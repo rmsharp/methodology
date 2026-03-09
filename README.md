@@ -147,6 +147,4 @@ The framework is agent-independent — it works with any AI coding agent that su
 
 ## License
 
-This work is licensed under [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/).
-
-You are free to share and adapt this material for non-commercial purposes, with appropriate attribution.
+Copyright 2026 by Terrell Deppe. You are free to share and adapt this material with appropriate attribution. You may use it to make money, but you may not call it your own, or sell it in any way.
