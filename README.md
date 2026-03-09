@@ -54,6 +54,7 @@ Pre-Flight → Research → Create → Present → Implement → Verify & Close
 Each phase is gated. You cannot enter the next phase until the current one is complete. The most valuable gate is between Present and Implement: no implementation begins without stakeholder approval.
 
 ## Quick Start
+*NOTE: The absolute fastest way to use this is to tell Claude (or other service), "Use this methodology: https://github.com/KJ5HST/methodology". Claude will pull it down and put it in place for you.*
 
 ### 1. Copy files to your project
 
@@ -74,7 +75,7 @@ for every session. It tells you what to read, when to stop, and how to close out
 
 ### 3. Create a backlog
 
-Create a `BACKLOG.md` at your project root with your current tasks and priorities. The session runner reads this during orientation.
+Create a `BACKLOG.md` at your project root with your current tasks and priorities. The session runner reads this during orientation. You can also tell claude to make a plan for your effort that follows this methodology. Once the plan is created, start a new session and either tell claude to implement the next phase of your plan, and tell it what file the plan is in, or build the backlog from that plan.
 
 ### Full setup guide
 
