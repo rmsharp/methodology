@@ -77,6 +77,42 @@ State your understanding back to the user: *"I'm going to [deliverable] followin
 4. If blocked, ask. Don't improvise around blockers.
 5. If you catch yourself thinking "while I'm at it..." — STOP. That's scope creep. Commit what you have and note it for a future session.
 
+### Planning Sessions
+
+**A plan is a deliverable, not a preamble.** When the session's deliverable is a plan (architecture doc, migration plan, multi-phase implementation plan), additional discipline applies:
+
+#### Evidence-Based Inventory (MANDATORY for deletion/migration/rename plans)
+
+For any plan that involves deleting, renaming, migrating, or moving code:
+
+1. The plan MUST include a **grep-based inventory** of all references to the affected symbols, files, components, keys, imports, and type names.
+2. Run the actual searches. List every matching file. The plan's "files to change" list comes from search results, not architectural knowledge.
+3. Search terms should include: file names, class names, function names, import paths, key prefixes, component registration names, and any aliases.
+4. The inventory IS the plan's verification step — equivalent to "grep for dangling references" in execution sessions.
+
+**A plan that lists files to change without having searched for them is an assumption, not an inventory.** The executor will trust the plan. If it's wrong, they'll miss files — exactly the failure this requirement prevents.
+
+#### Per-Phase Completion Criteria
+
+Every phase in a multi-phase plan must state:
+- **What DONE looks like** — concrete output, not "implement Phase N"
+- **Verification commands** — how the executor confirms completion (build, test, grep)
+- **Session boundary** — "This phase is one session. Close out when done."
+
+Without explicit completion criteria, executors don't know when to stop and tend to bundle adjacent phases.
+
+#### Planning Session Checklist
+
+Before closing out a planning session, verify:
+
+- [ ] Plan document written with file paths and line numbers
+- [ ] Grep-based inventory completed for all affected symbols (if deletion/migration/rename)
+- [ ] Each phase has explicit completion criteria and verification commands
+- [ ] Each phase marked as "separate session" with a STOP point
+- [ ] Close-out: evaluate predecessor, self-assess, commit, STOP
+
+**The plan is the deliverable. Do not start implementing it.**
+
 ---
 
 ## Phase 3: Close Out
@@ -193,6 +229,7 @@ These are documented tendencies. The agent must actively guard against them.
 | 15 | **Minimal handoff** | Session writes "Done. Pick next from backlog." — technically a handoff, functionally useless. Next session starts blind. | Phase 3D has 6 minimum requirements. A handoff missing key files, specific next steps, or gotchas is a protocol violation that will score ≤4/10. |
 | 16 | **False credit / fabrication** | Session claims credit for work it didn't do, or attributes quotes the user never said. Trust destruction. | Never claim deliverables you didn't produce. If a plan was input, say so. If you produced nothing, say so. |
 | 17 | **Protocol erosion** | Each session shaves off "just one" protocol step. Individually minor. Over 5-10 sessions, the whole protocol collapses. Scores drift from 9/10 to 1/10. | The protocol is not optional, advisory, or improvable-by-subtraction during a session. Every step exists because a previous session failed without it. If you think a step is unnecessary, that's the erosion happening. Do the step. |
+| 18 | **Planning-to-implementation bleed** | A session produces a plan, then immediately begins implementing it. Or the next session bundles multiple phases because "the plan is done, implementation is easy." | A planning session's deliverable IS the plan. Close out after the plan. The next session implements ONE phase. If a plan has N phases, expect N+1 sessions minimum (1 planning + N implementation). If a session's commit history shows both "docs: plan" and "feat: implement," it bundled. |
 
 ---
 
@@ -209,6 +246,7 @@ These are documented tendencies. The agent must actively guard against them.
 | Session number gap in SESSION_NOTES.md | Ghost session already happened | Note it. Document what you can infer from git log. |
 | Score dropping session-over-session | Multiple failure modes compounding | Re-read this entire document. Reset to full protocol. |
 | "This step doesn't apply to my session" | Failure mode #17 (protocol erosion) is active | The step applies. Do it. Every step exists because a session failed without it. |
+| Plan commit + implementation commit in same session | Failure mode #18 (planning-to-implementation bleed) is active | The plan was the deliverable. Close out. Implementation is a separate session. |
 
 **If you detect 2+ warning signs: STOP.** Re-read this document from the top. Do not continue until you've re-internalized the protocol. The cost of pausing to re-read is 2 minutes. The cost of a ghost session or failed delivery is the user's trust.
 
