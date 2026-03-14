@@ -1,3 +1,8 @@
+![GitHub release](https://img.shields.io)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/USERNAME/REPO)
+![npm](https://img.shields.io)
+
+
 # Iterative Session Methodology
 
 A framework for producing high-quality software through structured, self-correcting AI agent sessions. Each session follows a fixed phase sequence, accumulates knowledge, and feeds lessons back into the process. The result: sessions compound — session 40 is dramatically better than session 10, using the same tools on the same type of work.
