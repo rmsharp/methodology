@@ -1443,7 +1443,7 @@ HOOK_CONFIG = {
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "python3 methodology_dashboard.py",
+                        "command": "python3 methodology_dashboard.py --no-open",
                         "timeout": 15,
                         "statusMessage": "Generating Methodology Dashboard...",
                         "once": True
@@ -1529,8 +1529,9 @@ def main():
     output_path = root / "dashboard.html"
     output_path.write_text(html)
 
-    # Open in browser
-    open_in_browser(output_path)
+    # Open in browser (skip with --no-open or when piped)
+    if "--no-open" not in sys.argv and sys.stdout.isatty():
+        open_in_browser(output_path)
 
     # Terminal summary with ANSI colors
     R = "\033[0m"       # reset
