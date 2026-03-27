@@ -54,6 +54,14 @@ Copy these files from `starter-kit/` to your **project root**:
 
 The markdown files are templates designed to be customized. The dashboard is a standalone Python 3 script (no dependencies) that works out of the box.
 
+After copying, install the auto-run hook:
+
+```bash
+python3 methodology_dashboard.py --setup
+```
+
+This creates `.claude/settings.local.json` with a `UserPromptSubmit` hook that runs the dashboard on the first prompt of each session.
+
 Add `dashboard.html` to your `.gitignore` — it's a generated artifact.
 
 ## Step 3: Create Your BACKLOG.md
