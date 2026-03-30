@@ -106,7 +106,27 @@ Add this block to the top of your `CLAUDE.md` (or equivalent agent instructions 
 
 Open `SESSION_RUNNER.md` and update the Phase 1 task-to-workstream mapping table to match your project's workstream documents. The starter version has generic examples — replace them with your actual workstream docs.
 
-## Step 6: Create a Sessions Directory
+## Step 6: Identify the Build Equivalent
+
+Every project has a command that confirms the deliverable is not broken. Identify it during setup and record it in `SAFEGUARDS.md` (see "Verify the Build Equivalent"):
+
+| Project Type | Example Command |
+|---|---|
+| Software (Node.js) | `npm run build && npm test` |
+| Software (Rust) | `cargo build && cargo test` |
+| Documentation (Quarto) | `quarto render` |
+| Documentation (LaTeX) | `pdflatex && bibtex && pdflatex` |
+| Data pipeline | Pipeline-specific execution command |
+
+For **documentation projects**, also identify:
+
+- **The rendering tool** (Quarto, LaTeX, Sphinx, etc.) and its render command
+- **Bibliography files** (`.bib`) — every citation key referenced in the document must exist in the bibliography. Rendering typically catches missing citations, but only if you render after every change.
+- **Cross-reference targets** — figures, tables, and section labels that other parts of the document reference. Rendering verifies these resolve.
+
+Record the build command in `SAFEGUARDS.md` so every session knows how to verify its work.
+
+## Step 7: Create a Sessions Directory
 
 ```bash
 mkdir -p docs/methodology/sessions
@@ -114,7 +134,7 @@ mkdir -p docs/methodology/sessions
 
 This is where session output documents go (if you use them). The methodology works without explicit session documents — `SESSION_NOTES.md` carries the essential continuity — but formal session documents are useful for design series and audits where you want a permanent record.
 
-## Step 7: Set Up the Methodology Dashboard (Recommended)
+## Step 8: Set Up the Methodology Dashboard (Recommended)
 
 The methodology includes a health scanner that scores projects on 5 dimensions (activity, testing, documentation, CI/CD, methodology compliance) and generates an HTML dashboard that auto-refreshes every 60 seconds.
 
@@ -149,7 +169,7 @@ You can use both — the per-project dashboard runs when you're inside a project
 
 The dashboard requires only Python 3 (stdlib, no pip dependencies) and works on macOS, Linux, and Windows.
 
-## Step 8: Set Up Git Hooks (Optional)
+## Step 9: Set Up Git Hooks (Optional)
 
 The methodology works without hooks, but a `core.hooksPath` configuration can enforce commit discipline:
 
