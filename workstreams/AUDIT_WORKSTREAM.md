@@ -12,6 +12,10 @@ Use this workstream when:
 - Evaluating a series of components against a standard
 - Conducting a quality gate review before a release or milestone
 - Assessing technical debt across a subsystem
+- Validating tooling or scripts against external test data (e.g., testing an extraction workflow against real-world files)
+- Auditing documents for internal consistency, citation completeness, or structural quality
+
+**This workstream is not limited to code.** The audit methodology — define criteria, inventory scope, examine systematically, report findings with evidence — applies to any artifact: documents, configurations, data pipelines, vendor integrations, or tooling. A three-session audit campaign validated Excel extraction tooling against 29 actuarial workbooks using this workstream without modification.
 
 ---
 
