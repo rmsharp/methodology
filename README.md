@@ -1,8 +1,3 @@
-![GitHub release](https://img.shields.io)
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/USERNAME/REPO)
-![npm](https://img.shields.io)
-
-
 # Iterative Session Methodology
 
 A framework for producing high-quality software through structured, self-correcting AI agent sessions. Each session follows a fixed phase sequence, accumulates knowledge, and feeds lessons back into the process. The result: sessions compound — session 40 is dramatically better than session 10, using the same tools on the same type of work.
@@ -65,6 +60,18 @@ Each phase is gated. You cannot enter the next phase until the current one is co
 
 ### 1. Copy files to your project
 
+**Option A — scripted (recommended if you have a local methodology checkout):**
+
+```bash
+../methodology/bin/sync your-project/             # committed mode (default)
+../methodology/bin/sync your-project/ --mode=ignore  # or: multi-project operator mode
+../methodology/bin/sync your-project/ --source=github  # or: pull from GitHub (needs gh CLI)
+```
+
+This copies `SESSION_RUNNER.md`, `SAFEGUARDS.md`, and `methodology_dashboard.py` into the target. See [`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md) for the difference between committed and ignored modes.
+
+**Option B — manual:**
+
 Copy `starter-kit/SESSION_RUNNER.md`, `starter-kit/SAFEGUARDS.md`, `starter-kit/SESSION_NOTES.md`, `starter-kit/CHANGELOG.md`, and `starter-kit/ROADMAP.md` to your project root. Copy the framework files (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`, `workstreams/`) to `docs/methodology/`.
 
 ### 2. Tell Claude to use it
@@ -96,6 +103,7 @@ See **[`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md)** for the complete 
 | `SESSION_RUNNER.md` | Cockpit checklist template (no project-specific history) |
 | `SESSION_NOTES.md` | Empty template for session continuity |
 | `SAFEGUARDS.md` | Safety rails: commit discipline, blast radius limits, mode switching |
+| `CLAUDE_TEMPLATE.md` | Template for project `CLAUDE.md` with SESSION PROTOCOL block and Adaptations section |
 | `CHANGELOG.md` | Completed work history template — keeps BACKLOG.md lean |
 | `ROADMAP.md` | Feature inventory and future plans template |
 | `methodology_dashboard.py` | Health scanner: project scoring, risk assessment, compliance dashboard |
@@ -149,12 +157,17 @@ Expand any project card to see health breakdown by dimension, risk factors, git 
 │
 ├── starter-kit/                      ← Copy these to bootstrap a new project
 │   ├── BOOTSTRAP.md                  ← Setup guide
+│   ├── CLAUDE_TEMPLATE.md            ← Project CLAUDE.md template (protocol + Adaptations section)
 │   ├── SESSION_RUNNER.md             ← Cockpit checklist template
 │   ├── SESSION_NOTES.md              ← Session continuity template
 │   ├── SAFEGUARDS.md                 ← Safety rails template
 │   ├── CHANGELOG.md                  ← Completed work history template
 │   ├── ROADMAP.md                    ← Feature inventory & future plans template
 │   └── methodology_dashboard.py      ← Health scanner (also in tools/)
+│
+├── bin/                              ← Sync tools (v2.2+)
+│   ├── sync                          ← Copy starter-kit files into a project (dual-mode, dual-source)
+│   └── status                        ← Report drift of synced files across projects
 │
 └── tools/                            ← Portfolio-level tooling
     └── methodology_dashboard.py      ← Health scanner & compliance dashboard
@@ -169,7 +182,7 @@ The methodology framework describes WHAT to do and WHY. In practice, it needs an
 - **Mandatory orientation** — prevents starting work without understanding current state
 - **"1 and done" rule** — prevents scope creep and quality degradation
 - **Automatic close-out** — prevents skipping the self-improvement loop
-- **19 known failure modes** — documents agent tendencies with specific countermeasures
+- **23 known failure modes** — documents agent tendencies with specific countermeasures
 - **Degradation detection** — 7 warning signs that predict protocol erosion
 - **Handoff accountability** — ensures each session sets up the next for success
 
@@ -212,7 +225,7 @@ Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during develop
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
 
-### What's New in v2.2
+### What's New in v2.3
 
 - **Research Documentation workstream** — new `workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md` adapts the methodology for research papers, technical reports, dissertations, and regulatory analyses
 - **Source-corpus management procedures** — pre-flag completeness audit, WAF retrieval hierarchy, filename verification, post-hoc dedup
@@ -221,11 +234,24 @@ The framework is agent-independent — it works with any AI coding agent that su
 - **Toolchain adaptation table** — Quarto, LaTeX, Sphinx, Pandoc, AsciiDoc, and Markdown equivalents for citation checking, render commands, cross-reference verification, and figure scripts
 - **Audit Mode** — adapts the workstream's machinery for fresh-eyes review of existing research repositories; uses the `AUDIT_WORKSTREAM.md` review-session pattern with this workstream's verification checklist as audit criteria, the 13 anti-patterns as finding categories, and the claim-source map as an audit sampling instrument
 
+### What's New in v2.2
+
+- **`bin/sync` tool** — dual-mode (`--mode=commit` / `--mode=ignore`) and dual-source (`--source=local` / `--source=github`) sync for starter-kit files. Committed mode is the existing pattern; ignored mode is new, for multi-project operators who want methodology updates to propagate via one command from a sibling `methodology/` checkout.
+- **`bin/status` tool** — drift reporter across one or many projects. Shows `current`, `N versions behind`, `locally modified`, or `missing` per synced file.
+- **Drift safety** — `bin/sync` refuses to overwrite files with local modifications (not matching canonical or any historical version). Pass `--force` to override, or move customizations to CLAUDE.md's Adaptations section first.
+- **`starter-kit/CLAUDE_TEMPLATE.md`** — new template for project `CLAUDE.md` files, including the **Project-Specific Methodology Adaptations** section. This is the canonical seam for per-project customizations (task mappings, Phase 0 steps, project Learnings, project failure modes) — keeping synced files byte-identical to canonical.
+- **BOOTSTRAP.md rewrite** — documents committed vs ignored modes, the customization seam pattern, and the updating workflow (`bin/status` → `bin/sync`).
+- **Backward compatible** — existing adopters on v2.1 who copy files manually continue to work unchanged. The scripted workflow is additive.
+
 ### What's New in v2.1
 
 - **CHANGELOG.md and ROADMAP.md templates** — new starter-kit files that split task tracking into three focused files: BACKLOG.md (open work only), CHANGELOG.md (completed work history), ROADMAP.md (feature inventory and future plans)
 - **Migration guide** — step-by-step instructions in BOOTSTRAP.md for projects with an existing monolithic BACKLOG.md
-- **Dashboard compliance updated** — methodology dashboard now checks for CHANGELOG.md and ROADMAP.md presence
+- **4 new failure modes** (#20-23): edit from memory, greenfield assumption, overwrite user edits, question-as-instruction
+- **Artifact Integrity section** in SAFEGUARDS.md — read before edit, preserve user edits, verify the build equivalent
+- **Build equivalent step** — new Step 6 in BOOTSTRAP.md for identifying and recording the project's verification command
+- **Documentation project adaptations** — adaptation table and anti-patterns in TEMPLATE_WORKSTREAM.md, expanded audit scope in AUDIT_WORKSTREAM.md
+- **Dashboard compliance updated** — methodology dashboard now checks for CHANGELOG.md and ROADMAP.md presence (6 → 8 required items)
 - **Consistent references** — SAFEGUARDS.md, SESSION_RUNNER.md, and README updated to reference the three-file approach
 
 ### What's New in v2.0
@@ -233,7 +259,7 @@ The framework is agent-independent — it works with any AI coding agent that su
 - **Methodology Dashboard** — new portfolio health scanner (`tools/methodology_dashboard.py`) that scores projects on 5 dimensions (activity, testing, documentation, CI/CD, methodology compliance) and generates a self-contained HTML dashboard
 - **Two scanning modes** — portfolio mode (scans sibling git repos) and single-project mode (scans the project + git submodules), auto-detected based on placement
 - **Health scoring (0-100)** with 5 weighted dimensions and rule-based risk assessment (critical/high/medium/low flags)
-- **Methodology compliance scoring (0-100)** — weighted checklist of 8 required items (SESSION_RUNNER, SAFEGUARDS, SESSION_NOTES, BACKLOG, CHANGELOG, ROADMAP, docs/methodology/, workstreams/)
+- **Methodology compliance scoring (0-100)** — weighted checklist of required methodology items (SESSION_RUNNER, SAFEGUARDS, SESSION_NOTES, BACKLOG, docs/methodology/, workstreams/)
 - **Color-coded terminal output** — at-a-glance status without opening the browser
 - **Live HTML dashboard** — auto-refreshes every 60 seconds; collapsible project cards sortable by health, risk, name, or activity
 - **Starter kit includes dashboard** — `starter-kit/methodology_dashboard.py` for per-project use
