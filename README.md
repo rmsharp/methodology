@@ -152,6 +152,7 @@ Expand any project card to see health breakdown by dimension, risk factors, git 
 │   ├── ARCHITECTURE_WORKSTREAM.md    ← System architecture, API design
 │   ├── DEVELOPMENT_WORKSTREAM.md     ← Feature implementation, bug fix campaigns
 │   ├── AUDIT_WORKSTREAM.md           ← Code audits, security reviews, quality gates
+│   ├── RESEARCH_DOCUMENTATION_WORKSTREAM.md ← Research papers, technical reports, regulatory analyses
 │   └── TEMPLATE_WORKSTREAM.md        ← Create your own workstream
 │
 ├── starter-kit/                      ← Copy these to bootstrap a new project
@@ -204,6 +205,7 @@ Domain-specific adaptations of the master framework. Each workstream customizes 
 | **Architecture** | Systems, APIs, data models, integration patterns |
 | **Development** | Feature implementation, bug fix campaigns |
 | **Audit** | Code reviews, security assessments, quality gates |
+| **Research Documentation** | Research papers, technical reports, dissertations, regulatory analyses |
 
 ### When to Use / When Not to Use
 
@@ -222,6 +224,15 @@ Domain-specific adaptations of the master framework. Each workstream customizes 
 Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during development of a commercial software product. The methodology emerged organically from an 11-session design series, was codified into a reusable framework, and subsequently validated across 60+ sessions of varied work.
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
+
+### What's New in v2.3
+
+- **Research Documentation workstream** — new `workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md` adapts the methodology for research papers, technical reports, dissertations, and regulatory analyses
+- **Source-corpus management procedures** — pre-flag completeness audit, WAF retrieval hierarchy, filename verification, post-hoc dedup
+- **Claim-source audit pattern** — every numeric, dated, or attributed claim requires a ≤40-word quoted passage from a primary source; baseline ~22% unsupported / ~12% re-attribution rate from real-world use
+- **13 documented anti-patterns** specific to research documentation, including citation drift, filename trust, premature delete on audit-flagged claims, and goal-language for constraints
+- **Toolchain adaptation table** — Quarto, LaTeX, Sphinx, Pandoc, AsciiDoc, and Markdown equivalents for citation checking, render commands, cross-reference verification, and figure scripts
+- **Audit Mode** — adapts the workstream's machinery for fresh-eyes review of existing research repositories; uses the `AUDIT_WORKSTREAM.md` review-session pattern with this workstream's verification checklist as audit criteria, the 13 anti-patterns as finding categories, and the claim-source map as an audit sampling instrument
 
 ### What's New in v2.2
 

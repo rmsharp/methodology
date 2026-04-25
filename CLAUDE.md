@@ -60,6 +60,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 | `workstreams/ARCHITECTURE_WORKSTREAM.md` | Systems, APIs, data models |
 | `workstreams/DEVELOPMENT_WORKSTREAM.md` | Feature implementation, bug fixes |
 | `workstreams/AUDIT_WORKSTREAM.md` | Code audits, security reviews |
+| `workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md` | Research papers, technical reports, dissertations, regulatory analyses |
 | `workstreams/TEMPLATE_WORKSTREAM.md` | Blank template for creating new workstreams |
 
 ## Key Concepts to Preserve When Editing
@@ -74,7 +75,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 
 ## Versioning
 
-Changes are tracked via git commits and the README's "What's New" section. Current version: v2.2. Key additions by version:
+Changes are tracked via git commits and the README's "What's New" section. Current version: v2.3. Key additions by version:
 
 - **v1.0:** Initial 9 principles, 6 phases, 4 workstreams
 - **v1.1:** Protocol erosion detection, ghost session prevention, minimum handoff requirements, 4 new failure modes (#14-17)
@@ -82,3 +83,4 @@ Changes are tracked via git commits and the README's "What's New" section. Curre
 - **v2.0:** Methodology Dashboard — portfolio health scanner with dual-mode detection, health/risk scoring, methodology compliance checking, live HTML dashboard with auto-refresh, color-coded terminal output, starter-kit inclusion
 - **v2.1:** CHANGELOG.md and ROADMAP.md templates, three-file task tracking split, migration guide for monolithic backlogs, dashboard compliance updates, 4 new failure modes (#20-23), Artifact Integrity safeguards, build equivalent step in BOOTSTRAP, documentation project adaptations
 - **v2.2:** `bin/sync` + `bin/status` distribution tooling (dual-mode commit/ignore, dual-source local/github), CLAUDE_TEMPLATE.md customization seam, BOOTSTRAP.md rewrite, drift-safety guard on sync
+- **v2.3:** Research Documentation workstream — adapts the methodology for research papers, technical reports, dissertations, and regulatory analyses; source-corpus management, claim-source audit pattern, 13 documented anti-patterns, toolchain adaptation table (Quarto/LaTeX/Sphinx/Pandoc/AsciiDoc/Markdown), Audit Mode for fresh-eyes review of existing repositories
