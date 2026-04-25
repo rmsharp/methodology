@@ -29,6 +29,7 @@ your-projects/                        <-- parent directory (portfolio level)
 │           ├── ARCHITECTURE_WORKSTREAM.md
 │           ├── DEVELOPMENT_WORKSTREAM.md
 │           ├── AUDIT_WORKSTREAM.md
+│           ├── RESEARCH_DOCUMENTATION_WORKSTREAM.md
 │           └── TEMPLATE_WORKSTREAM.md
 │
 ├── project-b/                        <-- same structure
