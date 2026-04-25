@@ -12,10 +12,11 @@ Use this workstream when:
 - Maintaining a multi-paper series where citations and figures cross-pollinate
 - Working in Quarto, LaTeX, Sphinx, or any toolchain that renders source files into PDF/HTML/DOCX
 - The deliverable's correctness depends on each numeric, dated, or attributed claim tracing to a verifiable source
+- Auditing an existing research-documentation repository with fresh eyes against this workstream's procedures (see *Audit Mode* below)
 
 **Not for casual documentation.** API docs, READMEs, and runbooks belong in the Development workstream's documentation sub-tasks. This workstream's machinery (corpus management, claim-source audit, citation discipline) is overhead unless the deliverable is evaluated on the strength of its citations.
 
-**Distinct from the Audit workstream.** Audit produces analysis *about* an artifact; this workstream produces an artifact *with* embedded analysis. The claim-source audit (Phase 6) borrows from Audit but is internal to the writing loop, not the deliverable.
+**Distinct from the Audit workstream.** `AUDIT_WORKSTREAM.md` produces analysis *about* an artifact; this workstream's standard mode produces an artifact *with* embedded analysis. The claim-source audit (Phase 6) borrows from Audit but is internal to the writing loop, not the deliverable. When you specifically want to audit an existing research-documentation repository — finding-list deliverable, no paper modifications — use *Audit Mode* below, which adapts this workstream's machinery into the review-session pattern from `AUDIT_WORKSTREAM.md`.
 
 ---
 
@@ -26,6 +27,59 @@ Sloppy research is worse than valueless — credible-looking citations that fail
 This workstream benefits materially from your agent's deepest-reasoning mode (max-effort, deep-thinking, or extended-reasoning settings, depending on the toolchain). The marginal cost is latency and tokens; the cost of an undetected misattribution is reputational. Set the mode at session start — not after a problem appears.
 
 The same logic applies to a human author working without an agent: the chapters of this workstream that demand the most attention are claim-source mapping, framing-language distinctions, and dedup logic across parallel work streams. Slow down on those. Speed elsewhere is fine.
+
+---
+
+## Audit Mode (Reviewing an Existing Repository)
+
+The procedures below are forward-looking — they assume you are writing or extending a paper. The same procedures double as **audit criteria** for a repository where prior work was done without this workstream's discipline. Use Audit Mode when the deliverable is a finding list, not modifications to the papers.
+
+Follow the **review-session pattern** from [`AUDIT_WORKSTREAM.md`](AUDIT_WORKSTREAM.md): Phases 1–4 (Pre-Flight, Research, Create the analysis, Present), skipping Phase 5 (Implement). The deliverable is the audit report; remediation is a follow-on session that re-enters this workstream's standard mode.
+
+### Map this workstream's machinery into audit deliverables
+
+| This workstream's section | Audit role |
+|---|---|
+| Phase 2 Steps 2–5 (corpus inventory, pre-flag, retrieval, filename verification) | Inventory the existing corpus; flag missing primary sources, format mismatches, internal duplicates, stub files |
+| Phase 3 Claim-Source Map | Sample 20–40 high-stakes claims (numeric, dated, attributed). If the unsupported rate exceeds the ~22% baseline, expand the sample. |
+| Phase 6 Cleanup procedures | Identify search artifacts, bogus retrievals, and pre-existing duplicates to remove |
+| Verification Checklist | Per-paper pass/fail grid |
+| The 13 anti-patterns | Finding categories — every finding cites a numbered anti-pattern |
+
+### Audit report structure
+
+```
+## Coverage
+- Papers audited: X of Y (with reason for any exclusions)
+- Claim sample size: N (per-paper breakdown)
+- Anti-pattern dimensions evaluated: [list, or "all 13"]
+
+## Findings
+For each finding:
+- Severity: critical / moderate / minor
+- Anti-pattern: #N (from this workstream)
+- Location: file:line or section
+- Evidence: quoted passage from source, file-inspection result, or citation key
+- Recommendation: specific action
+
+## Structural observations
+- Patterns across multiple findings (systemic vs. one-off)
+- Sections or papers that pass cleanly (use as reference implementations)
+
+## Remediation plan
+- Prioritized punch list for follow-on implementation sessions
+- Estimated session count
+```
+
+### Severity calibration
+
+| Severity | Example findings |
+|----------|-----------------|
+| **Critical** | Unsupported numeric claim cited as fact; citation key resolves to the wrong source; primary-source file is actually an HTML stub or 403 page; framing language asserts a constraint as a goal in a load-bearing section |
+| **Moderate** | Descriptive-page citation where the primary source is available locally; redundant restatement across sections; figure with no provenance; misattribution that can be re-attributed without removing the claim |
+| **Minor** | Search artifact in corpus folder; abstract length out of target range; bibliography entry style inconsistent with project convention |
+
+If a single repository would generate >40 critical findings, scope the audit by paper or by dimension and produce one report per scope. A 200-finding monolithic report is not actionable.
 
 ---
 

@@ -219,6 +219,7 @@ The framework is agent-independent — it works with any AI coding agent that su
 - **Claim-source audit pattern** — every numeric, dated, or attributed claim requires a ≤40-word quoted passage from a primary source; baseline ~22% unsupported / ~12% re-attribution rate from real-world use
 - **13 documented anti-patterns** specific to research documentation, including citation drift, filename trust, premature delete on audit-flagged claims, and goal-language for constraints
 - **Toolchain adaptation table** — Quarto, LaTeX, Sphinx, Pandoc, AsciiDoc, and Markdown equivalents for citation checking, render commands, cross-reference verification, and figure scripts
+- **Audit Mode** — adapts the workstream's machinery for fresh-eyes review of existing research repositories; uses the `AUDIT_WORKSTREAM.md` review-session pattern with this workstream's verification checklist as audit criteria, the 13 anti-patterns as finding categories, and the claim-source map as an audit sampling instrument
 
 ### What's New in v2.1
 
