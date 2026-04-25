@@ -320,7 +320,6 @@ def collect_file_metrics(path):
 
             # LOC for text files
             loc = 0
-#            if ext not in ASSET_EXTS and category != "assets":
             if ext not in ASSET_EXTS and category not in ("assets", "other"):
                 loc = count_lines(fpath)
                 metrics["total_loc"] += loc
@@ -629,20 +628,28 @@ def collect_coverage_config(path):
                         continue
                 label = name if rel == Path(".") else f"{rel}/{name}"
                 configs.append(label)
-        # Check package.json for jest/nyc/vitest-coverage config
+        # Check package.json for jest/nyc/coverage-tool config
         if "package.json" in files:
             pkg = Path(root_dir) / "package.json"
             try:
                 with open(pkg) as f:
                     data = json.load(f)
-                markers = {"jest", "nyc"}
-                # Check devDependencies for coverage packages
+                top_level_keys = set(data.keys())
                 dev_deps = data.get("devDependencies", {})
-                if any(k.startswith("@vitest/coverage") for k in dev_deps):
-                    markers.add("vitest-coverage")
-                if "pytest-cov" in dev_deps or "coverage" in dev_deps:
-                    markers.add("coverage")
-                found = markers & set(data.keys()) or (markers - {"jest", "nyc"})
+                found = []
+                # Top-level jest or nyc config blocks
+                if "jest" in top_level_keys:
+                    found.append("jest")
+                if "nyc" in top_level_keys:
+                    found.append("nyc")
+                # Coverage packages in devDependencies
+                for pkg_name in ("c8", "@vitest/coverage-v8", "@vitest/coverage-istanbul"):
+                    if pkg_name in dev_deps:
+                        found.append(pkg_name)
+                # Fallback: detect unknown @vitest/coverage-* variants
+                if not any(f.startswith("@vitest/coverage") for f in found):
+                    if any(k.startswith("@vitest/coverage") for k in dev_deps):
+                        found.append("vitest-coverage")
                 if found:
                     tag = ", ".join(sorted(found))
                     label = f"package.json ({tag})" if rel == Path(".") else f"{rel}/package.json ({tag})"
