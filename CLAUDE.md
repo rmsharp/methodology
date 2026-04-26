@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Session Startup
+
+If the user's first message of the session is exactly `go` (case-insensitive, no other content), treat it as "Start a new methodology session" and immediately begin `starter-kit/SESSION_RUNNER.md` Phase 0 (Orient). Do not ask for clarification — `go` is the canonical kickoff prompt for this repo.
+
 ## What This Repository Is
 
 A standalone methodology framework for structured, self-correcting AI agent sessions. It is **not a software project** — it contains no code to build, test, or run. The deliverables are markdown documents.
