@@ -123,6 +123,22 @@ else
     echo "  SKIP: gh unauthenticated"
 fi
 
+echo "== Test 10: tools/ and starter-kit/ dashboards in lockstep =="
+diff -q "$METHODOLOGY/tools/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null \
+    && pass "tools/ and starter-kit/ dashboards are byte-identical" \
+    || fail "tools/ and starter-kit/ dashboards have drifted"
+
+echo "== Test 11: collect_coverage_config regression tests =="
+TEST_OUT="$(python3 "$BIN/test_dashboard.py" 2>&1)"
+TEST_RC=$?
+if [ "$TEST_RC" = "0" ]; then
+    LINE="$(echo "$TEST_OUT" | grep -E '^Ran [0-9]+ tests' | head -1)"
+    pass "collect_coverage_config tests pass${LINE:+ ($LINE)}"
+else
+    fail "collect_coverage_config tests failed:"
+    echo "$TEST_OUT" | sed 's/^/    /'
+fi
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]
