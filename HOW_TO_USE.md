@@ -823,6 +823,12 @@ To use the session runner in your own project:
 
 The session runner is project-independent. The 4 phases and the failure modes table apply to any project using the iterative methodology. What changes per project is the task-to-workstream mapping and any project-specific failure modes.
 
+### Claude Code Skills
+
+If you run sessions with Claude Code, the [Matt Pocock engineering skill set](https://github.com/mattpocock/agent-skills) plus a few built-ins maps cleanly onto the methodology's phases. See [`docs/skills.md`](docs/skills.md) for the skill ↔ phase mapping and one-time setup notes.
+
+Skills are **tools, not phases.** The Session Runner checklist still drives every session. A skill that pulls you across a hard gate — `/to-issues` immediately followed by `/tdd`, for example — is failure mode #2 (Keep going) wearing a tool costume.
+
 ### Agent-Specific Guidance
 
 Beyond the session runner, AI agents benefit from these adaptations. These findings come from 60+ real sessions, not speculation.

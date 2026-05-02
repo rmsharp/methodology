@@ -16,6 +16,12 @@ Use this workstream when:
 
 ---
 
+## Recommended Claude Code Skills
+
+`/tdd` (Implement) for red-green-refactor; `/diagnose` (Research) for hard bugs and perf regressions; `/triage` (Pre-Flight) for incoming issues. See [`docs/skills.md`](../docs/skills.md).
+
+---
+
 ## Phase 2: Research (Development-Specific)
 
 ### Step 1: Study the Requirements
