@@ -221,7 +221,7 @@ Domain-specific adaptations of the master framework. Each workstream customizes 
 
 ## Origin
 
-Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during development of a commercial software product. The methodology emerged organically from an 11-session design series, was codified into a reusable framework, and subsequently validated across 60+ sessions of varied work.
+Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during development of a commercial software product. The methodology emerged organically from an initial 11-session design series, was codified into a reusable framework, and subsequently validated across 1100+ sessions of varied work.
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
 
