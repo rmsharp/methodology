@@ -14,6 +14,12 @@ Use this workstream when designing:
 
 ---
 
+## Recommended Claude Code Skills
+
+`/grill-me` (Pre-Flight) to stress-test design assumptions; `/improve-codebase-architecture` (Verify & Close) when refactor targets surface. See [`docs/skills.md`](../docs/skills.md).
+
+---
+
 ## Phase 2: Research (Design-Specific)
 
 ### Step 1: Study the User

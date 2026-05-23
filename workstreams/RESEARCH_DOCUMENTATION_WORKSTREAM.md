@@ -20,6 +20,12 @@ Use this workstream when:
 
 ---
 
+## Recommended Claude Code Skills
+
+`/grill-me` and `/grill-with-docs` (Pre-Flight, Research) for challenging scope and source claims; `/to-prd` (Create) when the deliverable is a spec-style document. See [`docs/skills.md`](../docs/skills.md).
+
+---
+
 ## Recommended Operating Mode
 
 Sloppy research is worse than valueless — credible-looking citations that fail under scrutiny damage reader trust more than missing citations would. Documentation errors surface as plausible text that passes casual review and only breaks under hostile scrutiny; by then the reputational damage is done.

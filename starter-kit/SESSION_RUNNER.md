@@ -317,3 +317,11 @@ The user can paste any of these to start a session reliably. The session runner 
 
 **Free-form:**
 > [Description of task]. *(Session runner will assess scope and pick the right workstream.)*
+
+---
+
+## Optional: Claude Code Skills
+
+If you run sessions with Claude Code, see `docs/methodology/skills.md` for the mapping of Claude Code skills onto this methodology's phases. **Skills are tools, not steps.** The phase sequence above still drives every session.
+
+A skill that pulls you across a hard gate — e.g., `/to-issues` immediately followed by `/tdd` — is failure mode #2 (Keep going) wearing a tool costume. Close out first.

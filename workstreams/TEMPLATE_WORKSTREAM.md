@@ -13,6 +13,12 @@ Use this workstream when:
 
 ---
 
+## Recommended Claude Code Skills
+
+[List 2-4 Claude Code skills that fit this workstream, with phase annotations. Keep to 3 lines max. See [`docs/skills.md`](../docs/skills.md).]
+
+---
+
 ## Phase 2: Research ([Domain]-Specific)
 
 ### Step 1: Study the [Requirements/Domain/Problem]

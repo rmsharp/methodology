@@ -19,6 +19,12 @@ Use this workstream when:
 
 ---
 
+## Recommended Claude Code Skills
+
+`/improve-codebase-architecture` and `/diagnose` (Research) for repo-wide passes; `/review` and `/security-review` (Create) for PR-scoped audits. See [`docs/skills.md`](../docs/skills.md).
+
+---
+
 ## Phase 2: Research (Audit-Specific)
 
 ### Step 1: Define the Audit Criteria

@@ -16,6 +16,12 @@ Use this workstream when designing:
 
 ---
 
+## Recommended Claude Code Skills
+
+`/grill-me` and `/grill-with-docs` (Pre-Flight) to stress-test the design; `/to-prd` (Create) for spec writing; `/to-issues` (Create→Implement boundary) for tracer-bullet decomposition. See [`docs/skills.md`](../docs/skills.md).
+
+---
+
 ## Phase 2: Research (Architecture-Specific)
 
 ### Step 1: Study the Requirements
