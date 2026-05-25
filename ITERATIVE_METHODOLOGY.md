@@ -186,6 +186,27 @@ Every session follows these phases in order. Phases are sequential and gated —
 
 **The Complete-Then-Create Rule:** Do NOT begin Phase 3 until all 8 steps are done. The temptation to start creating after steps 1–4 is strong. Resist it. Steps 5–8 routinely surface insights that change the entire approach.
 
+### Phase 2.5: Pre-Create Grill (Optional)
+
+**Purpose:** Before designing a solution, surface every load-bearing decision the stakeholder has not yet made — by asking, not by guessing. Catches misalignment one phase earlier than Phase 4 (Present), where the failure mode is "stakeholder rejects the design because a foundational assumption was wrong."
+
+**When this applies:**
+- UX or interaction-model work where the right behavior is not derivable from existing patterns
+- Novel features with no precedent in the codebase
+- Sessions started without a pre-written plan from the stakeholder
+- Anything where the agent is about to design from inference rather than specification
+
+**When to skip:**
+- The stakeholder handed you a complete plan or specification
+- The work is mechanical (rename, lint cleanup, dependency bump, well-defined bug fix)
+- An equivalent feature already exists in the codebase and the stakeholder has confirmed "do it the same way"
+
+**Why this phase exists:** Phase 4 (Present) catches misalignment by showing the stakeholder a complete design. Phase 2.5 catches it earlier — before any design exists — by asking instead of inferring. The cost difference is large: a wrong inference at Phase 3 is rework of the design document; a wrong inference confirmed at Phase 4 is a new design cycle. UX rollbacks (designs that ship and revert because the interaction model was wrong) are the canonical failure this phase prevents.
+
+**Running the grill.** The methodology recommends Pocock's `/grill-me` skill — see [`starter-kit/RECOMMENDED_SKILLS.md`](starter-kit/RECOMMENDED_SKILLS.md). Methodology owns *when* to grill and *why*; the skill owns *how* to conduct the interview. When the skill is unavailable, the operative discipline is: enumerate every decision the design will encode, draft each with a recommended answer plus real alternatives, present them one at a time, and stop only when every load-bearing decision has an explicit answer locked into the Phase 3 Create document.
+
+**This phase is explicitly optional, not a gate.** Mechanical sessions should skip it. Adding ceremony to well-defined work erodes the protocol. The discipline is recognizing when *this* session has high misalignment risk — not running the grill on every session.
+
 ### Phase 3: Create
 
 **Purpose:** Design the solution in a document — NOT in implementation artifacts. The design IS the deliverable of this phase. Implementation is mechanical work in Phase 5.
