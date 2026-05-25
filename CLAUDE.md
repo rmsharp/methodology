@@ -74,7 +74,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 
 ## Key Concepts to Preserve When Editing
 
-- **SESSION_RUNNER.md documents 24 failure modes** with specific countermeasures. These are empirically derived from 60+ sessions — do not remove or weaken them without strong justification. FMs 1–23 must not be renumbered; new FMs append at the end (e.g., FM #24 was appended in v2.3, not inserted).
+- **SESSION_RUNNER.md documents 25 failure modes** with specific countermeasures. These are empirically derived from 60+ sessions — do not remove or weaken them without strong justification. FMs 1–24 must not be renumbered; new FMs append at the end (e.g., FM #24 was appended in v2.3 and FM #25 in v2.6, not inserted).
 - **Phase 0 (Orient) must remain mandatory and blocking** — the most common failure mode is agents skipping orientation and starting work immediately.
 - **"1 and done" rule** — one deliverable per session, then close out. This is structural, not advisory.
 - **Ghost session detection** (Phase 0, step 5) exists because crashed sessions that leave no trace cause the next session to work from stale state.
