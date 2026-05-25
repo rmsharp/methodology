@@ -259,7 +259,7 @@ Every session follows these phases in order. Phases are sequential and gated —
 5. **Update the performance comparison table.** Add this session's metrics.
 6. **Update the pattern library and anti-pattern list.** If you discovered a new pattern or made a new mistake, name it and add it.
 7. **Write handoff notes for the next session.** (See below.) You will be judged on these — the next session will score your handoff just as you scored your predecessor's.
-8. **Commit the work.** Structured commit message referencing the session.
+8. **Commit the work.** Before committing, remove any debug instrumentation added during this session (tagged debug logs per `/diagnose` — see [`starter-kit/RECOMMENDED_SKILLS.md`](starter-kit/RECOMMENDED_SKILLS.md) — and ad-hoc prints). Then commit with a structured message referencing the session.
 
 **Minimum handoff requirements (Step 7):** The next session starts with zero context. Your handoff is their only connection to your work. A handoff that doesn't include ALL of the following is incomplete. "Done — pick next task" is not a handoff; it's an abdication that forces the next session to rediscover context you already had.
 

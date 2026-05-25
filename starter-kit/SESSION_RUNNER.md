@@ -211,7 +211,11 @@ This step exists because sessions have shipped code that compiled and built clea
 
 ### 3F: Commit
 
-Commit all changes with a descriptive message.
+Before committing:
+
+- **Remove debug instrumentation added during this session.** Tagged debug logs (per `/diagnose` — see [`RECOMMENDED_SKILLS.md`](RECOMMENDED_SKILLS.md)) make this a single grep; ad-hoc prints make it manual. Either way, do not commit instrumentation that was meant to be temporary.
+
+Then commit all changes with a descriptive message.
 
 ### 3G: Report and STOP
 
