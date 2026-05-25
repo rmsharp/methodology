@@ -204,11 +204,11 @@ A handoff that doesn't include ALL of the following is a protocol violation. "Pi
 
 ### 3E: Runtime Smoke Test
 
-**If your deliverable changes runtime behavior** — startup configuration, service registration, integration wiring, dispatch, plugin loading, config resolution — launch the application before committing and verify the behavior. Check startup logs for errors, warnings, or unexpected fallback paths. Confirm your deliverable is active, not silently overridden or skipped. Verify at the running endpoint if applicable.
+**If your deliverable changes runtime behavior** — startup configuration, service registration, integration wiring, dispatch, plugin loading, config resolution — launch the application before committing and confirm the change is active. **"Build clean" is necessary but not sufficient for runtime changes.**
 
-If you cannot runtime-verify (requires hardware, external service, CI), state this explicitly in session notes. Do not silently skip. **"Build clean" is necessary but not sufficient for runtime changes.**
+Run `/verify` (Claude Code built-in) for the smoke test, or `/run` to drive the application directly — see [`RECOMMENDED_SKILLS.md`](RECOMMENDED_SKILLS.md). When the skills are unavailable, the rule applies manually: start the application, scan startup logs for errors or unexpected fallback paths, confirm your deliverable is active and not silently overridden.
 
-This step exists because sessions have shipped code that compiled and built cleanly but broke at runtime due to plugin version collisions, registration order, or silent fallback paths. Build tools verify compilation, not integration. A self-assessment that notes "no runtime verification" without treating it as a defect is failure mode #24 in action.
+If you cannot runtime-verify (requires hardware, external service, CI), state this explicitly in session notes. Do not silently skip. A self-assessment that notes "no runtime verification" without treating it as a defect is failure mode #24 (build-passes-ship-it) in action.
 
 ### 3F: Commit
 
