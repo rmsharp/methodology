@@ -52,6 +52,7 @@ Common task-to-workstream mappings:
 | "Fix [bug campaign]" | One fix campaign pass | `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` |
 | "Review [code/PR]" | One review document | The review produces a plan; follow DEVELOPMENT_WORKSTREAM for structure |
 | "Write/draft/audit [paper/section/dimension]" | One paper section, one audit pass, or one corpus retrieval pass | `docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md` |
+| "Grill me" / "I want to be grilled" / "Decide before designing" | A decisions list with stakeholder answers, then the Phase 3 design | `docs/methodology/ITERATIVE_METHODOLOGY.md` §Phase 2.5 (then continue in the relevant workstream — typically DESIGN or ARCHITECTURE). The grill itself is run via `/grill-me` — see [`RECOMMENDED_SKILLS.md`](RECOMMENDED_SKILLS.md). |
 | Multi-phase plan appears in prompt (from Plan Mode or user) | Plan document written to `docs/planning/` with evidence-based inventory | Planning workstream |
 
 **⚠ Plan Mode exit trap.** Plan Mode generates "Implement the following plan" as its preamble. **This does NOT mean "start coding."** When a multi-phase plan appears in the prompt — regardless of the preamble wording — the deliverable is writing the plan document with grep-based evidence and per-phase criteria. Orient first. The plan is a DRAFT until evidence-verified. See Planning Sessions below.
@@ -203,15 +204,19 @@ A handoff that doesn't include ALL of the following is a protocol violation. "Pi
 
 ### 3E: Runtime Smoke Test
 
-**If your deliverable changes runtime behavior** — startup configuration, service registration, integration wiring, dispatch, plugin loading, config resolution — launch the application before committing and verify the behavior. Check startup logs for errors, warnings, or unexpected fallback paths. Confirm your deliverable is active, not silently overridden or skipped. Verify at the running endpoint if applicable.
+**If your deliverable changes runtime behavior** — startup configuration, service registration, integration wiring, dispatch, plugin loading, config resolution — launch the application before committing and confirm the change is active. **"Build clean" is necessary but not sufficient for runtime changes.**
 
-If you cannot runtime-verify (requires hardware, external service, CI), state this explicitly in session notes. Do not silently skip. **"Build clean" is necessary but not sufficient for runtime changes.**
+Run `/verify` (Claude Code built-in) for the smoke test, or `/run` to drive the application directly — see [`RECOMMENDED_SKILLS.md`](RECOMMENDED_SKILLS.md). When the skills are unavailable, the rule applies manually: start the application, scan startup logs for errors or unexpected fallback paths, confirm your deliverable is active and not silently overridden.
 
-This step exists because sessions have shipped code that compiled and built cleanly but broke at runtime due to plugin version collisions, registration order, or silent fallback paths. Build tools verify compilation, not integration. A self-assessment that notes "no runtime verification" without treating it as a defect is failure mode #24 in action.
+If you cannot runtime-verify (requires hardware, external service, CI), state this explicitly in session notes. Do not silently skip. A self-assessment that notes "no runtime verification" without treating it as a defect is failure mode #24 (build-passes-ship-it) in action.
 
 ### 3F: Commit
 
-Commit all changes with a descriptive message.
+Before committing:
+
+- **Remove debug instrumentation added during this session.** Tagged debug logs (per `/diagnose` — see [`RECOMMENDED_SKILLS.md`](RECOMMENDED_SKILLS.md)) make this a single grep; ad-hoc prints make it manual. Either way, do not commit instrumentation that was meant to be temporary.
+
+Then commit all changes with a descriptive message.
 
 ### 3G: Report and STOP
 
@@ -256,6 +261,7 @@ These are documented tendencies. The agent must actively guard against them.
 | 22 | **Overwrite user edits** | Regenerate or modify content the user edited outside the agent's control (between sessions, in another editor, or manually). Destroys the user's work. | Check git blame or system-reminders before modifying any artifact that might have been user-edited. When in doubt, ask. Never regenerate generated artifacts (figures, tables, templates) without confirming the user hasn't customized them. |
 | 23 | **Question-as-instruction** | User asks a question or makes an observation; agent treats it as an instruction to modify files. | Present options and wait for direction. A question is not a go-ahead. "How could we improve X?" means discuss, not implement. |
 | 24 | **Build-passes-ship-it** | Session confirms `mvn clean package` / `npm run build` / equivalent succeeds and treats that as verification of correctness. But the deliverable involves runtime behavior (startup, service registration, config resolution, handler dispatch) that only executes when the application starts. Build tools verify compilation, not integration. | If your deliverable changes runtime behavior, launch the application before close-out and verify (Phase 3E). "Build clean" is necessary but not sufficient. A self-assessment that notes "no runtime verification" without treating it as a defect is this failure mode in action. |
+| 25 | **Horizontal slicing** | Plan or implementation structured as horizontal layers: write all tests first, THEN all implementation; or finish all schema changes, THEN all API changes, THEN all UI. Each layer "feels complete" independently but no slice is end-to-end working until the very end. A blocker mid-stack means rework across every prior layer. Symptom in plans: phase names like "Phase 1: schemas / Phase 2: APIs / Phase 3: UI". Symptom in code: `tests/*` ships green for weeks while `src/*` is empty. | Vertical slices ("tracer bullets"): one feature end-to-end through every layer at once, then the next feature. Each slice ships a working narrow path; rework cost is bounded by one slice. Test: "If I stop here, is something working?" If no — you horizontally sliced. (Pattern named by Matt Pocock's `/tdd` skill at https://github.com/mattpocock/skills; the discipline applies more broadly than TDD.) |
 
 ---
 
@@ -279,6 +285,7 @@ These are documented tendencies. The agent must actively guard against them.
 | User says "I edited X" and the agent regenerates X | Failure mode #22 (overwrite user edits) is active | Check git blame. Preserve user modifications. |
 | User asks a question and the agent starts modifying files | Failure mode #23 (question-as-instruction) is active | Stop modifying. Present options. Wait for explicit direction. |
 | Self-assessment notes "no runtime verification" but treats it as incidental | Failure mode #24 (build-passes-ship-it) is active | Phase 3E was skipped. Launch the application before committing. If verification is impossible in this environment, state that explicitly — do not silently treat build-clean as runtime-clean. |
+| Plan phases or commits map to horizontal layers (all tests, then all impl; all schema, then all API, then all UI) | Failure mode #25 (horizontal slicing) is active | Restructure as vertical slices: one end-to-end feature at a time. Apply the "if I stop here, does something work?" test to each phase. |
 
 **If you detect 2+ warning signs: STOP.** Re-read this document from the top. Do not continue until you've re-internalized the protocol. The cost of pausing to re-read is 2 minutes. The cost of a ghost session or failed delivery is the user's trust.
 
