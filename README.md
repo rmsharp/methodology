@@ -255,7 +255,7 @@ The framework is agent-independent — it works with any AI coding agent that su
   - `RESEARCH_DOCUMENTATION_WORKSTREAM.md` — render-verification could cite `/verify`.
   - `SESSION_RUNNER.md` FM mechanical-enforcement column — depends on hook-conversion design.
   - `DEVELOPMENT_WORKSTREAM.md` citation audit beyond Issue Lifecycle.
-- **Backward compatible.** No principle, phase, or quality-gate change. FM #25 appended (FMs 1–24 unchanged). Phase 2 step renumbered 1→2..7→8 with a single Phase 2 cross-reference in `HOW_TO_USE.md` that cites the step by name (so the renumber is safe). Adopters who never use the recommended skills continue to operate the methodology as written; the citations are recommendations, not hard dependencies.
+- **Backward compatible.** No principle, phase, or quality-gate change. FM #25 appended (FMs 1–24 unchanged). Phase 2 step renumbered 1→2..7→8; the Phase 2 cross-references in `HOW_TO_USE.md` all cite by name, never by step number, so the renumber is safe. Adopters who never use the recommended skills continue to operate the methodology as written; the citations are recommendations, not hard dependencies.
 
 ### What's New in v2.5
 
