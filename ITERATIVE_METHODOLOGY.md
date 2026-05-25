@@ -285,7 +285,7 @@ Every session follows these phases in order. Phases are sequential and gated —
 
 ## Session Types
 
-The 6-phase model assumes a full Research→Create→Present→Implement→Verify cycle. Not all sessions follow this pattern. The methodology recognizes three session types:
+The 6-phase model assumes a full Research→Create→Present→Implement→Verify cycle. Not all sessions follow this pattern. The methodology recognizes four session types:
 
 ### Implementation Sessions (Standard)
 Follow all 6 phases. The deliverable is working code, a design document, or an artifact.
@@ -299,6 +299,13 @@ The deliverable is an analysis document — a code review, audit report, or plan
 The deliverable is a plan or handoff document that sets up a future implementation session. These sessions invest heavily in Phase 2 (Research) and produce a Phase 3 design document that another session will implement. The value is front-loaded: a good plan collapses multi-session implementation work into a single session.
 
 **Speed warning:** High-quality plans can make implementation sessions complete very fast. This is the plan's success, not evidence that verification can be skipped. (See Phase 5 anti-patterns: "Treating speed as evidence of quality.")
+
+### Debugging Sessions
+The deliverable is a closed bug — a regression fixed, a flake stabilized, an incident root-caused. Debugging has a different epistemic structure than the other three types: you are *searching for a hidden cause*, not building toward a known shape. Treating debugging as "implementation with a bug-shaped requirement" hides this distinction and produces predictable failures (instrumentation left in commits, single-hypothesis tunnel vision, feedback loops too slow to be useful, "fixes" that pass without a regression test).
+
+The 6 phases still apply, but Phase 2 (Research) is dominated by building a feedback loop that makes the bug observable on demand, and Phase 6 (Verify) expands to remove the debug instrumentation before commit (the cleanup gate at `SESSION_RUNNER.md` §Phase 3F).
+
+The methodology recommends Pocock's `/diagnose` skill for the actual debugging workflow — see [`starter-kit/RECOMMENDED_SKILLS.md`](starter-kit/RECOMMENDED_SKILLS.md). Methodology recognizes debugging as a session type; `/diagnose` runs it. When the skill is unavailable, the operative rules are: build the feedback loop before forming hypotheses, change one variable at a time, write the regression test before the fix, remove all debug instrumentation before commit.
 
 ---
 
