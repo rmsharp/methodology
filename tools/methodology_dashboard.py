@@ -62,8 +62,14 @@ from collections import defaultdict
 
 # === CONSTANTS ===
 
+# Canonical dashboard version. Source of truth: methodology/starter-kit/methodology_dashboard.py.
+# Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
+# carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
+# re-sync from the canonical. Bump on any change to the canonical script.
+DASHBOARD_VERSION = "2.6.0"
+
 ROOT = Path(__file__).parent
-EXCLUDE_DIRS = {"methodology", ".git", "__pycache__", "node_modules", ".venv", "venv"}
+EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
 WALK_SKIP = {".git", ".claude", "node_modules", "__pycache__", ".venv", "venv", "target",
              "build", "dist", ".build", "DerivedData", "Pods", ".gradle"}
 
@@ -603,6 +609,110 @@ def collect_dependency_metrics(path):
     return {"dependency_files": dep_files, "total_dependencies": total}
 
 
+def collect_github_metrics(path):
+    """Collect open issues and PR counts via gh CLI."""
+    metrics = {"open_issues": None, "open_prs": None, "repo_slug": None}
+
+    # Parse remote URL to get owner/repo
+    remote = git_cmd(path, "remote", "get-url", "origin")
+    if not remote:
+        return metrics
+
+    # Parse SSH or HTTPS URLs
+    slug = None
+    if "github.com" in remote:
+        # git@github.com:owner/repo.git or https://github.com/owner/repo.git
+        for prefix in ["git@github.com:", "https://github.com/"]:
+            if remote.startswith(prefix):
+                slug = remote[len(prefix):].rstrip(".git")
+                break
+
+    if not slug:
+        return metrics
+
+    metrics["repo_slug"] = slug
+
+    try:
+        result = subprocess.run(
+            ["gh", "api", f"repos/{slug}", "--jq",
+             '{issues: .open_issues_count}'],
+            capture_output=True, text=True, timeout=10
+        )
+        if result.returncode == 0:
+            data = json.loads(result.stdout.strip())
+            metrics["open_issues"] = data.get("issues", 0)
+    except (subprocess.TimeoutExpired, FileNotFoundError, OSError, json.JSONDecodeError):
+        pass
+
+    try:
+        result = subprocess.run(
+            ["gh", "api", f"repos/{slug}/pulls?state=open&per_page=1",
+             "--jq", "length"],
+            capture_output=True, text=True, timeout=10
+        )
+        if result.returncode == 0:
+            count_str = result.stdout.strip()
+            metrics["open_prs"] = int(count_str) if count_str.isdigit() else 0
+    except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+        pass
+
+    return metrics
+
+
+def collect_vulnerability_metrics(path):
+    """Scan for dependency vulnerabilities using available audit tools."""
+    metrics = {"vulnerabilities": [], "total_vulns": 0, "scanned": False}
+
+    # npm audit
+    pkg = path / "package.json"
+    if pkg.exists() and (path / "node_modules").exists():
+        try:
+            result = subprocess.run(
+                ["npm", "audit", "--json"],
+                capture_output=True, text=True, timeout=30, cwd=str(path)
+            )
+            # npm audit returns non-zero when vulns found — that's expected
+            data = json.loads(result.stdout)
+            vuln_meta = data.get("metadata", {}).get("vulnerabilities", {})
+            total = sum(vuln_meta.get(s, 0) for s in ["low", "moderate", "high", "critical"])
+            if total > 0 or result.returncode == 0:
+                metrics["scanned"] = True
+                metrics["total_vulns"] += total
+                for sev in ["critical", "high", "moderate", "low"]:
+                    count = vuln_meta.get(sev, 0)
+                    if count > 0:
+                        metrics["vulnerabilities"].append({
+                            "source": "npm", "severity": sev, "count": count
+                        })
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError,
+                json.JSONDecodeError, KeyError):
+            pass
+    elif pkg.exists() and (path / "package-lock.json").exists():
+        # Can audit without node_modules if lock file exists
+        try:
+            result = subprocess.run(
+                ["npm", "audit", "--json", "--package-lock-only"],
+                capture_output=True, text=True, timeout=30, cwd=str(path)
+            )
+            data = json.loads(result.stdout)
+            vuln_meta = data.get("metadata", {}).get("vulnerabilities", {})
+            total = sum(vuln_meta.get(s, 0) for s in ["low", "moderate", "high", "critical"])
+            if total > 0 or result.returncode == 0:
+                metrics["scanned"] = True
+                metrics["total_vulns"] += total
+                for sev in ["critical", "high", "moderate", "low"]:
+                    count = vuln_meta.get(sev, 0)
+                    if count > 0:
+                        metrics["vulnerabilities"].append({
+                            "source": "npm", "severity": sev, "count": count
+                        })
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError,
+                json.JSONDecodeError, KeyError):
+            pass
+
+    return metrics
+
+
 def collect_coverage_config(path):
     configs = []
     checks = [
@@ -782,6 +892,16 @@ def assess_risks(metrics):
     if metrics["git"]["branch_count"] > 5:
         risks.append({"severity": "low", "description": f"Multiple branches ({metrics['git']['branch_count']}) may indicate incomplete merges"})
 
+    # Vulnerability risks
+    vulns = metrics.get("vulnerabilities", {})
+    if vulns.get("scanned"):
+        crit = sum(v["count"] for v in vulns.get("vulnerabilities", []) if v["severity"] == "critical")
+        high = sum(v["count"] for v in vulns.get("vulnerabilities", []) if v["severity"] == "high")
+        if crit > 0:
+            risks.append({"severity": "critical", "description": f"{crit} critical dependency vulnerabilit{'y' if crit == 1 else 'ies'}"})
+        if high > 0:
+            risks.append({"severity": "high", "description": f"{high} high-severity dependency vulnerabilit{'y' if high == 1 else 'ies'}"})
+
     # Sort by severity
     severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
     risks.sort(key=lambda r: severity_order.get(r["severity"], 99))
@@ -846,6 +966,9 @@ def collect_all(path):
     deps = collect_dependency_metrics(path)
     cov = collect_coverage_config(path)
 
+    github = collect_github_metrics(path)
+    vulns = collect_vulnerability_metrics(path)
+
     metrics = {
         "name": name,
         "path": str(path),
@@ -857,6 +980,8 @@ def collect_all(path):
         "methodology": meth,
         "dependencies": deps,
         "coverage_configs": cov,
+        "github": github,
+        "vulnerabilities": vulns,
     }
 
     metrics["scores"] = {
@@ -1052,6 +1177,32 @@ def render_project_card(p):
     else:
         dep_html = "No dependency files detected"
 
+    # Vulnerabilities
+    vulns = p.get("vulnerabilities", {})
+    if vulns.get("scanned") and vulns.get("vulnerabilities"):
+        vuln_html = ""
+        for v in vulns["vulnerabilities"]:
+            vc = SEVERITY_COLORS.get(v["severity"], "#aaa")
+            vuln_html += f'<span class="risk-badge" style="background: {vc}">{v["severity"].upper()}: {v["count"]}</span> '
+        vuln_html = f'<div class="kv">{vuln_html} ({vulns["total_vulns"]} total)</div>'
+    elif vulns.get("scanned"):
+        vuln_html = '<div class="kv" style="color: #44ff88">No vulnerabilities found</div>'
+    else:
+        vuln_html = '<div class="kv" style="color: #888">Not scanned</div>'
+
+    # GitHub
+    gh = p.get("github", {})
+    if gh.get("repo_slug"):
+        gh_parts = []
+        if gh.get("open_issues") is not None:
+            gh_parts.append(f'Issues: <b>{gh["open_issues"]}</b>')
+        if gh.get("open_prs") is not None:
+            gh_parts.append(f'Open PRs: <b>{gh["open_prs"]}</b>')
+        gh_html = " &bull; ".join(gh_parts) if gh_parts else "Connected"
+        gh_html = f'<div class="kv">{gh_html} &bull; <a href="https://github.com/{esc(gh["repo_slug"])}" style="color: #44aaff">{esc(gh["repo_slug"])}</a></div>'
+    else:
+        gh_html = '<div class="kv" style="color: #888">No GitHub remote</div>'
+
     # Git info
     git = p["git"]
     days = git["days_since_last_commit"]
@@ -1145,6 +1296,16 @@ def render_project_card(p):
                         <h4>Dependencies</h4>
                         <div class="kv">{dep_html}</div>
                     </div>
+
+                    <div class="card-section">
+                        <h4>Vulnerabilities</h4>
+                        {vuln_html}
+                    </div>
+
+                    <div class="card-section">
+                        <h4>GitHub</h4>
+                        {gh_html}
+                    </div>
                 </div>
 
                 <div class="card-col">
@@ -1189,7 +1350,7 @@ def render_project_card(p):
     </div>'''
 
 
-def render_html(portfolio, projects, title="METHODOLOGY DASHBOARD"):
+def render_html(portfolio, projects, title="METHODOLOGY DASHBOARD", trend_html=""):
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     h_color = health_color(portfolio["health_score"])
 
@@ -1288,6 +1449,12 @@ h4 {{ color: #8b949e; font-size: 13px; font-weight: 600; margin-bottom: 6px; tex
 .activity-bar {{ height: 100%; border-radius: 4px; transition: width 0.3s; }}
 .activity-nums {{ width: 130px; font-size: 12px; color: #8b949e; }}
 
+.trend-chart {{ display: flex; flex-direction: column; gap: 4px; }}
+.trend-row {{ display: flex; align-items: center; gap: 12px; }}
+.trend-ts {{ width: 140px; font-size: 11px; color: #8b949e; text-align: right; font-family: monospace; }}
+.trend-val {{ width: 30px; font-size: 13px; font-weight: 700; text-align: right; }}
+.trend-risk {{ width: 60px; font-size: 11px; color: #8b949e; }}
+
 .project-card {{
     background: #161b22;
     border: 1px solid #30363d;
@@ -1365,7 +1532,7 @@ h4 {{ color: #8b949e; font-size: 13px; font-weight: 600; margin-bottom: 6px; tex
 
 <div class="header">
     <h1>{esc(title)}</h1>
-    <div class="header-time">Generated: {now}</div>
+    <div class="header-time">Generated: {now} &bull; dashboard v{DASHBOARD_VERSION}</div>
 </div>
 
 <div class="summary-bar">
@@ -1401,6 +1568,8 @@ h4 {{ color: #8b949e; font-size: 13px; font-weight: 600; margin-bottom: 6px; tex
     <div class="section-header"><h2>Commit Activity (30 Days)</h2></div>
     <div class="section-body">{render_activity_bars(projects)}</div>
 </div>
+
+{f'<div class="section"><div class="section-header"><h2>Historical Trends</h2></div><div class="section-body">{trend_html}</div></div>' if trend_html else ''}
 
 <div class="section">
     <div class="section-header"><h2>Project Details</h2></div>
@@ -1523,6 +1692,120 @@ setInterval(() => {{
 </html>'''
 
 
+# === HISTORICAL TRENDING ===
+
+HISTORY_FILE = "dashboard_history.jsonl"
+
+
+def append_history(root, portfolio, projects):
+    """Append current run metrics to JSONL history file."""
+    entry = {
+        "timestamp": datetime.now().isoformat(),
+        "portfolio": {
+            "health_score": portfolio["health_score"],
+            "project_count": portfolio["project_count"],
+            "total_commits": portfolio["total_commits"],
+            "risk_counts": portfolio.get("risk_counts", {}),
+        },
+        "projects": {
+            p["name"]: {
+                "health": p["scores"]["health"]["total"],
+                "risk": worst_risk(p["scores"]["risks"]),
+                "activity": p["scores"]["activity"],
+                "commits": p["git"]["total_commits"],
+                "test_files": p["tests"]["test_file_count"],
+                "vulns": p.get("vulnerabilities", {}).get("total_vulns", 0),
+            }
+            for p in projects
+        },
+    }
+
+    history_path = root / HISTORY_FILE
+    try:
+        with open(history_path, "a") as f:
+            f.write(json.dumps(entry) + "\n")
+    except OSError:
+        pass
+
+
+def load_history(root, max_entries=30):
+    """Load recent history entries."""
+    history_path = root / HISTORY_FILE
+    entries = []
+    if not history_path.exists():
+        return entries
+    try:
+        with open(history_path, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    try:
+                        entries.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        continue
+    except OSError:
+        pass
+    return entries[-max_entries:]
+
+
+def render_trend_section(history):
+    """Render portfolio health trend as a simple sparkline table."""
+    if len(history) < 2:
+        return ""
+
+    # Portfolio health over time
+    points = []
+    for entry in history:
+        ts = entry.get("timestamp", "")[:16].replace("T", " ")
+        score = entry.get("portfolio", {}).get("health_score", 0)
+        risk_counts = entry.get("portfolio", {}).get("risk_counts", {})
+        hi_risk = risk_counts.get("critical", 0) + risk_counts.get("high", 0)
+        points.append((ts, score, hi_risk))
+
+    rows = ""
+    max_score = max(p[1] for p in points) or 1
+    for ts, score, hi_risk in points:
+        pct = int((score / 100) * 100)
+        c = health_color(score)
+        rows += f'''<div class="trend-row">
+            <span class="trend-ts">{esc(ts)}</span>
+            <div class="activity-bar-bg" style="flex: 1">
+                <div class="activity-bar" style="width: {pct}%; background: {c}"></div>
+            </div>
+            <span class="trend-val" style="color: {c}">{score}</span>
+            <span class="trend-risk">Risk: {hi_risk}</span>
+        </div>'''
+
+    # Per-project trends (last vs first)
+    first_projects = history[0].get("projects", {})
+    last_projects = history[-1].get("projects", {})
+    delta_rows = ""
+    for name in sorted(last_projects.keys()):
+        curr = last_projects[name].get("health", 0)
+        prev = first_projects.get(name, {}).get("health", 0)
+        delta = curr - prev
+        if delta != 0:
+            arrow = "&#9650;" if delta > 0 else "&#9660;"
+            dc = "#44ff88" if delta > 0 else "#ff4444"
+            delta_rows += f'<tr><td>{esc(name)}</td><td class="num">{prev}</td><td class="num">{curr}</td><td style="color: {dc}">{arrow} {delta:+d}</td></tr>'
+
+    delta_table = ""
+    if delta_rows:
+        delta_table = f'''<div class="card-section" style="margin-top: 16px">
+            <h4>Project Health Changes (First &rarr; Latest)</h4>
+            <table class="detail-table">
+                <thead><tr><th>Project</th><th>First</th><th>Latest</th><th>Delta</th></tr></thead>
+                <tbody>{delta_rows}</tbody>
+            </table>
+        </div>'''
+
+    return f'''<div class="dashboard-section">
+        <h3>Portfolio Health Trend ({len(points)} snapshots)</h3>
+        <div class="trend-chart">{rows}</div>
+        {delta_table}
+    </div>'''
+
+
 # === MAIN ===
 
 def main():
@@ -1553,7 +1836,13 @@ def main():
     projects.sort(key=lambda p: p["scores"]["health"]["total"])
 
     portfolio = aggregate_portfolio(projects)
-    html = render_html(portfolio, projects, title=title)
+
+    # Historical trending
+    append_history(root, portfolio, projects)
+    history = load_history(root)
+    trend_html = render_trend_section(history)
+
+    html = render_html(portfolio, projects, title=title, trend_html=trend_html)
 
     output_path = root / "dashboard.html"
     output_path.write_text(html)
@@ -1586,11 +1875,16 @@ def main():
     hi_risk = rc.get("critical", 0) + rc.get("high", 0)
 
     print(f"\n{D}{'─'*W}{R}")
-    print(f"  {B}{title}{R}  {D}│{R}  {len(projects)} projects")
+    print(f"  {B}{title}{R}  {D}│{R}  {len(projects)} projects  {D}│  v{DASHBOARD_VERSION}{R}")
     print(f"{D}{'─'*W}{R}")
+    total_vulns = sum(p.get("vulnerabilities", {}).get("total_vulns", 0) for p in projects)
+    total_issues = sum(p.get("github", {}).get("open_issues", 0) or 0 for p in projects)
     print(f"  Health: {pc}{B}{ph}/100{R}    "
           f"High+ Risk: {c_risk('high') if hi_risk else c_risk('healthy')}{B}{hi_risk}{R}    "
           f"Commits: {B}{portfolio['total_commits']:,}{R}")
+    print(f"  Issues: {B}{total_issues}{R}    "
+          f"Vulns: {c_risk('high') if total_vulns else c_risk('healthy')}{B}{total_vulns}{R}    "
+          f"History: {B}{len(load_history(root))}{R} snapshots")
     print(f"{D}{'─'*W}{R}")
 
     # Column headers
