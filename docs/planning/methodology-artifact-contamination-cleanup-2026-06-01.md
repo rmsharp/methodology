@@ -101,7 +101,7 @@ All are gitignored as `dashboard.html` in their repos → safe untracked cruft (
 ```
 shasum -a 256 methodology/starter-kit/methodology_dashboard.py methodology_dashboard.py   # identical
 python3 methodology_dashboard.py --no-open        # portfolio mode: 21 projects, exit 0
-( cd wsjt-l && python3 ../methodology_dashboard.py --no-open ) # sanity: single-project still runs
+( cd wsjt-l && python3 ../methodology_dashboard.py --no-open ) # NOTE (F3): this runs PORTFOLIO mode, not single-project (ROOT=script home, not cwd). See the Phase 2 verify block for true single-project testing via a resident copy.
 ```
 **Commit:** methodology repo, one commit. **STOP — this phase is one session.**
 
@@ -112,10 +112,26 @@ python3 methodology_dashboard.py --no-open        # portfolio mode: 21 projects,
 3. Resync portfolio root.
 **DONE looks like:** running the script inside a submodule-bearing repo yields a single-row dashboard for that repo; `--with-submodules` reproduces the old multi-row view; stale-copy warning fires on an older version.
 **Verify:**
+> ⚠ **F3 correction (S506 found, S507 applied).** `( cd <repo> && python3 ../methodology_dashboard.py )` runs **PORTFOLIO mode, not single-project** — `ROOT = Path(__file__).parent` derives from the script's home, not cwd. The original commands here did NOT exercise single-project mode and could not reproduce the submodule misfire. Single-project mode requires a copy **resident inside a git repo**.
 ```
-( cd rad-con && python3 ../methodology_dashboard.py --no-open ) && grep -c "<tr" rad-con/dashboard.html   # expect single-project (no submodule rows)
-( cd rad-con && python3 ../methodology_dashboard.py --with-submodules --no-open )                          # old behavior restored
-python3 methodology_dashboard.py --no-open   # portfolio mode unaffected: 21 projects
+# (a) submodule misfire fixed — default scans the project only (S507 used a throwaway repo to avoid
+#     touching real repos; a resident copy inside rad-con also works if backed-up/restored):
+CANON=methodology/starter-kit/methodology_dashboard.py
+mkdir -p /tmp/sub && git -C /tmp/sub init -q && git -C /tmp/sub commit -q --allow-empty -m i
+mkdir -p /tmp/main && git -C /tmp/main init -q && git -C /tmp/main commit -q --allow-empty -m i
+git -C /tmp/main -c protocol.file.allow=always submodule add -q /tmp/sub sub && git -C /tmp/main commit -q -m s
+cp "$CANON" /tmp/main/methodology_dashboard.py
+( cd /tmp/main && python3 methodology_dashboard.py --no-open )                 # expect "… │ 1 projects │"
+( cd /tmp/main && python3 methodology_dashboard.py --with-submodules --no-open ) # expect "… │ 2 projects │" (old behavior)
+# rad-con resident variant (its copy is git-TRACKED): cp "$CANON" rad-con/ ; cd rad-con ; python3 methodology_dashboard.py --no-open ;
+#   then RESTORE: git -C rad-con checkout -- methodology_dashboard.py ; and restore rad-con/dashboard.html + dashboard_history.jsonl.
+# (b) portfolio mode unaffected:
+python3 methodology_dashboard.py --no-open      # 21 projects, exit 0, v2.6.1 in header, no stale warning on stderr
+# (c) --sync preview writes nothing and flags git-tracked copies for Phase 3 untrack:
+python3 methodology_dashboard.py --sync --dry-run
+# (d) stale-version warning fires when a copy < canonical (scratch dir under the portfolio, version downgraded):
+#   mkdir -p .scratch && cp "$CANON" .scratch/ && sed -i '' 's/2.6.1/2.5.0/' .scratch/methodology_dashboard.py
+#   ( cd .scratch && python3 methodology_dashboard.py --no-open )   # expect "⚠ … stale …" on stderr ; rm -rf .scratch
 ```
 **Commit:** methodology repo, one commit. **STOP.**
 

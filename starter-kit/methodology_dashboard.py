@@ -54,6 +54,8 @@ CUSTOMIZATION
 import json
 import os
 import platform
+import re
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timedelta
@@ -66,7 +68,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.6.0"
+DASHBOARD_VERSION = "2.6.1"
 
 ROOT = Path(__file__).parent
 EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
@@ -171,28 +173,159 @@ def open_in_browser(filepath):
         print(f"  Could not open browser. Open manually: {filepath}")
 
 
+# === CANONICAL / SYNC ===
+
+# The canonical dashboard lives at <portfolio>/methodology/starter-kit/methodology_dashboard.py.
+# Every other copy (portfolio root + per-project) is a synced copy of it. The helpers below let
+# any copy locate the canonical, compare versions, warn when it has gone stale, and (re)distribute
+# the canonical to the portfolio root + every project (the --sync flag).
+CANONICAL_REL = Path("methodology") / "starter-kit" / "methodology_dashboard.py"
+
+_VERSION_RE = re.compile(r'''^DASHBOARD_VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE)
+
+
+def find_canonical(start):
+    """Walk up from `start`, returning the resolved path to the canonical dashboard
+    (methodology/starter-kit/methodology_dashboard.py), or None if not found locally.
+    Silent-None lets adopters with no sibling methodology repo run without false warnings."""
+    start = Path(start).resolve()
+    for d in (start, *start.parents):
+        candidate = d / CANONICAL_REL
+        if candidate.is_file():
+            return candidate.resolve()
+    return None
+
+
+def parse_version(path):
+    """Read the DASHBOARD_VERSION string from a dashboard copy without importing it."""
+    try:
+        text = Path(path).read_text()
+    except OSError:
+        return None
+    m = _VERSION_RE.search(text)
+    return m.group(1) if m else None
+
+
+def version_key(v):
+    """Comparable tuple for a dotted version string (non-numeric chunks -> 0)."""
+    key = []
+    for chunk in str(v).split("."):
+        digits = "".join(ch for ch in chunk if ch.isdigit())
+        key.append(int(digits) if digits else 0)
+    return tuple(key)
+
+
+def check_stale_version():
+    """Best-effort staleness check: if a newer canonical exists locally, warn on stderr.
+    Silent when the canonical can't be found or when this copy IS the canonical."""
+    self_path = Path(__file__).resolve()
+    canonical = find_canonical(self_path.parent)
+    if not canonical or canonical == self_path:
+        return
+    canon_ver = parse_version(canonical)
+    if canon_ver and version_key(canon_ver) > version_key(DASHBOARD_VERSION):
+        sys.stderr.write(
+            f"  ⚠ methodology_dashboard.py is stale: this copy is v{DASHBOARD_VERSION}, "
+            f"canonical is v{canon_ver}.\n"
+            f"    Re-sync: python3 {canonical} --sync\n"
+        )
+
+
+def sync_dashboards(start, dry_run=False):
+    """Copy the canonical dashboard to the portfolio root + every discovered project.
+    In --dry-run mode nothing is written; the planned actions are printed. Returns the
+    count of files that were (or would be) changed.
+
+    NOTE: a live sync writes methodology_dashboard.py into every project, including the
+    repos where it is still git-tracked — those need the Phase 3 `git rm --cached` +
+    per-repo commit discipline. Tracked targets are flagged in the output."""
+    canonical = find_canonical(start)
+    if not canonical:
+        sys.stderr.write("  Cannot locate canonical methodology/starter-kit/"
+                         "methodology_dashboard.py — nothing synced.\n")
+        return 0
+    # .../starter-kit/methodology_dashboard.py -> starter-kit -> methodology -> portfolio root
+    portfolio_root = canonical.parent.parent.parent
+    canon_text = canonical.read_text()
+
+    targets = [portfolio_root / "methodology_dashboard.py"]
+    for proj in discover_projects(portfolio_root):
+        targets.append(proj / "methodology_dashboard.py")
+
+    print(f"Canonical: {canonical} (v{DASHBOARD_VERSION})")
+    print(f"{'DRY RUN — no files written.' if dry_run else 'Syncing.'} "
+          f"Targets: portfolio root + {len(targets) - 1} project(s)\n")
+
+    changed = inspected = 0
+    for t in targets:
+        t = t.resolve()
+        if t == canonical:
+            continue
+        inspected += 1
+        existing = t.read_text() if t.exists() else None
+        if existing == canon_text:
+            action = "unchanged"
+        elif existing is None:
+            action = "create"
+        else:
+            action = "update"
+        note = ""
+        if t.exists() and git_cmd(t.parent, "ls-files", "--error-unmatch", t.name):
+            note = "  [git-tracked — needs Phase 3 untrack]"
+        if action != "unchanged":
+            changed += 1
+            if not dry_run:
+                shutil.copyfile(canonical, t)
+        try:
+            label = t.relative_to(portfolio_root)
+        except ValueError:
+            label = t
+        print(f"  {action:<9s} {label}{note}")
+
+    verb = "Would change" if dry_run else "Changed"
+    print(f"\n  {verb} {changed} of {inspected} target(s).")
+    return changed
+
+
+def print_usage():
+    print(f"methodology_dashboard.py v{DASHBOARD_VERSION} — portfolio/project health scanner")
+    print("")
+    print("Usage: python3 methodology_dashboard.py [options]")
+    print("")
+    print("Options:")
+    print("  --no-open          Do not open the generated dashboard.html in a browser.")
+    print("  --with-submodules  In single-project mode, also scan git submodules as")
+    print("                     separate entries (default: scan the project only).")
+    print("  --sync             Copy the canonical dashboard to the portfolio root and")
+    print("                     every discovered project (use --dry-run to preview).")
+    print("  --dry-run          With --sync, show planned changes without writing.")
+    print("  -h, --help         Show this help and exit.")
+
+
 # === DISCOVERY ===
 
-def discover_projects(root):
+def discover_projects(root, with_submodules=False):
     """Discover projects to scan.
 
-    Two modes, auto-detected:
-    - Single-project mode: if root itself is a git repo, scan it plus any
-      git submodules (each submodule appears as its own entry).
-    - Portfolio mode: if root is NOT a git repo, scan sibling directories
-      that contain .git/ (the original behavior).
+    Two modes, auto-detected by whether `root` is itself a git repo:
+    - Single-project mode (root is a git repo): scan the project only. Git submodules are
+      scanned as separate entries ONLY when with_submodules=True (CLI: --with-submodules).
+      Default is project-only: expanding submodules by default rendered a mislabeled
+      mini-portfolio inside submodule-bearing repos (e.g. rad-con's 4 submodules).
+    - Portfolio mode (root is NOT a git repo): scan sibling directories that contain .git/.
     """
     # Single-project mode: root is a git repo
     if (root / ".git").exists():
         projects = [root]
-        # Discover git submodules
-        submodule_output = git_cmd(root, "submodule", "status")
-        for line in submodule_output.splitlines():
-            parts = line.strip().lstrip("+-").split()
-            if len(parts) >= 2:
-                submodule_path = root / parts[1]
-                if submodule_path.is_dir() and (submodule_path / ".git").exists():
-                    projects.append(submodule_path)
+        if with_submodules:
+            # Opt-in: discover git submodules (each appears as its own entry)
+            submodule_output = git_cmd(root, "submodule", "status")
+            for line in submodule_output.splitlines():
+                parts = line.strip().lstrip("+-").split()
+                if len(parts) >= 2:
+                    submodule_path = root / parts[1]
+                    if submodule_path.is_dir() and (submodule_path / ".git").exists():
+                        projects.append(submodule_path)
         return projects
 
     # Portfolio mode: scan sibling directories
@@ -1809,9 +1942,23 @@ def render_trend_section(history):
 # === MAIN ===
 
 def main():
-    root = ROOT
+    args = sys.argv[1:]
 
-    project_paths = discover_projects(root)
+    if "--help" in args or "-h" in args:
+        print_usage()
+        return
+
+    if "--sync" in args:
+        sync_dashboards(Path(__file__).resolve().parent, dry_run="--dry-run" in args)
+        return
+
+    # Warn (best-effort) if this copy is older than the canonical.
+    check_stale_version()
+
+    root = ROOT
+    with_submodules = "--with-submodules" in args
+
+    project_paths = discover_projects(root, with_submodules=with_submodules)
 
     if not project_paths:
         print("Methodology Dashboard: No projects found.")
