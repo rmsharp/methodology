@@ -135,6 +135,8 @@ Every session has exactly ONE deliverable. When it's complete, you close out. Yo
 
 Every session follows these phases in order. Phases are sequential and gated — you cannot skip a phase or enter the next one early.
 
+**Session shape does not change the phase model.** A vertical-slice session (Principle 9) runs the same six phases once, for its ONE capability — the slice bundles *layers* of one deliverable, never a plan with its implementation (failure mode #18's discriminator) and never a second capability (failure mode #26). The vertical-slice allowance adds a gate; it removes no phase.
+
 ### Phase 1: Pre-Flight
 
 **Purpose:** Verify the workspace is clean, the prior state is understood, and nothing is broken before you touch anything.
