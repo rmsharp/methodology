@@ -50,7 +50,31 @@ Repo HEAD at verification: `b8be62ffacb0` (2026-05-20).
 | `/code-review` | [`workstreams/AUDIT_WORKSTREAM.md`](../workstreams/AUDIT_WORKSTREAM.md) — correctness review |
 | `/review` | [`workstreams/AUDIT_WORKSTREAM.md`](../workstreams/AUDIT_WORKSTREAM.md) — PR review |
 | `/security-review` | [`workstreams/AUDIT_WORKSTREAM.md`](../workstreams/AUDIT_WORKSTREAM.md) — security review |
-| `/fewer-permission-prompts` | [`BOOTSTRAP.md`](BOOTSTRAP.md) — permission setup |
+
+---
+
+## Skills not recommended (and why)
+
+This index is a *vetted snapshot* of skills the methodology actively cites at specific phases or workstreams. Skills not listed in the tables above are either out of scope for the methodology's content, adequately covered by existing methodology discipline at higher rigor, or architecturally incompatible with the methodology's session-arc model.
+
+The entries below name skills considered during the v2.6 audit (or surfaced after) that were *deliberately* not cited, with a one-line rationale each. This subsection exists to (a) close the door on future re-litigation and (b) make the audit decisions discoverable from this index rather than only from the underlying [`docs/audits/2026-05-02-mattpocock-skills-evaluation.md`](../docs/audits/2026-05-02-mattpocock-skills-evaluation.md).
+
+**See also: [`ITERATIVE_METHODOLOGY.md`](../ITERATIVE_METHODOLOGY.md) §Recommended Skills — "A skill is not a phase."** A recommended skill that pulls a session across a hard gate is failure mode #2 wearing a tool costume. That principle applies to *every* skill, recommended or not — including the ones below if an adopter installs them independently.
+
+| Skill | Source | Why not cited |
+|---|---|---|
+| `/loop`, `/schedule` | Claude Code built-ins | Orchestration, not engineering. The methodology's phases are sequential and gated; loop/schedule belong above the session, not inside it. |
+| `/to-issues` | Pocock (`engineering/to-issues`) | Covered by Learning #30 (table-first, decisions batch, parallel creation, cross-reference verification). The methodology version is materially more rigorous. |
+| `/to-prd` | Pocock (`engineering/to-prd`) | Covered by Planning Sessions discipline. `/to-prd` synthesizes what's been discussed; methodology's planning sessions require grep-verified evidence inventories (per FM #19, plan-mode bypass). |
+| `/tdd` | Pocock (`engineering/tdd`) | The vertical-slicing framing is incorporated as FM #25; the red-green-refactor workflow is left to adopter preference. |
+| `/handoff` | Pocock (`productivity/handoff`) | Targets ephemeral single-arc compaction to OS temp; methodology requires repo-versioned cross-session handoff notes scored by the next session (Phase 3D). Different scope, not a substitute. |
+| `/caveman` | Pocock (`productivity/caveman`) | Stylistic compression; the methodology's length discipline (Learning #34: ≤150 lines for handoffs) addresses token reduction without changing voice. |
+| `/zoom-out` | Pocock (`engineering/zoom-out`) | Covered better by Learnings #28/#29 (Plan-subagent architecture surveys with file:line citations). |
+| `/write-a-skill` | Pocock (`productivity/write-a-skill`) | The methodology doesn't ship its own skills (per the v2.6 principle). Becomes relevant only if that posture changes. |
+| `/prototype` | Pocock (`engineering/prototype`) | Not yet audited (Pocock shipped this after the 2026-05-02 audit). Future-audit candidate. |
+| `/setup-matt-pocock-skills` | Pocock (`engineering/setup-matt-pocock-skills`) | Out of scope — installs Pocock's skills; methodology's `BOOTSTRAP.md` is the equivalent for the methodology framework itself. Different concerns. |
+
+If you encounter a skill that should be added to this section because it was considered and declined, open an issue or PR.
 
 ---
 
