@@ -25,7 +25,7 @@ This file is the canonical index of Claude Code skills the methodology recommend
 | Skill | Where methodology recommends it | Phases spanned (compression risk) | Source path | Known-good SHA |
 |---|---|---|---|---|
 | [`/git-guardrails-claude-code`](https://github.com/mattpocock/skills/tree/main/skills/misc/git-guardrails-claude-code) | [`starter-kit/SAFEGUARDS.md`](SAFEGUARDS.md) — recommended mechanical enforcement of "Blast Radius Limits" | Setup only, not in-session (zero) | `skills/misc/git-guardrails-claude-code` | `62f43a18177b` (2026-04-28) |
-| [`/grill-me`](https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me) | [`ITERATIVE_METHODOLOGY.md`](../ITERATIVE_METHODOLOGY.md) §Phase 2.5 (optional Pre-Create Grill) | Phase 2.5 only (low) | `skills/productivity/grill-me` | `62f43a18177b` (2026-04-28) |
+| [`/grill-me`](https://github.com/mattpocock/skills/tree/main/skills/productivity/grill-me) | [`ITERATIVE_METHODOLOGY.md`](../ITERATIVE_METHODOLOGY.md) §Phase 2B (optional Pre-Create Grill) | Phase 2B only (low) | `skills/productivity/grill-me` | `62f43a18177b` (2026-04-28) |
 | [`/grill-with-docs`](https://github.com/mattpocock/skills/tree/main/skills/engineering/grill-with-docs) | [`ITERATIVE_METHODOLOGY.md`](../ITERATIVE_METHODOLOGY.md) §Phase 2 — `CONTEXT.md` read-step; [`CONTEXT_TEMPLATE.md`](CONTEXT_TEMPLATE.md) §Maintenance | Phase 2 → 3 → 5, modifies `CONTEXT.md`/ADRs (**high**) | `skills/engineering/grill-with-docs` | `e7df78bb81da` (2026-05-19) |
 | [`/diagnose`](https://github.com/mattpocock/skills/tree/main/skills/engineering/diagnose) | [`ITERATIVE_METHODOLOGY.md`](../ITERATIVE_METHODOLOGY.md) §Debugging Sessions + Phase 6 step 8 commit-cleanup; [`SESSION_RUNNER.md`](SESSION_RUNNER.md) §Phase 3F (tagged debug-log cleanup) | All 6 phases — debugging-session alignment is intentional (medium, by design) | `skills/engineering/diagnose` | `7afa86d3a5dd` (2026-04-28) |
 | [`/triage`](https://github.com/mattpocock/skills/tree/main/skills/engineering/triage) | [`workstreams/DEVELOPMENT_WORKSTREAM.md`](../workstreams/DEVELOPMENT_WORKSTREAM.md) §Issue Lifecycle — see prerequisite note below | Phase 1 + Issue Lifecycle (low) | `skills/engineering/triage` | `179a14e72103` (2026-04-28) |
@@ -87,7 +87,7 @@ If you encounter a skill that should be added to this section because it was con
 The methodology's text remains the operative guidance. The skill is a sharper instrument; the underlying discipline does not depend on it. Examples:
 
 - **`/verify` unavailable.** Phase 3E's rule — "launch the application before committing and verify the behavior" — applies. The agent runs the verification manually.
-- **`/grill-me` unavailable.** Phase 2.5's procedure (list decisions, draft recommendations, present one at a time) applies. The session runs the grill manually.
+- **`/grill-me` unavailable.** Phase 2B's procedure (list decisions, draft recommendations, present one at a time) applies. The session runs the grill manually.
 - **`/git-guardrails-claude-code` unavailable.** SAFEGUARDS' "Blast Radius Limits" table applies as textual discipline. Without the hook there is no mechanical block; the rules still bind.
 
 Adopters who routinely operate without these skills are operating the methodology as it was originally written. The recommendation makes the methodology sharper; it does not make the unrecommended version broken.
