@@ -145,7 +145,7 @@ Each execution session is bounded to one scoped unit. The session type differs b
 ### Common steps (both modes)
 
 1. **Pre-Flight.** Read `CAMPAIGN.md`. Read prior execution sessions' unit deliverables if any exist. Verify the corpus state for this unit's sources matches the planning-session inventory.
-2. **Phase 1.5 (Claim the Session).** Write the stub naming the unit in progress. A ghost session here is detectable because the stub names exactly which unit was being worked on.
+2. **Phase 1B (Claim the Session).** Write the stub naming the unit in progress. A ghost session here is detectable because the stub names exactly which unit was being worked on.
 3. **Research.** For this unit only, build the claim list. Every numeric, dated, and attributed claim in the unit's scope gets a row, with no exceptions. (A claim you skip cannot be verified later without re-reading the source.)
 4. **Mode-specific work** (see below).
 5. **Present.** Surface the unit deliverable to the stakeholder. Highlight: blocked or re-attribute rows (these need attention before consolidation), patterns visible at unit scope, and any sub-agent calibration adjustments made mid-session.
@@ -388,7 +388,7 @@ Each unit deliverable is a checkpoint. After every execution session, commit the
 verification/exhaustive/units/<unit>.md
 ```
 
-A crashed mid-unit session is recovered by the next session reading the unit file from the last committed state and resuming from the first row marked `pending` (audit) or `planned` (creation, undrafted). The Phase 1.5 stub records which unit is in progress, so a ghost session is detectable.
+A crashed mid-unit session is recovered by the next session reading the unit file from the last committed state and resuming from the first row marked `pending` (audit) or `planned` (creation, undrafted). The Phase 1B stub records which unit is in progress, so a ghost session is detectable.
 
 **Unit deliverables are append-only within a session.** Never delete a row; mark it `superseded` and add a new row. The history of changed verdicts or statuses is itself a signal — for audit calibration, for creation scope drift, and for the consolidation session's pattern detection.
 

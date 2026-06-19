@@ -106,7 +106,7 @@ Stakeholder approval of `CAMPAIGN.md` is the second-highest-leverage gate in the
 ### Common steps
 
 1. **Pre-Flight.** Read `CAMPAIGN.md`. Read prior unit deliverables. Verify [domain-specific state] matches planning-session inventory.
-2. **Phase 1.5 (Claim the Session).** Stub names the unit in progress. A ghost session here is detectable because the stub names exactly which unit was being worked on.
+2. **Phase 1B (Claim the Session).** Stub names the unit in progress. A ghost session here is detectable because the stub names exactly which unit was being worked on.
 3. **Research.** [What to extract for this unit, with no exceptions.]
 4. **[Mode-specific work]** (see below).
 5. **Present.** Surface the unit deliverable to the stakeholder. Highlight: [campaign-specific items — e.g., blocked rows, calibration adjustments, patterns visible at unit scope].
@@ -208,7 +208,7 @@ Each unit deliverable is a checkpoint. After every execution session, commit the
 [campaign-directory]/units/<unit>.md
 ```
 
-A crashed mid-unit session is recovered by the next session reading the unit file from the last committed state and resuming from the first row marked [pending-status]. The Phase 1.5 stub records which unit is in progress, so a ghost session is detectable.
+A crashed mid-unit session is recovered by the next session reading the unit file from the last committed state and resuming from the first row marked [pending-status]. The Phase 1B stub records which unit is in progress, so a ghost session is detectable.
 
 **Unit deliverables are append-only within a session.** Never delete a row; mark it `superseded` and add a new row. The history of changed statuses is itself a signal — for calibration, scope drift, and the consolidation session's pattern detection.
 

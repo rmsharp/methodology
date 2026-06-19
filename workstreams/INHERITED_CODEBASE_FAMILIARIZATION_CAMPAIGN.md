@@ -153,7 +153,7 @@ Each execution session is bounded to one scoped unit. Familiarization sessions a
 ### Common steps (both modes)
 
 1. **Pre-Flight.** Read `CAMPAIGN.md`. Read prior unit deliverables. Verify the inventoried files for this unit still exist at the recorded paths (a rebase, merge, or upstream pull between sessions can move things; the planning inventory is the source of truth for what *was* in scope, the current state is the source of truth for what *is*).
-2. **Phase 1.5 (Claim the Session).** Write the stub naming the unit in progress. A ghost session here is detectable because the stub names exactly which module was being studied.
+2. **Phase 1B (Claim the Session).** Write the stub naming the unit in progress. A ghost session here is detectable because the stub names exactly which module was being studied.
 3. **Research — read the implementation.** For this unit only:
    - Enumerate the public API surface — every exported function, class, endpoint, message handler, scheduled job, or other externally-callable entry point. For each: file:line, signature, one-line purpose statement.
    - Trace data flow for each entry point — input source(s), transformation steps with file:line at each hop, persistent or shared state touched, outputs. Stop at module boundaries; cross-module flow is consolidation-session work.
@@ -395,7 +395,7 @@ Each unit deliverable is a checkpoint. After every execution session, commit the
 familiarization/units/<unit>.md
 ```
 
-A crashed mid-unit session is recovered by the next session reading the unit file from the last committed state and resuming from the first unanswered exit-criteria predicate. The Phase 1.5 stub records which unit is in progress, so a ghost session is detectable.
+A crashed mid-unit session is recovered by the next session reading the unit file from the last committed state and resuming from the first unanswered exit-criteria predicate. The Phase 1B stub records which unit is in progress, so a ghost session is detectable.
 
 **Unit deliverables are append-only within a session.** Never delete a row; mark it `superseded` and add a new row. The history of changed rows is itself a signal — for calibration, for owner-bias detection in interview mode, and for the consolidation session's pattern detection.
 
