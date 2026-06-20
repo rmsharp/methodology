@@ -158,7 +158,9 @@ Every session follows these phases in order. Phases are sequential and gated —
 - Skipping the adjacent artifact check (this is how cross-session damage goes undetected)
 - Skimming governing documents instead of reading them (reading "the gist" misses the specific steps that prevent specific failures)
 
-### Phase 1.5: Claim the Session
+### Phase 1B: Claim the Session
+
+*Phase 1B is an inserted activity between Phase 1 (Pre-Flight) and Phase 2 (Research); the letter suffix marks it as a bridge step that does not subdivide a numbered phase — Pre-Flight remains Phase 1 in full, and there is no "Phase 1A." This mirrors `SESSION_RUNNER.md`'s **1B: Claim the Session** and keeps the "6 phases" count intact.*
 
 **Purpose:** Leave a trace before any work begins, so that even a catastrophic failure (crash, context loss, timeout) produces evidence of what was attempted.
 
@@ -190,7 +192,9 @@ Every session follows these phases in order. Phases are sequential and gated —
 
 **The Complete-Then-Create Rule:** Do NOT begin Phase 3 until all 8 steps are done. The temptation to start creating after steps 1–4 is strong. Resist it. Steps 5–8 routinely surface insights that change the entire approach.
 
-### Phase 2.5: Pre-Create Grill (Optional)
+### Phase 2B: Pre-Create Grill (Optional)
+
+*Phase 2B is an inserted activity between Phase 2 (Research) and Phase 3 (Create), mirroring the **Phase 1B** precedent above: the letter suffix marks a bridge step and does not subdivide Phase 2 — Research remains Phase 2 in full, and there is no "Phase 2A." The "6 phases" count is unchanged.*
 
 **Purpose:** Before designing a solution, surface every load-bearing decision the stakeholder has not yet made — by asking, not by guessing. Catches misalignment one phase earlier than Phase 4 (Present), where the failure mode is "stakeholder rejects the design because a foundational assumption was wrong."
 
@@ -205,7 +209,7 @@ Every session follows these phases in order. Phases are sequential and gated —
 - The work is mechanical (rename, lint cleanup, dependency bump, well-defined bug fix)
 - An equivalent feature already exists in the codebase and the stakeholder has confirmed "do it the same way"
 
-**Why this phase exists:** Phase 4 (Present) catches misalignment by showing the stakeholder a complete design. Phase 2.5 catches it earlier — before any design exists — by asking instead of inferring. The cost difference is large: a wrong inference at Phase 3 is rework of the design document; a wrong inference confirmed at Phase 4 is a new design cycle. UX rollbacks (designs that ship and revert because the interaction model was wrong) are the canonical failure this phase prevents.
+**Why this phase exists:** Phase 4 (Present) catches misalignment by showing the stakeholder a complete design. Phase 2B catches it earlier — before any design exists — by asking instead of inferring. The cost difference is large: a wrong inference at Phase 3 is rework of the design document; a wrong inference confirmed at Phase 4 is a new design cycle. UX rollbacks (designs that ship and revert because the interaction model was wrong) are the canonical failure this phase prevents.
 
 **Running the grill.** The methodology recommends Pocock's `/grill-me` skill — see [`starter-kit/RECOMMENDED_SKILLS.md`](starter-kit/RECOMMENDED_SKILLS.md). Methodology owns *when* to grill and *why*; the skill owns *how* to conduct the interview. When the skill is unavailable, the operative discipline is: enumerate every decision the design will encode, draft each with a recommended answer plus real alternatives, present them one at a time, and stop only when every load-bearing decision has an explicit answer locked into the Phase 3 Create document.
 
@@ -513,7 +517,7 @@ A second factor: **workstream transfer amnesia.** Discipline built on one type o
 
 1. **Treat the methodology as if you've never read it.** Every session. The cost of re-reading is 2 minutes. The cost of assuming you know it is a failed session.
 2. **The handoff evaluation creates structural accountability.** If you write a bad handoff, the next session documents exactly how it failed. This feedback loop only works if both sides complete their steps.
-3. **Write the session stub before starting work (Phase 1.5).** This is 30 seconds of insurance against catastrophic session loss.
+3. **Write the session stub before starting work (Phase 1B).** This is 30 seconds of insurance against catastrophic session loss.
 4. **The methodology is not improvable-by-subtraction during a session.** Every step exists because a real session failed without it. If you think a step is unnecessary, that thought IS the erosion happening.
 
 ---
