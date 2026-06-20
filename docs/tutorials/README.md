@@ -4,9 +4,9 @@ A hands-on, progressive learning track for the Iterative Session Methodology. Th
 docs *define* the framework — this one makes you *do* it, one thing at a time, against a real
 project, with a checkpoint after each step.
 
-> **Status:** Scaffolding only. This index, the [tutorial template](TUTORIAL_TEMPLATE.md), and
-> the [sample project](sample-project/) are in place; the tutorial content (T1, T2, T5) lands in
-> later sessions. The curriculum below shows what's coming.
+> **Status:** [Tutorial 1: Setup & First Bootstrap](T1_setup.md) is published. The
+> [tutorial template](TUTORIAL_TEMPLATE.md) and [sample project](sample-project/) are in place;
+> T2 and T5 land in later sessions. The curriculum below shows what's done and what's coming.
 
 ## Why bother?
 
@@ -52,7 +52,7 @@ The **core trio (T1 · T2 · T5)** is the first cut; the rest is a roadmap.
 
 | # | Tutorial | You'll be able to… | In first cut? |
 |---|----------|--------------------|:-------------:|
-| T1 | Setup & First Bootstrap | Install the framework into a project: root files, `CLAUDE.md` protocol block, task tracking, dashboard | ✅ planned |
+| [T1](T1_setup.md) | Setup & First Bootstrap | Install the framework into a project: root files, `CLAUDE.md` protocol block, task tracking, dashboard | ✅ **published** |
 | T2 | Your First Session, End-to-End | Run one full 6-phase pass to one deliverable — with Phase 0 Orient and the Present gate front and center | ✅ planned |
 | T5 | Cautionary Use | Read the gates, the 26 failure modes, "1 and done", the vertical-slice gates, and the Plan-Mode exit trap — and know when the methodology is too heavy | ✅ planned |
 | T3 | The Compounding Loop | Run the handoff + scoring loop and watch session N+1 improve | roadmap |
