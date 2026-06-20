@@ -231,6 +231,15 @@ Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during develop
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
 
+### What's New in v2.7.2
+
+Docs-only dot release bundling three contributor fixes from the PR-14 review backlog — issues [#16](https://github.com/KJ5HST/methodology/issues/16), [#17](https://github.com/KJ5HST/methodology/issues/17), and [#19](https://github.com/KJ5HST/methodology/issues/19). No principle, phase, gate, workstream, or failure-mode changes.
+
+- **Agent-level memory, named generically (#16).** `starter-kit/CONTEXT_TEMPLATE.md`'s "CONTEXT.md vs auto-memory" guidance becomes "CONTEXT.md vs **agent-level memory**" — the cross-project persistence layer is now named by what it does, not by Claude Code's brand term, with a gloss that other agents implement it under their own names (Cursor's memories, Cody's preferences). Keeps the methodology agent-independent.
+- **A convention for citing skills from workstreams (#17).** `RECOMMENDED_SKILLS.md` now states the rule the docs already followed: cite **one** recommended skill inline at the point of recommendation; promote **two or more** for the same workstream to a dedicated `## Recommended Skills` section with a purpose→skill table. `TEMPLATE_WORKSTREAM.md` ships a matching optional scaffold.
+- **Cross-reference completeness as Learning #7 (#19).** A new Learnings-table row plus a Phase 3F pre-commit hook codify the self-review check `git diff` can't do for you: when you add a citation or grow a numbered set (failure modes, principles, learnings…), the defect is the *missing* destination-side edit — so grep each cited destination and each nearby count claim before committing.
+- **Backward compatible.** Docs-only; adopters absorb the starter-kit changes (`CONTEXT_TEMPLATE.md`, `RECOMMENDED_SKILLS.md`, `SESSION_RUNNER.md`, `TEMPLATE_WORKSTREAM.md`) via `bin/sync`.
+
 ### What's New in v2.7.1
 
 Docs-only naming-consistency dot release resolving issue [#15](https://github.com/KJ5HST/methodology/issues/15). The methodology's two decimal-suffixed phase labels are renamed to the letter-suffix convention `SESSION_RUNNER.md` already uses, so the spec carries one consistent style for inserted sub-phases.
