@@ -12,12 +12,9 @@ materializes a simulated adopter tree (each distributable copied to its adopter
 destination, plus the files an adopter creates locally) and asserts every
 relative link in every distributed markdown file resolves to an existing file.
 
-Part of B1 / issue #32, Phase 2 (link reconciliation).
-
-NOTE (Phase 2 -> Phase 3 hand-off): the DISTRIBUTION mapping below is inlined
-here for Phase 2. Phase 3 extracts it to bin/_manifest.py as the single source of
-truth shared with bin/sync and bin/status (plan Decision 5). Until then, keep the
-two in sync.
+Part of B1 / issue #32 (Phase 2 added this checker; Phase 3 moved the
+DISTRIBUTION map to bin/_manifest.py — the single source of truth now shared with
+bin/sync, plan Decision 5).
 
 Usage:  ./bin/check-links            # run from anywhere
 Exit:   0 = all relative links resolve; 1 = one or more dangling links.
@@ -29,43 +26,10 @@ import shutil
 import sys
 import tempfile
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _manifest import DISTRIBUTION  # noqa: E402  (bin/ is on sys.path above)
 
-# (source path relative to canonical repo root, destination relative to adopter
-# project root). Mirrors README Option B plus the two files B1 gives a home
-# (RECOMMENDED_SKILLS.md, CONTEXT_TEMPLATE.md -> adopter root, plan Decision 1).
-DISTRIBUTION = [
-    ("starter-kit/SESSION_RUNNER.md", "SESSION_RUNNER.md"),
-    ("starter-kit/SAFEGUARDS.md", "SAFEGUARDS.md"),
-    ("starter-kit/RECOMMENDED_SKILLS.md", "RECOMMENDED_SKILLS.md"),
-    ("starter-kit/CONTEXT_TEMPLATE.md", "CONTEXT_TEMPLATE.md"),
-    ("starter-kit/CLAUDE_TEMPLATE.md", "CLAUDE_TEMPLATE.md"),
-    ("starter-kit/SESSION_NOTES.md", "SESSION_NOTES.md"),
-    ("starter-kit/CHANGELOG.md", "CHANGELOG.md"),
-    ("starter-kit/ROADMAP.md", "ROADMAP.md"),
-    ("starter-kit/BOOTSTRAP.md", "BOOTSTRAP.md"),
-    ("starter-kit/methodology_dashboard.py", "methodology_dashboard.py"),
-    ("ITERATIVE_METHODOLOGY.md", "docs/methodology/ITERATIVE_METHODOLOGY.md"),
-    ("HOW_TO_USE.md", "docs/methodology/HOW_TO_USE.md"),
-    ("workstreams/DESIGN_WORKSTREAM.md",
-     "docs/methodology/workstreams/DESIGN_WORKSTREAM.md"),
-    ("workstreams/ARCHITECTURE_WORKSTREAM.md",
-     "docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md"),
-    ("workstreams/DEVELOPMENT_WORKSTREAM.md",
-     "docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md"),
-    ("workstreams/AUDIT_WORKSTREAM.md",
-     "docs/methodology/workstreams/AUDIT_WORKSTREAM.md"),
-    ("workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",
-     "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md"),
-    ("workstreams/TEMPLATE_WORKSTREAM.md",
-     "docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md"),
-    ("workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md",
-     "docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md"),
-    ("workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md",
-     "docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md"),
-    ("workstreams/TEMPLATE_CAMPAIGN.md",
-     "docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md"),
-]
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Legitimate link targets that are NOT part of the distribution: files an adopter
 # creates locally (instances / overflow valves) and intentional template
@@ -97,7 +61,7 @@ def is_external(target):
 
 
 def materialize(tree):
-    for src, dest in DISTRIBUTION:
+    for src, dest, _disp in DISTRIBUTION:
         dpath = os.path.join(tree, dest)
         os.makedirs(os.path.dirname(dpath) or tree, exist_ok=True)
         shutil.copyfile(os.path.join(REPO, src), dpath)
@@ -111,7 +75,7 @@ def materialize(tree):
 def check(tree):
     failures = []
     checked = 0
-    md_files = [(s, d) for s, d in DISTRIBUTION if d.endswith(".md")]
+    md_files = [(s, d) for s, d, _disp in DISTRIBUTION if d.endswith(".md")]
     for _src, dest in md_files:
         dpath = os.path.join(tree, dest)
         ddir = os.path.dirname(dpath)
