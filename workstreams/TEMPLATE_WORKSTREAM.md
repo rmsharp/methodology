@@ -13,6 +13,18 @@ Use this workstream when:
 
 ---
 
+## Recommended Skills *(optional — keep only if ≥2 skills apply)*
+
+Follows the citation-shape convention ([`../starter-kit/RECOMMENDED_SKILLS.md`](../starter-kit/RECOMMENDED_SKILLS.md) §How this index is used). If this workstream recommends **one** skill, cite it inline at the point of recommendation and **delete this section**. If **two or more** skills apply, keep it: a short intro naming what the methodology owns vs. what each skill owns, then a table.
+
+| [Purpose] | Recommended skill |
+|---|---|
+| [What you are trying to do] | `/[skill]` |
+
+When a recommended skill is unavailable, the discipline in this document is the operative guidance — the skill is a sharper instrument, not a hard dependency.
+
+---
+
 ## Phase 2: Research ([Domain]-Specific)
 
 ### Step 1: Study the [Requirements/Domain/Problem]
