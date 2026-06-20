@@ -1,0 +1,164 @@
+#!/usr/bin/env python3
+"""check-links — validate distributed-file cross-references in the ADOPTER layout.
+
+The canonical repo and an adopter project use different directory layouts
+(canonical: framework at repo root + starter-kit/; adopter: framework under
+docs/methodology/ + the starter-kit root-files at the project root). A relative
+markdown link can therefore be correct in one layout and dangling in the other
+(the "link-topology paradox", B1 plan section 4). The methodology's convention is
+that *distributed files author their cross-references for the adopter layout* and
+are validated there, not in-repo. This script enforces that convention: it
+materializes a simulated adopter tree (each distributable copied to its adopter
+destination, plus the files an adopter creates locally) and asserts every
+relative link in every distributed markdown file resolves to an existing file.
+
+Part of B1 / issue #32, Phase 2 (link reconciliation).
+
+NOTE (Phase 2 -> Phase 3 hand-off): the DISTRIBUTION mapping below is inlined
+here for Phase 2. Phase 3 extracts it to bin/_manifest.py as the single source of
+truth shared with bin/sync and bin/status (plan Decision 5). Until then, keep the
+two in sync.
+
+Usage:  ./bin/check-links            # run from anywhere
+Exit:   0 = all relative links resolve; 1 = one or more dangling links.
+Python 3 stdlib only; cross-platform.
+"""
+import os
+import re
+import shutil
+import sys
+import tempfile
+
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# (source path relative to canonical repo root, destination relative to adopter
+# project root). Mirrors README Option B plus the two files B1 gives a home
+# (RECOMMENDED_SKILLS.md, CONTEXT_TEMPLATE.md -> adopter root, plan Decision 1).
+DISTRIBUTION = [
+    ("starter-kit/SESSION_RUNNER.md", "SESSION_RUNNER.md"),
+    ("starter-kit/SAFEGUARDS.md", "SAFEGUARDS.md"),
+    ("starter-kit/RECOMMENDED_SKILLS.md", "RECOMMENDED_SKILLS.md"),
+    ("starter-kit/CONTEXT_TEMPLATE.md", "CONTEXT_TEMPLATE.md"),
+    ("starter-kit/CLAUDE_TEMPLATE.md", "CLAUDE_TEMPLATE.md"),
+    ("starter-kit/SESSION_NOTES.md", "SESSION_NOTES.md"),
+    ("starter-kit/CHANGELOG.md", "CHANGELOG.md"),
+    ("starter-kit/ROADMAP.md", "ROADMAP.md"),
+    ("starter-kit/BOOTSTRAP.md", "BOOTSTRAP.md"),
+    ("starter-kit/methodology_dashboard.py", "methodology_dashboard.py"),
+    ("ITERATIVE_METHODOLOGY.md", "docs/methodology/ITERATIVE_METHODOLOGY.md"),
+    ("HOW_TO_USE.md", "docs/methodology/HOW_TO_USE.md"),
+    ("workstreams/DESIGN_WORKSTREAM.md",
+     "docs/methodology/workstreams/DESIGN_WORKSTREAM.md"),
+    ("workstreams/ARCHITECTURE_WORKSTREAM.md",
+     "docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md"),
+    ("workstreams/DEVELOPMENT_WORKSTREAM.md",
+     "docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md"),
+    ("workstreams/AUDIT_WORKSTREAM.md",
+     "docs/methodology/workstreams/AUDIT_WORKSTREAM.md"),
+    ("workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",
+     "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md"),
+    ("workstreams/TEMPLATE_WORKSTREAM.md",
+     "docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md"),
+    ("workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md",
+     "docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md"),
+    ("workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md",
+     "docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md"),
+    ("workstreams/TEMPLATE_CAMPAIGN.md",
+     "docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md"),
+]
+
+# Legitimate link targets that are NOT part of the distribution: files an adopter
+# creates locally (instances / overflow valves) and intentional template
+# placeholders. Created as empty files in the simulated tree so links to them
+# resolve. Keep this list tight — every entry is a real adopter-layout file, so
+# an unexpected dangling link still fails rather than being masked.
+ADOPTER_LOCAL_FILES = [
+    "CONTEXT.md",            # instance of CONTEXT_TEMPLATE.md (adopter-owned)
+    "CLAUDE.md",             # instance of CLAUDE_TEMPLATE.md (adopter-owned)
+    "BACKLOG.md",            # adopter-created task list
+    "PROJECT_LEARNINGS.md",  # CLAUDE.md overflow valve (BOOTSTRAP.md)
+    # Template placeholder inside TEMPLATE_CAMPAIGN.md — the adopter replaces it
+    # with their actual parent-workstream filename.
+    "docs/methodology/workstreams/PARENT_WORKSTREAM.md",
+]
+
+# Markdown inline link target: the (...) after ](. Targets in these docs contain
+# no ')'; an optional ' "title"' is stripped below.
+LINK_RE = re.compile(r"\]\(([^)]+)\)")
+
+# Inline code spans. Text inside backticks renders as literal code, never as a
+# live link, so a ](...) that falls inside one is documented syntax (e.g. the
+# `![...](...)` image example in the toolchain table), not a real reference.
+CODE_SPAN_RE = re.compile(r"`[^`]*`")
+
+
+def is_external(target):
+    return target.startswith(("http://", "https://", "mailto:", "#"))
+
+
+def materialize(tree):
+    for src, dest in DISTRIBUTION:
+        dpath = os.path.join(tree, dest)
+        os.makedirs(os.path.dirname(dpath) or tree, exist_ok=True)
+        shutil.copyfile(os.path.join(REPO, src), dpath)
+    for rel in ADOPTER_LOCAL_FILES:
+        ppath = os.path.join(tree, rel)
+        os.makedirs(os.path.dirname(ppath) or tree, exist_ok=True)
+        if not os.path.exists(ppath):
+            open(ppath, "w").close()
+
+
+def check(tree):
+    failures = []
+    checked = 0
+    md_files = [(s, d) for s, d in DISTRIBUTION if d.endswith(".md")]
+    for _src, dest in md_files:
+        dpath = os.path.join(tree, dest)
+        ddir = os.path.dirname(dpath)
+        with open(dpath, encoding="utf-8") as fh:
+            for lineno, line in enumerate(fh, 1):
+                code_spans = [(m.start(), m.end())
+                              for m in CODE_SPAN_RE.finditer(line)]
+                for match in LINK_RE.finditer(line):
+                    if any(s <= match.start() < e for s, e in code_spans):
+                        continue  # documented syntax inside a code span
+                    target = match.group(1).strip()
+                    if is_external(target):
+                        continue
+                    # Strip an optional link title: ](path "Title")
+                    path = target.split(" ", 1)[0]
+                    # Strip an anchor fragment; file existence only (Phase 2).
+                    path = path.split("#", 1)[0]
+                    if not path:  # pure in-page anchor
+                        continue
+                    checked += 1
+                    resolved = os.path.normpath(os.path.join(ddir, path))
+                    if not os.path.exists(resolved):
+                        failures.append((dest, lineno, target))
+    return checked, failures, len(md_files)
+
+
+def main():
+    tree = tempfile.mkdtemp(prefix="methodology-adopter-tree-")
+    try:
+        materialize(tree)
+        checked, failures, n_files = check(tree)
+    finally:
+        shutil.rmtree(tree, ignore_errors=True)
+
+    if failures:
+        print("check-links: FAIL — %d dangling link(s) in the simulated "
+              "adopter tree:" % len(failures))
+        for dest, lineno, target in failures:
+            print("  %s:%d  ->  %s" % (dest, lineno, target))
+        print("\nDistributed files author cross-references for the ADOPTER "
+              "layout (B1 plan section 4). Fix the target above, not the layout.")
+        return 1
+
+    print("check-links: OK — %d relative link(s) across %d distributed markdown "
+          "files resolve in the simulated adopter tree." % (checked, n_files))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -123,6 +123,14 @@ else
     echo "  SKIP: gh unauthenticated"
 fi
 
+echo "== Test 10: distributed-file links resolve in the simulated adopter tree =="
+if "$BIN/check-links" >/dev/null 2>&1; then
+    pass "check-links: all relative links resolve in adopter layout"
+else
+    "$BIN/check-links" 2>&1 | sed 's/^/    /'
+    fail "check-links: dangling link(s) in adopter layout (see above)"
+fi
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]
