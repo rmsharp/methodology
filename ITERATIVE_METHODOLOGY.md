@@ -382,6 +382,18 @@ Inline pointers in this document and in the workstream files reference skills by
 
 ---
 
+## Matching Reasoning Effort to Stakes
+
+> **Match reasoning effort to the stakes, not the task label.**
+>
+> Set your agent's reasoning depth by the work's *blast radius × irreversibility × compounding cost* — the same risk lens the methodology already uses to size a vertical slice (Principle 9) and to place its hardest gate (Principle 3). High on any axis — wide blast radius (changes ripple across many call sites or readers), low reversibility (migrations, cutovers, published claims, operator-approval boundaries), or high compounding cost (a planning or architecture error every later session inherits) — warrants your agent's deepest-reasoning mode (max-effort, extended-reasoning, or a larger thinking budget, depending on the toolchain). The marginal cost is latency and tokens; the cost of a shallow decision on heavy work is rework that compounds. Set the mode at session start — not after a problem appears.
+
+Cheap, reversible, mechanical work — a one-line fix, a rename the compiler catches, a reversible config tweak — does not need it; a lighter setting is the honest default there. The axis runs both ways.
+
+Methodology owns *when and why* to raise the tier (this rule); your agent owns *how* (the specific effort or model mechanism — see [`RECOMMENDED_SKILLS.md`](../../RECOMMENDED_SKILLS.md) for concrete Claude Code settings). And a higher tier is not a license: like a skill, a deeper-reasoning mode sharpens a phase — it never authorizes skipping orientation, the stub, close-out, or any hard gate, nor widening a session beyond its one declared deliverable (failure mode #17, `SESSION_RUNNER.md` Protocol erosion). Reason harder; stop at the same gates.
+
+---
+
 ## The Session Runner
 
 The 6 phases and 9 principles define WHAT to do and WHY. In practice, they need an **operational wrapper** — a cockpit checklist — that ensures they're actually followed. This is the Session Runner (`SESSION_RUNNER.md` in the project root).
