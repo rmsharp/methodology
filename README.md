@@ -141,6 +141,10 @@ Expand any project card to see health breakdown by dimension, risk factors, git 
 
 ![Expanded project detail showing health breakdown, code metrics, and methodology compliance](docs/images/dashboard-detail.png)
 
+## Tutorials
+
+New to the methodology? The **[tutorials](docs/tutorials/)** are a hands-on, progressive learning track — install the framework, run a real session end to end, and learn where the guardrails catch you. Each lesson has you *do* one thing against a real project (your own repo, or the bundled [sample project](docs/tutorials/sample-project/)), with a checkpoint at every step. The core trio (Setup → First Session → Cautionary Use) is published; see the **[series index](docs/tutorials/)** for the full curriculum.
+
 ## Repository Structure
 
 ```
@@ -168,6 +172,9 @@ Expand any project card to see health breakdown by dimension, risk factors, git 
 │   ├── CHANGELOG.md                  ← Completed work history template
 │   ├── ROADMAP.md                    ← Feature inventory & future plans template
 │   └── methodology_dashboard.py      ← Health scanner (also in tools/)
+│
+├── docs/                             ← Tutorials and supporting docs
+│   └── tutorials/                    ← Hands-on learning track + sample todo-CLI project
 │
 ├── bin/                              ← Sync tools (v2.2+)
 │   ├── sync                          ← Copy starter-kit files into a project (dual-mode, dual-source)
@@ -230,6 +237,14 @@ Domain-specific adaptations of the master framework. Each workstream customizes 
 Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during development of a commercial software product. The methodology emerged organically from an initial 11-session design series, was codified into a reusable framework, and subsequently validated across 1100+ sessions of varied work.
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
+
+### What's New in v2.9
+
+A combined release of two additive contributions that merged together ([#38](https://github.com/KJ5HST/methodology/pull/38), [#39](https://github.com/KJ5HST/methodology/pull/39), rmsharp): a hands-on **tutorial track** for newcomers, and a **reasoning-effort convention** that generalizes "match effort to the stakes" across the whole framework. No principle, phase, gate, workstream, or failure-mode changes — failure-mode count stays 26.
+
+- **Hands-on tutorial track (#38).** A new [`docs/tutorials/`](docs/tutorials/) learning layer: a progressive, *do-one-thing-per-lesson* curriculum with a checkpoint at every step, run against your own repo or a bundled [sample todo-CLI project](docs/tutorials/sample-project/). The published **core trio** runs Setup (T1) → First Session, with a full worked transcript (T2) → Cautionary Use (T5), alongside a series index and a reusable tutorial template. The sample project intentionally leaves one feature unbuilt so a tutorial session implements it end to end. The tutorials are a **canonical-only learning aid — they are not distributed to adopter projects** by `bin/sync`, so the corpus an installed project receives is unchanged.
+- **Reasoning-effort convention (#39).** The guidance to raise an agent's reasoning depth on high-stakes work — previously living only in the Research Documentation workstream — is promoted to a cross-cutting rule: the new **Matching Reasoning Effort to Stakes** section in `ITERATIVE_METHODOLOGY.md`. Set reasoning depth by the work's *blast radius × irreversibility × compounding cost* (the same risk lens Principles 3 and 9 already use); the inverse holds too, so cheap, reversible, mechanical work gets a lighter default. The rule is **agent-independent** — the brand-neutral core says *when and why*, while `RECOMMENDED_SKILLS.md` names concrete example settings as the *how*. The heavy workstreams and both campaigns cite the rule, and an anti-erosion clause keeps it from becoming a license to skip a gate: a deeper mode sharpens a phase — it never crosses a hard gate (failure mode #17).
+- **Backward compatible.** Adopters absorb the reasoning-effort edits to distributed files (`ITERATIVE_METHODOLOGY.md`, `RECOMMENDED_SKILLS.md`, `SESSION_RUNNER.md`, `workstreams/*`) by re-running `bin/sync`; the tutorials are not synced and need no adopter action. These are additive — no methodology-content semantics change.
 
 ### What's New in v2.8
 

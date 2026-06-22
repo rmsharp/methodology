@@ -57,6 +57,23 @@ Repo HEAD at verification: `b8be62ffacb0` (2026-05-20).
 
 ---
 
+## Reasoning Effort
+
+Not a skill — a setting. The methodology owns *when* to raise reasoning effort (`ITERATIVE_METHODOLOGY.md` §Matching Reasoning Effort to Stakes: tier ∝ blast radius × irreversibility × compounding cost). This index — the recommendation layer — names the concrete Claude Code mechanism that satisfies it. Like the skill SHAs above, these are example settings for one agent; other agents expose the capability under other names, and the model names below are illustrative.
+
+| Work type | Why | Example (Claude Code) |
+|---|---|---|
+| Deep research / regulatory docs | misattribution is irreversible + reputational | `/effort max`, deepest model (e.g. Opus) |
+| Architecture / cross-module refactor | wide blast radius, low reversibility | `/effort high`–`max`, deepest model |
+| Planning sessions | errors compound across every executor session | `/effort high`–`max` |
+| Audits | a missed finding has high downstream cost | `/effort high` |
+| Feature / bugfix campaigns | quality compounds across sessions | `/effort medium`–`high` |
+| Mechanical / reversible edits (rename, config) | cheap to undo | `/effort low`–`medium`, lighter model (e.g. Sonnet/Haiku) |
+
+A higher tier sharpens a phase; it never licenses crossing a gate (failure mode #17).
+
+---
+
 ## Skills not recommended (and why)
 
 This index is a *vetted snapshot* of skills the methodology actively cites at specific phases or workstreams. Skills not listed in the tables above are either out of scope for the methodology's content, adequately covered by existing methodology discipline at higher rigor, or architecturally incompatible with the methodology's session-arc model.
