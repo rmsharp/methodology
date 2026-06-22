@@ -146,4 +146,4 @@ A complete pass through a multi-session campaign in miniature: a real `CAMPAIGN.
 
 ## Next
 
-→ The next roadmap stop is **T7 — Portfolio & Dashboard Ops** (run the methodology across many projects at once and read the health dashboard) — see the [curriculum](README.md#curriculum) for what's landed. For now, do it for real on Track A: take a deliverable you already suspect is too big for one session, run *only* its planning session, and let the `CAMPAIGN.md` — not a heroic marathon — be where the work gets organized.
+→ **[Tutorial 7: Portfolio & Dashboard Ops](T7_portfolio_dashboard.md)** — zoom out from one project to many: run the health dashboard across your whole portfolio and let the risk matrix decide where the next session goes. For now, do it for real on Track A: take a deliverable you already suspect is too big for one session, run *only* its planning session, and let the `CAMPAIGN.md` — not a heroic marathon — be where the work gets organized.

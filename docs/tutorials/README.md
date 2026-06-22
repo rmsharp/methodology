@@ -9,8 +9,9 @@ project, with a checkpoint after each step.
 > [worked transcript](T2_worked_transcript.md) of a real session against the sample project), and
 > [T5: Cautionary Use](T5_cautionary.md) — now extended by the roadmap tutorials
 > [T3: The Compounding Loop](T3_compounding_loop.md),
-> [T4: Choosing & Adapting a Workstream](T4_workstreams.md), and
-> [T6: Multi-Session Campaigns](T6_campaigns.md). The [tutorial template](TUTORIAL_TEMPLATE.md) and
+> [T4: Choosing & Adapting a Workstream](T4_workstreams.md),
+> [T6: Multi-Session Campaigns](T6_campaigns.md), and
+> [T7: Portfolio & Dashboard Ops](T7_portfolio_dashboard.md). The [tutorial template](TUTORIAL_TEMPLATE.md) and
 > [sample project](sample-project/) are in place. The curriculum below shows what's done and what's coming.
 
 ## Why bother?
@@ -28,7 +29,7 @@ sessions, and session N+1 reliably better than session N — is documented, not 
 
 - **One objective per tutorial** — mirrors the methodology's "1 deliverable per session." Each
   tutorial does exactly one thing.
-- **Progressive** — every tutorial names its predecessor, so the chain T1 → T2 → T5 → T3 → T4 → T6 builds on itself.
+- **Progressive** — every tutorial names its predecessor, so the chain T1 → T2 → T5 → T3 → T4 → T6 → T7 builds on itself.
 - **You produce a real artifact** — an installed framework, a saved session doc, a feature you
   shipped, a near-miss you caught. Not read-along.
 - **Cite, don't restate** — tutorials link into [`BOOTSTRAP.md`](../../starter-kit/BOOTSTRAP.md),
@@ -53,11 +54,13 @@ near-misses as its cautionary cases, T3 runs *Session 2* — scoring Session 1's
 building the next feature — to make the compounding loop felt, T4 switches lenses, auditing
 that same CLI and drafting a custom workstream for it instead of forcing the work into Development,
 and T6 carries the repository-wide hardening that audit recommended across a planning →
-execution → consolidation campaign that no single session could produce.
+execution → consolidation campaign that no single session could produce, and T7 zooms out from that
+single project to the whole portfolio — running the dashboard across many repos and letting the risk
+matrix and compliance grid decide where the next session goes.
 
 ## Curriculum
 
-The **core trio (T1 · T2 · T5)** was the first cut; **T3**, **T4**, and **T6** have since landed, and the rest is a roadmap.
+The **core trio (T1 · T2 · T5)** was the first cut; **T3**, **T4**, **T6**, and **T7** have since landed, and the rest is a roadmap.
 
 | # | Tutorial | You'll be able to… | Status |
 |---|----------|--------------------|:-------------:|
@@ -67,7 +70,7 @@ The **core trio (T1 · T2 · T5)** was the first cut; **T3**, **T4**, and **T6**
 | [T3](T3_compounding_loop.md) | The Compounding Loop | Run the handoff + scoring loop and watch session N+1 improve | ✅ **published** |
 | [T4](T4_workstreams.md) | Choosing & Adapting a Workstream | Pick the right workstream; spin up a custom one when none fits | ✅ **published** |
 | [T6](T6_campaigns.md) | Multi-Session Campaigns | Carry one deliverable across many sessions — planning → execution → consolidation, with a checkpoint at each boundary | ✅ **published** |
-| T7 | Portfolio & Dashboard Ops | Run across many projects; read the health dashboard | roadmap |
+| [T7](T7_portfolio_dashboard.md) | Portfolio & Dashboard Ops | Run across many projects; read the health dashboard | ✅ **published** |
 | T8 | Keeping Adopters Current | Use `bin/sync` / `bin/status` to stay in step with the canonical repo | roadmap |
 
 ## Writing a tutorial
