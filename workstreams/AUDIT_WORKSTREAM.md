@@ -31,6 +31,8 @@ The methodology owns *the audit framework* (criteria definition, scope inventory
 
 When a recommended skill is unavailable, the audit framework in this document is the operative discipline — the skill is a sharper instrument, not a hard dependency.
 
+Reasoning effort is the other sharper instrument. An audit mutates nothing (low irreversibility), but a missed finding has high downstream cost and findings compound — so scale reasoning depth to the cost of a missed finding (`ITERATIVE_METHODOLOGY.md` §Matching Reasoning Effort to Stakes).
+
 ---
 
 ## Phase 2: Research (Audit-Specific)

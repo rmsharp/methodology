@@ -14,6 +14,8 @@ Use this workstream when:
 
 **Not for one-off fixes.** If it's a single bug with a clear fix, just fix it. This workstream is for campaigns — repeated tasks of the same type where quality compounds.
 
+> Feature and bugfix campaigns mutate code and compound across sessions — heavy work. Default to a deeper reasoning tier (`ITERATIVE_METHODOLOGY.md` §Matching Reasoning Effort to Stakes).
+
 ---
 
 ## Issue Lifecycle
