@@ -49,16 +49,23 @@ This is a backlog, **not** GitHub issues, by operator decision.
   3. Merge — only when mts is between sessions.
 
 ### BL-3 — airqino #1: remediation + full re-vendor → merge
-- **Repo / PR:** `rmsharp/airqinodashboard` #1 — *PR #25/#27 remediation — receptacle + learnings (PART 1), full re-vendor v2.1→v2.7 (PART 2)*
+- **Repo / PR:** `rmsharp/airqinodashboard` #1 — *PR #25/#27 remediation — receptacle + learnings (PART 1), full re-vendor → v2.9 (PART 2)*
 - **What it does:** PART 1 — root receptacle + learnings (`CLAUDE.md`, `SAFEGUARDS.md`,
   `SESSION_NOTES.md`, `SESSION_RUNNER.md`). PART 2 — full re-vendor of the entire framework under
-  `docs/methodology/`. (+9582/−92, 37 files.)
-- **State (2026-06-22):** OPEN, `MERGEABLE` + `CLEAN` — mergeable today, **but the re-vendor is
-  v2.7-era**, so it would land an already-stale copy — notably the *old* pre-v2.8 `bin/sync`.
+  `docs/methodology/`. (+10102/−103, 40 files.)
+- **State (2026-06-22):** OPEN, `MERGEABLE` + `CLEAN`. Re-vendor **refreshed to v2.9** this session
+  (commits `28db357` mirror, `0c59e5e` root `SESSION_RUNNER.md`); PR title/body updated to v2.9.
+  Only the merge remains — held pending an airqino between-sessions window.
 - **Tasks:**
-  1. Re-do the full re-vendor against the **v2.9** corpus (this is the bulk of the work — the
-     v2.7→v2.9 delta includes the entire v2.8 `bin/_manifest.py` sync expansion).
-  2. Merge — only when airqino is between sessions.
+  1. ~~Re-do the full re-vendor against the **v2.9** corpus.~~ **✅ DONE 2026-06-22** — 30-file
+     `docs/methodology/` mirror refreshed verbatim from canonical `upstream/main` (= v2.9 + #41/#42
+     reconciles): 19 files refreshed + 2 new v2.8 bin files (`_manifest.py`, `check-links`);
+     `bin/sync`/`bin/status` now manifest-driven. Also caught and fixed the root `SESSION_RUNNER.md`
+     drift to restore the PR's root==vendored invariant (and a broken `../docs/methodology` →
+     `docs/methodology` link). `SAFEGUARDS.md`/`methodology_dashboard.py` were unchanged v2.7→v2.9
+     so already matched; the 4 unadopted root TRACKED files left absent (no adoption-surface
+     expansion). Adversarial 4-lens verify: all faithful, 0 must-fix. Both commits pushed.
+  2. Merge — only when airqino is between sessions. *(pending)*
 
 ### BL-4 — Housekeeping: methodology repo (its own session)
 - **Repo:** `rmsharp/methodology` (this repo). Not an adopter task; not a GitHub issue.
