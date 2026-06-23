@@ -6,7 +6,7 @@ A framework for producing high-quality software through structured, self-correct
 
 AI agents are capable but inconsistent. They skip steps, lose context between sessions, start implementing before researching, and treat speed as evidence of quality. A methodology document alone doesn't fix this — agents read it, understand it conceptually, and still skip steps. Understanding a concept and following a procedure are fundamentally different cognitive tasks.
 
-This framework solves the problem with three layers:
+This framework solves the problem with four layers:
 
 | Layer | Document | Purpose |
 |-------|----------|---------|
@@ -105,6 +105,8 @@ See **[`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md)** for the complete 
 | `SESSION_NOTES.md` | Empty template for session continuity |
 | `SAFEGUARDS.md` | Safety rails: commit discipline, blast radius limits, mode switching |
 | `CLAUDE_TEMPLATE.md` | Template for project `CLAUDE.md` with SESSION PROTOCOL block and Adaptations section |
+| `CONTEXT_TEMPLATE.md` | Project domain-glossary / `CONTEXT.md` template |
+| `RECOMMENDED_SKILLS.md` | Index of recommended skills, cited at the relevant phase/workstream |
 | `CHANGELOG.md` | Completed work history template — keeps BACKLOG.md lean |
 | `ROADMAP.md` | Feature inventory and future plans template |
 | `methodology_dashboard.py` | Health scanner: project scoring, risk assessment, compliance dashboard |
@@ -166,6 +168,8 @@ New to the methodology? The **[tutorials](docs/tutorials/)** are a hands-on, pro
 ├── starter-kit/                      ← Copy these to bootstrap a new project
 │   ├── BOOTSTRAP.md                  ← Setup guide
 │   ├── CLAUDE_TEMPLATE.md            ← Project CLAUDE.md template (protocol + Adaptations section)
+│   ├── CONTEXT_TEMPLATE.md           ← Project domain-glossary / CONTEXT.md template
+│   ├── RECOMMENDED_SKILLS.md         ← Index of recommended skills (cited by phase/workstream)
 │   ├── SESSION_RUNNER.md             ← Cockpit checklist template
 │   ├── SESSION_NOTES.md              ← Session continuity template
 │   ├── SAFEGUARDS.md                 ← Safety rails template
@@ -178,7 +182,10 @@ New to the methodology? The **[tutorials](docs/tutorials/)** are a hands-on, pro
 │
 ├── bin/                              ← Sync tools (v2.2+)
 │   ├── sync                          ← Copy starter-kit files into a project (dual-mode, dual-source)
-│   └── status                        ← Report drift of synced files across projects
+│   ├── status                        ← Report drift of synced files across projects
+│   ├── check-links                   ← Validate relative links resolve in the adopter layout
+│   ├── _manifest.py                  ← Shared (src, dest, disposition) manifest — single source of truth
+│   └── tests.sh                      ← Test suite for the bin/ tooling
 │
 └── tools/                            ← Portfolio-level tooling
     └── methodology_dashboard.py      ← Health scanner & compliance dashboard
@@ -193,8 +200,8 @@ The methodology framework describes WHAT to do and WHY. In practice, it needs an
 - **Mandatory orientation** — prevents starting work without understanding current state
 - **"1 and done" rule** — prevents scope creep and quality degradation
 - **Automatic close-out** — prevents skipping the self-improvement loop
-- **23 known failure modes** — documents agent tendencies with specific countermeasures
-- **Degradation detection** — 7 warning signs that predict protocol erosion
+- **26 known failure modes** — documents agent tendencies with specific countermeasures
+- **Degradation detection** — 16 warning signs that predict protocol erosion
 - **Handoff accountability** — ensures each session sets up the next for success
 
 ### The Handoff Accountability Loop
