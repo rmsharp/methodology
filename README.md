@@ -245,6 +245,15 @@ Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during develop
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
 
+### What's New in v3.0
+
+The methodology is now **MIT-licensed** ([#43](https://github.com/KJ5HST/methodology/issues/43), rmsharp). The bespoke source-available `LICENSE` is replaced with the verbatim standard MIT License. The major version bump marks a deliberate change to the *legal terms* — not the content: no principle, phase, gate, workstream, or failure-mode is touched, and the failure-mode count stays 26.
+
+- **What changed legally.** MIT grants the right to use, copy, modify, merge, publish, distribute, sublicense, and **sell** — with attribution (the copyright and permission notice must be retained in copies). The previous license permitted commercial *operational* use but **forbade** selling or productizing the methodology itself; that no-resale restriction is now **intentionally dropped**. Anyone may sell the methodology or derivatives, attribution retained.
+- **Why MIT.** It adds the standard `AS IS` warranty/liability disclaimer the bespoke license lacked (reducing the author's residual exposure), removes the interpretive ambiguity around "this methodology *itself*," and is instantly recognizable and GitHub-auto-detected. The trade-off — losing the no-sell guarantee — was weighed against a hardened-custom alternative (which would have closed the same two defects while keeping the restriction) and MIT was chosen by author decision.
+- **Lockstep doc updates.** `LICENSE` → verbatim MIT (`Copyright (c) 2025-2026 Terrell Deppe (KJ5HST)`); `README.md` §License and the `CLAUDE.md` license line updated to match, so nothing contradicts the authoritative file.
+- **Adopter impact: none mechanical.** `LICENSE` is not a `bin/sync`-distributed file, so installed projects pull no change from this release. If you redistribute or build on the methodology, you are now under MIT terms.
+
 ### What's New in v2.9
 
 A combined release of two additive contributions that merged together ([#38](https://github.com/KJ5HST/methodology/pull/38), [#39](https://github.com/KJ5HST/methodology/pull/39), rmsharp): a hands-on **tutorial track** for newcomers, and a **reasoning-effort convention** that generalizes "match effort to the stakes" across the whole framework. No principle, phase, gate, workstream, or failure-mode changes — failure-mode count stays 26.
@@ -442,10 +451,6 @@ Combined release covering two contributions: a new Research Documentation workst
 
 Iterative Session Methodology — Copyright © 2025-2026 Terrell Deppe (KJ5HST)
 
-Permission is granted to use, reproduce, adapt, and implement this methodology for personal, educational, research, internal, or commercial operational purposes, provided that attribution to the original author is retained.
+Licensed under the [MIT License](LICENSE). You are free to use, copy, modify, merge, publish, distribute, sublicense, and sell copies of this methodology, provided that the above copyright notice and the permission notice are retained in all copies or substantial portions.
 
-You may not sell, sublicense, redistribute, publish, market, or commercially exploit this methodology itself — in whole or in part — as a standalone product, service, training material, framework, or derivative work without prior written permission from the copyright holder.
-
-Attribution must include: "Iterative Session Methodology © 2025-2026 Terrell Deppe (KJ5HST)"
-
-All rights reserved except as expressly granted above. See the [`LICENSE`](LICENSE) file for the authoritative text.
+The methodology is provided "as is", without warranty of any kind. See the [`LICENSE`](LICENSE) file for the authoritative text.
