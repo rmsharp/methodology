@@ -88,14 +88,26 @@ This is a backlog, **not** GitHub issues, by operator decision.
      expansion). Adversarial 4-lens verify: all faithful, 0 must-fix. Both commits pushed.
   2. Merge — only when airqino is between sessions. *(pending)*
 
-### BL-4 — Housekeeping: methodology repo (its own session)
+### BL-4 — Housekeeping: methodology repo (its own session) — ✅ DONE 2026-07-06
 - **Repo:** `rmsharp/methodology` (this repo). Not an adopter task; not a GitHub issue.
 - **Tasks:**
-  1. Decide prune-vs-keep on the two stale **fork-only** local planning branches
-     `docs/reasoning-tier-plan` and `docs/tutorial-series-plan` (both shipped in v2.9).
-  2. Confirm fork / upstream / tags are fully in sync and v2.9 close-out is intact.
-  3. Verify nothing else is stranded after the tutorial campaign + #41/#42 reconciles.
-- **Run as its own dedicated session.**
+  1. ~~Decide prune-vs-keep on the two stale **fork-only** local planning branches
+     `docs/reasoning-tier-plan` and `docs/tutorial-series-plan` (both shipped in v2.9).~~
+     **✅ DONE — archive-then-prune** (operator decision 2026-07-06). Both branch-only plan
+     docs merged into `docs/planning/` (`reasoning-tier-generalization-plan.md`,
+     `tutorial-series-plan.md`; commit `2f2b01f`) to match the fork-only archive convention,
+     then all three stale branches deleted local+origin (`docs/reasoning-tier-plan`,
+     `docs/tutorial-series-plan`, plus the origin-only fully-merged stray
+     `docs/reconcile-tutorials-published`). Fork now carries only `main` +
+     `chore/reuse-compliance-badges` (PR #44).
+  2. ~~Confirm fork / upstream / tags are fully in sync and v2.9 close-out is intact.~~
+     **✅ DONE** — tags `v2.9` + `v3.0` mirrored to origin **and** upstream; GitHub Releases
+     intact (`v3.0` = Latest); fork `main` 0 behind `upstream/main` (13 ahead = fork merge
+     commits + fork-only `docs/planning/`, expected).
+  3. ~~Verify nothing else is stranded after the tutorial campaign + #41/#42 reconciles.~~
+     **✅ DONE** — PRs #40/#41/#42 all merged upstream and present in fork `main`; no
+     stranded branches or unmirrored refs.
+- **Run as its own dedicated session.** *(this was that session — 2026-07-06)*
 
 ## Not in this backlog (rollout context)
 
