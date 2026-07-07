@@ -1,16 +1,46 @@
-# Operational Backlog (fork-only) — RETIRED 2026-07-06
+# Operational Backlog (fork-only)
 
-> **STATUS: RETIRED.** All tracked items (BL-1 – BL-4) are complete. There is no open operational
-> work. The verbose per-item task bodies were removed on 2026-07-06; git history preserves them
-> (commits `b091fba` … `69dad12`). This file is kept as a record.
+> **STATUS: 1 open item (BL-5), reopened 2026-07-07.** BL-1 – BL-4 are complete (the operational
+> rollout that originally justified this file); it was marked RETIRED on 2026-07-06 and reopened
+> when a new item surfaced. The verbose BL-1 – BL-4 task bodies were removed on 2026-07-06; git
+> history preserves them (commits `b091fba` … `69dad12`).
 
 Operational/coordination backlog for **rmsharp's** methodology work. Fork-only — it lives in
 `docs/planning/` and is **not** part of the canonical framework or any upstream PR (same convention
 as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md)).
 
-This was a backlog, **not** GitHub issues, by operator decision.
+This is a backlog, **not** GitHub issues, by operator decision.
 
-## Items — all complete
+## Open items
+
+### BL-5 — Dashboard: adapt scoring to document-only repositories
+
+**Problem.** `tools/methodology_dashboard.py` (and its `starter-kit/` twin) scores every repo on a
+code-centric rubric, so it penalizes **document-only** repositories for having no code. Affected
+populations: research-documentation projects (per `RESEARCH_DOCUMENTATION_WORKSTREAM.md` — papers,
+dissertations, technical reports, regulatory analyses) and the methodology framework's own doc corpus.
+Concretely, a doc-only repo:
+
+- scores **0/20 on Testing** (`test_to_source_ratio` = 0, `test_file_count` = 0) and draws a **HIGH
+  "No test infrastructure"** risk — a false penalty; there is nothing to unit-test.
+- can draw a **"No CI/CD"** risk even when a docs-render / link-check pipeline is the real equivalent.
+- has an unstable `doc_to_source_ratio` when `source_loc` ≈ 0.
+
+**Desired.** Detect a doc-only / research repo (e.g. `source_loc` below a threshold, or an explicit
+opt-in marker) and **conditionally re-shape scoring** — reweight or exempt the Testing dimension,
+substitute a **render/verification** dimension (leverages the v2.5 render-dependency discipline and
+the Research-Documentation workstream's verification checklist), and suppress the code-centric risks.
+Advisory tool → no hard gate; the goal is fair scoring, not a new gate. Apply to **both byte-identical
+twins**; bump `DASHBOARD_VERSION`.
+
+**Related polish (from the S5 / Component C review, low priority, fold in if cheap):**
+- Signal F's advisory RISK line is not adopter-scoped, so it can fire on a non-adopter sibling repo
+  that keeps a `BACKLOG.md` with `- [x]` history plus a `CHANGELOG.md`. Same "adapt to repo type"
+  class; consider gating it (or the freshness signals generally) on methodology adoption.
+- `.gitignore` covers `tools/__pycache__/` and `bin/__pycache__/` but **not** `starter-kit/__pycache__/`,
+  which the dashboard module now produces when imported/tested. Add the missing rule.
+
+## Completed items (BL-1 – BL-4)
 
 | Item | Scope | Outcome |
 |------|-------|---------|
