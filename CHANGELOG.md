@@ -1,0 +1,87 @@
+# Changelog — Authoritative Action Ledger
+
+The cumulative, append-only record of **actions taken in this repository** — across backlog
+items, repository issues, and ad-hoc work. It is the authoritative answer to *"what was done
+here, ever?"*, distinct from the release narrative in [`CLAUDE.md` §Versioning](CLAUDE.md#versioning).
+
+This repository dogfoods its own methodology: every session records its actions here at
+close-out (`starter-kit/SESSION_RUNNER.md` Phase 3F), and Phase 0 reconciles the ledger against
+`git log` and backfills anything a crashed or out-of-band session missed. Taking an action — any
+commit, or any non-commit action (release, tag, PR, upstream issue close, access grant, grooming
+decision) — and not recording it is failure mode #27. The full close-out and reconcile rules, plus
+the reusable seed, live in [`starter-kit/CHANGELOG.md`](starter-kit/CHANGELOG.md).
+
+**Source tag — exactly one per entry**, so `grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md`
+enumerates every logged action and proves all three sources landed:
+
+- `[issue #<N>]` — a repository issue. Issues for this repo live in the **upstream** parent
+  `KJ5HST/methodology` (this fork has Issues disabled), so entries cite an **absolute URL**, never
+  a bare `#<N>`.
+- `[BL-<N>]` — a `docs/planning/BACKLOG.md` item, removed from the backlog in the same commit.
+- `[ad hoc]` — work with no backlog or issue origin: releases, tag/branch ops, PR opens, upstream
+  issue closes, access grants, and decline/wontfix/grooming decisions.
+
+**Boundary vs. `CLAUDE.md` §Versioning — so the two ledgers cannot diverge.** §Versioning owns
+*released-version semantics* (one narrated entry per shipped version); `README.md` §What's New is
+its public restatement. This ledger is the *per-action operational timeline*, including
+non-release work (housekeeping, doc-only PRs, adopter coordination, backlog grooming) that
+otherwise has no home but raw `git log`. Where the two overlap — a release — this ledger carries a
+**one-line pointer** into §Versioning, never a re-narration (cite, don't restate).
+
+Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sections as it grows.
+
+---
+
+### 2026-07-07 · [ad hoc] Authoritative CHANGELOG ledger campaign — gate + reconcile + dashboard (in progress)
+- **Change:** `CHANGELOG.md` is being made a dependable cross-source action ledger — a write-time
+  gate (FM #27, Phase 3F), a reconcile-on-read backstop (Phase 0), a recomposed seed template, a
+  dashboard freshness monitor, and this dogfooded root ledger. S2–S6 done; S7 (git pre-commit hook
+  + the step added to the other session-type checklists) is pending.
+- **Commit/PR:** `2227aab` (S2, FM #27) · `4828929` (S3, Phase 0 reconcile) · `f25e0c4` (S4, seed) ·
+  `89b8f60` (S5, dashboard) · this commit (S6, root ledger) — branch `feat/changelog-authoritative-ledger`.
+  Ratified plan: [`docs/planning/changelog-authoritative-ledger-gate-plan.md`](https://github.com/rmsharp/methodology/blob/main/docs/planning/changelog-authoritative-ledger-gate-plan.md) (`1710e90`, fork `main` only).
+- **Session:** S6 · **Verified:** 51/51 `bin/tests.sh` (S4/S5); 35 dashboard fixture assertions + live portfolio render (S5).
+
+<!-- Entries below were backfilled at ledger creation (S6), covering everything v3.0-forward per decision D5.
+     They were reconstructed from git history at ledger birth, not logged live at the time of the action. -->
+
+### 2026-07-07 · [ad hoc] Operational backlog reopened with BL-5 after full retirement
+- **Change:** `docs/planning/BACKLOG.md` was retired 2026-07-06 once BL-1/2/3/4 all closed, then
+  reopened 2026-07-07 with BL-5 (make `methodology_dashboard.py` adapt scoring to document-only repos).
+- **Commit/PR:** `ff5cee9` (retire) · `72dc914` (reopen with BL-5). *(fork `main`)*
+- **Session:** S6 (backfill) · **Verified:** n/a — docs-only (planning).
+
+### 2026-07-06 · [BL-4] Backlog item BL-4 closed — methodology housekeeping
+- **Change:** planning docs archived and stale branches pruned; BL-4 removed from `docs/planning/BACKLOG.md`.
+- **Commit/PR:** `69dad12`. *(fork `main`)*
+- **Session:** S6 (backfill) · **Verified:** n/a — docs-only (planning).
+
+### 2026-07-06 · [ad hoc] PR #45 merged — v3.0.1 added to the §Versioning ledger
+- **Change:** `CLAUDE.md` §Versioning gained its v3.0.1 entry (the release itself had already shipped at the PR #44 merge).
+- **Commit/PR:** PR #45 (content `3fee545`, merged `4df8ee6`).
+- **Session:** S6 (backfill) · **Verified:** n/a — docs-only.
+
+### 2026-07-06 · [ad hoc] Released v3.0.1 — REUSE-compliance metadata + README badges
+- **Change:** the repo's already-MIT licensing was made machine-readable (REUSE Spec 3.3); a patch
+  release was cut on top of v3.0 (not a re-point — v3.0 left untouched).
+- **Commit/PR:** annotated tag `v3.0.1` at `aa822f6` (the PR #44 merge). → full narrative: [`CLAUDE.md` §Versioning "v3.0.1"](CLAUDE.md#versioning).
+- **Session:** S6 (backfill) · **Verified:** `reuse lint` 53/53; live REUSE badge scanned compliant.
+
+### 2026-07-06 · [ad hoc] PR #44 merged — REUSE.toml + LICENSES/MIT.txt + README badges
+- **Change:** added `REUSE.toml` (single bulk `path = "**"` MIT annotation), `LICENSES/MIT.txt`, and
+  two README badges (static `License: MIT` + live REUSE-compliance); no existing framework file gained an inline SPDX header.
+- **Commit/PR:** PR #44 (content `7b5238a`, merged `aa822f6`).
+- **Session:** S6 (backfill) · **Verified:** `reuse lint` 53/53 files, 0 problems.
+
+### 2026-06-25 · [issue #43] Released v3.0 — relicensed under the MIT License
+- **Change:** the bespoke source-available `LICENSE` was replaced with verbatim standard MIT text;
+  use/copy/modify/distribute/**sell** with attribution retained is now permitted (the prior no-resale restriction dropped).
+- **Commit/PR:** relicense `49a103a`, release `5525f30`, annotated tag `v3.0`. Issue: <https://github.com/KJ5HST/methodology/issues/43>. → full narrative: [`CLAUDE.md` §Versioning "v3.0"](CLAUDE.md#versioning).
+- **Session:** S6 (backfill) · **Verified:** n/a — relicense + lockstep README/CLAUDE.md updates.
+
+---
+
+**Release history before v3.0 (v1.0 – v2.9):** not re-narrated here — see [`CLAUDE.md` §Versioning](CLAUDE.md#versioning)
+for the per-version narrative and `README.md` §What's New for the public restatement. This ledger is
+prepend-only from v3.0 forward (decision D5: an authoritative ledger needs no hole at its recent edge,
+and duplicating §Versioning would violate cite-don't-restate).

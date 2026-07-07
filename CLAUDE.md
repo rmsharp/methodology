@@ -84,7 +84,11 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 
 ## Versioning
 
-Changes are tracked via git commits and the README's "What's New" section. Current version: v3.0.1. Key additions by version:
+Changes are tracked via git commits and the README's "What's New" section. Current version: v3.0.1.
+
+This section owns **released-version semantics** — one narrated entry per shipped version. The repo's **per-action operational timeline** (including non-release work: housekeeping, doc-only PRs, adopter coordination, backlog grooming) lives in the root [`CHANGELOG.md`](CHANGELOG.md) action ledger; where the two overlap — a release — `CHANGELOG.md` carries a one-line pointer here rather than re-narrating, so the two ledgers cannot diverge.
+
+Key additions by version:
 
 - **v1.0:** Initial 9 principles, 6 phases, 4 workstreams
 - **v1.1:** Protocol erosion detection, ghost session prevention, minimum handoff requirements, 4 new failure modes (#14-17)
