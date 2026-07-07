@@ -8,20 +8,20 @@ Every session has exactly ONE deliverable. When it's done, you close out. You do
 
 ## Phase 0: Orient
 
-**Change nothing. Read only.**
+**Change nothing — read only, except the single append-only ledger backfill defined in step 6 (it records commits that already exist).**
 
 1. Read `SAFEGUARDS.md` — **in full, not skimmed. Every section.**
 2. **Confirm `pwd` and which `SESSION_NOTES.md` you are about to read/write** (see the session-notes boundary rule below), then read it — focus on the ACTIVE TASK section at the top
 3. Check GitHub Issues (`gh issue list`) if the project has a repo — understand current priorities. Fall back to `BACKLOG.md` if no repo exists. (BACKLOG.md should contain only open work items — for history see `CHANGELOG.md`, for feature inventory see `ROADMAP.md`.)
 4. Run: `git status`, `git log --oneline -5`, `git diff --stat`
 5. Run: `python3 methodology_dashboard.py` — refresh the project health dashboard. Leave `dashboard.html` open in a browser; it auto-refreshes every 60 seconds.
-6. **Check for ghost sessions:** Compare the session number in SESSION_NOTES.md against `git log`. If there are commits between the last documented session and now that don't correspond to any session notes, report: "Detected [N] undocumented session(s) between Session [X] and now. Commits: [list]. No session notes exist for this work."
+6. **Check for ghost sessions, then reconcile the ledger:** Compare the session number in SESSION_NOTES.md against `git log`. If there are commits between the last documented session and now that don't correspond to any session notes, report: "Detected [N] undocumented session(s) between Session [X] and now. Commits: [list]. No session notes exist for this work." **Then reconcile `CHANGELOG.md` against `git log`** — the authoritative-ledger backstop for commits a close-out gate never reached (a crash before Phase 3F, an out-of-band commit, a prior in-progress hand-off). Reconcile the ledger of the repo you confirmed in step 2 (one per repo when a session spans several — see the session-notes boundary rule below). Compute the undocumented set (mechanics in the ledger-reconcile note below); any commit in it — or a prior stub still marked `CHANGELOG: pending` (Phase 1B) — is an unrecorded action (failure mode #27). **Backfill it now, during this step, before the report and the STOP** — the one write Phase 0 permits (see the note below).
 7. **Report findings to the user:**
    - Current branch and clean/dirty state
    - What the last session was doing
    - Current milestone and active task from GitHub Issues (or BACKLOG.md if no repo)
    - Any uncommitted changes
-   - Ghost session detection results (step 6)
+   - Ghost session detection **and ledger-reconcile** results (step 6) — any undocumented commits since the `CHANGELOG.md` frontier, and the backfill entry made (or the recorded "no CHANGELOG" opt-out)
    - Dashboard health score and any risk flags
    - Build status if known
 8. **STOP. Wait for the user to give you a task.**
@@ -31,6 +31,15 @@ DO NOT skip the report. DO NOT start working. DO NOT assume you know what to do.
 **Even if the user's first message contains a task** (e.g., "Implement the following plan"), Phase 0 is still mandatory. That phrase comes from Plan Mode's auto-generated preamble — it does NOT mean start coding. The orientation report exists for the user's benefit — it establishes shared understanding of the current state. The user needs to see the report and confirm before work begins. A task in the prompt does not mean Phase 0 is complete. Complete all 8 steps, then the user will re-state or confirm the task in Phase 1.
 
 **Steps 1-3 are READS, not skims.** Every step exists because a session failed without it.
+
+**⚠ Ledger reconcile — the one write Phase 0 permits.** Phase 0 is otherwise read-only, but an authoritative ledger that is *true when you read it* needs one exception: backfilling history that already happened. This is a repair of the record — append-only documentation of commits that already exist — done **during step 6, before the Phase 0 report and STOP** (it needs no assigned task; it only records existing commits) and surfaced in that report. If step 6 finds undocumented commits:
+
+1. **Check for a committed ledger first** — `git log -1 --format=%H -- CHANGELOG.md`. If this is **empty**, no commit has ever recorded the ledger: self-provision (step 4) and reconcile from the repo root — do **not** treat an empty result as "current" (that is the original hole). If it returns a commit, that is the **frontier**.
+2. **List the gap** — commits since the frontier with no entry: `git log --no-merges <frontier>..HEAD` (the same count `git rev-list --count --no-merges <frontier>..HEAD` drives the dashboard's ledger-lag signal).
+3. **Backfill** — prepend one entry per undocumented span, **source-tagged so the audit `grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md` still enumerates it** (best-recoverable source; default `[ad hoc]`), noting provenance and the commit range: `### YYYY-MM-DD · [ad hoc] Backfilled (reconcile-on-read): undocumented commits <X>..<Y> — <summary>`. Commit it on its own (`docs(changelog): backfill …`), separate from this session's later deliverable. If a commit's intent is unclear, report it and ask before summarizing.
+4. **Self-provision if absent (D3)** — if step 1 found no committed ledger and `CLAUDE.md` records no "no CHANGELOG" opt-out, create `CHANGELOG.md` from the bootstrap seed (or commit an existing uncommitted seed), record pre-ledger history as a single pointer line, and reconcile forward. A missing ledger on a repo with real history is a defect, never a silent skip.
+
+Two no-ops only: a **non-empty** frontier with an empty `<frontier>..HEAD` (no undocumented commits — note that non-commit actions such as releases, tags, PR opens, issue closes, and access grants leave no commit and so are the Phase 3F write-gate's / failure-mode-#27 responsibility, not reconcile's), or a project that records a "no CHANGELOG" decision in `CLAUDE.md`. The backfill records what past sessions did; it does not become this session's deliverable or license work beyond the one assigned task (failure mode #17).
 
 **⚠ Session-notes boundary — which `SESSION_NOTES.md` do you write?** A session writes notes to the `SESSION_NOTES.md` of the directory it runs in. **This project's `SESSION_NOTES.md` records work done in THIS project.** A portfolio-oversight / methodology session (run from the oversight directory above the project repos) records its work in the **portfolio-oversight** dir's own `SESSION_NOTES.md`, never in a project's — and vice versa: project engineering run from a project directory writes that project's notes, full stop. Before step 2, confirm `pwd` and which `SESSION_NOTES.md` you are reading/writing. This boundary exists because same-named methodology artifacts (`SESSION_NOTES.md`, `methodology_dashboard.py`) are copied per-project with no canonical owner; logging project work at the portfolio level (or vice versa) is misfiling, and the next session inherits a stale, cross-contaminated log.
 
@@ -74,9 +83,10 @@ State your understanding back to the user: *"I'm going to [deliverable] followin
 **Deliverable:** [task description] (IN PROGRESS)
 **Started:** [date/time]
 **Status:** Session claimed. Work beginning.
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 ```
 
-**Why this exists:** Ghost sessions — sessions that crash, hit context limits, or end without writing notes — leave zero trace. The next session has no idea what happened, what was attempted, or what state was left behind. By writing a stub FIRST, even a catastrophic failure leaves evidence. This stub is overwritten during Phase 3D with the full handoff.
+**Why this exists:** Ghost sessions — sessions that crash, hit context limits, or end without writing notes — leave zero trace. The next session has no idea what happened, what was attempted, or what state was left behind. By writing a stub FIRST, even a catastrophic failure leaves evidence. This stub is overwritten during Phase 3D with the full handoff. The `CHANGELOG: pending` marker is a best-effort ledger breadcrumb: a session that crashes *before* close-out leaves it in place, so the next session's Phase 0 reconcile (step 6) sees both the `git log` gap and the explicit marker. The always-reliable backstop is the `git log` gap itself — it catches a crash even in the Phase 3D→3F window, after the handoff has overwritten the stub but before the ledger entry is written.
 
 **This is a structural control, not a suggestion.** Mandatory close-out steps are how clean-delivery streaks don't collapse: each protocol step that gets shaved off makes the next step easier to shave off.
 

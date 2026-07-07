@@ -139,24 +139,25 @@ Every session follows these phases in order. Phases are sequential and gated —
 
 ### Phase 1: Pre-Flight
 
-**Purpose:** Verify the workspace is clean, the prior state is understood, and nothing is broken before you touch anything.
+**Purpose:** Verify the workspace is clean, the prior state is understood, and nothing is broken before you touch anything — apart from the append-only ledger backfill in step 4, which records commits that already exist.
 
 **Steps:**
 1. Read all governing documents (safety rules, process docs, style guides) — **in full, not skimmed. Every section.**
 2. Read prior session notes (what was the last session doing? what's in progress?)
 3. Check the current state of the workspace (version control status, recent changes)
-4. **Detect ghost sessions:** Compare session notes against the change history. If there are changes between the last documented session and now that have no corresponding notes, report it. Ghost sessions — sessions that crashed or ended without writing notes — leave the next session blind.
+4. **Detect ghost sessions and reconcile the ledger:** Compare session notes against the change history. If there are changes between the last documented session and now that have no corresponding notes, report it — ghost sessions (crashed or ended without writing notes) leave the next session blind. Then reconcile the authoritative ledger (`CHANGELOG.md`) against the change history: first check whether any commit has ever recorded it (if none, self-provision the ledger from its seed and reconcile from the root — an unrecorded ledger on a repo with real history is a defect, not "current"); otherwise locate its frontier (the newest ledger-touching commit), and treat both the commits since it with no entry **and** any prior Phase 1B stub still marked `CHANGELOG: pending` as unrecorded actions. **Backfill them before new work** — a source-tagged entry marked as a reconcile backfill. Reconcile backstops commit-bearing actions; non-commit actions (releases, tags, PR/issue events, access grants) are the close-out write-gate's responsibility. This is the one write Pre-Flight permits — it records commits that already exist, not new work; the backfill is not this session's deliverable and licenses no work beyond the one assigned task (failure mode #17).
 5. Verify the artifact you will modify exists and is in a known-good state
 6. Spot-check 2-3 ADJACENT artifacts to confirm they are also healthy
 7. **Report findings to the stakeholder before proceeding**
 
-**Gate:** Pre-Flight Pass — workspace is clean, prior work is understood, no broken artifacts. If any artifact is broken, report it and get direction before continuing.
+**Gate:** Pre-Flight Pass — workspace is clean, prior work is understood, the ledger is reconciled with the change history, no broken artifacts. If any artifact is broken, report it and get direction before continuing.
 
 **Anti-patterns to avoid:**
 - Starting work without reading prior session notes
 - Assuming the workspace is clean because it was clean last time
 - Skipping the adjacent artifact check (this is how cross-session damage goes undetected)
 - Skimming governing documents instead of reading them (reading "the gist" misses the specific steps that prevent specific failures)
+- Starting new work while the ledger lags the change history (undocumented commits not yet backfilled)
 
 ### Phase 1B: Claim the Session
 
@@ -165,7 +166,7 @@ Every session follows these phases in order. Phases are sequential and gated —
 **Purpose:** Leave a trace before any work begins, so that even a catastrophic failure (crash, context loss, timeout) produces evidence of what was attempted.
 
 **Steps:**
-1. Write a stub to the session notes file with: session identifier, task description, start time, status "IN PROGRESS"
+1. Write a stub to the session notes file with: session identifier, task description, start time, status "IN PROGRESS", and a `CHANGELOG: pending` ledger marker (the crash breadcrumb the next session's Pre-Flight reconcile reads; cleared when Phase 6 records the entry)
 2. This stub is overwritten during Phase 6 with the full close-out notes
 
 **Why this phase exists:** In a 1100+ session series, multiple sessions crashed or ended without completing close-out. These "ghost sessions" left zero trace — no notes, no self-assessment, no handoff. The next session had no idea what was attempted, what state was left behind, or what to watch for. By writing a stub FIRST, even total failures leave a breadcrumb.
@@ -418,7 +419,7 @@ For AI agents, the Session Runner is especially critical because agents face con
 
 | # | Gate | Between | Question It Answers |
 |---|------|---------|---------------------|
-| 1 | Pre-Flight Pass | Start → Research | Is the workspace clean, prior work understood, and ghost sessions detected? |
+| 1 | Pre-Flight Pass | Start → Research | Is the workspace clean, prior work understood, ghost sessions detected, and the ledger reconciled with the change history? |
 | 2 | Session Claimed | After task received → Before work | Will this session leave a trace even if it crashes? |
 | 3 | Previous Handoff Evaluated | Start of Close-Out | Have I scored the previous session's handoff with specific evidence? |
 | 4 | Research Complete | Research → Create | Have I read everything I need to make good decisions? |
@@ -726,6 +727,7 @@ Every session produces a document following this structure. Copy this template a
 - Workspace state: [clean/dirty — if dirty, what and why]
 - Prior session notes: [summary of what the last session did]
 - Ghost session check: [any undocumented sessions detected? changes without notes?]
+- Ledger reconcile: [CHANGELOG current with git log? undocumented commits backfilled? or "no CHANGELOG" opt-out recorded?]
 - Artifact current state: [builds? passes? known issues?]
 - Adjacent artifact check: [which ones checked, their status]
 
