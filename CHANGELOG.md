@@ -32,6 +32,13 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-07 · [ad hoc] v3.1 release narration — §Versioning + What's New; tag + Release at PR #46 merge
+- **Change:** the CHANGELOG-ledger campaign (S2–S7) is designated **v3.1** — a minor bump (first new
+  failure mode since v2.7). `CLAUDE.md` §Versioning gains the narrated v3.1 entry, `README.md` §What's
+  New its public restatement; the annotated tag `v3.1` + GitHub Release are cut at the PR #46 merge commit.
+- **Commit/PR:** this commit (release narration) · [PR #46](https://github.com/KJ5HST/methodology/pull/46). → full narrative: [`CLAUDE.md` §Versioning "v3.1"](CLAUDE.md#versioning).
+- **Session:** S7 · **Verified:** 51/51 `bin/tests.sh`.
+
 ### 2026-07-07 · [ad hoc] Authoritative CHANGELOG ledger campaign — gate + reconcile + dashboard + hook (S2–S7 complete)
 - **Change:** `CHANGELOG.md` is now a dependable cross-source action ledger, closed on two
   mechanisms rather than one: a write-time gate (FM #27, Phase 3F), a reconcile-on-read backstop

@@ -248,6 +248,15 @@ Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during develop
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
 
+### What's New in v3.1
+
+`CHANGELOG.md` becomes a dependable cross-source **action ledger** — the authoritative record of *what was done here, ever* across backlog items, repository issues, and ad-hoc work (rmsharp, [PR #46](https://github.com/KJ5HST/methodology/pull/46)). The design's key finding: a close-out write-gate **alone** is not dependable, so the ledger rests on two mechanisms — **gate-on-write** at close-out *and* **reconcile-on-read** at orientation, which backfills anything the gate missed.
+
+- **New failure mode #27, "Unrecorded action"** (appended; the count moves to **27 failure modes**) — a Phase 3F / Phase 6 close-out step records one dated, source-tagged entry per action (`[issue #<N>]` · `[BL-<N>]` · `[ad hoc]`), newest on top.
+- **Reconcile-on-read** — Phase 0 diffs `git log` since the ledger frontier and backfills undocumented commits before new work. The self-healing backstop that makes the ledger true *when you read it*.
+- **Tooling** — a dashboard ledger-lag freshness monitor (advisory only; `DASHBOARD_VERSION` → 2.7.0), a `starter-kit/CHANGELOG.md` seed recomposed to the action-ledger shape, and a shipped `.githooks/pre-commit` co-staging hook (bypassable with `--no-verify`; reconcile is the guarantee).
+- **6 phases, 12 quality gates, four session types, and every workstream are unchanged** — the additions are FM #27, a Phase 0 reconcile step, and the close-out ledger step (propagated into every session-type and campaign checklist as Learning #8).
+
 ### What's New in v3.0
 
 The methodology is now **MIT-licensed** ([#43](https://github.com/KJ5HST/methodology/issues/43), rmsharp). The bespoke source-available `LICENSE` is replaced with the verbatim standard MIT License. The major version bump marks a deliberate change to the *legal terms* — not the content: no principle, phase, gate, workstream, or failure-mode is touched, and the failure-mode count stays 26.
