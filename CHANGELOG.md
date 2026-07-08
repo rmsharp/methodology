@@ -32,6 +32,20 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-07 · [ad hoc] v3.1 shipped — PR #46 merged, tag + GitHub Release cut, fork synced
+- **Change:** the held v3.1 deployment gate cleared after the v3.0→v3.1 adopter-migration trial passed
+  (operator post-trial confirm). PR #46 merged to `KJ5HST/main` (merge `75a6853`); the annotated tag
+  `v3.1` was cut at that commit and its **GitHub Release published + marked Latest**; fork `main` synced
+  (`1adf6b3`, 0 behind upstream) and the tag mirrored to `origin` (identical tag object `202669a` on both
+  remotes); the merged feature branch `feat/changelog-authoritative-ledger` was pruned (local + origin).
+  Failure-mode count is now **27**.
+- **Commit/PR:** [PR #46](https://github.com/KJ5HST/methodology/pull/46) → merge `75a6853`; fork-sync
+  merge `1adf6b3` (this entry). Release: <https://github.com/KJ5HST/methodology/releases/tag/v3.1>.
+  → full narrative: [`CLAUDE.md` §Versioning "v3.1"](CLAUDE.md#versioning).
+- **Session:** v3.1 deploy · **Verified:** 6-dimension adversarial release-readiness pass (version strings,
+  FM #27 count, README↔§Versioning parity, ledger integrity, `.githooks/pre-commit`, close-out
+  propagation) — clean; 51/51 `bin/tests.sh`; tag object byte-identical on `upstream` + `origin`.
+
 ### 2026-07-07 · [ad hoc] BOOTSTRAP: add earlier-version→v3.1 adopter migration note (seed CHANGELOG not auto-updated)
 - **Change:** a local v3.0→v3.1 adopter-migration trial (real `bin/sync` against a pristine v3.0 tree)
   confirmed the update path is sound — **8 tracked files upgrade with no `--force`**, drift guard intact —
