@@ -21,6 +21,9 @@ Block isolation matters: a receipt is parsed from the text BETWEEN a
 ```handoff / ``` fence pair, never by grepping the whole file — prose outside the
 fence (including this file's own illustrative example, wrapped in a 4-backtick
 outer fence per CommonMark's fence-nesting rule) must never satisfy or trip a check.
+The newest receipt is the FIRST ```handoff block in file order, so a documentation
+example MUST be wrapped in a stronger (4-backtick) fence — an UNWRAPPED ```handoff
+placed above the real receipt would be treated as a real receipt and shadow it.
 
 Part of the close-out-receipt vertical slice (P1: starter-kit/HANDOFFS.md + manifest
 wiring; P2: this checker + bin/tests.sh Tests 21-22).
@@ -55,14 +58,20 @@ KEY_RE = re.compile(r"^(" + "|".join(REQUIRED_KEYS) + r"):\s*(.*)$")
 HANDOFF_OPEN_RE = re.compile(r"^```handoff[ \t]*$")
 
 # `key_files` must carry a `path:line` token somewhere in the value (e.g.
-# "SessionManager.java:245"). This is the "at least one :line token in the whole
-# value" reading, not a stricter per-entry reading (each comma/space-separated
-# entry individually carrying its own token) — see the module docstring / the
-# session report for why the weaker reading was chosen.
-KEY_FILES_RE = re.compile(r"\S+:\d+")
+# "SessionManager.java:245"). The pre-colon token must be PATH-LIKE — contain a
+# "/" or "." — so an incidental colon-digit run in prose (a time "10:30", a ratio
+# "3:1", a scripture ref "John 3:16", "auth:2fa") does NOT vacuously satisfy the
+# check. Tradeoff: an extension-less top-level file needs a path prefix
+# ("./Makefile:12"). This is the "at least one path:line token in the whole value"
+# reading, not a stricter per-entry reading (each comma/space-separated entry
+# carrying its own token).
+KEY_FILES_RE = re.compile(r"[^\s:]*[/.][^\s:]*:\d+")
 
-# A sha-shaped token anywhere in what_was_done; short (7) to full (40) hex.
-SHA_RE = re.compile(r"\b[0-9a-f]{7,40}\b")
+# A sha-shaped token anywhere in what_was_done; short (7) to full (40) hex, and
+# containing at least one hex LETTER so a bare 7+ digit decimal (a count, a unix
+# timestamp) does not pass as a "commit sha" — the far more common false-negative.
+# (A rare all-numeric short sha is still carried in the separate `commit:` field.)
+SHA_RE = re.compile(r"\b(?=[0-9a-f]{7,40}\b)[0-9a-f]*[a-f][0-9a-f]*\b")
 
 PICK_BACKLOG_RE = re.compile(r"pick next(\s+from)?(\s+the)?\s+backlog", re.IGNORECASE)
 NEED_TO_VERIFY_RE = re.compile(r"need to verify", re.IGNORECASE)

@@ -337,6 +337,20 @@ good_handoff | sed 's#^key_files:.*#key_files: bin/check-handoff, bin/tests.sh#'
 "$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && fail "key_files missing path:line token not caught" || pass "key_files missing path:line token caught"
 rm -f "$F"
 
+# Regression (final-review C1): an incidental colon-digit run in prose (a scripture
+# ref, a time, a ratio) must NOT satisfy key_files — the pre-colon token must be path-like.
+F="$(mktemp)"
+good_handoff | sed 's#^key_files:.*#key_files: reviewed the citation John 3:16, no files edited#' > "$F"
+"$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && fail "key_files incidental colon-digit (John 3:16) wrongly passed" || pass "key_files incidental colon-digit (no path) caught"
+rm -f "$F"
+
+# Regression (final-review C2): a bare 7+ digit decimal (a count/timestamp) must NOT
+# satisfy what_was_done's sha-shape check — a real sha carries a hex letter.
+F="$(mktemp)"
+good_handoff | sed 's#^what_was_done:.*#what_was_done: processed 12345678 records, forgot to note the sha#' > "$F"
+"$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && fail "what_was_done decimal-only (12345678, no sha) wrongly passed" || pass "what_was_done decimal-only (no hex letter) caught"
+rm -f "$F"
+
 echo "== Test 22: check-handoff — anti-pattern lints, modes (--allow-pending), fresh-seed, block isolation =="
 F="$(mktemp)"
 good_handoff | sed 's/^next_steps:.*/next_steps: pick next from backlog/' > "$F"

@@ -71,10 +71,19 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   `feat/close-out-receipt` (from `upstream/main`); model
   split hybrid — **P2 + P4 Sonnet 5; P1/P3/P5/P6 Opus 4.8**, Opus reviewing every Sonnet phase (P6
   moved to Opus because its deliverable is the session's own close-out handoff, not a delegable task).
-- **Session:** close-out-receipt slice · **Verified:** `bin/tests.sh` **81/82** (the 1 = github-source
+- **Final review & fixes:** a 6-lens adversarial review (`wf_91880f5f-35c`, default-to-refute verify) —
+  **12 raised → 7 confirmed → all fixed** across 3 checkpoint commits. **Fix A (checker, this commit):**
+  `key_files`'s `path:line` regex now requires a **path-like** pre-colon token (`/` or `.`), so an
+  incidental colon-digit in prose (`John 3:16`, `10:30`, `3:1`) no longer passes (C1); `what_was_done`'s
+  sha-shape now requires a **hex letter**, so a bare 7+ digit decimal/timestamp no longer counts as a sha
+  (C2); + a docstring caveat that an unwrapped example fence shadows the real receipt (C7). Regression
+  tests added (**81 → 83**). Fixes B (adopter-fidelity caveats + double-count wording) and C (BOOTSTRAP
+  seed enumeration + campaign checklists) follow. 5 findings were refuted (e.g. the missing `--range`
+  mode — plan-optional; the last-wins duplicate-key parse — benign).
+- **Session:** close-out-receipt slice · **Verified:** `bin/tests.sh` **83/84** (the 1 = github-source
   404 on the not-yet-pushed `HANDOFFS.md`, clears on merge); `bin/check-links` clean; block-isolation +
-  per-field-defect fixtures green; **`bin/check-handoff` green on the first real receipt** (root
-  `HANDOFFS.md`, S1 — dogfood, first non-fixture run).
+  per-field-defect + C1/C2-regression fixtures green; **`bin/check-handoff` green on the first real
+  receipt** (root `HANDOFFS.md`, S1 — dogfood, first non-fixture run).
 
 ### 2026-07-08 · [ad hoc] bin/status flags stale-format adopter seeds (BL-6 item 2)
 - **Change:** `bin/status` now surfaces a SEED file whose *format* predates the current methodology —
