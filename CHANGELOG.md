@@ -32,6 +32,17 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] sample-project/.gitignore ignores demo.json (Tutorial 2/3 smoke-test store)
+- **Change:** `docs/tutorials/sample-project/.gitignore` now ignores **`demo.json`** — the `--file demo.json`
+  store that the Tutorial 2 (and Tutorial 3) Phase 3E runtime smoke test writes. The ignore list previously
+  covered only `todos.json`/`__pycache__/`/`.pytest_cache/`, and T2's 3F stages four named files, so a
+  learner replaying T2 was left with `demo.json` **untracked** after close-out — undercutting the clean-tree
+  discipline the tutorial teaches. `demo.json` is the only non-ignored artifact the tutorials generate
+  (verified: sole `--file` store; the default `todos.json` is already ignored). Resolves fork backlog BL-6
+  follow-up 1c. Canonical-only tutorial asset — **no version event**.
+- **Commit/PR:** `f84a440` (branch `docs/sample-gitignore-demo-json`) → [PR #49](https://github.com/KJ5HST/methodology/pull/49), merged `ca7c063` (canonical-only tutorial asset, no version event).
+- **Session:** BL-6 follow-up 1c · **Verified:** 51/51 `bin/tests.sh`; grep-confirmed `demo.json` is the complete untracked-artifact set (T2/T3 `--file` sweep); co-staged through `.githooks/pre-commit`.
+
 ### 2026-07-08 · [ad hoc] PR #48 merged to KJ5HST/main; fork synced; BL-6 follow-ups 1a/1b closed, 1c filed
 - **Change:** [PR #48](https://github.com/KJ5HST/methodology/pull/48) (BL-6 follow-ups 1a/1b — the
   `HOW_TO_USE.md` Phase 3E smoke-test re-letter + `T1_setup.md` setup commit) merged to `KJ5HST/main`
