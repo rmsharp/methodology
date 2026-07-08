@@ -48,7 +48,7 @@ guard intact — and shipped the `starter-kit/BOOTSTRAP.md` "Updating an existin
 methodology version" note (branch `feat/changelog-authoritative-ledger`, commit `c871ac0`). Three loose
 ends ride along to the v3.1 merge/release; they are parked here rather than widening the held campaign.
 
-1. **Pedagogical refresh (the original BL-6 intent) — ✅ SHIPPED via upstream [PR #47](https://github.com/KJ5HST/methodology/pull/47) (2026-07-08, pending merge).** `HOW_TO_USE.md` FM count 23→27 (two
+1. **Pedagogical refresh (the original BL-6 intent) — ✅ SHIPPED + MERGED via upstream [PR #47](https://github.com/KJ5HST/methodology/pull/47) (2026-07-08, merge `3bb7825`; fork synced `6db6a03`).** `HOW_TO_USE.md` FM count 23→27 (two
    sites) + compressed rows 24–27 + the FM #27 `CHANGELOG.md` ledger recording folded into its 3E close-out
    bullet; `docs/tutorials/T2_first_session.md` + `T2_worked_transcript.md` now show the Phase 3F ledger
    entry, the paired `BACKLOG.md` removal for a `[BL-N]` item, and explicit `git add` staging. Docs-lag

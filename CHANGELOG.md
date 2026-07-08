@@ -32,6 +32,17 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] PR #47 merged to KJ5HST/main; fork synced; BL-6 item 1 fully closed
+- **Change:** [PR #47](https://github.com/KJ5HST/methodology/pull/47) (the BL-6 item-1 `HOW_TO_USE.md` +
+  `T2_*` FM #27 pedagogical refresh) merged to `KJ5HST/main` (merge `3bb7825`); fork `main` synced via
+  `git merge upstream/main` (fork-sync merge `6db6a03`, resolving one `CHANGELOG.md` union conflict — the
+  fork's `[BL-6]` / v3.1 entries vs. the branch's own `[ad hoc]` entry, reconciled newest-on-top); the head
+  branch `docs/how-to-use-fm27-ledger` pruned (origin + local); `docs/planning/BACKLOG.md` BL-6 item 1
+  marked merged. Docs-lag correction — **no version event** (FM #27 already shipped in v3.1). BL-6 items
+  2–3 and follow-ups 1a/1b remain open.
+- **Commit/PR:** [PR #47](https://github.com/KJ5HST/methodology/pull/47) → merge `3bb7825`; fork-sync merge `6db6a03`; this commit (fork `main` — BACKLOG close-out + this ledger entry).
+- **Session:** BL-6 item-1 merge/close-out · **Verified:** distributed files (`HOW_TO_USE.md`, `T2_first_session.md`, `T2_worked_transcript.md`) byte-identical to `upstream/main` post-merge; 51/51 `bin/tests.sh`; ledger source-tag census intact (issue / BL / ad-hoc all present).
+
 ### 2026-07-08 · [BL-6] Groom BL-6 — item 1 (pedagogical refresh) shipped via PR #47; file follow-ups 1a/1b
 - **Change:** `docs/planning/BACKLOG.md` BL-6 updated — item 1 (HOW_TO_USE + T2-tutorial FM #27 / count
   refresh) marked ✅ shipped via upstream [PR #47](https://github.com/KJ5HST/methodology/pull/47) (pending
