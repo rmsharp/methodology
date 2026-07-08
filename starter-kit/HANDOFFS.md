@@ -50,7 +50,9 @@ commit: <short-sha — or `pending` until the next session reconciles it>
 
 Write clean `key: value` lines — no inline `#` comments (a `#` is a literal value character,
 as in `changelog_ref: PR #52`). The keys map one-to-one to the six Phase 3D Minimum Handoff
-Requirements plus the two scores.
+Requirements plus the two scores. `status` is `pending` at the Phase 1B claim and `complete` at
+close-out; a third value, `reconciled`, is written *only* by a later session's Phase 0 reconcile
+when it reconstructs a receipt a crashed session never completed — you never write it yourself.
 ````
 
 `self_score` and `predecessor_score` are distinct keys so one can never stand in for the other; omit

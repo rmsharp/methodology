@@ -47,13 +47,18 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   (1B receipt stub, 3D "write the six as a durable receipt", Planning checklist, slice-revert) +
   `ITERATIVE_METHODOLOGY.md` (Phase 1B, Phase 6 step 7, the Review/Planning/Debugging session types).
   **P3b:** the receipt item added to all three campaign checklists (per-session + consolidation) —
-  Learning #8 fully discharged. P4–P6 (Phase 0 reconcile backstop, framing, dogfood) follow on this branch.
+  Learning #8 fully discharged. **P4:** Phase 0 reconcile-on-read extended to backstop the receipt — a
+  missing or still-`pending` receipt for a session that left commits is reconstructed `status:
+  reconciled` at the next Orient, folded into the one write Phase 0 already permits (`SESSION_RUNNER.md`
+  step 6 + mechanics note, `ITERATIVE_METHODOLOGY.md` Pre-Flight). P5–P6 (framing, dogfood) follow.
 - **Commit/PR:** `4f0bea7` (P1: artifact + manifest) · `1646773` (P2: checker + tests, built by
   Sonnet 5; Opus review accepted `status: reconciled` for P4's backfill and made the `HANDOFFS.md`
   template checker-safe — no inline `#` comments, since `#` is a literal value char as in `PR #52`) ·
-  `f722a84` (P3a: SESSION_RUNNER + IM protocol wiring, Opus) · this commit (P3b: 3 campaign
-  checklists, Opus) — branch `feat/close-out-receipt` (from `upstream/main`); model split hybrid
-  (P2/P4/P6 Sonnet 5; P3/P5 Opus 4.8 + review of all).
+  `f722a84` (P3a: SESSION_RUNNER + IM protocol wiring, Opus) · `afbbe7d` (P3b: 3 campaign
+  checklists, Opus) · this commit (P4: Phase 0 receipt reconcile, built by Sonnet 5; Opus review
+  verified the false-positive scoping — one receipt per session, not per commit — and documented the
+  `reconciled` status in the seed) — branch `feat/close-out-receipt` (from `upstream/main`); model
+  split hybrid (P2/P4/P6 Sonnet 5; P3/P5 Opus 4.8 + review of all).
 - **Session:** close-out-receipt slice · **Verified:** `bin/tests.sh` **81/82** (the 1 = github-source
   404 on the not-yet-pushed `HANDOFFS.md`, clears on merge); block-isolation + per-field-defect
   fixtures green; `check-handoff` on the real seed reports fresh-ledger.
