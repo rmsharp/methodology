@@ -86,6 +86,8 @@ State your understanding back to the user: *"I'm going to [deliverable] followin
 **Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded in `CHANGELOG.md` at Phase 3F. Until close-out, this line is the crash breadcrumb for the next session's reconcile.
 ```
 
+**Also open the close-out receipt in `HANDOFFS.md`.** Prepend a ` ```handoff ` block with `status: pending` and the fields you can fill now (`session`, `date`, `active_task`), and commit it with this claim. A committed `status: pending` receipt is a durable crash breadcrumb — like `CHANGELOG: pending`, but one the next session's Phase 0 reconcile finds even from a fresh clone. Phase 3D overwrites it to `status: complete`. See the block format in `HANDOFFS.md` itself.
+
 **Why this exists:** Ghost sessions — sessions that crash, hit context limits, or end without writing notes — leave zero trace. The next session has no idea what happened, what was attempted, or what state was left behind. By writing a stub FIRST, even a catastrophic failure leaves evidence. This stub is overwritten during Phase 3D with the full handoff. The `CHANGELOG: pending` marker is a best-effort ledger breadcrumb: a session that crashes *before* close-out leaves it in place, so the next session's Phase 0 reconcile (step 6) sees both the `git log` gap and the explicit marker. The always-reliable backstop is the `git log` gap itself — it catches a crash even in the Phase 3D→3F window, after the handoff has overwritten the stub but before the ledger entry is written.
 
 **This is a structural control, not a suggestion.** Mandatory close-out steps are how clean-delivery streaks don't collapse: each protocol step that gets shaved off makes the next step easier to shave off.
@@ -139,7 +141,7 @@ Before closing out a planning session, verify:
 - [ ] Grep-based inventory completed for all affected symbols (if deletion/migration/rename)
 - [ ] Each phase has explicit completion criteria and verification commands
 - [ ] Each phase marked as "separate session" with a STOP point
-- [ ] Close-out: evaluate predecessor, self-assess, record the `CHANGELOG.md` ledger entry (Phase 3F, failure mode #27), commit, STOP
+- [ ] Close-out: evaluate predecessor, self-assess, write the `HANDOFFS.md` receipt (Phase 3D), record the `CHANGELOG.md` ledger entry (Phase 3F, failure mode #27), commit, STOP
 
 ### Vertical Slice Sessions
 
@@ -152,7 +154,7 @@ The unit of "1 and done" is one **intent**, not one layer. When ALL four gates b
 - **(c) Full verification at every layer boundary.** The complete build/test matrix plus the exhaustive grep inventory runs at EACH boundary, not once at the end.
 - **(d) Faithful verification, per surface.** "All tests ran" is not automatically faithful: a suite that runs with privileges the production path doesn't have (e.g., bypassing row-level security), or a layer that hand-maintains a duplicate enum/DTO, passes green while broken. Each surface in the slice must establish that its verification actually exercises the behavior being claimed. Faithfulness is established, never assumed.
 
-**The allowance is evidence-gated, not self-certified.** It holds only while the gate (c) artifacts actually land in-session. If a layer boundary's evidence is missing, the session reverts to horizontal scope at the last clean checkpoint commit and closes out there. That revert still closes out in full: the work that *did* land is an action, so its Phase 3F `CHANGELOG.md` ledger entry is owed exactly as in any close-out — mark the reverted remainder in-progress, do not silently drop it (failure mode #27). Declaring that high-parallelism verification is available is not the gate; the per-boundary artifacts are.
+**The allowance is evidence-gated, not self-certified.** It holds only while the gate (c) artifacts actually land in-session. If a layer boundary's evidence is missing, the session reverts to horizontal scope at the last clean checkpoint commit and closes out there. That revert still closes out in full: the work that *did* land is an action, so its `HANDOFFS.md` receipt and its Phase 3F `CHANGELOG.md` ledger entry are owed exactly as in any close-out — mark the reverted remainder in-progress, do not silently drop it (failure mode #27). Declaring that high-parallelism verification is available is not the gate; the per-boundary artifacts are.
 
 **Recoverability — not verifiability — is the ceiling on slice size.** Parallel verification does nothing for crash/reversal recovery, and larger slices make it worse: a crash mid-slice strands N layers, not 1. The slice must map to ONE reversible intent with per-layer commits.
 
@@ -247,7 +249,9 @@ A handoff that doesn't include ALL of the following is a protocol violation. "Pi
 
 **A handoff missing items 1-5 will score ≤4/10 by the next session.** This directly causes the next session to waste time on discovery that should have been documented.
 
-#### Evidence requirement
+#### Write the six as a durable receipt
+
+Complete this session's ` ```handoff ` block in `HANDOFFS.md` (opened as a `status: pending` stub in 1B): set `status: complete` and fill all six requirements as its fields, plus `self_score` and `predecessor_score`. `SESSION_NOTES.md` is the transient scratchpad (overwritten next session); the `HANDOFFS.md` receipt is the **durable, machine-checkable proof the handoff was written** — `bin/check-handoff` asserts its presence and structural completeness (never its quality: a green check is not a good handoff — that stays the next session's 3A score). A skipped receipt is caught at the next Orient by Phase 0 reconcile.
 
 **Never claim credit for work you didn't do.** If a plan was provided as input, say "Plan was input, not output." If you didn't produce a deliverable, say "No deliverable produced." Fabricating accomplishments or attributing quotes the user didn't say is a trust-destroying failure.
 
