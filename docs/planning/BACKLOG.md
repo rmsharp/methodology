@@ -55,17 +55,21 @@ ends ride along to the v3.1 merge/release; they are parked here rather than wide
    correction, **no version event** (FM #27 already shipped in v3.1). 6-lens adversarial review + 51/51
    `bin/tests.sh`.
 
-   **Two follow-ups discovered during the refresh (still open):**
-   - **1a. `HOW_TO_USE.md` close-out enumeration lags canonical.** Its Phase 3 close-out list still lacks
-     canonical `SESSION_RUNNER.md`'s **Phase 3E runtime smoke-test** step, and its 3E-commit/3F-report
-     lettering is off-by-one vs canonical's 3E-smoke / 3F-commit / 3G-report. Deliberately left out of
-     PR #47 (scope = ledger + count). Distributed-file fix → its own upstream PR: add the smoke-test step
-     and re-letter, keeping the ledger recording in the (re-lettered) 3F Commit.
-   - **1b. `T1_setup.md` never explicitly commits the seeded files.** Step 1 seeds `CHANGELOG.md`/`ROADMAP.md`;
-     Step 6 only asserts "setup is complete and committed" without a `git add`/`git commit`. A learner
-     following T1 literally can reach Tutorial 2 with an **untracked** `CHANGELOG.md` — which is exactly why
-     PR #47 made the T2 transcript's `git add CHANGELOG.md` explicit. Consider adding an explicit setup
-     commit to T1 Step 6 so the seeded ledger is tracked before the first session.
+   **Follow-ups discovered during the refresh:**
+   - **1a. `HOW_TO_USE.md` close-out enumeration lagged canonical — ✅ MERGED via upstream [PR #48](https://github.com/KJ5HST/methodology/pull/48) (2026-07-08, merge `be0a523`; fork synced `cc6023a`).** Added
+     canonical `SESSION_RUNNER.md`'s **Phase 3E runtime smoke-test** step and re-lettered Commit 3E→3F /
+     Report 3F→3G; the FM table now cites the close-out letters (FM #24 → Phase 3E, FM #27 → Phase 3F), and
+     the ledger recording stays in the re-lettered 3F Commit.
+   - **1b. `T1_setup.md` never explicitly committed the seeded files — ✅ MERGED via [PR #48](https://github.com/KJ5HST/methodology/pull/48).** Step 6 now runs `git add -A && git commit`
+     (heading "Commit the setup…"); Step 5 gitignores the generated `dashboard.html` so the commit stays
+     clean and Tutorial 2's clean-tree premise holds; `T2_worked_transcript.md`'s seed citation reconciled
+     `[T1 Step 3] → [T1 Step 1]`.
+   - **1c. `docs/tutorials/sample-project/.gitignore` misses `demo.json` (open).** Tutorial 2's Phase 3E
+     runtime smoke test writes `demo.json` (`T2_first_session.md`), but `sample-project/.gitignore` covers
+     only `todos.json`/`__pycache__/`/`.pytest_cache/`, and T2's 3F stages only four named files — so
+     `demo.json` lingers **untracked** after T2's close-out, undercutting the clean-tree discipline T2
+     teaches. Discovered by the PR #48 adversarial re-verify (out of scope there). One-line fix: add
+     `demo.json` to `sample-project/.gitignore` (canonical-only tutorial asset; likely no version event).
 
 2. **Seed-format migration for existing adopters.** `CHANGELOG.md` and `SESSION_NOTES.md` are `SEED`
    (write-if-absent, never clobbered), so an adopter updating from a pre-v3.1 methodology keeps its
@@ -83,7 +87,7 @@ ends ride along to the v3.1 merge/release; they are parked here rather than wide
    core.hooksPath .githooks` enable line) or keep it canonical-only by design — and record the decision
    either way.
 
-**Sequence.** Item 1 shipped (PR #47); its follow-ups 1a/1b are filed above. Items 2–3 are independent and can follow.
+**Sequence.** Item 1 + follow-ups 1a/1b shipped (PR #47, #48); follow-up 1c open (filed above). Items 2–3 are independent and can follow.
 
 ## Completed items (BL-1 – BL-4)
 

@@ -32,6 +32,17 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] PR #48 merged to KJ5HST/main; fork synced; BL-6 follow-ups 1a/1b closed, 1c filed
+- **Change:** [PR #48](https://github.com/KJ5HST/methodology/pull/48) (BL-6 follow-ups 1a/1b — the
+  `HOW_TO_USE.md` Phase 3E smoke-test re-letter + `T1_setup.md` setup commit) merged to `KJ5HST/main`
+  (merge `be0a523`); fork `main` synced via `git merge upstream/main` (fork-sync merge `cc6023a`, resolving
+  one `CHANGELOG.md` union conflict, reconciled newest-on-top); the head branch
+  `docs/closeout-3e-smoke-and-t1-commit` pruned (origin + local); `docs/planning/BACKLOG.md` marks 1a/1b
+  merged and files a new follow-up **1c** (`sample-project/.gitignore` misses `demo.json`, surfaced by the
+  PR #48 re-verify). Docs-lag correction — **no version event**. BL-6 items 2–3 and follow-up 1c remain open.
+- **Commit/PR:** [PR #48](https://github.com/KJ5HST/methodology/pull/48) → merge `be0a523`; fork-sync merge `cc6023a`; this commit (fork `main` — BACKLOG close-out + this ledger entry).
+- **Session:** BL-6 1a/1b merge/close-out · **Verified:** distributed `HOW_TO_USE.md` + `docs/tutorials/{T1_setup,T2_worked_transcript}.md` byte-identical to `upstream/main` post-merge; 51/51 `bin/tests.sh`; ledger source-tag census intact.
+
 ### 2026-07-08 · [ad hoc] HOW_TO_USE close-out gains Phase 3E smoke test (re-lettered 3E→3F, 3F→3G); T1 commits the seeded ledger
 - **Change:** two v3.1 close-out fidelity fixes to the teaching docs (fork backlog BL-6 follow-ups 1a + 1b).
   **1a** — `HOW_TO_USE.md` §Phase 3 Close Out gained the missing **3E: Runtime smoke test** step and
