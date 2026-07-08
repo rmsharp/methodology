@@ -32,6 +32,17 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] PR #49 merged to KJ5HST/main; fork synced; BL-6 follow-up 1c closed
+- **Change:** [PR #49](https://github.com/KJ5HST/methodology/pull/49) (BL-6 follow-up 1c —
+  `sample-project/.gitignore` ignores the tutorial smoke-test store `demo.json`) merged to `KJ5HST/main`
+  (merge `ca7c063`); fork `main` synced via `git merge upstream/main` (fork-sync merge `68488e1`, resolving
+  one `CHANGELOG.md` union conflict, reconciled newest-on-top); the head branch
+  `docs/sample-gitignore-demo-json` pruned (origin + local); `docs/planning/BACKLOG.md` marks 1c merged.
+  With this, **all BL-6 follow-ups 1a/1b/1c are shipped**; BL-6 items 2–3 and BL-5 remain. Canonical-only
+  tutorial asset — **no version event**.
+- **Commit/PR:** [PR #49](https://github.com/KJ5HST/methodology/pull/49) → merge `ca7c063`; fork-sync merge `68488e1`; this commit (fork `main` — BACKLOG close-out + this ledger entry).
+- **Session:** BL-6 1c merge/close-out · **Verified:** `sample-project/.gitignore` byte-identical to `upstream/main` post-merge; 51/51 `bin/tests.sh`; ledger source-tag census intact.
+
 ### 2026-07-08 · [ad hoc] sample-project/.gitignore ignores demo.json (Tutorial 2/3 smoke-test store)
 - **Change:** `docs/tutorials/sample-project/.gitignore` now ignores **`demo.json`** — the `--file demo.json`
   store that the Tutorial 2 (and Tutorial 3) Phase 3E runtime smoke test writes. The ignore list previously

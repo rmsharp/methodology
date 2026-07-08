@@ -64,12 +64,12 @@ ends ride along to the v3.1 merge/release; they are parked here rather than wide
      (heading "Commit the setup…"); Step 5 gitignores the generated `dashboard.html` so the commit stays
      clean and Tutorial 2's clean-tree premise holds; `T2_worked_transcript.md`'s seed citation reconciled
      `[T1 Step 3] → [T1 Step 1]`.
-   - **1c. `docs/tutorials/sample-project/.gitignore` misses `demo.json` (open).** Tutorial 2's Phase 3E
-     runtime smoke test writes `demo.json` (`T2_first_session.md`), but `sample-project/.gitignore` covers
-     only `todos.json`/`__pycache__/`/`.pytest_cache/`, and T2's 3F stages only four named files — so
-     `demo.json` lingers **untracked** after T2's close-out, undercutting the clean-tree discipline T2
-     teaches. Discovered by the PR #48 adversarial re-verify (out of scope there). One-line fix: add
-     `demo.json` to `sample-project/.gitignore` (canonical-only tutorial asset; likely no version event).
+   - **1c. `docs/tutorials/sample-project/.gitignore` missed `demo.json` — ✅ MERGED via upstream [PR #49](https://github.com/KJ5HST/methodology/pull/49) (2026-07-08, merge `ca7c063`; fork synced `68488e1`).** Tutorial 2's
+     Phase 3E runtime smoke test writes `demo.json` (also used by Tutorial 3), but `sample-project/.gitignore`
+     covered only `todos.json`/`__pycache__/`/`.pytest_cache/`, and T2's 3F stages only four named files — so
+     `demo.json` lingered **untracked** after T2's close-out, undercutting the clean-tree discipline T2
+     teaches. Discovered by the PR #48 adversarial re-verify. Fix: added `demo.json` to
+     `sample-project/.gitignore` (verified the complete untracked-artifact set). Canonical-only, **no version event**.
 
 2. **Seed-format migration for existing adopters.** `CHANGELOG.md` and `SESSION_NOTES.md` are `SEED`
    (write-if-absent, never clobbered), so an adopter updating from a pre-v3.1 methodology keeps its
@@ -87,7 +87,7 @@ ends ride along to the v3.1 merge/release; they are parked here rather than wide
    core.hooksPath .githooks` enable line) or keep it canonical-only by design — and record the decision
    either way.
 
-**Sequence.** Item 1 + follow-ups 1a/1b shipped (PR #47, #48); follow-up 1c open (filed above). Items 2–3 are independent and can follow.
+**Sequence.** Item 1 + all follow-ups 1a/1b/1c shipped (PR #47, #48, #49). Items 2–3 remain — independent and can follow.
 
 ## Completed items (BL-1 – BL-4)
 
