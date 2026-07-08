@@ -32,6 +32,17 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [BL-6] Groom BL-6 — item 1 (pedagogical refresh) shipped via PR #47; file follow-ups 1a/1b
+- **Change:** `docs/planning/BACKLOG.md` BL-6 updated — item 1 (HOW_TO_USE + T2-tutorial FM #27 / count
+  refresh) marked ✅ shipped via upstream [PR #47](https://github.com/KJ5HST/methodology/pull/47) (pending
+  merge). Two follow-ups discovered during the refresh filed under BL-6: **1a** — `HOW_TO_USE.md`'s
+  close-out enumeration still lacks canonical's Phase 3E runtime smoke-test step and its 3E/3F lettering
+  lags canonical (its own future upstream PR); **1b** — `T1_setup.md` never explicitly commits the seeded
+  `CHANGELOG.md`, so a learner can reach Tutorial 2 with it untracked. Items 2–3 (seed-format migration
+  affordance, hook-distribution decision) remain open. Fork-only; not part of any upstream PR.
+- **Commit/PR:** this commit (fork `main`); the refresh itself is [PR #47](https://github.com/KJ5HST/methodology/pull/47) (see the `[ad hoc]` entry on that branch).
+- **Session:** BL-6 item 1 · **Verified:** n/a — `docs/planning` grooming only.
+
 ### 2026-07-07 · [ad hoc] v3.1 shipped — PR #46 merged, tag + GitHub Release cut, fork synced
 - **Change:** the held v3.1 deployment gate cleared after the v3.0→v3.1 adopter-migration trial passed
   (operator post-trial confirm). PR #46 merged to `KJ5HST/main` (merge `75a6853`); the annotated tag
