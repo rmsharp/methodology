@@ -203,8 +203,8 @@ The methodology framework describes WHAT to do and WHY. In practice, it needs an
 - **Mandatory orientation** — prevents starting work without understanding current state
 - **"1 and done" rule** — prevents scope creep and quality degradation
 - **Automatic close-out** — prevents skipping the self-improvement loop
-- **26 known failure modes** — documents agent tendencies with specific countermeasures
-- **Degradation detection** — 16 warning signs that predict protocol erosion
+- **27 known failure modes** — documents agent tendencies with specific countermeasures
+- **Degradation detection** — 17 warning signs that predict protocol erosion
 - **Handoff accountability** — ensures each session sets up the next for success
 
 ### The Handoff Accountability Loop
@@ -247,6 +247,15 @@ Domain-specific adaptations of the master framework. Each workstream customizes 
 Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during development of a commercial software product. The methodology emerged organically from an initial 11-session design series, was codified into a reusable framework, and subsequently validated across 1100+ sessions of varied work.
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
+
+### What's New in v3.1
+
+`CHANGELOG.md` becomes a dependable cross-source **action ledger** — the authoritative record of *what was done here, ever* across backlog items, repository issues, and ad-hoc work (rmsharp, [PR #46](https://github.com/KJ5HST/methodology/pull/46)). The design's key finding: a close-out write-gate **alone** is not dependable, so the ledger rests on two mechanisms — **gate-on-write** at close-out *and* **reconcile-on-read** at orientation, which backfills anything the gate missed.
+
+- **New failure mode #27, "Unrecorded action"** (appended; the count moves to **27 failure modes**) — a Phase 3F / Phase 6 close-out step records one dated, source-tagged entry per action (`[issue #<N>]` · `[BL-<N>]` · `[ad hoc]`), newest on top.
+- **Reconcile-on-read** — Phase 0 diffs `git log` since the ledger frontier and backfills undocumented commits before new work. The self-healing backstop that makes the ledger true *when you read it*.
+- **Tooling** — a dashboard ledger-lag freshness monitor (advisory only; `DASHBOARD_VERSION` → 2.7.0), a `starter-kit/CHANGELOG.md` seed recomposed to the action-ledger shape, and a shipped `.githooks/pre-commit` co-staging hook (bypassable with `--no-verify`; reconcile is the guarantee).
+- **6 phases, 12 quality gates, four session types, and every workstream are unchanged** — the additions are FM #27, a Phase 0 reconcile step, and the close-out ledger step (propagated into every session-type and campaign checklist as Learning #8).
 
 ### What's New in v3.0
 

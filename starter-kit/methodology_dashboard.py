@@ -68,7 +68,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.6.1"
+DASHBOARD_VERSION = "2.7.0"
 
 ROOT = Path(__file__).parent
 EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
@@ -117,6 +117,18 @@ METHODOLOGY_ITEMS = [
     ("docs/methodology", 10, "dir"),
     ("docs/methodology/workstreams", 10, "dir"),
 ]
+
+# Component C — CHANGELOG ledger-freshness thresholds (advisory only; see
+# evaluate_changelog_freshness). This monitor stops rewarding mere presence: a CHANGELOG.md
+# that exists but no longer tracks the work earns the "present" point, not the "fresh" one,
+# and raises an advisory RISK line. It never hard-fails a score — the authoritative ledger
+# gate lives in the session runner (FM #27 close-out + Phase 0 reconcile-on-read), not here.
+LEDGER_UNLOGGED_MAX = 10       # Signal C: non-merge commits since CHANGELOG was last committed
+LEDGER_LAG_DAYS_MAX = 21       # Signal B: days the ledger frontier may trail HEAD on an active repo
+LEDGER_REAL_HISTORY_MIN = 10   # below this commit count a repo gets new-adopter grace (fresh seed)
+SEED_SENTINEL = "METHODOLOGY-SEED-SENTINEL"  # Signal D: an untouched seed still carries this token
+_DATED_ENTRY_RE = re.compile(r'^###\s+\d{4}-\d{2}-\d{2}', re.MULTILINE)
+_BACKLOG_DONE_RE = re.compile(r'^\s*[-*]\s*\[x\]', re.IGNORECASE | re.MULTILINE)
 
 
 # === HELPERS ===
@@ -608,6 +620,141 @@ def collect_doc_metrics(path, file_metrics):
     return metrics
 
 
+def _find_changelog(path):
+    """Return the Path to a CHANGELOG in the project root or docs/, else None.
+    Mirrors collect_doc_metrics's has_changelog detection (case-insensitive prefix), but
+    restricted to regular files so a CHANGELOG *directory* is not treated as a ledger."""
+    for base in (path, path / "docs"):
+        if not base.is_dir():
+            continue
+        try:
+            for entry in sorted(base.iterdir()):
+                if entry.is_file() and entry.name.upper().startswith("CHANGELOG"):
+                    return entry
+        except OSError:
+            continue
+    return None
+
+
+def _count_backlog_done(path):
+    """Signal F: BACKLOG.md checklist items still marked done (`- [x]`). The methodology
+    removes a backlog item from BACKLOG.md in the same commit that logs it to CHANGELOG, so
+    surviving done-marks are a best-effort proxy for 'completed but never migrated'."""
+    for name in ("BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md"):
+        bl = path / name
+        if bl.is_file():
+            try:
+                return len(_BACKLOG_DONE_RE.findall(bl.read_text(encoding="utf-8", errors="ignore")))
+            except OSError:
+                return 0
+    return 0
+
+
+def evaluate_changelog_freshness(path, git):
+    """Component C — CHANGELOG ledger-lag / freshness monitor.
+
+    Advisory only: it feeds at most a 1-point documentation nudge (present vs. fresh) plus
+    RISK lines; it never hard-fails a score. The two lag signals are git-only and format-
+    agnostic (they ask *when was the ledger last committed, and how far has HEAD moved since*),
+    so they work for any project that keeps a CHANGELOG; the never-used signal keys on the
+    methodology seed sentinel, and the backlog signal on unmigrated BACKLOG.md done-marks.
+    `git` is the already-collected collect_git_metrics dict.
+    """
+    result = {
+        "present": False,
+        "unlogged_commits": 0,        # Signal C
+        "frontier_lag_days": None,    # Signal B
+        "dated_entry_count": 0,
+        "has_seed_sentinel": False,
+        "never_used": False,          # Signal D
+        "backlog_done_unmigrated": _count_backlog_done(path),  # Signal F
+        "new_adopter_grace": False,
+        "is_fresh": False,
+        "signals": [],                # list of (severity, description) advisory tuples
+    }
+
+    changelog = _find_changelog(path)
+    if changelog is None:
+        # Absence is not judged here — assess_risks decides whether it is a defect (an adopter
+        # with real history) or simply a project that keeps no ledger by design.
+        return result
+    result["present"] = True
+
+    total_commits = git.get("total_commits", 0) or 0
+    real_history = total_commits >= LEDGER_REAL_HISTORY_MIN
+    grace = not real_history  # a young repo's fresh seed has not had a chance to go stale
+    result["new_adopter_grace"] = grace
+
+    # Signals C & B: git-only. A path outside a git repo yields "" and leaves both inert.
+    try:
+        rel = str(changelog.relative_to(path))
+    except ValueError:
+        rel = changelog.name
+    last_touch = git_cmd(path, "log", "-1", "--format=%H", "--", rel)
+    if last_touch:
+        unlogged = git_cmd(path, "rev-list", "--count", "--no-merges", f"{last_touch}..HEAD")
+        result["unlogged_commits"] = int(unlogged) if unlogged.isdigit() else 0
+        ledger_date = git_cmd(path, "log", "-1", "--format=%ai", "--", rel)[:10]
+        head_date = git_cmd(path, "log", "-1", "--format=%ai", "HEAD")[:10]
+        try:
+            d_ledger = datetime.strptime(ledger_date, "%Y-%m-%d")
+            d_head = datetime.strptime(head_date, "%Y-%m-%d")
+            result["frontier_lag_days"] = (d_head - d_ledger).days
+        except ValueError:
+            pass
+
+    # Signal D: an untouched seed still carries the sentinel and has zero real dated entries.
+    try:
+        text = changelog.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        text = ""
+    result["dated_entry_count"] = len(_DATED_ENTRY_RE.findall(text))
+    result["has_seed_sentinel"] = SEED_SENTINEL in text
+    result["never_used"] = (
+        result["has_seed_sentinel"] and result["dated_entry_count"] == 0 and real_history
+    )
+
+    # The time-lag signal only makes sense on a repo that is otherwise active; a repo dormant
+    # everywhere is already flagged by the activity score, so don't double-count it here.
+    days_idle = git.get("days_since_last_commit")
+    active = days_idle is not None and days_idle <= 90
+    lag_days = result["frontier_lag_days"]
+
+    lagging = (
+        result["unlogged_commits"] >= LEDGER_UNLOGGED_MAX
+        or (active and lag_days is not None and lag_days > LEDGER_LAG_DAYS_MAX)
+    )
+    # Fresh (earns the +1 nudge): present, and either under grace or neither lagging nor never-used.
+    result["is_fresh"] = grace or not (lagging or result["never_used"])
+
+    # Advisory RISK descriptions — suppressed under new-adopter grace so a fresh seed is silent.
+    if not grace:
+        if result["unlogged_commits"] >= LEDGER_UNLOGGED_MAX:
+            result["signals"].append((
+                "medium",
+                f"CHANGELOG ledger lag: {result['unlogged_commits']} commits since it was "
+                f"last updated (Component C)",
+            ))
+        if active and lag_days is not None and lag_days > LEDGER_LAG_DAYS_MAX:
+            result["signals"].append((
+                "low", f"CHANGELOG frontier trails HEAD by {lag_days} days",
+            ))
+        if result["never_used"]:
+            result["signals"].append((
+                "medium",
+                "CHANGELOG present but never used — still the untouched seed on a repo with "
+                "real commit history",
+            ))
+    if result["backlog_done_unmigrated"] > 0:
+        result["signals"].append((
+            "low",
+            f"{result['backlog_done_unmigrated']} done-marked BACKLOG.md item(s) not migrated "
+            f"to CHANGELOG",
+        ))
+
+    return result
+
+
 def collect_methodology_metrics(path):
     present = 0
     missing = []
@@ -959,7 +1106,12 @@ def score_health(metrics):
     if doc["has_docs_dir"]:
         doc_score += 4
     if doc["has_changelog"]:
-        doc_score += 2
+        # Component C: split the old flat +2 into +1 for presence and +1 for freshness, so a
+        # stale or never-used ledger no longer scores the same as a maintained one. Total cap
+        # is unchanged (a present + fresh ledger still earns 2).
+        doc_score += 1
+        if metrics.get("changelog", {}).get("is_fresh"):
+            doc_score += 1
     if doc["has_license"]:
         doc_score += 2
     if doc["has_roadmap"]:
@@ -1034,6 +1186,17 @@ def assess_risks(metrics):
             risks.append({"severity": "critical", "description": f"{crit} critical dependency vulnerabilit{'y' if crit == 1 else 'ies'}"})
         if high > 0:
             risks.append({"severity": "high", "description": f"{high} high-severity dependency vulnerabilit{'y' if high == 1 else 'ies'}"})
+
+    # Component C: CHANGELOG ledger freshness (advisory). Decision D3 — a methodology adopter
+    # (SESSION_RUNNER.md present) with real commit history but no ledger is a defect, not a
+    # silent absence. For projects that keep a ledger, surface the ledger-lag signals.
+    cl = metrics.get("changelog", {})
+    adopter = metrics["methodology"]["items"].get("SESSION_RUNNER.md", False)
+    if not cl.get("present") and adopter and metrics["git"]["total_commits"] >= LEDGER_REAL_HISTORY_MIN:
+        risks.append({"severity": "medium",
+                      "description": "Methodology adopter has commit history but no CHANGELOG ledger (Component C)"})
+    for sev, desc in cl.get("signals", []):
+        risks.append({"severity": sev, "description": desc})
 
     # Sort by severity
     severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
@@ -1116,6 +1279,10 @@ def collect_all(path):
         "github": github,
         "vulnerabilities": vulns,
     }
+
+    # Component C: ledger freshness. Wired after the metrics dict is built (so it can read the
+    # already-collected git metrics) and before the scores block (which consumes is_fresh).
+    metrics["changelog"] = evaluate_changelog_freshness(path, git)
 
     metrics["scores"] = {
         "health": score_health(metrics),
