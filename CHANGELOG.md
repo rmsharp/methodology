@@ -32,6 +32,30 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] v3.2 shipped — PR #50 merged, tag + GitHub Release cut, fork synced
+- **Change:** the BL-5 dashboard doc-only scoring change was designated **v3.2** (minor) and shipped.
+  [PR #50](https://github.com/KJ5HST/methodology/pull/50) merged to `KJ5HST/main` (merge `9bda167`);
+  the annotated tag `v3.2` was cut at that commit and its **GitHub Release published + marked Latest**;
+  fork `main` synced via `git merge upstream/main` (fork-sync merge `df2cac9`, resolving one
+  `CHANGELOG.md` union conflict, reconciled newest-on-top) and the tag mirrored to `origin`.
+  `DASHBOARD_VERSION` is now 2.8.0; the failure-mode count stays 27.
+- **Commit/PR:** [PR #50](https://github.com/KJ5HST/methodology/pull/50) → merge `9bda167`; fork-sync
+  merge `df2cac9`; this commit (fork `main` — BL-5 backlog close-out + these ledger entries). Release:
+  <https://github.com/KJ5HST/methodology/releases/tag/v3.2>. → full narrative:
+  [`CLAUDE.md` §Versioning "v3.2"](CLAUDE.md#versioning).
+- **Session:** BL-5 deploy · **Verified:** v3.2 GitHub Release is Latest (`releases/latest` = v3.2);
+  distributed files byte-identical to `upstream/main` post-merge; fork `main` 0 behind upstream.
+
+### 2026-07-08 · [BL-5] Dashboard doc-only scoring closed — removed from fork backlog
+- **Change:** with v3.2 shipped, **BL-5** ("adapt dashboard scoring to document-only repositories",
+  including the Signal-F adopter-gate + `starter-kit/__pycache__` polish notes) is complete and
+  **removed from `docs/planning/BACKLOG.md` "Open items"** (moved to the Completed table). The fork
+  backlog now has one open item — **BL-6 items 2–3** (seed-format migration affordance;
+  hook-distribution decision).
+- **Commit/PR:** this commit (fork `main`). The dashboard change itself shipped in
+  [PR #50](https://github.com/KJ5HST/methodology/pull/50) / v3.2 (see the entry above and the branch entry below).
+- **Session:** BL-5 close-out · **Verified:** BL-5 no longer under "## Open items"; ledger source-tag census intact (`[issue #]` / `[BL-]` / `[ad hoc]` all present).
+
 ### 2026-07-08 · [ad hoc] Dashboard: fair scoring for document-only / research repos (DASHBOARD_VERSION 2.8.0)
 - **Change:** `methodology_dashboard.py` (both byte-identical twins, `tools/` + `starter-kit/`) now
   detects a **document-only / research** repo and reshapes scoring so it is no longer falsely

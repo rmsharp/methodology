@@ -1,9 +1,10 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: 2 open items (BL-5, BL-6), reopened 2026-07-07.** BL-1 – BL-4 are complete (the operational
-> rollout that originally justified this file); it was marked RETIRED on 2026-07-06 and reopened
-> when a new item surfaced. The verbose BL-1 – BL-4 task bodies were removed on 2026-07-06; git
-> history preserves them (commits `b091fba` … `69dad12`).
+> **STATUS: 1 open item (BL-6); BL-5 shipped 2026-07-08 in v3.2 (PR #50).** BL-1 – BL-5 are complete;
+> it was marked RETIRED on 2026-07-06, reopened 2026-07-07 with BL-5, which is now shipped. The verbose
+> BL-1 – BL-4 task bodies were removed on 2026-07-06; git history preserves them (commits
+> `b091fba` … `69dad12`); BL-5's body was removed at its 2026-07-08 close-out (see `CHANGELOG.md` +
+> commits `b2efd76` … the v3.2 merge).
 
 Operational/coordination backlog for **rmsharp's** methodology work. Fork-only — it lives in
 `docs/planning/` and is **not** part of the canonical framework or any upstream PR (same convention
@@ -12,33 +13,6 @@ as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md))
 This is a backlog, **not** GitHub issues, by operator decision.
 
 ## Open items
-
-### BL-5 — Dashboard: adapt scoring to document-only repositories
-
-**Problem.** `tools/methodology_dashboard.py` (and its `starter-kit/` twin) scores every repo on a
-code-centric rubric, so it penalizes **document-only** repositories for having no code. Affected
-populations: research-documentation projects (per `RESEARCH_DOCUMENTATION_WORKSTREAM.md` — papers,
-dissertations, technical reports, regulatory analyses) and the methodology framework's own doc corpus.
-Concretely, a doc-only repo:
-
-- scores **0/20 on Testing** (`test_to_source_ratio` = 0, `test_file_count` = 0) and draws a **HIGH
-  "No test infrastructure"** risk — a false penalty; there is nothing to unit-test.
-- can draw a **"No CI/CD"** risk even when a docs-render / link-check pipeline is the real equivalent.
-- has an unstable `doc_to_source_ratio` when `source_loc` ≈ 0.
-
-**Desired.** Detect a doc-only / research repo (e.g. `source_loc` below a threshold, or an explicit
-opt-in marker) and **conditionally re-shape scoring** — reweight or exempt the Testing dimension,
-substitute a **render/verification** dimension (leverages the v2.5 render-dependency discipline and
-the Research-Documentation workstream's verification checklist), and suppress the code-centric risks.
-Advisory tool → no hard gate; the goal is fair scoring, not a new gate. Apply to **both byte-identical
-twins**; bump `DASHBOARD_VERSION`.
-
-**Related polish (from the S5 / Component C review, low priority, fold in if cheap):**
-- Signal F's advisory RISK line is not adopter-scoped, so it can fire on a non-adopter sibling repo
-  that keeps a `BACKLOG.md` with `- [x]` history plus a `CHANGELOG.md`. Same "adapt to repo type"
-  class; consider gating it (or the freshness signals generally) on methodology adoption.
-- `.gitignore` covers `tools/__pycache__/` and `bin/__pycache__/` but **not** `starter-kit/__pycache__/`,
-  which the dashboard module now produces when imported/tested. Add the missing rule.
 
 ### BL-6 — v3.1 adopter-migration completeness (pedagogical + seed-format + hook distribution)
 
@@ -89,7 +63,7 @@ ends ride along to the v3.1 merge/release; they are parked here rather than wide
 
 **Sequence.** Item 1 + all follow-ups 1a/1b/1c shipped (PR #47, #48, #49). Items 2–3 remain — independent and can follow.
 
-## Completed items (BL-1 – BL-4)
+## Completed items (BL-1 – BL-5)
 
 | Item | Scope | Outcome |
 |------|-------|---------|
@@ -97,6 +71,7 @@ ends ride along to the v3.1 merge/release; they are parked here rather than wide
 | **BL-2** | mts #1 — adopt PR #25/#27, refresh → v2.9 | ✅ Complete in `rmsharp/mts` (operator). |
 | **BL-3** | airqino #1 — remediation + full re-vendor → v2.9 | ✅ Complete in `rmsharp/airqinodashboard` (operator). |
 | **BL-4** | Housekeeping: methodology repo | ✅ DONE 2026-07-06 — plans archived to `docs/planning/`, 3 stale branches pruned, fork/upstream/tags in sync. |
+| **BL-5** | Dashboard: fair scoring for document-only / research repos | ✅ SHIPPED 2026-07-08 in **v3.2** ([PR #50](https://github.com/KJ5HST/methodology/pull/50), merge `9bda167`). `detect_doc_only` + Render/Verification proxy; code-centric risks suppressed; Large-files ext-filter; both polish items (Signal-F adopter-gate + `starter-kit/__pycache__` gitignore) done; `DASHBOARD_VERSION` 2.8.0; first functional scoring tests (29). |
 
 **Not in this backlog:** upstream **PR #44** (REUSE compliance + license/REUSE README badges) is being
 handled directly with the maintainer (Terrell) and was never a backlog item.
