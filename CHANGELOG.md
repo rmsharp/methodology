@@ -46,12 +46,14 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   verify", bare placeholders), never semantic quality. **P3a:** protocol wiring — `SESSION_RUNNER.md`
   (1B receipt stub, 3D "write the six as a durable receipt", Planning checklist, slice-revert) +
   `ITERATIVE_METHODOLOGY.md` (Phase 1B, Phase 6 step 7, the Review/Planning/Debugging session types).
-  P3b (campaign checklists), P4–P6 (Phase 0 backstop, framing, dogfood) follow on this branch.
+  **P3b:** the receipt item added to all three campaign checklists (per-session + consolidation) —
+  Learning #8 fully discharged. P4–P6 (Phase 0 reconcile backstop, framing, dogfood) follow on this branch.
 - **Commit/PR:** `4f0bea7` (P1: artifact + manifest) · `1646773` (P2: checker + tests, built by
   Sonnet 5; Opus review accepted `status: reconciled` for P4's backfill and made the `HANDOFFS.md`
   template checker-safe — no inline `#` comments, since `#` is a literal value char as in `PR #52`) ·
-  this commit (P3a: SESSION_RUNNER + IM protocol wiring, Opus) — branch `feat/close-out-receipt` (from
-  `upstream/main`); model split hybrid (P2/P4/P6 Sonnet 5; P3/P5 Opus 4.8 + review of all).
+  `f722a84` (P3a: SESSION_RUNNER + IM protocol wiring, Opus) · this commit (P3b: 3 campaign
+  checklists, Opus) — branch `feat/close-out-receipt` (from `upstream/main`); model split hybrid
+  (P2/P4/P6 Sonnet 5; P3/P5 Opus 4.8 + review of all).
 - **Session:** close-out-receipt slice · **Verified:** `bin/tests.sh` **81/82** (the 1 = github-source
   404 on the not-yet-pushed `HANDOFFS.md`, clears on merge); block-isolation + per-field-defect
   fixtures green; `check-handoff` on the real seed reports fresh-ledger.
