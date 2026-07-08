@@ -1,6 +1,6 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: 1 open item (BL-5), reopened 2026-07-07.** BL-1 – BL-4 are complete (the operational
+> **STATUS: 2 open items (BL-5, BL-6), reopened 2026-07-07.** BL-1 – BL-4 are complete (the operational
 > rollout that originally justified this file); it was marked RETIRED on 2026-07-06 and reopened
 > when a new item surfaced. The verbose BL-1 – BL-4 task bodies were removed on 2026-07-06; git
 > history preserves them (commits `b091fba` … `69dad12`).
@@ -39,6 +39,39 @@ twins**; bump `DASHBOARD_VERSION`.
   class; consider gating it (or the freshness signals generally) on methodology adoption.
 - `.gitignore` covers `tools/__pycache__/` and `bin/__pycache__/` but **not** `starter-kit/__pycache__/`,
   which the dashboard module now produces when imported/tested. Add the missing rule.
+
+### BL-6 — v3.1 adopter-migration completeness (pedagogical + seed-format + hook distribution)
+
+**Context.** The v3.0→v3.1 local migration trial (2026-07-07) confirmed `bin/sync` upgrades a pristine
+v3.0 adopter cleanly — **8 tracked files, no `--force`** (unmodified files classify `upgradable`), drift
+guard intact — and shipped the `starter-kit/BOOTSTRAP.md` "Updating an existing project from an earlier
+methodology version" note (branch `feat/changelog-authoritative-ledger`, commit `c871ac0`). Three loose
+ends ride along to the v3.1 merge/release; they are parked here rather than widening the held campaign.
+
+1. **Pedagogical refresh (the original BL-6 intent).** `HOW_TO_USE.md`'s close-out enumeration and
+   `docs/tutorials/T2_worked_transcript.md` still teach a *pre*-FM-#27 close-out (no ledger step). They
+   document the *released* methodology, so they were correctly out of campaign scope. Refresh them to
+   include the Phase 3F `CHANGELOG.md` ledger step **at v3.1 merge/release** — not before, so the docs
+   match what actually shipped. (`HOW_TO_USE.md` is a TRACKED distributed file; the tutorials are
+   canonical-only.)
+
+2. **Seed-format migration for existing adopters.** `CHANGELOG.md` and `SESSION_NOTES.md` are `SEED`
+   (write-if-absent, never clobbered), so an adopter updating from a pre-v3.1 methodology keeps its
+   old-shaped files — it gets the new *behavior* (FM #27 + Phase 0 reconcile via the synced
+   `SESSION_RUNNER.md`) but not the new *seed format*. The BOOTSTRAP note now documents the manual
+   reconcile/delete-and-reseed path. Optional follow-up: a lightweight, advisory affordance so the
+   format migration is discoverable rather than silent — e.g. a `bin/status` note when a seeded
+   `CHANGELOG.md` lacks the action-ledger header/sentinel, or an opt-in `bin/sync --reseed <file>`.
+   Never auto-overwrite an adopter-owned seed.
+
+3. **Hook distribution decision.** `.githooks/pre-commit` (the D1 co-staging gate) is canonical-only —
+   deliberately **not** in `bin/_manifest.py`, because adopters have a root `SESSION_RUNNER.md` to run
+   the Phase 3F gate directly (the hook exists precisely because *this* repo has no runner). Decide
+   whether to also offer it to adopters as an opt-in (a seed copy + a BOOTSTRAP Step-10 `git config
+   core.hooksPath .githooks` enable line) or keep it canonical-only by design — and record the decision
+   either way.
+
+**Sequence.** Item 1 lands with the v3.1 merge/release; items 2–3 are independent and can follow.
 
 ## Completed items (BL-1 – BL-4)
 
