@@ -32,6 +32,32 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] bin/status flags stale-format adopter seeds (BL-6 item 2)
+- **Change:** `bin/status` now surfaces a SEED file whose *format* predates the current methodology —
+  advisory-only — as `present (stale format)`, with a one-line migration note beneath the table, so an
+  adopter upgrading from a pre-v3.1 methodology can **discover** that its seeded `CHANGELOG.md` still
+  carries the old (pre-action-ledger) shape instead of the lag being silent. Mechanism: a new generic
+  `_manifest.SEED_FORMAT_MARKERS` dict (dest → marker), with `CHANGELOG.md` keyed on the ledger
+  **title** `"Authoritative Action Ledger"` — a lifetime-stable token that append-only entries never
+  remove — deliberately **not** the `METHODOLOGY-SEED-SENTINEL` (which the adopter deletes on its first
+  real entry, so keying on it would mis-flag an *in-use* current-format ledger). `SESSION_NOTES.md` /
+  `ROADMAP.md` are intentionally omitted (rewritten wholesale each session → no stable marker; add an
+  entry only when a seed gains a lifetime-stable one). Detection is **advisory only**: `bin/sync` still
+  never auto-overwrites an adopter-owned seed, the status string is never reclassified as drift, and the
+  exit code is unchanged. Docs updated in lockstep: `starter-kit/BOOTSTRAP.md`'s update-existing-project
+  note and the `docs/tutorials/T8_keeping_current.md` SEED-state model now name the third state.
+- **Commit/PR:** `346ac01` (feature + Test 20: `bin/_manifest.py` + `bin/status` + `bin/tests.sh`) ·
+  `fe3e10a` (docs: `starter-kit/BOOTSTRAP.md` note + `docs/tutorials/T8_keeping_current.md` third
+  state) — branch `feat/status-stale-seed-advisory` (from `upstream/main`) → [PR #51](https://github.com/KJ5HST/methodology/pull/51),
+  merge `48c253f`. Design + fixes hardened by a 6-lens adversarial review + default-to-refuted verify
+  (`wf_52a1df0d-068`): **5 findings confirmed → all fixed** (an in-use-ledger test-coverage gap that let
+  a sentinel-keyed regression pass, a vacuous disposition assertion masked by the note line, a
+  multi-project note undercount, and a `T8` doc-code mismatch).
+- **Session:** BL-6 item 2 · **Verified:** `bin/tests.sh` **68/68** (new **Test 20**, 14 assertions;
+  54 → 68); manual stale / current / absent cases; the marker survives an in-use ledger (root
+  `CHANGELOG.md` carries the title, no sentinel); a sentinel-keyed regression now makes Test 20 **fail**
+  — proving constraint #2 (no false positive on a current-format seed) is locked in by a test.
+
 ### 2026-07-08 · [ad hoc] v3.2 shipped — PR #50 merged, tag + GitHub Release cut, fork synced
 - **Change:** the BL-5 dashboard doc-only scoring change was designated **v3.2** (minor) and shipped.
   [PR #50](https://github.com/KJ5HST/methodology/pull/50) merged to `KJ5HST/main` (merge `9bda167`);
