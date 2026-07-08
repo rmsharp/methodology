@@ -20,6 +20,7 @@ your-projects/                        <-- parent directory (portfolio level)
 │   ├── SESSION_NOTES.md              ← Session continuity (copied from starter kit)
 │   ├── BACKLOG.md                    ← Open work items only (you create this)
 │   ├── CHANGELOG.md                  ← Completed work history (copied from starter kit)
+│   ├── HANDOFFS.md                   ← Durable close-out receipts (copied from starter kit)
 │   ├── ROADMAP.md                    ← Feature inventory & future plans (copied from starter kit)
 │   ├── methodology_dashboard.py      ← Health scanner (synced from methodology)
 │   │
@@ -66,7 +67,7 @@ If you have a local `methodology/` checkout (sibling to your projects), use the 
 ../methodology/bin/sync your-project/ --source=github
 ```
 
-`bin/sync` copies the full methodology corpus into the target: the operating files (`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`) at the project root and the framework (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`, `workstreams/`) under `docs/methodology/`, creating subdirectories as needed. `SESSION_NOTES.md`, `CHANGELOG.md`, and `ROADMAP.md` are *seeded* at the root only when absent and are never overwritten afterward — once created they are yours to edit. The complete mapping is defined once in `bin/_manifest.py`. In `--mode=ignore` it also adds `.gitignore` entries for the tracked files (not the seeded ones, which you commit) and warns (non-destructively) if any tracked file is currently tracked by git.
+`bin/sync` copies the full methodology corpus into the target: the operating files (`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`) at the project root and the framework (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`, `workstreams/`) under `docs/methodology/`, creating subdirectories as needed. `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` are *seeded* at the root only when absent and are never overwritten afterward — once created they are yours to edit. The complete mapping is defined once in `bin/_manifest.py`. In `--mode=ignore` it also adds `.gitignore` entries for the tracked files (not the seeded ones, which you commit) and warns (non-destructively) if any tracked file is currently tracked by git.
 
 **Drift safety:** `bin/sync` refuses to overwrite a file that has local modifications not matching canonical or any historical version. The recommended pattern is to move per-project customizations into your CLAUDE.md's "Project-Specific Methodology Adaptations" section (see Step 5), then run sync. If you really need to discard local edits, pass `--force`.
 
@@ -79,7 +80,7 @@ Check status with `bin/status`:
 
 You'll see `current`, `N versions behind`, `locally modified`, or `missing` per file.
 
-**Updating an existing project from an earlier methodology version:** re-run `bin/sync`. Prefer `--source=local` from a *full* methodology checkout — an unmodified file that matches an older canonical version is recognized as upgradable and updated cleanly with no `--force`; a shallow clone or a downloaded tarball loses that git history, so the same files look "locally modified" and are held back. Run `bin/status` first: it shows which tracked files are `N versions behind`, and it flags any seed whose *format* predates the current methodology as `present (stale format)` (with a one-line migration note beneath the table) so the format lag is surfaced rather than silent. **Seed files do not update:** because `SESSION_NOTES.md`, `CHANGELOG.md`, and `ROADMAP.md` are seeded-once and never overwritten, a project moving up from an earlier methodology keeps its existing copies — including their *format*. So if you are adopting the authoritative action-ledger `CHANGELOG.md` (methodology v3.1+) over an older changelog, `bin/status` marks it `present (stale format)` and sync leaves your file untouched **by design**: reconcile its header and per-entry format against the current `starter-kit/CHANGELOG.md` seed by hand, or — if it holds no history worth keeping — delete it and re-run `bin/sync` to reseed the current shape.
+**Updating an existing project from an earlier methodology version:** re-run `bin/sync`. Prefer `--source=local` from a *full* methodology checkout — an unmodified file that matches an older canonical version is recognized as upgradable and updated cleanly with no `--force`; a shallow clone or a downloaded tarball loses that git history, so the same files look "locally modified" and are held back. Run `bin/status` first: it shows which tracked files are `N versions behind`, and it flags any seed whose *format* predates the current methodology as `present (stale format)` (with a one-line migration note beneath the table) so the format lag is surfaced rather than silent. **Seed files do not update:** because `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` are seeded-once and never overwritten, a project moving up from an earlier methodology keeps its existing copies — including their *format*. So if you are adopting the authoritative action-ledger `CHANGELOG.md` (methodology v3.1+) over an older changelog, `bin/status` marks it `present (stale format)` and sync leaves your file untouched **by design**: reconcile its header and per-entry format against the current `starter-kit/CHANGELOG.md` seed by hand, or — if it holds no history worth keeping — delete it and re-run `bin/sync` to reseed the current shape.
 
 ---
 
@@ -101,6 +102,7 @@ From the methodology `starter-kit/` directory:
 | `SAFEGUARDS.md` | Safety rails — commit discipline, blast radius limits, mode switching |
 | `SESSION_NOTES.md` | Session continuity — where handoff notes live between sessions |
 | `CHANGELOG.md` | Completed work history — add entries as work is finished |
+| `HANDOFFS.md` | Durable close-out receipts — one machine-checkable block per session |
 | `ROADMAP.md` | Feature inventory and future plans — what's built, what's next |
 | `methodology_dashboard.py` | Health scanner — scores project health and methodology compliance |
 

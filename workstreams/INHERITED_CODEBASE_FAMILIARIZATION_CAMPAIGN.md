@@ -448,7 +448,7 @@ In interview mode, `interviews/round-N-*.md` is a separate checkpoint stream. A 
 - [ ] (Interview mode) Cold-read owner-bias check completed and recorded
 - [ ] (Archaeology mode) Doc spot-check completed; results recorded
 - [ ] Unit deliverable is committed to `familiarization/units/<unit>.md`
-- [ ] The session's handoff is written as a durable `HANDOFFS.md` receipt (Phase 3D; `bin/check-handoff` verifies it)
+- [ ] The session's handoff is written as a durable `HANDOFFS.md` receipt (Phase 3D)
 - [ ] The session's action is recorded in `CHANGELOG.md` (Phase 3F ledger entry, failure mode #27)
 - [ ] Handoff records sub-agent strategy, calibration adjustments, residual-unknown count, and any cross-unit hypotheses to verify in subsequent sessions
 

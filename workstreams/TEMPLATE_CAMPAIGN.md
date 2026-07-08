@@ -236,7 +236,7 @@ A crashed mid-unit session is recovered by the next session reading the unit fil
 - [ ] Every row has the required evidence
 - [ ] No row is in a transient/pending state
 - [ ] Unit deliverable is committed
-- [ ] The session's handoff is written as a durable `HANDOFFS.md` receipt (Phase 3D; `bin/check-handoff` verifies it)
+- [ ] The session's handoff is written as a durable `HANDOFFS.md` receipt (Phase 3D)
 - [ ] The session's action is recorded in `CHANGELOG.md` (Phase 3F ledger entry, failure mode #27)
 - [ ] Handoff records sub-agent strategy and calibration adjustments
 

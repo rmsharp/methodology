@@ -82,7 +82,12 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   `HANDOFFS.md` seed now carry the "canonical-only — copy it in; the dependable backstop is Phase 0
   reconcile" caveat the optional-hook subsections already had (C4/C5), and the receipt-to-requirements
   wording no longer double-counts `self_score` (C6: "the six requirements, the sixth being `self_score`,
-  plus `predecessor_score`"). **Fix C (BOOTSTRAP seed enumeration + campaign checklists)** follows. 5 findings were refuted (e.g. the missing `--range`
+  plus `predecessor_score`"). **Fix C (this commit):** `HANDOFFS.md` added to BOOTSTRAP's seed
+  enumerations (repo tree, root-files table, both "seeded"/"seeded-once" sentences) — deliberately NOT
+  the named three-file `BACKLOG`/`CHANGELOG`/`ROADMAP` task-tracking split (HANDOFFS is a close-out
+  record, not part of that concept; "three" stays accurate); the campaign per-session checklists drop
+  the bare `bin/check-handoff` mention (its caveated form stays in §3D). **All 7 confirmed findings fixed**
+  (`28cecc8` A · `ac97722` B · this commit C). 5 findings were refuted (e.g. the missing `--range`
   mode — plan-optional; the last-wins duplicate-key parse — benign).
 - **Session:** close-out-receipt slice · **Verified:** `bin/tests.sh` **83/84** (the 1 = github-source
   404 on the not-yet-pushed `HANDOFFS.md`, clears on merge); `bin/check-links` clean; block-isolation +
