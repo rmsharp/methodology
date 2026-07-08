@@ -1,6 +1,6 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: 0 open items — BL-6 fully closed 2026-07-08; BL-1 – BL-6 all complete; backlog RETIRED again.**
+> **STATUS: 1 open item — BL-7 (consider: model-tiering as an elective feature) added 2026-07-08. BL-1 – BL-6 all complete.**
 > BL-6's last two items closed today: item 2 (seed-format migration discoverability) shipped in
 > [PR #51](https://github.com/KJ5HST/methodology/pull/51) (merge `48c253f`, no version event), and item 3
 > (hook distribution) was **decided — keep `.githooks/pre-commit` canonical-only** (see the Completed
@@ -16,8 +16,36 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 ## Open items
 
-*(none — BL-6 fully closed 2026-07-08; see Completed items below. BL-1 – BL-6 are all complete, so this
-backlog is retired again. Reopen by adding a new `BL-<N>` here.)*
+### BL-7 — Model-tiering by task complexity as an elective methodology feature (consider)
+
+**Question (operator, 2026-07-08):** matching *model* capability to task complexity — as demonstrated
+live in the close-out-receipt slice (Sonnet 5 for spec-driven, test-graded phases; Opus 4.8 for
+high-blast-radius doc surgery + reviewing all sub-agent output before commit) — is a valuable pattern
+the operator had not seen before. Could it be codified as an **elective** feature of the methodology?
+
+This is a **planning/design** consideration (not implementation). Points for that session to weigh:
+
+- **Where it lands:** the recommendation layer, not a hard rule ("methodology recommends; does not
+  reimplement"). Likely a new *elective* section extending §Matching Reasoning Effort to Stakes (v2.9)
+  and the `RECOMMENDED_SKILLS.md` Reasoning Effort table — which today cover *reasoning tier* but not
+  *model selection*.
+- **Agent-independence:** "models" (Sonnet/Opus/…) are agent-specific brand tokens → frame the core as
+  **capability tiers** (cheaper/faster vs most-capable), model names illustrative only — same convention
+  the reasoning-effort table already uses.
+- **The risk lens is already ours:** tier ∝ blast radius × irreversibility × compounding cost
+  (Principle 3, Principle 9, §Matching Reasoning Effort to Stakes). Model-tiering is that same lens
+  applied to model choice rather than effort setting.
+- **The generalizable pattern:** the cheaper tier drafts *test-graded / spec-driven* work; the strongest
+  tier does *un-test-catchable* doc-surgery-on-invariants **and reviews all cheaper-tier output before
+  commit**. An objective gate (a test suite, a grep-reconciliation) is what makes delegating the
+  mechanical phases safe; the review pass is where the capability difference pays off.
+- **Elective & additive:** changes no phase, gate, principle, or FM; a project that ignores it operates
+  the methodology unchanged. Interaction to check: the vertical-slice per-boundary review discipline.
+- **Open sub-questions:** core (brand-neutral) text in `ITERATIVE_METHODOLOGY.md` + model specifics in
+  `RECOMMENDED_SKILLS.md`? Does the hybrid orchestration warrant a worked tutorial example?
+
+*Provenance: surfaced while executing the close-out-receipt slice's own hybrid model split (P2/P4 on
+Sonnet 5, P3/P5 on Opus 4.8) — see `close-out-receipt-durable-artifact-plan.md` and `CHANGELOG.md`.*
 
 ## Completed items (BL-1 – BL-6)
 

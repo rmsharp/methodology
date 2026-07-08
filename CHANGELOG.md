@@ -32,6 +32,16 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] Reopen backlog — BL-7 (consider: model-tiering as an elective feature)
+- **Change:** `docs/planning/BACKLOG.md` reopened with **BL-7** (a *consider* item): whether matching
+  model capability to task complexity — cheaper tier for spec-driven/test-graded work, strongest tier for
+  high-blast-radius doc surgery + reviewing all cheaper-tier output — should become an **elective**
+  methodology feature (recommendation layer; capability-tier framing for agent-independence; same risk
+  lens as §Matching Reasoning Effort to Stakes). Surfaced by the operator while watching this repo's own
+  close-out-receipt slice run on a hybrid Sonnet-5 / Opus-4.8 split. No phase/gate/FM change; planning-only.
+- **Commit/PR:** this commit (fork `main`, `docs/planning/` is fork-only).
+- **Session:** ad hoc grooming · **Verified:** n/a — backlog/docs only.
+
 ### 2026-07-08 · [ad hoc] Close-out receipt plan ratified — durable `HANDOFFS.md` artifact + reconcile, no CI
 - **Change:** new fork-only ratified plan `docs/planning/close-out-receipt-durable-artifact-plan.md`.
   Fixes the failure "agent had to be prompted for the mandatory close-out report" by making the handoff a
