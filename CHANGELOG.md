@@ -32,6 +32,17 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] Close-out receipt plan ratified — durable `HANDOFFS.md` artifact + reconcile, no CI
+- **Change:** new fork-only ratified plan `docs/planning/close-out-receipt-durable-artifact-plan.md`.
+  Fixes the failure "agent had to be prompted for the mandatory close-out report" by making the handoff a
+  durable, machine-checkable `HANDOFFS.md` receipt (SEED twin of this action ledger, one `handoff` block
+  per session) + a canonical-only `bin/check-handoff` + a Phase 0 reconcile backstop + strengthened
+  **FM #6** (count stays 27) + a *recommended* (never shipped) harness stop-hook. Scope ratified as
+  **durable-receipt-+-reconcile, NO server-side CI**; decisions D1–D5 settled. Design workflow
+  `wf_4793d8f5-b5b` (6 readers → 5 lens proposals → synthesis + adversarial critique).
+- **Commit/PR:** this commit (fork-only planning deliverable; implementation P1–P6 pending, to branch off `upstream/main`).
+- **Session:** planning · **Verified:** n/a — docs-only (plan document).
+
 ### 2026-07-08 · [BL-6] BL-6 fully closed — item 2 shipped (PR #51), item 3 decided (hook canonical-only)
 - **Change:** with the seed-format advisory merged (the `[ad hoc]` entry below / PR #51), the fork
   backlog's last item is complete and **removed from `docs/planning/BACKLOG.md` "Open items"** (moved to
