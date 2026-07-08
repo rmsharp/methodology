@@ -34,24 +34,29 @@ field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUN
 ```handoff
 session: S<N>
 date: YYYY-MM-DD
-status: pending            # "pending" at Phase 1B; "complete" at Phase 3D close-out
-self_score: <1-10>         # Phase 3D field 6 — this session's own score, with the +/- breakdown in the prose below
-predecessor_score: <1-10>  # Phase 3A evaluation of the PREVIOUS session's handoff — omit only on Session 1
-active_task: <current state — Phase 3D field 1>
-what_was_done: <field 2 — include a commit sha, or the literal `pending`>
-next_steps: <field 3 — specific and actionable; never "pick next from backlog">
-key_files: <field 4 — each entry carries a path:line token, e.g. SessionManager.java:245>
-gotchas: <field 5 — traps the next session should watch for>
-runtime_smoke: <Phase 3E — a run result, or "n/a — docs-only", or "impossible: <reason>">
-changelog_ref: <pointer into CHANGELOG.md — PR #N or short-sha>
-commit: pending            # reconciled to a short-sha by the next session
+status: <pending | complete>
+self_score: <1-10>
+predecessor_score: <1-10>
+active_task: <current state>
+what_was_done: <what you did, including a commit sha — or the literal `pending`>
+next_steps: <specific and actionable; never "pick next from backlog">
+key_files: <each entry carries a path:line token, e.g. SessionManager.java:245>
+gotchas: <traps the next session should watch for>
+runtime_smoke: <a run result, or "n/a — docs-only", or "impossible: <reason>">
+changelog_ref: <PR #N or a short-sha into CHANGELOG.md>
+commit: <short-sha — or `pending` until the next session reconciles it>
 ```
 <free-text prose: the durable proxy for the Phase 3G spoken report, plus the +/- self-score breakdown>
+
+Write clean `key: value` lines — no inline `#` comments (a `#` is a literal value character,
+as in `changelog_ref: PR #52`). The keys map one-to-one to the six Phase 3D Minimum Handoff
+Requirements plus the two scores.
 ````
 
-`self_score` and `predecessor_score` are distinct keys so one can never stand in for the other.
-`commit: pending` and `what_was_done: pending` are legal at write time (the receipt ships in the very
-commit whose sha it would name); the next session reconciles them to real shas.
+`self_score` and `predecessor_score` are distinct keys so one can never stand in for the other; omit
+`predecessor_score` on Session 1 (there is no predecessor to score). `commit: pending` and
+`what_was_done: pending` are legal at write time (the receipt ships in the very commit whose sha it
+would name); the next session reconciles them to real shas.
 
 ## Three files, three questions, one shared key
 

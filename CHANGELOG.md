@@ -39,12 +39,20 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   prompted for the close-out report." **P1 (this commit):** new `starter-kit/HANDOFFS.md` SEED — a
   per-session `handoff`-block receipt ledger (twin of this action ledger) — added to `bin/_manifest.py`
   `DISTRIBUTION` (SEED) + `SEED_FORMAT_MARKERS` (`"Handoff Receipts"`); `sync` seeds it, `status`
-  reports `present` / `present (stale format)`, `sync` never clobbers it. P2–P6 (checker, protocol
-  wiring, Phase 0 backstop, framing, dogfood) follow on this branch.
-- **Commit/PR:** this commit (P1) — branch `feat/close-out-receipt` (from `upstream/main`); model split
-  hybrid (P2/P4/P6 Sonnet 5; P3/P5 Opus 4.8 + review of all).
-- **Session:** close-out-receipt slice · **Verified:** `bin/tests.sh` 67/68 (the 1 = github-source 404
-  on the not-yet-pushed `HANDOFFS.md`, clears on merge); local DONE-criteria spot-check green.
+  reports `present` / `present (stale format)`, `sync` never clobbers it. **P2:** `bin/check-handoff`
+  (canonical-only, python3 stdlib) + `bin/tests.sh` Tests 21–22 — asserts a receipt's presence +
+  structural completeness (fence-isolated block, integer scores, `path:line` in `key_files`, sha-or-
+  `pending` in `what_was_done`) plus anti-pattern lints (rejects "pick next from backlog", "need to
+  verify", bare placeholders), never semantic quality. P3–P6 (protocol wiring, Phase 0 backstop,
+  framing, dogfood) follow on this branch.
+- **Commit/PR:** `4f0bea7` (P1: artifact + manifest) · this commit (P2: checker + tests, built by
+  Sonnet 5; Opus review accepted `status: reconciled` for P4's backfill and made the `HANDOFFS.md`
+  template checker-safe — no inline `#` comments, since `#` is a literal value char as in `PR #52`) —
+  branch `feat/close-out-receipt` (from `upstream/main`); model split hybrid (P2/P4/P6 Sonnet 5;
+  P3/P5 Opus 4.8 + review of all).
+- **Session:** close-out-receipt slice · **Verified:** `bin/tests.sh` **81/82** (the 1 = github-source
+  404 on the not-yet-pushed `HANDOFFS.md`, clears on merge); block-isolation + per-field-defect
+  fixtures green; `check-handoff` on the real seed reports fresh-ledger.
 
 ### 2026-07-08 · [ad hoc] bin/status flags stale-format adopter seeds (BL-6 item 2)
 - **Change:** `bin/status` now surfaces a SEED file whose *format* predates the current methodology —
