@@ -32,6 +32,23 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [BL-6] BL-6 fully closed — item 2 shipped (PR #51), item 3 decided (hook canonical-only)
+- **Change:** with the seed-format advisory merged (the `[ad hoc]` entry below / PR #51), the fork
+  backlog's last item is complete and **removed from `docs/planning/BACKLOG.md` "Open items"** (moved to
+  the Completed table). **Item 2** (seed-format migration discoverability) shipped in PR #51 — advisory,
+  no version event. **Item 3** (hook distribution) is **decided: keep `.githooks/pre-commit`
+  canonical-only** — adopters run the Phase 3F ledger gate via their root `SESSION_RUNNER.md`, so
+  distributing the hook would add a per-clone `git config core.hooksPath` enable step + a maintenance
+  surface for a mechanism they already have (the hook exists only because *this* repo has no root runner
+  to run the gate on itself). The hook is **not** added to `bin/_manifest.py`. With BL-6 done, BL-1 –
+  BL-6 are all complete and the fork backlog is retired again.
+- **Commit/PR:** this commit (fork `main` — `BACKLOG.md` close-out + this ledger entry). Item-2 code
+  shipped in [PR #51](https://github.com/KJ5HST/methodology/pull/51) (merge `48c253f`); fork-sync merge
+  `9a84b8e`.
+- **Session:** BL-6 close-out · **Verified:** `docs/planning/BACKLOG.md` "## Open items" now shows none;
+  the BL-6 Completed-table row records item 3's decision + rationale; ledger source-tag census intact
+  (`[issue #]` / `[BL-]` / `[ad hoc]` all present).
+
 ### 2026-07-08 · [ad hoc] bin/status flags stale-format adopter seeds (BL-6 item 2)
 - **Change:** `bin/status` now surfaces a SEED file whose *format* predates the current methodology —
   advisory-only — as `present (stale format)`, with a one-line migration note beneath the table, so an

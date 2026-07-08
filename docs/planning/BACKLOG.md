@@ -1,10 +1,12 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: 1 open item (BL-6); BL-5 shipped 2026-07-08 in v3.2 (PR #50).** BL-1 – BL-5 are complete;
-> it was marked RETIRED on 2026-07-06, reopened 2026-07-07 with BL-5, which is now shipped. The verbose
-> BL-1 – BL-4 task bodies were removed on 2026-07-06; git history preserves them (commits
-> `b091fba` … `69dad12`); BL-5's body was removed at its 2026-07-08 close-out (see `CHANGELOG.md` +
-> commits `b2efd76` … the v3.2 merge).
+> **STATUS: 0 open items — BL-6 fully closed 2026-07-08; BL-1 – BL-6 all complete; backlog RETIRED again.**
+> BL-6's last two items closed today: item 2 (seed-format migration discoverability) shipped in
+> [PR #51](https://github.com/KJ5HST/methodology/pull/51) (merge `48c253f`, no version event), and item 3
+> (hook distribution) was **decided — keep `.githooks/pre-commit` canonical-only** (see the Completed
+> table + `CHANGELOG.md`). Verbose task bodies are removed at close-out; git history preserves them
+> (`b091fba` … `69dad12`; BL-5 `b2efd76` … the v3.2 merge; the BL-6 item-1/1a/1b/1c detail up to the
+> `9a84b8e` fork-sync merge).
 
 Operational/coordination backlog for **rmsharp's** methodology work. Fork-only — it lives in
 `docs/planning/` and is **not** part of the canonical framework or any upstream PR (same convention
@@ -14,56 +16,10 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 ## Open items
 
-### BL-6 — v3.1 adopter-migration completeness (pedagogical + seed-format + hook distribution)
+*(none — BL-6 fully closed 2026-07-08; see Completed items below. BL-1 – BL-6 are all complete, so this
+backlog is retired again. Reopen by adding a new `BL-<N>` here.)*
 
-**Context.** The v3.0→v3.1 local migration trial (2026-07-07) confirmed `bin/sync` upgrades a pristine
-v3.0 adopter cleanly — **8 tracked files, no `--force`** (unmodified files classify `upgradable`), drift
-guard intact — and shipped the `starter-kit/BOOTSTRAP.md` "Updating an existing project from an earlier
-methodology version" note (branch `feat/changelog-authoritative-ledger`, commit `c871ac0`). Three loose
-ends ride along to the v3.1 merge/release; they are parked here rather than widening the held campaign.
-
-1. **Pedagogical refresh (the original BL-6 intent) — ✅ SHIPPED + MERGED via upstream [PR #47](https://github.com/KJ5HST/methodology/pull/47) (2026-07-08, merge `3bb7825`; fork synced `6db6a03`).** `HOW_TO_USE.md` FM count 23→27 (two
-   sites) + compressed rows 24–27 + the FM #27 `CHANGELOG.md` ledger recording folded into its 3E close-out
-   bullet; `docs/tutorials/T2_first_session.md` + `T2_worked_transcript.md` now show the Phase 3F ledger
-   entry, the paired `BACKLOG.md` removal for a `[BL-N]` item, and explicit `git add` staging. Docs-lag
-   correction, **no version event** (FM #27 already shipped in v3.1). 6-lens adversarial review + 51/51
-   `bin/tests.sh`.
-
-   **Follow-ups discovered during the refresh:**
-   - **1a. `HOW_TO_USE.md` close-out enumeration lagged canonical — ✅ MERGED via upstream [PR #48](https://github.com/KJ5HST/methodology/pull/48) (2026-07-08, merge `be0a523`; fork synced `cc6023a`).** Added
-     canonical `SESSION_RUNNER.md`'s **Phase 3E runtime smoke-test** step and re-lettered Commit 3E→3F /
-     Report 3F→3G; the FM table now cites the close-out letters (FM #24 → Phase 3E, FM #27 → Phase 3F), and
-     the ledger recording stays in the re-lettered 3F Commit.
-   - **1b. `T1_setup.md` never explicitly committed the seeded files — ✅ MERGED via [PR #48](https://github.com/KJ5HST/methodology/pull/48).** Step 6 now runs `git add -A && git commit`
-     (heading "Commit the setup…"); Step 5 gitignores the generated `dashboard.html` so the commit stays
-     clean and Tutorial 2's clean-tree premise holds; `T2_worked_transcript.md`'s seed citation reconciled
-     `[T1 Step 3] → [T1 Step 1]`.
-   - **1c. `docs/tutorials/sample-project/.gitignore` missed `demo.json` — ✅ MERGED via upstream [PR #49](https://github.com/KJ5HST/methodology/pull/49) (2026-07-08, merge `ca7c063`; fork synced `68488e1`).** Tutorial 2's
-     Phase 3E runtime smoke test writes `demo.json` (also used by Tutorial 3), but `sample-project/.gitignore`
-     covered only `todos.json`/`__pycache__/`/`.pytest_cache/`, and T2's 3F stages only four named files — so
-     `demo.json` lingered **untracked** after T2's close-out, undercutting the clean-tree discipline T2
-     teaches. Discovered by the PR #48 adversarial re-verify. Fix: added `demo.json` to
-     `sample-project/.gitignore` (verified the complete untracked-artifact set). Canonical-only, **no version event**.
-
-2. **Seed-format migration for existing adopters.** `CHANGELOG.md` and `SESSION_NOTES.md` are `SEED`
-   (write-if-absent, never clobbered), so an adopter updating from a pre-v3.1 methodology keeps its
-   old-shaped files — it gets the new *behavior* (FM #27 + Phase 0 reconcile via the synced
-   `SESSION_RUNNER.md`) but not the new *seed format*. The BOOTSTRAP note now documents the manual
-   reconcile/delete-and-reseed path. Optional follow-up: a lightweight, advisory affordance so the
-   format migration is discoverable rather than silent — e.g. a `bin/status` note when a seeded
-   `CHANGELOG.md` lacks the action-ledger header/sentinel, or an opt-in `bin/sync --reseed <file>`.
-   Never auto-overwrite an adopter-owned seed.
-
-3. **Hook distribution decision.** `.githooks/pre-commit` (the D1 co-staging gate) is canonical-only —
-   deliberately **not** in `bin/_manifest.py`, because adopters have a root `SESSION_RUNNER.md` to run
-   the Phase 3F gate directly (the hook exists precisely because *this* repo has no runner). Decide
-   whether to also offer it to adopters as an opt-in (a seed copy + a BOOTSTRAP Step-10 `git config
-   core.hooksPath .githooks` enable line) or keep it canonical-only by design — and record the decision
-   either way.
-
-**Sequence.** Item 1 + all follow-ups 1a/1b/1c shipped (PR #47, #48, #49). Items 2–3 remain — independent and can follow.
-
-## Completed items (BL-1 – BL-5)
+## Completed items (BL-1 – BL-6)
 
 | Item | Scope | Outcome |
 |------|-------|---------|
@@ -72,6 +28,7 @@ ends ride along to the v3.1 merge/release; they are parked here rather than wide
 | **BL-3** | airqino #1 — remediation + full re-vendor → v2.9 | ✅ Complete in `rmsharp/airqinodashboard` (operator). |
 | **BL-4** | Housekeeping: methodology repo | ✅ DONE 2026-07-06 — plans archived to `docs/planning/`, 3 stale branches pruned, fork/upstream/tags in sync. |
 | **BL-5** | Dashboard: fair scoring for document-only / research repos | ✅ SHIPPED 2026-07-08 in **v3.2** ([PR #50](https://github.com/KJ5HST/methodology/pull/50), merge `9bda167`). `detect_doc_only` + Render/Verification proxy; code-centric risks suppressed; Large-files ext-filter; both polish items (Signal-F adopter-gate + `starter-kit/__pycache__` gitignore) done; `DASHBOARD_VERSION` 2.8.0; first functional scoring tests (29). |
+| **BL-6** | v3.1 adopter-migration completeness (pedagogical + seed-format + hook distribution) | ✅ CLOSED 2026-07-08. **Item 1** (pedagogical refresh) + follow-ups **1a/1b/1c** shipped via [PR #47](https://github.com/KJ5HST/methodology/pull/47) / [#48](https://github.com/KJ5HST/methodology/pull/48) / [#49](https://github.com/KJ5HST/methodology/pull/49) (docs/tutorial lag; no version event). **Item 2** (seed-format migration discoverability) shipped via [PR #51](https://github.com/KJ5HST/methodology/pull/51) (merge `48c253f`, no version event) — `bin/status` flags a pre-v3.1-shaped seed `present (stale format)` with a migration note, advisory-only (generic `_manifest.SEED_FORMAT_MARKERS`; `sync` never auto-overwrites). **Item 3** (hook distribution) **DECIDED: keep `.githooks/pre-commit` canonical-only** — adopters run the Phase 3F ledger gate via their root `SESSION_RUNNER.md`, so distributing the hook would add a per-clone `core.hooksPath` enable step + a maintenance surface for a mechanism they already have; the hook exists only because *this* repo has no root runner. Not added to `bin/_manifest.py`. |
 
 **Not in this backlog:** upstream **PR #44** (REUSE compliance + license/REUSE README badges) is being
 handled directly with the maintainer (Terrell) and was never a backlog item.
