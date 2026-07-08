@@ -32,6 +32,19 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] HOW_TO_USE close-out gains Phase 3E smoke test (re-lettered 3E→3F, 3F→3G); T1 commits the seeded ledger
+- **Change:** two v3.1 close-out fidelity fixes to the teaching docs (fork backlog BL-6 follow-ups 1a + 1b).
+  **1a** — `HOW_TO_USE.md` §Phase 3 Close Out gained the missing **3E: Runtime smoke test** step and
+  re-lettered the trailing two to match canonical `SESSION_RUNNER.md` (Commit **3E→3F**, Report and STOP
+  **3F→3G**); the FM #27 ledger recording stays in the re-lettered **3F Commit**, and the failure-mode
+  table now cites the close-out letters (FM #24 → Phase 3E, FM #27 → Phase 3F). **1b** —
+  `docs/tutorials/T1_setup.md` Step 6 now explicitly commits the setup (`git add -A && git commit`) so the
+  Step-1-seeded `CHANGELOG.md`/`ROADMAP.md` are tracked before the first session; Step 5 now gitignores the
+  generated `dashboard.html` (so `git add -A` stays clean and Tutorial 2's clean-tree premise holds), and
+  `T2_worked_transcript.md`'s seed citation is reconciled to **[T1 Step 1]**. Docs-lag correction — **no version event**.
+- **Commit/PR:** `85aca72` (branch `docs/closeout-3e-smoke-and-t1-commit`) → [PR #48](https://github.com/KJ5HST/methodology/pull/48), merged `be0a523` (docs-lag correction, no version event).
+- **Session:** BL-6 follow-ups 1a/1b · **Verified:** 6-lens adversarial review → 6 findings fixed (2 majors: the T1↔T2 `git commit -am` contradiction and `git add -A` sweeping in `dashboard.html`); 2 focused re-verifies returned CONSISTENT + CLEAN; 51/51 `bin/tests.sh`; co-staged through `.githooks/pre-commit`.
+
 ### 2026-07-08 · [ad hoc] PR #47 merged to KJ5HST/main; fork synced; BL-6 item 1 fully closed
 - **Change:** [PR #47](https://github.com/KJ5HST/methodology/pull/47) (the BL-6 item-1 `HOW_TO_USE.md` +
   `T2_*` FM #27 pedagogical refresh) merged to `KJ5HST/main` (merge `3bb7825`); fork `main` synced via
