@@ -32,6 +32,35 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] Released v3.4 — completeness-critic review lens
+- **Change:** version bumped **v3.3 → v3.4** (`CLAUDE.md` "Current version" line + a new §Versioning
+  entry; `README.md` What's New) covering the completeness-critic lens (issue #55). Cite-don't-restate:
+  the full narrative lives in [`CLAUDE.md` §Versioning "v3.4"](CLAUDE.md#versioning).
+- **Commit/PR:** this commit (release narration) → merged; annotated tag `v3.4` + GitHub Release.
+- **Session:** release · **Verified:** `bin/tests.sh` 84/84; `bin/check-links` clean.
+
+### 2026-07-08 · [issue #55] Completeness-critic review lens — new Learning #10 + AUDIT_WORKSTREAM guidance
+- **Change:** promotes **Learning #7** (cross-reference completeness at self-review) and **Learning #8**
+  (close-out-gate checklist propagation) from authoring-time self-checks to an explicit **review-time
+  lens**: when a change adds, renames, or removes a concept, artifact, file, step, or numbered-set
+  member, a review/audit pass now owes a whole-corpus sweep (not just the diff) for enumerations,
+  worked examples, indexes, and count-claims that now lag. Three files: **`SESSION_RUNNER.md`** new
+  **Learning #10** (table was 1-9); **`AUDIT_WORKSTREAM.md`** new anti-pattern **#9** "Diff-scoped blind
+  spot" (list was 1-8), a new Verification Checklist bullet, and a note that `/code-review`/`/review`/
+  `/security-review` are diff-scoped by design so the sweep stays methodology-owned; **`ITERATIVE_METHODOLOGY.md`**
+  one sentence added to §Review/Audit Sessions citing the new Learning + the operative checklist step.
+  Motivated by the v3.3 doc-completeness gap (PR #54) that a clean 6-lens adversarial review missed —
+  [KJ5HST/methodology#55](https://github.com/KJ5HST/methodology/issues/55). **No new phase, gate,
+  principle, or workstream; failure-mode count stays 27.** All three touched files are
+  `bin/_manifest.py`-distributed, so adopters receive this via `bin/sync`.
+- **Design verification:** drafted, then adversarially checked by a 4-lens review (acceptance-criteria
+  coverage, numbering/citation fact-check, a reflexive Learning-#7 self-check for other stale
+  cross-references, and placement/precedent judgment) — 2 of 4 lenses clean, 2 raised real findings
+  (a mis-anchored insertion point in `AUDIT_WORKSTREAM.md`'s Recommended Skills section; a citation
+  missing the `starter-kit/` path prefix used elsewhere in the repo) — both fixed before commit.
+- **Commit/PR:** this commit — branch `feat/completeness-critic-review-lens` (from `upstream/main`).
+- **Session:** completeness-critic lens · **Verified:** `bin/tests.sh` 84/84; `bin/check-links` clean.
+
 ### 2026-07-08 · [ad hoc] v3.3 doc-completeness — propagate the receipt into HOW_TO_USE, README tree, tutorials
 - **Change:** the v3.3 close-out receipt is now reflected in the *secondary* docs that describe or
   demonstrate close-out, closing the Learning #7 propagation gap the release surfaced (the operator
