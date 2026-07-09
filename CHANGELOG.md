@@ -32,6 +32,15 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] Opened upstream issue #55 — completeness-critic review pass
+- **Change:** filed [KJ5HST/methodology#55](https://github.com/KJ5HST/methodology/issues/55) proposing a
+  **completeness-critic** review lens — reviews should sweep the *whole corpus* (not just the diff) for
+  enumerations / worked examples / indexes / count-claims a change made stale, promoting Learning #7/#8
+  from an authoring self-check to a review lens. Motivated by the v3.3 out-of-diff doc lag (caught by the
+  operator, fixed in #54) that a clean 6-lens adversarial review missed.
+- **Commit/PR:** this commit (fork `main` ledger record; the issue itself lives upstream).
+- **Session:** ad hoc · **Verified:** n/a — issue creation.
+
 ### 2026-07-08 · [ad hoc] v3.3 doc-completeness — propagate the receipt into HOW_TO_USE, README tree, tutorials
 - **Change:** the v3.3 close-out receipt is now reflected in the *secondary* docs that describe or
   demonstrate close-out, closing the Learning #7 propagation gap the release surfaced (the operator
