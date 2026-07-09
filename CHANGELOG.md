@@ -32,6 +32,52 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [BL-7] Fork close-out — capability-tiered review merged, fork synced, backlog retired
+- **Change:** PR #57 merged to `KJ5HST/main` (`d563600`); no version-bump commit was included in the
+  merge, so the version-event decision (dot release vs. `CLAUDE.md`-only) remains open — deferred to
+  the operator per the established defer-to-merge pattern. Fork `main` merged `upstream/main` —
+  resolved a `CHANGELOG.md` union conflict (this session's `[ad hoc]` entry landed above the prior
+  session's `v3.4 close-out` entry, by wall-clock order) and a `HANDOFFS.md` union conflict: this
+  session's receipt was originally committed as `session: S2` on the feature branch (the only
+  predecessor visible there was `S1`, by the branch-from-upstream convention that keeps fork-only
+  content out of the PR diff), which collided with the fork's own already-established `S2` (v3.3
+  release). Renumbered to **S6** — the next number in the fork's real sequence — without touching or
+  renumbering S1–S5; the receipt's `predecessor_score` evaluation of S1 was left exactly as originally
+  written (accurate to what the session actually did), not retroactively rescored against S5. `BL-7`
+  marked complete and removed from `docs/planning/BACKLOG.md`'s Open items (backlog retired again, all
+  of BL-1–BL-7 complete).
+- **Commit/PR:** this commit (fork `main` close-out).
+- **Session:** capability-tiered review (fork close-out) · **Verified:** `bin/check-handoff` OK on the
+  renumbered S6 receipt; `bin/tests.sh` 84/84; `bin/check-links` clean; fork `main` 0 commits behind
+  `upstream/main`.
+
+### 2026-07-08 · [ad hoc] Capability-tiered review — elective vertical-slice addition (BL-7)
+- **Change:** codifies the operator-observed pattern from the close-out-receipt slice's hybrid model
+  split (session S1) as an elective addition to `starter-kit/SESSION_RUNNER.md` §Vertical Slice
+  Sessions: **capability-tiered review** — a pre-declared slice's layers may be delegated to a
+  lighter/faster capability tier only where an objective gate (test suite, exhaustive grep, mechanical
+  spec) proves correctness, with the strongest tier reviewing every delegated layer's output before
+  that layer's checkpoint commit lands; explicitly additional evidence for gates (c)/(d), never a
+  substitute, and explicitly not a fifth gate — forecloses two FM #26 misreadings (treating review as
+  proof on its own, batching review to the end instead of per boundary). Four files: **`starter-kit/SESSION_RUNNER.md`**
+  the core paragraph + new **Learning #11**; **`ITERATIVE_METHODOLOGY.md`** a one-sentence routing
+  pointer in §Matching Reasoning Effort to Stakes; **`starter-kit/RECOMMENDED_SKILLS.md`** an
+  illustrative Claude-Code-specific addendum after §Reasoning Effort (brand names confined to this file
+  only); **`docs/tutorials/T5_cautionary.md`** a corollary citing this repo's own close-out-receipt
+  slice as the worked "doing it right" counter-example to FM #26. Preceded by an operator-approved
+  3-candidate design panel (placement, naming, scope, and all three optional extras decided by the
+  operator). **No new phase, gate, principle, workstream, or failure mode; failure-mode count stays 27.**
+  All four touched files are `bin/_manifest.py`-distributed except the tutorial (canonical-only), so
+  adopters receive the core/recommendation discipline via `bin/sync`.
+- **Design verification:** drafted, then adversarially checked by a 4-lens review (guardrail fidelity,
+  citation/numbering fact-check, voice & agent-independence, completeness-critic whole-corpus sweep) —
+  all four lenses independently confirmed the same real defect (brand names "Sonnet-5/Opus-4.8" leaking
+  into the new Learning #11's Source column in the brand-neutral core file) — fixed before commit; no
+  other findings across links, anchors, FM/gate byte-stability, or corpus-wide staleness checks.
+- **Commit/PR:** this commit — branch `feat/capability-tiered-review` (from `upstream/main`).
+- **Session:** capability-tiered review (BL-7 design + implementation) · **Verified:** `bin/tests.sh`
+  84/84; `bin/check-links` clean.
+
 ### 2026-07-08 · [ad hoc] v3.4 close-out — fork main synced, branch pruned, S5 receipt written
 - **Change:** PR #56 merged to `KJ5HST/main` (`4a6c1d2`, auto-closed issue #55); annotated tag `v3.4` +
   GitHub Release (Latest) pushed to both `upstream` and `origin`. Fork `main` merged `upstream/main`

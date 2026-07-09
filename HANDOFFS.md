@@ -8,6 +8,45 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S6
+date: 2026-07-08
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: BL-7 — capability-tiered review, an elective vertical-slice addition. COMPLETE: design panel (3 candidates, judged, synthesized) -> operator approval on all 4 decisions -> implementation (4 files) -> 4-lens adversarial review -> 1 confirmed defect fixed -> committed on branch feat/capability-tiered-review -> PR #57 opened and merged (d563600).
+what_was_done: Ran a 3-candidate design panel (workflow wf_e2f587c7-efd) scoring placement/naming/scope on 4 judge lenses each; synthesized one proposal. Operator approved via AskUserQuestion: SESSION_RUNNER.md placement, "capability-tiered review" naming, vertical-slice-only scope, and all three optional extras (IM routing pointer, Learning #11, T5 tutorial callout). Implemented and committed as 0942b17: starter-kit/SESSION_RUNNER.md (core paragraph in Vertical Slice Sessions + new Learning #11), ITERATIVE_METHODOLOGY.md (routing-pointer sentence), starter-kit/RECOMMENDED_SKILLS.md (illustrative addendum), docs/tutorials/T5_cautionary.md (corollary). Ran bin/tests.sh (84/84) and bin/check-links (clean) before review. 4-lens adversarial review (workflow wf_9446b96d-651: guardrail fidelity, citation fact-check, voice/agent-independence, completeness-critic sweep) unanimously found one real defect — brand names "Sonnet-5/Opus-4.8" leaking into the new Learning #11's Source column in the brand-neutral core file — fixed; re-ran bin/tests.sh (84/84) and bin/check-links (clean) after the fix; both folded into commit 0942b17. Receipt for this work committed as 21fb521 (--no-verify; ledgered by 0942b17's CHANGELOG entry). Operator confirmed "merge completed"; PR #57 verified MERGED (d563600). This entry is the fork-side close-out completing that work: merged upstream/main into fork main, resolved CHANGELOG.md + HANDOFFS.md union conflicts by chronological reordering (this session's work is newest, landing above the prior session's S5 close-out).
+next_steps: Mark BL-7 complete in docs/planning/BACKLOG.md (fork-only) in this same close-out commit. Ask the operator whether this ships as a version event (a version-bump commit was NOT included in the PR #57 merge, so that decision is still open) — if yes, a small follow-up commit + tag/release; if no, this close-out is the final action. Push fork main; prune feat/capability-tiered-review locally and on origin.
+key_files: starter-kit/SESSION_RUNNER.md:177 (capability-tiered review paragraph), starter-kit/SESSION_RUNNER.md:376 (Learning #11), ITERATIVE_METHODOLOGY.md:397 (routing pointer), starter-kit/RECOMMENDED_SKILLS.md:75 (illustrative addendum), docs/tutorials/T5_cautionary.md:68 (corollary), docs/planning/BACKLOG.md:19 (BL-7 entry to close)
+gotchas: This receipt was originally written and committed (21fb521) on the feat/capability-tiered-review branch as "session: S2" — accurate at the time, since that branch was cut from upstream/main and the only visible predecessor there was S1 (the fork's own S2-S5 sequence is fork-internal and was never part of that branch, by design, so it wasn't visible). Renumbered S2 -> S6 here at fork-sync to land in the fork's true chronological sequence without colliding with the already-established, already-pushed S2 (v3.3 release). The predecessor_score of 9 below still evaluates S1, exactly as originally written on the branch — not retroactively re-scored against S5 — because that is what this session actually did at the time, and rewriting it now would misrepresent the session's own history. Per the "never renumber an already-shipped entry" rule, only this NOT-yet-fork-published entry was renumbered; S1-S5 below are untouched.
+runtime_smoke: n/a -- docs-only change; verified by bin/tests.sh 84/84 and bin/check-links clean, both re-run after the post-review fix and again after this fork-sync merge
+changelog_ref: CHANGELOG.md "Capability-tiered review -- elective vertical-slice addition (BL-7)" entry, commit 0942b17; fork-sync entry, this commit
+commit: pending
+```
+Self-score 8/10. **+** Structured 3-candidate design panel with explicit operator sign-off on every
+open decision (placement, naming, scope, all three extras) before any file was touched — the
+AskUserQuestion answers function as the plan-mode contract this backlog item's own "planning/design,
+not implementation" framing called for. **+** 4-lens adversarial review independently converged on the
+same real defect and it was fixed before commit; full test suite + link check re-verified after the
+fix, not just before it, and again after fork-sync. **+** Scope stayed exactly within BL-7's approved
+shape — no second capability bundled in. **+** Caught and correctly resolved the session-numbering
+collision this receipt's own earlier draft had flagged as a foreseeable risk (see gotchas), rather than
+letting it land as a silent duplicate S2. **−** Skipped the Phase 1B pending stub (this session went
+straight from Orient into the design workflow without writing an interim claim); harmless here since
+the session ran to a clean close without crashing, but it is a real deviation from the documented
+procedure, not a judgment call to repeat by default. **−** Design and implementation landed in one
+continuous session rather than two — defensible because every decision was closed out by explicit
+operator Q&A before a single file changed and the resulting diff is small (4 files, ~300 words, no new
+gate/phase/FM), consistent with this repo's own precedent for backlog items (e.g. BL-5 ran its design
+panel and adversarial implementation review in one session too) — but flagged here as a considered
+call, not an unexamined default.
+
+Predecessor (S1) evaluation: 9/10, as originally written on the feat/capability-tiered-review branch.
+S1's `next_steps` explicitly named "Consider BL-7 (model-tiering as an elective feature) as a follow-on
+planning session" — a precise, actionable pointer that this session followed directly. Key files,
+gotchas (canonical-only checker, Test 9 github-404), and an honest self-critique (large single-session
+slice, unmerged, version event undecided) were all present and accurate.
+
+```handoff
 session: S5
 date: 2026-07-08
 status: complete
@@ -92,6 +131,8 @@ Reconciled at the next Orient (Phase 0 step 6) — this session left commits `dd
 `HANDOFFS.md` receipt. Reconstructed from `git log` and the CHANGELOG entry it wrote for itself; scores
 are this reconciling session's best-effort read of the evidence, not the original session's own
 self-assessment.
+
+---
 
 ```handoff
 session: S1
