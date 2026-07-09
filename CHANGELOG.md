@@ -32,6 +32,21 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] Backfilled (reconcile-on-read): HANDOFFS.md was 3 sessions behind
+- **Change:** Phase 0 orientation found `HANDOFFS.md`'s frontier (`4b0b1bc`, the S1 receipt) was 3
+  sessions stale — the v3.3 release, the doc-completeness follow-up, and the issue #55 filing had all
+  landed commits with no receipt written. Reconstructed `status: reconciled` blocks for **S2** (release,
+  `dd2c84b`/`4ec1f47`), **S3** (doc-completeness, `67581fd`/`768631e`), and **S4** (issue #55,
+  `6591faa`) from `git log` and each session's own CHANGELOG entry, per `SESSION_RUNNER.md` Phase 0
+  step 6's "also reconcile `HANDOFFS.md`" mechanic — this ledger (`CHANGELOG.md`) itself needed no
+  backfill (its frontier was already current). Also corrected S1's `commit: pending` to the real merge
+  sha (`e5638af`) now that PR #52 has landed, per `HANDOFFS.md`'s own documented reconcile note ("the
+  next session reconciles them to real shas"). First real exercise of the reconcile mechanic P4 built —
+  and a live instance of the completeness-critic gap issue #55 (just above) names.
+- **Commit/PR:** this commit (fork `main`; `HANDOFFS.md` backfill, one write Phase 0 permits).
+- **Session:** Phase 0 reconcile · **Verified:** `bin/check-handoff` OK on the newest receipt;
+  `bin/tests.sh` 84/84; `bin/check-links` clean.
+
 ### 2026-07-08 · [ad hoc] Opened upstream issue #55 — completeness-critic review pass
 - **Change:** filed [KJ5HST/methodology#55](https://github.com/KJ5HST/methodology/issues/55) proposing a
   **completeness-critic** review lens — reviews should sweep the *whole corpus* (not just the diff) for
