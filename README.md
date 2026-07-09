@@ -250,6 +250,15 @@ Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during develop
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
 
+### What's New in v3.4
+
+Review and audit passes get a **completeness-critic lens** — a review scoped only to the diff misses what the change made stale *elsewhere* in the corpus (rmsharp, [issue #55](https://github.com/KJ5HST/methodology/issues/55)). Motivated by the v3.3 close-out-receipt work: a clean 6-lens adversarial review missed three out-of-diff surfaces (`HOW_TO_USE.md`, the `README.md` tree, and three tutorials) that still described close-out without the new receipt.
+
+- **New Learning #10** — promotes Learning #7 (cross-reference completeness) and Learning #8 (checklist propagation) from an authoring-time self-check to a review-time lens.
+- **`AUDIT_WORKSTREAM.md`** — new anti-pattern #9 "Diff-scoped blind spot", a new Verification Checklist bullet, and a note that `/code-review`/`/review`/`/security-review` are diff-scoped by design.
+- **What to grep** — file/artifact enumerations, worked examples/tutorials, indexes/cross-references, and count/size claims, whenever a change adds, renames, or removes a concept, artifact, file, step, or numbered-set member.
+- **No principle, phase, gate, or workstream change; the failure-mode count stays 27.**
+
 ### What's New in v3.3
 
 The mandatory **close-out handoff is now a durable, machine-checkable artifact** — closing the one close-out sub-step that left no git-tracked file (rmsharp, [PR #52](https://github.com/KJ5HST/methodology/pull/52)). Previously the handoff lived only in the transient `SESSION_NOTES.md` or the spoken report, so a *skipped* close-out report was invisible until a human noticed. Mirrors v3.1's ledger — **gate-on-write AND reconcile-on-read**.
