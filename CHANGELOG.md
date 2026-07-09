@@ -32,6 +32,14 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] Released v3.5 — capability-tiered review
+- **Change:** version bumped **v3.4 → v3.5** (`CLAUDE.md` "Current version" line + a new §Versioning
+  entry; `README.md` What's New) covering the capability-tiered review elective addition (BL-7, PR #57,
+  already merged). Cite-don't-restate: the full narrative lives in
+  [`CLAUDE.md` §Versioning "v3.5"](CLAUDE.md#versioning).
+- **Commit/PR:** this commit (release narration) → merged; annotated tag `v3.5` + GitHub Release.
+- **Session:** release · **Verified:** `bin/tests.sh` 84/84; `bin/check-links` clean.
+
 ### 2026-07-08 · [BL-7] Fork close-out — capability-tiered review merged, fork synced, backlog retired
 - **Change:** PR #57 merged to `KJ5HST/main` (`d563600`); no version-bump commit was included in the
   merge, so the version-event decision (dot release vs. `CLAUDE.md`-only) remains open — deferred to
