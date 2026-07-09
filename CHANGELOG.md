@@ -32,6 +32,19 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] v3.4 close-out — fork main synced, branch pruned, S5 receipt written
+- **Change:** PR #56 merged to `KJ5HST/main` (`4a6c1d2`, auto-closed issue #55); annotated tag `v3.4` +
+  GitHub Release (Latest) pushed to both `upstream` and `origin`. Fork `main` merged `upstream/main`
+  (`d139642`) — resolved a `CHANGELOG.md` union conflict (both sides had added dated entries
+  independently) by wall-clock authorship order rather than a naive union or "ours" pick, and fixed a
+  stale "(just above)" positional cross-reference the reorder broke. Fork main pushed; the feature
+  branch `feat/completeness-critic-review-lens` pruned on `origin` and locally. This session's
+  `HANDOFFS.md` receipt (**S5**) written at close-out rather than deferred to the next Orient's
+  reconcile.
+- **Commit/PR:** this commit (fork `main` close-out).
+- **Session:** completeness-critic lens (close-out) · **Verified:** `bin/check-handoff` OK on the S5
+  receipt; `bin/tests.sh` 84/84; `bin/check-links` clean; fork `main` 0 commits behind `upstream/main`.
+
 ### 2026-07-08 · [ad hoc] Released v3.4 — completeness-critic review lens
 - **Change:** version bumped **v3.3 → v3.4** (`CLAUDE.md` "Current version" line + a new §Versioning
   entry; `README.md` What's New) covering the completeness-critic lens (issue #55). Cite-don't-restate:
