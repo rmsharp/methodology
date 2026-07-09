@@ -8,6 +8,47 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S7
+date: 2026-07-09
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: Ad hoc — answered a "should we register with FlexNet Code Insight" question, checked the dashboard for staleness, and filed an issue for a real blind spot it found.
+what_was_done: Answered that FNCI (an SCA/license-compliance tool) gains nothing here — no dependency manifest, stdlib-only tooling, and no CI to change that calculus (confirmed no .github/workflows exists). Then ran methodology_dashboard.py against this repo in single-project mode (collect_all(Path('.')), loaded directly from tools/methodology_dashboard.py to avoid polluting the scan — an earlier attempt that copied the script into the repo root to test single-project mode had to be discarded because the copy itself added ~2,475 LOC to the source count). Confirmed detect_doc_only correctly returns False (5,567 real source LOC, past the 200-LOC cap) — disproving the user's "judged doc-only since it has no code" premise. Found the methodology-compliance checklist (METHODOLOGY_ITEMS) has no self-recognition for this being the canonical repo, so it misreports "Partial methodology adoption (5%)". Filed KJ5HST/methodology#59 with reproduction steps and two candidate fix directions; logged it in CHANGELOG.md, commit 3cabd85. Also compacted MEMORY.md (auto-memory index) from 20.3KB to 7.7KB per a hook-triggered size warning, moving no content (topic files already held the detail) — just trimmed accreted prose out of the index lines.
+next_steps: Next session should pick up issue #59 — design the self-recognition fix (marker vs. structural heuristic, both sketched in the issue body) and implement it against tools/methodology_dashboard.py + starter-kit/methodology_dashboard.py (byte-identical twins, must stay in sync) + tools/test_methodology_dashboard.py. docs/planning/BACKLOG.md stays retired — this is tracked as a GitHub issue, not reopened as a backlog item, per operator instruction this session.
+key_files: tools/methodology_dashboard.py:110 (METHODOLOGY_ITEMS checklist), tools/methodology_dashboard.py:782 (collect_methodology_metrics), tools/methodology_dashboard.py:1209 (detect_doc_only — confirmed correct, not part of the bug), starter-kit/methodology_dashboard.py:110 (twin, needs the same fix)
+gotchas: the dashboard can't scan its own repo in place — ROOT = Path(__file__).parent resolves to tools/, which has no .git, so discover_projects returns nothing in portfolio mode; single-project mode requires the script to actually be copied to (or loaded as if running from) the project root. Any temp copy left sitting in the repo root during testing pollutes files.largest_files and source LOC — clean it up (and re-run) before trusting the numbers, as this session had to do once.
+runtime_smoke: n/a — no product code changed; verified by re-running the dashboard scan clean (git status empty) after removing the temporary test copy, dashboard.html, and dashboard_history.jsonl
+changelog_ref: CHANGELOG.md "Opened upstream issue #59 — dashboard self-scan blind spot" entry, commit 3cabd85
+commit: 3cabd85
+```
+Self-score 7/10. **+** Corrected my own methodology mid-investigation (caught and discarded a
+measurement polluted by my own temp file before reporting numbers) rather than reporting the
+contaminated first run. **+** Verified the user's stated premise ("no code") against actual data
+instead of accepting it, and reported the correct mechanism (200-LOC cap, not "no code") when it
+turned out false. **+** Filed a well-evidenced issue with exact reproduction steps and file:line
+references rather than a vague "dashboard is wrong" report, and correctly deferred design/implementation
+to the next session per the operator's explicit instruction. **+** Split the ledger entry and this
+receipt into two commits specifically so `what_was_done`/`commit` could cite a real sha (`3cabd85`)
+instead of leaving `pending` — avoided the self-reference problem outright rather than accepting an
+imprecise amend. **−** No Phase 0/1B was run at the start of this session — it began as an ambient "go"
+with no formal claim stub, the same class of procedural deviation S6 flagged in itself; harmless here
+since the session was small and low-risk, but not a pattern to repeat by default. **−** The HANDOFFS.md
+commit itself required `git commit --no-verify` (the ledger hook blocks a commit that touches tracked
+content without CHANGELOG.md co-staged, and CHANGELOG.md was already fully committed by that point) —
+the sanctioned bypass the hook's own message documents, backstopped by Phase 0 reconcile-on-read, but a
+deviation worth naming rather than passing over silently.
+
+Predecessor (S6) evaluation: 8/10. Thorough and specific — `next_steps` named exact actions ("mark
+BL-7 complete in BACKLOG.md," "ask the operator about a version event," "prune the branch"), all of
+which check out against the current repo state (BACKLOG.md shows BL-7 retired/complete;
+feat/capability-tiered-review is pruned locally and on origin). `key_files` carried real path:line
+tokens, `gotchas` transparently explained a session-renumbering decision (S2→S6) with reasoning rather
+than silently overwriting history, and the self-critique (skipped Phase 1B stub) was honest rather than
+self-serving. Docked one point only because `commit: pending` was never reconciled to a real sha in
+that entry either — a small, repeated gap in an otherwise exemplary handoff.
+
+```handoff
 session: S6
 date: 2026-07-08
 status: complete
