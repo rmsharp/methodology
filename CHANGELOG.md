@@ -32,6 +32,21 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-09 · [ad hoc] Opened upstream issue #59 — dashboard self-scan blind spot
+- **Change:** filed [KJ5HST/methodology#59](https://github.com/KJ5HST/methodology/issues/59) —
+  `methodology_dashboard.py`'s methodology-compliance check (`METHODOLOGY_ITEMS`) looks for
+  adopter-facing operating files at the scanned repo's own root, which is a category error when the
+  scan target is this canonical repo (those files live under `starter-kit/` here as templates).
+  Reproduced: `compliance_score: 5`, a misleading "Partial methodology adoption (5%)" medium-severity
+  risk on the repo that authors the methodology. Also confirmed `detect_doc_only` is **not** affected
+  by this — it correctly classifies this repo as code (5,567 source LOC, past the 200-LOC cap),
+  disproving the "judged doc-only since it has no code" premise that prompted the check in the first
+  place. No self-recognition logic exists in the file today; two candidate directions (a bidirectional
+  marker following the `.methodology-profile` precedent, or a structural heuristic keyed on
+  `starter-kit/` presence) are left for the next session to design.
+- **Commit/PR:** this commit (fork `main` ledger record; the issue itself lives upstream).
+- **Session:** ad hoc · **Verified:** n/a — issue creation + read-only dashboard investigation.
+
 ### 2026-07-08 · [ad hoc] Released v3.5 — capability-tiered review
 - **Change:** version bumped **v3.4 → v3.5** (`CLAUDE.md` "Current version" line + a new §Versioning
   entry; `README.md` What's New) covering the capability-tiered review elective addition (BL-7, PR #57,
