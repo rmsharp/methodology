@@ -43,8 +43,9 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   3D/expected-result), and `T3_compounding_loop.md` (the receipt carries `predecessor_score`, making the
   compounding loop machine-checkable). Mirrors the v3.1→BL-6 downstream-completeness pattern; **no version
   event** (docs-lag). No principle/phase/gate/workstream/FM change.
-- **Commit/PR:** this commit (distributed: `HOW_TO_USE.md` + `README.md`) · a tutorials commit follows —
-  branch `docs/v3.3-doc-completeness` (from `upstream/main`).
+- **Commit/PR:** `67581fd` (distributed: `HOW_TO_USE.md` + `README.md`) · this commit (tutorials:
+  `T2_worked_transcript.md`, `T2_first_session.md`, `T3_compounding_loop.md`) — branch
+  `docs/v3.3-doc-completeness` (from `upstream/main`).
 - **Session:** doc-completeness follow-on · **Verified:** `bin/check-links` clean; a completeness sweep
   found no other tutorial demonstrating close-out without the receipt (T5 only references a prior handoff).
 
