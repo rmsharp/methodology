@@ -32,6 +32,77 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] Released v3.3 — durable close-out receipt
+- **Change:** version bumped **v3.2 → v3.3** (`CLAUDE.md` "Current version" line + a new §Versioning
+  entry; `README.md` What's New) and shipped as an **annotated tag `v3.3` + GitHub Release (Latest)**,
+  covering the close-out-receipt slice (PR #52, merge `e5638af`). Cite-don't-restate: the full narrative
+  lives in [`CLAUDE.md` §Versioning "v3.3"](CLAUDE.md#versioning).
+- **Commit/PR:** this commit (release narration) → merged; annotated tag `v3.3` + GitHub Release.
+- **Session:** release · **Verified:** post-merge `bin/tests.sh` green — Test 9's github-source 404
+  clears now that `HANDOFFS.md` is on the default branch.
+
+### 2026-07-08 · [ad hoc] Close-out receipt — durable machine-checkable handoff artifact (shipped in v3.3, PR #52)
+- **Change:** implemented the ratified plan (fork `main`:
+  `docs/planning/close-out-receipt-durable-artifact-plan.md`) as a pre-declared **vertical slice** —
+  one capability, checkpoint commit + verification at each layer boundary. Fixes "agent had to be
+  prompted for the close-out report." **P1:** new `starter-kit/HANDOFFS.md` SEED — a
+  per-session `handoff`-block receipt ledger (twin of this action ledger) — added to `bin/_manifest.py`
+  `DISTRIBUTION` (SEED) + `SEED_FORMAT_MARKERS` (`"Handoff Receipts"`); `sync` seeds it, `status`
+  reports `present` / `present (stale format)`, `sync` never clobbers it. **P2:** `bin/check-handoff`
+  (canonical-only, python3 stdlib) + `bin/tests.sh` Tests 21–22 — asserts a receipt's presence +
+  structural completeness (fence-isolated block, integer scores, `path:line` in `key_files`, sha-or-
+  `pending` in `what_was_done`) plus anti-pattern lints (rejects "pick next from backlog", "need to
+  verify", bare placeholders), never semantic quality. **P3a:** protocol wiring — `SESSION_RUNNER.md`
+  (1B receipt stub, 3D "write the six as a durable receipt", Planning checklist, slice-revert) +
+  `ITERATIVE_METHODOLOGY.md` (Phase 1B, Phase 6 step 7, the Review/Planning/Debugging session types).
+  **P3b:** the receipt item added to all three campaign checklists (per-session + consolidation) —
+  Learning #8 fully discharged. **P4:** Phase 0 reconcile-on-read extended to backstop the receipt — a
+  missing or still-`pending` receipt for a session that left commits is reconstructed `status:
+  reconciled` at the next Orient, folded into the one write Phase 0 already permits (`SESSION_RUNNER.md`
+  step 6 + mechanics note, `ITERATIVE_METHODOLOGY.md` Pre-Flight). **P5:** framing — strengthened
+  **FM #6** to name the durable receipt (count stays 27, no new FM), a degradation-detection row
+  (commits landed but receipt never completed → FM #6), **Learning #9** (a handoff is dependable only
+  as a durable machine-checkable artifact: gate-on-write AND reconcile-on-read), and the
+  SAFEGUARDS/BOOTSTRAP harness stop-hook **recommendation** (agent-specific, soft-remind, never shipped;
+  `bin/check-handoff` noted canonical-only/copyable). **P6:** dogfood close-out — the canonical repo's
+  own root `HANDOFFS.md` receives its first receipt (S1) for this very slice, and `bin/check-handoff`
+  validates it green (first non-fixture run). Merged to `KJ5HST/main` as **PR #52** (merge `e5638af`);
+  the version event (D4) resolved to a **v3.3** minor — see the release entry above.
+- **Commit/PR:** `4f0bea7` (P1: artifact + manifest) · `1646773` (P2: checker + tests, built by
+  Sonnet 5; Opus review accepted `status: reconciled` for P4's backfill and made the `HANDOFFS.md`
+  template checker-safe — no inline `#` comments, since `#` is a literal value char as in `PR #52`) ·
+  `f722a84` (P3a: SESSION_RUNNER + IM protocol wiring, Opus) · `afbbe7d` (P3b: 3 campaign
+  checklists, Opus) · `5f13c99` (P4: Phase 0 receipt reconcile, built by Sonnet 5; Opus review
+  verified the false-positive scoping — one receipt per session, not per commit — and documented the
+  `reconciled` status in the seed) · `719a41d` (P5: framing — FM #6 + degradation row + Learning #9 +
+  stop-hook recommendation, Opus) · this commit (P6: dogfood root receipt + final verification, Opus —
+  P6's deliverable is the session's own handoff, so authored, not delegated) — branch
+  `feat/close-out-receipt` (from `upstream/main`); model
+  split hybrid — **P2 + P4 Sonnet 5; P1/P3/P5/P6 Opus 4.8**, Opus reviewing every Sonnet phase (P6
+  moved to Opus because its deliverable is the session's own close-out handoff, not a delegable task).
+- **Final review & fixes:** a 6-lens adversarial review (`wf_91880f5f-35c`, default-to-refute verify) —
+  **12 raised → 7 confirmed → all fixed** across 3 checkpoint commits. **Fix A (checker, this commit):**
+  `key_files`'s `path:line` regex now requires a **path-like** pre-colon token (`/` or `.`), so an
+  incidental colon-digit in prose (`John 3:16`, `10:30`, `3:1`) no longer passes (C1); `what_was_done`'s
+  sha-shape now requires a **hex letter**, so a bare 7+ digit decimal/timestamp no longer counts as a sha
+  (C2); + a docstring caveat that an unwrapped example fence shadows the real receipt (C7). Regression
+  tests added (**81 → 83**). **Fix B (synced docs):** the mandatory-procedure references to
+  `bin/check-handoff` in `SESSION_RUNNER.md` §3D, `ITERATIVE_METHODOLOGY.md` Phase 6, and the
+  `HANDOFFS.md` seed now carry the "canonical-only — copy it in; the dependable backstop is Phase 0
+  reconcile" caveat the optional-hook subsections already had (C4/C5), and the receipt-to-requirements
+  wording no longer double-counts `self_score` (C6: "the six requirements, the sixth being `self_score`,
+  plus `predecessor_score`"). **Fix C (this commit):** `HANDOFFS.md` added to BOOTSTRAP's seed
+  enumerations (repo tree, root-files table, both "seeded"/"seeded-once" sentences) — deliberately NOT
+  the named three-file `BACKLOG`/`CHANGELOG`/`ROADMAP` task-tracking split (HANDOFFS is a close-out
+  record, not part of that concept; "three" stays accurate); the campaign per-session checklists drop
+  the bare `bin/check-handoff` mention (its caveated form stays in §3D). **All 7 confirmed findings fixed**
+  (`28cecc8` A · `ac97722` B · this commit C). 5 findings were refuted (e.g. the missing `--range`
+  mode — plan-optional; the last-wins duplicate-key parse — benign).
+- **Session:** close-out-receipt slice · **Verified:** `bin/tests.sh` **83/84** (the 1 = github-source
+  404 on the not-yet-pushed `HANDOFFS.md`, clears on merge); `bin/check-links` clean; block-isolation +
+  per-field-defect + C1/C2-regression fixtures green; **`bin/check-handoff` green on the first real
+  receipt** (root `HANDOFFS.md`, S1 — dogfood, first non-fixture run).
+
 ### 2026-07-08 · [ad hoc] Reopen backlog — BL-7 (consider: model-tiering as an elective feature)
 - **Change:** `docs/planning/BACKLOG.md` reopened with **BL-7** (a *consider* item): whether matching
   model capability to task complexity — cheaper tier for spec-driven/test-graded work, strongest tier for
