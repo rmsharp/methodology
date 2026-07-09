@@ -32,6 +32,13 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-08 · [ad hoc] Released v3.4 — completeness-critic review lens
+- **Change:** version bumped **v3.3 → v3.4** (`CLAUDE.md` "Current version" line + a new §Versioning
+  entry; `README.md` What's New) covering the completeness-critic lens (issue #55). Cite-don't-restate:
+  the full narrative lives in [`CLAUDE.md` §Versioning "v3.4"](CLAUDE.md#versioning).
+- **Commit/PR:** this commit (release narration) → merged; annotated tag `v3.4` + GitHub Release.
+- **Session:** release · **Verified:** `bin/tests.sh` 84/84; `bin/check-links` clean.
+
 ### 2026-07-08 · [issue #55] Completeness-critic review lens — new Learning #10 + AUDIT_WORKSTREAM guidance
 - **Change:** promotes **Learning #7** (cross-reference completeness at self-review) and **Learning #8**
   (close-out-gate checklist propagation) from authoring-time self-checks to an explicit **review-time
