@@ -8,6 +8,13 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S8
+date: 2026-07-13
+status: pending
+active_task: Examine the mts-system adopter's 643-line BACKLOG.md (operator premise: "it should be on v3.5, which would not allow the backlog to grow"). Deliverable per operator direction: a ratified migration plan for mts-system + file the dashboard-defect issues this audit surfaced upstream.
+```
+
+```handoff
 session: S7
 date: 2026-07-09
 status: complete
