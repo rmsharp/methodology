@@ -32,6 +32,45 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-13 · [ad hoc] Opened upstream issues #60 and #61 — dashboard false-GREEN on a drifted adopter
+- **Change:** audited the `mts-system` adopter (operator question: "BACKLOG.md is large because of
+  completed items; it should be on v3.5, which would not allow the backlog to grow"). The premise was
+  false — that adopter runs a hand-patched **v2.0-era** runner (FM table stops at #19; zero occurrences of
+  "CHANGELOG"), so the FM #27 eviction rule was never installed. The audit surfaced three **framework**
+  defects, filed upstream: [#60](https://github.com/KJ5HST/methodology/issues/60) — (a) Signal F's
+  `_BACKLOG_DONE_RE` (`tools/methodology_dashboard.py:131`) matches only `- [x]` checkboxes, so a
+  table-status backlog with 253 DONE rows counts **0**; (b) `_find_changelog` (`:644-657`) searches `docs/`,
+  so a stale *product* `docs/changelog.md` masks the missing action ledger and **suppresses** the
+  "adopter has no CHANGELOG ledger" risk at `:1409` — the operator is instead told to update the wrong file.
+  [#61](https://github.com/KJ5HST/methodology/issues/61) — `METHODOLOGY_ITEMS` weights sum to **110** and the
+  methodology health dimension is the only one with no `min(20, …)` clamp (`:1329`), so the card renders
+  "Methodology Compliance (**105%**)" and a 21-of-20 sub-score. Net effect on a real adopter: **88/100 health,
+  zero backlog risks** — a green bill of health on a repo 12 releases behind with no ledger. Sibling class to
+  [#59](https://github.com/KJ5HST/methodology/issues/59), but sharper: #59 is a false *risk* on the canonical
+  repo; these are a false *green* on an adopter. Existing tests do not catch #61 —
+  `tools/test_methodology_dashboard.py:210-219` asserts the bound but drives `compliance_score: 0`, never
+  exercising the unclamped path.
+- **Commit/PR:** this commit (fork `main` ledger record; the issues live upstream). No dashboard code changed
+  this session — the fixes are unclaimed.
+- **Session:** S8 · **Verified:** reproductions executed read-only against the adopter via `importlib`
+  (no files written to either repo); `bin/status` drift table reproduced first-hand.
+
+### 2026-07-13 · [ad hoc] Adopter coordination — ratified methodology v3.5 migration plan for `mts-system`
+- **Change:** authored and committed a six-phase, session-sized migration plan to the adopter repo
+  (`mts-system` `fbc35cd`, `docs/planning/methodology-v35-migration.md`) taking it from the hand-patched
+  v2.0-era corpus to canonical v3.5 and performing the three-file `BACKLOG`/`CHANGELOG`/`ROADMAP` split it
+  never did (0/3, not 2/3 — its `ROADMAP.md` is not the seed). Operator ratified D1–D6 (full-corpus sync;
+  full 3-source ledger backfill; narrative→CHANGELOG + inventory→ROADMAP; ROADMAP rewrite; keep
+  `docs/changelog.md` with a disambiguating header; archive-then-reset `SESSION_NOTES.md`). Key finding for
+  **this** repo's tooling: `bin/sync`'s drift gate is whole-corpus and pre-write, so three locally-modified
+  tracked files cause it to exit 2 and write **nothing at all** — including seeds. "Sync will at least seed
+  the ledger" is false, and no doc says so.
+- **Commit/PR:** plan committed in the adopter repo (`fbc35cd`); no canonical file changed.
+- **Session:** S8 · **Verified:** grep-based evidence inventory executed first-hand (keep list, section map,
+  reference graph, the three sync-blocking diffs); plan then adversarially reviewed (4 lenses) before
+  commit — 11 defects found and folded in, incl. a missed fourth regrowth site (`CLAUDE.md:148`) and an
+  unfalsifiable verification step.
+
 ### 2026-07-09 · [ad hoc] Opened upstream issue #59 — dashboard self-scan blind spot
 - **Change:** filed [KJ5HST/methodology#59](https://github.com/KJ5HST/methodology/issues/59) —
   `methodology_dashboard.py`'s methodology-compliance check (`METHODOLOGY_ITEMS`) looks for
