@@ -8,6 +8,20 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S10
+date: 2026-07-25
+status: pending
+active_task: Layer 1 of docs/planning/dashboard-signal-integrity-plan.md — scale honesty + checklist currency (defects 1, 2, 8; upstream issue #61). Derived METHODOLOGY_MAX, HANDOFFS.md joins the checklist weighted 5, producer-side compliance_pct, clamp the methodology dimension, derive the grid headers, stamp dashboard_version into history. DASHBOARD_VERSION -> 2.9.0. ONE LAYER ONLY — Layers 2-6 are separate sessions.
+what_was_done: pending
+next_steps: pending
+key_files: tools/methodology_dashboard.py:110 (METHODOLOGY_ITEMS, weights sum 110), tools/methodology_dashboard.py:1329 (unclamped methodology dimension), tools/methodology_dashboard.py:1570 (hand-written headers list), tools/test_methodology_dashboard.py:210 (test that passes against the bug), bin/_manifest.py:47 (HANDOFFS.md SEED entry)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S9
 date: 2026-07-25
 status: complete
@@ -20,7 +34,7 @@ key_files: docs/planning/dashboard-signal-integrity-plan.md:1 (the ratified plan
 gotchas: (1) The dashboard CANNOT scan its own repo in place — ROOT = Path(__file__).parent resolves to tools/, which has no .git. Load it via importlib and call collect_all(Path(target)); NEVER copy it into a repo root to test, or the copy inflates that repo's own source-LOC count. (2) collect_all returns risks under metrics["scores"]["risks"], NOT metrics["risks"] — my first repro script crashed on exactly this. (3) The obvious #60b fix is WRONG: narrowing _find_changelog to root-only silently costs the +1 documentation freshness point (:1309) for exactly the adopter class #60b is about, because the early return leaves is_fresh False. Use the dual predicate in the plan. (4) The obvious #59 fix is WRONG too — see what_was_done. (5) The mts-system live repro fixture is GONE: it executed migration Phase 2 (28e9bb3) since S8 and now scores 110% with a root ledger. Use synthetic fixtures; recover real data from 383c1715:BACKLOG.md. (6) Each code layer sits at exactly 4 of the 5-file commit cap because .githooks/pre-commit requires CHANGELOG.md co-staged — no slack. (7) A receipt-only commit needs --no-verify (the hook wants CHANGELOG.md co-staged and the ledger entry is already committed); that bypass is documented and backstopped by Phase 0 reconcile. (8) bin/check-links is PYTHON — run python3 bin/check-links, not bash. (9) One bin/tests.sh run reported 83/84 and was never reproduced across four subsequent clean runs; the failing check was not captured. If you see 83/84, re-run before diagnosing your change.
 runtime_smoke: n/a — planning session, no code changed. Verified by re-running the full harness clean after the plan landed: bin/tests.sh 84 passed / 0 failed, tools/test_methodology_dashboard.py 29 tests OK, python3 bin/check-links OK (82 links across 21 files). All eight defects were reproduced by executing the canonical scanner read-only against this repo, the adopter, and synthetic git fixtures — no files written to any scanned repo.
 changelog_ref: CHANGELOG.md entry "Ratified plan — dashboard signal-integrity campaign", this commit
-commit: pending
+commit: bc2481d
 ```
 Self-score 8/10. **+** Reproduced every defect first-hand instead of trusting three well-written issues —
 which is how the four unfiled defects surfaced, and how I caught that #61's stated "21/20" is actually
