@@ -492,6 +492,416 @@ class TestHistoryVersionStamp(unittest.TestCase):
             self.assertEqual(entry.get("dashboard_version"), md.DASHBOARD_VERSION)
 
 
+# --- Signal-integrity campaign, Layer 2 (defects 5, 6, 7) -------------------------------------
+
+
+def write_tree(p, files_map):
+    """Materialize {relative path: content} under `p`, creating parent directories."""
+    for name, content in files_map.items():
+        fp = p / name
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        fp.write_text(content)
+
+
+def git_repo(case, files_map, extra_commits=0, tail_files=None, dates=None):
+    """A temp git repo with controllable history DEPTH and DATES.
+
+    `files_map` lands in the first commit, then `extra_commits` empty commits, then `tail_files`
+    in a final commit — which is how a test places a file at a chosen distance from HEAD (the
+    lag signals are computed from `git log -1 -- <file>` against HEAD). `dates`, when given, is
+    an (author_date_for_first, author_date_for_the_rest) pair so day-lag can be exercised
+    without waiting three weeks.
+    """
+    td = tempfile.TemporaryDirectory()
+    case.addCleanup(td.cleanup)
+    p = Path(td.name)
+    subprocess.run(["git", "init", "-q", str(p)], check=True)
+
+    def commit(msg, when=None):
+        env = dict(os.environ)
+        if when:
+            env["GIT_AUTHOR_DATE"] = env["GIT_COMMITTER_DATE"] = when
+        subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "--allow-empty", "-m", msg], check=True, env=env)
+
+    first_date, rest_date = dates if dates else (None, None)
+    write_tree(p, files_map)
+    commit("init", first_date)
+    for i in range(extra_commits):
+        commit(f"filler {i}", rest_date)
+    if tail_files:
+        write_tree(p, tail_files)
+        commit("tail", rest_date)
+    return p
+
+
+class TestLedgerLocators(unittest.TestCase):
+    """Defects 5 & 7. One locator was answering two different questions: *is there a changelog to
+    measure freshness against* (best-available — root or `docs/`, name-prefix, case-insensitive)
+    and *does this repo keep an action ledger* (root `CHANGELOG.md`, exactly — what
+    METHODOLOGY_ITEMS already probes). Conflating them let a `docs/` product changelog answer the
+    membership question, so the adopter that had no ledger at all was never told so."""
+
+    def setUp(self):
+        self._td = tempfile.TemporaryDirectory()
+        self.p = Path(self._td.name)
+
+    def tearDown(self):
+        self._td.cleanup()
+
+    # -- membership: _find_action_ledger, root-anchored and exact (RED: no such function today)
+    def test_the_action_ledger_is_the_root_changelog(self):
+        write_tree(self.p, {"CHANGELOG.md": "# ledger\n"})
+        self.assertEqual(md._find_action_ledger(self.p), self.p / "CHANGELOG.md")
+
+    def test_a_docs_changelog_is_not_an_action_ledger(self):
+        write_tree(self.p, {"docs/changelog.md": "# product release notes\n"})
+        self.assertIsNone(md._find_action_ledger(self.p))
+
+    def test_an_archive_is_not_an_action_ledger(self):
+        write_tree(self.p, {"CHANGELOG-archive.md": "# frozen history\n"})
+        self.assertIsNone(md._find_action_ledger(self.p))
+
+    def test_a_changelog_directory_is_not_an_action_ledger(self):
+        # Mirrors _find_changelog's is_file() guard: a CHANGELOG/ directory is not a ledger.
+        (self.p / "CHANGELOG.md").mkdir()
+        self.assertIsNone(md._find_action_ledger(self.p))
+
+    def test_membership_agrees_with_the_compliance_checklist_probe(self):
+        """Guard the guard, by CALLING the checklist rather than re-implementing it — a guard that
+        restates the thing it is guarding cannot detect the two drifting apart."""
+        for tree, expected in (({"CHANGELOG.md": "x"}, True),
+                               ({"docs/changelog.md": "x"}, False),
+                               ({"CHANGELOG-archive.md": "x"}, False),
+                               # A lowercase root file has no platform-independent answer: a
+                               # case-insensitive filesystem satisfies the CHANGELOG.md probe and a
+                               # case-sensitive one does not (plan §7 residual risk 6, pre-existing
+                               # and out of scope). Whatever the platform answers, the invariant
+                               # under test is that BOTH probes answer it the same way.
+                               ({"changelog.md": "x"}, None)):
+            with tempfile.TemporaryDirectory() as td:
+                p = Path(td)
+                write_tree(p, tree)
+                ledger = md._find_action_ledger(p) is not None
+                checklist = md.collect_methodology_metrics(p)["items"]["CHANGELOG.md"]
+                self.assertEqual(ledger, checklist,
+                                 f"the two probes must answer alike; tree={tree}")
+                if expected is not None:
+                    self.assertEqual(ledger, expected, tree)
+
+    def test_the_one_documented_divergence_from_the_checklist_probe(self):
+        # The checklist probes a bare exists(), so a CHANGELOG.md DIRECTORY scores as present for
+        # compliance while it is correctly not a ledger. Pinned so the docstring's claim of "the
+        # same question, one deliberate difference" stays true, and so the divergence cannot grow
+        # silently.
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td)
+            (p / "CHANGELOG.md").mkdir()
+            self.assertTrue(md.collect_methodology_metrics(p)["items"]["CHANGELOG.md"])
+            self.assertIsNone(md._find_action_ledger(p))
+
+    # -- location: _find_changelog, defect 7 (archive shadowing)
+    def test_an_exact_changelog_wins_over_an_archive_sibling(self):
+        # 'CHANGELOG-archive.md' sorts BEFORE 'CHANGELOG.md' ('-' is 0x2D, '.' is 0x2E), so the
+        # sorted()-first locator measured freshness against a deliberately frozen file and then
+        # reported it as lagging.
+        write_tree(self.p, {"CHANGELOG.md": "# ledger\n", "CHANGELOG-archive.md": "# frozen\n"})
+        self.assertEqual(md._find_changelog(self.p), self.p / "CHANGELOG.md")
+
+    def test_root_precedence_outranks_the_exact_name_across_bases(self):
+        """CHARACTERIZATION — this pins a LIMITATION, not a fix, so it cannot change by accident.
+        The exact-name preference is scoped within a base, so a root holding only a frozen archive
+        still shadows an exact `docs/CHANGELOG.md`. Hoisting the preference across bases would fix
+        this arrangement, but the same hoist would silently move which file is measured — and with
+        it the ±1 freshness point — for the neighbouring shape pinned in the test below, where a
+        non-`.md` root changelog coexists with an exact `docs/CHANGELOG.md` and nothing is being
+        shadowed at all. D3 exists precisely because a fix that quietly moves a score it claimed
+        not to touch is how this class of defect propagates, so the narrower reading shipped and
+        this arrangement was left as it was."""
+        write_tree(self.p, {"CHANGELOG-archive.md": "# frozen\n", "docs/CHANGELOG.md": "# live\n"})
+        self.assertEqual(md._find_changelog(self.p), self.p / "CHANGELOG-archive.md")
+
+    def test_a_non_md_root_changelog_still_outranks_docs(self):
+        # The behavior a cross-base hoist would have changed, pinned so it cannot: root wins, and
+        # nothing about this tree involves an archive or any defect this layer fixes.
+        write_tree(self.p, {"CHANGELOG.rst": "# root\n", "docs/CHANGELOG.md": "# docs\n"})
+        self.assertEqual(md._find_changelog(self.p), self.p / "CHANGELOG.rst")
+
+    def test_a_lowercase_exact_changelog_is_preferred_over_an_archive(self):
+        # _find_changelog is documented as case-insensitive (it mirrors has_changelog), so the
+        # exact-match preference must be too, or the shadowing simply persists for changelog.md
+        # ('C' 0x43 sorts before 'c' 0x63).
+        write_tree(self.p, {"changelog.md": "# live\n", "CHANGELOG-archive.md": "# frozen\n"})
+        self.assertEqual(md._find_changelog(self.p), self.p / "changelog.md")
+
+    def test_the_prefix_fallback_survives(self):
+        # Regression lock: the prefix search is the FALLBACK, not removed. A repo whose only
+        # changelog is CHANGELOG.rst is still located and measured.
+        write_tree(self.p, {"CHANGELOG.rst": "# rst\n"})
+        self.assertEqual(md._find_changelog(self.p), self.p / "CHANGELOG.rst")
+
+    def test_a_root_prefix_match_is_returned_even_when_a_docs_base_exists(self):
+        """The test above gives the repo no `docs/` directory at all, so it exercises only the
+        single-base path — a rewrite that mishandled the second base could not fail it. The far
+        more common shape is a root changelog plus an ordinary `docs/` tree, and that is what this
+        pins: the root prefix match is returned, and the presence of a second base does not cost
+        the repo its changelog — which would cost the +1 freshness point and silence every
+        Component-C advisory, but NOT the +1 presence point, since that comes from
+        `collect_doc_metrics.has_changelog`, an independent scan D3 leaves untouched. (Conflating
+        those two is the very thing this layer exists to stop doing.) This began as a
+        cross-base-accumulation lock against an implementation that carried
+        a `fallback` across bases; the shipped locator resolves per base and returns before `docs/`
+        is scanned, so what survives here is the behavior, not the original mechanism."""
+        write_tree(self.p, {"CHANGELOG.rst": "# rst\n", "docs/guide.md": "# guide\n"})
+        self.assertEqual(md._find_changelog(self.p), self.p / "CHANGELOG.rst")
+
+    def test_root_precedence_is_unchanged_when_both_are_exact(self):
+        # Regression lock: preferring an exact match must not reorder the bases.
+        write_tree(self.p, {"CHANGELOG.md": "# root\n", "docs/CHANGELOG.md": "# docs\n"})
+        self.assertEqual(md._find_changelog(self.p), self.p / "CHANGELOG.md")
+
+    def test_the_two_locators_disagree_on_purpose(self):
+        """The dual predicate stated as one assertion: the same tree answers YES to location and
+        NO to membership. If these two ever collapse into one answer, defect 5 is back."""
+        write_tree(self.p, {"docs/changelog.md": "# product release notes\n"})
+        self.assertIsNotNone(md._find_changelog(self.p))
+        self.assertIsNone(md._find_action_ledger(self.p))
+
+
+class TestSignalReachability(unittest.TestCase):
+    """Defect 6: Signal F (unmigrated `BACKLOG.md` done-marks) was emitted BELOW the
+    `changelog is None` early return, so an adopter with 60 unmigrated done-marks and no ledger
+    at all — strictly the worse case — received FEWER warnings than one with a ledger. A correct
+    assertion over an input that never executes is issue #61's own failure mode."""
+
+    def setUp(self):
+        self._td = tempfile.TemporaryDirectory()
+        self.p = Path(self._td.name)
+
+    def tearDown(self):
+        self._td.cleanup()
+
+    def _freshness(self, files_map, commits=50):
+        write_tree(self.p, files_map)
+        return md.evaluate_changelog_freshness(
+            self.p, {"total_commits": commits, "days_since_last_commit": 1})
+
+    def test_the_backlog_signal_fires_with_no_changelog_at_all(self):
+        r = self._freshness({"SESSION_RUNNER.md": "# runner\n",
+                             "BACKLOG.md": "- [x] shipped\n" * 60})
+        self.assertFalse(r["present"])
+        self.assertEqual(r["backlog_done_unmigrated"], 60)
+        self.assertTrue(any("not migrated" in d for _sev, d in r["signals"]),
+                        "Signal F must not depend on an unrelated file existing")
+
+    def test_the_backlog_signal_still_fires_with_a_changelog(self):
+        # Regression lock for the move: the case that already worked must keep working.
+        r = self._freshness({"SESSION_RUNNER.md": "# runner\n",
+                             "CHANGELOG.md": "# ledger\n",
+                             "BACKLOG.md": "- [x] shipped\n" * 60})
+        self.assertTrue(r["present"])
+        self.assertTrue(any("not migrated" in d for _sev, d in r["signals"]))
+
+    def test_the_backlog_signal_stays_adopter_scoped_with_no_changelog(self):
+        # The v3.2 fold-in gate must survive the move: a non-adopter sibling that keeps a [x]
+        # backlog does not follow the migrate-on-log convention, so it is not a defect there.
+        r = self._freshness({"BACKLOG.md": "- [x] shipped\n" * 60})
+        self.assertEqual(r["backlog_done_unmigrated"], 60)
+        self.assertFalse(any("not migrated" in d for _sev, d in r["signals"]))
+
+    def test_the_backlog_signal_is_not_suppressed_by_new_adopter_grace(self):
+        """Found by mutation: every other test here drives real history, so grace-suppressing
+        Signal F while moving it survived the whole suite. Grace exists because a *fresh seed* has
+        not had a chance to go stale — it says nothing about a backlog that arrived carrying 60
+        unmigrated done-marks, and this signal never was grace-scoped. Pin that."""
+        young = {"SESSION_RUNNER.md": "# runner\n", "BACKLOG.md": "- [x] shipped\n" * 60}
+        # `new_adopter_grace` is only computed once a changelog is located, so grace is
+        # OBSERVABLE only in the with-ledger case — assert it there...
+        with_ledger = self._freshness({**young, "CHANGELOG.md": "# ledger\n"},
+                                      commits=md.LEDGER_REAL_HISTORY_MIN - 1)
+        self.assertTrue(with_ledger["new_adopter_grace"], "fixture must actually be under grace")
+        self.assertTrue(any("not migrated" in d for _sev, d in with_ledger["signals"]),
+                        "Signal F is not grace-scoped and must keep firing on a young repo")
+        # ...and separately drive the intersection of both defect conditions: young history AND
+        # no changelog at all, where the emission's new position is what makes it reachable.
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td)
+            write_tree(p, young)
+            r = md.evaluate_changelog_freshness(
+                p, {"total_commits": md.LEDGER_REAL_HISTORY_MIN - 1, "days_since_last_commit": 1})
+            self.assertFalse(r["present"])
+            self.assertTrue(any("not migrated" in d for _sev, d in r["signals"]))
+
+    def test_no_signal_is_stranded_below_the_early_return(self):
+        """Guard the guard, STRUCTURALLY. Rather than naming Signal F — which the two tests above
+        already cover — this derives the invariant: every advisory that does not name the located
+        changelog is one that did not need a changelog to be computed, so it must survive the
+        changelog's absence. Today Signal F is the only such advisory, so the two formulations
+        coincide; the structural one keeps holding when the next file-independent signal is added
+        in the wrong place, and the literal one would not."""
+        runner_and_backlog = {"SESSION_RUNNER.md": "# runner\n",
+                              "BACKLOG.md": "- [x] shipped\n" * 60}
+        with_ledger = self._freshness({**runner_and_backlog, "CHANGELOG.md": "# ledger\n"})
+        located = md._find_changelog(self.p).name
+        file_independent = {d for _sev, d in with_ledger["signals"] if located not in d}
+        self.assertTrue(file_independent, "fixture emits no file-independent advisory to check")
+        with tempfile.TemporaryDirectory() as td:   # same fixture, minus the changelog
+            p = Path(td)
+            write_tree(p, runner_and_backlog)
+            without = md.evaluate_changelog_freshness(
+                p, {"total_commits": 50, "days_since_last_commit": 1})
+        self.assertFalse(without["present"])
+        self.assertTrue(file_independent <= {d for _sev, d in without["signals"]},
+                        "an advisory that never needed a changelog vanished when the changelog did")
+
+
+class TestAdvisoriesNameTheirSource(unittest.TestCase):
+    """Defect 5's misdirecting half. An adopter whose only changelog was a `docs/` product
+    release-notes file was told its "CHANGELOG ledger" was lagging — advice to go update a
+    release-notes file, while the real finding (no action ledger at all) stayed suppressed. An
+    advisory that names the file it was computed against cannot misdirect."""
+
+    def _signals(self, p):
+        r = md.evaluate_changelog_freshness(
+            p, {"total_commits": 50, "days_since_last_commit": 1})
+        return [d for _sev, d in r["signals"]]
+
+    def test_the_commit_lag_advisory_names_the_file(self):
+        # docs/changelog.md in the first commit, then 12 commits that never touch it.
+        p = git_repo(self, {"docs/changelog.md": "# product release notes\n"}, extra_commits=12)
+        descs = self._signals(p)
+        lag = [d for d in descs if "commits since it was last updated" in d]
+        self.assertEqual(len(lag), 1, f"expected exactly one commit-lag advisory; got {descs}")
+        self.assertIn("docs/changelog.md", lag[0])
+        self.assertNotIn("ledger", lag[0].lower())
+
+    def test_the_day_lag_advisory_names_the_file(self):
+        p = git_repo(self, {"docs/changelog.md": "# product release notes\n"}, extra_commits=1,
+                     dates=("2026-01-01T12:00:00", "2026-06-01T12:00:00"))
+        descs = self._signals(p)
+        day = [d for d in descs if "days" in d]
+        self.assertEqual(len(day), 1, f"expected exactly one day-lag advisory; got {descs}")
+        self.assertIn("docs/changelog.md", day[0])
+        self.assertNotIn("ledger", day[0].lower())
+
+    def test_the_never_used_advisory_names_the_file(self):
+        # Same misdirection class as the two lag messages: "CHANGELOG present but never used"
+        # reads as a statement about the action ledger even when the file found was docs/.
+        p = git_repo(self, {"docs/changelog.md": f"# notes\n{md.SEED_SENTINEL}\n"},
+                     extra_commits=1)
+        descs = self._signals(p)
+        never = [d for d in descs if "never used" in d]
+        self.assertEqual(len(never), 1, f"expected exactly one never-used advisory; got {descs}")
+        self.assertIn("docs/changelog.md", never[0])
+
+    def test_a_root_ledger_advisory_names_the_root_file(self):
+        # The naming is uniform, not a special case for docs/: the same code path names
+        # CHANGELOG.md when that is what it measured.
+        p = git_repo(self, {"CHANGELOG.md": "# ledger\n"}, extra_commits=12)
+        lag = [d for d in self._signals(p) if "commits since it was last updated" in d]
+        self.assertEqual(len(lag), 1)
+        self.assertIn("CHANGELOG.md", lag[0])
+
+    def test_advisory_paths_are_posix_on_every_platform(self):
+        # The displayed path is a rendered string, not a filesystem argument — pin the separator
+        # so the message reads the same in a Windows adopter's dashboard. Asserted only over
+        # advisories that actually carry a nested path, so this cannot pass vacuously against an
+        # implementation that names no file at all.
+        p = git_repo(self, {"docs/changelog.md": "# notes\n"}, extra_commits=12)
+        descs = self._signals(p)
+        naming = [d for d in descs if "changelog.md" in d.lower()]
+        self.assertTrue(naming, f"no advisory named its source file; got {descs}")
+        for d in naming:
+            self.assertIn("docs/changelog.md", d)
+            self.assertNotIn("\\", d)
+
+
+class TestMembershipRiskGating(unittest.TestCase):
+    """The membership risk's two guards, driven at the pure layer for precision. Both live on the
+    one line this layer rewrote, and both were unpinned: mutation showed that DELETING the
+    history gate and an OFF-BY-ONE on it each survived the whole suite."""
+
+    def _flagged(self, commits, adopter=True, ledger=False):
+        m = base_metrics(
+            git={"total_commits": commits},
+            methodology={"compliance_score": 25, "compliance_pct": md.compliance_pct(25),
+                         "items": {"SESSION_RUNNER.md": adopter}},
+            changelog={"present": False, "ledger_present": ledger, "is_fresh": False,
+                       "signals": []})
+        return any("no root CHANGELOG.md" in d for d in risk_descs(m))
+
+    def test_a_brand_new_adopter_is_not_scolded_for_a_ledger_it_has_not_owed_yet(self):
+        self.assertFalse(self._flagged(md.LEDGER_REAL_HISTORY_MIN - 1))
+
+    def test_the_history_threshold_is_inclusive(self):
+        self.assertTrue(self._flagged(md.LEDGER_REAL_HISTORY_MIN))
+
+    def test_a_non_adopter_is_never_flagged_however_long_its_history(self):
+        self.assertFalse(self._flagged(10_000, adopter=False))
+
+    def test_a_repo_with_a_ledger_is_never_flagged(self):
+        self.assertFalse(self._flagged(10_000, ledger=True))
+
+
+class TestLedgerIdentityEndToEnd(unittest.TestCase):
+    """Ratified decision D3 driven through `collect_all`: LOCATION (which changelog to measure
+    freshness against) and MEMBERSHIP (does this repo keep an action ledger) are different
+    questions, and fixing the second must not silently cost the first. The obvious fix —
+    narrowing the one locator to the root — passes the membership test and quietly drops a
+    documentation point for exactly the adopter class the defect is about."""
+
+    def _adopter_with_only_a_docs_changelog(self):
+        # 12 commits, so the repo has real history and gets no new-adopter grace, with the
+        # changelog committed LAST so it is not also lagging: the finding under test is
+        # membership, not freshness.
+        return git_repo(self, {"SESSION_RUNNER.md": "# runner\n" * 5,
+                               "README.md": "# demo\n" * 60},
+                        extra_commits=10,
+                        tail_files={"docs/changelog.md": "# Product release notes\n\n## 1.2.0\n"})
+
+    def test_the_adopter_is_told_it_has_no_action_ledger(self):
+        m = md.collect_all(self._adopter_with_only_a_docs_changelog())
+        self.assertGreaterEqual(m["git"]["total_commits"], md.LEDGER_REAL_HISTORY_MIN)
+        self.assertTrue(m["changelog"]["present"], "located for freshness")
+        self.assertFalse(m["changelog"]["ledger_present"], "but it is not an action ledger")
+        descs = [r["description"] for r in m["scores"]["risks"]]
+        self.assertTrue(any("no root CHANGELOG.md" in d for d in descs),
+                        f"the adopter must learn it has no action ledger; got {descs}")
+
+    def test_the_same_adopter_keeps_its_documentation_freshness_point(self):
+        """D3's regression lock, and the reason the obvious fix is wrong: `is_fresh` is computed
+        after the `changelog is None` early return, so a root-only locator leaves it False and
+        `score_health` silently withholds its +1 — a scoring change under a no-scoring-change
+        claim."""
+        m = md.collect_all(self._adopter_with_only_a_docs_changelog())
+        self.assertTrue(m["docs"]["has_changelog"])
+        self.assertTrue(m["changelog"]["is_fresh"], "freshness still measured against docs/")
+        earned = md.score_health(m)["documentation"]
+        self.assertLess(earned, 20, "the control below is only meaningful under the 0-20 cap")
+        stale = {**m, "changelog": {**m["changelog"], "is_fresh": False}}
+        self.assertEqual(earned - md.score_health(stale)["documentation"], 1,
+                         "the +1 freshness point must still be earned, not silently dropped")
+
+    def test_an_adopter_with_a_real_ledger_is_not_flagged(self):
+        # Regression lock on the other side of the predicate: a root CHANGELOG.md satisfies
+        # membership, so the risk must stay silent.
+        p = git_repo(self, {"SESSION_RUNNER.md": "# runner\n" * 5, "README.md": "# demo\n" * 60},
+                     extra_commits=10, tail_files={"CHANGELOG.md": "# ledger\n\n### 2026-07-25 · x\n"})
+        m = md.collect_all(p)
+        self.assertTrue(m["changelog"]["ledger_present"])
+        self.assertFalse(any("no root CHANGELOG.md" in r["description"]
+                             for r in m["scores"]["risks"]))
+
+    def test_a_non_adopter_with_no_ledger_is_not_flagged(self):
+        # Regression lock: the risk stays adopter-scoped. A sibling project that keeps no ledger
+        # by design is not a methodology defect.
+        m = md.collect_all(git_repo(self, {"README.md": "# demo\n" * 60}, extra_commits=10))
+        self.assertFalse(m["changelog"]["ledger_present"])
+        self.assertFalse(any("no root CHANGELOG.md" in r["description"]
+                             for r in m["scores"]["risks"]))
+
+
 class TestFmtRatioAndTwins(unittest.TestCase):
     def test_fmt_ratio(self):
         self.assertEqual(md.fmt_ratio(0.0, 0, True), "n/a (doc-only)")    # actually doc-only
@@ -504,10 +914,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.9.0")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.9.1")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.9\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.9.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.9\.1"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.9.1")
 
 
 class TestEndToEnd(unittest.TestCase):

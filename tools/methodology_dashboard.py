@@ -68,7 +68,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.9.0"
+DASHBOARD_VERSION = "2.9.1"
 
 ROOT = Path(__file__).parent
 EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
@@ -656,19 +656,67 @@ def collect_doc_metrics(path, file_metrics):
 
 
 def _find_changelog(path):
-    """Return the Path to a CHANGELOG in the project root or docs/, else None.
-    Mirrors collect_doc_metrics's has_changelog detection (case-insensitive prefix), but
-    restricted to regular files so a CHANGELOG *directory* is not treated as a ledger."""
+    """LOCATION — return the Path to the changelog freshness should be measured against (project
+    root or docs/), else None. Mirrors collect_doc_metrics's has_changelog detection
+    (case-insensitive prefix), but restricted to regular files so a CHANGELOG *directory* is not
+    treated as a ledger.
+
+    Within a base, an exact `CHANGELOG.md` (any case) wins over every name-prefix sibling:
+    `sorted()` alone returned `CHANGELOG-archive.md` ahead of `CHANGELOG.md` ('-' is 0x2D, '.' is
+    0x2E), so freshness was measured against a deliberately frozen archive and the repo was then
+    reported as lagging behind its own history. The prefix search remains as the fallback, so a
+    project whose only changelog is `CHANGELOG.rst` is still measured.
+
+    The preference is scoped WITHIN a base on purpose, so the pre-existing root-over-docs
+    precedence is preserved exactly. Hoisting it across bases would additionally fix a root that
+    holds only `CHANGELOG-archive.md` while an exact `docs/CHANGELOG.md` exists — but it would also
+    silently move which file is measured, and with it the ±1 freshness point, for the repo shape
+    that keeps a non-`.md` root changelog (`CHANGELOG.rst`) alongside an exact `docs/CHANGELOG.md`,
+    where nothing is being shadowed and no defect here asks for a change. D3 is specifically about
+    a fix that moves a score it claimed not to touch, so the narrower reading shipped. Both
+    arrangements — the one fixed and the one deliberately left alone — are pinned by tests.
+
+    This answers *which file*, never *does this repo keep an action ledger* — that is
+    _find_action_ledger. Keeping the two questions apart is ratified decision D3."""
     for base in (path, path / "docs"):
         if not base.is_dir():
             continue
+        exact = prefix = None
         try:
             for entry in sorted(base.iterdir()):
-                if entry.is_file() and entry.name.upper().startswith("CHANGELOG"):
-                    return entry
+                if not entry.is_file():
+                    continue
+                upper = entry.name.upper()
+                if upper == "CHANGELOG.MD":
+                    exact = entry
+                    break
+                if prefix is None and upper.startswith("CHANGELOG"):
+                    prefix = entry
         except OSError:
-            continue
+            pass          # keep whatever this base yielded before the listing failed
+        if exact or prefix:
+            return exact or prefix
     return None
+
+
+def _find_action_ledger(path):
+    """MEMBERSHIP — return the Path to this repo's action ledger (the root `CHANGELOG.md`,
+    exactly), else None.
+
+    Deliberately narrower than _find_changelog, and deliberately the same root-anchored, exact,
+    case-sensitive name that collect_methodology_metrics probes for the compliance checklist:
+    three subsystems used to answer "does this repo have a changelog" three different ways, and
+    the risk layer trusted the widest of them. So a `docs/` product changelog — release notes for
+    a shipped artifact, a different document with a different job — suppressed the finding that a
+    methodology adopter kept no action ledger at all, and replaced it with advice to go update the
+    release notes.
+
+    One deliberate difference from the checklist probe, which uses a bare `exists()`: a
+    `CHANGELOG.md` *directory* is not a ledger, so this requires a regular file, matching the same
+    guard _find_changelog already applies. The cross-platform case divergence the two share is
+    pre-existing and out of scope here (see the campaign plan §7 residual risk 6)."""
+    ledger = path / "CHANGELOG.md"
+    return ledger if ledger.is_file() else None
 
 
 def _count_backlog_done(path):
@@ -696,7 +744,8 @@ def evaluate_changelog_freshness(path, git):
     `git` is the already-collected collect_git_metrics dict.
     """
     result = {
-        "present": False,
+        "present": False,             # a changelog was LOCATED (root or docs/, best-available)
+        "ledger_present": False,      # a root CHANGELOG.md action ledger EXISTS (membership)
         "unlogged_commits": 0,        # Signal C
         "frontier_lag_days": None,    # Signal B
         "dated_entry_count": 0,
@@ -707,6 +756,23 @@ def evaluate_changelog_freshness(path, git):
         "is_fresh": False,
         "signals": [],                # list of (severity, description) advisory tuples
     }
+
+    # Membership, and the two findings that do not depend on locating a changelog, are computed
+    # ABOVE the early return below — the return is about having nothing to measure freshness
+    # against, which is not the same as having nothing to say.
+    result["ledger_present"] = _find_action_ledger(path) is not None
+
+    # Signal F keys on BACKLOG.md, not on any changelog, yet it used to be emitted below the early
+    # return — so an adopter with unmigrated done-marks and NO ledger, strictly the worse case,
+    # went silent while one with a ledger was warned. Adopter-scoped (root SESSION_RUNNER.md):
+    # only an adopter follows the "remove from BACKLOG.md in the commit that logs it to CHANGELOG"
+    # convention, so surviving done-marks are a defect there and not on a non-adopter sibling.
+    if result["backlog_done_unmigrated"] > 0 and (path / "SESSION_RUNNER.md").is_file():
+        result["signals"].append((
+            "low",
+            f"{result['backlog_done_unmigrated']} done-marked BACKLOG.md item(s) not migrated "
+            f"to CHANGELOG",
+        ))
 
     changelog = _find_changelog(path)
     if changelog is None:
@@ -721,8 +787,10 @@ def evaluate_changelog_freshness(path, git):
     result["new_adopter_grace"] = grace
 
     # Signals C & B: git-only. A path outside a git repo yields "" and leaves both inert.
+    # POSIX separators: `rel` is both a git pathspec (portable either way) and the display name in
+    # every advisory below, so a Windows adopter's dashboard reads "docs/changelog.md" too.
     try:
-        rel = str(changelog.relative_to(path))
+        rel = changelog.relative_to(path).as_posix()
     except ValueError:
         rel = changelog.name
     last_touch = git_cmd(path, "log", "-1", "--format=%H", "--", rel)
@@ -763,32 +831,29 @@ def evaluate_changelog_freshness(path, git):
     result["is_fresh"] = grace or not (lagging or result["never_used"])
 
     # Advisory RISK descriptions — suppressed under new-adopter grace so a fresh seed is silent.
+    #
+    # Each one NAMES the file it was computed against and does not call that file "the ledger",
+    # because it may not be one. An adopter whose only changelog was `docs/changelog.md` used to be
+    # told its "CHANGELOG ledger" was lagging: advice to go update a product release-notes file,
+    # while the actual finding — no action ledger at all — was suppressed by the same file's
+    # existence. Naming the measured file is what makes the advisory unable to misdirect.
     if not grace:
         if result["unlogged_commits"] >= LEDGER_UNLOGGED_MAX:
             result["signals"].append((
                 "medium",
-                f"CHANGELOG ledger lag: {result['unlogged_commits']} commits since it was "
+                f"{rel}: {result['unlogged_commits']} commits since it was "
                 f"last updated (Component C)",
             ))
         if active and lag_days is not None and lag_days > LEDGER_LAG_DAYS_MAX:
             result["signals"].append((
-                "low", f"CHANGELOG frontier trails HEAD by {lag_days} days",
+                "low", f"{rel} trails HEAD by {lag_days} days",
             ))
         if result["never_used"]:
             result["signals"].append((
                 "medium",
-                "CHANGELOG present but never used — still the untouched seed on a repo with "
+                f"{rel} present but never used — still the untouched seed on a repo with "
                 "real commit history",
             ))
-    # Signal F is adopter-scoped: only a methodology adopter (root SESSION_RUNNER.md) follows the
-    # "remove from BACKLOG.md in the commit that logs it to CHANGELOG" convention, so surviving
-    # done-marks are a defect only there — not on a non-adopter sibling that keeps a [x] backlog.
-    if result["backlog_done_unmigrated"] > 0 and (path / "SESSION_RUNNER.md").is_file():
-        result["signals"].append((
-            "low",
-            f"{result['backlog_done_unmigrated']} done-marked BACKLOG.md item(s) not migrated "
-            f"to CHANGELOG",
-        ))
 
     return result
 
@@ -1434,11 +1499,18 @@ def assess_risks(metrics):
     # Component C: CHANGELOG ledger freshness (advisory). Decision D3 — a methodology adopter
     # (SESSION_RUNNER.md present) with real commit history but no ledger is a defect, not a
     # silent absence. For projects that keep a ledger, surface the ledger-lag signals.
+    #
+    # This is the one RISK that asks about membership, and therefore the only consumer of
+    # `ledger_present` (root CHANGELOG.md, exactly) rather than `present` (any located changelog).
+    # Reading `present` here is what let a `docs/` product changelog answer for a missing ledger.
+    # The compliance checklist asks the same membership question independently and scores it; the
+    # two agreeing is the point of _find_action_ledger, not a duplication to collapse.
     cl = metrics.get("changelog", {})
     adopter = metrics["methodology"]["items"].get("SESSION_RUNNER.md", False)
-    if not cl.get("present") and adopter and metrics["git"]["total_commits"] >= LEDGER_REAL_HISTORY_MIN:
+    if not cl.get("ledger_present") and adopter and metrics["git"]["total_commits"] >= LEDGER_REAL_HISTORY_MIN:
         risks.append({"severity": "medium",
-                      "description": "Methodology adopter has commit history but no CHANGELOG ledger (Component C)"})
+                      "description": "Methodology adopter has commit history but no root "
+                                     "CHANGELOG.md action ledger (Component C)"})
     for sev, desc in cl.get("signals", []):
         risks.append({"severity": sev, "description": desc})
 

@@ -32,6 +32,105 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [issue #60] Dashboard signal-integrity **Layer 2** — ledger identity (`DASHBOARD_VERSION` 2.9.0 → 2.9.1)
+- **Change:** the second implementation layer of the ratified campaign plan
+  `docs/planning/dashboard-signal-integrity-plan.md` (S9, `bc2481d`). Closes
+  [#60](https://github.com/KJ5HST/methodology/issues/60) plus two defects found while planning and
+  never filed. All three are one error in three places — **file location standing in for a semantic
+  finding**. (1) A `docs/` **product changelog masked a missing action ledger**: three subsystems
+  answered *"does this repo have a changelog"* three different ways and the risk layer trusted the
+  widest, so a methodology adopter whose only changelog was release notes for a shipped artifact
+  was never told it kept no ledger — it was advised to go update the release notes instead. (2)
+  **Archive shadowing**: the locator returned the first `sorted()` name-prefix match, and
+  `CHANGELOG-archive.md` sorts *before* `CHANGELOG.md` (`-` is 0x2D, `.` is 0x2E), so freshness was
+  measured against a deliberately frozen file. Reproduced end to end — a fixture whose ledger was
+  committed **at HEAD** was reported **13 commits behind**. (3) **Signal F was unreachable**: the
+  unmigrated-`BACKLOG.md`-done-marks advisory was emitted *below* the `changelog is None` early
+  return, so an adopter with 60 unmigrated done-marks and no ledger at all — strictly the worse
+  case — went **silent**, while one with a ledger was warned.
+- **How — per ratified D3, a dual predicate rather than a narrowed one.** The plan is explicit that
+  the obvious fix is wrong: pointing the single locator at the root would satisfy the membership
+  test while silently costing a documentation point for exactly the repo class the defect is about,
+  because `is_fresh` is computed *after* the early return. So the two questions became two
+  functions. `_find_changelog` still answers **location** — best-available, root or `docs/`,
+  case-insensitive prefix — and still feeds `present`, `is_fresh` and Signals B–D. A new
+  `_find_action_ledger` answers **membership** — the root `CHANGELOG.md`, the same probe
+  `collect_methodology_metrics` already uses for the compliance checklist — and its
+  `ledger_present` result is consumed at exactly **one** site, the `assess_risks` ledger risk.
+  `collect_doc_metrics.has_changelog` is untouched; it answers a third question (doc hygiene).
+  Shadowing is fixed by preferring an exact `CHANGELOG.md` ahead of prefix matches, with the prefix
+  search retained as the fallback so a repo whose only changelog is `CHANGELOG.rst` is still
+  measured. Signal F moves above the early return, keeping its adopter scope and its
+  grace-independence. Every advisory now **names the file it was computed against** and no longer
+  calls that file "the ledger" — `docs/changelog.md: 12 commits since it was last updated`.
+- **One judgment call, recorded rather than buried.** The exact-name preference is scoped **within
+  a base**, preserving the pre-existing root-over-docs precedence exactly. Hoisting it across bases
+  would additionally fix a root archive that shadows an exact `docs/CHANGELOG.md` — but the same
+  hoist would silently move which file is measured, and with it the ±1 freshness point, for the
+  neighbouring shape where a non-`.md` root changelog (`CHANGELOG.rst`) coexists with an exact
+  `docs/CHANGELOG.md` and nothing is being shadowed at all — which no defect here asks for, and
+  which is the very failure mode D3 exists to prevent. A boundary reviewer argued the wider reading is within
+  the plan's literal text ("preferring an exact `CHANGELOG.md` over **any** name-prefix match") and
+  a second reviewer argued the opposite; the plan's own defect-7 evidence is a **same-base** pair,
+  so the conservative reading shipped. **Residual, stated plainly:** a root holding *only* an
+  archive still shadows an exact `docs/CHANGELOG.md`. It is pinned by a characterization test that
+  names it a limitation, so revisiting it is a decision, not a discovery.
+- **Adopter-visible effect: exactly one new advisory, and no score moves.** A methodology adopter
+  with real history and no root `CHANGELOG.md` now raises *"Methodology adopter has commit history
+  but no root CHANGELOG.md action ledger"* — the finding #60 is about. Re-scanned read-only against
+  five real sibling repos: every one keeps a root ledger, so **none** newly fires. The repo class
+  that does fire keeps its `+1` documentation freshness point — the regression the obvious fix
+  would have caused.
+- **Verified — RED-first, then mutation-tested.** 18 new assertions were driven against
+  **unpatched** code and watched to fail (9 `AttributeError` for the absent locator, 9 wrong-answer
+  failures) before the scanner was touched. Because the previous layer proved RED-first is
+  *necessary but not sufficient*, every assertion was then **mutation-tested**: 22 mutants were
+  applied to both twins and re-run. The first pass killed 15 of 17 and exposed a real hole — Signal
+  F could be grace-suppressed unnoticed, since every fixture drove real history. Two survivors are
+  survivors *by construction* and are recorded as such: `str()` vs `.as_posix()` is unkillable on a
+  POSIX filesystem (proven — the two are byte-identical there, differing only on Windows), and
+  moving the `ledger_present` assignment below the early return is logically inert, because "no
+  changelog located" now implies "no root ledger" except when `iterdir()` itself fails. A
+  self-inflicted trap worth recording: an unconditionally-failing new test made the harness report
+  *false* kills, so a mutation run is only meaningful from a green baseline.
+- **Hardened at the layer boundary by a 4-lens adversarial review before the commit landed** — 8
+  raw findings, each reproduced by this session before acting, with every refuter defaulting to
+  *refute*. The **adversarial regression lens came back clean**: no input was found on which the
+  new code behaves worse than the old. Three were **coverage holes that RED-first and the first
+  mutation pass had both missed** — the prefix-fallback lock's fixture had no `docs/` directory, so
+  the second base was never iterated and a per-base reset of the fallback survived the whole suite
+  while losing a root `CHANGELOG.rst` outright; the membership risk's history gate had no test on
+  either side (deleting it *and* an off-by-one both survived); and the "nothing is stranded below
+  the early return" test asserted a literal signal name rather than the structural invariant its
+  own docstring claimed. All three are closed and the mutants that exposed them now die.
+- **Three findings landed on my own prose, and all three were upheld** — in a change whose entire
+  subject is signal integrity, a comment that overstates is the same defect class as a signal that
+  overstates. (1) The `_find_action_ledger` docstring called itself "deliberately identical" to the
+  compliance checklist probe; false — the checklist uses a bare `exists()`, so a `CHANGELOG.md`
+  *directory* scores as present for compliance while it is correctly not a ledger. Corrected, and
+  the single divergence is now pinned by its own test. (2) A comment claimed the risk was "the ONE
+  site that asks about membership"; also false — `collect_methodology_metrics` asks the same
+  question and scores it, which is the *point* of aligning them, not a duplication. (3) A test
+  docstring claimed that losing the located changelog costs "documentation presence **and**
+  freshness"; it costs only freshness, because presence comes from
+  `collect_doc_metrics.has_changelog`, an independent scan D3 deliberately leaves untouched —
+  I had reproduced, in my own explanatory prose, the exact location-for-membership conflation this
+  layer exists to fix. One further docstring went stale *because of* the narrowing decision above
+  and was rewritten to describe what it now guards rather than the mechanism it was born against.
+- **Two findings were refuted as pre-existing, and coverage was added anyway.** The history gate
+  and the `is_file()`/`exists()` split are both byte-unchanged at HEAD, so neither is a defect this
+  change introduces — but this layer rewrote the condition they live in, and an untested guard on a
+  line you just edited is a hole regardless of who dug it.
+- **Suite:** `tools/test_methodology_dashboard.py` **47 → 79** tests; `bin/tests.sh` **84/84**;
+  `python3 bin/check-links` OK (82 links / 21 files); twins byte-identical. Runtime smoke ran the
+  **real** render path (`collect_all` → `render_project_card` → `render_methodology_grid` →
+  `render_html` → `append_history`) over five real sibling repos and three synthetic defect
+  fixtures, writing nothing into any scanned repo; the string `CHANGELOG ledger lag` no longer
+  appears anywhere in rendered output, and each history entry carries `dashboard_version 2.9.1`.
+- **Note for the next layer:** `changelog["present"]` now has **no consumer inside the scanner** —
+  its single reader moved to `ledger_present`. It remains in the emitted metrics (JSON, history)
+  and in tests, so it is informational rather than dead, but it is no longer load-bearing.
+
 ### 2026-07-25 · [issue #61] Dashboard signal-integrity **Layer 1** — scale honesty + checklist currency (`DASHBOARD_VERSION` 2.8.0 → 2.9.0)
 - **Change:** the first implementation layer of the ratified campaign plan
   `docs/planning/dashboard-signal-integrity-plan.md` (S9, `bc2481d`). Closes
