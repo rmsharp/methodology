@@ -68,7 +68,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.8.0"
+DASHBOARD_VERSION = "2.9.0"
 
 ROOT = Path(__file__).parent
 EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
@@ -113,10 +113,24 @@ METHODOLOGY_ITEMS = [
     ("SESSION_NOTES.md", 20, "file"),
     ("BACKLOG.md", 15, "file"),
     ("CHANGELOG.md", 5, "file"),
+    ("HANDOFFS.md", 5, "file"),
     ("ROADMAP.md", 5, "file"),
     ("docs/methodology", 10, "dir"),
     ("docs/methodology/workstreams", 10, "dir"),
 ]
+
+# The compliance DENOMINATOR — derived from the checklist itself, never written as a literal.
+# History is the argument for deriving it: the original six items summed to exactly 100, so the
+# "%" label and a bare `* 0.2` health dimension were correct *by construction*; two 5-point items
+# were later appended without re-cutting the scale, and from then on a fully-compliant project
+# rendered "110%" over a 22-of-20 sub-score. A hardcoded denominator is what drifted, so a
+# hardcoded 100 would drift again the next time this list grows.
+#
+# Adopter-root files that the methodology distributes are expected to appear on this checklist or
+# to be recorded as deliberately unscored — an invariant the canonical test suite enforces against
+# the distribution manifest (tools/test_methodology_dashboard.py, CHECKLIST_EXEMPT), since the
+# manifest is canonical-only and an adopter's copy has nothing to check itself against.
+METHODOLOGY_MAX = sum(weight for _, weight, _ in METHODOLOGY_ITEMS)
 
 # Component C — CHANGELOG ledger-freshness thresholds (advisory only; see
 # evaluate_changelog_freshness). This monitor stops rewarding mere presence: a CHANGELOG.md
@@ -779,35 +793,44 @@ def evaluate_changelog_freshness(path, git):
     return result
 
 
+def compliance_pct(raw_score):
+    """Normalize a raw weighted checklist sum to a true 0-100 percentage.
+
+    Normalization happens ONCE, here on the producer side. Every consumer — the health
+    dimension, the risk thresholds, the portfolio grid and the project card — then reads an
+    already-correct percentage instead of re-deriving one, so no site can drift from the scale
+    independently, and only this function knows the denominator.
+
+    The health dimension does scale the rounded percentage again (`int(pct * 0.2)`), which on
+    the current checklist credits one extra point at two of the twenty-four reachable sums
+    (raw 40 and 80). That is deliberate: the alternative — each consumer dividing by
+    METHODOLOGY_MAX itself — re-creates the several-sites-know-the-scale arrangement that
+    produced the defect, at a cost of one advisory point in a 0-20 band."""
+    if METHODOLOGY_MAX <= 0:
+        return 0
+    return int(round(100 * raw_score / METHODOLOGY_MAX))
+
+
 def collect_methodology_metrics(path):
-    present = 0
-    missing = []
-
+    # One existence probe per item: the weighted score, the present/missing counts and the
+    # per-item map are all derived from this single map (they were previously three separate
+    # loops over the same paths, each re-hitting the filesystem).
+    items = {}
     for item_path, weight, kind in METHODOLOGY_ITEMS:
         full_path = path / item_path
-        exists = full_path.is_dir() if kind == "dir" else full_path.exists()
-        if exists:
-            present += 1
-        else:
-            missing.append(item_path)
+        items[item_path] = full_path.is_dir() if kind == "dir" else full_path.exists()
 
-    # Weighted score
-    score = 0
-    for item_path, weight, kind in METHODOLOGY_ITEMS:
-        full_path = path / item_path
-        exists = full_path.is_dir() if kind == "dir" else full_path.exists()
-        if exists:
-            score += weight
+    score = sum(weight for item_path, weight, _ in METHODOLOGY_ITEMS if items[item_path])
 
     return {
-        "methodology_files_present": present,
+        "methodology_files_present": sum(1 for present in items.values() if present),
         "methodology_files_total": len(METHODOLOGY_ITEMS),
+        # Both are exported: the raw weighted sum stays inspectable (and scale-independent for
+        # the "no adoption at all" test), while compliance_pct is what may be rendered as a "%".
         "compliance_score": score,
-        "missing_files": missing,
-        "items": {
-            item_path: (path / item_path).is_dir() if kind == "dir" else (path / item_path).exists()
-            for item_path, weight, kind in METHODOLOGY_ITEMS
-        },
+        "compliance_pct": compliance_pct(score),
+        "missing_files": [item_path for item_path, present in items.items() if not present],
+        "items": items,
     }
 
 
@@ -1325,8 +1348,10 @@ def score_health(metrics):
     else:
         scores["ci_cd"] = 0
 
-    # 5. Methodology (0-20)
-    scores["methodology"] = int(metrics["methodology"]["compliance_score"] * 0.2)
+    # 5. Methodology (0-20) — from the normalized percentage, and clamped. This was the one
+    #    dimension of the five with no clamp, so a checklist that outgrew its 100-point scale
+    #    pushed both this sub-score and the "0-100" total past their bands.
+    scores["methodology"] = min(20, int(metrics["methodology"]["compliance_pct"] * 0.2))
 
     scores["total"] = sum(scores.values())
     return scores
@@ -1365,11 +1390,16 @@ def assess_risks(metrics):
     if not metrics["docs"]["has_readme"] or metrics["docs"]["readme_quality"] == "stub":
         risks.append({"severity": "medium", "description": "README is missing or insufficient"})
 
-    meth = metrics["methodology"]["compliance_score"]
-    if meth == 0:
+    # Both thresholds are stated in percent, so the partial-adoption test reads the normalized
+    # percentage. The "none at all" test deliberately stays on the RAW sum: it is scale-
+    # independent, so a single small-weight item in a future larger checklist cannot round down
+    # to 0% and false-fire "no adoption" on a project that has some.
+    meth_raw = metrics["methodology"]["compliance_score"]
+    meth_pct = metrics["methodology"]["compliance_pct"]
+    if meth_raw == 0:
         risks.append({"severity": "high", "description": "No methodology adoption (0% compliance)"})
-    elif meth < 50:
-        risks.append({"severity": "medium", "description": f"Partial methodology adoption ({meth}%)"})
+    elif meth_pct < 50:
+        risks.append({"severity": "medium", "description": f"Partial methodology adoption ({meth_pct}%)"})
 
     if not metrics["docs"]["has_license"]:
         risks.append({"severity": "low", "description": "No LICENSE file"})
@@ -1566,8 +1596,30 @@ def render_risk_matrix(projects):
     return f'<div class="risk-matrix">{cells}</div>'
 
 
+def methodology_item_label(item_path, kind):
+    """Human column label for a checklist item, derived from its path:
+    'SESSION_RUNNER.md' -> 'Session Runner', 'docs/methodology' -> 'Methodology Dir'."""
+    tail = item_path.rstrip("/").split("/")[-1]
+    if tail.lower().endswith(".md"):
+        tail = tail[:-3]
+    label = tail.replace("_", " ").replace("-", " ").title()
+    return f"{label} Dir" if kind == "dir" else label
+
+
+def methodology_grid_headers():
+    """The grid's full header row: Project + one column per checklist item + Score.
+
+    Derived rather than hand-written because the cells below already derive from
+    METHODOLOGY_ITEMS: a hand-maintained header list silently falls one column short of the
+    data every time the checklist grows (which is how the two items appended in v2.1 left every
+    project row running two cells wider than its headers)."""
+    return (["Project"]
+            + [methodology_item_label(p, kind) for p, _weight, kind in METHODOLOGY_ITEMS]
+            + ["Score"])
+
+
 def render_methodology_grid(projects):
-    headers = ["Project", "Session Runner", "Safeguards", "Session Notes", "Backlog", "Methodology Dir", "Workstreams", "Score"]
+    headers = methodology_grid_headers()
     item_keys = [item[0] for item in METHODOLOGY_ITEMS]
 
     rows = ""
@@ -1580,9 +1632,11 @@ def render_methodology_grid(projects):
                 cells += '<td class="meth-yes">&#10003;</td>'
             else:
                 cells += '<td class="meth-no">&#10007;</td>'
-        score = p["methodology"]["compliance_score"]
-        score_color = "#44ff88" if score >= 80 else "#ffcc00" if score >= 40 else "#ff4444"
-        cells += f'<td style="color: {score_color}; font-weight: bold">{score}%</td>'
+        # The colour ladder is stated in percent, so it reads the normalized percentage — on the
+        # raw 0-115 sum its 80/40 rungs sat at the wrong places and the cell rendered ">100%".
+        pct = p["methodology"]["compliance_pct"]
+        score_color = "#44ff88" if pct >= 80 else "#ffcc00" if pct >= 40 else "#ff4444"
+        cells += f'<td style="color: {score_color}; font-weight: bold">{pct}%</td>'
         rows += f"<tr>{cells}</tr>"
 
     header_row = "".join(f"<th>{h}</th>" for h in headers)
@@ -1653,7 +1707,11 @@ def render_project_card(p):
     else:
         risk_html = '<div class="risk-flag" style="color: #44ff88">No risks identified</div>'
 
-    # Methodology checklist
+    # Methodology checklist. The heading shows the normalized percentage with the raw weighted
+    # sum kept inspectable beside it, so a reader can still see what the checklist actually
+    # totalled without the "%" ever exceeding 100.
+    meth_compliance = (f'{p["methodology"]["compliance_pct"]}% '
+                       f'({p["methodology"]["compliance_score"]} of {METHODOLOGY_MAX})')
     meth_items = ""
     for item_path, weight, kind in METHODOLOGY_ITEMS:
         present = p["methodology"]["items"].get(item_path, False)
@@ -1889,7 +1947,7 @@ def render_project_card(p):
                     </div>
 
                     <div class="card-section">
-                        <h4>Methodology Compliance ({p["methodology"]["compliance_score"]}%)</h4>
+                        <h4>Methodology Compliance ({meth_compliance})</h4>
                         <div class="meth-checklist">{meth_items}</div>
                     </div>
 
@@ -2254,6 +2312,11 @@ def append_history(root, portfolio, projects):
     """Append current run metrics to JSONL history file."""
     entry = {
         "timestamp": datetime.now().isoformat(),
+        # Stamped so a scoring change is interpretable in the trend: history persists only
+        # derived totals, and the trend renderer diffs first-vs-last across its window, so a
+        # one-time re-scaling would otherwise render as a red regression arrow indistinguishable
+        # from a project that genuinely got worse.
+        "dashboard_version": DASHBOARD_VERSION,
         "portfolio": {
             "health_score": portfolio["health_score"],
             "project_count": portfolio["project_count"],

@@ -10,16 +10,55 @@ This repository dogfoods its own methodology: every session records a durable, m
 ```handoff
 session: S10
 date: 2026-07-25
-status: pending
-active_task: Layer 1 of docs/planning/dashboard-signal-integrity-plan.md — scale honesty + checklist currency (defects 1, 2, 8; upstream issue #61). Derived METHODOLOGY_MAX, HANDOFFS.md joins the checklist weighted 5, producer-side compliance_pct, clamp the methodology dimension, derive the grid headers, stamp dashboard_version into history. DASHBOARD_VERSION -> 2.9.0. ONE LAYER ONLY — Layers 2-6 are separate sessions.
-what_was_done: pending
-next_steps: pending
-key_files: tools/methodology_dashboard.py:110 (METHODOLOGY_ITEMS, weights sum 110), tools/methodology_dashboard.py:1329 (unclamped methodology dimension), tools/methodology_dashboard.py:1570 (hand-written headers list), tools/test_methodology_dashboard.py:210 (test that passes against the bug), bin/_manifest.py:47 (HANDOFFS.md SEED entry)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Layer 1 of docs/planning/dashboard-signal-integrity-plan.md — scale honesty + checklist currency (defects 1, 2, 8; upstream issue #61). COMPLETE. DASHBOARD_VERSION 2.8.0 -> 2.9.0. Layers 2-6 remain unclaimed, one per session.
+what_was_done: Implemented Layer 1 of the plan ratified in bc2481d, exactly as written, RED-first. Wrote 13 assertions and watched them FAIL against unpatched code before touching the scanner (methodology 22 not 20, total 102, card "110%", 8 headers over 10 cells, HANDOFFS.md the only unaccounted manifest destination) — necessary because the suite was green against all eight defects. Then: derived METHODOLOGY_MAX (=115, never a literal); ("HANDOFFS.md", 5, "file") added next to its structural twin CHANGELOG.md per D2; producer-side compliance_pct() normalizing ONCE; the four consumers rewired to the percentage (dimension now min(20, int(pct*0.2)); grid ladder + cell; card renders "{pct}% ({raw} of {MAX})") while the "no adoption at all" risk keeps reading the RAW sum (scale-independent); grid headers derived; the three duplicate exists() loops in collect_methodology_metrics collapsed to one probe per item; dashboard_version stamped into each dashboard_history.jsonl entry. Both twins byte-identical, re-copied after every edit. CORRECTION TO THE PLAN, verified by rendering HEAD's scanner: the header misalignment is NOT a future trap of adding a 9th item — it has been LIVE since v2.1, 8 <th> over 10 <td>, so "Methodology Dir"/"Workstreams"/"Score" have been sitting above the CHANGELOG/ROADMAP/docs-methodology cells and the last two cells have had no header at all. Ran a 5-lens adversarial review at the layer boundary BEFORE committing: 23 findings -> 2 confirmed, 19 refuted. The confirmed one mattered: a mutation (dimension reads compliance_score again, clamp retained) survived all 44 tests, because 0% and 100% cannot distinguish the clamp from the normalized read — I reproduced the surviving mutant myself, added an intermediate-value lock, and re-ran the mutation to watch it die. Also added an end-to-end pre-v3.3 adopter fixture (D2's accepted cost had no test), a direct out-of-range clamp test, and de-brittled two assertions that would have failed against correct code if the checklist were ever re-cut to sum 100. Two review findings against my own prose were upheld and fixed: the compliance_pct docstring claimed "no value is rounded twice" — false, the dimension re-scales an already-rounded percentage (credits +1 at raw 40 and 80; kept per plan, now documented), and my CHANGELOG entry overstated the write-only version stamp. Ledger entry + this receipt in the same commit.
+next_steps: Execute Layer 2 (ledger identity, defects 5/6/7) of docs/planning/dashboard-signal-integrity-plan.md — add _find_action_ledger (root-only, exact CHANGELOG.md) ALONGSIDE an unchanged _find_changelog, consume it only at the :1409 risk, fix archive shadowing, make lag messages name their source file, and move the Signal F emission above the `changelog is None` early return. DASHBOARD_VERSION -> 2.9.1. Start RED-first again, and this time also MUTATION-test each new assertion: Layer 1 proved that RED-first alone is not enough — a test can go red for the defect and still be blind to a wrong-field regression. The plan's four Layer 2 fixtures are the RED list; note fixture (d) (an adopter with docs/changelog.md KEEPS its +1 freshness point) is the regression lock that makes the obvious #60b fix wrong. Do NOT bundle: Layers 3-6 are separate sessions, and the release decision R1 is settled at merge, not by an implementing session.
+key_files: tools/methodology_dashboard.py:133 (METHODOLOGY_MAX, derived), tools/methodology_dashboard.py:796 (compliance_pct — the single normalization site), tools/methodology_dashboard.py:1348 (clamped dimension), tools/methodology_dashboard.py:1391 (risk thresholds — raw for ==0, pct for <50), tools/methodology_dashboard.py:1612 (methodology_grid_headers, derived), tools/methodology_dashboard.py:1707 (card label "{pct}% ({raw} of {MAX})"), tools/methodology_dashboard.py:2313 (dashboard_version history stamp), tools/test_methodology_dashboard.py:278 (RAW_MAX + CHECKLIST_EXEMPT — the manifest-vs-checklist guard), tools/test_methodology_dashboard.py:339 (intermediate-value lock that kills the raw-sum mutant), docs/planning/dashboard-signal-integrity-plan.md:194 (Layer 2, next)
+gotchas: (1) RED-first is necessary but NOT sufficient — my clamp test went red for the right reason and still let a raw-vs-pct regression through. Mutate the fix and re-run before believing any assertion; the endpoints of a normalized scale are exactly where the two readings coincide. (2) bin/check-handoff CANNOT validate a Phase 1B stub even with --allow-pending: self_score and predecessor_score are REQUIRED keys that must be integers 1..10, and neither is knowable at claim time (bin/check-handoff:51 + :161). S9's stub and mine both omit them and so both fail --allow-pending; filling them at claim would be fabrication. Worth an upstream issue — do not "fix" it by inventing scores. (3) The dashboard still cannot scan its own repo in place (ROOT = Path(__file__).parent resolves to tools/). Load it via importlib and call collect_all(Path(target)); never copy it into a repo root, never call main() against a real repo (main() writes dashboard.html + dashboard_history.jsonl into the scan root). My read-only scan + smoke scripts are in the session scratchpad if useful. (4) A receipt-only or claim-only commit needs --no-verify (the pre-commit hook wants CHANGELOG.md co-staged); backstopped by Phase 0 reconcile. (5) Each code layer is 4 files + the receipt = exactly the 5-file cap, so nothing else can ride along — this is why the SESSION_RUNNER.md Learnings row stays owed at Layer 6 (plan §8) rather than being appended now. (6) Layer 5's target table is missing three enumerations the review found and confirmed as ALREADY-STALE-BEFORE-THIS-LAYER, so they are Layer 5 work, not regressions: README.md:106-115 ("What's in the starter kit" table omits HANDOFFS.md), docs/tutorials/T1_setup.md:63 and docs/tutorials/T8_keeping_current.md:62 (both enumerate SEED files as SESSION_NOTES/CHANGELOG/ROADMAP), CLAUDE.md:42-48 (starter-kit table omits HANDOFFS.md; Tools table omits test_methodology_dashboard.py), plus README.md's two dashboard screenshots, which are worked examples of output this layer changed. Layer 5's own verify grep surfaces T1/T8; the others need adding as rows. (7) The two README screenshots (README.md:147 area) now show pre-2.9.0 output — regenerating images is NOT in any layer's file list; raise it as its own decision.
+runtime_smoke: Ran the REAL render path against live collected metrics (render_project_card + render_methodology_grid + render_html + append_history), writing nothing into any scanned repo. Card: mts-system "Methodology Compliance (100% (115 of 115))" (was "110%"), this repo "9% (10 of 115)". Grid: 11 headers over 11 cells for both projects (was 8 over 10). Full HTML render 34,469 chars with no percentage over 100 anywhere. History entry carries dashboard_version 2.9.0. Suites: tools/test_methodology_dashboard.py 29 -> 47 tests OK; bin/tests.sh 84 passed / 0 failed; python3 bin/check-links OK (82 links / 21 files); diff -q twins identical. Live re-scan read-only: mts-system 90 -> 88/100 with methodology 22/20 -> 20/20; this repo 43 -> 49 (testing 6 -> 12 because this session's own test file pushed the test-to-source ratio past 0.1 — not a scoring change).
+changelog_ref: CHANGELOG.md entry "Dashboard signal-integrity Layer 1 — scale honesty + checklist currency", this commit
 commit: pending
 ```
+Self-score 8/10. **+** Held the RED-first rule: every defect-proving assertion was watched to fail
+against unpatched code first, with the exact numbers the plan predicted. **+** Reviewed the layer
+at its boundary *before* the commit landed rather than after, and the review earned its cost — it
+found a mutation-surviving coverage hole that RED-first alone could never have surfaced. **+**
+Reproduced the confirmed finding myself (mutated both twins, watched 44/44 stay green) instead of
+taking the agent's word, and re-ran the mutation after fixing to prove the lock bites. **+**
+Corrected the ratified plan where reality disagreed with it — the grid misalignment is live, not
+prospective — instead of implementing to the plan's description. **+** Fixed two inaccuracies in
+my *own* prose that the review caught (a false "rounded twice" claim, an overstated trend claim);
+honest comments matter more in a repo whose subject is signal integrity. **−** I wrote that false
+docstring claim in the first place, restating the plan's rationale as an implementation guarantee
+without checking whether the code I had just written met it. **−** My first-cut tests pinned the
+clamp and not the normalized read — the exact anti-pattern this campaign documented as its own
+§8 learning 2, reproduced at the opposite endpoint one layer after it was written down. **−** Two
+of my new assertions would have failed against *correct* code if the checklist were ever re-cut to
+sum 100 — brittleness a reviewer had to point out. **−** I spent tokens on a 5-lens sweep whose
+doc-completeness lens was always going to land in Layer 5's lap; one lens would have done.
+
+Predecessor (S9) evaluation: 9/10. The plan is the best executable artifact I have been handed in
+this repo, and its value was concentrated exactly where it promised: the three "traps" section
+saved real time (I would have narrowed `_find_changelog` and would have remapped the checklist onto
+`starter-kit/` paths, both wrong), and the RED-first standing rule is the only reason I did not
+ship a suite that was green against the bug. Every `file:line` in its `key_files` resolved to the
+code it claimed (`:110`, `:1329`, `:1570`, `:698`, `:648`, `:1309`, `:210`), and the D1 decision
+was argued from `git show 46b17e8` rather than taste, which made implementation a transcription
+job rather than a judgment call. Its gotchas were load-bearing: the importlib warning and the
+"collect_all returns risks under metrics['scores']['risks']" note both applied verbatim. Two
+deductions, both small. First, one claim was wrong in a way that mattered to sequencing: the plan
+frames the grid `headers` misalignment as a trap that *appears* when a 9th item is added ("the grid
+misaligns until `headers` is derived too"), but it is already live at HEAD — 8 headers over 10
+cells since v2.1 — which means it was a *shipped defect* that belonged in the defect table, not a
+note about implementation order. It cost nothing here because the fix is identical, but a plan
+that mis-classifies a live defect as prospective could let a later layer defer it. Second, the plan
+prescribes `min(20, int(pct * 0.2))` while asserting in the same decision that "double-rounding is
+avoided" — the two cannot both hold, and reconciling them was left to me. I kept the prescription
+and documented the cost; a sentence in D1 acknowledging the one-point artifact would have closed
+it. Neither deduction touches the plan's core, which held up under a 5-lens adversarial review.
 
 ```handoff
 session: S9

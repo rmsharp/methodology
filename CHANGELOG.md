@@ -32,6 +32,70 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [issue #61] Dashboard signal-integrity **Layer 1** — scale honesty + checklist currency (`DASHBOARD_VERSION` 2.8.0 → 2.9.0)
+- **Change:** the first implementation layer of the ratified campaign plan
+  `docs/planning/dashboard-signal-integrity-plan.md` (S9, `bc2481d`). Closes
+  [#61](https://github.com/KJ5HST/methodology/issues/61) — `METHODOLOGY_ITEMS` weights summed
+  **110** while `compliance_score` was rendered as a percentage, and the methodology health
+  dimension was the only one of five with **no clamp**, so a fully-compliant adopter scored
+  **22/20** on a 0–20 dimension and **102/100** overall. Also fixes two defects found while
+  planning and never filed: **`HANDOFFS.md`** has shipped to adopters as a SEED since v3.3
+  (`bin/_manifest.py:47`) but was never a compliance checklist item, and the grid's header row
+  was hand-written at **8** columns while its cells derive from `METHODOLOGY_ITEMS` — so since
+  v2.1 every project row has rendered **two cells wider than its headers** (8 `<th>` over 10
+  `<td>`, reproduced; the plan predicted this as a *future* trap of adding a 9th item, but it
+  was already live).
+- **How:** per ratified **D1** the denominator is **derived, never a literal**
+  (`METHODOLOGY_MAX = sum(...)`, now 115) and normalization happens **once, producer-side**
+  (`compliance_pct`); all four consumers — the health dimension (now `min(20, …)`), the risk
+  thresholds, the portfolio grid's colour ladder, and the project card — read that percentage,
+  while the `== 0` *"no adoption at all"* test deliberately keeps reading the **raw** sum, which
+  is scale-independent. The card renders `"{pct}% ({raw} of {MAX})"` so the weighted sum stays
+  inspectable. Per **D2** `HANDOFFS.md` joins the checklist weighted **5**, matching its
+  structural twin `CHANGELOG.md`. The grid header row is now derived from the checklist. Two
+  supporting changes: the three duplicate `exists()` loops in `collect_methodology_metrics`
+  collapse to one probe per item, and every `dashboard_history.jsonl` entry is stamped with
+  `dashboard_version`, so the one-time re-scaling is *recoverable from the history data* rather
+  than reading as an unexplained red regression arrow (plan residual risk 1). Stated precisely:
+  the stamp is written but not yet read — `render_trend_section` remains version-unaware, so the
+  discontinuity is now diagnosable, not annotated.
+- **A second adopter-visible effect, beyond D1's stated ~9% deflation:** because the
+  partial-adoption risk threshold is stated in percent, it now reads the percentage — so the two
+  reachable checklist sums between the old and new boundary (raw **50** → 43% and **55** → 48%)
+  newly raise a medium *"Partial methodology adoption"* row. Those repos genuinely are below
+  half; nothing about them changed, only the honesty of the comparison.
+- **Verified — RED-first, per the campaign's standing rule:** 13 new assertions were driven
+  against **unpatched** code and watched to fail (methodology **22** not 20, total **102**, card
+  **"110%"**, 8 headers over 10 cells, `HANDOFFS.md` the *only* unaccounted manifest
+  destination) before the scanner was touched — the suite was green against every one of these
+  defects beforehand, so "tests pass" was not evidence. A new **manifest-vs-checklist structural
+  guard** converts the `HANDOFFS.md` omission into an invariant: every adopter-root destination
+  in `bin/_manifest.py` must be a checklist item or carry a stated exemption, so the next
+  distributed artifact cannot repeat it. `tools/test_methodology_dashboard.py` **29 → 47** tests;
+  `bin/tests.sh` **84/84**; `python3 bin/check-links` OK (82 links / 21 files); twins
+  byte-identical. Live effect, re-scanned read-only: the adopter whose card read *"Methodology
+  Compliance (110%)"* now reads *"100% (115 of 115)"* with methodology **20/20** and a total of
+  **88** (was 90/100 — the accepted one-time deflation).
+- **Hardened at the layer boundary by a 5-lens adversarial review before the commit landed:** 23
+  raw findings → **2 confirmed**, 19 refuted (chiefly as Layer 5 doc targets the plan already
+  owns, or pre-existing conditions this layer neither introduced nor was chartered to fix). The
+  confirmed one was a **mutation-proven coverage hole**: the suite pinned the *clamp* but not the
+  *normalized read*, so an implementation that clamps while still reading the raw sum passed all
+  44 tests — verified first-hand by mutating both twins, and now killed by an intermediate-value
+  lock (the endpoints 0% and 100% cannot distinguish the two readings; the whole adopter fleet
+  lives between them). Also added: an end-to-end pre-v3.3 adopter fixture, so D2's accepted cost
+  has a test; a direct out-of-range clamp test; exact pinning of the derived grid labels; and
+  removal of two assertions that would have broken against correct code if the checklist were
+  ever re-cut to sum 100. Two review claims about this session's own prose were upheld and
+  fixed — the `compliance_pct` docstring's "no value is rounded twice" was **false** (the
+  dimension re-scales the rounded percentage, credited one extra point at raw 40 and 80 — kept
+  deliberately, now documented), and this entry's trend claim overstated a write-only stamp.
+- **Commit/PR:** this commit. **Layer 1 of 6 — Layers 2–6 remain separate sessions** (ledger
+  identity, backlog-shape predicate, repo role, completeness sweep, release decision). Upstream
+  #61 stays **open** until this reaches upstream; the release decision (plan R1) is deferred to
+  merge by operator decision.
+- **Session:** S10
+
 ### 2026-07-25 · [ad hoc] Ratified plan — dashboard signal-integrity campaign (upstream #59/#60/#61 + 5 unfiled defects)
 - **Change:** authored and committed `docs/planning/dashboard-signal-integrity-plan.md`, a ratified
   six-layer campaign plan (one layer per session) closing the three filed dashboard issues
