@@ -8,6 +8,20 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S13
+date: 2026-07-25
+status: pending
+active_task: Layer 4 of docs/planning/dashboard-signal-integrity-plan.md — repo role (defect 3 / upstream issue #59). Add detect_repo_role following the BL-5 precedent: bidirectional .methodology-profile marker (new `framework` token, read with encoding="utf-8-sig") then the structural heuristic (bin/_manifest.py AND starter-kit/SESSION_RUNNER.md both present); score a SEPARATE FRAMEWORK_ITEMS checklist when role == framework; suppress/reframe the adoption risk. DASHBOARD_VERSION -> 2.10.0. THE OBVIOUS FIX IS WRONG AND THE PLAN SAYS SO AT :255 — do NOT remap METHODOLOGY_ITEMS onto starter-kit/ paths (starter-kit/SESSION_NOTES.md is a 27-line empty stub; starter-kit/BACKLOG.md does not exist), which would credit 20 points for a placeholder and INVERT defect 3. Detection and wiring land in the SAME layer (plan :261). Both marker readers must scan the full token set, not tokens[0], so `doc-only` and `framework` compose. ONE LAYER ONLY — Layers 5 (mandatory doc sweep) and 6 (close-out + release decision R1) are separate sessions.
+what_was_done: pending
+next_steps: pending
+key_files: tools/methodology_dashboard.py:110 (METHODOLOGY_ITEMS + the derived METHODOLOGY_MAX this layer parallels), tools/methodology_dashboard.py:192 (DOC_ONLY_MARKER — the marker this layer must share, not duplicate), tools/methodology_dashboard.py:1067 (collect_methodology_metrics — scores one checklist today), tools/methodology_dashboard.py:1485 (detect_doc_only — the BL-5 precedent, incl. the tokens[0] read that must become a full-token scan), tools/methodology_dashboard.py:1654 (the false "Partial methodology adoption" risk), tools/methodology_dashboard.py:1881 (render_methodology_grid — columns derive from METHODOLOGY_ITEMS, so a second checklist must not misalign the grid), docs/planning/dashboard-signal-integrity-plan.md:244 (Layer 4 contract + the :255 anti-pattern)
+gotchas: DEFECT 3 REPRODUCED AT HEAD BEFORE ANY EDIT — this repo scans compliance 10/115 = 9%, methodology 1/20, health 49/100, with a false medium risk "Partial methodology adoption (9%)". REACHABILITY, checked because this campaign's own defect 6 was an unreachable signal: EXCLUDE_DIRS contains the literal "methodology" (:74), so a sibling directory of that exact name is skipped in PORTFOLIO mode — the false risk is reached via SINGLE-PROJECT mode (a dashboard copy at the repo root, which is exactly how BOOTSTRAP tells operators to run it) or via any fork whose directory is not named "methodology". Carry every S10-S12 method rule: RED-first is necessary but NOT sufficient; mutation-test from a GREEN baseline with BOTH twins patched (a harness that patches only tools/ lets test_twins_byte_identical fake every kill); run mutation rounds with a raised timeout (a timed-out harness leaves a live mutant in the tree); a test derived from the thing under test cannot falsify it; freeze the tree before the boundary review.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S12
 date: 2026-07-25
 status: pending
