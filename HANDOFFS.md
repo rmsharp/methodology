@@ -8,6 +8,20 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S12
+date: 2026-07-25
+status: pending
+active_task: Layer 3 of docs/planning/dashboard-signal-integrity-plan.md — backlog shape with abstention (defect 4 + the fenced-code-block false positive). _scan_backlog_done returns {format, done, recognized, source}; strip fenced code blocks BEFORE scanning; keep the checkbox predicate byte-unchanged in behaviour; add the table predicate (a cell that STARTS WITH a done token, in a row of >=3 cells, ignoring the ID column) WITHOUT re-deriving it — the plan tuned it empirically against the real 643-line backlog; abstain visibly on an unrecognized format per decision D4. DASHBOARD_VERSION -> 2.9.2. ONE LAYER ONLY — Layers 4-6 are separate sessions, and release decision R1 is settled at merge, not by an implementing session.
+what_was_done: pending
+next_steps: pending
+key_files: tools/methodology_dashboard.py:145 (_BACKLOG_DONE_RE — the checkbox-only regex), tools/methodology_dashboard.py:722 (_count_backlog_done — the function this layer replaces), tools/methodology_dashboard.py:770 (the Signal F advisory and its adopter gate), docs/planning/dashboard-signal-integrity-plan.md:215 (Layer 3 contract + the tuned predicate table), docs/planning/BACKLOG.md:22 (this repo's own `| Item | Scope | Outcome |` backlog — the plan's named abstention case)
+gotchas: PROCESS DEVIATION, recorded deliberately — this stub was written AFTER the technical work began, not before it as Phase 1B requires. Everything up to the boundary review ran unclaimed. Recover the real 643-line fixture from mts-system commit 383c1715:BACKLOG.md; it is NOT in this repo and must not be vendored into it.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S11
 date: 2026-07-25
 status: complete
