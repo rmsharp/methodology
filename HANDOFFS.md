@@ -10,16 +10,45 @@ This repository dogfoods its own methodology: every session records a durable, m
 ```handoff
 session: S9
 date: 2026-07-25
-status: pending
-active_task: Dashboard signal-integrity cluster — upstream issues #59, #60, #61 (all open, all unclaimed, all in methodology_dashboard.py, all the same class: "dashboard signals do not mean what they appear to mean"). Designing the three together per S8's handoff recommendation rather than as three separate patches. Deliverable this session is the DESIGN; whether implementation follows in-session as a pre-declared vertical slice, or is deferred to a separate session per FM #18's plan-to-implementation boundary, is an operator decision at the Phase 4 present gate.
-what_was_done: pending
-next_steps: pending
-key_files: tools/methodology_dashboard.py:131 (_BACKLOG_DONE_RE, #60), tools/methodology_dashboard.py:644 (_find_changelog, #60), tools/methodology_dashboard.py:110 (METHODOLOGY_ITEMS weights, #61), tools/methodology_dashboard.py:1329 (unclamped methodology dimension, #61), tools/methodology_dashboard.py:782 (collect_methodology_metrics, #59), starter-kit/methodology_dashboard.py:1 (byte-identical twin), tools/test_methodology_dashboard.py:210 (bound test that cannot catch #61)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Dashboard signal-integrity cluster (upstream #59/#60/#61). COMPLETE as a PLANNING session — operator ratified D1-D4 and chose "ratify the plan now, implement next". Deliverable is docs/planning/dashboard-signal-integrity-plan.md. Implementation begins next session at Layer 1. No scanner code was changed this session.
+what_was_done: Reproduced all eight defects first-hand (importlib + collect_all, read-only) rather than trusting the issue text — and found FIVE that were never filed. Mine: (a) HANDOFFS.md ships to adopters as SEED since v3.3 (bin/_manifest.py:47) but was never added to METHODOLOGY_ITEMS; (b) Signal F is UNREACHABLE when no changelog exists — evaluate_changelog_freshness early-returns at :698-701, before the emission at :772, so an adopter with 60 unmigrated done-marks and no ledger gets FEWER warnings than one with a ledger (proved by flipping the marker: ledger absent -> silent, present -> fires). Found by the design panel and then verified by me: (c) archive shadowing — _find_changelog's sorted() returns CHANGELOG-archive.md over CHANGELOG.md ('-' 0x2D sorts before '.' 0x2E); (d) a '- [x]' inside a fenced ```markdown block counts as real completed work; (e) README.md:75 and :79 both omit HANDOFFS.md from the seeded-files enumeration. Ran an 11-agent design panel (wf_e3499138-1fd: 4 code maps, 3 competing designs, 3 judge lenses, 1 synthesis) — it REFUTED my own #59 design (remapping the checklist onto starter-kit/ paths would credit a 27-line empty stub and render "SESSION_NOTES.md ✓" on a repo with no session notes: defect #59 inverted) and caught a silent +1 documentation regression hiding inside the obvious #60b fix. I rejected two of its claims after re-executing them ("30 tests" — line 327 is a fixture STRING, there are genuinely 29; and edits to dated release prose the v2.7.1 convention freezes). Empirically tuned the table done-row predicate against the real 643-line backlog recovered from mts-system 383c1715: contains-token = 321 (94 false positives), equals-token = 227 (misses bolded forms), starts-with/>=3-cells/ignore-ID-column = 256 — within 3 of S8's independent hand count. Settled D1 from git history: v2.0 commit 46b17e8 summed to EXACTLY 100, v2.1 commit 274dcd4 appended two 5-pointers without re-cutting. Also reconciled S8's commit: pending -> 4e2901f. Plan + ledger + this receipt in this commit.
+next_steps: Execute Layer 1 of docs/planning/dashboard-signal-integrity-plan.md — derived METHODOLOGY_MAX, the HANDOFFS.md checklist row, producer-side compliance_pct, min(20,...) at :1329, and the manifest-vs-checklist structural guard. ONE LAYER PER SESSION; do not bundle. Start by writing the three RED-first assertions and watching them FAIL against unpatched code — the suite is green against all eight defects today, so "tests pass" is not evidence. Note L1 is not a pure append: render_methodology_grid:1570 hard-codes an 8-string headers list while :1571 derives item_keys from METHODOLOGY_ITEMS, so adding a 9th item misaligns the grid columns until headers are derived too. Deferred decision R1 (tagged release vs ledger-only) is settled at merge, not now.
+key_files: docs/planning/dashboard-signal-integrity-plan.md:1 (the ratified plan — read it first), tools/methodology_dashboard.py:110 (METHODOLOGY_ITEMS, weights sum 110), tools/methodology_dashboard.py:1329 (unclamped dimension), tools/methodology_dashboard.py:1570 (hand-written 8-header list — column misalignment trap), tools/methodology_dashboard.py:698 (the early return that strands Signal F at :772), tools/methodology_dashboard.py:648 (archive-shadowing sorted() locator), tools/methodology_dashboard.py:1309 (the +1 freshness point the obvious #60b fix silently costs), tools/test_methodology_dashboard.py:210 (test that passes against the bug), bin/_manifest.py:47 (HANDOFFS.md SEED entry)
+gotchas: (1) The dashboard CANNOT scan its own repo in place — ROOT = Path(__file__).parent resolves to tools/, which has no .git. Load it via importlib and call collect_all(Path(target)); NEVER copy it into a repo root to test, or the copy inflates that repo's own source-LOC count. (2) collect_all returns risks under metrics["scores"]["risks"], NOT metrics["risks"] — my first repro script crashed on exactly this. (3) The obvious #60b fix is WRONG: narrowing _find_changelog to root-only silently costs the +1 documentation freshness point (:1309) for exactly the adopter class #60b is about, because the early return leaves is_fresh False. Use the dual predicate in the plan. (4) The obvious #59 fix is WRONG too — see what_was_done. (5) The mts-system live repro fixture is GONE: it executed migration Phase 2 (28e9bb3) since S8 and now scores 110% with a root ledger. Use synthetic fixtures; recover real data from 383c1715:BACKLOG.md. (6) Each code layer sits at exactly 4 of the 5-file commit cap because .githooks/pre-commit requires CHANGELOG.md co-staged — no slack. (7) A receipt-only commit needs --no-verify (the hook wants CHANGELOG.md co-staged and the ledger entry is already committed); that bypass is documented and backstopped by Phase 0 reconcile. (8) bin/check-links is PYTHON — run python3 bin/check-links, not bash. (9) One bin/tests.sh run reported 83/84 and was never reproduced across four subsequent clean runs; the failing check was not captured. If you see 83/84, re-run before diagnosing your change.
+runtime_smoke: n/a — planning session, no code changed. Verified by re-running the full harness clean after the plan landed: bin/tests.sh 84 passed / 0 failed, tools/test_methodology_dashboard.py 29 tests OK, python3 bin/check-links OK (82 links across 21 files). All eight defects were reproduced by executing the canonical scanner read-only against this repo, the adopter, and synthetic git fixtures — no files written to any scanned repo.
+changelog_ref: CHANGELOG.md entry "Ratified plan — dashboard signal-integrity campaign", this commit
 commit: pending
 ```
+Self-score 8/10. **+** Reproduced every defect first-hand instead of trusting three well-written issues —
+which is how the four unfiled defects surfaced, and how I caught that #61's stated "21/20" is actually
+**22/20** (`int(110*0.2)`). **+** Settled the one decision the whole design hinges on from *evidence*
+rather than taste: `git show 46b17e8` proves the checklist once summed to exactly 100 and that v2.1 broke
+it, so normalization restores an invariant instead of inventing a scale. **+** Ran an adversarial design
+panel and then *actually let it win* — my `starter-kit/` remap for #59 was wrong and I replaced it rather
+than defending it. **+** Verified the panel instead of adopting it, rejecting two of its claims that would
+each have introduced a new error into the corpus. **+** Empirically tuned the riskiest predicate against
+real recovered data rather than reasoning about regexes in the abstract. **−** I *authored* that wrong
+`starter-kit/` design in the first place, from files I had listed but not read — precisely failure mode
+#20, and a panel had to catch it. **−** My first reproduction script had two defects (wrong accessor path,
+a fixture loop that committed identical content); a cleaner first draft would have cost less. **−** I
+reported a "83/84" baseline having tailed away the line naming the failing check, so I could not diagnose
+it and had to record it as an unexplained transient — capture full output the first time. **−** Ran
+`bin/check-links` under the wrong interpreter and briefly read a syntax error as a repo problem.
+
+Predecessor (S8) evaluation: 9/10. The most useful handoff I have been given in this repo. Its `gotchas`
+were load-bearing rather than decorative: the importlib warning saved me from repeating S7's
+self-polluting scan, and its NOTES-column caution turned out to be *exactly* the trap in the table
+predicate — I confirmed it quantitatively (94 false positives) and its warning is why I tested three
+candidate rules instead of shipping the naive one. Every `key_files` line:line I checked resolved to the
+code it claimed (`:131`, `:644`, `:110`, `:1329`, `:210-219`). Its `next_steps` correctly recommended
+designing the three issues together rather than as separate patches, which the panel independently
+confirmed was right. Two small deductions: `commit: pending` was left unreconciled for the second session
+running (I fixed it to `4e2901f` here), and its adopter-track guidance ("mts-system executes Phase 1")
+was stale by the time I read it — through no fault of its own, since that repo moved on independently,
+but it is a reminder that handoffs naming *another* repo's state should say "verify before acting".
 
 ```handoff
 session: S8
@@ -34,7 +63,7 @@ key_files: tools/methodology_dashboard.py:131 (_BACKLOG_DONE_RE — checkbox-onl
 gotchas: (1) bin/sync's drift gate is WHOLE-CORPUS and PRE-WRITE — three locally-modified tracked files make it exit 2 before the write loop, so it seeds nothing either. "Sync will at least create the ledger and leave the runner alone" is false, and no doc says so; I only learned it by running --dry-run. Worth documenting upstream. (2) The dashboard cannot scan its own repo in place (ROOT = Path(__file__).parent resolves to tools/, which has no .git) — load it via importlib from a scratchpad script and call collect_all(Path(target)); never copy it into a repo root to test, or it pollutes the source-LOC count (S7 hit this). collect_all writes no files; main() does. (3) When censusing a markdown-table backlog, read the STATUS column specifically — several mts-system rows carry "DONE"/"FIXED IN CODE" inside their NOTES column, and a naive "any field contains a status token" awk mis-flags them. My first draft got BACKLOG.md:470 wrong exactly this way; the review caught it. (4) Sub-agent fleets died mid-run on network errors (ECONNRESET / UNKNOWN_CERTIFICATE_VERIFICATION_ERROR) — a 5-agent workflow burned 38 minutes and returned nothing. Check the journal before assuming a workflow's empty result means "found nothing."
 runtime_smoke: n/a — no code changed in this repo. The dashboard defects were reproduced by executing the canonical scanner read-only against the adopter (health 88/100, compliance 105%, methodology sub-score 21/20, weights sum 110, zero backlog risks); bin/status and bin/sync --dry-run were both run first-hand against the adopter.
 changelog_ref: CHANGELOG.md entries "Opened upstream issues #60 and #61 — dashboard false-GREEN on a drifted adopter" and "Adopter coordination — ratified methodology v3.5 migration plan for mts-system", this commit
-commit: pending
+commit: 4e2901f
 ```
 
 ```handoff

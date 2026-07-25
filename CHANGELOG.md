@@ -32,6 +32,34 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [ad hoc] Ratified plan — dashboard signal-integrity campaign (upstream #59/#60/#61 + 5 unfiled defects)
+- **Change:** authored and committed `docs/planning/dashboard-signal-integrity-plan.md`, a ratified
+  six-layer campaign plan (one layer per session) closing the three filed dashboard issues
+  ([#59](https://github.com/KJ5HST/methodology/issues/59),
+  [#60](https://github.com/KJ5HST/methodology/issues/60),
+  [#61](https://github.com/KJ5HST/methodology/issues/61)) **plus five defects found while planning and
+  not yet filed**: (a) `HANDOFFS.md` ships to adopters as a SEED since v3.3 (`bin/_manifest.py:47`) but was
+  never added to `METHODOLOGY_ITEMS`; (b) **Signal F is unreachable** when no changelog exists —
+  `evaluate_changelog_freshness` early-returns at `:698-701`, *before* the emission at `:772`, so an adopter
+  with unmigrated done-marks **and no ledger** gets fewer warnings than one with a ledger; (c) **archive
+  shadowing** — `_find_changelog`'s `sorted()` returns `CHANGELOG-archive.md` over `CHANGELOG.md`;
+  (d) a `- [x]` inside a fenced ` ```markdown ` block counts as real completed work; (e) `README.md:75`
+  and `:79` omit `HANDOFFS.md` from the seeded-files enumeration. All eight reproduced first-hand
+  (`importlib` + `collect_all`, read-only). Operator ratified **D1** normalize to a true 0–100 percentage
+  with a *derived* denominator — decided by git history, since v2.0 (`46b17e8`) summed to exactly 100 and
+  v2.1 (`274dcd4`) appended two 5-point items without re-cutting; **D2** `HANDOFFS.md` joins the checklist
+  weighted 5; **D3** plan now, implement next (FM #18 — the plan↔implementation boundary is never
+  collapsible into a slice); **D4** release decision deferred to merge. Design was pressure-tested by an
+  11-agent panel (4 code maps → 3 competing designs → 3 judge lenses → synthesis) which **refuted this
+  session's own #59 design** (remapping the checklist onto `starter-kit/` paths would credit a 27-line
+  empty stub — the defect inverted) and caught a silent `+1` documentation regression hiding inside the
+  obvious #60b fix; two of the panel's own claims were rejected after re-execution.
+- **Commit/PR:** this commit. **No scanner code changed** — the plan is the deliverable; implementation
+  starts next session at Layer 1.
+- **Session:** S9 · **Verified:** `bin/tests.sh` 84/84, `tools/test_methodology_dashboard.py` 29 OK,
+  `python3 bin/check-links` OK (82 links / 21 files); every cited `file:line` re-read before commit.
+  Also reconciled S8's receipt `commit: pending` → `4e2901f`.
+
 ### 2026-07-13 · [ad hoc] Opened upstream issues #60 and #61 — dashboard false-GREEN on a drifted adopter
 - **Change:** audited the `mts-system` adopter (operator question: "BACKLOG.md is large because of
   completed items; it should be on v3.5, which would not allow the backlog to grow"). The premise was
