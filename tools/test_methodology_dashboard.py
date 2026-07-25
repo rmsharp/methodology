@@ -118,21 +118,21 @@ class TestDetection(unittest.TestCase):
         self.assertFalse(md.detect_doc_only(self.p, files(src=201, docs_count=5), render)["is_doc_only"])
 
     def test_marker_code_forces_not_doc_only(self):
-        (self.p / md.DOC_ONLY_MARKER).write_text("code\n")
+        (self.p / md.PROFILE_MARKER).write_text("code\n")
         r = md.detect_doc_only(self.p, files(src=0, docs_loc=800, docs_count=12),
                                {"toolchain_present": True})
         self.assertFalse(r["is_doc_only"])
         self.assertEqual(r["reason"], "marker")
 
     def test_marker_doc_only_forces_doc_only(self):
-        (self.p / md.DOC_ONLY_MARKER).write_text("doc-only\n")
+        (self.p / md.PROFILE_MARKER).write_text("doc-only\n")
         r = md.detect_doc_only(self.p, files(src=4500, docs_loc=0, docs_count=0),
                                {"toolchain_present": False})
         self.assertTrue(r["is_doc_only"])
         self.assertEqual(r["reason"], "marker")
 
     def test_marker_unknown_token_falls_through(self):
-        (self.p / md.DOC_ONLY_MARKER).write_text("banana\n")
+        (self.p / md.PROFILE_MARKER).write_text("banana\n")
         r = md.detect_doc_only(self.p, files(src=4500), {"toolchain_present": False})
         self.assertFalse(r["is_doc_only"])
         self.assertEqual(r["reason"], "heuristic")
@@ -140,7 +140,7 @@ class TestDetection(unittest.TestCase):
     def test_marker_with_utf8_bom_is_honored(self):
         # A BOM-prefixed marker (Notepad-authored) must still be read as the token, not silently
         # dropped to the heuristic (which would flip to the opposite of the owner's request).
-        (self.p / md.DOC_ONLY_MARKER).write_bytes(b"\xef\xbb\xbfcode\n")
+        (self.p / md.PROFILE_MARKER).write_bytes(b"\xef\xbb\xbfcode\n")
         r = md.detect_doc_only(self.p, files(src=0, docs_loc=800, docs_count=12),
                                {"toolchain_present": True})
         self.assertFalse(r["is_doc_only"])
@@ -1406,6 +1406,611 @@ class TestLedgerIdentityEndToEnd(unittest.TestCase):
                              for r in m["scores"]["risks"]))
 
 
+# === LAYER 4 — REPO ROLE (plan defect 3 / upstream issue #59) ===
+
+# The marker filename is written out LITERALLY in the tests below rather than read from the
+# module constant. That is deliberate and it is the stronger assertion: an owner types this exact
+# filename into their repo, so a test that asks the scanner what it calls its own marker can never
+# catch a rename that breaks every marker already in the wild.
+PROFILE_FILE = ".methodology-profile"
+
+# The two paths detect_repo_role uses to PROVE the role. They must never be scored — see
+# TestFrameworkChecklist.test_detection_inputs_are_not_scored for why this is load-bearing.
+DETECTION_INPUTS = ("bin/_manifest.py", "starter-kit/SESSION_RUNNER.md")
+
+CANONICAL_ROOT = Path(os.path.dirname(HERE))
+
+
+def framework_tree(p):
+    """The minimum tree detect_repo_role must classify as framework by structure alone:
+    distribution machinery + a starter-kit runner, and NO root runner of its own."""
+    (p / "bin").mkdir(parents=True, exist_ok=True)
+    (p / "bin" / "_manifest.py").write_text("DISTRIBUTION = []\n")
+    (p / "starter-kit").mkdir(parents=True, exist_ok=True)
+    (p / "starter-kit" / "SESSION_RUNNER.md").write_text("# runner\n")
+
+
+def full_framework_tree(p):
+    """framework_tree plus every FRAMEWORK_ITEMS artifact — a 100% framework repo."""
+    framework_tree(p)
+    for item_path, _w, kind in md.FRAMEWORK_ITEMS:
+        target = p / item_path
+        if kind == "dir":
+            target.mkdir(parents=True, exist_ok=True)
+        else:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(f"# {item_path}\n")
+
+
+class TestProfileMarkerAxes(unittest.TestCase):
+    """The .methodology-profile marker gains a SECOND axis in this layer, so one file now answers
+    two independent questions. Every test here was driven against the shipped tokens[0] reader
+    first; the ones marked RED failed, which is what proves detect_doc_only could not stay
+    untouched — the plan's own Layer 4 proof ('a doc-only framework marker satisfies both axes')
+    is unsatisfiable while only the first token is read."""
+
+    def setUp(self):
+        self._td = tempfile.TemporaryDirectory()
+        self.p = Path(self._td.name)
+        # 400 source LOC and no doc corpus: the HEURISTIC says "not doc-only", so any doc-only
+        # verdict below can only have come from the marker, and any heuristic verdict means the
+        # owner's declaration was lost. Without this the two paths are indistinguishable.
+        self.files = files(src=400, docs_loc=0, docs_count=0)
+        self.render = {"toolchain_present": False}
+
+    def _marker(self, text):
+        (self.p / PROFILE_FILE).write_text(text)
+
+    def _doc_only(self):
+        return md.detect_doc_only(self.p, self.files, self.render)
+
+    def test_the_marker_constant_is_the_filename_owners_actually_write(self):
+        self.assertEqual(md.PROFILE_MARKER, PROFILE_FILE)
+
+    def test_axis_token_sets_are_disjoint(self):
+        """One file is one token bag, so the two axes share a namespace. If a token ever served
+        both, a single word would silently answer two questions."""
+        self.assertEqual(set(md.PROFILE_CORPUS_TOKENS) & set(md.PROFILE_ROLE_TOKENS), set())
+
+    def test_axes_compose_in_either_order(self):
+        """RED against tokens[0]: 'framework doc-only' returned is_doc_only False / heuristic —
+        the owner's doc-only declaration was discarded because it was not written first."""
+        for text in ("doc-only framework", "framework doc-only"):
+            with self.subTest(marker=text):
+                self._marker(text)
+                self.assertTrue(self._doc_only()["is_doc_only"], f"{text!r} lost the corpus axis")
+                self.assertEqual(md.detect_repo_role(self.p)["role"], "framework")
+
+    def test_a_leading_comment_does_not_swallow_the_declaration(self):
+        """RED against tokens[0]: a marker whose first line is a comment returned heuristic,
+        so a well-documented marker was worth less than an undocumented one."""
+        self._marker("# why this repo is classified this way\ndoc-only\n")
+        r = self._doc_only()
+        self.assertTrue(r["is_doc_only"])
+        self.assertEqual(r["reason"], "marker")
+
+    def test_comment_prose_is_never_tokenized(self):
+        """The blocker this layer was found to have, verified against the only marker in the live
+        population. church_growth's .methodology-profile is 8 lines / 87 whitespace tokens: one
+        declaration plus SEVEN lines of '#' prose that MENTION the opposite token. It survives
+        today only because both mentions carry trailing punctuation ('code,' and 'code.').
+        Remove one comma and a naive full-token scan discards the override the file exists to
+        assert — so switching to full-token scanning WITHOUT stripping comments is strictly more
+        dangerous than tokens[0]. The fixture below is a shortened PARAPHRASE of that file with
+        the trailing punctuation removed from its 'code' mentions — not a copy of it."""
+        self._marker(
+            "doc-only\n"
+            "# This project is a content/strategy repository with no application source code\n"
+            "# Without this marker the dashboard misclassifies this repo as code because the\n"
+            "# dashboard script itself is the only source-extension file in the repo\n"
+        )
+        r = self._doc_only()
+        self.assertTrue(r["is_doc_only"], "comment prose overrode the declaration")
+        self.assertEqual(r["reason"], "marker")
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "adopter")
+
+    def test_a_trailing_comment_on_the_declaration_line_is_prose_too(self):
+        """Found by mutation, not by design: every comment fixture above puts the comment on its
+        OWN line, so a reader that stripped whole-line comments but not trailing ones passed the
+        entire suite. 'doc-only # actually this is code' would then declare both tokens and
+        abstain — the owner's declaration lost to their own annotation."""
+        self._marker("doc-only   # this is not code, whatever the extension census says\n")
+        r = self._doc_only()
+        self.assertTrue(r["is_doc_only"])
+        self.assertEqual(r["reason"], "marker")
+
+    def test_a_trailing_comment_cannot_fabricate_a_role(self):
+        self._marker("adopter  # not the framework repo\n")
+        self.assertEqual(md.detect_repo_role(self.p), {"role": "adopter", "reason": "marker"})
+
+    def test_comment_prose_cannot_fabricate_a_role_either(self):
+        self._marker("doc-only\n# this repo is not the framework repo\n")
+        self.assertEqual(md.detect_repo_role(self.p)["reason"], "default")
+
+    def test_a_contradiction_abstains_on_that_axis_only(self):
+        """Decision D4 applied to the marker: a declaration that cannot be read is abstained on
+        OUT LOUD, never resolved silently. Today word order decides it — 'doc-only code' returns
+        True and 'code doc-only' returns False, from the same two words."""
+        self._marker("doc-only code framework\n")
+        r = self._doc_only()
+        self.assertEqual(r["reason"], "marker-contradiction")
+        self.assertFalse(r["is_doc_only"], "contradicted axis must fall through to the heuristic")
+        # ...while the UNcontradicted axis on the same line still resolves.
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "framework")
+
+    def test_contradiction_is_order_independent(self):
+        for text in ("doc-only code", "code doc-only"):
+            with self.subTest(marker=text):
+                self._marker(text)
+                self.assertEqual(self._doc_only()["reason"], "marker-contradiction")
+
+    def test_unknown_tokens_are_ignored_not_treated_as_a_contradiction(self):
+        """Forward compatibility in both directions: an adopter running an OLDER synced twin must
+        not crash or flip on a marker naming an axis it has never heard of, and a newer twin must
+        ignore tokens a future axis adds."""
+        self._marker("doc-only banana quantum\n")
+        r = self._doc_only()
+        self.assertTrue(r["is_doc_only"])
+        self.assertEqual(r["reason"], "marker")
+
+    def test_bom_and_crlf_survive_on_both_axes(self):
+        (self.p / PROFILE_FILE).write_bytes(b"\xef\xbb\xbfframework doc-only\r\n")
+        self.assertEqual(md.detect_repo_role(self.p)["reason"], "marker")
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "framework")
+        self.assertTrue(self._doc_only()["is_doc_only"])
+
+    def test_only_the_first_declaration_line_is_read(self):
+        """Found by adversarial review, and it is the defect this layer nearly SHIPPED. The first
+        version of the reader mined every line for tokens, so an owner's own uncommented sentence
+        of explanation was read as a deliberate override — inverting the very defect Layer 4
+        fixes. Both cases below are prose a real owner might plausibly write, and reading only the
+        first declaration line is what makes them inert. Reading tokens[0] never had this bug, so
+        whole-file scanning would have been a regression dressed up as a fix."""
+        runner = self.p / "SESSION_RUNNER.md"
+        runner.write_text("# an ordinary adopter\n")
+
+        # (a) prose naming the opposite role must not promote an adopter to publisher.
+        self._marker("doc-only\nWe keep our docs in the framework style\n")
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "adopter")
+        self.assertTrue(self._doc_only()["is_doc_only"], "prose must not disturb the corpus axis")
+
+        # (b) prose naming the opposite corpus token must not fabricate a contradiction and
+        #     destroy a declaration the owner did make.
+        self._marker("doc-only\nThis is a code repository with a few helper scripts\n")
+        r = self._doc_only()
+        self.assertTrue(r["is_doc_only"])
+        self.assertEqual(r["reason"], "marker")
+
+    def test_prose_below_the_declaration_cannot_fabricate_a_role(self):
+        self._marker("adopter\nSee the methodology framework for details\n")
+        self.assertEqual(md.detect_repo_role(self.p), {"role": "adopter", "reason": "marker"})
+
+    def test_case_is_ignored(self):
+        self._marker("FRAMEWORK\n")
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "framework")
+
+    def test_empty_and_absent_markers_fall_through(self):
+        self.assertEqual(md.detect_repo_role(self.p)["reason"], "default")   # absent
+        self._marker("   \n\n")
+        self.assertEqual(md.detect_repo_role(self.p)["reason"], "default")
+        self._marker("# only a comment\n")
+        self.assertEqual(md.detect_repo_role(self.p)["reason"], "default")
+
+
+class TestRepoRoleDetection(unittest.TestCase):
+    def setUp(self):
+        self._td = tempfile.TemporaryDirectory()
+        self.p = Path(self._td.name)
+
+    def test_this_repository_is_detected_as_framework(self):
+        r = md.detect_repo_role(CANONICAL_ROOT)
+        self.assertEqual(r["role"], "framework")
+        self.assertEqual(r["reason"], "structural")
+
+    def test_a_bare_repo_is_an_adopter_by_default(self):
+        self.assertEqual(md.detect_repo_role(self.p), {"role": "adopter", "reason": "default"})
+
+    def test_the_structural_heuristic_needs_every_conjunct(self):
+        (self.p / "bin").mkdir()
+        (self.p / "bin" / "_manifest.py").write_text("DISTRIBUTION = []\n")
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "adopter",
+                         "distribution machinery alone must not imply the framework role")
+        (self.p / "starter-kit").mkdir()
+        (self.p / "starter-kit" / "SESSION_RUNNER.md").write_text("# runner\n")
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "framework")
+
+    def test_a_repo_that_vendors_the_framework_and_also_adopts_it_stays_an_adopter(self):
+        """Plan residual risk 3, mechanized: the misfire class is a repo that ships starter-kit/
+        templates plus distribution machinery WITHOUT installing to its own root. A monorepo that
+        vendors this framework and ALSO runs it keeps its adoption grading — this conjunct can
+        only remove false positives, never create one."""
+        framework_tree(self.p)
+        (self.p / "SESSION_RUNNER.md").write_text("# my own runner\n")
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "adopter")
+
+    def test_the_marker_overrides_the_structure_in_both_directions(self):
+        framework_tree(self.p)
+        (self.p / PROFILE_FILE).write_text("adopter\n")
+        self.assertEqual(md.detect_repo_role(self.p), {"role": "adopter", "reason": "marker"})
+        (self.p / PROFILE_FILE).write_text("framework\n")
+        self.assertEqual(md.detect_repo_role(self.p), {"role": "framework", "reason": "marker"})
+
+    def test_a_marker_contradiction_falls_back_to_the_structure(self):
+        framework_tree(self.p)
+        (self.p / PROFILE_FILE).write_text("framework adopter\n")
+        r = md.detect_repo_role(self.p)
+        self.assertEqual(r, {"role": "framework", "reason": "marker-contradiction"})
+
+    def test_a_synthesised_adopter_tree_is_not_misdetected(self):
+        """The heuristic's whole safety argument is that bin/ ships nothing to adopters, so no
+        synced repo can acquire bin/_manifest.py. This drives a SYNTHESISED adopter tree — the
+        sweep over the 10 real sibling repos is an out-of-band session verification recorded in
+        CHANGELOG.md, and naming it here would make the suite look like it re-runs it."""
+        for name in ("SESSION_RUNNER.md", "SAFEGUARDS.md", "CHANGELOG.md", "HANDOFFS.md"):
+            (self.p / name).write_text(f"# {name}\n")
+        (self.p / "docs" / "methodology" / "workstreams").mkdir(parents=True)
+        self.assertEqual(md.detect_repo_role(self.p)["role"], "adopter")
+
+
+class TestFrameworkChecklist(unittest.TestCase):
+    def test_max_is_derived_from_the_checklist_never_a_literal(self):
+        self.assertEqual(md.FRAMEWORK_MAX, sum(w for _, w, _ in md.FRAMEWORK_ITEMS))
+
+    def test_the_checklist_is_pinned_verbatim(self):
+        """Pinned in full rather than spot-checked: a test that only iterates FRAMEWORK_ITEMS
+        cannot notice a member being deleted, because the fixture it builds shrinks with it —
+        the campaign has hit that trap three times."""
+        self.assertEqual(md.FRAMEWORK_ITEMS, [
+            ("ITERATIVE_METHODOLOGY.md", 15, "file"),
+            ("starter-kit/SAFEGUARDS.md", 15, "file"),
+            ("workstreams", 15, "dir"),
+            ("bin/sync", 15, "file"),
+            ("bin/tests.sh", 10, "file"),
+            ("CHANGELOG.md", 10, "file"),
+            ("HANDOFFS.md", 10, "file"),
+            ("starter-kit/BOOTSTRAP.md", 5, "file"),
+            ("HOW_TO_USE.md", 5, "file"),
+            ("bin/status", 5, "file"),
+        ])
+
+    def test_every_framework_item_exists_in_this_repository(self):
+        """Independent of the constant under test: the filesystem is the oracle. A renamed or
+        deleted artifact makes the checklist score a path that cannot be satisfied, which is
+        defect 3's own shape (grading a repo against files it was never going to have)."""
+        for item_path, _w, kind in md.FRAMEWORK_ITEMS:
+            target = CANONICAL_ROOT / item_path
+            with self.subTest(item=item_path):
+                self.assertTrue(target.is_dir() if kind == "dir" else target.is_file(),
+                                f"FRAMEWORK_ITEMS scores {item_path}, which does not exist here")
+
+    def test_no_framework_item_is_a_distribution_seed(self):
+        """The operator-ratified mechanization of the plan's line-255 prohibition. Its stated harm
+        is crediting placeholders, and every placeholder it names is a manifest SEED source:
+        starter-kit/SESSION_NOTES.md (a 27-line stub) and starter-kit/ROADMAP.md (an 18-line
+        skeleton). Excluding SEED sources draws that line mechanically instead of by reading."""
+        manifest_path = os.path.join(os.path.dirname(HERE), "bin", "_manifest.py")
+        spec = importlib.util.spec_from_file_location("manifest_seed_check", manifest_path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        seed_srcs = {src for src, _dest, disp in mod.DISTRIBUTION if disp == "seed"}
+        self.assertTrue(seed_srcs, "guard is inert if the manifest declares no seeds")
+        offenders = [p for p, _w, _k in md.FRAMEWORK_ITEMS if p in seed_srcs]
+        self.assertEqual(offenders, [],
+                         "a FRAMEWORK_ITEMS path is a distribution SEED — those are placeholders "
+                         "in this repo, and scoring one credits an empty stub (plan :255)")
+
+    def test_detection_inputs_are_not_scored(self):
+        """Load-bearing, not tidiness. If the two files that PROVE the role also earn points, the
+        raw sum has a nonzero floor on the structural path and the 'no corpus at all' branch
+        becomes an assertion over an input that can never occur — defect 6's exact failure class,
+        re-created inside the campaign that closed it."""
+        scored = {p for p, _w, _k in md.FRAMEWORK_ITEMS}
+        for probe in DETECTION_INPUTS:
+            self.assertNotIn(probe, scored)
+
+    def test_zero_is_reachable_for_a_structurally_detected_repo(self):
+        """The consequence of the rule above, driven rather than argued."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        framework_tree(p)                       # detected, but publishes nothing
+        m = md.collect_methodology_metrics(p, role="framework")
+        self.assertEqual(m["compliance_score"], 0)
+        self.assertEqual(m["compliance_pct"], 0)
+
+    def test_a_framework_repo_is_scored_on_the_framework_checklist(self):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        full_framework_tree(p)
+        m = md.collect_methodology_metrics(p, role="framework")
+        self.assertEqual(m["checklist"], "framework")
+        self.assertEqual(m["checklist_max"], md.FRAMEWORK_MAX)
+        self.assertEqual(m["compliance_score"], md.FRAMEWORK_MAX)
+        self.assertEqual(m["compliance_pct"], 100)
+        self.assertEqual(m["missing_files"], [])
+        # Keyed by the checklist that actually ran — no adopter key may appear.
+        self.assertEqual(set(m["items"]), {p for p, _w, _k in md.FRAMEWORK_ITEMS})
+        self.assertNotIn("SESSION_NOTES.md", m["items"])
+
+    def test_adopter_scoring_is_byte_for_byte_what_it_was(self):
+        """The regression lock the plan's Layer 4 proof asks for: an adopter fixture's score is
+        UNCHANGED. Driven at full compliance and at a partial score."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        full_compliance_tree(p)
+        m = md.collect_methodology_metrics(p)
+        self.assertEqual(m["checklist"], "adopter")
+        self.assertEqual(m["checklist_max"], md.METHODOLOGY_MAX)
+        self.assertEqual(m["compliance_score"], md.METHODOLOGY_MAX)
+        self.assertEqual(m["compliance_pct"], 100)
+        self.assertEqual(set(m["items"]), {x for x, _w, _k in md.METHODOLOGY_ITEMS})
+
+    def test_checklist_pct_normalizes_against_the_checklist_that_ran(self):
+        self.assertEqual(md.checklist_pct(md.FRAMEWORK_MAX, md.FRAMEWORK_MAX), 100)
+        self.assertEqual(md.checklist_pct(md.METHODOLOGY_MAX, md.METHODOLOGY_MAX), 100)
+        self.assertEqual(md.checklist_pct(0, md.FRAMEWORK_MAX), 0)
+        self.assertEqual(md.checklist_pct(5, 0), 0)          # degenerate denominator
+        # The single-argument form keeps meaning the adopter scale.
+        self.assertEqual(md.compliance_pct(md.METHODOLOGY_MAX), 100)
+
+    def test_the_two_checklists_do_not_share_a_denominator_by_accident(self):
+        """A denominator of exactly 100 would make raw == pct and render every value-sweep test
+        inert: an implementation that scaled the RAW sum would pass. Both scales are deliberately
+        off 100, which is what keeps Layer 1's discipline testable here too."""
+        self.assertNotEqual(md.FRAMEWORK_MAX, 100)
+        self.assertNotEqual(md.METHODOLOGY_MAX, 100)
+
+
+class TestFrameworkRisks(unittest.TestCase):
+    def _fw(self, score, missing=(), items=None):
+        return base_metrics(methodology={
+            "role": "framework", "checklist": "framework", "checklist_max": md.FRAMEWORK_MAX,
+            "compliance_score": score, "compliance_pct": md.checklist_pct(score, md.FRAMEWORK_MAX),
+            "missing_files": list(missing), "items": items or {},
+        })
+
+    def test_the_adoption_risks_never_fire_on_a_framework_repo(self):
+        """The word 'adoption' is the falsehood — the checklist paths are adopter-root
+        DESTINATIONS, and a repo that publishes SESSION_RUNNER.md does not install a second copy
+        into its own root.
+
+        MEASURED against unpatched code rather than assumed, because the first draft of this
+        docstring claimed a risk at 95% that does not exist: raw 0 yields HIGH 'No methodology
+        adoption (0% compliance)' and raw 40 (38%) yields medium 'Partial methodology adoption
+        (38%)', while a complete corpus fires nothing at all — the partial rung is pct < 50. So
+        the sweep below is only a RED at the first two scores, and the third is a lock, not a
+        proof. Saying which is which is the difference between a test and a belief."""
+        for score in (0, 40, md.FRAMEWORK_MAX):
+            with self.subTest(score=score):
+                descs = risk_descs(self._fw(score, missing=["bin/sync"] if score else []))
+                self.assertFalse(any("methodology adoption" in d for d in descs), descs)
+                self.assertFalse(any("adoption" in d for d in descs), descs)
+
+    def test_an_adopter_still_gets_the_adoption_risks(self):
+        descs = risk_descs(base_metrics(methodology={"compliance_score": 52,
+                                                     "compliance_pct": md.compliance_pct(52)}))
+        self.assertTrue(any("Partial methodology adoption" in d for d in descs))
+
+    def test_no_corpus_at_all_is_high_and_names_the_framework(self):
+        descs = risk_descs(self._fw(0))
+        self.assertTrue(any("No framework corpus" in d for d in descs), descs)
+        self.assertEqual([r["severity"] for r in md.assess_risks(self._fw(0))
+                          if "No framework corpus" in r["description"]], ["high"])
+
+    def test_an_incomplete_corpus_names_the_missing_members(self):
+        """A percentage alone is not a finding here: losing BOTH root ledgers still scores 81%,
+        so a pct-only rule would say nothing about it. The member names carry the signal."""
+        m = self._fw(md.FRAMEWORK_MAX - 20, missing=["CHANGELOG.md", "HANDOFFS.md"])
+        descs = risk_descs(m)
+        hit = [d for d in descs if "Framework integrity incomplete" in d]
+        self.assertEqual(len(hit), 1, descs)
+        self.assertIn("CHANGELOG.md", hit[0])
+        self.assertIn("HANDOFFS.md", hit[0])
+
+    def test_a_complete_corpus_raises_no_framework_risk(self):
+        descs = risk_descs(self._fw(md.FRAMEWORK_MAX))
+        self.assertFalse(any("Framework integrity" in d for d in descs), descs)
+        self.assertFalse(any("No framework corpus" in d for d in descs), descs)
+
+    def test_the_ledger_risk_stays_reachable_for_a_framework_repo(self):
+        """The regression this layer would otherwise inflict on the campaign itself. The ledger
+        risk is gated on items.get('SESSION_RUNNER.md'); under FRAMEWORK_ITEMS that key does not
+        exist, so the gate would return False permanently and the risk would go UNREACHABLE with
+        no test failing — defect 6's exact failure class, on the one repo that dogfoods the v3.1
+        ledger it publishes."""
+        m = self._fw(md.FRAMEWORK_MAX)
+        m["changelog"] = {"present": False, "ledger_present": False, "is_fresh": False,
+                          "signals": []}
+        descs = risk_descs(m)
+        hit = [d for d in descs if "no root CHANGELOG.md" in d]
+        self.assertEqual(len(hit), 1, descs)
+        self.assertNotIn("adopter", hit[0], "a framework repo is not an adopter")
+
+    def test_a_framework_repo_that_keeps_its_ledger_is_not_flagged(self):
+        m = self._fw(md.FRAMEWORK_MAX)
+        m["changelog"] = {"present": True, "ledger_present": True, "is_fresh": True,
+                          "signals": []}
+        self.assertFalse(any("no root CHANGELOG.md" in d for d in risk_descs(m)))
+
+    def test_a_marker_contradiction_is_disclosed_on_either_axis(self):
+        role_conflict = self._fw(md.FRAMEWORK_MAX)
+        role_conflict["methodology"]["role_reason"] = "marker-contradiction"
+        self.assertTrue(any("conflicting tokens" in d for d in risk_descs(role_conflict)))
+
+        corpus_conflict = base_metrics(doc_only={"is_doc_only": False,
+                                                 "reason": "marker-contradiction"})
+        self.assertTrue(any("conflicting tokens" in d for d in risk_descs(corpus_conflict)))
+
+    def test_one_disclosure_even_when_both_axes_conflict(self):
+        m = self._fw(md.FRAMEWORK_MAX)
+        m["methodology"]["role_reason"] = "marker-contradiction"
+        m["doc_only"] = {"is_doc_only": False, "reason": "marker-contradiction"}
+        self.assertEqual(len([d for d in risk_descs(m) if "conflicting tokens" in d]), 1)
+
+    def test_a_clean_marker_raises_no_disclosure(self):
+        m = self._fw(md.FRAMEWORK_MAX)
+        m["methodology"]["role_reason"] = "marker"
+        self.assertFalse(any("conflicting tokens" in d for d in risk_descs(m)))
+
+
+class TestFrameworkRendering(unittest.TestCase):
+    def _proj(self, role, items, pct, name="demo"):
+        return {"name": name,
+                "methodology": {"role": role, "items": items, "compliance_score": 0,
+                                "compliance_pct": pct, "checklist_max": md.FRAMEWORK_MAX}}
+
+    def test_a_framework_row_shows_no_false_crosses(self):
+        """RED today, and measured rather than assumed: the two checklists overlap at exactly
+        CHANGELOG.md and HANDOFFS.md, so a framework-keyed items dict rendered against the nine
+        adopter columns gives TWO ticks beside SEVEN crosses — under headers naming files the
+        repo was never scored on. The row stays the right WIDTH, so nothing looks broken and the
+        existing alignment assertion passes against the defect. Aligned and PARTLY TRUE is worse
+        than aligned and all-false: the two accidental ticks make the row look considered."""
+        html = md.render_methodology_grid(
+            [self._proj("framework", {p: True for p, _w, _k in md.FRAMEWORK_ITEMS}, 100)])
+        row = html.split("<tbody>")[1]
+        self.assertEqual(row.count("meth-no"), 0, "framework row must not render adopter crosses")
+        self.assertEqual(row.count("meth-yes"), 0, "nor adopter checks")
+        self.assertIn("meth-na", row)
+
+    def test_a_framework_row_keeps_the_grid_aligned(self):
+        """A colspan cell still has to add up. Counting <td> tags alone would call a 3-cell
+        framework row 'aligned' against 11 headers, so the width is summed over colspans."""
+        html = md.render_methodology_grid(
+            [self._proj("framework", {}, 100), self._proj(
+                "adopter", {k: True for k, _w, _k in md.METHODOLOGY_ITEMS}, 100, name="adopter")])
+        self.assertEqual(html.count("<th>"), len(md.METHODOLOGY_ITEMS) + 2)
+        rows = html.split("<tbody>")[1].split("</tbody>")[0].split("<tr>")[1:]
+        self.assertEqual(len(rows), 2)
+        for row in rows:
+            width = 0
+            for tag in re.findall(r'<td\b[^>]*>', row):
+                span = re.search(r'colspan="(\d+)"', tag)
+                width += int(span.group(1)) if span else 1
+            self.assertEqual(width, len(md.METHODOLOGY_ITEMS) + 2,
+                             f"row width {width} does not fill the header row: {row[:120]}")
+
+    def test_the_legend_appears_only_when_a_framework_row_does(self):
+        adopter_only = md.render_methodology_grid(
+            [self._proj("adopter", {k: True for k, _w, _k in md.METHODOLOGY_ITEMS}, 100)])
+        self.assertNotIn("framework repo", adopter_only)
+        with_framework = md.render_methodology_grid([self._proj("framework", {}, 100)])
+        self.assertIn("framework repo", with_framework)
+        # The legend must not overstate. Saying these columns "do not apply" to a framework repo
+        # would be the same class of falsehood this layer removes from the score: two of them
+        # (CHANGELOG.md, HANDOFFS.md) are on BOTH checklists, and on this repo both are present.
+        shared = ({p for p, _w, _k in md.METHODOLOGY_ITEMS}
+                  & {p for p, _w, _k in md.FRAMEWORK_ITEMS})
+        self.assertTrue(shared, "guard is inert if the checklists stop overlapping")
+        for name in shared:
+            self.assertIn(name, with_framework,
+                          "the legend must name the columns that DO apply to a framework repo")
+        self.assertNotIn("do not apply", with_framework)
+
+    def test_a_project_dict_with_no_role_still_renders_as_an_adopter(self):
+        """Back-compat lock: render_methodology_grid is called with hand-built dicts in this
+        suite and receives whatever collect_all produced in an older run."""
+        html = md.render_methodology_grid(
+            [{"name": "legacy",
+              "methodology": {"items": {k: True for k, _w, _k in md.METHODOLOGY_ITEMS},
+                              "compliance_score": md.METHODOLOGY_MAX, "compliance_pct": 100}}])
+        self.assertIn("meth-yes", html)
+        self.assertNotIn("meth-na", html)
+
+
+class TestFrameworkEndToEnd(unittest.TestCase):
+    def _repo(self, build):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        build(p)
+        (p / "README.md").write_text("# framework\n" * 60)
+        subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "-m", "init"], check=True)
+        return p
+
+    def test_a_framework_repo_end_to_end(self):
+        m = md.collect_all(self._repo(full_framework_tree))
+        self.assertEqual(m["methodology"]["role"], "framework")
+        self.assertEqual(m["methodology"]["compliance_pct"], 100)
+        self.assertEqual(m["scores"]["health"]["methodology"], 20)
+        self.assertLessEqual(m["scores"]["health"]["total"], 100)
+        self.assertFalse(any("adoption" in r["description"] for r in m["scores"]["risks"]))
+
+        card = md.render_project_card(m)
+        self.assertIn("Framework Integrity", card)
+        self.assertNotIn("Methodology Compliance", card)
+        # The heading must state the checklist that ran. Rendering the adopter denominator here
+        # would print the literal arithmetic falsehood "100% (105 of 115)".
+        self.assertIn(f"({md.FRAMEWORK_MAX} of {md.FRAMEWORK_MAX})", card)
+        self.assertNotIn(f"of {md.METHODOLOGY_MAX})", card)
+        # Every glyph on the card must name something the score actually counted.
+        self.assertIn("bin/sync", card)
+        self.assertNotIn("SESSION_NOTES.md", card)
+        self.assertIn("structural", card)     # role provenance is never printed silently
+        # The Health Breakdown label, asserted separately from the section heading above. Found
+        # by mutation: reverting ONLY the dimension label left the whole suite green, because
+        # every other assertion here reads the heading.
+        self.assertIn('<span class="dim-label">Framework</span>', card)
+        self.assertNotIn('<span class="dim-label">Methodology</span>', card)
+
+    def test_this_repository_end_to_end(self):
+        """The defect itself, on the real tree. At HEAD this scan produces compliance 10 of 115
+        = 9%, a methodology dimension of 1/20 and a medium 'Partial methodology adoption (9%)'
+        risk on the repo that publishes the methodology."""
+        m = md.collect_all(CANONICAL_ROOT)
+        self.assertEqual(m["methodology"]["role"], "framework")
+        self.assertEqual(m["methodology"]["compliance_score"], md.FRAMEWORK_MAX)
+        self.assertFalse(any("adoption" in r["description"] for r in m["scores"]["risks"]))
+        # Not a whitewash: the findings that are TRUE of this repo must survive the reframing.
+        self.assertTrue(any("No CI/CD pipeline" in r["description"]
+                            for r in m["scores"]["risks"]))
+
+    def test_the_role_provenance_on_the_card_is_wired_end_to_end(self):
+        """Found by adversarial review: role_reason travelled from detect_repo_role to the card
+        through collect_all with nothing pinning the wire. Both regressions are silent-and-wrong
+        rather than loud — hardcoding the reason makes a MARKER-classified repo's card assert
+        'structural: bin/_manifest.py + starter-kit/SESSION_RUNNER.md' about a repo that has
+        neither file. A card that misstates why it graded you is this campaign's own defect."""
+        def marked(p):
+            (p / PROFILE_FILE).write_text("framework\n")     # no structural evidence at all
+        m = md.collect_all(self._repo(marked))
+        self.assertEqual(m["methodology"]["role"], "framework")
+        self.assertEqual(m["methodology"]["role_reason"], "marker")
+        card = md.render_project_card(m)
+        self.assertIn("marker override", card)
+        self.assertNotIn("bin/_manifest.py", card)
+
+    def test_a_marker_contradiction_survives_the_wire_to_the_card(self):
+        """The other unpinned half: dropping detect_repo_role's `reason or` fall-through would
+        silently delete the D4 disclosure for every structurally-classified repo."""
+        def conflicted(p):
+            full_framework_tree(p)
+            (p / PROFILE_FILE).write_text("framework adopter\n")
+        m = md.collect_all(self._repo(conflicted))
+        self.assertEqual(m["methodology"]["role"], "framework")
+        self.assertEqual(m["methodology"]["role_reason"], "marker-contradiction")
+        self.assertTrue(any("conflicting tokens" in r["description"]
+                            for r in m["scores"]["risks"]))
+        self.assertIn("conflicting role tokens", md.render_project_card(m))
+
+    def test_the_presence_check_disclosure_is_on_both_cards(self):
+        """Plan residual risk 8 names this footnote as THE honest disclosure for presence-based
+        scoring, and it was never actually shipped. It is equally true of both checklists: a repo
+        can score 100% while running a years-old runner, because .exists() cannot tell a
+        maintained artifact from an abandoned one."""
+        fw = md.render_project_card(md.collect_all(self._repo(full_framework_tree)))
+        ad = md.render_project_card(md.collect_all(self._repo(full_compliance_tree)))
+        for card, which in ((fw, "framework"), (ad, "adopter")):
+            with self.subTest(card=which):
+                self.assertIn("presence check", card)
+                self.assertIn("does not verify these files are used", card)
+
+
 class TestFmtRatioAndTwins(unittest.TestCase):
     def test_fmt_ratio(self):
         self.assertEqual(md.fmt_ratio(0.0, 0, True), "n/a (doc-only)")    # actually doc-only
@@ -1418,10 +2023,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.9.2")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.10.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.9\.2"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.9.2")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.10\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.10.0")
 
 
 class TestEndToEnd(unittest.TestCase):

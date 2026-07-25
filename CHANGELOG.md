@@ -32,6 +32,167 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [issue #59] Dashboard signal-integrity **Layer 4** — repo role (`DASHBOARD_VERSION` 2.9.2 → 2.10.0)
+- **Change:** the fourth implementation layer of the ratified campaign plan
+  `docs/planning/dashboard-signal-integrity-plan.md` (S9, `bc2481d`). Closes
+  [#59](https://github.com/KJ5HST/methodology/issues/59) — the scanner graded **every** repo
+  against `METHODOLOGY_ITEMS`, a checklist of adopter-**root** operating files. The repo that
+  *publishes* the methodology does not install its own corpus into its own root, so scanning this
+  one produced **compliance 10 of 115 = 9%**, a methodology dimension of **1/20**, health
+  **49/100**, and a false medium risk **"Partial methodology adoption (9%)"** — reproduced at HEAD
+  before a line was changed. New `detect_repo_role` + a separate **`FRAMEWORK_ITEMS`** checklist,
+  scored and rendered under its own name.
+- **Detection is marker-override → structural heuristic**, following the BL-5 precedent. The
+  structural test is a **three-way AND**: `bin/_manifest.py` **and** `starter-kit/SESSION_RUNNER.md`
+  present, **and no root `SESSION_RUNNER.md`**. The plan names the first two; the third mechanizes
+  the plan's own §7.3 description of the one shape this could misfire on — a repo that ships
+  starter-kit templates plus distribution machinery *without installing to its own root* — so a
+  monorepo that vendors this framework **and** genuinely runs it keeps its adoption grading. It can
+  only remove false positives, never create one. Sound because the manifest ships **0 of 22**
+  sources from `bin/`: no synced adopter can acquire `bin/_manifest.py`. Verified against all 10
+  live siblings — exactly one repo matches, and every adopter comes back `adopter`.
+- **The two files that PROVE the role are deliberately NOT scored.** If the evidence for the role
+  also earned points, the raw sum would have a nonzero floor on the structural path and the
+  "no corpus at all" branch would become a correct assertion over an input that can never occur —
+  **defect 6's exact failure class, re-created inside the campaign that closed it**. Excluding them
+  keeps `raw == 0` genuinely reachable and stops the checklist scoring its own premise; the role's
+  provenance is *displayed* on the card instead.
+- **`FRAMEWORK_ITEMS` (sum 105, derived — never a literal, per D1)** asks two questions a publisher
+  can actually answer: does it *publish* a complete corpus (`ITERATIVE_METHODOLOGY.md`,
+  `starter-kit/SAFEGUARDS.md`, `workstreams/`, `starter-kit/BOOTSTRAP.md`, `HOW_TO_USE.md`, plus the
+  machinery that delivers it — `bin/sync`, `bin/status`, `bin/tests.sh`), and does it *operate* the
+  methodology it publishes (root `CHANGELOG.md`, root `HANDOFFS.md`)? The second half is why the
+  role swap is **not a hiding place**: without it, becoming a "framework" repo would stop the
+  scanner asking whether the publisher runs its own rules.
+- **Operator decision — the plan's line-255 prohibition.** The plan forbids scoring the framework
+  repo by remapping `METHODOLOGY_ITEMS` onto `starter-kit/` paths; its stated harm is crediting
+  placeholders, and that harm is real (`starter-kit/SESSION_NOTES.md` is a 27-line stub,
+  `starter-kit/BACKLOG.md` does not exist, `starter-kit/ROADMAP.md` is an 18-line skeleton).
+  `starter-kit/SAFEGUARDS.md` — a real 242-line published document — is **permitted**, with the
+  boundary drawn **mechanically rather than by reading**: a canonical test asserts that no
+  `FRAMEWORK_ITEMS` path is a distribution **SEED** source, which excludes all four placeholders by
+  construction. Ratified by the operator, not settled by the implementing session.
+- **The marker gained a second axis, and that forced a rewrite of shipped BL-5 code.**
+  `.methodology-profile` now answers two questions — corpus (`doc-only` | `code`) and role
+  (`framework` | `adopter`) — through one shared reader, with the pairs asserted **disjoint** by
+  test. Reading only `tokens[0]` made the plan's own Layer 4 proof ("a `doc-only framework` marker
+  satisfies both axes") **unsatisfiable**: measured against HEAD, `doc-only framework` was honoured
+  but **`framework doc-only` silently discarded the owner's doc-only declaration**, a leading
+  comment line discarded it too, and `doc-only code` vs `code doc-only` resolved a contradiction by
+  **word order**. So Layer 4 could not be purely additive here.
+- **Comment stripping is the load-bearing part of that reader, and it came from real data, not
+  design.** The only `.methodology-profile` in the live population (`church_growth`) is **8 lines /
+  87 whitespace tokens**: one declaration plus **seven** lines of `#` prose explaining why the owner set it —
+  and that prose mentions the opposite token **twice**. It survives being read as a token bag only
+  because both mentions carry trailing punctuation (`code,` and `code.`). **Delete one comma and a
+  reader that tokenizes comments discards the very override the file exists to assert**, restoring
+  the false "No test infrastructure" penalty BL-5 added the marker to prevent. Switching to
+  full-token scanning *without* stripping comments would therefore have been strictly **more**
+  dangerous than reading the first token — the plan's instruction, taken literally, was a trap.
+- **A contradictory marker abstains on that axis only** (decision D4 applied to the marker): it
+  falls through to that axis's heuristic for the *value*, keeps `marker-contradiction` as its
+  *reason*, and raises one LOW advisory. An unresolvable declaration is disclosed, never resolved by
+  guessing — and the uncontradicted axis on the same line still resolves.
+- **The risk layer replaces rather than suppresses.** For `role == framework` the two adoption
+  branches are gone — the word "adoption" is not merely unflattering there, it is **false** — and in
+  their place a **HIGH** "No framework corpus detected" (reachable, per the unscored-inputs rule)
+  and a **graded** "Framework integrity incomplete (N%) — missing: …" that **names the members**.
+  Naming them is the finding: losing *both* root ledgers still scores 81%, so a percentage-only
+  rung would have said nothing about it.
+- **The regression this layer would otherwise have inflicted on the campaign itself.** The
+  Component-C ledger risk was gated on `items.get("SESSION_RUNNER.md")`. Under `FRAMEWORK_ITEMS`
+  that key does not exist, so the gate would have returned False forever and the risk would have
+  gone **unreachable for every framework repo — silently, with no test failing**, on the one repo
+  that dogfoods the v3.1 ledger rule it publishes. Verified by driving HEAD's `assess_risks` with a
+  framework-shaped items dict: the risk vanishes. Fixed by deriving an explicit `owes_ledger`
+  predicate instead of probing a checklist key, and by naming a publisher a publisher.
+- **The grid does not misalign — it *lies*, and that is why it needed handling.** Rendered before
+  the fix: the two checklists overlap at exactly `CHANGELOG.md` and `HANDOFFS.md`, so a
+  framework-keyed `items` dict rendered against the nine adopter columns came out **correctly
+  aligned** with **two ✓ beside seven ✗** — under headers naming files the repo was never scored
+  on — and the existing width assertion passed against it. Aligned *and partly true* is worse than
+  either broken or all-red: the two accidental ticks make the row look considered. A framework row now renders one neutral
+  `colspan` cell (a **third glyph**, never a ✗), a daggered score, and a legend that appears only
+  when a framework row does. Deriving `item_keys` per project — the obvious alternative — was
+  rejected: it puts a 10-cell row under an 11-column header, which is **Layer 1's defect
+  reintroduced by the campaign that closed it**.
+- **The card** swaps its heading to **Framework Integrity**, reads the denominator from the project
+  rather than the module global (rendering `METHODOLOGY_MAX` there would print the literal
+  arithmetic falsehood *"100% (105 of 115)"*), iterates the items that were actually **scored** so
+  every glyph names something the percentage counted, swaps the Health-Breakdown label to
+  **Framework**, and prints the role's **provenance** — a one-word marker is a grading opt-out, so
+  how a repo came to be graded as a publisher must be visible.
+- **Plan residual risk 8 is now disclosed on BOTH cards** (operator decision): *"presence check —
+  the scanner does not verify these files are used"*. The plan calls this footnote "the honest
+  disclosure" — it had **never been shipped**. It is equally true of both checklists: `mts-system`
+  scores 100% compliance while running a v2.0-era runner.
+- **Reachability, checked because this campaign's defect 6 was an unreachable signal.**
+  `EXCLUDE_DIRS` contains the literal string `"methodology"`, so a sibling directory of that exact
+  name is skipped in **portfolio** mode and this repo is not among the 9 discovered siblings. The
+  false risk is reached via **single-project mode** — a dashboard copy at the repo root, which is
+  exactly how `BOOTSTRAP.md` tells an operator to run it — or by any fork or clone under a different
+  directory name. **The release note must not claim the portfolio dashboard stops mis-scoring the
+  framework repo.**
+- **Verified:** `tools/test_methodology_dashboard.py` **116 → 168** tests OK; `bin/tests.sh` 84
+  passed / 0 failed; `bin/check-links` OK (82 links / 21 files); twins byte-identical, both
+  declaring `DASHBOARD_VERSION 2.10.0`; `py_compile` clean. **RED-first**, and the reds that matter
+  are behavioural rather than `AttributeError`: 5 assertions failed against unpatched code with
+  *wrong answers* before any scanner line changed. **Mutation-tested from a green baseline with
+  BOTH twins patched** (a harness patching only `tools/` lets the twin byte-compare fake every
+  kill): 34 mutants, first run **31 killed / 3 survived**. One survivor was inert (a redundant
+  comment-stripping branch, since removed so no later reader mistakes which line does the work);
+  **two were real holes** — no test used a **trailing** `#` comment on a declaration line, and the
+  Health-Breakdown label could revert to "Methodology" with the whole suite green. After the
+  boundary-review fixes the set stands at **38 mutants, 38 killed, 0 survived**.
+- **Boundary review before the commit landed, against a frozen tree**: 5 lenses (plan fidelity,
+  reachability/regression, comment honesty, fresh-eyes correctness, completeness critic), one
+  skeptical refuter per finding defaulting to *refuted* — **28 raw → 8 confirmed**, all 8 fixed.
+  **The HIGH finding was a defect this layer would otherwise have shipped, and it inverted the
+  defect being fixed.** The first reader mined *every* line of `.methodology-profile` for
+  declaration tokens, so an owner's own **uncommented** sentence was read as a deliberate
+  override: *"We keep our docs in the framework style"* graded a plain adopter as the **publisher**
+  (`reason: marker`, nothing disclosed), and *"This is a code repository with helper scripts"*
+  under a `doc-only` declaration fabricated a **contradiction** and destroyed the override. Reading
+  `tokens[0]` never had that failure — whole-file scanning was a regression dressed as a fix. Now
+  **only the first line that survives comment-stripping is a declaration**; every later line is
+  prose. Composing the two axes needs one line, not two. A MEDIUM finding showed `role_reason` was
+  wired from `detect_repo_role` to the card with **nothing pinning the wire** — hardcoding it makes
+  a *marker*-classified repo's card assert `structural: bin/_manifest.py + …` about a repo that has
+  neither file — now covered end to end. The remaining six were **false claims in my own prose**:
+  the grid rationale and its test docstring asserted the checklists "share no keys" and rendered
+  "eight red crosses" (measured: two shared keys, nine columns, 2 ✓ + 7 ✗); the user-facing legend
+  said those columns "do not apply" to a framework repo when two of them do; the live marker was
+  described as six comment lines when it has seven; a fixture was called a copy of that file when
+  it is a paraphrase; and a test named `test_no_live_sibling_is_misdetected` claimed to be "driven
+  against real trees" while driving a tempdir — renamed, and the live sweep is recorded here
+  instead of implied by the suite. **In a change about signals that do not mean what they appear to
+  mean, prose that misstates its own evidence is the least excusable defect available**, and six of
+  eight confirmed findings were exactly that.
+- **Live fleet impact: exactly one repo's scoring moves, and it is the target.** Before/after scan
+  of all 10 siblings: `methodology` goes compliance 10 → 105, 9% → 100%, methodology dimension
+  1 → 20, and loses the false adoption risk. **Every other repo is byte-identical** (`wsfct`'s only
+  delta is a branch count 261 → 262, live git drift — this diff touches no branch-counting code).
+  A genuine non-adopter is *not* laundered: `claims-model-starter.wiki` stays at 4% / 0-of-20.
+  **Honest attribution of this repo's health 49 → 72:** **+19** is the fix; **+4** is the *testing*
+  dimension rising because this session added ~430 lines of tests and crossed the 0.3 test:source
+  rung — not a scoring change, and not creditable to the fix.
+- **Not a whitewash:** the findings that are *true* of this repo survive the reframing — it still
+  reports `No CI/CD pipeline` and `Large files detected`.
+- **Owed to Layer 6 (plan correction, deliberately not fixed here — operator decision):** ratified
+  decision **D4 states this repo's own `docs/planning/BACKLOG.md` "lands in that branch and will
+  correctly say so"**, and that is **false at HEAD**. The format *is* read as `unrecognized`, but
+  the advisory is suppressed by Signal F's operator gate (root `SESSION_RUNNER.md`), which this repo
+  fails. Widening that gate was rejected for this layer because Signal F's premise — an item is
+  *removed* from `BACKLOG.md` in the commit that logs it to `CHANGELOG.md` — is verifiably false for
+  this repo class, whose retired backlog deliberately **keeps** all seven completed `BL-1`–`BL-7`
+  rows permanently; widening the counting branch would manufacture a false "not migrated"
+  accusation the moment that table gains a Status column.
+- **Owed to Layer 5 (mandatory doc sweep):** the marker is documented in `README.md` as
+  `doc-only | code` and now has a second axis; the plan's Layer 5 table predates both the second
+  checklist and the new marker axis, so it needs rows this layer added.
+- **Commit/PR:** this commit (fork `main`; upstream #59 stays open until this reaches upstream).
+- **Session:** S13 · **Verified:** as above.
+
 ### 2026-07-25 · [ad hoc] Dashboard signal-integrity **Layer 3** — backlog shape with abstention (`DASHBOARD_VERSION` 2.9.1 → 2.9.2)
 - **Change:** the third implementation layer of the ratified campaign plan
   `docs/planning/dashboard-signal-integrity-plan.md` (S9, `bc2481d`). Closes plan **defect 4** and
