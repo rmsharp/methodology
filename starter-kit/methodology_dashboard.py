@@ -68,7 +68,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.9.1"
+DASHBOARD_VERSION = "2.9.2"
 
 ROOT = Path(__file__).parent
 EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
@@ -143,6 +143,32 @@ LEDGER_REAL_HISTORY_MIN = 10   # below this commit count a repo gets new-adopter
 SEED_SENTINEL = "METHODOLOGY-SEED-SENTINEL"  # Signal D: an untouched seed still carries this token
 _DATED_ENTRY_RE = re.compile(r'^###\s+\d{4}-\d{2}-\d{2}', re.MULTILINE)
 _BACKLOG_DONE_RE = re.compile(r'^\s*[-*]\s*\[x\]', re.IGNORECASE | re.MULTILINE)
+_BACKLOG_BOX_RE = re.compile(r'^\s*[-*]\s*\[[x ]\]', re.IGNORECASE | re.MULTILINE)
+_BACKLOG_BULLET_RE = re.compile(r'^\s*[-*]\s+\S', re.MULTILINE)
+_FENCE_RE = re.compile(r'^\s*(?:```|~~~)')
+_TABLE_SEP_RE = re.compile(r'^\s*\|[\s:|-]+\|\s*$')
+
+# Signal F's table predicate: a cell that STARTS WITH one of these tokens, in a row of >= 3
+# cells, ignoring the ID column. EMPIRICALLY TUNED — do not re-derive it. Against a real
+# 643-line table backlog the campaign plan measured: *contains* a token = 321; *equals* a token
+# = 227 (misses `**DONE (Session 30, ...)**` and counts the 2-cell Status legend); this predicate
+# = 256, within 3 of an independent hand count of 253. All three counts reproduce here exactly.
+# The plan calls the contains/equals gap of 94 "false positives"; treat that as the plan's
+# characterization of why *contains* was rejected, not as a measured error count — it is the
+# arithmetic 321 - 227, and roughly a third of those rows are ones this predicate also counts.
+# What is independently verified is the ranking the choice rests on: *contains* admits
+# NOTES-column prose that this predicate rejects. The plan records the three counts but not the
+# token list, so this set was
+# recovered by search: it reproduces all three numbers against that corpus, where a DONE-only set
+# scores 277 rather than 321 on the *contains* probe. That is corroboration, NOT uniqueness — any
+# superset adding tokens the corpus never uses reproduces the same three numbers, so this set is
+# *a* set consistent with the tuning rather than provably *the* one. Only DONE / FIXED / RESOLVED
+# are exercised by that corpus at all; the other five add 0 matches there, true or false, and are
+# carried for conventions it happens not to use. All eight are pinned by test, because a token no
+# test exercises is a token no one can safely change.
+_BACKLOG_DONE_TOKENS = ("DONE", "COMPLETE", "COMPLETED", "SHIPPED", "FIXED", "RESOLVED",
+                        "CLOSED", "✅")  # U+2705 WHITE HEAVY CHECK MARK
+_BACKLOG_LOCATIONS = ("BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md")
 
 # Doc-only / research-repo scoring reshape (BL-5). A document-only repo (papers, dissertations,
 # technical reports, regulatory analyses — the Research-Documentation workstream population, and
@@ -719,18 +745,163 @@ def _find_action_ledger(path):
     return ledger if ledger.is_file() else None
 
 
-def _count_backlog_done(path):
-    """Signal F: BACKLOG.md checklist items still marked done (`- [x]`). The methodology
-    removes a backlog item from BACKLOG.md in the same commit that logs it to CHANGELOG, so
-    surviving done-marks are a best-effort proxy for 'completed but never migrated'."""
-    for name in ("BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md"):
+def _strip_fenced_blocks(text):
+    """Drop fenced code blocks (``` or ~~~) before scanning for done-marks.
+
+    A backlog that DOCUMENTS its own convention — "mark an item `- [x]`, then migrate it" — inside
+    a fenced example is not a repo with unmigrated work. Counting that example is a match presented
+    as a finding, which is the defect class this whole campaign exists to remove.
+
+    Only a CLOSED fence is stripped. An unterminated one is left intact, which is the opposite of
+    what a markdown renderer does and is deliberate: a single stray ``` line would otherwise swallow
+    the rest of the file, and "no done-marks found" is not a harmless under-count here — it is
+    reported as a clean backlog, which is defect 4 itself. A stray fence must not be able to
+    manufacture a healthy verdict, so an unclosed one is treated as ordinary prose.
+    """
+    lines = text.splitlines()
+    keep = [True] * len(lines)
+    fence = start = None
+    for i, line in enumerate(lines):
+        stripped = line.lstrip()
+        if fence is None:
+            if _FENCE_RE.match(line):
+                fence, start = stripped[:3], i
+        elif stripped.startswith(fence):
+            for j in range(start, i + 1):
+                keep[j] = False
+            fence = start = None
+    return "\n".join(line for line, k in zip(lines, keep) if k)
+
+
+def _split_row(line):
+    """Split one markdown table row into cells on UNESCAPED pipes.
+
+    `\\|` is the only way GFM lets a literal pipe sit inside a cell, and splitting on it invents
+    cells that were never there — which can shift a prose fragment into the position the done
+    predicate reads. Splitting on the escape is how a NOTES cell can fabricate a done-mark.
+    """
+    body = line.strip().strip("|")
+    return [c.replace(r"\|", "|").strip() for c in re.split(r'(?<!\\)\|', body)]
+
+
+def _header_line_indices(lines):
+    """Indices of the table HEADER rows — each the row directly above a `|---|` separator.
+    Line-by-line on purpose: _TABLE_SEP_RE is anchored but not MULTILINE, so it must be matched
+    against individual lines and never searched across a whole document."""
+    return {i - 1 for i, line in enumerate(lines)
+            if i and _TABLE_SEP_RE.match(line) and lines[i - 1].strip().startswith("|")}
+
+
+def _table_headers(text):
+    """Yield the cell list of every table header row."""
+    lines = text.splitlines()
+    for i in sorted(_header_line_indices(lines)):
+        yield _split_row(lines[i])
+
+
+def _table_data_rows(text):
+    """Yield the cell list of every table DATA row — skipping `|---|` separators AND header rows.
+
+    Headers are excluded because a header is a label, not an item: a table with a `Completed` or
+    `Resolved` column would otherwise count its own heading as a finished piece of work. (Zero rows
+    of the 643-line corpus this predicate was tuned against are affected either way, so this
+    protects against a shape that corpus happens not to contain rather than changing its count.)
+    """
+    lines = text.splitlines()
+    headers = _header_line_indices(lines)
+    for i, line in enumerate(lines):
+        s = line.strip()
+        if i in headers or not s.startswith("|") or _TABLE_SEP_RE.match(line):
+            continue
+        yield _split_row(line)
+
+
+def _has_status_column(text):
+    """True when some table header names a Status column. This, not the mere presence of a table,
+    is what makes a table backlog readable: it is the author declaring that a column carries item
+    state. A table with no such column (`| Item | Scope | Outcome |`) is item-bearing content whose
+    convention this scanner cannot read, and it abstains rather than guess."""
+    return any(any("STATUS" in c.upper() for c in header) for header in _table_headers(text))
+
+
+def _cell_marks_done(cell):
+    """The tuned predicate for one cell: strip markdown decoration, then match a leading token.
+    `**DONE (Session 30, ...)**` is done; `blocked until SEC-013 is DONE` is not."""
+    return cell.strip().strip("*`~ ").strip().upper().startswith(_BACKLOG_DONE_TOKENS)
+
+
+def _count_table_done(text):
+    """Data rows of >= 3 cells in which any cell BUT THE FIRST starts with a done token. The first
+    cell is skipped because it is the ID column, and an ID may legitimately read `DONE-9` while the
+    row itself is open. The >= 3 floor drops the 2-cell Status *legend*, which defines the
+    vocabulary rather than reporting work.
+
+    KNOWN LIMITATION, measured rather than assumed: the predicate is a union over every non-ID
+    cell, not a read of the Status column, so a row whose TITLE cell begins with a done token
+    ("Fixed login redirect", status READY) counts, as does a 3-column legend whose MEANING cell
+    reads "Completed and tested". On the 643-line corpus this was tuned against, that costs
+    nothing — all 256 counted rows are counted via a Status column (242) or sit in a table with no
+    Status column at all (14), and NONE are counted only via some other column. Narrowing to the
+    Status column is therefore not a free improvement: it would drop those 14 and move the ratified
+    count to 242, so it is an operator decision, not an implementer's.
+    """
+    return sum(1 for cells in _table_data_rows(text)
+               if len(cells) >= 3 and any(_cell_marks_done(c) for c in cells[1:]))
+
+
+def _scan_backlog_done(path):
+    """Signal F — backlog items marked done but never migrated to CHANGELOG.
+
+    The methodology removes a backlog item from BACKLOG.md in the same commit that logs it to
+    CHANGELOG.md, so a surviving done-mark is a proxy for 'completed but never migrated'.
+
+    Returns `{"format", "done", "recognized", "source"}`. ABSTENTION IS A FIRST-CLASS RESULT
+    (campaign decision D4): a `done` of 0 from a format this scanner cannot read is
+    indistinguishable from a genuinely clean backlog, and that silence IS defect 4 — a real
+    643-line table backlog carrying 256 done-marks reported "nothing unmigrated" for as long as
+    the predicate was checkbox-only. So the count now travels with the convention it was read
+    under, and `recognized` states whether the count can be trusted at all.
+
+    The six formats, in decision order:
+
+    - `unreadable` — the file exists but could not be read. Abstains: an I/O error is the one case
+      where a 0 is guaranteed to mean nothing at all.
+    - `checkbox`  — `- [x]` / `- [ ]` marks, counted by the unchanged checkbox regex. The count is
+      unchanged for every input EXCEPT one this layer deliberately moves: marks inside a closed
+      fenced block are no longer counted, because a documented example is not work.
+    - `table`     — a table declaring a Status column, counted by the tuned predicate above.
+    - `unrecognized` — item-bearing content whose done convention cannot be read: a table with no
+      Status column (this repo's own `| Item | Scope | Outcome |` backlog), or plain list items
+      with neither checkboxes nor a table. Abstains out loud.
+    - `none`      — no checkboxes, no tables, no list items. NOT an abstention: an empty backlog is
+      the healthy state and 0 is a correct measurement of it. Keeping this distinct is what stops
+      the disclosure from firing on every adopter who is simply up to date.
+    - `absent`    — no BACKLOG.md at any known location; nothing to recognize.
+
+    `recognized` is True only for `checkbox` and `table` — the two formats whose count can be
+    trusted. It is False for `none` and `absent` too, where the 0 is correct but is not the result
+    of reading a convention; those two are distinguished from the abstaining formats by staying
+    SILENT rather than by this flag.
+    """
+    for name in _BACKLOG_LOCATIONS:
         bl = path / name
-        if bl.is_file():
-            try:
-                return len(_BACKLOG_DONE_RE.findall(bl.read_text(encoding="utf-8", errors="ignore")))
-            except OSError:
-                return 0
-    return 0
+        if not bl.is_file():
+            continue
+        try:
+            raw = bl.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            return {"format": "unreadable", "done": 0, "recognized": False, "source": name}
+        text = _strip_fenced_blocks(raw)
+        if _BACKLOG_BOX_RE.search(text):
+            return {"format": "checkbox", "done": len(_BACKLOG_DONE_RE.findall(text)),
+                    "recognized": True, "source": name}
+        if _has_status_column(text):
+            return {"format": "table", "done": _count_table_done(text),
+                    "recognized": True, "source": name}
+        if any(True for _ in _table_headers(text)) or _BACKLOG_BULLET_RE.search(text):
+            return {"format": "unrecognized", "done": 0, "recognized": False, "source": name}
+        return {"format": "none", "done": 0, "recognized": False, "source": name}
+    return {"format": "absent", "done": 0, "recognized": False, "source": None}
 
 
 def evaluate_changelog_freshness(path, git):
@@ -743,6 +914,7 @@ def evaluate_changelog_freshness(path, git):
     methodology seed sentinel, and the backlog signal on unmigrated BACKLOG.md done-marks.
     `git` is the already-collected collect_git_metrics dict.
     """
+    backlog = _scan_backlog_done(path)
     result = {
         "present": False,             # a changelog was LOCATED (root or docs/, best-available)
         "ledger_present": False,      # a root CHANGELOG.md action ledger EXISTS (membership)
@@ -751,7 +923,9 @@ def evaluate_changelog_freshness(path, git):
         "dated_entry_count": 0,
         "has_seed_sentinel": False,
         "never_used": False,          # Signal D
-        "backlog_done_unmigrated": _count_backlog_done(path),  # Signal F
+        "backlog_done_unmigrated": backlog["done"],       # Signal F — pre-existing key
+        "backlog_format": backlog["format"],              # which convention it was read under
+        "backlog_recognized": backlog["recognized"],      # whether that count can be trusted
         "new_adopter_grace": False,
         "is_fresh": False,
         "signals": [],                # list of (severity, description) advisory tuples
@@ -767,11 +941,25 @@ def evaluate_changelog_freshness(path, git):
     # went silent while one with a ledger was warned. Adopter-scoped (root SESSION_RUNNER.md):
     # only an adopter follows the "remove from BACKLOG.md in the commit that logs it to CHANGELOG"
     # convention, so surviving done-marks are a defect there and not on a non-adopter sibling.
-    if result["backlog_done_unmigrated"] > 0 and (path / "SESSION_RUNNER.md").is_file():
+    #
+    # Abstention (decision D4) rides the SAME adopter gate: a note that this scanner could not read
+    # a backlog is only owed where the convention it cannot check actually applies. It is also
+    # deliberately narrow — an EMPTY backlog reports a silent, correct 0 rather than abstaining,
+    # because telling an adopter who is simply up to date that its "format was not recognized"
+    # would itself be a signal that does not mean what it appears to mean.
+    adopter = (path / "SESSION_RUNNER.md").is_file()
+    if adopter and result["backlog_done_unmigrated"] > 0:
         result["signals"].append((
             "low",
-            f"{result['backlog_done_unmigrated']} done-marked BACKLOG.md item(s) not migrated "
-            f"to CHANGELOG",
+            f"{backlog['source']}: {result['backlog_done_unmigrated']} done-marked item(s) "
+            f"not migrated to CHANGELOG ({backlog['format']} format)",
+        ))
+    elif adopter and backlog["format"] in ("unrecognized", "unreadable"):
+        why = ("could not be read" if backlog["format"] == "unreadable"
+               else "done-mark format not recognized (no `- [x]` checkboxes and no Status column)")
+        result["signals"].append((
+            "low",
+            f"{backlog['source']}: {why} — the unmigrated-work signal is inactive for this repo",
         ))
 
     changelog = _find_changelog(path)

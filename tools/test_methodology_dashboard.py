@@ -756,6 +756,510 @@ class TestSignalReachability(unittest.TestCase):
                         "an advisory that never needed a changelog vanished when the changelog did")
 
 
+STATUS_TABLE_BACKLOG = """\
+# Backlog
+
+## Status Legend
+
+| Status | Meaning |
+|--------|---------|
+| `DONE` | Completed and tested |
+| `READY` | Ready to implement (no blockers) |
+
+## Critical Issues
+
+| ID | Issue | Status | Notes |
+|----|-------|--------|-------|
+| SEC-013 | Refresh tokens stored as plaintext | DONE | hash_token() utility |
+| SEC-014 | JWT tokens in localStorage | DONE | httpOnly cookies + CSRF |
+| B-001 | Pagination field mismatch | READY | blocked until SEC-013 is DONE |
+| B-002 | Duplicate files need cleanup | IN_PROGRESS | will be DONE next session |
+| DONE-9 | Misleading ID column | READY | the ID itself starts with a done token |
+
+## Later
+
+| ID | Initiative | Duration | Status |
+|----|-----------|----------|--------|
+| INIT-1 | Migration | 3 weeks | **DONE (Session 30, 2026-01-01)** |
+| INIT-2 | Rollout | 2 weeks | BLOCKED |
+"""
+
+FENCED_DOC_BACKLOG = """\
+# Backlog
+
+Format reference — mark an item done like this before migrating it to CHANGELOG.md:
+
+```markdown
+- [x] a completed item that exists only inside a documentation example
+- [x] a second one
+```
+
+## Open
+
+- [ ] a genuinely open item
+"""
+
+OUTCOME_TABLE_BACKLOG = """\
+# Operational Backlog (fork-only)
+
+> **STATUS: RETIRED** — verbose task bodies are removed at close-out.
+
+## Open items
+
+None.
+
+## Completed items
+
+| Item | Scope | Outcome |
+|------|-------|---------|
+| **BL-1** | wsfct migration | ✅ Complete in `rmsharp/wsfct` (operator). |
+| **BL-4** | Housekeeping | ✅ DONE 2026-07-06 — plans archived. |
+"""
+
+EMPTY_BACKLOG = """\
+# Backlog
+
+## Active
+<!-- Current work items -->
+
+## Up Next
+<!-- Upcoming tasks -->
+"""
+
+
+class TestBacklogFormatAndAbstention(unittest.TestCase):
+    """Defect 4 (`BACKLOG.md` done-marks are counted checkbox-only, so a table backlog reads 0)
+    plus the fenced-code-block false positive, under campaign decision D4: ABSTENTION IS A
+    FIRST-CLASS RESULT.
+
+    A silent `0` is defect 4 itself — it is indistinguishable from a clean backlog, which is how
+    a 643-line table backlog carrying 256 done-marks reported "nothing unmigrated". So the scanner
+    now reports WHICH convention it read, and says out loud when it could not read one.
+
+    The table predicate (*a cell that starts with a done token, in a row of >= 3 cells, ignoring
+    the ID column*) is empirically tuned in the campaign plan against that real backlog and is NOT
+    re-derived here — see `_BACKLOG_DONE_TOKENS`. `STATUS_TABLE_BACKLOG` is a compact fixture that
+    exercises each property the tuning depends on by name (prose false positives, the 2-cell
+    legend, a done token in the ID column, a decorated cell, a moving Status column), rather than
+    vendoring 51 KB of an adopter's real backlog into this repo; the real-corpus count of 256 is
+    reproduced as runtime-smoke evidence at close-out instead.
+
+    RED-FIRST: every assertion below that proves a defect was driven against the unpatched
+    scanner and watched to fail — `_count_backlog_done` returned 0 for the table fixture, 2 for
+    the fenced one, and 0 (silently) for the abstention fixture. The regression locks assert
+    BEHAVIOUR that is unchanged (a checkbox backlog still counts 60), but they are still new
+    tests: they call `_scan_backlog_done`, which did not exist before this layer, so none of them
+    could execute against the old module — the invariant is preserved, the assertion is not.
+    """
+
+    def setUp(self):
+        self._td = tempfile.TemporaryDirectory()
+        self.p = Path(self._td.name)
+
+    def tearDown(self):
+        self._td.cleanup()
+
+    def _scan(self, text):
+        write_tree(self.p, {"BACKLOG.md": text})
+        return md._scan_backlog_done(self.p)
+
+    def _freshness(self, files_map, commits=50):
+        write_tree(self.p, files_map)
+        return md.evaluate_changelog_freshness(
+            self.p, {"total_commits": commits, "days_since_last_commit": 1})
+
+    # --- the table predicate, property by property -------------------------------------------
+
+    def test_a_status_table_backlog_is_counted(self):
+        """RED: the checkbox-only scanner returns 0 for every table backlog ever written."""
+        r = self._scan(STATUS_TABLE_BACKLOG)
+        self.assertEqual(r["format"], "table")
+        self.assertTrue(r["recognized"])
+        self.assertEqual(r["done"], 3, "SEC-013, SEC-014 and INIT-1 are the only done rows")
+
+    def test_prose_containing_a_done_token_is_not_a_done_row(self):
+        """The 94-false-positive class the tuning rejected: a NOTES cell that merely mentions a
+        done token ("blocked until SEC-013 is DONE") is not a completed item. A *contains*
+        predicate scored 321 on the real corpus against a hand count of 253."""
+        r = self._scan(
+            "| ID | Issue | Status | Notes |\n"
+            "|----|-------|--------|-------|\n"
+            "| B-001 | Pagination | READY | blocked until SEC-013 is DONE |\n")
+        self.assertEqual(r["done"], 0)
+
+    def test_a_done_token_in_the_id_column_is_ignored(self):
+        """Why the predicate skips cell 0: an ID may legitimately start with a done token
+        (`DONE-9`) while the row's actual status is READY."""
+        r = self._scan(
+            "| ID | Issue | Status | Notes |\n"
+            "|----|-------|--------|-------|\n"
+            "| DONE-9 | Misleading ID | READY | still open |\n")
+        self.assertEqual(r["done"], 0)
+
+    def test_the_two_cell_legend_is_not_counted(self):
+        """Why the predicate needs >= 3 cells: a Status *legend* defines the vocabulary, it does
+        not report work. An *equals* predicate scored 227 and counted this row."""
+        r = self._scan(
+            "| Status | Meaning |\n"
+            "|--------|---------|\n"
+            "| `DONE` | Completed and tested |\n")
+        self.assertEqual(r["done"], 0)
+
+    def test_a_decorated_done_cell_is_counted(self):
+        """Why the predicate is *starts-with* and not *equals*: real backlogs write
+        `**DONE (Session 30, ...)**`, which no equality test matches."""
+        r = self._scan(
+            "| ID | Initiative | Duration | Status |\n"
+            "|----|-----------|----------|--------|\n"
+            "| INIT-1 | Migration | 3 weeks | **DONE (Session 30, 2026-01-01)** |\n")
+        self.assertEqual(r["done"], 1)
+
+    def test_the_status_column_may_sit_anywhere_but_the_id_column(self):
+        """Guard the guard: across the real corpus's 27 tables the Status column lands at index
+        2 (20 tables), 3, 4 and even 0, and 3 tables carry no Status column at all — which is why
+        the predicate scans every non-ID cell rather than a fixed column index."""
+        r = self._scan(STATUS_TABLE_BACKLOG)
+        self.assertEqual(r["done"], 3, "a fixed Status index would miss the trailing-Status table")
+
+    # --- the fenced-code-block false positive ------------------------------------------------
+
+    def test_a_fenced_example_is_not_a_done_mark(self):
+        """RED: today this counts 2. A doc that *documents* the `- [x]` convention inside a fenced
+        example is not a repo with unmigrated work — it is a match presented as a finding, the
+        campaign's own root defect."""
+        r = self._scan(FENCED_DOC_BACKLOG)
+        self.assertEqual(r["done"], 0)
+        self.assertEqual(r["format"], "checkbox",
+                         "the surviving `- [ ]` outside the fence still identifies the convention")
+        self.assertTrue(r["recognized"])
+
+    def test_a_fenced_table_is_not_a_done_row(self):
+        """The same containment on the new surface: a fenced example of the *table* convention
+        must not be counted either."""
+        r = self._scan(
+            "# Backlog\n\nExample:\n\n```markdown\n"
+            "| ID | Issue | Status | Notes |\n"
+            "|----|-------|--------|-------|\n"
+            "| X-1 | example | DONE | not real |\n"
+            "```\n\n- [ ] a real open item\n")
+        self.assertEqual(r["done"], 0)
+
+    # --- abstention (decision D4) -------------------------------------------------------------
+
+    def test_an_unreadable_table_abstains_visibly(self):
+        """RED: today this reports a silent 0, indistinguishable from a clean backlog. A table
+        with no Status column carries item state this scanner cannot interpret, so it must say so
+        rather than assert a count it cannot support. This is this repo's own backlog shape
+        (`| Item | Scope | Outcome |`) and the plan names it as the abstention case."""
+        r = self._scan(OUTCOME_TABLE_BACKLOG)
+        self.assertEqual(r["format"], "unrecognized")
+        self.assertFalse(r["recognized"])
+        self.assertEqual(r["done"], 0)
+
+    def test_the_abstention_is_visible_to_an_adopter(self):
+        f = self._freshness({"SESSION_RUNNER.md": "# runner\n",
+                             "BACKLOG.md": OUTCOME_TABLE_BACKLOG})
+        self.assertFalse(f["backlog_recognized"])
+        self.assertTrue(any("not recognized" in d for _sev, d in f["signals"]),
+                        "an unreadable format must abstain out loud, never report a silent 0")
+        self.assertTrue(any("BACKLOG.md" in d for _sev, d in f["signals"]),
+                        "the advisory must name the file it was computed against")
+
+    def test_the_abstention_is_adopter_scoped(self):
+        """Same gate as Signal F itself: only an adopter follows the migrate-on-log convention, so
+        only an adopter is owed a note about the scanner's inability to check it."""
+        f = self._freshness({"BACKLOG.md": OUTCOME_TABLE_BACKLOG})
+        self.assertFalse(any("not recognized" in d for _sev, d in f["signals"]))
+
+    def test_an_empty_backlog_is_silent_rather_than_abstaining(self):
+        """The abstention must stay NARROW. An empty backlog is the healthy state, not an
+        unreadable one: it carries no item rows and no checkboxes, so 0 is a correct measurement
+        and there is nothing to disclose. Two live adopters keep exactly this file; advising them
+        that a format was 'not recognized' would be a signal that does not mean what it appears
+        to mean — the defect class this campaign exists to remove."""
+        r = self._scan(EMPTY_BACKLOG)
+        self.assertEqual(r["format"], "none")
+        self.assertEqual(r["done"], 0)
+        f = self._freshness({"SESSION_RUNNER.md": "# runner\n", "BACKLOG.md": EMPTY_BACKLOG})
+        self.assertFalse(any("not recognized" in d for _sev, d in f["signals"]))
+
+    def test_a_prose_bullet_backlog_abstains(self):
+        """The other side of that boundary: plain list items with no checkbox and no table DO
+        carry item state the scanner cannot read, so they abstain rather than report 0."""
+        r = self._scan("# Backlog\n\n- Fix the login redirect (done)\n- Add rate limiting\n")
+        self.assertEqual(r["format"], "unrecognized")
+        self.assertFalse(r["recognized"])
+
+    def test_an_absent_backlog_is_not_an_abstention(self):
+        """A repo that keeps no backlog at all has no format to fail to recognize."""
+        write_tree(self.p, {"SESSION_RUNNER.md": "# runner\n"})
+        r = md._scan_backlog_done(self.p)
+        self.assertEqual(r["format"], "absent")
+        self.assertIsNone(r["source"])
+        f = md.evaluate_changelog_freshness(
+            self.p, {"total_commits": 50, "days_since_last_commit": 1})
+        self.assertFalse(any("not recognized" in d for _sev, d in f["signals"]))
+
+    # --- regression locks ---------------------------------------------------------------------
+
+    def test_a_checkbox_backlog_counts_exactly_as_before(self):
+        """The one behaviour this layer must not move: the checkbox predicate is unchanged."""
+        r = self._scan("- [x] shipped\n" * 60)
+        self.assertEqual(r["format"], "checkbox")
+        self.assertEqual(r["done"], 60)
+        f = self._freshness({"SESSION_RUNNER.md": "# runner\n",
+                             "BACKLOG.md": "- [x] shipped\n" * 60})
+        self.assertEqual(f["backlog_done_unmigrated"], 60)
+        self.assertTrue(any("not migrated" in d for _sev, d in f["signals"]))
+
+    def test_an_all_open_checkbox_backlog_is_a_recognized_zero(self):
+        """A recognized 0 and an abstained 0 are different findings, which is the whole of D4."""
+        r = self._scan("- [ ] still open\n- [ ] also open\n")
+        self.assertEqual(r["format"], "checkbox")
+        self.assertTrue(r["recognized"])
+        self.assertEqual(r["done"], 0)
+
+    def test_the_search_order_over_backlog_locations_is_unchanged(self):
+        write_tree(self.p, {"BACKLOG.md": "- [x] root\n",
+                            "docs/planning/BACKLOG.md": STATUS_TABLE_BACKLOG})
+        r = md._scan_backlog_done(self.p)
+        self.assertEqual(r["source"], "BACKLOG.md")
+        self.assertEqual(r["done"], 1)
+
+    def test_the_emitted_metrics_key_contract_is_preserved(self):
+        """`backlog_done_unmigrated` is in the JSON contract; the new keys are additive."""
+        f = self._freshness({"SESSION_RUNNER.md": "# runner\n",
+                             "BACKLOG.md": STATUS_TABLE_BACKLOG})
+        self.assertEqual(f["backlog_done_unmigrated"], 3)
+        self.assertEqual(f["backlog_format"], "table")
+        self.assertTrue(f["backlog_recognized"])
+
+    # --- mutation-driven coverage --------------------------------------------------------------
+    #
+    # Every test below closes a hole found by MUTATION, not by RED-first: each one pins a decision
+    # that the suite above could not distinguish from its opposite. Two further mutants survive and
+    # are deliberately NOT "fixed", because they are inert by construction rather than untested —
+    # inventing a test for either would assert a property over an input that cannot violate it,
+    # which is the campaign's own §8 learning 2:
+    #
+    #   * `elif` -> `if` on the abstention branch. An unrecognized format always reports done == 0,
+    #     so the two branches are already mutually exclusive; the `elif` documents that, it does not
+    #     enforce it.
+    #   * dropping the separator-row skip in `_table_rows`. A separator cell contains only `-` and
+    #     `:`, which can never start with a done token, so the skip is clarity rather than behaviour.
+
+    def test_checkbox_format_wins_when_a_backlog_carries_both(self):
+        """Precedence is a real decision, and no fixture above forced it. Checkbox wins, because
+        that is the reading this layer promised not to move; a backlog carrying both conventions is
+        reported under the one whose count is already load-bearing."""
+        r = self._scan(
+            "| ID | Task | Status | Notes |\n"
+            "|----|------|--------|-------|\n"
+            "| A-1 | a | DONE | |\n"
+            "| A-2 | b | DONE | |\n"
+            "| A-3 | c | DONE | |\n"
+            "\n## Also\n\n- [x] one checkbox item\n")
+        self.assertEqual(r["format"], "checkbox")
+        self.assertEqual(r["done"], 1)
+
+    def test_a_status_word_in_a_data_row_is_not_a_header(self):
+        """A header is the row directly above a `|---|` separator — not any row that happens to
+        say "Status". Otherwise a single NOTES cell reading "Status: DONE" would silently promote
+        an unreadable table to a counted one, turning an honest abstention into a fabricated count."""
+        r = self._scan(
+            "| Item | Scope | Outcome |\n"
+            "|------|-------|---------|\n"
+            "| BL-1 | migration | Status: DONE |\n"
+            "| BL-2 | cleanup | DONE 2026-01-01 |\n")
+        self.assertEqual(r["format"], "unrecognized")
+        self.assertEqual(r["done"], 0)
+
+    # The token list is written out LITERALLY here on purpose. A first version of this test built
+    # its fixture by iterating md._BACKLOG_DONE_TOKENS and asserting done == len(that tuple) —
+    # which passes no matter which tokens are removed, because fixture and expectation move
+    # together. Mutation caught it: dropping a token survived the "coverage" written to pin it.
+    # A test derived from the thing under test cannot falsify it (campaign §8 learning 2).
+    EXPECTED_DONE_TOKENS = ("DONE", "COMPLETE", "COMPLETED", "SHIPPED", "FIXED", "RESOLVED",
+                            "CLOSED", "✅")
+
+    def test_the_published_done_token_set_is_pinned(self):
+        self.assertEqual(md._BACKLOG_DONE_TOKENS, self.EXPECTED_DONE_TOKENS,
+                         "the done-token set is a published predicate — changing it changes every "
+                         "adopter's Signal F, so it changes here first")
+
+    def test_every_shipped_done_token_is_counted(self):
+        """The real 643-line corpus only exercises DONE, FIXED and RESOLVED, so the other five
+        tokens shipped untested — dropping any one of them changed nothing the suite could see."""
+        rows = "".join(f"| A-{i} | task | {tok} | notes |\n"
+                       for i, tok in enumerate(self.EXPECTED_DONE_TOKENS))
+        r = self._scan("| ID | Task | Status | Notes |\n|----|------|--------|-------|\n"
+                       + rows + "| A-99 | open one | READY | notes |\n")
+        self.assertEqual(r["done"], len(self.EXPECTED_DONE_TOKENS),
+                         "every documented done token must count, and READY must not")
+
+    def test_a_recognized_zero_is_distinguishable_from_an_abstained_zero(self):
+        """The whole of D4, asserted on the emitted metrics: `backlog_recognized` must report the
+        CONVENTION, never merely `done > 0`. A backlog with only open checkboxes is a trustworthy
+        0; an unreadable table is not — and both report 0."""
+        f = self._freshness({"SESSION_RUNNER.md": "# runner\n", "BACKLOG.md": "- [ ] open\n"})
+        self.assertEqual(f["backlog_done_unmigrated"], 0)
+        self.assertTrue(f["backlog_recognized"], "an all-open checkbox backlog is a KNOWN zero")
+        f2 = self._freshness({"SESSION_RUNNER.md": "# runner\n",
+                              "BACKLOG.md": OUTCOME_TABLE_BACKLOG})
+        self.assertEqual(f2["backlog_done_unmigrated"], 0)
+        self.assertFalse(f2["backlog_recognized"], "an unreadable table is an UNKNOWN zero")
+
+    def test_a_horizontal_rule_is_not_an_item(self):
+        """Keeps the abstention narrow. `---` is a markdown horizontal rule, not a list item, and
+        an otherwise-empty backlog containing one is still the healthy empty state. A bullet
+        predicate loose enough to match it would abstain on ordinary formatting."""
+        r = self._scan("# Backlog\n\n## Active\n\n---\n\n## Up Next\n")
+        self.assertEqual(r["format"], "none")
+
+    def test_a_fence_is_closed_only_by_its_own_marker(self):
+        """A ``` block is not closed by a ~~~ line inside it. Otherwise the remainder of the
+        example leaks back into the scan and is counted as real work."""
+        r = self._scan("# Backlog\n\n```markdown\n~~~\n- [x] leaked example\n```\n\n- [ ] real\n")
+        self.assertEqual(r["done"], 0)
+        self.assertEqual(r["format"], "checkbox")
+
+    # --- review-driven coverage ----------------------------------------------------------------
+    #
+    # Everything below closes a hole found by the 5-lens adversarial boundary review, which caught
+    # what RED-first and two mutation rounds both missed. The first two are REGRESSIONS the review
+    # found in this layer's own new code.
+
+    def test_an_unterminated_fence_does_not_swallow_the_file(self):
+        """REGRESSION the review caught. A markdown renderer lets an unclosed ``` run to end of
+        file; doing that here let ONE stray fence line hide every done-mark below it and report a
+        clean backlog — strictly worse than the checkbox-only scanner this layer replaces, and the
+        exact silent-zero this layer exists to remove. Only CLOSED fences are stripped."""
+        text = "# Backlog\n\n```\n\n## Notes\n\n- [x] a\n- [x] b\n- [x] c\n"
+        r = self._scan(text)
+        self.assertEqual(r["done"], 3)
+        self.assertEqual(len(md._BACKLOG_DONE_RE.findall(text)), 3,
+                         "and it must still agree with the pre-Layer-3 reading on this input")
+
+    def test_a_stray_fence_cannot_manufacture_a_trusted_zero(self):
+        """The worst sibling of the unterminated-fence regression, and the reason the fix is "do
+        not strip an unclosed fence" rather than "redirect the empty case": with a Status table
+        ABOVE the stray fence, swallowing the tail returned format `table`, done 0, recognized
+        TRUE — an affirmatively trusted zero, worse than abstaining. Also covers the case where the
+        document is genuinely balanced to a renderer (a 4-backtick outer fence) so the author has
+        no visual cue anything is wrong."""
+        r = self._scan("# Backlog\n\n| ID | Item | Status |\n|----|------|--------|\n"
+                       "| A-1 | x | OPEN |\n\n```text\n- [x] BL-1 shipped\n- [x] BL-2 shipped\n")
+        self.assertEqual(r["done"], 2)
+        outer = self._scan("# Backlog\n\n````markdown\n```\n````\n\n- [x] BL-1\n- [x] BL-2\n")
+        self.assertEqual(outer["done"], 2, "a 4-backtick fence renders balanced; do not swallow it")
+
+    def test_a_header_row_is_not_a_finished_item(self):
+        """REGRESSION the review caught. A table whose column is headed `Completed` counted its own
+        HEADING as one unmigrated item — a label read as work, which is this campaign's root defect
+        reproduced inside its own fix."""
+        r = self._scan("| ID | Status | Completed | Notes |\n"
+                       "|----|--------|-----------|-------|\n"
+                       "| A-1 | READY | no | still open |\n")
+        self.assertEqual(r["format"], "table")
+        self.assertEqual(r["done"], 0)
+
+    def test_an_escaped_pipe_does_not_fabricate_a_done_mark(self):
+        """REGRESSION the review caught. `\\|` is the only way GFM lets a literal pipe sit inside a
+        cell; splitting on it invents cells that were never in the table and can shift a prose
+        fragment into the position the predicate reads — so a NOTES cell mentioning "DONE upstream"
+        marked an open row complete. The row below is READY and must count 0."""
+        r = self._scan("| ID | Task | Status | Notes |\n|----|------|--------|-------|\n"
+                       r"| B-1 | a thing | READY | see `foo \| bar` — DONE upstream |" "\n")
+        self.assertEqual(r["format"], "table")
+        self.assertEqual(r["done"], 0)
+
+    def test_an_inline_code_span_does_not_close_a_fence(self):
+        """The fence marker is three characters, not two: a line opening with a two-backtick inline
+        code span sits INSIDE the block and must not close it, or the rest of the example leaks
+        back in and is counted as work."""
+        r = self._scan("# Backlog\n\n```markdown\n``code`` in an example\n- [x] fenced item\n```\n"
+                       "\n- [ ] real open item\n")
+        self.assertEqual(r["done"], 0)
+
+    def test_a_tilde_fence_is_stripped_too(self):
+        """`_FENCE_RE` accepts ~~~ as well as ```, and nothing exercised it: deleting ~~~ support
+        entirely survived the suite and re-created the false positive this layer removes."""
+        r = self._scan("# Backlog\n\n~~~markdown\n- [x] fenced example\n~~~\n\n- [ ] real\n")
+        self.assertEqual(r["done"], 0)
+
+    def test_a_backlog_below_the_root_is_found_and_named(self):
+        """No test ever read a non-root location, so `_BACKLOG_LOCATIONS` was effectively a
+        one-element tuple as far as the suite could tell — and the advisory that promises to name
+        its source file could not fail against a hardcoded "BACKLOG.md"."""
+        write_tree(self.p, {"SESSION_RUNNER.md": "# runner\n",
+                            "docs/planning/BACKLOG.md": "- [x] shipped\n" * 3})
+        r = md._scan_backlog_done(self.p)
+        self.assertEqual(r["source"], "docs/planning/BACKLOG.md")
+        self.assertEqual(r["done"], 3)
+        f = md.evaluate_changelog_freshness(
+            self.p, {"total_commits": 50, "days_since_last_commit": 1})
+        self.assertTrue(any("docs/planning/BACKLOG.md" in d for _sev, d in f["signals"]),
+                        "the advisory must name the file it actually read")
+
+    def test_a_three_column_table_is_counted(self):
+        """The `>= 3` floor was only ever tested from below (2-cell rows excluded). A 3-column
+        backlog is the boundary case and had no coverage at all."""
+        r = self._scan("| ID | Task | Status |\n|----|------|--------|\n"
+                       "| A-1 | a thing | DONE |\n| A-2 | another | READY |\n")
+        self.assertEqual(r["done"], 1)
+
+    def test_done_tokens_are_matched_case_insensitively_and_through_decoration(self):
+        """`_cell_marks_done` upper-cases and strips backticks/asterisks; neither was exercised, so
+        dropping either survived both the suite and the 643-line runtime smoke."""
+        r = self._scan("| ID | Task | Status | Notes |\n|----|------|--------|-------|\n"
+                       "| A-1 | a | done | lowercase |\n"
+                       "| A-2 | b | `DONE` | code-span |\n"
+                       "| A-3 | c | Done — 2026-01-01 | mixed case + trailer |\n"
+                       "| A-4 | d | READY | still open |\n")
+        self.assertEqual(r["done"], 3)
+
+    def test_a_bolded_status_header_still_declares_a_table(self):
+        r = self._scan("| ID | Task | **Status** | Notes |\n|:---|:----:|-----------:|------|\n"
+                       "| A-1 | a | DONE | x |\n")
+        self.assertEqual(r["format"], "table")
+        self.assertEqual(r["done"], 1, "alignment-colon separators must parse too")
+
+    @unittest.skipIf(os.geteuid() == 0, "root can read a 000-mode file")
+    def test_an_unreadable_backlog_abstains_rather_than_reporting_zero(self):
+        """An I/O error is the one case where 0 is guaranteed to mean nothing at all, and it was
+        the one branch that still reported a silent 0 — D4's own definition of defect 4."""
+        write_tree(self.p, {"SESSION_RUNNER.md": "# runner\n", "BACKLOG.md": "- [x] a\n"})
+        bl = self.p / "BACKLOG.md"
+        bl.chmod(0o000)
+        try:
+            r = md._scan_backlog_done(self.p)
+            self.assertEqual(r["format"], "unreadable")
+            self.assertFalse(r["recognized"])
+            f = md.evaluate_changelog_freshness(
+                self.p, {"total_commits": 50, "days_since_last_commit": 1})
+            self.assertTrue(any("inactive for this repo" in d for _sev, d in f["signals"]),
+                            "an unreadable backlog must abstain, not report a clean 0")
+        finally:
+            bl.chmod(0o644)
+
+    def test_the_union_predicates_known_false_positives_are_pinned(self):
+        """CHARACTERIZATION, not endorsement. The tuned predicate is a union over every non-ID
+        cell rather than a read of the Status column, so a TITLE cell beginning with a done token
+        and a 3-column legend's MEANING cell both count. Measured on the 643-line corpus this was
+        tuned against, that costs nothing — all 256 rows are counted via a Status column (242) or
+        sit in a table with no Status column (14), and none only via another column. Narrowing is
+        an operator decision (it would move the ratified count to 242), so the behaviour is pinned
+        here rather than silently changed."""
+        title = self._scan("| ID | Task | Status | Notes |\n|----|------|--------|-------|\n"
+                           "| B-5 | Fixed login redirect | READY | still open |\n")
+        self.assertEqual(title["done"], 1, "known false positive: a done token in the TITLE cell")
+        legend = self._scan("| Status | Meaning | Example |\n|--------|---------|--------|\n"
+                            "| `DONE` | Completed and tested | A-1 |\n"
+                            "| ID | Task | Status |\n|----|------|--------|\n"
+                            "| A-9 | real | READY |\n")
+        self.assertEqual(legend["done"], 1, "known false positive: a 3-column legend")
+
+
 class TestAdvisoriesNameTheirSource(unittest.TestCase):
     """Defect 5's misdirecting half. An adopter whose only changelog was a `docs/` product
     release-notes file was told its "CHANGELOG ledger" was lagging — advice to go update a
@@ -914,10 +1418,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.9.1")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.9.2")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.9\.1"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.9.1")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.9\.2"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.9.2")
 
 
 class TestEndToEnd(unittest.TestCase):

@@ -32,6 +32,74 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [ad hoc] Dashboard signal-integrity **Layer 3** — backlog shape with abstention (`DASHBOARD_VERSION` 2.9.1 → 2.9.2)
+- **Change:** the third implementation layer of the ratified campaign plan
+  `docs/planning/dashboard-signal-integrity-plan.md` (S9, `bc2481d`). Closes plan **defect 4** and
+  the **fenced-code-block false positive**, neither of which is filed upstream — the plan stands as
+  their record pending the operator's filing decision at merge. Signal F counted `BACKLOG.md`
+  done-marks with a **checkbox-only** regex, so a real 643-line *table* backlog carrying **256**
+  done-marks reported **0** — and reported it *silently*, indistinguishable from a clean backlog.
+  `_count_backlog_done` becomes **`_scan_backlog_done`**, returning `{format, done, recognized,
+  source}`: the count now travels with the convention it was read under.
+- **Six formats, in decision order** — `unreadable` (I/O error), `checkbox`, `table`,
+  `unrecognized`, `none`, `absent`. **Abstention is a first-class result** (decision D4): a table
+  with no Status column, or plain list items with no checkbox, abstains *out loud* rather than
+  reporting a 0 it cannot support. **A silent 0 is defect 4 itself.**
+- **The abstention is deliberately NARROW, and that is the load-bearing design choice.** An
+  *empty* backlog reports a silent, correct 0 (`format: none`) instead of abstaining — two live
+  adopters (`airqino`, `model_project_constructor`) keep exactly that file, and telling a project
+  that is simply up to date that its "format was not recognized" would be a signal that does not
+  mean what it appears to mean: this campaign's own root defect, re-created inside its fix. The
+  abstention fires only on **item-bearing content whose convention cannot be read**, which is this
+  repo's own `| Item | Scope | Outcome |` backlog — the case the plan names.
+- **The table predicate was NOT re-derived** (the plan forbids it): a cell that *starts with* a
+  done token, in a row of >= 3 cells, ignoring the ID column. The plan records its three tuning
+  counts but not the token list, so the 8-token set was **recovered by search** and reproduces all
+  three simultaneously — *contains* 321, *equals* 227, this predicate **256** (hand count 253).
+  That is corroboration, **not uniqueness**: any superset adding tokens the corpus never uses
+  reproduces the same numbers. Only `DONE`/`FIXED`/`RESOLVED` are exercised by that corpus at all;
+  all eight are now pinned by test, because a token no test exercises is one no one can safely
+  change. The 256 was re-verified against the clean tree at every step.
+- **Known limitation, measured rather than assumed.** The predicate is a *union over every non-ID
+  cell*, not a read of the Status column, so a TITLE cell reading "Fixed login redirect" (status
+  READY) counts, as does a 3-column legend's "Completed and tested". On the tuning corpus this
+  costs nothing — of the 256, **242** are counted via a Status column and **14** sit in tables with
+  no Status column, and **none** only via another column. Narrowing to the Status column would drop
+  those 14 and move the ratified count to **242**, so it is an **operator decision, not an
+  implementer's**. The behaviour is pinned by characterization test rather than silently changed.
+- **Adversarially reviewed at the boundary before the commit landed** — 5 diverse lenses against a
+  *frozen* tree, then one skeptical verifier per finding: **23 raw → 15 confirmed**, all 15 fixed.
+  Two were **regressions in this layer's own new code**, and both are the campaign's thesis defect
+  reproduced inside its fix: (1) an **unterminated fence swallowed the rest of the file**, so one
+  stray ` ``` ` line turned a backlog full of unmigrated work into `format: none` — *affirmatively
+  the healthy state* — where the old scanner had warned; worse, with a Status table above the stray
+  fence it returned a **trusted** zero (`recognized: True`). Only *closed* fences are stripped now,
+  which is deliberately **not** what a markdown renderer does. (2) A **GFM-escaped pipe** (`\|`)
+  split a cell that was never split, shifting NOTES prose into the position the predicate reads and
+  fabricating a done-mark on an open row. Also fixed: a table **header** row was scanned as data, so
+  a column headed `Completed` counted itself as finished work.
+- **Method.** RED-first per the standing rule — every defect-proving assertion was driven against
+  the unpatched scanner and watched to fail (table fixture 0, fenced 2, abstention a silent 0), and
+  the behavioural REDs were captured against the *old function* rather than resting on the weak
+  `AttributeError` that a renamed function produces. Then mutation-tested per S10/S11's learning —
+  and the **first mutation run was invalid**: the harness patched only `tools/`, so the
+  byte-identical-twin test killed every mutant regardless of behaviour and reported a false 28/28.
+  Re-run with both twins patched, it exposed **8 real holes**, one of them *in a test written to
+  close a hole* — `test_every_shipped_done_token_is_counted` built its fixture by iterating the very
+  constant it tested, so it passed no matter which tokens were removed. A test derived from the
+  thing under test cannot falsify it (plan §8 learning 2, caught here for the third time in this
+  campaign).
+- **Suite:** `tools/test_methodology_dashboard.py` **79 → 116** tests; `bin/tests.sh` **84/84**;
+  `python3 bin/check-links` OK (82 links / 21 files); twins byte-identical; `py_compile` clean.
+  Runtime smoke ran the **real** render path (`collect_all` → `render_project_card` →
+  `render_methodology_grid` → `render_html` → `append_history`) over five real sibling repos,
+  writing nothing into any of them; history entries carry `dashboard_version 2.9.2`.
+- **Live fleet impact: no new risk fires anywhere, and no health score moves.** `church_growth`
+  keeps its existing advisory (now naming its source file and format); `mts-system` and `wsfct` are
+  newly *readable* as table backlogs and correctly report **0** — `mts-system` mentions a done token
+  on 12 lines and none is a done row, which is the false-positive class rejected on live data;
+  `airqino` and `model_project_constructor` stay silent.
+
 ### 2026-07-25 · [issue #60] Dashboard signal-integrity **Layer 2** — ledger identity (`DASHBOARD_VERSION` 2.9.0 → 2.9.1)
 - **Change:** the second implementation layer of the ratified campaign plan
   `docs/planning/dashboard-signal-integrity-plan.md` (S9, `bc2481d`). Closes
