@@ -8,6 +8,20 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S11
+date: 2026-07-25
+status: pending
+active_task: Layer 2 of docs/planning/dashboard-signal-integrity-plan.md — ledger identity (defects 5, 6, 7; upstream issue #60). Add _find_action_ledger (root-only, exact CHANGELOG.md) ALONGSIDE an unchanged _find_changelog; add ledger_present, consumed only at the assess_risks site; fix archive shadowing by preferring an exact CHANGELOG.md over any name-prefix match; make lag messages name their source file and drop the word "ledger"; move the Signal F emission above the `changelog is None` early return. DASHBOARD_VERSION -> 2.9.1. ONE LAYER ONLY — Layers 3-6 are separate sessions, and release decision R1 is settled at merge, not by an implementing session.
+what_was_done: pending
+next_steps: pending
+key_files: tools/methodology_dashboard.py:658 (_find_changelog — archive-shadowing sorted() locator), tools/methodology_dashboard.py:712 (the `changelog is None` early return that strands Signal F), tools/methodology_dashboard.py:786 (Signal F emission, currently below the early return), tools/methodology_dashboard.py:1332 (the +1 freshness point the obvious #60b fix silently costs), tools/methodology_dashboard.py:1439 (the risk that must read ledger_present, not present), docs/planning/dashboard-signal-integrity-plan.md:194 (Layer 2 contract)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S10
 date: 2026-07-25
 status: complete
