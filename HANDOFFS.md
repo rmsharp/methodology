@@ -8,6 +8,20 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S9
+date: 2026-07-25
+status: pending
+active_task: Dashboard signal-integrity cluster — upstream issues #59, #60, #61 (all open, all unclaimed, all in methodology_dashboard.py, all the same class: "dashboard signals do not mean what they appear to mean"). Designing the three together per S8's handoff recommendation rather than as three separate patches. Deliverable this session is the DESIGN; whether implementation follows in-session as a pre-declared vertical slice, or is deferred to a separate session per FM #18's plan-to-implementation boundary, is an operator decision at the Phase 4 present gate.
+what_was_done: pending
+next_steps: pending
+key_files: tools/methodology_dashboard.py:131 (_BACKLOG_DONE_RE, #60), tools/methodology_dashboard.py:644 (_find_changelog, #60), tools/methodology_dashboard.py:110 (METHODOLOGY_ITEMS weights, #61), tools/methodology_dashboard.py:1329 (unclamped methodology dimension, #61), tools/methodology_dashboard.py:782 (collect_methodology_metrics, #59), starter-kit/methodology_dashboard.py:1 (byte-identical twin), tools/test_methodology_dashboard.py:210 (bound test that cannot catch #61)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S8
 date: 2026-07-13
 status: complete
