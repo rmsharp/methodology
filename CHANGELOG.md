@@ -90,7 +90,10 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   fixed — the `compliance_pct` docstring's "no value is rounded twice" was **false** (the
   dimension re-scales the rounded percentage, credited one extra point at raw 40 and 80 — kept
   deliberately, now documented), and this entry's trend claim overstated a write-only stamp.
-- **Commit/PR:** this commit. **Layer 1 of 6 — Layers 2–6 remain separate sessions** (ledger
+- **Commit/PR:** `6b10f09` — both scanner twins, the tests and this entry; its immediate
+  successor reconciles the `HANDOFFS.md` receipt and this line to that sha, so no `pending`
+  marker is left for the next session's Phase 0 to repair. **Layer 1 of 6 — Layers 2–6 remain
+  separate sessions** (ledger
   identity, backlog-shape predicate, repo role, completeness sweep, release decision). Upstream
   #61 stays **open** until this reaches upstream; the release decision (plan R1) is deferred to
   merge by operator decision.
