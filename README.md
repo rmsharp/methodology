@@ -134,7 +134,7 @@ See **[`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md)** for the complete 
 
 **Live dashboard:** The generated HTML auto-refreshes every 60 seconds. Run the script once, open `dashboard.html` in your browser, and leave it open — it stays current as you work. Re-run the script whenever you want updated data.
 
-**Overriding what the scanner infers — `.methodology-profile`:** the two class detections above are heuristics, so a repo can declare its own class. Create a `.methodology-profile` file at the repo root; **only its first line that isn't a comment is read** as the declaration (`#` starts a comment, whole-line or trailing — every later line is prose, so you can explain the choice underneath). That one line carries whitespace-separated tokens from two independent axes:
+**Declaring what the scanner should infer — `.methodology-profile`:** the two class detections above are heuristics, and one of them is unreliable in an *installed* project — `bin/sync` puts the ~3,000-line `methodology_dashboard.py` at your root, which is far past the scanner's source-code cap, so a document-only project reads as `code` unless it says otherwise. **If your project is document-only, declare it.** Create a `.methodology-profile` file at the repo root; **only its first line that is neither blank nor a comment is read** as the declaration. That one line carries whitespace-separated tokens from two independent axes:
 
 | Axis | Tokens | Answers |
 |---|---|---|
@@ -142,6 +142,13 @@ See **[`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md)** for the complete 
 | Role | `framework` \| `adopter` | Does this repo publish the methodology? |
 
 Set either or both, in any order (`doc-only framework` and `framework doc-only` are the same declaration). Unrecognized tokens are ignored, and two contradictory tokens on the same axis cancel — the scanner falls back to its structural detection rather than guessing. When the verdict is `framework` the card names the path that produced it (a marker, the structural check, or a declared contradiction that was overruled).
+
+**Comment your explanation — that declaration line is read as tokens, not as prose.** Every word on it is a candidate token, so an ordinary uncommented sentence placed *first* silently declares any axis word it happens to contain and consumes the declaration slot. A file whose first line reads `We follow the framework conventions for this paper.` is graded **framework — by marker**, and a `doc-only` on the line below it is ignored as prose. Put the declaration first and explain underneath, or prefix the explanation with `#`:
+
+```
+doc-only                      # ← the declaration: first non-blank, non-comment line
+# We follow the framework conventions for this paper, but there is no code here.
+```
 
 Requires only Python 3 (stdlib, no dependencies). Works on macOS, Linux, and Windows.
 

@@ -86,7 +86,30 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   Two adjacent claims corrected because the addition would otherwise contradict them: T7's expected
   result and risk-bucket cell said the sample's only flag was `No CI/CD`, and the fixture carries
   three mediums — that inaccuracy predates this campaign.
-- **This layer shipped WITHOUT an adversarial boundary review, and that is recorded rather than
+- **The deferred boundary review was run after close-out and found FOUR real defects — three in
+  this layer's own new prose, one in the scanner.** Two lenses (marker documentation, numbers) ran
+  against the frozen tree; every finding was re-verified by hand before acting. Fixed here:
+  (a) the marker documentation never said the declaration line is read as **tokens**, so an
+  uncommented sentence placed first silently declares any axis word it contains — measured:
+  `We follow the framework conventions for this paper.` grades the repo **framework, reason=marker**
+  and discards a `doc-only` on the line below. That is the same failure class S13's review caught
+  *in the code*, surviving in the prose that documents it. (b) `BOOTSTRAP.md`'s "every line after
+  the first is prose" was **false** whenever line 1 is a comment — a leading `#` does not consume
+  the declaration slot (`README.md` stated the rule correctly; the distributed file did not).
+  (c) "first non-comment line" under-described the parser, which also skips blank lines. Both
+  worked examples added here were executed verbatim and assert `tokens=['doc-only']`,
+  `doc_only=True`, `reason=marker`.
+- **A LIVE SCANNER DEFECT, found by the same review and NOT fixed here — it needs an operator
+  decision and a code layer.** `bin/sync` installs `methodology_dashboard.py` (**3,070 lines**) to
+  the adopter root, and `DOC_ONLY_SOURCE_LOC_MAX` is **200**, so the source-LOC cap short-circuits
+  before the doc-corpus check runs: **installing the methodology destroys the doc-only fair-scoring
+  v3.2 exists to provide.** Measured on a Quarto-book fixture — before `bin/sync`: `doc_only=True`,
+  testing dimension **4** (render proxy), no test risk; after `bin/sync`: `doc_only=False`,
+  `source_loc=3070`, testing dimension **0**, and the HIGH **"No test infrastructure"** risk is
+  back. This predates Layer 5 and has been live since v3.2. Layer 5 corrects only the *prose* that
+  misdescribed it — `README.md` and `BOOTSTRAP.md` now tell a document-only project it **must**
+  declare `doc-only`, rather than framing the marker as a fallback for when the guess is wrong.
+- **This layer's deliverable shipped BEFORE that review ran, and that is recorded rather than
   glossed.** A 4-lens review was launched against the frozen tree and all four agents died on a usage
   limit; the harness returned `findings: []`, which means *nothing executed*, not *nothing found*.
   Two lenses were then run by hand (the T7 counterfactual — adding a `Status` column to a rebuilt

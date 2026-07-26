@@ -270,7 +270,16 @@ The dashboard auto-detects its context:
 - **Inside a git repo** → single-project mode (also scans git submodules as separate entries)
 - **Above git repos** → portfolio mode (scans all sibling repos)
 
-It also infers the two repo classes above structurally. If it guesses wrong for your project, declare the class yourself: create a **`.methodology-profile`** file at the repo root whose first non-comment line holds whitespace-separated tokens — `doc-only` or `code` for the corpus axis, `framework` or `adopter` for the role axis (set either, or both in any order; `#` starts a comment, and every line after the first is prose, so you can explain the choice underneath). A declaration overrides the structural guess; two conflicting tokens on one axis cancel and the structural guess stands.
+It also infers the two repo classes above structurally — but **if your project is document-only, you must declare it**, because installing the methodology defeats that particular inference: the `methodology_dashboard.py` you just copied to your root is ~3,000 lines of Python, far past the source-code cap the doc-only check uses, so an installed documentation project reads as `code` and gets scored on tests it has no reason to have.
+
+Declare the class by creating a **`.methodology-profile`** file at the repo root. Its **first line that is neither blank nor a comment** is the declaration; that line holds whitespace-separated tokens — `doc-only` or `code` for the corpus axis, `framework` or `adopter` for the role axis (set either, or both, in any order). A declaration overrides the structural guess; two conflicting tokens on one axis cancel, and the structural guess stands.
+
+**Comment your explanation.** The declaration line is read as *tokens*, not prose — every word on it counts — and a leading `#` comment does not consume the declaration slot, so an explanation is safe above or below as long as it is commented. An *uncommented* sentence placed first does declare: a file starting `We follow the framework conventions for this paper.` is graded **framework**, and a `doc-only` on the next line is ignored.
+
+```
+doc-only                      # ← the declaration: first non-blank, non-comment line
+# No code here — this is a Quarto book. Scored on render/verification, not tests.
+```
 
 ### Per-Project Setup
 
