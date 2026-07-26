@@ -109,6 +109,18 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   back. This predates Layer 5 and has been live since v3.2. Layer 5 corrects only the *prose* that
   misdescribed it — `README.md` and `BOOTSTRAP.md` now tell a document-only project it **must**
   declare `doc-only`, rather than framing the marker as a fallback for when the guess is wrong.
+- **Operator decision (S14), and the plan is amended to carry it:** fix **A of three** — stop
+  counting **framework-installed files** toward the adopter's source LOC — landing as a new
+  **Layer 7**, whose execution slot is **before** Layer 6 so the campaign does not close and settle
+  R1 with a known live defect in this subsystem. The number is **appended, never renumbered**,
+  following this repo's own rule for numbered sets, so Layers 1–6 keep their identities. Measured
+  before choosing: A flips the synced Quarto fixture back to `doc_only=True` (3,070 → 0 LOC) while a
+  synced *real* code repo stays `code` (4,070 → 1,000, still over the 200 cap), so v3.2's guarantee
+  survives. **B** (raise/replace the cap) and **C** (no code change, rely on the marker) were
+  rejected on the record, with reasons, inside the new Layer 7 contract so they are not re-proposed.
+  `docs/planning/dashboard-signal-integrity-plan.md` now carries that contract — written this
+  session while the measurements were first-hand, precisely because Layer 5's own table went stale
+  by being written without them. **No code changed here; Layer 7 is a separate session.**
 - **This layer's deliverable shipped BEFORE that review ran, and that is recorded rather than
   glossed.** A 4-lens review was launched against the frozen tree and all four agents died on a usage
   limit; the harness returned `findings: []`, which means *nothing executed*, not *nothing found*.

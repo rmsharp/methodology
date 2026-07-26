@@ -302,6 +302,67 @@ targets appears in any code diff. v3.4 exists precisely because a clean diff-sco
 README.md docs/tutorials/ starter-kit/ HOW_TO_USE.md` · `bash bin/check-links`
 **This layer is one session. Close out when done.**
 
+### Layer 7 — The installer defeats doc-only detection (amendment; executes BEFORE Layer 6)
+
+> **Amendment ratified by operator decision, S14.** This defect was **not** among the eight this plan
+> was written against — it was found by Layer 5's late boundary review, and it predates the campaign
+> (live since **v3.2**). The number is **appended, never renumbered**, following this repo's own rule
+> for numbered sets (`CLAUDE.md`: "FMs 1–26 must not be renumbered; new FMs append at the end"), so
+> Layers 1–6 keep their identities. Its **execution slot is before Layer 6**, because Layer 6 closes
+> the campaign and settles R1 — a release should not ship with a known live defect in this subsystem.
+
+**The defect — the campaign's own class, from an unexpected direction.** `bin/sync` installs
+`methodology_dashboard.py` (**3,070 lines**) to the adopter **root** (`bin/_manifest.py:43`,
+disposition `TRACKED`), and `DOC_ONLY_SOURCE_LOC_MAX` is **200** (`:232`). So `detect_doc_only`'s
+source-cap short-circuit (`:1678`) fires before the corpus disjunction (`:1686`) is ever consulted:
+**installing the methodology destroys the doc-only fair-scoring v3.2 exists to provide.** The signal
+"No test infrastructure" does not mean what it appears to mean — it means *we put our own scanner in
+your repo and then counted it against you*.
+
+**Measured (S14), on a Quarto-book fixture — 6 `.qmd` chapters + `_quarto.yml`, `git init`:**
+
+| | `doc_only` | `source_loc` | testing dim | risk |
+|---|---|---|---|---|
+| before `bin/sync` | `True` | 0 | 4 (render proxy) | — |
+| after `bin/sync` | `False` | 3,070 | **0** | **HIGH "No test infrastructure"** |
+
+**Files:** `tools/methodology_dashboard.py`, `starter-kit/methodology_dashboard.py` (byte-identical
+twins), `tools/test_methodology_dashboard.py`, `CHANGELOG.md`. `DASHBOARD_VERSION` → **2.10.1**.
+
+**Change (operator-chosen fix A of three):** stop counting **framework-installed files** toward the
+adopter's source LOC. `bin/sync` installs exactly one non-markdown file, so this is a one-name
+exclusion, not a judgment call — confirm with
+`[d for _,d,_ in DISTRIBUTION if not d.endswith('.md')]` → `['methodology_dashboard.py']`.
+
+> **Two rejected alternatives, recorded so they are not re-proposed.** **(B) Raise or replace the
+> 200-LOC cap** — knowingly surrenders v3.2's written guarantee that a mixed code+docs repo is never
+> misclassified; any threshold above 3,070 makes a real 4,070-LOC code repo read as doc-only.
+> **(C) No code change, rely on the marker** — converts v3.2's automatic fair-scoring into an opt-in
+> feature and leaves a false HIGH risk on every doc-only adopter who never reads `BOOTSTRAP.md`
+> §Step 9. Layer 5 already shipped the prose half of C (both `README.md` and `BOOTSTRAP.md` now tell
+> a document-only project it **must** declare `doc-only`); that prose stays correct either way and
+> is **not** a substitute for this fix.
+
+**The exclusion must not become a laundering hole.** Exclude only by the manifest's own installed
+name, at the point of the source-LOC read — never a general "skip large Python files" rule, which
+would exempt an adopter's real code. A repo whose *own* source exceeds the cap must still read as
+`code` after the exclusion.
+
+**RED-first proof** (drive each against unpatched code and watch it fail — a rename produces
+`AttributeError`, which proves absence, not wrongness):
+(a) the synced Quarto fixture reports `doc_only=True` (today: `False`);
+(b) a synced **real code repo** — 500 own-source functions ≈ 1,000 LOC plus the installed scanner —
+still reports `doc_only=False` (**measured today: 4,070 → 1,000 after exclusion, still over the cap**,
+so this test must be seen to fail against a *wrong* fix such as B, not merely pass against A);
+(c) an **unsynced** doc repo is unchanged (no regression to the v3.2 path);
+(d) the HIGH "No test infrastructure" risk is absent from (a) and present in a genuine no-test code repo.
+
+**Done when:** installing the methodology no longer changes a document-only repo's classification.
+**Verify:** as Layer 1, plus the four fixtures above, plus `bin/tests.sh`, `bin/check-links`, twins
+byte-identical, and a live read-only fleet re-scan showing no other repo's score moves.
+**Stops coherently:** the subsystem is correct before Layer 6 settles the release.
+**This layer is one session. Close out when done.**
+
 ### Layer 6 — Close-out and release decision
 
 **Files:** `CLAUDE.md` (conditional), `HANDOFFS.md`, `CHANGELOG.md`
