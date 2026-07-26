@@ -8,6 +8,22 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S14
+date: 2026-07-25
+status: pending
+active_task: Layer 5 of docs/planning/dashboard-signal-integrity-plan.md (:272-303) — the MANDATORY completeness-critic doc sweep (v3.4 Learning #10 / AUDIT_WORKSTREAM.md anti-pattern #9). Reconcile the prose corpus to what Layers 1-4 actually SHIPPED. THE PLAN'S OWN TABLE IS INCOMPLETE AND MUST NOT BE TRUSTED AS THE SCOPE: it was written at S9 and predates Layer 3's abstention and Layer 4's repo role, so its six rows cover only the HANDOFFS.md / compliance-% / 5-dimensions items. Re-derive the target list from the four shipped diffs (6b10f09, 3838a13, 9ebedda, abb3b29), not from the table. Known-stale before the sweep even starts: README.md:285 documents .methodology-profile as "doc-only | code" and it now has a SECOND axis (framework | adopter), and nothing in the corpus mentions the second checklist, the "Framework Integrity" dimension label, or the role-provenance line. THE FROZEN-PROSE RULE BINDS (v2.7.1): dated release prose in README §What's New and CLAUDE.md §Versioning entries is NOT edited, and the plan at :294 records two "corrections" it explicitly REJECTED because applying them would have INTRODUCED errors ("29 tests" is right; "51 -> 54" is a dated statement). NO SCANNER CODE CHANGES — this is a prose layer; DASHBOARD_VERSION stays 2.10.0. ONE LAYER ONLY: Layer 6 (close-out, release decision R1, the owed SESSION_RUNNER.md Learnings row, and the D4 plan correction) is a separate session.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/dashboard-signal-integrity-plan.md:272 (the Layer 5 contract — six rows, incomplete as written), docs/planning/dashboard-signal-integrity-plan.md:290 (the explicitly-NOT-edited frozen prose list), docs/planning/dashboard-signal-integrity-plan.md:294 (the two REJECTED corpus edits and why applying either would introduce an error), README.md:285 (the stale marker documentation — one axis where there are now two), tools/methodology_dashboard.py:159 (FRAMEWORK_ITEMS — the second checklist no prose mentions), tools/methodology_dashboard.py:1631 (detect_repo_role — the second detection axis), CHANGELOG.md:193 (the Layer 4 entry's "Owed to Layer 5" line)
+gotchas: (1) S13's #1 lesson, twice in a row now: SIX of its eight confirmed review findings were FALSE CLAIMS IN ITS OWN PROSE, measured against a toy structure instead of the real one. This layer is ENTIRELY prose about a scanner's behaviour, so every claim written must be re-executed against the live code, not reasoned about. (2) A doc sweep is exactly the session type FM #17 erodes — the temptation is to fix adjacent staleness that Layers 1-4 did not cause. In scope: claims this campaign made false. Out of scope: everything else, however stale. (3) The frozen-prose convention makes "more edits" strictly worse: the plan already documents two proposed edits that were errors. Verify each candidate is live/operative prose, not dated history. (4) bin/check-links must stay green — several targets carry cross-boundary relative links whose correctness is defined in the ADOPTER tree (v2.8 link-topology paradox), not this one. (5) Phase 0 found a real record defect NOT repaired (operator did not assign it): HANDOFFS.md:73 carries a leftover stub `status: pending` above S12's `status: complete` — a duplicate key that bin/check-handoff cannot see because it validates only the NEWEST block, and which would false-positive the portable `grep 'status: pending'` stop-hook SAFEGUARDS.md recommends. Also untracked empty scratch_test/ at root.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+---
+
+```handoff
 session: S13
 date: 2026-07-25
 status: complete
