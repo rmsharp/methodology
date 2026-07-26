@@ -264,11 +264,13 @@ This is where session output documents go if you use them. The methodology works
 
 ## Step 9: Set Up the Methodology Dashboard (Recommended)
 
-The methodology includes a health scanner that scores projects on 5 dimensions (activity, testing, documentation, CI/CD, methodology compliance) and generates an HTML dashboard that auto-refreshes every 60 seconds.
+The methodology includes a health scanner that scores projects on 5 dimensions (activity, testing, documentation, CI/CD, methodology) and generates an HTML dashboard that auto-refreshes every 60 seconds. Two of those five adapt to the kind of repo being scored, so the rubric doesn't penalize a project for something it has no reason to have: **testing** becomes a render/verification score for a document-only repo (nothing to unit-test), and **methodology** becomes a framework-integrity score for a repo that *publishes* the methodology rather than adopting it. Most projects are neither and see the plain five.
 
 The dashboard auto-detects its context:
 - **Inside a git repo** → single-project mode (also scans git submodules as separate entries)
 - **Above git repos** → portfolio mode (scans all sibling repos)
+
+It also infers the two repo classes above structurally. If it guesses wrong for your project, declare the class yourself: create a **`.methodology-profile`** file at the repo root whose first non-comment line holds whitespace-separated tokens — `doc-only` or `code` for the corpus axis, `framework` or `adopter` for the role axis (set either, or both in any order; `#` starts a comment, and every line after the first is prose, so you can explain the choice underneath). A declaration overrides the structural guess; two conflicting tokens on one axis cancel and the structural guess stands.
 
 ### Per-Project Setup
 

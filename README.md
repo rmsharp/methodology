@@ -72,11 +72,11 @@ Each phase is gated. You cannot enter the next phase until the current one is co
 ../methodology/bin/sync your-project/ --source=github  # or: pull from GitHub (needs gh CLI)
 ```
 
-This copies the full methodology corpus into the target: the operating files (`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`) to the project root, and the framework (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`, `workstreams/`) to `docs/methodology/`. These are kept current on every run. `SESSION_NOTES.md`, `CHANGELOG.md`, and `ROADMAP.md` are *seeded* at the root only when absent — once they exist they are yours and `bin/sync` never overwrites them. See [`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md) for the difference between committed and ignored modes.
+This copies the full methodology corpus into the target: the operating files (`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`) to the project root, and the framework (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`, `workstreams/`) to `docs/methodology/`. These are kept current on every run. `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` are *seeded* at the root only when absent — once they exist they are yours and `bin/sync` never overwrites them. See [`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md) for the difference between committed and ignored modes.
 
 **Option B — manual:**
 
-Copy the starter-kit root-files to your project root — `SESSION_RUNNER.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`, plus `SESSION_NOTES.md`, `CHANGELOG.md`, and `ROADMAP.md` as starting points you then own. Copy the framework files (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`) and `workstreams/` to `docs/methodology/`. (Option A's `bin/sync` does all of this in one command.)
+Copy the starter-kit root-files to your project root — `SESSION_RUNNER.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`, plus `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` as starting points you then own. Copy the framework files (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`) and `workstreams/` to `docs/methodology/`. (Option A's `bin/sync` does all of this in one command.)
 
 ### 2. Tell Claude to use it
 
@@ -111,6 +111,7 @@ See **[`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md)** for the complete 
 | `CONTEXT_TEMPLATE.md` | Project domain-glossary / `CONTEXT.md` template |
 | `RECOMMENDED_SKILLS.md` | Index of recommended skills, cited at the relevant phase/workstream |
 | `CHANGELOG.md` | Completed work history template — keeps BACKLOG.md lean |
+| `HANDOFFS.md` | Durable close-out receipt template — one machine-checkable block per session |
 | `ROADMAP.md` | Feature inventory and future plans template |
 | `methodology_dashboard.py` | Health scanner: project scoring, risk assessment, compliance dashboard |
 
@@ -126,11 +127,21 @@ See **[`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md)** for the complete 
 - **Discovers** git repositories automatically (sibling repos or submodules depending on mode)
 - **Collects** metrics across 7 dimensions: git activity, file structure, tests, CI/CD, documentation, methodology compliance, dependencies
 - **Scores** each project's health (0-100) across 5 weighted dimensions (activity, testing, documentation, CI/CD, methodology)
+- **Adapts** two of those dimensions to the repo class it detects — a document-only repo is scored on render/verification configuration instead of unit tests, and a repo that *publishes* the framework is scored on framework integrity instead of adoption. Both detections are structural; either can be overridden by a `.methodology-profile` file at the repo root (see below)
 - **Assesses** risk with severity-tagged flags (critical/high/medium/low) for issues like abandonment, missing tests, no CI, large files, low velocity
 - **Generates** a self-contained HTML dashboard with collapsible project cards, sortable by health/risk/name/activity
 - **Prints** a color-coded terminal summary for quick at-a-glance status
 
 **Live dashboard:** The generated HTML auto-refreshes every 60 seconds. Run the script once, open `dashboard.html` in your browser, and leave it open — it stays current as you work. Re-run the script whenever you want updated data.
+
+**Overriding what the scanner infers — `.methodology-profile`:** the two class detections above are heuristics, so a repo can declare its own class. Create a `.methodology-profile` file at the repo root; **only its first line that isn't a comment is read** as the declaration (`#` starts a comment, whole-line or trailing — every later line is prose, so you can explain the choice underneath). That one line carries whitespace-separated tokens from two independent axes:
+
+| Axis | Tokens | Answers |
+|---|---|---|
+| Corpus | `doc-only` \| `code` | Is there anything here to unit-test? |
+| Role | `framework` \| `adopter` | Does this repo publish the methodology? |
+
+Set either or both, in any order (`doc-only framework` and `framework doc-only` are the same declaration). Unrecognized tokens are ignored, and two contradictory tokens on the same axis cancel — the scanner falls back to its structural detection rather than guessing. When the verdict is `framework` the card names the path that produced it (a marker, the structural check, or a declared contradiction that was overruled).
 
 Requires only Python 3 (stdlib, no dependencies). Works on macOS, Linux, and Windows.
 
@@ -142,7 +153,7 @@ Portfolio health score, risk matrix, methodology compliance table, commit activi
 
 #### Project Detail View
 
-Expand any project card to see health breakdown by dimension, risk factors, git stats, code breakdown by language and category, test metrics, CI/CD status, documentation quality, dependency counts, methodology compliance checklist, and the 10 largest files.
+Expand any project card to see health breakdown by dimension, risk factors, git stats, code breakdown by language and category, test metrics, CI/CD status, documentation quality, dependency counts, whichever methodology checklist applies to that repo (compliance for an adopting project, framework integrity for a repo that publishes the framework), and the 10 largest files.
 
 ![Expanded project detail showing health breakdown, code metrics, and methodology compliance](docs/images/dashboard-detail.png)
 
@@ -193,7 +204,8 @@ New to the methodology? The **[tutorials](docs/tutorials/)** are a hands-on, pro
 │   └── tests.sh                      ← Test suite for the bin/ tooling
 │
 └── tools/                            ← Portfolio-level tooling
-    └── methodology_dashboard.py      ← Health scanner & compliance dashboard
+    ├── methodology_dashboard.py      ← Health scanner & compliance dashboard
+    └── test_methodology_dashboard.py ← Scoring tests for the scanner (canonical-only)
 ```
 
 ## Key Concepts

@@ -44,6 +44,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 | `starter-kit/SESSION_NOTES.md` | Empty template for session continuity between sessions |
 | `starter-kit/BOOTSTRAP.md` | Step-by-step setup guide for new projects |
 | `starter-kit/CHANGELOG.md` | Completed work history template — keeps BACKLOG.md lean |
+| `starter-kit/HANDOFFS.md` | Durable close-out receipt template — one machine-checkable block per session |
 | `starter-kit/ROADMAP.md` | Feature inventory and future plans template |
 | `starter-kit/methodology_dashboard.py` | Health scanner — copy to project root for per-project dashboard |
 
@@ -51,7 +52,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 
 | File | Purpose |
 |------|---------|
-| `tools/methodology_dashboard.py` | Portfolio health scanner — scores projects on activity, testing, docs, CI/CD, methodology compliance; generates HTML dashboard. Place in parent directory above project repos. Python 3 stdlib only, cross-platform. |
+| `tools/methodology_dashboard.py` | Portfolio health scanner — scores projects on activity, testing, docs, CI/CD, and methodology, where the 2nd and 5th dimensions adapt to the repo class (testing → render/verification for a doc-only repo; compliance → framework integrity for a repo that publishes the framework, overridable via `.methodology-profile`); generates HTML dashboard. Place in parent directory above project repos. Python 3 stdlib only, cross-platform. |
 
 ### Workstreams (domain-specific adaptations)
 

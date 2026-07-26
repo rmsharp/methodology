@@ -32,6 +32,50 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [ad hoc] Dashboard signal-integrity **Layer 5** — completeness-critic doc sweep (no version bump)
+
+- **Change:** the fifth layer of the ratified campaign plan `docs/planning/dashboard-signal-integrity-plan.md`
+  (S9, `bc2481d`), and the first that ships **no scanner code** — `DASHBOARD_VERSION` stays **2.10.0**,
+  both twins untouched. Layers 1–4 added a member to a numbered set, added a detection axis, and made
+  two health dimensions context-dependent; **not one** of those appeared in a prose file, which is the
+  blind spot v3.4 Learning #10 / `AUDIT_WORKSTREAM.md` anti-pattern #9 exist to close.
+- **The plan's Layer 5 table was re-derived from the shipped diffs, not trusted.** It listed 6 rows; the
+  swept corpus yielded **20 sites across 7 files**. Landed in two commits (the 5-file per-commit cap):
+  this one covers `README.md`, `CLAUDE.md`, `HOW_TO_USE.md`, `starter-kit/BOOTSTRAP.md`.
+- **The plan's headline row was wrong, and was refuted rather than applied.** It directed a fix at
+  `README.md`'s `.methodology-profile` line for documenting only one axis. That line sits inside
+  `### What's New in v3.2` — dated prose the v2.7.1 convention freezes, which the plan's *own*
+  not-edited list names — and it correctly describes what v3.2 shipped. `grep -rn "methodology-profile"`
+  returns **three hits, all inside that frozen section**: the real defect is that the marker had **no live
+  documentation anywhere**, which is the plan's residual risk #3 (*"the marker is the escape hatch;
+  document it"*). Fixed by adding operative documentation of both axes to `README.md` §Methodology
+  Dashboard and `BOOTSTRAP.md` Step 9 (distributed), leaving the v3.2 entry untouched.
+- **Verify-don't-edit, verified:** `README.md`'s "health (0-100) across 5 weighted dimensions" was
+  measured **false before the campaign** (the pre-L1 scanner scores this repo's tutorial fixture at
+  health **62** with a methodology dimension of **22**) and **true at HEAD**. No edit — as the plan said.
+- **Scope widened by operator decision, on evidence.** (a) The `HANDOFFS.md` enumeration gap the plan
+  adopted at 2 sites is systemic at **11**; all 11 are being fixed rather than leaving 9 known-stale
+  siblings behind. (b) Two stale count/size claims not caused by this campaign are included:
+  `HOW_TO_USE.md` sized `SESSION_RUNNER.md` at "~150 lines" (actual **397**) and
+  `ITERATIVE_METHODOLOGY.md` at "~587" (actual **880**).
+- **A false claim in this layer's own new prose was caught before commit.** The first draft of the
+  marker documentation asserted that the card always names the path that produced the verdict, "so a
+  marker override is never silent." Fixture-tested: a structurally-framework repo declaring `adopter`
+  renders **no** provenance line at all — only framework-role cards carry it. Corrected in place. The
+  contradiction-fallback claim was tested the same way and held (`framework adopter` on a structurally
+  framework repo → `role=framework, reason=marker-contradiction`).
+- **Recorded, deliberately not fixed here:** `CLAUDE.md`'s starter-kit table still omits three other
+  files (`CLAUDE_TEMPLATE.md`, `CONTEXT_TEMPLATE.md`, `RECOMMENDED_SKILLS.md`) — a separate, older gap
+  outside the approved scope; `docs/images/*.png` have shown pre-campaign renderings since v2.0
+  (`9639ce6`); the scanner's own module docstring documents `METHODOLOGY_ITEMS` but neither
+  `FRAMEWORK_ITEMS` nor the marker, and editing it is a code change this layer does not make.
+- **Commit/PR:** this commit (part 1 of 2). **Layer 6** — close-out, release decision R1, the owed
+  `SESSION_RUNNER.md` Learnings row, and the D4 plan correction — remains a separate session.
+- **Session:** S14 · **Verified:** `bin/check-links` OK (82 links / 21 files); `bin/tests.sh` 84 passed
+  / 0 failed; `tools/test_methodology_dashboard.py` 168 OK; twins byte-identical; exhaustive grep
+  reconciliation of both fixed classes shows every remaining hit is either the tutorials (part 2) or
+  frozen dated prose.
+
 ### 2026-07-25 · [issue #59] Dashboard signal-integrity **Layer 4** — repo role (`DASHBOARD_VERSION` 2.9.2 → 2.10.0)
 - **Change:** the fourth implementation layer of the ratified campaign plan
   `docs/planning/dashboard-signal-integrity-plan.md` (S9, `bc2481d`). Closes
