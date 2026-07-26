@@ -151,7 +151,7 @@ correctly say so.
 > `{'format': 'unrecognized', 'done': 0, 'recognized': False, 'source': 'docs/planning/BACKLOG.md'}`.
 > The *classification* half is right — the format is read as `unrecognized`, exactly as ratified.
 > But this repo emits **nothing**, because the abstention has exactly **one** disclosure surface
-> (the Signal-F advisory tuple in `detect_changelog_signals`) and that surface is gated on
+> (the Signal-F advisory tuple in `evaluate_changelog_freshness`) and that surface is gated on
 > `(path / "SESSION_RUNNER.md").is_file()` — the *adopter* test, which this repo fails: its runner
 > lives at `starter-kit/SESSION_RUNNER.md`, not the root. So the backlog lands in the abstaining
 > branch and stays silent. **Widening that gate was rejected by operator decision in S13, and that
@@ -394,8 +394,12 @@ so this test must be seen to fail against a *wrong* fix such as B, not merely pa
 > test in `tools/test_methodology_dashboard.py`.
 >
 > **(c) was verified by a test structurally incapable of failing.** The Quarto fixture reports
-> `doc_only=True` with `toolchain_present=True` — and the render-toolchain clause short-circuits the
-> corpus disjunction **before** either doc count is consulted. Probed by counterfactual: stripping the
+> `doc_only=True` with `toolchain_present=True`, and that arm is a **standing-`True` disjunct** of the
+> corpus check, so the verdict is invariant to both doc counts. (Stated precisely, because the
+> mechanism is easy to get backwards: `render["toolchain_present"]` is the **last** of the three
+> `or` operands, *reached only after* both doc-count comparisons evaluate `False` — it does not
+> short-circuit ahead of them. What makes the test unfailable is that this final arm is `True`
+> regardless, not that it is evaluated first.) Probed by counterfactual: stripping the
 > fixture's markdown doc corpus bare leaves the verdict **unchanged at `True`**. No doc-corpus
 > regression can ever move this test, so it could not have detected the framework-doc discount it was
 > cited to protect. A plain-markdown fixture now carries clause (c). **Ask what a fixture makes

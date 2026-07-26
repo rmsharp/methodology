@@ -37,10 +37,11 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 The campaign's **last layer**. No scanner code changes; `DASHBOARD_VERSION` stays **2.10.1**.
 
 - **Deferred decision R1 is SETTLED by operator decision: this is a v3.6 MINOR framework release,
-  delivered as an upstream PR (not a direct push).** The inputs at plan `:378` were put to the
-  operator with measurements: the campaign moved `DASHBOARD_VERSION` **2.8.0 → 2.10.1** across five
-  code layers, changed the `bin/_manifest.py`-distributed `starter-kit/methodology_dashboard.py` by
-  **+995 lines**, and resolves upstream #59/#60/#61 plus five unfiled defects. **v3.6 follows the
+  delivered as an upstream PR (not a direct push).** The inputs at plan **§6 *Deferred decision*
+  (R1)** were put to the operator with measurements: the campaign moved `DASHBOARD_VERSION`
+  **2.8.0 → 2.10.1** across five code layers, changed the `bin/_manifest.py`-distributed
+  `starter-kit/methodology_dashboard.py` by **890 insertions / 105 deletions (+785 net, 2,475 →
+  3,260 lines)**, and resolves upstream #59/#60/#61 plus five unfiled defects. **v3.6 follows the
   v3.2 precedent** — v3.2 was a *minor* release for a strictly smaller dashboard scoring change
   (BL-5). A `v4.0` alternative (arguing the one-time trend discontinuity is breaking) and a `v3.5.1`
   patch alternative (arguing pure defect repair) were both put on the record and both declined.
@@ -48,6 +49,10 @@ The campaign's **last layer**. No scanner code changes; `DASHBOARD_VERSION` stay
   "Current version" line **v3.5 → v3.6**. Writing §Versioning without §What's New would create
   exactly the cross-reference lag Learnings #7/#10 exist to catch, in the session whose job is to
   close the campaign — so both land together, and neither re-narrates the other beyond its audience.
+  Cite-don't-restate: the full release narrative lives in
+  [`CLAUDE.md` §Versioning](CLAUDE.md#versioning) under **v3.6**; the bullets here are the
+  per-action operational record (the Learning row, the plan corrections, the mirror-clause fix)
+  that §Versioning does not carry.
 - **New `starter-kit/SESSION_RUNNER.md` Learning #12, owed since plan §8** (table was **1–11**;
   appended, never renumbered — that file is DISTRIBUTED). *When an invariant is mechanical, encode
   it as a test — a review-time grep is a human step that silently stops happening.* Learnings #7/#10
@@ -73,8 +78,10 @@ The campaign's **last layer**. No scanner code changes; `DASHBOARD_VERSION` stay
   README. What actually refutes fix B is an **unsynced** code repo **with** a doc corpus: measured
   `False` at cap 200, **`True` at cap 3,100**. (3) **clause (c) was verified by a test structurally
   incapable of failing** — proved by counterfactual: stripping the Quarto fixture's markdown corpus
-  bare leaves the verdict **unchanged at `True`**, because the render-toolchain clause short-circuits
-  before either doc count is read. Stale scanner line citations re-derived: `:232` still correct,
+  bare leaves the verdict **unchanged at `True`**, because `render["toolchain_present"]` is a
+  standing-`True` disjunct of the corpus check (it is the **last** `or` operand, reached only after
+  both doc counts compare `False` — it does not short-circuit ahead of them; what makes the test
+  unfailable is that the arm is `True` regardless). Stale scanner line citations re-derived: `:232` still correct,
   `:1678` → **`:1841`**, `:1686` → **`:1855`**, with a note to prefer symbol names.
 - **Completeness-critic finding, fixed (Learning #10 applied to Layer 7, which Layer 5 predates).**
   Layer 7 swept its own prose (`f1cfdbc`) but documented only **half** its fix: `README.md` and
@@ -90,6 +97,40 @@ The campaign's **last layer**. No scanner code changes; `DASHBOARD_VERSION` stay
   explicitly owed by the plan's own §8 and by the S14/S15 receipts, and the two mirror-clause
   sentences are a completeness-critic fix on the campaign's last session rather than a seventh item
   passed forward unassigned.
+- **BOUNDARY REVIEW — 6 lenses, 17 findings, ALL 17 verified (no cap), 11 confirmed / 6 refuted.**
+  The verification cap was removed deliberately: S15 capped at top-3-per-lens and silently dropped
+  13 of 34 findings, several true. Deduplicated, the 11 confirmed are 8 distinct defects, and
+  **three were errors in this session's own new prose**: (a) the D4 correction cited a **fabricated
+  function name**, `detect_changelog_signals` — `git log -S` shows the identifier never existed at
+  any point in repo history; the real symbol is `evaluate_changelog_freshness`. (b) The clause-(c)
+  correction stated the **evaluation order backwards** — `render["toolchain_present"]` is the
+  **last** `or` operand, reached only after both doc counts compare `False`; it does not
+  short-circuit ahead of them. The conclusion survives and is stronger stated correctly: the arm is
+  a *standing-`True` disjunct*, so the verdict is invariant to the doc counts at every input.
+  (c) This entry cited `plan :378` for R1 — and **this same session's own plan insertions moved it**,
+  so the citation pointed at RED-first clause (d). Re-anchored to `§6`, applying the rule the
+  session had just written into the plan. Also fixed: **"+995 lines" was git's total churn presented
+  with a growth sign** (890 insertions + 105 deletions); restated as `890/105 (+785 net, 2,475 →
+  3,260)`. The ledger entry was **missing the mandated one-line §Versioning pointer** this file's
+  own header requires of a release entry. `CLAUDE.md` §Tools **omitted `tools/test_methodology_dashboard.py`**
+  — the twin of a site Layer 5 fixed in `README.md` and missed here. And a Layer 7 test docstring
+  asserted two things the clause-(b) correction refutes ("its 4,070 total clears the raised cap
+  too"; "B's cap would have to exceed 6,000") — both false post-Layer-7, since the installed scanner
+  is `vendor` and the cap sees only the adopter's own 1,000 LOC.
+- **A LIVE SCANNER DEFECT the review found, reproduced, and DELIBERATELY NOT FIXED HERE.** The
+  framework-doc discount subtracts the four **SEED** names (`CHANGELOG.md`, `SESSION_NOTES.md`,
+  `HANDOFFS.md`, `ROADMAP.md`) whenever the framework is detected as installed — but `bin/sync`
+  *leaves a seed alone* when the adopter already has one, so the scanner subtracts the adopter's
+  **own** file. Reproduced end to end: a spec repo (own 901-line `CHANGELOG.md` + `docs/spec.md`)
+  reads `doc_only=True` with a correct medium render advisory before `bin/sync`; after a sync that
+  printed `CHANGELOG.md: present (seed; left as-is)` and wrote nothing there, it reads
+  **`doc_only=False` with a false HIGH "No test infrastructure"** and health 28 → 47.
+  **NOT a Layer 7 regression** — the pre-Layer-7 scanner (2.10.0) returns the identical wrong
+  result, so v3.6 ships nothing worse than v3.5; the case is *incompletely closed*, not broken.
+  Fixing it is a code change to both twins plus tests plus a version bump — a new layer, not a
+  close-out. **What this session did instead:** stopped the docs overclaiming. `README.md` and the
+  distributed `starter-kit/BOOTSTRAP.md` now scope the guarantee to *your source count* and disclose
+  the seed gap by name, pointing at `.methodology-profile` as the fix.
 - **Deferred to the PR session, unprejudged:** plan `:42` records that **defects 6, 7, 8 and the
   fenced-code-block false positive are not filed upstream** — "file them, or let this plan stand as
   their record" is an operator decision *at merge*, and merge has not happened.

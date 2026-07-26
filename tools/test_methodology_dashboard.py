@@ -2223,10 +2223,14 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         for coverage (plan §8 learning 2).
 
         It also **corrects the plan's own RED-first clause (b)**, which asserts that the synced
-        code fixture "must be seen to fail against a wrong fix such as B". Measured, it is not:
-        at every plausible raised cap (3,100 / 4,100) a synced 1,000-LOC code repo still reads
-        `code`, because its 4,070 total clears the raised cap too — B's cap would have to exceed
-        6,000 before that fixture moves. What B actually breaks is an **unsynced** real code repo
+        code fixture "must be seen to fail against a wrong fix such as B". Measured, it is not —
+        and the reason is not the one this docstring gave before Layer 6 re-measured it. Post
+        Layer 7 the installed scanner is categorized `vendor`, so the cap never sees it: it sees
+        only the adopter's own 1,000 LOC. Raising the cap therefore does not keep the fixture
+        above it — it merely lets control fall through to the corpus disjunction, which this
+        fixture fails on a single README with no render toolchain. So the fixture reads `code` at
+        **every** cap (measured 200 / 1,000 / 3,100 / 4,100 / 6,000 / 10,000), and no threshold
+        moves it at all. What B actually breaks is an **unsynced** real code repo
         with a doc corpus, whose OWN source sits under the raised cap: it silently becomes
         doc-only and loses its "No test infrastructure" risk. That — not the synced fixture — is
         v3.2's written guarantee (a mixed code+docs repo is never misclassified) being
