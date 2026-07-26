@@ -209,7 +209,14 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   are left untouched by the v2.7.1 convention.
 - **A SECOND boundary review covered the delta the first one never saw** (`ef71946..f1cfdbc`) —
   the honest completion of the freeze-violation above rather than closing out on an unreviewed
-  diff. 3 lenses, 7 findings, 7 verified: **2 confirmed, 5 refuted.** The refutations were as
+  diff. 3 lenses, **14 findings filed, 9 verified: 2 confirmed, 7 refuted** — and **5 were never
+  verified at all**, silently dropped by the same top-3-per-lens cap that dropped 8 of review 1's
+  20. Across both reviews **13 filed findings never reached a verifier.** (This sentence originally
+  read "7 findings, 7 verified: 2 confirmed, 5 refuted" — written from a *partial* journal read
+  before the third lens reported, and never re-derived. It is corrected here from the completed
+  run, and it is the session's last instance of exactly the error class the session spent its
+  length correcting: a number carried forward instead of re-measured, inside the bullet describing
+  the review that caught that error class.) The refutations were as
   valuable as the confirmations and are recorded so they are not re-raised: a claimed laundering
   hole in the ≥2-signature fallback (**refuted** — the ratified plan prescribes a *name-only*
   exclusion with **no** content check at all, so this predicate is strictly *tighter* than
