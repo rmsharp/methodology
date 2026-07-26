@@ -170,8 +170,19 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
     code the diff they were given did not contain. Every finding above was re-verified by hand
     against the final tree before being acted on, and the delta the review never covered is being
     re-reviewed separately. Freeze first; S12 recorded this rule and this session broke it.
+- **Completeness-critic sweep (v3.4 Learning #10) — the one confirmed corpus finding, fixed.**
+  `starter-kit/BOOTSTRAP.md:273` and `README.md:137` both told the reader that *"installing the
+  methodology defeats that particular inference"* and that a document-only project therefore
+  **must** declare `doc-only` — stating this layer's defect as permanent behaviour. Layer 5 wrote
+  that prose correctly *for the code as it then stood*; Layer 7 makes it false. Both are rewritten
+  to say the inference now survives installation, to keep the (still sound) recommendation to
+  declare, and to name **2.10.1** so an adopter on an older dashboard knows the old warning still
+  applies to them. `BOOTSTRAP.md` is `bin/_manifest.py`-distributed, so this correction reaches
+  every adopter via `bin/sync`; the frozen v3.2 §What's New entries describing the old behaviour
+  are left untouched by the v2.7.1 convention.
 - **Commit/PR:** `ae9e5b7` (the ratified source-LOC exclusion), `ef71946` (the two
-  operator-approved sibling fixes), and this commit (boundary-review fixes).
+  operator-approved sibling fixes), `6f10460` (boundary-review fixes), and this commit (the
+  completeness-critic prose correction).
   `DASHBOARD_VERSION` **2.10.0 → 2.10.1**; both twins byte-identical.
 - **Session:** S15 · **Verified:** `tools/test_methodology_dashboard.py` 168 → **190** OK;
   `bin/tests.sh` **84 passed / 0 failed**; `python3 bin/check-links` OK (82 links / 21 files);
