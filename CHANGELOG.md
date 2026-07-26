@@ -32,6 +32,31 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-26 · [ad hoc] Close-out — S16 handoff receipt, self-assessment, and predecessor evaluation
+
+- **Change:** `HANDOFFS.md` S16 receipt completed (`status: pending` → `complete`,
+  `bin/check-handoff` green), plus the Phase 3A predecessor evaluation (S15, **8/10**) and the
+  Phase 3B self-assessment (**6/10**). No code; `DASHBOARD_VERSION` stays 2.10.1.
+- **Two housekeeping items closed that had been recorded-and-unassigned for three sessions:** the
+  leftover claim-time `status: pending` key sitting above S12's `status: complete` (invisible to
+  `bin/check-handoff`, which validates only the newest block, but a false positive for the portable
+  grep stop-hook `SAFEGUARDS.md` recommends) is removed, and the empty untracked `scratch_test/` at
+  the repo root is deleted. `grep -c '^status: pending' HANDOFFS.md` → **0**.
+- **Why the self-score is 6:** three of the boundary review's confirmed findings were errors in this
+  session's own new prose, all three inside the *plan corrections* — the part of the work whose whole
+  purpose was citation accuracy — including a **fabricated function name** that has never existed in
+  repo history, and a mechanism stated backwards because it was inherited from a receipt and repeated
+  without tracing the code. Against that: the tree-freeze held, the verification cap was removed, a
+  live defect was found and correctly classified as non-blocking, and it was disclosed in the release
+  note rather than shipped in silence.
+- **Why the predecessor scores 8:** S15's receipt is what made this session executable — it enumerated
+  the six owed items with reasons and recorded that its own ratified fix had proved insufficient.
+  Docked for passing forward an unverified mechanism claim ("short-circuits") that this session
+  propagated into the plan before measuring it, and for leaving the same two housekeeping items
+  unassigned a third time.
+- **Commit:** this commit. **Session:** S16 · **Verified:** `bin/check-handoff` OK · 191/191 unit ·
+  84/84 `bin/tests.sh` · `bin/check-links` OK · twins byte-identical.
+
 ### 2026-07-26 · [ad hoc] Dashboard signal-integrity **Layer 6** — campaign close-out, R1 settled as **v3.6**, and new Learning #12
 
 The campaign's **last layer**. No scanner code changes; `DASHBOARD_VERSION` stays **2.10.1**.
