@@ -78,28 +78,61 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   That is the fixture now pinned, and it is labeled a **characterization** test that passes before
   and after, so it is never mistaken for coverage of this layer.
 - **Live read-only fleet re-scan (10 repos), the Verify clause's requirement that no other repo's
-  score moves.** Exactly **one** moves, and only because the defect was live on it:
-  `dalia_martinez_funeral` **48 → 49**, `source_loc` 2,475 → 0, `doc_only` **False → True**, HIGH
-  "No test infrastructure" removed — a genuine document repo whose entire "source" was our own
-  installed scanner. All nine others are byte-stable in health, classification, and risk set
-  (`airqino` 7,530 → 5,475 LOC and `mts-system` 43,363 → 40,888 with **no** change in score or
-  class — real code repos correctly still read `code`). 5 of 10 carry an installed copy.
-- **Two live sibling defects of the same class were found and are NOT fixed here** (raised for an
-  operator decision rather than folded in silently, per FM #17): the **"Large files detected"** risk
-  still names our own installed scanner on **4 of 10** real repos (`airqino`, `church_growth`,
-  `dalia_martinez_funeral`, `mts-system`) because it keys on `largest_files`/`SOURCE_EXTS` rather
-  than the source category; and the **mirror defect this layer's own fix opens** — `bin/sync`
-  installs 22 markdown files / 6,353 doc LOC, which satisfies the corpus disjunction, so a
-  small-source repo (measured: 148 own LOC) that read `code` before sync now reads `doc-only` after
-  it and **loses** a true "No test infrastructure" risk. The pre-fix source cap accidentally masked
-  that; fix A unmasks it. Not currently firing on any live repo (no fleet member has the
-  `0 < own source ≤ 200` + synced shape), but latent.
+  score moves.** Exactly **one health score** moves, and only because the defect was live on it:
+  `dalia_martinez_funeral` **48 → 49** (testing dimension 0 → 1), `source_loc` 2,475 → 0, `doc_only`
+  **False → True**, HIGH "No test infrastructure" removed — a genuine document repo whose entire
+  "source" was our own installed scanner. Three more repos lose only the false large-file risk with
+  **no** score change (`church_growth`, `mts-system`, and `airqino`). Six are byte-stable in health,
+  classification, and risk set; **no repo anywhere gains a risk**, and `airqino` 7,530 → 5,475 LOC
+  and `mts-system` 43,363 → 40,888 correctly still read `code`. The canonical repo is unmoved at
+  health **72**. Re-run after the SEED correction tightened the corpus check: **identical** — that
+  change moves nothing on the live fleet.
+- **A deliberate limitation the fleet scan surfaced, recorded rather than papered over.** `airqino`
+  does not lose its large-file risk; the risk **relocates** to
+  `docs/methodology/tools/methodology_dashboard.py`, a *second* copy of the scanner that repo
+  vendored outside the `bin/sync` dest layout. The exclusion is root-anchored on purpose — matching
+  the basename anywhere is the laundering hole the plan forbids — so a non-dest copy is not
+  excluded, and the risk string now names the full path, which makes the provenance legible to the
+  reader. Widening the anchor is not a fix; it is the rejected rule.
+- **Two live sibling defects of the same class were found, measured, put to the operator, and — by
+  their decision — fixed here too** (raised rather than folded in silently, per FM #17):
+  - **The mirror defect this layer's own fix opened.** `bin/sync` also installs 21 markdown files
+    (~6,353 doc LOC), which satisfies `detect_doc_only`'s corpus disjunction unaided, so excluding
+    only the scanner *flipped* the defect instead of fixing it: a 148-own-LOC utility repo that
+    correctly read `code` before sync read **doc-only** after it and **lost** a true "No test
+    infrastructure" risk. The old source cap had been masking it. **Operator decision:** discount
+    installed markdown in `detect_doc_only`'s corpus check **only**, leaving the documentation
+    health dimension crediting it — so the classification stops being answerable by the installer
+    while no adopter's score moves.
+  - **The "Large files detected" risk**, which keys on `largest_files`/`SOURCE_EXTS` rather than the
+    source category, so it still named our own installed scanner — live on **4 of 10** real repos.
+    **Operator decision:** fold in, riding the `vendor` flag now carried on each `largest_files`
+    entry.
+- **The first implementation of the mirror fix was wrong, and measurement — not review — caught it.**
+  It listed only the **17 TRACKED** markdown dests, on the reasoning that a SEED is adopter-owned
+  from creation (`bin/_manifest.py`) and an adopter's own changelog documents a real project.
+  Sound in principle; **false against a real `bin/sync` run**: the four seeds plus the adopter's own
+  `README.md` are **5** doc files, which clears `DOC_ONLY_DOC_FILES_MIN` (**3**) by themselves, and
+  the 148-LOC fixture *still* flipped to doc-only. At sync time a seed is our template, not their
+  writing. All **21** dests are now listed, and the test that had encoded the refuted reasoning is
+  replaced by one that pins the measurement instead of the intuition.
+- **Two test defects in this session's own new tests, both caught before the suite was trusted.**
+  (1) `large_risks()` filtered with `"Large files" in r` — `r` is a dict, so it tested KEYS and
+  returned `[]` unconditionally; the "no false risk" assertion passed **vacuously**, and only the
+  control case (a genuinely large adopter file that must STILL be flagged) exposed it. (2) The
+  mirror-defect test built its fixture by iterating `md.FRAMEWORK_INSTALLED_DOCS` — the very
+  constant under test — so against unpatched code it raised `AttributeError` rather than failing
+  behaviourally, and could not have failed at all had the constant been wrong. Rebuilt from
+  `bin/_manifest.py` (the independent source of truth), it now REDs properly:
+  `AssertionError: True is not false : a 148-LOC code repo must not become doc-only by being synced`.
 - **Also recorded, not fixed** (pre-existing, cosmetic, outside scope): the doc-only card footnote
   builds a literal `&le;` entity and then passes it through `esc()`, so the card ships `&amp;le;`
   and the reader sees the entity text rather than `≤`. The new test asserts the true current output
   rather than the intended one.
-- **Commit/PR:** this commit. `DASHBOARD_VERSION` **2.10.0 → 2.10.1**; both twins byte-identical.
-- **Session:** S15 · **Verified:** `tools/test_methodology_dashboard.py` 168 → **182** OK;
+- **Commit/PR:** `ae9e5b7` (the ratified source-LOC exclusion) and this commit (the two
+  operator-approved sibling fixes). `DASHBOARD_VERSION` **2.10.0 → 2.10.1**; both twins
+  byte-identical.
+- **Session:** S15 · **Verified:** `tools/test_methodology_dashboard.py` 168 → **186** OK;
   `bin/tests.sh` **84 passed / 0 failed**; `python3 bin/check-links` OK (82 links / 21 files);
   `diff -q` twins identical; `py_compile` clean; runtime smoke over the real render path
   (`collect_all` → `render_project_card` → `render_methodology_grid` → `aggregate_portfolio` →

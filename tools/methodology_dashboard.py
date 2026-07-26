@@ -326,6 +326,51 @@ _VERSION_RE = re.compile(r'''^DASHBOARD_VERSION\s*=\s*["']([^"']+)["']''', re.MU
 # laundering hole the exclusion must not become.
 FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py",)
 
+# The markdown half of the same problem, and the mirror of the defect above. `bin/sync` also
+# installs 21 markdown files (~6,353 LOC), which on its own satisfies detect_doc_only's corpus
+# disjunction (>= 3 doc files). Excluding only the scanner therefore FLIPPED the defect rather
+# than fixing it: a 148-LOC utility repo that correctly read `code` before sync read `doc-only`
+# after it, and lost a TRUE "No test infrastructure" risk. The old source cap had been masking
+# that; removing the cap's grip on synced repos exposes it.
+#
+# ALL 21 markdown dests are listed, TRACKED *and* SEED. Listing only the 17 TRACKED ones was
+# tried first, on the reasoning that a SEED is adopter-owned from creation (bin/_manifest.py) —
+# and MEASURED AGAINST A REAL `bin/sync` RUN it does not close the hole: the four seeds
+# (SESSION_NOTES/CHANGELOG/HANDOFFS/ROADMAP) plus the adopter's own README are 5 doc files, which
+# clears DOC_ONLY_DOC_FILES_MIN (3) by themselves, so the 148-LOC fixture still flipped to
+# doc-only. At sync time a seed is OUR template, not the adopter's writing; it only becomes their
+# content later. The corpus question is "does this repo hold a real document corpus?", and a set
+# of methodology bookkeeping files is not one no matter who later edits it.
+#
+# Used ONLY by detect_doc_only's corpus check, by operator decision: the question "is this a
+# DOCUMENT project?" must not be answered with documents we installed, while the documentation
+# health dimension keeps counting them, so no adopter's score moves. No content check is needed
+# here (unlike the source list): excluding docs can only make doc-only classification HARDER, so
+# a repo cannot use this list to launder anything — it would only penalize itself.
+FRAMEWORK_INSTALLED_DOCS = (
+    "SESSION_RUNNER.md",
+    "SAFEGUARDS.md",
+    "RECOMMENDED_SKILLS.md",
+    "CONTEXT_TEMPLATE.md",
+    "CLAUDE_TEMPLATE.md",
+    "BOOTSTRAP.md",
+    "SESSION_NOTES.md",
+    "CHANGELOG.md",
+    "HANDOFFS.md",
+    "ROADMAP.md",
+    "docs/methodology/ITERATIVE_METHODOLOGY.md",
+    "docs/methodology/HOW_TO_USE.md",
+    "docs/methodology/workstreams/DESIGN_WORKSTREAM.md",
+    "docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md",
+    "docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md",
+    "docs/methodology/workstreams/AUDIT_WORKSTREAM.md",
+    "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",
+    "docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md",
+    "docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md",
+    "docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md",
+    "docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md",
+)
+
 
 def is_framework_installed(rel_path, fpath):
     """True for a source file `bin/sync` installed at the adopter's project ROOT.
@@ -606,6 +651,10 @@ def collect_file_metrics(path):
             "assets": {"count": 0},
             "other": {"count": 0},
         },
+        # Framework-installed markdown, counted alongside (NOT subtracted from) by_category.docs:
+        # the documentation dimension keeps crediting it, only detect_doc_only's corpus check
+        # discounts it. See FRAMEWORK_INSTALLED_DOCS for why the two questions differ.
+        "framework_docs": {"count": 0, "loc": 0},
         "largest_files": [],
         "directory_depth_max": 0,
         "directory_count": 0,
@@ -631,6 +680,7 @@ def collect_file_metrics(path):
             # already test/docs/config is untouched.
             if category == "source" and is_framework_installed(rel_path, fpath):
                 category = "vendor"
+            rel_posix = str(rel_path).replace("\\", "/")
 
             metrics["total_files"] += 1
 
@@ -655,12 +705,17 @@ def collect_file_metrics(path):
             if category in ("source", "vendor", "test", "docs", "config"):
                 metrics["by_category"][category]["count"] += 1
                 metrics["by_category"][category]["loc"] += loc
+                if category == "docs" and rel_posix in FRAMEWORK_INSTALLED_DOCS:
+                    metrics["framework_docs"]["count"] += 1
+                    metrics["framework_docs"]["loc"] += loc
             elif category in ("assets", "other"):
                 metrics["by_category"][category]["count"] += 1
 
-            # Track for largest files
+            # Track for largest files. The vendor flag rides along so the "Large files" risk can
+            # skip a file we installed without re-deriving the predicate at risk time.
             if loc > 0:
-                all_files.append({"path": str(rel_path), "loc": loc, "ext": ext})
+                all_files.append({"path": str(rel_path), "loc": loc, "ext": ext,
+                                  "vendor": category == "vendor"})
 
     metrics["directory_count"] = len(dirs_seen)
     all_files.sort(key=lambda f: f["loc"], reverse=True)
@@ -1730,8 +1785,14 @@ def detect_doc_only(path, files, render):
     # 3. Corpus disjunction (only when source is negligible): a real doc corpus OR a render
     #    toolchain — the latter catches a pure-LaTeX/Quarto repo whose .tex/.qmd are not counted
     #    as docs (so its doc_loc is ~0), the exact source_loc≈0 research repo that must not be missed.
-    doc_loc = files["by_category"]["docs"]["loc"]
-    doc_files = files["by_category"]["docs"]["count"]
+    #    Framework-installed markdown is discounted here and ONLY here: bin/sync ships 21 doc
+    #    files, which clears DOC_ONLY_DOC_FILES_MIN by itself, so counting them would let the
+    #    installer answer the question "is this a document project?" — the mirror of the very
+    #    defect the source exclusion above fixes. `.get` keeps older synthetic `files` dicts
+    #    (and any caller that builds one by hand) working unchanged.
+    fw_docs = files.get("framework_docs", {"count": 0, "loc": 0})
+    doc_loc = files["by_category"]["docs"]["loc"] - fw_docs["loc"]
+    doc_files = files["by_category"]["docs"]["count"] - fw_docs["count"]
     corpus = (
         doc_loc >= DOC_ONLY_DOC_LOC_MIN
         or doc_files >= DOC_ONLY_DOC_FILES_MIN
@@ -1914,8 +1975,14 @@ def assess_risks(metrics):
     # a document repo. Scan for the largest *source* file over the threshold rather than inspecting
     # only largest[0], so a non-source #1 (e.g. a big lockfile/JSON) doesn't mask a real large source
     # file below it (helps mixed repos too — no doc_only branch needed).
+    # Layer 7: and never a file WE installed. "Large files detected (methodology_dashboard.py:
+    # 3,070 lines)" was firing on 4 of 10 real repos — the same defect class as the source-LOC
+    # miscount, one signal over: we put our scanner in their repo, then flagged it as their
+    # problem. The canonical repo still pays for the copies it authors (tools/, starter-kit/),
+    # which are not root dests and so are never vendor.
     big_src = next((f for f in metrics["files"]["largest_files"]
-                    if f["loc"] > 2000 and f.get("ext") in SOURCE_EXTS), None)
+                    if f["loc"] > 2000 and f.get("ext") in SOURCE_EXTS
+                    and not f.get("vendor")), None)
     if big_src:
         risks.append({"severity": "medium", "description": f"Large files detected ({big_src['path']}: {big_src['loc']:,} lines)"})
 

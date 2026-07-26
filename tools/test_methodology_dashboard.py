@@ -2292,19 +2292,116 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 0)
         self.assertGreater(m["files"]["by_category"]["test"]["loc"], 0)
 
-    def test_exclusion_list_matches_the_manifest(self):
-        """Machine-checkable cross-reference (plan §8 learning 1). The scanner cannot import
-        bin/_manifest.py — adopters have no bin/ — so the name is duplicated by necessity; this
-        asserts the duplicate can never drift from its source of truth."""
+    def _manifest(self):
         manifest_path = os.path.join(os.path.dirname(HERE), "bin", "_manifest.py")
         spec = importlib.util.spec_from_file_location("manifest_for_exclusion", manifest_path)
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
+        return mod
+
+    def installed_markdown(self):
+        """The markdown `bin/sync` installs, read from the MANIFEST — the independent source of
+        truth. Fixtures are built from this, never from the scanner constant they exercise."""
+        mod = self._manifest()
+        return [dest for _s, dest, _disp in mod.DISTRIBUTION if dest.endswith(".md")]
+
+    def test_exclusion_list_matches_the_manifest(self):
+        """Machine-checkable cross-reference (plan §8 learning 1). The scanner cannot import
+        bin/_manifest.py — adopters have no bin/ — so the names are duplicated by necessity; this
+        asserts the duplicates can never drift from their source of truth."""
+        mod = self._manifest()
         non_markdown = tuple(dest for _s, dest, _d in mod.DISTRIBUTION
                              if not dest.endswith(".md"))
         self.assertEqual(non_markdown, md.FRAMEWORK_INSTALLED_SOURCE,
                          "bin/sync installs a non-markdown file the exclusion does not know about "
                          "(or vice versa) — update FRAMEWORK_INSTALLED_SOURCE")
+        all_markdown = tuple(dest for _s, dest, _d in mod.DISTRIBUTION if dest.endswith(".md"))
+        self.assertEqual(all_markdown, md.FRAMEWORK_INSTALLED_DOCS,
+                         "the doc-corpus exclusion must list every markdown dest bin/sync writes")
+
+    def test_seed_files_are_in_the_doc_exclusion_and_why(self):
+        """Pins a conclusion that was reached by MEASUREMENT after the opposite one was written
+        and refuted. The intuitive rule — a SEED is adopter-owned from creation
+        (bin/_manifest.py), so it is the adopter's writing — leaves the hole open: against a real
+        `bin/sync`, the four seeds plus the adopter's own README are 5 doc files, clearing
+        DOC_ONLY_DOC_FILES_MIN (3) unaided, and the 148-LOC fixture still flipped to doc-only. At
+        sync time a seed is our template, not their content."""
+        mod = self._manifest()
+        seeds = {dest for _s, dest, disp in mod.DISTRIBUTION if disp == mod.SEED}
+        self.assertTrue(seeds, "guard-the-guard: the manifest must actually have SEED entries")
+        self.assertTrue(seeds <= set(md.FRAMEWORK_INSTALLED_DOCS),
+                        "every SEED markdown dest must be discounted from the corpus check")
+        # The measurement itself, so the reasoning above cannot rot into an unchecked comment:
+        # seeds alone must not be able to satisfy the corpus threshold.
+        self.assertGreaterEqual(len(seeds), md.DOC_ONLY_DOC_FILES_MIN,
+                                "if this ever fails, seeds can no longer carry the threshold "
+                                "alone and this exclusion may be worth revisiting")
+
+    def test_installed_docs_do_not_make_a_code_repo_doc_only(self):
+        """The MIRROR defect, unmasked by the source exclusion and closed by operator decision.
+
+        RED against the source-exclusion-only tree: this repo read doc_only=True and LOST its
+        "No test infrastructure" risk, because bin/sync's 21 installed markdown files clear
+        DOC_ONLY_DOC_FILES_MIN (3) on their own. Installing the methodology must not answer the
+        question "is this a document project?" in EITHER direction.
+        """
+        tree = {
+            "tool.py": "def s(x):\n    return x\n" * 74,      # 148 own LOC — under the 200 cap
+            "README.md": "# Tiny tool\n\nA small utility.\n",
+            "methodology_dashboard.py": installed_scanner(),
+        }
+        # Built from the MANIFEST, never from md.FRAMEWORK_INSTALLED_DOCS: a fixture assembled by
+        # iterating the constant under test cannot fail when that constant is wrong, and would
+        # degrade this from a behavioural RED to an AttributeError (absence, not wrongness).
+        for dest in self.installed_markdown():
+            tree[dest] = "# framework doc\n" + "prose\n" * 60
+        m = md.collect_all(self._repo(tree))
+        self.assertFalse(m["doc_only"]["is_doc_only"],
+                         "a 148-LOC code repo must not become doc-only by being synced")
+        self.assertIn("No test infrastructure",
+                      [r["description"] for r in m["scores"]["risks"]],
+                      "and it must keep the risk that is TRUE of it")
+        # The documentation dimension deliberately still counts them, so no adopter's score moves.
+        self.assertGreater(m["files"]["framework_docs"]["count"], 3)
+        self.assertEqual(m["files"]["by_category"]["docs"]["count"],
+                         m["files"]["framework_docs"]["count"] + 1)   # + the adopter's README
+
+    def test_an_adopters_own_doc_corpus_still_counts(self):
+        """Guard-the-guard on the above: the discount must not swallow real documentation."""
+        tree = {"ch1.md": "# a\n" + "prose\n" * 100,
+                "ch2.md": "# b\n" + "prose\n" * 100,
+                "ch3.md": "# c\n" + "prose\n" * 100}
+        for dest in self.installed_markdown():
+            tree[dest] = "# framework doc\n" + "prose\n" * 60
+        m = md.collect_all(self._repo(tree))
+        self.assertTrue(m["doc_only"]["is_doc_only"])
+
+    def test_large_file_risk_ignores_the_installed_scanner(self):
+        """RED: fired as `Large files detected (methodology_dashboard.py: 3,070 lines)` — live on
+        4 of 10 real repos. Same class as the source miscount, one signal over."""
+        def large_risks(m):
+            # `in r` would test dict KEYS and silently return [] always — a check that cannot
+            # fail. It passed vacuously here once; the control case below is what exposed it.
+            return [r["description"] for r in m["scores"]["risks"]
+                    if "Large files" in r["description"]]
+
+        synced = md.collect_all(self._repo({
+            "app.py": "def f(x):\n    return x\n" * 50,
+            "README.md": "# app\n",
+            "methodology_dashboard.py": installed_scanner(),
+        }))
+        self.assertEqual(large_risks(synced), [])
+        # Control: a genuinely large file the ADOPTER wrote must still be flagged, and a repo
+        # that has both must be flagged for its own file rather than silently masked by ours.
+        own = md.collect_all(self._repo({
+            "huge.py": "def f(x):\n    return x\n" * 1200,   # 2,400 own LOC
+            "README.md": "# app\n",
+            "methodology_dashboard.py": installed_scanner(),
+        }))
+        flagged = large_risks(own)
+        self.assertEqual(len(flagged), 1)
+        self.assertIn("huge.py", flagged[0])
+        self.assertNotIn("methodology_dashboard.py", flagged[0])
 
     def test_stale_installed_version_is_still_excluded(self):
         """Adopters lag canonical; the marker check must match any version, not the current one."""
