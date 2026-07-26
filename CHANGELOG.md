@@ -129,10 +129,51 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   builds a literal `&le;` entity and then passes it through `esc()`, so the card ships `&amp;le;`
   and the reader sees the entity text rather than `≤`. The new test asserts the true current output
   rather than the intended one.
-- **Commit/PR:** `ae9e5b7` (the ratified source-LOC exclusion) and this commit (the two
-  operator-approved sibling fixes). `DASHBOARD_VERSION` **2.10.0 → 2.10.1**; both twins
-  byte-identical.
-- **Session:** S15 · **Verified:** `tools/test_methodology_dashboard.py` 168 → **186** OK;
+- **A 5-lens adversarial boundary review (default-to-refute) ran against the frozen tree and found
+  four more real defects, three of them in this layer's own new code.** Fixed here:
+  - **The content gate had a silent cliff.** It searched only the first **4,096 bytes** for
+    `DASHBOARD_VERSION`, which sits at byte **2,524** — **1,572 bytes of headroom**. Roughly 1.5 KB
+    of added module header would have switched the exclusion off with a fully green suite, silently
+    regressing every doc-only adopter to the v3.2 defect: a signal that stops meaning what it
+    appears to mean, planted *inside* the fix for exactly that bug. The whole file is now read (it
+    is read for line-counting regardless), and a test pins it.
+  - **The gate silently skipped copies older than the constant it looked for** — live today on
+    `feedback-loop-comparison`, which still runs a **1,614-line** pre-`DASHBOARD_VERSION` copy that
+    the fix therefore did not apply to (`source_loc` 2,585, unchanged). A structural fallback now
+    accepts a copy carrying **≥2** framework signatures; that repo reads 2,585 → **971** with no
+    change to its health (34) or class (`code`). One incidental signature is not enough, and a test
+    pins that too.
+  - **`test_a_test_file_named_like_the_scanner_is_still_a_test` was inert.** `test_*` is
+    categorized before the predicate is consulted, so `collect_all` never called
+    `is_framework_installed` at all and the test would have passed with the whole reclassification
+    deleted. Verified by instrumenting the predicate: *"invoked on: NOTHING"*. Relabeled honestly
+    and paired with a direct call. **No fixture had ever exercised the real shipped artifact**
+    either — every one used a stand-in whose marker sits on line 3; the real file's sits on line 71.
+    Now covered.
+  - **A false claim in this entry, caught by the review and corrected here: "13 of the 14 new
+    tests" was wrong — it is 12 of 14.** Three `subTest` cases of one parametrized test were counted
+    as distinct methods. Re-measured mechanically: **12** fail pre-fix, **2** pass (`test_card_omits
+    _the_disclosure_when_nothing_was_excluded` and `test_rejected_cap_fix_would_misclassify_a_real
+    _code_repo`), and only the second was labeled as passing-both-ways. Against the full
+    pre-campaign baseline the final suite is **15 fail / 3 pass**.
+  - **The docstring's "the exclusion can only ever remove a file we put there ourselves" was an
+    overclaim** — the reviewer defeated it with one pasted line (50,004 LOC exempted). Rewritten to
+    state the actual threat model: these checks prevent *accidental* miscounting, not an adversarial
+    adopter, and nothing file-local could do the latter.
+  - **Refuted, and recorded so they are not re-raised:** a claimed misclassification of the bundled
+    tutorial sample (reproduced, but *not* caused by this change); and a doc-only "helper source with
+    no tests" advisory that ignores `test_file_count` (real, but introduced by v3.2/BL-5 at
+    `:1913`, pre-existing and out of scope). A `dashboard_version` trend-arrow discontinuity was
+    also raised — that is plan residual risk **#1**, known and accepted.
+  - **Process error, recorded rather than glossed:** the tree was **not frozen** for this review —
+    the two operator-approved fixes landed while it was running, so lenses reading the live file saw
+    code the diff they were given did not contain. Every finding above was re-verified by hand
+    against the final tree before being acted on, and the delta the review never covered is being
+    re-reviewed separately. Freeze first; S12 recorded this rule and this session broke it.
+- **Commit/PR:** `ae9e5b7` (the ratified source-LOC exclusion), `ef71946` (the two
+  operator-approved sibling fixes), and this commit (boundary-review fixes).
+  `DASHBOARD_VERSION` **2.10.0 → 2.10.1**; both twins byte-identical.
+- **Session:** S15 · **Verified:** `tools/test_methodology_dashboard.py` 168 → **190** OK;
   `bin/tests.sh` **84 passed / 0 failed**; `python3 bin/check-links` OK (82 links / 21 files);
   `diff -q` twins identical; `py_compile` clean; runtime smoke over the real render path
   (`collect_all` → `render_project_card` → `render_methodology_grid` → `aggregate_portfolio` →

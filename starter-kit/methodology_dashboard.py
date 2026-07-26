@@ -372,28 +372,53 @@ FRAMEWORK_INSTALLED_DOCS = (
 )
 
 
+# Structural signatures of this scanner, for copies too old to carry DASHBOARD_VERSION. Two must
+# match, and none of them is a phrase that lands in unrelated code by accident. Measured need: a
+# live adopter (feedback-loop-comparison) still runs a 1,614-line pre-version copy, and a
+# DASHBOARD_VERSION-only gate silently skipped it — the fix quietly not applying is the same class
+# of defect as the fix being wrong.
+_FRAMEWORK_SIGNATURES = (
+    "METHODOLOGY_ITEMS",
+    "def collect_all",
+    "def score_health",
+    "def assess_risks",
+    "https://github.com/KJ5HST/methodology",
+)
+_FRAMEWORK_SIGNATURE_MIN = 2
+
+
 def is_framework_installed(rel_path, fpath):
     """True for a source file `bin/sync` installed at the adopter's project ROOT.
 
-    Deliberately narrow on two independent axes, because a file the scanner stops counting is a
-    file an adopter could hide real code in:
+    Root-anchored, not basename-matched: an adopter's own `src/methodology_dashboard.py` stays
+    their source, and the canonical repo's `tools/` + `starter-kit/` copies stay ITS source — it
+    authors that file, so its own health score must keep paying for it.
 
-    * **Root-anchored, not basename-matched.** An adopter's own `src/methodology_dashboard.py`
-      stays their source, and the canonical repo's `tools/` + `starter-kit/` copies stay ITS
-      source — it authors that file, so its own health score must keep paying for it.
-    * **Content-verified.** The file must actually declare `DASHBOARD_VERSION`. Renaming a
-      5,000-line application to `methodology_dashboard.py` at the root does not exempt it.
+    Content-verified: the file must declare `DASHBOARD_VERSION`, or carry at least two structural
+    signatures of this scanner (for copies predating that constant). The **whole file** is read,
+    not a fixed prefix — an earlier version searched only the first 4096 bytes, and the real
+    constant sits at byte 2,524 with just 1,572 bytes of headroom, so ~1.5 KB of added header
+    comment would have silently switched the exclusion off and regressed every doc-only adopter
+    to the defect this exists to fix. A silent cliff inside the fix for a silent-signal bug is
+    not a tradeoff worth keeping; the read costs nothing, since the file is read for line-counting
+    anyway.
 
-    Both checks together mean the exclusion can only ever remove a file we put there ourselves.
+    **The threat model is accidental miscounting, not an adversarial adopter.** These checks stop
+    the scanner from mistaking an adopter's own work for ours. They do NOT stop someone who
+    deliberately pastes `DASHBOARD_VERSION` into their application to dodge a score — nothing
+    file-local could, and the only thing they would win is a wrong dashboard for themselves.
     """
     if str(rel_path).replace("\\", "/") not in FRAMEWORK_INSTALLED_SOURCE:
         return False
     try:
         with open(fpath, "r", encoding="utf-8", errors="ignore") as fh:
-            head = fh.read(4096)
+            text = fh.read()
     except OSError:
         return False
-    return _VERSION_RE.search(head) is not None
+    if _VERSION_RE.search(text):
+        return True
+    hits = sum(1 for sig in _FRAMEWORK_SIGNATURES if sig in text)
+    return hits >= _FRAMEWORK_SIGNATURE_MIN
 
 
 def find_canonical(start):

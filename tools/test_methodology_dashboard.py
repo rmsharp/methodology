@@ -2286,11 +2286,64 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         self.assertGreater(m["tests"]["source_loc"], 3000)
 
     def test_a_test_file_named_like_the_scanner_is_still_a_test(self):
-        """categorize_file runs first, so the reclassification can only ever touch `source`."""
+        """categorize_file runs first, so the reclassification can only ever touch `source`.
+
+        Boundary review caught that the end-to-end half of this is INERT: `test_*` is categorized
+        before the predicate is consulted, so `collect_all` here never calls
+        is_framework_installed at all and the assertions below would hold with the whole
+        reclassification deleted. Kept for the ordering guarantee, honestly labeled, and paired
+        with a direct call so the predicate is actually exercised on this input.
+        """
         p = self._repo({"test_methodology_dashboard.py": installed_scanner(loc=400)})
         m = md.collect_all(p)
         self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 0)
         self.assertGreater(m["files"]["by_category"]["test"]["loc"], 0)
+        # Direct: even asked outright, the predicate rejects it — it is not a root dest name.
+        self.assertFalse(md.is_framework_installed(
+            Path("test_methodology_dashboard.py"), p / "test_methodology_dashboard.py"))
+
+    def test_predicate_reads_the_whole_file_not_a_prefix(self):
+        """The real scanner declares DASHBOARD_VERSION at byte ~2,524. A 4096-byte read window
+        left ~1,572 bytes of headroom, so ordinary growth of the module header would have
+        switched the exclusion off silently — a signal that stops meaning what it appears to
+        mean, inside the fix for exactly that bug. RED against the windowed version."""
+        p = self._repo({"methodology_dashboard.py":
+                        "# padding\n" * 900 + 'DASHBOARD_VERSION = "2.10.1"\n' + "x = 1\n" * 2000})
+        self.assertTrue(md.is_framework_installed(
+            Path("methodology_dashboard.py"), p / "methodology_dashboard.py"))
+        self.assertEqual(md.collect_all(p)["tests"]["source_loc"], 0)
+
+    def test_the_real_shipped_artifact_is_recognized(self):
+        """Every other fixture uses a stand-in. If the stand-in and the real file ever diverge in
+        a way the predicate cares about, only this test notices."""
+        real = Path(STARTER_PY).read_text(encoding="utf-8")
+        p = self._repo({"methodology_dashboard.py": real, "README.md": "# adopter\n"})
+        m = md.collect_all(p)
+        self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 1)
+        self.assertEqual(m["tests"]["source_loc"], 0)
+
+    def test_pre_version_copies_are_recognized_by_structure(self):
+        """A live adopter still runs a 1,614-line copy that predates DASHBOARD_VERSION entirely.
+        A version-only gate silently skipped it — the fix not applying is as bad as it being
+        wrong, and worse to notice. Two structural signatures are required, so an unrelated
+        application cannot trip it by mentioning one word."""
+        legacy = ('#!/usr/bin/env python3\n'
+                  '"""Methodology Dashboard -- Portfolio health scanner.\n'
+                  'https://github.com/KJ5HST/methodology\n"""\n'
+                  'METHODOLOGY_ITEMS = []\n'
+                  'def collect_all(p):\n    return {}\n' + "x = 1\n" * 1600)
+        self.assertNotIn("DASHBOARD_VERSION", legacy)
+        p = self._repo({"methodology_dashboard.py": legacy, "README.md": "# adopter\n"})
+        self.assertEqual(md.collect_all(p)["tests"]["source_loc"], 0)
+
+    def test_one_incidental_signature_is_not_enough(self):
+        """Guard-the-guard on the structural fallback: a single mention must not exempt a file."""
+        app = ("# our internal dashboard\n"
+               "def collect_all(items):\n    return list(items)\n" + "y = 2\n" * 1000)
+        p = self._repo({"methodology_dashboard.py": app, "README.md": "# adopter\n"})
+        self.assertFalse(md.is_framework_installed(
+            Path("methodology_dashboard.py"), p / "methodology_dashboard.py"))
+        self.assertGreater(md.collect_all(p)["tests"]["source_loc"], 200)
 
     def _manifest(self):
         manifest_path = os.path.join(os.path.dirname(HERE), "bin", "_manifest.py")
