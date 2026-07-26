@@ -69,8 +69,26 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   outside the approved scope; `docs/images/*.png` have shown pre-campaign renderings since v2.0
   (`9639ce6`); the scanner's own module docstring documents `METHODOLOGY_ITEMS` but neither
   `FRAMEWORK_ITEMS` nor the marker, and editing it is a code change this layer does not make.
-- **Commit/PR:** this commit (part 1 of 2). **Layer 6** — close-out, release decision R1, the owed
-  `SESSION_RUNNER.md` Learnings row, and the D4 plan correction — remains a separate session.
+- **Part 2 — the tutorials** (`T1_setup.md`, `T7_portfolio_dashboard.md`, `T8_keeping_current.md`):
+  the remaining `HANDOFFS.md` enumeration sites, including **T8's worked `bin/status` transcript**,
+  which showed three SEED rows where the tool emits four — a learner compares their own output
+  against that block. T8's "all **21** distributed files" corrected to **22**, verified by counting
+  `bin/status` rows against a real synced fixture (21 is the *markdown* count `bin/check-links`
+  reports; `bin/status` covers the manifest's 22 entries, `methodology_dashboard.py` included).
+- **T7 now teaches the Layer 3 abstention, because the campaign made it fire on the tutorials' own
+  sample project.** `docs/tutorials/sample-project/BACKLOG.md` is a feature table with no `Status`
+  column and no checkboxes, so at HEAD it scans `format: unrecognized` and the sample — the repo T7
+  presents as "the methodology working as designed" — now carries a LOW advisory T7 never mentioned.
+  Measured on a rebuilt post-T1 fixture (`sample-project` + `git init` + `bin/sync`): pre-campaign
+  3 medium + 1 low; at HEAD the same plus that new LOW. The advisory is quoted **verbatim** (asserted
+  byte-equal against the live risk string) and taught as the design working: an unjustifiable 0 would
+  be indistinguishable from a clean backlog, so abstention says the signal is *off*, not *green*.
+  Two adjacent claims corrected because the addition would otherwise contradict them: T7's expected
+  result and risk-bucket cell said the sample's only flag was `No CI/CD`, and the fixture carries
+  three mediums — that inaccuracy predates this campaign.
+- **Commit/PR:** `baa1dd1` (part 1, core docs) and this commit (part 2, tutorials); split only by the
+  5-file per-commit cap. **Layer 6** — close-out, release decision R1, the owed `SESSION_RUNNER.md`
+  Learnings row, and the D4 plan correction — remains a separate session.
 - **Session:** S14 · **Verified:** `bin/check-links` OK (82 links / 21 files); `bin/tests.sh` 84 passed
   / 0 failed; `tools/test_methodology_dashboard.py` 168 OK; twins byte-identical; exhaustive grep
   reconciliation of both fixed classes shows every remaining hit is either the tutorials (part 2) or
