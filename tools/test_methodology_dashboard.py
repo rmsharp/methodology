@@ -2314,7 +2314,10 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         self.assertEqual(md.collect_all(p)["tests"]["source_loc"], 0)
 
     def test_the_real_shipped_artifact_is_recognized(self):
-        """Every other fixture uses a stand-in. If the stand-in and the real file ever diverge in
+        """Guard-the-guard, and it passes both before and after by construction — the real file's
+        marker sits at byte 2,524, inside the old 4,096-byte window, so this cannot RED against it
+        (test_predicate_reads_the_whole_file_not_a_prefix is what catches that). Its value is as a
+        stand-in-vs-real-artifact drift guard. Every other fixture uses a stand-in. If the stand-in and the real file ever diverge in
         a way the predicate cares about, only this test notices."""
         real = Path(STARTER_PY).read_text(encoding="utf-8")
         p = self._repo({"methodology_dashboard.py": real, "README.md": "# adopter\n"})
@@ -2368,27 +2371,58 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         self.assertEqual(non_markdown, md.FRAMEWORK_INSTALLED_SOURCE,
                          "bin/sync installs a non-markdown file the exclusion does not know about "
                          "(or vice versa) — update FRAMEWORK_INSTALLED_SOURCE")
-        all_markdown = tuple(dest for _s, dest, _d in mod.DISTRIBUTION if dest.endswith(".md"))
-        self.assertEqual(all_markdown, md.FRAMEWORK_INSTALLED_DOCS,
-                         "the doc-corpus exclusion must list every markdown dest bin/sync writes")
+        tracked_md = tuple(dest for _s, dest, disp in mod.DISTRIBUTION
+                           if dest.endswith(".md") and disp == mod.TRACKED)
+        seed_md = tuple(dest for _s, dest, disp in mod.DISTRIBUTION
+                        if dest.endswith(".md") and disp == mod.SEED)
+        self.assertEqual(tracked_md, md.FRAMEWORK_INSTALLED_DOCS,
+                         "the unconditional doc discount must be exactly the TRACKED markdown "
+                         "dests — the names nobody writes by coincidence")
+        self.assertEqual(seed_md, md.FRAMEWORK_SEED_DOCS,
+                         "the evidence-gated discount must be exactly the SEED markdown dests")
+        self.assertEqual(set(tracked_md) & set(seed_md), set(),
+                         "a dest discounted both ways would be counted out twice")
 
-    def test_seed_files_are_in_the_doc_exclusion_and_why(self):
-        """Pins a conclusion that was reached by MEASUREMENT after the opposite one was written
-        and refuted. The intuitive rule — a SEED is adopter-owned from creation
-        (bin/_manifest.py), so it is the adopter's writing — leaves the hole open: against a real
-        `bin/sync`, the four seeds plus the adopter's own README are 5 doc files, clearing
-        DOC_ONLY_DOC_FILES_MIN (3) unaided, and the 148-LOC fixture still flipped to doc-only. At
-        sync time a seed is our template, not their content."""
-        mod = self._manifest()
-        seeds = {dest for _s, dest, disp in mod.DISTRIBUTION if disp == mod.SEED}
-        self.assertTrue(seeds, "guard-the-guard: the manifest must actually have SEED entries")
-        self.assertTrue(seeds <= set(md.FRAMEWORK_INSTALLED_DOCS),
-                        "every SEED markdown dest must be discounted from the corpus check")
-        # The measurement itself, so the reasoning above cannot rot into an unchecked comment:
-        # seeds alone must not be able to satisfy the corpus threshold.
-        self.assertGreaterEqual(len(seeds), md.DOC_ONLY_DOC_FILES_MIN,
-                                "if this ever fails, seeds can no longer carry the threshold "
-                                "alone and this exclusion may be worth revisiting")
+    def test_seed_docs_need_evidence_the_framework_was_installed(self):
+        """The delta boundary review's confirmed regression, and the plan's RED-first clause (c)
+        — "an UNSYNCED doc repo is unchanged" — instantiated where it can actually fail.
+
+        The shipped clause-(c) test uses the Quarto fixture, whose `_quarto.yml` satisfies the
+        render-toolchain arm of the corpus disjunction; that arm short-circuits the doc counts, so
+        that fixture is STRUCTURALLY INCAPABLE of detecting a doc-corpus discount. This one is
+        plain markdown with no toolchain, so the discount is the only thing that can move it.
+
+        Measured regression it pins: a spec repo that never ran `bin/sync`, whose corpus is its own
+        900-line CHANGELOG.md, was flipped `doc-only -> code` and handed a false HIGH "No test
+        infrastructure" — the v3.2 false penalty, re-created by the fix for its mirror.
+        """
+        spec = self._repo({
+            "README.md": "# Spec\n\nA specification repository.\n",
+            "docs/spec.md": "# Spec\n" + "clause\n" * 190,
+            "CHANGELOG.md": "# Changelog\n" + "- a change\n" * 900,   # the adopter's OWN
+        })
+        m = md.collect_all(spec)
+        self.assertFalse(m["render"]["toolchain_present"],
+                         "guard-the-guard: no toolchain, so only the doc counts can decide this")
+        self.assertEqual(m["files"]["framework_docs"], {"count": 0, "loc": 0},
+                         "nothing here is ours — the framework was never installed")
+        self.assertTrue(m["doc_only"]["is_doc_only"])
+        self.assertNotIn("No test infrastructure",
+                         [r["description"] for r in m["scores"]["risks"]])
+
+    def test_seed_docs_are_discounted_once_the_framework_is_present(self):
+        """The other side of the gate: with a distinctive dest present the seeds ARE ours, so a
+        synced repo cannot use them to look like a document corpus."""
+        tree = {"README.md": "# app\n",
+                "tool.py": "def s(x):\n    return x\n" * 74,          # 148 own LOC
+                "CHANGELOG.md": "# Changelog\n" + "- a change\n" * 900}
+        for dest in self.installed_markdown():
+            tree[dest] = "# framework doc\n" + "prose\n" * 60
+        m = md.collect_all(self._repo(tree))
+        self.assertGreaterEqual(m["files"]["framework_docs"]["count"], 21)
+        self.assertFalse(m["doc_only"]["is_doc_only"])
+        self.assertIn("No test infrastructure",
+                      [r["description"] for r in m["scores"]["risks"]])
 
     def test_installed_docs_do_not_make_a_code_repo_doc_only(self):
         """The MIRROR defect, unmasked by the source exclusion and closed by operator decision.
@@ -2430,8 +2464,10 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         self.assertTrue(m["doc_only"]["is_doc_only"])
 
     def test_large_file_risk_ignores_the_installed_scanner(self):
-        """RED: fired as `Large files detected (methodology_dashboard.py: 3,070 lines)` — live on
-        4 of 10 real repos. Same class as the source miscount, one signal over."""
+        """RED: fired as `Large files detected (methodology_dashboard.py: 2,475 lines)` — live on
+        4 of 10 real repos. Same class as the source miscount, one signal over. (The quoted LOC is
+        the value actually observed in the field, not this file's fixture default: adopters lag
+        canonical, so the real strings were 2,055 and 2,475, never the stand-in's 3,073.)"""
         def large_risks(m):
             # `in r` would test dict KEYS and silently return [] always — a check that cannot
             # fail. It passed vacuously here once; the control case below is what exposed it.
@@ -2479,6 +2515,8 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
                       "'Source LOC' must say what it excludes, or it reads as a scanner error")
 
     def test_card_omits_the_disclosure_when_nothing_was_excluded(self):
+        """Guard-the-guard; passes both before and after, since asserting the ABSENCE of a string
+        is trivially true before that string exists. Labeled per the module docstring's rule."""
         card = md.render_project_card(md.collect_all(self._repo({
             "app.py": "def f(x):\n    return x\n" * 200, "README.md": "# app\n"})))
         self.assertNotIn("Framework (installed)", card)

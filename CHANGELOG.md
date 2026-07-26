@@ -70,20 +70,26 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   canonical, and an exclusion that only matched the current version would leave them mis-measured.
 - **THE PLAN'S OWN RED-FIRST PROOF (b) IS WRONG, AND THE CORRECTION IS SHIPPED AS A TEST.** Plan
   `:354` requires that the synced code fixture "be seen to fail against a wrong fix such as B, not
-  merely pass against A". Measured: it does not. At every plausible raised cap (3,100 / 4,100) that
-  fixture still reads `code`, because its 4,070 total clears the raised cap too — B would have to
-  exceed **6,000** before it moves. What B actually breaks is an **unsynced** real code repo with a
-  doc corpus, whose own source sits under the raised cap: at cap 4,100 a 996-LOC code repo flips to
-  `doc-only` and **loses** its "No test infrastructure" risk — v3.2's written guarantee surrendered.
+  merely pass against A". Measured: it does not. That fixture reads `code` at **every** cap —
+  200, 3,100, 4,100, 6,000, 10,000 — because its docs are a single `README.md`, so the corpus arm
+  never fires and no threshold can move it. (An earlier draft of this bullet said "B would have to
+  exceed 6,000"; that number came from a *different* fixture, one carrying a real `bin/sync` doc
+  set, and was reported as though it described the shipped one — corrected after re-execution.)
+  What B actually breaks is an **unsynced** real code repo with a
+  doc corpus, whose own source sits under the raised cap: at cap 4,100 a 1,000-LOC code repo flips
+  to `doc-only` and **loses** its "No test infrastructure" risk — v3.2's written guarantee surrendered.
   That is the fixture now pinned, and it is labeled a **characterization** test that passes before
   and after, so it is never mistaken for coverage of this layer.
 - **Live read-only fleet re-scan (10 repos), the Verify clause's requirement that no other repo's
   score moves.** Exactly **one health score** moves, and only because the defect was live on it:
   `dalia_martinez_funeral` **48 → 49** (testing dimension 0 → 1), `source_loc` 2,475 → 0, `doc_only`
   **False → True**, HIGH "No test infrastructure" removed — a genuine document repo whose entire
-  "source" was our own installed scanner. Three more repos lose only the false large-file risk with
-  **no** score change (`church_growth`, `mts-system`, and `airqino`). Six are byte-stable in health,
-  classification, and risk set; **no repo anywhere gains a risk**, and `airqino` 7,530 → 5,475 LOC
+  "source" was our own installed scanner. Two more repos lose the false large-file risk outright with
+  **no** score change (`church_growth`, `mts-system`); `airqino` does not lose it — see the next
+  bullet. Six are byte-stable in health,
+  classification, and risk set. **The only risk description gained anywhere is `airqino`'s
+  relocated large-file entry** (one lost, one gained, same underlying file) — no repo gains a new
+  *kind* of risk, and none gains one that is true of it. `airqino` 7,530 → 5,475 LOC
   and `mts-system` 43,363 → 40,888 correctly still read `code`. The canonical repo is unmoved at
   health **72**. Re-run after the SEED correction tightened the corpus check: **identical** — that
   change moves nothing on the live fleet.
@@ -97,13 +103,19 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 - **Two live sibling defects of the same class were found, measured, put to the operator, and — by
   their decision — fixed here too** (raised rather than folded in silently, per FM #17):
   - **The mirror defect this layer's own fix opened.** `bin/sync` also installs 21 markdown files
-    (~6,353 doc LOC), which satisfies `detect_doc_only`'s corpus disjunction unaided, so excluding
+    (**6,350** doc LOC), which satisfies `detect_doc_only`'s corpus disjunction unaided, so excluding
     only the scanner *flipped* the defect instead of fixing it: a 148-own-LOC utility repo that
     correctly read `code` before sync read **doc-only** after it and **lost** a true "No test
     infrastructure" risk. The old source cap had been masking it. **Operator decision:** discount
-    installed markdown in `detect_doc_only`'s corpus check **only**, leaving the documentation
-    health dimension crediting it — so the classification stops being answerable by the installer
-    while no adopter's score moves.
+    installed markdown in `detect_doc_only`'s corpus check **only**, so the classification stops
+    being answerable by the installer. **The reason given for that scoping was wrong, and the
+    delta review caught it:** the operator was told full symmetry would move every synced
+    adopter's documentation score. It would not — `score_health`'s documentation dimension is
+    `readme_quality + has_docs_dir + has_changelog + has_license + has_roadmap + has_todo` and
+    never reads `by_category["docs"]` at all (verified dynamically: subtracting the docs outright
+    yields a byte-identical health dict). The decision stands on the display axis, where
+    `doc_to_source_ratio` and the Docs row do read those counts; the score tradeoff it was
+    justified with does not exist.
   - **The "Large files detected" risk**, which keys on `largest_files`/`SOURCE_EXTS` rather than the
     source category, so it still named our own installed scanner — live on **4 of 10** real repos.
     **Operator decision:** fold in, riding the `vendor` flag now carried on each `largest_files`
@@ -154,8 +166,11 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
     tests" was wrong — it is 12 of 14.** Three `subTest` cases of one parametrized test were counted
     as distinct methods. Re-measured mechanically: **12** fail pre-fix, **2** pass (`test_card_omits
     _the_disclosure_when_nothing_was_excluded` and `test_rejected_cap_fix_would_misclassify_a_real
-    _code_repo`), and only the second was labeled as passing-both-ways. Against the full
-    pre-campaign baseline the final suite is **15 fail / 3 pass**.
+    _code_repo`), and only the second was labeled as passing-both-ways. Against the pre-Layer-7
+    baseline (`65b1e8e`) the final suite is **20 fail / 3 pass** of 23 methods, re-measured
+    mechanically after the last commit rather than carried forward — the earlier "15 / 3" was
+    itself measured one commit early, inside the very bullet that exists to correct a stale
+    verification figure.
   - **The docstring's "the exclusion can only ever remove a file we put there ourselves" was an
     overclaim** — the reviewer defeated it with one pasted line (50,004 LOC exempted). Rewritten to
     state the actual threat model: these checks prevent *accidental* miscounting, not an adversarial
@@ -180,11 +195,58 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   applies to them. `BOOTSTRAP.md` is `bin/_manifest.py`-distributed, so this correction reaches
   every adopter via `bin/sync`; the frozen v3.2 §What's New entries describing the old behaviour
   are left untouched by the v2.7.1 convention.
+- **A SECOND boundary review covered the delta the first one never saw** (`ef71946..f1cfdbc`) —
+  the honest completion of the freeze-violation above rather than closing out on an unreviewed
+  diff. 3 lenses, 7 findings, 7 verified: **2 confirmed, 5 refuted.** The refutations were as
+  valuable as the confirmations and are recorded so they are not re-raised: a claimed laundering
+  hole in the ≥2-signature fallback (**refuted** — the ratified plan prescribes a *name-only*
+  exclusion with **no** content check at all, so this predicate is strictly *tighter* than
+  ratified, and the paste-one-line hole is identical at `ae9e5b7`); an unbounded whole-file read
+  (**refuted** — the pre-campaign scanner already had ten uncapped whole-file reads and peaks
+  *higher* via `count_lines` on a newline-free file, and the proposed `read(8192)` remedy fails
+  the shipped RED fixture); the `largest_files[:10]` truncation (**refuted** — byte-identical
+  since before the campaign, and the delta *strictly improves* every in-window case); `airqino`'s
+  relocated risk (**refuted** — that path is a manual full re-vendor of the whole upstream repo,
+  not a `bin/sync` product, and the proposed basename-anywhere fix would make the canonical repo
+  stop counting 6,452 LOC it authors, health 72 → 76); and a UTF-16 encoding gap (**refuted** —
+  pre-existing, and unreachable through `bin/sync`, which writes raw bytes).
+- **CONFIRMED and fixed here — a regression this session introduced.** The doc discount was
+  applied with **no evidence the framework was ever installed**. `CHANGELOG.md`, `ROADMAP.md`,
+  `SESSION_NOTES.md` and `HANDOFFS.md` are ordinary names thousands of repos author themselves, so
+  a spec repo that never ran `bin/sync` — corpus in its own 900-line `CHANGELOG.md` — had that
+  file subtracted, flipped **`doc-only` → `code`**, and gained a **false HIGH "No test
+  infrastructure"**: the exact v3.2 false penalty, re-created by the fix for its mirror. Measured
+  on a policy fixture with link-check CI, health **51 → 49**. It also violated the plan's own
+  RED-first clause **(c)** ("an *unsynced* doc repo is unchanged"), and **the shipped test for (c)
+  could never have caught it** — that test uses the Quarto fixture, whose `_quarto.yml` satisfies
+  the render-toolchain arm and short-circuits the doc counts, making it *structurally* incapable
+  of detecting a doc-corpus discount. Live proof of the mis-attribution: this repo was discounting
+  **2 files / 1,879 LOC** of its own authored `CHANGELOG.md` + `HANDOFFS.md` (now `{0, 0}`).
+  **Fix:** the list is split — 17 **distinctive** dests (nobody writes a root `SESSION_RUNNER.md`
+  by coincidence) are discounted unconditionally and are themselves the install evidence; the 4
+  ordinary **SEED** names are discounted only when a distinctive dest is present. The gate is
+  deliberately *not* "is the installed scanner present" — `BOOTSTRAP.md` documents a manual-copy
+  install and 3 fleet repos carry framework markdown with no root scanner. A new test pins clause
+  (c) on a **plain-markdown** doc repo, where the discount is the only thing that can move it.
+- **CONFIRMED and fixed here — "15 fail / 3 pass" was itself stale**, measured at `ef71946` and
+  written into `6f10460`, the very commit that added 4 more tests. Re-measured mechanically
+  against the pre-Layer-7 baseline: **20 fail / 3 pass of 23**. A stale verification figure inside
+  the bullet that exists to correct a stale verification figure.
+- **Further prose corrections from that review, each re-derived rather than reasoned about:**
+  installed markdown is **6,350** LOC, not 6,353 (the extra 3 were the adopter's own README —
+  the file count had been corrected 22 → 21 without re-deriving the LOC); **6 of 10** fleet repos
+  carry an installed copy, not 5; the fleet bullet said `airqino` "loses" its risk while the next
+  bullet said it "relocates" — the summary now matches the evidence; a test docstring quoted
+  `Large files detected (…: 3,070 lines)` as **observed field output** when no live repo ever
+  emitted it (adopters lag, so the real strings were 2,055 and 2,475 — a fixture default presented
+  as a measurement); an inline comment asserted the **inverse** of the assertion beneath it; and
+  `test_the_real_shipped_artifact_is_recognized` / `test_card_omits_the_disclosure_when_nothing
+  _was_excluded` are now labeled as passing-both-ways, per the module docstring's own rule.
 - **Commit/PR:** `ae9e5b7` (the ratified source-LOC exclusion), `ef71946` (the two
-  operator-approved sibling fixes), `6f10460` (boundary-review fixes), and this commit (the
-  completeness-critic prose correction).
+  operator-approved sibling fixes), `6f10460` (first boundary-review fixes), `f1cfdbc` (the
+  completeness-critic prose correction), and this commit (delta-review fixes).
   `DASHBOARD_VERSION` **2.10.0 → 2.10.1**; both twins byte-identical.
-- **Session:** S15 · **Verified:** `tools/test_methodology_dashboard.py` 168 → **190** OK;
+- **Session:** S15 · **Verified:** `tools/test_methodology_dashboard.py` 168 → **191** OK;
   `bin/tests.sh` **84 passed / 0 failed**; `python3 bin/check-links` OK (82 links / 21 files);
   `diff -q` twins identical; `py_compile` clean; runtime smoke over the real render path
   (`collect_all` → `render_project_card` → `render_methodology_grid` → `aggregate_portfolio` →

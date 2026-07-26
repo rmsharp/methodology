@@ -313,7 +313,7 @@ _VERSION_RE = re.compile(r'''^DASHBOARD_VERSION\s*=\s*["']([^"']+)["']''', re.MU
 
 # Non-markdown files `bin/sync` installs into an ADOPTER project root, as adopter-relative dest
 # paths. Installing the methodology must not change how the adopter's OWN code is measured: this
-# scanner is 3,070 lines against a 200-LOC doc-only cap, so counting it as adopter source made
+# scanner is thousands of lines against a 200-LOC doc-only cap, so counting it as adopter source made
 # `bin/sync` destroy the very fair-scoring v3.2 shipped (a synced Quarto book flipped doc_only
 # True -> False and got its "No test infrastructure" penalty back). The signal did not mean what
 # it appeared to mean: it meant *we put our own scanner in your repo and then counted it against
@@ -343,10 +343,14 @@ FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py",)
 # of methodology bookkeeping files is not one no matter who later edits it.
 #
 # Used ONLY by detect_doc_only's corpus check, by operator decision: the question "is this a
-# DOCUMENT project?" must not be answered with documents we installed, while the documentation
-# health dimension keeps counting them, so no adopter's score moves. No content check is needed
+# DOCUMENT project?" must not be answered with documents we installed. No content check is needed
 # here (unlike the source list): excluding docs can only make doc-only classification HARDER, so
 # a repo cannot use this list to launder anything — it would only penalize itself.
+#
+# SPLIT INTO TWO LISTS, because the false-penalty direction is a real defect even though the
+# laundering direction is not. These 17 names are DISTINCTIVE — nobody writes a root
+# `SESSION_RUNNER.md` or a `docs/methodology/workstreams/…` by coincidence — so their presence is
+# itself the evidence that the framework was installed, and they are discounted unconditionally.
 FRAMEWORK_INSTALLED_DOCS = (
     "SESSION_RUNNER.md",
     "SAFEGUARDS.md",
@@ -354,10 +358,6 @@ FRAMEWORK_INSTALLED_DOCS = (
     "CONTEXT_TEMPLATE.md",
     "CLAUDE_TEMPLATE.md",
     "BOOTSTRAP.md",
-    "SESSION_NOTES.md",
-    "CHANGELOG.md",
-    "HANDOFFS.md",
-    "ROADMAP.md",
     "docs/methodology/ITERATIVE_METHODOLOGY.md",
     "docs/methodology/HOW_TO_USE.md",
     "docs/methodology/workstreams/DESIGN_WORKSTREAM.md",
@@ -371,9 +371,28 @@ FRAMEWORK_INSTALLED_DOCS = (
     "docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md",
 )
 
+# The four SEED dests. These names are ORDINARY — thousands of repos author a CHANGELOG.md or a
+# ROADMAP.md and never heard of this framework — so they are discounted only when one of the
+# distinctive dests above proves the framework really was installed. Discounting them
+# unconditionally was a measured regression: a spec repo that never ran `bin/sync`, whose corpus
+# lived in its own 900-line CHANGELOG.md, lost that file from the corpus check, flipped
+# `doc-only -> code`, and gained a false HIGH "No test infrastructure" — the exact false penalty
+# v3.2 exists to remove, re-created by the fix for its mirror. Found by the delta boundary review.
+#
+# The evidence gate is deliberately NOT "is the installed scanner present": BOOTSTRAP.md documents
+# a manual-copy install, and three real fleet repos carry framework markdown with no root scanner,
+# so keying on the scanner would silently stop discounting for them.
+FRAMEWORK_SEED_DOCS = (
+    "SESSION_NOTES.md",
+    "CHANGELOG.md",
+    "HANDOFFS.md",
+    "ROADMAP.md",
+)
+
 
 # Structural signatures of this scanner, for copies too old to carry DASHBOARD_VERSION. Two must
-# match, and none of them is a phrase that lands in unrelated code by accident. Measured need: a
+# match. Three are ordinary function names, so two hits are suggestive rather than proof — this is
+# a heuristic, and the .methodology-profile marker is the documented override. Measured need: a
 # live adopter (feedback-loop-comparison) still runs a 1,614-line pre-version copy, and a
 # DASHBOARD_VERSION-only gate silently skipped it — the fix quietly not applying is the same class
 # of defect as the fix being wrong.
@@ -403,8 +422,8 @@ def is_framework_installed(rel_path, fpath):
     not a tradeoff worth keeping; the read costs nothing, since the file is read for line-counting
     anyway.
 
-    **The threat model is accidental miscounting, not an adversarial adopter.** These checks stop
-    the scanner from mistaking an adopter's own work for ours. They do NOT stop someone who
+    **The threat model is accidental miscounting, not an adversarial adopter.** These checks make
+    it unlikely that the scanner mistakes an adopter's own work for ours. They do NOT stop someone who
     deliberately pastes `DASHBOARD_VERSION` into their application to dodge a score — nothing
     file-local could, and the only thing they would win is a wrong dashboard for themselves.
     """
@@ -687,6 +706,10 @@ def collect_file_metrics(path):
 
     all_files = []
     dirs_seen = set()
+    # Seed-named docs are held aside during the walk: whether they are OURS depends on evidence
+    # that only appears elsewhere in the tree, which the walk may not have reached yet.
+    seed_docs = {"count": 0, "loc": 0}
+    saw_distinctive_framework_doc = False
 
     for root_dir, dirs, files in os.walk(path):
         dirs[:] = [d for d in dirs if d not in WALK_SKIP]
@@ -730,9 +753,15 @@ def collect_file_metrics(path):
             if category in ("source", "vendor", "test", "docs", "config"):
                 metrics["by_category"][category]["count"] += 1
                 metrics["by_category"][category]["loc"] += loc
-                if category == "docs" and rel_posix in FRAMEWORK_INSTALLED_DOCS:
-                    metrics["framework_docs"]["count"] += 1
-                    metrics["framework_docs"]["loc"] += loc
+                if category == "docs":
+                    if rel_posix in FRAMEWORK_INSTALLED_DOCS:
+                        metrics["framework_docs"]["count"] += 1
+                        metrics["framework_docs"]["loc"] += loc
+                        saw_distinctive_framework_doc = True
+                    elif rel_posix in FRAMEWORK_SEED_DOCS:
+                        # Held aside; folded in below only if the framework is really installed.
+                        seed_docs["count"] += 1
+                        seed_docs["loc"] += loc
             elif category in ("assets", "other"):
                 metrics["by_category"][category]["count"] += 1
 
@@ -741,6 +770,11 @@ def collect_file_metrics(path):
             if loc > 0:
                 all_files.append({"path": str(rel_path), "loc": loc, "ext": ext,
                                   "vendor": category == "vendor"})
+
+    # A CHANGELOG.md is ours only in a repo that also carries a file nobody writes by accident.
+    if saw_distinctive_framework_doc:
+        metrics["framework_docs"]["count"] += seed_docs["count"]
+        metrics["framework_docs"]["loc"] += seed_docs["loc"]
 
     metrics["directory_count"] = len(dirs_seen)
     all_files.sort(key=lambda f: f["loc"], reverse=True)
@@ -2001,7 +2035,7 @@ def assess_risks(metrics):
     # only largest[0], so a non-source #1 (e.g. a big lockfile/JSON) doesn't mask a real large source
     # file below it (helps mixed repos too — no doc_only branch needed).
     # Layer 7: and never a file WE installed. "Large files detected (methodology_dashboard.py:
-    # 3,070 lines)" was firing on 4 of 10 real repos — the same defect class as the source-LOC
+    # 2,475 lines)" was firing on 4 of 10 real repos — the same defect class as the source-LOC
     # miscount, one signal over: we put our scanner in their repo, then flagged it as their
     # problem. The canonical repo still pays for the copies it authors (tools/, starter-kit/),
     # which are not root dests and so are never vendor.
@@ -2472,7 +2506,7 @@ def render_project_card(p):
         f'<tr><td>Framework (installed)</td><td class="num">{vendor["count"]:,}</td>'
         f'<td class="num">{vendor["loc"]:,}</td></tr>' if vendor["count"] else "")
     # Same disclosure in the Testing section, where "Source LOC: 0" on a repo that visibly
-    # contains a 3,070-line file would otherwise read as a scanner error.
+    # contains a multi-thousand-line file would otherwise read as a scanner error.
     vendor_note = (
         f'<div class="kv" style="font-size:0.8em;opacity:0.7">'
         f'(excludes {vendor["loc"]:,} LOC of framework-installed files)</div>'
