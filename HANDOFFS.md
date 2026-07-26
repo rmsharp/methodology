@@ -8,6 +8,13 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S15
+date: 2026-07-25
+status: pending
+active_task: Layer 7 of docs/planning/dashboard-signal-integrity-plan.md (:305-364) — the ratified amendment that executes BEFORE Layer 6. The installer defeats doc-only detection: bin/sync installs methodology_dashboard.py (3,070 lines) to the adopter ROOT (bin/_manifest.py:43, TRACKED) while DOC_ONLY_SOURCE_LOC_MAX is 200, so detect_doc_only's source-cap short-circuit (:1678) fires before the corpus disjunction (:1686) is ever consulted — installing the methodology destroys the doc-only fair-scoring v3.2 exists to provide. Operator chose fix A of three (S14): stop counting framework-installed files toward the adopter's source LOC. B (raise the cap) and C (rely on the marker) are REJECTED ON THE RECORD at plan :337 — do not re-propose. The exclusion must not become a laundering hole: exclude only by the manifest's own installed name at the point of the source-LOC read, never a general "skip large Python files" rule, and a repo whose OWN source exceeds the cap must still read as `code`. RED-first proof is four fixtures (plan :351): (a) synced Quarto fixture -> doc_only=True; (b) synced real code repo -> still doc_only=False, and this one must be SEEN TO FAIL against a wrong fix such as B, not merely pass against A; (c) unsynced doc repo unchanged; (d) the HIGH "No test infrastructure" risk absent from (a), present in a genuine no-test code repo. DASHBOARD_VERSION -> 2.10.1; both byte-identical twins + tests. ONE LAYER ONLY — Layer 6 (close-out, release decision R1, the owed SESSION_RUNNER.md Learnings row, the D4 plan correction) is a separate session, and BL-8/BL-9 are sequenced after it.
+```
+
+```handoff
 session: S14
 date: 2026-07-25
 status: complete
