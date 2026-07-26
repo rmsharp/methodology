@@ -86,8 +86,16 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   Two adjacent claims corrected because the addition would otherwise contradict them: T7's expected
   result and risk-bucket cell said the sample's only flag was `No CI/CD`, and the fixture carries
   three mediums — that inaccuracy predates this campaign.
-- **Commit/PR:** `baa1dd1` (part 1, core docs) and this commit (part 2, tutorials); split only by the
-  5-file per-commit cap. **Layer 6** — close-out, release decision R1, the owed `SESSION_RUNNER.md`
+- **This layer shipped WITHOUT an adversarial boundary review, and that is recorded rather than
+  glossed.** A 4-lens review was launched against the frozen tree and all four agents died on a usage
+  limit; the harness returned `findings: []`, which means *nothing executed*, not *nothing found*.
+  Two lenses were then run by hand (the T7 counterfactual — adding a `Status` column to a rebuilt
+  fixture removes the advisory and restoring it brings the advisory back; and a plain code+docs adopter
+  fixture confirming it is `doc_only=False` / `role=adopter` and renders the plain five dimension labels
+  plus "Methodology Compliance"). What remains unreviewed is an independent pass over the new marker
+  documentation's completeness and wording. **Re-running it is Layer 6's first act.**
+- **Commit/PR:** `baa1dd1` (part 1, core docs) and `fc65013` (part 2, tutorials); split only by the
+  5-file per-commit cap. Close-out receipt in this commit. **Layer 6** — close-out, release decision R1, the owed `SESSION_RUNNER.md`
   Learnings row, and the D4 plan correction — remains a separate session.
 - **Session:** S14 · **Verified:** `bin/check-links` OK (82 links / 21 files); `bin/tests.sh` 84 passed
   / 0 failed; `tools/test_methodology_dashboard.py` 168 OK; twins byte-identical; exhaustive grep
