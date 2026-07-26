@@ -32,6 +32,18 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [ad hoc] Close-out — S15 handoff receipt, self-assessment, and predecessor evaluation
+
+- **Change:** `HANDOFFS.md` S15 receipt completed (`status: pending` → `complete`,
+  `bin/check-handoff` green), plus the Phase 3A predecessor evaluation (S14, **9/10**) and the
+  Phase 3B self-assessment (**6/10**). No code, no version bump; `DASHBOARD_VERSION` stays 2.10.1.
+- **Why the self-score is 6 and not higher, in one line each:** the tree-freeze rule was broken
+  during a boundary review and the recovery cost a second full review; the operator was given a
+  **false basis** for one of their two decisions (the documentation dimension never reads the
+  numbers I said would move); a top-3-per-lens verification cap silently dropped 8 of 20 findings,
+  several true; and 3 of the 6 confirmed findings were defects in code written this same session.
+- **Commit/PR:** this commit. **Session:** S15.
+
 ### 2026-07-25 · [ad hoc] Dashboard signal-integrity **Layer 7** — the installer no longer defeats doc-only detection (`DASHBOARD_VERSION` 2.10.0 → 2.10.1)
 
 - **The defect, live since v3.2 and repaired here.** `bin/sync` installs `methodology_dashboard.py`
