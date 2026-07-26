@@ -130,7 +130,9 @@ The campaign's **last layer**. No scanner code changes; `DASHBOARD_VERSION` stay
   Fixing it is a code change to both twins plus tests plus a version bump — a new layer, not a
   close-out. **What this session did instead:** stopped the docs overclaiming. `README.md` and the
   distributed `starter-kit/BOOTSTRAP.md` now scope the guarantee to *your source count* and disclose
-  the seed gap by name, pointing at `.methodology-profile` as the fix.
+  the seed gap by name, pointing at `.methodology-profile` as the fix — and the **v3.6 release note
+  itself discloses it** in both `CLAUDE.md` §Versioning and `README.md` §What's New, rather than
+  shipping a known live instance of the campaign's own defect class in silence.
 - **Deferred to the PR session, unprejudged:** plan `:42` records that **defects 6, 7, 8 and the
   fenced-code-block false positive are not filed upstream** — "file them, or let this plan stand as
   their record" is an operator decision *at merge*, and merge has not happened.
