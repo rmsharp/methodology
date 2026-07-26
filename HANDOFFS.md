@@ -8,6 +8,13 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S16
+date: 2026-07-26
+status: pending
+active_task: Layer 6 of docs/planning/dashboard-signal-integrity-plan.md (:366-372) — the LAST layer: close out the dashboard signal-integrity campaign and settle deferred decision R1. R1 IS SETTLED BY OPERATOR DECISION THIS SESSION: v3.6 MINOR framework release, delivered as an upstream PR (not a direct push). The v3.6 choice follows the v3.2 precedent — v3.2 was a minor release for a SMALLER dashboard scoring change (BL-5) — and this campaign moved DASHBOARD_VERSION 2.8.0 -> 2.10.1 across five code layers, changed a bin/sync-DISTRIBUTED file by +995 lines, and resolves upstream #59/#60/#61 plus five unfiled defects. Layer 6 owes SIX things per the S15 receipt: (1) R1 — DONE, v3.6 minor + PR; (2) the SESSION_RUNNER.md Learnings row owed since plan §8, appended as #12 (that file is DISTRIBUTED; table is 1-11 at :364-376, append only, never renumber); (3) the D4 plan correction; (4) the CLAUDE.md §Versioning v3.6 entry, and README.md §What's New in lockstep with it — writing one without the other is exactly the cross-reference lag Learning #7/#10 exist to catch; (5) two more plan corrections Layer 7 proved, the false RED-first clause (b) at :354 and the structurally-unfailable clause (c) at :357; (6) the plan's stale scanner line citations. THE UPSTREAM PR ITSELF IS THE NEXT SESSION, NOT THIS ONE: fork main is 78 commits ahead of upstream/main and carries fork-only docs/planning/* that must NOT go upstream, so the PR needs a curated branch built from upstream/main, which is its own deliverable. This session closes the campaign on the fork so that PR has something complete to carry. NO SCANNER CODE CHANGES — DASHBOARD_VERSION stays 2.10.1.
+```
+
+```handoff
 session: S15
 date: 2026-07-25
 status: complete
