@@ -32,6 +32,72 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-26 · [ad hoc] Dashboard signal-integrity **Layer 6** — campaign close-out, R1 settled as **v3.6**, and new Learning #12
+
+The campaign's **last layer**. No scanner code changes; `DASHBOARD_VERSION` stays **2.10.1**.
+
+- **Deferred decision R1 is SETTLED by operator decision: this is a v3.6 MINOR framework release,
+  delivered as an upstream PR (not a direct push).** The inputs at plan `:378` were put to the
+  operator with measurements: the campaign moved `DASHBOARD_VERSION` **2.8.0 → 2.10.1** across five
+  code layers, changed the `bin/_manifest.py`-distributed `starter-kit/methodology_dashboard.py` by
+  **+995 lines**, and resolves upstream #59/#60/#61 plus five unfiled defects. **v3.6 follows the
+  v3.2 precedent** — v3.2 was a *minor* release for a strictly smaller dashboard scoring change
+  (BL-5). A `v4.0` alternative (arguing the one-time trend discontinuity is breaking) and a `v3.5.1`
+  patch alternative (arguing pure defect repair) were both put on the record and both declined.
+- **`CLAUDE.md` §Versioning v3.6 entry + `README.md` §What's New in lockstep**, plus the
+  "Current version" line **v3.5 → v3.6**. Writing §Versioning without §What's New would create
+  exactly the cross-reference lag Learnings #7/#10 exist to catch, in the session whose job is to
+  close the campaign — so both land together, and neither re-narrates the other beyond its audience.
+- **New `starter-kit/SESSION_RUNNER.md` Learning #12, owed since plan §8** (table was **1–11**;
+  appended, never renumbered — that file is DISTRIBUTED). *When an invariant is mechanical, encode
+  it as a test — a review-time grep is a human step that silently stops happening.* Learnings #7/#10
+  remain right for prose-to-meaning relations; where the invariant relates two **enumerable sets**,
+  an assertion beats a grep because a grep depends on someone remembering and its absence leaves no
+  evidence. Motivating case, verified here: `HANDOFFS.md` entered the manifest in v3.3 (`4f0bea7`)
+  and was never added to `METHODOLOGY_ITEMS`, and the gap survived **two** releases (v3.4, v3.5) of
+  exactly the greps #7/#10 prescribe. The row carries a non-negotiable precondition — drive the new
+  assertion RED first — with this campaign's own two counterexamples: an absence check filtering a
+  **dict** by `"Large files" in r` that tested keys and passed vacuously, and a fixture whose render
+  toolchain short-circuited the counts under test.
+- **THREE PLAN CORRECTIONS, each re-measured at HEAD rather than taken from the predecessor
+  handoff.** (1) **D4** — ratified text says this repo's own `docs/planning/BACKLOG.md` "lands in
+  that branch and will correctly say so." Measured: `_scan_backlog_done(<root>)` →
+  `{'format': 'unrecognized', ..., 'source': 'docs/planning/BACKLOG.md'}`. The *classification* half
+  is right; the *disclosure* half is **false** — the abstention has exactly one surface, gated on
+  `(path/"SESSION_RUNNER.md").is_file()`, and this repo's runner lives at `starter-kit/`, so it
+  lands in the abstaining branch and stays silent. The S13 decision not to widen that gate stands
+  (Signal F's premise is verifiably false for this repo class). (2) **RED-first clause (b) is
+  unsound** — its prescribed fixture reads `doc_only=False` at **every** cap measured (200 / 1,000 /
+  3,100 / 4,100 / 6,000 / 10,000), so it cannot "be seen to fail against a wrong fix such as B";
+  raising the cap only drops control into a corpus check the fixture fails anyway on a single
+  README. What actually refutes fix B is an **unsynced** code repo **with** a doc corpus: measured
+  `False` at cap 200, **`True` at cap 3,100**. (3) **clause (c) was verified by a test structurally
+  incapable of failing** — proved by counterfactual: stripping the Quarto fixture's markdown corpus
+  bare leaves the verdict **unchanged at `True`**, because the render-toolchain clause short-circuits
+  before either doc count is read. Stale scanner line citations re-derived: `:232` still correct,
+  `:1678` → **`:1841`**, `:1686` → **`:1855`**, with a note to prefer symbol names.
+- **Completeness-critic finding, fixed (Learning #10 applied to Layer 7, which Layer 5 predates).**
+  Layer 7 swept its own prose (`f1cfdbc`) but documented only **half** its fix: `README.md` and
+  `starter-kit/BOOTSTRAP.md` described the scanner being held out of the adopter's *source* count and
+  said nothing about the mirror half — that the 21 installed markdown files are discounted from the
+  *doc-corpus* check. That omission understates precisely the campaign's headline lesson, since a
+  one-sided exclusion is what *flipped* the defect in S15. Both sites now state the exclusion runs
+  both ways. **Verified, not asserted:** a 150-own-LOC code repo reads `doc_only=False` both before
+  and after a real `bin/sync` (docs 1 → 22 with `framework_docs` 21 discounted).
+- **Scope note, stated plainly:** the plan lists Layer 6's files as `CLAUDE.md` / `HANDOFFS.md` /
+  `CHANGELOG.md`. This layer also touches `README.md`, `starter-kit/SESSION_RUNNER.md`,
+  `starter-kit/BOOTSTRAP.md`, and the plan itself — the Learnings row and the plan corrections are
+  explicitly owed by the plan's own §8 and by the S14/S15 receipts, and the two mirror-clause
+  sentences are a completeness-critic fix on the campaign's last session rather than a seventh item
+  passed forward unassigned.
+- **Deferred to the PR session, unprejudged:** plan `:42` records that **defects 6, 7, 8 and the
+  fenced-code-block false positive are not filed upstream** — "file them, or let this plan stand as
+  their record" is an operator decision *at merge*, and merge has not happened.
+- **Commits:** this commit + the v3.6 narration commit + the close-out receipt commit (fork `main`;
+  upstream #59/#60/#61 stay open until this reaches upstream).
+- **Session:** S16 · **Verified:** 191/191 unit · 84/84 `bin/tests.sh` · `bin/check-links` OK
+  (82 links / 21 files) · twins byte-identical · `DASHBOARD_VERSION` unchanged at 2.10.1.
+
 ### 2026-07-25 · [ad hoc] Close-out — S15 handoff receipt, self-assessment, and predecessor evaluation
 
 - **Change:** `HANDOFFS.md` S15 receipt completed (`status: pending` → `complete`,

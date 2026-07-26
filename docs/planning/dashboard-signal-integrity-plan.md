@@ -145,6 +145,26 @@ repo"), never a silent `0`. **A silent 0 is defect #4 itself.** This repo's own
 `docs/planning/BACKLOG.md` (`| Item | Scope | Outcome |`, no Status column) lands in that branch and will
 correctly say so.
 
+> **CORRECTION (Layer 6, S16) — the last sentence above is FALSE at HEAD, and the shipped behaviour
+> is correct while the ratified text is not.** Measured against `HEAD` by calling the shipped
+> function directly: `_scan_backlog_done(<repo root>)` →
+> `{'format': 'unrecognized', 'done': 0, 'recognized': False, 'source': 'docs/planning/BACKLOG.md'}`.
+> The *classification* half is right — the format is read as `unrecognized`, exactly as ratified.
+> But this repo emits **nothing**, because the abstention has exactly **one** disclosure surface
+> (the Signal-F advisory tuple in `detect_changelog_signals`) and that surface is gated on
+> `(path / "SESSION_RUNNER.md").is_file()` — the *adopter* test, which this repo fails: its runner
+> lives at `starter-kit/SESSION_RUNNER.md`, not the root. So the backlog lands in the abstaining
+> branch and stays silent. **Widening that gate was rejected by operator decision in S13, and that
+> decision stands** — Signal F's premise (an item is *removed* from `BACKLOG.md` in the commit that
+> logs it to `CHANGELOG.md`) is verifiably false for this repo class, whose backlog deliberately
+> **keeps** all completed `BL-` rows permanently; widening the counting branch would manufacture a
+> false "not migrated" accusation the moment that table gains a Status column. The correct reading
+> of D4 is therefore: *abstention is a first-class result **for adopters**, which is the population
+> the signal is scoped to.* Two smaller drifts in the same paragraph: the return dict now carries a
+> fourth key, `source` (which location the backlog was actually found at), and the shipped advisory
+> text is "done-mark format not recognized (no `- [x]` checkboxes and no Status column) — the
+> unmigrated-work signal is inactive for this repo", not the shorter string quoted above.
+
 ---
 
 ## 5. Layer decomposition — one layer per session, do NOT bundle
@@ -314,7 +334,7 @@ README.md docs/tutorials/ starter-kit/ HOW_TO_USE.md` · `bash bin/check-links`
 **The defect — the campaign's own class, from an unexpected direction.** `bin/sync` installs
 `methodology_dashboard.py` (**3,070 lines**) to the adopter **root** (`bin/_manifest.py:43`,
 disposition `TRACKED`), and `DOC_ONLY_SOURCE_LOC_MAX` is **200** (`:232`). So `detect_doc_only`'s
-source-cap short-circuit (`:1678`) fires before the corpus disjunction (`:1686`) is ever consulted:
+source-cap short-circuit (`:1841`) fires before the corpus disjunction (`:1855`) is ever consulted:
 **installing the methodology destroys the doc-only fair-scoring v3.2 exists to provide.** The signal
 "No test infrastructure" does not mean what it appears to mean — it means *we put our own scanner in
 your repo and then counted it against you*.
@@ -356,6 +376,35 @@ still reports `doc_only=False` (**measured today: 4,070 → 1,000 after exclusio
 so this test must be seen to fail against a *wrong* fix such as B, not merely pass against A);
 (c) an **unsynced** doc repo is unchanged (no regression to the v3.2 path);
 (d) the HIGH "No test infrastructure" risk is absent from (a) and present in a genuine no-test code repo.
+
+> **CORRECTION (Layer 6, S16) — clauses (b) and (c) above are unsound as written. Both were
+> re-measured at HEAD, and Layer 7 shipped replacements for both; the text here is corrected so the
+> plan does not teach the two mistakes it caused.**
+>
+> **(b) is false.** The fixture it prescribes — a synced real code repo whose docs are one `README.md`
+> — reports `doc_only=False` at **every** cap: measured 200 / 1,000 / 3,100 / 4,100 / 6,000 / 10,000,
+> all `False`, with `source=1,000` own LOC and 21 framework docs discounted. It therefore **cannot**
+> "be seen to fail against a wrong fix such as B", because raising the cap only lets control fall
+> through to the corpus disjunction, which this fixture fails anyway on a single README. A test that
+> passes identically against the fix and against the rejected alternative distinguishes nothing —
+> the plan's own §8 #2 ("a test that passes against the bug is not coverage") applied to the plan.
+> **What actually refutes fix B is an *unsynced* code repo with a real doc corpus**: measured
+> `doc_only=False` at cap 200 and **`True` at cap 3,100** — the false doc-only classification of a
+> genuine 1,000-LOC code repo that raising the cap would buy. Shipped as a labelled characterization
+> test in `tools/test_methodology_dashboard.py`.
+>
+> **(c) was verified by a test structurally incapable of failing.** The Quarto fixture reports
+> `doc_only=True` with `toolchain_present=True` — and the render-toolchain clause short-circuits the
+> corpus disjunction **before** either doc count is consulted. Probed by counterfactual: stripping the
+> fixture's markdown doc corpus bare leaves the verdict **unchanged at `True`**. No doc-corpus
+> regression can ever move this test, so it could not have detected the framework-doc discount it was
+> cited to protect. A plain-markdown fixture now carries clause (c). **Ask what a fixture makes
+> unreachable, not only what it asserts.**
+>
+> **Line citations in this section were re-derived at HEAD** after Layer 7's five commits:
+> `DOC_ONLY_SOURCE_LOC_MAX` is still `:232`, but the source-cap short-circuit moved `:1678` → **`:1841`**
+> and the corpus disjunction `:1686` → **`:1855`**. Prefer the symbol names (`DOC_ONLY_SOURCE_LOC_MAX`,
+> `detect_doc_only`) over the line numbers — this is the second time these citations have gone stale.
 
 **Done when:** installing the methodology no longer changes a document-only repo's classification.
 **Verify:** as Layer 1, plus the four fixtures above, plus `bin/tests.sh`, `bin/check-links`, twins
