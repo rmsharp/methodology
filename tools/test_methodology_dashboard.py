@@ -2023,10 +2023,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.10.0")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.10.1")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.10\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.10.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.10\.1"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.10.1")
 
 
 class TestEndToEnd(unittest.TestCase):
@@ -2125,6 +2125,230 @@ class TestEndToEnd(unittest.TestCase):
         card = md.render_project_card(m)
         self.assertIn("<h4>Testing</h4>", card)
         self.assertNotIn("Render / Verification", card)
+
+
+def installed_scanner(loc=3070, version="2.10.0", marker=True):
+    """Text that stands in for the copy `bin/sync` installs at an adopter's root.
+
+    The predicate reads a NAME and a MARKER, never a size, so a faithful stand-in only has to
+    declare DASHBOARD_VERSION near the top and be long. `version` deliberately defaults to an
+    OLDER release: adopters lag canonical, and an exclusion that only recognized the current
+    version would leave every lagging adopter still mis-measured.
+    """
+    head = f'#!/usr/bin/env python3\n"""stand-in."""\n'
+    if marker:
+        head += f'DASHBOARD_VERSION = "{version}"\n'
+    return head + "".join(f"def gen_{i}():\n    return {i}\n" for i in range(loc // 2))
+
+
+class TestFrameworkInstalledExclusion(unittest.TestCase):
+    """Layer 7 — `bin/sync` installs a 3,070-line scanner into the adopter's ROOT while the
+    doc-only cap is 200 LOC, so the source-cap short-circuit fired before the corpus disjunction
+    was ever consulted: **installing the methodology destroyed the doc-only fair-scoring v3.2
+    shipped**. Live since v3.2; found by Layer 5's late boundary review, ratified as fix A.
+
+    RED-first: (a)/(d) were driven against the pre-fix scanner and watched to FAIL (a reported
+    doc_only=False with source_loc=3070 and a HIGH "No test infrastructure" risk). The
+    anti-laundering and manifest-agreement tests are guard-the-guard checks — they constrain the
+    fix rather than prove the defect, and are expected to pass only after it.
+    """
+
+    def _repo(self, files_map):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        write_tree(p, files_map)
+        subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "-m", "init"], check=True)
+        return p
+
+    # The synced doc corpus: a Quarto book, whose .qmd files are NOT doc-extensions, so the
+    # render-toolchain arm of the disjunction is what has to carry it — the exact source_loc≈0
+    # research repo BL-5 exists for.
+    QUARTO = {
+        "_quarto.yml": "project:\n  type: book\n",
+        "ch1.qmd": "# Ch1\n" + "prose\n" * 200,
+        "ch2.qmd": "# Ch2\n" + "prose\n" * 200,
+        "README.md": "# Monograph\n\nA Quarto book.\n" * 4,
+    }
+
+    def test_a_synced_doc_repo_is_still_doc_only(self):
+        """RED: reported False (source_loc 3,070 > the 200 cap) before the exclusion."""
+        p = self._repo({**self.QUARTO, "methodology_dashboard.py": installed_scanner()})
+        m = md.collect_all(p)
+        self.assertTrue(m["doc_only"]["is_doc_only"],
+                        "installing the methodology must not change a doc repo's classification")
+        self.assertEqual(m["tests"]["source_loc"], 0,
+                         "the adopter wrote no source; only the installed scanner was present")
+        self.assertGreater(m["files"]["by_category"]["vendor"]["loc"], 2000,
+                           "the excluded LOC must remain visible, not vanish from the inventory")
+
+    def test_d_no_test_risk_absent_when_synced_doc_repo_present_when_real(self):
+        """RED: the HIGH risk was present on the synced doc repo before the exclusion."""
+        def risks_of(m):
+            return [r["description"] for r in m["scores"]["risks"]]
+
+        synced_doc = md.collect_all(
+            self._repo({**self.QUARTO, "methodology_dashboard.py": installed_scanner()}))
+        self.assertNotIn("No test infrastructure", risks_of(synced_doc))
+        # Control: the risk must still fire where it is TRUE, or the fix is just suppression.
+        real_code = md.collect_all(self._repo({
+            "app.py": "def f(x):\n    return x\n" * 200,
+            "README.md": "# app\n",
+        }))
+        self.assertIn("No test infrastructure", risks_of(real_code))
+
+    def test_b_synced_code_repo_still_reads_as_code(self):
+        p = self._repo({
+            "app/core.py": "def f(x):\n    return x\n" * 500,   # 1,000 own LOC, over the cap
+            "README.md": "# app\n",
+            "methodology_dashboard.py": installed_scanner(),
+        })
+        m = md.collect_all(p)
+        self.assertFalse(m["doc_only"]["is_doc_only"])
+        self.assertEqual(m["tests"]["source_loc"], 1000,
+                         "the adopter's own source must survive the exclusion intact")
+
+    def test_c_unsynced_doc_repo_is_unchanged(self):
+        """Regression guard on the v3.2 path — no exclusion applies, nothing moves."""
+        m = md.collect_all(self._repo(self.QUARTO))
+        self.assertTrue(m["doc_only"]["is_doc_only"])
+        self.assertEqual(m["files"]["by_category"]["vendor"], {"count": 0, "loc": 0})
+
+    def test_rejected_cap_fix_would_misclassify_a_real_code_repo(self):
+        """CHARACTERIZATION of why fix **B** was rejected. Passes before AND after Layer 7 — it
+        constrains a future session, it does not prove this layer. Labeled so nobody mistakes it
+        for coverage (plan §8 learning 2).
+
+        It also **corrects the plan's own RED-first clause (b)**, which asserts that the synced
+        code fixture "must be seen to fail against a wrong fix such as B". Measured, it is not:
+        at every plausible raised cap (3,100 / 4,100) a synced 1,000-LOC code repo still reads
+        `code`, because its 4,070 total clears the raised cap too — B's cap would have to exceed
+        6,000 before that fixture moves. What B actually breaks is an **unsynced** real code repo
+        with a doc corpus, whose OWN source sits under the raised cap: it silently becomes
+        doc-only and loses its "No test infrastructure" risk. That — not the synced fixture — is
+        v3.2's written guarantee (a mixed code+docs repo is never misclassified) being
+        surrendered, so that is what this test pins.
+        """
+        p = self._repo({
+            "app/core.py": "def f(x):\n    return x\n" * 500,   # 1,000 own LOC
+            "GUIDE.md": "# guide\n" + "prose\n" * 200,
+            "DESIGN.md": "# design\n" + "prose\n" * 200,
+            "README.md": "# app\n" * 20,
+        })
+        original = md.DOC_ONLY_SOURCE_LOC_MAX
+        self.addCleanup(setattr, md, "DOC_ONLY_SOURCE_LOC_MAX", original)
+        self.assertFalse(md.collect_all(p)["doc_only"]["is_doc_only"])   # under the real cap
+        md.DOC_ONLY_SOURCE_LOC_MAX = 4100                                # simulate fix B
+        m = md.collect_all(p)
+        self.assertTrue(m["doc_only"]["is_doc_only"],
+                        "characterizing WHY B was rejected: a real code repo flips to doc-only")
+        self.assertNotIn("No test infrastructure",
+                         [r["description"] for r in m["scores"]["risks"]],
+                         "and loses the risk that was true — the harm, not merely the label")
+
+    # --- anti-laundering: the exclusion must only ever remove a file WE put there -------------
+
+    def test_adopters_own_file_of_the_same_name_is_not_excluded(self):
+        """Root-anchored, not basename-matched: a nested same-named file stays adopter source."""
+        p = self._repo({
+            "src/methodology_dashboard.py": installed_scanner(loc=3000),
+            "README.md": "# app\n",
+        })
+        m = md.collect_all(p)
+        self.assertGreater(m["tests"]["source_loc"], 200)
+        self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 0)
+        self.assertFalse(m["doc_only"]["is_doc_only"])
+
+    def test_root_file_without_the_marker_is_not_excluded(self):
+        """Content-verified: renaming an application to the framework's name does not hide it."""
+        p = self._repo({
+            "methodology_dashboard.py": installed_scanner(loc=3000, marker=False),
+            "README.md": "# app\n",
+        })
+        m = md.collect_all(p)
+        self.assertGreater(m["tests"]["source_loc"], 200)
+        self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 0)
+
+    def test_canonical_repo_still_pays_for_the_file_it_authors(self):
+        """This repo publishes the scanner from tools/ + starter-kit/ — neither is a root dest, so
+        both stay ITS source. A framework that laundered its own largest file would be scoring
+        itself by a rule it does not apply to anyone else."""
+        p = self._repo({
+            "tools/methodology_dashboard.py": installed_scanner(loc=3000),
+            "starter-kit/methodology_dashboard.py": installed_scanner(loc=3000),
+            "README.md": "# framework\n",
+        })
+        m = md.collect_all(p)
+        self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 0)
+        self.assertGreater(m["tests"]["source_loc"], 3000)
+
+    def test_a_test_file_named_like_the_scanner_is_still_a_test(self):
+        """categorize_file runs first, so the reclassification can only ever touch `source`."""
+        p = self._repo({"test_methodology_dashboard.py": installed_scanner(loc=400)})
+        m = md.collect_all(p)
+        self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 0)
+        self.assertGreater(m["files"]["by_category"]["test"]["loc"], 0)
+
+    def test_exclusion_list_matches_the_manifest(self):
+        """Machine-checkable cross-reference (plan §8 learning 1). The scanner cannot import
+        bin/_manifest.py — adopters have no bin/ — so the name is duplicated by necessity; this
+        asserts the duplicate can never drift from its source of truth."""
+        manifest_path = os.path.join(os.path.dirname(HERE), "bin", "_manifest.py")
+        spec = importlib.util.spec_from_file_location("manifest_for_exclusion", manifest_path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        non_markdown = tuple(dest for _s, dest, _d in mod.DISTRIBUTION
+                             if not dest.endswith(".md"))
+        self.assertEqual(non_markdown, md.FRAMEWORK_INSTALLED_SOURCE,
+                         "bin/sync installs a non-markdown file the exclusion does not know about "
+                         "(or vice versa) — update FRAMEWORK_INSTALLED_SOURCE")
+
+    def test_stale_installed_version_is_still_excluded(self):
+        """Adopters lag canonical; the marker check must match any version, not the current one."""
+        for version in ("2.8.0", "2.9.2", "2.10.1"):
+            with self.subTest(version=version):
+                p = self._repo({**self.QUARTO,
+                                "methodology_dashboard.py": installed_scanner(version=version)})
+                self.assertTrue(md.collect_all(p)["doc_only"]["is_doc_only"])
+
+    # --- disclosure: what was excluded stays visible -------------------------------------------
+
+    def test_card_discloses_the_exclusion(self):
+        p = self._repo({
+            "app/core.py": "def f(x):\n    return x\n" * 500,
+            "README.md": "# app\n",
+            "methodology_dashboard.py": installed_scanner(),
+        })
+        card = md.render_project_card(md.collect_all(p))
+        self.assertIn("Framework (installed)", card,
+                      "the excluded file must still appear in the file-type table")
+        self.assertIn("excludes", card,
+                      "'Source LOC' must say what it excludes, or it reads as a scanner error")
+
+    def test_card_omits_the_disclosure_when_nothing_was_excluded(self):
+        card = md.render_project_card(md.collect_all(self._repo({
+            "app.py": "def f(x):\n    return x\n" * 200, "README.md": "# app\n"})))
+        self.assertNotIn("Framework (installed)", card)
+
+    def test_doc_only_footnote_is_true_after_the_exclusion(self):
+        """The card justifies doc-only with `source_loc <= cap`. Excluding at the classification
+        alone would have left that inequality printing '3070 <= 200' — a false statement, in a
+        campaign about signals that do not mean what they appear to mean.
+
+        NOTE, found while writing this test and deliberately NOT fixed here (pre-existing, cosmetic,
+        outside Layer 7's ratified scope): the footnote is built with a literal `&le;` entity and
+        then passed through `esc()`, so the card ships `&amp;le;` and the reader sees the entity
+        text rather than "≤". Recorded for a later layer; asserting the true current output rather
+        than the intended one keeps this test honest about what ships.
+        """
+        card = md.render_project_card(md.collect_all(
+            self._repo({**self.QUARTO, "methodology_dashboard.py": installed_scanner()})))
+        self.assertIn("source_loc 0 &amp;le; 200", card)
+        self.assertNotIn("source_loc 3", card,
+                         "the justification must not still quote the installed scanner's LOC")
 
 
 if __name__ == "__main__":

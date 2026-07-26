@@ -32,6 +32,82 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [ad hoc] Dashboard signal-integrity **Layer 7** — the installer no longer defeats doc-only detection (`DASHBOARD_VERSION` 2.10.0 → 2.10.1)
+
+- **The defect, live since v3.2 and repaired here.** `bin/sync` installs `methodology_dashboard.py`
+  (3,070 lines) into the adopter **root**, and `DOC_ONLY_SOURCE_LOC_MAX` is **200**, so
+  `detect_doc_only`'s source-cap short-circuit fired before the corpus disjunction was ever
+  consulted: **installing the methodology destroyed the doc-only fair-scoring v3.2 exists to
+  provide.** The signal did not mean what it appeared to mean — "No test infrastructure" meant
+  *we put our own scanner in your repo and then counted it against you*. Ratified as **Layer 7**
+  by operator decision in S14 (fix **A** of three; **B** raise-the-cap and **C** rely-on-the-marker
+  rejected on the record at plan `:337`), appended without renumbering Layers 1–6 and executed
+  **before** Layer 6 so the campaign does not settle its release decision with a known live defect.
+- **The fix.** Framework-installed files are held out of the adopter's source LOC by a new
+  `is_framework_installed` predicate and a new `by_category["vendor"]` bucket, so every downstream
+  consumer — `detect_doc_only`, `tests.source_loc`, the test:source and doc:source ratios, the card
+  — reads one consistent number. Given its own bucket rather than silently subtracted: a card
+  reading "Source LOC: 0" on a repo that visibly contains a 3,070-line file would be a new signal
+  defect in a campaign about signal defects, so the file-type table gains a **Framework
+  (installed)** row and the Testing section a "(excludes N LOC of framework-installed files)" note.
+  The doc-only footnote now prints a **true** inequality (`source_loc 0 ≤ 200`, previously it would
+  have read `3070 ≤ 200`).
+- **The exclusion is narrow on two independent axes so it cannot become a laundering hole.**
+  **Root-anchored, not basename-matched** — an adopter's own `src/methodology_dashboard.py` stays
+  their source, and this repo's `tools/` + `starter-kit/` copies stay **its** source (verified live:
+  canonical self-scan unchanged at health **72**, `source_loc` **6,885**, `vendor` **0** — a
+  framework that laundered its own largest file would be scoring itself by a rule it applies to
+  nobody else). **Content-verified** — the file must actually declare `DASHBOARD_VERSION`, so
+  renaming a 5,000-line application to the framework's name does not hide it. A test asserts the
+  name list equals the non-markdown dests in `bin/_manifest.py`, so the necessary duplication
+  cannot drift (plan §8 learning 1 — make the cross-reference machine-checkable, not re-greppable).
+- **Measured on the four ratified fixtures, RED-first.** 13 of the 14 new tests were driven against
+  the pre-fix scanner and watched to fail (8 behavioural failures; 6 `KeyError`/`AttributeError`
+  errors, recorded as the *weak* REDs they are — absence, not wrongness). Synced Quarto book:
+  `doc_only` **False → True**, `source_loc` **3,070 → 0**, testing dimension **0 → 5**, HIGH "No
+  test infrastructure" **gone**. Synced code repo: still `code`, own source intact at 1,000. Unsynced
+  doc repo: unchanged. A stale installed copy (2.8.0/2.9.2) is still excluded — adopters lag
+  canonical, and an exclusion that only matched the current version would leave them mis-measured.
+- **THE PLAN'S OWN RED-FIRST PROOF (b) IS WRONG, AND THE CORRECTION IS SHIPPED AS A TEST.** Plan
+  `:354` requires that the synced code fixture "be seen to fail against a wrong fix such as B, not
+  merely pass against A". Measured: it does not. At every plausible raised cap (3,100 / 4,100) that
+  fixture still reads `code`, because its 4,070 total clears the raised cap too — B would have to
+  exceed **6,000** before it moves. What B actually breaks is an **unsynced** real code repo with a
+  doc corpus, whose own source sits under the raised cap: at cap 4,100 a 996-LOC code repo flips to
+  `doc-only` and **loses** its "No test infrastructure" risk — v3.2's written guarantee surrendered.
+  That is the fixture now pinned, and it is labeled a **characterization** test that passes before
+  and after, so it is never mistaken for coverage of this layer.
+- **Live read-only fleet re-scan (10 repos), the Verify clause's requirement that no other repo's
+  score moves.** Exactly **one** moves, and only because the defect was live on it:
+  `dalia_martinez_funeral` **48 → 49**, `source_loc` 2,475 → 0, `doc_only` **False → True**, HIGH
+  "No test infrastructure" removed — a genuine document repo whose entire "source" was our own
+  installed scanner. All nine others are byte-stable in health, classification, and risk set
+  (`airqino` 7,530 → 5,475 LOC and `mts-system` 43,363 → 40,888 with **no** change in score or
+  class — real code repos correctly still read `code`). 5 of 10 carry an installed copy.
+- **Two live sibling defects of the same class were found and are NOT fixed here** (raised for an
+  operator decision rather than folded in silently, per FM #17): the **"Large files detected"** risk
+  still names our own installed scanner on **4 of 10** real repos (`airqino`, `church_growth`,
+  `dalia_martinez_funeral`, `mts-system`) because it keys on `largest_files`/`SOURCE_EXTS` rather
+  than the source category; and the **mirror defect this layer's own fix opens** — `bin/sync`
+  installs 22 markdown files / 6,353 doc LOC, which satisfies the corpus disjunction, so a
+  small-source repo (measured: 148 own LOC) that read `code` before sync now reads `doc-only` after
+  it and **loses** a true "No test infrastructure" risk. The pre-fix source cap accidentally masked
+  that; fix A unmasks it. Not currently firing on any live repo (no fleet member has the
+  `0 < own source ≤ 200` + synced shape), but latent.
+- **Also recorded, not fixed** (pre-existing, cosmetic, outside scope): the doc-only card footnote
+  builds a literal `&le;` entity and then passes it through `esc()`, so the card ships `&amp;le;`
+  and the reader sees the entity text rather than `≤`. The new test asserts the true current output
+  rather than the intended one.
+- **Commit/PR:** this commit. `DASHBOARD_VERSION` **2.10.0 → 2.10.1**; both twins byte-identical.
+- **Session:** S15 · **Verified:** `tools/test_methodology_dashboard.py` 168 → **182** OK;
+  `bin/tests.sh` **84 passed / 0 failed**; `python3 bin/check-links` OK (82 links / 21 files);
+  `diff -q` twins identical; `py_compile` clean; runtime smoke over the real render path
+  (`collect_all` → `render_project_card` → `render_methodology_grid` → `aggregate_portfolio` →
+  `render_html`) at 128,071 chars with every rendered percentage extracted and compared numerically
+  (max **100**), writing nothing into any scanned repo (confirmed by mtime: the oldest
+  `dashboard.html` under `Development/` is 1,874h old and the newest 3.6h, none from this run; no
+  `dashboard_history.jsonl` touched).
+
 ### 2026-07-25 · [ad hoc] Backlog **REOPENED** — BL-8 (subagent tiering) and BL-9 (this repo's size drift), both sequenced after the campaign
 
 - **Change:** `docs/planning/BACKLOG.md` moves from RETIRED to reopened by operator instruction, with

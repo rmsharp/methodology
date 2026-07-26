@@ -68,7 +68,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.10.0"
+DASHBOARD_VERSION = "2.10.1"
 
 ROOT = Path(__file__).parent
 EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
@@ -310,6 +310,45 @@ def open_in_browser(filepath):
 CANONICAL_REL = Path("methodology") / "starter-kit" / "methodology_dashboard.py"
 
 _VERSION_RE = re.compile(r'''^DASHBOARD_VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE)
+
+# Non-markdown files `bin/sync` installs into an ADOPTER project root, as adopter-relative dest
+# paths. Installing the methodology must not change how the adopter's OWN code is measured: this
+# scanner is 3,070 lines against a 200-LOC doc-only cap, so counting it as adopter source made
+# `bin/sync` destroy the very fair-scoring v3.2 shipped (a synced Quarto book flipped doc_only
+# True -> False and got its "No test infrastructure" penalty back). The signal did not mean what
+# it appeared to mean: it meant *we put our own scanner in your repo and then counted it against
+# you*. See docs/planning/dashboard-signal-integrity-plan.md §"Layer 7".
+#
+# Mirrors the non-markdown dests in bin/_manifest.py; a canonical test asserts the two agree, so
+# the pair cannot drift silently (that plan's §8 learning 1 — make the cross-reference
+# machine-checkable, not re-greppable). Markdown dests are deliberately NOT listed: this tuple
+# exists to correct the source-LOC read, and a general "skip framework files" rule is exactly the
+# laundering hole the exclusion must not become.
+FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py",)
+
+
+def is_framework_installed(rel_path, fpath):
+    """True for a source file `bin/sync` installed at the adopter's project ROOT.
+
+    Deliberately narrow on two independent axes, because a file the scanner stops counting is a
+    file an adopter could hide real code in:
+
+    * **Root-anchored, not basename-matched.** An adopter's own `src/methodology_dashboard.py`
+      stays their source, and the canonical repo's `tools/` + `starter-kit/` copies stay ITS
+      source — it authors that file, so its own health score must keep paying for it.
+    * **Content-verified.** The file must actually declare `DASHBOARD_VERSION`. Renaming a
+      5,000-line application to `methodology_dashboard.py` at the root does not exempt it.
+
+    Both checks together mean the exclusion can only ever remove a file we put there ourselves.
+    """
+    if str(rel_path).replace("\\", "/") not in FRAMEWORK_INSTALLED_SOURCE:
+        return False
+    try:
+        with open(fpath, "r", encoding="utf-8", errors="ignore") as fh:
+            head = fh.read(4096)
+    except OSError:
+        return False
+    return _VERSION_RE.search(head) is not None
 
 
 def find_canonical(start):
@@ -556,6 +595,11 @@ def collect_file_metrics(path):
         "by_language": defaultdict(lambda: {"count": 0, "loc": 0}),
         "by_category": {
             "source": {"count": 0, "loc": 0},
+            # Framework-installed source (bin/sync's own files), held OUT of "source" so the
+            # adopter is measured on code they wrote. Given its own bucket rather than silently
+            # subtracted: every consumer then reads one consistent number, and the file stays
+            # visible in the card's file-type table instead of vanishing from the inventory.
+            "vendor": {"count": 0, "loc": 0},
             "test": {"count": 0, "loc": 0},
             "docs": {"count": 0, "loc": 0},
             "config": {"count": 0, "loc": 0},
@@ -582,6 +626,11 @@ def collect_file_metrics(path):
             rel_path = fpath.relative_to(path)
             ext = fpath.suffix.lower()
             category = categorize_file(rel_path, ext, fname)
+            # Layer 7: reclassify only what WE installed, and only where it would otherwise be
+            # counted as the adopter's code. Checked after categorize_file so a file that is
+            # already test/docs/config is untouched.
+            if category == "source" and is_framework_installed(rel_path, fpath):
+                category = "vendor"
 
             metrics["total_files"] += 1
 
@@ -603,7 +652,7 @@ def collect_file_metrics(path):
                 metrics["by_language"][lang]["loc"] += loc
 
             # By category
-            if category in ("source", "test", "docs", "config"):
+            if category in ("source", "vendor", "test", "docs", "config"):
                 metrics["by_category"][category]["count"] += 1
                 metrics["by_category"][category]["loc"] += loc
             elif category in ("assets", "other"):
@@ -2323,6 +2372,19 @@ def render_project_card(p):
     is_doc_only = doc_only_info.get("is_doc_only", False)
     render = p.get("render", {})
     src_loc = p["tests"]["source_loc"]
+    # Layer 7: framework-installed files are held out of Source, so the file-type table shows the
+    # excluded LOC on its own row. The row is emitted only when something was actually excluded —
+    # a permanent "Framework 0 / 0" would be noise on the repos that never ran bin/sync.
+    vendor = p["files"]["by_category"].get("vendor", {"count": 0, "loc": 0})
+    vendor_row = (
+        f'<tr><td>Framework (installed)</td><td class="num">{vendor["count"]:,}</td>'
+        f'<td class="num">{vendor["loc"]:,}</td></tr>' if vendor["count"] else "")
+    # Same disclosure in the Testing section, where "Source LOC: 0" on a repo that visibly
+    # contains a 3,070-line file would otherwise read as a scanner error.
+    vendor_note = (
+        f'<div class="kv" style="font-size:0.8em;opacity:0.7">'
+        f'(excludes {vendor["loc"]:,} LOC of framework-installed files)</div>'
+        if vendor["count"] else "")
     dims = ["activity", "testing", "documentation", "ci_cd", "methodology"]
     # Slot 5 swaps label the same way slot 2 already does for a doc-only repo: the dict key stays
     # "methodology" for JSON export / portfolio aggregation / the radar, and only the display
@@ -2370,6 +2432,7 @@ def render_project_card(p):
                         <div class="kv">Test Files: <b>{p["tests"]["test_file_count"]}</b></div>
                         <div class="kv">Test LOC: <b>{p["tests"]["test_loc"]:,}</b></div>
                         <div class="kv">Source LOC: <b>{p["tests"]["source_loc"]:,}</b></div>
+                        {vendor_note}
                         <div class="kv">Test:Source Ratio: <b>{fmt_ratio(p["tests"]["test_to_source_ratio"], src_loc)}</b></div>
                         <div class="kv">Coverage Config: <b>{cov_html}</b></div>
                     </div>'''
@@ -2462,6 +2525,7 @@ def render_project_card(p):
                             <thead><tr><th>Category</th><th>Files</th><th>LOC</th></tr></thead>
                             <tbody>
                                 <tr><td>Source</td><td class="num">{p["files"]["by_category"]["source"]["count"]:,}</td><td class="num">{p["files"]["by_category"]["source"]["loc"]:,}</td></tr>
+                                {vendor_row}
                                 <tr><td>Test</td><td class="num">{p["files"]["by_category"]["test"]["count"]:,}</td><td class="num">{p["files"]["by_category"]["test"]["loc"]:,}</td></tr>
                                 <tr><td>Docs</td><td class="num">{p["files"]["by_category"]["docs"]["count"]:,}</td><td class="num">{p["files"]["by_category"]["docs"]["loc"]:,}</td></tr>
                                 <tr><td>Config</td><td class="num">{p["files"]["by_category"]["config"]["count"]:,}</td><td class="num">{p["files"]["by_category"]["config"]["loc"]:,}</td></tr>
