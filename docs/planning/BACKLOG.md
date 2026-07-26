@@ -1,6 +1,10 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: RETIRED (again) — BL-1 – BL-7 all complete, 2026-07-08.**
+> **STATUS: REOPENED 2026-07-25 — BL-8 and BL-9 are open, both deliberately sequenced *after*
+> the dashboard signal-integrity campaign closes (Layer 7, then Layer 6).** BL-1 – BL-7 remain
+> complete; the retirement note below is preserved as the record of that cycle.
+
+> **(prior status) RETIRED (again) — BL-1 – BL-7 all complete, 2026-07-08.**
 > BL-7 (capability-tiered review, an elective vertical-slice addition) shipped via
 > [PR #57](https://github.com/KJ5HST/methodology/pull/57) (merge `d563600`) — see the Completed table
 > + `CHANGELOG.md`. Verbose task bodies are removed at close-out; git history preserves them
@@ -15,7 +19,51 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 ## Open items
 
-None. Retired 2026-07-08 (see status line above).
+**Both are sequenced AFTER the dashboard signal-integrity campaign closes** — i.e. after **Layer 7**
+(the installer/doc-only fix, ratified S14) and then **Layer 6** (close-out + release decision R1).
+Neither blocks that campaign, and neither is a change to the methodology. Raised and measured in
+**S14**; see `CHANGELOG.md` for that session's entries.
+
+**BL-8 — Subagent capability-tiering: adopt as an operational default, or decline.**
+*Not a methodology change, and no document needs editing.* `SESSION_RUNNER.md` §Vertical Slice
+Sessions already carries the decision rule (v3.5, BL-7) — explicitly **elective**, scoped to
+pre-declared vertical slices — and `RECOMMENDED_SKILLS.md` states the default outright:
+*"Elective; single-tier-throughout remains the default."* The open question is narrower and purely
+operational: when a session authors a **workflow** whose subagent roles rest on an objective,
+checkable gate (extraction re-verified by executing the module; corpus sweeps re-verified downstream),
+should those roles be authored onto a lighter tier while judgment roles and review stay on the
+strongest? Note the current campaign is **horizontal** (one layer per session), not a slice, so the
+v3.5 mechanism does not formally govern it — this would be applying its *principle* to a context the
+document does not cover.
+*Measured in S14, against its own 48 subagents:* all-Opus **$132**; all-Sonnet **$79** standard /
+**$53** intro; **hybrid ~13–19% saving** — much less than the headline, because the judgment-heavy
+verifier role is **61% of input tokens**. Cache reads are **91.7%** of all input. Sonnet intro
+pricing ends **2026-08-31**.
+*The larger lever measured alongside it, and the better first move:* **8 of 36 verifier agents
+re-verified a site another slice had already surfaced** (dedupe findings before spawning verifiers),
+and the review budget should be reserved *before* the discovery sweep — S14's sweep consumed the
+budget and its review then died on a usage limit, which is why Layer 5 shipped unreviewed and later
+needed three prose fixes. Both are free of any quality tradeoff.
+**"Decline and keep single-tier" is a correct outcome** and matches the documented default; the only
+cost is the saving above.
+
+**BL-9 — This repo has drifted from two size disciplines it publishes, and a third has no rule at all.**
+*Also not a new proposal — two of the three are rules this repo already states and does not follow.*
+- `CHANGELOG.md` is **103 KB**, and its own line 31 says *"Promote to `## YYYY-MM` sections as it
+  grows."* Never done.
+- `CLAUDE.md` is **43 KB** and **85%** of it is `§Versioning`, against `starter-kit/BOOTSTRAP.md:195`,
+  which sets a *"practical size budget (…roughly 200 lines…)"* and warns that an oversized memory file
+  *"measurably degrades how reliably the agent follows it."* That file is auto-loaded every session.
+- `HANDOFFS.md` is **110 KB** with **no archival rule anywhere in the corpus** — the genuine gap.
+  Per-session receipts grew **10 → 13 → 13 → 15 KB** across S10–S13.
+*Scope note:* this is a **canonical-repo** problem. Adopters pay almost none of it — their
+per-session floor is `SESSION_RUNNER.md` + `SAFEGUARDS.md`, and the signal-integrity campaign added
+~0 to it.
+*Constraints any fix must respect:* Phase 0 reconcile is **frontier-based** (`git log -1 --format=%H
+-- <file>`), so sharding either ledger is safe by construction; `bin/check-handoff` validates only
+the **newest** receipt, so archiving older ones does not break it; and the `§Versioning` ↔
+`CHANGELOG.md` cite-don't-restate boundary (v3.1) must survive whatever `CLAUDE.md` extraction is
+chosen.
 
 ## Completed items (BL-1 – BL-7)
 

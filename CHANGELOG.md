@@ -32,6 +32,39 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-25 · [ad hoc] Backlog **REOPENED** — BL-8 (subagent tiering) and BL-9 (this repo's size drift), both sequenced after the campaign
+
+- **Change:** `docs/planning/BACKLOG.md` moves from RETIRED to reopened by operator instruction, with
+  two new open items. Both are explicitly sequenced **after Layer 7 and then Layer 6**, so neither
+  competes with the campaign's close-out. The BL-1 – BL-7 completed table and the prior retirement
+  note are preserved verbatim as the record of that cycle.
+- **Neither item is a change to the methodology, and the entry says so** — that distinction is the
+  reason they are written down rather than acted on. **BL-8**: `SESSION_RUNNER.md` §Vertical Slice
+  Sessions already carries the tiering rule (v3.5/BL-7), explicitly **elective** and scoped to
+  pre-declared vertical slices, and `RECOMMENDED_SKILLS.md` states *"Elective; single-tier-throughout
+  remains the default."* The open question is only whether **workflow subagent** roles that rest on a
+  mechanical gate get authored onto a lighter tier — a context the document does not cover, since this
+  campaign is horizontal, not a slice. **Declining is a correct outcome.** **BL-9**: two of its three
+  findings are rules this repo *publishes and does not follow* — `CHANGELOG.md:31` ("Promote to
+  `## YYYY-MM` sections as it grows", now **103 KB**) and `BOOTSTRAP.md:195`'s CLAUDE.md size budget
+  (**43 KB**, 85% `§Versioning`, auto-loaded every session). Only the third is a real gap:
+  `HANDOFFS.md` is **110 KB** with no archival rule anywhere in the corpus.
+- **Measurements carried into the items so a later session need not re-derive them:** S14's own 48
+  subagents cost **$132** all-Opus vs **$79/$53** all-Sonnet, but a *principled* hybrid saves only
+  **13–19%** because the judgment-heavy verifier role is **61% of input tokens**; cache reads are
+  **91.7%** of all input; **8 of 36 verifiers duplicated another slice's site**; receipts grew
+  **10 → 13 → 13 → 15 KB** across S10–S13. BL-9 also records the three constraints any fix must
+  respect (Phase 0 reconcile is frontier-based so sharding is safe; `bin/check-handoff` validates only
+  the newest receipt; the `§Versioning` ↔ ledger cite-don't-restate boundary must survive).
+- **Deliberately written as prose bullets, not a status table or checkboxes.** This repo's backlog
+  scans as `format: unrecognized` today, and Layer 6 owes a **D4 plan correction** written against
+  exactly that state; a table with a Status column or `- [ ]` checkboxes would have flipped the format
+  and silently moved the ground under that correction. Verified before and after the edit —
+  `_scan_backlog_done` returns `{'format': 'unrecognized', 'done': 0, 'recognized': False}` unchanged.
+- **Commit/PR:** this commit. No code, no version bump; `DASHBOARD_VERSION` stays 2.10.0.
+- **Session:** S14 (post-close-out, operator-directed) · **Verified:** backlog scan byte-identical
+  before/after; every quoted rule and byte count re-read at HEAD.
+
 ### 2026-07-25 · [ad hoc] Dashboard signal-integrity **Layer 5** — completeness-critic doc sweep (no version bump)
 
 - **Change:** the fifth layer of the ratified campaign plan `docs/planning/dashboard-signal-integrity-plan.md`
