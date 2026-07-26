@@ -93,8 +93,9 @@ The campaign's **last layer**. No scanner code changes; `DASHBOARD_VERSION` stay
 - **Deferred to the PR session, unprejudged:** plan `:42` records that **defects 6, 7, 8 and the
   fenced-code-block false positive are not filed upstream** — "file them, or let this plan stand as
   their record" is an operator decision *at merge*, and merge has not happened.
-- **Commits:** this commit + the v3.6 narration commit + the close-out receipt commit (fork `main`;
-  upstream #59/#60/#61 stay open until this reaches upstream).
+- **Commits:** `307a7a8` (plan corrections + Learning #12) + this commit (v3.6 narration + the
+  mirror-clause completeness fix) + the close-out receipt commit (fork `main`; upstream
+  #59/#60/#61 stay open until this reaches upstream).
 - **Session:** S16 · **Verified:** 191/191 unit · 84/84 `bin/tests.sh` · `bin/check-links` OK
   (82 links / 21 files) · twins byte-identical · `DASHBOARD_VERSION` unchanged at 2.10.1.
 

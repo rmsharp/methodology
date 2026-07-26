@@ -134,7 +134,7 @@ See **[`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md)** for the complete 
 
 **Live dashboard:** The generated HTML auto-refreshes every 60 seconds. Run the script once, open `dashboard.html` in your browser, and leave it open — it stays current as you work. Re-run the script whenever you want updated data.
 
-**Declaring what the scanner should infer — `.methodology-profile`:** the two class detections above are heuristics, and a heuristic can be wrong about your repo. Installation itself no longer breaks them — as of dashboard 2.10.1 the scanner holds its own installed copy out of your source count, so a document-only project still reads as `doc-only` after `bin/sync` (before that, the ~3,000-line `methodology_dashboard.py` at your root counted as *your* code and pushed you past the source cap). **Declaring is still the right move for a document-only project**, and it is the supported way to overrule either detection. Create a `.methodology-profile` file at the repo root; **only its first line that is neither blank nor a comment is read** as the declaration. That one line carries whitespace-separated tokens from two independent axes:
+**Declaring what the scanner should infer — `.methodology-profile`:** the two class detections above are heuristics, and a heuristic can be wrong about your repo. Installation itself no longer breaks them — as of dashboard 2.10.1 the scanner holds its own installed copy out of your source count, so a document-only project still reads as `doc-only` after `bin/sync` (before that, the ~3,000-line `methodology_dashboard.py` at your root counted as *your* code and pushed you past the source cap). The exclusion runs **both ways**: the 21 markdown files `bin/sync` installs are likewise discounted when the scanner asks whether yours is a *document* project, so installing the framework cannot push a code repo into `doc-only` either — a one-sided exclusion would simply have mirrored the defect instead of removing it. **Declaring is still the right move for a document-only project**, and it is the supported way to overrule either detection. Create a `.methodology-profile` file at the repo root; **only its first line that is neither blank nor a comment is read** as the declaration. That one line carries whitespace-separated tokens from two independent axes:
 
 | Axis | Tokens | Answers |
 |---|---|---|
@@ -268,6 +268,19 @@ Domain-specific adaptations of the master framework. Each workstream customizes 
 Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during development of a commercial software product. The methodology emerged organically from an initial 11-session design series, was codified into a reusable framework, and subsequently validated across 1100+ sessions of varied work.
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
+
+### What's New in v3.6
+
+The **portfolio health scanner's signals now mean what they say.** A multi-session campaign against one root cause — every defect was a *proxy presented as a semantic finding* — resolving upstream issues #59/#60/#61 plus five unfiled defects. `DASHBOARD_VERSION` **2.8.0 → 2.10.1**; unit suite **29 → 191**.
+
+- **Scale honesty** — the checklist weights summed **110** while the score was rendered as a percentage, and the methodology dimension was the only one of five with no clamp: one adopter's card read *"Methodology Compliance (110%)"* live. The denominator is now derived, and `HANDOFFS.md` — shipped to adopters since v3.3 but never scored — is on the checklist.
+- **Ledger identity** — a `docs/` product changelog no longer masks a missing action ledger, `CHANGELOG-archive.md` no longer shadows `CHANGELOG.md`, and the unmigrated-backlog signal is reachable when no changelog exists (previously the *worse* case went silent).
+- **Backlog shape, with abstention as a first-class result** — the done-mark predicate was checkbox-only and read a real 643-line table backlog as **0** against **256** true done-rows. A count now travels with the convention it was read under, because a `0` the scanner could not compute is indistinguishable from a clean backlog — and that silence was the defect.
+- **Repo role** — a framework publisher scanning itself no longer scores a false *"Partial methodology adoption (5%)"*; it is scored against what a publisher actually owes.
+- **The installer no longer defeats doc-only scoring** — `bin/sync` installs the scanner to the adopter root, which pushed document-only repos over the source-LOC cap: installing the methodology destroyed the fair-scoring v3.2 exists to provide. Live since v3.2.
+- **New Learning #12** — when an invariant is mechanical, encode it as a test; a review-time grep is a human step that silently stops happening.
+- **Still advisory, never a hard gate**, and **presence is still not use** — the checklist scores `.exists()` and cannot tell a maintained runner from an empty stub. Expect a **one-time step in your trend line**: the old scale was wrong, and history carries no scale marker, so the correction renders as a jump. The new `dashboard_version` stamp is what makes it interpretable.
+- **No principle, phase, gate, or workstream change; the failure-mode count stays 27.**
 
 ### What's New in v3.5
 
