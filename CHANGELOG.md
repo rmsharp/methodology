@@ -32,6 +32,53 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-27 · [ad hoc] v3.6 shipped — PR #62 merged, tagged, released, and the fork resynced
+
+The release action closing the dashboard signal-integrity campaign. **Cite, don't restate:** the
+release narrative lives in [`CLAUDE.md` §Versioning](CLAUDE.md#versioning) under **v3.6**; the
+per-layer engineering record is the campaign entries below this one.
+
+- **[PR #62](https://github.com/KJ5HST/methodology/pull/62) merged** into `KJ5HST:main` as
+  **`d7a482a`** (13 files, +4424/-243). The three closing clauses fired exactly as written —
+  [#59](https://github.com/KJ5HST/methodology/issues/59),
+  [#60](https://github.com/KJ5HST/methodology/issues/60) and
+  [#61](https://github.com/KJ5HST/methodology/issues/61) all show **CLOSED**. The separate-clause
+  form was load-bearing: GitHub applies a closing keyword only to the *first* reference, so the
+  prose form "closes #59, #60 and #61" would have left two open and required manual cleanup.
+- **Annotated tag `v3.6` cut at the merge commit**, per the v3.2/v3.4/v3.5 pattern, and pushed to
+  both remotes. **GitHub Release `v3.6`** published on
+  [upstream](https://github.com/KJ5HST/methodology/releases/tag/v3.6) and mirrored to the
+  [fork](https://github.com/rmsharp/methodology/releases/tag/v3.6), both marked latest. No
+  follow-on release PR was needed: unlike v3.5 (whose bump landed separately as PR #58), PR #62
+  already carried its own `docs(release)` content — `CLAUDE.md` "Current version" + §Versioning
+  and `README.md` §What's New — so it follows the v3.4 shape instead.
+- **Fork resynced** via `git merge upstream/main`, producing **seven** conflicts rather than the
+  one the S3 receipt predicted. Root cause: Layer 8 and the pre-PR review fixes were committed
+  **on the branch**, so fork `main` was genuinely behind at `DASHBOARD_VERSION` 2.10.1 — the two
+  dashboard twins, the unit suite, `CLAUDE.md` and `README.md` all diverged, not just the ledger.
+  Both twins and the tests took **theirs**, but only after verifying rather than assuming the
+  superset relation: the fork-main → port-commit diff is exactly the two approved port edits (the
+  `CUSTOMIZATION` docstring fold-in and the plan citations rewritten as absolute fork URLs), which
+  establishes upstream = fork main + approved edits + review fixes + Layer 8. Taking theirs also
+  restores byte-identity with upstream, so this conflict does not recur on every future sync.
+- **`README.md:137` and `starter-kit/BOOTSTRAP.md:273` were deliberately left at "2.10.1"** — they
+  name *the version a behavior landed in*, not the current version. This is the same distinction
+  that produced two of the four confirmed findings in the pre-PR review.
+- **`HANDOFFS.md` reconciled without renumbering either sequence.** The S3 receipt
+  (upstream-branch-local) now sits above the fork's S16 chain. Theirs' trailing `session: S2` line
+  was dropped because it labels the *same receipt* the fork already carries as **S6** — the shared
+  region below the conflict completes it — so no content was lost and the fork's own renumbering,
+  documented in that receipt's own `gotchas`, is preserved.
+- **Branch `feat/dashboard-signal-integrity` pruned** locally and on `origin`.
+- **Verified on the merged tree:** 197/197 unit · 84/84 `bin/tests.sh` · `bin/check-handoff` OK ·
+  `bin/check-links` OK (82 links / 21 files) · twins byte-identical at 2.10.2 · fork-only
+  `docs/planning/*` intact · `upstream/main` is an ancestor of `main`, 0 behind / 86 ahead.
+- **Known gap, recorded not fixed:** the fork's Release list still lacks **v3.0.1 and v3.1–v3.4**,
+  which lagged before this session and were not backfilled here. `git tag` parity is fine; only the
+  Release objects are sparse.
+- **Commit:** this commit (close-out) + `699046c` (the merge). **Session:** S17 ·
+  **Verified:** as listed above.
+
 ### 2026-07-26 · [ad hoc] Dashboard signal-integrity campaign lands upstream — the scanner's signals now mean what they say (v3.6)
 - **Change:** the portfolio health scanner's signals are reconciled with what they actually measure,
   closing upstream issues [#59](https://github.com/KJ5HST/methodology/issues/59),
