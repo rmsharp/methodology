@@ -32,6 +32,33 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-27 · [ad hoc] S17 Phase 3C — Learning #13 drafted and opened as upstream PR #63
+
+Completes the one close-out step the first S17 commit (`a5dc925`) left open. Recorded here because
+opening a PR is a **non-commit action** the ledger owes an entry for (FM #27), and because the work
+itself lands upstream rather than on this branch.
+
+- **[PR #63](https://github.com/KJ5HST/methodology/pull/63) opened** — one row appended to the
+  `starter-kit/SESSION_RUNNER.md` Learnings table (was **1–12**, append only), plus its own ledger
+  entry on the branch. 2 files, **+30/−0**, MERGEABLE/CLEAN. *A handoff carries predictions as well
+  as facts, and a prediction about state the handoff's own session later changed is the least
+  reliable kind.*
+- **Why it is a PR and not a commit here.** `starter-kit/SESSION_RUNNER.md` is
+  `bin/_manifest.py`-**distributed**. Committing an unreleased change to it on fork `main` would
+  break the invariant this session had just verified and reported — that fork and upstream differ
+  **only** by fork-only `docs/planning/*` and this repo's own ledger and receipts. The branch was
+  cut from `upstream/main` (0 behind), per the standing rule for clean single-topic upstream PRs.
+- **Why the learning earned a row.** Learning #6 and FM #11 cover claims written *from memory*;
+  #7/#10/#12 cover cross-references that go stale *in the corpus*. Neither covers a
+  **forward-looking** claim whose expiry is caused by the writing session's own later commits —
+  which is exactly what produced seven merge conflicts against a predicted one during this session's
+  fork resync.
+- **No new `HANDOFFS.md` receipt.** This is S17's Phase 3C, not a new session; the S17 block is
+  amended in place to record it rather than duplicated. A second receipt for one session would
+  double-count it in the very ledger that exists to prevent that.
+- **Commit:** this commit. **Session:** S17 · **Verified:** `bin/check-handoff` OK · on the branch,
+  `bin/tests.sh` 84/84, `bin/check-links` OK, 197/197 unit, Learnings table 1–13 all 4-column.
+
 ### 2026-07-27 · [ad hoc] v3.6 shipped — PR #62 merged, tagged, released, and the fork resynced
 
 The release action closing the dashboard signal-integrity campaign. **Cite, don't restate:** the
