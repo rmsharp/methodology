@@ -32,6 +32,28 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-30 · [ad hoc] S18 — model-use provenance plan ratified
+
+No dedicated field records which model(s) ran a session/action today; model identity leaks out only
+incidentally (ad hoc receipt prose on capability-tiered sessions, or git commit co-author trailers).
+A design panel (3 candidates × 3 judges × 4 lenses, synthesis, adversarial completeness critique)
+surfaced the load-bearing finding: git commit trailers can directly **misattribute** capability-tiered
+work — S1's own receipt says Sonnet 5 built P2/P4, but all six of S1's checkpoint commits, including
+those two, are trailer-tagged Opus 4.8 (verified independently three times). Operator ratified 4
+decisions (D1–D4): optional `**Model:**` bullet in `CHANGELOG.md`'s per-action entry + a formalized
+free-text convention in `HANDOFFS.md` + a `SESSION_RUNNER.md` Phase 3F propagation clause + a
+canonical-only `bin/model-report` tool that treats git trailers as disclaimed corroboration only, never
+authoritative. No change to `bin/check-handoff` or `REQUIRED_KEYS`.
+
+- **Plan:** [`docs/planning/model-use-provenance-plan.md`](docs/planning/model-use-provenance-plan.md)
+  — RATIFIED, implementation (P1–P3) is a separate session; P3 additionally gated on upstream PR #63
+  merging first, to avoid a Learnings-table numbering collision.
+- **Commit/PR:** claim `fb47a4c`, deliverable + close-out this commit.
+- **Session:** S18 · **Verified:** `bin/tests.sh` 84/84, `bin/check-links` OK (82 links / 21 files), all
+  quantitative claims in the plan independently re-verified against `git log`/`grep` before ratification
+  (two numbers the design workflow got wrong — a brand-token count and a trailer-coverage count — were
+  corrected in place; see the plan's evidence table).
+
 ### 2026-07-27 · [ad hoc] S17 Phase 3C — Learning #13 drafted and opened as upstream PR #63
 
 Completes the one close-out step the first S17 commit (`a5dc925`) left open. Recorded here because
