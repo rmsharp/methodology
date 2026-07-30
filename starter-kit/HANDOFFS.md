@@ -41,7 +41,9 @@ states which tier built which layer and which tier reviewed it; this fork's own 
 remains the structured, per-action record; this is a convenience pointer for the session-level
 view, not a second schema — and it is fine for both to name the same model on a single-tier
 session, since they answer different questions ("what happened, action by action" vs. "which model
-ran this session").
+ran this session"). A canonical-only `bin/model-report` (copy it into your `bin/` if you want it,
+same as `bin/check-handoff`) reads this free-text convention back alongside `CHANGELOG.md`'s
+**Model:** bullets and git's `Co-Authored-By` trailers, keeping all three visually separate.
 
 ## Format — a fenced `handoff` block
 

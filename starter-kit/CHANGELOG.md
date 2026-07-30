@@ -80,7 +80,11 @@ convention: naming the model once in a receipt's free-text prose, for a reader w
 session's answer without correlating multiple entries here. That convention adds no new
 `HANDOFFS.md` schema key — it is not a second, competing structured field, and it is fine for both
 files to name the same model for a single-tier session, since they answer different questions
-("what happened, action by action" vs. "which model ran this session").
+("what happened, action by action" vs. "which model ran this session"). A canonical-only
+`bin/model-report` (copy it into your `bin/` if you want it) reads this file's **Model:** bullets
+back alongside `HANDOFFS.md`'s free-text mentions and git's `Co-Authored-By` trailers, keeping all
+three visually separate — see that tool's own docstring for why trailers are corroboration-only,
+never authoritative.
 
 Work committed but not finished — an in-progress hand-off, a reverted slice — still owes an
 entry: mark it `(in progress)` in the summary, and a later session closes it out or records

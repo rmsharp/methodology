@@ -32,6 +32,50 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-30 · [ad hoc] S20 — model-use provenance Phase 2 (bin/model-report + Test 23) shipped
+
+Implements Phase 2 of the ratified `docs/planning/model-use-provenance-plan.md` (§4.4/§8):
+the canonical-only `bin/model-report` tool reads three sources — `CHANGELOG.md` `**Model:**`
+bullets (primary/structured), `HANDOFFS.md` free-text "model" mentions (secondary/best-effort,
+regex-fuzzy), and git `Co-Authored-By` trailers (corroboration-only, never authoritative, with a
+hard disclaimer citing S1's real trailer-vs-prose mismatch) — and keeps them visually and
+structurally separate, never merged. `Test 23` was written RED-first per Learning #12: a
+deliberately naive single-merged-list draft was run against the fixture and confirmed to fail
+before the real fence-aware, source-separated implementation replaced it. A 4-lens adversarial
+review before commit (design-fidelity, parsing-robustness, citation-accuracy, completeness-critic)
+caught and fixed 5 real defects: (1) HIGH — `parse_changelog_models` had no code-fence awareness,
+so it fabricated three pseudo-entries (placeholder text, invented session IDs) out of
+`starter-kit/CHANGELOG.md`'s own permanent illustrative examples — a live default-path exposure
+for every future adopter, since that file is SEED-copied verbatim; fixed with a fence-toggle guard
+mirroring `extract_handoff_prose`'s existing fence-nesting awareness. (2) Test 23 originally always
+passed `--no-git`, so it never actually exercised Source 3 (git trailers) or proved trailer data
+stays out of Sources 1–2; added assertions against this repo's real trailer history. (3) The tool's
+own module docstring claimed S1's receipt "prose" names the tier split, but that sentence actually
+lives in the fenced `what_was_done` field, not the post-fence prose area Source 2 scans — the
+docstring's own live SOURCE 2 output contradicts its claim; reworded to "its `what_was_done` field
+states." (4) A garbled `SS4.4` section-reference typo. (5) Completeness sweep: `README.md`'s
+Repository Structure tree and `starter-kit/CHANGELOG.md`/`starter-kit/HANDOFFS.md`'s model-naming
+sections didn't yet mention the new tool — added discoverability pointers to all three, mirroring
+`bin/check-handoff`'s existing precedent. Also fixed a `**Model:**` bullet continuation-line gap
+(wrapped values were silently truncated). Scoped to Phase 2 only, per the plan's own "(one session
+each)" phasing — Phase 3 (new Learnings row) remains blocked on upstream PR #63 merging (confirmed
+still OPEN at claim and close-out).
+
+- **Change:** new canonical-only `bin/model-report` (306 lines, Python 3 stdlib) reports
+  self-reported model/tier attribution from `CHANGELOG.md`, `HANDOFFS.md`, and git trailers,
+  read-only and non-gating; `bin/tests.sh` gained `Test 23` (RED-first, 8 assertions); discoverability
+  pointers added to `README.md` and both `starter-kit/` files' model-naming sections.
+- **Commit/PR:** claim `cc49f52`, deliverable + close-out this commit.
+- **Session:** S20 · **Verified:** `bin/tests.sh` 92/92 (baseline was 84/84, unchanged by Phase 1;
+  this session's `Test 23` adds all 8 new assertions — driven RED first against a deliberately naive
+  merged-list draft, confirmed to fail, then GREEN against the real implementation), `bin/check-links`
+  OK (82 links / 21 files), `bin/check-handoff --allow-pending` shows only the two expected
+  missing-key errors on this session's own still-open claim stub (S17's known, canonical-only, unfixed
+  gotcha — not a regression), brand-neutrality regression check (`grep -inE "Opus|Sonnet|Haiku|Fable"`
+  across the three starter-kit files touched) returns empty, and `python3 bin/model-report` runs
+  clean against this fork's real 20-session history both before and after every fix.
+- **Model:** Claude Sonnet 5
+
 ### 2026-07-30 · [ad hoc] S19 — model-use provenance Phase 1 (schema/docs) shipped
 
 Implements Phase 1 of the ratified `docs/planning/model-use-provenance-plan.md` (S18):

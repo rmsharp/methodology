@@ -406,6 +406,103 @@ F="$(mktemp)"
 "$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && pass "prose outside the fenced block does not trigger the lint (block isolation)" || fail "block isolation: outside prose leaked into the check"
 rm -f "$F"
 
+echo "== Test 23: model-report — three sources stay visually/structurally separate (RED-first, Learning #12) =="
+CL="$(mktemp)"
+cat > "$CL" <<'EOF'
+# Changelog
+
+### 2026-01-01 · [ad hoc] entry with a Model bullet
+- **Change:** something shipped
+- **Commit/PR:** `abc1234`
+- **Session:** S40 · **Verified:** n/a — fixture
+- **Model:** Claude Sonnet 5
+
+### 2026-01-02 · [ad hoc] entry with NO Model bullet
+- **Change:** something else shipped
+- **Commit/PR:** `def5678`
+- **Session:** S41 · **Verified:** n/a — fixture
+EOF
+
+HO="$(mktemp)"
+cat > "$HO" <<'EOF'
+```handoff
+session: S1
+date: 2026-01-01
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: fixture
+what_was_done: abc1234
+next_steps: fixture
+key_files: a.py:1
+gotchas: fixture
+runtime_smoke: n/a
+changelog_ref: n/a
+commit: abc1234
+```
+Hybrid model split: Sonnet 5 built P2/P4, Opus 4.8 did P3/P5/P6 and reviewed all Sonnet output.
+EOF
+
+OUT="$("$BIN/model-report" --changelog "$CL" --handoffs "$HO" --no-git 2>&1)"
+
+PRIMARY_LN="$(echo "$OUT" | grep -n "PRIMARY" | head -1 | cut -d: -f1)"
+SECONDARY_LN="$(echo "$OUT" | grep -n "SECONDARY" | head -1 | cut -d: -f1)"
+SONNET_LN="$(echo "$OUT" | grep -n "Claude Sonnet 5" | head -1 | cut -d: -f1)"
+HYBRID_LN="$(echo "$OUT" | grep -n "Hybrid model split" | head -1 | cut -d: -f1)"
+
+if [ -n "$PRIMARY_LN" ] && [ -n "$SECONDARY_LN" ] && [ "$PRIMARY_LN" -lt "$SECONDARY_LN" ]; then
+    pass "PRIMARY section header precedes SECONDARY section header"
+else
+    fail "section headers missing or out of order (PRIMARY=$PRIMARY_LN SECONDARY=$SECONDARY_LN)"
+fi
+
+if [ -n "$SONNET_LN" ] && [ -n "$PRIMARY_LN" ] && [ -n "$SECONDARY_LN" ] \
+   && [ "$SONNET_LN" -gt "$PRIMARY_LN" ] && [ "$SONNET_LN" -lt "$SECONDARY_LN" ]; then
+    pass "CHANGELOG Model value falls structurally within the PRIMARY section"
+else
+    fail "CHANGELOG Model value leaked out of the PRIMARY section (SONNET_LN=$SONNET_LN)"
+fi
+
+if [ -n "$HYBRID_LN" ] && [ -n "$SECONDARY_LN" ] && [ "$HYBRID_LN" -gt "$SECONDARY_LN" ]; then
+    pass "HANDOFFS free-text mention falls structurally within the SECONDARY section"
+else
+    fail "HANDOFFS free-text mention leaked before/out of the SECONDARY section (HYBRID_LN=$HYBRID_LN)"
+fi
+
+echo "$OUT" | grep -q "S41" && fail "entry with no Model bullet was fabricated into the PRIMARY section" || pass "entry without a Model bullet correctly omitted from PRIMARY"
+
+echo "$OUT" | grep -qi "never authoritative\|non-authoritative\|corroboration" && pass "corroboration/non-authoritative disclaimer present in output" || fail "no corroboration/non-authoritative disclaimer in output"
+
+# Same fixture, but WITHOUT --no-git: exercises the real SOURCE 3 (git trailers)
+# against this repo's actual commit history, since the plan's own completion
+# criterion is "the THREE sources stay separate" -- a fixture that always
+# passes --no-git never proves trailer data (source 3) stays out of 1/2.
+OUT_GIT="$("$BIN/model-report" --changelog "$CL" --handoffs "$HO" 2>&1)"
+CORRO_LN="$(echo "$OUT_GIT" | grep -n "CORROBORATION-ONLY" | head -1 | cut -d: -f1)"
+SECONDARY_LN2="$(echo "$OUT_GIT" | grep -n "SECONDARY" | head -1 | cut -d: -f1)"
+TRAILER_LN="$(echo "$OUT_GIT" | grep -n "noreply@anthropic.com" | head -1 | cut -d: -f1)"
+
+if [ -n "$CORRO_LN" ] && [ -n "$SECONDARY_LN2" ] && [ "$CORRO_LN" -gt "$SECONDARY_LN2" ]; then
+    pass "CORROBORATION-ONLY section header follows the SECONDARY section header"
+else
+    fail "CORROBORATION-ONLY header missing or out of order (SECONDARY=$SECONDARY_LN2 CORRO=$CORRO_LN)"
+fi
+
+if [ -n "$TRAILER_LN" ] && [ -n "$CORRO_LN" ] && [ "$TRAILER_LN" -gt "$CORRO_LN" ]; then
+    pass "a real git Co-Authored-By trailer value falls structurally within the CORROBORATION-ONLY section"
+else
+    fail "no real trailer value found after the CORROBORATION-ONLY header (TRAILER_LN=$TRAILER_LN CORRO_LN=$CORRO_LN)"
+fi
+
+if [ -n "$SECONDARY_LN2" ]; then
+    BEFORE_SECONDARY_TRAILERS="$(echo "$OUT_GIT" | head -n "$SECONDARY_LN2" | grep -c "noreply@anthropic.com")"
+    [ "$BEFORE_SECONDARY_TRAILERS" = "0" ] && pass "no real trailer data leaked into the PRIMARY/SECONDARY sections" || fail "real trailer data leaked before the SECONDARY section"
+else
+    fail "SECONDARY header missing in git-enabled run, cannot check for trailer leakage"
+fi
+
+rm -f "$CL" "$HO"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]

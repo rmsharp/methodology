@@ -10,16 +10,49 @@ This repository dogfoods its own methodology: every session records a durable, m
 ```handoff
 session: S20
 date: 2026-07-30
-status: pending
-active_task: Implement Phase 2 of docs/planning/model-use-provenance-plan.md section 8 (bin/model-report tool + Test 23, canonical-only) -- write bin/model-report reading CHANGELOG.md **Model:** bullets (primary), HANDOFFS.md free-text "model" mentions (secondary/best-effort), and git Co-Authored-By trailers (corroboration-only, disclaimer-gated, never merged with 1-2); add Test 23 to bin/tests.sh RED-first per Learning #12 (write the fixture, confirm it fails against a naive single-merged-list implementation, then fix). Scoped to Phase 2 ONLY per the plan's own "(one session each)" phasing -- Phase 3 remains gated on upstream PR #63 ("Learning #13") merging first, still OPEN as of this claim.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/model-use-provenance-plan.md:291 (SS8, Phase 2 completion criteria), docs/planning/model-use-provenance-plan.md:179 (SS4.4, the tool's design spec), bin/check-handoff:1 (precedent style/structure for a canonical-only python3-stdlib tool), bin/tests.sh:290 (where Tests 21-22 end and 23 is appended)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Implement Phase 2 of docs/planning/model-use-provenance-plan.md section 8 (bin/model-report tool + Test 23, canonical-only). COMPLETE. Scoped to Phase 2 ONLY per the plan's own "(one session each)" phasing -- Phase 3 (new Learnings row) remains blocked on upstream PR #63 ("Learning #13"), confirmed still OPEN at both claim and close-out.
+what_was_done: Wrote bin/model-report (306→~340 lines, Python 3 stdlib, canonical-only) reading three sources -- CHANGELOG.md **Model:** bullets (primary/structured), HANDOFFS.md free-text "model" mentions (secondary/best-effort, regex-fuzzy, post-fence-only), git Co-Authored-By trailers (corroboration-only, never authoritative, hard-disclaimer citing S1's real trailer-vs-prose mismatch) -- kept visually/structurally separate. Added Test 23 to bin/tests.sh RED-first per Learning #12: wrote a deliberately naive single-merged-list draft, confirmed 4 of the fixture's assertions failed against it, then replaced it with the real fence-aware implementation and confirmed GREEN. Ran a 4-lens adversarial-review workflow (wf_6aa36fcb-5dc) before committing, which caught and fixed 5 real defects the mechanical checks had missed: (1) HIGH -- parse_changelog_models had no code-fence awareness, so it fabricated 3 pseudo-entries (placeholder text, invented S42/S43 session IDs) out of starter-kit/CHANGELOG.md's own permanent illustrative examples -- a live default-path exposure for every future adopter since that file is SEED-copied verbatim; fixed with a fence-toggle guard. (2) Test 23 originally always passed --no-git, never actually exercising Source 3 or proving trailer data stays separate; added 3 assertions against this repo's real git-trailer history (also RED-first verified). (3) The module docstring claimed S1's receipt "prose" states the tier split, but that sentence lives in the fenced what_was_done field, not the post-fence prose area Source 2 actually scans -- the tool's own live SOURCE 2 output contradicts its own docstring; reworded to "its what_was_done field states." (4) A garbled "SS4.4" section-reference typo, fixed to "section 4.4". (5) Completeness sweep found README.md's Repository Structure tree and both starter-kit/CHANGELOG.md's and starter-kit/HANDOFFS.md's model-naming sections didn't yet mention the new tool -- added discoverability pointers to all three, mirroring bin/check-handoff's existing precedent. Also fixed a **Model:** bullet continuation-line gap (wrapped values were silently truncated at the first line) found during the same fix pass. Commits: cc49f52 (S20 claim), this commit (Phase 2 + close-out).
+next_steps: Phase 3 (new Learnings-table row citing this plan + BL-8 informational pointer, per SS8) is next, but ONLY after re-confirming upstream PR #63 ("Learning #13") has merged -- `gh pr view 63 --repo KJ5HST/methodology` was still OPEN at this session's close-out; check again before starting. Separately (not blocking, no scope pressure): a future doc-touch session could correct starter-kit/HANDOFFS.md:38-41's "worked precedent" wording -- it cites S1's receipt as the precedent for naming the model in the POST-FENCE free-text area specifically, but S1's actual detailed tier-attribution sentence lives inside the fenced what_was_done field; this session's adversarial review judged it a pre-existing Phase 1 (S19) imprecision inherited rather than introduced by Phase 2, and out of this session's own claimed scope to fix. BL-8 and BL-9 remain otherwise unassigned, as S17/S18/S19 all flagged.
+key_files: bin/model-report:1 (new tool, esp. parse_changelog_models:96 for the fence-fix and continuation-line handling, extract_handoff_prose:122 for the SOURCE 2 boundary, git_trailers:186 and S1_DISCLAIMER:65), bin/tests.sh:409 (Test 23, 8 assertions), docs/planning/model-use-provenance-plan.md:291 (SS8 Phase 2 completion criteria), docs/planning/model-use-provenance-plan.md:179 (SS4.4 tool design spec), README.md:209 (repo-structure tree pointer), starter-kit/CHANGELOG.md:78 and starter-kit/HANDOFFS.md:40 (new bin/model-report cross-references)
+gotchas: (1) starter-kit/CHANGELOG.md's own "How to add an entry" format-section examples are permanent, fenced, in-file documentation with realistic dates/session-IDs/Model-bullet placeholders -- any future parser touching this file MUST be fence-aware or it will treat those illustrations as real data; this bit both design-fidelity and parsing-robustness reviewers independently before the fix. (2) This session's own S20 claim commit (cc49f52) has no Co-Authored-By trailer (an oversight -- omitted, not deliberately excluded); running bin/model-report against real history will show it as a gap in Source 3's coverage for this exact session, a live (harmless) instance of the tool's own honesty-ceiling point that a missing trailer proves nothing either way. (3) bin/check-handoff --allow-pending still rejects a correctly-written Phase 1B stub missing self_score/predecessor_score (S17's gotcha #3, still open, canonical-only fix) -- expected, not a regression from this session. (4) FREE_TEXT_MODEL_RE (Source 2) is deliberately bare-word "model" fuzzy matching, by ratified design (SS4.4) -- it will false-positive on unrelated uses of the word; do not "fix" this without re-reading the plan first.
+runtime_smoke: n/a -- python3-stdlib tooling + docs, no runtime/render surface. bin/tests.sh 92/92 (84 baseline + 8 new Test 23 assertions, all RED-first verified before trusting), bin/check-links OK (82 links/21 files), bin/check-handoff --allow-pending shows only the two pre-existing expected gaps on this session's own stub (gotcha #3), brand-neutrality regression check across the three starter-kit files touched returns empty, python3 bin/model-report runs clean against this fork's real 20-session/300+-commit history both before and after every fix.
+changelog_ref: CHANGELOG.md "S20 — model-use provenance Phase 2 (bin/model-report + Test 23) shipped" entry, this commit
+commit: pending — reconciled at next Orient (this receipt ships in the very commit whose sha it would name); the prior claim commit is cc49f52
 ```
+Self-score **8/10.** **+** Followed Learning #12 for real, not just by citing it — a naive draft was
+physically written to `bin/model-report`, run against the fixture, and confirmed RED (4/5 assertions
+failed) before the correct implementation replaced it, and the same discipline was re-applied to the
+3 assertions added mid-session (also proven RED before being trusted). **+** The adversarial review
+caught a genuinely high-severity, non-obvious defect — the fence-fabrication bug — that every one of
+this session's own mechanical checks (`bin/tests.sh`, `bin/model-report` against real history) had
+missed, because this fork's own root `CHANGELOG.md` happens to lack the format-documentation section
+that triggers it; the plan's own Phase 2 completion criterion ("runs clean against real history")
+was satisfied by a build that would have silently misled every future adopter. **+** Stayed
+disciplined about scope at the boundary the review itself proposed crossing: fixed the two
+discoverability gaps (README tree, starter-kit cross-references) as within-scope completeness for
+*this session's own new artifact*, but declined to fix `starter-kit/HANDOFFS.md`'s inherited "worked
+precedent" wording, correctly attributing that finding to Phase 1 (S19) rather than absorbing it as
+a second deliverable (FM #17). **−** The docstring's "its prose says" inaccuracy — contradicted by
+the tool's own live SOURCE 2 output — was there to find by simply running the tool against the real
+S1 receipt and reading the result, which this session did do during manual sanity-checking but
+without cross-checking the docstring's specific wording against what came out; the adversarial review
+caught it, not this session's own verification pass, which is exactly the gap careful self-review
+should have closed unaided. **−** Forgot the `Co-Authored-By` trailer on the S20 claim commit
+(`cc49f52`) — a small, harmless irony for a session whose own deliverable reports on trailer
+coverage.
+
+Predecessor (S19) evaluation: **8/10.** Its `next_steps` were exactly executable — the Phase 2/3
+split, the RED-first instruction with the correct Learning citation, and the PR #63 gating check were
+all accurate and let this session skip re-deriving them, and every `key_files` line it gave was still
+correct at the start of this session. Docked nothing further: the one real gap surfaced this
+session — S19's own citation of S1's sentence as living in the "free-text prose area" when it
+actually lives in the fenced `what_was_done` field — was a subtle, defensible-at-the-time reading (the
+plan document itself, written by S18, makes the identical characterization in three separate places),
+not a corner S19 visibly cut, and S19's own receipt could not reasonably have been expected to catch
+a mischaracterization inherited from the ratified plan it was implementing faithfully.
 
 ---
 

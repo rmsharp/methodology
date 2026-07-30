@@ -1,0 +1,349 @@
+#!/usr/bin/env python3
+"""model-report -- read-only reporter surfacing which model(s) executed sessions
+and actions in this repository. Full design: docs/planning/model-use-provenance-plan.md
+section 4 (section 4.4 for this tool specifically), Phase 2 of section 8.
+
+Reads THREE sources and keeps them visually and structurally separate in the
+output -- NEVER merges them into one list or one number:
+
+  1. PRIMARY / structured: `**Model:**` bullets in CHANGELOG.md -- self-reported,
+     explicit, per-action (starter-kit/CHANGELOG.md's format section).
+  2. SECONDARY / best-effort: free-text "model" mentions in the prose that
+     follows each ```handoff block in HANDOFFS.md -- regex-fuzzy by nature
+     (matches the bare word "model", so a mention in an unrelated sense will
+     false-positive by design; this is a best-effort secondary source, not a
+     structured field -- see starter-kit/HANDOFFS.md's "How to write a
+     receipt" section).
+  3. CORROBORATION-ONLY, explicitly non-authoritative: git `Co-Authored-By`
+     trailers. A git trailer records who ran `git commit`, not which
+     capability tier authored the content -- proven concretely by this fork's
+     own S1 receipt (HANDOFFS.md): its `what_was_done` field states "Sonnet 5
+     built P2/P4, Opus 4.8 did P3/P5/P6", yet ALL SIX of S1's real checkpoint
+     commits -- including the two the receipt attributes to Sonnet -- carry
+     the identical trailer "Claude Opus 4.8 (1M context)". This tool never
+     presents trailer data merged with sources 1-2, and flags the one known
+     non-model trailer pattern (a human co-author, rmsharp@me.com) rather
+     than silently counting it as a model.
+
+No pass/fail exit code -- a reporter, not a gate, matching bin/check-handoff's
+honesty-ceiling framing ("verifies presence/structure, never truth") but going
+one step further: this tool cannot even verify presence/structure of a TRUE
+fact, only of a self-reported string. Read and display, never adjudicate --
+feeds a retrospective (e.g. BL-8), never settles one.
+
+Usage:
+  bin/model-report                              # this fork's own root CHANGELOG.md /
+                                                 # HANDOFFS.md, falling back to
+                                                 # starter-kit/ + this repo's git history
+  bin/model-report --changelog PATH --handoffs PATH --no-git   # explicit files (tests)
+
+Python 3 stdlib only; cross-platform. Canonical-only (like bin/check-handoff):
+absent from bin/_manifest.py, adopters copy it manually if wanted.
+"""
+import argparse
+import re
+import subprocess
+import sys
+from collections import OrderedDict
+from pathlib import Path
+
+CHANGELOG_ENTRY_RE = re.compile(r"^### (\d{4}-\d{2}-\d{2}) · \[([^\]]+)\] (.+)$")
+CHANGELOG_MODEL_RE = re.compile(r"^-\s*\*\*Model:\*\*\s*(.+)$")
+CHANGELOG_SESSION_RE = re.compile(r"\*\*Session:\*\*\s*(\S+)")
+CHANGELOG_FENCE_RE = re.compile(r"^```")
+CHANGELOG_BULLET_RE = re.compile(r"^-\s")
+
+HANDOFF_OPEN_RE = re.compile(r"^```handoff[ \t]*$")
+HANDOFF_SESSION_RE = re.compile(r"^session:\s*(\S+)")
+
+# Secondary source: regex-fuzzy, best-effort by design (see module docstring).
+FREE_TEXT_MODEL_RE = re.compile(r"\bmodel\b", re.IGNORECASE)
+
+# The one known non-model Co-Authored-By value in this fork's own history (a
+# human, not an agent) -- flagged rather than silently counted as a model (D3).
+KNOWN_NON_MODEL_TRAILER_RE = re.compile(r"rmsharp@me\.com", re.IGNORECASE)
+CO_AUTHORED_BY_RE = re.compile(r"^Co-Authored-By:\s*(.+)$", re.MULTILINE)
+
+S1_DISCLAIMER = (
+    "A git trailer records who ran `git commit`, not which capability tier authored\n"
+    "the content. This fork's own S1 receipt (HANDOFFS.md) says \"Sonnet 5 built\n"
+    "P2/P4, Opus 4.8 did P3/P5/P6\" -- yet ALL SIX of S1's real checkpoint commits,\n"
+    "INCLUDING THE TWO THE RECEIPT ATTRIBUTES TO SONNET, carry the identical trailer\n"
+    "\"Claude Opus 4.8 (1M context)\". Do not treat this section as ground truth for\n"
+    "model/tier attribution -- it is corroboration-only, NEVER authoritative."
+)
+
+
+def repo_root() -> Path:
+    try:
+        out = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            capture_output=True, text=True, check=True,
+        )
+        return Path(out.stdout.strip())
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return Path.cwd()
+
+
+def default_changelog(root: Path) -> Path:
+    root_file = root / "CHANGELOG.md"
+    return root_file if root_file.exists() else root / "starter-kit" / "CHANGELOG.md"
+
+
+def default_handoffs(root: Path) -> Path:
+    root_file = root / "HANDOFFS.md"
+    return root_file if root_file.exists() else root / "starter-kit" / "HANDOFFS.md"
+
+
+def parse_changelog_models(text: str) -> list:
+    """One dict per ### entry that carries an optional **Model:** bullet.
+    Entries without one are skipped entirely -- the field is optional, and a
+    skipped entry must never be fabricated into the report.
+
+    Fenced-code-block aware: starter-kit/CHANGELOG.md's own "How to add an
+    entry" section permanently embeds fenced illustrative examples (dated
+    ### headers, S42/S43 session IDs, <model> placeholders) as in-file
+    documentation -- and that file is SEED-distributed verbatim to every new
+    adopter's real root CHANGELOG.md. Any line inside a ``` ... ``` fence is
+    skipped whole, so those illustrations are never parsed as real entries.
+
+    A **Model:** bullet's value may wrap onto indented continuation lines,
+    matching this file's own wrapping convention for its other bullets
+    (e.g. **Change:**, **Verified:**) -- continuation lines are joined with a
+    single space."""
+    lines = text.splitlines()
+    n = len(lines)
+    entries = []
+    cur = None
+    in_fence = False
+    i = 0
+    while i < n:
+        line = lines[i]
+        if CHANGELOG_FENCE_RE.match(line.strip()):
+            in_fence = not in_fence
+            i += 1
+            continue
+        if in_fence:
+            i += 1
+            continue
+        m = CHANGELOG_ENTRY_RE.match(line)
+        if m:
+            cur = {
+                "date": m.group(1), "source": m.group(2), "summary": m.group(3),
+                "session": None, "model": None,
+            }
+            entries.append(cur)
+            i += 1
+            continue
+        if cur is None:
+            i += 1
+            continue
+        sm = CHANGELOG_SESSION_RE.search(line)
+        if sm:
+            cur["session"] = sm.group(1)
+        mm = CHANGELOG_MODEL_RE.match(line.strip())
+        if mm:
+            value_parts = [mm.group(1).strip()]
+            j = i + 1
+            while j < n:
+                nxt = lines[j]
+                nxt_stripped = nxt.strip()
+                if (not nxt_stripped or not nxt[:1].isspace()
+                        or CHANGELOG_BULLET_RE.match(nxt_stripped)
+                        or CHANGELOG_FENCE_RE.match(nxt_stripped)
+                        or nxt_stripped.startswith("#")):
+                    break
+                value_parts.append(nxt_stripped)
+                j += 1
+            cur["model"] = " ".join(value_parts)
+            i = j
+            continue
+        i += 1
+    return [e for e in entries if e["model"]]
+
+
+def extract_handoff_prose(text: str) -> list:
+    """Return a list of (session_id, prose_text) -- one per ```handoff block,
+    where prose_text is the free-text following that block up to (not
+    including) the next block. Fence-nesting aware exactly like
+    bin/check-handoff's extract_blocks: a bare all-backtick wrapper line (the
+    Format section's own illustrative example, wrapped in 4 backticks per
+    CommonMark's fence-nesting rule) is skipped whole -- never mistaken for a
+    real block, and never leaked into any session's prose."""
+    lines = text.splitlines()
+    n = len(lines)
+    i = 0
+    results = []
+    current = None
+    prose_buffer = []
+
+    def flush():
+        if current is not None:
+            results.append((current, "\n".join(prose_buffer)))
+
+    while i < n:
+        stripped = lines[i].strip()
+        if stripped and set(stripped) == {"`"} and len(stripped) >= 3:
+            fence_len = len(stripped)
+            i += 1
+            while i < n:
+                s2 = lines[i].strip()
+                i += 1
+                if set(s2) == {"`"} and len(s2) >= fence_len:
+                    break
+            continue
+        if HANDOFF_OPEN_RE.match(lines[i]):
+            flush()
+            i += 1
+            session = "?"
+            while i < n:
+                s2 = lines[i].strip()
+                if set(s2) == {"`"} and len(s2) >= 3:
+                    i += 1
+                    break
+                sm = HANDOFF_SESSION_RE.match(lines[i].strip())
+                if sm:
+                    session = sm.group(1)
+                i += 1
+            current = session
+            prose_buffer = []
+            continue
+        if current is not None:
+            prose_buffer.append(lines[i])
+        i += 1
+    flush()
+    return results
+
+
+def parse_handoffs_secondary(text: str) -> list:
+    """One entry per (session, matched line) for every free-text line
+    containing the bare word "model" in a session's post-block prose."""
+    hits = []
+    for session, prose in extract_handoff_prose(text):
+        for line in prose.splitlines():
+            if FREE_TEXT_MODEL_RE.search(line) and line.strip():
+                hits.append((session, line.strip()))
+    return hits
+
+
+def git_trailers(no_git: bool, root: Path) -> list:
+    if no_git:
+        return []
+    try:
+        out = subprocess.run(
+            ["git", "log", "--all", "--date=short", "--format=%H\x1f%ad\x1f%B\x1e"],
+            capture_output=True, text=True, check=True, cwd=str(root),
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return []
+    trailers = []
+    for record in out.stdout.split("\x1e"):
+        record = record.strip("\n")
+        if not record.strip():
+            continue
+        parts = record.split("\x1f", 2)
+        if len(parts) < 3:
+            continue
+        sha, date, body = parts
+        for m in CO_AUTHORED_BY_RE.finditer(body):
+            value = m.group(1).strip()
+            if not value:
+                continue
+            trailers.append({
+                "sha": sha[:7], "date": date,
+                "value": value,
+                "non_model": bool(KNOWN_NON_MODEL_TRAILER_RE.search(value)),
+            })
+    return trailers
+
+
+def render(changelog_entries, handoffs_hits, trailers) -> str:
+    lines = []
+    lines.append("model-report -- self-reported model/tier attribution, read-only, non-gating.")
+    lines.append("See docs/planning/model-use-provenance-plan.md for the full design.")
+    lines.append("")
+
+    lines.append("=== SOURCE 1 -- PRIMARY (self-reported, structured): CHANGELOG.md **Model:** bullets ===")
+    if changelog_entries:
+        for e in changelog_entries:
+            session = e["session"] or "?"
+            lines.append("%s  %-5s [%s]  %s" % (e["date"], session, e["source"], e["model"]))
+            lines.append("    %s" % e["summary"])
+        n = len(changelog_entries)
+        lines.append("(%d %s **Model:** bullet)"
+                      % (n, "entry carries a" if n == 1 else "entries carry a"))
+    else:
+        lines.append("(no CHANGELOG.md entries carry a **Model:** bullet)")
+    lines.append("")
+
+    lines.append('=== SOURCE 2 -- SECONDARY (self-reported, best-effort/regex-fuzzy): '
+                  'HANDOFFS.md free-text "model" mentions ===')
+    lines.append("(fuzzy match on the bare word \"model\" in each receipt's free-text prose;")
+    lines.append(" false positives are expected by design -- NOT a structured field)")
+    if handoffs_hits:
+        for session, line in handoffs_hits:
+            lines.append("%-5s %s" % (session, line))
+    else:
+        lines.append("(no free-text \"model\" mentions found)")
+    lines.append("")
+
+    lines.append("=== SOURCE 3 -- CORROBORATION-ONLY, NEVER AUTHORITATIVE: "
+                  "git Co-Authored-By trailers ===")
+    for l in S1_DISCLAIMER.splitlines():
+        lines.append(l)
+    lines.append("")
+    if trailers:
+        by_value = OrderedDict()
+        for t in trailers:
+            by_value.setdefault(t["value"], []).append(t)
+        total = len(trailers)
+        lines.append("%d commits carry a Co-Authored-By trailer; %d distinct value(s):"
+                      % (total, len(by_value)))
+        for value, entries in by_value.items():
+            flag = "  <-- FLAGGED: known non-model value (a human co-author)" \
+                if entries[0]["non_model"] else ""
+            newest = max(entries, key=lambda t: t["date"])
+            lines.append("  %-45s  %4d commit(s)  most recent %s (%s)%s"
+                          % (value, len(entries), newest["date"], newest["sha"], flag))
+    else:
+        lines.append("(no git trailer data -- --no-git or no Co-Authored-By trailers found)")
+
+    return "\n".join(lines) + "\n"
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(
+        description="Report self-reported model/tier attribution across CHANGELOG.md, "
+                     "HANDOFFS.md, and git trailers -- kept visually separate, never merged."
+    )
+    p.add_argument("--changelog", help="explicit CHANGELOG.md path (default: this repo's root, "
+                                        "falling back to starter-kit/CHANGELOG.md)")
+    p.add_argument("--handoffs", help="explicit HANDOFFS.md path (default: this repo's root, "
+                                       "falling back to starter-kit/HANDOFFS.md)")
+    p.add_argument("--no-git", action="store_true",
+                    help="skip the git-trailer corroboration section entirely")
+    args = p.parse_args()
+
+    root = repo_root()
+    changelog_path = Path(args.changelog) if args.changelog else default_changelog(root)
+    handoffs_path = Path(args.handoffs) if args.handoffs else default_handoffs(root)
+
+    if not changelog_path.exists():
+        print("error: CHANGELOG.md not found: %s" % changelog_path)
+        return 1
+    if not handoffs_path.exists():
+        print("error: HANDOFFS.md not found: %s" % handoffs_path)
+        return 1
+
+    changelog_entries = parse_changelog_models(
+        changelog_path.read_text(encoding="utf-8", errors="replace"))
+    handoffs_hits = parse_handoffs_secondary(
+        handoffs_path.read_text(encoding="utf-8", errors="replace"))
+    trailers = git_trailers(args.no_git, root)
+
+    print(render(changelog_entries, handoffs_hits, trailers), end="")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
