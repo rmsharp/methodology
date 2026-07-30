@@ -10,16 +10,47 @@ This repository dogfoods its own methodology: every session records a durable, m
 ```handoff
 session: S19
 date: 2026-07-30
-status: pending
-active_task: Implement Phase 1 of docs/planning/model-use-provenance-plan.md section 8 (schema/docs, canonical, docs-only) -- add the optional **Model:** bullet to starter-kit/CHANGELOG.md's format section, formalize the free-text model-naming convention in starter-kit/HANDOFFS.md's "How to write a receipt" section, and append the brand-neutral Phase 3F propagation clause to starter-kit/SESSION_RUNNER.md's first bullet at the plan's corrected (true-end) anchor point. Scoped to Phase 1 ONLY per the plan's own "(one session each)" phasing and this repo's "1 and done" rule -- Phase 2 (bin/model-report + Test 23) and Phase 3 (Learnings row, gated on upstream PR #63 merging -- still OPEN as of this claim) are explicitly out of scope for this session.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/model-use-provenance-plan.md:263 (section 8, Phase 1 completion criteria), starter-kit/CHANGELOG.md:34 (format section to edit), starter-kit/HANDOFFS.md:24 (How to write a receipt section to edit), starter-kit/SESSION_RUNNER.md:276 (Phase 3F first bullet, true end after "does not authorize a second deliverable)")
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Implement Phase 1 of docs/planning/model-use-provenance-plan.md section 8 (schema/docs, canonical, docs-only). COMPLETE. Scoped to Phase 1 ONLY per the plan's own "(one session each)" phasing and this repo's "1 and done" rule -- Phase 2 (bin/model-report + Test 23) and Phase 3 (Learnings row, gated on upstream PR #63 merging -- still OPEN) are explicitly out of scope for this session.
+what_was_done: Added the optional **Model:** bullet to starter-kit/CHANGELOG.md's format section (with a single-tier example and a capability-tiered two-entry example mirroring the real Layer pattern), formalized the free-text model-naming convention in starter-kit/HANDOFFS.md's "How to write a receipt" section, and appended a brand-neutral propagation clause to starter-kit/SESSION_RUNNER.md's Phase 3F first bullet at the plan's corrected (true-end) anchor. Ran all 4 of the plan's Phase 1 completion-criteria greps (all passed) plus bin/tests.sh (84/84) and bin/check-links (OK). Then ran a 3-lens adversarial-review workflow (wf_efc5af32-478) against the diff BEFORE committing, which caught 3 real defects the mechanical greps had missed: (1) starter-kit/CHANGELOG.md's new prose said "do not restate the model in HANDOFFS.md's free text," while starter-kit/HANDOFFS.md's new prose said to do exactly that "especially for a single-tier session" -- a direct self-contradiction from misreading the plan's SS4.2 "no second structured field" guardrail as "no content overlap," when the plan's actual intent is that both files may name the same model for different purposes; (2) starter-kit/HANDOFFS.md claimed the Phase-3G-spoken-report phrase was "documented above" when it is documented BELOW (in the Format section, which structurally follows the "How to write a receipt" section); (3) starter-kit/CHANGELOG.md's format-section edit was missing the concrete single-tier and capability-tiered two-entry worked examples the plan's own SS8 Phase 1 task description explicitly calls for -- only abstract grammar description had been added. Fixed all three, re-verified with the same completion-criteria greps plus a fresh contradiction-check grep (empty), then dogfooded the new convention immediately: this session's own root CHANGELOG.md close-out entry uses a real **Model:** bullet (Claude Sonnet 5) rather than a placeholder, per SS6 of the plan ("this fork adopts it starting with the implementing session's own close-out"). Commits: bc5dc13 (S19 claim), this commit (Phase 1 + close-out).
+next_steps: Phase 2 (bin/model-report tool + Test 23, RED-first per Learning #12 -- write the fixture, confirm it fails against a naive single-merged-list implementation, then fix) is the next session's deliverable, per the plan's own "(one session each)" phasing. Phase 3 (new Learnings-table row + BL-8 informational pointer) remains gated on upstream PR #63 ("Learning #13") merging first -- confirmed still OPEN via `gh pr view 63 --repo KJ5HST/methodology` at both claim and close-out of this session; check again before starting Phase 3. BL-8 and BL-9 remain otherwise unassigned, as S17/S18 both flagged.
+key_files: docs/planning/model-use-provenance-plan.md:263 (SS8, Phase 1 completion criteria), docs/planning/model-use-provenance-plan.md:179 (SS4.2, the "no second structured field" guardrail this session initially misread as "no content overlap" -- read carefully before touching either file again), starter-kit/CHANGELOG.md:34 (Format section, now with two worked examples), starter-kit/HANDOFFS.md:33 (the model-naming paragraph in "How to write a receipt"), starter-kit/SESSION_RUNNER.md:276 (Phase 3F first bullet, the appended clause), CHANGELOG.md:35 (this session's own dogfood entry, real **Model:** bullet)
+gotchas: (1) The ratified plan's SS4.1 illustrative examples use real brand names ("Claude Opus 5," "Claude Sonnet 5 (delegated; reviewed by Claude Opus 4.8)") for the human reader's benefit, but the actual starter-kit files must NOT copy those literally -- SS8's own completion criteria demand `grep -inE "Opus|Sonnet|Haiku|Fable"` return EMPTY across the three edited files, matching this repo's established "brand names confined to RECOMMENDED_SKILLS.md only" convention (v2.6.1/v3.5 precedent). Use brand-neutral placeholders (`<model>`, `<model A>`/`<model B>`) in the actual template text; real brand names are fine in root CHANGELOG.md/HANDOFFS.md (the fork's own historical dogfood record), just not in the starter-kit/ templates adopters receive. (2) All 4 mechanical completion-criteria greps in SS8 passed on the FIRST draft of the three edits, yet that draft contained a genuine self-contradiction and a factual directionality error -- grep-based verification catches presence/structure, never semantic correctness (this repo's own recurring lesson, Learning #12's sibling). Always run an independent adversarial-review pass on new cross-file prose before committing, even when every mechanical check is green. (3) bin/check-handoff --allow-pending still rejects a correctly-written Phase 1B stub missing self_score/predecessor_score (S17's gotcha #3, still open, canonical-only fix) -- expected, not a regression from this session's edits.
+runtime_smoke: n/a — docs-only session, no code touched. bin/tests.sh 84/84 (both before and after the review-fix round), bin/check-links OK (82 links / 21 files), all re-run after the fix round to confirm no regression from the corrections.
+changelog_ref: CHANGELOG.md "S19 — model-use provenance Phase 1 (schema/docs) shipped" entry, this commit
+commit: pending — reconciled at next Orient (this receipt ships in the very commit whose sha it would name); the prior claim commit is bc5dc13
 ```
+Self-score **8/10.** **+** Stayed strictly scoped to Phase 1 despite the plan explicitly gating
+Phase 3 on an open PR and leaving Phase 2 available — the "(one session each)" phasing in the plan's
+own SS8 was honored rather than bundled. **+** Ran the plan's own mechanical completion criteria
+first, then went further and ran an independent adversarial review before committing, which is what
+actually caught the three real defects — all four mechanical greps were green on a draft that
+still contradicted itself. **+** Correctly distinguished the plan's illustrative brand-name examples
+(SS4.1, for the human reader) from the binding brand-neutral regression check (SS8, for the actual
+files) — a subtlety the ratified plan itself never states explicitly, and one that a literal reading
+of SS4.1 could have gotten wrong. **+** Dogfooded the new convention immediately and correctly, using
+a real model name at the fork's own root ledger while keeping the starter-kit templates brand-neutral.
+**−** The first draft of the three edits contained a direct self-contradiction between two files edited
+in the same sitting and a backwards directional claim — both were the kind of defect careful
+re-reading of my own prose, once, before running the review workflow, should plausibly have caught
+unaided. **−** Did not verify PR #63's status a third time immediately before writing this receipt
+(checked at claim and once mid-session); low risk since nothing in this session could have changed it,
+but the next session should re-check before Phase 3, not assume this receipt's claim still holds.
+
+Predecessor (S18) evaluation: **8/10.** Its `next_steps` were exactly executable — the Phase 1/2/3
+breakdown, the corrected anchor point, and the corrected regression-check command were all accurate
+and let this session skip re-deriving them; every `key_files` line number it gave was still correct
+at the start of this session. Explicitly flagging that Phase 3 must wait on PR #63, with the reason
+(a numbering collision), prevented a real mistake. **Docked two points for one real gap.** S18's own
+receipt describes re-running every quantitative claim in the design workflow's synthesis and catching
+two defects the completeness critic had missed — real diligence — but it never flagged the tension
+between SS4.1's illustrative brand-name examples and SS8's binding brand-neutral regression check,
+which is exactly the class of defect S18 prided itself on hunting for. A one-sentence gotcha in S18's
+own receipt ("SS4.1's examples use real brand names for illustration only — do not copy them literally
+into the actual files") would have saved this session the trouble of discovering and reasoning through
+that distinction unassisted.
 
 ---
 

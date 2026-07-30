@@ -32,6 +32,36 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-07-30 · [ad hoc] S19 — model-use provenance Phase 1 (schema/docs) shipped
+
+Implements Phase 1 of the ratified `docs/planning/model-use-provenance-plan.md` (S18):
+the optional `**Model:**` bullet in `starter-kit/CHANGELOG.md`'s format section (with a
+single-tier example and a capability-tiered two-entry example mirroring the real Layer
+pattern), the formalized free-text model-naming convention in `starter-kit/HANDOFFS.md`'s
+"How to write a receipt" section, and the brand-neutral Phase 3F propagation clause
+appended to `starter-kit/SESSION_RUNNER.md`'s action-ledger bullet. A 3-lens adversarial
+review before commit caught a real defect: the CHANGELOG.md and HANDOFFS.md edits gave
+directly contradictory guidance for the single-tier case (one said not to restate the model
+in HANDOFFS' free text, the other said to do exactly that) — a misreading of the plan's
+§4.2 "no second structured field" guardrail as "no content overlap." Also caught: a
+directionally-backwards "documented above" cross-reference, and a missing pair of concrete
+worked examples the plan's own Phase 1 task description called for. All three fixed and the
+fix set re-verified before this entry. Scoped to Phase 1 only, per the plan's own
+"(one session each)" phasing — Phase 2 (`bin/model-report` + Test 23) and Phase 3 (new
+Learnings row) remain; Phase 3 stays blocked on upstream PR #63 merging (still OPEN).
+
+- **Change:** `starter-kit/CHANGELOG.md`, `starter-kit/HANDOFFS.md`, and
+  `starter-kit/SESSION_RUNNER.md` now document an optional, self-reported `**Model:**`
+  convention for recording which model executed an action or session — no new
+  `bin/check-handoff` key, no hard gate anywhere in the design.
+- **Commit/PR:** claim `bc5dc13`, deliverable + close-out this commit.
+- **Session:** S19 · **Verified:** `bin/tests.sh` 84/84, `bin/check-links` OK (82 links /
+  21 files), all 4 of the plan's Phase 1 completion-criteria greps pass, and the
+  brand-neutrality regression check (`grep -inE "Opus|Sonnet|Haiku|Fable"` across the three
+  edited files) returns empty — confirming the actual file edits used brand-neutral
+  placeholders rather than copying the plan's own illustrative brand-name examples verbatim.
+- **Model:** Claude Sonnet 5
+
 ### 2026-07-30 · [ad hoc] S18 — model-use provenance plan ratified
 
 No dedicated field records which model(s) ran a session/action today; model identity leaks out only

@@ -32,17 +32,55 @@ three sources landed):
   decline/wontfix/grooming decisions all land here.
 
 **Format** — the `###` header line is the required, greppable unit; the detail bullets are
-recommended:
+recommended, plus one further bullet, `Model`, that is optional even relative to the others:
 
 ```
 ### YYYY-MM-DD · [SOURCE] one-line outcome-focused summary
 - **Change:** what is now true in the repo/product that was not before
 - **Commit/PR:** `<short-sha>`  —or—  PR #<N> (merged `<sha>`)
 - **Session:** S<N> · **Verified:** <build/test/render/runtime evidence, or "n/a — docs-only">
+- **Model:** <acting model> (optional — omit the line entirely when not recorded)
 ```
 
 *(The `[SOURCE]`, `[issue #<N>]`, `[BL-<N>]`, and `[ad hoc]` tokens above are illustrative; the
 freshness check keys on dated `###` entries, of which a fresh seed has none.)*
+
+**Model:** — self-reported, free text; omit the line when not recorded. Names which model
+executed the action — an agent-independent key with a concrete value, the same pattern
+`key_files` already uses for paths. Single-tier work names one model:
+
+```
+### 2026-01-15 · [ad hoc] Ship the export-retry fix
+- **Change:** exports now retry once on a transient network error instead of failing immediately
+- **Commit/PR:** `a1b2c3d`
+- **Session:** S42 · **Verified:** unit suite green, manual retry reproduced and confirmed fixed
+- **Model:** <model>
+```
+
+Capability-tiered work (one session whose layers are built or reviewed across different tiers) is
+recorded *per entry*, not compressed into one line: each layer/checkpoint already gets its own
+`CHANGELOG.md` entry, so each entry's **Model:** bullet states only its own role:
+
+```
+### 2026-01-16 · [ad hoc] Layer 3 — draft the parser (delegated layer)
+- **Change:** the new input format parses without a follow-up fixup pass
+- **Commit/PR:** `d4e5f6a`
+- **Session:** S43 · **Verified:** unit tests for the new parser pass
+- **Model:** <model A> (delegated; reviewed by <model B>)
+
+### 2026-01-16 · [ad hoc] Layer 4 — review and land the parser (primary layer)
+- **Change:** the delegated layer's diff is reviewed and the checkpoint committed
+- **Commit/PR:** `b7c8d9e`
+- **Session:** S43 · **Verified:** full suite green after review fixes
+- **Model:** <model B> (primary)
+```
+
+`HANDOFFS.md`'s "How to write a receipt" section documents a complementary session-level
+convention: naming the model once in a receipt's free-text prose, for a reader who wants one
+session's answer without correlating multiple entries here. That convention adds no new
+`HANDOFFS.md` schema key — it is not a second, competing structured field, and it is fine for both
+files to name the same model for a single-tier session, since they answer different questions
+("what happened, action by action" vs. "which model ran this session").
 
 Work committed but not finished — an in-progress hand-off, a reverted slice — still owes an
 entry: mark it `(in progress)` in the summary, and a later session closes it out or records

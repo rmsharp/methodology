@@ -30,6 +30,19 @@ breadcrumb: if the session ends before close-out, the next session's Phase 0 rec
 **At Phase 3D (close-out)** — overwrite that block in place to `status: complete` and fill every
 field. The block must satisfy all six Minimum Handoff Requirements (`SESSION_RUNNER.md` §3D).
 
+**Naming the acting model (optional).** No new key — `REQUIRED_KEYS` is unchanged, and the fenced
+block below stays exactly as documented. When a one-line summary is useful, especially for a
+single-tier session where it saves a reader a cross-reference into `CHANGELOG.md`'s per-action
+**Model:** bullet (see that file's format section), name the model in this receipt's free-text
+prose area — the Format section below documents that area as *"the durable proxy for the Phase 3G
+spoken report."* This formalizes what a capability-tiered session already does organically when it
+states which tier built which layer and which tier reviewed it; this fork's own first receipt
+(root `HANDOFFS.md`, session S1) is the worked precedent. `CHANGELOG.md`'s **Model:** bullet
+remains the structured, per-action record; this is a convenience pointer for the session-level
+view, not a second schema — and it is fine for both to name the same model on a single-tier
+session, since they answer different questions ("what happened, action by action" vs. "which model
+ran this session").
+
 ## Format — a fenced `handoff` block
 
 ````
