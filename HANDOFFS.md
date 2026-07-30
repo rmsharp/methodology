@@ -8,6 +8,22 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S20
+date: 2026-07-30
+status: pending
+active_task: Implement Phase 2 of docs/planning/model-use-provenance-plan.md section 8 (bin/model-report tool + Test 23, canonical-only) -- write bin/model-report reading CHANGELOG.md **Model:** bullets (primary), HANDOFFS.md free-text "model" mentions (secondary/best-effort), and git Co-Authored-By trailers (corroboration-only, disclaimer-gated, never merged with 1-2); add Test 23 to bin/tests.sh RED-first per Learning #12 (write the fixture, confirm it fails against a naive single-merged-list implementation, then fix). Scoped to Phase 2 ONLY per the plan's own "(one session each)" phasing -- Phase 3 remains gated on upstream PR #63 ("Learning #13") merging first, still OPEN as of this claim.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/model-use-provenance-plan.md:291 (SS8, Phase 2 completion criteria), docs/planning/model-use-provenance-plan.md:179 (SS4.4, the tool's design spec), bin/check-handoff:1 (precedent style/structure for a canonical-only python3-stdlib tool), bin/tests.sh:290 (where Tests 21-22 end and 23 is appended)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+---
+
+```handoff
 session: S19
 date: 2026-07-30
 status: complete
