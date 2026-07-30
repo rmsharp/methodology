@@ -8,6 +8,22 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S18
+date: 2026-07-30
+status: pending
+active_task: Planning session — develop a plan to record which model(s) ran each session. No dedicated field exists today in either CHANGELOG.md or HANDOFFS.md; model info currently only surfaces incidentally (free-text prose on capability-tiered sessions per BL-7/v3.5, or git commit co-author trailers, neither a methodology-defined field). Deliverable is a plan document to docs/planning/, not implementation. Placement (canonical schema change vs fork-only operational convention) is an open question the plan itself must resolve or put to the operator.
+what_was_done: pending
+next_steps: pending
+key_files: HANDOFFS.md:1 (starter-kit seed — the receipt schema), CHANGELOG.md:1 (starter-kit seed — the ledger entry format), bin/check-handoff:51 (REQUIRED_KEYS — the schema the checker enforces), starter-kit/RECOMMENDED_SKILLS.md:62 (existing illustrative model-name table, brand-neutral-core precedent)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+---
+
+```handoff
 session: S17
 date: 2026-07-27
 status: complete
