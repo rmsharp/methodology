@@ -8,6 +8,22 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S19
+date: 2026-07-30
+status: pending
+active_task: Implement Phase 1 of docs/planning/model-use-provenance-plan.md section 8 (schema/docs, canonical, docs-only) -- add the optional **Model:** bullet to starter-kit/CHANGELOG.md's format section, formalize the free-text model-naming convention in starter-kit/HANDOFFS.md's "How to write a receipt" section, and append the brand-neutral Phase 3F propagation clause to starter-kit/SESSION_RUNNER.md's first bullet at the plan's corrected (true-end) anchor point. Scoped to Phase 1 ONLY per the plan's own "(one session each)" phasing and this repo's "1 and done" rule -- Phase 2 (bin/model-report + Test 23) and Phase 3 (Learnings row, gated on upstream PR #63 merging -- still OPEN as of this claim) are explicitly out of scope for this session.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/model-use-provenance-plan.md:263 (section 8, Phase 1 completion criteria), starter-kit/CHANGELOG.md:34 (format section to edit), starter-kit/HANDOFFS.md:24 (How to write a receipt section to edit), starter-kit/SESSION_RUNNER.md:276 (Phase 3F first bullet, true end after "does not authorize a second deliverable)")
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+---
+
+```handoff
 session: S18
 date: 2026-07-30
 status: complete
