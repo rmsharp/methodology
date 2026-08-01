@@ -10,17 +10,50 @@ This repository dogfoods its own methodology: every session records a durable, m
 ```handoff
 session: S22
 date: 2026-08-01
-status: pending
-active_task: BL-10 (docs/planning/BACKLOG.md:71) — five dangling `Learning #N` citations (#28/#29, #30 ×3, #34) live in two bin/_manifest.py-distributed files against a Learnings table that ends at #12. Settle the four questions S21 named before implementing: (1) what the citations were MEANT to say (git archaeology, not a guess), (2) distributed-file constraints, (3) a bin/tests.sh assertion driven RED first per Learning #12 rather than another review-time grep, (4) the Learning #12 Source-column convention question (fork-only S9–S16 / Layer 1 / Layer 7 tokens, unreachable from upstream) — decide or explicitly defer in this session.
-what_was_done: pending
-next_steps: pending
-key_files: docs/planning/BACKLOG.md:71 (the item), starter-kit/RECOMMENDED_SKILLS.md:90 and workstreams/DEVELOPMENT_WORKSTREAM.md:23 (two of the five sites), starter-kit/SESSION_RUNNER.md:365 (the Learnings table, ends at #12), bin/tests.sh:409 (Test 23, the newest test and the insertion point for a new one)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 6
+active_task: BL-10 — five dangling `Learning #N` citations (#28/#29, #30 ×3, #34) live in two bin/_manifest.py-distributed files. COMPLETE and shipped as upstream PR #64. Scope held to the five sites + one audit-bridge sentence (operator-approved); the two other defect classes the sweep surfaced were filed, not fixed (FM #17). All four questions S21 named were settled: (1) archaeology answered, (2) constraints verified, (3) test written RED-first, (4) the Learning #12 Source-column question DEFERRED to BL-11 with a stated reason — the table is append-only and those rows are merged upstream, so rewriting them needs a maintainer exception, and that decision is the deliverable, not the edit.
+what_was_done: Traced all five citations to docs/audits/2026-05-02-mattpocock-skills-evaluation.md (commits 151f743, 3a497b4), written in session S438 of a DIFFERENT methodology instance whose Learnings table ran into the 30s. THE FINDING WAS LARGER THAN THE ITEM: three of the five did not merely dangle, they asserted framework rules that do not exist. Verified by grep, not inference — the only `150`-as-handoff-length string in the entire distributed corpus is RECOMMENDED_SKILLS.md:94 itself, the line claiming the methodology has a handoff length discipline; FM #15 names the THIN handoff as the failure, so the corpus's pressure runs the opposite way. Likewise DEVELOPMENT_WORKSTREAM.md:23 routed the reader to ITERATIVE_METHODOLOGY.md §Knowledge Accumulation, which EXISTS (so check-links and every heading check pass) but contains no numbered learnings and nothing about issues — an absence, strictly harder to detect than a broken link. So the reflex fix (strike the number, keep the gloss) would have converted unreachable citations into unattributed FALSE claims, which no checker can see. Each site re-grounded on a reachable referent; every anchor verified before writing (FM #15's countermeasure literally reads "Phase 3D has 6 minimum requirements"; transition rule 2 is the acceptance-criteria bar; §Sub-Agent Dispatch Pattern at :249/:258/:274/:276). Dispositions unchanged — the guardrail lens caught that my draft Site A turned a ratified rejection into a conditional endorsement, contradicting ITERATIVE_METHODOLOGY.md:385, which uses /to-issues as THE worked example of FM #2; corrected. Mechanized per Learning #12: canonical-only bin/check-citations + Test 23, suite 84 → 91 on the branch. Ran a 12-agent workflow (wf_d4c9b6a8-9b2: 5 discovery lenses → 3 candidate strategies → synthesis → 3 adversarial verifiers, ~1.7M subagent tokens). Fork resynced (fc4d297) with the conflict set COMPUTED via `git merge-tree --write-tree --name-only`, not predicted — the exact Learning #13 countermeasure this repo shipped today. BL-10 retired; BL-11 and BL-12 raised.
+next_steps: RECOMMENDED DELIVERABLE: docs/planning/model-use-provenance-plan.md Phase 3 — it is NOW UNBLOCKED. Every prior session (S18/S19/S20/S21) gated it on upstream PR #63 merging, and #63 merged mid-session today (f9561a4, 22:11 UTC); fork main carries Learning #13 as of fc4d297, so the Learnings table is 1–13 and a new row is #14 with no collision. Read §8 of that plan for the phase's completion criteria. SECOND CHOICE if you want the smaller item: BL-12's first bullet is a genuine one-word fix in a distributed file — workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md:55 says "The 19 anti-patterns" and the list has 20, self-contradicted at :306 in the same file ("#9, #10, #11 … the remaining 17"). BEFORE EITHER, check PR #64's status (`gh pr view 64 --repo KJ5HST/methodology`): it is OPEN at this close-out and touches bin/tests.sh, so if it merges, the NEXT fork resync WILL conflict there — upstream will have Test 23 = check-citations while this fork has Test 23 = model-report (fork-only). Resolve by renumbering the fork's model-report test to Test 24; do NOT renumber the upstream one. That conflict does not exist yet and is not in any current merge-tree output — it appears only after #64 merges. Also still open and unclaimed: BL-8, BL-9, BL-11, BL-12.
+key_files: bin/check-citations:1 (new canonical-only checker; esp. read():57 for the OSError guard that mutation testing forced, extract_definitions():82 for why the parse is section-anchored, and the MIN_* floors at :39-41), bin/tests.sh:509 (Test 23 on the PR branch — 7 assertions incl. the fixture control), docs/planning/BACKLOG.md:71 (BL-11) and :95 (BL-12), CHANGELOG.md:35 (this session's fork-side entry), starter-kit/SESSION_RUNNER.md:378 (Learning #13, now on fork main after the resync — the table is 1–13, so the next appended row is #14)
+gotchas: (1) PR #64 IS OPEN, NOT MERGED. Everything on branch docs/bl-10-dangling-learning-citations (1eac7a4, 268f1e5) is invisible to fork main — `bin/check-citations` does not exist here, and fork main's suite is 92, not 91. Do not quote 91 against this fork or 92 against upstream. (2) THE NEXT RESYNC WILL CONFLICT IN bin/tests.sh once #64 merges — see next_steps. It is NOT visible to `git merge-tree` today, so a reader who checks now and trusts the empty result will be surprised. This is exactly the Learning #13 trap in the other direction: a computation is only valid for the state it was run against. (3) MY OWN CHECKER SHIPPED WITH A REAL DEFECT that only mutation testing found: a missing registry file raised an uncaught OSError and exited 1 (corpus defect) instead of 2 (checker defect), so a broken tree would have read as "unresolved citations". Fixed at bin/check-citations:57. The lesson generalizes — I proved the three GUARDS trip before trusting them, but not the FIXTURE, and a broken fixture makes exit-2 assertions pass for the wrong reason. There is now an explicit fixture control; keep it. (4) check-links moves 82 → 85 ON THE BRANCH ONLY (three new cross-references). Frozen receipts quote 82 and cannot be edited; do not read the change as a regression. (5) The two HANDOFFS sequences remain separate: upstream S2 ≡ fork S6 and upstream S1 ≡ fork S1 (proved by date + active_task, not assumed). Any future resync must re-prove this before unioning — the receipt bodies are NOT byte-identical, so a verbatim-containment test alone reports them as missing and tempts you to double-record. (6) bin/check-handoff is green on this receipt, but that is worth exactly what the tool claims and no more — it validates STRUCTURE on the NEWEST block only, never quality and never coverage. It was necessarily red for the whole session while the 1B stub sat `pending`, so "check-handoff green" is not a mid-session signal, and it would stay green on a repo whose newer commits had no receipt at all.
+runtime_smoke: n/a — markdown + python3-stdlib tooling, no runtime or render surface. Branch: bin/tests.sh 91/91 (84 upstream baseline + 7 new), bin/check-citations OK (15 citations / 3 files / 13-row table), bin/check-links OK (85 links / 21 files). Fork main after resync: bin/tests.sh 92/92, bin/check-links OK (82 links / 21 files). RED-first proof executed and observed, not asserted: check-citations reported exactly 6 findings across the 5 sites against the unpatched corpus (5 sites, 6 tokens — `#28/#29` correctly expands to two), and each guard was separately driven RED (renamed heading → 2, broken extractor → 2, table hole → 2, injected #99 → 1, --repo with no value → 2). Ledger enumerates 71 source-tagged entries; HANDOFFS parses 24 blocks with 24 fence opens / 24 closes.
+changelog_ref: CHANGELOG.md:35 "2026-08-01 · [BL-10] Five dangling `Learning #N` citations fixed upstream (PR #64), the invariant mechanized, and the fork resynced" — plus the branch's own entry, which carries the full narration
+commit: pending — reconciled at next Orient (this receipt ships in the very commit whose sha it would name); the prior claim commit is 5a3a890, and the resync merge is fc4d297
 ```
-Phase 1B claim stub — `status: pending`. Overwritten to `status: complete` at Phase 3D.
+Self-score **8/10.** **+** Wrote the Phase 1B stub before any technical work — the single thing S21
+identified as its own worst failure, and the reason this session's five commits across two branches
+were never at risk of being a ghost. **+** The central finding is one the backlog item did not
+contain and a number-only fix would have buried: three of the five citations assert framework rules
+that do not exist, so the obvious repair would have replaced a detectable defect with an undetectable
+one. It was established by grep against the whole distributed corpus, not by reading the audit.
+**+** Re-derived the verifiers' "PR #63 is merged" claim from `gh` before acting on it — it
+contradicted my own Phase 0 check and was true, and several downstream decisions depended on it.
+**+** Mutation-tested my own fixture and found a real defect in the checker I was about to ship.
+**−** I proved the three guards tripped but initially did **not** prove the fixture was sound, which
+is the same vacuity trap Learning #12 names explicitly; the control exists only because a deliberate
+mutation exposed it. I should have written it first. **−** Committed six files in one commit against
+`SAFEGUARDS.md`'s explicit per-commit cap, then had to soft-reset and split — the cap is one of the
+disciplines this repo publishes, and I broke it while editing that same corpus. **−** Wrote two
+claims into this very receipt — that `bin/check-handoff` had not been run — and had to correct them
+after running it. Small, but a receipt is the one artifact whose verification claims should not need
+correcting.
+
+Predecessor (S21) evaluation: **6/10.** Its `next_steps` were the best I have inherited: they named
+the exact deliverable, the five sites with line numbers, a reproduction command, and — decisively —
+**four things to settle first, none of them optional**, including "run `git log -S` first, do not
+guess at the intended target." I followed that instruction literally and it led straight to the S438
+portfolio-instance origin; a session that had guessed would have invented plausible referents.
+Its warning not to append a Learnings row on fork `main` was correct when written and I verified it
+still held before relying on it. **Docked for two things.** Its own receipt records skipping the
+Phase 1B stub — a straight protocol violation it correctly refused to excuse, and the reason its
+self-score of 6 is right. And its `key_files` pointed at `bin/tests.sh:409` as "the insertion point
+for a new one"; the actual insertion point is the end of the file, and 409 is where the *previous*
+test begins. Minor, but it is the class of claim Learning #13 exists to catch: a forward-looking
+pointer stated as fact rather than computed. **Not docked for:** raising BL-10 and deliberately
+keeping it out of PR #63. That call was correct, and it is why this session had a clean, well-scoped
+deliverable to pick up.
 
 ---
 

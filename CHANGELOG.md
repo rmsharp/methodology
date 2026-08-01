@@ -32,6 +32,53 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-08-01 · [BL-10] Five dangling `Learning #N` citations fixed upstream (PR #64), the invariant mechanized, and the fork resynced
+
+**BL-10 shipped as [PR #64](https://github.com/KJ5HST/methodology/pull/64)** (branched from
+`upstream/main`, since both target files are `bin/_manifest.py`-**TRACKED** — a fork-local fix would
+have repaired the defect for nobody). Full narration lives in that branch's own ledger entry; this
+entry records the fork-side actions.
+
+- **The finding was larger than the item.** All five citations trace to
+  `docs/audits/2026-05-02-mattpocock-skills-evaluation.md` (`151f743`, `3a497b4`), written in
+  **session S438 of a different methodology instance** whose Learnings table ran into the 30s.
+  **Three of the five asserted framework rules that do not exist** — `RECOMMENDED_SKILLS.md:94`
+  rejected `/caveman` on a *"length discipline (≤150 lines for handoffs)"* whose only occurrence in
+  the entire distributed corpus was the line claiming it, and `DEVELOPMENT_WORKSTREAM.md:23` routed
+  the reader to a section that exists but contains nothing it promised. So the reflex fix (strike the
+  number, keep the gloss) would have converted unreachable citations into **unattributed false
+  claims** — strictly worse, because no checker can see those.
+- **Mechanized per Learning #12**, RED-first: canonical-only `bin/check-citations` + Test 23
+  (suite 84 → 91 on the branch). Mutation-testing the *fixture* caught a real defect in the checker
+  itself — a missing registry file exited **1**, indistinguishable from a corpus finding — which is
+  this campaign's own defect class surviving inside its fix. Fixed before shipping.
+- **PR #63 merged mid-session** (`f9561a4`, 22:11 UTC), discharging the "do not append a Learnings
+  row" gate that S18/S20/S21 all carried. `docs/planning/model-use-provenance-plan.md` Phase 3 is
+  **unblocked**.
+- **Fork resynced** from `upstream/main` (merge `fc4d297`). Conflict set **computed**, not predicted,
+  per the Learning #13 this repo just shipped: `git merge-tree --write-tree --name-only` returned
+  exactly `CHANGELOG.md` + `HANDOFFS.md`, both routine prepend-only unions. Both resolved by proving
+  the superset rather than picking a side — every upstream receipt was checked against ours first,
+  establishing that **upstream S2 ≡ fork S6** and **upstream S1 ≡ fork S1** (same dates, same
+  `active_task`; one session under two numbers), so only upstream **S5** was genuinely new. Result:
+  24 receipt blocks, 24 fence opens / 24 closes, no receipt from either side lost.
+- **Backlog:** BL-10 retired to the Completed table; **BL-11** (unreachable non-`Learning` referents
+  — the four Learnings Source rows, `HOW_TO_USE.md:861`'s `anti-pattern #31`, and `BL-5`/`Layer N`
+  tokens inside the adopter-installed dashboard) and **BL-12** (two verified defects found in the
+  sweep but outside BL-10's scope: the `"19 anti-patterns"` count that is really **20**, and the
+  Learnings table's absent *shape* coverage) raised in the same commit.
+- **Decisions:** no version event (matching PR #63's precedent the same day); scope held to the five
+  sites plus one audit-bridge sentence; fork resync done now rather than deferred. All three the
+  operator's call.
+- **Model:** Claude Opus 5 (1M context), with a 12-agent design/adversarial-review workflow
+  (5 discovery lenses → 3 candidate strategies → synthesis → 3 verify lenses, ~1.7M subagent tokens).
+  Two verifier claims were re-derived from `git` before being acted on — one of them, "PR #63 is
+  merged," contradicted this session's own Phase 0 check and turned out to be true.
+- **Verified (fork `main`):** `bin/tests.sh` **92/92** · `bin/check-links` OK (82 links / 21 files) ·
+  ledger enumerates **71** source-tagged entries · Learnings table now ships rows **1–13**.
+
+---
+
 ### 2026-08-01 · [ad hoc] Upstream PR #63 corrected — its central claim was false, not merely unclear; BL-10 raised
 
 The operator reported PR #63 ("Learning #13 — a handoff's predictions decay") as unintelligible,
