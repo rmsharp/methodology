@@ -47,7 +47,7 @@ written, and the sentence was written inside "Layer 8" — the very commit the P
 counts across the branch's life were measured directly: **1** (and that one was `HANDOFFS.md`, not
 `CHANGELOG.md`) → 5 → 5 → **7**, so "one CHANGELOG union conflict" was true at no point.
 
-- **Change:** on branch `docs/learning-13-handoff-predictions` (commit `867c365`, **not pushed**),
+- **Change:** on branch `docs/learning-13-handoff-predictions` (squashed to `73b72c0`, force-pushed),
   the Learning #13 row and its upstream ledger entry are rewritten to the stronger, checkable lesson
   — *a forward-looking claim cannot be checked by re-reading a file; it has to be computed* — which
   also explains why the existing rows miss it (FM #11's remedy is "re-read the file", and a
@@ -58,16 +58,32 @@ counts across the branch's life were measured directly: **1** (and that one was 
   the countermeasure is executable rather than ritual. On `main`, **BL-10** raised in
   `docs/planning/BACKLOG.md` for five dangling `Learning #28/#30/#34` citations live in two
   distributed files — the same defect class, deliberately **not** bundled into PR #63 (FM #17).
-- **Commit/PR:** branch `867c365` (local only, awaiting operator review of disposition);
-  BL-10 + this entry on `main` this commit. [PR #63](https://github.com/KJ5HST/methodology/pull/63)
-  remains OPEN and un-updated pending that decision.
+- **The maintainer had already approved the original, and his review did not catch the error.** His
+  comment (2026-07-31) ran every check independently and concluded the case "verifies from both
+  ends — the upstream S3 receipt does say it, and the fork's S17 receipt records seven with the same
+  cause." Both halves are true; taking the receipt's account of *the cause* on trust is the failure
+  the corrected row names. This session initially recommended force-pushing on the stated premise
+  that the PR was unreviewed — **that premise was false and was not checked before acting.** No
+  formal review state was dismissed (it was a plain comment, `reviewDecision` empty), but the
+  recommendation rested on an unverified claim, in a session about unverified claims.
+- **Commit/PR:** branch squashed to `73b72c0` and force-pushed to `origin`; BL-10 + this entry on
+  `main`. [PR #63](https://github.com/KJ5HST/methodology/pull/63) retitled *"a forward-looking claim
+  has to be computed, not re-read"*, body replaced, and three comments posted: the rewrite notice,
+  a reply to the maintainer's four review points, and a correction (below). Awaiting his merge.
+- **Two further self-corrections, both caught before they became durable.** (1) The first rewrite
+  *grew* the row 1,604 → 1,986 bytes against his size advisory; measured, then trimmed to **1,562**
+  — smaller than the original, every column inside the rows 1–12 envelope. (2) A public comment
+  claimed this fork's ledger lacked a `Released v3.6` entry and that this session would add one; it
+  already had one at `CHANGELOG.md:198`, missed because the check grepped only the literal
+  `Released v3` heading form. The real gap is **upstream's** ledger. Corrected in-thread.
 - **Session:** S21 · **Verified:** on the branch, `bin/tests.sh` **84/84** (upstream baseline — the
   fork's 92 includes fork-only Test 23 and must not be quoted upstream), `bin/check-links` OK (82
-  links / 21 files), Learnings table parses contiguous **1–13** with every row 4-column and rows
-  1–12 byte-unchanged (diff is 1 insertion / 1 deletion), brand-neutrality grep empty, and no
-  fork-topology token in the Learning column. Every quantitative claim above was re-derived directly
-  from `git` rather than taken from the workflow's own report — which is how the two adversarial
-  verifiers' findings were confirmed, including one that had re-created the original's error.
+  links / 21 files), Learnings table parses contiguous **1–13** with every row 4-column, the diff vs
+  `upstream/main` is **1 insertion / 0 deletions** on that file so rows 1–12 are byte-unchanged,
+  brand-neutrality grep empty, and no fork-topology token in the Learning column. Every quantitative
+  claim above was re-derived directly from `git` rather than taken from the workflow's own report —
+  which is how the two adversarial verifiers' findings were confirmed, including one that had
+  re-created the original's error.
 - **Model:** Claude Opus 5 (1M context) for the diagnosis, rewrite and verification, including all
   10 workflow subagents, which inherited the session tier; the initial Phase 0 orientation and the
   fork push earlier in the session ran on Claude Sonnet 5, before an operator `/model` switch.
