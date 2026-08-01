@@ -8,6 +8,23 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S22
+date: 2026-08-01
+status: pending
+active_task: BL-10 (docs/planning/BACKLOG.md:71) — five dangling `Learning #N` citations (#28/#29, #30 ×3, #34) live in two bin/_manifest.py-distributed files against a Learnings table that ends at #12. Settle the four questions S21 named before implementing: (1) what the citations were MEANT to say (git archaeology, not a guess), (2) distributed-file constraints, (3) a bin/tests.sh assertion driven RED first per Learning #12 rather than another review-time grep, (4) the Learning #12 Source-column convention question (fork-only S9–S16 / Layer 1 / Layer 7 tokens, unreachable from upstream) — decide or explicitly defer in this session.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/BACKLOG.md:71 (the item), starter-kit/RECOMMENDED_SKILLS.md:90 and workstreams/DEVELOPMENT_WORKSTREAM.md:23 (two of the five sites), starter-kit/SESSION_RUNNER.md:365 (the Learnings table, ends at #12), bin/tests.sh:409 (Test 23, the newest test and the insertion point for a new one)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub — `status: pending`. Overwritten to `status: complete` at Phase 3D.
+
+---
+
+```handoff
 session: S21
 date: 2026-08-01
 status: complete
