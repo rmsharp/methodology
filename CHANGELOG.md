@@ -76,6 +76,13 @@ counts across the branch's life were measured directly: **1** (and that one was 
   claimed this fork's ledger lacked a `Released v3.6` entry and that this session would add one; it
   already had one at `CHANGELOG.md:198`, missed because the check grepped only the literal
   `Released v3` heading form. The real gap is **upstream's** ledger. Corrected in-thread.
+- **Close-out (Phase 3).** S21 receipt written to `HANDOFFS.md`, `bin/check-handoff` green.
+  **Phase 1B was skipped this session — no claim stub was ever written**, so until this receipt
+  landed, five commits across two branches and three public PR comments stood with no receipt at
+  all; recorded as the receipt's first gotcha rather than quietly fixed. **No new Learnings row:**
+  fork `main`'s table ends at **12** and `#13` exists only on the unmerged PR #63 branch, so
+  appending here would collide — the same trap S18 flagged for the model-use plan's Phase 3, which
+  stays blocked on the same PR. **BL-10 is the recommended next deliverable** (`BACKLOG.md:71`).
 - **Session:** S21 · **Verified:** on the branch, `bin/tests.sh` **84/84** (upstream baseline — the
   fork's 92 includes fork-only Test 23 and must not be quoted upstream), `bin/check-links` OK (82
   links / 21 files), Learnings table parses contiguous **1–13** with every row 4-column, the diff vs
