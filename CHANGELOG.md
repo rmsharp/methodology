@@ -32,6 +32,46 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-08-01 · [ad hoc] Upstream PR #63 corrected — its central claim was false, not merely unclear; BL-10 raised
+
+The operator reported PR #63 ("Learning #13 — a handoff's predictions decay") as unintelligible,
+"assuming knowledge from a source outside itself." That diagnosis was correct and led to a larger
+one. A 10-agent diagnosis + rewrite workflow (4 reader/fact-check/precedent lenses → 3 candidate
+rewrites → synthesis → 2 adversarial verifiers) found the PR's load-bearing inference is **refuted
+by one command in the maintainer's own clone**:
+`git log -S 'expect one CHANGELOG union conflict' -- HANDOFFS.md` returns `bec4095`, and
+`git show --stat bec4095` shows that same commit changing **seven** files — the seven the later
+merge collided in. The prediction did not "decay"; it was **never derived**. The two commits the PR
+blamed for invalidating it (`eeb827f`, `7a7e9a2`) both landed *hours before* the sentence was
+written, and the sentence was written inside "Layer 8" — the very commit the PR blames. Conflict
+counts across the branch's life were measured directly: **1** (and that one was `HANDOFFS.md`, not
+`CHANGELOG.md`) → 5 → 5 → **7**, so "one CHANGELOG union conflict" was true at no point.
+
+- **Change:** on branch `docs/learning-13-handoff-predictions` (commit `867c365`, **not pushed**),
+  the Learning #13 row and its upstream ledger entry are rewritten to the stronger, checkable lesson
+  — *a forward-looking claim cannot be checked by re-reading a file; it has to be computed* — which
+  also explains why the existing rows miss it (FM #11's remedy is "re-read the file", and a
+  prediction has no file). Removed every referent unreachable from `upstream/main`: the S17 receipt
+  (upstream's `HANDOFFS.md` holds only S1–S3), "Layer 8", "ported from", and the fork/upstream
+  topology; fixed the misquote (`CHANGELOG.md` → `CHANGELOG`, which made the quoted string
+  ungreppable); added the exact non-mutating command `git merge-tree --write-tree --name-only` so
+  the countermeasure is executable rather than ritual. On `main`, **BL-10** raised in
+  `docs/planning/BACKLOG.md` for five dangling `Learning #28/#30/#34` citations live in two
+  distributed files — the same defect class, deliberately **not** bundled into PR #63 (FM #17).
+- **Commit/PR:** branch `867c365` (local only, awaiting operator review of disposition);
+  BL-10 + this entry on `main` this commit. [PR #63](https://github.com/KJ5HST/methodology/pull/63)
+  remains OPEN and un-updated pending that decision.
+- **Session:** S21 · **Verified:** on the branch, `bin/tests.sh` **84/84** (upstream baseline — the
+  fork's 92 includes fork-only Test 23 and must not be quoted upstream), `bin/check-links` OK (82
+  links / 21 files), Learnings table parses contiguous **1–13** with every row 4-column and rows
+  1–12 byte-unchanged (diff is 1 insertion / 1 deletion), brand-neutrality grep empty, and no
+  fork-topology token in the Learning column. Every quantitative claim above was re-derived directly
+  from `git` rather than taken from the workflow's own report — which is how the two adversarial
+  verifiers' findings were confirmed, including one that had re-created the original's error.
+- **Model:** Claude Opus 5 (1M context) for the diagnosis, rewrite and verification, including all
+  10 workflow subagents, which inherited the session tier; the initial Phase 0 orientation and the
+  fork push earlier in the session ran on Claude Sonnet 5, before an operator `/model` switch.
+
 ### 2026-07-30 · [ad hoc] S20 — model-use provenance Phase 2 (bin/model-report + Test 23) shipped
 
 Implements Phase 2 of the ratified `docs/planning/model-use-provenance-plan.md` (§4.4/§8):

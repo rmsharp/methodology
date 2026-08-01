@@ -1,8 +1,10 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: REOPENED 2026-07-25 — BL-8 and BL-9 are open, both deliberately sequenced *after*
-> the dashboard signal-integrity campaign closes (Layer 7, then Layer 6).** BL-1 – BL-7 remain
-> complete; the retirement note below is preserved as the record of that cycle.
+> **STATUS: REOPENED 2026-07-25 — BL-8, BL-9 and BL-10 are open.** BL-8 and BL-9 were deliberately
+> sequenced *after* the dashboard signal-integrity campaign closed (Layer 7, then Layer 6), which it
+> now has (v3.6 shipped 2026-07-27), so both are unblocked. BL-10 was raised 2026-08-01 and is
+> independent of that campaign. BL-1 – BL-7 remain complete; the retirement note below is preserved
+> as the record of that cycle.
 
 > **(prior status) RETIRED (again) — BL-1 – BL-7 all complete, 2026-07-08.**
 > BL-7 (capability-tiered review, an elective vertical-slice addition) shipped via
@@ -19,10 +21,11 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 ## Open items
 
-**Both are sequenced AFTER the dashboard signal-integrity campaign closes** — i.e. after **Layer 7**
-(the installer/doc-only fix, ratified S14) and then **Layer 6** (close-out + release decision R1).
-Neither blocks that campaign, and neither is a change to the methodology. Raised and measured in
-**S14**; see `CHANGELOG.md` for that session's entries.
+**BL-8 and BL-9** were sequenced AFTER the dashboard signal-integrity campaign closed — i.e. after
+**Layer 7** (the installer/doc-only fix, ratified S14) and then **Layer 6** (close-out + release
+decision R1). That campaign shipped as **v3.6** on 2026-07-27, so neither is blocked any longer.
+Neither is a change to the methodology. Both were raised and measured in **S14**; see `CHANGELOG.md`
+for that session's entries. **BL-10** is unrelated to the campaign and was raised 2026-08-01.
 
 **BL-8 — Subagent capability-tiering: adopt as an operational default, or decline.**
 *Not a methodology change, and no document needs editing.* `SESSION_RUNNER.md` §Vertical Slice
@@ -64,6 +67,27 @@ per-session floor is `SESSION_RUNNER.md` + `SAFEGUARDS.md`, and the signal-integ
 the **newest** receipt, so archiving older ones does not break it; and the `§Versioning` ↔
 `CHANGELOG.md` cite-don't-restate boundary (v3.1) must survive whatever `CLAUDE.md` extraction is
 chosen.
+
+**BL-10 — Five dangling `Learning #N` citations are live in adopter-distributed files.**
+*Raised 2026-08-01 while correcting upstream PR #63; deliberately NOT bundled into it (FM #17).*
+The Learnings table ends at **#12**, and the highest numbered row anywhere in
+`starter-kit/SESSION_RUNNER.md` is FM **#27** — yet five sites cite Learnings **#28**, **#30** and
+**#34**, which have no referent anywhere in the corpus:
+- `starter-kit/RECOMMENDED_SKILLS.md:90` (`Learning #30`), `:94` (`Learning #34`), `:95` (`Learnings #28/#29`)
+- `workstreams/DEVELOPMENT_WORKSTREAM.md:23`, `:56` (`Learning #30`)
+`DEVELOPMENT_WORKSTREAM.md:23` is the worst of them — it directs the reader to *"Learning #30 (in
+`ITERATIVE_METHODOLOGY.md` §Knowledge Accumulation)"*, and that section contains no numbered
+learnings at all. **Both files are `bin/_manifest.py`-distributed**, so every adopter already has
+these. Verify with:
+`grep -rnoE "Learning[s]? #[0-9]+" starter-kit/ workstreams/ | awk -F'#' '$2+0 > 13'`
+*Same defect class as PR #63* — a citation resolvable only against a source the reader does not
+have — which makes it the natural companion item, not a reason to widen that PR.
+*Related, decide together:* **Learning #12** (already merged upstream) cites `S9–S16` and
+`Layer 1`/`Layer 7` in its Source column; those are fork-only session/campaign vocabulary with no
+referent in `upstream/main`. Not wrong, but unreachable — the same convention question.
+*Candidate fix, per Learning #12's own rule:* the invariant ("every `Learning #N` citation resolves
+to a row that exists") is a relation between two enumerable sets, so it belongs in `bin/tests.sh` as
+an assertion driven RED first — not in another review-time grep.
 
 ## Completed items (BL-1 – BL-7)
 
