@@ -65,6 +65,42 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [ad hoc] Reconcile-on-read repair: nine `commit:` fields that named no sha
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` ("committed on its
+own, separate from this session's later deliverable") and `:42` ("does not become this session's
+deliverable"). Precedent: `728f39a`. The analysis this repair came out of ships separately as
+**BL-14**.
+
+- **The nine, and what each now names.** Seven carried the literal `pending`: S27 → `1298af7`,
+  S22 → `6f994ae`, S21 → `36e9195`, S20 → `596ff18`, S19 → `3737acd`, S18 → `8e6f292`
+  (`docs/archive/HANDOFFS-archive.md`), S6 → `21fb521` (same archive). Two more named no sha in the
+  answer slot at all: S26 → `54426cb` and S25 → `3aee4e3`, both reading `this commit — …`.
+  **S25 contained no sha anywhere in the field** — the most unresolvable value in the corpus, and
+  the one that keying on the literal word `pending` would have missed.
+- **Every target derived, not assumed.** Each is the commit in which that receipt's block first
+  appeared with `status: complete`, computed by walking `git log --all --full-history` over both
+  ledger files with the checker's own `extract_blocks`/`parse_block` — never grep, per the
+  fence-nesting rule at `bin/check-handoff:83`. All nine re-verified as ancestors of `HEAD`.
+- **S6 is dual-homed and is the one case that is not a one-token edit.** It was authored at
+  `21fb521` as `session: S2` on `feat/capability-tiered-review`, then renumbered S2 → S6 and given
+  its fork-side close-out narrative in the merge `ab5b2d6`. `21fb521` is an ancestor of **both**
+  `upstream/main` and this fork's `main`; **`ab5b2d6` is fork-only.** `upstream/main` still carries
+  the identical receipt as `session: S2, commit: pending`. Naming `ab5b2d6` alone would have written
+  a value unresolvable in the canonical copy of the same receipt — the unreachable-reference trap
+  [Learning #13](starter-kit/SESSION_RUNNER.md) was added to prevent. That copy is upstream's to
+  fix, not the fork's, and no upstream action was taken.
+- **Shape of the edit: replace the leading token, keep every word of existing prose.** `status` is
+  untouched on all nine — the historical reconciles (`e5638af`, `4e2901f`, `bc2481d`) all left it
+  `complete`, and `reconciled` is reserved for a receipt a later session *reconstructed*, which
+  none of these are.
+- **Verified after.** 31 of 32 receipts now lead their `commit:` with a sha; the sole exception is
+  this session's own open S28 Phase 1B stub, which carries no `commit:` key at all and is exempt by
+  construction.
+- **The archive was edited, and that rewrites no history** — `docs/archive/HANDOFFS-archive.md` is
+  frozen *content*, not a frozen file, and two of the nine live there.
+
 ### 2026-08-02 · [ad hoc] `bin/check-handoff` learned the Phase 1B stub schema — the flag advertised a capability the tool never had
 
 **Model:** Claude Opus 5 (1M context) — implementation, both workflows, and this entry.
