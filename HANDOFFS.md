@@ -29,6 +29,23 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S27
+date: 2026-08-01
+status: pending
+active_task: Resolve the `bin/check-handoff --allow-pending` contradiction that S26 identified and deliberately did not fix (FM #17). The flag's docstring (`bin/check-handoff:36`) and its `--help` text both name "checking a just-written Phase 1B stub" as its purpose, but it relaxes exactly ONE assertion — the `status == pending` finding — while every other assertion runs at full strength against a document both specs describe as deliberately partial (`starter-kit/SESSION_RUNNER.md:88` "the fields you can fill now (`session`, `date`, `active_task`)"; `starter-kit/HANDOFFS.md:26` "filling what you can"). THE DELIVERABLE IS THE DECISION FIRST AND THE EDIT SECOND: either the FLAG is wrong (it should apply a stub schema) or the CONVENTION is wrong (stubs should carry every key). Decision goes to the operator at the Present gate BEFORE any implementation. SCOPE: fork-local only; `bin/check-handoff` and `bin/tests.sh` are canonical-only (verified absent from `bin/_manifest.py`'s 22-entry DISTRIBUTION), so no adopter file and no distributed file is in scope. NO outward-facing action on KJ5HST/methodology — the standing rule is unweakened by issue #65 being open.
+what_was_done: pending
+next_steps: pending
+key_files: bin/check-handoff:36 (the `--allow-pending` docstring line that makes the claim), bin/check-handoff:51 (REQUIRED_KEYS — the unconditional list), bin/check-handoff:145 (`validate()`, whose `allow_pending` parameter gates only the line-185 status finding), bin/check-handoff:161 (the two `check_int_range` calls that reject `pending` as a score), starter-kit/SESSION_RUNNER.md:88 (Phase 1B, "the fields you can fill now"), starter-kit/HANDOFFS.md:26 (the seed's "filling what you can"), starter-kit/HANDOFFS.md:76 (the `self_score`/`predecessor_score` distinctness rule and the `commit: pending` / `what_was_done: pending` legality carve-out that already exists for two other keys), bin/tests.sh:1 (Tests 21-22 cover check-handoff; no test exercises --allow-pending)
+gotchas: MEASURED AT CLAIM against HEAD `54426cb`, before any byte moved, over git history rather than the working tree. (1) THE POPULATION IS 21 STUBS, NOT 4 — S26's own commit message `e4b4070` says "all four prior stubs fail it identically" and its self-review corrected that to "17 distinct sessions"; both are wrong. Enumerating every `status: pending` receipt in every version of `HANDOFFS.md` and `docs/archive/HANDOFFS-archive.md` across 63 ledger-touching commits on `--all` refs yields **21 distinct stubs, keyed by session+date**, and **0 of 21 pass** `--allow-pending`. This is the third consecutive session to miscount this same figure by reading the visible file instead of the population. (2) THERE ARE TWO STUB DIALECTS AND THE CHECKER REJECTS BOTH — this is the finding that decides the design and it is not in any prior record. The fork's 18 stubs (`da46b19` S8 2026-07-13 → `e4b4070` S26 2026-08-01) OMIT `self_score`/`predecessor_score` and fail with `missing required key` ×2; the maintainer's own 3 stubs (`c3157e8` S5, `a4e2b30` S7, `9c9c39c` S8, all 2026-08-01, all authored by KJ5HST) WRITE `self_score: pending` and fail with `must be an integer 1..10 (got 'pending')` ×2. The author of the checker, working in its home repo, independently reached for the value his own tool rejects — so "the convention is wrong, just fill the scores in" is not a reading the evidence supports. (3) FOUR EARLY FORK STUBS OMIT NINE KEYS, NOT TWO (`da46b19` S8, `65b1e8e` S15, `71ae4a1` S16, `9e93588` S3) — exactly the literal `(session, date, active_task)` triple `SESSION_RUNNER.md:88` names. Any stub schema must decide whether that maximal reading is still legal or was always drift; the two specs disagree in emphasis and neither is binding on the point. (4) THE SESSION-NUMBER COLLISION IS LIVE IN THIS VERY MEASUREMENT: `S8` appears twice in the population under two different dates and two different authors. Key every row by session+date, exactly as `HANDOFFS.md:16` now requires. (5) THIS STUB IS SPECIMEN #22 and it is written in the fork's dialect deliberately, so the pre-fix baseline stays 0/22 rather than being quietly improved by the session doing the fixing — count against the pre-change tree, never against a tree the measurer has already touched.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub — `status: pending`. Overwritten to `status: complete` at Phase 3D.
+
+---
+
+```handoff
 session: S26
 date: 2026-08-01
 status: complete
