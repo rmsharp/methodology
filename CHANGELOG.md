@@ -65,6 +65,34 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [ad hoc] Reconcile-on-read: S28's `commit:` field → `6d47624` — the first time the duty was discharged as a duty
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`7752114` (the nine-receipt repair the day before), `728f39a`. It is not S29's deliverable and does
+not license work beyond it (FM #17).
+
+- **What was reconciled.** S28's receipt (`HANDOFFS.md:32`, 2026-08-02) closed out with
+  `commit: pending`, legitimately — it shipped inside the very commit whose sha it names. That sha
+  is **`6d47624`**, derived and not assumed: the receipt's first appearance with `status: complete`,
+  found by walking `git log --all --full-history` over `HANDOFFS.md` with the checker's own
+  `extract_blocks`/`parse_block`, then re-verified as an ancestor of `HEAD`. Leading token replaced;
+  every word of existing prose kept, `status` untouched — the shape `7752114` established.
+- **This is the first discharge that was owed rather than remembered.** The base rate BL-14 measured
+  is six firings, only four deliberate, all inside one 8-hour window on 2026-07-25 — one operator, by
+  hand. This one was found at Phase 0 by the mechanism BL-14 shipped, in the session immediately
+  after it shipped.
+- **Discharged BEFORE the Phase 1B claim, deliberately.** Test 25 L1 exempts the newest receipt
+  positionally, so it was green while S28 was still newest and would have gone RED the instant S29
+  prepended its own. Repairing first means S29 never started from a red suite
+  (`starter-kit/SAFEGUARDS.md:34`) — and it is the honest record: the mechanism was *observable*
+  here, not *observed*. The distinction matters, because a session that claims first and repairs
+  second is the one that actually proves the tripwire fires.
+- **BL-14's open half is untouched by this.** The DISTRIBUTED spec still promises a reconcile that no
+  procedure assigns; one hand-discharge does not make it a procedure. That choice — schedule it into
+  `starter-kit/SESSION_RUNNER.md` Phase 0, or delete the promise from the seed — remains blocked on
+  the paused channel.
+
 ### 2026-08-02 · [BL-14] The `commit:` answer-slot rule — a distributed promise that had no owner and no detector
 
 **Model:** Claude Opus 5 (1M context) — implementation, the design panel, and this entry.
