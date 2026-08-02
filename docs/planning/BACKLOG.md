@@ -66,20 +66,23 @@ cost is the saving above.
 **BL-9 — This repo has drifted from two size disciplines it publishes, and a third has no rule at all.**
 *Also not a new proposal — two of the three are rules this repo already states and does not follow.*
 
-> **PARTIALLY COMPLETE. Fork-local scope, operator-approved. Remaining order: L3, then L2 — each its
-> own session.**
+> **PARTIALLY COMPLETE. Fork-local scope, operator-approved. Remaining: L2 only — its own session.**
 > - ✅ **L1 — `HANDOFFS.md` archival. DONE 2026-08-01 (S23, commit `7a71df0`).** 216 KB → 51 KB; the
 >   6 newest receipts stay, the previous 19 moved verbatim to `docs/archive/HANDOFFS-archive.md`.
 >   Dashboard output byte-identical to the pre-change baseline. **This closed "the genuine gap"** —
 >   the missing archival rule — *for this repo*; writing that rule into the framework is distributed
 >   content and stays out of scope while the upstream channel is paused.
-> - ⬜ **L3 — extract `CLAUDE.md` §Versioning. DO THIS NEXT**, ahead of L2: `CLAUDE.md` is
->   auto-loaded into *every* session's context, so its size is a recurring cost, whereas
->   `CHANGELOG.md` is read on demand. Constraints verified in S23: the pointer must be a **plain
->   Markdown link, never an `@`-import** (`starter-kit/BOOTSTRAP.md:195` — an `@`-import is expanded
->   into context every session and would defeat the point); the v3.1 §Versioning ↔ `CHANGELOG.md`
->   cite-don't-restate boundary must survive; `CLAUDE.md` is **not** in `bin/_manifest.py`, so no
->   adopter is affected and no upstream action is needed.
+> - ✅ **L3 — `CLAUDE.md` §Versioning extracted. DONE 2026-08-01 (S24, commit `7603f10`).**
+>   52,909 → 8,519 bytes (**−83.9%**), 122 → 98 lines; the 25 version bullets moved verbatim
+>   (md5-identical payload) to [`docs/RELEASE_HISTORY.md`](../RELEASE_HISTORY.md). All three S23
+>   constraints held: plain Markdown link (no `@`-import), the v3.1 cite-don't-restate boundary
+>   restated in both files, and `CLAUDE.md` confirmed absent from `bin/_manifest.py` DISTRIBUTION
+>   (22 entries) so no adopter is affected. **The constraint S23 did not surface** was the binding
+>   one: **15 markdown links target the `CLAUDE.md#versioning` anchor** — all of them in
+>   `CHANGELOG.md`, most inside dated entries the v2.7.1 convention freezes (plus 1 prose mention
+>   in a receipt = 16 occurrences). So the `## Versioning` heading stays in `CLAUDE.md` and only
+>   the list moved — every link still resolves and no frozen entry was rewritten. Dashboard health
+>   unchanged (72); suite 92/92; `check-links` 82/21 unchanged.
 > - ⬜ **L2 — `CHANGELOG.md` (172 KB).** Before implementing, settle what its own line-31 rule
 >   actually means: *"promote to `## YYYY-MM` sections"* reads as headers **within** the file, which
 >   aids navigation but reduces no bytes, whereas sharding to `docs/archive/` reduces bytes but is

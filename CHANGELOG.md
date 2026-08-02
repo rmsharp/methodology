@@ -51,12 +51,19 @@ is what makes this item runnable at all while the upstream channel is paused.
 - **The binding constraint was one the predecessor did not surface.** BL-9 and S23's handoff named
   three constraints (plain link never an `@`-import; the v3.1 cite-don't-restate boundary; no
   adopter impact) — all three held. But a claim-time sweep found a fourth that actually shaped the
-  design: **20 citations across the corpus target the `CLAUDE.md#versioning` anchor**, most of them
-  inside this ledger's own dated entries, which the v2.7.1 convention freezes as written. So the
-  `## Versioning` **heading stays in `CLAUDE.md`** and only the list beneath it moved. Every one of
-  the 20 citations still resolves, and no frozen dated entry was rewritten. The alternative —
-  moving the heading and rewriting 20 historical links — would have edited frozen records to no
-  benefit.
+  design: **15 markdown links target the `CLAUDE.md#versioning` anchor — every one of them in this
+  ledger, and most inside dated entries the v2.7.1 convention freezes as written** (plus one prose
+  mention in a `HANDOFFS.md` receipt: 16 occurrences of the anchor in all). So the `## Versioning`
+  **heading stays in `CLAUDE.md`** and only the list beneath it moved. All 15 links still resolve,
+  and no frozen dated entry was rewritten. The alternative — moving the heading and rewriting 15
+  historical links — would have edited frozen records to no benefit.
+  ***Correction, recorded rather than quietly fixed:*** the version of this entry that shipped in
+  `7603f10` said **20**, and the claim stub said *"~25"*. Both were wrong in the same way — the
+  count was taken *after* this session had already written its own citations into
+  `docs/RELEASE_HISTORY.md`, `BACKLOG.md` and this file, so the measurement included the measurer.
+  Re-measured against the claim commit `9d92c6d`, i.e. the corpus as it stood *before* any edit:
+  15 links + 1 prose mention. The design argument is unchanged; the number was not. This is
+  BL-12's own defect class (a count claim never recounted) caught inside the session that wrote it.
 - **Verbatim proven, not asserted.** The extraction ran as a **dry run first** (S23's lesson),
   asserting its structural assumptions rather than trusting line numbers, and refusing to write
   unless six checks passed. The moved payload was then verified independently of that script:
