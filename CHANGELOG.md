@@ -65,6 +65,73 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-01 · [ad hoc] Fork resynced with `upstream/main`, and the backlog reconciled to what those commits changed
+
+**Fork-local; no upstream action taken, and none is authorized.** The maintainer ran their own S7/S8
+the same evening and the fork was six commits stale (`d6dd6c9` → `e02538b`). Chosen over three other
+live tracks because every one of them had a premise that changed in those two hours.
+
+- **What upstream did, and what it did to this backlog.** `15ccb38` fixed **BL-10 independently** —
+  the same five dangling `Learning #N` citations, the same two distributed files, the same rad-con
+  root cause — so the fork's parked `1eac7a4` is **superseded**. `f85a324` filed
+  [issue #65](https://github.com/KJ5HST/methodology/issues/65), which **is BL-12's second bullet**,
+  now the maintainer's and open. `faf42fb` routed Learning #13's writer-side duty into Phase 3D;
+  `e02538b` added a `### Since v3.6 (unreleased)` README section.
+- **The one predicted conflict was the one that happened**, and it was derived rather than guessed —
+  by `git merge-tree --write-tree --name-only`, which is the technique `faf42fb` added to Phase 3D in
+  this very merge. `CHANGELOG.md` conflicted; `HANDOFFS.md`, `README.md` and `SESSION_RUNNER.md`
+  auto-merged.
+- **Both ledgers resolved as an exact union and proved independently of the scripts that resolved
+  them.** `CHANGELOG.md` 15 + 2 = **17** live at the merge commit, the 50-entry archive frozen and
+  byte-identical, **67** by the published audit command at `232514e` and **68** once this entry lands
+  (18 live + 50) — the risk here was *resurrection* of the archived entries, not
+  loss, because upstream never split its ledger. `HANDOFFS.md` 9 + 2 = **11**, fences balanced,
+  every block byte-identical. Every guard was driven **RED** against a mutated fixture first, and two
+  guards were **wrong on the first pass and fixed**: the receipt verifier reported three phantom
+  drops until it learned the archive is a valid home, and the entry slicer reported two phantom
+  mutations until `## YYYY-MM` headings were excised as structure — S25's footer trap one level up,
+  in a file S25 had already trapped once.
+- **The collision that made session numbers unusable as keys.** Upstream's new **S7/S8** (both
+  2026-08-01) collide with the fork's archived **S7** (2026-07-09) and **S8** (2026-07-13) — four
+  distinct sessions, two numbers. Receipts are keyed by **session + date** throughout, the rule is
+  now stated in `HANDOFFS.md`'s header, and `fc4d297`'s adjudication of the three older upstream
+  receipts was **reproduced rather than trusted** (upstream S3 byte-identical in the archive;
+  upstream S2 = fork S6; upstream S1 = fork S1).
+- **Two false claims corrected in this repo's own records, both count claims.** `HANDOFFS.md` said it
+  kept *"the most recent 6"* — true at `7a71df0`, false since, and this merge would have made it
+  wronger; it is now 11, with the count flagged as **unguarded**, which is the receipt-ledger half of
+  issue #65. And BL-10's Completed row said *"SHIPPED … via PR #64"*, **wrong on both counts** — that
+  PR was closed, never merged, and the corpus was fixed by upstream instead.
+- **BL-13 raised, and it is BL-10's own prediction landing.** `15ccb38` stripped the dangling
+  `Learning #34` number from `starter-kit/RECOMMENDED_SKILLS.md:94` but kept the claim it was
+  attributing: *"the methodology's own handoff length discipline."* Measured at `e02538b`, that
+  string occurs **once** in the whole distributed corpus — that line — and the corpus argues the
+  opposite (**FM #15** is *"Minimal handoff"*; the Phase 3D tripwire flags *"Handoff is <5 lines"*;
+  `ITERATIVE_METHODOLOGY.md:509` calls a shortening handoff **erosion**). BL-10's session wrote
+  beforehand that stripping just the numbers *"would have left unattributed false claims."*
+- **BL-12's first bullet grew, and it took two passes to get right.** The `"19 anti-patterns"` claim
+  (the list has **20**) is live at **four** sites, not the one the backlog named:
+  `workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md:55` (**DISTRIBUTED**), `README.md:475` and
+  `:477`, and `docs/RELEASE_HISTORY.md:34`. This session first recorded "two", having grepped the
+  literal string and missed the `"19 **documented** anti-patterns"` phrasing at two of them; the
+  adversarial review caught it. All four are one fix on this repo's own precedent — `ac770fe` changed
+  the workstream count, both README bullets and the `CLAUDE.md` v2.3 entry together as *"same drift,
+  same fix"*, and BL-9 L3 is what later moved that entry to `docs/RELEASE_HISTORY.md`.
+- **Also recorded, not fixed (FM #17):** `bin/check-handoff --allow-pending` cannot accept a Phase 1B
+  stub, though its docstring names that as the flag's purpose. `self_score` and `predecessor_score`
+  are unconditionally required, while the published stub convention omits both by design
+  (`starter-kit/SESSION_RUNNER.md:91`, `starter-kit/HANDOFFS.md:26` — a self-score is a Phase 3D
+  judgement and is unknowable at claim). **Every Phase 1B stub this repo has ever written fails it
+  identically — 17 distinct sessions**, most reachable only through git history since `7a71df0`
+  archived them. This entry first said "four", counting only what was visible in the live file.
+  Either the flag or the convention is wrong, and that is its own decision.
+- **Commits:** `e4b4070` (claim) · `232514e` (merge) · this commit (close-out). **Session:** S26 ·
+  **Verified:** `bin/tests.sh` 92/92 (the fork's figure; upstream runs 84 and both are correct);
+  `bin/check-links` OK **83**/21, up one from upstream's added link; ledger audit **68** = 18 live
+  (17 merged + this entry) + 50 archived; all links
+  in both ledgers hand-resolved on disk, since `check-links` walks only the 22 distributed files and
+  has never read either.
+
 ### 2026-08-01 · [BL-9] Layer 2 — the action ledger split at the v3.6 release frontier (186,704 → 53,512 bytes)
 
 **Fork-local; no adopter is affected and no upstream action is needed.** The root `CHANGELOG.md` is
