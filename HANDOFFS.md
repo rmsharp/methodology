@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **12**; the oldest **19**
+**Older receipts are archived.** This file currently holds **13**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -25,6 +25,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > [Learning #12](starter-kit/SESSION_RUNNER.md) pointed at this file, and it is the receipt-ledger
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
+
+---
+
+```handoff
+session: S28
+date: 2026-08-02
+status: pending
+active_task: Raise BL-14 and close the `commit:` field escape S27 identified but deliberately did not fix (FM #17). MEASURED AT CLAIM against `1298af7`, with the checker's own `extract_blocks`/`parse_block` over both ledger files (never grep — `bin/check-handoff:83`'s fence-nesting rule makes grep unsound here): the fork's receipt corpus is **31 receipts** (`HANDOFFS.md` 12 + `docs/archive/HANDOFFS-archive.md` 19), and **7 of them carry `commit: pending`** — S27, S22, S21, S20, S19 in the live file, S18 and S6 in the archive. SIX of the seven carry explicit reconcile-promise prose ("reconciled at next Orient" / "the next session reconciles it") and NO successor session has ever executed it; the seventh, S6 (2026-07-08), is a bare `pending` with no prose at all and has stood through every session since. All seven are `status: complete` and `bin/check-handoff` is GREEN on the file, because `pending` is absent from `BARE_PLACEHOLDERS` (`bin/check-handoff:130`). NOTE THE ASYMMETRY THAT MAKES THIS A REAL DEFECT AND NOT A CONVENTION QUIBBLE: `starter-kit/HANDOFFS.md:77-79` deliberately BLESSES `commit: pending` at write time, and S27 just extended that sentinel to the two score keys — so the sentinel is sanctioned on the way in, and nothing anywhere retires it on the way out. THE DELIVERABLE IS THE DECISION FIRST AND THE EDIT SECOND: whether the fix is a checker assertion, a schema change, or a convention change is unsettled, and it goes to the operator at the Present gate before any implementation. Scope declared fork-local and canonical-only at claim; whether the seed at `starter-kit/HANDOFFS.md` (DISTRIBUTED) is implicated is itself part of the decision and would need an explicit ask. No outward-facing action on KJ5HST/methodology is authorized — issue #65 is an invitation, not authorization.
+```
 
 ---
 
