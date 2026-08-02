@@ -14,6 +14,23 @@ top of this file. `bin/model-report --handoffs <archive>` reaches the older pros
 ---
 
 ```handoff
+session: S26
+date: 2026-08-01
+status: pending
+active_task: Resync the fork with `upstream/main` (6 new commits, `d6dd6c9` → `e02538b`) and reconcile `docs/planning/BACKLOG.md` to the reality those commits created. SCOPE: fork-local only; NO outward-facing action on KJ5HST/methodology — no PR, no issue, no comment. Chosen over three other live tracks because every one of them has a premise that changed in the last two hours. WHAT CHANGED UPSTREAM: `15ccb38` fixed BL-10 independently (same five dangling `Learning #N` citations, same two distributed files, same rad-con root cause), so the fork's parked branch `docs/bl-10-dangling-learning-citations` is superseded in substance; `f85a324` filed issue #65, which IS BL-12's second bullet, raised by the maintainer and open; `faf42fb` routed Learning #13's writer-side duty into Phase 3D; `e02538b` added a `### Since v3.6 (unreleased)` README section. THE MERGE IS THE RISK, NOT THE RECONCILE — see gotchas; both prepend-only ledgers collide and one collision is a session-number collision.
+what_was_done: pending
+next_steps: pending
+key_files: HANDOFFS.md:8 (the archival header, whose "most recent **6**" count-claim is already false at 8 receipts BEFORE this merge adds any), CHANGELOG.md:45 (the ordering rule S25 rewrote — sections by month, file boundary by release), docs/planning/BACKLOG.md:23 (BL-10's PARKED block), :35 (Open items), :67 (BL-11), :91 (BL-12), :115 (BL-10's Completed row), docs/archive/CHANGELOG-through-v3.6.md:1 (frozen, must not be reopened by the merge), docs/archive/HANDOFFS-archive.md:1 (holds the fork's OWN S7/S8, which are NOT upstream's incoming S7/S8)
+gotchas: MEASURED AT CLAIM, before any byte moved, against HEAD `3aee4e3` and `upstream/main` `e02538b`. (1) THE SESSION-NUMBER COLLISION IS REAL AND IT IS THE MERGE'S SHARPEST EDGE: upstream's two genuinely-new receipts are numbered **S7 (2026-08-01)** and **S8 (2026-08-01)**, and the fork's archive already holds its own **S7 (2026-07-09)** and **S8 (2026-07-13)** — four distinct sessions, two numbers. `fc4d297` set the binding precedent for this exact situation: *the two session sequences stay separate and unrenumbered*, and every incoming receipt is checked against ours before resolving (it found upstream S3 already present verbatim, and upstream S2 == fork S6 / upstream S1 == fork S1, one session under two numbers). Distinguish by DATE + AUTHOR, never by number. (2) `HANDOFFS.md` AUTO-MERGES, WHICH IS A HAZARD AND NOT A COMFORT — a union whose endpoint lands mid-receipt silently renumbers a session. Base `d6dd6c9` had 4 receipts, upstream has 6, fork main has 8 (9 with this stub); the only genuinely new upstream blocks are S7 and S8, so the arithmetic to hit is 9 + 2 = 11, with 11 opening fences and 11 closes. (3) `CHANGELOG.md` IS THE ONE PREDICTED CONFLICT and the danger is RESURRECTION, not loss: the fork's live ledger holds 15 entries because S25 (`3aee4e3`) moved 50 to `docs/archive/CHANGELOG-through-v3.6.md`, while upstream's ledger still carries all 26 and never split. A three-way merge sees 50 fork-side deletions against 2 upstream-side prepends; the target is 15 + 2 = 17 live entries, archive untouched at 50, total 67 — and the archive is FROZEN BY CONSTRUCTION and must not be reopened. Both new upstream entries are `2026-08-01 · [ad hoc]`, so they belong in the live file's existing `## 2026-08` section under S25's settled rule (sections by month, file boundary by release). (4) A PRE-EXISTING FALSE COUNT-CLAIM SITS IN A FILE THIS MERGE TOUCHES: `HANDOFFS.md:8` says the file "keeps the most recent **6**" — true at BL-9 L1's commit `7a71df0`, false since S23/S24/S25 prepended three more, and this merge will move it again. It is BL-12's defect class found in the fork's own header. Decide it explicitly rather than letting the merge quietly make it wronger. (5) `bin/tests.sh` COUNTS DIFFER ACROSS THE SEAM and neither is wrong: the fork runs 92 (it carries `bin/model-report` and its tests from S19/S20), upstream runs 84. A post-merge 92 is the expected figure; treat any other number as a finding, not as drift.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub — `status: pending`. Overwritten to `status: complete` at Phase 3D.
+
+---
+
+```handoff
 session: S25
 date: 2026-08-01
 status: complete
