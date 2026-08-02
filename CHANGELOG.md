@@ -26,11 +26,59 @@ enumerates every logged action and proves all three sources landed:
 its public restatement. This ledger is the *per-action operational timeline*, including
 non-release work (housekeeping, doc-only PRs, adopter coordination, backlog grooming) that
 otherwise has no home but raw `git log`. Where the two overlap — a release — this ledger carries a
-**one-line pointer** into §Versioning, never a re-narration (cite, don't restate).
+**one-line pointer** into §Versioning, never a re-narration (cite, don't restate). §Versioning still
+owns that semantics and still answers at the `CLAUDE.md#versioning` anchor every entry below cites;
+as of BL-9 L3 its **narrated per-version list** lives one hop further on, in
+[`docs/RELEASE_HISTORY.md`](docs/RELEASE_HISTORY.md), so the always-loaded `CLAUDE.md` stays lean.
+The boundary itself is unchanged — the pointer moved, not the ownership.
 
 Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sections as it grows.
 
 ---
+
+### 2026-08-01 · [BL-9] Layer 3 — `CLAUDE.md` §Versioning extracted to `docs/RELEASE_HISTORY.md` (52,909 → 8,519 bytes)
+
+**Fork-local; no adopter is affected and no upstream action is needed.** `CLAUDE.md` is not in
+`bin/_manifest.py` DISTRIBUTION (re-verified at claim: 22 entries, none of them `CLAUDE.md`), which
+is what makes this item runnable at all while the upstream channel is paused.
+
+- **The change.** The 25 narrated per-version entries (v1.0 – v3.6) moved **verbatim** out of
+  `CLAUDE.md` §Versioning into a new [`docs/RELEASE_HISTORY.md`](docs/RELEASE_HISTORY.md).
+  `CLAUDE.md` goes **52,909 → 8,519 bytes (−83.9%)** and 122 → 98 lines. This file is auto-loaded
+  into *every* session's context, so the 44 KB removed is a cost that was being paid by every
+  session regardless of whether any release history was wanted — which is why L3 was sequenced
+  ahead of L2 despite `CHANGELOG.md` being the larger file.
+- **The binding constraint was one the predecessor did not surface.** BL-9 and S23's handoff named
+  three constraints (plain link never an `@`-import; the v3.1 cite-don't-restate boundary; no
+  adopter impact) — all three held. But a claim-time sweep found a fourth that actually shaped the
+  design: **20 citations across the corpus target the `CLAUDE.md#versioning` anchor**, most of them
+  inside this ledger's own dated entries, which the v2.7.1 convention freezes as written. So the
+  `## Versioning` **heading stays in `CLAUDE.md`** and only the list beneath it moved. Every one of
+  the 20 citations still resolves, and no frozen dated entry was rewritten. The alternative —
+  moving the heading and rewriting 20 historical links — would have edited frozen records to no
+  benefit.
+- **Verbatim proven, not asserted.** The extraction ran as a **dry run first** (S23's lesson),
+  asserting its structural assumptions rather than trusting line numbers, and refusing to write
+  unless six checks passed. The moved payload was then verified independently of that script:
+  `diff` plus **md5 equality** (`fc9740f0…`) between the 25 bullets in the pre-change file and the
+  25 in the destination, `diff` proving `CLAUDE.md`'s retained head byte-identical, and 0 bullets
+  left behind.
+- **Also updated:** this file's operative boundary paragraph, which now states that §Versioning
+  keeps ownership and the anchor while its narrated list lives one hop further on. Dated entries
+  below are untouched.
+- **Deliberately NOT done (FM #17).** No Learnings row was appended: the table lives in
+  `starter-kit/SESSION_RUNNER.md`, a DISTRIBUTED file, and the upstream channel is paused pending
+  the operator's PR #64 conversation. The candidate learning is recorded in this session's receipt
+  instead — *a move must preserve the moved section's **anchor**, because inbound citations cite the
+  anchor, not the content* — and is a fork-side note, not a framework change.
+- **Verification:** `bin/tests.sh` **92/92**; `bin/check-links` OK (82 links / 21 files —
+  unchanged, since neither touched file is distributed); all 8 relative links in the touched files
+  resolve on disk; dashboard **health unchanged at 72** (activity 20 / testing 16 / documentation 16
+  / ci_cd 0 / methodology 20), role `framework`, compliance 105/105 = 100%, same 3 risks. The only
+  dashboard movement is the mechanical file count: 83 → 84 files, doc corpus 64 → 65 files
+  (+32 LOC), ratio 2.179 → 2.183.
+- **Commit/PR:** this commit (extraction + this entry); the claim stub is `9d92c6d`. BL-9 L2
+  (`CHANGELOG.md`, 182 KB) remains open as its own session.
 
 ### 2026-08-01 · [BL-10] Five dangling `Learning #N` citations fixed on a fork branch, the invariant mechanized, and the fork resynced
 
