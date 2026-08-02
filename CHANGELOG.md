@@ -65,6 +65,48 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [ad hoc] Record repair: nine `changelog_ref` line anchors, and one quoted title that had been stale since the day it was written
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39`/`:42`; precedent
+`7752114`, the nine-`commit:`-field repair the same week. It is not S29's deliverable and
+licenses nothing further (FM #17). Fork-local, canonical-only: zero `bin/_manifest.py`
+DISTRIBUTION members in the diff.
+
+- **The nine anchors.** Every `changelog_ref` carrying a root-relative `CHANGELOG.md:<N>`:
+  S28 (`:70`, `:118`), S27 (`:68`), S26 (`:68`), S25 (`:68`), S24 (`:39`), S22 (`:35`),
+  S5-2026-08-01 (`:35`), S21 (`:35`) — 9 tokens across 8 receipts, all in the live
+  `HANDOFFS.md`; the archive shard was **measured** clean, not assumed. Seven were deletions
+  only: each already carried a quoted `### ` heading beside the number, so removing it lost
+  nothing.
+- **Why they had to go, in one measurement.** **8 of the 9 were correct the day they were
+  written. 0 of 9 resolved to their stated referent afterwards.** Four now land in
+  `CHANGELOG.md`'s front matter, above every entry; four land inside an entry written *today*.
+  The cause is not "the ledger is prepend-only" — under strict prepending an anchor at `:35`
+  lands on the newest heading forever. The **front matter itself** is edited in place: this
+  file's first `### ` moved **35 → 39 → 68** across two such edits, and the v3.6 split moved 50
+  entries out of the file entirely.
+- **Two needed more than deletion, and both are disclosed rather than bundled quietly.**
+  S28's `:118` is the corpus's **only** anchor-only referent — no title, no sha beside it — and
+  it never worked: at `6d47624` line 118 sat inside the BL-14 entry while the repair entry it
+  names began at 122. It now names that entry by heading, plus `7752114`. And **S5's `:35` was
+  correct at birth**, pointing at PR #63's entry — PR #63 *is* the Learning #13 PR (`f9561a4`),
+  confirmed against `d6dd6c9`, the tree where that value first appeared. Its referent is now
+  named by title.
+- **One repair the shipped rule does not cover, called out for that reason.** S22's quoted
+  title had been stale since **23 minutes** after it was written: `de46858` retitled the entry
+  from *"fixed upstream (PR #64)"* to *"fixed on a fork branch"* — correcting a false claim —
+  and rewrote four other fields of that same receipt while leaving `changelog_ref` alone. It is
+  re-quoted here as a judgement call **outside** the invariant; a prohibition on line numbers
+  cannot see a stale title, and pretending otherwise would be the more comfortable sentence.
+  The general case is BL-17.
+- **Derivation, not assumption.** Each anchor's write-time correctness was judged at the tree
+  where that value **first appeared**, found by walking `git log --all --full-history` over both
+  ledger files with the checker's own `extract_blocks`/`parse_block`. That matters: for 2 of the
+  8 receipts the `commit:` field names the **wrong** tree — S24's value first appears in
+  `62f191e`, and S5's in `d6dd6c9` while its `commit:` leads with `c3157e8`, that session's
+  Phase 1B *claim stub*.
+
 ### 2026-08-02 · [ad hoc] Reconcile-on-read: S28's `commit:` field → `6d47624` — the first time the duty was discharged as a duty
 
 **Model:** Claude Opus 5 (1M context).
