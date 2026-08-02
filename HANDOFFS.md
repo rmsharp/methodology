@@ -5,11 +5,26 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file keeps the most recent **6**; the previous
-**19** (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
+**Older receipts are archived.** This file currently holds **11**; the oldest **19**
+(2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
 top of this file. `bin/model-report --handoffs <archive>` reaches the older prose when you need it.
+Archive again — a new file, same format — when this one approaches ~1,200 lines, the trigger the
+action ledger already uses.
+
+**Two session sequences share this ledger and their numbers collide.** This fork and
+`upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
+never by number alone: upstream's **S7**/**S8** (both 2026-08-01) are different sessions from the
+fork's **S7** (2026-07-09) / **S8** (2026-07-13) in the archive. At a resync the two sequences stay
+separate and unrenumbered, each incoming receipt is checked against ours before it is kept, and
+within a shared date the fork's receipts precede the arriving upstream ones (precedent: `fc4d297`).
+
+> **The count above is unguarded.** Nothing asserts it, so it drifts every time a session prepends —
+> it read **6** from `7a71df0` until this line was corrected, three sessions later. That is
+> [Learning #12](starter-kit/SESSION_RUNNER.md) pointed at this file, and it is the receipt-ledger
+> half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
+> trusting it.
 
 ---
 
@@ -240,6 +255,42 @@ test begins. Minor, but it is the class of claim Learning #13 exists to catch: a
 pointer stated as fact rather than computed. **Not docked for:** raising BL-10 and deliberately
 keeping it out of PR #63. That call was correct, and it is why this session had a clean, well-scoped
 deliverable to pick up.
+
+---
+
+```handoff
+session: S8
+date: 2026-08-01
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Operator-directed: discharge all three remaining follow-ons in one run — (1) five dangling `Learning #28/#30/#34` citations in distributed files, (2) Learning #13's writer-side duty never reaching Phase 3D, (3) README §What's New lagging the shipped Learnings table by one row. THREE SEPARATE FIXES BUNDLED BY OPERATOR DIRECTION — this is NOT a vertical slice and does not pass the failure-mode-#26 slice test (three capabilities, no prior plan-mode contract). Recorded as bundling rather than mislabelled; mitigated by one independently-verified checkpoint commit per fix. COMPLETE — all three landed.
+what_was_done: Three checkpoint commits, full build/link verification at each boundary rather than once at the end. 15ccb38 (citations), faf42fb (Phase 3D), plus the README section and this close-out. (1) TRACED THE CITATIONS RATHER THAN DELETING THEM: all five descend from docs/audits/2026-05-02-mattpocock-skills-evaluation.md, which cites rad-con's PROJECT Learnings by that project's own numbering ("Learning #30 (rad-con UDP issue batch, S357...)"); v2.6 distilled the audit into the distributed corpus and the numbers came along without their referent. Because the parentheticals already carried the substance, each site could state the content instead of the number — nothing was lost, and the text now stands alone in the single-repo install where these files land. The audit doc is untouched: dated record prose, canonical-only, correct about rad-con (v2.7.1 precedent). (2) THE LOAD-BEARING CALL WAS TO GREP THE COUNT-CLAIMS BEFORE WRITING, not after: adding the obvious 7th row would have falsified seven live claims across three files AND implied a 7th check-handoff REQUIRED_KEY, invalidating every receipt already written. Prose on requirements 3 and 5 instead — the two that actually carry predictions — closing with "this adds no requirement; it constrains how two of the six are written". (3) Chose `### Since v3.6 (unreleased)` over inventing a version, since the operator had already ruled out a version event; the section states that it folds into the next release when one is cut. The 6-for-6 Learning-bullet pattern is now 7-for-7.
+next_steps: NOTHING IS OUTSTANDING FROM THE PR #63 CYCLE — all three follow-ons are discharged and issue #65 is filed for the one piece of real engineering left. The live work queue is: (a) IMPLEMENT #65 (structural tests for the Learnings table and the receipt ledger) — its RED-first precondition is non-negotiable, drive each assertion against a mutated file and watch it fail, and pair every absence-check with a presence control; (b) the branch docs/operator-gated-review-plan is repaired and merges clean but is UNPUSHED and its plan UNRATIFIED (D1-D8 open), with its section 2 line numbers now stale by four merges — re-derive them before implementing, and note that D3 is discharged (#63 took #13, so that plan's row is #14 and the Learnings table was deliberately left at 1-13 this session to keep it free); (c) `### Since v3.6 (unreleased)` in README.md must be FOLDED INTO the next release's section when one is cut, or it becomes permanent cruft — it is the one thing this session added that has an expiry date.
+key_files: starter-kit/RECOMMENDED_SKILLS.md:90 (the /to-issues row, now citing DEVELOPMENT_WORKSTREAM by relative link in adopter layout), starter-kit/RECOMMENDED_SKILLS.md:94 and :95 (the /caveman and /zoom-out rows, numbers replaced by substance), workstreams/DEVELOPMENT_WORKSTREAM.md:23 (§Issue Lifecycle intro — the false "in ITERATIVE_METHODOLOGY.md §Knowledge Accumulation" pointer is gone, replaced by a forward ref to §When to Bulk-Triage at :54, which was verified to exist verbatim), workstreams/DEVELOPMENT_WORKSTREAM.md:56 (the batch discipline, now stated in full), starter-kit/SESSION_RUNNER.md:256 (the new prediction paragraph — count-safe by construction), README.md:272 (the unreleased section, which has an expiry date), docs/audits/2026-05-02-mattpocock-skills-evaluation.md:191 (the rad-con provenance — read this before ever "fixing" the audit doc's numbers)
+gotchas: (1) DO NOT ADD A 7TH MINIMUM HANDOFF REQUIREMENT. Seven live count-claims depend on six (SESSION_RUNNER.md:254/:256/:258, HOW_TO_USE.md:764/:791, ITERATIVE_METHODOLOGY.md:293/:523) and bin/check-handoff maps the six onto receipt fields, so a 7th implies a 7th REQUIRED_KEY and invalidates every existing receipt. The same trap waits for anyone who reads the new paragraph and thinks it "should really be a row". (2) THE AUDIT DOC'S #28/#29/#30/#34 ARE CORRECT AND MUST STAY — they are rad-con's numbers in a dated record that attributes them properly. A future sweep that "fixes" them would destroy the provenance this session needed to make the repair honestly. (3) `grep -oE "Learning[s]? #[0-9]+" | awk '$2+0 > 13'` now returns one hit in README.md:278, and it is a FALSE POSITIVE — that bullet names the bad numbers as the defect being described, not as a citation. (4) The Learnings table is deliberately still 1-13: #14 is reserved by the operator-gated-review plan's D3. (5) Still no core.hooksPath in this clone, so .githooks/pre-commit never ran; the ledger was co-staged by hand.
+runtime_smoke: n/a as an application launch — documentation only, no code changed. Build-equivalent run at EACH of the three checkpoint boundaries, not once at the end: bin/tests.sh 84 passed / 0 failed and bin/check-links OK every time (82 → 83 relative links across 21 distributed files; the one added link is the /to-issues → DEVELOPMENT_WORKSTREAM reference and it resolves in the simulated adopter tree, per the v2.8 link-topology convention). Post-fix structural sweeps executed rather than assumed: no `Learning #N` with N > 13 survives in starter-kit/ or workstreams/; surviving refs resolve to #6/#7/#8/#10 only; requirements table still exactly 6 rows; REQUIRED_KEYS still 13; Learnings table still 1-13; all seven count-claims re-checked individually; the new §When to Bulk-Triage forward reference confirmed to match its heading verbatim. Explicitly n/a, not silently skipped.
+changelog_ref: CHANGELOG.md "2026-08-01 · [ad hoc] Discharged the three documentation follow-ons from the Learning #13 cycle" entry, this commit
+commit: 9c9c39c (1B claim) + 15ccb38 (fix 1) + faf42fb (fix 2) + this commit (fix 3 + close-out)
+```
+
+---
+
+```handoff
+session: S7
+date: 2026-08-01
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: File the upstream issue for the enumerable-set invariant gap — the Learnings table and the HANDOFFS.md receipt ledger both enforce structural invariants by human attention rather than by assertion. Operator-directed follow-on; the gap was mutation-proved during the PR #63 re-review (S524, oversight) and then hit a second time for real in S6, when a receipt defect lived undetected because bin/check-handoff validates only the newest block. COMPLETE — issue #65 is open.
+what_was_done: Opened https://github.com/KJ5HST/methodology/issues/65 and recorded it in the ledger. RE-RAN ALL THE EVIDENCE AGAINST main RATHER THAN QUOTING THE EARLIER SESSION: the three Learnings-table mutations were originally run at PR #63's head, so I re-ran them in a throwaway worktree at a4e2b30 (malformed 3-column row 14, duplicate row number 12, deleted row 11 — each leaves bin/tests.sh at 84 passed / 0 failed), and added a fifth, sharper demonstration for the receipt half: stripping an older receipt's fence + session + date drops the block count 4 to 3 while bin/check-handoff AND bin/tests.sh both report green. My first attempt at that demo was a FALSE NEGATIVE — the worktree's newest receipt was this session's own pending S7 stub, so check-handoff errored "still pending" both before and after and proved nothing; I had to check out a tree whose newest receipt was complete before the before/after comparison meant anything. THE LOAD-BEARING EDITORIAL CALL was to cite NO SHA for the real-world incident: both the introducing commit and its repair live on the unpushed branch docs/operator-gated-review-plan, so naming them in a public issue would plant references nobody can resolve — the exact trap Learning #13 was merged to prevent, and the same one S3 fell into with 18 fork-only SHAs. Every claim in the issue therefore reproduces from a clean clone of main.
+next_steps: Issue #65 is open and unassigned; it proposes the invariants but implementing them is a separate session, and Learning #12's RED-first precondition is non-negotiable — drive each assertion against a mutated file and watch it fail before trusting it, and pair every absence-check with a presence control (that campaign shipped two vacuous tests). THREE OTHER FOLLOW-ONS REMAIN UNFILED and none is covered by #65: (a) the next release's README §What's New owes a "New Learning #13" bullet — every Learning #7-#12 got one, so skipping it breaks a 6-for-6 pattern and the public restatement stays a row behind; (b) Learning #13's WRITER-SIDE duty ("derive it or label it a guess") still never reaches Phase 3D's Minimum Handoff Requirements, which the contributor agreed to on PR #63 and deferred; (c) five dangling `Learning #28/#30/#34` citations in distributed files — starter-kit/RECOMMENDED_SKILLS.md:90/:94/:95 and workstreams/DEVELOPMENT_WORKSTREAM.md:23/:56 — cite Learnings that have no referent anywhere in the corpus, reproduce with `grep -rnoE "Learning[s]? #[0-9]+" starter-kit/ workstreams/ | awk -F'#' '$2+0 > 13'`; the contributor raised these on PR #63 and offered to file them. Also still open: the branch docs/operator-gated-review-plan is repaired and merges clean but is unpushed and its plan unratified (D1-D8), with its section 2 line numbers now stale by three merges.
+key_files: bin/check-handoff:51 (REQUIRED_KEYS) and its newest-receipt-only scope — the Evidence B gap, and where a --all mode would go; starter-kit/SESSION_RUNNER.md:360 (Learnings table header; rows 1-13 follow — the Evidence A target); CHANGELOG.md:35 (this session's entry); bin/tests.sh:1 (84 checks, the natural home for the shell-level assertions); tools/test_methodology_dashboard.py:1 (197 tests, the stdlib-unittest precedent if a Python home is preferred — and the asymmetry the issue names: the advisory scanner is well tested while the load-bearing records are not)
+gotchas: (1) Numbered S7 — S6 exists only on the unpushed branch docs/operator-gated-review-plan, so main's visible sequence reads S5 then S7 until that branch lands. Never renumber an already-written receipt; a visible gap that closes on merge is the lesser defect. (2) DO NOT ADD A LEARNING ROW for any of this without checking the number first: the operator-gated-review plan reserves #14 (its decision D3), so an unthinking append would create exactly the collision D3 exists to prevent. (3) When demonstrating check-handoff's blind spot, make sure the tree's NEWEST receipt is `status: complete` first — a pending stub makes the checker error for an unrelated reason and the demonstration silently proves nothing. (4) This clone still has no core.hooksPath set, so .githooks/pre-commit never runs; the ledger was co-staged by hand.
+runtime_smoke: n/a as an application launch — no code changed; the deliverable is a GitHub issue. Build-equivalent run on the final tree: bin/tests.sh 84 passed / 0 failed, bin/check-links OK (82 relative links / 21 distributed markdown files), bin/check-handoff green on this receipt. The issue's own evidence was executed rather than asserted — five mutations against main at a4e2b30 in a throwaway worktree, since removed, repo confirmed clean afterwards. Issue confirmed OPEN via the API after creation. Explicitly n/a, not silently skipped.
+changelog_ref: CHANGELOG.md "2026-08-01 · [ad hoc] Opened issue #65 — the repo's own numbered sets have no structural test" entry, this commit
+commit: a4e2b30 (1B claim) + this commit
+```
 
 ---
 
