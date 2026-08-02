@@ -88,6 +88,43 @@ send it there.
 
 ---
 
+### 2026-08-01 · [BL-9] Layer 1 — `HANDOFFS.md` receipts archived (216 KB → 51 KB)
+
+First layer of BL-9's fork-local size-drift slice. `HANDOFFS.md` had reached **216 KB / 25 receipts**
+with **no archival rule anywhere in the corpus** — BL-9 calls that the genuine gap, and it had nearly
+doubled since the item was written on 2026-07-25.
+
+- **Change:** the 6 most recent receipts stay in the root ledger; the previous **19** (2026-07-08 →
+  2026-07-30) move verbatim to `docs/archive/HANDOFFS-archive.md`, same format, same newest-on-top
+  order. Root file **216 KB → 51 KB**. Both session sequences (fork S1–S23 and upstream S1–S5) are
+  preserved unrenumbered.
+- **Why `docs/archive/` and not a root sibling.** A subdirectory is structurally invisible to the
+  dashboard's `_find_changelog`, which scans only the project root and `docs/` and skips non-files.
+  Not incidental: v3.6 Layer 2 fixed a real bug where a root `CHANGELOG-archive.md` sorted *ahead* of
+  `CHANGELOG.md` (`-` is 0x2D, `.` is 0x2E) so freshness was measured against a frozen archive.
+  Putting archives outside the scanned bases makes that class of shadowing impossible here rather
+  than merely absent.
+- **Safe by construction, verified not assumed:** `bin/check-handoff` reads only the *newest* receipt
+  and Phase 0 reconcile is frontier-based, so neither looks past the top of the live file. The one
+  consumer that loses coverage is `bin/model-report`, whose Source 2 scans free-text prose; the root
+  pointer and the archive header both document `--handoffs docs/archive/HANDOFFS-archive.md`.
+- **A separator-based split would have silently destroyed receipts.** The first attempt found **10**
+  sections where there are **25**, because receipt prose contains `---` — one section swallowed many
+  receipts and only its first was reported. Caught by a dry run before anything was written; the
+  shipped split anchors on the handoff fences and asserts exactly one receipt per section. This is
+  the S21 trap (a union ending mid-receipt silently renumbers a session) in a new costume.
+- **Verified:** 25 receipts before → 25 after (6 live + 19 archived), **none lost, no duplicates,
+  order preserved**; dashboard output **byte-identical to the pre-layer baseline** (health 72, role
+  `framework`, compliance 100%, ledger and freshness still resolving to root `CHANGELOG.md`);
+  `bin/tests.sh` 92/92; `bin/check-links` OK. `bin/check-handoff` is red on the live file *only*
+  because the newest receipt is S23's in-flight `pending` 1B stub — proved pre-existing by running
+  the identical check against the pre-layer file and getting the same three failures; the archive's
+  own newest receipt validates OK.
+- Also corrected a false statement the earlier pass left in S22's receipt: its `next_steps` still
+  said PR #64 "is OPEN at this close-out". It is closed.
+
+---
+
 ### 2026-08-01 · [ad hoc] BL-10's fix parked and preserved under tag `archive/bl-10-citations`
 
 Operator is discussing reopening `KJ5HST/methodology` PR #64 with the maintainer, and asked that the
