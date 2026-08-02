@@ -14,6 +14,23 @@ top of this file. `bin/model-report --handoffs <archive>` reaches the older pros
 ---
 
 ```handoff
+session: S25
+date: 2026-08-01
+status: pending
+active_task: BL-9 Layer 2 (docs/planning/BACKLOG.md:86) — the last open layer: `CHANGELOG.md` size discipline. SCOPE: fork-local only, one horizontal deliverable, taken alone for the same reason S23/S24 gave (BL-9's L1/L2/L3 are three independent file restructurings, not one capability through layers). THE DELIVERABLE IS A DECISION FIRST, AN EDIT SECOND, and BL-9 says so explicitly: the file's own line-35 rule — *"Promote to `## YYYY-MM` sections as it grows"* — reads as headers WITHIN the file, which aids navigation but reduces no bytes, whereas sharding to `docs/archive/` reduces bytes but is not what the line says. Settle which the rule means, state it, and do not assume sharding. RE-MEASURED AT CLAIM against HEAD `62f191e` rather than trusting BL-9's 2026-07-25 figure of 103 KB, stale by 81%: `CHANGELOG.md` is 186,704 bytes / 2,091 lines / 64 entries, preamble 2,581 bytes, mean entry 2,876 B, median 1,588 B, max 21,063 B.
+what_was_done: pending
+next_steps: pending
+key_files: CHANGELOG.md:35 (the rule to be settled), CHANGELOG.md:39 (newest entry; :2079 is the oldest, 2026-06-25), docs/planning/BACKLOG.md:86 (BL-9 L2 and its two named constraints), starter-kit/methodology_dashboard.py:1007 (`_find_action_ledger` — requires the root `CHANGELOG.md` at exactly that path), .githooks/pre-commit:38 (the co-stage gate, literal `-F` path match), bin/_manifest.py:1 (SEED_FORMAT_MARKERS keys on the ledger title "Authoritative Action Ledger"), docs/archive/HANDOFFS-archive.md:1 (L1's precedent, commit `7a71df0`)
+gotchas: THE MEASUREMENT THAT SHOULD DECIDE THIS, taken at claim before any edit: the ledger spans only 2026-06-25 → 2026-08-01, so `## YYYY-MM` sectioning yields exactly THREE sections — and 2026-07 alone is 56 of 64 entries and 85.8% of the bytes (2026-08 is 12.2%, 2026-06 is 0.5%). The literal reading of line 35 therefore buys almost no navigation and zero bytes; whatever is chosen must be argued against that number, not against the rule's wording. Second, S24's lesson applies directly and is the thing most likely to be missed: a move must preserve the moved content's ANCHOR, because inbound citations cite the anchor, not the content — so every inbound `CHANGELOG.md#...` deep link must be swept AT THE PRE-CHANGE SHA (`git grep <pattern> 62f191e`), never in the working tree, or the measurement includes the measurer. Third, this repo's own convention freezes dated entries as written (v2.7.1 precedent), so a restructuring may relocate entries but must not rewrite them.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub — `status: pending`. Overwritten to `status: complete` at Phase 3D.
+
+---
+
+```handoff
 session: S24
 date: 2026-08-01
 status: complete
