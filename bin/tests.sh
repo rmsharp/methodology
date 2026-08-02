@@ -726,6 +726,207 @@ sub = set(m.STUB_REQUIRED_KEYS) < set(m.REQUIRED_KEYS)
 sys.exit(0 if sub and len(m.REQUIRED_KEYS) == 13 and len(m.STUB_REQUIRED_KEYS) == 4 else 1)
 PY
 
+echo '== Test 25: check-handoff — the `commit:` answer-slot rule (BL-14, RED-first per Learning #12) =='
+# WHY THIS TEST EXISTS. `commit:` may legitimately read `pending` when written — a
+# close-out receipt ships INSIDE the commit whose sha it would name. The distributed
+# spec (starter-kit/HANDOFFS.md:64, :78-79) then promises the NEXT session reconciles
+# it. Nothing performed that promise: 9 of 32 receipts named no sha in the answer
+# slot, one 25 days old, and this checker passed every one of them because it reads
+# only blocks[0] and `pending` is not a BARE_PLACEHOLDER.
+#
+# RED-FIRST WAS RUN AGAINST THE REAL CORPUS, not a fixture: the new pass was executed
+# against the pre-repair ledger at fd5d2d8 and returned exactly 9 findings — the same
+# 9 derived independently by walking git history with the checker's own parser. That
+# run is also what caught N5's hole (see below), which the fixtures alone would not
+# have.
+#
+# THE RULE: the answer slot is the value's FIRST token, and on every receipt except
+# the newest it must be a sha. Leading-token, not "contains" — see N7.
+
+# Two-block ledger: newest on top, exactly as the real file is ordered.
+two_block_ledger() {   # $1 = older block's commit: value
+    cat <<EOF
+\`\`\`handoff
+session: S13
+date: 2026-08-02
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: The newest receipt — exempt from the answer-slot rule by construction
+what_was_done: Shipped the thing; commit b2c3d4e
+next_steps: Reconcile the predecessor's commit: field at Phase 0
+key_files: bin/check-handoff:1
+gotchas: none
+runtime_smoke: n/a — docs-only
+changelog_ref: PR #99
+commit: pending
+\`\`\`
+Prose for the newest receipt.
+
+\`\`\`handoff
+session: S12
+date: 2026-08-01
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: The OLDER receipt — this one is governed by the rule
+what_was_done: Did the earlier thing; commit a1b2c3d
+next_steps: Something specific and actionable
+key_files: bin/tests.sh:230
+gotchas: none
+runtime_smoke: n/a — docs-only
+changelog_ref: PR #52
+commit: $1
+\`\`\`
+Prose for the older receipt.
+EOF
+}
+
+# Count only the structured finding rows, never the "N issue(s)" headline or the
+# advisory note footer — the footer contains the phrase "answer slot" too, and
+# grepping for it counted the advice as a finding on this test's first draft.
+nslot() { "$BIN/check-handoff" --file "$1" ${2-} 2>&1 | grep -c '^  error: receipt'; }
+
+# --- C1: THE UNMUTATED-FIXTURE CONTROL --------------------------------------
+# The older receipt names a real sha. If C1 ever goes red, the FIXTURE is broken,
+# not the guard.
+F="$(mktemp)"; two_block_ledger 'a1b2c3d' > "$F"
+if "$BIN/check-handoff" --file "$F" >/dev/null 2>&1; then
+    pass "C1 unmutated control: older receipt naming a sha passes"
+else
+    fail "C1 unmutated control: should pass (got $(nslot "$F") finding(s))"
+fi
+rm -f "$F"
+
+# --- N1: the `pending` dialect below the newest is caught -------------------
+F="$(mktemp)"; two_block_ledger 'pending — reconciled at next Orient' > "$F"
+[ "$(nslot "$F")" = "1" ] && pass "N1 older receipt with commit: pending is caught" \
+    || fail "N1 older commit: pending not caught (got $(nslot "$F"))"
+rm -f "$F"
+
+# --- N2: the `this commit` dialect is caught (S25/S26 — names no sha at all) -
+F="$(mktemp)"; two_block_ledger 'this commit — the split and this receipt ship together' > "$F"
+[ "$(nslot "$F")" = "1" ] && pass "N2 older receipt with 'this commit' (no sha) is caught" \
+    || fail "N2 'this commit' dialect not caught (got $(nslot "$F"))"
+rm -f "$F"
+
+# --- N3: THE KILLER TEST — the newest receipt is NEVER failed for pending ----
+# C1/N1/N2 all carry `commit: pending` on the NEWEST block. If the exemption were
+# value-based instead of positional, or if the rule ran over blocks[0], every one of
+# them would fail — and the chicken-egg the ratified plan solved would be back. This
+# also pins bin/tests.sh:366's long-standing "commit: pending is accepted" assertion
+# at ledger scope rather than single-block scope.
+F="$(mktemp)"; two_block_ledger 'a1b2c3d' > "$F"
+if "$BIN/check-handoff" --file "$F" 2>&1 | grep -q 'S13'; then
+    fail "N3 the NEWEST receipt was failed for commit: pending — chicken-egg re-created"
+else
+    pass "N3 newest receipt is exempt by construction (never failed for commit: pending)"
+fi
+rm -f "$F"
+
+# --- N4: absence is not a pass ----------------------------------------------
+# A rule that only reads PRESENT values makes deleting the line a free escape.
+F="$(mktemp)"; two_block_ledger 'a1b2c3d' | sed '20,$ s/^commit: a1b2c3d$//' > "$F"
+[ "$(nslot "$F")" = "1" ] && pass "N4 older receipt missing commit: entirely is caught" \
+    || fail "N4 missing commit: key below the newest not caught (got $(nslot "$F"))"
+rm -f "$F"
+
+# --- N5: --archived removes the exemption (the hole RED-first found) --------
+# "Newest" is a property of the LEDGER, not of a file. In a sharded ledger the
+# archive's blocks[0] is merely the newest IN THAT SHARD. Without --archived the
+# real S18 receipt passed for three days.
+F="$(mktemp)"; two_block_ledger 'a1b2c3d' > "$F"     # newest block has commit: pending
+[ "$(nslot "$F" --archived)" = "1" ] && pass "N5 --archived checks block 0 too (no unearned exemption)" \
+    || fail "N5 --archived did not check the first block (got $(nslot "$F" --archived))"
+[ "$(nslot "$F")" = "0" ] && pass "N5b without --archived the same file's block 0 stays exempt" \
+    || fail "N5b exemption leaked away without --archived"
+rm -f "$F"
+
+# --- N6: the issue-#65 boundary — validate() is still blocks[0] ONLY --------
+# The 13-key schema must NOT spread to older receipts. Upstream issue #65 proposes a
+# separate `--all` mode over different ground; this is not that and must not become
+# it by accident.
+F="$(mktemp)"; two_block_ledger 'a1b2c3d' | sed '20,$ s/^gotchas: none$//' > "$F"
+if "$BIN/check-handoff" --file "$F" 2>&1 | grep -q 'missing required key'; then
+    fail "N6 the 13-key schema leaked onto an older receipt (issue #65 scope boundary crossed)"
+else
+    pass "N6 schema validation stays on blocks[0]; only the answer slot spans the ledger"
+fi
+rm -f "$F"
+
+# --- N7: leading-token, not "contains" --------------------------------------
+# `search` instead of `fullmatch` on the first token would accept any prose that
+# merely CONTAINS a sha-shaped run — which every one of the 7 `pending` receipts did
+# (they all cite their own claim-stub sha in the trailing prose).
+F="$(mktemp)"; two_block_ledger 'pending — the prior claim commit is a1b2c3d' > "$F"
+[ "$(nslot "$F")" = "1" ] && pass "N7 a sha in trailing prose does not satisfy the answer slot" \
+    || fail "N7 trailing-prose sha wrongly satisfied the leading-token rule"
+rm -f "$F"
+
+# --- N8: a bare decimal is not a sha ----------------------------------------
+F="$(mktemp)"; two_block_ledger '12345678' > "$F"
+[ "$(nslot "$F")" = "1" ] && pass "N8 an all-decimal token is not accepted as a sha" \
+    || fail "N8 all-decimal token wrongly accepted as a sha"
+rm -f "$F"
+
+# --- N9: fullmatch, not search — the token must BE a sha, not CONTAIN one ---
+# N7 does not cover this and a mutation run proved it: N7's first token is plain
+# `pending`, which contains no sha-shaped run, so search and fullmatch agree on it and
+# the fullmatch->search mutant SURVIVED the whole suite. This fixture is the one that
+# separates them — an em-dash bound directly to the sha with no space, one typo away
+# from what S27's real receipt wrote. leads_with_sha() deliberately does not strip it.
+F="$(mktemp)"; two_block_ledger 'pending—a1b2c3d' > "$F"
+[ "$(nslot "$F")" = "1" ] && pass "N9 a token CONTAINING a sha does not satisfy the slot (fullmatch, not search)" \
+    || fail "N9 fullmatch degraded to search — a token merely containing a sha was accepted"
+rm -f "$F"
+
+# --- N10: an unfinished stub below the newest is NOT double-reported --------
+# A `status: pending` block below the newest means a session claimed and never closed
+# out. That is the status finding's business and Phase 0 reconcile's remedy; reporting
+# its empty answer slot here too would be noise pointing at the wrong repair. Pins the
+# stub-skip guard, which no other assertion reaches.
+F="$(mktemp)"
+{ two_block_ledger 'a1b2c3d' | sed -n '1,17p'
+  printf '\n```handoff\nsession: S11\ndate: 2026-07-31\nstatus: pending\nactive_task: Claimed and never closed out\n```\nProse.\n'
+} > "$F"
+[ "$(nslot "$F")" = "0" ] && pass "N10 an unfinished stub below the newest is not reported for its answer slot" \
+    || fail "N10 stub below the newest was double-reported (got $(nslot "$F"))"
+rm -f "$F"
+
+# --- L1: THE LIVE-CORPUS ASSERTION ------------------------------------------
+# Every other check-handoff assertion in this file runs against a mktemp fixture, so
+# nothing observes the REAL ledger. This is the half of Learning #9 the `commit:`
+# field never had: it trips on the next `bash bin/tests.sh` rather than waiting for
+# someone to remember. Precedent: Test 10 runs check-links bare against the real tree.
+# If this goes red, the ledger drifted — reconcile it, do not weaken the test.
+LEDGER="$(cd "$BIN/.." && pwd)"
+if [ -f "$LEDGER/HANDOFFS.md" ]; then
+    if "$BIN/check-handoff" --file "$LEDGER/HANDOFFS.md" --allow-pending >/dev/null 2>&1; then
+        pass "L1 live ledger: every receipt below the newest names a commit sha"
+    else
+        "$BIN/check-handoff" --file "$LEDGER/HANDOFFS.md" --allow-pending 2>&1 | sed 's/^/    /'
+        fail "L1 live ledger has an unreconciled commit: answer slot (see above)"
+    fi
+else
+    pass "L1 skipped: no root HANDOFFS.md (adopter tree or fresh clone)"
+fi
+if [ -f "$LEDGER/docs/archive/HANDOFFS-archive.md" ]; then
+    if "$BIN/check-handoff" --file "$LEDGER/docs/archive/HANDOFFS-archive.md" --archived >/dev/null 2>&1; then
+        pass "L1b archived ledger shard: every receipt names a commit sha"
+    else
+        "$BIN/check-handoff" --file "$LEDGER/docs/archive/HANDOFFS-archive.md" --archived 2>&1 | sed 's/^/    /'
+        fail "L1b archived ledger shard has an unreconciled commit: answer slot (see above)"
+    fi
+else
+    pass "L1b skipped: no archived ledger shard"
+fi
+
+# --- R6: --help documents --archived ----------------------------------------
+case "$("$BIN/check-handoff" --help 2>&1)" in
+    *--archived*) pass "R6 --help documents --archived" ;;
+    *)            fail "R6 --help does not mention --archived" ;;
+esac
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]

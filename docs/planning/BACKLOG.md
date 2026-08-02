@@ -1,6 +1,9 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12 and BL-13 are open.** BL-8 was deliberately
+> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13 and BL-14 are open** (BL-14 raised
+> 2026-08-02 (S28) and **partially closed the same session**: the fork-side detector and the
+> 9-receipt repair shipped; its distributed half — the spec still promises a reconcile no procedure
+> assigns — is blocked on the channel. **BL-15 and BL-16 were raised alongside it and are open.**) BL-8 was deliberately
 > sequenced *after* the dashboard signal-integrity campaign closed (Layer 7, then Layer 6), which it
 > now has (v3.6 shipped 2026-07-27), so it is unblocked. BL-11 and BL-12 were both raised 2026-08-01
 > at BL-10's close-out. BL-1 – BL-7, BL-9 and BL-10 are complete; the retirement note below is
@@ -190,6 +193,65 @@ is a weaker sibling: upstream's replacement is *true but unlocated* (it describe
 architecture survey and points at nothing), where `1eac7a4` cited
 `INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md` §Sub-Agent Dispatch Pattern. Not false; note it,
 do not bundle it.
+
+**BL-14 — The `commit:` answer slot: a distributed promise with no owner and no detector.**
+*Raised and PARTIALLY CLOSED 2026-08-02 (S28). The fork-side half shipped; the distributed half is
+prepared and blocked on the channel.* Nominated by S27's `next_steps` as a pre-existing escape it
+declined to bundle (FM #17).
+**The defect.** `commit:` may legitimately read `pending` when written — a close-out receipt ships
+inside the very commit whose sha it would name, the chicken-egg the ratified plan solved by
+deferring. The distributed spec then promises a collector: `starter-kit/HANDOFFS.md:64`
+(*"`pending` until the next session reconciles it"*) and `:78-79` (*"the next session reconciles
+them to real shas"*), ratified at
+[`close-out-receipt-durable-artifact-plan.md:87`](close-out-receipt-durable-artifact-plan.md).
+**No procedure ever assigned it.** `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 reconciles
+undocumented commits, a `CHANGELOG: pending` marker, and a missing-or-`status: pending` receipt —
+and says nothing about a `status: complete` receipt whose `commit:` is still `pending`. Nothing
+detected it either: `bin/check-handoff` read only `blocks[0]`, and `pending` is not in
+`BARE_PLACEHOLDERS`.
+*Measured over both ledger files with the checker's own parser, never grep:* **9 of 32 receipts
+named no sha in the answer slot** — 7 literal `pending` (S27, S22, S21, S20, S19, S18, S6) plus
+S26 and S25 reading `this commit — …`, **S25 containing no sha anywhere**. The oldest, S6, had
+stood **25 days**.
+*The base rate corrects the folk history:* the successor-reconcile has fired **6 times, only 4 of
+them deliberately**, all inside one 8-hour window on 2026-07-25 — one operator, by hand. (`7817989`
+is not a seventh: it is S3 completing its **own** receipt 2m26s later.) It was never a procedure.
+*This is [Learning #9](../../starter-kit/SESSION_RUNNER.md)'s own remedy — gate-on-write AND
+reconcile-on-read, neither dependable alone — unapplied to the one sentinel-bearing key that needed
+both.* Two archived receipts had already **docked their successors points** for exactly this
+(`docs/archive/HANDOFFS-archive.md:569`, `:632`) without anyone fixing it.
+**SHIPPED (fork-local, canonical-only, no channel):** the ledger repair of all 9 (`7752114`), plus
+the **answer-slot rule** in `bin/check-handoff` — every receipt *except the newest* must have a sha
+as its `commit:` value's **first token**. The newest is exempt **positionally, not by value**, so
+the chicken-egg cannot return. Test 25 (13 assertions incl. a live-corpus assertion against the real
+ledger) + `--archived`. **8 mutants, 8 killed.**
+**STILL OPEN, and it is the half that matters — DISTRIBUTED, needs the channel.** The spec still
+promises a reconcile that no procedure assigns. The fix is one of two forks, and *choosing between
+them is the deliverable*, not the edit: **(A) schedule it** — add the `commit:` case to
+`SESSION_RUNNER.md` Phase 0 step 6; or **(B) delete the promise** — drop "the next session
+reconciles it" from `starter-kit/HANDOFFS.md:64`/`:78-79` and let the state predicate stand alone.
+The shipped detector is **agnostic between them** and correct under either, which is why it could
+ship first. Seven distributed sites currently scope "reconcile" to `status: pending` only:
+`starter-kit/SESSION_RUNNER.md:18`, `:44`, `:343`, `:376`; `ITERATIVE_METHODOLOGY.md:148`;
+`starter-kit/SAFEGUARDS.md:179`; `starter-kit/BOOTSTRAP.md:322`. Per **Learning #8**, a fix must
+reach every checklist that restates close-out, not just the canonical phase text.
+**Upstream note, disclosed not absorbed.** `bin/check-handoff` is canonical-only but **not
+fork-only**; it now diverges from `upstream/main` by S27's stub schema *and* this. Upstream
+[issue #65](https://github.com/KJ5HST/methodology/issues/65) separately asks for an `--all` mode
+over *different* ground. This is not that, is named nothing like it, leaves `validate()` on
+`blocks[0]` (pinned by Test 25 N6), and **does not answer #65** — answering it remains an
+outward-facing action needing an explicit ask. Two facts to hold before anyone does: #65's proposed
+*"`session:` values are unique"* invariant is **false at full-ledger scope** (32 receipts, 28
+distinct numbers — S3/S5/S7/S8 each collide across the two sequences), and its scope omits the
+archive.
+**Upstream's copy of S6 is upstream's to fix.** `upstream/main` still carries that receipt as
+`session: S2, commit: pending`; the fork reconciled its own renumbered copy to `21fb521`, the only
+sha that is an ancestor of *both* repos. No upstream action taken.
+*Follow-ons raised, deliberately not bundled (FM #17):* **BL-15** — `changelog_ref` carries the
+identical escape in 13 of 32 receipts, but its false-positive surface is wider (a legitimately
+pending PR number is plausible). **BL-16** — `bin/check-handoff:301-303`'s docstring claims the
+canonical repo "has no root-level receipt ledger of its own," which is false here (13 receipts + a
+19-receipt archive it knows nothing about).
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

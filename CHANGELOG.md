@@ -65,6 +65,60 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [BL-14] The `commit:` answer-slot rule — a distributed promise that had no owner and no detector
+
+**Model:** Claude Opus 5 (1M context) — implementation, the design panel, and this entry.
+**Fork-local and canonical-only.** `bin/check-handoff` and `bin/tests.sh` are both absent from
+`bin/_manifest.py`'s 22-entry DISTRIBUTION; zero DISTRIBUTION members appear in the diff. **No
+upstream action taken and none authorized** — `gh` was read-only, and upstream
+[issue #65](https://github.com/KJ5HST/methodology/issues/65) stays open and unanswered.
+
+- **The defect S27 nominated and declined to bundle.** `commit:` may legitimately read `pending`
+  when written — the receipt ships inside the very commit whose sha it would name. The distributed
+  spec then promises a collector (`starter-kit/HANDOFFS.md:64`, `:78-79`; ratified at
+  `docs/planning/close-out-receipt-durable-artifact-plan.md:87`). **No procedure ever assigned it:**
+  `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 covers undocumented commits, a `CHANGELOG: pending`
+  marker, and a missing-or-`status: pending` receipt — never a *complete* receipt whose `commit:` is
+  still `pending`. And nothing detected it: the checker read only `blocks[0]`, and `pending` is not
+  a `BARE_PLACEHOLDER`. **This is [Learning #9](starter-kit/SESSION_RUNNER.md)'s own remedy —
+  gate-on-write AND reconcile-on-read — unapplied to the one sentinel-bearing key that needed both.**
+- **Measured, and it corrected the record three times.** 9 of 32 receipts named no sha in the answer
+  slot, not the 7 the literal word `pending` would find — S26 and S25 read `this commit — …`, and
+  **S25 contained no sha anywhere**. The corpus is **32, not 31**: the claim stub measured the corpus
+  pre-claim and the classification post-claim, mixing two trees in one paragraph. And the
+  successor-reconcile has fired **6 times, only 4 deliberately**, all in one 8-hour window on
+  2026-07-25 — `7817989` is S3 completing its **own** receipt 2m26s later, not a successor. The
+  practice was never a procedure; it was one operator, by hand, for one afternoon.
+- **The rule, and why it cannot re-create the chicken-egg.** The answer slot is the value's **first
+  token**, and on every receipt *except the newest* it must be a sha. The newest is exempt
+  **positionally, without its value ever being inspected** — so no close-out receipt can be failed
+  for the deferral the plan explicitly permits. Test 25 N3 is that assertion; `bin/tests.sh:366`'s
+  long-standing "`commit: pending` is accepted" now holds at ledger scope, not just single-block.
+  Leading-token on purpose: it tolerates trailing prose and catches the `this commit` dialect.
+- **RED-FIRST WAS RUN AGAINST THE REAL CORPUS, and it earned its keep.** Executed against the
+  pre-repair ledger at `fd5d2d8`, the new pass returned **exactly 9** — matching the 9 derived
+  independently by walking git history. That run also exposed a hole no fixture would have:
+  **"newest" is a property of the LEDGER, not of a file.** In a sharded ledger the archive's
+  `blocks[0]` is merely the newest *in that shard*, so S18 was silently exempt. Hence `--archived`,
+  and Test 25 N5/N5b.
+- **8 mutants, 8 killed — and two of them bought real tests rather than an annotation.** `M3`
+  (`fullmatch`→`search`) **survived the first round**, because N7's first token is plain `pending`,
+  which contains no sha, so both predicates agree on it; **N9** is the fixture that separates them.
+  `M8` (drop the stub skip) drove **N10**. Also killed by narrowing, not only by deletion: `M1`
+  (`blocks[1:]`→`blocks[2:]`), `M7` (narrow to the literal `pending`), `M4`/`M5` (both directions of
+  the exemption), `M6` (absence-as-pass), `M2`.
+- **Suite 112 → 127**, including a **live-corpus assertion** (L1/L1b) that runs the checker against
+  the real ledger and archive. Every other `check-handoff` assertion in the suite uses a `mktemp`
+  fixture, so nothing observed the real file; precedent is Test 10, which runs `check-links` bare
+  against the real tree.
+- **What did NOT ship, and it is the half that matters.** The spec still promises a reconcile no
+  procedure assigns. Closing that means either **scheduling** the duty into `SESSION_RUNNER.md`
+  Phase 0 or **deleting** the promise from the seed — a DISTRIBUTED change, blocked on the paused
+  channel, and the choice between the two *is* the deliverable. The shipped detector is agnostic
+  between them, which is why it could ship first. Recorded in BL-14 with the 7 affected distributed
+  sites. **BL-15** (`changelog_ref`, same escape, 13 of 32) and **BL-16** (the checker's own docstring
+  claims this repo has no root ledger) raised, not bundled (FM #17).
+
 ### 2026-08-02 · [ad hoc] Reconcile-on-read repair: nine `commit:` fields that named no sha
 
 **Model:** Claude Opus 5 (1M context).

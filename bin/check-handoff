@@ -50,6 +50,31 @@ placed above the real receipt would be treated as a real receipt and shadow it.
 Part of the close-out-receipt vertical slice (P1: starter-kit/HANDOFFS.md + manifest
 wiring; P2: this checker + bin/tests.sh Tests 21-22).
 
+THE ANSWER-SLOT RULE (the `commit:` field, every receipt EXCEPT the newest).
+`commit:` is the receipt's join key into git. It may legitimately read `pending`
+when written, because a close-out receipt ships INSIDE the very commit whose sha it
+would name — the chicken-egg the ratified plan solved by deferring. What the
+distributed spec then promises (starter-kit/HANDOFFS.md:64 and :78-79) is that the
+NEXT session reconciles it to a real sha. Nothing performed that promise: measured
+over both ledger files, 9 of 32 receipts named no sha in the answer slot, one of
+them 25 days old, and this checker passed all of them because it reads only the
+newest block and `pending` is not a BARE_PLACEHOLDER.
+
+So the rule enforced here is a state predicate over the FILE, not a duty assigned to
+a session: the answer slot is the value's FIRST token, and on every receipt except
+the newest it must be a sha. The newest is exempt BY CONSTRUCTION rather than by
+flag — it is the one receipt that may still be shipping in its own commit — which is
+why nothing here can re-create the chicken-egg. This is a leading-token rule on
+purpose: it accepts trailing prose (most reconciled receipts carry some), and it
+catches the `this commit — ...` dialect that names no sha at all, which keying on
+the literal word `pending` would miss.
+
+Scope note, deliberate: this pass iterates blocks[1:], but `validate()` still runs on
+blocks[0] ONLY — the 13-key schema is not applied to older receipts. Upstream issue
+#65 separately proposes a `--all` mode for this tool covering different ground
+(duplicate/malformed row detection across the whole ledger). This is not that, is not
+named that, and does not answer it.
+
 Usage:
   bin/check-handoff                    # check the newest receipt in ./HANDOFFS.md,
                                         # falling back to starter-kit/HANDOFFS.md
@@ -60,8 +85,9 @@ Usage:
                                         # above is selected by the block, not by this)
 
 Exit: 0 = a receipt is present and structurally complete, or legitimately absent
-      (fresh seed, or --allow-none with none found); 1 = missing / structurally
-      incomplete / an anti-pattern lint fired.
+      (fresh seed, or --allow-none with none found), AND every receipt below the
+      newest names a commit sha; 1 = missing / structurally incomplete / an
+      anti-pattern lint fired / an unreconciled `commit:` answer slot below the newest.
 Python 3 stdlib only; cross-platform.
 """
 import argparse
@@ -287,6 +313,62 @@ def validate(fields: dict, allow_pending: bool) -> list:
     return findings
 
 
+def leads_with_sha(value: str) -> bool:
+    """True iff the ANSWER SLOT — the first whitespace-delimited token of the value —
+    is a commit sha.
+
+    Backticks, and a trailing comma/semicolon/colon, are stripped before matching:
+    receipts write the sha bare (`1298af7 — ...`), fenced (`` `1298af7` ``) and
+    punctuated (`7603f10 (extraction...)`) interchangeably, and all three name a sha
+    in the slot. An em-dash or "(" immediately following without a space does not
+    occur in the corpus and is deliberately NOT stripped — widening this predicate
+    should be driven by a real receipt, not by anticipation.
+
+    Reuses SHA_RE, so the same "at least one hex letter" rule applies here as in
+    what_was_done: a bare 7+ digit decimal is not a sha. `fullmatch`, not `search` —
+    `search` would accept "pending-1298af7" and, worse, accept any prose whose first
+    word merely CONTAINS a sha-shaped run.
+    """
+    token = value.strip().split()[0] if value.strip() else ""
+    return bool(SHA_RE.fullmatch(token.strip("`,;:")))
+
+
+def check_answer_slots(blocks: list, archived: bool = False) -> list:
+    """Return findings for every receipt BELOW the newest whose `commit:` answer slot
+    names no sha. See THE ANSWER-SLOT RULE in the module docstring.
+
+    blocks[0] is skipped unconditionally and WITHOUT inspecting its value — the
+    exemption is positional, not value-based, so no close-out receipt can ever be
+    failed for the deferral the spec explicitly permits it. A missing `commit:` key
+    below the newest is a finding too: absence is not a pass, or omitting the line
+    would be a free escape from a rule that only reads present values.
+
+    `archived=True` removes that exemption, and the reason is a hole this rule had on
+    its first run against the real corpus. "Newest" is a property of the LEDGER, not
+    of a file. Once the ledger is sharded (this repo's own HANDOFFS.md +
+    docs/archive/HANDOFFS-archive.md), the archive's blocks[0] is merely the newest
+    receipt IN THAT SHARD — it is not shipping in its own commit and has no claim on
+    the exemption. Checking the archive without this flag silently passed S18, which
+    had stood unreconciled for three days. An archive shard contains no newest
+    receipt, so every block in it is checked.
+    """
+    findings = []
+    for block in (blocks if archived else blocks[1:]):
+        fields = parse_block(block)
+        # A still-open Phase 1B stub below the newest means a session claimed and never
+        # closed out. That is `status: pending`'s finding to raise, not this one's, and
+        # Phase 0 reconcile is its remedy — do not double-report it here.
+        if fields.get("status", "").strip() == "pending":
+            continue
+        value = fields.get("commit", "")
+        if not leads_with_sha(value):
+            findings.append(
+                "receipt %s (%s) names no commit sha in its `commit:` answer slot: %r"
+                % (fields.get("session", "?"), fields.get("date", "?"), value.strip()[:60])
+            )
+    return findings
+
+
 def repo_root() -> Path:
     try:
         out = subprocess.run(
@@ -318,6 +400,10 @@ def main() -> int:
                     help="treat 'no receipt blocks found' as success (empty-diff / no-action session)")
     p.add_argument("--allow-pending", action="store_true",
                     help="do not count 'status: pending' as a finding; this flag changes nothing else")
+    p.add_argument("--archived", action="store_true",
+                    help="FILE is an archived ledger shard, not the live ledger: no receipt in it "
+                         "is the newest, so check every block's `commit:` answer slot (the newest "
+                         "receipt's exemption is a property of the LEDGER, not of a file)")
     args = p.parse_args()
 
     path = Path(args.file) if args.file else default_path()
@@ -341,15 +427,33 @@ def main() -> int:
     fields = parse_block(blocks[0])  # newest = first block in the file
     findings = validate(fields, args.allow_pending)
 
-    if findings:
-        print("check-handoff: FAIL — %d issue(s) in the newest receipt in %s:" % (len(findings), path))
-        for msg in findings:
-            print("  error: %s" % msg)
+    # Reported separately from the schema findings above, and computed over a
+    # different scope, so the two can never be read as one number: `validate()` is the
+    # 13-key schema on the NEWEST receipt; this is one property on every OLDER one.
+    anchor_findings = check_answer_slots(blocks, args.archived)
+
+    if findings or anchor_findings:
+        if findings:
+            print("check-handoff: FAIL — %d issue(s) in the newest receipt in %s:"
+                  % (len(findings), path))
+            for msg in findings:
+                print("  error: %s" % msg)
+        if anchor_findings:
+            print("check-handoff: FAIL — %d unreconciled `commit:` answer slot(s) in %s:"
+                  % (len(anchor_findings), path))
+            for msg in anchor_findings:
+                print("  error: %s" % msg)
+            print("  note: the spec (starter-kit/HANDOFFS.md:64, :78-79) says the next session")
+            print("        reconciles `commit:` to a real sha. Find the sha a receipt should name")
+            print("        with: git log --all --full-history --format=%H -- <this file>")
+            print("        then the first commit whose copy of that block reads `status: complete`.")
         return 1
 
     label = ("a valid Phase 1B stub (close-out not yet performed)"
              if fields.get("status", "").strip() == "pending" else "structurally complete")
-    print("check-handoff: OK — newest receipt in %s is %s." % (path, label))
+    checked = len(blocks) if args.archived else len(blocks) - 1
+    print("check-handoff: OK — newest receipt in %s is %s; all %d %sreceipt(s) name a commit sha."
+          % (path, label, checked, "" if args.archived else "older "))
     return 0
 
 
