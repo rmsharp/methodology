@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **13**; the oldest **19**
+**Older receipts are archived.** This file currently holds **14**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -25,6 +25,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > [Learning #12](starter-kit/SESSION_RUNNER.md) pointed at this file, and it is the receipt-ledger
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
+
+---
+
+```handoff
+session: S29
+date: 2026-08-02
+status: pending
+active_task: BL-15 — settle the `changelog_ref` question, which S28 raised as a follow-on to BL-14 and deliberately did not bundle (FM #17). BL-15 as written (`docs/planning/BACKLOG.md:250`) asserts that `changelog_ref` "carries the identical escape in 13 of 32 receipts." AT CLAIM, THAT POPULATION DOES NOT REPRODUCE, and no predicate I can construct yields 13. Measured at `9267500` (this session's Phase 0 reconcile commit, which touched no `changelog_ref` value) with the checker's own `extract_blocks`/`parse_block` over both ledger files, never grep, per `bin/check-handoff:83`: of 32 receipts, **0** contain the literal `pending`, **12** contain the phrase "this commit", **9** carry no sha-shaped token anywhere in the value, and **24** carry no `CHANGELOG.md:<line>` anchor. So the first deliverable of this session is NOT a rule — it is the PREDICATE. What, exactly, is `changelog_ref`'s answer slot, and is it unresolvable in the way `commit:`'s was? The prior is that it is NOT the identical escape: `commit:` names a sha or names nothing, whereas `changelog_ref` also quotes an entry title, which is greppable and stays resolvable as the ledger grows. A live hypothesis pointing the other way, and the reason this is worth a session: `CHANGELOG.md` is PREPEND-ONLY, so every `CHANGELOG.md:<line>` anchor in an older receipt is displaced by every subsequent prepend — including the one this very session just made. If that is true, the line-anchored refs are not merely unreconciled but ACTIVELY WRONG, which is a different and worse defect than BL-15 describes. **"Close BL-15 as not-a-defect" is an explicitly correct outcome** and was named as such when the operator chose this deliverable; so is "it is a defect, but a different one." SCOPE: fork-side, canonical-only, no upstream channel needed and none to be used — `bin/check-handoff` and `bin/tests.sh` are both absent from `bin/_manifest.py`'s DISTRIBUTION. No outward-facing action; upstream issue #65 stays untouched.
+```
 
 ---
 
