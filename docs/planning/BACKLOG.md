@@ -1,10 +1,11 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: REOPENED 2026-07-25 — BL-8, BL-9, BL-11 and BL-12 are open.** BL-8 and BL-9 were
-> deliberately sequenced *after* the dashboard signal-integrity campaign closed (Layer 7, then
-> Layer 6), which it now has (v3.6 shipped 2026-07-27), so both are unblocked. BL-11 and BL-12 were
-> both raised 2026-08-01 at BL-10's close-out and are independent of that campaign. BL-1 – BL-7 and
-> BL-10 are complete; the retirement note below is preserved as the record of that cycle.
+> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11 and BL-12 are open.** BL-8 was deliberately sequenced
+> *after* the dashboard signal-integrity campaign closed (Layer 7, then Layer 6), which it now has
+> (v3.6 shipped 2026-07-27), so it is unblocked. BL-11 and BL-12 were both raised 2026-08-01 at
+> BL-10's close-out and are independent of that campaign. BL-1 – BL-7, BL-9 and BL-10 are complete;
+> the retirement note below is preserved as the record of that cycle. **BL-9 closed 2026-08-01 (S25)
+> when its last layer, L2, shipped** — all three layers delivered across S23/S24/S25.
 
 > **(prior status) RETIRED (again) — BL-1 – BL-7 all complete, 2026-07-08.**
 > BL-7 (capability-tiered review, an elective vertical-slice addition) shipped via
@@ -33,11 +34,11 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 ## Open items
 
-**BL-8 and BL-9** were sequenced AFTER the dashboard signal-integrity campaign closed — i.e. after
-**Layer 7** (the installer/doc-only fix, ratified S14) and then **Layer 6** (close-out + release
-decision R1). That campaign shipped as **v3.6** on 2026-07-27, so neither is blocked any longer.
-Neither is a change to the methodology. Both were raised and measured in **S14**; see `CHANGELOG.md`
-for that session's entries. **BL-11** and **BL-12** are unrelated to the campaign; both were raised
+**BL-8** was sequenced AFTER the dashboard signal-integrity campaign closed — i.e. after **Layer 7**
+(the installer/doc-only fix, ratified S14) and then **Layer 6** (close-out + release decision R1).
+That campaign shipped as **v3.6** on 2026-07-27, so it is not blocked any longer. It is not a change
+to the methodology. It was raised and measured in **S14** (as was BL-9, now complete); see the action
+ledger for those entries. **BL-11** and **BL-12** are unrelated to the campaign; both were raised
 2026-08-01 at BL-10's close-out.
 
 **BL-8 — Subagent capability-tiering: adopt as an operational default, or decline.**
@@ -62,55 +63,6 @@ budget and its review then died on a usage limit, which is why Layer 5 shipped u
 needed three prose fixes. Both are free of any quality tradeoff.
 **"Decline and keep single-tier" is a correct outcome** and matches the documented default; the only
 cost is the saving above.
-
-**BL-9 — This repo has drifted from two size disciplines it publishes, and a third has no rule at all.**
-*Also not a new proposal — two of the three are rules this repo already states and does not follow.*
-
-> **PARTIALLY COMPLETE. Fork-local scope, operator-approved. Remaining: L2 only — its own session.**
-> - ✅ **L1 — `HANDOFFS.md` archival. DONE 2026-08-01 (S23, commit `7a71df0`).** 216 KB → 51 KB; the
->   6 newest receipts stay, the previous 19 moved verbatim to `docs/archive/HANDOFFS-archive.md`.
->   Dashboard output byte-identical to the pre-change baseline. **This closed "the genuine gap"** —
->   the missing archival rule — *for this repo*; writing that rule into the framework is distributed
->   content and stays out of scope while the upstream channel is paused.
-> - ✅ **L3 — `CLAUDE.md` §Versioning extracted. DONE 2026-08-01 (S24, commit `7603f10`).**
->   52,909 → 8,519 bytes (**−83.9%**), 122 → 98 lines; the 25 version bullets moved verbatim
->   (md5-identical payload) to [`docs/RELEASE_HISTORY.md`](../RELEASE_HISTORY.md). All three S23
->   constraints held: plain Markdown link (no `@`-import), the v3.1 cite-don't-restate boundary
->   restated in both files, and `CLAUDE.md` confirmed absent from `bin/_manifest.py` DISTRIBUTION
->   (22 entries) so no adopter is affected. **The constraint S23 did not surface** was the binding
->   one: **15 markdown links target the `CLAUDE.md#versioning` anchor** — all of them in
->   `CHANGELOG.md`, most inside dated entries the v2.7.1 convention freezes (plus 1 prose mention
->   in a receipt = 16 occurrences). So the `## Versioning` heading stays in `CLAUDE.md` and only
->   the list moved — every link still resolves and no frozen entry was rewritten. Dashboard health
->   unchanged (72); suite 92/92; `check-links` 82/21 unchanged.
-> - ⬜ **L2 — `CHANGELOG.md` (172 KB).** Before implementing, settle what its own line-31 rule
->   actually means: *"promote to `## YYYY-MM` sections"* reads as headers **within** the file, which
->   aids navigation but reduces no bytes, whereas sharding to `docs/archive/` reduces bytes but is
->   not what the line says. Decide and state it; do not assume sharding. Whatever is chosen, the root
->   `CHANGELOG.md` must remain a regular file — `_find_action_ledger`
->   (`starter-kit/methodology_dashboard.py:1007`) requires exactly that path, and
->   `.githooks/pre-commit` co-stages it.
->
-> *Measurements below are from 2026-07-25 and were already stale by 2026-08-01* (actuals then:
-> `CHANGELOG.md` **172 KB**, `HANDOFFS.md` **216 KB**, `CLAUDE.md` **51 KB**). **Re-measure before
-> quoting.** Note also that `CLAUDE.md` is only ~122 lines, so it *passes* the "~200 lines" budget
-> while being 51 KB — the binding cost is bytes, not lines.
-
-- `CHANGELOG.md` is **103 KB**, and its own line 31 says *"Promote to `## YYYY-MM` sections as it
-  grows."* Never done.
-- `CLAUDE.md` is **43 KB** and **85%** of it is `§Versioning`, against `starter-kit/BOOTSTRAP.md:195`,
-  which sets a *"practical size budget (…roughly 200 lines…)"* and warns that an oversized memory file
-  *"measurably degrades how reliably the agent follows it."* That file is auto-loaded every session.
-- `HANDOFFS.md` is **110 KB** with **no archival rule anywhere in the corpus** — the genuine gap.
-  Per-session receipts grew **10 → 13 → 13 → 15 KB** across S10–S13.
-*Scope note:* this is a **canonical-repo** problem. Adopters pay almost none of it — their
-per-session floor is `SESSION_RUNNER.md` + `SAFEGUARDS.md`, and the signal-integrity campaign added
-~0 to it.
-*Constraints any fix must respect:* Phase 0 reconcile is **frontier-based** (`git log -1 --format=%H
--- <file>`), so sharding either ledger is safe by construction; `bin/check-handoff` validates only
-the **newest** receipt, so archiving older ones does not break it; and the `§Versioning` ↔
-`CHANGELOG.md` cite-don't-restate boundary (v3.1) must survive whatever `CLAUDE.md` extraction is
-chosen.
 
 **BL-11 — Unreachable non-`Learning` referents across the distributed corpus.**
 *Raised 2026-08-01 at BL-10's close-out; deliberately not bundled into it (FM #17/#18).*
@@ -148,7 +100,7 @@ rule routes this back to a review-time grep (Learnings #7/#10), not to another a
   `bin/check-citations`' contiguity guard closes only the **hole** case; duplicates and malformed
   rows still pass. Same Learning #12 shape as BL-10's fix — drive it RED first.
 
-## Completed items (BL-1 – BL-7, BL-10)
+## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
 | Item | Scope | Outcome |
 |------|-------|---------|
@@ -159,6 +111,7 @@ rule routes this back to a review-time grep (Learnings #7/#10), not to another a
 | **BL-5** | Dashboard: fair scoring for document-only / research repos | ✅ SHIPPED 2026-07-08 in **v3.2** ([PR #50](https://github.com/KJ5HST/methodology/pull/50), merge `9bda167`). `detect_doc_only` + Render/Verification proxy; code-centric risks suppressed; Large-files ext-filter; both polish items (Signal-F adopter-gate + `starter-kit/__pycache__` gitignore) done; `DASHBOARD_VERSION` 2.8.0; first functional scoring tests (29). |
 | **BL-6** | v3.1 adopter-migration completeness (pedagogical + seed-format + hook distribution) | ✅ CLOSED 2026-07-08. **Item 1** (pedagogical refresh) + follow-ups **1a/1b/1c** shipped via [PR #47](https://github.com/KJ5HST/methodology/pull/47) / [#48](https://github.com/KJ5HST/methodology/pull/48) / [#49](https://github.com/KJ5HST/methodology/pull/49) (docs/tutorial lag; no version event). **Item 2** (seed-format migration discoverability) shipped via [PR #51](https://github.com/KJ5HST/methodology/pull/51) (merge `48c253f`, no version event) — `bin/status` flags a pre-v3.1-shaped seed `present (stale format)` with a migration note, advisory-only (generic `_manifest.SEED_FORMAT_MARKERS`; `sync` never auto-overwrites). **Item 3** (hook distribution) **DECIDED: keep `.githooks/pre-commit` canonical-only** — adopters run the Phase 3F ledger gate via their root `SESSION_RUNNER.md`, so distributing the hook would add a per-clone `core.hooksPath` enable step + a maintenance surface for a mechanism they already have; the hook exists only because *this* repo has no root runner. Not added to `bin/_manifest.py`. |
 | **BL-7** | Capability-tiered review — model-tiering as an elective vertical-slice addition | ✅ SHIPPED 2026-07-08 via [PR #57](https://github.com/KJ5HST/methodology/pull/57) (merge `d563600`). A 3-candidate design panel (extend-in-place / full-parallel-treatment / anchor-to-vertical-slice) scored on 4 lenses, synthesized, then every open decision (placement, naming, scope, all three extras) put to the operator before implementation. Landed as an elective paragraph in `SESSION_RUNNER.md` §Vertical Slice Sessions + new Learning #11, a routing pointer in `ITERATIVE_METHODOLOGY.md`, an illustrative addendum in `RECOMMENDED_SKILLS.md`, and a corollary in `docs/tutorials/T5_cautionary.md`. A 4-lens adversarial review unanimously caught and fixed one defect (brand names leaking into the brand-neutral core file). No new phase, gate, principle, workstream, or FM; FM count stays 27. Version-event decision still open (deferred past merge — no version-bump commit landed with PR #57). |
+| **BL-9** | Three size disciplines this repo publishes and had drifted from | ✅ CLOSED 2026-08-01 across three sessions, all fork-local, zero distributed files touched. **L1** (S23, `7a71df0`) — `HANDOFFS.md` 216 KB → 51 KB, 19 older receipts to `docs/archive/HANDOFFS-archive.md`; closed the missing-archival-rule gap *for this repo*. **L3** (S24, `7603f10`) — `CLAUDE.md` 52,909 → 8,519 bytes (−83.9%), the 25 version entries verbatim to `docs/RELEASE_HISTORY.md`, with the `## Versioning` heading kept in place because 15 frozen links cite that anchor. **L2** (S25) — the action ledger split at the **v3.6 release frontier**: 186,704 → 53,512 bytes (−71.3%), 2,090 → 658 lines, 50 entries verbatim to `docs/archive/CHANGELOG-through-v3.6.md`. L2's deliverable was the **decision**, and the evidence settled it: the rule's ratified plan (`changelog-authoritative-ledger-gate-plan.md:128`) and the distributed seed (`starter-kit/CHANGELOG.md:92`) both make `## YYYY-MM` a *grouping-axis* rule, never a size rule — so sections went by month and the *file* boundary by release, two different axes. The one concrete defect fixed: the file had crossed the 2,000-line agent `Read` cap at L1's own commit and was silently dropping its 10 oldest entries. Everything else was anticipatory and is recorded as such — this ledger is not auto-loaded and no size-caused harm was on record. |
 | **BL-10** | Five dangling `Learning #N` citations in adopter-distributed files | ✅ SHIPPED 2026-08-01 via [PR #64](https://github.com/KJ5HST/methodology/pull/64). All five traced to the 2026-05-02 Pocock audit, written in session S438 of a *different* methodology instance whose Learnings table ran into the 30s. **Three were worse than dangling** — they asserted framework rules that do not exist (there is no handoff length discipline; the only `150`-as-handoff-length string in the distributed corpus was the line claiming it), so stripping just the numbers would have left unattributed false claims. Each site re-grounded on a reachable referent; dispositions unchanged; no Learnings row added or edited. Mechanized per Learning #12: canonical-only `bin/check-citations` + Test 23, driven RED first (6 findings), with every guard driven RED too — mutation-testing the fixture caught a real defect in the checker itself (a missing registry file exited 1, indistinguishable from a corpus finding). Suite 84 → 91. Follow-ons raised as BL-11 and BL-12. |
 
 **Not in this backlog:** upstream **PR #44** (REUSE compliance + license/REUSE README badges) is being
