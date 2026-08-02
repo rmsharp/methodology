@@ -65,6 +65,77 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [ad hoc] `bin/check-handoff` learned the Phase 1B stub schema — the flag advertised a capability the tool never had
+
+**Model:** Claude Opus 5 (1M context) — implementation, both workflows, and this entry.
+**Fork-local, canonical-only; no upstream action taken and none is authorized.** Session claimed
+`2026-08-01` (`8bd750c`, 23:42 CDT) and closed out after midnight; the receipt keeps `date:
+2026-08-01` because session+date is the ledger's identity key and must not shift between Phase 1B
+and Phase 3D, while this entry is dated when the work actually shipped.
+
+- **The defect.** `bin/check-handoff --allow-pending` promised, in its docstring and its `--help`,
+  to accept "a just-written Phase 1B stub." It relaxed exactly one assertion — the `status` finding
+  — while every other assertion ran at full strength against a document both distributed specs
+  describe as deliberately partial (`starter-kit/SESSION_RUNNER.md:91`, "the fields you can fill
+  now"; `starter-kit/HANDOFFS.md:26`, "filling what you can").
+- **Measured over git history, not the working tree: 21 distinct Phase 1B stubs, 0 passing.**
+  Enumerated with the checker's own parser across 63 ledger-touching commits on `--all` refs, keyed
+  by session+date because two sequences share this file and both have an S7 and an S8. **THREE
+  dialects, and the checker rejected all three:** FLOOR-4 (4 stubs — `da46b19` S8, `65b1e8e` S15,
+  `71ae4a1` S16, `9e93588` S3 — carrying exactly the `(session, date, active_task)` triple the spec
+  names, 9 findings each); FORK-11 (14 — S9–S14, S18–S20, S22–S26 — both score keys omitted, 2
+  findings each); and **SENTINEL-13 (3 — `c3157e8` S5, `a4e2b30` S7, `9c9c39c` S8, all authored by
+  the framework's own maintainer — writing `self_score: pending`, 2 findings each).** That third
+  dialect decided the design: the author of the checker, working in its home repo, independently
+  reached for the value his own tool rejects, which is what rules out "the convention is wrong, just
+  fill the scores in." S26's entry below says "17 distinct sessions"; that figure counts the fork's
+  own *prior* sessions and is correct on its own terms — 21 is the whole population, both sequences,
+  measured at `8bd750c`.
+- **The root cause was a fixture, not a missing test.** `bin/tests.sh` has exercised
+  `--allow-pending` since `1646773` and has been green the whole time, because its fixture is
+  `good_handoff | sed 's/^status:.*/status: pending/'` — a fully-populated close-out receipt with one
+  word changed, which is not a stub. **The guard was proved; the fixture under it never was.** That
+  is why 21 real stubs failed unnoticed for a month, and it is the same lesson this repo already
+  carries in its own receipts.
+- **Known since 2026-07-25, recorded four times, fixed now.** `9ebedda` (S12) first wrote *"`bin/check-handoff`
+  STILL cannot validate a 1B stub even with `--allow-pending` … do not 'fix' it by inventing
+  scores"*; S13, S17/S19 and S26 each recorded it again under FM #17. The standing instruction not to
+  invent scores is honoured — no session is asked to fabricate a self-score.
+- **The design, ratified by the operator before implementation.** A three-candidate panel scored on
+  two lenses picked **status-dispatched schema selection** (16.5/20, zero fatal flaws): a block is a
+  stub **iff its own `status` is `pending`** — never because of the flag. Stubs require four keys
+  (`session`, `date`, `status`, `active_task`); the other nine are optional-if-absent but **validated
+  at full strength when present**, and a present-but-blank one is its own finding so blanking never
+  becomes an escape. `self_score`/`predecessor_score` may carry `pending` inside a stub (extending
+  the sentinel `starter-kit/HANDOFFS.md:77-79` already blesses for `commit`/`what_was_done`); the
+  three other floor keys may not, since they are knowable at claim time. **The flag's job is
+  unchanged** — it still gates exactly one finding, so an unflagged stub still exits 1 and no
+  relaxation can produce a false green. **Labelled as ADDED POLICY in the code**, because no ratified
+  text enumerates a stub's keys.
+- **Why status-dispatch and not the one-line version.** The obvious patch —
+  `required = STUB if allow_pending else REQUIRED_KEYS` — is a hole: a `status: complete` receipt
+  missing `gotchas`, checked with the flag, returns clean. That receipt is now Test 24's N1.
+- **Verified.** `bin/tests.sh` **92 → 112**, new Test 24 written and run **RED first** (its three
+  unmutated stub fixtures failed with exactly 9 / 2 / 2 findings, matching the three dialects).
+  **11 mutants, 10 killed** — including the naive flag-dispatch, dropping either new guard, letting
+  the sentinel escape stub scope, and making the stub branch skip the sha-shape check or the
+  placeholder lint. The one survivor is annotated in-code as uncoverable by construction rather than
+  claimed as coverage. **All 21 historical stubs now pass (22 with this session's own).** An
+  exhaustive **312-case** old-vs-new differential (4 statuses × 13 keys × 3 mutations × 2 flag
+  states) shows **zero** behavioural change on the close-out path — nothing that fails today passes
+  after. `bin/check-links` OK 83/21 unchanged; **zero `bin/_manifest.py` DISTRIBUTION members
+  touched**, verified by importing the manifest.
+- **A four-lens adversarial review before commit produced 14 findings; 3 survived refutation and all
+  3 were fixed.** The sharpest was this session's own thesis recurring one level down: `N2` and `N7`
+  each made a *plural* claim ("blank optional key", "floor keys") while sampling exactly **one** key,
+  so narrowing either loop to that key passed the whole suite. Two `for` loops and four assertions
+  closed it, each then mutation-proved.
+- **Commits:** `8bd750c` (claim) · this commit (implementation + close-out). **Session:** S27 ·
+  **Not done, deliberately:** no Learnings row (that table lives in a DISTRIBUTED file and the
+  upstream channel is paused); no distributed-seed documentation of the stub schema (operator
+  decision — the residual is recorded in the receipt); no version event (canonical-only, adopters
+  receive nothing).
+
 ### 2026-08-01 · [ad hoc] Fork resynced with `upstream/main`, and the backlog reconciled to what those commits changed
 
 **Fork-local; no upstream action taken, and none is authorized.** The maintainer ran their own S7/S8

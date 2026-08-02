@@ -503,6 +503,229 @@ fi
 
 rm -f "$CL" "$HO"
 
+echo "== Test 24: check-handoff — a Phase 1B stub validates against the stub schema (RED-first, Learning #12) =="
+# WHY THIS TEST EXISTS. Tests 21-22 build every fixture from good_handoff(), a
+# fully-populated `status: complete` receipt, and reach the pending path with
+# `sed 's/^status:.*/status: pending/'`. That is a close-out receipt with one word
+# changed — it is NOT a Phase 1B stub, so the --allow-pending assertion at :378 has
+# been green since 1646773 while every real stub failed. The guard was proved; the
+# FIXTURE never was. These three fixtures are the missing ones: each is a verbatim
+# shape taken from the 21 stubs actually committed to this repo, and each is written
+# out in full rather than sed-derived, so a fixture can never drift into a receipt.
+#
+# Stub schema (bin/check-handoff STUB_REQUIRED_KEYS): a block is a stub iff its OWN
+# `status` is `pending` — dispatch is on the block, never on the flag. See N1.
+
+# FLOOR-4 dialect: exactly the (session, date, active_task) triple SESSION_RUNNER.md:91
+# names, plus status. 4 real stubs: da46b19 S8, 65b1e8e S15, 71ae4a1 S16, 9e93588 S3.
+stub_floor() {
+    cat <<'EOF'
+```handoff
+session: S15
+date: 2026-07-25
+status: pending
+active_task: Layer 4 — dashboard self-scan false risk (issue #59)
+```
+Phase 1B claim stub — `status: pending`.
+EOF
+}
+
+# FORK-11 dialect: all 13 keys minus the two scores. The 14-stub pre-change majority
+# (S9-S14, S18-S20, S22-S26).
+stub_fork() {
+    cat <<'EOF'
+```handoff
+session: S25
+date: 2026-08-01
+status: pending
+active_task: BL-9 Layer 2 — the action ledger size discipline
+what_was_done: pending
+next_steps: pending
+key_files: CHANGELOG.md:45 (the ordering rule), bin/tests.sh:504
+gotchas: The risk is outbound here, not inbound — sweep for links INSIDE frozen entries
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub — `status: pending`.
+EOF
+}
+
+# SENTINEL-13 dialect: all 13 keys, the two scores written `pending`. 3 real stubs,
+# all authored by the framework's own maintainer: c3157e8 S5, a4e2b30 S7, 9c9c39c S8.
+stub_sentinel() {
+    cat <<'EOF'
+```handoff
+session: S7
+date: 2026-08-01
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: File the upstream issue for the enumerable-set invariant gap
+what_was_done: pending
+next_steps: pending
+key_files: bin/check-handoff:50 (REQUIRED_KEYS; newest-receipt-only scope is the gap)
+gotchas: Numbered S7 — never renumber an already-written receipt
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub — `status: pending`.
+EOF
+}
+
+# Count findings from the checker's own `  error:` lines, never the "N issue(s)"
+# headline — the headline is prose, the error lines are the structured rows.
+# (Isolate the row from the advisory text before counting.)
+nfind() { "$BIN/check-handoff" --file "$1" --allow-pending 2>&1 | grep -c '^  error:' || true; }
+
+# --- C1: THE UNMUTATED-FIXTURE CONTROL (positive) ---------------------------
+# All three real-shaped stubs must pass cleanly. This is the control Tests 21-22
+# never had: if C1 ever goes red, the FIXTURE is broken, not the guard.
+for d in floor fork sentinel; do
+    F="$(mktemp)"; "stub_$d" > "$F"
+    if "$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1; then
+        pass "C1 unmutated control: $d-dialect stub passes --allow-pending cleanly"
+    else
+        fail "C1 unmutated control: $d-dialect stub should pass (got $(nfind "$F") finding(s))"
+    fi
+    rm -f "$F"
+done
+
+# --- N1: THE KILLER TEST (flag-dispatch vs status-dispatch) -----------------
+# The most likely wrong patch is `required = STUB if allow_pending else REQUIRED_KEYS`.
+# Under it, a `status: complete` receipt one key short passes silently WITH the flag.
+# Dispatching on the BLOCK's own status is what makes this fail correctly.
+F="$(mktemp)"
+good_handoff | grep -v '^gotchas:' > "$F"
+"$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+    && fail "N1 flag-dispatch hole: a status:complete receipt missing gotchas passed WITH --allow-pending" \
+    || pass "N1 status-dispatch: --allow-pending does not relax a status:complete receipt"
+rm -f "$F"
+
+# --- N2: blank is not absent ------------------------------------------------
+# TWO keys, not one. B4 is a loop over all nine optional keys, so pinning it with a
+# single representative would let the loop be narrowed to that one key while the suite
+# stayed green — a plural claim resting on a sample of one. (Adversarial review caught
+# exactly this: `if key not in required` narrowed to `if key == "key_files"` passed
+# 31/31 while a blank `gotchas:` sailed through.)
+for k in key_files gotchas; do
+    F="$(mktemp)"
+    stub_fork | sed "s/^$k:.*/$k: /" > "$F"
+    "$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+        && fail "N2 blank bypass: a blanked optional key ($k) passed" \
+        || pass "N2 blank optional key is a finding ($k) — omit the line instead"
+    rm -f "$F"
+done
+
+# --- N3: the score sentinel must not leak onto the close-out path -----------
+F="$(mktemp)"
+good_handoff | sed 's/^self_score:.*/self_score: pending/' > "$F"
+"$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+    && fail "N3 sentinel leak: self_score: pending accepted on a status:complete receipt" \
+    || pass "N3 score sentinel is stub-scoped, not close-out-scoped"
+rm -f "$F"
+
+# --- N4: the sentinel is two named keys, not "any key" ----------------------
+F="$(mktemp)"
+stub_fork | sed 's#^key_files:.*#key_files: pending#' > "$F"
+"$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+    && fail "N4 sentinel over-reach: key_files: pending satisfied the path:line check" \
+    || pass "N4 score sentinel does not reach key_files"
+rm -f "$F"
+
+# --- N5/N6: present optional keys are validated at FULL strength ------------
+F="$(mktemp)"
+stub_sentinel | sed 's/^self_score:.*/self_score: 11/' > "$F"
+"$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+    && fail "N5 range check skipped: self_score: 11 accepted in a stub" \
+    || pass "N5 a non-sentinel score value still gets the 1..10 range check"
+rm -f "$F"
+
+F="$(mktemp)"
+stub_fork | sed 's/^next_steps:.*/next_steps: pick next from backlog/' > "$F"
+"$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+    && fail "N6 lint skipped: 'pick next from backlog' accepted in a stub" \
+    || pass "N6 anti-pattern lints still fire inside a stub"
+rm -f "$F"
+
+# B2 covers FIVE value checks that can reach the nine optional keys; N4/N5/N6 pin three
+# of them. These two pin the remaining pair — the what_was_done sha-shape check and the
+# bare-placeholder sweep — so no check is correct-by-assumption in the stub branch.
+F="$(mktemp)"
+stub_fork | sed 's/^what_was_done:.*/what_was_done: refactored the parser/' > "$F"
+"$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+    && fail "N6b sha-shape check skipped: sha-less what_was_done accepted in a stub" \
+    || pass "N6b what_was_done still needs a sha or the literal pending inside a stub"
+rm -f "$F"
+
+F="$(mktemp)"
+stub_fork | sed 's/^gotchas:.*/gotchas: TODO/' > "$F"
+"$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+    && fail "N6c placeholder lint skipped: 'gotchas: TODO' accepted in a stub" \
+    || pass "N6c bare-placeholder lint still fires inside a stub"
+rm -f "$F"
+
+# --- N7: the floor keys must carry real values ------------------------------
+# Again TWO keys, for the same reason as N2: B5 loops over session/date/active_task, so
+# one representative would let it be narrowed to that key alone. `status` is deliberately
+# NOT tested here — `pending` is its mandated value and is the schema selector.
+for k in active_task date; do
+    F="$(mktemp)"
+    stub_floor | sed "s/^$k:.*/$k: pending/" > "$F"
+    "$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+        && fail "N7 floor value: $k: pending accepted at Phase 1B" \
+        || pass "N7 floor key $k rejects the pending sentinel (knowable at claim time)"
+    rm -f "$F"
+done
+
+# N7b: the converse — `status: pending` is REQUIRED, never a finding. Without this, a
+# future session "fixing" B5 to cover all four floor keys would break every stub, and
+# only the C1 control would say so.
+F="$(mktemp)"
+stub_floor > "$F"
+"$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+    && pass "N7b status: pending is exempt from B5 — it is the schema selector" \
+    || fail "N7b status: pending was itself flagged; B5 must exempt status"
+rm -f "$F"
+
+# --- N8: default mode still refuses a stub, with ONE honest finding ---------
+# The flag gates exactly one finding and nothing else, so an unflagged stub still
+# exits 1 — no schema relaxation can produce a false green.
+F="$(mktemp)"
+stub_fork > "$F"
+"$BIN/check-handoff" --file "$F" >/dev/null 2>&1 \
+    && fail "N8 a stub passed without --allow-pending" \
+    || pass "N8 a stub still fails by default (the flag gates one finding, not the schema)"
+N8="$("$BIN/check-handoff" --file "$F" 2>&1 | grep -c '^  error:' || true)"
+[ "$N8" = "1" ] \
+    && pass "N8 default mode yields exactly ONE finding, naming the real problem" \
+    || fail "N8 default mode yielded $N8 findings, expected exactly 1"
+rm -f "$F"
+
+# --- C2/R4: the tool must stop advertising a capability, and --help must work -
+HELP="$("$BIN/check-handoff" --help 2>&1)"
+case "$HELP" in
+    *--allow-pending*) pass "C2 presence control: --help renders and documents --allow-pending" ;;
+    *)                 fail "C2 presence control: --help did not mention --allow-pending" ;;
+esac
+if printf '%s' "$HELP" | grep -qiE '1B|stub'; then
+    fail "R4 --help still advertises the flag as a Phase 1B/stub checker"
+else
+    pass "R4 --help no longer claims the flag checks a Phase 1B stub"
+fi
+
+# --- R5: the stub schema is a strict subset of the close-out schema ---------
+python3 - "$BIN/check-handoff" <<'PY' && pass "R5 STUB_REQUIRED_KEYS is a strict subset of the 13 REQUIRED_KEYS" || fail "R5 stub schema is not a strict subset of REQUIRED_KEYS"
+import sys, importlib.machinery, importlib.util
+sys.dont_write_bytecode = True
+ldr = importlib.machinery.SourceFileLoader("ch", sys.argv[1])
+spec = importlib.util.spec_from_loader("ch", ldr)
+m = importlib.util.module_from_spec(spec); ldr.exec_module(m)
+sub = set(m.STUB_REQUIRED_KEYS) < set(m.REQUIRED_KEYS)
+sys.exit(0 if sub and len(m.REQUIRED_KEYS) == 13 and len(m.STUB_REQUIRED_KEYS) == 4 else 1)
+PY
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]

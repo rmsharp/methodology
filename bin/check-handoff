@@ -13,9 +13,31 @@ bin/check-handoff is not a good handoff"). It isolates the newest fenced block a
 asserts: every required key is present and non-empty (Session 1 is exempt from
 `predecessor_score`); `self_score` / `predecessor_score` are integers 1..10;
 `key_files` carries at least one `path:line` token; `what_was_done` names a commit
-sha or the literal `pending`; `status` is `complete` unless `--allow-pending`; and a
-handful of anti-pattern lints reject lazy filler ("pick next from backlog", "need to
-verify", bare TODO/TBD/"Done."/"Fixed stuff"/"...").
+sha or the literal `pending`; `status` is `complete` or `reconciled` (`pending` is a
+finding unless `--allow-pending`); and a handful of anti-pattern lints reject lazy
+filler ("pick next from backlog", "need to verify", bare TODO/TBD/"Done."/"Fixed
+stuff"/"...").
+
+TWO SCHEMAS, SELECTED BY THE BLOCK'S OWN `status`. A Phase 1B claim stub is a
+different artifact from a close-out receipt and is partial by design, so a block with
+`status: pending` is graded against STUB_REQUIRED_KEYS — `session`, `date`, `status`,
+`active_task` — and the other nine keys are optional-if-absent. Everything else takes
+the 13-key close-out schema. The selector is the BLOCK, never the flag: grading by
+`--allow-pending` would let a `status: complete` receipt missing nine keys pass.
+
+A stub is a SHORTER receipt, never a SLOPPIER one. Any of the nine that IS present is
+checked by every rule that would apply to it at close-out, and a present-but-blank one
+is a finding in its own right ("omit the line instead") so that blanking a value never
+becomes an escape. Two narrow relaxations, both scoped to stubs: `self_score` and
+`predecessor_score` may carry the literal `pending` (unknowable at claim time — see
+STUB_SCORE_SENTINEL_KEYS), and conversely the other three floor keys — `session`,
+`date`, `active_task` — may NOT, since they are knowable at claim time. `status` is
+exempt from that second rule: `pending` is its mandated Phase 1B value, and is what
+selects this schema in the first place.
+
+WHAT A STUB CHECK DOES NOT PROVE. The floor is four keys, so a stub whose
+`active_task` is a single character still passes; the epigraph above governs here too.
+This asserts that a claim was FILED, never that it was filed usefully.
 
 Block isolation matters: a receipt is parsed from the text BETWEEN a
 ```handoff / ``` fence pair, never by grepping the whole file — prose outside the
@@ -33,7 +55,9 @@ Usage:
                                         # falling back to starter-kit/HANDOFFS.md
   bin/check-handoff --file PATH        # check an explicit file (what tests use)
   bin/check-handoff --allow-none       # "no receipt blocks found" is success (empty-diff session)
-  bin/check-handoff --allow-pending    # accept status: pending (e.g. checking a Phase 1B stub)
+  bin/check-handoff --allow-pending    # don't count "status: pending" as a finding
+                                        # (that is ALL this flag does — the stub schema
+                                        # above is selected by the block, not by this)
 
 Exit: 0 = a receipt is present and structurally complete, or legitimately absent
       (fresh seed, or --allow-none with none found); 1 = missing / structurally
@@ -53,6 +77,34 @@ REQUIRED_KEYS = (
     "what_was_done", "next_steps", "key_files", "gotchas", "runtime_smoke",
     "changelog_ref", "commit",
 )
+
+# A Phase 1B claim stub is a DIFFERENT artifact from a close-out receipt, and it is
+# partial by design: the originating plan says so at
+# docs/planning/close-out-receipt-durable-artifact-plan.md:122 ("write the `handoff`
+# block with `status: pending` and the fields it can fill now"), ratified twice over by
+# its D2/D3, and both distributed specs propagate it faithfully —
+# starter-kit/SESSION_RUNNER.md:91 ("the fields you can fill now (`session`, `date`,
+# `active_task`)") and starter-kit/HANDOFFS.md:26 ("filling what you can").
+#
+# So a stub is validated against a SHORTER schema, never a SLOPPIER one: these four
+# keys are required, the other nine are optional-if-absent but checked at full strength
+# whenever they ARE present. ADDED POLICY, labelled as such: no ratified text ever
+# enumerates a stub's keys, and this list departs from the plan's own §5 ("every
+# required key present and non-empty", :151), whose exemption list at :163-165 is
+# scoped "so it never false-fails a legitimate close-out" and has no stub carve-out.
+# The warrant for preferring :122 is that it is ratified by two numbered decisions
+# while §5 is plain plan body, already ruled design-guidance rather than binding
+# (docs/archive/CHANGELOG-through-v3.6.md:1283-1284).
+STUB_REQUIRED_KEYS = ("session", "date", "status", "active_task")
+
+# Inside a stub ONLY, and for these two keys ONLY, the literal `pending` counts as
+# absence. `self_score` is unknowable at claim time by construction — it scores work
+# not yet done — and the two ledger sequences that share this file evolved two
+# spellings for that fact: omit the key (18 of 21 historical stubs) or write `pending`
+# (3, all by the framework's author). Both are now legal. This extends a sentinel the
+# seed already blesses for two other keys at starter-kit/HANDOFFS.md:77-79
+# ("`commit: pending` and `what_was_done: pending` are legal at write time").
+STUB_SCORE_SENTINEL_KEYS = ("self_score", "predecessor_score")
 
 KEY_RE = re.compile(r"^(" + "|".join(REQUIRED_KEYS) + r"):\s*(.*)$")
 HANDOFF_OPEN_RE = re.compile(r"^```handoff[ \t]*$")
@@ -148,7 +200,26 @@ def validate(fields: dict, allow_pending: bool) -> list:
     session = fields.get("session", "").strip()
     is_s1 = session == "S1"
 
-    for key in REQUIRED_KEYS:
+    # THE SCHEMA SELECTOR IS THE BLOCK, NOT THE FLAG. A block is a Phase 1B stub iff it
+    # says so itself. Keying this off `allow_pending` instead would be a hole, not a
+    # shortcut: a `status: complete` receipt checked with the flag would then be graded
+    # against the 4-key schema and pass while missing nine keys. bin/tests.sh Test 24
+    # N1 is that exact receipt, and it is the reason this line reads `is_stub`.
+    status = fields.get("status", "").strip()
+    is_stub = status == "pending"
+    required = STUB_REQUIRED_KEYS if is_stub else REQUIRED_KEYS
+
+    def sentinelled(key):
+        # The `key in STUB_SCORE_SENTINEL_KEYS` conjunct is DEFENSIVE, not load-bearing,
+        # and no test can kill it: the only two call sites below already pass exactly
+        # those two key names, so removing it is a behavioural no-op today (mutation-
+        # verified — the mutant survived the whole suite). It is kept so that a future
+        # third call site cannot silently widen the sentinel to a key that never earned
+        # it. Recorded rather than claimed as coverage.
+        return (is_stub and key in STUB_SCORE_SENTINEL_KEYS
+                and fields.get(key, "").strip() == "pending")
+
+    for key in required:
         if key == "predecessor_score" and is_s1:
             continue  # Session-1 exemption — no predecessor to score
         if key not in fields:
@@ -156,13 +227,29 @@ def validate(fields: dict, allow_pending: bool) -> list:
         elif not fields[key].strip():
             findings.append("empty required field: %s" % key)
 
+    if is_stub:
+        # "Optional" governs PRESENCE only. A key that is present but blank would
+        # otherwise slip past every value check below, making a blanked line a
+        # universal escape — so absence is legal and emptiness is not.
+        for key in REQUIRED_KEYS:
+            if key not in required and key in fields and not fields[key].strip():
+                findings.append("empty optional field: %s (omit the line instead)" % key)
+        # The floor keys are knowable at claim time — that is why they are the floor —
+        # so the `pending` sentinel must not spread to them. `status` is exempt:
+        # `pending` is its mandated Phase 1B value.
+        for key in STUB_REQUIRED_KEYS:
+            if key != "status" and fields.get(key, "").strip().lower() == "pending":
+                findings.append(
+                    "%s must carry a real value at Phase 1B (it is knowable at claim time)" % key
+                )
+
     # self_score / predecessor_score are distinct keys — each validated on its own
     # value, so one can never stand in for the other.
-    if fields.get("self_score", "").strip():
+    if fields.get("self_score", "").strip() and not sentinelled("self_score"):
         msg = check_int_range("self_score", fields["self_score"])
         if msg:
             findings.append(msg)
-    if fields.get("predecessor_score", "").strip():
+    if fields.get("predecessor_score", "").strip() and not sentinelled("predecessor_score"):
         msg = check_int_range("predecessor_score", fields["predecessor_score"])
         if msg:
             findings.append(msg)
@@ -181,8 +268,7 @@ def validate(fields: dict, allow_pending: bool) -> list:
     # "reconciled" is the terminal status the next session's Phase 0 backfill writes for a
     # receipt it reconstructed after a crash/skip (see the reconcile-on-read backstop); it is a
     # valid closed state, like "complete".
-    status = fields.get("status", "").strip()
-    if status == "pending" and not allow_pending:
+    if is_stub and not allow_pending:
         findings.append("receipt still pending — close-out not completed")
     elif status and status not in ("pending", "complete", "reconciled"):
         findings.append("status must be 'complete', 'reconciled', or 'pending' (got %r)" % status)
@@ -231,7 +317,7 @@ def main() -> int:
     p.add_argument("--allow-none", action="store_true",
                     help="treat 'no receipt blocks found' as success (empty-diff / no-action session)")
     p.add_argument("--allow-pending", action="store_true",
-                    help="accept status: pending (e.g. checking a just-written Phase 1B stub)")
+                    help="do not count 'status: pending' as a finding; this flag changes nothing else")
     args = p.parse_args()
 
     path = Path(args.file) if args.file else default_path()
@@ -261,7 +347,9 @@ def main() -> int:
             print("  error: %s" % msg)
         return 1
 
-    print("check-handoff: OK — newest receipt in %s is structurally complete." % path)
+    label = ("a valid Phase 1B stub (close-out not yet performed)"
+             if fields.get("status", "").strip() == "pending" else "structurally complete")
+    print("check-handoff: OK — newest receipt in %s is %s." % (path, label))
     return 0
 
 
