@@ -65,6 +65,34 @@ cost is the saving above.
 
 **BL-9 — This repo has drifted from two size disciplines it publishes, and a third has no rule at all.**
 *Also not a new proposal — two of the three are rules this repo already states and does not follow.*
+
+> **PARTIALLY COMPLETE. Fork-local scope, operator-approved. Remaining order: L3, then L2 — each its
+> own session.**
+> - ✅ **L1 — `HANDOFFS.md` archival. DONE 2026-08-01 (S23, commit `7a71df0`).** 216 KB → 51 KB; the
+>   6 newest receipts stay, the previous 19 moved verbatim to `docs/archive/HANDOFFS-archive.md`.
+>   Dashboard output byte-identical to the pre-change baseline. **This closed "the genuine gap"** —
+>   the missing archival rule — *for this repo*; writing that rule into the framework is distributed
+>   content and stays out of scope while the upstream channel is paused.
+> - ⬜ **L3 — extract `CLAUDE.md` §Versioning. DO THIS NEXT**, ahead of L2: `CLAUDE.md` is
+>   auto-loaded into *every* session's context, so its size is a recurring cost, whereas
+>   `CHANGELOG.md` is read on demand. Constraints verified in S23: the pointer must be a **plain
+>   Markdown link, never an `@`-import** (`starter-kit/BOOTSTRAP.md:195` — an `@`-import is expanded
+>   into context every session and would defeat the point); the v3.1 §Versioning ↔ `CHANGELOG.md`
+>   cite-don't-restate boundary must survive; `CLAUDE.md` is **not** in `bin/_manifest.py`, so no
+>   adopter is affected and no upstream action is needed.
+> - ⬜ **L2 — `CHANGELOG.md` (172 KB).** Before implementing, settle what its own line-31 rule
+>   actually means: *"promote to `## YYYY-MM` sections"* reads as headers **within** the file, which
+>   aids navigation but reduces no bytes, whereas sharding to `docs/archive/` reduces bytes but is
+>   not what the line says. Decide and state it; do not assume sharding. Whatever is chosen, the root
+>   `CHANGELOG.md` must remain a regular file — `_find_action_ledger`
+>   (`starter-kit/methodology_dashboard.py:1007`) requires exactly that path, and
+>   `.githooks/pre-commit` co-stages it.
+>
+> *Measurements below are from 2026-07-25 and were already stale by 2026-08-01* (actuals then:
+> `CHANGELOG.md` **172 KB**, `HANDOFFS.md` **216 KB**, `CLAUDE.md` **51 KB**). **Re-measure before
+> quoting.** Note also that `CLAUDE.md` is only ~122 lines, so it *passes* the "~200 lines" budget
+> while being 51 KB — the binding cost is bytes, not lines.
+
 - `CHANGELOG.md` is **103 KB**, and its own line 31 says *"Promote to `## YYYY-MM` sections as it
   grows."* Never done.
 - `CLAUDE.md` is **43 KB** and **85%** of it is `§Versioning`, against `starter-kit/BOOTSTRAP.md:195`,

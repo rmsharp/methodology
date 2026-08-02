@@ -88,6 +88,32 @@ send it there.
 
 ---
 
+### 2026-08-01 · [ad hoc] S23 close-out — BL-9 Layer 1 delivered, Layers 2–3 deferred, and a mislabeled session contract corrected
+
+- **Delivered:** BL-9 Layer 1 only (see the entry below). Layers 2 and 3 were pre-declared at the S23
+  claim and are **deferred by operator decision** to their own sessions, in the order **L3 then L2**.
+- **The session contract was wrong, and correcting it is the substance of this entry.** S23 claimed
+  L1/L2/L3 as a *vertical slice*. It is not one. A vertical slice is **one capability through layers
+  that only mean something together**; these are three independent restructurings of three unrelated
+  files sharing only the goal "make files smaller" — remove any one and the others are unaffected,
+  which is the signature of **three deliverables**. Continuing under that framing would have been
+  failure mode **#26** (mega-session masquerading as a vertical slice) almost by definition. The
+  operator-approved *scope* was correct; "slice" was the wrong container, and citing the
+  pre-declaration gate lent the framing a legitimacy it had not earned. **Getting the container right
+  is the point of that gate, not a formality.**
+- **Re-ordered on recurring cost, not size.** L3 (`CLAUDE.md`, 51 KB, 86% §Versioning) goes before L2
+  (`CHANGELOG.md`, 172 KB) because `CLAUDE.md` is **auto-loaded into every session's context** while
+  the ledger is read on demand. The larger file is not the expensive one.
+- **`docs/planning/BACKLOG.md` BL-9 updated** with the layer status, the verified constraints for L3
+  and L2 so neither is re-derived, and a warning that its own 2026-07-25 measurements were already
+  stale (103/110/43 KB recorded vs 172/216/51 KB actual).
+- **Model:** Claude Opus 5 (1M context), single-tier.
+- **Verified:** `bin/tests.sh` 92/92 · `bin/check-links` OK (82 links / 21 files) ·
+  `bin/check-handoff` OK · dashboard health **72**, role `framework`, compliance **100%** —
+  byte-identical to the baseline captured before any edit this session.
+
+---
+
 ### 2026-08-01 · [BL-9] Layer 1 — `HANDOFFS.md` receipts archived (216 KB → 51 KB)
 
 First layer of BL-9's fork-local size-drift slice. `HANDOFFS.md` had reached **216 KB / 25 receipts**
