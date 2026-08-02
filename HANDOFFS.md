@@ -8,6 +8,23 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S23
+date: 2026-08-01
+status: pending
+active_task: BL-9 (docs/planning/BACKLOG.md:66) — this repo has drifted from two size disciplines it publishes, and a third has no rule at all. SCOPE: FORK-LOCAL ONLY, operator-approved. Re-measured at claim (BL-9's figures are from 2026-07-25 and have grown): CHANGELOG.md 103→172 KB, HANDOFFS.md 110→216 KB (24 receipts, mean 6.9 KB, largest 14.2 KB), CLAUDE.md 43→51 KB with 86% in §Versioning. Note BL-9's own framing is imprecise — CLAUDE.md is 122 lines, so it PASSES BOOTSTRAP.md:195's "~200 lines" budget while being 51 KB auto-loaded every session; the binding cost is bytes, not lines. PRE-DECLARED LAYER SET (gate (a), §Vertical Slice Sessions), checkpoint commit + full verification at each boundary: L1 archive older HANDOFFS.md receipts; L2 shard CHANGELOG.md per its own line-31 "promote to ## YYYY-MM" rule; L3 extract CLAUDE.md §Versioning to a referenced file with a plain Markdown link (never an @-import, per BOOTSTRAP.md:195). NOT IN SCOPE: authoring a general archival rule into the framework — that is distributed content and would need the upstream channel, which is paused.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/BACKLOG.md:66 (BL-9, incl. the three constraints any fix must respect), CHANGELOG.md:31 (the repo's own unfollowed "promote to ## YYYY-MM sections" rule), starter-kit/BOOTSTRAP.md:195 (the size budget + the @-import warning), starter-kit/methodology_dashboard.py (v3.6 Layer 2 archive-shadowing fix — MUST re-verify before naming any archive file)
+gotchas: KNOWN TRAP TO VERIFY BEFORE WRITING ANY ARCHIVE FILE — v3.6 Layer 2 fixed "archive shadowing" in the dashboard, where CHANGELOG-archive.md sorted BEFORE CHANGELOG.md ("-" = 0x2D < "." = 0x2E) and was returned as the ledger. Naming an archive CHANGELOG-2026-07.md could re-trigger exactly that bug. Also: .githooks/pre-commit requires CHANGELOG.md co-staged, and bin/_manifest.SEED_FORMAT_MARKERS keys on the ledger title "Authoritative Action Ledger" — both must survive any shard.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub — `status: pending`. Overwritten to `status: complete` at Phase 3D.
+
+---
+
+```handoff
 session: S22
 date: 2026-08-01
 status: complete
