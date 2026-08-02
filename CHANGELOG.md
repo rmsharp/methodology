@@ -88,6 +88,24 @@ send it there.
 
 ---
 
+### 2026-08-01 · [ad hoc] BL-10's fix parked and preserved under tag `archive/bl-10-citations`
+
+Operator is discussing reopening `KJ5HST/methodology` PR #64 with the maintainer, and asked that the
+work not be damaged or lost while that conversation runs. It was exposed: commits `1eac7a4` and
+`268f1e5` were reachable from exactly **one** ref (branch `docs/bl-10-dangling-learning-citations`,
+local + `origin`) and are **not** on `main`, so deleting that branch on both sides would have lost
+them.
+
+- **Change:** annotated tag **`archive/bl-10-citations`** created at `268f1e5` and pushed to
+  **`origin` only** (confirmed absent from `upstream`). Namespaced under `archive/` on purpose so it
+  cannot be mistaken for a release tag (`v3.x`) or mirrored as one. The work now has two independent
+  anchors, and `docs/planning/BACKLOG.md` carries the SHAs, the base commit, the verified results and
+  the recovery command in prose — so it survives even if both refs are lost.
+- **Also recorded there:** no agent may reopen PR #64, open a replacement, or comment upstream
+  without an explicit ask.
+
+---
+
 ### 2026-08-01 · [ad hoc] Upstream PR #64 opened without authorization, and closed
 
 Recorded because an unrecorded action is failure mode #27, and because the action was a mistake

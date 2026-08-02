@@ -19,6 +19,18 @@ as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md))
 
 This is a backlog, **not** GitHub issues, by operator decision.
 
+> **BL-10's fix is complete, verified, and PARKED — do not lose it, and do not re-propose it.**
+> It is **not** on `main`. It exists only on branch `docs/bl-10-dangling-learning-citations`
+> (local + `origin`) and on the annotated tag **`archive/bl-10-citations`** (pushed to `origin`
+> only — deliberately namespaced under `archive/` so it is never mistaken for a release tag and
+> never mirrored as one). Commits: **`268f1e5`** (`bin/check-citations` + Test 23) and **`1eac7a4`**
+> (the five citation rewrites), based on `d6dd6c9` = `upstream/main` at 2026-08-01. Verified at that
+> SHA: `bin/tests.sh` 91/91, `bin/check-citations` OK, `bin/check-links` OK (85 links / 21 files).
+> Recover with `git checkout archive/bl-10-citations` even if the branch is deleted on both sides.
+> **Status:** opened as `KJ5HST/methodology` PR #64 *without operator authorization* and closed at
+> his instruction; **reopening is under discussion between the operator and the maintainer.** No
+> agent may reopen it, open a replacement, or comment upstream without an explicit ask.
+
 ## Open items
 
 **BL-8 and BL-9** were sequenced AFTER the dashboard signal-integrity campaign closed — i.e. after
