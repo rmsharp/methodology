@@ -14,6 +14,23 @@ top of this file. `bin/model-report --handoffs <archive>` reaches the older pros
 ---
 
 ```handoff
+session: S24
+date: 2026-08-01
+status: pending
+active_task: BL-9 Layer 3 (docs/planning/BACKLOG.md:76) — extract `CLAUDE.md` §Versioning to a referenced file. SCOPE: fork-local only, one horizontal deliverable, operator-confirmed at claim along with the destination path `docs/RELEASE_HISTORY.md`. NOT framed as a vertical slice, deliberately: S23 named its own L1/L2/L3 contract as mislabeled (three independent file restructurings sharing only "make files smaller" is three deliverables, not one capability through layers), so this session takes L3 alone and L2 stays for its own session. RE-MEASURED AT CLAIM rather than trusting BL-9's 2026-07-25 figures, which are stale by 20-45%: CLAUDE.md is 52,909 bytes / 122 lines, and lines 90-122 (§Versioning) are 45,874 bytes = 86.7% of the file. Note BL-9's framing is imprecise in a way that matters — at 122 lines CLAUDE.md PASSES BOOTSTRAP.md:195's "~200 lines" budget while being 52 KB auto-loaded into every session; the binding cost is bytes, not lines.
+what_was_done: pending
+next_steps: pending
+key_files: CLAUDE.md:90 (the §Versioning heading — the extraction boundary), docs/planning/BACKLOG.md:76 (BL-9 L3 and its three constraints), starter-kit/BOOTSTRAP.md:195 (the size budget + the @-import warning the pointer must obey), CHANGELOG.md:5 and :24 (the v3.1 cite-don't-restate boundary that must survive the move)
+gotchas: THE DESIGN CONSTRAINT S23 DID NOT SURFACE, found at this claim: ~25 inbound links target the anchor `CLAUDE.md#versioning`, nearly all in CHANGELOG.md and several inside frozen dated entries this repo leaves verbatim by convention (the v2.7.1 precedent). So the extraction MUST keep the `## Versioning` heading in CLAUDE.md and move only the per-version list beneath it — leaving a stub that carries the current-version line, the cite-don't-restate boundary, and a plain-link pointer. Rewriting 25 historical links instead would touch frozen records to no benefit. Also: the pointer must be a PLAIN MARKDOWN LINK, never an @-import (BOOTSTRAP.md:195 — an @-import is expanded into context every session and would defeat the entire point). CLAUDE.md is NOT in bin/_manifest.py DISTRIBUTION (re-verified at claim: 22 entries, none of them CLAUDE.md), so no adopter is affected and no upstream action is needed — which matters because the upstream channel is paused pending the operator's PR #64 conversation.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+Phase 1B claim stub — `status: pending`. Overwritten to `status: complete` at Phase 3D.
+
+---
+
+```handoff
 session: S23
 date: 2026-08-01
 status: complete
