@@ -13,6 +13,8 @@
 #   Enable:      git config core.hooksPath .githooks
 #   Bypass once: git commit --no-verify   (reconcile-on-read backfills it)
 #   Opt out:     delete CHANGELOG.md and record that decision in CLAUDE.md
+#   Exemption:   the Phase 1B claim stub — see the carve-out below, which is
+#                deliberately narrower than "a HANDOFFS.md commit"
 #
 set -u
 
@@ -26,7 +28,15 @@ for marker in MERGE_HEAD REBASE_HEAD CHERRY_PICK_HEAD rebase-merge rebase-apply;
 	fi
 done
 
-staged=$(git diff --cached --name-only)
+# --no-renames, because rename detection collapses a rename to its DESTINATION path
+# and the deleted source never appears. Without it `git mv bin/check-handoff
+# SESSION_NOTES.md` staged beside a real claim reads as the two exempt paths and
+# deletes a tracked file with no ledger line (reproduced; the carve-out below is
+# what made it reachable). It only ever ADDS paths, so the refusal below can only
+# get stricter — with one honest exception: `git mv CHANGELOG.md FOO.md` now shows
+# CHANGELOG.md as staged and passes, which is the same behaviour `git rm
+# CHANGELOG.md` has always had and is the documented opt-out.
+staged=$(git diff --cached --name-only --no-renames)
 
 # Empty index (e.g. `--allow-empty`, or an all-unstaged tree): nothing to gate.
 if [ -z "$staged" ]; then
@@ -38,6 +48,75 @@ fi
 # same-length sibling (CHANGELOGxmd, CHANGELOG-md) satisfy the gate.
 if printf '%s\n' "$staged" | grep -qxF 'CHANGELOG.md'; then
 	exit 0
+fi
+
+# Phase 1B claim carve-out — the one commit the methodology REQUIRES that has no
+# action to record yet. SESSION_RUNNER.md §1B says the claim stub is written
+# BEFORE any technical work, so the ledger line it would need does not exist:
+# writing it is Phase 3F's job, and Phase 0 reconcile-on-read is what catches a
+# session that never gets there. Measured at c000a90: 32 of 32 commits in this
+# repo's history whose entire diff is HANDOFFS.md alone were refused by the rule
+# above, and every claim among them shipped with --no-verify. A gate bypassed
+# 100% of the time at a known, mandatory point is not a gate — it is a trained
+# reflex — and the derived-value checks planned for this same hook inherit that
+# reflex unless it is removed first.
+#
+# THE PATH IS NOT SUFFICIENT, and the corpus is why: 2 of those 32 were close-out
+# receipts committed alone (f2d013b, 21fb521) — exactly what FM #27 exists to
+# catch — and 4 were later repairs of an older receipt. So this reads the staged
+# diff, not just the staged path, and fires only for a commit that ADDS a receipt
+# block and whose every added `status:` line says `pending`. Committed alone, a
+# close-out (adds `status: complete`), a bundled claim+close-out, a status
+# flipped in place (no block added) and a prose edit are each still refused.
+# Verified against all 32, not inferred from one.
+#
+# ITS EXACT WIDTH, because the corpus shows it is wider than "the claim and
+# nothing else": once a claim block is present, ANY other edit inside
+# HANDOFFS.md rides through with it. Measured over all 27 real claims, not
+# sampled — an earlier draft of this comment said "two", which was two commits
+# noticed rather than a population counted. ALL 27 add lines outside the new
+# block (the `---` separator, blank lines, the prescribed annotation line), and
+# 5 also DELETE one: four bump the front matter's receipt count (12→13, 13→14,
+# 14→15, 15→16) and 63316ca reconciles a predecessor's `commit:` field. So
+# "only the receipt block" would refuse 27 of 27, and "deletes nothing" would
+# refuse 5 of 27 — a narrower rule refuses commits this repo has actually made. What rides through is bounded to two files that hold no
+# source and no ledger — and the bound is only real because of --no-renames above.
+# BE PRECISE ABOUT THE SAFETY NET, because the obvious sentence is false: Phase 0
+# reconcile-on-read re-reads the LEDGER against `git log`; it does not re-read
+# HANDOFFS.md content, its own reconcile is frontier-based, and `bin/check-handoff`
+# fully validates blocks[0] only. So a claim commit that also rewrites an older
+# receipt's already-reconciled `commit:` sha to another sha-shaped value is caught
+# by nothing downstream. Narrowing to "every older block byte-identical" was
+# measured against the corpus and refuses 63316ca, a real claim that reconciled a
+# predecessor's field in the same commit — so the width stays, stated rather than
+# implied. Test 27's N12 pins it so it remains a decision, not a leak.
+#
+# SESSION_NOTES.md may ride along because distributed Phase 1B tells every
+# adopter to write that stub too and "commit it with this claim"; it is the
+# transient scratchpad, overwritten next session, never an action.
+outside=$(printf '%s\n' "$staged" | grep -vxF -e 'HANDOFFS.md' -e 'SESSION_NOTES.md')
+if [ -z "$outside" ] && printf '%s\n' "$staged" | grep -qxF 'HANDOFFS.md'; then
+	# Added lines only. `-x` makes the `+++ b/HANDOFFS.md` header unmatchable by
+	# every pattern below, so it needs no separate filter.
+	# --no-ext-diff --no-textconv --no-color: this reads a diff as DATA, so it must not
+	# inherit the committer's diff *presentation* config. With `diff.external` set
+	# (difftastic's own documented global setup) or `color.ui = always`, `grep '^+'`
+	# matches nothing, all three counts read 0, and a textbook claim is refused — which
+	# reinstates the very --no-verify reflex this carve-out removes, invisibly and only
+	# for the people who configured their tooling.
+	added=$(git diff --cached --no-ext-diff --no-textconv --no-color -U0 -- HANDOFFS.md | grep '^+')
+	opened=$(printf '%s\n' "$added" | grep -cxE '\+```handoff[[:space:]]*')
+	# A ```handoff shown as DOCUMENTATION sits inside a stronger wrapper — 4+ backticks
+	# or tildes — and `bin/check-handoff`'s own extract_blocks skips exactly that case.
+	# This is a line-oriented approximation of the same rule, not a CommonMark parse:
+	# without it, appending the block-format example to this file's front matter is
+	# exempted while filing no receipt at all (reproduced).
+	wrapped=$(printf '%s\n' "$added" | grep -cxE '\+(`{4,}|~{3,})[[:space:]]*')
+	pending=$(printf '%s\n' "$added" | grep -cxE '\+status:[[:space:]]*pending[[:space:]]*')
+	statuses=$(printf '%s\n' "$added" | grep -cE '^\+status:')
+	if [ "$opened" -gt 0 ] && [ "$wrapped" -eq 0 ] && [ "$pending" -gt 0 ] && [ "$pending" -eq "$statuses" ]; then
+		exit 0
+	fi
 fi
 
 # No ledger has ever been committed and none is staged now: self-provisioning is
@@ -61,6 +140,12 @@ ledger. Append one dated, source-tagged entry to CHANGELOG.md — exactly one of
       true again on the next session's Orient. The hook is the fast path, not
       the guarantee.
   * Opt out for good:  delete CHANGELOG.md and record the decision in CLAUDE.md.
+
+The one exemption is the Phase 1B claim: a commit staging only HANDOFFS.md
+(SESSION_NOTES.md may ride along) whose diff ADDS a receipt block and whose every
+added `status:` line reads `pending`. If this was meant to be that commit, then
+one of those three is false — a file other than those two is staged, no receipt
+block was added, or an added `status:` line says something other than `pending`.
 
 "Too small to log" is the failure mode, not an exception (SESSION_RUNNER.md FM #27).
 MSG

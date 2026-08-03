@@ -114,6 +114,67 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] The Phase 1B carve-out — the ledger gate stops refusing the one commit the methodology requires
+
+**Model:** Claude Opus 5 (1M context).
+**S32 of [`framework-context-cost-plan.md`](docs/planning/framework-context-cost-plan.md) §5**, the
+plan's stated hard precondition for S34/S35: a new refusal reason on a hook with a measured 100%
+bypass is worse than no refusal. Fork-side, canonical-only — `.githooks/pre-commit` is not in
+`bin/_manifest.py`'s DISTRIBUTION, so no adopter file was touched and no channel was needed.
+
+- **The RED was this session's own claim commit.** Phase 1B stages `HANDOFFS.md` alone, so the FM #27
+  gate refused it — *"CHANGELOG.md not staged"*, exit 1 — before `d582e5b` went in with
+  `--no-verify`. The framework's own mandatory step could not satisfy the gate the framework ships.
+- **The population was re-measured message-independently, and the correction decided the design.**
+  At `c000a90`: **32** commits stage `HANDOFFS.md` and nothing else — not the 26 that
+  `git log --grep="claim S"` reports, which counts *claims*, not *commits this hook refuses*. The 6
+  the grep misses are the whole problem: `f2d013b` and `21fb521` are **close-out receipts committed
+  alone** — precisely what FM #27 exists to catch — and `f9ea5d7`, `faf2c42`, `a7c814d`, `1626e09`
+  are later repairs of an older receipt. **A path-only carve-out would have exempted the two
+  close-outs.**
+- **So the predicate reads the staged diff, not the staged path.** It fires only when the staged set
+  is `HANDOFFS.md` (`SESSION_NOTES.md` may ride along) **and** the diff adds a ` ```handoff ` fence
+  **and** adds no stronger (4-backtick / tilde) wrapper **and** every added `status:` line reads
+  `pending`. Committed alone, a close-out, a bundled claim-plus-close-out, an in-place status flip
+  and a prose edit are each still refused.
+- **One deliberate widening beyond the plan's sketch, labelled as added policy.** The plan says *"a
+  claim commit staging only `HANDOFFS.md`"*; the carve-out also admits `SESSION_NOTES.md`, because
+  distributed Phase 1B (`starter-kit/SESSION_RUNNER.md` §1B) tells every adopter to write that stub
+  and *"commit it with this claim"*, and `SESSION_NOTES.md` is a DISTRIBUTION `seed`. A
+  `HANDOFFS.md`-only carve-out would fix this repo and leave every adopter's prescribed shape refused.
+- **Test 27 — 34 assertions, RED-first.** Against the pre-change hook it failed 10 and enumerated
+  every historical claim as refused, while the negative controls stayed green. It replays the real
+  corpus: each single-file `HANDOFFS.md` commit is reconstructed in a scratch repo and run through
+  the hook — 27 claims pass, 6 non-claims refuse — with **both** populations derived from `git`
+  (the non-claims as the complement, plus a coverage check that the 6 known shas are still in it) and
+  a vacuity guard that fails if the query collapses. Nine guards were mutation-tested by **narrowing**,
+  each killed by one named test.
+- **An adversarial review of the finished diff found two real escapes, and both are closed.** (1)
+  `git diff --cached --name-only` collapses a rename to its **destination**, so `git mv <tracked
+  source> SESSION_NOTES.md` beside a real claim read as the two exempt paths and deleted a tracked
+  file with no ledger line — fixed with `--no-renames`, pinned by `27.N13`/`27.M8`. (2) A ` ```handoff `
+  shown as **documentation** inside a 4-backtick wrapper satisfied the fence test while filing no
+  receipt at all — fixed by refusing a stronger wrapper, the line-oriented analogue of the rule
+  `bin/check-handoff`'s own `extract_blocks` already applies, pinned by `27.N14`/`27.M9`.
+- **Three prose defects in the change's own comments were corrected, which is the more useful half.**
+  The hook claimed a prose edit was refused (true only when committed alone), claimed Phase 0
+  reconcile-on-read reads HANDOFFS.md content (it is frontier-based; it reads the *ledger*), and
+  reported the exemption's width from **two commits noticed rather than a population counted**. The
+  measured width: **all 27** claims add lines outside the new block, and **5** also delete one — four
+  bump the front matter's receipt count, one reconciles a predecessor's `commit:` field. So "only the
+  receipt block" would refuse 27 of 27 and "deletes nothing" 5 of 27; the width stays, stated.
+- **The test harness was hardened by its own misfire.** A mutant literal (`' --no-renames'`) also
+  matched the *comment* explaining it, so the patch landed in prose and the guard "survived" a
+  removal that never happened. `apply_mutant` now exits distinctly on an **ambiguous** literal, and
+  the mutation harness runs against a scratch **copy** of the hook — two suite runs overlapped during
+  development and one mutant leaked into the other — with the no-write-to-the-tracked-file invariant
+  asserted per mutant, since an end-of-run check passes even when the harness edits the real file.
+- **New: BL-21**, scoped *down* by that review from how it was first written. `starter-kit/SAFEGUARDS.md`
+  and `starter-kit/BOOTSTRAP.md` describe the hook without this exemption, but both point adopters at
+  the **upstream** file, which is byte-identical and has no carve-out, and no adopter receives the
+  hook via `bin/sync` — so nothing adopter-reachable is false today. It becomes false the moment the
+  hook is contributed upstream, and the wording to ship with it is written into the item.
+
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S31's `commit:` field → `020ba3f` — fourth consecutive discharge
 
 **Model:** Claude Opus 5 (1M context).

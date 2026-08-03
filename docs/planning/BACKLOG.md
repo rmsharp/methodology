@@ -1,7 +1,13 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18 and BL-19
-> are open** (**BL-19 raised 2026-08-02 (S30)** — the operator-assigned context-cost plan; it is an
+> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
+> BL-20 and BL-21 are open** (**BL-21 raised 2026-08-03 (S32)**; **BL-20 was raised 2026-08-02
+> (S31) and this enumeration was not updated with it**, which is why it is being said out loud: this
+> list is a hand-maintained derived value in the file whose own header tells you not to trust those.
+> It cannot be derived by counting headings either — the 11 `**BL-N —**` headings in §Open items are
+> a *different* set of 11: **BL-15** keeps its heading though it is CLOSED, and **BL-16** is open but
+> has no heading of its own, living inside BL-14's follow-ons paragraph. Read each item's own status
+> line.) (**BL-19 raised 2026-08-02 (S30)** — the operator-assigned context-cost plan; it is an
 > index entry for [`framework-context-cost-plan.md`](framework-context-cost-plan.md), not a restatement
 > of it. **S30 also re-measured every open item above and found a wrong number in six of six**; the
 > corrections are recorded in the `CHANGELOG.md` entry *"The framework's context cost — adopter
@@ -389,6 +395,42 @@ convention forbids; (3) change the seed to document the bare form — **DISTRIBU
 paused channel.** Note (1) and (2) are fork-side and (3) is not, so this can advance today.
 **Related:** this is the same shape as BL-14/BL-15 — a promise in the seed with no detector — except
 here the detector exists and reads the wrong dialect.
+
+**BL-21 — When the Phase 1B carve-out is contributed upstream, two seed sentences must ship with it.**
+*Raised 2026-08-03 (S32) by the change that will eventually create the drift. Scoped DOWN from how it
+was first written, by an adversarial review that refuted the stronger claim — recorded here because
+the refutation is the useful part.*
+**Not a live defect, and the distinction is the item.** S32 gave `.githooks/pre-commit` one exemption
+(the Phase 1B claim; see that date's ledger entry). Two distributed files state the hook's contract
+without it — `starter-kit/SAFEGUARDS.md:167` and `starter-kit/BOOTSTRAP.md:320`, the latter as an
+explicit list (*"It never blocks a repo that has no ledger yet, and it skips merges/rebases"*). But
+both seeds designate the **canonical reference implementation** by URL
+(`SAFEGUARDS.md:171` → `KJ5HST/methodology/blob/main/.githooks/pre-commit`), that file is
+byte-identical to `upstream/main`, and `grep -c githooks bin/_manifest.py` is **0** — no adopter
+receives the hook through `bin/sync`. The carve-out exists only in this fork, in a canonical-only
+file. **So no adopter-reachable sentence is false today**; it becomes false at the moment the hook
+is contributed upstream, and not before.
+**Two facts that keep this item small.** (1) The exemption list was *already* incomplete at the
+hook's birth (`dc8aa76`): neither seed mentions the empty-index exit (`git commit --allow-empty`
+passes) or `rebase-apply`/`git am`. These are summary-level docs that point at the implementation,
+by design. (2) The divergence direction is **fail-safe** — the seeds describe a *stricter* gate than
+the hook enforces, so no adopter instruction breaks; the failure mode is a reader who expects a
+refusal and gets a pass.
+**Proposed wording, written here so the upstream PR carries it without re-deriving it.** One clause
+in each, no restructuring:
+- `SAFEGUARDS.md`, appended to the bullet list — *"**One exemption: the Phase 1B claim.** A commit
+  staging only `HANDOFFS.md` (`SESSION_NOTES.md` may ride along) whose diff adds a receipt block and
+  whose every added `status:` line reads `pending` passes: it is written before any technical work,
+  so it has no action to record yet, and Phase 3F records it with the rest of the session. Note the
+  width — any other edit inside `HANDOFFS.md` in that same commit rides through with it, and Phase 0
+  reconcile-on-read is what reads those."*
+- `BOOTSTRAP.md`, extending the existing list — *"…and it skips merges/rebases, and the Phase 1B
+  claim commit."*
+**Verification when it ships:** `python3 bin/check-links` green; `bin/status` will show both files as
+drift for every adopter, so the `bin/status`→`bin/sync` pass is the second half of the work.
+**Blocked on the same thing everything distributed is blocked on** — the paused upstream channel —
+but note it is blocked *behind* a decision nobody has made yet: whether this hook is contributed at
+all. `.githooks/pre-commit` being canonical-only was itself a ratified decision (BL-6 item 3).
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

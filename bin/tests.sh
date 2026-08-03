@@ -1147,5 +1147,512 @@ else
 fi
 
 echo ""
+echo "== Test 27: .githooks/pre-commit — the Phase 1B claim carve-out (RED-first, S32) =="
+# The FM #27 gate refused the one commit the methodology REQUIRES: the Phase 1B claim,
+# which by definition has no action to log yet. Measured message-independently and FROZEN
+# AT c000a90, the pre-change tree — 32 commits stage HANDOFFS.md and nothing else, 26 of
+# them claims, all 32 postdating the hook (dc8aa76), every claim shipped with --no-verify.
+# Those two figures are historical and do not move; the live ones are re-derived by the
+# replay below and printed by 27.L1a/27.L1b/27.L1c, which is why they read higher here.
+# The carve-out is deliberately NARROWER than "a HANDOFFS.md commit": 6 of those 32 are
+# not claims — 2 close-out receipts committed alone and 4 later repairs of an older
+# receipt — and a path-only exemption would have waved through exactly what FM #27 exists
+# to catch. Every assertion below is therefore about the staged DIFF, not the path.
+
+# HOOKS_DIR/HOOK are variables, not constants: the mutation section at the bottom points
+# them at a scratch COPY so that no mutant is ever written into the tracked file. Two suite
+# runs overlapped during development and one mutant leaked into the other run — with the
+# copy there is nothing to leak.
+HOOKS_DIR="$METHODOLOGY/.githooks"
+HOOK="$HOOKS_DIR/pre-commit"
+REAL_HOOK_CKSUM="$(cksum < "$HOOK")"
+[ -x "$HOOK" ] && pass "27.0 the hook is executable" || fail "27.0 the hook lost its exec bit"
+
+# A claim stub and a close-out receipt are written as DISTINCT LITERALS, never by mutating
+# one into the other. A receipt sed'd to `status: pending` is not a Phase 1B stub, and a
+# fixture built that way would make the assertions below green for the wrong reason.
+handoff_claim() {     # $1 = session — the shape every real claim commit has
+    printf '```handoff\nsession: %s\ndate: 2026-08-03\nstatus: pending\nactive_task: Do the one thing\n```\n\n' "$1"
+}
+handoff_receipt() {   # $1 = session — the shape of a Phase 3D close-out receipt
+    printf '```handoff\nsession: %s\ndate: 2026-08-03\nstatus: complete\nself_score: 8\npredecessor_score: 9\nactive_task: Did the one thing\ncommit: pending\n```\n\n' "$1"
+}
+
+mk_hookrepo() {
+    local dir; dir="$(mktemp -d)"
+    git -C "$dir" init -q
+    git -C "$dir" config user.email t@t
+    git -C "$dir" config user.name t
+    git -C "$dir" config core.hooksPath "$HOOKS_DIR"
+    printf '# Changelog\n' > "$dir/CHANGELOG.md"
+    handoff_receipt S1 > "$dir/HANDOFFS.md"
+    printf '# Session notes\n' > "$dir/SESSION_NOTES.md"
+    printf '# Readme\n' > "$dir/README.md"
+    git -C "$dir" add -A
+    git -C "$dir" commit -q --no-verify -m baseline
+    echo "$dir"
+}
+
+# Runs the hook the way git runs it — from the repo root, against the staged index — and
+# reports WHY, not just whether. A shell error inside the carve-out also exits non-zero, so
+# without this a crashed hook would read as "correctly refused" in every negative case.
+hook_verdict() {   # $1 = repo -> "pass" | "refuse" | "crash:<rc>:<first line>"
+    local out rc
+    out="$(cd "$1" && "$HOOK" 2>&1)"; rc=$?
+    if [ "$rc" = "0" ]; then echo "pass"
+    elif printf '%s' "$out" | grep -q 'failure mode #27'; then echo "refuse"
+    else echo "crash:$rc:$(printf '%s' "$out" | head -1)"; fi
+}
+
+# --- C0: THE UNMUTATED-FIXTURE CONTROLS -------------------------------------
+# If the gate is not live in the fixture, every "passes" below is vacuous. Broken once by
+# hand (hooksPath unset) and watched to go green — which is precisely the failure this
+# control exists to catch.
+P="$(mk_hookrepo)"
+printf '# Readme\nedited\n' > "$P/README.md"; git -C "$P" add README.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.C0 control: an ordinary single-file commit is still refused" \
+    || fail "27.C0 control went red/green wrongly ($(hook_verdict "$P")) — the fixture cannot prove anything"
+# ...and git really invokes THIS hook through core.hooksPath, not some other one. The refusal
+# MESSAGE is asserted, not just the non-zero exit: a crashing hook also fails the commit, and
+# this is the one assertion in Test 27 that does not route through hook_verdict.
+C0B_OUT="$(git -C "$P" commit -m "probe" 2>&1)"; C0B_RC=$?
+if [ "$C0B_RC" = "0" ]; then
+    fail "27.C0b git committed a ledger-less change — the hook was never invoked"
+elif printf '%s' "$C0B_OUT" | grep -q 'failure mode #27'; then
+    pass "27.C0b git invokes the hook through core.hooksPath (real commit refused, FM #27)"
+else
+    fail "27.C0b the commit failed without the FM #27 message — the hook crashed: $(printf '%s' "$C0B_OUT" | head -1)"
+fi
+rm -rf "$P"
+
+# --- N1: THE TWO-POINT TEST, positive end -----------------------------------
+# A claim commit staging only HANDOFFS.md passes. Asserted through a REAL `git commit`,
+# because that is the operation 26 sessions had to bypass.
+P="$(mk_hookrepo)"
+{ handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "pass" ] && pass "27.N1 a Phase 1B claim staging only HANDOFFS.md passes" \
+    || fail "27.N1 the claim carve-out did not fire ($(hook_verdict "$P"))"
+if git -C "$P" commit -q -m "claim S2" 2>/dev/null; then
+    pass "27.N1b the same claim commits for real, with no --no-verify"
+else
+    fail "27.N1b a real claim commit still needs --no-verify — the bypass is not removed"
+fi
+rm -rf "$P"
+
+# --- N2: SESSION_NOTES.md may ride along ------------------------------------
+# Distributed Phase 1B (starter-kit/SESSION_RUNNER.md §1B) tells every adopter to write the
+# SESSION_NOTES.md stub and "commit it with this claim", and SESSION_NOTES.md is a
+# DISTRIBUTION seed. A HANDOFFS-only carve-out would fix this repo and leave every adopter's
+# prescribed claim shape refused.
+P="$(mk_hookrepo)"
+{ handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+printf '# Session notes\n### What Session 2 Did\n' > "$P/SESSION_NOTES.md"
+git -C "$P" add HANDOFFS.md SESSION_NOTES.md
+[ "$(hook_verdict "$P")" = "pass" ] && pass "27.N2 a claim co-staging SESSION_NOTES.md passes (the adopter shape)" \
+    || fail "27.N2 the prescribed adopter claim shape was refused ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N3: SESSION_NOTES.md alone is not a claim ------------------------------
+# There is no receipt in the diff, so there is no claim signature to read.
+P="$(mk_hookrepo)"
+printf '# Session notes\nedited\n' > "$P/SESSION_NOTES.md"; git -C "$P" add SESSION_NOTES.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.N3 SESSION_NOTES.md alone is refused (no receipt, no claim)" \
+    || fail "27.N3 SESSION_NOTES.md alone slipped through ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N4: THE KILLER TEST — a close-out receipt committed alone --------------
+# f2d013b and 21fb521 are exactly this, and a path-only carve-out exempts them. This is the
+# commit FM #27 was written for: work landed, and the ledger says nothing.
+P="$(mk_hookrepo)"
+{ handoff_receipt S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.N4 a close-out receipt committed alone is STILL refused" \
+    || fail "27.N4 a close-out receipt was exempted ($(hook_verdict "$P")) — the carve-out is path-only"
+rm -rf "$P"
+
+# --- N5: a claim bundled with a close-out is not a claim --------------------
+# Every added `status:` line must read `pending`; one `complete` in the same diff means an
+# action landed in this commit.
+P="$(mk_hookrepo)"
+{ handoff_claim S3; handoff_receipt S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.N5 a claim bundled with a close-out is refused" \
+    || fail "27.N5 bundling a close-out into a claim commit slipped through ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N6: a prose edit to HANDOFFS.md is an action ---------------------------
+# The archive front matter, the receipt-count line, the ledger doctrine — all live in this
+# file and all are actions. Only the claim is exempt.
+P="$(mk_hookrepo)"
+printf 'Front matter edited by hand.\n' >> "$P/HANDOFFS.md"; git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.N6 a prose edit to HANDOFFS.md is refused" \
+    || fail "27.N6 a prose edit was exempted ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N7: a status flipped in place adds no block ----------------------------
+# `+status: pending` alone is not a claim: this diff adds that exact line while adding no
+# receipt. Without the fence conjunct the carve-out would accept it (mutant M1).
+P="$(mk_hookrepo)"
+sed 's/^status: complete$/status: pending/' "$P/HANDOFFS.md" > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.N7 flipping an existing receipt to pending is refused (no block added)" \
+    || fail "27.N7 an in-place status flip was read as a claim ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N8: THE TWO-POINT TEST, negative end -----------------------------------
+# A claim is a claim only when nothing else rides with it.
+P="$(mk_hookrepo)"
+{ handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+printf '# Readme\nedited\n' > "$P/README.md"
+git -C "$P" add HANDOFFS.md README.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.N8 a claim carrying a third file is refused" \
+    || fail "27.N8 a claim smuggled a source file past the gate ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N9: the main path is untouched -----------------------------------------
+P="$(mk_hookrepo)"
+{ handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+printf '# Changelog\n### 2026-08-03 · [ad hoc] Something\n' > "$P/CHANGELOG.md"
+git -C "$P" add HANDOFFS.md CHANGELOG.md
+[ "$(hook_verdict "$P")" = "pass" ] && pass "27.N9 CHANGELOG.md co-staged still passes (main path unchanged)" \
+    || fail "27.N9 the carve-out broke the main co-staging path ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N10: the first session, where HANDOFFS.md is created by the claim ------
+P="$(mk_hookrepo)"
+git -C "$P" rm -q --cached HANDOFFS.md >/dev/null; rm -f "$P/HANDOFFS.md"
+git -C "$P" commit -q --no-verify -m "remove receipts ledger"
+handoff_claim S2 > "$P/HANDOFFS.md"; git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "pass" ] && pass "27.N10 a claim that CREATES HANDOFFS.md passes (adopter session 1)" \
+    || fail "27.N10 the first-ever claim was refused ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N11: a fence with no status line is not a claim ------------------------
+# HANDOFFS.md's own front matter documents the block format, so a ```handoff fence can be
+# added as an EXAMPLE. Without the `pending > 0` conjunct the counts would read 0 == 0 and
+# the carve-out would fire on it (mutant M7).
+P="$(mk_hookrepo)"
+printf '\nBlock format:\n\n```handoff\nsession: S<N>\n```\n' >> "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass '27.N11 a handoff fence with no status line is refused' \
+    || fail "27.N11 an example block was read as a claim ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N12: the measured WIDTH of the exemption, asserted rather than assumed --
+# Measured over all 27 real claims, not sampled — an earlier draft of this comment said "2",
+# which was two commits noticed rather than a population counted. ALL 27 add lines outside
+# the new block (separator, blanks, the prescribed annotation line) and 5 also DELETE one:
+# four bump the front matter's receipt count, and 63316ca reconciles a predecessor's
+# `commit:` field. So a claim commit may carry other HANDOFFS.md edits past the FM #27 gate
+# with it — the honest width of this exemption. Narrowing to "only the receipt block" would
+# refuse 27 of 27 and turn 27.L1b red against real history, which is the signal that the
+# tighter rule is wrong for this repo, not that the history is.
+P="$(mk_hookrepo)"
+{ handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+printf 'This file currently holds 2 receipts.\n' >> "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "pass" ] && pass "27.N12 a claim carrying an incidental HANDOFFS.md edit passes (74479df's shape)" \
+    || fail "27.N12 a real historical claim shape was refused ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N13: the rename escape (found by adversarial review, not by design) -----
+# `git diff --cached --name-only` collapses a rename to its DESTINATION path, so before
+# `--no-renames` was added to the staged-set query, `git mv <tracked source> SESSION_NOTES.md`
+# read as the two exempt paths and deleted a tracked file with no ledger line. The carve-out
+# is what made that reachable — the pre-change hook refused every commit without CHANGELOG.md.
+P="$(mk_hookrepo)"
+git -C "$P" rm -q SESSION_NOTES.md >/dev/null
+printf 'def real_code():\n    return 1\n' > "$P/src.py"
+git -C "$P" add -A >/dev/null; git -C "$P" commit -q --no-verify -m "drop notes, add source"
+git -C "$P" mv src.py SESSION_NOTES.md
+{ handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.N13 a claim smuggling a renamed source file is refused" \
+    || fail "27.N13 a tracked source file left the repo through the carve-out ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N14: a documentation example is not a receipt ---------------------------
+# HANDOFFS.md's front matter documents the block format, so a ```handoff fence WITH a
+# `status: pending` line can be added while filing no receipt at all. `bin/check-handoff`'s
+# extract_blocks already skips a block inside a stronger wrapper for exactly this reason;
+# the hook approximates the same rule line-wise. N11 (no status line) misses this by one line.
+P="$(mk_hookrepo)"
+printf '\nBlock format:\n\n````\n```handoff\nsession: S<N>\nstatus: pending\n```\n````\n' >> "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "refuse" ] && pass "27.N14 a fenced documentation example is refused (no receipt filed)" \
+    || fail "27.N14 a documentation example was read as a claim ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- N15/N16: the diff is read as DATA, not as the committer's presentation ---
+# `diff.external` (difftastic's documented global setup) and `color.ui = always` both replace
+# or decorate the diff body, so `grep '^+'` matches nothing and a textbook claim is refused.
+# It fails CLOSED — no gate is weakened — but it silently reinstates the --no-verify reflex
+# this carve-out exists to remove, and only for people whose tooling is configured.
+P="$(mk_hookrepo)"
+printf '#!/bin/sh\necho EXT\n' > "$P/ext.sh"; chmod +x "$P/ext.sh"
+git -C "$P" config diff.external "$P/ext.sh"
+{ handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "pass" ] && pass "27.N15 a claim still passes under diff.external (difftastic)" \
+    || fail "27.N15 diff.external defeated the carve-out ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+P="$(mk_hookrepo)"
+git -C "$P" config color.ui always
+{ handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+git -C "$P" add HANDOFFS.md
+[ "$(hook_verdict "$P")" = "pass" ] && pass "27.N16 a claim still passes under color.ui = always" \
+    || fail "27.N16 colourised diff output defeated the carve-out ($(hook_verdict "$P"))"
+rm -rf "$P"
+
+# --- L1: THE CORPUS REPLAY --------------------------------------------------
+# Every real single-file HANDOFFS.md commit in this repo's history, replayed against the
+# hook as written today. The population is DERIVED from git, not hardcoded, so a future
+# claim joins it automatically; the six non-claims are named by sha because they are frozen
+# history and cannot decay. A vacuity guard runs first: an empty population would make the
+# whole replay green while asserting nothing.
+REPLAY="$(mk_hookrepo)"
+SOLO_HANDOFF=""
+for c in $(git -C "$METHODOLOGY" log --format=%H -- HANDOFFS.md); do
+    files="$(git -C "$METHODOLOGY" show --name-only --format= "$c" | sed '/^$/d')"
+    [ "$files" = "HANDOFFS.md" ] && SOLO_HANDOFF="$SOLO_HANDOFF $c"
+done
+CLAIMS=""
+for c in $SOLO_HANDOFF; do
+    case "$(git -C "$METHODOLOGY" log -1 --format=%s "$c")" in
+        *"claim S"*) CLAIMS="$CLAIMS $c" ;;
+    esac
+done
+NCLAIM=0; for c in $CLAIMS; do NCLAIM=$((NCLAIM+1)); done
+if [ "$NCLAIM" -ge 26 ]; then
+    pass "27.L1a vacuity guard: $NCLAIM real claim commits found to replay"
+else
+    fail "27.L1a the replay population collapsed to $NCLAIM (26 existed at c000a90) — the query is wrong, not the history"
+fi
+
+replay_verdict() {   # $1 = commit sha -> hook verdict for that commit's HANDOFFS.md diff
+    if git -C "$METHODOLOGY" cat-file -e "$1~1:HANDOFFS.md" 2>/dev/null; then
+        git -C "$METHODOLOGY" show "$1~1:HANDOFFS.md" > "$REPLAY/HANDOFFS.md"
+    else
+        rm -f "$REPLAY/HANDOFFS.md"
+    fi
+    git -C "$REPLAY" add -A HANDOFFS.md >/dev/null 2>&1
+    git -C "$REPLAY" commit -q --no-verify -m "replay base $1" >/dev/null 2>&1
+    git -C "$METHODOLOGY" show "$1:HANDOFFS.md" > "$REPLAY/HANDOFFS.md"
+    git -C "$REPLAY" add HANDOFFS.md
+    hook_verdict "$REPLAY"
+}
+
+BAD=""
+for c in $CLAIMS; do
+    v="$(replay_verdict "$c")"
+    [ "$v" = "pass" ] || BAD="$BAD $(git -C "$METHODOLOGY" log -1 --format=%h "$c"):$v"
+done
+[ -z "$BAD" ] && pass "27.L1b all $NCLAIM historical claim commits pass the carve-out" \
+    || fail "27.L1b historical claims still refused —$BAD"
+
+# The non-claims are DERIVED as the complement of the claim set, not hardcoded, so a future
+# solo-HANDOFFS commit that is not a claim joins them automatically. The six known members are
+# named only as a coverage check on the query itself: 2 close-out receipts committed alone
+# (f2d013b, 21fb521) and 4 repairs of an older receipt (f9ea5d7, faf2c42, a7c814d, 1626e09).
+# Each is an action; each must still be refused.
+NONCLAIMS=""
+for c in $SOLO_HANDOFF; do
+    case " $CLAIMS " in *" $c "*) ;; *) NONCLAIMS="$NONCLAIMS $c" ;; esac
+done
+MISSING=""
+for want in f2d013b 21fb521 f9ea5d7 faf2c42 a7c814d 1626e09; do
+    full="$(git -C "$METHODOLOGY" rev-parse "$want")"
+    case " $NONCLAIMS " in *" $full "*) ;; *) MISSING="$MISSING $want" ;; esac
+done
+[ -z "$MISSING" ] && pass "27.L1c-cov the derived non-claim set still contains all 6 known members" \
+    || fail "27.L1c-cov the derived non-claim set lost —$MISSING — the query is wrong, not the history"
+BAD=""; NNON=0
+for c in $NONCLAIMS; do
+    NNON=$((NNON+1))
+    v="$(replay_verdict "$c")"
+    [ "$v" = "refuse" ] || BAD="$BAD $(git -C "$METHODOLOGY" log -1 --format=%h "$c"):$v"
+done
+[ -z "$BAD" ] && pass "27.L1c all $NNON historical non-claim HANDOFFS.md commits are still refused" \
+    || fail "27.L1c a real non-claim commit was exempted —$BAD"
+rm -rf "$REPLAY"
+
+# --- M1-M5: MUTATION — each guard NARROWED, not deleted ---------------------
+# A guard no mutant can falsify is a comment shaped like a guard. "Did not apply" is a
+# distinct outcome from "survived": the mutant is diffed after patching, so a stale literal
+# reports itself instead of silently scoring a kill.
+MUTDIR="$(mktemp -d)"
+MUTBAK="$MUTDIR/pristine"
+cp "$HOOK" "$MUTBAK"
+cp "$HOOK" "$MUTDIR/pre-commit"
+chmod +x "$MUTDIR/pre-commit"
+trap 'rm -rf "$MUTDIR"' EXIT INT TERM
+# From here down the fixtures run the COPY, so the tracked hook is never edited.
+HOOKS_DIR="$MUTDIR"
+HOOK="$MUTDIR/pre-commit"
+
+apply_mutant() {   # $1 = old literal, $2 = new literal -> 0 applied, 2 did not apply
+    python3 - "$MUTBAK" "$HOOK" "$1" "$2" <<'PY'
+import sys
+src, dst, old, new = sys.argv[1:5]
+t = open(src).read()
+n = t.count(old)
+if n == 0:
+    sys.exit(2)          # did not apply — the literal is stale
+if n > 1:
+    sys.exit(3)          # AMBIGUOUS — replace(...,1) would patch the wrong site
+open(dst, "w").write(t.replace(old, new, 1))
+PY
+}
+
+# $1 = label, $2 = killer, $3 = old literal, $4 = new literal, $5 = fixture fn,
+# $6 = the verdict the MUTANT is expected to produce on that fixture (i.e. the wrong one).
+# Comparing against a named verdict rather than a boolean means a mutant that merely CRASHES
+# the hook reports "crash:<rc>" instead of quietly scoring a kill it did not earn.
+mutant_killed_by() {
+    local label="$1" killer="$2" old="$3" new="$4" fixture="$5" wrong="$6" v
+    apply_mutant "$old" "$new"; local rc=$?
+    if [ "$rc" = "3" ]; then
+        cp "$MUTBAK" "$HOOK"
+        # Learned the hard way: ' --no-renames' also matched the COMMENT that explains it,
+        # so the patch landed in prose and the mutant "survived" a guard it never removed.
+        fail "$label MUTATION IS AMBIGUOUS — the literal occurs more than once; nothing was tested"
+        return
+    fi
+    if [ "$rc" != "0" ]; then
+        cp "$MUTBAK" "$HOOK"
+        fail "$label MUTATION DID NOT APPLY — the literal is stale, so nothing was tested"
+        return
+    fi
+    if diff -q "$MUTBAK" "$HOOK" >/dev/null 2>&1; then
+        cp "$MUTBAK" "$HOOK"
+        fail "$label MUTATION DID NOT APPLY — file unchanged after patch"
+        return
+    fi
+    # The invariant that makes the scratch copy worth having: while a mutant is live, the
+    # TRACKED hook is byte-unchanged. Checked here, per mutant, rather than only at the end —
+    # an end-of-run check passes even when the harness mutates the real file, because each
+    # mutant restores it. Delete the HOOKS_DIR redirection above and every mutant trips this.
+    if [ "$(cksum < "$METHODOLOGY/.githooks/pre-commit")" != "$REAL_HOOK_CKSUM" ]; then
+        fail "$label wrote into the TRACKED hook — the harness must mutate the scratch copy"
+    fi
+    v="$("$fixture")"
+    cp "$MUTBAK" "$HOOK"
+    if [ "$v" = "$wrong" ]; then
+        pass "$label killed by $killer"
+    else
+        fail "$label SURVIVED $killer — the guard is not load-bearing (mutant verdict: $v)"
+    fi
+}
+
+fx_flip() {            # N7's case: an in-place status flip, no block added
+    local P; P="$(mk_hookrepo)"
+    sed 's/^status: complete$/status: pending/' "$P/HANDOFFS.md" > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+    git -C "$P" add HANDOFFS.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+fx_bundle() {          # N5's case: a claim bundled with a close-out
+    local P; P="$(mk_hookrepo)"
+    { handoff_claim S3; handoff_receipt S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+    git -C "$P" add HANDOFFS.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+fx_third_file() {      # N8's case: a claim carrying README.md
+    local P; P="$(mk_hookrepo)"
+    { handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+    printf '# Readme\nedited\n' > "$P/README.md"
+    git -C "$P" add HANDOFFS.md README.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+fx_notes() {           # N2's case: the prescribed adopter claim shape
+    local P; P="$(mk_hookrepo)"
+    { handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+    printf '# Session notes\nclaimed\n' > "$P/SESSION_NOTES.md"
+    git -C "$P" add HANDOFFS.md SESSION_NOTES.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+fx_example_fence() {   # N11's case: a fence added with no status line at all
+    local P; P="$(mk_hookrepo)"
+    printf '\nBlock format:\n\n```handoff\nsession: S<N>\n```\n' >> "$P/HANDOFFS.md"
+    git -C "$P" add HANDOFFS.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+fx_rename() {          # N13's case: a tracked source file renamed onto an exempt path
+    local P; P="$(mk_hookrepo)"
+    git -C "$P" rm -q SESSION_NOTES.md >/dev/null
+    printf 'def real_code():\n    return 1\n' > "$P/src.py"
+    git -C "$P" add -A >/dev/null; git -C "$P" commit -q --no-verify -m "drop notes, add source"
+    git -C "$P" mv src.py SESSION_NOTES.md
+    { handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+    git -C "$P" add HANDOFFS.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+fx_doc_example() {     # N14's case: a fenced documentation example, no receipt filed
+    local P; P="$(mk_hookrepo)"
+    printf '\nBlock format:\n\n````\n```handoff\nsession: S<N>\nstatus: pending\n```\n````\n' >> "$P/HANDOFFS.md"
+    git -C "$P" add HANDOFFS.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+fx_ext_diff() {        # N15's case: a claim under an external differ
+    local P; P="$(mk_hookrepo)"
+    printf '#!/bin/sh\necho EXT\n' > "$P/ext.sh"; chmod +x "$P/ext.sh"
+    git -C "$P" config diff.external "$P/ext.sh"
+    { handoff_claim S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+    git -C "$P" add HANDOFFS.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+fx_receipt() {         # N4's case: a close-out receipt committed alone
+    local P; P="$(mk_hookrepo)"
+    { handoff_receipt S2; cat "$P/HANDOFFS.md"; } > "$P/H.tmp" && mv "$P/H.tmp" "$P/HANDOFFS.md"
+    git -C "$P" add HANDOFFS.md
+    hook_verdict "$P"
+    rm -rf "$P"
+}
+
+mutant_killed_by "27.M1 fence conjunct" "N7 (in-place status flip)" \
+    '[ "$opened" -gt 0 ] && ' '' fx_flip pass
+mutant_killed_by "27.M2 all-added-statuses-are-pending" "N5 (bundled close-out)" \
+    ' && [ "$pending" -eq "$statuses" ]' '' fx_bundle pass
+mutant_killed_by "27.M3 staged-set containment" "N8 (third file)" \
+    '[ -z "$outside" ] && ' '' fx_third_file pass
+mutant_killed_by "27.M4 SESSION_NOTES.md allowance" "N2 (adopter claim shape)" \
+    "-e 'HANDOFFS.md' -e 'SESSION_NOTES.md'" "-e 'HANDOFFS.md'" fx_notes refuse
+mutant_killed_by "27.M5 pending-line exactness" "N4 (close-out alone)" \
+    "grep -cxE '\\+status:[[:space:]]*pending[[:space:]]*'" "grep -cE '^\\+status:'" fx_receipt pass
+mutant_killed_by "27.M6 at-least-one-pending conjunct" "N11 (fence with no status line)" \
+    '[ "$pending" -gt 0 ] && ' '' fx_example_fence pass
+mutant_killed_by "27.M8 --no-renames on the staged-set query" "N13 (renamed source file)" \
+    '--name-only --no-renames' '--name-only' fx_rename pass
+mutant_killed_by "27.M9 stronger-wrapper conjunct" "N14 (documentation example)" \
+    '[ "$wrapped" -eq 0 ] && ' '' fx_doc_example pass
+mutant_killed_by "27.M10 plumbing-stable diff query" "N15 (external differ)" \
+    '--cached --no-ext-diff --no-textconv --no-color -U0' '--cached -U0' fx_ext_diff refuse
+
+# End-of-run backstop: the tracked hook still checksums to what it did before Test 27 started.
+# Its honest scope is a LEAKED mutant — a restore that failed, or a crash between patch and
+# restore. It does NOT catch a harness that mutates the tracked file and restores it each time
+# (tried: removing the HOOKS_DIR redirection leaves this green), which is why the real
+# invariant is asserted per mutant inside mutant_killed_by, where removing that redirection
+# turns all six red. An earlier draft asserted the restore by comparing the file to the backup
+# it had just been copied from — a line no mutant can falsify at all.
+HOOKS_DIR="$METHODOLOGY/.githooks"
+HOOK="$HOOKS_DIR/pre-commit"
+if [ "$(cksum < "$HOOK")" = "$REAL_HOOK_CKSUM" ]; then
+    pass "27.M7 the tracked hook was never modified by the mutation harness"
+else
+    fail "27.M7 the mutation harness wrote into the tracked hook — restore it before committing"
+fi
+rm -rf "$MUTDIR"; trap - EXIT INT TERM
+
+echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]
