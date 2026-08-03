@@ -29,6 +29,22 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S36
+date: 2026-08-03
+status: pending
+active_task: **Plan §5 item S37 (`docs/planning/framework-context-cost-plan.md:474`), operator-selected from a three-way Phase 0 offer: BUILD THE LEDGER TRIMMER, canonical-only, and prove it against this repo's own files — the worst case available.** The spec is `docs/planning/ledger-trimmer-design.md` §11 Phase 1; this session implements it and does not re-open it. **Numbered S36 because the two session sequences share this ledger and the fork's own counter is what advances** — the plan's queue labels (`S36`, `S37`, `S39′`) are *queue item ids*, not session numbers, and S35's receipt already flagged the §7-vs-§5 S-number collision rather than renumbering. So: fork session **S36** executes plan queue item **S37**. Do not read the two as the same axis. DONE LOOKS LIKE, from §11 verbatim: `starter-kit/methodology_trim.py` exists and is **NOT in `bin/_manifest.py`** (shipping is Phase 4 / queue item S39′, and it needs a go-ahead); dry-run by default; refuses to write unless **L1+L2+L3** pass; refuses on a non-empty undocumented set (**P1**); writes its own ledger entry and asserts the **P1a** post-condition; refuses on an existing shard path; refuses on **SRF ≥ 1.00** without `--force`; abstains out loud when SRF is undefined; emits `<shard>.verify.sh`; writes shard-then-live via temp-and-rename and **never commits**. THE GATES ARE THE HARD PART AND THEY ARE NAMED: drive **each** of L1, L2, L3 RED on a fixture and *watch it fail* before trusting green; **narrow** each guard's domain, never merely delete it (a guard proven by deletion is proven only to run); prove the **fixture** first with an unmutated control; **assert on named findings, never on the exit code** (§6.3 — the code is a union over every check). **Two fixtures are handed over already-real, not invented:** the §2.1 footer loss is the L2 fixture and the §4.2 S22 in-place edit is the L3 fixture — both actually happened in this repo. BASELINE AT CLAIM, measured not recalled: `bin/tests.sh` **175 passed / 1 failed** (Test 9's `--source=github` 404 on `starter-kit/FRAMEWORK_LEARNINGS.md`, correct until upstream merges — **DO NOT WEAKEN TEST 9**); `python3 -m unittest discover -s tools` **197 OK**; `bin/check-links` OK 88/22; dashboard **72/100, 0 high+**; twins byte-identical; `HANDOFFS.md` **238,432 B**, `CHANGELOG.md` **77,245 B**. NOT THIS SESSION (FM #17/#18): no dashboard row (queue S38), no dashboard defect fixes (queue S36 — a different item from this session's number), no manifest entry or shipping surface (queue S39′), no doctrine wording (queue S40), **and not D1** — S35 was explicit that folding the missing-footer repair into this session would re-create exactly the co-mingling L3 exists to forbid. **NO OUTWARD-FACING ACTION**: no PR, comment, issue, tag or Release; S34's PR is still prepared-and-unopened and every one needs the operator's explicit go-ahead, each time.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+---
+
+```handoff
 session: S35
 date: 2026-08-03
 status: complete
