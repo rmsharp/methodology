@@ -75,6 +75,52 @@ blocks[0] ONLY — the 13-key schema is not applied to older receipts. Upstream 
 (duplicate/malformed row detection across the whole ledger). This is not that, is not
 named that, and does not answer it.
 
+THE LOCATOR-FORM RULE (the `changelog_ref` field, EVERY receipt including the newest).
+`changelog_ref` points at the session's entry in the action ledger. A `CHANGELOG.md:68`
+line number is not a locator into that ledger, it is a POSITIONAL ADDRESS into a file
+whose prefix is rewritten on a schedule — so the reference does not go stale in the
+ordinary way, it goes WRONG: it keeps resolving, to a real entry, that is not the one
+the receipt means. Measured over both ledger files: 9 such anchors in 8 receipts, 8 of
+them correct the day they were written, and 0 of 9 resolving to their stated referent
+afterwards. Four now land in the file's front matter, above every entry, and four land
+inside an entry written on a later day.
+
+The cause is NOT "CHANGELOG.md is prepend-only" — under strict prepending an anchor at
+:35 lands on the newest heading forever. It is that the FRONT MATTER is itself edited
+in place: this repo's first `### ` heading moved 35 -> 39 -> 68 across two such edits.
+Published entries also get rewritten mid-file, and the v3.6 archive split moved 50
+entries out of the file entirely. Any one of those breaks a line number; nothing an
+author does at write time defends against them.
+
+So the rule is a PROHIBITION, not a correctness assertion: `changelog_ref` may not
+contain a root-relative positional address into a live ledger file. Three properties
+follow, and each is deliberate:
+
+  * NO blocks[0] EXEMPTION, unlike the answer-slot rule above. That exemption exists
+    because `commit:` has a chicken-egg — the receipt ships inside the commit whose sha
+    it would name. A prohibition has none: it is satisfiable the instant the receipt is
+    written. The corpus also shows write-time values are not self-validating anyway —
+    S28's second anchor was wrong the day it was written.
+  * THE PREDICATE READS ONLY THE RECEIPT'S OWN BYTES. No prepend, retitle, front-matter
+    expansion or archive split can turn a passing receipt red later. The rejected
+    alternative — asserting that each reference RESOLVES to a real `### ` heading —
+    fails the suite whenever someone legitimately retitles a ledger entry, and this repo
+    retitles entries precisely to correct false claims (`de46858`). A guard that
+    punishes correcting a false claim gets narrowed, not obeyed (FM #17).
+  * PREFIX-AWARE, because three populations look alike and only one is the defect.
+    `starter-kit/CHANGELOG.md:92` cites a distributed TEMPLATE, and
+    `docs/archive/CHANGELOG-through-v3.6.md:46` cites a shard frozen at write; both are
+    stable and both stay legal. Only a bare, root-relative `CHANGELOG.md:<N>` /
+    `HANDOFFS.md:<N>` is a finding. Reusing KEY_FILES_RE here would be unsound — it
+    matches all three.
+
+Scope is `changelog_ref` ONLY, and that is a smaller claim than the defect. The same
+anchors sit in 14 receipts' `key_files` values, where they decay identically — but
+`key_files` is REQUIRED by this very checker to carry a `path:line` token, so the two
+rules would collide head-on, and one archived receipt's entire `key_files` value is a
+single such anchor that cannot be rewritten without inventing a citation. Recorded as a
+backlog item, deliberately not bundled (FM #17).
+
 Usage:
   bin/check-handoff                    # check the newest receipt in ./HANDOFFS.md,
                                         # falling back to starter-kit/HANDOFFS.md
@@ -369,6 +415,61 @@ def check_answer_slots(blocks: list, archived: bool = False) -> list:
     return findings
 
 
+# A ROOT-RELATIVE positional address into a live ledger file. See THE LOCATOR-FORM RULE
+# in the module docstring. group(1) is the directory prefix and is the whole point: the
+# match is a finding ONLY when that prefix is empty.
+#
+# Leftmost-match semantics do the prefix capture for us — scanning "starter-kit/CHANGELOG.md:92"
+# left to right, the attempt at "s" succeeds with group(1) == "starter-kit/", so the engine
+# never reaches the position at "CHANGELOG" where group(1) would be empty. The lookbehind
+# stops a match from starting mid-token ("kit/CHANGELOG…" cannot begin at "k").
+#
+# `[\w.\-]*` after the filename stem keeps the archived shards in scope for the prefix test:
+# CHANGELOG-through-v3.6.md and HANDOFFS-archive.md must MATCH here so their non-empty
+# prefixes can exempt them. Requiring `:\d+` is what keeps a plain filename mention legal.
+LIVE_LEDGER_ANCHOR_RE = re.compile(
+    r"(?<![\w.\-])((?:[\w.\-]+/)*)((?:CHANGELOG|HANDOFFS)[\w.\-]*\.md):(\d+)"
+)
+
+
+def check_locator_forms(blocks: list) -> list:
+    """Return findings for every receipt whose `changelog_ref` carries a root-relative
+    positional address into a live ledger file. See THE LOCATOR-FORM RULE in the module
+    docstring.
+
+    EVERY block is checked, blocks[0] included — the answer-slot rule's positional
+    exemption does not transfer, because a prohibition has no chicken-egg to solve.
+
+    One finding per ANCHOR, not per receipt, so the count equals the number of tokens a
+    repair has to remove; one receipt in the corpus carries two.
+
+    ONE skip, and it is a real guard: a `status: pending` block is a Phase 1B stub whose
+    schema makes `changelog_ref` optional-if-absent. Without it this pass would fire on
+    every session's own claim commit.
+
+    An absent or empty `changelog_ref` is NOT skipped explicitly, and the omission is
+    deliberate. Emptiness is `validate()`'s finding on the newest receipt, and on an older
+    one it would assert a 13-key schema this pass does not apply — but a guard for it
+    would be unkillable: an empty string contains no anchor, so the pass is already silent
+    on it. A line no mutant can falsify is not a guard, it is a comment that looks like
+    one. This is that comment, in the place where it is true.
+    """
+    findings = []
+    for block in blocks:
+        fields = parse_block(block)
+        if fields.get("status", "").strip() == "pending":
+            continue
+        value = fields.get("changelog_ref", "")
+        for match in LIVE_LEDGER_ANCHOR_RE.finditer(value):
+            if match.group(1):  # a directory prefix — a template or a frozen shard, not the defect
+                continue
+            findings.append(
+                "changelog_ref in receipt %s (%s) addresses a live ledger by line number: %r"
+                % (fields.get("session", "?"), fields.get("date", "?"), match.group(0))
+            )
+    return findings
+
+
 def repo_root() -> Path:
     try:
         out = subprocess.run(
@@ -432,7 +533,17 @@ def main() -> int:
     # 13-key schema on the NEWEST receipt; this is one property on every OLDER one.
     anchor_findings = check_answer_slots(blocks, args.archived)
 
-    if findings or anchor_findings:
+    # A third scope, reported in its own block for the same reason the second one is:
+    # `validate()` is the 13-key schema on the NEWEST receipt, `check_answer_slots` is one
+    # property on every OLDER one, and this is one property on EVERY one. Three different
+    # denominators; never render them as one number.
+    #
+    # The message must not begin "receipt" — `nslot()` (bin/tests.sh) counts findings with
+    # `grep -c '^  error: receipt'`, so a row starting that way would be silently absorbed
+    # into the answer-slot tests' assertions.
+    locator_findings = check_locator_forms(blocks)
+
+    if findings or anchor_findings or locator_findings:
         if findings:
             print("check-handoff: FAIL — %d issue(s) in the newest receipt in %s:"
                   % (len(findings), path))
@@ -447,6 +558,16 @@ def main() -> int:
             print("        reconciles `commit:` to a real sha. Find the sha a receipt should name")
             print("        with: git log --all --full-history --format=%H -- <this file>")
             print("        then the first commit whose copy of that block reads `status: complete`.")
+        if locator_findings:
+            print("check-handoff: FAIL — %d positional ledger address(es) in `changelog_ref` in %s:"
+                  % (len(locator_findings), path))
+            for msg in locator_findings:
+                print("  error: %s" % msg)
+            print("  note: a line number into a live ledger is not a locator — the file's own")
+            print("        front matter is edited in place and its entries are archived, so the")
+            print("        number keeps resolving, to the wrong entry. Name the entry instead:")
+            print('        CHANGELOG.md "<its ### heading>". A prefixed path (starter-kit/…,')
+            print("        docs/archive/…) is stable and stays legal.")
         return 1
 
     label = ("a valid Phase 1B stub (close-out not yet performed)"

@@ -65,6 +65,73 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [BL-15] The `changelog_ref` locator-form rule — BL-15 was right, and settling it found a different defect
+
+**Model:** Claude Opus 5 (1M context) — implementation, the 11-agent refute/design/judge workflow,
+and this entry.
+**Fork-local and canonical-only.** `bin/check-handoff` and `bin/tests.sh` are both absent from
+`bin/_manifest.py`'s 22-entry DISTRIBUTION; zero DISTRIBUTION members appear in the diff, verified
+by importing the manifest. **No upstream action taken and none authorized** — `gh` read-only,
+[issue #65](https://github.com/KJ5HST/methodology/issues/65) untouched.
+
+- **BL-15 was raised correctly and this session's own claim stub was wrong about it.** The stub
+  asserted that BL-15's *"identical escape in 13 of 32 receipts"* reproduced under no predicate. It
+  reproduces exactly: **13 values defer deictically — 12 × `this commit` plus archive-S1's
+  `this branch`.** The stub grepped one literal phrasing, reached 12, and stopped one variant short,
+  which is the sampling error this repo has already recorded twice. `bin/check-handoff:69-70` names
+  that dialect in writing; the key was documented and was not used. **Three adversarial verifiers
+  refuted two of the session's three central claims, and every correction was re-derived here
+  first-hand rather than relayed.**
+- **It is closed anyway, and for a better reason than "wrong".** All 13 name their entry by a quoted
+  `### ` title *before* the deferral, and all 13 now carry a real sha as their own `commit:` first
+  token because of `7752114`/`6d47624`. Each deferral is a one-hop back-reference to a field the
+  checker already guarantees. **BL-14 discharged BL-15 as a side effect** — one field to the left,
+  the same week.
+- **What settling it found: 9 positional line anchors, and the arithmetic is the argument.**
+  **8 of 9 were correct the day they were written; 0 of 9 resolve to their stated referent now.**
+  Four land in `CHANGELOG.md`'s front matter above every entry; four land inside an entry written
+  the same day this was measured. **The cause is not "the ledger is prepend-only"** — under strict
+  prepending an anchor at `:35` lands on the newest heading forever. The front matter is edited in
+  place: the first `### ` moved **35 → 39 → 68**. Published entries are also rewritten mid-file, and
+  the v3.6 split moved 50 entries out of the file.
+- **The rule is a PROHIBITION, and that choice is the design.** `changelog_ref` may not carry a
+  root-relative positional address into a live ledger. Its truth value depends only on the receipt's
+  own bytes, so **no later prepend, retitle, front-matter edit or archive split can turn a passing
+  receipt red.** The rejected alternative — assert every reference *resolves* to a real `### `
+  heading — goes red whenever someone legitimately retitles an entry, and **this repo retitles
+  entries precisely to correct false claims** (`de46858`). A guard that punishes correcting a false
+  claim gets narrowed, not obeyed (FM #17). Three judges scored four candidate designs on separate
+  lenses; the prohibition won 7/9/9 against 2–6 for the resolution rules.
+- **No `blocks[0]` exemption, unlike the answer-slot rule — and that asymmetry is load-bearing.**
+  BL-14's exemption exists to solve a chicken-egg; a prohibition has none, being satisfiable the
+  instant the receipt is written. The corpus agrees: S28's second anchor was wrong the day it was
+  written, so write-time values are not self-validating.
+- **Prefix-aware, because three populations look alike and only one is the defect.**
+  `starter-kit/CHANGELOG.md:92` cites a distributed template and
+  `docs/archive/CHANGELOG-through-v3.6.md:46` cites a shard frozen at write; both stay legal, both
+  are pinned by controls. Reusing the existing `KEY_FILES_RE` here would have been unsound — it
+  matches all three, verified directly.
+- **RED-FIRST AGAINST THE REAL CORPUS, and the archive measured rather than assumed.** Run against
+  the unrepaired ledger the new pass returned **exactly 9** findings — the same 9 derived
+  independently by walking git history — and **0** against the archive shard. **8 mutants, 8 killed,
+  zero survivors**, six of them by NARROWING rather than deletion: drop prefix-awareness, copy the
+  answer-slot exemption, narrow to a leading-token match, make `:<N>` optional, report per receipt
+  instead of per anchor, and rename the finding prefix so `nslot()` would silently absorb it.
+- **One line was deleted for being untestable.** An empty-value skip could not be killed by any
+  mutant — an empty string contains no anchor, so the pass was already silent on it. A guard no
+  mutant can falsify is a comment that looks like a guard; it is now a comment that says so.
+- **Suite 127 → 142.** It also exposed and fixed a real coupling defect in the *previous* session's
+  work: Test 25's live assertions keyed on the checker's **exit code**, which is a union over all
+  three passes, so adding this one turned them red against a ledger whose `commit:` fields were all
+  correct — reporting an answer-slot failure for a defect in a different field. Both now count their
+  own rows.
+- **Raised, deliberately not bundled (FM #17):** **BL-17** — the seed offers no locator a fork-local
+  session can write (`PR #N`: often none; a short-sha: unknowable at write time), which is *why*
+  eight authors invented a line number; plus the stale-title class the prohibition cannot see.
+  **BL-18** — the same anchors in `key_files`, 20 of them, where `KEY_FILES_RE` *requires* a
+  `path:line` token, and where one archived receipt cannot be repaired without fabricating a
+  citation.
+
 ### 2026-08-02 · [ad hoc] Record repair: nine `changelog_ref` line anchors, and one quoted title that had been stale since the day it was written
 
 **Model:** Claude Opus 5 (1M context).

@@ -1,9 +1,14 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13 and BL-14 are open** (BL-14 raised
-> 2026-08-02 (S28) and **partially closed the same session**: the fork-side detector and the
-> 9-receipt repair shipped; its distributed half — the spec still promises a reconcile no procedure
-> assigns — is blocked on the channel. **BL-15 and BL-16 were raised alongside it and are open.**) BL-8 was deliberately
+> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17 and BL-18 are
+> open** (BL-14 raised 2026-08-02 (S28) and **partially closed the same session**: the fork-side
+> detector and the 9-receipt repair shipped; its distributed half — the spec still promises a
+> reconcile no procedure assigns — is blocked on the channel. **BL-15 is CLOSED 2026-08-02 (S29):
+> raised correctly — its "13 of 32" is exact — and already discharged by BL-14's own repair, which
+> gave all 13 receipts a real sha in `commit:` to defer to. S29's claim stub said the population
+> did not reproduce; that was wrong, and the correction is recorded in BL-15 itself. Settling it
+> uncovered a different defect, and the fork-side prohibition for that shipped the same session.
+> BL-17 and BL-18 were raised out of the settlement and are open.**) BL-8 was deliberately
 > sequenced *after* the dashboard signal-integrity campaign closed (Layer 7, then Layer 6), which it
 > now has (v3.6 shipped 2026-07-27), so it is unblocked. BL-11 and BL-12 were both raised 2026-08-01
 > at BL-10's close-out. BL-1 – BL-7, BL-9 and BL-10 are complete; the retirement note below is
@@ -252,6 +257,77 @@ identical escape in 13 of 32 receipts, but its false-positive surface is wider (
 pending PR number is plausible). **BL-16** — `bin/check-handoff:301-303`'s docstring claims the
 canonical repo "has no root-level receipt ledger of its own," which is false here (13 receipts + a
 19-receipt archive it knows nothing about).
+
+**BL-15 — `changelog_ref`'s deictic deferral: RAISED CORRECTLY, AND ALREADY DISCHARGED.**
+*Settled 2026-08-02 (S29). Do not re-raise; the count below is the third time this population has
+been measured and the first time it was measured right.*
+**BL-15's "13 of 32" is exact.** 13 `changelog_ref` values defer deictically instead of naming an
+identifier — **12 × `this commit` plus archive-S1's `this branch`**. S29's claim stub asserted the
+population did not reproduce under any predicate; that assertion was **wrong**, and wrong the way
+[`feedback_a_grep_count_is_a_sample`] describes: it grepped one literal phrasing, reached 12, and
+stopped one variant short. `bin/check-handoff:69-70` names the dialect in writing —
+*"it catches the `this commit — ...` dialect that names no sha at all"* — so the key was documented
+and was not used. The provenance settles the "identical" wording too, and it is textual rather than
+analogy: `starter-kit/HANDOFFS.md:63` specifies `changelog_ref: <PR #N or a short-sha into
+CHANGELOG.md>` and `:88` says outright *"the shared key across all three is the commit sha
+(`changelog_ref` / `commit` here)"*; the ratified plan agrees at
+[`close-out-receipt-durable-artifact-plan.md:105`](close-out-receipt-durable-artifact-plan.md).
+**Why it is nonetheless closed rather than open.** Two measured facts, neither of which was
+available when BL-15 was raised one session earlier:
+- **All 13 name their entry by a quoted `### ` title BEFORE the deferral** — "…entry, this commit".
+  The deferral is a trailing modifier, never the answer slot. BL-14's escape was categorical: S25
+  and S26's `commit:` read `this commit` **and nothing else, with no sha anywhere in the receipt**.
+- **All 13 now carry a real sha as their own `commit:` first token**, because `7752114` and
+  `6d47624` forced it. Each deictic reference is therefore a one-hop back-reference to a field the
+  checker already guarantees. **BL-14 discharged BL-15 as a side effect** — which is the honest
+  finding, and better than either "wrong" or "open".
+*What no longer stands:* the parenthetical about a *"legitimately pending PR number"*. Zero of the
+32 values contain the literal `pending`, and the seed's `PR #N` form appears in **no** receipt —
+only in `bin/tests.sh` fixtures. Nothing in the corpus can produce that false positive.
+*Residual, deliberately not mechanized:* the one-hop resolution is a convention no document states.
+Writing it down means editing `starter-kit/HANDOFFS.md`, which is **DISTRIBUTED** — see BL-17.
+
+**BL-17 — The `changelog_ref` referent the seed does not offer, and the one title that is stale.**
+*Raised 2026-08-02 (S29) out of BL-15's settlement; measured, not fixed (FM #17).*
+Two halves that share one root cause: **the distributed spec offers no locator a fork-local session
+can actually write.** `starter-kit/HANDOFFS.md:63` gives `PR #N` (there is often no PR) and a
+short-sha (unknowable while the receipt is being written). **0 of 32 receipts use either.** All 32
+invented the same third form — `CHANGELOG.md "<its ### heading>"` — and eight then reached for a
+line number on top. *That vacuum is why the anchors existed*, so the shipped prohibition treats the
+symptom and this item is the cause.
+- **The DISTRIBUTED half, blocked on the paused channel.** Bless the quoted `### ` heading as a
+  third locator form at `starter-kit/HANDOFFS.md:63`, and state that a line number is not a locator
+  into a ledger. Per **Learning #8** a fix must reach every checklist restating close-out.
+- **The fork-side half, unblocked but deliberately deferred.** Stale quoted titles are the failure
+  mode the shipped rule cannot see. Measured over 32 receipts: **22 resolve byte-exact, 9 more after
+  folding markup only (backticks, `**bold**`, `--`/`—`, and — declare it, S29 did not at first — an
+  ASCII `->` against a `→`), and 1 resolved nowhere**: root-S22, whose entry `de46858` retitled **23
+  minutes** after the receipt was written, to correct a false claim, while rewriting four other
+  fields of that same receipt and leaving `changelog_ref` alone. S22 is repaired in `7c8284e` as a
+  disclosed judgement call; the *class* is untouched. **Do not mechanize this as a resolution check
+  without reading why it was rejected** (`bin/check-handoff`, THE LOCATOR-FORM RULE): a checker that
+  asserts every title resolves goes red whenever someone legitimately retitles an entry — and this
+  repo retitles entries *to correct false claims*. Four retitle events already exist; of the two
+  receipts ever exposed to one, **one broke**. That is a 50% conditional rate on a 25-day-old corpus,
+  not a 1-in-32 rate.
+
+**BL-18 — The same line anchors, in `key_files`, where the checker's own schema requires them.**
+*Raised 2026-08-02 (S29); measured, not fixed (FM #17). This is the larger half of the defect
+BL-15's settlement uncovered, and it was scoped out by operator decision, not by oversight.*
+Root-relative live-ledger anchors across **all** receipt keys: **30 in 14 receipts** — **20 in
+`key_files`**, 9 in `changelog_ref` (repaired), 1 in `next_steps`. They decay identically; the
+`changelog_ref` nine were merely the ones inside the settled question.
+*Why it is a genuinely harder item, and not just a bigger one:* `bin/check-handoff`'s
+`KEY_FILES_RE` **requires** `key_files` to carry a `path:line` token, so a prohibition and a
+requirement meet head-on in one field. Worse, archive-S4's entire `key_files` value is
+`CHANGELOG.md:35 (issue #55 ledger entry)` — repairing it means **fabricating a source citation
+into a frozen 2026-07-08 archived receipt**, which no measurement can supply. Verified: after
+stripping ledger anchors, 13 of the 14 receipts still satisfy `KEY_FILES_RE`; **archive-S4 does
+not.**
+*Method note for whoever takes it:* judge each anchor at the tree where its value **first appeared**
+(walk `git log --all --full-history` with the checker's own parser), never at the tree its `commit:`
+names — that field named the wrong tree for 2 of the 8 `changelog_ref` receipts, once because it
+leads with a Phase 1B *claim stub*.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

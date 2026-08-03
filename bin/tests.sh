@@ -899,9 +899,15 @@ rm -f "$F"
 # field never had: it trips on the next `bash bin/tests.sh` rather than waiting for
 # someone to remember. Precedent: Test 10 runs check-links bare against the real tree.
 # If this goes red, the ledger drifted — reconcile it, do not weaken the test.
+# SCOPE-ISOLATED ON PURPOSE — count answer-slot ROWS, never the process exit status.
+# As first written these two assertions keyed on the exit code, which is 1 if ANY of the
+# tool's three passes finds anything. The moment Test 26's locator pass was added, both
+# went red against a ledger whose `commit:` fields were all correct, reporting "an
+# unreconciled commit: answer slot" for a defect in a different field. An exit code is a
+# union; these assertions are about one member of it. Same reason nslot() exists at all.
 LEDGER="$(cd "$BIN/.." && pwd)"
 if [ -f "$LEDGER/HANDOFFS.md" ]; then
-    if "$BIN/check-handoff" --file "$LEDGER/HANDOFFS.md" --allow-pending >/dev/null 2>&1; then
+    if [ "$(nslot "$LEDGER/HANDOFFS.md" --allow-pending)" = "0" ]; then
         pass "L1 live ledger: every receipt below the newest names a commit sha"
     else
         "$BIN/check-handoff" --file "$LEDGER/HANDOFFS.md" --allow-pending 2>&1 | sed 's/^/    /'
@@ -911,7 +917,7 @@ else
     pass "L1 skipped: no root HANDOFFS.md (adopter tree or fresh clone)"
 fi
 if [ -f "$LEDGER/docs/archive/HANDOFFS-archive.md" ]; then
-    if "$BIN/check-handoff" --file "$LEDGER/docs/archive/HANDOFFS-archive.md" --archived >/dev/null 2>&1; then
+    if [ "$(nslot "$LEDGER/docs/archive/HANDOFFS-archive.md" --archived)" = "0" ]; then
         pass "L1b archived ledger shard: every receipt names a commit sha"
     else
         "$BIN/check-handoff" --file "$LEDGER/docs/archive/HANDOFFS-archive.md" --archived 2>&1 | sed 's/^/    /'
@@ -926,6 +932,219 @@ case "$("$BIN/check-handoff" --help 2>&1)" in
     *--archived*) pass "R6 --help documents --archived" ;;
     *)            fail "R6 --help does not mention --archived" ;;
 esac
+
+echo ''
+echo '== Test 26: check-handoff — the `changelog_ref` locator-form rule (BL-15, RED-first) =='
+# WHY THIS TEST EXISTS. BL-15 alleged `changelog_ref` carried BL-14's escape. It does
+# carry the deictic-deferral population BL-15 counted — 13 of 32, "this commit" x12 plus
+# archive-S1's "this branch" — but all 13 name their entry by a quoted ### title BEFORE
+# the deferral, and since 7752114 all 13 carry a real sha in their own `commit:`. The
+# deferral is a resolvable back-reference, not an escape. What the measurement DID find
+# is a different defect: 9 root-relative `CHANGELOG.md:<N>` anchors in 8 receipts, 8 of
+# them correct the day they were written and 0 of 9 resolving to their stated referent
+# afterwards. Four land in front matter above every entry; four land inside an entry
+# written on a later day.
+#
+# RED-FIRST WAS RUN AGAINST THE REAL CORPUS, not a fixture: executed against the
+# unrepaired ledger the new pass returned exactly 9 findings — the same 9 derived
+# independently by walking git history — and 0 against the archive shard, measured
+# rather than assumed.
+#
+# THE RULE is a PROHIBITION, not a resolution check. Its truth value depends only on the
+# receipt's own bytes, so no later prepend, retitle or archive split can turn a passing
+# receipt red. The rejected alternative — assert each reference RESOLVES to a real ###
+# heading — goes red whenever someone legitimately retitles a ledger entry, which this
+# repo does to correct false claims (de46858). NO blocks[0] exemption: unlike `commit:`
+# there is no chicken-egg, so the prohibition is satisfiable the instant it is written.
+
+# One receipt, one changelog_ref value. Newest-position by default so the absence of a
+# blocks[0] exemption is what every positive assertion below actually exercises.
+one_ref_ledger() {   # $1 = changelog_ref value
+    cat <<EOF
+\`\`\`handoff
+session: S31
+date: 2026-08-02
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Sole receipt — newest by position, and NOT exempt from this rule
+what_was_done: Shipped the thing; commit b2c3d4e
+next_steps: Something specific and actionable
+key_files: bin/check-handoff:1
+gotchas: none
+runtime_smoke: n/a — docs-only
+changelog_ref: $1
+commit: a1b2c3d
+\`\`\`
+Prose.
+EOF
+}
+
+# Count ONLY locator rows. Deliberately not `^  error: receipt` — that is nslot()'s
+# prefix, and a row starting that way would be absorbed into Test 25's assertions
+# instead of this one's. The checker's message begins "changelog_ref in receipt" for
+# exactly this reason.
+nloc() { "$BIN/check-handoff" --file "$1" ${2-} 2>&1 | grep -c '^  error: changelog_ref'; }
+
+# --- C0: THE UNMUTATED-FIXTURE CONTROL --------------------------------------
+# The house form: name the entry by its quoted heading. If C0 goes red the FIXTURE is
+# broken, not the guard. Broken once by hand and watched to fail before being trusted.
+F="$(mktemp)"; one_ref_ledger 'CHANGELOG.md "2026-08-02 · [BL-15] The locator-form rule"' > "$F"
+if "$BIN/check-handoff" --file "$F" >/dev/null 2>&1; then
+    pass "C0 unmutated control: a quoted-heading changelog_ref passes"
+else
+    "$BIN/check-handoff" --file "$F" 2>&1 | sed 's/^/    /'
+    fail "C0 unmutated control went red — the fixture is broken, not the guard"
+fi
+rm -f "$F"
+
+# --- C1/C2/C3: FALSE-POSITIVE CONTROLS, all three measured in the corpus -----
+# The two prescribed seed forms (starter-kit/HANDOFFS.md:63) must stay legal, or the
+# rule would fail the very form the distributed spec asks adopters to write.
+F="$(mktemp)"; one_ref_ledger 'PR #52' > "$F"
+[ "$(nloc "$F")" = "0" ] && pass "C1 the seed's own 'PR #N' form is not a finding" \
+    || fail "C1 'PR #52' was flagged — the rule contradicts starter-kit/HANDOFFS.md:63"
+rm -f "$F"
+
+# A distributed TEMPLATE is stable: it is not prepended to and its front matter is not
+# rewritten per session. 16 such prefixed citations exist across the live corpus.
+F="$(mktemp)"; one_ref_ledger 'the rule at starter-kit/CHANGELOG.md:92, entry "Foo"' > "$F"
+[ "$(nloc "$F")" = "0" ] && pass "C2 a starter-kit/ template line cite is not a finding" \
+    || fail "C2 prefix-awareness lost — starter-kit/CHANGELOG.md:92 was flagged"
+rm -f "$F"
+
+# An archived shard is frozen at write, so a line number into it cannot decay.
+F="$(mktemp)"; one_ref_ledger 'docs/archive/CHANGELOG-through-v3.6.md:46 "Foo"' > "$F"
+[ "$(nloc "$F")" = "0" ] && pass "C3 a frozen archive shard line cite is not a finding" \
+    || fail "C3 prefix-awareness lost — an archived-shard anchor was flagged"
+rm -f "$F"
+
+# --- N1: the defect itself, on the NEWEST receipt ---------------------------
+# The whole point of having no blocks[0] exemption. If the answer-slot rule's positional
+# skip were copied here, this returns 0 and the rule guards nothing at the head of the file.
+F="$(mktemp)"; one_ref_ledger 'CHANGELOG.md:68 "2026-08-01 · [BL-9] Layer 2"' > "$F"
+[ "$(nloc "$F")" = "1" ] && pass "N1 a root CHANGELOG.md:<N> anchor is caught on the NEWEST receipt" \
+    || fail "N1 root anchor not caught on blocks[0] (got $(nloc "$F")) — exemption wrongly copied"
+rm -f "$F"
+
+# --- N2: an anchor in TRAILING prose, not the leading token ------------------
+# S28's second anchor is exactly this shape, and it is the one anchor in the corpus that
+# was wrong the day it was written. A leading-token predicate (the answer-slot rule's
+# shape) would miss it entirely.
+F="$(mktemp)"; one_ref_ledger 'CHANGELOG.md "Some entry"; the repair entry is CHANGELOG.md:118' > "$F"
+[ "$(nloc "$F")" = "1" ] && pass "N2 an anchor in trailing prose is caught (not a leading-token rule)" \
+    || fail "N2 trailing-prose anchor missed (got $(nloc "$F"))"
+rm -f "$F"
+
+# --- N3: HANDOFFS.md is a live ledger too ------------------------------------
+F="$(mktemp)"; one_ref_ledger 'CHANGELOG.md "Entry"; see HANDOFFS.md:8 for the count' > "$F"
+[ "$(nloc "$F")" = "1" ] && pass "N3 a root HANDOFFS.md:<N> anchor is caught, not only CHANGELOG" \
+    || fail "N3 root HANDOFFS.md anchor missed (got $(nloc "$F"))"
+rm -f "$F"
+
+# --- N4: one finding PER ANCHOR, so the count equals the repair size ---------
+# S28 carries two. A per-receipt count would understate every multi-anchor repair.
+F="$(mktemp)"; one_ref_ledger 'CHANGELOG.md:70 "A"; the repair entry is CHANGELOG.md:118' > "$F"
+[ "$(nloc "$F")" = "2" ] && pass "N4 two anchors in one value yield two findings (per anchor, not per receipt)" \
+    || fail "N4 expected 2 findings for a two-anchor value (got $(nloc "$F"))"
+rm -f "$F"
+
+# --- N5: a bare filename mention, with no line number, stays legal -----------
+# This is what the repair turns every flagged value INTO, so if it were a finding the
+# repair could not converge.
+F="$(mktemp)"; one_ref_ledger 'CHANGELOG.md "2026-08-01 · [BL-9] Layer 2", commit 3aee4e3' > "$F"
+[ "$(nloc "$F")" = "0" ] && pass "N5 a filename with no :<N> is legal (the repaired form converges)" \
+    || fail "N5 the repaired form was itself flagged (got $(nloc "$F")) — the rule cannot converge"
+rm -f "$F"
+
+# --- N6: an older receipt is checked too ------------------------------------
+# Complements N1: the rule spans the ledger, so neither end is exempt.
+F="$(mktemp)"
+{ one_ref_ledger 'CHANGELOG.md "Newest entry"'
+  cat <<'EOS'
+
+```handoff
+session: S30
+date: 2026-08-01
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: The OLDER receipt — clean newest above it, so only this one can fire
+what_was_done: Did the earlier thing; commit a1b2c3d
+next_steps: Something specific and actionable
+key_files: bin/tests.sh:1
+gotchas: none
+runtime_smoke: n/a — docs-only
+changelog_ref: CHANGELOG.md:35 "Older entry"
+commit: a1b2c3d
+```
+Prose for the older receipt.
+EOS
+} > "$F"
+[ "$(nloc "$F")" = "1" ] && pass "N6 an older receipt's anchor is caught (the rule spans the ledger)" \
+    || fail "N6 older-receipt anchor missed (got $(nloc "$F"))"
+rm -f "$F"
+
+# --- N7: a Phase 1B stub is skipped whole -----------------------------------
+# changelog_ref is not in STUB_REQUIRED_KEYS; a stub that carries one anyway is not this
+# pass's business, and reporting it would fire during every session's own claim commit.
+F="$(mktemp)"
+cat > "$F" <<'EOS'
+```handoff
+session: S32
+date: 2026-08-02
+status: pending
+active_task: Claimed, not closed out
+changelog_ref: CHANGELOG.md:68 "not yet real"
+```
+Prose.
+EOS
+[ "$(nloc "$F")" = "0" ] && pass "N7 a status: pending stub is skipped whole" \
+    || fail "N7 a Phase 1B stub was flagged (got $(nloc "$F"))"
+rm -f "$F"
+
+# --- N8: an empty value is validate()'s finding, not this pass's ------------
+# Pins the BEHAVIOUR, and deliberately not a guard: the checker has no empty-value skip,
+# because an empty string contains no anchor, so no mutant could falsify one. Written
+# this way so nobody adds an unkillable line later believing this test covers it.
+F="$(mktemp)"; one_ref_ledger '' > "$F"
+[ "$(nloc "$F")" = "0" ] && pass "N8 an empty changelog_ref is not double-reported here" \
+    || fail "N8 empty value double-reported as a locator finding (got $(nloc "$F"))"
+rm -f "$F"
+
+# --- N9: a time, a ratio, and a URL are not ledger anchors ------------------
+# The naive `path:digits` shape matches all three; requiring the CHANGELOG/HANDOFFS stem
+# plus `.md` is what keeps them out.
+F="$(mktemp)"
+one_ref_ledger 'CHANGELOG.md "Entry"; written 18:24, ratio 3:1, https://github.com/KJ5HST/methodology/pull/63' > "$F"
+[ "$(nloc "$F")" = "0" ] && pass "N9 a time, a ratio and a URL are not ledger anchors" \
+    || fail "N9 false positive on non-anchor colon-digit text (got $(nloc "$F"))"
+rm -f "$F"
+
+# --- L2: THE LIVE-CORPUS ASSERTIONS -----------------------------------------
+# Same role as Test 25's L1: every assertion above runs on a mktemp fixture, so nothing
+# observes the REAL ledger. If these go red the ledger drifted — repair it, do not
+# weaken the test. --allow-pending so an in-flight Phase 1B stub is not the finding.
+if [ -f "$LEDGER/HANDOFFS.md" ]; then
+    if [ "$(nloc "$LEDGER/HANDOFFS.md" --allow-pending)" = "0" ]; then
+        pass "L2 live ledger: no changelog_ref addresses a live ledger by line number"
+    else
+        "$BIN/check-handoff" --file "$LEDGER/HANDOFFS.md" --allow-pending 2>&1 | sed 's/^/    /'
+        fail "L2 live ledger carries a positional ledger address (see above)"
+    fi
+else
+    pass "L2 skipped: no root HANDOFFS.md (adopter tree or fresh clone)"
+fi
+if [ -f "$LEDGER/docs/archive/HANDOFFS-archive.md" ]; then
+    if [ "$(nloc "$LEDGER/docs/archive/HANDOFFS-archive.md" --archived)" = "0" ]; then
+        pass "L2b archived ledger shard: no positional ledger address"
+    else
+        "$BIN/check-handoff" --file "$LEDGER/docs/archive/HANDOFFS-archive.md" --archived 2>&1 | sed 's/^/    /'
+        fail "L2b archived ledger shard carries a positional ledger address (see above)"
+    fi
+else
+    pass "L2b skipped: no archived ledger shard"
+fi
 
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
