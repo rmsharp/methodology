@@ -69,8 +69,11 @@ are all written in a bare `**Model:**` form it cannot parse, so **every bullet S
 see moved into the 2026-08-01 shard at this split** — run with no arguments it now reports an empty
 Source 1 against a ledger whose entries visibly carry the bullet. Reach a span with
 `bin/model-report --changelog <shard>`. The parser blindness is **not a consequence of this split**:
-the form drifted at `1298af7` (2026-08-02) and has held unbroken for nine entries since, this file's
-own newest included. Raised as **BL-20**, deliberately not fixed here (FM #17). Count both dialects,
+the form drifted at `1298af7` (2026-08-02) and has held unbroken since — *every* live entry, this
+file's own newest included. Raised as **BL-20**, deliberately not fixed here (FM #17). The count that
+stood here ("nine entries since") was falsified by the very next entry written above it, which is the
+plan's own **DELETE** sink applied on the spot: the reader can count the list, and the command below
+does it. Count both dialects,
 never one — a single literal is a sample, not a population:
 
 ```sh
@@ -110,6 +113,32 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 ---
 
 ## 2026-08
+
+### 2026-08-03 · [ad hoc] Reconcile-on-read: S31's `commit:` field → `020ba3f` — fourth consecutive discharge
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`. Not S32's deliverable and no license for work
+beyond it (FM #17). **Deliberately short** — four prior entries carry the mechanics; cite, don't
+re-narrate.
+
+- **What was reconciled.** S31's receipt closed out `commit: pending`, legitimately: it shipped inside
+  the commit whose sha it names. That sha is **`020ba3f`**, derived by the method
+  `bin/check-handoff`'s own failure note prescribes — walk `git log --all --full-history` over
+  `HANDOFFS.md` (**85** commits, all refs) with the checker's `extract_blocks`/`parse_block`, take the
+  first commit whose `S31` block reads `status: complete`. The claim stub `74479df` holds the same
+  block at `status: pending` — distinct commits, S29's gotcha (3), now four receipts running.
+- **RED observed, not inherited.** A synthetic `S32` stub prepended to a **scratch copy** made the
+  checker emit *"receipt S31 (2026-08-02) names no commit sha in its `commit:` answer slot"*, exit 1.
+  The working tree never went red (`starter-kit/SAFEGUARDS.md:34`).
+- **Still a practice, not a procedure.** BL-14's DISTRIBUTED half — the seed promises a reconcile no
+  checklist assigns — is untouched and blocked on the paused channel.
+- **One front-matter number, falsified by this very entry, deleted rather than incremented.** The
+  BL-20 paragraph above said the bare `**Model:**` form "has held unbroken for nine entries since" —
+  a level, in a sentence that any new entry written above it invalidates. Prepending this entry made
+  it wrong within the same commit, so it was **deleted, not bumped** (sink 1 of
+  [`framework-context-cost-plan.md`](docs/planning/framework-context-cost-plan.md) §3.5): the list is
+  in view and the command two lines below counts it. No other front-matter figure moved.
 
 ### 2026-08-02 · [ad hoc] The action ledger split at a day seam, and the archive trigger restated as a rate
 
