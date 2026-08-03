@@ -1,7 +1,15 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17 and BL-18 are
-> open** (BL-14 raised 2026-08-02 (S28) and **partially closed the same session**: the fork-side
+> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18 and BL-19
+> are open** (**BL-19 raised 2026-08-02 (S30)** — the operator-assigned context-cost plan; it is an
+> index entry for [`framework-context-cost-plan.md`](framework-context-cost-plan.md), not a restatement
+> of it. **S30 also re-measured every open item above and found a wrong number in six of six**; the
+> corrections are recorded in the `CHANGELOG.md` entry *"The framework's context cost — adopter
+> heuristics and a remediation plan"* and the items themselves are deliberately NOT edited (FM #17).
+> Do not trust a number in this file without re-deriving it — in particular the live-voice "32
+> receipts" (it is 33), BL-18's "30 anchors" (28) and its "cannot be repaired without fabricating a
+> citation" (false), BL-12's "four sites" (five), and BL-16's `bin/check-handoff:301-303` (it is
+> `:487`, and was never `:301-303` at any tree that ever existed).) (BL-14 raised 2026-08-02 (S28) and **partially closed the same session**: the fork-side
 > detector and the 9-receipt repair shipped; its distributed half — the spec still promises a
 > reconcile no procedure assigns — is blocked on the channel. **BL-15 is CLOSED 2026-08-02 (S29):
 > raised correctly — its "13 of 32" is exact — and already discharged by BL-14's own repair, which
@@ -328,6 +336,25 @@ not.**
 (walk `git log --all --full-history` with the checker's own parser), never at the tree its `commit:`
 names — that field named the wrong tree for 2 of the 8 `changelog_ref` receipts, once because it
 leads with a Phase 1B *claim stub*.
+
+**BL-19 — The framework's context cost: adopter heuristics and the design deficiencies behind them.**
+*Raised 2026-08-02 (S30). Operator-assigned planning session; the plan shipped, nothing was
+implemented.* **The deliverable is [`framework-context-cost-plan.md`](framework-context-cost-plan.md)
+— read it rather than this entry, which is an index and deliberately carries no numbers.**
+*What it settles:* one of the three expenses is **declined as framed** (coordination residue is a
+maintainer cost with no adopter analogue; its true analogue is record growth); a resolution check and
+a numbered-set growth gauge are both declined with reasons; five heuristics are specified, two
+load-bearing.
+*Why it is not just a monitoring proposal:* `starter-kit/SESSION_RUNNER.md:280` already mandates the
+countermeasure in prose — *"grep nearby prose for set-size claims that may have drifted"* — and six
+of six backlog items still carried a wrong number. That is this corpus's controlled comparison of
+MECHANIZED versus DOCUMENTED, and it forecloses "add a sentence" before anyone proposes one.
+*Sequenced as ten single-deliverable sessions (S31–S40) in the plan's §5.* Six ship fork-side today;
+**S39 (ledger doctrine into two seeds) and S40 (extract the Learnings table) are DISTRIBUTED and
+blocked on the paused channel** — and an open channel is still not authorization. S32 (the Phase 1B
+carve-out in `.githooks/pre-commit`) is a hard precondition for S34/S35: adding a refusal to a hook
+with a measured 100% bypass at that point is worse than adding none.
+*Five open decisions belong to the operator, not to an agent* — plan §7.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

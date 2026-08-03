@@ -65,6 +65,92 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [ad hoc] The framework's context cost — adopter heuristics and a remediation plan
+
+**Model:** Claude Opus 5 (1M context).
+**A PLANNING session (S30): the plan is the deliverable and nothing was implemented**
+(`starter-kit/SESSION_RUNNER.md` §Planning Sessions). Operator-assigned, not a backlog item. Written
+to [`docs/planning/framework-context-cost-plan.md`](docs/planning/framework-context-cost-plan.md),
+which is fork-only — absent from `bin/_manifest.py`'s DISTRIBUTION, so no adopter file was touched
+and no channel was needed.
+
+- **The question it answers.** Whether a framework's accumulated learnings are actually resident in
+  an agent's context or are read-and-discarded. **Nothing is ever discarded.** `CLAUDE.md` is
+  resident every turn (8,519 B); everything else enters on Read and is carried until compaction
+  replaces it with a *lossy summary*, degrading line numbers and which-of-two-similar-counts first.
+  Prompt caching cuts the price of re-sending that prefix (~10%, measured at 91.7% of input in S14)
+  but not its occupancy — **so the budget signal that would warn you is the one caching suppresses.**
+- **The monitoring verdict — one of the three expenses is DECLINED as framed.** "Coordination
+  residue from outward-facing upstream actions" is a *maintainer* cost; an adopter has no PRs, tags
+  or releases, so a gauge for it would read zero forever and look like coverage. Its true adopter
+  analogue is **record growth**, and there the finding is a missing *doctrine*, not a missing gauge:
+  **zero of the 21 distributed `.md` files state any ledger size/archive/split policy**, while
+  `starter-kit/BOOTSTRAP.md:195`/`:360` and `starter-kit/CLAUDE_TEMPLATE.md:82` ship exactly that
+  policy for `CLAUDE.md`. Every adopter reproduces this repo's sawtooth from scratch. Expense 1 is
+  MONITORED but reframed from bytes-shipped to bytes-Phase-0-obliges-opening; expense 3 is monitored
+  only in its new-instance half — a resolution check and a numbered-set growth gauge are both
+  declined, with reasons.
+- **The decisive finding, and it forecloses "add a sentence" as a remedy.**
+  `starter-kit/SESSION_RUNNER.md:280` **already** instructs every session to "grep nearby prose for
+  set-size claims that may have drifted." That rule is distributed, sits in the 62,410 B file Phase 0
+  reads in full every session — and six of six open backlog items still carried a wrong number. It is
+  the closest thing this corpus can produce to a controlled comparison of MECHANIZED versus
+  DOCUMENTED, and Learning #12 already names the failure: a review-time grep is "a human step that
+  silently stops happening."
+- **The sawtooth, measured.** `HANDOFFS.md` was archived from **224,368 B** to **52,927 B**
+  (`7a71df0`, BL-9 L1) and stood at **164,611 B** one day later — SRF **0.651**, 65% of a whole
+  session's deliverable given back. `CHANGELOG.md` split from **186,704 B** to **53,512 B**
+  (`3aee4e3`) and is **92,950 B**, SRF **0.296**. **Every accumulation control the framework has is a
+  LEVEL control; nothing anywhere is a rate control.** The stated archive trigger is itself a wrong
+  derived value — `HANDOFFS.md` says "approaches ~1,200 lines" and the archive fired at **997**.
+- **The denominator matters more than the rate.** Measured in the framework's own unit — ledger
+  entries, not commits — `CHANGELOG.md` has **18.9 entries** of headroom to the 2,000-line agent
+  `Read` cap, not 36 commits. It crossed that cap once before at **2,090 lines** and was *silently
+  dropping its ten oldest entries*, found incidentally. This is the only one of the three expenses
+  that produces silently wrong answers rather than merely expensive ones.
+- **Three verified defects in the only executable adopters receive**, all byte-identical in the
+  distributed twin: `tools/methodology_dashboard.py:699` runs `git log --reverse --format=%ai -1`,
+  and git applies `-n1` *before* `--reverse`, so it returns the **newest** commit — measured
+  `2026-08-02` against a true root of `2026-03-09`, making `project_age_days ≈ 0` and one risk
+  permanently dead; `:2122` gates the large-file risk on `SOURCE_EXTS`, and `.md` is in `DOC_EXTS`,
+  so the file that actually breached the `Read` cap could never trip it at any size; `:88` excludes
+  `"methodology"`, so the instrument is blind to its own home.
+- **Corrections to the record, measured so the next session inherits them right** (the items
+  themselves are NOT edited — that is a separate deliverable, FM #17): the receipt corpus is **33**,
+  not the backlog's nine live-voice "32"s. **BL-18**'s "30 anchors, 20 in `key_files`, 1 in
+  `next_steps`" is **28** across 14 receipts (`key_files` 24, `active_task` 1, `gotchas` 1,
+  `next_steps` 1, `changelog_ref` **0** — S29's repair held), and its published breakdown was a
+  `CHANGELOG.md`-only slice that missed six bare `HANDOFFS.md:<N>` anchors and two whole keys.
+  **BL-18's stated blocker is false**: archive-S4's referent is recoverable with zero invention
+  (`git show 6591faa:CHANGELOG.md` line 35 → the `Opened upstream issue #55` heading, surviving in
+  the archive shard), and a prefixed replacement satisfies `KEY_FILES_RE` while producing no finding.
+  **BL-12**'s "four sites" is **five**. **BL-16**'s docstring is at `bin/check-handoff:487`, never at
+  the cited `:301-303` at any tree that ever existed. The Learnings table is **13** rows / 12,937 B.
+- **A fourth expense the brief did not name: gate erosion.** `.githooks/pre-commit` carves out five
+  *git* states and not one *methodology* state, so the Phase 1B claim commit the framework mandates —
+  which by construction has no action to log yet — is a gate violation. **25 of 25 claim commits
+  stage `HANDOFFS.md` alone and every one bypassed.** Artifact damage nil (reconcile-on-read
+  backfills); the damage is that `--no-verify` is trained reflex, and every future check on that hook
+  inherits the bypass silently.
+- **A third failure class, named here for the first time: *denominator-wrong*** — a number freshly
+  and honestly computed over the wrong population, invisible to any derived-value detector because
+  the digit is present, recent, and genuinely derived. **This session produced one:** it reported the
+  bypass population as "20 of 20" because it passed `-20` to `git log` and read a capped sample as a
+  population. Recorded rather than quietly fixed, because it is the strongest available evidence that
+  discipline-by-attention fails even for someone actively looking for it.
+- **Method.** Two workflows, 22 agents, ~2.29M subagent tokens: a 13-agent re-measurement of every
+  open backlog item (measure → adversarially refute) at Phase 0, then a 9-agent design panel (four
+  forced-different stances → three judging lenses → synthesis → completeness critic). Every
+  load-bearing number in the plan was **re-derived by the session lead** rather than relayed; doing so
+  corrected the panel twice (it restated a wrong denominator — "22 distributed `.md` files" for 21
+  `.md` + 1 `.py` — inside the document arguing never to restate) and corrected the session lead
+  twice (the Learnings table row count, and the bypass population above).
+- **The plan dogfoods its own rule.** Its thesis is that derived values must not be stored as
+  hand-written prose, so every derived number in it carries the command that computes it — the
+  **CITE** sink, added as a fourth sink precisely because a measurement report can neither delete,
+  generate, nor freeze its own findings. All embedded commands were executed and reproduce their
+  stated values.
+
 ### 2026-08-02 · [ad hoc] Reconcile-on-read: S29's `commit:` field → `4669fb6` — and the first time the tripwire was *observed* firing
 
 **Model:** Claude Opus 5 (1M context).
