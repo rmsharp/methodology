@@ -82,7 +82,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.10.2"
+DASHBOARD_VERSION = "2.10.3"
 
 ROOT = Path(__file__).parent
 EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
@@ -175,7 +175,7 @@ METHODOLOGY_MAX = sum(weight for _, weight, _ in METHODOLOGY_ITEMS)
 FRAMEWORK_ITEMS = [
     ("ITERATIVE_METHODOLOGY.md", 15, "file"),      # the theory layer the runner cross-references
     ("starter-kit/SAFEGUARDS.md", 15, "file"),     # the enforcement half of the runner
-    ("workstreams", 15, "dir"),                    # 9 of the 22 distributed sources live here
+    ("workstreams", 15, "dir"),                    # 9 of the 23 distributed sources live here
     ("bin/sync", 15, "file"),                      # what separates HAVING a methodology from PUBLISHING one
     ("bin/tests.sh", 10, "file"),                  # the framework's build equivalent
     ("CHANGELOG.md", 10, "file"),                  # its OWN action ledger (FM #27)
@@ -344,13 +344,13 @@ _VERSION_RE = re.compile(r'''^DASHBOARD_VERSION\s*=\s*["']([^"']+)["']''', re.MU
 FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py",)
 
 # The markdown half of the same problem, and the mirror of the defect above. `bin/sync` also
-# installs 21 markdown files (~6,353 LOC), which on its own satisfies detect_doc_only's corpus
+# installs 22 markdown files, which on its own satisfies detect_doc_only's corpus
 # disjunction (>= 3 doc files). Excluding only the scanner therefore FLIPPED the defect rather
 # than fixing it: a 148-LOC utility repo that correctly read `code` before sync read `doc-only`
 # after it, and lost a TRUE "No test infrastructure" risk. The old source cap had been masking
 # that; removing the cap's grip on synced repos exposes it.
 #
-# ALL 21 markdown dests are listed, TRACKED *and* SEED. Listing only the 17 TRACKED ones was
+# ALL 22 markdown dests are listed, TRACKED *and* SEED. Listing only the 18 TRACKED ones was
 # tried first, on the reasoning that a SEED is adopter-owned from creation (bin/_manifest.py) —
 # and MEASURED AGAINST A REAL `bin/sync` RUN it does not close the hole: the four seeds
 # (SESSION_NOTES/CHANGELOG/HANDOFFS/ROADMAP) plus the adopter's own README are 5 doc files, which
@@ -394,11 +394,12 @@ FRAMEWORK_DISTINCTIVE_DOCS = (
     "docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md",
 )
 
-# The six TRACKED root dests. `bin/sync` installs every one of them, so a real install always
-# carries all six — but any single one can also be a coincidence, so they are discounted only
+# The seven TRACKED root dests. `bin/sync` installs every one of them, so a real install always
+# carries all seven — but any single one can also be a coincidence, so they are discounted only
 # behind the same evidence gate as the seeds (see _framework_docs_are_evidenced).
 FRAMEWORK_AMBIGUOUS_DOCS = (
     "SESSION_RUNNER.md",
+    "FRAMEWORK_LEARNINGS.md",
     "SAFEGUARDS.md",
     "RECOMMENDED_SKILLS.md",
     "CONTEXT_TEMPLATE.md",
@@ -407,11 +408,11 @@ FRAMEWORK_AMBIGUOUS_DOCS = (
 )
 
 # The full markdown dest set, kept as the union so the canonical drift test against
-# bin/_manifest.py keeps checking all 21 names rather than silently narrowing to a subset.
+# bin/_manifest.py keeps checking all 22 names rather than silently narrowing to a subset.
 FRAMEWORK_INSTALLED_DOCS = FRAMEWORK_DISTINCTIVE_DOCS + FRAMEWORK_AMBIGUOUS_DOCS
 
-# How many of the six ambiguous root names must co-occur to stand in for a docs/methodology/ path.
-# `bin/sync` writes all six, and README.md's manual Option B copies them as a set, so a genuine
+# How many of the seven ambiguous root names must co-occur to stand in for a docs/methodology/ path.
+# `bin/sync` writes all seven, and README.md's manual Option B copies them as a set, so a genuine
 # install clears this easily. A doc repo that happens to own three of these EXACT names is not a
 # coincidence worth protecting. One or two is (BOOTSTRAP.md alone; BOOTSTRAP.md + SAFEGUARDS.md).
 FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN = 3
@@ -829,7 +830,7 @@ def collect_file_metrics(path):
 
     # A root BOOTSTRAP.md — or a CHANGELOG.md — is ours only in a repo that also carries proof the
     # framework was installed: a docs/methodology/ path (nothing lands there by accident), or the
-    # six TRACKED root names co-occurring past FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN. Neither the
+    # seven TRACKED root names co-occurring past FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN. Neither the
     # ambiguous names nor the seeds are evidence FOR themselves, which is the Layer 8 correction:
     # letting them self-evidence is what discounted a non-adopter's own documentation.
     if saw_distinctive_framework_doc or len(ambiguous_names) >= FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN:
@@ -1920,7 +1921,7 @@ def detect_doc_only(path, files, render):
     # 4. Corpus disjunction (only when source is negligible): a real doc corpus OR a render
     #    toolchain — the latter catches a pure-LaTeX/Quarto repo whose .tex/.qmd are not counted
     #    as docs (so its doc_loc is ~0), the exact source_loc≈0 research repo that must not be missed.
-    #    Framework-installed markdown is discounted here and ONLY here: bin/sync ships 21 doc
+    #    Framework-installed markdown is discounted here and ONLY here: bin/sync ships 22 doc
     #    files, which clears DOC_ONLY_DOC_FILES_MIN by itself, so counting them would let the
     #    installer answer the question "is this a document project?" — the mirror of the very
     #    defect the source exclusion above fixes. `.get` keeps older synthetic `files` dicts

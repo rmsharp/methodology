@@ -114,6 +114,46 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] S34 — the Learnings table extracted to `starter-kit/FRAMEWORK_LEARNINGS.md`; the mandatory read-set floor down 16.6%
+
+**Model:** Claude Opus 5 (1M context).
+Plan §5 item **S34**, the first of the twelve-session queue and the only one that reduces G1's floor.
+
+- **The move.** The 13-row Learnings table leaves `starter-kit/SESSION_RUNNER.md` for a new
+  distributed sibling, `starter-kit/FRAMEWORK_LEARNINGS.md` → adopter root `FRAMEWORK_LEARNINGS.md`,
+  `TRACKED`. **Runner 62,410 → 49,465 B; floor 77,796 → 64,851 B (−12,945, −16.6%)**; the sibling is
+  13,894 B, read on demand. Rows moved **verbatim, proven not asserted** — sha256
+  `4e65b92e…` identical before and after, by an extractor that dry-ran first and refused to write
+  until six structural checks passed.
+- **The precedent inverts, and that was the whole difficulty.** `7603f10` kept `CLAUDE.md`'s
+  `## Versioning` heading because citations targeted its anchor, and turned on `CLAUDE.md` being
+  **absent** from `bin/_manifest.py`. Neither holds here: **zero** citations target the Learnings
+  anchor (proven non-vacuous — 53 anchor links target nine *other* runner headings), and the runner
+  **is** distributed, so the sibling had to be distributed too.
+- **A designed tripwire, driven RED first.** Adding an adopter-root dest fails four unit tests,
+  including Learning #12's manifest-vs-checklist guard. All four were watched failing before anything
+  was patched. Resolved with a `CHECKLIST_EXEMPT` entry, **not** a `METHODOLOGY_ITEMS` row:
+  `METHODOLOGY_MAX` is a derived denominator, so scoring it would have moved every already-compliant
+  adopter's percentage for a change they did not make. **The guard is conditional on placement** —
+  it filters `if "/" not in dest`, so a `docs/methodology/` home would have escaped it entirely.
+- **A unit error, corrected.** The `~12,937 B` this plan carried for the table is `wc -m` — the
+  **character** count of runner lines 366–380. The **byte** count of that identical slice is
+  **13,004**. Verified two ways; the figure had been adjudicated "correct" by a prior review.
+- **Corpus repair, ~25 sites**, everything the move falsified: Phase 3C's two routing bullets,
+  `HOW_TO_USE.md`, `ITERATIVE_METHODOLOGY.md`, `AUDIT_WORKSTREAM.md`, `CLAUDE_TEMPLATE.md`, five
+  parallel root-file enumerations, both `README.md` inventories, `CLAUDE.md`'s table, two tutorials
+  (including a worked `bin/status` transcript verified against a real sync), both byte-identical
+  dashboard twins, and several live planning-doc line anchors. `DASHBOARD_VERSION` **2.10.2 → 2.10.3**
+  — the ambiguous root-name set grew 6 → 7, which is a behavior change.
+- **No Learnings row appended, for a reason with an author.** `#14` is reserved by
+  `docs/operator-gated-review-plan`'s decision D3, recorded in two receipts. Noted: **that branch does
+  not exist in this clone** and `#14` is unused corpus-wide, so the reservation's holder is
+  unreachable from the fork. Respected rather than overridden — the reservation is attributable.
+- **`bin/tests.sh` is 175/1 and stays that way until upstream merges.** Test 9 dry-runs
+  `--source=github` against the pinned upstream repo, so a manifest entry for a file that does not
+  exist there yet 404s. Placement-independent and unfixable on this side. No adopter is affected —
+  `bin/` is not distributed. **Nothing outward-facing was done; the PR needs the operator's go-ahead.**
+
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S33's `commit:` field → `d69f7a9` — sixth discharge, and the practice restored to its right place
 
 **Model:** Claude Opus 5 (1M context).

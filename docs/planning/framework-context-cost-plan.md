@@ -102,8 +102,8 @@ zero for every adopter forever — worse than no gauge, because it looks like co
 The adopter's real second expense is **record growth**, and the finding there is not a missing gauge
 but a **missing doctrine**:
 
-- Zero of the **21** distributed `.md` files state any ledger size, archive, split, or truncation
-  policy. (DISTRIBUTION is 21 `.md` + 1 `.py`.) The keyword hits are an example app's CRUD
+- Zero of the **22** distributed `.md` files state any ledger size, archive, split, or truncation
+  policy. (DISTRIBUTION is 22 `.md` + 1 `.py` as of S34; it was 21 + 1 when this was measured.) The keyword hits are an example app's CRUD
   `archive/unarchive` endpoints, a 2,000-line monolith refactoring scenario at `HOW_TO_USE.md:385`,
   an anti-pattern *staleness* rule at `HOW_TO_USE.md:944`, and a UI truncation question at
   `DESIGN_WORKSTREAM.md:57`.
@@ -370,7 +370,7 @@ three of four independent candidate designs restated a wrong figure for it.
 
 **D2 — No ledger doctrine exists in any distributed file, though the framework ships exactly that
 doctrine for a different file.**
-*Explains the entire sawtooth, and makes every expense-2 gauge normless.* Zero of 21 distributed
+*Explains the entire sawtooth, and makes every expense-2 gauge normless.* Zero of 22 distributed
 `.md` files state a ledger size/archive/split policy; `BOOTSTRAP.md:195`/`:360` and
 `CLAUDE_TEMPLATE.md:82` state precisely that policy for `CLAUDE.md`. The archive practice is
 fork-side folklore recorded only in this repo's own live prose. It was invented under operational
@@ -454,7 +454,7 @@ as first written it did not deliver two of them:
 
 | | Goal | Status when re-queued |
 |---|---|---|
-| **G1** | Model context is not overly taxed by the framework | **Measured, barely reduced.** The floor an adopter reads every session is **77,796 B** (`starter-kit/SESSION_RUNNER.md` 62,410 + `starter-kit/SAFEGUARDS.md` 15,386). Exactly one item reduces it, and it was the item marked BLOCKED |
+| **G1** | Model context is not overly taxed by the framework | **Measured, and S34 has now reduced it.** The floor an adopter reads every session was **77,796 B** (`starter-kit/SESSION_RUNNER.md` 62,410 + `starter-kit/SAFEGUARDS.md` 15,386); after S34 it is **64,851 B** (49,465 + 15,386). Exactly one item reduced it, and it was the item marked BLOCKED |
 | **G2** | **Automated** trimming of files that both grow and must be read | **Not delivered — the real gap.** Six tools in `bin/`; none trims anything. Manual trimming demonstrably does not hold: `HANDOFFS.md` was archived to **52,927 B** on 2026-08-01 and was **199,801 B** two days later; `docs/planning/BACKLOG.md` (44,487 B) has never been trimmed and has no rule at all |
 | **G3** | Instructions for users where automated maintenance is not possible | **Deferred** on the fabricated pause |
 
@@ -468,7 +468,7 @@ goal, with real dependencies named. **"Needs go-ahead" marks an outward-facing s
 
 | # | Deliverable | Serves | Depends on | Outward? |
 |---|---|---|---|---|
-| **S34** | **Extract the Learnings table** from `starter-kit/SESSION_RUNNER.md` to a read-on-demand sibling, mirroring the `CLAUDE.md` → `docs/RELEASE_HISTORY.md` precedent. *The single largest floor reduction available (~12,937 B ≈ 17%), and independent of everything else here* | **G1** | — | PR, needs go-ahead |
+| **S34** | **Extract the Learnings table** from `starter-kit/SESSION_RUNNER.md` to a read-on-demand sibling, mirroring the `CLAUDE.md` → `docs/RELEASE_HISTORY.md` precedent. *The single largest floor reduction available, and independent of everything else here* | **G1** | — | **SHIPPED (fork) 2026-08-03** → `starter-kit/FRAMEWORK_LEARNINGS.md`; runner **62,410 → 49,465 B**, floor **77,796 → 64,851 B** (**−12,945, −16.6%**), sibling 13,894 B read on demand. `wc -c starter-kit/SESSION_RUNNER.md starter-kit/SAFEGUARDS.md` at the close-out commit. PR still needs go-ahead |
 | **S35** | **Design the trimmer.** What is trimmed, the trigger, how losslessness is proven mechanically (the manual procedure already proves it byte-for-byte, so it is mechanizable), where it lives, and the search path that lets the dashboard detect it. Design only — no code | **G2** | — | no |
 | **S36** | **Fix the three dashboard defects (D4).** Independently valuable and a precondition for trusting any dashboard row: (a) root-date query returns the newest commit, not the oldest; (b) a 2,090-line `.md` cannot trip the large-file risk; (c) the `methodology` self-exclusion | **G2** | — | fork now; PR later |
 | **S37** | **Build the trimmer, canonical-only**, and prove it against this repo's own files — the worst case available. Dry-run by default; refuses to write unless the reconstruction is byte-identical | **G2** | S35 | no (canonical-only) |
@@ -563,8 +563,15 @@ keeps its original question text unedited; the ratified answer is appended benea
    each figure, or the checker flags it. That burden is the countermeasure, not a side effect of it.
    This is the decision S34/S35 were waiting on.
 4. **Is S40 (extracting the Learnings table) worth it at all?** It is the single largest FLOOR
-   reduction available (~12,937 B) and the most invasive change to a file that must stay
+   reduction available and the most invasive change to a file that must stay
    byte-identical for `bin/sync`.
+   *(The **~12,937 B** this question and the S34 row both carried was a **unit error**, corrected by
+   S34 on 2026-08-03: `12,937` is `wc -m` — the CHARACTER count of `SESSION_RUNNER.md` lines
+   366–380. The BYTE count of that identical slice is **13,004**. Re-derive, stating the span:
+   `git show 816984b:starter-kit/SESSION_RUNNER.md | sed -n '366,380p' | wc -c` — it must read the
+   PRE-EXTRACTION blob, since S34 deleted that span from the working tree. The same figure
+   also stands, uncorrected and correctly so, in S33's frozen receipt at `HANDOFFS.md` — dated
+   records are corrected forward, never rewritten.)*
    **SUPERSEDED 2026-08-03 — QUEUED AS S34, FIRST IN THE QUEUE.** Two answers were given to this and
    both were wrong. The first, *"worth doing, but not soon,"* named no trigger, so it could be neither
    scheduled, refused, nor audited. The second restated it as gated on "the channel reopening" — a

@@ -134,6 +134,15 @@ needed three prose fixes. Both are free of any quality tradeoff.
 **"Decline and keep single-tier" is a correct outcome** and matches the documented default; the only
 cost is the saving above.
 
+> **S34 regression note (2026-08-03), recorded not fixed.** The parked `bin/check-citations`
+> (branch `docs/bl-10-dangling-learning-citations`, tag `archive/bl-10-citations` → `268f1e5`) is
+> hard-anchored on `REGISTRY_FILE = "starter-kit/SESSION_RUNNER.md"` (`:34`) and
+> `REGISTRY_HEADING = "## Learnings (added by sessions)"` (`:35`). It exits 0 against `816984b` and
+> aborts `GUARD FAIL — the Learnings table parsed to zero rows` (exit 2) against the post-S34 tree,
+> because the table now lives in `starter-kit/FRAMEWORK_LEARNINGS.md` under `# Framework Learnings`.
+> **Whoever revives it — S43 absorbs it into `bin/check-derived` — must retarget both constants.**
+> The guard failing loudly rather than silently passing is the tool behaving correctly.
+
 **BL-11 — Unreachable non-`Learning` referents across the distributed corpus.**
 *Raised 2026-08-01 at BL-10's close-out; deliberately not bundled into it (FM #17/#18).*
 **Re-verified line-by-line at the S26 resync against `e02538b`: every site below still stands.**
@@ -142,9 +151,10 @@ is untouched by it — the row numbers below are the post-resync ones.
 BL-10 closed the `Learning #N` case (upstream `15ccb38`; the fork's parked `bin/check-citations`
 would have mechanized it). The same class survives in referents that no such checker can model,
 because they are prose provenance rather than a relation between two enumerable sets:
-- `starter-kit/SESSION_RUNNER.md` Learnings **Source** column, four rows — #8 (`:375`, `escape #8` /
-  `S7`), #9 (`:376`, the deictic "this session"), #11 (`:378`, `HANDOFFS.md` session `S1`, `BL-7`),
-  #12 (`:379`, `S9–S16`, `Layer 1`/`Layer 7`). All fork-only vocabulary with no referent in
+- `starter-kit/FRAMEWORK_LEARNINGS.md` Learnings **Source** column, four rows — #8 (`:25`, `escape #8` /
+  `S7`), #9 (`:26`, the deictic "this session"), #11 (`:28`, `HANDOFFS.md` session `S1`, `BL-7`),
+  #12 (`:29`, `S9–S16`, `Layer 1`/`Layer 7`). *(Line anchors re-derived by S34 on 2026-08-03, when
+  the table moved out of `starter-kit/SESSION_RUNNER.md`, where they read `:375`/`:376`/`:378`/`:379`.)* All fork-only vocabulary with no referent in
   `upstream/main`. **Note the S7 collision this backlog itself can now cause:** upstream has since
   run its own S7 and S8, so "S7" in that Source column resolves to *neither* session unambiguously —
   the token got worse without anyone editing it.
@@ -249,7 +259,7 @@ stood **25 days**.
 *The base rate corrects the folk history:* the successor-reconcile has fired **6 times, only 4 of
 them deliberately**, all inside one 8-hour window on 2026-07-25 — one operator, by hand. (`7817989`
 is not a seventh: it is S3 completing its **own** receipt 2m26s later.) It was never a procedure.
-*This is [Learning #9](../../starter-kit/SESSION_RUNNER.md)'s own remedy — gate-on-write AND
+*This is [Learning #9](../../starter-kit/FRAMEWORK_LEARNINGS.md)'s own remedy — gate-on-write AND
 reconcile-on-read, neither dependable alone — unapplied to the one sentinel-bearing key that needed
 both.* Two archived receipts had already **docked their successors points** for exactly this
 (`docs/archive/HANDOFFS-archive.md:569`, `:632`) without anyone fixing it.
@@ -265,8 +275,12 @@ them is the deliverable*, not the edit: **(A) schedule it** — add the `commit:
 reconciles it" from `starter-kit/HANDOFFS.md:64`/`:78-79` and let the state predicate stand alone.
 The shipped detector is **agnostic between them** and correct under either, which is why it could
 ship first. Seven distributed sites currently scope "reconcile" to `status: pending` only:
-`starter-kit/SESSION_RUNNER.md:18`, `:44`, `:343`, `:376`; `ITERATIVE_METHODOLOGY.md:148`;
-`starter-kit/SAFEGUARDS.md:179`; `starter-kit/BOOTSTRAP.md:322`. Per **Learning #8**, a fix must
+`starter-kit/SESSION_RUNNER.md:18`, `:44`, `:343`; `starter-kit/FRAMEWORK_LEARNINGS.md:26`;
+`ITERATIVE_METHODOLOGY.md:148`; `starter-kit/SAFEGUARDS.md:179`; `starter-kit/BOOTSTRAP.md:324`.
+*(Re-derived by S34 on 2026-08-03 — `git grep -n 'status: pending' -- <the DISTRIBUTION sources>`.
+The seventh site was `SESSION_RUNNER.md:376`, which is now Learning #9 in the extracted
+`FRAMEWORK_LEARNINGS.md`; `BOOTSTRAP.md` shifted `:322`→`:324`. The count stays **seven** only
+because `FRAMEWORK_LEARNINGS.md` is itself distributed.)* Per **Learning #8**, a fix must
 reach every checklist that restates close-out, not just the canonical phase text.
 **Upstream note, disclosed not absorbed.** `bin/check-handoff` is canonical-only but **not
 fork-only**; it now diverges from `upstream/main` by S27's stub schema *and* this. Upstream

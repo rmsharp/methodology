@@ -35,6 +35,7 @@ SEED = "seed"
 DISTRIBUTION = [
     # starter-kit root-files -> adopter project root
     ("starter-kit/SESSION_RUNNER.md", "SESSION_RUNNER.md", TRACKED),
+    ("starter-kit/FRAMEWORK_LEARNINGS.md", "FRAMEWORK_LEARNINGS.md", TRACKED),
     ("starter-kit/SAFEGUARDS.md", "SAFEGUARDS.md", TRACKED),
     ("starter-kit/RECOMMENDED_SKILLS.md", "RECOMMENDED_SKILLS.md", TRACKED),
     ("starter-kit/CONTEXT_TEMPLATE.md", "CONTEXT_TEMPLATE.md", TRACKED),

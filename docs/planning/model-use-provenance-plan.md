@@ -304,7 +304,7 @@ mismatch as its cited justification for never treating trailers as authoritative
 predictions decay") has merged — the Learnings table currently ends at #12 on this branch and #13 exists
 only on that unmerged PR (§2); starting Phase 3 first risks two sessions both claiming "#13." Once #63
 is merged, append a new row (the next available number after #13) to
-`starter-kit/SESSION_RUNNER.md`'s Learnings table (canonical, `TRACKED`) capturing the finding from §2:
+`starter-kit/FRAMEWORK_LEARNINGS.md`'s Learnings table (canonical, `TRACKED`; extracted from `SESSION_RUNNER.md` by S34) capturing the finding from §2:
 git commit trailers can directly contradict correct self-reported capability-tier attribution, using
 S1's own case as the cited evidence (receipt says Sonnet built P2/P4; all six checkpoint commits,
 including those two, are trailer-tagged Opus). Separately (fork-only, informational): run

@@ -289,6 +289,11 @@ RAW_MAX = sum(w for _, w, _ in md.METHODOLOGY_ITEMS)
 CHECKLIST_EXEMPT = {
     "RECOMMENDED_SKILLS.md": "index of optional skill recommendations; using them is elective, "
                              "so its presence says nothing about methodology adoption",
+    "FRAMEWORK_LEARNINGS.md": "canonical framework learnings, synced read-only; an adopter never "
+                              "writes it and receives it automatically with SESSION_RUNNER.md, so "
+                              "its presence measures sync, not adoption. Scoring it would also "
+                              "re-cut METHODOLOGY_MAX and move every already-compliant adopter's "
+                              "percentage for a change they did not make",
     "CONTEXT_TEMPLATE.md": "template; the operating artifact is the adopter's CONTEXT.md instance",
     "CLAUDE_TEMPLATE.md": "template; the operating artifact is the adopter's CLAUDE.md instance",
     "BOOTSTRAP.md": "one-time setup guide, not a per-session operating artifact",
@@ -2025,10 +2030,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.10.2")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.10.3")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.10\.2"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.10.2")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.10\.3"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.10.3")
 
 
 class TestEndToEnd(unittest.TestCase):
@@ -2406,7 +2411,7 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
             self.assertTrue(dest.startswith("docs/methodology/"),
                             f"{dest} is a root-level name and cannot be self-evidencing — a "
                             f"non-adopter can own that filename by coincidence")
-        # bin/sync installs all six ambiguous names, so a genuine install always clears the
+        # bin/sync installs all seven ambiguous names, so a genuine install always clears the
         # threshold. If this ever inverts, real installs silently stop being discounted.
         self.assertGreaterEqual(len(md.FRAMEWORK_AMBIGUOUS_DOCS),
                                 md.FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN,
@@ -2449,7 +2454,10 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         for dest in self.installed_markdown():
             tree[dest] = "# framework doc\n" + "prose\n" * 60
         m = md.collect_all(self._repo(tree))
-        self.assertGreaterEqual(m["files"]["framework_docs"]["count"], 21)
+        # Derived from the manifest, never a literal: a hardcoded floor silently stops asserting
+        # the whole set the moment DISTRIBUTION grows (it read 21 while the set was already 22).
+        self.assertGreaterEqual(m["files"]["framework_docs"]["count"],
+                                len(self.installed_markdown()))
         self.assertFalse(m["doc_only"]["is_doc_only"])
         self.assertIn("No test infrastructure",
                       [r["description"] for r in m["scores"]["risks"]])
@@ -2503,6 +2511,7 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
 
     def test_ambiguous_names_are_discounted_once_enough_co_occur(self):
         """The other side of the gate, so the fix cannot silently stop discounting real installs.
+        Seven ambiguous root names as of S34 (FRAMEWORK_LEARNINGS.md joined the set).
         README.md's manual Option B copies the root files as a SET, and `bin/sync` writes all six,
         so a genuine install clears FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN without any
         docs/methodology/ path present. Built from the manifest, not from the scanner constant.

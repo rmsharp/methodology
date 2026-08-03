@@ -58,6 +58,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 | File | Purpose |
 |------|---------|
 | `starter-kit/SESSION_RUNNER.md` | Operational checklist — users copy this to their project root |
+| `starter-kit/FRAMEWORK_LEARNINGS.md` | The framework's own accumulated learnings — the runner's read-on-demand sibling, synced read-only (adopters never edit it; they record project learnings in their `CLAUDE.md`) |
 | `starter-kit/SAFEGUARDS.md` | Commit discipline, blast radius limits, mode-switching rules |
 | `starter-kit/SESSION_NOTES.md` | Empty template for session continuity between sessions |
 | `starter-kit/BOOTSTRAP.md` | Step-by-step setup guide for new projects |

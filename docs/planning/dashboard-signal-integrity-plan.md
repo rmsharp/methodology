@@ -467,7 +467,7 @@ resolves 3 filed issues + 5 unfiled defects, and every synced adopter copy begin
 
 ## 8. Method learnings from the planning session (S9)
 
-Recorded here so they are durable and greppable. **A `SESSION_RUNNER.md` Learnings-table row is owed at
+Recorded here so they are durable and greppable. **A `FRAMEWORK_LEARNINGS.md` Learnings-table row is owed at
 Layer 6**, once the campaign has actually shipped — editing that distributed file was out of scope for a
 session whose ratified deliverable is this plan.
 
