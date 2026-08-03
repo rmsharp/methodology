@@ -114,6 +114,60 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] S35 — the trimmer designed, and the manual procedure's proof found insufficient
+
+**Model:** Claude Opus 5 (1M context).
+Plan §5 item **S35**, operator-assigned. Deliverable:
+[`docs/planning/ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md) — design only, no
+code (S37 builds it). 1,097 lines, 24 runnable command blocks; every figure carries its command
+(operator decision 3) and is pinned to `2fc2c5b` so this close-out cannot rot it.
+
+- **The brief's own premise needed correcting, and that changed the design.** It says *"the manual
+  procedure already proves it byte-for-byte, so it is mechanizable."* True and **not sufficient**:
+  event 3 (`020ba3f`) published a correct whole-file md5 reconstruction **and lost a paragraph in the
+  same commit** — moving content into the shard is exactly byte-preserving under concatenation, so
+  the proof was structurally blind to it. The design answers with **three** assertions (concatenation
+  over the records zone, zone pinning, record partition), not one.
+- **A live defect, found and recorded not fixed (FM #17):** `CHANGELOG.md` has been missing its
+  pre-v3.0 scope footer since `020ba3f`. Event 2 explicitly retained it (*"does not migrate"*); event
+  3 let it migrate. Reproduce:
+  `for s in 3aee4e3 020ba3f HEAD; do git show $s:CHANGELOG.md | grep -c 'Release history before v3.0'; done` → `1 0 0`.
+  In a newest-on-top file the footer sits at the bottom — exactly where an oldest-first cut takes
+  from — so it migrates *by position* unless something pins it.
+- **A CONFIRMED correctness bug, reproduced end-to-end in a scratch repo:** a trim commit rewrites
+  `CHANGELOG.md`, which **advances the Phase 0 reconcile frontier past any unrecorded commit and
+  hides it permanently** (undocumented set 1 → 0). It also blinds the `HANDOFFS.md` reconcile and the
+  dashboard's Signals B and C. Countered by **P1** (refuse when the undocumented set is non-empty) and
+  **P1a** (the trimmer writes its own ledger entry — the FM #27 hook checks co-staging, never that an
+  entry was added). The reproduction script is published in §8.1 and was run verbatim.
+- **The existing trigger is blind to the file that most needs it.** It is line-denominated against the
+  2,000-line `Read` cap; the two ledgers differ 3× in density (253 vs 82 B/line). `HANDOFFS.md` reads
+  **24 receipts of line-headroom — it does not fire** — while sitting at **227,538 B**, larger than
+  the 224,368 B file whose size justified its last archive two days earlier. **SRF = 1.0185, past the
+  plan's own RED.** The design adds a byte metric as a **level with hysteresis** (fire above budget,
+  cut to ≤ ½ budget), default budget 64 KB calibrated to the three post-archive sizes this repo
+  actually operated at.
+- **It refuses to industrialise the sawtooth.** Plan §3.3 says SRF RED means *"do not archive again;
+  the next deliverable is a rate cut, not another reset."* The trimmer therefore **refuses to
+  auto-fire at SRF ≥ 1.00** without `--force`, and abstains out loud where SRF is undefined (every
+  adopter on day one). The rate problem is named and handed forward, not absorbed.
+- **`docs/planning/BACKLOG.md` is ruled OUT of scope, permanently, with evidence** — zero `###`
+  headings, no uniform delimiter, BL-16 has no heading at all, and 69.2% of it is live state. Only
+  16.2% is archivable, and the framework's own doctrine sends that to `CHANGELOG.md`, not a shard.
+- **Nine defects recorded not fixed** (D1–D9), including two more recurrences of the unit-wrong class
+  (`020ba3f`'s "101,608 B" is `wc -m`; the byte count is 102,407) and a published payload md5 that is
+  **not reproducible** from the committed artifacts.
+- **An adversarial review found four BLOCKING errors in my own first draft**, each independently
+  reproduced before it was fixed: L1 as written was **unsatisfiable** (the unscoped whole-file form
+  fails on the real event at char 44 / char 3,389); the `](` transform key would have **corrupted 14
+  absolute URLs** against 1 genuine candidate; the 15/30 thresholds are **unreachable on the byte
+  metric at every budget**, even trimming to one record; and a shard-path collision is **invisible to
+  all three assertions**, so it is now excluded by construction rather than detected.
+
+Also recorded: **operator decision — the trimmer SHIPS to adopters** (plan §7 item 6, §5's S39,
+decided ahead of its slot), the new **S39′** queue row for executing it, and the plan's §7-vs-§5
+S-number collision noted rather than silently renumbered.
+
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S34's `commit:` field → `ed22ace` — seventh discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).

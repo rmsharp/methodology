@@ -469,12 +469,13 @@ goal, with real dependencies named. **"Needs go-ahead" marks an outward-facing s
 | # | Deliverable | Serves | Depends on | Outward? |
 |---|---|---|---|---|
 | **S34** | **Extract the Learnings table** from `starter-kit/SESSION_RUNNER.md` to a read-on-demand sibling, mirroring the `CLAUDE.md` → `docs/RELEASE_HISTORY.md` precedent. *The single largest floor reduction available, and independent of everything else here* | **G1** | — | **SHIPPED (fork) 2026-08-03** → `starter-kit/FRAMEWORK_LEARNINGS.md`; runner **62,410 → 49,465 B**, floor **77,796 → 64,851 B** (**−12,945, −16.6%**), sibling 13,894 B read on demand. `wc -c starter-kit/SESSION_RUNNER.md starter-kit/SAFEGUARDS.md` at the close-out commit. PR still needs go-ahead |
-| **S35** | **Design the trimmer.** What is trimmed, the trigger, how losslessness is proven mechanically (the manual procedure already proves it byte-for-byte, so it is mechanizable), where it lives, and the search path that lets the dashboard detect it. Design only — no code | **G2** | — | no |
+| **S35** | **Design the trimmer.** What is trimmed, the trigger, how losslessness is proven mechanically (the manual procedure already proves it byte-for-byte, so it is mechanizable), where it lives, and the search path that lets the dashboard detect it. Design only — no code | **G2** | — | **SHIPPED (fork) 2026-08-03** → [`ledger-trimmer-design.md`](ledger-trimmer-design.md). Two premises in this row needed correction and both changed the design: the manual procedure's byte-for-byte proof is real but **not sufficient** (it passed while a paragraph was lost), and the ratified architecture's "one line in `bin/_manifest.py`" is measured at **21 files** for a simpler precedent. Also **confirms a correctness bug**: a trim commit advances the Phase 0 reconcile frontier and permanently hides an unrecorded action |
 | **S36** | **Fix the three dashboard defects (D4).** Independently valuable and a precondition for trusting any dashboard row: (a) root-date query returns the newest commit, not the oldest; (b) a 2,090-line `.md` cannot trip the large-file risk; (c) the `methodology` self-exclusion | **G2** | — | fork now; PR later |
 | **S37** | **Build the trimmer, canonical-only**, and prove it against this repo's own files — the worst case available. Dry-run by default; refuses to write unless the reconstruction is byte-identical | **G2** | S35 | no (canonical-only) |
 | **S38** | **Dashboard row per grow-and-must-be-read file** — headroom and whether the trigger has fired. Read-only. Names the trimmer **only when it is present**, with **two tests**: the named command is one the trimmer really accepts, and a no-trimmer fixture still points at the documented manual procedure | **G2** | S36, S37 | PR, needs go-ahead |
-| **S39** | **Decide whether the trimmer ships to adopters**, on S37's evidence. Adopters receive exactly one executable today, so this is "extend the manifest" vs "stay canonical-only" — and it must be decided *before* S40, because "run this" and "here is the manual procedure" are different documents | **G2/G3** | S37 | operator decision |
-| **S40** | **The ledger doctrine** into `starter-kit/HANDOFFS.md` and `starter-kit/CHANGELOG.md`: a stated size norm, the archive trigger as a *rate*, and the one-line-pointer shard convention — the instructions for the cases automation cannot reach | **G3** | S39 (wording) | PR, needs go-ahead |
+| **S39** | **Decide whether the trimmer ships to adopters**, on S37's evidence. Adopters receive exactly one executable today, so this is "extend the manifest" vs "stay canonical-only" — and it must be decided *before* S40, because "run this" and "here is the manual procedure" are different documents | **G2/G3** | S37 | **DECIDED 2026-08-03 by the operator: IT SHIPS.** Taken *ahead of its slot* — this row sequenced it on S37's evidence; the operator decided earlier, which is his to make. Recorded at S35, which folded it in as a binding design input (`ledger-trimmer-design.md` §1.4, §6). The remaining work is the manifest/scanner surface, now queued as **S39′**; the PR still needs a go-ahead |
+| **S39′** | **Ship the trimmer** — the execution of the decision above, not the decision. Manifest entry, `FRAMEWORK_INSTALLED_SOURCE`, `is_framework_installed` recognition (else a >200-LOC tool at an adopter root flips a doc-only project to "code"), `DASHBOARD_VERSION` bump in both twins, checklist entry, exec-bit assertion. **Measured at 21 files for a simpler precedent, not "one line"** — inventory in [`ledger-trimmer-design.md`](ledger-trimmer-design.md) §6.2 | **G2/G3** | S37, S38 | PR, **needs go-ahead** |
+| **S40** | **The ledger doctrine** into `starter-kit/HANDOFFS.md` and `starter-kit/CHANGELOG.md`: a stated size norm, the archive trigger as a *rate*, and the one-line-pointer shard convention — the instructions for the cases automation cannot reach | **G3** | **UNBLOCKED** — S39 is decided, so the wording is settled as *"run this"*, not *"here is the manual procedure"* | PR, needs go-ahead |
 | **S41** | **Floor audit: procedure vs reference.** How much of the remaining ~65 KB an agent must read every session is *procedure it must follow* rather than *reference it could look up*? Raised 2026-08-03; **no operator decision yet** — do not start without one | **G1** | S34 | no |
 | **S42** | **Purge derived values from `CLAUDE.md`**, and write the **version-pointer exemption** down *as an exemption* (operator decision 2, §7) — naming version pointers as the exempt class and the release step as their owner | **G1** | — | no |
 | **S43** | **`bin/check-derived`** — detector plus a one-time standing-population report; **covers `docs/planning/`** (operator decision 3, §7). Absorbs the parked `bin/check-citations` | support | — | no (`bin/` is not distributed) |
@@ -533,10 +534,16 @@ Split by **what the code does to the user's files**, not by topic:
 
 ## 7. Open decisions — the operator's, not an agent's
 
-**Ratified 2026-08-03 by the operator: 1 WAIT, 2 EXEMPTION, 3 YES.** 5 was settled by S31 (rate).
-**4 remains open, and the reason it does is recorded below** — the answer first given ("worth doing,
-but not soon") was a deferral with no trigger, which is not an implementable disposition. Each item
-keeps its original question text unedited; the ratified answer is appended beneath it.
+**Ratified 2026-08-03 by the operator: 1 WAIT, 2 EXEMPTION, 3 YES, 6 SHIPS.** 5 was settled by S31
+(rate). **4 remains open, and the reason it does is recorded below** — the answer first given ("worth
+doing, but not soon") was a deferral with no trigger, which is not an implementable disposition. Each
+item keeps its original question text unedited; the ratified answer is appended beneath it.
+
+> **Item numbers here are not §5's S-numbers, and item 1 proves it.** Item 1 calls the ledger doctrine
+> "S39"; §5's queue calls the doctrine **S40** and uses **S39** for the ship decision. The §5 queue is
+> authoritative for S-numbers — it is the one a session reads to pick up work. Item 1's text is left
+> unedited (this section's own rule), so read its "S39" as *the doctrine*, i.e. §5's S40. Recorded by
+> S35 rather than silently renumbered.
 
 1. **Does the ledger doctrine (S39) get written now as a parked branch, or not until the channel
    reopens?** Evidence supports either: parking preserves the work, but a parked branch produces zero
@@ -587,3 +594,21 @@ keeps its original question text unedited; the ratified answer is appended benea
    **SETTLED 2026-08-02 by S31 — RATE**, shipped in this repo's `CHANGELOG.md` front matter with a
    runnable derivation that re-baselines itself from `git log --diff-filter=A` and abstains out loud
    when it has no slope. Retained here as the record; not open.
+
+6. **Does the trimmer ship to adopters, or stay canonical-only?** (§5's queue item **S39**. Adopters
+   receive exactly one executable today, so this is "extend the manifest" vs "stay canonical-only",
+   and it gates S40's wording — *"run this"* and *"here is the manual procedure"* are different
+   documents.)
+   **RATIFIED 2026-08-03 — IT SHIPS.** The operator: *"ships to adopter; gates S40's wording."*
+   **Taken ahead of its slot**, and that is worth recording rather than smoothing over: §5 sequenced
+   this on S37's evidence, and the operator decided before that evidence existed. It is his decision
+   to make and the earlier answer is strictly more useful — S35 was able to fold it in as a binding
+   design input instead of designing for both branches.
+   **What it costs, measured, so the decision stays honest as it is executed:** shipping an executable
+   is not the "one line in `bin/_manifest.py`" the §5 architecture block estimates. The precedent for
+   a *simpler* change (S34, one distributed markdown file, `ed22ace`) touched **21 files**, and an
+   executable additionally faces `FRAMEWORK_INSTALLED_SOURCE` tuple equality, `is_framework_installed`
+   content verification, the `DOC_ONLY_SOURCE_LOC_MAX = 200` ceiling, a `DASHBOARD_VERSION` bump
+   pinned in two places, and the byte-identical twin. Full inventory:
+   [`ledger-trimmer-design.md`](ledger-trimmer-design.md) §6.2. That work is now **S39′**; the PR
+   carrying it still needs a go-ahead, each time.
