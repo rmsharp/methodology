@@ -469,15 +469,52 @@ refusal). S37 precedes S38 (do not port gauges into a broken instrument). S31 pr
 
 ## 7. Open decisions — the operator's, not an agent's
 
+**Ratified 2026-08-03 by the operator: 1 WAIT, 2 EXEMPTION, 3 YES.** 5 was settled by S31 (rate).
+**4 remains open, and the reason it does is recorded below** — the answer first given ("worth doing,
+but not soon") was a deferral with no trigger, which is not an implementable disposition. Each item
+keeps its original question text unedited; the ratified answer is appended beneath it.
+
 1. **Does the ledger doctrine (S39) get written now as a parked branch, or not until the channel
    reopens?** Evidence supports either: parking preserves the work, but a parked branch produces zero
    closable work and collects conflicts at the next resync.
+   **RATIFIED 2026-08-03 — WAIT.** No parked branch. The reasoning is already captured in a live
+   file rather than on a shelf: S31 applied the rate form to this repo's own `CHANGELOG.md` front
+   matter, so the doctrine exists as working text and only its *distribution* is pending. Revisit
+   when the channel reopens, not before.
 2. **`"Current version: v3.6"` in the always-resident `CLAUDE.md`** — take sink 4 (CITE), or grant a
    named, reasoned exemption for version pointers? It decays at every release and has no other sink.
+   **RATIFIED 2026-08-03 — NAMED EXEMPTION.** Version pointers are hand-maintained by design: the
+   derivation (`git describe --tags`) is longer than the fact it yields, and the place that knows the
+   value changed is the release procedure, not a reader. S33 must therefore write the exemption down
+   *as an exemption* — a sentence naming version pointers as the exempt class and the release step as
+   their owner — not silently leave the line alone. An unexplained survivor reads as an oversight and
+   gets re-litigated; a named one does not.
 3. **Does DVX cover `docs/planning/`?** It must, to catch the six measured errors — but that makes
    sink 4 load-bearing for every future measurement report, including this one.
+   **RATIFIED 2026-08-03 — YES, COVER IT.** A checker aimed away from where every measured error
+   actually occurred is theatre. The accepted cost is stated rather than discovered: from S34 onward
+   every analysis document in `docs/planning/` — this plan included — must carry the command behind
+   each figure, or the checker flags it. That burden is the countermeasure, not a side effect of it.
+   This is the decision S34/S35 were waiting on.
 4. **Is S40 (extracting the Learnings table) worth it at all?** It is the single largest FLOOR
    reduction available (~12,937 B) and the most invasive change to a file that must stay
    byte-identical for `bin/sync`.
+   **STILL OPEN 2026-08-03, and the answer first given was rejected as unimplementable.** "Worth
+   doing, but not soon" names no trigger, so it cannot be scheduled, refused, or audited. Restated:
+   S40 has **one** gate — operator authorization to contribute upstream. It is not gated on effort
+   (one session), on risk (the verification is mechanical: every `Learning #N` citation resolves or
+   does not), or on sequencing (nothing depends on it). **There is no fork-only version**: the
+   benefit is a reduction in what *adopters* must read, and `bin/sync --source=local` copies from
+   this working tree, so a local-only edit would reach adopters regardless while making every one of
+   them report the file as drifted. The implementable disposition is therefore *"first in the queue
+   when the channel reopens; not startable before then,"* plus the non-rotting preparation this plan
+   already allows — freeze the measurement, write the citation-resolution check, count the adopters
+   who will need a re-sync. **The question put back to the operator:** S39 and S40 pay off only if
+   the channel reopens (§6 says exactly that of the whole adopter-facing half). If reopening is
+   indefinite, both should be marked **declined-until-reopened** rather than carried as pending work
+   that cannot move. Awaiting that answer.
 5. **Should the archive trigger be restated as a rate** (§3.3's "(target) − (slope × headroom)"), or
    left as a level with a corrected number? D3 argues the former; the latter is a one-word fix.
+   **SETTLED 2026-08-02 by S31 — RATE**, shipped in this repo's `CHANGELOG.md` front matter with a
+   runnable derivation that re-baselines itself from `git log --diff-filter=A` and abstains out loud
+   when it has no slope. Retained here as the record; not open.

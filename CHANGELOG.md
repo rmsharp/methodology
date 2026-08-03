@@ -114,6 +114,35 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] Operator decisions 1, 2 and 3 of the context-cost plan, ratified and recorded
+
+**Model:** Claude Opus 5 (1M context).
+**Record action, not a deliverable** — the decisions are the operator's; this entry records that they
+were given and where they now live (`docs/planning/framework-context-cost-plan.md` §7, appended
+beneath each original question, which is left unedited).
+
+- **1 — WAIT.** The ledger doctrine is not written onto a parked branch. A shelf produces nothing
+  closable and collects conflicts at every resync, and the reasoning already exists as working text:
+  S31 shipped the rate form into this repo's own ledger front matter. Only its *distribution* is
+  pending.
+- **2 — NAMED EXEMPTION.** `"Current version: v3.6"` in the always-resident `CLAUDE.md` stays
+  hand-maintained, because the derivation is longer than the fact and the release procedure is what
+  knows it changed. **S33 must write the exemption down as an exemption** — naming version pointers
+  as the exempt class and the release step as their owner. A survivor with no stated reason reads as
+  an oversight and gets re-litigated.
+- **3 — YES, COVER `docs/planning/`.** This is the one S34/S35 were waiting on. A checker aimed away
+  from where all six measured errors occurred is theatre. The cost is accepted and stated up front:
+  from S34 onward every analysis document here, this plan included, carries the command behind each
+  figure or gets flagged.
+- **4 — STILL OPEN, and my own answer was rejected as unimplementable.** *"Worth doing, but not
+  soon"* names no trigger, so it can be neither scheduled nor refused nor audited. Restated in §7:
+  S40 has exactly one gate — authorization to contribute upstream — and **no fork-only version
+  exists**, because `bin/sync --source=local` copies from this working tree, so a "local" edit
+  reaches adopters anyway while marking the file drifted for every one of them. The question is now
+  back with the operator: if the channel's reopening is indefinite, S39 and S40 should be marked
+  *declined-until-reopened* rather than carried as pending work that cannot move.
+- **5** was settled 2026-08-02 by S31 (rate, not level); recorded in §7 as closed, not open.
+
 ### 2026-08-03 · [ad hoc] The Phase 1B carve-out — the ledger gate stops refusing the one commit the methodology requires
 
 **Model:** Claude Opus 5 (1M context).
