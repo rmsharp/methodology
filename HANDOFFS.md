@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **15**; the oldest **19**
+**Older receipts are archived.** This file currently holds **16**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -25,6 +25,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > [Learning #12](starter-kit/SESSION_RUNNER.md) pointed at this file, and it is the receipt-ledger
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
+
+---
+
+```handoff
+session: S31
+date: 2026-08-02
+status: pending
+active_task: S31 of `docs/planning/framework-context-cost-plan.md` §5 — **archive/split `CHANGELOG.md` below the 2,000-line agent `Read` cap**, the plan's only time-critical item. Fork-side, canonical-only: the root ledger is not in `bin/_manifest.py`'s DISTRIBUTION, so no adopter file is touched and no channel is needed. MEASURED AT `0a1a0d5`, the pre-change tree, so a successor can check every figure: 1,231 lines / 27 entries; front matter 65 lines; `## 2026-08` 929 lines / 20 entries (9 dated 08-02, 11 dated 08-01), `## 2026-07` 237 lines / 7 entries; slope since the last split (`3aee4e3`, 658 lines / 15 entries) = +573 lines over +12 entries = **47.75 lines/entry**; headroom 769 lines = **16.1 entries**. THREE OPERATOR DECISIONS, taken before any work: (1) run S31; (2) state the next trigger as a **RATE**, not a level; (3) cut at the **2026-08-02 day seam** — 18 entries out, 9 kept. DECISION 3 REVERSED MY OWN RECOMMENDATION AND THE REVERSAL IS THE POINT: I proposed the month boundary before measuring it, and it buys 5 entries (16.1 → 21.1, re-firing in 2–3 sessions) while contradicting BL-9 L2's ratified axis rule, whose stated reason — "the calendar does not partition this ledger" — is the very measurement I then reproduced. The day seam lands at 505 lines / 31.3 entries, and it is corroborated INDEPENDENTLY by the rate trigger's own reset arithmetic (headroom ÷ slope ≥ 30 ⇒ ≤ 567 lines), which is the only reason to trust either. THE RELEASE-FRONTIER AXIS IS UNAVAILABLE, not rejected: v3.6 *is* the last split and no release has shipped since; cutting one is outward-facing on a paused channel. That departure must ship LABELLED AS ADDED POLICY, not smoothed into the front matter as though it were settled. Verification is two-sided: the concatenation of shard + live file must reproduce the pre-change entry set exactly (no entry lost, none duplicated), and every reader named in the front matter's own "safe by construction" clause must be re-proven, not re-asserted — the FM #27 pre-commit gate, the frontier-based Phase 0 reconcile, `_find_action_ledger`, `CHANGELOG_ENTRY_RE`, and the source-tag audit grep that reads live + archives. THE FRONT MATTER IS ITSELF FULL OF DERIVED VALUES (50 archived, 78, 64, the v3.6 boundary sentence) and rewriting it is where this session is most likely to introduce the exact defect the plan it implements is about. NOT IN SCOPE (FM #17): BL-18, S32's hook carve-out, `HANDOFFS.md`'s own stale "~1,200 lines" trigger, and the plan's §7 decisions 1/2/4, which remain open for the sessions they gate.
+```
 
 ---
 
