@@ -114,6 +114,57 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] S36 — the ledger trimmer built, and its own losslessness guards found inert
+
+**Model:** Claude Opus 5 (1M context).
+Plan §5 queue item **S37** (fork session **S36** — the two axes differ; see the receipt). Deliverable:
+**`starter-kit/methodology_trim.py`** (1,632 lines) + **`tools/test_methodology_trim.py`** (65 tests),
+**canonical-only** — deliberately **not** in `bin/_manifest.py`. Shipping is queue item S39′ and needs
+a go-ahead. Implements [`docs/planning/ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md)
+§11 Phase 1. Dry-run by default; the tool never commits and never runs `git mv` (P2).
+
+- **The design's L1 formula is backwards for these ledgers, and the first real run proved it.**
+  §4.2 writes `invert(transform(records(shard))) ++ records(live_after)`; both ledgers are
+  **newest-on-top**, so the retained records precede the archived ones. The design's order fails at
+  char 26 of a reconstruction with the **correct total length** — not loss, the two halves swapped.
+  Corrected in code, labelled in place, and recorded here rather than silently fixed.
+- **An adversarial review found all three losslessness assertions INERT at their only call site,
+  and it is the finding of the session.** They were handed `records`, `records[:k]` and
+  `records[k:]` — operands derived from each other, so `records[:k] ++ records[k:] == records` is an
+  identity that cannot fail; L2 was passed the *before* footer as its *after* footer, comparing a
+  value with itself. Reproduced end to end: a write path that silently drops a record was written
+  with **`[L1_OK] [L2_OK] [L3_OK] [WROTE]`**, and only the independently generated `verify.sh`
+  caught it. Repaired by re-parsing the artifacts and asserting over those (design §6.4: *"verify
+  L1/L2/L3 on the in-memory **result**"*).
+- **The 13/13 mutation score that missed it is the second half of the lesson.** The harness mutated
+  every *predicate* and killed every one — which proves the predicates are correct as functions and
+  nothing about whether they are connected. Extended with **11 write-path mutants** (mutate the
+  *producer*, not only the checker): **23 of 24 killed, 0 did-not-apply**. The one survivor is named
+  and annotated in-code rather than counted as coverage — sha-order coincides with commit-graph
+  order about half the time, so no functional test kills it deterministically. → **Learning #16.**
+- **Nine further defects fixed, each reproduced first:** a cut key interpolated into the shard path
+  (`--cut @refs/tags/v1.0` wrote a *nested* shard, invisible to the single-level glob the trigger
+  uses for its own baseline); the recorded size short by the length of its own entry (now iterated
+  to a fixed point — the figure is frozen into a dated record); archive ordering broken by a `%ct`
+  tie; a baseline the classifier *refused* counted as "zero records", inflating headroom with no
+  abstention; `verify.sh` claiming "L1, L2 and L3 hold" while running **no** front-matter clause and
+  skipping L2 entirely on a footerless ledger (it now checks front matter and names only the clauses
+  it ran); the footer-in-shard test defeated by the rebase; a month-boundary trim that silently
+  re-filed the previous month's records (now a reported finding, not a silent edit).
+- **Proved against this repo's own files, the worst case available.** On `CHANGELOG.md`: 19 records →
+  7 retained + 12 archived, **77,245 B → 28,025 B**, all three assertions green on the artifacts, the
+  generated proof green both pre- and post-commit, and the size the entry records equal to the size of
+  the file written. On `HANDOFFS.md`: **238,432 B → 29,487 B** — but only under `--force`, because the
+  tool **refuses** at **SRF 1.0820 (RED)**, which is plan §3.3's own action rule mechanised. Its first
+  act on this repository is to decline to industrialise the sawtooth.
+- **P1 fired on live data at Phase 0**, naming this session's own claim commit as an unrecorded
+  action — the frontier-poisoning countermeasure working outside a fixture.
+- **Verified:** `bin/tests.sh` **175 passed / 1 failed** (Test 9's `--source=github` 404 on
+  `starter-kit/FRAMEWORK_LEARNINGS.md`, correct until upstream merges — **not weakened**);
+  `python3 -m unittest discover -s tools` **263 OK** (197 → 263); `bin/check-links` OK 88/22; twins
+  byte-identical; dashboard **72/100** unchanged. **Zero tracked files modified outside close-out**,
+  and `bin/_manifest.py` is untouched. No outward-facing action.
+
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S35's `commit:` field → `d192161` — eighth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
