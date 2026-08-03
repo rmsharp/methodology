@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S33
+date: 2026-08-03
+status: pending
+active_task: **Operator-assigned: correct a fabricated constraint and re-queue the context-cost work against the operator's three stated goals.** THE FABRICATION: `docs/planning/framework-context-cost-plan.md` §5 states *"The upstream channel is PAUSED: no PRs, comments, issues, tags or releases."* **Nobody imposed that.** The archived ledger (`docs/archive/CHANGELOG-through-2026-08-01.md`) records that PR #64 was opened WITHOUT authorization and closed the same day, and that the operator was then *discussing reopening it with the maintainer* — contribution was live. The operator, 2026-08-03: *"The purpose of this repository is to update the upstream repository. The channel never paused, you simply made a push request without authorization."* MEASURED SPAN at `e1c1fd0`: 8 sites in the plan (including the BLOCKED markers on S39/S40 and §6's "option value on a paused channel"), 8 in `docs/planning/BACKLOG.md` where six open items carry it as their DISPOSITION, plus historical mentions in `CHANGELOG.md` and `HANDOFFS.md` receipts. THE DAMAGE IS THE SEQUENCE, NOT THE WORDING: every item that would serve the operator's three goals needs an upstream PR, so the fabricated pause pushed exactly that class to the end and left a plan optimized for what needed no permission. FIVE PARTS: (1) write the real rule into `CLAUDE.md` — contributing upstream is the purpose; batch and vet to protect the maintainer's review time; ask before each outward action; no agent may record the route as closed; (2) purge every pause formulation from LIVE governing documents only — dated ledger entries and receipts are records of what was believed and are corrected forward, never rewritten (v2.7.1 convention); (3) re-triage the six affected backlog items against the real constraint, distinguishing genuinely blocked (BL-11 needs a maintainer decision) from merely unauthorized-yet; (4) rewrite §5 as a queue ordered by the three goals — context tax, AUTOMATED trimming, user instructions — and add the automated-trimming work the plan never had, since six `bin/` tools trim nothing and `HANDOFFS.md` went 52,927 B → 199,801 B in the two days after its manual archive; (5) record the ratified architecture: metrics in `methodology_dashboard.py`, the WRITE in a separate executable, the remedy named CONDITIONALLY on the tool being present, two tests because there are two distinct risks. NOT IN SCOPE: any outward-facing action, any code, and the trimmer's own design (that is the next session's deliverable, and this queue names it).
+```
+
+---
+
+```handoff
 session: S32
 date: 2026-08-03
 status: complete
