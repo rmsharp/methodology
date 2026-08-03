@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S34
+date: 2026-08-03
+status: pending
+active_task: **Plan §5 item S34, operator-assigned: extract the Learnings table from `starter-kit/SESSION_RUNNER.md` to a read-on-demand sibling, mirroring the `CLAUDE.md` → `docs/RELEASE_HISTORY.md` precedent (`7603f10`).** WHY THIS ONE: it is the only queued item that reduces G1's read-set floor — **77,796 B** re-derived at claim time (`starter-kit/SESSION_RUNNER.md` 62,410 + `starter-kit/SAFEGUARDS.md` 15,386), of which the Learnings section is **13,422 B / 21.5%** across 13 rows, lines 362–383 — and it depends on nothing. THE PRECEDENT DOES NOT TRANSFER CLEANLY, AND THAT IS THE WHOLE DIFFICULTY: `7603f10` turned on `CLAUDE.md` being **absent** from `bin/_manifest.py` DISTRIBUTION ("no adopter is affected and no upstream action is needed"). `starter-kit/SESSION_RUNNER.md` is TRACKED → adopter-root `SESSION_RUNNER.md`, so every one of those clauses inverts: the sibling must itself be distributed, its link must resolve in the simulated adopter tree (`bin/check-links`), `bin/sync`/`bin/status` must carry it, and adding a DISTRIBUTION member should trip **Learning #12's** manifest-vs-checklist guard — a designed tripwire I must drive RED and watch fail before patching. OPEN AT CLAIM TIME, to be settled by evidence not preference: (a) the sibling's canonical path and its adopter-root dest; (b) whether the `## Learnings (added by sessions)` heading stays put as `## Versioning` did, which depends on how many citations target that anchor rather than the file; (c) what Phase 3C must now say, since it instructs sessions to append rows; (d) the interaction with open upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65), which proposes a structural test for this very table. VERIFICATION IS MECHANICAL: every `Learning #N` citation across the corpus must still resolve, and the moved payload must be proven byte-identical rather than asserted. ENDS IN AN UPSTREAM PR THAT NEEDS THE OPERATOR'S EXPLICIT GO-AHEAD — prepare and vet here, then ask; open nothing.
+```
+
+---
+
+```handoff
 session: S33
 date: 2026-08-03
 status: complete
