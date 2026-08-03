@@ -10,6 +10,24 @@ A standalone methodology framework for structured, self-correcting AI agent sess
 **Author:** Terrell Deppe (KJ5HST)
 **License:** MIT — see `LICENSE`. Free to use, copy, modify, distribute, and sell, provided the copyright notice and permission notice are retained.
 
+### Contributing upstream — the purpose, and the one rule
+
+**This clone is a fork whose purpose is to update the upstream repository** `KJ5HST/methodology`
+(remote `upstream`; `origin` is the fork). Work that reaches adopters only reaches them through a
+merged upstream pull request, so getting work *there* is the point, not an afterthought.
+
+What is scarce is the maintainer's review time. So: let work accumulate here until it is worth his
+attention; prefer **one substantial, fully vetted pull request** over several small ones (independent
+work *may* go separately, dependent work should not); do the vetting on this side first — tests
+green, claims re-verified, adopter impact stated. **Every outward-facing action — pull request,
+issue, comment, tag, release — needs the operator's explicit go-ahead, each time.**
+
+This is a rule about **sequence and batching, never a suspension.** No session may record the
+contribution route as closed, paused, or unavailable. One did — inferring a standing prohibition from
+a single correction and writing it into a ratified plan — and it re-ranked ten sessions away from
+this repository's stated purpose before anyone noticed. If you find a blocker in a document, check
+who imposed it and when; an unattributed blocker is a defect, not a constraint.
+
 ## Document Hierarchy
 
 Three layers, each serving a distinct purpose:

@@ -17,7 +17,9 @@
 > citation" (false), BL-12's "four sites" (five), and BL-16's `bin/check-handoff:301-303` (it is
 > `:487`, and was never `:301-303` at any tree that ever existed).) (BL-14 raised 2026-08-02 (S28) and **partially closed the same session**: the fork-side
 > detector and the 9-receipt repair shipped; its distributed half — the spec still promises a
-> reconcile no procedure assigns — is blocked on the channel. **BL-15 is CLOSED 2026-08-02 (S29):
+> reconcile no procedure assigns — is prepared, unshipped, and needs a go-ahead (see the routing
+> paragraph; it was recorded as "blocked on the channel" until 2026-08-03, on a constraint nobody
+> imposed). **BL-15 is CLOSED 2026-08-02 (S29):
 > raised correctly — its "13 of 32" is exact — and already discharged by BL-14's own repair, which
 > gave all 13 receipts a real sha in `commit:` to defer to. S29's claim stub said the population
 > did not reproduce; that was wrong, and the correction is recorded in BL-15 itself. Settling it
@@ -89,14 +91,25 @@ to the methodology. It was raised and measured in **S14** (as was BL-9, now comp
 ledger for those entries. **BL-11** and **BL-12** are unrelated to the campaign; both were raised
 2026-08-01 at BL-10's close-out. **BL-13** was raised 2026-08-01 at the S26 resync.
 
-**Which of these need the upstream channel, restated after the resync — this is the routing that
-decides what a session can actually run today.** BL-8 needs nothing outward-facing: it is a fork-side
-operational decision, and *"decline"* is an explicitly correct outcome. BL-13 and BL-12's first bullet
-both touch `bin/_manifest.py`-**DISTRIBUTED** files, so a *fix* needs the channel — but each can be
-fully **prepared and evidenced** fork-side first, which is the part that carries the work. BL-11's
-deliverable is *a maintainer decision*, not an edit, so it cannot advance at all while the channel is
-paused. BL-12's second bullet is no longer the fork's to raise: it is upstream issue #65, and
-answering it is still an outward-facing action requiring an explicit ask.
+**RE-TRIAGED 2026-08-03 (S33) — the routing that decides what a session can run today, corrected.**
+Until this date several items below carried *"blocked on the paused channel"* as their **disposition**.
+**That constraint was never imposed** (see `framework-context-cost-plan.md` §5): the operator's rule
+is *ask before each outward-facing action, batch and vet to protect the maintainer's review time* —
+sequence, not suspension. Nothing here is blocked for that reason. The honest routing:
+
+- **Runnable now, nothing outward-facing.** **BL-8** — a fork-side operational decision where
+  *"decline"* is an explicitly correct outcome. **BL-18** — S30 proved its stated blocker false.
+  **BL-20** — two of its three fixes are fork-side.
+- **Runnable now up to the PR, which needs a go-ahead.** **BL-13**, **BL-12's first bullet**,
+  **BL-14's distributed half**, **BL-17's distributed half**, **BL-21**. Each touches a
+  `bin/_manifest.py`-**DISTRIBUTED** file, so the *fix* lands upstream — but the preparation and the
+  evidence are fork-side and are the part that carries the work. Batch them rather than sending each
+  alone; that is what the operator's rule is protecting.
+- **Genuinely not advanceable by a session, and the only one.** **BL-11** — its deliverable is *a
+  maintainer decision*, not an edit. No amount of fork-side work produces it. This is what a real
+  block looks like, and it is worth contrasting with the five above that were mislabelled as one.
+- **Not the fork's to raise.** **BL-12's second bullet** is upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65);
+  answering it is an outward-facing action and needs an explicit ask.
 
 **BL-8 — Subagent capability-tiering: adopt as an operational default, or decline.**
 *Not a methodology change, and no document needs editing.* `SESSION_RUNNER.md` §Vertical Slice
@@ -206,8 +219,8 @@ three of the five citations were **worse than dangling** — they asserted frame
 exist — and that stripping just the numbers *"would have left unattributed false claims."* This is
 that prediction landing. The fork's parked `1eac7a4` re-grounded this same row on FM #15 and the six
 Minimum Handoff Requirements, and stated outright that there is no length rule to trade against.
-*Scope:* one distributed file, one table cell. **DISTRIBUTED**, so a fix needs the upstream channel —
-but the evidence package is fork-side work and is the part that matters. `/zoom-out` on the same line
+*Scope:* one distributed file, one table cell. **DISTRIBUTED**, so the fix lands upstream and the PR
+needs a go-ahead — but the evidence package is fork-side work and is the part that matters. `/zoom-out` on the same line
 is a weaker sibling: upstream's replacement is *true but unlocated* (it describes a structured
 architecture survey and points at nothing), where `1eac7a4` cited
 `INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md` §Sub-Agent Dispatch Pattern. Not false; note it,
@@ -215,7 +228,8 @@ do not bundle it.
 
 **BL-14 — The `commit:` answer slot: a distributed promise with no owner and no detector.**
 *Raised and PARTIALLY CLOSED 2026-08-02 (S28). The fork-side half shipped; the distributed half is
-prepared and blocked on the channel.* Nominated by S27's `next_steps` as a pre-existing escape it
+prepared and awaiting a go-ahead — recorded as "blocked on the channel" until the 2026-08-03
+re-triage.* Nominated by S27's `next_steps` as a pre-existing escape it
 declined to bundle (FM #17).
 **The defect.** `commit:` may legitimately read `pending` when written — a close-out receipt ships
 inside the very commit whose sha it would name, the chicken-egg the ratified plan solved by
@@ -309,7 +323,7 @@ short-sha (unknowable while the receipt is being written). **0 of 32 receipts us
 invented the same third form — `CHANGELOG.md "<its ### heading>"` — and eight then reached for a
 line number on top. *That vacuum is why the anchors existed*, so the shipped prohibition treats the
 symptom and this item is the cause.
-- **The DISTRIBUTED half, blocked on the paused channel.** Bless the quoted `### ` heading as a
+- **The DISTRIBUTED half — prepared here, shipped upstream, needs a go-ahead.** Bless the quoted `### ` heading as a
   third locator form at `starter-kit/HANDOFFS.md:63`, and state that a line number is not a locator
   into a ledger. Per **Learning #8** a fix must reach every checklist restating close-out.
 - **The fork-side half, unblocked but deliberately deferred.** Stale quoted titles are the failure
@@ -355,11 +369,14 @@ load-bearing.
 countermeasure in prose — *"grep nearby prose for set-size claims that may have drifted"* — and six
 of six backlog items still carried a wrong number. That is this corpus's controlled comparison of
 MECHANIZED versus DOCUMENTED, and it forecloses "add a sentence" before anyone proposes one.
-*Sequenced as ten single-deliverable sessions (S31–S40) in the plan's §5.* Six ship fork-side today;
-**S39 (ledger doctrine into two seeds) and S40 (extract the Learnings table) are DISTRIBUTED and
-blocked on the paused channel** — and an open channel is still not authorization. S32 (the Phase 1B
-carve-out in `.githooks/pre-commit`) is a hard precondition for S34/S35: adding a refusal to a hook
-with a measured 100% bypass at that point is worse than adding none.
+*The plan's §5 was RE-QUEUED 2026-08-03 (S33) against the operator's three stated goals* — context
+tax, **automated** trimming, and user instructions — after its original sequence was found to be
+ordered by *what needed no permission*. The two items that serve those goals most directly (extracting
+the Learnings table, and the doctrine into the two seeds) had been marked BLOCKED on a constraint
+nobody imposed; the extraction is now **first in the queue**. S31 (ledger split) and S32 (the Phase 1B
+carve-out in `.githooks/pre-commit`, the hard precondition for the diff-scoped prohibition) are
+shipped. **An outward-facing step is not a block — but it is still not authorization:** every PR,
+issue, comment, tag or release needs an explicit ask, each time.
 *Five open decisions belong to the operator, not to an agent* — plan §7. **Three were taken at S31**
 (run S31; state the trigger as a rate; cut at a day seam); §7's own five — the S39 parked branch, the
 `CLAUDE.md` version-pointer sink, DVX's `docs/planning/` scope, whether S40 is worth it, and the
@@ -391,8 +408,9 @@ note in both ledgers says so.
 **Three fixes, and the choice is the deliverable:** (1) widen the regex to accept both dialects —
 smallest, but blesses a form the seed does not document; (2) normalize the nine live entries to the
 seed's list form — restores the documented convention, but rewrites dated entries, which the v2.7.1
-convention forbids; (3) change the seed to document the bare form — **DISTRIBUTED, blocked on the
-paused channel.** Note (1) and (2) are fork-side and (3) is not, so this can advance today.
+convention forbids; (3) change the seed to document the bare form — **DISTRIBUTED, so it ships
+upstream and needs a go-ahead.** Note (1) and (2) are fork-side, so this can advance today either
+way.
 **Related:** this is the same shape as BL-14/BL-15 — a promise in the seed with no detector — except
 here the detector exists and reads the wrong dialect.
 

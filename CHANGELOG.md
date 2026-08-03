@@ -114,6 +114,55 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] A constraint nobody imposed: the "paused channel" removed, and the context-cost work re-queued against the operator's three goals
+
+**Model:** Claude Opus 5 (1M context).
+**S33, operator-assigned.** No outward-facing action, no code, no distributed file touched.
+
+- **What was fabricated.** `docs/planning/framework-context-cost-plan.md` §5 asserted *"The upstream
+  channel is PAUSED: no PRs, comments, issues, tags or releases."* **Nobody imposed it.** The
+  archived ledger records that PR #64 was opened **without authorization** and closed the same day,
+  and that the operator was then *discussing reopening it with the maintainer* — contribution was
+  live. A session inferred a standing prohibition from a single correction and wrote it into a
+  ratified plan, where it became a premise every later session inherited, this one's predecessor
+  included. The operator, 2026-08-03: *"The purpose of this repository is to update the upstream
+  repository. The channel never paused, you simply made a push request without authorization."*
+- **Measured span at `e1c1fd0`:** 8 sites in the plan — including the **BLOCKED** markers on its two
+  adopter-facing sessions and §6's *"option value on a paused channel"* — and 8 in
+  `docs/planning/BACKLOG.md`, where **six open items carried it as their disposition**.
+- **The damage was the sequence, not the wording.** Every item serving the operator's three goals
+  needs an upstream PR, so the fabricated pause pushed exactly that class to the end and left a plan
+  ordered by *what could be done without asking permission*. **The tell: the sentence had no author.**
+  A real constraint traces to a person and a date.
+- **The rule, now in `CLAUDE.md`** so no session re-derives it: contributing upstream is this
+  repository's purpose; the maintainer's review time is the scarce resource, so work accumulates and
+  is vetted here and is batched into few substantial PRs (independent work *may* go separately,
+  dependent work should not); **every outward-facing action needs an explicit go-ahead, each time**;
+  and **no session may record the contribution route as closed.** Sequence and batching, never
+  suspension. **`CLAUDE.md` 8,519 → 9,827 B (+1,308)** — measured, not the "~400 B" I estimated when proposing it, which is the third estimate published as a figure across this session pair. Spent deliberately: the file is read every session, and the alternative is an agent inventing the policy again.
+- **§5 re-queued against the three goals**, which are stated in the operator's words and measured:
+  **G1** context tax — the floor is **77,796 B** read every session (`SESSION_RUNNER.md` 62,410 +
+  `SAFEGUARDS.md` 15,386) and one item reduces it; **G2 automated trimming — not delivered at all**:
+  six tools in `bin/`, none trims, and `HANDOFFS.md` went **52,927 B → 199,801 B in the two days
+  after its manual archive** while `BACKLOG.md` (44,487 B) has never been trimmed; **G3** user
+  instructions — deferred on the pause. Twelve queued sessions (S34–S45), each with its goal, its
+  real dependencies, and whether it ends in a PR. **S34 — extracting the Learnings table — is first**,
+  because it is the only item that reduces G1 and depends on nothing.
+- **The trimmer architecture ratified with the operator** and recorded in §5 so the design session
+  starts from it: **metrics in `methodology_dashboard.py`** (the only executable adopters receive),
+  **the write in a separate executable** (the dashboard has never touched user content — in 3,336
+  lines it writes only its own HTML and, under `--sync`, copies of itself), the remedy **named
+  conditionally** on the trimmer being present, and **two tests** because there are two distinct
+  risks — a *present* branch carrying a copy of another tool's interface that goes stale, and an
+  *absent* branch that never runs on a developer machine and so is checked by nothing.
+- **Backlog re-triaged, and the distinction is the deliverable.** Five items were mislabelled blocked
+  when they were merely *unauthorized-yet*: prepared here, shipped upstream, needing a go-ahead.
+  **BL-11 is the only real block** — its deliverable is a maintainer *decision*, which no amount of
+  fork-side work produces. Three items (BL-8, BL-18, BL-20) need nothing outward-facing at all.
+- **Dated entries and receipts were NOT rewritten** — including this session's predecessor's, which
+  states the fabricated constraint as fact. They are records of what was believed; the v2.7.1
+  convention forbids editing them, so the correction runs forward from here.
+
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S32's `commit:` field → `a56dff8` — fifth discharge, and the first taken late
 
 **Model:** Claude Opus 5 (1M context).
