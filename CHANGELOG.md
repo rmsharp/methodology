@@ -65,6 +65,37 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [ad hoc] Reconcile-on-read: S29's `commit:` field → `4669fb6` — and the first time the tripwire was *observed* firing
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`9267500` (the same duty, one session earlier), `7752114`, `728f39a`. It is not S30's deliverable and
+does not license work beyond it (FM #17).
+
+- **What was reconciled.** S29's receipt (`HANDOFFS.md`, session `S29`, 2026-08-02) closed out with
+  `commit: pending`, legitimately — it shipped inside the very commit whose sha it names. That sha is
+  **`4669fb6`**, derived and not assumed: the receipt's first appearance with `status: complete`,
+  found by walking `git log --all --full-history` over `HANDOFFS.md` (79 commits, all refs) with the
+  checker's own `extract_blocks`/`parse_block`, then re-verified as an ancestor of `HEAD`. The stub's
+  own first appearance is `7df3c4b`, and the two are distinct — which is exactly the trap S29's own
+  gotcha (3) recorded. Leading token replaced; existing prose kept, `status` untouched.
+- **The claim S29 could only make forward, this session tested.** S29 wrote that `bash bin/tests.sh`
+  "goes RED (Test 25 L1) the moment that session prepends its own receipt", and recorded honestly that
+  the mechanism had been *observable* and never *observed* — both prior discharges happened before any
+  successor receipt existed. Rather than inherit that sentence a third time, a synthetic `S30`
+  Phase 1B stub was prepended to a **scratch copy** of the ledger and `bin/check-handoff` run against
+  it. It named this exact field: *"receipt S29 (2026-08-02) names no commit sha in its `commit:`
+  answer slot"*, exit 1. **First observed firing on a real receipt** — and the working tree never went
+  red, so nothing was started from a red suite (`starter-kit/SAFEGUARDS.md:34`). A prediction verified
+  against a copy costs one file write; repeating it costs the record its meaning
+  ([Learning #13](starter-kit/SESSION_RUNNER.md)).
+- **Two consecutive discharges make a practice, not a procedure.** BL-14's measured base rate was six
+  firings, only four deliberate, all inside one 8-hour window on 2026-07-25, by hand. This is the
+  second in a row found at Phase 0 by the mechanism BL-14 shipped. The DISTRIBUTED half is untouched:
+  the seed still promises a reconcile that no procedure assigns, and that choice — schedule it into
+  `starter-kit/SESSION_RUNNER.md` Phase 0, or delete the promise — remains blocked on the paused
+  channel.
+
 ### 2026-08-02 · [BL-15] The `changelog_ref` locator-form rule — BL-15 was right, and settling it found a different defect
 
 **Model:** Claude Opus 5 (1M context) — implementation, the 11-agent refute/design/judge workflow,
