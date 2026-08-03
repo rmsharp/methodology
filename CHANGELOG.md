@@ -114,6 +114,26 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] Reconcile-on-read: S34's `commit:` field → `ed22ace` — seventh discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S34 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`ed22ace`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` and reading each blob's S34 block, `ed22ace` is
+  the first commit where it reads `status: complete`; the claim stub `816984b` carries the same block
+  at `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
+  seven receipts running.
+- **Taken BEFORE this session's Phase 1B claim**, holding the order S33 broke and S34's predecessor
+  restored. It still held because the practice was inherited from the receipt, not because any
+  checklist assigns the step: **BL-14's distributed half remains open.**
+- **Form follows S33's discharge (`40a1554`), not the older ones.** The field carries the bare sha and
+  the derivation lives here, in the action ledger, rather than being restated in the receipt. That is
+  the leaner of the two established shapes, and `HANDOFFS.md` is the file G2 names as growing
+  unbounded — 223,771 B at this reconcile.
+
 ### 2026-08-03 · [ad hoc] S34 — the Learnings table extracted to `starter-kit/FRAMEWORK_LEARNINGS.md`; the mandatory read-set floor down 16.6%
 
 **Model:** Claude Opus 5 (1M context).
