@@ -354,7 +354,41 @@ MECHANIZED versus DOCUMENTED, and it forecloses "add a sentence" before anyone p
 blocked on the paused channel** — and an open channel is still not authorization. S32 (the Phase 1B
 carve-out in `.githooks/pre-commit`) is a hard precondition for S34/S35: adding a refusal to a hook
 with a measured 100% bypass at that point is worse than adding none.
-*Five open decisions belong to the operator, not to an agent* — plan §7.
+*Five open decisions belong to the operator, not to an agent* — plan §7. **Three were taken at S31**
+(run S31; state the trigger as a rate; cut at a day seam); §7's own five — the S39 parked branch, the
+`CLAUDE.md` version-pointer sink, DVX's `docs/planning/` scope, whether S40 is worth it, and the
+archive-trigger form — **remain open except the last, which S31 settled as a rate.**
+
+**BL-20 — `bin/model-report`'s Source 1 is blind to the `**Model:**` form this repo actually writes.**
+*Raised 2026-08-02 (S31), found while verifying a claim S31 was about to publish about its own split.
+Not fixed in that session (FM #17): the split was the deliverable, and this is a tool/convention
+mismatch with at least three defensible fixes.*
+**The defect.** `CHANGELOG_MODEL_RE` (`bin/model-report:51`) is `^-\s*\*\*Model:\*\*\s*(.+)$` — the
+list form the distributed seed documents (`starter-kit/CHANGELOG.md:42`, `:57`, `:69`). This repo's
+live ledger writes the bullet as a bare `**Model:**` at line start, which that regex cannot match. So
+`python3 bin/model-report` prints *"(no CHANGELOG.md entries carry a **Model:** bullet)"* against a
+file containing nine of them. Source 1 is the **primary, structured** source; it fails silently and
+reads as "no data recorded" rather than "not parsed."
+**Population, both dialects, frozen at the tree it was measured against** (`74479df`, S31's claim, so
+the figure cannot decay): 14 bullets corpus-wide — **9** bare, all in the live `CHANGELOG.md`, and
+**5** list-form, all in `docs/archive/CHANGELOG-through-2026-08-01.md`; 0 in the v3.6 shard. It is
+already stale at HEAD — S31's own close-out entry made it 10 bare / 15 total, which is the point.
+Re-measure, never recall:
+`grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+**Drift point, derived not guessed:** `54426cb` (2026-08-01) is the last commit with list-form only;
+`1298af7` (2026-08-02) is the first bare-form entry, and every one of the nine entries since has
+followed it — a same-day convention change that no check noticed because the only reader is
+non-gating and its empty output is indistinguishable from an unrecorded field.
+**Consequence of S31's split, recorded because it is counterintuitive:** the split moved 100% of what
+Source 1 can parse into the archive. The tool's default invocation is now empty, and its front-matter
+note in both ledgers says so.
+**Three fixes, and the choice is the deliverable:** (1) widen the regex to accept both dialects —
+smallest, but blesses a form the seed does not document; (2) normalize the nine live entries to the
+seed's list form — restores the documented convention, but rewrites dated entries, which the v2.7.1
+convention forbids; (3) change the seed to document the bare form — **DISTRIBUTED, blocked on the
+paused channel.** Note (1) and (2) are fork-side and (3) is not, so this can advance today.
+**Related:** this is the same shape as BL-14/BL-15 — a promise in the seed with no detector — except
+here the detector exists and reads the wrong dialect.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

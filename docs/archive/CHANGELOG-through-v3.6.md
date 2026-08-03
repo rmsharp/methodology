@@ -9,10 +9,17 @@ dashboard signal-integrity campaign, up to and including the work that shipped a
 file resumes at `### 2026-07-27 · [ad hoc] Released v3.6 — dashboard signal integrity`.
 
 **This file is frozen.** The split key is the release frontier: the ledger is prepend-only, so once
-v3.6 shipped, nothing could ever be written into this span again. Nothing is added here. The next
-archive is a NEW file, taken when the live file approaches ~1,200 lines and cut at the newest
-`Released vX.Y` entry at or below that point — sized so that no ledger file approaches the ~2,000-line
-default `Read` cap this split exists to clear.
+v3.6 shipped, nothing could ever be written into this span again. Nothing is added here, and **no
+dated entry below has ever been edited** — `git log -- docs/archive/CHANGELOG-through-v3.6.md` showed
+exactly one commit, `3aee4e3`, until this front-matter correction.
+
+**The rule for the next archive is deliberately not restated here.** It lives once, in the live
+[`CHANGELOG.md`](../../CHANGELOG.md) front matter. This paragraph used to restate it — "taken when
+the live file approaches ~1,200 lines and cut at the newest `Released vX.Y` entry at or below that
+point" — and **both halves were wrong one day later**: this file was written `3aee4e3` (2026-08-01),
+and at the very next archive (2026-08-02) the level had become a rate and the release axis was
+unavailable, v3.6 still being the newest release with no frontier left to cut at. A frozen file
+cannot keep a forward-looking rule true. Cite, don't restate.
 
 **Nothing reads this file automatically, and that is deliberate.** The FM #27 pre-commit gate matches
 the literal staged path `CHANGELOG.md` (`grep -qxF`), Phase 0 reconcile is frontier-based
