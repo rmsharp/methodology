@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **14**; the oldest **19**
+**Older receipts are archived.** This file currently holds **15**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -25,6 +25,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > [Learning #12](starter-kit/SESSION_RUNNER.md) pointed at this file, and it is the receipt-ledger
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
+
+---
+
+```handoff
+session: S30
+date: 2026-08-02
+status: pending
+active_task: A PLANNING SESSION, assigned by the operator and NOT a backlog item. Deliverable: ONE plan document in `docs/planning/` with two parts — (1) heuristics an ADOPTER can run to monitor and assess three classes of accumulating expense, and (2) a plan addressing the design deficiencies that produce them. The plan is the deliverable; **no implementation this session** (`starter-kit/SESSION_RUNNER.md` §Planning Sessions). The three expenses came out of the operator's own question — whether a framework's accumulated learnings are actually resident in an agent's context or are read-and-discarded — and the answer is that nothing is ever discarded: `CLAUDE.md` is resident every turn, everything else is read once and then carried until compaction replaces it with a lossy summary. THE PROVOCATION IS A MEASURED DEFECT, not a worry: at this session's Phase 0, an 13-agent re-measurement found **six of six** open backlog items carrying a wrong number, every one the same shape — a figure correct at some earlier tree, later restated from recollection instead of re-derived (`bin/check-handoff:301-303` was never right at ANY tree; "32 receipts" is 33; BL-18's "30 anchors" is 28 and its breakdown was a single-file slice; BL-12's "four sites" is five). BASELINE MEASURED AT `d9bedb0`, the pre-change tree, so a successor can check it: `CLAUDE.md` 8,519 B always-resident; the Phase 0 mandated read set (`starter-kit/SAFEGUARDS.md` + `starter-kit/SESSION_RUNNER.md` + `docs/planning/BACKLOG.md`) 113,126 B ≈ 28k tokens before Phase 1 begins; the two live ledgers 254,663 B, 574,086 B with both archive shards; 33 receipts, mean live receipt 8,667 B; the Learnings table 15 rows / 12,937 B inside a 62,069 B file every session reads. TO BE TESTED, NOT ASSERTED — the operator's brief says "assuming you find all 3 should be monitored", and my prior is that expense #2 as I framed it to him (coordination residue from outward-facing actions) is a MAINTAINER cost with no adopter analogue, and that the adopter's real second expense is record/ledger growth. Declining to monitor one of the three is an explicitly correct outcome. A second prior to test: the framework may already own the right delivery vehicle for these heuristics (`tools/methodology_dashboard.py`, which scores five dimensions and adapts to repo class) and currently measures none of them. SCOPE: fork-side and canonical-only — `docs/planning/` is absent from `bin/_manifest.py`'s DISTRIBUTION, so writing the plan touches no adopter file and needs no channel. Any edit the plan RECOMMENDS to a distributed file is a later session's problem and blocked anyway. BL-18 is NOT this session's deliverable (FM #17) despite being fully measured at Phase 0; its numbers are recorded in the ledger entry so the next session inherits them corrected.
+```
 
 ---
 
