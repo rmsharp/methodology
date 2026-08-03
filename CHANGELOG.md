@@ -65,6 +65,29 @@ are still in this file, so its Source 1 loses nothing today.
 
 ## 2026-08
 
+### 2026-08-02 · [ad hoc] Reconcile-on-read: S30's `commit:` field → `326094d` — third consecutive discharge
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`d9bedb0`, `9267500`, `7752114`, `728f39a`. Not S31's deliverable and no license for work beyond it
+(FM #17). **Deliberately short**: this session's own deliverable is that this file is 15.8 ledger
+entries from the `Read` cap, and a reconcile entry is the cheapest place to stop restating what four
+prior entries already say — cite, don't re-narrate.
+
+- **What was reconciled.** S30's receipt closed out `commit: pending`, legitimately — it shipped
+  inside the commit whose sha it names. That sha is **`326094d`**, derived by the method
+  `bin/check-handoff`'s own failure note prescribes: walk `git log --all --full-history` over
+  `HANDOFFS.md` (**82** commits, all refs) with the checker's `extract_blocks`/`parse_block`, take the
+  first commit whose `S30` block reads `status: complete`. The claim stub `0485d4a` holds the same
+  block at `status: pending` — distinct commits, S29's gotcha (3).
+- **RED observed, not inherited.** A synthetic `S31` stub prepended to a **scratch copy** made the
+  checker emit *"receipt S30 (2026-08-02) names no commit sha in its `commit:` answer slot"*, exit 1.
+  The working tree never went red (`starter-kit/SAFEGUARDS.md:34`).
+- **Three in a row is a practice with a widening gap behind it.** The DISTRIBUTED half of BL-14 is
+  still untouched: the seed promises a reconcile no procedure assigns. Each clean discharge makes the
+  fork look healthier while the adopter-facing hole stays exactly where it was — blocked on the
+  paused channel, and a choice (schedule it into Phase 0, or delete the promise), not an edit.
+
 ### 2026-08-02 · [ad hoc] The framework's context cost — adopter heuristics and a remediation plan
 
 **Model:** Claude Opus 5 (1M context).
@@ -150,29 +173,6 @@ and no channel was needed.
   **CITE** sink, added as a fourth sink precisely because a measurement report can neither delete,
   generate, nor freeze its own findings. All embedded commands were executed and reproduce their
   stated values.
-
-### 2026-08-02 · [ad hoc] Reconcile-on-read: S30's `commit:` field → `326094d` — third consecutive discharge
-
-**Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`d9bedb0`, `9267500`, `7752114`, `728f39a`. Not S31's deliverable and no license for work beyond it
-(FM #17). **Deliberately short**: this session's own deliverable is that this file is 15.8 ledger
-entries from the `Read` cap, and a reconcile entry is the cheapest place to stop restating what four
-prior entries already say — cite, don't re-narrate.
-
-- **What was reconciled.** S30's receipt closed out `commit: pending`, legitimately — it shipped
-  inside the commit whose sha it names. That sha is **`326094d`**, derived by the method
-  `bin/check-handoff`'s own failure note prescribes: walk `git log --all --full-history` over
-  `HANDOFFS.md` (**82** commits, all refs) with the checker's `extract_blocks`/`parse_block`, take the
-  first commit whose `S30` block reads `status: complete`. The claim stub `0485d4a` holds the same
-  block at `status: pending` — distinct commits, S29's gotcha (3).
-- **RED observed, not inherited.** A synthetic `S31` stub prepended to a **scratch copy** made the
-  checker emit *"receipt S30 (2026-08-02) names no commit sha in its `commit:` answer slot"*, exit 1.
-  The working tree never went red (`starter-kit/SAFEGUARDS.md:34`).
-- **Three in a row is a practice with a widening gap behind it.** The DISTRIBUTED half of BL-14 is
-  still untouched: the seed promises a reconcile no procedure assigns. Each clean discharge makes the
-  fork look healthier while the adopter-facing hole stays exactly where it was — blocked on the
-  paused channel, and a choice (schedule it into Phase 0, or delete the promise), not an edit.
 
 ### 2026-08-02 · [ad hoc] Reconcile-on-read: S29's `commit:` field → `4669fb6` — and the first time the tripwire was *observed* firing
 
