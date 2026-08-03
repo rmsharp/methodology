@@ -149,13 +149,20 @@ bypass is worse than no refusal. Fork-side, canonical-only — `.githooks/pre-co
   (the non-claims as the complement, plus a coverage check that the 6 known shas are still in it) and
   a vacuity guard that fails if the query collapses. Nine guards were mutation-tested by **narrowing**,
   each killed by one named test.
-- **An adversarial review of the finished diff found two real escapes, and both are closed.** (1)
+- **An adversarial review of the finished diff found three defects, and all three are closed.** (1)
   `git diff --cached --name-only` collapses a rename to its **destination**, so `git mv <tracked
   source> SESSION_NOTES.md` beside a real claim read as the two exempt paths and deleted a tracked
   file with no ledger line — fixed with `--no-renames`, pinned by `27.N13`/`27.M8`. (2) A ` ```handoff `
   shown as **documentation** inside a 4-backtick wrapper satisfied the fence test while filing no
   receipt at all — fixed by refusing a stronger wrapper, the line-oriented analogue of the rule
-  `bin/check-handoff`'s own `extract_blocks` already applies, pinned by `27.N14`/`27.M9`.
+  `bin/check-handoff`'s own `extract_blocks` already applies, pinned by `27.N14`/`27.M9`. (3) The
+  content query inherited the committer's diff **presentation** config, so `diff.external`
+  (difftastic's documented global setup) or `color.ui = always` made `grep '^+'` match nothing and
+  every claim was refused — fail-closed, invisible, and only for people whose tooling is configured;
+  fixed with `--no-ext-diff --no-textconv --no-color`, pinned by `27.N15`/`27.N16`/`27.M10`. The
+  adversarial pass then re-ran each repro against the fixed hook and returned **0 of 11 findings
+  surviving**, having refuted the rest — including its own over-broad claim that `--no-renames` can
+  only tighten the gate.
 - **Three prose defects in the change's own comments were corrected, which is the more useful half.**
   The hook claimed a prose edit was refused (true only when committed alone), claimed Phase 0
   reconcile-on-read reads HANDOFFS.md content (it is frontier-based; it reads the *ledger*), and
@@ -169,6 +176,10 @@ bypass is worse than no refusal. Fork-side, canonical-only — `.githooks/pre-co
   the mutation harness runs against a scratch **copy** of the hook — two suite runs overlapped during
   development and one mutant leaked into the other — with the no-write-to-the-tracked-file invariant
   asserted per mutant, since an end-of-run check passes even when the harness edits the real file.
+- **This entry was itself repaired minutes after it was written** (`a56dff8` → the following commit):
+  it said the review found *two* escapes when three shipped, and the receipt carried no self-score
+  narrative, which every other receipt in `HANDOFFS.md` has. Recorded here rather than in a second
+  entry, because the action is the same action.
 - **New: BL-21**, scoped *down* by that review from how it was first written. `starter-kit/SAFEGUARDS.md`
   and `starter-kit/BOOTSTRAP.md` describe the hook without this exemption, but both point adopters at
   the **upstream** file, which is byte-identical and has no carve-out, and no adopter receives the
