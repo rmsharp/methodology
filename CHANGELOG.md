@@ -114,6 +114,23 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] Reconcile-on-read: S33's `commit:` field → `d69f7a9` — sixth discharge, and the practice restored to its right place
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S33 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`d69f7a9`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` and reading each blob's S33 block, `d69f7a9` is
+  the first commit where it reads `status: complete`; `caf1612` and the claim stub `dcbda37` both
+  carry the same block at `status: pending`, so the stub and the close-out are distinct commits.
+- **Taken BEFORE this session's Phase 1B claim**, which is where the four sessions before S33 took it
+  and where S33 did not — its own gotcha (1) recorded the slip and named the cause: the pair held
+  because `bin/check-handoff` fired, not because any checklist assigned the step. That is BL-14's
+  distributed half. Restoring the order here is one session's compliance, not a fix; the gap between
+  what the spec promises and what a checklist assigns is still open.
+
 ### 2026-08-03 · [ad hoc] A constraint nobody imposed: the "paused channel" removed, and the context-cost work re-queued against the operator's three goals
 
 **Model:** Claude Opus 5 (1M context).
