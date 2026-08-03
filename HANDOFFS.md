@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S32
+date: 2026-08-03
+status: pending
+active_task: S32 of `docs/planning/framework-context-cost-plan.md` §5 — **the Phase 1B carve-out in `.githooks/pre-commit`**, the plan's stated hard precondition for S34/S35 (a new refusal reason on a hook with a measured 100% bypass is worse than no refusal). Fork-side, canonical-only: `.githooks/pre-commit` is NOT in `bin/_manifest.py`'s DISTRIBUTION, so no adopter file is touched and no channel is needed. MEASURED AT `c000a90`, the pre-change tree, message-independently — **the population is 32 commits whose entire diff is `HANDOFFS.md` alone, not the 26 my predecessor left me.** S31's `git log --grep="claim S"` is a sample of *claims*, not the population of *commits this hook refuses*, and the 6 it misses are the design's whole problem: 2 are close-out receipts committed alone (`f2d013b`, `21fb521`) and 4 are receipt repairs (`f9ea5d7`, `faf2c42`, `a7c814d`, `1626e09`). All 32 postdate the hook (`dc8aa76`, 2026-07-07) and the first tracked ledger (`339dfb2`, same day). THE CONSEQUENCE IS THE DESIGN: the obvious carve-out — *staged set == `HANDOFFS.md` → pass* — would also exempt the two close-out-alone commits, i.e. exactly the commit FM #27 exists to gate. So the predicate reads the staged diff, not just the path: pass only when the diff **adds a ` ```handoff ` fence AND a `status: pending` line AND no `status: complete` line**. That signature was verified against all 32, not assumed from one. DELIBERATE WIDENING BEYOND THE PLAN'S SKETCH, to be labelled as such: the staged set may also carry `SESSION_NOTES.md`, because distributed Phase 1B (`starter-kit/SESSION_RUNNER.md:79-89`) tells every adopter to write that stub and *"commit it with this claim"*, and `SESSION_NOTES.md` is a DISTRIBUTION `seed` — a `HANDOFFS.md`-only carve-out would fix the canonical repo and leave every adopter's prescribed claim shape refused. NOT IN SCOPE (FM #17): `starter-kit/SAFEGUARDS.md:167` and `starter-kit/BOOTSTRAP.md:320` describe the hook without the exemption and are DISTRIBUTED — the channel is paused, so that drift is raised as a backlog item, not edited. Also out: BL-20, BL-18, S33's `CLAUDE.md` purge, `HANDOFFS.md`'s own stale "~1,200 lines" level, and the plan's §7 decisions 1/2/4.
+```
+
+---
+
+```handoff
 session: S31
 date: 2026-08-02
 status: complete
