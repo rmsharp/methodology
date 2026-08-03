@@ -114,6 +114,34 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] Reconcile-on-read: S35's `commit:` field → `d192161` — eighth discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S35 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`d192161`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**98** commits, all refs) and reading each blob's
+  S35 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `d192161` is the first
+  commit where it reads `status: complete`; the claim stub `2fc2c5b` carries the same block at
+  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
+  **eight receipts running**.
+- **The ordinal is derived too, not incremented on faith.** `grep -nE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returns **8** entries in the live file and **0** in either archive shard — but one of the eight is
+  the `nine commit: fields that named no sha` **repair**, not a discharge. Seven numbered discharges
+  precede this one, so this is the **eighth**.
+- **Taken BEFORE this session's Phase 1B claim**, holding the order for the eighth consecutive time
+  (S33 is still the only session that took it late). It held again because the practice is inherited
+  from the predecessor's receipt, not because any checklist assigns the step: **BL-14's distributed
+  half remains open**, and `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to
+  `status: pending` receipts and undocumented commits — never to a *complete* receipt whose `commit:`
+  is `pending`.
+- **Form follows `40a1554`/`0a1f19b`:** the field carries the bare sha and the derivation lives here,
+  in the action ledger, rather than being restated in the receipt. `HANDOFFS.md` is the file G2 names
+  as growing unbounded — **238,432 B** at this reconcile, up from 223,771 B at the previous one, a
+  **+14,661 B** rise across one session.
+
 ### 2026-08-03 · [ad hoc] S35 — the trimmer designed, and the manual procedure's proof found insufficient
 
 **Model:** Claude Opus 5 (1M context).
