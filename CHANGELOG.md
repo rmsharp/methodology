@@ -114,6 +114,23 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] Reconcile-on-read: S32's `commit:` field → `a56dff8` — fifth discharge, and the first taken late
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S32 closed out `commit: pending`, legitimately — the receipt shipped inside
+  the commit whose sha it names. That sha is **`a56dff8`**, with `1479143` (close-out repair) and
+  `e1c1fd0` (operator decisions) named beside it. Derived by walking `git log --all --full-history`
+  over `HANDOFFS.md` (**90** commits, all refs) with `bin/check-handoff`'s own
+  `extract_blocks`/`parse_block` and taking the first commit whose S32 block reads `status: complete`.
+- **It was taken LATE, and that is the point worth recording.** Four prior sessions discharged this
+  before their Phase 1B claim; S33 claimed first (`dcbda37`) and only then discharged. Nothing was
+  lost — `bin/check-handoff` failed immediately and named the exact field — but the gate-on-write and
+  reconcile-on-read pair worked here because the *checker* caught it, not because the *practice* held.
+  BL-14's distributed half is exactly this: the spec promises a reconcile that no checklist assigns.
+
 ### 2026-08-03 · [ad hoc] Operator decisions 1, 2 and 3 of the context-cost plan, ratified and recorded
 
 **Model:** Claude Opus 5 (1M context).
