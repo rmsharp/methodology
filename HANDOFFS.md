@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **26**; the oldest **19**
+**Older receipts are archived.** This file currently holds **27**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -25,6 +25,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > [Learning #12](starter-kit/FRAMEWORK_LEARNINGS.md) pointed at this file, and it is the receipt-ledger
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
+
+---
+
+```handoff
+session: S42
+date: 2026-08-04
+status: pending
+active_task: **OPERATOR-ASSIGNED — a `README.md` section stating what adopting this framework COSTS an adopter in resources.** Sequenced by S41 as residual (i), *"explicitly sequenced after this and not started."* **NAME THE AXIS: fork session `S42` is NOT plan §5 queue item `S42`** (purge derived values from `CLAUDE.md`, `framework-context-cost-plan.md:482`) — the numbers coincide again, as they did at S38 and S40, and that is a coincidence and not a rule. **WHY THIS IS OWED RATHER THAN NICE-TO-HAVE:** `docs/planning/framework-context-cost-plan.md` exists *because* the operator raised the cost (goal G1, "the context tax"), it measured that cost in detail, and **every one of those measurements is fork-only** — `docs/planning/` reaches no adopter and no reader of the GitHub landing page. A prospective adopter today can read the entire public corpus and find no statement of what a session costs them. **README.md IS NOT DISTRIBUTED** (checked against `bin/_manifest.py`: 24 DISTRIBUTION entries, `README.md` is not one), so this section adds **zero** bytes to any adopter's per-session floor — which is the one property that makes it safe to write at length, and it must be stated in the section rather than assumed. **SCOPE, and the Present gate applies before anything is committed:** the deliverable is ONE new README section; every figure in it is re-derived against the tree at this session's own claim sha, with the command that produced it, per this repo's own repeated finding that a number measured mid-change rots before the session ends. **NOT THIS SESSION (FM #17/#18):** no `starter-kit/` or distributed file is edited; no adopter repo is touched (the four-repo rollout stays DEFERRED on operator instruction — *"you need to wait on modifying repos until I am not actively working on them"*); no `ZONE_UNCLASSIFIED` config fix; no `ledger-trimmer-design.md:722` repair; no `BOOTSTRAP.md:137`/`:384` repair; no root-ledger doctrine dogfood (S40 residual 1); no plan queue items S41–S45. **NO OUTWARD-FACING ACTION** — no PR, comment, issue, tag or Release. **BASELINE AT CLAIM, measured on the post-reconcile tree:** HEAD `e23d595`; `bash bin/tests.sh` **182 passed / 1 failed** (`FAIL: github source dry-run failed`, Test 9's expected 404 — **DO NOT WEAKEN TEST 9**); `python3 -m unittest discover -s tools` **334 OK**; `python3 bin/check-links` OK **88 links / 22 files**; `python3 bin/check-handoff` OK; dashboard twins byte-identical; dashboard **72/100** (activity 20 / testing 16 / documentation 16 / ci_cd 0 / methodology 20), worst risk `medium`, `DASHBOARD_VERSION` **2.13.0**; both root ledgers fire the archive trigger (`CHANGELOG.md` 136,309 B / line headroom 8; `HANDOFFS.md` 341,785 B / line headroom 17, byte half only).
+```
 
 ---
 
