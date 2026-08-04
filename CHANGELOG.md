@@ -114,6 +114,85 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] S38 — the trim-trigger dashboard row, and a spec that asked for two things that cannot both be true
+
+**Model:** Claude Opus 5 (1M context).
+Plan §5 queue item **S38** (fork session **S38** — the axes agree this session, having swapped
+twice; that is coincidence, not identity). Deliverable: `collect_trim_metrics`, a collector
+authoring the conditional `(severity, description)` row per grow-and-must-be-read ledger, in
+**both** twins, with **37 new tests**. `DASHBOARD_VERSION` **2.11.0 → 2.12.0**.
+
+- **The session's real decision, and it was settled by arithmetic rather than by preference.**
+  Design §1.3 says the dashboard *"reads the number rather than re-deriving it"* and, in the same
+  paragraph, makes S38 owe an **agreement test**: *"with the trimmer present, the dashboard's
+  displayed headroom equals `--check`'s."* Those cannot both hold. A number **obtained by** parsing
+  `--check` makes that test an identity over one value — it passes forever and certifies nothing,
+  which is Learning #16 with the tautology written into the *specification*. The dashboard
+  therefore **computes** the line metric itself and reads only the one input genuinely owned
+  elsewhere: the calibrated byte budget, parsed from the tool's source **by regex**, which is
+  §7.1's own stated precedent (`check_stale_version`/`parse_version` interrogate another
+  executable *"without importing it"*) and keeps the rows read-only per the ratified architecture.
+- **Two more premises could not be met as written, and both are labelled in the code as
+  departures rather than dressed as readings.** §7.3's absent branch is told to name *"the
+  documented manual procedure"* — **there is none**: no distributed file documents ledger
+  archiving, which is exactly queue item **S40**, and §11 Phase 5 says so in the same document.
+  And §7.2's root-anchored probe misses **everywhere**, because the trimmer is canonical-only and
+  lives at `starter-kit/`, so the *present* branch would have shipped having never run; a
+  `role == "framework"` fallback (added policy) makes it observable on the one repo whose trigger
+  actually fires.
+- **The population is the intersection, not the watch list.** `READ_CAP_WATCHED` holds six names;
+  the trimmer's `LEDGERS` table holds two, and answers `NO_CONFIG` on the rest *by design*
+  ("there is deliberately no generic fallback"). Naming the trimmer for `docs/planning/BACKLOG.md`
+  would point an adopter at a refusal — and design §3.3 independently rules that file permanently
+  out of scope. Asserted against the trimmer's own table, never restated as a literal.
+- **THE FINDING OF THE SESSION IS A REGRESSION I CAUSED IN CODE I DID NOT THINK I WAS TOUCHING.**
+  The new fence regex was named `_FENCE_RE` — a module global of that name **already existed** and
+  is the sole detector for `_strip_fenced_blocks()`. The later binding won, and the two differ on
+  *indented* fences, so an indented documentation example stopped being stripped and its `- [x]`
+  lines became phantom unmigrated done-marks in the backlog signal: **0 before, 2 after**, on a
+  fixture. Renamed, and pinned by a test that asserts the **behaviour** rather than the names.
+- **A 5-lens adversarial review over the uncommitted diff filed 24 findings; 13 survived
+  refutation and all are fixed.** Three further divergences came from reading the two
+  implementations side by side rather than from the review. Every one of them was invisible to the
+  agreement test for the same reason: **every archive shard in this repo happens to shrink its
+  ledger**, so the two sides agreed by accident of history. A missing `pre <= post` archive-event
+  filter (measured at headroom **248** against `--check`'s **35**, and on a plain two-step hand
+  archive the dashboard stayed silent about a ledger the trimmer reported as firing); a fence
+  closer ignoring the trimmer's empty-info rule (**2** records vs **1**); no mirror of the
+  `footer_mode='none'` zone refusal, so the dashboard printed a confident number exactly where
+  `--check` prints none; and `git_show` decoding with the **locale** rather than UTF-8 (**20** vs
+  **34** under `LC_ALL=en_US.ISO8859-1`, because the middle dot in the record grammar stops being
+  a middle dot).
+- **The abstention was rewritten twice and is now gated on both halves.** It first fired whenever
+  the byte half alone was unavailable, asserting *"only the line metric answered"* — false in the
+  commonest adopter state, since a repo that has never archived has no rate baseline either. It
+  now fires only where **neither** half could measure, carries the line metric's own abstention
+  reason (which was being written to the metrics dict and read by nobody), and names no tool the
+  adopter cannot obtain.
+- **Producer mutation: 31 mutants, 31 killed, 0 survived, 0 failed to apply.** Six of them are
+  reverts of the review fixes, written only after those reverts **survived** — a fix with no test
+  is a fix that gets undone. Five more pin what an operator actually reads: both authored
+  severities, the figures in the advisory, `find_trim_tool`'s content verification, and
+  `tool_version`, all of which could be falsified while 310 tests stayed green.
+- **Adopter impact, stated rather than discovered later.** `starter-kit/methodology_dashboard.py`
+  is distributed, so on their next sync every adopter gains one `low` row disclosing that neither
+  half of the archive trigger could measure their ledgers — true today for all 11 adopters in this
+  portfolio, and clearing when **S39′** ships the trimmer and **S40** writes the doctrine. On a
+  repo with no other risks this moves the displayed worst risk from `healthy` to `low`
+  (`worst_risk([])` is `healthy`; `worst_risk([one low])` is `low`). The 0-100 health score is
+  untouched, pinned by a test that kills a scoring mutant (72 → 68).
+- **Verification, measured after the last edit rather than before it.** `bash bin/tests.sh`
+  **175 passed / 1 failed** — the failure is Test 9's `--source=github` 404 on
+  `starter-kit/FRAMEWORK_LEARNINGS.md`, identical to the claim baseline and correct until upstream
+  merges; **Test 9 was not weakened**. `python3 -m unittest discover -s tools` **323 OK**
+  (286 at claim + 37). `python3 bin/check-links` OK **88 links / 22 files**. Twins byte-identical,
+  no file-mode change. Live: dashboard **72/100**, **0 high+**, and the row's headroom **20** /
+  **21** equals `--check`'s **20** / **21** on this repo's two ledgers. Portfolio self-scan: 12
+  repos, no crash, 12 rows.
+- **Learning #17** appended to `starter-kit/FRAMEWORK_LEARNINGS.md` — a spec demanding both "read
+  X's value" and "prove yours equals X's" is a contradiction, and the owed test's falsifiability
+  is the tiebreaker.
+
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S37's `commit:` field → `0e188f5` — tenth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).

@@ -84,7 +84,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.11.0"
+DASHBOARD_VERSION = "2.12.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -277,6 +277,87 @@ READ_CAP_WATCHED = frozenset(
     ("SESSION_NOTES.md", "CHANGELOG.md", "HANDOFFS.md") + _BACKLOG_LOCATIONS
 )
 
+# --- S38: the trim-trigger row ------------------------------------------------------------------
+# D4(b) above reports a file that is ALREADY truncating. This reports the file that is heading
+# there, and names what to do about it. The two are separate risks on purpose and neither
+# subsumes the other: the ledgers in this repo are both well under the line cap today and both
+# already over the byte budget, so a cap-only reporter is silent about the live problem.
+#
+# THE ARCHITECTURE, AND WHY THE DASHBOARD COMPUTES RATHER THAN ASKS. The design (§1.3) says the
+# dashboard "reads the number rather than re-deriving it" AND that S38 owes an agreement test --
+# "with the trimmer present, the dashboard's displayed headroom equals --check's". Those cannot
+# both hold. A number OBTAINED by parsing `--check` makes that test an identity, which cannot
+# fail; the repo has already paid for that mistake once (Learning #16 -- three losslessness
+# guards inert at their call site behind a 13/13 mutation score). The owed test is only
+# meaningful if the two sides are computed independently, so this module computes the line
+# metric itself and the test compares it against a real `--check` run.
+#
+# That also keeps the rows READ-ONLY, which the ratified architecture requires, and matches
+# §7.1's stated precedent: check_stale_version()/parse_version() interrogate another executable
+# BY REGEX, without importing or running it. Nothing here executes a file it discovered.
+#
+# What is genuinely the trimmer's and cannot be re-derived is the BYTE BUDGET -- a judgment
+# calibrated in design §5.4, not a formula. It is read out of the tool's source by regex, the
+# same way parse_version reads DASHBOARD_VERSION. No budget -> the byte half abstains out loud
+# (decision D4: a 0 from an unread source must not be reported as a clean state), and the line
+# half, whose formula is published in CHANGELOG.md's own front matter, still answers.
+TRIM_TOOL_NAME = "methodology_trim.py"
+
+# The framework repo authors the tool under starter-kit/ and does not install a copy at its own
+# root, exactly as it does for methodology_dashboard.py. Probing the root ALONE would therefore
+# miss on every repo in existence today -- the tool is not in bin/_manifest.py yet (that is queue
+# item S39'), so no adopter has it either, and the "present" branch would ship having never run
+# anywhere. ADDED POLICY, and the reason is coverage, not convenience: this fallback is what
+# makes the present branch observable on the one repo whose trigger actually fires.
+#   python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
+#     print([e for e in m.DISTRIBUTION if 'trim' in e[0]])"      -> [] until S39'
+TRIM_TOOL_FRAMEWORK_REL = "starter-kit/" + TRIM_TOOL_NAME
+
+_TRIM_VERSION_RE = re.compile(r'''^TRIM_VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE)
+
+# DEFAULT_BUDGET_BYTES is written `64 * 1024`, NOT as a plain integer -- a digits-only regex
+# matches nothing and silently reports "no budget", which looks exactly like "tool absent". The
+# product form is parsed explicitly and multiplied; no eval, and a test pins the parsed value
+# against the trimmer's real module constant so the two cannot drift apart unnoticed.
+_TRIM_BUDGET_RE = re.compile(
+    r"^DEFAULT_BUDGET_BYTES\s*=\s*([0-9_]+(?:\s*\*\s*[0-9_]+)*)", re.MULTILINE)
+
+# design §5.2's published rate rule. Pinned to the trimmer's own literal by a canonical test,
+# the same arrangement READ_CAP_LINES already uses.
+TRIM_LINE_FIRE_BELOW = 15
+
+TRIM_ARCHIVE_DIR = "docs/archive"
+
+# U+00B7 MIDDLE DOT, spelled as an ESCAPE rather than pasted. Not for ASCII purity -- this file
+# already carries 136 em-dashes and a handful of other non-ASCII characters. The reason is that
+# a middle dot is visually indistinguishable from its lookalikes (U+2022, U+2027, U+30FB) inside
+# a regex, where picking the wrong one silently stops matching and the count quietly drifts. The
+# escape names the codepoint so a reviewer can check it. It is load-bearing, not decoration: the
+# trimmer anchors a CHANGELOG record on the dated, SOURCE-TAGGED heading, so a looser
+# `^### <date>` would count headings the trimmer does not and break the agreement test.
+#   python3 -c "import collections,pathlib;print(collections.Counter(c for c in \
+#     pathlib.Path('tools/methodology_dashboard.py').read_text() if ord(c)>127))"
+_MIDDLE_DOT = "\u00b7"
+
+# The ledgers the trimmer actually has a config entry for. READ_CAP_WATCHED is deliberately
+# WIDER -- it holds six names, including SESSION_NOTES.md and three BACKLOG.md locations -- and
+# the trimmer answers NO_CONFIG on every one of those by design ("there is deliberately no
+# generic fallback: a generic rule is what would mis-zone a differently-shaped ledger"). Naming
+# the trimmer as the remedy for a file it refuses would be a pointer the adopter cannot follow,
+# which is the misdirection §7.3 exists to prevent. A canonical test asserts these keys against
+# the trimmer's own LEDGERS table rather than restating them here.
+TRIM_GRAMMARS = {
+    "CHANGELOG.md": ("heading",
+                     re.compile(r"^### \d{4}-\d{2}-\d{2} " + _MIDDLE_DOT + r" \[")),
+    "HANDOFFS.md": ("fence", "handoff"),
+}
+# Applied per LINE by _trim_record_count, so `^` is a string anchor here and re.MULTILINE is
+# deliberately absent. Compiling it with MULTILINE and then calling .findall over the whole text
+# would count the same headings, but only until a fenced example contained one -- which the two
+# seed ledgers both do, and which is the case that must not be counted.
+
+_TRIM_FENCE_RE = re.compile(r"^(`{3,}|~{3,})(.*)$")
+
 # Doc-only / research-repo scoring reshape (BL-5). A document-only repo (papers, dissertations,
 # technical reports, regulatory analyses — the Research-Documentation workstream population, and
 # partly this framework's own doc corpus) has nothing to unit-test, so the code-centric Testing
@@ -322,6 +403,32 @@ def git_cmd(path, *args, timeout=5):
         return result.stdout.strip()
     except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
         return ""
+
+
+def git_show(path, spec, timeout=10):
+    """`git show <spec>` as TEXT, unstripped, or None when it fails.
+
+    Deliberately not git_cmd: that helper .strip()s its output and returns "" on failure. Both
+    are wrong for a blob whose LINE COUNT is the thing being measured -- stripping silently
+    drops leading and trailing blank lines, and "" makes an unreadable baseline look like an
+    empty file rather than a reason to abstain.
+
+    ENCODING IS PINNED, not left to the locale. `text=True` alone decodes with
+    locale.getpreferredencoding(), so the same repo read under a non-UTF-8 LC_ALL decodes the
+    middle dot in a dated CHANGELOG heading (0xC2 0xB7) as two characters, the record regex stops
+    matching, the baseline record count collapses toward zero and the reported headroom inflates.
+    The trimmer's own baseline read is `git_bytes(...).decode("utf-8", "replace")`, which is
+    locale-independent; this matches it exactly, errors and all, so the two cannot drift apart on
+    a machine neither of them chose."""
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(path), "show", spec],
+            capture_output=True, text=True, timeout=timeout,
+            encoding="utf-8", errors="replace",
+        )
+    except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+        return None
+    return result.stdout if result.returncode == 0 else None
 
 
 def count_lines(filepath):
@@ -583,6 +690,215 @@ def check_stale_version():
             f"canonical is v{canon_ver}.\n"
             f"    Re-sync: python3 {canonical} --sync\n"
         )
+
+
+# --- S38 helpers: locating the trimmer, and computing the line metric without it ------------------
+
+def find_trim_tool(path, role="adopter"):
+    """Locate the ledger trimmer for the SCANNED project, or None.
+
+    Root-anchored on the scanned project, mirroring is_framework_installed -- an adopter's own
+    `tools/methodology_trim.py` is their file, not ours. The starter-kit/ fallback applies only
+    to a framework repo, which authors the tool there and installs no root copy of it (see
+    TRIM_TOOL_FRAMEWORK_REL for why that branch exists at all).
+
+    Content-verified by regex, exactly as parse_version verifies a dashboard copy: a bare
+    `.is_file()` would accept a directory or an unrelated same-named script. Nothing here
+    imports or executes the file it found -- §7.1's precedent, and the reason the rows stay
+    read-only."""
+    candidates = [path / TRIM_TOOL_NAME]
+    if role == "framework":
+        candidates.append(path / TRIM_TOOL_FRAMEWORK_REL)
+    for cand in candidates:
+        if not cand.is_file():
+            continue
+        try:
+            text = cand.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        m = _TRIM_VERSION_RE.search(text)
+        if m:
+            return {"path": cand, "version": m.group(1),
+                    "budget": _parse_trim_budget(text)}
+    return None
+
+
+def _parse_trim_budget(text):
+    """The trimmer's byte budget, read out of its source. None when it cannot be read.
+
+    None is a real answer here, not a zero: the budget is a calibrated judgment (design §5.4)
+    that no formula recovers, so an unparseable one makes the byte half of the trigger
+    unanswerable and it says so rather than substituting a guess."""
+    m = _TRIM_BUDGET_RE.search(text)
+    if not m:
+        return None
+    total = 1
+    for part in m.group(1).split("*"):
+        part = part.strip().replace("_", "")
+        if not part.isdigit():
+            return None
+        total *= int(part)
+    return total or None
+
+
+def _trim_record_count(text, basename):
+    """Records in a ledger under its declared grammar, FENCE-AWARE.
+
+    Fence-awareness is not defensive polish. `starter-kit/CHANGELOG.md` carries three dated
+    headings and `starter-kit/HANDOFFS.md` one ```handoff block, and in both files every one of
+    them sits inside a documentation fence -- a fence-blind counter reads 3 and 1 where the
+    truth is 0, and would report a confident slope for a freshly seeded ledger holding no
+    records at all.
+
+    Returns None -- ABSTAIN, never a count of zero -- for a basename this module has no grammar
+    for, and for a text the trimmer's own zone classifier would REFUSE. Both matter: the trimmer
+    treats a refusal as a reason to abstain and says so ("that is not a count of zero. Treating it
+    as zero makes `de` the whole current record count and prints a confidently inflated headroom
+    for a baseline the tool would itself refuse to read"), so a counter that always answers would
+    print a number exactly where `--check` prints none."""
+    grammar = TRIM_GRAMMARS.get(basename)
+    if grammar is None:
+        return None
+    kind, pat = grammar
+    n = 0
+    fence = None
+    last_start = -1
+    hrs = []
+    for idx, raw in enumerate(text.split("\n")):
+        line = raw.rstrip()
+        m = _TRIM_FENCE_RE.match(line)
+        inside_before = fence is not None
+        if m:
+            marker, info = m.group(1), m.group(2).strip()
+            if fence is None:
+                fence = marker
+                # No `and not inside_before` conjunct here, deliberately. This branch is reached
+                # only when fence is None, which IS inside_before being False, so the conjunct
+                # could never be false and no mutant could falsify it -- a comment wearing a
+                # guard's clothes. It was written, observed unkillable, and removed. The fact it
+                # asserted is real and is stated instead: a fence OPENER is never itself nested,
+                # which is what makes a ```handoff line a record start rather than noise.
+                if kind == "fence" and info == pat:
+                    n += 1
+                    last_start = idx
+            elif marker[0] == fence[0] and len(marker) >= len(fence) and not info:
+                # `and not info` is the trimmer's rule and it is load-bearing, not pedantry: a
+                # closer carries no info string. Without it a nested ```python inside an open
+                # fence reads as a closer here and as ordinary fenced content there, and every
+                # record after it is counted by one side and not the other -- measured at 1 vs 2
+                # on a three-fence fixture.
+                fence = None
+            continue
+        if inside_before:
+            continue
+        if kind == "heading" and pat.match(line):
+            n += 1
+            last_start = idx
+        if line.strip() == "---":
+            hrs.append(idx)
+
+    # The trimmer ASSERTS a footer_mode='none' declaration rather than trusting it: a standalone
+    # '---' after the last record with content under it is content the config cannot name, and it
+    # refuses. Mirror the refusal, do not model the whole zone split -- the dashboard has no need
+    # to know where the footer starts, only whether the trimmer would have answered at all.
+    if kind == "fence" and n and hrs:
+        for i in hrs:
+            if i > last_start and "\n".join(text.split("\n")[i + 1:]).strip():
+                return None
+    return n
+
+
+def _newest_archive_sha(path, basename):
+    """The commit that ADDED the most recent shard of this ledger, or None.
+
+    Ordered by position in the commit graph, never by timestamp: two archives committed in the
+    same second are ordinary, and a timestamp tie falls back to sha order, which is arbitrary.
+    The trimmer orders the same way and for the same reason; the agreement test is what holds
+    the two together."""
+    adir = path / TRIM_ARCHIVE_DIR
+    if not adir.is_dir():
+        return None
+    stem = basename[:-3] if basename.endswith(".md") else basename
+    shas = []
+    for shard in sorted(adir.glob("%s-*.md" % stem)):
+        try:
+            rel = shard.relative_to(path).as_posix()
+        except ValueError:
+            continue
+        sha = git_cmd(path, "log", "--diff-filter=A", "-1", "--format=%H", "--", rel)
+        if not sha:
+            continue
+        # An archive EVENT is a commit in which the ledger actually SHRANK -- the trimmer's own
+        # filter, and skipping it is not cosmetic. A shard committed separately from the trim
+        # (the ordinary two-step manual archive), or copied in beside new entries, adds a sha
+        # here that the trimmer discards; the two then compute against different baselines and
+        # the row an operator reads stops matching `--check`, which is the one thing §1.3 names
+        # as worse than a single gauge. It does not bite on this repo -- every shard here really
+        # did shrink its ledger -- so the agreement test passed on luck of history until a
+        # fixture was built for it.
+        pre = git_show(path, "%s^:%s" % (sha, basename))
+        post = git_show(path, "%s:%s" % (sha, basename))
+        if pre is None or post is None:
+            continue
+        if len(pre.encode("utf-8")) <= len(post.encode("utf-8")):
+            continue
+        shas.append(sha)
+    if not shas:
+        return None
+    if len(shas) == 1:
+        return shas[0]
+    # Ordered by position in the commit graph, never by timestamp: two archives committed in the
+    # same second are ordinary, and a timestamp tie falls back to sha order, which is arbitrary.
+    #
+    # ABSTAIN rather than degrade. git_cmd returns "" on timeout, which is indistinguishable from
+    # success -- and an empty walk collapses every rank to the same sentinel, leaving the stable
+    # sort in FILENAME order, which for a date-stamped shard naming scheme silently selects the
+    # OLDEST. That is the precise ordering this function's contract forbids, arrived at with no
+    # error and no marker. If the walk cannot rank every candidate, say nothing.
+    walk = (git_cmd(path, "rev-list", "--topo-order", "HEAD") or "").split()
+    rank = {sha: i for i, sha in enumerate(walk)}
+    if any(s not in rank for s in shas):
+        return None
+    shas.sort(key=lambda s: rank[s])
+    return shas[0]
+
+
+def trim_line_headroom(path, rel_posix, basename):
+    """(headroom_records, abstain_reason) for a ledger's line metric.
+
+    The rule published in CHANGELOG.md's own front matter: headroom to the 2,000-line read cap,
+    divided by lines-per-record measured since the last split. It needs no tool, which is why
+    this half still answers when the trimmer is absent.
+
+    It ABSTAINS OUT LOUD rather than printing a number it cannot support -- immediately after a
+    split both deltas are zero, and against a superseded baseline they go negative. Exactly one
+    of the two return slots is ever filled."""
+    fpath = path / rel_posix
+    try:
+        text = fpath.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return None, "%s could not be read" % rel_posix
+    live_lines = text.count("\n")
+
+    split = _newest_archive_sha(path, basename)
+    if split is None:
+        return None, "no prior archive of this ledger -- the rate has no baseline"
+
+    base_text = git_show(path, "%s:%s" % (split, rel_posix))
+    if base_text is None:
+        return None, "the baseline blob %s:%s is unreadable" % (split[:7], rel_posix)
+
+    live_records = _trim_record_count(text, basename)
+    base_records = _trim_record_count(base_text, basename)
+    if live_records is None or base_records is None:
+        return None, "%s has no declared record grammar" % basename
+
+    dl = live_lines - base_text.count("\n")
+    de = live_records - base_records
+    if de <= 0 or dl <= 0:
+        return None, ("fewer than one record written since the last split "
+                      "(%d records, %d lines)" % (de, dl))
+    return (READ_CAP_LINES - live_lines) * de // dl, None
 
 
 def sync_dashboards(start, dry_run=False):
@@ -1413,6 +1729,157 @@ def evaluate_changelog_freshness(path, git):
                 f"{rel} present but never used — still the untouched seed on a repo with "
                 "real commit history",
             ))
+
+    return result
+
+
+def collect_trim_metrics(path, files, role="adopter"):
+    """S38 -- the trim-trigger row: headroom per grow-and-must-be-read ledger, and the remedy.
+
+    The remedy BRANCHES on whether the trimmer is installed for the scanned project (§7.3):
+    present names a command the adopter can actually run, built from the located path; absent
+    never does. Every advisory names the file it was computed against rather than saying "the
+    ledger" -- a generic noun in this position once sent an adopter to update a product
+    release-notes file while the real finding stayed suppressed.
+
+    ONE DEPARTURE FROM §7.3, LABELLED AS SUCH RATHER THAN DRESSED AS A READING. The design says
+    the absent branch "names the documented manual procedure". There is no such procedure to
+    name: no distributed file documents ledger archiving, which is precisely what queue item S40
+    is for (design §11 Phase 5 says so itself -- "Today zero distributed files say anything on
+    the subject"). Verified over the WHOLE distributed set, not a convenient corner of it -- the
+    design's own check greps `starter-kit/*.md`, which is 12 of the 23 manifest entries, and a
+    claim about "no distributed file" cannot be settled by a net that misses 11 of them
+    (`HOW_TO_USE.md`, `ITERATIVE_METHODOLOGY.md`, and nine `workstreams/*.md`):
+      python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
+        print('\n'.join(sorted(e[0] for e in m.DISTRIBUTION if e[0].endswith('.md'))))" \
+        | xargs grep -l -i archiv
+    -> `starter-kit/FRAMEWORK_LEARNINGS.md` (Learning #15's prose about PROVING a split lossless,
+       not a procedure for performing one) and `HOW_TO_USE.md` (a worked example project's
+       `POST /projects/:id/archive` endpoint). Neither documents ledger archiving. The narrower
+       grep reached the same verdict, which is luck, not method.
+    The `.md` filter is not cosmetic either: run unfiltered and the distributed set also returns
+    THIS FILE, because the paragraph you are reading contains the word. A measurement that
+    includes the measurer is the trap one over from the narrow-population one, and the fix for
+    both is to state the population beside the number.
+    So the absent branch states the measurement and says plainly that the byte half did not run.
+    Inventing a destination would be the exact misdirection §7.3 exists to prevent. WHEN S40
+    LANDS, this branch should point at the seed ledger's own archiving section.
+    """
+    result = {
+        "tool_present": False,
+        "tool_path": None,
+        "tool_version": None,
+        "budget_bytes": None,
+        "ledgers": [],
+        "signals": [],
+    }
+
+    # Same gate as the D4(b) risk: a project that never adopted the methodology is not told its
+    # CHANGELOG.md is too long. Bound here rather than at risk time so the collector's output is
+    # already scoped when assess_risks re-emits it verbatim.
+    owes_ledger = (path / "SESSION_RUNNER.md").is_file() or role == "framework"
+    if not owes_ledger:
+        return result
+
+    tool = find_trim_tool(path, role=role)
+    if tool is not None:
+        result["tool_present"] = True
+        result["tool_version"] = tool["version"]
+        result["budget_bytes"] = tool["budget"]
+        try:
+            result["tool_path"] = tool["path"].relative_to(path).as_posix()
+        except ValueError:
+            result["tool_path"] = tool["path"].name
+
+    # The population is the intersection of what a session must read in full and what the
+    # trimmer has a config entry for. read_cap_watch already holds the line counts; taking the
+    # names from TRIM_GRAMMARS is what keeps the row from pointing at a file the tool refuses.
+    for w in files.get("read_cap_watch", []):
+        basename = w["path"].rsplit("/", 1)[-1]
+        if basename not in TRIM_GRAMMARS:
+            continue
+        fpath = path / w["path"]
+        try:
+            size_bytes = fpath.stat().st_size
+        except OSError:
+            continue
+        headroom, abstains = trim_line_headroom(path, w["path"], basename)
+        line_fires = headroom is not None and headroom < TRIM_LINE_FIRE_BELOW
+        budget = result["budget_bytes"]
+        byte_fires = None if budget is None else size_bytes > budget
+        entry = {
+            "path": w["path"], "lines": w["lines"], "bytes": size_bytes,
+            "headroom": headroom, "abstains": abstains,
+            "line_fires": line_fires, "byte_fires": byte_fires,
+            "fires": bool(line_fires or byte_fires),
+        }
+        result["ledgers"].append(entry)
+
+        if not entry["fires"]:
+            continue
+
+        reasons = []
+        if line_fires:
+            reasons.append("line headroom %d record(s), under the %d the rate rule fires at"
+                           % (headroom, TRIM_LINE_FIRE_BELOW))
+        if byte_fires:
+            reasons.append("{:,} B against a {:,} B budget".format(size_bytes, budget))
+        why = "; ".join(reasons)
+
+        # `--check` and NOT `--write`, deliberately. A trigger firing is not the same as a trim
+        # being the right move, and the tool knows the difference: on this repo `--write`
+        # against HANDOFFS.md refuses twice over -- once because the undocumented set is
+        # non-empty (a trim commit would advance the Phase 0 frontier and hide those commits
+        # permanently) and once because SRF is past RED, where archiving resets the level and
+        # not the rate. An advisory promising "--write to archive" would name a command that
+        # declines, which is the misdirection this wording exists to avoid. `--check` reports
+        # the full trigger and the refusal, writes nothing, and keeps this row read-only.
+        if result["tool_present"]:
+            remedy = ("run `python3 %s --file %s --check` for the full report and whether a "
+                      "trim is the right move" % (result["tool_path"], w["path"]))
+        else:
+            remedy = ("%s is not installed here, so this must be archived by hand"
+                      % TRIM_TOOL_NAME)
+        result["signals"].append(
+            ("medium", "%s: %s -- the archive trigger fires; %s" % (w["path"], why, remedy)))
+
+    # The abstention, said ONCE per repo and ONLY where BOTH halves came up empty.
+    #
+    # Decision D4 forbids reporting a 0 from an unread source as a clean state, and the state that
+    # actually meets that description is a watched ledger about which this scanner said NOTHING --
+    # the line rate had no baseline AND the byte budget was unreadable. Then the file is being
+    # watched in name only, and the silence is the finding.
+    #
+    # An earlier draft fired whenever the BYTE half alone was unavailable and asserted "only the
+    # line metric answered". Two things were wrong with it. The sentence is false in the commonest
+    # adopter state -- a repo that has never archived has no rate baseline either, so NEITHER half
+    # answered -- and the line half's abstention reason, which trim_line_headroom takes care to
+    # produce, was written to `ledgers[].abstains` and read by nobody, so the half that guards
+    # silent truncation was itself abstaining silently. Both reasons are now in the text.
+    #
+    # It also fired across the whole adopter fleet over a budget adopters have never been told
+    # about: no distributed file names one (S40 writes the doctrine, S39' ships the tool). Naming
+    # an unobtainable tool as something they had failed to install was a pointer they could not
+    # follow -- the misdirection §7.3 exists to prevent, in the branch written to honour it.
+    #
+    # The CAUSE is stated, not guessed: a tool present with an unreadable budget constant is a
+    # different finding from a tool that is absent, and an earlier draft reported the second for
+    # both -- telling an operator looking straight at an installed trimmer that it was not there.
+    blind = [l for l in result["ledgers"]
+             if l["byte_fires"] is None and l["headroom"] is None]
+    if blind:
+        if result["tool_present"]:
+            cause = ("its %s could not be read from %s"
+                     % ("DEFAULT_BUDGET_BYTES", result["tool_path"]))
+        else:
+            cause = "no %s is installed here to supply one" % TRIM_TOOL_NAME
+        detail = "; ".join("%s (%s)" % (l["path"], l["abstains"]) for l in blind)
+        result["signals"].append((
+            "low",
+            "no ledger-size measurement was possible for %s: the rate metric abstained and the "
+            "byte budget is unknown -- %s. These files are watched but unmeasured."
+            % (detail, cause),
+        ))
 
     return result
 
@@ -2283,6 +2750,14 @@ def assess_risks(metrics):
                                    "gets a silently truncated file, with no error and no "
                                    "missing-data marker"})
 
+    # S38: the trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
+    # the Component C signals above use. The collector owns the gate, the population and the
+    # conditional remedy wording; nothing is re-decided here, so there is one place to read to
+    # know what an operator was told. Absent key tolerated: a metrics dict built by an older
+    # copy of this module has no "trim" entry, and that is not a finding.
+    for sev, desc in metrics.get("trim", {}).get("signals", []):
+        risks.append({"severity": sev, "description": desc})
+
     # Sort by severity
     severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
     risks.sort(key=lambda r: severity_order.get(r["severity"], 99))
@@ -2379,6 +2854,10 @@ def collect_all(path):
     # (which consumes doc_only + render). Order matters: render feeds detect_doc_only.
     metrics["render"] = collect_render_metrics(path, files, ci, meth)
     metrics["doc_only"] = detect_doc_only(path, files, metrics["render"])
+
+    # S38: the trim-trigger row. Wired after the metrics dict is built (it reads the collected
+    # read_cap_watch line counts) and before the scores block, which re-emits its signals.
+    metrics["trim"] = collect_trim_metrics(path, files, role=role_info["role"])
 
     metrics["scores"] = {
         "health": score_health(metrics),

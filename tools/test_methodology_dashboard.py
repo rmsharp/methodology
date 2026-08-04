@@ -2037,10 +2037,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.11.0")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.12.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.11\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.11.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.12\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.12.0")
 
 
 class TestEndToEnd(unittest.TestCase):
@@ -3068,6 +3068,844 @@ class TestD4SelfExclusion(unittest.TestCase):
                          "--sync must not target the repo that AUTHORS the dashboard")
         self.assertIn("adopter", out, "fixture check: a real adopter target must still be found, "
                                       "or this test would pass on an empty target list")
+
+
+TRIM_PY = os.path.join(os.path.dirname(HERE), "starter-kit", "methodology_trim.py")
+
+
+def _load_trimmer():
+    """The trimmer as a module, for use as an INDEPENDENT operand only.
+
+    The dashboard never imports it -- that is the whole architecture (§7.1: interrogate by
+    regex, without importing). These tests do, precisely so that the value the dashboard parsed
+    out of the tool's SOURCE TEXT can be compared against the value the tool itself defines.
+    Two spellings of one comprehension would assert nothing (Learning #16)."""
+    spec = importlib.util.spec_from_file_location("methodology_trim_under_test", TRIM_PY)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+class TestS38TrimTriggerRow(unittest.TestCase):
+    """Queue item S38 -- the conditional trim-trigger row (design §7, §11 Phase 3).
+
+    RED-FIRST, and watched: every assertion below was run against the pre-change scanner
+    (`git show HEAD:tools/methodology_dashboard.py`) and observed to fail -- the collector,
+    the constants and the metrics key do not exist there, so each fails with AttributeError or
+    KeyError rather than passing vacuously.
+
+    The design says (§1.3) that the dashboard "reads the number rather than re-deriving it" and
+    in the same paragraph makes this session owe an AGREEMENT TEST against `--check`. Those two
+    cannot both be honoured: a number obtained BY parsing `--check` makes the agreement test an
+    identity that cannot fail. The dashboard therefore computes independently, and
+    test_headroom_agrees_with_a_real_check_run is a test that can actually go red.
+    """
+
+    REPO = Path(HERE).parent          # the canonical repo, used as a live fixture
+
+    # --- fixtures -------------------------------------------------------------------------------
+
+    def _repo(self, files_map, runner=True, archive=None, ledger="CHANGELOG.md"):
+        """A repo whose archive shard, if any, is a REAL archive event.
+
+        An earlier version of this helper wrote the shard in the same commit that created the
+        ledger, and every fixture built on it was unrepresentative: the trimmer counts a shard as
+        an archive event only when the LEDGER ACTUALLY SHRANK in that commit, so those repos had
+        no baseline at all as far as `--check` was concerned. The tests passed anyway because the
+        dashboard was, at that point, equally permissive -- two implementations agreeing on a
+        state neither would ever meet in the wild. The shard is now committed the way a real trim
+        commits one: an inflated ledger first, then the shrunk ledger and the shard together."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        if runner:
+            (p / "SESSION_RUNNER.md").write_text("# Session Runner\n" + "step\n" * 40)
+
+        if archive is not None:
+            # commit 1 -- the pre-archive ledger, deliberately larger than what follows.
+            pre = p / ledger
+            pre.parent.mkdir(parents=True, exist_ok=True)
+            pre.write_text((files_map.get(ledger, "# ledger\n")) + ("padding\n" * 400))
+            self._commit(p, "pre-archive ledger")
+            ap = p / "docs" / "archive" / archive
+            ap.parent.mkdir(parents=True, exist_ok=True)
+            ap.write_text("# archived shard\n")
+
+        for name, content in files_map.items():
+            fp = p / name
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            fp.write_text(content)
+        self._commit(p, "archive event" if archive is not None else "init")
+
+        if archive is not None:
+            # Fixture control: the shard commit must really be an archive event, or every
+            # headroom this repo produces is measured against a baseline the trimmer rejects.
+            self.assertIsNotNone(
+                md._newest_archive_sha(p, Path(ledger).name),
+                "fixture is not a real archive event: the ledger did not shrink in the shard "
+                "commit, so the trimmer would find no baseline here")
+        return p
+
+    @staticmethod
+    def _commit(p, msg):
+        subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "-m", msg], check=True)
+
+    @staticmethod
+    def _entries(n, start=0, body=30):
+        return "".join("### 2026-01-%02d %s [ad hoc] entry %d\n\n%s\n"
+                       % (i % 28 + 1, md._MIDDLE_DOT, i, "x\n" * body)
+                       for i in range(start, start + n))
+
+    def _descs(self, path, expect_role=None):
+        """Signals plus the collector's own dict.
+
+        The `role` parameter this helper used to take was DEAD: collect_all detects the role
+        itself, so passing role="framework" controlled nothing and two tests looked like they
+        were exercising a branch they were not selecting. It is now an ASSERTION about the role
+        collect_all actually detected, which is the thing those tests meant to establish."""
+        m = md.collect_all(path)
+        if expect_role is not None:
+            self.assertEqual(m["methodology"].get("role"), expect_role,
+                             "fixture: this test depends on the detected repo role")
+        return [d for _s, d in m["trim"]["signals"]], m["trim"]
+
+    # --- the constants, each pinned to an INDEPENDENT operand -----------------------------------
+
+    def test_grammars_agree_with_the_trimmer_config_table(self):
+        """THE POPULATION, and the defect it prevents. `READ_CAP_WATCHED` is deliberately wider
+        than the set of ledgers the trimmer can act on -- it names SESSION_NOTES.md and three
+        BACKLOG.md locations, and the trimmer answers NO_CONFIG on every one of them by design.
+        A row naming the trimmer for one of those would point an adopter at a refusal. Asserted
+        against the trimmer's own LEDGERS table, not against a restatement of it."""
+        trim = _load_trimmer()
+        self.assertEqual(sorted(md.TRIM_GRAMMARS), sorted(trim.LEDGERS))
+        # ...and prove the wider set really is wider, or the assertion above is vacuous.
+        self.assertTrue(set(md.READ_CAP_WATCHED) - set(md.TRIM_GRAMMARS),
+                        "fixture check: READ_CAP_WATCHED must hold names the trimmer refuses, "
+                        "or this test is guarding nothing")
+
+    def test_line_fire_threshold_agrees_with_the_trimmer(self):
+        """The reporter and the remedy must not disagree about when the rate rule fires. One
+        operand is read out of this module, the other parsed out of the OTHER tool's source."""
+        trim_src = Path(TRIM_PY).read_text(encoding="utf-8")
+        m = re.search(r"^LINE_FIRE_BELOW\s*=\s*(\d+)", trim_src, re.MULTILINE)
+        self.assertIsNotNone(m, "methodology_trim.py must declare LINE_FIRE_BELOW")
+        self.assertEqual(md.TRIM_LINE_FIRE_BELOW, int(m.group(1)))
+
+    def test_budget_is_parsed_from_the_product_form(self):
+        """THE TRAP THIS TEST EXISTS FOR: the trimmer writes `DEFAULT_BUDGET_BYTES = 64 * 1024`,
+        not a plain integer. A digits-only regex matches nothing, returns None, and the byte
+        half of the trigger silently reports "unavailable" on a repo where the tool is sitting
+        right there. Compared against the tool's own module constant, which is an operand this
+        module never sees."""
+        trim = _load_trimmer()
+        parsed = md._parse_trim_budget(Path(TRIM_PY).read_text(encoding="utf-8"))
+        self.assertEqual(parsed, trim.DEFAULT_BUDGET_BYTES)
+        self.assertIsNotNone(parsed)
+        # The form really is a product, or the test above proves nothing about the parser.
+        self.assertRegex(Path(TRIM_PY).read_text(encoding="utf-8"),
+                         r"(?m)^DEFAULT_BUDGET_BYTES\s*=\s*\d+\s*\*\s*\d+")
+
+    def test_unparseable_budget_abstains_rather_than_guessing(self):
+        self.assertIsNone(md._parse_trim_budget("DEFAULT_BUDGET_BYTES = compute_it()\n"))
+        self.assertIsNone(md._parse_trim_budget("nothing here\n"))
+        self.assertEqual(md._parse_trim_budget("DEFAULT_BUDGET_BYTES = 64 * 1024\n"), 65536)
+        self.assertEqual(md._parse_trim_budget("DEFAULT_BUDGET_BYTES = 65_536\n"), 65536)
+
+    # --- A4, branch 1: the present branch names a command the trimmer really accepts ------------
+
+    def test_named_command_uses_flags_the_trimmer_accepts(self):
+        """A4's present-branch risk: this module carries a copy of ANOTHER tool's interface and
+        goes stale when that interface moves. The flags are not compared against a hardcoded
+        literal -- the command is lifted out of the emitted advisory and actually RUN, and the
+        assertion is that the trimmer did not reject its arguments.
+
+        Asserted on argparse's own rejection text and on the finding CODES, never on the exit
+        code: `--check` exits 1 BY DESIGN when the trigger fires, so an exit-code assertion here
+        would read a working tool as a broken one."""
+        descs, trim_metrics = self._descs(self.REPO, expect_role="framework")
+        self.assertTrue(trim_metrics["tool_present"],
+                        "fixture check: the canonical repo must locate its own trimmer, or the "
+                        "present branch is not under test at all")
+        cmds = [c for d in descs for c in re.findall(r"`([^`]+)`", d)]
+        self.assertTrue(cmds, "the present branch must name at least one runnable command")
+        for cmd in cmds:
+            parts = cmd.split()
+            self.assertEqual(parts[:1], ["python3"], cmd)
+            proc = subprocess.run(parts, cwd=str(self.REPO), capture_output=True, text=True,
+                                  timeout=120)
+            self.assertNotIn("unrecognized arguments", proc.stderr, cmd)
+            self.assertNotIn("invalid choice", proc.stderr, cmd)
+            self.assertNotIn("expected one argument", proc.stderr, cmd)
+            self.assertIn("[CHECK]", proc.stdout,
+                          "the named command must actually reach the trigger report: " + cmd)
+
+    def test_present_branch_never_promises_a_write(self):
+        """A trigger firing is not a trim being correct, and the tool knows the difference: on
+        this repo `--write` refuses (undocumented set non-empty, and SRF past RED). An advisory
+        ending "--write to archive" would name a command that declines."""
+        descs, _ = self._descs(self.REPO, expect_role="framework")
+        self.assertTrue(descs, "fixture check: the trigger must fire here, or nothing is asserted")
+        for d in descs:
+            self.assertNotIn("--write", d)
+
+    # --- A4, branch 2: the absent branch, which no developer machine runs by accident -----------
+
+    def test_absent_branch_names_the_file_and_never_a_command(self):
+        """A4's absent-branch risk: this branch never runs where the tool is installed, so
+        nothing checks that it says anything useful. It must name the FILE it was computed
+        against (a generic noun in this position once misdirected an adopter) and must not name
+        a command the adopter does not have."""
+        p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(40)},
+                       archive="CHANGELOG-through-2025-12-31.md")
+        (p / "CHANGELOG.md").write_text(
+            (p / "CHANGELOG.md").read_text() + self._entries(25, start=40, body=45))
+        self._commit(p, "grow")
+
+        descs, trim_metrics = self._descs(p)
+        self.assertFalse(trim_metrics["tool_present"],
+                         "fixture check: the trimmer must be absent, or this is the other branch")
+        self.assertTrue(descs, "the absent branch must still speak when the line metric fires")
+        joined = "\n".join(descs)
+        self.assertIn("CHANGELOG.md", joined, "the advisory must name the file it measured")
+        self.assertNotIn("python3", joined,
+                         "the absent branch must not name a command the adopter cannot run")
+        self.assertNotIn("`", joined)
+
+    def test_a_ledger_neither_half_could_measure_is_disclosed(self):
+        """Decision D4 -- a 0 from an unread source must not be reported as a clean state. The
+        state that actually meets that description is a watched ledger about which NEITHER half
+        spoke: no archive, so the rate has no baseline, and no trimmer, so no budget. Then the
+        file is watched in name only and the silence is the finding.
+
+        An earlier version fired whenever the BYTE half alone was unavailable and claimed "only
+        the line metric answered". That sentence is false in the commonest adopter state, and it
+        put a permanent unactionable row on every repo in the fleet over a budget no distributed
+        file has ever named."""
+        p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(6)})
+        descs, trim_metrics = self._descs(p)
+        self.assertFalse(trim_metrics["tool_present"])
+        led = [l for l in trim_metrics["ledgers"] if l["path"] == "CHANGELOG.md"][0]
+        self.assertIsNone(led["headroom"], "fixture: the rate must have no baseline here")
+        self.assertIsNone(led["byte_fires"], "fixture: the budget must be unknown here")
+        self.assertEqual(sum("watched but unmeasured" in d for d in descs), 1,
+                         "said once per repo, and said at all: %r" % descs)
+        joined = "\n".join(descs)
+        self.assertIn("CHANGELOG.md", joined, "the advisory must name the file")
+        self.assertIn("no prior archive", joined,
+                      "the LINE half's abstention reason must reach a consumer, not just the "
+                      "metrics dict -- it is the half that guards silent truncation")
+
+    def test_a_ledger_the_rate_could_measure_gets_no_abstention_row(self):
+        """The control, and the fleet-noise fix. When the rate metric answered, the dashboard has
+        said something about the file, and a second row announcing that the other half is
+        unavailable is noise an adopter cannot act on -- no distributed file names a byte budget
+        (that is S40) and no adopter can obtain the trimmer (that is S39')."""
+        p = self._exact(base_lines=800, base_records=10, live_lines=1000, live_records=13)
+        descs, trim_metrics = self._descs(p)
+        self.assertFalse(trim_metrics["tool_present"])
+        led = [l for l in trim_metrics["ledgers"] if l["path"] == "CHANGELOG.md"][0]
+        self.assertIsNotNone(led["headroom"], "fixture: the rate must answer here")
+        self.assertIsNone(led["byte_fires"])
+        self.assertFalse([d for d in descs if "watched but unmeasured" in d], descs)
+
+    def test_unreadable_budget_is_not_reported_as_an_absent_tool(self):
+        """An installed trimmer whose budget constant cannot be parsed is a DIFFERENT finding
+        from a missing trimmer. An earlier draft reported the second for both, which would have
+        told an operator looking straight at an installed tool that it was not installed."""
+        p = self._repo({
+            "CHANGELOG.md": "# Changelog\n\n" + self._entries(6),
+            "methodology_trim.py": 'TRIM_VERSION = "9.9.9"\nDEFAULT_BUDGET_BYTES = later()\n',
+        }, archive="CHANGELOG-through-2025-12-31.md")
+        descs, trim_metrics = self._descs(p)
+        self.assertTrue(trim_metrics["tool_present"])
+        self.assertIsNone(trim_metrics["budget_bytes"])
+        joined = "\n".join(descs)
+        self.assertIn("could not be read", joined)
+        self.assertNotIn("is not installed", joined)
+
+    # --- §1.3's owed agreement test -------------------------------------------------------------
+
+    def test_headroom_agrees_with_a_real_check_run(self):
+        """§1.3's owed test. The two operands are genuinely independent: the left is computed by
+        this module from the file and git, the right is parsed out of a real subprocess run of
+        the trimmer. Neither is derived from the other, so this can fail -- and it does under
+        every one of the three mutations recorded in the session's close-out (wrong archive
+        boundary, looser record grammar on a fenced fixture, fence-blind counting)."""
+        trim_metrics = md.collect_trim_metrics(
+            self.REPO, md.collect_file_metrics(self.REPO), role="framework")
+        measured = {l["path"]: l["headroom"] for l in trim_metrics["ledgers"]}
+        self.assertTrue(measured, "fixture check: the canonical repo must expose trimmable "
+                                  "ledgers, or nothing is compared")
+        # VACUITY GUARD. `assertTrue(measured)` only proves the dict is non-empty; if every
+        # headroom were None the loop below would take the abstain branch every time and this
+        # test would pass having compared no numbers at all. At least one real numeric
+        # comparison must happen, and it is counted rather than hoped for.
+        compared = 0
+        self.assertTrue(any(v is not None for v in measured.values()),
+                        "fixture check: at least one ledger must yield a NUMBER, or the "
+                        "agreement test compares nothing: %r" % measured)
+        for rel, mine in measured.items():
+            proc = subprocess.run(
+                ["python3", TRIM_PY, "--file", rel, "--check"],
+                cwd=str(self.REPO), capture_output=True, text=True, timeout=120)
+            m = re.search(r"\[TRIGGER_LINES\] line headroom (-?\d+) record", proc.stdout)
+            if m is None:
+                self.assertIn("[LINE_METRIC_ABSTAINS]", proc.stdout,
+                              "unexpected --check output for %s: %s" % (rel, proc.stdout))
+                self.assertIsNone(mine, "the trimmer abstained on %s; so must this module" % rel)
+                continue
+            self.assertEqual(mine, int(m.group(1)),
+                             "displayed headroom for %s must equal --check's" % rel)
+            compared += 1
+        self.assertGreaterEqual(compared, 1,
+                                "no numeric agreement was actually asserted (%d ledgers, all "
+                                "abstaining)" % len(measured))
+
+    # --- the record counter, at the two points the live repo does NOT discriminate --------------
+
+    def test_fenced_records_are_not_counted(self):
+        """The live ledgers cannot prove this: every dated heading in the root CHANGELOG.md is a
+        real entry, so a fence-blind counter scores identically there. The SEED ledgers are the
+        discriminating fixture and they are real artifacts, not synthetic ones -- every dated
+        heading in `starter-kit/CHANGELOG.md` and the one ```handoff block in
+        `starter-kit/HANDOFFS.md` sit inside documentation fences. A fence-blind counter reads
+        3 and 1 where the truth is 0, and would print a confident slope for a freshly seeded
+        ledger that holds no records at all."""
+        seed_cl = (self.REPO / "starter-kit" / "CHANGELOG.md").read_text(encoding="utf-8")
+        seed_ho = (self.REPO / "starter-kit" / "HANDOFFS.md").read_text(encoding="utf-8")
+        # Fixture control: the naive counts really are non-zero, or "0" proves nothing.
+        self.assertGreater(len(re.findall(r"(?m)^### \d{4}-\d{2}-\d{2}", seed_cl)), 0)
+        self.assertGreater(len(re.findall(r"(?m)^```handoff", seed_ho)), 0)
+        self.assertEqual(md._trim_record_count(seed_cl, "CHANGELOG.md"), 0)
+        self.assertEqual(md._trim_record_count(seed_ho, "HANDOFFS.md"), 0)
+
+    def test_record_counter_matches_the_trimmers_zoning_on_every_real_ledger(self):
+        """Seven real files, including both archives and both seeds. The dashboard's counter and
+        the trimmer's fence-aware classify_zones are separate implementations; this is what
+        makes the headroom agreement above more than a coincidence on two files."""
+        trim = _load_trimmer()
+        targets = ["CHANGELOG.md", "HANDOFFS.md",
+                   "starter-kit/CHANGELOG.md", "starter-kit/HANDOFFS.md"]
+        targets += [str(q.relative_to(self.REPO).as_posix())
+                    for q in sorted((self.REPO / "docs" / "archive").glob("*.md"))]
+        checked = 0
+        for rel in targets:
+            fp = self.REPO / rel
+            if not fp.is_file():
+                continue
+            base = "CHANGELOG.md" if "CHANGELOG" in fp.name else "HANDOFFS.md"
+            text = fp.read_text(encoding="utf-8")
+            zones = trim.classify_zones(text, trim.LEDGERS[base], trim.Result(fp))
+            if zones is None:
+                continue
+            self.assertEqual(md._trim_record_count(text, base), len(zones.starts), rel)
+            checked += 1
+        self.assertGreaterEqual(checked, 6,
+                                "fixture check: too few real ledgers compared (%d)" % checked)
+
+    # --- the review fixes, each held by the fixture that exposed it ------------------------------
+    #
+    # Every test in this block was written AFTER a producer mutant reverting the corresponding
+    # fix survived the suite. A fix with no test is a fix that gets undone.
+
+    def test_a_shard_commit_that_did_not_shrink_the_ledger_is_not_a_baseline(self):
+        """The trimmer counts an archive EVENT, not a shard file: `if pre is None or post is None
+        or pre <= post: continue`. Without the same filter the dashboard picks a baseline the
+        trimmer rejects, and the two gauges disagree -- measured at headroom 248 against
+        `--check`'s 35 on one review fixture, and at a firing trigger the dashboard missed on
+        another. It does not bite on this repo, because every shard here really did shrink its
+        ledger, so the live agreement test passed on luck of history until this fixture existed."""
+        cl = "# Changelog\n\n" + self._entries(6)
+        p = self._repo({"CHANGELOG.md": cl + "padding\n" * 400}, archive=None)
+        # A real event: shard `a`, committed with a shrink.
+        (p / "docs" / "archive").mkdir(parents=True, exist_ok=True)
+        (p / "docs" / "archive" / "CHANGELOG-through-a.md").write_text("# real\n")
+        (p / "CHANGELOG.md").write_text(cl)
+        self._commit(p, "shard a + shrink")
+        real = subprocess.run(["git", "-C", str(p), "rev-parse", "HEAD"],
+                              capture_output=True, text=True, check=True).stdout.strip()
+        # A stray shard dropped in later, with the ledger GROWING in the same commit.
+        (p / "docs" / "archive" / "CHANGELOG-through-z.md").write_text("# stray\n")
+        (p / "CHANGELOG.md").write_text(cl + self._entries(3, start=6))
+        self._commit(p, "stray shard, ledger grew")
+
+        self.assertEqual(md._newest_archive_sha(p, "CHANGELOG.md"), real,
+                         "the stray shard's commit is not an archive event and must not become "
+                         "the baseline")
+
+    def test_a_shard_commit_where_the_ledger_is_unchanged_is_not_a_baseline(self):
+        """The EDGE of the filter, not just its interior: `pre <= post`, so pre == post is
+        excluded too. `<=` -> `<` survived the suite until this fixture pinned equality -- the
+        two-step manual archive (commit the shard, then commit the trimmed ledger) produces
+        exactly this shape."""
+        cl = "# Changelog\n\n" + self._entries(6)
+        p = self._repo({"CHANGELOG.md": cl + "padding\n" * 400}, archive=None)
+        (p / "docs" / "archive").mkdir(parents=True, exist_ok=True)
+        (p / "docs" / "archive" / "CHANGELOG-through-a.md").write_text("# real\n")
+        (p / "CHANGELOG.md").write_text(cl)
+        self._commit(p, "shard a + shrink")
+        real = subprocess.run(["git", "-C", str(p), "rev-parse", "HEAD"],
+                              capture_output=True, text=True, check=True).stdout.strip()
+        # Shard committed alone: the ledger is byte-identical across this commit.
+        before = (p / "CHANGELOG.md").read_bytes()
+        (p / "docs" / "archive" / "CHANGELOG-through-z.md").write_text("# shard only\n")
+        self._commit(p, "shard z alone, ledger untouched")
+        self.assertEqual((p / "CHANGELOG.md").read_bytes(), before,
+                         "fixture: the ledger must be unchanged across the shard commit")
+
+        self.assertEqual(md._newest_archive_sha(p, "CHANGELOG.md"), real)
+
+    def test_an_unrankable_shard_abstains_rather_than_falling_back_to_filename_order(self):
+        """git_cmd returns "" on timeout, indistinguishable from success. An empty walk collapses
+        every rank to one sentinel and the stable sort leaves FILENAME order, which for a
+        date-stamped naming scheme silently selects the OLDEST -- the exact ordering this
+        function's contract forbids, reached with no error and no marker.
+
+        The timeout is injected at `git_cmd` rather than simulated by stalling git: the failure
+        being tested is "the walk came back empty", and that is what git_cmd hands back on
+        timeout. Two GENUINE archive events are built first, so the function really is in the
+        branch that has to choose between candidates."""
+        cl = "# Changelog\n\n" + self._entries(6)
+        p = self._repo({"CHANGELOG.md": cl + "padding\n" * 400}, archive=None)
+        (p / "docs" / "archive").mkdir(parents=True, exist_ok=True)
+        (p / "docs" / "archive" / "CHANGELOG-through-a.md").write_text("# older\n")
+        (p / "CHANGELOG.md").write_text(cl)
+        self._commit(p, "shard a + shrink")
+        (p / "CHANGELOG.md").write_text(cl + "padding\n" * 400)
+        self._commit(p, "grow")
+        (p / "docs" / "archive" / "CHANGELOG-through-z.md").write_text("# newer\n")
+        (p / "CHANGELOG.md").write_text(cl)
+        self._commit(p, "shard z + shrink")
+
+        # Control: with a working walk it answers, and answers with the graph-newest.
+        newest = md._newest_archive_sha(p, "CHANGELOG.md")
+        self.assertIsNotNone(newest, "fixture: two real archive events must be present")
+
+        real_git_cmd = md.git_cmd
+
+        def flaky(path, *args, **kw):
+            if args[:1] == ("rev-list",):
+                return ""              # exactly what git_cmd returns on timeout
+            return real_git_cmd(path, *args, **kw)
+
+        md.git_cmd = flaky
+        try:
+            self.assertIsNone(md._newest_archive_sha(p, "CHANGELOG.md"),
+                              "an unrankable candidate set must abstain, never silently degrade "
+                              "to filename order")
+        finally:
+            md.git_cmd = real_git_cmd
+        # And the injection was real: the working call still answers afterwards.
+        self.assertEqual(md._newest_archive_sha(p, "CHANGELOG.md"), newest)
+
+    def test_a_nested_fence_with_an_info_string_is_not_a_closer(self):
+        """The trimmer closes a fence only on a marker with an EMPTY info string. Dropping that
+        conjunct flips the fence state on a nested ```python, and every record after it is
+        counted by one side and not the other. Compared against the trimmer's own zoning, so the
+        two operands stay independent."""
+        trim = _load_trimmer()
+        text = ("# Handoffs\n\n"
+                "```handoff\nsession: S1\n"
+                "```python\nstill inside the S1 record\n```\n\n"
+                "```handoff\nsession: S2\n```\n")
+        zones = trim.classify_zones(text, trim.LEDGERS["HANDOFFS.md"],
+                                    trim.Result(Path("HANDOFFS.md")))
+        self.assertIsNotNone(zones)
+        self.assertEqual(len(zones.starts), 2, "fixture check: the trimmer must see two records")
+        self.assertEqual(md._trim_record_count(text, "HANDOFFS.md"), 2)
+
+    def test_a_ledger_the_trimmer_refuses_to_zone_abstains_here_too(self):
+        """`LEDGERS['HANDOFFS.md']` declares footer_mode='none' and classify_zones ASSERTS the
+        declaration: a standalone '---' after the last record with content under it returns None
+        (ZONE_UNCLASSIFIED). The trimmer treats that as a reason to abstain and says why -- "that
+        is not a count of zero" -- so a counter that always answers prints a confident headroom
+        exactly where `--check` prints none."""
+        trim = _load_trimmer()
+        refused = ("# Handoffs\n\n```handoff\nsession: S1\n```\n\n"
+                   "---\n\nTrailing prose the config cannot classify.\n")
+        self.assertIsNone(
+            trim.classify_zones(refused, trim.LEDGERS["HANDOFFS.md"],
+                                trim.Result(Path("HANDOFFS.md"))),
+            "fixture check: the trimmer must refuse this shape")
+        self.assertIsNone(md._trim_record_count(refused, "HANDOFFS.md"))
+
+        # Control: the same file without the trailing content classifies, and both agree.
+        ok = "# Handoffs\n\n```handoff\nsession: S1\n```\n\n---\n"
+        z = trim.classify_zones(ok, trim.LEDGERS["HANDOFFS.md"], trim.Result(Path("HANDOFFS.md")))
+        self.assertIsNotNone(z)
+        self.assertEqual(md._trim_record_count(ok, "HANDOFFS.md"), len(z.starts))
+
+    def test_the_trim_fence_regex_does_not_rebind_the_pre_existing_one(self):
+        """A REGRESSION I CAUSED AND THE REVIEW CAUGHT. The first draft named this module's new
+        fence regex `_FENCE_RE`, which already existed at module scope as the sole detector for
+        `_strip_fenced_blocks()`. The later binding won, and the two differ on INDENTED fences --
+        the old pattern allows leading whitespace, the new one anchors at column 0 -- so an
+        indented documentation example stopped being stripped and its `- [x]` lines became
+        phantom unmigrated done-marks in the backlog signal. Measured at 0 before, 2 after.
+
+        Asserted on BEHAVIOUR, not on the names: renaming the constant back would satisfy a
+        name-based check while re-creating the defect."""
+        backlog = ("# Backlog\n\nExample of a done-mark:\n\n"
+                   "    ```markdown\n"
+                   "    - [x] a DOCUMENTATION EXAMPLE, not a real done-mark\n"
+                   "    - [x] and another\n"
+                   "    ```\n\n"
+                   "- [ ] a real open item\n")
+        self.assertEqual(md._strip_fenced_blocks(backlog).count("- [x]"), 0,
+                         "an indented fenced example must still be stripped")
+        # Fixture control: the marks really are there before stripping.
+        self.assertEqual(backlog.count("- [x]"), 2)
+        # And the two regexes must remain distinct objects with distinct patterns.
+        self.assertNotEqual(md._FENCE_RE.pattern, md._TRIM_FENCE_RE.pattern)
+
+    def test_unknown_basename_abstains_instead_of_counting_zero(self):
+        self.assertIsNone(md._trim_record_count("### 2026-01-01 x\n", "BACKLOG.md"))
+
+    def test_a_dated_heading_without_a_source_tag_is_not_a_record(self):
+        """Closes a survivor: loosening the grammar to `^### <date>` changes nothing on any real
+        ledger here, because every dated heading in them happens to be source-tagged. The
+        distinguishing input has to be built, and it is checked against the trimmer's own zoning
+        rather than against my expectation of it."""
+        trim = _load_trimmer()
+        text = ("# Changelog\n\n"
+                "### 2026-01-01 %s [ad hoc] a real entry\n\nbody\n\n"
+                "### 2026-01-02 a heading that is dated but not an entry\n\nbody\n"
+                % md._MIDDLE_DOT)
+        zones = trim.classify_zones(text, trim.LEDGERS["CHANGELOG.md"],
+                                    trim.Result(Path("CHANGELOG.md")))
+        self.assertIsNotNone(zones)
+        self.assertEqual(len(zones.starts), 1,
+                         "fixture check: the trimmer must see exactly one record here")
+        self.assertEqual(md._trim_record_count(text, "CHANGELOG.md"), 1)
+
+    def test_shard_added_before_the_ledger_existed_is_not_an_archive_event(self):
+        """A shard committed before the ledger exists cannot be an archive event -- there is no
+        pre-image to have shrunk from -- so the rate has no baseline and must say so.
+
+        This test previously asserted the "baseline unreadable" reason and passed for the wrong
+        reason: the shard was accepted as an event, `git show` then failed on the missing blob,
+        and the abstention arrived one step too late. With the shrink filter the candidate is
+        rejected up front, which is what the trimmer does. `git_show`'s own None-on-failure
+        contract is pinned directly below rather than through this path."""
+        # Built inline: _repo's archive= path now ASSERTS that the shard commit is a real event,
+        # and this test's whole point is a shard commit that is not one.
+        p = self._repo({"README.md": "# r\n"})
+        ap = p / "docs" / "archive" / "CHANGELOG-through-2025-12-31.md"
+        ap.parent.mkdir(parents=True, exist_ok=True)
+        ap.write_text("# archived shard\n")
+        self._commit(p, "shard, with no ledger in the tree at all")
+        (p / "CHANGELOG.md").write_text("# Changelog\n\n" + self._entries(8))
+        self._commit(p, "add the ledger after the shard")
+
+        self.assertIsNone(md._newest_archive_sha(p, "CHANGELOG.md"))
+        led = [l for l in md.collect_all(p)["trim"]["ledgers"]
+               if l["path"] == "CHANGELOG.md"][0]
+        self.assertIsNone(led["headroom"])
+        self.assertIn("no prior archive", led["abstains"])
+        self.assertFalse(led["line_fires"])
+
+    def test_git_show_returns_none_for_a_missing_blob(self):
+        """Pinned directly, because the shrink filter now rejects most ways of reaching it
+        through trim_line_headroom. "" would make a missing blob look like an empty file and the
+        slope would be computed against a fabricated zero-line baseline."""
+        p = self._repo({"CHANGELOG.md": "# Changelog\n"})
+        self.assertIsNone(md.git_show(p, "HEAD:does-not-exist.md"))
+        self.assertIsNone(md.git_show(p, "no-such-ref:CHANGELOG.md"))
+        self.assertEqual(md.git_show(p, "HEAD:CHANGELOG.md"), "# Changelog\n")
+
+    def test_git_show_decodes_utf8_regardless_of_locale(self):
+        """The record grammar turns on U+00B7. `text=True` alone decodes with the LOCALE, so under
+        a non-UTF-8 environment the middle dot's bytes stop being a middle dot, the heading regex
+        stops matching, the baseline record count collapses and the reported headroom inflates --
+        measured by the review at 34 against `--check`'s 20 on this very repo. The trimmer's
+        baseline read is always UTF-8; this asserts the same.
+
+        `LC_ALL=C` ALONE IS NOT ENOUGH and a test that used it would pass vacuously: Python's
+        UTF-8 mode coerces the C locale back to UTF-8, so the unpinned code still works. PYTHONUTF8=0
+        is what actually makes the child prefer US-ASCII. The child is asked what it will use, and
+        the test SKIPS rather than passes if the platform refuses to move off UTF-8 -- a green
+        result here has to mean the hostile case was really exercised."""
+        env = dict(os.environ, LC_ALL="C", LANG="C", PYTHONUTF8="0", PYTHONCOERCECLOCALE="0")
+        probe = subprocess.run(
+            [sys.executable, "-c", "import locale;print(locale.getpreferredencoding(False))"],
+            capture_output=True, text=True, env=env, check=True).stdout.strip()
+        if probe.lower().replace("-", "") in ("utf8",):
+            self.skipTest("platform will not leave UTF-8 (child reports %r)" % probe)
+
+        p = self._repo({"CHANGELOG.md": "### 2026-01-01 %s [ad hoc] x\n" % md._MIDDLE_DOT})
+        # The child's own stdout is ASCII under this locale, so it must NOT try to print the
+        # character -- doing so raises UnicodeEncodeError on correct code and the test would fail
+        # for a reason that has nothing to do with git_show. It reports a verdict instead.
+        child = (
+            "import sys;sys.path.insert(0,%r);import methodology_dashboard as m;"
+            "from pathlib import Path;"
+            "t=m.git_show(Path(%r), 'HEAD:CHANGELOG.md');"
+            "print('VERDICT', 'DOT' if '\\u00b7' in t else 'NODOT',"
+            " t.encode('unicode_escape').decode('ascii')[:60])" % (HERE, str(p))
+        )
+        out = subprocess.run([sys.executable, "-c", child],
+                             capture_output=True, text=True, env=env)
+        self.assertEqual(out.returncode, 0,
+                         "git_show must not raise under a non-UTF-8 locale: %s" % out.stderr)
+        self.assertIn("VERDICT DOT", out.stdout,
+                      "git_show must decode UTF-8 under %s; got %s" % (probe, out.stdout))
+
+    def test_newest_archive_is_chosen_by_graph_order_not_by_filename(self):
+        """Closes a survivor: on this repo the shards' alphabetical order happens to match their
+        commit order, so dropping the graph sort changes nothing. The fixture inverts the two --
+        shard `a` is committed FIRST and shard `z` second -- so filename order names the oldest
+        and only graph order names the newest. (The trimmer records the same mutant as
+        undecidable for ITS fixtures; this one decides it.)"""
+        cl = "# Changelog\n\n" + self._entries(4)
+        p = self._repo({"CHANGELOG.md": cl + "padding\n" * 400}, archive=None)
+
+        # Archive event 1: shard `a`, committed WITH a shrink. Both shards must be real events
+        # now that the shrink filter is in place, or neither is a candidate to choose between.
+        (p / "docs" / "archive").mkdir(parents=True, exist_ok=True)
+        (p / "docs" / "archive" / "CHANGELOG-through-a.md").write_text("# older shard\n")
+        (p / "CHANGELOG.md").write_text(cl)
+        self._commit(p, "shard a (older) + shrink")
+        older_sha = subprocess.run(["git", "-C", str(p), "rev-parse", "HEAD"],
+                                   capture_output=True, text=True, check=True).stdout.strip()
+
+        # Grow again, then archive event 2: shard `z`, also with a shrink.
+        (p / "CHANGELOG.md").write_text(cl + "padding\n" * 400)
+        self._commit(p, "grow")
+        (p / "docs" / "archive" / "CHANGELOG-through-z.md").write_text("# newer shard\n")
+        (p / "CHANGELOG.md").write_text(cl)
+        self._commit(p, "shard z (newer) + shrink")
+        newer_sha = subprocess.run(["git", "-C", str(p), "rev-parse", "HEAD"],
+                                   capture_output=True, text=True, check=True).stdout.strip()
+
+        self.assertNotEqual(older_sha, newer_sha)
+        self.assertEqual(md._newest_archive_sha(p, "CHANGELOG.md"), newer_sha,
+                         "the baseline must be the most recent shard by COMMIT GRAPH position, "
+                         "not the first one the glob happened to return")
+
+    # --- abstention and gating ------------------------------------------------------------------
+
+    def test_no_prior_archive_abstains_rather_than_reporting_a_slope(self):
+        """Every adopter on day one is in this state. A rate with no baseline has no value, and
+        computing one against an empty sha silently succeeds against the index -- a plausible
+        wrong number instead of an error."""
+        p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(6)})
+        trim_metrics = md.collect_all(p)["trim"]
+        led = [l for l in trim_metrics["ledgers"] if l["path"] == "CHANGELOG.md"]
+        self.assertEqual(len(led), 1)
+        self.assertIsNone(led[0]["headroom"])
+        self.assertIn("no prior archive", led[0]["abstains"])
+        self.assertFalse(led[0]["line_fires"],
+                         "an abstaining rate must not be read as a firing one")
+
+    def test_non_adopter_is_never_told_about_its_changelog(self):
+        """The same gate the D4(b) risk uses. A project that never adopted the methodology keeps
+        whatever changelog it likes; ungated, this row fires on any repo with a long one -- the
+        assumption whose measured cost is already recorded in FRAMEWORK_INSTALLED_SOURCE."""
+        p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(60, body=60)},
+                       runner=False, archive="CHANGELOG-through-2025-12-31.md")
+        trim_metrics = md.collect_all(p)["trim"]
+        self.assertEqual(trim_metrics["signals"], [])
+        self.assertEqual(trim_metrics["ledgers"], [])
+
+    # --- the EDGES, not only the predicates (S37's gotcha 5) ------------------------------------
+
+    def _exact(self, base_lines, base_records, live_lines, live_records, trimmer=None):
+        """A repo whose line metric lands on an arithmetic point I choose.
+
+        headroom = (2000 - live_lines) * de // dl, so the fixture pins de and dl directly rather
+        than hoping a plausible-looking ledger happens to land near a threshold. The archive
+        shard is added in the SAME commit as the baseline, because the split is the commit that
+        added the shard and the baseline blob is the ledger as of that commit."""
+        def ledger(n_lines, n_records):
+            out = []
+            for i in range(n_records):
+                out.append("### 2026-01-%02d %s [ad hoc] entry %d" % (i % 28 + 1, md._MIDDLE_DOT, i))
+                out.append("")
+                out.append("body")
+            pad = n_lines - len(out)
+            self.assertGreaterEqual(pad, 0, "fixture arithmetic: asked for too few lines")
+            out.extend(["filler"] * pad)
+            text = "\n".join(out) + "\n"
+            self.assertEqual(text.count("\n"), n_lines)
+            return text
+
+        files_map = {"CHANGELOG.md": ledger(base_lines, base_records)}
+        if trimmer is not None:
+            files_map["methodology_trim.py"] = trimmer
+        p = self._repo(files_map, archive="CHANGELOG-through-2025-12-31.md")
+        (p / "CHANGELOG.md").write_text(ledger(live_lines, live_records))
+        self._commit(p, "grow")
+        # Fixture control: the baseline the dashboard will measure against must be the shard
+        # commit, and the arithmetic above is stated in terms of that blob.
+        split = md._newest_archive_sha(p, "CHANGELOG.md")
+        self.assertIsNotNone(split)
+        base = md.git_show(p, "%s:CHANGELOG.md" % split)
+        self.assertEqual(base.count("\n"), base_lines, "fixture: baseline blob line count")
+        self.assertEqual(md._trim_record_count(base, "CHANGELOG.md"), base_records,
+                         "fixture: baseline blob record count")
+        return p
+
+    def test_headroom_exactly_at_the_threshold_does_not_fire(self):
+        """`headroom < 15` fires; 15 itself does not. Nothing else in this suite exercises a
+        ledger sitting exactly on the boundary, and `<` -> `<=` is precisely the mutant that
+        survived the whole suite one session ago on the read cap."""
+        p = self._exact(base_lines=800, base_records=10, live_lines=1000, live_records=13)
+        led = [l for l in md.collect_all(p)["trim"]["ledgers"] if l["path"] == "CHANGELOG.md"][0]
+        self.assertEqual(led["headroom"], md.TRIM_LINE_FIRE_BELOW)
+        self.assertFalse(led["line_fires"],
+                         "headroom of exactly %d must not fire" % md.TRIM_LINE_FIRE_BELOW)
+
+    def test_headroom_one_below_the_threshold_fires(self):
+        """The control for the test above: same fixture shape, one record less of headroom."""
+        p = self._exact(base_lines=800, base_records=10, live_lines=1000, live_records=12)
+        led = [l for l in md.collect_all(p)["trim"]["ledgers"] if l["path"] == "CHANGELOG.md"][0]
+        self.assertEqual(led["headroom"], 10)
+        self.assertTrue(led["line_fires"])
+
+    def test_size_exactly_at_the_budget_does_not_fire(self):
+        """`size > budget` fires; equality does not. Same edge, the other metric. The fixture
+        carries its own trimmer with a small budget so the boundary is reachable without
+        writing a 64 KB file."""
+        stub = 'TRIM_VERSION = "0.0.1"\nDEFAULT_BUDGET_BYTES = 900\n'
+        p = self._exact(base_lines=40, base_records=4, live_lines=60, live_records=6,
+                        trimmer=stub)
+        cl = p / "CHANGELOG.md"
+        text = cl.read_text()
+        # Pad to EXACTLY the budget, keeping the trailing newline so the line metric is unmoved.
+        pad = 900 - len(text.encode("utf-8"))
+        self.assertGreater(pad, 0, "fixture arithmetic: ledger already exceeds the stub budget")
+        cl.write_text(text[:-1] + ("p" * pad) + "\n")
+        self.assertEqual(cl.stat().st_size, 900)
+        self._commit(p, "pad to exactly the budget")
+
+        trim_metrics = md.collect_all(p)["trim"]
+        self.assertEqual(trim_metrics["budget_bytes"], 900)
+        led = [l for l in trim_metrics["ledgers"] if l["path"] == "CHANGELOG.md"][0]
+        self.assertEqual(led["bytes"], 900)
+        self.assertFalse(led["byte_fires"], "a ledger of exactly the budget must not fire")
+
+        # Control: one byte more, and it does.
+        cl.write_text(cl.read_text()[:-1] + "q\n")
+        self.assertEqual(cl.stat().st_size, 901)
+        led2 = [l for l in md.collect_all(p)["trim"]["ledgers"]
+                if l["path"] == "CHANGELOG.md"][0]
+        self.assertTrue(led2["byte_fires"])
+
+    def test_backlog_is_watched_but_never_given_a_trim_row(self):
+        """The population defect, asserted at the OUTPUT rather than only at the constant.
+        `docs/planning/BACKLOG.md` is in READ_CAP_WATCHED and the trimmer answers NO_CONFIG on
+        it; dropping the TRIM_GRAMMARS filter would emit a row pointing at that refusal, and
+        the constants test alone would not notice."""
+        m = md.collect_all(self.REPO)
+        watched = {w["path"] for w in m["files"]["read_cap_watch"]}
+        self.assertIn("docs/planning/BACKLOG.md", watched,
+                      "fixture check: the backlog must be watched, or this proves nothing")
+        rows = {l["path"] for l in m["trim"]["ledgers"]}
+        self.assertNotIn("docs/planning/BACKLOG.md", rows)
+        self.assertNotIn("BACKLOG", "\n".join(d for _s, d in m["trim"]["signals"]))
+
+    # --- what the operator actually READS: the severities and the numbers ----------------------
+    #
+    # Written after a review pointed out that every one of these survived the full module: the
+    # tests asserted that a row EXISTED and what it said in prose, never what severity it carried
+    # or whether its figures were the figures that were measured. A row is a severity plus a
+    # number; asserting the sentence around them is asserting the packaging.
+
+    def test_the_authored_severities_are_pinned(self):
+        """`medium` -> `critical` and `low` -> `high` both survived the suite. Severity is not
+        decoration here: worst_risk() drives the portfolio row, the terminal colour and the
+        High+ Risk count, so a wrong tier is a wrong dashboard for every project."""
+        _descs, tm = self._descs(self.REPO, expect_role="framework")
+        sevs = {s for s, _d in tm["signals"]}
+        self.assertTrue(tm["signals"], "fixture: the trigger must fire on this repo")
+        self.assertEqual(sevs, {"medium"},
+                         "a firing archive trigger is advisory, not a high+ finding: %r" % sevs)
+
+        p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(6)})
+        _d2, tm2 = self._descs(p)
+        self.assertEqual({s for s, _d in tm2["signals"]}, {"low"},
+                         "an unmeasurable ledger is disclosed at low, not escalated")
+
+    def test_the_advisory_carries_the_numbers_that_were_measured(self):
+        """Swapping the byte figures between two ledgers, or printing any other headroom, left
+        all 310 tests green. The row is checked against the collector's own measurements here,
+        each figure tied to the ledger it belongs to -- and the operands are independent: one
+        side is the rendered sentence, the other is `Path.stat()` / the collected dict."""
+        descs, tm = self._descs(self.REPO, expect_role="framework")
+        by_path = {l["path"]: l for l in tm["ledgers"]}
+        self.assertGreaterEqual(len(by_path), 2, "fixture: at least two ledgers must be measured")
+        checked = 0
+        for d in descs:
+            rel = d.split(":")[0]
+            if rel not in by_path:
+                continue
+            led = by_path[rel]
+            on_disk = (self.REPO / rel).stat().st_size
+            self.assertEqual(led["bytes"], on_disk, rel)
+            self.assertIn("{:,} B".format(on_disk), d,
+                          "the row must quote the size it measured, for %s" % rel)
+            self.assertIn("{:,} B budget".format(tm["budget_bytes"]), d)
+            self.assertNotIn("{:,} B".format(
+                next(v["bytes"] for k, v in by_path.items() if k != rel)), d,
+                "the row must not quote the OTHER ledger's size")
+            checked += 1
+        self.assertEqual(checked, len(descs),
+                         "every emitted row must have been checked, not just the first")
+
+    def test_the_named_tool_must_content_verify_not_merely_exist(self):
+        """§7.2's detection contract is `.is_file()` AND a content check by regex, and dropping
+        the second half survived the suite. A bare existence probe accepts an adopter's unrelated
+        same-named script and then prints a command against it."""
+        p = self._repo({
+            "CHANGELOG.md": "# Changelog\n\n" + self._entries(6),
+            "methodology_trim.py": "# an adopter's own script, nothing to do with ours\n",
+        })
+        self.assertTrue((p / "methodology_trim.py").is_file(), "fixture: the file must exist")
+        self.assertIsNone(md.find_trim_tool(p),
+                          "a same-named file with no TRIM_VERSION is not our tool")
+        # Control: add the constant and it is found, so the None above is about CONTENT.
+        (p / "methodology_trim.py").write_text('TRIM_VERSION = "1.2.3"\n')
+        found = md.find_trim_tool(p)
+        self.assertIsNotNone(found)
+        self.assertEqual(found["version"], "1.2.3")
+
+    def test_the_collected_tool_version_is_the_tools_own(self):
+        """`tool_version` was collected and read by nothing -- falsifying it survived the suite.
+        It is the field a future staleness check will key on, so it is pinned to the trimmer's
+        real constant rather than left as decoration."""
+        trim = _load_trimmer()
+        _descs, tm = self._descs(self.REPO, expect_role="framework")
+        self.assertEqual(tm["tool_version"], trim.TRIM_VERSION)
+        self.assertEqual(tm["tool_path"], md.TRIM_TOOL_FRAMEWORK_REL)
+
+    def test_risks_reemit_the_collector_verbatim(self):
+        """assess_risks re-emits and does not re-decide, so there is one place to read to know
+        what an operator was told."""
+        m = md.collect_all(self.REPO)
+        descs = {r["description"] for r in m["scores"]["risks"]}
+        self.assertTrue(m["trim"]["signals"], "fixture check: the trigger must fire here")
+        for _sev, d in m["trim"]["signals"]:
+            self.assertIn(d, descs)
+
+    def test_score_is_untouched_by_the_new_rows(self):
+        """The row is advisory. Risks feed the displayed worst-severity, never the 0-100 score.
+
+        GUARD-THE-GUARD, and labelled: this is the ONE test in this class that also passes
+        against the pre-change scanner, because score_health never read `trim` there either. A
+        green absence-assertion is not coverage (S37's gotcha 4), so it earns its place by
+        producer mutation instead -- adding `- 2 * len(metrics["trim"]["signals"])` to
+        score_health's total was applied and observed to fail this test (72 != 68). It is a
+        forward tripwire against a later edit quietly turning an advisory into a penalty."""
+        m = md.collect_all(self.REPO)
+        before = m["scores"]["health"]["total"]
+        stripped = dict(m)
+        stripped["trim"] = {"signals": [], "ledgers": [], "tool_present": False,
+                            "tool_path": None, "tool_version": None, "budget_bytes": None}
+        self.assertEqual(md.score_health(stripped)["total"], before)
 
 
 if __name__ == "__main__":
