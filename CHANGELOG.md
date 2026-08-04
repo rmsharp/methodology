@@ -114,6 +114,46 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] Pushed 42 commits to `origin/main` — the fork is published, and the README's pinned SHAs now resolve
+
+**Model:** Claude Opus 5 (1M context).
+**A push is a non-commit action, so it is recorded here rather than left to `git log`** (failure
+mode #27; the same reason releases, tags and PR opens get entries). **Authorized by the operator in
+the same breath as the UAT go-ahead** — *"push to origin prior to starting UAT"* — and taken after
+S42's close-out, which is why it is its own entry and not a correction to S42's receipt. That receipt
+says "no outward-facing action was taken" and remains true of the session it describes.
+
+- **What moved.** `d9bedb0..8804635`, **42 commits**, `origin/main` only. Nothing was pushed to
+  `upstream/main`, no branch was created, no PR opened. `main` is now **0 ahead / 0 behind**
+  `origin/main` and **165 ahead / 0 behind** `upstream/main`. The two other local branches
+  (`docs/bl-10-dangling-learning-citations`, `docs/learning-13-handoff-predictions`) were already in
+  sync with origin and were not touched.
+- **It discharges half of S42's own finding, and the measurement is the proof.** The `## What It
+  Costs` section pins four SHAs — `cc593e0`, `020ba3f`, `7a71df0`, `3aee4e3` — and before this push
+  **none of them resolved in any published clone**; two were on no remote at all. All four now return
+  `YES` to `git merge-base --is-ancestor <sha> origin/main`. **All four still return `no` against
+  `upstream/main`**, and no push can change that: the figures they pin are measurements of this
+  fork's own ledger history, which is not upstream's. That remains a stated precondition for any
+  upstream PR carrying the section, not a defect this action closed.
+- **What is still unselected.** Ten paths in those 42 commits do not exist upstream. Three
+  (`starter-kit/FRAMEWORK_LEARNINGS.md`, `starter-kit/methodology_trim.py`,
+  `tools/test_methodology_trim.py`) **must** go — their absence is what makes Test 9 fail and what
+  makes a URL-sourced adopter update install nothing. Three are fork-only by convention
+  (`docs/planning/BACKLOG.md`, `framework-context-cost-plan.md`, `ledger-trimmer-design.md`). **Four
+  are undecided** — `docs/planning/dashboard-signal-integrity-plan.md`,
+  `model-use-provenance-plan.md`, and both `docs/archive/CHANGELOG-*` shards — because "planning is
+  fork-only" is *not* a blanket rule: `upstream/main` carries four planning documents of its own.
+  That selection is an open decision, recorded here so the next session does not have to rediscover
+  that it was never made.
+- **UAT scope set at the same time.** The operator named
+  **`/Users/rmsharp/Development/nprcgenekeepr` as busy and off-limits** until they say otherwise —
+  no read-for-write, no `bin/status`, no `bin/sync` against it. The other three S41 candidates
+  remain candidates, and their live state was re-measured at this point rather than inherited from
+  S41: `mts-system` 2 uncommitted / 1 undocumented commit since `42aae69`; `vscode_quarto_ext`
+  3 uncommitted / 0 undocumented; `wsfct` 0 uncommitted / 1 undocumented. **S41's recorded frontier
+  for `nprcgenekeepr` (`5c9ee6c`) is already stale — it now reads `7739e425`** — which is the
+  standing reason to re-derive an adopter's frontier at the moment of use.
+
 ### 2026-08-04 · [ad hoc] S42 — what the framework costs an adopter, and the numbers a reader cannot reach
 
 **Model:** Claude Opus 5 (1M context).
