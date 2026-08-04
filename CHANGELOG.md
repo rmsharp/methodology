@@ -114,6 +114,47 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] Reconcile-on-read: S38's `commit:` field → `bcc0d7b` — eleventh discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`,
+`9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S38 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`bcc0d7b`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**107** commits, all refs) and reading each blob's
+  S38 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `bcc0d7b` is the first
+  commit where it reads `status: complete`; the claim stub `bc444af` carries the same block at
+  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
+  **eleven receipts running**.
+- **The ordinal is derived too, not incremented on faith.** `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returned **11** in the live file and **0** in either archive shard, immediately before this one was
+  prepended — one of the eleven is the `nine commit: fields that named no sha` **repair**, not a
+  discharge. Ten numbered discharges precede this one, so this is the **eleventh**.
+- **Taken BEFORE this session's Phase 1B claim**, holding the order for the eleventh consecutive time
+  (S33 is still the only session that took it late). **BL-14's distributed half remains open**, so the
+  practice is still inherited from the predecessor's receipt rather than assigned by any checklist:
+  `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to `status: pending` receipts
+  and undocumented commits — never to a *complete* receipt whose `commit:` is `pending`.
+- **Nothing else needed reconciling, and both frontiers agree on it.**
+  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
+  `bcc0d7b`, and `git rev-list --count --no-merges bcc0d7b..HEAD` is **0** — no ghost, no backfill.
+  `python3 bin/check-handoff` was **OK** before this edit (newest receipt structurally complete, all
+  22 older receipts naming a sha) and is re-run after it.
+- **The G2 trend line, re-measured rather than quoted forward — and `CHANGELOG.md` has now crossed
+  too.** `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --check` reads **SRF 1.4028**
+  against archive `7a71df0` (both the most-recent and H3's largest-drop boundary resolve to the same
+  archive, so nothing has to be chosen), **293,427 B**, line headroom **19**, trigger **FIRES**. That
+  is the **fourth consecutive reading past RED** — 1.0820 at S36, 1.1709 at S37, 1.2832 at S38, and
+  the trimmer still **refuses** the file by design. `CHANGELOG.md` reads **SRF 1.0666** against the
+  most recent archive `020ba3f` (0.3936 against H3's largest-drop boundary `3aee4e3` — the two differ
+  by 2.71×), **105,936 B** against a 65,536 B budget, line headroom **17**, trigger **FIRES**. Its SRF
+  was **0.8760** at S38's claim, so **this file has now crossed RED as well** and both watched ledgers
+  are growing faster than their own last archives removed. Level control is the wrong lever for either;
+  the **rate** problem (`framework-context-cost-plan.md` §10.2) still owns nobody. Every figure here
+  rots on the next prepend — re-run the commands, never quote these.
+
 ### 2026-08-03 · [ad hoc] S38 — the trim-trigger dashboard row, and a spec that asked for two things that cannot both be true
 
 **Model:** Claude Opus 5 (1M context).
