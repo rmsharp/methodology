@@ -114,6 +114,37 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] Reconcile-on-read: S42's `commit:` field → `8804635` — fifteenth discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`e23d595`, `ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`,
+`caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S42 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`8804635`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**119** commits, all refs) and reading each
+  blob's S42 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `8804635` is the
+  **only** commit where it reads `status: complete`; the claim stub `cc593e0` carries the same block
+  at `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
+  **fifteen receipts running**.
+- **The ordinal is derived, not incremented on faith.**
+  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returned **15** in the live file and **0** in both archive shards immediately before this entry was
+  prepended — and one of those fifteen is the `nine commit: fields that named no sha` **repair**, not
+  a discharge. Fourteen numbered discharges precede this one, so this is the **fifteenth**.
+- **Taken BEFORE the claim.** Nothing else was staged when this was committed. The working tree was
+  clean at Orient apart from an untracked `dashboard_history.jsonl`, written by the Phase 0 step-5
+  dashboard run itself and **not** covered by `.gitignore` — reported, not committed, and not fixed
+  here (FM #17).
+- **The two frontiers disagree for the first time in this run, and the gap is benign.**
+  `git log -1 --format=%H -- CHANGELOG.md` returns `db8f061`; `git log -1 --format=%H -- HANDOFFS.md`
+  returns `8804635`. The one commit between them is `db8f061` itself — the ledger-only record of the
+  operator-authorized push, taken *after* S42's close-out. `git rev-list --count --no-merges db8f061..HEAD`
+  is **0**, so no backfill is owed on the ledger side; and a commit that exists solely to record a
+  non-commit action is not a session that left work unreceipted, so no reconstructed `status: reconciled`
+  block is owed on the receipt side either. No ghost session.
+
 ### 2026-08-04 · [ad hoc] Pushed 42 commits to `origin/main` — the fork is published, and the README's pinned SHAs now resolve
 
 **Model:** Claude Opus 5 (1M context).
