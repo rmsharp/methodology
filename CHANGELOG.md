@@ -114,6 +114,79 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] S40 — the ledger doctrine, and an instruction that would have deleted an adopter's records
+
+**Model:** Claude Opus 5 (1M context).
+Plan §5 queue item **S40** (fork session **S40** — the axes agree this session). Spec:
+[`ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md) §11 Phase 5. **G3** of the
+operator's three goals: the instructions for the cases automation cannot reach.
+
+- **What is now true.** `starter-kit/CHANGELOG.md` and `starter-kit/HANDOFFS.md` each carry a
+  **Size, and when to archive** section stating a size norm, the archive trigger, the shard
+  convention and the commands to run. Before this, **no distributed file stated any archive, split,
+  size or truncation policy**, and the receipt seed described itself as *kept forever* — the single
+  hard contradiction, now gone. Both seeds state all three of Phase 5's items **independently**;
+  neither depends on the other having been installed.
+- **The check that proves it is new, because the published one had stopped working.** §11 Phase 5
+  shipped `grep -l archiv starter-kit/*.md   # currently empty`. It was not empty at S39' and is not
+  empty now — **a word is not a policy.** Replaced with one that asserts what the file *says*:
+  ```sh
+  python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
+    print('\n'.join(sorted(e[0] for e in m.DISTRIBUTION if e[0].endswith('.md'))))" \
+    | xargs grep -l '^## Size, and when to archive'
+  ```
+  → exactly the two ledger seeds.
+- **THE WORST DEFECT WAS MINE, IT WAS A DISTRIBUTED INSTRUCTION, AND IT INVITED THE EXACT LOSS THE
+  TOOL EXISTS TO PREVENT.** The seed told adopters `--write` *"leaves the change staged for you."*
+  The trimmer contains **no `git add` anywhere**, prints `WRITTEN (uncommitted — this tool never
+  commits)`, and leaves the new shard **untracked**. An adopter who believed the sentence and ran
+  `git commit -a` would have committed the *shortened* ledger while the shard holding the removed
+  records never entered history — and the rollback promised in the same clause
+  (`git checkout -- <file>`) only works *because* nothing is staged. I did not invent it: it is
+  copied faithfully from this design's own `:722`, *"staged-but-uncommitted"*, which its own rollback
+  table two lines below already contradicts. **The spec was stale and I cited it instead of running
+  the tool.** Recorded as **Learning #18**; the design's stale sentence is raised, not fixed (FM #17).
+- **The worked anecdote was chronologically backwards.** I published that the receipt ledger
+  *"carried ~1,200 lines while its archive actually fired at 997, and nothing noticed."* The archive
+  (`7a71df0`, 19:15) **predates** the level (`3aee4e3`, 21:35) by 2h20m the same day —
+  `git merge-base --is-ancestor` settles it in one command — and six lines of this repo's own
+  `HANDOFFS.md` noticed, one of them the stub that created this session. Rewritten to the claim that
+  is both true and stronger: the level **has never once fired**; the file sits under it while running
+  multiples over its byte budget; a level in the wrong unit says *fine* indefinitely.
+- **Phase 5's "the archive trigger as a *rate*" is half the rule, and shipping only that half would
+  have been silent on the file this campaign exists for.** §5.2 says the byte metric is a **level
+  with hysteresis, not a rate**, and measured at this session's claim the *line* rate does **not**
+  fire on `HANDOFFS.md` — only the byte level does. Both seeds state both conditions with the correct
+  form for each; **the departure is labelled** at §11 Phase 5 and in the queue row.
+- **G3 is delivered for new adopters only, and the mechanism that would tell the rest is deliberately
+  untouched.** Both seeds are **SEED** disposition — written only when the destination is absent —
+  and `bin/_manifest.py`'s `SEED_FORMAT_MARKERS` key on their H1 titles, which this change leaves
+  intact, so `bin/status` reports every existing adopter's ledger as `present`, not
+  `present (stale format)`. Changing that marker flags every adopter at once: an operator decision,
+  not taken here. **This also settles the item S39' handed forward with a *no*:** the dashboard's
+  absent-branch remedy must not point at these sections, because the trimmer is `TRACKED` and the
+  seeds are `SEED`, so "tool absent" implies "seed predates S40" — the two are anti-correlated and
+  the pointer would name a section that reader is guaranteed not to have.
+- **Cost, stated rather than buried — this is the first change in the context-cost campaign that
+  *increases* per-session cost.** The two seeds grow **+8,252 B**, and every byte lands in the
+  **pinned front-matter zone the trimmer never touches**. Re-derive:
+  `for f in starter-kit/CHANGELOG.md starter-kit/HANDOFFS.md; do git show <sha>:$f | wc -c; wc -c < $f; done`.
+  Judged worth it against a measured **13,639 B per receipt** on this repo's own ledger.
+- **Verification.** `bash bin/tests.sh` **178 passed / 1 failed** — `FAIL: github source dry-run
+  failed`, Test 9's expected 404 on files not yet upstream, named not counted, and identical to the
+  claim baseline. `python3 -m unittest discover -s tools` **334 OK**. `python3 bin/check-links` OK
+  **88 links / 22 files**. The seed fixture invariant holds under **both** implementations (the
+  dashboard's counter and the trimmer's `classify_zones` each read **0** records in each seed while
+  the naive regex reads 3 and 1) — the property that stops a freshly seeded adopter ledger being
+  trimmed on day one. All **13** line-anchored citation instances into the seeds are **byte-identical
+  to HEAD**, achieved by inserting only below the highest cited line. Two real `bin/sync` runs into
+  throwaway repos: the doctrine lands at the adopter root, both published commands are accepted
+  verbatim (exit 0), and a controlled pre/post pair scores identical health with identical risks.
+- **A 5-lens adversarial review over the uncommitted diff, each finding then attacked by a refuter
+  that defaults to refuted: 4 survived, all fixed, 2 of them serious and both mine.** The refutations
+  were not rubber stamps — one lens's "the pointer carries no recompute command" was refuted by a
+  refuter that actually *ran* the verify script it dismissed.
+
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S39's `commit:` field → `316e7ef` — twelfth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).

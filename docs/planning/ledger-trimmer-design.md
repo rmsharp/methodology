@@ -951,12 +951,13 @@ substitute, and the design says plainly that without it the read-set floor stops
 
 - **No code.** That is S37.
 - **The three dashboard defects (D4 in the plan).** That is S36, and S36 precedes S38.
-- **Doctrine wording.** That is S40 — now unblocked by the operator's decision, and it must say
-  *"run this"*, not *"here is the manual procedure"*. Confirmed gap: **zero distributed files state
-  any archive, split, size, or truncation policy.** (`grep -l archiv starter-kit/*.md` returned
-  nothing when this was written; since S39' it returns `FRAMEWORK_LEARNINGS.md` and `BOOTSTRAP.md`,
-  neither of which states a policy — the gap stands, the *command* no longer demonstrates it. See
-  Phase 4's closing note.) Both ledger seeds describe themselves as append-only and kept forever.
+- **Doctrine wording.** That was S40, **shipped (fork) 2026-08-04**. When this was written the gap
+  was: **zero distributed files state any archive, split, size, or truncation policy**, and both
+  ledger seeds described themselves as append-only and kept forever. (`grep -l archiv
+  starter-kit/*.md` returned nothing then; by S39' it returned `FRAMEWORK_LEARNINGS.md` and
+  `BOOTSTRAP.md`, neither of which stated a policy — the gap stood, the *command* had stopped
+  demonstrating it. See Phase 4's closing note and Phase 5's own record.) Both seeds now carry a
+  **Size, and when to archive** section; the `kept forever` clause is gone.
 - **Whether the conditional row appears in terminal stdout** (§7.3) — an operator question for S45.
 
 ### 10.2 The rate problem, named and handed forward
@@ -1097,19 +1098,58 @@ written now returns hits for a repo that still documents nothing, so Phase 5 mus
 says*, not *whether the word appears*. §10.1's *"returns nothing"* is stale for the same reason and
 is corrected there.
 
-### Phase 5 → **S40**: the doctrine
+### Phase 5 → **S40**: the doctrine — **SHIPPED (fork) 2026-08-04, fork session S40**
 
 **Done looks like:** `starter-kit/CHANGELOG.md` and `starter-kit/HANDOFFS.md` each state a size norm,
 the archive trigger **as a rate**, and the one-line-pointer shard convention — wording *"run this"*,
 since the tool now ships. Today **zero** distributed files say anything on the subject.
 
-**Verify:**
+**Verify — the published form was broken, and S39' said so before this phase started.**
+`grep -l archiv starter-kit/*.md   # currently empty` was not empty at S39' (2 files) and is not
+empty now (4). **A word is not a policy**, so the check was replaced with one that asserts what the
+file *says* — the section heading the doctrine actually introduces:
+
 ```sh
-grep -l archiv starter-kit/*.md              # currently empty; must match both ledger seeds after
-bin/check-links                              # OK — the seeds are distributed, so their links are checked
-bash bin/tests.sh                            # 178/1 — S40's starting baseline, moved by S39'
+# must return EXACTLY the two ledger seeds
+python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
+  print('\n'.join(sorted(e[0] for e in m.DISTRIBUTION if e[0].endswith('.md'))))" \
+  | xargs grep -l '^## Size, and when to archive'
+bin/check-links                              # OK — 88 links / 22 files
+bash bin/tests.sh                            # 178/1 — Test 9's expected github 404, unmoved
+python3 -m unittest discover -s tools        # 334 OK
 ```
 **Session boundary: STOP. Do not open the PR** — ask.
+
+**What this phase learned, recorded against the plan that set it (S40).** Four of the done-list's
+premises did not survive contact, and two changed the artifact:
+
+- **"the archive trigger *as a rate*" is half the rule, and shipping only that half would have been
+  silent on the file this campaign exists for.** §5.2 of this document says the byte metric is a
+  **level with hysteresis, not a rate** — and measured at S40's claim, the *line* rate does **not**
+  fire on `HANDOFFS.md` (headroom 20 against a threshold of 15); only the byte level does. A
+  rate-only doctrine reproduces exactly the blindness §5.1 was written to fix. Both seeds therefore
+  state **both** conditions with the correct form for each. **This is a departure from Phase 5's
+  wording, adopted deliberately and labelled here**; §5.2 is the specific rule and Phase 5's summary
+  is the loose restatement.
+- **§5.4's "S40 documents choosing it" is a fourth done-item this list omits.** The budget is
+  judgment; both seeds now say how to calibrate it and name `--budget-bytes`.
+- **"each state … the one-line-pointer shard convention" is load-bearing on *each*, and the first
+  draft failed it.** The `HANDOFFS.md` seed delegated the whole shard convention to the
+  `CHANGELOG.md` seed. Both files are **SEED** disposition — written only when the destination is
+  absent — so they install independently, and an adopter can receive one whose entire convention
+  lives in a section the other file never delivered. Caught by review; the receipt seed now states
+  the path shape, the pointer rule and the span-both-by-glob rule in its own words, and cross-refers
+  only for shared *reasoning*.
+- **The seeds reach no *existing* adopter, and nothing in the shipped mechanism will tell them.**
+  SEED means never-overwritten, and `bin/_manifest.py`'s `SEED_FORMAT_MARKERS` key on the files' H1
+  titles, which this change deliberately leaves intact — so `bin/status` reports every existing
+  adopter's ledger as `present`, not `present (stale format)`. Changing that marker would flag every
+  adopter at once; it is a real operator decision and was **not** taken here. **Consequence for the
+  successor:** the dashboard's absent-branch remedy must *not* be pointed at these sections. The two
+  are anti-correlated — the trimmer is `TRACKED`, so "tool absent" means "has not synced since S39'",
+  which means the adopter's seed also predates S40. Pointing there would name a section that reader
+  is structurally guaranteed not to have. S39' handed that item forward; this is its answer, and the
+  answer is *no*.
 
 ---
 
