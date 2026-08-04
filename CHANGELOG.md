@@ -114,6 +114,61 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] S42 — what the framework costs an adopter, and the numbers a reader cannot reach
+
+**Model:** Claude Opus 5 (1M context).
+Operator-assigned; sequenced by S41 as residual (i). **Fork session `S42` is not plan §5 queue item
+`S42`** (purge derived values from `CLAUDE.md`) — the axes coincide for the third time and it remains
+a coincidence. `README.md` gains one section, **`## What It Costs`**, 160 lines, 70,502 → 83,896 B.
+No distributed file was touched: `README.md` is absent from `bin/_manifest.py`, so no adopter
+receives a byte of this.
+
+- **Why it was owed.** [`framework-context-cost-plan.md`](docs/planning/framework-context-cost-plan.md)
+  exists because the operator raised the cost, and it measured that cost in detail — but
+  `docs/planning/` reaches no adopter and no reader of the landing page. A prospective adopter could
+  read the entire public corpus and find no statement of what a session costs them. Four costs are
+  now stated: **disk 757,941 B / 24 files**, an unavoidable **per-session floor of 64,851 B**, two
+  ledgers growing at **43.9 lines per entry** and **44.8 lines per receipt**, and a cadence of one
+  deliverable and two-to-three mandatory stops per session.
+- **Every figure carries the command that prints it — DVX sink 4, applied to a page that adds ~30
+  derived values to a live file.** Without it the section would be the exact defect the plan was
+  written about. Two figures cannot carry one and say so in place: the 91.7% cache-read telemetry and
+  the private-portfolio comparison.
+- **A 5-lens adversarial review with a refute pass filed 29 findings; 15 survived, all fixed.** Two
+  were serious and both were mine. **(1) The section promised that every figure carried its command
+  and its own tables broke the promise** — the two headline byte slopes, the `2.09 entries per
+  session` that converts bytes into a deadline, the seed row and the whole "Files" column were
+  produced by nothing on the page. Worse, the printed numbers supported a *different* answer: a
+  reader combining the two visible deltas gets 1.10 entries/session and ~7.9 sessions of headroom,
+  nearly double the true four. Fixed by publishing the missing commands, not by softening the
+  promise. **(2) None of the four pinned SHAs is reachable from any published clone** — `cc593e0` and
+  `020ba3f` are on no remote at all (local `main` is **41 ahead of `origin/main`**), and `7a71df0` /
+  `3aee4e3` are fork-only, so a reader who clones `KJ5HST/methodology` gets `fatal: invalid object
+  name` from the very commands the section tells them to trust over its prose. The section now states
+  which figures depend on this repository's history; **making them reachable is a push, and pushes
+  are the operator's call.**
+- **Three claims the review falsified and I had asserted.** *"The heaviest possible user of its own
+  framework … an upper bound"* — false: this repository writes the largest receipts by bytes
+  (**12,764 B** each against **3,517–7,404** across seven adopters) but has neither the largest
+  ledger (another is **10.3×**) nor the fastest line growth (an adopter's 20 receipts average **47.9**
+  lines against **44.6** here). *"Nothing here is installed into your project"* — true of what the
+  manifest installs, false on disk: **6 of 11** adopter repositories hold a hand-copied
+  `docs/methodology/README.md`. *"`methodology_dashboard.py` reports headroom … so growth is watched
+  rather than discovered"* — it is a **tripwire, not a gauge**: it reports headroom only for a ledger
+  already archived once, and below the trigger it emits nothing.
+- **Two more corrections, one of them a number I nearly republished from the plan.** The
+  commit-denominated headroom is **13.3 commits**, not the plan's `36.0` — that figure was true at the
+  tree it was measured on and is not true now, which is the plan's own thesis landing on the plan.
+  And the Present → Implement gate is not design-only: `ITERATIVE_METHODOLOGY.md` calls it the most
+  valuable gate in the model and the Development and Research-Documentation workstreams each carry
+  their own `Phase 4: Present`, so it binds any session that will build something. Two skeptics
+  refuted that finding and one confirmed it; it was settled from the sources, not from the vote.
+- **Verification.** `bash bin/tests.sh` **182 passed / 1 failed** — Test 9's expected upstream 404,
+  unchanged from the claim baseline and **not to be weakened**. `python3 -m unittest discover -s tools`
+  **334 OK**. `python3 bin/check-links` OK **88 links / 22 files**. Dashboard twins byte-identical.
+  Every one of the section's **nine** command blocks was executed verbatim after the last edit and
+  matched its published output; the 18 fence delimiters balance and no table's column count drifts.
+
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S41's `commit:` field → `12463dd` — fourteenth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).

@@ -269,6 +269,166 @@ Domain-specific adaptations of the master framework. Each workstream customizes 
 - Trivial tasks where the overhead exceeds the work
 - Exploratory work with no defined deliverable
 
+## What It Costs
+
+Adopting this framework is not free, and the price is not visible in the file list. This section states it in measured numbers, split by what you can change and what you cannot. What you get for it is [Evidence](#evidence) above; this is the other side of that ledger.
+
+**Every figure below is printed by a command shown beside it.** Re-run the line rather than trusting the sentence — a hand-written number in a live document decays silently, and a command is falsifiable from the page's own bytes. Two figures are exceptions and say so in place. Run the commands from a clone of this repository: several read `bin/`, which is canonical-only and is not installed into adopting projects.
+
+**The §3 ledger figures are measurements of this repository's own history**, pinned to commits in it, and they are the only ones that do not reproduce in a tree lacking that history. They were taken on 2026-08-04. **If you re-run those commands and get larger numbers than the ones printed here, that is not staleness — that is the section's thesis demonstrating itself.**
+
+**This page is not part of what you install.** `README.md` is absent from `bin/_manifest.py`, so `bin/sync` never installs it and no step of a session reads it:
+
+```sh
+python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
+print('README.md' in [d for _,d,_ in m.DISTRIBUTION])"      # False
+```
+
+(Adopters who copied `docs/methodology/` by hand rather than by the manifest sometimes carry a snapshot of this file anyway — 6 of the 11 repositories in the portfolio measured in §3 do. It is disk only; nothing reads it, and it goes stale the moment this page changes.)
+
+### 1. Disk — paid once
+
+| What lands in your repo | Files | Bytes |
+|---|---|---|
+| Markdown corpus | 22 | 487,269 |
+| The two executables (`methodology_dashboard.py`, `methodology_trim.py`) | 2 | 270,672 |
+| **Total installed** | **24** | **757,941** |
+| …of which **seeds**: yours from day one, never overwritten by an update | 4 | 23,804 |
+
+Thirteen of the twenty-four land at your repository root; the other eleven under `docs/methodology/`.
+
+```sh
+python3 - <<'PY'
+import os, sys; sys.path.insert(0, "bin")
+import _manifest as m
+sz = lambda p: sum(os.path.getsize(s) for s, _, k in m.DISTRIBUTION if p(s, k))
+ct = lambda p: sum(1 for s, _, k in m.DISTRIBUTION if p(s, k))
+for name, p in (("markdown", lambda s, k: not s.endswith(".py")),
+                ("python  ", lambda s, k: s.endswith(".py")),
+                ("seeds   ", lambda s, k: k == "seed")):
+    print(name, ct(p), "files", sz(p), "B")
+print("total", len(m.DISTRIBUTION), "files",
+      sum(os.path.getsize(s) for s, _, _ in m.DISTRIBUTION), "B;",
+      sum(1 for _, d, _ in m.DISTRIBUTION if "/" not in d), "at root")
+PY
+```
+
+This is the only one of these costs that stops growing.
+
+### 2. Context per session — the part you cannot change
+
+Phase 0 opens two files in full, every session, before you have said anything:
+
+| Read every session | Bytes |
+|---|---|
+| `SESSION_RUNNER.md` — the operating procedure itself | 49,465 |
+| `SAFEGUARDS.md` — read in full, not skimmed, by Phase 0 step 1 | 15,386 |
+| **Floor** | **64,851** |
+
+```sh
+wc -c starter-kit/SESSION_RUNNER.md starter-kit/SAFEGUARDS.md
+```
+
+On top of the floor, a session opens what its work needs and nothing else. Ranges below cover the **realized** documents only — the two blank authoring templates (`TEMPLATE_WORKSTREAM.md` 5,024 B, `TEMPLATE_CAMPAIGN.md` 12,513 B) are opened when you are writing a *new* workstream or campaign, not when you are running a session:
+
+| Read on demand | Bytes | When |
+|---|---|---|
+| One workstream document | 9,566 – 35,861 | Every session with a domain — Design (smallest) to Research Documentation (largest) |
+| `FRAMEWORK_LEARNINGS.md` | 23,654 | When a learning applies. Phase 3C *writes* here only in the canonical repo; adopters record learnings in their `CLAUDE.md` |
+| One campaign template | 40,043 – 50,349 | Only when the deliverable genuinely spans sessions |
+| `RECOMMENDED_SKILLS.md` | 17,182 | When a phase cites a skill |
+| `ITERATIVE_METHODOLOGY.md` | 68,240 | When no workstream fits, or you want the theory |
+| `HOW_TO_USE.md` | 55,352 | Rarely — it is the long-form guide, not a session read |
+
+```sh
+wc -c workstreams/{DESIGN,ARCHITECTURE,DEVELOPMENT,AUDIT,RESEARCH_DOCUMENTATION}_WORKSTREAM.md \
+      workstreams/{RESEARCH_EXHAUSTIVE_VERIFICATION,INHERITED_CODEBASE_FAMILIARIZATION}_CAMPAIGN.md \
+      starter-kit/FRAMEWORK_LEARNINGS.md starter-kit/RECOMMENDED_SKILLS.md \
+      ITERATIVE_METHODOLOGY.md HOW_TO_USE.md
+```
+
+So an ordinary development session opens roughly **79,648 B** of framework prose (floor + `DEVELOPMENT_WORKSTREAM.md` at 14,797 B), or **103,302 B** if a learning is consulted. A research-documentation session opens more; a session that also needs a campaign template opens more again.
+
+**The token figure is a proxy, and this page will not pretend otherwise.** Dividing bytes by four is wrong for markdown-with-tables by roughly ±15%, and the window is not the same for every reader: the floor is ≈16,200 tokens, which is ≈8% of a 200,000-token window and ≈1.6% of a 1,000,000-token one. `BOOTSTRAP.md` Step 5 already points you at the real instrument — **`/context` measures true occupancy**, including the system prompt and tool definitions, which no byte count can see. Use it; treat the bytes above as the always-available approximation.
+
+**You cannot cut this.** Twenty of the twenty-four installed files are `tracked` — synced read-only from canonical, where local edits become drift that blocks or loses the next update (`BOOTSTRAP.md` Step 5). Project-specific additions belong in your `CLAUDE.md`, not in an edited runner. If the floor alone is too expensive for your window, this framework is the wrong tool for that project — that is a real answer, not a hedge.
+
+### 3. Context per session — the part you own, and it grows
+
+Phase 0 also opens the adopter-owned files, and two of them grow monotonically:
+
+| Adopter-owned | Starts at | Behaviour |
+|---|---|---|
+| `CLAUDE.md` | 3,137 B from `CLAUDE_TEMPLATE.md` | **Always resident** — loaded before turn 1, present every turn. Budget ~200 lines |
+| `SESSION_NOTES.md` | 1,093 B | Overwritten each session; does not accumulate |
+| `BACKLOG.md` | you write it | Open items only; history goes to `CHANGELOG.md` |
+| `CHANGELOG.md` + `HANDOFFS.md` | 12,124 + 9,927 B of doctrine, no records | **Append-only. This is the one that gets you.** |
+
+```sh
+wc -c starter-kit/CLAUDE_TEMPLATE.md starter-kit/SESSION_NOTES.md \
+      starter-kit/CHANGELOG.md starter-kit/HANDOFFS.md
+```
+
+The ledgers grow because Phase 0 reconciles them against `git log` every session and Phase 3 writes to them at every close-out. Measured on this repository, between each ledger's most recent archive and 2026-08-04:
+
+| Ledger | Since its last archive | Growth per record | Headroom to the 2,000-line cap |
+|---|---|---|---|
+| `CHANGELOG.md` | 10 → 33 entries, 606 → 1,616 lines | **43.9 lines / 3,779 B per entry** | **8.7 entries** |
+| `HANDOFFS.md` | 6 → 27 receipts, 264 → 1,204 lines | **44.8 lines / 13,891 B per receipt** | **17.8 receipts** |
+
+```sh
+git show 020ba3f:CHANGELOG.md | wc -lc ; wc -lc < CHANGELOG.md   #   606  49382 ->  1616 136309
+grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[' CHANGELOG.md      #    33 entries (was 10)
+git show 7a71df0:HANDOFFS.md  | wc -lc ; wc -lc < HANDOFFS.md     #   264  52927 ->  1204 344628
+grep -c '^```handoff' HANDOFFS.md                                 #    27 receipts (was 6)
+git show 020ba3f:HANDOFFS.md | grep -c '^```handoff'              #    16 -> 27, i.e. 11 sessions
+```
+
+**The denominator is stated because it is the whole point.** Those 23 new entries were written over the **11 sessions** since the same commit — one receipt per session — so this repository runs at **2.09 ledger entries per session**, and 8.7 entries of headroom is about **four more sessions** before the action ledger crosses the cap. Denominate the same growth in commits instead (`git rev-list --count --no-merges 020ba3f..HEAD` → 35) and it reads as 28.9 lines per commit and 13.3 commits of headroom — a different answer to the same question, because commits-per-session is the most adopter-variable quantity in the system. That is why the framework's unit is the record, which lives inside the file being measured, and not the commit.
+
+**Why the 2,000-line cap is the number that matters.** Past it, an agent's file read truncates with **no error and no missing-data marker**. Phase 0 then computes its reconcile frontier against a record it cannot fully see, and the failure is silent. This is not hypothetical — this repository's own action ledger crossed the cap and was quietly dropping its ten oldest entries, found by accident rather than by any check:
+
+```sh
+git show 3aee4e3^:CHANGELOG.md | wc -l    # 2090 — 90 lines past the cap, unnoticed
+```
+
+**These figures are one sample, not a ceiling.** This repository writes by far the largest individual receipts — 12,764 B each on average against 3,517–7,404 B across the adopters measured below — but it does not have the largest ledgers, and it is not even the fastest-growing by line: one adopter's 20 receipts average 47.9 lines each against this repository's 44.6, and another's action ledger is 10.3× the size of this one. Across one portfolio of **11 repositories** that have installed the framework, ledger sizes span **324 B to 1,405,962 B**, and **4 ledger files across 2 of those repositories are already past the cap**. *That portfolio is private, so it is the one measurement here you cannot reproduce from this repository — it is labelled rather than dressed up.*
+
+**What you do about it.** `methodology_trim.py` ships with the framework and lands at your repository root. It archives the oldest records into a frozen shard and **refuses to write unless the reconstruction is provably lossless**; dry-run is the default, and `--check` reports the trigger without writing anything:
+
+```sh
+python3 starter-kit/methodology_trim.py --file CHANGELOG.md --check   # in this repository
+python3 methodology_trim.py --file CHANGELOG.md --check               # at YOUR root, where sync installs it
+```
+
+Its default budget is **64 KB per ledger** (`DEFAULT_BUDGET_BYTES` in the tool). Both ledger seeds carry a `## Size, and when to archive` section stating the norm and the trigger.
+
+**`methodology_dashboard.py` is a tripwire, not a gauge**, and the distinction matters for budgeting. It raises a flag once a ledger's archive trigger fires, and it reports remaining line headroom only for a ledger that has been archived at least once — the rate metric has no baseline before that, so a new adopter's headroom reads as unknown. Below the trigger it says nothing at all. It tells you that you have arrived, not that you are approaching.
+
+### 4. What the bill will not tell you
+
+Prompt caching bills cache reads at roughly a tenth of base input, and in one measured session here cache reads were **91.7% of all input**. Caching cuts the *price* of re-sending the prefix, not its *occupancy*. So framework growth is nearly free in dollars and expensive in reliability — **the budget signal that would have warned you is precisely the one caching suppresses**, and that gap widens as caching improves. Watch bytes and `/context`, not the invoice.
+
+*(The 91.7% is telemetry from a single session of this repository's own work, recorded in its planning backlog. It is a real measurement of one session, not a reproducible command, and it is cited that way — the second of this section's two exceptions.)*
+
+### 5. Your time and your cadence
+
+This is the cost adopters underestimate, because it is not measured in bytes.
+
+- **One deliverable per session.** "1 and done" is structural, not advisory. You cannot batch three tasks into one session and keep the guarantees.
+- **Two mandatory stops in the runner itself** — Phase 0 ends by reporting and waiting for you, and Phase 3G ends by reporting and stopping.
+- **A third stop arrives with the work, not with the workstream you picked.** `ITERATIVE_METHODOLOGY.md` makes Present → Implement the most valuable gate in the model — no implementation begins without your approval — and the Development and Research-Documentation workstreams each carry their own `Phase 4: Present`. Budget for three stops on any session that will build something.
+- **A close-out every session**, whose receipt carries **13 required fields** and will be scored 1–10 by the next session. A handoff saying "pick the next item from the backlog" is explicitly insufficient.
+- **Ten bootstrap steps**, paid once — seven required, plus a sessions directory, the dashboard, and git hooks, which are marked optional or recommended (`BOOTSTRAP.md`).
+
+```sh
+grep -cE '^#{2,3} Step [0-9]+' starter-kit/BOOTSTRAP.md          # 10
+python3 -c "import importlib.machinery as m;\
+c=m.SourceFileLoader('c','bin/check-handoff').load_module();print(len(c.REQUIRED_KEYS))"   # 13
+```
+
+The framework buys reliability with your attention at fixed points. If your work does not repeat, the loop has nothing to compound and those stops are pure overhead — see [When to Use / When Not to Use](#when-to-use--when-not-to-use) above, which is the same judgment stated qualitatively.
+
 ## Origin
 
 Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during development of a commercial software product. The methodology emerged organically from an initial 11-session design series, was codified into a reusable framework, and subsequently validated across 1100+ sessions of varied work.
