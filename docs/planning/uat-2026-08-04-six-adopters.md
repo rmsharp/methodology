@@ -22,7 +22,7 @@ This is fork-only. It lives in `docs/planning/` and reaches no adopter.
 | **Scope** | 6 repositories × 4 surfaces (update path, ledger trimmer, dashboard, installed state) |
 | **Coverage** | 6 of 6 repositories examined; 9 of 9 existing adopter ledgers exercised; 24 of 24 manifest destinations checked per repo |
 | **Criteria** | §2 below |
-| **Findings** | **4 critical · 5 moderate · 2 minor** — 9 of 11 are defects in what we ship |
+| **Findings** | **5 critical · 5 moderate · 2 minor** — 10 of 12 are defects in what we ship |
 | **Writes outside this repository** | **zero**, proven in §7 |
 
 **The single most important result is a reframing, not a defect.** A fresh adopter installs cleanly:
@@ -375,6 +375,53 @@ git -C $r rev-list --count --no-merges $(git -C $r log -1 --format=%h -- CHANGEL
 
 ---
 
+### F12 — CRITICAL · D4 · A lifted constraint was never recorded, and the stale blocker propagated into the next session
+
+**This finding was produced by this audit making the mistake it describes**, which is the strongest
+evidence available for it.
+
+The preceding session's ledger entry records the operator putting `nprcgenekeepr` off-limits:
+
+```sh
+grep -n "nprcgenekeepr" CHANGELOG.md
+# :244  **`/Users/rmsharp/Development/nprcgenekeepr` as busy and off-limits** until they say otherwise
+```
+
+The operator then lifted it, in the final prompt of that same session — *"nprcgenekeepr now idle"*.
+**That lift was never written down.**
+
+```sh
+grep -rn "idle" CHANGELOG.md HANDOFFS.md docs/archive/*.md
+# only S41/S42 next_steps stating the trigger CONDITION ("resume when the operator says those
+# repos are idle") — never the trigger firing
+```
+
+**Impact.** I read the imposition, found no repeal, and wrote a false self-accusation into a committed
+report. Worse than the wrong sentence: the constraint was still shaping decisions — the four-repo
+rollout's blocker list, and this session's own scope — a full session after it had ceased to exist.
+
+**Why the existing machinery cannot catch this.** Phase 0 reconcile is keyed to **commits**: it
+computes `<frontier>..HEAD` and backfills what left a commit behind. An operator lifting a scope
+constraint leaves no commit, so reconcile has nothing to find. This is squarely FM #27's stated
+territory — *"'Action' is broader than a commit … a decline/wontfix/grooming decision"* — and the
+write-gate is the only mechanism that covers it. It did not fire.
+
+**This is the mirror image of a failure this repository already knows.** `CLAUDE.md` records a session
+that *invented* a constraint nobody imposed and wrote it into a ratified plan, where it re-ranked ten
+sessions away from the repo's purpose. The rule drawn from it — *"if you find a blocker in a document,
+check who imposed it and when; an unattributed blocker is a defect, not a constraint"* — is exactly
+what I failed to apply. The blocker here had an author and a date; what it lacked was a *currency
+check*, and nobody re-derives a blocker. **A constraint's release is an action. Both edges are events;
+only one is being logged.**
+
+**Recommendation.** Make the write-gate's non-commit list explicit that a scope constraint has two
+edges, and that lifting one is as loggable as imposing it. A one-line ledger entry — *"operator
+released `<target>`; the constraint recorded on `<date>` no longer applies"* — is the whole fix.
+Consider making a recorded constraint carry its release condition, so a later session reading it knows
+what to check rather than assuming it still holds.
+
+---
+
 ## 5. Coverage and structural observations
 
 **Audited:** 6 of 6 repositories · 4 of 4 surfaces · 9 of 9 existing ledgers · 24 of 24 destinations
@@ -432,13 +479,18 @@ Verified after the fact: `git status --porcelain` in all six repos matches the p
 (`scratchpad/uat/before-git.txt`), and the pre-existing dirty paths in `airqino` (2), `mts-system` (2)
 and `vscode_quarto_ext` (3) are untouched.
 
-**Disclosure 1 — repositories outside the assigned six were read.** During verification, subagents and
-one of my own `*/`-globbed commands read files in `chat_verification`, `claude_work`,
-`dalia_martinez_funeral`, `feedback-loop-comparison` and **`nprcgenekeepr`** — which the operator had
-declared busy and off-limits. All access was read-only (`wc`, `shasum`, `grep`, `check-handoff`,
-`check-links`); nothing was written and no `bin/sync` or `bin/status` was run against
-`nprcgenekeepr`. It should not have been read at all, and the six-repo scope should have been
-enforced in the subagent instructions rather than assumed.
+**Disclosure 1 — repositories outside the assigned six were read, and my first account of it was
+wrong in a way that is itself finding F12.** During verification, subagents and one of my own
+`*/`-globbed commands read files in `chat_verification`, `claude_work`, `dalia_martinez_funeral`,
+`feedback-loop-comparison` and `nprcgenekeepr`. All access was read-only (`wc`, `shasum`, `grep`,
+`check-handoff`, `check-links`); nothing was written anywhere.
+
+I originally reported the `nprcgenekeepr` read as a breach of a standing off-limits instruction. **It
+was not.** The operator lifted that constraint in the final prompt of the preceding session —
+*"nprcgenekeepr now idle"* — and I acted on a ledger entry that recorded only the imposition. See
+**F12**. The remaining, real technique lapse is smaller and stands: my subagent prompts named the six
+target repositories in prose while granting access to the whole tree. A scope is not enforced by
+mentioning it; enumerate the paths in the commands.
 
 That reading did produce one result worth recording, because it changes how §5's third pattern should
 be read: **`chat_verification` is a clean control** — its `SESSION_RUNNER.md` is byte-identical to

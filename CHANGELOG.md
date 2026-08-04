@@ -121,7 +121,7 @@ Operator-assigned (*"begin UAT with ../airqino, ../church_growth, ../model_proje
 ../mts-system, ../vscode_quarto_ext, and ../wsfct"*), scoped in the same exchange to a **read-only**
 assessment across **all four** adopter-facing surfaces. **Fork session `S43` is not plan §5 queue item
 `S43`** (`bin/check-derived`) — the axes coincide for the fourth time and it remains a coincidence.
-Deliverable: **one report, [`docs/planning/uat-2026-08-04-six-adopters.md`](docs/planning/uat-2026-08-04-six-adopters.md)**, fork-only. **11 findings — 4 critical, 5 moderate, 2 minor; 9 of 11 are defects in
+Deliverable: **one report, [`docs/planning/uat-2026-08-04-six-adopters.md`](docs/planning/uat-2026-08-04-six-adopters.md)**, fork-only. **12 findings — 5 critical, 5 moderate, 2 minor; 10 of 12 are defects in
 what we ship.** No adopter repository was written to, and the claim is proven rather than asserted:
 `git status --porcelain` across all six is byte-identical to the pre-audit snapshot.
 
@@ -167,11 +167,25 @@ what we ship.** No adopter repository was written to, and the claim is proven ra
   had already collected — and asserted a dangling `FRAMEWORK_LEARNINGS.md` reference in all six when
   **0 of 6** runners reference it at all. Every number published was re-run by me at `4dea909`;
   figures I could not personally reproduce were dropped.
+- **F12 was produced by this audit committing the defect it describes, and it is the sharpest finding
+  in the set.** I reported reading `nprcgenekeepr` as a breach of a standing off-limits instruction.
+  **It was not one.** The operator lifted that constraint in the final prompt of the preceding session
+  — *"nprcgenekeepr now idle"* — and **the lift was never written down**: `grep -rn "idle"` over both
+  ledgers and both archive shards returns only S41/S42 stating the trigger *condition*, never the
+  trigger firing, while `CHANGELOG.md:244` records the imposition in full. **Phase 0 reconcile cannot
+  catch this** — it is keyed to `<frontier>..HEAD`, and an operator lifting a scope constraint leaves
+  no commit — so the write-gate is the only mechanism that covers it, and it did not fire. This is the
+  mirror image of the failure `CLAUDE.md` already records (a session that *invented* a constraint
+  nobody imposed): **a constraint has two edges, and only one of them is being logged.** The rule this
+  repo already carries — *check who imposed a blocker and when* — needs its other half: check whether
+  it still holds. Corrected in the report, the receipt and this entry; the operator caught it.
 - **Two scope disclosures, both in the report's §7.** Repositories outside the assigned six were read
-  read-only during verification, including **`nprcgenekeepr`**, which the operator had declared
-  off-limits — the six-repo scope should have been enforced in the subagent instructions, not assumed.
-  And this session's own mandated Phase 0 dashboard run left an untracked `dashboard_history.jsonl` at
-  this repo's root, which `.gitignore` does not cover — an instance of finding F9 in the canonical repo.
+  read-only during verification (`chat_verification`, `claude_work`, `dalia_martinez_funeral`,
+  `feedback-loop-comparison`, `nprcgenekeepr`) — none of them off-limits, per F12, but none of them
+  assigned either: the six-repo scope was named in the subagents' prose while the commands were given
+  the whole tree. And this session's own mandated Phase 0 dashboard run left an untracked
+  `dashboard_history.jsonl` at this repo's root, which `.gitignore` does not cover — an instance of
+  finding F9 in the canonical repo.
 - **Not done, deliberately:** no adopter repository touched (three carry uncommitted work, two are on
   feature branches); no defect fixed — findings are recorded, not remediated; **no `FRAMEWORK_LEARNINGS.md`
   row**, because this session's claim scoped out every distributed file and a row changes what adopters
