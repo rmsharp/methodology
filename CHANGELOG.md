@@ -114,6 +114,33 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] Reconcile-on-read: S41's `commit:` field → `12463dd` — fourteenth discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`,
+`c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S41 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`12463dd`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**116** commits, all refs) and reading each
+  blob's S41 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `12463dd` is the
+  first commit where it reads `status: complete`; the claim stub `c44037c` carries the same block at
+  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
+  **fourteen receipts running**.
+- **The ordinal is derived, not incremented on faith.**
+  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returned **14** in the live file and **0** in both archive shards immediately before this entry was
+  prepended — and one of those fourteen is the `nine commit: fields that named no sha` **repair**, not
+  a discharge. Thirteen numbered discharges precede this one, so this is the **fourteenth**.
+- **Taken BEFORE the claim**, unlike S33 (the only session that took it late) and unlike S40/S41,
+  which had to *recover* the order after drafting a claim stub first. Nothing else was staged when
+  this was committed.
+- **Nothing else needed reconciling, and both frontiers agree on it.**
+  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
+  `12463dd`, and `git rev-list --count --no-merges 12463dd..HEAD` is **0** — no ghost session, no
+  backfill owed. The working tree was clean at Orient.
+
 ### 2026-08-04 · [ad hoc] S41 — the update path for older adopters, and a documented instruction that destroys history
 
 **Model:** Claude Opus 5 (1M context).
