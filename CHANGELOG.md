@@ -114,6 +114,58 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] Reconcile-on-read: S39's `commit:` field → `316e7ef` — twelfth discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`,
+`d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S39 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`316e7ef`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**110** commits, all refs) and reading each blob's
+  S39 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `316e7ef` is the first
+  commit where it reads `status: complete`; the claim stub `5b0dd23` carries the same block at
+  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
+  **twelve receipts running**.
+- **The ordinal is derived too, not incremented on faith.** `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returned **12** in the live file and **0** in either archive shard, immediately before this one was
+  prepended — one of the twelve is the `nine commit: fields that named no sha` **repair**, not a
+  discharge. Eleven numbered discharges precede this one, so this is the **twelfth**.
+- **Taken BEFORE this session's Phase 1B claim**, holding the order for the twelfth consecutive time
+  (S33 is still the only session that took it late). **BL-14's distributed half remains open**, so the
+  practice is still inherited from the predecessor's receipt rather than assigned by any checklist:
+  `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to `status: pending` receipts
+  and undocumented commits — never to a *complete* receipt whose `commit:` is `pending`.
+- **Nothing else needed reconciling, and both frontiers agree on it.**
+  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
+  `316e7ef`, and `git rev-list --count --no-merges 316e7ef..HEAD` is **0** — no ghost, no backfill.
+  `python3 bin/check-handoff` was **OK** before this edit (newest receipt structurally complete, all
+  23 older receipts naming a sha) and is re-run after it. The live file still holds **24** receipts;
+  this repair adds none, so the header count is unchanged and was re-counted rather than assumed
+  (`grep -c '^\`\`\`handoff' HANDOFFS.md` → 24).
+- **The G2 trend line, re-measured rather than quoted forward — and BOTH files have now been past RED
+  for two consecutive readings.** `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --check`
+  reads **SRF 1.4911** against archive `7a71df0` (both the most-recent and H3's largest-drop boundary
+  resolve to the same archive, so nothing has to be chosen), **308,563 B** against a 65,536 B budget,
+  line headroom **20**, trigger **FIRES**. That is the **fifth consecutive reading past RED** — 1.0820
+  at S36, 1.1709 at S37, 1.2832 at S38, 1.4028 at S39 — and the trimmer still **refuses** the file by
+  design. `CHANGELOG.md` reads **SRF 1.2631** against the most recent archive `020ba3f` (0.4718
+  against H3's largest-drop boundary `3aee4e3` — the two differ by 2.68×), **116,356 B**, line
+  headroom **14**, trigger **FIRES**; it was 1.0666 at S39's claim, so its **second** reading past RED.
+- **The *line* half of the trigger now fires on `CHANGELOG.md` for the first time, and that is derived,
+  not inferred from two readings.** Replaying the tool's own formula
+  (`(READ_CAP_LINES - line_count) * de // dl`, with `classify_zones` from the trimmer itself) over
+  **every one of the 19 commits** that touched this file since its last split `020ba3f` — 606 lines /
+  10 records at the split — the headroom runs 47, 28, 25, 29, 33, 30, 33, 31, 32, 29, 29, 26, 26, 25,
+  21, 20, **17** (`bcc0d7b`, the tree S39 measured at its claim), **16** (`1b3f808`), and **14** at
+  `316e7ef`. `LINE_FIRE_BELOW` is 15, so `316e7ef` — S39's own close-out — is the first commit in this
+  shard's life at which the line half fires, and it fired unobserved: S39 measured 17 at its claim and
+  did not re-measure at close. Until now the byte half had been carrying this file alone.
+  Level control is the wrong lever for either; the **rate** problem
+  (`framework-context-cost-plan.md` §10.2) still owns nobody. Every figure here rots on the next
+  prepend — re-run the commands, never quote these.
+
 ### 2026-08-04 · [ad hoc] S39 — the trimmer ships, and the tuple entry the plan called the task turned out to do nothing
 
 **Model:** Claude Opus 5 (1M context).
