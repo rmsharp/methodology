@@ -114,6 +114,78 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] S37 — the three dashboard defects fixed, and one of them could not be done as specified
+
+**Model:** Claude Opus 5 (1M context).
+Plan §5 queue item **S36** (fork session **S37** — the two axes swapped places since last session;
+see the receipt). Deliverable: plan **D4** (a), (b) and (c) fixed in **both** twins of
+`methodology_dashboard.py`, with **26 new tests**. `DASHBOARD_VERSION` **2.10.3 → 2.11.0**.
+
+- **(a) The root-date query.** `git log --reverse --format=%ai -1` reads as "the oldest commit" and
+  is not: git applies `-n1` while walking, **before** `--reverse` re-orders the survivors, so it
+  returned the **newest**. Replaced with `--max-parents=0` plus `min()` over the roots, because a
+  repo can have more than one root. Live on this repo: `first_commit_date` **2026-08-03 → 2026-03-09**,
+  `project_age_days` **0 → 147**.
+- **(a) — and this row's own premise was overstated, which the review proved on real repos.** The
+  plan says the bug made the `commits < 10 and age > 30` risk "permanently dead". It did not: a
+  **stale** repo, whose newest commit is itself over 30 days old, still tripped it — for the wrong
+  reason. The true statement is narrower: unreachable for every *active* low-commit repo, which is
+  exactly the young project the risk exists to flag, and a wrong age everywhere. **My first fixture
+  for this test was green against the bug** for precisely that reason, which is how it was caught:
+  two 2020 commits satisfy `age > 30` under the bug too. The discriminating shape is an **old root
+  with a recent tip**. A test that passes against the bug is not coverage.
+- **(b) cannot be done as the design words it, and this is the session's real decision.** "A
+  2,090-line `.md` can trip the large-file risk" reads as *widen `SOURCE_EXTS`* — and
+  `tools/test_methodology_dashboard.py:249` `test_large_file_ext_filter` **ratifies the opposite**
+  (a 2,500-line chapter must NOT trip it), a narrowing BL-5 earned by measured false positives, with
+  Layer 7's `vendor` exclusion earned the same way one signal over. The two are reconcilable only by
+  separating the **failure modes**: BL-5 asks *"is this module unwieldy?"* (structure); D4(b) asks
+  *"does a file a session must read in full still fit in one read?"* (harness). Shipped as a
+  **second** risk — `READ_CAP_LINES = 2000`, a name-keyed `READ_CAP_WATCHED` population, `high`
+  severity, gated on `owes_ledger` — sharing **no substring** with "Large files detected" so the
+  diagnostic trail that produced both narrowings survives. BL-5's predicate is not touched by one
+  character. **Every departure is labelled as added policy in the code**, per this repo's rule that
+  added policy is never dressed as a reading.
+- **(b), the population, and the one that would have bitten adopters.** The watched set is written
+  as a **literal**, not derived from `METHODOLOGY_ITEMS`, because `SESSION_RUNNER.md` and
+  `SAFEGUARDS.md` are **TRACKED** dests in `bin/_manifest.py:37,39` — files *we* install. Flagging
+  one would re-earn Layer 7's narrowing at fleet scale: a single canonical breach lighting up every
+  adopter at once over a file they cannot edit. A test asserts that against the manifest itself
+  rather than restating it in a comment.
+- **(c) removed the `methodology` self-exclusion — and review found the defect that made it
+  dangerous.** `discover_projects()` has **two** consumers, and only one was considered.
+  `sync_dashboards()` uses it as a **write** path, so removing the exclusion silently added the
+  canonical repo's own root as a `--sync` target — a third, unignored copy beside the two it
+  authors. The `t == canonical` skip does not catch it (canonical is `.../starter-kit/<name>`; the
+  new target is `.../<name>`). Fixed by skipping the authoring repo explicitly, proved by mutation,
+  and confirmed on a live `--sync --dry-run`: 12 targets, none of them this repo.
+- **Method, and what it caught.** Each defect was driven **RED first and watched**. Then a 5-lens
+  adversarial review over the uncommitted diff: **26 findings filed, 17 survived refutation**,
+  collapsing to **9 distinct in-scope defects**, all fixed. Three were mine and material: the
+  `--sync` write path above; **the twins left byte-divergent** because a comment was revised in
+  `tools/` *after* mirroring, which falsified the verification numbers I had already recorded; and a
+  shipped `CUSTOMIZATION` docstring still telling adopters to re-add `methodology` to
+  `EXCLUDE_DIRS` — the exact instruction (c) removes, in the file adopters receive.
+- **Three producer mutants survived the full 283-test suite and are now killed.** `>` → `>=` on the
+  cap (no test exercised a file of *exactly* 2,000 lines, so the boundary was free to move);
+  gating the watch append on `loc > 0` (the "an empty watched file still reports 0" comment was
+  unfalsifiable — a comment shaped like a design decision); and deleting the `--sync` skip. This is
+  **Learning #16 one level down**: the predicates were covered, their **edges** were not.
+- **Two tests were green against the unpatched scanner** and are now labelled guard-the-guard
+  rather than counted as RED-first coverage — both assert the *absence* of a string, which is
+  trivially true before that string exists. They earn their place by mutation instead.
+- **Effect on this repo: a tripwire, not a new red row.** `CHANGELOG.md` 1,077, `HANDOFFS.md` 970,
+  `docs/planning/BACKLOG.md` 547 lines — all under the cap, so the new risk adds nothing here and
+  the score is unchanged at **72/100**. On the real 12-repo portfolio it fires **4 rows across 2
+  repos**, every one a true positive, the worst a **25,346-line** `SESSION_NOTES.md`. The
+  self-scan is sane: role `framework`, compliance 100%, **0 high+ risks** — upstream
+  [issue #59](https://github.com/KJ5HST/methodology/issues/59)'s false "5% adoption" risk does not
+  recur.
+- **Verified, measured last rather than quoted:** `bash bin/tests.sh` **175 passed / 1 failed** (the
+  failure is Test 9's `--source=github` 404, unchanged and correct until upstream merges — Test 9
+  was **not** weakened); `python3 -m unittest discover -s tools` **286 OK**; `python3 bin/check-links`
+  OK **88 links / 22 files**; twins byte-identical with no file-mode change.
+
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S36's `commit:` field → `df381ea` — ninth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).

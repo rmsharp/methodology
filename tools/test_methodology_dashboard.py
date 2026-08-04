@@ -24,14 +24,17 @@ Design notes:
 import sys
 sys.dont_write_bytecode = True
 
+import contextlib
 import filecmp
 import importlib.util
+import io
 import json
 import os
 import re
 import subprocess
 import tempfile
 import unittest
+from datetime import datetime, timedelta
 from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -64,7 +67,11 @@ def base_metrics(**over):
         "methodology": {"compliance_score": 0, "compliance_pct": 0, "items": {}},
         "coverage_configs": [],
         "changelog": {"present": False, "is_fresh": False, "signals": []},
-        "files": {"largest_files": []},
+        # `read_cap_watch` is indexed directly by the D4(b) risk, not `.get`-with-default: a silent
+        # default is exactly how a signal in this scanner went permanently unreachable with no test
+        # failing. So it must exist here. base_metrics shallow-merges top-level keys only, so every
+        # existing caller passing files={"largest_files": [...]} keeps read_cap_watch == [].
+        "files": {"largest_files": [], "read_cap_watch": []},
         "vulnerabilities": {},
         "render": {"score": 0, "toolchain_present": False,
                    "render_dep_verified": False, "signals": []},
@@ -2030,10 +2037,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.10.3")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.11.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.10\.3"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.10.3")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.11\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.11.0")
 
 
 class TestEndToEnd(unittest.TestCase):
@@ -2687,6 +2694,380 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         self.assertIn("source_loc 0 &amp;le; 200", card)
         self.assertNotIn("source_loc 3", card,
                          "the justification must not still quote the installed scanner's LOC")
+
+
+class TestD4ReadCapTruncation(unittest.TestCase):
+    """Plan D4(b) (`docs/planning/framework-context-cost-plan.md:391`), and the one defect of the
+    three that is NOT a mechanical edit.
+
+    The literal reading — put `.md` into `SOURCE_EXTS` so the existing "Large files detected" risk
+    can see it — regresses BL-5, whose ratified `test_large_file_ext_filter` (below, untouched)
+    asserts a 2,500-line chapter must NOT trip it, and whose narrowing was earned by measurement.
+    A SECOND risk is used instead, because the two share only the adjective:
+
+      BL-5's question       "is this MODULE unwieldy?"   — structure; false for a chapter
+      D4(b)'s question      "does a file a session must read IN FULL still fit in one read?"
+                                                        — harness behaviour; true or false
+                                                          whatever the file is for
+
+    That separation is ADDED POLICY, labelled as such here and in the ledger entry. What the design
+    requires is only that a 2,090-line `.md` be able to trip *a* large-file risk.
+
+    RED-FIRST, and watched: every assertion below was run against the unpatched scanner and
+    observed to fail (the metrics key is absent -> KeyError; the risk string appears nowhere).
+    """
+
+    def _repo(self, files_map, runner=True):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        if runner:
+            (p / "SESSION_RUNNER.md").write_text("# Session Runner\n" + "step\n" * 40)
+        for name, content in files_map.items():
+            fp = p / name
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            fp.write_text(content)
+        subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "-m", "init"], check=True)
+        return p
+
+    @staticmethod
+    def _lines(n):
+        return "x\n" * n
+
+    # --- the constant -------------------------------------------------------------------------
+
+    def test_cap_agrees_with_the_trimmer(self):
+        """The reporter and the remedy must not disagree about where the cliff is. The trimmer
+        already declares this cap for the same reason; pin the two literals together so a later
+        edit to either is caught. Independent operands: one is read out of the module, the other
+        is parsed out of the OTHER tool's source text."""
+        trim_src = (Path(STARTER_PY).parent / "methodology_trim.py").read_text(encoding="utf-8")
+        m = re.search(r"^READ_CAP_LINES\s*=\s*(\d+)", trim_src, re.MULTILINE)
+        self.assertIsNotNone(m, "methodology_trim.py must declare READ_CAP_LINES")
+        self.assertEqual(md.READ_CAP_LINES, int(m.group(1)))
+
+    def test_watched_set_never_names_a_tracked_dest(self):
+        """THE LOAD-BEARING INVARIANT, and the reason the population is a literal rather than the
+        methodology checklist. `SESSION_RUNNER.md` and `SAFEGUARDS.md` are TRACKED dests: we
+        install them and keep them current. Flagging one would re-earn Layer 7's narrowing at
+        fleet scale — a single canonical breach lighting up every adopter at once over a file they
+        cannot edit. Asserted against `bin/_manifest.py` itself, so the two sides are genuinely
+        independent (Learning #16) rather than two spellings of one comprehension."""
+        manifest_src = (Path(STARTER_PY).parent.parent / "bin" / "_manifest.py").read_text(
+            encoding="utf-8")
+        tracked = set(re.findall(r'\(\s*"[^"]+"\s*,\s*"([^"]+)"\s*,\s*TRACKED\s*\)', manifest_src))
+        self.assertIn("SESSION_RUNNER.md", tracked, "fixture check: the manifest must still mark "
+                                                    "SESSION_RUNNER.md TRACKED, or this test is "
+                                                    "asserting nothing")
+        self.assertEqual(md.READ_CAP_WATCHED & tracked, set())
+
+    # --- the collector ------------------------------------------------------------------------
+
+    def test_collector_reports_watched_file_lines(self):
+        p = self._repo({"CHANGELOG.md": self._lines(2500)})
+        m = md.collect_file_metrics(p)
+        watch = {w["path"]: w["lines"] for w in m["read_cap_watch"]}
+        self.assertEqual(watch.get("CHANGELOG.md"), 2500)
+
+    def test_collector_ignores_unwatched_names(self):
+        p = self._repo({"chapter07.md": self._lines(2500)})
+        m = md.collect_file_metrics(p)
+        self.assertEqual([w["path"] for w in m["read_cap_watch"]], [])
+
+    def test_watch_list_is_not_capped_by_the_top_ten(self):
+        """Keyed by NAME, never by size rank. `largest_files` is `all_files[:10]`, so a ledger
+        pushed past rank 10 leaves the window and no threshold on that list could see it at ANY
+        size — D4(b)'s own defect class, re-created by the fix for it. (An earlier draft of this
+        docstring quoted how many source files it would take; a reviewer re-derived the number and
+        it was wrong. The claim needs no distance, and a distance would rot.)"""
+        big = {f"src{i}.py": self._lines(9000 + i) for i in range(12)}
+        p = self._repo({**big, "HANDOFFS.md": self._lines(2400)})
+        m = md.collect_file_metrics(p)
+        self.assertNotIn("HANDOFFS.md", [f["path"] for f in m["largest_files"]],
+                         "fixture check: HANDOFFS.md must be pushed OUT of the top ten, or this "
+                         "test proves nothing")
+        self.assertEqual({w["path"] for w in m["read_cap_watch"]}, {"HANDOFFS.md"})
+
+    # --- the risk -----------------------------------------------------------------------------
+
+    def test_risk_fires_past_the_cap(self):
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(2090)}))
+        descs = [r["description"] for r in m["scores"]["risks"]]
+        self.assertTrue(any("CHANGELOG.md is 2,090 lines" in d and "read cap" in d for d in descs),
+                        f"expected a read-cap row, got {descs}")
+
+    def test_risk_silent_under_the_cap(self):
+        """GUARD-THE-GUARD, labelled per this file's docstring rule: asserting the ABSENCE of a
+        string is trivially true before that string exists, so this was one of the two tests in
+        this class that were GREEN against the unpatched scanner. It is not RED-first coverage
+        and must not be counted as such. It earns its place by mutation instead — see
+        test_boundary_is_exactly_the_cap, which pins the comparison the mutant moves."""
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(1999)}))
+        self.assertFalse(any("read cap" in r["description"] for r in m["scores"]["risks"]))
+
+    def test_boundary_is_exactly_the_cap(self):
+        """Pins the comparison itself, both sides. Without this the `>` -> `>=` producer mutant
+        survived the entire suite: nothing exercised a file of exactly READ_CAP_LINES lines, so
+        the boundary was free to move by one in either direction undetected. Learning #16's
+        lesson one level down — the predicate was covered, its EDGE was not."""
+        exact = md.collect_all(self._repo({"CHANGELOG.md": self._lines(md.READ_CAP_LINES)}))
+        self.assertFalse(any("read cap" in r["description"] for r in exact["scores"]["risks"]),
+                         "a file of exactly READ_CAP_LINES lines still fits in one read")
+        over = md.collect_all(self._repo({"CHANGELOG.md": self._lines(md.READ_CAP_LINES + 1)}))
+        self.assertTrue(any("read cap" in r["description"] for r in over["scores"]["risks"]),
+                        "one line past the cap must fire")
+
+    def test_empty_watched_file_still_reports_zero(self):
+        """The collector deliberately appends OUTSIDE the `loc > 0` branch, so a watched file that
+        is empty still appears with 0 rather than vanishing. Nothing tested that: the mutant
+        `if loc > 0 and rel_posix in READ_CAP_WATCHED` survived the whole suite, which made the
+        comment stating the intent unfalsifiable — a comment shaped like a design decision."""
+        p = self._repo({"CHANGELOG.md": "", "HANDOFFS.md": self._lines(3)})
+        m = md.collect_file_metrics(p)
+        watch = {w["path"]: w["lines"] for w in m["read_cap_watch"]}
+        self.assertEqual(watch.get("CHANGELOG.md"), 0,
+                         "an empty watched file must be reported as 0, not omitted")
+
+    def test_risk_is_gated_on_owing_a_ledger(self):
+        """GUARD-THE-GUARD by construction (see test_risk_silent_under_the_cap): also green
+        against the unpatched scanner, because pre-change no risk description contained the
+        string at all. Its real proof is the producer mutant — replacing `if owes_ledger:` with
+        `if True:` turns this red, which was run and observed.
+
+        The claim it locks: a repo that never adopted the methodology is not told its CHANGELOG.md
+        is too long. The scanner's own Layer 8 comment records a MEASURED regression from exactly
+        that assumption."""
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(3000)}, runner=False))
+        self.assertFalse(any("read cap" in r["description"] for r in m["scores"]["risks"]))
+
+    def test_one_row_per_breaching_file(self):
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(2100),
+                                       "HANDOFFS.md": self._lines(2200),
+                                       "SESSION_NOTES.md": self._lines(2300)}))
+        rows = [r for r in m["scores"]["risks"] if "read cap" in r["description"]]
+        self.assertEqual(len(rows), 3, "each file is separately actionable; an aggregate row "
+                                       "naming only the worst hides the others")
+        self.assertTrue(all(r["severity"] == "high" for r in rows))
+
+    def test_backlog_is_watched_at_every_documented_location(self):
+        for loc in md._BACKLOG_LOCATIONS:
+            with self.subTest(loc=loc):
+                m = md.collect_all(self._repo({loc: self._lines(2400)}))
+                self.assertTrue(any(f"{loc} is 2,400 lines" in r["description"]
+                                    for r in m["scores"]["risks"]))
+
+    def test_bl5_code_smell_row_is_untouched_and_independent(self):
+        """Guard-the-guard, from the NEW signal's side. The two risks must coexist without either
+        suppressing the other, and their strings must share no substring, so the diagnostic trail
+        that produced BL-5's and Layer 7's narrowings survives in `dashboard_history.jsonl`."""
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(2100),
+                                       "app.py": "x = 1\n" * 2500}))
+        descs = [r["description"] for r in m["scores"]["risks"]]
+        self.assertTrue(any("Large files detected" in d and "app.py" in d for d in descs))
+        self.assertTrue(any("read cap" in d and "CHANGELOG.md" in d for d in descs))
+        self.assertFalse(any("Large files detected" in d and "CHANGELOG.md" in d for d in descs),
+                         "the code-smell risk must still never name a markdown file")
+
+    def test_the_real_historical_blob_fires(self):
+        """The strongest fixture available: not a synthetic file, but the actual artifact that
+        actually breached the cap in this repository and was found by accident rather than by any
+        check. Coverage does not depend on it — test_risk_fires_past_the_cap carries the same
+        assertion synthetically — so a shallow clone skips rather than fails."""
+        blob = subprocess.run(["git", "show", "3aee4e3^:CHANGELOG.md"],
+                              capture_output=True, text=True,
+                              cwd=str(Path(STARTER_PY).parent.parent))
+        if blob.returncode != 0:
+            self.skipTest("object 3aee4e3^ not present (shallow clone)")
+        self.assertEqual(blob.stdout.count("\n"), 2090,
+                         "fixture check: the historical blob must still be 2,090 lines")
+        m = md.collect_all(self._repo({"CHANGELOG.md": blob.stdout}))
+        self.assertTrue(any("CHANGELOG.md is 2,090 lines" in r["description"]
+                            for r in m["scores"]["risks"]))
+
+
+class TestD4RootCommitDate(unittest.TestCase):
+    """Plan D4(a) (`docs/planning/framework-context-cost-plan.md:391`).
+
+    `git log --reverse --format=%ai -1` looks like "the oldest commit" and is not: git applies
+    `-n1` while walking, BEFORE `--reverse` re-orders what survived, so it returns the NEWEST
+    commit. `first_commit_date` therefore tracked HEAD, `project_age_days` sat near 0 for every
+    repo ever scanned, and the `commits < 10 and age > 30` risk could never fire.
+
+    RED-FIRST, and watched: run against the unpatched scanner these assertions FAIL with
+    first_commit_date == the newest date (2026-08-01), not the root's 2020-01-02.
+    """
+
+    def _dated_repo(self, dates):
+        """A repo with one commit per date, in the order given. Dates are pinned through the
+        environment, so the fixture's own history is a REAL git history and the assertion reads
+        it back through the scanner rather than being handed it (Learning #16)."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        for i, d in enumerate(dates):
+            (p / f"f{i}.md").write_text(f"# commit {i}\n")
+            stamp = f"{d}T12:00:00 +0000"
+            env = {**os.environ, "GIT_AUTHOR_DATE": stamp, "GIT_COMMITTER_DATE": stamp}
+            subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+            subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                            "commit", "-q", "-m", f"c{i}"], check=True, env=env)
+        return p
+
+    def test_first_commit_date_is_the_root_not_head(self):
+        p = self._dated_repo(["2020-01-02", "2023-06-15", "2026-08-01"])
+        g = md.collect_git_metrics(p)
+        self.assertEqual(g["first_commit_date"], "2020-01-02")
+        self.assertNotEqual(g["first_commit_date"], g["last_commit_date"],
+                            "a 3-commit repo spanning 6 years must not report one date for both "
+                            "ends of its history")
+
+    def test_project_age_is_measured_from_the_root(self):
+        p = self._dated_repo(["2020-01-02", "2026-08-01"])
+        g = md.collect_git_metrics(p)
+        # Whatever 'now' is, the age must be at least the span of the fixture's own history.
+        span = (datetime(2026, 8, 1) - datetime(2020, 1, 2)).days
+        self.assertGreaterEqual(g["project_age_days"], span)
+
+    def test_low_velocity_risk_can_fire_at_all(self):
+        """The consequence, asserted at the risk surface rather than at the metric: with age
+        pinned to ~0 this risk was unreachable for every repo, at any commit count.
+
+        THE FIXTURE HAS TO DISCRIMINATE, and the first version of it did not. Written with two
+        commits in 2020 it passed against the UNPATCHED scanner — the buggy query returned the
+        *newest* commit, which in that fixture was still six years old, so `age > 30` held for the
+        wrong reason and the test was green against the bug it was written to catch. That is this
+        file's own docstring rule ("a test that passes against the bug is not coverage"), and it
+        took catching. The discriminating shape is an OLD root with a RECENT tip: the bug reads
+        the tip and computes age ~0 (risk cannot fire); the fix reads the root (risk fires).
+        """
+        recent = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+        p = self._dated_repo(["2020-01-02", recent])
+        m = md.collect_all(p)
+        self.assertTrue(any("Very low commit velocity" in r["description"]
+                            for r in m["scores"]["risks"]),
+                        "2 commits in a repo rooted in 2020 must trip the low-velocity risk, "
+                        "however recently it was last touched")
+
+    def test_single_commit_repo_still_reports_its_one_date(self):
+        """Guard-the-guard: the fix must not regress the degenerate case, where the root IS head."""
+        p = self._dated_repo(["2024-03-04"])
+        g = md.collect_git_metrics(p)
+        self.assertEqual(g["first_commit_date"], "2024-03-04")
+        self.assertEqual(g["last_commit_date"], "2024-03-04")
+
+    def test_root_date_survives_a_merge_of_two_unrelated_histories(self):
+        """A repo can have MORE THAN ONE root. Whatever query replaces `--reverse -1` has to pick
+        the OLDEST root, not just any root, or the fix trades one wrong answer for another."""
+        p = self._dated_repo(["2021-05-06"])
+        other = tempfile.TemporaryDirectory()
+        self.addCleanup(other.cleanup)
+        q = Path(other.name)
+        subprocess.run(["git", "init", "-q", str(q)], check=True)
+        (q / "z.md").write_text("# other\n")
+        stamp = "2018-02-03T12:00:00 +0000"
+        env = {**os.environ, "GIT_AUTHOR_DATE": stamp, "GIT_COMMITTER_DATE": stamp}
+        subprocess.run(["git", "-C", str(q), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(q), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "-m", "other-root"], check=True, env=env)
+        subprocess.run(["git", "-C", str(p), "remote", "add", "other", str(q)], check=True)
+        subprocess.run(["git", "-C", str(p), "fetch", "-q", "other"], check=True)
+        # Resolve the fetched head by ASKING git, not by guessing between "master" and "main":
+        # the first draft hard-coded those two and would error out under any other
+        # `init.defaultBranch`, which is a machine-configuration dependency, not a property of
+        # the code under test.
+        other_head = subprocess.run(
+            ["git", "-C", str(p), "rev-parse", "--verify", "-q", "refs/remotes/other/HEAD"],
+            capture_output=True, text=True).stdout.strip()
+        if not other_head:
+            refs = subprocess.run(["git", "-C", str(p), "for-each-ref", "--format=%(refname)",
+                                   "refs/remotes/other/"], capture_output=True, text=True)
+            candidates = [r for r in refs.stdout.split() if not r.endswith("/HEAD")]
+            self.assertTrue(candidates, "fixture check: fetch produced no remote-tracking ref")
+            other_head = candidates[0]
+        merge_stamp = "2021-05-07T12:00:00 +0000"
+        menv = {**os.environ, "GIT_AUTHOR_DATE": merge_stamp, "GIT_COMMITTER_DATE": merge_stamp}
+        subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "merge", "-q", "--allow-unrelated-histories", "--no-edit", other_head],
+                       check=True, env=menv)
+        g = md.collect_git_metrics(p)
+        self.assertEqual(g["first_commit_date"], "2018-02-03",
+                         "with two roots the older one is the project's true start")
+
+
+
+class TestD4SelfExclusion(unittest.TestCase):
+    """Plan D4(c): `EXCLUDE_DIRS` contained the literal `"methodology"`, so in portfolio mode the
+    instrument was structurally blind to its own home — the one repo whose methodology signals it
+    is best placed to check, and the subject of upstream issue #59.
+
+    RED-FIRST, and watched: against the unpatched scanner `discover_projects` returns [] for a
+    portfolio root whose only project is named `methodology/`.
+    """
+
+    def _portfolio(self, names):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        for n in names:
+            d = root / n
+            d.mkdir(parents=True)
+            (d / "README.md").write_text(f"# {n}\n")
+            subprocess.run(["git", "init", "-q", str(d)], check=True)
+            subprocess.run(["git", "-C", str(d), "add", "-A"], check=True)
+            subprocess.run(["git", "-C", str(d), "-c", "user.email=t@t", "-c", "user.name=t",
+                            "commit", "-q", "-m", "init"], check=True)
+        return root
+
+    def test_a_project_named_methodology_is_discovered(self):
+        root = self._portfolio(["methodology"])
+        found = [p.name for p in md.discover_projects(root)]
+        self.assertEqual(found, ["methodology"])
+
+    def test_methodology_is_not_in_the_exclusion_set(self):
+        self.assertNotIn("methodology", md.EXCLUDE_DIRS)
+
+    def test_the_real_exclusions_still_exclude(self):
+        """Narrowed, not deleted (Learning #12's sibling): removing one member must not empty the
+        set. A guard proven only by deletion is proven only to run."""
+        root = self._portfolio(["realproject", "node_modules", "venv", "__pycache__"])
+        found = sorted(p.name for p in md.discover_projects(root))
+        self.assertEqual(found, ["realproject"])
+
+    def test_sync_does_not_target_the_authoring_repo(self):
+        """`discover_projects()` has TWO consumers, and D4(c) widened both. The scan wanted it;
+        `sync_dashboards()` did not — with `methodology` discoverable, --sync gained a target at
+        the canonical repo's OWN root, creating a third, unignored copy of the file beside the
+        two that repo already authors. The `t == canonical` skip does not catch it (canonical is
+        .../starter-kit/<name>; the new target is .../<name>).
+
+        This was missed entirely by the author and found in adversarial review. It is asserted on
+        the DRY-RUN output rather than by writing anything, and the fixture is a real directory
+        layout, not a stubbed discover_projects."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        canon = root / "methodology" / "starter-kit"
+        canon.mkdir(parents=True)
+        (canon / "methodology_dashboard.py").write_text(
+            Path(TOOLS_PY).read_text(encoding="utf-8"), encoding="utf-8")
+        subprocess.run(["git", "init", "-q", str(root / "methodology")], check=True)
+        other = root / "adopter"
+        other.mkdir()
+        (other / "README.md").write_text("# adopter\n")
+        subprocess.run(["git", "init", "-q", str(other)], check=True)
+
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            md.sync_dashboards(canon / "methodology_dashboard.py", dry_run=True)
+        out = buf.getvalue()
+        self.assertNotIn("methodology/methodology_dashboard.py", out.replace(str(root) + "/", ""),
+                         "--sync must not target the repo that AUTHORS the dashboard")
+        self.assertIn("adopter", out, "fixture check: a real adopter target must still be found, "
+                                      "or this test would pass on an empty target list")
 
 
 if __name__ == "__main__":

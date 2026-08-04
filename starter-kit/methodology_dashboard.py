@@ -41,8 +41,10 @@ SETUP
 CUSTOMIZATION
 -------------
 - EXCLUDE_DIRS: Add directory names to skip during project discovery.
-  By default, common non-project directories are excluded. If you have
-  the methodology repo cloned as a sibling, add its directory name here.
+  By default, common non-project directories are excluded. The methodology
+  repo itself is deliberately NOT excluded — it is scored like any other
+  project, and --sync skips it as a target on its own (it authors this file
+  rather than receiving it).
 
 - WALK_SKIP: Directories skipped during file traversal (build artifacts,
   vendor dependencies, etc.).
@@ -82,10 +84,14 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.10.3"
+DASHBOARD_VERSION = "2.11.0"
 
 ROOT = Path(__file__).parent
-EXCLUDE_DIRS = {"methodology", "BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
+# `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
+# blind to its own home in portfolio mode — the one repo whose methodology signals it is best
+# placed to check, and the subject of upstream issue #59. The self-scan is safe now that Layer 4
+# classifies repo role; before that it read its own home as a 5%-adoption risk.
+EXCLUDE_DIRS = {"BrogueCE-iOS", ".git", "__pycache__", "node_modules", ".venv", "venv"}
 WALK_SKIP = {".git", ".claude", "node_modules", "__pycache__", ".venv", "venv", "target",
              "build", "dist", ".build", "DerivedData", "Pods", ".gradle"}
 
@@ -228,6 +234,48 @@ _TABLE_SEP_RE = re.compile(r'^\s*\|[\s:|-]+\|\s*$')
 _BACKLOG_DONE_TOKENS = ("DONE", "COMPLETE", "COMPLETED", "SHIPPED", "FIXED", "RESOLVED",
                         "CLOSED", "✅")  # U+2705 WHITE HEAVY CHECK MARK
 _BACKLOG_LOCATIONS = ("BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md")
+
+# --- D4(b): the agent Read cap ----------------------------------------------------------------
+# A SECOND large-file question, deliberately NOT a widening of the BL-5 code-smell check in
+# assess_risks(). BL-5 asks "is this MODULE unwieldy?" — a judgment about structure, false for a
+# 2,500-line chapter, which is why .md is excluded there and `vendor` after it: two consecutive
+# narrowings, both earned by measured false positives. This asks "does a file a session must read
+# IN FULL still fit in one read?" — a fact about the harness, true or false whatever the file is
+# for. Separating them is ADDED POLICY: the ratified design says only that a 2,090-line .md must
+# be able to trip *a* large-file risk, and taking that literally would regress BL-5's test.
+#
+# UNIT: LINES, because the cap is in lines. Bytes are not a proxy — measured in this repo,
+# HANDOFFS.md runs ~265 B/line and CHANGELOG.md ~83 B/line, so any single byte threshold is wrong
+# for one of them by ~3x, and would flag the file that is NOT truncating while missing the one
+# that did.
+# VALUE: harness behaviour, not a repo property and not taste — a Read past it returns the first
+# 2,000 lines with no error and no missing-data marker. Same name, same value and same stated
+# reason as starter-kit/methodology_trim.py's READ_CAP_LINES, so the reporter and the remedy
+# cannot disagree about where the cliff is; a canonical test pins the two literals together.
+# BASIS — the failure already happened here, and was found by accident rather than by any check:
+#   git show 3aee4e3^:CHANGELOG.md | wc -l    -> 2,090
+# Phase 0's reconcile then computed a frontier against a record it could not fully see.
+READ_CAP_LINES = 2000
+
+# The files a session is instructed to read IN FULL to establish state — SESSION_RUNNER.md
+# Phase 0 step 2 (SESSION_NOTES.md), step 3 (BACKLOG.md), step 6 (reconcile CHANGELOG.md and
+# HANDOFFS.md against git log) — restricted to the ones the ADOPTER owns.
+#
+# Written as a literal, NOT derived from METHODOLOGY_ITEMS, because two of that checklist's file
+# entries — SESSION_RUNNER.md and SAFEGUARDS.md — are TRACKED dests in bin/_manifest.py: files we
+# install and keep current. Flagging those would re-earn Layer 7's narrowing at fleet scale, since
+# one canonical breach would light up every adopter at once over a file they cannot edit. Every
+# name below is a SEED dest (bin/sync writes a short stub once; adopter-owned forever after) or
+# never a dest at all, so every line past the cap is the adopter's own record. A canonical test
+# asserts that against bin/_manifest.py rather than restating it in a comment here.
+#
+# ROADMAP.md is a SEED too and is deliberately absent: the runner cites it as a pointer, never as
+# a file read whole to compute anything. Absent above all: a book chapter. Nobody is instructed to
+# read chap07.md in full, so truncating it produces no wrong answer — flagging it would re-create
+# the very false positive BL-5's ext filter, one signal over, exists to kill.
+READ_CAP_WATCHED = frozenset(
+    ("SESSION_NOTES.md", "CHANGELOG.md", "HANDOFFS.md") + _BACKLOG_LOCATIONS
+)
 
 # Doc-only / research-repo scoring reshape (BL-5). A document-only repo (papers, dissertations,
 # technical reports, regulatory analyses — the Research-Documentation workstream population, and
@@ -554,8 +602,17 @@ def sync_dashboards(start, dry_run=False):
     portfolio_root = canonical.parent.parent.parent
     canon_text = canonical.read_text()
 
+    # discover_projects() has TWO consumers — the portfolio scan and this WRITE path — so
+    # widening it widens both. Dropping "methodology" from EXCLUDE_DIRS (D4(c)) is wanted for the
+    # scan and NOT wanted here: it would make --sync create a third copy of this file at the
+    # canonical repo's own root, unignored and beside the two it already authors. The `t ==
+    # canonical` skip below does not catch that, because canonical is .../starter-kit/<name> and
+    # the new target is .../<name>. Skip the authoring repo explicitly.
+    canon_repo = canonical.parent.parent.resolve()          # .../methodology
     targets = [portfolio_root / "methodology_dashboard.py"]
     for proj in discover_projects(portfolio_root):
+        if proj.resolve() == canon_repo:
+            continue
         targets.append(proj / "methodology_dashboard.py")
 
     print(f"Canonical: {canonical} (v{DASHBOARD_VERSION})")
@@ -696,10 +753,23 @@ def collect_git_metrics(path):
         except ValueError:
             pass
 
-    # First commit date
-    first_log = git_cmd(path, "log", "--reverse", "--format=%ai", "-1")
-    if first_log:
-        first_date_str = first_log[:10]
+    # First commit date. NOT `log --reverse --format=%ai -1`, which reads as "the oldest commit"
+    # and is not: git applies `-n1` while walking, BEFORE `--reverse` re-orders what survived, so
+    # that form returns the NEWEST commit. `first_commit_date` tracked HEAD and
+    # `project_age_days` measured "days since the last commit" under the name "project age".
+    #
+    # Precisely — an earlier draft of this comment said the `commits < 10 and age > 30` risk below
+    # "could never fire at all", and that overclaims: for a STALE repo whose newest commit is
+    # itself over 30 days old the risk still fired, for the wrong reason. What the bug really did
+    # was make the risk unreachable for every ACTIVE low-commit repo — exactly the young project
+    # it exists to flag — while reporting a wrong age everywhere.
+    # `--max-parents=0` names the root commit(s) directly and needs no ordering flag. A repo can
+    # have MORE THAN ONE root (a merge of unrelated histories), so take the oldest rather than
+    # whichever git happens to print first.
+    root_log = git_cmd(path, "log", "--max-parents=0", "--format=%ai")
+    root_dates = [ln[:10] for ln in root_log.splitlines() if ln.strip()]
+    if root_dates:
+        first_date_str = min(root_dates)
         try:
             first_date = datetime.strptime(first_date_str, "%Y-%m-%d")
             metrics["first_commit_date"] = first_date_str
@@ -750,11 +820,13 @@ def collect_file_metrics(path):
         # discounts it. See FRAMEWORK_INSTALLED_DOCS for why the two questions differ.
         "framework_docs": {"count": 0, "loc": 0},
         "largest_files": [],
+        "read_cap_watch": [],
         "directory_depth_max": 0,
         "directory_count": 0,
     }
 
     all_files = []
+    watched = []
     dirs_seen = set()
     # Seed-named docs are held aside during the walk: whether they are OURS depends on evidence
     # that only appears elsewhere in the tree, which the walk may not have reached yet.
@@ -828,6 +900,24 @@ def collect_file_metrics(path):
                 all_files.append({"path": str(rel_path), "loc": loc, "ext": ext,
                                   "vendor": category == "vendor"})
 
+            # D4(b): keyed by NAME, never by size rank, and deliberately outside the `loc > 0`
+            # branch above so an empty watched file still reports its 0.
+            #
+            # This list must NOT inherit largest_files' top-ten window, and the reason is not
+            # hypothetical: in this repo `docs/planning/BACKLOG.md` is ALREADY outside that
+            # window, so a size threshold reading largest_files could not see it at any size —
+            # D4(b)'s own defect class, re-created inside the fix for it. The two ledgers are
+            # inside the window today and can leave it without changing by a byte, since the
+            # window is a RANK. No distance is quoted here on purpose: the first draft of this
+            # comment named one, a reviewer re-derived it and it was wrong, and any such figure
+            # rots as the tree grows. Re-derive it instead:
+            #   python3 -c "import sys;sys.path.insert(0,'tools');from methodology_dashboard \
+            #     import collect_all;from pathlib import Path;\
+            #     d=collect_all(Path('.').resolve());\
+            #     print([f['path'] for f in d['files']['largest_files']])"
+            if rel_posix in READ_CAP_WATCHED:
+                watched.append({"path": rel_posix, "lines": loc})
+
     # A root BOOTSTRAP.md — or a CHANGELOG.md — is ours only in a repo that also carries proof the
     # framework was installed: a docs/methodology/ path (nothing lands there by accident), or the
     # seven TRACKED root names co-occurring past FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN. Neither the
@@ -841,6 +931,7 @@ def collect_file_metrics(path):
     metrics["directory_count"] = len(dirs_seen)
     all_files.sort(key=lambda f: f["loc"], reverse=True)
     metrics["largest_files"] = all_files[:10]
+    metrics["read_cap_watch"] = sorted(watched, key=lambda f: f["lines"], reverse=True)
 
     # Convert defaultdicts
     metrics["by_extension"] = dict(metrics["by_extension"])
@@ -2168,6 +2259,29 @@ def assess_risks(metrics):
                                      "CHANGELOG.md action ledger (Component C)"})
     for sev, desc in cl.get("signals", []):
         risks.append({"severity": sev, "description": desc})
+
+    # D4(b) — silent truncation, not a code smell. A second risk on purpose: it shares only the
+    # adjective with "Large files detected" above, and shares no substring with it, so the two stay
+    # independently greppable in dashboard_history.jsonl and the diagnostic trail that produced
+    # BL-5's and Layer 7's narrowings survives intact.
+    #
+    # Gated on `owes_ledger` (bound above), which is ADDED POLICY and the reason it is here rather
+    # than beside the BL-5 check: a project that never adopted the methodology is not told its
+    # CHANGELOG.md is too long. Ungated, this fires on any repo that happens to keep a long
+    # changelog — the assumption whose measured cost is recorded in FRAMEWORK_INSTALLED_SOURCE's
+    # own comment. Severity is `high` (also added policy) because this is the only expense in the
+    # set that produces silently WRONG answers rather than merely expensive ones. No remedy is
+    # named: the trimmer is not in bin/_manifest.py, so naming it would be a pointer adopters
+    # cannot follow — naming it conditionally is queue item S38.
+    if owes_ledger:
+        for w in metrics["files"]["read_cap_watch"]:
+            if w["lines"] > READ_CAP_LINES:
+                risks.append({
+                    "severity": "high",
+                    "description": f"{w['path']} is {w['lines']:,} lines — past the "
+                                   f"{READ_CAP_LINES:,}-line agent read cap; a session reading it "
+                                   "gets a silently truncated file, with no error and no "
+                                   "missing-data marker"})
 
     # Sort by severity
     severity_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
