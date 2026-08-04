@@ -114,6 +114,48 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] Reconcile-on-read: S36's `commit:` field → `df381ea` — ninth discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`,
+`728f39a`.
+
+- **What was reconciled.** S36 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`df381ea`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**101** commits, all refs) and reading each blob's
+  S36 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `df381ea` is the first
+  commit where it reads `status: complete`; the claim stub `cb537a9` carries the same block at
+  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
+  **nine receipts running**.
+- **The ordinal is derived too, not incremented on faith.** `grep -nE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returns **9** entries in the live file and **0** in either archive shard — one of the nine is the
+  `nine commit: fields that named no sha` **repair**, not a discharge. Eight numbered discharges
+  precede this one, so this is the **ninth**.
+- **Taken BEFORE this session's Phase 1B claim**, holding the order for the ninth consecutive time
+  (S33 is still the only session that took it late). **BL-14's distributed half remains open**, so
+  the practice is still inherited from the predecessor's receipt rather than assigned by any
+  checklist: `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to `status: pending`
+  receipts and undocumented commits — never to a *complete* receipt whose `commit:` is `pending`.
+- **Nothing else needed reconciling.** The frontier holds two commits since S36's close-out —
+  `df381ea` itself and `62659f4` (the BL-22 raise) — and both already carry ledger entries, so there
+  is no ghost and no backfill. `python3 bin/check-handoff` was **OK** both before and after this edit.
+- **The G2 trend line, and the first reading taken with a tool in the tree.** `HANDOFFS.md` is
+  **253,671 B** at this reconcile, up from **238,432 B** at the previous one — **+15,239 B across one
+  session**, the largest single-session rise yet recorded here and slightly steeper than the +14,661 B
+  before it. `starter-kit/methodology_trim.py` now exists, and its verdict on the file is **refusal**:
+  `--file HANDOFFS.md --check` reports the trigger FIRES on both forms (line headroom 22 records;
+  253,671 B against a 65,536 B budget) at **SRF 1.1709**, above `SRF_RED = 1.00`
+  (`starter-kit/methodology_trim.py:51`), so it declines without `--force`.
+- **And that SRF is the session's first correction: S36's receipt records 1.0820, measured hours
+  earlier — it is 1.1709 now.** The figure was re-run rather than carried forward, which is the only
+  reason the drift was seen; SRF is a ratio against the last archive, so it climbs with every
+  prepend and a quoted value starts rotting the moment it is written. `CHANGELOG.md` sits at
+  **0.7415** against its most recent boundary but **0.2642** against H3's largest-drop boundary —
+  the same file, **2.81×** apart, with the tool labelling its use of the former as a policy addition
+  on top of H3 rather than a reading of it. G2's headline file is still untrimmed by design, and
+  §10.2's rate question still owns nobody.
+
 ### 2026-08-03 · [ad hoc] BL-22 raised: `DOC_ONLY_SOURCE_LOC_MAX = 200` has no derivation and no test
 
 **Model:** Claude Opus 5 (1M context).
