@@ -114,6 +114,70 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] S43 — UAT: the framework against six real adopter repositories, read-only
+
+**Model:** Claude Opus 5 (1M context).
+Operator-assigned (*"begin UAT with ../airqino, ../church_growth, ../model_project_constructor,
+../mts-system, ../vscode_quarto_ext, and ../wsfct"*), scoped in the same exchange to a **read-only**
+assessment across **all four** adopter-facing surfaces. **Fork session `S43` is not plan §5 queue item
+`S43`** (`bin/check-derived`) — the axes coincide for the fourth time and it remains a coincidence.
+Deliverable: **one report, [`docs/planning/uat-2026-08-04-six-adopters.md`](docs/planning/uat-2026-08-04-six-adopters.md)**, fork-only. **11 findings — 4 critical, 5 moderate, 2 minor; 9 of 11 are defects in
+what we ship.** No adopter repository was written to, and the claim is proven rather than asserted:
+`git status --porcelain` across all six is byte-identical to the pre-audit snapshot.
+
+- **The result that reframes the rest: a fresh adopter installs cleanly.** `bin/sync --dry-run` into
+  an empty git repo writes all **24** destinations, `FRAMEWORK_LEARNINGS.md` and
+  `methodology_trim.py` included. **Every defect found is an *update-path* defect** — the fleet is
+  un-updated, not broken. The report says so before its findings so they are not misread.
+- **The trimmer declares multi-hundred-KB ledgers empty, in the words reserved for a fresh seed.**
+  `model_project_constructor/CHANGELOG.md` (**597,717 B**, 130 dated entries) and
+  `wsfct/CHANGELOG.md` (**1,239,085 B**, 508 table rows) both print *"holds zero records under its
+  declared grammar … A freshly seeded ledger looks exactly like this"* and exit **0** — the same
+  status as "trigger does not fire". The grammar wants a U+00B7 middle dot and a source tag; they use
+  an em dash and `## YYYY-MM`. A grammar mismatch is indistinguishable from an empty file.
+- **Every adopter holding `BOOTSTRAP.md` holds the history-destroying instruction S41 fixed, and the
+  only documented route to the fix is that instruction.** `:330` in all three still reads *"It will
+  fetch the latest starter-kit files and overlay them"* with no exception. S41's rewrite has reached
+  **0 of 6**. `bin/` ships nothing, so an adopter without a sibling clone has only the prose route.
+- **`SESSION_NOTES.md` is documented as transient, accumulates in 6 of 6, and no tool covers it.**
+  The seed contradicts itself — `:5` *"transient — it is overwritten every session"* against `:27`
+  *"Session history accumulates below this line"* — and `SESSION_RUNNER.md:260` publishes the false
+  half. `model_project_constructor` is at **25,346 lines, 12.7× the 2,000-line `Read` cap**, on a file
+  Phase 0 step 2 mandates reading; the trimmer knows only `CHANGELOG.md` and `HANDOFFS.md`.
+- **2 of 6 cannot be updated at all, and the file explaining the way out is among the files withheld.**
+  `bin/sync` exits 2 on `model_project_constructor` and `wsfct`; the guard is *correct* (three of the
+  four blocked files carry genuine project content). But the reconciliation procedure lives in
+  `BOOTSTRAP.md:341`/`:452`, and **`BOOTSTRAP.md` is absent from both repos.**
+- **Two live instances of the same checker false positive, found the same day.** `bin/check-handoff`'s
+  `SHA_RE` (`:198`) requires a hex *letter*, so an all-numeric short sha is rejected: `mts-system`
+  receipt S74's `commit: 4966443` (a real commit, `49664433f…`, failing since 2026-07-14) and **this
+  repository's own S42 receipt**, which reconciled to `8804635` at this session's Phase 0 and had to
+  be written `8804635e` to pass. The comment at `:197` claims a mitigation that `:373-374` removes.
+- **Also:** the dashboard credits `airqino`'s 17-versions-behind `SESSION_RUNNER.md` in full (96–100%
+  methodology compliance for all six, against **11–20** drifting files each, **82** portfolio-wide);
+  the URL update path installs nothing for 6 of 6 until upstream merges (S41's pre-flight working as
+  designed); `ZONE_UNCLASSIFIED` reproduced on a 1.1 MB `HANDOFFS.md` from our own seed's trailing
+  comment; `dashboard_history.jsonl` is ignored in 1 of 6 and tracked-and-dirty in one.
+- **Verified rather than assumed, on the pass side:** S41's stale-format detection was correct on
+  **9 of 9** ledgers; the trimmer's fence-awareness correctly excluded the seed's own template line
+  from `church_growth`'s 26 records; `bin/sync`'s local-modification guard protected real content.
+- **A 13-agent adversarial workflow refuted or materially overstated 4 of my 6 headline claims**, and
+  the corrections are in the report rather than its findings. The worst was mine: I reported "6 to 9"
+  drifting files per repo when the true range is **11 to 20** — a figure matching no slice of output I
+  had already collected — and asserted a dangling `FRAMEWORK_LEARNINGS.md` reference in all six when
+  **0 of 6** runners reference it at all. Every number published was re-run by me at `4dea909`;
+  figures I could not personally reproduce were dropped.
+- **Two scope disclosures, both in the report's §7.** Repositories outside the assigned six were read
+  read-only during verification, including **`nprcgenekeepr`**, which the operator had declared
+  off-limits — the six-repo scope should have been enforced in the subagent instructions, not assumed.
+  And this session's own mandated Phase 0 dashboard run left an untracked `dashboard_history.jsonl` at
+  this repo's root, which `.gitignore` does not cover — an instance of finding F9 in the canonical repo.
+- **Not done, deliberately:** no adopter repository touched (three carry uncommitted work, two are on
+  feature branches); no defect fixed — findings are recorded, not remediated; **no `FRAMEWORK_LEARNINGS.md`
+  row**, because this session's claim scoped out every distributed file and a row changes what adopters
+  receive (owed, and named in the receipt as a residual); no outward-facing action.
+- **Commits:** `75bc44b` (Phase 0 reconcile) · `4dea909` (claim) · this commit. **Session:** S43.
+
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S42's `commit:` field → `8804635` — fifteenth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
