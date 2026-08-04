@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **25**; the oldest **19**
+**Older receipts are archived.** This file currently holds **26**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -25,6 +25,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > [Learning #12](starter-kit/FRAMEWORK_LEARNINGS.md) pointed at this file, and it is the receipt-ledger
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
+
+---
+
+```handoff
+session: S41
+date: 2026-08-04
+status: pending
+active_task: **OPERATOR-ASSIGNED — make *"Update methodology using https://github.com/KJ5HST/methodology"* actually work for a repository on an earlier methodology version.** **NAME THE AXIS: fork session `S41` is NOT plan §5 queue item `S41`** (the floor audit, still undecided — do not start it). The operator's phrase is not new wording: it is already the documented agent-facing update path at `starter-kit/BOOTSTRAP.md:345`. **THE FRAMEWORK ALREADY PROMISES THE THING THAT IS BROKEN, WHICH IS WHY THIS IS A DEFECT AND NOT A PREFERENCE.** `BOOTSTRAP.md:85` states that `bin/status` *"flags any seed whose format predates the current methodology as `present (stale format)` ... so the format lag is surfaced rather than silent."* **S40 falsified that promise**: the current seed format now includes the `## Size, and when to archive` doctrine, `SEED_FORMAT_MARKERS` (`bin/_manifest.py:97`) still keys on the seeds' unchanged **H1 titles**, and both seeds are **SEED** disposition, so every existing adopter reports `present` — current — while missing the doctrine entirely. Measured across the operator's portfolio: **11 sibling repos hold `CHANGELOG.md`, 9 hold `HANDOFFS.md`, 0 hold `methodology_trim.py`**, so an update today delivers the tool and silently withholds the doctrine. **THREE INDEPENDENT FAILURES, AND ONLY TWO ARE FIXABLE HERE:** (1) the stale-seed marker above; (2) `read_github` (`bin/sync:80`) `sys.exit`s on the **first** failing file and its hint says *"run `gh auth login` or use --source=local"* — but auth is fine; `starter-kit/FRAMEWORK_LEARNINGS.md` (manifest index 1) and `starter-kit/methodology_trim.py` genuinely 404 upstream, so a URL-sourced update installs **nothing at all** and sends the adopter to diagnose the wrong problem; (3) **not fixable locally** — those two files reach `raw` only when an upstream PR merges, which needs the operator's go-ahead. **ALSO NOTE `bin/` SHIPS NOTHING** (0 of 24 DISTRIBUTION entries), so an adopter has no updater of its own and the URL path is necessarily an agent following prose, which is why the prose has to carry the seed-reconcile step and today does not. **NOT THIS SESSION (FM #17/#18):** no adopter repo is touched — the four-repo rollout is DEFERRED on operator instruction (*"you need to wait on modifying repos until I am not actively working on them"*) and its scoping is preserved in `next_steps`; the README resource-use section is operator-assigned and sequenced after this; no `ZONE_UNCLASSIFIED` config fix; no `wsfct` format reconcile; no plan queue items S41-S45. **NO OUTWARD-FACING ACTION** — no PR, comment, issue, tag or Release. **BASELINE AT CLAIM:** `bash bin/tests.sh` **178 passed / 1 failed** (Test 9's expected github 404 — and that failure is now *evidence for this session's own finding (2)*, not noise); `python3 -m unittest discover -s tools` **334 OK**; `python3 bin/check-links` OK **88 links / 22 files**; HEAD `ab94743`.
+```
 
 ---
 
