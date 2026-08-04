@@ -29,6 +29,22 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S37
+date: 2026-08-03
+status: pending
+active_task: **Plan §5 queue item `S36` — FIX THE THREE DASHBOARD DEFECTS (plan D4), in BOTH twins.** Spec: `docs/planning/ledger-trimmer-design.md` §11 Phase 2 (`:1010`), defects stated at `docs/planning/framework-context-cost-plan.md:391`. **MIND THE AXIS COLLISION, WHICH IS NOW INVERTED FROM LAST SESSION'S:** this is fork session **S37** executing plan queue item **S36** — the previous session was fork **S36** executing queue item **S37**. The two numbers have swapped places, not repeated. Never write either without naming the axis. DONE LOOKS LIKE, from §11 Phase 2 verbatim: (a) the root-date query returns the **newest** commit, not the oldest — `tools/methodology_dashboard.py:699` runs `git log --reverse --format=%ai -1` and git applies `-n1` *before* `--reverse`; (b) a 2,090-line `.md` can trip the large-file risk — `.md` is in `DOC_EXTS`, absent from `SOURCE_EXTS`, so no markdown file can trip it at any size; (c) the `methodology` self-exclusion removed from `EXCLUDE_DIRS` (`:88`). **EACH DEFECT NEEDS A TEST DRIVEN RED BEFORE ITS FIX** (Learning #12) — and per Learning #16, mutate the PRODUCER, not only the predicate: a test whose fixture is computed from the code under test asserts an identity. **(b) IS NOT THE MECHANICAL EDIT IT LOOKS LIKE, AND THIS IS THE SESSION'S REAL DECISION.** `tools/test_methodology_dashboard.py:249` (`test_large_file_ext_filter`) asserts *in the opposite direction*: a 2,500-line `.md` must NOT trip the risk, which is BL-5's ratified intent, recorded in the code comment at `:2109`. Widening `SOURCE_EXTS` to include `.md` regresses BL-5 and re-earns the false positives it was written to remove. The two are reconcilable only by separating the FAILURE MODES: BL-5's risk is a *code smell* (poor modularization); D4(b)'s is *silent truncation* (`framework-context-cost-plan.md:237` — past 2,000 lines a `Read` truncates with no error and no missing-data marker, and Phase 0's reconcile then computes a frontier against a record it cannot fully see). Whatever is chosen must be **labelled as added policy**, not dressed up as a reading of the design. **BASELINE AT CLAIM, measured not recalled:** `bash bin/tests.sh` **175 passed / 1 failed** (`FAIL: github source dry-run failed` — Test 9's `--source=github` 404 on `starter-kit/FRAMEWORK_LEARNINGS.md`, correct until upstream merges; **DO NOT WEAKEN TEST 9**); `python3 -m unittest discover -s tools` **263 OK**; `python3 bin/check-links` OK **88 links / 22 files**; twins **byte-identical**; dashboard **72/100**, risks = 1 low + 2 medium, 0 high+. Defect (a) reproduces LIVE at claim: `first_commit_date` **2026-08-03**, `project_age_days` **0**, against a true root of **2026-03-09** — so the `commits < 10 and age > 30` risk is dead for every repo, not just this one. **NOT THIS SESSION (FM #17/#18):** no dashboard row (queue S38), no manifest entry or shipping surface (queue S39′), no doctrine wording (queue S40), no BL-22 decision (the `DOC_ONLY_SOURCE_LOC_MAX = 200` derivation — raised, deliberately unowned), **and not D1** (the missing `CHANGELOG.md` scope footer, still unowned). **NO OUTWARD-FACING ACTION**: no PR, comment, issue, tag or Release. S34's PR is still prepared-and-unopened; every outward action needs the operator's explicit go-ahead, each time.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+---
+
+```handoff
 session: S36
 date: 2026-08-03
 status: complete
