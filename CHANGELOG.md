@@ -114,6 +114,33 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] Reconcile-on-read: S40's `commit:` field → `11b843a` — thirteenth discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`,
+`0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S40 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`11b843a`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**113** commits, all refs) and reading each
+  blob's S40 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `11b843a` is the
+  first commit where it reads `status: complete`; the claim stub `65cdc19` carries the same block at
+  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
+  **thirteen receipts running**.
+- **The ordinal is derived too, not incremented on faith.** `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returned **13** in the live file and **0** in either archive shard, immediately before this one was
+  prepended — one of the thirteen is the `nine commit: fields that named no sha` **repair**, not a
+  discharge. Twelve numbered discharges precede this one, so this is the **thirteenth**.
+- **Taken BEFORE the claim, and it had to be recovered to stay that way.** This session drafted its
+  Phase 1B stub first, noticed the outstanding answer slot only when `bin/check-handoff` failed, and
+  **reverted the stub to HEAD rather than collapse the two commits** — the working copy was set aside,
+  the reconcile taken alone, and the claim re-applied on top. S33 remains the only session that took
+  the reconcile late.
+- **Nothing else needed reconciling, and both frontiers agree on it.**
+  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
+  `11b843a`, and `git rev-list --count --no-merges 11b843a..HEAD` is **0** — no ghost, no backfill.
+
 ### 2026-08-04 · [ad hoc] S40 — the ledger doctrine, and an instruction that would have deleted an adopter's records
 
 **Model:** Claude Opus 5 (1M context).
