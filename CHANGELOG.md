@@ -114,6 +114,41 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] Reconcile-on-read: S43's `commit:` field → `f7637b3` — sixteenth discharge, and the first receipt that closed out twice
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`75bc44b`, `e23d595`, `ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`,
+`40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S43 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`f7637b3`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**123** commits, all refs) and reading each
+  blob's S43 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`.
+- **The derivation returned two answers this time, and that is new.** Every prior discharge found
+  exactly **one** commit carrying the session's block at `status: complete`. S43 has **two** —
+  `f7637b3` and `b215c0a` — because the operator corrected the session's `nprcgenekeepr` disclosure
+  after close-out and the receipt was amended in place to carry finding **F12**. The claim stub
+  `4dea909` still reads `status: pending`, so the stub/close-out split holds for a **sixteenth**
+  consecutive receipt (S29's gotcha 3). **The field names `f7637b3`, the earlier of the two** — the
+  commit where the close-out actually happened; `b215c0a` is a correction *to* the receipt, not a
+  second close-out of it. Naming the later sha would have silently redefined "the commit this receipt
+  shipped in" to mean "the last commit that touched it", which is a different question with the same
+  answer on all fifteen previous receipts and a different one here. Both shas are recorded in the
+  field so the amendment is not lost.
+- **The ordinal is derived, not incremented on faith.**
+  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returned **16** in the live file and **0** in both archive shards immediately before this entry was
+  prepended — and one of those sixteen is the `nine commit: fields that named no sha` **repair**, not
+  a discharge. Fifteen numbered discharges precede this one, so this is the **sixteenth**.
+- **Taken BEFORE the claim.** Nothing else was staged when this was committed. Both ledger frontiers
+  agreed at `b215c0a` at Orient and `git rev-list --count --no-merges b215c0a..HEAD` was **0** — no
+  ghost session, no backfill owed. The working tree was clean apart from the untracked
+  `dashboard_history.jsonl` that S43's own Phase 0 step-5 dashboard run left behind and reported as
+  **F9**; it is still uncommitted, still not covered by `.gitignore`, and still not fixed here
+  (FM #17). This session's own mandated dashboard run was taken through the scratchpad symlink
+  harness (S43's gotcha 4) precisely so it would not write a second one.
+
 ### 2026-08-04 · [ad hoc] S43 — UAT: the framework against six real adopter repositories, read-only
 
 **Model:** Claude Opus 5 (1M context).
