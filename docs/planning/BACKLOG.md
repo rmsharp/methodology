@@ -1,7 +1,9 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20 and BL-21 are open** (**BL-21 raised 2026-08-03 (S32)**; **BL-20 was raised 2026-08-02
+> BL-20, BL-21 and BL-22 are open** (**BL-22 raised 2026-08-03 (S36)**, and this enumeration WAS
+> updated with it — the omission called out below for BL-20 is the reason it was checked;
+> **BL-21 raised 2026-08-03 (S32)**; **BL-20 was raised 2026-08-02
 > (S31) and this enumeration was not updated with it**, which is why it is being said out loud: this
 > list is a hand-maintained derived value in the file whose own header tells you not to trust those.
 > It cannot be derived by counting headings either — the 11 `**BL-N —**` headings in §Open items are
@@ -463,6 +465,53 @@ drift for every adopter, so the `bin/status`→`bin/sync` pass is the second hal
 **Blocked on the same thing everything distributed is blocked on** — the paused upstream channel —
 but note it is blocked *behind* a decision nobody has made yet: whether this hook is contributed at
 all. `.githooks/pre-commit` being canonical-only was itself a ratified decision (BL-6 item 3).
+
+**BL-22 — `DOC_ONLY_SOURCE_LOC_MAX = 200`: an unexamined round number, protected by no test, that
+decides a user-visible risk verdict in a DISTRIBUTED file.**
+Raised 2026-08-03 (S36) while checking whether the new trimmer could ship without perturbing adopter
+scoring. Not a defect this session introduced, and deliberately not folded into it (FM #17).
+
+**What it does.** `tools/methodology_dashboard.py:248` (and its byte-identical `starter-kit/` twin).
+`detect_doc_only` runs marker-override → **source-LOC cap** → corpus-disjunction; the cap is the
+short-circuit at `:1918` — above 200 lines of source, a repo is **not** doc-only, so it keeps the
+code-centric `Testing` dimension and can earn a HIGH **"No test infrastructure"** risk. Below it, and
+with a doc corpus, the repo is exempted and scored on a render/verification proxy instead. The
+constant therefore decides, for every adopter, which of two scoring regimes applies.
+
+**Provenance, traced not assumed.** Introduced by `b2efd76` (2026-07-08, *"feat(dashboard): score
+document-only repos fairly (BL-5)"*). The commit message, the `[BL-5]` ledger entry
+(`docs/archive/CHANGELOG-through-v3.6.md:1375`) and `dashboard-signal-integrity-plan.md` all state
+the cap's **purpose** — *"keeps a mixed tooling repo … from being silently exempted"* — and **none
+states where 200 came from.** Two tells that it was chosen rather than measured:
+
+- its sibling `DOC_ONLY_DOC_LOC_MIN` is **also 200**, for an unrelated quantity (doc lines, not
+  source lines);
+- **no test asserts the value.** The only test that touches it *overrides* it to `4100`
+  (`tools/test_methodology_dashboard.py:2252-2255`). Change 200 to anything and the suite stays green.
+
+```sh
+git log --oneline -S DOC_ONLY_SOURCE_LOC_MAX -- tools/methodology_dashboard.py   # -> b2efd76 only
+grep -rn 'DOC_ONLY_SOURCE_LOC_MAX' tools/test_methodology_dashboard.py           # override, never an assertion
+```
+
+**It is already on record as having been wrong once.** The comment above `FRAMEWORK_INSTALLED_SOURCE`
+(`tools/methodology_dashboard.py:~450`) documents a real **148-LOC** utility repo that correctly read
+`code` and, after `bin/sync`, flipped to `doc-only` and **lost a TRUE "No test infrastructure" risk** —
+*"The old source cap had been masking that."* 148 < 200, so the cap alone misclassifies that repo.
+
+**Why it is worth an item rather than a shrug.** This is the class of value the operator's
+derived-value work exists to catch — a number that reads as calibrated, is not, sits in an
+adopter-distributed file, and drives a risk verdict adopters act on. It is also **load-bearing for
+queue item S39′**: shipping `methodology_trim.py` (**1,632 LOC**, 8.2× the cap) requires adding it to
+`FRAMEWORK_INSTALLED_SOURCE`, and the softness of the threshold is exactly why that exclusion cannot
+be skipped in favour of re-tuning the number.
+
+**The deliverable is a decision, and "leave it at 200, with the reasoning written down" is a fully
+correct outcome.** Options: (a) derive a value from real adopter repos and record the derivation;
+(b) keep 200 and document it as a deliberate, stated heuristic; (c) pin whatever value survives with
+a test so it cannot drift unnoticed. (c) is worth doing under any of the three. **Runnable fork-side;
+the fix lands in a DISTRIBUTED file, so the PR needs the operator's go-ahead** — batch it with the
+other distributed work rather than sending it alone.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

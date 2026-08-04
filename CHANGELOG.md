@@ -114,6 +114,29 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-03 · [ad hoc] BL-22 raised: `DOC_ONLY_SOURCE_LOC_MAX = 200` has no derivation and no test
+
+**Model:** Claude Opus 5 (1M context).
+Grooming action, at the operator's direction, after S36's close-out. Raised, not fixed.
+
+- **What.** `tools/methodology_dashboard.py:248` (and its twin) decides which of two scoring regimes
+  every adopter gets — above 200 source LOC a repo keeps the code-centric `Testing` dimension and can
+  earn a HIGH *"No test infrastructure"* risk; below it, with a doc corpus, it is exempted.
+- **Traced, not assumed.** Introduced by `b2efd76` (2026-07-08, BL-5). The commit message, the
+  `[BL-5]` ledger entry and the signal-integrity plan all state the cap's *purpose* and **none states
+  where 200 came from**. Its sibling `DOC_ONLY_DOC_LOC_MIN` is also 200 for an unrelated quantity, and
+  **no test asserts the value** — the only test touching it overrides it to `4100`.
+- **Already wrong once, on the record.** The dashboard's own `FRAMEWORK_INSTALLED_SOURCE` comment
+  documents a real 148-LOC repo that read `code`, flipped to `doc-only` after `bin/sync`, and lost a
+  TRUE no-test-infrastructure risk — *"The old source cap had been masking that."*
+- **Why it was raised now.** It is load-bearing for queue item **S39′**: `methodology_trim.py` is
+  1,632 LOC, 8.2× the cap, so shipping it requires the `FRAMEWORK_INSTALLED_SOURCE` exclusion — and
+  the softness of the threshold is precisely why re-tuning the number is not an alternative.
+- **The deliverable is a decision**; "keep 200 and write down why" is a fully correct outcome. The
+  fix touches a DISTRIBUTED file, so the PR needs a go-ahead and should be batched.
+- Also updated the backlog's own open-item enumeration, which the file documents as a hand-maintained
+  derived value that went stale for BL-20.
+
 ### 2026-08-03 · [ad hoc] S36 — the ledger trimmer built, and its own losslessness guards found inert
 
 **Model:** Claude Opus 5 (1M context).
