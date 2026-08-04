@@ -84,7 +84,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.12.0"
+DASHBOARD_VERSION = "2.13.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -181,7 +181,7 @@ METHODOLOGY_MAX = sum(weight for _, weight, _ in METHODOLOGY_ITEMS)
 FRAMEWORK_ITEMS = [
     ("ITERATIVE_METHODOLOGY.md", 15, "file"),      # the theory layer the runner cross-references
     ("starter-kit/SAFEGUARDS.md", 15, "file"),     # the enforcement half of the runner
-    ("workstreams", 15, "dir"),                    # 9 of the 23 distributed sources live here
+    ("workstreams", 15, "dir"),                    # 9 of the 24 distributed sources live here
     ("bin/sync", 15, "file"),                      # what separates HAVING a methodology from PUBLISHING one
     ("bin/tests.sh", 10, "file"),                  # the framework's build equivalent
     ("CHANGELOG.md", 10, "file"),                  # its OWN action ledger (FM #27)
@@ -304,13 +304,20 @@ READ_CAP_WATCHED = frozenset(
 TRIM_TOOL_NAME = "methodology_trim.py"
 
 # The framework repo authors the tool under starter-kit/ and does not install a copy at its own
-# root, exactly as it does for methodology_dashboard.py. Probing the root ALONE would therefore
-# miss on every repo in existence today -- the tool is not in bin/_manifest.py yet (that is queue
-# item S39'), so no adopter has it either, and the "present" branch would ship having never run
-# anywhere. ADDED POLICY, and the reason is coverage, not convenience: this fallback is what
-# makes the present branch observable on the one repo whose trigger actually fires.
+# root, exactly as it does for methodology_dashboard.py. So the root probe misses HERE, and the
+# fallback is what lets the "present" branch be observed on the one repo whose trigger fires.
+#
+# ITS ORIGINAL REASON EXPIRED AT S39' AND THE SURVIVING ONE IS NARROWER. When this was written the
+# tool was canonical-only, so the root probe missed on EVERY repo in existence and the present
+# branch would have shipped never having run anywhere. `bin/sync` now installs the trimmer at
+# adopter roots, so the root probe is the live path for every adopter and this fallback covers
+# exactly one case: the framework repo scanning itself. Measured on a real sync rather than
+# reasoned about -- find_trim_tool() on a freshly synced throwaway repo returns
+# `methodology_trim.py` (the ROOT candidate), v1.0.0, budget 65536, and the fleet-wide `low`
+# "watched but unmeasured" abstention row is gone from its risk list.
 #   python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
-#     print([e for e in m.DISTRIBUTION if 'trim' in e[0]])"      -> [] until S39'
+#     print([e for e in m.DISTRIBUTION if 'trim' in e[0]])"
+#   -> [('starter-kit/methodology_trim.py', 'methodology_trim.py', 'tracked')]  since S39'
 TRIM_TOOL_FRAMEWORK_REL = "starter-kit/" + TRIM_TOOL_NAME
 
 _TRIM_VERSION_RE = re.compile(r'''^TRIM_VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE)
@@ -483,20 +490,70 @@ CANONICAL_REL = Path("methodology") / "starter-kit" / "methodology_dashboard.py"
 _VERSION_RE = re.compile(r'''^DASHBOARD_VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE)
 
 # Non-markdown files `bin/sync` installs into an ADOPTER project root, as adopter-relative dest
-# paths. Installing the methodology must not change how the adopter's OWN code is measured: this
-# scanner is thousands of lines against a 200-LOC doc-only cap, so counting it as adopter source made
-# `bin/sync` destroy the very fair-scoring v3.2 shipped (a synced Quarto book flipped doc_only
-# True -> False and got its "No test infrastructure" penalty back). The signal did not mean what
-# it appeared to mean: it meant *we put our own scanner in your repo and then counted it against
-# you*. See §"Layer 7" of the campaign plan, which lives on the fork's `main` only:
+# paths, each paired with HOW THAT FILE PROVES IT IS OURS. Installing the methodology must not
+# change how the adopter's OWN code is measured: these executables are thousands of lines against a
+# 200-LOC doc-only cap, so counting them as adopter source made `bin/sync` destroy the very
+# fair-scoring v3.2 shipped (a synced Quarto book flipped doc_only True -> False and got its "No
+# test infrastructure" penalty back). The signal did not mean what it appeared to mean: it meant
+# *we put our own tools in your repo and then counted them against you*. See §"Layer 7" of the
+# campaign plan, which lives on the fork's `main` only:
 # https://github.com/rmsharp/methodology/blob/main/docs/planning/dashboard-signal-integrity-plan.md
 #
 # Mirrors the non-markdown dests in bin/_manifest.py; a canonical test asserts the two agree, so
 # the pair cannot drift silently (that plan's §8 learning 1 — make the cross-reference
-# machine-checkable, not re-greppable). Markdown dests are deliberately NOT listed: this tuple
+# machine-checkable, not re-greppable). Markdown dests are deliberately NOT listed: this table
 # exists to correct the source-LOC read, and a general "skip framework files" rule is exactly the
 # laundering hole the exclusion must not become.
-FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py",)
+#
+# WHY A TABLE AND NOT A TUPLE (S39', when the trimmer became the second installed executable).
+# The membership list and the content gate were separate before, and that made one specific wrong
+# edit both easy and green: `test_exclusion_list_matches_the_manifest` goes red the moment the
+# manifest grows a non-markdown dest, and the cheapest way to green it is to append the name here.
+# Measured, that edit accomplishes NOTHING — with `methodology_trim.py` on the old tuple and no
+# content branch for it, the adopter fixture still read doc_only False, source_loc 1,632 and a HIGH
+# "No test infrastructure". A green 323-test suite over a live fleet-wide regression. Deriving
+# FRAMEWORK_INSTALLED_SOURCE from these keys makes that edit unwritable: a name reaches the
+# exclusion only by declaring how it identifies itself.
+#
+# Each value is (version_pattern, structural_signatures). A file passes if the version pattern
+# matches, or if it carries >= _FRAMEWORK_SIGNATURE_MIN of the signatures. An EMPTY signature tuple
+# means "no structural fallback": sum(...) over it is 0, which cannot reach the minimum of 2, so the
+# version constant is then the only way in. That is correct for a tool with no pre-constant releases
+# in the wild, and it is pinned by a test rather than left to arithmetic a reader has to redo.
+#
+# The two patterns are deliberately DISTINCT rather than one generic version matcher. Widening
+# _VERSION_RE would have been the smaller diff and it has two other consumers — parse_version() and
+# check_stale_version(), which drives the "methodology_dashboard.py is stale" warning — so it would
+# have changed staleness reporting as a side effect. Distinct patterns also mean neither tool's
+# constant can launder the other's file, which a shared any-marker rule would have allowed.
+# Structural signatures of the SCANNER, for copies too old to carry DASHBOARD_VERSION. Two must
+# match. Three are ordinary function names, so two hits are suggestive rather than proof — this is
+# a heuristic, and the .methodology-profile marker is the documented override. Measured need: a
+# live adopter (feedback-loop-comparison) still runs a 1,614-line pre-version copy, and a
+# DASHBOARD_VERSION-only gate silently skipped it — the fix quietly not applying is the same class
+# of defect as the fix being wrong. (Moved up from below `is_framework_installed` at S39' so it is
+# defined before the table that consumes it; the constant and its rationale are unchanged.)
+_FRAMEWORK_SIGNATURES = (
+    "METHODOLOGY_ITEMS",
+    "def collect_all",
+    "def score_health",
+    "def assess_risks",
+    "https://github.com/KJ5HST/methodology",
+)
+_FRAMEWORK_SIGNATURE_MIN = 2
+
+_FRAMEWORK_INSTALLED_CONTENT = {
+    "methodology_dashboard.py": (_VERSION_RE, _FRAMEWORK_SIGNATURES),
+    # The trimmer has no pre-constant releases in the wild — v1.0.0 is its first shipped version and
+    # it has declared TRIM_VERSION since it was written — so it gets no structural fallback. See the
+    # empty-tuple paragraph above for why that is a refusal and not a hole.
+    TRIM_TOOL_NAME:            (_TRIM_VERSION_RE, ()),
+}
+
+# Derived, never hand-written — see the paragraph above. Order follows the dict, which follows
+# bin/_manifest.py's DISTRIBUTION order, because the manifest-agreement test compares ORDERED
+# tuples (its sibling markdown assertions are set-compared and say so).
+FRAMEWORK_INSTALLED_SOURCE = tuple(_FRAMEWORK_INSTALLED_CONTENT)
 
 # The markdown half of the same problem, and the mirror of the defect above. `bin/sync` also
 # installs 22 markdown files, which on its own satisfies detect_doc_only's corpus
@@ -591,31 +648,20 @@ FRAMEWORK_SEED_DOCS = (
 )
 
 
-# Structural signatures of this scanner, for copies too old to carry DASHBOARD_VERSION. Two must
-# match. Three are ordinary function names, so two hits are suggestive rather than proof — this is
-# a heuristic, and the .methodology-profile marker is the documented override. Measured need: a
-# live adopter (feedback-loop-comparison) still runs a 1,614-line pre-version copy, and a
-# DASHBOARD_VERSION-only gate silently skipped it — the fix quietly not applying is the same class
-# of defect as the fix being wrong.
-_FRAMEWORK_SIGNATURES = (
-    "METHODOLOGY_ITEMS",
-    "def collect_all",
-    "def score_health",
-    "def assess_risks",
-    "https://github.com/KJ5HST/methodology",
-)
-_FRAMEWORK_SIGNATURE_MIN = 2
-
-
 def is_framework_installed(rel_path, fpath):
     """True for a source file `bin/sync` installed at the adopter's project ROOT.
 
     Root-anchored, not basename-matched: an adopter's own `src/methodology_dashboard.py` stays
     their source, and the canonical repo's `tools/` + `starter-kit/` copies stay ITS source — it
-    authors that file, so its own health score must keep paying for it.
+    authors those files, so its own health score must keep paying for them.
 
-    Content-verified: the file must declare `DASHBOARD_VERSION`, or carry at least two structural
-    signatures of this scanner (for copies predating that constant). The **whole file** is read,
+    Content-verified, PER NAME: each installed executable proves itself with its own constant —
+    the scanner with `DASHBOARD_VERSION` (or, for copies predating it, at least two structural
+    signatures of the scanner), the trimmer with `TRIM_VERSION`. The pairing lives in
+    `_FRAMEWORK_INSTALLED_CONTENT`, which this reads rather than re-stating, and which
+    FRAMEWORK_INSTALLED_SOURCE is derived from — so no name can be excluded without declaring how
+    it identifies itself. Neither tool's constant satisfies the other's entry. The **whole file** is
+    read,
     not a fixed prefix — an earlier version searched only the first 4096 bytes, and the real
     constant sits close enough to that boundary that ordinary growth of this module header would
     have crossed it, silently switching the exclusion off and regressing every doc-only adopter
@@ -632,17 +678,56 @@ def is_framework_installed(rel_path, fpath):
     deliberately pastes `DASHBOARD_VERSION` into their application to dodge a score — nothing
     file-local could, and the only thing they would win is a wrong dashboard for themselves.
     """
-    if str(rel_path).replace("\\", "/") not in FRAMEWORK_INSTALLED_SOURCE:
+    content = _FRAMEWORK_INSTALLED_CONTENT.get(str(rel_path).replace("\\", "/"))
+    if content is None:
         return False
+    version_re, signatures = content
     try:
         with open(fpath, "r", encoding="utf-8", errors="ignore") as fh:
             text = fh.read()
     except OSError:
         return False
-    if _VERSION_RE.search(text):
+    if version_re.search(text):
         return True
-    hits = sum(1 for sig in _FRAMEWORK_SIGNATURES if sig in text)
+    hits = sum(1 for sig in signatures if sig in text)
     return hits >= _FRAMEWORK_SIGNATURE_MIN
+
+
+# The losslessness proof `methodology_trim.py --write` leaves beside each shard it creates. Not a
+# distributed file — the adopter's own tool WROTE it into their repo — which is why it needs its own
+# predicate rather than an entry in the table above.
+#
+# WHY THIS EXISTS, and it is the defect S39' would otherwise have shipped. The exclusion above keeps
+# the two installed executables out of the adopter's source count. It says nothing about what those
+# executables PRODUCE. A single `--write` emits a fixed 220-line bash script into `docs/archive/`,
+# and `.sh` is in SOURCE_EXTS — so a doc-only adopter who actually USES the tool we just shipped
+# lands 220 lines of "their own source" against DOC_ONLY_SOURCE_LOC_MAX = 200, flips to `code`, and
+# re-earns the false HIGH "No test infrastructure" risk that v3.2 exists to remove. Every subsequent
+# trim adds another. Measured, not reasoned about: a real `--write` on a 28-record fixture gives
+# `source_loc 220`, `doc_only False`. Shipping the tool while its ordinary use re-creates the
+# regression the shipping work exists to prevent is shipping the defect by a different route.
+#
+# Three conditions, all required, so this cannot become a laundering hole: the file sits under the
+# archive directory the trimmer writes to, it carries the `.verify.sh` suffix the trimmer gives it,
+# and its content carries the generator banner. An adopter cannot get an arbitrary script exempted
+# without putting it in that directory, under that name, with our banner in it — and the only thing
+# they would win is a wrong dashboard for themselves (the same threat model as above).
+_GENERATED_PROOF_SUFFIX = ".verify.sh"
+_GENERATED_PROOF_BANNER = "generated by methodology_trim.py"
+
+
+def is_generated_proof(rel_path, fpath):
+    """True for a losslessness-proof script `methodology_trim.py --write` generated in this repo."""
+    rel_posix = str(rel_path).replace("\\", "/")
+    if not rel_posix.startswith(TRIM_ARCHIVE_DIR + "/"):
+        return False
+    if not rel_posix.endswith(_GENERATED_PROOF_SUFFIX):
+        return False
+    try:
+        with open(fpath, "r", encoding="utf-8", errors="ignore") as fh:
+            return _GENERATED_PROOF_BANNER in fh.read()
+    except OSError:
+        return False
 
 
 def find_canonical(start):
@@ -1166,7 +1251,8 @@ def collect_file_metrics(path):
             # Layer 7: reclassify only what WE installed, and only where it would otherwise be
             # counted as the adopter's code. Checked after categorize_file so a file that is
             # already test/docs/config is untouched.
-            if category == "source" and is_framework_installed(rel_path, fpath):
+            if category == "source" and (is_framework_installed(rel_path, fpath)
+                                         or is_generated_proof(rel_path, fpath)):
                 category = "vendor"
             rel_posix = str(rel_path).replace("\\", "/")
 
@@ -1747,16 +1833,21 @@ def collect_trim_metrics(path, files, role="adopter"):
     name: no distributed file documents ledger archiving, which is precisely what queue item S40
     is for (design §11 Phase 5 says so itself -- "Today zero distributed files say anything on
     the subject"). Verified over the WHOLE distributed set, not a convenient corner of it -- the
-    design's own check greps `starter-kit/*.md`, which is 12 of the 23 manifest entries, and a
-    claim about "no distributed file" cannot be settled by a net that misses 11 of them
+    design's own check greps `starter-kit/*.md`, which matches 11 of the 24 manifest entries, and
+    a claim about "no distributed file" cannot be settled by a net that misses 11 of them
     (`HOW_TO_USE.md`, `ITERATIVE_METHODOLOGY.md`, and nine `workstreams/*.md`):
       python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
         print('\n'.join(sorted(e[0] for e in m.DISTRIBUTION if e[0].endswith('.md'))))" \
         | xargs grep -l -i archiv
     -> `starter-kit/FRAMEWORK_LEARNINGS.md` (Learning #15's prose about PROVING a split lossless,
-       not a procedure for performing one) and `HOW_TO_USE.md` (a worked example project's
-       `POST /projects/:id/archive` endpoint). Neither documents ledger archiving. The narrower
-       grep reached the same verdict, which is luck, not method.
+       not a procedure for performing one), `HOW_TO_USE.md` (a worked example project's
+       `POST /projects/:id/archive` endpoint), and, since S39', `starter-kit/BOOTSTRAP.md` (the
+       one-line inventory entry describing what the newly distributed tool DOES -- a tool
+       description, not a policy: it states no size norm, no trigger, and no procedure). None of
+       the three documents ledger archiving, so the verdict is unchanged and the departure below
+       still stands. The narrower `starter-kit/*.md` grep reached the same verdict, which is luck,
+       not method -- and this result line is itself the demonstration, having gone from two files
+       to three inside the very session that shipped the tool. Re-run it; do not read it.
     The `.md` filter is not cosmetic either: run unfiltered and the distributed set also returns
     THIS FILE, because the paragraph you are reading contains the word. A measurement that
     includes the measurer is the trap one over from the narrow-population one, and the fix for
@@ -2737,9 +2828,15 @@ def assess_risks(metrics):
     # CHANGELOG.md is too long. Ungated, this fires on any repo that happens to keep a long
     # changelog — the assumption whose measured cost is recorded in FRAMEWORK_INSTALLED_SOURCE's
     # own comment. Severity is `high` (also added policy) because this is the only expense in the
-    # set that produces silently WRONG answers rather than merely expensive ones. No remedy is
-    # named: the trimmer is not in bin/_manifest.py, so naming it would be a pointer adopters
-    # cannot follow — naming it conditionally is queue item S38.
+    # set that produces silently WRONG answers rather than merely expensive ones. This row names no
+    # remedy, and BOTH halves of the reason it used to give have since expired: the conditional
+    # naming it deferred to queue item S38 shipped in 2.12.0 (collect_trim_metrics), and the
+    # trimmer it called unreachable is in bin/_manifest.py as of S39'. What keeps the row bare is
+    # now a scope boundary rather than a missing tool — the remedy is emitted by the trim row,
+    # which owns the conditional wording and the abstentions; duplicating it here would give a
+    # ledger past both thresholds two remedies for one problem. The dedup between the two rows is
+    # raised and undecided (S38's residual 1), so this comment states the coupling rather than
+    # pretending the rows are independent.
     if owes_ledger:
         for w in metrics["files"]["read_cap_watch"]:
             if w["lines"] > READ_CAP_LINES:

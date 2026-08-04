@@ -114,6 +114,82 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] S39 — the trimmer ships, and the tuple entry the plan called the task turned out to do nothing
+
+**Model:** Claude Opus 5 (1M context).
+Plan §5 queue item **S39′** (fork session **S39** — the axes nearly agree and do not: queue item
+`S39` is a *different*, already-decided item; `S39′` is the execution of that decision). Spec:
+[`ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md) §6.2 and §11 Phase 4. The
+session was claimed 2026-08-03 (`5b0dd23`) and closed the next day; the receipt keeps its claim date
+because Phase 0 reconcile matches receipts on session + date.
+
+- **What shipped.** `starter-kit/methodology_trim.py` is in `bin/_manifest.py` as a TRACKED dest at
+  the adopter project root — `DISTRIBUTION` **23 → 24** (22 `.md` + **2** `.py`). `DASHBOARD_VERSION`
+  **2.12.0 → 2.13.0** in both twins. **15 files**, which is what the design's §6.2 meant by *"21
+  files for a simpler precedent, not one line."*
+- **The premise the queue row was built on is false, and measuring it is what this session actually
+  contributed.** The row lists *"`FRAMEWORK_INSTALLED_SOURCE`"* and *"`is_framework_installed`
+  recognition"* as two tasks. The first is **inert**: with `methodology_trim.py` on the exclusion
+  tuple and no content rule for it, a synced doc fixture still read `doc_only` False, `source_loc`
+  equal to the whole trimmer, and a HIGH "No test infrastructure" — identical to never having
+  touched the tuple. The trimmer declares `TRIM_VERSION`, not `DASHBOARD_VERSION`, and carries
+  **zero** of the five structural signatures. So the *only* edit that fixes anything is the content
+  gate, and the tuple edit is the one that turns the failing test green. `FRAMEWORK_INSTALLED_SOURCE`
+  is therefore now **derived from** a per-name content table: a name cannot reach the exclusion
+  without declaring how its file proves it is ours. The cheap green edit is no longer expressible.
+- **BL-22 is not on this item's critical path, and its own entry said it was.** Once recognition
+  lands, the file is classified `vendor` *before* the source cap is consulted, so
+  `DOC_ONLY_SOURCE_LOC_MAX = 200` never sees it. `docs/planning/BACKLOG.md` BL-22 is corrected; the
+  item stays **open** on its own merits (no derivation, no test, and a real 148-LOC repo the cap
+  alone misclassifies).
+- **The defect this session would otherwise have shipped, found by review and confirmed by running
+  it.** The exclusion covers the executables; it said nothing about what they **produce**. One
+  `methodology_trim.py --write` emits a fixed **220-line** `.verify.sh` losslessness proof into
+  `docs/archive/`, and `.sh` is in `SOURCE_EXTS` — so a doc-only adopter who *uses* the tool we just
+  shipped lands 220 lines of "their own source" against a 200 cap, flips to `code`, and re-earns the
+  false HIGH risk v3.2 exists to remove. Every subsequent trim adds another. Measured on a real
+  `--write` over a 28-record fixture: `source_loc` **220**, `doc_only` **False**. Fixed by
+  `is_generated_proof()` — three required conditions (under `docs/archive/`, `.verify.sh` suffix,
+  generator banner in the content), so it cannot become a laundering hole.
+- **Adopter impact, measured on two real `bin/sync` runs into throwaway repos, not reasoned about.**
+  `source_loc` **0** before and after; the executables sit in `vendor`, 1 file → **2**; health
+  **47/100 unchanged**; and the fleet-wide `low` *"watched but unmeasured … no `methodology_trim.py`
+  is installed here"* row **is gone** — S38 predicted that clearing and asked for it to be verified
+  on a real install rather than assumed. `find_trim_tool` now resolves the **root** candidate, so
+  S38's `role == "framework"` fallback covers exactly one case: the framework repo scanning itself.
+  No absolute vendor LOC is published here on purpose — see the last bullet.
+- **Also fixed, all of it downstream of shipping:** `bin/tests.sh`'s exec-bit assertion was hardcoded
+  to the dashboard and is now **derived from the manifest** (proven by mutation: narrowing
+  `bin/sync`'s chmod to the dashboard leaves the old assertion passing while the trimmer lands
+  `0644`); the trimmer's **66 tests ran in nothing** and are now wired into the suite; `CHECKLIST_EXEMPT`
+  gains the trimmer with a stated reason (exempt, not scored — its presence measures sync, not
+  adoption, and scoring it would re-cut `METHODOLOGY_MAX` and move every compliant adopter's
+  percentage for a change they did not make); the trimmer's module docstring no longer cites a
+  fork-only design path as a live URL; D6's live prose, README/CLAUDE/BOOTSTRAP/T1/T8 inventories,
+  and two stale manifest counts are corrected.
+- **Verification.** `bash bin/tests.sh` **178 passed / 1 failed** — the failure is Test 9's
+  `--source=github` 404, unchanged and correct until upstream merges; **Test 9 was not weakened**,
+  and note that the trimmer's own 404 is *masked* by it (`read_github` exits on the first failure and
+  `FRAMEWORK_LEARNINGS.md` is earlier in `DISTRIBUTION`), so Test 9 is evidence of the trimmer's
+  upstream status in neither direction. `python3 -m unittest discover -s tools` **334 OK** (323 at
+  claim). `bin/check-links` OK 88 links / 22 files. Twins byte-identical, no mode changes.
+  Producer mutation **11 mutants, 11 killed, 0 survived, 0 did-not-apply**, control green — run
+  *after* the review-fix round, which is what caught the one that had survived before it.
+- **A 5-lens adversarial review over the uncommitted diff filed 21 findings; 16 survived independent
+  refutation and all are fixed.** The largest cluster was mine and is this repo's own recorded
+  lesson landing on me: **seven findings were numbers I measured mid-change and published**, all
+  falsified by my own later edits — a vendor figure of `5,603` (three different values existed during
+  the session), a trimmer line count of `1,632`, a line number of `43`. The fix is not a fresher
+  number: those sites now state the **invariant** and publish the command. Two more were worse than
+  stale — I replaced a **true** `CLAUDE.md` claim with a **false** retraction (both test suites set
+  `sys.dont_write_bytecode`, so no `starter-kit/__pycache__` is generated; verified by deleting it
+  and re-running), and my own `BOOTSTRAP.md` inventory line **falsified a verification command quoted
+  inside the shipped dashboard's docstring** (`grep -l -i archiv` over the distributed `.md` went from
+  two files to three). Both corrected in the tree and in the design.
+- **No outward-facing action.** No PR, comment, issue, tag or Release; S34's PR is still
+  prepared-and-unopened. §11 Phase 4 ends *"Do not open the PR — ask,"* and shipping to adopters is
+  exactly the change that needs the operator's go-ahead.
+
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S38's `commit:` field → `bcc0d7b` — eleventh discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).

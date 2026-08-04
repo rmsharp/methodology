@@ -4,9 +4,16 @@
 Moves the oldest records out of a grow-and-must-be-read ledger into a frozen shard under
 `docs/archive/`, and refuses to do it unless the move is provably lossless.
 
-Implements `docs/planning/ledger-trimmer-design.md` (S35). The design is the spec; this file
-does not re-open it. Read §2 (the three-zone record model), §4 (the three assertions) and §5
-(the trigger) before changing anything here.
+Implements the ledger-trimmer design (S35). `bin/sync` installs this file at your project root
+and does NOT install that design, which lives only in the methodology repository as
+`docs/planning/ledger-trimmer-design.md` — deliberately, since it is a working document for the
+tool's authors rather than something an adopter operates. No URL is given for it on purpose: it
+has not been published to a public remote, and a link that 404s is worse than a path plus the
+repository's name. The design is the spec and this file does not re-open it; whoever changes this
+module reads its §2 (the three-zone record model), §4 (the three assertions) and §5 (the trigger)
+first, from a checkout of that repository. Nothing mechanical protects this reference:
+`bin/check-links` validates only the distributed *markdown*, so a dangling citation inside this
+module is never reported.
 
 WHY THREE ASSERTIONS AND NOT ONE
     The manual procedure this replaces proved whole-file byte identity under concatenation, and

@@ -872,7 +872,7 @@ real shipped bug. A subdirectory cannot shadow the live file.
 | **D3** | Event 2's payload md5 `f3d2015…` is **not reproducible** from the committed artifacts; no boundary, no command recorded | §4.4 |
 | **D4** | `020ba3f`'s "101,608 B" is `wc -m` **characters**; the byte count is 102,407. Third recurrence of the unit-wrong class | §4.4 |
 | **D5** | `7a71df0`'s recorded cause for the separator trap is **false** — zero non-standalone `---` in the pre-split file | §2.2 |
-| **D6** | **Three live prose sentences** call the dashboard *"the only executable adopters receive"* — false the moment the trimmer ships: plan `:172`, `:391`, `:495`. The phrase also appears at `CHANGELOG.md:229` and `:509`, but both sit **inside dated entries**, which are corrected forward and never rewritten — those two are correctly left alone, and counting them as five would be the defect | `grep -rn "only executable" CHANGELOG.md docs/planning/framework-context-cost-plan.md`; entry containment: `head -229 CHANGELOG.md \| grep '^### 20' \| tail -1` |
+| **D6** | **Three live prose sentences** call the dashboard *"the only executable adopters receive"* — false the moment the trimmer ships: plan `:172`, `:391`, `:495`. The phrase also appears at `CHANGELOG.md:229` and `:509`, but both sit **inside dated entries**, which are corrected forward and never rewritten — those two are correctly left alone, and counting them as five would be the defect. **CORRECTED AT S39', WHICH DISCHARGED THIS ROW: the population is FIVE live sites, not three, and this row's own verification command is why it read three.** `:476` and `:599` say *"Adopters receive exactly one executable today"* — the same claim in different words, invisible to a grep for one literal (this repo's own *a grep count is a sample* lesson, landing on the row that taught it). `:495` is off by one; the third live site is `:496`. The two frozen `CHANGELOG.md` anchors have drifted ~428 lines each — the ledger is newest-first, so every prepend pushes them down — and are `:657` and `:937` today; the **verdict survives** (containment re-proved: `:657` sits inside the entry opening at `:622`, `:937` inside `:894`), but this row's own `head -229` containment command now inspects the wrong entry | `grep -rn "only executable" CHANGELOG.md docs/planning/framework-context-cost-plan.md`; entry containment: `head -229 CHANGELOG.md \| grep '^### 20' \| tail -1` |
 | **D7** | `.gitignore` covers `dashboard.html` but **not** `dashboard_history.jsonl`, so a routine Phase-0 dashboard run dirties the tree | `cat .gitignore` |
 | **D8** | Plan `:496`'s "3,336 lines" is stale by one (3,337 since `ed22ace`), and its "writes only its own HTML and copies of itself" omits the **JSONL history append** — three write sites, not two | `git show ed22ace:tools/methodology_dashboard.py \| wc -l` |
 | **D9** | The plan's read-set figure (**379,206 B**, `:81`) is stale: the same six files sum to **422,363 B** at `2fc2c5b` (**+43,157 B, +11.4%**) — and it grew *despite* S34 removing 12,945 B. Its component values are pre-S34 (`SESSION_RUNNER.md` **62,410**, now 49,465), so the figure predates `326094d`, where the same six sum to **394,954** — i.e. it was already stale when the plan published it | `for f in …; do git show 2fc2c5b:$f \| wc -c; done \| paste -sd+ \| bc` → 422363; same at `326094d` → 394954 |
@@ -953,8 +953,10 @@ substitute, and the design says plainly that without it the read-set floor stops
 - **The three dashboard defects (D4 in the plan).** That is S36, and S36 precedes S38.
 - **Doctrine wording.** That is S40 — now unblocked by the operator's decision, and it must say
   *"run this"*, not *"here is the manual procedure"*. Confirmed gap: **zero distributed files state
-  any archive, split, size, or truncation policy.** `grep -l archiv starter-kit/*.md` returns nothing;
-  both ledger seeds describe themselves as append-only and kept forever.
+  any archive, split, size, or truncation policy.** (`grep -l archiv starter-kit/*.md` returned
+  nothing when this was written; since S39' it returns `FRAMEWORK_LEARNINGS.md` and `BOOTSTRAP.md`,
+  neither of which states a policy — the gap stands, the *command* no longer demonstrates it. See
+  Phase 4's closing note.) Both ledger seeds describe themselves as append-only and kept forever.
 - **Whether the conditional row appears in terminal stdout** (§7.3) — an operator question for S45.
 
 ### 10.2 The rate problem, named and handed forward
@@ -1035,7 +1037,7 @@ diff -q tools/methodology_dashboard.py starter-kit/methodology_dashboard.py   # 
 python3 -m unittest discover -s tools
 ```
 
-### Phase 4 → **S39′**: ship it (the decision is already made)
+### Phase 4 → **S39′**: ship it (the decision is already made) — **SHIPPED (fork) 2026-08-04, fork session S39**
 
 **Done looks like:** manifest entry added; `FRAMEWORK_INSTALLED_SOURCE` tuple updated;
 `is_framework_installed()` recognises the trimmer; `DASHBOARD_VERSION` bumped in both twins;
@@ -1046,7 +1048,7 @@ frozen — do not rewrite a dated record).
 **Verify:**
 ```sh
 python3 -m unittest discover -s tools        # Learning #12's guard driven RED FIRST, then patched
-bash bin/tests.sh                            # 175/1 → Test 9 will 404 until upstream merges
+bash bin/tests.sh                            # 178/1 at close (175/1 when written) → Test 9 will 404 until upstream merges
 diff -q tools/methodology_dashboard.py starter-kit/methodology_dashboard.py
 # real sync into a throwaway repo — not a simulation:
 D=$(mktemp -d); git -C "$D" init -q .; bin/sync "$D" --source=local
@@ -1056,6 +1058,44 @@ rm -rf "$D"
 ```
 **Do not weaken Test 9** to make the suite green — its 404 is the correct signal for a manifest entry
 not yet upstream. **Session boundary: STOP after S39′. Do not open the PR** — ask.
+
+**What this phase learned, recorded against the plan that set it (S39').** Three of the done-list's
+premises did not survive contact:
+
+- **The `FRAMEWORK_INSTALLED_SOURCE` entry and the `is_framework_installed` recognition are not two
+  tasks — the first is inert without the second, and it is the one that silences the test.** Measured:
+  with the name on the tuple and no content rule for it, a synced doc fixture still read `doc_only`
+  False, `source_loc` 1,632, HIGH "No test infrastructure" — **a green suite over a live fleet-wide
+  regression.** The suite in that state was the PRE-change one, **323 tests**; it is 323 that would
+  have passed, not the 334 this session leaves behind, because the tests that catch this are the
+  ones S39' added. Quoting the post-change count here would have credited the fix with catching a
+  defect it was written in response to. The membership list is now *derived from* a per-name content table, so a name
+  cannot be added without declaring how the file proves it is ours.
+- **`DASHBOARD_VERSION` bump | test red** (§6.2's table) reads as a gate and is not one. Measured, the
+  whole suite is green at the old version with every functional change in place; the bump is a
+  judgment about adopter-visible behaviour. It moves **five** sites, not the four a plain
+  `grep '2\.12\.0'` returns — one pin spells the digits with backslashes inside a regex literal.
+- **Test 9 does not 404 "for a second reason".** `bin/sync`'s `read_github` exits on the FIRST
+  failure and `starter-kit/FRAMEWORK_LEARNINGS.md` sits at DISTRIBUTION index 1 against the trimmer's
+  index 8, so the trimmer's 404 is **masked**. Test 9 is evidence of the trimmer's upstream status in
+  neither direction — do not read it as one.
+
+Also found while discharging D6, and it is Phase 5's to inherit: **§11 Phase 5's own verify command
+`grep -l archiv starter-kit/*.md   # currently empty` is not empty and this session made it less
+empty.** Re-derived over the whole distributed set, not the narrow glob:
+
+```sh
+python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
+  print('\n'.join(sorted(e[0] for e in m.DISTRIBUTION if e[0].endswith('.md'))))" | xargs grep -l -i archiv
+```
+returns **three** files — `HOW_TO_USE.md` (a worked example's `POST /projects/:id/archive`
+endpoint), `starter-kit/FRAMEWORK_LEARNINGS.md` (Learning #15's prose about *proving* a split
+lossless), and **`starter-kit/BOOTSTRAP.md`, which S39' added**: the one-line inventory entry saying
+what the newly distributed tool does. **The gap §7.3 depends on is unchanged** — a tool description
+is not a policy; none of the three states a size norm, a trigger, or a procedure — but the check as
+written now returns hits for a repo that still documents nothing, so Phase 5 must ask *what the file
+says*, not *whether the word appears*. §10.1's *"returns nothing"* is stale for the same reason and
+is corrected there.
 
 ### Phase 5 → **S40**: the doctrine
 
@@ -1067,7 +1107,7 @@ since the tool now ships. Today **zero** distributed files say anything on the s
 ```sh
 grep -l archiv starter-kit/*.md              # currently empty; must match both ledger seeds after
 bin/check-links                              # OK — the seeds are distributed, so their links are checked
-bash bin/tests.sh                            # 175/1
+bash bin/tests.sh                            # 178/1 — S40's starting baseline, moved by S39'
 ```
 **Session boundary: STOP. Do not open the PR** — ask.
 

@@ -305,6 +305,14 @@ CHECKLIST_EXEMPT = {
     "CLAUDE_TEMPLATE.md": "template; the operating artifact is the adopter's CLAUDE.md instance",
     "BOOTSTRAP.md": "one-time setup guide, not a per-session operating artifact",
     "methodology_dashboard.py": "the scanner itself — scoring its own presence is circular",
+    "methodology_trim.py": "the ledger trimmer (S39'): sync installs it automatically alongside "
+                           "the scanner, so like FRAMEWORK_LEARNINGS.md its presence measures "
+                           "sync, not adoption — an adopter cannot fail to have it and cannot "
+                           "demonstrate anything by having it. Scoring it would also re-cut "
+                           "METHODOLOGY_MAX and move every already-compliant adopter's percentage "
+                           "for a change they did not make. Whether an adopter USES it is a "
+                           "different question, and the dashboard already answers it in the "
+                           "trim-trigger row rather than in the compliance checklist",
 }
 
 
@@ -2037,10 +2045,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.12.0")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.13.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.12\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.12.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.13\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.13.0")
 
 
 class TestEndToEnd(unittest.TestCase):
@@ -2152,6 +2160,36 @@ def installed_scanner(loc=3070, version="2.10.0", marker=True):
     head = f'#!/usr/bin/env python3\n"""stand-in."""\n'
     if marker:
         head += f'DASHBOARD_VERSION = "{version}"\n'
+    return head + "".join(f"def gen_{i}():\n    return {i}\n" for i in range(loc // 2))
+
+
+def installed_trimmer(loc=1600, version="1.0.0", marker=True):
+    """Text that stands in for the ledger trimmer `bin/sync` installs at an adopter's root (S39').
+
+    The SECOND executable adopters receive, and it proves itself by a DIFFERENT constant than the
+    scanner does. Measured against the real tool rather than assumed:
+
+        grep -c DASHBOARD_VERSION starter-kit/methodology_trim.py                      -> 0
+        for s in METHODOLOGY_ITEMS 'def collect_all' 'def score_health' \\
+                 'def assess_risks' https://github.com/KJ5HST/methodology; do \\
+          grep -c -- "$s" starter-kit/methodology_trim.py; done                        -> 0 0 0 0 0
+
+    So the pre-S39' predicate answered False for this file on BOTH of its arms, and putting the
+    name on the exclusion tuple alone would not have changed that — the content gate is the work.
+
+    Those two are ZERO-counts, which is why they are quoted and the tool's line count and the
+    line number of its TRIM_VERSION are NOT. Both of those were published here with real measured
+    values and both were falsified before this session ended, by this session's own later edit to
+    the trimmer's module docstring. A count that moves whenever anyone touches a comment is a
+    liability in a docstring; re-derive it (`wc -l starter-kit/methodology_trim.py`) if you need
+    it. `loc` below is a nominal default chosen to sit well above DOC_ONLY_SOURCE_LOC_MAX, not a
+    claim about the shipped file's size — the test that pins the fixture against the REAL artifact
+    is test_every_shipped_executable_is_recognized_from_its_real_source. `version` defaults to the
+    shipped one; unlike the scanner there are no pre-constant copies in the wild to lag behind.
+    """
+    head = '#!/usr/bin/env python3\n"""stand-in."""\n'
+    if marker:
+        head += f'TRIM_VERSION = "{version}"\n'
     return head + "".join(f"def gen_{i}():\n    return {i}\n" for i in range(loc // 2))
 
 
@@ -2346,6 +2384,31 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 1)
         self.assertEqual(m["tests"]["source_loc"], 0)
 
+    def test_every_shipped_executable_is_recognized_from_its_real_source(self):
+        """The generalization of the test above, and the one that was MISSING: nothing iterated
+        FRAMEWORK_INSTALLED_SOURCE, so every content fixture hardcoded the scanner. A future name
+        added to the table with a content rule that does not match its own shipped file would ship
+        the v3.2 regression under a green suite — the tuple would agree with the manifest and the
+        predicate would still answer False.
+
+        Reads each name's REAL artifact out of starter-kit/, resolved through the manifest rather
+        than by assuming `starter-kit/<dest>`: the source path is the manifest's business, and
+        hardcoding it here would re-introduce exactly the duplicated cross-reference the
+        manifest-agreement test exists to prevent."""
+        src_for = {dest: src for src, dest, _d in self._manifest().DISTRIBUTION}
+        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 2,
+                         "population guard: update this test's expectations deliberately when a "
+                         "third executable ships, rather than letting the loop silently cover less")
+        for dest in md.FRAMEWORK_INSTALLED_SOURCE:
+            real = Path(os.path.dirname(HERE), src_for[dest]).read_text(encoding="utf-8")
+            p = self._repo({dest: real, "README.md": "# adopter\n"})
+            self.assertTrue(
+                md.is_framework_installed(Path(dest), p / dest),
+                f"{dest} is on the exclusion table but its own shipped source does not satisfy "
+                f"the content rule declared for it — the exclusion is inert for this file")
+            self.assertEqual(md.collect_all(p)["tests"]["source_loc"], 0,
+                             f"{dest} was recognized but still counted as adopter source")
+
     def test_pre_version_copies_are_recognized_by_structure(self):
         """A live adopter still runs a 1,614-line copy that predates DASHBOARD_VERSION entirely.
         A version-only gate silently skipped it — the fix not applying is as bad as it being
@@ -2368,6 +2431,180 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         self.assertFalse(md.is_framework_installed(
             Path("methodology_dashboard.py"), p / "methodology_dashboard.py"))
         self.assertGreater(md.collect_all(p)["tests"]["source_loc"], 200)
+
+    # --- S39': the SECOND installed executable ------------------------------------------------
+    #
+    # Layer 7 fixed this defect for the scanner. Shipping the trimmer re-opens it for a file that
+    # proves itself by a different constant, so the fix does not generalize for free: the two
+    # RED-first tests below were driven against the pre-S39' scanner and watched to FAIL
+    # (doc_only=False, source_loc=1632, the HIGH "No test infrastructure" risk back).
+
+    def test_a_synced_doc_repo_with_the_trimmer_is_still_doc_only(self):
+        """RED: reported False (source_loc 1,632 > the 200 cap) before the trimmer was recognized."""
+        p = self._repo({**self.QUARTO, "methodology_trim.py": installed_trimmer()})
+        m = md.collect_all(p)
+        self.assertTrue(m["doc_only"]["is_doc_only"],
+                        "installing the trimmer must not change a doc repo's classification")
+        self.assertEqual(m["tests"]["source_loc"], 0,
+                         "the adopter wrote no source; only the installed trimmer was present")
+        self.assertGreater(m["files"]["by_category"]["vendor"]["loc"], 800,
+                           "the excluded LOC must remain visible, not vanish from the inventory")
+
+    def test_trimmer_alone_does_not_reintroduce_the_no_test_risk(self):
+        """RED: the HIGH risk was present on a doc repo carrying only the trimmer."""
+        def risks_of(m):
+            return [r["description"] for r in m["scores"]["risks"]]
+
+        synced = md.collect_all(
+            self._repo({**self.QUARTO, "methodology_trim.py": installed_trimmer()}))
+        self.assertNotIn("No test infrastructure", risks_of(synced))
+
+    def test_both_installed_executables_are_excluded_together(self):
+        """A REAL `bin/sync` leaves both at the root; excluding one and not the other still
+        breaks the adopter, so the whole-install case is pinned rather than inferred."""
+        p = self._repo({**self.QUARTO,
+                        "methodology_dashboard.py": installed_scanner(),
+                        "methodology_trim.py": installed_trimmer()})
+        m = md.collect_all(p)
+        self.assertTrue(m["doc_only"]["is_doc_only"])
+        self.assertEqual(m["tests"]["source_loc"], 0)
+        self.assertGreater(m["files"]["by_category"]["vendor"]["loc"], 4000,
+                           "both executables must land in vendor, not one of them")
+
+    def test_a_lookalike_trimmer_without_its_version_constant_is_not_excluded(self):
+        """GUARD-THE-GUARD, and green before the fix as well as after — it constrains the fix, it
+        does not prove it (S37 gotcha 4: an absence assertion is trivially true before the name
+        exists). It earns its place by producer mutation: deleting the trimmer's content check
+        makes it fail. An adopter's own 1,000-line `methodology_trim.py` is THEIRS."""
+        app = ("# our own ledger trimmer\n" + "y = 2\n" * 1000)
+        p = self._repo({"methodology_trim.py": app, "README.md": "# adopter\n"})
+        self.assertFalse(md.is_framework_installed(
+            Path("methodology_trim.py"), p / "methodology_trim.py"))
+        self.assertGreater(md.collect_all(p)["tests"]["source_loc"], 200)
+
+    def test_adopters_own_nested_trimmer_is_not_excluded(self):
+        """Root-anchored for the trimmer too, not basename-matched."""
+        p = self._repo({"tools/methodology_trim.py": installed_trimmer(loc=1000),
+                        "README.md": "# app\n"})
+        m = md.collect_all(p)
+        self.assertGreater(m["tests"]["source_loc"], 200)
+        self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 0)
+
+    def test_the_scanner_marker_does_not_launder_the_trimmer_or_the_reverse(self):
+        """Each name proves itself with ITS OWN constant. A shared any-of-these-markers rule would
+        make the two interchangeable, so a file could be exempted by carrying the wrong tool's
+        constant — the laundering hole the per-file table exists to close."""
+        wrong_marker_trimmer = ('#!/usr/bin/env python3\nDASHBOARD_VERSION = "2.12.0"\n'
+                                + "y = 2\n" * 1000)
+        p = self._repo({"methodology_trim.py": wrong_marker_trimmer, "README.md": "# a\n"})
+        self.assertFalse(md.is_framework_installed(
+            Path("methodology_trim.py"), p / "methodology_trim.py"),
+            "a file named methodology_trim.py must not be exempted by the SCANNER's constant")
+        wrong_marker_scanner = ('#!/usr/bin/env python3\nTRIM_VERSION = "1.0.0"\n'
+                                + "y = 2\n" * 1000)
+        q = self._repo({"methodology_dashboard.py": wrong_marker_scanner, "README.md": "# a\n"})
+        self.assertFalse(md.is_framework_installed(
+            Path("methodology_dashboard.py"), q / "methodology_dashboard.py"),
+            "and not the reverse either")
+
+    def test_a_lookalike_trimmer_carrying_the_SCANNERS_signatures_is_not_excluded(self):
+        """The trimmer's entry declares an EMPTY structural-signature tuple, meaning 'no fallback —
+        TRIM_VERSION or nothing'. Without this test that field is unexercised: the harness proved
+        that swapping `()` for the scanner's five signatures survives the whole suite, which would
+        let a file named methodology_trim.py be exempted by carrying two scanner function names it
+        has no business having. RED-first against that mutant."""
+        impostor = ("# our own trimmer\n"
+                    "def collect_all(items):\n    return list(items)\n"
+                    "def score_health(m):\n    return 0\n" + "y = 2\n" * 1000)
+        p = self._repo({"methodology_trim.py": impostor, "README.md": "# adopter\n"})
+        self.assertFalse(md.is_framework_installed(
+            Path("methodology_trim.py"), p / "methodology_trim.py"),
+            "the trimmer declares no structural fallback — only TRIM_VERSION may exempt it")
+        self.assertGreater(md.collect_all(p)["tests"]["source_loc"], 200)
+
+    # --- what the shipped tool WRITES, which the exclusion above says nothing about --------------
+
+    def _real_trim_output(self, tmp):
+        """Run the REAL trimmer's --write on a real fixture ledger and return the repo path.
+
+        Deliberately not a stand-in: the whole defect is that the generated artifact's size and
+        shape come from the tool, so a hand-written fixture would be asserting my guess about its
+        output rather than its output."""
+        subprocess.run(["git", "init", "-q", str(tmp)], check=True)
+        hdr = "# Changelog — Authoritative Action Ledger\n\nIntro prose.\n\n---\n\n## 2026-01\n\n"
+        recs = "".join(f"### 2026-01-{i:02d} · [ad hoc] Entry {i}\n\nBody line {i}.\n\n"
+                       for i in range(28, 0, -1))
+        (tmp / "CHANGELOG.md").write_text(hdr + recs, encoding="utf-8")
+        (tmp / "README.md").write_text("# adopter\n" * 5, encoding="utf-8")
+        subprocess.run(["git", "-C", str(tmp), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(tmp), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "-m", "init"], check=True)
+        trimmer = os.path.join(os.path.dirname(HERE), "starter-kit", "methodology_trim.py")
+        r = subprocess.run([sys.executable, trimmer, "--file", str(tmp / "CHANGELOG.md"),
+                            "--write", "--cut", "10"], capture_output=True, text=True)
+        proofs = list((tmp / "docs" / "archive").glob("*.verify.sh"))
+        self.assertEqual(len(proofs), 1,
+                         f"fixture control: --write must emit exactly one proof script; "
+                         f"stdout={r.stdout[-400:]} stderr={r.stderr[-400:]}")
+        return proofs[0]
+
+    def test_the_generated_proof_script_is_not_counted_as_adopter_source(self):
+        """RED: `source_loc` was 220 against a 200 cap, `doc_only` False — a doc-only adopter who
+        USES the tool this session ships re-earned the exact v3.2 regression the shipping work
+        exists to prevent, by a different route."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        proof = self._real_trim_output(p)
+        # Fixture control: the artifact must actually be big enough to trip the cap, or this test
+        # would pass for the wrong reason on a future, shorter template.
+        self.assertGreater(md.count_lines(proof), md.DOC_ONLY_SOURCE_LOC_MAX,
+                           "fixture control: the generated proof must exceed the source cap, "
+                           "otherwise this test cannot observe the defect it is written for")
+        m = md.collect_all(p)
+        self.assertEqual(m["tests"]["source_loc"], 0,
+                         "the tool's own generated proof is not the adopter's source")
+        self.assertGreater(m["files"]["by_category"]["vendor"]["loc"], 0,
+                           "and it must stay visible in the inventory, not vanish")
+
+    def test_the_proof_exclusion_is_anchored_on_all_three_conditions(self):
+        """Guard-the-guard, and each condition is broken separately — a predicate proven only by
+        its happy path is a predicate whose ANDs are untested."""
+        banner = "#!/usr/bin/env bash\n# generated by methodology_trim.py v1.0.0\n" + "x=1\n" * 300
+        cases = {
+            "docs/archive/s.verify.sh": True,                       # all three hold
+            "s.verify.sh": False,                                   # wrong directory
+            "docs/archive/s.sh": False,                             # wrong suffix
+        }
+        for rel, expected in cases.items():
+            p = self._repo({rel: banner, "README.md": "# a\n"})
+            self.assertEqual(md.is_generated_proof(Path(rel), p / rel), expected,
+                             f"{rel}: expected is_generated_proof == {expected}")
+        # ...and the content condition, at the one path where the other two DO hold.
+        rel = "docs/archive/s.verify.sh"
+        p = self._repo({rel: "#!/usr/bin/env bash\n" + "x=1\n" * 300, "README.md": "# a\n"})
+        self.assertFalse(md.is_generated_proof(Path(rel), p / rel),
+                         "a script at the right path and suffix but without the generator banner "
+                         "is the adopter's own — the content check is what stops that")
+
+    def test_every_excluded_source_name_declares_a_content_check(self):
+        """THE STRUCTURAL GUARD, and the reason this session exists rather than appending a name.
+
+        The failure this closes: `test_exclusion_list_matches_the_manifest` goes red when the
+        manifest grows a non-markdown dest, and the cheapest way to make it green is to append the
+        name to FRAMEWORK_INSTALLED_SOURCE — which passes that test while `is_framework_installed`
+        still has no rule for the file. Deriving the tuple FROM the content table makes that edit
+        impossible to write. Asserted as an ordered tuple because the manifest test compares
+        ordered tuples."""
+        self.assertEqual(md.FRAMEWORK_INSTALLED_SOURCE,
+                         tuple(md._FRAMEWORK_INSTALLED_CONTENT),
+                         "the exclusion tuple must BE the content table's keys, in order — a name "
+                         "with no declared content check must not be expressible")
+        for name, (version_re, signatures) in md._FRAMEWORK_INSTALLED_CONTENT.items():
+            self.assertTrue(hasattr(version_re, "search"),
+                            f"{name} declares no compiled version pattern")
+            self.assertIsInstance(signatures, tuple,
+                                  f"{name}'s structural fallback must be a tuple (possibly empty)")
 
     def _manifest(self):
         manifest_path = os.path.join(os.path.dirname(HERE), "bin", "_manifest.py")

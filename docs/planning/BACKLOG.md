@@ -501,10 +501,29 @@ grep -rn 'DOC_ONLY_SOURCE_LOC_MAX' tools/test_methodology_dashboard.py          
 
 **Why it is worth an item rather than a shrug.** This is the class of value the operator's
 derived-value work exists to catch — a number that reads as calibrated, is not, sits in an
-adopter-distributed file, and drives a risk verdict adopters act on. It is also **load-bearing for
-queue item S39′**: shipping `methodology_trim.py` (**1,632 LOC**, 8.2× the cap) requires adding it to
+adopter-distributed file, and drives a risk verdict adopters act on.
+
+**It is NOT load-bearing for queue item S39′, and this paragraph used to say it was.** The original
+claim — *"shipping `methodology_trim.py` (1,632 LOC, 8.2× the cap) requires adding it to
 `FRAMEWORK_INSTALLED_SOURCE`, and the softness of the threshold is exactly why that exclusion cannot
-be skipped in favour of re-tuning the number.
+be skipped in favour of re-tuning the number"* — was right that re-tuning is the wrong move and wrong
+about the dependency, in two ways S39′ measured:
+
+- **The tuple entry accomplishes nothing on its own.** With `methodology_trim.py` on the exclusion
+  list and no content rule for it, a synced doc fixture still read `doc_only` False, `source_loc`
+  1,632 and a HIGH "No test infrastructure" — identical to having never touched the tuple. What does
+  the work is `is_framework_installed`'s per-name **content** gate; the membership list is now derived
+  from it, so the two cannot be separated again.
+- **Once recognition lands, this constant never sees the file.** A recognized install is categorized
+  `vendor` before the source cap is consulted, so `DOC_ONLY_SOURCE_LOC_MAX` is not on S39′'s path at
+  all. Verified on two real `bin/sync` runs: `source_loc` is **0** both before and after, and the
+  trimmer's lines appear in `vendor` instead — 1 file before, **2 after**. No absolute LOC is quoted
+  on purpose; the figure this paragraph first carried was stale within the hour, because both
+  executables grew under the same session's edits. Re-derive it if you need it.
+
+**BL-22 therefore stands entirely on its own merits, unblocked and unblocking**, and the merits are
+unchanged: 200 has no derivation, no test asserts it, and the comment above `FRAMEWORK_INSTALLED_SOURCE`
+still records a real **148-LOC** repo the cap alone misclassifies. The deliverable is still a decision.
 
 **The deliverable is a decision, and "leave it at 200, with the reasoning written down" is a fully
 correct outcome.** Options: (a) derive a value from real adopter repos and record the derivation;

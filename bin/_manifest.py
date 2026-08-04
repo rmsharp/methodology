@@ -42,6 +42,12 @@ DISTRIBUTION = [
     ("starter-kit/CLAUDE_TEMPLATE.md", "CLAUDE_TEMPLATE.md", TRACKED),
     ("starter-kit/BOOTSTRAP.md", "BOOTSTRAP.md", TRACKED),
     ("starter-kit/methodology_dashboard.py", "methodology_dashboard.py", TRACKED),
+    # The SECOND executable adopters receive (S39'). Placement is load-bearing, not tidiness:
+    # tools/test_methodology_dashboard.py compares the non-markdown dests to the scanner's
+    # FRAMEWORK_INSTALLED_SOURCE as an ORDERED tuple (the sibling markdown assertions in the same
+    # test are set-compared, and say so), so moving this entry above the dashboard forces that
+    # tuple to be rewritten in the same reversed order.
+    ("starter-kit/methodology_trim.py", "methodology_trim.py", TRACKED),
     # seed-once root-files: created if absent, then adopter-owned (never clobbered)
     ("starter-kit/SESSION_NOTES.md", "SESSION_NOTES.md", SEED),
     ("starter-kit/CHANGELOG.md", "CHANGELOG.md", SEED),

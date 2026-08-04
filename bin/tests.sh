@@ -25,7 +25,18 @@ P="$(mktemp_project)"
 diff -q "$P/SESSION_RUNNER.md" "$STARTER/SESSION_RUNNER.md" >/dev/null && pass "SESSION_RUNNER matches canonical" || fail "SESSION_RUNNER drift"
 diff -q "$P/SAFEGUARDS.md" "$STARTER/SAFEGUARDS.md" >/dev/null && pass "SAFEGUARDS matches canonical" || fail "SAFEGUARDS drift"
 diff -q "$P/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null && pass "dashboard matches canonical" || fail "dashboard drift"
-[ -x "$P/methodology_dashboard.py" ] && pass "dashboard is executable" || fail "dashboard not executable"
+# Exec bit, DERIVED from the manifest rather than named. This assertion was hardcoded to
+# methodology_dashboard.py and was the only exec-bit check over a synced file in the suite, so
+# the trimmer would have shipped with zero coverage (S39'). Proven by mutation: narrowing
+# bin/sync's `if dest.endswith(".py")` to `if dest == "methodology_dashboard.py"` leaves the old
+# single-name assertion PASSING while the trimmer lands 0644. Derived, so a third executable is
+# covered with no edit.
+PY_DESTS="$(python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; \
+print('\n'.join(d for _s, d, _x in _manifest.DISTRIBUTION if d.endswith('.py')))")"
+[ -n "$PY_DESTS" ] && pass "manifest declares at least one executable dest" || fail "no .py dests in manifest"
+for dest in $PY_DESTS; do
+    [ -x "$P/$dest" ] && pass "$dest is executable" || fail "$dest not executable"
+done
 [ ! -f "$P/.gitignore" ] && pass "commit mode leaves .gitignore alone" || fail "commit mode created .gitignore"
 rm -rf "$P"
 
@@ -232,6 +243,15 @@ if python3 "$METHODOLOGY/tools/test_methodology_dashboard.py" >/dev/null 2>&1; t
     pass "dashboard scoring unit tests green"
 else
     fail "dashboard scoring unit tests failed"
+fi
+# The trimmer's own 66 tests ran in NOTHING here until S39'. That was tolerable while the tool was
+# canonical-only; it is not once `bin/sync` installs it at adopter roots, because `bash bin/tests.sh`
+# would stay green with a shipped executable arbitrarily broken. (Test 18 above is not cover for
+# this: it loads the real trimmer only for the S38 trim-row couplings, not for the tool's behaviour.)
+if python3 "$METHODOLOGY/tools/test_methodology_trim.py" >/dev/null 2>&1; then
+    pass "ledger trimmer unit tests green"
+else
+    fail "ledger trimmer unit tests failed"
 fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
