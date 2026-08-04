@@ -87,14 +87,36 @@ DISTRIBUTION = [
 # auto-overwrites it — reconcile manually or delete-and-reseed (BOOTSTRAP.md "Updating an existing
 # project…"; BL-6 item 2).
 #
-# The marker must be a token that PERSISTS across the seed's whole lifetime, not a one-shot banner:
-#   * CHANGELOG.md keys on the ledger TITLE ("Authoritative Action Ledger"), which append-only
-#     entries never remove — NOT the METHODOLOGY-SEED-SENTINEL, which the adopter deletes on its
-#     first real entry, so keying on the sentinel would mis-flag an in-use current-format ledger.
-#   * SESSION_NOTES.md is deliberately omitted: it is rewritten wholesale every session, so no
-#     token is stable enough to detect its format without false positives. Add an entry here only
-#     when a seed gains a lifetime-stable marker.
+# A marker must satisfy TWO properties, and the pair is the whole design. Missing either one makes
+# the check useless in a different direction:
+#   1. LIFETIME-STABLE — surviving everything an adopter legitimately does to the file, or it
+#      mis-flags a current-format seed. This rules out the METHODOLOGY-SEED-SENTINEL, which the
+#      adopter deletes on its first real entry.
+#   2. VERSION-DISCRIMINATING — absent from the formats it must detect as stale, or it can never
+#      fire at all.
+#
+# Both markers keyed on the seeds' H1 TITLES until 2026-08-04, which satisfied (1) and silently
+# failed (2): the titles are precisely what did NOT change when the seed format did. S40 added the
+# `## Size, and when to archive` doctrine to both ledger seeds; every existing adopter kept a seed
+# without it and still reported `present` — "current" — because the title was still there. That
+# falsified BOOTSTRAP.md's own written promise that status "flags any seed whose format predates
+# the current methodology ... so the format lag is surfaced rather than silent." Measured at the
+# time: 11 sibling projects held CHANGELOG.md, 9 held HANDOFFS.md, and none held the doctrine.
+#
+# The doctrine heading satisfies both. It lives in the front-matter zone, which methodology_trim.py
+# PINS and never archives, so it survives every trim, every prepend and every close-out (1); and it
+# arrived with a known format version, so its absence dates the file (2).
+#
+# CONSEQUENCE, stated because it is a real cost: a version-discriminating marker has to MOVE when
+# the seed format materially changes again. That is the mechanism working, not drift — a marker that
+# never needs updating is a marker that can never fire. Move it, and drive the RED case in
+# bin/tests.sh Test 20 (b2) before trusting the green.
+#
+# SESSION_NOTES.md is deliberately omitted: it is rewritten wholesale every session, so no token is
+# stable enough to detect its format without false positives. ROADMAP.md likewise carries no
+# format contract worth asserting. Add an entry here only when a seed gains a marker meeting both
+# properties above.
 SEED_FORMAT_MARKERS = {
-    "CHANGELOG.md": "Authoritative Action Ledger",
-    "HANDOFFS.md": "Handoff Receipts",
+    "CHANGELOG.md": "Size, and when to archive",
+    "HANDOFFS.md": "Size, and when to archive",
 }

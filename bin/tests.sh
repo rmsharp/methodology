@@ -272,14 +272,23 @@ OUT="$("$BIN/status" "$P")"
 echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && fail "status: current-format (fresh) seed mis-flagged stale" || pass "status: current-format (fresh) seed not flagged"
 echo "$OUT" | grep -q "^note:" && fail "status: spurious stale-format note on fresh tree" || pass "status: no stale-format note on fresh tree"
 # (b) In-use current-format ledger: the METHODOLOGY-SEED-SENTINEL is deleted (as the adopter does on its
-# first real entry) and a dated entry appended, but the ledger TITLE is retained. This is the exact case
-# the marker choice is engineered around (key on the lifetime-stable title, NOT the deletable sentinel);
+# first real entry) and a dated entry appended, but the doctrine section is retained. This is the case
+# the marker choice is engineered around — the marker must be LIFETIME-STABLE (surviving sentinel
+# deletion, prepends and trims, since the doctrine lives in the front-matter zone the trimmer pins);
 # it must NOT be flagged, or binding constraint #2 (no false positive on a current-format seed) breaks.
-printf '# Changelog — Authoritative Action Ledger\n\nThe action ledger.\n\n---\n\n### 2026-01-01 · [ad hoc] a real entry\n- Change: something real.\n' > "$P/CHANGELOG.md"
-grep -q "METHODOLOGY-SEED-SENTINEL" "$P/CHANGELOG.md" && fail "test-bug: in-use fixture still carries the sentinel" || pass "test: in-use fixture is title-only (sentinel deleted)"
+printf '# Changelog — Authoritative Action Ledger\n\nThe action ledger.\n\n## Size, and when to archive\n\nRun `python3 methodology_trim.py --file CHANGELOG.md --check`.\n\n---\n\n### 2026-01-01 · [ad hoc] a real entry\n- Change: something real.\n' > "$P/CHANGELOG.md"
+grep -q "METHODOLOGY-SEED-SENTINEL" "$P/CHANGELOG.md" && fail "test-bug: in-use fixture still carries the sentinel" || pass "test: in-use fixture is current-format with the sentinel deleted"
 OUT="$("$BIN/status" "$P")"
 echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && fail "status: in-use current-format ledger mis-flagged stale (constraint #2)" || pass "status: in-use current-format ledger not flagged"
 echo "$OUT" | grep -q "^note:" && fail "status: spurious note on in-use current-format ledger" || pass "status: no note on in-use current-format ledger"
+# (b2) An in-use ledger carrying the current TITLE but predating the S40 ledger doctrine. This is the
+# population the operator actually has: 11 sibling repos held CHANGELOG.md and none held the doctrine.
+# BOOTSTRAP.md:85 promises status "flags any seed whose format predates the current methodology ...
+# so the format lag is surfaced rather than silent" — a title-keyed marker cannot keep that promise,
+# because the title is exactly what did NOT change. Driven RED before the marker moved.
+printf '# Changelog — Authoritative Action Ledger\n\nThe action ledger.\n\n---\n\n### 2026-01-01 · [ad hoc] a real entry\n- Change: something real.\n' > "$P/CHANGELOG.md"
+ROW="$("$BIN/status" "$P" | grep "CHANGELOG.md" | grep -v '^note:')"
+echo "$ROW" | grep -q "stale format" && pass "status: pre-doctrine in-use ledger flagged (BOOTSTRAP.md:85's promise holds)" || fail "status: pre-doctrine in-use ledger NOT flagged — BOOTSTRAP.md:85 promises it is"
 # (c) Replace the seed with a pre-v3.1 (Keep-a-Changelog) shape lacking the ledger-title marker.
 printf '# Changelog\n\nAll notable changes to this project.\n\n## [Unreleased]\n' > "$P/CHANGELOG.md"
 OUT="$("$BIN/status" "$P")"
@@ -1672,6 +1681,40 @@ else
     fail "27.M7 the mutation harness wrote into the tracked hook — restore it before committing"
 fi
 rm -rf "$MUTDIR"; trap - EXIT INT TERM
+
+echo "== Test 28: BOOTSTRAP's never-overwrite list is pinned to the manifest (RED-first, Learning #12) =="
+# The agent-facing update path ("Update methodology using <url>") is PROSE, and until 2026-08-04 it
+# said only "fetch the latest starter-kit files and overlay them" -- naming no exception. An agent
+# following that overwrites CHANGELOG.md and HANDOFFS.md with empty templates and destroys the
+# adopter's history, which is precisely what SEED disposition exists to prevent. bin/sync refuses
+# structurally; prose has nothing but this assertion. So the list is pinned to _manifest, not trusted.
+BS="$STARTER/BOOTSTRAP.md"
+# Anchor on the TABLE ROW, not on the phrase. 'never overwrite' also appears in the surrounding
+# prose, and an earlier draft of this test grepped the first match -- so it read the prose line,
+# found no filenames in it, and reported all four seeds missing from a row that was in fact fine.
+# An assertion that cannot see its own artifact fails for the wrong reason (Learning #16).
+NOOVERWRITE="$(grep -n '^| \*\*Adopter-owned\*\*' "$BS" | head -1 | cut -d: -f1)"
+[ -n "$NOOVERWRITE" ] && pass "bootstrap: a 'never overwrite' rule exists in the update path" \
+    || fail "bootstrap: no 'never overwrite' rule found — the URL update path can destroy history"
+if [ -n "$NOOVERWRITE" ]; then
+    ROWTEXT="$(sed -n "${NOOVERWRITE}p" "$BS")"
+    MISSING=""
+    while IFS= read -r seed; do
+        echo "$ROWTEXT" | grep -qF "$seed" || MISSING="$MISSING $seed"
+    done < <(python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; \
+        print('\n'.join(d for _s, d, x in _manifest.DISTRIBUTION if x == _manifest.SEED))")
+    [ -z "$MISSING" ] && pass "bootstrap: every adopter-owned seed is named in the never-overwrite row" \
+        || fail "bootstrap: adopter-owned seed(s) absent from the never-overwrite row:$MISSING"
+    # The converse matters just as much: a TRACKED file listed as never-overwrite would freeze it at
+    # the adopter's old version forever, and no sync would ever correct it.
+    WRONG=""
+    while IFS= read -r t; do
+        echo "$ROWTEXT" | grep -qF "$t" && WRONG="$WRONG $t"
+    done < <(python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; \
+        print('\n'.join(d for _s, d, x in _manifest.DISTRIBUTION if x == _manifest.TRACKED and '/' not in d))")
+    [ -z "$WRONG" ] && pass "bootstrap: no tracked file is mislabelled adopter-owned" \
+        || fail "bootstrap: tracked file(s) wrongly listed as never-overwrite:$WRONG"
+fi
 
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="

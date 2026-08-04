@@ -114,6 +114,60 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] S41 — the update path for older adopters, and a documented instruction that destroys history
+
+**Model:** Claude Opus 5 (1M context).
+Operator-assigned: *"the equivalent of 'Update methodology using
+https://github.com/KJ5HST/methodology' should work for repositories using earlier versions of
+methodology."* **Fork session `S41` is not plan §5 queue item `S41`** (the floor audit, still
+undecided). Three independent defects; two fixed here, one is upstream's.
+
+- **The most serious is the one nobody had to run to hit.** `starter-kit/BOOTSTRAP.md`'s agent-facing
+  update path — the operator's exact phrase, already documented there — read in full: *"It will fetch
+  the latest starter-kit files and overlay them."* It named **no exception**. Four distributed files
+  are adopter-owned (`CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`, `ROADMAP.md`), and an agent
+  following that sentence literally **overwrites the action ledger and the receipt ledger with empty
+  templates** — destroying precisely the history `SEED` disposition exists to protect. `bin/sync`
+  refuses structurally; prose had nothing. Rewritten as three numbered rules with a tracked
+  vs adopter-owned table, the by-hand reconcile step, and a verification step. **Pinned by new
+  Test 28**, because a list in prose drifts: both directions are asserted against `_manifest`
+  (every SEED named; no TRACKED mislabelled) and **both were driven RED on separate mutations**.
+- **The stale-format detector could not fire, and reported *current* instead.** `BOOTSTRAP.md:85`
+  promises `bin/status` *"flags any seed whose format predates the current methodology ... so the
+  format lag is surfaced rather than silent."* S40 falsified it: `SEED_FORMAT_MARKERS` keyed on the
+  seeds' **H1 titles**, and titles are exactly what did not change. Measured across the operator's
+  portfolio — **11 sibling projects hold `CHANGELOG.md`, 9 hold `HANDOFFS.md`, 0 held the doctrine**,
+  and every one reported `present`. Markers now key on the `## Size, and when to archive` heading,
+  which lives in the front-matter zone the trimmer pins and therefore survives every trim and
+  prepend. Recorded as **Learning #19**: a version tripwire keyed to something that never changes
+  across versions cannot fire, and it fails by returning a confident *current*.
+- **A URL-sourced update installed nothing and blamed the operator's credentials.** `read_github`
+  exited on the **first** failing file with `hint: run gh auth login`. Auth was fine; two files in
+  this manifest simply are not upstream yet, and the first sits at manifest index **1**, so the run
+  died before writing anything. New `fetch_all_github` reads the whole distribution before writing,
+  separates *absent upstream* from *actual error*, and now says: `2 of 24 distributed file(s) do not
+  exist in KJ5HST/methodology yet` — naming both, stating **"This is NOT an authentication
+  problem — the other 22 file(s) read fine"**, explaining that the repository is behind this
+  manifest, and pointing at `--source=local`.
+- **The third defect is not fixable here and needs the operator.** Those two files reach upstream
+  only through a merged PR. Until then `--source=github` cannot deliver a complete update, which is
+  what `bin/tests.sh` Test 9 has been reporting all along — **that failure is evidence for this
+  finding, not noise, and must not be weakened.**
+- **Verified end-to-end on real syncs, not reasoned about.** A fresh adopter reads `present`; an
+  adopter with pre-doctrine ledgers carrying real history reads `present (stale format)` on **both**,
+  with the migration note; and a re-sync leaves that history intact. `bash bin/tests.sh`
+  **182 passed / 1 failed** (178 baseline + 4 new; the 1 is Test 9's expected 404),
+  `python3 -m unittest discover -s tools` **334 OK**, `python3 bin/check-links` OK **88 links /
+  22 files**, dashboard twins identical.
+- **A test that never ran is worse than no test, and this session shipped one for an hour.**
+  Test 28 first used an undefined `$KIT`; with `set -u` active the script aborted mid-test, and the
+  tell was the missing `== Summary ==` line rather than any failure message. The earlier RED proofs
+  had been run standalone, so they proved the *logic* and not the *harness*. Both assertions were
+  re-proved RED **inside the suite** afterwards (181/2, naming exactly the two removed files).
+- **The four-repo rollout is deferred, not abandoned**, on the operator's instruction not to modify
+  repositories in active use. Nothing outside this repo was touched: the four target working trees
+  were re-checked after the stand-down and are as found.
+
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S40's `commit:` field → `11b843a` — thirteenth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).

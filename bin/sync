@@ -77,6 +77,16 @@ def local_history_blobs(methodology_root: Path, src: str) -> set:
     return blobs
 
 
+class GitHubFetchError(Exception):
+    """One source could not be read from the upstream repo. Carries the DISTINCTION that
+    matters to the operator: `absent` (the file is not in that repo) vs `error` (anything
+    else — auth, rate limit, network)."""
+
+    def __init__(self, src: str, kind: str, detail: str):
+        super().__init__(f"{src}: {detail}")
+        self.src, self.kind, self.detail = src, kind, detail
+
+
 def read_github(src: str) -> bytes:
     try:
         result = subprocess.run(
@@ -86,10 +96,54 @@ def read_github(src: str) -> bytes:
     except FileNotFoundError:
         sys.exit("error: gh CLI not found; install GitHub CLI or use --source=local")
     except subprocess.CalledProcessError as e:
-        sys.exit(f"error: gh api failed for {src}: {e.stderr.strip() or e.stdout.strip()}\n"
-                 f"hint: run `gh auth login` or use --source=local")
+        detail = (e.stderr or "").strip() or (e.stdout or "").strip()
+        kind = "absent" if ("Not Found" in detail or "404" in detail) else "error"
+        raise GitHubFetchError(src, kind, detail)
     payload = json.loads(result.stdout)
     return base64.b64decode(payload["content"])
+
+
+def fetch_all_github(srcs: list) -> dict:
+    """Read every distributed source BEFORE writing anything, and report a partial upstream
+    as a complete inventory rather than as one misdiagnosed failure.
+
+    This exists because the previous per-file behaviour was actively misleading. It exited on
+    the FIRST failure with `hint: run gh auth login`, so an adopter whose credentials were
+    perfectly good was sent to debug authentication — while the real cause was that a file in
+    this manifest simply had not been merged upstream yet. Worse, the first such file sits at
+    manifest index 1, so the run died before installing anything at all: the operator saw an
+    auth error and an untouched project, and had no way to learn that 22 of 24 files were fine.
+
+    A missing file is a VERSION statement, not a failure of the caller: this checkout's manifest
+    is ahead of the upstream repository. Say that, name every file, and point at the source that
+    does work."""
+    contents, absent, errors = {}, [], []
+    for src in srcs:
+        try:
+            contents[src] = read_github(src)
+        except GitHubFetchError as exc:
+            (absent if exc.kind == "absent" else errors).append(exc)
+
+    if errors:
+        listed = "\n".join(f"    {e.src}: {e.detail}" for e in errors)
+        sys.exit(f"error: {len(errors)} of {len(srcs)} file(s) could not be read from {REPO}:\n"
+                 f"{listed}\n"
+                 f"hint: if these are authentication failures, run `gh auth login`; otherwise "
+                 f"sync from a local checkout with --source=local")
+
+    if absent:
+        listed = "\n".join(f"    {e.src}" for e in absent)
+        sys.exit(f"error: {len(absent)} of {len(srcs)} distributed file(s) do not exist in "
+                 f"{REPO} yet:\n{listed}\n"
+                 f"       This is NOT an authentication problem — the other "
+                 f"{len(srcs) - len(absent)} file(s) read fine.\n"
+                 f"       That repository is behind this distribution manifest: those files ship "
+                 f"in a version\n"
+                 f"       which has not been merged there yet, so no complete update is available "
+                 f"from it.\n"
+                 f"hint: sync from a full local checkout instead — `--source=local` — or wait for "
+                 f"upstream to merge.")
+    return contents
 
 
 def methodology_version(methodology_root: Path, source: str) -> str:
@@ -213,9 +267,14 @@ def main() -> int:
     if args.dry_run:
         print("  (dry-run: no changes will be written)")
 
+    # Read the whole distribution up front when sourcing from GitHub, so an upstream that is
+    # behind this manifest is reported as an inventory before anything is written (see
+    # fetch_all_github). --source=local reads from the filesystem and needs no such pre-flight.
+    remote = fetch_all_github([s for s, _, _ in DISTRIBUTION]) if source == "github" else None
+
     entries = []  # (src, dest, disposition, content, classification)
     for src, dest, disp in DISTRIBUTION:
-        content = read_local(methodology_root, src) if source == "local" else read_github(src)
+        content = read_local(methodology_root, src) if source == "local" else remote[src]
         target = project / dest
         if disp == SEED:
             # SEED files are adopter-owned; classification is only present/missing.
