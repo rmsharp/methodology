@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **24**; the oldest **19**
+**Older receipts are archived.** This file currently holds **25**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -25,6 +25,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > [Learning #12](starter-kit/FRAMEWORK_LEARNINGS.md) pointed at this file, and it is the receipt-ledger
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
+
+---
+
+```handoff
+session: S40
+date: 2026-08-04
+status: pending
+active_task: **Plan §5 queue item `S40` — THE LEDGER DOCTRINE into the two distributed ledger seeds.** Spec: `docs/planning/ledger-trimmer-design.md` §11 Phase 5 (`:1128`); queue row at `docs/planning/framework-context-cost-plan.md:479`. **THE AXES AGREE THIS SESSION: fork `S40` runs queue item `S40`.** They swapped twice (fork S37 ran queue S36, fork S36 ran queue S37), agreed at S38, and near-missed at S39 (fork S39 ran queue `S39′`, a different item from queue `S39`). Agreement is the state, not a guarantee — do not generalize it. **DONE LOOKS LIKE, from §11 Phase 5 verbatim:** `starter-kit/CHANGELOG.md` and `starter-kit/HANDOFFS.md` each state (a) a size norm, (b) the archive trigger **as a rate**, and (c) the one-line-pointer shard convention — wording **"run this"**, not "here is the manual procedure", because the trimmer ships as of S39′. **THE GAP IS RE-VERIFIED, NOT INHERITED.** Both seeds read end to end at claim: `starter-kit/CHANGELOG.md` (105 lines) says "append-only", "prepend-only", "Promote to `## YYYY-MM` sections as the list grows" and states no size, trigger, or split policy; `starter-kit/HANDOFFS.md` (95 lines) says "kept forever" and states none either. **S39′ HANDED ME A CORRECTED VERIFY COMMAND AND I RE-RAN BOTH FORMS.** §11 Phase 5's published `grep -l archiv starter-kit/*.md   # currently empty` is **not** empty: the narrow glob returns **2** (`BOOTSTRAP.md`, `FRAMEWORK_LEARNINGS.md`) and the manifest-derived form over all **22** distributed `.md` returns **3** (adds `HOW_TO_USE.md`). I read every hit: `HOW_TO_USE.md` is a worked example's `POST /projects/:id/archive` REST surface plus one line about retiring anti-patterns; `BOOTSTRAP.md:111` is S39′'s one-line tool-inventory entry; `FRAMEWORK_LEARNINGS.md` #15 is about *proving* a split lossless. **None states a size norm, a trigger, or a procedure — the gap stands and the command is the thing that broke.** Phase 5 must assert what a file SAYS. **NOT THIS SESSION (FM #17/#18):** no BL-22 decision or re-tuning of `DOC_ONLY_SOURCE_LOC_MAX = 200`; no `TRIM_VERSION` pin (S39′ residual (a), Learning #16 sitting unfixed); no S38/S37 residuals; no §10.2 rate-problem *fix* (it owns nobody and this session does not adopt it — level control is what the doctrine documents); no terminal-stdout work (S45). **NO OUTWARD-FACING ACTION**: no PR, comment, issue, tag or Release — S34's PR is still prepared-and-unopened, §11 Phase 5 ends "Do not open the PR — ask", and this change is adopter-facing. **BASELINE AT CLAIM, measured on the post-reconcile tree, not recalled:** `bash bin/tests.sh` **178 passed / 1 failed** (`FAIL: github source dry-run failed` — Test 9's expected 404; **DO NOT WEAKEN TEST 9**); `python3 -m unittest discover -s tools` **334 OK**; `python3 tools/test_methodology_trim.py` **66 OK**; `python3 bin/check-links` OK **88 links / 22 files**; `python3 bin/check-handoff` OK; twins **byte-identical**; dashboard **72/100**, 0 high+, `DASHBOARD_VERSION` **2.13.0**. Trigger at claim, and these rot on every prepend: `CHANGELOG.md` **120,994 B** / headroom **12** / SRF **1.3505** — FIRES, and **the line half now fires too**, first crossed at `316e7ef` (derived at Orient by replaying the tool's formula over all 19 commits since the `020ba3f` split); `HANDOFFS.md` **308,563 B** / headroom **20** / SRF **1.4911** — fifth reading past RED, FIRES, and the trimmer still **refuses** it by design.
+```
 
 ---
 
