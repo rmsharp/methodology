@@ -47,7 +47,9 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.0.0"
+TRIM_VERSION = "1.1.0"   # 1.1.0: GRAMMAR_MISMATCH — a grammar this tool cannot read
+                         # is no longer reported as an empty file (UAT F1). New finding code and
+                         # a new exit status on a distributed tool, so: minor, not patch.
 
 # --- Tunables, all of them judgment, all of them labelled as such in the design ---------------
 READ_CAP_LINES = 2000          # agent `Read` truncation cap — harness behaviour, not a repo property
@@ -58,6 +60,15 @@ BYTE_STOP_FRACTION = 0.5       # hysteresis — stops a trim re-firing on the ne
 SRF_RED = 1.00                 # plan §3.3 H3: at or above this, a reset is the wrong move
 ARCHIVE_DIR = "docs/archive"
 REBASE_PREFIX = "../../"       # docs/archive/<shard>.md -> repo root is exactly two levels
+
+# --- "is this plausibly a fresh seed?" — a DIFFERENT question from "is it over its budget" ----
+# Deliberately its own literal rather than an alias of DEFAULT_BUDGET_BYTES, and deliberately not
+# `opts.budget_bytes`: --budget-bytes tunes when a trim FIRES, and the seeds invite an adopter to
+# lower it. Wiring that knob into this test would let a calibration choice decide whether the tool
+# tells you your ledger grammar is wrong — and a budget set below 12,124 B would declare the seed
+# we ship to be unreadable. The two numbers may drift apart; nothing should couple them.
+SEED_PLAUSIBLE_MAX_BYTES = 64 * 1024
+SEED_SENTINEL = "METHODOLOGY-SEED-SENTINEL"   # the token both seeds carry until first real use
 
 
 # =============================================================================================
@@ -111,7 +122,8 @@ class Result:
 
 class LedgerSpec:
     def __init__(self, basename, record_kind, footer_mode, date_of_record,
-                 record_start=None, fence_info=None, regenerated=(), budget_bytes=DEFAULT_BUDGET_BYTES):
+                 record_start=None, fence_info=None, regenerated=(), budget_bytes=DEFAULT_BUDGET_BYTES,
+                 content_probe=None, seed_negation=None):
         self.basename = basename
         self.record_kind = record_kind        # "heading" | "fence"
         self.record_start = record_start      # compiled regex, for record_kind == "heading"
@@ -120,6 +132,8 @@ class LedgerSpec:
         self.date_of_record = date_of_record  # callable(record_text) -> "YYYY-MM-DD" or None
         self.regenerated = list(regenerated)  # [(name, compiled regex w/ 3 groups, value_fn)]
         self.budget_bytes = budget_bytes
+        self.content_probe = content_probe    # loose "this LOOKS like a record" regex, or None
+        self.seed_negation = seed_negation    # the seed comment's own "and there are no X below"
 
 
 def _changelog_date(text):
@@ -144,6 +158,17 @@ LEDGERS = {
         # pointer block below is the whole of the front-matter change. Declared-empty is not the
         # same as unchecked: L2 still confines the front-matter diff to the pointer block.
         regenerated=(),
+        # Evidence that entries EXIST in a grammar this config cannot read. Anchored to a line
+        # that could plausibly BE a record — an ATX heading or a table row — not to "a date
+        # somewhere on the line", which also matches ordinary front-matter prose describing dates.
+        # Measured over the real population: the anchored form loses no detection (147 / 87 / 11 /
+        # 4 hits on the four mismatched adopter ledgers found by the UAT) while dropping to zero on
+        # both shipped seeds and on dated prose.
+        content_probe=re.compile(r"^(#{1,6} |\|).*\d{4}-\d{2}-\d{2}"),
+        # Quoted from this file's own seed comment: fresh "While this line is present AND there are
+        # no dated (### YYYY-MM-DD) entries below". Looser than record_start on purpose — an entry
+        # written in the WRONG grammar still counts as an entry, which is the whole point.
+        seed_negation=re.compile(r"^###\s+\d{4}-\d{2}-\d{2}"),
     ),
     "HANDOFFS.md": LedgerSpec(
         basename="HANDOFFS.md",
@@ -158,6 +183,18 @@ LEDGERS = {
              re.compile(r"(This file currently holds \*\*)(\d+)(\*\*)"),
              lambda ctx: str(ctx["retained"])),
         ),
+        # The SAME probe as CHANGELOG.md, deliberately. The first draft left this None on the
+        # argument that a receipt ledger keeps its records inside fences — true of a WORKING one,
+        # and beside the point for a broken one: a ledger whose receipts are not ```handoff fences
+        # keeps them somewhere, and heading-shaped is the likeliest somewhere. Leaving it None also
+        # made the tool's strictness depend on which of two filenames you were holding, which is a
+        # guard you can walk around by picking a name. Measured at zero hits on the shipped seed
+        # (its worked receipt is inside a 4-backtick wrapper, and the probe is fence-aware).
+        content_probe=re.compile(r"^(#{1,6} |\|).*\d{4}-\d{2}-\d{2}"),
+        # This file's seed states its own freshness rule in its own terms — fresh "While this line
+        # is present AND there are no `session:` blocks below" — so the negation is `session:`,
+        # not a dated heading. Fence-aware, so the seed's wrapped example does not count itself.
+        seed_negation=re.compile(r"^session:\s"),
     ),
 }
 
@@ -1294,6 +1331,95 @@ def check_P1a(ledger_path, spec_for_ledger, expected_after_partition, result):
 
 
 # =============================================================================================
+# Zero records — "I found nothing" and "I could not read this" are different answers.
+#
+# This branch used to give one answer to both, at exit 0, in the words reserved for a fresh seed:
+# a 597,717 B ledger holding 130 dated entries and a 1,239,085 B one keying its entries on table
+# rows under 8 `## YYYY-MM` group headings were both
+# told they held "zero records ... nothing to archive. (A freshly seeded ledger looks exactly like
+# this ...)" — byte-identical to what a genuine 324 B seed is told, and with the same exit status,
+# so a wrapper reading the code was told everything was fine. Neither file uses the declared
+# `### YYYY-MM-DD · [tag]` heading; one uses an em dash, the other keys entries on table rows.
+# That is UAT finding F1, and the failure shape is the worst available for a tool whose entire
+# justification is that manual trimming does not happen.
+#
+# Design §6.3's exit table already said `3 | usage error: ... no records`, and this branch shipped
+# with no exit code at all. Restoring 3 for the unreadable half is a return to the ratified table.
+# KEEPING 0 FOR THE GENUINELY-EMPTY HALF IS ADDED POLICY, labelled here as such: a day-one adopter
+# running --check from a hook must not be handed a usage error for a correctly-seeded file, and the
+# design's own edge-case list ("zero archivable records → 0 with a stated reason") shows the family
+# it belongs to. ZONE_UNCLASSIFIED is the model the refusal copies — refuse, name the evidence,
+# print the offending span, and do not guess.
+# =============================================================================================
+
+def classify_empty(path, text, spec, result):
+    """Decide whether a zero-record file is a fresh seed or a grammar we cannot read."""
+    lines = text.splitlines()
+    size_bytes = len(text.encode("utf-8"))       # same source and unit as Trigger.size_bytes
+    line_count = text.count("\n")                # same unit as evaluate_trigger's line_count
+    hits, negations, sentinel = [], 0, False
+    for i, s, inside, _info in fence_scan(lines):
+        if inside:
+            continue                             # a fenced example is documentation, not a record
+        if spec.content_probe is not None and spec.content_probe.search(s):
+            hits.append((i + 1, s))
+        if spec.seed_negation is not None and spec.seed_negation.match(s):
+            negations += 1
+        if SEED_SENTINEL in s:
+            sentinel = True                      # fence-aware, like both signals beside it: a
+                                                 # documentation example QUOTING the token must
+                                                 # not be able to seal a ledger that has records
+
+    # The seed declares its own freshness, and both seeds state the rule as a CONJUNCTION: the
+    # token, AND nothing recorded below it. Presence alone is not enough — an adopter who never
+    # deleted the comment would otherwise buy permanent silence (one really does: church_growth's
+    # receipt ledger carries the token alongside the 19 receipts this grammar does parse — a
+    # fence-blind `grep -c '^```handoff'` says 20 there; one is a documentation example).
+    sealed = sentinel and negations == 0
+
+    # `negations` is EVIDENCE, not merely the second half of the seal. The seed's negation test is
+    # the seed's own answer to "has anything been recorded below?", so a file that answers yes and
+    # still parses to zero records is a mismatch by definition — and the first draft of this
+    # function computed that answer and then discarded it, which left a receipt ledger written as
+    # bare `session:` blocks (no dated headings for the probe to see) reporting NO_RECORDS at
+    # exit 0: F1 intact in the file this branch had just been widened to cover.
+    evidence = bool(hits) or negations > 0
+
+    # The exemption covers the fuzzy evidence only. Size is not a heuristic, and a forgotten
+    # comment must not be able to silence a ledger that has visibly outgrown a seed.
+    if not (size_bytes > SEED_PLAUSIBLE_MAX_BYTES or line_count > READ_CAP_LINES
+            or (evidence and not sealed)):
+        result.add("NO_RECORDS",
+                   "%s holds zero records under its declared grammar — nothing to archive. (A "
+                   "freshly seeded ledger looks exactly like this, and must not be trimmed.)"
+                   % path.name)
+        return result
+
+    where = ""
+    if hits:
+        n, first = hits[0]
+        where = ("\n  First line that looks like a record but is not one, at line %d:\n%s"
+                 % (n, _indent(first[:200])))
+    result.add(
+        "GRAMMAR_MISMATCH",
+        "%s holds %s B on %s line(s) and NOT ONE record the declared grammar can read. This is a "
+        "file this tool cannot parse, not a file with nothing in it — %s. Refusing rather than "
+        "reporting an absence.\n  Declared record start (%s): %s\n  Lines matching the looser "
+        "content probe: %d (and %d line(s) matching this ledger's own freshness test)%s\n  Fix the config entry for this file, or bring the ledger to the "
+        "declared grammar. Do not trim until one of those is true."
+        % (spec.basename, "{:,}".format(size_bytes), "{:,}".format(line_count),
+           "records are visibly present in another shape" if hits else
+           ("the ledger's own freshness test says content has been recorded below"
+            if negations else "a freshly seeded ledger is small, and this is not"),
+           spec.record_kind,
+           spec.record_start.pattern if spec.record_start else "```%s" % spec.fence_info,
+           len(hits), negations, where),
+        exit_code=3,
+    )
+    return result
+
+
+# =============================================================================================
 # Driver
 # =============================================================================================
 
@@ -1319,10 +1445,7 @@ def evaluate(path, opts, result):
     if zones is None:
         return result
     if not zones.starts:
-        result.add("NO_RECORDS",
-                   "%s holds zero records under its declared grammar — nothing to archive. (A "
-                   "freshly seeded ledger looks exactly like this, and must not be trimmed.)"
-                   % path.name)
+        classify_empty(path, text, spec, result)
         return result
 
     # Validate --cut before anything else consumes it: the key is interpolated straight into the

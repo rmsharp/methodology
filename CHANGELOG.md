@@ -114,6 +114,69 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] S44 — UAT F1: a grammar the trimmer cannot read is no longer reported as an empty file
+
+**Model:** Claude Opus 5 (1M context).
+Operator-chosen from a four-option menu at Phase 0 close; also S43's own ranked #1 in
+[`docs/planning/uat-2026-08-04-six-adopters.md`](docs/planning/uat-2026-08-04-six-adopters.md) §6.
+**Fork session `S44` is NOT plan §5 queue item `S44`** — queue S44 is the diff-scoped prohibition
+plus pre-commit/CI wiring. The two axes coincided four sessions running (S38, S40, S42, S43) and
+**diverge here**, which is why the axis is named at every claim.
+
+- **The defect.** `starter-kit/methodology_trim.py` printed `[NO_RECORDS] … nothing to archive. (A
+  freshly seeded ledger looks exactly like this, and must not be trimmed.)` **and exited 0** on
+  `../model_project_constructor/CHANGELOG.md` (**597,717 B**, 130 dated entries) and
+  `../wsfct/CHANGELOG.md` (**1,239,085 B**, entries as table rows under 8 month groupers). Neither
+  matches the declared `^### \d{4}-\d{2}-\d{2} · \[`. A 1.2 MB ledger and a 324 B fresh seed
+  produced **byte-identical output and the same exit status**, and the message actively reassured.
+- **The fix.** A new `classify_empty()`. Three signals, any of which refuses: over
+  `SEED_PLAUSIBLE_MAX_BYTES`; over `READ_CAP_LINES`; or evidence of records the grammar cannot see
+  — a fence-aware **anchored** content probe plus **the seed's own freshness test**. The sentinel
+  exemption covers only that fuzzy evidence, **never size**. Refusal is `GRAMMAR_MISMATCH` at
+  **exit 3**, naming size, line count, both hit counts, the first unparsed line (bounded at 200
+  chars; `ZONE_UNCLASSIFIED` bounds at 400) and the declared grammar. `ZONE_UNCLASSIFIED` was the
+  model to copy, exactly as the UAT recommended.
+- **Exit 3 is a return to the ratified table, not a new opinion.** `ledger-trimmer-design.md` §6.3
+  already said `3 | usage error: … no records`; the branch shipped with **no exit code at all**.
+  **Keeping 0 for the genuinely-empty half is ADDED POLICY** and is labelled as such in the code: a
+  day-one adopter running `--check` from a hook must not be handed a usage error.
+- **`SEED_PLAUSIBLE_MAX_BYTES` is deliberately its own literal**, not `DEFAULT_BUDGET_BYTES` and not
+  `opts.budget_bytes`. `--budget-bytes` tunes when a trim *fires* and the seeds invite adopters to
+  lower it; wiring it in would let a calibration choice decide whether the tool calls your ledger
+  unreadable, and a budget under 12,124 B would condemn the seed we ship.
+- **Three defects in this session's own design were found by producer mutation and by the diff
+  review, not by reasoning.** (1) A mutant *deleting* the sentinel exemption **survived** — with the
+  probe anchored, no fixture existed in which that guard could fire; a guard nothing can falsify is
+  a comment shaped like a guard. (2) A mutant *adding* a probe to `HANDOFFS.md` survived, exposing
+  `content_probe=None` there as an **undefended asymmetry** — strictness that depended on which of
+  two filenames you were holding. Both ledgers now carry the same probe. (3) `negations` were
+  computed as evidence and then **discarded**, so a receipt ledger written as bare `session:` blocks
+  — no fences, no dated headings — still answered `NO_RECORDS` at exit 0: **F1 intact in the very
+  file the probe had just been widened to cover.** Final harness **24 mutants, 24 killed, 0
+  survived, 0 did-not-apply**, control green.
+- **Two figures quoted from the UAT report did not reproduce and were replaced with ones that carry
+  a command.** *"wsfct 508 table rows"* — actual **531** pipe-leading lines, **489** date-shaped;
+  and `church_growth`'s receipt count is **19** fence-aware, **20** by a fence-blind grep. Both had
+  been republished here from S43 without re-running their commands.
+- **Verified on real files, not fixtures alone.** Four adopter ledgers now refuse: the two above
+  plus **`../claims-model-starter.wiki`** (28,300 B) and **`../feedback-loop-comparison`**
+  (7,067 B) — **both under both size limits, caught by the probe alone, and neither examined by the
+  UAT**. That is what makes the probe load-bearing rather than decorative. `../airqino`'s genuine
+  324 B seed and both shipped seeds still answer `NO_RECORDS` at exit 0; every parsing ledger is
+  unchanged. **No file outside this repository was written.**
+- **Adopter-visible surface.** `TRIM_VERSION` **1.0.0 → 1.1.0** (new finding code, new exit status,
+  on a distributed tool). `README.md`'s install-size table re-derived by running the command the
+  README itself publishes: executables **278,042 → 279,552 B**, total **765,311 → 766,821 B** —
+  measured *after* the last edit, because the first pair was already stale by the time the comments
+  were finished.
+- **Not taken (FM #17):** F3, F6, F7, F8, F9 stay open; no `FRAMEWORK_LEARNINGS.md` row (it changes
+  what adopters receive and is the operator's call); no ledger archiving; no `.gitignore` fix for
+  `dashboard_history.jsonl`; no outward-facing action. **S34's PR remains prepared and unopened.**
+- **Incident, disclosed:** a design-review subagent wrote a probe sentence into the **distributed**
+  seed `starter-kit/CHANGELOG.md` and left it uncommitted. Caught at the next `git status`, reverted
+  (`git checkout --`), and the tree re-verified clean before any commit. The second review workflow
+  was launched with an explicit read-only constraint and a self-check on `git status --porcelain`.
+
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S43's `commit:` field → `f7637b3` — sixteenth discharge, and the first receipt that closed out twice
 
 **Model:** Claude Opus 5 (1M context).

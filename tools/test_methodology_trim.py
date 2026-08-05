@@ -53,6 +53,33 @@ def records_of(text, spec):
     return z.records() if z else []
 
 
+# Written out as a literal on purpose. Taking it from `mod.SEED_SENTINEL` would make every
+# assertion below an identity — the token would agree with itself while both drifted away from
+# the one actually embedded in the two seed files adopters receive. The test immediately below
+# is what ties the three together.
+SEED_SENTINEL_TOKEN = "METHODOLOGY-SEED-SENTINEL"
+
+
+def mod_seed_sentinel():
+    return SEED_SENTINEL_TOKEN
+
+
+def probe_hits_of(text, spec):
+    """[(1-based line, line)] for the spec's content probe, fence-aware. [] when none declared.
+
+    Reimplemented here rather than called through the module: an assertion computed by the same
+    code it is testing cannot fail. This walks the module's fence_scan — the shared primitive the
+    production path also uses — but applies the predicate itself.
+    """
+    if spec.content_probe is None:
+        return []
+    out = []
+    for i, s, inside, _info in mod.fence_scan(text.splitlines()):
+        if not inside and spec.content_probe.search(s):
+            out.append((i + 1, s))
+    return out
+
+
 CL = mod.LEDGERS["CHANGELOG.md"]
 HF = mod.LEDGERS["HANDOFFS.md"]
 
@@ -953,6 +980,415 @@ class TestReviewRegressions(unittest.TestCase):
             self.assertIsNotNone(m, out)
             self.assertNotEqual(m.group(1), m.group(2),
                                 "the two boundaries must yield different SRFs in this fixture")
+
+
+# =============================================================================================
+# GRAMMAR_MISMATCH — a file the grammar cannot read must not be reported as a file with nothing
+# in it. UAT finding F1 (docs/planning/uat-2026-08-04-six-adopters.md §4).
+#
+# The defect these pin: evaluate() answered `[NO_RECORDS] ... nothing to archive. (A freshly
+# seeded ledger looks exactly like this, and must not be trimmed.)` AT EXIT 0 for a 597,717 B
+# ledger holding 130 dated entries and a 1,239,085 B ledger keying entries on table rows, because
+# neither
+# uses the declared `### YYYY-MM-DD · [tag]` heading. A 1.2 MB ledger and a 324 B fresh seed
+# produced byte-identical output and the same exit status, and the message actively reassured.
+#
+# EVERY FIXTURE HERE IS A LITERAL, ON PURPOSE. The shapes are copied from real adopter ledgers
+# and each one's real-world source and measurements are named in its docstring, but no test reads
+# a sibling repository: a suite that does is green or red depending on which checkouts happen to
+# sit beside this one, which is not a property of this code. The two seed fixtures come from
+# `show("HEAD:...")`, not from the working tree — a working-tree read measures a file nobody
+# shipped, and during the design review for this very change an agent left an uncommitted edit in
+# `starter-kit/CHANGELOG.md` that would have silently redefined the control.
+#
+# ON ASSERTING `Result.exit` HERE. This file's own rule is "assert on named findings, never on
+# the exit code," and design §6.3 states its reason: the exit code "is a union over every check
+# the tool runs." That union is `main()`'s `worst = max(...)` across `--file` arguments
+# (methodology_trim.py:1629-1635). `Result.exit` is per-evaluation, and in this branch evaluate()
+# returns immediately, so the union is over exactly one check — which each test asserts by
+# checking `len(r.codes) == 1` beside it. The exit status is pinned because it is half of what
+# F1 reports: a mutant that keeps the code and drops `exit_code=3` produces identical `codes`,
+# and asserting codes alone lets exactly the reported defect back in.
+# =============================================================================================
+
+SEED_CL = "HEAD:starter-kit/CHANGELOG.md"
+SEED_HF = "HEAD:starter-kit/HANDOFFS.md"
+
+
+def one_file_repo(tmp, name, data):
+    """A scratch git repo holding exactly one ledger. Bytes in, never a template."""
+    p = Path(tmp)
+    (p / name).write_bytes(data.encode("utf-8") if isinstance(data, str) else data)
+    sh(p, "git", "init", "-q", ".")
+    sh(p, "git", "config", "user.email", "t@t")
+    sh(p, "git", "config", "user.name", "T")
+    sh(p, "git", "add", "-A")
+    sh(p, "git", "commit", "-qm", "seed")
+    return p
+
+
+def ev(repo, name, **optkw):
+    """evaluate() in-process against `repo`. Mirrors TestWritePathIsActuallyGated._run_in_proc."""
+    kw = dict(write=False, check=False, cut=None, budget_bytes=None, force=False,
+              today="2026-08-04")
+    kw.update(optkw)
+    cwd = os.getcwd()
+    try:
+        os.chdir(str(repo))
+        r = mod.Result(Path(name))
+        mod.evaluate(Path(name), type("O", (), kw)(), r)
+        return r
+    finally:
+        os.chdir(cwd)
+
+
+def evaluate_text(case, name, data, **optkw):
+    with tempfile.TemporaryDirectory() as tmp:
+        return ev(one_file_repo(tmp, name, data), name, **optkw)
+
+
+# The two shapes F1 found in the wild, reduced to literals. Neither matches
+# `^### \d{4}-\d{2}-\d{2} · \[` — the first uses a U+2014 em dash where the grammar wants a
+# U+00B7 middle dot plus a bracketed source tag; the second keys entries on table rows under
+# `## YYYY-MM` group headings and has no dated `###` heading at all.
+MISMATCH_EMDASH = "# Changelog\n\nThe action ledger.\n\n" + "".join(
+    "### 2026-07-%02d — did a thing (Session %d)\n\n- Change: something real.\n\n" % (i % 28 + 1, i)
+    for i in range(12))
+
+MISMATCH_TABLE = "# Changelog\n\n## 2026-08\n\n| Item | Date | Notes |\n|------|------|-------|\n" + \
+    "".join("| **Did a thing %d** | 2026-08-%02d | Session %d. Notes. |\n" % (i, i % 28 + 1, i)
+            for i in range(12))
+
+
+class TestGrammarMismatchFixtureControls(unittest.TestCase):
+    """Prove each fixture IS what the tests below assume, before anything is asserted about code.
+
+    Without these, every assertion downstream can pass for the wrong reason — a fixture that
+    quietly stopped being a mismatch would make the mismatch tests green by accident.
+    """
+
+    def test_the_seed_fixtures_are_reachable_and_are_the_shipped_seeds(self):
+        for ref in (SEED_CL, SEED_HF):
+            text = show(ref)
+            self.assertIsNotNone(text, "%s is unreachable — history changed" % ref)
+            self.assertIn(mod_seed_sentinel(), text,
+                          "%s must still carry the seed sentinel, or the exemption is untested" % ref)
+
+    def test_the_seed_fixtures_hold_zero_records_AND_zero_probe_hits(self):
+        """The seed is only a control if BOTH halves hold: no records, and nothing that looks like one."""
+        cl = show(SEED_CL)
+        self.assertEqual(records_of(cl, CL), [], "a freshly seeded ledger has no records")
+        self.assertEqual(probe_hits_of(cl, CL), [],
+                         "the shipped CHANGELOG seed must produce zero content-probe hits — if a "
+                         "future edit adds a dated heading to its prose, fix the seed, not the probe")
+
+    def test_the_mismatch_fixtures_really_do_fail_the_declared_grammar(self):
+        """Both fixtures must hold zero records under the grammar AND real content under the probe."""
+        for label, data, want_hits in (("em dash", MISMATCH_EMDASH, 12),
+                                       ("table rows", MISMATCH_TABLE, 12)):
+            self.assertEqual(records_of(data, CL), [], "%s fixture must parse to zero records" % label)
+            self.assertEqual(len(probe_hits_of(data, CL)), want_hits,
+                             "%s fixture must carry %d probe-visible lines" % (label, want_hits))
+
+    def test_the_mismatch_fixtures_are_UNDER_both_size_signals(self):
+        """This is what makes them tests of the PROBE rather than tests of the size rule.
+
+        Both real files F1 names are over the byte ceiling, so a probe-free implementation would
+        catch them and ship the probe decorative. Two real adopter ledgers are not:
+        `claims-model-starter.wiki/CHANGELOG.md` (28,300 B / 269 lines / 11 probe hits) and
+        `feedback-loop-comparison/CHANGELOG.md` (7,067 B / 41 lines / 4 hits), both under both
+        limits and both misreported as empty by the shipped tool. These literals stand in for them.
+        """
+        for label, data in (("em dash", MISMATCH_EMDASH), ("table rows", MISMATCH_TABLE)):
+            self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES,
+                            "%s fixture must be under the byte ceiling" % label)
+            self.assertLess(len(data.splitlines()), mod.READ_CAP_LINES,
+                            "%s fixture must be under the line ceiling" % label)
+
+
+class TestGrammarMismatch(unittest.TestCase):
+
+    # --- the genuine-seed half: must stay exit 0 -------------------------------------------
+
+    def test_the_shipped_CHANGELOG_seed_is_still_reported_as_a_fresh_seed(self):
+        r = evaluate_text(self, "CHANGELOG.md", show(SEED_CL))
+        self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 0, "a day-one adopter must not be told their ledger is broken")
+
+    def test_the_shipped_HANDOFFS_seed_is_still_reported_as_a_fresh_seed(self):
+        r = evaluate_text(self, "HANDOFFS.md", show(SEED_HF))
+        self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 0)
+
+    def test_a_hand_rolled_empty_ledger_with_no_sentinel_is_still_exit_0(self):
+        """Copied from ../airqino/CHANGELOG.md, a real 324 B seed that is NOT ours.
+
+        It carries no sentinel, so the exemption cannot save it — only the absence of every
+        signal does. This is the case that fails first if a size floor is tightened carelessly.
+        """
+        data = ("# Changelog\n\nAll notable changes to this project are documented here.\n"
+                "Format loosely follows [Keep a Changelog](https://keepachangelog.com/).\n\n"
+                "When completing work, remove the item from `BACKLOG.md` and add an entry here.\n\n"
+                "## [Unreleased]\n\n"
+                "<!-- Add entries here as work is completed. Group by month when the list grows. -->\n")
+        self.assertNotIn(mod_seed_sentinel(), data, "control: this fixture has no sentinel")
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 0)
+
+    def test_dated_PROSE_in_a_sealed_seed_does_not_trip_the_probe(self):
+        """Two independent guards, and this asserts BOTH are needed.
+
+        A design-review agent added exactly this sentence to the shipped seed while probing this
+        change. The anchored probe ignores it (it is not heading- or row-shaped) AND the sentinel
+        exemption would cover it anyway. Belt and braces, because the seed is a file adopters get.
+        """
+        data = show(SEED_CL).replace(
+            "## How to add an entry",
+            "For instance an entry dated 2026-01-15 sits above one dated 2026-01-14.\n\n"
+            "## How to add an entry", 1)
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
+
+    # --- the mismatch half: must refuse, loudly ---------------------------------------------
+
+    def test_an_em_dash_ledger_under_both_size_limits_is_refused_by_the_probe_alone(self):
+        """RED against the shipped tool, which answers [NO_RECORDS] at exit 0.
+
+        Shape of ../model_project_constructor/CHANGELOG.md (597,717 B, 130 entries), reduced to a
+        size where ONLY the probe can fire.
+        """
+        r = evaluate_text(self, "CHANGELOG.md", MISMATCH_EMDASH)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+        self.assertEqual(len(r.codes), 1)
+        self.assertEqual(r.exit, 3, "a file the grammar cannot read is not a file with nothing in it")
+
+    def test_a_table_row_ledger_under_both_size_limits_is_refused_by_the_probe_alone(self):
+        """Shape of ../wsfct/CHANGELOG.md — 1,239,085 B, entries as table rows under 8 `## YYYY-MM`
+        group headings (`grep -cE '^## [0-9]{4}-[0-9]{2}$'` = 8), 87 probe-visible lines."""
+        r = evaluate_text(self, "CHANGELOG.md", MISMATCH_TABLE)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 3)
+
+    def test_the_refusal_names_the_evidence_instead_of_reassuring(self):
+        """F1's core complaint was the WORDING, not only the code: the message reassured.
+
+        The refusal has to carry what a reader needs to act — how big the file is, how many lines
+        the probe saw, where the first one is, and what the grammar actually wants — and must not
+        repeat the fresh-seed reassurance.
+        """
+        r = evaluate_text(self, "CHANGELOG.md", MISMATCH_EMDASH)
+        msg = r.findings[0].message
+        self.assertNotIn("freshly seeded", msg, "the mismatch must not reuse the seed reassurance")
+        self.assertNotIn("nothing to archive", msg)
+        # Anchored to the label, not a bare "12": the byte and line counts also contain "12", so a
+        # substring check passed a mutant that deleted the count entirely.
+        self.assertIn("content probe: 12", msg, "the probe hit count must be stated")
+        self.assertRegex(msg, r"\b5\b|\bline 5\b|:5\b", "the first unparsed line must be located")
+        self.assertIn("2026-07-01 — did a thing", msg, "the first unparsed line must be quoted")
+        self.assertIn(CL.record_start.pattern, msg, "the declared grammar must be shown")
+
+    def test_the_quoted_line_is_bounded(self):
+        """A real table-row ledger stores 900+ character rows; ZONE_UNCLASSIFIED bounds at 400."""
+        long_row = "| **x** | 2026-08-01 | " + ("y" * 4000) + " |\n"
+        r = evaluate_text(self, "CHANGELOG.md", "# Changelog\n\n" + long_row)
+        self.assertIn("GRAMMAR_MISMATCH", r.codes)
+        self.assertLess(len(r.findings[0].message), 1200,
+                        "an unbounded quote turns one finding into a screenful")
+
+    # --- the size signals, each isolated ----------------------------------------------------
+
+    def test_a_file_over_the_byte_ceiling_is_refused_with_zero_probe_hits(self):
+        """Isolates the byte signal: no dates anywhere, so only size can fire."""
+        data = "# Changelog\n\n" + ("z" * (mod.SEED_PLAUSIBLE_MAX_BYTES + 1)) + "\n"
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 3)
+
+    def test_a_file_of_exactly_the_byte_ceiling_is_NOT_refused(self):
+        """The `>` edge. Without this, `>` and `>=` are indistinguishable."""
+        head = "# Changelog\n\n"
+        data = head + ("z" * (mod.SEED_PLAUSIBLE_MAX_BYTES - len(head)))
+        self.assertEqual(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES,
+                         "control: the fixture must be EXACTLY the ceiling, not near it")
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
+
+    def test_a_file_over_the_read_cap_is_refused_even_though_it_is_under_budget(self):
+        """Isolates the line signal: 2,402 short lines, 33 KB, no dates.
+
+        No file in the audited portfolio has this shape — zero records AND over 2,000 lines — so
+        this signal has no real-world fixture and is pinned synthetically. It exists because the
+        `Read` truncation it guards is the whole reason the trimmer exists.
+        """
+        data = "# Changelog\n\n" + "".join("- bullet %04d\n" % i for i in range(2400))
+        self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES,
+                        "control: must be UNDER the byte ceiling, or this tests the wrong signal")
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+
+    def test_a_file_of_exactly_the_read_cap_is_NOT_refused(self):
+        data = "".join("line %04d\n" % i for i in range(mod.READ_CAP_LINES))
+        self.assertEqual(len(data.splitlines()), mod.READ_CAP_LINES, "control: exactly the cap")
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
+
+    # --- the sentinel exemption, and its limits ---------------------------------------------
+
+    def test_the_sentinel_exempts_only_the_probe_never_the_size_signals(self):
+        """A sealed seed that somehow grew past the ceiling is still refused.
+
+        The exemption covers the probe because the probe is a heuristic. Size is not a heuristic,
+        and a sentinel an adopter merely forgot to delete must not buy silence forever —
+        ../church_growth/HANDOFFS.md carries the sentinel today alongside 19 parsed receipts.
+        """
+        data = show(SEED_CL) + ("\nz" * mod.SEED_PLAUSIBLE_MAX_BYTES)
+        self.assertIn(mod_seed_sentinel(), data, "control: the fixture is still sealed")
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+
+    def test_a_sealed_seed_whose_FRONT_MATTER_is_heading_shaped_and_dated_is_exempt(self):
+        """The case that makes the exemption a guard rather than a decoration.
+
+        Written because a producer mutant that deleted `and not sealed` SURVIVED the first draft
+        of this class: with the probe anchored to heading- and row-shaped lines, no fixture existed
+        in which the exemption could fire, so nothing could falsify it. This is that fixture —
+        seed documentation whose own front matter carries a dated table row and a dated `##`
+        heading, neither of which is a `###` entry, so `seed_negation` stays at zero and the
+        sentinel still holds. A seed is entitled to document dates; only recording them counts.
+        """
+        data = show(SEED_CL).replace(
+            "## How to add an entry",
+            "## Shards are named for their last date, e.g. 2026-01-15\n\n"
+            "| Field | Example |\n|---|---|\n| date | 2026-01-15 |\n\n"
+            "## How to add an entry", 1)
+        self.assertIn(mod_seed_sentinel(), data, "control: the fixture is still sealed")
+        self.assertGreater(len(probe_hits_of(data, CL)), 0,
+                           "control: the probe MUST fire here, or this tests nothing")
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 0)
+
+    def test_a_receipt_ledger_in_the_wrong_shape_is_refused_too(self):
+        """The receipt ledger gets the same probe as the action ledger, and this pins it.
+
+        A producer mutant that ADDED a probe to HANDOFFS.md survived the first draft — proof that
+        leaving it off was an undefended choice rather than a decision. Shape: receipts recorded as
+        dated headings instead of ```handoff fences, under both size limits so only the probe can
+        fire.
+        """
+        data = ("# Handoff Receipts\n\nReceipts below.\n\n" +
+                "".join("## Session %d — 2026-08-%02d\n\nDid a thing.\n\n" % (i, i % 28 + 1)
+                        for i in range(8)))
+        self.assertEqual(records_of(data, HF), [], "control: zero records under the fence grammar")
+        self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES)
+        r = evaluate_text(self, "HANDOFFS.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 3)
+
+    def test_a_receipt_ledger_that_kept_its_sentinel_while_filling_up_is_still_refused(self):
+        """The receipt ledger's half of the conjunction, and it is not hypothetical.
+
+        ../church_growth/HANDOFFS.md carries METHODOLOGY-SEED-SENTINEL today alongside 19 real
+        receipts — an adopter who simply never deleted the comment. That file happens to parse, so
+        it never reaches this branch; one that did NOT parse would be handed a permanent silent
+        exit 0 by a sentinel nobody removed. The seed's own rule is the fix: fresh means the token
+        AND no `session:` blocks below. Two producer mutants (dropping this negation, and keying it
+        on ```handoff instead) survived until this test existed.
+        """
+        data = ("# Handoff Receipts\n\n<!-- " + mod_seed_sentinel() + ": fresh receipt ledger -->\n\n" +
+                "".join("## Session %d — 2026-08-%02d\n\nsession: S%d\ndate: 2026-08-%02d\nDid a thing.\n\n"
+                        % (i, i % 28 + 1, i, i % 28 + 1) for i in range(8)))
+        self.assertIn(mod_seed_sentinel(), data, "control: the sentinel really is present")
+        self.assertEqual(records_of(data, HF), [], "control: zero records under the fence grammar")
+        self.assertGreater(len(probe_hits_of(data, HF)), 0, "control: the probe must fire")
+        r = evaluate_text(self, "HANDOFFS.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 3)
+
+    def test_bare_session_blocks_with_no_headings_are_refused_by_the_negation_alone(self):
+        """The gap that existed while `negations` was computed and then thrown away.
+
+        A receipt ledger written as bare `session:` blocks — no fences for the grammar, and no
+        dated headings for the content probe — sat under both size limits and reported NO_RECORDS
+        at exit 0, which is F1 intact in the very file the probe had just been extended to cover.
+        The seed's own freshness test already knew better: it asks whether any `session:` block has
+        been recorded below, and here the answer is yes.
+        """
+        data = ("# Handoff Receipts\n\nReceipts below.\n\n" +
+                "".join("session: S%d\ndate: 2026-08-%02d\nstatus: complete\nDid a thing.\n\n"
+                        % (i, i % 28 + 1) for i in range(8)))
+        self.assertEqual(records_of(data, HF), [], "control: zero records under the fence grammar")
+        self.assertEqual(probe_hits_of(data, HF), [],
+                         "control: the PROBE must find nothing, or this tests the wrong signal")
+        self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES)
+        self.assertLess(len(data.splitlines()), mod.READ_CAP_LINES)
+        r = evaluate_text(self, "HANDOFFS.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 3)
+
+    def test_a_documentation_example_quoting_the_sentinel_cannot_seal_a_real_ledger(self):
+        """The sentinel check is fence-aware, like both signals beside it.
+
+        A ledger that merely QUOTES the token inside a fenced example — documenting the seed
+        format, say — would otherwise be sealed by its own documentation and silenced forever.
+        """
+        data = ("# Changelog\n\nHow a fresh ledger is marked:\n\n```\n<!-- "
+                + mod_seed_sentinel() + ": fresh ledger -->\n```\n\n"
+                + "".join("## Release %d — 2026-06-%02d\n\n- did a thing\n\n" % (i, i % 28 + 1)
+                          for i in range(6)))
+        self.assertIn(mod_seed_sentinel(), data, "control: the token IS in the file")
+        self.assertGreater(len(probe_hits_of(data, CL)), 0, "control: the probe fires")
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+
+    def test_a_seed_that_gained_a_real_entry_in_the_wrong_grammar_is_refused(self):
+        """The sentinel is a conjunction, exactly as the seed's own comment states it.
+
+        `starter-kit/CHANGELOG.md:10` says the file is fresh "While this line is present AND there
+        are no dated (### YYYY-MM-DD) entries below." An adopter who starts writing entries in
+        their own grammar without deleting the comment has a mismatch, not a fresh ledger.
+        """
+        data = show(SEED_CL) + "\n### 2026-07-27 — did a thing\n\n- Change: x\n"
+        self.assertIn(mod_seed_sentinel(), data, "control: the sentinel is still present")
+        r = evaluate_text(self, "CHANGELOG.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+
+    # --- narrowed variants: what makes each clause load-bearing ------------------------------
+
+    def test_NARROWED_a_size_only_implementation_misses_both_real_shapes(self):
+        """Delete the probe and the two shapes F1 found survive at adopter-plausible sizes.
+
+        This is the test that makes `content_probe` load-bearing rather than decorative: both
+        files F1 actually names are over the byte ceiling, so size alone would have "fixed" F1
+        while leaving ../claims-model-starter.wiki (28,300 B) and ../feedback-loop-comparison
+        (7,067 B) — both real, both misreported today — exactly as broken.
+        """
+        for data in (MISMATCH_EMDASH, MISMATCH_TABLE):
+            size_only = (len(data.encode("utf-8")) > mod.SEED_PLAUSIBLE_MAX_BYTES
+                         or len(data.splitlines()) > mod.READ_CAP_LINES)
+            self.assertFalse(size_only, "a size-only rule would report this mismatch as empty")
+
+    def test_NARROWED_a_fence_blind_probe_would_refuse_our_own_shipped_seed(self):
+        """Drop fence-awareness from the probe and day one breaks for every adopter."""
+        cl = show(SEED_CL)
+        blind = [ln for ln in cl.splitlines() if mod.LEDGERS["CHANGELOG.md"].content_probe
+                 and mod.LEDGERS["CHANGELOG.md"].content_probe.search(ln)]
+        self.assertGreater(len(blind), 0,
+                           "control: the seed DOES contain probe-shaped lines inside its fences")
+        self.assertEqual(probe_hits_of(cl, CL), [],
+                         "fence-aware, those same lines must be invisible")
+
+    def test_NARROWED_an_unanchored_probe_would_flag_dated_prose(self):
+        """`search(r'\\d{4}-\\d{2}-\\d{2}')` anywhere on the line is too loose.
+
+        Measured on the real population: the anchored form loses no detection (147/87/11/4 hits on
+        the four mismatched adopter ledgers) while dropping to 0 on ordinary dated prose.
+        """
+        prose = "For instance an entry dated 2026-01-15 sits above one dated 2026-01-14.\n"
+        self.assertRegex(prose, r"\d{4}-\d{2}-\d{2}", "control: the line does carry a date")
+        self.assertIsNone(mod.LEDGERS["CHANGELOG.md"].content_probe.search(prose),
+                          "an anchored probe must ignore prose that merely mentions a date")
 
 
 if __name__ == "__main__":
