@@ -47,7 +47,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.1.0"   # 1.1.0: GRAMMAR_MISMATCH — a grammar this tool cannot read
+TRIM_VERSION = "1.1.1"   # 1.1.0: GRAMMAR_MISMATCH — a grammar this tool cannot read
                          # is no longer reported as an empty file (UAT F1). New finding code and
                          # a new exit status on a distributed tool, so: minor, not patch.
 
@@ -68,7 +68,6 @@ REBASE_PREFIX = "../../"       # docs/archive/<shard>.md -> repo root is exactly
 # tells you your ledger grammar is wrong — and a budget set below 12,124 B would declare the seed
 # we ship to be unreadable. The two numbers may drift apart; nothing should couple them.
 SEED_PLAUSIBLE_MAX_BYTES = 64 * 1024
-SEED_SENTINEL = "METHODOLOGY-SEED-SENTINEL"   # the token both seeds carry until first real use
 
 
 # =============================================================================================
@@ -165,10 +164,11 @@ LEDGERS = {
         # 4 hits on the four mismatched adopter ledgers found by the UAT) while dropping to zero on
         # both shipped seeds and on dated prose.
         content_probe=re.compile(r"^(#{1,6} |\|).*\d{4}-\d{2}-\d{2}"),
-        # Quoted from this file's own seed comment: fresh "While this line is present AND there are
-        # no dated (### YYYY-MM-DD) entries below". Looser than record_start on purpose — an entry
-        # written in the WRONG grammar still counts as an entry, which is the whole point.
-        seed_negation=re.compile(r"^###\s+\d{4}-\d{2}-\d{2}"),
+        # No separate negation: for a HEADING-keyed ledger the probe already subsumes it. Every
+        # `### <date>` line is also `#{1,6} `-shaped and dated, so a negation here can never be the
+        # only signal that fires, and a clause no mutant can falsify is a comment shaped like a
+        # guard. HANDOFFS.md keeps one because its records are fences, where that is not true.
+        seed_negation=None,
     ),
     "HANDOFFS.md": LedgerSpec(
         basename="HANDOFFS.md",
@@ -1357,7 +1357,7 @@ def classify_empty(path, text, spec, result):
     lines = text.splitlines()
     size_bytes = len(text.encode("utf-8"))       # same source and unit as Trigger.size_bytes
     line_count = text.count("\n")                # same unit as evaluate_trigger's line_count
-    hits, negations, sentinel = [], 0, False
+    hits, negations = [], 0
     for i, s, inside, _info in fence_scan(lines):
         if inside:
             continue                             # a fenced example is documentation, not a record
@@ -1365,30 +1365,31 @@ def classify_empty(path, text, spec, result):
             hits.append((i + 1, s))
         if spec.seed_negation is not None and spec.seed_negation.match(s):
             negations += 1
-        if SEED_SENTINEL in s:
-            sentinel = True                      # fence-aware, like both signals beside it: a
-                                                 # documentation example QUOTING the token must
-                                                 # not be able to seal a ledger that has records
 
-    # The seed declares its own freshness, and both seeds state the rule as a CONJUNCTION: the
-    # token, AND nothing recorded below it. Presence alone is not enough — an adopter who never
-    # deleted the comment would otherwise buy permanent silence (one really does: church_growth's
-    # receipt ledger carries the token alongside the 19 receipts this grammar does parse — a
-    # fence-blind `grep -c '^```handoff'` says 20 there; one is a documentation example).
-    sealed = sentinel and negations == 0
-
-    # `negations` is EVIDENCE, not merely the second half of the seal. The seed's negation test is
-    # the seed's own answer to "has anything been recorded below?", so a file that answers yes and
-    # still parses to zero records is a mismatch by definition — and the first draft of this
-    # function computed that answer and then discarded it, which left a receipt ledger written as
-    # bare `session:` blocks (no dated headings for the probe to see) reporting NO_RECORDS at
-    # exit 0: F1 intact in the file this branch had just been widened to cover.
+    # `negations` is EVIDENCE, not bookkeeping. The seed's negation test is the seed's own answer to
+    # "has anything been recorded below?", so a file that answers yes and still parses to zero
+    # records is a mismatch by definition. The first draft computed that answer and discarded it,
+    # which left a receipt ledger of bare `session:` blocks — nothing for the probe to see —
+    # reporting NO_RECORDS at exit 0: F1 intact in the file this branch had just been widened to
+    # cover.
     evidence = bool(hits) or negations > 0
 
-    # The exemption covers the fuzzy evidence only. Size is not a heuristic, and a forgotten
-    # comment must not be able to silence a ledger that has visibly outgrown a seed.
-    if not (size_bytes > SEED_PLAUSIBLE_MAX_BYTES or line_count > READ_CAP_LINES
-            or (evidence and not sealed)):
+    # THERE IS DELIBERATELY NO SEED-SENTINEL EXEMPTION HERE, and it was tried.
+    # An earlier draft let a ledger still carrying METHODOLOGY-SEED-SENTINEL suppress the probe, on
+    # the theory that a seed documenting example dates should not be accused of being broken. It
+    # reopened F1 on the exact shape F1 names: a 6,150 B ledger with 120 real table-row entries and
+    # the sentinel left in place answered `[NO_RECORDS]` at exit 0, because table rows do not match
+    # the `^###` negation, so the seal held while 121 probe hits were thrown away. The seal's
+    # negation test was narrower than the evidence it was suppressing — and a seal you can hold open
+    # by choosing a record shape is worse than no seal, because F1's whole lesson is that silence is
+    # the failure mode that costs the most.
+    # The seeds are protected by the probe being ANCHORED instead: both ship with zero hits, which
+    # `TestGrammarMismatchFixtureControls` pins, so a seed edit that would flag every adopter fails
+    # in OUR suite rather than at their root. That is the right place to catch it. The accepted cost
+    # is stated rather than hidden: an adopter who adds a dated `##` heading or a dated table row to
+    # their own front matter, while holding no records, gets a loud false refusal. Loud and wrong is
+    # recoverable; quiet and wrong is what this whole finding is about.
+    if not (size_bytes > SEED_PLAUSIBLE_MAX_BYTES or line_count > READ_CAP_LINES or evidence):
         result.add("NO_RECORDS",
                    "%s holds zero records under its declared grammar — nothing to archive. (A "
                    "freshly seeded ledger looks exactly like this, and must not be trimmed.)"

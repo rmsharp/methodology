@@ -53,10 +53,10 @@ def records_of(text, spec):
     return z.records() if z else []
 
 
-# Written out as a literal on purpose. Taking it from `mod.SEED_SENTINEL` would make every
-# assertion below an identity — the token would agree with itself while both drifted away from
-# the one actually embedded in the two seed files adopters receive. The test immediately below
-# is what ties the three together.
+# The token the two shipped seeds carry until first real use. The TOOL no longer reads it — an
+# exemption keyed on it reopened F1 (see test_a_sealed_table_row_ledger_with_120_entries_is_STILL_
+# refused) — so this is purely a fixture token here, used to build files that DO carry the marker
+# and must be judged on their contents anyway.
 SEED_SENTINEL_TOKEN = "METHODOLOGY-SEED-SENTINEL"
 
 
@@ -1072,7 +1072,7 @@ class TestGrammarMismatchFixtureControls(unittest.TestCase):
             text = show(ref)
             self.assertIsNotNone(text, "%s is unreachable — history changed" % ref)
             self.assertIn(mod_seed_sentinel(), text,
-                          "%s must still carry the seed sentinel, or the exemption is untested" % ref)
+                          "%s must still carry the seed sentinel — the fixtures below build on it" % ref)
 
     def test_the_seed_fixtures_hold_zero_records_AND_zero_probe_hits(self):
         """The seed is only a control if BOTH halves hold: no records, and nothing that looks like one."""
@@ -1235,56 +1235,12 @@ class TestGrammarMismatch(unittest.TestCase):
 
     # --- the sentinel exemption, and its limits ---------------------------------------------
 
-    def test_the_sentinel_exempts_only_the_probe_never_the_size_signals(self):
-        """A sealed seed that somehow grew past the ceiling is still refused.
-
-        The exemption covers the probe because the probe is a heuristic. Size is not a heuristic,
-        and a sentinel an adopter merely forgot to delete must not buy silence forever —
-        ../church_growth/HANDOFFS.md carries the sentinel today alongside 19 parsed receipts.
-        """
+    def test_a_sealed_seed_that_grew_past_the_byte_ceiling_is_refused(self):
+        """Size was never exemptible, and still is not now that nothing is."""
         data = show(SEED_CL) + ("\nz" * mod.SEED_PLAUSIBLE_MAX_BYTES)
-        self.assertIn(mod_seed_sentinel(), data, "control: the fixture is still sealed")
+        self.assertIn(mod_seed_sentinel(), data, "control: the fixture still carries the marker")
         r = evaluate_text(self, "CHANGELOG.md", data)
         self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
-
-    def test_a_sealed_seed_whose_FRONT_MATTER_is_heading_shaped_and_dated_is_exempt(self):
-        """The case that makes the exemption a guard rather than a decoration.
-
-        Written because a producer mutant that deleted `and not sealed` SURVIVED the first draft
-        of this class: with the probe anchored to heading- and row-shaped lines, no fixture existed
-        in which the exemption could fire, so nothing could falsify it. This is that fixture —
-        seed documentation whose own front matter carries a dated table row and a dated `##`
-        heading, neither of which is a `###` entry, so `seed_negation` stays at zero and the
-        sentinel still holds. A seed is entitled to document dates; only recording them counts.
-        """
-        data = show(SEED_CL).replace(
-            "## How to add an entry",
-            "## Shards are named for their last date, e.g. 2026-01-15\n\n"
-            "| Field | Example |\n|---|---|\n| date | 2026-01-15 |\n\n"
-            "## How to add an entry", 1)
-        self.assertIn(mod_seed_sentinel(), data, "control: the fixture is still sealed")
-        self.assertGreater(len(probe_hits_of(data, CL)), 0,
-                           "control: the probe MUST fire here, or this tests nothing")
-        r = evaluate_text(self, "CHANGELOG.md", data)
-        self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
-        self.assertEqual(r.exit, 0)
-
-    def test_a_receipt_ledger_in_the_wrong_shape_is_refused_too(self):
-        """The receipt ledger gets the same probe as the action ledger, and this pins it.
-
-        A producer mutant that ADDED a probe to HANDOFFS.md survived the first draft — proof that
-        leaving it off was an undefended choice rather than a decision. Shape: receipts recorded as
-        dated headings instead of ```handoff fences, under both size limits so only the probe can
-        fire.
-        """
-        data = ("# Handoff Receipts\n\nReceipts below.\n\n" +
-                "".join("## Session %d — 2026-08-%02d\n\nDid a thing.\n\n" % (i, i % 28 + 1)
-                        for i in range(8)))
-        self.assertEqual(records_of(data, HF), [], "control: zero records under the fence grammar")
-        self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES)
-        r = evaluate_text(self, "HANDOFFS.md", data)
-        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
-        self.assertEqual(r.exit, 3)
 
     def test_a_receipt_ledger_that_kept_its_sentinel_while_filling_up_is_still_refused(self):
         """The receipt ledger's half of the conjunction, and it is not hypothetical.

@@ -172,6 +172,20 @@ plus pre-commit/CI wiring. The two axes coincided four sessions running (S38, S4
 - **Not taken (FM #17):** F3, F6, F7, F8, F9 stay open; no `FRAMEWORK_LEARNINGS.md` row (it changes
   what adopters receive and is the operator's call); no ledger archiving; no `.gitignore` fix for
   `dashboard_history.jsonl`; no outward-facing action. **S34's PR remains prepared and unopened.**
+- **A follow-up commit removed the seed-sentinel exemption entirely, because it reopened F1.** The
+  first draft let a ledger still carrying `METHODOLOGY-SEED-SENTINEL` suppress the probe. Table rows
+  do not match the `^###` negation, so the seal held while 121 probe hits were discarded, and a
+  **6,150 B ledger holding 120 real table-row entries — `wsfct`'s exact shape, under both size
+  limits — answered `[NO_RECORDS]` at exit 0.** F1 reopened by its own fix, found by the diff review
+  and reproduced before being believed. **A seal you can hold open by choosing a record shape is
+  worse than no seal.** The seeds are protected instead by the probe being *anchored* — both ship
+  with zero hits, pinned by a fixture control, so a seed edit that would flag every adopter fails in
+  our suite rather than at their root. The accepted cost is stated in the code: an adopter with a
+  dated `##` heading in their own front matter and no records gets a loud false refusal. Loud and
+  wrong is recoverable; quiet and wrong is the finding. `CHANGELOG.md`'s `seed_negation` went to
+  `None` in the same pass — for a heading-keyed ledger the probe strictly subsumes it, so it could
+  never be the only signal firing, and an unfalsifiable clause is a comment shaped like a guard.
+  `TRIM_VERSION` **1.1.0 → 1.1.1**; final harness **20 mutants, 20 killed, 0 survived, 0 skipped**.
 - **Incident, disclosed:** a design-review subagent wrote a probe sentence into the **distributed**
   seed `starter-kit/CHANGELOG.md` and left it uncommitted. Caught at the next `git status`, reverted
   (`git checkout --`), and the tree re-verified clean before any commit. The second review workflow

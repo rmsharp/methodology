@@ -291,8 +291,8 @@ print('README.md' in [d for _,d,_ in m.DISTRIBUTION])"      # False
 | What lands in your repo | Files | Bytes |
 |---|---|---|
 | Markdown corpus | 22 | 487,269 |
-| The two executables (`methodology_dashboard.py`, `methodology_trim.py`) | 2 | 279,552 |
-| **Total installed** | **24** | **766,821** |
+| The two executables (`methodology_dashboard.py`, `methodology_trim.py`) | 2 | 279,783 |
+| **Total installed** | **24** | **767,052** |
 | …of which **seeds**: yours from day one, never overwritten by an update | 4 | 23,804 |
 
 Thirteen of the twenty-four land at your repository root; the other eleven under `docs/methodology/`.
