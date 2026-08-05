@@ -186,6 +186,17 @@ plus pre-commit/CI wiring. The two axes coincided four sessions running (S38, S4
   `None` in the same pass — for a heading-keyed ledger the probe strictly subsumes it, so it could
   never be the only signal firing, and an unfalsifiable clause is a comment shaped like a guard.
   `TRIM_VERSION` **1.1.0 → 1.1.1**; final harness **20 mutants, 20 killed, 0 survived, 0 skipped**.
+- **A third pass cleared the rest of the diff review** (31 findings filed, 17 survived refutation;
+  most were the two above, caught mid-flight). Four were real and outstanding. The one that mattered
+  is a **factual error in a distributed file**: the `content_probe` comment credited *"the four
+  mismatched adopter ledgers found by the UAT"* — the UAT examined six repositories and found **two**
+  (`model_project_constructor`, `wsfct`); the other two were found while building this fix and are
+  not part of that audit. Corrected, with a sentence telling the next reader not to re-merge them.
+  Also: the refusal message printed *"0 line(s) matching this ledger's own freshness test"* for a
+  ledger that declares none — now omitted unless one is declared; a behavioural test for the
+  `HANDOFFS.md` probe had been lost in an edit, leaving that mutant killable only by another test's
+  fixture control (coverage by accident) and is restored with its own negation-is-silent control; and
+  a citation to a test name wrapped across two comment lines, so grepping for it found nothing.
 - **Incident, disclosed:** a design-review subagent wrote a probe sentence into the **distributed**
   seed `starter-kit/CHANGELOG.md` and left it uncommitted. Caught at the next `git status`, reverted
   (`git checkout --`), and the tree re-verified clean before any commit. The second review workflow

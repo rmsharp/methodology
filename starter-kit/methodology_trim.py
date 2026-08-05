@@ -160,9 +160,10 @@ LEDGERS = {
         # Evidence that entries EXIST in a grammar this config cannot read. Anchored to a line
         # that could plausibly BE a record — an ATX heading or a table row — not to "a date
         # somewhere on the line", which also matches ordinary front-matter prose describing dates.
-        # Measured over the real population: the anchored form loses no detection (147 / 87 / 11 /
-        # 4 hits on the four mismatched adopter ledgers found by the UAT) while dropping to zero on
-        # both shipped seeds and on dated prose.
+        # Measured over the real population: the anchored form loses no detection — 147 and 87 hits
+        # on the two ledgers the UAT named, and 11 and 4 on two more found while building this fix
+        # and NOT part of that audit — while dropping to zero on both shipped seeds and on dated
+        # prose. Do not re-attribute all four to the UAT; it examined six repositories, not eight.
         content_probe=re.compile(r"^(#{1,6} |\|).*\d{4}-\d{2}-\d{2}"),
         # No separate negation: for a HEADING-keyed ledger the probe already subsumes it. Every
         # `### <date>` line is also `#{1,6} `-shaped and dated, so a negation here can never be the
@@ -1406,7 +1407,7 @@ def classify_empty(path, text, spec, result):
         "%s holds %s B on %s line(s) and NOT ONE record the declared grammar can read. This is a "
         "file this tool cannot parse, not a file with nothing in it — %s. Refusing rather than "
         "reporting an absence.\n  Declared record start (%s): %s\n  Lines matching the looser "
-        "content probe: %d (and %d line(s) matching this ledger's own freshness test)%s\n  Fix the config entry for this file, or bring the ledger to the "
+        "content probe: %d%s%s\n  Fix the config entry for this file, or bring the ledger to the "
         "declared grammar. Do not trim until one of those is true."
         % (spec.basename, "{:,}".format(size_bytes), "{:,}".format(line_count),
            "records are visibly present in another shape" if hits else
@@ -1414,7 +1415,10 @@ def classify_empty(path, text, spec, result):
             if negations else "a freshly seeded ledger is small, and this is not"),
            spec.record_kind,
            spec.record_start.pattern if spec.record_start else "```%s" % spec.fence_info,
-           len(hits), negations, where),
+           len(hits),
+           ("" if spec.seed_negation is None else
+            " (and %d line(s) matching this ledger's own freshness test)" % negations),
+           where),
         exit_code=3,
     )
     return result

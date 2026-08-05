@@ -54,14 +54,22 @@ def records_of(text, spec):
 
 
 # The token the two shipped seeds carry until first real use. The TOOL no longer reads it — an
-# exemption keyed on it reopened F1 (see test_a_sealed_table_row_ledger_with_120_entries_is_STILL_
-# refused) — so this is purely a fixture token here, used to build files that DO carry the marker
-# and must be judged on their contents anyway.
+# exemption keyed on it reopened F1 — see the 120-entry sealed-table-row test below — so this is
+# purely a fixture token here, used to build files that DO carry the marker and must be judged on
+# their contents anyway.
 SEED_SENTINEL_TOKEN = "METHODOLOGY-SEED-SENTINEL"
 
 
 def mod_seed_sentinel():
     return SEED_SENTINEL_TOKEN
+
+
+def negations_of(text, spec):
+    """Fence-aware count for the spec's seed negation. 0 when none is declared."""
+    if spec.seed_negation is None:
+        return 0
+    return sum(1 for i, s, inside, _ in mod.fence_scan(text.splitlines())
+               if not inside and spec.seed_negation.match(s))
 
 
 def probe_hits_of(text, spec):
@@ -1258,6 +1266,27 @@ class TestGrammarMismatch(unittest.TestCase):
         self.assertIn(mod_seed_sentinel(), data, "control: the sentinel really is present")
         self.assertEqual(records_of(data, HF), [], "control: zero records under the fence grammar")
         self.assertGreater(len(probe_hits_of(data, HF)), 0, "control: the probe must fire")
+        r = evaluate_text(self, "HANDOFFS.md", data)
+        self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
+        self.assertEqual(r.exit, 3)
+
+    def test_a_receipt_ledger_in_the_wrong_shape_is_refused_by_the_probe(self):
+        """The receipt ledger's PROBE, exercised behaviourally rather than by a fixture control.
+
+        An earlier revision of this class lost this test in an edit, leaving `drop HANDOFFS probe`
+        killable only by another test's control assertion — coverage by accident. Shape: receipts as
+        dated headings instead of ```handoff fences, with NO out-of-fence `session:` lines, so the
+        negation is silent and only the probe can fire. No sentinel, so nothing else is in play.
+        """
+        data = ("# Handoff Receipts\n\nReceipts below.\n\n" +
+                "".join("## Session %d — 2026-08-%02d\n\nDid a thing.\n\n" % (i, i % 28 + 1)
+                        for i in range(8)))
+        self.assertEqual(records_of(data, HF), [], "control: zero records under the fence grammar")
+        self.assertEqual(negations_of(data, HF), 0,
+                         "control: the NEGATION must be silent, or this tests the wrong signal")
+        self.assertGreater(len(probe_hits_of(data, HF)), 0, "control: the probe is the live signal")
+        self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES)
+        self.assertLess(len(data.splitlines()), mod.READ_CAP_LINES)
         r = evaluate_text(self, "HANDOFFS.md", data)
         self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
         self.assertEqual(r.exit, 3)
