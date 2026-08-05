@@ -114,6 +114,43 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] Reconcile-on-read: S44's `commit:` field → `6f28d59` — seventeenth discharge, and a receipt whose own figure rotted behind it
+
+**Model:** Claude Opus 5 (1M context).
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`99f9a6f`, `75bc44b`, `e23d595`, `ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`,
+`0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
+
+- **What was reconciled.** S44 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`6f28d59`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**126** commits, all refs) and reading each
+  blob's S44 block. Unlike S43 the derivation returned **exactly one** answer, so the ambiguity that
+  entry had to adjudicate does not arise here. The claim stub `5166ccd` carries the same block at
+  `status: pending`, so the stub/close-out split holds for a **seventeenth** consecutive receipt
+  (S29's gotcha 3).
+- **The ordinal is derived, not incremented on faith.**
+  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returned **17** in the live file and **0** in both archive shards immediately before this entry was
+  prepended — and one of those seventeen is the `nine commit: fields that named no sha` **repair**,
+  not a discharge. Sixteen numbered discharges precede this one, so this is the **seventeenth**.
+- **Three commits landed after S44's receipt shipped, and the receipt does not describe them.**
+  `8fcb532`, `79550ec` and `391d882` all followed `6f28d59`. Every one is recorded in this ledger
+  (the S44 correction entry directly below), so no action is unlogged and no backfill is owed — but
+  the receipt's `runtime_smoke` line publishes `python3 -m unittest discover -s tools` as **360 OK**
+  and the tree returns **359**. Traced rather than guessed: `b215c0a` 334 → `6f28d59` 360 →
+  `8fcb532` 358 → `79550ec` 359. The −2 is `8fcb532` deleting the seed-sentinel exemption together
+  with the two tests that covered it, which is correct; the +1 is `79550ec` restoring one that had
+  been lost with them. **The code is right and the receipt is stale**, which is S44's own gotcha (2)
+  — *a figure derived from a file this session is still editing must be measured after the last edit*
+  — landing on S44's own receipt one commit after it was written. The `commit:` slot now carries the
+  correction so the next reader does not re-derive it.
+- **Taken BEFORE the claim.** Nothing else was staged when this was committed. `CHANGELOG.md`'s
+  frontier was `391d882` — HEAD — and `git rev-list --count --no-merges 391d882..HEAD` was **0**: no
+  ghost session, no backfill owed. The working tree was clean apart from the untracked
+  `dashboard_history.jsonl` that is finding **F9**, still uncommitted, still uncovered by
+  `.gitignore`, and still not fixed here (FM #17). The mandated Phase 0 step-5 dashboard run was
+  taken through the scratchpad symlink harness (S43's gotcha 4) so it would not write a second one.
+
 ### 2026-08-04 · [ad hoc] S44 correction — "reopened F1" was wrong; it was a shape the fix never covered
 
 **Model:** Claude Opus 5 (1M context).
