@@ -114,6 +114,35 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] S45 — the archive is refused, the rate is the target, and the deliverable was not built
+
+**Model:** Claude Opus 5 (1M context). *Deliberately written in the compact form this session was
+arguing for: a verbosity finding published in 3,000 bytes would refute itself.*
+
+- **Change:** nothing in the repo behaves differently. The assigned deliverable — archive
+  `CHANGELOG.md` — was **withdrawn by the operator** (*"trimming is maintenance, not a deliverable"*)
+  and is **independently refused by the trimmer**: `SRF_RED` 2.2983, re-derived from raw git object
+  sizes, against the verbatim rule at `framework-context-cost-plan.md:265-267` — *"RED: do not
+  archive again; the next deliverable is a rate cut, not another reset."* Its replacement — *reduce
+  verbosity without loss of precision* — was claimed and **not built**: the session stopped at 99% of
+  the operator's weekly allotment before any compaction was written.
+- **What survives:** the measurement. Level control cannot work here — the 2,000-line cap holds
+  **2.79 days** of output, so the deepest legal cut buys ~2.3 days. The accelerant is **cadence**
+  (entries/day +41.9%, bytes/entry −3.5%), but the **level** gap is verbosity: 3,931 B/entry against
+  the seed's own 297 B examples (**13.2×**), and 108 lines/session against the ~10 a 30-day horizon
+  allows (**10.8×**) — so verbosity alone spans the target, refuting the investigation's own
+  conclusion that it could not. The 18 `Reconcile-on-read` entries are **556 lines / 46,153 B**;
+  compacting that one class lands the file at ~1,567 lines, under the cap, with no archive and no
+  history moved.
+- **Two defects found, both unfixed:** the front matter's published headroom command (`:92-101`)
+  prints **"0 entries of headroom"** where both tools compute **−1** (POSIX `$(( ))` truncates toward
+  zero); and `'^## Size, and when to archive'` is present in both distributed seeds and **absent from
+  both of this repo's own ledgers**.
+- **Commit/PR:** `b0934ce` (reconcile) → `332471b` (claim) → this commit. No PR; nothing outward-facing.
+- **Session:** S45 · **Verified:** `bin/tests.sh` 182/1 (Test 9's expected upstream 404, unchanged),
+  `unittest discover -s tools` 359 OK, `check-links` OK 88/22, `check-handoff` OK. Trimmer run
+  **dry-run/`--check` only** — never `--write`, never `--force`, on any ledger in any repository.
+
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S44's `commit:` field → `6f28d59` — seventeenth discharge, and a receipt whose own figure rotted behind it
 
 **Model:** Claude Opus 5 (1M context).
