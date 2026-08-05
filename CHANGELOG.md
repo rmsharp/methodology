@@ -114,6 +114,39 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-04 · [ad hoc] S44 correction — "reopened F1" was wrong; it was a shape the fix never covered
+
+**Model:** Claude Opus 5 (1M context).
+**Operator-caught.** Commit `8fcb532`'s message and this ledger's S44 entry both said the
+seed-sentinel exemption *"reopened F1"* and that F1 was *"reopened by its own fix"*. **Both halves are
+false**, and the operator called it: *"Do you realize that 'My fix reintroduced the bug it fixed' is
+complete nonsense?"*
+
+- **Measured, not argued.** The pre-S44 trimmer (`git show b215c0a:starter-kit/methodology_trim.py`)
+  was run against the identical 6,150 B / 120-entry sealed table-row fixture and returned
+  **byte-identical output: `[NO_RECORDS]`, exit 0.** That shape was never correct at any point in
+  this repository's history.
+- **So "reintroduced" is wrong** — it names a *regression*, a case that worked and stopped. Nothing
+  stopped working; there was no interval in which that case passed. And **"the bug it fixed" is
+  wrong** — `6f28d59` did fix F1 for the two ledgers F1 names, both of which are over the byte
+  ceiling and refuse on the size signal whether the exemption exists or not.
+- **What actually happened:** the fix **shrank the defect's domain without eliminating it**, and the
+  guard it added was the reason one shape stayed uncovered. That is **incomplete coverage**, not a
+  regression.
+- **Why the wording is not cosmetic.** The two words send a maintainer to different questions.
+  *Regression* asks "what changed?" — and here nothing did. *Incomplete coverage* asks "which record
+  shapes did we enumerate, and which did we not?" — which is the question that actually finds the
+  next instance. A distributed code comment that sends the reader to the wrong question is a defect
+  in the comment.
+- **Corrected in place:** `starter-kit/methodology_trim.py` (the distributed comment a future
+  maintainer acts on), `tools/test_methodology_trim.py` (two comments), and the S44 entry below,
+  which now carries a pointer here. Commit `8fcb532`'s message is immutable and stays wrong; this
+  entry is its correction of record.
+- **This is the second self-accusation in two sessions that did not survive checking.** S43 committed
+  a false one about a lifted constraint (finding **F12**); this one was inflated rather than
+  fabricated, but it is the same failure to check a claim about my own conduct before writing it
+  down. **A statement about your own error is a claim, and carries the same burden as any other.**
+
 ### 2026-08-04 · [ad hoc] S44 — UAT F1: a grammar the trimmer cannot read is no longer reported as an empty file
 
 **Model:** Claude Opus 5 (1M context).
@@ -172,12 +205,14 @@ plus pre-commit/CI wiring. The two axes coincided four sessions running (S38, S4
 - **Not taken (FM #17):** F3, F6, F7, F8, F9 stay open; no `FRAMEWORK_LEARNINGS.md` row (it changes
   what adopters receive and is the operator's call); no ledger archiving; no `.gitignore` fix for
   `dashboard_history.jsonl`; no outward-facing action. **S34's PR remains prepared and unopened.**
-- **A follow-up commit removed the seed-sentinel exemption entirely, because it reopened F1.** The
+- **A follow-up commit removed the seed-sentinel exemption entirely, because it left one shape of F1
+  uncovered** — *not* "reopened", which this entry originally said and which is false; see the
+  correction entry above. The
   first draft let a ledger still carrying `METHODOLOGY-SEED-SENTINEL` suppress the probe. Table rows
   do not match the `^###` negation, so the seal held while 121 probe hits were discarded, and a
   **6,150 B ledger holding 120 real table-row entries — `wsfct`'s exact shape, under both size
-  limits — answered `[NO_RECORDS]` at exit 0.** F1 reopened by its own fix, found by the diff review
-  and reproduced before being believed. **A seal you can hold open by choosing a record shape is
+  limits — answered `[NO_RECORDS]` at exit 0**, exactly as it had before S44 existed. Found by the
+  diff review and reproduced before being believed. **A seal you can hold open by choosing a record shape is
   worse than no seal.** The seeds are protected instead by the probe being *anchored* — both ship
   with zero hits, pinned by a fixture control, so a seed edit that would flag every adopter fails in
   our suite rather than at their root. The accepted cost is stated in the code: an adopter with a

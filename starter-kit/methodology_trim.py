@@ -1378,12 +1378,14 @@ def classify_empty(path, text, spec, result):
     # THERE IS DELIBERATELY NO SEED-SENTINEL EXEMPTION HERE, and it was tried.
     # An earlier draft let a ledger still carrying METHODOLOGY-SEED-SENTINEL suppress the probe, on
     # the theory that a seed documenting example dates should not be accused of being broken. It
-    # reopened F1 on the exact shape F1 names: a 6,150 B ledger with 120 real table-row entries and
-    # the sentinel left in place answered `[NO_RECORDS]` at exit 0, because table rows do not match
-    # the `^###` negation, so the seal held while 121 probe hits were thrown away. The seal's
-    # negation test was narrower than the evidence it was suppressing — and a seal you can hold open
-    # by choosing a record shape is worse than no seal, because F1's whole lesson is that silence is
-    # the failure mode that costs the most.
+    # left one shape of F1 uncovered — NOT a regression, and the difference matters to whoever reads
+    # this next. A 6,150 B ledger with 120 real table-row entries and the sentinel left in place
+    # answered `[NO_RECORDS]` at exit 0, because table rows do not match the `^###` negation, so the
+    # seal held while 121 probe hits were thrown away. That case behaved identically BEFORE any of
+    # this existed; it was never correct, so nothing was re-broken. The defect was a guard whose
+    # negation test was narrower than the evidence it suppressed — which is a question about which
+    # record shapes were enumerated, not about what changed. A seal you can hold open by choosing a
+    # record shape is worse than no seal, because F1's lesson is that silence costs the most.
     # The seeds are protected by the probe being ANCHORED instead: both ship with zero hits, which
     # `TestGrammarMismatchFixtureControls` pins, so a seed edit that would flag every adopter fails
     # in OUR suite rather than at their root. That is the right place to catch it. The accepted cost

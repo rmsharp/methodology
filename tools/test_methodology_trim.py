@@ -54,7 +54,8 @@ def records_of(text, spec):
 
 
 # The token the two shipped seeds carry until first real use. The TOOL no longer reads it — an
-# exemption keyed on it reopened F1 — see the 120-entry sealed-table-row test below — so this is
+# exemption keyed on it left one shape of F1 uncovered — see the 120-entry sealed-table-row test
+# below — so this is
 # purely a fixture token here, used to build files that DO carry the marker and must be judged on
 # their contents anyway.
 SEED_SENTINEL_TOKEN = "METHODOLOGY-SEED-SENTINEL"
