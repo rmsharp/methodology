@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S51
+date: 2026-08-08
+status: pending
+active_task: Operator-directed, following up on BL-24's closed read-only re-run — the operator explicitly asked for an actual live `bin/sync` (write mode, no `--dry-run`) against `mts-system`, then verification that the sync applied cleanly. Explicit go-ahead given via a direct clarifying-question answer ("An actual live sync/write test") after I flagged this touches the adopter repo and would need one. Scope confirmed at claim via `bin/sync --dry-run ../mts-system`: 9 methodology/tooling files would be created or updated (`SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`, `RECOMMENDED_SKILLS.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`, `methodology_trim.py`, `docs/methodology/ITERATIVE_METHODOLOGY.md`, `docs/methodology/HOW_TO_USE.md`, plus `DEVELOPMENT_WORKSTREAM.md`/`AUDIT_WORKSTREAM.md`); the four seeds (`SESSION_NOTES.md`/`CHANGELOG.md`/`HANDOFFS.md`/`ROADMAP.md`) are left as-is per design. Zero touches to any application code (`mts-backend`, `mts-web`, `mts-admin`, `MTSApp`, `mts-android`, `nginx*`, docker-compose, `.env`). Plan: run the real sync, verify the resulting diff matches the dry-run prediction exactly, sanity-check the two synced Python tools run, leave the result **uncommitted** in `mts-system` for the operator/adopter to review rather than committing on their behalf.
+```
+
+---
+
+```handoff
 session: S50
 date: 2026-08-08
 status: complete
