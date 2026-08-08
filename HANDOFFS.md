@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S47
+date: 2026-08-08
+status: pending
+active_task: Operator-directed review — does open upstream issue #65 (Learnings-table + HANDOFFS.md receipt-ledger structural tests, https://github.com/KJ5HST/methodology/issues/65) collide with fork-side work prepared/planned for an upstream PR? Primary suspect identified at claim: S34's Learnings-table extraction (`starter-kit/SESSION_RUNNER.md` → `starter-kit/FRAMEWORK_LEARNINGS.md`, `ed22ace`) is DONE fork-side, awaiting a go-ahead to open as a PR (per its own receipt, `HANDOFFS.md` S34 block) — and issue #65's Evidence A anchors on `starter-kit/SESSION_RUNNER.md`'s `## Learnings (added by sessions)` heading, which S34 itself already flagged as an open tension at claim time. Also checking `docs/planning/BACKLOG.md`'s other "runnable now up to the PR" items (BL-12's first bullet, BL-13, BL-14's distributed half, BL-17's distributed half, BL-20, BL-21) and the two unpushed branches (`docs/bl-10-dangling-learning-citations`, `docs/learning-13-handoff-predictions`) for the same kind of collision. Deliverable: one written review document (docs/planning/). No code changes to ship this session; no outward-facing action (`gh` read-only).
+```
+
+---
+
+```handoff
 session: S46
 date: 2026-08-08
 status: complete
