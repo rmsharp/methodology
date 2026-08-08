@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S50
+date: 2026-08-08
+status: pending
+active_task: Operator-directed — BL-24's queued focused UAT re-run against `mts-system` (`docs/planning/BACKLOG.md`): re-derive F6 (D3, dashboard methodology compliance), F7 (D4, `check-handoff` all-numeric-sha false positive), F9 (D4, `dashboard_history.jsonl` tracked/ignored state), F10 (D4, Phase 0 reconcile debt), and F11 (D4, `HANDOFFS.md` presence) against `mts-system`'s current state. F1/F3/F4/F8/F12 are out of scope per BL-24's own framing (D1/D2/D4 items that don't key on this repo, or already confirmed elsewhere). Read-only throughout (`git status`, `bin/sync --dry-run`, `bin/status`, `bin/check-handoff`, direct `git`/grep queries against `../mts-system`); no writes to the adopter repo, no outward-facing action, no sync without a separate operator go-ahead. Pre-condition verified at claim: `mts-system` re-checked live — `git status --porcelain` 0 dirty paths, `bin/sync --dry-run` exit 0/unblocked, both unchanged from S49's snapshot ~4 hours ago.
+```
+
+---
+
+```handoff
 session: S49
 date: 2026-08-08
 status: complete
