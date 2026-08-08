@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S52
+date: 2026-08-08
+status: pending
+active_task: Operator-directed follow-up resolving S51's own open `next_steps` question — commit the `bin/sync` diff S51 left uncommitted in `mts-system`. Executed directly (`git commit` in `../mts-system`, commit `1c8ec7b`) **before** this claim was written — a process gap I am correcting now rather than leaving unrecorded: the action should have been claimed here first, per Phase 1B, even though it produced no commit in this repo's own tree. Recording it now so this repo's own ledger reflects the action, matching FM #27's "any non-commit action... not recording it is failure mode #27" framing (a commit in another repo is exactly that kind of action from this repo's perspective).
+```
+
+---
+
+```handoff
 session: S51
 date: 2026-08-08
 status: complete
