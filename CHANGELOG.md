@@ -144,6 +144,55 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Live `bin/sync` write test against `mts-system` — 9 methodology files updated, zero application-code touches
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed, following BL-24's read-only re-run. The operator explicitly asked for
+  an actual live sync (write mode, not `--dry-run`) against `mts-system`, given after this session
+  flagged that it touches the adopter repo and needs a separate go-ahead beyond the read-only UAT
+  work — the standing rule (BL-12's second bullet and others) held; this is the explicit ask it
+  requires, not an inference from it.
+- **What ran:** `python3 bin/sync ../mts-system` (no `--dry-run`, no `--force` — none was needed, no
+  file showed local modifications). Result matched the pre-verified dry-run exactly: 7 files updated
+  (`SESSION_RUNNER.md`, `RECOMMENDED_SKILLS.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`,
+  `methodology_dashboard.py`, `docs/methodology/ITERATIVE_METHODOLOGY.md`,
+  `docs/methodology/HOW_TO_USE.md`, `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`,
+  `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` — 9 total), 2 created
+  (`FRAMEWORK_LEARNINGS.md`, `methodology_trim.py`). The 4 seeds (`SESSION_NOTES.md`/`CHANGELOG.md`/
+  `HANDOFFS.md`/`ROADMAP.md`) were left as-is by design.
+- **Verified zero application-code touch:** `git status --porcelain` scoped explicitly to
+  `mts-backend`, `mts-web`, `mts-admin`, `MTSApp`, `mts-android`, `nginx*`, all docker-compose files,
+  and `.env*` inside `mts-system` — empty output, confirming the sync's blast radius matched its
+  advertised scope exactly.
+- **Verified the sync itself works:** re-ran `bin/status ../mts-system` — all 20 tracked/seed rows
+  now read `current` (was 3 versions-behind + 2 missing before). Ran `methodology_dashboard.py --help`
+  and `methodology_trim.py --help` inside `mts-system` — both exit 0, correct usage text.
+  `FRAMEWORK_LEARNINGS.md` reads as well-formed markdown (41 lines, real content, not truncated).
+  Did **not** run `mts-system`'s own application test suites (`mts-backend`/`mts-web`/`mts-admin`) —
+  out of scope: none of those paths were touched, and exercising them would need docker/staging
+  infrastructure and secrets unrelated to what this sync changed.
+- **Left uncommitted in `mts-system`** — this session made no commit in the adopter repo. The diff
+  is sitting in `mts-system`'s working tree for the operator (or a future `mts-system` session,
+  under its own protocol) to review and commit.
+- **Self-caught process gap:** claiming S51 without first reconciling S50's own `commit: pending`
+  field (the same Phase 0 step every prior session transition had performed) regressed
+  `bin/tests.sh` from 185/1 to 184/2 — caught immediately by the suite's own live-ledger check (L1),
+  fixed same session (see the reconcile entry below), confirmed back to 185/1 before this entry
+  was written.
+- **Session:** S51 · **Verified:** `bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream
+  404, unchanged baseline — confirmed only after the self-caught gap above was fixed),
+  `bin/check-links` OK (unchanged), `bin/check-handoff --allow-pending` OK.
+
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S50's `commit:` field → `c1610bf` — twenty-third discharge, caught mid-session by `bin/tests.sh`, not deferred to next Orient
+
+**Model:** Claude Sonnet 5.
+Reconciled `c1610bf` (claim stub `c317f13`) — twenty-third discharge. Unlike every prior instance,
+this one was not caught at the next session's Phase 0: S51 claimed immediately after S50's close-out
+in the same conversation without an intervening Orient, so the gap slipped through claim. `bin/tests.sh`'s
+own live-ledger check (Test L1) caught it before this session's close-out, regressing the suite from
+185/1 to 184/2 until fixed. Single-answer derivation; both ledger frontiers agree at `c1610bf`, HEAD.
+
 ### 2026-08-08 · [BL-24] Closed: focused `mts-system` UAT re-run — F9 confirmed resolved, F10 improved to zero, F6/F7 unchanged
 
 **Model:** Claude Sonnet 5.
