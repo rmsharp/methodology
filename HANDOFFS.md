@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S49
+date: 2026-08-08
+status: pending
+active_task: Operator-directed, arising from live conversational spot-checks of two of the six UAT adopter repos: (1) record that `mts-system` has cleared both blocking conditions the S48 UAT follow-up recorded it under (`git status --porcelain` now 0 dirty paths, was 2; `bin/sync --dry-run` still exit 0/unblocked, unchanged) — as a short addendum to `docs/planning/uat-2026-08-08-followup.md`, not a rewrite of its frozen findings; (2) live re-check `vscode_quarto_ext` against the same two conditions and record that result too; (3) queue a focused UAT re-run on `mts-system` for next session via a `docs/planning/BACKLOG.md` item. Read-only against both adopter repos throughout (`git status`, `bin/sync --dry-run`, `bin/status` only); no writes to either, no outward-facing action.
+```
+
+---
+
+```handoff
 session: S48
 date: 2026-08-08
 status: complete
