@@ -144,6 +144,35 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] BL-24 raised: `mts-system` cleared its UAT blocking conditions, `vscode_quarto_ext` partially cleared
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed, arising from live conversational spot-checks (not a scheduled UAT
+  sweep) of two of the six adopter repos S48 assessed earlier the same day.
+- **`mts-system`:** both conditions §6 of the S48 follow-up recorded it under are now clear —
+  `git status --porcelain` reads 0 dirty paths (was 2), `bin/sync --dry-run` remains unblocked
+  (exit 0, unchanged). Real, independent adopter-side activity: `mts-system`'s own internal session
+  (its "S95") closed out and cleaned the tree roughly 1.5 hours after S48's snapshot. Two bonus
+  observations, unprompted: F9 (`dashboard_history.jsonl`) looks independently resolved there too;
+  F2's dangerous `BOOTSTRAP.md:330` text is unchanged, byte-identical (closes only upstream).
+- **`vscode_quarto_ext`:** partially cleared — down to 1 dirty path (`?? scratchpad/`, an untracked
+  non-methodology scratch directory, not a modified-tracked-file conflict; was 3), and F9's
+  `dashboard_history.jsonl` is now committed cleanly (was permanently dirty). Recorded as a smaller,
+  different kind of dirtiness than S48 measured, not asserted as fully clean.
+- **Deliverable:** `docs/planning/uat-2026-08-08-followup.md` §7 (new addendum; S48's own §1-§6
+  findings frozen and unedited, matching this ledger's own dated-entry convention) plus a
+  forward-pointer at the doc's top; `docs/planning/BACKLOG.md` BL-24 (new, queues a focused
+  `mts-system` UAT re-run for next session, read-only) plus its header enumeration.
+- **Caught in the same pass:** `BACKLOG.md`'s own "11 `**BL-N —**` headings" claim had already
+  drifted to 13 before this session touched anything; corrected to the current true count (14, after
+  BL-24) rather than silently inheriting the stale number — the exact drift class Learning #12 names.
+- **Session:** S49 · **Verified:** `bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream
+  404, unchanged), `bin/check-links` OK 88/22 (unchanged — the one new link is canonical-only,
+  outside that checker's scope, verified directly with `test -f`), `bin/check-handoff --allow-pending`
+  OK. Zero writes to either adopter repo — read-only `git status` / `bin/sync --dry-run` / `bin/status`
+  only, confirmed by command exit codes and unmodified adopter trees.
+
 ### 2026-08-08 · [ad hoc] Reconcile-on-read: S48's `commit:` field → `cd0822b` — twenty-first discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.

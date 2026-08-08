@@ -7,6 +7,11 @@ This is fork-only. It lives in `docs/planning/` and reaches no adopter. Excludes
 the operator stated it is busy/currently off-limits (recorded in `CHANGELOG.md`); it was never one
 of the original six.
 
+> **Addendum 2026-08-08, later the same day (S49):** a conversational spot-check of two repos —
+> **§7 below**. `mts-system` has cleared both blocking conditions §6 recorded it under; `vscode_quarto_ext`
+> is partially clearer. Not a repeat of the full six-repo sweep — §1–§6 below stand as S48 wrote them
+> and are not edited in place; read §7 for what changed.
+
 **Method:** seven parallel read-only agents (one per repo, one for the dashboard) reproduced S43's
 own commands verbatim against the current state of `airqino`, `church_growth`,
 `model_project_constructor`, `mts-system`, `vscode_quarto_ext`, `wsfct`, reporting raw command
@@ -135,3 +140,59 @@ proves the *tool* is now safe to point at these ledgers in `--check` mode, not t
 The priority order S43 set (§6 there) is unchanged except F1 moving from "highest severity, cheapest
 fix" to done: **F3** (correct the `SESSION_NOTES.md` premise) is now the top open item; **F2/F5**
 still close only by merging upstream; **F4, F6, F7, F8, F9** remain bounded, independent, small.
+
+---
+
+## 7. Live spot-check addendum (S49, 2026-08-08, later the same day)
+
+**Mode:** read-only, conversational — two of the six repos re-checked because the operator asked
+about them directly, not a scheduled re-run. Same commands as §1/§5, run from this repo's root:
+`git status --porcelain` (inside the adopter repo), `python3 bin/sync --dry-run ../<repo>`,
+`python3 bin/status ../<repo>`.
+
+### `mts-system` — cleared both blocking conditions in §6
+
+| Check | S48 (14:00) | S49 (~15:30) |
+|---|---|---|
+| `git status --porcelain` | 2 dirty paths | **0 — clean** |
+| `bin/sync --dry-run` | exit 0 (never F4-blocked) | exit 0, unchanged |
+| `bin/status` "locally modified" | 0 | 0, unchanged |
+
+`mts-system`'s own commit log shows an internal session (its own "S95," commits timestamped
+15:22–15:27, about 1.5 hours after S48's snapshot) closed out and left the tree clean — independent
+adopter-side activity, not anything this fork did. Two observations beyond the two conditions above:
+
+- **F9 looks independently resolved there too:** `dashboard_history.jsonl` is now tracked
+  (`git ls-files` lists it), and `mts-system/.gitignore` carries a comment explaining it is
+  deliberately *not* ignored — the exact defect F9 named as open in that repo.
+- **F2 is unchanged:** `mts-system/BOOTSTRAP.md:330`'s unqualified "overlay them" text is still
+  present, byte-identical (`grep -n "overlay them"` still matches line 330). F2 closes only by
+  merging upstream (§6) — nothing an adopter does locally fixes it.
+
+### `vscode_quarto_ext` — closer, not identical
+
+| Check | S48 (14:00) | S49 (~15:30) |
+|---|---|---|
+| `git status --porcelain` | 3 dirty paths | **1 — `?? scratchpad/`**, an untracked directory of unrelated project scratch files (JS/TS probes, a `.qmd` file), not a modified methodology file |
+| `bin/sync --dry-run` | exit 0 (never F4-blocked) | exit 0, unchanged |
+| `bin/status` "locally modified" | 0 | 0, unchanged |
+| F9 (`dashboard_history.jsonl`) | tracked, permanently dirty, 81,865 B | tracked, **committed cleanly today** (`fe1e05b`, 15:18, `"chore(dashboard): commit four orientation snapshots, and correct why they matter"`) — no longer showing as a dirty working-tree path |
+
+Reading this one as "ready" is a judgment call this addendum flags rather than makes: the sole
+remaining dirty path is untracked, not a modified-tracked-file conflict, but part of its contents
+were touched as recently as today (15:19) — `vscode_quarto_ext` has its own concurrent, unrelated
+session activity in flight (commit messages reference its own "Session 186"). That is a materially
+smaller and different form of dirtiness than S48 recorded for this repo, not a confirmed "clean."
+
+### Not re-verified this pass
+
+F1, F3, F4, F6, F7, F8, F10, F11, F12 were not re-checked for either repo here. This is a two-repo
+spot-check, not a repeat of the full six-repo four-surface sweep — treat only the rows above as
+current; everything else in §1–§6 stands as S48 measured it.
+
+### Next step queued
+
+A focused UAT re-run on `mts-system` specifically (all applicable findings, not just the two
+conditions above) is queued for a future session — see `docs/planning/BACKLOG.md`. No sync or write
+action against either adopter repo is authorized by this addendum; the §6 recommendation (no adopter
+repo touched without a separate operator go-ahead) is unchanged.
