@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S46
+date: 2026-08-08
+status: pending
+active_task: Continue S45's pre-declared vertical slice, unstarted at S45's close-out (operator stopped that session at 99% of the weekly model allotment before any compaction was written): **reduce CHANGELOG.md's ledger verbosity without loss of precision.** Scope per S45's own design (`HANDOFFS.md` S45 receipt, `what_was_done`/`next_steps`): (1) state a precision-preserving norm once — U (unique/non-derivable) vs B (boilerplate, repeated per entry) vs D (re-derivable by a published command); (2) apply it losslessly to the worst class, the `Reconcile-on-read` entries (18 at S45's claim, re-measured this session); (3) add a mechanical check so future entries stay inside the norm. Losslessness must be PROVEN (re-parse the artifact and assert over it — Learning #16), not asserted. No archiving, no `--force`, no edit to `starter-kit/CHANGELOG.md`/`starter-kit/HANDOFFS.md` (adopter-visible, needs its own session + operator go-ahead), no outward-facing action. **BASELINE AT CLAIM:** HEAD `b65196c` (the Phase 0 reconcile, eighteenth discharge, taken before this claim); `bash bin/tests.sh` **182 passed / 1 failed**; `python3 -m unittest discover -s tools` **359 OK**; `python3 bin/check-links` OK **88 links / 22 files**; `python3 bin/check-handoff --allow-pending` OK; dashboard (via a scratchpad-copy harness — `tools/methodology_dashboard.py`'s `ROOT` is the script's own directory, so an in-place run finds no projects) **72/100**, high-risk **1**, **407** commits, `DASHBOARD_VERSION` **2.13.0**; `CHANGELOG.md` **2,069 L / 175,636 B**; `HANDOFFS.md` **1,347 L / 410,587 B** (pre-claim-commit).
+```
+
+---
+
+```handoff
 session: S45
 date: 2026-08-04
 status: complete
