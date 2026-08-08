@@ -144,6 +144,13 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S53's `commit:` field → `cfd890b` — twenty-fifth discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `cfd890b` (claim stub `a954904`) — twenty-fifth discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agree at `cfd890b`, HEAD; no ghost session
+(`git rev-list --count --no-merges cfd890b..HEAD` = 0).
+
 ### 2026-08-08 · [BL-25] Closed: focused `vscode_quarto_ext` UAT re-run — F9 confirmed resolved, F2/F3/F6/F8 unchanged, both bonus checks clean
 
 **Model:** Claude Sonnet 5.
