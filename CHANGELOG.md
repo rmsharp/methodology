@@ -144,6 +144,13 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S48's `commit:` field → `cd0822b` — twenty-first discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `cd0822b` (claim stub `6b0d5d1`) — twenty-first discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agreed at `cd0822b`, HEAD; no ghost session
+(`git rev-list --count --no-merges cd0822b..HEAD` = 0).
+
 ### 2026-08-08 · [ad hoc] S48 — UAT follow-up: F1 verified against the real corpus, F2–F11 unchanged (zero drift, six repos)
 
 **Model:** Claude Sonnet 5.
