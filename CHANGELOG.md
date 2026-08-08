@@ -144,6 +144,13 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S52's `commit:` field → `3595dc8` — twenty-fourth discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `3595dc8` (claim stub `051cd75`) — twenty-fourth discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agree at `3595dc8`, HEAD; no ghost session
+(`git rev-list --count --no-merges 3595dc8..HEAD` = 0).
+
 ### 2026-08-08 · [ad hoc] Committed the `mts-system` sync diff S51 left open — `mts-system` now at `1c8ec7b`
 
 **Model:** Claude Sonnet 5.
