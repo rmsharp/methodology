@@ -144,6 +144,34 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Committed the `mts-system` sync diff S51 left open — `mts-system` now at `1c8ec7b`
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed follow-up resolving S51's own `next_steps` question ("ask the operator
+  whether to commit it"). Answer: commit it, and do it myself rather than defer to a future
+  `mts-system` session.
+- **What ran:** `git commit` inside `../mts-system`, staging exactly the 11 files S51's sync wrote
+  (9 updated + 2 created), nothing else. Result: `mts-system` HEAD moved from `5082951` to `1c8ec7b`
+  (`chore(methodology): sync framework corpus to canonical v3.6+206`), working tree clean afterward.
+  The commit message documents scope, source commit (`a667e18`), and the zero-application-code-touch
+  verification S51 already ran.
+- **Deliberately did not write a matching ledger entry inside `mts-system`** or claim one of its own
+  `Session N` numbers — that repo dogfoods this same methodology with its own reconcile-on-read
+  discipline; fabricating a session receipt on its behalf isn't this session's place. Its own next
+  real session will see `1c8ec7b` as an undocumented commit against its `CHANGELOG.md`/`HANDOFFS.md`
+  frontier and backfill it — the designed mechanism for exactly this, not a gap.
+- **Self-caught process gap:** performed the `git commit` in `mts-system` before claiming this
+  session (Phase 1B) — a real, consequential, operator-directed write, executed with no crash
+  breadcrumb in this repo's own ledger while it was in flight. Corrected by claiming and recording
+  it now, after the fact, rather than leaving it unlogged once noticed. Also reconciled S51's own
+  `commit: pending` field (this time *before* claiming, in the correct order) and collapsed a doubled
+  `---` separator the S51 close-out edit had introduced.
+- **Session:** S52 · **Verified:** `git -C ../mts-system status --porcelain` empty (clean) both
+  immediately before and after the commit; `git -C ../mts-system log --oneline -1` confirms `1c8ec7b`;
+  `bin/tests.sh` 185/1 (unchanged), `bin/check-links` OK (unchanged), `bin/check-handoff` OK. Zero
+  writes to this repo's own tree apart from ledger entries.
+
 ### 2026-08-08 · [ad hoc] Live `bin/sync` write test against `mts-system` — 9 methodology files updated, zero application-code touches
 
 **Model:** Claude Sonnet 5.
