@@ -144,6 +144,51 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [BL-25] Closed: focused `vscode_quarto_ext` UAT re-run — F9 confirmed resolved, F2/F3/F6/F8 unchanged, both bonus checks clean
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed, `vscode_quarto_ext` chosen from three offered alternatives (issue
+  #67/PR #66, this fork's own F9 instance, F3). BL-24's `mts-system` counterpart, run against the
+  other repo §7 flagged as "closer, not identical." Pre-condition reverified at claim: `git status
+  --porcelain` 1 dirty path (`?? scratchpad/`, untracked non-methodology scratch dir, unchanged from
+  S49's snapshot), `bin/sync --dry-run` exit 0 (never F4-blocked).
+- **F2 (D1):** unchanged, still open. `BOOTSTRAP.md:330`'s "overlay them" text is byte-identical.
+  Closes only upstream.
+- **F3 (D4):** unchanged, still open, and grew. `SESSION_NOTES.md` now 7,549 lines / 506 session
+  headings (was 7,468 / 500 at S43) — +81 lines, +6 headings.
+- **F6 (D3):** unchanged, still open. `collect_methodology_metrics` reports 100% compliance (9/9,
+  current checklist scale) while `bin/status` shows `SESSION_RUNNER.md`/`BOOTSTRAP.md` 8 versions
+  behind, `methodology_dashboard.py` 7 behind, `FRAMEWORK_LEARNINGS.md`/`methodology_trim.py`
+  missing — 11 "would write" targets total, matching S43's drifting count exactly.
+- **F8 (D2):** unchanged, still open. `ZONE_UNCLASSIFIED` still fires on `HANDOFFS.md`, now at line
+  2807 (was 2771 — file growth, not a new defect); same seed-sentinel cause.
+- **F9 (D4): confirmed resolved**, not just "committed cleanly today" as S49 (§7) hedged.
+  `git ls-files` lists `dashboard_history.jsonl` as tracked; `git check-ignore` confirms not ignored;
+  absent from `git status --porcelain`'s dirty output; two further unrelated session commits have
+  landed since `fe1e05b` and left it untouched.
+- **F10 (D4):** unchanged at 0 — never drifted for this repo across any session.
+- **F11 (D4):** not applicable, confirmed — `vscode_quarto_ext` has `HANDOFFS.md`.
+- **Two bonus checks**, never run against this repo before: **F1** — `methodology_trim.py --check`
+  on `CHANGELOG.md` shows `TRIGGER_BYTES` firing correctly, no `NO_RECORDS`/`GRAMMAR_MISMATCH`; this
+  ledger's grammar was never broken the way `model_project_constructor`'s/`wsfct`'s were. **F4** —
+  `bin/sync --dry-run` exit 0 confirms this repo was correctly excluded from the "2 of 6 blocked" set.
+- **Adjacent, not a numbered finding:** `bin/check-handoff` now counts 96 unreconciled `commit:`
+  answer slots (S38–S186), up from §4's 93 (S38–S184) — ordinary adopter ledger-hygiene drift.
+- **Deliverable:** `docs/planning/uat-2026-08-08-followup.md` §9 (new; §1–§8 frozen and unedited)
+  plus a forward-pointer at the doc's top; `docs/planning/BACKLOG.md` BL-25 (new, raised and closed
+  in the same entry) and the header's `**BL-N —**` heading count re-derived to 15 (was 14, itself
+  already stale by this session's start).
+- **Net:** 1 of 7 re-checked items improved (F9), 4 unchanged/open (F2, F3, F6, F8), 2
+  unchanged-and-clean (F10, F11), zero regressions. Both bonus checks came back clean.
+- **Session:** S53 · **Verified:** `bash bin/tests.sh` 185 passed / 1 failed (Test 9's expected
+  upstream 404, unchanged) before this entry's own edits were checked; `python3 bin/check-links` OK
+  (88/22, unchanged — new content is canonical-only). `git status --porcelain` inside
+  `vscode_quarto_ext` identical (1 dirty path) both before and after every check this session ran;
+  every command was `git ls-files` / `git check-ignore` / `git log` / `git rev-list` / `test -f` /
+  `bin/check-handoff --file` / `methodology_trim.py --check` / `bin/sync --dry-run` (read-only) — no
+  write, no `--force`, no `--write` flag used anywhere.
+
 ### 2026-08-08 · [ad hoc] Reconcile-on-read: S52's `commit:` field → `3595dc8` — twenty-fourth discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.

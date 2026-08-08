@@ -17,6 +17,12 @@ of the original six.
 > §7 hedged); F10 improved to zero reconcile debt; F11 not applicable (never one of the three missing
 > `HANDOFFS.md`). §1–§7 stand as written and are not edited in place.
 
+> **Addendum 2026-08-08, later still (S53):** the focused `vscode_quarto_ext` UAT re-run **§9 below**,
+> operator-directed, the counterpart §8 ran for `mts-system`. F2, F3, F6, F8 unchanged, still open;
+> **F9 confirmed resolved** (S49's "committed cleanly today" hedge upgraded to a verified fact, same
+> upgrade §8 gave `mts-system`'s F9); F10 unchanged at zero; F11 not applicable. §1–§8 stand as
+> written and are not edited in place.
+
 **Method:** seven parallel read-only agents (one per repo, one for the dashboard) reproduced S43's
 own commands verbatim against the current state of `airqino`, `church_growth`,
 `model_project_constructor`, `mts-system`, `vscode_quarto_ext`, `wsfct`, reporting raw command
@@ -235,3 +241,59 @@ order is unchanged from §6: **F3** is the top open item across the six-repo bas
 only by merging upstream; **F4, F6, F7, F8, F9** (for the other four repos) remain bounded,
 independent, small. No sync or write action against `mts-system` or any other adopter repo is
 authorized by this section.
+
+---
+
+## 9. Focused `vscode_quarto_ext` UAT re-run (S53, 2026-08-08, BL-25)
+
+**Mode:** read-only, single-repo. Operator-directed, `vscode_quarto_ext` chosen from three offered
+alternatives (issue #67/PR #66, this fork's own F9 instance, F3). Pre-condition re-verified at claim:
+`git status --porcelain` **1** dirty path (`?? scratchpad/`, an untracked directory of unrelated
+project scratch files — JS/TS probes, a `.qmd` file, no git history of its own — not a modified
+methodology file), unchanged from §7's snapshot; `bin/sync --dry-run ../vscode_quarto_ext` exit 0,
+unblocked. Scope: re-derive **F2, F3, F6, F8, F9, F10, F11** against current state, plus two bonus
+checks (F1, F4) that were never run against this repo in the original six-repo sweep.
+
+| # | S43/S48 baseline (`vscode_quarto_ext`) | S53 (now) | Verdict |
+|---|---|---|---|
+| **F2** | `BOOTSTRAP.md:330`'s "overlay them" text, byte-identical to `church_growth`/`mts-system` | `grep -n "overlay them" ../vscode_quarto_ext/BOOTSTRAP.md` → line 330, same text | **Unchanged, still open.** Closes only upstream (§6) — nothing an adopter does locally fixes it |
+| **F3** | 7,468 lines, 500 session headings, 3.7× over the 2,000-line `Read` cap | `wc -l` → **7,549** lines; `grep -cE '^#{2,3} .*[Ss]ession'` → **506** headings | **Unchanged, still open — and grew** (+81 lines / +6 headings since S43). The seed's self-contradiction (transient vs. mandated-reading-and-never-overwritten) is unaddressed |
+| **F6** | 100% compliance (dashboard's old 20-item scale), 11 drifting files (`bin/status`) | `collect_methodology_metrics` → **100%** (9/9 items `True`, current checklist scale) while `bin/status` shows `SESSION_RUNNER.md`/`BOOTSTRAP.md` **8 versions behind**, `methodology_dashboard.py` **7 versions behind**, `FRAMEWORK_LEARNINGS.md`/`methodology_trim.py` **missing**, plus 6 more 1–2-version-behind files — `bin/sync --dry-run` counts exactly **11** "would write" targets, matching S43's drifting count exactly | **Unchanged, still open.** The presence-only blind spot reproduces exactly; the checklist's own item count changed across dashboard versions since S43, the blind spot did not |
+| **F8** | `ZONE_UNCLASSIFIED` at line 2771, caused by the seed's trailing `---` + sentinel comment | `python3 starter-kit/methodology_trim.py --file ../vscode_quarto_ext/HANDOFFS.md --check` → `[ZONE_UNCLASSIFIED]` at **line 2807**, same cause, same span text | **Unchanged, still open.** Line number moved because the file grew (new receipts prepended above it); the substance is identical |
+| **F9** | S43/S48: tracked, **permanently dirty** (81,865 B). S49 (§7): "committed cleanly today" (`fe1e05b`), hedged as not fully re-verified | `git ls-files dashboard_history.jsonl` lists it (**tracked**, 82,439 B); `git check-ignore` exits 1 (**not ignored**); **not** in `git status --porcelain`'s dirty-path output; `git log` shows the file last touched by `fe1e05b` (2026-08-08), with two further unrelated session commits (`8dd11a5`, `41c4946`) landing since and leaving it untouched | **Confirmed resolved** — S49's hedge is now a verified fact, the same upgrade §8 gave `mts-system`'s F9. Unlike `mts-system`, no `.gitignore` comment documents the choice; it is simply committed and has stayed clean since |
+| **F10** | 0 undocumented commits (already 0 at S43, unchanged through S48) | `git log -1 --format=%h -- CHANGELOG.md` = `b7508d8` = current `HEAD`; `git rev-list --count --no-merges b7508d8..HEAD` = **0** | **Unchanged at 0.** Never drifted for this repo across any session |
+| **F11** | N/A — `vscode_quarto_ext` was never one of the three repos missing `HANDOFFS.md` | `test -f ../vscode_quarto_ext/HANDOFFS.md` → present | **Not applicable, confirmed** |
+
+**Two bonus checks, never run against this repo in the original sweep:**
+
+- **F1 (bonus):** `python3 starter-kit/methodology_trim.py --file ../vscode_quarto_ext/CHANGELOG.md --check`
+  → `[TRIGGER_BYTES] 482,406 B against a 65,536 B budget`, `[CHECK] trigger FIRES` — **no
+  `[NO_RECORDS]`/`[GRAMMAR_MISMATCH]`.** Unlike `model_project_constructor` and `wsfct`, this ledger's
+  grammar parses correctly; F1's original blindness bug was never present here, so there is nothing
+  for the S44 fix to have changed.
+- **F4 (bonus):** `bin/sync --dry-run ../vscode_quarto_ext` exits **0**, unblocked — confirms this
+  repo was correctly excluded from F4's "2 of 6 cannot be updated at all" set.
+
+**Adjacent, not a numbered finding — `bin/check-handoff --file ../vscode_quarto_ext/HANDOFFS.md`
+now reports 96 unreconciled `commit:` answer slots (receipts S38–S186)**, up from §4's 93
+(S38–S184) — ordinary adopter ledger-hygiene drift tracking this repo's own continued session
+activity (now past its "Session 187"), not a new tool defect.
+
+**Net for `vscode_quarto_ext`: 1 of 7 re-checked items improved (F9, confirmed resolved), 4
+unchanged/still open (F2, F3, F6, F8), 2 unchanged-and-clean (F10, F11) — zero regressions.** Both
+bonus checks (F1, F4) came back clean. The one improvement (F9) is adopter-side activity, not
+anything this fork changed.
+
+**Read-only proof:** `git status --porcelain` inside `vscode_quarto_ext` captured before and after
+this session's checks — **identical, 1 dirty path (`?? scratchpad/`) both times.** Every command run
+was one of `git ls-files`, `git check-ignore`, `git log`/`git rev-list`, `test -f`,
+`python3 bin/check-handoff --file`, `python3 starter-kit/methodology_trim.py --check`, or
+`python3 bin/sync --dry-run` (this repo's own tools, reading the adopter files, writing nothing). No
+`bin/sync` write, no `--force`, no `--write` flag used anywhere in this session.
+
+**BL-25 is closed by this section** — see `docs/planning/BACKLOG.md`. Remaining open UAT priority
+order is unchanged from §6/§8: **F3** is the top open item across the six-repo baseline; **F2/F5**
+close only by merging upstream; **F4, F6, F7, F8, F9** for the four repos with no focused re-run yet
+(`airqino`, `church_growth`, `model_project_constructor`, `wsfct`) remain bounded, independent,
+small. No sync or write action against `vscode_quarto_ext` or any other adopter repo is authorized
+by this section.

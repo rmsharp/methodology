@@ -1,7 +1,10 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22 and BL-23 are open** (**BL-24 raised 2026-08-08 (S49), CLOSED same day (S50)**
+> BL-20, BL-21, BL-22 and BL-23 are open** (**BL-25 raised and CLOSED same session (S53)** — the
+> `vscode_quarto_ext` counterpart to BL-24: F9 confirmed resolved, F2/F3/F6/F8 unchanged/open,
+> F10/F11 unchanged-and-clean, both bonus checks (F1, F4) clean; see its own entry and
+> [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §9. **BL-24 raised 2026-08-08 (S49), CLOSED same day (S50)**
 > — the focused `mts-system` re-run it queued ran: F9 confirmed resolved, F10 improved to zero, F6/F7
 > unchanged/open, F11 not applicable; see its own entry and
 > [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §8. **BL-23 raised 2026-08-08 (S47)** — issue #65 collides
@@ -12,10 +15,11 @@
 > **BL-21 raised 2026-08-03 (S32)**; **BL-20 was raised 2026-08-02
 > (S31) and this enumeration was not updated with it**, which is why it is being said out loud: this
 > list is a hand-maintained derived value in the file whose own header tells you not to trust those.
-> It cannot be derived by counting headings either — the 14 `**BL-N —**` headings in §Open items
-> (re-derived 2026-08-08, S49; **13** at last count, itself already stale — this line is exactly the
-> kind of drift the paragraph warns about, caught only because S49 added a fourteenth heading, BL-24,
-> and re-ran the grep rather than incrementing by hand) are a *different* set: **BL-15** keeps its
+> It cannot be derived by counting headings either — the 15 `**BL-N —**` headings in §Open items
+> (re-derived 2026-08-08, S53, via `grep -cE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG.md`; **14** at
+> S49's last count, itself already stale by then — this line is exactly the kind of drift the
+> paragraph warns about, caught only because S53 added a fifteenth heading, BL-25, and re-ran the
+> grep rather than incrementing by hand) are a *different* set: **BL-15** keeps its
 > heading though it is CLOSED, and **BL-16** is open but has no heading of its own, living inside
 > BL-14's follow-ons paragraph. Read each item's own status line.) (**BL-19 raised 2026-08-02 (S30)** — the operator-assigned context-cost plan; it is an
 > index entry for [`framework-context-cost-plan.md`](framework-context-cost-plan.md), not a restatement
@@ -616,6 +620,34 @@ and `check-handoff`'s all-numeric-sha false positive on receipt S74 both still s
 found them. **F11 not applicable** — `mts-system` was never one of the three repos missing
 `HANDOFFS.md`. Zero regressions. Read-only throughout; `git status --porcelain` inside `mts-system`
 confirmed 0 dirty paths both before and after. No sync or write action was taken or authorized.
+
+**BL-25 — Focused `vscode_quarto_ext` UAT re-run, raised and CLOSED same session (S53).**
+*Operator-directed 2026-08-08 (S53), choosing `vscode_quarto_ext` from three offered alternatives
+(issue #67/PR #66, this fork's own F9 instance, F3). The `mts-system` counterpart to BL-24, run
+against the other repo §7 flagged as "closer, not identical." Full evidence:
+[`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §9.*
+
+Pre-condition re-verified at claim: `git status --porcelain` **1** dirty path (`?? scratchpad/`, an
+untracked non-methodology scratch directory, not a modified-tracked-file conflict — unchanged from
+§7's S49 snapshot); `bin/sync --dry-run ../vscode_quarto_ext` exit 0, unblocked (never F4-blocked).
+Re-derived **F2, F3, F6, F8, F9, F10, F11**, plus two bonus checks never run against this repo before
+(**F1**, **F4**). **F9 confirmed resolved** — tracked, not ignored, not dirty; last touched by
+`fe1e05b` with two further unrelated session commits landing since and leaving it untouched, which
+upgrades §7's (S49) "committed cleanly today" hedge to a verified fact, the same upgrade BL-24 gave
+`mts-system`'s F9. **F2, F3, F6, F8 reproduce unchanged, still open** — `BOOTSTRAP.md:330`'s
+"overlay them" text is byte-identical; `SESSION_NOTES.md` grew to 7,549 lines/506 headings (+81/+6
+since S43); the dashboard's 100%-compliance/11-drifting-files blind spot reproduces exactly, `bin/status`
+now naming `SESSION_RUNNER.md`/`BOOTSTRAP.md` 8 versions behind; `ZONE_UNCLASSIFIED` still fires on
+`HANDOFFS.md`, now at line 2807 (was 2771 — the shift is the file growing, not a new defect). **F10
+unchanged at 0; F11 not applicable** (has `HANDOFFS.md`). **Both bonus checks came back clean**: F1's
+original grammar-mismatch bug was never present in this repo's `CHANGELOG.md` (the trimmer's
+`TRIGGER_BYTES` check fires correctly, no `NO_RECORDS`/`GRAMMAR_MISMATCH`); F4 confirms this repo was
+correctly excluded from the "2 of 6 blocked" set. Adjacent, not a numbered finding:
+`bin/check-handoff` now counts 96 unreconciled `commit:` answer slots (S38–S186), up from §4's 93
+(S38–S184) — ordinary adopter ledger-hygiene drift, not a new tool defect. **Net: 1 of 7 improved
+(F9), 4 unchanged/open (F2, F3, F6, F8), 2 unchanged-and-clean (F10, F11), zero regressions.**
+Read-only throughout; `git status --porcelain` inside `vscode_quarto_ext` confirmed identical (1
+dirty path) both before and after. No sync or write action was taken or authorized.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
