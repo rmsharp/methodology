@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S53
+date: 2026-08-08
+status: pending
+active_task: Operator-directed — begin a focused UAT re-run against `vscode_quarto_ext`, mirroring BL-24's `mts-system` pattern. `vscode_quarto_ext` was the operator's own choice after being offered issue #67/PR #66, this repo's own F9 instance, or F3 as alternatives. Scope: re-derive F2, F3, F6, F8, F9, F10, F11 against `vscode_quarto_ext`'s current state, plus a pre-condition re-verify (S49's addendum left it "closer, not identical" — 1 dirty untracked path, not a confirmed clean). Read-only throughout; no writes to the adopter repo.
+```
+
+---
+
+```handoff
 session: S52
 date: 2026-08-08
 status: complete
