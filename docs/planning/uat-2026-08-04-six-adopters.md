@@ -7,6 +7,12 @@ exchange to a **read-only assessment** covering **all four** adopter-facing surf
 
 This is fork-only. It lives in `docs/planning/` and reaches no adopter.
 
+> **Follow-up 2026-08-08 (S48):** the same six repos were re-audited against this baseline —
+> [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md). **F1 is now fixed and verified against
+> the real corpus that exposed it** (this doc's own evidence, `model_project_constructor`/`wsfct`);
+> F2–F11 all reproduced exactly with zero drift. This doc's findings stand as written below and are
+> not edited in place — read the follow-up for current status.
+
 > **Why this is the first real acceptance test.** S41 fixed three defects in the update path and
 > verified them on **throwaway** repositories it had created itself. The trimmer ships to adopters as
 > of S39′ and had **never been run against a real adopter ledger**. S40's ledger doctrine was measured

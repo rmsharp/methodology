@@ -144,6 +144,37 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] S48 — UAT follow-up: F1 verified against the real corpus, F2–F11 unchanged (zero drift, six repos)
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed re-run of S43's read-only 4-surface UAT
+  (`docs/planning/uat-2026-08-04-six-adopters.md`) against `airqino`, `church_growth`,
+  `model_project_constructor`, `mts-system`, `vscode_quarto_ext`, `wsfct` (`nprcgenekeepr` excluded
+  — operator-stated busy, recorded separately above). Seven parallel read-only agents (one per repo,
+  one for the dashboard) reproduced S43's exact commands against current state.
+- **Headline: F1's fix (S44) is now verified against the real corpus that exposed it**, not just
+  synthetic fixtures — `model_project_constructor/CHANGELOG.md` and `wsfct/CHANGELOG.md` both now
+  produce a loud `[GRAMMAR_MISMATCH]` refusal (exit 3, naming the first non-conforming line) where
+  S43 recorded a silent `[NO_RECORDS]` false-empty report (exit 0).
+- **F2–F11: zero drift across all six repos.** Every re-checked number reproduced its S43 value
+  exactly — including all six `F10` reconcile-debt counts, byte-for-byte — no regression, no
+  self-remediation. F6 re-verified directly: `airqino`'s `SESSION_RUNNER.md` is still 17 versions
+  behind and the dashboard still credits it in full (96% compliance).
+- **One reconciliation, not a defect:** S43's Inventory "drifting" column, which several agents
+  independently flagged as unreproducible from `bin/status`'s own vocabulary, resolves exactly once
+  all six repos are cross-checked together — it is `missing + locally-modified + versions-behind`,
+  a derived summary term in the report's own prose, never a tool output string. Recorded as a
+  process lesson (isolated per-item checks can manufacture a false discrepancy a same-shape check
+  across the full population resolves instantly), not a new finding.
+- **Deliverable:** [`docs/planning/uat-2026-08-08-followup.md`](docs/planning/uat-2026-08-08-followup.md)
+  (new); a forward-pointer added to the top of the S43 doc (not rewritten in place, matching this
+  ledger's own dated-entry convention).
+- **Session:** S48 · **Verified:** `bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream
+  404, unchanged), `bin/check-links` OK 88/22. Zero writes to any of the six adopter repos or
+  `nprcgenekeepr` — confirmed via `git status --porcelain` before/after in each, and by file
+  timestamp on every pre-existing dirty path.
+
 ### 2026-08-08 · [ad hoc] Reconcile-on-read: S47's `commit:` field → `5136be6` — twentieth discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.
