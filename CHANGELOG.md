@@ -144,6 +144,37 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Live `bin/sync` write test against `vscode_quarto_ext` — 11 methodology files updated, zero application-code touches, executed by the operator after the harness denied this session's own write attempt
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed, following S53's UAT re-run — sync the 11 stale/missing files it
+  identified (`bin/sync --dry-run`), mirroring S51's `mts-system` precedent. Go-ahead given via a
+  direct response to a clarifying question.
+- **This session's own `python3 bin/sync ../vscode_quarto_ext` call was denied by Claude Code's
+  permission classifier** (a cross-repo file write outside this repo's working directory). Reported
+  the denial plainly rather than attempting a workaround; the operator ran the identical command
+  themselves and reported back.
+- **Verified independently rather than trusted:** `git status --porcelain` inside `vscode_quarto_ext`
+  shows exactly 9 modified + 2 newly-created files (`BOOTSTRAP.md`, `CLAUDE_TEMPLATE.md`,
+  `RECOMMENDED_SKILLS.md`, `SESSION_RUNNER.md`, `docs/methodology/HOW_TO_USE.md`,
+  `docs/methodology/ITERATIVE_METHODOLOGY.md`,
+  `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`,
+  `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`, `methodology_dashboard.py`; new:
+  `FRAMEWORK_LEARNINGS.md`, `methodology_trim.py`) plus the pre-existing untracked `scratchpad/` —
+  exactly S53's `--dry-run` prediction, confirmed by excluding all 11 expected paths and finding the
+  remainder empty. `bin/status ../vscode_quarto_ext` now shows all 9 tracked files `current` (was
+  8/8/7-versions-behind + 2 missing). Both new tools run (`--help` exit 0 each);
+  `FRAMEWORK_LEARNINGS.md` well-formed (41 lines, non-truncated).
+- **The 4 seeds left as-is by design** (`SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`,
+  `ROADMAP.md`); 2 still flagged `present (stale format)` as expected — sync never auto-overwrites
+  adopter-owned seeds.
+- **Left uncommitted in `vscode_quarto_ext`**, per S51's precedent — no direction given on whether to
+  commit it there.
+- **Session:** S54 · **Verified:** `bash bin/tests.sh` 185 passed / 1 failed (Test 9's expected
+  upstream 404, unchanged), `python3 bin/check-links` OK 88/22 (unchanged),
+  `python3 bin/check-handoff --allow-pending` OK.
+
 ### 2026-08-08 · [ad hoc] Reconcile-on-read: S53's `commit:` field → `cfd890b` — twenty-fifth discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.
