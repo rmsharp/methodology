@@ -151,6 +151,22 @@ Reconciled `5136be6` (claim stub `ec09e57`) — twentieth discharge, taken befor
 Single-answer derivation; both ledger frontiers agreed at `5136be6`, HEAD; no ghost session
 (`git rev-list --count --no-merges 5136be6..HEAD` = 0).
 
+### 2026-08-08 · [ad hoc] Operator constraint recorded: `nprcgenekeepr` busy/off-limits, current as of S48's claim
+
+**Model:** Claude Sonnet 5.
+The operator stated `/Users/rmsharp/Development/nprcgenekeepr` is busy (actively working on it) and
+should stay out of scope, in the same exchange that scoped S48's UAT re-run to the original six
+(`airqino`, `church_growth`, `model_project_constructor`, `mts-system`, `vscode_quarto_ext`,
+`wsfct` — `nprcgenekeepr` was never one of them). **Recorded per F12's own recommendation** —
+*"a recorded constraint should carry its release condition, so a later session reading it knows what
+to check"* — because the prior instance of this exact constraint (`CHANGELOG.md`, historical S41
+entry) was imposed, verbally lifted, and the lift never logged, which produced a false
+self-accusation in S43. This entry is the imposition edge only; if/when the operator lifts it, that
+release is a separate loggable action — do not assume it still holds without checking for one, and
+do not assume it was lifted without finding one either.
+- **Session:** S48 (claim) · No commit action taken beyond this entry; not a `commit:` answer-slot
+  case.
+
 ### 2026-08-08 · [ad hoc] BL-23 raised: issue #65 collides with S34's unopened Learnings-table PR
 
 **Model:** Claude Sonnet 5.

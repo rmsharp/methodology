@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S48
+date: 2026-08-08
+status: pending
+active_task: Operator-directed — re-run S43's read-only 4-surface UAT (D1 update path, D2 trimmer, D3 dashboard, D4 installed-state coherence; `docs/planning/uat-2026-08-04-six-adopters.md`) against the same six local adopter repos: `airqino`, `church_growth`, `model_project_constructor`, `mts-system`, `vscode_quarto_ext`, `wsfct`. **`nprcgenekeepr` explicitly excluded — the operator stated it is busy/off-limits as of this session** (it was never one of the original six; this records the operator's current statement so a future session doesn't have to re-derive it the way S43 itself got this wrong for the same repo, per F12). Specific focus beyond a plain repeat: verify whether F1's fix (S44) now behaves correctly against the real multi-hundred-KB ledgers in `model_project_constructor` and `wsfct` that originally exposed it — that verification was never run against the real corpus, only unit-tested here. Read-only throughout; no writes to any adopter repo (S43's own top recommendation, unchanged); dashboard run from a scratchpad harness only, per S43 precedent, never from inside an adopter repo.
+```
+
+---
+
+```handoff
 session: S47
 date: 2026-08-08
 status: complete
