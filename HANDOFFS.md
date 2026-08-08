@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S54
+date: 2026-08-08
+status: pending
+active_task: Operator-directed, following S53's UAT re-run — a live `bin/sync` (write mode, no `--force`) against `vscode_quarto_ext`, mirroring S51's `mts-system` precedent. Go-ahead given via direct response to a clarifying question ("Want me to run bin/sync ../vscode_quarto_ext (write mode)?" → "That is what the update is to address."). Scope: sync the 11 stale/missing files S53's `--dry-run` identified, verify zero application-code (Quarto extension) touch, verify the synced tools still run, leave the result for review per S51's precedent unless directed otherwise.
+```
+
+---
+
+```handoff
 session: S53
 date: 2026-08-08
 status: complete
