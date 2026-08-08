@@ -144,6 +144,40 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] BL-23 raised: issue #65 collides with S34's unopened Learnings-table PR
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed review — does open upstream
+  [issue #65](https://github.com/KJ5HST/methodology/issues/65) collide with anything in this fork
+  prepared or planned for an upstream PR? Read-only investigation: this session's own `git`/`grep`
+  verification plus a 4-agent background `Workflow` cross-checking `bin/check-handoff`'s current
+  capabilities, `docs/planning/BACKLOG.md` in full, S34's complete receipt, and the two non-`main`
+  local branches.
+- **Verdict: yes, two real collisions, both moderate, both against one piece of prepared-but-unpushed
+  work.** (1) Issue #65's Evidence A tests mutations against `starter-kit/SESSION_RUNNER.md`'s
+  `## Learnings (added by sessions)` section; S34 (`ed22ace`, 2026-08-03) already extracted that
+  table into `starter-kit/FRAMEWORK_LEARNINGS.md`, leaving only a pointer paragraph — S34's own claim
+  flagged the tension as open and it was never revisited in the twelve sessions since. (2) Issue #65's
+  proposed `"session: values are unique"` invariant is false against this repo's real ledger: 51
+  combined receipts (live + archive), 47 distinct — S3/S5/S7/S8 each collide by the two-sequence
+  design this file's own front matter documents. Confirmed live against `upstream/main`: the table is
+  still in the old location there, so #65 is accurate against what the maintainer currently sees —
+  the collision is entirely with this fork's unshipped state.
+- **Checked and cleared:** none of BACKLOG.md's "runnable now up to the PR" items (BL-12's first
+  bullet, BL-13, BL-14's/BL-17's distributed halves, BL-21) touch the Learnings table,
+  `FRAMEWORK_LEARNINGS.md`, or `HANDOFFS.md`'s structure; `bin/check-handoff`'s shipped BL-14/BL-17
+  cross-block checks explicitly disclaim answering #65 (docstring + a pinned test) and do not
+  duplicate it. Adjacent, not blocking: the parked `bin/check-citations`
+  (`docs/bl-10-dangling-learning-citations`, not on `main`) is a partial Evidence-A answer, already
+  broken against the post-S34 tree (hard-anchored to the old file/heading).
+- **Recorded, not fixed (FM #17).** Raised as `BL-23`; full evidence trail in the new
+  [`issue-65-collision-review.md`](docs/planning/issue-65-collision-review.md). No outward-facing
+  action taken or recommended by this session — answering #65 in any form needs an explicit
+  operator go-ahead, same standing rule as BL-12's second bullet.
+- **Session:** S47 · **Verified:** `bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream
+  404, unchanged), `bin/check-links` OK 88/22, `bin/check-handoff --allow-pending` OK.
+
 ### 2026-08-08 · [ad hoc] Reconcile-on-read: S46's `commit:` field → `0a56b20` — nineteenth discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.

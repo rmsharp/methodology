@@ -1,8 +1,11 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21 and BL-22 are open** (**BL-22 raised 2026-08-03 (S36)**, and this enumeration WAS
-> updated with it — the omission called out below for BL-20 is the reason it was checked;
+> BL-20, BL-21, BL-22 and BL-23 are open** (**BL-23 raised 2026-08-08 (S47)** — issue #65 collides
+> with S34's unopened Learnings-table PR; see its own entry and
+> [`issue-65-collision-review.md`](issue-65-collision-review.md). **BL-22 raised 2026-08-03 (S36)**,
+> and this enumeration WAS updated with it — the omission called out below for BL-20 is the reason it
+> was checked;
 > **BL-21 raised 2026-08-03 (S32)**; **BL-20 was raised 2026-08-02
 > (S31) and this enumeration was not updated with it**, which is why it is being said out loud: this
 > list is a hand-maintained derived value in the file whose own header tells you not to trust those.
@@ -531,6 +534,57 @@ correct outcome.** Options: (a) derive a value from real adopter repos and recor
 a test so it cannot drift unnoticed. (c) is worth doing under any of the three. **Runnable fork-side;
 the fix lands in a DISTRIBUTED file, so the PR needs the operator's go-ahead** — batch it with the
 other distributed work rather than sending it alone.
+
+**BL-23 — Issue #65's proposed invariants collide with fork state issue #65 doesn't know about.**
+*Raised 2026-08-08 (S47), operator-directed review of #65 against work planned for an upstream PR.
+Measured, not fixed (FM #17); answering #65 in any form remains an outward-facing action needing an
+explicit go-ahead. Full evidence trail: [`issue-65-collision-review.md`](issue-65-collision-review.md).*
+
+Two real collisions, both re-derived independently — this session's own greps plus a 4-agent
+read-only investigation, agreeing on every cited fact:
+
+1. **Evidence A's anchor has already moved.** #65 tests mutations against
+   `starter-kit/SESSION_RUNNER.md`'s `## Learnings (added by sessions)` section. S34 (`ed22ace`,
+   2026-08-03) already extracted the entire 13-row table out of that section into a new distributed
+   file, `starter-kit/FRAMEWORK_LEARNINGS.md` (`# Framework Learnings`), leaving only a pointer
+   paragraph under the old heading (`starter-kit/SESSION_RUNNER.md:362-364`). A
+   `SESSION_RUNNER.md`-anchored implementation of Evidence A would find zero rows to mutate. S34's own
+   claim flagged this exact tension as open (*"(d) the interaction with open upstream issue #65"*,
+   `HANDOFFS.md:554`) and never resolved it — no session between S34 and S46 (twelve sessions)
+   mentioned #65 again. S34's PR is prepared, vetted, and **not opened**, waiting on a go-ahead
+   unrelated to this item (`framework-context-cost-plan.md:472`; `CHANGELOG.md` "S34's PR remains
+   prepared and unopened"). Confirmed live against `upstream/main`: the table is still in the old
+   location there today, so #65 is accurate *against upstream* — the collision is with the fork's
+   unshipped state, not with reality as the maintainer currently sees it.
+2. **Evidence B's own proposed invariant is false on this repo's real ledger.** *"`session:` values
+   are unique"* does not hold: 51 combined receipts across `HANDOFFS.md` +
+   `docs/archive/HANDOFFS-archive.md`, 47 distinct — S3/S5/S7/S8 each appear twice, because the fork
+   and `upstream/main` run independent `S<N>` counters that this ledger's own header documents as
+   colliding by design (`HANDOFFS.md:16-21`: *"a receipt is identified by session + date, never by
+   number alone"*). Not a new discovery — BL-14 recorded the same falsification at 32/28 receipts —
+   but it was never connected back to #65 itself as its own tracked item.
+
+**Not a collision, checked and cleared:** none of BACKLOG.md's "runnable now up to the PR" items
+(BL-12's first bullet, BL-13, BL-14's distributed half, BL-17's distributed half, BL-21) touch the
+Learnings table, `FRAMEWORK_LEARNINGS.md`, or `bin/check-handoff`'s fence/key structure.
+`bin/check-handoff`'s already-shipped BL-14/BL-17 cross-block checks (`check_answer_slots`,
+`check_locator_forms`) do not implement any of #65's four Evidence-B asks and explicitly disclaim
+answering it, in both the module docstring (`bin/check-handoff:72-76`) and a pinned test
+(`bin/tests.sh` Test 25 N6) — no duplication risk.
+
+**Adjacent, not blocking:** the parked `bin/check-citations` (branch
+`docs/bl-10-dangling-learning-citations`, not on `main`) is a partial, already-broken answer to
+Evidence A's contiguity check — hard-anchored to the pre-S34 file/heading, it now exits
+`GUARD FAIL` against the current tree (this file's own S34 regression note, above). Whoever revives
+it must retarget both constants first. The sibling branch `docs/learning-13-handoff-predictions` has
+zero delta from `main` (already merged as PR #63) and should simply be pruned — no collision, just
+stale housekeeping a prior session's `next_steps` asked for and nobody did.
+
+**The deliverable is a decision, not an edit — same shape as BL-8/BL-22.** When S34's Learnings-table
+PR is ready to open (its own go-ahead, separate from this item's), the operator should decide
+whether/how to also flag #65 — e.g. a PR-description note to the maintainer, a direct comment on #65
+once authorized, or leaving it for the maintainer to discover at review time. **Answering #65 in any
+form is an outward-facing action and needs an explicit ask**, same rule as BL-12's second bullet.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
