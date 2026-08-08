@@ -144,6 +144,13 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S47's `commit:` field → `5136be6` — twentieth discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `5136be6` (claim stub `ec09e57`) — twentieth discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agreed at `5136be6`, HEAD; no ghost session
+(`git rev-list --count --no-merges 5136be6..HEAD` = 0).
+
 ### 2026-08-08 · [ad hoc] BL-23 raised: issue #65 collides with S34's unopened Learnings-table PR
 
 **Model:** Claude Sonnet 5.
