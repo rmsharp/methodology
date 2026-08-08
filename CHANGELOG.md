@@ -144,6 +144,14 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S46's `commit:` field → `0a56b20` — nineteenth discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `0a56b20` (claim stub `d97a4a7`) — nineteenth discharge, taken before the claim. Single-
+answer derivation; no ghost session. Ledger frontiers differ by one commit this time — CHANGELOG
+`1cd3090`, HANDOFFS `0a56b20` — S46's own gotcha 6 (the close-out/deliverable commit split); the gap
+commit is this reconcile's own subject, not a separate undocumented action.
+
 ### 2026-08-08 · [ad hoc] S46 — the Reconcile-on-read entries compacted, losslessly, verified adversarially
 
 **Model:** Claude Sonnet 5.
