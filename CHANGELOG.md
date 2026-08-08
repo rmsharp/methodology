@@ -114,6 +114,31 @@ and was silently dropping its ten oldest entries when a `Read` truncated it.
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S45's `commit:` field → `7b5a7de` — eighteenth discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
+`b0934ce`, `99f9a6f`, `75bc44b`, `e23d595`, `ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`,
+`408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`,
+`728f39a`.
+
+- **What was reconciled.** S45 closed out `commit: pending`, legitimately — its receipt shipped inside
+  the commit whose sha it names. That sha is **`7b5a7de`**. Derived, not assumed: walking
+  `git log --all --full-history` over `HANDOFFS.md` (**129** commits, all refs) and reading each
+  blob's S45 block, `7b5a7de` is the only commit carrying it at `status: complete`; the claim stub
+  `332471b` carries the same block at `status: pending`, so the stub/close-out split holds for an
+  **eighteenth** consecutive receipt (S29's gotcha 3).
+- **The ordinal is derived, not incremented on faith.**
+  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
+  returned **18** in the live file and **0** in both archive shards immediately before this entry was
+  prepended — one of those eighteen is the `nine commit: fields that named no sha` **repair**, not a
+  discharge. Seventeen numbered discharges precede this one, so this is the **eighteenth**.
+- **Taken BEFORE the claim.** Nothing else was staged when this was committed. `CHANGELOG.md`'s and
+  `HANDOFFS.md`'s frontiers both agreed at `7b5a7de` — HEAD — and `git rev-list --count --no-merges
+  7b5a7de..HEAD` was **0**: no ghost session, no backfill owed. The working tree was clean apart from
+  the untracked `dashboard_history.jsonl` that is finding **F9**, unchanged since S45's own Phase 0,
+  still not covered by `.gitignore`, still not fixed here (FM #17).
+
 ### 2026-08-04 · [ad hoc] S45 — the archive is refused, the rate is the target, and the deliverable was not built
 
 **Model:** Claude Opus 5 (1M context). *Deliberately written in the compact form this session was
