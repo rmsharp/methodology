@@ -110,34 +110,79 @@ nothing watching. A level is a hand-written derived value that decays silently; 
 itself from the file every time it is read. This file crossed the cap once already, at 2,090 lines,
 and was silently dropping its ten oldest entries when a `Read` truncated it.
 
+**Reconcile-on-read entries below — the compact form, and the method stated once.** Each
+`[ad hoc] Reconcile-on-read` entry records one Phase 0 discharge of BL-14's shipped half
+(`starter-kit/SESSION_RUNNER.md:39`/`:42`): the predecessor session's `HANDOFFS.md` receipt shipped
+with `commit: pending`, and the very next session named the real sha, always before its own Phase 1B
+claim unless the entry says otherwise. **The derivation method is identical in every entry below and
+is stated here, once, not per entry:** the target sha is the first commit — walking
+`git log --all --full-history -- HANDOFFS.md` (all refs), read with `bin/check-handoff`'s own
+`extract_blocks`/`parse_block` — whose named session's block reads `status: complete`; the claim stub
+is the analogous first commit reading `status: pending`; the two are always distinct commits (S29's
+gotcha 3, true in every case below); `git rev-list --count --no-merges <target-sha>..HEAD`, taken at
+the time of reconcile, is `0` unless an entry says otherwise (no ghost session, no backfill owed).
+**Precedents are not restated per entry** — in this prepend-ordered file, every Reconcile-on-read
+heading *below* a given entry already is that entry's precedent list; nothing is lost by not
+repeating it. The ordinal is reproducible, not incremented on faith:
+
+```sh
+grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md
+```
+
+counts every discharge below plus the one bulk repair; subtract the repair to get the discharge
+ordinal. **Each entry below states only what the method above cannot supply:** the two shas, whether
+the order was taken before or after the discharging session's own claim, and any adjudication or
+measurement unique to that reconcile (a two-answer derivation, a frontier disagreement, a G2/SRF
+reading). Nothing quantitative recurs on purpose — the `HANDOFFS.md` SRF/byte-size series that runs
+through several entries is the same kind of point-in-time reading the paragraph above already asks
+you to re-run, never recall. **This is the norm new entries must stay inside** — `bin/tests.sh`
+Test 29 fails a new discharge entry whose body exceeds a fixed line budget, so this cannot silently
+erode back into prose the way it did before this compaction. The before/after figures for that
+compaction are recorded in the action ledger entry below that performed it, not restated here.
+
 ---
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] S46 — the Reconcile-on-read entries compacted, losslessly, verified adversarially
+
+**Model:** Claude Sonnet 5.
+
+- **Change:** the 19 `Reconcile-on-read` entries — an identical derivation method re-narrated in
+  full prose 19 times — are compacted to a handful of lines each; the method is stated once in the
+  front matter, just above this section, with the reproduction commands. `bin/tests.sh` Test 29
+  (RED-first: 19/19 violations against the pre-compaction file, 0/19 after) fails any future
+  per-session discharge entry over 12 lines, or the one-time bulk-repair entry over 20, so the norm
+  cannot silently erode back into prose. U/B/D classification per S45's design: session/sha/ordinal/
+  adjudications/measurements kept (U); the identical derivation-method paragraph stated once, not
+  per entry (B); the "Precedents" sha-list and the ordinal count are re-derivable by the published
+  command (D).
+- **What survives, measured not asserted:** the 19-entry class: 581 → 165 lines (**−71.6%**),
+  48,118 → 11,417 B (**−76.3%**); whole file: 2,069 → 1,683 lines (**−18.7%**),
+  175,636 → 141,372 B (**−19.5%**) — back under the 2,000-line `Read` cap without archiving, without
+  `--force`, and without moving one line of history, exactly the constraint S45 set and could not
+  build.
+- **Losslessness proven, not asserted, in two independent passes.** All 43 `### ` headings in the
+  file are byte-for-byte unchanged (headings-only diff, before vs after). A first-draft compaction
+  was then checked by a 7-group adversarial verification workflow (each group given the pre-edit
+  file and the compacted file, told to find any non-derivable fact present in the original but
+  absent from — and not covered by the front matter's stated method in — its replacement): **3/7
+  groups CLEAN, 4/7 reported real losses** — a specific `unittest` count trajectory (S44), a
+  diligence-gap narrative plus a wrong parenthetical commit label (S39), a "policy choice, not a
+  neutral reading" adjudication (S36), and three details in the bulk-repair entry (the `pending`
+  vs `this commit — …` split, three status-untouched precedent shas, the S6 branch name +
+  Learning #13 citation). All four restored and re-grepped present; none were boilerplate the
+  front matter already covers.
+- **Commit/PR:** this commit. No PR; nothing outward-facing.
+- **Session:** S46 · **Verified:** `bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream
+  404, unchanged; 3 new Test 29 assertions all pass), `unittest discover -s tools` 359 OK,
+  `check-links` OK 88/22, `check-handoff --allow-pending` OK.
+
 ### 2026-08-08 · [ad hoc] Reconcile-on-read: S45's `commit:` field → `7b5a7de` — eighteenth discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`b0934ce`, `99f9a6f`, `75bc44b`, `e23d595`, `ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`,
-`408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`,
-`728f39a`.
-
-- **What was reconciled.** S45 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`7b5a7de`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**129** commits, all refs) and reading each
-  blob's S45 block, `7b5a7de` is the only commit carrying it at `status: complete`; the claim stub
-  `332471b` carries the same block at `status: pending`, so the stub/close-out split holds for an
-  **eighteenth** consecutive receipt (S29's gotcha 3).
-- **The ordinal is derived, not incremented on faith.**
-  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **18** in the live file and **0** in both archive shards immediately before this entry was
-  prepended — one of those eighteen is the `nine commit: fields that named no sha` **repair**, not a
-  discharge. Seventeen numbered discharges precede this one, so this is the **eighteenth**.
-- **Taken BEFORE the claim.** Nothing else was staged when this was committed. `CHANGELOG.md`'s and
-  `HANDOFFS.md`'s frontiers both agreed at `7b5a7de` — HEAD — and `git rev-list --count --no-merges
-  7b5a7de..HEAD` was **0**: no ghost session, no backfill owed. The working tree was clean apart from
-  the untracked `dashboard_history.jsonl` that is finding **F9**, unchanged since S45's own Phase 0,
-  still not covered by `.gitignore`, still not fixed here (FM #17).
+Reconciled `7b5a7de` (claim stub `332471b`) — eighteenth discharge, taken before the claim. Single-
+answer derivation; both ledger frontiers agreed; no ghost session.
 
 ### 2026-08-04 · [ad hoc] S45 — the archive is refused, the rate is the target, and the deliverable was not built
 
@@ -171,39 +216,13 @@ arguing for: a verbosity finding published in 3,000 bytes would refute itself.*
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S44's `commit:` field → `6f28d59` — seventeenth discharge, and a receipt whose own figure rotted behind it
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`99f9a6f`, `75bc44b`, `e23d595`, `ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`,
-`0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S44 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`6f28d59`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**126** commits, all refs) and reading each
-  blob's S44 block. Unlike S43 the derivation returned **exactly one** answer, so the ambiguity that
-  entry had to adjudicate does not arise here. The claim stub `5166ccd` carries the same block at
-  `status: pending`, so the stub/close-out split holds for a **seventeenth** consecutive receipt
-  (S29's gotcha 3).
-- **The ordinal is derived, not incremented on faith.**
-  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **17** in the live file and **0** in both archive shards immediately before this entry was
-  prepended — and one of those seventeen is the `nine commit: fields that named no sha` **repair**,
-  not a discharge. Sixteen numbered discharges precede this one, so this is the **seventeenth**.
-- **Three commits landed after S44's receipt shipped, and the receipt does not describe them.**
-  `8fcb532`, `79550ec` and `391d882` all followed `6f28d59`. Every one is recorded in this ledger
-  (the S44 correction entry directly below), so no action is unlogged and no backfill is owed — but
-  the receipt's `runtime_smoke` line publishes `python3 -m unittest discover -s tools` as **360 OK**
-  and the tree returns **359**. Traced rather than guessed: `b215c0a` 334 → `6f28d59` 360 →
-  `8fcb532` 358 → `79550ec` 359. The −2 is `8fcb532` deleting the seed-sentinel exemption together
-  with the two tests that covered it, which is correct; the +1 is `79550ec` restoring one that had
-  been lost with them. **The code is right and the receipt is stale**, which is S44's own gotcha (2)
-  — *a figure derived from a file this session is still editing must be measured after the last edit*
-  — landing on S44's own receipt one commit after it was written. The `commit:` slot now carries the
-  correction so the next reader does not re-derive it.
-- **Taken BEFORE the claim.** Nothing else was staged when this was committed. `CHANGELOG.md`'s
-  frontier was `391d882` — HEAD — and `git rev-list --count --no-merges 391d882..HEAD` was **0**: no
-  ghost session, no backfill owed. The working tree was clean apart from the untracked
-  `dashboard_history.jsonl` that is finding **F9**, still uncommitted, still uncovered by
-  `.gitignore`, and still not fixed here (FM #17). The mandated Phase 0 step-5 dashboard run was
-  taken through the scratchpad symlink harness (S43's gotcha 4) so it would not write a second one.
+Reconciled `6f28d59` (claim stub `5166ccd`) — seventeenth discharge, taken before the claim.
+Single-answer derivation (unlike S43, next below). Three commits landed after this receipt shipped
+(`8fcb532`, `79550ec`, `391d882`, all logged separately in this ledger); none were unlogged, but the
+receipt's own published `unittest` figure rotted — traced, not guessed: `b215c0a` 334 → `6f28d59`
+360 → `8fcb532` 358 → `79550ec` 359. The −2 is `8fcb532` correctly deleting the seed-sentinel
+exemption together with the two tests that covered it; the +1 is `79550ec` restoring one of those
+two. Code correct, receipt stale (S44's own gotcha 2, landing on S44's own receipt).
 
 ### 2026-08-04 · [ad hoc] S44 correction — "reopened F1" was wrong; it was a shape the fix never covered
 
@@ -331,37 +350,11 @@ plus pre-commit/CI wiring. The two axes coincided four sessions running (S38, S4
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S43's `commit:` field → `f7637b3` — sixteenth discharge, and the first receipt that closed out twice
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`75bc44b`, `e23d595`, `ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`,
-`40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S43 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`f7637b3`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**123** commits, all refs) and reading each
-  blob's S43 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`.
-- **The derivation returned two answers this time, and that is new.** Every prior discharge found
-  exactly **one** commit carrying the session's block at `status: complete`. S43 has **two** —
-  `f7637b3` and `b215c0a` — because the operator corrected the session's `nprcgenekeepr` disclosure
-  after close-out and the receipt was amended in place to carry finding **F12**. The claim stub
-  `4dea909` still reads `status: pending`, so the stub/close-out split holds for a **sixteenth**
-  consecutive receipt (S29's gotcha 3). **The field names `f7637b3`, the earlier of the two** — the
-  commit where the close-out actually happened; `b215c0a` is a correction *to* the receipt, not a
-  second close-out of it. Naming the later sha would have silently redefined "the commit this receipt
-  shipped in" to mean "the last commit that touched it", which is a different question with the same
-  answer on all fifteen previous receipts and a different one here. Both shas are recorded in the
-  field so the amendment is not lost.
-- **The ordinal is derived, not incremented on faith.**
-  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **16** in the live file and **0** in both archive shards immediately before this entry was
-  prepended — and one of those sixteen is the `nine commit: fields that named no sha` **repair**, not
-  a discharge. Fifteen numbered discharges precede this one, so this is the **sixteenth**.
-- **Taken BEFORE the claim.** Nothing else was staged when this was committed. Both ledger frontiers
-  agreed at `b215c0a` at Orient and `git rev-list --count --no-merges b215c0a..HEAD` was **0** — no
-  ghost session, no backfill owed. The working tree was clean apart from the untracked
-  `dashboard_history.jsonl` that S43's own Phase 0 step-5 dashboard run left behind and reported as
-  **F9**; it is still uncommitted, still not covered by `.gitignore`, and still not fixed here
-  (FM #17). This session's own mandated dashboard run was taken through the scratchpad symlink
-  harness (S43's gotcha 4) precisely so it would not write a second one.
+Reconciled `f7637b3` (claim stub `4dea909`) — sixteenth discharge, taken before the claim.
+**Two-answer derivation, the first of the run**: the block reads `status: complete` at both
+`f7637b3` and `b215c0a`, because the operator's F12 correction amended the receipt in place after
+close-out. The field names `f7637b3` — the actual close-out commit, not the later amendment; both
+shas are recorded so the correction is not lost.
 
 ### 2026-08-04 · [ad hoc] S43 — UAT: the framework against six real adopter repositories, read-only
 
@@ -444,33 +437,10 @@ what we ship.** No adopter repository was written to, and the claim is proven ra
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S42's `commit:` field → `8804635` — fifteenth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`e23d595`, `ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`,
-`caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S42 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`8804635`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**119** commits, all refs) and reading each
-  blob's S42 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `8804635` is the
-  **only** commit where it reads `status: complete`; the claim stub `cc593e0` carries the same block
-  at `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  **fifteen receipts running**.
-- **The ordinal is derived, not incremented on faith.**
-  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **15** in the live file and **0** in both archive shards immediately before this entry was
-  prepended — and one of those fifteen is the `nine commit: fields that named no sha` **repair**, not
-  a discharge. Fourteen numbered discharges precede this one, so this is the **fifteenth**.
-- **Taken BEFORE the claim.** Nothing else was staged when this was committed. The working tree was
-  clean at Orient apart from an untracked `dashboard_history.jsonl`, written by the Phase 0 step-5
-  dashboard run itself and **not** covered by `.gitignore` — reported, not committed, and not fixed
-  here (FM #17).
-- **The two frontiers disagree for the first time in this run, and the gap is benign.**
-  `git log -1 --format=%H -- CHANGELOG.md` returns `db8f061`; `git log -1 --format=%H -- HANDOFFS.md`
-  returns `8804635`. The one commit between them is `db8f061` itself — the ledger-only record of the
-  operator-authorized push, taken *after* S42's close-out. `git rev-list --count --no-merges db8f061..HEAD`
-  is **0**, so no backfill is owed on the ledger side; and a commit that exists solely to record a
-  non-commit action is not a session that left work unreceipted, so no reconstructed `status: reconciled`
-  block is owed on the receipt side either. No ghost session.
+Reconciled `8804635` (claim stub `cc593e0`) — fifteenth discharge, taken before the claim.
+**The two ledger frontiers disagreed for the first time**: `CHANGELOG.md`'s was `db8f061` (the
+operator-authorized push, recorded after S42's close-out), `HANDOFFS.md`'s was `8804635`. Benign —
+`db8f061` records a non-commit action, not unreceipted work; no ghost session.
 
 ### 2026-08-04 · [ad hoc] Pushed 42 commits to `origin/main` — the fork is published, and the README's pinned SHAs now resolve
 
@@ -570,29 +540,8 @@ receives a byte of this.
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S41's `commit:` field → `12463dd` — fourteenth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`ab94743`, `5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`,
-`c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S41 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`12463dd`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**116** commits, all refs) and reading each
-  blob's S41 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `12463dd` is the
-  first commit where it reads `status: complete`; the claim stub `c44037c` carries the same block at
-  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  **fourteen receipts running**.
-- **The ordinal is derived, not incremented on faith.**
-  `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **14** in the live file and **0** in both archive shards immediately before this entry was
-  prepended — and one of those fourteen is the `nine commit: fields that named no sha` **repair**, not
-  a discharge. Thirteen numbered discharges precede this one, so this is the **fourteenth**.
-- **Taken BEFORE the claim**, unlike S33 (the only session that took it late) and unlike S40/S41,
-  which had to *recover* the order after drafting a claim stub first. Nothing else was staged when
-  this was committed.
-- **Nothing else needed reconciling, and both frontiers agree on it.**
-  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
-  `12463dd`, and `git rev-list --count --no-merges 12463dd..HEAD` is **0** — no ghost session, no
-  backfill owed. The working tree was clean at Orient.
+Reconciled `12463dd` (claim stub `c44037c`) — fourteenth discharge, taken before the claim. Both
+ledger frontiers agreed; nothing else to reconcile.
 
 ### 2026-08-04 · [ad hoc] S41 — the update path for older adopters, and a documented instruction that destroys history
 
@@ -651,29 +600,10 @@ undecided). Three independent defects; two fixed here, one is upstream's.
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S40's `commit:` field → `11b843a` — thirteenth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`5e9ea52`, `1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`,
-`0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S40 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`11b843a`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**113** commits, all refs) and reading each
-  blob's S40 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `11b843a` is the
-  first commit where it reads `status: complete`; the claim stub `65cdc19` carries the same block at
-  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  **thirteen receipts running**.
-- **The ordinal is derived too, not incremented on faith.** `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **13** in the live file and **0** in either archive shard, immediately before this one was
-  prepended — one of the thirteen is the `nine commit: fields that named no sha` **repair**, not a
-  discharge. Twelve numbered discharges precede this one, so this is the **thirteenth**.
-- **Taken BEFORE the claim, and it had to be recovered to stay that way.** This session drafted its
-  Phase 1B stub first, noticed the outstanding answer slot only when `bin/check-handoff` failed, and
-  **reverted the stub to HEAD rather than collapse the two commits** — the working copy was set aside,
-  the reconcile taken alone, and the claim re-applied on top. S33 remains the only session that took
-  the reconcile late.
-- **Nothing else needed reconciling, and both frontiers agree on it.**
-  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
-  `11b843a`, and `git rev-list --count --no-merges 11b843a..HEAD` is **0** — no ghost, no backfill.
+Reconciled `11b843a` (claim stub `65cdc19`) — thirteenth discharge. **Taken before the claim, but
+had to be recovered**: this session drafted its own Phase 1B stub first, `bin/check-handoff` caught
+the outstanding field, and the stub was reverted to HEAD so the reconcile could be taken alone and
+the claim reapplied on top.
 
 ### 2026-08-04 · [ad hoc] S40 — the ledger doctrine, and an instruction that would have deleted an adopter's records
 
@@ -751,54 +681,15 @@ operator's three goals: the instructions for the cases automation cannot reach.
 ### 2026-08-04 · [ad hoc] Reconcile-on-read: S39's `commit:` field → `316e7ef` — twelfth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`1b3f808`, `763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`,
-`d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S39 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`316e7ef`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**110** commits, all refs) and reading each blob's
-  S39 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `316e7ef` is the first
-  commit where it reads `status: complete`; the claim stub `5b0dd23` carries the same block at
-  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  **twelve receipts running**.
-- **The ordinal is derived too, not incremented on faith.** `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **12** in the live file and **0** in either archive shard, immediately before this one was
-  prepended — one of the twelve is the `nine commit: fields that named no sha` **repair**, not a
-  discharge. Eleven numbered discharges precede this one, so this is the **twelfth**.
-- **Taken BEFORE this session's Phase 1B claim**, holding the order for the twelfth consecutive time
-  (S33 is still the only session that took it late). **BL-14's distributed half remains open**, so the
-  practice is still inherited from the predecessor's receipt rather than assigned by any checklist:
-  `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to `status: pending` receipts
-  and undocumented commits — never to a *complete* receipt whose `commit:` is `pending`.
-- **Nothing else needed reconciling, and both frontiers agree on it.**
-  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
-  `316e7ef`, and `git rev-list --count --no-merges 316e7ef..HEAD` is **0** — no ghost, no backfill.
-  `python3 bin/check-handoff` was **OK** before this edit (newest receipt structurally complete, all
-  23 older receipts naming a sha) and is re-run after it. The live file still holds **24** receipts;
-  this repair adds none, so the header count is unchanged and was re-counted rather than assumed
-  (`grep -c '^\`\`\`handoff' HANDOFFS.md` → 24).
-- **The G2 trend line, re-measured rather than quoted forward — and BOTH files have now been past RED
-  for two consecutive readings.** `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --check`
-  reads **SRF 1.4911** against archive `7a71df0` (both the most-recent and H3's largest-drop boundary
-  resolve to the same archive, so nothing has to be chosen), **308,563 B** against a 65,536 B budget,
-  line headroom **20**, trigger **FIRES**. That is the **fifth consecutive reading past RED** — 1.0820
-  at S36, 1.1709 at S37, 1.2832 at S38, 1.4028 at S39 — and the trimmer still **refuses** the file by
-  design. `CHANGELOG.md` reads **SRF 1.2631** against the most recent archive `020ba3f` (0.4718
-  against H3's largest-drop boundary `3aee4e3` — the two differ by 2.68×), **116,356 B**, line
-  headroom **14**, trigger **FIRES**; it was 1.0666 at S39's claim, so its **second** reading past RED.
-- **The *line* half of the trigger now fires on `CHANGELOG.md` for the first time, and that is derived,
-  not inferred from two readings.** Replaying the tool's own formula
-  (`(READ_CAP_LINES - line_count) * de // dl`, with `classify_zones` from the trimmer itself) over
-  **every one of the 19 commits** that touched this file since its last split `020ba3f` — 606 lines /
-  10 records at the split — the headroom runs 47, 28, 25, 29, 33, 30, 33, 31, 32, 29, 29, 26, 26, 25,
-  21, 20, **17** (`bcc0d7b`, the tree S39 measured at its claim), **16** (`1b3f808`), and **14** at
-  `316e7ef`. `LINE_FIRE_BELOW` is 15, so `316e7ef` — S39's own close-out — is the first commit in this
-  shard's life at which the line half fires, and it fired unobserved: S39 measured 17 at its claim and
-  did not re-measure at close. Until now the byte half had been carrying this file alone.
-  Level control is the wrong lever for either; the **rate** problem
-  (`framework-context-cost-plan.md` §10.2) still owns nobody. Every figure here rots on the next
-  prepend — re-run the commands, never quote these.
+Reconciled `316e7ef` (claim stub `5b0dd23`) — twelfth discharge, taken before the claim; both
+frontiers agreed. **G2/SRF series, HANDOFFS.md**: 1.0820 (S36) → 1.1709 (S37) → 1.2832 (S38) →
+**1.4911** here, 308,563 B, line headroom 20 — fifth consecutive RED reading, trimmer still refuses.
+**CHANGELOG.md**: SRF 1.2631 (0.4718 against H3's largest-drop boundary, 2.68× apart), 116,356 B,
+line headroom 14, FIRES — its second RED reading, and **the first time its line half fires**, and it
+fired **unobserved**: replaying the trimmer's formula over the 19 commits since the last split
+(`020ba3f`) traces headroom 47→…→17 at `bcc0d7b` (the tree S39 measured **at its own claim**, and
+did not re-measure at close) →16 at `1b3f808`→**14** at `316e7ef` (S39's own close-out), crossing
+`LINE_FIRE_BELOW = 15` between S39's claim and its close without anyone catching it there.
 
 ### 2026-08-04 · [ad hoc] S39 — the trimmer ships, and the tuple entry the plan called the task turned out to do nothing
 
@@ -879,43 +770,11 @@ because Phase 0 reconcile matches receipts on session + date.
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S38's `commit:` field → `bcc0d7b` — eleventh discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`763e8c7`, `eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`,
-`9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S38 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`bcc0d7b`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**107** commits, all refs) and reading each blob's
-  S38 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `bcc0d7b` is the first
-  commit where it reads `status: complete`; the claim stub `bc444af` carries the same block at
-  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  **eleven receipts running**.
-- **The ordinal is derived too, not incremented on faith.** `grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **11** in the live file and **0** in either archive shard, immediately before this one was
-  prepended — one of the eleven is the `nine commit: fields that named no sha` **repair**, not a
-  discharge. Ten numbered discharges precede this one, so this is the **eleventh**.
-- **Taken BEFORE this session's Phase 1B claim**, holding the order for the eleventh consecutive time
-  (S33 is still the only session that took it late). **BL-14's distributed half remains open**, so the
-  practice is still inherited from the predecessor's receipt rather than assigned by any checklist:
-  `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to `status: pending` receipts
-  and undocumented commits — never to a *complete* receipt whose `commit:` is `pending`.
-- **Nothing else needed reconciling, and both frontiers agree on it.**
-  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
-  `bcc0d7b`, and `git rev-list --count --no-merges bcc0d7b..HEAD` is **0** — no ghost, no backfill.
-  `python3 bin/check-handoff` was **OK** before this edit (newest receipt structurally complete, all
-  22 older receipts naming a sha) and is re-run after it.
-- **The G2 trend line, re-measured rather than quoted forward — and `CHANGELOG.md` has now crossed
-  too.** `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --check` reads **SRF 1.4028**
-  against archive `7a71df0` (both the most-recent and H3's largest-drop boundary resolve to the same
-  archive, so nothing has to be chosen), **293,427 B**, line headroom **19**, trigger **FIRES**. That
-  is the **fourth consecutive reading past RED** — 1.0820 at S36, 1.1709 at S37, 1.2832 at S38, and
-  the trimmer still **refuses** the file by design. `CHANGELOG.md` reads **SRF 1.0666** against the
-  most recent archive `020ba3f` (0.3936 against H3's largest-drop boundary `3aee4e3` — the two differ
-  by 2.71×), **105,936 B** against a 65,536 B budget, line headroom **17**, trigger **FIRES**. Its SRF
-  was **0.8760** at S38's claim, so **this file has now crossed RED as well** and both watched ledgers
-  are growing faster than their own last archives removed. Level control is the wrong lever for either;
-  the **rate** problem (`framework-context-cost-plan.md` §10.2) still owns nobody. Every figure here
-  rots on the next prepend — re-run the commands, never quote these.
+Reconciled `bcc0d7b` (claim stub `bc444af`) — eleventh discharge, taken before the claim; both
+frontiers agreed. **G2/SRF, HANDOFFS.md**: 1.0820 (S36) → 1.1709 (S37) → **1.4028** here, 293,427 B,
+line headroom 19 — fourth consecutive RED reading. **CHANGELOG.md crosses RED for the first time**:
+SRF **1.0666** (0.3936 against H3's boundary, 2.71× apart), 105,936 B, line headroom 17, FIRES — was
+0.8760 at this session's own claim.
 
 ### 2026-08-03 · [ad hoc] S38 — the trim-trigger dashboard row, and a spec that asked for two things that cannot both be true
 
@@ -999,40 +858,10 @@ authoring the conditional `(severity, description)` row per grow-and-must-be-rea
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S37's `commit:` field → `0e188f5` — tenth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`eb6fbe4`, `408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`,
-`7752114`, `728f39a`.
-
-- **What was reconciled.** S37 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`0e188f5`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**104** commits, all refs) and reading each blob's
-  S37 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `0e188f5` is the first
-  commit where it reads `status: complete`; the claim stub `27bf100` carries the same block at
-  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  **ten receipts running**.
-- **The ordinal is derived too, not incremented on faith.** `grep -nE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returned **10** entries in the live file and **0** in either archive shard, immediately before this
-  one was prepended — one of the ten is the `nine commit: fields that named no sha` **repair**, not a
-  discharge. Nine numbered discharges precede this one, so this is the **tenth**.
-- **Taken BEFORE this session's Phase 1B claim**, holding the order for the tenth consecutive time
-  (S33 is still the only session that took it late). **BL-14's distributed half remains open**, so
-  the practice is still inherited from the predecessor's receipt rather than assigned by any
-  checklist: `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to `status: pending`
-  receipts and undocumented commits — never to a *complete* receipt whose `commit:` is `pending`.
-- **Nothing else needed reconciling, and both frontiers agree on it.**
-  `git log -1 --format=%H -- CHANGELOG.md` and `git log -1 --format=%H -- HANDOFFS.md` both return
-  `0e188f5`, and `git rev-list --count --no-merges 0e188f5..HEAD` is **0** — no ghost, no backfill.
-  `python3 bin/check-handoff` was **OK** before this edit (newest receipt structurally complete, all
-  21 older receipts naming a sha) and is re-run after it.
-- **The G2 trend line, re-measured rather than quoted forward — this is the number S36's receipt got
-  wrong by quoting it.** `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --check` now
-  reads **SRF 1.2832** against archive `7a71df0` (both the most-recent and H3's largest-drop boundary
-  resolve to the same archive here, so nothing has to be chosen). It was **1.0820** at S36's close-out
-  and **1.1709** a few hours later at S37's — the file is growing faster than its own last archive
-  removed, and has been past RED for three readings. The trimmer still **refuses** it by design; level
-  control is the wrong lever, and the **rate** problem (`framework-context-cost-plan.md` §10.2) still
-  owns nobody. `CHANGELOG.md` reads **SRF 0.8760** / **95,834 B** against a 65,536 B budget, trigger
-  **FIRES**. Both figures rot on the next prepend — re-run the command, never quote these.
+Reconciled `0e188f5` (claim stub `27bf100`) — tenth discharge, taken before the claim; both
+frontiers agreed. **G2/SRF, HANDOFFS.md**: **1.2832** — corrects S36's own receipt, which had
+quoted 1.0820 measured hours earlier (re-running found 1.1709 already, now 1.2832) — third
+consecutive RED reading. **CHANGELOG.md**: SRF 0.8760, 95,834 B, FIRES.
 
 ### 2026-08-03 · [ad hoc] S37 — the three dashboard defects fixed, and one of them could not be done as specified
 
@@ -1109,44 +938,14 @@ see the receipt). Deliverable: plan **D4** (a), (b) and (c) fixed in **both** tw
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S36's `commit:` field → `df381ea` — ninth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`408136c`, `0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`,
-`728f39a`.
-
-- **What was reconciled.** S36 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`df381ea`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**101** commits, all refs) and reading each blob's
-  S36 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `df381ea` is the first
-  commit where it reads `status: complete`; the claim stub `cb537a9` carries the same block at
-  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  **nine receipts running**.
-- **The ordinal is derived too, not incremented on faith.** `grep -nE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returns **9** entries in the live file and **0** in either archive shard — one of the nine is the
-  `nine commit: fields that named no sha` **repair**, not a discharge. Eight numbered discharges
-  precede this one, so this is the **ninth**.
-- **Taken BEFORE this session's Phase 1B claim**, holding the order for the ninth consecutive time
-  (S33 is still the only session that took it late). **BL-14's distributed half remains open**, so
-  the practice is still inherited from the predecessor's receipt rather than assigned by any
-  checklist: `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to `status: pending`
-  receipts and undocumented commits — never to a *complete* receipt whose `commit:` is `pending`.
-- **Nothing else needed reconciling.** The frontier holds two commits since S36's close-out —
-  `df381ea` itself and `62659f4` (the BL-22 raise) — and both already carry ledger entries, so there
-  is no ghost and no backfill. `python3 bin/check-handoff` was **OK** both before and after this edit.
-- **The G2 trend line, and the first reading taken with a tool in the tree.** `HANDOFFS.md` is
-  **253,671 B** at this reconcile, up from **238,432 B** at the previous one — **+15,239 B across one
-  session**, the largest single-session rise yet recorded here and slightly steeper than the +14,661 B
-  before it. `starter-kit/methodology_trim.py` now exists, and its verdict on the file is **refusal**:
-  `--file HANDOFFS.md --check` reports the trigger FIRES on both forms (line headroom 22 records;
-  253,671 B against a 65,536 B budget) at **SRF 1.1709**, above `SRF_RED = 1.00`
-  (`starter-kit/methodology_trim.py:51`), so it declines without `--force`.
-- **And that SRF is the session's first correction: S36's receipt records 1.0820, measured hours
-  earlier — it is 1.1709 now.** The figure was re-run rather than carried forward, which is the only
-  reason the drift was seen; SRF is a ratio against the last archive, so it climbs with every
-  prepend and a quoted value starts rotting the moment it is written. `CHANGELOG.md` sits at
-  **0.7415** against its most recent boundary but **0.2642** against H3's largest-drop boundary —
-  the same file, **2.81×** apart, with the tool labelling its use of the former as a policy addition
-  on top of H3 rather than a reading of it. G2's headline file is still untrimmed by design, and
-  §10.2's rate question still owns nobody.
+Reconciled `df381ea` (claim stub `cb537a9`) — ninth discharge, taken before the claim. Frontier held
+two commits (`df381ea` itself, `62659f4` the BL-22 raise), both already logged — no ghost.
+**First G2/SRF reading with the trimmer in the tree**: HANDOFFS.md 253,671 B, up **15,239 B** in
+one session (steeper than the prior +14,661 B) — `--check` reads SRF 1.1709 (self-corrected from
+1.0820 measured hours earlier: SRF rots on every prepend), line headroom 22, FIRES; refuses without
+`--force`. CHANGELOG.md: 0.7415 against its own last boundary, 0.2642 against H3's largest-drop
+boundary — 2.81× apart, same file, because 0.7415 is the tool applying a **policy choice** on top of
+the H3 split, not a neutral reading of H3's own boundary.
 
 ### 2026-08-03 · [ad hoc] BL-22 raised: `DOC_ONLY_SOURCE_LOC_MAX = 200` has no derivation and no test
 
@@ -1225,30 +1024,9 @@ a go-ahead. Implements [`docs/planning/ledger-trimmer-design.md`](docs/planning/
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S35's `commit:` field → `d192161` — eighth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`0a1f19b`, `40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S35 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`d192161`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` (**98** commits, all refs) and reading each blob's
-  S35 block with `bin/check-handoff`'s own `extract_blocks`/`parse_block`, `d192161` is the first
-  commit where it reads `status: complete`; the claim stub `2fc2c5b` carries the same block at
-  `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  **eight receipts running**.
-- **The ordinal is derived too, not incremented on faith.** `grep -nE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[ad hoc\] Reconcile-on-read' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-  returns **8** entries in the live file and **0** in either archive shard — but one of the eight is
-  the `nine commit: fields that named no sha` **repair**, not a discharge. Seven numbered discharges
-  precede this one, so this is the **eighth**.
-- **Taken BEFORE this session's Phase 1B claim**, holding the order for the eighth consecutive time
-  (S33 is still the only session that took it late). It held again because the practice is inherited
-  from the predecessor's receipt, not because any checklist assigns the step: **BL-14's distributed
-  half remains open**, and `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 still scopes reconcile to
-  `status: pending` receipts and undocumented commits — never to a *complete* receipt whose `commit:`
-  is `pending`.
-- **Form follows `40a1554`/`0a1f19b`:** the field carries the bare sha and the derivation lives here,
-  in the action ledger, rather than being restated in the receipt. `HANDOFFS.md` is the file G2 names
-  as growing unbounded — **238,432 B** at this reconcile, up from 223,771 B at the previous one, a
-  **+14,661 B** rise across one session.
+Reconciled `d192161` (claim stub `2fc2c5b`) — eighth discharge, taken before the claim. HANDOFFS.md
+238,432 B, up **14,661 B** from the prior reconcile (223,771 B) — no tool existed yet to read SRF
+from.
 
 ### 2026-08-03 · [ad hoc] S35 — the trimmer designed, and the manual procedure's proof found insufficient
 
@@ -1307,22 +1085,8 @@ S-number collision noted rather than silently renumbered.
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S34's `commit:` field → `ed22ace` — seventh discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`40a1554`, `caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S34 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`ed22ace`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` and reading each blob's S34 block, `ed22ace` is
-  the first commit where it reads `status: complete`; the claim stub `816984b` carries the same block
-  at `status: pending`, so the stub and the close-out are distinct commits — S29's gotcha (3), now
-  seven receipts running.
-- **Taken BEFORE this session's Phase 1B claim**, holding the order S33 broke and S34's predecessor
-  restored. It still held because the practice was inherited from the receipt, not because any
-  checklist assigns the step: **BL-14's distributed half remains open.**
-- **Form follows S33's discharge (`40a1554`), not the older ones.** The field carries the bare sha and
-  the derivation lives here, in the action ledger, rather than being restated in the receipt. That is
-  the leaner of the two established shapes, and `HANDOFFS.md` is the file G2 names as growing
-  unbounded — 223,771 B at this reconcile.
+Reconciled `ed22ace` (claim stub `816984b`) — seventh discharge, taken before the claim, restoring
+the order S33 broke. HANDOFFS.md 223,771 B at this reconcile (first size data point in the series).
 
 ### 2026-08-03 · [ad hoc] S34 — the Learnings table extracted to `starter-kit/FRAMEWORK_LEARNINGS.md`; the mandatory read-set floor down 16.6%
 
@@ -1367,19 +1131,9 @@ Plan §5 item **S34**, the first of the twelve-session queue and the only one th
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S33's `commit:` field → `d69f7a9` — sixth discharge, and the practice restored to its right place
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`caf1612`, `c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S33 closed out `commit: pending`, legitimately — its receipt shipped inside
-  the commit whose sha it names. That sha is **`d69f7a9`**. Derived, not assumed: walking
-  `git log --all --full-history` over `HANDOFFS.md` and reading each blob's S33 block, `d69f7a9` is
-  the first commit where it reads `status: complete`; `caf1612` and the claim stub `dcbda37` both
-  carry the same block at `status: pending`, so the stub and the close-out are distinct commits.
-- **Taken BEFORE this session's Phase 1B claim**, which is where the four sessions before S33 took it
-  and where S33 did not — its own gotcha (1) recorded the slip and named the cause: the pair held
-  because `bin/check-handoff` fired, not because any checklist assigned the step. That is BL-14's
-  distributed half. Restoring the order here is one session's compliance, not a fix; the gap between
-  what the spec promises and what a checklist assigns is still open.
+Reconciled `d69f7a9` (claim stub `dcbda37`; `caf1612` also carries the pending block) — sixth
+discharge. **The order broke here and was restored the same session**: `bin/check-handoff` firing is
+what caught it, not the practice — BL-14's distributed half (no checklist assigns the step) is why.
 
 ### 2026-08-03 · [ad hoc] A constraint nobody imposed: the "paused channel" removed, and the context-cost work re-queued against the operator's three goals
 
@@ -1433,19 +1187,10 @@ Plan §5 item **S34**, the first of the twelve-session queue and the only one th
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S32's `commit:` field → `a56dff8` — fifth discharge, and the first taken late
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`c000a90`, `0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`.
-
-- **What was reconciled.** S32 closed out `commit: pending`, legitimately — the receipt shipped inside
-  the commit whose sha it names. That sha is **`a56dff8`**, with `1479143` (close-out repair) and
-  `e1c1fd0` (operator decisions) named beside it. Derived by walking `git log --all --full-history`
-  over `HANDOFFS.md` (**90** commits, all refs) with `bin/check-handoff`'s own
-  `extract_blocks`/`parse_block` and taking the first commit whose S32 block reads `status: complete`.
-- **It was taken LATE, and that is the point worth recording.** Four prior sessions discharged this
-  before their Phase 1B claim; S33 claimed first (`dcbda37`) and only then discharged. Nothing was
-  lost — `bin/check-handoff` failed immediately and named the exact field — but the gate-on-write and
-  reconcile-on-read pair worked here because the *checker* caught it, not because the *practice* held.
-  BL-14's distributed half is exactly this: the spec promises a reconcile that no checklist assigns.
+Reconciled `a56dff8` (with `1479143` close-out repair and `e1c1fd0` operator-decisions shas named
+beside it) — fifth discharge, **the first taken late**: S33 (the discharging session) claimed itself
+first, then discharged S32's field. Nothing lost — `bin/check-handoff` failed immediately and named
+the exact field.
 
 ### 2026-08-03 · [ad hoc] Operator decisions 1, 2 and 3 of the context-cost plan, ratified and recorded
 
@@ -1551,28 +1296,10 @@ bypass is worse than no refusal. Fork-side, canonical-only — `.githooks/pre-co
 ### 2026-08-03 · [ad hoc] Reconcile-on-read: S31's `commit:` field → `020ba3f` — fourth consecutive discharge
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`0a1a0d5`, `d9bedb0`, `9267500`, `7752114`, `728f39a`. Not S32's deliverable and no license for work
-beyond it (FM #17). **Deliberately short** — four prior entries carry the mechanics; cite, don't
-re-narrate.
-
-- **What was reconciled.** S31's receipt closed out `commit: pending`, legitimately: it shipped inside
-  the commit whose sha it names. That sha is **`020ba3f`**, derived by the method
-  `bin/check-handoff`'s own failure note prescribes — walk `git log --all --full-history` over
-  `HANDOFFS.md` (**85** commits, all refs) with the checker's `extract_blocks`/`parse_block`, take the
-  first commit whose `S31` block reads `status: complete`. The claim stub `74479df` holds the same
-  block at `status: pending` — distinct commits, S29's gotcha (3), now four receipts running.
-- **RED observed, not inherited.** A synthetic `S32` stub prepended to a **scratch copy** made the
-  checker emit *"receipt S31 (2026-08-02) names no commit sha in its `commit:` answer slot"*, exit 1.
-  The working tree never went red (`starter-kit/SAFEGUARDS.md:34`).
-- **Still a practice, not a procedure.** BL-14's DISTRIBUTED half — the seed promises a reconcile no
-  checklist assigns — is untouched and blocked on the paused channel.
-- **One front-matter number, falsified by this very entry, deleted rather than incremented.** The
-  BL-20 paragraph above said the bare `**Model:**` form "has held unbroken for nine entries since" —
-  a level, in a sentence that any new entry written above it invalidates. Prepending this entry made
-  it wrong within the same commit, so it was **deleted, not bumped** (sink 1 of
-  [`framework-context-cost-plan.md`](docs/planning/framework-context-cost-plan.md) §3.5): the list is
-  in view and the command two lines below counts it. No other front-matter figure moved.
+Reconciled `020ba3f` (claim stub `74479df`) — fourth discharge, taken before the claim. RED verified
+via a synthetic S32 stub on a **scratch copy** (working tree never went red). Also: deleted (not
+incremented) a front-matter figure this entry itself falsified — "held unbroken for nine entries" —
+rather than let a level claim rot in place.
 
 ### 2026-08-02 · [ad hoc] The action ledger split at a day seam, and the archive trigger restated as a rate
 
@@ -1633,25 +1360,8 @@ taken before any technical work.
 ### 2026-08-02 · [ad hoc] Reconcile-on-read: S30's `commit:` field → `326094d` — third consecutive discharge
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`d9bedb0`, `9267500`, `7752114`, `728f39a`. Not S31's deliverable and no license for work beyond it
-(FM #17). **Deliberately short**: this session's own deliverable is that this file is 15.8 ledger
-entries from the `Read` cap, and a reconcile entry is the cheapest place to stop restating what four
-prior entries already say — cite, don't re-narrate.
-
-- **What was reconciled.** S30's receipt closed out `commit: pending`, legitimately — it shipped
-  inside the commit whose sha it names. That sha is **`326094d`**, derived by the method
-  `bin/check-handoff`'s own failure note prescribes: walk `git log --all --full-history` over
-  `HANDOFFS.md` (**82** commits, all refs) with the checker's `extract_blocks`/`parse_block`, take the
-  first commit whose `S30` block reads `status: complete`. The claim stub `0485d4a` holds the same
-  block at `status: pending` — distinct commits, S29's gotcha (3).
-- **RED observed, not inherited.** A synthetic `S31` stub prepended to a **scratch copy** made the
-  checker emit *"receipt S30 (2026-08-02) names no commit sha in its `commit:` answer slot"*, exit 1.
-  The working tree never went red (`starter-kit/SAFEGUARDS.md:34`).
-- **Three in a row is a practice with a widening gap behind it.** The DISTRIBUTED half of BL-14 is
-  still untouched: the seed promises a reconcile no procedure assigns. Each clean discharge makes the
-  fork look healthier while the adopter-facing hole stays exactly where it was — blocked on the
-  paused channel, and a choice (schedule it into Phase 0, or delete the promise), not an edit.
+Reconciled `326094d` (claim stub `0485d4a`) — third discharge, taken before the claim. RED verified
+via a synthetic S31 stub on a **scratch copy**.
 
 ### 2026-08-02 · [ad hoc] The framework's context cost — adopter heuristics and a remediation plan
 
@@ -1742,33 +1452,9 @@ and no channel was needed.
 ### 2026-08-02 · [ad hoc] Reconcile-on-read: S29's `commit:` field → `4669fb6` — and the first time the tripwire was *observed* firing
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`9267500` (the same duty, one session earlier), `7752114`, `728f39a`. It is not S30's deliverable and
-does not license work beyond it (FM #17).
-
-- **What was reconciled.** S29's receipt (`HANDOFFS.md`, session `S29`, 2026-08-02) closed out with
-  `commit: pending`, legitimately — it shipped inside the very commit whose sha it names. That sha is
-  **`4669fb6`**, derived and not assumed: the receipt's first appearance with `status: complete`,
-  found by walking `git log --all --full-history` over `HANDOFFS.md` (79 commits, all refs) with the
-  checker's own `extract_blocks`/`parse_block`, then re-verified as an ancestor of `HEAD`. The stub's
-  own first appearance is `7df3c4b`, and the two are distinct — which is exactly the trap S29's own
-  gotcha (3) recorded. Leading token replaced; existing prose kept, `status` untouched.
-- **The claim S29 could only make forward, this session tested.** S29 wrote that `bash bin/tests.sh`
-  "goes RED (Test 25 L1) the moment that session prepends its own receipt", and recorded honestly that
-  the mechanism had been *observable* and never *observed* — both prior discharges happened before any
-  successor receipt existed. Rather than inherit that sentence a third time, a synthetic `S30`
-  Phase 1B stub was prepended to a **scratch copy** of the ledger and `bin/check-handoff` run against
-  it. It named this exact field: *"receipt S29 (2026-08-02) names no commit sha in its `commit:`
-  answer slot"*, exit 1. **First observed firing on a real receipt** — and the working tree never went
-  red, so nothing was started from a red suite (`starter-kit/SAFEGUARDS.md:34`). A prediction verified
-  against a copy costs one file write; repeating it costs the record its meaning
-  ([Learning #13](starter-kit/SESSION_RUNNER.md)).
-- **Two consecutive discharges make a practice, not a procedure.** BL-14's measured base rate was six
-  firings, only four deliberate, all inside one 8-hour window on 2026-07-25, by hand. This is the
-  second in a row found at Phase 0 by the mechanism BL-14 shipped. The DISTRIBUTED half is untouched:
-  the seed still promises a reconcile that no procedure assigns, and that choice — schedule it into
-  `starter-kit/SESSION_RUNNER.md` Phase 0, or delete the promise — remains blocked on the paused
-  channel.
+Reconciled `4669fb6` (claim stub `7df3c4b`) — second discharge, taken before the claim. **First time
+the tripwire was tested against a real receipt** (via a synthetic S30 stub on a **scratch copy** —
+both prior discharges had only argued the mechanism was observable, never run it).
 
 ### 2026-08-02 · [BL-15] The `changelog_ref` locator-form rule — BL-15 was right, and settling it found a different defect
 
@@ -1882,30 +1568,9 @@ DISTRIBUTION members in the diff.
 ### 2026-08-02 · [ad hoc] Reconcile-on-read: S28's `commit:` field → `6d47624` — the first time the duty was discharged as a duty
 
 **Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` and `:42`. Precedents:
-`7752114` (the nine-receipt repair the day before), `728f39a`. It is not S29's deliverable and does
-not license work beyond it (FM #17).
-
-- **What was reconciled.** S28's receipt (`HANDOFFS.md:32`, 2026-08-02) closed out with
-  `commit: pending`, legitimately — it shipped inside the very commit whose sha it names. That sha
-  is **`6d47624`**, derived and not assumed: the receipt's first appearance with `status: complete`,
-  found by walking `git log --all --full-history` over `HANDOFFS.md` with the checker's own
-  `extract_blocks`/`parse_block`, then re-verified as an ancestor of `HEAD`. Leading token replaced;
-  every word of existing prose kept, `status` untouched — the shape `7752114` established.
-- **This is the first discharge that was owed rather than remembered.** The base rate BL-14 measured
-  is six firings, only four deliberate, all inside one 8-hour window on 2026-07-25 — one operator, by
-  hand. This one was found at Phase 0 by the mechanism BL-14 shipped, in the session immediately
-  after it shipped.
-- **Discharged BEFORE the Phase 1B claim, deliberately.** Test 25 L1 exempts the newest receipt
-  positionally, so it was green while S28 was still newest and would have gone RED the instant S29
-  prepended its own. Repairing first means S29 never started from a red suite
-  (`starter-kit/SAFEGUARDS.md:34`) — and it is the honest record: the mechanism was *observable*
-  here, not *observed*. The distinction matters, because a session that claims first and repairs
-  second is the one that actually proves the tripwire fires.
-- **BL-14's open half is untouched by this.** The DISTRIBUTED spec still promises a reconcile that no
-  procedure assigns; one hand-discharge does not make it a procedure. That choice — schedule it into
-  `starter-kit/SESSION_RUNNER.md` Phase 0, or delete the promise from the seed — remains blocked on
-  the paused channel.
+Reconciled `6d47624` — first discharge, and **the first time this duty was performed as a duty**
+rather than remembered by hand (BL-14's base rate: six prior firings, only four deliberate, all in
+one 8-hour window, by hand). Taken before the claim so S29 never started from a red suite.
 
 ### 2026-08-02 · [BL-14] The `commit:` answer-slot rule — a distributed promise that had no owner and no detector
 
@@ -1963,39 +1628,22 @@ upstream action taken and none authorized** — `gh` was read-only, and upstream
 
 ### 2026-08-02 · [ad hoc] Reconcile-on-read repair: nine `commit:` fields that named no sha
 
-**Model:** Claude Opus 5 (1M context).
-**Record repair, committed on its own** per `starter-kit/SESSION_RUNNER.md:39` ("committed on its
-own, separate from this session's later deliverable") and `:42` ("does not become this session's
-deliverable"). Precedent: `728f39a`. The analysis this repair came out of ships separately as
-**BL-14**.
-
-- **The nine, and what each now names.** Seven carried the literal `pending`: S27 → `1298af7`,
-  S22 → `6f994ae`, S21 → `36e9195`, S20 → `596ff18`, S19 → `3737acd`, S18 → `8e6f292`
-  (`docs/archive/HANDOFFS-archive.md`), S6 → `21fb521` (same archive). Two more named no sha in the
-  answer slot at all: S26 → `54426cb` and S25 → `3aee4e3`, both reading `this commit — …`.
-  **S25 contained no sha anywhere in the field** — the most unresolvable value in the corpus, and
-  the one that keying on the literal word `pending` would have missed.
-- **Every target derived, not assumed.** Each is the commit in which that receipt's block first
-  appeared with `status: complete`, computed by walking `git log --all --full-history` over both
-  ledger files with the checker's own `extract_blocks`/`parse_block` — never grep, per the
-  fence-nesting rule at `bin/check-handoff:83`. All nine re-verified as ancestors of `HEAD`.
-- **S6 is dual-homed and is the one case that is not a one-token edit.** It was authored at
-  `21fb521` as `session: S2` on `feat/capability-tiered-review`, then renumbered S2 → S6 and given
-  its fork-side close-out narrative in the merge `ab5b2d6`. `21fb521` is an ancestor of **both**
-  `upstream/main` and this fork's `main`; **`ab5b2d6` is fork-only.** `upstream/main` still carries
-  the identical receipt as `session: S2, commit: pending`. Naming `ab5b2d6` alone would have written
-  a value unresolvable in the canonical copy of the same receipt — the unreachable-reference trap
-  [Learning #13](starter-kit/SESSION_RUNNER.md) was added to prevent. That copy is upstream's to
-  fix, not the fork's, and no upstream action was taken.
-- **Shape of the edit: replace the leading token, keep every word of existing prose.** `status` is
-  untouched on all nine — the historical reconciles (`e5638af`, `4e2901f`, `bc2481d`) all left it
-  `complete`, and `reconciled` is reserved for a receipt a later session *reconstructed*, which
-  none of these are.
-- **Verified after.** 31 of 32 receipts now lead their `commit:` with a sha; the sole exception is
-  this session's own open S28 Phase 1B stub, which carries no `commit:` key at all and is exempt by
-  construction.
-- **The archive was edited, and that rewrites no history** — `docs/archive/HANDOFFS-archive.md` is
-  frozen *content*, not a frozen file, and two of the nine live there.
+**Model:** Claude Opus 5 (1M context). The bulk repair BL-14 came out of; not a per-session
+discharge. Nine receipts reconciled at once, each to the commit where its block first read
+`status: complete`. Seven carried the literal `pending`: S27→`1298af7`, S22→`6f994ae`,
+S21→`36e9195`, S20→`596ff18`, S19→`3737acd`, S18→`8e6f292` (archive), S6→`21fb521` (archive). Two
+read `this commit — …` instead: S26→`54426cb`, S25→`3aee4e3` (S25 had no sha anywhere in the field —
+the one `pending`-only keying would have missed). **S6 is dual-homed**: authored `21fb521` as
+`session: S2` on the since-renamed branch `feat/capability-tiered-review` (an ancestor of both this
+fork and `upstream/main`), then renumbered and given its fork-side close-out narrative in the
+fork-only merge `ab5b2d6` — the field names `21fb521`, reachable from *both* repos, because naming
+`ab5b2d6` alone would recreate the unreachable-reference trap [Learning #13](starter-kit/SESSION_RUNNER.md)
+exists to prevent; upstream's own copy still reads `session: S2, commit: pending` and is upstream's
+to fix, not this fork's. **Shape of the edit**: `status` left untouched on all nine, matching three
+prior historical reconciles (`e5638af`, `4e2901f`, `bc2481d`) — `reconciled` is reserved for a
+receipt a *later* session reconstructs, none of these are. Verified after: 31 of 32 receipts led
+with a sha; the sole exception was S28's own still-open stub. The two archive-housed receipts were
+edited too — the archive is frozen content, not a frozen file.
 
 ### 2026-08-02 · [ad hoc] `bin/check-handoff` learned the Phase 1B stub schema — the flag advertised a capability the tool never had
 

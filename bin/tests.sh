@@ -1716,6 +1716,96 @@ if [ -n "$NOOVERWRITE" ]; then
         || fail "bootstrap: tracked file(s) wrongly listed as never-overwrite:$WRONG"
 fi
 
+echo "== Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the compact norm (RED-first, S46) =="
+# Before S46's compaction, 19 Reconcile-on-read entries ran 13-48 body lines each (556 lines /
+# 46,153 B total across the 18 that existed at S45's claim) -- an identical derivation method
+# re-narrated in full prose every single time. The norm compacted them to a handful of lines each
+# and stated the method once in the front matter (see that paragraph, just above "## 2026-08").
+# This test is the mechanical half of "new entries stay inside it": a body over budget means the
+# norm eroded. Two budgets, not one -- an adversarial verification pass caught that a single flat
+# cap would either truncate the one-time bulk repair entry's real content or let the recurring
+# per-session discharges drift too high: DISCHARGE_BUDGET covers the class this whole exercise was
+# about (max observed 10, after restoring facts the first cut had dropped) with a small margin;
+# REPAIR_BUDGET is looser because that entry is a one-time historical event, never repeated, so it
+# is not the erosion risk this test exists to catch (max observed 16).
+RECON_CHECK="$(python3 - "$METHODOLOGY/CHANGELOG.md" <<'PY'
+import re, sys
+DISCHARGE_BUDGET = 12
+REPAIR_BUDGET = 20
+with open(sys.argv[1], encoding="utf-8") as f:
+    lines = f.readlines()
+heading_idxs = [i for i, l in enumerate(lines) if l.startswith("### ")]
+heading_idxs.append(len(lines))
+recon_re = re.compile(r"^### \d{4}-\d{2}-\d{2} · \[ad hoc\] Reconcile-on-read")
+discharge_re = re.compile(r"^### \d{4}-\d{2}-\d{2} · \[ad hoc\] Reconcile-on-read: S\d+'s")
+count = 0
+violations = []
+for idx, hi in enumerate(heading_idxs[:-1]):
+    if recon_re.match(lines[hi]):
+        count += 1
+        end = heading_idxs[idx + 1]
+        body = [l for l in lines[hi + 1:end] if l.strip() != ""]
+        budget = DISCHARGE_BUDGET if discharge_re.match(lines[hi]) else REPAIR_BUDGET
+        if len(body) > budget:
+            violations.append(f"{lines[hi].strip()[:70]} ({len(body)} lines, budget {budget})")
+print(count)
+for v in violations:
+    print("VIOLATION:", v)
+PY
+)"
+RECON_COUNT="$(echo "$RECON_CHECK" | head -1)"
+RECON_VIOLATIONS="$(echo "$RECON_CHECK" | grep -c '^VIOLATION:')"
+if [ "$RECON_COUNT" -gt 0 ] 2>/dev/null && [ "$RECON_VIOLATIONS" = "0" ]; then
+    pass "reconcile-on-read: all $RECON_COUNT live entries stay within their body budget"
+else
+    fail "reconcile-on-read: budget violated -- $(echo "$RECON_CHECK" | grep '^VIOLATION:')"
+fi
+
+# The norm's own explanation must still be present -- if it is silently deleted, the compact
+# entries below it become unexplained shorthand for the next reader.
+grep -q "Reconcile-on-read entries below — the compact form, and the method stated once" "$METHODOLOGY/CHANGELOG.md" \
+    && pass "reconcile-on-read: the front-matter norm paragraph is present" \
+    || fail "reconcile-on-read: the front-matter norm paragraph is missing"
+
+# RED-observed, not inherited (Learning #13): prove the budget check actually fires on a NEW
+# violation, on a scratch copy -- never on the tracked file. Uses a per-session discharge heading
+# (the tighter of the two budgets), so this also proves the two classes are distinguished correctly
+# -- a mutant collapsing back to one flat budget would still pass this assertion, so Test 29's own
+# regex split is covered by the count/violation logic above, not by this fixture alone.
+RECON_SCRATCH="$(mktemp)"
+cp "$METHODOLOGY/CHANGELOG.md" "$RECON_SCRATCH"
+{
+    echo ""
+    echo "### 2099-01-01 · [ad hoc] Reconcile-on-read: S999's \`commit:\` field → \`0000000\` — synthetic overlong fixture"
+    echo ""
+    for i in $(seq 1 20); do echo "Line $i of a body that has regressed back to essay length."; done
+} >> "$RECON_SCRATCH"
+RECON_SCRATCH_CHECK="$(python3 - "$RECON_SCRATCH" <<'PY'
+import re, sys
+DISCHARGE_BUDGET = 12
+REPAIR_BUDGET = 20
+with open(sys.argv[1], encoding="utf-8") as f:
+    lines = f.readlines()
+heading_idxs = [i for i, l in enumerate(lines) if l.startswith("### ")]
+heading_idxs.append(len(lines))
+recon_re = re.compile(r"^### \d{4}-\d{2}-\d{2} · \[ad hoc\] Reconcile-on-read")
+discharge_re = re.compile(r"^### \d{4}-\d{2}-\d{2} · \[ad hoc\] Reconcile-on-read: S\d+'s")
+violations = 0
+for idx, hi in enumerate(heading_idxs[:-1]):
+    if recon_re.match(lines[hi]):
+        end = heading_idxs[idx + 1]
+        body = [l for l in lines[hi + 1:end] if l.strip() != ""]
+        budget = DISCHARGE_BUDGET if discharge_re.match(lines[hi]) else REPAIR_BUDGET
+        if len(body) > budget:
+            violations += 1
+print(violations)
+PY
+)"
+rm -f "$RECON_SCRATCH"
+[ "$RECON_SCRATCH_CHECK" -ge 1 ] 2>/dev/null \
+    && pass "reconcile-on-read: a synthetic 20-line discharge entry on a scratch copy is caught (RED observed)" \
+    || fail "reconcile-on-read: a synthetic 20-line discharge entry on a scratch copy was NOT caught"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]
