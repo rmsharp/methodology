@@ -41,7 +41,7 @@ key_files: `../mts-system` (target of the sync; 9 updated + 2 created files, unc
 gotchas: (1) **A session that begins immediately after a same-conversation close-out, with no intervening Orient, does not get Phase 0's reconcile-on-read for free.** Every prior session transition (S48→S49, S49→S50) reconciled the predecessor's `commit: pending` field automatically because a fresh Phase 0 ran first. S50→S51 happened inside the same turn sequence with no new Orient, so that step was silently skipped at claim — `bin/tests.sh`'s own live-ledger check caught it, not process discipline. **A same-session task chain still needs the reconcile step performed explicitly**, even without a fresh Phase 0 triggering it. (2) `bin/sync`'s `--mode commit` (the default) does not itself perform a `git commit` — it only means the synced files are meant to be git-tracked rather than gitignored. A real sync leaves plain uncommitted working-tree changes; nothing here auto-committed into `mts-system`. (3) `mts-system` is a substantial multi-service production system (`mts-backend`, `mts-web`, `mts-admin`, `MTSApp`, `mts-android`, staging/prod docker-compose) — the sync touched none of it, but "verify it still works" needed explicit scoping to what actually changed (the 9 methodology/tooling files), not a demand to exercise unrelated application test suites that would need docker/secrets this session has no business touching.
 runtime_smoke: Live external write verified functionally: `bin/status ../mts-system` all-current (was 3 behind + 2 missing), both synced Python tools run (`--help` exit 0), synced markdown well-formed and non-truncated (byte counts checked). This repo's own suite: `bash bin/tests.sh` **185 passed / 1 failed** (Test 9's expected upstream 404) — after fixing the self-caught 184/2 regression mid-session. `python3 bin/check-links` OK 88/22 (unchanged). `python3 bin/check-handoff --allow-pending` OK.
 changelog_ref: CHANGELOG.md "2026-08-08 · [ad hoc] Live bin/sync write test against mts-system — 9 methodology files updated, zero application-code touches"; the self-caught reconcile is CHANGELOG.md "2026-08-08 · [ad hoc] Reconcile-on-read: S50's commit: field → c1610bf — twenty-third discharge, caught mid-session by bin/tests.sh"; the claim stub is commit `7a75a60`
-commit: pending
+commit: f801716
 ```
 Self-score **7/10.** **+** Executed exactly what was authorized, no more — the sync touched precisely
 the 9 files the dry-run predicted, verified explicitly against every application-code path to prove
@@ -65,8 +65,6 @@ straight into this session's pre-condition check). Docked nothing for S50's own 
 session hit (the missing reconcile) was a failure of S51's own claim step, not something S50's receipt
 got wrong or omitted; S50's `commit: pending` field was exactly correct to leave as `pending` at its
 own close-out, per the standing convention.
-
----
 
 ---
 
