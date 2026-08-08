@@ -144,6 +144,48 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [BL-24] Closed: focused `mts-system` UAT re-run — F9 confirmed resolved, F10 improved to zero, F6/F7 unchanged
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** BL-24's own queued next step — re-derive F6, F7, F9, F10, F11 against `mts-system`'s
+  current state (F1/F3/F4/F8/F12 correctly out of scope, per the item's own framing). Read-only
+  throughout; pre-condition (0 dirty paths, `bin/sync --dry-run` unblocked) reverified at claim,
+  unchanged from S49's snapshot ~4 hours earlier.
+- **F6 (D3):** unchanged, still open. `collect_methodology_metrics` still reports 100% compliance
+  while `bin/status` shows `SESSION_RUNNER.md` 8 versions behind, `BOOTSTRAP.md` 8 versions behind,
+  `methodology_dashboard.py` 7 versions behind, and two tracked files (`FRAMEWORK_LEARNINGS.md`,
+  `methodology_trim.py`) missing entirely — the presence-only blind spot F6 named reproduces exactly.
+- **F7 (D4):** unchanged, still open. `bin/check-handoff --file ../mts-system/HANDOFFS.md` still
+  fails on the same receipt (S74, 2026-07-14) and the same all-numeric sha (`4966443`), against a
+  ledger that has grown substantially since (`mts-system` is now past its own "Session 96").
+- **F9 (D4): confirmed resolved**, not just "looks resolved" as S49 hedged. `git ls-files` lists
+  `dashboard_history.jsonl` as tracked; `git check-ignore` confirms it is not ignored; `.gitignore`
+  carries an explanatory comment. Adopter-side fix, not this fork's doing.
+- **F10 (D4): improved, 1 → 0.** `mts-system`'s own Session 96 close-out fully reconciled its
+  `CHANGELOG.md`; `git rev-list --count --no-merges <frontier>..HEAD` now reads 0.
+- **F11 (D4): not applicable, confirmed.** `mts-system` was never one of the three repos
+  (`airqino`, `model_project_constructor`, `wsfct`) missing `HANDOFFS.md`; `test -f` confirms present.
+- **Deliverable:** `docs/planning/uat-2026-08-08-followup.md` §8 (new addendum; §1–§7 frozen and
+  unedited) plus a forward-pointer at the doc's top; `docs/planning/BACKLOG.md` BL-24 closed in
+  place (heading and header enumeration both updated, matching the BL-15 precedent of keeping a
+  closed item's heading rather than deleting it).
+- **Net:** 2 of 5 re-checked items improved (F9, F10), 2 unchanged/open (F6, F7), 1 not applicable
+  (F11), zero regressions. Both improvements are `mts-system`'s own adopter-side activity.
+- **Session:** S50 · **Verified:** `bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream
+  404, unchanged), `bin/check-links` OK (unchanged — new content is canonical-only, outside that
+  checker's scope), `bin/check-handoff --allow-pending` OK. `git status --porcelain` inside
+  `mts-system` read 0 dirty paths both before and after every check this session ran; every command
+  was `git ls-files` / `git check-ignore` / `git log` / `git rev-list` / `test -f` /
+  `bin/check-handoff --file` (read-only) — no `bin/sync` write, no `--force`, no `--write` flag used.
+
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S49's `commit:` field → `7a812cf` — twenty-second discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `7a812cf` (claim stub `2105741`) — twenty-second discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agreed at `7a812cf`, HEAD; no ghost session
+(`git rev-list --count --no-merges 7a812cf..HEAD` = 0).
+
 ### 2026-08-08 · [ad hoc] BL-24 raised: `mts-system` cleared its UAT blocking conditions, `vscode_quarto_ext` partially cleared
 
 **Model:** Claude Sonnet 5.

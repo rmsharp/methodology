@@ -12,6 +12,11 @@ of the original six.
 > is partially clearer. Not a repeat of the full six-repo sweep — §1–§6 below stand as S48 wrote them
 > and are not edited in place; read §7 for what changed.
 
+> **Addendum 2026-08-08, later still (S50):** the focused `mts-system` UAT re-run BL-24 queued —
+> **§8 below**. F6 and F7 unchanged, still open; F9 confirmed resolved (not just "looks resolved," as
+> §7 hedged); F10 improved to zero reconcile debt; F11 not applicable (never one of the three missing
+> `HANDOFFS.md`). §1–§7 stand as written and are not edited in place.
+
 **Method:** seven parallel read-only agents (one per repo, one for the dashboard) reproduced S43's
 own commands verbatim against the current state of `airqino`, `church_growth`,
 `model_project_constructor`, `mts-system`, `vscode_quarto_ext`, `wsfct`, reporting raw command
@@ -196,3 +201,37 @@ A focused UAT re-run on `mts-system` specifically (all applicable findings, not 
 conditions above) is queued for a future session — see `docs/planning/BACKLOG.md`. No sync or write
 action against either adopter repo is authorized by this addendum; the §6 recommendation (no adopter
 repo touched without a separate operator go-ahead) is unchanged.
+
+---
+
+## 8. Focused `mts-system` UAT re-run (S50, 2026-08-08, BL-24)
+
+**Mode:** read-only, single-repo. Pre-condition re-verified at claim: `git status --porcelain` 0
+dirty paths, `bin/sync --dry-run ../mts-system` exit 0/unblocked — both unchanged from §7's ~15:30
+snapshot. Scope per BL-24: re-derive **F6, F7, F9, F10, F11** against current state. F1/F3/F4/F8/F12
+are D1/D2/D4 items that don't key on this repo, or were already confirmed elsewhere, and are out of
+scope here.
+
+| # | S43/S48 baseline (`mts-system`) | S50 (now) | Verdict |
+|---|---|---|---|
+| **F6** | compliance 100% (20/20 items scored), 11 drifting files (`bin/status`) | compliance **100%** (`collect_methodology_metrics`, 9/9 checklist items `True`) while `bin/status` shows `SESSION_RUNNER.md` **8 versions behind**, `BOOTSTRAP.md` **8 versions behind**, `methodology_dashboard.py` **7 versions behind**, `FRAMEWORK_LEARNINGS.md`/`methodology_trim.py` **missing** | **Unchanged, still open.** The blind spot F6 names reproduces exactly: the dashboard's presence-only compliance check does not see any of this real drift |
+| **F7** | `check-handoff` rejects receipt S74's `commit: 4966443` (all-numeric, real sha) | `python3 bin/check-handoff --file ../mts-system/HANDOFFS.md` → **FAIL**, identical error: `receipt S74 (2026-07-14) names no commit sha in its commit: answer slot: '4966443'` | **Unchanged, still open.** Same repo, same receipt, same sha, same false positive — reproduced against a ledger that has grown substantially since (mts-system is now past its own "Session 96") |
+| **F9** | untracked + unignored, unmanaged | `git ls-files dashboard_history.jsonl` lists it (**tracked**); `git check-ignore` exits 1 (**not ignored** — deliberately); `.gitignore:3` carries an explanatory comment | **Confirmed resolved** — this session verifies with the actual commands what §7 could only report as "looks independently resolved." Adopter-side fix, not anything this fork did |
+| **F10** | 1 undocumented commit since `CHANGELOG.md`'s last touch | `git log -1 --format=%h -- CHANGELOG.md` = `5082951` = current `HEAD`; `git rev-list --count --no-merges 5082951..HEAD` = **0** | **Improved, 1 → 0.** `mts-system`'s own Session 96 close-out reconciled its ledger fully; no drift introduced by this check |
+| **F11** | N/A — `mts-system` was never one of the three repos (`airqino`, `model_project_constructor`, `wsfct`) missing `HANDOFFS.md` | `test -f ../mts-system/HANDOFFS.md` → present | **Not applicable, confirmed.** Listed in BL-24's scope for completeness; `mts-system` was never in this finding's affected set |
+
+**Net for `mts-system`: 2 of 5 re-checked items improved (F9 fully confirmed, F10 to zero), 2
+unchanged/still open (F6, F7), 1 not applicable (F11) — zero regressions.** Both improvements are
+adopter-side activity (`mts-system`'s own Session 95/96), not anything this fork changed.
+
+**Read-only proof:** `git status --porcelain` inside `mts-system` captured before and after this
+session's checks — **0 dirty paths both times**. Every command run was one of `git ls-files`, `git
+check-ignore`, `git log`/`git rev-list`, `test -f`, or `python3 bin/check-handoff --file` (this
+repo's own tool, reading the adopter file, writing nothing). No `bin/sync` write, no `--force`, no
+`--write` flag used anywhere in this session.
+
+**BL-24 is closed by this section** — see `docs/planning/BACKLOG.md`. Remaining open UAT priority
+order is unchanged from §6: **F3** is the top open item across the six-repo baseline; **F2/F5** close
+only by merging upstream; **F4, F6, F7, F8, F9** (for the other four repos) remain bounded,
+independent, small. No sync or write action against `mts-system` or any other adopter repo is
+authorized by this section.

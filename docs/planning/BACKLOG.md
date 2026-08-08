@@ -1,9 +1,10 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23 and BL-24 are open** (**BL-24 raised 2026-08-08 (S49)** — `mts-system`
-> cleared both UAT blocking conditions §6 of the S48 follow-up recorded it under; queue a focused
-> re-run. **BL-23 raised 2026-08-08 (S47)** — issue #65 collides
+> BL-20, BL-21, BL-22 and BL-23 are open** (**BL-24 raised 2026-08-08 (S49), CLOSED same day (S50)**
+> — the focused `mts-system` re-run it queued ran: F9 confirmed resolved, F10 improved to zero, F6/F7
+> unchanged/open, F11 not applicable; see its own entry and
+> [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §8. **BL-23 raised 2026-08-08 (S47)** — issue #65 collides
 > with S34's unopened Learnings-table PR; see its own entry and
 > [`issue-65-collision-review.md`](issue-65-collision-review.md). **BL-22 raised 2026-08-03 (S36)**,
 > and this enumeration WAS updated with it — the omission called out below for BL-20 is the reason it
@@ -590,10 +591,10 @@ whether/how to also flag #65 — e.g. a PR-description note to the maintainer, a
 once authorized, or leaving it for the maintainer to discover at review time. **Answering #65 in any
 form is an outward-facing action and needs an explicit ask**, same rule as BL-12's second bullet.
 
-**BL-24 — `mts-system` cleared both UAT blocking conditions; queue a focused re-run.**
+**BL-24 — `mts-system` cleared both UAT blocking conditions; focused re-run CLOSED (S50).**
 *Raised 2026-08-08 (S49), from a live conversational spot-check triggered by the operator, not a
-scheduled sweep. Full evidence:
-[`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §7.*
+scheduled sweep. Closed the same day (S50). Full evidence:
+[`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §7 (raised) and §8 (closed).*
 
 `mts-system` was one of three repos the S48 UAT follow-up recorded as carrying uncommitted work
 (§6 there). Re-checked live at ~15:30 today: `git status --porcelain` reads **0** dirty paths (was
@@ -605,11 +606,16 @@ snapshot. Two things also worth noting, found in the same spot-check but out of 
 scope: `mts-system`'s `dashboard_history.jsonl` (F9) now looks independently tracked/resolved there
 too; F2's dangerous `BOOTSTRAP.md:330` text is unchanged, byte-identical (closes only upstream, §6).
 
-**Next session:** run a focused UAT pass against `mts-system` specifically — the full applicable
-finding set (re-derive F6, F7, F9, F10, F11 against current state; F1/F3/F4/F8/F12 are D1/D2/D4 items
-that don't key on this repo, or were already confirmed elsewhere), not just the two conditions this
-item measured. **Still read-only** (`--dry-run`/`--check` only) unless the operator gives a separate
-go-ahead for an actual `--write` sync — clearing these two conditions is not that go-ahead.
+**CLOSED 2026-08-08 (S50):** ran the focused UAT pass this item queued — re-derived F6, F7, F9, F10,
+F11 against `mts-system`'s current state (F1/F3/F4/F8/F12 correctly scoped out, per this item's own
+framing). **F9 confirmed resolved** (tracked, deliberately unignored, documented in `.gitignore`) —
+S49's "looks independently resolved" hedge is now a verified fact. **F10 improved, 1 → 0** reconcile
+debt — new information this item's own scope didn't originally ask for but the re-run surfaced.
+**F6 and F7 reproduce unchanged, still open** — the dashboard's presence-only compliance blind spot
+and `check-handoff`'s all-numeric-sha false positive on receipt S74 both still stand exactly as S43
+found them. **F11 not applicable** — `mts-system` was never one of the three repos missing
+`HANDOFFS.md`. Zero regressions. Read-only throughout; `git status --porcelain` inside `mts-system`
+confirmed 0 dirty paths both before and after. No sync or write action was taken or authorized.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
