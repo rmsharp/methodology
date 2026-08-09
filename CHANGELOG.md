@@ -144,6 +144,13 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-08 · [ad hoc] Reconcile-on-read: S54's `commit:` field → `24fb899` — twenty-sixth discharge, taken before the claim
+
+**Model:** Claude Opus 5 (1M context).
+Reconciled `24fb899` (claim stub `4dc3990`) — twenty-sixth discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agree at `24fb899`, HEAD; no ghost session
+(`git rev-list --count --no-merges 24fb899..HEAD` = 0).
+
 ### 2026-08-08 · [ad hoc] Live `bin/sync` write test against `vscode_quarto_ext` — 11 methodology files updated, zero application-code touches, executed by the operator after the harness denied this session's own write attempt
 
 **Model:** Claude Sonnet 5.
