@@ -31,9 +31,40 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ```handoff
 session: S59
 date: 2026-08-09
-status: pending
-active_task: Phase 3C gap found while preparing S58's close-out report for the operator (asked "are you ready for phase 3 close-out report?") — S57/S58 never appended a `starter-kit/FRAMEWORK_LEARNINGS.md` row despite a genuine, distinctly novel finding: a candidate-review panel provides zero coverage of a SYNTHESIZED design that grafts pieces from multiple candidates. Append it as Learning #20, canonical-only, distributed (TRACKED) — no version event (single-row append, matching several prior precedent additions).
+status: complete
+self_score: 9
+predecessor_score: 7
+active_task: Phase 3C gap found while preparing S58's close-out report for the operator (asked "are you ready for phase 3 close-out report?") — S57/S58 never appended a `starter-kit/FRAMEWORK_LEARNINGS.md` row despite a genuine, distinctly novel finding: a candidate-review panel provides zero coverage of a SYNTHESIZED design that grafts pieces from multiple candidates. Append it as Learning #20, canonical-only, distributed (TRACKED) — no version event (single-row append, matching several prior precedent additions). COMPLETE.
+what_was_done: Triggered by the operator's own question rather than self-initiated — walked the canonical Phase 3 checklist (`starter-kit/SESSION_RUNNER.md` §Phase 3) against what S58 actually did, item by item, before answering. 3A/3B/3D/3F/3G checked out; found two real gaps: (1) 3F's cross-reference check had a blind spot — `bin/check-links` doesn't cover `docs/planning/` (fork-only, not distributed), so the new `issue67-fork-side-fix-plan.md` links added to `BACKLOG.md`/`CHANGELOG.md` were never actually grep-verified, only assumed covered; ran the grep directly (`docs/planning/{issue67-fork-side-fix-plan,issue67-pr66-review}.md` both exist, all citing lines checked) — confirmed clean. Also re-verified the plan document's own internal section cross-references (`§6 item 4`, `§10 item 2`, `§7`, `§9`) still point at the correct numbered items after S58's edits — Learning #7 applied to my own prior work, not just the corpus. (2) 3C (Document Learnings) was never done for S57 or S58 — no `FRAMEWORK_LEARNINGS.md` row, and no explicit "not done, deliberately" disclosure either (contrast with the many prior sessions that skip 3C but say so). Judged the design-panel-vs-synthesis finding from S57 genuinely novel (not a restatement of #12/#16/#17/#18) and worth elevating. First did Phase 0 properly this time — reconciled S58's own `commit: pending` field (`07f54a0`, 30th discharge) BEFORE claiming, the exact step S58 itself skipped — then claimed, then appended Learning #20 to `starter-kit/FRAMEWORK_LEARNINGS.md` (canonical-only, no `tools/` twin exists for this file, confirmed by `find`), grepped the corpus for any stale "N learnings" size-claim that would need updating (none found), and logged both the reconcile and the Learning addition as separate CHANGELOG entries.
+next_steps: Phase 3 for the S57→S59 arc is now genuinely complete — the 3G report to the operator (next turn) can state this plainly. Implementation of the ratified issue #67 plan remains the next real, substantive, unclaimed deliverable — `docs/planning/issue67-fork-side-fix-plan.md` §11 is written for that session. Carried forward unchanged: PR #66's BL-26 thread untouched; `airqino`/`church_growth`/`model_project_constructor` UAT re-runs untouched; `CHANGELOG.md`'s HIGH-severity size risk (now even larger — this S57–S59 arc added ~150 more lines to an already-over-cap file) still unclaimed and arguably more urgent than when first flagged; the stale `HANDOFFS.md` front-matter receipt count (line 8, still says "30"; `grep -c '^session: S' HANDOFFS.md` = 44 as of this session's own close-out) still unfixed, still disclosed rather than silently touched, three sessions running.
+key_files: `starter-kit/FRAMEWORK_LEARNINGS.md:42` (new Learning #20 row), `HANDOFFS.md:44` (S58's reconciled `commit:` field), `CHANGELOG.md:147-171` (this session's two entries: the reconcile, then the Learning addition), `docs/planning/issue67-fork-side-fix-plan.md:6,54,181,262,402,499` (the internal cross-references re-verified, not just assumed correct)
+gotchas: (1) **This session exists because a probing question surfaced a gap self-review missed** — worth naming plainly rather than folding into the previous session's already-closed receipt (which would have meant editing a committed, `status: complete` block — this ledger's own prepend-only/append-only discipline forbids that). (2) The `bin/check-links` blind spot (doesn't cover `docs/planning/`) is not new or unique to this session — it's a standing, known scope boundary (S56's own receipt names it: "docs/planning/ is not distributed, so out of that checker's scope") — but S58 didn't re-verify against it explicitly, it only ran the checker and treated a clean result as sufficient; this session did the manual grep the checker structurally can't do. (3) Docked predecessor S58 two points below its own self-score for exactly this — a real, undisclosed 3C omission that its own self-assessment didn't catch or name, discovered only because the operator asked rather than because S58's own review found it.
+runtime_smoke: n/a — docs-only session (`FRAMEWORK_LEARNINGS.md`, `CHANGELOG.md`, `HANDOFFS.md`), no code touched, no runtime/render surface. `bash bin/tests.sh` will be re-run before this commit; `python3 bin/check-links` OK (re-run); `python3 bin/check-handoff --allow-pending` OK.
+changelog_ref: CHANGELOG.md "2026-08-09 · [ad hoc] FRAMEWORK_LEARNINGS.md Learning #20 appended — panel review doesn't cover a synthesized graft"; the claim stub is commit `6aa338c`
+commit: pending
 ```
+Self-score **9/10.** **+** Did not accept the operator's question as a yes/no prompt to rubber-stamp
+— walked the actual Phase 3 checklist against what was really done, found two real gaps (one in 3F's
+verification depth, one a genuine missing 3C step), and fixed both before reporting anything back.
+**+** Corrected the exact mistake S58 made: did Phase 0's reconcile-on-read BEFORE claiming this
+session, not after or mid-session. **+** Verified rather than asserted every number that could be
+verified — the receipt count, the cross-reference destinations, the absence of a stale size-claim
+elsewhere in the corpus, the absence of a `tools/` twin for the file being edited — and caught its own
+first-draft error (a guessed "46" receipt count, corrected to the grep-derived 44) before it shipped,
+the identical class of self-correction this whole S57–S59 arc has been about. **−** This is the third
+session in a row for one continuous thread of operator-directed work (design → ratify → close-out
+completion); each session was individually well-justified by this ledger's own prepend-only
+discipline, but a version of S58 that had completed 3C itself would have made this session
+unnecessary — the honest accounting is that S59's own cleanliness doesn't erase the cost of needing
+it at all.
+
+Predecessor (S58) evaluation: **7/10, docked two points below its own self-assessed 9.** S58's actual
+ratification work was precise and well-scoped — nothing about that part needed correction. But its
+close-out silently completed Phase 3 without covering 3C, and did not disclose the omission the way
+many prior sessions explicitly do when 3C is skipped ("no Learnings row — deliberately, because...").
+A self-assessment that scored its own close-out 9/10 should have caught its own incompleteness against
+the checklist it was following; it took the operator's direct question, not S58's own review, to
+surface it. That is a real gap in the self-assessment step itself, not just in 3C's execution.
 
 ---
 

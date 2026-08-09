@@ -144,6 +144,27 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] `FRAMEWORK_LEARNINGS.md` Learning #20 appended — panel review doesn't cover a synthesized graft
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** Phase 3C gap, found while preparing S58's close-out report — S57/S58 never appended a
+  learning despite a genuine, distinctly novel finding. Appended `starter-kit/FRAMEWORK_LEARNINGS.md`
+  Learning #20 (canonical-only, distributed via `bin/_manifest.py:38` `TRACKED`; no `tools/` twin
+  exists for this file, confirmed).
+- **The learning:** a candidate-review panel scores the candidates it's given; it provides zero
+  coverage of a **synthesized** design that grafts one candidate's mechanism onto a different
+  candidate's sub-component. S57's own design panel (3 candidates, 6 judges) demonstrated this
+  directly — the chosen design grafted GENERAL's target-scoping mechanism with LITERAL's
+  `.gitignore`-aware gate, and a HIGH-severity defect lived exactly in that graft, invisible to any
+  review of either source candidate alone. Caught only by a second, independent review pass scoped to
+  the actual synthesized artifact.
+- **No version event** — a single-row append to a distributed doc, matching the precedent of several
+  prior single-row Learning additions (#13, #15–#19) shipping without their own release. No stale
+  size-claim elsewhere in the corpus needed correction (grepped for "N learnings" assertions — none
+  found).
+- **Commits:** `6aa338c` (reconcile S58's `commit:` field, 30th discharge, + claim) → this commit.
+
 ### 2026-08-09 · [ad hoc] Reconcile-on-read: S58's `commit:` field → `07f54a0` — thirtieth discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.
