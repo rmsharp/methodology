@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S57
+date: 2026-08-09
+status: pending
+active_task: Operator-directed — design a plan for a FULL fork-side fix of upstream `KJ5HST/methodology` issue #67 (`check_stale_version()` advertises `--sync`, a 26-file/25-repo write, as the remedy for a single stale copy), covering all four fixes the issue names, scoped so the eventual PR can be pushed upstream once implemented and go-ahead is given. Deliverable is a plan document (`docs/planning/`), not implementation — no code touched, no outward-facing action this session.
+```
+
+---
+
+```handoff
 session: S56
 date: 2026-08-09
 status: complete
