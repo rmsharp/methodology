@@ -144,6 +144,13 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] Reconcile-on-read: S55's `commit:` field → `a0f9000` — twenty-seventh discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `a0f9000` (claim stub `54509d8`) — twenty-seventh discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agree at `a0f9000`, HEAD; no ghost session
+(`git rev-list --count --no-merges a0f9000..HEAD` = 0).
+
 ### 2026-08-09 · [ad hoc] `bin/sync --force` against `wsfct` — F4 blocker cleared via wsfct #763/#764, 14 files updated, zero application-code touches
 
 **Model:** Claude Opus 5 (1M context).
