@@ -144,6 +144,40 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] `bin/sync --force` against `wsfct` — F4 blocker cleared via wsfct #763/#764, 14 files updated, zero application-code touches
+
+**Model:** Claude Opus 5 (1M context).
+
+- **Task:** operator-directed. Follows the two GitHub issues filed on `rmsharp/wsfct` last session
+  (#763 `SESSION_RUNNER.md`, #764 `SAFEGUARDS.md`) asking `wsfct` to relocate its F4-blocking local
+  customizations into `CLAUDE.md`'s Adaptations section.
+- **Verified the reconciliation live before acting on it** — both issues `CLOSED`, merged via `wsfct`
+  PR #767 (`6d0a3c0e`): every named customization header gone from both files, all relocated content
+  (incl. `Push Discipline`'s Session-147 citations) confirmed present in `CLAUDE.md`, a project-term
+  grep (`wsfct`/`church`/`iOS`/`Swift`/`Xcode`) empty in both files, `wsfct` tree clean.
+- **`bin/sync --dry-run` still exited 2** after the reconciliation — not from remaining
+  customization, but because neither file byte-matched any canonical historical snapshot exactly
+  (`SAFEGUARDS.md`'s harmless `Signs Claude…` brand-name heading never existed under that wording
+  in canonical history; `SESSION_RUNNER.md` is a patchwork of prose from different canonical eras).
+  With nothing unique confirmed left in either file, `--force` was the documented escape hatch
+  (`BOOTSTRAP.md`), not a workaround.
+- **Ran `python3 bin/sync --force ../wsfct`.** Result: 6 updated (`SESSION_RUNNER.md`,
+  `SAFEGUARDS.md`, `docs/methodology/ITERATIVE_METHODOLOGY.md`, `docs/methodology/HOW_TO_USE.md`,
+  `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`,
+  `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`) + 8 created (`FRAMEWORK_LEARNINGS.md`,
+  `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`,
+  `methodology_dashboard.py`, `methodology_trim.py`, `HANDOFFS.md`); the 3 pre-existing seeds
+  (`SESSION_NOTES.md`, `CHANGELOG.md`, `ROADMAP.md`) left as-is.
+- **Verified independently, not trusted from the tool's own report:** `git status --porcelain`
+  inside `wsfct` shows exactly 14 paths, matching the 6+8 tally with nothing extra; excluding all
+  14 known methodology paths from that output leaves nothing — zero application-code touch.
+  `bin/status ../wsfct` now shows all 24 rows `current`/`present`. Both new Python tools run
+  (`--help` exit 0 each); `FRAMEWORK_LEARNINGS.md` (41 lines) and the new `HANDOFFS.md` seed
+  (152 lines) both well-formed.
+- **Left uncommitted in `wsfct`**, per S51/S54 precedent — no direction given on committing there.
+- **Session:** S55 · **Verified:** `bash bin/tests.sh` 185 passed / 1 failed (Test 9's expected
+  upstream 404, unchanged).
+
 ### 2026-08-08 · [ad hoc] Reconcile-on-read: S54's `commit:` field → `24fb899` — twenty-sixth discharge, taken before the claim
 
 **Model:** Claude Opus 5 (1M context).
