@@ -144,6 +144,13 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] Reconcile-on-read: S59's `commit:` field → `59b0f91` — thirty-first discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `59b0f91` (claim stub `6aa338c`) — thirty-first discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agreed at `59b0f91`, HEAD, at claim time; no ghost
+session (`git rev-list --count --no-merges 59b0f91..HEAD` = 0 at claim time).
+
 ### 2026-08-09 · [ad hoc] `FRAMEWORK_LEARNINGS.md` Learning #20 appended — panel review doesn't cover a synthesized graft
 
 **Model:** Claude Sonnet 5.

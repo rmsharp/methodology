@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S60
+date: 2026-08-09
+status: pending
+active_task: Operator-directed — address CHANGELOG.md's HIGH-severity size risk (2,236 lines, past the 2,000-line agent-read cap). `python3 starter-kit/methodology_trim.py --file CHANGELOG.md --check` shows the trigger fires but SRF is RED (2.5383 against the most recent archive boundary 020ba3f, S31) — per `docs/planning/framework-context-cost-plan.md` §3.3 (H3), RED means "do not archive again; the next deliverable is a rate cut, not another reset." Deliverable: a lossless compaction pass over the 38 substantive (non-Reconcile-on-read) entries added since 020ba3f, each independently re-verified against its original before being trusted, bringing the file back under the cap with real headroom. No archive this cycle. HANDOFFS.md's own trim-budget overrun is a separate, out-of-scope finding for a future session.
+```
+
+---
+
+```handoff
 session: S59
 date: 2026-08-09
 status: complete
@@ -41,7 +50,7 @@ key_files: `starter-kit/FRAMEWORK_LEARNINGS.md:42` (new Learning #20 row), `HAND
 gotchas: (1) **This session exists because a probing question surfaced a gap self-review missed** — worth naming plainly rather than folding into the previous session's already-closed receipt (which would have meant editing a committed, `status: complete` block — this ledger's own prepend-only/append-only discipline forbids that). (2) The `bin/check-links` blind spot (doesn't cover `docs/planning/`) is not new or unique to this session — it's a standing, known scope boundary (S56's own receipt names it: "docs/planning/ is not distributed, so out of that checker's scope") — but S58 didn't re-verify against it explicitly, it only ran the checker and treated a clean result as sufficient; this session did the manual grep the checker structurally can't do. (3) Docked predecessor S58 two points below its own self-score for exactly this — a real, undisclosed 3C omission that its own self-assessment didn't catch or name, discovered only because the operator asked rather than because S58's own review found it.
 runtime_smoke: n/a — docs-only session (`FRAMEWORK_LEARNINGS.md`, `CHANGELOG.md`, `HANDOFFS.md`), no code touched, no runtime/render surface. `bash bin/tests.sh` will be re-run before this commit; `python3 bin/check-links` OK (re-run); `python3 bin/check-handoff --allow-pending` OK.
 changelog_ref: CHANGELOG.md "2026-08-09 · [ad hoc] FRAMEWORK_LEARNINGS.md Learning #20 appended — panel review doesn't cover a synthesized graft"; the claim stub is commit `6aa338c`
-commit: pending
+commit: 59b0f91
 ```
 Self-score **9/10.** **+** Did not accept the operator's question as a yes/no prompt to rubber-stamp
 — walked the actual Phase 3 checklist against what was really done, found two real gaps (one in 3F's
