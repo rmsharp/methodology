@@ -1,6 +1,10 @@
 # Issue #67 fork-side fix — proposed plan (full fix, upstream-PR-ready)
 
-**Status:** PROPOSED — awaiting operator ratification (not yet approved for implementation).
+**Status:** RATIFIED (operator approved as written, 2026-08-09, session S58). **Ratification approves
+the design — it is not, on its own, a go-ahead to implement** (§"Deliverable of S57" below still
+holds: implementation is a future session's own deliverable) **and not a go-ahead for any
+upstream-facing action** (§9 still applies in full — a ratified plan is explicitly not that
+go-ahead either).
 **Deliverable of S57:** this plan. **Implementation is a future session's deliverable, not this
 one's** — no code in `tools/methodology_dashboard.py` or `starter-kit/methodology_dashboard.py` is
 touched by S57.
@@ -95,7 +99,7 @@ only two things touching this code path with any live test coverage; `check_stal
 
 ## 4. Design decisions
 
-### D1 — One generalized `--sync [TARGET_DIR]`, not a second `--sync-self` flag *(proposed)*
+### D1 — One generalized `--sync [TARGET_DIR]`, not a second `--sync-self` flag *(ratified 2026-08-09, S58)*
 
 `--sync` gains an optional, order-independent positional argument. Given, it scopes the write to
 exactly `<TARGET_DIR>/methodology_dashboard.py`. Omitted, it is today's unchanged full-portfolio
@@ -135,7 +139,7 @@ not. Mitigated, not eliminated, by `test_extract_sync_target_is_order_independen
 value-taking flag needs its own dedicated test at the time it's added, not just an entry in
 `_KNOWN_FLAGS`.
 
-### D2 — Rename the issue's suggested `--yes` to `--force`, matching this repo's own established verb *(proposed, a deliberate departure from the issue's literal wording)*
+### D2 — Rename the issue's suggested `--yes` to `--force`, matching this repo's own established verb *(ratified 2026-08-09, S58 — a deliberate departure from the issue's literal wording, restated for the eventual PR at §9)*
 
 `bin/sync` (evidence row 8) already uses `--force` for exactly this semantic in this same repository.
 The issue's own text says "`--yes`," but that is the filer's suggestion, not a requirement — and
@@ -144,7 +148,7 @@ reviewing cold would flag on sight (two of three candidate judges did, independe
 here for internal consistency; call this out explicitly in the eventual PR description since it
 diverges from the issue's own vocabulary.
 
-### D3 — The `--force` gate covers exactly two risk classes, one of them `.gitignore`-aware *(proposed)*
+### D3 — The `--force` gate covers exactly two risk classes, one of them `.gitignore`-aware *(ratified 2026-08-09, S58, including its disclosed residual risks below as accepted, not resolved)*
 
 A write is gated (skipped without `--force`) when the target is **(a)** already git-tracked, or
 **(b)** a `"create"` action landing in a repo whose own `.gitignore` does not already cover the
@@ -178,7 +182,7 @@ very first sync, before that project has been `git init`'d. **Residual risk, not
 repo and genuinely not ignored" (e.g. via `git rev-parse --is-inside-work-tree`) and message the two
 differently, but that is out of this plan's scope as currently sized.
 
-### D4 — The gate is computed unconditionally, so `--dry-run` previews it honestly *(proposed — fixes a defect every candidate that combined gating with dry-run actually shipped)*
+### D4 — The gate is computed unconditionally, so `--dry-run` previews it honestly *(ratified 2026-08-09, S58 — fixes a defect every candidate that combined gating with dry-run actually shipped)*
 
 Both MINIMAL's and GENERAL's own designs computed the `gated` decision *inside* an
 `if dry_run: pass / elif gated and not force: ...` branch structure, which meant a `--dry-run` preview
@@ -190,7 +194,7 @@ both the printed row and whether `shutil.copyfile` actually runs — see §5 for
 also means `--sync --dry-run --force` previews what a real `--force` run would do, not what a bare
 dry-run would.
 
-### D5 — Bare `--dry-run` (no `--sync`) is a hard, explained error, not a silent no-op *(proposed)*
+### D5 — Bare `--dry-run` (no `--sync`) is a hard, explained error, not a silent no-op *(ratified 2026-08-09, S58 — including the borrowed-`argparse`-convention property named as such at close of this section)*
 
 The issue's complaint is silence — a no-op that exits 0 and prints nothing distinctive gives no
 signal the flag did nothing. An explained error costs one branch more than a silent no-op and is

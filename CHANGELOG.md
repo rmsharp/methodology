@@ -144,6 +144,34 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] BL-26 issue-#67 thread: S57's fix plan RATIFIED as written
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed — "ratify the plan as written." `docs/planning/issue67-fork-side-fix-plan.md`
+  status flipped PROPOSED → **RATIFIED**; its six design decisions (D1–D5, each explicitly, plus D6's
+  disclosed consequence) marked ratified with the date/session. `docs/planning/BACKLOG.md` BL-26
+  updated to record the ratification.
+- **What ratification is, and is not:** approves the design as written. It is **not** a go-ahead to
+  implement — that remains a future session's own deliverable, per S57's original scoping and this
+  repo's "1 and done" rule. It is **not** a go-ahead for any upstream-facing action either — the
+  plan's own §9 restates the ask-before-outward-facing-action rule as a binding gate on itself, and
+  that gate is untouched by this commit. No code changed; the live tool still carries the defect this
+  plan describes.
+- **Commits:** `1e4bbf3` (claim) → this commit.
+
+### 2026-08-09 · [ad hoc] Reconcile-on-read: S57's `commit:` field → `86319da` — twenty-ninth discharge, caught mid-session by manual `check-handoff` re-run, not at S58's own Phase 0
+
+**Model:** Claude Sonnet 5.
+Reconciled `86319da` (claim stub `cd792fa`) — twenty-ninth discharge. Unlike most prior instances,
+not caught at the next session's Phase 0: S58 claimed directly off the operator's follow-up
+instruction ("ratify the plan as written") without a fresh Orient in between, so the gap slipped
+through claim, mirroring S50/S51's precedent. `python3 bin/check-handoff --allow-pending`, re-run
+before this session's own close-out, caught it (`error: receipt S57 ... names no commit sha`) before
+it could ship undiscovered. Single-answer derivation; ghost-session check against the target sha
+(`git rev-list --count --no-merges 86319da..HEAD` = 1) found exactly this session's own claim commit,
+not an undocumented gap — no backfill owed beyond this reconcile.
+
 ### 2026-08-09 · [ad hoc] BL-26 issue-#67 thread: full fork-side fix plan proposed, not implemented
 
 **Model:** Claude Sonnet 5.

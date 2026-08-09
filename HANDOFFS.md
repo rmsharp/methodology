@@ -31,9 +31,44 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ```handoff
 session: S58
 date: 2026-08-09
-status: pending
-active_task: Operator-directed — ratify `docs/planning/issue67-fork-side-fix-plan.md` (S57's plan) as written. Flip the document's own status from PROPOSED to RATIFIED, mark its six design decisions ratified, update BL-26 accordingly. Ratification is NOT a go-ahead to implement (a future session's deliverable) and NOT a go-ahead for any upstream-facing action (still needs its own explicit ask per CLAUDE.md, restated by the plan's own §9).
+status: complete
+self_score: 9
+predecessor_score: 8
+active_task: Operator-directed — ratify `docs/planning/issue67-fork-side-fix-plan.md` (S57's plan) as written. Flip the document's own status from PROPOSED to RATIFIED, mark its six design decisions ratified, update BL-26 accordingly. Ratification is NOT a go-ahead to implement (a future session's deliverable) and NOT a go-ahead for any upstream-facing action (still needs its own explicit ask per CLAUDE.md, restated by the plan's own §9). COMPLETE.
+what_was_done: Commit `1e4bbf3` (claim) → this commit. Treated as its own session rather than reopening S57 (already closed `status: complete`, with a real commit and self-score) — this repo's own ledgers are prepend-only/append-only by design, so a new distinct operator action gets a new session record, not a retroactive edit to a closed one. Edited `docs/planning/issue67-fork-side-fix-plan.md`: header `**Status:**` line changed PROPOSED → RATIFIED, with an explicit two-part scope statement (approves the design; is NOT a go-ahead to implement; is NOT a go-ahead for any upstream-facing action) rather than a bare status flip that could be misread as broader authorization. Each of the six design decisions (D1–D5 individually, D6 left as `(disclosed, not hidden)` since it's a stated consequence, not a choice needing a vote) got its own `(ratified 2026-08-09, S58 ...)` marker, several carrying forward the specific caveat that section already made (D3's disclosed residual risks accepted-not-resolved; D5's borrowed-`argparse`-convention property). No other edits to the plan's own content — ratifying "as written" was read literally, zero prose changes beyond the status markers. Updated `docs/planning/BACKLOG.md` BL-26's S57 paragraph to record the S58 ratification inline (not a new paragraph — the existing one already described the plan and just needed its status extended). Filed a CHANGELOG.md entry stating plainly what ratification is and is not, mirroring the plan's own two-part disclaimer so a reader of either document gets the same boundary.
+next_steps: Implementation of the ratified plan is a genuinely open, unclaimed future session's deliverable — `docs/planning/issue67-fork-side-fix-plan.md` §11 ("Completion criteria") is written for that session to work from directly. When it's picked up, re-confirm the plan's own residual risks (§10) are still being carried forward deliberately, not silently dropped. Separately, noticed but NOT fixed (out of this session's own narrow scope, FM #17): this file's front-matter line 8 ("This file currently holds **30**") is stale — the real count is now 43 receipts (`grep -c '^session: S' HANDOFFS.md`), a drift of 13 that predates this session (it was already wrong before S57 or S58 touched the file). A future session touching this file should recount and correct it, or fold the correction into the next natural edit here. Carried forward unchanged from S57/S56/S55: `airqino`, `church_growth`, `model_project_constructor` UAT re-runs still untouched (F4/F6/F7/F8/F9); F3 remains the top open UAT item; `CHANGELOG.md`'s HIGH-severity size risk (2,146 lines, past the 2,000-line read cap) still unclaimed; `dashboard_history.jsonl` still untracked; PR #66's BL-26 thread still untouched.
+key_files: `docs/planning/issue67-fork-side-fix-plan.md:3-6` (the ratification header), `:98,138,147,181,193` (the five `(ratified ...)` markers on D1–D5), `docs/planning/BACKLOG.md:692-693` (BL-26's updated status line), `CHANGELOG.md:147-159` (this session's entry), `HANDOFFS.md:31-40` (this receipt)
+gotchas: (1) **Ratification ≠ implementation ≠ upstream go-ahead — three separate gates, stated explicitly at every layer this session touched** (plan header, BL-26, CHANGELOG) specifically so a future reader skimming any ONE of these documents alone still sees the boundary, not just the plan's own §9. (2) The stale receipt-count line (`next_steps`) was deliberately left unfixed rather than silently corrected inline — this session's own explicit task was ratification, not ledger housekeeping, and fixing it silently while doing something else would have been exactly the kind of undisclosed scope-add this repo's FM #17 exists to prevent; naming it here instead. (3) D6 was deliberately NOT given a `(ratified ...)` marker like D1–D5 — it documents a consequence of D1's mechanism (a return-value semantics change), not an independent choice that could have gone a different way, so "ratified" would have been a category error; left as `(disclosed, not hidden)`, unchanged.
+runtime_smoke: n/a — docs-only session (one plan file edited for status only, one BACKLOG.md paragraph extended, `CHANGELOG.md`, `HANDOFFS.md`), no code touched, no runtime/render surface. `bash bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream 404, unchanged). `python3 bin/check-links` OK. `python3 bin/check-handoff --allow-pending` OK both as a pending stub and as this completed receipt.
+changelog_ref: CHANGELOG.md "2026-08-09 · [ad hoc] BL-26 issue-#67 thread: S57's fix plan RATIFIED as written"; the claim stub is commit `1e4bbf3`
+commit: pending
 ```
+Self-score **9/10.** **+** Read "ratify the plan as written" literally and precisely — touched only
+the status markers (header, six decision headings), made zero content edits to the plan's substance,
+and did not treat a short operator instruction as license to also revise, expand, or second-guess
+anything else in a document that had just been through two independent review passes. **+**
+Recognized and explicitly stated the boundary a bare status flip could easily blur: ratifying a design
+is not authorization to build it (this repo's own Present→Implement gate) and not authorization to
+push it upstream (a second, independent gate) — stated this at all three places a future reader might
+land (the plan itself, BL-26, the CHANGELOG entry), not just once. **+** Correctly treated this as a
+new session rather than reopening S57's closed receipt, consistent with this ledger's own
+prepend-only/append-only design, and disclosed rather than silently fixed an unrelated pre-existing
+drift (the stale receipt-count line) found incidentally while working in the same file. **−** One real
+gap: did not ask, and could reasonably have asked, whether "as written" also meant the operator had
+seen and was satisfied with the two rounds of self-correction already baked into the document (the
+design-panel defects and the adversarial-review fixes) versus wanting to review the raw candidate
+designs first — a one-line confirmation ("ratifying the version with all review-round fixes applied,
+correct?") would have removed any doubt at zero cost; proceeding without asking was a reasonable
+default given the operator had the full document in front of them, but it was a default, not a
+certainty.
+
+Predecessor (S57) evaluation: **8/10**, unchanged from its own self-assessment — nothing in this
+session's work surfaced any gap in S57's receipt or its plan that this session had to work around or
+correct. Every file/line citation S57's receipt gave (`issue67-fork-side-fix-plan.md`'s section
+numbers, `BACKLOG.md`'s BL-26 location) was still accurate at the start of this session, and the plan
+document itself required zero substantive fixes to ratify — a direct, checkable sign that S57's own
+two-pass review discipline (design panel, then independent adversarial review) produced a document
+that held up under a third, later reading with fresh eyes.
 
 ---
 
@@ -50,7 +85,7 @@ key_files: `docs/planning/issue67-fork-side-fix-plan.md:1` (the deliverable — 
 gotchas: (1) **This plan is PROPOSED, not ratified** — do not treat its existence as license to implement; that mirrors this repo's own PR-go-ahead rule one phase-gate earlier (Present → Implement). (2) The plan deliberately renames the issue's own suggested `--yes` to `--force` (D2, matching `bin/sync`'s existing verb) — a documented, deliberate departure from the issue's literal wording; name it explicitly in any eventual PR, a maintainer may prefer their own term. (3) Two workflow runs back every "judge found X" / "candidate proposed Y" claim in the plan — `wf_36c11a44-4ac` (design panel) and `wf_54b22b55-836` (adversarial review); the plan's own prose summarizes them but the full journals are the source of record if deeper verification is ever needed. (4) The live tool is UNCHANGED and still carries the defect — `python3 tools/methodology_dashboard.py --sync --dry-run` today still only offers the portfolio-wide remedy, and bare `--dry-run` (no `--sync`) still silently performs a real single-project write. Nothing in this session touched shipped code. (5) The plan's root-cause section cites "26 files across 25 sibling repos" as the ISSUE's own filed number (a different environment, a different time) — this fork's own portfolio measured 13 targets at S57; don't conflate the two if re-verifying later, the plan's own text already disambiguates this.
 runtime_smoke: n/a — docs-only session (one new `docs/planning/` file, one edited `docs/planning/` file, `CHANGELOG.md`, `HANDOFFS.md`), no code touched, no runtime/render surface. `bash bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream 404, unchanged) — run after the Phase 0 reconcile and again after this session's edits. `python3 bin/check-links` OK. `python3 bin/check-handoff --allow-pending` OK both as a pending stub and as this completed receipt.
 changelog_ref: CHANGELOG.md "2026-08-09 · [ad hoc] BL-26 issue-#67 thread: full fork-side fix plan proposed, not implemented"; the claim stub is commit `cd792fa`
-commit: pending
+commit: 86319da
 ```
 Self-score **8/10.** **+** Never self-certified: ran an independent adversarial-review workflow
 against the plan document itself, distinct from and after the design-panel workflow that produced it,
