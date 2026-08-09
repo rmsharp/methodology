@@ -144,6 +144,39 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] BL-26 issue-#67 thread: full fork-side fix plan proposed, not implemented
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed — make this session's deliverable a plan for a full fork-side fix of
+  upstream [issue #67](https://github.com/KJ5HST/methodology/issues/67) that can be pushed upstream
+  once implemented. Plan only; no code touched, no outward-facing action.
+- **Method:** a 3-candidate design panel (fresh agents, no shared state, same evidence packet) scored
+  by 6 independent judges across 2 lenses — none scored above 7/10, each with real, judge-verified
+  defects. Synthesized (not picked) into one design: the highest-completeness candidate's generalized
+  `--sync [TARGET_DIR]` mechanism, grafted with the most-faithful-to-the-issue `.gitignore`-aware
+  `--force` gate, repairing every concrete flaw every judge found across all three candidates —
+  including two defects every single candidate missed (a version-bump companion-test collision, an
+  em-dash style regression). Then, per this repo's own "never self-certify" convention, the
+  synthesized plan itself went through a second, independent four-lens adversarial review (code
+  hand-trace, citation re-verification, design-completeness re-derivation, test-plan soundness) that
+  found and this session fixed one HIGH-severity defect the design panel missed — the `.gitignore`
+  create-gate silently blanket-gates any `--sync` target directory that isn't a git repo yet,
+  reachable through the plan's own new capability and firing on exactly the "brand-new adopter
+  bootstrap" case the gate exists to protect — plus a canonical-version mislabeling bug, a wrong
+  denominator in an em-dash style claim, a wrong test-count citation, an internally-inconsistent test
+  count, two test rows that would have passed vacuously against unpatched code, and a missing
+  end-to-end integration test.
+- **Deliverable:** [`docs/planning/issue67-fork-side-fix-plan.md`](docs/planning/issue67-fork-side-fix-plan.md)
+  — covers all four of the issue's suggested fixes (not the minimal subset), a full implementation
+  spec for both twins, 17 RED-first tests, a version bump (2.13.0→2.14.0) with its required companion
+  test edit named explicitly, and an upstream-PR-readiness section that restates this repo's
+  ask-before-outward-facing-action rule as a binding gate on the plan itself. Status: **PROPOSED**,
+  awaiting operator ratification — not yet approved for implementation.
+- **BL-26 updated** with a progress paragraph (this plan); the item **stays open** — issue #67 remains
+  functionally unaddressed (the plan is not the fix), and PR #66's thread is untouched.
+- **Commits:** `cd792fa` (claim) → this commit.
+
 ### 2026-08-09 · [ad hoc] Reconcile-on-read: S56's `commit:` field → `ccc6e94` — twenty-eighth discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.

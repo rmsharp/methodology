@@ -689,7 +689,20 @@ an actual commit-refusing size gate, where BL-19's five heuristics are all read-
 Whether this repo wants a size-enforcing gate at all is an undecided, operator-level design question,
 parallel to BL-19 §7's existing decision items — not resolved here.
 
-No outward-facing action taken; #67 and #66 remain exactly as found.
+**Issue #67 thread: a full fork-side fix plan, PROPOSED 2026-08-09 (S57), operator-directed.** Not
+implemented — the deliverable is the plan itself, awaiting operator ratification before any code is
+touched. Covers all four of the issue's suggested fixes (scoped remedy message, a generalized
+`--sync [TARGET_DIR]` in place of a second flag, a `.gitignore`-aware `--force` gate, and a hard error
+on bare `--dry-run`), reached via a 3-candidate design panel (scored by 6 independent judges, none
+scored above 7/10) synthesized into one design, then itself put through a second, independent
+four-lens adversarial review that found and fixed one high-severity defect (the create-gate silently
+blanket-gates any target directory that isn't a git repo yet — reachable through the plan's own new
+capability) plus several medium/low citation and test-soundness defects. Full plan:
+[`issue67-fork-side-fix-plan.md`](issue67-fork-side-fix-plan.md). **PR #66 thread unchanged, still
+open** — this session did not touch it.
+
+No outward-facing action taken; PR #66 remains exactly as found. Issue #67 now has a ratification-ready
+plan but is still functionally unaddressed — the live defect this plan describes is still shipped.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
