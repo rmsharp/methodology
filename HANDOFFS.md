@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S55
+date: 2026-08-09
+status: pending
+active_task: Operator-directed — following S54's `vscode_quarto_ext` sync, filed two GitHub issues on `rmsharp/wsfct` (#763 SESSION_RUNNER.md, #764 SAFEGUARDS.md) to reconcile its F4-blocking local customizations into `CLAUDE.md`. Both closed via `wsfct` PR #767 (`6d0a3c0e`). Verified live (not trusted on report): issues CLOSED, no unique/customization headers remain in either file, `CLAUDE.md` carries all relocated content verbatim (incl. Push Discipline's Session-147 citations), `wsfct` tree clean. `bin/sync --dry-run ../wsfct` still exits 2 — not from remaining customization but because neither file byte-matches ANY canonical historical snapshot exactly (SAFEGUARDS.md's harmless "Signs Claude…" brand-name heading never existed under that wording in canonical history; SESSION_RUNNER.md is a patchwork of prose from different canonical eras). Operator directed: run `bin/sync --force ../wsfct`.
+```
+
+---
+
+```handoff
 session: S54
 date: 2026-08-08
 status: complete
