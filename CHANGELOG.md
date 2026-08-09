@@ -144,6 +144,13 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] Reconcile-on-read: S56's `commit:` field → `ccc6e94` — twenty-eighth discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `ccc6e94` (claim stub `eeb3275`) — twenty-eighth discharge, taken before the claim.
+Single-answer derivation; both ledger frontiers agree at `ccc6e94`, HEAD; no ghost session
+(`git rev-list --count --no-merges ccc6e94..HEAD` = 0).
+
 ### 2026-08-09 · [ad hoc] BL-26 raised: issue #67 and PR #66 checked against fork state — neither addressed, PR #66 has its own collisions
 
 **Model:** Claude Sonnet 5.
