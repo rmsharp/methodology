@@ -144,6 +144,39 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] BL-26 raised: issue #67 and PR #66 checked against fork state — neither addressed, PR #66 has its own collisions
+
+**Model:** Claude Sonnet 5.
+
+- **Task:** operator-directed — do upstream [issue #67](https://github.com/KJ5HST/methodology/issues/67)
+  or [PR #66](https://github.com/KJ5HST/methodology/pull/66) collide with, or get addressed by,
+  anything already in this fork? Read-only: `gh issue view`/`gh pr view --json`/`gh pr diff`, verified
+  line-for-line against this fork's own tracked files and real git history.
+- **Verdict: neither is addressed, and PR #66 is worse than absent.** Issue #67
+  (`check_stale_version()` advertises `--sync`, a 26-file/25-repo write, as the remedy for one stale
+  copy) reproduces **verbatim in this fork's own `tools/methodology_dashboard.py`**
+  (`DASHBOARD_VERSION` 2.13.0, already past the issue's cited v2.10.2) — a live, currently-**shipped**
+  defect this fork independently carried through its own later dashboard campaigns, not merely an
+  upstream gap. PR #66 has two concrete, reproduced collisions: (1) `install_hook()` targets
+  `.git/hooks/pre-commit` unconditionally with no `core.hooksPath` awareness — silently a no-op
+  against this fork's own `.githooks/pre-commit` convention while printing a false "installed"
+  message; (2) `bin/check-handoff --all`'s new duplicate-`session:` check (built to answer issue #65)
+  keys on bare session id with no date component — the exact invariant BL-23 already found false
+  against this repo's real ledger (S3/S5/S7/S8 each name two real sessions by design), re-verified
+  live and still true.
+- **Checked and cleared:** `bin/_manifest.py` has no `context_budget` entry (no parallel local work to
+  collide with); FM #28 slots cleanly after this fork's own FM #27, no renumbering. **Adjacent, not a
+  collision:** PR #66 overlaps this fork's own `framework-context-cost-plan.md` (BL-19) queued-but-
+  unshipped **S45**, but goes further — an actual commit-refusing size gate where BL-19's plan is
+  read-only/dashboard-only throughout; flagged as an open operator design decision, not resolved here.
+- **Recorded, not fixed (FM #17).** Raised as `BL-26`; full evidence trail in the new
+  [`issue67-pr66-review.md`](docs/planning/issue67-pr66-review.md). No outward-facing action taken —
+  issue #67's fix is fork-side-doable without upstream involvement; PR #66's fixes and the size-gate
+  design question both need an operator decision before any of this goes further.
+- **Session:** S56 · **Verified:** `bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream
+  404, unchanged), `bin/check-links` OK 88/22, `bin/check-handoff --allow-pending` OK, `docs/planning/BACKLOG.md`'s
+  re-derived heading count (16) matches the grep it cites.
+
 ### 2026-08-09 · [ad hoc] Reconcile-on-read: S55's `commit:` field → `a0f9000` — twenty-seventh discharge, taken before the claim
 
 **Model:** Claude Sonnet 5.

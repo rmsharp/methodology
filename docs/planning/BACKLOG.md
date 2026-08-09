@@ -1,7 +1,12 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22 and BL-23 are open** (**BL-25 raised and CLOSED same session (S53)** — the
+> BL-20, BL-21, BL-22, BL-23 and BL-26 are open** (**BL-26 raised 2026-08-09 (S56)** — issue #67
+> describes a live, unfixed defect already shipped in this fork's own `methodology_dashboard.py`;
+> PR #66 has two concrete, reproduced collisions of its own (a hook-install path that silently
+> no-ops under this fork's `core.hooksPath` convention, and a duplicate-session check with the exact
+> flaw BL-23 already found in issue #65); see its own entry and
+> [`issue67-pr66-review.md`](issue67-pr66-review.md). **BL-25 raised and CLOSED same session (S53)** — the
 > `vscode_quarto_ext` counterpart to BL-24: F9 confirmed resolved, F2/F3/F6/F8 unchanged/open,
 > F10/F11 unchanged-and-clean, both bonus checks (F1, F4) clean; see its own entry and
 > [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §9. **BL-24 raised 2026-08-08 (S49), CLOSED same day (S50)**
@@ -15,10 +20,10 @@
 > **BL-21 raised 2026-08-03 (S32)**; **BL-20 was raised 2026-08-02
 > (S31) and this enumeration was not updated with it**, which is why it is being said out loud: this
 > list is a hand-maintained derived value in the file whose own header tells you not to trust those.
-> It cannot be derived by counting headings either — the 15 `**BL-N —**` headings in §Open items
-> (re-derived 2026-08-08, S53, via `grep -cE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG.md`; **14** at
-> S49's last count, itself already stale by then — this line is exactly the kind of drift the
-> paragraph warns about, caught only because S53 added a fifteenth heading, BL-25, and re-ran the
+> It cannot be derived by counting headings either — the 16 `**BL-N —**` headings in §Open items
+> (re-derived 2026-08-09, S56, via `grep -cE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG.md`; **15** at
+> S53's count, itself already stale by then — this line is exactly the kind of drift the
+> paragraph warns about, caught only because S56 added a sixteenth heading, BL-26, and re-ran the
 > grep rather than incrementing by hand) are a *different* set: **BL-15** keeps its
 > heading though it is CLOSED, and **BL-16** is open but has no heading of its own, living inside
 > BL-14's follow-ons paragraph. Read each item's own status line.) (**BL-19 raised 2026-08-02 (S30)** — the operator-assigned context-cost plan; it is an
@@ -648,6 +653,43 @@ correctly excluded from the "2 of 6 blocked" set. Adjacent, not a numbered findi
 (F9), 4 unchanged/open (F2, F3, F6, F8), 2 unchanged-and-clean (F10, F11), zero regressions.**
 Read-only throughout; `git status --porcelain` inside `vscode_quarto_ext` confirmed identical (1
 dirty path) both before and after. No sync or write action was taken or authorized.
+
+**BL-26 — Issue #67 and PR #66 checked against this fork's current state: neither is addressed, and
+PR #66 has its own unfixed collisions.** *Raised 2026-08-09 (S56), operator-directed — offered and
+declined as an alternative at BL-25's claim (S53) and left un-investigated across five prior sessions'
+`next_steps`. Measured, not fixed (FM #17). Full evidence:
+[`issue67-pr66-review.md`](issue67-pr66-review.md).*
+
+**Issue #67** (`check_stale_version()` advertises `--sync`, a 26-file/25-repo portfolio write, as the
+remedy for one stale copy) **reproduces verbatim in this fork's own `tools/methodology_dashboard.py`
+and its `starter-kit/` twin** (`DASHBOARD_VERSION` 2.13.0, already past the `v2.10.2` the issue's own
+example cites) — a live, currently-**shipped** defect, not merely an upstream gap this fork hasn't
+pulled a fix for. All three parts reproduce: the warning still prints only the portfolio remedy
+(`:774-777`), bare `--dry-run` still falls through to a full write (`:3923-3928`, reproduced live this
+session), and none of the issue's four suggested fixes exist in `print_usage()`. Fork-side-fixable
+today, independent of upstream — same class as BL-20/BL-22.
+
+**PR #66** (Failure Mode #28 + `context_budget.py`, still `OPEN`/`MERGEABLE`) is **not safely
+mergeable as-is**, two concrete collisions, both reproduced rather than inferred:
+1. `install_hook()` targets `.git/hooks/pre-commit` unconditionally, with no `core.hooksPath`
+   awareness — silently a no-op against this fork's own `.githooks/pre-commit` convention
+   (`core.hooksPath = .githooks`, BL-6 item 3), printing a false "installed" success message. The
+   PR's own dev-session note records `core.hooksPath` as unset in its author's test environment, so
+   this path was never exercised there either.
+2. `bin/check-handoff --all`'s new duplicate-`session:` check (built to answer issue #65) keys on the
+   bare session id with no date component — **the exact invariant BL-23 already found false against
+   this repo's real ledger** (S3/S5/S7/S8 each name two different real sessions, by this repo's own
+   documented fork/upstream dual-sequence design). Re-verified live this session: still 4 duplicates.
+   This fork's own `bin/check-handoff:74` already disclaims answering #65 for precisely this reason;
+   PR #66 answers it anyway and inherits the flaw as shipped code.
+
+**Adjacent, not a collision:** PR #66 overlaps ground this fork's own `framework-context-cost-plan.md`
+(BL-19) already planned as **S45** (`bin/check-context-budget`, still unshipped) but goes further —
+an actual commit-refusing size gate, where BL-19's five heuristics are all read-only/dashboard-only.
+Whether this repo wants a size-enforcing gate at all is an undecided, operator-level design question,
+parallel to BL-19 §7's existing decision items — not resolved here.
+
+No outward-facing action taken; #67 and #66 remain exactly as found.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
