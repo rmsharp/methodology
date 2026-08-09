@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S58
+date: 2026-08-09
+status: pending
+active_task: Operator-directed — ratify `docs/planning/issue67-fork-side-fix-plan.md` (S57's plan) as written. Flip the document's own status from PROPOSED to RATIFIED, mark its six design decisions ratified, update BL-26 accordingly. Ratification is NOT a go-ahead to implement (a future session's deliverable) and NOT a go-ahead for any upstream-facing action (still needs its own explicit ask per CLAUDE.md, restated by the plan's own §9).
+```
+
+---
+
+```handoff
 session: S57
 date: 2026-08-09
 status: complete
