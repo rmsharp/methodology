@@ -144,6 +144,14 @@ compaction are recorded in the action ledger entry below that performed it, not 
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] Reconcile-on-read: S58's `commit:` field → `07f54a0` — thirtieth discharge, taken before the claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `07f54a0` (claim stub `1e4bbf3`) — thirtieth discharge, taken before the claim this time
+(unlike the twenty-ninth, which S58 itself caught mid-session after skipping this exact step).
+Single-answer derivation; both ledger frontiers agree at `07f54a0`, HEAD; no ghost session
+(`git rev-list --count --no-merges 07f54a0..HEAD` = 0).
+
 ### 2026-08-09 · [ad hoc] BL-26 issue-#67 thread: S57's fix plan RATIFIED as written
 
 **Model:** Claude Sonnet 5.

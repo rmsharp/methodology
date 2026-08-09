@@ -29,6 +29,15 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S59
+date: 2026-08-09
+status: pending
+active_task: Phase 3C gap found while preparing S58's close-out report for the operator (asked "are you ready for phase 3 close-out report?") — S57/S58 never appended a `starter-kit/FRAMEWORK_LEARNINGS.md` row despite a genuine, distinctly novel finding: a candidate-review panel provides zero coverage of a SYNTHESIZED design that grafts pieces from multiple candidates. Append it as Learning #20, canonical-only, distributed (TRACKED) — no version event (single-row append, matching several prior precedent additions).
+```
+
+---
+
+```handoff
 session: S58
 date: 2026-08-09
 status: complete
@@ -41,7 +50,7 @@ key_files: `docs/planning/issue67-fork-side-fix-plan.md:3-6` (the ratification h
 gotchas: (1) **Ratification ≠ implementation ≠ upstream go-ahead — three separate gates, stated explicitly at every layer this session touched** (plan header, BL-26, CHANGELOG) specifically so a future reader skimming any ONE of these documents alone still sees the boundary, not just the plan's own §9. (2) The stale receipt-count line (`next_steps`) was deliberately left unfixed rather than silently corrected inline — this session's own explicit task was ratification, not ledger housekeeping, and fixing it silently while doing something else would have been exactly the kind of undisclosed scope-add this repo's FM #17 exists to prevent; naming it here instead. (3) D6 was deliberately NOT given a `(ratified ...)` marker like D1–D5 — it documents a consequence of D1's mechanism (a return-value semantics change), not an independent choice that could have gone a different way, so "ratified" would have been a category error; left as `(disclosed, not hidden)`, unchanged.
 runtime_smoke: n/a — docs-only session (one plan file edited for status only, one BACKLOG.md paragraph extended, `CHANGELOG.md`, `HANDOFFS.md`), no code touched, no runtime/render surface. `bash bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream 404, unchanged). `python3 bin/check-links` OK. `python3 bin/check-handoff --allow-pending` OK both as a pending stub and as this completed receipt.
 changelog_ref: CHANGELOG.md "2026-08-09 · [ad hoc] BL-26 issue-#67 thread: S57's fix plan RATIFIED as written"; the claim stub is commit `1e4bbf3`
-commit: pending
+commit: 07f54a0
 ```
 Self-score **9/10.** **+** Read "ratify the plan as written" literally and precisely — touched only
 the status markers (header, six decision headings), made zero content edits to the plan's substance,
