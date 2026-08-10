@@ -33,6 +33,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S64
+date: 2026-08-10
+status: pending
+active_task: Operator-directed — lossless trim of HANDOFFS.md. `methodology_trim.py --file HANDOFFS.md --check` at claim: TRIGGER_BYTES fires (406,024 B vs 65,536 B budget, 6.2×); TRIGGER_LINES does not (27 record headroom, fires below 15). SRF 0.1297 against the most-recent-archive boundary `c0e6944` (not RED, RED is >=1.00) vs 2.0596 against H3's largest-drop boundary `7a71df0` (itself RED) — per this repo's ratified S37 policy (the refusal operates on the most-recent boundary, a disclosed departure from H3's literal reading, because it tracks current cadence), not RED means archive-cut is the correct next action, not a rate cut. Following the HANDOFFS.md archive precedent (`docs/archive/HANDOFFS-archive.md`, `docs/archive/HANDOFFS-through-2026-08-02.md`) and the S59/S61/S63 cut-point-by-AskUserQuestion pattern.
+CHANGELOG: pending
+```
+
+---
+
+```handoff
 session: S63
 date: 2026-08-10
 status: complete
