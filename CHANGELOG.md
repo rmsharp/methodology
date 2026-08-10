@@ -152,6 +152,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Reconcile-on-read: S68's `commit:` field → `8a5d4b0` — 40th discharge, found at Phase 0 orientation
+
+**Model:** Claude Sonnet 5.
+Reconciled `8a5d4b0` (S68's own close-out commit) — 40th discharge, same mechanical chicken-egg
+shape as the prior 39: S68's receipt was written and committed before its own commit sha could be
+known, so its `commit:` field was left `pending` in the tree at the frontier this session's Phase 0
+found (`git log -1 --format=%H -- HANDOFFS.md` = `8a5d4b0`, no commits after it). No other
+undocumented commits exist between the S68 frontier and `HEAD` — `git log --oneline
+8a5d4b0..HEAD` is empty, so this is the only gap. `bin/tests.sh` confirmed 185/186 both before and
+after this fix (Test 9's expected upstream-404 baseline, unaffected).
+
 ### 2026-08-10 · [ad hoc] Reconcile-on-read: S67's `commit:` field → `fb6e3cd` — 39th discharge, found via `bin/tests.sh` after this session's own substantive work
 
 **Model:** Claude Sonnet 5.
