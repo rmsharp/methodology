@@ -172,6 +172,17 @@ Full `bin/tests.sh` 185/186 before and after (Test 9's expected upstream-404, un
 OK (88/22). No BL-N item existed for this — it was tracked only via UAT-report cross-references and
 `HANDOFFS.md` `next_steps` carryover since S63; recorded here as `[ad hoc]` accordingly.
 
+### 2026-08-10 · [ad hoc] Reconcile-on-read: S69's `commit:` field → `2e45ae4` — 41st discharge, found at Phase 0 orientation
+
+**Model:** Claude Sonnet 5.
+Reconciled `2e45ae4` (S69's own close-out commit) — 41st discharge, same mechanical chicken-egg
+shape as the prior 40: S69's receipt was written and committed before its own commit sha could be
+known, so its `commit:` field was left `pending` in the tree at the frontier this session's Phase 0
+found (`git log -1 --format=%H -- HANDOFFS.md` = `2e45ae4`, no commits after it). No other
+undocumented commits exist between the S69 frontier and `HEAD` — `git log --oneline
+2e45ae4..HEAD` is empty, so this is the only gap. `bin/tests.sh` confirmed 185/186 both before and
+after this fix (Test 9's expected upstream-404 baseline, unaffected).
+
 ### 2026-08-10 · [ad hoc] Reconcile-on-read: S68's `commit:` field → `8a5d4b0` — 40th discharge, found at Phase 0 orientation
 
 **Model:** Claude Sonnet 5.
