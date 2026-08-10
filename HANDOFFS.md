@@ -29,6 +29,25 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 ---
 
 ```handoff
+session: S61
+date: 2026-08-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: Operator-directed — lossless trim of HANDOFFS.md (2,005 lines, past the 2,000-line agent-read cap; 558,284 B against its own 65,536 B budget). Mirrors S59/S60's CHANGELOG.md trim: `methodology_trim.py --file HANDOFFS.md --check` shows both TRIGGER_LINES and TRIGGER_BYTES firing and SRF RED (2.9477 vs the 7a71df0 archive boundary) — per `framework-context-cost-plan.md` SS3.3 (H3), the prescribed next deliverable is a rate cut, not another archive reset. IN PROGRESS.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+pending
+
+---
+
+```handoff
 session: S60
 date: 2026-08-09
 status: complete
