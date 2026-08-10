@@ -148,6 +148,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] S61 — HANDOFFS.md's 39 compactable receipt prose sections compacted, losslessly, verified adversarially — 2,005 → 987 lines, HIGH risk cleared
+
+**Model:** Claude Sonnet 5.
+- **Trigger:** dashboard HIGH risk — HANDOFFS.md at 2,005 lines, past the 2,000-line `Read` cap.
+  `methodology_trim.py --check` showed both LINES and BYTES triggers firing and SRF RED (2.9477
+  against the `7a71df0` archive boundary) — per `framework-context-cost-plan.md` SS3.3 (H3), RED means
+  *"do not archive again; the next deliverable is a rate cut, not another reset."* Mirrors S59/S60's
+  CHANGELOG.md arc for a structurally different ledger: this file's records are a fixed 14-line
+  `handoff` fence (the six Minimum Handoff Requirement fields — left untouched, per the file's own H4
+  guidance that "the essay" compacts, not the fields) plus free-text prose beneath it (self-score
+  +/− breakdown, predecessor evaluation). Compaction targeted the prose only.
+- **Change:** all 39 receipts with compactable prose (S19–S60, excluding 6 with no prose and this
+  session's own pending stub) compacted against the U/B/D norm S45/S46/S60 established (keep unique/
+  non-derivable facts and meaning-changing qualifiers verbatim; cut narrative restatement/boilerplate;
+  don't restate re-derivable claims), targeting real character-count reduction, then independently
+  adversarially verified by a second agent — given only the file and line range, never a copy of "the
+  original" — told to find any fact, quote, number, file:line, sha, or precision qualifier present in
+  the original but missing or softened in the candidate. A first pass that targeted line-count
+  reduction produced near-zero real compaction (agents satisfied "fewer lines" by removing word-wrap
+  breaks rather than cutting content, caught by measuring characters — not lines — before anything
+  touched the live file) and was redone with explicit character-count targets.
+- **What survives, measured not asserted:** 39-receipt prose class 112,076 → 106,818 chars (**−4.7%**,
+  close to S60's own 6.0% ceiling for individually-unique narrative — the same "not a repeated
+  template" ceiling, on a different corpus); whole file 2,025 → 987 lines (**−51.2%**, dominated by
+  removing internal word-wrap breaks, not content loss), 559,034 → 553,842 B (**−0.9%** — the fenced
+  fields this pass didn't touch hold **79.4%** of the file's bytes, so a prose-only compaction was
+  never going to move the byte budget much).
+- **Losslessness proven, not asserted.** All 46 fenced `handoff` blocks confirmed byte-identical
+  before/after (front matter, all 12 `key: value` lines per receipt, all separators) via a Python
+  round-trip check. Per-receipt adversarial verification (up to 8 rounds where needed) found real,
+  non-obvious losses on most first drafts — dropped first-person attribution ("I"), dropped qualifiers
+  ("own", "explicit", "directly", "non-negotiable", "again", "both", "here"), softened causal/emphatic
+  framing — every included receipt reached `lossless: true` before being written back.
+- **Dashboard confirms:** HANDOFFS.md's HIGH risk (2,000-line cap) cleared; 0 HIGH risk repo-wide. The
+  byte-budget MEDIUM risk (553,842 B against 65,536 B) and SRF-RED (2.9218, barely moved by a prose-
+  only cut) remain open — same shape as S60's CHANGELOG.md experience, a real rate cut per H3's policy
+  but not enough alone to clear the byte trigger.
+
+### 2026-08-09 · [ad hoc] Reconcile-on-read: S60's `commit:` field → `3d22d84` — thirty-second discharge, taken after the claim (not before)
+
+**Model:** Claude Sonnet 5.
+Reconciled `3d22d84` (S60's close-out commit, confirmed via `git show 3d22d84:HANDOFFS.md` carrying
+S60's block at `status: complete`) — thirty-second discharge. Unlike the established "before the
+claim" pattern (S59→S60's own discharge), this one was found mid-session, after S61's claim
+(`6f62787`) had already landed — a gap in this session's own Phase 1B, disclosed rather than silently
+fixed. No ghost session: `git rev-list --count --no-merges 3d22d84..HEAD` was `0` at claim time.
+
 ### 2026-08-09 · [ad hoc] S60 close-out — CHANGELOG.md HIGH risk cleared, self-score 8/10
 
 **Model:** Claude Sonnet 5.
