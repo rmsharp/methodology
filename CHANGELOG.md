@@ -152,6 +152,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Reconcile-on-read: S64's `commit:` field → `a46f2f9` — 36th discharge, found at Phase 0 orientation
+
+**Model:** Claude Sonnet 5.
+Reconciled `a46f2f9` (claim stub `ede7cbb`) — 36th discharge, same mechanical shape as the prior 35:
+S64's own close-out receipt necessarily named its `commit:` field `pending` at write time. `a46f2f9`
+is the first commit (all refs) whose S64 block reads `status: complete`, confirmed via `git log
+--all --full-history -- HANDOFFS.md`; it is also `HANDOFFS.md`'s current frontier and `HEAD`, with
+`git rev-list --count --no-merges a46f2f9..HEAD` = `0` (no ghost session, no backfill owed). Taken
+before this session's own Phase 1B claim.
+
 ### 2026-08-10 · [ad hoc] S64 close-out — receipt written, self-score 8/10; see the BL-27 and regression-fix entries below for the substantive work
 
 **Model:** Claude Sonnet 5.
