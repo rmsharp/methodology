@@ -882,6 +882,60 @@ class TestVerifyShHandoffFalsePositives(unittest.TestCase):
 
 
 # =============================================================================================
+# BL-28 — the GENERATED .verify.sh's L2 "missing front-matter line" check is a substring test
+# (`ln not in afront`), not exact-line-set membership. `afront` is the whole front-matter TEXT, so
+# `in` is substring containment: an APPEND-style edit that keeps the original line as a literal
+# prefix of the new one leaves the old text intact as a substring and the check reports no loss.
+# Raised 2026-08-10 (S65) while building BL-27's own narrowed control — that control (above,
+# `test_an_undeclared_front_matter_edit_still_fails_L2_even_with_the_field_regenerated`) had to use
+# a full-line REPLACEMENT tamper specifically because an append would have been invisible to this
+# defect and masked what that test was proving. This is the sibling test that proves the append
+# shape itself is caught, now that the check is fixed.
+# =============================================================================================
+
+class TestVerifyShAppendTamperEvadesSubstringCheck(unittest.TestCase):
+
+    def test_an_append_style_edit_that_keeps_the_original_line_as_a_substring_still_fails_L2(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_handoff_repo(tmp)
+            run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+            live = p / "HANDOFFS.md"
+            text = live.read_text(encoding="utf-8")
+            before = text
+            text = text.replace("# Handoff Receipts", "# Handoff Receipts EDITED", 1)
+            self.assertNotEqual(text, before, "control: the tamper must actually change the file")
+            self.assertIn("# Handoff Receipts", text,
+                         "control: the tamper must be an APPEND -- the original line's text must "
+                         "survive as a literal substring of the new line. That is the exact shape "
+                         "BL-28 names; a full replacement (the sibling test above) is a different "
+                         "shape and does not exercise this defect.")
+            live.write_text(text, encoding="utf-8")
+            shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+            v = sh(p, "bash", str(shard) + ".verify.sh")
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+            self.assertIn("L2 FRONT MATTER", v.stdout, v.stdout)
+            self.assertNotEqual(v.returncode, 0)
+
+    def test_the_regenerated_field_carve_out_still_works_after_the_fix(self):
+        """NARROWED control — the exact-line-set fix must not turn field_reversible's own carve-out
+        into a false FAIL. The regenerated-count line changes on every archive by construction and
+        must still pass, exactly as `TestVerifyShHandoffFalsePositives` already proves for the
+        pre-fix code; re-asserted here so a fix that over-corrects (e.g. by comparing raw line sets
+        with no field_reversible exemption at all) is caught by this file too."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_handoff_repo(tmp)
+            r = run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+            self.assertIn("[WROTE]", r.stdout, r.stdout)
+            live = (p / "HANDOFFS.md").read_text(encoding="utf-8")
+            self.assertIn("This file currently holds **2**", live,
+                         "control: the regenerated field must actually have changed")
+            shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+            v = sh(p, "bash", str(shard) + ".verify.sh")
+            self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
+            self.assertEqual(v.returncode, 0)
+
+
+# =============================================================================================
 # Regression tests for the defects an adversarial review found in the first build of this tool.
 # Each one existed BECAUSE the corresponding guard was wired to the wrong operand and no test
 # noticed. They mutate the WRITE PATH — not the predicate — because mutating the predicate is

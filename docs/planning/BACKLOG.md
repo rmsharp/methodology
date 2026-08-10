@@ -1,11 +1,12 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23, BL-26 and BL-28 are open** (**BL-28 raised 2026-08-10 (S65)** — the
-> generated `.verify.sh`'s "missing front-matter line" check is a substring test, not exact-line-set
-> membership, so an append-style edit that keeps the original text as a literal substring of the new
-> line is invisible to it; found while building BL-27's own control test, reproduced live; see its
-> own entry. **BL-27 raised 2026-08-10 (S64), CLOSED 2026-08-10 (S65)** — the
+> BL-20, BL-21, BL-22, BL-23 and BL-26 are open** (**BL-28 raised 2026-08-10 (S65), CLOSED 2026-08-10
+> (S68)** — the generated `.verify.sh`'s "missing front-matter line" check was a substring test, not
+> exact-line-set membership, so an append-style edit that kept the original text as a literal
+> substring of the new line was invisible to it; fixed by comparing against the exact set of new
+> front-matter lines, `TRIM_VERSION` 1.1.2 → 1.1.3, 2 new RED-first tests (97/97); see its own entry.
+> **BL-27 raised 2026-08-10 (S64), CLOSED 2026-08-10 (S65)** — the
 > ledger trimmer's generated `.verify.sh` had two known false-positive triggers on `HANDOFFS.md`
 > (front-matter field regeneration; a same-commit close-out bundled with the archive write reading as
 > record alteration); both fixed in `VERIFY_TEMPLATE`/`build_verify` (`starter-kit/methodology_trim.py`
@@ -839,6 +840,24 @@ substring containment — a change to the same canonical, adopter-distributed to
 RED-first test. Low severity in practice (an append that happens to preserve the exact original
 text as a contiguous substring is a narrow tamper shape), but real, and this file's own precedent
 (BL-27) is to record what is found even when it is not what was being looked for.
+
+**CLOSED 2026-08-10 (S68):** fixed in the same `starter-kit/methodology_trim.py` template (the sole
+canonical copy — no `tools/` twin to mirror). The "missing" check now builds `afront_lines =
+set(afront.splitlines())` once and tests `ln not in afront_lines` — exact membership in the new
+front matter's line set — instead of `ln not in afront` (substring containment on the whole text).
+`field_reversible()`'s own separate, correct line-by-line carve-out for the declared regenerated
+fields is untouched. RED-first: a new `TestVerifyShAppendTamperEvadesSubstringCheck` class
+(`tools/test_methodology_trim.py`) with the exact reproduction from this entry (`"# Handoff
+Receipts"` → `"# Handoff Receipts EDITED"`, append not replace) — confirmed FAILing (no `FAIL:` in
+the script's output) against unpatched code before the fix, `FAIL: L2 FRONT MATTER` after; a
+narrowed control re-confirms the regenerated-count field still passes unpatched-and-patched, so the
+fix doesn't turn the exact-line-set comparison into a blanket new false positive. Trimmer suite 95 →
+97, all green; full `bin/tests.sh` unaffected. `TRIM_VERSION` 1.1.2 → 1.1.3 (patch — no new finding
+code or exit status on the tool's own CLI, a correctness fix to generated output, same class as
+1.1.2). The sibling BL-27 control test's own comment about needing a full-line replacement (not an
+append) for its tamper — because an append would have been invisible to *this* defect — is now
+historical: an append-shaped tamper is caught too, verified by the new test above it in the same
+file.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

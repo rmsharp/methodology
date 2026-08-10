@@ -164,6 +164,27 @@ and only ran the full suite (surfacing the gap) after the BL-28 fix and its test
 written — later in the session than S66's own slip, not earlier. Fixed here rather than left for a
 future session; disclosed in this session's own `HANDOFFS.md` gotchas, not hidden.
 
+### 2026-08-10 · [BL-28] `.verify.sh`'s L2 "missing front-matter line" check: substring containment → exact-line-set membership
+
+**Model:** Claude Sonnet 5.
+Fixed `starter-kit/methodology_trim.py`'s `VERIFY_TEMPLATE` (the generated `.verify.sh`, sole
+canonical copy — no `tools/` twin): the "missing" check tested `ln not in afront`, substring
+containment against the whole front-matter TEXT, so an append-style edit that kept the original line
+as a literal prefix of a new, longer line evaded detection — a real change to the line read as "no
+loss." Now builds `afront_lines = set(afront.splitlines())` once and tests exact membership in that
+set; `field_reversible()`'s own separate, correct carve-out for the declared regenerated fields is
+untouched. RED-first: reproduced the exact BL-28 tamper (`"# Handoff Receipts"` → `"# Handoff
+Receipts EDITED"`) in a new `TestVerifyShAppendTamperEvadesSubstringCheck` class
+(`tools/test_methodology_trim.py`) — confirmed no `FAIL:` in the script's output against unpatched
+code, `FAIL: L2 FRONT MATTER` after the fix; a narrowed control re-confirms the regenerated-count
+field still passes both before and after, so the fix does not turn exact-line-set comparison into a
+blanket new false positive. Trimmer suite 95 → 97, all green; full `bin/tests.sh` 184/186 (2
+pre-existing/unrelated: Test 9's expected upstream-404, and the S67 reconcile fixed in the entry
+immediately above). `TRIM_VERSION` 1.1.2 → 1.1.3 (patch — no new finding code or exit status on the
+tool's own CLI, a correctness fix to generated output, same class as 1.1.2/BL-27).
+`docs/planning/BACKLOG.md` BL-28 closed in place with a closure paragraph (BL-27 precedent), top
+STATUS line updated to drop BL-28 from the open list.
+
 ### 2026-08-10 · [ad hoc] S67 close-out — receipt written, self-score 8/10; see the `[BL-26]` entry below for the substantive work
 
 **Model:** Claude Sonnet 5.

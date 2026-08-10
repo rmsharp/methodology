@@ -47,7 +47,13 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.1.2"   # 1.1.2: BL-27 — the GENERATED .verify.sh had two false-positive triggers
+TRIM_VERSION = "1.1.3"   # 1.1.3: BL-28 — the GENERATED .verify.sh's L2 "missing front-matter line"
+                         # check compared by substring (`ln not in afront`) instead of exact-line-
+                         # set membership, so an append-style edit that kept the original line as a
+                         # literal prefix of the new one evaded detection. No new finding code or
+                         # exit-code change: patch, not minor — a correctness fix to what the tool
+                         # WRITES, same class as 1.1.2.
+                         # 1.1.2: BL-27 — the GENERATED .verify.sh had two false-positive triggers
                          # the internal --check/--write assertions do not share: a declared
                          # front-matter regen field (e.g. HANDOFFS.md's receipt count) read as L2
                          # data loss, and a same-commit close-out bundling (this repo's own
@@ -1228,8 +1234,15 @@ def field_reversible(missing_line):
     return False
 
 
+# BL-28 fix: exact-line-set membership, not substring containment. `ln not in afront` tested
+# whether `ln` occurs anywhere in the whole front-matter TEXT — an append-style edit that keeps
+# the original line as a literal prefix of a new, longer line leaves that substring intact and
+# reads as "found," so a real change to the line evaded detection. Comparing against the SET of
+# exact lines in the new front matter closes that gap without touching field_reversible's own
+# separate, correct line-by-line carve-out for the declared regenerated fields.
+afront_lines = set(afront.splitlines())
 missing = [ln for ln in bfront.splitlines()
-           if ln.strip() and ln not in afront and not field_reversible(ln)]
+           if ln.strip() and ln not in afront_lines and not field_reversible(ln)]
 if missing:
     fails.append("L2 FRONT MATTER lost %d line(s), first: %r" % (len(missing), missing[0][:70]))
 leaked = [ln for ln in bfront.splitlines()
