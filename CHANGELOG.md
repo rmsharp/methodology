@@ -152,6 +152,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Reconcile-on-read: S65's `commit:` field → `c43e7ee` — 37th discharge, found at Phase 0 orientation
+
+**Model:** Claude Sonnet 5.
+Reconciled `c43e7ee` (claim stub `d244dd0`) — 37th discharge, same mechanical shape as the prior 36:
+S65's own close-out receipt necessarily named its `commit:` field `pending` at write time, because it
+was written in the same commit whose sha it would name. `c43e7ee` is `HANDOFFS.md`'s current frontier
+and `HEAD`, with `git rev-list --count --no-merges c43e7ee..HEAD` = `0` (no ghost session, no backfill
+owed). Taken before this session's own Phase 1B claim.
+
 ### 2026-08-10 · [ad hoc] S65 close-out — receipt written, self-score 8/10; see the `[BL-27]`/`[ad hoc]` entries below for the substantive work
 
 **Model:** Claude Sonnet 5.
