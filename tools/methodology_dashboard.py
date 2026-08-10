@@ -84,7 +84,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.13.0"
+DASHBOARD_VERSION = "2.14.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -763,7 +763,11 @@ def version_key(v):
 
 def check_stale_version():
     """Best-effort staleness check: if a newer canonical exists locally, warn on stderr.
-    Silent when the canonical can't be found or when this copy IS the canonical."""
+    Silent when the canonical can't be found or when this copy IS the canonical.
+
+    Issue #67 point 1: the remedy used to be the portfolio-wide --sync only -- disproportionate
+    for a one-file problem. Now names both: the scoped fix for THIS copy first, the full sweep
+    second."""
     self_path = Path(__file__).resolve()
     canonical = find_canonical(self_path.parent)
     if not canonical or canonical == self_path:
@@ -773,7 +777,9 @@ def check_stale_version():
         sys.stderr.write(
             f"  ⚠ methodology_dashboard.py is stale: this copy is v{DASHBOARD_VERSION}, "
             f"canonical is v{canon_ver}.\n"
-            f"    Re-sync: python3 {canonical} --sync\n"
+            f"    Update just this copy:      python3 {canonical} --sync {self_path.parent}\n"
+            f"    Update the whole portfolio: python3 {canonical} --sync   "
+            f"(writes every discovered project — preview first with --dry-run)\n"
         )
 
 
@@ -986,41 +992,85 @@ def trim_line_headroom(path, rel_posix, basename):
     return (READ_CAP_LINES - live_lines) * de // dl, None
 
 
-def sync_dashboards(start, dry_run=False):
-    """Copy the canonical dashboard to the portfolio root + every discovered project.
-    In --dry-run mode nothing is written; the planned actions are printed. Returns the
-    count of files that were (or would be) changed.
+_KNOWN_FLAGS = {"--sync", "--dry-run", "--force", "--no-open", "--with-submodules", "--help", "-h"}
+
+
+def _extract_sync_target(args):
+    """First non-flag token in argv (any position, not only after --sync): the optional
+    single-project sync scope. Order-independent — '--sync /path' and '--sync --force /path'
+    both resolve to '/path'. None => sync the whole portfolio (today's unchanged default).
+
+    Issue #67 point 2. Every current flag is dash-prefixed, so this is really just "the first
+    bare word" — a FUTURE value-taking flag (e.g. a hypothetical --out FILE) would have its own
+    value misread as the sync target; `_KNOWN_FLAGS` does no independent filtering against that
+    today. Not a structural guard; any future value-taking flag needs its own dedicated test."""
+    for a in args:
+        if a not in _KNOWN_FLAGS and not a.startswith("-"):
+            return a
+    return None
+
+
+def sync_dashboards(start, dry_run=False, target=None, force=False):
+    """Copy the canonical dashboard to a single TARGET_DIR (if given) or to the portfolio root +
+    every discovered project (target=None, today's default). In --dry-run mode nothing is
+    written; the planned actions — including which targets --force would be needed for — are
+    printed. Returns the count of files ACTUALLY written (0 for a dry run).
 
     NOTE: a live sync writes methodology_dashboard.py into every project, including the
     repos where it is still git-tracked — those need the Phase 3 `git rm --cached` +
-    per-repo commit discipline. Tracked targets are flagged in the output."""
+    per-repo commit discipline. Tracked targets are flagged in the output.
+
+    Issue #67 points 2/3/4 (docs/planning/issue67-fork-side-fix-plan.md, D1-D4): a write is
+    gated (skipped without --force) when the target is already git-tracked, or is a brand-new
+    file landing in a repo whose own .gitignore does not already cover it. The gate is computed
+    BEFORE branching on dry_run, so a --dry-run preview shows [SKIPPED] honestly instead of
+    promising a write --force would still be needed for."""
     canonical = find_canonical(start)
     if not canonical:
         sys.stderr.write("  Cannot locate canonical methodology/starter-kit/"
                          "methodology_dashboard.py — nothing synced.\n")
         return 0
     # .../starter-kit/methodology_dashboard.py -> starter-kit -> methodology -> portfolio root
+    canon_repo = canonical.parent.parent.resolve()           # .../methodology
     portfolio_root = canonical.parent.parent.parent
     canon_text = canonical.read_text()
+    canon_ver_display = parse_version(canonical) or DASHBOARD_VERSION   # see SS6 item 4: never
+                                                                          # DASHBOARD_VERSION alone —
+                                                                          # that's the RUNNING copy's
+                                                                          # own version, not the
+                                                                          # canonical's, whenever a
+                                                                          # local stale copy invokes
+                                                                          # --sync on itself.
 
-    # discover_projects() has TWO consumers — the portfolio scan and this WRITE path — so
-    # widening it widens both. Dropping "methodology" from EXCLUDE_DIRS (D4(c)) is wanted for the
-    # scan and NOT wanted here: it would make --sync create a third copy of this file at the
-    # canonical repo's own root, unignored and beside the two it already authors. The `t ==
-    # canonical` skip below does not catch that, because canonical is .../starter-kit/<name> and
-    # the new target is .../<name>. Skip the authoring repo explicitly.
-    canon_repo = canonical.parent.parent.resolve()          # .../methodology
-    targets = [portfolio_root / "methodology_dashboard.py"]
-    for proj in discover_projects(portfolio_root):
-        if proj.resolve() == canon_repo:
-            continue
-        targets.append(proj / "methodology_dashboard.py")
+    if target is not None:
+        target_dir = Path(target).resolve()
+        if not target_dir.is_dir():
+            sys.stderr.write(f"  Target directory does not exist: {target_dir} — nothing synced.\n")
+            return 0
+        if target_dir == canon_repo or (target_dir / "methodology_dashboard.py") == canonical:
+            sys.stderr.write("  Refusing to sync the canonical's own authoring repo as a target.\n")
+            return 0
+        targets = [target_dir / "methodology_dashboard.py"]
+        scope_label = f"1 target ({target_dir})"
+    else:
+        # discover_projects() has TWO consumers — the portfolio scan and this WRITE path — so
+        # widening it widens both. Dropping "methodology" from EXCLUDE_DIRS (D4(c)) is wanted for
+        # the scan and NOT wanted here: it would make --sync create a third copy of this file at
+        # the canonical repo's own root, unignored and beside the two it already authors. The
+        # `t == canonical` skip below does not catch that, because canonical is
+        # .../starter-kit/<name> and the new target is .../<name>. Skip the authoring repo
+        # explicitly.
+        targets = [portfolio_root / "methodology_dashboard.py"]
+        for proj in discover_projects(portfolio_root):
+            if proj.resolve() == canon_repo:
+                continue
+            targets.append(proj / "methodology_dashboard.py")
+        scope_label = f"portfolio root + {len(targets) - 1} project(s)"
 
-    print(f"Canonical: {canonical} (v{DASHBOARD_VERSION})")
-    print(f"{'DRY RUN — no files written.' if dry_run else 'Syncing.'} "
-          f"Targets: portfolio root + {len(targets) - 1} project(s)\n")
+    print(f"Canonical: {canonical} (v{canon_ver_display})")
+    print(f"{'DRY RUN — no files written.' if dry_run else 'Syncing.'} Targets: {scope_label}\n")
 
-    changed = inspected = 0
+    written = skipped = inspected = 0
     for t in targets:
         t = t.resolve()
         if t == canonical:
@@ -1033,22 +1083,34 @@ def sync_dashboards(start, dry_run=False):
             action = "create"
         else:
             action = "update"
+
+        tracked = bool(git_cmd(t.parent, "ls-files", "--error-unmatch", t.name))
+        ignored = action == "create" and bool(git_cmd(t.parent, "check-ignore", t.name))
+        gated = action != "unchanged" and (tracked or (action == "create" and not ignored))
+
         note = ""
-        if t.exists() and git_cmd(t.parent, "ls-files", "--error-unmatch", t.name):
-            note = "  [git-tracked — needs Phase 3 untrack]"
-        if action != "unchanged":
-            changed += 1
+        if gated and not force:
+            skipped += 1
+            note = ("  [SKIPPED — git-tracked; pass --force, then Phase 3 untrack]" if tracked else
+                    "  [SKIPPED — new, ungitignored file; pass --force to create]")
+        elif action != "unchanged":
             if not dry_run:
                 shutil.copyfile(canonical, t)
+            written += 1
+            if tracked:
+                note = "  [git-tracked — needs Phase 3 untrack]"
+
         try:
             label = t.relative_to(portfolio_root)
         except ValueError:
             label = t
-        print(f"  {action:<9s} {label}{note}")
+        shown = "skip" if (gated and not force) else action
+        print(f"  {shown:<9s} {label}{note}")
 
     verb = "Would change" if dry_run else "Changed"
-    print(f"\n  {verb} {changed} of {inspected} target(s).")
-    return changed
+    tail = f" ({skipped} skipped — rerun with --force to include them)" if skipped else ""
+    print(f"\n  {verb} {written} of {inspected} target(s).{tail}")
+    return 0 if dry_run else written
 
 
 def print_usage():
@@ -1060,9 +1122,16 @@ def print_usage():
     print("  --no-open          Do not open the generated dashboard.html in a browser.")
     print("  --with-submodules  In single-project mode, also scan git submodules as")
     print("                     separate entries (default: scan the project only).")
-    print("  --sync             Copy the canonical dashboard to the portfolio root and")
-    print("                     every discovered project (use --dry-run to preview).")
+    print("  --sync [DIR]       Copy the canonical dashboard to DIR (a single project) if")
+    print("                     given, or to the portfolio root and every discovered")
+    print("                     project if omitted. Combine with --dry-run to preview,")
+    print("                     --force to also write tracked/brand-new targets.")
     print("  --dry-run          With --sync, show planned changes without writing.")
+    print("                     Alone, it is an error (nothing else in this tool writes")
+    print("                     speculatively).")
+    print("  --force            With --sync, also write targets that are git-tracked or")
+    print("                     brand-new (and not already .gitignore'd). Without it,")
+    print("                     those targets are listed but skipped.")
     print("  -h, --help         Show this help and exit.")
 
 
@@ -3921,8 +3990,18 @@ def main():
         return
 
     if "--sync" in args:
-        sync_dashboards(Path(__file__).resolve().parent, dry_run="--dry-run" in args)
+        target = _extract_sync_target(args)
+        sync_dashboards(Path(__file__).resolve().parent, dry_run="--dry-run" in args,
+                         target=target, force="--force" in args)
         return
+
+    if "--dry-run" in args:                                                    # issue #67 pt. 4
+        sys.stderr.write(
+            "  --dry-run only means something together with --sync (nothing else in this\n"
+            "  tool writes speculatively).\n"
+            "  Usage: python3 methodology_dashboard.py --sync [DIR] --dry-run\n"
+        )
+        sys.exit(2)
 
     # Warn (best-effort) if this copy is older than the canonical.
     check_stale_version()

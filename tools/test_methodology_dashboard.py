@@ -2045,10 +2045,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.13.0")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.14.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.13\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.13.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.14\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.14.0")
 
 
 class TestEndToEnd(unittest.TestCase):
@@ -3305,6 +3305,312 @@ class TestD4SelfExclusion(unittest.TestCase):
                          "--sync must not target the repo that AUTHORS the dashboard")
         self.assertIn("adopter", out, "fixture check: a real adopter target must still be found, "
                                       "or this test would pass on an empty target list")
+
+
+class TestIssue67ScopedSync(unittest.TestCase):
+    """Upstream issue #67 (docs/planning/issue67-fork-side-fix-plan.md, S57 proposed / S58
+    ratified): `check_stale_version()`'s only remedy was a portfolio-wide `--sync` for a one-file
+    problem, `sync_dashboards()` had no target scope and no confirm-before-overwrite gate, and a
+    bare `--dry-run` silently fell through to a full scan-and-write. RED-FIRST throughout
+    (Learning #12): every assertion below was run against the unpatched functions and watched to
+    fail for the reason named in its own docstring, matching the plan's own SS7 test table by row
+    number. Fixture idiom matches the existing TestD4SelfExclusion precedent
+    (test_sync_does_not_target_the_authoring_repo): a real temp directory tree + real `git init`,
+    never a stubbed discover_projects."""
+
+    def _canon_and_portfolio(self):
+        """A canonical repo (methodology/starter-kit/methodology_dashboard.py) plus an empty
+        portfolio root to hang targets off of. Mirrors the existing precedent fixture exactly."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        canon_dir = root / "methodology" / "starter-kit"
+        canon_dir.mkdir(parents=True)
+        canon = canon_dir / "methodology_dashboard.py"
+        canon.write_text(Path(TOOLS_PY).read_text(encoding="utf-8"), encoding="utf-8")
+        subprocess.run(["git", "init", "-q", str(root / "methodology")], check=True)
+        return root, canon
+
+    def _git_init(self, path):
+        path.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["git", "init", "-q", str(path)], check=True)
+        return path
+
+    def _git_commit_all(self, path):
+        subprocess.run(["git", "-C", str(path), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(path), "-c", "user.email=t@t", "-c", "user.name=t",
+                         "commit", "-q", "-m", "init"], check=True)
+
+    def _run_sync(self, canon, **kwargs):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            written = md.sync_dashboards(canon, **kwargs)
+        return written, out.getvalue(), err.getvalue()
+
+    def _run_cli(self, script, args, cwd):
+        return subprocess.run(["python3", str(script)] + list(args), cwd=str(cwd),
+                               capture_output=True, text=True, timeout=30)
+
+    # --- Row 1 -------------------------------------------------------------------------------
+
+    def test_check_stale_version_recommends_scoped_target(self):
+        """Row 1: today's message has exactly one remedy (portfolio --sync) for a one-file
+        problem. RED against unpatched code because no scoped remedy string exists at all."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        canon_dir = root / "methodology" / "starter-kit"
+        canon_dir.mkdir(parents=True)
+        canon = canon_dir / "methodology_dashboard.py"
+        real_src = Path(TOOLS_PY).read_text(encoding="utf-8")
+        canon_src, n = re.subn(r'DASHBOARD_VERSION = "[^"]+"',
+                                'DASHBOARD_VERSION = "9.9.9"', real_src)
+        self.assertEqual(n, 1, "fixture check: the version-bump substitution must actually apply "
+                               "exactly once")
+        canon.write_text(canon_src, encoding="utf-8")
+
+        adopter = root / "adopter"
+        adopter.mkdir()
+        adopter_copy = adopter / "methodology_dashboard.py"
+        adopter_copy.write_text(Path(TOOLS_PY).read_text(encoding="utf-8"), encoding="utf-8")
+
+        driver = ("import importlib.util, sys\n"
+                   "spec = importlib.util.spec_from_file_location('m', sys.argv[1])\n"
+                   "m = importlib.util.module_from_spec(spec)\n"
+                   "spec.loader.exec_module(m)\n"
+                   "m.check_stale_version()\n")
+        result = subprocess.run(["python3", "-c", driver, str(adopter_copy)],
+                                 capture_output=True, text=True, timeout=30)
+        self.assertIn(str(adopter), result.stderr,
+                      "the warning must name a remedy scoped to THIS copy's own directory")
+        self.assertIn("--sync", result.stderr)
+
+    # --- Row 2 -------------------------------------------------------------------------------
+
+    def test_extract_sync_target_is_order_independent(self):
+        """Row 2: `_extract_sync_target` doesn't exist yet -- RED with AttributeError."""
+        self.assertEqual(md._extract_sync_target(["--sync", "/some/dir"]), "/some/dir")
+        self.assertEqual(md._extract_sync_target(["--sync", "--force", "/some/dir"]), "/some/dir",
+                         "a flag between --sync and the target must not shift the parse")
+        self.assertEqual(md._extract_sync_target(["/some/dir", "--sync"]), "/some/dir",
+                         "the target token may precede --sync on the command line")
+        self.assertIsNone(md._extract_sync_target(["--sync", "--dry-run"]),
+                          "no bare-word token present => whole-portfolio mode, not a crash")
+
+    # --- Rows 3-6 ------------------------------------------------------------------------------
+
+    def test_sync_accepts_a_single_target_directory(self):
+        """Row 3: scoped mode must not fall through to full portfolio discovery -- a distractor
+        project would only appear in the output if discover_projects() still ran. RED with
+        TypeError against unpatched code (no `target` kwarg)."""
+        root, canon = self._canon_and_portfolio()
+        target = self._git_init(root / "solo")
+        (target / ".gitignore").write_text("methodology_dashboard.py\n")
+        self._git_init(root / "adopter")
+        written, out, err = self._run_sync(canon, target=str(target))
+        self.assertNotIn("adopter", out,
+                         "a scoped sync must not even inspect other portfolio members")
+        self.assertIn("1 target", out)
+        self.assertEqual(written, 1)
+
+    def test_sync_target_writes_only_that_target(self):
+        """Row 4: filesystem-level scope check -- only the named target gets a new file. RED
+        with TypeError against unpatched code."""
+        root, canon = self._canon_and_portfolio()
+        target = self._git_init(root / "solo")
+        (target / ".gitignore").write_text("methodology_dashboard.py\n")
+        other = self._git_init(root / "adopter")
+        self._run_sync(canon, target=str(target))
+        self.assertTrue((target / "methodology_dashboard.py").exists())
+        self.assertFalse((other / "methodology_dashboard.py").exists())
+        self.assertFalse((root / "methodology_dashboard.py").exists(),
+                         "the portfolio-root copy must not be touched by a scoped sync either")
+
+    def test_sync_target_nonexistent_directory_errors_without_writing(self):
+        """Row 5: RED with TypeError against unpatched code; no such guard exists today."""
+        root, canon = self._canon_and_portfolio()
+        ghost = root / "does-not-exist"
+        written, out, err = self._run_sync(canon, target=str(ghost))
+        self.assertEqual(written, 0)
+        self.assertFalse(ghost.exists())
+        self.assertIn("does not exist", err)
+
+    def test_sync_target_refuses_canonical_authoring_repo(self):
+        """Row 6: scoped mode's own analogue of test_sync_does_not_target_the_authoring_repo.
+        RED with TypeError against unpatched code; no such guard exists in scoped mode today."""
+        root, canon = self._canon_and_portfolio()
+        written, out, err = self._run_sync(canon, target=str(root / "methodology"))
+        self.assertEqual(written, 0)
+        self.assertIn("authoring repo", err)
+
+    # --- Rows 7-11: the --force gate ------------------------------------------------------------
+
+    def _tracked_target(self, root, canon):
+        target = self._git_init(root / "tracked")
+        (target / "methodology_dashboard.py").write_text("# stale content, not canonical\n")
+        self._git_commit_all(target)
+        return target
+
+    def test_sync_skips_git_tracked_target_without_force(self):
+        """Row 7: today's code writes a git-tracked target unconditionally -- RED because the
+        file ends up equal to canonical text instead of staying stale."""
+        root, canon = self._canon_and_portfolio()
+        target = self._tracked_target(root, canon)
+        written, out, err = self._run_sync(canon, target=str(target))
+        self.assertEqual(written, 0)
+        self.assertEqual((target / "methodology_dashboard.py").read_text(),
+                         "# stale content, not canonical\n")
+        self.assertIn("[SKIPPED — git-tracked; pass --force, then Phase 3 untrack]", out)
+
+    def test_sync_writes_git_tracked_target_with_force(self):
+        """Row 8: `force` kwarg doesn't exist yet -- RED with TypeError. Also asserts the
+        written note is EXACTLY the tracked-and-written note, with no residual "needs --force"
+        text once --force has already been satisfied (SS6 item 3)."""
+        root, canon = self._canon_and_portfolio()
+        target = self._tracked_target(root, canon)
+        written, out, err = self._run_sync(canon, target=str(target), force=True)
+        self.assertEqual(written, 1)
+        self.assertEqual((target / "methodology_dashboard.py").read_text(),
+                         canon.read_text(encoding="utf-8"))
+        self.assertIn("[git-tracked — needs Phase 3 untrack]", out)
+        self.assertNotIn("SKIPPED", out)
+        self.assertNotIn("needs --force", out)
+
+    def test_sync_skips_new_ungitignored_target_without_force(self):
+        """Row 9: today's code creates a brand-new target unconditionally -- RED because the
+        file would exist afterward."""
+        root, canon = self._canon_and_portfolio()
+        target = self._git_init(root / "brand-new")
+        written, out, err = self._run_sync(canon, target=str(target))
+        self.assertEqual(written, 0)
+        self.assertFalse((target / "methodology_dashboard.py").exists())
+        self.assertIn("[SKIPPED — new, ungitignored file; pass --force to create]", out)
+
+    def test_sync_creates_new_gitignored_target_without_force(self):
+        """Row 10, CONTROL: proves the gate does not over-fire on an already-.gitignore'd new
+        file. Must use the new target=/force= kwargs to be genuinely RED (TypeError against the
+        old two-positional-argument signature) -- calling with only a plain start/dry_run
+        wouldn't touch the new code path at all and would pass vacuously today."""
+        root, canon = self._canon_and_portfolio()
+        target = self._git_init(root / "brand-new")
+        (target / ".gitignore").write_text("methodology_dashboard.py\n")
+        written, out, err = self._run_sync(canon, target=str(target), force=False)
+        self.assertEqual(written, 1)
+        self.assertEqual((target / "methodology_dashboard.py").read_text(),
+                         canon.read_text(encoding="utf-8"))
+        self.assertNotIn("SKIPPED", out)
+
+    def test_sync_updates_existing_untracked_target_without_force(self):
+        """Row 11, CONTROL: the tool's routine self-heal case -- an ordinary update of an
+        already-existing, already-untracked target -- must keep working without --force. Same
+        new-kwarg RED reasoning as row 10: guards against an over-broad gate regressing routine
+        use."""
+        root, canon = self._canon_and_portfolio()
+        target = self._git_init(root / "existing")
+        (target / "methodology_dashboard.py").write_text("# old, untracked copy\n")
+        written, out, err = self._run_sync(canon, target=str(target), force=False)
+        self.assertEqual(written, 1)
+        self.assertEqual((target / "methodology_dashboard.py").read_text(),
+                         canon.read_text(encoding="utf-8"))
+        self.assertNotIn("SKIPPED", out)
+
+    # --- Row 12: D4, dry-run must preview the gate honestly --------------------------------------
+
+    def test_sync_dry_run_previews_skips_accurately(self):
+        """Row 12: the D4 fix. Every design candidate's own dry-run computed the gate INSIDE the
+        dry_run branch, so a preview never showed [SKIPPED] and a later real run without --force
+        wrote less than the preview promised. RED with TypeError against unpatched code (no
+        `target`/`force` kwargs to exercise the gate through in the first place)."""
+        root, canon = self._canon_and_portfolio()
+        target = self._tracked_target(root, canon)
+
+        written, out, err = self._run_sync(canon, target=str(target), dry_run=True)
+        self.assertEqual(written, 0)
+        self.assertIn("[SKIPPED", out)
+        self.assertIn("Would change 0 of 1", out)
+        self.assertEqual((target / "methodology_dashboard.py").read_text(),
+                         "# stale content, not canonical\n", "dry-run must never write")
+
+        written, out, err = self._run_sync(canon, target=str(target), dry_run=True, force=True)
+        self.assertEqual(written, 0, "D6: a dry run always returns 0, even with --force")
+        self.assertNotIn("SKIPPED", out)
+        self.assertIn("Would change 1 of 1", out)
+        self.assertEqual((target / "methodology_dashboard.py").read_text(),
+                         "# stale content, not canonical\n",
+                         "--dry-run --force previews the real action; it still writes nothing")
+
+    # --- Row 13 --------------------------------------------------------------------------------
+
+    def test_bare_dry_run_without_sync_errors_and_writes_nothing(self):
+        """Row 13: direct reproduction of issue #67 point 4. RED because today's bare --dry-run
+        exits 0 and writes dashboard.html + appends history. Real subprocess against a
+        temp-copied script -- ROOT is `Path(__file__).parent`, so the copy's own directory
+        becomes the (single-project) scan root, exactly the self-referential case this fix
+        exists to guard."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = self._git_init(Path(td.name))
+        script = root / "methodology_dashboard.py"
+        script.write_text(Path(TOOLS_PY).read_text(encoding="utf-8"), encoding="utf-8")
+
+        result = self._run_cli(script, ["--dry-run"], cwd=root)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("only means something together with --sync", result.stderr)
+        self.assertFalse((root / "dashboard.html").exists())
+        self.assertFalse((root / "dashboard_history.jsonl").exists())
+
+    # --- Row 14 ----------------------------------------------------------------------------------
+
+    def test_sync_dry_run_with_target_still_works(self):
+        """Row 14, CONTROL: a scoped dry-run's preview text must be scoped to exactly the given
+        directory, excluding other portfolio members -- "unaffected by the guard" alone would
+        pass vacuously today (RED FOR A DIFFERENT REASON: today's `main()` never even calls
+        `_extract_sync_target`, so a directory token on argv is silently ignored and a scoped
+        `--sync DIR --dry-run` previews the WHOLE portfolio; this test drives sync_dashboards()
+        directly with the new target= kwarg, so it goes RED with TypeError, same as rows 3-6, but
+        exists specifically to catch a future `main()` that extracts the target and forgets to
+        pass it through)."""
+        root, canon = self._canon_and_portfolio()
+        target = self._git_init(root / "solo")
+        self._git_init(root / "adopter")
+        written, out, err = self._run_sync(canon, target=str(target), dry_run=True)
+        self.assertIn(f"1 target ({target.resolve()})", out,
+                     "resolved, since sync_dashboards() resolves the target directory itself")
+        self.assertNotIn("adopter", out)
+
+    # --- Row 15 --------------------------------------------------------------------------------
+
+    def test_usage_documents_sync_target_and_force(self):
+        """Row 15: neither string exists in print_usage() today -- RED by absence."""
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            md.print_usage()
+        out = buf.getvalue()
+        self.assertIn("--sync [DIR]", out)
+        self.assertIn("--force", out)
+
+    # --- Row 16 --------------------------------------------------------------------------------
+
+    def test_sync_end_to_end_via_main_writes_only_the_target(self):
+        """Row 16: genuine CLI-level integration test through the real main()/argv path, unlike
+        rows 3-11 which call sync_dashboards() directly and so cannot catch main() extracting the
+        target but forgetting to pass it through. RED because today's main() has no
+        _extract_sync_target call at all and unconditionally full-portfolio-syncs on --sync."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        canon_dir = self._git_init(root / "methodology" / "starter-kit").parent
+        script = canon_dir / "starter-kit" / "methodology_dashboard.py"
+        script.write_text(Path(TOOLS_PY).read_text(encoding="utf-8"), encoding="utf-8")
+        target = self._git_init(root / "solo")
+        (target / ".gitignore").write_text("methodology_dashboard.py\n")
+        self._git_init(root / "adopter")
+
+        result = self._run_cli(script, ["--sync", str(target)], cwd=root)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((target / "methodology_dashboard.py").exists())
+        self.assertFalse((root / "adopter" / "methodology_dashboard.py").exists())
+        self.assertFalse((root / "methodology_dashboard.py").exists())
 
 
 TRIM_PY = os.path.join(os.path.dirname(HERE), "starter-kit", "methodology_trim.py")

@@ -148,6 +148,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [issue #67] S62 — fork-side fix: scoped `--sync [DIR]`, `.gitignore`-aware `--force` gate, bare `--dry-run` now errors
+
+**Model:** Claude Sonnet 5.
+Implemented the ratified fork-side fix plan (`docs/planning/issue67-fork-side-fix-plan.md`, S57
+proposed / S58 ratified) in full — all four fixes issue #67 names, in both
+`tools/methodology_dashboard.py` and its `starter-kit/` twin (byte-identical, `diff -q` verified).
+`check_stale_version()` now recommends a scoped `--sync <dir>` first; `sync_dashboards()` gained a
+`target=` scope via a new order-independent `--sync [DIR]` form; a `.gitignore`-aware `--force` gate
+now blocks silent overwrites of git-tracked or brand-new targets (computed before `dry_run`
+branches, so `--dry-run` previews it honestly); a bare `--dry-run` is now `sys.exit(2)` instead of
+a silent full scan-and-write. `DASHBOARD_VERSION` 2.13.0 → 2.14.0. 17 RED-first tests
+(`TestIssue67ScopedSync`, 16 new + `test_dashboard_version` updated) — each confirmed failing
+against pre-fix code before the fix landed, all green after; `bin/tests.sh` 185/186 (Test 9's
+expected upstream 404, unchanged). Live-portfolio dry-run smoke test against this machine's real
+13 targets confirmed the gate would have caught 11 of them previously writing unconditionally.
+Fork-side only, per the plan's own §9 — no PR opened against `KJ5HST/methodology`.
+
 ### 2026-08-10 · [ad hoc] Reconcile-on-read: S61's `commit:` field → `c0e6944` — 33rd discharge, taken at Phase 0/claim
 
 **Model:** Claude Sonnet 5.
