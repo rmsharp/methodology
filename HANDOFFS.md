@@ -33,6 +33,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S63
+date: 2026-08-10
+status: pending
+active_task: Operator-directed — lossless trim of CHANGELOG.md. `methodology_trim.py --file CHANGELOG.md --check` at claim: TRIGGER_LINES (0 record headroom, fires below 15) and TRIGGER_BYTES (161,637 B vs 65,536 B budget) both fire; SRF 0.3894 against the most-recent-archive boundary `7d7c63e` (not RED, RED is >=1.00) and 0.8118 against H3's largest-drop boundary `3aee4e3` (AMBER, >=0.50) — per H3, not RED means archive-cut is the correct next action, not a rate cut. Following the CHANGELOG.md archive precedent (`docs/archive/CHANGELOG-through-2026-08-01.md`, `docs/archive/CHANGELOG-through-v3.6.md`) and the S59-S61 cut-point-by-AskUserQuestion pattern used for HANDOFFS.md.
+CHANGELOG: pending
+```
+
+---
+
+```handoff
 session: S62
 date: 2026-08-10
 status: complete
