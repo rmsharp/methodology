@@ -148,6 +148,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] S60 close-out — CHANGELOG.md HIGH risk cleared, self-score 8/10
+
+**Model:** Claude Sonnet 5.
+Session record: `HANDOFFS.md` receipt flipped `status: pending` → `complete`. No new substantive
+action beyond the two entries below (compaction, then the SRF-RED override) — this entry exists so
+the close-out commit satisfies FM #27 without re-narrating work already logged. Self-score **8/10**;
+predecessor S59 **9/10** (unchanged from S59's own self-score). Full self-assessment in `HANDOFFS.md`.
+
 ### 2026-08-09 · [ad hoc] S60 — the SRF-RED refusal below overridden, on an explicit operator go-ahead, after a rate cut
 
 **Model:** Claude Sonnet 5.
