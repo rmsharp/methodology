@@ -34,19 +34,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ```handoff
 session: S62
-date: 2026-08-09
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: Operator-directed — implement the ratified issue #67 fork-side fix plan (`docs/planning/issue67-fork-side-fix-plan.md`, S57 proposed / S58 ratified): scoped `--sync [TARGET_DIR]`, a `.gitignore`-aware `--force` gate, and a hard error on bare `--dry-run`, in both `tools/methodology_dashboard.py` and its `starter-kit/` twin, plus the 17-test RED-first plan and version bump. Fork-side only; no upstream PR without a separate go-ahead.
-what_was_done: pending
-next_steps: pending
-key_files: pending
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: pending
+date: 2026-08-10
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Operator-directed — implement the ratified issue #67 fork-side fix plan (`docs/planning/issue67-fork-side-fix-plan.md`, S57 proposed / S58 ratified): scoped `--sync [TARGET_DIR]`, a `.gitignore`-aware `--force` gate, and a hard error on bare `--dry-run`, in both `tools/methodology_dashboard.py` and its `starter-kit/` twin, plus the 17-test RED-first plan and version bump. Fork-side only; no upstream PR without a separate go-ahead. COMPLETE — all four fixes landed, mirrored, tested, live-smoke-tested; BL-26 updated; no upstream action taken.
+what_was_done: Re-verified all four cited code sites against the live tree before touching anything (gate (a) drift check — no drift found). Wrote all 17 tests from SS7 of the plan (`TestIssue67ScopedSync`, `tools/test_methodology_dashboard.py:3310`, 16 new + `test_dashboard_version` updated), ran them against unpatched code, confirmed all 17 failed for the documented reason (RED, Learning #12) — no vacuous passes. Implemented the four spec'd edits verbatim from SS5: `check_stale_version()` (`:764`, scoped remedy first), `_KNOWN_FLAGS`/`_extract_sync_target()` (`:995`/`:998`, new), `sync_dashboards()` (`:1013`, full rewrite — `target=`/`force=` kwargs, the tracked/ungitignored-create gate computed before the `dry_run` branch per D4), `print_usage()` (`:1116`), `main()`'s dispatch (`:3985`, target threading + the bare-`--dry-run` `sys.exit(2)` guard ordered before `check_stale_version()`). Bumped `DASHBOARD_VERSION` 2.13.0 → 2.14.0. Mirrored byte-for-byte to `starter-kit/methodology_dashboard.py` (`diff -q` confirmed identical). Re-ran all 17 — green. Full suite `bin/tests.sh` 185/186 (Test 9's pre-existing expected upstream-404, unchanged). Live-portfolio smoke test: `python3 tools/methodology_dashboard.py --sync --dry-run` against this machine's real 13 targets — the new gate reported 11 of 13 as `[SKIPPED]` that the pre-fix code wrote unconditionally, a real confirmation the fix closes a live footgun, not just a synthetic one; `--dry-run` alone now exits 2 with the documented message; a scoped `--sync ../mts-system --dry-run` previewed correctly. Committed in four steps: `575a9ba` claim, `13f9890` reconcile (see gotcha 1), `7d682fa` the fix itself, `f53f47c` BL-26 update. Updated `docs/planning/BACKLOG.md` BL-26: issue #67 thread now IMPLEMENTED fork-side (not closed — upstream issue stays open, no PR opened); PR #66 thread explicitly left untouched.
+next_steps: **CHANGELOG.md's trim trigger is now at 0 line-headroom** (161,144 B vs 65,536 B budget, SRF 0.3733) — this session's own four entries pushed it from the 2-record headroom found at Orient to 0; the next session should treat this as the most pressing housekeeping item, mirroring the S59→S61 CHANGELOG/HANDOFFS rate-cut-then-archive pattern (`framework-context-cost-plan.md` §3.3, H3/SRF) rather than assuming a re-check will still show headroom. Substantively: issue #67 is fixed fork-side only — PR #66's own two collisions (BL-26, `install_hook()`'s `core.hooksPath` blindness and `bin/check-handoff --all`'s duplicate-session flaw) remain completely untouched and still open; whether/when to propose the issue #67 fix upstream is an operator decision this session did not ask for (out of scope — the plan's own §9 gate). The rest of `docs/planning/BACKLOG.md`'s open items (BL-8, 11-14, 16-25 minus what's closed) are unchanged from S61's own next_steps. `airqino`/`church_growth`/`model_project_constructor` UAT re-runs remain untouched.
+key_files: `tools/methodology_dashboard.py:764` (`check_stale_version`), `:995-1011` (`_KNOWN_FLAGS`/`_extract_sync_target`), `:1013-1122` (`sync_dashboards`, the D3/D4 gate), `:1116` (`print_usage`), `:3985` (`main`'s dispatch, `--dry-run`-alone guard ordered before `check_stale_version()`), `starter-kit/methodology_dashboard.py` (byte-identical twin, same line numbers), `tools/test_methodology_dashboard.py:3310` (`TestIssue67ScopedSync`, 16 tests) and `:2047` (`test_dashboard_version`, updated), `docs/planning/issue67-fork-side-fix-plan.md` (the ratified spec this session executed verbatim), `docs/planning/BACKLOG.md` (BL-26 updated), `CHANGELOG.md` (four entries this session)
+gotchas: (1) **Prepending this session's own Phase 1B claim stub cost the PREDECESSOR its positional `check-handoff` exemption.** `bin/check-handoff`'s `commit:` rule exempts only the single newest receipt; the moment S62's stub became newest, S61 — whose `commit:` was still legitimately `pending` from its own chicken-egg close-out — lost that exemption and `bin/tests.sh` dropped to 184/186. Not a regression in the fix; a mechanical consequence of claiming a session at all, now the fourth time this exact shape has occurred (S58→S59→S60→S61 precedent). Reconciled S61's `commit:` → `c0e6944` before continuing (33rd discharge, `CHANGELOG.md`); a future session claiming after mine should expect the same and check `bin/tests.sh` right after claiming, not after finishing unrelated work. (2) **Two bugs shipped in my own FIRST DRAFT of the tests, both caught only by running them, not by inspection.** Test 1's fixture asserted `assertNotEqual` on a version-string substitution using the literal `"2.13.0"` — which I had already bumped to `"2.14.0"` in the real source earlier in the same session, so the substitution silently matched nothing and the fixture's own sanity check failed. Test 14 asserted an exact printed path string without accounting for macOS resolving `/var/folders/...` temp paths through a `/private` symlink, which `Path.resolve()` inside the implementation does but my raw `Path(td.name)` construction does not — same class of bug this repo's own `git_show` docstring warns about elsewhere (encoding/locale assumptions), here applied to path resolution. Both fixed with a regex substitution keyed off any current version (not a hardcoded literal) and an explicit `.resolve()` on the expected side. (3) **A real, not synthetic, confirmation that the fix matters**: the live-portfolio dry-run smoke test found 11 of this machine's 13 real sync targets would have been silently overwritten by the pre-fix `--sync` with no `--force` gate at all — worth citing if anyone asks whether this fix addresses a real risk or only the issue's literal wording.
+runtime_smoke: Real subprocess + real portfolio invocations, not mocks: `python3 tools/methodology_dashboard.py --sync --dry-run` against the actual local portfolio (13 targets, 11 correctly gated) and `--sync ../mts-system --dry-run` (scoped form) both produced exactly the documented output; bare `--dry-run` exits 2 with the documented message. `bash bin/tests.sh` 185 passed / 1 failed (Test 9's expected upstream 404, unchanged baseline) — confirmed both immediately after the fix landed and again after the BL-26/reconcile commits. `python3 bin/check-handoff` (no flag) correctly FAILs against this session's own then-still-pending stub (expected, self-resolving here at close-out — same pattern S61's own gotcha (4) documented). `python3 bin/check-links` OK 88/22. `diff -q tools/methodology_dashboard.py starter-kit/methodology_dashboard.py` — identical. Dashboard self-scan via direct `collect_all()` import: 72/100, 0 HIGH, CHANGELOG.md MEDIUM (0 line-headroom — see next_steps), HANDOFFS.md MEDIUM (byte budget, unchanged from S61, by design).
+changelog_ref: CHANGELOG.md "2026-08-10 · [issue #67] S62 — fork-side fix: scoped --sync [DIR]...", "2026-08-10 · [ad hoc] Reconcile-on-read: S61's commit: field → c0e6944 — 33rd discharge...", "2026-08-10 · [BL-26] S62 — issue #67 thread updated...", plus this close-out's own entry immediately above these in the file; the claim stub is commit `575a9ba`
 commit: pending
 ```
+Self-score **8/10.** **+** Executed a genuinely well-specified plan faithfully — re-verified drift
+before starting, implemented all four fixes verbatim from §5, and never deviated from the ratified
+design. **+** RED-first discipline held throughout: all 17 tests confirmed failing for the stated
+reason before any implementation code was touched, and none passed vacuously. **+** Caught two bugs
+in my own test fixtures by actually running them rather than trusting the write — a version-literal
+collision and a macOS symlink-resolution gap — before either shipped. **+** Went beyond the plan's
+own test suite with a live-portfolio dry-run smoke test, which found the gate would have caught 11
+of 13 real targets on this machine — a concrete confirmation the fix addresses a real risk, not just
+the issue's literal wording. **+** Respected the plan's explicit no-PR gate without needing a
+reminder. **−** Two bugs did ship into the first draft, even though both were caught before commit —
+a small foreseeability gap: I had just bumped the version string and had, earlier in the same
+session, already seen macOS temp paths resolve through `/private`, and neither fact was applied
+preemptively to the test-writing that followed. **−** The session produced four commits rather than
+a tighter set; each is a legitimately distinct action (claim, reconcile, fix, backlog bookkeeping),
+but a reader wanting "the diff" has to assemble it across four, not one.
+
+Predecessor **S61: 9/10.** Its `next_steps` named this exact task by number, urgency, and file
+path — *"implementation of the ratified issue #67 plan ... remains the next real, substantive,
+unclaimed deliverable"* — and its `key_files` pointed straight at the ratified plan, which was
+exhaustive enough that this session needed no research or design phase, only faithful execution.
+**Docked one point, not for an error but for something outside its control that cost me real
+diagnostic time:** S61 closed out with its own `commit:` field legitimately `pending` (the standard
+chicken-egg), and the moment I claimed S62, S61 lost `bin/check-handoff`'s positional exemption and
+`bin/tests.sh` dropped to 184/186 — expected in hindsight (S58→S59→S60→S61 all show the same shape),
+but nothing in S61's own handoff flagged "your claim will do this to my receipt," so I spent time
+tracing a suite regression that had a known cause a forward pointer could have named directly.
 
 ---
 

@@ -148,6 +148,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S62 close-out — receipt written, self-score 8/10; see the `[issue #67]`/`[BL-26]` entries below for the substantive work
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S62 stub overwritten in place to `status: complete` with all six Minimum Handoff
+Requirements. No new substantive action in this commit beyond the receipt itself — the fix, its
+ledger entry, and the BACKLOG.md update all landed in prior commits this session (`7d682fa`,
+`f53f47c`), cited below.
+
 ### 2026-08-10 · [BL-26] S62 — issue #67 thread updated: IMPLEMENTED fork-side, PR #66 thread untouched
 
 **Model:** Claude Sonnet 5.
