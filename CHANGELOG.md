@@ -152,6 +152,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Reconcile-on-read: S63's `commit:` field → `072324b` — 35th discharge, found at Phase 0 orientation
+
+**Model:** Claude Sonnet 5.
+Reconciled `072324b` (claim stub `efe5ee0`) — 35th discharge, same mechanical shape as the prior 34:
+S63's own close-out receipt necessarily named its `commit:` field `pending` at write time (the
+standard chicken-egg — a session cannot know its own final commit sha before committing). `072324b`
+is cited because that is the commit whose message states it "completes S63's HANDOFFS.md close-out
+receipt (status: complete, self_score 8/10)" and whose diff matches the receipt as it currently
+reads — the earlier `61b48a6` reached `status: complete` first but with content (`self_score: 7`,
+one collateral regression) `072324b` itself revised. Found and fixed at this session's Phase 0
+orientation, before any task was assigned, per the established reconcile-on-read convention.
+
 ### 2026-08-10 · [ad hoc] Fix `tools/test_methodology_trim.py`'s control assertion after the trim moved its target content
 
 **Model:** Claude Sonnet 5.
