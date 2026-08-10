@@ -148,6 +148,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [BL-26] S62 — issue #67 thread updated: IMPLEMENTED fork-side, PR #66 thread untouched
+
+**Model:** Claude Sonnet 5.
+`docs/planning/BACKLOG.md` BL-26 updated in place (not closed — this is the fork-side half only,
+upstream issue #67 stays open and no PR was opened against `KJ5HST/methodology`; PR #66's own
+collisions remain unaddressed and its thread is untouched). See the `[issue #67]` entry immediately
+below for the implementation itself.
+
 ### 2026-08-10 · [issue #67] S62 — fork-side fix: scoped `--sync [DIR]`, `.gitignore`-aware `--force` gate, bare `--dry-run` now errors
 
 **Model:** Claude Sonnet 5.

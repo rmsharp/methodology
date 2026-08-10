@@ -707,6 +707,16 @@ No outward-facing action taken; PR #66 remains exactly as found. Issue #67 now h
 implementation-ready plan but is still functionally unaddressed — the live defect this plan describes
 is still shipped; nothing changes there until a future session implements it.
 
+**Issue #67 thread: IMPLEMENTED fork-side, 2026-08-10 (S62), operator-directed.** All four fixes from
+the ratified plan landed in both `tools/methodology_dashboard.py` and its `starter-kit/` twin
+(byte-identical), `DASHBOARD_VERSION` 2.13.0 → 2.14.0, 17 RED-first tests
+(`TestIssue67ScopedSync` in `tools/test_methodology_dashboard.py`), `bin/tests.sh` 185/186 (Test 9's
+pre-existing expected failure, unrelated). Commit `7d682fa`. **Not the same as closed**: this is the
+fork-side half only — the live defect no longer ships in this fork's own copies, but the upstream
+issue itself is still open, and no PR has been opened against `KJ5HST/methodology` (the plan's own §9
+gate — needs a separate, explicit go-ahead, asked for again at that time). **PR #66 thread still
+untouched and still open** — this item did not touch it.
+
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
 | Item | Scope | Outcome |
