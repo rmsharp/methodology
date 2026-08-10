@@ -152,6 +152,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S66 close-out — receipt written, self-score 8/10; see the Learning #22 entry below for the substantive work
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S66 stub overwritten in place to `status: complete` with all six Minimum Handoff
+Requirements. No separate substantive action beyond the receipt itself — the Learning addition is
+described in the sibling entry immediately below.
+
+### 2026-08-10 · [ad hoc] Add Framework Learning #22 — a completed backlog item's own text can be load-bearing for a sibling item's cross-reference
+
+**Model:** Claude Sonnet 5.
+Appended row 22 to `starter-kit/FRAMEWORK_LEARNINGS.md` (append-only, existing rows untouched —
+verified single-hunk, 1 insertion). Distills a pattern found this session doing cross-repo adopter
+`bin/sync`/ledger-reconcile/`BACKLOG.md`-hygiene maintenance in two sibling repos (wsfct,
+nprcgenekeepr, both ad hoc, not sessions in either adopter's own sequence): Phase 3F's "remove a
+completed backlog item in the same commit" assumes each item is independently deletable, and both
+adopters' `BACKLOG.md` files falsified that — items cross-referenced each other by relative
+position ("the item above", "immediately below") or by quoted title, and a naive
+marker-grep-and-delete pass would have silently orphaned a still-open item's own reference. wsfct
+kept 2 of 15 flagged rows, nprcgenekeepr 5 of 9 (a three-item chain plus one member quoted by name
+from outside it), both found only by grepping the whole file before deleting anything. Drafted,
+reviewed, and shortened (~330 → ~230 words, no claim dropped) with the operator across three rounds
+before being written in. `bin/check-links` OK (88/22, unaffected — no new cross-references added).
+No adopter impact — canonical-only until contributed upstream, which stays its own, separately
+authorized action per this repo's own standing rule.
+
 ### 2026-08-10 · [ad hoc] Reconcile-on-read: S65's `commit:` field → `c43e7ee` — 37th discharge, found at Phase 0 orientation
 
 **Model:** Claude Sonnet 5.

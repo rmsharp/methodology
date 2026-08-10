@@ -39,10 +39,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ```handoff
 session: S66
 date: 2026-08-10
-status: pending
-active_task: Operator-directed — add a Framework Learning to `starter-kit/FRAMEWORK_LEARNINGS.md` distilling the cross-repo adopter-maintenance pattern discovered this session: a completed `BACKLOG.md` item's own text can be load-bearing for a sibling item's meaning (relative-position or quoted-title reference), so removing it can silently orphan a live reference with no test to catch it. Evidenced independently on two real adopters (wsfct, nprcgenekeepr) during this session's own cross-repo `bin/sync`/ledger-reconcile/`BACKLOG.md`-hygiene work in those repos. Drafted, reviewed and shortened with the operator across several rounds before being written in.
-CHANGELOG: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Operator-directed — add a Framework Learning to `starter-kit/FRAMEWORK_LEARNINGS.md` distilling the cross-repo adopter-maintenance pattern discovered this session: a completed `BACKLOG.md` item's own text can be load-bearing for a sibling item's meaning (relative-position or quoted-title reference), so removing it can silently orphan a live reference with no test to catch it. Evidenced independently on two real adopters (wsfct, nprcgenekeepr) during this session's own cross-repo `bin/sync`/ledger-reconcile/`BACKLOG.md`-hygiene work in those repos. Drafted, reviewed and shortened with the operator across several rounds before being written in. COMPLETE.
+what_was_done: Appended row 22 to `starter-kit/FRAMEWORK_LEARNINGS.md` (append-only per the file's own rule; existing rows byte-unchanged, verified single-hunk/1-insertion diff). Drafted the entry first as a full-length draft, then — at the operator's request — shortened it (~330 → ~230 words) while re-checking every factual claim survived: both exact ratios (wsfct 2/15, nprcgenekeepr 5/9), the two distinct reference mechanisms (relative-position vs. quoted-title), the three-item-chain detail, the tell, and the repair. Verified the written row's table structure matches row 21's field count exactly (`awk -F'|'` both give 6 fields) before committing, and ran `bin/check-links` (OK, 88 links/22 files, unaffected). Also reconciled S65's `commit: pending` field → `c43e7ee` (37th discharge, commit `aeec8e5`) before claiming, per the S62-S65 established order.
+next_steps: `docs/planning/BACKLOG.md` BL-28 (the `.verify.sh` substring-vs-exact-line-set defect S65 raised) is the next well-scoped, not-yet-fixed item in that file, unless the operator directs otherwise. Separately: Learning #22 is canonical-only and unshipped upstream — batch it with the other prepared-but-unopened distributed work (BL-13, BL-14's distributed half, BL-17's distributed half, BL-21, BL-22) rather than sending it alone, per this repo's own standing PR-batching rule; no PR has been opened, this stays fork-local until an explicit go-ahead.
+key_files: `starter-kit/FRAMEWORK_LEARNINGS.md:44` (new Learning #22 row), `CHANGELOG.md` (this close-out entry + the Learning-addition entry + the S65 reconcile entry, three total this session), `HANDOFFS.md` (this receipt).
+gotchas: The Learning's own evidence — the wsfct and nprcgenekeepr `BACKLOG.md` cleanups — is NOT logged in this repo's own history. It is logged in each adopter's own `CHANGELOG.md`/`HANDOFFS.md` (wsfct commits `2ce092bd`/`b2dc2fcc`; nprcgenekeepr commits `18d8e3c7`/`4d3c979a`/`3ff03967` — different repos/histories, do not conflate one's commits for the other's). A future session reading this receipt should not expect to find that underlying work anywhere in this repo's own `git log` — only the distilled Learning is here, by design (FM #17: the substantive adopter work was its own, already-closed-out action in a different repo, not this session's deliverable).
+runtime_smoke: `bin/check-links` OK (88/22, unaffected). Table structure verified by direct field count comparison against an existing row, not assumed. `git diff` verified pure-addition (0 deletions) both before and after the shortening round. No code/render/test surface touched — docs-only session, `n/a` beyond the checks named above.
+changelog_ref: CHANGELOG.md "2026-08-10 · [ad hoc] Add Framework Learning #22 — a completed backlog item's own text can be load-bearing for a sibling item's cross-reference...", plus this close-out's own entry immediately above it and the S65 reconcile entry immediately below it in the file; the claim stub is commit `c6421a3`
+commit: pending
 ```
+Self-score **8/10.** **+** The Learning is evidence-based rather than asserted: it cites exact,
+independently-verified ratios from two real adopter repos (wsfct 2/15, nprcgenekeepr 5/9), not a
+plausible-sounding rule of thumb. **+** Followed the file's own append-only convention correctly —
+verified byte-for-byte that no existing row moved, not just trusted the edit. **+** Took the
+operator's "can this be shortened without loss of precision?" seriously: re-checked every factual
+claim survived the ~30% cut rather than shortening first and hoping. **+** Reconciled S65's pending
+field before claiming, matching the established order. **−** This receipt's own substantive
+evidence lives entirely in two OTHER repos' histories, not this one's — a real, disclosed gap named
+in `gotchas`, not hidden, but it means this session's own `git log`/`runtime_smoke` is thin relative
+to a typical methodology-repo session. **−** Modest scope for the full six-field receipt ceremony;
+defensible given this repo's own consistent practice of logging everything (S62-S65 did the same
+for smaller reconcile-only actions), but worth naming rather than pretending it was a large session.
+
+Predecessor **S65: 9/10.** All six Minimum Handoff Requirements filled with real evidence, not
+placeholders — RED-first tests confirmed against unpatched code, both real historical repro cases
+(`a46f2f9`, `c0e6944`) re-verified against the actual patched tool, not just the synthetic fixtures.
+Caught and disclosed its own mistake mid-session (a control test that passed for the wrong reason,
+found only by an unexpected result after applying its own fix, not by inspection) rather than
+shipping it silently. Raised BL-28 with full reproduction and explicitly did not fix it, respecting
+scope (FM #17) on a canonical, adopter-distributed file. **Docked one point, not for an error:** the
+predecessor-reconcile order it modeled (fix the predecessor's `pending` field before claiming) was
+followed correctly here too, but its own `next_steps` assumed the next session would continue this
+repo's backlog work directly — a reasonable assumption that this session's operator-directed pivot
+to cross-repo adopter maintenance made moot, through no fault of the receipt itself.
 
 ---
 
