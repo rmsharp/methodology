@@ -37,6 +37,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S67
+date: 2026-08-10
+status: pending
+active_task: Operator-directed — post the two drafted review comments (hook-install `core.hooksPath` blindness; duplicate-session-id check ignoring `date`) to upstream PR #66, and fold the proposed fix into `docs/planning/BACKLOG.md` BL-26 as a documented, unimplemented proposal.
+CHANGELOG: pending
+```
+
+---
+
+```handoff
 session: S66
 date: 2026-08-10
 status: complete
