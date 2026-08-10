@@ -152,6 +152,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Reconcile-on-read: S67's `commit:` field → `fb6e3cd` — 39th discharge, found via `bin/tests.sh` after this session's own substantive work
+
+**Model:** Claude Sonnet 5.
+Reconciled `fb6e3cd` (S67's own close-out commit) — 39th discharge, same mechanical shape as the
+prior 38: prepending this session's own S68 claim stub moved S67 out of "newest," so its still-
+`pending` `commit:` field started failing `bin/check-handoff`'s `L1` check inside `bin/tests.sh`
+(184 passed, 2 failed — the other being Test 9's expected upstream-404 baseline). **Departs from the
+S62–S66 established order** the same way S66 itself did: claimed S68 before checking S67's field,
+and only ran the full suite (surfacing the gap) after the BL-28 fix and its tests were already
+written — later in the session than S66's own slip, not earlier. Fixed here rather than left for a
+future session; disclosed in this session's own `HANDOFFS.md` gotchas, not hidden.
+
 ### 2026-08-10 · [ad hoc] S67 close-out — receipt written, self-score 8/10; see the `[BL-26]` entry below for the substantive work
 
 **Model:** Claude Sonnet 5.

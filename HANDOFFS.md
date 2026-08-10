@@ -59,7 +59,7 @@ key_files: `docs/planning/BACKLOG.md:719` (new paragraph appended to BL-26, betw
 gotchas: Neither suggested fix is applied anywhere in this fork's own code — this repo carries no `context_budget.py`, and its own `bin/check-handoff` has no `--all` mode, so there is nothing here to keep in sync regardless of what happens to PR #66. If the maintainer clicks "Commit suggestion" on GitHub, that creates a commit ON THE PR's OWN BRANCH in the upstream repo — it will never appear in this fork's `git log`; check the PR/upstream history, not this repo's commits, to see whether it landed. The reconcile-ordering slip (see `what_was_done`) happened because claiming the session felt like the first step by habit; the actual first step per precedent is checking the predecessor's `commit:` field.
 runtime_smoke: n/a — docs/comment session, no code, render, or test surface touched. `bin/check-links` OK (88/22, unaffected) after the `BACKLOG.md` edit.
 changelog_ref: CHANGELOG.md "2026-08-10 · [BL-26] PR #66: proposed fix for both collisions, posted as three review comments", plus the S66 reconcile entry immediately above it and this close-out's own entry two above it.
-commit: pending
+commit: fb6e3cd
 ```
 Self-score **8/10.** **+** Re-verified both collisions live against current PR-head and fork state
 before drafting a single word — did not trust BL-26's own prior write-up from memory, and it still
