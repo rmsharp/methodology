@@ -148,6 +148,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Reconcile-on-read: S61's `commit:` field → `c0e6944` — 33rd discharge, taken at Phase 0/claim
+
+**Model:** Claude Sonnet 5.
+Reconciled `c0e6944` (claim stub `6f62787`) — 33rd discharge. Surfaced by `bin/check-handoff`'s
+positional exemption: prepending S62's own pending stub moved S61 out of "newest," so its
+still-`pending` `commit:` field (the usual chicken-egg — the receipt ships in the commit whose sha
+it would name) started failing `bin/tests.sh`. Reconciled before further work, per this repo's own
+established S58→S59→S60→S61 precedent.
+
 ### 2026-08-09 · [ad hoc] S61 — append Learning #21, a compaction-verification gap found in this session's own first attempt
 
 **Model:** Claude Sonnet 5.
