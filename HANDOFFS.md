@@ -39,10 +39,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ```handoff
 session: S67
 date: 2026-08-10
-status: pending
-active_task: Operator-directed — post the two drafted review comments (hook-install `core.hooksPath` blindness; duplicate-session-id check ignoring `date`) to upstream PR #66, and fold the proposed fix into `docs/planning/BACKLOG.md` BL-26 as a documented, unimplemented proposal.
-CHANGELOG: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Operator-directed — post the two drafted review comments (hook-install `core.hooksPath` blindness; duplicate-session-id check ignoring `date`) to upstream PR #66, fold the proposed fix into `docs/planning/BACKLOG.md` BL-26 as a documented, unimplemented proposal, and answer whether a new session is needed to take PR #66 further. COMPLETE.
+what_was_done: Re-verified both BL-26 collisions live against PR #66's current head (`df6a9918`, unchanged since 2026-08-08) and this fork's real state (`git config core.hooksPath` = `.githooks`; `S3`/`S5`/`S7`/`S8` each duplicated across `HANDOFFS.md` + both archives) before drafting anything — did not trust the prior session's write-up from memory. Drafted concrete fixes for both: `install_hook()` checking `core.hooksPath` first; the duplicate-session check keying on `(session, date)` instead of bare `session`. Posted 3 review comments to upstream PR #66 (1 general via `gh pr comment`, 2 inline `suggestion` blocks via `gh api .../pulls/66/comments`, each anchored to the exact file/line/head-commit): https://github.com/KJ5HST/methodology/pull/66#issuecomment-5246274123, #discussion_r3753541194, #discussion_r3753543217. Folded the same proposal into `docs/planning/BACKLOG.md` BL-26 as a new appended paragraph (original entry text untouched, BL-24/BL-25/BL-27 precedent). Answered the operator's question directly (see `next_steps`). Mid-close-out, found and fixed a self-inflicted process slip: claimed S67 before reconciling S66's own `commit: pending` field, breaking the S62–S66 established order — fixed it here (→ `971377c`, 38th discharge) rather than leaving it for a future session to catch.
+next_steps: Yes, a new session is needed to take PR #66 further, but not yet and not preemptively (FM #17): implementation is separate work gated on the maintainer's response to the 3 posted comments. If accepted via GitHub's inline "Commit suggestion" button, the fix lands directly on the PR branch and no fork session is needed at all. If the maintainer asks for a follow-up PR or the comments go unanswered, a future session's deliverable is implementing the fix properly — RED-first tests, mirroring this repo's own BL-27/BL-28 practice — against whatever branch state exists then; do not start that now. Otherwise unchanged from S66: BL-28 (`.verify.sh` substring-vs-exact-line-set defect) is still the next well-scoped, not-yet-fixed `docs/planning/BACKLOG.md` item; the batch of prepared-but-unopened distributed fixes (BL-13, BL-14's distributed half, BL-17's distributed half, BL-21, BL-22, Learning #22) still needs an explicit go-ahead to open upstream.
+key_files: `docs/planning/BACKLOG.md:719` (new paragraph appended to BL-26, between the "No outward-facing action taken" sentence and the "Issue #67 thread: IMPLEMENTED" paragraph), `HANDOFFS.md:90` (S66's `commit:` field corrected), `CHANGELOG.md` (three entries this session: the `[BL-26]` substantive entry, the S66 reconcile, this close-out).
+gotchas: Neither suggested fix is applied anywhere in this fork's own code — this repo carries no `context_budget.py`, and its own `bin/check-handoff` has no `--all` mode, so there is nothing here to keep in sync regardless of what happens to PR #66. If the maintainer clicks "Commit suggestion" on GitHub, that creates a commit ON THE PR's OWN BRANCH in the upstream repo — it will never appear in this fork's `git log`; check the PR/upstream history, not this repo's commits, to see whether it landed. The reconcile-ordering slip (see `what_was_done`) happened because claiming the session felt like the first step by habit; the actual first step per precedent is checking the predecessor's `commit:` field.
+runtime_smoke: n/a — docs/comment session, no code, render, or test surface touched. `bin/check-links` OK (88/22, unaffected) after the `BACKLOG.md` edit.
+changelog_ref: CHANGELOG.md "2026-08-10 · [BL-26] PR #66: proposed fix for both collisions, posted as three review comments", plus the S66 reconcile entry immediately above it and this close-out's own entry two above it.
+commit: pending
 ```
+Self-score **8/10.** **+** Re-verified both collisions live against current PR-head and fork state
+before drafting a single word — did not trust BL-26's own prior write-up from memory, and it still
+held byte-for-byte. **+** Comments are precisely anchored (exact file/line/commit, GitHub `suggestion`
+blocks the maintainer can accept with one click) rather than vague prose pointing at a defect. **+**
+Answered the operator's third question directly and gave a real reason ("gated on the maintainer's
+response," not "scope creep" as a bare label) instead of a flat yes/no. **−** Broke the S62–S66
+established reconcile-before-claim order — claimed S67 before checking S66's own `commit:` field,
+caught only while finalizing this receipt. Fixed within-session and disclosed, but it is exactly the
+kind of process erosion this repo's own Learning #9/#12 machinery exists to catch, and it should not
+have happened at all.
+
+Predecessor **S66: 9/10.** All six Minimum Handoff Requirements filled with real, checked evidence —
+the exact ratios (wsfct 2/15, nprcgenekeepr 5/9) and both reference mechanisms were independently
+verifiable, not asserted. Correctly named BL-28 as the next well-scoped item; that it wasn't what this
+session actually worked (an unpredictable operator redirect toward PR #66 instead) is not a flaw in
+S66's own handoff — Learning #13 is explicit that `next_steps` is a forecast, not a promise. **Not
+docked, but worth naming:** S66's own `gotchas` field didn't mention the reconcile-before-claim
+order as a rule to re-state, and this session needed to rediscover it by re-reading S65/S66's prose
+rather than finding it stated as a checklist step anywhere — a documentation gap upstream of both
+receipts, not a defect in either one.
 
 ---
 
@@ -59,7 +87,7 @@ key_files: `starter-kit/FRAMEWORK_LEARNINGS.md:44` (new Learning #22 row), `CHAN
 gotchas: The Learning's own evidence — the wsfct and nprcgenekeepr `BACKLOG.md` cleanups — is NOT logged in this repo's own history. It is logged in each adopter's own `CHANGELOG.md`/`HANDOFFS.md` (wsfct commits `2ce092bd`/`b2dc2fcc`; nprcgenekeepr commits `18d8e3c7`/`4d3c979a`/`3ff03967` — different repos/histories, do not conflate one's commits for the other's). A future session reading this receipt should not expect to find that underlying work anywhere in this repo's own `git log` — only the distilled Learning is here, by design (FM #17: the substantive adopter work was its own, already-closed-out action in a different repo, not this session's deliverable).
 runtime_smoke: `bin/check-links` OK (88/22, unaffected). Table structure verified by direct field count comparison against an existing row, not assumed. `git diff` verified pure-addition (0 deletions) both before and after the shortening round. No code/render/test surface touched — docs-only session, `n/a` beyond the checks named above.
 changelog_ref: CHANGELOG.md "2026-08-10 · [ad hoc] Add Framework Learning #22 — a completed backlog item's own text can be load-bearing for a sibling item's cross-reference...", plus this close-out's own entry immediately above it and the S65 reconcile entry immediately below it in the file; the claim stub is commit `c6421a3`
-commit: pending
+commit: 971377c
 ```
 Self-score **8/10.** **+** The Learning is evidence-based rather than asserted: it cites exact,
 independently-verified ratios from two real adopter repos (wsfct 2/15, nprcgenekeepr 5/9), not a

@@ -716,6 +716,31 @@ No outward-facing action taken; PR #66 remains exactly as found. Issue #67 now h
 implementation-ready plan but is still functionally unaddressed — the live defect this plan describes
 is still shipped; nothing changes there until a future session implements it.
 
+**PR #66 thread: proposed fix drafted and posted as review comments, 2026-08-10 (S67),
+operator-directed.** Both collisions above re-verified live against `df6a9918` (PR head, unchanged
+since 2026-08-08) before drafting — `install_hook()` still targets `<git-dir>/hooks/pre-commit`
+unconditionally (`starter-kit/context_budget.py:472-490`), and `validate_ledger()`'s duplicate check
+still keys on bare `session:` (`bin/check-handoff:204-212`); the real ledger still reproduces the
+second collision exactly (`S3`/`S5`/`S7`/`S8` each appear twice across `HANDOFFS.md` + both archives).
+**Proposed fix, not implemented:** (1) `install_hook()` should check `git config --get
+core.hooksPath` first and target that directory when set, falling back to `<git-dir>/hooks` only
+when it's unset — a general correctness fix, not a fork-specific carve-out, since any repo using that
+convention hits the same silent no-op. (2) `validate_ledger()`'s duplicate check should key on
+`(session, date)` instead of `session` alone, matching the invariant `HANDOFFS.md` itself documents
+(*"a receipt is identified by session + date, never by number alone"*) rather than the module
+docstring's stronger, locally-false claim that session ids are unique. **Posted to PR #66 as three
+review comments** — one general summary plus two inline `suggestion` blocks, each anchored to the
+exact file/line/commit the defect reproduces at:
+[general](https://github.com/KJ5HST/methodology/pull/66#issuecomment-5246274123),
+[hook-install suggestion](https://github.com/KJ5HST/methodology/pull/66#discussion_r3753541194),
+[duplicate-check suggestion](https://github.com/KJ5HST/methodology/pull/66#discussion_r3753543217).
+**This is a comment, not a commit** — no code changed, nothing pushed to the PR branch, and the
+suggestions are the PR author's to accept, reject, or ignore. Whether this fork's own copies of
+`bin/check-handoff`/`context_budget.py`-equivalents ever need the same fix independently of what
+happens to PR #66 is a separate, not-yet-raised question — this repo does not carry
+`context_budget.py`, and its own `bin/check-handoff` has no `--all` mode to share the defect with
+(disclaims answering issue #65 outright, per BL-23).
+
 **Issue #67 thread: IMPLEMENTED fork-side, 2026-08-10 (S62), operator-directed.** All four fixes from
 the ratified plan landed in both `tools/methodology_dashboard.py` and its `starter-kit/` twin
 (byte-identical), `DASHBOARD_VERSION` 2.13.0 → 2.14.0, 17 RED-first tests

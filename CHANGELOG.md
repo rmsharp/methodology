@@ -152,6 +152,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S67 close-out — receipt written, self-score 8/10; see the `[BL-26]` entry below for the substantive work
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S67 stub overwritten in place to `status: complete` with all six Minimum Handoff
+Requirements. No separate substantive action beyond the receipt itself and the reconcile entry
+immediately below — the PR #66 work is described in the `[BL-26]` entry two below.
+
+### 2026-08-10 · [ad hoc] Reconcile-on-read: S66's `commit:` field → `971377c` — 38th discharge, found at this session's own close-out, not at Phase 0
+
+**Model:** Claude Sonnet 5.
+Reconciled `971377c` (S66's own close-out commit, and the tree's `HEAD` at this session's Phase 0) —
+38th discharge, same mechanical shape as the prior 37. **Departs from the S62–S66 established
+order**, which reconciles the predecessor's `pending` field *before* claiming: this session claimed
+S67 first and only found the gap while finalizing its own receipt. `git rev-list --count --no-merges
+971377c..e69a7a5` confirms no ghost session — the sole intervening commit is this session's own S67
+claim stub. Disclosed as a process slip in `HANDOFFS.md`'s S67 gotchas, not hidden.
+
+### 2026-08-10 · [BL-26] PR #66: proposed fix for both collisions, posted as three review comments
+
+**Model:** Claude Sonnet 5.
+Operator-directed. Re-verified both collisions BL-26 (S56) originally found, live against the PR's
+current head (`df6a9918`, unchanged since 2026-08-08) and this fork's current state, before drafting
+anything: `install_hook()` still writes unconditionally to `<git-dir>/hooks/pre-commit`
+(`starter-kit/context_budget.py:472-490`), ignoring this repo's `core.hooksPath = .githooks`;
+`bin/check-handoff`'s new `validate_ledger()` still keys its duplicate-session check on bare
+`session:` (`:204-212`), and the real ledger still reproduces the false-positive shape exactly
+(`S3`/`S5`/`S7`/`S8` each appear twice across `HANDOFFS.md` + both archives, by this fork's own
+documented dual-sequence design). Drafted a concrete fix for each — check `core.hooksPath` first in
+`install_hook()`, fall back to `<git-dir>/hooks` only when unset; key the duplicate check on
+`(session, date)` instead of `session` alone, matching the invariant `HANDOFFS.md` itself states.
+Posted three review comments to upstream PR #66 — one general summary plus two inline `suggestion`
+blocks, each anchored to the exact file/line/commit the defect reproduces at — via `gh pr comment`
+and `gh api repos/KJ5HST/methodology/pulls/66/comments`:
+[general](https://github.com/KJ5HST/methodology/pull/66#issuecomment-5246274123),
+[hook-install](https://github.com/KJ5HST/methodology/pull/66#discussion_r3753541194),
+[duplicate-check](https://github.com/KJ5HST/methodology/pull/66#discussion_r3753543217). Folded the
+same proposal into `docs/planning/BACKLOG.md` BL-26 as a new dated, appended paragraph (original
+entry text untouched, matching the BL-24/BL-25/BL-27 precedent). This is a comment, not a commit — no
+code changed in this repo or on the PR branch; the suggestions are the PR author's to accept, reject,
+or ignore. `bin/check-links` OK (88/22, unaffected). Answered the operator's question of whether a
+new session is needed to take PR #66 further: yes, if and when the maintainer responds — this
+session's scope was the proposal and the comment, not implementation (FM #17).
+
 ### 2026-08-10 · [ad hoc] S66 close-out — receipt written, self-score 8/10; see the Learning #22 entry below for the substantive work
 
 **Model:** Claude Sonnet 5.
