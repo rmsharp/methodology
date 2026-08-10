@@ -37,6 +37,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S68
+date: 2026-08-10
+status: pending
+active_task: BL-28 (`docs/planning/BACKLOG.md`) — the generated `.verify.sh`'s L2 "missing front-matter line" check compares by substring (`ln not in afront`) rather than exact-line-set membership, so an append-style edit that keeps the original line as a literal substring of the new one evades it. Fix the same template in `starter-kit/methodology_trim.py`, RED-first test, no go-ahead needed (fork-side canonical tool fix).
+CHANGELOG: pending
+```
+
+---
+
+```handoff
 session: S67
 date: 2026-08-10
 status: complete
