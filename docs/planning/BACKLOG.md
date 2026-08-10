@@ -1,10 +1,15 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23, BL-26 and BL-27 are open** (**BL-27 raised 2026-08-10 (S64)** — the
-> ledger trimmer's generated `.verify.sh` has two known false-positive triggers on `HANDOFFS.md`
+> BL-20, BL-21, BL-22, BL-23, BL-26 and BL-28 are open** (**BL-28 raised 2026-08-10 (S65)** — the
+> generated `.verify.sh`'s "missing front-matter line" check is a substring test, not exact-line-set
+> membership, so an append-style edit that keeps the original text as a literal substring of the new
+> line is invisible to it; found while building BL-27's own control test, reproduced live; see its
+> own entry. **BL-27 raised 2026-08-10 (S64), CLOSED 2026-08-10 (S65)** — the
+> ledger trimmer's generated `.verify.sh` had two known false-positive triggers on `HANDOFFS.md`
 > (front-matter field regeneration; a same-commit close-out bundled with the archive write reading as
-> record alteration), reproduced live and against S61's own frozen shard proof; see its own entry.
+> record alteration); both fixed in `VERIFY_TEMPLATE`/`build_verify` (`starter-kit/methodology_trim.py`
+> v1.1.2), RED-first, 4 new tests (95/95), full suite unaffected; see its own entry for the fix shape.
 > **BL-26 raised 2026-08-09 (S56)** — issue #67
 > describes a live, unfixed defect already shipped in this fork's own `methodology_dashboard.py`;
 > PR #66 has two concrete, reproduced collisions of its own (a hook-install path that silently
@@ -722,7 +727,8 @@ gate — needs a separate, explicit go-ahead, asked for again at that time). **P
 untouched and still open** — this item did not touch it.
 
 **BL-27 — `methodology_trim.py`'s generated `.verify.sh` has two known false-positive triggers on
-`HANDOFFS.md`, distinct from the internal `--check`/`--write` assertions, which do not share them.**
+`HANDOFFS.md`, distinct from the internal `--check`/`--write` assertions, which do not share them.
+CLOSED (S65).**
 *Raised 2026-08-10 (S64), found while independently re-running the tool's own generated proof for a
 routine `HANDOFFS.md` archive-cut — the practice this repo's own precedent (S61, S63) established
 specifically to avoid trusting the tool's write-time summary.* Both are reproduced, not inferred:
@@ -767,6 +773,47 @@ document the bundled-commit pattern in the script's own output so a `FAIL` doesn
 unqualified loss. Both are changes to a canonical, adopter-distributed tool (`bin/_manifest.py`) and
 need their own RED-first tests against `tools/test_methodology_trim.py`'s existing 91-test suite —
 scoped as a session of its own, not folded into a trim.
+
+**CLOSED 2026-08-10 (S65):** fixed both, in `VERIFY_TEMPLATE`/`build_verify`
+(`starter-kit/methodology_trim.py`, the sole canonical copy — no `tools/` twin to mirror). (1) A new
+`@@REGEN@@` template variable carries `spec.regenerated`'s declared field patterns into the
+generated script (`repr()`'d, since it is 0-or-more patterns, not the single-pattern case
+`@@START@@`'s r-string wrapper already handled); a `field_reversible()` helper excuses a "missing"
+line only when it has a same-shaped partner elsewhere in the new front matter, identical everywhere
+outside the declared field's own span. (2) L1/L3 now share one `rebuilt`/`bad`-index computation;
+when the only altered record is position 0 (the frontier) the script still FAILs — a real loss can
+have this exact shape — but also prints a `NOTE:` naming the known bundled-commit pattern, so a
+`FAIL` here no longer reads as unqualified. RED-first: 4 new tests in a new
+`TestVerifyShHandoffFalsePositives` class (`tools/test_methodology_trim.py`), a new
+`make_handoff_repo` fixture (the suite's first end-to-end `HANDOFFS.md` trim through the actual
+subprocess, not just `assert_L2` in isolation); both fix-tests confirmed RED against unpatched code
+for the exact defects above, both narrowed controls confirmed already-green unpatched (proving the
+fix doesn't become a blanket permit). Suite 91 → 95, all green; full `bin/tests.sh` unaffected.
+`TRIM_VERSION` 1.1.1 → 1.1.2 (patch — no new finding code or exit status on the tool's own CLI, a
+correctness fix to generated output). One real finding surfaced while building the first control
+test, not fixed here: **BL-28**, its own entry below.
+
+**BL-28 — the generated `.verify.sh`'s L2 "missing front-matter line" check is a substring test,
+not an exact-line-set membership test, so an APPEND-style edit that keeps the original text as a
+literal substring of the new line is invisible to it.** *Raised 2026-08-10 (S65), found while
+building BL-27's own narrowed control test.* The check is `ln not in afront` — `afront` is the
+whole front-matter TEXT, not a list of lines, so `in` is substring containment. A tamper of
+`"# Handoff Receipts"` → `"# Handoff Receipts EDITED"` (append, not replace) left the original 19
+characters intact as a literal prefix of the new line, and the check reported no loss — reproduced
+live via the actual generated script, not inferred. **Pre-existing, not introduced by BL-27's fix**:
+the same substring check was there before this session touched the file; BL-27's own fix (the
+declared-field-reversal exemption) only *exposed* it, by removing a co-occurring, unrelated false
+positive (the regen-field "loss") that had been accidentally covering for it in BL-27's own first
+draft of that control test — the tamper appeared caught, but for the wrong reason. **The INTERNAL
+`assert_L2` (used by `--check`/`--write`) does not share this defect** — it compares the whole
+front-matter TEXT for exact equality after reversing declared changes (`residue != before_zones.front`),
+which an append-style edit still fails correctly; the bug is specific to the standalone script's
+separately-written, weaker line-based reimplementation. **Not fixed here (FM #17):** the fix is to
+compare an exact set/sequence of lines (or reuse the internal residue-equality approach) instead of
+substring containment — a change to the same canonical, adopter-distributed tool, needing its own
+RED-first test. Low severity in practice (an append that happens to preserve the exact original
+text as a contiguous substring is a narrow tamper shape), but real, and this file's own precedent
+(BL-27) is to record what is found even when it is not what was being looked for.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

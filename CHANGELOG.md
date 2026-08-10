@@ -152,6 +152,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S65 close-out — receipt written, self-score 8/10; see the `[BL-27]`/`[ad hoc]` entries below for the substantive work
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S65 stub overwritten in place to `status: complete` with all six Minimum Handoff
+Requirements. No separate substantive action beyond the receipt itself — the fix and the BL-28
+finding are described in the sibling entries immediately below.
+
+### 2026-08-10 · [ad hoc] BL-28 raised: the generated `.verify.sh`'s "missing front-matter line" check is a substring test, not exact-line-set membership
+
+**Model:** Claude Sonnet 5.
+Found while building BL-27's own narrowed control test for the front-matter-regen fix: an
+append-style edit (`"# Handoff Receipts"` → `"# Handoff Receipts EDITED"`) leaves the original text
+intact as a literal substring of the new line, and the check (`ln not in afront`, a substring test
+over the whole front-matter TEXT) reports no loss — reproduced live via the actual generated script.
+Pre-existing, not introduced by this session's fix; BL-27's fix only exposed it by removing an
+unrelated false positive that had been accidentally masking it. The INTERNAL `assert_L2` (used by
+`--check`/`--write`) does not share this defect — it compares by exact residue equality, which an
+append-style edit still fails correctly. Not fixed here (FM #17) — a change to the same canonical,
+adopter-distributed tool, needing its own RED-first test. Full evidence: `docs/planning/BACKLOG.md`
+BL-28.
+
+### 2026-08-10 · [BL-27] S65 — fix the ledger trimmer's generated `.verify.sh`'s two false-positive triggers on `HANDOFFS.md`
+
+**Model:** Claude Sonnet 5.
+Fixed both findings raised at S64, in `VERIFY_TEMPLATE`/`build_verify`
+(`starter-kit/methodology_trim.py` — the sole canonical copy, no `tools/` twin to mirror). (1) A new
+`@@REGEN@@` template variable carries `spec.regenerated`'s declared field patterns (`repr()`'d,
+since it is 0-or-more patterns) into the generated script; a `field_reversible()` helper excuses a
+"missing" front-matter line only when a same-shaped partner line exists elsewhere in the new front
+matter, identical everywhere outside the declared field's own span. (2) L1/L3 now share one
+`rebuilt`/`bad`-index computation; when the only altered record is position 0 (the frontier), the
+script still FAILs — loud, never silently exempted, because a real loss can have this exact shape —
+but also prints a `NOTE:` naming the known bundled-commit pattern (this repo's own established
+practice of finalizing a session's close-out receipt in the same commit as the archive write), so a
+`FAIL` no longer reads as unqualified. RED-first: 4 new tests in a new
+`TestVerifyShHandoffFalsePositives` class (`tools/test_methodology_trim.py`), against a new
+`make_handoff_repo` fixture — the suite's first end-to-end `HANDOFFS.md` trim through the actual
+subprocess and generated script, not just `assert_L2` in isolation. Both fix-tests confirmed RED
+against unpatched code for the exact defects BL-27 named; both narrowed controls confirmed
+already-green unpatched, proving the fix does not become a blanket permit. Suite 91 → 95, all
+green; full `bin/tests.sh` unaffected (185/186, Test 9's expected upstream-404 only — unchanged
+baseline). `TRIM_VERSION` 1.1.1 → 1.1.2 (patch — no new finding code or exit status on the tool's
+own CLI; a correctness fix to what the tool WRITES). One real finding surfaced while building the
+first control test, not fixed here: raised as BL-28 (sibling entry above). Full evidence:
+`docs/planning/BACKLOG.md` BL-27 and BL-28.
+
 ### 2026-08-10 · [ad hoc] Reconcile-on-read: S64's `commit:` field → `a46f2f9` — 36th discharge, found at Phase 0 orientation
 
 **Model:** Claude Sonnet 5.

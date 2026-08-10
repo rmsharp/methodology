@@ -539,6 +539,54 @@ def make_repo(tmp, n_records=30, body=3500, footer=False):
     return p
 
 
+def make_handoff_repo(tmp, n_hf_records=6, hf_body=1200, n_cl_records=3, cl_body=50):
+    """A repo holding BOTH ledgers, seeded in ONE commit — HANDOFFS.md fence-kind records with the
+    real declared regen field (`This file currently holds **N**`), plus a minimal CHANGELOG.md
+    (check_P1's ledger_rel_for() is hardcoded to CHANGELOG.md regardless of which file is trimmed,
+    and insert_ledger_entry() writes into it even when trimming HANDOFFS.md — both need it to
+    exist and parse). One commit, not two, so the P1 undocumented-set is empty at trim time: a
+    second commit adding HANDOFFS.md after CHANGELOG.md's own commit would itself be undocumented.
+    """
+    p = Path(tmp)
+    (p / "docs" / "archive").mkdir(parents=True)
+    cl_entries = "".join(
+        "### 2026-01-%02d · [ad hoc] entry %d\n\nbody %s\n\n" % (i % 28 + 1, i, "x" * cl_body)
+        for i in range(n_cl_records))
+    (p / "CHANGELOG.md").write_text(
+        "# Changelog\n\nFront matter.\nRetained entries: **0**.\n\n---\n\n"
+        "## 2026-01\n\n" + cl_entries, encoding="utf-8")
+
+    def hf_rec(i):
+        return (
+            "```handoff\n"
+            "session: S%d\n"
+            "date: 2026-01-%02d\n"
+            "status: complete\n"
+            "active_task: x\n"
+            "what_was_done: %s\n"
+            "next_steps: n\n"
+            "key_files: k\n"
+            "gotchas: g\n"
+            "runtime_smoke: r\n"
+            "changelog_ref: c\n"
+            "commit: %040x\n"
+            "```\n"
+            "Self-score **8/10.** commentary about session %d.\n\n"
+            % (i, n_hf_records - i, "x" * hf_body, i, i)
+        )
+
+    hf_entries = "---\n\n".join(hf_rec(i) for i in range(n_hf_records))
+    (p / "HANDOFFS.md").write_text(
+        "# Handoff Receipts\n\nThis file currently holds **0**.\n\n---\n\n" + hf_entries,
+        encoding="utf-8")
+    sh(p, "git", "init", "-q", ".")
+    sh(p, "git", "config", "user.email", "t@t")
+    sh(p, "git", "config", "user.name", "T")
+    sh(p, "git", "add", "-A")
+    sh(p, "git", "commit", "-qm", "seed")
+    return p
+
+
 def run_trim(repo, *args):
     return subprocess.run([sys.executable, str(TRIM_PY)] + list(args), cwd=str(repo),
                           stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -724,6 +772,113 @@ class TestEndToEnd(unittest.TestCase):
             r2 = run_trim(p, "--file", "CHANGELOG.md", "--write", "--force", "--today", "2026-04-01")
             self.assertIn("[WROTE]", r2.stdout, r2.stdout)
 
+
+# =============================================================================================
+# BL-27 — the GENERATED .verify.sh has two false-positive triggers on HANDOFFS.md that the
+# internal --check/--write assertions do not share (they have assert_L2's declared-field-reversal
+# exception; the standalone script did not). Reproduced against a real end-to-end HANDOFFS.md trim
+# through the actual subprocess, not just the internal assert_L2 unit — the defect lives entirely
+# in the generated shell/python text, not in the tool's own in-memory checks.
+# =============================================================================================
+
+class TestVerifyShHandoffFalsePositives(unittest.TestCase):
+
+    def test_regenerated_front_matter_field_no_longer_false_fails_verify_sh(self):
+        """Fix 1. The trim's own regenerated receipt-count line changes on every archive by
+        construction — the standalone proof must not read that as data loss."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_handoff_repo(tmp)
+            r = run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+            self.assertIn("[WROTE]", r.stdout, r.stdout)
+            live = (p / "HANDOFFS.md").read_text(encoding="utf-8")
+            self.assertIn("This file currently holds **2**", live,
+                         "control: the regenerated field must actually have changed")
+            shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+            v = sh(p, "bash", str(shard) + ".verify.sh")
+            self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
+            self.assertEqual(v.returncode, 0)
+
+    def test_an_undeclared_front_matter_edit_still_fails_L2_even_with_the_field_regenerated(self):
+        """NARROWED control for fix 1 — the exemption must not become a blanket permit. An edit
+        OUTSIDE the declared field's own parens, alongside a real regenerated-field change, must
+        still be caught: the same shape as `test_a_regenerated_field_does_not_license_an_edit_elsewhere`,
+        but through the actual generated script rather than the internal assert_L2 unit.
+
+        The tamper must be a full-line REPLACEMENT, not an append — the "missing" check compares
+        by substring (`ln not in afront`), so a tamper that merely appends to a line leaves the
+        original text intact as a substring of the edited one and is invisible to it. That gap is
+        real and pre-existing (open as its own finding, not this session's to fix), but a control
+        built on it would pass for the wrong reason — masked by the very regen-field false-positive
+        this test exists to prove is no longer masking anything.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_handoff_repo(tmp)
+            run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+            live = p / "HANDOFFS.md"
+            text = live.read_text(encoding="utf-8")
+            before = text
+            text = text.replace("# Handoff Receipts", "# TAMPERED", 1)
+            self.assertNotEqual(text, before, "control: the tamper must actually change the file")
+            self.assertNotIn("# Handoff Receipts", text,
+                             "control: the tamper must be a full replacement, not an append -- the "
+                             "old text surviving as a substring of the new line would defeat the "
+                             "'missing' check's own (pre-existing, unrelated) substring comparison")
+            live.write_text(text, encoding="utf-8")
+            shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+            v = sh(p, "bash", str(shard) + ".verify.sh")
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+            self.assertIn("L2 FRONT MATTER", v.stdout, v.stdout)
+            self.assertNotEqual(v.returncode, 0)
+
+    def test_frontier_record_edit_bundled_into_trim_commit_still_fails_but_is_labelled(self):
+        """Fix 2. This repo's own established practice (S61/S63/S64): a session's frontier receipt
+        is finalized (status: pending -> complete) in the SAME commit as the archive write. The
+        standalone script re-run later must still FAIL (a real loss can have this exact shape) —
+        but must now also print a NOTE naming the known pattern, so a reader does not mistake a
+        legitimate bundled edit for an unqualified loss."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_handoff_repo(tmp)
+            run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+            live = p / "HANDOFFS.md"
+            text = live.read_text(encoding="utf-8")
+            before = text
+            # Record 0 (S0, the newest/frontier — file position 0 is topmost/newest, though dates
+            # descend with i) — simulate its own close-out finalize, bundled into the trim commit.
+            self.assertIn("session: S0", text, "control: the frontier record must be S0")
+            text = text.replace("status: complete\nactive_task: x",
+                                "status: complete\nactive_task: x (finalized)", 1)
+            self.assertNotEqual(text, before, "control: the tamper must actually change record 0")
+            live.write_text(text, encoding="utf-8")
+            sh(p, "git", "add", "-A")
+            sh(p, "git", "commit", "-qm", "trim + frontier finalize, bundled")
+            shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+            v = sh(p, "bash", str(shard) + ".verify.sh")
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+            self.assertIn("NOTE:", v.stdout, v.stdout)
+            self.assertIn("BL-27", v.stdout, v.stdout)
+            self.assertNotEqual(v.returncode, 0, "a bundled edit must still FAIL, never pass silently")
+
+    def test_a_non_frontier_record_edit_bundled_into_trim_commit_gets_no_such_label(self):
+        """NARROWED control for fix 2 — the label must not spread to a record that is not the
+        frontier. Editing the OTHER retained record (position 1, not 0) is real, uncovered data
+        alteration and must fail with no reassuring NOTE."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_handoff_repo(tmp)
+            run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+            live = p / "HANDOFFS.md"
+            text = live.read_text(encoding="utf-8")
+            before = text
+            self.assertIn("session: S1", text, "control: the second retained record must be S1")
+            text = text.replace("session: S1\n", "session: S1-TAMPERED\n", 1)
+            self.assertNotEqual(text, before, "control: the tamper must actually change record 1")
+            live.write_text(text, encoding="utf-8")
+            sh(p, "git", "add", "-A")
+            sh(p, "git", "commit", "-qm", "trim + an edit to the wrong record, bundled")
+            shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+            v = sh(p, "bash", str(shard) + ".verify.sh")
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+            self.assertNotIn("NOTE:", v.stdout, v.stdout)
+            self.assertNotEqual(v.returncode, 0)
 
 
 # =============================================================================================

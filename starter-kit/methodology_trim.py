@@ -47,7 +47,14 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.1.1"   # 1.1.0: GRAMMAR_MISMATCH — a grammar this tool cannot read
+TRIM_VERSION = "1.1.2"   # 1.1.2: BL-27 — the GENERATED .verify.sh had two false-positive triggers
+                         # the internal --check/--write assertions do not share: a declared
+                         # front-matter regen field (e.g. HANDOFFS.md's receipt count) read as L2
+                         # data loss, and a same-commit close-out bundling (this repo's own
+                         # established practice) read as an unqualified L1/L3 record alteration.
+                         # No new finding code on the TOOL's own CLI and no exit-code change, so:
+                         # patch, not minor — this is a correctness fix to what the tool WRITES.
+                         # 1.1.0: GRAMMAR_MISMATCH — a grammar this tool cannot read
                          # is no longer reported as an empty file (UAT F1). New finding code and
                          # a new exit status on a distributed tool, so: minor, not patch.
 
@@ -1033,6 +1040,12 @@ FENCE_INFO = "@@INFO@@"
 FOOTER_MODE = "@@FOOTER@@"
 PREFIX = "../../"
 
+# BL-27 fix 1: the same declared front-matter fields assert_L2's reversal exception already knows
+# about (design's regenerated-field table), so a line that changed ONLY inside one of these spans
+# is not "lost" — every OTHER line still must survive verbatim, unchanged from before this fix.
+REGEN_PATTERNS = @@REGEN@@
+REGEN = [re.compile(p) for p in REGEN_PATTERNS]
+
 FENCE = re.compile(r"^(`{3,}|~{3,})(.*)$")
 LINK = re.compile(r"\]\(([^)\s]*)\)")
 SCHEME = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*:")
@@ -1176,7 +1189,8 @@ ran = []
 
 # --- L1: records-zone concatenation ---------------------------------------------------------
 ran.append("L1")
-if "".join(ar_cmp) + "".join(invert(r) for r in sr) != "".join(br):
+rebuilt = list(ar_cmp) + [invert(r) for r in sr]
+if "".join(rebuilt) != "".join(br):
     fails.append("L1 records-zone concatenation is not byte-identical")
 
 # --- L2: zone pinning. BOTH halves — footer AND front matter. -------------------------------
@@ -1193,8 +1207,29 @@ if bfoot.strip():
 ran.append("L2/front-matter")
 # Front matter may GAIN declared blocks (the shard pointer, a new month heading); it may not lose
 # or reword anything. Every non-blank line of the original must survive verbatim in the new front
-# matter, and none of it may have travelled into the shard.
-missing = [ln for ln in bfront.splitlines() if ln.strip() and ln not in afront]
+# matter, and none of it may have travelled into the shard — UNLESS the only change is confined to
+# a declared regenerated field's own value (BL-27 fix 1), the same exception assert_L2 already
+# applies via its reversal loop. This is a narrower carve-out than assert_L2's, on purpose: it
+# excuses a specific LINE only when it has a same-shaped partner line in the new front matter with
+# identical bytes everywhere outside the declared span — an actual reword just outside the field's
+# own parens still fails, same as an edit anywhere else in front matter.
+def field_reversible(missing_line):
+    for rx in REGEN:
+        m = rx.search(missing_line)
+        if not m:
+            continue
+        prefix, suffix = m.group(1), m.group(3)
+        residue = missing_line[:m.start()] + missing_line[m.end():]
+        for al in afront.splitlines():
+            am = rx.search(al)
+            if (am and am.group(1) == prefix and am.group(3) == suffix
+                    and al[:am.start()] + al[am.end():] == residue):
+                return True
+    return False
+
+
+missing = [ln for ln in bfront.splitlines()
+           if ln.strip() and ln not in afront and not field_reversible(ln)]
 if missing:
     fails.append("L2 FRONT MATTER lost %d line(s), first: %r" % (len(missing), missing[0][:70]))
 leaked = [ln for ln in bfront.splitlines()
@@ -1205,7 +1240,7 @@ if leaked:
 
 # --- L3: record partition ---------------------------------------------------------------------
 ran.append("L3")
-rebuilt = list(ar_cmp) + [invert(r) for r in sr]
+bad = None
 if len(rebuilt) != len(br):
     fails.append("L3 record count %d != %d" % (len(rebuilt), len(br)))
 else:
@@ -1213,12 +1248,30 @@ else:
     if bad:
         fails.append("L3 record(s) not byte-identical across the move: %s" % bad)
 
+# BL-27 fix 2: a same-commit close-out bundling (this repo's own established practice — a
+# session's own frontier receipt going status: pending -> complete, committed together with the
+# archive write) makes position 0 (newest) legitimately differ between this commit's parent and
+# itself. NOT an exemption — this stays a FAIL, loud, because a real loss can have this exact
+# shape too — only a NOTE naming the known pattern, so a reader does not mistake it for an
+# unqualified loss. Narrow on purpose: any OTHER record differing (bad != [0]) gets no such note.
+notes = []
+if fails and bad == [0]:
+    notes.append(
+        "only the frontier record (position 0, newest) differs, across L1 and L3 -- matches a "
+        "known, accepted pattern (BL-27): this repository's own practice bundles a session's "
+        "close-out finalize edit into the same commit as an archive write, so the frontier "
+        "record can legitimately differ between this commit's parent and itself. This does NOT "
+        "confirm losslessness -- manually diff record 0 by hand to be sure it is a receipt "
+        "finalize, not real data loss.")
+
 print("source : %s" % origin)
 print("records: %d before = %d retained + %d archived (%d entry injected by the trim)"
       % (len(br), len(ar_cmp), len(sr), INJ))
 print("checked: %s" % ", ".join(ran))
 for f in fails:
     print("FAIL:", f)
+for n in notes:
+    print("NOTE:", n)
 if fails:
     sys.exit(1)
 # State what actually ran, never a blanket claim: on a ledger with no footer the footer clause is
@@ -1229,11 +1282,19 @@ PYEOF_VERIFY
 
 
 def build_verify(spec, live_rel, shard_rel, injected):
+    # REGEN travels as a repr()'d list of plain (non-raw) pattern strings, not a wrapped r-string
+    # like @@START@@ — spec.regenerated is 0-or-more patterns, and an r-string wrapper only ever
+    # holds one. repr() doubles each backslash; the generated script parses that back as a normal
+    # (non-raw) Python string literal, which un-doubles it — the round trip restores the exact
+    # pattern .compile() would see. Safe only because no config pattern contains a quote character
+    # (true of both entries in LEDGERS today); a pattern that did would need a different encoding.
+    regen_patterns = repr([rx.pattern for _name, rx, _fn in spec.regenerated])
     out = VERIFY_TEMPLATE
     for key, val in (("@@SHARD@@", shard_rel), ("@@LIVE@@", live_rel), ("@@VER@@", TRIM_VERSION),
                      ("@@INJECTED@@", str(injected)), ("@@KIND@@", spec.record_kind),
                      ("@@START@@", spec.record_start.pattern if spec.record_start else ""),
-                     ("@@INFO@@", spec.fence_info or ""), ("@@FOOTER@@", spec.footer_mode)):
+                     ("@@INFO@@", spec.fence_info or ""), ("@@FOOTER@@", spec.footer_mode),
+                     ("@@REGEN@@", regen_patterns)):
         out = out.replace(key, val)
     return out
 
