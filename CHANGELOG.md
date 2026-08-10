@@ -148,6 +148,56 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-09 · [ad hoc] S61 — append Learning #21, a compaction-verification gap found in this session's own first attempt
+
+**Model:** Claude Sonnet 5.
+Appended to `starter-kit/FRAMEWORK_LEARNINGS.md` (canonical-only, distributed via `bin/_manifest.py`
+`TRACKED`; no `tools/` twin exists for this file). Finding: a line-count-targeted compaction pass
+achieved ~1.4% real (character) reduction while an adversarial verifier built to catch dropped facts
+reported success on every candidate, because removing hand-wrapped line breaks satisfies "fewer
+lines" without touching the actual byte count. Caught by measuring characters directly before writing
+anything to the live file; redone with an explicit character-count target, real reduction rose to
+4.7%. Grepped for a stale "20 learnings" / "Learning #20" size claim needing an update to 21 — none
+found (`starter-kit/FRAMEWORK_LEARNINGS.md`'s own count is unguarded prose, matching the same
+disclosed pattern as `HANDOFFS.md`'s receipt count; not in scope here).
+
+### 2026-08-09 · [ad hoc] S61 — the SRF-RED refusal below overridden, on an explicit operator go-ahead, after a rate cut
+
+**Model:** Claude Sonnet 5.
+- **Why this needed a decision, not just a tool run.** The compaction entry above (this session's
+  first act) cut HANDOFFS.md's 2,005-line HIGH risk to 987 lines, but SRF stayed RED post-compaction
+  (2.9477 → 2.9218, still ≥ the 1.00 threshold) and the byte trigger kept firing (553,842 B against a
+  65,536 B budget) — a real rate cut, not enough alone to clear either. Per
+  `framework-context-cost-plan.md` SS3.3 (H3), RED is `methodology_trim.py`'s designed refusal: *"do
+  not archive again"* without a rate cut first. Matches S60's own CHANGELOG.md precedent exactly — a
+  genuine rate cut preceding the override, which is what H3's rule is asking for, even though the RED
+  number itself didn't cross back to green (it can't, from a prose-only compaction: the fenced
+  `handoff` fields this pass didn't touch hold 79.4% of the file's bytes).
+- **The decision was put to the operator, not made unilaterally.** Presented the real numbers (line
+  cap already resolved; byte budget and SRF still RED) and four options — stop at the rate cut and
+  leave the byte budget disclosed-MEDIUM, or force-archive through one of three candidate day-seam
+  cut points (2026-08-02 / -08-04 / -08-08) with each one's exact resulting live-file size shown.
+  Operator chose the conservative 2026-08-02 boundary, matching this ledger's existing precedent
+  (S31's CHANGELOG.md cut, `020ba3f`) and this file's own only prior archive boundary (`7a71df0`).
+- **Result:** `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --cut 2026-08-02 --force
+  --write` — mechanics and losslessness proof are in the tool-written entry immediately below this
+  one. Independently re-ran `docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh` rather than
+  trusting the tool's own write-time output — OK (L1/L2/L3).
+- **Honest disclosure:** the byte budget (65,536 B) is not reached by this cut — live file lands at
+  371,861 B, still ~5.7x over. The operator's own preview for this option stated that plainly before
+  it was chosen; the more aggressive candidates (2026-08-08 archived 39 of 46 receipts and would have
+  cleared the budget) were declined in favor of the smaller, precedent-matching cut. The byte-budget
+  MEDIUM risk remains open and disclosed, same as it was before this session, just smaller in absolute
+  terms.
+
+### 2026-08-09 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-02.md` (16 record(s), 553,842 B → 371,861 B)
+
+**Written by:** `methodology_trim.py` v1.1.1 — a tool action, not a session's judgment.
+Moved the oldest **16** record(s) (2026-07-30 → 2026-08-02) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-08-02.md`](docs/archive/HANDOFFS-through-2026-08-02.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh)
+rather than trusting a digest printed here. Live file 553,842 B → 371,861 B (−32.9%).
+
 ### 2026-08-09 · [ad hoc] S61 — HANDOFFS.md's 39 compactable receipt prose sections compacted, losslessly, verified adversarially — 2,005 → 987 lines, HIGH risk cleared
 
 **Model:** Claude Sonnet 5.
