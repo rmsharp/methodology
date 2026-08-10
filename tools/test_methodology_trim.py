@@ -283,16 +283,25 @@ class TestL2(unittest.TestCase):
     def test_a_declared_regenerated_field_is_permitted_and_confined(self):
         """Uses the REAL declared field on the REAL front matter — not a synthetic anchor, because
         a synthetic one tests the test. HANDOFFS.md declares its retained-receipt count regenerated,
-        and that count has already drifted by hand, which is why it is declared at all."""
+        and that count has already drifted by hand, which is why it is declared at all.
+
+        The probe value must differ from whatever the live count currently reads, computed rather
+        than hardcoded: a hardcoded literal (this test's own prior form used `3`) is exactly the
+        kind of coupling to real, mutable ledger content this repo's own precedent warns about
+        (S63's `test_L2_fixture_loss_actually_happened_and_is_still_unrepaired`) — and it went
+        live here, not hypothetically: S64's own HANDOFFS.md archive set the real count to 3, the
+        very literal this test had hardcoded, making `old == new` and silencing the assertion this
+        test exists to make."""
         hf_text = (REPO / "HANDOFFS.md").read_text(encoding="utf-8")
         zh = mod.classify_zones(hf_text, HF, mod.Result("x"))
         name, rx, _fn = HF.regenerated[0]
         m = rx.search(zh.front)
         self.assertIsNotNone(m, "control: the declared field must exist in the live front matter")
         old = m.group(2)
+        probe = int(old) + 1  # guaranteed to differ from `old`, whatever `old` currently is
 
         r = mod.Result("x")
-        new_front, reversals = mod.apply_regenerated(zh.front, HF, {"retained": 3}, r)
+        new_front, reversals = mod.apply_regenerated(zh.front, HF, {"retained": probe}, r)
         self.assertIn("FRONTMATTER_FIELD_REGENERATED", r.codes)
         self.assertNotEqual(new_front, zh.front, "control: the field really changed")
         self.assertEqual(reversals[0][1], old)
@@ -305,8 +314,10 @@ class TestL2(unittest.TestCase):
         """NARROWED: the carve-out must not become a blanket permit for front-matter edits."""
         hf_text = (REPO / "HANDOFFS.md").read_text(encoding="utf-8")
         zh = mod.classify_zones(hf_text, HF, mod.Result("x"))
+        name, rx, _fn = HF.regenerated[0]
+        old = rx.search(zh.front).group(2)
         r = mod.Result("x")
-        new_front, reversals = mod.apply_regenerated(zh.front, HF, {"retained": 3}, r)
+        new_front, reversals = mod.apply_regenerated(zh.front, HF, {"retained": int(old) + 1}, r)
         tampered = new_front.replace("prepend-only", "prepend-onlyX", 1) + "PTR\n"
         self.assertNotEqual(tampered, new_front + "PTR\n", "control: the tamper must apply")
         r2 = mod.Result("x")

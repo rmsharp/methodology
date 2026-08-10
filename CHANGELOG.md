@@ -152,6 +152,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Fix two collateral regressions this session's own `HANDOFFS.md` archive caused in the test suite
+
+**Model:** Claude Sonnet 5.
+Same class as S63's own collateral-regression fix, different couplings. (1)
+`tools/test_methodology_trim.py::test_a_declared_regenerated_field_is_permitted_and_confined` read
+`HANDOFFS.md` directly off disk and probed with a hardcoded `{"retained": 3}` — this session's own
+archive set the real live count to exactly `3`, making `old == new` and silencing the
+`FRONTMATTER_FIELD_REGENERATED` assertion it exists to make; fixed by deriving the probe from the
+live value (`int(old) + 1`) so it can never coincide again, in both this test and its sibling
+`test_a_regenerated_field_does_not_license_an_edit_elsewhere`, which shared the same hardcoded
+literal. (2) Four tests in `tools/test_methodology_dashboard.py::TestS38TrimTriggerRow` use this
+repo's own live state as a real (non-synthetic) fixture and assert its trim trigger currently
+fires; clearing `HANDOFFS.md`'s trigger (this session) made that precondition false — `CHANGELOG.md`'s
+was already clear from S63, so neither ledger fires today. Fixed by converting the bare
+`AssertionError` each already raised on a clear, self-documented fixture-precondition message into
+an explicit `self.skipTest(...)` with the same message — the tests still exist to catch a broken
+advisory and will run again once either ledger is genuinely over budget; force-passing them would
+have hidden that, not fixed it. `python3 tools/test_methodology_trim.py` 91/91 (was 90/91);
+`python3 tools/test_methodology_dashboard.py` 284/284, 4 skipped (was 280/284, 4 failed).
+
 ### 2026-08-10 · [ad hoc] BL-27 raised: the ledger trimmer's generated `.verify.sh` has two known false-positive triggers on `HANDOFFS.md`
 
 **Model:** Claude Sonnet 5.
