@@ -126,9 +126,19 @@ class TestFixtureControls(unittest.TestCase):
         self.assertNotIn("Release history before v3.0", za.footer, "the footer left the live file")
         self.assertNotIn("Release history before v3.0", zh.footer, "and it has never come back")
         self.assertIn("Release history before v3.0", zs.footer, "it is now the SHARD's footer")
-        # And the whole-file grep really is ambiguous now — this is why the zone form is used.
-        self.assertIn("Release history before v3.0", head,
-                      "control: the phrase IS in the live file, just not as its footer")
+        # The control matches the design's own D1 scope (`CHANGELOG.md docs/archive/`), not the
+        # live file alone: S35's quoting entry migrates by position on every later trim just like
+        # any other record (Learning #15), and did — a S63 archive moved it out of the live file
+        # into docs/archive/CHANGELOG-through-2026-08-09.md. The whole-CORPUS grep stays ambiguous
+        # even after it moves; only the live file's grep would stop being.
+        archive_dir = REPO / "docs" / "archive"
+        corpus = head + "".join(
+            show(f"HEAD:{p.relative_to(REPO).as_posix()}") or ""
+            for p in sorted(archive_dir.glob("CHANGELOG-*.md"))
+        )
+        self.assertIn("Release history before v3.0", corpus,
+                      "control: the phrase IS in the live corpus (live file or an archive "
+                      "shard), just not as any shard's footer")
 
     def test_L3_fixture_is_the_event_that_bundled_an_edit_with_the_move(self):
         before = show("7a71df0^:HANDOFFS.md")

@@ -152,13 +152,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
-### 2026-08-10 · [ad hoc] S63 close-out — receipt written, self-score 7/10; see the ledger-trim and reconcile entries below for the substantive work
+### 2026-08-10 · [ad hoc] Fix `tools/test_methodology_trim.py`'s control assertion after the trim moved its target content
+
+**Model:** Claude Sonnet 5.
+`test_L2_fixture_loss_actually_happened_and_is_still_unrepaired`'s control checked only
+`HEAD:CHANGELOG.md` for a phrase quoted inside S35's old close-out entry (dated 2026-08-03); the
+2026-08-09 archive cut (entry immediately below) moved that entry into
+`docs/archive/CHANGELOG-through-2026-08-09.md`, so the assertion started failing —
+`bin/tests.sh` 184/186. The test's own docstring already documented the correct scope (the
+design's D1 command greps `CHANGELOG.md docs/archive/` together); widened the assertion to match,
+searching the live file plus all archive shards rather than the live file alone. `python3
+tools/test_methodology_trim.py`: 91/91. `bin/tests.sh`: 185/186 (Test 9's expected upstream-404
+only) — true baseline, confirmed a second time. Found on a post-commit-amend diligence re-run of
+the full suite, not by a pre-trim sweep — see this session's own `HANDOFFS.md` gotcha (3).
+
+### 2026-08-10 · [ad hoc] S63 close-out — receipt written, self-score 8/10; see the ledger-trim and reconcile entries below for the substantive work
 
 **Model:** Claude Sonnet 5.
 `HANDOFFS.md`'s S63 stub overwritten in place to `status: complete` with all six Minimum Handoff
-Requirements. No separate substantive action beyond the receipt itself — the trim and the collateral
-`commit:` reconcile it triggered are described in the sibling entries immediately below, all three
-landed together in this same commit.
+Requirements. No separate substantive action beyond the receipt itself — the trim, the collateral
+`commit:` reconcile, and the trimmer-test fix it triggered are described in the sibling entries
+immediately below and above, all landed together in this same commit.
 
 ### 2026-08-10 · [ad hoc] Reconcile-on-read: S62's `commit:` field → `d7712ca` — 34th discharge, found via `bin/tests.sh`
 
