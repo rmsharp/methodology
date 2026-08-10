@@ -148,6 +148,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Claim S63 — lossless trim of `CHANGELOG.md` (operator-directed)
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S63 stub prepended (`status: pending`) — Phase 1B claim, no substantive work yet.
+Commit `efe5ee0`.
+
 ### 2026-08-10 · [ad hoc] S62 close-out — receipt written, self-score 8/10; see the `[issue #67]`/`[BL-26]` entries below for the substantive work
 
 **Model:** Claude Sonnet 5.
