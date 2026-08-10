@@ -152,6 +152,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Claim S64 — lossless trim of `HANDOFFS.md` (operator-directed)
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S64 stub prepended (`status: pending`) — Phase 1B claim, no substantive work yet.
+Commit `ede7cbb`.
+
 ### 2026-08-10 · [ad hoc] Reconcile-on-read: S63's `commit:` field → `072324b` — 35th discharge, found at Phase 0 orientation
 
 **Model:** Claude Sonnet 5.
