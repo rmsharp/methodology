@@ -37,6 +37,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S66
+date: 2026-08-10
+status: pending
+active_task: Operator-directed — add a Framework Learning to `starter-kit/FRAMEWORK_LEARNINGS.md` distilling the cross-repo adopter-maintenance pattern discovered this session: a completed `BACKLOG.md` item's own text can be load-bearing for a sibling item's meaning (relative-position or quoted-title reference), so removing it can silently orphan a live reference with no test to catch it. Evidenced independently on two real adopters (wsfct, nprcgenekeepr) during this session's own cross-repo `bin/sync`/ledger-reconcile/`BACKLOG.md`-hygiene work in those repos. Drafted, reviewed and shortened with the operator across several rounds before being written in.
+CHANGELOG: pending
+```
+
+---
+
+```handoff
 session: S65
 date: 2026-08-10
 status: complete
