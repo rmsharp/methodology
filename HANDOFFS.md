@@ -37,6 +37,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S65
+date: 2026-08-10
+status: pending
+active_task: Operator-directed — fix BL-27 (`docs/planning/BACKLOG.md`): `starter-kit/methodology_trim.py`'s generated `.verify.sh` has two known false-positive triggers on `HANDOFFS.md`, distinct from the internal `--check`/`--write` assertions (which do not share them). (1) Front-matter field regeneration (e.g. the receipt-count sentence) reads as `L2` data loss — the standalone script has no equivalent to `assert_L2`'s declared-field-reversal exception. (2) A same-commit close-out bundling (this repo's own established practice, S61/S63/S64) reads as an unqualified `L1`/`L3` record-alteration FAIL, though it is a known, accepted pattern this repo's own test suite already names (`test_L3_fixture_is_the_event_that_bundled_an_edit_with_the_move`). RED-first tests against the 91-test `tools/test_methodology_trim.py` suite, then fix `VERIFY_TEMPLATE`/`build_verify` in `starter-kit/methodology_trim.py` — a canonical, adopter-distributed file. Scoped as its own session per BL-27's own text (FM #17: not folded into a trim).
+CHANGELOG: pending
+```
+
+---
+
+```handoff
 session: S64
 date: 2026-08-10
 status: complete
