@@ -1,7 +1,11 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23 and BL-26 are open** (**BL-26 raised 2026-08-09 (S56)** — issue #67
+> BL-20, BL-21, BL-22, BL-23, BL-26 and BL-27 are open** (**BL-27 raised 2026-08-10 (S64)** — the
+> ledger trimmer's generated `.verify.sh` has two known false-positive triggers on `HANDOFFS.md`
+> (front-matter field regeneration; a same-commit close-out bundled with the archive write reading as
+> record alteration), reproduced live and against S61's own frozen shard proof; see its own entry.
+> **BL-26 raised 2026-08-09 (S56)** — issue #67
 > describes a live, unfixed defect already shipped in this fork's own `methodology_dashboard.py`;
 > PR #66 has two concrete, reproduced collisions of its own (a hook-install path that silently
 > no-ops under this fork's `core.hooksPath` convention, and a duplicate-session check with the exact
@@ -716,6 +720,53 @@ fork-side half only — the live defect no longer ships in this fork's own copie
 issue itself is still open, and no PR has been opened against `KJ5HST/methodology` (the plan's own §9
 gate — needs a separate, explicit go-ahead, asked for again at that time). **PR #66 thread still
 untouched and still open** — this item did not touch it.
+
+**BL-27 — `methodology_trim.py`'s generated `.verify.sh` has two known false-positive triggers on
+`HANDOFFS.md`, distinct from the internal `--check`/`--write` assertions, which do not share them.**
+*Raised 2026-08-10 (S64), found while independently re-running the tool's own generated proof for a
+routine `HANDOFFS.md` archive-cut — the practice this repo's own precedent (S61, S63) established
+specifically to avoid trusting the tool's write-time summary.* Both are reproduced, not inferred:
+
+1. **Front-matter field regeneration reads as data loss.** `HANDOFFS.md`'s front matter carries a
+   `This file currently holds **N**` receipt count that the tool mechanically regenerates on every
+   archive (`[FRONTMATTER_FIELD_REGENERATED]`, e.g. `30 → 3` this session). The internal `assert_L2`
+   check correctly excuses this — it reverses every *declared* regeneration and requires the original
+   bytes back (`starter-kit/methodology_trim.py:523-563`) — but the simpler, self-contained check
+   embedded in the generated `.verify.sh` only asserts "every non-blank line of the original front
+   matter survives verbatim," with no concept of a declared exception. Any archive that changes this
+   line — every one, since the count always changes — makes the standalone proof report
+   `FAIL: L2 FRONT MATTER lost 1 line(s)` even though nothing was lost. Reproduced live this session:
+   `docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh` fails this way; manually diffing
+   `HEAD:HANDOFFS.md` against the pre-commit working tree confirmed the *only* front-matter changes
+   were the declared count regeneration and the declared pointer-block insertion — genuinely lossless,
+   just not provable by the generated script as currently written.
+2. **A same-commit close-out bundling reads as record alteration.** This repo's own established
+   practice (S61, S63, and this session) commits an archive's `--write` output together with
+   finalizing the session's *own* close-out receipt (`status: pending` → `complete`) in one commit.
+   The frontier record (the newest, never archived) therefore legitimately differs between that
+   commit's parent and itself — a fact the internal test suite already names and accepts
+   (`tools/test_methodology_trim.py`'s `test_L3_fixture_is_the_event_that_bundled_an_edit_with_the_move`,
+   fixture `7a71df0`, S23's original archive). But `.verify.sh`, re-run in commit-comparison mode
+   after the fact, has no such exception and reports `FAIL: L3 record(s) not byte-identical … [0]` /
+   an `L1` mismatch. Reproduced live this session against `docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh`
+   (S61's shard, untouched since `c0e6944`, same tool version `v1.1.1` throughout) — its record-0
+   "alteration" is exactly S61's own receipt going from its pending stub to its finished self-score-7
+   form, all within `c0e6944`. **This is not evidence of historical data loss** — S61's actual archive
+   move is intact — but it does mean a past session's disclosed "independently re-ran `.verify.sh` —
+   OK" can go stale the moment the receipt is later finalized into the same commit, and a *future*
+   re-run of that same frozen script, done for due diligence, will misread as a fresh finding of loss
+   unless the reader already knows this pattern.
+
+**Practical mitigation already used this session, not a fix:** run `.verify.sh`'s underlying check
+in the working-tree window *before* finalizing the session's own receipt (which is when `L1`/`L3`
+are still meaningful), and rely on a manual front-matter diff — not the generated script's verdict —
+for `L2`. **Not fixed here (FM #17):** the two real fixes are (a) teach the `.verify.sh` generator
+the same declared-field-reversal exception `assert_L2` already has, and (b) either exempt the
+frontier record from the generated script's `L1`/`L3` comparison when it's the only one to change, or
+document the bundled-commit pattern in the script's own output so a `FAIL` doesn't read as an
+unqualified loss. Both are changes to a canonical, adopter-distributed tool (`bin/_manifest.py`) and
+need their own RED-first tests against `tools/test_methodology_trim.py`'s existing 91-test suite —
+scoped as a session of its own, not folded into a trim.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

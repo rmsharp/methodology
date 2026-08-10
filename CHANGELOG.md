@@ -152,6 +152,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] BL-27 raised: the ledger trimmer's generated `.verify.sh` has two known false-positive triggers on `HANDOFFS.md`
+
+**Model:** Claude Sonnet 5.
+Found while independently re-running `docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh` —
+this session's own trim precedent (S61, S63) established that practice specifically to avoid
+trusting the tool's write-time summary. (1) `HANDOFFS.md`'s regenerated receipt-count front-matter
+field reads as `L2` data loss in the generated script, which has no equivalent to `assert_L2`'s
+declared-field-reversal exception. (2) A same-commit close-out bundling (this repo's own
+established practice) reads as `L1`/`L3` record alteration; reproduced against S61's own frozen
+shard proof (`docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh`, untouched since `c0e6944`) —
+**not evidence of historical data loss**, confirmed by manual diff and by this repo's own
+`tools/test_methodology_trim.py::test_L3_fixture_is_the_event_that_bundled_an_edit_with_the_move`,
+which already names and accepts the same pattern from S23's original archive. Not fixed here
+(FM #17) — both are changes to a canonical, adopter-distributed tool needing their own RED-first
+tests. Full evidence: `docs/planning/BACKLOG.md` BL-27.
+
+### 2026-08-10 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-09.md` (30 record(s), 406,941 B → 25,874 B)
+
+**Written by:** `methodology_trim.py` v1.1.1 — a tool action, not a session's judgment.
+Moved the oldest **30** record(s) (2026-08-03 → 2026-08-09) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-08-09.md`](docs/archive/HANDOFFS-through-2026-08-09.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh)
+rather than trusting a digest printed here. Live file 406,941 B → 25,874 B (−93.6%).
+
 ### 2026-08-10 · [ad hoc] Claim S64 — lossless trim of `HANDOFFS.md` (operator-directed)
 
 **Model:** Claude Sonnet 5.
