@@ -37,6 +37,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S69
+date: 2026-08-10
+status: pending
+active_task: Operator-directed — fix UAT F9's own instance in this canonical repo (`dashboard_history.jsonl` untracked and unignored, `.gitignore` covers `dashboard.html` but not this newer sibling). Operator chose: track the file, add a `.gitignore` comment explaining the deliberate asymmetry (matching the confirmed-resolved `mts-system`/`wsfct` pattern), document both artifacts' treatment in `BOOTSTRAP.md`.
+CHANGELOG: pending
+```
+
+---
+
+```handoff
 session: S68
 date: 2026-08-10
 status: complete
