@@ -152,6 +152,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S64 close-out — receipt written, self-score 8/10; see the BL-27 and regression-fix entries below for the substantive work
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S64 stub overwritten in place to `status: complete` with all six Minimum Handoff
+Requirements. No separate substantive action beyond the receipt itself — the archive, the BL-27
+finding, and the two collateral-regression fixes are described in the sibling entries immediately
+below, landed in three separate commits.
+
 ### 2026-08-10 · [ad hoc] Fix two collateral regressions this session's own `HANDOFFS.md` archive caused in the test suite
 
 **Model:** Claude Sonnet 5.
