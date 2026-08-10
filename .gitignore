@@ -1,5 +1,8 @@
 .DS_Store
 dashboard.html
+# NOTE: dashboard_history.jsonl is deliberately NOT ignored. Unlike dashboard.html
+# (regenerated in full every run), it is append-only, non-regenerable project-health
+# history, so it is tracked to survive machine loss and travel with a clone.
 tools/__pycache__/
 starter-kit/__pycache__/
 bin/__pycache__/

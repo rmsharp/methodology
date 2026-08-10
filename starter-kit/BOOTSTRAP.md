@@ -118,7 +118,7 @@ Run the dashboard once to generate your first report:
 python3 methodology_dashboard.py
 ```
 
-This generates `dashboard.html` and opens it in your browser. The page auto-refreshes every 60 seconds. Add `dashboard.html` to your `.gitignore` — it's a generated artifact.
+This generates `dashboard.html` and opens it in your browser. The page auto-refreshes every 60 seconds. Add `dashboard.html` to your `.gitignore` — it's a generated artifact. It also appends one snapshot to `dashboard_history.jsonl` each run — leave that file tracked, not gitignored (see Step 9).
 
 ---
 
@@ -293,7 +293,7 @@ doc-only                      # ← the declaration: first non-blank, non-commen
 python3 methodology_dashboard.py
 ```
 
-Add `dashboard.html` to your `.gitignore` (it's a generated artifact).
+Add `dashboard.html` to your `.gitignore` (it's a generated artifact). **Do not** add `dashboard_history.jsonl` the same way: each run appends one snapshot to it rather than regenerating it, so it's the only place your health-trend history lives — track and commit it like `CHANGELOG.md`/`HANDOFFS.md`, not ignore it like `dashboard.html`. A short `.gitignore` comment explaining the asymmetry (see this repo's own `.gitignore`) heads off the next person wondering why one sibling file is ignored and the other isn't.
 
 ### Portfolio Setup
 

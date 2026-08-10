@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **4**; the oldest **19**
+**Older receipts are archived.** This file currently holds **5**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -39,10 +39,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ```handoff
 session: S69
 date: 2026-08-10
-status: pending
-active_task: Operator-directed — fix UAT F9's own instance in this canonical repo (`dashboard_history.jsonl` untracked and unignored, `.gitignore` covers `dashboard.html` but not this newer sibling). Operator chose: track the file, add a `.gitignore` comment explaining the deliberate asymmetry (matching the confirmed-resolved `mts-system`/`wsfct` pattern), document both artifacts' treatment in `BOOTSTRAP.md`.
-CHANGELOG: pending
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Operator-directed — fix UAT F9's own instance in this canonical repo (`dashboard_history.jsonl` untracked and unignored; `.gitignore` covers `dashboard.html` but not this newer sibling). COMPLETE.
+what_was_done: Commit `d28f2ad` (claim) → this commit. Read F9's original finding (`docs/planning/uat-2026-08-04-six-adopters.md:346`) before acting on the user's literal "gitignore issue" phrasing — found the root cause was framed as "nowhere documented," not "wrong gitignore direction," and that widening `IGNORE_ENTRIES` in `bin/sync` would help nothing (all real adopters sync in commit mode; that branch never runs). Grepped `docs/planning/BACKLOG.md` and `docs/planning/uat-2026-08-08-followup.md` for how real adopters resolved their own F9 instances: `mts-system` and `wsfct` both independently chose to **track** the file (not gitignore it) and `mts-system` added a `.gitignore` comment explaining why — the follow-up UAT audit confirmed both resolved with the actual git commands, not just "looks resolved." Put the resulting fork in the road — gitignore it (matching `dashboard.html`, discards local trend history) vs. track+document (matching the confirmed-resolved precedent) — to the operator via `AskUserQuestion` rather than picking from the literal phrasing alone; operator chose track+document. Read `mts-system`'s actual `.gitignore` comment (a different repo on this machine, read-only) and matched its wording here for ecosystem consistency. Implementation: `git add`ed `dashboard_history.jsonl` (2 pre-existing snapshots, 2026-08-04/2026-08-09, untouched); added a `.gitignore` comment stating the deliberate asymmetry; added one sentence at each of `starter-kit/BOOTSTRAP.md`'s two existing `dashboard.html`/`.gitignore` mentions (Step 2 line 121, Step 9 "Per-Project Setup" line 296) documenting `dashboard_history.jsonl`'s opposite treatment — closing the "nowhere documented" gap F9 named as root cause. `starter-kit/BOOTSTRAP.md` is TRACKED in `bin/_manifest.py`, so this reaches adopters on their next `bin/sync`. Full `bin/tests.sh` 185/186 confirmed before and after (Test 9's expected upstream-404 baseline, unaffected by these files); `bin/check-links` OK (88/22).
+next_steps: No BL-N item existed for this (tracked only via UAT cross-references and `HANDOFFS.md` carryover since S63) — nothing to remove from `BACKLOG.md`. This closes the last item S68's `next_steps` called "the smallest of the lot." Remaining, unchanged from S68: a batch of prepared-but-unopened distributed fixes (BL-13, BL-14's distributed half, BL-17's distributed half, BL-21, BL-22, Learning #22) ready to open upstream pending an explicit operator go-ahead — batch together, don't send one alone; PR #66's 3 posted review comments await the maintainer; upstream issue #65 open; `airqino`/`church_growth`/`model_project_constructor` UAT re-runs untouched. Separately, not this session's scope but noticed in passing: `tools/methodology_dashboard.py` run in-place (`python3 tools/methodology_dashboard.py` from this repo's root, or via a relative path from its parent) reports "No projects found" rather than single-project-scanning this repo — the working portfolio-root copy at `/Users/rmsharp/Development/methodology_dashboard.py` (v2.14.0, synced) scans fine. Not investigated further (out of scope for this session); a future session touching the dashboard's path-resolution logic should check this.
+key_files: `.gitignore:3-5` (the new asymmetry comment), `starter-kit/BOOTSTRAP.md:121` (Step 2 mention) and `:296` (Step 9 "Per-Project Setup" mention), `dashboard_history.jsonl` (newly tracked, 2 pre-existing snapshot lines, content unchanged by this session), `CHANGELOG.md` (this session's `[ad hoc]` substantive entry, immediately above the S68 `commit:` reconcile from Phase 0), `docs/planning/uat-2026-08-04-six-adopters.md:346` (F9's original finding, read not edited — out of scope, it audits the six *other* adopters, not this repo), `docs/planning/uat-2026-08-08-followup.md:176-225` (the `mts-system`/`wsfct` confirmed-resolved precedent this session's fix matches).
+gotchas: The user's literal phrasing ("fix the gitignore issue") pointed at the opposite of the evidence-based right answer — gitignoring the file would have silently discarded the only copy of this repo's health-trend history, and would have diverged from what two real adopters already converged on and had confirmed-resolved by a prior audit. Reading F9's *original* finding text (not just the "still open" carryover phrase repeated in five straight sessions' `next_steps`) was what surfaced the actual root cause and the adopter precedent — the carryover phrase alone ("`.gitignore` lists `dashboard.html` but not this newer sibling file") reads as if the fix direction were obvious and literal. A future session should be wary of treating a repeatedly-carried-forward one-line gloss as the full finding; go back to the finding's own paragraph when it's about to become an action.
+runtime_smoke: Docs/config-only session — no dashboard code touched, no runtime behavior changed (tracking a file in git does not alter what `methodology_dashboard.py` does at runtime). `bin/tests.sh` 185/186 both before and after (Test 9's expected upstream-404, unaffected). `git check-ignore -v dashboard_history.jsonl` confirmed exit 1 (not ignored) after the `.gitignore` edit. `python3 bin/check-links` OK (88/22) after the `BOOTSTRAP.md` edits.
+changelog_ref: CHANGELOG.md "2026-08-10 · [ad hoc] Fix UAT F9's own instance: `dashboard_history.jsonl` tracked + documented, not left unmanaged", plus the Phase 0 reconcile entry ("S68's `commit:` field → `8a5d4b0` — 40th discharge") immediately below it, and this close-out's own entry to follow.
+commit: pending
 ```
+Self-score **8/10.** **+** Did not act on the user's literal phrasing ("gitignore issue") without
+first reading F9's own finding — that literal reading pointed the wrong direction, and following it
+would have permanently discarded this repo's only copy of its health-trend history. **+** Found and
+verified the actual precedent (two real adopters, independently converged, confirmed-resolved by a
+prior audit using real git commands) rather than reasoning from the framework's design intent alone.
+**+** Surfaced the resulting fork in the road to the operator via `AskUserQuestion` with the concrete
+trade-off, rather than silently picking the non-obvious-but-correct answer. **+** Matched
+`mts-system`'s own `.gitignore` comment wording for ecosystem consistency rather than inventing new
+phrasing. **+** Kept the change to 3 files, well under the blast-radius cap, and confirmed the full
+suite unaffected before and after. **−** Added no automated guard against this drift recurring — a
+future session's `dashboard_history.jsonl` run elsewhere, or a `.gitignore` edit that drops the
+comment, would not be caught by any test; this fix is durable only because it is now documented in
+two places, not because anything enforces it. **−** Noticed but did not chase the unrelated
+`tools/methodology_dashboard.py` in-place "No projects found" quirk found while orienting — correctly
+out of scope, but worth a sharper flag than a `next_steps` aside if it turns out to matter.
+
+Predecessor **S68: 8/10.** Its `next_steps` named this exact item by tag (F9), file, and one-line
+cause, and correctly flagged it as "the smallest of the lot" — accurate, and this session did finish
+in one pass. **Docked, not for an error but for a gap the carryover phrasing created:** S68's own
+`next_steps` (like S65's, S66's, and S67's before it) repeated only F9's one-line gloss, not a
+pointer to F9's own finding paragraph or the adopter-precedent doc — five sessions in a row carried
+the same summary forward without any of them noting that the summary reads as instructing the wrong
+fix. Reading F9's original text was what this session needed to do the right thing, and nothing in
+S68's handoff pointed there directly.
 
 ---
 

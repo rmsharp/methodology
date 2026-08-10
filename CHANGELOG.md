@@ -152,6 +152,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Fix UAT F9's own instance: `dashboard_history.jsonl` tracked + documented, not left unmanaged
+
+**Model:** Claude Sonnet 5.
+Operator-directed. UAT F9 (`docs/planning/uat-2026-08-04-six-adopters.md:346`) found `dashboard_history.jsonl`
+undocumented anywhere `dashboard.html` is, and reproduced the resulting inconsistency in this
+canonical repo itself: an untracked, unignored file at the repo root, left in place at the time
+(disclosed then, not fixed). Two real adopters (`mts-system`, `wsfct`) have since independently
+converged on the same resolution and the follow-up UAT audit confirmed both: **track** the file
+rather than gitignore it, since — unlike `dashboard.html`, fully regenerated every run —
+`dashboard_history.jsonl` only appends, so it is the sole place the health-trend history lives.
+Put to the operator via `AskUserQuestion` (track-and-document vs. gitignore, matching `dashboard.html`);
+operator chose track-and-document. `git add`ed the file (2 existing snapshots, 2026-08-04/2026-08-09).
+Added a `.gitignore` comment explaining the deliberate asymmetry, worded to match `mts-system`'s own
+`.gitignore` comment for the identical fix (ecosystem consistency). Documented both artifacts'
+opposite treatment in `starter-kit/BOOTSTRAP.md` at both existing `dashboard.html`/`.gitignore`
+mentions (Step 2, Step 9 Per-Project Setup) — the "nowhere documented" gap F9 named as root cause.
+Full `bin/tests.sh` 185/186 before and after (Test 9's expected upstream-404, unaffected); `bin/check-links`
+OK (88/22). No BL-N item existed for this — it was tracked only via UAT-report cross-references and
+`HANDOFFS.md` `next_steps` carryover since S63; recorded here as `[ad hoc]` accordingly.
+
 ### 2026-08-10 · [ad hoc] Reconcile-on-read: S68's `commit:` field → `8a5d4b0` — 40th discharge, found at Phase 0 orientation
 
 **Model:** Claude Sonnet 5.
