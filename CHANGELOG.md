@@ -152,6 +152,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] S76 close-out — receipt written, self-score 9/10; see the diagnostic entry below for the substantive work
+
+**Model:** Claude Sonnet 5.
+Phase 3A/3B/3D: evaluated S75's handoff (7/10 — accurate BL-31/PR state, but its `next_steps`
+carried "PRs #68/#69/#70 still open awaiting review" forward as unchanged without re-running
+`gh pr list --json mergeable`, even though PR #66 had already merged by the time S75 ran and the
+conflict was likely already live; a five-second check would have caught it). Self-assessed 9/10:
+used `git merge-tree` for a real 3-way merge simulation rather than inferring the cause from PR
+metadata alone, cross-checked the timing theory against PR #71 (the one PR that doesn't conflict)
+instead of assuming it, and stopped at the diagnostic boundary — did not rebase/force-push the
+open PR branches, since that touches upstream PR state and needs a go-ahead. Receipt: `HANDOFFS.md`.
+
 ### 2026-08-11 · [ad hoc] Diagnosed why upstream PRs #68/#69/#70 turned `CONFLICTING` — root cause found, not fixed
 
 **Model:** Claude Sonnet 5.
