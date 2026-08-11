@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **9**; the oldest **19**
+**Older receipts are archived.** This file currently holds **10**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -39,9 +39,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ```handoff
 session: S71
 date: 2026-08-10
-status: pending
-active_task: Operator-directed — verify and act on the church_growth/BACKLOG.md:4-20 Active item (a flag asking a future canonical-repo session to fix detect_doc_only()'s self-referential source-LOC miscount). Verification found the fix already shipped here 2026-07-25 (Layer 7, `ae9e5b7`/`ef71946`/`6f10460`/`d78cd41`) -- confirmed empirically, read-only, against church_growth's real tree (source loc 0 after vendor reclassification; detect_doc_only returns is_doc_only=True, reason=heuristic even with the .methodology-profile marker temporarily removed and restored). Deliverable: correct church_growth's BACKLOG.md record to reflect verified-fixed-upstream status (not "needs a canonical fix"), with the matching church_growth CHANGELOG.md entry.
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Operator-directed — verify and act on the church_growth/BACKLOG.md:4-20 Active item (a flag asking a future canonical-repo session to fix detect_doc_only()'s self-referential source-LOC miscount). COMPLETE.
+what_was_done: Commit `6cdf18d` (claim) → `0dbf26e` (this repo's substantive commit); a separate, disclosed commit in `church_growth` (`3035560`, different repo, not counted as this session's own). Read `church_growth/BACKLOG.md:4-20` fresh (FM #20, not from S70's carryover summary) and, before treating it as a fix request, verified its claim empirically rather than trusting the prose (FM #11): ran the current canonical `tools/methodology_dashboard.py` (v2.14.0) against `church_growth`'s real tree — `source loc` 0 after Layer 7's vendor reclassification of the dashboard script itself — then temporarily moved `church_growth/.methodology-profile` aside and reran `detect_doc_only()`, which returned `is_doc_only=True, reason='heuristic'` with no marker present, then restored the marker immediately (`git status --porcelain` confirmed clean in `church_growth` before and after). Found the requested fix had already shipped 2026-07-25 ("Layer 7", `ae9e5b7`/`ef71946`/`6f10460`/`d78cd41`) — four days after the item was filed (2026-07-21) and 16 days before this verification, unbeknownst to the item's own carried-forward text. Presented the finding and a scoped-down deliverable to the operator before acting (a materially different task than "implement a fix"); operator said "proceed." Rewrote `church_growth/BACKLOG.md`'s Active item from "needs a canonical fix" to "verified fixed upstream; local resync optional" and added the matching `church_growth/CHANGELOG.md` entry, then committed both together there (that repo's pre-commit ledger-co-staging hook requires it, matching S70's precedent). In this repo: no new or extended `BL-N` item (nothing here is unfixed — BL-22 left untouched rather than folded into a non-defect); distilled the pattern into Framework Learning #23 (`starter-kit/FRAMEWORK_LEARNINGS.md`, append-only, verified non-duplicate against the full existing table first).
+next_steps: This item is fully closed — no further action owed on it by either repo (church_growth's local resync is optional/low-priority, noted in its own BACKLOG.md, not tracked here). Unchanged from S70, still open: BL-29 needs an actual fix (re-read `0e188f5` first — a prior naive fix was rejected for a specific write-path collision reason a second attempt could reintroduce); BL-30 is a watch item, check when `methodology_trim.py` next fires in `mts-system`/`vscode_quarto_ext`/`wsfct`; a batch of prepared-but-unopened distributed fixes (BL-13, BL-14's distributed half, BL-17's distributed half, BL-21, BL-22, Learning #22, and now Learning #23) is ready to open upstream as one PR pending an explicit operator go-ahead; PR #66's 3 posted review comments await the maintainer; upstream issue #65 open. This repo is 10 commits ahead of `origin/main`, unpushed — no push occurred without operator direction.
+key_files: `church_growth/BACKLOG.md:4-21` (rewritten Active item), `church_growth/CHANGELOG.md:53-66` (new entry, this session's addition above the S70-era Component-C note), `CHANGELOG.md:155-178` (two new `[ad hoc]` entries: Learning #23 addition, then the church_growth verification itself, both above the S70 close-out entry), `starter-kit/FRAMEWORK_LEARNINGS.md:45` (new row 23, append-only), `HANDOFFS.md` (this receipt; also corrected the front-matter receipt count 9 → 10, the same drift class S70 fixed for its predecessor).
+gotchas: The verification technique — temporarily `mv` a `.methodology-profile` marker aside, re-run the read-only detection function, `mv` it back, confirm `git status --porcelain` clean before and after — is a safe, repeatable pattern for testing "would this repo self-classify correctly without its workaround," worth reusing whenever a similar override-masks-a-maybe-fixed-bug question comes up. Separately, a real gap remains even though this item is closed: `church_growth`'s own installed `methodology_dashboard.py` copy is still `DASHBOARD_VERSION 2.8.0` (2026-07-11) — a scan run *from church_growth itself*, using its own vendored copy, would still misclassify, because the fix lives in the scanner's CODE, not in a version string a marker could route around. Verifying "is this fixed" always means running the CURRENT canonical/portfolio-root copy against the target tree, never the target's own possibly-stale installed copy — a future verification session should not assume a target's local scanner reflects canonical HEAD.
+runtime_smoke: Docs-only session — no dashboard code touched, no runtime behavior changed. `bin/tests.sh` 185/186 confirmed after this session's edits (Test 9's expected upstream-404 baseline, unaffected — the two files it names, `starter-kit/FRAMEWORK_LEARNINGS.md` and `starter-kit/methodology_trim.py`, are the same pre-existing gap, not newly caused by this session). `python3 bin/check-links` OK (88/22). The empirical verification itself was read-only Python (`collect_file_metrics`/`collect_render_metrics`/`detect_doc_only` imported directly from `tools/methodology_dashboard.py`, never `main()` or `--sync`), confirmed no stray writes in `church_growth` via `git status --porcelain` immediately before and after the marker move.
+changelog_ref: CHANGELOG.md "2026-08-10 · [ad hoc] Add Framework Learning #23 — a backlog item naming a defect is a claim frozen at filing time, not a live read of current behavior" and "2026-08-10 · [ad hoc] Verified church_growth/BACKLOG.md's doc-only self-scan item already fixed upstream; corrected the record there", both immediately above the S70 close-out entry; plus `church_growth/CHANGELOG.md`'s own new entry, a different repo's ledger.
+commit: 0dbf26e
 ```
+Self-score **8/10.** **+** Did not implement the fix the task pointed at on its literal framing —
+verified it empirically against the real code and real repo first, and it turned out to already be
+shipped, four days after the item was filed and unnoticed through a two-week carryover including
+last session's own audit. Surfaced that as a materially different, smaller deliverable and got
+explicit "proceed" before touching a second repo. **+** The verification was read-only-then-reversed
+(`.methodology-profile` moved aside, tested, restored) with `git status --porcelain` checked clean
+both sides, not just "looked right." **+** Checked the full `FRAMEWORK_LEARNINGS.md` table for an
+existing duplicate before adding Learning #23, rather than assuming novelty. **+** Matched
+`church_growth`'s own commit-message and CHANGELOG.md style exactly, and its pre-commit hook forced
+both files staged together, same discipline S70 followed there. **+** Full `bin/tests.sh` (185/186)
+and `bin/check-links` (88/22) both confirmed unaffected after the edits. **−** Did not verify whether
+`church_growth`'s own portfolio-level scan (as opposed to a scan run from within `church_growth`
+using its stale local copy) already reflects the fix in practice — the empirical test used the
+canonical copy directly, which answers "is the fix real" but not "does this adopter's current
+day-to-day tooling see it," a narrower question this session didn't chase. **−** The Learning #23 row
+is long even by this table's own standard (four `**bold**` clauses) — could have been tightened
+without losing the tell/repair structure.
+
+Predecessor **S70: 8/10.** Its `next_steps` named `church_growth/BACKLOG.md:4-20` precisely, by file
+and line range, with an accurate quote of the item's content — that precision is why this session
+could act on it directly instead of re-discovering it. **Docked, not for an error but for a framing
+gap this session had to correct:** S70 characterized the item as "closely related to — arguably a
+concrete, implementable extension of — this repo's own BL-22" and asked a future session to "decide
+whether to extend BL-22 or raise a new item," which primed the assumption that *some* canonical-repo
+action was still owed. S70 never claimed the defect still reproduced — it explicitly deferred that
+judgment — but the framing's center of gravity was "what fix," not "does this still need one," and a
+faster read of the handoff alone could have gone straight to re-implementing already-shipped code. A
+sharper `next_steps` would have flagged the item's age (three weeks between discovery and S70's own
+read of it) as a reason to re-verify before assuming the ask still held — exactly what Learning #23
+now names explicitly for future sessions to apply.
 
 ---
 

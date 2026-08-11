@@ -152,6 +152,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S71 close-out — receipt written, self-score 8/10; see the `[ad hoc]` entries below for the substantive work
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S71 stub overwritten in place to `status: complete` with all six Minimum Handoff
+Requirements. Also corrected `HANDOFFS.md`'s own front-matter receipt count (9 → 10, the same drift
+class S70 fixed for its predecessor). No separate substantive action beyond the receipt itself — the
+verification and the Learning addition are described in the two sibling entries immediately below.
+
 ### 2026-08-10 · [ad hoc] Add Framework Learning #23 — a backlog item naming a defect is a claim frozen at filing time, not a live read of current behavior
 
 **Model:** Claude Sonnet 5.
