@@ -1,7 +1,14 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23, BL-26, BL-30 and BL-31 are open** (**BL-31 raised 2026-08-11 (S74)** —
+> BL-20, BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-32 raised 2026-08-11**,
+> not a session claimed in this repo — reported by an operator conversation relaying a live
+> `nprcgenekeepr` session's own investigation, independently verified against this repo's canonical
+> `starter-kit/methodology_trim.py` before being recorded: its `LEDGERS` config table covers only
+> `CHANGELOG.md`/`HANDOFFS.md`, with no supported path for a third ledger-shaped file, and the
+> reporting session's own reading of the tool's "no generic fallback" comment as an invitation to add
+> local entries does not hold up on a direct re-read; see its own entry. **BL-31 raised 2026-08-11
+> (S74)** —
 > a live `upstream/main` dashboard-exclusion gap found while re-verifying BL-26's PR #66 fixes, not
 > fork-fixable; **PR opened 2026-08-11 (S75), operator-directed** —
 > [KJ5HST/methodology#71](https://github.com/KJ5HST/methodology/pull/71), open, `MERGEABLE`; see its
@@ -1083,6 +1090,56 @@ commit — verified via `git log -1 --format="%H parent=%P"` before pushing. Not
 the bad state. PR: [KJ5HST/methodology#71](https://github.com/KJ5HST/methodology/pull/71), open,
 `MERGEABLE`. Not yet reviewed/merged — nothing further owed here unless the maintainer asks for
 changes.
+
+**BL-32 — `methodology_trim.py`'s `LEDGERS` config table covers only the two ledgers the framework
+itself owns; an adopter with a third grow-and-must-be-read file has no supported path to trim it.**
+*Raised 2026-08-11, reported by an operator conversation relaying a live `nprcgenekeepr` Claude Code
+session's own investigation into a "ledger-size trim" deliverable there — not a session claimed in
+this repo. Independently verified against this repo's own canonical source before being recorded
+here. Measured, not fixed (FM #17).*
+
+**The defect, verified here.** `starter-kit/methodology_trim.py:161` — `LEDGERS = {` — has exactly
+two keys, `"CHANGELOG.md"` and `"HANDOFFS.md"`; there is no `tools/` twin (this file has always had a
+sole canonical copy, per BL-27/BL-28's own fix notes). A ledger-shaped file with no entry hits
+`NO_CONFIG` in `evaluate()` (`:1508-1513`) and exits 3. `nprcgenekeepr` (a portfolio adopter, distinct
+from this fork) has two more grow-and-must-be-read files needing the same treatment as
+CHANGELOG.md/HANDOFFS.md: `SESSION_NOTES.md` (a canonical starter-kit template — reported at 40,252
+lines, ~20× the 2,000-line agent `Read` cap) and `BACKLOG.md` (project-bespoke, no starter-kit
+template — reported at ~2,181 lines, ~1× over). Neither can be trimmed by the shipped tool as it
+stands. The two file sizes above are as reported by the adopter session, not independently
+re-measured in that repo by this one.
+
+**Reported extensibility claim, checked here and found NOT to hold.** The reporting session
+characterized the tool's own design comment as inviting adopters to add their own `LEDGERS` entries.
+Re-read directly (`:131-132`, restated at `:1511-1512`): *"It does NOT fall back to a generic rule,
+because a generic rule is exactly what would mis-zone an adopter's differently-shaped ledger (design
+§6.3)."* That is the tool's stated reason for having **no** generic/auto-detected fallback at all —
+every `LedgerSpec` is deliberately hand-authored (content probe, footer mode, seed negation,
+regenerated-field handling, each individually reasoned through — see the two existing entries,
+`:162-212`) precisely because guessing a ledger's shape risks silently corrupting it. Read plainly,
+the comment argues **against** ad hoc adopter-authored specs, not for them.
+
+**Why that correction matters, not just its accuracy.** It weakens the reporting session's own
+leading option — hand-add `SESSION_NOTES.md`/`BACKLOG.md` entries locally, flag the risk — on two
+independent grounds, not one: (1) `methodology_trim.py` is classified **Tracked** in
+`starter-kit/BOOTSTRAP.md:354` — *"overlay — replace with the latest"*, the same bucket as
+`SESSION_RUNNER.md`/`SAFEGUARDS.md` — so `bin/sync` silently discards any local edit to it, and no
+existing survive-the-sync mechanism covers this shape of edit (the closest precedent, the
+never-overwrite list for adopter-*owned* whole files, was built for a different problem — a whole
+file an adopter owns outright, not a partial hand-edit inside a canonical overlay file); (2) a
+hand-written spec assembled without the same design rigor the two shipped ones required is exactly
+the "mis-zone a differently-shaped ledger" failure the tool's own comment exists to prevent.
+
+**Scope, not yet decided.** No project in the local portfolio (`mts-system`, `nprcgenekeepr`,
+`vscode_quarto_ext`, `wsfct`) has ever extended `LEDGERS` — as reported by the adopter session, not
+independently re-verified across those other three repos here. Adjacent to **BL-30** (the watch item
+on where `methodology_trim.py` has/hasn't fired outside `nprcgenekeepr`) — the other three repos will
+hit this same wall the moment any of them grows a third ledger-shaped file past its own trim trigger.
+Whether the right fix is (a) a canonical `LedgerSpec` for `SESSION_NOTES.md` shipped in this repo (it
+is, after all, a framework-standard filename every adopter gets), with `BACKLOG.md` left as
+project-bespoke and out of scope; (b) a documented, supported adopter-extension mechanism with its
+own sync-survival story; or (c) something else — **is a decision, not yet made, and not this entry's
+to make.** Nothing here was implemented, and no upstream/outward-facing action was taken.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

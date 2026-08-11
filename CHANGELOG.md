@@ -152,6 +152,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [BL-32] `methodology_trim.py`'s `LEDGERS` table has no path for a third adopter ledger — raised, not fixed
+
+**Model:** Claude Sonnet 5.
+Not a session claimed in this repo — reported by an operator conversation relaying a live
+`nprcgenekeepr` Claude Code session's own investigation into a "ledger-size trim" deliverable there,
+independently verified against this repo's canonical source before being recorded.
+`starter-kit/methodology_trim.py:161`'s `LEDGERS` config table has exactly two entries,
+`CHANGELOG.md`/`HANDOFFS.md`; a third grow-and-must-be-read file (there: `SESSION_NOTES.md`, reported
+at ~20× the 2,000-line agent `Read` cap) has no supported trim path. `methodology_trim.py` is
+**Tracked**/overlay per `starter-kit/BOOTSTRAP.md:354` — `bin/sync` would silently discard a local
+`LEDGERS` edit. Also corrects the reporting session's own characterization of the tool's "no generic
+fallback" design comment (`:131-132`) as inviting adopter-added entries — re-read directly, it states
+the opposite: no generic fallback exists precisely because guessing a ledger's shape risks corrupting
+it. Recorded as `docs/planning/BACKLOG.md` BL-32, adjacent to BL-30; the right disposition (canonical
+`LedgerSpec` vs. a supported extension mechanism vs. something else) is an open decision, not made
+here.
+
 ### 2026-08-11 · [ad hoc] S75 close-out — receipt written, self-score 8/10; see the `[BL-31]` entry below for the substantive work
 
 **Model:** Claude Sonnet 5.
