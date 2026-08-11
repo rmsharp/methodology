@@ -152,6 +152,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S73 close-out — receipt written, self-score 9/10; see the `[BL-13]`/`[BL-14][BL-17]`/`[BL-21]`/`[BL-22]` entries below for the substantive work
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S73 stub overwritten in place to `status: complete` with all six Minimum Handoff
+Requirements. Also corrected `HANDOFFS.md`'s own front-matter receipt count (11 → 12) — a drift
+this session's own claim commit introduced and had not yet corrected. No separate substantive
+action beyond the receipt itself — the four fixes are described in the entries immediately below
+(commit `a1c6180`).
+
 ### 2026-08-10 · [BL-22] Documented and pinned the dashboard's doc-only detection thresholds — PR opened upstream
 
 **Model:** Claude Sonnet 5.
