@@ -152,6 +152,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [BL-31] Fix opened upstream — dashboard's framework-installed exclusion extended for the context-budget gate
+
+**Model:** Claude Sonnet 5.
+Operator-directed: offered "flag BL-31 upstream" vs. "continue fork-side only" vs. "something else";
+operator chose flagging it, specifically "open an issue (or small PR) against KJ5HST/methodology
+describing/fixing it." Re-verified `upstream/main` unchanged since the prior session's `a2a7275`
+measurement — no drift. Built and tested the fix in an isolated `git worktree` branched from
+`a2a7275` (this fork's own tree carries neither `context_budget.py` nor `.context-budget.json`, so
+nothing here is fork-side): `FRAMEWORK_INSTALLED_SOURCE` extended to `("methodology_dashboard.py",
+"context_budget.py", ".context-budget.json")` (mirrored `tools/`+`starter-kit/`), `CHECKLIST_EXEMPT`
+(in `tools/test_methodology_dashboard.py`) gains both new dests with the same reasoning already on
+record for `methodology_dashboard.py`'s own entry, `DASHBOARD_VERSION` 2.10.2 → 2.10.3. Verified:
+`python3 -m unittest tools/test_methodology_dashboard.py` 197/197 (was 195/197), `bash bin/tests.sh`
+114/114, `python3 bin/check-links` OK (83/21), twins byte-identical. **Corrected the prior session's
+own test attribution while re-deriving it** — one of the two cited failures was actually in a
+different test class (`TestChecklistCurrency`, not `TestFrameworkInstalledExclusion`) than recorded,
+naming a real second defect (the checklist-exempt gap, not just the source-exclusion gap) the prior
+prose had collapsed into one; see BL-31's own entry for the correction in full. **One mistake caught
+and recovered before it reached anything pushed:** a first commit attempt was blocked by upstream's
+own `CHANGELOG.md`-ledger pre-commit hook, and the immediate `git commit --amend --no-edit` landed
+the fix as an amend of the PR #66 merge commit itself rather than a new commit on top of it — caught
+by reading `git log` right after rather than assuming success, recovered by diffing the bad commit
+against its parent, hard-resetting to the real merge commit, and reapplying the diff as a fresh,
+correctly-parented commit, verified via `git log -1 --format="%H parent=%P"` before pushing.
+Opened [KJ5HST/methodology#71](https://github.com/KJ5HST/methodology/pull/71) — open, `MERGEABLE`,
+not yet reviewed.
+
 ### 2026-08-11 · [BL-31] Live `upstream/main` dashboard-exclusion gap found while re-verifying PR #66 — raised, not fixed
 
 **Model:** Claude Sonnet 5.

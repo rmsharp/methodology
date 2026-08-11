@@ -3,7 +3,9 @@
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
 > BL-20, BL-21, BL-22, BL-23, BL-26, BL-30 and BL-31 are open** (**BL-31 raised 2026-08-11 (S74)** —
 > a live `upstream/main` dashboard-exclusion gap found while re-verifying BL-26's PR #66 fixes, not
-> fork-fixable; see its own entry. **BL-26's PR #66 thread CLOSED 2026-08-11 (S74)** — PR #66 merged
+> fork-fixable; **PR opened 2026-08-11 (S75), operator-directed** —
+> [KJ5HST/methodology#71](https://github.com/KJ5HST/methodology/pull/71), open, `MERGEABLE`; see its
+> own entry. **BL-26's PR #66 thread CLOSED 2026-08-11 (S74)** — PR #66 merged
 > upstream, both S67 review-comment findings confirmed genuinely fixed before merge; BL-26's issue #67
 > thread remains open on its own. **BL-29 and BL-30 raised 2026-08-10
 > (S70)**, operator-directed, out of a cross-repo investigation into whether adopting the methodology
@@ -1048,6 +1050,39 @@ does not carry `context_budget.py`"). It is upstream's defect to fix, in upstrea
 add either, so nothing here is fork-side-fixable the way BL-20/BL-22 were). **Whether/how to flag
 this to the maintainer is an outward-facing decision needing an explicit go-ahead**, same rule as
 BL-23/BL-26's issue-#67 thread.
+
+**PR OPENED upstream 2026-08-11 (S75), operator-directed** (chose "open an issue/small PR
+describing/fixing it" over fork-side-only continuation, offered as one of two options): re-verified
+`upstream/main` first — unchanged since S74's `a2a7275` measurement, no drift. **Correcting S74's own
+test attribution while re-deriving it (this file's own header warns not to trust a number without
+re-checking):** S74 named both failures as inside `TestFrameworkInstalledExclusion`
+(`test_no_manifest_file_is_unaccounted_for` + `test_exclusion_list_matches_the_manifest`). Re-running
+`python3 -m unittest tools/test_methodology_dashboard.py` against a fresh worktree at `a2a7275` found
+the first failure is actually `test_every_distributed_adopter_root_file_is_scored_or_exempt` in a
+*different* class, `TestChecklistCurrency` — a real second defect (the compliance-checklist
+`CHECKLIST_EXEMPT` map, not just `FRAMEWORK_INSTALLED_SOURCE`) that S74's prose collapsed into one.
+No `test_no_manifest_file_is_unaccounted_for` exists in the test file at all. Both are pre-existing
+tests (last touched `bec4095`, before PR #66), not newly authored. Fix: extended
+`FRAMEWORK_INSTALLED_SOURCE` to `("methodology_dashboard.py", "context_budget.py",
+".context-budget.json")` (mirrored `tools/`+`starter-kit/`) and `CHECKLIST_EXEMPT` (in
+`tools/test_methodology_dashboard.py`) with both new dests, same reasoning already on record for
+`methodology_dashboard.py`'s own exemption; `DASHBOARD_VERSION` 2.10.2 → 2.10.3. Built and verified in
+an isolated `git worktree` branched from `a2a7275` (not this repo's own tree, which carries neither
+file): `python3 -m unittest tools/test_methodology_dashboard.py` 197/197 (was 195/197), `bash
+bin/tests.sh` 114/114, `python3 bin/check-links` OK (83/21), twins byte-identical. **One recovered
+mistake, not shipped:** the comment first drafted for `FRAMEWORK_INSTALLED_SOURCE` cited this fork's
+own `BL-31` id directly inside upstream/adopter-installed source — caught before committing and
+reworded to describe the defect in neutral terms with no fork-only vocabulary, the exact class BL-11
+already flagged (fork ID shipped inside adopter-installed code). **Also caught and recovered before
+pushing:** the first commit attempt was blocked by upstream's own pre-commit `CHANGELOG.md`-ledger
+hook; running `git commit --amend --no-edit` immediately after landed the fix as an amend of the PR
+#66 *merge commit itself* (`a2a7275` → `142e807`) rather than a new commit on top of it — caught by
+reading `git log` right after, not assumed clean. Recovered with `git diff a2a7275 142e807 -- <4
+files> > patch`, `git reset --hard a2a7275`, `git apply patch`, then a fresh, correctly-parented
+commit — verified via `git log -1 --format="%H parent=%P"` before pushing. Nothing was pushed during
+the bad state. PR: [KJ5HST/methodology#71](https://github.com/KJ5HST/methodology/pull/71), open,
+`MERGEABLE`. Not yet reviewed/merged — nothing further owed here unless the maintainer asks for
+changes.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
