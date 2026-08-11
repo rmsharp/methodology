@@ -37,6 +37,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S73
+date: 2026-08-10
+status: pending
+active_task: Operator-directed -- prepare and open one upstream PR against KJ5HST/methodology bundling the accumulated prepared-but-unopened distributed work: BL-13 (RECOMMENDED_SKILLS.md:94's `/caveman` row, upstream's own citation fix left an unattributed false claim standing), BL-14's distributed half (the `commit:` reconcile promise in starter-kit/HANDOFFS.md with no procedure assigning it), BL-17's distributed half (bless the quoted `### ` heading as a third changelog_ref locator form), BL-21 (two seed sentences for the Phase 1B pre-commit exemption, contingent on whether .githooks/pre-commit itself is being contributed), BL-22 (DOC_ONLY_SOURCE_LOC_MAX=200, an unexamined constant -- deliverable is a decision), Learning #22, and Learning #23. Per CLAUDE.md's stated purpose (this fork exists to update upstream) and its one rule (do the vetting here first, get explicit go-ahead before any outward-facing action). Deliverable: each item re-verified against the CURRENT live tree and upstream/main (not stale BACKLOG.md prose, per FM #20), a single tested branch, PR description drafted, explicit operator go-ahead obtained before `gh pr create` runs.
+```
+
+---
+
+```handoff
 session: S72
 date: 2026-08-10
 status: complete
