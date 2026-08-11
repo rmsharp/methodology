@@ -275,6 +275,12 @@ is a weaker sibling: upstream's replacement is *true but unlocated* (it describe
 architecture survey and points at nothing), where `1eac7a4` cited
 `INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md` §Sub-Agent Dispatch Pattern. Not false; note it,
 do not bundle it.
+**PR OPENED 2026-08-10 (S73):** [upstream PR #68](https://github.com/KJ5HST/methodology/pull/68),
+re-verified against `upstream/main` fresh (no drift since this item was raised — `upstream/main` had
+not advanced past the `e02538b` resync at all), re-grounded the row on FM #15 + the Minimum Handoff
+Requirements rather than reusing `1eac7a4`'s wording verbatim (that text answered a since-superseded
+corpus state — a dangling `Learning #34` citation that no longer exists to remove). `bin/tests.sh`
+84/84 and `bin/check-links` OK on the PR branch. Awaiting maintainer review; not yet merged.
 
 **BL-14 — The `commit:` answer slot: a distributed promise with no owner and no detector.**
 *Raised and PARTIALLY CLOSED 2026-08-02 (S28). The fork-side half shipped; the distributed half is
@@ -334,6 +340,23 @@ archive.
 **Upstream's copy of S6 is upstream's to fix.** `upstream/main` still carries that receipt as
 `session: S2, commit: pending`; the fork reconciled its own renumbered copy to `21fb521`, the only
 sha that is an ancestor of *both* repos. No upstream action taken.
+**DISTRIBUTED half — PR OPENED 2026-08-10 (S73):**
+[upstream PR #69](https://github.com/KJ5HST/methodology/pull/69), choosing fork **(B) delete the
+promise** over (A) schedule it — re-verified live: upstream's Phase 0 step 6 is byte-identical to
+the fork's (confirmed by diff), never mentions `commit:` at all, and (A)'s real footprint turned
+out larger than "add a case" (Phase 0's write permission is explicitly *append-only*; reconciling
+an existing receipt's `commit:` field in place is a mutation, not an append — a doctrinal conflict
+(A) would have to resolve first). Re-derived the "seven distributed `status: pending` sites" this
+item cites: the same grep now returns **11**, not 7, on the current tree — none of the 11 mention
+`commit:`, so (B)'s edit stays confined to `HANDOFFS.md` alone regardless. **Bundled with BL-17 in
+the same PR** (same file, adjacent lines, one review pass). `bin/tests.sh` 84/84 and
+`bin/check-links`/`bin/check-handoff` OK on the PR branch. Awaiting maintainer review; not yet
+merged. **A third instance of the same promise, fork-only, still open:** the investigating agent
+found a `starter-kit/HANDOFFS.md` "Size, and when to archive" section (fork-only — upstream has no
+equivalent, since upstream has no archiving) that restates the identical unkept promise at its own
+`:134-136`. Not part of the PR (nothing to fix upstream, since the section doesn't exist there);
+needs its own small fork-local fix in a future session so the fork's own copy doesn't cite a
+promise its own PR just deleted upstream.
 *Follow-ons raised, deliberately not bundled (FM #17):* **BL-15** — `changelog_ref` carries the
 identical escape in 13 of 32 receipts, but its false-positive surface is wider (a legitimately
 pending PR number is plausible). **BL-16** — `bin/check-handoff:301-303`'s docstring claims the
@@ -377,9 +400,15 @@ short-sha (unknowable while the receipt is being written). **0 of 32 receipts us
 invented the same third form — `CHANGELOG.md "<its ### heading>"` — and eight then reached for a
 line number on top. *That vacuum is why the anchors existed*, so the shipped prohibition treats the
 symptom and this item is the cause.
-- **The DISTRIBUTED half — prepared here, shipped upstream, needs a go-ahead.** Bless the quoted `### ` heading as a
+- **The DISTRIBUTED half — PR OPENED 2026-08-10 (S73).** Bless the quoted `### ` heading as a
   third locator form at `starter-kit/HANDOFFS.md:63`, and state that a line number is not a locator
   into a ledger. Per **Learning #8** a fix must reach every checklist restating close-out.
+  [upstream PR #69](https://github.com/KJ5HST/methodology/pull/69) (bundled with BL-14's
+  distributed half — same file, adjacent lines). Confirmed byte-identical against `upstream/main`
+  before editing; also found `bin/check-handoff`'s own remediation-hint text already teaches the
+  `CHANGELOG.md "<its ### heading>"` convention the spec never blessed, so the wording matches what
+  the checker already prints. `bin/tests.sh` 84/84 OK on the PR branch. Awaiting maintainer review;
+  not yet merged.
 - **The fork-side half, unblocked but deliberately deferred.** Stale quoted titles are the failure
   mode the shipped rule cannot see. Measured over 32 receipts: **22 resolve byte-exact, 9 more after
   folding markup only (backticks, `**bold**`, `--`/`—`, and — declare it, S29 did not at first — an
@@ -500,9 +529,17 @@ in each, no restructuring:
   claim commit."*
 **Verification when it ships:** `python3 bin/check-links` green; `bin/status` will show both files as
 drift for every adopter, so the `bin/status`→`bin/sync` pass is the second half of the work.
-**Blocked on the same thing everything distributed is blocked on** — the paused upstream channel —
-but note it is blocked *behind* a decision nobody has made yet: whether this hook is contributed at
-all. `.githooks/pre-commit` being canonical-only was itself a ratified decision (BL-6 item 3).
+**Blocked *behind* a decision nobody has made yet: whether this hook is contributed at all** —
+not on any general channel state (`.githooks/pre-commit` being canonical-only was itself a ratified
+decision, BL-6 item 3). **Re-verified 2026-08-10 (S73), NOT bundled into the PR batch opened this
+session** — the precondition is still unmet: `git grep -c githooks bin/_manifest.py` is still 0
+(never distributed to adopters), and `.githooks/pre-commit`'s Phase 1B exemption logic (`a56dff8`)
+is fork-only — confirmed `upstream/main`'s own canonical copy at the URL this item's own proposed
+sentences would cite has zero exemption logic (still the pre-exemption `dc8aa76` shape; the two
+files have also further diverged, not converged, since this item was raised — `.githooks/pre-commit`
+was BYTE-IDENTICAL to upstream when written, it is not now). Landing the two sentences now would
+describe a hook neither the cited canonical URL nor any adopter's copy actually has — the same
+false-on-arrival shape BL-21 itself was written to avoid. Leave exactly as scoped.
 
 **BL-22 — `DOC_ONLY_SOURCE_LOC_MAX = 200`: an unexamined round number, protected by no test, that
 decides a user-visible risk verdict in a DISTRIBUTED file.**
@@ -569,6 +606,20 @@ correct outcome.** Options: (a) derive a value from real adopter repos and recor
 a test so it cannot drift unnoticed. (c) is worth doing under any of the three. **Runnable fork-side;
 the fix lands in a DISTRIBUTED file, so the PR needs the operator's go-ahead** — batch it with the
 other distributed work rather than sending it alone.
+
+**DECIDED (b)+(c), PR OPENED 2026-08-10 (S73):**
+[upstream PR #70](https://github.com/KJ5HST/methodology/pull/70). Re-verified first that no prior
+session had actually made this decision despite being carried as "prepared" through seven handoffs
+(S66–S73) — `git log --all --grep="BL-22"` turns up only this item's own raise and this session's
+own claim, never a decision commit. (a) declined as disproportionate to a bundle-PR session (needs
+a defined measurement corpus this session doesn't have). Shipped: a comment above the three
+constants recording them as deliberate, unmeasured heuristics, plus a direct regression test
+(`test_doc_only_thresholds_are_pinned_not_left_to_drift`) pinning all three current values —
+`test_source_cap_boundary` already pinned `DOC_ONLY_SOURCE_LOC_MAX` *indirectly* via hardcoded
+200/201 literals, but that coverage would silently vanish if that fixture were ever rewritten to
+derive its boundary from the constant instead. `DASHBOARD_VERSION` 2.10.2 → 2.10.3 in both
+`tools/` and `starter-kit/` twins. `python3 tools/test_methodology_dashboard.py` 198/198 and
+`bin/tests.sh` 84/84 on the PR branch. Awaiting maintainer review; not yet merged.
 
 **BL-23 — Issue #65's proposed invariants collide with fork state issue #65 doesn't know about.**
 *Raised 2026-08-08 (S47), operator-directed review of #65 against work planned for an upstream PR.

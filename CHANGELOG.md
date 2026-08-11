@@ -152,6 +152,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [BL-22] Documented and pinned the dashboard's doc-only detection thresholds — PR opened upstream
+
+**Model:** Claude Sonnet 5.
+`DOC_ONLY_SOURCE_LOC_MAX`/`DOC_ONLY_DOC_LOC_MIN`/`DOC_ONLY_DOC_FILES_MIN` had no recorded derivation
+and no direct test pinning their values (`test_source_cap_boundary` only pinned the first
+*indirectly*, via hardcoded `200`/`201` literals — coverage that would silently vanish if that
+fixture were ever rewritten to derive its boundary from the constant instead). First confirmed no
+prior session had actually made the decision this item asks for, despite being carried as
+"prepared" through seven handoffs (S66–S73). Decided (b)+(c): documented all three as deliberate,
+unmeasured heuristics via a new comment, and added `test_doc_only_thresholds_are_pinned_not_left_to_drift`
+asserting the current values directly. `DASHBOARD_VERSION` 2.10.2 → 2.10.3 in `tools/` and
+`starter-kit/` twins, kept byte-identical. `python3 tools/test_methodology_dashboard.py` 198/198;
+`bin/tests.sh` 84/84 on the PR branch, both re-verified independently of the fork's own tree.
+Opened as [upstream PR #70](https://github.com/KJ5HST/methodology/pull/70), branched from and
+0-behind `upstream/main` at open time.
+
+### 2026-08-10 · [BL-21] Re-verified: precondition still unmet, deliberately not bundled; fixed a stale unattributed blocker
+
+**Model:** Claude Sonnet 5.
+Re-checked BL-21's own stated precondition — whether `.githooks/pre-commit`'s Phase 1B exemption is
+contributed upstream — before considering it for this session's PR batch. Still unmet: `bin/_manifest.py`
+still does not distribute the hook (`git grep -c githooks` is 0), and the hook has **further
+diverged** from `upstream/main` since the item was raised, not converged — it was byte-identical
+when BL-21 was written and is not now (`upstream/main`'s own canonical copy, the one the proposed
+seed sentences would cite by URL, still carries zero Phase 1B exemption logic). Landing the two
+proposed seed sentences now would describe a hook neither adopters nor upstream's own canonical
+implementation actually has — correctly excluded from the PR batch. Separately, while re-reading
+this item: its own text described itself as "blocked on the same thing everything distributed is
+blocked on — the paused upstream channel," an unattributed, stale characterization (this session
+opened three PRs; the channel has never been paused by anyone with authority to pause it — see
+[[feedback_never_record_a_constraint_nobody_imposed]]). Corrected in place to name only the actual,
+attributed precondition.
+
+### 2026-08-10 · [BL-14][BL-17] Two defects in the HANDOFFS.md receipt spec — PR opened upstream
+
+**Model:** Claude Sonnet 5.
+**BL-14's distributed half:** the spec promised `commit: pending` is reconciled by "the next
+session," but `SESSION_RUNNER.md` Phase 0 step 6 (confirmed byte-identical fork vs. upstream) only
+ever reconciles a missing or still-`status: pending` receipt, never a `status: complete` receipt
+whose `commit:` field alone is `pending` — no procedure anywhere performs the promise as written.
+Chose fork option **(B) delete the promise** over (A) schedule it: (A)'s real footprint is larger
+than "add a case" (Phase 0's write permission is explicitly append-only; reconciling an existing
+receipt's `commit:` field in place is a mutation, not an append), and the re-derived "seven
+distributed `status: pending` sites" this item cites now number **11** on the current tree, none of
+which mention `commit:` — so (B) stays confined to `HANDOFFS.md` alone. **BL-17's distributed
+half:** `changelog_ref`'s spec offered `PR #N`/short-sha, but 0 of 32 receipts in this ledger use
+either — all locate a `CHANGELOG.md` action by its quoted `### ` heading instead, a convention
+`bin/check-handoff`'s own remediation text already teaches without the spec ever blessing it. Added
+it as a third explicit form; noted a bare line number is not a durable locator once a ledger is
+trimmed. Bundled in one PR (same file, adjacent lines). A third instance of BL-14's promise, found
+only in the fork's own `HANDOFFS.md` "Size, and when to archive" section (fork-only, no upstream
+equivalent), was **not** part of this PR and needs its own fork-local follow-up. `bin/tests.sh`
+84/84, `bin/check-links` and `bin/check-handoff` OK on the PR branch. Opened as
+[upstream PR #69](https://github.com/KJ5HST/methodology/pull/69), branched from and 0-behind
+`upstream/main` at open time.
+
+### 2026-08-10 · [BL-13] Re-grounded the /caveman row's remaining unsupported claim — PR opened upstream
+
+**Model:** Claude Sonnet 5.
+Upstream's own citation fix (`15ccb38`) removed a dangling `Learning #34` citation from
+`RECOMMENDED_SKILLS.md`'s `/caveman` row but kept the claim it was attributing — "the methodology's
+own handoff length discipline" — which has no referent anywhere in the distributed corpus and runs
+opposite to failure mode #15 (the thin handoff is the failure) and the content-gated Minimum
+Handoff Requirements. Re-verified fresh against current `upstream/main` (unchanged since the S7/S8
+resync this item was measured against) before writing the fix, rather than reusing the fork's own
+parked `1eac7a4` wording verbatim — that text answered a since-superseded corpus state. Re-grounded
+on the two verified, reachable sources. `bin/tests.sh` 84/84, `bin/check-links` OK on the PR
+branch. Opened as [upstream PR #68](https://github.com/KJ5HST/methodology/pull/68), branched from
+and 0-behind `upstream/main` at open time.
+
 ### 2026-08-10 · [ad hoc] S72 close-out — receipt written, self-score 9/10; see the `[BL-29]` entry below for the substantive work
 
 **Model:** Claude Sonnet 5.
