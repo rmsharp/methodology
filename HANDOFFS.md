@@ -37,6 +37,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S76
+date: 2026-08-11
+status: pending
+active_task: Operator-directed -- investigate why upstream PRs KJ5HST/methodology#68, #69, #70 (BL-13, BL-14+17, BL-22) turned CONFLICTING; report root cause. Diagnostic, not yet a fix.
+```
+
+```handoff
 session: S75
 date: 2026-08-11
 status: complete
