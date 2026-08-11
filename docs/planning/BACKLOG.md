@@ -1,7 +1,11 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23, BL-26 and BL-30 are open** (**BL-29 and BL-30 raised 2026-08-10
+> BL-20, BL-21, BL-22, BL-23, BL-26, BL-30 and BL-31 are open** (**BL-31 raised 2026-08-11 (S74)** —
+> a live `upstream/main` dashboard-exclusion gap found while re-verifying BL-26's PR #66 fixes, not
+> fork-fixable; see its own entry. **BL-26's PR #66 thread CLOSED 2026-08-11 (S74)** — PR #66 merged
+> upstream, both S67 review-comment findings confirmed genuinely fixed before merge; BL-26's issue #67
+> thread remains open on its own. **BL-29 and BL-30 raised 2026-08-10
 > (S70)**, operator-directed, out of a cross-repo investigation into whether adopting the methodology
 > produced measurable effects in local adopter repos — **BL-29** a still-reproducible self-scan gap in
 > `tools/methodology_dashboard.py`, **BL-30** a deliberately lightweight watch item on the ledger
@@ -814,6 +818,27 @@ issue itself is still open, and no PR has been opened against `KJ5HST/methodolog
 gate — needs a separate, explicit go-ahead, asked for again at that time). **PR #66 thread still
 untouched and still open** — this item did not touch it.
 
+**PR #66 thread: MERGED 2026-08-11, both review findings confirmed genuinely implemented (S74).**
+`gh pr view 66` shows `state: MERGED`, `mergedBy: rmsharp`, merge commit `a2a7275` — both S67 review
+comments were fixed by the maintainer **before** merge, not left as unresolved suggestions: `14bd88a`
+(*"fix(context-budget): install-hook must honor core.hooksPath"*) and `63e1dcf` (*"fix(check-handoff):
+receipt identity is session + date, not session alone"*), each crediting *"Reported by rmsharp in
+review of PR #66"* in its commit message, each with new RED-first `bin/tests.sh` assertions (107→111,
+then →112). `starter-kit/HANDOFFS.md` also gained 7 lines stating the session+date identity rule this
+item's own proposed wording asked for. **Re-verified independently, not by reading commit messages
+alone:** checked out `a2a7275` in an isolated `git worktree`, ran `bash bin/tests.sh` three times —
+113–114/114 passed each run, the one intermittent failure being this fork's already-known
+`gh api`/github-source-dry-run network flake (Test 9's baseline), not a regression. **This closes the
+PR #66 thread of BL-26.** The issue #67 thread (fork-side fix shipped S62, not yet contributed
+upstream) remains open on its own — a separate go-ahead question, unaffected by this merge.
+
+**New, out-of-scope finding surfaced while re-verifying (S74), disclosed not fixed (FM #17): see
+BL-31.** `python3 -m unittest tools/test_methodology_dashboard.py` against `a2a7275` — 2 failures,
+reproduced consistently (not a flake): PR #66 added `context_budget.py`/`.context-budget.json` to
+`bin/_manifest.py` as newly distributed files, but `tools/methodology_dashboard.py`'s
+`FRAMEWORK_INSTALLED_SOURCE` exclusion tuple was never updated to include the new TRACKED file. This
+is `upstream/main`'s own state post-merge, not anything this fork introduced.
+
 **BL-27 — `methodology_trim.py`'s generated `.verify.sh` has two known false-positive triggers on
 `HANDOFFS.md`, distinct from the internal `--check`/`--write` assertions, which do not share them.
 CLOSED (S65).**
@@ -992,6 +1017,37 @@ One clean run in one repo is evidence the tool *can* work, not that it generaliz
 ledger shapes, sizes, and histories. **Check on later:** the next time any of the other three crosses
 its trigger, confirm the run is verified by its own `.verify.sh` (not just "ran without error") before
 treating the tool as proven rather than promising.
+
+**BL-31 — `upstream/main`'s dashboard exclusion list wasn't updated for PR #66's new distributed
+file; reproduces on `a2a7275` today.** *Raised 2026-08-11 (S74), found while re-verifying BL-26's PR
+#66 review-comment fixes — out of that item's scope, so recorded separately rather than folded in
+(FM #17). Measured, not fixed.*
+
+**The defect.** `bin/_manifest.py:44` (as of `a2a7275`, upstream `main` post-merge) adds
+`("starter-kit/context_budget.py", "context_budget.py", TRACKED)` — a new framework-owned file
+`bin/sync` now installs into every adopter root, same class as `methodology_dashboard.py` itself.
+`tools/methodology_dashboard.py:344`'s `FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py",)`
+was never extended to match, so the dashboard's own LOC-counting will attribute `context_budget.py`'s
+source to the *adopter's* code rather than excluding it as framework tooling — the same class of
+scoring distortion `FRAMEWORK_INSTALLED_SOURCE`'s own neighboring comment (`:346-350`) describes for
+the markdown half of this exact problem.
+
+**Reproduced, not inferred.** `git worktree add <tmp> a2a7275 && python3 -m unittest
+tools/test_methodology_dashboard.py`: 2 failures, both in `TestFrameworkInstalledExclusion` —
+`test_no_manifest_file_is_unaccounted_for` (`context_budget.py`/`.context-budget.json` show up as
+"distributed adopter-root file(s) neither on METHODOLOGY_ITEMS nor in CHECKLIST_EXEMPT") and
+`test_exclusion_list_matches_the_manifest` (the tuple comparison fails outright:
+`('methodology_dashboard.py', 'context_budget.py', '.context-budget.json') !=
+('methodology_dashboard.py',)`). Reproduced consistently across 3 runs — not the known `gh api`
+network flake (`bin/tests.sh` Test 9), a separate, deterministic failure.
+
+**Scope note.** This is `upstream/main`'s own state, introduced by PR #66, not anything this fork's
+own tree carries — this fork does not distribute `context_budget.py` (BL-26's own note: "this repo
+does not carry `context_budget.py`"). It is upstream's defect to fix, in upstream's own
+`tools/methodology_dashboard.py` (this fork's canonical-only twin has no `context_budget.py` entry to
+add either, so nothing here is fork-side-fixable the way BL-20/BL-22 were). **Whether/how to flag
+this to the maintainer is an outward-facing decision needing an explicit go-ahead**, same rule as
+BL-23/BL-26's issue-#67 thread.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

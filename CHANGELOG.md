@@ -152,6 +152,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [BL-31] Live `upstream/main` dashboard-exclusion gap found while re-verifying PR #66 — raised, not fixed
+
+**Model:** Claude Sonnet 5.
+While independently re-verifying BL-26's PR #66 fix (below), ran `tools/test_methodology_dashboard.py`
+against the merge commit `a2a7275` in an isolated worktree: 2 reproducible failures, unrelated to the
+review-comment fix under test. `bin/_manifest.py` now distributes `context_budget.py` (TRACKED) but
+`FRAMEWORK_INSTALLED_SOURCE` (`tools/methodology_dashboard.py:344`) was never extended to match, so
+the dashboard misattributes that framework file's LOC to adopter code. Upstream's own defect, not
+fork-fixable (this fork carries no `context_budget.py`). Recorded as `docs/planning/BACKLOG.md` BL-31;
+whether/how to flag it to the maintainer is a separate, not-yet-decided outward-facing action.
+
+### 2026-08-11 · [BL-26] PR #66 merged upstream — both S67 review-comment findings confirmed genuinely fixed, not just posted
+
+**Model:** Claude Sonnet 5.
+Operator directed re-verification of BL-26's PR #66 thread; mid-session the operator merged PR #66
+(`gh pr view 66`: `state: MERGED`, `mergedBy: rmsharp`, merge commit `a2a7275`). Confirmed, not
+assumed, that both S67 review comments (`install_hook()` ignoring `core.hooksPath`; `check-handoff`'s
+duplicate-session check keyed on session id alone) were fixed by the maintainer before merge —
+commits `14bd88a` and `63e1dcf`, each crediting "Reported by rmsharp in review of PR #66" and each
+RED-first tested. Independently re-ran the suite against the merge commit in an isolated `git
+worktree` rather than trusting the commit messages: `bash bin/tests.sh` 113–114/114 across 3 runs (the
+one intermittent failure is the pre-existing `gh api` network flake, this fork's own known baseline).
+Closes BL-26's PR #66 thread; its issue #67 thread (fork-side fix shipped, not yet contributed
+upstream) remains open. Surfaced a new, unrelated gap in the same merge — see the `[BL-31]` entry
+above.
+
 ### 2026-08-10 · [ad hoc] S73 close-out — receipt written, self-score 9/10; see the `[BL-13]`/`[BL-14][BL-17]`/`[BL-21]`/`[BL-22]` entries below for the substantive work
 
 **Model:** Claude Sonnet 5.
