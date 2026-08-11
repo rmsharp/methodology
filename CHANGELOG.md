@@ -152,6 +152,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [BL-8] Subagent capability-tiering adopted as this fork's operational default for `Workflow`-authored campaigns
+
+**Model:** Claude Sonnet 5.
+Operator-directed: work BL-8, a decision item ("adopt subagent capability-tiering as an operational
+default, or decline") unblocked since the dashboard signal-integrity campaign closed (v3.6).
+Presented the operator with the measured tradeoff already on record (S14: hybrid saves only 13-19%
+against all-Sonnet, far below the headline, because the judgment-heavy verifier role is 61% of input
+tokens; the dedupe-before-verify / reserve-review-budget-before-discovery lever is separate and free
+of any quality tradeoff) via `AskUserQuestion`; the operator chose **adopt**. Recorded the decision
+and the concrete operational rule in `docs/planning/BACKLOG.md`'s BL-8 entry (header STATUS line and
+the entry body): a subagent role whose correctness rests on an objective, checkable gate (a module
+re-verified by executing it, an exhaustively-grepped corpus sweep) may run on a lighter tier;
+judgment roles (the verifier/refuter, anything adjudicating "is this finding real," cross-file
+invariants) and every review pass stay on the strongest tier — extending `SESSION_RUNNER.md`'s
+existing "Capability-tiered review" principle from pre-declared vertical slices to horizontal
+`Workflow` campaigns, which that text does not formally cover. **Not a methodology change** — no
+distributed document (`SESSION_RUNNER.md`, `RECOMMENDED_SKILLS.md`) was edited, since both already
+state the elective, single-tier-by-default framework-level position for adopters; this decision only
+governs how this fork authors its own future workflows. `python3 bin/check-links` OK (88 links/22
+files); `bash bin/tests.sh` 185/186 (Test 9's pre-existing baseline, unaffected by this doc-only
+change).
+
 ### 2026-08-11 · [ad hoc] S77 close-out — receipt written, self-score 8/10; see the entry below for the substantive work
 
 **Model:** Claude Sonnet 5.

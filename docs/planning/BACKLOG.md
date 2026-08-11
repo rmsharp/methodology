@@ -1,7 +1,10 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-32 raised 2026-08-11**,
+> **STATUS: REOPENED 2026-07-25 — BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
+> BL-20, BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-8 ADOPTED 2026-08-11
+> (S78), operator-directed** — subagent capability-tiering is now this fork's own operational default
+> when authoring a `Workflow` script; not a methodology change, no distributed document edited; see
+> its own entry. **BL-32 raised 2026-08-11**,
 > not a session claimed in this repo — reported by an operator conversation relaying a live
 > `nprcgenekeepr` session's own investigation, independently verified against this repo's canonical
 > `starter-kit/methodology_trim.py` before being recorded: its `LEDGERS` config table covers only
@@ -164,7 +167,7 @@ sequence, not suspension. Nothing here is blocked for that reason. The honest ro
 - **Not the fork's to raise.** **BL-12's second bullet** is upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65);
   answering it is an outward-facing action and needs an explicit ask.
 
-**BL-8 — Subagent capability-tiering: adopt as an operational default, or decline.**
+**BL-8 — Subagent capability-tiering: adopt as an operational default, or decline. ADOPTED (S78).**
 *Not a methodology change, and no document needs editing.* `SESSION_RUNNER.md` §Vertical Slice
 Sessions already carries the decision rule (v3.5, BL-7) — explicitly **elective**, scoped to
 pre-declared vertical slices — and `RECOMMENDED_SKILLS.md` states the default outright:
@@ -186,6 +189,27 @@ budget and its review then died on a usage limit, which is why Layer 5 shipped u
 needed three prose fixes. Both are free of any quality tradeoff.
 **"Decline and keep single-tier" is a correct outcome** and matches the documented default; the only
 cost is the saving above.
+
+**ADOPTED 2026-08-11 (S78), operator-directed.** Presented the measured tradeoff above (13-19%
+saving, driven down because the judgment-heavy verifier role is 61% of input tokens; the
+dedupe/budget-reservation lever is separate and free of the tradeoff) and asked the operator to
+choose between adopt and decline; the answer was **adopt**, accepting the modest saving.
+**The operational rule this fork now applies when authoring a `Workflow` script:** a subagent role
+whose correctness rests on an objective, checkable gate (a test suite it must pass, an exhaustive
+grep-reconciliation, a module it re-verifies by executing — the same bar `SESSION_RUNNER.md`'s
+§Vertical Slice Sessions "Capability-tiered review" already sets for slice layers) may be authored on
+a lighter/faster tier; a role whose correctness rests on judgment across interacting constraints no
+such gate expresses (the verifier/refuter role, any role adjudicating "is this finding real," brand-
+neutral wording, cross-file invariants) stays on the strongest available tier — and so does every
+review pass over a delegated role's output, never batched at the end. This extends the
+already-documented principle from its current scope (pre-declared vertical slices) to horizontal
+`Workflow`-authored campaigns, which that text does not formally cover. **Still not a methodology
+change** — no distributed document is edited, because the extension is this fork's own operational
+practice for authoring its own workflows, not a new recommendation for adopters.
+Independently of tiering, also adopt the two tradeoff-free levers measured alongside it: dedupe
+findings against what earlier stages already surfaced before spawning verifiers, and reserve the
+review budget before the discovery sweep can spend it down (S14's own failure: the sweep spent the
+budget and Layer 5 shipped unreviewed).
 
 > **S34 regression note (2026-08-03), recorded not fixed.** The parked `bin/check-citations`
 > (branch `docs/bl-10-dangling-learning-citations`, tag `archive/bl-10-citations` → `268f1e5`) is
