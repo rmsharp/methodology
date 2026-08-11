@@ -152,6 +152,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S70 close-out — receipt written, self-score 8/10; see the `[ad hoc]` BL-29/BL-30 entries below for the substantive work
+
+**Model:** Claude Sonnet 5.
+Also corrected `HANDOFFS.md`'s own unguarded receipt count (front matter claimed **5**, actually **9**
+live receipts — drifted stale before this session, the same class of drift the file's own text already
+warns about; recounted and fixed rather than left for a future session to catch). Disclosed, out of
+this repo's own scope, a separate cross-repo write in `church_growth` (`4a613ba`) — a different repo's
+ledger, not counted here.
+
 ### 2026-08-10 · [ad hoc] BL-30 raised: watch item — `methodology_trim.py`'s next firing outside `nprcgenekeepr`
 
 **Model:** Claude Sonnet 5.
