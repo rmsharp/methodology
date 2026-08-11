@@ -152,6 +152,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] S75 close-out — receipt written, self-score 8/10; see the `[BL-31]` entry below for the substantive work
+
+**Model:** Claude Sonnet 5.
+Phase 3A/3B/3D: evaluated S74's handoff (7/10 — accurate reproduction pointers, but named a test
+that does not exist and mis-attributed the second failure to the wrong test class, an inaccuracy
+this session's own re-derivation caught); self-assessed (8/10 — see `HANDOFFS.md` for the full
++/− breakdown, including a `git commit --amend` mistake caught and fully recovered before pushing).
+
 ### 2026-08-11 · [BL-31] Fix opened upstream — dashboard's framework-installed exclusion extended for the context-budget gate
 
 **Model:** Claude Sonnet 5.
