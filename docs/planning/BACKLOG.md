@@ -311,6 +311,22 @@ at 16:36 UTC, after #66 had already merged — its base `CHANGELOG.md` already i
 (keep both sides' entries, reorder by date), not a content change** — not yet done; needs a
 go-ahead, since it touches an open upstream PR branch. Same root cause and same fix shape apply to
 #69 and #70 below; see this note rather than repeating it.
+**REBASED AND FORCE-PUSHED 2026-08-11 (S76, operator-directed).** All three rebased onto
+`upstream/main` (`a2a7275`, unchanged since diagnosis), `CHANGELOG.md` resolved by keeping both
+sides' entries with the rebased PR's own new entry placed above the already-merged PR #66 entries
+(newest-on-top, matching the ledger's own convention) — `f1dd996` → `b4ceb73`. Confirmed clean with
+`git merge-tree --write-tree --name-only upstream/main <branch>` (no `CONFLICT` output) before
+pushing, not assumed from a successful `rebase --continue` alone. `bin/check-links` OK on the
+rebased tree. `gh pr view 68 --json mergeable` → `MERGEABLE` after GitHub recomputed (took under a
+minute; read `UNKNOWN` immediately after push, which is normal async lag, not a second problem).
+**Found, not fixed, while verifying: a latent version collision with PR #71, unrelated to the
+conflict just fixed.** Both #70 (this item's fix, unchanged by the rebase) and the already-open
+#71 bump `DASHBOARD_VERSION` `"2.10.2"` → `"2.10.3"` for unrelated changes — #70 branched before
+#71 existed, so no git conflict today, but whichever of the two merges *second* will re-diff
+against a tree where the string already reads `2.10.3`, which is either a silent no-op (if by then
+identical) or a fresh conflict on that exact line. Neither PR's own content is wrong; this is
+sequencing, decided by merge order the fork does not control. Not raised as its own BL item —
+small enough to note here and revisit once the maintainer merges either one.
 
 **BL-14 — The `commit:` answer slot: a distributed promise with no owner and no detector.**
 *Raised and PARTIALLY CLOSED 2026-08-02 (S28). The fork-side half shipped; the distributed half is
@@ -383,7 +399,12 @@ the same PR** (same file, adjacent lines, one review pass). `bin/tests.sh` 84/84
 `bin/check-links`/`bin/check-handoff` OK on the PR branch. Awaiting maintainer review; not yet
 merged. **Turned `CONFLICTING` 2026-08-11, diagnosed same day (S76) — same root cause as BL-13's
 #68 note above (`CHANGELOG.md` prepend-point collision with PR #66's merged batch, confirmed via
-`git merge-tree` as the only conflicting path); needs the same rebase, not a content fix.** **A
+`git merge-tree` as the only conflicting path); needs the same rebase, not a content fix.**
+**REBASED AND FORCE-PUSHED 2026-08-11 (S76, operator-directed), same run as BL-13's #68 — see that
+entry for the shared method. `d47d4ee` → `e74de65`; the `starter-kit/HANDOFFS.md` auto-merge was
+diffed against `upstream/main` (not trusted from a clean `rebase --continue` alone) and confirmed
+to carry only this PR's own two intended edits, nothing lost or duplicated from PR #66's separate
+edits to the same file. `gh pr view 69 --json mergeable` → `MERGEABLE`.** **A
 third instance of the same promise, fork-only, still open:** the investigating agent
 found a `starter-kit/HANDOFFS.md` "Size, and when to archive" section (fork-only — upstream has no
 equivalent, since upstream has no archiving) that restates the identical unkept promise at its own
@@ -659,6 +680,15 @@ above (`CHANGELOG.md` prepend-point collision with PR #66's merged batch, confir
 `tools/methodology_dashboard.py` / `starter-kit/methodology_dashboard.py` /
 `tools/test_methodology_dashboard.py` — never being touched by #66 at all); needs the same rebase,
 not a content fix.**
+**REBASED AND FORCE-PUSHED 2026-08-11 (S76, operator-directed), same run as BL-13's #68 — see that
+entry for the shared method and for a latent `DASHBOARD_VERSION` collision with PR #71 found while
+verifying this one (both bump `2.10.2` → `2.10.3` independently; not a conflict today, sequencing
+risk at whichever merges second). `d56b983` → `13796c4`. `python3 -m unittest
+tools/test_methodology_dashboard.py` on the rebased branch: 198/198 minus the same 2 pre-existing
+`FRAMEWORK_INSTALLED_SOURCE`/`CHECKLIST_EXEMPT` failures BL-31 already found and fixed in the
+still-unmerged PR #71 — confirmed present on unmodified `upstream/main` itself via a throwaway
+worktree before trusting that they weren't introduced by this rebase. `gh pr view 70 --json
+mergeable` → `MERGEABLE`.**
 
 **BL-23 — Issue #65's proposed invariants collide with fork state issue #65 doesn't know about.**
 *Raised 2026-08-08 (S47), operator-directed review of #65 against work planned for an upstream PR.

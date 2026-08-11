@@ -152,6 +152,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] Rebased and force-pushed PRs #68/#69/#70 onto `upstream/main` — all four open PRs now `MERGEABLE`
+
+**Model:** Claude Sonnet 5.
+Operator-directed follow-up to the S76 diagnostic, operator said "rebase-and-force-push." For each
+of `fix/caveman-length-citation-upstream` (#68), `fix/handoffs-receipt-spec-upstream` (#69), and
+`fix/doc-only-thresholds-upstream` (#70): `git rebase upstream/main`, resolved the `CHANGELOG.md`
+conflict by keeping both sides' entries with the rebased PR's own entry placed above the
+already-merged PR #66 entries (matching the ledger's newest-on-top convention), verified clean with
+`git merge-tree --write-tree --name-only upstream/main <branch>` (no `CONFLICT`, not assumed from a
+successful `rebase --continue`), then `git push --force-with-lease`. #69's auto-merged
+`starter-kit/HANDOFFS.md` was diffed against `upstream/main` before trusting it — confirmed to carry
+only #69's own two intended edits. #70's rebased branch reproduces the same 2 pre-existing
+`FRAMEWORK_INSTALLED_SOURCE`/`CHECKLIST_EXEMPT` test failures BL-31 already found (fixed in the
+still-unmerged PR #71, not in #70) — confirmed present on unmodified `upstream/main` itself via a
+throwaway worktree before concluding the rebase didn't cause them. Found, not fixed, while
+verifying #70: PR #70 and PR #71 both bump `DASHBOARD_VERSION` `"2.10.2"` → `"2.10.3"`
+independently for unrelated changes — no conflict today (branched before #71 existed), but
+whichever merges second will re-diff against an already-`2.10.3` tree; noted in `BACKLOG.md`
+against BL-22, not raised as its own item. `gh pr view <N> --json mergeable` confirms all three
+**MERGEABLE** after GitHub finished recomputing (async, resolved within ~1 minute of each push).
+Recorded against BL-13/BL-14+17/BL-22 in `docs/planning/BACKLOG.md`. **Process note, disclosed:**
+this was a continuation of the same conversation immediately after S76's close-out rather than a
+freshly claimed session — no Phase 1B stub was written before the rebase work began, an out-of-order
+deviation from the mandated claim-before-work sequence; recorded honestly here rather than folded
+silently into S76's already-closed, already-reported receipt. `bash bin/tests.sh` 185/186 on the
+fork's own tree afterward (Test 9's pre-existing baseline, unaffected).
+
 ### 2026-08-11 · [ad hoc] S76 close-out — receipt written, self-score 9/10; see the diagnostic entry below for the substantive work
 
 **Model:** Claude Sonnet 5.
