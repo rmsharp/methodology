@@ -37,6 +37,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S75
+date: 2026-08-11
+status: pending
+active_task: Operator-directed -- flag BL-31 (upstream/main's FRAMEWORK_INSTALLED_SOURCE exclusion-list gap, introduced by PR #66's merge, reproduced at a2a7275) to the maintainer. Operator chose "open an issue (or small PR) against KJ5HST/methodology describing/fixing it" over fork-side-only continuation.
+```
+
+---
+
+```handoff
 session: S74
 date: 2026-08-11
 status: complete
