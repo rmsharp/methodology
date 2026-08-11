@@ -152,6 +152,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] S72 close-out — receipt written, self-score 9/10; see the `[BL-29]` entry below for the substantive work
+
+**Model:** Claude Sonnet 5.
+`HANDOFFS.md`'s S72 stub overwritten in place to `status: complete` with all six Minimum Handoff
+Requirements. Also corrected `HANDOFFS.md`'s own front-matter receipt count (10 → 11, the same
+drift class S70 and S71 each fixed for their predecessors). No separate substantive action beyond
+the receipt itself — the fix is described in the entry immediately below (commit `c26358f`).
+
 ### 2026-08-10 · [BL-29] Fix the dashboard's self-scan gap — `tools/`/`starter-kit/` copies now scan their own repo
 
 **Model:** Claude Sonnet 5.

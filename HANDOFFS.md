@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **10**; the oldest **19**
+**Older receipts are archived.** This file currently holds **11**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -39,9 +39,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ```handoff
 session: S72
 date: 2026-08-10
-status: pending
-active_task: Operator-directed -- fix BL-29 (docs/planning/BACKLOG.md), the dashboard's self-scan gap. D4(c) (`0e188f5`, 2026-08-03) removed "methodology" from EXCLUDE_DIRS but a naive form couldn't ship as worded because discover_projects() has two consumers, one a write path (sync_dashboards()) -- a different fix landed instead. Running `python3 tools/methodology_dashboard.py --no-open` from this repo's own root still reports "No projects found" rather than scanning this repo as a single project, even though `main()` already special-cases `single_project = (root / ".git").exists()` for its title text. Reproduced live at Phase 0 orientation this session. Deliverable: fix the self-scan discovery path without reintroducing the write-path collision D4(c) already found and avoided (re-read its commit message first), RED-first test, mirror tools/ and starter-kit/ copies byte-identical, remove BL-29 from BACKLOG.md at close.
+status: complete
+self_score: 9
+predecessor_score: 9
+active_task: Operator-directed -- fix BL-29 (docs/planning/BACKLOG.md), the dashboard's self-scan gap. COMPLETE.
+what_was_done: Commit `c1777ee` (claim) -> commit for this receipt (below). Re-read D4(c)'s own commit (`0e188f5`) before writing any code: its collision lived in `sync_dashboards()` (a WRITE path sharing `discover_projects()`'s exclusion set with the scan), a function this fix never touches. The actual defect was `main()`'s `root = ROOT` (`ROOT = Path(__file__).parent`): correct for every adopter-installed and portfolio-root copy, wrong for the methodology repo's own two checked-in copies (`tools/`, `starter-kit/`), which file the script one level BELOW the repo they belong to, so `(ROOT / ".git").exists()` read false and `main()` printed "No projects found" instead of scanning. Fixed with a new `resolve_single_project_root()` (both twins) that bridges `ROOT` to its parent only when `ROOT.name` is `tools` or `starter-kit` AND the parent both is a git repo and carries `bin/_manifest.py` -- the same structural marker `detect_repo_role()` already trusts to prove "this is the framework's own publishing repo", unreachable by any adopter via `bin/sync`. `main()`'s one call site changed (`root = resolve_single_project_root(ROOT)`); `discover_projects()`, `EXCLUDE_DIRS`, `sync_dashboards()` untouched. RED-first: 6 new tests in `TestBL29SelfScanRoot` (`tools/test_methodology_dashboard.py`), including a negative control (`test_a_tools_dir_with_no_manifest_marker_is_not_bridged`) proving the marker gates the bridge, not just the directory name; watched all 6 fail against unpatched code first (5 `AttributeError`, 1 by actually reproducing "No projects found"). `DASHBOARD_VERSION` 2.14.0 -> 2.15.0 in both twins, mirrored via direct copy and reconfirmed byte-identical; the version-pinned `test_dashboard_version` updated to match. Dashboard suite 284 -> 290, all green. `docs/planning/BACKLOG.md`: BL-29 marked CLOSED in place (this file's own established convention for closing an item -- append a CLOSED note, keep the history, matching BL-24/25/27/28 -- rather than deleting the write-up the top status paragraph's own accounting depends on) and removed from the top "are open" enumeration.
+next_steps: BL-29 is fully closed -- no further action owed on it. Unchanged from S71/S70's own next_steps, still open: BL-30 is a watch item, check when `methodology_trim.py` next fires in `mts-system`/`vscode_quarto_ext`/`wsfct`; a batch of prepared-but-unopened distributed fixes (BL-13, BL-14's distributed half, BL-17's distributed half, BL-21, BL-22, Learning #22, Learning #23) is ready to open upstream as one PR pending an explicit operator go-ahead; PR #66's 3 posted review comments await the maintainer; upstream issue #65 open. One new, small item this session surfaced but did not chase (out of scope for a single-deliverable session): whether any OTHER canonical-only script in this repo has the same `Path(__file__).parent`-vs-repo-root assumption baked in -- not investigated, no evidence either way. This repo is ahead of `origin/main`, unpushed -- no push occurred without operator direction (recount at next Orient rather than trusting a carried-forward number -- S71 wrote "10 commits ahead," Orient this session read 13, ordinary same-day drift as more commits land, not an error).
+key_files: `tools/methodology_dashboard.py:1140-1174` (new `_CANONICAL_IN_REPO_DIRS` + `resolve_single_project_root()`), `:87` (`DASHBOARD_VERSION`), `:4047` (`main()`'s call site) -- `starter-kit/methodology_dashboard.py` byte-identical twin, same line numbers; `tools/test_methodology_dashboard.py:3310-3391` (new `TestBL29SelfScanRoot`, 6 tests), `:2047-2051` (`test_dashboard_version` updated); `docs/planning/BACKLOG.md:3-21` (top status paragraph, BL-29 removed from "are open", CLOSED note added), `:873-919` (BL-29's own entry, CLOSED note appended in place); `CHANGELOG.md:155-175` (new `[BL-29]` entry); `dashboard_history.jsonl` (2 new entries, real output of the live verification runs below, not test fixtures).
+gotchas: The fix's safety rests on `resolve_single_project_root()` NOT touching `discover_projects()`, `EXCLUDE_DIRS`, or `sync_dashboards()` at all -- verify that invariant holds before ever widening this bridge (e.g. to a third checked-in location), since `sync_dashboards()`'s own D4(c)-era comment (`tools/methodology_dashboard.py` near `sync_dashboards()`) is the live memory of exactly the collision a careless widening could reintroduce. Separately: `python3 tools/methodology_dashboard.py --no-open` and `python3 starter-kit/methodology_dashboard.py --no-open`, run live from this repo's own root for verification, both append to the real, tracked `dashboard_history.jsonl` -- expected and correct now that self-scan works (first time this repo's own root copy could write its own history), but worth knowing before running either copy casually, since it is not a no-op.
+runtime_smoke: Ran the actual application, both copies, not just unit tests. `python3 tools/methodology_dashboard.py --no-open` and `python3 starter-kit/methodology_dashboard.py --no-open`, both run from this repo's own root: both now print `METHODOLOGY — METHODOLOGY DASHBOARD | 1 projects | v2.15.0`, health 76/100, medium risk, active -- matching the portfolio-wide scan's own row for this repo exactly (cross-checked against the Phase 0 orientation's 13-project scan), a stronger correctness signal than "ran without crashing." `python3 -m unittest tools/test_methodology_dashboard.py`: 290/290 green (284 baseline + 6 new). Full `bin/tests.sh`: 185 passed, 1 failed -- Test 9's pre-existing upstream-404 baseline (`github source dry-run failed`, unauthenticated `gh`), unchanged from S71's own confirmed baseline, not caused by this session. `python3 bin/check-links`: OK (88/22).
+changelog_ref: CHANGELOG.md "2026-08-10 · [BL-29] Fix the dashboard's self-scan gap — `tools/`/`starter-kit/` copies now scan their own repo".
+commit: c26358f
 ```
+Self-score **9/10.** **+** Re-read D4(c)'s actual commit diff before writing any code, and confirmed
+the collision it warned about lived in a function (`sync_dashboards()`) this fix never touches —
+not by assertion, by tracing which function each caller of `discover_projects()` actually is. **+**
+RED-first throughout: 6 tests written and watched fail against unpatched code for the right reason
+(5 `AttributeError`, 1 by reproducing the literal reported symptom) before the fix landed. **+**
+Added a deliberate negative control (`test_a_tools_dir_with_no_manifest_marker_is_not_bridged`) an
+adversarial reviewer would ask for anyway — proving the new bridge is gated by the `bin/_manifest.py`
+structural marker, not merely a directory name an unrelated adopter repo could coincidentally share.
+**+** Verified the fix live, both copies, not just via unit tests — and the resulting health score
+(76/100) matched the portfolio-wide scan's own row for this repo exactly, a correctness cross-check
+stronger than "it ran." **+** Ran the FULL suite (`bin/tests.sh` 185/186, unittest 290/290, plus
+`check-links`), not just the directly touched module, and confirmed the one pre-existing failure was
+unchanged from S71's own baseline rather than assuming it. **+** Followed this specific file's own
+established convention for closing an item (append-CLOSED, not delete) after checking it against 4
+prior precedents (BL-24/25/27/28), rather than applying Phase 3F's generic wording literally. **−**
+Did not check whether any other canonical-only script in this repo shares the same
+`Path(__file__).parent`-vs-repo-root assumption — flagged in `next_steps` as unresearched rather than
+silently absent, but a slightly more thorough session might have grepped for the pattern once while
+already in this area. **−** The `key_files` line numbers for the twin (`starter-kit/`) are asserted
+by "byte-identical, same numbers" rather than independently re-derived — correct given
+`test_twins_byte_identical` passed, but a reader who distrusts that claim has to re-derive it
+themselves.
+
+Predecessor **S71: 9/10** (revised from S71's own self-assessed 8/10 with the benefit of acting
+directly on its `next_steps`). Its handoff named this exact task — "BL-29 needs an actual fix
+(re-read `0e188f5` first — a prior naive fix was rejected for a specific write-path collision reason
+a second attempt could reintroduce)" — precisely enough that this session could act on it directly
+without rediscovering anything: the file, the specific prior commit to re-read, and the specific
+failure mode to avoid repeating. That one clause is the reason this session opened by reading
+`0e188f5`'s diff before writing a line of the fix, rather than after. Nothing in it turned out wrong.
+**Docked only the one point S71 itself already claimed**, for the same reason S71 gave when scoring
+S70: `next_steps` and `gotchas` are forward-looking claims that cannot be verified by re-reading a
+file, so a small margin stays reserved for what can only be judged in hindsight — this session found
+nothing to dock it for in hindsight either, which is itself informative, not a formality.
 
 ---
 
