@@ -37,6 +37,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S71
+date: 2026-08-10
+status: pending
+active_task: Operator-directed — verify and act on the church_growth/BACKLOG.md:4-20 Active item (a flag asking a future canonical-repo session to fix detect_doc_only()'s self-referential source-LOC miscount). Verification found the fix already shipped here 2026-07-25 (Layer 7, `ae9e5b7`/`ef71946`/`6f10460`/`d78cd41`) -- confirmed empirically, read-only, against church_growth's real tree (source loc 0 after vendor reclassification; detect_doc_only returns is_doc_only=True, reason=heuristic even with the .methodology-profile marker temporarily removed and restored). Deliverable: correct church_growth's BACKLOG.md record to reflect verified-fixed-upstream status (not "needs a canonical fix"), with the matching church_growth CHANGELOG.md entry.
+```
+
+---
+
+```handoff
 session: S70
 date: 2026-08-10
 status: complete
