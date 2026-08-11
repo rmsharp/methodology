@@ -37,6 +37,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S78
+date: 2026-08-11
+status: pending
+active_task: Operator-directed -- work BL-8 (subagent capability-tiering: adopt as an operational default, or decline). BL-8's own routing note calls this "runnable now, nothing outward-facing" -- a fork-side operational decision, not a document edit.
+```
+
+```handoff
 session: S77
 date: 2026-08-11
 status: complete
