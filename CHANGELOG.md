@@ -152,6 +152,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] Diagnosed why upstream PRs #68/#69/#70 turned `CONFLICTING` — root cause found, not fixed
+
+**Model:** Claude Sonnet 5.
+Operator-directed investigation, S76. `git merge-tree --write-tree --name-only upstream/main
+<branch>` against each of the three fork-authored open PRs confirms **`CHANGELOG.md` is the only
+conflicting path** in every case — every other touched file, including `starter-kit/HANDOFFS.md` in
+PR #69, auto-merges clean despite [PR #66](https://github.com/KJ5HST/methodology/pull/66) also
+touching it. Cause: #68/#69/#70 all branched from the shared base `e02538b` at 05:00 UTC
+2026-08-11; PR #66 merged into `upstream/main` (`a2a7275`) at 15:15 UTC the same day, landing a
+9-commit batch (two upstream sessions, S9 and S10) that rewrote `CHANGELOG.md`'s header source-tag
+prose and prepended several new dated entries at the identical top-of-ledger insertion point every
+session's own new entry also targets — a simultaneous-prepend collision on a prepend-only ledger,
+not a defect in any of the three PRs' own content. [PR #71](https://github.com/KJ5HST/methodology/pull/71)
+does not conflict because it branched at 16:36 UTC, after #66 had already merged. Fix is mechanical
+(rebase onto current `upstream/main`, re-resolve the `CHANGELOG.md` prepend by keeping both sides'
+entries) but not yet done — it touches open upstream PR branches and needs a go-ahead. Recorded in
+`docs/planning/BACKLOG.md` against BL-13 (full explanation), BL-14/17, and BL-22 (cross-references).
+
 ### 2026-08-11 · [BL-32] `methodology_trim.py`'s `LEDGERS` table has no path for a third adopter ledger — raised, not fixed
 
 **Model:** Claude Sonnet 5.

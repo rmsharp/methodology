@@ -294,6 +294,23 @@ not advanced past the `e02538b` resync at all), re-grounded the row on FM #15 + 
 Requirements rather than reusing `1eac7a4`'s wording verbatim (that text answered a since-superseded
 corpus state — a dangling `Learning #34` citation that no longer exists to remove). `bin/tests.sh`
 84/84 and `bin/check-links` OK on the PR branch. Awaiting maintainer review; not yet merged.
+**Turned `CONFLICTING` 2026-08-11, diagnosed same day (S76).** Root cause, confirmed with
+`git merge-tree --write-tree --name-only upstream/main <branch>` (not inferred): **`CHANGELOG.md` is
+the only conflicting path** in all of #68/#69/#70 — every other touched file, including
+`starter-kit/HANDOFFS.md` in #69, auto-merges clean despite PR #66 also touching it. This PR (and
+#69/#70) branched from the shared base `e02538b` at 05:00 UTC 2026-08-11; PR #66 merged into
+`upstream/main` (`a2a7275`) at 15:15 UTC the same day, landing a 9-commit batch
+(`e02538b..a2a7275`: two upstream sessions, S9 and S10) that rewrote `CHANGELOG.md`'s header
+source-tag prose (lines 17-20 at the base) and prepended several new dated entries — the identical
+top-of-ledger insertion point every session's own new entry also targets. Git's three-way merge
+cannot reconcile two independent prepends at the same location plus a genuine content edit on the
+same lines, so it conflicts by construction, not because of any defect in this PR's own change.
+[PR #71](https://github.com/KJ5HST/methodology/pull/71) does **not** conflict because it was branched
+at 16:36 UTC, after #66 had already merged — its base `CHANGELOG.md` already includes the batch.
+**Fix is mechanical: rebase onto current `upstream/main` and re-resolve the `CHANGELOG.md` prepend
+(keep both sides' entries, reorder by date), not a content change** — not yet done; needs a
+go-ahead, since it touches an open upstream PR branch. Same root cause and same fix shape apply to
+#69 and #70 below; see this note rather than repeating it.
 
 **BL-14 — The `commit:` answer slot: a distributed promise with no owner and no detector.**
 *Raised and PARTIALLY CLOSED 2026-08-02 (S28). The fork-side half shipped; the distributed half is
@@ -364,7 +381,10 @@ item cites: the same grep now returns **11**, not 7, on the current tree — non
 `commit:`, so (B)'s edit stays confined to `HANDOFFS.md` alone regardless. **Bundled with BL-17 in
 the same PR** (same file, adjacent lines, one review pass). `bin/tests.sh` 84/84 and
 `bin/check-links`/`bin/check-handoff` OK on the PR branch. Awaiting maintainer review; not yet
-merged. **A third instance of the same promise, fork-only, still open:** the investigating agent
+merged. **Turned `CONFLICTING` 2026-08-11, diagnosed same day (S76) — same root cause as BL-13's
+#68 note above (`CHANGELOG.md` prepend-point collision with PR #66's merged batch, confirmed via
+`git merge-tree` as the only conflicting path); needs the same rebase, not a content fix.** **A
+third instance of the same promise, fork-only, still open:** the investigating agent
 found a `starter-kit/HANDOFFS.md` "Size, and when to archive" section (fork-only — upstream has no
 equivalent, since upstream has no archiving) that restates the identical unkept promise at its own
 `:134-136`. Not part of the PR (nothing to fix upstream, since the section doesn't exist there);
@@ -633,6 +653,12 @@ constants recording them as deliberate, unmeasured heuristics, plus a direct reg
 derive its boundary from the constant instead. `DASHBOARD_VERSION` 2.10.2 → 2.10.3 in both
 `tools/` and `starter-kit/` twins. `python3 tools/test_methodology_dashboard.py` 198/198 and
 `bin/tests.sh` 84/84 on the PR branch. Awaiting maintainer review; not yet merged.
+**Turned `CONFLICTING` 2026-08-11, diagnosed same day (S76) — same root cause as BL-13's #68 note
+above (`CHANGELOG.md` prepend-point collision with PR #66's merged batch, confirmed via
+`git merge-tree` as the only conflicting path, despite this PR's own substantive files —
+`tools/methodology_dashboard.py` / `starter-kit/methodology_dashboard.py` /
+`tools/test_methodology_dashboard.py` — never being touched by #66 at all); needs the same rebase,
+not a content fix.**
 
 **BL-23 — Issue #65's proposed invariants collide with fork state issue #65 doesn't know about.**
 *Raised 2026-08-08 (S47), operator-directed review of #65 against work planned for an upstream PR.
