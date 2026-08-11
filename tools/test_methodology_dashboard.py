@@ -2045,10 +2045,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.14.0")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.15.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.14\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.14.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.15\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.15.0")
 
 
 class TestEndToEnd(unittest.TestCase):
@@ -3305,6 +3305,89 @@ class TestD4SelfExclusion(unittest.TestCase):
                          "--sync must not target the repo that AUTHORS the dashboard")
         self.assertIn("adopter", out, "fixture check: a real adopter target must still be found, "
                                       "or this test would pass on an empty target list")
+
+
+class TestBL29SelfScanRoot(unittest.TestCase):
+    """BL-29: D4(c) fixed the PORTFOLIO-mode self-scan (TestD4SelfExclusion above) but left a
+    different self-scan gap open. `ROOT = Path(__file__).parent` is the script's own directory --
+    correct for every adopter-installed copy and the portfolio-root copy, which all sit exactly
+    where `bin/_manifest.py` / `sync_dashboards()` place them, at the root of what they scan. The
+    methodology repo's own two checked-in copies are the one exception: `tools/` and
+    `starter-kit/` both file this script one level BELOW the repo it belongs to, so
+    `(ROOT / ".git").exists()` reads false there even though `main()`'s own `single_project`
+    title-text branch already assumes that case can happen. RED-FIRST: `resolve_single_project_root`
+    does not exist on unpatched code, so every test below fails with AttributeError.
+    """
+
+    def _framework_repo(self, in_repo_dir):
+        """A tempdir shaped like the methodology repo itself: a git root carrying
+        `bin/_manifest.py` (the structural marker `detect_repo_role()` already trusts), with this
+        script filed `in_repo_dir` levels below that root -- e.g. "tools" or "starter-kit"."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(root)], check=True)
+        (root / "bin").mkdir()
+        (root / "bin" / "_manifest.py").write_text("DISTRIBUTION = []\n")
+        script_dir = root / in_repo_dir
+        script_dir.mkdir(parents=True)
+        return root, script_dir
+
+    def test_bridges_the_canonical_tools_copy_to_its_repo_root(self):
+        root, script_dir = self._framework_repo("tools")
+        self.assertEqual(md.resolve_single_project_root(script_dir), root)
+
+    def test_bridges_the_canonical_starter_kit_copy_to_its_repo_root(self):
+        root, script_dir = self._framework_repo("starter-kit")
+        self.assertEqual(md.resolve_single_project_root(script_dir), root)
+
+    def test_a_normally_placed_copy_is_unchanged(self):
+        """The documented, common case -- an adopter or portfolio-root copy sitting exactly where
+        it is meant to scan -- must not be redirected anywhere."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(root)], check=True)
+        self.assertEqual(md.resolve_single_project_root(root), root)
+
+    def test_a_tools_dir_with_no_manifest_marker_is_not_bridged(self):
+        """An adopter repo that happens to have its own `tools/` directory, with no
+        `bin/_manifest.py` at its root, must fall through to the pre-existing (portfolio-mode)
+        behavior -- the bridge is scoped to the framework's own home, not any repo with a
+        similarly-named subdirectory."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(root)], check=True)
+        script_dir = root / "tools"
+        script_dir.mkdir()
+        self.assertEqual(md.resolve_single_project_root(script_dir), script_dir,
+                         "no bin/_manifest.py at the grandparent -- must not bridge")
+
+    def test_a_differently_named_nested_dir_is_not_bridged(self):
+        """Only the two directories this file is actually checked into (bin/_manifest.py) are
+        bridged -- not a generic upward walk that would let ANY nested placement claim its
+        ancestor as "the project"."""
+        root, script_dir = self._framework_repo("scripts")
+        self.assertEqual(md.resolve_single_project_root(script_dir), script_dir)
+
+    def test_end_to_end_self_scan_no_longer_reports_no_projects_found(self):
+        """Integration-level reproduction of the reported bug: `python3 tools/methodology_dashboard.py
+        --no-open`, run from a fixture shaped like this repo, must scan the repo itself instead of
+        printing "No projects found"."""
+        root, script_dir = self._framework_repo("tools")
+        # A minimal but real repo -- collect_all() needs at least a commit to read git metrics from.
+        (root / "README.md").write_text("# framework\n")
+        subprocess.run(["git", "-C", str(root), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(root), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "-m", "init"], check=True)
+        script = script_dir / "methodology_dashboard.py"
+        script.write_text(Path(TOOLS_PY).read_text(encoding="utf-8"), encoding="utf-8")
+        result = subprocess.run(["python3", str(script), "--no-open"], cwd=str(script_dir),
+                                capture_output=True, text=True, timeout=30)
+        self.assertNotIn("No projects found", result.stdout)
+        self.assertIn(root.name.upper(), result.stdout,
+                      "single-project title must name the repo, proving it was actually scanned")
 
 
 class TestIssue67ScopedSync(unittest.TestCase):

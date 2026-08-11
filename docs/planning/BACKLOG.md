@@ -1,11 +1,18 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23, BL-26, BL-29 and BL-30 are open** (**BL-29 and BL-30 raised 2026-08-10
+> BL-20, BL-21, BL-22, BL-23, BL-26 and BL-30 are open** (**BL-29 and BL-30 raised 2026-08-10
 > (S70)**, operator-directed, out of a cross-repo investigation into whether adopting the methodology
 > produced measurable effects in local adopter repos — **BL-29** a still-reproducible self-scan gap in
 > `tools/methodology_dashboard.py`, **BL-30** a deliberately lightweight watch item on the ledger
-> trimmer's adoption outside `nprcgenekeepr`; see their own entries. **BL-28 raised 2026-08-10 (S65), CLOSED 2026-08-10
+> trimmer's adoption outside `nprcgenekeepr`; see their own entries. **BL-29 raised 2026-08-10 (S70),
+> CLOSED 2026-08-10 (S72)** — `ROOT = Path(__file__).parent` is the script's own directory, correct
+> for every adopter-installed and portfolio-root copy, but the canonical repo's own two checked-in
+> copies (`tools/`, `starter-kit/`) file the script one level BELOW the repo they belong to, so
+> `(ROOT / ".git").exists()` read false there; a new `resolve_single_project_root()` bridges exactly
+> those two known, marker-verified nestings to their repo root, `DASHBOARD_VERSION` 2.14.0 → 2.15.0,
+> 6 new RED-first tests (290/290 in the dashboard suite), full `bin/tests.sh` 185/186 (Test 9's
+> pre-existing baseline) unaffected; see its own entry. **BL-28 raised 2026-08-10 (S65), CLOSED 2026-08-10
 > (S68)** — the generated `.verify.sh`'s "missing front-matter line" check was a substring test, not
 > exact-line-set membership, so an append-style edit that kept the original text as a literal
 > substring of the new line was invisible to it; fixed by comparing against the exact set of new
@@ -888,6 +895,38 @@ from its own root in single-project mode, the same `single_project = (root / ".g
 (FM #17):** whoever revives it should first re-read the D4(c) commit's own account of why the naive
 fix was rejected, so a second attempt doesn't reintroduce the write-path collision it already found
 and avoided once.
+
+**CLOSED 2026-08-10 (S72).** Re-read D4(c)'s own account first, as this entry asked: its collision
+was in `sync_dashboards()` (a WRITE path taking `discover_projects()`'s exclusion set with it), a
+different function from the one `main()`'s plain scan calls `discover_projects()` through — so this
+fix never touches `EXCLUDE_DIRS`, `discover_projects()`, or `sync_dashboards()` at all, and cannot
+reintroduce that collision. The actual defect was `ROOT = Path(__file__).parent`: correct for every
+adopter-installed and portfolio-root copy (all sit exactly where `bin/_manifest.py` /
+`sync_dashboards()` place them), wrong for the methodology repo's own two checked-in copies
+(`tools/`, `starter-kit/`), which file the script one level BELOW the repo they belong to. Fixed with
+a new `resolve_single_project_root()` (both twins) that bridges `ROOT` to its parent only when
+`ROOT.name` is `tools` or `starter-kit` AND the parent both is a git repo and carries
+`bin/_manifest.py` — the same structural marker `detect_repo_role()` already trusts to prove "this
+is the framework's own publishing repo", which no adopter can acquire via `bin/sync`. Deliberately
+narrow: not a generic upward walk, which could let an accidental copy anywhere in an unrelated
+subdirectory tree claim its ancestor as "the project". `main()`'s single call site
+(`root = resolve_single_project_root(ROOT)`) is the only line changed in `main()` itself.
+Verified live, both copies, from this repo's own root:
+```sh
+$ python3 tools/methodology_dashboard.py --no-open
+  METHODOLOGY — METHODOLOGY DASHBOARD  │  1 projects  │  v2.15.0
+  Health: 76/100    High+ Risk: 0    Commits: 491
+```
+— matching the portfolio scan's own row for this repo exactly. `DASHBOARD_VERSION` 2.14.0 → 2.15.0.
+6 new RED-first tests (`TestBL29SelfScanRoot`, `tools/test_methodology_dashboard.py`): each failed
+with `AttributeError` pre-fix except the end-to-end reproduction, which failed by actually printing
+"No projects found" — confirmed the exact reported symptom before patching it. Coverage includes a
+negative control (`test_a_tools_dir_with_no_manifest_marker_is_not_bridged`): an adopter repo with
+its own unrelated `tools/` directory and no `bin/_manifest.py` is NOT bridged, proving the marker
+check — not just the directory name — gates the new behavior. Dashboard suite 284 → 290, all green;
+full `bin/tests.sh` 185/186 unaffected (Test 9's pre-existing upstream-404 baseline). Twins verified
+byte-identical after the mirror. `dashboard_history.jsonl` gained two real entries from the live
+verification runs above — first time this repo's own root copy could write its own history.
 
 **BL-30 — Watch item, not a defect: `methodology_trim.py`'s next firing outside `nprcgenekeepr`.**
 *Raised 2026-08-10 (S70), operator-directed, while examining cross-repo adoption effects. Deliberately

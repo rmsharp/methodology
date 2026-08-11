@@ -152,6 +152,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [BL-29] Fix the dashboard's self-scan gap — `tools/`/`starter-kit/` copies now scan their own repo
+
+**Model:** Claude Sonnet 5.
+`ROOT = Path(__file__).parent` is correct for every adopter-installed and portfolio-root copy (all
+sit exactly where `bin/_manifest.py` / `sync_dashboards()` place them) but wrong for the methodology
+repo's own two checked-in copies, which file the script one level BELOW the repo they belong to —
+`python3 tools/methodology_dashboard.py --no-open` run from this repo's own root printed "No
+projects found" instead of scanning the repo. New `resolve_single_project_root()` (both twins)
+bridges `ROOT` to its parent only when `ROOT.name` is `tools` or `starter-kit` AND the parent both
+is a git repo and carries `bin/_manifest.py` — the same structural marker `detect_repo_role()`
+already trusts, unreachable by any adopter via `bin/sync`. Deliberately narrow, not a generic
+upward walk. `main()`'s single call site changed; `discover_projects()`, `EXCLUDE_DIRS`, and
+`sync_dashboards()` untouched, so this cannot reintroduce D4(c)'s write-path collision (re-verified
+against `0e188f5` before writing a line — that collision lived in `sync_dashboards()`, a different
+function). `DASHBOARD_VERSION` 2.14.0 → 2.15.0. 6 new RED-first tests (`TestBL29SelfScanRoot`,
+including a negative control proving the `bin/_manifest.py` marker gates the bridge, not just the
+directory name): dashboard suite 284 → 290, all green. Full `bin/tests.sh` 185/186 unaffected
+(Test 9's pre-existing baseline). Verified live, both copies, from this repo's own root — matches
+the portfolio scan's own row for this repo exactly (health 76/100, medium risk, active).
+`docs/planning/BACKLOG.md`'s BL-29 entry updated in place with a `CLOSED` note (this repo's own
+convention for this file, matching BL-24/25/27/28 — kept, not deleted, for the audit trail).
+
 ### 2026-08-10 · [ad hoc] S71 close-out — receipt written, self-score 8/10; see the `[ad hoc]` entries below for the substantive work
 
 **Model:** Claude Sonnet 5.

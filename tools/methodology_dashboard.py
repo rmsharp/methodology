@@ -84,7 +84,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.14.0"
+DASHBOARD_VERSION = "2.15.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -1136,6 +1136,44 @@ def print_usage():
 
 
 # === DISCOVERY ===
+
+# BL-29: the two directories this script is actually checked into its OWN home repo at (see
+# bin/_manifest.py — starter-kit/methodology_dashboard.py is the TRACKED distribution source;
+# tools/methodology_dashboard.py is the canonical-only portfolio copy). Every OTHER copy —
+# every adopter-installed copy, the portfolio-root copy — sits directly at the level it is meant
+# to scan (bin/_manifest.py TRACKED dest; sync_dashboards()'s own target list), so
+# resolve_single_project_root() only ever needs to bridge these two specific, known nestings.
+_CANONICAL_IN_REPO_DIRS = ("tools", "starter-kit")
+
+
+def resolve_single_project_root(script_dir):
+    """Return the directory `main()` should treat as "the project to scan".
+
+    Ordinarily `script_dir` (== `ROOT`, `Path(__file__).parent`) IS that directory. The
+    methodology repo's own two checked-in copies are the one exception: `tools/` and
+    `starter-kit/` both file this script one level BELOW the repo it belongs to, so
+    `(script_dir / ".git").exists()` reads false there even while running the framework's own
+    tool against the framework's own home — exactly the case `main()`'s `single_project`
+    title-text branch already assumed could happen, but discovery never bridged. Reproduced live:
+    `python3 tools/methodology_dashboard.py --no-open` printed "No projects found" run from this
+    repo's own root, while the portfolio-root copy scanned this repo correctly.
+
+    Narrow on purpose, not a generic upward walk — a generic walk could let an accidental copy
+    anywhere in an unrelated subdirectory tree claim its ancestor as "the project". The parent is
+    substituted only when its own name is one of the two locations this file is actually checked
+    in at, AND the parent both is a git repo and carries `bin/_manifest.py` — the same structural
+    marker `detect_repo_role()` already trusts to prove "this is the framework's own publishing
+    repo", which no adopter can acquire via `bin/sync` (bin/ ships nothing through it).
+    """
+    if (script_dir / ".git").exists():
+        return script_dir
+    parent = script_dir.parent
+    if (script_dir.name in _CANONICAL_IN_REPO_DIRS
+            and (parent / ".git").exists()
+            and (parent / "bin" / "_manifest.py").is_file()):
+        return parent
+    return script_dir
+
 
 def discover_projects(root, with_submodules=False):
     """Discover projects to scan.
@@ -4006,7 +4044,7 @@ def main():
     # Warn (best-effort) if this copy is older than the canonical.
     check_stale_version()
 
-    root = ROOT
+    root = resolve_single_project_root(ROOT)
     with_submodules = "--with-submodules" in args
 
     project_paths = discover_projects(root, with_submodules=with_submodules)
