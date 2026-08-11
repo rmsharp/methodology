@@ -152,6 +152,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] Add Framework Learning #23 — a backlog item naming a defect is a claim frozen at filing time, not a live read of current behavior
+
+**Model:** Claude Sonnet 5.
+Appended row 23 to `starter-kit/FRAMEWORK_LEARNINGS.md` (append-only, existing rows untouched).
+Distills the pattern found verifying `church_growth/BACKLOG.md:4-20`: the item asked a future
+canonical-repo session to fix `detect_doc_only()`'s self-referential source-LOC miscount, found
+there 2026-07-21. Unrelated work — a different campaign — had already shipped the exact fix four
+days later (Layer 7, `ae9e5b7` et al., 2026-07-25), and the backlog item's own text was never
+updated, carrying forward unrevised through a cross-repo audit (S70) that named it "ready-to-act"
+without re-deriving whether the defect still reproduced. An empirical re-test against the current
+scanner (not a re-read of the backlog prose) found it already fixed. See the entry immediately
+below for the verification itself.
+
+### 2026-08-10 · [ad hoc] Verified church_growth/BACKLOG.md's doc-only self-scan item already fixed upstream; corrected the record there
+
+**Model:** Claude Sonnet 5.
+Operator-directed ("church_growth/BACKLOG.md:4-20", then "proceed"). Read the item fresh (FM #20)
+rather than trusting S70's carryover summary, then verified its claim empirically before treating
+it as a fix request: ran the current canonical `tools/methodology_dashboard.py` (v2.14.0) against
+`church_growth`'s real tree — `source loc` 0 after Layer 7's vendor reclassification — then
+temporarily moved `church_growth/.methodology-profile` aside and reran `detect_doc_only()`, which
+returned `is_doc_only=True, reason='heuristic'` without the marker; restored the marker immediately
+(`git status --porcelain` confirmed clean in `church_growth` before and after, no stray writes).
+The requested canonical fix already shipped 2026-07-25 (Layer 7), four days after the item was
+filed and two weeks before this verification — no canonical-repo code change was owed. Rewrote
+`church_growth/BACKLOG.md`'s Active item from "needs a canonical fix" to "verified fixed upstream;
+local resync optional" and added the matching `church_growth/CHANGELOG.md` entry (`3035560`) — a
+different repo's ledger, not counted here, same disclosure pattern S70 used for its own
+`church_growth` write. No new or extended `BL-N` item in this repo: nothing here is unfixed, so
+BL-22 (the `DOC_ONLY_SOURCE_LOC_MAX` constant S70's `next_steps` floated extending) is left
+untouched rather than folded into a defect that doesn't exist. `bin/check-links` OK (88/22,
+unaffected).
+
 ### 2026-08-10 · [ad hoc] S70 close-out — receipt written, self-score 8/10; see the `[ad hoc]` BL-29/BL-30 entries below for the substantive work
 
 **Model:** Claude Sonnet 5.
