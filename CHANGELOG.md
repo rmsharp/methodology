@@ -152,6 +152,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] S77 close-out — receipt written, self-score 8/10; see the entry below for the substantive work
+
+**Model:** Claude Sonnet 5.
+Phase 3A/3B/3D: evaluated S76's handoff (9/10 — root cause was precise and pre-verified with real
+tools, and the diagnosis held exactly at rebase time with no surprises). Self-assessed 8/10, one
+point below S76's: the work itself was clean and each step verified against real tools rather than
+assumed (`git merge-tree` before every push, a diffed auto-merge, an unmodified-`upstream/main`
+worktree control for #70's test failures), but this session skipped the mandatory Phase 1B
+claim-before-work stub — disclosed in the receipt's `gotchas` rather than hidden. Receipt:
+`HANDOFFS.md`.
+
 ### 2026-08-11 · [ad hoc] Rebased and force-pushed PRs #68/#69/#70 onto `upstream/main` — all four open PRs now `MERGEABLE`
 
 **Model:** Claude Sonnet 5.
