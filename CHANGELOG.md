@@ -152,6 +152,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] S78 close-out — receipt written, self-score 9/10; see the entry below for the substantive work
+
+**Model:** Claude Sonnet 5.
+Phase 3A/3B/3D: evaluated S77's handoff (9/10 — comprehensive, accurate, and honest about the
+disclosed Phase 1B deviation; not directly aimed at this session's task since the operator
+redirected to BL-8, but nothing in it was wrong or wasted time). Self-assessed 9/10: read BL-8's
+full entry and both referenced distributed documents before deciding anything, put the actual
+adopt/decline call to the operator rather than deciding it solo (the item explicitly frames this as
+an operational-default decision), and verified with real commands (`check-links`, full test suite)
+rather than assuming doc-only edits are risk-free. One point held back because the new operational
+rule is untested — it has not yet governed a real `Workflow` authored in this repo. Receipt:
+`HANDOFFS.md`.
+
 ### 2026-08-11 · [BL-8] Subagent capability-tiering adopted as this fork's operational default for `Workflow`-authored campaigns
 
 **Model:** Claude Sonnet 5.
