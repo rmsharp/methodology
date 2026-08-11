@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **12**; the oldest **19**
+**Older receipts are archived.** This file currently holds **13**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -33,6 +33,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 **Archived 30 record(s), 2026-08-03 → 2026-08-09** into [`docs/archive/HANDOFFS-through-2026-08-09.md`](docs/archive/HANDOFFS-through-2026-08-09.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
+
+---
+
+```handoff
+session: S74
+date: 2026-08-11
+status: pending
+active_task: Operator-directed -- BL-26, verify PR #66's two posted review comments (install_hook core.hooksPath awareness; check-handoff duplicate-session identity) are actually implemented, not just posted. IN PROGRESS.
+```
 
 ---
 
