@@ -37,6 +37,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S70
+date: 2026-08-10
+status: pending
+active_task: Operator-directed — investigate whether adopting the methodology produced a measurable effect in local adopter repos (nprcgenekeepr, vscode_quarto_ext, mts-system, wsfct, + 4 smaller repos), then narrow to effects since each repo's CURRENT `methodology_dashboard.py` version was adopted, then broaden past the health/risk composite to other shipped mechanisms (the trimmer, Component C ledger-freshness, D4(a)/(c)). Record two surfaced findings as BACKLOG.md items: D4(c)'s still-reproducible self-scan gap, and a watch item on the trimmer's adoption outside nprcgenekeepr.
+```
+
+---
+
+```handoff
 session: S69
 date: 2026-08-10
 status: complete
