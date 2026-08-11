@@ -37,6 +37,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S72
+date: 2026-08-10
+status: pending
+active_task: Operator-directed -- fix BL-29 (docs/planning/BACKLOG.md), the dashboard's self-scan gap. D4(c) (`0e188f5`, 2026-08-03) removed "methodology" from EXCLUDE_DIRS but a naive form couldn't ship as worded because discover_projects() has two consumers, one a write path (sync_dashboards()) -- a different fix landed instead. Running `python3 tools/methodology_dashboard.py --no-open` from this repo's own root still reports "No projects found" rather than scanning this repo as a single project, even though `main()` already special-cases `single_project = (root / ".git").exists()` for its title text. Reproduced live at Phase 0 orientation this session. Deliverable: fix the self-scan discovery path without reintroducing the write-path collision D4(c) already found and avoided (re-read its commit message first), RED-first test, mirror tools/ and starter-kit/ copies byte-identical, remove BL-29 from BACKLOG.md at close.
+```
+
+---
+
+```handoff
 session: S71
 date: 2026-08-10
 status: complete
