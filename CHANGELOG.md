@@ -152,6 +152,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-10 · [ad hoc] BL-30 raised: watch item — `methodology_trim.py`'s next firing outside `nprcgenekeepr`
+
+**Model:** Claude Sonnet 5.
+Operator-directed, out of a cross-repo investigation into whether adopting the methodology produced
+measurable effects in local adopter repos. The ledger trimmer is installed in 4 repos (`mts-system`,
+`nprcgenekeepr`, `vscode_quarto_ext`, `wsfct`) but has actually fired — archived real records, verified
+by its own generated `.verify.sh` — in exactly 1: `nprcgenekeepr` (S509, `0929172a`/`d07814a7`, 288 +
+181 records). Not a defect; a deliberately lightweight tracking note asking a future check-in to
+confirm the tool generalizes the next time one of the other three crosses its trim trigger. See
+`docs/planning/BACKLOG.md` BL-30.
+
+### 2026-08-10 · [ad hoc] BL-29 raised: D4(c)'s "methodology" directory-exclusion fix does not cover the self-scan case it was meant to close
+
+**Model:** Claude Sonnet 5.
+Operator-directed, same investigation as BL-30 above. S69's `HANDOFFS.md` receipt flagged, but did not
+chase, that `python3 tools/methodology_dashboard.py` run in-place from this repo's own root reports
+"No projects found" instead of scanning this repo as a single project. Reproduced live against current
+`HEAD` (`DASHBOARD_VERSION` 2.14.0) — still broken, despite D4(c) (`0e188f5`, 2026-08-03) having
+targeted exactly this class of self-scan gap. D4(c)'s own commit message discloses the naive fix
+(removing `"methodology"` from `EXCLUDE_DIRS` outright) was rejected because `sync_dashboards()` is a
+write path and would have made `--sync` install a third copy into this repo's own root; a different,
+narrower fix landed instead, and this specific case survived it. Not fixed here (FM #17). See
+`docs/planning/BACKLOG.md` BL-29.
+
 ### 2026-08-10 · [ad hoc] Fix UAT F9's own instance: `dashboard_history.jsonl` tracked + documented, not left unmanaged
 
 **Model:** Claude Sonnet 5.

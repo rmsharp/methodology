@@ -1,7 +1,11 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-8, BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23 and BL-26 are open** (**BL-28 raised 2026-08-10 (S65), CLOSED 2026-08-10
+> BL-20, BL-21, BL-22, BL-23, BL-26, BL-29 and BL-30 are open** (**BL-29 and BL-30 raised 2026-08-10
+> (S70)**, operator-directed, out of a cross-repo investigation into whether adopting the methodology
+> produced measurable effects in local adopter repos — **BL-29** a still-reproducible self-scan gap in
+> `tools/methodology_dashboard.py`, **BL-30** a deliberately lightweight watch item on the ledger
+> trimmer's adoption outside `nprcgenekeepr`; see their own entries. **BL-28 raised 2026-08-10 (S65), CLOSED 2026-08-10
 > (S68)** — the generated `.verify.sh`'s "missing front-matter line" check was a substring test, not
 > exact-line-set membership, so an append-style edit that kept the original text as a literal
 > substring of the new line was invisible to it; fixed by comparing against the exact set of new
@@ -858,6 +862,46 @@ code or exit status on the tool's own CLI, a correctness fix to generated output
 append) for its tamper — because an append would have been invisible to *this* defect — is now
 historical: an append-shaped tamper is caught too, verified by the new test above it in the same
 file.
+
+**BL-29 — D4(c)'s "methodology" directory-exclusion fix does not cover the self-scan case it was
+meant to close.** *Raised 2026-08-10 (S70), found while investigating cross-repo methodology-adoption
+effects for the operator; reproduced live, not inferred.*
+
+D4(c) (`0e188f5`, 2026-08-03, `DASHBOARD_VERSION` 2.10.3 → 2.11.0) removed `"methodology"` from
+`EXCLUDE_DIRS` — but its own commit message discloses the naive form couldn't ship as worded, because
+`discover_projects()` has two consumers and `sync_dashboards()` is a write path, so the naive removal
+"would have made `--sync` install a third copy into this repo's own root." A different fix landed
+instead ("Fixed and mutation-proved"), and S69's own `HANDOFFS.md` receipt separately flagged, but did
+not chase, that `python3 tools/methodology_dashboard.py` run in-place from this repo's own root still
+reports "No projects found" rather than scanning this repo as a single project. Reproduced live this
+session, against current `HEAD` (`DASHBOARD_VERSION` 2.14.0):
+
+```sh
+$ python3 tools/methodology_dashboard.py --no-open
+Methodology Dashboard: No projects found.
+```
+
+The portfolio-root copy (`/Users/rmsharp/Development/methodology_dashboard.py`) scans this repo
+correctly as part of the 13-project portfolio — the defect is specific to running the in-repo copy
+from its own root in single-project mode, the same `single_project = (root / ".git").exists()` branch
+`main()` already special-cases for its title text but apparently not for discovery. **Not fixed here
+(FM #17):** whoever revives it should first re-read the D4(c) commit's own account of why the naive
+fix was rejected, so a second attempt doesn't reintroduce the write-path collision it already found
+and avoided once.
+
+**BL-30 — Watch item, not a defect: `methodology_trim.py`'s next firing outside `nprcgenekeepr`.**
+*Raised 2026-08-10 (S70), operator-directed, while examining cross-repo adoption effects. Deliberately
+lightweight — a tracking note, not a defect write-up like this file's other entries.*
+
+`methodology_trim.py` (shipped at `DASHBOARD_VERSION`/`TRIM_VERSION` 2.13.0-era, S39) is installed in
+four local adopter repos — `mts-system`, `nprcgenekeepr`, `vscode_quarto_ext`, `wsfct` — but has
+actually **fired** (archived real ledger records, not merely been present) in exactly **one**:
+`nprcgenekeepr`, 2026-08-10 (session S509, commits `0929172a`/`d07814a7`, 288 + 181 records archived,
+verified by its own generated `.verify.sh`). The other three haven't crossed their trim trigger yet.
+One clean run in one repo is evidence the tool *can* work, not that it generalizes across different
+ledger shapes, sizes, and histories. **Check on later:** the next time any of the other three crosses
+its trigger, confirm the run is verified by its own `.verify.sh` (not just "ran without error") before
+treating the tool as proven rather than promising.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
