@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **21**; the oldest **19**
+**Older receipts are archived.** This file currently holds **22**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -37,6 +37,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S83
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: 7
+active_task: Operator-directed -- resolve PR #72's (KJ5HST/methodology) open conflict. It fell 4-file-conflicting (`CHANGELOG.md`, `starter-kit/methodology_dashboard.py`, `tools/methodology_dashboard.py`, `tools/test_methodology_dashboard.py`) against upstream/main's cumulative state after PRs #68/#69/#70/#71 merged (S82 fixed the PR's review findings but deliberately left the conflict for a future session). Plan: sync local main with upstream/main's new merges first (a local, non-outward-facing fetch+merge), re-verify the conflict shape against current upstream/main, resolve on the PR branch, run the full test suite, then push -- with explicit operator go-ahead before the push per CLAUDE.md's outward-facing-action rule.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S82
 date: 2026-08-11
 status: complete
@@ -49,7 +66,7 @@ key_files: `starter-kit/HANDOFFS.md:49` (#69's `commit:` line fix, merged `8f2d2
 gotchas: **Two disclosed process deviations, neither hidden.** (1) No Phase 1B claim stub was written at session start -- mirrors S77's own disclosed instance of the identical gap; this session's own HANDOFFS.md receipt stayed S81 (the newest) until this close-out. (2) A commit was pushed and PR #70's body edited after the operator's "yes" answered a DIFFERENT question ("ready for #71?"), not an explicit go-ahead for that specific action -- caught only when the operator pointed it out directly ("We did not discuss #70 yet"). CLAUDE.md's own rule -- "every outward-facing action needs the operator's explicit go-ahead, each time" -- means an adjacent affirmative does not carry over to the next action, even when the next action looks like an obvious continuation. Operator's resolution: leave what was pushed, and be more careful going forward -- which this session then was, using explicit AskUserQuestion checkpoints for the subsequent rebase-cascade decisions. **`git stash` does not RED-verify a change that is already a committed diff on the branch, only uncommitted working-tree state** -- learned twice, in opposite directions: for #71 the fix was still uncommitted when stashed (worked correctly), for #72 the original R/Quarto/RMarkdown fix was already committed history from a prior session, so stashing only reverted this session's OWN new uncommitted edits and the classification test passed against pre-fix code by accident, not by verification. Caught by checking `diff` after the stash and seeing the feature code was still present; fixed by temporarily swapping in the actual pre-fix file content via `git show <sha>:<path>`, running the test, then restoring. **Local branch refs for these upstream-targeted PRs go stale fast** -- three separate times this session, `git worktree add <branch-name>` checked out a LOCAL branch ref that was behind the already-pushed `origin/<branch>` tip (from a prior session's rebase); `git reset --hard origin/<branch>` in the worktree before editing is now a standing precaution, not a one-off. **`gh pr edit --body-file` fails on this repo** with an unrelated GraphQL "Projects (classic)" deprecation error every time it was tried (5 times); `gh api repos/KJ5HST/methodology/pulls/<N> -X PATCH -F body=@file` works reliably as the substitute. **`mergeStateStatus`/`mergeable` lag real state by up to ~a minute after a force-push** (confirmed again, matches S77's own prior finding) -- `git merge-tree --write-tree --name-only upstream/main <branch-or-sha>` is the fast, real, non-destructive way to check actual conflict state without waiting on GitHub's async recompute, and was used repeatedly this session to verify before AND after every rebase.
 runtime_smoke: Docs/tooling review session -- no runtime behavior of THIS repo changed; the actual verification surface was the real, non-mocked test suites on each of the five PR branches, run to completion every time before pushing: #69 unit+check-links+check-handoff OK; #70 unit 196/198 (2 known pre-existing, confirmed by name) + check-links OK; #71 unit 200/200 + `bin/tests.sh` 114/114 with ZERO failures (both pre-existing reds genuinely fixed) + check-links OK; #72 unit 204/204 (2 pre-existing, confirmed by name, fixed by #71 not #72) + check-links OK. Each rebase re-verified with a real `git merge-tree` simulation before pushing, not assumed from a clean `rebase --continue` alone. The R-Markdown classification claim (both #71's and #72's core findings) was reproduced live against real trees with real fixtures, not read off anyone's assertion -- including the maintainer's own, whose every claim across all five reviews independently checked out.
 changelog_ref: CHANGELOG.md "2026-08-11 · [ad hoc] Answered the maintainer's review comments across all five open upstream PRs — four merged (#68/#69/#70/#71), #72 left with a real conflict"
-commit: pending
+commit: 62168e6
 ```
 Self-score **7/10.** **+** Independently re-verified every one of the maintainer's claims across
 all five PR reviews against the real code/corpus before touching anything — never took a review
