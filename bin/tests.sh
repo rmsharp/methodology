@@ -1863,6 +1863,82 @@ echo "$OUT30" | grep -q "S12" && fail "control entry with no Model bullet was fa
 OUT30_REAL="$("$BIN/model-report" --changelog "$METHODOLOGY/CHANGELOG.md" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
 echo "$OUT30_REAL" | grep -q "no CHANGELOG.md entries carry a" && fail "Source 1 still reports empty against this repo's own live CHANGELOG.md" || pass "Source 1 reports a non-empty population against this repo's own live CHANGELOG.md"
 
+echo "== Test 31: model-report -- Source 1 parses a multi-tag \`### \` header and reports (not folds) any header it still can't parse (BL-33, RED-first, Learning #12) =="
+# BL-33: CHANGELOG_ENTRY_RE required exactly one bracketed tag, so a real header carrying two
+# adjacent tags (CHANGELOG.md:378's `[BL-14][BL-17]`) never matched -- and because parse_changelog_models
+# never reset `cur` on a `### `-prefixed line that failed to match, that entry's own **Model:** bullet
+# was silently absorbed into the PRECEDING entry instead of being dropped or reported. Fixture carries
+# a multi-tag header (must now parse as its own entry), a deliberately malformed `### ` header with no
+# middle dot (must be reported, and must NOT donate its Model bullet to either neighbor), and a valid
+# entry after it (must still parse correctly -- proves the malformed line doesn't wedge the parser).
+CL31="$(mktemp)"
+cat > "$CL31" <<'EOF'
+# Changelog
+
+### 2026-01-01 · [ad hoc] entry before the multi-tag header
+- **Model:** Claude Opus 5
+
+### 2026-01-02 · [BL-9][BL-10] multi-tag entry (two adjacent [TAG] groups)
+
+**Model:** Claude Sonnet 5.
+Free-text prose, exactly like this repo's real multi-tag entry.
+
+### 2026-01-03 [BL-11] malformed header -- no middle dot, must not match
+
+**Model:** Claude Haiku 4.5.
+This bullet must be dropped, not folded into the multi-tag entry above.
+
+### 2026-01-04 · [BL-12] valid entry after the malformed header
+- **Model:** Claude Opus 5.1
+EOF
+HO31="$(mktemp)"
+cat > "$HO31" <<'EOF'
+```handoff
+session: S1
+date: 2026-01-01
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: fixture
+what_was_done: abc1234
+next_steps: fixture
+key_files: a.py:1
+gotchas: fixture
+runtime_smoke: n/a
+changelog_ref: n/a
+commit: abc1234
+```
+EOF
+OUT31="$("$BIN/model-report" --changelog "$CL31" --handoffs "$HO31" --no-git 2>&1)"
+rm -f "$CL31" "$HO31"
+
+echo "$OUT31" | grep -q '\[BL-9\]\[BL-10\]' && pass "multi-tag \`### \` header (\`[BL-9][BL-10]\`) parsed as its own entry" || fail "multi-tag header still not parsed -- BL-33 unfixed"
+echo "$OUT31" | grep -q "Claude Haiku 4.5" && fail "malformed header's Model bullet was fabricated into some other entry" || pass "malformed header's Model bullet correctly dropped, not fabricated"
+echo "$OUT31" | grep -qi "WARNING.*BL-33" && pass "an unparsed \`### \` header is reported as a loud warning, not silently folded" || fail "no loud warning for the unparsed \`### \` header"
+echo "$OUT31" | grep -q "2026-01-03 \[BL-11\] malformed header" && pass "the warning names the exact unparsed line" || fail "warning did not identify the offending line"
+OPUS5_LN="$(echo "$OUT31" | grep -n "Claude Opus 5$" | head -1 | cut -d: -f1)"
+SONNET_LN="$(echo "$OUT31" | grep -n "Claude Sonnet 5" | head -1 | cut -d: -f1)"
+if [ -n "$OPUS5_LN" ] && [ -n "$SONNET_LN" ] && [ "$SONNET_LN" -gt "$OPUS5_LN" ]; then
+    pass "entry before the multi-tag header kept its own Model value (not overwritten by the multi-tag entry's)"
+else
+    fail "entry before the multi-tag header lost or misattributed its Model value (OPUS5_LN=$OPUS5_LN SONNET_LN=$SONNET_LN)"
+fi
+echo "$OUT31" | grep -q "Claude Opus 5.1" && pass "the valid entry AFTER the malformed header still parsed (parser not wedged)" || fail "entry after the malformed header failed to parse"
+
+# Real-file proof: this repo's own live CHANGELOG.md carries exactly the multi-tag header BL-33
+# describes (`[BL-14][BL-17]`, CHANGELOG.md:378 at raise time) and no other unparsed `### ` lines --
+# so Source 1's reported count must equal the raw anchored **Model:** bullet count exactly, and no
+# WARNING should fire against real, well-formed data.
+OUT31_REAL="$("$BIN/model-report" --changelog "$METHODOLOGY/CHANGELOG.md" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
+TOOL_COUNT="$(echo "$OUT31_REAL" | grep -c '^2026-\|^20[0-9][0-9]-')"
+RAW_COUNT="$(grep -cE '^-?[[:space:]]*\*\*Model:\*\*' "$METHODOLOGY/CHANGELOG.md")"
+if [ "$TOOL_COUNT" = "$RAW_COUNT" ]; then
+    pass "Source 1's entry count ($TOOL_COUNT) matches the raw anchored **Model:** grep ($RAW_COUNT) against this repo's own live CHANGELOG.md"
+else
+    fail "Source 1's entry count ($TOOL_COUNT) still disagrees with the raw anchored **Model:** grep ($RAW_COUNT) -- BL-33 population gap unfixed"
+fi
+echo "$OUT31_REAL" | grep -qi "WARNING" && fail "Source 1 raised a WARNING against this repo's own live, well-formed CHANGELOG.md" || pass "no false-positive WARNING against this repo's own live CHANGELOG.md"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]

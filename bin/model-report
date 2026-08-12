@@ -9,7 +9,12 @@ output -- NEVER merges them into one list or one number:
   1. PRIMARY / structured: `**Model:**` bullets in CHANGELOG.md -- self-reported,
      explicit, per-action (starter-kit/CHANGELOG.md's format section). Two
      dialects accepted (BL-20): the seed's `- **Model:**` list-item form, and
-     this repo's own live bare `**Model:**` form (no leading `- `).
+     this repo's own live bare `**Model:**` form (no leading `- `). A `### `
+     entry header may carry one or more adjacent `[TAG]` groups (BL-33), e.g.
+     `[BL-14][BL-17]` -- the source tag list has never said only one can
+     appear. A `### `-prefixed line that still fails to match is never
+     silently folded into the preceding entry; it is dropped and reported
+     as a loud warning in Source 1's own output instead.
   2. SECONDARY / best-effort: free-text "model" mentions in the prose that
      follows each ```handoff block in HANDOFFS.md -- regex-fuzzy by nature
      (matches the bare word "model", so a mention in an unrelated sense will
@@ -49,7 +54,8 @@ import sys
 from collections import OrderedDict
 from pathlib import Path
 
-CHANGELOG_ENTRY_RE = re.compile(r"^### (\d{4}-\d{2}-\d{2}) · \[([^\]]+)\] (.+)$")
+CHANGELOG_ENTRY_RE = re.compile(r"^### (\d{4}-\d{2}-\d{2}) · ((?:\[[^\]]+\])+) (.+)$")
+CHANGELOG_HEADER_PREFIX_RE = re.compile(r"^### ")
 CHANGELOG_MODEL_RE = re.compile(r"^-?\s*\*\*Model:\*\*\s*(.+)$")
 CHANGELOG_SESSION_RE = re.compile(r"\*\*Session:\*\*\s*(\S+)")
 CHANGELOG_FENCE_RE = re.compile(r"^```")
@@ -97,17 +103,31 @@ def default_handoffs(root: Path) -> Path:
     return root_file if root_file.exists() else root / "starter-kit" / "HANDOFFS.md"
 
 
-def parse_changelog_models(text: str) -> list:
-    """One dict per ### entry that carries an optional **Model:** bullet.
-    Entries without one are skipped entirely -- the field is optional, and a
-    skipped entry must never be fabricated into the report.
+def parse_changelog_models(text: str) -> tuple:
+    """Returns (entries, unparsed_headers).
+
+    entries: one dict per ### entry that carries an optional **Model:**
+    bullet. Entries without one are skipped entirely -- the field is
+    optional, and a skipped entry must never be fabricated into the report.
+    `source` holds the entry's full tag group exactly as written, brackets
+    included (e.g. `[BL-20]` or `[BL-14][BL-17]`) -- one or more adjacent
+    `[TAG]` groups (BL-33); the source tag list has never said only one can
+    appear per entry.
+
+    unparsed_headers: one (1-based line number, raw line text) pair for
+    every line starting with `### ` that CHANGELOG_ENTRY_RE still fails to
+    match. Such a line is NEVER silently folded into the preceding entry
+    (BL-33's defect) -- it ends the current entry's bullet capture outright
+    (`cur` resets to None) so nothing after it is misattributed, and it is
+    surfaced in the report as a loud, counted warning instead.
 
     Fenced-code-block aware: starter-kit/CHANGELOG.md's own "How to add an
     entry" section permanently embeds fenced illustrative examples (dated
     ### headers, S42/S43 session IDs, <model> placeholders) as in-file
     documentation -- and that file is SEED-distributed verbatim to every new
     adopter's real root CHANGELOG.md. Any line inside a ``` ... ``` fence is
-    skipped whole, so those illustrations are never parsed as real entries.
+    skipped whole, so those illustrations are never parsed as real entries
+    (and never counted as unparsed headers either).
 
     A **Model:** bullet's value may wrap onto indented continuation lines,
     matching this file's own wrapping convention for its other bullets
@@ -121,6 +141,7 @@ def parse_changelog_models(text: str) -> list:
     lines = text.splitlines()
     n = len(lines)
     entries = []
+    unparsed_headers = []
     cur = None
     in_fence = False
     i = 0
@@ -140,6 +161,11 @@ def parse_changelog_models(text: str) -> list:
                 "session": None, "model": None,
             }
             entries.append(cur)
+            i += 1
+            continue
+        if CHANGELOG_HEADER_PREFIX_RE.match(line):
+            unparsed_headers.append((i + 1, line))
+            cur = None
             i += 1
             continue
         if cur is None:
@@ -166,7 +192,7 @@ def parse_changelog_models(text: str) -> list:
             i = j
             continue
         i += 1
-    return [e for e in entries if e["model"]]
+    return [e for e in entries if e["model"]], unparsed_headers
 
 
 def extract_handoff_prose(text: str) -> list:
@@ -264,7 +290,7 @@ def git_trailers(no_git: bool, root: Path) -> list:
     return trailers
 
 
-def render(changelog_entries, handoffs_hits, trailers) -> str:
+def render(changelog_entries, unparsed_headers, changelog_path, handoffs_hits, trailers) -> str:
     lines = []
     lines.append("model-report -- self-reported model/tier attribution, read-only, non-gating.")
     lines.append("See docs/planning/model-use-provenance-plan.md for the full design.")
@@ -274,13 +300,20 @@ def render(changelog_entries, handoffs_hits, trailers) -> str:
     if changelog_entries:
         for e in changelog_entries:
             session = e["session"] or "?"
-            lines.append("%s  %-5s [%s]  %s" % (e["date"], session, e["source"], e["model"]))
+            lines.append("%s  %-5s %s  %s" % (e["date"], session, e["source"], e["model"]))
             lines.append("    %s" % e["summary"])
         n = len(changelog_entries)
         lines.append("(%d %s **Model:** bullet)"
                       % (n, "entry carries a" if n == 1 else "entries carry a"))
     else:
         lines.append("(no CHANGELOG.md entries carry a **Model:** bullet)")
+    if unparsed_headers:
+        lines.append("")
+        lines.append("WARNING: %d '### '-prefixed line(s) in %s did NOT match "
+                      "CHANGELOG_ENTRY_RE (BL-33) -- dropped, NOT folded into the "
+                      "preceding entry:" % (len(unparsed_headers), changelog_path))
+        for lineno, raw in unparsed_headers:
+            lines.append("  %s:%d: %s" % (changelog_path, lineno, raw))
     lines.append("")
 
     lines.append('=== SOURCE 2 -- SECONDARY (self-reported, best-effort/regex-fuzzy): '
@@ -342,13 +375,14 @@ def main() -> int:
         print("error: HANDOFFS.md not found: %s" % handoffs_path)
         return 1
 
-    changelog_entries = parse_changelog_models(
+    changelog_entries, unparsed_headers = parse_changelog_models(
         changelog_path.read_text(encoding="utf-8", errors="replace"))
     handoffs_hits = parse_handoffs_secondary(
         handoffs_path.read_text(encoding="utf-8", errors="replace"))
     trailers = git_trailers(args.no_git, root)
 
-    print(render(changelog_entries, handoffs_hits, trailers), end="")
+    print(render(changelog_entries, unparsed_headers, changelog_path, handoffs_hits, trailers),
+          end="")
     return 0
 
 
