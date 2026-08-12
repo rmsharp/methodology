@@ -155,6 +155,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] Reconcile-on-read — operator pushed PR #72's rebased branch outside any session
+
+**Model:** Claude Sonnet 5.
+Phase 0 orientation for this session found PR #72
+([KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72)) already
+`mergeable_state: clean` on GitHub, though the S83 receipt below states its rebased branch "is NOT
+pushed... awaiting explicit operator go-ahead." The PR's timeline API shows the operator (`rmsharp`)
+force-pushed it twice, outside any session: `3082d71` at 2026-08-12T02:30:22Z (S82's own `#72` fix)
+and `c4fd8791` at 2026-08-12T03:54:16Z (S83's rebase — the exact sha and `git push --force-with-lease`
+command S83's `next_steps` specified). `git merge-tree` against current `upstream/main` (`02961e7`)
+confirms zero conflicts, matching GitHub's reported state. This is a non-commit outward-facing action
+with no prior ledger record (FM #27) — reconciled here per Phase 0 duty, not altered. No PR comment
+was left noting the push; the PR now sits ready for the upstream maintainer's own merge decision,
+nothing further owed on this fork's side unless asked.
+
+**Verified:** `gh api repos/KJ5HST/methodology/pulls/72` (`mergeable: true`, `mergeable_state:
+"clean"`, `head.sha: c4fd8791...`); `gh api .../issues/72/timeline` (both `head_ref_force_pushed`
+events, actor `rmsharp`); `git merge-tree --write-tree --name-only upstream/main
+origin/fix/dashboard-r-quarto-rmarkdown-extensions` (clean, single tree oid, no conflicting paths).
+
 ### 2026-08-11 · [ad hoc] Merged `upstream/main` (21 commits) into local `main`, resolving PR #72's conflict as a byproduct — BL-35 raised
 
 **Model:** Claude Sonnet 5.
