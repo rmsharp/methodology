@@ -1,7 +1,10 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-34 raised AND FIXED
+> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31, BL-32 and BL-35 are open** (**BL-35 raised
+> 2026-08-11 (S83)** — `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18/19 are malformed 2-column rows,
+> live since S40/S41; found by `bin/check-learnings`, arriving via this session's upstream merge;
+> see its own entry. **BL-34 raised AND FIXED
 > 2026-08-11 (S81), operator-directed** — `LANG_MAP` had no `.r` entry despite `.r` already being
 > in `SOURCE_EXTS` (found scanning `../nprcgenekeepr`: 603 `.r` files, 77,773 LOC, counted as
 > Source but invisible in "Code by Language"); fixed, and `.qmd`/`.rmd` added to `DOC_EXTS` per
@@ -1258,6 +1261,29 @@ is, after all, a framework-standard filename every adopter gets), with `BACKLOG.
 project-bespoke and out of scope; (b) a documented, supported adopter-extension mechanism with its
 own sync-survival story; or (c) something else — **is a decision, not yet made, and not this entry's
 to make.** Nothing here was implemented, and no upstream/outward-facing action was taken.
+
+**BL-35 — `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18 and 19 have been malformed 2-column rows,
+missing their `Source` and `When to Apply` cells, since S40/S41 (2026-08-04).**
+*Raised 2026-08-11 (S83), found by `bin/check-learnings` — a tool arriving via this session's
+`upstream/main` merge (issue #65) that this fork had never run against its own extracted Learnings
+table before. Not fixed here (FM #17: one deliverable, and reconstructing two real learnings' Source
+and When-to-Apply cells needs real editorial judgement this session should not fabricate). Content
+defect only; canonical checker itself was adapted to locate and tolerate it (`bin/tests.sh` Tests
+32/33 assert on this exact, disclosed shape rather than papering over it).*
+**The defect.** `starter-kit/FRAMEWORK_LEARNINGS.md:40-41` — Learning rows `18` and `19` — are each
+one physical line with exactly 2 pipe-delimited cells (`| 18 | <prose> |`), not the table's own
+4-column shape (`# | Learning | Source | When to Apply`) every other row (1-17, 20-23) carries.
+`git blame` traces both to their original authoring commits (`11b843a`, `12463dd`, both 2026-08-04,
+S40/S41) — this is not a regression from this session's merge, it has been live and undetected since
+those rows were written, because no structural checker for this table existed in this fork until
+`bin/check-learnings` arrived just now.
+**Why not fixed here.** Reconstructing the missing `Source`/`When to Apply` cells requires
+correctly characterizing what session/context each learning came from and what concrete guidance it
+implies — real content the original author would need to supply or confirm, not something to invent
+from the prose alone. A future session (ideally the operator, or a session that can ask) should
+either recover the intended cells or, if unrecoverable, decide how the row should read instead.
+**Distribution note.** `FRAMEWORK_LEARNINGS.md` is `bin/_manifest.py`-TRACKED, so every adopter
+already has this malformed content in their own synced copy, unnoticed for the same reason.
 
 **BL-33 — `bin/model-report`'s `CHANGELOG_ENTRY_RE` can't parse a multi-tag `### ` header, and
 silently folds that entry into the PRECEDING one instead of dropping it loudly.**

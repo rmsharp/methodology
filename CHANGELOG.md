@@ -24,10 +24,13 @@ unanchored single-file form published here before the v3.6 split returned **78**
 it also matched the three tag definitions just below and eleven in-prose mentions of a tag — and after
 the split it would have stopped counting the archived entries at all.
 
-- `[issue #<N>]` — a repository issue. Issues for this repo live in the **upstream** parent
-  `KJ5HST/methodology` (this fork has Issues disabled), so entries cite an **absolute URL**, never
-  a bare `#<N>`.
-- `[BL-<N>]` — a `docs/planning/BACKLOG.md` item, removed from the backlog in the same commit.
+- `[issue #<N>]` — a repository issue. Issues live in `KJ5HST/methodology`; the fork
+  `rmsharp/methodology` has Issues disabled, so entries — authored from either side — cite an
+  **absolute URL**, never a bare `#<N>`, and resolve identically from both.
+- `[BL-<N>]` — a backlog item, removed from the backlog in the same commit. That backlog is
+  [`docs/planning/BACKLOG.md`](https://github.com/rmsharp/methodology/blob/main/docs/planning/BACKLOG.md)
+  on fork `main` only — **this repo has no `docs/planning/BACKLOG.md`** — so a `[BL-<N>]` entry here
+  records work whose origin lives in the fork.
 - `[ad hoc]` — work with no backlog or issue origin: releases, tag/branch ops, PR opens, upstream
   issue closes, access grants, and decline/wontfix/grooming decisions.
 
@@ -151,6 +154,84 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ## 2026-08
+
+### 2026-08-11 · [ad hoc] Merged `upstream/main` (21 commits) into local `main`, resolving PR #72's conflict as a byproduct — BL-35 raised
+
+**Model:** Claude Sonnet 5.
+Operator-directed: resolve PR #72's ([KJ5HST/methodology](https://github.com/KJ5HST/methodology/pull/72))
+4-file conflict, left open by S82. Local `main` had not merged `upstream/main` since `a2a7275` (PR
+#66), so it was 21 commits behind — including PRs #68/#69/#70/#71's own merges and two of the
+maintainer's own S9/S10 sessions — and PR #72's conflict was really "local main is stale," not a
+defect in the PR itself. Resolved as a real 3-way merge (`git merge upstream/main --no-commit`, no
+`--strategy` shortcut), file by file, not by picking a side wholesale.
+
+**`CHANGELOG.md`/`HANDOFFS.md` (ledger prepend collision).** Most of upstream's inserted content was
+this fork's OWN prior work, already archived on this side after shipping via a merged PR — kept HEAD,
+discarded the duplicate rather than resurrecting archived text. Three genuinely new upstream-only
+actions (the maintainer's own S9: issue #65's structural tests + the Codex `AGENTS.md`/citation
+cleanup; FM #28 + `context_budget.py`) had never reached this fork's ledger at all — appended at the
+tail of each live file, dated by their true (older) date, not resurrected into an already-frozen
+archive shard. `CLAUDE.md` (2 conflict, +1 clean auto-merge): kept this fork's own `docs/RELEASE_HISTORY.md`
+extraction (BL-9 L3, `7603f10`) over upstream's un-extracted inline history — confirmed byte-identical
+content, upstream just never received the extraction; the FM count (27→28) auto-merged cleanly.
+
+**`tools/methodology_dashboard.py` + `starter-kit/` twin (6 conflicts, real architecture collision).**
+Both sides had independently built "verify a framework file is really installed, per-file" content
+checks after PR #71's own review cycle — this fork's own later, more evolved `_FRAMEWORK_INSTALLED_CONTENT`
+derived-table design (avoids a documented real bug: appending a name to the tuple without a matching
+content check) vs. upstream's separately-maintained `_FRAMEWORK_FILE_SIGNATURES` dict (the actual
+shape PR #71's fix shipped as, on a branch never merged back to this fork's own `main`). Kept this
+fork's derived-table design, ported `context_budget.py`/`.context-budget.json`'s real signature values
+into it (version pattern, structural signatures, `min_hits`) rather than losing PR #66's context-budget
+coverage. `DASHBOARD_VERSION` 2.15.1 → **2.15.2** (both twins, byte-identical, re-confirmed).
+`tools/test_methodology_dashboard.py`: merged `CHECKLIST_EXEMPT` additively (both sides' entries kept);
+dropped upstream's now-redundant `test_every_framework_installed_source_name_has_a_signature` (this
+fork's own `test_every_excluded_source_name_declares_a_content_check` already asserts the stronger,
+ordered-tuple form of the same invariant); fixed a real `None`-vs-`hasattr` gap the merge exposed
+(`.context-budget.json` has no version constant of its own, by design) and a hardcoded population
+guard (2 → 4).
+
+**`bin/check-handoff` (4 conflicts, additive).** This fork's own richer stub-schema logic
+(`STUB_REQUIRED_KEYS`/`STUB_SCORE_SENTINEL_KEYS`, block-selected not flag-selected) kept and extended
+with upstream's `--all` mode (whole-ledger validation: fence balance, duplicate session+date identity)
+— `validate_ledger()`/`scan()` had already auto-merged in cleanly; only the 4 explicit hunks (usage
+text, stub-key constants, `validate()`'s body, the `--all` flag itself) needed reconciling. This fork's
+own `--archived` flag kept alongside. `--all` immediately found a real, pre-existing defect: a stray
+bare `` ``` `` at `HANDOFFS.md`'s old line 318 (S73's own self-assessment prose) was silently
+swallowing S72's entire receipt block whole — fixed (the stray line deleted; not a content change,
+a markdown-fence bug).
+
+**`bin/check-learnings` (clean add, then adapted).** Arrived whole from upstream's own issue #65
+work; written against upstream's inline-table layout (`SESSION_RUNNER.md`), which does not match this
+fork's own extracted `FRAMEWORK_LEARNINGS.md` (S34, BL-9). Retargeted `default_path()` and replaced
+the section-heading anchor with a direct table-header-row match (`TABLE_HEADER_RE`) so it works
+against either layout; added a `RESERVED_RE`/`reserved_numbers()` exception so the file's own
+documented `` `#14` is reserved `` gap is not flagged as a missing row. Running it against the real
+corpus immediately surfaced **BL-35** (raised, not fixed — FM #17): `FRAMEWORK_LEARNINGS.md` rows
+18/19 have been malformed 2-column rows, missing their `Source`/`When to Apply` cells, since S40/S41
+(2026-08-04) — live and undetected because no structural checker for this table existed in this fork
+until now. `bin/tests.sh` Tests 32/33 assert on this exact, disclosed shape rather than papering over
+it or fabricating the missing content.
+
+**`bin/tests.sh` (1 giant hunk, 439–2181, both sides' new tests since the shared base).** Kept all of
+this fork's own Tests 23–31 unchanged; renumbered upstream's Tests 23–25 → **32–34** and its untitled
+`context_budget.py` block → **Test 35**, appended after. Tests 32/33 rewritten to target
+`FRAMEWORK_LEARNINGS.md` (not `SESSION_RUNNER.md`, which no longer carries the table) and to assert on
+each mutation's *specific* finding text rather than "any failure" — the real corpus's 2 BL-35 findings
+would otherwise make every mutation assertion vacuously true regardless of whether the mutation itself
+was detected.
+
+**`bin/_manifest.py` (1 conflict, additive):** kept this fork's own `methodology_trim.py` entry +
+comment, added upstream's `context_budget.py` (TRACKED) after it — its `.context-budget.json` SEED
+entry had already auto-merged in cleanly elsewhere in the file; removed one accidental duplicate
+introduced while resolving this by hand. **`README.md`:** combined the `bin/` tree rows (both
+`check-handoff`'s current description and the new `check-learnings` row).
+
+**Verified:** `python3 -m unittest tools.test_methodology_dashboard` 299/299 (300 with the deleted
+redundant test discounted); `bash bin/tests.sh` run to completion after every structural fix, not
+assumed from a clean merge alone; `python3 bin/check-links` OK; `python3 bin/check-handoff --all` OK
+(24 receipts, fences balanced, no duplicate session+date); `python3 bin/check-learnings` reports
+exactly BL-35's 2 disclosed findings, nothing else; twins re-confirmed byte-identical after every edit.
 
 ### 2026-08-11 · [ad hoc] Answered the maintainer's review comments across all five open upstream PRs — four merged (#68/#69/#70/#71), #72 left with a real conflict
 
@@ -1062,4 +1143,132 @@ positional exemption: prepending S62's own pending stub moved S61 out of "newest
 still-`pending` `commit:` field (the usual chicken-egg — the receipt ships in the commit whose sha
 it would name) started failing `bin/tests.sh`. Reconciled before further work, per this repo's own
 established S58→S59→S60→S61 precedent.
+
+
+---
+
+**Arriving via this session's `upstream/main` merge (S83) — three actions from the maintainer's own S9 session that this fork's ledger never recorded, since local `main` had not merged upstream since `a2a7275`.** Placed here by original date, at the tail of the live section, rather than resurrected into an already-frozen archive shard.
+
+### 2026-08-08 · [ad hoc] Failure mode #28 and `context_budget.py` — the artifacts Phase 0 mandates reading now have ceilings
+
+- **Change:** the methodology tells every session to *write* a durable record (Phase 3C a learning,
+  Phase 3D a handoff, Phase 3A an evaluation of its predecessor) and no phase ever tells one to
+  *reduce* one. That is a compounding term with no decay term, and past a threshold the artifacts
+  Phase 0 orders a session to read stop being readable. Adds **failure mode #28, "Unbounded mandatory
+  read"**, four Degradation Detection rows, and `starter-kit/context_budget.py` — a stdlib-only
+  checker with a declarative per-project config, distributed `TRACKED` with a `SEED` config, plus a
+  pre-commit gate. Suite **99 → 107**.
+- **Evidence — measured on adopter project ResortApp across 51 raw session transcripts, not
+  theorised.** Opening context (tokens present before the first word of the task) rose from
+  **45,931 to 103,241 over 38 consecutive sessions and never once decreased**, reversed only when a
+  human hand-extracted 156 KB out of `CLAUDE.md`; it regrew 7.6% in the next 43 hours, half of that
+  from learnings-index rows **this methodology instructs sessions to append**. `SESSION_NOTES.md`
+  reached **26,097 lines / 4,089,558 B ≈ 1.02M tokens** — larger than the window Phase 0 step 2
+  mandates reading it into. The measured median session read **180 lines, 0.72% of it.**
+- **Why a gate and not a report.** `methodology_dashboard.py` already printed
+  `Large files detected (SESSION_NOTES.md: 26,039 lines)` at every Phase 0 by protocol mandate — the
+  single risk flag in that project's `dashboard.html` — and **15+ consecutive sessions read past
+  it.** The signal was never missing; nothing gated on it. So `--precommit` refuses a commit that
+  grows a budgeted file past its ceiling, prints five ranked remedies with "raise the ceiling"
+  deliberately last, and states what `--no-verify` costs. All three branches were observed: growth
+  refused, shrink-while-over permitted, growth-again refused, then end-to-end through the installed
+  hook with `git rev-list --count HEAD` proving no commit was created.
+- **Two findings worth naming separately.** (1) Throughput is the wrong tell — source output on that
+  project *peaked* on the two days its documents were largest, with zero compactions and 428K of a
+  1M window used. What degrades is task selection, not volume. (2) Size hides the **refutation**, not
+  the false claim: the claim that cost one session its entire deliverable sat in `CLAUDE.md`, which
+  *is* read in full, while the evidence against it sat 503 lines past anything anyone reads.
+- **Also:** `bin/tests.sh` gains 10 cases, including the tool's own 13-gate `--selftest` (every gate
+  observed failing as well as passing), that re-sync never clobbers an adopter-owned config, and that
+  the tool ships no `--force`. Failure-mode count assertions updated 27 → 28 across `CLAUDE.md`,
+  `README.md` and four tutorials (Learning #7); the historical release note naming #27 is left alone.
+  Pre-existing and unrelated: two `bin/tests.sh` failures on this branch also fail on `main`
+  (`tools/test_methodology_dashboard.py` is byte-identical to `main` and fails there; the GitHub
+  dry-run needs network).
+
+### 2026-08-02 · [issue #65] The repo's own numbered sets now have structural tests
+
+- **Change:** implements [issue #65](https://github.com/KJ5HST/methodology/issues/65) — Learning #12
+  ("when an invariant is mechanical, encode it as a test") applied to the two records the framework's
+  own guarantees rest on. Before this, a Learning row could be **renumbered** (which `CLAUDE.md`
+  forbids outright), duplicated, malformed, or deleted, and an older `HANDOFFS.md` receipt destroyed
+  outright, with `bin/tests.sh` still reporting green. Suite **84 → 99**.
+- **New `bin/check-learnings`** — asserts the `starter-kit/SESSION_RUNNER.md` Learnings table is
+  contiguous from 1 with no gaps or duplicates, every row exactly 4 columns, every row one physical
+  line; then sweeps the **distributed corpus** (`bin/_manifest.py`, 21 markdown files) so every
+  `Learning #N` citation resolves to a row that exists — the defect S8 fixed by hand the day before.
+  The sweep deliberately **excludes** `docs/audits/`, `docs/planning/`, `README.md` and this ledger:
+  those legitimately cite *other projects'* numbering or name bad numbers as the defect being
+  described, so sweeping them would manufacture findings against correct prose.
+- **`bin/check-handoff --all`** — the checker validated only the **newest** receipt, so a mangled
+  older block reported green forever. `--all` validates every block and adds the ledger-level
+  invariants: fences balance, no receipt body stranded outside a fence, `session:`/`date:` lead every
+  block, session ids unique. The default stays newest-only for the close-out fast path.
+- **`--allow-pending` now narrows to the newest block, and relaxes a pending stub to its four
+  honest keys.** A Phase 1B claim is *by definition* incomplete, yet the checker demanded all 13 keys,
+  so a correct stub reported red for a whole session (S5 documented this friction) and the
+  whole-ledger mode was unusable as a live check. An **older** receipt left pending is still caught —
+  that is a session that never closed out. The close-out gate is untouched: at Phase 3D `status` is
+  `complete` and all 13 keys are demanded.
+- **RED-first, and it earned its keep — two mutations were caught proving nothing.** Issue #65 makes
+  the precondition non-negotiable, and it immediately paid: (1) the malformed-row mutation anchored on
+  the bare string `"| 13 |"`, which matches a **different numbered table** earlier in
+  `SESSION_RUNNER.md` — the file has more than one — so it mutated the wrong set and the checker was
+  *correct* to pass; (2) a citation mutation replaced the literal `Learning #7`, which does not occur
+  (the real text is the plural `Learnings #7/#8`), so it silently changed nothing. Both are now
+  guarded: `mutate` **aborts if the edit is a no-op**, and each anchor is pinned to text unique to the
+  set under test. The vacuity guard alone is *not sufficient* — defect (1) really did change the file,
+  just the wrong part of it, and only running RED exposed that.
+- **Known limit, stated rather than papered over:** the citation regex does not span a parenthetical
+  (`Learnings #7 (…) and #8` yields only `#7`). That is an under-detection — the checker never invents
+  a finding, so a form it cannot parse is simply unchecked, never falsely flagged.
+- **Commit/PR:** this commit. **Canonical-only** — `bin/check-learnings` is deliberately **not** in
+  `bin/_manifest.py` (same class as `check-handoff` and `check-links`), so `bin/sync` ships adopters
+  nothing new; this guards *this* repo's corpus, which is also the honest limit.
+- **Session:** S9 · **Verified:** `bin/tests.sh` **99 passed / 0 failed**; `bin/check-links` OK (83
+  links / 21 files); `bin/check-learnings` OK (13 rows, all citations resolve); `bin/check-handoff`
+  OK both default and `--all` (7 receipts, fences balanced, ids unique); dashboard twins still
+  byte-identical; `bin/_manifest.py` unchanged. No Learnings row appended — **#14 is reserved** by the
+  unpushed `docs/operator-gated-review-plan` branch's decision D3, and the new checker would now catch
+  that collision.
+
+### 2026-08-02 · [ad hoc] Removed the Codex `AGENTS.md`; corrected four cross-repo citations that described the fork as "this repo"
+
+- **Change:** operator-directed cleanup preceding the issue #65 work, in two parts. Recorded as one
+  entry because both parts share a root cause — **text written from one repository's vantage, landing
+  in another's** — and neither has a backlog or issue origin.
+- **(1) The Codex `AGENTS.md` is deleted — and its deletion leaves no commit.** An untracked 116-line
+  `AGENTS.md` had sat at the repo root since 2026-07-22 across at least four sessions, named in no
+  receipt, no ledger entry, and no `README`. It was a **mechanical find-and-replace of `CLAUDE.md`**
+  (`Claude`→`Codex`, `CLAUDE.md`→`AGENTS.md`, `claude.ai/code`→`Codex.ai/code`), applied blind across a
+  file that is mostly *dated release narration* — so it falsified records: its v2.7.1 entry claimed the
+  cross-doc split v2.7.1 fixed was between "`SESSION_RUNNER.md`/`AGENTS.md`", and its v2.7.2 entry
+  credited agent-level memory to "Codex's auto-memory" where the original names Claude Code's. It was
+  frozen at **v3.5** while `CLAUDE.md` is at v3.6, so it was also drifting. **Deliberately not
+  gitignored:** an ignored regeneration would stop being reported at Orient, which is worse than an
+  untracked one that gets flagged every session. Because the file was never tracked, removing it
+  produces **zero git diff** — a non-commit action, the exact class failure mode #27 names and Phase 0
+  reconcile-on-read cannot catch by design. This line *is* the only durable record that it happened.
+- **(2) Four citations described the fork as "this repo".** All four reached this repository through
+  fork PRs and were true where they were written: **`CHANGELOG.md`'s own source-tag key** claimed
+  *"Issues for this repo live in the upstream parent `KJ5HST/methodology` (this fork has Issues
+  disabled)"* — but this repository **is** `KJ5HST/methodology`, with Issues enabled (verified:
+  `has_issues=true` here, `false` on `rmsharp/methodology`), so the key misdescribed its own repo; and
+  the `[BL-<N>]` key pointed at a `docs/planning/BACKLOG.md` that has never existed here. The
+  absolute-URL convention is **kept unchanged** — retargeting it would strand every entry already
+  written — only its stated *reason* is corrected. Three `CLAUDE.md` §Versioning citations (v3.1, v3.3,
+  v3.6) and one `CHANGELOG.md` citation (v3.3) named fork-only plans by bare repo-relative path; each is
+  now an absolute fork URL plus an explicit "not present in this repo", matching the convention the
+  v3.1 and v3.6 entries already used. **Every URL was resolved against the API before being written**
+  (Learning #13 — an unresolvable reference is the trap), which is also how the `[BL-<N>]` fix was
+  corrected mid-edit: `BACKLOG.md` is **live** on fork `main`, not retired as this ledger's 2026-07-06
+  entry alone would suggest — it was reopened 07-07 with BL-5, exactly as the 2026-07-07 entry records.
+- **Left verbatim by design:** the dated record prose at `CHANGELOG.md` (the 2026-07-06/07 backlog
+  entries) and the S3/S7 receipts in `HANDOFFS.md` already label their fork references *fork-only* and
+  are frozen records — the v2.7.1 precedent and `README.md:387`. Receipts are never edited after the
+  fact regardless.
+- **Commit/PR:** `3b58abb` (1B claim) · this commit. Part (1) has no commit of its own, by nature.
+- **Session:** S9 · **Verified:** `bin/tests.sh` 84/84, `bin/check-links` OK, and all five cited fork
+  paths resolved via `gh api` (`operator-gated-review-plan.md` was checked too and is **404 — correctly
+  cited nowhere**).
 

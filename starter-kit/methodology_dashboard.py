@@ -84,7 +84,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.15.1"
+DASHBOARD_VERSION = "2.15.2"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -392,6 +392,11 @@ _TRIM_FENCE_RE = re.compile(r"^(`{3,}|~{3,})(.*)$")
 # Detection is marker-override -> source-cap -> corpus-disjunction (see detect_doc_only). The
 # source cap keeps a mixed tooling repo (real code that should be tested) from being silently
 # exempted; the bidirectional .methodology-profile marker lets an owner force either classification.
+# These three thresholds are deliberate, stated round-number heuristics, not derived from a
+# measured corpus of adopter repos — record that plainly rather than let the round numbers read
+# as calibrated. DOC_ONLY_SOURCE_LOC_MAX in particular decides which of two scoring regimes a
+# repo gets (see the 148-LOC misclassification documented near FRAMEWORK_INSTALLED_DOCS below), so a
+# regression test pins the current value: change it deliberately, not by accident.
 DOC_ONLY_SOURCE_LOC_MAX = 200            # source LOC at/below this is "essentially no real code"
 DOC_ONLY_DOC_LOC_MIN    = 200            # doc LOC at/above this signals a real doc corpus
 DOC_ONLY_DOC_FILES_MIN  = 3              # this many doc files also signals a real doc corpus
@@ -553,12 +558,37 @@ _FRAMEWORK_SIGNATURES = (
 )
 _FRAMEWORK_SIGNATURE_MIN = 2
 
+# Arriving via upstream/main's PR #66 (context-budget gate, FM #28): a version constant, for a
+# copy new enough to carry one (mirrors _VERSION_RE's own shape).
+_CONTEXT_BUDGET_VERSION_RE = re.compile(r'''^VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE)
+_CONTEXT_BUDGET_SIGNATURES = (
+    "context_budget.py — size budgets",
+    "CONFIG_NAME",
+    "HISTORY_NAME",
+    "growth_run",
+)
+# The seed config has no version constant of its own — signatures are the only way in (see the
+# version_re-is-None guard in is_framework_installed). Structurally unreachable today:
+# is_framework_installed() is only called when category == "source", and categorize_file()
+# always buckets a .json extension as "config" (CONFIG_EXTS), never "source" — so this entry
+# can never affect source-LOC either way. Given a real signature anyway so the completeness
+# test below needs no special case that could hide a future gap if that call-site guard, or
+# this file's extension, ever changes.
+_CONTEXT_BUDGET_JSON_SIGNATURES = (
+    "bytes_per_token",
+    "fixed_harness_tokens",
+    "growth_run",
+    "calibrate_against",
+)
+
 _FRAMEWORK_INSTALLED_CONTENT = {
     "methodology_dashboard.py": (_VERSION_RE, _FRAMEWORK_SIGNATURES),
     # The trimmer has no pre-constant releases in the wild — v1.0.0 is its first shipped version and
     # it has declared TRIM_VERSION since it was written — so it gets no structural fallback. See the
     # empty-tuple paragraph above for why that is a refusal and not a hole.
     TRIM_TOOL_NAME:            (_TRIM_VERSION_RE, ()),
+    "context_budget.py":       (_CONTEXT_BUDGET_VERSION_RE, _CONTEXT_BUDGET_SIGNATURES),
+    ".context-budget.json":    (None, _CONTEXT_BUDGET_JSON_SIGNATURES),
 }
 
 # Derived, never hand-written — see the paragraph above. Order follows the dict, which follows
@@ -668,10 +698,11 @@ def is_framework_installed(rel_path, fpath):
 
     Content-verified, PER NAME: each installed executable proves itself with its own constant —
     the scanner with `DASHBOARD_VERSION` (or, for copies predating it, at least two structural
-    signatures of the scanner), the trimmer with `TRIM_VERSION`. The pairing lives in
-    `_FRAMEWORK_INSTALLED_CONTENT`, which this reads rather than re-stating, and which
-    FRAMEWORK_INSTALLED_SOURCE is derived from — so no name can be excluded without declaring how
-    it identifies itself. Neither tool's constant satisfies the other's entry. The **whole file** is
+    signatures of the scanner), the trimmer with `TRIM_VERSION`, the context-budget gate with its
+    own `VERSION`. The pairing lives in `_FRAMEWORK_INSTALLED_CONTENT`, which this reads rather
+    than re-stating, and which FRAMEWORK_INSTALLED_SOURCE is derived from — so no name can be
+    excluded without declaring how it identifies itself. No tool's constant satisfies another
+    entry's check. The **whole file** is
     read,
     not a fixed prefix — an earlier version searched only the first 4096 bytes, and the real
     constant sits close enough to that boundary that ordinary growth of this module header would
@@ -686,7 +717,7 @@ def is_framework_installed(rel_path, fpath):
 
     **The threat model is accidental miscounting, not an adversarial adopter.** These checks make
     it unlikely that the scanner mistakes an adopter's own work for ours. They do NOT stop someone who
-    deliberately pastes `DASHBOARD_VERSION` into their application to dodge a score — nothing
+    deliberately pastes a version marker into their application to dodge a score — nothing
     file-local could, and the only thing they would win is a wrong dashboard for themselves.
     """
     content = _FRAMEWORK_INSTALLED_CONTENT.get(str(rel_path).replace("\\", "/"))
@@ -698,7 +729,9 @@ def is_framework_installed(rel_path, fpath):
             text = fh.read()
     except OSError:
         return False
-    if version_re.search(text):
+    # version_re is None for a file with no version constant of its own (e.g.
+    # .context-budget.json) — signatures are then the only way in.
+    if version_re is not None and version_re.search(text):
         return True
     hits = sum(1 for sig in signatures if sig in text)
     return hits >= _FRAMEWORK_SIGNATURE_MIN

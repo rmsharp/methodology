@@ -40,6 +40,7 @@ from pathlib import Path
 HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS_PY = os.path.join(HERE, "methodology_dashboard.py")
 STARTER_PY = os.path.join(os.path.dirname(HERE), "starter-kit", "methodology_dashboard.py")
+STARTER_CONTEXT_BUDGET = os.path.join(os.path.dirname(HERE), "starter-kit", "context_budget.py")
 
 _spec = importlib.util.spec_from_file_location("methodology_dashboard_under_test", TOOLS_PY)
 md = importlib.util.module_from_spec(_spec)
@@ -155,6 +156,18 @@ class TestDetection(unittest.TestCase):
                                {"toolchain_present": True})
         self.assertFalse(r["is_doc_only"])
         self.assertEqual(r["reason"], "marker")
+
+    def test_doc_only_thresholds_are_pinned_not_left_to_drift(self):
+        # These three constants are stated heuristics, not derived from a measured corpus (see
+        # the comment above their declaration) — but "unmeasured" must not mean "unpinned".
+        # test_source_cap_boundary above already hardcodes 200/201 as its own boundary literals,
+        # so it happens to catch drift in DOC_ONLY_SOURCE_LOC_MAX too, but that coverage is
+        # implicit and would silently vanish if that fixture were ever rewritten to derive its
+        # boundary from the constant instead of a literal. Assert all three values directly so a
+        # future edit to any of them is a deliberate, visible decision, not a silent drift.
+        self.assertEqual(md.DOC_ONLY_SOURCE_LOC_MAX, 200)
+        self.assertEqual(md.DOC_ONLY_DOC_LOC_MIN, 200)
+        self.assertEqual(md.DOC_ONLY_DOC_FILES_MIN, 3)
 
 
 class TestBL34LanguageAndDocExtensions(unittest.TestCase):
@@ -374,6 +387,11 @@ CHECKLIST_EXEMPT = {
                            "for a change they did not make. Whether an adopter USES it is a "
                            "different question, and the dashboard already answers it in the "
                            "trim-trigger row rather than in the compliance checklist",
+    "context_budget.py": "an elective size-governance gate, same class as the scanner above — "
+                         "its presence indicates a pre-commit hook was installed, not that the "
+                         "session-operating discipline this checklist measures was followed",
+    ".context-budget.json": "SEED config for the context-budget gate above; scored the same way "
+                            "for the same reason, not a session-operating artifact",
 }
 
 
@@ -2106,10 +2124,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.15.1")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.15.2")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.15\.1"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.15.1")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.15\.2"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.15.2")
 
 
 class TestEndToEnd(unittest.TestCase):
@@ -2484,9 +2502,9 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         hardcoding it here would re-introduce exactly the duplicated cross-reference the
         manifest-agreement test exists to prevent."""
         src_for = {dest: src for src, dest, _d in self._manifest().DISTRIBUTION}
-        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 2,
+        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 4,
                          "population guard: update this test's expectations deliberately when a "
-                         "third executable ships, rather than letting the loop silently cover less")
+                         "further executable ships, rather than letting the loop silently cover less")
         for dest in md.FRAMEWORK_INSTALLED_SOURCE:
             real = Path(os.path.dirname(HERE), src_for[dest]).read_text(encoding="utf-8")
             p = self._repo({dest: real, "README.md": "# adopter\n"})
@@ -2689,10 +2707,17 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
                          "the exclusion tuple must BE the content table's keys, in order — a name "
                          "with no declared content check must not be expressible")
         for name, (version_re, signatures) in md._FRAMEWORK_INSTALLED_CONTENT.items():
-            self.assertTrue(hasattr(version_re, "search"),
-                            f"{name} declares no compiled version pattern")
+            # None is legal (see is_framework_installed's own guard) for a file with no version
+            # constant of its own — signatures are then the only way in, and an empty signature
+            # tuple alongside a None version_re would be a genuine, silent no-op entry, so a
+            # compiled pattern OR a non-empty signature tuple is required, never neither.
+            self.assertTrue(version_re is None or hasattr(version_re, "search"),
+                            f"{name} declares a version_re that is neither None nor compiled")
             self.assertIsInstance(signatures, tuple,
                                   f"{name}'s structural fallback must be a tuple (possibly empty)")
+            if version_re is None:
+                self.assertTrue(signatures,
+                                f"{name} has no version_re AND no signatures — unreachable, inert entry")
 
     def _manifest(self):
         manifest_path = os.path.join(os.path.dirname(HERE), "bin", "_manifest.py")
@@ -2749,6 +2774,56 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
                                 md.FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN,
                                 "a real bin/sync install must be able to satisfy the ambiguous "
                                 "evidence threshold on its own")
+
+    # --- per-file signatures: the BL-31 follow-up gap (a listed name proves nothing about a
+    # DIFFERENT file's content) --------------------------------------------------------------
+    #
+    # test_every_framework_installed_source_name_has_a_signature (upstream's own name for this
+    # same completeness gate) is deliberately not carried over: this fork's design derives
+    # FRAMEWORK_INSTALLED_SOURCE FROM _FRAMEWORK_INSTALLED_CONTENT's own keys (see the constant's
+    # definition), so the two can never disagree by construction, and
+    # test_every_excluded_source_name_declares_a_content_check above already asserts the
+    # stronger, ordered-tuple form of the same invariant.
+
+    def test_the_real_context_budget_artifact_is_recognized(self):
+        """Guard-the-guard, mirrors test_the_real_shipped_artifact_is_recognized: uses the REAL
+        starter-kit/context_budget.py content, not a synthetic stand-in, so a future edit to
+        that file that drifts from its own declared signatures is caught here, not only in a
+        fixture that could drift right alongside it."""
+        real = Path(STARTER_CONTEXT_BUDGET).read_text(encoding="utf-8")
+        self.assertTrue(md.is_framework_installed(
+            Path("context_budget.py"), Path(STARTER_CONTEXT_BUDGET)))
+        p = self._repo({"context_budget.py": real, "README.md": "# adopter\n"})
+        m = md.collect_all(p)
+        self.assertEqual(m["files"]["by_category"]["vendor"]["count"], 1)
+        self.assertEqual(m["tests"]["source_loc"], 0)
+
+    def test_a_synced_repo_with_context_budget_installed_is_still_doc_only(self):
+        """THE regression test for the actual bug, reproducing the maintainer's own PR #71
+        review finding: adding context_budget.py's NAME to FRAMEWORK_INSTALLED_SOURCE did not
+        exclude it, because the content check verified every name against
+        methodology_dashboard.py's OWN signatures — which context_budget.py never matches. RED
+        against that version (confirmed by running this test before the per-file fix): a real
+        doc-only repo, after a real bin/sync-shaped install of context_budget.py (674 real
+        lines, read from the actual shipped file) alongside the scanner, flips
+        doc_only True -> False and gains a false HIGH "No test infrastructure" risk — v3.2's
+        exact false penalty, a fourth time."""
+        real_scanner = Path(STARTER_PY).read_text(encoding="utf-8")
+        real_context_budget = Path(STARTER_CONTEXT_BUDGET).read_text(encoding="utf-8")
+        p = self._repo({
+            **self.QUARTO,
+            "methodology_dashboard.py": real_scanner,
+            "context_budget.py": real_context_budget,
+        })
+        m = md.collect_all(p)
+        self.assertTrue(m["doc_only"]["is_doc_only"],
+                        "a real bin/sync-shaped install of context_budget.py must not flip a "
+                        "genuine doc-only repo to code")
+        self.assertEqual(m["tests"]["source_loc"], 0,
+                         "context_budget.py's own 674 LOC must not count as the adopter's source")
+        self.assertNotIn("No test infrastructure",
+                         [r["description"] for r in m["scores"]["risks"]],
+                         "the false HIGH risk this whole fix exists to prevent")
 
     def test_seed_docs_need_evidence_the_framework_was_installed(self):
         """The delta boundary review's confirmed regression, and the plan's RED-first clause (c)

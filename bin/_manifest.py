@@ -48,11 +48,16 @@ DISTRIBUTION = [
     # test are set-compared, and say so), so moving this entry above the dashboard forces that
     # tuple to be rewritten in the same reversed order.
     ("starter-kit/methodology_trim.py", "methodology_trim.py", TRACKED),
+    # Arriving via upstream/main's PR #66 (context-budget gate, FM #28) — a third executable,
+    # appended after methodology_trim.py so FRAMEWORK_INSTALLED_SOURCE's ordered-tuple comparison
+    # (see the comment above) only needs one new tail entry, not a reorder.
+    ("starter-kit/context_budget.py", "context_budget.py", TRACKED),
     # seed-once root-files: created if absent, then adopter-owned (never clobbered)
     ("starter-kit/SESSION_NOTES.md", "SESSION_NOTES.md", SEED),
     ("starter-kit/CHANGELOG.md", "CHANGELOG.md", SEED),
     ("starter-kit/HANDOFFS.md", "HANDOFFS.md", SEED),
     ("starter-kit/ROADMAP.md", "ROADMAP.md", SEED),
+    ("starter-kit/context-budget.json", ".context-budget.json", SEED),
     # framework docs -> docs/methodology/
     ("ITERATIVE_METHODOLOGY.md", "docs/methodology/ITERATIVE_METHODOLOGY.md", TRACKED),
     ("HOW_TO_USE.md", "docs/methodology/HOW_TO_USE.md", TRACKED),
