@@ -110,10 +110,10 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 
 ## Versioning
 
-Changes are tracked via git commits and the README's "What's New" section. Current version: v3.6.
+Changes are tracked via git commits and the README's "What's New" section. Current version: v3.7.
 
 This section owns **released-version semantics** — one narrated entry per shipped version. The repo's **per-action operational timeline** (including non-release work: housekeeping, doc-only PRs, adopter coordination, backlog grooming) lives in the root [`CHANGELOG.md`](CHANGELOG.md) action ledger; where the two overlap — a release — `CHANGELOG.md` carries a one-line pointer here rather than re-narrating, so the two ledgers cannot diverge.
 
-The **narrated per-version history** — one entry for every release from v1.0 to v3.6 — lives in [`docs/RELEASE_HISTORY.md`](docs/RELEASE_HISTORY.md). **Read it when you need the semantics of a specific version**: what changed, why, and what it deliberately did not change. New releases append their entry there; this section keeps only the current-version line and the boundary rule above.
+The **narrated per-version history** — one entry for every release from v1.0 to v3.7 — lives in [`docs/RELEASE_HISTORY.md`](docs/RELEASE_HISTORY.md). **Read it when you need the semantics of a specific version**: what changed, why, and what it deliberately did not change. New releases append their entry there; this section keeps only the current-version line and the boundary rule above.
 
 That pointer is a plain Markdown link and **must never become an `@`-import**, which is expanded into context every session (`starter-kit/BOOTSTRAP.md` Step 5) and would restore exactly the recurring cost the extraction removed — this file is auto-loaded, and the history was 86% of it. This is that step's own rule applied here: the always-loaded file stays scannable, the accumulated record moves to a sibling read on demand. The `## Versioning` heading stays put, so existing `CLAUDE.md#versioning` links still resolve.

@@ -155,6 +155,98 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-12 · [ad hoc] Released v3.7 — the artifacts Phase 0 mandates reading now have ceilings
+
+- **Change:** release narration commit on `release/v3.7` — `README.md` §What's New in v3.7 (folding
+  in the stale "Since v3.6 (unreleased)" section), `CLAUDE.md` §Versioning entry, and the
+  "Current version" line 3.6 → 3.7. Cite-don't-restate: the full narrative lives in
+  [`CLAUDE.md` §Versioning "v3.7"](CLAUDE.md#versioning); this entry is the action record.
+- **Scope:** 38 commits and 13 ledger entries since `v3.6` (`d7a482a`). **Minor**, not patch,
+  because the framework gained a failure mode (**#28**, count 27 → 28 — the first since v3.1) and a
+  new distributed tool (`starter-kit/context_budget.py`, TRACKED, with a SEED config). **Not major**
+  because no principle, phase, gate, or workstream changed. Learnings 12 → 13; `DASHBOARD_VERSION`
+  2.10.2 → 2.10.6 across four separate fixes; `bin/tests.sh` 84 → 114; unit suite 197 → 211.
+- **The "unreleased" README section was stale and is why this was worth catching.** It still ended
+  *"the failure-mode count stays 27"* — written before PR #66 appended FM #28, and true when
+  written. A section that describes itself as pending release is exactly the text nobody re-reads;
+  it is Learning #7's cross-reference problem applied to the release notes themselves.
+- **Tag and Release are recorded in a follow-up entry, not predicted here.** A tag SHA that does not
+  exist yet is a forward-looking claim, and Learning #13 says to compute those rather than assert
+  them — so the tag/Release facts are appended once the action has actually happened.
+
+### 2026-08-12 · [issue #67] The stale-copy warning now names a remedy proportionate to the finding, and bare `--dry-run` no longer writes
+
+- **Change:** `tools/methodology_dashboard.py` (+ `starter-kit/` twin, kept byte-identical) and
+  `tools/test_methodology_dashboard.py`. `DASHBOARD_VERSION` 2.10.5 → 2.10.6. Closes
+  [issue #67](https://github.com/KJ5HST/methodology/issues/67).
+- **Defect 1 — a disproportionate remedy.** `check_stale_version()` answered "this one copy is
+  old" with `Re-sync: python3 <canonical> --sync`. But `--sync` is scoped from the **canonical's
+  own location**, not the working directory, so it rewrites every discovered sibling — measured at
+  26 files across 25 repos, including 7 creates in repos that do not gitignore the path and 1
+  where the file is git-tracked. An adopter following a one-line instruction verbatim dirtied
+  eight unrelated repositories. The warning now leads with the safe per-project action
+  (`cp <canonical> <this copy>`) and offers the portfolio path only as `--sync --dry-run`, with
+  its scope stated. **Why it matters beyond tidiness:** a remedy nobody can safely run is one
+  mechanism behind an *ignored* warning — in one adopter this line rode ~28 consecutive handoffs
+  unacted-on. The measurement was never missing; the actionable remedy was.
+- **Defect 2 — a flag named `--dry-run` that writes.** It was consulted only inside the `--sync`
+  branch, so bare `--dry-run` fell through to a full scan and wrote `dashboard.html` *and*
+  appended to `dashboard_history.jsonl`. It is now an error (exit 2) that writes nothing.
+  Refusing rather than silently no-opping is deliberate: a silent no-op leaves the caller unable
+  to distinguish "nothing to do" from "flag ignored" — the same unreadable-signal class as
+  defect 1.
+- **Tests:** new `TestCliRemedyProportionality` (3 cases, unit suite 208 → 211). Both defect
+  tests were driven RED against the pre-fix scanner and the failing run read, not assumed;
+  the third is a presence control (a plain run must still write `dashboard.html`), without which
+  a scanner that refused *every* invocation would pass and look fixed.
+- **Scope deliberately not taken:** the issue also suggests `--sync-self` and a `--yes` gate on
+  `--sync`. Both change the CLI contract rather than fix a defect, so they are left for a
+  separate deliverable; the `cp` line already gives the per-project remedy with no new surface.
+- **Distribution:** the scanner is `bin/_manifest.py`-TRACKED, so adopters receive both fixes via
+  `bin/sync`.
+
+### 2026-08-11 · [ad hoc] `methodology_dashboard.py`'s `LANG_MAP`/`DOC_EXTS` now recognize R, Quarto, and R Markdown
+
+- **Change:** `tools/methodology_dashboard.py` (+ `starter-kit/` twin, kept byte-identical) and
+  `tools/test_methodology_dashboard.py`.
+- **The defect:** `.r` was already in `SOURCE_EXTS` (R source always counted toward Source LOC),
+  but had no `LANG_MAP` entry, so it never got its own "Code by Language" row. `.qmd` (Quarto) and
+  `.rmd` (R Markdown) were in neither `SOURCE_EXTS` nor `DOC_EXTS`, so either extension outside a
+  `docs/` path fell through `categorize_file`'s whole ladder to `"other"` — not source, not docs,
+  not even LOC-counted (LOC is skipped entirely for `"other"`). Found scanning a real R package:
+  603 `.r` files / 77,773 LOC counted as Source but invisible in "Code by Language".
+- **Fix:** `"r": "R"` added to `LANG_MAP`; `.qmd`/`.rmd` added to `DOC_EXTS`.
+- **A real, not just cosmetic, classification consequence — found on review, pinned here.**
+  Quarto's `.qmd` was already a render-toolchain marker (`detect_doc_only`'s fallback arm), so a
+  Quarto repo was already `doc_only` before this fix; what changed for Quarto is only its
+  *reported* metrics (a Quarto book previously showed zero documentation and its files as
+  uncounted `"other"`). Bare `.Rmd` has no toolchain marker at all (`_bookdown.yml` is one; a
+  plain analysis project has neither that nor `*.qmd`), so adding `.rmd` to `DOC_EXTS` is what
+  newly clears the corpus disjunction for that class: a real R-Markdown analysis repo (no
+  toolchain marker, a small `.R` helper alongside several `.Rmd` files) flips `doc_only`
+  `False → True` and its `"No test infrastructure"` risk softens from `HIGH` to a doc-only
+  advisory. Believed correct — an R-Markdown analysis project is exactly the population BL-5/v3.2
+  exists to score fairly, and the has-tests gate still protects a real R package with a `tests/`
+  dir — verified directly against the pre-fix scanner (the identical fixture there reads
+  `doc_only=False` with the `HIGH` risk) and pinned with a new end-to-end regression test,
+  `test_rmd_analysis_repo_flips_doc_only_and_softens_the_test_risk`, so a future `DOC_EXTS` edit
+  cannot silently un-flip the population without a test noticing.
+- **Also fixed:** the existing Quarto fixture's own render-toolchain-arm isolation. Adding
+  `.qmd`/`.rmd` to `DOC_EXTS` meant the pre-existing Quarto test could now clear the corpus
+  disjunction on doc-LOC alone, silently narrowing what it proved (Layer 7's specific
+  toolchain-arm-in-isolation guarantee). A `QUARTO_MINIMAL` fixture + a dedicated isolation test
+  restore that proof; the stale in-code comment claiming a pure-Quarto repo's `.qmd` was "never
+  counted as docs" is corrected to match.
+- **Verified:** `python3 -m unittest tools/test_methodology_dashboard.py` 204/204 (198 prior + 6
+  from the original fix + 1 classification-regression test), the 2 failures on this base
+  (`test_every_distributed_adopter_root_file_is_scored_or_exempt`,
+  `test_exclusion_list_matches_the_manifest`) are pre-existing and unrelated (fixed by a sibling
+  PR, not this one). `DASHBOARD_VERSION` 2.10.2 → 2.10.5 (2.10.3/2.10.4 independently claimed by
+  two sibling PRs open the same day). Twins confirmed byte-identical.
+- **Distribution:** `starter-kit/methodology_dashboard.py` is `bin/_manifest.py`-TRACKED, so
+  adopters receive the fix via `bin/sync`; `tools/` and `tools/test_methodology_dashboard.py` are
+  canonical-only.
+
 ### 2026-08-11 · [BL-34] PR #72 merged upstream — the maintainer's two review requests confirmed genuinely landed, not just posted
 
 **Model:** Claude Sonnet 5.
