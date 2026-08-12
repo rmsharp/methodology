@@ -37,10 +37,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ```handoff
 session: S86
 date: 2026-08-11
-status: pending
-active_task: Operator-directed -- sync local main with upstream/main now. Real 3-way merge, resolve the 4-file conflict (CHANGELOG.md, tools/methodology_dashboard.py + starter-kit/ twin, tools/test_methodology_dashboard.py) between BL-34's own two independent implementations of the same R/Quarto/RMarkdown fix.
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Operator-directed -- sync local main with upstream/main now. Real 3-way merge, resolve the 4-file conflict (CHANGELOG.md, tools/methodology_dashboard.py + starter-kit/ twin, tools/test_methodology_dashboard.py) between BL-34's own two independent implementations of the same R/Quarto/RMarkdown fix. COMPLETE -- conflict had grown to 6 files by the time the sync ran (upstream moved 5c59f0b -> dcb6fc6: issue #67's own independent fix + the v3.7 release); resolved the full grown scope, not the originally-scoped 4.
+what_was_done: Fetched upstream/main fresh before touching anything (Learning #13 -- re-derive, don't trust S85's snapshot) and found it had moved three commits past what S85 scoped: PR #73 (issue #67, upstream's own independent fix for a defect this fork already fixed differently at S62) and PR #74 (the v3.6->v3.7 release itself). Real 3-way merge (`git merge upstream/main --no-commit --no-ff`, no strategy shortcut), 6 conflicting files, resolved `aa378ab`. CLAUDE.md/docs/RELEASE_HISTORY.md: kept this fork's own history extraction over upstream's reintroduced inline list; appended upstream's v3.7 entry to RELEASE_HISTORY.md with a fork note that its functional content had already reached this fork independently. CHANGELOG.md: upstream's newer-dated entries placed above this fork's own; dropped one orphaned duplicate (upstream's own PR #71 narration, already covered by this fork's existing BL-31 entries). tools/methodology_dashboard.py + starter-kit twin (7 conflicts): kept this fork's own BL-34 comments/DASHBOARD_VERSION (2.15.2) throughout; for issue #67 kept this fork's own `--sync [DIR]` scoping design over upstream's `cp`-based one -- more general, already covered by ~15 existing Row 13/14 tests. tools/test_methodology_dashboard.py (8 conflicts): kept BL-34 comment flavor; adopted upstream's genuinely-new `test_rmd_analysis_repo_flips_doc_only_and_softens_the_test_risk` (never landed on this fork's own main before, only on the separate PR #72 branch); dropped upstream's whole `TestCliRemedyProportionality` class as redundant -- one of its assertions (`assertIn("cp ", err)`) would have failed against this fork's correct, already-tested `--sync [DIR]` design. README.md's auto-merged "What's New in v3.7" section inherited upstream's cp-based remedy description verbatim -- corrected the one inaccurate bullet. HANDOFFS.md (3 conflicts): upstream's S11 merged in, but placed BELOW this session's own S86 stub rather than above it despite its later date -- `check-handoff --allow-pending` exempts only the file's literal newest block, and two stacked pending stubs (this session's own S86 plus upstream's still-open S12 release-cutting session) both flagged red under --allow-pending when I first tried date-strict ordering; found live by running the suite, not assumed. Upstream's S12 deliberately NOT recorded -- a pending stub is a live claim, not settled history. Receipt count corrected 24 -> 28. Then wrote two follow-up commits: a CHANGELOG.md/BACKLOG.md pair recording the merge's full resolution narrative and closing BL-34 fully (both the PR #72 merge and this sync), and this close-out receipt.
+next_steps: BL-34 is now fully closed. Long-tail backlog unchanged and not re-verified this session: BL-11/12/13/14/16/17/18/19/21/22/23/26/30/31/32. Upstream's S12 (v3.6->v3.7 release-cutting session) is still `status: pending` at their own tip as of this merge -- a future sync should check whether it has completed and, if so, reconcile that completed receipt in (not this pending snapshot, which was deliberately not recorded). No other known open threads from this session.
+key_files: `CHANGELOG.md` "2026-08-12 · [BL-34] Local main synced with upstream/main ..." entry (the full file-by-file resolution narrative); `docs/planning/BACKLOG.md:15-17` (header), `:1433-1442` (BL-34's new SYNCED paragraph); `HANDOFFS.md:38` (this receipt), `:44-54` (the S11 provenance note explaining its placement below S86); `tools/methodology_dashboard.py` + `starter-kit/` twin (DASHBOARD_VERSION 2.15.2, unchanged by this merge); `tools/test_methodology_dashboard.py:2171` (the dropped-class note documenting why `TestCliRemedyProportionality` isn't here).
+gotchas: **A merge's conflict shape can grow between when a predecessor scopes it and when you actually run it -- always re-fetch and re-derive before touching a file, even mid-session.** S85 scoped 4 files at `5c59f0b`; by the time this session fetched, upstream had moved to `dcb6fc6` and the real conflict was 6 files spanning a full release. **`check-handoff --allow-pending`'s exemption is POSITIONAL, not just "at most one pending receipt exists"** -- it only tolerates the file's literal newest block being pending; a later-dated but still-open receipt from a merged sequence sitting above your own in-flight stub breaks it even though semantically both are legitimately "in progress." Caught only by actually running `check-handoff --all` and `bin/tests.sh` after the first reconstruction attempt, not by reasoning about it in advance -- the first fix (date-strict ordering) looked right and was still wrong. **A `status: pending` receipt from a merged sequence is not durable history the way a `status: complete` one is** -- it's a live claim that may complete differently than drafted, or never complete at all; the repair is to omit it and let a future sync pick up its eventual completion, not to preserve an incomplete snapshot forever. **Auto-merged content (no conflict marker) can still be substantively wrong** -- README.md's "What's New in v3.7" merged cleanly with zero conflicts, and still described a remedy (`cp`) this fork doesn't actually ship; a clean auto-merge is not the same claim as "still accurate," and needs the same fact-check as a resolved conflict. **When dropping upstream test coverage as "redundant," name the SPECIFIC assertion that would have failed and why** -- not just "we have similar tests" -- `TestCliRemedyProportionality`'s `cp`-assertion would have been a real, avoidable false-red against correct code, and that's the sharper, checkable claim.
+runtime_smoke: Real tool execution throughout, no mocks. `python3 -m unittest tools.test_methodology_dashboard` 300/300 (3 full runs as fixes landed). `bash bin/tests.sh` run to completion 3 times: 226/229 (2 new HANDOFFS.md failures found) -> 228/229 (fixed) -> 228/229 (final, unchanged) -- the sole remaining failure is Test 9's pre-existing, unrelated github-source gap. `bin/check-links` OK (88/22) at every checkpoint. `bin/check-learnings` OK (22 rows, 0 findings) at every checkpoint. `bin/check-handoff --all --allow-pending` OK (28 receipts, fences balanced, no duplicate session+date) after the ordering fix -- FAILED before it (two stacked pending stubs), which is exactly the defect this session's own gotcha describes catching live. Twins (`tools/`/`starter-kit/` methodology_dashboard.py) confirmed byte-identical via `diff` at every checkpoint. `git status --porcelain` clean after every commit.
+changelog_ref: CHANGELOG.md "2026-08-12 · [BL-34] Local `main` synced with `upstream/main` (v3.7 release + issue #67 fix) — the 4-file conflict resolved"
+commit: f8f32ea
 ```
 <!-- claim stub written at session start; reconciled at close-out -->
+Self-score **8/10.** **+** Re-fetched and re-derived the actual conflict shape before touching
+anything, rather than trusting the predecessor's snapshot -- this is exactly what surfaced the
+scope had grown from 4 files to 6, and resolving the grown scope rather than narrowing back to the
+originally-claimed 4 was the honest choice even though it cost real session width. **+** Resolved
+every file conflict on its actual merits rather than defaulting to "ours" or "theirs" -- verified
+which side's `--sync`-scoping design had more test coverage before choosing, confirmed the dropped
+upstream test class's specific assertion would have false-failed against correct code, checked
+whether a genuinely-new upstream test already existed on this fork's own main before adopting it.
+**+** Found and fixed a real inaccuracy in cleanly auto-merged (zero-conflict) content -- README.md's
+new v3.7 section described a remedy this fork doesn't ship -- rather than assuming "no conflict"
+meant "no problem." **+** Caught my own reconstruction defect (two pending receipts stacked, breaking
+`--allow-pending`) by actually running the full test suite after the first attempt, not by trusting
+that the file merely "looked right," and diagnosed the root cause precisely enough to fix it
+correctly on the second attempt. **+** Documented the full resolution rationale in CHANGELOG.md and
+BACKLOG.md in enough detail that a future session doesn't need to re-derive any of these judgment
+calls from the diff alone. **−** My first attempt at reconstructing HANDOFFS.md's conflicted region
+used a fragile line-slicing approach against the working file instead of pulling clean content from
+git's own merge stages (`:2:`/`:3:`) from the start -- it silently dropped a fence separator, caught
+only by visual inspection, not by any tool; the second attempt used the safer approach and worked
+first try. **−** This session grew very wide relative to its original claim (4 files -> 6 files, a
+full release, a second independent duplicate-fix collision) without pausing to confirm the expanded
+scope with the operator before proceeding -- defensible under Learning #13 (the scope genuinely
+couldn't be known until fetched) but a stricter reading of "ask before diving into judgment-heavy
+work beyond what was authorized" would have paused once the release-cutting session (S12) and a
+second issue-#67-shaped collision appeared, rather than treating "the operator already said sync
+now" as authorization for whatever shape the sync turned out to have.
+
+Predecessor **S85: 9/10.** Its `next_steps` said exactly what this session needed to hear: "re-run
+[git merge-tree] fresh, don't trust this session's snapshot if more upstream activity has landed" --
+and upstream HAD moved, by three full commits including a release, in the time between S85's close
+and this session's start. Without that explicit instruction to re-derive rather than trust, this
+session could easily have started from S85's stale 4-file snapshot and hit the real 6-file shape
+mid-resolution instead of before starting. Its gotcha distinguishing "same feature landed twice" from
+"one side is stale" was the correct frame for BOTH duplicate-fix collisions this session resolved
+(BL-34's own R/Quarto fix AND the newly-discovered issue #67 one), even though S85 only knew about
+the first. Docked one point only because its own self-critique (didn't even preliminarily read what
+changed on each side of the 4 files before deferring) turned out to matter in practice -- this
+session had to do that reading from zero, and a session with slightly more runway might have left a
+head start on which hunks were substantive vs. mechanical.
 
 ---
 
