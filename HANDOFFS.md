@@ -39,10 +39,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ```handoff
 session: S84
 date: 2026-08-11
-status: pending
-active_task: Operator-selected from a Phase 0 orientation menu -- recover BL-35's two malformed FRAMEWORK_LEARNINGS.md rows (18, 19 -- missing Source/When-to-Apply cells since S40/S41) via git archaeology on their authoring commits, or make an explicit editorial call if unrecoverable.
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Operator-selected from a Phase 0 orientation menu -- recover BL-35's two malformed FRAMEWORK_LEARNINGS.md rows (18, 19 -- missing Source/When-to-Apply cells since S40/S41) via git archaeology on their authoring commits, or make an explicit editorial call if unrecoverable. COMPLETE -- both cells recovered and written.
+what_was_done: Phase 0 found one unrecorded gap before any task selection: S83's receipt said PR #72's rebased branch was "NOT pushed, awaiting operator go-ahead," but `gh api` showed it already `mergeable_state: clean` -- the PR timeline proved the operator (`rmsharp`) force-pushed it twice outside any session, landing the exact sha (`c4fd8791`) S83's `next_steps` specified. Non-commit outward action, no ledger record (FM #27) -- reconciled into CHANGELOG.md (`015be40`), not altered; nothing further owed on PR #72. Presented a menu of live options (BL-35, a PR #72 status comment, other); operator picked BL-35. `git blame` + `git show` on rows 18/19's authoring commits (`11b843a` S40, `12463dd` S41) found both commit MESSAGES explicitly narrate "Recorded as Learning #18/#19" with the exact defect and its generalized lesson -- recovery from real provenance, not invention from the row's own prose (the distinction BL-35 itself drew). Drafted both `Source`/`When to Apply` cells, presented them to the operator (AskUserQuestion, since this is canonical `bin/_manifest.py`-TRACKED content every adopter already carries malformed), approved as drafted, then written (`f8b978f`). Running `bin/check-learnings` afterward exposed that `bin/tests.sh` Tests 32/33 had themselves been pinned to BL-35's disclosed 2-finding shape ("expected exactly BL-35's 2 known findings") at two independent sites (Test 32's presence control, Test 33's restoration control) -- both would have started failing against the very fix that closed the defect they were asserting on, so both were rewritten to assert `check-learnings: OK` instead, same commit. Swept the corpus for other `Learning #18`/`#19` citations (Learning #7's own lesson, applied to this change) -- the only other hits are in a frozen 2026-05-02 audit doc using a wholly different methodology instance's numbering, already excluded from check-learnings' sweep by design; nothing else needed touching. BACKLOG.md: BL-35 marked FIXED in place (precedent: BL-24/BL-25's inline-CLOSED convention, not the aspirational "removed in the same commit" line CHANGELOG.md's own header states but recent practice doesn't follow), removed from the header's open-items list.
+next_steps: BL-35 is closed; no further action on it. PR #72 sits `mergeable_state: clean`, ready for the upstream maintainer's own merge decision -- nothing owed on this fork's side unless asked. Long-tail backlog unchanged and not re-verified this session: BL-11/12/13/14/16/17/18/19/21/22/23/26/30/31/32 (each "awaiting upstream or a separate decision" per S83). Minor bookkeeping debt, not urgent: several BACKLOG.md items (BL-8/20/33/34/35) are now FIXED/ADOPTED/CLOSED in place but still live under "## Open items" rather than moved to the "## Completed items" table -- a future grooming session could reconcile that, low priority. Next session should orient fresh and ask the operator for direction, per this repo's consistent operator-directed pattern.
+key_files: `starter-kit/FRAMEWORK_LEARNINGS.md:40-41` (rows 18/19, now 4-column); `bin/tests.sh:1975-1996` (Test 32 presence control, rewritten), `:2052-2060` (Test 33 restoration control, rewritten); `CHANGELOG.md` "2026-08-11 · [BL-35] ..." entry (this session's fix) and "2026-08-11 · [ad hoc] Reconcile-on-read — operator pushed PR #72's rebased branch..." entry (the Phase 0 gap); `docs/planning/BACKLOG.md:3-9` (header, BL-35 removed from open list), `:1265-1298` (BL-35 entry + new FIXED paragraph).
+gotchas: **Phase 0 must check live PR/GitHub state, not just `git log` and the local ledger** -- the operator can and did act outward-facing (a force-push) entirely outside a session, exactly the kind of non-commit action FM #27 exists to catch, and nothing in the local repo would have surfaced it without querying `gh api` directly against the PR named in the predecessor's `next_steps`. **A "content unrecoverable, needs editorial judgement" backlog item is worth checking the AUTHORING COMMIT MESSAGE before accepting that verdict** -- BL-35 correctly declined to fabricate from the row's own prose, but the commit that wrote each malformed row often narrates the very context (session, defect, generalization) the row's missing cells need; `git blame` -> `git show <sha>` on the defect's own line is cheap and found it here in minutes. **A disclosed-defect test assertion ("expect exactly N known findings") is a ticking regression against its own future fix** -- fixing the defect the test was pinned to makes the pin itself wrong, at every site that independently hardcoded the same count (there were two here, not one; grep the whole file for the pattern rather than assuming one fix covers the invariant).
+runtime_smoke: Real tool execution throughout. `bin/check-learnings` before: 2 findings (rows 18/19); after: 22 rows, contiguous, 0 findings. `bin/check-links` OK (88 links/22 files), unchanged. `bin/check-handoff --all`: 1 finding both before and after this session's own work commits -- this receipt's own then-pending S84 stub, expected, resolves at this close-out. `bash bin/tests.sh` run to completion 3 times as fixes landed: 227/229 (2 stale-assertion failures found) -> 228/229 (both fixed, only Test 9 remains) -> 228/229 (final, unchanged) -- Test 9's failure is pre-existing and unrelated (`FRAMEWORK_LEARNINGS.md`/`methodology_trim.py` not yet merged upstream, a network/github-source gap this session did not cause or touch).
+changelog_ref: CHANGELOG.md "2026-08-11 · [BL-35] `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18/19's missing `Source`/`When to Apply` cells recovered via git archaeology"
+commit: f8b978f
 ```
 <!-- claim stub written at session start; reconciled at close-out -->
+Self-score **8/10.** **+** Phase 0 caught a real, unrecorded outward-facing action (the operator's
+own PR #72 push) that the local ledger alone would never have surfaced, by checking live GitHub
+state rather than trusting the predecessor receipt's stated end-state. **+** Treated "content
+unrecoverable" as a hypothesis to test, not a given -- the authoring commits' own messages supplied
+real provenance for both missing cells, so the fix is recovery, not invention, exactly what BL-35
+asked a future session to attempt. **+** Presented the drafted content for explicit approval before
+writing to a canonical, distributed file, honoring the Present-before-Implement gate on editorial
+content every adopter will receive. **+** Found and fixed the fix's own downstream blast radius --
+two independent test assertions pinned to the disclosed-broken shape -- rather than shipping a fix
+that would have flipped `bin/tests.sh` red. **+** Verified with the full suite after every material
+edit (3 full runs), not once at the end, and precisely characterized the one remaining failure rather
+than either hiding it or claiming full green. **−** Did not proactively reconcile the several other
+BACKLOG.md items that are FIXED/CLOSED/ADOPTED in place but not yet moved to the Completed table --
+named as a gap in next_steps rather than fixed, a reasonable scope boundary but real debt left
+standing. **−** The Phase 0 discovery (PR #72's already-pushed branch) added real session width before
+the operator-selected task even began; justified as orientation, not scope creep, but a leaner
+session might have surfaced the same fact with fewer `gh api` round trips.
+
+Predecessor **S83: 9/10.** Its `next_steps` named the one open action (push PR #72) precisely and
+gave the exact branch/sha/command -- accurate as of its own close, and it was the direct trail that
+let this session's Phase 0 confirm the action had since been taken. Its BACKLOG.md BL-35 entry did
+more than disclose the defect: it cited the two authoring commits by sha (`11b843a`, `12463dd`),
+which is exactly what turned this session's archaeology into a five-minute lookup instead of a cold
+search. Docked one point only because its own `what_was_done` estimated "the 4 non-Test-9 failures
+... confirmed resolving by simulation" rather than a live re-run after its own stub completed --
+reasonable under FM #17 scope pressure at the end of a long session, not an error, just the one place
+its verification stopped short of the standard the rest of the receipt held to.
 
 ```handoff
 session: S83
