@@ -1,7 +1,14 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-33 FIXED 2026-08-11 (S80)**
+> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-34 raised AND FIXED
+> 2026-08-11 (S81), operator-directed** — `LANG_MAP` had no `.r` entry despite `.r` already being
+> in `SOURCE_EXTS` (found scanning `../nprcgenekeepr`: 603 `.r` files, 77,773 LOC, counted as
+> Source but invisible in "Code by Language"); fixed, and `.qmd`/`.rmd` added to `DOC_EXTS` per
+> operator direction (previously fell through to "other" — not source, not docs, not even
+> LOC-counted). Both twins fixed, 6 new tests, RED-first against both this fork's tree and a clean
+> `upstream/main` worktree; PR opened upstream — [KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72),
+> open, `MERGEABLE`; see its own entry. **BL-33 FIXED 2026-08-11 (S80)**
 > — `bin/model-report`'s `CHANGELOG_ENTRY_RE` widened to accept one-or-more adjacent `[TAG]` groups,
 > so `CHANGELOG.md:378`'s `[BL-14][BL-17]` header now parses as its own entry; a `### `-prefixed line
 > that still fails to match is now reported as a loud `WARNING` (with file/line) instead of being
@@ -1309,6 +1316,63 @@ by an explicit negative assertion in Test 31, not merely by the count matching).
 `bash bin/tests.sh`: 197 passed / 1 failed (Test 9's pre-existing `gh api`/upstream-lag baseline,
 unrelated, same failure class reported by every session since at least S75). `python3 bin/check-links`
 unaffected (88 links / 22 files).
+
+**BL-34 — `methodology_dashboard.py`'s `LANG_MAP`/`DOC_EXTS` are blind to R, Quarto, and R
+Markdown, silently undercounting a real adopter's code and doc corpus.**
+*Raised and FIXED same session, 2026-08-11 (S81), operator-directed — found while answering an
+operator question about `../nprcgenekeepr`'s dashboard card, not from a pre-existing complaint.
+DISTRIBUTED (`tools/methodology_dashboard.py` + `starter-kit/` twin), so the fix lands here AND
+ships upstream; PR opened same session.*
+**The defect, two independent gaps in the same three constants.** `SOURCE_EXTS` already had `.r`
+(R source always counted toward Source LOC), but `LANG_MAP` had no entry for it, so R never got
+its own row in the "Code by Language" card — measured against `../nprcgenekeepr`: **603** `.r`
+files, **77,773** LOC (the bulk of that project's 99,482-LOC Source total), completely invisible
+in `by_language`. Separately, `.qmd` (Quarto) and `.rmd` (R Markdown) were in neither
+`SOURCE_EXTS` nor `DOC_EXTS`, so a file with either extension outside a `docs/` path fell through
+`categorize_file`'s entire ladder to `"other"` — not source, not docs, and (per `collect_file_metrics`)
+not even LOC-counted, since LOC is skipped entirely for `"other"`. Measured on the same corpus: 28
+`.rmd` files at **0** counted LOC (all 28), and 11 of 12 `.qmd` files also at 0 (the 12th happened
+to sit under a `docs/` path, which counts regardless of extension).
+**Fix.** `.r": "R"` added to `LANG_MAP`. `.qmd`/`.rmd` added to `DOC_EXTS` (operator-specified
+target — these are literate-document formats, prose with embedded code, the same bucket `.md`
+already lives in, not `SOURCE_EXTS`'s). Re-measured post-fix against the same corpus: `by_language["R"]`
+now reads 603/77,773 (exact match to Source's own R contribution); `by_category["docs"]` grew from
+415/161,362 to 454/171,766 (+39 files, +10,404 LOC — every `.rmd`/`.qmd` file, accounted for
+exactly). `DASHBOARD_VERSION` 2.15.0 → 2.15.1.
+**Interaction found and handled, not assumed harmless:** adding `.qmd`/`.rmd` to `DOC_EXTS` feeds
+`detect_doc_only`'s corpus disjunction (clause 4), whose own comment stated a pure-Quarto repo's
+`.qmd` was "not counted as docs" — the exact reason the `render.toolchain_present` fallback arm
+exists (Layer 7's `TestFrameworkInstalledExclusion.QUARTO` fixture proved that arm's real-scan
+correctness in isolation). Verified before assuming: the QUARTO fixture (two ~200-line chapters)
+now *also* clears `DOC_ONLY_DOC_LOC_MIN` on its own, so it stopped isolating the toolchain arm —
+still green, but silently narrower coverage. Fixed the comment (now names only `.tex`, since that
+stays uncounted) and added a new minimal fixture (`QUARTO_MINIMAL`, a single short chapter kept
+under both corpus thresholds even with `.qmd` counted) plus a dedicated test that asserts
+`doc_loc`/`doc_files` stay below threshold AND `is_doc_only` is still `True` — restoring the
+toolchain-arm-in-isolation proof the original fixture could no longer carry alone.
+**RED-first (Learning #12):** all 6 new/changed assertions run against the pre-fix module (via
+`git stash` on just the two dashboard.py twins, tests kept) and confirmed failing — 4 hard
+failures/errors, plus the 2 unaffected guard tests (the "not also a language row" negative
+assertion and the toolchain-isolation regression-lock) correctly staying green throughout, since
+neither is proving this fix. Post-fix: `python3 -m unittest tools.test_methodology_dashboard` —
+**296 passed** (290 prior + 6 new). `bash bin/tests.sh` unaffected (197/198, Test 9's pre-existing
+baseline). Twins confirmed byte-identical (`diff`) both before and after.
+**PR OPENED 2026-08-11 (S81), same session, operator pre-authorized in the task assignment
+itself:** built independently in an isolated `git worktree` at `upstream/main` (`a2a7275`) rather
+than porting the fork's own evolved file — confirmed upstream carries the byte-identical
+pre-fix `SOURCE_EXTS`/`DOC_EXTS`/`LANG_MAP`/disjunction-comment block, so the same minimal patch
+applied cleanly. Comments written with no fork-only vocabulary (`BL-34`, `S81`) inside the
+upstream-shipped source — the near-miss BL-31/S75 already flagged and caught once. `DASHBOARD_VERSION`
+2.10.2 → 2.10.3 in the isolated worktree (upstream's own version, far behind the fork's 2.15.x —
+matches the BL-31/PR #71 precedent exactly); this collides with #70 and #71, which independently
+propose the same "2.10.3" for unrelated changes — a known, already-disclosed (BL-22) sequencing
+risk, not new, not pre-empted here. Verified RED against a **clean, unmodified** `upstream/main`
+worktree first (2 pre-existing failures, same `FRAMEWORK_INSTALLED_SOURCE`/`context_budget.py` gap
+#71 already targets, confirmed unrelated to this change), then against the fix branch — 203/203
+minus the identical 2 pre-existing failures, all 6 new tests green. Pushed to `origin`, opened
+[KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72) — **OPEN, MERGEABLE**.
+Isolated worktrees removed after pushing; nothing left behind on this fork's own tree from the
+upstream-targeted work.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

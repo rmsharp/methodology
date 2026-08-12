@@ -152,6 +152,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [BL-34] `methodology_dashboard.py`'s `LANG_MAP`/`DOC_EXTS` now recognize R, Quarto, and R Markdown — fixed here, PR opened upstream
+
+**Model:** Claude Sonnet 5.
+Operator-directed: found while answering an operator question about why `../nprcgenekeepr`'s
+"Code by Language" card omitted R. `SOURCE_EXTS` already had `.r` (R source always counted toward
+Source LOC), but `LANG_MAP` had no entry for it — measured against the real corpus: 603 `.r`
+files, 77,773 LOC, invisible in `by_language`. Operator also specified `.qmd` (Quarto) and `.rmd`
+(R Markdown) for `DOC_EXTS`: neither was in `SOURCE_EXTS` or `DOC_EXTS`, so a file with either
+extension outside a `docs/` path fell through `categorize_file`'s ladder to `"other"` — not
+source, not docs, not even LOC-counted (LOC is skipped entirely for `"other"`); measured: 28
+`.rmd` files at 0 counted LOC, 11 of 12 `.qmd` files likewise. Fixed both twins
+(`tools/methodology_dashboard.py` + `starter-kit/` twin): `.r": "R"` added to `LANG_MAP`;
+`.qmd`/`.rmd` added to `DOC_EXTS`. Found and handled a real interaction rather than assuming it
+harmless: the new `DOC_EXTS` entries feed `detect_doc_only`'s corpus disjunction, whose own
+comment claimed a pure-Quarto repo's `.qmd` was never counted as docs — the reason the
+`render.toolchain_present` fallback exists. The existing `TestFrameworkInstalledExclusion.QUARTO`
+fixture now also clears the doc-LOC threshold on its own, silently narrowing what that fixture
+proves; fixed the stale comment and added a new minimal fixture + test that isolates the
+toolchain arm in isolation again. RED-first (Learning #12): confirmed pre-fix, by direct
+execution (via `git stash` on just the dashboard twins), that all 4 defect-proving assertions
+failed; post-fix `python3 -m unittest tools.test_methodology_dashboard` — 296 passed (290 + 6 new).
+`bash bin/tests.sh` unaffected (197/198, Test 9's pre-existing baseline). `DASHBOARD_VERSION`
+2.15.0 → 2.15.1. Twins confirmed byte-identical before and after.
+**PR opened upstream, same session, operator pre-authorized in the task assignment itself:** built
+independently in an isolated `git worktree` at `upstream/main` (`a2a7275`, confirmed byte-identical
+at the affected block) rather than porting the fork's own evolved file; comments written with no
+fork-only vocabulary (`BL-34`, `S81`) inside the upstream-shipped source. `DASHBOARD_VERSION`
+2.10.2 → 2.10.3 there — a known, already-disclosed (BL-22) collision with #70/#71, which
+independently propose the same version for unrelated changes. RED-verified against a clean
+unmodified `upstream/main` worktree first (2 pre-existing, unrelated failures — the
+`context_budget.py` gap #71 already targets), then against the fix branch: 203/203 minus the
+identical 2 pre-existing failures. Pushed to `origin`, opened
+[KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72) — OPEN, MERGEABLE.
+
 ### 2026-08-11 · [BL-33] `bin/model-report`'s `CHANGELOG_ENTRY_RE` now parses multi-tag `### ` headers and reports (not folds) any it still can't
 
 **Model:** Claude Sonnet 5.
