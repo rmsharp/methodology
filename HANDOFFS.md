@@ -37,6 +37,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S79
+date: 2026-08-11
+status: pending
+active_task: Operator-directed -- work BL-20 (bin/model-report's Source 1 CHANGELOG_MODEL_RE can't parse this repo's own bare `**Model:**` bullet form). Fix (1) from BL-20's own three-option list: widen the regex to accept both dialects -- fork-side, no go-ahead needed (option 2 is forbidden by the v2.7.1 frozen-dated-entries convention; option 3 is a seed-doc change that ships upstream and is out of scope this session).
+```
+
+```handoff
 session: S78
 date: 2026-08-11
 status: complete
