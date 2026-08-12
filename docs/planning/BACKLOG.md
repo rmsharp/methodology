@@ -1,10 +1,17 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-20, BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-8 ADOPTED 2026-08-11
+> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31, BL-32 and BL-33 are open** (**BL-33 raised 2026-08-11
+> (S79)**, found incidentally while re-verifying BL-20's population, not fixed (FM #17) — a second,
+> separate `bin/model-report` defect: a multi-tag `### ` header (`[BL-14][BL-17]`) silently folds
+> into the preceding entry instead of failing loudly; see its own entry. **BL-8 ADOPTED 2026-08-11
 > (S78), operator-directed** — subagent capability-tiering is now this fork's own operational default
 > when authoring a `Workflow` script; not a methodology change, no distributed document edited; see
-> its own entry. **BL-32 raised 2026-08-11**,
+> its own entry. **BL-20 FIXED 2026-08-11 (S79)** — `bin/model-report`'s `CHANGELOG_MODEL_RE`
+> widened to accept this repo's own bare `**Model:**` dialect alongside the seed's documented
+> `- **Model:**` list form (option 1 of the entry's own three; option 2 is forbidden by the v2.7.1
+> frozen-dated-entries convention, option 3 is a separate DISTRIBUTED seed-doc change that needs its
+> own go-ahead and was not taken); see its own entry. **BL-32 raised 2026-08-11**,
 > not a session claimed in this repo — reported by an operator conversation relaying a live
 > `nprcgenekeepr` session's own investigation, independently verified against this repo's canonical
 > `starter-kit/methodology_trim.py` before being recorded: its `LEDGERS` config table covers only
@@ -574,6 +581,27 @@ upstream and needs a go-ahead.** Note (1) and (2) are fork-side, so this can adv
 way.
 **Related:** this is the same shape as BL-14/BL-15 — a promise in the seed with no detector — except
 here the detector exists and reads the wrong dialect.
+
+**FIXED 2026-08-11 (S79), option (1).** `CHANGELOG_MODEL_RE` (`bin/model-report:51`) widened from
+`^-\s*\*\*Model:\*\*\s*(.+)$` to `^-?\s*\*\*Model:\*\*\s*(.+)$` — the leading `- ` is now optional,
+not required, so Source 1 matches both dialects. Option (2) (normalize the live entries to list
+form) was ruled out, not chosen against: it rewrites dated `CHANGELOG.md` entries, which the
+v2.7.1 convention forbids outright. Option (3) (change the seed to document the bare form) remains
+genuinely open — it would close the last gap (the seed still only documents the list form the live
+ledger doesn't use) but is a DISTRIBUTED change that ships upstream and needs its own go-ahead;
+not taken this session, not blocking this fix.
+RED-first (Learning #12): confirmed pre-fix that a bare-form fixture, and this repo's own live
+`CHANGELOG.md`, both fell through to `(no CHANGELOG.md entries carry a **Model:** bullet)` before
+touching the regex. New Test 30 in `bin/tests.sh` fixtures both dialects side by side plus a
+no-bullet control (so an over-wide fix would still be caught), and asserts against this repo's own
+live `CHANGELOG.md` directly, not only a synthetic fixture.
+Re-measured, not recalled, and reconciled against the tool's own post-fix output rather than trusted
+as a bare grep count: `grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md` → **52** anchored
+bullets in the live file (5/10/68/0 across the four archive shards); `bin/model-report`'s own
+post-fix entry count is **51**, one lower. The gap is real and is NOT this fix — re-derived down to
+a single cause, a second, separate, pre-existing `bin/model-report` defect (a multi-tag `### `
+header silently folding into its predecessor rather than failing to match loudly), raised as its own
+item, **BL-33**, and deliberately not fixed here (FM #17: this session's one deliverable was BL-20).
 
 **BL-21 — When the Phase 1B carve-out is contributed upstream, two seed sentences must ship with it.**
 *Raised 2026-08-03 (S32) by the change that will eventually create the drift. Scoped DOWN from how it
@@ -1220,6 +1248,36 @@ is, after all, a framework-standard filename every adopter gets), with `BACKLOG.
 project-bespoke and out of scope; (b) a documented, supported adopter-extension mechanism with its
 own sync-survival story; or (c) something else — **is a decision, not yet made, and not this entry's
 to make.** Nothing here was implemented, and no upstream/outward-facing action was taken.
+
+**BL-33 — `bin/model-report`'s `CHANGELOG_ENTRY_RE` can't parse a multi-tag `### ` header, and
+silently folds that entry into the PRECEDING one instead of dropping it loudly.**
+*Raised 2026-08-11 (S79), found incidentally while re-measuring BL-20's population against the real
+live ledger — not the item this session was assigned, and not fixed here (FM #17: one deliverable).
+Fork-side tool only; canonical-only, not distributed.*
+**The defect.** `CHANGELOG_ENTRY_RE` (`bin/model-report:50`) is
+`^### (\d{4}-\d{2}-\d{2}) · \[([^\]]+)\] (.+)$` — exactly one bracketed tag, then a required space,
+then the summary. `CHANGELOG.md:378`'s real header — `### 2026-08-10 · [BL-14][BL-17] Two defects in
+the HANDOFFS.md receipt spec — PR opened upstream` — carries two adjacent tags with no space between
+the first `]` and the second `[`, so the regex never matches. `parse_changelog_models()` never resets
+`cur` on that line, so the entry gets no dict of its own: its `**Model:**` bullet, date, and summary
+are silently absorbed as if they belonged to the PRECEDING entry (`### 2026-08-10 · [BL-21] …`,
+2 headers up) instead. In this one instance both entries happen to carry the identical value ("Claude
+Sonnet 5."), so the report's Model *value* doesn't visibly corrupt — but the **entry count** does:
+this is exactly how BL-20's own re-verification found `bin/model-report` reporting **51** entries
+against a raw anchored `**Model:**` grep of **52** (`grep -cE '^-?[[:space:]]*\*\*Model:\*\*'
+CHANGELOG.md docs/archive/CHANGELOG-*.md` → 52 for the live file; the tool's own count is one lower).
+A future ledger entry whose merged-away Model value genuinely *disagrees* with the entry it gets
+folded into would misattribute silently, not just undercount.
+**Population, re-derived here:** exactly **one** live occurrence
+(`grep -noE '^### [0-9-]+ · \[[^]]+\](\[[^]]+\])+' CHANGELOG.md docs/archive/CHANGELOG-*.md` → only
+`CHANGELOG.md:378`); none in any archive shard.
+**Not fixed.** Out of scope for BL-20 (a different regex, a different failure mode — silent
+misattribution vs. silent non-match), and this session's one deliverable was already BL-20. A fix
+widens `CHANGELOG_ENTRY_RE` to accept one-or-more adjacent `[TAG]` groups (mirroring how the source
+tag list already documents `[BL-<N>]`/`[issue #<N>]`/`[ad hoc]` as a closed set but never says only
+one can appear) and should fail loudly (or at minimum count) an unparsed `### ` header rather than
+silently folding it into its neighbor — a "line starts with `### ` but doesn't match" trap this tool
+does not currently guard at all.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

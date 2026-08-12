@@ -152,6 +152,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [ad hoc] S79 close-out — receipt written, self-score 9/10; see the `[BL-20]` entry below for the substantive work
+
+**Model:** Claude Sonnet 5.
+Phase 3A/3B/3D: evaluated S78's handoff (9/10 — put the actual adopt/decline call to the operator
+rather than deciding solo, verified with real commands rather than assuming doc-only edits are
+risk-free; one point held back because the new BL-8 operational rule was untested). Self-assessed
+9/10: confirmed RED by direct execution (both a synthetic fixture and this repo's own live
+`CHANGELOG.md`) before touching the regex, ran the full suite before and after (189/190, Test 9's
+pre-existing baseline the only failure, all 4 of this session's own new Test 30 assertions green),
+and did not let a discrepancy
+found while re-measuring the fix's own population (52 raw vs. 51 reported) go unexplained — traced
+it to its actual root cause rather than citing either number uncorrected, and raised it as a new
+item (BL-33) rather than silently folding a fix for it into this session's own scope. One point held
+back: BL-33 was found, not anticipated — a broader pre-fix sweep for other `### ` headers the tool's
+own entry regex can't parse would have caught it before, not during, the re-measurement.
+
+### 2026-08-11 · [BL-20] `bin/model-report`'s Source 1 now parses this repo's own bare `**Model:**` dialect
+
+**Model:** Claude Sonnet 5.
+Operator-directed: work BL-20 (`bin/model-report`'s Source 1 was blind to the bare `**Model:**` form
+this repo's own live `CHANGELOG.md` writes, reading a file with dozens of real bullets as having
+none). Of the entry's own three fixes, option (2) is forbidden outright by the v2.7.1 frozen-dated-
+entries convention and option (3) is a DISTRIBUTED seed-doc change needing its own go-ahead, so this
+session took option (1): widened `CHANGELOG_MODEL_RE` (`bin/model-report:51`) from
+`^-\s*\*\*Model:\*\*\s*(.+)$` to `^-?\s*\*\*Model:\*\*\s*(.+)$` — the leading `- ` is now optional.
+RED-first (Learning #12): confirmed pre-fix, by direct execution, that both a synthetic bare-form
+fixture and this repo's own live `CHANGELOG.md` fell through to the tool's empty-population sentinel.
+Added Test 30 to `bin/tests.sh` — both dialects side by side plus a no-bullet control, asserted
+against the real live ledger, not only a synthetic fixture. Full suite: 189 passed / 1 failed (Test
+9's pre-existing upstream-lag baseline, unrelated). While re-measuring the fix's population, found and
+traced a second, separate, pre-existing defect (a multi-tag `### ` header silently merging into its
+predecessor) — not fixed here, out of this session's one-deliverable scope; raised as `BL-33`.
+
+### 2026-08-11 · [BL-33] `bin/model-report`'s multi-tag `### ` header defect — raised, not fixed
+
+**Model:** Claude Sonnet 5.
+Found incidentally while re-measuring BL-20's population against this repo's own live `CHANGELOG.md`:
+a raw anchored `**Model:**` grep gave 52 for the live file, but the tool's own post-fix count was 51.
+Traced to `CHANGELOG_ENTRY_RE` (`bin/model-report:50`), which permits exactly one bracketed source
+tag; `CHANGELOG.md:378`'s real header, `### 2026-08-10 · [BL-14][BL-17] …`, carries two adjacent tags
+with no space between them and never matches, so `parse_changelog_models()` never opens a new entry
+for it — its own `**Model:**` bullet, date, and summary are silently absorbed into whichever entry
+preceded it instead of being dropped loudly. Exactly one live occurrence, none in any archive shard.
+Not fixed (FM #17: this session's one deliverable was BL-20, a different regex and a different
+failure mode). Recorded as `docs/planning/BACKLOG.md` BL-33.
+
 ### 2026-08-11 · [ad hoc] S78 close-out — receipt written, self-score 9/10; see the entry below for the substantive work
 
 **Model:** Claude Sonnet 5.
