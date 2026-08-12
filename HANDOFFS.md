@@ -37,6 +37,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S80
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Operator-directed -- work BL-33 (bin/model-report's CHANGELOG_ENTRY_RE can't parse a multi-tag `### ` header, e.g. `[BL-14][BL-17]`, and silently folds that entry into the PRECEDING one instead of failing loudly). Widen the regex to accept one-or-more adjacent [TAG] groups; add loud detection for any `### `-prefixed line that still fails to match.
+what_was_done: pending
+next_steps: pending
+key_files: bin/model-report:52 (CHANGELOG_ENTRY_RE), :100-169 (parse_changelog_models), :267-318 (render); docs/planning/BACKLOG.md:1252-1279 (BL-33's full entry)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S79
 date: 2026-08-11
 status: complete
