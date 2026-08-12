@@ -12,7 +12,8 @@
 > operator direction (previously fell through to "other" — not source, not docs, not even
 > LOC-counted). Both twins fixed, 6 new tests, RED-first against both this fork's tree and a clean
 > `upstream/main` worktree; PR opened upstream — [KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72),
-> open, `MERGEABLE`; see its own entry. **BL-33 FIXED 2026-08-11 (S80)**
+> **MERGED 2026-08-11** (`5c59f0b`, verified S85) — local `main` not yet synced, a real 4-file
+> conflict against this item's own already-landed local fix; see its own entry. **BL-33 FIXED 2026-08-11 (S80)**
 > — `bin/model-report`'s `CHANGELOG_ENTRY_RE` widened to accept one-or-more adjacent `[TAG]` groups,
 > so `CHANGELOG.md:378`'s `[BL-14][BL-17]` header now parses as its own entry; a `### `-prefixed line
 > that still fails to match is now reported as a loud `WARNING` (with file/line) instead of being
@@ -1411,9 +1412,24 @@ risk, not new, not pre-empted here. Verified RED against a **clean, unmodified**
 worktree first (2 pre-existing failures, same `FRAMEWORK_INSTALLED_SOURCE`/`context_budget.py` gap
 #71 already targets, confirmed unrelated to this change), then against the fix branch — 203/203
 minus the identical 2 pre-existing failures, all 6 new tests green. Pushed to `origin`, opened
-[KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72) — **OPEN, MERGEABLE**.
+[KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72).
 Isolated worktrees removed after pushing; nothing left behind on this fork's own tree from the
 upstream-targeted work.
+**MERGED 2026-08-11 (S85; operator reported it, verified rather than taken on word):** `gh api
+repos/KJ5HST/methodology/pulls/72` confirms `merged: true`, `merged_by: KJ5HST`, merge commit
+`5c59f0b`. Independently re-verified in an isolated worktree at that exact merge commit (mirroring
+the BL-26/PR #66 precedent, not trusting the commit messages alone): `python3 -m unittest
+tools.test_methodology_dashboard` 208/208; `bash bin/tests.sh` 114/114 (upstream's own smaller
+suite scope). Confirms both of the maintainer's review requests actually landed, not just posted —
+`DASHBOARD_VERSION` reads `2.10.5` there (the resolved three-way collision), and
+`test_rmd_analysis_repo_flips_doc_only_and_softens_the_test_risk` (the classification-consequence
+pin) is present. **Not synced into local `main` here** — `git merge-tree` against local `main`
+shows a real 4-file conflict (`CHANGELOG.md`, both `methodology_dashboard.py` twins,
+`tools/test_methodology_dashboard.py`), because this item's own fix was ALSO built and landed
+directly on local `main` in the same S81 session (this entry's own "Fix" section above,
+`DASHBOARD_VERSION` 2.15.0 → 2.15.1) — two independent applications of the same feature against
+two different base trees. Resolving that is real judgment (which side's structure to keep across
+4 files), deliberately deferred to a dedicated sync rather than folded into this verification.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

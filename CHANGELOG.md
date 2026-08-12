@@ -155,6 +155,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [BL-34] PR #72 merged upstream — the maintainer's two review requests confirmed genuinely landed, not just posted
+
+**Model:** Claude Sonnet 5.
+Operator reported the merge; verified rather than taken on word. `gh api repos/KJ5HST/methodology/pulls/72`
+confirms `merged: true`, `merged_by: KJ5HST`, merge commit `5c59f0b`. Independently re-ran the suite
+against that exact merge commit in an isolated `git worktree` (mirroring the `[BL-26]` PR #66
+precedent below, not trusting the commit messages alone): `python3 -m unittest
+tools.test_methodology_dashboard` 208/208; `bash bin/tests.sh` 114/114 (upstream's own smaller
+suite scope, no fork-only tests). Confirmed both review findings actually shipped — `DASHBOARD_VERSION`
+reads `2.10.5` there, the three-way version collision's resolution, and
+`test_rmd_analysis_repo_flips_doc_only_and_softens_the_test_risk`, the classification-consequence
+pin the maintainer asked for, is present in the merged tree.
+
+**Local `main` is deliberately not synced in this entry.** `git merge-tree` against local `main`
+shows a real 4-file conflict (`CHANGELOG.md`, both `methodology_dashboard.py` twins,
+`tools/test_methodology_dashboard.py`) — BL-34's own fix was built twice, independently, against
+two different base trees: once landed directly on this fork's `main` the same session (S81,
+`DASHBOARD_VERSION` 2.15.0 → 2.15.1), and once on the PR #72 branch built fresh against a clean
+`upstream/main` worktree (S81's own stated reason: "confirmed upstream carries the byte-identical
+pre-fix ... block, so the same minimal patch applied cleanly"). Both are correct; neither is a
+strict superset of the other's surrounding file state, so reconciling them across 4 files is a real
+judgment call, deliberately deferred to a dedicated sync rather than rushed into this verification.
+Closes BL-34's PR #72 thread; the local-`main` sync remains open.
+
 ### 2026-08-11 · [BL-35] `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18/19's missing `Source`/`When to Apply` cells recovered via git archaeology
 
 **Model:** Claude Sonnet 5.
