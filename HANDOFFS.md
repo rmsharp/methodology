@@ -37,6 +37,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S85
+date: 2026-08-11
+status: pending
+active_task: Operator reported PR #72 merged upstream. Independently verify the merge, record it (mirroring the BL-26/PR #66 precedent), update BL-34's BACKLOG.md status, and assess whether local main should sync with upstream/main now (real conflict shape: BL-34's own already-landed local fix vs PR #72's independently-evolved version of the same feature) or be deferred.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S84
 date: 2026-08-11
 status: complete
