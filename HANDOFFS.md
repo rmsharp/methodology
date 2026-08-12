@@ -37,6 +37,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S86
+date: 2026-08-11
+status: pending
+active_task: Operator-directed -- sync local main with upstream/main now. Real 3-way merge, resolve the 4-file conflict (CHANGELOG.md, tools/methodology_dashboard.py + starter-kit/ twin, tools/test_methodology_dashboard.py) between BL-34's own two independent implementations of the same R/Quarto/RMarkdown fix.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S85
 date: 2026-08-11
 status: complete
