@@ -7,7 +7,9 @@ Reads THREE sources and keeps them visually and structurally separate in the
 output -- NEVER merges them into one list or one number:
 
   1. PRIMARY / structured: `**Model:**` bullets in CHANGELOG.md -- self-reported,
-     explicit, per-action (starter-kit/CHANGELOG.md's format section).
+     explicit, per-action (starter-kit/CHANGELOG.md's format section). Two
+     dialects accepted (BL-20): the seed's `- **Model:**` list-item form, and
+     this repo's own live bare `**Model:**` form (no leading `- `).
   2. SECONDARY / best-effort: free-text "model" mentions in the prose that
      follows each ```handoff block in HANDOFFS.md -- regex-fuzzy by nature
      (matches the bare word "model", so a mention in an unrelated sense will
@@ -48,7 +50,7 @@ from collections import OrderedDict
 from pathlib import Path
 
 CHANGELOG_ENTRY_RE = re.compile(r"^### (\d{4}-\d{2}-\d{2}) · \[([^\]]+)\] (.+)$")
-CHANGELOG_MODEL_RE = re.compile(r"^-\s*\*\*Model:\*\*\s*(.+)$")
+CHANGELOG_MODEL_RE = re.compile(r"^-?\s*\*\*Model:\*\*\s*(.+)$")
 CHANGELOG_SESSION_RE = re.compile(r"\*\*Session:\*\*\s*(\S+)")
 CHANGELOG_FENCE_RE = re.compile(r"^```")
 CHANGELOG_BULLET_RE = re.compile(r"^-\s")
@@ -110,7 +112,12 @@ def parse_changelog_models(text: str) -> list:
     A **Model:** bullet's value may wrap onto indented continuation lines,
     matching this file's own wrapping convention for its other bullets
     (e.g. **Change:**, **Verified:**) -- continuation lines are joined with a
-    single space."""
+    single space.
+
+    Two dialects, both accepted (BL-20): the seed's documented list-item form
+    (`- **Model:** ...`) and this repo's own live convention, a bare
+    `**Model:** ...` line with no leading `- `. CHANGELOG_MODEL_RE matches
+    either; the leading `-` is optional, not required."""
     lines = text.splitlines()
     n = len(lines)
     entries = []

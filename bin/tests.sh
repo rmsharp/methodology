@@ -1806,6 +1806,63 @@ rm -f "$RECON_SCRATCH"
     && pass "reconcile-on-read: a synthetic 20-line discharge entry on a scratch copy is caught (RED observed)" \
     || fail "reconcile-on-read: a synthetic 20-line discharge entry on a scratch copy was NOT caught"
 
+echo "== Test 30: model-report — Source 1 parses BOTH \`**Model:**\` dialects (BL-20, RED-first, Learning #12) =="
+# BL-20: CHANGELOG_MODEL_RE required a leading `- ` (the seed's list-item form). This repo's own
+# live CHANGELOG.md writes the bullet bare, at line start, with no leading `- ` -- so Source 1 read
+# a file with 9 (now more) real Model bullets as having none. Fixture carries both dialects side by
+# side, plus a control entry with no bullet at all, so a fix that widens the regex too far (e.g. into
+# matching an unrelated line) would still be caught by the control's absence.
+CL30="$(mktemp)"
+cat > "$CL30" <<'EOF'
+# Changelog
+
+### 2026-01-01 · [ad hoc] list-form entry (the seed's documented dialect)
+- **Change:** something shipped
+- **Commit/PR:** `abc1234`
+- **Session:** S10 · **Verified:** n/a — fixture
+- **Model:** Claude Opus 5
+
+### 2026-01-02 · [ad hoc] bare-form entry (this repo's own live dialect)
+
+**Model:** Claude Sonnet 5.
+Free-text prose follows, unindented, exactly like this repo's real CHANGELOG.md entries.
+
+### 2026-01-03 · [ad hoc] entry with NO Model bullet at all (control)
+- **Change:** something else shipped
+- **Commit/PR:** `def5678`
+- **Session:** S12 · **Verified:** n/a — fixture
+EOF
+HO30="$(mktemp)"
+cat > "$HO30" <<'EOF'
+```handoff
+session: S1
+date: 2026-01-01
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: fixture
+what_was_done: abc1234
+next_steps: fixture
+key_files: a.py:1
+gotchas: fixture
+runtime_smoke: n/a
+changelog_ref: n/a
+commit: abc1234
+```
+EOF
+OUT30="$("$BIN/model-report" --changelog "$CL30" --handoffs "$HO30" --no-git 2>&1)"
+rm -f "$CL30" "$HO30"
+
+echo "$OUT30" | grep -q "Claude Opus 5" && pass "list-form (\`- **Model:**\`) bullet still parsed" || fail "list-form bullet regressed"
+echo "$OUT30" | grep -q "Claude Sonnet 5" && pass "bare-form (\`**Model:**\`, this repo's live dialect) bullet now parsed" || fail "bare-form bullet NOT parsed -- BL-20 unfixed"
+echo "$OUT30" | grep -q "S12" && fail "control entry with no Model bullet was fabricated into Source 1" || pass "control entry without a Model bullet correctly omitted"
+
+# Real-file proof, not just a synthetic fixture: BL-20's actual population lives in this repo's own
+# live CHANGELOG.md. Before the fix, this invocation prints the empty-population sentinel string
+# against a file that in fact carries multiple bullets -- the exact silent failure BL-20 describes.
+OUT30_REAL="$("$BIN/model-report" --changelog "$METHODOLOGY/CHANGELOG.md" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
+echo "$OUT30_REAL" | grep -q "no CHANGELOG.md entries carry a" && fail "Source 1 still reports empty against this repo's own live CHANGELOG.md" || pass "Source 1 reports a non-empty population against this repo's own live CHANGELOG.md"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]
