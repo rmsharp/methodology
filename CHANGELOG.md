@@ -152,6 +152,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [BL-33] `bin/model-report`'s `CHANGELOG_ENTRY_RE` now parses multi-tag `### ` headers and reports (not folds) any it still can't
+
+**Model:** Claude Sonnet 5.
+Operator-directed: work BL-33 (raised at S79's close, left unclaimed). `CHANGELOG_ENTRY_RE`
+(`bin/model-report:52`) widened from exactly-one-bracketed-tag to one-or-more adjacent `[TAG]`
+groups, so `CHANGELOG.md:378`'s `[BL-14][BL-17]` header now parses as its own entry instead of
+donating its `**Model:**` bullet to the preceding one. `parse_changelog_models()` now returns
+`(entries, unparsed_headers)`: a `### `-prefixed line that still fails to match resets the
+in-progress entry to `None` (no more misattribution to a stale neighbor) and is collected with its
+line number; `render()` prints a `WARNING` block naming the file, line, and raw text for each one in
+Source 1's own output. RED-first (Learning #12): confirmed pre-fix, by direct execution, that the
+multi-tag entry's bullet was absorbed into its predecessor and that no unparsed-header signal existed
+at all. New Test 31 in `bin/tests.sh` — 8 assertions: multi-tag header parses as its own entry; a
+deliberately malformed header is reported and donates its bullet to neither neighbor; the entry after
+the malformed line still parses; and against this repo's own live `CHANGELOG.md`, Source 1's count
+(55) now exactly matches the raw anchored `**Model:**` grep (55) with no false-positive `WARNING` —
+closing the population gap BL-20's own closure note reported (51 vs. 52). Full suite: 197 passed / 1
+failed (Test 9's pre-existing `gh api`/upstream-lag baseline, unrelated). `check-links` unaffected
+(88/22).
+
 ### 2026-08-11 · [ad hoc] S79 close-out — receipt written, self-score 9/10; see the `[BL-20]` entry below for the substantive work
 
 **Model:** Claude Sonnet 5.

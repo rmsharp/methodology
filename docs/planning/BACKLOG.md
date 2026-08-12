@@ -1,10 +1,13 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31, BL-32 and BL-33 are open** (**BL-33 raised 2026-08-11
-> (S79)**, found incidentally while re-verifying BL-20's population, not fixed (FM #17) — a second,
-> separate `bin/model-report` defect: a multi-tag `### ` header (`[BL-14][BL-17]`) silently folds
-> into the preceding entry instead of failing loudly; see its own entry. **BL-8 ADOPTED 2026-08-11
+> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-33 FIXED 2026-08-11 (S80)**
+> — `bin/model-report`'s `CHANGELOG_ENTRY_RE` widened to accept one-or-more adjacent `[TAG]` groups,
+> so `CHANGELOG.md:378`'s `[BL-14][BL-17]` header now parses as its own entry; a `### `-prefixed line
+> that still fails to match is now reported as a loud `WARNING` (with file/line) instead of being
+> silently folded into the preceding entry; Source 1's live-file count (55) now exactly matches the
+> raw anchored `**Model:**` grep (55), closing the population gap BL-20's own closure note reported;
+> see its own entry. **BL-8 ADOPTED 2026-08-11
 > (S78), operator-directed** — subagent capability-tiering is now this fork's own operational default
 > when authoring a `Workflow` script; not a methodology change, no distributed document edited; see
 > its own entry. **BL-20 FIXED 2026-08-11 (S79)** — `bin/model-report`'s `CHANGELOG_MODEL_RE`
@@ -1278,6 +1281,34 @@ tag list already documents `[BL-<N>]`/`[issue #<N>]`/`[ad hoc]` as a closed set 
 one can appear) and should fail loudly (or at minimum count) an unparsed `### ` header rather than
 silently folding it into its neighbor — a "line starts with `### ` but doesn't match" trap this tool
 does not currently guard at all.
+
+**FIXED 2026-08-11 (S80), both halves.** `CHANGELOG_ENTRY_RE` (`bin/model-report:52`) widened from
+`^### (\d{4}-\d{2}-\d{2}) · \[([^\]]+)\] (.+)$` to
+`^### (\d{4}-\d{2}-\d{2}) · ((?:\[[^\]]+\])+) (.+)$` — one-or-more adjacent `[TAG]` groups, captured
+whole (brackets included) into `source`, so `CHANGELOG.md:378`'s `[BL-14][BL-17]` header now parses
+as its own entry rather than donating its `**Model:**` bullet to its predecessor. Separately,
+`parse_changelog_models()` now returns `(entries, unparsed_headers)`: any `### `-prefixed line that
+still fails to match resets `cur` to `None` (so nothing after it can be misattributed to a stale
+entry) and is collected with its 1-based line number; `render()` prints a `WARNING:` block naming the
+file, line number, and raw text for each one, in Source 1's own output — loud, not silent, and not
+merely counted. `render()`'s per-entry format string dropped its own `[%s]` wrapping (now redundant
+since `source` already carries its brackets), so single-tag output is byte-identical to before the
+fix; multi-tag output now prints the header's literal tag group, e.g. `[BL-14][BL-17]`.
+RED-first (Learning #12): confirmed pre-fix, by direct execution against a fixture and against this
+repo's own live `CHANGELOG.md`, that the multi-tag entry's Model bullet was absorbed into the
+preceding entry and that no unparsed-header signal existed at all. New Test 31 in `bin/tests.sh`
+fixtures a multi-tag header (must parse as its own entry), a deliberately malformed `### ` header
+with no middle dot (must be reported and must not donate its bullet to either neighbor), and a valid
+entry immediately after it (must still parse — proves the malformed line doesn't wedge the parser) —
+8 assertions, all green.
+Re-measured against this repo's own live `CHANGELOG.md`, not recalled: `bin/model-report`'s own
+post-fix Source 1 count is **55**, now exactly equal to
+`grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md` (**55**) — the population gap BL-20's
+closure note reported (51 vs. 52) is closed, and no `WARNING` fires against the real file (confirmed
+by an explicit negative assertion in Test 31, not merely by the count matching). Full suite
+`bash bin/tests.sh`: 197 passed / 1 failed (Test 9's pre-existing `gh api`/upstream-lag baseline,
+unrelated, same failure class reported by every session since at least S75). `python3 bin/check-links`
+unaffected (88 links / 22 files).
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
