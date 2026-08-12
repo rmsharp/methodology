@@ -1975,31 +1975,30 @@ echo "== Test 32: check-learnings — Learnings table shape (issue #65 Evidence 
 RUNNER="$STARTER/FRAMEWORK_LEARNINGS.md"
 F="$(mktemp)"
 
-# Presence control, WITH a disclosed exception: rows 18/19 have been live 2-column rows
-# since S40/S41 (2026-08-04) — BL-35, found by this tool, not fabricated a fix for here (FM
-# #17). "6 issue(s)" pins that exact, disclosed shape rather than accepting any failure.
+# Presence control: the canonical Learnings table is fully clean. Rows 18/19 were live
+# 2-column rows (missing Source/When-to-Apply) from S40/S41 (2026-08-04) until BL-35
+# (raised S83, found by this tool) recovered both cells via git archaeology on their
+# authoring commits, 11b843a/12463dd (S84, 2026-08-11) — this asserts the current clean
+# state, not the once-disclosed exception.
 OUT32="$("$BIN/check-learnings" --file "$RUNNER" --no-citations 2>&1)"
-N32="$(echo "$OUT32" | grep -c 'row .18. has 2 column\|row .19. has 2 column')"
-if echo "$OUT32" | grep -q '^check-learnings: FAIL — 2 issue' && [ "$N32" = "2" ]; then
-    pass "canonical Learnings table has exactly the 2 disclosed BL-35 findings (presence control)"
+if echo "$OUT32" | grep -q '^check-learnings: OK'; then
+    pass "canonical Learnings table has no malformed rows (presence control)"
 else
-    fail "canonical Learnings table presence control: expected exactly BL-35's 2 known findings, got: $OUT32"
+    fail "canonical Learnings table presence control: expected clean, got: $OUT32"
 fi
 
-# The canonical table and the citation sweep together, against the live corpus. BL-35's 2
-# findings are still present here too (same table, same file) — same disclosed exception.
+# The canonical table and the citation sweep together, against the live corpus.
 OUTALL="$("$BIN/check-learnings" 2>&1)"
-N_ALL="$(echo "$OUTALL" | grep -c 'row .18. has 2 column\|row .19. has 2 column')"
-if [ "$N_ALL" = "2" ] && ! echo "$OUTALL" | grep -qv 'row .18. has 2 column\|row .19. has 2 column\|^check-learnings:'; then
-    pass "canonical table + distributed-corpus citations: only the 2 disclosed BL-35 findings"
+if echo "$OUTALL" | grep -q '^check-learnings: OK'; then
+    pass "canonical table + distributed-corpus citations: fully clean"
 else
-    fail "canonical table + distributed-corpus citations: expected only BL-35's 2 known findings, got: $OUTALL"
+    fail "canonical table + distributed-corpus citations: expected clean, got: $OUTALL"
 fi
 
 # The 4 mutation tests below assert on the SPECIFIC finding text each mutation should
-# produce, not merely "any failure" — the real file already carries BL-35's 2 disclosed
-# findings (rows 18/19), so "any failure" would pass vacuously whether or not the
-# mutation's own defect was actually detected.
+# produce, not merely "any failure" — otherwise a mutation would pass vacuously against
+# any unrelated finding the corpus happens to carry, whether or not the mutation's own
+# defect was actually detected.
 
 # A malformed 3-column row. Anchored on the LEARNINGS row 13, not the bare string
 # "| 13 |" — SESSION_RUNNER.md has a second numbered table whose row 13 comes first,
@@ -2050,13 +2049,11 @@ if mutate "$SAFE" "$SAFE" 's.replace("## Commit Discipline", "## Commit Discipli
         || pass "dangling Learning citation in a distributed file caught"
 else fail "dangling-citation mutation was vacuous"; fi
 cp "$BAK" "$SAFE"; rm -f "$BAK"
-# Restoration control: the tree must be back to exactly BL-35's 2 disclosed findings (not
-# clean — the real corpus carries them independently of this test), or the mutation above
+# Restoration control: the tree must be back to fully clean, or the mutation above
 # poisoned the repo instead of being fully undone.
 OUT33="$("$BIN/check-learnings" 2>&1)"
-N33="$(echo "$OUT33" | grep -c 'row .18. has 2 column\|row .19. has 2 column')"
-if [ "$N33" = "2" ] && ! echo "$OUT33" | grep -qv 'row .18. has 2 column\|row .19. has 2 column\|^check-learnings:'; then
-    pass "corpus restored after the citation mutation (only BL-35's 2 disclosed findings remain)"
+if echo "$OUT33" | grep -q '^check-learnings: OK'; then
+    pass "corpus restored after the citation mutation (fully clean)"
 else
     fail "citation mutation left the corpus dirty: $OUT33"
 fi

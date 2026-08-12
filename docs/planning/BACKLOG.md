@@ -1,10 +1,11 @@
 # Operational Backlog (fork-only)
 
 > **STATUS: REOPENED 2026-07-25 — BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31, BL-32 and BL-35 are open** (**BL-35 raised
-> 2026-08-11 (S83)** — `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18/19 are malformed 2-column rows,
-> live since S40/S41; found by `bin/check-learnings`, arriving via this session's upstream merge;
-> see its own entry. **BL-34 raised AND FIXED
+> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-35 raised 2026-08-11
+> (S83) and FIXED 2026-08-11 (S84)** — `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18/19 were
+> malformed 2-column rows, live since S40/S41; found by `bin/check-learnings`, arriving via
+> S83's upstream merge; recovered via git archaeology on the two rows' authoring commits
+> (`11b843a`, `12463dd`); see its own entry. **BL-34 raised AND FIXED
 > 2026-08-11 (S81), operator-directed** — `LANG_MAP` had no `.r` entry despite `.r` already being
 > in `SOURCE_EXTS` (found scanning `../nprcgenekeepr`: 603 `.r` files, 77,773 LOC, counted as
 > Source but invisible in "Code by Language"); fixed, and `.qmd`/`.rmd` added to `DOC_EXTS` per
@@ -1284,6 +1285,20 @@ from the prose alone. A future session (ideally the operator, or a session that 
 either recover the intended cells or, if unrecoverable, decide how the row should read instead.
 **Distribution note.** `FRAMEWORK_LEARNINGS.md` is `bin/_manifest.py`-TRACKED, so every adopter
 already has this malformed content in their own synced copy, unnoticed for the same reason.
+
+**FIXED 2026-08-11 (S84):** recovered both cells from the rows' own authoring commits rather than
+inventing from the prose. `11b843a`'s message states "Recorded as Learning #18" and narrates the
+exact defect (the ledger-doctrine seed's `--write` text claimed "leaves the change staged for you"
+while the shipped tool never `git add`s and leaves the shard untracked); `12463dd`'s states
+"Recorded as Learning #19" and narrates its own (`SEED_FORMAT_MARKERS` keyed on a stable H1 title,
+so every pre-doctrine adopter matched as "current"). Both `Source`/`When to Apply` cells were
+written from that provenance, presented to the operator for approval before writing, and approved
+as drafted. `bin/check-learnings` now reports the table fully clean (22 contiguous rows, no
+malformed shape); `bin/tests.sh` Tests 32/33's presence/restoration controls, pinned to the
+disclosed 2-finding shape, updated to assert clean instead — full suite 228/229, the sole failure
+being Test 9's pre-existing, unrelated `starter-kit/FRAMEWORK_LEARNINGS.md`/`methodology_trim.py`
+github-source gap (those two files not yet merged upstream). Distributed to every adopter at their
+next `bin/sync`.
 
 **BL-33 — `bin/model-report`'s `CHANGELOG_ENTRY_RE` can't parse a multi-tag `### ` header, and
 silently folds that entry into the PRECEDING one instead of dropping it loudly.**

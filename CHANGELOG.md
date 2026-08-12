@@ -155,6 +155,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-11 · [BL-35] `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18/19's missing `Source`/`When to Apply` cells recovered via git archaeology
+
+**Model:** Claude Sonnet 5.
+Operator-selected from a Phase 0 orientation menu. BL-35 (raised S83) left Learning rows 18 and 19
+as malformed 2-column rows — missing the table's `Source` and `When to Apply` cells since their
+original authoring commits, S40/S41 (2026-08-04) — deliberately not fixed at the time because
+reconstructing real editorial content needs the original context, not invention from the prose
+(FM #17). Both commits turned out to state that context explicitly: `11b843a`'s message says
+"Recorded as Learning #18" and narrates the exact defect (the ledger-doctrine seed's `--write` text
+claimed the trimmer "leaves the change staged for you", copied from `ledger-trimmer-design.md:722`,
+while the shipped tool has no `git add` anywhere and leaves the shard untracked); `12463dd`'s says
+"Recorded as Learning #19" and narrates its own (`SEED_FORMAT_MARKERS` keyed each seed's
+stale-format check on a lifetime-stable H1 title, so every adopter already on the old format
+matched as "current" — measured against 11 sibling projects holding `CHANGELOG.md`, 9 holding
+`HANDOFFS.md`, none holding the doctrine). Both cells were drafted from that provenance, presented
+to the operator, and approved as drafted before writing — canonical, `bin/_manifest.py`-TRACKED
+content every adopter already carries malformed.
+- **`bin/tests.sh` Tests 32/33** were themselves pinned to BL-35's disclosed 2-finding shape
+  ("expected exactly BL-35's 2 known findings") — now that the corpus is clean, those presence and
+  restoration controls were rewritten to assert `check-learnings: OK` instead, so they don't start
+  failing against the very defect this entry fixes.
+- **Verified:** `bin/check-learnings` — 22 Learning rows, contiguous, all citations resolve, zero
+  findings (was 2). `bin/check-links` OK (88/22). `bin/check-handoff --all` — 1 finding, this
+  session's own still-pending S84 stub (expected, closes at close-out). `bash bin/tests.sh` 228/229
+  — the sole failure is Test 9's pre-existing, unrelated github-source gap (`FRAMEWORK_LEARNINGS.md`/
+  `methodology_trim.py` not yet merged upstream), not caused by this change.
+- **Session:** S84.
+
 ### 2026-08-11 · [ad hoc] Reconcile-on-read — operator pushed PR #72's rebased branch outside any session
 
 **Model:** Claude Sonnet 5.
