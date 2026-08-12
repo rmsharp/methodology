@@ -37,6 +37,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S84
+date: 2026-08-11
+status: pending
+active_task: Operator-selected from a Phase 0 orientation menu -- recover BL-35's two malformed FRAMEWORK_LEARNINGS.md rows (18, 19 -- missing Source/When-to-Apply cells since S40/S41) via git archaeology on their authoring commits, or make an explicit editorial call if unrecoverable.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S83
 date: 2026-08-11
 status: complete
