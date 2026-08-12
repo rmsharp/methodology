@@ -37,6 +37,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ---
 
 ```handoff
+session: S81
+date: 2026-08-11
+status: pending
+self_score: pending
+predecessor_score: 9
+active_task: Operator-directed -- raise and fix a new dashboard defect found while answering an operator question about `../nprcgenekeepr`'s "Code by Language" card: `LANG_MAP` has no `.r` entry even though `.r` is in `SOURCE_EXTS`, so R source (603 files in nprcgenekeepr) counts toward Source LOC but never gets its own language row. Fix `.r` in `LANG_MAP`; also add Quarto (`.qmd`) and R Markdown (`.rmd`) to `DOC_EXTS` per operator direction. Raise as a new BL item, fix both twins, commit, push, then open a small PR upstream (operator pre-authorized this specific PR in the task itself).
+what_was_done: pending
+next_steps: pending
+key_files: tools/methodology_dashboard.py:98-128 (SOURCE_EXTS/DOC_EXTS/LANG_MAP), starter-kit/methodology_dashboard.py (twin), tools/test_methodology_dashboard.py
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S80
 date: 2026-08-11
 status: complete
