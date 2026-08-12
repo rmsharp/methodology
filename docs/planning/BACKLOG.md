@@ -12,8 +12,9 @@
 > operator direction (previously fell through to "other" — not source, not docs, not even
 > LOC-counted). Both twins fixed, 6 new tests, RED-first against both this fork's tree and a clean
 > `upstream/main` worktree; PR opened upstream — [KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72),
-> **MERGED 2026-08-11** (`5c59f0b`, verified S85) — local `main` not yet synced, a real 4-file
-> conflict against this item's own already-landed local fix; see its own entry. **BL-33 FIXED 2026-08-11 (S80)**
+> **MERGED 2026-08-11** (`5c59f0b`, verified S85) **and SYNCED into local `main` 2026-08-12**
+> (`aa378ab`, S86) — the 4-file (grown to 6 by sync time) conflict against this item's own
+> already-landed local fix resolved; see its own entry. **BL-33 FIXED 2026-08-11 (S80)**
 > — `bin/model-report`'s `CHANGELOG_ENTRY_RE` widened to accept one-or-more adjacent `[TAG]` groups,
 > so `CHANGELOG.md:378`'s `[BL-14][BL-17]` header now parses as its own entry; a `### `-prefixed line
 > that still fails to match is now reported as a loud `WARNING` (with file/line) instead of being
@@ -1430,6 +1431,17 @@ directly on local `main` in the same S81 session (this entry's own "Fix" section
 `DASHBOARD_VERSION` 2.15.0 → 2.15.1) — two independent applications of the same feature against
 two different base trees. Resolving that is real judgment (which side's structure to keep across
 4 files), deliberately deferred to a dedicated sync rather than folded into this verification.
+
+**SYNCED 2026-08-12 (S86; operator-directed).** Local `main` merged with `upstream/main`
+(`aa378ab`), resolving this item's own conflict — which had grown to 6 files by the time the sync
+ran (upstream had moved to `dcb6fc6`: issue #67's own independent fix, PR #73, plus the v3.6→v3.7
+release itself, PR #74). Kept this fork's own BL-34 comments/`DASHBOARD_VERSION` (`2.15.2`)
+throughout; for issue #67, kept this fork's own `--sync [DIR]` scoping design over upstream's
+`cp`-based one (already covered by ~15 existing tests upstream's simpler design has no equivalent
+for). Full resolution narrative: `CHANGELOG.md` "2026-08-12 · [BL-34] Local `main` synced with
+`upstream/main` ...". Verified: unittest 300/300, `bin/tests.sh` 228/229 (Test 9's pre-existing gap
+aside), twins byte-identical. **This item is now fully closed** — both the PR #72 merge and the
+local sync are done.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

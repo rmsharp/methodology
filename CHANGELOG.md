@@ -155,6 +155,64 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-12 · [BL-34] Local `main` synced with `upstream/main` (v3.7 release + issue #67 fix) — the 4-file conflict resolved
+
+**Model:** Claude Sonnet 5.
+Operator-directed: sync local `main` with `upstream/main` now, resolving BL-34's 4-file conflict
+(`[BL-34]` entry above, S85). Fetching first showed the conflict had grown past what S85 scoped —
+upstream had moved from `5c59f0b` to `dcb6fc6`, three commits further: PR #73 (issue #67's own
+independent stale-copy fix) and PR #74 (the v3.7 release itself). Re-derived the real shape rather
+than trusting the stale snapshot (Learning #13) and resolved the full scope: `git merge
+upstream/main --no-commit --no-ff`, 6 conflicting files, no strategy shortcut, real 3-way merge
+`aa378ab`.
+
+- **`CLAUDE.md` + `docs/RELEASE_HISTORY.md`:** kept this fork's own history extraction (BL-9 L3)
+  over upstream's reintroduced inline version list; appended upstream's new v3.7 entry to
+  `RELEASE_HISTORY.md` with a fork note — every functional item it bundles had already reached
+  this fork independently before the tag (issue #65's structural tests + FM #28 via S83's earlier
+  merge; BL-34's R/Quarto/RMarkdown fix; this fork's own S62 fix for issue #67), so the entry
+  records the upstream release as a fact, not new functional content landing here.
+- **`CHANGELOG.md`:** upstream's newer-dated entries (the v3.7 release narration, the issue #67
+  fix) placed above this fork's own 2026-08-11 entries. Dropped one orphaned duplicate — upstream's
+  own narration of PR #71 (`_FRAMEWORK_FILE_SIGNATURES`), the same event this fork's existing
+  `[BL-31]` entries already cover from S83's earlier merge, which kept this fork's own
+  `_FRAMEWORK_INSTALLED_CONTENT` design over that same PR's dict-shaped one.
+- **`tools/methodology_dashboard.py` + `starter-kit/` twin (7 conflicts):** kept this fork's own
+  BL-34 comments and `DASHBOARD_VERSION` (`2.15.2`) throughout — functionally identical to
+  upstream's leaner, fork-vocabulary-free wording (written for the upstream-targeted branch, not
+  this file). For issue #67's stale-copy remedy, kept this fork's own `--sync [DIR]` single-project
+  scoping design over upstream's `cp`-based one: more general (reuses the existing sync mechanism
+  rather than bypassing it), and already covered by roughly 15 existing Row 13/14 tests
+  (`test_sync_accepts_a_single_target_directory`, `test_bare_dry_run_without_sync_errors_and_writes_
+  nothing`, `test_sync_end_to_end_via_main_writes_only_the_target`, etc.) that upstream's simpler
+  design has no equivalent for.
+- **`tools/test_methodology_dashboard.py` (8 conflicts):** kept BL-34 comment flavor throughout;
+  adopted upstream's new `test_rmd_analysis_repo_flips_doc_only_and_softens_the_test_risk` (genuinely
+  new — it only ever existed on the separate PR #72 branch, never merged into this fork's own
+  `main`). Dropped upstream's whole `TestCliRemedyProportionality` class as redundant with this
+  fork's own more thorough `--sync`-target coverage — one of its assertions
+  (`self.assertIn("cp ", err, ...)`) would have failed against this fork's correct, already-tested
+  `--sync [DIR]` design, catching a difference in implementation shape, not a real defect.
+- **`README.md` (auto-merged cleanly, no conflict):** its new "What's New in v3.7" section, inherited
+  verbatim from upstream, described the `cp`-based stale-copy remedy — inaccurate against what this
+  fork actually ships. Corrected the one bullet to describe the `--sync [DIR]` design instead.
+- **`HANDOFFS.md` (3 conflicts):** upstream's **S11** (issue #67's fix) merged in. Dated
+  2026-08-12 — later than this session's own 2026-08-11 entries — but placed BELOW this session's
+  own **S86** stub rather than above it: `check-handoff --allow-pending` exempts only the file's
+  literal newest block, so a later-dated but still-`pending` receipt sitting above an in-flight one
+  breaks the exemption (found live — two stacked pending stubs, both flagged red even with
+  `--allow-pending`). Upstream's own **S12** (the v3.6→v3.7 release-cutting session, still
+  `status: pending` at `upstream/main`'s own tip) is deliberately **not** recorded here — a pending
+  stub is a live claim in progress, not settled history, and belongs in this ledger once upstream
+  completes or abandons it; a future sync should re-check for that rather than assume this one
+  reconciled it. Receipt count corrected 24 → 28 (was already stale before this merge, per the
+  section's own "unguarded" warning).
+
+**Verified:** `python3 -m unittest tools.test_methodology_dashboard` 300/300; `bash bin/tests.sh`
+228/229 (Test 9's pre-existing, unrelated github-source gap aside); `bin/check-links` OK (88/22);
+`bin/check-learnings` OK (22 rows, 0 findings); `bin/check-handoff --all --allow-pending` OK (28
+receipts, fences balanced, no duplicate session+date); twins byte-identical throughout.
+
 ### 2026-08-12 · [ad hoc] Released v3.7 — the artifacts Phase 0 mandates reading now have ceilings
 
 - **Change:** release narration commit on `release/v3.7` — `README.md` §What's New in v3.7 (folding
