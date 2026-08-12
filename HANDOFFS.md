@@ -39,10 +39,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 ```handoff
 session: S85
 date: 2026-08-11
-status: pending
-active_task: Operator reported PR #72 merged upstream. Independently verify the merge, record it (mirroring the BL-26/PR #66 precedent), update BL-34's BACKLOG.md status, and assess whether local main should sync with upstream/main now (real conflict shape: BL-34's own already-landed local fix vs PR #72's independently-evolved version of the same feature) or be deferred.
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: Operator reported PR #72 merged upstream. Independently verify the merge, record it (mirroring the BL-26/PR #66 precedent), update BL-34's BACKLOG.md status, and assess whether local main should sync with upstream/main now (real conflict shape: BL-34's own already-landed local fix vs PR #72's independently-evolved version of the same feature) or be deferred. COMPLETE for verify+record; sync deliberately deferred pending operator direction (see next_steps).
+what_was_done: Did not take the operator's report on word. `gh api repos/KJ5HST/methodology/pulls/72` confirmed `merged: true`, `merged_by: KJ5HST`, merge commit `5c59f0b`. Built an isolated `git worktree` at that exact commit (mirroring the `[BL-26]`/PR #66 precedent in CHANGELOG.md, which independently re-verifies rather than trusting commit messages) and ran the real suites there: `python3 -m unittest tools.test_methodology_dashboard` 208/208, `bash bin/tests.sh` 114/114 (upstream's own smaller scope, no fork-only tests). Confirmed both of the maintainer's review requests genuinely landed in the merge, not just posted to the PR thread: `DASHBOARD_VERSION` reads `2.10.5` (the three-way version collision's resolution) and `test_rmd_analysis_repo_flips_doc_only_and_softens_the_test_risk` (the classification-consequence pin) is present in the merged tree. Removed the worktree after. Ran `git merge-tree --write-tree --name-only main upstream/main` to check whether local `main` could sync cleanly -- it cannot: a real 4-file conflict (`CHANGELOG.md`, `tools/methodology_dashboard.py` + `starter-kit/` twin, `tools/test_methodology_dashboard.py`), because BL-34's own fix was built TWICE independently against two different base trees in the same S81 session -- once landed directly on local `main` (`DASHBOARD_VERSION` 2.15.0 -> 2.15.1), once on the PR #72 branch built fresh against a clean `upstream/main` worktree specifically because local `main`'s own file had already diverged too far to reuse. Neither side is a strict superset of the other's surrounding state (local main has 300+ commits of unrelated fork evolution since; upstream's PR #72 commit has the maintainer's own specific review-requested changes). Recorded the merge and this conflict shape in `CHANGELOG.md` (new `[BL-34]` entry) and `docs/planning/BACKLOG.md` (BL-34's own entry gets a MERGED paragraph; header line updated) rather than attempting the reconciliation inline -- deliberately scoped this session to verify+record, leaving the real judgment call (which side's structure to keep, file by file) for a dedicated pass.
+next_steps: **The sync is the open item.** `git merge-tree --write-tree --name-only main upstream/main` (re-run fresh, don't trust this session's snapshot if more upstream activity has landed) names the 4 conflicting files; resolve by comparing what each side actually changed rather than picking "ours" or "theirs" wholesale, matching the discipline the S83 upstream-merge entry above used for its own larger version of this same problem. Ask the operator before starting if the conflict shape has grown, matches S82's "re-derive, don't assume the snapshot still holds" lesson. Long-tail backlog unchanged and not re-verified this session: BL-11/12/13/14/16/17/18/19/21/22/23/26/30/31/32.
+key_files: `CHANGELOG.md` "2026-08-11 · [BL-34] PR #72 merged upstream ..." entry (this session's own); `docs/planning/BACKLOG.md:8-10` (header MERGED note), `:1414-1428` (BL-34 entry's new MERGED paragraph, states the 4 conflicting files); local `main`'s own BL-34 fix at `tools/methodology_dashboard.py` + `starter-kit/` twin (`DASHBOARD_VERSION 2.15.2`) vs upstream's at the same paths in commit `5c59f0b` (`DASHBOARD_VERSION 2.10.5`) -- the two sides of the pending sync.
+gotchas: **A merge conflict can be "the same feature landed twice," not "one side is behind"** -- unlike S83's earlier upstream merge (genuinely stale local main, no duplicate work), this conflict exists because the identical fix was deliberately built twice against two different base trees in the same session, for a documented reason (upstream's file had already diverged, so porting the fork's own evolved version wouldn't have applied). Don't assume the newer or larger side is automatically correct -- read what each side's diff actually changed before resolving. **Independent re-verification in an isolated worktree at the exact merge commit is now a two-time precedent** (`[BL-26]`, this entry) -- cheap (a few minutes), and both times it caught real information a bare `merged: true` wouldn't have (BL-26: two review fixes genuinely present; here: the same, plus the version number confirming which collision-resolution actually shipped).
+runtime_smoke: Real tool execution, isolated from the working tree throughout. Verification worktree at `5c59f0b`: `python3 -m unittest tools.test_methodology_dashboard` 208/208; `bash bin/tests.sh` 114/114. Local repo, unaffected by the verification: `bin/check-links` OK (88/22); `bin/check-learnings` OK (22 rows, 0 findings) -- both re-confirmed clean after this session's CHANGELOG.md/BACKLOG.md edits.
+changelog_ref: CHANGELOG.md "2026-08-11 · [BL-34] PR #72 merged upstream — the maintainer's two review requests confirmed genuinely landed, not just posted"
+commit: ffa3450
 ```
 <!-- claim stub written at session start; reconciled at close-out -->
+Self-score **8/10.** **+** Did not take the operator's report at face value -- independently verified
+via `gh api` and a real isolated-worktree test run, which is what actually confirmed the maintainer's
+two review requests shipped rather than merely being promised. **+** Correctly recognized the merge
+conflict as a distinct, harder class than the one S83 resolved (duplicate independent work, not
+staleness) and named that distinction explicitly rather than treating "4 files conflict" as
+self-explanatory. **+** Scoped the session honestly to verify+record and stopped there rather than
+pushing into a 4-file judgment-call resolution under time pressure just because the door was open --
+matches this repo's own recurring lesson about FM #17 scope discipline. **+** Left a next_steps that
+names the exact command to re-derive the conflict shape rather than a stale snapshot, per Learning
+#13. **−** Did not actually attempt even a preliminary read of what changed on each side of the 4
+conflicting files before deferring -- a next session (or this one, if asked to continue) starts from
+zero on the resolution itself; a slightly more thorough pass might have at least characterized which
+hunks in each file are genuinely substantive vs. mechanical (version bumps, ledger prepends) to save
+the next pass some time. **−** The isolated-worktree verification, while real, checked only that the
+merge commit's suite passes -- it did not diff `5c59f0b` against `c4fd879` (the fork's own last-known
+PR #72 branch state) to confirm the maintainer's merge didn't rebase or squash unexpectedly; the
+version-number and test-presence checks are strong indirect evidence but not that direct comparison.
+
+Predecessor **S84: 9/10.** Its `next_steps` said PR #72 "sits `mergeable_state: clean`, ready for the
+upstream maintainer's own merge decision -- nothing owed on this fork's side unless asked," which is
+exactly what happened next -- the maintainer merged it with no further action needed from this fork.
+That prediction held up under real-world test in the shortest possible span, which is the strongest
+evidence a `next_steps` claim can get. Its own self-critique (didn't reconcile several other
+FIXED/CLOSED-in-place BACKLOG.md items into the Completed table) remains accurate and untouched by
+this session, which had a different focus. No point docked -- everything it asserted checked out.
 
 ```handoff
 session: S84
