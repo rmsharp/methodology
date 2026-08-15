@@ -159,6 +159,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] `bin/tests.sh` Test 29 now reads the archives, not only the live `CHANGELOG.md`
+
+**Model:** Claude Opus 5.
+Fixes a test the same session's own archive turned red — found by running the suite, not predicted.
+
+- **The defect.** Test 29's budget check keyed on `CHANGELOG.md` alone, and its pass condition is
+  `RECON_COUNT > 0 && RECON_VIOLATIONS == 0`. The trim above moved all **10** remaining
+  `Reconcile-on-read` entries into `docs/archive/CHANGELOG-through-2026-08-11.md`, so the live count
+  fell to **0** and the test failed with an *empty* violation list — reporting
+  `budget violated -- ` with nothing after the dash. Nothing had eroded; the population had moved.
+- **Not a new lesson.** This is the blind spot `CHANGELOG.md`'s own source-tag audit already fixed
+  for itself ("after the split it would have stopped counting the archived entries at all"), and the
+  same *"found nothing" vs. "could not read this"* conflation `methodology_trim.py`'s
+  `classify_empty` was widened for (UAT F1). Test 29 had the identical shape and had simply never
+  been trimmed past before.
+- **Fix.** The check now reads `CHANGELOG.md` **plus** `docs/archive/CHANGELOG-*.md`; violation
+  messages carry the shard basename. The population is the whole ledger — which is where the norm
+  has to hold — not whichever shard happens to be live today. **43** entries across 4 files, 0
+  violations. The pass message no longer says "live", which had become false.
+- **The archive arm is a real guard, proved rather than assumed.** Appending a synthetic 20-line
+  discharge entry to an *archive* shard on a scratch copy moves the check `43/0 violations` →
+  `44/1 violation`. Without that, the widened arm could have inflated the count while being
+  incapable of ever failing. The pre-existing scratch-copy RED proof (`bin/tests.sh:1786`) is
+  unchanged and still passes.
+- **Verified:** `bash bin/tests.sh` **228 passed, 1 failed** — back to the S86 baseline exactly, the
+  sole failure being Test 9's pre-existing, unrelated github-source gap.
+
 ### 2026-08-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-11.md` (25 record(s), 247,188 B → 32,649 B)
 
 **Written by:** `methodology_trim.py` v1.1.3 — a tool action, not a session's judgment.

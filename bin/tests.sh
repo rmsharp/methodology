@@ -1729,26 +1729,38 @@ echo "== Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the compact
 # about (max observed 10, after restoring facts the first cut had dropped) with a small margin;
 # REPAIR_BUDGET is looser because that entry is a one-time historical event, never repeated, so it
 # is not the erosion risk this test exists to catch (max observed 16).
-RECON_CHECK="$(python3 - "$METHODOLOGY/CHANGELOG.md" <<'PY'
+# IT READS THE ARCHIVES, NOT ONLY THE LIVE FILE (S87). This check keyed on `CHANGELOG.md` alone
+# until a trim moved all 10 remaining Reconcile-on-read entries into
+# `docs/archive/CHANGELOG-through-2026-08-11.md`, leaving the live count at 0 -- and the pass
+# condition below requires a NON-ZERO count, so a correct, operator-directed archive turned this
+# test red while nothing had eroded. That is the same blind spot the source-tag audit in
+# `CHANGELOG.md`'s own front matter already fixed for itself ("after the split it would have stopped
+# counting the archived entries at all"), and the same "found nothing" / "could not read this"
+# conflation `methodology_trim.py`'s classify_empty was widened for (UAT F1). Reading live+archives
+# keeps the presence control meaningful across every future split: the population is the whole
+# ledger, which is where the norm has to hold, not whichever shard happens to be live today.
+RECON_CHECK="$(python3 - "$METHODOLOGY/CHANGELOG.md" "$METHODOLOGY"/docs/archive/CHANGELOG-*.md <<'PY'
 import re, sys
 DISCHARGE_BUDGET = 12
 REPAIR_BUDGET = 20
-with open(sys.argv[1], encoding="utf-8") as f:
-    lines = f.readlines()
-heading_idxs = [i for i, l in enumerate(lines) if l.startswith("### ")]
-heading_idxs.append(len(lines))
 recon_re = re.compile(r"^### \d{4}-\d{2}-\d{2} · \[ad hoc\] Reconcile-on-read")
 discharge_re = re.compile(r"^### \d{4}-\d{2}-\d{2} · \[ad hoc\] Reconcile-on-read: S\d+'s")
 count = 0
 violations = []
-for idx, hi in enumerate(heading_idxs[:-1]):
-    if recon_re.match(lines[hi]):
-        count += 1
-        end = heading_idxs[idx + 1]
-        body = [l for l in lines[hi + 1:end] if l.strip() != ""]
-        budget = DISCHARGE_BUDGET if discharge_re.match(lines[hi]) else REPAIR_BUDGET
-        if len(body) > budget:
-            violations.append(f"{lines[hi].strip()[:70]} ({len(body)} lines, budget {budget})")
+for path in sys.argv[1:]:
+    with open(path, encoding="utf-8") as f:
+        lines = f.readlines()
+    heading_idxs = [i for i, l in enumerate(lines) if l.startswith("### ")]
+    heading_idxs.append(len(lines))
+    for idx, hi in enumerate(heading_idxs[:-1]):
+        if recon_re.match(lines[hi]):
+            count += 1
+            end = heading_idxs[idx + 1]
+            body = [l for l in lines[hi + 1:end] if l.strip() != ""]
+            budget = DISCHARGE_BUDGET if discharge_re.match(lines[hi]) else REPAIR_BUDGET
+            if len(body) > budget:
+                violations.append(f"{path.split('/')[-1]}: {lines[hi].strip()[:60]} "
+                                  f"({len(body)} lines, budget {budget})")
 print(count)
 for v in violations:
     print("VIOLATION:", v)
@@ -1757,7 +1769,7 @@ PY
 RECON_COUNT="$(echo "$RECON_CHECK" | head -1)"
 RECON_VIOLATIONS="$(echo "$RECON_CHECK" | grep -c '^VIOLATION:')"
 if [ "$RECON_COUNT" -gt 0 ] 2>/dev/null && [ "$RECON_VIOLATIONS" = "0" ]; then
-    pass "reconcile-on-read: all $RECON_COUNT live entries stay within their body budget"
+    pass "reconcile-on-read: all $RECON_COUNT entries (live + archives) stay within their body budget"
 else
     fail "reconcile-on-read: budget violated -- $(echo "$RECON_CHECK" | grep '^VIOLATION:')"
 fi
