@@ -159,6 +159,86 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] BL-37 raised — this repo ships a size-ceiling gate to every adopter and has never configured it for itself
+
+**Model:** Claude Opus 5.
+Found while looking for `docs/planning/BACKLOG.md`'s **declared** ceiling during the reduction
+above, and there isn't one, because this repo declares none at all. `bin/_manifest.py:54`/`:60`
+distribute `starter-kit/context_budget.py` → adopter `context_budget.py` and
+`starter-kit/context-budget.json` → adopter `.context-budget.json`; this repo's own root has no
+`.context-budget.json`. Same shape as **BL-29** / upstream
+[issue #59](https://github.com/KJ5HST/methodology/issues/59) — a tool right for every installed copy
+and blind at home — but reached through *configuration* rather than path resolution, which is why
+nothing catches it: `bin/tests.sh` has **13** rows proving the gate *installs* correctly and none
+asserting it is *configured here*, and an unconfigured gate is silent, not red. Second half: the
+shipped seed's `files` list covers `CLAUDE.md`, `SESSION_NOTES.md` and an optional `LEARNINGS.md`,
+and has **no `BACKLOG.md` entry** — the file `SESSION_RUNNER.md` Phase 0 step 3 names as the
+priorities fallback for any adopter without a repo. **Measured, not fixed (FM #17):** one half is
+this repo's own root config, the other is a DISTRIBUTED seed change needing a go-ahead, and neither
+is a reduction. Both options costed in the item; (a) is a precondition for arguing (b) from a
+measurement instead of a guess.
+
+### 2026-08-15 · [BL-32] `docs/planning/BACKLOG.md` reduced 137,440 → 91,733 B (−33.3%) — 11 closed items archived verbatim with an identity-keyed losslessness proof
+
+**Model:** Claude Opus 5.
+The measured local half of BL-32, operator-directed. `SESSION_RUNNER.md` Phase 3F requires removing
+a completed item from `BACKLOG.md` in the same commit that closes it; **that step was skipped 11
+times**, so a file whose stated job is open work only carried 45,288 B — a third of itself — of
+finished work. S85's own self-critique had flagged this and it was never picked up. BL-8, BL-15,
+BL-20's closed half, BL-24, BL-25, BL-27, BL-28, BL-29, BL-33, BL-34 and BL-35 moved **verbatim** to
+[`docs/planning/BACKLOG-archive-2026-08-15.md`](docs/planning/BACKLOG-archive-2026-08-15.md), each
+keeping a one-line pointer row carrying its *conclusion* (not just its title) in §Completed items.
+The stacked superseded-STATUS preamble went 16,521 → 6,862 B; every live warning it carried was kept
+(the six-of-six wrong-numbers caution and its named figures, BL-16's headingless-inside-BL-14
+placement, BL-10's parked-branch block and its PR #64 authorization rule).
+
+**Not a `methodology_trim.py` trim, and could not have been — this is a partial answer to BL-32's
+own undecided (a)/(b)/(c).** Every `LedgerSpec` requires a `date_of_record`
+(`starter-kit/methodology_trim.py:145`, `:150`, `:158`) and freezes the oldest **by date**; a
+backlog's reduction axis is **status**. Measured on the real file: BL-11 (2026-08-01) is open and
+had to stay, BL-35 (2026-08-11) is fixed and had to go — a date-keyed trim inverts the correct
+answer. That is the *"mis-zone a differently-shaped ledger"* failure the tool's own comment
+(`:131-132`) exists to prevent, arriving as a hand-authored spec rather than a generic fallback.
+Recorded in BL-32; it narrows the decision and does not make it.
+
+**Losslessness is proved, and the proof was mutation-tested before its green was believed.**
+[`BACKLOG-archive-2026-08-15.md.verify.sh`](docs/planning/BACKLOG-archive-2026-08-15.md.verify.sh)
+re-extracts each item from `git show 201e84e:docs/planning/BACKLOG.md` and compares **byte-for-byte,
+keyed on the item's identity (`BL-N`), never on its position** — deliberately not the shipped
+`.verify.sh` design, whose positional `injected` flag is what makes four intact archives read FAIL
+(BL-36). C1 identity set / C2 byte-exact bodies / C3 the move actually happened (no archived body
+still in the live file) / C4 every item reachable from it. **7 mutants: 6 killed** (delete an item;
+a same-length one-character edit inside a body — 7,417 B on both sides, so the check is comparing
+bytes and not lengths; truncate an item; copy-instead-of-move; drop a pointer row; unname the
+shard), **1 deliberate survivor** (reordering two items — correct, and it is the positive evidence
+that the check is identity-keyed rather than positional). A control ran green unmutated, every
+restore was `cmp`-verified, and a mutant that failed to apply reported as **MUTATION DID NOT APPLY**
+rather than as a survival — one did, and was re-run against real text.
+
+**The retained half was proved too, not assumed:** 14 of the 15 open items are byte-identical to
+`201e84e`; the 15th, BL-36, differs by exactly the deliberate edit below.
+
+**The budget was NOT reached, and the reason is the finding.** 137,440 → 91,733 B (1,548 → 1,002
+lines) is −33.3%, still 1.40× the 65,536 B the ledgers are held to. With **every** closed item
+archived and **before this session had written a word of its own into the file**, the 16 inherited
+*open* items already totalled 68,195 B — 1.04× — so no amount of archiving finished work can reach a
+ceiling here. (The final 72,920 B / 17 items includes this session's own BL-37 and its additions to
+BL-32/BL-36; the 68,195 B figure is the one measured against the pre-addition state, so the
+measurement does not include the measurer.)
+The remaining excess **is the open work itself**, and closing the gap means compacting live items:
+a separate decision, not deferred housekeeping. Recorded in BL-36, whose stale `BL-27 above (:975)`
+cross-reference — false in both halves once BL-27 moved — was repointed at the archive in the same
+edit. One boundary was hand-checked rather than sliced: an orphaned S34 regression note about
+BL-10's parked branch sat inside BL-8's heading span, belongs to neither, and was retained (moved
+beside the BL-10 block it describes); the losslessness proof asserts that boundary marker exists
+rather than assuming it.
+
+Verified: `bin/tests.sh` 228 passed / 1 failed (Test 9's pre-existing github-source gap, unchanged
+from S87/S88), `tools.test_methodology_dashboard` 300/300 (4 skipped), `tools.test_methodology_trim`
+97/97, `bin/check-links` OK (88/22), `bin/check-learnings` OK (24 rows), `bin/check-handoff --all
+--allow-pending` OK. No `bin/_manifest.py`-distributed file was touched; no outward-facing action
+was taken.
+
 ### 2026-08-15 · [ad hoc] S88 close-out — receipt written, self-score 8/10; see the `[BL-36] ANSWERED` entry below for the substantive work
 
 **Model:** Claude Opus 5.

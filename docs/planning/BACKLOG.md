@@ -1,140 +1,40 @@
 # Operational Backlog (fork-only)
 
-> **STATUS: REOPENED 2026-07-25 — BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19,
-> BL-21, BL-22, BL-23, BL-26, BL-30, BL-31 and BL-32 are open** (**BL-35 raised 2026-08-11
-> (S83) and FIXED 2026-08-11 (S84)** — `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18/19 were
-> malformed 2-column rows, live since S40/S41; found by `bin/check-learnings`, arriving via
-> S83's upstream merge; recovered via git archaeology on the two rows' authoring commits
-> (`11b843a`, `12463dd`); see its own entry. **BL-34 raised AND FIXED
-> 2026-08-11 (S81), operator-directed** — `LANG_MAP` had no `.r` entry despite `.r` already being
-> in `SOURCE_EXTS` (found scanning `../nprcgenekeepr`: 603 `.r` files, 77,773 LOC, counted as
-> Source but invisible in "Code by Language"); fixed, and `.qmd`/`.rmd` added to `DOC_EXTS` per
-> operator direction (previously fell through to "other" — not source, not docs, not even
-> LOC-counted). Both twins fixed, 6 new tests, RED-first against both this fork's tree and a clean
-> `upstream/main` worktree; PR opened upstream — [KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72),
-> **MERGED 2026-08-11** (`5c59f0b`, verified S85) **and SYNCED into local `main` 2026-08-12**
-> (`aa378ab`, S86) — the 4-file (grown to 6 by sync time) conflict against this item's own
-> already-landed local fix resolved; see its own entry. **BL-33 FIXED 2026-08-11 (S80)**
-> — `bin/model-report`'s `CHANGELOG_ENTRY_RE` widened to accept one-or-more adjacent `[TAG]` groups,
-> so `CHANGELOG.md:378`'s `[BL-14][BL-17]` header now parses as its own entry; a `### `-prefixed line
-> that still fails to match is now reported as a loud `WARNING` (with file/line) instead of being
-> silently folded into the preceding entry; Source 1's live-file count (55) now exactly matches the
-> raw anchored `**Model:**` grep (55), closing the population gap BL-20's own closure note reported;
-> see its own entry. **BL-8 ADOPTED 2026-08-11
-> (S78), operator-directed** — subagent capability-tiering is now this fork's own operational default
-> when authoring a `Workflow` script; not a methodology change, no distributed document edited; see
-> its own entry. **BL-20 FIXED 2026-08-11 (S79)** — `bin/model-report`'s `CHANGELOG_MODEL_RE`
-> widened to accept this repo's own bare `**Model:**` dialect alongside the seed's documented
-> `- **Model:**` list form (option 1 of the entry's own three; option 2 is forbidden by the v2.7.1
-> frozen-dated-entries convention, option 3 is a separate DISTRIBUTED seed-doc change that needs its
-> own go-ahead and was not taken); see its own entry. **BL-32 raised 2026-08-11**,
-> not a session claimed in this repo — reported by an operator conversation relaying a live
-> `nprcgenekeepr` session's own investigation, independently verified against this repo's canonical
-> `starter-kit/methodology_trim.py` before being recorded: its `LEDGERS` config table covers only
-> `CHANGELOG.md`/`HANDOFFS.md`, with no supported path for a third ledger-shaped file, and the
-> reporting session's own reading of the tool's "no generic fallback" comment as an invitation to add
-> local entries does not hold up on a direct re-read; see its own entry. **BL-31 raised 2026-08-11
-> (S74)** —
-> a live `upstream/main` dashboard-exclusion gap found while re-verifying BL-26's PR #66 fixes, not
-> fork-fixable; **PR opened 2026-08-11 (S75), operator-directed** —
-> [KJ5HST/methodology#71](https://github.com/KJ5HST/methodology/pull/71), open, `MERGEABLE`; see its
-> own entry. **BL-26's PR #66 thread CLOSED 2026-08-11 (S74)** — PR #66 merged
-> upstream, both S67 review-comment findings confirmed genuinely fixed before merge; BL-26's issue #67
-> thread remains open on its own. **BL-29 and BL-30 raised 2026-08-10
-> (S70)**, operator-directed, out of a cross-repo investigation into whether adopting the methodology
-> produced measurable effects in local adopter repos — **BL-29** a still-reproducible self-scan gap in
-> `tools/methodology_dashboard.py`, **BL-30** a deliberately lightweight watch item on the ledger
-> trimmer's adoption outside `nprcgenekeepr`; see their own entries. **BL-29 raised 2026-08-10 (S70),
-> CLOSED 2026-08-10 (S72)** — `ROOT = Path(__file__).parent` is the script's own directory, correct
-> for every adopter-installed and portfolio-root copy, but the canonical repo's own two checked-in
-> copies (`tools/`, `starter-kit/`) file the script one level BELOW the repo they belong to, so
-> `(ROOT / ".git").exists()` read false there; a new `resolve_single_project_root()` bridges exactly
-> those two known, marker-verified nestings to their repo root, `DASHBOARD_VERSION` 2.14.0 → 2.15.0,
-> 6 new RED-first tests (290/290 in the dashboard suite), full `bin/tests.sh` 185/186 (Test 9's
-> pre-existing baseline) unaffected; see its own entry. **BL-28 raised 2026-08-10 (S65), CLOSED 2026-08-10
-> (S68)** — the generated `.verify.sh`'s "missing front-matter line" check was a substring test, not
-> exact-line-set membership, so an append-style edit that kept the original text as a literal
-> substring of the new line was invisible to it; fixed by comparing against the exact set of new
-> front-matter lines, `TRIM_VERSION` 1.1.2 → 1.1.3, 2 new RED-first tests (97/97); see its own entry.
-> **BL-27 raised 2026-08-10 (S64), CLOSED 2026-08-10 (S65)** — the
-> ledger trimmer's generated `.verify.sh` had two known false-positive triggers on `HANDOFFS.md`
-> (front-matter field regeneration; a same-commit close-out bundled with the archive write reading as
-> record alteration); both fixed in `VERIFY_TEMPLATE`/`build_verify` (`starter-kit/methodology_trim.py`
-> v1.1.2), RED-first, 4 new tests (95/95), full suite unaffected; see its own entry for the fix shape.
-> **BL-26 raised 2026-08-09 (S56)** — issue #67
-> describes a live, unfixed defect already shipped in this fork's own `methodology_dashboard.py`;
-> PR #66 has two concrete, reproduced collisions of its own (a hook-install path that silently
-> no-ops under this fork's `core.hooksPath` convention, and a duplicate-session check with the exact
-> flaw BL-23 already found in issue #65); see its own entry and
-> [`issue67-pr66-review.md`](issue67-pr66-review.md). **BL-25 raised and CLOSED same session (S53)** — the
-> `vscode_quarto_ext` counterpart to BL-24: F9 confirmed resolved, F2/F3/F6/F8 unchanged/open,
-> F10/F11 unchanged-and-clean, both bonus checks (F1, F4) clean; see its own entry and
-> [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §9. **BL-24 raised 2026-08-08 (S49), CLOSED same day (S50)**
-> — the focused `mts-system` re-run it queued ran: F9 confirmed resolved, F10 improved to zero, F6/F7
-> unchanged/open, F11 not applicable; see its own entry and
-> [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §8. **BL-23 raised 2026-08-08 (S47)** — issue #65 collides
-> with S34's unopened Learnings-table PR; see its own entry and
-> [`issue-65-collision-review.md`](issue-65-collision-review.md). **BL-22 raised 2026-08-03 (S36)**,
-> and this enumeration WAS updated with it — the omission called out below for BL-20 is the reason it
-> was checked;
-> **BL-21 raised 2026-08-03 (S32)**; **BL-20 was raised 2026-08-02
-> (S31) and this enumeration was not updated with it**, which is why it is being said out loud: this
-> list is a hand-maintained derived value in the file whose own header tells you not to trust those.
-> It cannot be derived by counting headings either — the 16 `**BL-N —**` headings in §Open items
-> (re-derived 2026-08-09, S56, via `grep -cE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG.md`; **15** at
-> S53's count, itself already stale by then — this line is exactly the kind of drift the
-> paragraph warns about, caught only because S56 added a sixteenth heading, BL-26, and re-ran the
-> grep rather than incrementing by hand) are a *different* set: **BL-15** keeps its
-> heading though it is CLOSED, and **BL-16** is open but has no heading of its own, living inside
-> BL-14's follow-ons paragraph. Read each item's own status line.) (**BL-19 raised 2026-08-02 (S30)** — the operator-assigned context-cost plan; it is an
-> index entry for [`framework-context-cost-plan.md`](framework-context-cost-plan.md), not a restatement
-> of it. **S30 also re-measured every open item above and found a wrong number in six of six**; the
-> corrections are recorded in the `CHANGELOG.md` entry *"The framework's context cost — adopter
-> heuristics and a remediation plan"* and the items themselves are deliberately NOT edited (FM #17).
-> Do not trust a number in this file without re-deriving it — in particular the live-voice "32
-> receipts" (it is 33), BL-18's "30 anchors" (28) and its "cannot be repaired without fabricating a
-> citation" (false), BL-12's "four sites" (five), and BL-16's `bin/check-handoff:301-303` (it is
-> `:487`, and was never `:301-303` at any tree that ever existed).) (BL-14 raised 2026-08-02 (S28) and **partially closed the same session**: the fork-side
-> detector and the 9-receipt repair shipped; its distributed half — the spec still promises a
-> reconcile no procedure assigns — is prepared, unshipped, and needs a go-ahead (see the routing
-> paragraph; it was recorded as "blocked on the channel" until 2026-08-03, on a constraint nobody
-> imposed). **BL-15 is CLOSED 2026-08-02 (S29):
-> raised correctly — its "13 of 32" is exact — and already discharged by BL-14's own repair, which
-> gave all 13 receipts a real sha in `commit:` to defer to. S29's claim stub said the population
-> did not reproduce; that was wrong, and the correction is recorded in BL-15 itself. Settling it
-> uncovered a different defect, and the fork-side prohibition for that shipped the same session.
-> BL-17 and BL-18 were raised out of the settlement and are open.**) BL-8 was deliberately
-> sequenced *after* the dashboard signal-integrity campaign closed (Layer 7, then Layer 6), which it
-> now has (v3.6 shipped 2026-07-27), so it is unblocked. BL-11 and BL-12 were both raised 2026-08-01
-> at BL-10's close-out. BL-1 – BL-7, BL-9 and BL-10 are complete; the retirement note below is
-> preserved as the record of that cycle. **BL-9 closed 2026-08-01 (S25)** — all three layers
-> delivered across S23/S24/S25.
->
-> **RECONCILED 2026-08-01 (S26) against `upstream/main` `e02538b`, and three items moved.** The
-> maintainer ran their own S7/S8 the same evening, and the fork resynced (`d6dd6c9` → `e02538b`):
-> — **BL-10's prose fix was superseded upstream.** `15ccb38` re-grounded the identical five
-> `Learning #N` citations in the identical two distributed files, from the identical rad-con root
-> cause. The fork's parked branch is now of historical interest only; see the parked block below,
-> which has been rewritten rather than deleted.
-> — **BL-12's second bullet became upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65)**,
-> filed by the maintainer (`f85a324`), open, and scoped almost exactly as BL-12 framed it —
-> mutation-proved, with Learning #12's RED-first precondition carried over verbatim.
-> — **BL-13 is new**, and it exists *because* of `15ccb38`: that fix stripped the dangling numbers
-> but left one of the claims they were attributing standing on its own. BL-10's own session predicted
-> this failure in writing.
-
-> **(prior status) RETIRED (again) — BL-1 – BL-7 all complete, 2026-07-08.**
-> BL-7 (capability-tiered review, an elective vertical-slice addition) shipped via
-> [PR #57](https://github.com/KJ5HST/methodology/pull/57) (merge `d563600`) — see the Completed table
-> + `CHANGELOG.md`. Verbose task bodies are removed at close-out; git history preserves them
-> (`b091fba` … `69dad12`; BL-5 `b2efd76` … the v3.2 merge; the BL-6 item-1/1a/1b/1c detail up to the
-> `9a84b8e` fork-sync merge; BL-7 design panel + implementation up to the `d563600` merge).
-
 Operational/coordination backlog for **rmsharp's** methodology work. Fork-only — it lives in
 `docs/planning/` and is **not** part of the canonical framework or any upstream PR (same convention
 as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md)).
 
 This is a backlog, **not** GitHub issues, by operator decision.
+
+**Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
+BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37.** Re-derive rather than trust that list —
+it is hand-maintained, and it has been wrong before:
+
+```
+grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG.md
+```
+
+Two things that grep will *not* tell you, both deliberate: **BL-16 is open but has no heading of
+its own**, living inside BL-14's follow-ons paragraph; and **BL-20's heading now covers only its
+open residual**, its closed history having moved to the archive below.
+
+**⚠ Do not trust a number in this file without re-deriving it.** S30 re-measured every open item
+and found a wrong number in **six of six**; the corrections are in `CHANGELOG.md` (*"The framework's
+context cost — adopter heuristics and a remediation plan"*) and the items themselves are
+deliberately NOT edited (FM #17). Known-wrong figures still standing in the prose below: the
+live-voice *"32 receipts"* (it is 33), BL-18's *"30 anchors"* (28) and its *"cannot be repaired
+without fabricating a citation"* (false), BL-12's *"four sites"* (five), and BL-16's
+`bin/check-handoff:301-303` (it is `:487`, and was never `:301-303` at any tree that ever existed).
+
+**Closed items are archived, not kept here.** Eleven closed items — BL-8, BL-15, BL-20's closed
+half, BL-24, BL-25, BL-27, BL-28, BL-29, BL-33, BL-34, BL-35 — live verbatim in
+[`BACKLOG-archive-2026-08-15.md`](BACKLOG-archive-2026-08-15.md), with a one-line pointer row each
+in §Completed items below. Losslessness is proved by
+[`BACKLOG-archive-2026-08-15.md.verify.sh`](BACKLOG-archive-2026-08-15.md.verify.sh) — run it
+rather than trusting this sentence. **Grep the archive too**, not just this file: BL-36 was raised
+into this file 471 lines below BL-27, which already contained its answer, and cost a session.
+The narrative of *what was done and when* belongs to [`CHANGELOG.md`](../../CHANGELOG.md), which is
+the authoritative action ledger; this file holds open work only.
 
 > **BL-10's parked fix — HALF of it is now moot, and the other half found a home. Still do not
 > re-propose it, and still do not lose it.** It is **not** on `main`. It exists only on branch
@@ -161,79 +61,6 @@ This is a backlog, **not** GitHub issues, by operator decision.
 > authorization** — no agent may reopen #64, open a replacement, comment upstream, or answer #65
 > without an explicit ask.
 
-## Open items
-
-**BL-8** was sequenced AFTER the dashboard signal-integrity campaign closed — i.e. after **Layer 7**
-(the installer/doc-only fix, ratified S14) and then **Layer 6** (close-out + release decision R1).
-That campaign shipped as **v3.6** on 2026-07-27, so it is not blocked any longer. It is not a change
-to the methodology. It was raised and measured in **S14** (as was BL-9, now complete); see the action
-ledger for those entries. **BL-11** and **BL-12** are unrelated to the campaign; both were raised
-2026-08-01 at BL-10's close-out. **BL-13** was raised 2026-08-01 at the S26 resync.
-
-**RE-TRIAGED 2026-08-03 (S33) — the routing that decides what a session can run today, corrected.**
-Until this date several items below carried *"blocked on the paused channel"* as their **disposition**.
-**That constraint was never imposed** (see `framework-context-cost-plan.md` §5): the operator's rule
-is *ask before each outward-facing action, batch and vet to protect the maintainer's review time* —
-sequence, not suspension. Nothing here is blocked for that reason. The honest routing:
-
-- **Runnable now, nothing outward-facing.** **BL-8** — a fork-side operational decision where
-  *"decline"* is an explicitly correct outcome. **BL-18** — S30 proved its stated blocker false.
-  **BL-20** — two of its three fixes are fork-side.
-- **Runnable now up to the PR, which needs a go-ahead.** **BL-13**, **BL-12's first bullet**,
-  **BL-14's distributed half**, **BL-17's distributed half**, **BL-21**. Each touches a
-  `bin/_manifest.py`-**DISTRIBUTED** file, so the *fix* lands upstream — but the preparation and the
-  evidence are fork-side and are the part that carries the work. Batch them rather than sending each
-  alone; that is what the operator's rule is protecting.
-- **Genuinely not advanceable by a session, and the only one.** **BL-11** — its deliverable is *a
-  maintainer decision*, not an edit. No amount of fork-side work produces it. This is what a real
-  block looks like, and it is worth contrasting with the five above that were mislabelled as one.
-- **Not the fork's to raise.** **BL-12's second bullet** is upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65);
-  answering it is an outward-facing action and needs an explicit ask.
-
-**BL-8 — Subagent capability-tiering: adopt as an operational default, or decline. ADOPTED (S78).**
-*Not a methodology change, and no document needs editing.* `SESSION_RUNNER.md` §Vertical Slice
-Sessions already carries the decision rule (v3.5, BL-7) — explicitly **elective**, scoped to
-pre-declared vertical slices — and `RECOMMENDED_SKILLS.md` states the default outright:
-*"Elective; single-tier-throughout remains the default."* The open question is narrower and purely
-operational: when a session authors a **workflow** whose subagent roles rest on an objective,
-checkable gate (extraction re-verified by executing the module; corpus sweeps re-verified downstream),
-should those roles be authored onto a lighter tier while judgment roles and review stay on the
-strongest? Note the current campaign is **horizontal** (one layer per session), not a slice, so the
-v3.5 mechanism does not formally govern it — this would be applying its *principle* to a context the
-document does not cover.
-*Measured in S14, against its own 48 subagents:* all-Opus **$132**; all-Sonnet **$79** standard /
-**$53** intro; **hybrid ~13–19% saving** — much less than the headline, because the judgment-heavy
-verifier role is **61% of input tokens**. Cache reads are **91.7%** of all input. Sonnet intro
-pricing ends **2026-08-31**.
-*The larger lever measured alongside it, and the better first move:* **8 of 36 verifier agents
-re-verified a site another slice had already surfaced** (dedupe findings before spawning verifiers),
-and the review budget should be reserved *before* the discovery sweep — S14's sweep consumed the
-budget and its review then died on a usage limit, which is why Layer 5 shipped unreviewed and later
-needed three prose fixes. Both are free of any quality tradeoff.
-**"Decline and keep single-tier" is a correct outcome** and matches the documented default; the only
-cost is the saving above.
-
-**ADOPTED 2026-08-11 (S78), operator-directed.** Presented the measured tradeoff above (13-19%
-saving, driven down because the judgment-heavy verifier role is 61% of input tokens; the
-dedupe/budget-reservation lever is separate and free of the tradeoff) and asked the operator to
-choose between adopt and decline; the answer was **adopt**, accepting the modest saving.
-**The operational rule this fork now applies when authoring a `Workflow` script:** a subagent role
-whose correctness rests on an objective, checkable gate (a test suite it must pass, an exhaustive
-grep-reconciliation, a module it re-verifies by executing — the same bar `SESSION_RUNNER.md`'s
-§Vertical Slice Sessions "Capability-tiered review" already sets for slice layers) may be authored on
-a lighter/faster tier; a role whose correctness rests on judgment across interacting constraints no
-such gate expresses (the verifier/refuter role, any role adjudicating "is this finding real," brand-
-neutral wording, cross-file invariants) stays on the strongest available tier — and so does every
-review pass over a delegated role's output, never batched at the end. This extends the
-already-documented principle from its current scope (pre-declared vertical slices) to horizontal
-`Workflow`-authored campaigns, which that text does not formally cover. **Still not a methodology
-change** — no distributed document is edited, because the extension is this fork's own operational
-practice for authoring its own workflows, not a new recommendation for adopters.
-Independently of tiering, also adopt the two tradeoff-free levers measured alongside it: dedupe
-findings against what earlier stages already surfaced before spawning verifiers, and reserve the
-review budget before the discovery sweep can spend it down (S14's own failure: the sweep spent the
-budget and Layer 5 shipped unreviewed).
-
 > **S34 regression note (2026-08-03), recorded not fixed.** The parked `bin/check-citations`
 > (branch `docs/bl-10-dangling-learning-citations`, tag `archive/bl-10-citations` → `268f1e5`) is
 > hard-anchored on `REGISTRY_FILE = "starter-kit/SESSION_RUNNER.md"` (`:34`) and
@@ -242,6 +69,29 @@ budget and Layer 5 shipped unreviewed).
 > because the table now lives in `starter-kit/FRAMEWORK_LEARNINGS.md` under `# Framework Learnings`.
 > **Whoever revives it — S43 absorbs it into `bin/check-derived` — must retarget both constants.**
 > The guard failing loudly rather than silently passing is the tool behaving correctly.
+
+## Open items
+
+**Routing — what a session can actually run today.** Until 2026-08-03 several items below
+carried *"blocked on the paused channel"* as their disposition. **That constraint was never
+imposed** (see [`framework-context-cost-plan.md`](framework-context-cost-plan.md) §5): the
+operator's rule is *ask before each outward-facing action, batch and vet to protect the maintainer's
+review time* — sequence, not suspension. Nothing here is blocked for that reason.
+
+- **Runnable now, nothing outward-facing.** **BL-18** — S30 proved its stated blocker false.
+  **BL-22**, **BL-30**, **BL-32** — measurement and decision work, fork-side throughout.
+- **Runnable now up to the PR, which needs a go-ahead.** **BL-13**, **BL-12's first bullet**,
+  **BL-14's distributed half**, **BL-17's distributed half**, **BL-20's residual option (3)**,
+  **BL-21**, **BL-31** (already opened as PR #71), **BL-36's repair**. Each touches a
+  `bin/_manifest.py`-**DISTRIBUTED** file, so the *fix* lands upstream — but the preparation and the
+  evidence are fork-side and are the part that carries the work. Batch them rather than sending each
+  alone; that is what the operator's rule is protecting.
+- **Genuinely not advanceable by a session, and the only one.** **BL-11** — its deliverable is *a
+  maintainer decision*, not an edit. No amount of fork-side work produces it. This is what a real
+  block looks like, and it is worth contrasting with the ones above that were mislabelled as one.
+- **Not the fork's to raise.** **BL-12's second bullet** is upstream
+  [issue #65](https://github.com/KJ5HST/methodology/issues/65); answering it is an outward-facing
+  action and needs an explicit ask.
 
 **BL-11 — Unreachable non-`Learning` referents across the distributed corpus.**
 *Raised 2026-08-01 at BL-10's close-out; deliberately not bundled into it (FM #17/#18).*
@@ -464,35 +314,6 @@ pending PR number is plausible). **BL-16** — `bin/check-handoff:301-303`'s doc
 canonical repo "has no root-level receipt ledger of its own," which is false here (13 receipts + a
 19-receipt archive it knows nothing about).
 
-**BL-15 — `changelog_ref`'s deictic deferral: RAISED CORRECTLY, AND ALREADY DISCHARGED.**
-*Settled 2026-08-02 (S29). Do not re-raise; the count below is the third time this population has
-been measured and the first time it was measured right.*
-**BL-15's "13 of 32" is exact.** 13 `changelog_ref` values defer deictically instead of naming an
-identifier — **12 × `this commit` plus archive-S1's `this branch`**. S29's claim stub asserted the
-population did not reproduce under any predicate; that assertion was **wrong**, and wrong the way
-[`feedback_a_grep_count_is_a_sample`] describes: it grepped one literal phrasing, reached 12, and
-stopped one variant short. `bin/check-handoff:69-70` names the dialect in writing —
-*"it catches the `this commit — ...` dialect that names no sha at all"* — so the key was documented
-and was not used. The provenance settles the "identical" wording too, and it is textual rather than
-analogy: `starter-kit/HANDOFFS.md:63` specifies `changelog_ref: <PR #N or a short-sha into
-CHANGELOG.md>` and `:88` says outright *"the shared key across all three is the commit sha
-(`changelog_ref` / `commit` here)"*; the ratified plan agrees at
-[`close-out-receipt-durable-artifact-plan.md:105`](close-out-receipt-durable-artifact-plan.md).
-**Why it is nonetheless closed rather than open.** Two measured facts, neither of which was
-available when BL-15 was raised one session earlier:
-- **All 13 name their entry by a quoted `### ` title BEFORE the deferral** — "…entry, this commit".
-  The deferral is a trailing modifier, never the answer slot. BL-14's escape was categorical: S25
-  and S26's `commit:` read `this commit` **and nothing else, with no sha anywhere in the receipt**.
-- **All 13 now carry a real sha as their own `commit:` first token**, because `7752114` and
-  `6d47624` forced it. Each deictic reference is therefore a one-hop back-reference to a field the
-  checker already guarantees. **BL-14 discharged BL-15 as a side effect** — which is the honest
-  finding, and better than either "wrong" or "open".
-*What no longer stands:* the parenthetical about a *"legitimately pending PR number"*. Zero of the
-32 values contain the literal `pending`, and the seed's `PR #N` form appears in **no** receipt —
-only in `bin/tests.sh` fixtures. Nothing in the corpus can produce that false positive.
-*Residual, deliberately not mechanized:* the one-hop resolution is a convention no document states.
-Writing it down means editing `starter-kit/HANDOFFS.md`, which is **DISTRIBUTED** — see BL-17.
-
 **BL-17 — The `changelog_ref` referent the seed does not offer, and the one title that is stale.**
 *Raised 2026-08-02 (S29) out of BL-15's settlement; measured, not fixed (FM #17).*
 Two halves that share one root cause: **the distributed spec offers no locator a fork-local session
@@ -566,58 +387,18 @@ issue, comment, tag or release needs an explicit ask, each time.
 `CLAUDE.md` version-pointer sink, DVX's `docs/planning/` scope, whether S40 is worth it, and the
 archive-trigger form — **remain open except the last, which S31 settled as a rate.**
 
-**BL-20 — `bin/model-report`'s Source 1 is blind to the `**Model:**` form this repo actually writes.**
-*Raised 2026-08-02 (S31), found while verifying a claim S31 was about to publish about its own split.
-Not fixed in that session (FM #17): the split was the deliverable, and this is a tool/convention
-mismatch with at least three defensible fixes.*
-**The defect.** `CHANGELOG_MODEL_RE` (`bin/model-report:51`) is `^-\s*\*\*Model:\*\*\s*(.+)$` — the
-list form the distributed seed documents (`starter-kit/CHANGELOG.md:42`, `:57`, `:69`). This repo's
-live ledger writes the bullet as a bare `**Model:**` at line start, which that regex cannot match. So
-`python3 bin/model-report` prints *"(no CHANGELOG.md entries carry a **Model:** bullet)"* against a
-file containing nine of them. Source 1 is the **primary, structured** source; it fails silently and
-reads as "no data recorded" rather than "not parsed."
-**Population, both dialects, frozen at the tree it was measured against** (`74479df`, S31's claim, so
-the figure cannot decay): 14 bullets corpus-wide — **9** bare, all in the live `CHANGELOG.md`, and
-**5** list-form, all in `docs/archive/CHANGELOG-through-2026-08-01.md`; 0 in the v3.6 shard. It is
-already stale at HEAD — S31's own close-out entry made it 10 bare / 15 total, which is the point.
-Re-measure, never recall:
-`grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md docs/archive/CHANGELOG-*.md`
-**Drift point, derived not guessed:** `54426cb` (2026-08-01) is the last commit with list-form only;
-`1298af7` (2026-08-02) is the first bare-form entry, and every one of the nine entries since has
-followed it — a same-day convention change that no check noticed because the only reader is
-non-gating and its empty output is indistinguishable from an unrecorded field.
-**Consequence of S31's split, recorded because it is counterintuitive:** the split moved 100% of what
-Source 1 can parse into the archive. The tool's default invocation is now empty, and its front-matter
-note in both ledgers says so.
-**Three fixes, and the choice is the deliverable:** (1) widen the regex to accept both dialects —
-smallest, but blesses a form the seed does not document; (2) normalize the nine live entries to the
-seed's list form — restores the documented convention, but rewrites dated entries, which the v2.7.1
-convention forbids; (3) change the seed to document the bare form — **DISTRIBUTED, so it ships
-upstream and needs a go-ahead.** Note (1) and (2) are fork-side, so this can advance today either
-way.
-**Related:** this is the same shape as BL-14/BL-15 — a promise in the seed with no detector — except
-here the detector exists and reads the wrong dialect.
-
-**FIXED 2026-08-11 (S79), option (1).** `CHANGELOG_MODEL_RE` (`bin/model-report:51`) widened from
-`^-\s*\*\*Model:\*\*\s*(.+)$` to `^-?\s*\*\*Model:\*\*\s*(.+)$` — the leading `- ` is now optional,
-not required, so Source 1 matches both dialects. Option (2) (normalize the live entries to list
-form) was ruled out, not chosen against: it rewrites dated `CHANGELOG.md` entries, which the
-v2.7.1 convention forbids outright. Option (3) (change the seed to document the bare form) remains
-genuinely open — it would close the last gap (the seed still only documents the list form the live
-ledger doesn't use) but is a DISTRIBUTED change that ships upstream and needs its own go-ahead;
-not taken this session, not blocking this fix.
-RED-first (Learning #12): confirmed pre-fix that a bare-form fixture, and this repo's own live
-`CHANGELOG.md`, both fell through to `(no CHANGELOG.md entries carry a **Model:** bullet)` before
-touching the regex. New Test 30 in `bin/tests.sh` fixtures both dialects side by side plus a
-no-bullet control (so an over-wide fix would still be caught), and asserts against this repo's own
-live `CHANGELOG.md` directly, not only a synthetic fixture.
-Re-measured, not recalled, and reconciled against the tool's own post-fix output rather than trusted
-as a bare grep count: `grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md` → **52** anchored
-bullets in the live file (5/10/68/0 across the four archive shards); `bin/model-report`'s own
-post-fix entry count is **51**, one lower. The gap is real and is NOT this fix — re-derived down to
-a single cause, a second, separate, pre-existing `bin/model-report` defect (a multi-tag `### `
-header silently folding into its predecessor rather than failing to match loudly), raised as its own
-item, **BL-33**, and deliberately not fixed here (FM #17: this session's one deliverable was BL-20).
+**BL-20 — the seed still documents only the `- **Model:**` list form the live ledger does not
+use. RESIDUAL ONLY; the defect itself is FIXED.**
+*Raised 2026-08-02 (S31); fixed 2026-08-11 (S79) as option (1) of three — `CHANGELOG_MODEL_RE`
+widened so `bin/model-report`'s Source 1 reads both dialects. Closed history archived verbatim to
+[`BACKLOG-archive-2026-08-15.md`](BACKLOG-archive-2026-08-15.md).*
+**What is still open, and only this.** Option (3): change the distributed seed
+(`starter-kit/CHANGELOG.md:42`, `:57`, `:69`) to document the bare `**Model:**` form this repo
+actually writes. It would close the last gap — the seed and the live convention still disagree, and
+the widened regex tolerates that disagreement rather than settling it. It is a **DISTRIBUTED**
+change that ships upstream and **needs its own go-ahead**. Option (2) (normalise the live entries to
+list form) is not merely untaken but ruled out: it rewrites dated `CHANGELOG.md` entries, which the
+v2.7.1 convention forbids outright.
 
 **BL-21 — When the Phase 1B carve-out is contributed upstream, two seed sentences must ship with it.**
 *Raised 2026-08-03 (S32) by the change that will eventually create the drift. Scoped DOWN from how it
@@ -809,60 +590,6 @@ whether/how to also flag #65 — e.g. a PR-description note to the maintainer, a
 once authorized, or leaving it for the maintainer to discover at review time. **Answering #65 in any
 form is an outward-facing action and needs an explicit ask**, same rule as BL-12's second bullet.
 
-**BL-24 — `mts-system` cleared both UAT blocking conditions; focused re-run CLOSED (S50).**
-*Raised 2026-08-08 (S49), from a live conversational spot-check triggered by the operator, not a
-scheduled sweep. Closed the same day (S50). Full evidence:
-[`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §7 (raised) and §8 (closed).*
-
-`mts-system` was one of three repos the S48 UAT follow-up recorded as carrying uncommitted work
-(§6 there). Re-checked live at ~15:30 today: `git status --porcelain` reads **0** dirty paths (was
-**2** at S48's 14:00 snapshot), and `bin/sync --dry-run ../mts-system` remains unblocked (exit 0 —
-it was never F4-blocked, only the "carries uncommitted work" condition applied). The change is real,
-independent adopter-side activity, not anything this fork did: `mts-system`'s own commit log shows an
-internal session (its own "S95") closed out and left the tree clean about 1.5 hours after S48's
-snapshot. Two things also worth noting, found in the same spot-check but out of this item's own
-scope: `mts-system`'s `dashboard_history.jsonl` (F9) now looks independently tracked/resolved there
-too; F2's dangerous `BOOTSTRAP.md:330` text is unchanged, byte-identical (closes only upstream, §6).
-
-**CLOSED 2026-08-08 (S50):** ran the focused UAT pass this item queued — re-derived F6, F7, F9, F10,
-F11 against `mts-system`'s current state (F1/F3/F4/F8/F12 correctly scoped out, per this item's own
-framing). **F9 confirmed resolved** (tracked, deliberately unignored, documented in `.gitignore`) —
-S49's "looks independently resolved" hedge is now a verified fact. **F10 improved, 1 → 0** reconcile
-debt — new information this item's own scope didn't originally ask for but the re-run surfaced.
-**F6 and F7 reproduce unchanged, still open** — the dashboard's presence-only compliance blind spot
-and `check-handoff`'s all-numeric-sha false positive on receipt S74 both still stand exactly as S43
-found them. **F11 not applicable** — `mts-system` was never one of the three repos missing
-`HANDOFFS.md`. Zero regressions. Read-only throughout; `git status --porcelain` inside `mts-system`
-confirmed 0 dirty paths both before and after. No sync or write action was taken or authorized.
-
-**BL-25 — Focused `vscode_quarto_ext` UAT re-run, raised and CLOSED same session (S53).**
-*Operator-directed 2026-08-08 (S53), choosing `vscode_quarto_ext` from three offered alternatives
-(issue #67/PR #66, this fork's own F9 instance, F3). The `mts-system` counterpart to BL-24, run
-against the other repo §7 flagged as "closer, not identical." Full evidence:
-[`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §9.*
-
-Pre-condition re-verified at claim: `git status --porcelain` **1** dirty path (`?? scratchpad/`, an
-untracked non-methodology scratch directory, not a modified-tracked-file conflict — unchanged from
-§7's S49 snapshot); `bin/sync --dry-run ../vscode_quarto_ext` exit 0, unblocked (never F4-blocked).
-Re-derived **F2, F3, F6, F8, F9, F10, F11**, plus two bonus checks never run against this repo before
-(**F1**, **F4**). **F9 confirmed resolved** — tracked, not ignored, not dirty; last touched by
-`fe1e05b` with two further unrelated session commits landing since and leaving it untouched, which
-upgrades §7's (S49) "committed cleanly today" hedge to a verified fact, the same upgrade BL-24 gave
-`mts-system`'s F9. **F2, F3, F6, F8 reproduce unchanged, still open** — `BOOTSTRAP.md:330`'s
-"overlay them" text is byte-identical; `SESSION_NOTES.md` grew to 7,549 lines/506 headings (+81/+6
-since S43); the dashboard's 100%-compliance/11-drifting-files blind spot reproduces exactly, `bin/status`
-now naming `SESSION_RUNNER.md`/`BOOTSTRAP.md` 8 versions behind; `ZONE_UNCLASSIFIED` still fires on
-`HANDOFFS.md`, now at line 2807 (was 2771 — the shift is the file growing, not a new defect). **F10
-unchanged at 0; F11 not applicable** (has `HANDOFFS.md`). **Both bonus checks came back clean**: F1's
-original grammar-mismatch bug was never present in this repo's `CHANGELOG.md` (the trimmer's
-`TRIGGER_BYTES` check fires correctly, no `NO_RECORDS`/`GRAMMAR_MISMATCH`); F4 confirms this repo was
-correctly excluded from the "2 of 6 blocked" set. Adjacent, not a numbered finding:
-`bin/check-handoff` now counts 96 unreconciled `commit:` answer slots (S38–S186), up from §4's 93
-(S38–S184) — ordinary adopter ledger-hygiene drift, not a new tool defect. **Net: 1 of 7 improved
-(F9), 4 unchanged/open (F2, F3, F6, F8), 2 unchanged-and-clean (F10, F11), zero regressions.**
-Read-only throughout; `git status --porcelain` inside `vscode_quarto_ext` confirmed identical (1
-dirty path) both before and after. No sync or write action was taken or authorized.
-
 **BL-26 — Issue #67 and PR #66 checked against this fork's current state: neither is addressed, and
 PR #66 has its own unfixed collisions.** *Raised 2026-08-09 (S56), operator-directed — offered and
 declined as an alternative at BL-25's claim (S53) and left un-investigated across five prior sessions'
@@ -971,171 +698,6 @@ reproduced consistently (not a flake): PR #66 added `context_budget.py`/`.contex
 `bin/_manifest.py` as newly distributed files, but `tools/methodology_dashboard.py`'s
 `FRAMEWORK_INSTALLED_SOURCE` exclusion tuple was never updated to include the new TRACKED file. This
 is `upstream/main`'s own state post-merge, not anything this fork introduced.
-
-**BL-27 — `methodology_trim.py`'s generated `.verify.sh` has two known false-positive triggers on
-`HANDOFFS.md`, distinct from the internal `--check`/`--write` assertions, which do not share them.
-CLOSED (S65).**
-*Raised 2026-08-10 (S64), found while independently re-running the tool's own generated proof for a
-routine `HANDOFFS.md` archive-cut — the practice this repo's own precedent (S61, S63) established
-specifically to avoid trusting the tool's write-time summary.* Both are reproduced, not inferred:
-
-1. **Front-matter field regeneration reads as data loss.** `HANDOFFS.md`'s front matter carries a
-   `This file currently holds **N**` receipt count that the tool mechanically regenerates on every
-   archive (`[FRONTMATTER_FIELD_REGENERATED]`, e.g. `30 → 3` this session). The internal `assert_L2`
-   check correctly excuses this — it reverses every *declared* regeneration and requires the original
-   bytes back (`starter-kit/methodology_trim.py:523-563`) — but the simpler, self-contained check
-   embedded in the generated `.verify.sh` only asserts "every non-blank line of the original front
-   matter survives verbatim," with no concept of a declared exception. Any archive that changes this
-   line — every one, since the count always changes — makes the standalone proof report
-   `FAIL: L2 FRONT MATTER lost 1 line(s)` even though nothing was lost. Reproduced live this session:
-   `docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh` fails this way; manually diffing
-   `HEAD:HANDOFFS.md` against the pre-commit working tree confirmed the *only* front-matter changes
-   were the declared count regeneration and the declared pointer-block insertion — genuinely lossless,
-   just not provable by the generated script as currently written.
-2. **A same-commit close-out bundling reads as record alteration.** This repo's own established
-   practice (S61, S63, and this session) commits an archive's `--write` output together with
-   finalizing the session's *own* close-out receipt (`status: pending` → `complete`) in one commit.
-   The frontier record (the newest, never archived) therefore legitimately differs between that
-   commit's parent and itself — a fact the internal test suite already names and accepts
-   (`tools/test_methodology_trim.py`'s `test_L3_fixture_is_the_event_that_bundled_an_edit_with_the_move`,
-   fixture `7a71df0`, S23's original archive). But `.verify.sh`, re-run in commit-comparison mode
-   after the fact, has no such exception and reports `FAIL: L3 record(s) not byte-identical … [0]` /
-   an `L1` mismatch. Reproduced live this session against `docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh`
-   (S61's shard, untouched since `c0e6944`, same tool version `v1.1.1` throughout) — its record-0
-   "alteration" is exactly S61's own receipt going from its pending stub to its finished self-score-7
-   form, all within `c0e6944`. **This is not evidence of historical data loss** — S61's actual archive
-   move is intact — but it does mean a past session's disclosed "independently re-ran `.verify.sh` —
-   OK" can go stale the moment the receipt is later finalized into the same commit, and a *future*
-   re-run of that same frozen script, done for due diligence, will misread as a fresh finding of loss
-   unless the reader already knows this pattern.
-
-**Practical mitigation already used this session, not a fix:** run `.verify.sh`'s underlying check
-in the working-tree window *before* finalizing the session's own receipt (which is when `L1`/`L3`
-are still meaningful), and rely on a manual front-matter diff — not the generated script's verdict —
-for `L2`. **Not fixed here (FM #17):** the two real fixes are (a) teach the `.verify.sh` generator
-the same declared-field-reversal exception `assert_L2` already has, and (b) either exempt the
-frontier record from the generated script's `L1`/`L3` comparison when it's the only one to change, or
-document the bundled-commit pattern in the script's own output so a `FAIL` doesn't read as an
-unqualified loss. Both are changes to a canonical, adopter-distributed tool (`bin/_manifest.py`) and
-need their own RED-first tests against `tools/test_methodology_trim.py`'s existing 91-test suite —
-scoped as a session of its own, not folded into a trim.
-
-**CLOSED 2026-08-10 (S65):** fixed both, in `VERIFY_TEMPLATE`/`build_verify`
-(`starter-kit/methodology_trim.py`, the sole canonical copy — no `tools/` twin to mirror). (1) A new
-`@@REGEN@@` template variable carries `spec.regenerated`'s declared field patterns into the
-generated script (`repr()`'d, since it is 0-or-more patterns, not the single-pattern case
-`@@START@@`'s r-string wrapper already handled); a `field_reversible()` helper excuses a "missing"
-line only when it has a same-shaped partner elsewhere in the new front matter, identical everywhere
-outside the declared field's own span. (2) L1/L3 now share one `rebuilt`/`bad`-index computation;
-when the only altered record is position 0 (the frontier) the script still FAILs — a real loss can
-have this exact shape — but also prints a `NOTE:` naming the known bundled-commit pattern, so a
-`FAIL` here no longer reads as unqualified. RED-first: 4 new tests in a new
-`TestVerifyShHandoffFalsePositives` class (`tools/test_methodology_trim.py`), a new
-`make_handoff_repo` fixture (the suite's first end-to-end `HANDOFFS.md` trim through the actual
-subprocess, not just `assert_L2` in isolation); both fix-tests confirmed RED against unpatched code
-for the exact defects above, both narrowed controls confirmed already-green unpatched (proving the
-fix doesn't become a blanket permit). Suite 91 → 95, all green; full `bin/tests.sh` unaffected.
-`TRIM_VERSION` 1.1.1 → 1.1.2 (patch — no new finding code or exit status on the tool's own CLI, a
-correctness fix to generated output). One real finding surfaced while building the first control
-test, not fixed here: **BL-28**, its own entry below.
-
-**BL-28 — the generated `.verify.sh`'s L2 "missing front-matter line" check is a substring test,
-not an exact-line-set membership test, so an APPEND-style edit that keeps the original text as a
-literal substring of the new line is invisible to it.** *Raised 2026-08-10 (S65), found while
-building BL-27's own narrowed control test.* The check is `ln not in afront` — `afront` is the
-whole front-matter TEXT, not a list of lines, so `in` is substring containment. A tamper of
-`"# Handoff Receipts"` → `"# Handoff Receipts EDITED"` (append, not replace) left the original 19
-characters intact as a literal prefix of the new line, and the check reported no loss — reproduced
-live via the actual generated script, not inferred. **Pre-existing, not introduced by BL-27's fix**:
-the same substring check was there before this session touched the file; BL-27's own fix (the
-declared-field-reversal exemption) only *exposed* it, by removing a co-occurring, unrelated false
-positive (the regen-field "loss") that had been accidentally covering for it in BL-27's own first
-draft of that control test — the tamper appeared caught, but for the wrong reason. **The INTERNAL
-`assert_L2` (used by `--check`/`--write`) does not share this defect** — it compares the whole
-front-matter TEXT for exact equality after reversing declared changes (`residue != before_zones.front`),
-which an append-style edit still fails correctly; the bug is specific to the standalone script's
-separately-written, weaker line-based reimplementation. **Not fixed here (FM #17):** the fix is to
-compare an exact set/sequence of lines (or reuse the internal residue-equality approach) instead of
-substring containment — a change to the same canonical, adopter-distributed tool, needing its own
-RED-first test. Low severity in practice (an append that happens to preserve the exact original
-text as a contiguous substring is a narrow tamper shape), but real, and this file's own precedent
-(BL-27) is to record what is found even when it is not what was being looked for.
-
-**CLOSED 2026-08-10 (S68):** fixed in the same `starter-kit/methodology_trim.py` template (the sole
-canonical copy — no `tools/` twin to mirror). The "missing" check now builds `afront_lines =
-set(afront.splitlines())` once and tests `ln not in afront_lines` — exact membership in the new
-front matter's line set — instead of `ln not in afront` (substring containment on the whole text).
-`field_reversible()`'s own separate, correct line-by-line carve-out for the declared regenerated
-fields is untouched. RED-first: a new `TestVerifyShAppendTamperEvadesSubstringCheck` class
-(`tools/test_methodology_trim.py`) with the exact reproduction from this entry (`"# Handoff
-Receipts"` → `"# Handoff Receipts EDITED"`, append not replace) — confirmed FAILing (no `FAIL:` in
-the script's output) against unpatched code before the fix, `FAIL: L2 FRONT MATTER` after; a
-narrowed control re-confirms the regenerated-count field still passes unpatched-and-patched, so the
-fix doesn't turn the exact-line-set comparison into a blanket new false positive. Trimmer suite 95 →
-97, all green; full `bin/tests.sh` unaffected. `TRIM_VERSION` 1.1.2 → 1.1.3 (patch — no new finding
-code or exit status on the tool's own CLI, a correctness fix to generated output, same class as
-1.1.2). The sibling BL-27 control test's own comment about needing a full-line replacement (not an
-append) for its tamper — because an append would have been invisible to *this* defect — is now
-historical: an append-shaped tamper is caught too, verified by the new test above it in the same
-file.
-
-**BL-29 — D4(c)'s "methodology" directory-exclusion fix does not cover the self-scan case it was
-meant to close.** *Raised 2026-08-10 (S70), found while investigating cross-repo methodology-adoption
-effects for the operator; reproduced live, not inferred.*
-
-D4(c) (`0e188f5`, 2026-08-03, `DASHBOARD_VERSION` 2.10.3 → 2.11.0) removed `"methodology"` from
-`EXCLUDE_DIRS` — but its own commit message discloses the naive form couldn't ship as worded, because
-`discover_projects()` has two consumers and `sync_dashboards()` is a write path, so the naive removal
-"would have made `--sync` install a third copy into this repo's own root." A different fix landed
-instead ("Fixed and mutation-proved"), and S69's own `HANDOFFS.md` receipt separately flagged, but did
-not chase, that `python3 tools/methodology_dashboard.py` run in-place from this repo's own root still
-reports "No projects found" rather than scanning this repo as a single project. Reproduced live this
-session, against current `HEAD` (`DASHBOARD_VERSION` 2.14.0):
-
-```sh
-$ python3 tools/methodology_dashboard.py --no-open
-Methodology Dashboard: No projects found.
-```
-
-The portfolio-root copy (`/Users/rmsharp/Development/methodology_dashboard.py`) scans this repo
-correctly as part of the 13-project portfolio — the defect is specific to running the in-repo copy
-from its own root in single-project mode, the same `single_project = (root / ".git").exists()` branch
-`main()` already special-cases for its title text but apparently not for discovery. **Not fixed here
-(FM #17):** whoever revives it should first re-read the D4(c) commit's own account of why the naive
-fix was rejected, so a second attempt doesn't reintroduce the write-path collision it already found
-and avoided once.
-
-**CLOSED 2026-08-10 (S72).** Re-read D4(c)'s own account first, as this entry asked: its collision
-was in `sync_dashboards()` (a WRITE path taking `discover_projects()`'s exclusion set with it), a
-different function from the one `main()`'s plain scan calls `discover_projects()` through — so this
-fix never touches `EXCLUDE_DIRS`, `discover_projects()`, or `sync_dashboards()` at all, and cannot
-reintroduce that collision. The actual defect was `ROOT = Path(__file__).parent`: correct for every
-adopter-installed and portfolio-root copy (all sit exactly where `bin/_manifest.py` /
-`sync_dashboards()` place them), wrong for the methodology repo's own two checked-in copies
-(`tools/`, `starter-kit/`), which file the script one level BELOW the repo they belong to. Fixed with
-a new `resolve_single_project_root()` (both twins) that bridges `ROOT` to its parent only when
-`ROOT.name` is `tools` or `starter-kit` AND the parent both is a git repo and carries
-`bin/_manifest.py` — the same structural marker `detect_repo_role()` already trusts to prove "this
-is the framework's own publishing repo", which no adopter can acquire via `bin/sync`. Deliberately
-narrow: not a generic upward walk, which could let an accidental copy anywhere in an unrelated
-subdirectory tree claim its ancestor as "the project". `main()`'s single call site
-(`root = resolve_single_project_root(ROOT)`) is the only line changed in `main()` itself.
-Verified live, both copies, from this repo's own root:
-```sh
-$ python3 tools/methodology_dashboard.py --no-open
-  METHODOLOGY — METHODOLOGY DASHBOARD  │  1 projects  │  v2.15.0
-  Health: 76/100    High+ Risk: 0    Commits: 491
-```
-— matching the portfolio scan's own row for this repo exactly. `DASHBOARD_VERSION` 2.14.0 → 2.15.0.
-6 new RED-first tests (`TestBL29SelfScanRoot`, `tools/test_methodology_dashboard.py`): each failed
-with `AttributeError` pre-fix except the end-to-end reproduction, which failed by actually printing
-"No projects found" — confirmed the exact reported symptom before patching it. Coverage includes a
-negative control (`test_a_tools_dir_with_no_manifest_marker_is_not_bridged`): an adopter repo with
-its own unrelated `tools/` directory and no `bin/_manifest.py` is NOT bridged, proving the marker
-check — not just the directory name — gates the new behavior. Dashboard suite 284 → 290, all green;
-full `bin/tests.sh` 185/186 unaffected (Test 9's pre-existing upstream-404 baseline). Twins verified
-byte-identical after the mirror. `dashboard_history.jsonl` gained two real entries from the live
-verification runs above — first time this repo's own root copy could write its own history.
 
 **BL-30 — Watch item, not a defect: `methodology_trim.py`'s next firing outside `nprcgenekeepr`.**
 *Raised 2026-08-10 (S70), operator-directed, while examining cross-repo adoption effects. Deliberately
@@ -1265,183 +827,21 @@ project-bespoke and out of scope; (b) a documented, supported adopter-extension 
 own sync-survival story; or (c) something else — **is a decision, not yet made, and not this entry's
 to make.** Nothing here was implemented, and no upstream/outward-facing action was taken.
 
-**BL-35 — `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18 and 19 have been malformed 2-column rows,
-missing their `Source` and `When to Apply` cells, since S40/S41 (2026-08-04).**
-*Raised 2026-08-11 (S83), found by `bin/check-learnings` — a tool arriving via this session's
-`upstream/main` merge (issue #65) that this fork had never run against its own extracted Learnings
-table before. Not fixed here (FM #17: one deliverable, and reconstructing two real learnings' Source
-and When-to-Apply cells needs real editorial judgement this session should not fabricate). Content
-defect only; canonical checker itself was adapted to locate and tolerate it (`bin/tests.sh` Tests
-32/33 assert on this exact, disclosed shape rather than papering over it).*
-**The defect.** `starter-kit/FRAMEWORK_LEARNINGS.md:40-41` — Learning rows `18` and `19` — are each
-one physical line with exactly 2 pipe-delimited cells (`| 18 | <prose> |`), not the table's own
-4-column shape (`# | Learning | Source | When to Apply`) every other row (1-17, 20-23) carries.
-`git blame` traces both to their original authoring commits (`11b843a`, `12463dd`, both 2026-08-04,
-S40/S41) — this is not a regression from this session's merge, it has been live and undetected since
-those rows were written, because no structural checker for this table existed in this fork until
-`bin/check-learnings` arrived just now.
-**Why not fixed here.** Reconstructing the missing `Source`/`When to Apply` cells requires
-correctly characterizing what session/context each learning came from and what concrete guidance it
-implies — real content the original author would need to supply or confirm, not something to invent
-from the prose alone. A future session (ideally the operator, or a session that can ask) should
-either recover the intended cells or, if unrecoverable, decide how the row should read instead.
-**Distribution note.** `FRAMEWORK_LEARNINGS.md` is `bin/_manifest.py`-TRACKED, so every adopter
-already has this malformed content in their own synced copy, unnoticed for the same reason.
-
-**FIXED 2026-08-11 (S84):** recovered both cells from the rows' own authoring commits rather than
-inventing from the prose. `11b843a`'s message states "Recorded as Learning #18" and narrates the
-exact defect (the ledger-doctrine seed's `--write` text claimed "leaves the change staged for you"
-while the shipped tool never `git add`s and leaves the shard untracked); `12463dd`'s states
-"Recorded as Learning #19" and narrates its own (`SEED_FORMAT_MARKERS` keyed on a stable H1 title,
-so every pre-doctrine adopter matched as "current"). Both `Source`/`When to Apply` cells were
-written from that provenance, presented to the operator for approval before writing, and approved
-as drafted. `bin/check-learnings` now reports the table fully clean (22 contiguous rows, no
-malformed shape); `bin/tests.sh` Tests 32/33's presence/restoration controls, pinned to the
-disclosed 2-finding shape, updated to assert clean instead — full suite 228/229, the sole failure
-being Test 9's pre-existing, unrelated `starter-kit/FRAMEWORK_LEARNINGS.md`/`methodology_trim.py`
-github-source gap (those two files not yet merged upstream). Distributed to every adopter at their
-next `bin/sync`.
-
-**BL-33 — `bin/model-report`'s `CHANGELOG_ENTRY_RE` can't parse a multi-tag `### ` header, and
-silently folds that entry into the PRECEDING one instead of dropping it loudly.**
-*Raised 2026-08-11 (S79), found incidentally while re-measuring BL-20's population against the real
-live ledger — not the item this session was assigned, and not fixed here (FM #17: one deliverable).
-Fork-side tool only; canonical-only, not distributed.*
-**The defect.** `CHANGELOG_ENTRY_RE` (`bin/model-report:50`) is
-`^### (\d{4}-\d{2}-\d{2}) · \[([^\]]+)\] (.+)$` — exactly one bracketed tag, then a required space,
-then the summary. `CHANGELOG.md:378`'s real header — `### 2026-08-10 · [BL-14][BL-17] Two defects in
-the HANDOFFS.md receipt spec — PR opened upstream` — carries two adjacent tags with no space between
-the first `]` and the second `[`, so the regex never matches. `parse_changelog_models()` never resets
-`cur` on that line, so the entry gets no dict of its own: its `**Model:**` bullet, date, and summary
-are silently absorbed as if they belonged to the PRECEDING entry (`### 2026-08-10 · [BL-21] …`,
-2 headers up) instead. In this one instance both entries happen to carry the identical value ("Claude
-Sonnet 5."), so the report's Model *value* doesn't visibly corrupt — but the **entry count** does:
-this is exactly how BL-20's own re-verification found `bin/model-report` reporting **51** entries
-against a raw anchored `**Model:**` grep of **52** (`grep -cE '^-?[[:space:]]*\*\*Model:\*\*'
-CHANGELOG.md docs/archive/CHANGELOG-*.md` → 52 for the live file; the tool's own count is one lower).
-A future ledger entry whose merged-away Model value genuinely *disagrees* with the entry it gets
-folded into would misattribute silently, not just undercount.
-**Population, re-derived here:** exactly **one** live occurrence
-(`grep -noE '^### [0-9-]+ · \[[^]]+\](\[[^]]+\])+' CHANGELOG.md docs/archive/CHANGELOG-*.md` → only
-`CHANGELOG.md:378`); none in any archive shard.
-**Not fixed.** Out of scope for BL-20 (a different regex, a different failure mode — silent
-misattribution vs. silent non-match), and this session's one deliverable was already BL-20. A fix
-widens `CHANGELOG_ENTRY_RE` to accept one-or-more adjacent `[TAG]` groups (mirroring how the source
-tag list already documents `[BL-<N>]`/`[issue #<N>]`/`[ad hoc]` as a closed set but never says only
-one can appear) and should fail loudly (or at minimum count) an unparsed `### ` header rather than
-silently folding it into its neighbor — a "line starts with `### ` but doesn't match" trap this tool
-does not currently guard at all.
-
-**FIXED 2026-08-11 (S80), both halves.** `CHANGELOG_ENTRY_RE` (`bin/model-report:52`) widened from
-`^### (\d{4}-\d{2}-\d{2}) · \[([^\]]+)\] (.+)$` to
-`^### (\d{4}-\d{2}-\d{2}) · ((?:\[[^\]]+\])+) (.+)$` — one-or-more adjacent `[TAG]` groups, captured
-whole (brackets included) into `source`, so `CHANGELOG.md:378`'s `[BL-14][BL-17]` header now parses
-as its own entry rather than donating its `**Model:**` bullet to its predecessor. Separately,
-`parse_changelog_models()` now returns `(entries, unparsed_headers)`: any `### `-prefixed line that
-still fails to match resets `cur` to `None` (so nothing after it can be misattributed to a stale
-entry) and is collected with its 1-based line number; `render()` prints a `WARNING:` block naming the
-file, line number, and raw text for each one, in Source 1's own output — loud, not silent, and not
-merely counted. `render()`'s per-entry format string dropped its own `[%s]` wrapping (now redundant
-since `source` already carries its brackets), so single-tag output is byte-identical to before the
-fix; multi-tag output now prints the header's literal tag group, e.g. `[BL-14][BL-17]`.
-RED-first (Learning #12): confirmed pre-fix, by direct execution against a fixture and against this
-repo's own live `CHANGELOG.md`, that the multi-tag entry's Model bullet was absorbed into the
-preceding entry and that no unparsed-header signal existed at all. New Test 31 in `bin/tests.sh`
-fixtures a multi-tag header (must parse as its own entry), a deliberately malformed `### ` header
-with no middle dot (must be reported and must not donate its bullet to either neighbor), and a valid
-entry immediately after it (must still parse — proves the malformed line doesn't wedge the parser) —
-8 assertions, all green.
-Re-measured against this repo's own live `CHANGELOG.md`, not recalled: `bin/model-report`'s own
-post-fix Source 1 count is **55**, now exactly equal to
-`grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md` (**55**) — the population gap BL-20's
-closure note reported (51 vs. 52) is closed, and no `WARNING` fires against the real file (confirmed
-by an explicit negative assertion in Test 31, not merely by the count matching). Full suite
-`bash bin/tests.sh`: 197 passed / 1 failed (Test 9's pre-existing `gh api`/upstream-lag baseline,
-unrelated, same failure class reported by every session since at least S75). `python3 bin/check-links`
-unaffected (88 links / 22 files).
-
-**BL-34 — `methodology_dashboard.py`'s `LANG_MAP`/`DOC_EXTS` are blind to R, Quarto, and R
-Markdown, silently undercounting a real adopter's code and doc corpus.**
-*Raised and FIXED same session, 2026-08-11 (S81), operator-directed — found while answering an
-operator question about `../nprcgenekeepr`'s dashboard card, not from a pre-existing complaint.
-DISTRIBUTED (`tools/methodology_dashboard.py` + `starter-kit/` twin), so the fix lands here AND
-ships upstream; PR opened same session.*
-**The defect, two independent gaps in the same three constants.** `SOURCE_EXTS` already had `.r`
-(R source always counted toward Source LOC), but `LANG_MAP` had no entry for it, so R never got
-its own row in the "Code by Language" card — measured against `../nprcgenekeepr`: **603** `.r`
-files, **77,773** LOC (the bulk of that project's 99,482-LOC Source total), completely invisible
-in `by_language`. Separately, `.qmd` (Quarto) and `.rmd` (R Markdown) were in neither
-`SOURCE_EXTS` nor `DOC_EXTS`, so a file with either extension outside a `docs/` path fell through
-`categorize_file`'s entire ladder to `"other"` — not source, not docs, and (per `collect_file_metrics`)
-not even LOC-counted, since LOC is skipped entirely for `"other"`. Measured on the same corpus: 28
-`.rmd` files at **0** counted LOC (all 28), and 11 of 12 `.qmd` files also at 0 (the 12th happened
-to sit under a `docs/` path, which counts regardless of extension).
-**Fix.** `.r": "R"` added to `LANG_MAP`. `.qmd`/`.rmd` added to `DOC_EXTS` (operator-specified
-target — these are literate-document formats, prose with embedded code, the same bucket `.md`
-already lives in, not `SOURCE_EXTS`'s). Re-measured post-fix against the same corpus: `by_language["R"]`
-now reads 603/77,773 (exact match to Source's own R contribution); `by_category["docs"]` grew from
-415/161,362 to 454/171,766 (+39 files, +10,404 LOC — every `.rmd`/`.qmd` file, accounted for
-exactly). `DASHBOARD_VERSION` 2.15.0 → 2.15.1.
-**Interaction found and handled, not assumed harmless:** adding `.qmd`/`.rmd` to `DOC_EXTS` feeds
-`detect_doc_only`'s corpus disjunction (clause 4), whose own comment stated a pure-Quarto repo's
-`.qmd` was "not counted as docs" — the exact reason the `render.toolchain_present` fallback arm
-exists (Layer 7's `TestFrameworkInstalledExclusion.QUARTO` fixture proved that arm's real-scan
-correctness in isolation). Verified before assuming: the QUARTO fixture (two ~200-line chapters)
-now *also* clears `DOC_ONLY_DOC_LOC_MIN` on its own, so it stopped isolating the toolchain arm —
-still green, but silently narrower coverage. Fixed the comment (now names only `.tex`, since that
-stays uncounted) and added a new minimal fixture (`QUARTO_MINIMAL`, a single short chapter kept
-under both corpus thresholds even with `.qmd` counted) plus a dedicated test that asserts
-`doc_loc`/`doc_files` stay below threshold AND `is_doc_only` is still `True` — restoring the
-toolchain-arm-in-isolation proof the original fixture could no longer carry alone.
-**RED-first (Learning #12):** all 6 new/changed assertions run against the pre-fix module (via
-`git stash` on just the two dashboard.py twins, tests kept) and confirmed failing — 4 hard
-failures/errors, plus the 2 unaffected guard tests (the "not also a language row" negative
-assertion and the toolchain-isolation regression-lock) correctly staying green throughout, since
-neither is proving this fix. Post-fix: `python3 -m unittest tools.test_methodology_dashboard` —
-**296 passed** (290 prior + 6 new). `bash bin/tests.sh` unaffected (197/198, Test 9's pre-existing
-baseline). Twins confirmed byte-identical (`diff`) both before and after.
-**PR OPENED 2026-08-11 (S81), same session, operator pre-authorized in the task assignment
-itself:** built independently in an isolated `git worktree` at `upstream/main` (`a2a7275`) rather
-than porting the fork's own evolved file — confirmed upstream carries the byte-identical
-pre-fix `SOURCE_EXTS`/`DOC_EXTS`/`LANG_MAP`/disjunction-comment block, so the same minimal patch
-applied cleanly. Comments written with no fork-only vocabulary (`BL-34`, `S81`) inside the
-upstream-shipped source — the near-miss BL-31/S75 already flagged and caught once. `DASHBOARD_VERSION`
-2.10.2 → 2.10.3 in the isolated worktree (upstream's own version, far behind the fork's 2.15.x —
-matches the BL-31/PR #71 precedent exactly); this collides with #70 and #71, which independently
-propose the same "2.10.3" for unrelated changes — a known, already-disclosed (BL-22) sequencing
-risk, not new, not pre-empted here. Verified RED against a **clean, unmodified** `upstream/main`
-worktree first (2 pre-existing failures, same `FRAMEWORK_INSTALLED_SOURCE`/`context_budget.py` gap
-#71 already targets, confirmed unrelated to this change), then against the fix branch — 203/203
-minus the identical 2 pre-existing failures, all 6 new tests green. Pushed to `origin`, opened
-[KJ5HST/methodology#72](https://github.com/KJ5HST/methodology/pull/72).
-Isolated worktrees removed after pushing; nothing left behind on this fork's own tree from the
-upstream-targeted work.
-**MERGED 2026-08-11 (S85; operator reported it, verified rather than taken on word):** `gh api
-repos/KJ5HST/methodology/pulls/72` confirms `merged: true`, `merged_by: KJ5HST`, merge commit
-`5c59f0b`. Independently re-verified in an isolated worktree at that exact merge commit (mirroring
-the BL-26/PR #66 precedent, not trusting the commit messages alone): `python3 -m unittest
-tools.test_methodology_dashboard` 208/208; `bash bin/tests.sh` 114/114 (upstream's own smaller
-suite scope). Confirms both of the maintainer's review requests actually landed, not just posted —
-`DASHBOARD_VERSION` reads `2.10.5` there (the resolved three-way collision), and
-`test_rmd_analysis_repo_flips_doc_only_and_softens_the_test_risk` (the classification-consequence
-pin) is present. **Not synced into local `main` here** — `git merge-tree` against local `main`
-shows a real 4-file conflict (`CHANGELOG.md`, both `methodology_dashboard.py` twins,
-`tools/test_methodology_dashboard.py`), because this item's own fix was ALSO built and landed
-directly on local `main` in the same S81 session (this entry's own "Fix" section above,
-`DASHBOARD_VERSION` 2.15.0 → 2.15.1) — two independent applications of the same feature against
-two different base trees. Resolving that is real judgment (which side's structure to keep across
-4 files), deliberately deferred to a dedicated sync rather than folded into this verification.
-
-**SYNCED 2026-08-12 (S86; operator-directed).** Local `main` merged with `upstream/main`
-(`aa378ab`), resolving this item's own conflict — which had grown to 6 files by the time the sync
-ran (upstream had moved to `dcb6fc6`: issue #67's own independent fix, PR #73, plus the v3.6→v3.7
-release itself, PR #74). Kept this fork's own BL-34 comments/`DASHBOARD_VERSION` (`2.15.2`)
-throughout; for issue #67, kept this fork's own `--sync [DIR]` scoping design over upstream's
-`cp`-based one (already covered by ~15 existing tests upstream's simpler design has no equivalent
-for). Full resolution narrative: `CHANGELOG.md` "2026-08-12 · [BL-34] Local `main` synced with
-`upstream/main` ...". Verified: unittest 300/300, `bin/tests.sh` 228/229 (Test 9's pre-existing gap
-aside), twins byte-identical. **This item is now fully closed** — both the PR #72 merge and the
-local sync are done.
+**One of the three options is now measurably ruled out for `BACKLOG.md` specifically (S89,
+2026-08-15).** A `LedgerSpec` for a backlog file cannot work, and this is a property of the tool's
+model rather than of any particular spec anyone might write. Every `LedgerSpec` requires a
+`date_of_record` callable (`starter-kit/methodology_trim.py:145`, `:150`, `:158`) and `evaluate()`
+freezes the **oldest by date**; a backlog's reduction axis is **status, not age**. Measured on this
+repo's own file at the moment of reduction: BL-11 (raised 2026-08-01) is open and had to be
+retained, while BL-35 (raised 2026-08-11) was fixed and was exactly what had to go. A date-keyed
+trim would have archived the open items and kept the closed ones — the *"mis-zone an adopter's
+differently-shaped ledger"* failure the tool's own comment (`:131-132`) exists to prevent, arriving
+through the front door as a hand-authored spec rather than through the generic fallback it refuses
+to have. Backlog reduction was therefore done **by hand** here, with its own identity-keyed proof
+([`BACKLOG-archive-2026-08-15.md.verify.sh`](BACKLOG-archive-2026-08-15.md.verify.sh)). This
+narrows the open question rather than answering it: it says nothing about option (a)'s
+`SESSION_NOTES.md` spec, which is a different file with a different shape, and it leaves (b) — a
+supported adopter-extension mechanism — untouched. **The decision is still not made.**
 
 **BL-36 — Four of the six shipped `.verify.sh` losslessness proofs do not hold. Raised 2026-08-15
 (S87), found, not fixed.**
@@ -1508,10 +908,54 @@ open as a repair decision.** Full audit: [`docs/audits/2026-08-15-bl36-archive-l
   generator's logic still fails all four. The repair is Defect A (make `injected` a measured count),
   or a protocol rule that a trim commit touches nothing but the trim. Both need their own
   operator-gated session against a distributed tool; neither was taken here (FM #17).
-- **This was already answered once.** BL-27 above (`:975`) documents this exact trigger, states
-  *"This is not evidence of historical data loss"*, and predicted this re-raise verbatim. It was not
-  found because this file is **1,518 lines / 134,759 B** — 2.06× the ledgers' own 65,536 B budget —
-  and no reduction step reaches it, which is **BL-32**, still open. That link now has a cost attached.
+- **This was already answered once.** BL-27 — now archived to
+  [`BACKLOG-archive-2026-08-15.md`](BACKLOG-archive-2026-08-15.md), and in this file at `:975` when
+  S87 raised BL-36 past it — documents this exact trigger, states *"This is not evidence of
+  historical data loss"*, and predicted this re-raise verbatim. It was not found because this file
+  was **1,518 lines / 134,759 B** — 2.06× the ledgers' own 65,536 B budget — and no reduction step
+  reached it, which is **BL-32**, still open. That link now has a cost attached. **S89 ran the
+  reduction** (a third of the file; exact before/after figures are in `CHANGELOG.md`'s `[BL-32]`
+  entry — this file deliberately does not state its own byte size, because writing that number in
+  changes it) and it did not close the gap: with every closed item archived, and measured before
+  that session added anything of its own, the 16 inherited *open* items already totalled **68,195 B,
+  1.04× the 65,536 B budget**. So the remaining excess is not deferred housekeeping — it is the open
+  work itself, and reaching a ceiling here means compacting live items, which is a separate
+  decision. Re-derive rather than trust any of it: `wc -c docs/planning/BACKLOG.md`.
+
+**BL-37 — this repo ships a size-ceiling gate to every adopter and does not run it on itself; and
+the ceiling list it ships has no `BACKLOG.md` entry.** *Raised 2026-08-15 (S89), found while
+reducing `BACKLOG.md` and looking for that file's DECLARED ceiling. Measured, not fixed (FM #17):
+both halves change distributed artifacts or this repo's own root config, and neither is a
+reduction.*
+
+**Half one — the gate does not run here.** `bin/_manifest.py:54` and `:60` distribute
+`starter-kit/context_budget.py` → adopter `context_budget.py` (TRACKED) and
+`starter-kit/context-budget.json` → adopter `.context-budget.json` (SEED). This repo has **no
+`.context-budget.json` at its own root** (`find . -name '.context-budget.json' -not -path
+'./.git/*'` → nothing), so the FM #28 gate authored here has never been run against the repo that
+authors it. That is the same shape as **BL-29** and upstream
+[issue #59](https://github.com/KJ5HST/methodology/issues/59) — a tool correct for every installed
+copy and blind at home — arriving through configuration rather than through path resolution.
+Note the asymmetry that makes it easy to miss: `bin/tests.sh` proves the gate *installs* correctly
+(13 passing rows: hook honouring `core.hooksPath`, seed parses, over-ceiling exits 2, re-sync does
+not clobber). Nothing asserts it is *configured here*, and an unconfigured gate is silent, not red.
+
+**Half two — the shipped ceiling list has no backlog entry.** The seed's `files` array covers
+`CLAUDE.md` (resident), `SESSION_NOTES.md` (read-mandated) and an optional `LEARNINGS.md`
+(on-demand). `BACKLOG.md` is absent, in a framework whose `SESSION_RUNNER.md` Phase 0 step 3 names
+it as the documented fallback for current priorities — *"Fall back to `BACKLOG.md` if no repo
+exists"* — which makes it the mandated Phase 0 read for any adopter without a repo, and states in
+the same breath that it *"should contain only open work items."* It is the file class that just
+cost a session (BL-36 raised past its own answer), and this session's own measurement says its
+excess cannot be archived
+away — after moving every closed item out, the open items alone are 68,195 B. A ceiling for it is
+therefore a *policy* question about how much open work a backlog may hold, not a housekeeping one,
+which is exactly why it wants an entry with a defended number rather than a default.
+
+**Not decided here:** whether the right move is (a) provision `.context-budget.json` in this repo
+from the seed and calibrate it (fork-side, no distributed file, runnable today); (b) add a
+`BACKLOG.md` entry to the distributed seed (DISTRIBUTED — ships upstream, needs a go-ahead); or
+both, in that order. (a) is a precondition for arguing (b) from a measurement rather than a guess.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
@@ -1526,6 +970,17 @@ open as a repair decision.** Full audit: [`docs/audits/2026-08-15-bl36-archive-l
 | **BL-7** | Capability-tiered review — model-tiering as an elective vertical-slice addition | ✅ SHIPPED 2026-07-08 via [PR #57](https://github.com/KJ5HST/methodology/pull/57) (merge `d563600`). A 3-candidate design panel (extend-in-place / full-parallel-treatment / anchor-to-vertical-slice) scored on 4 lenses, synthesized, then every open decision (placement, naming, scope, all three extras) put to the operator before implementation. Landed as an elective paragraph in `SESSION_RUNNER.md` §Vertical Slice Sessions + new Learning #11, a routing pointer in `ITERATIVE_METHODOLOGY.md`, an illustrative addendum in `RECOMMENDED_SKILLS.md`, and a corollary in `docs/tutorials/T5_cautionary.md`. A 4-lens adversarial review unanimously caught and fixed one defect (brand names leaking into the brand-neutral core file). No new phase, gate, principle, workstream, or FM; FM count stays 27. Version-event decision still open (deferred past merge — no version-bump commit landed with PR #57). |
 | **BL-9** | Three size disciplines this repo publishes and had drifted from | ✅ CLOSED 2026-08-01 across three sessions, all fork-local, zero distributed files touched. **L1** (S23, `7a71df0`) — `HANDOFFS.md` 216 KB → 51 KB, 19 older receipts to `docs/archive/HANDOFFS-archive.md`; closed the missing-archival-rule gap *for this repo*. **L3** (S24, `7603f10`) — `CLAUDE.md` 52,909 → 8,519 bytes (−83.9%), the 25 version entries verbatim to `docs/RELEASE_HISTORY.md`, with the `## Versioning` heading kept in place because 15 frozen links cite that anchor. **L2** (S25) — the action ledger split at the **v3.6 release frontier**: 186,704 → 53,512 bytes (−71.3%), 2,090 → 658 lines, 50 entries verbatim to `docs/archive/CHANGELOG-through-v3.6.md`. L2's deliverable was the **decision**, and the evidence settled it: the rule's ratified plan (`changelog-authoritative-ledger-gate-plan.md:128`) and the distributed seed (`starter-kit/CHANGELOG.md:92`) both make `## YYYY-MM` a *grouping-axis* rule, never a size rule — so sections went by month and the *file* boundary by release, two different axes. The one concrete defect fixed: the file had crossed the 2,000-line agent `Read` cap at L1's own commit and was silently dropping its 10 oldest entries. Everything else was anticipatory and is recorded as such — this ledger is not auto-loaded and no size-caused harm was on record. |
 | **BL-10** | Five dangling `Learning #N` citations in adopter-distributed files | ✅ CLOSED 2026-08-01 — **the defect is fixed in the corpus, but not by this fork's work.** The corrected record, restated at the S26 resync: the fork's fix was opened as [PR #64](https://github.com/KJ5HST/methodology/pull/64) *without authorization* and **CLOSED, never merged**; the maintainer then fixed the same five sites independently in `15ccb38`. The earlier wording here read "SHIPPED … via PR #64", which was wrong on both counts. The fork's analysis below stands and was reached first; **its predicted failure then came true — see BL-13**, where upstream's fix kept one of the false claims after removing its citation. The parked branch survives for `bin/check-citations` alone (now partial input to [issue #65](https://github.com/KJ5HST/methodology/issues/65)). All five traced to the 2026-05-02 Pocock audit, written in session S438 of a *different* methodology instance whose Learnings table ran into the 30s. **Three were worse than dangling** — they asserted framework rules that do not exist (there is no handoff length discipline; the only `150`-as-handoff-length string in the distributed corpus was the line claiming it), so stripping just the numbers would have left unattributed false claims. Each site re-grounded on a reachable referent; dispositions unchanged; no Learnings row added or edited. Mechanized per Learning #12: canonical-only `bin/check-citations` + Test 23, driven RED first (6 findings), with every guard driven RED too — mutation-testing the fixture caught a real defect in the checker itself (a missing registry file exited 1, indistinguishable from a corpus finding). Suite 84 → 91. Follow-ons raised as BL-11 and BL-12. |
+| **BL-8** | Subagent capability-tiering — adopt as an operational default, or decline | ✅ **ADOPTED** 2026-08-11 (S78), operator-directed. Not a methodology change; no distributed document edited. This fork now authors gate-checkable `Workflow` subagent roles on a lighter tier while judgment and review roles stay on the strongest available tier. |
+| **BL-15** | `changelog_ref`'s deictic deferral — 13 of 32 receipts defer instead of naming an entry | ✅ **CLOSED** 2026-08-02 (S29). Raised correctly — the "13 of 32" is exact — and **already discharged by BL-14's own repair**, which gave all 13 receipts a real sha in `commit:` to defer to. Do not re-raise. Its one residual (the one-hop resolution is a convention no document states) is live in **BL-17**, not here. |
+| **BL-20** | `bin/model-report`'s Source 1 blind to the `**Model:**` form this repo writes | ✅ **FIXED** 2026-08-11 (S79), option (1) — `CHANGELOG_MODEL_RE` widened to accept both dialects, RED-first, Test 30. **Option (3) remains open and is retained live in §Open items above.** |
+| **BL-24** | `mts-system` focused UAT re-run | ✅ **CLOSED** 2026-08-08 (S50). F9 confirmed resolved, F10 improved 1 → 0, **F6 and F7 reproduce unchanged and are still open** in [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §8, F11 not applicable. Zero regressions; read-only throughout. |
+| **BL-25** | `vscode_quarto_ext` focused UAT re-run | ✅ **CLOSED** 2026-08-08 (S53). Net 1 of 7 improved (F9); **F2, F3, F6, F8 unchanged and still open** in [`uat-2026-08-08-followup.md`](uat-2026-08-08-followup.md) §9; F10/F11 unchanged-and-clean. Zero regressions; read-only throughout. |
+| **BL-27** | `methodology_trim.py`'s generated `.verify.sh` — two false-positive triggers on `HANDOFFS.md` | ✅ **CLOSED** 2026-08-10 (S65), `TRIM_VERSION` 1.1.1 → 1.1.2, 4 tests. **Read this one before concluding an archive lost data:** it states the bundled-commit trigger *"is not evidence of historical data loss"* and predicted the exact re-raise that became BL-36. Its fix 2 deliberately keeps that case a loud FAIL. |
+| **BL-28** | The generated `.verify.sh`'s L2 front-matter check was a substring test, not exact-line-set membership | ✅ **CLOSED** 2026-08-10 (S68), `TRIM_VERSION` 1.1.2 → 1.1.3, 2 RED-first tests (97/97). An append-style edit that kept the original text as a substring was invisible to the check. |
+| **BL-29** | D4(c)'s directory-exclusion fix missed the self-scan case | ✅ **CLOSED** 2026-08-10 (S72). `resolve_single_project_root()` bridges the canonical repo's two checked-in copies (`tools/`, `starter-kit/`) to their repo root; `DASHBOARD_VERSION` 2.14.0 → 2.15.0, 6 RED-first tests, with a negative control proving the `bin/_manifest.py` marker — not the directory name — gates the behaviour. |
+| **BL-33** | `bin/model-report`'s `CHANGELOG_ENTRY_RE` can't parse a multi-tag `### ` header | ✅ **FIXED** 2026-08-11 (S80). Widened to accept adjacent `[TAG]` groups; a non-matching `### ` line is now a loud `WARNING` instead of being silently folded into the preceding entry. Closed BL-20's reported 51-vs-52 population gap (now 55 = 55). |
+| **BL-34** | `methodology_dashboard.py`'s `LANG_MAP`/`DOC_EXTS` blind to R, Quarto, R Markdown | ✅ **FIXED** 2026-08-11 (S81), **merged upstream** as [PR #72](https://github.com/KJ5HST/methodology/pull/72) (`5c59f0b`, verified S85) **and synced into local `main`** 2026-08-12 (S86). Found scanning `../nprcgenekeepr`: 603 `.r` files, 77,773 LOC counted as Source but invisible in "Code by Language". |
+| **BL-35** | `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18 and 19 were malformed 2-column rows | ✅ **FIXED** 2026-08-11 (S84). Live since S40/S41; found by `bin/check-learnings` arriving via S83's upstream merge; the two missing cells recovered by git archaeology on the rows' authoring commits (`11b843a`, `12463dd`) and approved before writing. Distributed to adopters at their next `bin/sync`. |
 
 **Not in this backlog:** upstream **PR #44** (REUSE compliance + license/REUSE README badges) is being
 handled directly with the maintainer (Terrell) and was never a backlog item.
