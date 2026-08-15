@@ -39,6 +39,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-11.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ```handoff
+session: S90
+date: 2026-08-15
+status: pending
+active_task: BL-37 half (a) -- provision and calibrate `.context-budget.json` at this repo's own root, so the FM #28 size-ceiling gate this repo AUTHORS and DISTRIBUTES (`bin/_manifest.py:54`/`:60` ship `starter-kit/context_budget.py` -> adopter `context_budget.py` TRACKED and `starter-kit/context-budget.json` -> adopter `.context-budget.json` SEED) finally runs against the repo that authors it. Confirmed absent at Phase 0: `find . -name '.context-budget.json' -not -path './.git/*'` returns nothing. Same blind-at-home shape as BL-29 / upstream issue #59, arriving through configuration rather than path resolution; note the asymmetry that hides it -- `bin/tests.sh` has 13 rows proving the gate INSTALLS correctly, and nothing asserts it is CONFIGURED here, because an unconfigured gate is silent rather than red. Every ceiling to be defended from a measurement of THIS repo with the derivation recorded in the neighbouring `_` key, per the seed's own instruction -- the seed's numbers were calibrated on a different project and are explicitly labelled a starting point, not a law. Fork-only: the seed and the tool are DISTRIBUTED and are NOT edited here; only this repo's own untracked-until-now root config is added. Half (b) -- adding a `BACKLOG.md` entry to the distributed seed -- is deliberately NOT taken: it ships upstream and needs the operator's go-ahead, and (a) is its precondition, so that it can be argued from a measurement instead of a guess.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S89
 date: 2026-08-15
 status: complete
