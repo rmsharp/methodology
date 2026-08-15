@@ -39,6 +39,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-11.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ```handoff
+session: S89
+date: 2026-08-15
+status: pending
+active_task: BL-32's measured local cost -- reduce this fork's `docs/planning/BACKLOG.md` (1,548 lines / 137,440 B, 2.10x the 65,536 B budget its own ledgers are held to) below that budget. Operator-directed shape: the 11 CLOSED items still sitting inside `## Open items` (BL-8/15/20/24/25/27/28/29/33/34/35, 46,068 B = 33.5% of the file) move VERBATIM to a frozen `docs/planning/BACKLOG-archive-*.md` shard with a one-line pointer row each in the existing Completed items table, plus compaction of the superseded stacked-STATUS preamble (16,521 B). Fork-only; no `bin/_manifest.py`-distributed file is touched and no outward-facing action is taken. Phase 3F's "remove a completed item from BACKLOG.md in the same commit" was skipped 11 times -- this is that arrears, not a new mechanism. NOT `methodology_trim.py`: every `LedgerSpec` requires `date_of_record` and trims oldest-by-date, but this file's reduction axis is STATUS, so a date-keyed trim would archive the open items and retain the closed ones.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S88
 date: 2026-08-15
 status: complete
