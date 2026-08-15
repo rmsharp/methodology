@@ -159,6 +159,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S87 close-out — receipt written, self-score 8/10; see the two `Ledger trim` entries below for the substantive work
+
+**Model:** Claude Opus 5.
+Phase 3A/3B/3D. Evaluated S86's handoff (**8/10** — its `runtime_smoke` baseline of 228/229 with
+Test 9 as the sole known failure is what let this session read a mid-run 227/2 as one new breakage
+rather than noise; docked for closing with both mandated-read ledgers 2–4× over their declared
+65,536 B budget without naming it, which is FM #28's own degradation sign, and for the FM #27 gap
+backfilled here at Phase 0). Self-assessed 8/10: treated the trimmer's `P1_UNDOCUMENTED` refusal as
+information rather than an obstacle, measured three cut options instead of arguing them, established
+the `HANDOFFS.md` date-cut hazard by running it, and — after the suite went red immediately
+following its own change — ran the pre-change tree in a detached worktree before claiming
+responsibility, which is what separated one real self-inflicted breakage from four pre-existing
+failures. Held back for nearly shipping a verification pass that checked only the two proofs this
+session wrote (broadening it is the sole reason BL-36 exists), and for leaving BL-36's cause
+excluded-but-unproven.
+
+**This entry deliberately restores the convention that lapsed after S79.** A close-out receipt commit
+is written after the ledger commit that would have to cite it, so it can never record itself; S80,
+S81, S83, S84, S85 and S86 each left one unrecorded, and frontier-based reconcile can only ever see
+the newest. Writing the close-out entry *with* the ledger commit — the S62–S79 shape — is one of the
+two clean options (S82's bundled single commit is the other). The historical gap remains open and is
+flagged in this session's `8a22608` backfill entry below.
+
 ### 2026-08-15 · [BL-36] Four of the six shipped `.verify.sh` losslessness proofs do not hold — raised, not fixed
 
 **Model:** Claude Opus 5.

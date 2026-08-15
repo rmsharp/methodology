@@ -41,10 +41,57 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 ```handoff
 session: S87
 date: 2026-08-15
-status: pending
-active_task: Operator-directed -- archive both over-budget mandated-read ledgers. `CHANGELOG.md` (121,094 B) and `HANDOFFS.md` (246,625 B) both fire `methodology_trim.py --check` against a 65,536 B budget; both trigger on BYTES, not lines (line headroom still 23 and 30 records). One deliverable, one capability (ledgers back under budget), two files the trimmer's own `LEDGERS` table already covers -- checkpoint commit per file.
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: Operator-directed -- archive both over-budget mandated-read ledgers. COMPLETE. `CHANGELOG.md` 122,600 B -> 25,165 B (68 of 73 records archived) and `HANDOFFS.md` 247,188 B -> 32,649 B (25 of 29 receipts archived), both now well under the 65,536 B budget; `methodology_trim.py --check` reports `trigger does not fire` for both, and the dashboard's two ledger-size MEDIUM flags are gone. One deliverable, one capability, checkpoint commit per file.
+what_was_done: Seven commits. (1) `11b44dc` -- Phase 0 reconcile backfill of `8a22608`, S86's own close-out receipt commit, the only undocumented commit the CHANGELOG frontier exposed. (2) `4825586` -- Phase 1B claim stub. (3) `d4635c6` -- recorded that claim commit in the ledger, because `methodology_trim.py`'s `check_P1` REFUSED both trims while the undocumented set was non-empty ("a trim commit advances that frontier and would hide them PERMANENTLY"); the refusal is correct and was not worked around. (4) `3dfde94` -- CHANGELOG trim, cut at a clean 2026-08-11 day seam, OPERATOR-SELECTED from three measured options after the archive front matter's own rule ("if a release frontier is available at the next archive, prefer it") and the tool's positional default disagreed. (5) `721853b` -- HANDOFFS trim, count-based default; a date cut is UNSAFE on that file and this was measured, not assumed: `--cut 2026-08-11` writes a shard NAMED through-2026-08-11 whose real span runs to 2026-08-12, because upstream's S11 receipt (2026-08-12) deliberately sits below S86 (2026-08-11), so the file is not date-monotonic. (6) `09410bd` -- fixed `bin/tests.sh` Test 29, which the CHANGELOG trim turned red: it keyed on the live file alone, the trim moved all 10 `Reconcile-on-read` entries into the shard, the live count fell to 0, and its `count > 0` presence control failed with an EMPTY violation list ("budget violated -- " with nothing after the dash). Widened to live + `docs/archive/CHANGELOG-*.md` (43 entries, 0 violations), and PROVED the new archive arm can actually fail (synthetic overlong entry appended to a shard on a scratch copy: 43/0 -> 44/1) rather than merely inflating the count. (7) `f78b3ae` -- raised BL-36 and appended Framework Learning #24.
+next_steps: (a) BL-36 IS THE HIGHEST-VALUE THREAD AND IT IS NOT MINE TO CLOSE -- four of the six shipped `.verify.sh` losslessness proofs FAIL. Proved pre-existing, not caused by this session, by running them in a detached worktree at `8a22608`. Answer FIRST whether the four archives' content is genuinely intact or records were actually lost; those are different repairs, and regenerating the proofs first would produce a passing proof over lost content and destroy the only evidence. (b) SYNC UPSTREAM -- `upstream/main` is 1 commit ahead (`512c2ed`, completing the S12 receipt), which is exactly the follow-up S86 predicted. DERIVED, NOT GUESSED: `git merge-tree --write-tree --name-only HEAD upstream/main` conflicts in exactly ONE path, `HANDOFFS.md`; `CHANGELOG.md` auto-merges. Re-derive before acting -- S86's own lesson is that this shape can grow between sessions. (c) THE CLOSE-OUT-ENTRY CONVENTION IS STILL LAPSED: S80/S81/S83/S84/S85/S86 each left a close-out commit with no ledger entry, and frontier-based reconcile structurally cannot reach the first five. Recorded in `CHANGELOG.md`'s `8a22608` backfill entry; needs a decision, not a backfill. (d) `HANDOFFS.md:13` still states its archive trigger as "approaches ~1,200 lines" -- a stale LEVEL the live `CHANGELOG.md` front matter already documents as wrong (it fired at 997, 203 lines early). Untouched here: out of scope, one line to fix. (e) Long-tail backlog unchanged and NOT re-verified: BL-11/12/13/14/16/17/18/19/21/22/23/26/30/31/32.
+key_files: `docs/planning/BACKLOG.md:1446` (BL-36, with its reproduction command and the do-not-regenerate warning); `bin/tests.sh:1732` (Test 29's widened population and the comment explaining why it reads archives) and `:1786` (the pre-existing scratch-copy RED proof, unchanged); `starter-kit/FRAMEWORK_LEARNINGS.md:46` (Learning #24 -- DISTRIBUTED file, append-only, `#14` stays reserved); `CHANGELOG.md:162` (BL-36), `:183` (Learning #24), `:196` (Test 29 fix), `:223`/`:231` (the two trim entries the tool wrote), `:239` (the P1-guard entry), `:262` (the Phase 0 backfill); `HANDOFFS.md:37` (this trim's front-matter paragraph), `:41` (this receipt); `docs/archive/CHANGELOG-through-2026-08-11.md` + `docs/archive/HANDOFFS-through-2026-08-11.md` and their two `.verify.sh` proofs (both PASS).
+gotchas: **A correct Phase 1B claim makes the trimmer refuse.** The claim commit is an unrecorded action until Phase 3F, so `check_P1` sees a non-empty undocumented set and blocks. The order that works is claim -> RECORD the claim -> trim, never claim -> trim. `--force` does not apply; it is scoped to the SRF-RED refusal only. **A date cut is unsafe on `HANDOFFS.md` and safe on `CHANGELOG.md`, for a reason specific to this repo** -- `HANDOFFS.md` is deliberately not date-monotonic (a merged upstream receipt sits below a fork receipt with an earlier date), and `--cut <date>` retains a PREFIX determined by the first record at-or-before that date, so it silently archives later-dated records into an earlier-named shard. Verify monotonicity before ever passing `--cut <date>`. **Archiving is now a routine act, so anything keyed on a live ledger is conditional on where its population currently lives** -- Test 29 broke this way, and it reported the wrong defect when it did. Before cutting, enumerate what reads the file. **Run EVERY `.verify.sh`, not only the ones you just wrote** -- checking only this session's two would have shown green and missed BL-36 entirely. **And when a check goes red right after your own change, run the pre-change tree before believing you caused it** -- a detached worktree at the predecessor's tip is two commands and it is what separated my real breakage (Test 29) from the four pre-existing failures (BL-36).
+runtime_smoke: Real tool execution throughout, no mocks; this repo ships no application, so the build-equivalent is the suites plus the tools themselves. `bash bin/tests.sh` 228 passed / 1 failed -- exactly S86's baseline, the sole failure being Test 9's pre-existing, unrelated github-source gap (it was 227/2 mid-session, which is how the Test 29 breakage was found). `python3 -m unittest tools.test_methodology_dashboard` 300/300; `tools.test_methodology_trim` 97/97. `bin/check-links` OK (88/22); `bin/check-learnings` OK (23 rows, contiguous, all citations resolve); `bin/check-handoff --all --allow-pending` OK (4 receipts). Both new `.verify.sh` proofs re-derived from git and PASS. `methodology_trim.py --check` on both ledgers: `trigger does not fire` (30,700 B and 32,649 B against 65,536 B). Dashboard re-run end to end: both ledger-size MEDIUM flags GONE, remaining flags unrelated (no CI/CD, large test file, 22 branches).
+changelog_ref: CHANGELOG.md "2026-08-15 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-11.md`" and "2026-08-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-11.md`", plus five further entries for this session's other actions
+commit: 11b44dc + 4825586 + d4635c6 + 3dfde94 + 721853b + 09410bd + f78b3ae + this close-out commit
 ```
 <!-- claim stub written at session start; reconciled at close-out -->
+Self-score **8/10.** **+** Treated the trimmer's `P1_UNDOCUMENTED` refusal as information rather than
+an obstacle — read `check_P1`'s source to understand what it protects before doing anything about
+it, and satisfied it by recording the action it named instead of reaching for `--force` (which would
+not have applied anyway). **+** Measured the cut options instead of arguing about them: three
+dry-runs with byte counts and advisories, which is what made the boundary decision the operator's to
+make on evidence rather than mine to make on plausibility. **+** Established the `HANDOFFS.md`
+date-cut hazard by *running* it and reading the resulting shard name against its real span, rather
+than reasoning from the file's ordering — the mislabelled artifact was visible in one command.
+**+** When the suite went red immediately after my own change, ran the pre-change tree in a detached
+worktree before claiming anything: that separated one real self-inflicted breakage from four
+pre-existing failures, and both halves of that split turned out to matter. **+** Did not let the
+widened Test 29 arm ship as decoration — proved it can fail (43/0 → 44/1) on a scratch copy, which
+is the specific trap Learning #16 describes. **+** Ran every archive verifier rather than only my
+own two, which is the only reason BL-36 exists. **−** I nearly shipped exactly that omission: my
+first verification pass checked only the two proofs this session generated, and broadening it was an
+afterthought rather than the plan. **−** I appended Learning #24 in the wrong table position on the
+first attempt (above row 23 rather than at the end) and only caught it by inspection afterwards;
+`bin/check-learnings` would have passed either way, since it checks contiguity and not append-order,
+so nothing mechanical was going to catch it. **−** BL-36 is raised with its cause unresolved. I
+excluded the most obvious explanation by reading the verifier's derivation, but "unlikely on
+inspection" is weaker than a measurement, and the next session inherits a diagnosis I started and
+did not finish.
+
+Predecessor **S86: 8/10.** Its `runtime_smoke` line was the single most valuable thing I inherited:
+it recorded `bin/tests.sh` at **228/229 with Test 9 as the sole known failure**, which is exactly
+what let me read a mid-session **227/2** as *one new breakage* instead of noise, and go find it. Its
+`check-learnings` figure (22 rows) did the same job for my Learning #24 append. Its gotcha that
+`check-handoff --allow-pending`'s exemption is **positional** was directly load-bearing — I stacked a
+pending S87 stub above S86's completed receipt and needed to know that held. Every claim it made that
+I exercised turned out true, including its prediction that upstream's S12 would complete (`512c2ed`
+now exists). Docked two points for one omission that is squarely this receipt's business: **S86
+closed with both mandated-read ledgers 2–4× over their declared 65,536 B budget** (`HANDOFFS.md` at
+246,625 B, `CHANGELOG.md` at 119,126 B — measurable at its own tip) **and said nothing about it**,
+while its own receipt added ~4 KB to the larger of the two. That is FM #28's degradation sign
+verbatim — "a health check has reported the same finding for several consecutive sessions and
+nothing has changed" — and a receipt that documents tool output in that much detail had every
+opportunity to name it. It also left the FM #27 gap I opened this session by backfilling. Neither is
+a wrong claim; both are the kind of silence that makes the next session's Phase 0 do the noticing.
 
 ```handoff
 session: S86
