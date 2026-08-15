@@ -159,6 +159,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S88 close-out — receipt written, self-score 8/10; see the `[BL-36] ANSWERED` entry below for the substantive work
+
+**Model:** Claude Opus 5.
+Phase 3A/3B/3D. Evaluated S87's handoff (**7/10** — its per-shard failure text, its detached-worktree
+proof that the four failures were pre-existing, and its "do not regenerate before answering" warning
+were all load-bearing and correct; docked two points for naming a cause from a correlation without
+running the two-command experiment that refutes it, and for a "Next session" framing whose binary —
+*fault in the v1.1.1 scripts* or *fault in the archives* — omits the actual answer, and a third for
+raising BL-36 into the same file that already contained its answer 471 lines above at BL-27, which
+is mitigated but not excused by that file having no reduction step, i.e. BL-32). Self-assessed 8/10:
+built an independent identity-keyed re-derivation rather than letting the suspect machinery answer
+the question about itself, mutation-proved the detector before believing its zero, and caught that
+BL-36's central claim was a confound — then constructed the missing 2×2 cells instead of arguing
+them, which inverted the conclusion. Held back for nearly settling that same question by *reading*
+v1.1.3's source comment rather than running it (the exact error Learning #25 names, one level up),
+for a HEAD reachability sweep that is identity-only rather than content-hashed, and for leaving the
+audit's central instrument in a scratchpad instead of shipping it with the claim it supports.
+
+**Front-matter receipt count corrected 4 → 5** in `HANDOFFS.md`, the unguarded count its own front
+matter warns drifts on every prepend. Its stale archive-trigger sentence (`:13`, "approaches ~1,200
+lines" — a level the live `CHANGELOG.md` front matter already documents as wrong) was left untouched:
+out of scope for this deliverable, still one line to fix, still open.
+
 ### 2026-08-15 · [ad hoc] Framework Learning #25 appended — a total correlation can still be a confound; run the off-diagonal cell
 
 **Model:** Claude Opus 5.

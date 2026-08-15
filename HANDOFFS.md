@@ -5,7 +5,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **4**; the oldest **19**
+**Older receipts are archived.** This file currently holds **5**; the oldest **19**
 (2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
 same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
 validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
@@ -41,10 +41,62 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 ```handoff
 session: S88
 date: 2026-08-15
-status: pending
-active_task: BL-36 -- determine whether the four failing archives' content is genuinely INTACT or records were actually LOST, and locate the fault (v1.1.1-generated proof vs. the archives themselves). Diagnosis is the deliverable; no `.verify.sh` is regenerated, per BL-36's own warning that a regenerated proof over lost content would pass and destroy the only evidence.
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: BL-36 -- determine whether the four failing archives' content is genuinely INTACT or records were actually LOST, and locate the fault. COMPLETE. **The archives are intact; the fault is entirely in the proofs, and no version of the generator fixed it.** 0 records missing across all six trims; 0 of 228 historical record identities unreachable at HEAD. Diagnosis only -- no `.verify.sh` regenerated, no archive byte touched, no repair attempted (FM #17: the repair is a distributed-tool change and its own session).
+what_was_done: Three commits. (1) `4f1259d` -- the audit (`docs/audits/2026-08-15-bl36-archive-losslessness.md`), BL-36 updated with the answer, ledger entry. (2) `2632e59` -- Framework Learning #25. (3) this close-out. METHOD: re-running the suspect proof can only repeat its verdict and regenerating it can manufacture a green one over unexamined content, so the check was rebuilt independently -- records keyed by IDENTITY (`### ` heading; `session|date`) rather than by the shipped proof's POSITION, link targets normalised because the trimmer rewrites them by design, and the question asked as a set difference ("is this record's content still somewhere?") rather than a byte-concatenation. RESULT: 0 missing at every trim; the 2 `changed` records adjudicated individually by diff and both are the trimming session's OWN Phase 1B stub going `pending -> complete` in the same commit (the record GREW); the `added` records are that session's own ledger entries. ROOT CAUSE: `injected = 1 if trims_the_ledger else 0` (`starter-kit/methodology_trim.py:1715`, `:1736`) is a 0/1 flag meaning "does the trim write its own ledger entry", NOT a count of records the trim commit adds -- so the proof's positional identity breaks by construction on any trim bundled with other same-ledger edits. THE FINDING THAT CHANGED THE REPAIR: BL-36's "generator version correlates perfectly" is a CONFOUND -- all four failing shards came from bundled trim commits and both passing ones from standalone trims, so version and commit-shape are collinear across the only six artifacts that exist. Ran the off-diagonal cells rather than arguing them (copy the shipped script, substitute only its SHARD/LIVE path, run): v1.1.3 logic FAILS all four bundled trims with byte-identical output, and v1.1.1 logic PASSES the standalone CHANGELOG trim. So there are two independent defects -- A (bundling, present in every version, causal, and deliberately kept a loud FAIL by BL-27's own fix 2) and B (the regenerated front-matter count line, genuinely fixed v1.1.1 -> v1.1.3). Consequence, measured not predicted: REGENERATING THE FOUR PROOFS WOULD NOT FIX THEM.
+next_steps: (a) THE REPAIR IS NOT MINE AND IS NOT REGENERATION. Two options, both needing operator go-ahead: fix Defect A by making `injected` a measured count of what the trim commit adds (a change to `starter-kit/methodology_trim.py`, adopter-distributed, needs RED-first tests against `tools/test_methodology_trim.py`'s 97), OR adopt the cheaper protocol rule that a trim commit touches nothing but the trim -- which is what S87 did and why its two proofs pass. Cost the protocol option FIRST; it fixes the cause instead of teaching the proof to tolerate it. (b) THE FOUR FROZEN PROOFS STILL NEED A DISPOSITION regardless -- they are frozen artifacts and no generator change can reach them; either annotate the shards or accept that a regenerated proof is no longer the artifact that shipped. Operator decision. (c) BL-27's explanatory `NOTE:` is gated on `bad == [0]`, so it never fires for a bundled CHANGELOG trim (the count-mismatch shape) -- the busier ledger's likeliest bundling still fails mute. One `if` condition. (d) MY OWN GAP: the identity-keyed re-derivation lives in the scratchpad and is NOT committed, so this audit's central measurement is reproducible only by rewriting it. Consider landing it as a checked-in checker/test -- it is the only thing in the repo that can currently distinguish "proof is wrong" from "data is gone". (e) BL-32 now has a measured cost attached -- see gotchas. (f) UPSTREAM SYNC still pending: measured at this session's Phase 0, `upstream/main` was exactly 1 commit ahead (`512c2ed`) with `git merge-tree --write-tree --name-only HEAD upstream/main` conflicting in exactly ONE path, `HANDOFFS.md`. RE-DERIVE before acting; that command is the check, and this session has since added a receipt to that same file. (g) The S80-S86 close-out-entry gap is unchanged and still needs a decision, not a backfill. (h) Long-tail backlog unchanged and NOT re-verified: BL-11/12/13/14/16/17/18/19/21/22/23/26/30/31/32.
+key_files: `docs/audits/2026-08-15-bl36-archive-losslessness.md` (the audit -- Findings #1-#7, the 2x2 table, the mutation table, and a Reproduction section with runnable commands); `docs/planning/BACKLOG.md:1487` (BL-36's ANSWERED block) and `:975` (BL-27, which already contained this answer); `starter-kit/methodology_trim.py:1715` + `:1736` (the `injected` flag -- the root cause); `docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh:251` (`if fails and bad == [0]`, the NOTE gate of next-step (c)) and `:179`/`:237` (the L1 and L3 positional comparisons the whole failure turns on); `starter-kit/FRAMEWORK_LEARNINGS.md:47` (Learning #25 -- DISTRIBUTED, append-only, `#14` stays reserved); `CHANGELOG.md:162` (Learning #25 entry), `:177` (the BL-36 answer entry).
+gotchas: **A red proof is evidence about the PROOF until you re-derive its claim by machinery it does not share.** Re-running the suspect script repeats its verdict; regenerating it can manufacture a green one over content nobody examined -- which is precisely why BL-36's "do not regenerate first" warning was correct, and it turned out to be correct for a second reason nobody had: regeneration does not even work here. **A correlation holding across every artifact in existence can still be a confound.** Six artifacts, two perfectly collinear variables. The escape was two `sed` substitutions and two runs, and it inverted the conclusion -- I nearly wrote the answer from the v1.1.3 source comment ("stays a FAIL, loud") instead, which would have been the same error one level up. **A deliberately-loud FAIL with no in-artifact explanation is indistinguishable from a real failure to every future reader.** BL-27 chose "stay red, add a NOTE" -- defensible, since a real loss shares the shape -- but the NOTE was added to the GENERATOR and the four affected proofs are frozen artifacts predating it. A fix that only reaches future artifacts leaves the existing ones saying FAIL forever. **THIS QUESTION WAS ALREADY ANSWERED AND THE ANSWER WAS UNFINDABLE.** BL-27 (`docs/planning/BACKLOG.md:975`) documents this exact trigger, states "This is not evidence of historical data loss", and predicts this re-raise verbatim: "a future re-run of that same frozen script, done for due diligence, will misread as a fresh finding of loss unless the reader already knows this pattern." S87 appended BL-36 to the SAME FILE 471 lines below it. The file is 1,518 lines / 134,759 B -- 2.06x the 65,536 B budget its own ledgers are held to -- and no reduction step reaches it, because `methodology_trim.py`'s `LEDGERS` table covers only `CHANGELOG.md`/`HANDOFFS.md`. That is BL-32, and it just cost a session. **`grep` the backlog before raising an item in it.** **"Frozen" means records frozen, not file frozen** -- `CHANGELOG-through-v3.6.md` is the one shard not byte-identical to its creating commit (S31 corrected its front matter; all 50 dated records verified byte-identical), so `git diff <add-commit> HEAD -- <shard>` reports MODIFIED on a legitimately intact archive.
+runtime_smoke: Real tool execution throughout, no mocks; this repo ships no application, so the build-equivalent is the suites plus the tools themselves. `bash bin/tests.sh` 228 passed / 1 failed -- unchanged from S87's and S86's baseline, the sole failure being Test 9's pre-existing, unrelated github-source gap. `python3 -m unittest tools.test_methodology_dashboard` 300/300 (4 skipped); `tools.test_methodology_trim` 97/97. `bin/check-links` OK (88/22); `bin/check-learnings` OK (24 rows, all citations resolve); `bin/check-handoff --all --allow-pending` OK (5 receipts). All six `.verify.sh` re-run at close-out: 4 FAIL / 2 OK, verdicts UNCHANGED by this session, which is the intended outcome of a diagnosis that repairs nothing. `git diff HEAD~3 HEAD -- docs/archive/` EMPTY -- no archive byte was touched. `methodology_trim.py --check` on both ledgers: `trigger does not fire`. The audit's own detector was mutation-proved before its zero was believed: deleted shard record -> 1 missing, altered -> 1 changed, 5-record truncation -> 5 missing, silent on the unmutated artifact, each mutant asserting the mutation actually applied.
+changelog_ref: CHANGELOG.md "2026-08-15 · [BL-36] ANSWERED — the four failing archive proofs are not evidence of loss; the archives are intact and the fault is in the proofs" and "2026-08-15 · [ad hoc] Framework Learning #25 appended — a total correlation can still be a confound; run the off-diagonal cell"
+commit: 5980a4d + 4f1259d + 2632e59 + this close-out commit
 ```
 <!-- claim stub written at session start; reconciled at close-out -->
+Self-score **8/10.** **+** Refused to let the suspect machinery answer the question about itself:
+built an identity-keyed re-derivation rather than re-running or regenerating the proof, which is the
+only reason "intact" is a measurement here instead of an inherited opinion. **+** Mutation-proved the
+detector *before* believing its zero — three mutants and a control, each asserting the mutation
+actually applied, so "did not apply" could not pass as "survived" (Learning #16, and the specific
+trap S87 was caught by in a different form). **+** Caught that BL-36's central claim was a confound
+and, instead of arguing it, constructed the two missing cells of the 2×2 — two `sed` substitutions —
+which inverted the conclusion and proved the obvious repair would not have worked. That is the whole
+value of the session. **+** Adjudicated both `changed` records by reading their diffs rather than
+counting them and moving on; both turned out benign, but that was established, not assumed. **+**
+Corroborated my own parser against six counts written by a different program at a different time
+before trusting its segmentation. **+** Verified every cited line number before committing, which
+caught one wrong reference (`:250` → `:251`). **+** Stopped at the diagnosis: the repair touches an
+adopter-distributed tool and was left with two costed options and a go-ahead requirement. **−** I
+nearly settled the version-vs-bundling question by *reading* v1.1.3's own source comment rather than
+running it. The experiment was an afterthought, not the plan — which is precisely the error Learning
+#25 names, committed one level up while writing Learning #25. **−** The HEAD reachability sweep is
+identity-only, not content-hashed, so for the three proof-less pre-trimmer archives I can say
+"present" but not "unaltered", and I stated that limit rather than closing it. **−** The audit's
+central measurement lives in the scratchpad and is not committed, so the strongest claim in the
+report is reproducible only by someone rewriting the tool. I documented the method and left it as
+next-step (d), but a load-bearing measurement should ship with its instrument.
+
+Predecessor **S87: 7/10.** **+** Its BL-36 entry gave me the exact failure text per shard, which is
+what let me pattern-match symptoms to causes in one pass instead of re-deriving each. **+** It proved
+the four failures pre-existing in a detached worktree at `8a22608` and said so, so I never had to
+re-establish that. **+** Its "do not regenerate the scripts before answering that question" warning
+was load-bearing and correct — and correct for a second reason it did not know, since regeneration
+provably does not even work. **+** It excluded the "a later trim moved records out from under an
+older proof" explanation by reading the script's own derivation, and labelled that *excluded, not
+disproved* — honest, and it held up when I checked it. **+** Its `runtime_smoke` baseline (228/229,
+Test 9 named as the sole failure) and its derived merge shape both reproduced exactly at my Phase 0.
+**−** Docked two points for naming a cause from a correlation without running the two-command
+experiment that refutes it. BL-36 hedges honestly ("correlation is not the cause and this item does
+not assert one") and then points at the version anyway — and its "Next session" framing offers a
+binary, *fault in the v1.1.1 scripts* or *fault in the archives*, which omits the actual answer: a
+design limitation present in every version. A session that trusted that framing would have
+regenerated under v1.1.3 and watched it fail. **−** Docked a further point for raising BL-36 into
+the same file that already contained its answer, 471 lines above: **BL-27 states this is not data
+loss and predicts this exact re-raise.** One `grep verify.sh docs/planning/BACKLOG.md` before
+appending would have found it. The mitigation is real and structural — that file is 134,759 B with
+no reduction step reaching it (BL-32) — which is why this is −1 and not −3, and why the finding
+lands on BL-32 rather than on S87 alone.
 
 ```handoff
 session: S87
