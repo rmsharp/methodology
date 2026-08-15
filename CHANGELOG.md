@@ -159,6 +159,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] Framework Learning #26 appended — archiving everything finished can still leave a file over its ceiling, because the excess may be the live work
+
+**Model:** Claude Opus 5.
+Appended to [`starter-kit/FRAMEWORK_LEARNINGS.md`](starter-kit/FRAMEWORK_LEARNINGS.md) at Phase 3C —
+**DISTRIBUTED**, append-only, `#14` still reserved; the table is now 25 rows numbered 1–13, 15–26.
+Generalised from the `[BL-32]` reduction below, where the diagnosis everyone held was correct and the
+target was still unreachable: the protocol's own Phase 3F removal step had been skipped 11 times, and
+recovering all of it recovered a third of the file without reaching the ceiling, because the *open*
+items alone already exceeded it. The countermeasure costs one measurement and is available before the
+work starts — **sum the part you are not permitted to remove and compare that to the ceiling first**;
+if the untouchable remainder already exceeds it, say so at claim time and re-scope to "reduction plus
+finding" rather than discovering it at close-out. Carries a related sub-trap from the same session: a
+file cannot accurately state its own byte size, because writing the number in changes it — put the
+figure in a neighbouring file and leave a re-derivation command behind. `bin/check-learnings` OK.
+
 ### 2026-08-15 · [ad hoc] BL-37 raised — this repo ships a size-ceiling gate to every adopter and has never configured it for itself
 
 **Model:** Claude Opus 5.
