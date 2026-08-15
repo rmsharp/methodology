@@ -1,0 +1,86 @@
+{
+  "_": "THIS REPO'S OWN context budget — BL-37 half (a), provisioned by S90 (2026-08-15) from starter-kit/context-budget.json and then CALIBRATED, per that seed's own instruction to replace every inherited number with one defensible from a measurement of this project. This repo AUTHORS and DISTRIBUTES the FM #28 gate (bin/_manifest.py:54 ships starter-kit/context_budget.py -> adopter context_budget.py, :60 ships the seed -> adopter .context-budget.json) and until now had never configured it for itself — the same blind-at-home shape as BL-29 and upstream issue #59, arriving through configuration rather than path resolution. Run: python3 starter-kit/context_budget.py (there is no root copy of the tool here; see _tool_location below).",
+
+  "_tool_location": "The tool is NOT at this repo's root. bin/_manifest.py installs it at ADOPTER roots; canonically it lives only at starter-kit/context_budget.py. Two consequences, both measured not assumed: (1) invoke it as `python3 starter-kit/context_budget.py` — find_root() then walks up to this repo root via .git and reads this file, which is why a root-relative `path` below still resolves; (2) `install-hook` would write a hook that execs $(git rev-parse --show-toplevel)/context_budget.py, which does not exist here, AND this clone already sets core.hooksPath=.githooks whose pre-commit is the FM #27 ledger gate, so install-hook correctly declines with 'already exists and is not ours'. The budget gate is therefore MEASURING here, not BLOCKING. Wiring it into .githooks/pre-commit would edit a canonical file that ships upstream — deliberately not done here; raised as a follow-on instead.",
+
+  "bytes_per_token": 2.80,
+  "_bytes_per_token": "MEASURED ON THIS REPO, 2026-08-15 (S90). Regression of each session's opening context on the size of CLAUDE.md at that session's start, over n=75 transcripts in ~/.claude/projects/-Users-rmsharp-Development-methodology: opening_tokens ~= 42,033.2 + 0.356891 x bytes, R^2 = 0.8083 => 2.8020 B/tok, rounded here to 2.80. Corroborated by two independent local instruments: the same fit with only the lineage defect corrected gives 2.93 (R^2 = 0.6854), and the natural experiment across commit 7603f10 (CLAUDE.md 52,909 -> 8,519 B, -44,390 B) using the two sessions bracketing it within 20 minutes on each side gives 44,390 B / 17,616 tok = 2.52. Three local estimates spanning 2.52-2.93, and the seed's 2.93 from a different project, all agree within ~15%. WARNING — `python3 starter-kit/context_budget.py --calibrate` PRINTS 14.45 B/tok AT R^2 = 0.0513 AND THAT NUMBER IS NOISE; do not 'correct' this key to it. Two defects in calibrate() cause it, separated by running the fit four ways: (D1, causal) it derives the size history with `git log -- CLAUDE.md`, which walks ALL merged ancestry, so upstream's own CLAUDE.md lineage (52,909 / 53,372 / 58,652 B, author KJ5HST, reachable only through the merges 8b87086 and aa378ab) interleaves by commit date with this fork's 8,519 -> 11,064 B lineage and 'size at time T' stops being a function — correcting it alone moves R^2 0.0513 -> 0.6854; and (D2) it sorts and compares ISO timestamps AS STRINGS while git emits mixed offsets (both -05:00 and -04:00 appear in this file's history) and transcripts end in Z, so the comparison is not chronological — correcting it alone moves R^2 0.0513 -> 0.0790, and both together 0.8083. Re-derive with: git log --first-parent --format='%H %cI' -- CLAUDE.md, comparing datetimes tz-aware. Both defects are in a DISTRIBUTED tool and are NOT fixed here (FM #17); raised as a backlog item.",
+
+  "fixed_harness_tokens": 42033,
+  "_fixed_harness_tokens": "MEASURED — the intercept of the same n=75 fit above: the opening context that exists before any budgeted file is loaded (system prompt, tool schemas, skill listings, MCP server tools, agent-level memory). The seed carries 35,700 from a different project and a different harness configuration; this repo's floor is higher. Note what this makes CLAUDE.md worth: at 11,064 B and 2.80 B/tok it is 3,951 tok, 9.4% of this floor.",
+
+  "growth_run": 10,
+  "_growth_run": "INHERITED FROM THE SEED, NOT DERIVED — and labelled so rather than presented as measured. It cannot be calibrated on day one: this repo has no .context-budget-history.jsonl until this config's first run, so the series the trigger reads is empty. Revisit once ~15 measurements exist; the honest input is how many consecutive non-shrinking readings this repo actually produces between deliberate reductions (S23, S24, S25, S87 and S89 were all reductions, so the true run length here is probably short).",
+
+  "calibrate_against": "CLAUDE.md",
+
+  "classes": {
+    "resident": {
+      "total_bytes": 18600,
+      "_": "Resident is a ONE-FILE class in this repo — CLAUDE.md is the only artifact the harness injects in full before the session starts; this repo has no root SESSION_RUNNER.md (its runner is the distributed starter-kit/SESSION_RUNNER.md) and no root SESSION_NOTES.md (its continuity record is HANDOFFS.md). So this total equals CLAUDE.md's own ceiling by construction. That is deliberate and it is NOT a check that cannot fail: the per-file ceiling cannot see a SECOND resident file being added, and this one can. Agent-level memory (~/.claude/projects/.../MEMORY.md) is genuinely resident too but is per-operator and per-machine, outside this repo, and not a reviewable diff — deliberately excluded, and worth remembering when reading the 42,033-tok floor above, which INCLUDES it."
+    }
+  },
+
+  "files": [
+    {
+      "path": "CLAUDE.md",
+      "class": "resident",
+      "max_lines": 200,
+      "max_bytes": 18600,
+      "warn_bytes": 16000,
+      "structure": [
+        { "pattern": "^## Versioning", "expect_min": 1,
+          "why": "CLAUDE.md's own Versioning section states that this heading must stay put because existing CLAUDE.md#versioning links resolve to it; the v3.7-era extraction to docs/RELEASE_HISTORY.md kept the heading for exactly that reason. A compaction that removes it breaks frozen citations silently." }
+      ],
+      "_": "max_lines 200 is THIS FRAMEWORK'S OWN PUBLISHED NUMBER, not an invention: starter-kit/BOOTSTRAP.md:199 says 'Claude Code targets roughly 200 lines' and tells adopters to extract to a referenced PROJECT_LEARNINGS.md before that budget is crowded. Dogfooding it here is the whole point of BL-37. max_bytes converts it at this file's measured density — 11,064 B / 119 lines = 92.97 B/line, x200 = 18,594 B, rounded to 18,600 — because a line ceiling alone just produces longer lines. warn_bytes sits 2,600 B below, which is two of the largest single-session increases this file has actually taken since the S24 cut (+1,308 B at d69f7a9, +1,017 B at 316e7ef), so the warning arrives with about two sessions of notice. NO protected_fence IS DECLARED, deliberately: the seed's budget:protected fence does not exist in this file, and declaring it without adding it would report 'over' for a missing fence — a red manufactured by this config rather than a real defect. Adding the fence edits canonical content that ships upstream; raised as a follow-on instead."
+    },
+    {
+      "path": "CHANGELOG.md",
+      "class": "read-mandated",
+      "max_lines": 2000,
+      "max_bytes": 65536,
+      "structure": [
+        { "pattern": "^### \\d{4}-\\d{2}-\\d{2} · \\[", "expect_min": 5,
+          "why": "the same anchor this ledger's own front-matter audit grep uses, and the same one methodology_trim.py's CHANGELOG LedgerSpec keys records on. If it stops matching, the file has been restructured and every size check here is measuring something else." }
+      ],
+      "_": "Read-mandated: SESSION_RUNNER.md Phase 0 step 6 reconciles this file against git log every session, and Phase 3F writes to it. max_bytes 65,536 is NOT chosen here — it is starter-kit/methodology_trim.py:69 DEFAULT_BUDGET_BYTES = 64 * 1024, 'calibrated to the three sizes this repo operated at', the same ceiling BL-9/BL-32/BL-36/S87/S89 have all measured against. Cross-checked: `python3 starter-kit/methodology_trim.py --file CHANGELOG.md --check` reports 48,469 B against a 65,536 B budget, trigger does not fire — two independent tools, same verdict. max_lines 2,000 is the agent Read cap, a mechanically real ceiling this repo has already been bitten by: BL-9's L2 found this file had crossed it and was silently dropping its 10 oldest entries. NO max_line_bytes, deliberately — see HANDOFFS.md below, same reason."
+    },
+    {
+      "path": "HANDOFFS.md",
+      "class": "read-mandated",
+      "max_lines": 1200,
+      "max_bytes": 65536,
+      "structure": [
+        { "pattern": "^```handoff", "expect_min": 1,
+          "why": "receipts are fenced blocks — the shape bin/check-handoff validates and methodology_trim.py's HANDOFFS LedgerSpec keys on (record_kind=fence, fence_info=handoff). Zero matches means the receipts are no longer receipts." }
+      ],
+      "_": "Read-mandated: Phase 0 step 6 reconciles this file's frontier and Phase 3A reads the predecessor's receipt in full. max_lines 1,200 is THIS FILE'S OWN DECLARED TRIGGER, stated in its front matter ('Archive again ... when this one approaches ~1,200 lines'), which is tighter than the 2,000-line Read cap and so governs. max_bytes 65,536 from methodology_trim.py:69 as above. EXPECT THIS ONE TO REPORT over ON DAY ONE AND DO NOT SILENCE IT BY RAISING THE CEILING: it is 72,449 B as of this config's first run, and `methodology_trim.py --file HANDOFFS.md --check` independently reports 'trigger FIRES' on the same number — a pre-existing condition S89 also carried, recorded here rather than fixed (FM #17). NO max_line_bytes, deliberately and unlike the seed's SESSION_NOTES.md entry: the handoff block format is one field per line by design, so field lines run to thousands of bytes legitimately, and a per-line ceiling here would fight the format bin/check-handoff enforces rather than find a defect."
+    },
+    {
+      "path": "docs/planning/BACKLOG.md",
+      "class": "read-mandated",
+      "max_lines": 2000,
+      "max_bytes": 65536,
+      "structure": [
+        { "pattern": "^\\*\\*BL-[0-9]+ —", "expect_min": 5,
+          "why": "the exact grep this file's own header publishes for re-deriving its open-item list, because that list is hand-maintained and has been wrong before. Note the header's own caveat: BL-16 is open but has no heading of its own, so this count is one lower than the open-item count and that is correct, not a defect." }
+      ],
+      "_": "Read-mandated: SESSION_RUNNER.md Phase 0 step 3 names BACKLOG.md as the documented fallback for current priorities ('Fall back to BACKLOG.md if no repo exists'), and this fork's operational priorities live here rather than in issues (the fork has Issues disabled; they live upstream). max_bytes 65,536 is the same methodology_trim.py:69 ceiling its sibling ledgers are held to — the number BL-32, BL-36 and S89 all measured this file against. EXPECT over ON DAY ONE, 91,857 B, AND THIS IS THE POINT: S89 archived every closed item and reduced the file 33.2%, and measured that the 16 remaining OPEN items alone were 68,195 B = 1.04x the ceiling, so the residual excess is live work rather than deferred housekeeping. Closing that gap means compacting open items, which is an operator policy decision, not a session's. This entry is what turns BL-37 half (b) — adding a BACKLOG.md entry to the DISTRIBUTED seed, which needs a go-ahead — into an argument from a measurement instead of a guess."
+    },
+    {
+      "path": "starter-kit/FRAMEWORK_LEARNINGS.md",
+      "class": "on-demand",
+      "max_bytes": 60000,
+      "structure": [
+        { "pattern": "^\\| *[0-9]+ *\\|", "expect_min": 5,
+          "why": "the Learnings table's own row shape, which bin/check-learnings parses for contiguity. Rows 18 and 19 were malformed 2-column rows for ~40 sessions (BL-35) before anything looked; a shape check is cheap." }
+      ],
+      "_": "This repo's equivalent of the seed's optional LEARNINGS.md entry: CLAUDE.md calls it 'the runner's read-on-demand sibling', appended to by Phase 3C and read when relevant. max_bytes 60,000 is INHERITED FROM THE SEED AND NOT LOCALLY DERIVED — labelled rather than dressed up. The local cost that would let a future session defend a tighter number: 42,249 B is 15,089 tok at this repo's measured 2.80 B/tok, i.e. 36% of the 42,033-tok fixed floor, paid whenever a session opens it whole. The seed's own justification for the entry existing at all still applies here: on its source project this file class reached 215,750 B and was measured, across 51 transcripts, to have been opened exactly once."
+    }
+  ],
+
+  "synced": [],
+  "_synced": "DELIBERATELY EMPTY, and this is an inversion worth stating rather than an omission. The seed ships two synced entries (SESSION_RUNNER.md, SAFEGUARDS.md) that drift-check an adopter's local copy against a canonical checkout elsewhere. THIS REPO IS THAT CANONICAL. It holds no local copies to drift — starter-kit/SESSION_RUNNER.md and starter-kit/SAFEGUARDS.md ARE the originals — so the naive adaptation, pointing path and canonical at the same file, would git hash-object the same blob twice and compare it to itself: an assertion of an identity that no change can falsify, which is the exact 'comment shaped like a guard' this repo has already had to delete once (Learning #16). The other half of the inversion also holds: the seed says synced files are drift-checked and never size-checked because an adopter may not edit them, so a size finding would be unactionable — here they ARE editable, so a size finding WOULD be actionable, and starter-kit/SESSION_RUNNER.md is 52,386 B and starter-kit/SAFEGUARDS.md 15,386 B, both read at every adopter's Phase 0. Ceilings for them are a framework-policy decision that constrains future canonical work and would ship upstream; NOT taken here (FM #17), measured and raised instead.",
+
+  "_deliberate_exclusions": "Measured and left out on purpose, with the numbers a future session needs: starter-kit/SESSION_RUNNER.md 52,386 B (Phase 0 mandates it for every adopter) and starter-kit/SAFEGUARDS.md 15,386 B (Phase 0 step 1, 'in full, not skimmed') — both distributed, see _synced. README.md 89,175 B and ITERATIVE_METHODOLOGY.md 68,240 B — large, but read on demand and by humans, not mandated at Phase 0. docs/RELEASE_HISTORY.md — the sibling the v3.7 CLAUDE.md extraction created, read on demand. Adding any of these means declaring a ceiling nobody has defended yet, which is policy, not provisioning."
+}

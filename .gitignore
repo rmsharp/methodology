@@ -3,6 +3,10 @@ dashboard.html
 # NOTE: dashboard_history.jsonl is deliberately NOT ignored. Unlike dashboard.html
 # (regenerated in full every run), it is append-only, non-regenerable project-health
 # history, so it is tracked to survive machine loss and travel with a clone.
+# NOTE: .context-budget-history.jsonl is deliberately NOT ignored either, for the same
+# reason plus one of its own — context_budget.py's growth-run trigger reads the series
+# and must survive a fresh clone. It appends only when a measurement actually changes,
+# so tracking it does not put a diff in every commit.
 tools/__pycache__/
 starter-kit/__pycache__/
 bin/__pycache__/

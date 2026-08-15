@@ -7,7 +7,8 @@ as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md))
 This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
-BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37.** Re-derive rather than trust that list —
+BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open),
+BL-38.** Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
 ```
@@ -958,6 +959,85 @@ which is exactly why it wants an entry with a defended number rather than a defa
 from the seed and calibrate it (fork-side, no distributed file, runnable today); (b) add a
 `BACKLOG.md` entry to the distributed seed (DISTRIBUTED — ships upstream, needs a go-ahead); or
 both, in that order. (a) is a precondition for arguing (b) from a measurement rather than a guess.
+
+> **HALF (a) IS DONE — S90, 2026-08-15.** `.context-budget.json` provisioned at this repo's root
+> and calibrated; figures and derivations in `CHANGELOG.md`'s `[BL-37]` entry and in the config's
+> own `_` keys. Run it with `python3 starter-kit/context_budget.py` — **there is no root copy of the
+> tool here**, which is itself a finding: `install-hook` would write a hook exec'ing a
+> `context_budget.py` that does not exist at this root, and this clone's `core.hooksPath=.githooks`
+> `pre-commit` is the FM #27 ledger gate, so the budget gate **measures here, it does not block.**
+> Wiring it into `.githooks/pre-commit` edits a canonical file that ships upstream — not taken.
+>
+> **What (a) measured, which is what makes (b) arguable:** `HANDOFFS.md` (72,449 B) and this file
+> (91,857 B) both report `over` the 65,536 B ceiling on the first run, exit 2. Both pre-existing;
+> `HANDOFFS.md` is independently corroborated by `methodology_trim.py --check` (`trigger FIRES`, same
+> byte count), and this file's excess is S89's finding that the *open* items alone are 1.04× the
+> ceiling. **Half (b) is still open and still needs a go-ahead** — it edits the distributed seed.
+>
+> **Two further findings from (a), neither fixed (FM #17):** the `calibrate()` defects are now
+> **BL-38** below. And the seed's `synced` block is *meaningless in the canonical repo* — it
+> drift-checks an adopter's copy against a canonical checkout elsewhere, and this repo **is** that
+> canonical, so the naive adaptation (`path` and `canonical` pointing at the same file) would
+> `git hash-object` one blob twice and compare it to itself: an identity no change can falsify.
+> `synced` is therefore deliberately `[]` here, with the reason recorded in the config's `_synced`
+> key. The inversion has a second half worth a decision someday: the seed never size-checks synced
+> files *because an adopter may not edit them*, but here they **are** editable, so a size finding
+> **would** be actionable — and `starter-kit/SESSION_RUNNER.md` is 52,386 B and
+> `starter-kit/SAFEGUARDS.md` 15,386 B, both mandated reads at every adopter's Phase 0. Declaring
+> ceilings for them is framework policy that ships upstream, so it was measured and left.
+
+**BL-38 — `context_budget.py --calibrate` produces noise on any repo that has merged another
+lineage of its calibration target, and prints the number with no goodness-of-fit gate.** *Raised
+2026-08-15 (S90), found by actually running BL-37 half (a)'s calibration rather than trusting it.
+Measured, not fixed (FM #17): `starter-kit/context_budget.py` is DISTRIBUTED (`bin/_manifest.py:54`),
+so the repair ships to every adopter and needs a go-ahead.*
+
+As shipped, on this repo, `--calibrate` prints **14.45 B/token at R² = 0.0513** — noise, and
+implausible on its face for dense markdown. Two independent defects, **separated by running the fit
+four ways rather than asserted**:
+
+| fit | n | R² | intercept | B/token |
+|---|---|---|---|---|
+| **A** as shipped | 75 | 0.0513 | 46,319 | 14.45 |
+| **B** `--first-parent` only (D1 fixed) | 75 | 0.6854 | 42,646 | 2.93 |
+| **C** tz-aware compare only (D2 fixed) | 75 | 0.0790 | 45,270 | 11.06 |
+| **D** both fixed | 75 | **0.8083** | **42,033** | **2.80** |
+
+- **D1 — lineage (causal).** `calibrate()` builds the size history with `git log --format=%H %cI --
+  <target>` (`starter-kit/context_budget.py:390`), which walks **all merged ancestry**. On this repo
+  that interleaves upstream's own `CLAUDE.md` lineage (52,909 / 53,372 / 58,652 B, author `KJ5HST`,
+  reachable only through the merges `8b87086` and `aa378ab`) with the fork's 8,519 → 11,064 B
+  lineage, ordered by commit date — so `size_at(t)` (`:407`) oscillates between two different files
+  and *"size at time T"* stops being a function. **This is the normal case, not an edge case:** it
+  fires on any fork that syncs upstream, which is the workflow this framework documents. Fix:
+  `--first-parent`.
+- **D2 — timezone.** `hist.sort()` (`:402`) and `when <= iso` compare ISO timestamps **as
+  strings** (`:410`), while `git %cI` emits offsets (both `-05:00` and `-04:00` occur in this file's own
+  history) and transcript timestamps end in `Z`. String order is not chronological across mixed
+  offsets; the error is up to the offset. Concrete instance: commit `7603f10` at
+  `2026-08-01T19:42:50-05:00` is `2026-08-02T00:42:50Z`, but string-compares as *before* a session
+  starting `2026-08-01T21:25:28Z` — so that session is scored against 8,519 B when the file was
+  still 52,909 B. Fix: parse tz-aware.
+- **D3 — no goodness-of-fit gate.** The tool prints R² and then prints the derived B/token with the
+  same confidence whether R² is 0.81 or 0.05. A tool whose stated thesis is that a session should
+  *re-derive rather than believe* still hands over an unusable number with nothing marking it
+  unusable — FM #28's own silent-failure shape. A floor (refuse, or loudly qualify, below some R²)
+  is the cheap fix and is the one an adopter most needs, since an adopter has no second instrument.
+- **D4 — the ledger row cannot show the number that fired.** `render()` (`:329`) prints **lines**
+  in the size column and `max_lines` in the ceiling column for a `read-mandated` file, but the
+  finding that fires may be the **byte** ceiling. On this repo's first run the table reads
+  `HANDOFFS.md 359 ln / 1200 ln — over`, pointing at the ceiling that did **not** fire; the 72,449 B
+  that caused the verdict appears only in the finding prose below. Cosmetic until someone reads the
+  table and not the prose.
+- **D5 — remediation prose is hardcoded to the source project.** `REMEDIES["bytes"]` (`:266`) tells
+  every adopter to *"relocate the section to the module document that owns it (`server/`,
+  `mobile/*/`, `database/` each have a `CLAUDE.md`)"* — directories that exist in no repo but the
+  one the tool was written in. Printed verbatim here.
+
+**Not decided here:** whether to fix D1/D2 (a real correctness repair, and the one that makes
+`--calibrate` mean anything on a fork), D3 (a policy addition — the tool currently never
+adjudicates), or D4/D5 (presentation). All five are in one distributed file, so they are one
+go-ahead and plausibly one PR.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

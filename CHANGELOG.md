@@ -159,6 +159,80 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [BL-37] Half (a) done — the FM #28 context-budget gate now runs on the repo that authors it, and calibrating it found two defects in the distributed tool
+
+**`.context-budget.json` provisioned at this repo's root and calibrated.** BL-37's half (a): this
+repo distributes the FM #28 size-ceiling gate to every adopter (`bin/_manifest.py:54` ships
+`starter-kit/context_budget.py` → adopter `context_budget.py`, `:60` ships the seed → adopter
+`.context-budget.json`) and had never configured it for itself — the same blind-at-home shape as
+BL-29 and [issue #59](https://github.com/KJ5HST/methodology/issues/59), arriving through
+configuration rather than path resolution. Fork-local: **no distributed file was edited.** Run it
+with `python3 starter-kit/context_budget.py` — there is no root copy of the tool here.
+
+**First run, and it is honest rather than green.** `CLAUDE.md` 11,064 B / 18,600 B **ok**;
+`CHANGELOG.md` 48,469 B **ok**; `starter-kit/FRAMEWORK_LEARNINGS.md` 42,249 B / 60,000 B **ok**;
+**`HANDOFFS.md` 72,449 B and `docs/planning/BACKLOG.md` 91,857 B both `over` the 65,536 B ceiling**,
+exit 2. Both are pre-existing and independently corroborated — `methodology_trim.py --file
+HANDOFFS.md --check` reports `trigger FIRES` on the same 72,449 B, and S89 measured BACKLOG.md's
+excess as *live open work* (16 open items = 68,195 B = 1.04× the ceiling on their own). Neither is
+fixed here (FM #17) and neither ceiling was raised to silence it, which is the seed's own
+instruction.
+
+**Those five figures are the FIRST RUN, measured before this session wrote anything of its own —
+say which you mean.** This entry and the `BL-38` item below have since grown `CHANGELOG.md` and
+`docs/planning/BACKLOG.md`, and the close-out receipt grows `HANDOFFS.md` again, so the current
+numbers are larger and the measurer is inside them. Re-derive rather than trust any of it:
+`python3 starter-kit/context_budget.py`. This file deliberately states no self-size for the same
+reason S89 recorded — writing the number in changes it.
+
+**Every ceiling is cited, not invented.** `max_bytes: 65536` on all three ledger-class files is
+`starter-kit/methodology_trim.py:69` `DEFAULT_BUDGET_BYTES = 64 * 1024`, the number BL-9/BL-32/BL-36
+have all measured against. `CLAUDE.md`'s `max_lines: 200` is this framework's own published figure
+(`starter-kit/BOOTSTRAP.md:199`, *"Claude Code targets roughly 200 lines"*), converted to
+`max_bytes: 18600` at the file's measured density (92.97 B/line × 200 = 18,594). `HANDOFFS.md`'s
+`max_lines: 1200` is that file's own front-matter archive trigger. `CHANGELOG.md`/`BACKLOG.md` use
+`max_lines: 2000`, the agent `Read` cap BL-9's L2 was already bitten by. Each of the five entries
+carries its derivation in a neighbouring `_` key, and the two numbers that are **inherited rather
+than derived** (`growth_run: 10`, `FRAMEWORK_LEARNINGS.md`'s 60,000 B) say so in their own text
+rather than passing as measured.
+
+**`bytes_per_token` is 2.80, measured here — and the shipped `--calibrate` disagrees for reasons
+that are its own defects.** Regressing each session's opening context on `CLAUDE.md`'s size across
+n=75 transcripts: `opening_tokens ≈ 42,033.2 + 0.356891 × bytes`, **R² = 0.8083 ⇒ 2.8020 B/tok**,
+fixed harness floor **42,033 tok**. Corroborated twice locally: the same fit with only the lineage
+defect corrected gives **2.93** (R² = 0.6854), and the natural experiment across `7603f10`
+(`CLAUDE.md` 52,909 → 8,519 B) using the two sessions bracketing it within 20 minutes each side
+gives 44,390 B / 17,616 tok = **2.52**. Three local estimates spanning 2.52–2.93, against the seed's
+2.93 from an unrelated project.
+
+**Two defects in `starter-kit/context_budget.py`'s `calibrate()`, separated by running the fit four
+ways rather than asserted.** As shipped it prints **14.45 B/tok at R² = 0.0513** — noise, and
+implausible on its face for dense markdown. **D1 (causal):** it derives the size history with
+`git log -- <target>`, which walks *all* merged ancestry, so upstream's own `CLAUDE.md` lineage
+(52,909 / 53,372 / 58,652 B, author `KJ5HST`, reachable only through the merges `8b87086` and
+`aa378ab`) interleaves by commit date with this fork's 8,519 → 11,064 B lineage and *"size at time
+T"* stops being a function. **D2:** it sorts and compares ISO timestamps **as strings** while `git`
+emits mixed offsets (both `-05:00` and `-04:00` appear in this file's history) and transcripts end
+in `Z`. Correcting D1 alone: R² 0.0513 → **0.6854**. D2 alone: → 0.0790. Both: → **0.8083**. The
+tool is DISTRIBUTED, so neither is fixed here — raised as **BL-38**.
+
+**Verified, not assumed.** `--selftest` 13/13 PASS. `bin/sync . --dry-run` reports
+`.context-budget.json: present (seed; left as-is)` — the calibration is proved safe from re-sync
+against *this* repo, not inferred from the general seed rule. `bin/tests.sh` unchanged from the
+pre-change baseline. `.context-budget-history.jsonl` is created at root and deliberately tracked
+(the growth run must survive a fresh clone); `.gitignore` gains a note saying so, mirroring the one
+`dashboard_history.jsonl` already carries.
+
+**Half (b) is deliberately NOT taken** — adding a `BACKLOG.md` entry to the *distributed* seed ships
+upstream and needs the operator's go-ahead. It is now arguable from a measurement rather than a
+guess, which was the whole point of doing (a) first.
+
+### 2026-08-15 · [ad hoc] BL-38 raised — two defects in the distributed `context_budget.py` make its `--calibrate` produce noise on any repo that has merged another lineage of its target
+
+Found by running BL-37 half (a)'s calibration, above. Measured, not fixed (FM #17): the tool is
+DISTRIBUTED, so the repair ships to every adopter and needs a go-ahead. Full statement, evidence and
+the four-way fit that separates the two defects: `docs/planning/BACKLOG.md` §BL-38.
+
 ### 2026-08-15 · [ad hoc] S89 close-out — receipt written, self-score 8/10; see the `[BL-32]` entry below for the substantive work
 
 **Model:** Claude Opus 5.
