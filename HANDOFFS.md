@@ -39,6 +39,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-11.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ```handoff
+session: S88
+date: 2026-08-15
+status: pending
+active_task: BL-36 -- determine whether the four failing archives' content is genuinely INTACT or records were actually LOST, and locate the fault (v1.1.1-generated proof vs. the archives themselves). Diagnosis is the deliverable; no `.verify.sh` is regenerated, per BL-36's own warning that a regenerated proof over lost content would pass and destroy the only evidence.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S87
 date: 2026-08-15
 status: complete
