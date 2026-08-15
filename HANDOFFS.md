@@ -35,6 +35,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-09.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ```handoff
+session: S87
+date: 2026-08-15
+status: pending
+active_task: Operator-directed -- archive both over-budget mandated-read ledgers. `CHANGELOG.md` (121,094 B) and `HANDOFFS.md` (246,625 B) both fire `methodology_trim.py --check` against a 65,536 B budget; both trigger on BYTES, not lines (line headroom still 23 and 30 records). One deliverable, one capability (ledgers back under budget), two files the trimmer's own `LEDGERS` table already covers -- checkpoint commit per file.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S86
 date: 2026-08-11
 status: complete
