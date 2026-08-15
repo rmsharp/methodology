@@ -159,6 +159,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [BL-36] ANSWERED — the four failing archive proofs are not evidence of loss; the archives are intact and the fault is in the proofs
+
+**Model:** Claude Opus 5.
+One audit, no repair (FM #17 — the repair touches a distributed tool and is its own session).
+Report: `docs/audits/2026-08-15-bl36-archive-losslessness.md`. Coverage 9 of 9 archives, 6 of 6
+proofs, 6 of 6 trim commits.
+
+**No records were lost.** Re-derived independently — a parser keyed on record *identity* (heading,
+or `session|date`) rather than the shipped proof's *position* — giving **0 records missing** across
+all six trims and **0 of 228** historical identities unreachable at HEAD across live + all 9
+archives. All six trimmer-declared counts (10, 70, 68, 16, 30, 25) reproduce exactly, which is
+corroboration from a different program at a different time. The detector was mutation-proved able to
+fail *before* its zero was believed (Learning #16): a deleted shard record → 1 missing, an altered
+one → 1 changed, a 5-record truncation → 5 missing, silent on the unmutated artifact, each mutant
+asserting that it actually applied.
+
+**Root cause: `injected = 1 if trims_the_ledger else 0`** (`starter-kit/methodology_trim.py:1715`,
+`:1736`) is a 0/1 flag meaning *"does the trim write its own ledger entry"*, never a count of what
+the trim commit added. The generated proof's positional identity therefore breaks by construction on
+any trim bundled with other same-ledger edits — two extra records (`73≠72`), three (`77≠75`), or a
+frontier receipt finalized `pending → complete` inside the trim commit (`record [0]`).
+
+**BL-36's version correlation was a confound, and catching it changed the repair.** All four failing
+shards came from *bundled* trim commits and both passing ones from *standalone* trims, so generator
+version and commit shape are collinear across the shipped six. The off-diagonal cells were executed,
+not argued: **v1.1.3 logic fails all four bundled trims with identical text** (plus the BL-27 `NOTE:`
+on the two `HANDOFFS` cases), and **v1.1.1 logic passes the standalone `CHANGELOG` trim**. So two
+independent defects had been fused into one correlation — **A: bundling**, present in every version,
+causal, and deliberately retained as a loud FAIL by BL-27's own fix 2; **B: the regenerated
+front-matter count line**, genuinely fixed v1.1.1 → v1.1.3. Consequence: **regenerating the four
+proofs would not fix them**, which is measured rather than predicted.
+
+**Four minor findings.** BL-27's explanatory `NOTE` is gated on `bad == [0]`, so it never fires for a
+bundled `CHANGELOG` trim — the busier ledger's likeliest bundling still fails mute. 3 of 9 archives
+predate the trimmer and ship no proof at all. `CHANGELOG-through-v3.6.md` is the one shard not
+byte-frozen since its creating commit (S31 corrected its front matter; all 50 dated records verified
+byte-identical). And the answer already existed: **BL-27** (`docs/planning/BACKLOG.md:975`) states
+*"This is not evidence of historical data loss"* and predicts this exact re-raise — unfound because
+that file is 1,518 lines / 134,759 B, 2.06× the budget its own ledgers are held to, with no
+reduction step reaching it (**BL-32**, open). Nothing in `docs/archive/` was modified by this audit.
+
 ### 2026-08-15 · [ad hoc] S87 close-out — receipt written, self-score 8/10; see the two `Ledger trim` entries below for the substantive work
 
 **Model:** Claude Opus 5.

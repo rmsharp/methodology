@@ -1484,6 +1484,35 @@ themselves. Those are different repairs: regenerating a stale proof is cheap, an
 is not. Do not regenerate the scripts before answering that question — a regenerated proof over lost
 content would pass, and would destroy the only evidence that anything is wrong.
 
+**ANSWERED 2026-08-15 (S88) — the archives are INTACT; the fault is entirely in the proofs. Still
+open as a repair decision.** Full audit: [`docs/audits/2026-08-15-bl36-archive-losslessness.md`](../audits/2026-08-15-bl36-archive-losslessness.md).
+
+- **No loss, measured independently.** A re-derivation keyed on record *identity* rather than
+  position finds **0 records missing** across all six trims, and **0 of 228** historical record
+  identities unreachable at HEAD (live + all 9 archives). All six trimmer-declared counts (10, 70,
+  68, 16, 30, 25) reproduce exactly. The detector was mutation-proved able to fail first (deleted /
+  altered / truncated shard records all detected; silent on the real artifact).
+- **Root cause — `injected = 1 if trims_the_ledger else 0`** (`starter-kit/methodology_trim.py:1715`,
+  `:1736`). It is a **0/1 flag**, not a count of records the trim commit adds, so the generated
+  proof's positional identity breaks *by construction* on any trim commit bundled with other edits
+  to the same ledger. All four failures are that shape: two extra records (`73!=72`), three
+  (`77!=75`), and a frontier receipt finalized `pending → complete` in the trim commit (`record [0]`).
+- **The version correlation in the table above is a CONFOUND, and the repair depended on catching
+  it.** Every failing shard came from a *bundled* trim and every passing one from a *standalone*
+  trim, so version and commit-shape are collinear across the six shipped artifacts. Running the
+  off-diagonal cells settles it: **v1.1.3 logic fails all four bundled trims with identical text**,
+  and v1.1.1 logic *passes* the standalone `CHANGELOG` trim. There are two independent defects —
+  **A: bundling** (present in every version, causal, and deliberately kept a loud FAIL by BL-27's own
+  fix 2) and **B: the regenerated front-matter count line** (genuinely fixed v1.1.1 → v1.1.3).
+- **Regenerating the four proofs is NOT the repair** — measured, not predicted: the current
+  generator's logic still fails all four. The repair is Defect A (make `injected` a measured count),
+  or a protocol rule that a trim commit touches nothing but the trim. Both need their own
+  operator-gated session against a distributed tool; neither was taken here (FM #17).
+- **This was already answered once.** BL-27 above (`:975`) documents this exact trigger, states
+  *"This is not evidence of historical data loss"*, and predicted this re-raise verbatim. It was not
+  found because this file is **1,518 lines / 134,759 B** — 2.06× the ledgers' own 65,536 B budget —
+  and no reduction step reaches it, which is **BL-32**, still open. That link now has a cost attached.
+
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
 | Item | Scope | Outcome |
