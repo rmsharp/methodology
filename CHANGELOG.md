@@ -159,6 +159,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S90 close-out — receipt written, self-score 8/10, predecessor S89 scored 9/10; see the `[BL-37]` entry below for the substantive work
+
+### 2026-08-15 · [ad hoc] Framework Learning #27 appended — a tool can print its own refutation beside its answer, and the answer still gets believed
+
+A derived number and its goodness-of-fit statistic are two claims, and only the first gets read:
+`--calibrate` printed `R² = 0.0513` immediately beside `⇒ 14.45 bytes/token`, with nothing marking
+the estimate unusable. Same shape as this tool's own founding evidence — a dashboard printed
+`Large files detected` at every Phase 0 and 15+ consecutive sessions read past it. Surfacing a
+signal is not gating on it. Row 27 in [`starter-kit/FRAMEWORK_LEARNINGS.md`](starter-kit/FRAMEWORK_LEARNINGS.md)
+(DISTRIBUTED, append-only; `#14` stays reserved), so `bin/check-learnings` now reports 26 rows.
+
 ### 2026-08-15 · [BL-37] Half (a) done — the FM #28 context-budget gate now runs on the repo that authors it, and calibrating it found two defects in the distributed tool
 
 **`.context-budget.json` provisioned at this repo's root and calibrated.** BL-37's half (a): this
