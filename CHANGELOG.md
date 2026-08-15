@@ -159,6 +159,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [BL-36] Four of the six shipped `.verify.sh` losslessness proofs do not hold — raised, not fixed
+
+**Model:** Claude Opus 5.
+Found while re-running *every* archive verifier after this session's two trims, rather than only the
+two it had just written. Four fail: both v1.1.1-generated `CHANGELOG` proofs (L1 not byte-identical;
+L3 counts 73≠72 and 77≠75) and both v1.1.1-generated `HANDOFFS` proofs (L1/L2 plus record `[0]` not
+byte-identical). The two this session generated with v1.1.3 pass.
+
+**Not caused by this session — measured, not assumed.** All four fail identically in a detached
+worktree at `8a22608` (S86's tip, before S87's first commit). The generator version correlates
+perfectly, which points at the class BL-27/BL-28 fixed in v1.1.2/v1.1.3, but the entry asserts no
+cause: the competing *"a later trim invalidated an older proof"* explanation is unlikely on
+inspection — each script freezes its derivation at its own trim commit via `TRIM_SHA` and three
+`git show` reads, so it is not a function of `HEAD` — and unlikely is not disproved.
+
+**Deliberately not fixed here** (FM #17): the repair depends on an answer this session did not have
+budget to establish — whether the four archives' content is genuinely intact and only the proofs are
+stale, or whether records were actually lost. Those are different repairs, and regenerating the
+scripts first would make a passing proof over lost content, destroying the only evidence. Full item,
+reproduction command and next-session instruction: `docs/planning/BACKLOG.md` **BL-36**.
+
+### 2026-08-15 · [ad hoc] Framework Learning #24 appended — a check keyed on the live file has a population the protocol's own reduction step can move
+
+**Model:** Claude Opus 5.
+Phase 3C. Appended row **24** to [`starter-kit/FRAMEWORK_LEARNINGS.md`](starter-kit/FRAMEWORK_LEARNINGS.md) (append-only; `#14` stays reserved, so the
+table now runs 1–13, 15–24 and `bin/check-learnings` reports 23 rows, contiguous, all citations
+resolving). The learning generalizes this session's own Test 29 breakage: FM #28 makes archiving a
+*routine, mandated* act, which silently makes every check keyed on a live file conditional on where
+its population currently lives — and such a check's empty state surfaces as "failed", not as
+"nothing to check". Carries the repair (define the population as the whole ledger, live + archives)
+and the constraint on it (prove the widened arm can actually fail, or it is Learning #16's tautology
+in a new place). Corpus re-grepped for stale set-size claims per Learning #7: none — no document
+hardcodes a learnings count, and `bin/check-learnings` derives contiguity dynamically.
+
 ### 2026-08-15 · [ad hoc] `bin/tests.sh` Test 29 now reads the archives, not only the live `CHANGELOG.md`
 
 **Model:** Claude Opus 5.
