@@ -155,6 +155,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `8a22608` — S86's own close-out receipt commit
+
+**Model:** Claude Opus 5.
+Phase 0 step 6 of the next session. Frontier `git log -1 --format=%H -- CHANGELOG.md` = `f8f32ea`
+(S86's ledger commit); `git rev-list --count --no-merges f8f32ea..HEAD` = **1** — `8a22608`,
+`docs(handoffs): S86 close-out`, which wrote S86's `HANDOFFS.md` receipt and nothing else. It is an
+action this repository took and never logged (FM #27), so it is recorded here rather than left to
+`git log`. `HANDOFFS.md` needed no parallel reconcile: its own frontier **is** `8a22608`, nothing
+follows it, and the receipt it carries is `status: complete` with `commit: f8f32ea` already filled —
+so the `commit: pending` chicken-egg shape discharged 41 times through S69 does not apply here.
+
+**The gap is structural, and wider than the one commit this frontier can see.** A close-out receipt
+commit is written *after* the ledger commit it would have to cite, so it can never record itself;
+the only two clean shapes are S82's (`62168e6` — ledger and receipt in one commit) or S62–S79's
+(a pre-written `[ad hoc] S<N> close-out — receipt written, self-score …` entry riding the ledger
+commit, 15 of them in this file). That convention lapsed after S79: **S80 (`ca1261e`), S81
+(`0a5b723`), S83 (`bb2c8af`), S84 (`b4780ec`), S85 (`d36a61e`) and S86 (`8a22608`) each left a
+close-out commit with no ledger entry** — measured, not inferred (`grep -cE '^### .*S<N> close-out'`
+returns 0 for each). Frontier-based reconcile structurally cannot reach the first five: each
+session's own ledger commit moves the frontier past its predecessor's close-out commit, so only the
+newest is ever visible. Recorded as a finding for the operator; **not** fixed here — a backfill of
+five historical commits, or a change to the close-out convention, is a deliverable that needs its
+own session and its own go-ahead (FM #17).
+
 ### 2026-08-12 · [BL-34] Local `main` synced with `upstream/main` (v3.7 release + issue #67 fix) — the 4-file conflict resolved
 
 **Model:** Claude Sonnet 5.
