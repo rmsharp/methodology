@@ -155,6 +155,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.1.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S87 claim commit `4825586` recorded — the trimmer's P1 guard requires an empty undocumented set
+
+**Model:** Claude Opus 5.
+Records this session's own Phase 1B claim (`4825586`, the `status: pending` S87 receipt). Written
+**before** Phase 3F rather than at it, because `methodology_trim.py`'s `check_P1` refused both
+planned trims while the undocumented set was non-empty:
+
+> `[P1_UNDOCUMENTED]` the undocumented set is non-empty (1 commit(s) since the ledger frontier
+> `11b44dc`). A trim commit advances that frontier and would hide them PERMANENTLY. Reconcile
+> first, then trim.
+
+The refusal is correct and was **not** worked around: a trim rewrites `CHANGELOG.md`, which advances
+the Phase 0 frontier past any commit never recorded, so the claim commit would have become
+permanently invisible to reconcile-on-read. `--force` would not have applied anyway — it is scoped
+to the SRF-RED refusal, not this one.
+
+**The interaction is worth naming for the next session that trims:** Phase 1B mandates a claim
+commit, and that commit is itself an unrecorded action until Phase 3F — so *any* session that claims
+correctly and then trims will hit `P1_UNDOCUMENTED`. The order that works is claim → record the
+claim → trim, not claim → trim. Recorded as an observation, not a defect: the guard is doing
+precisely its job, and the tool writes its own ledger entry per trim (`build_ledger_entry`,
+`starter-kit/methodology_trim.py:980`), asserted afterwards by `check_P1a`.
+
 ### 2026-08-15 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit `8a22608` — S86's own close-out receipt commit
 
 **Model:** Claude Opus 5.
