@@ -159,6 +159,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] S89 close-out — receipt written, self-score 8/10; see the `[BL-32]` entry below for the substantive work
+
+**Model:** Claude Opus 5.
+Phase 3A/3B/3D. Evaluated S88's handoff (**8/10** — its gotcha attached a *measured cost* to BL-32,
+naming the file, the size and the session it had just consumed, which is the only reason the work
+was selectable; its 228/1 suite baseline and its derived 1-commit/`HANDOFFS.md`-only merge shape both
+reproduced exactly at Phase 0. Docked two for a causal claim in its own voice — *"no reduction step
+reaches it, **because** `methodology_trim.py`'s `LEDGERS` table covers only
+`CHANGELOG.md`/`HANDOFFS.md`"* — which points a successor at a distributed tool that could not have
+done the job, when the reduction step was never missing: it is Phase 3F, skipped eleven times).
+Receipt written to [`HANDOFFS.md`](HANDOFFS.md); its `next_steps` names the budget gap as a policy
+question about live items rather than housekeeping, BL-37's go-ahead-free half (a) as the cheapest
+follow-on, and re-derives the upstream merge shape rather than inheriting it. Every line number cited
+in the receipt was re-checked after the last edit, which caught one that had shifted (`:925` → `:927`
+for BL-37). Corrected in the same pass: `date_of_record` was cited as
+`starter-kit/methodology_trim.py:145`/`:150`/`:158` and is actually `:136` (required positional
+parameter), `:144`, `:168`, `:194` — fixed in both the `[BL-32]` entry and BL-32 itself before commit.
+`bin/check-handoff --all --allow-pending` OK (6 receipts).
+
 ### 2026-08-15 · [ad hoc] Framework Learning #26 appended — archiving everything finished can still leave a file over its ceiling, because the excess may be the live work
 
 **Model:** Claude Opus 5.
@@ -193,7 +212,7 @@ this repo's own root config, the other is a DISTRIBUTED seed change needing a go
 is a reduction. Both options costed in the item; (a) is a precondition for arguing (b) from a
 measurement instead of a guess.
 
-### 2026-08-15 · [BL-32] `docs/planning/BACKLOG.md` reduced 137,440 → 91,733 B (−33.3%) — 11 closed items archived verbatim with an identity-keyed losslessness proof
+### 2026-08-15 · [BL-32] `docs/planning/BACKLOG.md` reduced 137,440 → 91,857 B (−33.2%) — 11 closed items archived verbatim with an identity-keyed losslessness proof
 
 **Model:** Claude Opus 5.
 The measured local half of BL-32, operator-directed. `SESSION_RUNNER.md` Phase 3F requires removing
@@ -208,8 +227,9 @@ The stacked superseded-STATUS preamble went 16,521 → 6,862 B; every live warni
 placement, BL-10's parked-branch block and its PR #64 authorization rule).
 
 **Not a `methodology_trim.py` trim, and could not have been — this is a partial answer to BL-32's
-own undecided (a)/(b)/(c).** Every `LedgerSpec` requires a `date_of_record`
-(`starter-kit/methodology_trim.py:145`, `:150`, `:158`) and freezes the oldest **by date**; a
+own undecided (a)/(b)/(c).** Every `LedgerSpec` requires a `date_of_record` — a required
+positional parameter of `LedgerSpec.__init__` (`starter-kit/methodology_trim.py:136`, stored at
+`:144`, supplied by both shipped specs at `:168`/`:194`) — and freezes the oldest **by date**; a
 backlog's reduction axis is **status**. Measured on the real file: BL-11 (2026-08-01) is open and
 had to stay, BL-35 (2026-08-11) is fixed and had to go — a date-keyed trim inverts the correct
 answer. That is the *"mis-zone a differently-shaped ledger"* failure the tool's own comment
@@ -233,8 +253,8 @@ rather than as a survival — one did, and was re-run against real text.
 **The retained half was proved too, not assumed:** 14 of the 15 open items are byte-identical to
 `201e84e`; the 15th, BL-36, differs by exactly the deliberate edit below.
 
-**The budget was NOT reached, and the reason is the finding.** 137,440 → 91,733 B (1,548 → 1,002
-lines) is −33.3%, still 1.40× the 65,536 B the ledgers are held to. With **every** closed item
+**The budget was NOT reached, and the reason is the finding.** 137,440 → 91,857 B (1,548 → 1,004
+lines) is −33.2%, still 1.40× the 65,536 B the ledgers are held to. With **every** closed item
 archived and **before this session had written a word of its own into the file**, the 16 inherited
 *open* items already totalled 68,195 B — 1.04× — so no amount of archiving finished work can reach a
 ceiling here. (The final 72,920 B / 17 items includes this session's own BL-37 and its additions to

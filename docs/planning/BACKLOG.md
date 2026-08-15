@@ -830,7 +830,9 @@ to make.** Nothing here was implemented, and no upstream/outward-facing action w
 **One of the three options is now measurably ruled out for `BACKLOG.md` specifically (S89,
 2026-08-15).** A `LedgerSpec` for a backlog file cannot work, and this is a property of the tool's
 model rather than of any particular spec anyone might write. Every `LedgerSpec` requires a
-`date_of_record` callable (`starter-kit/methodology_trim.py:145`, `:150`, `:158`) and `evaluate()`
+`date_of_record` callable — a REQUIRED positional parameter of `LedgerSpec.__init__`
+(`starter-kit/methodology_trim.py:136`, stored at `:144`, and supplied by both shipped specs at
+`:168` and `:194`) — and `evaluate()`
 freezes the **oldest by date**; a backlog's reduction axis is **status, not age**. Measured on this
 repo's own file at the moment of reduction: BL-11 (raised 2026-08-01) is open and had to be
 retained, while BL-35 (raised 2026-08-11) was fixed and was exactly what had to go. A date-keyed
