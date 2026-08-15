@@ -159,6 +159,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] Framework Learning #25 appended — a total correlation can still be a confound; run the off-diagonal cell
+
+**Model:** Claude Opus 5.
+Phase 3C, from the BL-36 audit below. The transferable half is not "the archives were fine" but the
+method that showed it: when a defect report names a cause from a correlation that holds across every
+artifact in existence, ask what else is perfectly collinear with it, then *construct* the missing
+cell rather than reading the evidence harder. Here that was two `sed` substitutions and two runs, and
+it inverted the conclusion — the obvious repair (regenerate under the fixed version) provably would
+not have worked. Companion half: a failing proof is evidence about the proof until its claim is
+re-derived by machinery it does not share, and that re-derivation must be mutation-proved able to
+fail before its zero is believed (Learning #16). Appended at the end of the table, `#14` still
+reserved; `bin/check-learnings` OK (24 rows, all citations resolve), `bin/check-links` OK (88/22) —
+the row cites artifacts in backticks and adds no repo-relative link, since this file is distributed
+and such a link would not resolve in an adopter tree.
+
 ### 2026-08-15 · [BL-36] ANSWERED — the four failing archive proofs are not evidence of loss; the archives are intact and the fault is in the proofs
 
 **Model:** Claude Opus 5.
