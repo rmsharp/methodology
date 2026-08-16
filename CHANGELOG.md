@@ -216,6 +216,18 @@ restoration `cmp`-verified. Full harness **229 passed / 1 failed**, compared row
 pre-change baseline with both populations asserted non-empty — the only delta is the new row; the
 lone failure is Test 9's pre-existing, unrelated github-source 404.
 
+### 2026-08-15 · [ad hoc] The two records that BL-38's fix made false, repaired in the same session that falsified them
+
+Fixing a defect invalidates whatever described it. `.context-budget.json`'s `_bytes_per_token` key
+carried a **WARNING** that `--calibrate` prints 14.45 B/tok at R² = 0.0513 and must not be adopted —
+true when S90 wrote it, false the moment the tool was repaired, and sitting in the file a session
+reads to decide whether to trust that very number. Replaced with the current state and a
+re-derivation command rather than a new assertion. `docs/planning/BACKLOG.md`: BL-38 moved to
+§Completed (95,979 B, −3,970), the hand-maintained `**Open:**` list updated, and BL-37's forward
+pointer to *"BL-38 below"* re-aimed. **`BL-16` was checked before being assumed missing** — it is
+open with no heading of its own, deliberately, as `:18` of that file says; the `**BL-N —` grep alone
+would have reported it closed.
+
 ### 2026-08-15 · [ad hoc] `dashboard_history.jsonl` committed — 6 append-only snapshots that had accumulated uncommitted across four sessions
 
 Operator-directed, after S90's close-out flagged the file as dirty-on-arrival. Six rows,
