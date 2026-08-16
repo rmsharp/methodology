@@ -169,6 +169,31 @@ session moved — not an adjacent cleanup. The remedy is `Compute`, not a fresh 
 now ships with `grep -c '^```handoff' HANDOFFS.md` beside it. This is the receipt-ledger half of
 upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65) and remains open as a *guard*.
 
+### 2026-08-16 · [issue #75] Comment posted upstream — the gate (d) finding handed to the maintainer, on his explicit go-ahead
+
+**An outward-facing action, authorized by the operator for this action specifically** (comment only;
+no PR, no push, nothing else — the standing rule is per-action, and PR #64's precedent stands).
+Posted as `rmsharp`: <https://github.com/KJ5HST/methodology/issues/75#issuecomment-5305674268>.
+
+Content: (1) the gap independently re-verified against `upstream/main` before anything else;
+(2) **the finding — gate (d) already states the principle and no general procedure routes to it**,
+with the citation count stated precisely rather than as the overstated "nothing cites it," and the
+suggestion that the new requirement *quote* gate (d) instead of standing alone; (3) that his
+one-line diff would create the checklist's only orphan, since all six existing items mirror a
+requirement stated above them; (4) that the same gap sits in three more places he did not name
+(`ITERATIVE_METHODOLOGY.md:287-288`, Quality Gate 8 at `:432`, Phase 3E at
+`SESSION_RUNNER.md:272`); (5) `SAFEGUARDS.md:95` as prior art in the same species; and (6) the
+honest caveat that this is a **requirement, not a gate** — nothing refuses a plan that omits its
+surface, which is the Degradation table's own standard turned on the proposal.
+
+**Every citation was re-derived against `upstream/main`, not against this fork** — line numbers here
+had shifted by the local change, and `docs/planning/b1-sync-coverage-expansion-plan.md` (the plan
+that had applied gate (d) at plan time) **does not exist upstream**, so it is described without a
+path the maintainer cannot resolve. Closes with the implementation offered but **not** sent, and his
+own stated intent to write the checklist line left as his to take.
+Carries the agent-authorship disclaimer (`DEVELOPMENT_WORKSTREAM.md` §Agent-Authored Triage
+Comments).
+
 ### 2026-08-15 · [ad hoc] S92's "zero inbound citations" claim corrected — the count came from grepping one spelling
 
 The `[issue #75]` finding below was published as *"nothing cited it."* Re-checked on a direct
