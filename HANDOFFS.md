@@ -39,6 +39,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-11.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ```handoff
+session: S91
+date: 2026-08-15
+status: pending
+active_task: BL-38 -- repair the five defects S90 MEASURED in `starter-kit/context_budget.py`'s `calibrate()` and `render()`, which it deliberately did not fix because the file is DISTRIBUTED (`bin/_manifest.py:54`). D1 lineage: `git log -- <target>` (`:390`) walks ALL merged ancestry, so on any fork that syncs upstream -- the workflow this framework documents -- two lineages of the same file interleave by commit date and `size_at(t)` (`:407`) stops being a function. D2 timezone: `hist.sort()` (`:402`) and the `when <= iso` comparison (`:410`) order ISO timestamps AS STRINGS while `git %cI` emits mixed offsets (`-05:00` and `-04:00` both occur in this repo's own history) and transcript stamps end in `Z`. Together these produce 14.45 B/tok at R^2 = 0.0513 here, against 2.80 at R^2 = 0.8083 with both fixed. D3: no goodness-of-fit gate -- the tool prints a derived constant with identical confidence at R^2 = 0.05 and 0.81, which is FM #28's own silent-failure shape in the tool built to detect it, and is the defect an ADOPTER most needs closed because an adopter has no second instrument. D4: `render()` (`:329`) shows LINES against `max_lines` for a read-mandated file while the ceiling that actually fired may be the BYTE one. D5: `REMEDIES["bytes"]` (`:266`) hardcodes `server/`, `mobile/*/`, `database/` -- directories in no repo but the one the tool was written in. THE REGRESSION EVIDENCE IS PART OF THE DELIVERABLE, NOT A FOLLOW-ON: `calibrate()` currently has NO test asserting its arithmetic (Test 35 covers install/sync/selftest gates only), so a fix with no test would be indistinguishable from the defect it replaces. CARVE-OUT, stated at claim time rather than reconciled at close-out (S90's own `-` point): this session EDITS A DISTRIBUTED FILE by design -- that is the item -- plus the append-only `starter-kit/FRAMEWORK_LEARNINGS.md` row Phase 3C mandates if a framework-level learning emerges. NO OUTWARD-FACING ACTION: no PR, no push, no issue, no comment. The repair is prepared and vetted fork-side and STOPS there, per the operator's standing rule.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S90
 date: 2026-08-15
 status: complete
