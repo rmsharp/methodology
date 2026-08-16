@@ -169,6 +169,27 @@ session moved — not an adjacent cleanup. The remedy is `Compute`, not a fresh 
 now ships with `grep -c '^```handoff' HANDOFFS.md` beside it. This is the receipt-ledger half of
 upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65) and remains open as a *guard*.
 
+### 2026-08-15 · [ad hoc] S92's "zero inbound citations" claim corrected — the count came from grepping one spelling
+
+The `[issue #75]` finding below was published as *"nothing cited it."* Re-checked on a direct
+question and it is **wrong**: the grep behind it was `gate (d)`, which silently misses `gate d` at
+`starter-kit/SESSION_RUNNER.md:176` (inside gate (d)'s own section) and the one citation from
+outside that section anywhere in the fork —
+`docs/planning/b1-sync-coverage-expansion-plan.md:189`, a plan that applied gate (d) as a phase
+criterion. **The load-bearing claim survives and is now stated accurately: no *general procedure*
+routes to gate (d)** — not the Planning Session Checklist, not Phase 3E, not the flight manual's
+Phase 6 or Quality Gates. The b1 citation in fact *strengthens* the case: a session already used
+gate (d) at plan time, informally, which is what #75 asks be required — but only because that
+author already knew it existed.
+
+Corrected in all four places it had been written: `starter-kit/FRAMEWORK_LEARNINGS.md:51`
+(Learning #29 — **repair of a row this same session authored and had not yet shipped, not a later
+session editing an earlier one; the append-only rule is unbroken**, and the row now carries the
+error as part of its own lesson), `CHANGELOG.md`, `HANDOFFS.md`, and `bin/tests.sh:2252`.
+The general failure has a name: **a grep count is a sample** — one phrasing is one sample, and
+an honestly-computed count over the wrong population is uncatchable by any checker. State the
+population, and the spelling, beside the number.
+
 ### 2026-08-15 · [ad hoc] S92's own receipt repaired — issue #75 was one day old, not "nine days"
 
 Caught on re-reading, after the close-out commit `7f565d3`. The figure was never derived: #75 was
@@ -226,8 +247,10 @@ were right to — no failure was a logic bug, and no simulator-based check could
 **The finding that shaped the answer: the framework already owned the doctrine, as an orphan.**
 Slice gate (d), *"Faithful verification, per surface"*, already says faithfulness is established and
 never assumed — and a corpus-wide grep for that phrase returned **one line, its own definition**.
-Nothing cited it, so it bound only sessions that opted into a vertical slice, and only once a layer
-was built: after the last moment naming the surface could have changed the plan. The fix therefore
+**No general procedure routed to it** (not the checklist, not Phase 3E, not the flight manual's
+Phase 6 or Quality Gates); it is named once more inside its own section (`:176`) and cited exactly
+once outside it, by a fork-only planning doc that applied it at plan time. So it bound only sessions
+that opted into a vertical slice, and only once a layer was built: after the last moment naming the surface could have changed the plan. The fix therefore
 **projects gate (d) to plan time by quoting it**, rather than authoring a rival rule that could drift
 from it. Generalized as Learning #29.
 

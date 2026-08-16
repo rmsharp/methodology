@@ -2251,9 +2251,12 @@ echo "== Test 36: the plan-time surface requirement stays coupled to slice gate 
 # WHY THIS TEST IS A COUPLING GUARD AND NOT A PRESENCE GREP. The framework already owned the
 # doctrine before #75: §Vertical Slice Sessions gate (d) ("Faithful verification, per surface")
 # says faithfulness is established and never assumed. At the time #75 was answered, `grep` for
-# that phrase across the whole corpus returned exactly ONE line -- its own definition. Nothing
-# cited it, so it reached only sessions that opted into a slice, and only after a layer was
-# already built. The fix projects it to plan time BY QUOTING IT, which creates a citation that
+# that phrase across the whole corpus returned exactly ONE line -- its own definition, with gate
+# (d) named once more inside its OWN section (:176) and cited exactly once outside it in the
+# whole fork. No GENERAL PROCEDURE routed to it -- not this checklist, not Phase 3E, not the
+# flight manual -- so it reached only sessions that opted into a slice, and only after a layer
+# was already built. (The first draft of this comment said "nothing cited it," from grepping the
+# one spelling `gate (d)`, which misses `gate d`. A citation count is a grep count is a sample.) The fix projects it to plan time BY QUOTING IT, which creates a citation that
 # can dangle: rename or move gate (d) and the Per-Phase prose silently starts quoting a rule
 # that no longer exists under that name. That is BL-10's failure class exactly, and a test that
 # only greps for the new checklist line survives it. So the third assertion below mutates the
