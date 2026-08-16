@@ -39,6 +39,21 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-11.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ```handoff
+session: S92
+date: 2026-08-15
+status: pending
+active_task: Answer upstream [issue #75](https://github.com/KJ5HST/methodology/issues/75) fork-side -- the Planning Session Checklist (`starter-kit/SESSION_RUNNER.md:137-146`) requires that every phase carry "explicit completion criteria and verification commands" and does NOT require that the criterion be demonstrable on a surface the executor will actually have. Verified present in THIS fork's tree at Phase 0, not merely accepted from the issue text. The maintainer filed it 2026-08-14 against his own adopter project: a 3-phase plan passed the checklist, Phase 1 closed reporting "verified live against prod -- cold run downloaded=4," every word true OF THE SIMULATOR, and the code wrote nothing at all on real hardware. 413 unit tests stayed green and were right to; no simulator-based check could have found it. #75 proposes ONE checklist line and explicitly leaves the synced files untouched, offering two adopter-side counterparts (Phase 3E naming its surface; `runtime_smoke` leading with the surface) as prior art rather than as an ask. CARVE-OUT STATED AT CLAIM TIME, not reconciled at close-out: this session EDITS A DISTRIBUTED FILE by design -- `starter-kit/SESSION_RUNNER.md` is manifest row `('starter-kit/SESSION_RUNNER.md', 'SESSION_RUNNER.md', 'tracked')` (`bin/_manifest.py`, 26 rows) -- that IS the item; plus the append-only `starter-kit/FRAMEWORK_LEARNINGS.md` row Phase 3C mandates if a framework-level learning emerges, and `bin/tests.sh` (canonical-only) for the guard. SCOPE BOUNDARY: the two "Related" items are NOT in scope unless research shows the checklist line cannot bite without them; that decision gets recorded, not assumed. NO OUTWARD-FACING ACTION: no PR, no push, no issue comment, no tag. The answer is prepared and vetted fork-side and STOPS there, per the operator's standing rule.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S91
 date: 2026-08-15
 status: complete
