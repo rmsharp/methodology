@@ -216,6 +216,20 @@ restoration `cmp`-verified. Full harness **229 passed / 1 failed**, compared row
 pre-change baseline with both populations asserted non-empty — the only delta is the new row; the
 lone failure is Test 9's pre-existing, unrelated github-source 404.
 
+### 2026-08-15 · [ad hoc] S91 close-out — receipt written, self-score 8/10, predecessor S90 scored 9/10; see the `[BL-38]` entry below for the substantive work
+
+### 2026-08-15 · [ad hoc] Framework Learning #28 appended — repairing a defect falsifies every record that described it, and the most dangerous survivor is the one shaped as a warning
+
+A close-out is told to record what a session *found*; no step tells it to re-check what an earlier
+session *wrote about* the same defect. Those descriptions accumulate in a config's explanatory key,
+a backlog item, a handoff's gotcha — each a measurement frozen at diagnosis time — and a fix inverts
+them all at once. The survivor that does the damage is the one written to be **obeyed without
+re-derivation**: *"the tool prints 14.45 and that number is noise; do not adopt it"* is protective
+while the defect lives and is itself the noise once it is gone. Mirror of a constraint's release
+being an unlogged action. Cheap countermeasure: the wrong number is its own best search key —
+grep `14.45`. Row 28 in [`starter-kit/FRAMEWORK_LEARNINGS.md`](starter-kit/FRAMEWORK_LEARNINGS.md)
+(DISTRIBUTED, append-only; `#14` stays reserved), so `bin/check-learnings` now reports 27 rows.
+
 ### 2026-08-15 · [ad hoc] The two records that BL-38's fix made false, repaired in the same session that falsified them
 
 Fixing a defect invalidates whatever described it. `.context-budget.json`'s `_bytes_per_token` key
