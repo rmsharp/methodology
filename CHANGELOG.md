@@ -159,6 +159,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [issue #75] The plan-time surface requirement — answered by lifting slice gate (d) out of the elective allowance it was fenced inside
+
+**`starter-kit/SESSION_RUNNER.md` is DISTRIBUTED** (`bin/_manifest.py`, manifest row
+`('starter-kit/SESSION_RUNNER.md', 'SESSION_RUNNER.md', 'tracked')`), so this ships to every
+adopter. **No outward-facing action taken — prepared and vetted fork-side, per the standing rule.**
+
+**The gap, verified in this fork's own tree rather than accepted from the issue text.** The Planning
+Session Checklist required *"explicit completion criteria and verification commands"* per phase and
+did **not** require that the criterion be demonstrable on a surface the executor would actually
+have. Upstream's report: a 3-phase plan passed the checklist; Phase 1 closed reporting *"verified
+live against prod — cold run `downloaded=4`"*, every word true **of the simulator**, while on real
+hardware the code wrote nothing at all. 413 unit tests stayed green and were right to — none of the
+three failures was a logic bug, and no simulator-based check could have found any of them.
+
+**The finding that shaped the answer: the framework already owned the doctrine, and it was an
+orphan.** §Vertical Slice Sessions gate (d), *"Faithful verification, per surface"*, already says
+faithfulness is established and never assumed. A corpus-wide grep for that phrase returned **exactly
+one line — its own definition.** Nothing cited it. So it bound only a session that had opted into a
+vertical slice, and only once a layer was already built — after the last moment naming the surface
+could have changed the plan. The fix therefore **projects gate (d) to plan time by quoting it**,
+rather than adding a free-standing rule that would compete with it.
+
+**Two sites, one requirement — a departure from the issue's own one-line draft, and deliberate.**
+Every one of the six pre-existing checklist items mirrors a requirement stated in a section above
+it; all six were checked. A checklist line with nothing stated behind it would have been the list's
+only orphan. So §Per-Phase Completion Criteria gains a fourth bullet (**The surface**) and the
+checklist gains the verification line (6 items → 7).
+
+**Mechanized as a COUPLING guard, not a presence grep** — `bin/tests.sh` Test 36 (canonical-only,
+6 assertions, 5 mutants + 1 population-guard control). Quoting gate (d) creates a citation that can
+dangle: rename the gate and the new prose silently quotes a rule that no longer exists under that
+name — BL-10's failure class exactly, which a grep for the added lines survives. Mutant 3 renames
+gate (d) and leaves the citation untouched; it must go red. **The population guard earned its place
+during authoring:** the section extractor was compiled `re.S` without `re.M`, so every
+line-anchored section silently extracted to `""` and all four absence checks would have passed
+vacuously. `EMPTY-CRITERIA`/`EMPTY-CHECKLIST`/`EMPTY-SLICE` failed loudly instead, and mutant 5 now
+pins that behaviour.
+
+**Deliberately NOT done, recorded rather than assumed** (raised as BL-39): the issue's two *Related*
+items — Phase 3E naming its surface, and `runtime_smoke` leading with it. The checklist line bites
+without them; they touch two further distributed files and are their own change.
+`README.md:713`'s *"5-item verification"* was left alone: it sits under **"What's New in v1.2"**,
+where 5 was true as shipped, and correcting frozen release notes would falsify the history.
+
+- **Model:** Claude Opus 5 (1M context)
+
 ### 2026-08-15 · [BL-38] All five defects repaired in the distributed `context_budget.py`, with the arithmetic tests its `calibrate()` never had
 
 **The tool is DISTRIBUTED** (`bin/_manifest.py:54` → adopter `context_budget.py`), so this ships to

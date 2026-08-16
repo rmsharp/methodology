@@ -7,7 +7,7 @@ as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md))
 This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
-BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open).**
+BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -986,6 +986,37 @@ both, in that order. (a) is a precondition for arguing (b) from a measurement ra
 > **would** be actionable — and `starter-kit/SESSION_RUNNER.md` is 52,386 B and
 > `starter-kit/SAFEGUARDS.md` 15,386 B, both mandated reads at every adopter's Phase 0. Declaring
 > ceilings for them is framework policy that ships upstream, so it was measured and left.
+
+**BL-39 — issue #75's two *Related* items: carry the named surface forward into close-out.**
+Raised 2026-08-15 by S92, deliberately out of that session's scope rather than forgotten.
+S92 answered [issue #75](https://github.com/KJ5HST/methodology/issues/75) at **plan time** —
+`starter-kit/SESSION_RUNNER.md` §Per-Phase Completion Criteria now requires each phase to name the
+surface its DONE criterion is demonstrated on, and the Planning Session Checklist verifies it. The
+issue also offered two counterparts as prior art, explicitly *not* as an ask, and both are about
+what happens at the **other** end — whether the named surface survives into the record a successor
+actually reads:
+
+1. **Phase 3E** (`starter-kit/SESSION_RUNNER.md`) asks *did you runtime-verify?* and never *can this
+   surface fail?* Its only surface-shaped clause covers verification being **impossible** ("requires
+   hardware, external service, CI — state this explicitly"), which is a different question from a
+   verification that ran somewhere it could not fail. Same gap in the flight manual:
+   `ITERATIVE_METHODOLOGY.md:287-288` (Phase 6 step 2) and Quality Gate 8 (`:432`, *"Have I run the
+   code and verified it works?"*).
+2. **`runtime_smoke`** in the receipt (`starter-kit/HANDOFFS.md:62`) is documented as
+   `<a run result, or "n/a — docs-only", or "impossible: <reason>">` — no surface slot. Leading with
+   `simulator:` / `device:` / `impossible: …` is purely mechanical and makes a claim like #75's
+   visibly incomplete beside a gate that says "real hardware."
+
+**Why it was split rather than bundled.** The plan-time line bites without either: the plan names
+the surface, the executor inherits it. These touch **two further distributed files** plus the
+flight manual, and (2) changes a documented field format that adopters' existing receipts were
+written against — a compatibility question S92's change does not have. Not blocked, not deferred
+for cause; sequenced.
+
+**Do not re-derive the disposition of `README.md:713`.** It says the Planning Session Checklist is
+*"5-item"* and the checklist is now 7. It is **correct as written**: it sits under
+**"### What's New in v1.2"**, frozen release notes where 5 was the count as shipped. Editing it
+would falsify the history, and it is not a live claim. S92 verified the heading before leaving it.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

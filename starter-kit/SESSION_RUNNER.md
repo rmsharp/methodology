@@ -130,9 +130,14 @@ For any plan that involves deleting, renaming, migrating, or moving code:
 Every phase in a multi-phase plan must state:
 - **What DONE looks like** — concrete output, not "implement Phase N"
 - **Verification commands** — how the executor confirms completion (build, test, grep)
+- **The surface** — *where* that criterion will be demonstrated (device, staging, CI, simulator, local machine), and what that surface **cannot** enforce. Where it is unavailable, or cannot fail the way production fails, the plan says so rather than leaving the executor to discover it.
 - **Session boundary** — "This phase is one session. Close out when done."
 
-Without explicit completion criteria, executors don't know when to stop and tend to bundle adjacent phases.
+Without explicit completion criteria, executors don't know when to stop and tend to bundle adjacent phases. Without the **surface** named, a phase closes on a criterion that was checked somewhere it could not fail — and the handoff reads *"verified live"* with every word of it true of the wrong machine.
+
+**Naming the surface is §Vertical Slice Sessions gate (d) — *"Faithful verification, per surface"* — moved to plan time and applied to every plan, not only to slices.** Gate (d) already says faithfulness is established and never assumed, but it binds only a session that opted into a slice, and only once a layer is built — which is after the last moment naming the surface could have changed the plan. The two are the same rule at two times: the plan names the surface, the implementation establishes that it is faithful. Note what does *not* substitute for either — a green suite is not evidence about the surface it ran on. A plan whose phases are well-shaped and vertically sliced (failure mode #25) can still strand its executor here, because the gap is in the criterion's *verifiability*, not in the slicing.
+
+*(Adopted via issue [#75](https://github.com/KJ5HST/methodology/issues/75), from a 3-phase plan whose every phase passed the checklist below: Phase 1 closed reporting "verified live against prod," true of the simulator, while the code wrote nothing at all on real hardware. 413 unit tests stayed green and were right to — none of the failures was a logic bug, and no simulator-based check could have found any of them.)*
 
 #### Planning Session Checklist
 
@@ -142,6 +147,7 @@ Before closing out a planning session, verify:
 - [ ] Plan document written with file paths and line numbers
 - [ ] Grep-based inventory completed for all affected symbols (if deletion/migration/rename)
 - [ ] Each phase has explicit completion criteria and verification commands
+- [ ] Each phase names the SURFACE its DONE criterion will be demonstrated on — and, where that surface is unavailable or cannot enforce the property under test, the plan says so explicitly rather than leaving the executor to discover it
 - [ ] Each phase marked as "separate session" with a STOP point
 - [ ] Close-out: evaluate predecessor, self-assess, write the `HANDOFFS.md` receipt (Phase 3D), record the `CHANGELOG.md` ledger entry (Phase 3F, failure mode #27), commit, STOP
 

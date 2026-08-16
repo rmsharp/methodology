@@ -2241,6 +2241,122 @@ AFTER="$(md5 -q "$P/.context-budget.json" 2>/dev/null || md5sum "$P/.context-bud
     || fail "re-sync overwrote the adopter's .context-budget.json"
 rm -rf "$P"
 
+echo "== Test 36: the plan-time surface requirement stays coupled to slice gate (d) (issue #75, RED-first) =="
+# Issue #75's gap: the Planning Session Checklist required "explicit completion criteria and
+# verification commands" per phase and did NOT require that the criterion be demonstrable on a
+# surface the executor would actually have. A 3-phase plan passed the checklist; Phase 1 closed
+# reporting "verified live against prod," true of the simulator, while the code wrote nothing on
+# real hardware -- with 413 unit tests green and right to be.
+#
+# WHY THIS TEST IS A COUPLING GUARD AND NOT A PRESENCE GREP. The framework already owned the
+# doctrine before #75: §Vertical Slice Sessions gate (d) ("Faithful verification, per surface")
+# says faithfulness is established and never assumed. At the time #75 was answered, `grep` for
+# that phrase across the whole corpus returned exactly ONE line -- its own definition. Nothing
+# cited it, so it reached only sessions that opted into a slice, and only after a layer was
+# already built. The fix projects it to plan time BY QUOTING IT, which creates a citation that
+# can dangle: rename or move gate (d) and the Per-Phase prose silently starts quoting a rule
+# that no longer exists under that name. That is BL-10's failure class exactly, and a test that
+# only greps for the new checklist line survives it. So the third assertion below mutates the
+# GATE, not the citation -- the direction a presence-only guard cannot see.
+#
+# BOTH POPULATIONS ARE GUARDED BEFORE ANY ABSENCE IS BELIEVED (S91). An absence finding computed
+# over an empty population is vacuously "clean": if a future edit renames either heading, the
+# section extractions below yield nothing and every MISSING- check would pass while asserting
+# nothing at all. EMPTY-CRITERIA / EMPTY-CHECKLIST make that failure loud instead of green.
+surface_check() {
+    python3 - "$1" <<'PY'
+import re, sys
+src = open(sys.argv[1], encoding="utf-8").read()
+
+def section(start, end):
+    # re.M as well as re.S: every `end` pattern below is line-anchored, and with re.S alone
+    # `^` matches only at string start, so every section silently extracted to "". The
+    # population guard caught exactly that while this test was being written.
+    m = re.search(re.escape(start) + r"(.*?)(?=" + end + ")", src, re.S | re.M)
+    return m.group(1) if m else ""
+
+crit  = section("#### Per-Phase Completion Criteria", r"^#### Planning Session Checklist")
+check = section("#### Planning Session Checklist", r"^### ")
+slice_= section("### Vertical Slice Sessions", r"^---$")
+items = [l for l in check.splitlines() if l.startswith("- [ ]")]
+
+# Population guards first -- an absence over an empty set is not a finding.
+if not crit.strip():   print("EMPTY-CRITERIA")
+if not items:          print("EMPTY-CHECKLIST")
+if not slice_.strip(): print("EMPTY-SLICE")
+print("POP crit=%d items=%d slice=%d" % (len(crit), len(items), len(slice_)))
+
+if crit.strip() and "- **The surface**" not in crit:
+    print("MISSING-CRITERIA-SURFACE")
+if items and not any("SURFACE" in i for i in items):
+    print("MISSING-CHECKLIST-SURFACE")
+
+# The citation half. The Per-Phase prose quotes gate (d) by name and by phrase; both must
+# still resolve inside §Vertical Slice Sessions.
+QUOTE = "Faithful verification, per surface"
+if crit.strip():
+    if "gate (d)" not in crit or QUOTE not in crit:
+        print("MISSING-GATE-D-ANCHOR")
+    elif slice_.strip() and QUOTE not in slice_:
+        print("DANGLING-GATE-D")
+PY
+}
+
+RUNNER36="$STARTER/SESSION_RUNNER.md"
+F36="$(mktemp)"
+
+# Presence control: the canonical file is clean, and BOTH populations are non-empty. Without the
+# POP line this control could pass on a file whose headings had been renamed away.
+OUT36="$(surface_check "$RUNNER36")"
+POP36="$(echo "$OUT36" | grep '^POP ')"
+if [ -z "$(echo "$OUT36" | grep -v '^POP ')" ] && echo "$POP36" | grep -qv 'items=0'; then
+    pass "canonical SESSION_RUNNER: surface requirement present, gate (d) anchor resolves ($POP36)"
+else
+    fail "canonical SESSION_RUNNER surface control: expected clean, got: $OUT36"
+fi
+
+# (1) The checklist item deleted -- the literal ask of issue #75.
+if mutate "$RUNNER36" "$F36" 're.sub(r"(?m)^- \[ \] Each phase names the SURFACE.*\n", "", s, count=1)'; then
+    surface_check "$F36" | grep -q "MISSING-CHECKLIST-SURFACE" \
+        && pass "deleted checklist SURFACE item caught" \
+        || fail "deleted checklist SURFACE item NOT caught: $(surface_check "$F36")"
+else fail "checklist-item deletion mutation was vacuous"; fi
+
+# (2) The stated requirement deleted, checklist left intact -- the orphan-checklist-line shape.
+# Every other checklist item mirrors a requirement stated above it; this asserts the new one does too.
+if mutate "$RUNNER36" "$F36" 're.sub(r"(?m)^- \*\*The surface\*\*.*\n", "", s, count=1)'; then
+    surface_check "$F36" | grep -q "MISSING-CRITERIA-SURFACE" \
+        && pass "deleted Per-Phase surface requirement caught (checklist line left orphaned)" \
+        || fail "deleted Per-Phase surface requirement NOT caught: $(surface_check "$F36")"
+else fail "criteria-bullet deletion mutation was vacuous"; fi
+
+# (3) THE COUPLING ASSERTION. Gate (d) is renamed in §Vertical Slice Sessions while the Per-Phase
+# citation is left untouched -- both halves still "present," the reference now dangling. A
+# presence-only grep for the new lines passes this mutant; that is why it is here.
+if mutate "$RUNNER36" "$F36" 's.replace("**(d) Faithful verification, per surface.**", "**(d) Verification fidelity.**", 1)'; then
+    surface_check "$F36" | grep -q "DANGLING-GATE-D" \
+        && pass "renamed gate (d) caught by the Per-Phase citation (coupling, not presence)" \
+        || fail "renamed gate (d) NOT caught: $(surface_check "$F36")"
+else fail "gate-(d) rename mutation was vacuous"; fi
+
+# (4) The anchor stripped from the Per-Phase prose -- the fix degrading back into a free-standing
+# rule that competes with gate (d) instead of projecting it.
+if mutate "$RUNNER36" "$F36" 's.replace("gate (d)", "the slice gates", 1)'; then
+    surface_check "$F36" | grep -q "MISSING-GATE-D-ANCHOR" \
+        && pass "stripped gate (d) anchor caught" \
+        || fail "stripped gate (d) anchor NOT caught: $(surface_check "$F36")"
+else fail "anchor-strip mutation was vacuous"; fi
+
+# (5) FIXTURE-PROVING CONTROL (S91's lesson): prove the population guard itself fires, so a future
+# heading rename cannot turn every assertion above into a vacuous green.
+if mutate "$RUNNER36" "$F36" 's.replace("#### Planning Session Checklist", "#### Planning Session Checkboxes", 1)'; then
+    surface_check "$F36" | grep -q "EMPTY-CHECKLIST" \
+        && pass "renamed checklist heading trips the population guard (not a silent green)" \
+        || fail "renamed checklist heading did NOT trip the population guard: $(surface_check "$F36")"
+else fail "heading-rename mutation was vacuous"; fi
+
+rm -f "$F36"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]
