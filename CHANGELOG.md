@@ -159,6 +159,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-16 · [BL-36] The archive losslessness proof stopped inferring what the trim commit added — `methodology_trim.py` v1.2.0
+
+Four of six shipped `.verify.sh` proofs reported FAIL over archives S88 had already measured
+**intact** (0 records missing at every trim, 0 of 228 identities unreachable at HEAD). S88 located
+the fault in the proof and deliberately made no repair: the file is DISTRIBUTED, so the fix needed
+its own operator-gated, RED-first session. Given, and taken here.
+
+**Root cause, restated precisely, because it decided the shape of the fix.** The generated script
+identified the records the trim *commit* introduced with `INJECTED`, a constant baked in at
+generation time as `1 if trims_the_ledger else 0`, and skipped that many **positions**. Inside the
+tool that quantity is a fact — it performs the injection and knows the answer is 0 or 1. In the
+exported script it is an **inference** about a commit that may carry a whole session's other
+ledger writes. So it was right whenever the commit held only the trim, which is every case anyone
+had checked, and wrong by construction otherwise.
+
+**The repair is audit rec 2 — "make `injected` a measured count" — done by CONTENT, not by
+position**, and that departure was declared at Phase 1B rather than reconciled at close-out.
+Measuring it positionally would derive the operand from the very difference L1/L3 assert on: an
+identity that cannot fail (Learning #16). The added set is now `after + shard` minus `before`,
+by record text, removed occurrence-wise and in order before the byte comparison runs. `INJECTED`
+is gone from the template. L1/L2/L3 keep their names and semantics; losses, edits and reorders
+still fail. `:1736`'s in-memory twin is deliberately unchanged, with a comment saying why.
+
+**Measured on the six real shards, replayed read-only with `docs/archive/` untouched:**
+`CHANGELOG-through-2026-08-02` and `-08-09` go **FAIL → PASS**, naming the 2 and 3 records their
+commits added; the two already-green proofs stay green; the two `HANDOFFS` proofs **stay red,
+correctly** — each trim commit finalized its own frontier receipt, so that record's pre-trim bytes
+exist nowhere afterwards — now reported as `MISSING: session: S61` / `S64` beside the added twin
+instead of `L3 record [0] not byte-identical`. Audit Finding #4 is dissolved, not extended.
+
+**Evidence.** Six RED-first tests (`tools/test_methodology_trim.py`, canonical-only), all observed
+failing against the unmodified tool first; suite 97 → **103/103**. `bin/tests.sh` **235 passed / 1
+failed**, compared row-for-row against the pre-change baseline with both populations asserted
+non-empty (236 rows each, zero rows lost, the single delta a replay counter that now includes this
+session's own claim commit); the sole failure is Test 9's pre-existing github-source 404.
+Third surface, the one that matters for a distributed file: a fresh `bin/sync` adopter tree
+delivers the tool byte-identical at v1.2.0, a bundled trim there proves lossless end to end, and a
+pre-commit shard tamper still goes red naming its victim.
+
+**Two narrowed controls earned their place by failing.** One caught that the new global `missing`
+silently rebound L2's same-named front-matter variable three clauses above it — a flat generated
+script has one namespace — so L3 read L2's usually-empty list and reported a downstream symptom
+instead of its own finding. The other caught that the first reorder fixture swapped two records
+the commit had *added*, which is correctly invisible, and so proved nothing.
+
+BL-36 is narrowed to its open residual: the four already-frozen artifacts, whose disposition the
+operator scheduled as a separate session.
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-15 · [ad hoc] `HANDOFFS.md`'s unguarded receipt count corrected — 5 → 9, and the recount command put beside it
 
 The header's *"this file currently holds N"* is asserted by nothing and drifts every time a session

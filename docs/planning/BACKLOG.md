@@ -887,8 +887,51 @@ themselves. Those are different repairs: regenerating a stale proof is cheap, an
 is not. Do not regenerate the scripts before answering that question — a regenerated proof over lost
 content would pass, and would destroy the only evidence that anything is wrong.
 
-**ANSWERED 2026-08-15 (S88) — the archives are INTACT; the fault is entirely in the proofs. Still
-open as a repair decision.** Full audit: [`docs/audits/2026-08-15-bl36-archive-losslessness.md`](../audits/2026-08-15-bl36-archive-losslessness.md).
+**REPAIRED 2026-08-16 (S93) — Defect A is fixed in `methodology_trim.py` v1.2.0. THIS ITEM NOW
+COVERS ONLY ITS OPEN RESIDUAL: the four frozen `.verify.sh` artifacts already shipped.** The
+heading and the diagnosis below are kept verbatim as the record of how it was found (same
+convention as BL-20's).
+
+- **What changed.** The generated proof no longer carries `INJECTED` at all. The records a trim
+  commit introduced are measured at verification time from record **content** — those present in
+  `after + shard` and absent from `before` — and removed occurrence-wise, in order, before L1/L3
+  run. L1/L2/L3 keep their names and their exact semantics. This is Defect A's repair stated as
+  rec 2 asked ("a measured count"), done **by content rather than by position**: measuring it
+  positionally would derive the operand from the very difference L1/L3 assert on, which is an
+  identity that cannot fail (Learning #16). `:1736`'s in-memory `injected` is deliberately
+  **unchanged** and now carries a comment saying why — there the count is a fact the tool owns,
+  not an inference about a commit.
+- **Measured against the six real shards, not predicted** (replayed read-only; `docs/archive/`
+  untouched): `CHANGELOG-through-2026-08-02` and `-08-09` **go from FAIL to PASS**, naming the 2
+  and 3 records their commits added. The two already-passing proofs still pass. The two
+  `HANDOFFS` proofs **still FAIL, correctly** — each trim commit finalized its own frontier
+  receipt, so that record's pre-trim bytes exist nowhere afterwards. They now report
+  `MISSING: session: S61` / `S64` beside the added twin and the BL-27 note, instead of
+  `L3 record [0] not byte-identical`.
+- **Audit Finding #4 is dissolved rather than extended.** The note that never fired for a bundled
+  `CHANGELOG` trim is moot: that shape is no longer a failure at all.
+- **Verified on three surfaces**, since the file is DISTRIBUTED: the canonical suite
+  (`tools/test_methodology_trim.py` 103/103, six new RED-first tests), the six real shards above,
+  and a fresh `bin/sync` adopter tree where a bundled trim proves lossless end to end and a
+  pre-commit shard tamper still goes red naming its victim.
+
+**OPEN RESIDUAL — the four frozen proofs, and the operator's recorded decision.** No change to a
+generator can reach an artifact that is already frozen, so the four shipped `.verify.sh` files
+still say what they said. Operator decision 2026-08-16: **decide now, execute in a separate
+session** — regenerating four archive artifacts is a second capability, not a layer of this one.
+The disposition now has measured numbers behind it, which it did not when S88 posed it:
+regenerating under v1.2.0 takes the four from **4 red to 2 red**, and the 2 that remain are red
+for a true reason a reader can act on. Recommended disposition, for that session to confirm:
+regenerate all four under v1.2.0 and state in each shard's front matter that the proof was
+regenerated on that date and is no longer the artifact originally shipped — this is a deliberate
+exception to the archive freeze rule (`starter-kit/HANDOFFS.md` §Size, and when to archive) and
+needs its own go-ahead. **The two that stay red want the protocol rule, not more code:** audit
+rec 3 — a trim commit touches nothing but the trim — is the only thing that removes their cause,
+and it is still untaken (FM #17).
+
+Full audit: [`docs/audits/2026-08-15-bl36-archive-losslessness.md`](../audits/2026-08-15-bl36-archive-losslessness.md).
+
+**ANSWERED 2026-08-15 (S88) — the archives are INTACT; the fault is entirely in the proofs.**
 
 - **No loss, measured independently.** A re-derivation keyed on record *identity* rather than
   position finds **0 records missing** across all six trims, and **0 of 228** historical record

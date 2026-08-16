@@ -936,6 +936,149 @@ class TestVerifyShAppendTamperEvadesSubstringCheck(unittest.TestCase):
 
 
 # =============================================================================================
+# BL-36 — the generated proof's INJECTED constant is a 0/1 FLAG, not a count of what the trim
+# commit actually added, so `ar_cmp = ar[INJ:]` skips the wrong number of records and the whole
+# positional comparison shifts. Any trim commit bundled with a second entry to the same ledger
+# fails BY CONSTRUCTION, with zero data loss. Observed on this repo's own shipped artifacts:
+# `CHANGELOG-through-2026-08-02` (commit added 2, INJECTED=1) reports `L3 record count 73 != 72`
+# and `CHANGELOG-through-2026-08-09` (added 3) reports `77 != 75`, while S88's independent
+# identity-keyed re-derivation measured 0 records missing at either trim
+# (docs/audits/2026-08-15-bl36-archive-losslessness.md, Findings #1 and #2).
+#
+# THE REPAIR IS TO MEASURE THE INJECTED SET BY CONTENT, NOT TO RE-PARAMETERIZE THE POSITION.
+# L1/L2/L3 keep their exact semantics: the records the COMMIT introduced are those present in
+# `after ∪ shard` and absent from `before`, computed from record text and removed occurrence-wise
+# before the byte-for-byte comparison runs. That is not circular — it is a different function of
+# the same three artifacts, never the difference L1/L3 are about to assert on (Learning #16).
+#
+# WHAT THIS DELIBERATELY DOES NOT DO: it does not make a record EDITED inside the trim commit
+# pass. Such a record's pre-trim bytes exist nowhere afterwards, so it is genuinely not preserved
+# and BL-27's "stays a loud FAIL" is correct — see TestVerifyShHandoffFalsePositives above, which
+# must stay green. Only ADDITIONS become tolerable, because an added record makes no claim about
+# a record that was already there.
+# =============================================================================================
+
+
+def _insert_records_at_top_of_zone(text, n, tag="bundled extra"):
+    """Prepend n new CHANGELOG-grammar records immediately above the newest existing one."""
+    at = text.index("### ")
+    new = "".join("### 2026-02-01 · [ad hoc] %s %d\n\nbody %d\n\n" % (tag, i, i) for i in range(n))
+    return text[:at] + new + text[at:]
+
+
+class TestVerifyShBundledAddsAreMeasuredNotAssumed(unittest.TestCase):
+
+    def _trim_then_bundle(self, p, mutate, extra=2):
+        """Trim, apply `mutate` to the live ledger, and commit BOTH in one commit — the shape the
+        four failing shipped proofs have. Returns the generated proof's completed process."""
+        r = run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+        self.assertIn("[WROTE]", r.stdout, r.stdout)
+        live = p / "CHANGELOG.md"
+        before = live.read_text(encoding="utf-8")
+        after = mutate(_insert_records_at_top_of_zone(before, extra))
+        self.assertNotEqual(after, before, "control: the bundled edit must change the live file")
+        live.write_text(after, encoding="utf-8")
+        n_before = len(records_of(before, CL))
+        n_after = len(records_of(after, CL))
+        sh(p, "git", "add", "-A")
+        sh(p, "git", "commit", "-qm", "trim bundled with other ledger writes")
+        shard = sorted((p / "docs" / "archive").glob("CHANGELOG-through-*.md"))[0]
+        return sh(p, "bash", str(shard) + ".verify.sh"), n_before, n_after
+
+    def test_a_trim_commit_that_also_adds_records_still_proves_lossless(self):
+        """The BL-36 case itself. Adding entries to the ledger in the trim commit says nothing
+        about whether the archived records survived — and must not be able to fail the proof."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            v, n_before, n_after = self._trim_then_bundle(p, lambda t: t, extra=2)
+            self.assertEqual(n_after - n_before, 2,
+                             "control: the bundle must really have added 2 records to the live file")
+            self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
+            self.assertEqual(v.returncode, 0, v.stdout)
+
+    def test_the_verdict_does_not_depend_on_HOW_MANY_records_the_commit_added(self):
+        """Kills the whole family of 'bump the constant' mutants. INJECTED=1 happens to be right
+        for a standalone ledger trim, which is why every passing shipped proof has it; the defect
+        only shows once the count is anything else. Three is as legitimate as one."""
+        for extra in (1, 3, 5):
+            with self.subTest(extra=extra), tempfile.TemporaryDirectory() as tmp:
+                p = make_repo(tmp)
+                v, n_before, n_after = self._trim_then_bundle(p, lambda t: t, extra=extra)
+                self.assertEqual(n_after - n_before, extra, "control: the bundle size must be real")
+                self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
+
+    def test_the_proof_reports_what_the_commit_added_rather_than_staying_silent(self):
+        """A proof that tolerates additions must SAY which ones, or it has quietly widened what it
+        excuses. Audit Finding #4: under the shipped tool the busier ledger's bundling shape got no
+        explanation at all."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            v, _b, _a = self._trim_then_bundle(p, lambda t: t, extra=2)
+            # 3, not 2: the trimmer writes its own `Ledger trim:` entry into CHANGELOG.md as part
+            # of the trim, so a bundle of 2 extras lands 3 new records in the commit. That third
+            # one is exactly what the old INJECTED=1 constant modelled — correctly, and only ever
+            # when it was alone.
+            self.assertIn("added by the trim commit: 3", v.stdout, v.stdout)
+            self.assertIn("bundled extra 0", v.stdout,
+                          "the added records must be named, not just counted")
+            self.assertIn("Ledger trim:", v.stdout,
+                          "the trim's own entry is an added record like any other")
+
+    def test_NARROWED_tolerating_ADDS_must_not_tolerate_a_LOSS(self):
+        """The plausible weak implementation — 'ignore any count mismatch' — passes the test above
+        and this one too. Dropping a retained record in the same commit must still be caught."""
+        def drop_oldest_retained(text):
+            heads = re.findall(r"(?m)^### .*$", text)
+            self.assertGreater(len(heads), 3, "control: there must be a retained record to drop")
+            return text[:text.index(heads[-1])]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            v, _b, _a = self._trim_then_bundle(p, drop_oldest_retained, extra=2)
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+            self.assertIn("missing", v.stdout.lower(), v.stdout)
+            self.assertNotEqual(v.returncode, 0, "a bundled ADD must never launder a real loss")
+
+    def test_NARROWED_tolerating_ADDS_must_not_tolerate_a_REORDER(self):
+        """The other plausible weak implementation — compare record MULTISETS and drop the
+        byte-concatenation entirely. Multisets are order-blind, so a ledger silently reordered in
+        the trim commit would pass. L1 still carries the ordering claim; this pins that."""
+        def swap_two_retained(text):
+            z = mod.classify_zones(text, CL, mod.Result("x"))
+            recs = z.records()
+            self.assertGreater(len(recs), 4, "control: there must be two retained records to swap")
+            # The LAST two, and the control below is load-bearing: the first records in this file
+            # are the ones the commit ADDED (2 bundled extras, then the trimmer's own entry), and
+            # those are dropped before the ordering comparison runs. Swapping two of THEM is
+            # correctly invisible, so a test that did it would pass while proving nothing — which
+            # is what the first draft of this test did.
+            for r in (recs[-1], recs[-2]):
+                self.assertIn("[ad hoc] entry ", r.splitlines()[0],
+                              "control: both swapped records must be pre-existing retained ones, "
+                              "not records this commit added")
+            recs[-1], recs[-2] = recs[-2], recs[-1]
+            return z.front + "".join(recs) + z.footer
+
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            v, _b, _a = self._trim_then_bundle(p, swap_two_retained, extra=2)
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+            self.assertNotEqual(v.returncode, 0, "reordering is not losslessness")
+
+    def test_the_template_no_longer_bakes_a_positional_INJECTED_constant(self):
+        """Coupling guard, not a presence grep: the tests above all run through the generated
+        script, so they would still pass if a constant were baked in AND happened to be right.
+        This pins that the mechanism itself is gone from the shipped template, which is what makes
+        a future 'just set INJECTED=2' regression impossible rather than merely unlikely."""
+        src = TRIM_PY.read_text(encoding="utf-8")
+        self.assertIn("VERIFY_TEMPLATE", src, "control: the template must still be here to check")
+        template = src.split("VERIFY_TEMPLATE = r\"\"\"", 1)[1].split("\n\"\"\"", 1)[0]
+        self.assertGreater(len(template), 2000, "control: the extracted template must be the real one")
+        self.assertNotIn("@@INJECTED@@", template)
+        self.assertNotIn("ar[INJ:]", template)
+
+
+# =============================================================================================
 # Regression tests for the defects an adversarial review found in the first build of this tool.
 # Each one existed BECAUSE the corresponding guard was wired to the wrong operand and no test
 # noticed. They mutate the WRITE PATH — not the predicate — because mutating the predicate is
