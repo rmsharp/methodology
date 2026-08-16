@@ -159,6 +159,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] `dashboard_history.jsonl` committed — 6 append-only snapshots that had accumulated uncommitted across four sessions
+
+Operator-directed, after S90's close-out flagged the file as dirty-on-arrival. Six rows,
+2026-08-13 → 2026-08-15: five written by S87–S89's own Phase 0 dashboard runs and one by S90's,
+all `dashboard_version` 2.15.2, health flat at **72/100** with `total_commits` 568 → 584 and no
+change in risk counts. Append-only and non-regenerable, which is why `.gitignore:3-5` deliberately
+tracks this file — but nothing commits it, so it accrues silently until someone looks. That gap is
+the thing worth noticing here, not the six rows: **the file is tracked so it survives a clone, and
+no protocol step ever stages it.** Not fixed (FM #17) — it wants either a Phase 3F line or a
+dashboard that stages its own history, and both are decisions rather than housekeeping.
+
 ### 2026-08-15 · [ad hoc] S90 close-out — receipt written, self-score 8/10, predecessor S89 scored 9/10; see the `[BL-37]` entry below for the substantive work
 
 ### 2026-08-15 · [ad hoc] Framework Learning #27 appended — a tool can print its own refutation beside its answer, and the answer still gets believed
