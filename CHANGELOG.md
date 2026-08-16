@@ -159,49 +159,89 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [ad hoc] `HANDOFFS.md`'s unguarded receipt count corrected — 5 → 9, and the recount command put beside it
+
+The header's *"this file currently holds N"* is asserted by nothing and drifts every time a session
+prepends; the file's own front matter warns *"Recount before trusting it."* It read **5** against an
+actual **9**, having last been corrected three sessions after its previous drift (`7a71df0`). S92
+prepended the ninth, so this is the Phase 3F cross-reference duty (Learning #7) on a claim this
+session moved — not an adjacent cleanup. The remedy is `Compute`, not a fresh hand-count: the number
+now ships with `grep -c '^```handoff' HANDOFFS.md` beside it. This is the receipt-ledger half of
+upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65) and remains open as a *guard*.
+
+### 2026-08-15 · [ad hoc] S92 close-out — receipt written, self-score 8/10, predecessor S91 scored 9/10; see the `[issue #75]` entry below for the substantive work
+
+Claim commit `a744218` (Phase 1B), deliverable `b1b7eaf`, this close-out. **The claim stub was
+written malformed and repaired in-session:** it filled `key_files`/`commit`/etc. with `pending`,
+which trips `check-handoff`'s `path:line` lint — the 1B stub schema takes only `session`, `date`,
+`status`, `active_task` (`starter-kit/HANDOFFS.md:26-28`). It cost 3 red rows until caught.
+
+### 2026-08-15 · [ad hoc] `CHANGELOG.md` crossed its byte ceiling this session — measured, self-reduced as far as facts allow, and handed forward
+
+At S92's Phase 0 this file was **62,853 B against the 65,536 B ceiling — 2,683 B of headroom against
+a 1,540 B median entry.** One substantive entry plus its close-out entries exceeds that, so the
+FM #28 gate fires on the first real session after S91 regardless of who runs it. S92 compacted its
+own `[issue #75]` entry 3,556 → 3,156 B rather than only reporting the breach; further cuts would
+delete facts, and a trim is a session-sized deliverable (S87's precedent), not a close-out side
+effect. `methodology_trim.py --file CHANGELOG.md --check` reports **`[CHECK] trigger FIRES`** on
+`TRIGGER_BYTES`; line headroom is fine (50 records, fires below 15). **The trim is now owed work.**
+
+### 2026-08-15 · [ad hoc] Framework Learning #29 appended — a rule is only as reachable as the section it sits in, and its inbound-citation count says which sessions it binds
+
+Generalized from the `[issue #75]` work below: slice gate (d) was correct, ratified doctrine with
+**zero inbound citations**, reachable only by sessions that opted into a vertical slice and only
+after a layer existed. Names the mechanical tell (grep the distinguishing phrase corpus-wide; one
+hit = its own definition = orphan), the repair (**quote it, never restate it**, so the citation
+count moves and a test can pin the quote to its source), and the half that gets missed — a rule can
+also be scoped to the wrong **time**, firing after the decision it was meant to change.
+
+### 2026-08-15 · [ad hoc] BL-39 raised — issue #75's two *Related* items, carrying the named surface forward into close-out
+
+Phase 3E and the `runtime_smoke` receipt field both ask *did you verify?* and never *can this
+surface fail?* Split from the plan-time fix deliberately, not deferred for cause: that line bites
+without them, while these touch two further distributed files plus `ITERATIVE_METHODOLOGY.md`
+(`:287-288`, Quality Gate 8 at `:432`), and the `runtime_smoke` half changes a documented field
+format adopters' existing receipts were written against.
+
 ### 2026-08-15 · [issue #75] The plan-time surface requirement — answered by lifting slice gate (d) out of the elective allowance it was fenced inside
 
-**`starter-kit/SESSION_RUNNER.md` is DISTRIBUTED** (`bin/_manifest.py`, manifest row
-`('starter-kit/SESSION_RUNNER.md', 'SESSION_RUNNER.md', 'tracked')`), so this ships to every
-adopter. **No outward-facing action taken — prepared and vetted fork-side, per the standing rule.**
+**`starter-kit/SESSION_RUNNER.md` is DISTRIBUTED** (`bin/_manifest.py` row
+`('starter-kit/SESSION_RUNNER.md', 'SESSION_RUNNER.md', 'tracked')`) — this ships to every adopter.
+**No outward-facing action: prepared and vetted fork-side.**
 
-**The gap, verified in this fork's own tree rather than accepted from the issue text.** The Planning
-Session Checklist required *"explicit completion criteria and verification commands"* per phase and
-did **not** require that the criterion be demonstrable on a surface the executor would actually
-have. Upstream's report: a 3-phase plan passed the checklist; Phase 1 closed reporting *"verified
-live against prod — cold run `downloaded=4`"*, every word true **of the simulator**, while on real
-hardware the code wrote nothing at all. 413 unit tests stayed green and were right to — none of the
-three failures was a logic bug, and no simulator-based check could have found any of them.
+**The gap, re-verified in this tree rather than accepted from the issue.** The Planning Session
+Checklist required *"explicit completion criteria and verification commands"* per phase, never that
+the criterion be demonstrable on a surface the executor would have. Upstream's evidence: a 3-phase
+plan passed the checklist; Phase 1 closed reporting *"verified live against prod"*, every word true
+**of the simulator**, while on real hardware the code wrote nothing. 413 unit tests stayed green and
+were right to — no failure was a logic bug, and no simulator-based check could have found one.
 
-**The finding that shaped the answer: the framework already owned the doctrine, and it was an
-orphan.** §Vertical Slice Sessions gate (d), *"Faithful verification, per surface"*, already says
-faithfulness is established and never assumed. A corpus-wide grep for that phrase returned **exactly
-one line — its own definition.** Nothing cited it. So it bound only a session that had opted into a
-vertical slice, and only once a layer was already built — after the last moment naming the surface
-could have changed the plan. The fix therefore **projects gate (d) to plan time by quoting it**,
-rather than adding a free-standing rule that would compete with it.
+**The finding that shaped the answer: the framework already owned the doctrine, as an orphan.**
+Slice gate (d), *"Faithful verification, per surface"*, already says faithfulness is established and
+never assumed — and a corpus-wide grep for that phrase returned **one line, its own definition**.
+Nothing cited it, so it bound only sessions that opted into a vertical slice, and only once a layer
+was built: after the last moment naming the surface could have changed the plan. The fix therefore
+**projects gate (d) to plan time by quoting it**, rather than authoring a rival rule that could drift
+from it. Generalized as Learning #29.
 
-**Two sites, one requirement — a departure from the issue's own one-line draft, and deliberate.**
-Every one of the six pre-existing checklist items mirrors a requirement stated in a section above
-it; all six were checked. A checklist line with nothing stated behind it would have been the list's
-only orphan. So §Per-Phase Completion Criteria gains a fourth bullet (**The surface**) and the
-checklist gains the verification line (6 items → 7).
+**Two sites, one requirement — a deliberate departure from the issue's one-line draft.** All six
+pre-existing checklist items were checked; each mirrors a requirement stated in a section above it.
+So §Per-Phase Completion Criteria gains a **The surface** bullet and the checklist gains its
+verification line (6 items → 7), rather than leaving the list's only orphan.
 
-**Mechanized as a COUPLING guard, not a presence grep** — `bin/tests.sh` Test 36 (canonical-only,
-6 assertions, 5 mutants + 1 population-guard control). Quoting gate (d) creates a citation that can
-dangle: rename the gate and the new prose silently quotes a rule that no longer exists under that
-name — BL-10's failure class exactly, which a grep for the added lines survives. Mutant 3 renames
-gate (d) and leaves the citation untouched; it must go red. **The population guard earned its place
-during authoring:** the section extractor was compiled `re.S` without `re.M`, so every
-line-anchored section silently extracted to `""` and all four absence checks would have passed
-vacuously. `EMPTY-CRITERIA`/`EMPTY-CHECKLIST`/`EMPTY-SLICE` failed loudly instead, and mutant 5 now
-pins that behaviour.
+**Mechanized as a COUPLING guard, not a presence grep** — `bin/tests.sh` Test 36 (canonical-only;
+6 assertions, 5 mutants + a population-guard control). Quoting gate (d) creates a citation that can
+dangle: rename the gate and the new prose quotes a rule gone under that name — BL-10's class, which
+a grep for the added lines survives. Mutant 3 renames the gate, leaves the citation, must go red.
+**The population guard earned its place during authoring:** the section extractor compiled `re.S`
+without `re.M`, so every line-anchored section silently extracted to `""` and all four absence
+checks would have passed vacuously. `EMPTY-*` failed loudly instead; mutant 5 now pins that.
 
-**Deliberately NOT done, recorded rather than assumed** (raised as BL-39): the issue's two *Related*
-items — Phase 3E naming its surface, and `runtime_smoke` leading with it. The checklist line bites
-without them; they touch two further distributed files and are their own change.
-`README.md:713`'s *"5-item verification"* was left alone: it sits under **"What's New in v1.2"**,
-where 5 was true as shipped, and correcting frozen release notes would falsify the history.
+**Deliberately not done, recorded rather than assumed** — the issue's two *Related* items (Phase 3E
+and `runtime_smoke` naming their surface) are **BL-39**: the plan-time line bites without them, and
+they touch two further distributed files. `README.md:713`'s *"5-item verification"* was left alone —
+it sits under **"What's New in v1.2"**, where 5 was true as shipped; correcting frozen release notes
+would falsify history.
 
 - **Model:** Claude Opus 5 (1M context)
 
