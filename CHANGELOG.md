@@ -159,6 +159,63 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-15 · [BL-38] All five defects repaired in the distributed `context_budget.py`, with the arithmetic tests its `calibrate()` never had
+
+**The tool is DISTRIBUTED** (`bin/_manifest.py:54` → adopter `context_budget.py`), so this ships to
+every adopter. S90 measured these and correctly declined to fix them in the same session; the
+go-ahead was given for this one. **No outward-facing action taken — prepared and vetted fork-side.**
+
+**D1 lineage (causal).** `git log -- <target>` walks all merged ancestry, so on a fork that syncs an
+upstream — the workflow this framework documents — two lineages of the same file interleave by
+commit date and *"size at time T"* stops being a function. Now `--first-parent`. **One boundary was
+re-derived the hard way and is now pinned by a test:** git's *default history simplification*
+already prunes a side branch whose merge was TREESAME to the first parent, so the defect needs a
+merge that genuinely **changed** the target. The first fixture written for this used `git merge -s
+ours`, did not reproduce the defect, and would have passed against the broken code — caught only
+because the fixture-proving test ran before the assertions built on it.
+
+**D2 timezone.** `hist.sort()` and `when <= iso` ordered ISO timestamps **as strings** while git
+`%cI` emits offsets that move with the season (`-05:00` and `-04:00` both occur in this repo's
+history) and transcripts end in `Z`. Now parsed to aware datetimes via `parse_iso`, with a naive
+stamp documented as read-as-UTC rather than left to whatever the comparison did.
+
+**Measured effect, re-derived this session at n=76** (S90 measured n=75; the extra transcript is
+this session's own): as shipped **14.75 B/tok at R² = 0.0503**; `--first-parent` alone 2.94 at
+0.6833; tz-aware alone 11.37 at 0.0767; **both 2.81 at R² = 0.8054**. Independently reproduces
+S90's table within rounding. The repaired tool now prints 2.81 against the 2.80 the config carries.
+
+**D3 goodness-of-fit gate.** `calibration_verdict()` refuses to recommend a constant below an R²
+floor of **0.50** — the majority-of-variance line, statable without reference to any project's
+result — overridable per project via `calibrate_min_r2`. It also refuses a **negative** slope
+however tight the fit, since a high R² with more-bytes-fewer-tokens still has no reciprocal worth
+printing, and refuses an undefined R² rather than rendering it as a number. A refused fit is printed
+in full and the `⇒ bytes/token` line is **suppressed entirely**, not annotated. This is Learning #27
+enforced in the tool that motivated it.
+
+**D4 the row now names the ceiling that fired.** `HANDOFFS.md` read `417 ln / 1,200 ln — over`,
+pointing at the ceiling that did *not* fire; it now reads `90,890 B / 65,536 B`. A latent
+`TypeError` on a file declaring only `max_lines` went with it.
+
+**D5 remediation prose de-localized.** `REMEDIES["bytes"]` told every adopter to relocate sections
+into `server/`, `mobile/*/`, `database/` — directories in no repo but the tool's home — and stated
+a measurement from that project as *"one table **here**"*, which reads in an adopter's terminal as a
+claim about their own repository. Both corrected; the measurement is kept and attributed.
+
+Also fixed in passing, in the same loop D1/D2 live in: transcripts were opened without a context
+manager in a loop that `break`s, leaking one descriptor per transcript.
+
+**The evidence, not just the change.** `tools/test_context_budget.py` is **new and canonical-only**
+(not in `bin/_manifest.py`) — 41 tests, wired into `bin/tests.sh` beside the trimmer's on the
+trimmer's own argument: `calibrate()` had **no test of its arithmetic**, so the shipped executable
+returned noise while every row stayed green. Each defect is exhibited as well as fixed — D1 via a
+real two-parent merge fixture, D2 via a verbatim re-implementation of the shipped string comparison.
+The tool's own `--selftest` goes **13 → 34** gates and ships to adopters. A **10-mutant round**
+(one per defect plus the plausible weaker implementations: an R²-only gate, a lexical sort, a
+nearest-rather-than-in-effect `size_at`) killed **10/10**, with the control green and every
+restoration `cmp`-verified. Full harness **229 passed / 1 failed**, compared row-for-row against the
+pre-change baseline with both populations asserted non-empty — the only delta is the new row; the
+lone failure is Test 9's pre-existing, unrelated github-source 404.
+
 ### 2026-08-15 · [ad hoc] `dashboard_history.jsonl` committed — 6 append-only snapshots that had accumulated uncommitted across four sessions
 
 Operator-directed, after S90's close-out flagged the file as dirty-on-arrival. Six rows,

@@ -35,9 +35,10 @@ import os
 import re
 import subprocess
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 CONFIG_NAME = ".context-budget.json"
 HISTORY_NAME = ".context-budget-history.jsonl"
 
@@ -111,6 +112,7 @@ def measure_file(root, spec):
     out["bytes"] = len(data)
     out["lines"] = len(lines)
     out["max_bytes"] = spec.get("max_bytes")
+    out["max_lines"] = spec.get("max_lines")
     out["warn_bytes"] = spec.get("warn_bytes")
 
     def over(msg, kind):
@@ -263,12 +265,13 @@ def growth_run(history, snapshot, limit):
 
 REMEDIES = {
  "bytes": [
-  ("Move", "Relocate the section to the module document that owns it "
-           "(server/, mobile/*/, database/ each have a CLAUDE.md). Resident context is "
-           "for what a session needs BEFORE it knows the task."),
+  ("Move", "Relocate the section into the document that owns it — a module- or "
+           "subsystem-level doc a session opens only once it knows the task. Resident "
+           "context is for what a session needs BEFORE it knows the task."),
   ("Compute", "Replace any hand-maintained count or list with the command that "
               "produces it. A count written into a read-often file is a future lie — "
-              "10 of 11 rows of one table here were wrong when it was finally measured."),
+              "on the project this was measured, 10 of 11 rows of one such table were "
+              "wrong by the time anyone checked."),
   ("Archive", "git already conserves every byte. Cut the content and leave "
               "`git show <sha>:<file>` — retrieval by original line number, zero new bytes."),
   ("Delete", "If another file says the same thing, delete this copy and link to it."),
@@ -326,9 +329,7 @@ def render(root, results, synced, run_len, run_hit, cfg, snapshot):
         if r["status"] == "unmeasured":
             print(f"  {name:<34s}{'—':>12s}{'—':>12s}  {CYN}unmeasured{R} {D}({r['reason']}){R}")
             continue
-        size = f"{r['bytes']:,} B" if r["class"] != "read-mandated" else f"{r['lines']:,} ln"
-        ceil = (f"{r['max_bytes']:,} B" if r["class"] != "read-mandated"
-                else f"{cfg_lookup(cfg, r['path'], 'max_lines') or '—'} ln")
+        size, ceil = ledger_dimension(r)
         cc = status_colour(r["status"])
         print(f"  {name:<34s}{size:>12s}{str(ceil):>12s}  {cc}{r['status']}{R}")
     for r in synced:
@@ -367,93 +368,267 @@ def short(path, width=34):
     return ("…/" + tail)[-width:]
 
 
-def cfg_lookup(cfg, path, key):
-    for s in cfg.get("files", []):
-        if s["path"] == path:
-            return s.get(key)
-    return None
+def ledger_dimension(r):
+    """(size, ceiling) for one ledger row — reported in the dimension that ACTUALLY FIRED.
+
+    A read-mandated file is normally reported in lines, because that is the unit an
+    agent's read cap comes in. But its BYTE ceiling can be the one that fires, and a
+    row reading `359 ln / 1,200 ln  over` then points at a ceiling that did not fire,
+    while the 72,449 B behind the verdict appears only in the prose further down. A
+    ledger row that cannot show the figure behind its own verdict is precisely the
+    read-past-it failure this tool exists to interrupt.
+
+    The first size finding decides the dimension; with nothing fired, the file's class
+    decides. `bytes` is appended before `lines` in measure_file, so a file over both
+    reports bytes.
+    """
+    fired = next((f["kind"] for f in r.get("findings", [])
+                  if f["kind"] in ("bytes", "lines")), None)
+    if (fired or ("lines" if r.get("class") == "read-mandated" else "bytes")) == "lines":
+        return (f"{r['lines']:,} ln",
+                f"{r['max_lines']:,} ln" if r.get("max_lines") else "—")
+    return (f"{r['bytes']:,} B",
+            f"{r['max_bytes']:,} B" if r.get("max_bytes") else "—")
 
 
 # === CALIBRATE ===
+
+# A fit whose regressor explains less than half the variance in opening context is
+# not a measurement of bytes-per-token — it is the slope of a cloud. The floor is
+# the majority-of-variance line, chosen because it is statable without reference to
+# any one project's result rather than tuned to admit a particular fit. Override per
+# project with "calibrate_min_r2" in the config.
+MIN_R2 = 0.50
+
+_ISO = re.compile(r"^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2}):(\d{2})"
+                  r"(?:\.(\d+))?(Z|z|[+-]\d{2}:?\d{2})?$")
+
+
+def parse_iso(s):
+    """ISO-8601 → aware datetime, or None if it does not parse.
+
+    Timestamps reach this tool from two sources that do not agree on format: git
+    `%cI` emits a numeric offset that moves with the season (`-05:00` and `-04:00`
+    both occur in this repository's own history), while session transcripts end in
+    `Z`. Ordering those AS STRINGS is not chronological — `2026-08-01T19:42:50-05:00`
+    is really `2026-08-02T00:42:50Z` but string-sorts *before* `2026-08-01T21:25:28Z`,
+    which scores that session against the wrong file size. Every comparison in this
+    section is therefore between aware datetimes.
+
+    A timestamp carrying no offset at all is read as UTC. That is an assumption, not
+    a measurement — neither real source emits one — and it is stated here rather than
+    left to whatever a comparison happened to do with it.
+    """
+    m = _ISO.match(s.strip()) if s else None
+    if not m:
+        return None
+    y, mo, d, h, mi, sec, frac, off = m.groups()
+    micro = int(frac.ljust(6, "0")[:6]) if frac else 0
+    tz = timezone.utc
+    if off and off not in ("Z", "z"):
+        digits = off[1:].replace(":", "")
+        tz = timezone((1 if off[0] == "+" else -1)
+                      * timedelta(hours=int(digits[:2]), minutes=int(digits[2:4])))
+    try:
+        return datetime(int(y), int(mo), int(d), int(h), int(mi), int(sec), micro, tz)
+    except ValueError:
+        return None                      # e.g. month 13 — matched the shape, not a date
+
+
+def size_history(root, target, first_parent=True):
+    """(history, skipped, error) — `target`'s size over time on ONE line of development.
+
+    `git log -- <path>` walks ALL merged ancestry. On a repository that has merged
+    another lineage of the same file — every fork that syncs an upstream, which is
+    the workflow this methodology documents — two unrelated size series interleave
+    by commit date and "the size of X at time T" stops being a function. Measured on
+    this framework's own fork: all-ancestry yields 54 size records against
+    `--first-parent`'s 42, and the fit's R² falls from 0.81 to 0.05. So this asks the
+    question actually being asked: how large was this file, *here*, on this branch.
+
+    `first_parent=False` exists only so the regression test can exhibit that defect
+    against a fixture repository. Nothing in the tool passes it.
+
+    `skipped` counts commits whose timestamp did not parse, so a silently shrinking
+    sample is reported rather than inferred.
+    """
+    argv = ["git", "log", "--format=%H %cI"]
+    if first_parent:
+        argv.append("--first-parent")
+    argv += ["--", target]
+    rc, log, err = run(argv, cwd=root)
+    if rc:
+        return None, 0, err
+    hist, skipped = [], 0
+    for line in log.split("\n"):
+        if not line.strip():
+            continue
+        sha, _, iso = line.partition(" ")
+        when = parse_iso(iso)
+        if when is None:
+            skipped += 1
+            continue
+        rc2, size, _ = run(["git", "cat-file", "-s", f"{sha}:{target}"], cwd=root)
+        if rc2 == 0 and size.isdigit():
+            hist.append((when, int(size)))
+    hist.sort(key=lambda t: t[0])
+    return hist, skipped, None
+
+
+def size_at(hist, when):
+    """The size in effect at `when` — the last record at or before it, not the nearest.
+
+    Requires `hist` chronologically sorted, which is why it may stop at the first
+    record past `when`: that early exit is only correct under the ordering
+    size_history establishes, and breaking it would break this.
+    """
+    best = None
+    for t, size in hist:
+        if t <= when:
+            best = size
+        else:
+            break
+    return best
+
+
+def linfit(pts):
+    """Ordinary least squares over [(x, y)] → (slope, intercept, r2).
+
+    Returns None when the regressor has no variance: no line is determined, and
+    inventing one would be the same error this tool exists to catch. `r2` is None —
+    never 0.0, never 1.0 — when the response has no variance to explain, because an
+    undefined statistic rendered as a number is indistinguishable from a measured one.
+    """
+    n = len(pts)
+    sx = sum(p[0] for p in pts); sy = sum(p[1] for p in pts)
+    sxx = sum(p[0]**2 for p in pts); sxy = sum(p[0]*p[1] for p in pts)
+    den = n*sxx - sx*sx
+    if den == 0:
+        return None
+    slope = (n*sxy - sx*sy) / den
+    inter = (sy - slope*sx) / n
+    my = sy/n
+    ss_tot = sum((p[1]-my)**2 for p in pts)
+    ss_res = sum((p[1] - (inter + slope*p[0]))**2 for p in pts)
+    return slope, inter, (1 - ss_res/ss_tot if ss_tot else None)
+
+
+def calibration_verdict(slope, r2, floor):
+    """None if the fit supports a bytes-per-token constant, else why it does not.
+
+    Separated from the printing so it can be observed refusing. The slope test is
+    not redundant with the R² test: a tight fit with a NEGATIVE slope has a high R²
+    and still means "more bytes, fewer tokens", whose reciprocal is not a conversion.
+    """
+    if slope is None or slope <= 0:
+        return (f"the slope is {slope:.4f} — more bytes fitting FEWER tokens is not a "
+                f"conversion, and its reciprocal is not bytes-per-token")
+    if r2 is None:
+        return "R² is undefined — opening context never varied, so nothing was explained"
+    if r2 < floor:
+        return (f"R² = {r2:.4f} is below the {floor:.2f} floor — the regressor explains "
+                f"{r2*100:.0f}% of the variance in opening context")
+    return None
+
 
 def calibrate(root, cfg):
     """Re-derive bytes-per-token by regressing each session's opening context against
     the size of the resident file at that moment. Writes nothing. A tool whose thesis
     is 'store a fact as the command that produces it' must not carry its own constant
-    as an unmeasured literal."""
+    as an unmeasured literal.
+
+    It must equally not hand back a constant it cannot support. Below the floor the
+    fit is printed in full and the derived number is REFUSED: printing `1/slope`
+    beside R² = 0.05 with the same confidence as R² = 0.81 is exactly the
+    read-past-it failure (FM #28) this tool was built to interrupt, committed by the
+    tool itself. An adopter has no second instrument to catch it with.
+    """
     slug = "-" + str(Path(root).resolve()).strip("/").replace("/", "-")
     tdir = Path.home() / ".claude" / "projects" / slug
     if not tdir.exists():
         print(f"{CYN}no transcripts at {tdir} — cannot calibrate{R}")
         return WARN
     target = cfg.get("calibrate_against", "CLAUDE.md")
-    rc, log, err = run(["git", "log", "--format=%H %cI", "--", target], cwd=root)
-    if rc:
+    hist, skipped, err = size_history(root, target)
+    if hist is None:
         print(f"{RED}git log failed: {err}{R}")
         return USAGE
-    hist = []
-    for line in log.split("\n"):
-        if not line.strip():
-            continue
-        sha, iso = line.split(None, 1)
-        rc2, size, _ = run(["git", "cat-file", "-s", f"{sha}:{target}"], cwd=root)
-        if rc2 == 0 and size.isdigit():
-            hist.append((iso.strip(), int(size)))
-    hist.sort()
+    if skipped:
+        print(f"{YEL}{skipped} commit timestamp(s) for {target} did not parse and were "
+              f"dropped from the history{R}")
     if len(hist) < 3:
         print(f"{CYN}only {len(hist)} sizes of {target} in history — not enough{R}")
         return WARN
 
-    def size_at(iso):
-        best = None
-        for when, size in hist:
-            if when <= iso:
-                best = size
-        return best
-
-    pts = []
+    pts, undated = [], 0
     for f in sorted(tdir.glob("*.jsonl")):
         first_ts = first_ctx = None
         try:
-            for line in open(f, errors="ignore"):
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    rec = json.loads(line)
-                except ValueError:
-                    continue
-                if first_ts is None and rec.get("timestamp"):
-                    first_ts = rec["timestamp"]
-                u = (rec.get("message") or {}).get("usage") or {}
-                if u:
-                    first_ctx = (u.get("input_tokens", 0) + u.get("cache_read_input_tokens", 0)
-                                 + u.get("cache_creation_input_tokens", 0))
-                    break
+            # `with`, because this loop BREAKS out on the first usage record — one
+            # descriptor per transcript was being left to the garbage collector, and a
+            # project with hundreds of them can exhaust the process limit before the fit
+            # is ever reached.
+            with open(f, errors="ignore") as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        rec = json.loads(line)
+                    except ValueError:
+                        continue
+                    if first_ts is None and rec.get("timestamp"):
+                        first_ts = rec["timestamp"]
+                    u = (rec.get("message") or {}).get("usage") or {}
+                    if u:
+                        first_ctx = (u.get("input_tokens", 0)
+                                     + u.get("cache_read_input_tokens", 0)
+                                     + u.get("cache_creation_input_tokens", 0))
+                        break
         except OSError:
             continue
         if first_ts and first_ctx:
-            s = size_at(first_ts)
+            when = parse_iso(first_ts)
+            if when is None:
+                undated += 1
+                continue
+            s = size_at(hist, when)
             if s:
                 pts.append((s, first_ctx))
+    if undated:
+        print(f"{YEL}{undated} transcript(s) had an unparseable opening timestamp and were "
+              f"dropped{R}")
     if len(pts) < 4:
         print(f"{CYN}only {len(pts)} usable sessions — not enough to fit{R}")
         return WARN
-    n = len(pts)
-    sx = sum(p[0] for p in pts); sy = sum(p[1] for p in pts)
-    sxx = sum(p[0]**2 for p in pts); sxy = sum(p[0]*p[1] for p in pts)
-    den = n*sxx - sx*sx
-    if den == 0:
+    fitted = linfit(pts)
+    if fitted is None:
         print(f"{CYN}no variation in {target} size across sessions — cannot fit{R}")
         return WARN
-    slope = (n*sxy - sx*sy) / den
-    inter = (sy - slope*sx) / n
-    my = sy/n
-    ss_tot = sum((p[1]-my)**2 for p in pts)
-    ss_res = sum((p[1] - (inter + slope*p[0]))**2 for p in pts)
-    r2 = 1 - ss_res/ss_tot if ss_tot else float("nan")
-    print(f"\n  n={n} sessions, regressor = bytes({target})")
-    print(f"  opening_tokens ≈ {inter:,.0f} + {slope:.4f} × bytes      R² = {r2:.4f}")
+    slope, inter, r2 = fitted
+
+    print(f"\n  n={len(pts)} sessions, regressor = bytes({target}), "
+          f"{len(hist)} sizes on this branch")
+    print(f"  opening_tokens ≈ {inter:,.0f} + {slope:.4f} × bytes      "
+          f"R² = {'undefined' if r2 is None else f'{r2:.4f}'}")
+
+    floor = cfg.get("calibrate_min_r2", MIN_R2)
+    refused = calibration_verdict(slope, r2, floor)
+    if refused:
+        print(f"\n  {RED}{B}no constant recommended{R} — {refused},")
+        print(f"  so 1/slope is an artefact of the scatter rather than a measurement.")
+        print(f"\n  {B}What to check, cheapest first:{R}")
+        print(f"    1. Is {target} the right regressor? It has to be BOTH auto-loaded into")
+        print(f"       every session AND actually varying in size over the window. Set")
+        print(f'       "calibrate_against" in {CONFIG_NAME}.')
+        print(f"    2. Does this project's opening context come mostly from elsewhere —")
+        print(f"       other resident files, tool schemas, agent-level memory? Then no")
+        print(f"       single file's byte count will track it, and none should be expected to.")
+        print(f"    3. Did {target} really vary here? {len(hist)} recorded sizes on this branch.")
+        print(f"\n  {D}the fit is printed above in full so you can judge it yourself; "
+              f"nothing was written{R}\n")
+        return WARN
+
     print(f"  ⇒ {1/slope:.2f} bytes/token   (config carries {cfg.get('bytes_per_token')})")
     print(f"  ⇒ fixed harness floor ≈ {inter:,.0f} tokens\n")
     print(f"  {D}writes nothing — edit {CONFIG_NAME} yourself if you want to adopt these{R}\n")
@@ -584,6 +759,63 @@ def selftest(root, cfg):
 
     rc, _, _ = run(["definitely-not-a-real-binary-xyz"])
     check("a missing binary surfaces as rc=127, never as empty success", rc == 127)
+
+    # --- calibration: the comparisons, the arithmetic, and the gate on the result ---
+    # This exact pair is the one this framework's own repository was mis-fitted on.
+    # The second check is the CONTROL: it asserts the string comparison really does
+    # give the wrong answer here, so the first check is not passing for free.
+    early = parse_iso("2026-08-01T19:42:50-05:00")        # = 2026-08-02T00:42:50Z
+    later = parse_iso("2026-08-01T21:25:28Z")
+    check("a -05:00 stamp later in UTC compares as later", early > later)
+    check("...and comparing that same pair AS STRINGS is the wrong answer",
+          "2026-08-01T19:42:50-05:00" < "2026-08-01T21:25:28Z")
+    check("both offset signs land on the same instant",
+          parse_iso("2026-08-01T19:42:50-05:00") == parse_iso("2026-08-02T02:42:50+02:00"))
+    check("fractional seconds with Z parse", parse_iso("2026-08-01T21:25:28.417Z") is not None)
+    check("a non-timestamp is None, never a silent default", parse_iso("not-a-date") is None)
+    check("date-shaped but impossible is None too", parse_iso("2026-13-01T00:00:00Z") is None)
+
+    h = [(parse_iso("2026-01-01T00:00:00Z"), 100), (parse_iso("2026-01-03T00:00:00Z"), 300)]
+    check("size_at gives the size in EFFECT, not the nearest record",
+          size_at(h, parse_iso("2026-01-03T18:00:00Z")) == 300
+          and size_at(h, parse_iso("2026-01-02T18:00:00Z")) == 100)
+    check("size_at before all history is None, never the first size",
+          size_at(h, parse_iso("2025-06-01T00:00:00Z")) is None)
+
+    f = linfit([(x, 3*x + 7) for x in (1, 2, 3, 4)])
+    check("linfit recovers a known slope and intercept exactly",
+          f and abs(f[0]-3) < 1e-9 and abs(f[1]-7) < 1e-9 and abs(f[2]-1) < 1e-9)
+    check("linfit refuses a regressor with no variance", linfit([(5, 1), (5, 2), (5, 3)]) is None)
+    f = linfit([(1, 9), (2, 9), (3, 9)])
+    check("R² is undefined — not 1.0 — when the response never varies", f and f[2] is None)
+    f = linfit([(1, 50), (2, 10), (3, 90), (4, 20)])
+    check("a scatter fits with a low R²", f and f[2] < MIN_R2)
+
+    check("a fit above the floor is accepted", calibration_verdict(0.36, 0.81, MIN_R2) is None)
+    check("a fit exactly AT the floor is accepted",
+          calibration_verdict(0.36, MIN_R2, MIN_R2) is None)
+    check("a low-R² fit is refused, however confident the number looks",
+          calibration_verdict(0.07, 0.05, MIN_R2) is not None)
+    check("a NEGATIVE slope is refused however good the fit",
+          calibration_verdict(-0.36, 0.99, MIN_R2) is not None)
+    check("an undefined R² is refused, not treated as perfect",
+          calibration_verdict(0.36, None, MIN_R2) is not None)
+
+    # The ledger row must name the ceiling that fired. A read-mandated file over its
+    # BYTE ceiling reported as `359 ln / 1,200 ln` points at the ceiling that did not.
+    row = {"class": "read-mandated", "lines": 359, "max_lines": 1200,
+           "bytes": 72449, "max_bytes": 65536, "status": "over",
+           "findings": [{"kind": "bytes", "msg": "x"}]}
+    check("the row shows the ceiling that fired, not the class default",
+          ledger_dimension(row) == ("72,449 B", "65,536 B"))
+    check("with nothing fired, a read-mandated row still reports lines",
+          ledger_dimension({**row, "findings": [], "status": "ok"}) == ("359 ln", "1,200 ln"))
+    check("an undeclared ceiling renders as — rather than crashing",
+          ledger_dimension({"class": "resident", "bytes": 10, "lines": 1,
+                            "findings": []}) == ("10 B", "—"))
+
+    check("the byte remedies name no directory from the tool's home project",
+          not any(s in REMEDIES["bytes"][0][1] for s in ("server/", "mobile/", "database/")))
 
     check("--force is not offered", "--force" not in open(__file__).read()
           .split("def selftest")[0])

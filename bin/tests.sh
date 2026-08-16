@@ -254,6 +254,15 @@ if python3 "$METHODOLOGY/tools/test_methodology_trim.py" >/dev/null 2>&1; then
 else
     fail "ledger trimmer unit tests failed"
 fi
+# Same argument as the trimmer's, one tool over (BL-38). Test 35 below covers the budget
+# gate's install/sync/selftest surface; until this line its `calibrate()` had no test of
+# its ARITHMETIC at all, and returned noise on any repo that had merged another lineage of
+# its regressor while every row here stayed green.
+if python3 "$METHODOLOGY/tools/test_context_budget.py" >/dev/null 2>&1; then
+    pass "context budget gate unit tests green"
+else
+    fail "context budget gate unit tests failed"
+fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
 diff -q "$METHODOLOGY/tools/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null \
