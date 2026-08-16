@@ -40,6 +40,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-11.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ```handoff
+session: S93
+date: 2026-08-16
+status: pending
+active_task: BL-36 -- repair the GENERATED `.verify.sh` losslessness proof so it stops reporting FAIL over archives S88 measured to be intact. S88's audit (`docs/audits/2026-08-15-bl36-archive-losslessness.md`) answered the question (0 records lost across all six trims; 0 of 228 identities unreachable at HEAD) and located the fault entirely in the proof, but did NOT repair it. THE REPAIR DEPARTS FROM THE AUDIT'S LITERAL RECOMMENDATION 2, AND THE DEPARTURE IS STATED AT CLAIM TIME RATHER THAN DISCOVERED AT CLOSE-OUT. Rec 2 says "make `injected` a measured count". Two `injected` sites exist and only one is broken: `starter-kit/methodology_trim.py:1736` feeds the tool's OWN in-memory assertion and is already correct, because the tool injects exactly 0 or 1 entries and knows which; `:1715` is baked as a constant into the EXPORTED script, which re-derives from git at the trim commit, where the session may have added other records to the same ledger. A proof cannot compute that count from the very difference it is about to assert on without its operands being derived from each other -- an identity that cannot fail (Learning #16). So the positional frame at `:1192` (`ar_cmp = ar[INJ:]`) is replaced rather than re-parameterized: assert by RECORD MULTISET (every pre-trim record still present byte-identically in `live` union inverted `shard`), report commit-added records as a NOTE, and add an ORDER-SUBSEQUENCE check so a reordering is still caught. This is STRICTLY STRONGER for the loss question than what ships today, which is the argument that justifies changing BL-27's deliberate "bundling stays a loud FAIL" choice: BL-27 kept it red because "a real loss can have this exact shape too", and under multiset matching it cannot -- a lost record is a missing record regardless of what else the commit added. CARVE-OUT, DECLARED NOW: this session EDITS A DISTRIBUTED FILE by design (`starter-kit/methodology_trim.py`, `bin/_manifest.py`) -- that is the item -- plus `tools/test_methodology_trim.py` (canonical-only) for the RED-first regression evidence, and the append-only `starter-kit/FRAMEWORK_LEARNINGS.md` row if Phase 3C yields a framework-level learning. THE FOUR FROZEN PROOFS ARE NOT REPAIRED HERE: the operator chose "decide now, execute next session", so their disposition is RECORDED in BL-36 and executed separately -- regenerating four archive artifacts is a second capability, not a layer of this one (FM #26). NO OUTWARD-FACING ACTION: no PR, no push, no issue, no comment, no tag. Prepared and vetted fork-side and STOPS there.
+```
+<!-- claim stub written at session start; reconciled at close-out -->
+
+```handoff
 session: S92
 date: 2026-08-15
 status: complete
