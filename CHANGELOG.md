@@ -169,6 +169,13 @@ session moved — not an adjacent cleanup. The remedy is `Compute`, not a fresh 
 now ships with `grep -c '^```handoff' HANDOFFS.md` beside it. This is the receipt-ledger half of
 upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65) and remains open as a *guard*.
 
+### 2026-08-15 · [ad hoc] S92's own receipt repaired — issue #75 was one day old, not "nine days"
+
+Caught on re-reading, after the close-out commit `7f565d3`. The figure was never derived: #75 was
+created `2026-08-14T04:17:48Z` and S92 ran 2026-08-15. Corrected in place to the filing date plus
+its interval, so the claim carries its own arithmetic. Nothing else in the receipt depended on it —
+the disposition (prepared fork-side, no outward action) turns on the standing rule, not on age.
+
 ### 2026-08-15 · [ad hoc] S92 close-out — receipt written, self-score 8/10, predecessor S91 scored 9/10; see the `[issue #75]` entry below for the substantive work
 
 Claim commit `a744218` (Phase 1B), deliverable `b1b7eaf`, this close-out. **The claim stub was
