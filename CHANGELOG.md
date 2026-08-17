@@ -159,6 +159,64 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-16 · [ad hoc] S94 close-out — receipt written, self-score 8/10, predecessor S93 scored 9/10; see the trim entry below for the substantive work
+
+Also in this commit: **Framework Learning #31** (30 rows, `#14` still reserved) — *a test that reads
+its own fixture anchors from a live artifact is coupled to that artifact's SIZE, and the tool that
+shrinks the artifact cannot see the coupling* — and **BL-40** raised in
+[`docs/planning/BACKLOG.md`](https://github.com/rmsharp/methodology/blob/main/docs/planning/BACKLOG.md).
+
+**Why this trim's proof passes when the two before it do not, and it is not the tool.** Both
+previously shipped `HANDOFFS` proofs are red because each of those trim commits finalized its own
+frontier receipt *inside* the trim, editing a record that existed at `TRIM^` and whose pre-trim bytes
+then exist nowhere. S93's v1.2.0 made a commit's **added** records tolerable and deliberately did not
+excuse an **edited** one. So the commit shape was declared at claim time and held: this receipt
+stayed `status: pending` across the trim commit and was finalized only afterwards, where a frozen
+proof — which reads all three artifacts from the trim commit by design — cannot see it. The proof
+reports `added by the trim commit: 0`. This is audit recommendation 3's discipline *followed*; the
+rule itself is still unwritten.
+
+**The trimmer's P1 guard re-ordered the session, correctly** — see the claim entry below. The order
+trimming forces is **claim → record → trim → close-out**.
+
+**The first trim was wrong, and the suite caught it — the session's other finding.** Taken at the
+tool's budget-driven default it retained **2** receipts and made five of `bin/tests.sh` Test 34's
+assertions vacuous (**235 passed / 1 failed → 229 / 6**). Test 34 reads its mutation anchors as
+`ids[1]`/`ids[2]` of the live ledger (`bin/tests.sh:2103`), deliberately not hardcoded so it survives
+*which* receipts rotate — and silent about *how many* must survive. It was visible only because the
+harness reports `mutation was vacuous` as an outcome distinct from *survived*. That commit was
+unwound with `git reset --soft` plus targeted `restore`/`checkout` — never `--hard`, with two
+inherited dirty `.jsonl` files in the tree — and re-taken at `--cut 3`.
+
+**Retention chosen against both constraints, with the numbers.** Receipts here run 10–13.5 KB
+(S91 13,553 B; S92 13,091 B; S93 11,917 B):
+
+| retained | live size | headroom | Test 34 |
+|---|---|---|---|
+| 2 (tool default) | 21,231 B | 44,305 B | **vacuous** |
+| **3 (taken)** | **38,071 B** | **27,465 B** (~2 sessions) | satisfied exactly |
+| 4 | 56,222 B | 9,314 B | satisfied, < 1 receipt of room |
+
+**The coupling is avoided, not fixed** — the next default-cut trim re-breaks Test 34. Raised as
+BL-40 with two candidate fixes; the recommended one (make Test 34 skip with a stated reason below
+three receipts) is canonical-only and was **not** implemented or tested here. A `--cut 3` floor
+warning now sits in `HANDOFFS.md`'s own front matter, whose stale retained-count attribution was also
+repaired — the trim regenerates that number but left the credit reading `S92, 2026-08-15`.
+
+Proof driven RED before committing, the only window in which it can see a working-tree change:
+record deleted → `MISSING: session: S89`/`S88`; pure reorder with the record multiset asserted
+identical → `L3 record(s) out of order across the move: [3, 4]`. Every restore `cmp`-verified against
+backups held outside the repo. The FM #28 gate now reads `HANDOFFS.md` **ok**; `CHANGELOG.md` and
+`docs/planning/BACKLOG.md` remain over and were deliberately not touched (FM #17).
+
+**One carve-out breach, recorded rather than dressed up.** The Phase 1B claim declared **zero
+distributed files**. Phase 3C is a mandatory close-out step and its only home is
+`starter-kit/FRAMEWORK_LEARNINGS.md`, which `bin/_manifest.py` distributes. The learning was kept —
+skipping a mandatory step to protect a self-imposed scope note is the wrong trade, and the edit is
+append-only and purely local, so no operator gate is involved — but the claim should have
+pre-declared the contingency, as S93's did. Verified mechanically at close-out: 26 manifest rows,
+6 files changed, **one** distributed.
+
 ### 2026-08-16 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-15.md` (8 record(s), 141,085 B → 38,071 B)
 
 **Written by:** `methodology_trim.py` v1.2.0 — a tool action, not a session's judgment.

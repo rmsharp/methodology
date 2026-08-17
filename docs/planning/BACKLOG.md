@@ -7,7 +7,8 @@ as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md))
 This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
-BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39.**
+BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
+BL-40.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -1060,6 +1061,42 @@ for cause; sequenced.
 *"5-item"* and the checklist is now 7. It is **correct as written**: it sits under
 **"### What's New in v1.2"**, frozen release notes where 5 was the count as shipped. Editing it
 would falsify the history, and it is not a live claim. S92 verified the heading before leaving it.
+
+**BL-40 — a `HANDOFFS.md` trim taken at the trimmer's default cut silently makes five of Test 34's
+assertions vacuous.** Raised 2026-08-16 by S94, which hit it, avoided it, and deliberately did not
+fix it — the fix lands in a distributed file, and S94's carve-out declared zero.
+
+`bin/tests.sh` Test 34 mutates the live `HANDOFFS.md` to check `bin/check-handoff --all`'s
+whole-ledger invariants. It reads its two mutation anchors at run time as `ids[1]` and `ids[2]`
+(`bin/tests.sh:2103`) rather than hardcoding session numbers, and its own comment says why: *"this
+fork's own sequence has moved on and periodically archives — a literal id here would itself go
+vacuous the next time the ledger rotates."* That reasoning is right about **which** receipts rotate
+and silent about **how many** survive. `starter-kit/methodology_trim.py`'s cut is budget-driven; on
+this file it retained **2**, `ids[2]` raised `IndexError`, both anchors came back empty, and every
+mutation regex matched nothing. Result: `orphaned-receipt`, `duplicate-identity`, `merged-sequence`,
+`key-order` and `older-pending` all reported **`mutation was vacuous`** and the suite went
+**235 passed / 1 failed → 229 / 6**.
+
+**The harness behaved correctly and is the only reason this was visible** — `mutate` distinguishes
+did-not-apply from survived, exactly the discipline
+[`starter-kit/FRAMEWORK_LEARNINGS.md`](../../starter-kit/FRAMEWORK_LEARNINGS.md) records. Had it
+folded the two together, a trim would have quietly converted five real assertions into five green
+no-ops.
+
+**S94's disposition: `--cut 3`, chosen against both constraints with the numbers stated.** Receipts
+here run 10–13.5 KB (S91 13,553 B; S92 13,091 B; S93 11,917 B), so retention trades headroom against
+testability: **2** → 21,231 B live, Test 34 vacuous; **3** → 38,071 B, 27,465 B headroom (~2
+sessions), Test 34 satisfied exactly; **4** → 56,222 B, 9,314 B headroom, under the ceiling by less
+than one receipt. A warning naming the `--cut 3` floor is now in `HANDOFFS.md`'s own front matter.
+
+**Two candidate fixes; neither taken, and they are not equivalent.** (a) A **retained-records floor**
+in `starter-kit/methodology_trim.py` — but the trimmer has no business knowing a *test's* fixture
+requirements, and the floor would ship to every adopter, none of whom run Test 34. (b) Rewrite Test
+34 to **skip with an explicit reason** when the live ledger holds fewer than three receipts, and
+assert that population is non-empty — canonical-only, no adopter impact, and it converts a silent
+vacuum into a stated skip. **(b) looks right**; it is recorded rather than taken because it is a
+second capability (FM #26). Note (b) alone does not stop a future default trim from cutting to 2 —
+it only stops that from being silent, which is the property actually worth having.
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
