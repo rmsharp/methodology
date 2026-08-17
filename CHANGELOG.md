@@ -163,6 +163,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] A stale figure in S95's own receipt corrected — the `**Model:**` carrier count, 2 → 6
+
+The receipt's `next_steps` (b) gave the live carrier population as **2**, measured immediately after
+the trim and already wrong by close-out: this session's four close-out entries each carry a
+`**Model:**` bullet, so the true figure is **6**. Caught by the final `bin/tests.sh` run, where Test
+31's real-file row moved 2 → 6 and stayed green because it asserts an equality rather than a level.
+
+This is the same defect class this session's Phase 3A deducted its predecessor for — a number that
+was true when written and false when read. The corrected line now carries the command that re-derives
+it rather than only the value: `grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md`.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] `HANDOFFS.md`'s unguarded receipt count corrected — 3 → 4, one close-out after the trim that set it
 
 [`HANDOFFS.md:8`](HANDOFFS.md) read **3** while the file held **4**. Not a new defect and not a
