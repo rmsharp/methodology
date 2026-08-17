@@ -40,6 +40,13 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-11.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ```handoff
+session: S94
+date: 2026-08-16
+status: pending
+active_task: Trim `HANDOFFS.md` back under its 65,536 B ceiling with a losslessness proof that actually PASSES. It measures 138,932 B — 2.1x the ceiling, the worst of the three over-ceiling ledgers — and the FM #28 growth run is now 10/10 (7 at S91, 8 at S93's Phase 0, 9 at its close). THE COMMIT SHAPE IS THE DELIVERABLE'S LOAD-BEARING PART AND IS DECLARED HERE, NOT DISCOVERED AT CLOSE-OUT. S93's v1.2.0 made a trim commit's ADDED records tolerable, but an EDITED record is still a genuine loss of its pre-trim bytes, and that — not a tool defect — is why both shipped `HANDOFFS` proofs are correctly red: each of those trim commits finalized its own frontier receipt inside the trim, editing a record that existed at TRIM^. So this session commits in THREE parts, claim -> trim -> close-out: (C1) this stub; (C2) THE TRIM ALONE — live `HANDOFFS.md`, the new shard, its `.verify.sh`, and the FM #27 ledger line, nothing else; (C3) close-out, which overwrites THIS stub to `status: complete`. At C2 the stub is `pending` in both TRIM^ and TRIM and is untouched by the trim, so no record is edited; C3's overwrite lands AFTER the proof is frozen, and a frozen proof reads all three artifacts from the trim commit by design, so it cannot see a later edit. THIS IS AUDIT REC 3'S DISCIPLINE FOLLOWED, NOT AUDIT REC 3 WRITTEN — the protocol rule itself is a distributed-doc change and a SECOND capability (FM #26); it is not in this session's scope and is not being taken here. `--cut <date>` WILL NOT BE USED: this ledger is not date-monotonic (two session sequences with colliding numbers share it, and fork receipts precede same-date upstream ones), so a date cut is unsafe here by the tool's own caveat. CARVE-OUT: ZERO DISTRIBUTED FILES. Root `HANDOFFS.md` is this repo's own record; the distributed seed is `starter-kit/HANDOFFS.md` (`bin/_manifest.py:58`) and is NOT touched. To be verified at close-out by set-comparing `git diff --name-only` against the manifest, both populations asserted non-empty. NO OUTWARD-FACING ACTION: no PR, no push, no issue, no comment, no tag.
+```
+
+```handoff
 session: S93
 date: 2026-08-16
 status: complete
