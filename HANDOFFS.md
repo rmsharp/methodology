@@ -57,6 +57,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-15.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ```handoff
+session: S95
+date: 2026-08-17
+status: pending
+active_task: Trim `CHANGELOG.md` back under its 65,536 B ceiling (83,860 B at claim, over by 18,324) with a losslessness proof that PASSES. PRE-DECLARED COMMIT SHAPE, because it is the load-bearing part and declaring it at close-out would be worthless: claim -> record the claim -> **trim ALONE** -> close-out. A trim commit that also finalizes its own receipt EDITS a record that existed at TRIM^, whose pre-trim bytes then exist nowhere; that is why 4 of this repo's 7 shipped proofs are red, and why S94's standalone trim produced the first green one. PRE-DECLARED CUT: BY COUNT, never by date -- `--cut N` is the number of records to RETAIN (`starter-kit/methodology_trim.py:858` `_explicit_retain`), and this ledger is NOT date-monotonic (2026-08-16 x4, 08-15 x1, 08-16 x1, 08-15 x31, 08-12 x3), so no date key names the boundary. I intend to take the tool's budget-driven DEFAULT (retain 12 of 40 -> 30,634 B, satisfying the seed's stated stop condition of <= 1/2 x budget = 32,768 B) rather than override it -- but only because I audited the couplings FIRST and the default clears every floor they impose. FLOORS MEASURED BEFORE CUTTING, not after: `bin/tests.sh:1886` (Test 30) requires a NON-EMPTY `**Model:**` population in the live file and the only surviving bullets are in records #4 and #13, so N >= 4; `.context-budget.json`'s structure guard requires >= 5 records. Every achievable cut STRADDLES a calendar day (the tool says so itself, `CUT_STRADDLES_DAY`); the only non-straddling seam is 74,753 B, over budget. CARVE-OUT: zero distributed files, EXCEPT `starter-kit/FRAMEWORK_LEARNINGS.md` if Phase 3C yields a framework learning -- that is a MANDATORY close-out step whose only home is a distributed file, and the exception is declared NOW because S94 declared "zero distributed files" without checking it against Phase 3C and then broke it. NO OUTWARD-FACING ACTION: no PR, no push, no issue, no comment, no tag.
+```
+<!-- claim stub written at session start; completed at close-out -->
+
+```handoff
 session: S94
 date: 2026-08-16
 status: complete
