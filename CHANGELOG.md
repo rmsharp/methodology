@@ -163,6 +163,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] `HANDOFFS.md` crossed its byte ceiling this session — recorded, with the residual shown to be structural
+
+74,683 B against 65,536 B. It entered this session at **53,272 B**, under the ceiling, so this is
+S95's doing: the S95 receipt is 20,146 B, the largest of the four (S94 16,136; S92 16,840; S93 15,160).
+
+**The residual is structural, not one session's appetite.** Four receipts now average ~17 KB, so
+65,536 B cannot hold four at current sizes. S94's stated "~2 sessions of headroom" was computed from a
+10–13.5 KB per-receipt distribution that its own 16,136 B receipt already exceeded — a headroom figure
+derived from a stale distribution, which is [Learning #12](starter-kit/FRAMEWORK_LEARNINGS.md)'s shape
+applied to a rate rather than a count.
+
+Self-reduction was attempted and is reported honestly rather than claimed as a fix: `active_task`
+compacted 2,699 → 1,660 B, then 1,313 B deliberately spent making `next_steps` (a) executable on the
+breach — a net **+274 B**. Shaving prose could not have cleared 8,026 B without gutting the handoff.
+
+**The trim that is owed has a constraint the tool's default violates:** `--cut 3`, not the default,
+because `bin/tests.sh:2103` reads its mutation anchors as `ids[1]`/`ids[2]` of the live file (BL-40,
+unfixed). Retaining 3 lands ≈52 KB — under the ceiling, above the ≤ ½ × budget stop condition, and **no
+cut satisfies both**: retaining 2 would satisfy the stop condition and break Test 34. That tension is
+BL-40's to resolve, and it is named rather than silently decided.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] A stale figure in S95's own receipt corrected — the `**Model:**` carrier count, 2 → 6
 
 The receipt's `next_steps` (b) gave the live carrier population as **2**, measured immediately after
