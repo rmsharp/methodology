@@ -159,6 +159,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-16 · [ad hoc] S94 claimed — `HANDOFFS.md` trim, recorded before the trim because the trimmer's own P1 guard refuses otherwise
+
+Commit `1ac90ac`, the Phase 1B claim stub. Recorded here **now, mid-session**, rather than at
+close-out where a claim commit is normally folded into the session's substantive entry — because
+this session's deliverable is a trim, and `methodology_trim.py`'s **P1_UNDOCUMENTED** guard refused
+the dry run while this commit sat above the ledger frontier:
+
+> the undocumented set is non-empty (1 commit(s) since the ledger frontier `5c8620c`). A trim commit
+> advances that frontier and would hide them PERMANENTLY. Reconcile first, then trim.
+
+The guard is right, and the mechanism is worth stating because it is not obvious: a trim rewrites
+`CHANGELOG.md`, so `git log -1 -- CHANGELOG.md` becomes the trim commit, and Phase 0's
+`frontier..HEAD` undocumented set silently loses everything that preceded it. The ordering this
+forces is **claim → record → trim → close-out**, and it is a property of trimming specifically, not
+a change to the general close-out rule.
+
+Deliverable and pre-declared commit shape are in the receipt (`HANDOFFS.md`, S94). No distributed
+file is touched; no outward-facing action.
+
 ### 2026-08-16 · [BL-36] The archive losslessness proof stopped inferring what the trim commit added — `methodology_trim.py` v1.2.0
 
 Four of six shipped `.verify.sh` proofs reported FAIL over archives S88 had already measured
