@@ -159,6 +159,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.1.3.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] S95 claimed — `CHANGELOG.md` trim, recorded before the trim because the trimmer's own P1 guard refuses otherwise
+
+Claim commit `a35a14f` (`HANDOFFS.md` receipt, `status: pending`). Recorded here as its own action
+before any technical work, because `methodology_trim.py`'s P1 guard refused the trim outright while
+this commit sat above the ledger frontier:
+
+> `[P1_UNDOCUMENTED]` the undocumented set is non-empty (1 commit(s) since the ledger frontier
+> `defe66a`). A trim commit advances that frontier and would hide them PERMANENTLY.
+
+That is not an inconvenience to route around — a trim rewrites this file, so `git log -1 -- CHANGELOG.md`
+would advance past the claim and Phase 0's `frontier..HEAD` set would lose it for good. The order
+trimming forces is **claim → record → trim → close-out**, exactly as S94 recorded it.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-16 · [ad hoc] S94 close-out — receipt written, self-score 8/10, predecessor S93 scored 9/10; see the trim entry below for the substantive work
 
 Also in this commit: **Framework Learning #31** (30 rows, `#14` still reserved) — *a test that reads
