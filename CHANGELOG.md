@@ -163,6 +163,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] `HANDOFFS.md`'s unguarded receipt count corrected — 3 → 4, one close-out after the trim that set it
+
+[`HANDOFFS.md:8`](HANDOFFS.md) read **3** while the file held **4**. Not a new defect and not a
+surprising one: the blockquote directly below that line predicts this exact span — the count is a
+field `methodology_trim.py` regenerates at a **trim**, and nothing updates it when a session
+**prepends** a receipt, so it is right immediately after a trim and wrong from the next close-out
+onward. S95's own close-out was that next close-out, so this session created the drift it is
+repairing. Prior occurrence: the line read **6** from `7a71df0` for three sessions.
+
+The stale attribution went with it — the sentence credited the S94 trim for a number that trim no
+longer determined. Every other figure in it was re-derived rather than carried: 19 archived receipts,
+2026-07-08 → 2026-07-30, both confirmed against `docs/archive/HANDOFFS-archive.md`.
+
+Still **not** mechanized — this is a hand correction of a hand-maintained number, which is the
+half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65) that remains open.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-17 · [ad hoc] The two tracked telemetry ledgers committed — 16 append-only rows that had accumulated uncommitted
+
+`.context-budget-history.jsonl` (12 rows) and `dashboard_history.jsonl` (4 rows). Both are tracked
+**deliberately** — `.gitignore` states the reason for each: they are append-only and non-regenerable,
+and `context_budget.py`'s growth-run trigger *reads* the series, so it must survive a fresh clone.
+Sixteen rows living only in one working tree defeats precisely that. Same action, same reasoning, as
+`2026-08-15 · [ad hoc] dashboard_history.jsonl committed` (now in
+[`docs/archive/CHANGELOG-through-2026-08-15.md`](docs/archive/CHANGELOG-through-2026-08-15.md)).
+
+**Whose rows these are, stated rather than glossed:** 13 of the 16 are inherited, spanning the S87–S94
+era — `HANDOFFS.md` at 21,231 B and 38,071 B, S94's two trims, are visible in the series. **3 are this
+session's**, written merely by orienting and verifying: a Phase 0 dashboard snapshot and two budget
+measurements, the last of which is the first row in the series to record `CHANGELOG.md` at 31,539 B.
+
+**The underlying gap is NOT fixed.** No protocol step owns writing these files, which is why the diff
+accumulated across at least four sessions and three receipts flagged it. This commits the data; it
+does not assign the ownership. A session that runs the Phase 0 dashboard dirties the tree and no
+close-out step tells it what to do about that.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] S95 close-out — receipt written, self-score 8/10, predecessor S94 scored 9/10; see the trim entry below for the substantive work
 
 Also in this commit: **Framework Learning #32** (31 rows, `#14` still reserved) — *a count-based cut
