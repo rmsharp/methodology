@@ -163,6 +163,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] S95 close-out — receipt written, self-score 8/10, predecessor S94 scored 9/10; see the trim entry below for the substantive work
+
+Also in this commit: **Framework Learning #32** (31 rows, `#14` still reserved) — *a count-based cut
+cannot see a content-population floor, and whether it trips is a fact about your data's layout rather
+than an invariant*.
+
+**The deliverable, stated as a measurement:** `CHANGELOG.md` 84,765 B → **31,539 B** (−62.8%), under
+both the 65,536 B ceiling and the seed's stated stop condition of ≤ ½ × budget (32,768 B). The FM #28
+gate now reads this file **ok**; `docs/planning/BACKLOG.md` (104,530 B) remains the only breach and was
+not touched (FM #17).
+
+**What made the proof pass, and it is the commit shape rather than the tool.** The trim commit
+`c3d68c5` contains the trim and nothing else; this receipt stayed `status: pending` across it and is
+finalized only here. The frozen proof reports `added by the trim commit: 1` — the trimmer's own ledger
+entry, which v1.2.0 excuses as an *added* record — and passes. This repo now holds **8** shipped
+proofs, **4 passing**; the 4 reds are BL-36's untouched frozen residual, unchanged by this session.
+
+**The audit S94 flagged as owed, done: `CHANGELOG.md` has six readers that are not human.** Two are
+safe by prior hardening (`bin/tests.sh:1751` reads live **+** archives since S87; `:1788` reads the
+front matter, which a trim preserves). One is **binding**: `:1886` requires a non-empty `**Model:**`
+population, and the only carriers were records #4 and #13 of 41 — an unstated floor of N ≥ 4 that no
+count check would surface. A second, separate floor is a count: `.context-budget.json`'s structure
+guard wants ≥ 5 records. The tool's default retained 13 and cleared both, so it was taken
+rather than overridden — the opposite decision from S94's, reached by the same method. One reader
+*cannot* break by construction and it is worth naming: `bin/check-handoff`'s `changelog_ref` rule is a
+**prohibition on line numbers**, not a resolution check — which is exactly why the field quotes
+headings.
+
+**`CUT_STRADDLES_DAY` was accepted, not overlooked.** The tool flags that the shard name is a span
+label rather than a day boundary. That is unavoidable here, and it was proven so rather than assumed:
+the date sequence is `08-16×4, 08-15×1, 08-16×1, 08-15×31, 08-12×3`, and the only non-straddling seam
+sits at 74,753 B — over the ceiling.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-17 · [ad hoc] Framework Learning #32 appended — a count-based cut cannot see a content-population floor
+
+Appended to [`starter-kit/FRAMEWORK_LEARNINGS.md`](starter-kit/FRAMEWORK_LEARNINGS.md) (DISTRIBUTED;
+55,193 → 57,964 B, leaving **2,036 B** under its 60,000 B ceiling — one more row of this size breaches
+it). Sibling of Learning #31: #31's coupling is *dimensional* (a fixture needs at least three records,
+so a count check finds it), while #32's is *content* — which records survive, not how many. A
+positional trimmer has no vocabulary for "retain at least one record satisfying P", and a dry run
+reports bytes and counts, the exact quantities such a floor is invisible to.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-15.md` (28 record(s), 84,765 B → 31,539 B)
 
 **Written by:** `methodology_trim.py` v1.2.0 — a tool action, not a session's judgment.
