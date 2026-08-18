@@ -163,6 +163,50 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [BL-40] Test 34's mutation anchors become an asserted population with a stated skip — six assertions could vanish, not five
+
+`bin/tests.sh` Test 34 read its two mutation anchors as `ids[1]`/`ids[2]` of the live `HANDOFFS.md`.
+Below three receipts `ids[2]` raised `IndexError`, both anchors resolved to empty, and the
+anchor-dependent assertions stopped asserting. Option **(b)** of BL-40, taken as recorded and as
+[Learning #31](starter-kit/FRAMEWORK_LEARNINGS.md) itself prescribes: assert the population, skip
+with a stated reason below the floor.
+
+**Canonical-only.** `bin/_manifest.py` exposes 26 SOURCE rows (asserted non-empty) and none under
+`bin/`; no adopter receives this. Option (a) — a retained-records floor in the distributed trimmer —
+stays declined: the trimmer has no business knowing a test's fixture requirements.
+
+**What changed.** `handoff_anchors` returns `<count> <A1> <A2>` and cannot raise;
+`anchor_disposition` routes that count to MALFORMED / EMPTY / SHORT / ANCHORED, with the
+non-numeric arm FIRST so a garbled count cannot fall through to the permissive default. The SHORT
+arm emits six `SKIP` rows, each naming the assertion it replaces and the reason. A new `skip()`
+primitive counts separately from `pass()`, and the summary line now reads
+`N passed, M failed, K skipped` — **a format change, announced at claim**, because every receipt in
+`HANDOFFS.md` compares suite output row-for-row against a predecessor baseline.
+
+**RED first, against copied fixtures — the live ledger was never truncated.** The pre-change body,
+extracted verbatim and replayed at 1/2/3/4 receipts: **2 passed / 5 failed** below the floor,
+**8 / 0** at or above it. After: **11 / 0 / 6 skipped** and **17 / 0 / 0**. A 0-receipt ledger still
+FAILS — corruption is not rotation.
+
+**This item's own count was low, and the correction is the session's learning.** BL-40 and Learning
+#31 both said *five* assertions stopped asserting. **Six** did. The sixth sat in the then-branch of
+a failed `if mutate` guard and emitted no row at all — not a pass, not a fail. The published
+arithmetic carried the discrepancy in plain sight (235 → 229 passes is six fewer, against five new
+failures) and nobody subtracted. Recorded as **Learning #33**.
+
+**Verification.** 9-mutant round on the new guards, **9/9 killed**, unmutated control green — each
+mutant verified to APPLY first, so did-not-apply stayed distinct from survived. Killed mutants
+include both silent-vacuum reinstatements: a renamed `SHORT)` arm (reads as 0 skip rows) and a
+non-numeric count routed permissively. Full suite **247 passed / 1 failed / 0 skipped**, diffed
+row-for-row against a 236-row pre-change baseline: **zero rows lost**, 13 added (12 new controls
+plus Test 31's `**Model:**` equality moving 8 → 9 as this session's own entries joined the
+population). Sole failure is Test 9's pre-existing `--source=github` 404, confirmed by name.
+
+`HANDOFFS.md`'s front-matter warning said *"This is avoided here, not fixed."* That is now false and
+was corrected in place; it still says `--cut 3`, because a stated skip does not restore coverage.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [BL-40] Session S96 claimed — Test 34's mutation anchors become an asserted population with a stated skip
 
 Phase 1B crash breadcrumb, recorded at claim rather than at close-out so the ledger is true while the

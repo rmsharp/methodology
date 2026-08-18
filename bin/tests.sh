@@ -9,9 +9,15 @@ METHODOLOGY="$(dirname "$BIN")"
 STARTER="$METHODOLOGY/starter-kit"
 PASS=0
 FAIL=0
+SKIP=0
 
 pass() { echo "  PASS: $*"; PASS=$((PASS+1)); }
 fail() { echo "  FAIL: $*"; FAIL=$((FAIL+1)); }
+# An assertion that could not be BUILT, as distinct from one that ran and held. It is counted
+# and named in the summary, never folded into PASS: routing an unbuildable assertion to pass()
+# converts a real check into a green no-op, which is the failure this primitive exists to
+# prevent (BL-40). A skip does not fail the suite -- it states what was not exercised.
+skip() { echo "  SKIP: $*"; SKIP=$((SKIP+1)); }
 
 mktemp_project() {
     local dir
@@ -2083,6 +2089,33 @@ echo "== Test 34: check-handoff --all — whole-ledger invariants (issue #65 Evi
 LEDGER="$METHODOLOGY/HANDOFFS.md"
 F="$(mktemp)"
 
+# Reads the receipt-id POPULATION from a ledger; prints "<count> <A1> <A2>". A1/A2 are empty
+# when the population is too small to name them, and this NEVER raises on a short ledger --
+# that is the whole of BL-40's fix. Split into a function so the control at the end of this
+# test can drive it over shortened copies without touching the live file.
+handoff_anchors() {
+    python3 - "$1" <<'PY_ANCHORS'
+import re, sys
+ids = re.findall(r"^session: (S\d+)$", open(sys.argv[1], encoding="utf-8").read(), re.MULTILINE)
+print(len(ids), ids[1] if len(ids) > 1 else "", ids[2] if len(ids) > 2 else "")
+PY_ANCHORS
+}
+
+# Routes a population size to the branch that handles it. A separate function for the same
+# reason: the live ledger has held >= 3 receipts at every commit this test has existed, so an
+# ordinary run exercises exactly one of these four arms and the other three would be untested
+# assertions about untaken branches. The non-numeric arm is FIRST and lands on MALFORMED rather
+# than on the permissive default -- an empty or garbled count falling through to `*)` would read
+# as ANCHORED and reinstate the vacuum this test is being repaired for.
+anchor_disposition() {
+    case "$1" in
+        ''|*[!0-9]*) echo "MALFORMED" ;;
+        0)           echo "EMPTY" ;;
+        1|2)         echo "SHORT" ;;
+        *)           echo "ANCHORED" ;;
+    esac
+}
+
 if [ -f "$LEDGER" ]; then
     # Presence control. --allow-pending because a session in flight legitimately has
     # a Phase 1B stub as its newest receipt; older ones must still be closed.
@@ -2096,63 +2129,184 @@ if [ -f "$LEDGER" ]; then
     # a literal id here would itself go vacuous the next time the ledger rotates). A1 is
     # the older of the two, so its own receipt (not the newest, in-flight one) is what
     # each mutation below targets.
-    read -r A1 A2 <<EOF_IDS
-$(python3 - "$LEDGER" <<'PY'
-import re, sys
-text = open(sys.argv[1], encoding="utf-8").read()
-ids = re.findall(r"^session: (S\d+)$", text, re.MULTILINE)
-print(ids[1], ids[2])
-PY
-)
+    #
+    # They are a POPULATION with a stated floor, not two indexed reads (BL-40). The reasoning
+    # above is right about WHICH receipts rotate and was silent about HOW MANY survive: `ids[2]`
+    # on a ledger holding fewer than three raised IndexError, both anchors came back empty, and
+    # the six assertions below degraded into five `mutation was vacuous` failures plus one row
+    # that never printed at all -- a red naming the mutation rather than its cause, pointing the
+    # reader at check-handoff rather than at the trim that had just shortened the ledger.
+    # `starter-kit/methodology_trim.py`'s cut is budget-driven and knows nothing of this fixture,
+    # so a short ledger is a NORMAL state to report, not a defect to fail on. Note what this does
+    # NOT do: it cannot stop a default trim from cutting to two -- only stop that from being silent.
+    read -r N_IDS A1 A2 <<EOF_IDS
+$(handoff_anchors "$LEDGER")
 EOF_IDS
 
-    # Evidence B: strip an older receipt's opening fence + its session/date lines.
-    # The default newest-only mode reports OK on this file — that IS the blind spot.
-    if mutate "$LEDGER" "$F" "re.sub(r'\`\`\`handoff\nsession: $A1\ndate: [0-9-]+\n', '', s, count=1)"; then
-        "$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
-            && pass "default mode still green on a destroyed older receipt (documents the gap)" \
-            || fail "default mode unexpectedly changed behaviour"
-        "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
-            && fail "orphaned receipt body not caught by --all" || pass "orphaned receipt body caught by --all"
-    else fail "orphaned-receipt mutation was vacuous"; fi
+    # The six assertions below are ANCHOR-DEPENDENT: each mutation is keyed to A1/A2, so each is
+    # only BUILDABLE when the population supports two older anchors. The two that are not -- the
+    # presence control above and the unclosed-fence mutation below -- run at every population size.
+    case "$(anchor_disposition "${N_IDS:-}")" in
+    MALFORMED)
+        # Not a short ledger: the extraction itself returned something that is not a count.
+        fail "receipt-id population is unreadable (handoff_anchors returned \"${N_IDS:-}\") in $LEDGER"
+        ;;
+    EMPTY)
+        # Also not a short ledger. A HANDOFFS.md carrying zero `session:` lines is corruption,
+        # not rotation -- there is no cut of a valid ledger that produces it -- so it fails.
+        fail "receipt-id population is EMPTY in $LEDGER -- no anchors derivable"
+        ;;
+    SHORT)
+        # A legitimately short ledger. Report each assertion that could not be BUILT, by the
+        # same name it carries when it runs, so the row-for-row comparison every close-out
+        # receipt in HANDOFFS.md performs against its predecessor's baseline reads as six
+        # stated skips rather than six vanished rows. The reason travels ON each row: a
+        # summary line is read on its own.
+        SKIP_WHY="live ledger holds $N_IDS receipt(s), these anchors need 3 -- see BL-40"
+        skip "default mode still green on a destroyed older receipt (documents the gap) -- $SKIP_WHY"
+        skip "orphaned receipt body caught by --all -- $SKIP_WHY"
+        skip "duplicate session+date caught -- $SKIP_WHY"
+        skip "repeated session id on different dates is accepted (two merged sequences) -- $SKIP_WHY"
+        skip "session/date must lead every block -- $SKIP_WHY"
+        skip "older pending receipt caught; --allow-pending exempts only the newest -- $SKIP_WHY"
+        ;;
+    ANCHORED)
+        # Evidence B: strip an older receipt's opening fence + its session/date lines.
+        # The default newest-only mode reports OK on this file — that IS the blind spot.
+        if mutate "$LEDGER" "$F" "re.sub(r'\`\`\`handoff\nsession: $A1\ndate: [0-9-]+\n', '', s, count=1)"; then
+            "$BIN/check-handoff" --file "$F" --allow-pending >/dev/null 2>&1 \
+                && pass "default mode still green on a destroyed older receipt (documents the gap)" \
+                || fail "default mode unexpectedly changed behaviour"
+            "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
+                && fail "orphaned receipt body not caught by --all" || pass "orphaned receipt body caught by --all"
+        else fail "orphaned-receipt mutation was vacuous"; fi
 
-    # Duplicate receipt identity — session AND date, the pair. The header is copied
-    # from A2's own block rather than hardcoded, so the mutation cannot degrade into a
-    # session-only collision if a date later changes and stop testing what it claims.
-    if mutate "$LEDGER" "$F" "re.sub(r'session: $A1\ndate: [0-9-]+', re.search(r'session: $A2\ndate: [0-9-]+', s).group(0), s, count=1)"; then
-        "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
-            && fail "duplicate session+date not caught" || pass "duplicate session+date caught"
-    else fail "duplicate-identity mutation was vacuous"; fi
+        # Duplicate receipt identity — session AND date, the pair. The header is copied
+        # from A2's own block rather than hardcoded, so the mutation cannot degrade into a
+        # session-only collision if a date later changes and stop testing what it claims.
+        if mutate "$LEDGER" "$F" "re.sub(r'session: $A1\ndate: [0-9-]+', re.search(r'session: $A2\ndate: [0-9-]+', s).group(0), s, count=1)"; then
+            "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
+                && fail "duplicate session+date not caught" || pass "duplicate session+date caught"
+        else fail "duplicate-identity mutation was vacuous"; fi
 
-    # The paired NEGATIVE: a repeated session id on DIFFERENT dates is legitimate, not
-    # corruption. `S<N>` is a per-sequence counter and one ledger may merge two
-    # sequences (a fork and its upstream), so keying uniqueness on the id alone
-    # false-positives on a valid file. Without this assertion the checker is free to
-    # silently tighten back to session-only and no test would notice.
-    if mutate "$LEDGER" "$F" "re.sub(r'session: $A1\ndate: [0-9-]+', 'session: $A2\ndate: 2026-01-01', s, count=1)"; then
-        "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
-            && pass "repeated session id on different dates is accepted (two merged sequences)" \
-            || fail "repeated session id on different dates was wrongly flagged"
-    else fail "merged-sequence mutation was vacuous"; fi
+        # The paired NEGATIVE: a repeated session id on DIFFERENT dates is legitimate, not
+        # corruption. `S<N>` is a per-sequence counter and one ledger may merge two
+        # sequences (a fork and its upstream), so keying uniqueness on the id alone
+        # false-positives on a valid file. Without this assertion the checker is free to
+        # silently tighten back to session-only and no test would notice.
+        if mutate "$LEDGER" "$F" "re.sub(r'session: $A1\ndate: [0-9-]+', 'session: $A2\ndate: 2026-01-01', s, count=1)"; then
+            "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
+                && pass "repeated session id on different dates is accepted (two merged sequences)" \
+                || fail "repeated session id on different dates was wrongly flagged"
+        else fail "merged-sequence mutation was vacuous"; fi
 
-    # session:/date: must lead every block.
-    if mutate "$LEDGER" "$F" "re.sub(r'session: $A1\ndate: ([0-9-]+)\nstatus: complete', r'status: complete\nsession: $A1\ndate: \1', s, count=1)"; then
-        "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
-            && fail "session/date not leading a block was not caught" || pass "session/date must lead every block"
-    else fail "key-order mutation was vacuous"; fi
+        # session:/date: must lead every block.
+        if mutate "$LEDGER" "$F" "re.sub(r'session: $A1\ndate: ([0-9-]+)\nstatus: complete', r'status: complete\nsession: $A1\ndate: \1', s, count=1)"; then
+            "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
+                && fail "session/date not leading a block was not caught" || pass "session/date must lead every block"
+        else fail "key-order mutation was vacuous"; fi
 
-    # An OLDER receipt left pending — --allow-pending exempts only the newest.
-    if mutate "$LEDGER" "$F" "re.sub(r'(session: $A1\ndate: [0-9-]+\n)status: complete', r'\1status: pending', s, count=1)"; then
-        "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
-            && fail "older pending receipt not caught (--allow-pending over-applied)" \
-            || pass "older pending receipt caught; --allow-pending exempts only the newest"
-    else fail "older-pending mutation was vacuous"; fi
+        # An OLDER receipt left pending — --allow-pending exempts only the newest.
+        if mutate "$LEDGER" "$F" "re.sub(r'(session: $A1\ndate: [0-9-]+\n)status: complete', r'\1status: pending', s, count=1)"; then
+            "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
+                && fail "older pending receipt not caught (--allow-pending over-applied)" \
+                || pass "older pending receipt caught; --allow-pending exempts only the newest"
+        else fail "older-pending mutation was vacuous"; fi
+        ;;
+    esac
 
     # An unclosed fence.
     if mutate "$LEDGER" "$F" 's[:s.rindex("```")] + s[s.rindex("```")+3:]'; then
         "$BIN/check-handoff" --file "$F" --all --allow-pending >/dev/null 2>&1 \
             && fail "unclosed fence not caught" || pass "unclosed fence caught"
     else fail "unclosed-fence mutation was vacuous"; fi
+
+    # (control) THE FLOOR GUARD ITSELF, PROVEN TO FIRE. A guard no input can trip is a comment
+    # shaped like a guard, and this one branches on a count that no ordinary run varies: the live
+    # ledger has held >= 3 receipts at every commit this test has existed, so a run exercises the
+    # ANCHORED arm and leaves the other three as untested assertions about untaken branches --
+    # which is how the original indexed read stayed broken for its whole life. Fixtures are
+    # SYNTHETIC on purpose: deriving them by truncating the live ledger would make the proof of
+    # the short-population guard depend on the live population, the exact coupling being removed.
+    # They are faithful because handoff_anchors reads nothing but `^session: S<N>$` lines.
+    CTL="$(mktemp -d)"
+    printf 'a ledger with no receipts at all\n'          > "$CTL/L0.md"
+    printf 'session: S1\n'                               > "$CTL/L1.md"
+    printf 'session: S1\nsession: S2\n'                  > "$CTL/L2.md"
+    printf 'session: S1\nsession: S2\nsession: S3\n'     > "$CTL/L3.md"
+
+    ctl_disp() { read -r n _a _b <<EOF_CTL
+$(handoff_anchors "$1")
+EOF_CTL
+        anchor_disposition "$n"; }
+
+    [ "$(ctl_disp "$CTL/L0.md")" = "EMPTY" ] \
+        && pass "population guard: 0 receipts routes to EMPTY (corruption, not rotation)" \
+        || fail "population guard: 0 receipts routed to $(ctl_disp "$CTL/L0.md"), expected EMPTY"
+    [ "$(ctl_disp "$CTL/L1.md")" = "SHORT" ] \
+        && pass "population guard: 1 receipt routes to SHORT" \
+        || fail "population guard: 1 receipt routed to $(ctl_disp "$CTL/L1.md"), expected SHORT"
+    [ "$(ctl_disp "$CTL/L2.md")" = "SHORT" ] \
+        && pass "population guard: 2 receipts routes to SHORT (the cut that broke this test)" \
+        || fail "population guard: 2 receipts routed to $(ctl_disp "$CTL/L2.md"), expected SHORT"
+    # The PAIRED POSITIVE. Without it the guard could route everything to SHORT and every
+    # assertion above would still pass while the six real checks never ran again.
+    [ "$(ctl_disp "$CTL/L3.md")" = "ANCHORED" ] \
+        && pass "population guard: 3 receipts routes to ANCHORED (the guard is not always-on)" \
+        || fail "population guard: 3 receipts routed to $(ctl_disp "$CTL/L3.md"), expected ANCHORED"
+    # A count that is not a number must NOT fall through to the permissive arm. This is the
+    # regression that would silently reinstate the vacuum: empty anchors reaching the mutations.
+    [ "$(anchor_disposition "")" = "MALFORMED" ] && [ "$(anchor_disposition "x")" = "MALFORMED" ] \
+        && pass "population guard: a non-numeric count is MALFORMED, never the permissive default" \
+        || fail "population guard: non-numeric count did not route to MALFORMED"
+    # Anchors must be EMPTY below the floor and BOTH NON-EMPTY at it -- the property the
+    # mutations actually consume. Routing alone would not catch an off-by-one in the slicing.
+    read -r _n S2A S2B <<EOF_S2
+$(handoff_anchors "$CTL/L2.md")
+EOF_S2
+    read -r _n S3A S3B <<EOF_S3
+$(handoff_anchors "$CTL/L3.md")
+EOF_S3
+    [ -z "${S2B:-}" ] && pass "below the floor the second anchor is empty, not a stale value" \
+        || fail "second anchor was non-empty at 2 receipts: ${S2B:-}"
+    [ -n "${S3A:-}" ] && [ -n "${S3B:-}" ] \
+        && pass "at the floor both anchors are non-empty (S3A=$S3A S3B=$S3B)" \
+        || fail "an anchor was empty at 3 receipts: A1=${S3A:-} A2=${S3B:-}"
+
+    # (control) THE PROPERTY BL-40 ACTUALLY ASKS FOR, which no counter or exit code can express:
+    # the SHORT arm must emit skip(), never pass(). Routing an unbuildable assertion to pass()
+    # turns six real checks into six green no-ops and moves nothing a reader would notice -- the
+    # suite would report more passes than before. Asserted against the SOURCE because the arm is
+    # inline rather than a function; the count assertion doubles as the population guard, so a
+    # renamed arm reads as 0 skips and fails rather than passing vacuously.
+    SHORT_ARM="$(awk '/^    SHORT\)$/,/^        ;;$/' "$BIN/tests.sh")"
+    SHORT_SKIPS="$(printf '%s\n' "$SHORT_ARM" | grep -c '^        skip "')"
+    [ "$SHORT_SKIPS" = "6" ] \
+        && pass "SHORT arm states all six unbuildable assertions as skips" \
+        || fail "SHORT arm emits $SHORT_SKIPS skip row(s), expected 6 (renamed arm reads as 0)"
+    printf '%s\n' "$SHORT_ARM" | grep -q '^        pass "' \
+        && fail "SHORT arm routes an unbuildable assertion to pass() -- a green no-op" \
+        || pass "SHORT arm routes no unbuildable assertion to pass()"
+    # ...and the count must reach the reader. A summary that names only passes and failures hides
+    # every skip, which is the same silence in a different place.
+    grep -q '^echo "== Summary: \$PASS passed, \$FAIL failed, \$SKIP skipped =="$' "$BIN/tests.sh" \
+        && pass "summary line reports the skip count" \
+        || fail "summary line does not report skips -- skipped assertions would be invisible"
+
+    # WIRED TO THE REAL ARTIFACT, and measured by a DIFFERENT tool than the one asserted on:
+    # grep counts the live ledger's receipt ids, handoff_anchors counts them in python. A guard
+    # proven only against fixtures it authored is a guard proven against itself.
+    LIVE_N="$(grep -cE '^session: S[0-9]+$' "$LEDGER")"
+    read -r ANCH_N _a _b <<EOF_LIVE
+$(handoff_anchors "$LEDGER")
+EOF_LIVE
+    [ -n "$LIVE_N" ] && [ "$LIVE_N" != "0" ] \
+        && pass "live ledger receipt-id population is non-empty ($LIVE_N)" \
+        || fail "live ledger receipt-id population is empty or unreadable"
+    [ "$LIVE_N" = "$ANCH_N" ] \
+        && pass "handoff_anchors agrees with an independent grep on the live ledger ($ANCH_N)" \
+        || fail "population disagreement on the live ledger: grep=$LIVE_N handoff_anchors=$ANCH_N"
+    rm -rf "$CTL"
 else
     pass "no root HANDOFFS.md in this repo — --all ledger tests not applicable"
 fi
@@ -2361,5 +2515,5 @@ else fail "heading-rename mutation was vacuous"; fi
 rm -f "$F36"
 
 echo ""
-echo "== Summary: $PASS passed, $FAIL failed =="
+echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]

@@ -32,16 +32,20 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
 
-> **⚠ A trim of this file must retain at least THREE receipts — the tool's default cut does not
+> **⚠ A trim of this file should retain at least THREE receipts — the tool's default cut does not
 > know that.** `bin/tests.sh` Test 34 mutates *this* ledger to check `check-handoff --all`'s
-> whole-ledger invariants, and reads its two mutation anchors as `ids[1]`/`ids[2]` of the live file
-> (`bin/tests.sh:2103`) — deliberately not hardcoded, so it survives *which* receipts rotate, but it
-> needs three to exist. S94's first attempt took the budget-driven default, retained **2**, and every
-> mutation matched nothing: five assertions reported `mutation was vacuous` and the suite went
-> 235/1 → 229/6. Pass `--cut 3` (or more) explicitly, and re-run `bash bin/tests.sh` after any trim
-> of this file. **This is avoided here, not fixed** — the durable fix is a retained-records floor in
-> the distributed trimmer or a rewrite of Test 34's anchor selection; see `docs/planning/BACKLOG.md`.
-
+> whole-ledger invariants, reading two mutation anchors from the live file: not hardcoded, so it
+> survives *which* receipts rotate, but it needs three to exist. S94's first attempt took the
+> budget-driven default, retained **2**, and the suite went 235/1 → **229/6**. Pass `--cut 3` (or
+> more) explicitly, and re-run `bash bin/tests.sh` after any trim of this file.
+>
+> **Since S96 (2026-08-17) a short ledger is STATED rather than silent — which is not the same as
+> fixed** (BL-40 (b)). The anchors are an asserted population: below the floor those six assertions
+> print as `SKIP` rows naming themselves and the reason, the summary line carries a skip count, and
+> a ledger with *zero* receipts still FAILS, because corruption is not rotation. A cut to two no
+> longer reads as a checker regression, and it still leaves six invariants unexercised. **Nothing
+> prevents that cut** — judging it worth the coverage is the reader's call, which is why the count
+> is on the summary line.
 **Archived 16 record(s), 2026-07-30 → 2026-08-02** into [`docs/archive/HANDOFFS-through-2026-08-02.md`](docs/archive/HANDOFFS-through-2026-08-02.md) — same format, same order, frozen.
 Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
 than trusting this sentence. Written by `methodology_trim.py` v1.1.1.

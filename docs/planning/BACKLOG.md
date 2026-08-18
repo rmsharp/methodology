@@ -7,8 +7,7 @@ as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md))
 This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
-BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-40.**
+BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -1062,42 +1061,6 @@ for cause; sequenced.
 **"### What's New in v1.2"**, frozen release notes where 5 was the count as shipped. Editing it
 would falsify the history, and it is not a live claim. S92 verified the heading before leaving it.
 
-**BL-40 — a `HANDOFFS.md` trim taken at the trimmer's default cut silently makes five of Test 34's
-assertions vacuous.** Raised 2026-08-16 by S94, which hit it, avoided it, and deliberately did not
-fix it — the fix lands in a distributed file, and S94's carve-out declared zero.
-
-`bin/tests.sh` Test 34 mutates the live `HANDOFFS.md` to check `bin/check-handoff --all`'s
-whole-ledger invariants. It reads its two mutation anchors at run time as `ids[1]` and `ids[2]`
-(`bin/tests.sh:2103`) rather than hardcoding session numbers, and its own comment says why: *"this
-fork's own sequence has moved on and periodically archives — a literal id here would itself go
-vacuous the next time the ledger rotates."* That reasoning is right about **which** receipts rotate
-and silent about **how many** survive. `starter-kit/methodology_trim.py`'s cut is budget-driven; on
-this file it retained **2**, `ids[2]` raised `IndexError`, both anchors came back empty, and every
-mutation regex matched nothing. Result: `orphaned-receipt`, `duplicate-identity`, `merged-sequence`,
-`key-order` and `older-pending` all reported **`mutation was vacuous`** and the suite went
-**235 passed / 1 failed → 229 / 6**.
-
-**The harness behaved correctly and is the only reason this was visible** — `mutate` distinguishes
-did-not-apply from survived, exactly the discipline
-[`starter-kit/FRAMEWORK_LEARNINGS.md`](../../starter-kit/FRAMEWORK_LEARNINGS.md) records. Had it
-folded the two together, a trim would have quietly converted five real assertions into five green
-no-ops.
-
-**S94's disposition: `--cut 3`, chosen against both constraints with the numbers stated.** Receipts
-here run 10–13.5 KB (S91 13,553 B; S92 13,091 B; S93 11,917 B), so retention trades headroom against
-testability: **2** → 21,231 B live, Test 34 vacuous; **3** → 38,071 B, 27,465 B headroom (~2
-sessions), Test 34 satisfied exactly; **4** → 56,222 B, 9,314 B headroom, under the ceiling by less
-than one receipt. A warning naming the `--cut 3` floor is now in `HANDOFFS.md`'s own front matter.
-
-**Two candidate fixes; neither taken, and they are not equivalent.** (a) A **retained-records floor**
-in `starter-kit/methodology_trim.py` — but the trimmer has no business knowing a *test's* fixture
-requirements, and the floor would ship to every adopter, none of whom run Test 34. (b) Rewrite Test
-34 to **skip with an explicit reason** when the live ledger holds fewer than three receipts, and
-assert that population is non-empty — canonical-only, no adopter impact, and it converts a silent
-vacuum into a stated skip. **(b) looks right**; it is recorded rather than taken because it is a
-second capability (FM #26). Note (b) alone does not stop a future default trim from cutting to 2 —
-it only stops that from being silent, which is the property actually worth having.
-
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
 | Item | Scope | Outcome |
@@ -1123,6 +1086,7 @@ it only stops that from being silent, which is the property actually worth havin
 | **BL-34** | `methodology_dashboard.py`'s `LANG_MAP`/`DOC_EXTS` blind to R, Quarto, R Markdown | ✅ **FIXED** 2026-08-11 (S81), **merged upstream** as [PR #72](https://github.com/KJ5HST/methodology/pull/72) (`5c59f0b`, verified S85) **and synced into local `main`** 2026-08-12 (S86). Found scanning `../nprcgenekeepr`: 603 `.r` files, 77,773 LOC counted as Source but invisible in "Code by Language". |
 | **BL-38** | `context_budget.py --calibrate` returned noise on any repo that had merged another lineage of its regressor, with no goodness-of-fit gate | ✅ **FIXED** 2026-08-15 (S91), `VERSION` 1.0.0 → 1.1.0, all five defects in the one DISTRIBUTED file. **D1** `--first-parent` (the ancestry walk made "size at time T" not a function); **D2** tz-aware datetime comparison (ISO stamps were ordered as strings across mixed offsets); together **14.75 B/tok at R² = 0.0503 → 2.81 at R² = 0.8054**, re-derived at n=76 and reproducing S90's n=75 table within rounding. **D3** `calibration_verdict()` refuses below R² 0.50 (configurable via `calibrate_min_r2`), refuses a negative slope however tight the fit, refuses an undefined R² — and **suppresses** the `⇒ bytes/token` line rather than annotating it. **D4** the ledger row now names the ceiling that fired (`HANDOFFS.md` read `417 ln / 1,200 ln — over` for a **byte** breach). **D5** remediation prose no longer names the tool's home-project directories nor states that project's measurement as a claim about the reader's repo. Plus a leaked file descriptor per transcript in the same loop. Evidence: new canonical-only `tools/test_context_budget.py` (41 tests, wired into `bin/tests.sh` — `calibrate()` previously had **no** test of its arithmetic), `--selftest` 13 → 34 gates, **10-mutant round 10/10 killed** with control green and restorations `cmp`-verified, harness 229/1 diffed row-for-row against baseline. **One boundary re-derived the hard way and now pinned:** git's default history simplification already prunes a TREESAME merge, so D1 needs a merge that *changed* the target — the first fixture used `merge -s ours`, did not reproduce the defect, and would have passed against the broken code. **Fork-side only; no PR opened.** |
 | **BL-35** | `starter-kit/FRAMEWORK_LEARNINGS.md` rows 18 and 19 were malformed 2-column rows | ✅ **FIXED** 2026-08-11 (S84). Live since S40/S41; found by `bin/check-learnings` arriving via S83's upstream merge; the two missing cells recovered by git archaeology on the rows' authoring commits (`11b843a`, `12463dd`) and approved before writing. Distributed to adopters at their next `bin/sync`. |
+| **BL-40** | A `HANDOFFS.md` trim at the trimmer's default cut silently made Test 34's anchor-dependent assertions vacuous | ✅ **FIXED** 2026-08-17 (S96), **option (b) exactly as recorded** — canonical-only, `bin/tests.sh` alone, zero distributed files (verified against `bin/_manifest.py`'s 26 SOURCE rows, none under `bin/`). The indexed reads `ids[1]`/`ids[2]` become a population with a stated floor: `handoff_anchors` returns `<count> <A1> <A2>` and cannot raise, `anchor_disposition` routes that count to MALFORMED / EMPTY / SHORT / ANCHORED, and the SHORT arm emits **six** `SKIP` rows naming each unbuildable assertion and why. A new `skip()` primitive counts separately from `pass()` and the summary line carries the total — routing an unbuildable assertion to `pass()` was the real hazard, and nothing a reader watches would have moved. **RED first, against copied fixtures, never the live ledger:** the pre-change body replayed at 1/2/3/4 receipts gave 2 passed / 5 failed below the floor and 8 / 0 at or above it; after, 11 / 0 / 6 skipped and 17 / 0 / 0. EMPTY (0 receipts) fails rather than skips — corruption is not rotation. **This item's own count was low: SIX assertions stopped running, not five** — the sixth sat in a failed guard's then-branch and emitted no row at all, which is why the pass delta (−6) never matched the failure delta (+5). Recorded as **Learning #33**. **9-mutant round, 9/9 killed**, unmutated control green, including both mutants that would silently reinstate the vacuum: a renamed `SHORT)` arm (reads as 0 skip rows) and a non-numeric count falling through to the permissive default. Option **(a)** — a retained-records floor in the distributed trimmer — stays **declined** for the reason recorded here: the trimmer has no business knowing a test's fixture requirements, and the floor would ship to adopters who never run Test 34. **What this still does not do, unchanged:** it cannot stop a default trim from cutting to 2, only stop that from being silent. `--cut 3` remains the right cut for this ledger. |
 
 **Not in this backlog:** upstream **PR #44** (REUSE compliance + license/REUSE README badges) is being
 handled directly with the maintainer (Terrell) and was never a backlog item.
