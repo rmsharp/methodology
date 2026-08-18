@@ -163,6 +163,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] Session S98 claimed — bring `HANDOFFS.md` under its ceiling durably
+
+Phase 1B claim; receipt stub in [`HANDOFFS.md`](HANDOFFS.md) with `status: pending`. The subject is
+S97's `next_steps` (b), and it is the repository's live size breach: **114,466 B against a 65,536 B
+ceiling, over by 48,930**.
+
+**One finding is recorded here at claim rather than at close-out, because it refutes the remedy the
+handoff recommends.** S97 measured `--cut 3 = 49,724 B` and called it "real room". Re-derived at this
+Orient, the same cut yields **66,778 B — 1,242 B over**. S97's figure was taken before its own
+20,086 B receipt was appended, and it said so; that receipt is now one of the three a `--cut 3`
+retains.
+
+**The condition is a collision between two constraints set independently, not a backlog of untrimmed
+bytes.** Post-trim the header is 6,017 B, leaving 59,519 B for records. `bin/tests.sh` Test 34 floors
+retention at **three receipts**. The last three total **60,761 B** (mean 20,254 B). Floor × mean
+already exceeds ceiling − header, so **no cut satisfies both**: `--cut 2` clears at 45,511 B only by
+going below the floor, where six assertions become stated `SKIP` rows (BL-40 (b)).
+
+Which of the three levers moves — receipt **size**, the **floor**, or the **ceiling** — is a policy
+choice and goes to the operator with numbers before anything is written. Noted for that choice:
+`.context-budget.json` sources this ceiling to `methodology_trim.py:69` — the trimmer's
+`DEFAULT_BUDGET_BYTES`, an **inherited default**, at a line number S97 already flagged as stale — while
+the same entry states the mandated read as *"Phase 0 step 6 reconciles this file's frontier and Phase
+3A reads the predecessor's receipt in full."*
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] S97 close-out — receipt written, self-score 7/10, predecessor S96 scored 9/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md); the substantive work is the entry below. Telemetry
