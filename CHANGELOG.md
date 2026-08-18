@@ -163,6 +163,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S98 close-out — receipt written, self-score 8/10, predecessor S97 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md); the substantive work is the per-record budget entry
+below and the trim entry above it. **Framework Learning #35 appended** at 1,219 B against the 1,500 B
+row budget — two limits set independently on one artifact can multiply into a constraint nobody
+checks, which is why this breach kept recurring while each session's trim looked correct.
+
+**The guard was applied to its own author.** This receipt measures **17,162 B against the 18,432 B
+per-record budget introduced this session** — `check-handoff` reports `1 unwritten record(s), 0 over`.
+The ledger closes at **62,673 B against the 65,536 B ceiling**, 2,863 B of headroom, and the FM #28
+gate reports `HANDOFFS.md` **ok** for the first time in four sessions.
+
+Two tracked telemetry ledgers committed with it — `.context-budget-history.jsonl` and
+`dashboard_history.jsonl` — which go dirty from Phase 0 alone and which no protocol step owns.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-18 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-17.md` (4 record(s), 118,534 B → 49,579 B)
 
 **Written by:** `methodology_trim.py` v1.2.0 — a tool action, not a session's judgment.
