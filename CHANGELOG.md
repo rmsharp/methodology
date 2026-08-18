@@ -163,6 +163,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] The Learnings-table ceiling moves onto the axis the cost is actually paid on — a per-row budget, and a whole-file ceiling derived instead of inherited
+
+`starter-kit/FRAMEWORK_LEARNINGS.md` had 604 B of headroom against a 60,000 B ceiling, and the
+ceiling was **inherited from the seed** — `.context-budget.json` said so in its own words. Measured
+before choosing a remedy: across **80 transcripts** of this repo the file was read **whole once** and
+read **in part 243 times**, and it was never touched at all in 47 of the 80. A partial read returns
+whole **rows**, because a row is one physical line — so the cost a session actually pays here is
+per-row, and rows have grown **4.9×** (rows #1–#6 average 510 B; #24–#33 average 2,510 B).
+
+**The guard was on the wrong axis, so the axis moved rather than the number.** `bin/check-learnings`
+gains `ROW_BUDGET_BYTES = 1500`, scoped to rows **not yet frozen in git HEAD** — deliberately, because
+the table is append-only, and a finding against a row nobody may edit is a gate that cannot be obeyed.
+`max_bytes` is re-derived to **65,536 B**, the ceiling this repo already applies to its three other
+accumulating ledgers (`starter-kit/methodology_trim.py:80`), and a whole-file read at that size
+(23,406 tok, 55.7% of the measured 42,033-tok floor) sits inside the range of whole-file reads this
+repo already performs routinely. **That is a raise, from a 50.5% permitted tail to 55.7%, and it is
+recorded as one.** `max_line_bytes` is deliberately NOT declared: 20 of 32 rows exceed 1,500 B, so it
+would be permanently red against frozen rows.
+
+`bin/tests.sh` **Test 37** — 14 assertions, 4 mutants, all killed, against a throwaway git repo so the
+live table is never written to. **Three of those four mutants were scoring themselves killed while
+asserting nothing**: with `set -o pipefail`, `producer | grep -q` makes the producer take SIGPIPE when
+grep short-circuits, and on a `&& fail || pass` polarity a broken pipeline lands on `pass`. Captured
+into a variable first, as the rest of the suite already does, and the reason is recorded in the test.
+
+**What this does not do: it does not make the file smaller.** Headroom is 6,140 B, about four more
+rows. The two shapes that shrink it — a tighter derived ceiling forcing a shed, or a distributed
+archive split — were put to the operator with numbers and deliberately not taken.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] Session S97 claimed — bring `starter-kit/FRAMEWORK_LEARNINGS.md` under its ceiling durably
 
 Phase 1B claim; receipt stub in [`HANDOFFS.md`](HANDOFFS.md) with `status: pending`. The subject is

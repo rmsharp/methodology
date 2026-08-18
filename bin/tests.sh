@@ -2514,6 +2514,187 @@ else fail "heading-rename mutation was vacuous"; fi
 
 rm -f "$F36"
 
+echo "== Test 37: check-learnings — the per-row byte budget, scoped to unfrozen rows =="
+# WHY A ROW BUDGET AND NOT A FILE BUDGET. Measured over 80 session transcripts of this repo:
+# starter-kit/FRAMEWORK_LEARNINGS.md was read WHOLE once and read in PART 243 times. A partial
+# read returns whole rows, because a row is one physical line -- so row size, not file size, is
+# what a session actually spends on this table. The derivation lives in .context-budget.json.
+#
+# WHY THE FIXTURE IS A THROWAWAY GIT REPO. The check compares each row against its counterpart
+# in git HEAD, so a plain mktemp file has no frozen population and can only ever exercise the
+# SKIP arm. Every assertion below therefore runs against a real repo with a real HEAD, and the
+# live canonical file is never written to.
+FIXREPO="$(mktemp_project)"
+mkdir -p "$FIXREPO/starter-kit"
+FIXFILE="$FIXREPO/starter-kit/FRAMEWORK_LEARNINGS.md"
+cp "$STARTER/FRAMEWORK_LEARNINGS.md" "$FIXFILE"
+(cd "$FIXREPO" && git add -A && git -c user.email=t@t -c user.name=t commit -q -m "frozen baseline")
+
+# Run the checker with CWD inside the fixture repo: repo_root() is CWD-derived, so this is what
+# points the HEAD lookup at the fixture rather than at the methodology checkout.
+cl37() { (cd "$FIXREPO" && "$BIN/check-learnings" --file "$FIXFILE" --no-citations 2>&1); }
+# Same, for a MUTATED copy of the checker itself (the mutation block at the end).
+cl37m() { (cd "$FIXREPO" && python3 "$1" --file "$FIXFILE" --no-citations 2>&1); }
+
+# Append one row whose CHECKER-VISIBLE size is exactly $1 bytes, and ECHO the number it used.
+# Two things here are load-bearing:
+#   - The checker measures the row line WITHOUT its trailing newline (parse_table keeps
+#     splitlines() output), so the newline is added back when sizing. An off-by-one moves every
+#     edge assertion below off the boundary it exists to sit on -- which it did on first write.
+#   - The row NUMBER is derived from the fixture as max+1, never hardcoded. The fixture is a copy
+#     of the live table, so a hardcoded number collides with a real row the moment a session
+#     appends one at that number -- which it did, one Phase 3C row later, in this same session.
+add_row37() {
+    python3 - "$FIXFILE" "$1" <<'PY37'
+import sys, re
+path, nbytes = sys.argv[1], int(sys.argv[2])
+text = open(path, encoding="utf-8").read()
+nums = [int(m.group(1)) for m in re.finditer(r"(?m)^\| *([0-9]+) *\|", text)]
+if not nums:
+    sys.exit("EMPTY ROW POPULATION -- fixture is not a Learnings table")
+num = max(nums) + 1
+s = text.rstrip("\n") + "\n"
+head, tail = "| %d | " % num, " | src | when |\n"
+pad = nbytes - len((head + tail).encode()) + 1  # +1: tail's "\n" is not part of the row line
+if pad < 1:
+    sys.exit("row overhead exceeds the requested size")
+open(path, "w", encoding="utf-8").write(s + head + "X" * pad + tail)
+print(num)
+PY37
+}
+restore37() { (cd "$FIXREPO" && git checkout -q -- starter-kit/FRAMEWORK_LEARNINGS.md); }
+
+# (0) FIXTURE-PROVING CONTROL. A green result below is worthless if the fixture is not really a
+# tracked file with a readable HEAD -- the SKIP arm is also green. So assert the disposition
+# NAMES a checked population before trusting anything that follows (S91/S96's lesson).
+OUT37="$(cl37)"
+echo "$OUT37" | grep -q '^check-learnings: OK' \
+    && pass "fixture control: committed baseline is clean" \
+    || fail "fixture control: expected clean, got: $OUT37"
+echo "$OUT37" | grep -q 'row budget: 0 unfrozen row(s), 0 over' \
+    && pass "fixture control: HEAD is readable, so the budget REALLY ran (not the skip arm)" \
+    || fail "fixture control: budget did not run against HEAD: $OUT37"
+
+# (1) A new row over budget FAILS, and the message names the row and the overage.
+N37="$(add_row37 1700)"
+[ -n "$N37" ] && pass "fixture control: the appended row got a derived number (#$N37)" \
+    || fail "fixture control: add_row37 produced no row number"
+OUT37="$(cl37)"
+echo "$OUT37" | grep -q "row #$N37 is 1,700 B, over the 1,500 B per-row budget by 200" \
+    && pass "new over-budget row caught, with its own number and overage" \
+    || fail "new over-budget row not caught: $OUT37"
+restore37
+
+# (2) EDGE, not just the predicate: a row EXACTLY at the budget must pass, one byte over must
+# fail. A `>` mutated to `>=` survives any test that only ever uses a row far from the cap.
+N37="$(add_row37 1500)"
+echo "$(cl37)" | grep -q '^check-learnings: OK' \
+    && pass "edge: a row of exactly 1,500 B is within budget" \
+    || fail "edge: exactly-1,500 B row wrongly rejected: $(cl37)"
+restore37
+N37="$(add_row37 1501)"
+echo "$(cl37)" | grep -q "row #$N37 is 1,501 B" \
+    && pass "edge: a row of 1,501 B is over budget" \
+    || fail "edge: 1,501 B row not caught: $(cl37)"
+restore37
+
+# (3) THE SCOPING CHOICE IS ASSERTED, NOT LEFT IMPLICIT. Frozen rows are exempt by design -- the
+# table is append-only, so a finding against a row nobody may edit would have no legal remedy.
+# 20 of the 32 committed rows already exceed 1,500 B, so if the scope were wrong this would be
+# a wall of red. A guard whose domain is a design choice must have that choice faced (BL-40).
+echo "$(cl37)" | grep -q 'row budget: 0 unfrozen row(s)' \
+    && pass "scope: the 20 committed rows already over 1,500 B are exempt as frozen" \
+    || fail "scope: frozen rows were not exempt: $(cl37)"
+
+# (4) ...but a frozen row that is CHANGED comes back into scope. This is why the comparison is
+# row TEXT against HEAD and not "is this number new" -- growing an existing row is the obvious
+# way to route around a new-rows-only budget.
+python3 - "$FIXFILE" <<'PY37B'
+import sys, re
+p = sys.argv[1]
+s = open(p, encoding="utf-8").read()
+new = re.sub(r"(?m)^\| 3 \| ", "| 3 | " + "X" * 1600 + " ", s, count=1)
+assert new != s, "MUTATION VACUOUS: row 3 not found"
+open(p, "w", encoding="utf-8").write(new)
+PY37B
+echo "$(cl37)" | grep -q 'row #3 is' \
+    && pass "a FROZEN row grown past the budget is caught (changed, not merely new)" \
+    || fail "grown frozen row not caught: $(cl37)"
+restore37
+
+# (5) THE SKIP IS STATED AND DOES NOT READ AS A PASS. An untracked file has no frozen
+# population; the tool must say so and must NOT print a checked-population figure.
+UNTRACKED37="$(mktemp)"
+cp "$STARTER/FRAMEWORK_LEARNINGS.md" "$UNTRACKED37"
+OUT37="$("$BIN/check-learnings" --file "$UNTRACKED37" --no-citations 2>&1)"
+echo "$OUT37" | grep -q 'row budget SKIPPED' \
+    && pass "no frozen population: the skip is STATED" \
+    || fail "no frozen population: skip not stated: $OUT37"
+echo "$OUT37" | grep -q 'unfrozen row(s)' \
+    && fail "the skip printed a checked-population figure, so it reads as a pass: $OUT37" \
+    || pass "the skip does NOT print a checked-population figure"
+rm -f "$UNTRACKED37"
+
+# (6) MUTATION -- on the guard this session added, not on the code it guards. Each mutant is
+# verified to APPLY before it is run, so "did not apply" can never be scored as "killed".
+#
+# EVERY assertion below CAPTURES the output before grepping it, and that is load-bearing rather
+# than stylistic. `set -o pipefail` is on; `producer | grep -q` makes grep exit at the first
+# match and close the pipe, the producer takes SIGPIPE, and pipefail then reports the PIPELINE
+# as failed even though the pattern matched. On the mutants whose polarity is `&& fail || pass`
+# that lands on pass -- three of these four scored themselves killed while asserting nothing.
+M37="$(mktemp)"
+N37="$(add_row37 1500)"   # a row exactly AT the budget: the state that separates > from >=
+
+# M1: the boundary. Kills a `>` silently widened to `>=`.
+if mutate "$BIN/check-learnings" "$M37" 's.replace("if len(raw.encode(\"utf-8\")) > ROW_BUDGET_BYTES", "if len(raw.encode(\"utf-8\")) >= ROW_BUDGET_BYTES", 1)'; then
+    OUT37="$(cl37m "$M37")"
+    echo "$OUT37" | grep -q "row #$N37 is 1,500 B" \
+        && pass "mutant killed: > widened to >= rejects an at-budget row" \
+        || fail "MUTANT SURVIVED: >= at the boundary went undetected: $OUT37"
+else fail "M1 mutation DID NOT APPLY"; fi
+restore37
+
+# M2: the scoping predicate. Kills text-comparison degraded to number-membership.
+python3 - "$FIXFILE" <<'PY37C'
+import sys, re
+p = sys.argv[1]
+s = open(p, encoding="utf-8").read()
+new = re.sub(r"(?m)^\| 3 \| ", "| 3 | " + "X" * 1600 + " ", s, count=1)
+assert new != s, "MUTATION VACUOUS"
+open(p, "w", encoding="utf-8").write(new)
+PY37C
+if mutate "$BIN/check-learnings" "$M37" 's.replace("if frozen.get(n) != raw", "if n not in frozen", 1)'; then
+    OUT37="$(cl37m "$M37")"
+    echo "$OUT37" | grep -q 'row #3 is' \
+        && fail "MUTANT SURVIVED: number-membership still caught a grown frozen row" \
+        || pass "mutant killed: number-membership misses a grown frozen row"
+else fail "M2 mutation DID NOT APPLY"; fi
+restore37
+
+# M3: the skip arm. Kills a skip rewritten to look like a completed check.
+if mutate "$BIN/check-learnings" "$M37" 's.replace("return \"row budget SKIPPED (%s)\" % why", "return \"row budget: 0 unfrozen row(s), 0 over 1,500 B\"", 1)'; then
+    UNTRACKED37="$(mktemp)"; cp "$STARTER/FRAMEWORK_LEARNINGS.md" "$UNTRACKED37"
+    OUT37="$(python3 "$M37" --file "$UNTRACKED37" --no-citations 2>&1)"
+    echo "$OUT37" | grep -q 'row budget SKIPPED' \
+        && fail "MUTANT SURVIVED: the skip arm still announced itself" \
+        || pass "mutant killed: a skip disguised as a completed check loses its SKIPPED marker"
+    rm -f "$UNTRACKED37"
+else fail "M3 mutation DID NOT APPLY"; fi
+
+# M4: the budget itself. Kills a ceiling quietly raised past the row under test.
+N37="$(add_row37 1700)"
+if mutate "$BIN/check-learnings" "$M37" 's.replace("ROW_BUDGET_BYTES = 1500", "ROW_BUDGET_BYTES = 5000", 1)'; then
+    OUT37="$(cl37m "$M37")"
+    echo "$OUT37" | grep -q "row #$N37 is" \
+        && fail "MUTANT SURVIVED: a 1,700 B row still caught at a 5,000 B budget" \
+        || pass "mutant killed: raising the budget stops catching the row it was set for"
+else fail "M4 mutation DID NOT APPLY"; fi
+restore37
+
+rm -f "$M37"
+rm -rf "$FIXREPO"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
