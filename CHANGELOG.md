@@ -163,6 +163,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] `docs/planning/BACKLOG.md` comes under its ceiling by SPLIT — index here, bodies in a read-on-demand sibling
+
+The file stood at **103,755 B against 65,536 B**, the only file the FM #28 gate flagged, and it is
+now **26,322 B and reports `ok`**. Commit `8eb4f0e`.
+
+**No housekeeping cut could have done it, which is why the remedy is a split.** Open-item bodies
+were **81,340 B — 98% of the section and 1.24× the whole ceiling on their own**. Deleting the front
+matter, all 11 archive pointer rows and the historical section — 20,716 B, everything that is *not*
+live work — still left the file 17,503 B over. The 18 bodies moved **verbatim** to
+[`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md); `BACKLOG.md` keeps a 19-row
+index (BL-16 has no heading of its own, so its row is the one not derivable from the detail file).
+Nothing was compacted, reworded or dropped — which is why this did **not** need the operator policy
+call `.context-budget.json:73` says compaction would. That question stands unanswered, for the day
+someone wants the detail file smaller too.
+
+**The ceiling was checked against the read pattern before it was kept.** S97 and S98 re-derived the
+two sibling ledgers *off* the whole-file axis after measuring 1 whole read in 80 and 81 transcripts
+respectively. Measured the same way, this file was read **whole 23 times across 22 of 82 transcripts
+(27%)**, against 584 partial reads, most recently 2026-08-13 — about **22× more often** than either
+sibling. Phase 0 step 3 asks it for *current priorities*, which are not localised to one record. So
+the whole-file ceiling is the right axis here and was **retained**; the per-record/per-row remedy was
+deliberately not copied, and the budget entry now says so, so the next session does not pattern-match
+it. **The instrument was audited before the number was published** — a first pass counted
+`git cat-file -e` as a `cat`, swept two other repos' `BACKLOG.md` into the total, and split
+`sed '1,5p;90,100p'` mid-quote; two further "whole reads" were the word *cat* inside receipt prose.
+Every surviving match was eyeballed.
+
+**Losslessness is proved, not asserted.**
+[`BACKLOG-DETAIL.md.verify.sh`](docs/planning/BACKLOG-DETAIL.md.verify.sh) re-extracts each item
+from git **by its own `BL-N` identity, never by position** — the flaw that makes 4 of 6 generated
+proofs read as data loss over intact archives (BL-36). C1 identity set, C2 byte-exact bodies, C3 the
+move really happened, C4 reachability, C5 the section preamble. **7 mutants, each verified to apply,
+7/7 killed** against a passing unmutated control.
+
+**C5 exists because C1–C4 were green while content was lost.** The first cut dropped the 1,684 B
+*"Routing — what a session can actually run today"* block — not an item body, so outside the
+population the proof enumerated. That block is the record that the *"blocked on the paused channel"*
+disposition **was never imposed**, the exact class of unattributed blocker `CLAUDE.md` warns about.
+Restored verbatim to the live file, where routing belongs, and now asserted. **A losslessness proof
+only proves losslessness of the population it enumerates.**
+
+**Mechanical readers, checked against baselines captured before the edit:** the archive proof (whose
+C4 reads the live file) 4/4 OK; the dashboard's `_scan_backlog_done` still `unrecognized`/0/False —
+the index deliberately declares **no Status column**, since one would flip the format to `table` and
+start counting the completed rows' `CLOSED`/`SHIPPED`/✅ tokens as unmigrated done-marks; `bin/tests.sh`
+279 passed / 1 failed / 0 skipped, row-for-row identical; 444/444 Python; `check-links` 88/22;
+`check-learnings` OK; dashboard health 72. The budget gate's structure check was **repaired to follow
+the split and proven red by mutation before being trusted** — it had correctly reported
+`instrument-failed`, which is how I learned the split had broken it.
+
+Carve-out verified mechanically: 26 `DISTRIBUTION` source rows vs 6 changed paths, both non-empty,
+**intersection NONE**.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-18 · [ad hoc] S99 claim — bring `docs/planning/BACKLOG.md` under its ceiling
 
 `CHANGELOG: pending` — set at claim; this session's actions are recorded here at Phase 3F. Receipt
