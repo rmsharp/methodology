@@ -163,6 +163,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-17.md` (4 record(s), 118,534 B → 49,579 B)
+
+**Written by:** `methodology_trim.py` v1.2.0 — a tool action, not a session's judgment.
+Moved the oldest **4** record(s) (2026-08-15 → 2026-08-17) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-08-17.md`](docs/archive/HANDOFFS-through-2026-08-17.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-08-17.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-17.md.verify.sh)
+rather than trusting a digest printed here. Live file 118,534 B → 49,579 B (−58.2%).
+
 ### 2026-08-18 · [ad hoc] The receipt ledger gets a guard on the axis its cost is actually paid on — a per-record budget, derived from the collision it resolves
 
 `HANDOFFS.md` stood at **114,466 B against a 65,536 B ceiling**, and the trim S97 recommended did
