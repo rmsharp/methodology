@@ -163,6 +163,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S99 claim — bring `docs/planning/BACKLOG.md` under its ceiling
+
+`CHANGELOG: pending` — set at claim; this session's actions are recorded here at Phase 3F. Receipt
+stub with `status: pending` in [`HANDOFFS.md`](HANDOFFS.md) is the durable crash breadcrumb.
+
+**Recorded at claim because it bounds the remedy before any is attempted.** The file is
+**103,755 B against 65,536 B**, over by 38,219 — the only file the FM #28 gate flags. Its
+composition, measured: front matter 5,209 B, `## Open items` **83,039 B**, `## Completed items`
+14,387 B, `## Historical context` 1,120 B. **`## Open items` alone is 1.27× the whole-file
+ceiling**, so deleting everything that is *not* live work — 20,716 B — still leaves the file
+17,503 B over. No housekeeping cut clears this. That re-frames the session from "trim a file" to
+"choose which limit moves", the same shape S98 found in `HANDOFFS.md` on a different axis.
+
+**And the obvious cut is load-bearing.** `docs/planning/BACKLOG-archive-2026-08-15.md.verify.sh`
+asserts C4 *reachability against the live file*: the shard must be named there and all 11 archived
+items must keep a `**BL-N**` pointer row. Deleting `## Completed items` would turn a green proof
+red. Baseline captured before any edit — the proof passes 4/4 today.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-18 · [ad hoc] S98 close-out — receipt written, self-score 8/10, predecessor S97 scored 8/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md); the substantive work is the per-record budget entry
