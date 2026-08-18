@@ -163,6 +163,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] S97 close-out — receipt written, self-score 7/10, predecessor S96 scored 9/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md); the substantive work is the entry below. Telemetry
+committed with it rather than inherited forward, as S96 did — `.context-budget-history.jsonl` and
+`dashboard_history.jsonl` accumulate rows from running Phase 0 alone and no protocol step owns them.
+
+**Self-score is 7 rather than 8 for one specific reason, recorded here and not only in the receipt:**
+the session's first access measurement was wrong — it counted `cat >> file` appends and filenames
+inside `git commit` heredocs as whole-file reads — and its headline figures were shown to the
+operator before the instrument was audited. Corrected one turn later by printing the raw matched
+commands, and the remedy decision was taken on the corrected numbers.
+
+**`starter-kit/FRAMEWORK_LEARNINGS.md` ends this session at 60,469 / 65,536 B** — over the ceiling it
+started under, and under the one derived to replace it. That is the intended outcome and the receipt
+says so plainly: this session moved the RATE lever, leaving roughly **three rows** of headroom. The
+LEVEL is unfixed by the operator's deliberate choice among four costed shapes.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] The Learnings-table ceiling moves onto the axis the cost is actually paid on — a per-row budget, and a whole-file ceiling derived instead of inherited
 
 `starter-kit/FRAMEWORK_LEARNINGS.md` had 604 B of headroom against a 60,000 B ceiling, and the
