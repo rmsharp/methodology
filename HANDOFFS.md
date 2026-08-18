@@ -59,6 +59,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-15.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ```handoff
+session: S96
+date: 2026-08-17
+status: pending
+active_task: BL-40 option (b) -- rewrite `bin/tests.sh` Test 34 so its two mutation anchors are an ASSERTED, NON-EMPTY population that SKIPS WITH A STATED REASON when the live `HANDOFFS.md` holds fewer than three receipts, instead of degrading into five failures that misname their own cause. PRE-DECLARED, because these are the load-bearing choices and declaring them at close-out would be worthless. (1) **RED FIRST, AND AGAINST A FIXTURE, NOT THE LIVE LEDGER.** Test 34 hardcodes `LEDGER="$METHODOLOGY/HANDOFFS.md"`, so the obvious repro is to truncate the live file; I will not. The vacuum will be reproduced by running the CURRENT Test 34 body against a copied 2-receipt fixture, so the RED is real and the live ledger is never mutated on disk outside `mutate`'s own tempfile. (2) **A SKIP THAT READS AS A PASS IS THE DEFECT, NOT THE FIX.** The harness has only `pass`/`fail` and a summary of the form `N passed, M failed`; routing a short ledger to `pass` would convert five real assertions into five green no-ops, which is precisely what BL-40 says the property worth having prevents. So the skip gets its OWN counter, its own row prefix, and a place in the summary line. The summary line therefore CHANGES SHAPE -- stated here in advance because every receipt in this ledger compares suite output row-for-row against a predecessor's baseline, and an unannounced format change would read as a regression. (3) **THE POPULATION GUARD MUST BE PROVEN TO FIRE**, not merely written: a guard no mutant can falsify is a comment shaped like a guard. Test 36 already ships this discipline in this same file; I will follow it. (4) **CARVE-OUT: ZERO DISTRIBUTED FILES**, verified mechanically at claim -- `bin/_manifest.py` has 26 SOURCE rows (asserted non-empty) and NONE under `bin/`, so `bin/tests.sh` is canonical-only and no adopter receives this change. The ONE exception, declared now rather than discovered later: `starter-kit/FRAMEWORK_LEARNINGS.md` IS distributed and Phase 3C is mandatory. That file stands at 57,964 / 60,000 B -- **2,036 B of headroom against a predecessor row that cost 2,771 B**, so the row is BUDGETED: if the learning cannot be said inside the headroom, I will report the collision rather than breach the ceiling or pad the row to fit. (5) **I WILL NOT TRIM `HANDOFFS.md`.** It is 74,683 B against 65,536 B, and this deliverable is what makes a real trim possible -- but the trim is a SECOND capability (FM #26) and is not this session's. My own receipt makes the breach worse; that is a stated cost, not an oversight. NO OUTWARD-FACING ACTION: no PR, no push, no issue, no comment, no tag.
+```
+<!-- claim stub written at session start; completed at close-out -->
+
+```handoff
 session: S95
 date: 2026-08-17
 status: complete

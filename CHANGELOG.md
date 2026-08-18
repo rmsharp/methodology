@@ -163,6 +163,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [BL-40] Session S96 claimed — Test 34's mutation anchors become an asserted population with a stated skip
+
+Phase 1B crash breadcrumb, recorded at claim rather than at close-out so the ledger is true while the
+work is in flight. Deliverable: `bin/tests.sh` Test 34, whose two mutation anchors are read at run
+time as `ids[1]`/`ids[2]` of the live `HANDOFFS.md` (`:2103`). Below three receipts `ids[2]` raises
+`IndexError`, both anchors come back empty, and five real assertions report `mutation was vacuous` —
+a red that names the mutation rather than the cause.
+
+**Carve-out verified at claim, not asserted:** `bin/_manifest.py` exposes **26** SOURCE rows
+(population asserted non-empty) and **none** under `bin/`, so this file is canonical-only and no
+adopter receives the change. One declared exception: `starter-kit/FRAMEWORK_LEARNINGS.md` is
+distributed and Phase 3C is mandatory — it stands at 57,964 / 60,000 B, so the row is budgeted
+against 2,036 B of headroom rather than written first and measured after.
+
+**Announced in advance:** the suite's summary line changes shape to carry a skip count. Every receipt
+here compares suite output row-for-row against a predecessor baseline, so an unannounced format
+change would read as a regression.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] `HANDOFFS.md` crossed its byte ceiling this session — recorded, with the residual shown to be structural
 
 74,683 B against 65,536 B. It entered this session at **53,272 B**, under the ceiling, so this is
