@@ -163,6 +163,64 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] The receipt ledger gets a guard on the axis its cost is actually paid on — a per-record budget, derived from the collision it resolves
+
+`HANDOFFS.md` stood at **114,466 B against a 65,536 B ceiling**, and the trim S97 recommended did
+not clear it: re-derived, `--cut 3` gave **66,778 B**. The reason was not untrimmed backlog. Post-trim
+the header is 6,017 B, leaving 59,519 B; `bin/tests.sh` Test 34 floors retention at **three**
+receipts; the newest three totalled **60,761 B**. Floor × mean already exceeded ceiling − header, so
+**no cut satisfied both constraints** — two limits set independently had begun to collide.
+
+**Measured before choosing a remedy.** Across **81 transcripts** of this repo (the measuring session
+excluded) the live root ledger was read **whole into a session's context exactly once** and read **in
+part 593 times** — median span 25 lines, largest ever requested 220, against a 452-line file. No read
+in the corpus asked for even half of it. That is what `SESSION_RUNNER.md` mandates and what
+`.context-budget.json` already said in its own note: Phase 0 step 6 takes a **frontier** (`git log -1`,
+no content) and Phase 3A reads **the predecessor's receipt in full**. One record.
+
+**The instrument was wrong twice before it was right, both times flatteringly.** The first pass scored
+the 4.5 KB seed `starter-kit/HANDOFFS.md` as the live ledger — 8 of its 9 "whole reads" were the seed —
+and scored `awk '/^```handoff/{n++} n==1'`, which extracts *one receipt*, as a whole-file read. It
+reported 9 whole reads. The answer is 1. Found by printing raw matched commands, not by re-reading the
+counter.
+
+**The fix.** `bin/check-handoff` (canonical-only) gains `RECORD_BUDGET_BYTES = 18432` and
+`check_record_budget()`, scoped to the record **being written** — the newest record when its text
+differs from its counterpart at git HEAD. Comparing record *text*, not "is this session id new", is
+what stops a close-out from growing its own already-committed Phase 1B stub past the budget unseen.
+The derivation is `(65,536 − 8,000 header allowance) / 3 = 19,178 → 18,432 B`, 2,240 B of slack, and it
+is written beside the constant so a successor re-runs it rather than re-argues it. Records have grown
+**3.15×** (oldest 10 mean 5,478 B; newest 10 mean 17,258 B; largest ever 21,267 B, n=104).
+
+**The unit is the record, not the fenced block** — trailing prose below the closing fence is counted,
+because the byte ceiling counts it and `methodology_trim.py` moves it as part of the record. Budgeting
+the fence alone would put the guard on a different axis from the ceiling it is derived from and make
+the arithmetic above false. Mutant **M5** exists to defend exactly that.
+
+**Deliberately NOT run under `--all`:** Test 34's presence control asserts on `check-handoff`'s **exit
+code** against the live ledger, and an exit code is a union over every check — routing the budget
+through `--all` would turn an unrelated assertion red whenever a session's in-flight receipt ran long.
+Asserted, not just intended, by assertion (7).
+
+`bin/tests.sh` **Test 38** — 18 assertions, **5 mutants, 5 killed**, against a throwaway git repo so the
+live ledger is never written to. Proven RED in situ first: an oversized record injected into the live
+tracked file made the pre-change checker exit **0** and the new one exit **1**; restore verified
+byte-identical by `cmp` and `git diff --quiet`. Suite **279 passed / 1 failed** (the pre-existing Test 9
+`--source=github` 404), diffed row-for-row against a clean HEAD worktree: **zero rows lost**, 18 added,
+both populations asserted non-empty (262 and 280).
+
+**Two fixture defects of my own, both caught by the artifact and not by the builder.** The record
+builder prepended at byte 0, absorbing the file's 5,569 B header into the record under test; and its
+size check measured the string it had just constructed rather than the record as the checker parses it
+— an identity, not an assertion. Corrected to insert at a **line-anchored** fence (a plain
+`text.index("```handoff")` lands in front-matter prose that mentions the fence inline, leaving 86 stray
+bytes inside the record) and to re-parse the written file.
+
+Carve-out verified mechanically against the staged set: **26 manifest SOURCE rows vs 2 changed files,
+both populations asserted non-empty, intersection empty** — no distributed file touched.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-18 · [ad hoc] Session S98 claimed — bring `HANDOFFS.md` under its ceiling durably
 
 Phase 1B claim; receipt stub in [`HANDOFFS.md`](HANDOFFS.md) with `status: pending`. The subject is

@@ -2695,6 +2695,265 @@ restore37
 rm -f "$M37"
 rm -rf "$FIXREPO"
 
+echo "== Test 38: check-handoff — the per-RECORD byte budget, scoped to the record being written =="
+# WHY A RECORD BUDGET AND NOT A FILE BUDGET. Measured across 81 session transcripts of this repo
+# (the measuring session excluded): the live root HANDOFFS.md was read WHOLE into a session's
+# context exactly ONCE and read in PART 593 times -- median span 25 lines, largest ever requested
+# 220, against a 452-line file. That matches what the protocol mandates: Phase 0 step 6 takes a
+# FRONTIER (git log -1, no content) and Phase 3A reads THE PREDECESSOR'S RECEIPT IN FULL. One
+# record. The derivation of the 18,432 B figure lives beside the constant in bin/check-handoff.
+#
+# WHY THE FIXTURE IS A THROWAWAY GIT REPO, as Test 37's is: the check compares the newest record
+# against its counterpart in git HEAD, so a plain mktemp file has no frozen counterpart and can
+# only ever exercise the SKIP arm. The live canonical ledger is never written to.
+FIXREPO38="$(mktemp_project)"
+FIXFILE38="$FIXREPO38/HANDOFFS.md"
+# The copy DROPS any leading `status: pending` record. Not cosmetic: this repo's own ledger
+# carries a Phase 1B stub mid-session, and once a record is prepended above it that stub becomes
+# an OLDER pending receipt with no `commit:` -- which check_answer_slots reports, reddening this
+# fixture for a reason that has nothing to do with the budget.
+python3 - "$METHODOLOGY/HANDOFFS.md" "$FIXFILE38" <<'PY38A'
+import re, sys
+src, dst = sys.argv[1], sys.argv[2]
+text = open(src, encoding="utf-8").read()
+starts = [m.start() for m in re.finditer(r"(?m)^```handoff$", text)] + [len(text)]
+if len(starts) < 3:
+    sys.exit("FIXTURE SOURCE TOO SHORT: need >= 2 records, found %d" % (len(starts) - 1))
+head = text[:starts[0]]
+recs = [text[starts[i]:starts[i + 1]] for i in range(len(starts) - 1)]
+while recs and re.search(r"(?m)^status: pending$", recs[0]):
+    recs.pop(0)
+if not recs:
+    sys.exit("FIXTURE EMPTY after dropping pending records")
+open(dst, "w", encoding="utf-8").write(head + "".join(recs))
+PY38A
+(cd "$FIXREPO38" && git add -A && git -c user.email=t@t -c user.name=t commit -q -m "frozen baseline")
+
+ch38()  { "$BIN/check-handoff" --file "$FIXFILE38" --allow-pending 2>&1; }
+ch38m() { python3 "$1" --file "$FIXFILE38" --allow-pending 2>&1; }
+restore38() { (cd "$FIXREPO38" && git checkout -q -- HANDOFFS.md); }
+
+# Prepend one record whose CHECKER-VISIBLE size is exactly $1 bytes and ECHO the session id used.
+# $2 selects where the padding goes: "field" puts it inside `active_task`, "prose" puts it in the
+# TRAILING prose below the closing fence. The two are not interchangeable -- "prose" is the only
+# one that can kill a record-extent measured on the fenced block alone (M5).
+# The session NUMBER is derived from the fixture as max+1, never hardcoded: the fixture is a copy
+# of the live ledger, so a literal collides with a real receipt the moment one is written at it.
+add_record38() {
+    python3 - "$FIXFILE38" "$1" "$2" <<'PY38B'
+import sys, re
+path, nbytes, where = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+text = open(path, encoding="utf-8").read()
+nums = [int(m.group(1)) for m in re.finditer(r"(?m)^session: S(\d+)$", text)]
+if not nums:
+    sys.exit("EMPTY RECEIPT POPULATION -- fixture is not a handoff ledger")
+sid = "S%d" % (max(nums) + 1)
+body = ("```handoff\nsession: %s\ndate: 2026-01-01\nstatus: pending\n"
+        "active_task: %%s\n```\n%%s\n" % sid)
+fixed = len((body % ("", "")).encode())
+pad = nbytes - fixed
+if pad < 1:
+    sys.exit("record overhead (%d B) exceeds the requested size" % fixed)
+rec = body % (("X" * pad, "") if where == "field" else ("x", "X" * (pad - 1)))
+# Insert AFTER the front matter, at the first fence -- not at byte 0. Writing rec+text puts the
+# file's ~5.6 KB header BETWEEN this record's closing fence and the next opening one, so the
+# checker's fence-to-fence extent swallows the header and every edge assertion below lands off
+# the boundary it exists to sit on. That is exactly what happened on first write.
+# LINE-ANCHORED, matching the regex the checker itself uses. A plain text.index() finds the
+# first occurrence ANYWHERE, and this ledger's front matter mentions ```handoff inline in prose
+# -- inserting there leaves the header's remaining bytes inside the record under test (86 of
+# them, on first write) and every size assertion is quietly off by that much.
+fm = re.search(r"(?m)^```handoff$", text)
+if not fm:
+    sys.exit("NO LINE-ANCHORED FENCE in the fixture -- cannot place a record")
+first = fm.start()
+open(path, "w", encoding="utf-8").write(text[:first] + rec + text[first:])
+# Re-parse the ARTIFACT and assert the size the CHECKER will see, not the size of the string just
+# built. A sizing check whose operands both come from the builder asserts an identity.
+back = open(path, encoding="utf-8").read()
+st = [m.start() for m in re.finditer(r"(?m)^```handoff$", back)] + [len(back)]
+got = len(back[st[0]:st[1]].encode())
+if got != nbytes:
+    sys.exit("SIZING BUG: the written record measures %d B, wanted %d" % (got, nbytes))
+print(sid)
+PY38B
+}
+
+# (0) FIXTURE-PROVING CONTROL. A green result is worthless if the fixture has no readable HEAD --
+# the SKIP arm is green too. Assert the disposition NAMES a checked population first.
+OUT38="$(ch38)"
+echo "$OUT38" | grep -q '^check-handoff: OK' \
+    && pass "fixture control: committed baseline is clean" \
+    || fail "fixture control: expected clean, got: $OUT38"
+echo "$OUT38" | grep -q 'record budget: 0 unwritten record(s), 0 over' \
+    && pass "fixture control: HEAD is readable, so the budget REALLY ran (not the skip arm)" \
+    || fail "fixture control: budget did not run against HEAD: $OUT38"
+
+# (1) A new record over budget FAILS, and the message names the record and the overage.
+S38="$(add_record38 20000 field)"
+[ -n "$S38" ] && pass "fixture control: the prepended record got a derived id ($S38)" \
+    || fail "fixture control: add_record38 produced no session id"
+OUT38="$(ch38)"
+echo "$OUT38" | grep -q "record $S38 is 20,000 B, over the 18,432 B per-record budget by 1,568" \
+    && pass "new over-budget record caught, with its own id and overage" \
+    || fail "new over-budget record not caught: $OUT38"
+restore38
+
+# (2) EDGE, not just the predicate: exactly AT the budget passes, one byte over fails. A `>`
+# widened to `>=` survives any test whose records all sit far from the cap.
+S38="$(add_record38 18432 field)"
+OUT38="$(ch38)"
+echo "$OUT38" | grep -q '^check-handoff: OK' \
+    && pass "edge: a record of exactly 18,432 B is within budget" \
+    || fail "edge: exactly-18,432 B record wrongly rejected: $OUT38"
+restore38
+S38="$(add_record38 18433 field)"
+OUT38="$(ch38)"
+echo "$OUT38" | grep -q "record $S38 is 18,433 B" \
+    && pass "edge: a record of 18,433 B is over budget" \
+    || fail "edge: 18,433 B record not caught: $OUT38"
+restore38
+
+# (3) THE UNIT IS THE RECORD, NOT THE FENCE, asserted rather than left to the comment. Padding
+# that lives entirely BELOW the closing fence must still count -- the byte ceiling counts it and
+# methodology_trim.py moves it as part of the record.
+S38="$(add_record38 20000 prose)"
+OUT38="$(ch38)"
+echo "$OUT38" | grep -q "record $S38 is 20,000 B" \
+    && pass "unit: trailing prose below the closing fence counts toward the record" \
+    || fail "unit: trailing prose was not counted: $OUT38"
+restore38
+
+# (4) THE SCOPING CHOICE IS FACED, NOT IMPLICIT. Committed records are exempt: the ledger is
+# prepend-only, so a finding against a receipt nobody may edit has no legal remedy. The fixture
+# is a copy of the live ledger and really does contain records over 18,432 B, so a wrong scope
+# would show here as red rather than as nothing.
+OVER38="$(python3 - "$FIXFILE38" <<'PY38C'
+import re, sys
+t = open(sys.argv[1], encoding="utf-8").read()
+st = [m.start() for m in re.finditer(r"(?m)^```handoff$", t)] + [len(t)]
+print(sum(1 for i in range(len(st) - 1) if len(t[st[i]:st[i+1]].encode()) > 18432))
+PY38C
+)"
+[ "${OVER38:-0}" -ge 1 ] \
+    && pass "scope control: the frozen population really does hold $OVER38 record(s) over budget" \
+    || fail "scope control: fixture holds no over-budget frozen record, so (4) proves nothing"
+echo "$(ch38)" | grep -q 'record budget: 0 unwritten record(s), 0 over' \
+    && pass "scope: those $OVER38 committed over-budget record(s) are exempt as frozen" \
+    || fail "scope: committed records were not exempt: $(ch38)"
+
+# (5) ...but a committed record that is CHANGED comes back into scope. This is why the comparison
+# is record TEXT against HEAD and not "is this session id new": growing the receipt you already
+# committed is the obvious way around a new-records-only budget, and it is exactly what a
+# close-out does to its own Phase 1B stub.
+python3 - "$FIXFILE38" <<'PY38D'
+import sys, re
+p = sys.argv[1]
+s = open(p, encoding="utf-8").read()
+new = s.replace("\n```\n", "\n```\n" + "X" * 20000 + "\n", 1)
+assert new != s, "MUTATION VACUOUS: no closing fence found"
+open(p, "w", encoding="utf-8").write(new)
+PY38D
+echo "$(ch38)" | grep -q 'per-record budget by' \
+    && pass "a COMMITTED record grown past the budget is caught (changed, not merely new)" \
+    || fail "grown committed record not caught: $(ch38)"
+restore38
+
+# (6) THE SKIP IS STATED AND DOES NOT READ AS A PASS. An untracked copy has no frozen
+# counterpart; the tool must say so and must NOT print a checked-population figure.
+UNTRACKED38="$(mktemp)"
+cp "$FIXFILE38" "$UNTRACKED38"
+OUT38="$("$BIN/check-handoff" --file "$UNTRACKED38" --allow-pending 2>&1)"
+echo "$OUT38" | grep -q 'record budget SKIPPED' \
+    && pass "no frozen counterpart: the skip is STATED" \
+    || fail "no frozen counterpart: skip not stated: $OUT38"
+echo "$OUT38" | grep -q 'unwritten record(s)' \
+    && fail "the skip printed a checked-population figure, so it reads as a pass: $OUT38" \
+    || pass "the skip does NOT print a checked-population figure"
+rm -f "$UNTRACKED38"
+
+# (7) --all MUST NOT RUN THE BUDGET, and that is a decision with a reason, so it is asserted.
+# Test 34's presence control asserts on check-handoff's EXIT CODE against the live ledger. An
+# exit code is a union over every check, so routing the budget through --all would turn that
+# unrelated assertion red whenever a session's in-flight receipt ran long.
+S38="$(add_record38 20000 field)"
+if "$BIN/check-handoff" --file "$FIXFILE38" --all --allow-pending >/dev/null 2>&1; then
+    pass "--all stays green on an over-budget record (Test 34's exit-code control is insulated)"
+else
+    fail "--all now fails on an over-budget record -- Test 34's presence control will go red"
+fi
+restore38
+
+# (8) MUTATION -- on the guard this session added. Each mutant is verified to APPLY first, so
+# "DID NOT APPLY" can never be scored as "killed". Every assertion CAPTURES output before
+# grepping: under `set -o pipefail` a `producer | grep -q` that MATCHES still reports a failed
+# pipeline, because grep closes the pipe and the producer takes SIGPIPE -- which on a
+# `&& fail || pass` polarity lands on pass and asserts nothing (Learning #34).
+M38="$(mktemp)"
+
+# M1: the boundary. Kills a `>` silently widened to `>=`.
+S38="$(add_record38 18432 field)"
+if mutate "$BIN/check-handoff" "$M38" 's.replace("if size > RECORD_BUDGET_BYTES", "if size >= RECORD_BUDGET_BYTES", 1)'; then
+    OUT38="$(ch38m "$M38")"
+    echo "$OUT38" | grep -q "record $S38 is 18,432 B" \
+        && pass "mutant killed: > widened to >= rejects an at-budget record" \
+        || fail "MUTANT SURVIVED: >= at the boundary went undetected: $OUT38"
+else fail "M1 mutation DID NOT APPLY"; fi
+restore38
+
+# M2: the scoping predicate. Kills record-TEXT comparison degraded to a presence test, which is
+# what would let a close-out grow its own already-committed stub without being seen.
+python3 - "$FIXFILE38" <<'PY38E'
+import sys
+p = sys.argv[1]
+s = open(p, encoding="utf-8").read()
+new = s.replace("\n```\n", "\n```\n" + "X" * 20000 + "\n", 1)
+assert new != s, "MUTATION VACUOUS"
+open(p, "w", encoding="utf-8").write(new)
+PY38E
+if mutate "$BIN/check-handoff" "$M38" 's.replace("if working == frozen:", "if frozen:", 1)'; then
+    OUT38="$(ch38m "$M38")"
+    echo "$OUT38" | grep -q 'per-record budget by' \
+        && fail "MUTANT SURVIVED: a presence test still caught a grown committed record" \
+        || pass "mutant killed: a presence test misses a grown committed record"
+else fail "M2 mutation DID NOT APPLY"; fi
+restore38
+
+# M3: the skip arm. Kills a skip rewritten to look like a completed check.
+if mutate "$BIN/check-handoff" "$M38" 's.replace("return [], \"record budget SKIPPED (%s) — nothing checked\" % why", "return [], \"record budget: 0 unwritten record(s), 0 over 18,432 B\"", 1)'; then
+    UNTRACKED38="$(mktemp)"; cp "$FIXFILE38" "$UNTRACKED38"
+    OUT38="$(python3 "$M38" --file "$UNTRACKED38" --allow-pending 2>&1)"
+    echo "$OUT38" | grep -q 'record budget SKIPPED' \
+        && fail "MUTANT SURVIVED: the skip arm still announced itself" \
+        || pass "mutant killed: a skip disguised as a completed check loses its SKIPPED marker"
+    rm -f "$UNTRACKED38"
+else fail "M3 mutation DID NOT APPLY"; fi
+
+# M4: the budget itself. Kills a ceiling quietly raised past the record under test.
+S38="$(add_record38 20000 field)"
+if mutate "$BIN/check-handoff" "$M38" 's.replace("RECORD_BUDGET_BYTES = 18432", "RECORD_BUDGET_BYTES = 50000", 1)'; then
+    OUT38="$(ch38m "$M38")"
+    echo "$OUT38" | grep -q "record $S38 is" \
+        && fail "MUTANT SURVIVED: a 20,000 B record still caught at a 50,000 B budget" \
+        || pass "mutant killed: raising the budget stops catching the record it was set for"
+else fail "M4 mutation DID NOT APPLY"; fi
+restore38
+
+# M5: THE AXIS. Kills a record extent narrowed to the fenced block, dropping the trailing prose.
+# This is the mutant that defends the design claim rather than the arithmetic: the whole reason
+# the budget is derived from the byte ceiling is that both count the same unit.
+S38="$(add_record38 20000 prose)"
+if mutate "$BIN/check-handoff" "$M38" 's.replace("end = (blocks[i + 1][\"line\"] - 1) if i + 1 < len(blocks) else len(lines)", "end = start + b[\"content\"].count(chr(10)) + 3", 1)'; then
+    OUT38="$(ch38m "$M38")"
+    echo "$OUT38" | grep -q "record $S38 is 20,000 B" \
+        && fail "MUTANT SURVIVED: fence-only extent still counted the trailing prose" \
+        || pass "mutant killed: a fence-only extent misses prose-carried overage"
+else fail "M5 mutation DID NOT APPLY"; fi
+restore38
+
+rm -f "$M38"
+rm -rf "$FIXREPO38"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]

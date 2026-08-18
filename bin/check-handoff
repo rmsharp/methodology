@@ -574,6 +574,110 @@ def check_locator_forms(blocks: list) -> list:
     return findings
 
 
+# --- THE RECORD BUDGET -------------------------------------------------------
+#
+# 18 KiB per RECORD. Derived, not inherited — and derived from the two constraints that
+# were set independently and had started to collide:
+#
+#   ceiling      65,536 B   .context-budget.json, HANDOFFS.md `max_bytes`
+#   header        6,017 B   measured post-trim; grows ~450 B per archive notice, so the
+#                           derivation allows 8,000 B rather than today's figure
+#   floor             3     bin/tests.sh Test 34 reads ids[1]/ids[2] of the LIVE ledger,
+#                           so a cut below three receipts makes six assertions SKIP
+#
+#   (65,536 - 8,000) / 3 = 19,178  ->  18,432 B (18 KiB), leaving 2,240 B of slack.
+#
+# WHY A PER-RECORD BUDGET AND NOT A LOWER WHOLE-FILE CEILING. Measured across 81
+# transcripts of this repo (this session excluded): the live ledger was read WHOLE into a
+# session's context exactly ONCE, and read in PART 593 times — median span 25 lines, the
+# largest ever requested 220, against a 452-line file. No read in the corpus asked for even
+# half of it. That matches what SESSION_RUNNER.md mandates and what .context-budget.json
+# already said in its own note: Phase 0 step 6 takes a FRONTIER (git log -1, no content) and
+# Phase 3A reads THE PREDECESSOR'S RECEIPT IN FULL. One record. So the whole-file ceiling
+# was guarding a cost paid once in 81 sessions, while the cost paid 593 times has no guard
+# at all — and records have grown 3.15x (oldest 10 mean 5,478 B; newest 10 mean 17,258 B;
+# largest ever 21,267 B, n=104).
+#
+# THE UNIT IS THE RECORD, NOT THE FENCED BLOCK, and that is load-bearing rather than
+# incidental: a receipt's trailing prose (the `Model:` line, the predecessor score, the
+# self-assessment) sits OUTSIDE its fence, and both methodology_trim.py and the byte ceiling
+# count it. Budgeting the fence alone would put this check on a different axis from the
+# ceiling it is derived from, and the arithmetic above would be false.
+RECORD_BUDGET_BYTES = 18432
+
+
+def record_extents(text: str, blocks: list) -> list:
+    """(session-or-None, bytes) per RECORD — opening fence to the next opening fence,
+    trailing prose included. `blocks` is scan()'s list, whose "line" is 1-based."""
+    lines = text.splitlines(keepends=True)
+    out = []
+    for i, b in enumerate(blocks):
+        start = b["line"] - 1
+        end = (blocks[i + 1]["line"] - 1) if i + 1 < len(blocks) else len(lines)
+        body = "".join(lines[start:end])
+        m = re.search(r"^session:\s*(\S+)$", b["content"], re.MULTILINE)
+        out.append((m.group(1) if m else None, len(body.encode("utf-8"))))
+    return out
+
+
+def frozen_newest_record(path: Path):
+    """The newest record's TEXT as of git HEAD, or (None, reason-it-could-not-be-read).
+
+    Scoped to HEAD deliberately. Receipts are prepend-only and never edited once committed,
+    so a budget applied to the whole ledger would be permanently red against records nobody
+    may touch — the same reason bin/check-learnings scopes its row budget to unfrozen rows.
+    What IS editable is the record this session is writing: a Phase 1B stub committed at
+    claim and rewritten at close-out, or a receipt not yet committed at all. Comparing TEXT
+    rather than asking "is this session id new" is what stops a session from growing its own
+    already-committed record past the budget without the check noticing.
+    """
+    try:
+        top = subprocess.run(["git", "rev-parse", "--show-toplevel"],
+                             capture_output=True, text=True, check=True,
+                             cwd=str(path.parent)).stdout.strip()
+        rel = path.resolve().relative_to(Path(top).resolve()).as_posix()
+        head = subprocess.run(["git", "show", "HEAD:" + rel],
+                              capture_output=True, text=True, check=True,
+                              cwd=top).stdout
+    except (FileNotFoundError, subprocess.CalledProcessError, ValueError):
+        return None, "no readable copy of this file at git HEAD"
+    hblocks, _ = scan(head)
+    if not hblocks:
+        return None, "the copy at git HEAD holds no receipt"
+    lines = head.splitlines(keepends=True)
+    end = (hblocks[1]["line"] - 1) if len(hblocks) > 1 else len(lines)
+    return "".join(lines[hblocks[0]["line"] - 1:end]), None
+
+
+def check_record_budget(path: Path, text: str, blocks: list):
+    """(findings, note) for the newest record — the one being written.
+
+    `note` is never None: either it states the checked population or it states, IN THE
+    WORD "SKIPPED", that nothing was checked and why. A skip that renders as a pass is the
+    defect this contract exists to prevent, so the skip path deliberately prints NO
+    population figure — there is no honest one to print.
+    """
+    frozen, why = frozen_newest_record(path)
+    if frozen is None:
+        return [], "record budget SKIPPED (%s) — nothing checked" % why
+    extents = record_extents(text, blocks)
+    if not extents:
+        return [], "record budget SKIPPED (no records in the working file) — nothing checked"
+    lines = text.splitlines(keepends=True)
+    end = (blocks[1]["line"] - 1) if len(blocks) > 1 else len(lines)
+    working = "".join(lines[blocks[0]["line"] - 1:end])
+    if working == frozen:
+        return [], "record budget: 0 unwritten record(s), 0 over %s B" % f"{RECORD_BUDGET_BYTES:,}"
+    session, size = extents[0]
+    if size > RECORD_BUDGET_BYTES:
+        return ([
+            "record %s is %s B, over the %s B per-record budget by %s"
+            % (session or "(newest)", f"{size:,}", f"{RECORD_BUDGET_BYTES:,}",
+               f"{size - RECORD_BUDGET_BYTES:,}")
+        ], "record budget: 1 unwritten record(s), 1 over %s B" % f"{RECORD_BUDGET_BYTES:,}")
+    return [], "record budget: 1 unwritten record(s), 0 over %s B" % f"{RECORD_BUDGET_BYTES:,}"
+
+
 def repo_root() -> Path:
     try:
         out = subprocess.run(
@@ -663,7 +767,15 @@ def main() -> int:
     # into the answer-slot tests' assertions.
     locator_findings = check_locator_forms(blocks)
 
-    if findings or anchor_findings or locator_findings:
+    # A FOURTH scope, same discipline, and deliberately NOT run under --all. The budget is a
+    # property of the record being WRITTEN, which is the newest — that is what this mode is
+    # for. Adding it to --all would also route it through Test 34's presence control, which
+    # asserts on check-handoff's EXIT CODE against the live ledger: a union over every check,
+    # so one new check turns an unrelated assertion red for a budget reason. Close-out runs
+    # this mode explicitly; see bin/tests.sh Test 38.
+    budget_findings, budget_note = check_record_budget(path, text, blocks_meta)
+
+    if findings or anchor_findings or locator_findings or budget_findings:
         if findings:
             print("check-handoff: FAIL — %d issue(s) in the newest receipt in %s:"
                   % (len(findings), path))
@@ -688,6 +800,16 @@ def main() -> int:
             print("        number keeps resolving, to the wrong entry. Name the entry instead:")
             print('        CHANGELOG.md "<its ### heading>". A prefixed path (starter-kit/…,')
             print("        docs/archive/…) is stable and stays legal.")
+        if budget_findings:
+            print("check-handoff: FAIL — the record being written is over the per-record "
+                  "budget in %s:" % path)
+            for msg in budget_findings:
+                print("  error: %s" % msg)
+            print("  note: a record is the opening fence through the NEXT opening fence —")
+            print("        trailing prose included, because the ceiling counts it too. The")
+            print("        budget is derived: (65,536 B ceiling − 8,000 B header allowance)")
+            print("        / 3 retained receipts. Shorten the receipt, or move the derivation")
+            print("        (RECORD_BUDGET_BYTES in this file) if the ceiling or floor changed.")
         return 1
 
     label = ("a valid Phase 1B stub (close-out not yet performed)"
@@ -695,6 +817,7 @@ def main() -> int:
     checked = len(blocks) if args.archived else len(blocks) - 1
     print("check-handoff: OK — newest receipt in %s is %s; all %d %sreceipt(s) name a commit sha."
           % (path, label, checked, "" if args.archived else "older "))
+    print("  %s" % budget_note)
     return 0
 
 
