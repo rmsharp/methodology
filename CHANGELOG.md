@@ -163,6 +163,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] Session S97 claimed — bring `starter-kit/FRAMEWORK_LEARNINGS.md` under its ceiling durably
+
+Phase 1B claim; receipt stub in [`HANDOFFS.md`](HANDOFFS.md) with `status: pending`. The subject is
+S96's `next_steps` (b): the file stands at **59,396 / 60,000 B — 604 B of headroom** while recent
+Learning rows run 1,431–3,451 B, and it is **DISTRIBUTED**, so it is the one imminent breach an
+adopter inherits.
+
+**One finding is already established and is recorded here at claim rather than at close-out, because
+it refutes the remedy a reader would assume.** Trimming oldest-first — what `methodology_trim.py`
+does to `CHANGELOG.md` and `HANDOFFS.md` — is the wrong axis for this file. Re-derived with
+`bin/check-learnings`'s own `CITATION_RE` over `bin/_manifest.py`'s 26-row distributed population:
+**all 24 `Learning #N` tokens in the distributed corpus cite a row numbered ≤ 16.** Age here
+correlates with being foundational, not with being stale.
+
+The inverse reading is refused for cause in the same breath: the 17 rows numbered ≥ 17 hold 40,851 B
+(70.6% of row bytes) and no distributed citations, but [Learning #29](starter-kit/FRAMEWORK_LEARNINGS.md)
+— ratified five sessions ago — is precisely the finding that an uncited rule is *orphaned*, not
+worthless. Citation count is not an archive criterion.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [ad hoc] S96 close-out — receipt written, self-score 8/10, predecessor S95 scored 9/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md); the substantive work is the BL-40 entry below.
