@@ -163,78 +163,89 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-18 · [ad hoc] S99 close-out — receipt written, self-score 8/10, predecessor S98 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), within the 18,432 B per-record budget S98
+introduced (`check-handoff`: `1 unwritten record(s), 0 over`). Substantive work is the entry below.
+
+**BL-41 raised, found not fixed:** `methodology_trim.py` cannot trim `HANDOFFS.md` at all. Shards are
+named `HANDOFFS-through-<date of newest archived record>.md` and an existing one is never overwritten;
+retention is by count, floored at three by `bin/tests.sh` Test 34. With receipts at S96/S97
+(2026-08-17) and S98/S99 (2026-08-18) and `HANDOFFS-through-2026-08-17.md` already present, `--cut 3`
+and `--cut 2` derive the taken name and are refused; `--cut 1` is free but drops below the floor.
+**Every admissible cut yields the taken name, so the tool's advice — "Disambiguate with `--cut`" —
+has no solution.** Verified by dry run; no `--write` issued. Full write-up and three candidate fixes
+in [`BACKLOG-DETAIL.md#bl-41`](docs/planning/BACKLOG-DETAIL.md#bl-41).
+
+**So `HANDOFFS.md` closes OVER — ~79.6 KB against 65,536, stated rather than left to be found; re-derive with the gate, since the figure counts the receipt that reports it.** It was already over at
+claim: a protocol-mandated receipt landing in a ledger S98 closed with 2,863 B of headroom against
+receipts that run 17–20 KB. No session writing any receipt could have avoided it.
+
+**A Learning is owed and deliberately not written** — *a losslessness proof only proves losslessness
+of the population it enumerates*. `starter-kit/FRAMEWORK_LEARNINGS.md` is DISTRIBUTED and this
+session's claim declared it would touch none; holding to that was worth more than the row. #36 is the
+next session's.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-18 · [ad hoc] `docs/planning/BACKLOG.md` comes under its ceiling by SPLIT — index here, bodies in a read-on-demand sibling
 
-The file stood at **103,755 B against 65,536 B**, the only file the FM #28 gate flagged, and it is
-now **26,322 B and reports `ok`**. Commit `8eb4f0e`.
-
-**No housekeeping cut could have done it, which is why the remedy is a split.** Open-item bodies
-were **81,340 B — 98% of the section and 1.24× the whole ceiling on their own**. Deleting the front
-matter, all 11 archive pointer rows and the historical section — 20,716 B, everything that is *not*
-live work — still left the file 17,503 B over. The 18 bodies moved **verbatim** to
+**103,755 B → 26,504 B, `ok`** — the only file the FM #28 gate flagged, now green. Commit `8eb4f0e`.
+The 18 open-item bodies moved **verbatim** to
 [`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md); `BACKLOG.md` keeps a 19-row
-index (BL-16 has no heading of its own, so its row is the one not derivable from the detail file).
-Nothing was compacted, reworded or dropped — which is why this did **not** need the operator policy
-call `.context-budget.json:73` says compaction would. That question stands unanswered, for the day
-someone wants the detail file smaller too.
+index. Full detail in the S99 receipt — this entry records the decisions a future session must not
+re-litigate.
 
-**The ceiling was checked against the read pattern before it was kept.** S97 and S98 re-derived the
-two sibling ledgers *off* the whole-file axis after measuring 1 whole read in 80 and 81 transcripts
-respectively. Measured the same way, this file was read **whole 23 times across 22 of 82 transcripts
-(27%)**, against 584 partial reads, most recently 2026-08-13 — about **22× more often** than either
-sibling. Phase 0 step 3 asks it for *current priorities*, which are not localised to one record. So
-the whole-file ceiling is the right axis here and was **retained**; the per-record/per-row remedy was
-deliberately not copied, and the budget entry now says so, so the next session does not pattern-match
-it. **The instrument was audited before the number was published** — a first pass counted
-`git cat-file -e` as a `cat`, swept two other repos' `BACKLOG.md` into the total, and split
-`sed '1,5p;90,100p'` mid-quote; two further "whole reads" were the word *cat* inside receipt prose.
-Every surviving match was eyeballed.
+**Why a split and not a trim.** Open bodies were 81,340 B — 98% of the section, **1.24× the whole
+ceiling alone**. Deleting the front matter, all 11 archive pointer rows and the historical section
+(20,716 B, everything not live work) still left it 17,503 B over. Because nothing was compacted or
+dropped, the operator policy question at `.context-budget.json:73` — what to abandon — was never
+reached and stands unanswered.
 
-**Losslessness is proved, not asserted.**
-[`BACKLOG-DETAIL.md.verify.sh`](docs/planning/BACKLOG-DETAIL.md.verify.sh) re-extracts each item
-from git **by its own `BL-N` identity, never by position** — the flaw that makes 4 of 6 generated
-proofs read as data loss over intact archives (BL-36). C1 identity set, C2 byte-exact bodies, C3 the
-move really happened, C4 reachability, C5 the section preamble. **7 mutants, each verified to apply,
-7/7 killed** against a passing unmutated control.
+**Why the ceiling stayed on the whole-file axis.** S97 and S98 moved the two sibling ledgers *off*
+it after measuring 1 whole read in 80 and 81 transcripts. Measured the same way: this file was read
+**whole 23 times across 22 of 82 transcripts (27%)**, against 584 partial reads, most recently
+2026-08-13 — ~22× either sibling, because Phase 0 step 3 asks it for *current priorities*. Ceiling
+**retained**; the per-record remedy deliberately not copied, and the budget entry now says so.
+The instrument was audited before publishing: four defects found and fixed (`git cat-file -e` read as
+a `cat`; two other repos' `BACKLOG.md` swept in; a quoted `sed` script split mid-expression; the word
+*cat* inside receipt prose).
 
-**C5 exists because C1–C4 were green while content was lost.** The first cut dropped the 1,684 B
-*"Routing — what a session can actually run today"* block — not an item body, so outside the
-population the proof enumerated. That block is the record that the *"blocked on the paused channel"*
-disposition **was never imposed**, the exact class of unattributed blocker `CLAUDE.md` warns about.
-Restored verbatim to the live file, where routing belongs, and now asserted. **A losslessness proof
-only proves losslessness of the population it enumerates.**
+**Losslessness proved, not asserted.**
+[`BACKLOG-DETAIL.md.verify.sh`](docs/planning/BACKLOG-DETAIL.md.verify.sh) re-extracts each item from
+git **by `BL-N` identity, never by position** — the flaw behind BL-36's four false failures. C1–C5;
+**7 mutants, each verified to apply, 7/7 killed** against a passing control.
 
-**Mechanical readers, checked against baselines captured before the edit:** the archive proof (whose
-C4 reads the live file) 4/4 OK; the dashboard's `_scan_backlog_done` still `unrecognized`/0/False —
-the index deliberately declares **no Status column**, since one would flip the format to `table` and
-start counting the completed rows' `CLOSED`/`SHIPPED`/✅ tokens as unmigrated done-marks; `bin/tests.sh`
-279 passed / 1 failed / 0 skipped, row-for-row identical; 444/444 Python; `check-links` 88/22;
-`check-learnings` OK; dashboard health 72. The budget gate's structure check was **repaired to follow
-the split and proven red by mutation before being trusted** — it had correctly reported
-`instrument-failed`, which is how I learned the split had broken it.
+**C5 exists because C1–C4 were green while content was lost.** The first cut silently dropped the
+1,684 B *"Routing — what a session can actually run today"* block — not an item body, so outside the
+population the proof enumerated, and the standing record that the *"blocked on the paused channel"*
+disposition **was never imposed**. Restored verbatim; now asserted. **A losslessness proof only
+proves losslessness of the population it enumerates.** C1 also had to be repaired before shipping:
+it failed on any *newly raised* item, which would have turned it red on correct use.
 
-Carve-out verified mechanically: 26 `DISTRIBUTION` source rows vs 6 changed paths, both non-empty,
+**Mechanical readers, against baselines captured before the edit:** archive proof 4/4; dashboard
+`_scan_backlog_done` unchanged at `unrecognized`/0/False — the index declares **no Status column**,
+which would otherwise count the completed rows' `CLOSED`/`SHIPPED`/✅ as unmigrated done-marks;
+`bin/tests.sh` 279/1/0 row-for-row identical; 444/444 Python; `check-links` 88/22; health 72. The
+gate's structure check was repaired to follow the split and **proven red by mutation** before being
+trusted — it had correctly reported `instrument-failed`.
+
+Carve-out verified mechanically: 26 `DISTRIBUTION` rows vs 6 changed paths, both non-empty,
 **intersection NONE**.
 
 **Model:** Claude Opus 5 (1M context).
 
 ### 2026-08-18 · [ad hoc] S99 claim — bring `docs/planning/BACKLOG.md` under its ceiling
 
-`CHANGELOG: pending` — set at claim; this session's actions are recorded here at Phase 3F. Receipt
-stub with `status: pending` in [`HANDOFFS.md`](HANDOFFS.md) is the durable crash breadcrumb.
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md) is the durable crash breadcrumb. Both resolved at this session's
+close-out above.
 
-**Recorded at claim because it bounds the remedy before any is attempted.** The file is
-**103,755 B against 65,536 B**, over by 38,219 — the only file the FM #28 gate flags. Its
-composition, measured: front matter 5,209 B, `## Open items` **83,039 B**, `## Completed items`
-14,387 B, `## Historical context` 1,120 B. **`## Open items` alone is 1.27× the whole-file
-ceiling**, so deleting everything that is *not* live work — 20,716 B — still leaves the file
-17,503 B over. No housekeeping cut clears this. That re-frames the session from "trim a file" to
-"choose which limit moves", the same shape S98 found in `HANDOFFS.md` on a different axis.
-
-**And the obvious cut is load-bearing.** `docs/planning/BACKLOG-archive-2026-08-15.md.verify.sh`
-asserts C4 *reachability against the live file*: the shard must be named there and all 11 archived
-items must keep a `**BL-N**` pointer row. Deleting `## Completed items` would turn a green proof
-red. Baseline captured before any edit — the proof passes 4/4 today.
+Two facts recorded *at claim*, before any remedy was attempted, because they bound the remedy:
+**no housekeeping cut could clear the ceiling** (`## Open items` alone was 1.27× it, so deleting
+everything that is not live work still left the file 17,503 B over), and **the obvious cut was
+load-bearing** — the archive proof's C4 asserts reachability against the live file, so deleting
+§Completed items would turn a green proof red. Baseline captured before any edit: 4/4.
 
 **Model:** Claude Opus 5 (1M context).
 

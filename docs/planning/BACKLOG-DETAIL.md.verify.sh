@@ -80,14 +80,19 @@ if not items or not now:
           "population asserts nothing." % (len(items), len(now)))
     sys.exit(2)
 
-# C1 -- identity set. Same items on both sides, nothing invented, nothing dropped.
+# C1 -- identity set. Every item open at the split must still be in the detail file. Items ADDED
+# since are reported, NEVER failed: this proof asks "was anything lost in the move", and a backlog
+# that can never gain an item would be a proof that fails on correct use -- which is precisely the
+# false-positive class BL-36 is about. Losses fail; growth is reported.
 missing = [n for n in items if n not in now]
-extra   = sorted(set(now) - set(items))
-if missing or extra:
-    fails.append("C1 identity set: missing from detail: %s; unexpected in detail: %s" % (missing, extra))
+added   = sorted(set(now) - set(items))
+if missing:
+    fails.append("C1 identity set: item(s) open at %s missing from the detail file: %s" % (base, missing))
 else:
-    checks.append("C1 identity set: %d item(s), exactly the set open at %s, present on both sides"
-                  % (len(items), base))
+    checks.append("C1 identity set: all %d item(s) open at %s still present%s"
+                  % (len(items), base,
+                     "" if not added else "; %d raised since (not a finding): BL-%s"
+                     % (len(added), ", BL-".join(str(n) for n in added))))
 
 # C2 -- byte-exact bodies, per identity.
 bad = [(n, len(was[n].encode()), len(now[n].encode())) for n in items
