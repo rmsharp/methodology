@@ -163,6 +163,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-17 · [ad hoc] S96 close-out — receipt written, self-score 8/10, predecessor S95 scored 9/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md); the substantive work is the BL-40 entry below.
+Two tracked telemetry ledgers committed with it — `.context-budget-history.jsonl` and
+`dashboard_history.jsonl` accumulate rows from running Phase 0 alone, and no protocol step owns
+writing them. Committing rather than inheriting the dirt forward; the ownership gap itself is
+recorded in the receipt's `next_steps` (f), not fixed.
+
+**`HANDOFFS.md` ends this session at 94,380 B against a 65,536 B ceiling** — worse than the 74,683 B
+it started at, and stated rather than buried. The trim this session unblocks was deliberately not
+taken: it is a second capability (FM #26). The receipt hands it forward with the method for
+re-deriving the numbers rather than the numbers themselves, because the last two sessions both
+published headroom figures that were stale by their own close-out.
+
+**One correction made at the final gate rather than left standing:** the self-assessment claimed this
+receipt was the smallest of the last five at 13,986 B. That measured the fence block alone against
+predecessor figures that include the assessment prose. On a like-for-like basis it is **18,845 B**,
+the second largest (S95 21,266; S92 16,840; S94 16,135; S93 15,159). Corrected in place, and the
+self-score reasoning updated to count it.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-17 · [BL-40] Test 34's mutation anchors become an asserted population with a stated skip — six assertions could vanish, not five
 
 `bin/tests.sh` Test 34 read its two mutation anchors as `ids[1]`/`ids[2]` of the live `HANDOFFS.md`.
