@@ -163,6 +163,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-23 · [BL-41] `methodology_trim.py` disambiguates a taken shard name instead of refusing
+
+`TRIM_VERSION` 1.2.0 → **1.3.0**, one DISTRIBUTED file. The shard name was a function of a record
+DATE while the cut is POSITIONAL — not injective, yet used as a unique key behind a write-once
+refusal, so every admissible cut of `HANDOFFS.md` derived one taken name and the tool's own advice
+(*"Disambiguate with `--cut`"*) had no solution. A taken name now resolves to `-2`, `-3`, … and is
+REPORTED; nothing is ever overwritten, and past `SHARD_SUFFIX_MAX` it still refuses.
+
+`--cut 3` — the cut BL-41 recorded as impossible — now archives to
+`HANDOFFS-through-2026-08-17-2.md`, retaining Test 34's floor of three: 82,966 → **43,928 B**.
+**Dry run only; no trim was run** — a second capability (FM #26), scoped out by the operator.
+
+RED first against copied fixtures (3 failures + 2 errors, both controls green on either side);
+9 mutants, **9/9 killed**; suite diffed row-for-row against the Orient baseline, **zero rows lost**;
+the 9 shipped `.verify.sh` proofs unchanged at 5 green / 4 red (BL-36, pre-existing).
+Detail in the [`HANDOFFS.md`](HANDOFFS.md) receipt and the BL-41 row in `docs/planning/BACKLOG.md`.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-23 · [BL-41] S100 claim — restore the routine `HANDOFFS.md` trim
 
 `CHANGELOG: pending`. Measurements and the seven declarations are in the `status: pending` receipt

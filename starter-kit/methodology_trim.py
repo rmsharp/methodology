@@ -47,7 +47,20 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.2.0"   # 1.2.0: BL-36 — the GENERATED .verify.sh identified the records the trim
+TRIM_VERSION = "1.3.0"   # 1.3.0: BL-41 — the shard name is derived from a RECORD DATE while
+                         # the cut is POSITIONAL, so it is NOT injective: whenever two records share
+                         # a date, distinct cuts derive one name. The write-once rule then refused
+                         # every admissible cut, and the tool's own advice ("Disambiguate with
+                         # --cut") had no solution — that date both selects the records AND becomes
+                         # the key, so there is no second knob. A live ledger sat 14,317 B over its
+                         # ceiling with no reachable remedy. A taken name is now DISAMBIGUATED with
+                         # a numeric suffix instead of refused. MINOR: nothing is ever overwritten
+                         # (write-once is unchanged, and still REFUSES past SHARD_SUFFIX_MAX), but
+                         # a run that previously exited 2 now writes a shard, and its name can
+                         # carry a suffix — so a reader comparing two archives must be able to tell
+                         # which rule each ran under.
+                         #
+                         # 1.2.0: BL-36 — the GENERATED .verify.sh identified the records the trim
                          # COMMIT added by a constant baked in at generation time (`INJECTED`, a
                          # 0/1 flag) and skipped that many POSITIONS. A commit bundling any second
                          # ledger write therefore failed by construction with zero data loss — four
@@ -84,6 +97,7 @@ BYTE_STOP_FRACTION = 0.5       # hysteresis — stops a trim re-firing on the ne
 SRF_RED = 1.00                 # plan §3.3 H3: at or above this, a reset is the wrong move
 ARCHIVE_DIR = "docs/archive"
 REBASE_PREFIX = "../../"       # docs/archive/<shard>.md -> repo root is exactly two levels
+SHARD_SUFFIX_MAX = 99          # BL-41 — bound on collision disambiguation; past it, refuse
 
 # --- "is this plausibly a fresh seed?" — a DIFFERENT question from "is it over its budget" ----
 # Deliberately its own literal rather than an alias of DEFAULT_BUDGET_BYTES, and deliberately not
@@ -386,6 +400,17 @@ def classify_zones(text, spec, result):
 def _safe_cut_key(key):
     """A cut key must be a flat filename fragment — no separator, no leading dot."""
     return bool(re.match(r"^[A-Za-z0-9][A-Za-z0-9._-]*$", key or ""))
+
+
+def shard_name_taken(shard_path):
+    """True if EITHER half of the pair this name would write already exists.
+
+    A trim writes `<shard>.md` and `<shard>.md.verify.sh` together. An interrupted or partially
+    reverted run can leave the proof behind without its shard, and a check that looked only at the
+    shard would then report the name free and overwrite a frozen proof — the same corruption the
+    write-once rule exists to exclude, one file over. The pair is the unit, so the pair is the test.
+    """
+    return shard_path.exists() or Path(str(shard_path) + ".verify.sh").exists()
 
 
 def _indent(s, pad="    | "):
@@ -1741,20 +1766,45 @@ def evaluate(path, opts, result):
             "--cut <earlier date> if you want a clean calendar seam." % cut_key)
 
     stem = spec.basename[:-3]
-    shard_rel = "%s/%s-through-%s.md" % (ARCHIVE_DIR, stem, cut_key)
+    base_rel = "%s/%s-through-%s.md" % (ARCHIVE_DIR, stem, cut_key)
+
+    # Write-once, and it stays write-once: overwriting would destroy the earlier shard's records
+    # while L1/L2/L3 all still pass — they quantify only over THIS run's triple, so it is the one
+    # corruption the three assertions cannot see.
+    #
+    # But REFUSING was the wrong way to enforce it (BL-41). The name is a function of a RECORD
+    # DATE while the cut is POSITIONAL, so it is not injective: when two records share a date,
+    # distinct cuts derive one name. The old advice — "Disambiguate with --cut" — had no solution,
+    # because a date cut key both SELECTS the records and BECOMES the key; there is no second knob
+    # to turn. On this repo's own receipt ledger every admissible cut derived the same taken name,
+    # and the file sat 14,317 B over its ceiling with no reachable remedy.
+    #
+    # So a taken name is resolved, not refused. Nothing is overwritten — the loop only ever moves
+    # to a name that does not exist — and the rename is REPORTED, because a shard whose name no
+    # longer uniquely says "through this date" must not arrive silently.
+    shard_rel, suffix = base_rel, 1
+    while shard_name_taken(repo / shard_rel):
+        suffix += 1
+        if suffix > SHARD_SUFFIX_MAX:
+            result.add("SHARD_EXISTS",
+                       "%s and every disambiguation up to -%d are taken. Refusing to overwrite: a "
+                       "collision destroys the earlier shard's records while all three assertions "
+                       "still pass, because none of them quantifies over any other file in %s. "
+                       "Archive by hand, or clear the stale names."
+                       % (base_rel, SHARD_SUFFIX_MAX, ARCHIVE_DIR), exit_code=2)
+            return result
+        shard_rel = "%s/%s-through-%s-%d.md" % (ARCHIVE_DIR, stem, cut_key, suffix)
+
+    if shard_rel != base_rel:
+        result.add("SHARD_NAME_DISAMBIGUATED",
+                   "%s was taken, so this shard is %s. The date in a shard name is a SPAN LABEL, "
+                   "not a unique key — cuts are positional (§2.3) and two records can share a "
+                   "date, so more than one shard may legitimately end on the same day. The "
+                   "earlier shard is untouched."
+                   % (base_rel, shard_rel))
+
     shard_path = repo / shard_rel
     verify_rel = shard_rel + ".verify.sh"
-
-    # Write-once. Two runs can resolve to the same cut key, and overwriting would destroy the first
-    # shard's records while L1/L2/L3 all still pass — they quantify only over THIS run's triple.
-    # The one corruption the three assertions cannot see, so it is excluded by construction.
-    if shard_path.exists():
-        result.add("SHARD_EXISTS",
-                   "%s already exists. Refusing to overwrite: a collision destroys the earlier "
-                   "shard's records while all three assertions still pass, because none of them "
-                   "quantifies over any other file in %s. Disambiguate with --cut."
-                   % (shard_rel, ARCHIVE_DIR), exit_code=2)
-        return result
 
     live_rel = path.relative_to(repo).as_posix()
     plan = TrimPlan()

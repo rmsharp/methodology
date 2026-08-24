@@ -705,18 +705,181 @@ class TestEndToEnd(unittest.TestCase):
                              "TWO entries gained must also be caught, not just zero")
             self.assertIn("P1A_LEDGER_ENTRY", two_r.codes)
 
-    def test_shard_collision_is_a_refusal_never_an_overwrite(self):
+    # --- BL-41: the shard name is not injective, so a collision must be RESOLVED, not refused ----
+    #
+    # The name is a function of a RECORD DATE; the cut is POSITIONAL. Distinct cuts therefore map
+    # to one name, and the write-once refusal then has no escape: `--cut <date>` cannot break the
+    # tie because that date both selects the records AND becomes the key. On the live HANDOFFS.md
+    # every admissible cut yielded `HANDOFFS-through-2026-08-17.md`, so the tool's own advice —
+    # "Disambiguate with --cut" — had no solution and the ledger sat over its ceiling (BL-41).
+    #
+    # What must NOT change: no run may ever overwrite an earlier shard or an earlier proof. That
+    # is the invariant the refusal was protecting, and every test below still asserts it.
+
+    def test_FIXTURE_the_derived_shard_name_really_is_taken_before_the_second_cut(self):
+        """Fixture control. Asserts the COLLISION EXISTS before anything asserts what happens to
+        it — a green disambiguation test proves nothing if the second cut never collided."""
         with tempfile.TemporaryDirectory() as tmp:
             p = make_repo(tmp)
             run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
             sh(p, "git", "add", "-A")
             sh(p, "git", "commit", "-qm", "trim")
-            shard = sorted((p / "docs" / "archive").glob("CHANGELOG-through-*.md"))[0]
-            key = shard.name[len("CHANGELOG-through-"):-3]
-            before = shard.read_bytes()
+            shards = sorted((p / "docs" / "archive").glob("CHANGELOG-through-*.md"))
+            self.assertEqual(len(shards), 1, "fixture must start from exactly one shard")
+            key = shards[0].name[len("CHANGELOG-through-"):-3]
+            self.assertTrue(shards[0].exists())
+            # The precondition, stated as an assertion rather than assumed by the next test.
+            self.assertTrue((p / "docs" / "archive" / ("CHANGELOG-through-%s.md" % key)).exists(),
+                            "the name the next cut will derive must already be taken")
+
+    def test_a_colliding_shard_name_is_disambiguated_and_the_earlier_shard_is_untouched(self):
+        """BL-41's fix. The earlier shard's BYTES are the invariant; the refusal was only one way
+        of protecting them, and it protected them by making the tool unusable."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+            sh(p, "git", "add", "-A")
+            sh(p, "git", "commit", "-qm", "trim")
+            first = sorted((p / "docs" / "archive").glob("CHANGELOG-through-*.md"))[0]
+            key = first.name[len("CHANGELOG-through-"):-3]
+            before = first.read_bytes()
+
             r = run_trim(p, "--file", "CHANGELOG.md", "--cut", key, "--write", "--today", "2026-02-02")
+
+            self.assertIn("SHARD_NAME_DISAMBIGUATED", r.stdout, r.stdout)
+            self.assertNotIn("[SHARD_EXISTS]", r.stdout, r.stdout)
+            self.assertEqual(first.read_bytes(), before,
+                             "the earlier shard must be byte-identical after the second trim")
+            second = p / "docs" / "archive" / ("CHANGELOG-through-%s-2.md" % key)
+            self.assertTrue(second.exists(), "the disambiguated shard must be written")
+
+    def test_the_disambiguated_shard_holds_THIS_cut_s_records_not_a_copy_of_the_first(self):
+        """A disambiguation that wrote an empty file, or re-wrote the first shard's contents under
+        a free name, would pass the byte-identity test above. Assert the CONTENT moved."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+            sh(p, "git", "add", "-A")
+            sh(p, "git", "commit", "-qm", "trim")
+            first = sorted((p / "docs" / "archive").glob("CHANGELOG-through-*.md"))[0]
+            key = first.name[len("CHANGELOG-through-"):-3]
+            live_before = (p / "CHANGELOG.md").read_text(encoding="utf-8")
+            spec = mod.LEDGERS["CHANGELOG.md"]
+            moved_out = records_of(live_before, spec)
+
+            run_trim(p, "--file", "CHANGELOG.md", "--cut", key, "--write", "--today", "2026-02-02")
+
+            second = p / "docs" / "archive" / ("CHANGELOG-through-%s-2.md" % key)
+            live_after = (p / "CHANGELOG.md").read_text(encoding="utf-8")
+            kept = records_of(live_after, spec)
+            self.assertTrue(kept, "the live file must still hold records")
+            self.assertLess(len(kept), len(moved_out), "the second cut must actually archive")
+            shard_text = second.read_text(encoding="utf-8")
+            # The oldest record of the PREVIOUS live file is the one this cut moved.
+            oldest = mod.transform_record(moved_out[-1])
+            self.assertIn(oldest.strip()[:200], shard_text,
+                          "the disambiguated shard must contain the records THIS cut archived")
+            self.assertNotIn(first.read_text(encoding="utf-8")[:200], shard_text,
+                             "it must not be a copy of the earlier shard")
+
+    def test_a_stray_proof_with_no_shard_is_also_never_clobbered(self):
+        """The shard and its .verify.sh are written as a pair; an interrupted run can leave the
+        proof behind without its shard. Checking only the SHARD would then silently overwrite a
+        frozen proof — the same corruption the write-once rule exists to exclude, one file over."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            r0 = run_trim(p, "--file", "CHANGELOG.md", "--today", "2026-02-01")
+            m = re.search(r"docs/archive/(CHANGELOG-through-[0-9-]+)\.md", r0.stdout)
+            self.assertIsNotNone(m, r0.stdout)
+            stray = p / "docs" / "archive" / (m.group(1) + ".md.verify.sh")
+            stray.write_text("#!/usr/bin/env bash\n# frozen proof, no shard\n", encoding="utf-8")
+            keep = stray.read_bytes()
+
+            r = run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+
+            self.assertEqual(stray.read_bytes(), keep,
+                             "an existing .verify.sh must never be overwritten")
+            self.assertIn("SHARD_NAME_DISAMBIGUATED", r.stdout, r.stdout)
+
+    def test_NARROWED_shard_only_collision_check_passes_the_shard_case_and_loses_the_proof(self):
+        """The plausible weaker implementation: disambiguate on the SHARD path alone. It resolves
+        an ordinary collision (so it passes the two tests above) and silently clobbers the stray
+        proof — which is why the real check quantifies over BOTH names."""
+        def narrowed_taken(shard_path):
+            return shard_path.exists()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            r0 = run_trim(p, "--file", "CHANGELOG.md", "--today", "2026-02-01")
+            m = re.search(r"docs/archive/(CHANGELOG-through-[0-9-]+)\.md", r0.stdout)
+            base = p / "docs" / "archive" / (m.group(1) + ".md")
+            stray = p / "docs" / "archive" / (m.group(1) + ".md.verify.sh")
+            stray.write_text("frozen\n", encoding="utf-8")
+
+            self.assertFalse(narrowed_taken(base),
+                             "the narrowed check sees the name as FREE — and would write over "
+                             "the stray proof")
+            self.assertTrue(mod.shard_name_taken(base),
+                            "the full-strength check must see the pair as taken")
+
+    def test_disambiguation_is_bounded_and_still_REFUSES_at_the_bound(self):
+        """Write-once is retained, not removed. Past the bound the tool refuses exactly as before,
+        so the protection has a floor rather than an unbounded rename loop."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            r0 = run_trim(p, "--file", "CHANGELOG.md", "--today", "2026-02-01")
+            m = re.search(r"docs/archive/(CHANGELOG-through-[0-9-]+)\.md", r0.stdout)
+            stem = m.group(1)
+            adir = p / "docs" / "archive"
+            (adir / (stem + ".md")).write_text("taken\n", encoding="utf-8")
+            for i in range(2, mod.SHARD_SUFFIX_MAX + 1):
+                (adir / ("%s-%d.md" % (stem, i))).write_text("taken\n", encoding="utf-8")
+
+            r = run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+
             self.assertIn("[SHARD_EXISTS]", r.stdout, r.stdout)
-            self.assertEqual(shard.read_bytes(), before, "the earlier shard must be untouched")
+            self.assertEqual((adir / (stem + ".md")).read_text(encoding="utf-8"), "taken\n",
+                             "the refusal must still leave every existing shard untouched")
+
+    def test_the_bound_refusal_is_FATAL_and_not_merely_reported(self):
+        """THE ONE PLACE THIS FILE ASSERTS ON EXIT STATUS, AND THE DEPARTURE IS DELIBERATE.
+
+        The header rule — assert on named findings, never on the exit code — exists so that adding
+        a check cannot silently re-label an UNRELATED assertion. This assertion is not unrelated:
+        its whole subject is the SEVERITY of one named finding. Dropping `exit_code=2` from the
+        bound refusal changes nothing a finding-only test can see (the function returns before the
+        write either way, so the shard is still untouched), and a scripted caller would read the
+        refusal as success. That mutant survived a 9-mutant round with every finding asserted.
+
+        It can still pass for the wrong reason if some future check exits 2 on this fixture, so it
+        asserts the finding AND the status together, and names the pair here so a reader can tell.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            r0 = run_trim(p, "--file", "CHANGELOG.md", "--today", "2026-02-01")
+            m = re.search(r"docs/archive/(CHANGELOG-through-[0-9-]+)\.md", r0.stdout)
+            stem = m.group(1)
+            adir = p / "docs" / "archive"
+            (adir / (stem + ".md")).write_text("taken\n", encoding="utf-8")
+            for i in range(2, mod.SHARD_SUFFIX_MAX + 1):
+                (adir / ("%s-%d.md" % (stem, i))).write_text("taken\n", encoding="utf-8")
+
+            r = run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+
+            self.assertIn("[SHARD_EXISTS]", r.stdout, r.stdout)
+            self.assertNotEqual(r.returncode, 0,
+                                "a refusal a caller cannot detect is not a refusal")
+
+    def test_a_free_name_is_used_verbatim_and_reports_no_disambiguation(self):
+        """Negative control: always-suffixing would pass every test above. The plain name must
+        still be the name when nothing is in the way."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            r = run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+            self.assertNotIn("SHARD_NAME_DISAMBIGUATED", r.stdout, r.stdout)
+            shards = sorted((p / "docs" / "archive").glob("CHANGELOG-through-*.md"))
+            self.assertEqual(len(shards), 1, r.stdout)
+            self.assertNotIn("-2.md", shards[0].name, "an unforced suffix is a bug")
 
     def test_srf_abstains_out_loud_before_a_first_archive(self):
         with tempfile.TemporaryDirectory() as tmp:
