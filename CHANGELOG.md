@@ -163,6 +163,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-23 · [ad hoc] S101 claim — run the `HANDOFFS.md` trim
+
+`CHANGELOG: pending`. Breach, cut, controls and six declarations are in the `status: pending`
+receipt in [`HANDOFFS.md`](HANDOFFS.md). **Minimal by necessity: this file arrived 1,764 B OVER its
+own 65,536 B ceiling** (S100's `next_steps` (c)); trimming it is a second capability, not claimed here.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-23 · [BL-41] S100 close-out — receipt written, self-score 8/10, predecessor S99 scored 8/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), inside the 18,432 B per-record budget

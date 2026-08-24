@@ -67,6 +67,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-17.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ```handoff
+session: S101
+date: 2026-08-23
+status: pending
+active_task: **Run the `HANDOFFS.md` trim** — S100's `next_steps` (a), assigned by the operator. Breach RE-DERIVED at Orient, not inherited: **98,284 B against 65,536 B, over by 32,748.** S100's own close-out added 15,318 B *after* it measured 82,966, so every `HANDOFFS.md` byte figure in that receipt — including its `--cut 3` estimate of 43,928 B — understates. Header 6,016 B; the five receipts run S100 18,430 / S99 17,179 / S98 17,161 / S97 20,085 / S96 19,408 B. Both ledgers reconciled with a **zero-commit gap**, so the P1 record-then-trim guard is satisfied and no backfill was written. `--check` FIRES on both triggers. **ONE NUMBER WORTH FIXING BEFORE THE TRIM MOVES IT:** `bin/check-handoff`'s per-record budget is 18,432 B and Test 34's retention floor is 3, so a post-trim ledger whose receipts sit at that budget measures 6,016 + 3 x 18,432 = **61,312 B — 4,224 B of headroom, under a quarter of one receipt.** The ceiling holds only while the mean receipt stays under **19,840 B** AND every session trims. S98's collision is therefore not repealed, merely not binding today; S100 skipped one trim and this file reached 98 KB.
+next_steps: SIX DECLARATIONS, to be judged at close-out. **(1) THE TRIM IS THE ONE DELIVERABLE.** No tool edit, no `CHANGELOG.md` trim, no BL item raised — each is a second capability (FM #26). **(2) `--cut 3`, Test 34's floor**, confirmed by DRY RUN on the live file before any `--write`; the floor is read off this file's own front-matter warning, not assumed. **(3) THE TRIM COMMITS ALONE**, this receipt `status: pending` across it — S98's commit shape, restated by S100. **(4) LOSSLESSNESS IS PROVED BY RUNNING THE EMITTED `.verify.sh`, NOT BY TRUSTING THE TOOL'S SENTENCE.** The eleven proofs that already ship were run BEFORE any write: **7 green / 4 red**, the reds being the `*-2026-08-02` and `*-2026-08-09` pairs on both ledgers — that is the control, and the trim must redden none of the seven. Suite baseline captured pre-change too: **280 rows, 279 passed / 1 failed**, the sole failure Test 9's pre-existing `--source=github` 404, confirmed BY NAME. **(5) CARVE-OUT, DECLARED AT CLAIM AND DELIBERATELY NOT NARROWED THE WAY S100'S WAS.** The trim touches NO distributed file: it writes `HANDOFFS.md`, one new `docs/archive/` shard and its proof, all canonical-only. `starter-kit/FRAMEWORK_LEARNINGS.md` IS distributed and Phase 3C may mandate a row there — declared here rather than discovered at 3C, with its **2,410 B** of headroom budgeted before anything is written. **(6) NO OUTWARD-FACING ACTION** — no PR, no push, no issue, no comment, no tag. Upstream issue #75's prepared answer stays unsent; this makes eleven sessions.
+```
+
+```handoff
 session: S100
 date: 2026-08-23
 status: complete
