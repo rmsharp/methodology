@@ -163,6 +163,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-23 · [BL-41] S100 claim — restore the routine `HANDOFFS.md` trim
+
+`CHANGELOG: pending`. Measurements and the seven declarations are in the `status: pending` receipt
+in [`HANDOFFS.md`](HANDOFFS.md). **Deliberately minimal: this file had 397 B of byte headroom at
+claim while its gate row read `894 ln / 2,000 ln — ok`.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-18 · [ad hoc] S99 close-out — receipt written, self-score 8/10, predecessor S98 scored 8/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), within the 18,432 B per-record budget S98
