@@ -2725,7 +2725,29 @@ while recs and re.search(r"(?m)^status: pending$", recs[0]):
     recs.pop(0)
 if not recs:
     sys.exit("FIXTURE EMPTY after dropping pending records")
-open(dst, "w", encoding="utf-8").write(head + "".join(recs))
+out = head + "".join(recs)
+# THE OVER-BUDGET FROZEN RECORD IS CONSTRUCTED HERE, NOT INHERITED. Assertion (4) below proves
+# that committed records are exempt from the budget -- which proves nothing unless the frozen
+# population really holds one over it. It used to, by accident: the live ledger happened to carry
+# receipts above 18,432 B. The 2026-08-23 trim archived the last two (S97 20,086 B, S96 19,408 B),
+# and NO cut can both clear this file's byte ceiling and retain one -- retaining S97 means five
+# receipts, 101,053 B against a 65,536 B ceiling. So the property was never durable enough to
+# inherit, and the control below caught its loss the first time a trim took it away.
+# Padding goes on the OLDEST record's TRAILING PROSE: the newest record is the subject of every
+# other assertion in this test, and prose is the axis M5 exists to defend.
+BUDGET38, TARGET38 = 18432, 18432 + 512
+bounds = [m.start() for m in re.finditer(r"(?m)^```handoff$", out)] + [len(out)]
+cur = len(out[bounds[-2]:].encode())
+if cur < TARGET38:
+    out = out + "X" * (TARGET38 - cur - 1) + "\n"
+open(dst, "w", encoding="utf-8").write(out)
+# Re-parse the ARTIFACT. A size computed from the string just built asserts an identity, which is
+# the defect this file already records twice.
+back = open(dst, encoding="utf-8").read()
+st = [m.start() for m in re.finditer(r"(?m)^```handoff$", back)] + [len(back)]
+armed = sum(1 for i in range(len(st) - 1) if len(back[st[i]:st[i + 1]].encode()) > BUDGET38)
+if armed < 1:
+    sys.exit("FIXTURE NOT ARMED: no frozen record over %d B -- assertion (4) is vacuous" % BUDGET38)
 PY38A
 (cd "$FIXREPO38" && git add -A && git -c user.email=t@t -c user.name=t commit -q -m "frozen baseline")
 

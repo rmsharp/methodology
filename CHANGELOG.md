@@ -163,6 +163,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-23 · [ad hoc] Test 38's frozen population is CONSTRUCTED over budget, not inherited from the live ledger
+
+`bin/tests.sh` (canonical-only). The 2026-08-23 trim archived S97 (20,086 B) and S96 (19,408 B) —
+the live ledger's only two records over `check-handoff`'s 18,432 B per-record budget — and Test 38's
+assertion (4), *committed records are exempt as frozen*, went vacuous: it began asserting `0 over`
+against a population of **0**. S98's scope control caught it the first time a trim took the property
+away, exactly as its comment said it would.
+
+**No cut could have avoided this.** Retaining S97 means retaining five receipts — 101,053 B against a
+65,536 B ceiling — so the ceiling and that assertion's arming are mutually exclusive. The fixture
+builder now pads the **oldest** record's trailing prose to 18,944 B and re-parses the artifact to
+assert the frozen population really holds one over budget, failing loudly (`FIXTURE NOT ARMED`)
+rather than silently if it ever does not. Suite 279/1 restored, the sole failure Test 9's
+pre-existing `--source=github` 404.
+
+Mutation-proven, each mutant verified to apply and every restore `cmp`-checked: padding to exactly
+*at* budget, and padding removed, both re-redden the control.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-23 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-18.md` (3 record(s), 101,053 B → 44,845 B)
 
 **Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
