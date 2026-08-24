@@ -163,6 +163,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-23 · [BL-41] S100 close-out — receipt written, self-score 8/10, predecessor S99 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), inside the 18,432 B per-record budget
+(`check-handoff`: `1 unwritten record(s), 0 over`). Phase 3C added **Learning #36** to
+`starter-kit/FRAMEWORK_LEARNINGS.md` — a second DISTRIBUTED file, which the claim's carve-out did
+not anticipate; the departure is recorded in the receipt rather than quietly widened.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-23 · [BL-41] `methodology_trim.py` disambiguates a taken shard name instead of refusing
 
 `TRIM_VERSION` 1.2.0 → **1.3.0**, one DISTRIBUTED file. The shard name was a function of a record
