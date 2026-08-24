@@ -163,6 +163,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-24 · [ad hoc] S102 close-out — receipt written, self-score 8/10, predecessor S101 scored 7/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), inside the 18,432 B per-record budget (asserted by
+`bin/check-handoff --all`, not predicted). Claim `b300098`, deliverable `ebe69eb`, this close-out;
+branch commit `60246e7` unpushed.
+
+**S101 scored 7 for one reason worth recording here rather than only in the receipt:** its
+`next_steps` (g) carried *"issue #75's answer prepared, vetted, unsent"* — a formulation S99 and
+S100 carried too — which conflates the **comment** (sent 2026-08-16 on an explicit go-ahead,
+recorded at `143ff2b` in this very file) with the **implementation** (never sent). Paired with a
+session count that was incremented rather than derived — "ten", then "eleven", against an enumerated
+**9** — it left the fork's stated purpose looking blocked when nothing blocked it. Neither claim was
+marked unverified. **An unattributed status claim propagates exactly like an unattributed blocker.**
+
+**Both mandated-read ledgers are now over their ceilings**, `CHANGELOG.md` by this session's three
+owed entries and `HANDOFFS.md` by this receipt. Figures are in the receipt's FM #28 gate line,
+measured after the last write. Neither trim was run: each is a session-sized deliverable (S87's
+precedent, restated by S100 and S101), and running one here would be a second capability (FM #26).
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-24 · [issue #75] Upstream PR prepared and NOT sent — branch `docs/issue75-plan-surface-upstream`, local only
 
 **A branch op, recorded as an action; no outward-facing action was taken.** Nothing pushed, no PR,
