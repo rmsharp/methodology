@@ -163,6 +163,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-24 · [issue #75] S102 claim — prepare the upstream PR, send nothing
+
+`CHANGELOG: pending`. Declarations, corrections and controls are in the `status: pending` receipt in
+[`HANDOFFS.md`](HANDOFFS.md). **Compact by necessity: this file arrived 4,886 B OVER its own 65,536 B
+ceiling** (S101's `next_steps` (a)); trimming it is a second capability, not claimed here. Two
+inherited claims corrected at Orient: the #75 **comment** was sent (2026-08-16, `143ff2b`) — the
+**implementation** is what is unsent — and it is **9** sessions since S92, derived from the receipts,
+not the incremented eleven/twelve.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-23 · [ad hoc] S101 close-out — receipt written, self-score 8/10, predecessor S100 scored 8/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), within the 18,432 B per-record budget, verified by
