@@ -163,6 +163,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-23 · [ad hoc] S101 close-out — receipt written, self-score 8/10, predecessor S100 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), within the 18,432 B per-record budget, verified by
+running `bin/check-handoff` rather than predicting it. Deliverable: the `HANDOFFS.md` trim
+(`101,053 B → 44,845 B`). Phase 3C's `FRAMEWORK_LEARNINGS.md` row was **offered to the operator and
+scoped out** — recorded in the receipt, with the row's text, rather than silently skipped.
+
+Session crossed local midnight; ledger entries stay on the session's date, git timestamps carry the
+real one.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-23 · [ad hoc] Test 38's frozen population is CONSTRUCTED over budget, not inherited from the live ledger
 
 `bin/tests.sh` (canonical-only). The 2026-08-23 trim archived S97 (20,086 B) and S96 (19,408 B) —
