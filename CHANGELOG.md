@@ -163,6 +163,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-24 · [issue #75] Upstream PR prepared and NOT sent — branch `docs/issue75-plan-surface-upstream`, local only
+
+**A branch op, recorded as an action; no outward-facing action was taken.** Nothing pushed, no PR,
+no comment, no tag — verified with `git ls-remote --heads origin`, which returns nothing for this
+branch. Branch `docs/issue75-plan-surface-upstream` = `60246e7`, based on `upstream/main` (`512c2ed`),
+1 ahead, 3 files, +172/−1. Drafts: [`docs/planning/issue75-upstream-pr.md`](docs/planning/issue75-upstream-pr.md)
+(what exists, decisions, how to send) and its `-body.md` sibling (the PR body, `--body-file`-ready).
+
+**The finding that made this more than a cherry-pick.** Fork `main`'s `starter-kit/SESSION_RUNNER.md`
+differs from `upstream/main` in **FIVE** hunks; only **two** are #75. The other three — Phase 3C
+rerouted to `FRAMEWORK_LEARNINGS.md`, the `**Model:**` ledger bullet, and the Learnings-table
+extraction — all depend on `starter-kit/FRAMEWORK_LEARNINGS.md`, **which does not exist upstream**
+(nor does `starter-kit/methodology_trim.py`). A whole-file take would have carried three unshipped
+changes into a one-issue PR. Built instead by applying `b1b7eaf`'s patch for that file alone;
+`git apply --check` passed.
+
+**Test numbering collides across the two repos.** The fork's Tests 32/33/34 *are* upstream's 23/24/25
+(upstream `bin/tests.sh` is 650 lines against the fork's 2,981), so the fork's Test 36 ports as
+**Test 26**. Fork-only references were rewritten, not carried: `BL-10` and fork session ids removed,
+and the citation census stated as the commands that reproduce it rather than as drifting line numbers.
+
+**Verified on the branch, which is the surface that matters** — the fork's suite says nothing about a
+tree built from `upstream/main`. Pre-change control on a pristine tree **114/0**; RED with the test
+added and the runner unpatched, **5 of Test 26's 6 rows failing** with populations non-empty; GREEN
+**120/0**; row-for-row diff **+6 rows, ZERO lost**. `check-links` OK (83/21), `check-learnings` OK (13
+rows). Adopter smoke: `bin/sync` delivers `SESSION_RUNNER.md` byte-identical with 7 checklist items and
+both occurrences of the quoted phrase. **Not exercised: GitHub delivery, review, or merge.**
+
+**The upstream census is cleaner than the fork's, and the PR body uses the upstream one.** On
+`upstream/main`: `"Faithful verification, per surface"` **1** (its own definition), `gate (d)` **0**,
+`gate d` **1** — inside gate (d)'s own section. Nothing outside §Vertical Slice Sessions referred to
+it in either spelling; the fork had one such citation, in a fork-only planning file.
+
+**Two inherited claims corrected at Orient.** The #75 **comment** was sent 2026-08-16 with the
+operator's per-action go-ahead (`143ff2b`); it is the **implementation** that was unsent. And it is
+**9** sessions since S92 (S93–S101, enumerated from receipts), not the eleven/twelve the receipts had
+been incrementing.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-24 · [issue #75] S102 claim — prepare the upstream PR, send nothing
 
 `CHANGELOG: pending`. Declarations, corrections and controls are in the `status: pending` receipt in
