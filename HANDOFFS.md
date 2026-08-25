@@ -75,6 +75,17 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-23.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ```handoff
+session: S106
+date: 2026-08-25
+status: pending
+active_task: **Phase 1 of [`docs/planning/record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md) — lower `RECORD_BUDGET_BYTES` 18,432 -> 12,288.** The number was RATIFIED by the operator at Phase 1 (plan §9's one blocking decision), choosing the plan's recommendation over the costed 10,240 / 8,192. Sites: `bin/check-handoff` (the constant, its derivation comment, the user-facing remediation text), the nine `bin/tests.sh` couplings in plan §5.2, and the `_` note at `.context-budget.json:59`. **NOT claimed:** Phase 2 (front-matter compaction), Phase 3 (further reduction), the 65,536 B ceiling, Test 34's floor of 3, `methodology_trim.py`, any distributed file, and the `HANDOFFS.md` trim that is due (it is a second capability — FM #26). **NO OUTWARD-FACING ACTION.**
+next_steps: DONE = `bin/check-handoff` reports the new budget, `bin/tests.sh` green with ZERO rows lost against a pre-change control run in a `git worktree` at this claim commit, `git grep -nE '18,?432' -- bin/` returns zero hits, `context_budget.py` exits 0, and this session's own receipt is written under the NEW 12,288 B budget — the guard applied to its own author (precedent: `CHANGELOG.md` "This receipt measures 17,162 B against the 18,432 B..."). Highest-risk site is `bin/tests.sh:2956`, a literal string replace of `"RECORD_BUDGET_BYTES = 18432"`; `:2819` asserts DERIVED arithmetic (`by 1,568`) that must be recomputed, never search-replaced. Historical prose in `CHANGELOG.md`, `HANDOFFS.md` and every `docs/archive/` shard states 18,432 as a fact about its own moment and is correct as written — DO NOT REWRITE IT (FM #22, plan §5.4).
+```
+
+<!-- claim stub written at session start; completed at close-out -->
+
+
+```handoff
 session: S105
 date: 2026-08-25
 status: complete

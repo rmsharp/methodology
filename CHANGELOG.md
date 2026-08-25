@@ -167,6 +167,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S106 claim — Phase 1 of the record-budget reduction: lower the constant
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **An implementation session executing a ratified plan** — Phase 1 of
+[`docs/planning/record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md),
+one phase, one session, per that plan's own STOP.
+
+**The blocking decision was settled at Phase 1, not assumed.** Plan §9 made ratification of the
+number the one thing Phase 1 could not start without, because every site in §5.2 encodes it. The
+operator ratified **12,288 (12 KiB)** — the plan's recommendation — over the costed alternatives
+10,240 and 8,192. That choice is recorded here so a later session can see it was made rather than
+inherited.
+
+**What changes:** `RECORD_BUDGET_BYTES` 18,432 → 12,288 in `bin/check-handoff`, its derivation
+comment rewritten from a ceiling-fitting *formula* into a **policy number plus a fit assertion**
+(plan §4.3 — otherwise Phase 2's front-matter saving would be handed straight back), the
+user-facing remediation text, the nine `bin/tests.sh` couplings, and the `_` note in
+`.context-budget.json`.
+
+**What does NOT change, verified rather than assumed:** no distributed file — `bin/check-handoff`
+and `bin/tests.sh` are both canonical-only, so **no adopter receives anything this touches**; the
+65,536 B ceiling; Test 34's floor of 3; `methodology_trim.py`, which couples only to the whole-file
+budget; and every historical statement of 18,432 in this ledger, in `HANDOFFS.md`, and in the
+archived shards — those are frozen records of what was true when written (FM #22).
+
+**Why no existing receipt reddens.** `check_record_budget` is **prospective-only**: it checks the
+newest record, and only when it differs from its frozen copy at git HEAD. Committed receipts are
+exempt by construction. Lowering the budget therefore requires no migration and rewrites no receipt.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] S105 close-out — plan delivered, self-score 8/10, predecessor S104 scored 8/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md). **A planning session: the plan is the deliverable
