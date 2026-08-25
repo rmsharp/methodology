@@ -1,6 +1,10 @@
 # Per-Record Budget Reduction — Plan
 
-**Status:** DRAFT, awaiting operator ratification. Nothing in this plan has been implemented.
+**Status:** **RATIFIED 2026-08-25** — the operator chose **12,288 (12 KiB)**, §9's one blocking
+decision, over the costed alternatives 10,240 and 8,192. **Phase 1 IMPLEMENTED** the same day
+(session S106): the constant, its derivation comment, the remediation text, thirteen
+`bin/tests.sh` couplings and the `.context-budget.json` note. **Phases 2 and 3 remain pending**
+and are each a separate session. §5.2's inventory was incomplete — see the S106 correction below it.
 **Author:** S105 (2026-08-25). **Origin:** operator request following S104's structural finding.
 **Scope:** fork-only / canonical-only. **No distributed file is touched** — see §7.
 
@@ -132,6 +136,30 @@ Commands used: `git grep -n 'RECORD_BUDGET_BYTES'`, `git grep -nE '18,?432'`,
 | `bin/tests.sh:2917, 2920` | mutant asserting `record $S38 is 18,432 B` | |
 | `bin/tests.sh:2956` | mutant does a **literal string replace** of `"RECORD_BUDGET_BYTES = 18432"` → `50000` | **highest-risk site.** `mutate` aborts loudly if the edit is a no-op, so this fails visibly rather than silently — but it must be updated in the same commit. |
 | `bin/tests.sh:2704, 2732` | explanatory comments citing 18,432 | |
+
+> **⚠ S106 CORRECTION (2026-08-25, written by the session that executed Phase 1): this inventory was
+> incomplete by two sites, and one of them would have gone GREEN while silently ceasing to test
+> anything.** The table above is left as written — this note records what it missed, and why.
+>
+> - **`bin/tests.sh:2832-2836` — the one-byte-OVER half of the edge test** (`add_record38 18433`,
+>   and three message strings naming `18,433 B`). **Missed because the inventory's own grep pattern
+>   was `18,?432`, which cannot match `18433`.** The at-budget half (`:2826`) was listed, its
+>   over-by-one twin was not. **This is the dangerous one:** left at 18,433 against a 12,288 budget
+>   the record is still over budget, so the assertion still matches and the row still PASSES — while
+>   testing a record 6,145 B past the cap instead of one byte past it. The `>` → `>=` boundary
+>   mutant (M1) would then be scored *killed* by a record that any budget catches. A green suite
+>   would have reported full coverage of an edge nothing was standing on.
+> - **`bin/tests.sh:2945` — M3's replacement payload**, the forged summary line
+>   `"record budget: 0 unwritten record(s), 0 over 18,432 B"`. Functionally inert (M3's assertion
+>   only looks for the *absence* of the `SKIPPED` marker), but the payload's whole job is to be a
+>   convincing forgery of a line the code can actually emit, and at the old number it stops being
+>   one. Updated for that reason, not for a behavioural one.
+>
+> **Generalisation for Phase 2/3:** a value's *derived neighbours* (`N+1`, `N-1`, `N + 512`, an
+> overage term) do not match a grep for `N`. Enumerate the edge cases and the arithmetic, not only
+> the literal. Counting `:2829-2830` and `:2832-2836` as their own rows, Phase 1 touched **thirteen**
+> `bin/tests.sh` sites, not nine.
+
 
 ### 5.3 Documentation to update
 

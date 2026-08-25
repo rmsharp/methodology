@@ -576,16 +576,46 @@ def check_locator_forms(blocks: list) -> list:
 
 # --- THE RECORD BUDGET -------------------------------------------------------
 #
-# 18 KiB per RECORD. Derived, not inherited — and derived from the two constraints that
-# were set independently and had started to collide:
+# 12 KiB per RECORD. A POLICY NUMBER — NOT a derivation. That distinction is the whole
+# content of the 2026-08-25 reduction, so read this before changing the constant.
 #
-#   ceiling      65,536 B   .context-budget.json, HANDOFFS.md `max_bytes`
-#   header        6,017 B   measured post-trim; grows ~450 B per archive notice, so the
-#                           derivation allows 8,000 B rather than today's figure
+# It was 18 KiB, and that figure WAS derived: (65,536 - 8,000) / 3 = 19,178, rounded down to
+# 18 KiB. But that formula fits the budget TO the ceiling, which means it was built to
+# make the budget as large as would fit — it accommodated growth rather than restraining it.
+# Its steady state was 3 x 18 KiB + 8,000 = 63,296 B against a 65,536 B ceiling: 2,240 B of
+# slack, less than one receipt, so the ledger had to be trimmed nearly every session by
+# construction, and trimming never touched what a session actually pays (see below).
+#
+# THE FORMULA IS NOW A FIT CHECK, NEVER A DEFINITION, and the difference is load-bearing:
+# re-deriving the budget from the ceiling hands the reduction straight back. Shrink the front
+# matter and the header reserve drops, which under the old reading RAISES this constant. The
+# three terms below are inputs to the assertion, not operands of a division:
+#
+#   ceiling      65,536 B   .context-budget.json, HANDOFFS.md `max_bytes`. UNCHANGED by the
+#                           reduction — it is still the trigger methodology_trim.py keys on.
+#   header        8,000 B   a RESERVE, deliberately above the measured front matter, which
+#                           grows ~450 B per archive notice. Measure it, never trust a number
+#                           written here.
 #   floor             3     bin/tests.sh Test 34 reads ids[1]/ids[2] of the LIVE ledger,
 #                           so a cut below three receipts makes six assertions SKIP
 #
-#   (65,536 - 8,000) / 3 = 19,178  ->  18,432 B (18 KiB), leaving 2,240 B of slack.
+#   FIT ASSERTION:  3 x 12,288 + 8,000 = 44,864 B  <=  65,536 B ceiling.
+#   68.5% of the ceiling, leaving 20,672 B of slack — more than one whole receipt, so a trim
+#   is occasional rather than mandatory. Lowering the header reserve must BANK the saving as
+#   slack; it must never be fed back through a division to raise the budget.
+#
+# WHY 12,288 AND NOT LOWER. A receipt splits in two: fenced fields (mean 12,108 B) and
+# TRAILING PROSE below the closing fence — 27-30% of every recent one (S104 5,388 B, S103
+# 4,613 B, S102 4,653 B). The prose is the Phase 3A predecessor evaluation and the Phase 3B
+# self-assessment, ADDITIVE to the six mandatory handoff requirements: those live in the
+# fenced fields, and the receipt already carries their conclusions as the structured
+# predecessor_score / self_score. 12,288 sits just above the fenced-field mean, so the cut
+# falls on the essays and the six requirements survive unchanged. 8,192 would not — current
+# fenced fields run 10,920-13,019 B, so it would cut the requirements themselves, which is
+# SESSION_RUNNER.md failure mode #15, and no checker here can detect that: this file asserts a
+# receipt's presence and completeness, never its quality. The only detector is the next
+# session's 3A score. Ratified by the operator at S106 over costed alternatives 10,240 and
+# 8,192; the evidence and the arithmetic are in docs/planning/record-budget-reduction-plan.md.
 #
 # WHY A PER-RECORD BUDGET AND NOT A LOWER WHOLE-FILE CEILING. Measured across 81
 # transcripts of this repo (this session excluded): the live ledger was read WHOLE into a
@@ -603,7 +633,7 @@ def check_locator_forms(blocks: list) -> list:
 # self-assessment) sits OUTSIDE its fence, and both methodology_trim.py and the byte ceiling
 # count it. Budgeting the fence alone would put this check on a different axis from the
 # ceiling it is derived from, and the arithmetic above would be false.
-RECORD_BUDGET_BYTES = 18432
+RECORD_BUDGET_BYTES = 12288
 
 
 def record_extents(text: str, blocks: list) -> list:
@@ -806,10 +836,15 @@ def main() -> int:
             for msg in budget_findings:
                 print("  error: %s" % msg)
             print("  note: a record is the opening fence through the NEXT opening fence —")
-            print("        trailing prose included, because the ceiling counts it too. The")
-            print("        budget is derived: (65,536 B ceiling − 8,000 B header allowance)")
-            print("        / 3 retained receipts. Shorten the receipt, or move the derivation")
-            print("        (RECORD_BUDGET_BYTES in this file) if the ceiling or floor changed.")
+            print("        trailing prose included, because the ceiling counts it too.")
+            print("        CUT THE TRAILING PROSE FIRST. The budget is set just above the")
+            print("        measured mean of the FENCED fields, so the six mandatory handoff")
+            print("        requirements fit inside it; the Phase 3A/3B essays below the")
+            print("        closing fence are what it is sized to exclude, and the receipt")
+            print("        already carries their conclusions as predecessor_score and")
+            print("        self_score. The budget is a POLICY number, not a derivation —")
+            print("        RECORD_BUDGET_BYTES in this file, with the fit assertion and the")
+            print("        evidence beside it. Do not re-derive it from the ceiling.")
         return 1
 
     label = ("a valid Phase 1B stub (close-out not yet performed)"

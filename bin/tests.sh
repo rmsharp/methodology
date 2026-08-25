@@ -2701,7 +2701,8 @@ echo "== Test 38: check-handoff — the per-RECORD byte budget, scoped to the re
 # context exactly ONCE and read in PART 593 times -- median span 25 lines, largest ever requested
 # 220, against a 452-line file. That matches what the protocol mandates: Phase 0 step 6 takes a
 # FRONTIER (git log -1, no content) and Phase 3A reads THE PREDECESSOR'S RECEIPT IN FULL. One
-# record. The derivation of the 18,432 B figure lives beside the constant in bin/check-handoff.
+# record. The 12,288 B figure is a POLICY number, not a derivation; the reasoning, the evidence
+# and the fit assertion all live beside the constant in bin/check-handoff.
 #
 # WHY THE FIXTURE IS A THROWAWAY GIT REPO, as Test 37's is: the check compares the newest record
 # against its counterpart in git HEAD, so a plain mktemp file has no frozen counterpart and can
@@ -2729,13 +2730,13 @@ out = head + "".join(recs)
 # THE OVER-BUDGET FROZEN RECORD IS CONSTRUCTED HERE, NOT INHERITED. Assertion (4) below proves
 # that committed records are exempt from the budget -- which proves nothing unless the frozen
 # population really holds one over it. It used to, by accident: the live ledger happened to carry
-# receipts above 18,432 B. The 2026-08-23 trim archived the last two (S97 20,086 B, S96 19,408 B),
+# receipts above the budget. The 2026-08-23 trim archived the last two (S97 20,086 B, S96 19,408 B),
 # and NO cut can both clear this file's byte ceiling and retain one -- retaining S97 means five
 # receipts, 101,053 B against a 65,536 B ceiling. So the property was never durable enough to
 # inherit, and the control below caught its loss the first time a trim took it away.
 # Padding goes on the OLDEST record's TRAILING PROSE: the newest record is the subject of every
 # other assertion in this test, and prose is the axis M5 exists to defend.
-BUDGET38, TARGET38 = 18432, 18432 + 512
+BUDGET38, TARGET38 = 12288, 12288 + 512
 bounds = [m.start() for m in re.finditer(r"(?m)^```handoff$", out)] + [len(out)]
 cur = len(out[bounds[-2]:].encode())
 if cur < TARGET38:
@@ -2816,24 +2817,24 @@ S38="$(add_record38 20000 field)"
 [ -n "$S38" ] && pass "fixture control: the prepended record got a derived id ($S38)" \
     || fail "fixture control: add_record38 produced no session id"
 OUT38="$(ch38)"
-echo "$OUT38" | grep -q "record $S38 is 20,000 B, over the 18,432 B per-record budget by 1,568" \
+echo "$OUT38" | grep -q "record $S38 is 20,000 B, over the 12,288 B per-record budget by 7,712" \
     && pass "new over-budget record caught, with its own id and overage" \
     || fail "new over-budget record not caught: $OUT38"
 restore38
 
 # (2) EDGE, not just the predicate: exactly AT the budget passes, one byte over fails. A `>`
 # widened to `>=` survives any test whose records all sit far from the cap.
-S38="$(add_record38 18432 field)"
+S38="$(add_record38 12288 field)"
 OUT38="$(ch38)"
 echo "$OUT38" | grep -q '^check-handoff: OK' \
-    && pass "edge: a record of exactly 18,432 B is within budget" \
-    || fail "edge: exactly-18,432 B record wrongly rejected: $OUT38"
+    && pass "edge: a record of exactly 12,288 B is within budget" \
+    || fail "edge: exactly-12,288 B record wrongly rejected: $OUT38"
 restore38
-S38="$(add_record38 18433 field)"
+S38="$(add_record38 12289 field)"
 OUT38="$(ch38)"
-echo "$OUT38" | grep -q "record $S38 is 18,433 B" \
-    && pass "edge: a record of 18,433 B is over budget" \
-    || fail "edge: 18,433 B record not caught: $OUT38"
+echo "$OUT38" | grep -q "record $S38 is 12,289 B" \
+    && pass "edge: a record of 12,289 B is over budget" \
+    || fail "edge: 12,289 B record not caught: $OUT38"
 restore38
 
 # (3) THE UNIT IS THE RECORD, NOT THE FENCE, asserted rather than left to the comment. Padding
@@ -2848,13 +2849,13 @@ restore38
 
 # (4) THE SCOPING CHOICE IS FACED, NOT IMPLICIT. Committed records are exempt: the ledger is
 # prepend-only, so a finding against a receipt nobody may edit has no legal remedy. The fixture
-# is a copy of the live ledger and really does contain records over 18,432 B, so a wrong scope
+# is a copy of the live ledger and really does contain records over the budget, so a wrong scope
 # would show here as red rather than as nothing.
 OVER38="$(python3 - "$FIXFILE38" <<'PY38C'
 import re, sys
 t = open(sys.argv[1], encoding="utf-8").read()
 st = [m.start() for m in re.finditer(r"(?m)^```handoff$", t)] + [len(t)]
-print(sum(1 for i in range(len(st) - 1) if len(t[st[i]:st[i+1]].encode()) > 18432))
+print(sum(1 for i in range(len(st) - 1) if len(t[st[i]:st[i+1]].encode()) > 12288))
 PY38C
 )"
 [ "${OVER38:-0}" -ge 1 ] \
@@ -2914,10 +2915,10 @@ restore38
 M38="$(mktemp)"
 
 # M1: the boundary. Kills a `>` silently widened to `>=`.
-S38="$(add_record38 18432 field)"
+S38="$(add_record38 12288 field)"
 if mutate "$BIN/check-handoff" "$M38" 's.replace("if size > RECORD_BUDGET_BYTES", "if size >= RECORD_BUDGET_BYTES", 1)'; then
     OUT38="$(ch38m "$M38")"
-    echo "$OUT38" | grep -q "record $S38 is 18,432 B" \
+    echo "$OUT38" | grep -q "record $S38 is 12,288 B" \
         && pass "mutant killed: > widened to >= rejects an at-budget record" \
         || fail "MUTANT SURVIVED: >= at the boundary went undetected: $OUT38"
 else fail "M1 mutation DID NOT APPLY"; fi
@@ -2942,7 +2943,7 @@ else fail "M2 mutation DID NOT APPLY"; fi
 restore38
 
 # M3: the skip arm. Kills a skip rewritten to look like a completed check.
-if mutate "$BIN/check-handoff" "$M38" 's.replace("return [], \"record budget SKIPPED (%s) — nothing checked\" % why", "return [], \"record budget: 0 unwritten record(s), 0 over 18,432 B\"", 1)'; then
+if mutate "$BIN/check-handoff" "$M38" 's.replace("return [], \"record budget SKIPPED (%s) — nothing checked\" % why", "return [], \"record budget: 0 unwritten record(s), 0 over 12,288 B\"", 1)'; then
     UNTRACKED38="$(mktemp)"; cp "$FIXFILE38" "$UNTRACKED38"
     OUT38="$(python3 "$M38" --file "$UNTRACKED38" --allow-pending 2>&1)"
     echo "$OUT38" | grep -q 'record budget SKIPPED' \
@@ -2953,7 +2954,7 @@ else fail "M3 mutation DID NOT APPLY"; fi
 
 # M4: the budget itself. Kills a ceiling quietly raised past the record under test.
 S38="$(add_record38 20000 field)"
-if mutate "$BIN/check-handoff" "$M38" 's.replace("RECORD_BUDGET_BYTES = 18432", "RECORD_BUDGET_BYTES = 50000", 1)'; then
+if mutate "$BIN/check-handoff" "$M38" 's.replace("RECORD_BUDGET_BYTES = 12288", "RECORD_BUDGET_BYTES = 50000", 1)'; then
     OUT38="$(ch38m "$M38")"
     echo "$OUT38" | grep -q "record $S38 is" \
         && fail "MUTANT SURVIVED: a 20,000 B record still caught at a 50,000 B budget" \
