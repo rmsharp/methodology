@@ -167,6 +167,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S105 claim — plan the per-record budget reduction
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **A planning session: the plan is the deliverable and nothing is
+implemented** (FM #18, FM #19).
+
+**Why.** S104 established that `HANDOFFS.md` cannot be fixed by trimming: Test 34's retention floor
+of 3 receipts × `check-handoff`'s 18,432 B per-record budget + ~6 KB of front matter = **61,312 B
+against a 65,536 B ceiling**, and the file sits at 94.4% of that immediately after a trim. The
+operator's concern is session context cost, so the target is the number a session actually pays.
+
+**Two measurements that shape the plan, taken before it was written.** (1) The ledger is **read and
+gleaned, never resident** — no `@`-import; measured across 81 transcripts as read whole **once** and
+in part **593** times, median span 25 lines — so the per-session cost is front matter + **one**
+receipt, ~25 KB, not the file. (2) **Trailing prose is 27–30% of every recent receipt** (S104 5,388 B,
+S103 4,613 B, S102 4,653 B), and it is the Phase 3A/3B essays — *additive* to the six mandatory
+requirements, which the receipt already summarises as the structured `predecessor_score` and
+`self_score` fields.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-24 · [ad hoc] S104 close-out — receipt written, self-score 8/10, predecessor S103 scored 9/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), inside the 18,432 B per-record budget — asserted by

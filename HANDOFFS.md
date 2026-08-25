@@ -75,6 +75,16 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-23.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ```handoff
+session: S105
+date: 2026-08-25
+status: pending
+active_task: **Plan the per-record budget reduction — the PLAN is the deliverable, not the change** (`SESSION_RUNNER.md` §Planning Sessions, FM #18). Operator-assigned after S104 surfaced that `HANDOFFS.md` cannot be fixed by trimming: Test 34's floor of 3 receipts × the 18,432 B per-record budget + ~6 KB front matter = **61,312 B against a 65,536 B ceiling**, so the ledger's steady state is ~3 receipts and a trim nearly every session. **NOT claimed:** any edit to `bin/check-handoff`, `bin/tests.sh`, `.context-budget.json` or the front matter — implementation is a separate session. **NO OUTWARD-FACING ACTION.**
+next_steps: Deliverable is `docs/planning/record-budget-reduction-plan.md`, carrying: a grep-based inventory of every site that hardcodes the constant or its arithmetic; a recommended number with the evidence for it; per-phase DONE criteria, verification commands and **the SURFACE each is demonstrated on** (issue #75's requirement, which this repo itself adopted); and one phase per session with a STOP. Nothing is implemented this session.
+```
+
+<!-- claim stub written at session start; completed at close-out -->
+
+```handoff
 session: S104
 date: 2026-08-24
 status: complete
