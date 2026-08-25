@@ -167,6 +167,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S107 close-out — `HANDOFFS.md` trim shipped, 82,406 B → 31,875 B
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **9,332 B inside the 12,288 B per-record budget
+S106 introduced — 2,956 B of headroom, reached on the first pass.** Self-score 8/10; predecessor
+S106 scored 9/10, for warning that its own arithmetic was stale rather than leaving me to discover
+it (its Orient figures were four records old, and it said so).
+
+**The breach is closed.** `HANDOFFS.md` went from **OVER its 65,536 B ceiling by 16,870** to
+**26,505 B clear** at close-out. Both triggers now silent; `context_budget.py` exits 0.
+
+**Measured last, per FM #28:** `HANDOFFS.md` **39,031 B** (3 receipts), archive shard
+**HANDOFFS-through-2026-08-24.md** frozen with 3, `CHANGELOG.md` **now over its own 65,536 B ceiling, this entry included — see below**,
+`FRAMEWORK_LEARNINGS.md` 63,126 B (2,410 B free), `main` 51 ahead of `origin/main`, nothing pushed.
+
+**⚠ THIS ENTRY IS ITSELF THE NEXT SESSION'S PROBLEM, AND SAYING SO IS THE POINT.** Before it was
+written `CHANGELOG.md` measured **63,868 B against 65,536 B — 1,668 B clear, less than one close-out
+entry** — and its trim trigger did **not** fire. This entry is larger than that margin, so the byte
+trigger is expected to fire on the very next `--check`. That is the designed rhythm, not a defect:
+the ledger that records the trim is the ledger that then needs one. **Re-run
+`python3 starter-kit/methodology_trim.py --file CHANGELOG.md --check` — do not trust this
+sentence.** Its line trigger is nowhere near (33 records of headroom): this is a BYTE breach, and
+`context_budget.py` confirms it — `66,410 B ... over by 874`. The axis caveat below applies to
+`HANDOFFS.md`, which is now green and therefore displayed in LINES; a file that IS over is shown in
+bytes and red.
+
+**Verification, three ways, one independent of the instrument:** the tool's L1/L2/L3/P1A; its
+emitted `verify.sh` run rather than trusted; and all six records re-extracted from
+`git show HEAD:HANDOFFS.md` and byte-compared against their destinations — six identical, none in
+two places, 3 + 3 = 6. `bin/tests.sh` 280 rows before and after, **zero lost, zero gained, zero
+skipped**, four derived counts moved; sole failure `github source dry-run failed` on both sides
+(Test 9's pre-existing 404).
+
+**Carve-out, re-derived after a first attempt got it backwards:** none of the four files touched is
+a `bin/_manifest.py` **source** — adopters receive `starter-kit/HANDOFFS.md`, the SEED template,
+which is untouched. **No adopter receives anything from this session. No outward-facing action.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-24.md` (3 record(s), 82,406 B → 31,875 B)
 
 **Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
