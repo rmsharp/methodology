@@ -167,6 +167,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-24 · [ad hoc] S104 claim — run the `HANDOFFS.md` trim, losslessly
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). Recorded BEFORE the trim because the trimmer's **P1 guard** refuses
+otherwise: a trim commit advances this file's Phase 0 frontier and would permanently hide any commit
+not yet recorded (S95's precedent, S103's shape).
+
+**The target:** `HANDOFFS.md` arrived **92,387 B against a 65,536 B ceiling, OVER by 26,851** — the
+only file over one — with `--check` firing on both triggers. `CHANGELOG.md` is **not** being trimmed:
+it reports `trigger does not fire` at 41,462 B, and a second trim is a second capability (FM #26).
+
+**The cut is `--cut 3`, chosen, and it is not the tool's default — measured, not argued.** With the
+claim stub in place the file holds 6 receipts, and the three candidates dry-run as: the **default**
+retains **1** (→ 10,790 B) and raises `[CUT_STRADDLES_DAY]`; **`--cut 4`** retains 4 (→ 61,101 B,
+only **4,435 B** clear of the ceiling, less than one receipt — they run 15,533–18,431 B here) and
+also straddles; **`--cut 3`** retains 3 (→ **43,362 B, 22,174 B clear**) and raises **neither**
+`[CUT_STRADDLES_DAY]` **nor** `[SHARD_NAME_DISAMBIGUATED]` — a clean calendar seam at
+2026-08-23 | 2026-08-24 and the free name `docs/archive/HANDOFFS-through-2026-08-23.md`.
+
+**Why the default is not merely worse but wrong: it breaks two non-human consumers, read in the
+code rather than assumed.** `bin/tests.sh` Test 34 derives its mutation anchors as `ids[1]`/`ids[2]`
+and routes a population below 3 to the `SHORT` arm, printing **six assertions as SKIP**
+(`anchor_disposition`, `bin/tests.sh:2110`); Test 38's fixture builder aborts `FIXTURE SOURCE TOO
+SHORT: need >= 2 records` at `len(starts) < 3` (`bin/tests.sh:2719`) — unsatisfiable from one
+retained receipt once its own code drops the leading `status: pending` record. Retaining exactly 3
+sits **at** Test 34's floor; that margin is spent deliberately, for a name that means what it says
+and ~22 KB instead of ~4 KB of runway.
+
+**A defect of mine, found and fixed before it was committed, recorded because the next session will
+hit the same edge.** The first splice of the claim stub anchored on `text.index("```handoff")`, which
+matched the **substring** inside a front-matter sentence at line 9 — `` recount with `grep -c
+'^```handoff' HANDOFFS.md` `` — not the first record fence at line 73. The stub landed mid-sentence,
+fence parity flipped, and `methodology_trim.py` then reported **4** records in a 6-receipt file: two
+real receipts had been swallowed as `inside=True` by `fence_scan`. The tool was right and the edit
+was wrong. Reverted byte-identical to `HEAD`, redone with a **line-anchored** `(?m)^```handoff$` and
+an assertion that the record count rises by exactly 1. That is S103's own gotcha — *anchor on
+line-anchored fences and assert the count* — arriving one session later against a different tool.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-24 · [ad hoc] S103 close-out — receipt written, self-score 8/10, predecessor S102 scored 9/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), inside the 18,432 B per-record budget — asserted by
