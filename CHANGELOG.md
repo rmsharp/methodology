@@ -167,6 +167,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-24 · [ad hoc] S104 close-out — receipt written, self-score 8/10, predecessor S103 scored 9/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), inside the 18,432 B per-record budget — asserted by
+`bin/check-handoff`, which passes, not predicted (it took **seven** trim passes to get there; the
+budget counts fence-to-**next**-fence, trailing prose included). Claim `ab12b27`, deliverable
+`470cfd4`, this close-out.
+
+**The deliverable landed: `HANDOFFS.md` 96,264 B → 43,362 B at the trim commit**, and **57,892 B**
+with this receipt — from OVER by 30,728 to **7,644 B clear** of the 65,536 B ceiling, with
+`--check` reporting `trigger does not fire`. Three receipts archived (S101, S100, S99) to
+[`docs/archive/HANDOFFS-through-2026-08-23.md`](docs/archive/HANDOFFS-through-2026-08-23.md); three
+retained. The cut was **chosen, not defaulted**: `--cut 3` over the budget default, which retains
+**one** receipt and would break **two** non-human consumers — Test 34's anchor floor
+(`bin/tests.sh:2110`) and Test 38's fixture builder (`:2721`). `--cut 4` was rejected on a
+measurement: 61,101 B, only 4,435 B clear, less than one receipt.
+
+**Losslessness established on four axes, three of them independent of the tool's own L1/L2/L3.**
+Per-record: all **6** pre-trim records byte-identical by sha256 across the move, partition disjoint,
+none lost, none invented. Front matter: exactly **one diff hunk, a pure 4-line addition**. Full
+reconstruction: live records zone + shard records zone is **byte-identical at 89,799 B** to the
+pre-trim records zone — the trim is reversible from the two artifacts alone, without git. And the
+emitted proof runs green in both its pre-commit and post-commit forms.
+
+**Verification.** Suite **279 passed / 1 failed / 0 skipped** pre and post, the pre-change half in a
+**pristine `git worktree`** at `b570389`; sorted row-set diff over **280 rows each side** shows
+**zero lost, zero net added, exactly three changed**, each carrying a count in its own name. The
+`0 skipped` on both sides is the direct evidence Test 34 held its `ANCHORED` arm. Proofs **9 green /
+4 red of 13 → 10 green / 4 red of 14**, same four reds, zero reddened. Python **451/451**.
+`check-links` 88/22 and `check-learnings` 35 **unchanged**, as predicted at claim.
+
+**The structural finding, which outlives this trim.** Test 34's floor of 3 receipts × the 18,432 B
+per-record budget + ~6 KB of front matter = **61,312 B against a 65,536 B ceiling**; this file now
+sits at **94.4%** of that. The ledger's steady state is therefore ~3 receipts and a trim nearly every
+session, **by construction** — `--cut 3` was already the most aggressive cut the floor permits, so
+the durable remedy is a decision about the ceiling or the per-record budget, not another trim.
+Raised for an operator decision; **no BL item filed** (a second capability).
+
+**A defect of mine, caught before commit and recorded.** The first claim-stub splice anchored on
+`text.index("```handoff")`, matching a **substring** in a front-matter sentence rather than the first
+record fence; fence parity flipped and the trimmer correctly reported 4 records in a 6-receipt file.
+Reverted byte-identical, redone line-anchored with a count assertion. **And one criticism withdrawn
+after checking it:** S103's `6,016 + 3 × 18,432 = 61,312 B` is a sound steady-state bound, not an
+overstatement — the 43,362 B I compared it against was a transient mid-trim state holding a pending
+stub. Comparing a bound to a mid-operation measurement is a timing error.
+
+**No outward-facing action:** no push, no PR, no comment, no tag, no issue edit. Nothing DISTRIBUTED
+was touched. **A learning is owed and unwritten** — `starter-kit/FRAMEWORK_LEARNINGS.md` is at
+63,126 / 65,536 with **2,410 B** free and rows costing 1,219–1,436 B; four are now queued (S99, S102,
+S103, mine). Fourth consecutive deferral for the same reason, stated rather than left unsaid.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-24 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-23.md` (3 record(s), 96,264 B → 43,362 B)
 
 **Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
