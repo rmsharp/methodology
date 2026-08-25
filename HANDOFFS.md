@@ -75,6 +75,14 @@ Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-23.md.verify.s
 than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ```handoff
+session: S107
+date: 2026-08-25
+status: pending
+active_task: **Run the `HANDOFFS.md` trim, losslessly** — S106's next_steps (a), due before S106 arrived and left unrun by it (FM #26). Re-measured at Orient rather than inherited: **80,230 B against the 65,536 B ceiling, over by 14,694**, `--check` reports **trigger FIRES** on bytes; the line trigger does not fire and `CHANGELOG.md` does not fire at all. The instrument is `starter-kit/methodology_trim.py` v1.3.0, **run, not edited**. Procedural precedent is S104 `470cfd4`, including leaving THIS receipt `status: pending` across the trim commit (the shape S98 established, S101/S103/S104 restated). **NOT claimed:** the `CHANGELOG.md` trim, the 65,536 B ceiling, `RECORD_BUDGET_BYTES`, Phase 2/3 of the record-budget plan, issue #75's unsent PR, the four owed `FRAMEWORK_LEARNINGS.md` rows, and any edit to the trimmer. **NO OUTWARD-FACING ACTION.**
+next_steps: DONE = `docs/archive/HANDOFFS-through-2026-08-24.md` exists frozen with its `.verify.sh`; `--check` reports **trigger does not fire** on both triggers; `context_budget.py` shows `HANDOFFS.md` **ok**; `bash bin/tests.sh` re-run with ZERO rows lost against a pre-change control (Test 34 mutates THIS file and reads two anchors from it — the whole reason `--cut 3` is a floor and not a preference); `check-handoff` and `check-handoff --all` OK across the seam; the tool's emitted `verify.sh` RUN rather than trusted; and the regenerated count sentence in the front matter agreeing with `grep -c '^```handoff' HANDOFFS.md`. **The cut is `--cut 3`, decided before the write:** three is the floor (below it Test 34's six assertions SKIP and Test 38's fixture builder aborts, `bin/tests.sh:2110` / `:2719`), and with this receipt prepended it also buys a clean calendar seam — retained S107/S106/S105 all `2026-08-25`, archived S104/S103/S102 all `2026-08-24`, disjoint, so the shard name is a day boundary and not a span label. `HANDOFFS-through-2026-08-24.md` is a free name — no shard by that name exists, so no disambiguation. **Verify that seam directly on the artifacts; the absence of a `[CUT_STRADDLES_DAY]` line is not the evidence.**
+```
+
+```handoff
 session: S106
 date: 2026-08-25
 status: complete

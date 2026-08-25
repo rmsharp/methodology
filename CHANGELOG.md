@@ -167,6 +167,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S107 claim — run the `HANDOFFS.md` trim, losslessly
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **A maintenance session running a shipped tool** — the deliverable is
+the archive shard and the restored headroom, not a change to the tool.
+
+**Why now.** S106 handed this forward as next_steps (a): the trim was due before it arrived and it
+did not run it (a second capability — FM #26). Re-measured at this session's Orient rather than
+inherited: `context_budget.py` reports `HANDOFFS.md` at **80,230 B against the 65,536 B ceiling,
+over by 14,694**, and `methodology_trim.py --file HANDOFFS.md --check` reports **trigger FIRES** on
+the byte trigger. The line trigger does not fire (17 records of headroom) and `CHANGELOG.md` does
+not fire at all — this is a one-file job.
+
+**The cut is `--cut 3`, chosen before the write, for the reason S104 recorded and one it did not
+have.** Three is the retention **floor**, not a preference: below it `bin/tests.sh` Test 34's six
+whole-ledger assertions drop into their SKIP arm, and Test 38's fixture builder aborts outright.
+The new reason is the calendar seam — with this claim receipt prepended the file holds six records,
+and `--cut 3` retains S107/S106/S105 (all `2026-08-25`) while archiving S104/S103/S102 (all
+`2026-08-24`), so the retained and archived date sets are disjoint and the shard name
+`HANDOFFS-through-2026-08-24.md` is a true day boundary rather than a span label. That is the
+`[CUT_STRADDLES_DAY]` note the tool raised against a five-record file at Orient, and the claim
+receipt is what resolves it. **Measured after the claim, not predicted from it.**
+
+**What does NOT change:** the 65,536 B ceiling, `RECORD_BUDGET_BYTES`, `methodology_trim.py` itself,
+`CHANGELOG.md` (its trigger does not fire), and every archived shard already frozen. No distributed
+file — the trimmer is distributed but is only being *run*, not edited.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] S106 close-out — Phase 1 shipped, per-record budget 18,432 → 12,288
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **inside the NEW 12,288 B budget it introduces —
