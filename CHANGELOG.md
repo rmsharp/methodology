@@ -167,6 +167,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-24 · [ad hoc] S103 close-out — receipt written, self-score 8/10, predecessor S102 scored 9/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), inside the 18,432 B per-record budget — asserted by
+`bin/check-handoff --all`, which passes, not predicted. Claim `dbaaa94`, deliverable `6be9388`, this
+close-out.
+
+**The deliverable landed: `CHANGELOG.md` 75,564 B → 39,148 B, back under its 65,536 B ceiling with
+26,388 B of headroom** at the trim commit `6be9388` — this close-out entry then brings it to
+just over 41,400 B, still more than 24,000 B clear — and `methodology_trim.py --file CHANGELOG.md --check` now reports `trigger
+does not fire` on both triggers. The cut was **chosen, not defaulted**: `--cut 2026-08-17` over the
+tool's budget-driven default, paying 6,260 B of headroom for a shard name that is a true day
+boundary instead of a span label — the [CUT_STRADDLES_DAY] advisory the default raises. The seam is
+**proved** clean rather than inferred from that advisory's absence: retained records carry only
+2026-08-18/23/24, archived only 2026-08-15/16/17, no date on both sides.
+
+**Verification, on five independent axes.** Suite **279/1 pre and post**, the pre-change half run in
+a **pristine worktree** so it could not be contaminated by the writes it was controlling for; a
+sorted row-set diff over **280 rows each side** shows **zero lost and exactly three changed**, all
+three carrying counts in their own names. All **13** `.verify.sh` proofs re-run: **9 green / 4 red**,
+the same four reds as before, **zero reddened**. Python **451/451**. `check-links` (88 / 22) and
+`check-learnings` (35 rows) **byte-identical pre and post**. And the file's own documented source-tag
+audit across live plus archives went **287 → 289** — exactly this session's two added entries, with
+no archived record dropping out of the census.
+
+**`HANDOFFS.md` is now the only file over a ceiling — 92,387 B, OVER by 26,851**, this receipt being
+~12 KB of that. Its trim FIRES on both triggers and was **deliberately not run**: a second trim is a
+second capability (FM #26). It is the next deliverable, and its binding constraint is stated in the
+receipt — **Test 34's retention floor of three receipts, so `--cut 3` or more, never the default.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-24 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-17.md` (26 record(s), 76,774 B → 39,148 B)
 
 **Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
