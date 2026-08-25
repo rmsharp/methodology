@@ -167,6 +167,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S106 close-out — Phase 1 shipped, per-record budget 18,432 → 12,288
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **inside the NEW 12,288 B budget it introduces —
+12,264 B, 24 B of headroom, reached in seven trim passes.** The guard applied to its own author, the
+precedent set when the budget was introduced. Self-score 8/10; predecessor S105 scored 7/10.
+
+**Phase 1 of [`docs/planning/record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md)
+is complete.** `RECORD_BUDGET_BYTES` is now **12,288**, and — the part that matters more than the
+number — it is a **policy number with a fit assertion**, no longer a quotient. The old figure was
+`(65,536 − 8,000) / 3`, a formula that sizes the budget *to* the ceiling and therefore accommodates
+growth rather than restraining it. Steady state falls **63,296 B → 44,864 B** (96.6% → 68.5% of the
+ceiling); slack rises **2,240 B → 20,672 B**, more than one whole receipt, so a trim becomes
+occasional instead of mandatory-every-session.
+
+**THE PLAN'S MANDATORY GREP INVENTORY WAS INCOMPLETE BY TWO SITES, AND ONE OF THEM WOULD HAVE STAYED
+GREEN WHILE TESTING NOTHING.** §5.2 listed nine `bin/tests.sh` couplings; there are **thirteen**.
+
+- **`bin/tests.sh:2833-2837`** — the one-byte-OVER half of the edge test (`add_record38 18433`).
+  **Missed because the inventory's own grep pattern was `18,?432`, which cannot match the derived
+  neighbour `18433`.** Left unchanged it would still have passed: an 18,433 B record is over a 12,288
+  B budget, so the assertion still matches — while exercising a record **6,145 B** past the cap
+  instead of one byte past it, and leaving the `>` → `>=` boundary mutant scored *killed* by a record
+  any budget catches. Its at-budget twin fails loudly; only this half is silent.
+- **`bin/tests.sh:2946`** — the forged summary payload inside mutant M3. Functionally inert, but its
+  job is to be a convincing forgery of a line the code can emit.
+
+**The generalisation, recorded because it outlives this change:** a value's *derived neighbours* —
+`N+1`, `N + 512`, an overage term computed from `N` — do not match a grep for `N`. Enumerate the edge
+cases and the arithmetic, not only the literal. The correction is written into the plan beneath §5.2
+so Phases 2 and 3 inherit it rather than repeat it.
+
+**A HAZARD FOUND AND DELIBERATELY NOT SHIPPED, HANDED TO PHASE 2 INSTEAD.** §4.3 wants the fit rule
+`3 × budget + allowance ≤ 65,536` *asserted*, and Phase 2's DONE criterion says so. But a module-scope
+`assert` in `bin/check-handoff` is evaluated at **import**, and `bin/tests.sh:2957` (mutant M4)
+rewrites the constant to 50,000 — `3 × 50,000 + 8,000 = 158,000`, so the mutated interpreter dies with
+an `AssertionError` before reaching the code under test. M4 greps for the *absence* of a catch, and a
+traceback contains no catch, so **the mutant would be scored killed by a crash rather than by the
+budget behaviour.** Any value large enough to survive M4 breaks the fit check by construction. The fit
+rule therefore ships as prose beside the constant; the two concrete fixes are in the receipt's
+`next_steps` (b).
+
+**Verified, not asserted.** Pre-change control run in a `git worktree` at the claim commit — not in the
+tree being edited — giving **280 rows, 279/1**, sole failure named (`github source dry-run failed`,
+Test 9's pre-existing `--source=github` 404). After: **280 rows, 279/1, same sole failure.**
+Row-for-row diff of the sorted rows, both populations asserted non-empty: **zero lost, zero gained,
+exactly four pairs differ** — the two edge rows, and the two scope-control rows whose *population
+count* moved 1 → 3 because a lower budget puts more frozen receipts over it. That last pair is worth
+noting: it is a **stronger** control, but it is not what the plan predicted (*"changes confined to rows
+whose names carry the budget number"*) — those two names carry a derived count instead. Python suites
+**451/451**. `check-handoff --all` OK over all 5 receipts, confirming the **prospective-only** property:
+no committed receipt reddened and none needed rewriting. The rewritten user-facing remediation text was
+exercised by **triggering a real failure** on a throwaway git fixture, not by reading the format string.
+
+**FM #28 gate, measured after the last write.** `CLAUDE.md` 11,064 B ok · `CHANGELOG.md` 837 ln ok ·
+`docs/planning/BACKLOG.md` 184 ln ok · `starter-kit/FRAMEWORK_LEARNINGS.md` 63,126 / 65,536 ok
+(2,410 B free, unchanged) · **`HANDOFFS.md` 80,230 B — OVER the 65,536 B whole-file ceiling by 14,694.**
+It arrived over (67,966, by 2,430) and this receipt adds 12,264. **This is the one Phase 1 verification
+command the plan lists that Phase 1 cannot satisfy** — `context_budget.py` exit 0 — because the breach
+is the *whole-file* ceiling and the plan's own §7 puts the ceiling and the trim out of scope. The
+**record** budget is green. The trim is the next deliverable and is a second capability (FM #26).
+
+**Not changed, verified rather than assumed:** no distributed file — neither `bin/check-handoff` nor
+`bin/tests.sh` has a row in `bin/_manifest.py`, so no adopter receives any of this; the 65,536 B
+ceiling; Test 34's floor of 3; `methodology_trim.py`; and every historical statement of 18,432 in this
+ledger, in `HANDOFFS.md` and in the archived shards, which are frozen records of what was true when
+written (FM #22). Inside `bin/`, two past-tense sentences were rewritten to say **"18 KiB"** rather than
+be exempted, so that `git grep -nE '18,?432' -- bin/` remains a live detector of a missed coupling.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] S106 claim — Phase 1 of the record-budget reduction: lower the constant
 
 `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
