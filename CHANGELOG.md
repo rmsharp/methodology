@@ -167,6 +167,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S105 close-out — plan delivered, self-score 8/10, predecessor S104 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md). **A planning session: the plan is the deliverable
+and nothing was implemented** (FM #18/#19) — zero files touched under `bin/`, `tools/` or
+`starter-kit/`. Claim `2cdda38`, this close-out.
+
+**The deliverable:** [`docs/planning/record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md),
+DRAFT awaiting ratification. Recommends `RECORD_BUDGET_BYTES` **18,432 → 12,288**, taking the steady
+state from **63,296 B (96.6% of ceiling, 2,240 B slack)** to **44,864 B (68.5%, 20,672 B slack)** and
+the per-session context cost from ~25 KB to ~19 KB.
+
+**Three measurements decided the plan's shape.** (1) The ledger is **read and gleaned, never
+resident** — no `@`-import; measured across 81 transcripts as read whole **once**, in part **593**
+times. So a session pays *front matter + one receipt*, and **the receipt is the only lever that
+touches recurring cost.** (2) The budget is **prospective-only** — `check_record_budget` compares the
+newest record against its frozen copy at HEAD — so **no existing receipt reddens and none needs
+rewriting.** (3) Trailing prose is **27–30%** of a receipt while fenced fields mean **12,108 B**,
+which is exactly why 12,288 preserves all six mandatory requirements and 8,192 would cut into them
+(FM #15). A 17-site grep inventory is in §5, every `bin/` line number verified by re-reading it.
+
+**Two of my own errors, caught at Phase 3F and fixed before commit.** The first draft wrote
+`3 × 18,432 + 8,000 = 61,312`, mixing two header terms — the derivation's **8,000 B allowance** gives
+**63,296**, while S103's quoted 61,312 uses the header **as measured then** (6,016; today 6,913). The
+second: twelve `CHANGELOG.md` line citations were taken *before* this session's own claim entry and
+were stale by **5**; re-derived. A line number measured before your own write fails silently.
+
+**`HANDOFFS.md` IS OVER ITS CEILING AGAIN — 67,966 B against 65,536, over by 2,430** (`context_budget.py`
+exits 2; `--check` FIRES). **Recorded, not fixed:** a trim is a second capability (FM #26) and this was
+a planning session (FM #18). S104 predicted this at its close-out — the breach arrived in exactly one
+session, which is the plan's own premise demonstrated rather than argued. **The next session's first
+act is the trim (`--cut 3`, never the default); the plan is what stops it recurring.** This receipt was
+deliberately written under the **proposed** 12,288 B budget and measures **10,074 B**, 2,214 B clear —
+one worked example that the recommendation is livable.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] S105 claim — plan the per-record budget reduction
 
 `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in

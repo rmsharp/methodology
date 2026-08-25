@@ -77,12 +77,56 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 ```handoff
 session: S105
 date: 2026-08-25
-status: pending
-active_task: **Plan the per-record budget reduction — the PLAN is the deliverable, not the change** (`SESSION_RUNNER.md` §Planning Sessions, FM #18). Operator-assigned after S104 surfaced that `HANDOFFS.md` cannot be fixed by trimming: Test 34's floor of 3 receipts × the 18,432 B per-record budget + ~6 KB front matter = **61,312 B against a 65,536 B ceiling**, so the ledger's steady state is ~3 receipts and a trim nearly every session. **NOT claimed:** any edit to `bin/check-handoff`, `bin/tests.sh`, `.context-budget.json` or the front matter — implementation is a separate session. **NO OUTWARD-FACING ACTION.**
-next_steps: Deliverable is `docs/planning/record-budget-reduction-plan.md`, carrying: a grep-based inventory of every site that hardcodes the constant or its arithmetic; a recommended number with the evidence for it; per-phase DONE criteria, verification commands and **the SURFACE each is demonstrated on** (issue #75's requirement, which this repo itself adopted); and one phase per session with a STOP. Nothing is implemented this session.
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: **Plan the per-record budget reduction. COMPLETE — the PLAN is the deliverable and nothing was implemented** (FM #18/#19). Deliverable: [`docs/planning/record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md), DRAFT awaiting operator ratification. **Zero changes to `bin/check-handoff`, `bin/tests.sh`, `.context-budget.json` or the front matter.** **NO OUTWARD-FACING ACTION.**
+what_was_done: Two commits — `2cdda38` (1B claim), this close-out carrying the plan. **(1) THE OPERATOR'S ACTUAL QUESTION WAS ANSWERED FIRST, BECAUSE IT DECIDES WHETHER THE REST MATTERS:** is the ledger resident? **No** — no `@`-import, and the repo's own measurement across 81 transcripts (`bin/check-handoff:590-597`) is read-whole **once**, read-in-part **593** times, median span 25 lines. So the per-session cost is **front matter + ONE receipt ≈ 25 KB**, not the file's 57,892 B. **The receipt is the term worth attacking; trimming the file never touches it.** (2) **THE CUT IS CHEAPER THAN IT LOOKS, AND THAT IS A MEASUREMENT:** trailing prose is **27–30%** of every recent receipt (S104 5,388 B, S103 4,613 B, S102 4,653 B) and is *additive* to the six mandatory requirements, whose conclusions the receipt already carries as `predecessor_score`/`self_score`. Fenced-field mean is **12,108 B**, so **12,288 B leaves all six intact** and the cut lands on essays. (3) **RECOMMENDED 18,432 → 12,288**: steady state 63,296 → **44,864 B** (96.6% → 68.5% of ceiling), slack 2,240 → **20,672 B**, per-session cost ~25 KB → **~19 KB**. 10,240 and 8,192 costed and recorded; 8,192 rejected *as step 1* because current fenced fields are 10,920–13,019 B and it would cut the requirements themselves (FM #15). (4) **THE DE-RISKING FINDING:** `check_record_budget` (`bin/check-handoff:652+`) checks only the newest record and only when it differs from its frozen copy at HEAD — the budget is **prospective-only**, so **no existing receipt reddens and none needs rewriting.** (5) Grep inventory of all 17 sites, each line number verified by re-reading it.
+next_steps: (a) **RATIFY THE NUMBER BEFORE PHASE 1 — that is the one blocking decision** (plan §9). Every site in §5.2 encodes it. Recommendation 12,288; alternatives costed in §4.2. (b) **PHASE 1 IS ONE SESSION** and its riskiest site is `bin/tests.sh:2956`, which does a **literal string replace** of `"RECORD_BUDGET_BYTES = 18432"`; `:2819` asserts derived arithmetic (`by 1,568`) that must be **recomputed, not search-replaced**. Run the pre-change suite in a `git worktree`, diff sorted rows, expect zero lost. **Deepest reasoning mode** for Phase 1 (plan §8). (c) **PHASE 2 MUST NOT LET THE FORMULA UNDO PHASE 1** (§4.3): shrinking the front matter lowers the header allowance, which under the old reading *raises* the derived budget. State the budget as **policy**, use the formula only as the assertion `3 × budget + allowance ≤ 65,536`. (d) `HANDOFFS.md` is **57,892 B → now larger with this receipt**; measured last, in `runtime_smoke`. The trim will be due again soon — `--cut 3` remains the floor. (e) Issue #75 PR still prepared, unsent, local (`60246e7`); four owed `FRAMEWORK_LEARNINGS.md` rows still owed (2,410 B free). Both unchanged, **not re-verified this session.**
+key_files: **Every line number verified by re-reading the cited line, and the `CHANGELOG.md` ones re-derived AFTER this session's own write.** [`docs/planning/record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md) — the deliverable. `bin/check-handoff:606` the constant; `:578-604` the derivation comment; `:584` the 8,000 B allowance; `:588` the arithmetic; `:810` the user-facing remediation text; `:590-597` the 81-transcript measurement; `:652+` `check_record_budget`, the prospective-only scope. `bin/tests.sh:2738, 2819, 2826, 2829-2830, 2851, 2857, 2917, 2920, 2956` — the nine test couplings; `:2704, 2732` comments. `.context-budget.json:59` the `_` note. `CHANGELOG.md:598` the guard-applied-to-its-own-author precedent.
+gotchas: **A LINE NUMBER MEASURED BEFORE YOUR OWN WRITE IS STALE, AND IT FAILS SILENTLY.** I greppped `CHANGELOG.md` for the budget's sites, then prepended my claim entry, then wrote those numbers into the plan — every one was off by **5**. Nothing complained; the plan simply cited the wrong lines. **Re-derive after your last write to the file**, or cite against a named SHA. **TWO HEADER TERMS ARE IN CIRCULATION AND MIXING THEM CORRUPTS THE ARITHMETIC:** the derivation's **8,000 B allowance** gives 63,296 B (slack 2,240 — the comment's own figure), while S103's widely-quoted `6,016 + 3 × 18,432 = 61,312 B` uses the header **as measured then**; today it measures 6,913 B. My first draft wrote `3 × 18,432 + 8,000 = 61,312`, which is neither. **State which header term you are using.** **THE FORMULA IS A CEILING-FITTING DEVICE, NOT A TARGET** — it was built to make the budget as LARGE as would fit, so re-deriving it after any reduction hands the saving straight back. **DO NOT REWRITE HISTORICAL PROSE:** twelve `CHANGELOG.md` sites and every archived shard state 18,432 as a fact about their own moment and are correct as written (FM #22).
+runtime_smoke: **PLANNING SESSION — NO RUNTIME BEHAVIOUR CHANGED AND NO CODE WAS TOUCHED; the build-equivalent here is the checkers plus citation verification.** `git status` shows the diff confined to `HANDOFFS.md`, `CHANGELOG.md`, the new plan, and the two tracked telemetry ledgers — **zero files under `bin/`, `tools/` or `starter-kit/`.** **CITATIONS:** all **14** `bin/` line citations verified by re-reading each cited line against a regex of what I claimed it says — 14/14 OK; the `CHANGELOG.md`/`HANDOFFS.md` sites re-derived after my own write (see gotchas). **ARITHMETIC:** every figure in §4.1/§4.2 recomputed from `C=65536, H=8000, F=3` rather than carried — 63,296/96.6%/2,240 and 44,864/68.5%/20,672 confirmed. **CHECKERS:** `check-links` OK (88 links / 22 files), `check-handoff` OK, `check-handoff --all` OK. **`bin/tests.sh` NOT RUN — stated, not skipped silently:** no file it exercises was modified, so it could only reproduce S104's 279/1. **Phase 1 must run it**, with a worktree control. **FM #28 GATE, MEASURED LAST:** figures in the close-out ledger entry. **WHAT THIS DOES NOT EXERCISE:** the budget change itself — nothing here proves 12,288 is livable beyond this receipt being written under it.
+changelog_ref: CHANGELOG.md "2026-08-25 · [ad hoc] S105 claim — plan the per-record budget reduction" and "2026-08-25 · [ad hoc] S105 close-out"
+commit: 2cdda38 (1B claim) + this close-out
 ```
 
 <!-- claim stub written at session start; completed at close-out -->
+Model: Claude Opus 5 (1M context).
+
+**Predecessor S104 scored 8/10 — and the score is worth less than usual, because I wrote it.** The
+bidirectional accountability that makes this step work is absent when author and evaluator are the
+same session; recording that is more honest than performing the evaluation as though it held. **+**
+**Its `next_steps` (a) is this plan's §1, pre-derived** — the floor, the budget, the arithmetic, and
+the conclusion that *"the durable remedy is a decision about the ceiling or the per-record budget, not
+another trim."* The planning session had a premise instead of a research problem. **+** Its
+`key_files` named `bin/tests.sh:2110` and `:2721` and pointed at `bin/check-handoff`, which is where
+the whole inventory started. **+** Its telemetry-dirty and `check-*`-are-Python warnings held again.
+**−** **It left a number ambiguous and that ambiguity produced a real error in my first draft.** It
+quoted `61,312 B` without flagging that the figure uses the header **as measured** (6,016) while the
+derivation uses the **8,000 B allowance** (63,296). I wrote `3 × 18,432 + 8,000 = 61,312`, which is
+neither, and only caught it by recomputing. **−** **It gave line numbers with no warning that they go
+stale the moment the next session writes to those files** — I cited twelve `CHANGELOG.md` lines that
+my own claim entry had already shifted by 5. Both gaps are mine.
+
+**Self-assessment: 8/10.** **+** **I answered the operator's real question first — is this file
+resident? — because it decides whether the rest matters.** It is not; the cost is one receipt, ~25 KB,
+not the file's 57,892 B. That reframed the deliverable from *shrink the file* to *shrink the record*,
+which is the only lever that touches recurring cost. **+** **Two findings made the plan small and safe
+rather than sweeping.** The budget is **prospective-only** (`check_record_budget` compares against the
+frozen copy at HEAD), so no existing receipt reddens and none needs rewriting — without that the plan
+would have proposed a migration. And trailing prose is **27–30%** of a receipt while fenced fields mean
+**12,108 B**, which is what makes 12,288 safe for all six mandatory requirements and 8,192 unsafe. Both
+were measured, not assumed. **+** I ran a real grep inventory and **verified all 14 `bin/` citations by
+re-reading each cited line**, not by trusting the grep that produced them. **+** I wrote this receipt
+under the **proposed** 12,288 B budget rather than the current 18,432, so the recommendation carries at
+least one worked example. **−** **The stale line numbers were entirely avoidable.** I hold the lesson —
+measure against the pre-change tree, or re-derive after your last write — and still cited numbers taken
+before my own claim commit. Caught at Phase 3F only because the protocol makes citation-checking
+mandatory; without that step the plan would have shipped wrong. **−** **I propagated an inherited figure
+without asking which state it was derived for**, one session after recording a memory about exactly that
+failure. **−** `bin/tests.sh` was not run. Justified — no file it exercises was modified — but it is a
+gap stated rather than a box ticked, and Phase 1 must not inherit the assumption.
+
 
 ```handoff
 session: S104
