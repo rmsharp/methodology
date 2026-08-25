@@ -163,6 +163,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.2.0.
 
 ## 2026-08
 
+### 2026-08-24 · [ad hoc] S103 claim — run the `CHANGELOG.md` trim
+
+`CHANGELOG: pending`. Declarations and controls are in the `status: pending` receipt in
+[`HANDOFFS.md`](HANDOFFS.md). **Recorded before the trim, because the trimmer's own P1 guard refuses
+otherwise** — a trim commit advances this file's Phase 0 frontier and would permanently hide any
+commit not yet recorded (S95's precedent, for the same stated reason).
+
+**This file arrived 75,564 B against its own 65,536 B ceiling — OVER by 10,028**, and the trim is
+**three sessions overdue** (S102 `next_steps` (b) named it the obvious next deliverable). Bringing it
+back under is this session's one deliverable. **`HANDOFFS.md` is over too and is NOT claimed here** —
+a second trim is a second capability (FM #26).
+
+Pre-change controls captured BEFORE any write, both populations non-empty: the **12** shipped
+`.verify.sh` proofs at **8 green / 4 red**, re-derived independently and matching S102's census; and
+the `bin/tests.sh` baseline running in a **pristine worktree at `da40bdb`**, which is what keeps it a
+control — S102's own baseline overlapped its claim write and misread one row by one.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-24 · [ad hoc] S102 close-out — receipt written, self-score 8/10, predecessor S101 scored 7/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), inside the 18,432 B per-record budget (asserted by
