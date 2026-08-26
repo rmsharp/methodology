@@ -183,6 +183,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S111 — the detector reworded rather than exempted, so it stays a zero-hit tripwire
+
+Phase A's verify grep still returned one row after the corrections, and the row was **`README.md`
+quoting the false phrase in order to disclose that it was false**. Quoting-to-correct is not
+asserting — but a detector that returns a permanent row is a detector nobody will ever read again.
+
+**S106's precedent applies and was followed** (§5.5): *rewrite the live sentence rather than exempt
+it, keeping the zero-hit grep a live detector without falsifying history.* The disclosure stays and
+now names the old claim without reproducing its exact words. **An exemption list would have retired
+the detector instead** — which is the failure mode, not the fix.
+
+`git grep -nE 'no (error|missing-data) marker|silently truncat' -- starter-kit bin tools README.md`
+now returns **0 rows** across every live path, with one documented carve-out: eleven shipped
+`.verify.sh` files and `starter-kit/methodology_trim.py` carry *"command substitution strips trailing
+newlines, which silently truncates the LAST record"* — a **correct** sentence about `$(...)`, with no
+connection to the read cap. **Repairing it would be a defect.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [ad hoc] S111 — Phase A (3 of 3): the same unearned-remedy caveat pushed into the two TRACKED tools
 
 The correction made to the SEED tables in the entry below, carried into the two files that are
