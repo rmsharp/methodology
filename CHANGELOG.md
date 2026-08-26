@@ -171,6 +171,63 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S110 claim — plan the read-cap premise correction
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **A planning session: the plan is the deliverable and nothing is
+implemented** (FM #18, FM #19).
+
+**Why now.** The operator handed over `../model_project_constructor/docs/planning/ledger-budgets-review.md`
+(that repo's S248, 2026-08-26). It finds its own trim trigger's stated rationale — *"1,500 lines
+(75% of the 2,000-line agent read cap)"* — false by measurement, and recommends replacing a
+file-length target with a front-matter budget. **That premise is not only theirs: this repository
+authors and distributes it.**
+
+**Three probes, run here rather than relayed.** Their two reproduced exactly; the third is this
+session's, and it is the one that decides whether this is a documentation defect or a real one:
+
+| probe | file | result |
+|---|---|---|
+| A | 3,000 ln / 21,000 B | **returned whole** — the documented "up to 2000 lines" did not bind |
+| B | 101 ln / 199,700 B | **cut at line 10**, with a `PARTIAL view … (199405 tokens, cap 25000)` banner naming the exact next call and warning not to answer from the page alone |
+| C | **2,000 ln of real `CHANGELOG.md` content at this repo's own 74.8 B/line density** | **61,844 tokens against the 25,000 cap — truncated at line 687 of 2,001, 34% delivered** |
+
+**The cap is token-denominated at 25,000, and truncation is announced, not silent.**
+
+**The exposure is distributed, and read off `bin/_manifest.py`'s SOURCE column rather than the bare
+filename.** `READ_CAP_LINES = 2000` ships to every adopter root through three TRACKED tools:
+`starter-kit/methodology_trim.py:92` (headroom arithmetic at `:729`/`:809`, a refusal signal at
+`:1589`), `starter-kit/methodology_dashboard.py:269` (a **high**-severity adopter-facing risk at
+`:3006-3010`, the headroom metric at `:1046`), and `starter-kit/context_budget.py`'s `max_lines`
+axis. Its stated justification at `starter-kit/methodology_dashboard.py:264`, republished at
+`README.md:390` — *"a Read past it returns the first 2,000 lines with no error and no missing-data
+marker"* — is **false in both halves**, and probe C says the number is also wrong in the unsafe
+direction: at this repo's density the cliff is near line **690**, so the guard is ~**2.9×** too
+permissive and a ledger at 1,999 lines passes every check while delivering a third of itself.
+`tools/test_methodology_dashboard.py:3191-3193` **pins the trimmer's and the dashboard's literals to
+each other**, so the two agree and are wrong together.
+
+**Two qualifications recorded at claim so the plan cannot overstate.** (1) The practical consequence
+here is **small**: truncation is *ordered* top-down and these ledgers are newest-on-top, so Phase 0's
+frontier and Phase 3A's single-receipt read land inside the delivered prefix — this repo measured
+whole-file reads at 1-in-81. What is wrong is the published claim and the constant's unit more than
+the outcome. (2) **This repo has already arrived at the sibling document's recommendation by another
+route** — S105/S109's per-record budget and `HEADER_RESERVE_BYTES` are its Options D and E, shipped.
+The convergence is corroboration, not a new finding.
+
+**Also standing at claim, neither of them this session's deliverable.** `HANDOFFS.md` is 62,717 B
+with **2,819 B clear**, so this session's close-out receipt breaches the ceiling while `--check`
+still reports *trigger does not fire* — confirmed silent at this Orient, exactly as S109 predicted.
+The trim is **close-out housekeeping**, not a second capability. And `starter-kit/FRAMEWORK_LEARNINGS.md`
+is **16 B** from its ceiling, so **Phase 3C cannot be discharged without the operator's BL-45 decision.**
+
+**What does NOT change:** anything implemented, `RECORD_BUDGET_BYTES`, the 65,536 B ceiling, Test
+34's floor of 3, and every historical statement of the 2,000-line cap in this ledger and in the
+frozen shards, which are records of what was believed when written (FM #22).
+**Fork-side only. Nothing outward-facing** — the fix batches with BL-46(2)/47/48/49 for one later PR.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [BL-46] Cross-repo: BL-46's half (1) closed by the adopter, and its remedy shown too narrow — BL-47/48/49 raised
 
 **Written by:** a session running in `../vscode_quarto_ext` (its S254/S255), acting on that repo's
