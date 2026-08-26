@@ -183,6 +183,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-52] Post-close-out addendum: the read-cap premise's PRECONDITION fails for the two ledgers
+
+**Recorded after S111's close-out, at the operator's direction, and logged here so Phase 0's
+reconcile finds a ledger entry rather than a gap.** The S111 receipt in `HANDOFFS.md` names its own
+commits and is left as written; this is a separate action.
+
+**The finding.** `starter-kit/methodology_dashboard.py:295` justifies `READ_CAP_WATCHED` (`:311`) as
+*"the files a session is instructed to read **IN FULL** to establish state"*, citing
+`SESSION_RUNNER.md` Phase 0 **step 6** for `CHANGELOG.md` and `HANDOFFS.md`. But step 6
+(`SESSION_RUNNER.md:37`) is **frontier-based** — `git log -1 --format=%H -- CHANGELOG.md`, then the
+commits after it. **It reads git history, not the file.** Phase 3A reads **one receipt**, not the
+ledger.
+
+**The premise holds for three of the five watched names and fails for exactly the two the trimmer
+exists to bound.** Steps 1–3 genuinely do say *read*. Step 6 does not. The comment's
+SEED-vs-TRACKED population logic is careful and is **not** what is wrong; the sentence saying why the
+two ledgers are in the set is.
+
+**Observed:** S111's own Phase 0 followed step 6 exactly and never read `CHANGELOG.md` whole.
+
+**It strengthens BL-52 without settling it.** The missing measurement is how often anything reads
+these files whole — put near 1-in-81 by an earlier session, **not re-run**, and a count of exactly
+this kind was once wrong by **13×**. Re-derive before using. Says nothing about the byte metric.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [ad hoc] S111 close-out — Phase A shipped; self-score 8/10, predecessor S110 scored 8/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **inside the 12,288 B per-record budget** — over by

@@ -1352,3 +1352,44 @@ carried into another; sibling of *a ratio is a property of its content type*, Le
 genuinely in question is the **line metric's remedy**, on the argument in the body above. The
 **byte** metric is *not* in question here — for a file at or under the cap it bounds a cost that is
 actually paid, and S111's trim halved one. **Do not close BL-52 by retiring both.**
+
+**⚠ SECOND ADDENDUM (S111, after close-out, at the operator's direction): the PRECONDITION is
+questionable too, and this is the sharpest evidence in the item.** The body above asks whether
+trimming *remedies* an unread tail. This asks something one level further back — whether these two
+files are subject to the read cap **at all** in the way the framework asserts.
+
+**Two shipped texts disagree, and both are `TRACKED`.**
+
+- `starter-kit/methodology_dashboard.py:295` justifies the watched population as *"The files a
+  session is instructed to read **IN FULL** to establish state — `SESSION_RUNNER.md` Phase 0 step 2
+  (`SESSION_NOTES.md`), step 3 (`BACKLOG.md`), **step 6 (reconcile `CHANGELOG.md` and `HANDOFFS.md`
+  against `git log`)**"*, and on that basis `READ_CAP_WATCHED` (`:311`) includes both ledgers.
+- `starter-kit/SESSION_RUNNER.md:37`, which **is** step 6, says to run
+  `git log -1 --format=%H -- CHANGELOG.md` for a frontier and then list commits after it. **That
+  reads git history, not the file.** The `HANDOFFS.md` half of the same step is frontier-based in
+  exactly the same way, and Phase 3A reads **one receipt**, not the file.
+
+**So the premise is sound for three of the five watched names and fails for precisely the two the
+trimmer exists to bound.** Steps 1–3 really do say *read* (`SAFEGUARDS.md` *"in full, not skimmed"*,
+`SESSION_NOTES.md`, `BACKLOG.md`). Step 6 does not. **The population-selection logic in that comment
+is careful and is not what is wrong** — its SEED-vs-TRACKED reasoning stands. What is wrong is the
+sentence that says why the two ledgers are in the set.
+
+**Observed, not only argued:** S111's own Phase 0 followed step 6 exactly and **never read
+`CHANGELOG.md` whole**; no later step did either. The one whole-file read of a ledger this session
+was a deliberate probe, not the protocol.
+
+**What this does and does not license.**
+- It **strengthens** BL-52: if nothing is instructed to read these files whole, the line metric is
+  bounding a cost the protocol does not incur, and trimming to protect that read is remedying a
+  condition that may never arise.
+- It **does not** settle it. The missing measurement is **how often anything reads these files whole
+  in practice** — a prior session put it near 1-in-81, **not re-run**, and a log-mining count of
+  exactly this kind was once wrong by **13×** because `cat >>` and heredoc filenames scored as reads.
+  **Re-derive it before using it.**
+- It says nothing about the **byte** metric, which remains a separate claim.
+
+**And it is a fourth defect in the same neighbourhood as the three Phase A corrected** — a
+justification that was written once, plausibly, and never re-checked against the step it cites.
+Whoever takes Phase B or BL-52 should decide whether the fix is to correct the comment, to narrow
+`READ_CAP_WATCHED`, or to make step 6 actually require the read it is credited with.
