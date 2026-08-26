@@ -183,6 +183,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-51] S115 claim — Phase C1 of the read-cap correction: split the watched population by class
+
+- **Model:** Claude Opus 5 (1M context).
+- Phase 1B claim. Deliverable: **Phase C1** of [`read-cap-phase-c-plan.md`](docs/planning/read-cap-phase-c-plan.md)
+  §9 — `READ_CAP_WATCHED` becomes class-aware, with membership **declared** in
+  `starter-kit/methodology_dashboard.py` and **pinned by a canonical test** against
+  `starter-kit/methodology_trim.py`'s `LEDGERS` table.
+- **THIS PHASE CHANGES NO THRESHOLD.** §8 states A1 *"changes no threshold and cannot degenerate
+  anything"* and §9's Phase C1 criterion names none; §7's A1 mechanism cell, which reads as if two
+  thresholds move, is the summary that drifted. The threshold move is **Phase C2** (option A2),
+  which §8 requires be bundled with option C1 (`DEFAULT_BUDGET_BYTES`) or it is inert.
+- **The class must be DECLARED, not derived from the trimmer.** §10 dragon 6 requires that widening
+  `LEDGERS` **fail** rather than silently reassign a file's class, and §9's DONE criterion asks for
+  a test that fails when a name is added to `LEDGERS` without moving class. Deriving the class
+  would satisfy neither. The model is the existing `test_grammars_agree_with_the_trimmer_config_table`.
+- **Carriers are DISTRIBUTED** — `starter-kit/methodology_dashboard.py` is a TRACKED manifest
+  SOURCE, with a byte-identical `tools/` twin — so this reaches every adopter at their next
+  `bin/sync`. To be re-derived off the manifest's SOURCE column at close-out.
+- **Not in scope:** every threshold, the Class A fire/stop pair, the prefix invariant (A3), the
+  Class B remedy and `BOOTSTRAP.md` (B1/B2), `RECORD_BUDGET_BYTES`, BL-42/43/44/46/47/48/49,
+  issue #75's unsent PR, and **any outward-facing action**.
+
+### 2026-08-26 · [BL-51] Phase C plan RATIFIED — §8's three-session sequence approved, Phase C1 authorized
+
+- **Model:** Claude Opus 5 (1M context).
+- Non-commit **operator decision**, recorded per FM #27. S113 wrote
+  [`read-cap-phase-c-plan.md`](docs/planning/read-cap-phase-c-plan.md) as a DRAFT awaiting
+  ratification (`9a71c8e`); the operator ratified it at S115's Orient, selecting it over the
+  record-budget campaign and over issue #75's unsent PR.
+- **What was approved:** §8's recommendation `A1 → (A2 + C1 together) → A3 → (B1 + B2)`, as **three
+  sessions**. **Phase C1 alone is authorized as S115's deliverable.** Phases C2 and C3 stay
+  unstarted and are **not** authorized by this ratification.
+- **What was NOT approved, and is not implied:** any outward-facing action. The plan's own Scope
+  line already says so; the ratification does not relax it. The carriers are distributed, so the
+  eventual upstream landing batches with BL-46(2)/47/48/49 — and still needs an explicit go-ahead,
+  each time.
+- The plan's Status line was rewritten in place from DRAFT to RATIFIED, and **two ambiguities a
+  successor would otherwise have hit were fenced in the same edit**: `C1` names both an option
+  (§7, `DEFAULT_BUDGET_BYTES`) and a phase (§9, the class split, which is option A1), so §9's
+  *"Do: A2 and C1 in one commit"* means the **option**; and §7's A1 row reads as if Phase C1 moves
+  two thresholds when §8 and §9 both say it moves none.
+
 ### 2026-08-26 · [BL-45] S114 — the learnings ceiling re-derived, and five sessions of owed learnings written
 
 **BL-45 CLOSED** by the operator's choice of option (b) from four costed alternatives.

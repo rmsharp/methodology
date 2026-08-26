@@ -1,8 +1,23 @@
 # Phase C — What each guard WATCHES, and what it CLAIMS
 
-**Status:** **DRAFT, awaiting ratification.** Every repair named below is a *proposal*
-(`SESSION_RUNNER.md` FM #18/#19: the plan is the deliverable). Nothing here is implemented.
+**Status:** **RATIFIED by the operator 2026-08-26**, at S115's claim. The recommendation in §8 —
+`A1 → (A2 + C1 together) → A3 → (B1 + B2)`, as three sessions — is the approved sequence, and
+**Phase C1 is authorized as S115's single deliverable.** Phases C2 and C3 remain unstarted and are
+**not** authorized by this ratification; each is a separate session (§9), and every outward-facing
+action still needs the operator's explicit go-ahead, each time.
 **Author:** S113 (2026-08-26), at claim commit `f06b6f7`.
+
+> **⚠ `C1` NAMES TWO DIFFERENT THINGS IN THIS PLAN, and a successor will meet both.** **Option C1**
+> (§7) is *decide `DEFAULT_BUDGET_BYTES`*. **Phase C1** (§9) is *split the watched population by
+> class*, which is **option A1**. So §9's Phase C2 instruction — *"Do: A2 and C1 in one commit"* —
+> means **option** C1, the constant, and not Phase C1, which by then is already shipped. Read every
+> bare `C1` by its section: §7 and §8 mean the option, §9 means the phase.
+>
+> **⚠ Phase C1 CHANGES NO THRESHOLD, and §7's A1 row reads as if it does.** That row's mechanism
+> cell says the two classes get *"two thresholds"*; §8 says A1 *"changes no threshold and cannot
+> degenerate anything"*, and §9's Phase C1 criterion names none. **§8 and §9 are binding and §7's
+> cell is the summary that drifted** — the threshold move is **Phase C2** (option A2), which §8
+> requires be bundled with option C1 or it is inert. Phase C1 is structure only.
 **Origin:** the operator's proposal at S112's close-out — *"perhaps we should only worry about the
 256 KB limit for trimming. Would that satisfy all methodology's needs?"*
 **Predecessor:** [`read-cap-premise-correction-plan.md`](read-cap-premise-correction-plan.md)
