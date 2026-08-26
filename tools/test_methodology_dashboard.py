@@ -4833,13 +4833,61 @@ class TestS38TrimTriggerRow(unittest.TestCase):
             self.assertEqual(led["bytes"], on_disk, rel)
             self.assertIn("{:,} B".format(on_disk), d,
                           "the row must quote the size it measured, for %s" % rel)
-            self.assertIn("{:,} B budget".format(tm["budget_bytes"]), d)
+            # ONE ARM AT A TIME. Before Phase B the first half was a records-per-line RATE, so a
+            # firing row ALWAYS carried the byte reason too and this could assert it
+            # unconditionally. Both halves are byte LEVELS now with DIFFERENT thresholds -- the
+            # one-read cap is the lower -- so a ledger can fire on the read arm alone, and this
+            # repo's own CHANGELOG.md is in exactly that state. Assert the reason for each arm
+            # that actually fired, and assert the absence of the one that did not, or the row
+            # could quote a threshold nothing tested against.
+            if led["byte_fires"]:
+                self.assertIn("{:,} B budget".format(tm["budget_bytes"]), d,
+                              "a byte-arm breach must quote the budget, for %s" % rel)
+            else:
+                self.assertNotIn("B budget", d,
+                                 "%s is under the byte budget; the row must not imply it is "
+                                 "over one" % rel)
+            if led["refused"]:
+                # NOTE THE WORDING: the trim ADVISORY says "HARD REFUSAL"; the D4(b) RISK row says
+                # "hard limit". Two different sentences in two different places, deliberately, and
+                # asserting the risk row's phrasing here would have made this branch unfalsifiable.
+                # No ledger in this repo is past 262,144 B today, so nothing would have caught it
+                # -- test_the_refusal_advisory_says_nothing_is_delivered exercises it synthetically.
+                self.assertIn("{:,} B HARD REFUSAL".format(md.READ_REFUSE_BYTES), d, rel)
+                self.assertNotIn("one-read budget", d,
+                                 "%s is past the hard refusal; there is no delivered prefix to "
+                                 "describe as truncated" % rel)
+            elif led["read_fires"]:
+                self.assertIn("{:,} B one-read budget".format(md.READ_CAP_BYTES), d, rel)
+            self.assertTrue(led["read_fires"] or led["byte_fires"],
+                            "a row was emitted for %s with neither arm firing" % rel)
             self.assertNotIn("{:,} B".format(
                 next(v["bytes"] for k, v in by_path.items() if k != rel)), d,
                 "the row must not quote the OTHER ledger's size")
             checked += 1
         self.assertEqual(checked, len(descs),
                          "every emitted row must have been checked, not just the first")
+
+    def test_the_refusal_advisory_says_nothing_is_delivered(self):
+        """The branch the live repo cannot reach: no ledger here is past 262,144 B, so the
+        conditional in test_the_advisory_carries_the_numbers_that_were_measured would sit
+        unfalsifiable without this. Exercised synthetically, and paired with the truncation case so
+        it cannot pass by both branches emitting the same sentence."""
+        p = self._sized("CHANGELOG.md", md.READ_REFUSE_BYTES + 2)
+        descs, tm = self._descs(p)
+        led = [l for l in tm["ledgers"] if l["path"] == "CHANGELOG.md"][0]
+        self.assertTrue(led["refused"], "fixture: must be past the hard refusal")
+        d = "\n".join(descs)
+        self.assertIn("{:,} B HARD REFUSAL".format(md.READ_REFUSE_BYTES), d)
+        self.assertIn("NO CONTENT AT ALL", d,
+                      "the whole point of this branch is that the delivered prefix is empty")
+        self.assertNotIn("one-read budget", d,
+                         "a refused file is not a truncated one; emitting both gives one file two "
+                         "contradictory remedies")
+        under = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
+        d2 = "\n".join(self._descs(under)[0])
+        self.assertIn("one-read budget", d2, "control: the truncation branch must be distinct")
+        self.assertNotIn("HARD REFUSAL", d2)
 
     def test_the_named_tool_must_content_verify_not_merely_exist(self):
         """§7.2's detection contract is `.is_file()` AND a content check by regex, and dropping

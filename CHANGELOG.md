@@ -183,6 +183,56 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-52] S112 close-out — the trim was DECLINED on evidence; self-score 7/10, predecessor S111 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **12,288 B inside the 12,288 B per-record budget**
+— four trim passes, and `bin/check-handoff` was **run** rather than predicted each time (it counts
+the opening fence through the **next** opening fence, trailing prose included).
+
+**A trim was due as close-out housekeeping and was not performed, and that is the entry.**
+`methodology_trim.py` refused it (`[SRF_RED]` 1.1198). This session was about to `--force` past the
+refusal, **not having asked BL-52's own question** — whether the trim remedies anything. Asked, and
+measured by the free over-cap error path: a whole-file read of the untrimmed ledger delivers the
+front matter and the **four newest receipts** (55,342 B = **23,370 tok measured**, against 23,409
+predicted; the five-receipt prefix is **28,611 tok**, over). The cut on offer would have archived
+**S108 and S107 — both already outside the delivered prefix.** Phase 3A reads **one** receipt;
+Phase 0 step 6 takes the frontier from `git log` and **greps**; whole-file reads run **1 in 85**.
+The context-tax claim does not rescue it either: that cost is per read-span and is already guarded
+per record by `RECORD_BUDGET_BYTES`. **The tool's refusal was right for a stronger reason than it
+gave** — it diagnosed a level remedy on a rate problem; the measurement adds that the level is not
+costing anything yet.
+
+**Deliberately left red, and it is a finding rather than an oversight:** `context_budget.py` exits
+**2 (BREACH)** and this repo's own dashboard carries **one high-severity read-cap row**, both on
+`HANDOFFS.md`. Both are literally true and, on this measurement, not worth acting on — **a guard can
+be correct and not worth acting on**, which enlarges Phase C's question from *two rows or one* to
+*what population and what claim each row carries*. The threshold that will actually bite is
+`READ_REFUSE_BYTES` = **262,144 B**, roughly **16 sessions** out, where the front matter itself stops
+being delivered; the remedy between here and there is
+[`record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md) Phase 2/3.
+
+**Sizes, measured last — and this entry moved one of them, which is worth recording rather than
+hiding.** `HANDOFFS.md` **77,238 B / 305 ln**, over its 65,536 B ceiling, declined above.
+`CHANGELOG.md` was **58,843 B / 807 ln** before this entry; adding it takes the file to **61,574 B**,
+which crosses the new **56,750 B** one-read cap, so **its read arm now fires too.** Measured before
+asserting anything about it: at this file's own density it is **24,530 tokens — still inside the
+25,000 cap by 470.** So the firing is **early, not wrong**: `MIN_BYTES_PER_TOKEN` is deliberately the
+measured *floor* (2.27) rather than this content's 2.51, because a guard that must not stay silent
+on a truncating file has to assume the densest content it will meet. The cost of that choice, now
+quantified on a real file: it fires about **9.6% early** here (56,750 B against a true cliff near
+62,754 B). **That is the designed trade, stated with its price rather than discovered later.**
+**And the margin is closing, so do not inherit the word "early":** this file is now within a few
+hundred bytes of its own measured cliff, and the next close-out will take it past. Re-run the
+doubling probe (concatenate the file with itself, `Read` it with a spanning `limit`, halve the
+reported token count) rather than trusting either figure here — the *threshold vs cliff* ratio is a
+property of the content type and holds; the file's position against it does not.
+`starter-kit/FRAMEWORK_LEARNINGS.md` **65,520 B, 16 B free** — **BL-45 blocked Phase 3C for a fourth
+consecutive session**; three learnings are earned and unwritten. `main` is **77 ahead of
+`origin/main`**; nothing pushed, no outward-facing action taken.
+
+**Model:** Claude Opus 5 (1M context).
+
+
 ### 2026-08-26 · [BL-51] S112 — Phase B shipped: the read cap is re-denominated onto bytes, and the line rate is deleted
 
 Commits `9e71f83` (the deliverable) and `b5c1357` (the record). Scope was the operator's **"B-min"**
