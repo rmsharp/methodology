@@ -1272,11 +1272,29 @@ naturally with BL-42, which is about the same function.
 <a id="bl-51"></a>
 
 **BL-51 — the `2,000-line agent read cap` premise is false, and it is distributed. Raised
-2026-08-26 (S110); the plan is written and awaits ratification.**
+2026-08-26 (S110). PHASE A SHIPPED (S111). PHASE B SHIPPED (S112). PHASE C OPEN — the item stays
+open for it.**
 
 Full analysis and phased remedy:
-[`read-cap-premise-correction-plan.md`](read-cap-premise-correction-plan.md) — **DRAFT.** This row
-exists so the work appears in the open-item index; the plan is the artifact.
+[`read-cap-premise-correction-plan.md`](read-cap-premise-correction-plan.md) — **RATIFIED**, with
+**§11 recording Phase A** and **§12 recording Phase B**. This row exists so the work appears in the
+open-item index; the plan is the artifact, and §12.4 is what a Phase C session should read first.
+
+**Phase B (S112) moved the numeral and deleted a rule.** `READ_CAP_LINES` is gone from both
+distributed tools; the threshold is now `READ_CAP_BYTES = READ_CAP_TOKENS x MIN_BYTES_PER_TOKEN`
+= **56,750 B**, derived at import so no opaque boundary is published, plus a second measured
+boundary `READ_REFUSE_BYTES = 262,144` past which a default read returns **no content at all**.
+`LINE_FIRE_BELOW`/`LINE_STOP_ABOVE` were **removed, not re-tuned** — the rule is unsatisfiable at
+every honest cap (a one-read `CHANGELOG.md` holds 20.9 records, a one-read `HANDOFFS.md` 4.3,
+against a rule demanding 30 of headroom). J3 keeps 2000 as `SEED_PLAUSIBLE_MAX_LINES`. Fleet
+effect, measured read-only against all four adopters: read-cap risk rows **3 -> 14**, spreading
+from one repo to all five, **five of them the zero-content refusal**. Details and the eleven
+first-hand measurements are in the plan's §12.
+
+**Three figures in the paragraphs below are known-wrong and are deliberately NOT edited (FM #17);
+§12.3 carries the corrections.** *"cliffs near line 690"* and *"~2.9x too permissive"* were measured
+on `CHANGELOG.md` content only — per ledger it is 2.32x and **8.75x**. And the "do not just fix the
+number" paragraph is right but understated: the degeneracy is not specific to a *corrected* cap.
 
 Measured (probes reproduce in that plan's Appendix A): the cap is **~25,000 tokens**, not 2,000
 lines; truncation is **announced** with a full banner, not silent; and at this repo's ledger density
@@ -1370,7 +1388,33 @@ files are subject to the read cap **at all** in the way the framework asserts.
   exactly the same way, and Phase 3A reads **one receipt**, not the file.
 
 **So the premise is sound for three of the five watched names and fails for precisely the two the
-trimmer exists to bound.** Steps 1–3 really do say *read* (`SAFEGUARDS.md` *"in full, not skimmed"*,
+trimmer exists to bound.**
+
+> **⚠ THAT SENTENCE'S POPULATION IS WRONG, corrected by S112 at Phase B and left standing above per
+> FM #17.** `READ_CAP_WATCHED` holds **SIX** names, not five — `SESSION_NOTES.md`, `CHANGELOG.md`,
+> `HANDOFFS.md` and **three** `BACKLOG.md` locations. And **`SAFEGUARDS.md` is not in the set at
+> all**: it is the one file `SESSION_RUNNER.md:13` really does say to read *"in full, not skimmed"*,
+> and it is deliberately excluded as a `TRACKED` dest. So the tally is not 3 sound / 2 false but
+> **2 instructed-but-not-"in full" (`SESSION_NOTES.md`, `BACKLOG.md`, and step 3 is conditional on
+> having no issue tracker) / 2 with no protocol basis at all (`docs/BACKLOG.md`,
+> `docs/planning/BACKLOG.md`, named nowhere in the runner or `SAFEGUARDS.md`) / 2 false
+> (`CHANGELOG.md`, `HANDOFFS.md`)**. The finding is unchanged and if anything stronger; only its
+> arithmetic was wrong. **This is the item's own lesson landing on itself: a count is only as good
+> as the net that produced it.**
+>
+> **The missing measurement is no longer missing.** S112 re-derived it rather than citing it: over
+> **85 transcripts** (this session excluded, heredoc bodies stripped, pipeline segments classified,
+> `starter-kit/` SEEDS and other repos excluded) each **root** ledger was read WHOLE **once** and in
+> PART **1,696 / 1,797** times — **1 in 85**, corroborating S98 independently. The first pass was
+> wrong by 9–10x because it counted the seeds, and was caught only by printing the raw matches.
+>
+> **And one premise BL-52 shares with the plan is now falsified at the top end.** *"Truncation is
+> ordered top-down, so the records a cut removes are ones the read was not delivering anyway"* holds
+> only **between** 25,000 tokens and **256 KiB**. Past 262,144 B a default read is **refused with
+> zero content** — there is no delivered prefix to be ordered, and a cut back under it turns
+> nothing into something. **Five of the eighteen watched fleet ledgers are already past it.** So
+> BL-52's argument is bounded at both ends: it does not hold near the cap (S111's regime addendum)
+> and it does not hold well past it either. Steps 1–3 really do say *read* (`SAFEGUARDS.md` *"in full, not skimmed"*,
 `SESSION_NOTES.md`, `BACKLOG.md`). Step 6 does not. **The population-selection logic in that comment
 is careful and is not what is wrong** — its SEED-vs-TRACKED reasoning stands. What is wrong is the
 sentence that says why the two ledgers are in the set.

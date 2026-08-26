@@ -94,6 +94,10 @@ that falsified this session's own first draft.
 
 ### 1.3 The value is wrong, not only the unit
 
+> **⚠ CORRECTED BY MEASUREMENT AT PHASE B — see §12.3.** The *~2.9× too permissive* below was
+> measured on `CHANGELOG.md` content only. Re-measured per ledger it is **2.32× for
+> `CHANGELOG.md` and 8.75× for `HANDOFFS.md`** — this section understates the second by 3×.
+
 Probe C is the load-bearing measurement: at **this repository's own ledger density**, a file at the
 declared 2,000-line ceiling delivers **687 lines**. The real cliff is ~**2.9× lower** than the
 constant. A ledger sitting at 1,999 lines passes `READ_CAP_LINES` while a reader sees a third of it.
@@ -159,6 +163,13 @@ and give it its own name**, rather than let it inherit a correction made for a d
 
 ## 3. The coupling that makes the naive fix dangerous
 
+> **⚠ UNDERSTATED, AND PHASE B MEASURED THE STRONGER RESULT — see §12.3.** This section shows
+> the rate rule degenerating at a *corrected* cap. It is degenerate at **every honest cap**:
+> a one-read `CHANGELOG.md` holds **20.9** records and a one-read `HANDOFFS.md` **4.3**,
+> against a rule demanding **30** records of headroom. The shipped 2,000-line cap is what
+> hid that, by granting 2.32×/8.75× more capacity than a real read. **The conclusion below
+> stands and is strengthened: the rule was removed, not re-derived.**
+
 `LINE_FIRE_BELOW = 15` and `LINE_STOP_ABOVE = 30` (`starter-kit/methodology_trim.py:94-95`) are the
 published rate rule: *archive when headroom falls below 15 records; cut oldest-first until it is
 back above 30.* **Headroom is denominated in records of headroom to `READ_CAP_LINES`.** They are not
@@ -208,6 +219,12 @@ both `--check`'s exit code (`:1698`) and the gate on the entire write path (`:17
 ---
 
 ## 4. The framework already has a guard on the right axis
+
+> **⚠ THE COINCIDENCE IS LOOSER THAN STATED — see §12.3.** Against the *watched* population's
+> re-measured one-read band (**56,762–62,875 B**), `DEFAULT_BUDGET_BYTES = 65,536` sits
+> **above** it, not inside: 65,536 B is **27,720 tokens** at `HANDOFFS.md` density, over the
+> cap by 11%. Directionally the section's point holds — the byte guard is approximately the
+> real cliff and the line guard is not — but it is *permissive* by ~11%, not centred.
 
 | conversion | one-read boundary in bytes |
 |---|---|
@@ -577,6 +594,109 @@ falsified. An exemption list would have retired the detector instead.
 
 **This is the plan's own §5-inventory lesson landing on its §8:** a criterion is only as good as the
 population its command actually enumerates.
+
+---
+
+## 12. Phase B close-out — what shipped, what it measured, and what it hands forward
+
+**Written by S112 (2026-08-26), the implementing session. This section is a record, not a
+proposal.** Operator's scope decision at Phase 1: **"B-min"** — re-denominate, delete the line
+rate, rename J3, correct the false justification; leave `READ_CAP_WATCHED`, `DEFAULT_BUDGET_BYTES`
+and the prefix guard for Phase C. Design presented and approved before any distributed constant
+moved.
+
+### 12.1 What shipped
+
+| half | files | reaches |
+|---|---|---|
+| **TRACKED** | `starter-kit/methodology_trim.py` (1.3.0 → **1.4.0**), `starter-kit/methodology_dashboard.py` (+ its `tools/` twin, 2.15.2 → **2.16.0**), `starter-kit/context_budget.py` | **every existing adopter**, at their next `bin/sync` |
+| **canonical-only** | `tools/test_methodology_trim.py`, `tools/test_methodology_dashboard.py`, `tools/test_context_budget.py`, this plan | this repository |
+
+**No `SEED` was touched.** `starter-kit/context-budget.json`'s only `read-mandated` entry is
+`SESSION_NOTES.md`, whose justification (*"Phase 0 step 2 orders a read of this file"*) is **true**
+— checked before assuming the defect generalised.
+
+```
+READ_CAP_TOKENS      = 25_000    [M] verbatim from the tool: "exceeds maximum allowed tokens (25000)"
+MIN_BYTES_PER_TOKEN  = 2.27      [M] FLOOR of 2.2705–3.0300 over 9 real files in 5 repos
+READ_CAP_BYTES       = int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN) = 56,750   — computed, never written
+READ_REFUSE_BYTES    = 256 * 1024 = 262,144                                  — the hard, zero-content boundary
+SEED_PLAUSIBLE_MAX_LINES = 2000  — J3's value, unchanged, under its own name
+DELETED: READ_CAP_LINES, LINE_FIRE_BELOW, LINE_STOP_ABOVE, TRIM_LINE_FIRE_BELOW, trim_line_headroom()
+```
+
+### 12.2 The eleven measurements, all first-hand
+
+Instrument: an explicit `limit` spanning an over-cap region **errors and returns no content**,
+reporting the span's exact token count — a *free, exact* token meter. Three controls validate it:
+a 3,000-line file returns **whole** (lines do not bind), a **536-line** file is **over** (lines do
+not bind in the other direction either), and the estimator is **linear in content** —
+`CHANGELOG.md`×2 = 42,767 tok, ×3 = 64,148 against 64,150 predicted, **0.004%**.
+
+1. **The cap is 25,000 tokens**, stated by the tool itself.
+2. **B/token over 9 real markdown files in 5 repos: 2.2705–3.0300 (1.33×).** One-read band
+   **56,762–75,751 B**.
+3. **B/line over the same fleet population: 70.8–611.9 (8.6×).** The byte axis is the tighter proxy
+   by an order of magnitude.
+4. **The line guard is STRICTLY DOMINATED.** Over 18 watched ledgers in 5 repos it fires on **3**;
+   a byte cap fires on **11–14** at *every* threshold in the measured band. Files the line cap
+   catches that even the most permissive byte cap misses: **none**. Files it misses that even the
+   most permissive byte cap catches: **8**.
+5. **`HANDOFFS.md` here is over the cap TODAY** — 69,266 B = **29,300 tokens measured**, 1.17× —
+   and the shipped guard reported **no risk**, because it is 268 lines.
+6. **A THIRD delivery mode.** Past **262,144 B** a default read is **refused outright with zero
+   content**: `File content (256.1KB) exceeds maximum allowed size (256KB)`. Verified first-hand,
+   and a bounded `offset`/`limit` span of the same file still returns content, so the refusal is
+   on the *unbounded* read. **5 of the 18 fleet ledgers are already past it.**
+7. **The rate rule is unsatisfiable at every honest cap** — §12.3 below.
+8. **BL-52's precondition, re-derived not cited:** each root ledger read **whole once in 85
+   transcripts**, in **part 1,696 / 1,797** times.
+9. **The invariant the protocol actually needs is a PREFIX one.** `HANDOFFS.md`: front matter +
+   the **4** newest receipts fit one read (Test 34's floor is 3). Satisfied today with a receipt of
+   margin, **while the whole-file guard says OVER**.
+10. **Both per-record guards are canonical-only** — `RECORD_BUDGET_BYTES` and `ROW_BUDGET_BYTES`
+    are absent from `bin/_manifest.py`. No adopter has either.
+11. **`context_budget.py`'s `bytes_per_token` is not the right instrument**, which is why nothing
+    here uses it: re-running its own `--calibrate` today returns **2.46 at R² 0.59** (the config
+    records 2.80 at R² 0.81), and at 2.46 it predicts `FRAMEWORK_LEARNINGS.md` truncates when a
+    probe shows it returns whole. It estimates *opening context vs `CLAUDE.md` size* — a different
+    quantity. Dragon 7, confirmed by measurement.
+
+### 12.3 Three corrections to this plan's own earlier sections
+
+- **§1.3** said *~2.9× too permissive*. Per ledger: **2.32× (`CHANGELOG.md`), 8.75×
+  (`HANDOFFS.md`)** — measured on one content type and carried, which is the defect this plan
+  exists to correct, one level over.
+- **§3** said a *corrected* cap degenerates the rate rule. It is degenerate at **every** honest
+  cap. A one-read `CHANGELOG.md` holds **20.9** records; a one-read `HANDOFFS.md` **4.3**; the rule
+  demands **30** of headroom. **`LINE_FIRE_BELOW`/`LINE_STOP_ABOVE` were never satisfiable on
+  `HANDOFFS.md` by any honest threshold** — the 2,000-line cap hid it. `ledger-trimmer-design.md`
+  §5.2 already contained the reason: units-of-headroom is well-formed only while the cap *"sits far
+  above normal operating size"*, and at operating size it prescribes *"a level with hysteresis, not
+  a rate — the form that terminates"*. Removal was the design's own prescription, not a preference.
+- **§4** said 65,536 B *"sits inside the measured one-read band"*. Against the **watched**
+  population's re-measured band (56,762–62,875 B) it sits **above** it — 27,720 tokens at
+  `HANDOFFS.md` density, over the cap by **11%**.
+
+### 12.4 What Phase B hands to Phase C — sharper than it received it
+
+- **The dedup (S38's residual 1) is now a decision between two BYTE levels**, 56,750 and 65,536,
+  with distinct claims (read delivery vs context tax) and unrelated provenance. Phase B did not
+  merge them and says so in the code.
+- **The prefix guard is the strongest form of that decision and is measured, not sketched:**
+  *front matter + the K newest records ≤ one read* is what Phase 0 and Phase 3A actually consume,
+  it needs the record grammar (so the trimmer, not the dashboard), and on this repo today it says
+  **OK with one receipt of margin** where the whole-file guard says **OVER**.
+- **Narrowing `READ_CAP_WATCHED`** — deliberately not done. The justification was false for 2 of
+  its **6** names (BL-52's addendum says *"three of the five"*: the population is six, and
+  `SAFEGUARDS.md`, one of the three it credits, is **not in the set** — excluded as a `TRACKED`
+  dest). No protocol text names `docs/BACKLOG.md` or `docs/planning/BACKLOG.md` at all.
+- **`_newest_archive_sha` / `_trim_record_count` lost their only production consumer** and are kept,
+  labelled, with 18 assertions still pinning them. Delete or re-wire them when Phase C decides the
+  row's shape.
+- **`choose_cut` would retain 2 on `HANDOFFS.md`**, below Test 34's floor of 3 — **unchanged by
+  Phase B** (it was 2 at the shipped line cap too), and the reason sessions pass `--cut 3`
+  explicitly. Learning #35's collision, still standing.
 
 ---
 
