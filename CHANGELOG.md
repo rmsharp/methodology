@@ -171,6 +171,56 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S108 close-out — `CHANGELOG.md` trim shipped, 66,553 B → 34,044 B
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **12,288 B inside the 12,288 B per-record
+budget** — over on the first write and on three later passes, each time cut from the trailing prose, which is
+where the checker says to cut. Predecessor **S107 scored 8/10**; **self-score 8/10**.
+
+**The deliverable.** 23 records spanning `2026-08-18 → 2026-08-24` archived to
+[`docs/archive/CHANGELOG-through-2026-08-24.md`](docs/archive/CHANGELOG-through-2026-08-24.md) with
+its `.verify.sh`; 8 retained, all `2026-08-25`. Live file **66,553 B → 34,044 B** against the
+65,536 B ceiling — from OVER by 1,017 to **31,492 B clear**. `--check` reports *trigger does not
+fire* on both triggers (was FIRES); `context_budget.py` went **BREACH (exit 2) → no file over a ceiling**; it still exits **1
+(WARN)**, from the growth run alone (57 non-shrinking measurements vs a threshold of 10), which
+is independent of any ceiling. I nearly recorded `exit 0` without measuring it. The tool was
+**run, not edited**.
+
+**`--cut N` retains the N newest; it does not archive N** — settled from
+`methodology_trim.py:1730`/`:888`, not from S107's worked example, which used a six-record file on
+which both readings are the same command. On 31 records the wrong reading inverts the operation and
+**passes every check in the repo**.
+
+**This file's retention floor is a CONTENT floor, not a record count.** `bin/tests.sh` Test 30's
+real-file arm (`:1891-1892`) fails on **zero** `**Model:**` bullets in the live ledger; Test 31
+(`:1960-1962`) re-reads that population. Asserted on the retained set after the write: **7 of 9**.
+It does not generalise from `HANDOFFS.md`, whose floor is a record count.
+
+**Losslessness, three ways, one independent of the tool.** The tool's `L1`/`L2`/`L3`/`P1A`; its
+emitted `verify.sh` **run** (`31 before = 8 retained + 23 archived; added by the trim commit: 1`,
+exit 0); and every record re-extracted from `git show f40793c:CHANGELOG.md` and byte-compared with
+**my own inverter** — retained 8/8, archived 23/23 both directions, concatenation reconstructs the
+original zone, front matter +4/−0 lines. Seam proved on the artifacts: retained `{2026-08-25}`,
+archived `{2026-08-18, 2026-08-23, 2026-08-24}`, intersection **empty**.
+
+**A correct artifact read as 21 corrupted records, and the proof was what was wrong.** The trimmer
+rebases root-relative link targets by `../../` (32 targets × 6 B across 21 records) and refuses to
+unless the rebase round-trips to the identity, so `L3`'s "byte-identical" is identity *modulo* that
+transform. Recorded as **Learning #37** (`starter-kit/FRAMEWORK_LEARNINGS.md`, 1,413 B, now 36 rows
+— **997 B free**, so the next owed row will not fit without removing one).
+
+**Suite:** control at the claim commit `f40793c` **280 rows, 279/1/0**; after, **280 rows, 279/1/0**,
+same sole failure (`github source dry-run failed`, Test 9's pre-existing 404). Row-for-row: **zero
+lost, zero gained, zero skipped, one pair differing** — Test 31's count `26 → 7`, PASS both sides.
+
+**Measured last (FM #28 gate), after this entry:** `CHANGELOG.md` **37,659 B**, **27,877 B clear**.
+**`HANDOFFS.md` is the one to watch: 51,622 B, only 13,914 B clear, against a 12,288 B receipt** — one
+more fits, two do not, and at 4 records against the `--cut 3` floor a trim could archive exactly
+one. Re-run `wc -c`; `context_budget.py` now shows both files on the LINES axis, where the bytes
+that are the whole constraint do not appear.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-24.md` (23 record(s), 69,370 B → 34,044 B)
 
 **Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
