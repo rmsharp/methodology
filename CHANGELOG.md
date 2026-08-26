@@ -183,6 +183,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-51] S112 — Phase B shipped: the read cap is re-denominated onto bytes, and the line rate is deleted
+
+Commits `9e71f83` (the deliverable) and `b5c1357` (the record). Scope was the operator's **"B-min"**
+at Phase 1: re-denominate, delete the line rate, rename J3, correct the false justification — and
+present the design before any distributed constant moved.
+
+**`READ_CAP_LINES = 2000` is gone from both distributed tools.** In its place, derived at import so
+that no opaque boundary is published: `READ_CAP_TOKENS = 25_000` (stated verbatim by the tool's own
+error) × `MIN_BYTES_PER_TOKEN = 2.27` (the measured **floor** of 2.2705–3.0300 over nine real
+markdown files in five repos) = **`READ_CAP_BYTES` 56,750 B**. Plus a second measured boundary,
+`READ_REFUSE_BYTES = 262,144`.
+
+**The axis change is a dominance result, not a calibration argument.** Over 18 watched ledgers in 5
+repos the 2,000-line threshold fires on **3** and stays silent on **8** that a byte threshold at
+*any* point in the measured band catches — and it catches **nothing** a byte threshold misses.
+B/line spread over that population is **8.6×**; B/token is **1.33×**. Measured on the file that
+motivated it: this repo's own `HANDOFFS.md` is **29,300 tokens, 1.17× the cap, truncating today**,
+and the shipped guard reported no risk because it is 268 lines.
+
+**A third delivery mode nobody had costed.** Past **262,144 B** a default `Read` is **refused
+outright with zero content** — `File content (256.1KB) exceeds maximum allowed size (256KB)` — not
+truncated. So *"truncation is ordered top-down, so the front matter still arrives"* holds only
+**between** the two boundaries. **Five of the eighteen** fleet ledgers are already past it. It gets
+its own risk row and its own edge test: a different failure, not a worse degree of one.
+
+**`LINE_FIRE_BELOW`/`LINE_STOP_ABOVE` were removed, not re-tuned.** The plan's §3 said a *corrected*
+cap degenerates the rule; measured, it is degenerate at **every** honest cap. A one-read
+`CHANGELOG.md` holds **20.9** records and a one-read `HANDOFFS.md` **4.3**, against a rule demanding
+**30** of headroom — satisfiable only because 2,000 lines granted them 2.32× and 8.75× more capacity
+than a real read. [`ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md) §5.2 already
+held the reason: units-of-headroom is well-formed only while the cap *"sits far above normal
+operating size"*, and at operating size it prescribes *"a level with hysteresis, not a rate — the
+form that terminates"*. Removal was the design's own prescription. Recomputed through the shipped
+code, `stops()` is satisfiable at **k ∈ [8..1]** for `CHANGELOG.md` and **[2,1]** for `HANDOFFS.md`
+— a real cut exists for both, where every corrected *line* cap gave nothing for either.
+
+**A second distributed copy of the rate rule was found and removed** — `TRIM_LINE_FIRE_BELOW` in
+`methodology_dashboard.py`, absent from every plan, backlog and ledger text — along with its
+reimplementation `trim_line_headroom()`. **J3 keeps its value under its own name**
+(`SEED_PLAUSIBLE_MAX_LINES = 2000`): it asks whether a file is plausibly a fresh seed, which has
+nothing to do with truncation, and sharing the name meant a correction made for the reporter's
+reasons would silently widen a **refusal** population.
+
+**`READ_CAP_WATCHED`'s justification is corrected; the set is unchanged.** It claimed the two
+ledgers are read *in full* at Phase 0 step 6. `SESSION_RUNNER.md:37` **is** step 6 and is
+frontier-based on `git log`. Re-derived over **85 transcripts**, each root ledger is read whole
+**once** and in part **1,696 / 1,797** times. Narrowing the population is fleet-visible and is
+sequenced after this (Phase C / BL-52).
+
+**Fleet effect, measured read-only against all four adopters plus this repo:** read-cap risk rows
+**3 → 14**, spreading from one repo to five, five of them the zero-content refusal. No adopter file
+was written; `collect_all` reaches no writer, verified by call-graph.
+
+Versions, both **minor**: trim `1.3.0 → 1.4.0` (CLI finding codes change), dashboard
+`2.15.2 → 2.16.0`.
+
+**The surface cannot enforce the property under test, and that is stated rather than implied.**
+`bin/tests.sh` 287 rows both sides, **286 passed / 1 failed / 0 skipped, zero rows lost, gained or
+flipped**; sole failure by name on both sides is Test 9's standing `--source=github` 404. Python
+suites **111 / 302 / 42** OK (was 110 / 300 / 41). Twins byte-identical, mirrored last. **No test in
+this repository can falsify a read-cap claim** — nothing here invokes the agent's `Read` tool — so a
+green suite is evidence that nothing *else* broke. Appendix A was re-run first-hand this session.
+
+**Not done, each deliberately:** Phase C, option D, narrowing `READ_CAP_WATCHED`,
+`DEFAULT_BUDGET_BYTES`, the prefix guard (measured this session and handed to Phase C in plan
+§12.4), `RECORD_BUDGET_BYTES`, BL-45, issue #75's unsent PR, and **any outward-facing action**.
+
+**Model:** Claude Opus 5 (1M context).
+
+
 ### 2026-08-26 · [ad hoc] S112 claim — Phase B of the read-cap premise correction
 
 `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
