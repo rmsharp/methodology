@@ -171,6 +171,70 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S110 — plan delivered: correcting the read-cap premise
+
+**The deliverable:** [`docs/planning/read-cap-premise-correction-plan.md`](docs/planning/read-cap-premise-correction-plan.md),
+**DRAFT awaiting ratification.** A planning session — nothing implemented, no numeral changed, no
+distributed file touched (FM #18/#19). Carve-out re-derived off `bin/_manifest.py`'s **SOURCE**
+column, after a first attempt hit the DEST column and read the root ledgers as distributed: all
+three files this session touched are **canonical-only**.
+
+**Recommends A → B → C as three separate sessions, and declines the one-pass fix.**
+
+**Three defects in one distributed constant,** separated because they have different remedies:
+`READ_CAP_LINES = 2000`'s stated behaviour is false, its unit is wrong (the cap is ~25,000 **tokens**),
+and its value is ~**2.9×** too permissive at this repo's ledger density.
+
+**The finding that decided the plan's shape — no grep for `2000` reaches it.** `LINE_FIRE_BELOW = 15`
+and `LINE_STOP_ABOVE = 30` are denominated in *records of headroom to the cap*. Run through the
+trimmer's own `evaluate_trigger` arithmetic at both ledgers' real baselines: at a corrected cap the
+rate rule **degenerates on both** — max possible headroom falls to **12** and **22** records against
+a `>30` stop, so `stops()` (`byte_ok and line_ok`) can never return true. **And `stops()` has exactly
+one caller.** `choose_cut` (`methodology_trim.py:876-881`) loops the retention count down and
+**`return 1`** when nothing satisfies it — so the next `--write` at every adopter would retain **one
+record** and archive the rest. S94 measured a cut to *two* taking `bin/tests.sh` from 235/1 to 229/6
+(Learning #31); S96 corrected that to six assertions (Learning #33). **Every existing test stays
+green**, because nothing evaluates the rate rule at a corrected cap.
+
+**The structural result.** `DEFAULT_BUDGET_BYTES = 64 * 1024 = 65,536 B` sits *inside* the measured
+one-read band of **60,475–66,425 B**. The framework already ships a guard on the right axis at very
+nearly the right value; the line cap is a redundant second guard on the wrong axis firing ~3× late.
+This answers S38's residual 1, which `methodology_dashboard.py:3001-3003` records as undecided.
+
+**The comment's own cited basis refutes it.** `git show 3aee4e3^:CHANGELOG.md` → **2,090 lines /
+186,704 B**, which is 2.8–3.1× the token cap: it had been truncating since roughly line **676–743**.
+The constant records where the problem was *noticed*, not where it *starts*.
+
+**Four probes [M], reproduction in Appendix A.** 3,000 lines returned whole; 101 lines / 199,700 B
+cut at line 10 with a loud `PARTIAL view … cap 25000` banner; **2,000 lines of this repo's own
+ledger content cut at line 687 of 2,001**. The fourth **falsified this session's own first draft** —
+`FRAMEWORK_LEARNINGS.md` (65,520 B) returned **whole**, so the 2.419 B/token ratio does not transfer
+across content types (measured range 2.42–2.66). The plan therefore prescribes the **method**, not a
+new numeral.
+
+**The inventory caught the plan itself.** Six blind search angles plus two adversarial critics;
+**255 of 255 reported citations re-read and machine-verified** before use. A first draft written from
+one reader's grep named 19 sites; the completed sweep found live sites in **ten further files** —
+three of them **distributed seeds**, including the two that state the false claim as doctrine in a
+table (`starter-kit/CHANGELOG.md:103`, `starter-kit/HANDOFFS.md:97`).
+
+**And those two cannot be repaired by syncing.** Both are `SEED` in `bin/_manifest.py`, and
+`bin/sync:225-230` writes a SEED only when the destination is absent, **never overwriting it after**.
+A correction reaches **future adopters only**; every already-bootstrapped project keeps the false
+doctrine permanently. That is the same defect class as BL-46/47/48 and is the substantive reason
+this work batches with them.
+
+**The surface, named per `SESSION_RUNNER.md` §Planning Sessions:** every DONE criterion is
+demonstrated on the local suites — **and that surface cannot enforce the property under test.** The
+three carriers are Python and cannot invoke the agent's `Read` tool; `bin/tests.sh` has **zero**
+`READ_CAP` references. **No test in this repository can falsify a read-cap claim**, so each phase
+requires Appendix A re-run in the implementing session, with its output in the receipt.
+
+**Fork-side only. Nothing outward-facing.** Two open questions are left for the operator rather than
+decided: whether to annotate the design records (§5.4), and ratification of A → B → C (§7).
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [ad hoc] S110 claim — plan the read-cap premise correction
 
 `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
