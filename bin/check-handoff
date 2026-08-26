@@ -574,7 +574,7 @@ def check_locator_forms(blocks: list) -> list:
     return findings
 
 
-# --- THE RECORD BUDGET -------------------------------------------------------
+# --- THE RECORD BUDGET AND THE HEADER RESERVE --------------------------------
 #
 # 12 KiB per RECORD. A POLICY NUMBER — NOT a derivation. That distinction is the whole
 # content of the 2026-08-25 reduction, so read this before changing the constant.
@@ -588,28 +588,46 @@ def check_locator_forms(blocks: list) -> list:
 #
 # THE FORMULA IS NOW A FIT CHECK, NEVER A DEFINITION, and the difference is load-bearing:
 # re-deriving the budget from the ceiling hands the reduction straight back. Shrink the front
-# matter and the header reserve drops, which under the old reading RAISES this constant. The
-# three terms below are inputs to the assertion, not operands of a division:
+# matter and the header reserve drops, which under the old reading RAISES the per-record
+# constant. The three terms below are INPUTS TO AN ASSERTION, not operands of a division —
+# and as of S109 (Phase 2) they are named constants that bin/tests.sh Test 39 reads and
+# mutates, rather than three numbers living only in this comment.
 #
-#   ceiling      65,536 B   .context-budget.json, HANDOFFS.md `max_bytes`. UNCHANGED by the
-#                           reduction — it is still the trigger methodology_trim.py keys on.
-#   header        8,000 B   a RESERVE, deliberately above the measured front matter, which
-#                           grows ~450 B per archive notice. Measure it, never trust a number
-#                           written here.
-#   floor             3     bin/tests.sh Test 34 reads ids[1]/ids[2] of the LIVE ledger,
-#                           so a cut below three receipts makes six assertions SKIP
+#   CEILING_BYTES         65,536 B   .context-budget.json, HANDOFFS.md `max_bytes`. UNCHANGED
+#                                    by the reduction — still the trigger methodology_trim.py
+#                                    keys on.
+#   HEADER_RESERVE_BYTES   7,168 B   a RESERVE, deliberately above the MEASURED front matter.
+#   RETENTION_FLOOR             3    bin/tests.sh Test 34 reads ids[1]/ids[2] of the LIVE
+#                                    ledger, so a cut below three receipts makes six
+#                                    assertions SKIP.
 #
-#   FIT ASSERTION:  3 x 12,288 + 8,000 = 44,864 B  <=  65,536 B ceiling.
-#   68.5% of the ceiling, leaving 20,672 B of slack — more than one whole receipt, so a trim
-#   is occasional rather than mandatory. Lowering the header reserve must BANK the saving as
-#   slack; it must never be fed back through a division to raise the budget.
+#   A1 FIT:      RETENTION_FLOOR x record budget + HEADER_RESERVE_BYTES <= CEILING_BYTES
+#                3 x 12 KiB + 7,168 = 44,032 B <= 65,536 B — 67.2% of the ceiling, leaving
+#                21,504 B of slack, more than one whole receipt, so a trim is occasional
+#                rather than mandatory.
+#   A2 TRUTH:    the LIVE front matter must fit inside HEADER_RESERVE_BYTES.
 #
-# WHY 12,288 AND NOT LOWER. A receipt splits in two: fenced fields (mean 12,108 B) and
+# WHY A2 EXISTS, AND WHY THE RESERVE WAS LOWERED RATHER THAN LEFT ALONE. Until S109 the
+# 8,000 B header term existed ONLY in this comment: no constant, no assertion, nothing that
+# failed when it went wrong. It had already gone wrong quietly — the front matter measured
+# 7,361 B, 92.0% of the reserve, growing ~447 B on every trim because each one appended
+# another three-line archive pointer block. Two more trims would have breached it and nothing
+# would have said so. Phase 2 collapsed those 8 blocks (3,587 B) into one compact table:
+# 7,361 -> 6,170 B, and the per-trim growth term with them, ~447 -> ~190 B. The reserve is
+# set at 7 KiB — above the 6,170 B measurement with ~5 trims of headroom, and BELOW the old
+# 8,000 so the saving is BANKED as slack. It is NOT fed back through a division to raise the
+# per-record budget: that is the one move Phase 2 exists to prevent, and A1 is a check that
+# the numbers fit, never a formula that produces one of them.
+#
+# MEASURE THE FRONT MATTER, NEVER TRUST A NUMBER WRITTEN HERE — that is A2's whole job, and
+# the figures in this paragraph are a record of one moment, not a live fact.
+#
+# WHY 12 KiB AND NOT LOWER. A receipt splits in two: fenced fields (mean 12,108 B) and
 # TRAILING PROSE below the closing fence — 27-30% of every recent one (S104 5,388 B, S103
 # 4,613 B, S102 4,653 B). The prose is the Phase 3A predecessor evaluation and the Phase 3B
 # self-assessment, ADDITIVE to the six mandatory handoff requirements: those live in the
 # fenced fields, and the receipt already carries their conclusions as the structured
-# predecessor_score / self_score. 12,288 sits just above the fenced-field mean, so the cut
+# predecessor_score / self_score. 12 KiB sits just above the fenced-field mean, so the cut
 # falls on the essays and the six requirements survive unchanged. 8,192 would not — current
 # fenced fields run 10,920-13,019 B, so it would cut the requirements themselves, which is
 # SESSION_RUNNER.md failure mode #15, and no checker here can detect that: this file asserts a
@@ -633,6 +651,9 @@ def check_locator_forms(blocks: list) -> list:
 # self-assessment) sits OUTSIDE its fence, and both methodology_trim.py and the byte ceiling
 # count it. Budgeting the fence alone would put this check on a different axis from the
 # ceiling it is derived from, and the arithmetic above would be false.
+CEILING_BYTES = 65536
+HEADER_RESERVE_BYTES = 7168
+RETENTION_FLOOR = 3
 RECORD_BUDGET_BYTES = 12288
 
 

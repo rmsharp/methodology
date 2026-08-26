@@ -3,8 +3,10 @@
 **Status:** **RATIFIED 2026-08-25** — the operator chose **12,288 (12 KiB)**, §9's one blocking
 decision, over the costed alternatives 10,240 and 8,192. **Phase 1 IMPLEMENTED** the same day
 (session S106): the constant, its derivation comment, the remediation text, thirteen
-`bin/tests.sh` couplings and the `.context-budget.json` note. **Phases 2 and 3 remain pending**
-and are each a separate session. §5.2's inventory was incomplete — see the S106 correction below it.
+`bin/tests.sh` couplings and the `.context-budget.json` note. **PHASE 2 IMPLEMENTED 2026-08-25 (session S109)** — the front-matter
+compaction and, beyond the sketch, the header reserve turned into a named constant with two
+executable assertions; see the S109 note in §6. **Phase 3 remains pending** and is a separate
+session. §5.2's inventory was incomplete — see the S106 correction below it.
 **Author:** S105 (2026-08-25). **Origin:** operator request following S104's structural finding.
 **Scope:** fork-only / canonical-only. **No distributed file is touched** — see §7.
 
@@ -236,6 +238,51 @@ that is what the compact index format is for, and it should be checked again at 
 
 **Note:** a predecessor already flagged this redundancy against itself and left it
 (`docs/archive/HANDOFFS-through-2026-08-18.md:65`). It is a known, deliberate debt, not a new finding.
+
+**IMPLEMENTED 2026-08-25 (S109).** What was done, and where it departed from this sketch:
+
+- **The pointer blocks were 8, not 7.** Re-measured at Orient rather than inherited: **3,587 B =
+  48.6%** of a **7,361 B** front matter, against this section's 3,132 B / 45% / 6,913 B. The drift
+  is exactly one block at the ~447 B this section predicts, so the growth model is confirmed by its
+  own error. Collapsed to one table: front matter **7,361 → 6,170 B (−16.2%)**, and the per-trim
+  growth term **~447 → ~190 B**, which is the half that compounds.
+- **Losslessness was proved, not asserted.** All 7 facts × 8 shards (count, first/last date, shard
+  path, proof path, basename, generator version) re-parsed from the written artifact and compared
+  against the pre-change blocks re-derived from `git show HEAD:HANDOFFS.md`; record total 92 = 92;
+  parse completeness asserted (`rows parsed == row-shaped lines == source blocks`) so an empty
+  match could not read as success; and a **tamper control** (one version string altered) confirmed
+  the detector reports a mismatch.
+- **The reserve got a name, and that is the part this sketch understated.** `HEADER_RESERVE_BYTES`
+  did not exist — 8,000 B lived only in `bin/check-handoff`'s derivation comment, so the term this
+  phase was told to "re-derive" had nothing to re-derive it *in*. Now `CEILING_BYTES = 65536`,
+  `HEADER_RESERVE_BYTES = 7168`, `RETENTION_FLOOR = 3` sit beside the per-record constant.
+  **7 KiB** is below the old 8,000 (so the saving is banked, per §4.3) and above the measured
+  6,170 B with ~5 trims of headroom.
+- **Two assertions, not one — and A1 alone would have caught nothing.** `bin/tests.sh` **Test 39**:
+  **A1** is the fit this section asked for (`3 × 12,288 + 7,168 = 44,032 ≤ 65,536`); **A2** holds
+  the **live** front matter under the reserve. The front matter had already crept to **92.0%** of a
+  reserve nothing checked, two trims from a silent breach — and every byte of that creep satisfies
+  A1. A2 was observed **RED two independent ways** (reserve lowered under the front matter, with A1
+  still green; and front matter grown ~1,500 B with the reserve intact), then restored.
+- **The fit assertion is a TEST, never a module-scope `assert`** — decided at claim, not
+  discovered. A module-scope assert runs at import, so a mutant violating it dies with a traceback
+  before the code under test executes and is scored killed by the crash rather than by behaviour.
+- **`RECORD_BUDGET_BYTES` is unchanged at 12,288**, as §4.3 requires.
+- **Verification:** `bin/tests.sh` **286 passed / 1 failed / 0 skipped** against a **279/1/0**
+  control, row-for-row diffed — **7 new rows (Test 39), 0 status flips, 0 regressions**; the 3
+  rows whose text changed are the same assertions carrying a derived count this session's own
+  claim moved (`**Model:**` 8→9, receipts 4→5), PASS on both sides. The sole failure is Test 9's
+  standing `--source=github` 404. All **16** shipped `.verify.sh` proofs unchanged from control
+  (12 OK / 4 FAIL — BL-36's four). `check-links` 88/22, `check-handoff`, `--all`,
+  `check-learnings` OK. `context_budget.py`: no file over ceiling.
+
+**SCOPE COLLISION FOUND IN THIS PLAN, recorded rather than worked around.** §7 puts
+`methodology_trim.py` and "anything distributed" out of scope, but the pointer blocks are
+**generated** by `starter-kit/methodology_trim.py:935` (`build_pointer_block`) and placed by `:944`
+(`insert_pointer`), and that file **is** distributed. So the compaction is a data edit that is in
+scope, and it is durable only until the next trim appends a fresh ~447 B block in the old format.
+An HTML comment in the front matter tells the next trimming session to fold it into the table.
+Teaching the generator the compact format is an upstream change and was **not** taken here.
 
 **STOP. Close out.**
 

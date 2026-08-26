@@ -2977,6 +2977,147 @@ restore38
 rm -f "$M38"
 rm -rf "$FIXREPO38"
 
+echo "== Test 39: check-handoff — the header reserve and the fit assertion (S109, Phase 2) =="
+# Phase 2 of docs/planning/record-budget-reduction-plan.md. Until S109 the header term existed
+# ONLY inside check-handoff's derivation comment: three numbers in prose, no constant, and
+# nothing that failed when one went wrong. It had already gone wrong quietly -- the front matter
+# measured 7,361 B against a stated 8,000 B reserve (92.0%) and grew ~447 B on every trim,
+# so two more trims would have breached it silently.
+#
+# TWO ASSERTIONS, AND THEY FAIL FOR DIFFERENT REASONS. A1 is arithmetic among constants: the
+# retention floor's worth of records plus the header reserve must fit the ceiling. A2 is the one
+# with teeth -- it measures the LIVE front matter and holds it under the reserve, which is what
+# nothing did before. A1 alone would have stayed green through the entire 92% creep.
+#
+# WHY THIS IS A TEST AND NOT A MODULE-SCOPE `assert` IN check-handoff. A module-scope assert runs
+# at IMPORT, so any mutant that violates it dies with a traceback before the code under test
+# executes -- and a mutation harness scores that as killed by the crash rather than by the
+# behaviour. Decided at claim, not discovered here (S108's next_steps (d)).
+#
+# EVERY ASSERTION BELOW CAPTURES INTO A VARIABLE and compares numerically. It never uses
+# `producer | grep -q`: under `set -o pipefail` (this file, line 5) grep -q exits at the first
+# match, the producer can take SIGPIPE, and the pipeline is scored FAILED even though the pattern
+# MATCHED (Learning #34). Six assertions in this file still carry that form and flake because of
+# it -- :2591, :2596, :2605, :2620, :2864, :2880, all on the `&& pass || fail` polarity, so they
+# fail noisily rather than passing silently. Recorded, not fixed here.
+
+const39() {
+    python3 - "$1" "$2" <<'PY39A'
+import re, sys
+m = re.search(r"(?m)^%s = (\d+)$" % re.escape(sys.argv[2]),
+              open(sys.argv[1], encoding="utf-8").read())
+print(m.group(1) if m else "")
+PY39A
+}
+
+# Front matter = everything above the first receipt fence. LINE-ANCHORED: this file's own
+# front matter quotes ```handoff inside a backtick span in its prose, so a bare substring search
+# stops there and silently measures ~400 B instead of ~6,000.
+fmbytes39() {
+    python3 - "$1" <<'PY39B'
+import re, sys
+t = open(sys.argv[1], encoding="utf-8").read()
+m = re.search(r"(?m)^```handoff$", t)
+print(len(t[:m.start()].encode("utf-8")) if m else -1)
+PY39B
+}
+
+CEIL39="$(const39 "$BIN/check-handoff" CEILING_BYTES)"
+RES39="$(const39 "$BIN/check-handoff" HEADER_RESERVE_BYTES)"
+FLOOR39="$(const39 "$BIN/check-handoff" RETENTION_FLOOR)"
+BUD39="$(const39 "$BIN/check-handoff" RECORD_BUDGET_BYTES)"
+
+# (0) PARSE CONTROL. Without this every assertion below is vacuous: an empty operand under
+# `set -u` would abort, but a renamed constant would silently yield "" and the arithmetic would
+# never run. Named individually so the failure says WHICH one moved.
+MISSING39=""
+[ -n "$CEIL39" ]  || MISSING39="$MISSING39 CEILING_BYTES"
+[ -n "$RES39" ]   || MISSING39="$MISSING39 HEADER_RESERVE_BYTES"
+[ -n "$FLOOR39" ] || MISSING39="$MISSING39 RETENTION_FLOOR"
+[ -n "$BUD39" ]   || MISSING39="$MISSING39 RECORD_BUDGET_BYTES"
+if [ -z "$MISSING39" ]; then
+    pass "parse control: all four budget constants are named and readable ($FLOOR39 x $BUD39 + $RES39 vs $CEIL39)"
+else
+    fail "parse control: constant(s) not found in check-handoff --$MISSING39"
+fi
+
+# (1) A1 -- THE FIT. The formula is a CHECK, never a definition: re-deriving the budget from the
+# ceiling is exactly the move that hands the reduction straight back (plan Sec 4.3).
+A1SUM39=$(( FLOOR39 * BUD39 + RES39 ))
+if [ "$A1SUM39" -le "$CEIL39" ]; then
+    pass "A1 fit: $FLOOR39 x $BUD39 + $RES39 = $A1SUM39 B <= $CEIL39 B ceiling ($(( A1SUM39 * 100 / CEIL39 ))%)"
+else
+    fail "A1 fit VIOLATED: $FLOOR39 x $BUD39 + $RES39 = $A1SUM39 B > $CEIL39 B ceiling"
+fi
+
+# (2) A2 -- THE RESERVE IS TRUE OF THE LIVE FILE. Skipped, never silently passed, in an adopter
+# tree or fresh clone where there is no root ledger to measure (BL-40's primitive).
+if [ -f "$METHODOLOGY/HANDOFFS.md" ]; then
+    FM39="$(fmbytes39 "$METHODOLOGY/HANDOFFS.md")"
+    FILE39="$(wc -c < "$METHODOLOGY/HANDOFFS.md" | tr -d ' ')"
+    # Split control: a measurement that returned the whole file, or nothing, would make (2)
+    # meaningless in opposite directions. Both are excluded before the reserve is compared.
+    if [ "$FM39" -gt 0 ] && [ "$FM39" -lt "$FILE39" ]; then
+        pass "split control: front matter is $FM39 B, a proper prefix of the $FILE39 B ledger"
+    else
+        fail "split control: front matter measured $FM39 B against a $FILE39 B file -- the fence split failed"
+    fi
+    if [ "$FM39" -le "$RES39" ]; then
+        pass "A2 truth: live front matter $FM39 B <= $RES39 B reserve ($(( FM39 * 100 / RES39 ))% used)"
+    else
+        fail "A2 truth VIOLATED: live front matter $FM39 B exceeds the $RES39 B header reserve by $(( FM39 - RES39 ))"
+    fi
+else
+    skip "A2 truth: no root HANDOFFS.md (adopter tree or fresh clone), so the reserve was not measured against a live file"
+    skip "split control: no root HANDOFFS.md to split"
+fi
+
+# (3) MUTATION. Each mutant is verified to APPLY first, so "DID NOT APPLY" can never be scored
+# as "killed". The mutants target the CONSTANTS in check-handoff, which is what A1/A2 read --
+# mutating the assertion in this file would only prove the test can be broken.
+M39="$(mktemp)"
+
+# M1: the reserve inflated past what the ceiling can hold. Kills an A1 that never compares.
+if mutate "$BIN/check-handoff" "$M39" 's.replace("HEADER_RESERVE_BYTES = 7168", "HEADER_RESERVE_BYTES = 30000", 1)'; then
+    R39="$(const39 "$M39" HEADER_RESERVE_BYTES)"
+    if [ $(( FLOOR39 * BUD39 + R39 )) -gt "$CEIL39" ]; then
+        pass "mutant killed: a reserve of $R39 B breaks the fit assertion"
+    else
+        fail "MUTANT SURVIVED: reserve $R39 B still fits -- A1 is not comparing what it claims"
+    fi
+else fail "M1 mutation DID NOT APPLY"; fi
+
+# M2: the reserve cut below the measured front matter. This is the mutant A1 CANNOT kill, and it
+# is the whole reason A2 exists -- 4,096 B still fits the ceiling comfortably.
+if mutate "$BIN/check-handoff" "$M39" 's.replace("HEADER_RESERVE_BYTES = 7168", "HEADER_RESERVE_BYTES = 4096", 1)'; then
+    R39="$(const39 "$M39" HEADER_RESERVE_BYTES)"
+    if [ -f "$METHODOLOGY/HANDOFFS.md" ]; then
+        FM39="$(fmbytes39 "$METHODOLOGY/HANDOFFS.md")"
+        FITS39=0; [ $(( FLOOR39 * BUD39 + R39 )) -le "$CEIL39" ] && FITS39=1
+        if [ "$FM39" -gt "$R39" ] && [ "$FITS39" = "1" ]; then
+            pass "mutant killed by A2 alone: reserve $R39 B is under the $FM39 B front matter yet still fits the ceiling"
+        else
+            fail "MUTANT SURVIVED: reserve $R39 B vs front matter $FM39 B (fits ceiling: $FITS39) -- A2 adds nothing over A1"
+        fi
+    else
+        skip "M2: no root HANDOFFS.md to measure the shrunken reserve against"
+    fi
+else fail "M2 mutation DID NOT APPLY"; fi
+
+# M3: the PER-RECORD budget raised. A1 must read the budget too, not only the reserve -- this is
+# the mutant that proves A1 is coupled to both operands rather than to a constant it happens to
+# name. Sec 4.3's failure mode is precisely a budget silently re-derived upward.
+if mutate "$BIN/check-handoff" "$M39" 's.replace("RECORD_BUDGET_BYTES = 12288", "RECORD_BUDGET_BYTES = 20000", 1)'; then
+    B39="$(const39 "$M39" RECORD_BUDGET_BYTES)"
+    if [ $(( FLOOR39 * B39 + RES39 )) -gt "$CEIL39" ]; then
+        pass "mutant killed: a per-record budget of $B39 B breaks the fit assertion"
+    else
+        fail "MUTANT SURVIVED: budget $B39 B still fits -- A1 does not read the budget"
+    fi
+else fail "M3 mutation DID NOT APPLY"; fi
+
+rm -f "$M39"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
