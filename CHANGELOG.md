@@ -171,6 +171,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-25.md` (2 record(s), 66,615 B → 44,725 B)
+
+**Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-08-25 → 2026-08-25) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-08-25.md`](docs/archive/HANDOFFS-through-2026-08-25.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-08-25.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-25.md.verify.sh)
+rather than trusting a digest printed here. Live file 66,615 B → 44,725 B (−32.9%).
+
 ### 2026-08-26 · [ad hoc] S110 — plan delivered: correcting the read-cap premise
 
 **The deliverable:** [`docs/planning/read-cap-premise-correction-plan.md`](docs/planning/read-cap-premise-correction-plan.md),
