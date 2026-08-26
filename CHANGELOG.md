@@ -167,6 +167,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S108 claim — run the `CHANGELOG.md` trim, losslessly
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **A maintenance session running a shipped tool** — the deliverable is
+the archive shard and the restored headroom, not a change to the tool.
+
+**Why now.** S107's next_steps (a), which predicted this file might be the next trim and named
+itself as the possible cause. Re-measured at this Orient rather than inherited, exactly as it
+instructed: `context_budget.py` reports **66,553 B against the 65,536 B ceiling, over by 1,017**,
+and `--check` reports **trigger FIRES** on bytes. S107 recorded 66,410 B; its own close-out entry
+is what carried the file over, and 143 B more arrived after its measurement. The line trigger does
+not fire (32 records of headroom) and `HANDOFFS.md` does not fire at all — a one-file job.
+
+**The cut is `--cut 8`, chosen before the write, and `--cut N` retains the N newest rather than
+archiving N** — read off `methodology_trim.py:1730` (`retained, archived = records[:k], records[k:]`)
+and `:888`, not inferred from prose. With this entry prepended the file holds 31 records, so
+`--cut 8` retains all eight of `2026-08-25` and archives the 23 spanning `2026-08-18 → 2026-08-24`:
+disjoint date sets, so `CHANGELOG-through-2026-08-24.md` is a true day boundary and not a span
+label, and no shard by that name exists. Dry runs at all three calendar seams were measured rather
+than estimated — retain 7/16/23 give 31,227 / 48,476 / 53,756 B — and the deepest was chosen
+because a trim session is itself expensive: S107's cost this ledger 5,483 B across its claim, its
+auto-entry and its close-out, so a cut buying two or three sessions nearly pays for itself and no
+more. 31,227 B is 47.6% of ceiling, where S107 left `HANDOFFS.md` (48.6%), and it leaves the live
+ledger covering the same three sessions whose receipts `HANDOFFS.md` still retains.
+
+**This file's retention floor is a CONTENT floor, not a record count — the finding this cut turned
+on.** `bin/tests.sh` Test 30's real-file arm (`:1891-1892`) fails if the live `CHANGELOG.md` carries
+**zero** `**Model:**` bullets, and Test 31 (`:1960-1962`) re-reads that population. 25 of 30 records
+carry one; only the five auto-generated `Ledger trim:` entries do not. Any cut retaining the newest
+record clears it — to be asserted on the retained set after the write, not reasoned about.
+
+**What does NOT change:** the 65,536 B ceiling, `RECORD_BUDGET_BYTES`, `methodology_trim.py` itself,
+`HANDOFFS.md` (its trigger does not fire), BL-36's four failing shipped proofs, and every shard
+already frozen. No distributed file — the trimmer is distributed but is only being *run*, not
+edited.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] S107 close-out — `HANDOFFS.md` trim shipped, 82,406 B → 31,875 B
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **9,332 B inside the 12,288 B per-record budget
