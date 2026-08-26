@@ -1026,3 +1026,118 @@ for cause; sequenced.
 *"5-item"* and the checklist is now 7. It is **correct as written**: it sits under
 **"### What's New in v1.2"**, frozen release notes where 5 was the count as shipped. Editing it
 would falsify the history, and it is not a live claim. S92 verified the heading before leaving it.
+
+
+<a id="bl-42"></a>
+
+**BL-42 — `methodology_trim.py` still generates the fat pointer block the S109 compaction just
+removed. Raised 2026-08-25 (S109), found while doing Phase 2, deliberately not fixed.**
+
+`build_pointer_block` (`starter-kit/methodology_trim.py:935`) emits a 3-line ~447 B block and
+`insert_pointer` (`:944`) places it at the end of front matter. S109 collapsed the 8 accumulated
+blocks into one table (~190 B/row), so **the next trim of `HANDOFFS.md` re-appends a block in the
+old format** and the front matter carries two formats at once. An HTML comment in the front matter
+tells that session to fold it in by hand, which works but is a human step that silently stops
+happening (Learning #12).
+
+**Why it was not fixed here.** The file is **DISTRIBUTED** (`bin/_manifest.py` ships it to adopter
+roots), so the fix lands upstream and needs the operator's go-ahead. The ratified plan's §7 put
+`methodology_trim.py` and "anything distributed" out of Phase 2's scope while §6 asked for the
+compaction — a **scope collision inside the plan itself**, recorded there too.
+
+**Shape of the fix, for whoever takes it:** the pointer region wants to be a `LedgerSpec`-declared
+*regenerated* field — the trimmer already regenerates the receipt-count sentence — so the table is
+rebuilt from the shard inventory each trim rather than appended to. That also fixes the count
+sentence's drift for free. Runnable fork-side up to the PR.
+
+<a id="bl-43"></a>
+
+**BL-43 — six `bin/tests.sh` assertions flake under `pipefail`. Raised 2026-08-25 (S109),
+diagnosed, not fixed.**
+
+Two runs of `bin/tests.sh` on an identical clean tree gave **278/2/0** then **279/1/0**. The
+non-reproducing failure was Test 38 assertion (5). It is a **race, not a regression**:
+`bin/tests.sh:5` is `set -uo pipefail`, and `echo "$(producer)" | grep -q PAT` lets `grep -q` exit
+at the first match, so `echo` can take SIGPIPE and the pipeline is scored **failed even though the
+pattern matched** (Learning #34).
+
+**Population enumerated, not sampled:** `:2591`, `:2596`, `:2605`, `:2620`, `:2864`, `:2880`.
+**All six are on the `&& pass || fail` polarity, so each fails NOISILY** — none is in the
+dangerous `&& fail || pass` direction that would assert nothing and read green. That is why this
+is a nuisance rather than a hole, and why it was recorded rather than swept into S109's scope.
+
+**The fix is already in this file**: Test 38 section (8) capture output into a variable first and
+say why. Apply the same to all six. **Each needs its own proof that it still fails when it should**
+— a capture that silently stops asserting is exactly the failure being fixed — which is what makes
+this a session rather than a one-line sweep.
+
+<a id="bl-44"></a>
+
+**BL-44 — `bin/check-learnings` reports a range it has not measured. Raised 2026-08-25 (S109).**
+
+`bin/check-learnings:330` prints `"%d Learning row(s), contiguous 1..%d"` with `len(rows)` for
+**both** operands. The table reserves `#14`, so the rows are 1..38 with a deliberate gap and the
+tool reports **"37 rows, contiguous 1..37"**. The contiguity *check* is correct — it models the
+reserved gap — only the success message is wrong.
+
+**It is not cosmetic: it has already contaminated a durable record.** S108's receipt states
+`check-learnings OK (36 rows, contiguous 1..36)` **and** "I discharged one of mine (#37)" in the
+same block, because the tool's own summary contradicted the file. A reader trusting the summary
+concludes the newest Learning is one lower than it is, and cites the wrong number.
+
+**Fix:** report the observed maximum and name the reserved gap, e.g.
+`37 row(s), #1..#38, 1 reserved (#14)` — derived from the parsed numbers, never from `len(rows)`.
+Canonical-only (`bin/check-learnings` carries no `bin/_manifest.py` row), so no adopter impact and
+no upstream action.
+
+<a id="bl-45"></a>
+
+**BL-45 — `starter-kit/FRAMEWORK_LEARNINGS.md` is 16 B from its ceiling. Raised 2026-08-25 (S109).
+This blocks Phase 3C for the next session.**
+
+**65,520 B against a 65,536 B ceiling.** The 37 rows are ~97% of the file; prose is under 2 KB, so
+there is nothing else to reclaim. `ROW_BUDGET_BYTES` is 1,500 and the median row is ~1,971 B, so
+**no budget-conforming row fits** — S109's own was written to 981 B specifically to fit the
+remaining 997, and consumed it.
+
+The table is **append-only and `CLAUDE.md` forbids renumbering**, and rows are cited across the
+distributed corpus, so the ledger trimmer's shard-and-pointer pattern does not transfer unchanged:
+archiving row #7 breaks every `Learning #7` citation unless `check-learnings`' citation sweep
+learns to resolve into the shard.
+
+**This is Learning #35's own shape** — two limits set independently on one artifact multiplying
+into a constraint nobody checks — arriving in the file that records it.
+
+**Options, none costed yet, and the choice is the operator's:** (a) archive oldest rows into a
+shard plus citation-resolution in the checker; (b) raise the ceiling, which is measured and would
+need re-deriving; (c) compact frozen rows in place, which edits an append-only record; (d) split
+the table by theme. **Decide before the next session's Phase 3C, because that session cannot
+discharge it.**
+
+<a id="bl-46"></a>
+
+**BL-46 — an adopter's trimmer has been inert since bootstrap, and nothing detected it. Raised
+2026-08-25 (S109) from a cross-repo measurement.**
+
+`../vscode_quarto_ext` has `methodology_trim.py` installed and **zero** archive shards. Its
+`HANDOFFS.md` is **1,780,187 B — 27x the 65,536 B ceiling** — and `--check` refuses to parse it:
+
+```
+[ZONE_UNCLASSIFIED] HANDOFFS.md declares footer_mode='none', but line 3762 is a standalone '---'
+```
+
+The line is the **bootstrap seed sentinel** — `<!-- Receipts go below, newest on top. Delete the
+seed-sentinel line above when you add the first one. -->` — never deleted at setup. The tool has
+been correctly refusing to guess ever since, and nobody was reading its output.
+
+**Two separate items, and only the first is that repo's.** (1) Delete the sentinel there and run
+the overdue trims — that repo's work, not this one's. (2) **The framework defect:** the seed
+instructs the adopter to delete the line and **nothing checks that they did**. `bin/check-handoff`
+validates receipts, not the seed's own removal. A one-line check — a live `HANDOFFS.md` containing
+the sentinel text alongside a real receipt is a bootstrap that did not finish — would have caught
+this at that repo's first close-out instead of 216 receipts later. That half touches distributed
+files and needs a go-ahead.
+
+**Context:** the same sweep found `nprcgenekeepr` (218,298 / 286,154 B) and `wsfct` (74,180 B)
+firing their triggers with the tool installed and unrun. This repo is the only one of four under
+the ceiling. See `CHANGELOG.md`'s S109 entries for the full four-repo table.

@@ -7,7 +7,8 @@ as [`adopter-pr25-27-remediation-plan.md`](adopter-pr25-27-remediation-plan.md))
 This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
-BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39.**
+BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
+BL-42, BL-43, BL-44, BL-45, BL-46.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -134,6 +135,11 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-36** | Four of the six shipped `.verify.sh` losslessness proofs do not hold — found, not fixed | [detail](BACKLOG-DETAIL.md#bl-36) |
 | **BL-37** | This repo ships a size-ceiling gate it does not run on itself; the shipped list has no `BACKLOG.md` entry | [detail](BACKLOG-DETAIL.md#bl-37) |
 | **BL-39** | Issue #75's two *Related* items — carry the named surface forward into close-out | [detail](BACKLOG-DETAIL.md#bl-39) |
+| **BL-42** | `methodology_trim.py` still generates the fat pointer block S109's compaction removed | [detail](BACKLOG-DETAIL.md#bl-42) |
+| **BL-43** | Six `bin/tests.sh` assertions flake under `pipefail` — diagnosed, enumerated, not fixed | [detail](BACKLOG-DETAIL.md#bl-43) |
+| **BL-44** | `bin/check-learnings` reports `contiguous 1..N` from `len(rows)`, so a reserved gap makes it false | [detail](BACKLOG-DETAIL.md#bl-44) |
+| **BL-45** | `FRAMEWORK_LEARNINGS.md` is 16 B from its ceiling — **blocks Phase 3C for the next session** | [detail](BACKLOG-DETAIL.md#bl-45) |
+| **BL-46** | An adopter's trimmer inert since bootstrap; the seed's own removal has no detector | [detail](BACKLOG-DETAIL.md#bl-46) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

@@ -171,6 +171,70 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S109 close-out — Phase 2 shipped: front matter −16.2%, the header reserve named and asserted
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **inside the 12,288 B per-record budget** — which
+took seven trim passes against `bin/check-handoff`, run each time rather than estimated.
+Commits: `bd3f026` (Phase 1B claim) + **`eec1cbb`** (the deliverable) + this close-out.
+**Phase 2 of [`record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md),
+ratified at S105.** `RECORD_BUDGET_BYTES` **unchanged at 12,288** (§4.3).
+
+**The four-repo measurement that reframed the session.** The operator asked why this repo spends
+its effort trimming when three larger adopters do not. Read-only, same 65,536 B ceiling:
+
+| repo | `CHANGELOG.md` | `HANDOFFS.md` | `--check` | median B/receipt | archive shards |
+|---|--:|--:|---|--:|--:|
+| **methodology** | 37,659 | 51,622 | **silent, both** | **11,483** (n=115) | 17 |
+| wsfct | 74,180 | 51,983 | FIRES (CHANGELOG) | 4,059 (n=67) | 6 |
+| nprcgenekeepr | 218,298 | 286,154 | FIRES, both | 4,664 (n=325) | 13 |
+| vscode_quarto_ext | 811,069 | **1,780,187** | FIRES / **cannot parse** | 7,912 (n=216) | **0** |
+
+They do not lack the symptom; they lack the measurement. This repo has the **smallest** ledgers of
+the four and is the **only one under the ceiling**. The per-receipt figures are taken over live
+ledgers **plus every archive shard**, so the population is the whole history rather than the
+post-trim remnant. This repo's receipts run **2.5–2.8× the adopter median** — 5.7 receipts to fill
+the ceiling against their 14–16 — while its `CHANGELOG` entries are the *smallest* of the four
+(median 1,387 B). The excess is entirely in `HANDOFFS.md`, which is §2 of the plan restated by
+independent measurement: *"the term worth attacking is the receipt, not the file."*
+
+**What shipped.** The 8 archive pointer blocks (3,587 B, **48.6%** of a 7,361 B front matter,
+growing ~447 B per trim) collapsed into one table stating the naming rule once:
+**7,361 → 6,170 B (−16.2%)**, per-trim growth **~447 → ~190 B**. Lossless, proved from the written
+artifact against the pre-change blocks re-derived from `git show`: 7 facts × 8 shards, 92 = 92
+records, parse-completeness asserted so an empty match could not read as success, plus a tamper
+control. All 16 shard links preserved (`check-links` 88/22, unchanged). The live receipt count in
+the same front matter said **3** where the file held **5**; corrected.
+
+**The half the plan did not know was there.** `HEADER_RESERVE_BYTES` did not exist — 8,000 B lived
+only inside a derivation comment, so the term Phase 2 was told to re-derive had nothing to
+re-derive it *in*, and nothing failed when it went wrong. **It had already gone wrong: the front
+matter had crept to 92.0% of it, two trims from a silent breach.** Now `CEILING_BYTES = 65536`,
+`HEADER_RESERVE_BYTES = 7168`, `RETENTION_FLOOR = 3` sit beside the per-record constant, with
+`bin/tests.sh` **Test 39**: **A1** the fit (`3 × 12,288 + 7,168 = 44,032 ≤ 65,536`) and **A2** the
+live front matter held under the reserve. **Every byte of that 92% creep satisfies A1**, which is
+why A2 exists. A2 was observed **RED two independent ways** and restored. The fit assertion is a
+**test, never a module-scope `assert`** — decided at claim, per S108's `next_steps` (d).
+
+**Verification.** `bin/tests.sh` **286/1/0** against a **279/1/0** control, diffed row for row:
+**7 new rows, 0 status flips, 0 regressions**; the 3 rows whose text changed carry derived counts
+this session's own claim moved (`**Model:**` 8→9, receipts 4→5), PASS on both sides. All **16**
+shipped `.verify.sh` proofs run: 12 OK / 4 FAIL, the same four (BL-36). `check-links`,
+`check-handoff`, `--all`, `check-learnings` OK. `context_budget.py`: no file over its ceiling.
+`trim --check`: silent on both ledgers.
+
+**Five findings recorded rather than absorbed — [BL-42 … BL-46](docs/planning/BACKLOG-DETAIL.md).**
+BL-42 the trimmer still generates the fat block (distributed; the plan's §7 forbade touching it
+while §6 asked for the compaction — a scope collision recorded in the plan). BL-43 six
+`bin/tests.sh` assertions flake under `pipefail`, enumerated, all noisy-polarity. BL-44
+`check-learnings` prints `contiguous 1..len(rows)`, false whenever a number is reserved — it
+already contaminated S108's receipt. **BL-45 `FRAMEWORK_LEARNINGS.md` is 16 B from its ceiling and
+this blocks Phase 3C for the next session.** BL-46 an adopter's trimmer inert since bootstrap
+because the seed sentinel was never deleted, and nothing checks that it was.
+
+**Canonical-only. Nothing distributed, nothing outward-facing.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] S109 claim — Phase 2 of the record-budget reduction
 
 `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
