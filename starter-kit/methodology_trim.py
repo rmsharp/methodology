@@ -89,7 +89,11 @@ TRIM_VERSION = "1.3.0"   # 1.3.0: BL-41 — the shard name is derived from a REC
                          # a new exit status on a distributed tool, so: minor, not patch.
 
 # --- Tunables, all of them judgment, all of them labelled as such in the design ---------------
-READ_CAP_LINES = 2000          # agent `Read` truncation cap — harness behaviour, not a repo property
+READ_CAP_LINES = 2000          # line-denominated PROXY for the agent `Read` cap, which is itself
+                               # TOKEN-denominated. Harness behaviour, not a repo property. Do NOT
+                               # re-tune alone: LINE_FIRE_BELOW/LINE_STOP_ABOVE below are records
+                               # of headroom TO this number. See docs/planning/
+                               # read-cap-premise-correction-plan.md (Phase B) and its Appendix A.
 DEFAULT_BUDGET_BYTES = 64 * 1024   # design §5.4: calibrated to the three sizes this repo operated at
 LINE_FIRE_BELOW = 15           # design §5.2, the published rate rule, kept verbatim
 LINE_STOP_ABOVE = 30
@@ -693,7 +697,13 @@ def lines_at(repo, sha, relpath):
 # =============================================================================================
 # The trigger — two metrics, because there are two distinct failure modes.
 #
-#   Lines protect against SILENT TRUNCATION (a Read past the cap returns no error and no marker).
+#   Lines bound HOW MUCH OF THE FILE ONE READ DELIVERS. They are a proxy, on the wrong axis:
+#   the cap is TOKEN-denominated, and truncation is ANNOUNCED, not silent — an over-cap read
+#   returns a PARTIAL-view banner naming the delivered span, the true length and the cap, and
+#   an explicit over-cap line range errors outright, returning nothing. The claim that stood
+#   here — "a Read past the cap returns no error and no marker" — was false in both halves.
+#   Re-measure with Appendix A of docs/planning/read-cap-premise-correction-plan.md; nothing
+#   in this repo can falsify it, because nothing here can invoke the agent's Read tool.
 #   Bytes protect against CONTEXT TAX (G1, the operator's stated goal).
 #
 # The two take different FORMS and transplanting one onto the other does not work: "cut until back

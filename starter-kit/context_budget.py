@@ -371,8 +371,11 @@ def short(path, width=34):
 def ledger_dimension(r):
     """(size, ceiling) for one ledger row — reported in the dimension that ACTUALLY FIRED.
 
-    A read-mandated file is normally reported in lines, because that is the unit an
-    agent's read cap comes in. But its BYTE ceiling can be the one that fires, and a
+    A read-mandated file is normally reported in lines, because that is the unit the
+    surrounding trim rule is written in -- NOT because the cap comes in lines. Measured,
+    it does not: the agent read cap is TOKEN-denominated, and the line ceiling is a proxy
+    for it (docs/planning/read-cap-premise-correction-plan.md, Appendix A). But its BYTE
+    ceiling can be the one that fires, and a
     row reading `359 ln / 1,200 ln  over` then points at a ceiling that did not fire,
     while the 72,449 B behind the verdict appears only in the prose further down. A
     ledger row that cannot show the figure behind its own verdict is precisely the

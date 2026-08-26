@@ -175,6 +175,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S111 — Phase A (1 of 3): the false read-cap premise corrected in the three TRACKED tools
+
+**Phase A of [`read-cap-premise-correction-plan.md`](docs/planning/read-cap-premise-correction-plan.md),
+ratified by the operator at this session's Phase 1.** The claim is corrected; **no numeral moved** —
+`READ_CAP_LINES` is still `2000`, `LINE_FIRE_BELOW` still `15`, `LINE_STOP_ABOVE` still `30`. Phases
+B and C are explicitly not started.
+
+**These three are `TRACKED` in `bin/_manifest.py`, so this correction reaches every existing adopter
+at their next `bin/sync`** — read off the SOURCE column by importing `DISTRIBUTION`, never by
+grepping the bare filename, which matches the DEST half and inverts the answer.
+
+| file | what was false |
+|---|---|
+| `starter-kit/methodology_dashboard.py` | the `UNIT`/`VALUE` block, and the shipped **`high`**-severity adopter-facing risk text |
+| `starter-kit/methodology_trim.py` | `READ_CAP_LINES`' own comment, and the line metric's stated raison d'être |
+| `starter-kit/context_budget.py` | the docstring justifying the LINES axis *"because that is the unit an agent's read cap comes in"* |
+
+**What replaced it — measured this session, not relayed.** Truncation is **announced, not silent**:
+an over-cap read returns a `PARTIAL view` banner naming the delivered span, the true length, the
+token count and the cap. It does **not** return 2,000 lines. And the cap is **token-denominated**.
+
+**A fourth behaviour, which the plan did not know about and which settles its dragon 8.** An
+explicit `limit` spanning an over-cap region **neither bypasses the cap nor truncates — it returns
+an error with no content at all** (`File content (199405 tokens) exceeds maximum allowed tokens
+(25000)`). The plan's stated controlled pair could not have discriminated this: it reads a file that
+comes back whole either way. Run instead on a file that *does* truncate, `limit` is proved not to
+bypass — so probe D's "returned whole" is **not** an artifact and §1.4's ratio range stands.
+
+**Every corrected site names the reproduction rather than a replacement number.** §7's least
+confident point is whether 25,000 tokens is stable across harness versions; a numeral would rot, the
+command does not. Each site now points at Appendix A and says what it cannot prove.
+
+**The unit argument was inverted, not deleted.** The old comment's own evidence — a ~3× B/line
+spread, re-measured at **74.7** here against **227.4** next door — argues the *opposite* of what it
+was written to argue, because tokens track bytes: it is a single **line** threshold that is wrong for
+one ledger by 3×. Bytes are only a proxy too (2.42–2.66 B/token), so no conversion is published.
+
+**Each site also now carries the coupling that makes the cheap fix dangerous** (BL-51): the two
+thresholds are denominated in *records of headroom to this number*, so correcting it alone drives
+`choose_cut` to `return 1` — one record retained at every adopter, with every test green.
+
+**Verification.** Three Python suites **300 / 110 / 41, all OK** (4 skipped, pre-existing). Twins
+**byte-identical** (`diff -q`), mirrored **last** per the plan's dragon 2. `check-links` OK (88/22).
+**Seven suite assertions string-match `"read cap"` inside the risk description** and one matches
+`"CHANGELOG.md is 2,090 lines"` — found *before* editing, and the replacement text was written to
+keep satisfying them rather than discovered by a red suite.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-25.md` (12 record(s), 65,012 B → 32,900 B)
 
 **Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.

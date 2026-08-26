@@ -255,17 +255,41 @@ _BACKLOG_LOCATIONS = ("BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md
 # for. Separating them is ADDED POLICY: the ratified design says only that a 2,090-line .md must
 # be able to trip *a* large-file risk, and taking that literally would regress BL-5's test.
 #
-# UNIT: LINES, because the cap is in lines. Bytes are not a proxy — measured in this repo,
-# HANDOFFS.md runs ~265 B/line and CHANGELOG.md ~83 B/line, so any single byte threshold is wrong
-# for one of them by ~3x, and would flag the file that is NOT truncating while missing the one
-# that did.
-# VALUE: harness behaviour, not a repo property and not taste — a Read past it returns the first
-# 2,000 lines with no error and no missing-data marker. Same name, same value and same stated
-# reason as starter-kit/methodology_trim.py's READ_CAP_LINES, so the reporter and the remedy
-# cannot disagree about where the cliff is; a canonical test pins the two literals together.
+# UNIT: LINES — a PROXY, and known to be the wrong one. MEASURED: the cap is denominated in
+# TOKENS, not lines; the truncation banner names the token count and the cap itself. The ~3x
+# B/line spread this comment used to cite is real — re-measured at 74.7 B/line here against
+# 227.4 next door — but tokens track BYTES, so that evidence argues the OPPOSITE of what it was
+# written to argue: it is a single LINE threshold that is wrong for one ledger by ~3x. Bytes are
+# only a proxy too (2.42-2.66 B/token across real markdown), which is why nothing here publishes
+# a conversion. The axis is KEPT AS-IS deliberately rather than defended: re-denominating it is a
+# separate, sequenced change (docs/planning/read-cap-premise-correction-plan.md, Phase B). DO NOT
+# re-tune this value on its own — LINE_FIRE_BELOW/LINE_STOP_ABOVE in methodology_trim.py are
+# denominated in records of headroom TO this number, so correcting it alone drives choose_cut to
+# retain ONE record, with every test in the repo still green.
+# VALUE: harness behaviour, not a repo property and not taste. The justification that stood here
+# — that a Read past it "returns the first 2,000 lines with no error and no missing-data
+# marker" — was FALSE IN BOTH HALVES. It is replaced by what was measured, not argued:
+#   * truncation is ANNOUNCED, never silent. An over-cap read returns a PARTIAL-view banner
+#     giving the delivered span, the file's true length, the token count and the cap, and
+#     warning against answering from that page alone.
+#   * it does NOT deliver 2,000 lines. It delivers whatever prefix fits the TOKEN cap — on this
+#     repo's own ledger content, 2,000 lines is ~61,000 tokens and about a third comes back.
+#   * an explicit `limit` spanning an over-cap region neither bypasses the cap nor truncates: it
+#     returns an ERROR with NO content at all.
+# RE-MEASURE rather than restating those three sentences. The reproduction is
+# docs/planning/read-cap-premise-correction-plan.md Appendix A, and it is the ONLY instrument
+# that can falsify them: no test in this repository can, because nothing here invokes the agent's
+# Read tool. A number goes stale when the harness moves; the command does not.
+# Same name, same value and same stated reason as starter-kit/methodology_trim.py's
+# READ_CAP_LINES, so the reporter and the remedy cannot disagree about where the cliff is; a
+# canonical test pins the two literals together. Note precisely what that buys: it keeps the two
+# copies CONSISTENT, and it kept them consistent throughout the period both were WRONG.
 # BASIS — the failure already happened here, and was found by accident rather than by any check:
 #   git show 3aee4e3^:CHANGELOG.md | wc -l    -> 2,090
 # Phase 0's reconcile then computed a frontier against a record it could not fully see.
+# Re-measured since: that file is 186,704 B, roughly 2.8-3.1x the token cap, so it had been
+# truncating well before it reached 2,090 lines. The incident dates when the problem was
+# NOTICED, not when it began.
 READ_CAP_LINES = 2000
 
 # The files a session is instructed to read IN FULL to establish state — SESSION_RUNNER.md
@@ -1011,7 +1035,8 @@ def _newest_archive_sha(path, basename):
 def trim_line_headroom(path, rel_posix, basename):
     """(headroom_records, abstain_reason) for a ledger's line metric.
 
-    The rule published in CHANGELOG.md's own front matter: headroom to the 2,000-line read cap,
+    The rule published in CHANGELOG.md's own front matter: headroom to the 2,000-line
+    READ_CAP_LINES proxy -- the cap itself is token-denominated, see that constant --
     divided by lines-per-record measured since the last split. It needs no tool, which is why
     this half still answers when the trimmer is absent.
 
@@ -3007,9 +3032,13 @@ def assess_risks(metrics):
                 risks.append({
                     "severity": "high",
                     "description": f"{w['path']} is {w['lines']:,} lines — past the "
-                                   f"{READ_CAP_LINES:,}-line agent read cap; a session reading it "
-                                   "gets a silently truncated file, with no error and no "
-                                   "missing-data marker"})
+                                   f"{READ_CAP_LINES:,}-line proxy for the agent read cap, which "
+                                   "is itself denominated in tokens. A session reading it whole "
+                                   "gets a PARTIAL view — truncated to the prefix that fits the "
+                                   "token cap, and it SAYS SO in a banner naming the true "
+                                   "length, so the failure is loud rather than silent; an "
+                                   "explicit line range spanning the excess errors outright, "
+                                   "returning nothing. Archive it"})
 
     # S38: the trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
     # the Component C signals above use. The collector owns the gate, the population and the
