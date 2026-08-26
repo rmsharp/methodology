@@ -171,6 +171,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-46] Cross-repo: BL-46's half (1) closed by the adopter, and its remedy shown too narrow — BL-47/48/49 raised
+
+**Written by:** a session running in `../vscode_quarto_ext` (its S254/S255), acting on that repo's
+operator directive. **No distributed file in this repository was touched** — this is a backlog
+filing plus this ledger entry. Nothing outward-facing; nothing pushed.
+
+**BL-46 half (1) is DONE.** That repo deleted the blocking footer and ran both overdue trims:
+`CHANGELOG.md` **831,830 → 44,190 B** (230 records archived), `HANDOFFS.md` **1,801,150 → 52,850 B**
+(211 receipts). Both triggers now stand down. Losslessness established four ways — the tool's
+in-process L1/L2/L3+P1A, its emitted `verify.sh`, an independent verifier sharing no code with it,
+and a four-lens adversarial pass tasked with *refuting* the claim, which found none.
+
+⚠ **BL-46's DIAGNOSIS IS RIGHT AND ITS PROPOSED DETECTOR WOULD NOT HAVE FIRED.** BL-46 says the
+adopter *"never deleted"* the seed sentinel. They **had** deleted it — `METHODOLOGY-SEED-SENTINEL`
+was already absent — and the trimmer refused anyway, because what blocks it is the **trailing `---`
+and the comment below it**, which the seed's instruction never mentions. `starter-kit/HANDOFFS.md`
+carries the sentinel at line 20 and, at line 160, an instruction reading only *"Delete the
+seed-sentinel line above"*. **An adopter who follows it exactly still ends up with an inert
+trimmer** — which is what happened, for 216 receipts. BL-46's proposed check keys on the sentinel;
+it must key on the footer, or the seed must instruct removing both. Annotated in place.
+
+**Three items raised, none duplicating anything here (checked before filing):**
+- **BL-47** — the seed `context-budget.json` omits `CHANGELOG.md`/`HANDOFFS.md`, the two files
+  `methodology_trim.py` exists to bound, at the 65,536 B constant both tools already share. This is
+  BL-46 one level up: BL-46 asks why nobody read the trimmer's output; this is why. That adopter had
+  the trimmer since S188 and `context_budget.py` **not at all** until S255.
+- **BL-48** — the seed `HANDOFFS.md` lacks the `This file currently holds **N**` sentence its own
+  `LedgerSpec.regenerated` declares, so every adopter gets `FRONTMATTER_FIELD_ABSENT` on every trim,
+  forever. This repo's root copy *has* the sentence, so the mismatch is invisible from here.
+- **BL-49** — `content_probe` is consulted at exactly one call site, `classify_empty`, so a
+  **partial** grammar mismatch is never tested. Measured consequence: that repo's `CHANGELOG.md`
+  holds 236 dated `###` headings and 230 matched records (six predate its source-tagging
+  convention), so a **frozen** shard is published in four places as spanning from `2026-06-30` when
+  its true oldest entry is `2026-06-27`. Every L1/L2/L3 assertion passes — nothing is lost, only the
+  *description* is wrong, and the description is the index people search.
+
+**Also confirmed from the adopter side:** **BL-27's fix works.** Syncing that repo `v1.1.1 → v1.3.0`
+and regenerating its `HANDOFFS` shard proof turned `FAIL: L2 FRONT MATTER lost 1 line(s)` into `OK`.
+
+**Verification:** `docs/planning/BACKLOG-DETAIL.md.verify.sh` **OK** — C1–C5 green, 18 split items
+still byte-identical, new items correctly reported as raised-since and not a finding.
+
 ### 2026-08-25 · [ad hoc] S109 close-out — Phase 2 shipped: front matter −16.2%, the header reserve named and asserted
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **inside the 12,288 B per-record budget** — which

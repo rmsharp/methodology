@@ -1141,3 +1141,83 @@ files and needs a go-ahead.
 **Context:** the same sweep found `nprcgenekeepr` (218,298 / 286,154 B) and `wsfct` (74,180 B)
 firing their triggers with the tool installed and unrun. This repo is the only one of four under
 the ceiling. See `CHANGELOG.md`'s S109 entries for the full four-repo table.
+
+> **HALF (1) IS DONE — `vscode_quarto_ext` S254, 2026-08-26.** The operator directed that repo to
+> trim; it deleted the footer and ran both overdue trims. `CHANGELOG.md` **831,830 → 44,190 B**
+> (230 records archived), `HANDOFFS.md` **1,801,150 → 52,850 B** (211 receipts). Both triggers now
+> stand down. Losslessness was established four ways, one of them a four-lens pass tasked with
+> refuting it. **Two findings that repo hit are filed here as BL-48 and BL-49; a third, BL-47, came
+> from installing the budget tool afterwards.**
+>
+> ⚠ **THE DIAGNOSIS IN THIS ITEM IS RIGHT BUT THE REMEDY IS NARROWER THAN THE DEFECT.** This item
+> says the adopter *"never deleted"* the sentinel. They **did** delete it — `METHODOLOGY-SEED-SENTINEL`
+> was already absent from that repo — and the trimmer still refused, because what actually blocks it
+> is the **trailing `---` and the comment beneath it**, which the seed's own instruction never
+> mentions. `starter-kit/HANDOFFS.md` carries the sentinel at **line 20** (front matter) and the
+> instruction at **line 160** (last line), and the instruction says only *"Delete the seed-sentinel
+> line above"*. **An adopter who follows it exactly still ends up with an inert trimmer.** So the
+> proposed one-line check — *"a live `HANDOFFS.md` containing the sentinel text alongside a real
+> receipt"* — **would not have fired on `vscode_quarto_ext`**, because the sentinel was gone and the
+> footer was not. Either the seed must instruct removal of the separator and comment too, or the
+> detector must key on the trailing footer rather than the sentinel.
+
+
+**BL-47 — the seed `context-budget.json` omits the two ledgers `methodology_trim.py` exists to bound.
+Raised 2026-08-26 from `vscode_quarto_ext` S255.**
+
+`starter-kit/context-budget.json` governs `CLAUDE.md`, `SESSION_NOTES.md` and `LEARNINGS.md`. It
+does **not** list `CHANGELOG.md` or `HANDOFFS.md`. This repo's own `.context-budget.json` does — at
+`max_bytes: 65536`, the **same constant** `methodology_trim.py` budgets to.
+
+So an adopter who bootstraps by the book gets no gate on the two files the sibling tool exists to
+bound, at a number both tools already agree on. That is the precise gap BL-46 is about, one level
+up: BL-46 asks why nobody read the trimmer's output, and the answer is that the thing which would
+have made them read it was not in their config. `vscode_quarto_ext` had `methodology_trim.py` since
+S188 and `context_budget.py` **not at all** until S255 — 66 sessions, `HANDOFFS.md` at 27x, no
+signal anywhere in Phase 0.
+
+**Proposed:** add both to the seed at 65536 with `_` keys explaining that the number is shared with
+the trimmer deliberately, so `context_budget.py` REPORTS what `methodology_trim.py` would ACT on.
+Distributed file — needs a go-ahead.
+
+**BL-48 — the seed `HANDOFFS.md` lacks the count sentence its own `LedgerSpec` declares, so every
+adopter gets `FRONTMATTER_FIELD_ABSENT` forever. Raised 2026-08-26 from `vscode_quarto_ext` S254.**
+
+`LEDGERS["HANDOFFS.md"].regenerated` declares one field, keyed to
+`(This file currently holds \*\*)(\d+)(\*\*)`. **`starter-kit/HANDOFFS.md` contains no such
+sentence** (`grep -c "currently holds" starter-kit/HANDOFFS.md` → `0`). This repo's own root
+`HANDOFFS.md` does have it, so the mismatch is invisible from here and hits only adopters.
+
+Every trim an adopter runs therefore reports:
+
+```
+[FRONTMATTER_FIELD_ABSENT] declared regenerated field 'retained receipt count' not found in front
+matter — its value cannot be kept true. Add it, or remove it from the config.
+```
+
+A declared-but-absent field is a config that cannot be satisfied by the artifact it describes.
+`vscode_quarto_ext` fixed it locally at S254 by adding the sentence (not by editing the synced
+tool). **Proposed:** ship the sentence in the seed. Distributed file — needs a go-ahead.
+
+**BL-49 — `content_probe` is consulted only when the record count is ZERO, so a partial grammar
+mismatch is invisible and gets frozen into a shard. Raised 2026-08-26 from `vscode_quarto_ext` S254.**
+
+`content_probe` is documented as *"Evidence that entries EXIST in a grammar this config cannot
+read."* It is referenced at exactly **one** call site — `classify_empty`, the zero-record path
+(v1.1.1:1365, v1.3.0:1559). When a file has records, a **partial** mismatch is never tested.
+
+**Measured consequence, on a shard that is now frozen.** `vscode_quarto_ext`'s `CHANGELOG.md`
+holds **236** dated `###` headings but only **230** match `^### \d{4}-\d{2}-\d{2} · \[` — the six
+earliest entries predate that project's source-tagging convention. Those six are not record starts,
+so they ride inside the oldest tagged record's span. Bytes move intact and **every L1/L2/L3
+assertion passes** — but the computed span is wrong, and it is published in four places: the shard
+`h1`, the shard's own "Holds N record(s)" sentence, the live pointer block, and the archive index.
+The shard is named `through-2026-08-24` and labelled from `2026-06-30`; its true oldest entry is
+**`2026-06-27`**.
+
+⚠ **A byte-level losslessness proof cannot see this, because nothing is lost.** Only the
+*description* is wrong — and the description is the index people search.
+
+**Proposed:** on every run, compare probe hits against matched records and report the delta as a
+finding when they disagree (`GRAMMAR_COVERAGE`), before anything is frozen. The instrument already
+exists; it is simply not consulted on the path where records are present.

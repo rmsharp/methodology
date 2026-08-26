@@ -140,6 +140,9 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-44** | `bin/check-learnings` reports `contiguous 1..N` from `len(rows)`, so a reserved gap makes it false | [detail](BACKLOG-DETAIL.md#bl-44) |
 | **BL-45** | `FRAMEWORK_LEARNINGS.md` is 16 B from its ceiling — **blocks Phase 3C for the next session** | [detail](BACKLOG-DETAIL.md#bl-45) |
 | **BL-46** | An adopter's trimmer inert since bootstrap; the seed's own removal has no detector | [detail](BACKLOG-DETAIL.md#bl-46) |
+| **BL-47** | Seed `context-budget.json` omits the two ledgers `methodology_trim.py` exists to bound | [detail](BACKLOG-DETAIL.md#bl-47) |
+| **BL-48** | Seed `HANDOFFS.md` lacks the count sentence its own `LedgerSpec` declares | [detail](BACKLOG-DETAIL.md#bl-48) |
+| **BL-49** | `content_probe` runs only at zero records, so a partial grammar mismatch freezes into a shard | [detail](BACKLOG-DETAIL.md#bl-49) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 
