@@ -1114,6 +1114,44 @@ need re-deriving; (c) compact frozen rows in place, which edits an append-only r
 the table by theme. **Decide before the next session's Phase 3C, because that session cannot
 discharge it.**
 
+**✅ CLOSED 2026-08-26 (S114) by option (b), the operator's decision from the four costed below.
+Ceiling `65,536 → 73,728 B` (72 KiB), and the five-session Phase 3C backlog discharged — rows
+#39–#42 written, 968–1,148 B each. The file is 69,683 B against 73,728: `ok`.** The change is
+**canonical-only** — the distributed seed declares `CLAUDE.md`, `SESSION_NOTES.md`, `LEARNINGS.md`
+and **not** this file, so no adopter is affected.
+
+**⚠ TWO STATEMENTS ABOVE ARE WRONG AND ARE LEFT STANDING (FM #17); the corrections are here.**
+
+**(i) "archiving row #7 breaks every `Learning #7` citation" overstates it by ~59×.**
+`bin/check-learnings`' citation sweep covers the **distributed corpus only** — measured, that is
+**8 citations to 5 rows across 4 files** (`AUDIT_WORKSTREAM.md` 3, `SESSION_RUNNER.md` 2,
+`methodology_dashboard.py` 2, `ITERATIVE_METHODOLOGY.md` 1). The 471 citations that exist overall
+live in ledgers, plans and **frozen archives**, which must not be edited anyway. So option (a) needs
+**no checker work at small N**: archiving the oldest **5** rows orphans **zero** distributed
+citations; the oldest **10** orphans **five, in two files**, fixable by hand.
+
+**(ii) The ceiling was never "measured" — it was borrowed.** 65,536 came from the ledgers'
+`DEFAULT_BUDGET_BYTES`, and the note defending it converted to tokens at `bytes_per_token` 2.80
+against an **opening-context** floor. Both wrong: that estimator answers a different question
+(S112 measured its own `--calibrate` at 2.46, R² 0.59), and the binding limit is the **25,000-token
+Read cap**. Its arithmetic gave 23,406 tok where the measured figure is **21,623** — **8% over, in
+the direction that made the ceiling look tighter than it was.**
+
+**The four options, costed [M], so the three unused ones need not be re-derived:**
+
+| | option | frees | buys | cost |
+|---|---|--:|--:|---|
+| **(b) raise** ✅ | to a margin below the measured one-read cliff (75,751 B) | **8,192 B** | ~5 rows | edits no row, breaks no citation. **Taken.** |
+| **(a) archive** | oldest 5 / 10 / 15 / 20 rows | 2,580 / **7,589** / 17,063 / 28,812 B | 1 / 5 / 11 / 19 rows | **0 / 5 / 7 / 8** distributed citations orphaned |
+| **(c) compact** | the 20 rows over the 1,500 B row budget, to 1,500 each | **17,533 B** | ~11 rows | **edits an append-only record** — a policy change |
+| **(d) split by theme** | — | — | `Learning #7` stops being unambiguous. **Advise against.** |
+
+**What none of them fixes, and it is Learning #26's own shape arriving in the file that records it:**
+the 37 pre-existing rows are **97% of the file** and may not be edited, so the untouchable remainder
+**is** the file and no reduction step can reach it. The real question is policy — *how many learnings
+should the framework carry before old ones retire?* — and no ceiling answers it. **Re-open when the
+~3 remaining rows are spent**, which is S97's own instruction, now inherited.
+
 <a id="bl-46"></a>
 
 **BL-46 — an adopter's trimmer has been inert since bootstrap, and nothing detected it. Raised

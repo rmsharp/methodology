@@ -183,6 +183,54 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-45] S114 — the learnings ceiling re-derived, and five sessions of owed learnings written
+
+**BL-45 CLOSED** by the operator's choice of option (b) from four costed alternatives.
+`starter-kit/FRAMEWORK_LEARNINGS.md`'s ceiling **65,536 → 73,728 B (72 KiB)**, and the backlog it had
+been blocking is discharged: **rows #39–#42**, 968–1,148 B each, all inside the 1,500 B row budget.
+The file is **69,683 B against 73,728 — `ok`**, and `context_budget.py` no longer reports it over.
+**Canonical-only:** the distributed seed declares `CLAUDE.md`, `SESSION_NOTES.md`, `LEARNINGS.md` and
+**not** this file. *(The rows themselves are a different matter — `FRAMEWORK_LEARNINGS.md` **is** a
+manifest source, so #39–#42 reach every adopter at their next `bin/sync`.)*
+
+**The number was re-derived, and the old one's justification was wrong twice.** 65,536 was borrowed
+from the ledgers' `DEFAULT_BUDGET_BYTES`; the note defending it converted bytes to tokens at
+`bytes_per_token` 2.80 and compared the result to an **opening-context** floor. That estimator
+answers a different question, and the limit that bites a read is the **25,000-token Read cap**. Its
+arithmetic gave 23,406 tok for a 65,536 B file where the measured figure is **21,623** — 8% over, in
+the direction that made the ceiling look tighter than it was.
+
+**Measured three times, including after the write** — x2 = 43,247 tok, x3 = 64,868 against 64,870
+predicted (**linear to 0.004%**), giving **3.0300 B/token** and a cliff at **75,751 B**; re-measured
+after appending the four rows, **3.0396**, so the margin held. **73,728 is deliberately 2,023 B under
+that cliff**: a ceiling must sit below where the file stops fitting, not on it, and this is the value
+at which the file stays inside one read even if every future byte is 20% denser. The margin is
+judgment and is labelled as such in the config note.
+
+**What it buys, and what it does not.** 8,192 B gained, 4,159 B spent on the owed rows, **~3 rows
+left**. The 37 pre-existing rows are 97% of the file and may not be edited, so the untouchable
+remainder **is** the file — **Learning #26's own shape, arriving in the file that records it**. The
+question underneath is policy, not arithmetic. BL-45's other three options stay open and are now
+**costed in the item** so nobody re-derives them.
+
+**A correction to BL-45's own text, left standing per FM #17.** It warns that archiving breaks every
+citation to a row. The checker's sweep covers the **distributed corpus only** — **8 citations to 5
+rows across 4 files**, not the 471 overall — so archiving the oldest **5** rows would orphan
+**none**, and the oldest **10** just **five, in two files**.
+
+**Verification.** `bin/tests.sh` **287 rows, 286 / 1 / 0**, zero status flips, zero skips, sole
+failure by name Test 9's standing `--source=github` 404. **Test 37 was watched specifically** — it
+copies the live learnings file as its fixture, so four new rows enter its population; 9 assertions,
+4 mutants, green. Python suites **111 / 303 / 42 OK**. `check-learnings` OK — **41 rows, contiguous
+1..41** (`#14` remains deliberately reserved), 4 unfrozen, 0 over budget. `check-links` OK (88/22),
+`check-handoff` + `--all` OK, `BACKLOG-DETAIL` verify OK, twins byte-identical and untouched.
+`context_budget.py` exits **2**, and the composition is the point: the learnings file is now `ok`;
+the two remaining breaches are `CHANGELOG.md` and `HANDOFFS.md`, **both adjudicated** (BL-52 third
+addendum) — do not trim either on sight.
+
+**Model:** Claude Opus 5 (1M context).
+
+
 ### 2026-08-26 · [BL-45] S114 claim — raise the learnings ceiling to the file's real one-read limit
 
 `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
