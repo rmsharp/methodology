@@ -71,6 +71,14 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S114
+date: 2026-08-26
+status: pending
+active_task: **BL-45 — raise `starter-kit/FRAMEWORK_LEARNINGS.md`'s ceiling to this file's REAL one-read limit, then spend the room on the learnings it has been blocking.** Operator's decision, taken from four costed options. **Two halves, one deliverable:** the ceiling is only worth raising because Phase 3C has been blocked for five sessions, and raising it without discharging the backlog would leave the actual defect — lost learnings — in place. **CANONICAL-ONLY, and I checked rather than assumed:** `.context-budget.json` governs this file; `starter-kit/context-budget.json` (the SEED) declares only `CLAUDE.md`, `SESSION_NOTES.md`, `LEARNINGS.md`, so **no adopter is affected and nothing distributed changes**. **NOT in scope:** archiving rows, compacting rows, splitting the table (options 2–4, still open if the raise runs out), `DEFAULT_BUDGET_BYTES`, Phase C of the read-cap plan, issue #75's unsent PR, **any outward-facing action**.
+next_steps: DONE = (1) the ceiling **re-derived first-hand, not carried** — the current 65,536 was borrowed from the ledgers' `DEFAULT_BUDGET_BYTES`, and its stated justification computes a token cost from `bytes_per_token = 2.80`, an estimator S112 measured as **wrong for this purpose** (it fits opening context against `CLAUDE.md` size; re-running its own `--calibrate` today gives 2.46 at R² 0.59). Re-measure this file's B/token by the doubling probe and convert the **25,000-token read cap**; (2) **a margin stated rather than implied** — the cliff is where the file stops fitting, so the ceiling must sit below it, and the amount is judgment that must be labelled as such; (3) **the `_` note rewritten so a successor re-runs the measurement instead of re-arguing it**, which is what S97's note did for the value it is replacing — and it explicitly invited this: *"Re-open that choice when the four rows are spent, not before."* **They are spent**; S109 consumed the last 997 B; (4) **the four owed learnings written**, each inside `ROW_BUDGET_BYTES` = 1,500, appended (`CLAUDE.md` forbids renumbering; the file's front matter forbids editing existing rows); (5) `python3 starter-kit/context_budget.py` no longer reports this file over, and `bin/check-learnings` stays OK with the new rows; (6) `bash bin/tests.sh` row-for-row against a control — **Test 37 pins `ROW_BUDGET_BYTES` with 9 assertions and 4 mutants and must stay green**. **KNOWN AT CLAIM:** headroom is **16 B**, so nothing can be written until (1) lands. `HANDOFFS.md` is over its own ceiling **by adjudication, not neglect** (BL-52 third addendum) — do not trim it on sight; `context_budget.py` exits **2** for that reason and will continue to. The front-matter blank line is **load-bearing** (BL-50).
+```
+
+```handoff
 session: S113
 date: 2026-08-26
 status: complete

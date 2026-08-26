@@ -183,6 +183,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-45] S114 claim — raise the learnings ceiling to the file's real one-read limit
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **Operator's decision**, taken from four costed options: raise the
+ceiling rather than archive, compact or split. **One deliverable in two halves** — the raise is only
+worth making because Phase 3C has been blocked for five sessions, so the owed learnings are written
+in the same session or the defect survives the fix.
+
+**Canonical-only, checked rather than assumed:** `.context-budget.json` governs this file; the
+distributed seed declares only `CLAUDE.md`, `SESSION_NOTES.md` and `LEARNINGS.md`. **No adopter is
+affected.**
+
+**The number will be re-derived, not carried.** 65,536 was borrowed from the ledgers'
+`DEFAULT_BUDGET_BYTES`, and the note defending it converts bytes to tokens at `bytes_per_token`
+2.80 — an estimator S112 measured as wrong for this purpose. S97's own note invited the re-opening:
+*"Re-open that choice when the four rows are spent, not before."* They are spent.
+
+**Model:** Claude Opus 5 (1M context).
+
+
 ### 2026-08-26 · [BL-51] S113 — Phase C planned: what each guard watches, and what it claims; self-score 8/10
 
 Commits `f06b6f7` (claim) and **`9a71c8e`** (the deliverable),
