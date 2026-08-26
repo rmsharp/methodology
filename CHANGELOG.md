@@ -183,6 +183,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S113 claim — plan Phase C of the read-cap correction
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **A planning session: the plan is the deliverable, nothing is
+implemented** (FM #18/#19). Origin: the operator's proposal at S112's close-out — *only worry about
+the 256 KB limit for trimming*. That is right for the two ledgers the trimmer can act on and wrong as
+a blanket rule, because the six watched names are **two classes**, and the four the trimmer refuses
+are the ones the protocol genuinely reads in full. Phase C therefore grows from *"two rows or one"*
+into **what population and what claim each guard carries** — and must decide `DEFAULT_BUDGET_BYTES`,
+which fires first and would render a 256 KB trigger inert.
+
+**Not in scope:** implementing any of it, `RECORD_BUDGET_BYTES`, BL-45, issue #75's unsent PR, the
+§11.2 adopter remediation, **and any outward-facing action**.
+
+**Model:** Claude Opus 5 (1M context).
+
+
 ### 2026-08-26 · [BL-52] S112 close-out — the trim was DECLINED on evidence; self-score 7/10, predecessor S111 scored 8/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **12,288 B inside the 12,288 B per-record budget**

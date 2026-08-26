@@ -71,6 +71,14 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S113
+date: 2026-08-26
+status: pending
+active_task: **Plan Phase C of the read-cap correction — what each guard WATCHES and what it CLAIMS.** A **planning session: the plan is the deliverable and nothing is implemented** (FM #18/#19). Origin: the operator's proposal at S112's close-out — *"perhaps we should only worry about the 256 KB limit for trimming"*. First-pass answer, to be evidenced properly: **right for the two ledgers the trimmer can actually act on, wrong as a blanket rule**, because the six watched names are two different classes — record-structured and frontier-read (`CHANGELOG.md`, `HANDOFFS.md`) versus read-in-full and unstructured (`SESSION_NOTES.md`, three `BACKLOG.md` locations), and the trimmer refuses the second class by design. Phase C therefore grows beyond its original *"two rows or one"* dedup into **population and claim per guard**, and must also decide `DEFAULT_BUDGET_BYTES`, which fires first and would make a 256 KB trigger inert. **NOT in scope:** implementing any of it, `RECORD_BUDGET_BYTES`, BL-45, issue #75's unsent PR, the §11.2 adopter remediation, **any outward-facing action**.
+next_steps: DONE = a ratifiable plan at `docs/planning/read-cap-phase-c-plan.md`, linked from the read-cap plan's §8 Phase C stub, containing: (1) the **evidence-based inventory** SESSION_RUNNER mandates — every site that changes under each option, derived from greps, not from architectural memory; (2) the **two-class split, evidenced per name**, not asserted; (3) **the question I cannot yet answer and must not paper over — what an adopter with a 252 KB `BACKLOG.md` is actually told to DO**, given the trimmer refuses that file by design (`ledger-trimmer-design.md` §3.3: no uniform record delimiter, and one open item lives inside another's paragraph). A guard with no remedy is the misdirection §7.3 exists to prevent; (4) a decision shape for `DEFAULT_BUDGET_BYTES` with the context-tax evidence stated, since my S112 measurement (partial reads cost per span; whole-file reads run 1-in-85) weakens the case for it but it encodes the operator's stated goal G1 and is his call; (5) dragons, options with costs, and a recommendation. **KNOWN AT CLAIM:** `HANDOFFS.md` is **over both its ceilings and that is adjudicated, not neglected** (S112, BL-52 third addendum) — **do not trim it on sight**; `context_budget.py` exits **2** for that reason. `starter-kit/FRAMEWORK_LEARNINGS.md` is **16 B** from its ceiling, so **Phase 3C is blocked for a fifth session** (BL-45, operator's decision). The front-matter blank line is **load-bearing** (BL-50).
+```
+
+```handoff
 session: S112
 date: 2026-08-26
 status: complete
