@@ -83,8 +83,11 @@ never one — a single literal is a sample, not a population:
 grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md docs/archive/CHANGELOG-*.md
 ```
 
-**When to archive again — a rate, not a level.** Archive when the headroom to the 2,000-line agent
-`Read` cap, divided by the observed growth per ledger *entry*, falls below **15 entries**; then cut
+**When to archive again — a rate, not a level.** Archive when the headroom to the 2,000-line
+`READ_CAP_LINES` proxy — the agent `Read` cap is denominated in **tokens**, and 2,000 lines is a
+stand-in for it pending Phase B of
+[`read-cap-premise-correction-plan.md`](docs/planning/read-cap-premise-correction-plan.md) —
+divided by the observed growth per ledger *entry*, falls below **15 entries**; then cut
 oldest-first until that ratio is back above **30**. Both are denominated in entries — the framework's
 own unit — deliberately: commits-per-session is the most adopter-variable quantity in the system, so a
 team committing 10× per session reads a 10× lower slope for identical growth, and the same file
@@ -111,7 +114,12 @@ A **level** was the previous rule, and it failed in the file next door: `HANDOFF
 trigger as "approaches ~1,200 lines" and the archive actually fired at 997 — 203 lines early, with
 nothing watching. A level is a hand-written derived value that decays silently; a rate re-derives
 itself from the file every time it is read. This file crossed the cap once already, at 2,090 lines,
-and was silently dropping its ten oldest entries when a `Read` truncated it.
+and its ten oldest entries were not reaching a reader who read it whole. **That was recorded here
+as *silent* dropping, and that word was wrong** — truncation is announced, with a `PARTIAL view`
+banner naming the true length; what was silent was that **nothing in the repo was checking**, so
+the overrun was found by accident. Re-measured since, the file was 186,704 B — roughly 2.8–3.1×
+the token cap — so it had been truncating well before it reached 2,090 lines: the incident dates
+when the problem was *noticed*, not when it began.
 
 **Reconcile-on-read entries below — the compact form, and the method stated once.** Each
 `[ad hoc] Reconcile-on-read` entry records one Phase 0 discharge of BL-14's shipped half
@@ -174,6 +182,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 ---
 
 ## 2026-08
+
+### 2026-08-26 · [ad hoc] S111 — Phase A (2 of 3): the two SEED doctrine tables, `README.md`, and this file's own front matter
+
+**The `SEED` half of Phase A, and the half that cannot be delivered by syncing.**
+`bin/_manifest.py` marks `starter-kit/CHANGELOG.md` and `starter-kit/HANDOFFS.md` as **SEED**, and
+`bin/sync:225-230` writes a SEED **only when the destination is absent and never overwrites it
+afterward**. So this correction reaches **future adopters only**; every already-bootstrapped project
+keeps the false doctrine table until someone edits it **by hand, per repo**. Same defect class as
+BL-46/47/48. The remediation note that has to accompany it is a separate commit.
+
+**A mid-session critique from the operator changed this text after it was first written, and the
+change is the substantive part of this entry.** Relayed from a `../model_project_constructor`
+session: *if the ledgers are newest-on-top and reads are ordered top-down, what is the rationale for
+trimming?* The first draft of these rows had replaced *"protects against **silent truncation**"*
+with *"protects against **an unread tail**"* — **which is substituting one unverified benefit claim
+for another, the exact move Phase A exists to stop.**
+
+**The deduction follows from this session's own measurements, not from the relay.** Probe B
+delivered lines 1–10 of 101; probe C's prefix was lines 1–700 of 2,000 — truncation is **ordered
+top-down**. These ledgers are **newest-on-top**. Therefore the records a cut removes are ones a
+whole-file read **was not delivering anyway**: the delivered prefix is the same before and after the
+trim, and what changes is that the reader stops being **warned**. The rows now say the metric
+**measures** an unread tail and **does not, on its own, establish a remedy**, and point at **BL-52**.
+
+**What was NOT decided here, deliberately.** Whether to stop trimming, whether the byte metric
+survives the same argument, and the dedup between the two dashboard rows — that last is **Phase C**,
+and the seeds' *"neither subsumes the other"* sentence is therefore **left standing untouched**.
+
+**`README.md:390`** republished the false rationale as the framework's own; rewritten to state
+measured behaviour, to name what it cannot prove, and to say plainly that the earlier claim was
+false. **This file's front matter** carried the same claim twice — the rate rule's *"2,000-line agent
+`Read` cap"* and the incident line's *"silently dropping its ten oldest entries"*. The second is
+corrected with its own diagnosis: truncation was announced; **what was silent was that nothing in the
+repo was checking**, which is why the overrun was found by accident.
+
+**No numeral moved.** **Frozen records untouched** — `docs/archive/**`, and every historical
+statement inside this file's own records (FM #22, §5.5).
+
+**Model:** Claude Opus 5 (1M context).
 
 ### 2026-08-26 · [ad hoc] S111 — Phase A (1 of 3): the false read-cap premise corrected in the three TRACKED tools
 
