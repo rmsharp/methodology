@@ -1,0 +1,521 @@
+# CHANGELOG.md — archive: 2026-08-18 → 2026-08-24
+
+Retired records from [`CHANGELOG.md`](../../CHANGELOG.md), moved here so the live ledger stays small enough to read
+in one pass. Same format, same newest-on-top order — this is the same ledger, continued.
+
+Holds **23 record(s), 2026-08-18 → 2026-08-24**. Cut key: `2026-08-24`. Counts here are computed from the file
+itself, never carried forward. This shard is frozen: it states no forward-looking rule,
+because the live file owns those and a copy of one was wrong a day after it was written.
+
+---
+
+### 2026-08-24 · [ad hoc] S104 close-out — receipt written, self-score 8/10, predecessor S103 scored 9/10
+
+Phase 3D receipt in [`HANDOFFS.md`](../../HANDOFFS.md), inside the 18,432 B per-record budget — asserted by
+`bin/check-handoff`, which passes, not predicted (it took **seven** trim passes to get there; the
+budget counts fence-to-**next**-fence, trailing prose included). Claim `ab12b27`, deliverable
+`470cfd4`, this close-out.
+
+**The deliverable landed: `HANDOFFS.md` 96,264 B → 43,362 B at the trim commit**, and **57,892 B**
+with this receipt — from OVER by 30,728 to **7,644 B clear** of the 65,536 B ceiling, with
+`--check` reporting `trigger does not fire`. Three receipts archived (S101, S100, S99) to
+[`docs/archive/HANDOFFS-through-2026-08-23.md`](../../docs/archive/HANDOFFS-through-2026-08-23.md); three
+retained. The cut was **chosen, not defaulted**: `--cut 3` over the budget default, which retains
+**one** receipt and would break **two** non-human consumers — Test 34's anchor floor
+(`bin/tests.sh:2110`) and Test 38's fixture builder (`:2721`). `--cut 4` was rejected on a
+measurement: 61,101 B, only 4,435 B clear, less than one receipt.
+
+**Losslessness established on four axes, three of them independent of the tool's own L1/L2/L3.**
+Per-record: all **6** pre-trim records byte-identical by sha256 across the move, partition disjoint,
+none lost, none invented. Front matter: exactly **one diff hunk, a pure 4-line addition**. Full
+reconstruction: live records zone + shard records zone is **byte-identical at 89,799 B** to the
+pre-trim records zone — the trim is reversible from the two artifacts alone, without git. And the
+emitted proof runs green in both its pre-commit and post-commit forms.
+
+**Verification.** Suite **279 passed / 1 failed / 0 skipped** pre and post, the pre-change half in a
+**pristine `git worktree`** at `b570389`; sorted row-set diff over **280 rows each side** shows
+**zero lost, zero net added, exactly three changed**, each carrying a count in its own name. The
+`0 skipped` on both sides is the direct evidence Test 34 held its `ANCHORED` arm. Proofs **9 green /
+4 red of 13 → 10 green / 4 red of 14**, same four reds, zero reddened. Python **451/451**.
+`check-links` 88/22 and `check-learnings` 35 **unchanged**, as predicted at claim.
+
+**The structural finding, which outlives this trim.** Test 34's floor of 3 receipts × the 18,432 B
+per-record budget + ~6 KB of front matter = **61,312 B against a 65,536 B ceiling**; this file now
+sits at **94.4%** of that. The ledger's steady state is therefore ~3 receipts and a trim nearly every
+session, **by construction** — `--cut 3` was already the most aggressive cut the floor permits, so
+the durable remedy is a decision about the ceiling or the per-record budget, not another trim.
+Raised for an operator decision; **no BL item filed** (a second capability).
+
+**A defect of mine, caught before commit and recorded.** The first claim-stub splice anchored on
+`text.index("```handoff")`, matching a **substring** in a front-matter sentence rather than the first
+record fence; fence parity flipped and the trimmer correctly reported 4 records in a 6-receipt file.
+Reverted byte-identical, redone line-anchored with a count assertion. **And one criticism withdrawn
+after checking it:** S103's `6,016 + 3 × 18,432 = 61,312 B` is a sound steady-state bound, not an
+overstatement — the 43,362 B I compared it against was a transient mid-trim state holding a pending
+stub. Comparing a bound to a mid-operation measurement is a timing error.
+
+**No outward-facing action:** no push, no PR, no comment, no tag, no issue edit. Nothing DISTRIBUTED
+was touched. **A learning is owed and unwritten** — `starter-kit/FRAMEWORK_LEARNINGS.md` is at
+63,126 / 65,536 with **2,410 B** free and rows costing 1,219–1,436 B; four are now queued (S99, S102,
+S103, mine). Fourth consecutive deferral for the same reason, stated rather than left unsaid.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-24 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-23.md` (3 record(s), 96,264 B → 43,362 B)
+
+**Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
+Moved the oldest **3** record(s) (2026-08-18 → 2026-08-23) out of [`HANDOFFS.md`](../../HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-08-23.md`](../../docs/archive/HANDOFFS-through-2026-08-23.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-08-23.md.verify.sh`](../../docs/archive/HANDOFFS-through-2026-08-23.md.verify.sh)
+rather than trusting a digest printed here. Live file 96,264 B → 43,362 B (−55.0%).
+
+### 2026-08-24 · [ad hoc] S104 claim — run the `HANDOFFS.md` trim, losslessly
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](../../HANDOFFS.md). Recorded BEFORE the trim because the trimmer's **P1 guard** refuses
+otherwise: a trim commit advances this file's Phase 0 frontier and would permanently hide any commit
+not yet recorded (S95's precedent, S103's shape).
+
+**The target:** `HANDOFFS.md` arrived **92,387 B against a 65,536 B ceiling, OVER by 26,851** — the
+only file over one — with `--check` firing on both triggers. `CHANGELOG.md` is **not** being trimmed:
+it reports `trigger does not fire` at 41,462 B, and a second trim is a second capability (FM #26).
+
+**The cut is `--cut 3`, chosen, and it is not the tool's default — measured, not argued.** With the
+claim stub in place the file holds 6 receipts, and the three candidates dry-run as: the **default**
+retains **1** (→ 10,790 B) and raises `[CUT_STRADDLES_DAY]`; **`--cut 4`** retains 4 (→ 61,101 B,
+only **4,435 B** clear of the ceiling, less than one receipt — they run 15,533–18,431 B here) and
+also straddles; **`--cut 3`** retains 3 (→ **43,362 B, 22,174 B clear**) and raises **neither**
+`[CUT_STRADDLES_DAY]` **nor** `[SHARD_NAME_DISAMBIGUATED]` — a clean calendar seam at
+2026-08-23 | 2026-08-24 and the free name `docs/archive/HANDOFFS-through-2026-08-23.md`.
+
+**Why the default is not merely worse but wrong: it breaks two non-human consumers, read in the
+code rather than assumed.** `bin/tests.sh` Test 34 derives its mutation anchors as `ids[1]`/`ids[2]`
+and routes a population below 3 to the `SHORT` arm, printing **six assertions as SKIP**
+(`anchor_disposition`, `bin/tests.sh:2110`); Test 38's fixture builder aborts `FIXTURE SOURCE TOO
+SHORT: need >= 2 records` at `len(starts) < 3` (`bin/tests.sh:2719`) — unsatisfiable from one
+retained receipt once its own code drops the leading `status: pending` record. Retaining exactly 3
+sits **at** Test 34's floor; that margin is spent deliberately, for a name that means what it says
+and ~22 KB instead of ~4 KB of runway.
+
+**A defect of mine, found and fixed before it was committed, recorded because the next session will
+hit the same edge.** The first splice of the claim stub anchored on `text.index("```handoff")`, which
+matched the **substring** inside a front-matter sentence at line 9 — `` recount with `grep -c
+'^```handoff' HANDOFFS.md` `` — not the first record fence at line 73. The stub landed mid-sentence,
+fence parity flipped, and `methodology_trim.py` then reported **4** records in a 6-receipt file: two
+real receipts had been swallowed as `inside=True` by `fence_scan`. The tool was right and the edit
+was wrong. Reverted byte-identical to `HEAD`, redone with a **line-anchored** `(?m)^```handoff$` and
+an assertion that the record count rises by exactly 1. That is S103's own gotcha — *anchor on
+line-anchored fences and assert the count* — arriving one session later against a different tool.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-24 · [ad hoc] S103 close-out — receipt written, self-score 8/10, predecessor S102 scored 9/10
+
+Phase 3D receipt in [`HANDOFFS.md`](../../HANDOFFS.md), inside the 18,432 B per-record budget — asserted by
+`bin/check-handoff --all`, which passes, not predicted. Claim `dbaaa94`, deliverable `6be9388`, this
+close-out.
+
+**The deliverable landed: `CHANGELOG.md` 75,564 B → 39,148 B, back under its 65,536 B ceiling with
+26,388 B of headroom** at the trim commit `6be9388` — this close-out entry then brings it to
+just over 41,400 B, still more than 24,000 B clear — and `methodology_trim.py --file CHANGELOG.md --check` now reports `trigger
+does not fire` on both triggers. The cut was **chosen, not defaulted**: `--cut 2026-08-17` over the
+tool's budget-driven default, paying 6,260 B of headroom for a shard name that is a true day
+boundary instead of a span label — the [CUT_STRADDLES_DAY] advisory the default raises. The seam is
+**proved** clean rather than inferred from that advisory's absence: retained records carry only
+2026-08-18/23/24, archived only 2026-08-15/16/17, no date on both sides.
+
+**Verification, on five independent axes.** Suite **279/1 pre and post**, the pre-change half run in
+a **pristine worktree** so it could not be contaminated by the writes it was controlling for; a
+sorted row-set diff over **280 rows each side** shows **zero lost and exactly three changed**, all
+three carrying counts in their own names. All **13** `.verify.sh` proofs re-run: **9 green / 4 red**,
+the same four reds as before, **zero reddened**. Python **451/451**. `check-links` (88 / 22) and
+`check-learnings` (35 rows) **byte-identical pre and post**. And the file's own documented source-tag
+audit across live plus archives went **287 → 289** — exactly this session's two added entries, with
+no archived record dropping out of the census.
+
+**`HANDOFFS.md` is now the only file over a ceiling — 92,387 B, OVER by 26,851**, this receipt being
+~12 KB of that. Its trim FIRES on both triggers and was **deliberately not run**: a second trim is a
+second capability (FM #26). It is the next deliverable, and its binding constraint is stated in the
+receipt — **Test 34's retention floor of three receipts, so `--cut 3` or more, never the default.**
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-24 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-08-17.md` (26 record(s), 76,774 B → 39,148 B)
+
+**Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
+Moved the oldest **26** record(s) (2026-08-15 → 2026-08-17) out of [`CHANGELOG.md`](../../CHANGELOG.md) into
+[`docs/archive/CHANGELOG-through-2026-08-17.md`](../../docs/archive/CHANGELOG-through-2026-08-17.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-08-17.md.verify.sh`](../../docs/archive/CHANGELOG-through-2026-08-17.md.verify.sh)
+rather than trusting a digest printed here. Live file 76,774 B → 39,148 B (−49.0%).
+
+### 2026-08-24 · [ad hoc] S103 claim — run the `CHANGELOG.md` trim
+
+`CHANGELOG: pending`. Declarations and controls are in the `status: pending` receipt in
+[`HANDOFFS.md`](../../HANDOFFS.md). **Recorded before the trim, because the trimmer's own P1 guard refuses
+otherwise** — a trim commit advances this file's Phase 0 frontier and would permanently hide any
+commit not yet recorded (S95's precedent, for the same stated reason).
+
+**This file arrived 75,564 B against its own 65,536 B ceiling — OVER by 10,028**, and the trim is
+**three sessions overdue** (S102 `next_steps` (b) named it the obvious next deliverable). Bringing it
+back under is this session's one deliverable. **`HANDOFFS.md` is over too and is NOT claimed here** —
+a second trim is a second capability (FM #26).
+
+Pre-change controls captured BEFORE any write, both populations non-empty: the **12** shipped
+`.verify.sh` proofs at **8 green / 4 red**, re-derived independently and matching S102's census; and
+the `bin/tests.sh` baseline running in a **pristine worktree at `da40bdb`**, which is what keeps it a
+control — S102's own baseline overlapped its claim write and misread one row by one.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-24 · [ad hoc] S102 close-out — receipt written, self-score 8/10, predecessor S101 scored 7/10
+
+Phase 3D receipt in [`HANDOFFS.md`](../../HANDOFFS.md), inside the 18,432 B per-record budget (asserted by
+`bin/check-handoff --all`, not predicted). Claim `b300098`, deliverable `ebe69eb`, this close-out;
+branch commit `60246e7` unpushed.
+
+**S101 scored 7 for one reason worth recording here rather than only in the receipt:** its
+`next_steps` (g) carried *"issue #75's answer prepared, vetted, unsent"* — a formulation S99 and
+S100 carried too — which conflates the **comment** (sent 2026-08-16 on an explicit go-ahead,
+recorded at `143ff2b` in this very file) with the **implementation** (never sent). Paired with a
+session count that was incremented rather than derived — "ten", then "eleven", against an enumerated
+**9** — it left the fork's stated purpose looking blocked when nothing blocked it. Neither claim was
+marked unverified. **An unattributed status claim propagates exactly like an unattributed blocker.**
+
+**Both mandated-read ledgers are now over their ceilings**, `CHANGELOG.md` by this session's three
+owed entries and `HANDOFFS.md` by this receipt. Figures are in the receipt's FM #28 gate line,
+measured after the last write. Neither trim was run: each is a session-sized deliverable (S87's
+precedent, restated by S100 and S101), and running one here would be a second capability (FM #26).
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-24 · [issue #75] Upstream PR prepared and NOT sent — branch `docs/issue75-plan-surface-upstream`, local only
+
+**A branch op, recorded as an action; no outward-facing action was taken.** Nothing pushed, no PR,
+no comment, no tag — verified with `git ls-remote --heads origin`, which returns nothing for this
+branch. Branch `docs/issue75-plan-surface-upstream` = `60246e7`, based on `upstream/main` (`512c2ed`),
+1 ahead, 3 files, +172/−1. Drafts: [`docs/planning/issue75-upstream-pr.md`](../../docs/planning/issue75-upstream-pr.md)
+(what exists, decisions, how to send) and its `-body.md` sibling (the PR body, `--body-file`-ready).
+
+**The finding that made this more than a cherry-pick.** Fork `main`'s `starter-kit/SESSION_RUNNER.md`
+differs from `upstream/main` in **FIVE** hunks; only **two** are #75. The other three — Phase 3C
+rerouted to `FRAMEWORK_LEARNINGS.md`, the `**Model:**` ledger bullet, and the Learnings-table
+extraction — all depend on `starter-kit/FRAMEWORK_LEARNINGS.md`, **which does not exist upstream**
+(nor does `starter-kit/methodology_trim.py`). A whole-file take would have carried three unshipped
+changes into a one-issue PR. Built instead by applying `b1b7eaf`'s patch for that file alone;
+`git apply --check` passed.
+
+**Test numbering collides across the two repos.** The fork's Tests 32/33/34 *are* upstream's 23/24/25
+(upstream `bin/tests.sh` is 650 lines against the fork's 2,981), so the fork's Test 36 ports as
+**Test 26**. Fork-only references were rewritten, not carried: `BL-10` and fork session ids removed,
+and the citation census stated as the commands that reproduce it rather than as drifting line numbers.
+
+**Verified on the branch, which is the surface that matters** — the fork's suite says nothing about a
+tree built from `upstream/main`. Pre-change control on a pristine tree **114/0**; RED with the test
+added and the runner unpatched, **5 of Test 26's 6 rows failing** with populations non-empty; GREEN
+**120/0**; row-for-row diff **+6 rows, ZERO lost**. `check-links` OK (83/21), `check-learnings` OK (13
+rows). Adopter smoke: `bin/sync` delivers `SESSION_RUNNER.md` byte-identical with 7 checklist items and
+both occurrences of the quoted phrase. **Not exercised: GitHub delivery, review, or merge.**
+
+**The upstream census is cleaner than the fork's, and the PR body uses the upstream one.** On
+`upstream/main`: `"Faithful verification, per surface"` **1** (its own definition), `gate (d)` **0**,
+`gate d` **1** — inside gate (d)'s own section. Nothing outside §Vertical Slice Sessions referred to
+it in either spelling; the fork had one such citation, in a fork-only planning file.
+
+**Two inherited claims corrected at Orient.** The #75 **comment** was sent 2026-08-16 with the
+operator's per-action go-ahead (`143ff2b`); it is the **implementation** that was unsent. And it is
+**9** sessions since S92 (S93–S101, enumerated from receipts), not the eleven/twelve the receipts had
+been incrementing.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-24 · [issue #75] S102 claim — prepare the upstream PR, send nothing
+
+`CHANGELOG: pending`. Declarations, corrections and controls are in the `status: pending` receipt in
+[`HANDOFFS.md`](../../HANDOFFS.md). **Compact by necessity: this file arrived 4,886 B OVER its own 65,536 B
+ceiling** (S101's `next_steps` (a)); trimming it is a second capability, not claimed here. Two
+inherited claims corrected at Orient: the #75 **comment** was sent (2026-08-16, `143ff2b`) — the
+**implementation** is what is unsent — and it is **9** sessions since S92, derived from the receipts,
+not the incremented eleven/twelve.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-23 · [ad hoc] S101 close-out — receipt written, self-score 8/10, predecessor S100 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](../../HANDOFFS.md), within the 18,432 B per-record budget, verified by
+running `bin/check-handoff` rather than predicting it. Deliverable: the `HANDOFFS.md` trim
+(`101,053 B → 44,845 B`). Phase 3C's `FRAMEWORK_LEARNINGS.md` row was **offered to the operator and
+scoped out** — recorded in the receipt, with the row's text, rather than silently skipped.
+
+Session crossed local midnight; ledger entries stay on the session's date, git timestamps carry the
+real one.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-23 · [ad hoc] Test 38's frozen population is CONSTRUCTED over budget, not inherited from the live ledger
+
+`bin/tests.sh` (canonical-only). The 2026-08-23 trim archived S97 (20,086 B) and S96 (19,408 B) —
+the live ledger's only two records over `check-handoff`'s 18,432 B per-record budget — and Test 38's
+assertion (4), *committed records are exempt as frozen*, went vacuous: it began asserting `0 over`
+against a population of **0**. S98's scope control caught it the first time a trim took the property
+away, exactly as its comment said it would.
+
+**No cut could have avoided this.** Retaining S97 means retaining five receipts — 101,053 B against a
+65,536 B ceiling — so the ceiling and that assertion's arming are mutually exclusive. The fixture
+builder now pads the **oldest** record's trailing prose to 18,944 B and re-parses the artifact to
+assert the frozen population really holds one over budget, failing loudly (`FIXTURE NOT ARMED`)
+rather than silently if it ever does not. Suite 279/1 restored, the sole failure Test 9's
+pre-existing `--source=github` 404.
+
+Mutation-proven, each mutant verified to apply and every restore `cmp`-checked: padding to exactly
+*at* budget, and padding removed, both re-redden the control.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-23 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-18.md` (3 record(s), 101,053 B → 44,845 B)
+
+**Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
+Moved the oldest **3** record(s) (2026-08-17 → 2026-08-18) out of [`HANDOFFS.md`](../../HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-08-18.md`](../../docs/archive/HANDOFFS-through-2026-08-18.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-08-18.md.verify.sh`](../../docs/archive/HANDOFFS-through-2026-08-18.md.verify.sh)
+rather than trusting a digest printed here. Live file 101,053 B → 44,845 B (−55.6%).
+
+### 2026-08-23 · [ad hoc] S101 claim — run the `HANDOFFS.md` trim
+
+`CHANGELOG: pending`. Breach, cut, controls and six declarations are in the `status: pending`
+receipt in [`HANDOFFS.md`](../../HANDOFFS.md). **Minimal by necessity: this file arrived 1,764 B OVER its
+own 65,536 B ceiling** (S100's `next_steps` (c)); trimming it is a second capability, not claimed here.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-23 · [BL-41] S100 close-out — receipt written, self-score 8/10, predecessor S99 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](../../HANDOFFS.md), inside the 18,432 B per-record budget
+(`check-handoff`: `1 unwritten record(s), 0 over`). Phase 3C added **Learning #36** to
+`starter-kit/FRAMEWORK_LEARNINGS.md` — a second DISTRIBUTED file, which the claim's carve-out did
+not anticipate; the departure is recorded in the receipt rather than quietly widened.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-23 · [BL-41] `methodology_trim.py` disambiguates a taken shard name instead of refusing
+
+`TRIM_VERSION` 1.2.0 → **1.3.0**, one DISTRIBUTED file. The shard name was a function of a record
+DATE while the cut is POSITIONAL — not injective, yet used as a unique key behind a write-once
+refusal, so every admissible cut of `HANDOFFS.md` derived one taken name and the tool's own advice
+(*"Disambiguate with `--cut`"*) had no solution. A taken name now resolves to `-2`, `-3`, … and is
+REPORTED; nothing is ever overwritten, and past `SHARD_SUFFIX_MAX` it still refuses.
+
+`--cut 3` — the cut BL-41 recorded as impossible — now archives to
+`HANDOFFS-through-2026-08-17-2.md`, retaining Test 34's floor of three: 82,966 → **43,928 B**.
+**Dry run only; no trim was run** — a second capability (FM #26), scoped out by the operator.
+
+RED first against copied fixtures (3 failures + 2 errors, both controls green on either side);
+9 mutants, **9/9 killed**; suite diffed row-for-row against the Orient baseline, **zero rows lost**;
+the 9 shipped `.verify.sh` proofs unchanged at 5 green / 4 red (BL-36, pre-existing).
+Detail in the [`HANDOFFS.md`](../../HANDOFFS.md) receipt and the BL-41 row in `docs/planning/BACKLOG.md`.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-23 · [BL-41] S100 claim — restore the routine `HANDOFFS.md` trim
+
+`CHANGELOG: pending`. Measurements and the seven declarations are in the `status: pending` receipt
+in [`HANDOFFS.md`](../../HANDOFFS.md). **Deliberately minimal: this file had 397 B of byte headroom at
+claim while its gate row read `894 ln / 2,000 ln — ok`.**
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-18 · [ad hoc] S99 close-out — receipt written, self-score 8/10, predecessor S98 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](../../HANDOFFS.md), within the 18,432 B per-record budget S98
+introduced (`check-handoff`: `1 unwritten record(s), 0 over`). Substantive work is the entry below.
+
+**BL-41 raised, found not fixed:** `methodology_trim.py` cannot trim `HANDOFFS.md` at all. Shards are
+named `HANDOFFS-through-<date of newest archived record>.md` and an existing one is never overwritten;
+retention is by count, floored at three by `bin/tests.sh` Test 34. With receipts at S96/S97
+(2026-08-17) and S98/S99 (2026-08-18) and `HANDOFFS-through-2026-08-17.md` already present, `--cut 3`
+and `--cut 2` derive the taken name and are refused; `--cut 1` is free but drops below the floor.
+**Every admissible cut yields the taken name, so the tool's advice — "Disambiguate with `--cut`" —
+has no solution.** Verified by dry run; no `--write` issued. Full write-up and three candidate fixes
+in [`BACKLOG-DETAIL.md#bl-41`](../../docs/planning/BACKLOG-DETAIL.md#bl-41).
+
+**So `HANDOFFS.md` closes OVER — ~79.6 KB against 65,536, stated rather than left to be found; re-derive with the gate, since the figure counts the receipt that reports it.** It was already over at
+claim: a protocol-mandated receipt landing in a ledger S98 closed with 2,863 B of headroom against
+receipts that run 17–20 KB. No session writing any receipt could have avoided it.
+
+**A Learning is owed and deliberately not written** — *a losslessness proof only proves losslessness
+of the population it enumerates*. `starter-kit/FRAMEWORK_LEARNINGS.md` is DISTRIBUTED and this
+session's claim declared it would touch none; holding to that was worth more than the row. #36 is the
+next session's.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-18 · [ad hoc] `docs/planning/BACKLOG.md` comes under its ceiling by SPLIT — index here, bodies in a read-on-demand sibling
+
+**103,755 B → 26,504 B, `ok`** — the only file the FM #28 gate flagged, now green. Commit `8eb4f0e`.
+The 18 open-item bodies moved **verbatim** to
+[`docs/planning/BACKLOG-DETAIL.md`](../../docs/planning/BACKLOG-DETAIL.md); `BACKLOG.md` keeps a 19-row
+index. Full detail in the S99 receipt — this entry records the decisions a future session must not
+re-litigate.
+
+**Why a split and not a trim.** Open bodies were 81,340 B — 98% of the section, **1.24× the whole
+ceiling alone**. Deleting the front matter, all 11 archive pointer rows and the historical section
+(20,716 B, everything not live work) still left it 17,503 B over. Because nothing was compacted or
+dropped, the operator policy question at `.context-budget.json:73` — what to abandon — was never
+reached and stands unanswered.
+
+**Why the ceiling stayed on the whole-file axis.** S97 and S98 moved the two sibling ledgers *off*
+it after measuring 1 whole read in 80 and 81 transcripts. Measured the same way: this file was read
+**whole 23 times across 22 of 82 transcripts (27%)**, against 584 partial reads, most recently
+2026-08-13 — ~22× either sibling, because Phase 0 step 3 asks it for *current priorities*. Ceiling
+**retained**; the per-record remedy deliberately not copied, and the budget entry now says so.
+The instrument was audited before publishing: four defects found and fixed (`git cat-file -e` read as
+a `cat`; two other repos' `BACKLOG.md` swept in; a quoted `sed` script split mid-expression; the word
+*cat* inside receipt prose).
+
+**Losslessness proved, not asserted.**
+[`BACKLOG-DETAIL.md.verify.sh`](../../docs/planning/BACKLOG-DETAIL.md.verify.sh) re-extracts each item from
+git **by `BL-N` identity, never by position** — the flaw behind BL-36's four false failures. C1–C5;
+**7 mutants, each verified to apply, 7/7 killed** against a passing control.
+
+**C5 exists because C1–C4 were green while content was lost.** The first cut silently dropped the
+1,684 B *"Routing — what a session can actually run today"* block — not an item body, so outside the
+population the proof enumerated, and the standing record that the *"blocked on the paused channel"*
+disposition **was never imposed**. Restored verbatim; now asserted. **A losslessness proof only
+proves losslessness of the population it enumerates.** C1 also had to be repaired before shipping:
+it failed on any *newly raised* item, which would have turned it red on correct use.
+
+**Mechanical readers, against baselines captured before the edit:** archive proof 4/4; dashboard
+`_scan_backlog_done` unchanged at `unrecognized`/0/False — the index declares **no Status column**,
+which would otherwise count the completed rows' `CLOSED`/`SHIPPED`/✅ as unmigrated done-marks;
+`bin/tests.sh` 279/1/0 row-for-row identical; 444/444 Python; `check-links` 88/22; health 72. The
+gate's structure check was repaired to follow the split and **proven red by mutation** before being
+trusted — it had correctly reported `instrument-failed`.
+
+Carve-out verified mechanically: 26 `DISTRIBUTION` rows vs 6 changed paths, both non-empty,
+**intersection NONE**.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-18 · [ad hoc] S99 claim — bring `docs/planning/BACKLOG.md` under its ceiling
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](../../HANDOFFS.md) is the durable crash breadcrumb. Both resolved at this session's
+close-out above.
+
+Two facts recorded *at claim*, before any remedy was attempted, because they bound the remedy:
+**no housekeeping cut could clear the ceiling** (`## Open items` alone was 1.27× it, so deleting
+everything that is not live work still left the file 17,503 B over), and **the obvious cut was
+load-bearing** — the archive proof's C4 asserts reachability against the live file, so deleting
+§Completed items would turn a green proof red. Baseline captured before any edit: 4/4.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-18 · [ad hoc] S98 close-out — receipt written, self-score 8/10, predecessor S97 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](../../HANDOFFS.md); the substantive work is the per-record budget entry
+below and the trim entry above it. **Framework Learning #35 appended** at 1,219 B against the 1,500 B
+row budget — two limits set independently on one artifact can multiply into a constraint nobody
+checks, which is why this breach kept recurring while each session's trim looked correct.
+
+**The guard was applied to its own author.** This receipt measures **17,162 B against the 18,432 B
+per-record budget introduced this session** — `check-handoff` reports `1 unwritten record(s), 0 over`.
+The ledger closes at **62,673 B against the 65,536 B ceiling**, 2,863 B of headroom, and the FM #28
+gate reports `HANDOFFS.md` **ok** for the first time in four sessions.
+
+Two tracked telemetry ledgers committed with it — `.context-budget-history.jsonl` and
+`dashboard_history.jsonl` — which go dirty from Phase 0 alone and which no protocol step owns.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-18 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-17.md` (4 record(s), 118,534 B → 49,579 B)
+
+**Written by:** `methodology_trim.py` v1.2.0 — a tool action, not a session's judgment.
+Moved the oldest **4** record(s) (2026-08-15 → 2026-08-17) out of [`HANDOFFS.md`](../../HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-08-17.md`](../../docs/archive/HANDOFFS-through-2026-08-17.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-08-17.md.verify.sh`](../../docs/archive/HANDOFFS-through-2026-08-17.md.verify.sh)
+rather than trusting a digest printed here. Live file 118,534 B → 49,579 B (−58.2%).
+
+### 2026-08-18 · [ad hoc] The receipt ledger gets a guard on the axis its cost is actually paid on — a per-record budget, derived from the collision it resolves
+
+`HANDOFFS.md` stood at **114,466 B against a 65,536 B ceiling**, and the trim S97 recommended did
+not clear it: re-derived, `--cut 3` gave **66,778 B**. The reason was not untrimmed backlog. Post-trim
+the header is 6,017 B, leaving 59,519 B; `bin/tests.sh` Test 34 floors retention at **three**
+receipts; the newest three totalled **60,761 B**. Floor × mean already exceeded ceiling − header, so
+**no cut satisfied both constraints** — two limits set independently had begun to collide.
+
+**Measured before choosing a remedy.** Across **81 transcripts** of this repo (the measuring session
+excluded) the live root ledger was read **whole into a session's context exactly once** and read **in
+part 593 times** — median span 25 lines, largest ever requested 220, against a 452-line file. No read
+in the corpus asked for even half of it. That is what `SESSION_RUNNER.md` mandates and what
+`.context-budget.json` already said in its own note: Phase 0 step 6 takes a **frontier** (`git log -1`,
+no content) and Phase 3A reads **the predecessor's receipt in full**. One record.
+
+**The instrument was wrong twice before it was right, both times flatteringly.** The first pass scored
+the 4.5 KB seed `starter-kit/HANDOFFS.md` as the live ledger — 8 of its 9 "whole reads" were the seed —
+and scored `awk '/^```handoff/{n++} n==1'`, which extracts *one receipt*, as a whole-file read. It
+reported 9 whole reads. The answer is 1. Found by printing raw matched commands, not by re-reading the
+counter.
+
+**The fix.** `bin/check-handoff` (canonical-only) gains `RECORD_BUDGET_BYTES = 18432` and
+`check_record_budget()`, scoped to the record **being written** — the newest record when its text
+differs from its counterpart at git HEAD. Comparing record *text*, not "is this session id new", is
+what stops a close-out from growing its own already-committed Phase 1B stub past the budget unseen.
+The derivation is `(65,536 − 8,000 header allowance) / 3 = 19,178 → 18,432 B`, 2,240 B of slack, and it
+is written beside the constant so a successor re-runs it rather than re-argues it. Records have grown
+**3.15×** (oldest 10 mean 5,478 B; newest 10 mean 17,258 B; largest ever 21,267 B, n=104).
+
+**The unit is the record, not the fenced block** — trailing prose below the closing fence is counted,
+because the byte ceiling counts it and `methodology_trim.py` moves it as part of the record. Budgeting
+the fence alone would put the guard on a different axis from the ceiling it is derived from and make
+the arithmetic above false. Mutant **M5** exists to defend exactly that.
+
+**Deliberately NOT run under `--all`:** Test 34's presence control asserts on `check-handoff`'s **exit
+code** against the live ledger, and an exit code is a union over every check — routing the budget
+through `--all` would turn an unrelated assertion red whenever a session's in-flight receipt ran long.
+Asserted, not just intended, by assertion (7).
+
+`bin/tests.sh` **Test 38** — 18 assertions, **5 mutants, 5 killed**, against a throwaway git repo so the
+live ledger is never written to. Proven RED in situ first: an oversized record injected into the live
+tracked file made the pre-change checker exit **0** and the new one exit **1**; restore verified
+byte-identical by `cmp` and `git diff --quiet`. Suite **279 passed / 1 failed** (the pre-existing Test 9
+`--source=github` 404), diffed row-for-row against a clean HEAD worktree: **zero rows lost**, 18 added,
+both populations asserted non-empty (262 and 280).
+
+**Two fixture defects of my own, both caught by the artifact and not by the builder.** The record
+builder prepended at byte 0, absorbing the file's 5,569 B header into the record under test; and its
+size check measured the string it had just constructed rather than the record as the checker parses it
+— an identity, not an assertion. Corrected to insert at a **line-anchored** fence (a plain
+`text.index("```handoff")` lands in front-matter prose that mentions the fence inline, leaving 86 stray
+bytes inside the record) and to re-parse the written file.
+
+Carve-out verified mechanically against the staged set: **26 manifest SOURCE rows vs 2 changed files,
+both populations asserted non-empty, intersection empty** — no distributed file touched.
+
+**Model:** Claude Opus 5 (1M context).
+
+### 2026-08-18 · [ad hoc] Session S98 claimed — bring `HANDOFFS.md` under its ceiling durably
+
+Phase 1B claim; receipt stub in [`HANDOFFS.md`](../../HANDOFFS.md) with `status: pending`. The subject is
+S97's `next_steps` (b), and it is the repository's live size breach: **114,466 B against a 65,536 B
+ceiling, over by 48,930**.
+
+**One finding is recorded here at claim rather than at close-out, because it refutes the remedy the
+handoff recommends.** S97 measured `--cut 3 = 49,724 B` and called it "real room". Re-derived at this
+Orient, the same cut yields **66,778 B — 1,242 B over**. S97's figure was taken before its own
+20,086 B receipt was appended, and it said so; that receipt is now one of the three a `--cut 3`
+retains.
+
+**The condition is a collision between two constraints set independently, not a backlog of untrimmed
+bytes.** Post-trim the header is 6,017 B, leaving 59,519 B for records. `bin/tests.sh` Test 34 floors
+retention at **three receipts**. The last three total **60,761 B** (mean 20,254 B). Floor × mean
+already exceeds ceiling − header, so **no cut satisfies both**: `--cut 2` clears at 45,511 B only by
+going below the floor, where six assertions become stated `SKIP` rows (BL-40 (b)).
+
+Which of the three levers moves — receipt **size**, the **floor**, or the **ceiling** — is a policy
+choice and goes to the operator with numbers before anything is written. Noted for that choice:
+`.context-budget.json` sources this ceiling to `methodology_trim.py:69` — the trimmer's
+`DEFAULT_BUDGET_BYTES`, an **inherited default**, at a line number S97 already flagged as stale — while
+the same entry states the mandated read as *"Phase 0 step 6 reconciles this file's frontier and Phase
+3A reads the predecessor's receipt in full."*
+
+**Model:** Claude Opus 5 (1M context).
+
