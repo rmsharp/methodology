@@ -171,6 +171,65 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-25 · [ad hoc] S109 claim — Phase 2 of the record-budget reduction
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **Phase 2 of an already-RATIFIED plan**
+([`docs/planning/record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md)
+§6), so there is no new design gate. Phase 1 landed at S106; Phases 2 and 3 have stood pending
+through six sessions that trimmed files instead.
+
+**Why now — the operator asked why this repo spends its effort trimming when three larger adopters
+do not, and the answer inverts the premise.** Measured read-only across all four repos: this repo
+holds the **smallest** ledgers of the four (`CHANGELOG.md` 37,659 B, `HANDOFFS.md` 51,622 B) and is
+the **only one under the 65,536 B ceiling** — `--check` is silent on both. `wsfct` FIRES on
+`CHANGELOG.md` (74,180 B); `nprcgenekeepr` FIRES on both (218,298 / 286,154 B); `vscode_quarto_ext`
+FIRES on `CHANGELOG.md` (811,069 B) and its `HANDOFFS.md` (1,780,187 B, **27× the ceiling**) cannot
+be trimmed at all — the trimmer refuses with `[ZONE_UNCLASSIFIED]` because the bootstrap
+seed-sentinel line was never deleted, so it has **zero** archive shards. They do not lack the
+symptom; they lack the measurement.
+
+**The term that is genuinely wrong here is the RECEIPT, not the file.** Measured over live ledgers
+**plus every archive shard**, so the population is the whole history and not the post-trim
+remnant: median B/receipt — this repo **11,483** (n=115), `vscode_quarto_ext` 7,912 (n=216),
+`nprcgenekeepr` 4,664 (n=325), `wsfct` 4,059 (n=67). This repo's receipts are **2.5–2.8× the
+adopter median**, which is 5.7 receipts to fill the ceiling against their 14–16. Its `CHANGELOG`
+entries are the *smallest* of the four (median 1,387 B), so the whole excess sits in `HANDOFFS.md`.
+That is §2 of the plan restated by independent measurement: *"the term worth attacking is the
+receipt, not the file."*
+
+**What Phase 2 does, per §6.** (1) Collapse the archive pointer blocks in `HANDOFFS.md` front
+matter into one compact index. Re-measured at this Orient rather than inherited: there are **8**
+blocks, not the plan's 7, totalling **3,580 B = 48.6%** of a **7,360 B** front matter — the plan
+recorded 7 blocks / 3,132 B / 45% of 6,913 B, and the drift is exactly one block at the stated
+~447 B, so the growth model is confirmed by its own error. (2) Give the **8,000 B header reserve a
+name and an executable fit assertion** — today it exists only in prose in `bin/check-handoff`'s
+derivation comment, with no constant and nothing that fails when it is wrong.
+
+**Why the reserve is the urgent half:** the front matter is at **92.0% of it** (7,360 / 8,000) and
+grows ~447 B per trim, so it **breaches in two trims** — and because the reserve is only a comment,
+nothing would say so.
+
+**Decided here, not discovered later (S108's next_steps (d)):** the fit assertion goes in
+`bin/tests.sh` reading the constants out of `bin/check-handoff`, **never as a module-scope
+`assert`** — that runs at import, so a mutant violating it dies with a traceback before the code
+under test executes and is scored killed by the crash rather than by behaviour.
+
+**`RECORD_BUDGET_BYTES` stays 12,288.** §4.3 is binding: shrinking the front matter must **bank**
+the saving as slack, never feed it back through a division to raise the budget.
+
+**What does NOT change:** the 65,536 B ceiling, Test 34's floor of 3, `methodology_trim.py`, and
+anything distributed. **Nothing outward-facing.**
+
+**Recorded at claim: a scope collision in the ratified plan.** §7 puts `methodology_trim.py` and
+"anything distributed" out of scope, but the pointer blocks are *generated* by
+`starter-kit/methodology_trim.py:935-936`, which **is** distributed. So the compaction is durable
+only until the next trim appends a fresh 447 B block in the old format. Compacting is a data edit
+and is in scope; teaching the generator the compact format is not, and is raised as a follow-on
+rather than taken.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-25 · [ad hoc] S108 close-out — `CHANGELOG.md` trim shipped, 66,553 B → 34,044 B
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **12,288 B inside the 12,288 B per-record
