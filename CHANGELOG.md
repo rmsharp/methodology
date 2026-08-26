@@ -183,6 +183,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S111 close-out — Phase A shipped; self-score 8/10, predecessor S110 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **inside the 12,288 B per-record budget** — over by
+546 B on the first pass and cut from the **trailing prose**, which is where `bin/check-handoff` says
+to cut, because a record is the opening fence through the **next** opening fence. Commits: `d5a4fb4`
+(claim) · `730a309` (trim) · **`84abc60` / `86037bd` / `85a2158`** (Phase A) · `b8ecccf` · `979dc73` ·
+`90d9b76` · this close-out.
+
+**Phase A is complete and the plan is RATIFIED.** Six distributed carriers corrected — **3 `TRACKED`**
+(reach every existing adopter at their next `bin/sync`) and **2 `SEED`** (future adopters only).
+**No numeral moved.** Phases B and C are not started.
+
+**Three findings, each from running rather than reading.**
+
+**Dragon 8 settled, and the plan's own test could not have settled it.** An explicit `limit` spanning
+an over-cap region **neither bypasses the cap nor truncates — it errors and returns no content at
+all.** Three delivery modes, not two. Probe D's "returned whole" is therefore not an artifact.
+
+**Phase A's DONE criterion was unsatisfiable as written** — it matches a live, distributed, *correct*
+sentence about `$(...)`. The corrected command returns **0** (§11.3).
+
+**I shipped a benefit claim I had not established, and an operator relay caught it.** Replacing
+*"protects against silent truncation"* with *"protects against an unread tail"* substituted one
+unverified benefit for another — the exact move Phase A exists to stop. Corrected in the seeds **and**
+in the two TRACKED tools; **BL-52** raised, then narrowed by measuring that the argument is
+**regime-dependent** and does not reach this repo.
+
+**Verification.** Control 287 rows **286 / 1 / 0**; after **286 / 1 / 0**; row-for-row, both
+populations asserted non-empty: **zero status flips, zero skipped**, one pair differing only in a
+derived count this session's trim moved. Sole failure both sides by name: `github source dry-run
+failed`. Python suites **300 / 110 / 41 OK**, re-run **after** the mirror. Twins `diff -q`
+byte-identical. Trim losslessness three ways including an independent inverter: **12/12
+byte-identical, 0 lost, 0 unexplained.** `check-links` OK (88/22) · `check-learnings` OK (37) ·
+`check-handoff` + `--all` OK · `trim --check` silent on both · `BACKLOG-DETAIL.md.verify.sh` OK.
+
+**The surface cannot enforce the property under test, and that is stated rather than glossed:** no
+test here can invoke the agent's `Read` tool. A green suite proves nothing *else* broke — Appendix A
+is the only instrument, and it must be re-run every phase.
+
+**FM #28 gate, measured after the last write.** `HANDOFFS.md` **64,977 B** / 225 ln;
+`CHANGELOG.md` **47,207 B** *before this entry*; `starter-kit/FRAMEWORK_LEARNINGS.md`
+65,520 B (**16 B free — BL-45 still blocks Phase 3C, third session running**);
+`docs/planning/BACKLOG.md` 30,915 B. **`main` 69 ahead of `origin/main`, nothing pushed.**
+
+**Carve-out re-derived by importing `DISTRIBUTION` and reading the SOURCE column:** 3 TRACKED,
+2 SEED, 10 canonical. **No outward-facing action.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [BL-52] S111 — the relayed critique measured: it is regime-dependent, and this repo is in the other regime
 
 **BL-52 addendum.** The critique's load-bearing premise — *"the tail costs nothing, because nothing
