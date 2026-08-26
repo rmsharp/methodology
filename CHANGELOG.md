@@ -183,6 +183,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-52] S111 — the relayed critique measured: it is regime-dependent, and this repo is in the other regime
+
+**BL-52 addendum.** The critique's load-bearing premise — *"the tail costs nothing, because nothing
+reads it"* — is true **only once a file is already well past the cap**. Below it the whole file is
+delivered and every byte is paid for; **at** the boundary, a trim moves a file from *truncated* to
+*fully delivered*, which is not cosmetic.
+
+Measured by the free error path (an over-cap `limit` reports the span's token count and returns no
+content): this file was **26,723 tokens before this session's trim — OVER the 25,000 cap** `[M]`, and
+is ~18,800 after `[D]`. **This repo's ledgers hover at the cap boundary**; the relaying repo's is
+reported at 25,578 lines, ~**40×** the cap `[C]`. Their conclusion may be right for them and **does
+not transfer here** — the same failure shape this repo keeps recording, a figure measured in one
+regime carried into another.
+
+**So the trim run earlier in this session did real work on both axes**, which I could not have
+asserted when I ran it: I ran it because the ceiling forced it, and only measured afterwards that the
+file had actually been over the read cap too.
+
+**BL-52's scope narrowed accordingly:** what is in question is the **line metric's remedy**. The byte
+metric is **not**, and BL-52 must not be closed by retiring both.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [BL-52] S111 — BL-52 raised; the design record annotated; the plan RATIFIED and Phase A closed
 
 **The plan's status moves `DRAFT` → `RATIFIED`** (operator, this session's Phase 1: A → B → C as

@@ -1329,3 +1329,26 @@ at independently. Neither file is near 2,000 lines, so `read_cap_watch` does **n
 (the dedup between the two dashboard rows): if the line metric's remedy does not survive, the dedup
 answers itself. Do not decide C without deciding this.
 
+**⚠ ADDENDUM (same session, S111): the argument is REGIME-DEPENDENT, and this repo is in the other
+regime.** The critique's load-bearing premise is *"the tail costs nothing, because nothing reads
+it."* That is true **only once a file is already well past the cap**. Below it, the whole file is
+delivered and every byte is paid for in context; at the boundary, a trim moves a file from
+*truncated* to *fully delivered*, which is not cosmetic.
+
+Measured on this repo's own action ledger, by the free error path (an over-cap `limit` reports the
+span's token count and returns no content):
+
+| `CHANGELOG.md` | bytes | tokens | vs the 25,000 cap |
+|---|--:|--:|---|
+| **before S111's trim** | 65,012 | **26,723** `[M]` | **OVER — a whole-file read truncated** |
+| **after** | 45,750 | ~18,800 `[D]` | under, fully delivered |
+
+So this repo's ledgers **hover at the cap boundary**; the relaying repo's is reported at 25,578
+lines, roughly **40× the cap** `[C]`. Their conclusion may well be right *for them* and **does not
+transfer here** — the same failure shape this repo keeps recording (a figure measured in one regime
+carried into another; sibling of *a ratio is a property of its content type*, Learning #38-owed).
+
+**Consequence for BL-52's own scope, stated so a later session does not over-read it.** What is
+genuinely in question is the **line metric's remedy**, on the argument in the body above. The
+**byte** metric is *not* in question here — for a file at or under the cap it bounds a cost that is
+actually paid, and S111's trim halved one. **Do not close BL-52 by retiring both.**
