@@ -1433,6 +1433,54 @@ was a deliberate probe, not the protocol.
   **Re-derive it before using it.**
 - It says nothing about the **byte** metric, which remains a separate claim.
 
+**⚠ THIRD ADDENDUM (S112, Phase B): BL-52 IS NOW ADJUDICATED FOR THIS REPO'S `HANDOFFS.md`, ON
+MEASUREMENT, AND THE ANSWER IS THAT THE TRIM BUYS NOTHING.** The occasion was mundane — a trim was
+due as close-out housekeeping and `methodology_trim.py` refused it (`[SRF_RED]` 1.1198: *"the last
+archive has been entirely given back; archiving again resets the LEVEL and not the RATE"*). The
+session was about to `--force` past it. **It had not asked BL-52's own question first.**
+
+Asked, the answer is decisive. A whole-file read of the untrimmed ledger delivers **the front matter
+and the four newest receipts** — measured by the free over-cap error path, not modelled:
+
+| prefix | predicted | **measured** | error |
+|---|--:|--:|--:|
+| front matter + **4** newest receipts (55,342 B) | 23,409 tok | **23,370 tok** | 0.17% |
+| front matter + **5** newest receipts (67,630 B) | 28,606 tok | **28,611 tok** | 0.02% |
+
+The proposed `--cut 3` would have archived S108 and S107 — **both already outside the delivered
+prefix.** Against what the protocol actually consumes: **Phase 3A reads ONE receipt**, the
+predecessor's, at the top; **Phase 0 step 6 takes the frontier from `git log` and greps** for a
+pending receipt; whole-file reads run **1 in 85**. So on the read-delivery claim the trim changes
+nothing anyone reads.
+
+**And the context-tax claim does not rescue it either.** That cost is paid per read-span — 1,797
+partial reads against 1 whole — and is already guarded per record by `RECORD_BUDGET_BYTES = 12,288`,
+which every receipt in the file is inside. S98 reached the same conclusion for this file by a
+different route and moved the guard accordingly; `.context-budget.json` still says so in its own
+words: *"MAX_BYTES 65,536 IS RETAINED BUT NO LONGER THE OPERATIVE GUARD."*
+
+**So the tool's refusal was right, and right for a STRONGER reason than the one it gave.** It
+diagnosed a level remedy applied to a rate problem. The measurement adds: the level is not costing
+anything yet.
+
+**What this does and does not settle.**
+- It settles **this file, at this size, with these record sizes** — the middle regime, between the
+  25,000-token cap and the 256 KiB refusal. It does **not** settle the general question, and it
+  says nothing about a repo well past the refusal, where a cut back under it turns nothing into
+  something.
+- **The threshold that will actually bite is `READ_REFUSE_BYTES` = 262,144**, where the front matter
+  itself stops being delivered. From 77,265 B at ~12,288 B per close-out that is **~16 sessions**.
+  The remedy between here and there is the **record budget**, not archiving.
+- **It leaves two signals red that are literally true and, on this measurement, not worth acting
+  on** — `context_budget.py` BREACH and one high-severity read-cap row on this repo's own ledger.
+  That is deliberate and is itself the finding: **a guard can be correct and not worth acting on**,
+  which makes Phase C's question larger than *two rows or one* — it is what population and what
+  claim each row should carry. The **prefix guard** (plan §12.4) is the candidate that answers both.
+
+**Precedent set, and it is the transferable part:** *a trim was declined on evidence rather than
+performed as routine*. Every prior session here trimmed when a ceiling said to. This one measured
+what the trim would deliver first, and the honest answer was nothing.
+
 **And it is a fourth defect in the same neighbourhood as the three Phase A corrected** — a
 justification that was written once, plausibly, and never re-checked against the step it cites.
 Whoever takes Phase B or BL-52 should decide whether the fix is to correct the comment, to narrow

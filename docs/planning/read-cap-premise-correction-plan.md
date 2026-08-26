@@ -694,6 +694,14 @@ not bind in the other direction either), and the estimator is **linear in conten
 - **`_newest_archive_sha` / `_trim_record_count` lost their only production consumer** and are kept,
   labelled, with 18 assertions still pinning them. Delete or re-wire them when Phase C decides the
   row's shape.
+- **BL-52 IS ADJUDICATED FOR THIS REPO'S `HANDOFFS.md` AND THE TRIM WAS DECLINED ON EVIDENCE.**
+  Measured: a whole-file read delivers the front matter + the **4 newest receipts** (23,370 tok
+  measured against 23,409 predicted); the cut on offer would have archived two records **already
+  outside** that prefix; Phase 3A reads **one** receipt and Phase 0 greps. The trimmer's `SRF_RED`
+  refusal was honoured rather than `--force`d. Detail in `BACKLOG-DETAIL.md#bl-52`, third addendum.
+  **Consequence Phase C must weigh: this repo now carries two red signals that are true and, on
+  this measurement, not worth acting on.** That makes the dedup question larger than *two rows or
+  one* — it is what population and claim each row carries, and the prefix guard above answers both.
 - **`choose_cut` would retain 2 on `HANDOFFS.md`**, below Test 34's floor of 3 — **unchanged by
   Phase B** (it was 2 at the shipped line cap too), and the reason sessions pass `--cut 3`
   explicitly. Learning #35's collision, still standing.
