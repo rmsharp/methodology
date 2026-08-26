@@ -2156,10 +2156,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.15.2")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.16.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.15\.2"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.15.2")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.16\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.16.0")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general
@@ -3180,17 +3180,66 @@ class TestD4ReadCapTruncation(unittest.TestCase):
     def _lines(n):
         return "x\n" * n
 
+    @staticmethod
+    def _bytes(n):
+        """EXACTLY n bytes, and still line-structured so `loc` stays meaningful. Phase B moved the
+        verdict onto bytes, so a fixture built by LINE count no longer controls the variable under
+        test: `_lines(2500)` is 5,000 B, an order of magnitude under the cap, and every assertion
+        built on it would go quietly green for the wrong reason."""
+        assert n >= 2, "a line-structured fixture needs at least one 'x\\n'"
+        full, rest = divmod(n, 2)
+        body = "x\n" * full
+        if rest:                       # pad the last line by one byte, keeping the trailing \n
+            body = "xx\n" + "x\n" * (full - 1)
+        assert len(body.encode()) == n, (len(body.encode()), n)
+        return body
+
     # --- the constant -------------------------------------------------------------------------
 
     def test_cap_agrees_with_the_trimmer(self):
-        """The reporter and the remedy must not disagree about where the cliff is. The trimmer
-        already declares this cap for the same reason; pin the two literals together so a later
-        edit to either is caught. Independent operands: one is read out of the module, the other
-        is parsed out of the OTHER tool's source text."""
+        """The reporter and the remedy must not disagree about where the cliff is. Independent
+        operands: one side is read out of THIS module, the other parsed out of the OTHER tool's
+        source text.
+
+        Phase B pins BOTH INPUTS, not the product. Pinning only the product would let the two
+        tools agree on 56,750 B while disagreeing about what it means -- and the whole point of
+        deriving it is that the inputs, not the boundary, are what a future session re-measures.
+        Note what this still does NOT buy, unchanged from before and worth restating: it keeps the
+        two copies CONSISTENT, and it kept them consistent throughout the period both were WRONG.
+        Only Appendix A can say whether they are right."""
         trim_src = (Path(STARTER_PY).parent / "methodology_trim.py").read_text(encoding="utf-8")
-        m = re.search(r"^READ_CAP_LINES\s*=\s*(\d+)", trim_src, re.MULTILINE)
-        self.assertIsNotNone(m, "methodology_trim.py must declare READ_CAP_LINES")
-        self.assertEqual(md.READ_CAP_LINES, int(m.group(1)))
+        mt = re.search(r"^READ_CAP_TOKENS\s*=\s*([0-9_]+)", trim_src, re.MULTILINE)
+        self.assertIsNotNone(mt, "methodology_trim.py must declare READ_CAP_TOKENS")
+        self.assertEqual(md.READ_CAP_TOKENS, int(mt.group(1).replace("_", "")))
+        mb = re.search(r"^MIN_BYTES_PER_TOKEN\s*=\s*([0-9.]+)", trim_src, re.MULTILINE)
+        self.assertIsNotNone(mb, "methodology_trim.py must declare MIN_BYTES_PER_TOKEN")
+        self.assertEqual(md.MIN_BYTES_PER_TOKEN, float(mb.group(1)))
+        mr = re.search(r"^READ_REFUSE_BYTES\s*=\s*(\d+)\s*\*\s*(\d+)", trim_src, re.MULTILINE)
+        self.assertIsNotNone(mr, "methodology_trim.py must declare READ_REFUSE_BYTES")
+        self.assertEqual(md.READ_REFUSE_BYTES, int(mr.group(1)) * int(mr.group(2)))
+        self.assertEqual(md.READ_CAP_BYTES,
+                         int(md.READ_CAP_TOKENS * md.MIN_BYTES_PER_TOKEN),
+                         "the cap must stay DERIVED; a hardcoded literal is the defect Phase B "
+                         "removed, one level over")
+        self.assertLess(md.READ_CAP_BYTES, md.READ_REFUSE_BYTES,
+                        "the soft cap must sit below the hard refusal, or the refusal branch is "
+                        "unreachable and its row is dead code")
+
+    def test_the_line_denominated_cap_is_gone_from_both_tools(self):
+        """Phase B DELETED it rather than re-tuning it, and a deletion is only durable if
+        something notices it coming back. A future session re-adding `READ_CAP_LINES` here would
+        otherwise silently restore a second, contradictory axis beside the byte one."""
+        trim_src = (Path(STARTER_PY).parent / "methodology_trim.py").read_text(encoding="utf-8")
+        self.assertFalse(hasattr(md, "READ_CAP_LINES"))
+        self.assertFalse(hasattr(md, "TRIM_LINE_FIRE_BELOW"))
+        self.assertIsNone(re.search(r"^READ_CAP_LINES\s*=", trim_src, re.MULTILINE))
+        self.assertIsNone(re.search(r"^LINE_FIRE_BELOW\s*=", trim_src, re.MULTILINE))
+        self.assertIsNone(re.search(r"^LINE_STOP_ABOVE\s*=", trim_src, re.MULTILINE))
+        self.assertIsNotNone(re.search(r"^SEED_PLAUSIBLE_MAX_LINES\s*=\s*2000", trim_src,
+                                       re.MULTILINE),
+                             "J3's line ceiling was RENAMED, not deleted -- it answers a "
+                             "different question (is this plausibly a fresh seed?) and its value "
+                             "is deliberately unchanged")
 
     def test_watched_set_never_names_a_tracked_dest(self):
         """THE LOAD-BEARING INVARIANT, and the reason the population is a literal rather than the
@@ -3237,10 +3286,14 @@ class TestD4ReadCapTruncation(unittest.TestCase):
     # --- the risk -----------------------------------------------------------------------------
 
     def test_risk_fires_past_the_cap(self):
-        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(2090)}))
+        n = md.READ_CAP_BYTES + 2
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(n)}))
         descs = [r["description"] for r in m["scores"]["risks"]]
-        self.assertTrue(any("CHANGELOG.md is 2,090 lines" in d and "read cap" in d for d in descs),
+        self.assertTrue(any(f"CHANGELOG.md is {n:,} B" in d and "read cap" in d for d in descs),
                         f"expected a read-cap row, got {descs}")
+        self.assertFalse(any("hard limit" in d for d in descs),
+                         "between the two boundaries the row must describe TRUNCATION, not the "
+                         "zero-content refusal -- they are different failures")
 
     def test_risk_silent_under_the_cap(self):
         """GUARD-THE-GUARD, labelled per this file's docstring rule: asserting the ABSENCE of a
@@ -3248,20 +3301,48 @@ class TestD4ReadCapTruncation(unittest.TestCase):
         this class that were GREEN against the unpatched scanner. It is not RED-first coverage
         and must not be counted as such. It earns its place by mutation instead — see
         test_boundary_is_exactly_the_cap, which pins the comparison the mutant moves."""
-        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(1999)}))
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_CAP_BYTES - 2)}))
         self.assertFalse(any("read cap" in r["description"] for r in m["scores"]["risks"]))
 
     def test_boundary_is_exactly_the_cap(self):
         """Pins the comparison itself, both sides. Without this the `>` -> `>=` producer mutant
-        survived the entire suite: nothing exercised a file of exactly READ_CAP_LINES lines, so
-        the boundary was free to move by one in either direction undetected. Learning #16's
-        lesson one level down — the predicate was covered, its EDGE was not."""
-        exact = md.collect_all(self._repo({"CHANGELOG.md": self._lines(md.READ_CAP_LINES)}))
+        survived the entire suite: nothing exercised a file of exactly the cap, so the boundary
+        was free to move by one in either direction undetected. Learning #16's lesson one level
+        down — the predicate was covered, its EDGE was not.
+
+        Phase B moved the axis, and BOTH boundaries now need this treatment: the soft cap and the
+        256 KiB hard refusal are separate comparisons in separate branches, and an edge test on
+        one says nothing about the other."""
+        exact = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_CAP_BYTES)}))
         self.assertFalse(any("read cap" in r["description"] for r in exact["scores"]["risks"]),
-                         "a file of exactly READ_CAP_LINES lines still fits in one read")
-        over = md.collect_all(self._repo({"CHANGELOG.md": self._lines(md.READ_CAP_LINES + 1)}))
+                         "a file of exactly READ_CAP_BYTES still fits in one read")
+        over = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_CAP_BYTES + 2)}))
         self.assertTrue(any("read cap" in r["description"] for r in over["scores"]["risks"]),
-                        "one line past the cap must fire")
+                        "past the cap must fire")
+
+    def test_the_hard_refusal_boundary_is_its_own_edge_and_its_own_row(self):
+        """The second comparison, pinned the same way. Exactly at READ_REFUSE_BYTES a default read
+        still returns a truncated prefix, so the TRUNCATION row is correct; past it there is no
+        prefix at all and the row must say so instead. Without both sides, `>` -> `>=` on the
+        refusal branch is invisible, and so is a change that merges the two rows into one."""
+        at = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_REFUSE_BYTES)}))
+        at_d = [r["description"] for r in at["scores"]["risks"]]
+        self.assertTrue(any("one-read budget" in d for d in at_d),
+                        "exactly at the refusal it truncates")
+        self.assertFalse(any("hard limit" in d for d in at_d),
+                         "exactly at the refusal is not yet refused")
+        past = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_REFUSE_BYTES + 2)}))
+        past_d = [r["description"] for r in past["scores"]["risks"]]
+        self.assertTrue(any("hard limit" in d and "NO CONTENT AT ALL" in d for d in past_d),
+                        f"past the refusal must say nothing is delivered, got {past_d}")
+        # NOT `"read cap" not in d`: the refusal row names the read cap too, in order to say it
+        # is a DIFFERENT and harder boundary. The exclusive thing is the truncation VERDICT, so
+        # the phrase that only the truncation branch emits is what this asserts on.
+        self.assertFalse(any("one-read budget" in d for d in past_d),
+                         "the two rows are exclusive: a refused file is not a truncated one, and "
+                         "emitting both would give one file two contradictory remedies")
+        self.assertTrue(all(r["severity"] == "high" for r in past["scores"]["risks"]
+                            if "hard limit" in r["description"]))
 
     def test_empty_watched_file_still_reports_zero(self):
         """The collector deliberately appends OUTSIDE the `loc > 0` branch, so a watched file that
@@ -3283,30 +3364,32 @@ class TestD4ReadCapTruncation(unittest.TestCase):
         The claim it locks: a repo that never adopted the methodology is not told its CHANGELOG.md
         is too long. The scanner's own Layer 8 comment records a MEASURED regression from exactly
         that assumption."""
-        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(3000)}, runner=False))
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_CAP_BYTES + 2)},
+                                      runner=False))
         self.assertFalse(any("read cap" in r["description"] for r in m["scores"]["risks"]))
 
     def test_one_row_per_breaching_file(self):
-        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(2100),
-                                       "HANDOFFS.md": self._lines(2200),
-                                       "SESSION_NOTES.md": self._lines(2300)}))
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_CAP_BYTES + 2),
+                                       "HANDOFFS.md": self._bytes(md.READ_CAP_BYTES + 4),
+                                       "SESSION_NOTES.md": self._bytes(md.READ_CAP_BYTES + 6)}))
         rows = [r for r in m["scores"]["risks"] if "read cap" in r["description"]]
         self.assertEqual(len(rows), 3, "each file is separately actionable; an aggregate row "
                                        "naming only the worst hides the others")
         self.assertTrue(all(r["severity"] == "high" for r in rows))
 
     def test_backlog_is_watched_at_every_documented_location(self):
+        n = md.READ_CAP_BYTES + 2
         for loc in md._BACKLOG_LOCATIONS:
             with self.subTest(loc=loc):
-                m = md.collect_all(self._repo({loc: self._lines(2400)}))
-                self.assertTrue(any(f"{loc} is 2,400 lines" in r["description"]
+                m = md.collect_all(self._repo({loc: self._bytes(n)}))
+                self.assertTrue(any(f"{loc} is {n:,} B" in r["description"]
                                     for r in m["scores"]["risks"]))
 
     def test_bl5_code_smell_row_is_untouched_and_independent(self):
         """Guard-the-guard, from the NEW signal's side. The two risks must coexist without either
         suppressing the other, and their strings must share no substring, so the diagnostic trail
         that produced BL-5's and Layer 7's narrowings survives in `dashboard_history.jsonl`."""
-        m = md.collect_all(self._repo({"CHANGELOG.md": self._lines(2100),
+        m = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_CAP_BYTES + 2),
                                        "app.py": "x = 1\n" * 2500}))
         descs = [r["description"] for r in m["scores"]["risks"]]
         self.assertTrue(any("Large files detected" in d and "app.py" in d for d in descs))
@@ -3326,9 +3409,22 @@ class TestD4ReadCapTruncation(unittest.TestCase):
             self.skipTest("object 3aee4e3^ not present (shallow clone)")
         self.assertEqual(blob.stdout.count("\n"), 2090,
                          "fixture check: the historical blob must still be 2,090 lines")
+        size = len(blob.stdout.encode("utf-8"))
+        # WHICH BRANCH this artifact belongs in is a fact about it, not a choice, so it is
+        # asserted rather than assumed. Re-measured at Phase B: 186,704 B -- about 2.97x the token
+        # cap, and UNDER the 256 KiB refusal. So it TRUNCATED; it was not refused. A draft of this
+        # test asserted the opposite and this control is what caught it.
+        self.assertGreater(size, md.READ_CAP_BYTES,
+                           "fixture check: the artifact must be past the one-read cap")
+        self.assertLess(size, md.READ_REFUSE_BYTES,
+                        "fixture check: and UNDER the hard refusal, or the assertion below is "
+                        "testing the wrong branch")
         m = md.collect_all(self._repo({"CHANGELOG.md": blob.stdout}))
-        self.assertTrue(any("CHANGELOG.md is 2,090 lines" in r["description"]
-                            for r in m["scores"]["risks"]))
+        self.assertTrue(any(f"CHANGELOG.md is {size:,} B" in r["description"]
+                            and "one-read budget" in r["description"]
+                            for r in m["scores"]["risks"]),
+                        "the artifact that motivated this whole guard must trip the branch that "
+                        "matches what actually happened to it")
 
 
 class TestD4RootCommitDate(unittest.TestCase):
@@ -3991,6 +4087,22 @@ class TestS38TrimTriggerRow(unittest.TestCase):
                        % (i % 28 + 1, md._MIDDLE_DOT, i, "x\n" * body)
                        for i in range(start, start + n))
 
+    def _sized(self, name, n_bytes, **kw):
+        """A repo whose `name` is EXACTLY n_bytes, still line-structured.
+
+        Phase B moved this row's first half onto bytes, so a fixture sized by entry COUNT no
+        longer controls the variable under test -- `_entries(6)` is a couple of hundred bytes
+        against a 56,750 B cap, and every assertion built on it would go green for the wrong
+        reason."""
+        head = "# Changelog\n\n"
+        pad = n_bytes - len(head.encode())
+        assert pad >= 2, "fixture too small to be line-structured"
+        full, rest = divmod(pad, 2)
+        body = ("xx\n" + "x\n" * (full - 1)) if rest else ("x\n" * full)
+        text = head + body
+        assert len(text.encode()) == n_bytes, (len(text.encode()), n_bytes)
+        return self._repo({name: text}, **kw)
+
     def _descs(self, path, expect_role=None):
         """Signals plus the collector's own dict.
 
@@ -4019,13 +4131,21 @@ class TestS38TrimTriggerRow(unittest.TestCase):
                         "fixture check: READ_CAP_WATCHED must hold names the trimmer refuses, "
                         "or this test is guarding nothing")
 
-    def test_line_fire_threshold_agrees_with_the_trimmer(self):
-        """The reporter and the remedy must not disagree about when the rate rule fires. One
-        operand is read out of this module, the other parsed out of the OTHER tool's source."""
+    def test_no_rate_threshold_survives_in_either_tool(self):
+        """WHAT THIS REPLACED, and why the replacement is an absence. This used to pin
+        `md.TRIM_LINE_FIRE_BELOW` against the trimmer's `LINE_FIRE_BELOW` -- a SECOND distributed
+        copy of design §5.2's rate rule. Phase B deleted the rule from both tools rather than
+        re-tuning it, so the agreement to assert is that neither has re-grown one: a reporter
+        advertising a threshold the remedy no longer has is exactly the drift the original pin
+        existed to catch, one level up."""
         trim_src = Path(TRIM_PY).read_text(encoding="utf-8")
-        m = re.search(r"^LINE_FIRE_BELOW\s*=\s*(\d+)", trim_src, re.MULTILINE)
-        self.assertIsNotNone(m, "methodology_trim.py must declare LINE_FIRE_BELOW")
-        self.assertEqual(md.TRIM_LINE_FIRE_BELOW, int(m.group(1)))
+        self.assertFalse(hasattr(md, "TRIM_LINE_FIRE_BELOW"))
+        for gone in ("LINE_FIRE_BELOW", "LINE_STOP_ABOVE"):
+            self.assertIsNone(re.search(r"(?m)^%s\s*=" % gone, trim_src),
+                              "%s came back; if the rate rule is being restored it needs a "
+                              "feasibility argument, because a one-read HANDOFFS.md holds ~4 "
+                              "records and the old rule demanded 30 of headroom" % gone)
+        self.assertEqual(md.READ_CAP_BYTES, int(md.READ_CAP_TOKENS * md.MIN_BYTES_PER_TOKEN))
 
     def test_budget_is_parsed_from_the_product_form(self):
         """THE TRAP THIS TEST EXISTS FOR: the trimmer writes `DEFAULT_BUDGET_BYTES = 64 * 1024`,
@@ -4100,58 +4220,57 @@ class TestS38TrimTriggerRow(unittest.TestCase):
         nothing checks that it says anything useful. It must name the FILE it was computed
         against (a generic noun in this position once misdirected an adopter) and must not name
         a command the adopter does not have."""
-        p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(40)},
-                       archive="CHANGELOG-through-2025-12-31.md")
-        (p / "CHANGELOG.md").write_text(
-            (p / "CHANGELOG.md").read_text() + self._entries(25, start=40, body=45))
-        self._commit(p, "grow")
+        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
 
         descs, trim_metrics = self._descs(p)
         self.assertFalse(trim_metrics["tool_present"],
                          "fixture check: the trimmer must be absent, or this is the other branch")
-        self.assertTrue(descs, "the absent branch must still speak when the line metric fires")
+        self.assertTrue(descs, "the absent branch must still speak when the read metric fires")
         joined = "\n".join(descs)
         self.assertIn("CHANGELOG.md", joined, "the advisory must name the file it measured")
         self.assertNotIn("python3", joined,
                          "the absent branch must not name a command the adopter cannot run")
         self.assertNotIn("`", joined)
 
-    def test_a_ledger_neither_half_could_measure_is_disclosed(self):
-        """Decision D4 -- a 0 from an unread source must not be reported as a clean state. The
-        state that actually meets that description is a watched ledger about which NEITHER half
-        spoke: no archive, so the rate has no baseline, and no trimmer, so no budget. Then the
-        file is watched in name only and the silence is the finding.
+    def test_the_silent_watched_ledger_state_can_no_longer_OCCUR(self):
+        """WHAT THIS REPLACED. Two tests used to guard a `low` advisory -- "watched but
+        unmeasured" -- that fired where NEITHER half spoke: no archive, so the RATE had no
+        baseline, and no trimmer, so no budget. Decision D4 forbids reporting a 0 from an unread
+        source as a clean state, and that was the state which met the description.
 
-        An earlier version fired whenever the BYTE half alone was unavailable and claimed "only
-        the line metric answered". That sentence is false in the commonest adopter state, and it
-        put a permanent unactionable row on every repo in the fleet over a budget no distributed
-        file has ever named."""
+        Phase B removed the STATE, not just the row, so the honest assertion is that the
+        conjunction cannot arise: the read half is a LEVEL and answers from the file's own size,
+        with no git history and no trimmer installed. This fixture is the exact repo the old
+        advisory fired on -- day-one adopter, no archive, no tool -- and the scanner now has a
+        verdict for it.
+
+        THE DELETED ROW MUST ALSO STAY DELETED. Narrowing it to the byte half alone (fire whenever
+        the budget is unknown) would put a permanent unactionable row on every repo in the fleet
+        over a budget no distributed file has ever named -- an early draft did exactly that, and
+        the conjunction was the fix for it. Asserted, because restoring "half" of a deleted guard
+        is the likeliest way this comes back."""
         p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(6)})
         descs, trim_metrics = self._descs(p)
-        self.assertFalse(trim_metrics["tool_present"])
+        self.assertFalse(trim_metrics["tool_present"], "fixture: no trimmer")
+        self.assertIsNone(md._newest_archive_sha(p, "CHANGELOG.md"), "fixture: no archive")
         led = [l for l in trim_metrics["ledgers"] if l["path"] == "CHANGELOG.md"][0]
-        self.assertIsNone(led["headroom"], "fixture: the rate must have no baseline here")
-        self.assertIsNone(led["byte_fires"], "fixture: the budget must be unknown here")
-        self.assertEqual(sum("watched but unmeasured" in d for d in descs), 1,
-                         "said once per repo, and said at all: %r" % descs)
-        joined = "\n".join(descs)
-        self.assertIn("CHANGELOG.md", joined, "the advisory must name the file")
-        self.assertIn("no prior archive", joined,
-                      "the LINE half's abstention reason must reach a consumer, not just the "
-                      "metrics dict -- it is the half that guards silent truncation")
+        self.assertIsNone(led["byte_fires"], "fixture: the budget really is unknown here")
+        self.assertIn("read_fires", led, "the read half must still have spoken")
+        self.assertIs(led["read_fires"], False)
+        self.assertFalse([d for d in descs if "watched but unmeasured" in d],
+                         "the advisory guarded a state that can no longer occur: %r" % descs)
+        self.assertFalse([d for d in descs if "unmeasured" in d or "abstain" in d], descs)
 
-    def test_a_ledger_the_rate_could_measure_gets_no_abstention_row(self):
-        """The control, and the fleet-noise fix. When the rate metric answered, the dashboard has
-        said something about the file, and a second row announcing that the other half is
-        unavailable is noise an adopter cannot act on -- no distributed file names a byte budget
-        (that is S40) and no adopter can obtain the trimmer (that is S39')."""
-        p = self._exact(base_lines=800, base_records=10, live_lines=1000, live_records=13)
+    def test_a_measurable_ledger_under_both_thresholds_says_nothing(self):
+        """The control for the test above, and the fleet-noise property it protects. A ledger the
+        scanner CAN measure and which is under both thresholds must produce no row at all -- not a
+        reassuring one. Without this, deleting the advisory could be "passed" by a scanner that
+        had simply stopped emitting anything."""
+        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES - 2)
         descs, trim_metrics = self._descs(p)
-        self.assertFalse(trim_metrics["tool_present"])
         led = [l for l in trim_metrics["ledgers"] if l["path"] == "CHANGELOG.md"][0]
-        self.assertIsNotNone(led["headroom"], "fixture: the rate must answer here")
-        self.assertIsNone(led["byte_fires"])
-        self.assertFalse([d for d in descs if "watched but unmeasured" in d], descs)
+        self.assertFalse(led["fires"])
+        self.assertEqual(descs, [], "a quiet ledger gets no row: %r" % descs)
 
     def test_unreadable_budget_is_not_reported_as_an_absent_tool(self):
         """An installed trimmer whose budget constant cannot be parsed is a DIFFERENT finding
@@ -4162,49 +4281,62 @@ class TestS38TrimTriggerRow(unittest.TestCase):
             "methodology_trim.py": 'TRIM_VERSION = "9.9.9"\nDEFAULT_BUDGET_BYTES = later()\n',
         }, archive="CHANGELOG-through-2025-12-31.md")
         descs, trim_metrics = self._descs(p)
-        self.assertTrue(trim_metrics["tool_present"])
-        self.assertIsNone(trim_metrics["budget_bytes"])
-        joined = "\n".join(descs)
-        self.assertIn("could not be read", joined)
-        self.assertNotIn("is not installed", joined)
+        # The DISTINCTION is what this test is for, and Phase B moved where it is observable: the
+        # advisory that used to carry it guarded a state that can no longer occur and was deleted,
+        # so the assertion is now on the metrics dict, which is what the HTML card and
+        # dashboard_history.jsonl both read. `tool_present` True with `budget_bytes` None is a
+        # different finding from `tool_present` False, and conflating them once told an operator
+        # looking straight at an installed tool that it was not there.
+        self.assertTrue(trim_metrics["tool_present"], "an installed tool must read as installed")
+        self.assertIsNone(trim_metrics["budget_bytes"], "and its unparseable budget as unknown")
+        self.assertEqual(trim_metrics["tool_version"], "9.9.9",
+                         "the version parsed, so 'absent' would be plainly wrong here")
+        absent = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(6)})
+        _d, absent_metrics = self._descs(absent)
+        self.assertFalse(absent_metrics["tool_present"],
+                         "control: the OTHER finding must be distinguishable, or the pair above "
+                         "asserts nothing")
+        self.assertNotIn("is not installed", "\n".join(descs))
 
     # --- §1.3's owed agreement test -------------------------------------------------------------
 
-    def test_headroom_agrees_with_a_real_check_run(self):
-        """§1.3's owed test. The two operands are genuinely independent: the left is computed by
-        this module from the file and git, the right is parsed out of a real subprocess run of
-        the trimmer. Neither is derived from the other, so this can fail -- and it does under
-        every one of the three mutations recorded in the session's close-out (wrong archive
-        boundary, looser record grammar on a fenced fixture, fence-blind counting)."""
+    def test_read_verdict_agrees_with_a_real_check_run(self):
+        """§1.3's owed agreement test, re-pointed by Phase B onto the metric that replaced the
+        rate. The two operands stay genuinely independent -- the left is computed by this module
+        from `stat()`, the right is parsed out of a real subprocess run of the OTHER tool, which
+        measures `len(text.encode())` -- so this can fail, and it fails under any drift in either
+        the measurement or the threshold.
+
+        BOTH halves are compared on purpose. Agreeing on the SIZE while disagreeing about the CAP
+        would leave the reporter and the remedy pointing at different cliffs, which is the exact
+        failure the original pin was written against."""
         trim_metrics = md.collect_trim_metrics(
             self.REPO, md.collect_file_metrics(self.REPO), role="framework")
-        measured = {l["path"]: l["headroom"] for l in trim_metrics["ledgers"]}
+        measured = {l["path"]: l for l in trim_metrics["ledgers"]}
         self.assertTrue(measured, "fixture check: the canonical repo must expose trimmable "
                                   "ledgers, or nothing is compared")
-        # VACUITY GUARD. `assertTrue(measured)` only proves the dict is non-empty; if every
-        # headroom were None the loop below would take the abstain branch every time and this
-        # test would pass having compared no numbers at all. At least one real numeric
-        # comparison must happen, and it is counted rather than hoped for.
+        # VACUITY GUARD, kept from the version this replaced. A loop that silently compares
+        # nothing passes; the comparisons are counted rather than hoped for.
         compared = 0
-        self.assertTrue(any(v is not None for v in measured.values()),
-                        "fixture check: at least one ledger must yield a NUMBER, or the "
-                        "agreement test compares nothing: %r" % measured)
-        for rel, mine in measured.items():
+        for rel, led in measured.items():
             proc = subprocess.run(
                 ["python3", TRIM_PY, "--file", rel, "--check"],
                 cwd=str(self.REPO), capture_output=True, text=True, timeout=120)
-            m = re.search(r"\[TRIGGER_LINES\] line headroom (-?\d+) record", proc.stdout)
-            if m is None:
-                self.assertIn("[LINE_METRIC_ABSTAINS]", proc.stdout,
-                              "unexpected --check output for %s: %s" % (rel, proc.stdout))
-                self.assertIsNone(mine, "the trimmer abstained on %s; so must this module" % rel)
-                continue
-            self.assertEqual(mine, int(m.group(1)),
-                             "displayed headroom for %s must equal --check's" % rel)
+            m = re.search(r"\[TRIGGER_READ\] ([\d,]+) B against a ([\d,]+) B one-read cap",
+                          proc.stdout)
+            self.assertIsNotNone(
+                m, "unexpected --check output for %s: %s" % (rel, proc.stdout))
+            self.assertEqual(led["bytes"], int(m.group(1).replace(",", "")),
+                             "displayed size for %s must equal --check's" % rel)
+            self.assertEqual(md.READ_CAP_BYTES, int(m.group(2).replace(",", "")),
+                             "the reporter and the remedy must agree where the cliff is")
+            self.assertEqual(led["read_fires"],
+                             led["bytes"] > int(m.group(2).replace(",", "")),
+                             "the displayed verdict for %s must follow from the two numbers "
+                             "it displays" % rel)
             compared += 1
         self.assertGreaterEqual(compared, 1,
-                                "no numeric agreement was actually asserted (%d ledgers, all "
-                                "abstaining)" % len(measured))
+                                "no agreement was actually asserted (%d ledgers)" % len(measured))
 
     # --- the record counter, at the two points the live repo does NOT discriminate --------------
 
@@ -4442,12 +4574,13 @@ class TestS38TrimTriggerRow(unittest.TestCase):
         (p / "CHANGELOG.md").write_text("# Changelog\n\n" + self._entries(8))
         self._commit(p, "add the ledger after the shard")
 
+        # Asserted on the DETECTOR directly. Phase B removed this function's production consumer
+        # (see its comment in the scanner), so routing the assertion through collect_all would now
+        # prove nothing about it -- the very shape of vacuity this suite keeps catching.
         self.assertIsNone(md._newest_archive_sha(p, "CHANGELOG.md"))
         led = [l for l in md.collect_all(p)["trim"]["ledgers"]
                if l["path"] == "CHANGELOG.md"][0]
-        self.assertIsNone(led["headroom"])
-        self.assertIn("no prior archive", led["abstains"])
-        self.assertFalse(led["line_fires"])
+        self.assertFalse(led["read_fires"], "and the read half answers regardless, as it must")
 
     def test_git_show_returns_none_for_a_missing_blob(self):
         """Pinned directly, because the shrink filter now rejects most ways of reaching it
@@ -4529,18 +4662,21 @@ class TestS38TrimTriggerRow(unittest.TestCase):
 
     # --- abstention and gating ------------------------------------------------------------------
 
-    def test_no_prior_archive_abstains_rather_than_reporting_a_slope(self):
-        """Every adopter on day one is in this state. A rate with no baseline has no value, and
-        computing one against an empty sha silently succeeds against the index -- a plausible
-        wrong number instead of an error."""
+    def test_no_prior_archive_still_yields_a_verdict(self):
+        """Every adopter on day one is in this state, and it is the case Phase B most changes.
+        A RATE with no baseline had no value and had to abstain out loud -- which meant the half
+        guarding truncation said nothing at all on a brand-new repo. A LEVEL reads the file's own
+        size, so day one is answerable like any other day."""
         p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(6)})
         trim_metrics = md.collect_all(p)["trim"]
         led = [l for l in trim_metrics["ledgers"] if l["path"] == "CHANGELOG.md"]
         self.assertEqual(len(led), 1)
-        self.assertIsNone(led[0]["headroom"])
-        self.assertIn("no prior archive", led[0]["abstains"])
-        self.assertFalse(led[0]["line_fires"],
-                         "an abstaining rate must not be read as a firing one")
+        self.assertIsNone(md._newest_archive_sha(p, "CHANGELOG.md"),
+                          "fixture: there must be no archive baseline, or this proves nothing")
+        self.assertIsNotNone(led[0]["read_fires"], "the read half must answer without a baseline")
+        self.assertFalse(led[0]["read_fires"], "and this small fixture is under the cap")
+        self.assertNotIn("abstains", led[0],
+                         "abstention was the rate's machinery and went with it")
 
     def test_non_adopter_is_never_told_about_its_changelog(self):
         """The same gate the D4(b) risk uses. A project that never adopted the methodology keeps
@@ -4590,22 +4726,23 @@ class TestS38TrimTriggerRow(unittest.TestCase):
                          "fixture: baseline blob record count")
         return p
 
-    def test_headroom_exactly_at_the_threshold_does_not_fire(self):
-        """`headroom < 15` fires; 15 itself does not. Nothing else in this suite exercises a
-        ledger sitting exactly on the boundary, and `<` -> `<=` is precisely the mutant that
-        survived the whole suite one session ago on the read cap."""
-        p = self._exact(base_lines=800, base_records=10, live_lines=1000, live_records=13)
+    def test_read_level_exactly_at_the_cap_does_not_fire(self):
+        """`size > cap` fires; the cap itself does not. Nothing else in this class exercises a
+        ledger sitting exactly on the boundary, and `>` -> `>=` is precisely the mutant that
+        survived the whole suite one session ago on this very signal."""
+        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES)
         led = [l for l in md.collect_all(p)["trim"]["ledgers"] if l["path"] == "CHANGELOG.md"][0]
-        self.assertEqual(led["headroom"], md.TRIM_LINE_FIRE_BELOW)
-        self.assertFalse(led["line_fires"],
-                         "headroom of exactly %d must not fire" % md.TRIM_LINE_FIRE_BELOW)
+        self.assertEqual(led["bytes"], md.READ_CAP_BYTES, "fixture: exactly the cap")
+        self.assertFalse(led["read_fires"], "a file of exactly the cap still fits in one read")
+        self.assertFalse(led["refused"])
 
-    def test_headroom_one_below_the_threshold_fires(self):
-        """The control for the test above: same fixture shape, one record less of headroom."""
-        p = self._exact(base_lines=800, base_records=10, live_lines=1000, live_records=12)
+    def test_read_level_just_past_the_cap_fires(self):
+        """The control for the test above: same fixture shape, two bytes larger."""
+        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
         led = [l for l in md.collect_all(p)["trim"]["ledgers"] if l["path"] == "CHANGELOG.md"][0]
-        self.assertEqual(led["headroom"], 10)
-        self.assertTrue(led["line_fires"])
+        self.assertTrue(led["read_fires"])
+        self.assertFalse(led["refused"], "past the cap is truncation, not the hard refusal")
+        self.assertTrue(led["fires"])
 
     def test_size_exactly_at_the_budget_does_not_fire(self):
         """`size > budget` fires; equality does not. Same edge, the other metric. The fixture
@@ -4670,10 +4807,13 @@ class TestS38TrimTriggerRow(unittest.TestCase):
         self.assertEqual(sevs, {"medium"},
                          "a firing archive trigger is advisory, not a high+ finding: %r" % sevs)
 
-        p = self._repo({"CHANGELOG.md": "# Changelog\n\n" + self._entries(6)})
+        # The `low` tier went with the "watched but unmeasured" advisory Phase B deleted, so the
+        # only severity this row can now author is `medium`. Pinned from the other side: a
+        # firing ledger with no trimmer must still be advisory, never escalated.
+        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
         _d2, tm2 = self._descs(p)
-        self.assertEqual({s for s, _d in tm2["signals"]}, {"low"},
-                         "an unmeasurable ledger is disclosed at low, not escalated")
+        self.assertEqual({sev for sev, _d in tm2["signals"]}, {"medium"},
+                         "a firing archive trigger is advisory even with no tool to run")
 
     def test_the_advisory_carries_the_numbers_that_were_measured(self):
         """Swapping the byte figures between two ledgers, or printing any other headroom, left

@@ -399,16 +399,32 @@ class TestLedgerRow(unittest.TestCase):
              "findings": [{"kind": "bytes", "msg": "x"}, {"kind": "lines", "msg": "y"}]}
         self.assertEqual(cb.ledger_dimension(r)[0], "72,449 B")
 
-    def test_nothing_fired_falls_back_to_the_class(self):
+    def test_nothing_fired_falls_back_to_bytes_for_every_class(self):
+        """PHASE B CHANGED THIS EXPECTATION, and the change is the assertion. A read-mandated file
+        used to fall back to LINES because that was the unit the surrounding trim rule was written
+        in. The rule is byte-denominated now, and the cap it proxies always was token-denominated,
+        so lines were the figure least able to explain the verdict -- across these same files the
+        B/line spread is 8.6x against 1.33x for B/token. The class no longer selects a dimension
+        at all; bytes are the fallback for everyone."""
         self.assertEqual(cb.ledger_dimension({**self.OVER_BYTES, "findings": [],
-                                              "status": "ok"}), ("359 ln", "1,200 ln"))
+                                              "status": "ok"}), ("72,449 B", "65,536 B"))
         self.assertEqual(cb.ledger_dimension({"class": "resident", "bytes": 900,
                                               "lines": 9, "max_bytes": 1000,
                                               "findings": []}), ("900 B", "1,000 B"))
 
     def test_a_non_size_finding_does_not_hijack_the_dimension(self):
+        """Unchanged in intent, re-pointed by Phase B: a `protected` finding still must not select
+        a dimension, so the row falls through to the default -- which is now bytes. Paired with
+        the line case below, so this cannot pass merely because everything reports bytes."""
         r = {**self.OVER_BYTES, "findings": [{"kind": "protected", "msg": "x"}]}
-        self.assertEqual(cb.ledger_dimension(r)[0], "359 ln")
+        self.assertEqual(cb.ledger_dimension(r)[0], "72,449 B")
+
+    def test_a_line_finding_still_selects_lines(self):
+        """The control that keeps the test above honest. Phase B moved the DEFAULT, not the
+        dispatch: a fired `lines` ceiling must still be reported in lines, or the row would once
+        again name a ceiling that did not fire -- the exact defect ledger_dimension exists for."""
+        r = {**self.OVER_BYTES, "findings": [{"kind": "lines", "msg": "x"}]}
+        self.assertEqual(cb.ledger_dimension(r), ("359 ln", "1,200 ln"))
 
     def test_an_undeclared_ceiling_renders_rather_than_crashing(self):
         """The pre-change expression formatted max_bytes unconditionally, so a resident

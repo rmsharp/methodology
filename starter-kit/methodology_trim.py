@@ -47,7 +47,16 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.3.0"   # 1.3.0: BL-41 — the shard name is derived from a RECORD DATE while
+TRIM_VERSION = "1.4.0"   # 1.4.0: Phase B — the read cap is RE-DENOMINATED from lines onto bytes,
+                         # and the line RATE is removed rather than re-tuned. Two finding codes
+                         # change on the CLI (TRIGGER_LINES and LINE_METRIC_ABSTAINS are gone,
+                         # TRIGGER_READ replaces them), `stops()` loses its rate arms and
+                         # LINE_FIRE_BELOW/LINE_STOP_ABOVE are deleted, so an adopter's next trim
+                         # can cut to a different depth than it would have yesterday. New finding
+                         # code and changed behaviour on a distributed tool: MINOR, not patch.
+                         # READ_CAP_LINES' third job (seed plausibility) keeps the value 2000
+                         # under its own name, SEED_PLAUSIBLE_MAX_LINES — no behaviour change.
+                         # 1.3.0: BL-41 — the shard name is derived from a RECORD DATE while
                          # the cut is POSITIONAL, so it is NOT injective: whenever two records share
                          # a date, distinct cuts derive one name. The write-once rule then refused
                          # every admissible cut, and the tool's own advice ("Disambiguate with
@@ -89,14 +98,47 @@ TRIM_VERSION = "1.3.0"   # 1.3.0: BL-41 — the shard name is derived from a REC
                          # a new exit status on a distributed tool, so: minor, not patch.
 
 # --- Tunables, all of them judgment, all of them labelled as such in the design ---------------
-READ_CAP_LINES = 2000          # line-denominated PROXY for the agent `Read` cap, which is itself
-                               # TOKEN-denominated. Harness behaviour, not a repo property. Do NOT
-                               # re-tune alone: LINE_FIRE_BELOW/LINE_STOP_ABOVE below are records
-                               # of headroom TO this number. See docs/planning/
-                               # read-cap-premise-correction-plan.md (Phase B) and its Appendix A.
+# THE AGENT READ CAP, RE-DENOMINATED — Phase B, 2026-08-26. The cap is TOKEN-denominated and
+# always was. The 2,000-line proxy that stood here was wrong on the axis, and measured across the
+# fleet it was STRICTLY DOMINATED: over 18 watched ledgers in 5 repos it fired on 3 and stayed
+# silent on 8 that a byte threshold at ANY point in the measured ratio band catches, while
+# catching nothing a byte threshold misses. So the axis choice does not rest on picking the right
+# constant. It is NOT published as one opaque number — a number goes stale when the harness moves
+# and the command does not — but DERIVED from two inputs that each carry their own re-measurement.
+READ_CAP_TOKENS = 25_000       # [M] stated verbatim by the tool itself: "exceeds maximum allowed
+                               # tokens (25000)". Harness behaviour, not a repo property.
+MIN_BYTES_PER_TOKEN = 2.27     # [M] the FLOOR of the band 2.2705–3.0300 B/token measured over 9
+                               # real markdown files in 5 repos. The floor and not the mean,
+                               # because a guard that must not stay silent on a truncating file
+                               # has to assume the densest content it will meet. Deliberately NOT
+                               # context_budget.py's `bytes_per_token`: that is calibrated on
+                               # OPENING CONTEXT against CLAUDE.md's size, a different quantity —
+                               # and re-running its own --calibrate today returns 2.46 at R² 0.59,
+                               # a value that predicts FRAMEWORK_LEARNINGS.md truncates when a
+                               # probe shows it comes back whole. Re-derive with Appendix A.
+READ_CAP_BYTES = int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN)   # 56,750 B — computed, never written
+READ_REFUSE_BYTES = 256 * 1024 # [M] a SECOND and HARDER boundary, and it is NOT truncation: past
+                               # it a default Read is refused outright with ZERO content —
+                               # "File content (256.1KB) exceeds maximum allowed size (256KB)".
+                               # So "truncation is ordered top-down, and the prefix a session
+                               # needs still arrives" is true only BETWEEN the two boundaries.
+                               # Past this one nothing arrives at all, front matter included.
+                               # 5 of the 18 watched fleet ledgers are already past it.
 DEFAULT_BUDGET_BYTES = 64 * 1024   # design §5.4: calibrated to the three sizes this repo operated at
-LINE_FIRE_BELOW = 15           # design §5.2, the published rate rule, kept verbatim
-LINE_STOP_ABOVE = 30
+
+# LINE_FIRE_BELOW / LINE_STOP_ABOVE ARE GONE, DELIBERATELY. This note is the record of why, so a
+# later session re-adds them on purpose or not at all. They were "archive when headroom falls
+# below 15 RECORDS; cut until it is back above 30" — denominated in records of headroom TO the
+# cap. Measured at Phase B: a one-read CHANGELOG.md holds 20.9 records and a one-read HANDOFFS.md
+# holds 4.3, so a rule demanding 30 records of headroom is UNSATISFIABLE ON BOTH AT EVERY HONEST
+# CAP, and `choose_cut` falls through to `return 1` — retaining ONE record with every test in the
+# repo still green. It only ever looked satisfiable because 2,000 lines granted CHANGELOG.md 2.32×
+# and HANDOFFS.md 8.75× more capacity than a real read. design §5.2 states the reason itself: the
+# units-of-headroom form is well-formed only while the cap "sits far above normal operating size",
+# and at operating size that design prescribes "a level with hysteresis, not a rate — the form
+# that terminates". `byte_fires` + BYTE_STOP_FRACTION below is already that form, so the read cap
+# now takes it too. Re-deriving the two thresholds was considered and rejected on the measurement
+# rather than on taste; the arithmetic is in read-cap-premise-correction-plan.md, Phase B.
 BYTE_STOP_FRACTION = 0.5       # hysteresis — stops a trim re-firing on the next record
 SRF_RED = 1.00                 # plan §3.3 H3: at or above this, a reset is the wrong move
 ARCHIVE_DIR = "docs/archive"
@@ -110,6 +152,16 @@ SHARD_SUFFIX_MAX = 99          # BL-41 — bound on collision disambiguation; pa
 # tells you your ledger grammar is wrong — and a budget set below 12,124 B would declare the seed
 # we ship to be unreadable. The two numbers may drift apart; nothing should couple them.
 SEED_PLAUSIBLE_MAX_BYTES = 64 * 1024
+SEED_PLAUSIBLE_MAX_LINES = 2000
+# ^ THE VALUE IS UNCHANGED AND THE NAME IS NEW, and that is the whole point (Phase B, J3). This
+# line count used to be READ_CAP_LINES, borrowed. But the question here is not "does one Read
+# deliver this file?" — it is "is a file THIS LONG plausibly a fresh, empty seed, or is my grammar
+# wrong?" Nothing about truncation bears on it. Sharing the name meant a correction made for the
+# reporter's reasons would silently move the REFUSAL boundary: at a corrected cap, a record-less
+# file of 700–2,000 lines would newly refuse with GRAMMAR_MISMATCH instead of reporting NO_RECORDS,
+# and no test in this repo would have caught it. The byte disjunct beside it already covers "big
+# file"; this one uniquely covers LONG BUT SMALL — say 3,000 lines averaging 20 B. Re-tune it, if
+# ever, on seed plausibility and on nothing else.
 
 
 # =============================================================================================
@@ -695,32 +747,35 @@ def lines_at(repo, sha, relpath):
 
 
 # =============================================================================================
-# The trigger — two metrics, because there are two distinct failure modes.
+# The trigger — two metrics, because there are two distinct failure modes. BOTH ARE NOW LEVELS
+# WITH HYSTERESIS on the same axis (bytes), and that is the Phase B change: what used to be a
+# line-denominated RATE is now a byte-denominated LEVEL.
 #
-#   Lines bound HOW MUCH OF THE FILE ONE READ DELIVERS. They are a proxy, on the wrong axis:
-#   the cap is TOKEN-denominated, and truncation is ANNOUNCED, not silent — an over-cap read
-#   returns a PARTIAL-view banner naming the delivered span, the true length and the cap, and
-#   an explicit over-cap line range errors outright, returning nothing. The claim that stood
-#   here — "a Read past the cap returns no error and no marker" — was false in both halves.
-#   Re-measure with Appendix A of docs/planning/read-cap-premise-correction-plan.md; nothing
-#   in this repo can falsify it, because nothing here can invoke the agent's Read tool.
+#   READ DELIVERY — does one `Read` still return this file? The cap is TOKEN-denominated
+#   (~25,000), truncation is ANNOUNCED rather than silent, and there is a SECOND boundary at
+#   256 KiB past which a default read is REFUSED with zero content. READ_CAP_BYTES converts the
+#   token cap at the densest content measured, so the guard is conservative by construction.
+#   Re-measure with Appendix A of docs/planning/read-cap-premise-correction-plan.md; nothing in
+#   this repo can falsify it, because nothing here can invoke the agent's Read tool.
 #
-#   AND THE METRIC MEASURES A CONDITION IT MAY NOT REMEDY (BL-52, open). Truncation is ordered
-#   top-down and these ledgers are newest-on-top, so the records a cut removes are ones a
-#   whole-file read was NOT DELIVERING ANYWAY: the delivered prefix is the same before and
-#   after the trim, and what changes is that the reader stops being WARNED. Do not read this
-#   metric as an established argument for cutting. The BYTE metric below is a separate claim
-#   and is not covered by that caveat.
-#   Bytes protect against CONTEXT TAX (G1, the operator's stated goal).
+#   AND THE METRIC MEASURES A CONDITION IT MAY NOT REMEDY (BL-52, open, and Phase B did not close
+#   it). Truncation is ordered top-down and these ledgers are newest-on-top, so between the two
+#   boundaries the records a cut removes are ones a whole-file read was NOT DELIVERING ANYWAY:
+#   the delivered prefix is the same before and after, and what changes is that the reader stops
+#   being WARNED. Two things narrow that caveat rather than dissolve it. Past READ_REFUSE_BYTES
+#   there IS no delivered prefix, so a cut back under it turns nothing into something. And below
+#   the cap the whole file is delivered and every byte is paid for, so a cut moves a file from
+#   truncated to fully delivered. The caveat bites hardest well past the cap and not at all near
+#   it. Do not read this metric as a settled argument for cutting; do not read it as no argument.
 #
-# The two take different FORMS and transplanting one onto the other does not work: "cut until back
-# above 30" is unreachable on the byte metric at EVERY budget, even trimming to a single record.
-# =============================================================================================
-
+#   CONTEXT TAX — G1, the operator's stated goal. Bytes, against a per-file budget. A separate
+#   claim, not covered by the caveat above, and untouched by Phase B.
+#
+# The two are deliberately NOT deduplicated here even though they now share an axis: they answer
+# different questions and their thresholds have unrelated provenance. Whether the dashboard should
+# still report them as two rows is S38's residual 1, still open (Phase C).
 class Trigger:
     def __init__(self):
-        self.line_headroom = None
-        self.line_abstains = None      # reason string when the rate cannot be computed
         self.size_bytes = 0
         self.budget = DEFAULT_BUDGET_BYTES
         self.srf = None                # (value, boundary_sha) for the most recent archive
@@ -728,8 +783,8 @@ class Trigger:
         self.srf_abstains = None
 
     @property
-    def line_fires(self):
-        return self.line_headroom is not None and self.line_headroom < LINE_FIRE_BELOW
+    def read_fires(self):
+        return self.size_bytes > READ_CAP_BYTES
 
     @property
     def byte_fires(self):
@@ -737,17 +792,24 @@ class Trigger:
 
     @property
     def fires(self):
-        return self.line_fires or self.byte_fires
+        return self.read_fires or self.byte_fires
 
-    def stops(self, size_bytes, line_count, de, dl):
-        """Both stop conditions must hold. Fire if EITHER fires; stop only when BOTH stop."""
+    def stops(self, size_bytes, unused_line_count=None, unused_de=None, unused_dl=None):
+        """Both stop conditions must hold. Fire if EITHER fires; stop only when BOTH stop.
+
+        Both are LEVELS now, so both terminate — which is the property the deleted line rate did
+        not have. `byte_ok` is the tighter of the two at the shipped budget (32,768 B against
+        READ_CAP_BYTES' 56,750), so today it is what binds; `read_ok` is written out anyway rather
+        than left implicit, because `--budget-bytes` is an adopter-facing knob and a raised budget
+        must not quietly let a file stop above the read cap.
+
+        When this returns False at EVERY retained count, `choose_cut` still falls through to
+        `return 1` — but that now means what it says: trimming genuinely cannot satisfy the goal,
+        e.g. the front matter alone is over. It is no longer reachable by a rule that was
+        unsatisfiable by construction, which is what the line rate had become."""
         byte_ok = size_bytes <= int(self.budget * BYTE_STOP_FRACTION)
-        if de and dl and de > 0 and dl > 0:
-            headroom = (READ_CAP_LINES - line_count) * de // dl
-            line_ok = headroom > LINE_STOP_ABOVE
-        else:
-            line_ok = True         # the rate abstains; it cannot veto a stop it cannot compute
-        return byte_ok and line_ok
+        read_ok = size_bytes <= READ_CAP_BYTES
+        return byte_ok and read_ok
 
 
 def archive_events(repo, spec):
@@ -793,42 +855,8 @@ def evaluate_trigger(repo, path, spec, zones, budget, result):
     t.budget = budget
     text = read_text(path)
     t.size_bytes = len(text.encode("utf-8"))
-    line_count = text.count("\n")
-    rel = path.relative_to(repo).as_posix()
 
     events = archive_events(repo, spec)
-
-    # --- the line rate, re-derived from the file every read, abstaining out loud ---------------
-    de = dl = None
-    if not events:
-        t.line_abstains = "no prior archive of this ledger — the rate has no baseline"
-    else:
-        split = events[-1][0]
-        base_lines = lines_at(repo, split, rel)
-        base_text = git_bytes(repo, "show", "%s:%s" % (split, rel))
-        if base_lines is None or base_text is None:
-            t.line_abstains = "the baseline blob %s:%s is unreadable" % (split[:7], rel)
-        else:
-            base_zones = classify_zones(base_text.decode("utf-8"), spec, Result(path))
-            # classify_zones returns None on a REFUSAL — that is not a count of zero. Treating it
-            # as zero makes `de` the whole current record count and prints a confidently inflated
-            # headroom for a baseline the tool would itself refuse to read.
-            if base_zones is None:
-                t.line_abstains = ("the baseline blob %s:%s does not classify under this ledger's "
-                                   "declared grammar — abstaining rather than assuming it held zero "
-                                   "records" % (split[:7], rel))
-                base_records = None
-            else:
-                base_records = len(base_zones.starts)
-            dl = line_count - base_lines
-            de = None if base_records is None else len(zones.starts) - base_records
-            if de is not None and de > 0 and dl > 0:
-                t.line_headroom = (READ_CAP_LINES - line_count) * de // dl
-            elif de is None:
-                pass                                   # already abstaining, with a stated reason
-            else:
-                t.line_abstains = ("fewer than one record written since the last split "
-                                   "(%s records, %s lines)" % (de, dl))
 
     # --- SRF: reported for BOTH boundaries, because they differ by 3x on the same file ---------
     if not events:
@@ -843,7 +871,7 @@ def evaluate_trigger(repo, path, spec, zones, budget, result):
         t.srf_largest = (srf(largest[1], largest[2]), largest[0])
 
     result.plan_trigger = t
-    return t, de, dl
+    return t
 
 
 # =============================================================================================
@@ -867,7 +895,7 @@ class TrimPlan:
         self.pointer_block = None
 
 
-def choose_cut(zones, spec, trigger, de, dl, explicit, spec_date, result):
+def choose_cut(zones, spec, trigger, explicit, spec_date, result):
     """Pick how many records to retain. Cuts are by POSITION in file order, never by sorting on a
     parsed key: this ledger interleaves two independent S<N> sequences that collide, and a calendar
     day straddles the existing cut (design §2.3)."""
@@ -892,7 +920,7 @@ def choose_cut(zones, spec, trigger, de, dl, explicit, spec_date, result):
 
     for k in range(n - 1, 0, -1):
         b, l = resulting(k)
-        if trigger.stops(b, l, de, dl):
+        if trigger.stops(b):
             return k
     return 1
 
@@ -1603,7 +1631,8 @@ def classify_empty(path, text, spec, result):
     # is stated rather than hidden: an adopter who adds a dated `##` heading or a dated table row to
     # their own front matter, while holding no records, gets a loud false refusal. Loud and wrong is
     # recoverable; quiet and wrong is what this whole finding is about.
-    if not (size_bytes > SEED_PLAUSIBLE_MAX_BYTES or line_count > READ_CAP_LINES or evidence):
+    if not (size_bytes > SEED_PLAUSIBLE_MAX_BYTES or line_count > SEED_PLAUSIBLE_MAX_LINES
+            or evidence):
         result.add("NO_RECORDS",
                    "%s holds zero records under its declared grammar — nothing to archive. (A "
                    "freshly seeded ledger looks exactly like this, and must not be trimmed.)"
@@ -1680,14 +1709,16 @@ def evaluate(path, opts, result):
         return result
 
     budget = opts.budget_bytes or spec.budget_bytes
-    trigger, de, dl = evaluate_trigger(repo, path, spec, zones, budget, result)
+    trigger = evaluate_trigger(repo, path, spec, zones, budget, result)
     result.trigger = trigger
 
-    if trigger.line_abstains:
-        result.add("LINE_METRIC_ABSTAINS", trigger.line_abstains)
-    else:
-        result.add("TRIGGER_LINES",
-                   "line headroom %d record(s) (fires below %d)" % (trigger.line_headroom, LINE_FIRE_BELOW))
+    result.add("TRIGGER_READ",
+               "%s B against a %s B one-read cap (%s tokens x %s B/token, the measured floor)%s" %
+               ("{:,}".format(trigger.size_bytes), "{:,}".format(READ_CAP_BYTES),
+                "{:,}".format(READ_CAP_TOKENS), MIN_BYTES_PER_TOKEN,
+                "" if trigger.size_bytes <= READ_REFUSE_BYTES else
+                " — AND PAST THE %s B HARD REFUSAL: a default Read of this file returns NO CONTENT "
+                "AT ALL, front matter included" % "{:,}".format(READ_REFUSE_BYTES)))
     result.add("TRIGGER_BYTES", "%s B against a %s B budget" %
                ("{:,}".format(trigger.size_bytes), "{:,}".format(budget)))
     if trigger.srf_abstains:
@@ -1735,7 +1766,7 @@ def evaluate(path, opts, result):
         return result
 
     records = zones.records()
-    k = choose_cut(zones, spec, trigger, de, dl, opts.cut, repo, result)
+    k = choose_cut(zones, spec, trigger, opts.cut, repo, result)
     if k is None:
         return result
     if k <= 0:

@@ -371,23 +371,30 @@ def short(path, width=34):
 def ledger_dimension(r):
     """(size, ceiling) for one ledger row — reported in the dimension that ACTUALLY FIRED.
 
-    A read-mandated file is normally reported in lines, because that is the unit the
-    surrounding trim rule is written in -- NOT because the cap comes in lines. Measured,
-    it does not: the agent read cap is TOKEN-denominated, and the line ceiling is a proxy
-    for it (docs/planning/read-cap-premise-correction-plan.md, Appendix A). But its BYTE
-    ceiling can be the one that fires, and a
-    row reading `359 ln / 1,200 ln  over` then points at a ceiling that did not fire,
-    while the 72,449 B behind the verdict appears only in the prose further down. A
-    ledger row that cannot show the figure behind its own verdict is precisely the
-    read-past-it failure this tool exists to interrupt.
+    A read-mandated file now defaults to BYTES, and that changed at Phase B (2026-08-26).
+    It defaulted to lines because lines were the unit the surrounding trim rule was written
+    in -- never because the cap came in lines. It does not: the agent read cap is
+    TOKEN-denominated, and tokens track bytes, not lines. Measured across the fleet, the
+    B/line spread over these very files is 8.6x against 1.33x for B/token, so a line figure
+    is the one least able to explain a read-cap verdict. The trim rule has since been
+    re-denominated onto bytes as well (methodology_trim.py READ_CAP_BYTES), so the default
+    here and the unit the rule is written in agree again -- on the other axis.
+    (Reproduction: docs/planning/read-cap-premise-correction-plan.md, Appendix A.)
 
-    The first size finding decides the dimension; with nothing fired, the file's class
-    decides. `bytes` is appended before `lines` in measure_file, so a file over both
-    reports bytes.
+    The BYTE ceiling was already able to be the one that fires, and a row reading
+    `359 ln / 1,200 ln  over` then pointed at a ceiling that did not, while the 72,449 B
+    behind the verdict appeared only in the prose further down. A ledger row that cannot
+    show the figure behind its own verdict is precisely the read-past-it failure this tool
+    exists to interrupt.
+
+    The first size finding still decides the dimension; only the nothing-fired default
+    moved. `bytes` is appended before `lines` in measure_file, so a file over both reports
+    bytes. A `max_lines` ceiling that fires is still reported in lines -- the ceilings are
+    not being removed here, only the default when neither has fired.
     """
     fired = next((f["kind"] for f in r.get("findings", [])
                   if f["kind"] in ("bytes", "lines")), None)
-    if (fired or ("lines" if r.get("class") == "read-mandated" else "bytes")) == "lines":
+    if (fired or "bytes") == "lines":
         return (f"{r['lines']:,} ln",
                 f"{r['max_lines']:,} ln" if r.get("max_lines") else "—")
     return (f"{r['bytes']:,} B",
@@ -811,8 +818,11 @@ def selftest(root, cfg):
            "findings": [{"kind": "bytes", "msg": "x"}]}
     check("the row shows the ceiling that fired, not the class default",
           ledger_dimension(row) == ("72,449 B", "65,536 B"))
-    check("with nothing fired, a read-mandated row still reports lines",
-          ledger_dimension({**row, "findings": [], "status": "ok"}) == ("359 ln", "1,200 ln"))
+    check("with nothing fired, a read-mandated row now reports BYTES (Phase B)",
+          ledger_dimension({**row, "findings": [], "status": "ok"}) == ("72,449 B", "65,536 B"))
+    check("a LINE finding still reports lines -- only the default moved, not the dispatch",
+          ledger_dimension({**row, "findings": [{"kind": "lines", "msg": "x"}]})
+          == ("359 ln", "1,200 ln"))
     check("an undeclared ceiling renders as — rather than crashing",
           ledger_dimension({"class": "resident", "bytes": 10, "lines": 1,
                             "findings": []}) == ("10 B", "—"))

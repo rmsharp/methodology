@@ -484,26 +484,47 @@ class TestTrigger(unittest.TestCase):
         t.budget = 65536
         t.size_bytes = 200000
         self.assertTrue(t.byte_fires)
-        self.assertFalse(t.stops(40000, 100, None, None), "above half budget must not stop")
-        self.assertTrue(t.stops(32000, 100, None, None), "at or below half budget must stop")
+        self.assertFalse(t.stops(40000), "above half budget must not stop")
+        self.assertTrue(t.stops(32000), "at or below half budget must stop")
 
-    def test_the_line_metric_cannot_veto_a_stop_it_cannot_compute(self):
+    def test_the_read_cap_arm_can_stop_and_is_not_vestigial(self):
+        """`read_ok` is the looser arm at the SHIPPED budget, so a test that only exercises the
+        default budget cannot tell whether it is wired at all. Raise the budget past the read cap
+        — which `--budget-bytes` lets an adopter do — and it must be what binds."""
         t = mod.Trigger()
         t.budget = 65536
-        self.assertTrue(t.stops(1000, 50, None, None))
-        self.assertTrue(t.stops(1000, 50, 0, 0))
+        self.assertTrue(t.stops(1000), "well under both arms must stop")
+        loose = mod.Trigger()
+        loose.budget = 400000                       # half of this is 200,000 B: byte_ok alone passes
+        self.assertTrue(loose.stops(1000), "under both arms, a raised budget still stops")
+        self.assertFalse(loose.stops(mod.READ_CAP_BYTES + 1),
+                         "past the read cap must NOT stop even when the byte arm is satisfied")
+        self.assertTrue(loose.stops(mod.READ_CAP_BYTES),
+                        "exactly at the read cap must stop — the boundary is inclusive")
 
     def test_fires_if_either_metric_fires(self):
         t = mod.Trigger()
-        t.budget = 65536
-        t.size_bytes = 10
-        t.line_headroom = 3
-        self.assertTrue(t.fires, "the line metric alone must be able to fire")
+        t.budget = 10 ** 9                          # byte arm cannot fire
+        t.size_bytes = mod.READ_CAP_BYTES + 1
+        self.assertTrue(t.read_fires, "the read metric alone must be able to fire")
+        self.assertTrue(t.fires)
         t2 = mod.Trigger()
         t2.budget = 100
-        t2.size_bytes = 500
-        t2.line_headroom = 999
+        t2.size_bytes = 500                         # under the read cap, over the budget
+        self.assertLess(t2.size_bytes, mod.READ_CAP_BYTES, "control: the read arm must be quiet")
+        self.assertFalse(t2.read_fires)
         self.assertTrue(t2.fires, "the byte metric alone must be able to fire")
+
+    def test_the_read_cap_is_derived_and_not_a_written_literal(self):
+        """Phase B's structural promise: no opaque boundary is published. If someone replaces the
+        product with a hardcoded number, this fails."""
+        self.assertEqual(mod.READ_CAP_BYTES,
+                         int(mod.READ_CAP_TOKENS * mod.MIN_BYTES_PER_TOKEN))
+        self.assertFalse(hasattr(mod, "READ_CAP_LINES"),
+                         "the line-denominated cap was removed in Phase B, not renamed")
+        for gone in ("LINE_FIRE_BELOW", "LINE_STOP_ABOVE"):
+            self.assertFalse(hasattr(mod, gone),
+                             "%s was DELETED with the line arm, not re-tuned" % gone)
 
 
 # =============================================================================================
@@ -1454,11 +1475,15 @@ class TestReviewRegressions(unittest.TestCase):
         self.assertFalse(ok, "the transformed footer must still be detected in the shard")
         self.assertIn("L2_FOOTER_MOVED", r.codes)
 
-    def test_an_unclassifiable_baseline_makes_the_line_metric_abstain(self):
+    def test_the_trigger_needs_no_baseline_to_decide(self):
+        """What replaced the abstention machinery. The line RATE needed a baseline commit to
+        compute records-per-line, and abstained out loud when it could not get one — three
+        distinct abstention paths. Both arms are LEVELS now, so a fresh Trigger with no history
+        is already answerable, and there is nothing left to abstain about."""
         t = mod.Trigger()
-        self.assertIsNone(t.line_headroom)
-        self.assertTrue(t.stops(10, 10, None, None),
-                        "an abstaining rate must not veto a stop it cannot compute")
+        self.assertTrue(t.stops(10), "a level needs no baseline")
+        for gone in ("line_headroom", "line_abstains", "line_fires"):
+            self.assertFalse(hasattr(t, gone), "%s went with the line arm" % gone)
 
     def test_srf_reports_both_boundaries_and_the_refusal_uses_the_most_recent(self):
         """The design's one explicitly-labelled departure from H3. Every other fixture creates a
@@ -1647,7 +1672,7 @@ class TestGrammarMismatchFixtureControls(unittest.TestCase):
         for label, data in (("em dash", MISMATCH_EMDASH), ("table rows", MISMATCH_TABLE)):
             self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES,
                             "%s fixture must be under the byte ceiling" % label)
-            self.assertLess(len(data.splitlines()), mod.READ_CAP_LINES,
+            self.assertLess(len(data.splitlines()), mod.SEED_PLAUSIBLE_MAX_LINES,
                             "%s fixture must be under the line ceiling" % label)
 
 
@@ -1772,9 +1797,9 @@ class TestGrammarMismatch(unittest.TestCase):
         r = evaluate_text(self, "CHANGELOG.md", data)
         self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
 
-    def test_a_file_of_exactly_the_read_cap_is_NOT_refused(self):
-        data = "".join("line %04d\n" % i for i in range(mod.READ_CAP_LINES))
-        self.assertEqual(len(data.splitlines()), mod.READ_CAP_LINES, "control: exactly the cap")
+    def test_a_file_of_exactly_the_seed_plausibility_line_ceiling_is_NOT_refused(self):
+        data = "".join("line %04d\n" % i for i in range(mod.SEED_PLAUSIBLE_MAX_LINES))
+        self.assertEqual(len(data.splitlines()), mod.SEED_PLAUSIBLE_MAX_LINES, "control: exactly the ceiling")
         r = evaluate_text(self, "CHANGELOG.md", data)
         self.assertEqual(r.codes, ["NO_RECORDS"], [f.message for f in r.findings])
 
@@ -1823,7 +1848,7 @@ class TestGrammarMismatch(unittest.TestCase):
                          "control: the NEGATION must be silent, or this tests the wrong signal")
         self.assertGreater(len(probe_hits_of(data, HF)), 0, "control: the probe is the live signal")
         self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES)
-        self.assertLess(len(data.splitlines()), mod.READ_CAP_LINES)
+        self.assertLess(len(data.splitlines()), mod.SEED_PLAUSIBLE_MAX_LINES)
         r = evaluate_text(self, "HANDOFFS.md", data)
         self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
         self.assertEqual(r.exit, 3)
@@ -1844,7 +1869,7 @@ class TestGrammarMismatch(unittest.TestCase):
         self.assertEqual(probe_hits_of(data, HF), [],
                          "control: the PROBE must find nothing, or this tests the wrong signal")
         self.assertLess(len(data.encode("utf-8")), mod.SEED_PLAUSIBLE_MAX_BYTES)
-        self.assertLess(len(data.splitlines()), mod.READ_CAP_LINES)
+        self.assertLess(len(data.splitlines()), mod.SEED_PLAUSIBLE_MAX_LINES)
         r = evaluate_text(self, "HANDOFFS.md", data)
         self.assertEqual(r.codes, ["GRAMMAR_MISMATCH"], [f.message for f in r.findings])
         self.assertEqual(r.exit, 3)
@@ -1888,7 +1913,7 @@ class TestGrammarMismatch(unittest.TestCase):
         """
         for data in (MISMATCH_EMDASH, MISMATCH_TABLE):
             size_only = (len(data.encode("utf-8")) > mod.SEED_PLAUSIBLE_MAX_BYTES
-                         or len(data.splitlines()) > mod.READ_CAP_LINES)
+                         or len(data.splitlines()) > mod.SEED_PLAUSIBLE_MAX_LINES)
             self.assertFalse(size_only, "a size-only rule would report this mismatch as empty")
 
     def test_NARROWED_a_fence_blind_probe_would_refuse_our_own_shipped_seed(self):

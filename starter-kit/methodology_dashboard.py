@@ -84,7 +84,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.15.2"
+DASHBOARD_VERSION = "2.16.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -255,46 +255,73 @@ _BACKLOG_LOCATIONS = ("BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md
 # for. Separating them is ADDED POLICY: the ratified design says only that a 2,090-line .md must
 # be able to trip *a* large-file risk, and taking that literally would regress BL-5's test.
 #
-# UNIT: LINES — a PROXY, and known to be the wrong one. MEASURED: the cap is denominated in
-# TOKENS, not lines; the truncation banner names the token count and the cap itself. The ~3x
-# B/line spread this comment used to cite is real — re-measured at 74.7 B/line here against
-# 227.4 next door — but tokens track BYTES, so that evidence argues the OPPOSITE of what it was
-# written to argue: it is a single LINE threshold that is wrong for one ledger by ~3x. Bytes are
-# only a proxy too (2.42-2.66 B/token across real markdown), which is why nothing here publishes
-# a conversion. The axis is KEPT AS-IS deliberately rather than defended: re-denominating it is a
-# separate, sequenced change (docs/planning/read-cap-premise-correction-plan.md, Phase B). DO NOT
-# re-tune this value on its own — LINE_FIRE_BELOW/LINE_STOP_ABOVE in methodology_trim.py are
-# denominated in records of headroom TO this number, so correcting it alone drives choose_cut to
-# retain ONE record, with every test in the repo still green.
-# VALUE: harness behaviour, not a repo property and not taste. The justification that stood here
-# — that a Read past it "returns the first 2,000 lines with no error and no missing-data
-# marker" — was FALSE IN BOTH HALVES. It is replaced by what was measured, not argued:
-#   * truncation is ANNOUNCED, never silent. An over-cap read returns a PARTIAL-view banner
-#     giving the delivered span, the file's true length, the token count and the cap, and
-#     warning against answering from that page alone.
-#   * it does NOT deliver 2,000 lines. It delivers whatever prefix fits the TOKEN cap — on this
-#     repo's own ledger content, 2,000 lines is ~61,000 tokens and about a third comes back.
-#   * an explicit `limit` spanning an over-cap region neither bypasses the cap nor truncates: it
-#     returns an ERROR with NO content at all.
-# RE-MEASURE rather than restating those three sentences. The reproduction is
-# docs/planning/read-cap-premise-correction-plan.md Appendix A, and it is the ONLY instrument
-# that can falsify them: no test in this repository can, because nothing here invokes the agent's
-# Read tool. A number goes stale when the harness moves; the command does not.
-# Same name, same value and same stated reason as starter-kit/methodology_trim.py's
-# READ_CAP_LINES, so the reporter and the remedy cannot disagree about where the cliff is; a
-# canonical test pins the two literals together. Note precisely what that buys: it keeps the two
-# copies CONSISTENT, and it kept them consistent throughout the period both were WRONG.
+# UNIT: BYTES, converted from the TOKEN cap the harness actually enforces. Re-denominated at
+# Phase B (2026-08-26); it was LINES, and lines were not merely imprecise but STRICTLY DOMINATED.
+# Measured over 18 watched ledgers in 5 repos: the 2,000-line threshold fired on 3 and stayed
+# silent on 8 that a byte threshold at ANY point in the measured 2.2705-3.0300 B/token band
+# catches, and it caught NOTHING a byte threshold misses. The B/line spread over that same
+# population is 8.6x; the B/token spread is 1.33x. So this is not a re-tuning: one axis reports
+# the quantity the cap is denominated in and the other does not.
+# VALUE: harness behaviour, not a repo property and not taste — and DERIVED, never written as one
+# opaque number, because a number goes stale when the harness moves and the command does not.
+# What was measured, with the reproduction beside it:
+#   * the cap states itself: "exceeds maximum allowed tokens (25000)".
+#   * truncation is ANNOUNCED, never silent — a PARTIAL-view banner giving the delivered span,
+#     the file's true length, the token count and the cap, warning against answering from it.
+#   * it does NOT deliver a fixed number of lines. A 3,000-line file came back WHOLE; a 536-line
+#     one did not. Delivery is whatever prefix fits the TOKEN cap.
+#   * an explicit `limit` spanning an over-cap region neither truncates nor bypasses: it ERRORS
+#     with NO content, which is also what makes it a free, exact token meter.
+#   * PAST 256 KiB THERE IS NO PREFIX AT ALL. A default read is refused outright — "File content
+#     (256.1KB) exceeds maximum allowed size (256KB)" — so the familiar consolation that
+#     "truncation is ordered, and the top of the file still arrives" holds only BETWEEN the two
+#     boundaries. 5 of those 18 fleet ledgers are already past this one.
+# RE-MEASURE rather than restating those five sentences. The reproduction is
+# docs/planning/read-cap-premise-correction-plan.md Appendix A, and it is the ONLY instrument that
+# can falsify them: no test in this repository can, because nothing here invokes the agent's Read
+# tool. A green suite is evidence that nothing ELSE broke.
 # BASIS — the failure already happened here, and was found by accident rather than by any check:
 #   git show 3aee4e3^:CHANGELOG.md | wc -l    -> 2,090
 # Phase 0's reconcile then computed a frontier against a record it could not fully see.
-# Re-measured since: that file is 186,704 B, roughly 2.8-3.1x the token cap, so it had been
-# truncating well before it reached 2,090 lines. The incident dates when the problem was
-# NOTICED, not when it began.
-READ_CAP_LINES = 2000
+# Re-measured since: that file is 186,704 B — roughly 2.97x the token cap but UNDER the 256 KiB
+# refusal, so a default read of it came back as a truncated prefix with a banner, not as nothing.
+# (An earlier draft of this comment said it was past the refusal. It is not: 186,704 < 262,144.
+# A fixture-control assertion caught that, which is the only reason it is not shipped here.)
+# The incident dates when the problem was NOTICED, not when it began, and the 2,000-line number
+# derived from it recorded a symptom's size rather than a threshold.
+# Same names, same values and same stated reason as starter-kit/methodology_trim.py's, so the
+# reporter and the remedy cannot disagree about where the cliff is; a canonical test pins the
+# literals together. Note precisely what that buys: it keeps the two copies CONSISTENT, and it
+# kept them consistent throughout the period both were WRONG.
+READ_CAP_TOKENS = 25_000
+MIN_BYTES_PER_TOKEN = 2.27       # the measured FLOOR, not the mean — a guard that must not stay
+                                 # silent on a truncating file assumes the densest content it will
+                                 # meet. NOT context_budget.py's bytes_per_token, which estimates
+                                 # a different quantity (opening context vs CLAUDE.md size).
+READ_CAP_BYTES = int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN)     # 56,750 B — computed, not written
+READ_REFUSE_BYTES = 256 * 1024                                  # the hard, zero-content boundary
 
-# The files a session is instructed to read IN FULL to establish state — SESSION_RUNNER.md
-# Phase 0 step 2 (SESSION_NOTES.md), step 3 (BACKLOG.md), step 6 (reconcile CHANGELOG.md and
-# HANDOFFS.md against git log) — restricted to the ones the ADOPTER owns.
+# The files a session opens to establish state, restricted to the ones the ADOPTER owns.
+#
+# THE JUSTIFICATION THAT STOOD HERE WAS FALSE FOR TWO OF THE SIX NAMES, and it is corrected rather
+# than quietly dropped (Phase B / BL-52). It read "the files a session is instructed to read IN
+# FULL ... step 6 (reconcile CHANGELOG.md and HANDOFFS.md against git log)". Step 6 is
+# SESSION_RUNNER.md's reconcile, and its own stated mechanics are FRONTIER-BASED:
+# `git log -1 --format=%H -- CHANGELOG.md`, then the commits after it. That reads git HISTORY, not
+# the file. The HANDOFFS.md half is frontier-based the same way, and the one thing step 6 does
+# look for INSIDE the file — a still-`pending` receipt — is at the TOP by construction and
+# SAFEGUARDS.md prescribes a grep for it. Phase 3A reads ONE receipt, not the ledger.
+# Measured, not just re-read: across 85 session transcripts of this repo each root ledger was read
+# WHOLE exactly ONCE and read in PART 1,696 / 1,797 times. Roughly 1 in 85.
+# Two further corrections to what was claimed: the runner says "in full" about exactly ONE file,
+# SAFEGUARDS.md, which is deliberately NOT in this set (it is a TRACKED dest — see the test
+# below); and no protocol text names `docs/BACKLOG.md` or `docs/planning/BACKLOG.md` at all, so
+# those two are here by analogy to the root basename.
+# THE SET IS NEVERTHELESS UNCHANGED, and that is a decision rather than an oversight. The row
+# reports a real property — whether one read delivers the file — which stays true whoever reads
+# it and however rarely. What was wrong was the REASON given, and a reason nobody re-checks is how
+# this defect got here. Narrowing the population is a separate, fleet-visible call, sequenced
+# after this one (Phase C / BL-52).
 #
 # Written as a literal, NOT derived from METHODOLOGY_ITEMS, because two of that checklist's file
 # entries — SESSION_RUNNER.md and SAFEGUARDS.md — are TRACKED dests in bin/_manifest.py: files we
@@ -364,9 +391,14 @@ _TRIM_VERSION_RE = re.compile(r'''^TRIM_VERSION\s*=\s*["']([^"']+)["']''', re.MU
 _TRIM_BUDGET_RE = re.compile(
     r"^DEFAULT_BUDGET_BYTES\s*=\s*([0-9_]+(?:\s*\*\s*[0-9_]+)*)", re.MULTILINE)
 
-# design §5.2's published rate rule. Pinned to the trimmer's own literal by a canonical test,
-# the same arrangement READ_CAP_LINES already uses.
-TRIM_LINE_FIRE_BELOW = 15
+# TRIM_LINE_FIRE_BELOW IS GONE (Phase B). It was a SECOND distributed copy of design §5.2's
+# published rate rule -- "archive when headroom falls below 15 records" -- pinned to the trimmer's
+# literal by a canonical test. The rule itself was deleted from the trimmer, not re-tuned: it is
+# denominated in records of headroom TO the cap, and a one-read CHANGELOG.md holds 20.9 records
+# while a one-read HANDOFFS.md holds 4.3, so "cut until headroom is back above 30" is
+# unsatisfiable on both at every honest cap. Keeping a copy here would leave the reporter
+# advertising a threshold the remedy no longer has. The read metric is now a LEVEL and needs no
+# rate constant on either side.
 
 TRIM_ARCHIVE_DIR = "docs/archive"
 
@@ -977,6 +1009,16 @@ def _trim_record_count(text, basename):
     return n
 
 
+# ⚠ PHASE B REMOVED THIS FUNCTION'S ONLY PRODUCTION CONSUMER, and it is kept deliberately rather
+# than deleted or quietly left to rot. `trim_line_headroom` called it to find the baseline commit
+# a RATE needs; the read metric is a LEVEL and needs no baseline, so nothing in this module calls
+# it today. It is NOT dead by accident: it is the archive-event detector, it encodes a defect that
+# cost a session to find (a shard committed before the ledger existed is not an archive event,
+# because nothing shrank), and 18 assertions still pin that behaviour. Deleting it would discard
+# earned coverage; giving it a new consumer would be a feature this session did not scope. Whether
+# the S38 row should surface an archive baseline at all is part of Phase C's decision about that
+# row's shape — decide it there, and delete or re-wire this then. Recorded, not drifted into
+# (FM #17).
 def _newest_archive_sha(path, basename):
     """The commit that ADDED the most recent shard of this ledger, or None.
 
@@ -1032,43 +1074,14 @@ def _newest_archive_sha(path, basename):
     return shas[0]
 
 
-def trim_line_headroom(path, rel_posix, basename):
-    """(headroom_records, abstain_reason) for a ledger's line metric.
-
-    The rule published in CHANGELOG.md's own front matter: headroom to the 2,000-line
-    READ_CAP_LINES proxy -- the cap itself is token-denominated, see that constant --
-    divided by lines-per-record measured since the last split. It needs no tool, which is why
-    this half still answers when the trimmer is absent.
-
-    It ABSTAINS OUT LOUD rather than printing a number it cannot support -- immediately after a
-    split both deltas are zero, and against a superseded baseline they go negative. Exactly one
-    of the two return slots is ever filled."""
-    fpath = path / rel_posix
-    try:
-        text = fpath.read_text(encoding="utf-8", errors="ignore")
-    except OSError:
-        return None, "%s could not be read" % rel_posix
-    live_lines = text.count("\n")
-
-    split = _newest_archive_sha(path, basename)
-    if split is None:
-        return None, "no prior archive of this ledger -- the rate has no baseline"
-
-    base_text = git_show(path, "%s:%s" % (split, rel_posix))
-    if base_text is None:
-        return None, "the baseline blob %s:%s is unreadable" % (split[:7], rel_posix)
-
-    live_records = _trim_record_count(text, basename)
-    base_records = _trim_record_count(base_text, basename)
-    if live_records is None or base_records is None:
-        return None, "%s has no declared record grammar" % basename
-
-    dl = live_lines - base_text.count("\n")
-    de = live_records - base_records
-    if de <= 0 or dl <= 0:
-        return None, ("fewer than one record written since the last split "
-                      "(%d records, %d lines)" % (de, dl))
-    return (READ_CAP_LINES - live_lines) * de // dl, None
+# `trim_line_headroom()` WAS HERE and was deleted with the rate rule it re-implemented (Phase B).
+# It recomputed the trimmer's line headroom independently -- deliberately, so this half still
+# answered when the trimmer was absent -- and it carried the whole abstention apparatus that a
+# RATE needs: no baseline archive, an unreadable baseline blob, fewer than one record since the
+# split. A LEVEL needs none of it. `size_bytes > READ_CAP_BYTES` is answerable from the file
+# alone, with no git history and no baseline, so the read half now answers for every watched
+# ledger in every repo -- including a freshly-bootstrapped one that has never archived, which is
+# exactly the state in which the old rate abstained and reported nothing.
 
 
 _KNOWN_FLAGS = {"--sync", "--dry-run", "--force", "--no-open", "--with-submodules", "--help", "-h"}
@@ -1504,7 +1517,14 @@ def collect_file_metrics(path):
             #     d=collect_all(Path('.').resolve());\
             #     print([f['path'] for f in d['files']['largest_files']])"
             if rel_posix in READ_CAP_WATCHED:
-                watched.append({"path": rel_posix, "lines": loc})
+                # `lines` is kept and still reported: it is what a human scans a ledger by, and
+                # dashboard_history.jsonl has carried the key since S38. It is no longer what the
+                # verdict is computed from.
+                try:
+                    watched_bytes = fpath.stat().st_size
+                except OSError:
+                    watched_bytes = None
+                watched.append({"path": rel_posix, "lines": loc, "bytes": watched_bytes})
 
     # A root BOOTSTRAP.md — or a CHANGELOG.md — is ours only in a repo that also carries proof the
     # framework was installed: a docs/methodology/ path (nothing lands there by accident), or the
@@ -1519,7 +1539,8 @@ def collect_file_metrics(path):
     metrics["directory_count"] = len(dirs_seen)
     all_files.sort(key=lambda f: f["loc"], reverse=True)
     metrics["largest_files"] = all_files[:10]
-    metrics["read_cap_watch"] = sorted(watched, key=lambda f: f["lines"], reverse=True)
+    metrics["read_cap_watch"] = sorted(
+        watched, key=lambda f: (f["bytes"] if f["bytes"] is not None else -1), reverse=True)
 
     # Convert defaultdicts
     metrics["by_extension"] = dict(metrics["by_extension"])
@@ -2006,7 +2027,9 @@ def evaluate_changelog_freshness(path, git):
 
 
 def collect_trim_metrics(path, files, role="adopter"):
-    """S38 -- the trim-trigger row: headroom per grow-and-must-be-read ledger, and the remedy.
+    """S38 -- the trim-trigger row: one verdict per grow-and-must-be-read ledger, and the
+    remedy. Since Phase B both halves are LEVELS in bytes -- the one-read cap and the context
+    budget -- where the first half used to be a records-per-line RATE with a baseline commit.
 
     The remedy BRANCHES on whether the trimmer is installed for the scanned project (§7.3):
     present names a command the adopter can actually run, built from the located path; absent
@@ -2080,15 +2103,14 @@ def collect_trim_metrics(path, files, role="adopter"):
             size_bytes = fpath.stat().st_size
         except OSError:
             continue
-        headroom, abstains = trim_line_headroom(path, w["path"], basename)
-        line_fires = headroom is not None and headroom < TRIM_LINE_FIRE_BELOW
+        read_fires = size_bytes > READ_CAP_BYTES
+        refused = size_bytes > READ_REFUSE_BYTES
         budget = result["budget_bytes"]
         byte_fires = None if budget is None else size_bytes > budget
         entry = {
             "path": w["path"], "lines": w["lines"], "bytes": size_bytes,
-            "headroom": headroom, "abstains": abstains,
-            "line_fires": line_fires, "byte_fires": byte_fires,
-            "fires": bool(line_fires or byte_fires),
+            "read_fires": read_fires, "refused": refused, "byte_fires": byte_fires,
+            "fires": bool(read_fires or byte_fires),
         }
         result["ledgers"].append(entry)
 
@@ -2096,9 +2118,22 @@ def collect_trim_metrics(path, files, role="adopter"):
             continue
 
         reasons = []
-        if line_fires:
-            reasons.append("line headroom %d record(s), under the %d the rate rule fires at"
-                           % (headroom, TRIM_LINE_FIRE_BELOW))
+        if refused:
+            # Stated separately and FIRST, because it is a different failure, not a worse one:
+            # between the two boundaries a read returns a truncated prefix and says so, and past
+            # this one it returns nothing at all -- so the front matter a reader is relying on is
+            # not there either.
+            reasons.append("{:,} B, PAST THE {:,} B HARD REFUSAL -- a default read of this file "
+                           "returns NO CONTENT AT ALL, front matter included"
+                           .format(size_bytes, READ_REFUSE_BYTES))
+        elif read_fires:
+            # "one-read budget", NOT "one-read cap": the D4(b) risk row is greppable on the
+            # substring "read cap" and seven assertions plus the diagnostic trail in
+            # dashboard_history.jsonl depend on that staying exclusive to it. The same discipline
+            # keeps BL-5's "Large files detected" disjoint from both.
+            reasons.append("{:,} B against a {:,} B one-read budget -- a whole-file read comes "
+                           "back TRUNCATED to the prefix that fits, with a banner saying so"
+                           .format(size_bytes, READ_CAP_BYTES))
         if byte_fires:
             reasons.append("{:,} B against a {:,} B budget".format(size_bytes, budget))
         why = "; ".join(reasons)
@@ -2120,43 +2155,23 @@ def collect_trim_metrics(path, files, role="adopter"):
         result["signals"].append(
             ("medium", "%s: %s -- the archive trigger fires; %s" % (w["path"], why, remedy)))
 
-    # The abstention, said ONCE per repo and ONLY where BOTH halves came up empty.
+    # THE ABSTENTION DISCLOSURE WAS HERE, AND PHASE B DELETED THE STATE IT DETECTED rather than
+    # the disclosure alone -- which is why this note replaces it instead of the code being quietly
+    # dropped. It fired once per repo where NEITHER half could measure a watched ledger: the line
+    # RATE had no baseline archive AND the byte budget was unreadable. Decision D4 forbids
+    # reporting a 0 from an unread source as a clean state, and a ledger about which this scanner
+    # said nothing at all was exactly that.
     #
-    # Decision D4 forbids reporting a 0 from an unread source as a clean state, and the state that
-    # actually meets that description is a watched ledger about which this scanner said NOTHING --
-    # the line rate had no baseline AND the byte budget was unreadable. Then the file is being
-    # watched in name only, and the silence is the finding.
+    # The read half is a LEVEL now. It answers from the file's own size, with no git history, no
+    # baseline commit and no trimmer installed, so it answers for every watched ledger in every
+    # repo -- including a freshly-bootstrapped one that has never archived, which was the
+    # commonest way into the old silent state. The conjunction can no longer be true.
     #
-    # An earlier draft fired whenever the BYTE half alone was unavailable and asserted "only the
-    # line metric answered". Two things were wrong with it. The sentence is false in the commonest
-    # adopter state -- a repo that has never archived has no rate baseline either, so NEITHER half
-    # answered -- and the line half's abstention reason, which trim_line_headroom takes care to
-    # produce, was written to `ledgers[].abstains` and read by nobody, so the half that guards
-    # silent truncation was itself abstaining silently. Both reasons are now in the text.
-    #
-    # It also fired across the whole adopter fleet over a budget adopters have never been told
-    # about: no distributed file names one (S40 writes the doctrine, S39' ships the tool). Naming
-    # an unobtainable tool as something they had failed to install was a pointer they could not
-    # follow -- the misdirection §7.3 exists to prevent, in the branch written to honour it.
-    #
-    # The CAUSE is stated, not guessed: a tool present with an unreadable budget constant is a
-    # different finding from a tool that is absent, and an earlier draft reported the second for
-    # both -- telling an operator looking straight at an installed trimmer that it was not there.
-    blind = [l for l in result["ledgers"]
-             if l["byte_fires"] is None and l["headroom"] is None]
-    if blind:
-        if result["tool_present"]:
-            cause = ("its %s could not be read from %s"
-                     % ("DEFAULT_BUDGET_BYTES", result["tool_path"]))
-        else:
-            cause = "no %s is installed here to supply one" % TRIM_TOOL_NAME
-        detail = "; ".join("%s (%s)" % (l["path"], l["abstains"]) for l in blind)
-        result["signals"].append((
-            "low",
-            "no ledger-size measurement was possible for %s: the rate metric abstained and the "
-            "byte budget is unknown -- %s. These files are watched but unmeasured."
-            % (detail, cause),
-        ))
+    # AND NARROWING IT TO THE BYTE HALF ALONE WOULD BE A REGRESSION, NOT A SALVAGE. That is what
+    # an early draft did: it fired whenever the budget was unavailable and told the whole adopter
+    # fleet its ledgers were "unmeasured" over a budget no distributed file has ever named. The
+    # conjunction was the fix for that. Restoring half of it would restore the bug -- so if a
+    # future change gives the read half a way to abstain, re-add the CONJUNCTION, not this.
 
     return result
 
@@ -3028,12 +3043,31 @@ def assess_risks(metrics):
     # pretending the rows are independent.
     if owes_ledger:
         for w in metrics["files"]["read_cap_watch"]:
-            if w["lines"] > READ_CAP_LINES:
+            wb = w.get("bytes")
+            if wb is None:
+                continue
+            if wb > READ_REFUSE_BYTES:
+                # A DIFFERENT failure from truncation, not a worse degree of it, and it gets its
+                # own row text for that reason. The consolation that makes truncation survivable
+                # -- delivery is ordered top-down, so the front matter and the newest records
+                # still arrive -- is FALSE here. Nothing arrives.
                 risks.append({
                     "severity": "high",
-                    "description": f"{w['path']} is {w['lines']:,} lines — past the "
-                                   f"{READ_CAP_LINES:,}-line proxy for the agent read cap, which "
-                                   "is itself denominated in tokens. A session reading it whole "
+                    "description": f"{w['path']} is {wb:,} B ({w['lines']:,} lines) — past the "
+                                   f"{READ_REFUSE_BYTES:,} B hard limit, which is a HARDER "
+                                   "boundary than the agent read cap and behaves differently: a "
+                                   "default read is REFUSED OUTRIGHT and returns NO CONTENT AT "
+                                   "ALL, front matter included. Ordered truncation does not save "
+                                   "you here — there is no delivered prefix to be ordered. Read "
+                                   "it with explicit offset/limit, or archive it"})
+            elif wb > READ_CAP_BYTES:
+                risks.append({
+                    "severity": "high",
+                    "description": f"{w['path']} is {wb:,} B ({w['lines']:,} lines) — past the "
+                                   f"{READ_CAP_BYTES:,} B one-read budget for the agent read cap, "
+                                   f"which is denominated in tokens ({READ_CAP_TOKENS:,}) and "
+                                   f"converted here at the densest content measured "
+                                   f"({MIN_BYTES_PER_TOKEN} B/token). A session reading it whole "
                                    "gets a PARTIAL view — truncated to the prefix that fits the "
                                    "token cap, and it SAYS SO in a banner naming the true "
                                    "length, so the failure is loud rather than silent; an "
