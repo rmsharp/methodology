@@ -183,6 +183,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S111 — Phase A (3 of 3): the same unearned-remedy caveat pushed into the two TRACKED tools
+
+The correction made to the SEED tables in the entry below, carried into the two files that are
+**`TRACKED`** — so unlike the seeds, **this half does reach every existing adopter** at their next
+`bin/sync`. `starter-kit/methodology_trim.py`'s two-metric header and
+`starter-kit/methodology_dashboard.py`'s shipped **`high`**-severity risk text both told the reader
+what the line metric *protects against*; neither had ever established that archiving *remedies* it.
+
+Both now state the measured mechanism, then the caveat, then the boundary: **the byte metric is a
+separate claim — context tax, not read delivery — and is explicitly excluded**, so the caveat cannot
+be read as retiring both metrics at once. The dashboard's risk row previously ended with the bare
+imperative *"Archive it"*; it now says archiving's effect here is open, because the row fires on a
+file whose unreachable records a cut would not make reachable.
+
+**The mirror was re-taken and re-verified after this edit** (dragon 2): `diff -q` byte-identical,
+suites re-run **after** the mirror rather than before — S37's failure was recording numbers taken
+before a mirror that then moved.
+
+**Verification.** `tools.test_methodology_dashboard` **300 OK** (4 skipped, pre-existing) ·
+`tools.test_methodology_trim` **110 OK** · both re-run against the final tree. The seven suite
+assertions that string-match `"read cap"` inside the risk description still pass — the replacement
+text was written to keep satisfying them.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [ad hoc] S111 — Phase A (2 of 3): the two SEED doctrine tables, `README.md`, and this file's own front matter
 
 **The `SEED` half of Phase A, and the half that cannot be delivered by syncing.**

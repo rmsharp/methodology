@@ -704,6 +704,13 @@ def lines_at(repo, sha, relpath):
 #   here — "a Read past the cap returns no error and no marker" — was false in both halves.
 #   Re-measure with Appendix A of docs/planning/read-cap-premise-correction-plan.md; nothing
 #   in this repo can falsify it, because nothing here can invoke the agent's Read tool.
+#
+#   AND THE METRIC MEASURES A CONDITION IT MAY NOT REMEDY (BL-52, open). Truncation is ordered
+#   top-down and these ledgers are newest-on-top, so the records a cut removes are ones a
+#   whole-file read was NOT DELIVERING ANYWAY: the delivered prefix is the same before and
+#   after the trim, and what changes is that the reader stops being WARNED. Do not read this
+#   metric as an established argument for cutting. The BYTE metric below is a separate claim
+#   and is not covered by that caveat.
 #   Bytes protect against CONTEXT TAX (G1, the operator's stated goal).
 #
 # The two take different FORMS and transplanting one onto the other does not work: "cut until back

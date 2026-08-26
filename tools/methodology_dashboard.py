@@ -3038,7 +3038,10 @@ def assess_risks(metrics):
                                    "token cap, and it SAYS SO in a banner naming the true "
                                    "length, so the failure is loud rather than silent; an "
                                    "explicit line range spanning the excess errors outright, "
-                                   "returning nothing. Archive it"})
+                                   "returning nothing. Whether ARCHIVING remedies that is "
+                                   "open (BL-52): the file is newest-on-top and truncation "
+                                   "is ordered, so a cut removes records the read was not "
+                                   "delivering anyway"})
 
     # S38: the trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
     # the Component C signals above use. The collector owns the gate, the population and the
