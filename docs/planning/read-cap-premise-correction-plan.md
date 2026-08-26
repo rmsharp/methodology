@@ -468,6 +468,15 @@ Each is **one session. Close out when its criterion passes. Do not bundle.**
 
 ### Phase C — decide the dedup
 
+> **⚠ PHASE C IS LARGER THAN THIS BRIEF, AND HAS ITS OWN PLAN:**
+> [`read-cap-phase-c-plan.md`](read-cap-phase-c-plan.md) (**DRAFT**, S113). *"Two rows or one"*
+> presumes both rows watch the same set. They should not: the six watched names are **two classes**,
+> and the four the trimmer refuses are the ones the protocol genuinely reads in full. That plan also
+> carries the operator's proposal (*trim on the 256 KB refusal only* — right for Class A, wrong as a
+> blanket rule), the `DEFAULT_BUDGET_BYTES` decision without which that proposal is **inert**, and a
+> finding this one did not anticipate: **Class B files have 7 of 9 over the cap and, for
+> `SESSION_NOTES.md`, no documented remedy at all.** Read it instead of this stub.
+
 - **Do:** settle S38's residual 1 (§4) — two rows or one.
 - **DONE:** the decision recorded in `CHANGELOG.md` **and** in the code comment that currently says
   it is undecided; `starter-kit/methodology_dashboard.py:3001-3003` no longer describes an open
