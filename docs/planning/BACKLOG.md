@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-45, BL-46, BL-50, BL-51.**
+BL-42, BL-43, BL-44, BL-45, BL-46, BL-50, BL-51, BL-52.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -144,7 +144,8 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-48** | Seed `HANDOFFS.md` lacks the count sentence its own `LedgerSpec` declares | [detail](BACKLOG-DETAIL.md#bl-48) |
 | **BL-49** | `content_probe` runs only at zero records, so a partial grammar mismatch freezes into a shard | [detail](BACKLOG-DETAIL.md#bl-49) |
 | **BL-50** | `insert_pointer` injects a byte `L2`'s reversal never removes — the trimmer refuses a correct trim | [detail](BACKLOG-DETAIL.md#bl-50) |
-| **BL-51** | The distributed `2,000-line read cap` premise is false — plan written, awaiting ratification | [detail](BACKLOG-DETAIL.md#bl-51) |
+| **BL-51** | The distributed `2,000-line read cap` premise is false — plan RATIFIED at S111; **Phase A shipped**, Phases B and C open | [detail](BACKLOG-DETAIL.md#bl-51) |
+| **BL-52** | The line metric measures a condition trimming may not remedy — ordered truncation of a newest-on-top file | [detail](BACKLOG-DETAIL.md#bl-52) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10)
 

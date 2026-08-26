@@ -1291,3 +1291,41 @@ headroom to the cap, and `choose_cut` falls through to `return 1` when nothing s
 so a corrected cap alone would make every adopter's next trim retain **one record**. Every existing
 test stays green. See the plan's §3.
 
+<a id="bl-52"></a>
+
+**BL-52 — the line metric measures a condition that trimming may not remedy. Raised 2026-08-26
+(S111), from a critique the operator relayed from a `../model_project_constructor` session.**
+
+**The argument, and it follows from S111's own probes rather than from the relay.** Truncation is
+**ordered top-down** (probe B delivered lines 1–10 of 101; probe C's prefix was lines 1–700 of
+2,000) and both ledgers are **newest-on-top**. So the records a cut removes are precisely the ones a
+whole-file read **was not delivering anyway**. The delivered prefix is identical before and after a
+trim; the only thing that changes is that the reader stops receiving the `PARTIAL view` banner.
+**If that holds, the line metric's remedy is cosmetic — it suppresses the warning rather than
+delivering more of the file.**
+
+**This became visible only because BL-51's Phase A corrected the premise.** While truncation was
+believed *silent*, trimming was the only way to avoid an undetectable gap, and the rationale held.
+Once truncation is known to be **announced**, the gap is detectable without trimming, and the
+rationale has to be re-argued rather than inherited. Phase A therefore did not fix this — it
+**exposed** it, and stopped both the seeds and the two TRACKED tools from asserting a remedy none of
+them had established.
+
+**What is NOT claimed here, and must not be inferred.**
+- **The byte metric is a different claim** — *context tax*, not read delivery — and this item does
+  not touch it. The relayed critique argued against that half too; **S111 did not measure it**, and
+  asserting it either way would repeat the original error one level over.
+- **"Stop trimming" is not proposed.** That is an operator decision with fleet-wide blast radius.
+- The relayed figures (a 25,578-line ledger, a cut at line 746, front matter at 34% of the cap) are
+  **that repo's, not re-run here** — `[C]`, and they should be re-measured before being used.
+
+**Measured here, since the same shape was asserted about this repo.** `CHANGELOG.md` front matter is
+**14,295 B / 185 ln = 39% of the file**, and it is read *first*, so the critique's front-matter point
+is directionally right here too. `HANDOFFS.md` front matter is **6,362 B / 72 ln = 11%** — because
+**S109 already shipped that compaction** (−16.2%), which is the relayed critique's option E, arrived
+at independently. Neither file is near 2,000 lines, so `read_cap_watch` does **not** fire here.
+
+**Sequencing.** This sits *after* BL-51's Phase B (re-denominate) and is entangled with **Phase C**
+(the dedup between the two dashboard rows): if the line metric's remedy does not survive, the dedup
+answers itself. Do not decide C without deciding this.
+

@@ -1,6 +1,6 @@
 # Correcting the Read-Cap Premise — Plan
 
-**Status:** **DRAFT — awaiting operator ratification.** Nothing here is implemented. Every repair
+**Status:** **RATIFIED by the operator at S111 (2026-08-26), A → B → C as three separate sessions. PHASE A IS SHIPPED** (S111, commits `84abc60` / `86037bd` / `85a2158`); **Phases B and C are not started.** §5.4's open question was settled at the same time: *leave the design and audit records, annotate `ledger-trimmer-design.md` only* — done. Phase A also raised **BL-52** and settled **dragon 8**; see §11. Nothing outside Phase A is implemented. Every repair
 named below is a *proposal* (`SESSION_RUNNER.md` FM #18/#19: the plan is the deliverable).
 **Author:** S110 (2026-08-26), at claim commit `8decf71`.
 **Origin:** the operator handed over `../model_project_constructor/docs/planning/ledger-budgets-review.md`
@@ -503,6 +503,80 @@ BL-42/43/44 · **BL-45** (the `FRAMEWORK_LEARNINGS.md` ceiling — an operator d
 this plan except that probe D measured that file to be *inside* the read cap, so the read cap is not
 an argument for or against any BL-45 option) · BL-46(2)/47/48/49 · issue #75's unsent PR ·
 **any outward-facing action whatsoever.**
+
+---
+
+## 11. Phase A close-out — what shipped, and what existing adopters still need by hand
+
+**Written by S111 (2026-08-26), the implementing session. This section is a record, not a proposal.**
+
+### 11.1 What shipped
+
+| half | files | reaches |
+|---|---|---|
+| **TRACKED** | `starter-kit/methodology_dashboard.py` (+ its `tools/` twin), `starter-kit/methodology_trim.py`, `starter-kit/context_budget.py` | **every existing adopter**, at their next `bin/sync` |
+| **SEED** | `starter-kit/CHANGELOG.md`, `starter-kit/HANDOFFS.md` | **future adopters only** — see §11.2 |
+| **canonical-only** | `README.md`, this repo's `CHANGELOG.md` front matter, `ledger-trimmer-design.md` (annotated per §5.4) | this repository |
+
+**No numeral moved.** `READ_CAP_LINES` = `2000`, `LINE_FIRE_BELOW` = `15`, `LINE_STOP_ABOVE` = `30`.
+
+### 11.2 ⚠ The remediation existing adopters need, by hand, per repo
+
+**`bin/sync` cannot do this and never will.** `bin/sync:225-230` writes a `SEED` **only when the
+destination is absent**, and never overwrites afterward. So every project bootstrapped before
+2026-08-26 holds a `CHANGELOG.md` and a `HANDOFFS.md` whose *"Size, and when to archive"* table still
+states, as doctrine, that a read past the cap **"returns no error and no marker"**. Nothing in the
+framework will ever correct it, and **nothing detects it** — the same shape as BL-46/47/48.
+
+**Per adopter, one edit each in two files.** Locate the row and replace the *Protects against* cell:
+
+```sh
+grep -n 'silent truncation' CHANGELOG.md HANDOFFS.md     # the doctrine row, if present
+```
+
+Replace with the corrected cell from `starter-kit/CHANGELOG.md` / `starter-kit/HANDOFFS.md` at or
+after this date. **Do not edit records or receipts below the front matter** — those are frozen
+statements of what was believed when written (FM #22, §5.5).
+
+**Known population at the time of writing — four repos, none remediated:** `wsfct`,
+`nprcgenekeepr`, `vscode_quarto_ext`, `model_project_constructor`. Each needs the two edits above.
+**This is unfinished work and is deliberately left unfinished:** it is cross-repo and touches
+adopter-owned files, which is not this session's one deliverable.
+
+### 11.3 Two findings Phase A produced that the plan did not anticipate
+
+**Dragon 8 is SETTLED, and the plan's stated test could not have settled it.** Appendix A proposed
+reading `FRAMEWORK_LEARNINGS.md` with and without an explicit `limit` — but that file returns
+**whole** either way, so both hypotheses predict the same observation. Re-run on a file that *does*
+truncate (`limit` the only variable), the answer is decisive and is a **third delivery mode** the
+plan did not know about: an explicit `limit` spanning an over-cap region **neither bypasses the cap
+nor truncates — it errors and returns no content at all.** So `limit` cannot mask the cap, probe D's
+"returned whole" is **not** an artifact, and §1.4's 2.42–2.66 B/token range stands. Appendix A's
+probe D should be re-worded to name a truncating file.
+
+**Phase A's DONE criterion, as written in §8, is not satisfiable — and the reason is instructive.**
+It requires `git grep -nE 'no (error|missing-data) marker|silently truncat'` to return **only frozen
+paths**. It cannot: `starter-kit/methodology_trim.py:1077` matches *"command substitution strips
+trailing newlines, which **silently truncates** the LAST record"* — a live, **distributed**,
+**correct** sentence about `$(...)` in a shell proof, with no connection to the read cap. Eleven
+shipped `.verify.sh` files carry the same line. **A repair there would be a defect.** The criterion's
+real content is *no live site **asserts** the read-cap claim*; a site that **quotes** it in order to
+correct it, or that uses the same words about an unrelated mechanism, is not a violation. The
+corrected verify command, which returns **zero** rows across all live paths:
+
+```sh
+git grep -nE 'no (error|missing-data) marker|silently truncat' -- starter-kit bin tools README.md \
+  | grep -v 'trailing newlines'        # the one carve-out: an unrelated $(...) hazard
+```
+
+**And one site was reworded rather than exempted, following S106's precedent (§5.5).** `README.md`
+disclosed the correction by *quoting* the false phrase, which would have kept the detector returning
+a row forever. The disclosure is worth keeping, so the sentence now names the old claim without
+reproducing its exact words: the grep stays a **live zero-hit tripwire** and no history is
+falsified. An exemption list would have retired the detector instead.
+
+**This is the plan's own §5-inventory lesson landing on its §8:** a criterion is only as good as the
+population its command actually enumerates.
 
 ---
 

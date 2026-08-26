@@ -183,6 +183,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-52] S111 — BL-52 raised; the design record annotated; the plan RATIFIED and Phase A closed
+
+**The plan's status moves `DRAFT` → `RATIFIED`** (operator, this session's Phase 1: A → B → C as
+three separate sessions; the one-pass fix stays declined, option D stays deferred-on-evidence).
+**Phase A is shipped; B and C are not started.** A new **§11** records what shipped, what existing
+adopters still need by hand, and two findings Phase A produced that the plan did not anticipate.
+
+**§5.4 settled and executed:** *leave the design and audit records, annotate
+[`ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md) only* — it is the document a
+future session reads to re-derive the rate rule, which is what earns it the annotation the others do
+not get. Its false table cell is struck through in place, not rewritten (FM #22), with a block note
+carrying the measurement, the reproduction, and both consequences.
+
+**BL-52 raised** — *the line metric measures a condition trimming may not remedy.* From the critique
+the operator relayed mid-session, but **argued from this session's own probes**: truncation is
+ordered top-down, these ledgers are newest-on-top, so a cut removes records a whole-file read was not
+delivering anyway. **Phase A did not fix this — it exposed it.** While truncation was believed
+*silent*, trimming was the only way to avoid an undetectable gap and the rationale held; once it is
+known to be **announced**, the rationale has to be re-argued rather than inherited.
+
+**What BL-52 deliberately does NOT claim**, because S111 did not measure it: anything about the
+**byte** metric (a different claim — context tax), and anything resembling *"stop trimming"*, which
+is an operator decision with fleet-wide blast radius. The relayed figures are marked `[C]` — that
+repo's, not re-run here.
+
+**Measured here, since the same shape was asserted about this repo:** `CHANGELOG.md` front matter is
+**14,295 B / 185 ln = 39% of the file** and is read first, so the front-matter point is directionally
+right here too; `HANDOFFS.md` front matter is **6,362 B / 72 ln = 11%**, because **S109 already
+shipped that compaction** — the relayed critique's option E, arrived at independently.
+
+**Dragon 8 settled, and Appendix A's probe D found unsound as specified** — it names a file that
+returns whole either way, so it cannot discriminate. §11.3 records the corrected form.
+**Phase A's §8 DONE criterion found unsatisfiable as written** — one live, distributed, *correct*
+sentence about `$(...)` matches it. §11.3 records the corrected command, which returns **0**.
+
+**Verification.** `BACKLOG-DETAIL.md.verify.sh` **OK** — C1–C5 green, 18 items byte-identical,
+BL-52 correctly reported as raised-since and **not** a finding.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [ad hoc] S111 — the detector reworded rather than exempted, so it stays a zero-hit tripwire
 
 Phase A's verify grep still returned one row after the corrections, and the row was **`README.md`

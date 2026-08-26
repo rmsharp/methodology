@@ -509,7 +509,7 @@ They are not interchangeable and neither subsumes the other:
 
 | Metric | Protects against | Cap |
 |---|---|---|
-| **Lines** | **silent truncation** — a `Read` past the cap returns no error and no marker | 2,000 lines |
+| **Lines** | ~~**silent truncation** — a `Read` past the cap returns no error and no marker~~ **FALSE, corrected 2026-08-26 (S111) — see the annotation below** | 2,000 lines |
 | **Bytes** | **context tax** — G1, the operator's stated goal | per-file budget |
 
 **The two metrics take different FORMS, and transplanting one onto the other does not work.** The
@@ -544,6 +544,26 @@ it must avoid is measured in §1.1.
 read; the line metric abstains out loud when there is no slope. Under this rule `CHANGELOG.md` reads
 32 entries of line-headroom (no fire) but **72,661 B against a 64 KB budget — it fires on bytes**;
 `HANDOFFS.md` fires on bytes at 3.5× budget, which its own line trigger cannot see.
+
+> **⚠ ANNOTATION, 2026-08-26 (S111). The premise this design's line rule rests on is FALSE, and
+> this document is annotated — not rewritten — because it is a design record of what was believed
+> when it was written (FM #22).** It is annotated *at all*, where the other design and audit records
+> of the same era are deliberately left alone, because **this is the document a future session reads
+> to re-derive the rate rule** — the operator's decision at S111 Phase 1.
+>
+> **Measured** (reproduction: [`read-cap-premise-correction-plan.md`](read-cap-premise-correction-plan.md)
+> Appendix A): the cap is denominated in **~25,000 tokens**, not lines; truncation is **announced**,
+> with a `PARTIAL view` banner naming the delivered span, the true length and the cap; an explicit
+> over-cap line range **errors outright and returns nothing**; and 2,000 lines of this repo's own
+> ledger content measures **61,488 tokens**, so roughly a third of such a file comes back.
+>
+> **Two consequences for anyone re-deriving the rule from this page.** (1) `LINE_FIRE_BELOW` and
+> `LINE_STOP_ABOVE` are denominated in *records of headroom to the cap*, so the cap cannot be
+> corrected in isolation — `choose_cut` falls through to `return 1` and the next trim retains **one
+> record**, with every test green (BL-51 §3). (2) Because truncation is ordered top-down and these
+> ledgers are newest-on-top, **it is an open question whether cutting the tail remedies anything at
+> all** — the delivered prefix is the same before and after (BL-52). Re-argue the rule; do not
+> inherit it from here.
 
 *The 2,000-line cap is agent-harness behaviour, not a property of this repo — the live `CHANGELOG.md`
 concedes this about itself.*
