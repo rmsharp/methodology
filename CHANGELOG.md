@@ -183,6 +183,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S112 claim — Phase B of the read-cap premise correction
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **Operator's decision at Phase 1: take Phase B as ratified, but settle
+BL-52's precondition question inside it, as act 1.** The two are one question — `methodology_dashboard.py:295`
+justifies watching the two ledgers by crediting Phase 0 step 6 with a whole-file read, and
+`starter-kit/SESSION_RUNNER.md:37`, which *is* step 6, reads `git log`. Whether the guard should be
+**re-denominated**, **narrowed**, or **removed** for those two files cannot be answered without it,
+and this session's own Phase 0 read neither ledger whole.
+
+**The design is presented for approval before any distributed constant moves** — the operator's gate,
+recorded at claim. `LINE_FIRE_BELOW`/`LINE_STOP_ABOVE` must be re-derived in the **same commit** as
+any cap change ([plan §3](docs/planning/read-cap-premise-correction-plan.md)): `choose_cut` falls
+through to `return 1`, so a corrected cap alone ships a trim that retains **one** record to every
+adopter, with every test green.
+
+**Not in scope, each deliberately:** Phase C, option D as a decision, the 65,536 B ceiling,
+`RECORD_BUDGET_BYTES`, BL-42/43/44, **BL-45**, BL-46(2)/47/48/49, BL-50, issue #75's unsent PR, the
+cross-repo §11.2 adopter remediation, **and any outward-facing action**.
+
+**Known at claim, measured:** `HANDOFFS.md` 64,977 B against 65,536 B — **559 B clear**, both trim
+triggers silent. The trim this session is close-out housekeeping (FM #26), due because this
+session's own receipt breaches, not because the trigger fired.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [BL-52] Post-close-out addendum: the read-cap premise's PRECONDITION fails for the two ledgers
 
 **Recorded after S111's close-out, at the operator's direction, and logged here so Phase 0's
