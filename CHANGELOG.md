@@ -183,6 +183,59 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-51] S113 — Phase C planned: what each guard watches, and what it claims; self-score 8/10
+
+Commits `f06b6f7` (claim) and **`9a71c8e`** (the deliverable),
+[`docs/planning/read-cap-phase-c-plan.md`](docs/planning/read-cap-phase-c-plan.md), **DRAFT awaiting
+ratification**. A planning session: **nothing implemented, no numeral moved** (FM #18/#19). The
+predecessor plan's Phase C stub is **annotated in place** to point here.
+
+**The operator's proposal, answered.** *"Only worry about the 256 KB limit for trimming"* is **right
+for the two ledgers the trimmer can act on and wrong as a blanket rule.** The six watched names are
+**two classes**, evidenced per name off two independent facts — membership of the trimmer's `LEDGERS`
+table, and what `SESSION_RUNNER.md` actually instructs. **Class A** (`CHANGELOG.md`, `HANDOFFS.md`):
+records, newest-on-top, read by frontier and one record; 9 files, 8 over the cap. **Class B**
+(`SESSION_NOTES.md`, three `BACKLOG.md` locations): prose, no delimiter, **read in full**; the
+trimmer refuses them by design; **9 files, seven over the cap**. Truncation is only harmless when the
+part you need is at the top, and a backlog's bottom items are as live as its top ones.
+
+**The finding the plan did not go looking for and could not avoid: Class B has no reachable remedy.**
+`SESSION_NOTES.md` has **none documented anywhere in the distributed corpus**. `BACKLOG.md` has one —
+`BOOTSTRAP.md:144-151` — and **Learning #26, earned on this repo's own backlog at S89, proves it
+insufficient in general**: archiving everything finished recovered 33% and still left the file at
+1.40× its yardstick, because the **open** items alone exceeded it. The remedy that actually worked
+here (index + detail split with a runnable losslessness proof) is **fork-only**. **A guard whose
+remedy cannot reach is the misdirection [`ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md)
+§7.3 exists to prevent, and it is shipping.**
+
+**And the proposal is inert without a second decision.** `Trigger.fires` is `read_fires or
+byte_fires`, so a 256 KB read trigger changes nothing while `DEFAULT_BUDGET_BYTES` = 65,536 fires
+first — **Phase B's §3 coupling recurring one level over.** The plan requires the two ship in the same
+session and **deliberately does not decide the second**, laying out the evidence both ways and marking
+it a decision rather than a derivation.
+
+**A correction the plan makes to its own first draft, recorded because it is this campaign's lesson
+landing on the plan that states it.** Class B's *"× the cap"* column was drafted by carrying a
+**Class A** ratio (2.4 B/token, measured on ledger content) onto Class B files. Measured directly,
+Class B is **less** dense — 2.5472–2.9096 against Class A's 2.2705–2.5150 — so the draft
+**overstated every multiple by 6–20%**, in the direction that flattered the argument. The finding is
+unchanged; the numbers were wrong. Corrected before ratification.
+
+**Verification.** No code changed, and the suites were run to prove exactly that: `bin/tests.sh`
+**287 rows, 286 / 1 / 0**, sole failure by name Test 9's standing `--source=github` 404 — identical in
+shape to S112's control. Python suites **111 / 303 / 42 OK** from a foreign CWD. `check-links` OK
+(88/22), `check-learnings` OK (37), `check-handoff` + `--all` OK, `BACKLOG-DETAIL` verify OK (C1–C5),
+twins byte-identical and untouched. **20 of 20 load-bearing citations machine-verified** by re-reading
+the cited line. `context_budget.py` exits **2**, expected — `HANDOFFS.md` is over its ceiling **by
+adjudication, not neglect** (BL-52 third addendum); do not trim it on sight.
+
+**BL-45 now blocks Phase 3C for a fifth consecutive session** — `starter-kit/FRAMEWORK_LEARNINGS.md`
+is 16 B from its ceiling and four learnings are earned and unwritten across S112–S113. It is the
+longest-standing unaddressed blocker here and needs an operator decision.
+
+**Model:** Claude Opus 5 (1M context).
+
+
 ### 2026-08-26 · [ad hoc] S113 claim — plan Phase C of the read-cap correction
 
 `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in

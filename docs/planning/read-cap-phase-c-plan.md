@@ -133,12 +133,27 @@ loses open work, and the reader is told *that* something was cut but not *what*.
 
 **Under a 256 KB-only rule these go unwarned while truncating today** [M]:
 
-| file | bytes | ≈× the read cap |
-|---|--:|--:|
-| `wsfct/BACKLOG.md` | 252,367 | **4.2×** |
-| `model_project_constructor/SESSION_NOTES.md` | 149,569 | **2.5×** |
-| `nprcgenekeepr/BACKLOG.md` | 121,672 | **2.0×** |
-| `model_project_constructor/BACKLOG.md` | 72,493 | 1.2× |
+| file | bytes | tokens | B/token | × the read cap |
+|---|--:|--:|--:|--:|
+| `wsfct/BACKLOG.md` | 252,089 | **98,966** [M] | 2.5472 | **3.96×** |
+| `model_project_constructor/SESSION_NOTES.md` | 149,569 | **55,791** [M] | 2.6809 | **2.23×** |
+| `nprcgenekeepr/BACKLOG.md` | 121,672 | **41,817** [M] | 2.9096 | **1.67×** |
+| `model_project_constructor/BACKLOG.md` | 72,493 | ~28,400 [D] | — | ~1.14× |
+
+> **⚠ THESE FIGURES REPLACE A DRAFT THAT CARRIED A CLASS A RATIO ONTO CLASS B CONTENT, and the
+> correction is this campaign's own lesson landing on the plan that states it.** The first draft
+> multiplied Class B byte counts by **2.4 B/token** — measured on *ledger* content — and published
+> 4.2× / 2.5× / 2.0×. Measured directly, **Class B content is LESS dense than Class A**
+> (2.5472–2.9096 against 2.2705–2.5150), so the draft **overstated every multiple by 6–20%**.
+> The finding is unchanged — all four are over the cap and the class distinction holds — but the
+> numbers were wrong, in the direction of making the case look stronger than it is.
+> **A ratio is a property of its content type; it does not transfer between classes, including
+> between the two classes this plan exists to separate.**
+>
+> **One consequence worth keeping:** `MIN_BYTES_PER_TOKEN = 2.27` is set by **Class A** content
+> (`vscode_quarto_ext/HANDOFFS.md`, 2.2705). For a guard covering both classes that is the
+> conservative direction — it fires early on Class B rather than late — which is the behaviour a
+> guard should have, and it should be stated in the code comment rather than left to be rediscovered.
 
 ### 4.1 The remedy gap — the part that is not a threshold question
 
