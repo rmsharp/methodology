@@ -171,6 +171,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S111 claim — Phase A of the read-cap premise correction
+
+`CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md). **The operator ratified `A → B → C` at Phase 1** and directed Phase A
+this session; §5.4's open question is settled — *leave the design/audit records, annotate
+`ledger-trimmer-design.md` only*. Deliverable: the live behaviour-claim sites in
+[`read-cap-premise-correction-plan.md`](docs/planning/read-cap-premise-correction-plan.md)
+§5.2/§5.3/§5.4 rewritten to state **measured behaviour and its reproduction method**, **no numeral
+moved**, plus the existing-adopter remediation note §5.1 requires.
+
+**Not in scope, each deliberately:** Phase B, Phase C, `READ_CAP_LINES`' value,
+`LINE_FIRE_BELOW`/`LINE_STOP_ABOVE`, option D, the 65,536 B ceiling, `docs/archive/**` and every
+frozen record (§5.5), BL-45, BL-50, issue #75's unsent PR, **and any outward-facing action**.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [ad hoc] S110 close-out — read-cap plan delivered; self-score 8/10, predecessor S109 scored 8/10
 
 Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **12,237 B inside the 12,288 B per-record budget** —
