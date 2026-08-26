@@ -1221,3 +1221,73 @@ The shard is named `through-2026-08-24` and labelled from `2026-06-30`; its true
 **Proposed:** on every run, compare probe hits against matched records and report the delta as a
 finding when they disagree (`GRAMMAR_COVERAGE`), before anything is frozen. The instrument already
 exists; it is simply not consulted on the path where records are present.
+
+<a id="bl-50"></a>
+
+**BL-50 — `insert_pointer` injects a byte `L2`'s reversal never removes, so the trimmer refuses a
+correct trim. Raised 2026-08-26 (S110), hit while running the close-out trim.**
+
+`insert_pointer` (`starter-kit/methodology_trim.py:940-950`) appends the pointer block like this
+when the front matter has no standalone `---`:
+
+```python
+return front + ("\n" if front and not front.endswith("\n\n") else "") + block
+```
+
+`L2`'s confinement proof (`:582-586`) reverses the declared changes by removing the block —
+`residue.replace(block, "", 1)` — and **never removes that injected `"\n"`**. So the reversal
+cannot restore the original bytes, and the run dies with:
+
+```
+[L2_FRONTMATTER_UNDECLARED] the FRONT MATTER changed outside the declared regenerated fields and
+the pointer block ... (first residual difference at char 6126)
+```
+
+**Reproduced in isolation** (S110): `front.endswith("\n\n")` is `False`, and simulating the
+insert-then-reverse yields `front + "\n"` with the first difference at char 6126 — the tool's own
+number. **Nothing is corrupted; the proof is reporting its own insertion as an undeclared change.**
+
+**Why it became reachable only now.** Before S109's compaction the front matter ended with a
+generated pointer block, and `build_pointer_block` returns text ending `"\n\n"` — so the guard
+never fired. S109 folded those blocks into a table, leaving the front matter ending `-->\n`. **The
+very next trim hit the refusal.** This is a fork-side compaction exposing a latent defect in a
+**distributed** tool, so every adopter whose front matter ends in a single newline is equally
+blocked, and the failure reads as *data loss* when there is none.
+
+**This is Learning #37 one level down** — a losslessness proof that models the population and the
+declared growth but not the producer's full transform — and Learning #16's *"wire the assertion to
+the artifact"* seen from the other side: here the checker is correct and the **producer** is what
+the checker was not told about.
+
+**Worked around at S110, not fixed:** a one-byte fork-side data edit (a blank line at the end of
+`HANDOFFS.md`'s front matter) restores the condition the tool was written for. **A standalone `---`
+would be the tool's preferred anchor and is the wrong fix** — it trips `[ZONE_UNCLASSIFIED]`, which
+is BL-46's exact failure mode.
+
+**Proposed:** make the reversal symmetric with the insertion — have `insert_pointer` return the
+separator it injected (or have `L2` strip a single leading `"\n"` from the block's span), and add a
+mutant whose front matter ends in one newline. **Distributed file — needs a go-ahead.** Batches
+naturally with BL-42, which is about the same function.
+
+<a id="bl-51"></a>
+
+**BL-51 — the `2,000-line agent read cap` premise is false, and it is distributed. Raised
+2026-08-26 (S110); the plan is written and awaits ratification.**
+
+Full analysis and phased remedy:
+[`read-cap-premise-correction-plan.md`](read-cap-premise-correction-plan.md) — **DRAFT.** This row
+exists so the work appears in the open-item index; the plan is the artifact.
+
+Measured (probes reproduce in that plan's Appendix A): the cap is **~25,000 tokens**, not 2,000
+lines; truncation is **announced** with a full banner, not silent; and at this repo's ledger density
+a Read cliffs near line **690**, so `READ_CAP_LINES = 2000` is ~**2.9x** too permissive.
+
+Three carriers are `TRACKED` (a fix reaches existing adopters); **two ledger seeds state the claim as
+doctrine in a table and are `SEED`**, so a fix there reaches **future adopters only** — the same
+defect class as BL-46/47/48, which is why this batches with them.
+
+**Do not "just fix the number":** `LINE_FIRE_BELOW`/`LINE_STOP_ABOVE` are denominated in records of
+headroom to the cap, and `choose_cut` falls through to `return 1` when nothing satisfies `stops()` —
+so a corrected cap alone would make every adopter's next trim retain **one record**. Every existing
+test stays green. See the plan's §3.
+

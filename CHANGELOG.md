@@ -171,6 +171,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [ad hoc] S110 close-out — read-cap plan delivered; self-score 8/10, predecessor S109 scored 8/10
+
+Phase 3D receipt in [`HANDOFFS.md`](HANDOFFS.md), **12,237 B inside the 12,288 B per-record budget** —
+reached in seven passes, each one run against `bin/check-handoff` rather than estimated, every cut
+taken from the trailing prose where the checker says to cut. Commits: `8decf71` (1B claim) +
+**`c2bc56f`** (the deliverable) + `9038e40` (the trim) + this close-out.
+
+**Two findings this session did not set out to make, both from checking rather than reasoning.**
+
+**BL-50 — the trimmer refuses a correct trim, and it is a distributed defect.** `insert_pointer`
+(`starter-kit/methodology_trim.py:940-950`) appends `"\n" + block` when the front matter does not
+already end `"\n\n"`; `L2`'s confinement proof (`:582-586`) removes only `block` and never that
+injected newline, so the reversal cannot restore the original bytes and the run dies reporting a
+losslessness failure **that is an artifact of its own insertion**. Reproduced in isolation — first
+difference at char 6126, the tool's own number — rather than forced past. It became reachable
+because S109's compaction removed the trailing pointer blocks that used to end `"\n\n"`. Worked
+around with a one-byte fork-side data edit; **not** with a standalone `---`, which would trip
+`[ZONE_UNCLASSIFIED]` (BL-46's failure). Learning #37 one level down.
+
+**BL-51 — `choose_cut` makes the read-cap correction dangerous.** `stops()` has exactly one caller,
+and `choose_cut` (`:876-881`) falls through to **`return 1`** when nothing satisfies it. So
+correcting `READ_CAP_LINES` alone would make every adopter's next `--write` retain **one record**.
+S94 measured a cut to *two* taking the suite 235/1 → 229/6 (Learning #31). Every existing test stays
+green, because nothing evaluates the rate rule at a corrected cap.
+
+**Method notes worth more than either finding.** A ratio measured on one content type does not
+transfer to another — 2.419 B/token from ledger content against ≥2.62 from prose — and probe D
+killed a self-consistent table this session had already drafted. **A `--check` is not a dry run:** it
+returns at `:1698`, before the L1/L2/L3 machinery, so it reports a green trigger for a trim that will
+refuse. And a subagent's citation is a claim: **301 reported sites, every one re-read and verified
+against the file before use.**
+
+**Phase 3C NOT discharged, and it is structural, not skipped.** `starter-kit/FRAMEWORK_LEARNINGS.md`
+is **16 B** from its ceiling (BL-45) and no budget-conforming row fits. **Two learnings are earned
+and owed**, both recorded in the receipt's gotchas: *a ratio is a property of its content type, not
+of the corpus*, and *`--check` is not a dry run*.
+
+**Verification.** Suite control 287 rows **286 passed / 1 failed / 0 skipped**; after the trim
+287 rows, **286 / 1 / 0**; row-for-row, both populations asserted non-empty: **zero status flips,
+zero skipped**, five rows differing only in a derived count the trim moved. Sole failure both sides
+by name: `github source dry-run failed` (Test 9's standing 404). Trim losslessness three ways
+including an independent inverter modelling the declared link-rebase transform: **6 records,
+6 byte-identical, 0 unexplained**. `check-handoff` OK · `--all` OK (4) · `check-links` OK (88/22) ·
+`check-learnings` OK (37) · `trim --check` silent · `context_budget.py` no file over a ceiling
+(bare exit **1 = WARN**, growth run 64/10, ceiling-independent) · `BACKLOG-DETAIL.md.verify.sh` OK.
+
+**FM #28 gate, measured after the last write.** `HANDOFFS.md` **52,808 B** (12,728 B clear), front
+matter **6,362 / 7,168 B**; `CHANGELOG.md` 59,542 B *before this entry*;
+`starter-kit/FRAMEWORK_LEARNINGS.md` 65,520 B (**16 B free**); `docs/planning/BACKLOG.md` 30,458 B.
+`main` **61 ahead of `origin/main`**, nothing pushed.
+
+**Carve-out re-derived by importing `DISTRIBUTION` and reading the SOURCE column** — after a first
+attempt grepped the bare filename and hit the DEST half of
+`("starter-kit/HANDOFFS.md", "HANDOFFS.md", SEED)`. **Nothing this session touched is a manifest
+source. No adopter receives anything. No outward-facing action.**
+
+**Open for the operator:** ratify or reject the plan's A → B → C (§7), and answer §5.4 (annotate the
+design records, or leave them?). **BL-45 still blocks Phase 3C for the next session too.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-25.md` (2 record(s), 66,615 B → 44,725 B)
 
 **Written by:** `methodology_trim.py` v1.3.0 — a tool action, not a session's judgment.
