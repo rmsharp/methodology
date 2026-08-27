@@ -22,14 +22,22 @@ action still needs the operator's explicit go-ahead, each time.
 > pre-change and post-change modules emit byte-identical watched rows, trim rows, signals, risk rows
 > and health score on the same tree). **A1's *buys* are therefore DEFERRED, not delivered.**
 >
-> **⚠ AND ONE PIECE OF A1 IS NOW OWNED BY NO PHASE — this needs the operator, and S115 did not
-> resolve it.** §6's inventory puts A1's per-class thresholds at
+> **⚠ THE PIECE OF A1 THAT WAS OWNED BY NO PHASE — RESOLVED AT S116 (2026-08-26). The operator
+> WIDENED C2.** §6's inventory puts A1's per-class thresholds at
 > `starter-kit/methodology_dashboard.py:3045-3072` (the D4(b) risk rows), but §9's **Phase C2**
 > DONE criterion names only `--check`, `choose_cut` and `READ_REFUSE_BYTES` — all in the
-> **trimmer** — and Phase C3 is A3+B1+B2. So *"the threshold move is Phase C2"* is true of the
-> trimmer's trigger and **not** of the dashboard's per-class rows, which fall between the two
-> phases' criteria. Whoever runs C2 must either widen its DONE criterion to cover the dashboard
-> rows or raise it as a fourth phase. Do not assume it was handled here.
+> **trimmer** — and Phase C3 is A3+B1+B2, so the dashboard rows fell between the two.
+> **C2's DONE criterion now also covers the dashboard**, and A1's deferred *buys* are delivered:
+> the two rows are finally *different* rather than deduplicated (§7's own wording), and the effect
+> is fleet-visible — a Class A ledger over the one-read cap drops from `high` to `low`.
+>
+> **Two corrections to that inventory row, both found by measuring rather than by reading it.**
+> The citation `:3045-3072` is **pre-C1** — S115 shifted the file — and the true D4(b) range at
+> S116 was `:3135-3169`. And **the hole was TWO sites, not one**: besides the risk rows,
+> `collect_trim_metrics` (`:2197`) **re-implements** the trimmer's read arm as
+> `size_bytes > READ_CAP_BYTES`. That second one is why widening C2 was not merely tidier than a
+> fourth phase — left behind, it would have emitted *"the archive trigger fires; … run `--check`"*
+> beside a `--check` reporting that it does not, naming a command whose output refutes the row.
 
 **Origin:** the operator's proposal at S112's close-out — *"perhaps we should only worry about the
 256 KB limit for trimming. Would that satisfy all methodology's needs?"*
@@ -220,6 +228,24 @@ adopter. *For keeping it:* it encodes **G1, the operator's stated goal**, and it
 BL-9/BL-32/BL-36/S87/S89 have all measured against — retiring it invalidates a lot of recorded work
 as a baseline. **This plan does not decide it. §7 option C1 is a decision, not a derivation.**
 
+> **⚠ DECIDED AT S116: RAISED to `192 * 1024` (196,608). And one of the arguments above — the one
+> against that choice — does not survive re-derivation.** *"the number BL-9/BL-32/BL-36/S87/S89
+> have all measured against"* is **impossible for BL-9**: BL-9 closed **2026-08-01** and
+> `DEFAULT_BUDGET_BYTES` was first written **2026-08-03** (`df381ea`, S36). The relation runs the
+> other way — `ledger-trimmer-design.md` §5.4 calibrates the constant on three sizes, and
+> **52,927 B is BL-9's own L1 output commit `7a71df0`** — so BL-9 is this constant's **input**, not
+> a measurement against it. The other four names were **not** re-derived and are claimed neither
+> way. The sentence originates in `.context-budget.json`'s `_` key and this plan inherited it; both
+> now carry the correction. **This is the campaign's own lesson landing on the plan that states
+> it:** a figure repeated from a neighbouring document is `[C]`, and this one was tagged as
+> argument rather than as a claim anybody had checked.
+>
+> **What the decision actually cost, recorded because none of it goes red on its own:** moving the
+> constant falsified **three** `.context-budget.json` `_` keys and one comment block in
+> `bin/check-handoff`, each of which named it as its ceiling's source. All four were repaired in
+> the same session (Learning #28), and **no ceiling was moved** — those files answer a different
+> question (*what does Phase 0 pay to read this?*) and merely shared a number until now.
+
 ---
 
 ## 6. Evidence-based inventory (MANDATORY)
@@ -309,12 +335,25 @@ Each is **one session. Close out when its criterion passes. Do not bundle** (exc
   twins byte-identical, **mirrored last** · the fleet re-scanned read-only, rows tabulated by class.
 
 ### Phase C2 — the Class A trigger, and `DEFAULT_BUDGET_BYTES` with it
+**SHIPPED S116 (2026-08-26), commit `0afe9d6`.** Criterion below met in full; the widened
+dashboard half is recorded in the fence at the top of this plan.
 - **Do:** A2 and C1 in one commit. Re-derive the fire/stop pair; state the hysteresis as judgment.
 - **DONE:** `--check` fires on neither ledger at today's sizes **and** demonstrably fires on a
   synthetic file above the new threshold; `choose_cut` returns a real cut at both ledgers'
   densities (the §3-style table recomputed and pasted); **no ledger can stop above
   `READ_REFUSE_BYTES`**.
 - **⚠ Do not ship A2 without C1.**
+- **⚠ AND "THE READ ARM'S THRESHOLD" (§7's A2 mechanism cell) IS TWO SITES, NOT ONE — the single
+  most useful thing this phase learned.** `Trigger.stops()` reads its own constant for the stop,
+  and before C2 both the fire and the stop were `READ_CAP_BYTES`. **Moving only the fire leaves
+  `choose_cut` cutting back to 56,750 B, silently, with every test in the repository green** —
+  nothing asserted what a trim cuts back *to*. If a later phase re-tunes this pair, assert the
+  resting SIZE of a real `--write`, which is the only thing that distinguishes the two outcomes.
+- **⚠ The relaxed arm is SCOPED TO THE REPO ROOT**, an operator decision this plan did not
+  anticipate. `LEDGERS` is resolved by **basename at any depth**, so unscoped it would reach any
+  `*/CHANGELOG.md`; the dashboard's `read_cap_class()` is a **path** lookup and answers `None`
+  for a nested one. The two tools were already asking different questions here, and before C2 the
+  difference cost nothing because both arms used the same constant.
 
 ### Phase C3 — the prefix invariant, and the Class B remedy
 - **Do:** A3, B1, B2.

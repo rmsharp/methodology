@@ -594,8 +594,16 @@ def check_locator_forms(blocks: list) -> list:
 # mutates, rather than three numbers living only in this comment.
 #
 #   CEILING_BYTES         65,536 B   .context-budget.json, HANDOFFS.md `max_bytes`. UNCHANGED
-#                                    by the reduction — still the trigger methodology_trim.py
-#                                    keys on.
+#                                    by the reduction. ⚠ ITS SECOND WARRANT EXPIRED AT PHASE C2
+#                                    (S116, 2026-08-26): this comment used to end "still the
+#                                    trigger methodology_trim.py keys on", and that is now FALSE
+#                                    — option C1 raised DEFAULT_BUDGET_BYTES to 192 KiB and the
+#                                    Class A archive arm is 192 KiB, so the trimmer stays silent
+#                                    on this file at sizes that fired yesterday. The VALUE is
+#                                    deliberately kept: it is what the A1 fit below is computed
+#                                    from, and that reason stands on its own. But it is now a
+#                                    fork-local ceiling rather than a borrowed one, and the next
+#                                    session to re-open it owes it a defence of its own.
 #   HEADER_RESERVE_BYTES   7,168 B   a RESERVE, deliberately above the MEASURED front matter.
 #   RETENTION_FLOOR             3    bin/tests.sh Test 34 reads ids[1]/ids[2] of the LIVE
 #                                    ledger, so a cut below three receipts makes six
