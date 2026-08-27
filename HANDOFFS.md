@@ -71,6 +71,22 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S116
+date: 2026-08-26
+status: pending
+self_score: pending
+predecessor_score: 8
+active_task: **BL-51 Phase C2 — the Class A trigger (option A2), bundled with option C1 (`DEFAULT_BUDGET_BYTES`) as §8 requires.** Authorized by the operator at this claim, on the already-RATIFIED `read-cap-phase-c-plan.md` (§8's sequence; C1 shipped at S115). **TWO DECISIONS ARE THE OPERATOR'S AND ARE NOT MINE TO DERIVE** — they are put to them with evidence before any code moves: **(i) option C1's disposition** (§5, §7 — retire `DEFAULT_BUDGET_BYTES` / raise it / keep it and accept A2 is inert; the plan says outright *"This plan does not decide it"*), and **(ii) the C2 HOLE S115 left fenced at the plan's top** — §6's inventory puts A1's per-class dashboard thresholds at `starter-kit/methodology_dashboard.py:3045-3072`, but §9's C2 DONE criterion names only `--check`, `choose_cut`, `READ_REFUSE_BYTES`, all trimmer-side, so those rows are owned by **no phase**: widen C2 or raise a fourth. **NOT IN SCOPE:** the prefix invariant (A3), the Class B remedy + `BOOTSTRAP.md` (B1/B2), `RECORD_BUDGET_BYTES`, BL-42/43/44/46/47/48/49, issue #75's unsent PR, **any outward-facing action**.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/read-cap-phase-c-plan.md:209-224` (§5, the C1 coupling) · `:252-267` (§7 options) · `:311-318` (§9 Phase C2's DONE criterion) · `:327-351` (§10 dragons 1-8). Carriers to move: `starter-kit/methodology_trim.py:108-142` constants, `:780-811` `Trigger`, `:1711-1721` `--check` rows; `starter-kit/methodology_dashboard.py:296-302` the pinned constants + `tools/` twin.
+gotchas: **`CHANGELOG.md` AND `HANDOFFS.md` ARE OVER BOTH CEILINGS BY ADJUDICATION, NOT NEGLECT** (§10 dragon 8, BL-52 3rd addendum) — `context_budget.py` exits **2** and `trim --check` **FIRES** on both at claim time; that is the expected state and **not** this session's licence to trim. **`bin/check-*` ARE PYTHON; `dashboard_history.jsonl` and `.context-budget-history.jsonl` go dirty from Phase 0 alone — DO NOT `git reset --hard`** (inherited). **`bin/tests.sh` takes ~7 min and EXITS 1 EVEN WHEN GREEN** (Test 9's standing `--source=github` 404) — background it, read `$?` bare, never through a pipe.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-08-26 · [BL-51] S116 claim — Phase C2: the Class A trigger, bundled with `DEFAULT_BUDGET_BYTES`"
+commit: pending
+```
+
+```handoff
 session: S115
 date: 2026-08-26
 status: complete

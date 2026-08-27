@@ -183,6 +183,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-51] S116 claim — Phase C2: the Class A trigger, bundled with `DEFAULT_BUDGET_BYTES`
+
+- **Model:** Claude Opus 5 (1M context).
+- Phase 1B claim. Deliverable: **Phase C2** of [`read-cap-phase-c-plan.md`](docs/planning/read-cap-phase-c-plan.md)
+  §9 — option **A2** (the Class A fire/stop pair) shipped in **one commit** with option **C1**
+  (`DEFAULT_BUDGET_BYTES`), which §8 requires be bundled and §10 dragon 1 explains: `Trigger.fires`
+  is `read_fires or byte_fires`, and the 65,536 B byte arm fires first, so **A2 alone ships a
+  trigger that can never fire.**
+- Authorized by the operator at this claim. The plan itself was **RATIFIED 2026-08-26** at S115's
+  claim; that ratification approved §8's sequence but authorized **only Phase C1**, so C2 needed
+  its own go-ahead and now has it. **Phase C3 stays unstarted.**
+- **TWO DECISIONS BELONG TO THE OPERATOR AND ARE NOT DERIVABLE FROM THE PLAN.** Both are put to
+  them with measured evidence **before any carrier is edited**, and whichever way each falls is
+  recorded here as its own ledger entry:
+  1. **Option C1's disposition** — retire `DEFAULT_BUDGET_BYTES`, raise it, or keep it and accept
+     A2 is inert. §5 states the evidence on both sides and §7's C1 row says plainly
+     *"Judgment, not derivation"*; the plan closes the point with *"This plan does not decide it."*
+     Retiring it orphans the baseline BL-9/BL-32/BL-36/S87/S89 all measured against.
+  2. **The C2 hole**, fenced at the plan's top by S115 and not resolved there. §6's inventory puts
+     option A1's **per-class dashboard thresholds** at `starter-kit/methodology_dashboard.py:3045-3072`,
+     but §9's Phase C2 DONE criterion names only `--check`, `choose_cut` and `READ_REFUSE_BYTES` —
+     all **trimmer**-side. Those risk rows fall between C2's and C3's criteria and are owned by
+     **neither phase**. The operator either widens C2's criterion or raises a fourth phase.
+- **Carriers are DISTRIBUTED** — `starter-kit/methodology_trim.py` and
+  `starter-kit/methodology_dashboard.py` are both TRACKED manifest SOURCEs (the dashboard with a
+  byte-identical `tools/` twin), so this reaches every adopter at their next `bin/sync`. To be
+  re-derived off the manifest's **SOURCE** column at close-out, never by grepping a bare filename.
+- **State at claim, recorded because §10 dragon 8 says a successor will misread it:** `CHANGELOG.md`
+  (81,070 B) and `HANDOFFS.md` (111,388 B) are over both ceilings **by adjudication, not neglect**;
+  `context_budget.py` exits **2** and `methodology_trim.py --check` **FIRES** on both. That is the
+  expected state. **This session does not trim them.**
+- **Not in scope:** the prefix invariant (A3), the Class B remedy and `BOOTSTRAP.md` (B1/B2),
+  `RECORD_BUDGET_BYTES` and the record-budget campaign, `HEADER_RESERVE_BYTES`, Test 34's retention
+  floor, BL-42/43/44/46/47/48/49, issue #75's unsent PR, and **any outward-facing action whatsoever.**
+
 ### 2026-08-26 · [BL-51] S115 — Phase C1: the read-cap population split into two classes, pinned to the trimmer
 
 - **Model:** Claude Opus 5 (1M context).
