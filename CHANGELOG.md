@@ -183,6 +183,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [BL-45] S117 claim — BL-45 re-opened: the `FRAMEWORK_LEARNINGS.md` size remedy
+
+- **Model:** Claude Opus 5 (1M context).
+- Phase 1B claim. Deliverable: **BL-45's remedy**, re-opened on BL-45's own closing instruction —
+  *"Re-open when the ~3 remaining rows are spent."* They are spent. `starter-kit/FRAMEWORK_LEARNINGS.md`
+  is **72,646 B against a 73,728 B ceiling — 1,082 B free**, and `ROW_BUDGET_BYTES` is **1,500**, so
+  **no conforming Phase 3C learning row fits.** S116's close-out named this the binding constraint on
+  its successor rather than a note, and it binds this session too.
+- Authorized by the operator at this claim, from a Phase 0 report that put it beside BL-51 Phase C3
+  and issue #75's unsent PR. **Phase C3 stays unstarted. No outward-facing action is approved,
+  implied, or taken.**
+- **THE OPTION CHOICE IS THE OPERATOR'S.** BL-45's own table says so outright (*"the choice is the
+  operator's"*). Its four options — (a) archive oldest rows, (b) raise the ceiling **[taken at S114,
+  now spent]**, (c) compact the over-budget frozen rows, (d) split by theme **[BL-45 advises
+  against]** — are put to them **re-derived against today's tree**, not quoted: the costed table was
+  measured at **65,520 B / 37 rows** and the file is now **72,646 B / 43 rows**, so every figure in
+  it is stale. Whichever way it falls is recorded here as its own ledger entry before any row moves.
+- **TWO FACTS FOUND AT ORIENT ALREADY FALSIFY THAT TABLE, and both are recorded now rather than at
+  close-out, because a successor who reads BL-45 without them will act on a wrong premise:**
+  1. **The carrier is a DISTRIBUTED manifest source.** `bin/_manifest.py:38` is
+     `("starter-kit/FRAMEWORK_LEARNINGS.md", "FRAMEWORK_LEARNINGS.md", TRACKED)` — read on the
+     **source** column, not by grepping the bare filename — so any change reaches **every adopter at
+     their next `bin/sync`**. BL-45's closure note says *"The change is canonical-only … so no
+     adopter is affected"*; that is true of the **ceiling in `.context-budget.json`**, which is what
+     S114 actually moved, and **not** of the file. Left standing in BL-45 per FM #17; corrected here.
+  2. **Option (a) needs checker work at EVERY N, not only at large N.** BL-45's correction (i)
+     retired the *citation* objection on measurement — archiving the oldest 5 orphans **zero**
+     distributed citations. It never reached `bin/check-learnings:197`,
+     `expected = list(range(1, len(numbers) + len(reserved) + 1))`: the numbered set is asserted
+     contiguous **from 1**. Archiving the oldest row fails the checker at **N = 1** with
+     *"not contiguous from 1 — missing #1"*. The table's *"needs no checker work at small N"* is a
+     claim about citations that reads as a claim about the checker.
+- **Not in scope:** BL-51 Phase C3 (A3/B1/B2), `RECORD_BUDGET_BYTES` and the record-budget campaign,
+  BL-42/43/44/46/47/48/49/50/52, issue #75's unsent PR, and **any outward-facing action whatsoever.**
+- **State at claim, recorded because a successor will misread it:** `CHANGELOG.md` (92,346 B) and
+  `HANDOFFS.md` (123,667 B) are over their fork-local ceilings **by adjudication, not neglect**
+  (BL-52) — `context_budget.py` exits **2**, while `methodology_trim.py --check` fires on
+  **neither**, which is the intended post-Phase-C2 state. **This session does not trim them.**
+
 ### 2026-08-26 · [BL-51] S116 — Phase C2: the Class A archive threshold, bundled with `DEFAULT_BUDGET_BYTES`
 
 - **Model:** Claude Opus 5 (1M context).

@@ -71,6 +71,22 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S117
+date: 2026-08-27
+status: pending
+self_score: pending
+predecessor_score: 8
+active_task: **BL-45 RE-OPENED, on its own instruction — the `starter-kit/FRAMEWORK_LEARNINGS.md` size remedy.** BL-45 closed at S114 by option (b) *raise the ceiling*, and closed with *"Re-open when the ~3 remaining rows are spent."* They are spent: **72,646 B against 73,728 B — 1,082 B free, and `ROW_BUDGET_BYTES` is 1,500**, so no conforming Phase 3C row fits and every future session inherits the block. Authorized by the operator at this claim. **THE OPTION CHOICE IS THE OPERATOR'S AND IS NOT MINE TO DERIVE** — BL-45's own table says the choice is theirs — and it is put to them with re-derived, measured evidence **before any row moves**. **TWO FACTS FOUND AT ORIENT ALREADY FALSIFY THE PRE-COSTED TABLE; see gotchas.** **NOT IN SCOPE:** BL-51 Phase C3 (A3/B1/B2), `RECORD_BUDGET_BYTES`, BL-42/43/44/46/47/48/49/50/52, issue #75's unsent PR, trimming `CHANGELOG.md` or `HANDOFFS.md`, **any outward-facing action whatsoever.**
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/BACKLOG-DETAIL.md:1095-1155` (BL-45, its closure note, its two standing corrections, and the four-option costed table) · `starter-kit/FRAMEWORK_LEARNINGS.md` (the carrier — 43 rows numbered 1..44 with #14 reserved) · `bin/check-learnings:197-203` (the contiguity assertion) · `:242-266` (`check_row_budget`, `ROW_BUDGET_BYTES`) · `:279-300` (the citation sweep and its scope) · `bin/_manifest.py:38` (the manifest row) · `.context-budget.json` (the 73,728 B ceiling and its derivation).
+gotchas: **(1) THE CARRIER IS A DISTRIBUTED MANIFEST SOURCE, AND BL-45'S CLOSURE NOTE READS AS THOUGH IT IS NOT.** `bin/_manifest.py:38` is `("starter-kit/FRAMEWORK_LEARNINGS.md", "FRAMEWORK_LEARNINGS.md", TRACKED)` — parsed on the **SOURCE** column, not by grepping the bare name — so it reaches **every adopter at their next `bin/sync`**. BL-45's *"The change is canonical-only … so no adopter is affected"* is true of the **ceiling in `.context-budget.json`**, which is the thing S114 actually moved; it is **not** true of the file, and a successor reading that sentence as licence would ship a distributed change believing it local. **(2) OPTION (a) NEEDS CHECKER WORK AT EVERY N, NOT ONLY AT LARGE N.** BL-45's correction (i) retired the citation objection — measured, archiving the oldest 5 orphans **zero** distributed citations — but the objection it did **not** reach is `bin/check-learnings:197`, `expected = list(range(1, len(numbers) + len(reserved) + 1))`: the set is asserted contiguous **from 1**. Archive the oldest row and the checker fails *"not contiguous from 1 — missing #1"* at **N=1**. The costed table's *"needs no checker work at small N"* is a claim about **citations** that reads as a claim about the **checker**. **(3) `bin/check-learnings` UNDERSTATES THE MAXIMUM BY ONE (BL-44, open)** — it prints `len(rows)` for both operands and #14 is reserved, so it says *"43 rows, contiguous 1..43"* when the newest row is **#44**. Count the numbers; do not read the summary. **(4) A FILE YOU SHRINK MAY BE SOMEONE'S FIXTURE** — what reads this file that is not a human must be enumerated before any row moves, not after. **(5) `CHANGELOG.md` and `HANDOFFS.md` are over their fork-local ceilings BY ADJUDICATION (BL-52)** — `context_budget.py` exits **2** at claim time, `trim --check` fires on **neither**. Expected state; **not** this session's licence to trim. **(6) `bin/check-*` ARE PYTHON; the two `*.jsonl` go dirty from Phase 0 alone — DO NOT `git reset --hard`** (inherited). **(7) `bin/tests.sh` takes ~7 min and EXITS 1 EVEN WHEN GREEN** — background it, read `$?` bare, never through a pipe.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-08-27 · [BL-45] S117 claim — BL-45 re-opened: the FRAMEWORK_LEARNINGS.md size remedy"
+commit: pending
+```
+
+```handoff
 session: S116
 date: 2026-08-26
 status: complete
