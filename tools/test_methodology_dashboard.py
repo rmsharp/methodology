@@ -2156,10 +2156,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.16.0")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.16.1")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.16\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.16.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.16\.1"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.16.1")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general
@@ -4943,6 +4943,331 @@ class TestS38TrimTriggerRow(unittest.TestCase):
         stripped["trim"] = {"signals": [], "ledgers": [], "tool_present": False,
                             "tool_path": None, "tool_version": None, "budget_bytes": None}
         self.assertEqual(md.score_health(stripped)["total"], before)
+
+
+class TestPhaseC1ReadCapClasses(unittest.TestCase):
+    """Phase C1 of `docs/planning/read-cap-phase-c-plan.md` (BL-51) -- the watched population
+    becomes TWO CLASSES, and each guard finally claims something true of the files it watches.
+
+    WHAT THIS PHASE DELIBERATELY DOES NOT DO: move a threshold. Plan section 8 says option A1
+    "changes no threshold and cannot degenerate anything" and section 9's Phase C1 criterion names
+    none; section 7's A1 row, whose mechanism cell reads as if two thresholds move, is the summary
+    that drifted. The threshold move is Phase C2, which section 8 requires be bundled with option
+    C1 (`DEFAULT_BUDGET_BYTES`) or it is inert. So the population assertion below is not a
+    formality -- it is the phase's central claim, and it is asserted against a FROZEN literal
+    rather than against the module's own union, which would be an identity.
+
+    NOT RED-FIRST, and labelled as such per this file's docstring rule: `READ_CAP_CLASS_A`,
+    `READ_CAP_CLASS_B` and `read_cap_class` do not exist before this phase, so every assertion
+    here fails with AttributeError against the pre-change scanner -- which proves the names are
+    new, not that the behaviour they pin was wrong. What earns these tests their place is
+    MUTATION: each one below states, in its own docstring, the producer mutant it kills.
+    """
+
+    REPO = Path(HERE).parent
+
+    # The six names as they stood at the END of Phase B, copied here as a FROZEN literal and
+    # deliberately never derived from the module. Comparing the module's union against the
+    # module's own parts would be an identity that cannot fail (Learning #16).
+    POPULATION_AT_PHASE_B = frozenset((
+        "SESSION_NOTES.md", "CHANGELOG.md", "HANDOFFS.md",
+        "BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md",
+    ))
+
+    # --- the partition --------------------------------------------------------------------------
+
+    def test_every_watched_name_resolves_to_exactly_one_class(self):
+        """Plan section 9's first DONE criterion, asserted three ways because a partition can fail
+        in three directions: overlap, gap, and a classifier that disagrees with the sets it reads.
+
+        ⚠ THE COVERAGE HALF IS ASSERTED AGAINST THE FROZEN POPULATION, NEVER AGAINST
+        `READ_CAP_WATCHED`, AND THAT IS NOT A STYLE CHOICE. The union is DERIVED from the two
+        classes, so `assertEqual(A | B, READ_CAP_WATCHED)` expands to `A | B == A | B` — an
+        identity that cannot fail (Learning #16). The first draft of this test asserted exactly
+        that, and the mutation round is what caught it: narrowing a class (M1, M8) shrinks the
+        union in lockstep, so the tautological form stayed green on both while claiming to be
+        the assertion that covers them. Compare to a literal that does not move.
+
+        KILLS: `read_cap_class` returning a constant or forgetting a branch (M5, M6); a name
+        listed in both classes (M10); a name dropped from a class, which under a derived union
+        leaves it in NEITHER (M1, M8)."""
+        self.assertEqual(md.READ_CAP_CLASS_A & md.READ_CAP_CLASS_B, frozenset(),
+                         "the classes must be DISJOINT: a name in both gets two verdicts")
+        self.assertEqual(set(md.READ_CAP_CLASS_A | md.READ_CAP_CLASS_B),
+                         set(self.POPULATION_AT_PHASE_B),
+                         "the classes must COVER the population: a name that fell out of both is "
+                         "no longer watched at all, and under a derived union nothing else says so")
+        self.assertTrue(md.READ_CAP_CLASS_A, "fixture check: Class A must be non-empty")
+        self.assertTrue(md.READ_CAP_CLASS_B, "fixture check: Class B must be non-empty")
+        for name in sorted(self.POPULATION_AT_PHASE_B):
+            with self.subTest(name=name):
+                self.assertIn(md.read_cap_class(name), ("A", "B"))
+                self.assertEqual(md.read_cap_class(name) == "A", name in md.READ_CAP_CLASS_A)
+                self.assertEqual(md.read_cap_class(name) == "B", name in md.READ_CAP_CLASS_B)
+        self.assertIsNone(md.read_cap_class("chap07.md"),
+                          "an unwatched name must classify as None, not fall into a default class")
+        self.assertIsNone(md.read_cap_class("SESSION_RUNNER.md"),
+                          "a TRACKED dest is not watched at all, and must not acquire a class by "
+                          "the classifier being permissive")
+
+    def test_the_split_repartitioned_the_population_without_changing_it(self):
+        """PHASE C1'S CENTRAL CLAIM. Against a frozen literal of the six names as Phase B left
+        them -- not against the module's own union, which cannot disagree with itself.
+
+        KILLS: any add or drop, including the two `docs/**` locations this phase was required to
+        disposition. Dropping one is a defensible decision; doing it SILENTLY, inside a phase
+        whose plan says it cannot degenerate anything, is not."""
+        self.assertEqual(set(md.READ_CAP_WATCHED), set(self.POPULATION_AT_PHASE_B))
+
+    def test_the_union_is_derived_rather_than_a_third_spelling_of_the_six_names(self):
+        """The claim above is only PROVABLE while `READ_CAP_WATCHED` is computed from the classes.
+        Re-listing the names as a literal would leave the population correct and the guarantee
+        gone -- the two could then drift apart and only this assertion would notice.
+
+        Read out of the SOURCE TEXT, because there is no runtime difference between a derived
+        frozenset and an identical literal one -- which is exactly why it needs asserting.
+
+        KILLS: `READ_CAP_WATCHED = frozenset((...six names...))` restored beside the classes."""
+        src = Path(STARTER_PY).read_text(encoding="utf-8")
+        m = re.search(r"(?m)^READ_CAP_WATCHED\s*=\s*(.+)$", src)
+        self.assertIsNotNone(m, "the module must still declare READ_CAP_WATCHED at module scope")
+        self.assertRegex(m.group(1).strip(), r"^READ_CAP_CLASS_A\s*\|\s*READ_CAP_CLASS_B$",
+                         "READ_CAP_WATCHED must stay DERIVED from the two classes; a literal "
+                         "re-listing makes 'the population did not change' unprovable")
+
+    # --- the pin: class membership is asserted against the trimmer, never restated ---------------
+
+    def test_class_a_is_pinned_to_the_trimmers_ledgers_table(self):
+        """Plan section 9's second DONE criterion: a canonical test must FAIL if a name is added
+        to `LEDGERS` without moving class. This is that test.
+
+        The direction matters and is the subject of plan section 10 dragon 6. Class A is DECLARED,
+        not derived from `LEDGERS` -- derivation would make widening the trimmer silently
+        reassign a file's class, which is the failure the dragon names. Declaring it and pinning
+        it here means the widening turns this red and a human moves the name deliberately.
+
+        Operands are independent: one side is this module's constant, the other is the trimmer's
+        own executed module (Learning #16). This is the pattern
+        test_grammars_agree_with_the_trimmer_config_table established, applied to the class.
+
+        KILLS: moving CHANGELOG.md or HANDOFFS.md to Class B; adding a third name to Class A."""
+        trim = _load_trimmer()
+        self.assertEqual(sorted(n.rsplit("/", 1)[-1] for n in md.READ_CAP_CLASS_A),
+                         sorted(trim.LEDGERS),
+                         "Class A IS the set of watched names the trimmer can act on. If LEDGERS "
+                         "gained or lost a key, move the name between the classes here "
+                         "deliberately -- and re-read plan section 10 dragon 6 first")
+
+    def test_class_b_is_exactly_the_set_the_trimmer_refuses(self):
+        """The other half of the pin, and it fails independently. Without it, a name added to BOTH
+        `LEDGERS` and Class B would be caught only by the A-side assertion above -- and a future
+        edit that relaxes that one would leave nothing watching this.
+
+        The trimmer's refusal is asserted by CALLING it, not by reading its table twice: for each
+        Class B basename the config lookup must come back empty, which is the `NO_CONFIG` answer
+        the plan and the module comment both cite as the reason these files get no trim row.
+
+        ⚠ THE NON-EMPTY GUARD BELOW IS LOAD-BEARING, not decoration: this is a subTest loop over
+        `READ_CAP_CLASS_B`, and a loop over an empty sequence runs its body ZERO times and passes.
+        Emptying Class B would otherwise be caught only by a SIBLING test, and a test that depends
+        on its neighbour for its own non-vacuity is one edit away from asserting nothing.
+
+        KILLS: a Class B name that also acquires a `LEDGERS` entry — the case where the trimmer is
+        widened and this file is not. It does NOT independently kill a name PROMOTED to Class A;
+        that one is the A-side pin's, and an earlier draft of this docstring claimed it here."""
+        trim = _load_trimmer()
+        self.assertTrue(md.READ_CAP_CLASS_B,
+                        "fixture check: Class B must be non-empty, or the loop below runs zero "
+                        "times and this test passes without asserting anything")
+        for name in sorted(md.READ_CAP_CLASS_B):
+            with self.subTest(name=name):
+                self.assertIsNone(trim.LEDGERS.get(name.rsplit("/", 1)[-1]),
+                                  "a Class B name must be one the trimmer has NO config for; "
+                                  "naming the trimmer as its remedy would point an adopter at a "
+                                  "refusal")
+
+    # --- the class is what the trim row is now selected by ---------------------------------------
+
+    def test_the_trim_row_population_is_class_a_at_the_constants_and_at_the_output(self):
+        """The class and the old basename filter select the same two names today. That is the
+        precondition for Phase C1 changing no behaviour, so it is asserted rather than assumed --
+        and asserted at BOTH ends, because agreeing at the constants says nothing about what the
+        collector actually emitted (Learning #16 again).
+
+        GUARD-THE-GUARD on the output half: it also passes against the pre-change collector, since
+        the two filters coincide. Its companion below is the one that can tell them apart."""
+        for name in sorted(md.READ_CAP_WATCHED):
+            with self.subTest(name=name):
+                self.assertEqual(md.read_cap_class(name) == "A",
+                                 name.rsplit("/", 1)[-1] in md.TRIM_GRAMMARS,
+                                 "class membership and grammar membership must still coincide; "
+                                 "if they have diverged, the trim row's population changed and "
+                                 "Phase C1's no-behaviour-change claim no longer holds")
+        rows = {l["path"] for l in md.collect_all(self.REPO)["trim"]["ledgers"]}
+        self.assertTrue(rows, "fixture check: this repo must produce at least one trim row, or "
+                              "the assertion below is vacuous")
+        self.assertTrue(rows <= set(md.READ_CAP_CLASS_A),
+                        "every emitted trim row must be a Class A file: %r" % sorted(rows))
+
+    def test_a_watched_name_in_no_class_gets_no_trim_row_even_when_its_basename_matches(self):
+        """THE ONE ASSERTION THAT CAN TELL THE TWO FILTERS APART — and it does so at the FUNCTION'S
+        contract, not in production. Said plainly, because an earlier draft of this docstring did
+        not: `collect_file_metrics` only ever admits exact members of `READ_CAP_WATCHED` into
+        `read_cap_watch`, so through `collect_all` the old and new filters are equivalent on every
+        input that can exist, and Phase C1 changed no production behaviour. What this test proves
+        is that `collect_trim_metrics` honours its own contract — it takes `files` as a PARAMETER,
+        so a caller can hand it a name `collect_all` never would, and the function should answer NO
+        rather than guess from the filename. Read the kill of the revert-to-basename mutant that
+        way, and not as evidence of a live bug.
+
+        `docs/CHANGELOG.md` has a basename the trimmer knows a grammar for, and no class. Under
+        the old `basename in TRIM_GRAMMARS` filter it would be handed a trim row -- naming
+        `--check` against a path this scanner never decided to watch. Under class membership it is
+        skipped, because `read_cap_class` returns None and an unclassified file has no verdict to
+        emit. The class system forces the decision instead of guessing it from the filename.
+
+        No monkeypatching: `collect_trim_metrics` takes its population from the `files` dict it is
+        handed, so the case is constructed directly.
+
+        KILLS: reverting the filter to `basename in TRIM_GRAMMARS`."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        (p / "SESSION_RUNNER.md").write_text("# Session Runner\n" + "step\n" * 40)
+        big = "x\n" * ((md.READ_CAP_BYTES + 100) // 2)
+        (p / "docs").mkdir()
+        (p / "docs" / "CHANGELOG.md").write_text(big)
+        (p / "CHANGELOG.md").write_text(big)
+
+        self.assertIsNone(md.read_cap_class("docs/CHANGELOG.md"),
+                          "fixture check: docs/CHANGELOG.md must be unclassified, or this test is "
+                          "not exercising the case it was written for")
+        self.assertIn("CHANGELOG.md", md.TRIM_GRAMMARS,
+                      "fixture check: the basename must be one the trimmer knows, or the old "
+                      "filter would have skipped it too and the two agree vacuously")
+
+        unclassified = md.collect_trim_metrics(
+            p, {"read_cap_watch": [{"path": "docs/CHANGELOG.md", "lines": 9, "bytes": None}]})
+        self.assertEqual([l["path"] for l in unclassified["ledgers"]], [],
+                         "an unclassified watched name must get NO trim row")
+        self.assertEqual(unclassified["signals"], [])
+
+        # Positive control: the same harness, one directory up, does produce the row -- so the
+        # empty result above is the filter working, not the fixture failing to reach the code.
+        classified = md.collect_trim_metrics(
+            p, {"read_cap_watch": [{"path": "CHANGELOG.md", "lines": 9, "bytes": None}]})
+        self.assertEqual([l["path"] for l in classified["ledgers"]], ["CHANGELOG.md"])
+        self.assertTrue(classified["signals"], "the control must actually fire")
+
+    # --- the disposition, and the evidence it rests on --------------------------------------------
+
+    def test_the_two_docs_backlog_locations_have_no_protocol_basis(self):
+        """Plan section 9's third DONE criterion is a DECISION -- keep or drop, but decide it. The
+        decision was KEEP, and this pins the evidence the decision rests on so that the reasoning
+        recorded beside the classes cannot quietly become false.
+
+        The claim: neither `docs/BACKLOG.md` nor `docs/planning/BACKLOG.md` is named as a file to
+        read anywhere in the protocol, so both are watched by analogy to the root basename -- a
+        weaker warrant than the other four names have, and one worth saying out loud rather than
+        letting a reader assume parity.
+
+        The net is the WHOLE distributed .md corpus taken off bin/_manifest.py's SOURCE column,
+        not just the two protocol files: a claim about "no distributed file" cannot be settled by
+        a net that misses most of them. The single hit that does exist is Learning #26 citing this
+        repo's own backlog as a WORKED EXAMPLE, which is evidence ABOUT the file, not an
+        instruction to open it -- so it is allowed for by name rather than papered over.
+
+        THIS TEST IS SUPPOSED TO GO RED IF THE PROTOCOL CHANGES. That is its job: the day a runner
+        edit gives one of these locations a real basis, the KEEP decision has a stronger warrant
+        than "by analogy" and the comment beside the classes must be rewritten to say so."""
+        root = Path(HERE).parent
+        sys.path.insert(0, str(root / "bin"))
+        try:
+            import _manifest
+            distributed_md = [r[0] for r in _manifest.DISTRIBUTION if r[0].endswith(".md")]
+        finally:
+            sys.path.remove(str(root / "bin"))
+        self.assertGreater(len(distributed_md), 15,
+                           "fixture check: the distributed .md corpus must be the wide net, not a "
+                           "handful of files")
+
+        for protocol_file in ("starter-kit/SESSION_RUNNER.md", "starter-kit/SAFEGUARDS.md"):
+            text = (root / protocol_file).read_text(encoding="utf-8")
+            self.assertIn("BACKLOG.md", text,
+                          "fixture check: %s must still name the ROOT backlog, or the absence "
+                          "assertions below are trivially true" % protocol_file)
+            for loc in ("docs/BACKLOG.md", "docs/planning/BACKLOG.md"):
+                with self.subTest(file=protocol_file, loc=loc):
+                    self.assertNotIn(loc, text)
+
+        hits = {loc: sorted(f for f in distributed_md
+                            if loc in (root / f).read_text(encoding="utf-8"))
+                for loc in ("docs/BACKLOG.md", "docs/planning/BACKLOG.md")}
+        self.assertEqual(hits["docs/BACKLOG.md"], [],
+                         "docs/BACKLOG.md is named nowhere in the distributed corpus; if that has "
+                         "changed, its disposition is no longer 'by analogy'")
+        self.assertEqual(hits["docs/planning/BACKLOG.md"], ["starter-kit/FRAMEWORK_LEARNINGS.md"],
+                         "the only distributed mention must remain Learning #26's worked example, "
+                         "which is evidence about the file rather than an instruction to read it")
+
+    def test_the_fleet_facts_the_disposition_was_decided_on_are_stated_not_assumed(self):
+        """The other half of the KEEP decision: keeping these two costs nothing measurable.
+
+        Asserted only about THIS repo, because it is the only one in the fleet a canonical test
+        may read. `docs/planning/BACKLOG.md` is live here and well under the cap; `docs/BACKLOG.md`
+        does not exist, so watching it emits nothing. The four sibling repos were measured in
+        S115's receipt and are deliberately NOT asserted here -- a test that reads outside its own
+        repository would fail on every clone that does not have the fleet beside it."""
+        root = Path(HERE).parent
+        self.assertTrue((root / "docs" / "planning" / "BACKLOG.md").is_file(),
+                        "this repo's own Class B backlog is the worked example the disposition "
+                        "cites; if it moved, re-derive the decision rather than the path")
+        self.assertFalse((root / "docs" / "BACKLOG.md").exists(),
+                         "docs/BACKLOG.md is watched speculatively; if one has appeared here, the "
+                         "'emits nothing' half of the disposition needs re-measuring")
+        watched = {w["path"] for w in md.collect_all(root)["files"]["read_cap_watch"]}
+        self.assertIn("docs/planning/BACKLOG.md", watched)
+        self.assertNotIn("docs/BACKLOG.md", watched)
+
+    # --- the phase's own boundary -----------------------------------------------------------------
+
+    def test_phase_c1_moved_no_threshold(self):
+        """Plan section 8: option A1 "changes no threshold and cannot degenerate anything". The
+        constants are pinned to the trimmer elsewhere; what this adds is that the CLASSES did not
+        acquire thresholds of their own, which is Phase C2's job and would be inert before option
+        C1 settles `DEFAULT_BUDGET_BYTES` (plan section 5).
+
+        ⚠ BOTH HALVES OF THIS TEST WERE REWRITTEN AFTER REVIEW, and the reasons are the two traps
+        this class exists to avoid. The value half asserted `READ_CAP_BYTES == READ_CAP_TOKENS *
+        MIN_BYTES_PER_TOKEN` — which is the module's own definition of `READ_CAP_BYTES`, so both
+        operands moved together and a threshold could be moved to any value with this test still
+        green. It is Learning #43 again, in the class that ships Learning #43. FROZEN LITERALS are
+        used instead: an operand that does not move is the whole point. (Consistency between the
+        derivation and the trimmer is a different question, already owned by
+        test_cap_agrees_with_the_trimmer — this test's job is only "did a number move".)
+
+        The structural half grepped four INVENTED constant names that appear nowhere in the plan or
+        the codebase, and the mutant that "killed" it was written to use one of those exact names —
+        fitting the mutant to the guard. It is replaced by a check over the module's actual
+        namespace, which no per-class threshold can slip past whatever it is called.
+
+        KILLS: any threshold move; any per-class threshold constant landing early under any name —
+        which would ship a trigger that never fires while the byte arm fires first (plan §5)."""
+        self.assertEqual(md.READ_CAP_BYTES, 56_750,
+                         "the one-read budget moved; that is Phase C2's change, not C1's")
+        self.assertEqual(md.READ_REFUSE_BYTES, 262_144,
+                         "the hard refusal moved; that is Phase C2's change, not C1's")
+        self.assertEqual(md.READ_CAP_TOKENS, 25_000)
+        self.assertEqual(md.MIN_BYTES_PER_TOKEN, 2.27)
+        class_names = sorted(n for n in dir(md) if n.startswith("READ_CAP_CLASS"))
+        self.assertEqual(class_names, ["READ_CAP_CLASS_A", "READ_CAP_CLASS_B"],
+                         "Phase C1 adds the two classes and NOTHING attached to them. A per-class "
+                         "threshold belongs to Phase C2, which plan §5 says is INERT until option "
+                         "C1 (DEFAULT_BUDGET_BYTES) is decided in the same change: %r" % class_names)
+        for name in class_names:
+            self.assertIsInstance(getattr(md, name), frozenset,
+                                  "%s must stay a set of names; a threshold smuggled in as a dict "
+                                  "value would pass the name check above" % name)
 
 
 if __name__ == "__main__":

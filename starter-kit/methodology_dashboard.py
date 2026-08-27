@@ -84,7 +84,7 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.16.0"
+DASHBOARD_VERSION = "2.16.1"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -320,8 +320,11 @@ READ_REFUSE_BYTES = 256 * 1024                                  # the hard, zero
 # THE SET IS NEVERTHELESS UNCHANGED, and that is a decision rather than an oversight. The row
 # reports a real property — whether one read delivers the file — which stays true whoever reads
 # it and however rarely. What was wrong was the REASON given, and a reason nobody re-checks is how
-# this defect got here. Narrowing the population is a separate, fleet-visible call, sequenced
-# after this one (Phase C / BL-52).
+# this defect got here. Narrowing the population was deferred to a separate, fleet-visible call —
+# and Phase C1 has since MADE that call: it PARTITIONED the six names without removing any, and
+# the two `docs/**` locations were kept deliberately, on evidence, for the reason stated with the
+# classes below. So the sentence above is still true, and it is now true by decision twice over
+# rather than by deferral.
 #
 # Written as a literal, NOT derived from METHODOLOGY_ITEMS, because two of that checklist's file
 # entries — SESSION_RUNNER.md and SAFEGUARDS.md — are TRACKED dests in bin/_manifest.py: files we
@@ -335,9 +338,85 @@ READ_REFUSE_BYTES = 256 * 1024                                  # the hard, zero
 # a file read whole to compute anything. Absent above all: a book chapter. Nobody is instructed to
 # read chap07.md in full, so truncating it produces no wrong answer — flagging it would re-create
 # the very false positive BL-5's ext filter, one signal over, exists to kill.
-READ_CAP_WATCHED = frozenset(
-    ("SESSION_NOTES.md", "CHANGELOG.md", "HANDOFFS.md") + _BACKLOG_LOCATIONS
-)
+#
+# --- Phase C1: THE POPULATION IS TWO CLASSES, AND THE DIFFERENCE IS NOT COSMETIC ---------------
+# The six names above were one set, and the paragraph before this one records what that cost: a
+# justification that was FALSE for two of them, standing because nobody re-derived it. The split
+# below is read off two INDEPENDENT, machine-checkable facts, never off judgment:
+#
+#   Class A   the trimmer has a config entry for it (its basename is a key of LEDGERS), AND the
+#             protocol consumes it through a FRONTIER (`git log -1 --format=%H -- <file>`) or one
+#             record at a time (Phase 3A), never as a whole file. Records are dated/fenced and
+#             newest-on-top, so delivery being an ORDERED PREFIX means truncation removes the
+#             OLDEST records -- the ones nothing was reading. Measured across 85 transcripts of
+#             this repo: each root ledger was read WHOLE exactly ONCE, in PART 1,696/1,797 times.
+#
+#   Class B   the trimmer answers NO_CONFIG by design, AND the instructed access path IS the file
+#             (SESSION_RUNNER.md steps 2 and 3), with NO REMEDY the reader can reach -- no
+#             distributed file says what to do about an oversized one, which is the gap that
+#             separates this class from A far more sharply than any threshold does.
+#             ⚠ ORDERING: no Class B file has an ordering that GUARANTEES the needed part is in
+#             the delivered prefix -- and the qualifier is the whole claim, so it is not dropped
+#             here. An earlier draft of this comment said flatly "there is no record ordering that
+#             puts the needed part at the top", which is FALSE of SESSION_NOTES.md: step 2 tells a
+#             session to "focus on the ACTIVE TASK section at the top", the seed puts that heading
+#             at line 9, and across 11 fleet repos it sits at byte offsets 132-23,013 -- inside
+#             READ_CAP_BYTES in all 10 that have it. The true statement is that nothing ENFORCES
+#             it, and the fleet shows both ways that fails: one file carries 23 KB of prose above
+#             its ACTIVE TASK, and ONE (mts-system, 269,652 B) has no such heading at all -- zero
+#             `## ` headings, its records opening at `### Session N`. Past READ_REFUSE_BYTES
+#             ordering buys nothing for either class anyway. Where the absolute
+#             form IS true is the backlogs: a backlog's bottom items are as live as its top ones,
+#             so a truncated read silently loses OPEN WORK and the reader is told THAT something
+#             was cut, never WHAT. (This correction is the paragraph above happening again --
+#             a class justification asserted for all its names while holding for only some. It was
+#             caught by review, not by a check, because no check here can reach prose.)
+#
+# WHY BOTH SETS ARE WRITTEN OUT AND THE UNION IS DERIVED, RATHER THAN THE REVERSE. Deriving the
+# CLASS from the trimmer would make widening LEDGERS silently reassign a file -- exactly what
+# read-cap-phase-c-plan.md section 10 dragon 6 says must FAIL rather than follow. So each class is
+# DECLARED and a canonical test PINS Class A against the trimmer's own LEDGERS table; adding a
+# name there without moving it here turns that test red, which is the point. Deriving the UNION
+# instead is what makes "the population did not change" provable rather than asserted -- Phase C1
+# moves no threshold (plan sections 8 and 9; section 7's A1 row, which reads otherwise, is the
+# summary that drifted, and the threshold move is Phase C2).
+#
+# DISPOSITION OF THE TWO `docs/**` BACKLOG LOCATIONS: KEEP, BY ANALOGY, AND THE ANALOGY IS SAID
+# OUT LOUD. Plan section 9 requires this be DECIDED rather than inherited. Neither is named as a
+# file to read anywhere in SESSION_RUNNER.md or SAFEGUARDS.md, and across the whole DISTRIBUTED
+# .md corpus (22 files, taken off bin/_manifest.py's SOURCE column) `docs/BACKLOG.md` appears
+# ZERO times and `docs/planning/BACKLOG.md` appears once -- in FRAMEWORK_LEARNINGS.md Learning
+# #26, which cites this repo's own backlog as a WORKED EXAMPLE, not as a file anyone is told to
+# open. So they are watched by analogy to the root basename, and that is a weaker warrant than
+# the other four have. They are kept anyway, for the reason plan section 7 rejects option D on:
+# the row reports a REAL PROPERTY -- does one read deliver this file? -- which stays true however
+# rarely anyone reads it, and dropping a name is a fleet-visible narrowing that buys nothing.
+# Measured cost of keeping them: `docs/BACKLOG.md` matches NO file in the 5-repo fleet, so it
+# emits nothing; `docs/planning/BACKLOG.md` matches exactly one, THIS repo's, at 0.54x the cap.
+# A canonical test pins the "no protocol basis" half of that reasoning, so the day a protocol
+# edit gives one of them a basis, this comment is forced to be revisited instead of quietly
+# becoming false -- which is the failure the paragraph above records.
+READ_CAP_CLASS_A = frozenset(("CHANGELOG.md", "HANDOFFS.md"))
+READ_CAP_CLASS_B = frozenset(("SESSION_NOTES.md",) + _BACKLOG_LOCATIONS)
+
+# DERIVED, never re-listed. Phase C1's whole claim is that it repartitions this set without
+# changing it, and a third literal spelling of the six names would make that claim unprovable.
+READ_CAP_WATCHED = READ_CAP_CLASS_A | READ_CAP_CLASS_B
+
+
+def read_cap_class(rel_posix):
+    """"A", "B", or None for a name this scanner does not watch.
+
+    The one place that knows the partition. Callers ask the question rather than re-deriving it
+    from a membership test against the trimmer's grammar table -- which is what collect_trim_metrics
+    did before Phase C1, and which was correct only because the two happened to coincide. They
+    still coincide, and a canonical test asserts that they do; the difference is that the
+    coincidence is now checked rather than relied on."""
+    if rel_posix in READ_CAP_CLASS_A:
+        return "A"
+    if rel_posix in READ_CAP_CLASS_B:
+        return "B"
+    return None
 
 # --- S38: the trim-trigger row ------------------------------------------------------------------
 # D4(b) above reports a file that is ALREADY truncating. This reports the file that is heading
@@ -2091,12 +2170,24 @@ def collect_trim_metrics(path, files, role="adopter"):
         except ValueError:
             result["tool_path"] = tool["path"].name
 
-    # The population is the intersection of what a session must read in full and what the
-    # trimmer has a config entry for. read_cap_watch already holds the line counts; taking the
-    # names from TRIM_GRAMMARS is what keeps the row from pointing at a file the tool refuses.
+    # The population is CLASS A -- the watched names the trimmer has a config entry for -- which
+    # is what keeps the row from pointing at a file the tool refuses.
+    #
+    # PHASE C1 CHANGED THE SPELLING, NOT THE SET, AND ON EVERY INPUT collect_all CAN PRODUCE IT
+    # CHANGES NOTHING AT ALL -- said plainly because an earlier draft of this comment overstated it.
+    # This filtered on `basename in TRIM_GRAMMARS`. collect_file_metrics only ever admits an exact
+    # member of READ_CAP_WATCHED into read_cap_watch, so through collect_all the two filters are
+    # EQUIVALENT, not merely equivalent-today: no path exists that the old filter accepts and the
+    # new one rejects. The change is therefore not a bug fix and is not claimed as one.
+    # WHAT IT DOES BUY, which is why it was made: this function takes `files` as a PARAMETER, so
+    # its contract is wider than collect_all's output. Asked by basename, it answers "does the
+    # trimmer know a grammar for a file with this name" -- which would hand a `docs/x/CHANGELOG.md`
+    # a `--check` remedy if a caller ever passed one. Asked by class, it answers "is this one of
+    # the watched files the trimmer can act on", which is the actual precondition for the remedy
+    # below, and it makes an unclassified name a NO rather than a guess from the filename. A
+    # canonical test drives that case directly, because collect_all cannot construct it.
     for w in files.get("read_cap_watch", []):
-        basename = w["path"].rsplit("/", 1)[-1]
-        if basename not in TRIM_GRAMMARS:
+        if read_cap_class(w["path"]) != "A":
             continue
         fpath = path / w["path"]
         try:

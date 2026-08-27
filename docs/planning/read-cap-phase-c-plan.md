@@ -13,11 +13,24 @@ action still needs the operator's explicit go-ahead, each time.
 > means **option** C1, the constant, and not Phase C1, which by then is already shipped. Read every
 > bare `C1` by its section: §7 and §8 mean the option, §9 means the phase.
 >
-> **⚠ Phase C1 CHANGES NO THRESHOLD, and §7's A1 row reads as if it does.** That row's mechanism
-> cell says the two classes get *"two thresholds"*; §8 says A1 *"changes no threshold and cannot
-> degenerate anything"*, and §9's Phase C1 criterion names none. **§8 and §9 are binding and §7's
-> cell is the summary that drifted** — the threshold move is **Phase C2** (option A2), which §8
-> requires be bundled with option C1 or it is inert. Phase C1 is structure only.
+> **⚠ §7's A1 ROW AND §§8–9 DISAGREE ABOUT WHAT A1 DELIVERS, AND THE DISAGREEMENT IS REAL RATHER
+> THAN A WORDING SLIP.** §7's A1 row promises *two thresholds*, rows that become *different*, and a
+> *fleet-visible* effect ("Class A rows drop, Class B rows stay"). §8 says A1 *"changes no threshold
+> and cannot degenerate anything"*; §9's Phase C1 criterion names no threshold and no row change.
+> **S115 implemented §9's criterion**, because §9 is the phase spec a session closes against — so
+> Phase C1 shipped as **structure only and is deliberately fleet-invisible** (measured: the
+> pre-change and post-change modules emit byte-identical watched rows, trim rows, signals, risk rows
+> and health score on the same tree). **A1's *buys* are therefore DEFERRED, not delivered.**
+>
+> **⚠ AND ONE PIECE OF A1 IS NOW OWNED BY NO PHASE — this needs the operator, and S115 did not
+> resolve it.** §6's inventory puts A1's per-class thresholds at
+> `starter-kit/methodology_dashboard.py:3045-3072` (the D4(b) risk rows), but §9's **Phase C2**
+> DONE criterion names only `--check`, `choose_cut` and `READ_REFUSE_BYTES` — all in the
+> **trimmer** — and Phase C3 is A3+B1+B2. So *"the threshold move is Phase C2"* is true of the
+> trimmer's trigger and **not** of the dashboard's per-class rows, which fall between the two
+> phases' criteria. Whoever runs C2 must either widen its DONE criterion to cover the dashboard
+> rows or raise it as a fourth phase. Do not assume it was handled here.
+
 **Origin:** the operator's proposal at S112's close-out — *"perhaps we should only worry about the
 256 KB limit for trimming. Would that satisfy all methodology's needs?"*
 **Predecessor:** [`read-cap-premise-correction-plan.md`](read-cap-premise-correction-plan.md)
