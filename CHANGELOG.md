@@ -183,6 +183,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S118 claim — answer the six operator decisions gating Phase 1 of the file-management plan
+
+- **Model:** Claude Opus 5 (1M context).
+- Phase 1B claim. **Deliverable: the six operator decisions in
+  [`docs/planning/file-management-system-plan.md`](docs/planning/file-management-system-plan.md) §6,
+  asked and RECORDED** — each as its own entry in this ledger, the way S116 recorded its three.
+  Assigned by the operator at this claim from a Phase 0 report that put it beside BL-51 Phase C3,
+  issue #75's unsent PR, and the 1-commit `upstream/main` resync. **None of those is authorized.**
+- **Why this is a session and not a preamble.** §6 states the gate in its own words — *"Phase 1 does
+  not start until these are answered"* — and states why the gate cannot be dissolved by working
+  harder: *"None is derivable from measurement — that is why they are here and not in §4."* The plan
+  is **DRAFT** until they are answered; six of its seven phases depend on the vocabulary D1–D6 fix.
+- **THE ANSWERS ARE THE OPERATOR'S. A RECOMMENDATION IS NOT AN ANSWER.** This session's work is to
+  re-verify each decision's load-bearing evidence **against today's tree**, put concrete costed
+  options with their consequences, and record what is chosen — attributed, so a successor cannot
+  read a recommendation as a ratification.
+- **The six, in §6's order:** **D1** target cost per session · **D2** how many of each thing the
+  framework carries · **D3** the semantic event on which an artifact retires · **D4** whether
+  *undeliverable in one `Read`* is a fault or an accepted operating state · **D5** whether ceilings
+  are denominated in the conservative floor or measured density · **D6** whether the framework has
+  jurisdiction over adopter-owned files, and by what delivery mechanism. **A seventh rides with
+  Phase 1** — whether `SESSION_RUNNER.md` and `SAFEGUARDS.md` get ceilings at all; it is recorded
+  with the six because `.context-budget.json`'s `_deliberate_exclusions` declined it once already.
+- **RE-MEASUREMENT IS PART OF THE WORK, NOT A COURTESY.** Every figure in §6 was measured during
+  S117 and some were stale before that session closed: `FRAMEWORK_LEARNINGS.md`'s 73,483 B is the
+  size *after* S117's own Learning #45, and both root ledgers grew again at its close-out. Figures
+  quoted to the operator are re-derived here and the command is shown beside each.
+- **Not in scope, explicitly:** Phase 1 itself (teaching `context_budget.py` to total any declared
+  class), any edit to `.context-budget.json`, BL-45's remedy, BL-51 Phase C3,
+  BL-42/43/44/46/47/48/49/50/52, issue #75's unsent PR, trimming `CHANGELOG.md` or `HANDOFFS.md`,
+  the `upstream/main` resync, **and any outward-facing action whatsoever.**
+- **State at claim, measured:** `main` clean but for the two telemetry `.jsonl`; **96 ahead of
+  `origin/main`, 437 ahead / 1 behind `upstream/main`**. `check-handoff` **0**, `check-learnings`
+  **0** (44 rows), `check-links` **0**, each run bare. `context_budget.py` exits **2** — the
+  adjudicated BL-52 ledger breach, unchanged, **not** a regression; `methodology_trim.py --check`
+  fires on **neither** ledger (run per file — bare it exits **3** on a *usage* error, which is not a
+  signal about either ledger). Dashboard **76/100**, medium risk, 694 commits.
+
 ### 2026-08-27 · [ad hoc] S117 close-out — full-scope file-management plan shipped, self-score 8/10
 
 - **Model:** Claude Opus 5 (1M context).

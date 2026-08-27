@@ -70,6 +70,24 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 
+<!-- claim stub written at session start; completed at close-out -->
+```handoff
+session: S118
+date: 2026-08-27
+status: pending
+self_score: pending
+predecessor_score: 8
+active_task: **ANSWER THE SIX OPERATOR DECISIONS IN §6 OF `docs/planning/file-management-system-plan.md`.** The plan is S117's DRAFT deliverable and its own §6 says *"Phase 1 does not start until these are answered"*; the operator assigned exactly that at this claim. **THE DELIVERABLE IS THE RECORDED DECISIONS, NOT THEIR CONSEQUENCES** — each answer lands as its own `CHANGELOG.md` entry, the way S116 recorded its three. **NONE OF THE SIX IS MINE TO DECIDE** (§6: *"only the operator can make"*, *"None is derivable from measurement"*); my work is to re-verify each decision's load-bearing evidence against **today's tree**, put concrete costed options to the operator, and record what they choose verbatim. **NOT IN SCOPE:** Phase 1 itself (`context_budget.py` learning to total any class), any edit to `.context-budget.json`, BL-45's remedy, BL-51 Phase C3, BL-42/43/44/46/47/48/49/50/52, issue #75's unsent PR, trimming either ledger, the 1-commit `upstream/main` resync, **any outward-facing action whatsoever.**
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/file-management-system-plan.md` — **§6:279-300** (the six decisions and the seventh riding with Phase 1), §1 (the two limits and the density conflict), §4 F1–F7 (the findings each decision rests on), §7 (the phases the answers unblock). · `starter-kit/context_budget.py:888-898` (the single hardcoded class total — D1/D4's surface) · `starter-kit/methodology_trim.py:120` `MIN_BYTES_PER_TOKEN = 2.27` (**the floor of a band, not a measurement** — D5's subject) · `.context-budget.json` (the ceilings and `_deliberate_exclusions` — D5/D7) · `bin/_manifest.py` (the distributed set — D6's delivery mechanism) · `starter-kit/FRAMEWORK_LEARNINGS.md`, `starter-kit/SESSION_RUNNER.md` (D2's populations).
+gotchas: **(1) THE ANSWERS ARE THE OPERATOR'S AND A RECOMMENDATION IS NOT AN ANSWER.** §6 exists because these are policy, not measurement; a successor reading a recorded recommendation as a decision would ship a ceiling nobody chose. Every recorded entry must name who chose it. **(2) EVERY FIGURE IN §6 WAS MEASURED AT S117 AND SOME ARE ALREADY STALE BY CONSTRUCTION** — `FRAMEWORK_LEARNINGS.md` was 73,483 B *after* S117's own Learning #45, and both ledgers grew again at S117's close-out. Re-measure before quoting; a number measured mid-change rots before session end. **(3) D5 IS A *UNIT* QUESTION AND `MIN_BYTES_PER_TOKEN = 2.27` IS A FLOOR, NOT A DENSITY** — treating it as measured is the error S117 explicitly recorded a critic refuting. **(4) `CHANGELOG.md` AND `HANDOFFS.md` ARE OVER THEIR CEILINGS BY ADJUDICATION (BL-52)** — `context_budget.py` exits **2** at claim time and `trim --check` fires on **neither** ledger (run it with `--file`; bare it exits 3 on a *usage* error, which is not a signal). Expected state; **not** this session's licence to trim. **(5) `bin/check-*` ARE PYTHON; the two `*.jsonl` go dirty from Phase 0 alone — DO NOT `git reset --hard`** (inherited). **(6) `bin/tests.sh` takes ~7 min and EXITS 1 EVEN WHEN GREEN** — background it, read `$?` bare, never through a pipe.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-08-27 · [ad hoc] S118 claim — answer the six operator decisions gating Phase 1 of the file-management plan"
+commit: pending
+```
+
+
 <!-- claim stub written at session start; re-aimed mid-session; completed at close-out -->
 Model: Claude Opus 5 (1M context).
 
