@@ -183,6 +183,62 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-51] S115 — Phase C1: the read-cap population split into two classes, pinned to the trimmer
+
+- **Model:** Claude Opus 5 (1M context).
+- **Phase C1 of [`read-cap-phase-c-plan.md`](docs/planning/read-cap-phase-c-plan.md) §9, complete.**
+  `READ_CAP_WATCHED`'s six names become **Class A** (`CHANGELOG.md`, `HANDOFFS.md` — the trimmer has
+  a `LEDGERS` entry) and **Class B** (`SESSION_NOTES.md` + three `BACKLOG.md` locations — the trimmer
+  answers `NO_CONFIG`). Both classes are **declared literals**; `READ_CAP_WATCHED` is **derived** from
+  their union, so *"the population did not change"* is provable rather than asserted. New public
+  `read_cap_class(rel_posix)` → `"A"` / `"B"` / `None`.
+- **It changes no behaviour, and that is measured, not argued.** The pre-change module (`git show
+  HEAD:tools/methodology_dashboard.py`) and the post-change module were both run against the same
+  live tree: watched rows, trim ledger rows, trim signals, **all** risk rows and the health total are
+  **identical**, with a control confirming the two modules really differ. Phase C1 is deliberately
+  fleet-invisible; §7's A1 row promises otherwise and §§8–9 do not — see the plan's new note.
+- **Dragon 6 is satisfied by DECLARING the class, not deriving it.** Deriving class from `LEDGERS`
+  would let a widened trimmer silently reassign a file. `test_class_a_is_pinned_to_the_trimmers_ledgers_table`
+  fails instead — that is §9's second DONE criterion.
+- **The two `docs/**` backlog locations: KEPT, decided on evidence** (§9's third criterion).
+  Neither is named as a file to read in `SESSION_RUNNER.md` or `SAFEGUARDS.md`; across the whole
+  22-file distributed `.md` corpus `docs/BACKLOG.md` appears **0** times and `docs/planning/BACKLOG.md`
+  **once**, in Learning #26 as a worked example. Kept for §7's reason for rejecting option D — the row
+  reports a real property — and because keeping costs nothing measurable: `docs/BACKLOG.md` matches no
+  file in the fleet, `docs/planning/BACKLOG.md` matches only this repo's, at 0.54× the cap. A canonical
+  test pins the "no protocol basis" half so the reasoning cannot quietly go stale.
+- **`DASHBOARD_VERSION` 2.16.0 → 2.16.1.** Not cosmetic: `check_stale_version()` (`:928`) compares an
+  adopter copy's constant against the canonical's and warns only when the canonical is **newer**, so
+  without a bump every synced adopter would run diverged content and be told nothing. (`bin/status`
+  is unaffected either way — it keys on a content blob SHA, `bin/status:95-98`. A review finding and
+  its refutation both named that tool; the real consequence runs through the other one.)
+- **10 new canonical tests, 12-mutant round, 12/12 killed**, each verified to APPLY, both twins mutated
+  together, control green before and after, every restore `cmp`-verified.
+- **A review found a defect in text this session shipped into a DISTRIBUTED file, and it is fixed.**
+  The Class B warrant said flatly *"there is no record ordering that puts the needed part at the top"*
+  — false of `SESSION_NOTES.md`, whose `ACTIVE TASK` the runner puts at the top. The plan's own wording
+  is *"no record ordering that **guarantees** that"*; the qualifier had been dropped. Restored, with the
+  fleet measured **first-hand** (11 repos: offsets 132–23,013, inside the cap in all 10 that have the
+  heading; `mts-system` has **no** such heading at all — a fact the review's 6-repo sample missed).
+- **Learning #43** appended (1,498 B): *deriving a set from its own parts is usually right, and it
+  disarms the assertion that those parts still cover it.* Earned in-session — the first mutation round
+  scored 8/10 and both survivors traced to one tautological line.
+- **Carve-out, re-derived off `bin/_manifest.py`'s SOURCE column:** `starter-kit/methodology_dashboard.py`
+  is **TRACKED/distributed** → reaches every adopter at their next `bin/sync`;
+  `starter-kit/FRAMEWORK_LEARNINGS.md` is a **SOURCE** too → Learning #43 ships with it.
+  `tools/methodology_dashboard.py` and `tools/test_methodology_dashboard.py` are **canonical-only**.
+- **Verification:** `bin/tests.sh` **287 rows, 286 passed / 1 failed / 0 skipped**, row-for-row against
+  a worktree control at `757fed2` — **0 status flips**, exactly one row differs and it is a derived
+  count this session's own Learning #43 moved (`#43`→`#44`). Sole failure both sides by name:
+  `github source dry-run failed` (Test 9's standing `--source=github` 404). Python suites **111 / 313 /
+  42 OK** from a foreign CWD. `check-links` OK (88/22) · `check-learnings` OK (42 rows, 1..42, 0 over
+  budget). Twins byte-identical, **mirrored last**. `context_budget.py` exit **2** — `CHANGELOG.md` and
+  `HANDOFFS.md` only, both adjudicated (BL-52), expected.
+- **Commits:** `757fed2` (1B claim + the ratification) + **`596a602`** (the deliverable) + this close-out.
+- **NOT DONE, each deliberately:** every threshold (Phase C2 / option C1 `DEFAULT_BUDGET_BYTES`), the
+  prefix invariant (A3), the Class B remedy and `BOOTSTRAP.md` (B1/B2), `RECORD_BUDGET_BYTES`,
+  BL-42/43/44/46/47/48/49, issue #75's unsent PR, **any outward-facing action**. Nothing pushed.
+
 ### 2026-08-26 · [BL-51] S115 claim — Phase C1 of the read-cap correction: split the watched population by class
 
 - **Model:** Claude Opus 5 (1M context).
