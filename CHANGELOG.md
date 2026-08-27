@@ -183,6 +183,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-51] S116 — Phase C2: the Class A archive threshold, bundled with `DEFAULT_BUDGET_BYTES`
+
+- **Model:** Claude Opus 5 (1M context).
+- **Phase C2 of [`read-cap-phase-c-plan.md`](docs/planning/read-cap-phase-c-plan.md) §9, complete**
+  — option **A2** and option **C1** in one commit (`0afe9d6`), as §8 requires and §10 dragon 1
+  explains. New `CLASS_A_FIRE_BYTES = 192*1024` / `CLASS_A_STOP_BYTES = 96*1024`;
+  `DEFAULT_BUDGET_BYTES` **65,536 → 196,608**; `Trigger.read_fire_at` / `read_stop_at` per class;
+  new `is_root_class_a()`. `methodology_trim.py` **1.4.0 → 1.5.0**, `methodology_dashboard.py`
+  **2.16.1 → 2.17.0** with its twin.
+- **THE FINDING THAT CHANGED THE PHASE'S SHAPE: §7's *"replace the read arm's threshold"* is TWO
+  SITES.** `Trigger.stops()` compares each candidate cut to its own constant, and before C2 the
+  fire and the stop were both `READ_CAP_BYTES`. **Moving only the fire leaves `choose_cut` cutting
+  to 56,750 B — three times deeper than intended — with the whole suite green**, because every
+  assertion was about what *fires* and none about what a remedy *converges to*. Found by reading
+  `stops()` before writing anything, and pinned by an end-to-end test on the resting size: a real
+  `--write` on a 213,704 B fixture lands at **93,909 B**, inside
+  `(READ_CAP_BYTES, CLASS_A_STOP_BYTES]`. Recorded as **Learning #44**.
+- **§9's DONE criterion, each half demonstrated:** `--check` **fires on neither ledger** at today's
+  sizes (exit 0, was 1); **fires** on a synthetic 256,037 B root ledger; `choose_cut` returns a
+  **real cut at both densities** (`CHANGELOG.md` 26 of 27 → 85,052 B; `HANDOFFS.md` 8 of 10 →
+  91,906 B), not the `return 1` fall-through; **no ledger can stop above `READ_REFUSE_BYTES` at any
+  budget**, asserted to 4 MiB — the read arm caps the byte arm, which is the `--budget-bytes` guard
+  restated at the new value.
+- **The widened half — the dashboard — was TWO unowned sites, not the one §6 names**, and that
+  section's `:3045-3072` citation is pre-C1 (true range `:3135-3169`). The second is
+  `collect_trim_metrics:2197`, which **re-implements** the trimmer's read arm; left behind it would
+  have emitted *"the archive trigger fires; … run `--check`"* beside a `--check` reporting that it
+  does not. **A1's deferred *buys* are now delivered:** the two rows are *different* rather than
+  deduplicated (§7's own wording), and the effect is fleet-visible — a Class A ledger over the
+  one-read cap drops **`high` → `low`**, worst risk `high` → `medium`.
+- **`READ_CAP_BYTES` did not move and must not** — it is a measured harness fact, not a policy
+  knob. It still reports, and it is still Class B's threshold.
+- **VERIFIED, NOT ARGUED.** `bin/tests.sh` row-for-row against a worktree control at `b80f1a8`,
+  run **twice** (after the deliverable, and again after the prose repairs rather than assumed),
+  both populations asserted non-empty: **287/287, zero lost, zero gained, zero status flips, zero
+  skipped**; sole failure both sides by name, Test 9's standing `--source=github` 404. Python
+  suites **111/313/42 → 123/321/42**. **Mutation: 12 mutants, 12 killed, 0 survived, 0 failed to
+  apply** — and the half-application mutant was re-run alone to list **all four** objecting tests,
+  three of them this session's, because the harness reports only the first.
+- **A guard written to gate this phase stayed green through it.** S115's
+  `test_phase_c1_moved_no_threshold` promised a namespace check *"which no per-class threshold can
+  slip past whatever it is called"*; it greps one prefix, and `CLASS_A_FIRE_BYTES` is not that
+  prefix. Its successor sweeps by **substring** and asserts the exact expected set.
+- **Not done, each deliberately:** all of **Phase C3** (A3, B1, B2), `RECORD_BUDGET_BYTES`,
+  BL-42/43/44/46/47/48/49, issue #75's unsent PR, and **any outward-facing action whatsoever.**
+
 ### 2026-08-26 · [BL-51] Phase C2 DECISIONS — `DEFAULT_BUDGET_BYTES` raised, C2 widened to the dashboard, the Class A threshold scoped to root
 
 - **Model:** Claude Opus 5 (1M context).
