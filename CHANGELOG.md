@@ -183,6 +183,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S117 close-out — full-scope file-management plan shipped, self-score 8/10
+
+- **Model:** Claude Opus 5 (1M context).
+- Close-out receipt written to [`HANDOFFS.md`](HANDOFFS.md); **predecessor S116 scored 8/10**.
+- **Build-equivalent RUN:** `bin/tests.sh` **287 rows — 286 passed / 1 failed / 0 skipped, exit 1**,
+  identical row-for-row to S116's control; sole failure by name `github source dry-run failed`
+  (Test 9's standing 404). **Zero skips**, so Test 34 stayed in its anchored arm. Tests 34/37 mutate
+  the live `HANDOFFS.md` and `FRAMEWORK_LEARNINGS.md` and **the tree restored cleanly.**
+  `check-links` 0, `check-learnings` 0, `check-handoff` 0, all run bare. `context_budget.py` exits
+  **2** — the adjudicated BL-52 ledger breach, unchanged, not a regression.
+- **Phase 3C discharged: Learning #45 appended** (836 B) — *a budget made of per-file ceilings
+  cannot see the cost that is actually paid, the aggregate.* `starter-kit/FRAMEWORK_LEARNINGS.md`
+  72,646 → **73,483 B against 73,728: `ok`, 245 B headroom.** **This corrects a claim this session
+  itself repeated from S116:** the file did **not** block a learning row. A *median* row (1,464 B)
+  does not fit; a terse one does. Measure the row you intend to write.
+- **`starter-kit/FRAMEWORK_LEARNINGS.md` is a TRACKED manifest source, so Learning #45 reaches every
+  adopter at their next `bin/sync`.** Re-derived on the manifest's source column at close-out. The
+  plan itself (`docs/planning/`) and the two root ledgers are **not** distributed.
+- **FIVE DEFECTS FOUND AND DELIBERATELY NOT FIXED**, recorded here so they are not lost and each
+  needing a backlog item a future session raises: (1) a **new current-generation v1.3.0 losslessness
+  proof failure** — `docs/archive/HANDOFFS-through-2026-08-25.md.verify.sh` exits 1 with
+  `L2 FRONT MATTER lost 1 line(s)`, caused by the hand-maintained *"Archived shards — N trims, M
+  receipts"* sentence that is not in `spec.regenerated` and that the next trim edited — making
+  **5 of 16** shipped proofs red, not BL-36's four; (2) **`bin/check-learnings` is silently disarmed
+  by a single blank line** inside the table — it prints `OK — 21 Learning row(s), contiguous 1..21;
+  all citations resolve` at **exit 0** with 43 rows present, and on today's file only an *incidental*
+  citation catches it; (3) its **"out of ascending order" guard is dead code**, nested inside the
+  contiguity-failure branch — reversing all 43 rows returns exit 0; (4) **four `[[N]]`
+  cross-references** in rows #32/#33/#36/#38 are invisible to `CITATION_RE`; (5) the seed
+  `starter-kit/context-budget.json` declares **`LEARNINGS.md`**, a filename no manifest dest installs.
+- **Two self-corrections on the record, both of which reached the operator before they were
+  measured:** `ITERATIVE_METHODOLOGY.md` was asserted past its one-read limit from an *estimated*
+  density and in fact reads whole with **1,568 tokens spare**; and this session's own claim commit
+  `fd44454` said *"every figure in [BL-45] is stale"* when **both its byte columns reproduce
+  byte-exactly** — only its baseline, row count, median and citation figure are wrong.
+- **No outward-facing action taken, and none authorized.** `main` is **95 ahead of `origin/main`**;
+  nothing pushed. Issue #75's PR remains local-only and unsent.
+
 ### 2026-08-27 · [ad hoc] S117 — a full-scope file-management plan for the framework (DRAFT)
 
 - **Model:** Claude Opus 5 (1M context).
