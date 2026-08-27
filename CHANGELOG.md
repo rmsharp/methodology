@@ -183,6 +183,57 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-26 · [BL-51] Phase C2 DECISIONS — `DEFAULT_BUDGET_BYTES` raised, C2 widened to the dashboard, the Class A threshold scoped to root
+
+- **Model:** Claude Opus 5 (1M context).
+- Three non-commit **operator decisions**, recorded per FM #27 before any carrier is edited. The
+  plan states of the first *"This plan does not decide it"*; S115 fenced the second as needing the
+  operator; the third neither the plan nor S115 anticipated and it was found by measurement this
+  session.
+- **(1) OPTION C1 — `DEFAULT_BUDGET_BYTES`: RAISE to `192 * 1024` (196,608).** Chosen over retiring
+  it and over keeping it.
+  - Keeping it is not viable *if C2 is to close*: both ledgers `byte_fire` at today's sizes
+    (81,070 B and 111,388 B against 65,536), so §9's C2 criterion — *"`--check` fires on neither
+    ledger at today's sizes"* — is **unsatisfiable** with the constant where it is.
+  - Retiring it is a `NameError` at import from the `LedgerSpec` default parameter
+    (`starter-kit/methodology_trim.py:218`) unless the whole per-file budget machinery goes with
+    it, which would delete the `--budget-bytes` knob §8 gives a reason to keep. It also removes the
+    **only** byte guard adopters have on these two files: the seed
+    `starter-kit/context-budget.json` governs `CLAUDE.md`, `SESSION_NOTES.md` and `LEARNINGS.md`
+    and **not** the two ledgers (BL-47, re-verified this session by parsing the seed).
+  - Raising costs nothing extra in machinery: `BYTE_STOP_FRACTION` is already 0.5, so
+    `int(196,608 × 0.5)` is **98,304 = 96 KiB exactly**, which is option A2's stated stop.
+- **(2) THE C2 HOLE — WIDEN C2 rather than raise a fourth phase.** C2's DONE criterion now also
+  covers the dashboard. **The hole is TWO sites, not the one §6 names**, and the plan's
+  `:3045-3072` citation is pre-C1 — the true D4(b) range on this tree is
+  `starter-kit/methodology_dashboard.py:3135-3169`. The second site is the sharp one:
+  `collect_trim_metrics:2197` **re-implements** `read_fires = size_bytes > READ_CAP_BYTES` and
+  emits *"the archive trigger fires; … run `--check` for the full report"*. Moving the trimmer's
+  trigger without it would have the dashboard name a command whose output contradicts the row —
+  the exact misdirection the comment at `:2240` says that wording exists to avoid.
+- **(3) THE CLASS A THRESHOLD IS SCOPED TO THE REPO ROOT.** Found by measurement, not anticipated:
+  the trimmer resolves its config by **basename at any depth** (`methodology_trim.py:1674`,
+  `LEDGERS.get(path.name)`), while the dashboard's class is a **repo-relative path** lookup
+  (`methodology_dashboard.py:407`). Unscoped, the relaxed threshold would apply to any
+  `*/CHANGELOG.md` or `*/HANDOFFS.md` — **3.38× today's 56,750 B** — for a file that was never
+  classified. Harmless today (the only non-root instances in 13 portfolio repos are this repo's own
+  two ~12 KB seeds) and a trap tomorrow. The relaxed pair applies only where the file sits at the
+  repo root; a nested one keeps the tighter one-read threshold.
+- **Two costs of (1) are accepted with eyes open, and neither goes red on its own.** Moving the
+  constant silently falsifies three `.context-budget.json` `_` keys that name it as their ceiling's
+  source (*"max_bytes 65,536 is NOT chosen here — it is starter-kit/methodology_trim.py:69
+  `DEFAULT_BUDGET_BYTES`"*) and the comment at `bin/check-handoff:596` (*"still the trigger
+  `methodology_trim.py` keys on"*). That is Learning #28's shape — repairing a defect falsifies the
+  records that described it — so the repair is part of this session's scope, not left to be found.
+- **One argument in the plan's §5 does not survive re-derivation, and it argued against the option
+  chosen.** *"the number BL-9/BL-32/BL-36/S87/S89 have all measured against"* is **impossible for
+  BL-9**: BL-9 closed **2026-08-01** and `DEFAULT_BUDGET_BYTES` was first written **2026-08-03**
+  (`df381ea`, S36). The relation is the reverse — design §5.4 calibrates the constant on three
+  sizes, and 52,927 B is BL-9's own L1 output commit `7a71df0`, so **BL-9 is the constant's input,
+  not a measurement against it.** Only BL-9 was re-derived; the other four names are **not**
+  re-checked and are not claimed either way. The sentence originates in `.context-budget.json`'s
+  `_` key and the plan inherited it.
+
 ### 2026-08-26 · [BL-51] S116 claim — Phase C2: the Class A trigger, bundled with `DEFAULT_BUDGET_BYTES`
 
 - **Model:** Claude Opus 5 (1M context).
