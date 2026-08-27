@@ -183,6 +183,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S117 RE-AIM — the deliverable becomes a full-scope file-management plan
+
+- **Model:** Claude Opus 5 (1M context).
+- **Operator decision, taken mid-session, and it supersedes this session's own claim entry below
+  rather than abandoning it.** The session was claimed for BL-45's `FRAMEWORK_LEARNINGS.md` remedy;
+  the BL-45 research ran to completion and its findings stand (recorded in the two entries below).
+  Presented with the re-costed options, the operator asked instead for
+  *"a full scope plan … because we have been solving localized problems and not solving for making
+  methodology as efficient and effective as possible from the standpoint of file management."*
+- **THE RECORD SUPPORTS THAT CHARACTERISATION, which is why the re-aim is recorded as a decision
+  and not as scope drift.** Every prior effort in this space is a point fix on one artifact:
+  BL-19, BL-22, BL-37, BL-42, BL-43, BL-44, BL-45, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52,
+  [`read-cap-phase-c-plan.md`](docs/planning/read-cap-phase-c-plan.md) Phases A–C,
+  [`record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md),
+  [`ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md) and
+  [`framework-context-cost-plan.md`](docs/planning/framework-context-cost-plan.md).
+  **No document in this repository has ever asked what the whole file-management system should be**,
+  which is why the two largest per-session reads have no ceiling and nobody noticed (see below).
+- **THE DELIVERABLE IS A PLAN AND NOTHING IS IMPLEMENTED THIS SESSION** — Planning-session rules,
+  `SESSION_RUNNER.md` §Planning Sessions and failure modes #18/#19. The plan is written to
+  `docs/planning/`, with the mandatory grep-based evidence inventory, per-phase DONE criteria,
+  verification commands, and the **surface** each criterion is demonstrated on. Implementation is
+  a separate session per phase.
+- **BL-45's own remedy is deliberately NOT taken here.** Its four options are re-costed inside the
+  plan and put to the operator there. Closing it by a point fix is precisely the pattern the re-aim
+  rejects.
+- **THE FINDING THAT MOTIVATED THE RE-AIM, measured this session:** `.context-budget.json` declares
+  ceilings for five paths, and **neither of the two files every session must read in full is among
+  them** — `starter-kit/SESSION_RUNNER.md` (54,363 B, ~18,100 tok, the largest recurring context
+  cost in the repository) and `starter-kit/SAFEGUARDS.md` (15,386 B, which Phase 0 step 1 requires
+  *"in full, not skimmed"*). Meanwhile the two files that **are** red — `CHANGELOG.md` and
+  `HANDOFFS.md` — are read only at a frontier, are newest-first, and so lose their **oldest**
+  records to truncation, which is the harmless end. **The guards are on the files that can afford
+  to grow, and absent from the files that cannot.**
+- **Not in scope:** implementing any phase of the plan, BL-51 Phase C3, `RECORD_BUDGET_BYTES`,
+  issue #75's unsent PR, and **any outward-facing action whatsoever.**
+
 ### 2026-08-27 · [BL-45] S117 claim — BL-45 re-opened: the `FRAMEWORK_LEARNINGS.md` size remedy
 
 - **Model:** Claude Opus 5 (1M context).
