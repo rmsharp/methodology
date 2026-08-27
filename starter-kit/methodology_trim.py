@@ -47,7 +47,17 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.4.0"   # 1.4.0: Phase B — the read cap is RE-DENOMINATED from lines onto bytes,
+TRIM_VERSION = "1.5.0"   # 1.5.0: Phase C2 — the Class A archive threshold, and the byte budget
+                         # raised to meet it. An adopter's ROOT CHANGELOG.md/HANDOFFS.md now fires
+                         # at 196,608 B instead of 65,536 and cuts back to 98,304 instead of
+                         # 32,768, so a ledger that reported FIRES yesterday can report
+                         # NOTHING_TO_DO today and a trim that does run archives fewer records.
+                         # A NESTED ledger of the same name is unchanged: it keeps the 56,750 B
+                         # one-read arm, which is new behaviour where before all paths were equal.
+                         # The TRIGGER_READ row's text changes shape for a root ledger. Changed
+                         # behaviour on a distributed tool, no finding code removed: MINOR.
+                         #
+                         # 1.4.0: Phase B — the read cap is RE-DENOMINATED from lines onto bytes,
                          # and the line RATE is removed rather than re-tuned. Two finding codes
                          # change on the CLI (TRIGGER_LINES and LINE_METRIC_ABSTAINS are gone,
                          # TRIGGER_READ replaces them), `stops()` loses its rate arms and
@@ -124,7 +134,57 @@ READ_REFUSE_BYTES = 256 * 1024 # [M] a SECOND and HARDER boundary, and it is NOT
                                # needs still arrives" is true only BETWEEN the two boundaries.
                                # Past this one nothing arrives at all, front matter included.
                                # 5 of the 18 watched fleet ledgers are already past it.
-DEFAULT_BUDGET_BYTES = 64 * 1024   # design §5.4: calibrated to the three sizes this repo operated at
+# --- Phase C2, 2026-08-26: the CLASS A pair, and the budget moved to meet it ------------------
+# WHAT CHANGED AND WHY, stated here because both numbers below are judgment and the next session
+# must be able to re-open them on the reasoning rather than on taste.
+#
+# Phase C1 established that the watched population is TWO CLASSES, and that the class this tool
+# can act on -- the names in LEDGERS -- is exactly Class A. For those two files READ_CAP_BYTES is
+# the wrong thing to FIRE on. It is a true statement about them ("one Read does not deliver this
+# whole file") and it stays in the --check report for that reason, but it is not a fault: these
+# ledgers are newest-on-top and delivery is an ORDERED PREFIX, so truncation removes the OLDEST
+# records, which is the end nothing was reading. Measured across 85 transcripts of this repo, each
+# root ledger was read WHOLE exactly ONCE and in PART 1,696 times. What front matter + the newest
+# record costs is 30-32% of one read, with ~40 KB of growth headroom (plan §3).
+#
+# The failure that DOES matter is READ_REFUSE_BYTES, where the prefix stops existing and a default
+# Read returns nothing at all -- front matter included. So the Class A arm is denominated against
+# the REFUSAL, not against the cap, and it fires BELOW it rather than at it: a trigger set at the
+# refusal parks the file exactly on the edge where degradation stops being graceful (plan §3
+# caveat 1). 192 KiB leaves 64 KiB of margin under the refusal; 96 KiB is the stop, which is the
+# `level with hysteresis` shape ledger-trimmer-design.md §5.2 prescribes for a threshold sitting at
+# operating size, and NOT the rate form that was deleted for being unsatisfiable.
+#
+# ⚠ SCOPED TO THE REPO ROOT, and this was an operator decision made on a measurement. LEDGERS is
+# resolved by BASENAME at any depth (`LEDGERS.get(path.name)`, :1674+), so an unscoped relaxation
+# would hand the 192 KiB arm to any */CHANGELOG.md or */HANDOFFS.md -- 3.38x READ_CAP_BYTES -- for
+# a file the dashboard never classified as anything (its read_cap_class() is a repo-relative PATH
+# lookup and answers None for a nested one). A nested ledger keeps READ_CAP_BYTES. See
+# Trigger.class_a and evaluate_trigger.
+CLASS_A_FIRE_BYTES = 192 * 1024   # 196,608 — fire above this, for a ROOT Class A ledger only
+CLASS_A_STOP_BYTES = 96 * 1024    # 98,304 — cut back to at or under this. Deliberately equal to
+                                  # int(DEFAULT_BUDGET_BYTES * BYTE_STOP_FRACTION) today, and
+                                  # deliberately NOT written as that expression: the two arms
+                                  # answer different questions (see the Trigger comment below) and
+                                  # deriving one from the other would assert they are one question.
+                                  # The coincidence is asserted by a test as INTENTIONAL, so that
+                                  # moving one without the other is a decision and not an accident.
+
+# RAISED 64 KiB -> 192 KiB at Phase C2 (option C1), by operator decision, in the SAME change as the
+# Class A arm above because separately each is inert: `fires` is `read_fires or byte_fires`, so a
+# relaxed read arm changes nothing while a 64 KiB byte arm fires first (plan §5, §10 dragon 1).
+# THE OLD JUSTIFICATION IS RETIRED, NOT CARRIED FORWARD. It read "design §5.4: calibrated to the
+# three sizes this repo operated at" -- 52,927 / 53,512 / 49,382 B, the post-archive resets of
+# 2026-08. Those are no longer the sizes this repo operates at (81,070 and 111,388 B at this
+# commit), and the campaign that measured them adjudicated the growth as costing nothing anyone
+# reads. A calibration whose basis has moved is not a baseline; it is a stale number with a
+# citation. ⚠ A DERIVATION NOTE THE PLAN GOT WRONG AND A SUCCESSOR SHOULD NOT INHERIT: it is
+# widely written that this constant is "the number BL-9/BL-32/BL-36/S87/S89 have all measured
+# against". That is impossible for BL-9, which CLOSED 2026-08-01 against a constant first written
+# 2026-08-03 (df381ea); §5.4's 52,927 B is BL-9's own output commit 7a71df0, so BL-9 is this
+# constant's INPUT. The other four were not re-derived and are claimed neither way.
+DEFAULT_BUDGET_BYTES = 192 * 1024  # 196,608 — the per-file context-tax budget, still overridable
+                                   # per LedgerSpec and per run via --budget-bytes
 
 # LINE_FIRE_BELOW / LINE_STOP_ABOVE ARE GONE, DELIBERATELY. This note is the record of why, so a
 # later session re-adds them on purpose or not at all. They were "archive when headroom falls
@@ -778,13 +838,41 @@ class Trigger:
     def __init__(self):
         self.size_bytes = 0
         self.budget = DEFAULT_BUDGET_BYTES
+        # PHASE C2. False is the CONSERVATIVE default and that is deliberate: a caller that never
+        # sets it gets the tighter READ_CAP_BYTES arm, so forgetting to classify errs toward
+        # firing early rather than toward silence. evaluate_trigger sets it from the file's
+        # repo-relative path -- never from its basename, which is the distinction the scoping
+        # decision turns on.
+        self.class_a = False
         self.srf = None                # (value, boundary_sha) for the most recent archive
         self.srf_largest = None        # (value, boundary_sha) for H3's own largest-drop boundary
         self.srf_abstains = None
 
     @property
+    def read_fire_at(self):
+        """The read arm's threshold for THIS file. One place, so fire and stop cannot diverge.
+
+        A root Class A ledger is denominated against the REFUSAL (CLASS_A_FIRE_BYTES); everything
+        else keeps the one-read cap. The two are not degrees of the same thing: below the refusal
+        a Class A read still delivers front matter and the newest records, and past it no read
+        delivers anything."""
+        return CLASS_A_FIRE_BYTES if self.class_a else READ_CAP_BYTES
+
+    @property
+    def read_stop_at(self):
+        """The read arm's STOP for this file — the half `stops()` reads.
+
+        SEPARATE FROM read_fire_at ON PURPOSE, and this is the trap Phase C2 was written to avoid.
+        Before C2 the fire and the stop were the SAME constant (READ_CAP_BYTES), so moving "the
+        read arm's threshold" read like one edit. It is two. Moving only the fire leaves
+        `choose_cut` still cutting back to 56,750 B -- silently, with every test green, because
+        nothing asserted what a trim cuts BACK to. Both are named here so a future move of one is
+        visibly a move of one."""
+        return CLASS_A_STOP_BYTES if self.class_a else READ_CAP_BYTES
+
+    @property
     def read_fires(self):
-        return self.size_bytes > READ_CAP_BYTES
+        return self.size_bytes > self.read_fire_at
 
     @property
     def byte_fires(self):
@@ -798,17 +886,23 @@ class Trigger:
         """Both stop conditions must hold. Fire if EITHER fires; stop only when BOTH stop.
 
         Both are LEVELS now, so both terminate — which is the property the deleted line rate did
-        not have. `byte_ok` is the tighter of the two at the shipped budget (32,768 B against
-        READ_CAP_BYTES' 56,750), so today it is what binds; `read_ok` is written out anyway rather
-        than left implicit, because `--budget-bytes` is an adopter-facing knob and a raised budget
-        must not quietly let a file stop above the read cap.
+        not have. `read_ok` is written out rather than left implicit because `--budget-bytes` is an
+        adopter-facing knob and a raised budget must not quietly let a file stop above the read
+        arm's stop.
+
+        ⚠ WHICH ARM BINDS MOVED AT PHASE C2, and the direction is worth stating. At the old budget
+        `byte_ok` was the tighter of the two (32,768 B against READ_CAP_BYTES' 56,750). At the
+        raised budget the two COINCIDE for a root Class A ledger — 98,304 B on both sides — and for
+        everything else `read_ok` (56,750) is now the tighter. So a nested ledger, or any file
+        whose class was not established, still stops at the one-read cap no matter what the budget
+        says. That is the conservative direction, and it is the reason `class_a` defaults False.
 
         When this returns False at EVERY retained count, `choose_cut` still falls through to
         `return 1` — but that now means what it says: trimming genuinely cannot satisfy the goal,
         e.g. the front matter alone is over. It is no longer reachable by a rule that was
         unsatisfiable by construction, which is what the line rate had become."""
         byte_ok = size_bytes <= int(self.budget * BYTE_STOP_FRACTION)
-        read_ok = size_bytes <= READ_CAP_BYTES
+        read_ok = size_bytes <= self.read_stop_at
         return byte_ok and read_ok
 
 
@@ -850,9 +944,31 @@ def archive_events(repo, spec):
     return events
 
 
+def is_root_class_a(repo, path, spec):
+    """Is this file a Class A ledger AT THE REPOSITORY ROOT?
+
+    PHASE C2, and the whole point is that this asks a different question from `LEDGERS.get(name)`.
+    That lookup is by BASENAME at any depth, so `starter-kit/CHANGELOG.md` and a hypothetical
+    `docs/x/HANDOFFS.md` both resolve to a spec and get a fully evaluated trigger. Having a
+    grammar is what makes a file TRIMMABLE; sitting at the root is what makes it the ledger the
+    protocol actually reads, and only the latter earns the relaxed Class A arm.
+
+    This mirrors methodology_dashboard.py's read_cap_class(), which is a repo-relative PATH lookup
+    and answers None -- neither A nor B -- for a nested one. The two tools were already asking
+    different questions here; before C2 the difference cost nothing because both arms used the
+    same constant. Returns False on anything it cannot resolve, which routes the caller to the
+    tighter arm."""
+    try:
+        rel = path.resolve().relative_to(repo).as_posix()
+    except (ValueError, OSError):
+        return False
+    return rel == spec.basename
+
+
 def evaluate_trigger(repo, path, spec, zones, budget, result):
     t = Trigger()
     t.budget = budget
+    t.class_a = is_root_class_a(repo, path, spec)
     text = read_text(path)
     t.size_bytes = len(text.encode("utf-8"))
 
@@ -1712,11 +1828,33 @@ def evaluate(path, opts, result):
     trigger = evaluate_trigger(repo, path, spec, zones, budget, result)
     result.trigger = trigger
 
+    # PHASE C2: this row now reports the threshold ACTUALLY IN FORCE for this file, and names which
+    # arm it is. Reporting READ_CAP_BYTES unconditionally, as it did before, would have printed a
+    # number the trigger no longer keys on for a root Class A ledger -- a row that is arithmetic
+    # about a threshold nothing uses. The one-read cap is still stated for Class A, because "one
+    # Read does not deliver this whole file" stays TRUE and is the reason a reader might still want
+    # an explicit offset/limit; it is simply no longer the fault condition.
+    if trigger.class_a:
+        read_row = ("%s B against a %s B Class A archive threshold (this file is a ROOT ledger the "
+                    "trimmer can act on, so the arm is denominated against the %s B hard refusal, "
+                    "not against the one-read cap). FOR REFERENCE AND NOT AS A FAULT: it is also "
+                    "past the %s B one-read cap, so a whole-file read comes back truncated — but "
+                    "delivery is an ordered prefix and this ledger is newest-on-top, so what "
+                    "truncates is the OLDEST records" %
+                    ("{:,}".format(trigger.size_bytes), "{:,}".format(CLASS_A_FIRE_BYTES),
+                     "{:,}".format(READ_REFUSE_BYTES), "{:,}".format(READ_CAP_BYTES))
+                    if trigger.size_bytes > READ_CAP_BYTES else
+                    "%s B against a %s B Class A archive threshold (ROOT ledger; the arm is "
+                    "denominated against the %s B hard refusal, not the %s B one-read cap)" %
+                    ("{:,}".format(trigger.size_bytes), "{:,}".format(CLASS_A_FIRE_BYTES),
+                     "{:,}".format(READ_REFUSE_BYTES), "{:,}".format(READ_CAP_BYTES)))
+    else:
+        read_row = ("%s B against a %s B one-read cap (%s tokens x %s B/token, the measured floor)"
+                    % ("{:,}".format(trigger.size_bytes), "{:,}".format(READ_CAP_BYTES),
+                       "{:,}".format(READ_CAP_TOKENS), MIN_BYTES_PER_TOKEN))
     result.add("TRIGGER_READ",
-               "%s B against a %s B one-read cap (%s tokens x %s B/token, the measured floor)%s" %
-               ("{:,}".format(trigger.size_bytes), "{:,}".format(READ_CAP_BYTES),
-                "{:,}".format(READ_CAP_TOKENS), MIN_BYTES_PER_TOKEN,
-                "" if trigger.size_bytes <= READ_REFUSE_BYTES else
+               read_row +
+               ("" if trigger.size_bytes <= READ_REFUSE_BYTES else
                 " — AND PAST THE %s B HARD REFUSAL: a default Read of this file returns NO CONTENT "
                 "AT ALL, front matter included" % "{:,}".format(READ_REFUSE_BYTES)))
     result.add("TRIGGER_BYTES", "%s B against a %s B budget" %

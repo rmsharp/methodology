@@ -84,7 +84,12 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-DASHBOARD_VERSION = "2.16.1"
+# 2.17.0: Phase C2 — the D4(b) read-cap risk row is now PER CLASS (a Class A ledger over the
+# one-read cap drops from `high` to `low` and says no action is expected; Class B is unchanged at
+# `high`), and collect_trim_metrics' re-implemented read arm keys on CLASS_A_FIRE_BYTES instead of
+# READ_CAP_BYTES so it cannot contradict the trimmer's own --check. Changed output on a
+# distributed tool, and the severity change is fleet-visible: MINOR, not patch.
+DASHBOARD_VERSION = "2.17.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -300,6 +305,22 @@ MIN_BYTES_PER_TOKEN = 2.27       # the measured FLOOR, not the mean — a guard 
                                  # a different quantity (opening context vs CLAUDE.md size).
 READ_CAP_BYTES = int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN)     # 56,750 B — computed, not written
 READ_REFUSE_BYTES = 256 * 1024                                  # the hard, zero-content boundary
+
+# PHASE C2 — the Class A pair, mirrored from methodology_trim.py and pinned to it by a canonical
+# test, exactly as the four constants above are. THE REASON THEY EXIST HERE rather than only in
+# the trimmer: this scanner re-implements the trimmer's trigger in collect_trim_metrics (it must,
+# because it reports on repos where the tool is not installed), so a threshold that moved in the
+# trimmer alone would leave this file emitting "the archive trigger fires" beside a `--check` that
+# says it does not — naming a command whose output contradicts the row.
+#
+# THESE ARE NOT A REPLACEMENT FOR READ_CAP_BYTES; the two answer different questions and BOTH are
+# reported. READ_CAP_BYTES answers "does one Read deliver this whole file?", which stays true of a
+# Class A ledger and is why its risk row survives rather than being deleted (plan §7 rejects
+# option D on exactly that ground). CLASS_A_FIRE_BYTES answers "is a trim worth doing?", and for a
+# newest-on-top ledger whose truncation drops the OLDEST records the honest denominator for that
+# is the hard refusal, not the cap.
+CLASS_A_FIRE_BYTES = 192 * 1024   # 196,608 — see methodology_trim.py's block for the derivation
+CLASS_A_STOP_BYTES = 96 * 1024    # 98,304  — reported, never applied here; this tool never trims
 
 # The files a session opens to establish state, restricted to the ones the ADOPTER owns.
 #
@@ -2194,7 +2215,14 @@ def collect_trim_metrics(path, files, role="adopter"):
             size_bytes = fpath.stat().st_size
         except OSError:
             continue
-        read_fires = size_bytes > READ_CAP_BYTES
+        # PHASE C2. This re-implements methodology_trim.py's Trigger, so it must move with it.
+        # Every path that reaches here has already been filtered to class "A" by the guard above,
+        # and w["path"] is repo-root-relative, so the ROOT SCOPING the trimmer applies is already
+        # satisfied here by construction: read_cap_class() is a path lookup and answers None for a
+        # nested ledger, which the guard skips. Stated rather than assumed, because the trimmer
+        # reaches the same conclusion by a DIFFERENT route (an explicit relative_to check against
+        # spec.basename) — the two must not drift, and a canonical test drives the nested case.
+        read_fires = size_bytes > CLASS_A_FIRE_BYTES
         refused = size_bytes > READ_REFUSE_BYTES
         budget = result["budget_bytes"]
         byte_fires = None if budget is None else size_bytes > budget
@@ -2218,13 +2246,23 @@ def collect_trim_metrics(path, files, role="adopter"):
                            "returns NO CONTENT AT ALL, front matter included"
                            .format(size_bytes, READ_REFUSE_BYTES))
         elif read_fires:
-            # "one-read budget", NOT "one-read cap": the D4(b) risk row is greppable on the
-            # substring "read cap" and seven assertions plus the diagnostic trail in
+            # "archive threshold", and STILL not the substring "read cap": the D4(b) risk row is
+            # greppable on "read cap" and seven assertions plus the diagnostic trail in
             # dashboard_history.jsonl depend on that staying exclusive to it. The same discipline
-            # keeps BL-5's "Large files detected" disjoint from both.
-            reasons.append("{:,} B against a {:,} B one-read budget -- a whole-file read comes "
-                           "back TRUNCATED to the prefix that fits, with a banner saying so"
-                           .format(size_bytes, READ_CAP_BYTES))
+            # keeps BL-5's "Large files detected" disjoint from both. Phase C2 changed the NUMBER
+            # this row keys on, not that rule.
+            #
+            # WHY THE WORDING CHANGED WITH THE NUMBER. It used to say "against a 56,750 B one-read
+            # budget -- a whole-file read comes back TRUNCATED". Both halves would now be wrong
+            # here: the threshold is no longer the one-read budget, and truncation is no longer
+            # what this row is about -- a Class A ledger is expected to sit past the cap and the
+            # D4(b) row says so separately. What this row means at 192 KiB is that the file is
+            # closing on the boundary where a read stops returning ANYTHING.
+            reasons.append("{:,} B against the {:,} B Class A archive threshold -- within {:,} B "
+                           "of the {:,} B hard refusal, past which a default read returns NO "
+                           "CONTENT AT ALL"
+                           .format(size_bytes, CLASS_A_FIRE_BYTES,
+                                   READ_REFUSE_BYTES - size_bytes, READ_REFUSE_BYTES))
         if byte_fires:
             reasons.append("{:,} B against a {:,} B budget".format(size_bytes, budget))
         why = "; ".join(reasons)
@@ -3152,21 +3190,57 @@ def assess_risks(metrics):
                                    "you here — there is no delivered prefix to be ordered. Read "
                                    "it with explicit offset/limit, or archive it"})
             elif wb > READ_CAP_BYTES:
-                risks.append({
-                    "severity": "high",
-                    "description": f"{w['path']} is {wb:,} B ({w['lines']:,} lines) — past the "
-                                   f"{READ_CAP_BYTES:,} B one-read budget for the agent read cap, "
-                                   f"which is denominated in tokens ({READ_CAP_TOKENS:,}) and "
-                                   f"converted here at the densest content measured "
-                                   f"({MIN_BYTES_PER_TOKEN} B/token). A session reading it whole "
-                                   "gets a PARTIAL view — truncated to the prefix that fits the "
-                                   "token cap, and it SAYS SO in a banner naming the true "
-                                   "length, so the failure is loud rather than silent; an "
-                                   "explicit line range spanning the excess errors outright, "
-                                   "returning nothing. Whether ARCHIVING remedies that is "
-                                   "open (BL-52): the file is newest-on-top and truncation "
-                                   "is ordered, so a cut removes records the read was not "
-                                   "delivering anyway"})
+                # PHASE C2 — THIS ROW IS NOW PER-CLASS, WHICH IS HOW THE DEDUP ENDS.
+                # S38's residual 1 asked whether this row and the trim row should be deduplicated.
+                # The answer plan §7 gives for option A1 is "make the rows DIFFERENT, not delete
+                # one", and this is where that lands. Both rows still fire on a Class B file,
+                # because for those two thresholds still coincide. On a Class A file they now
+                # separate: the trim row is silent until 192 KiB, and this row keeps reporting the
+                # one-read property — which is REAL and stays true — at a severity that says what
+                # the reader should DO about it, which is nothing.
+                #
+                # ⚠ THE SEVERITY DROP IS THE FLEET-VISIBLE PART OF THIS PHASE, and it is a
+                # judgment, not a derivation. §10 dragon 7: a guard can be correct and not worth
+                # acting on. A Class A ledger between the cap and the archive threshold is the
+                # adjudicated case (BL-52 third addendum) — ordered truncation drops the OLDEST
+                # records, Phase 0 works from `git log`, and Phase 3A reads one receipt. Calling
+                # that HIGH taught a reader to ignore the row, which is worse than not emitting it.
+                # It is not dropped to "info" either: the property is real and a session that
+                # genuinely needs the whole file still gets a partial answer.
+                cls = read_cap_class(w["path"])
+                if cls == "A":
+                    risks.append({
+                        "severity": "low",
+                        "description": f"{w['path']} is {wb:,} B ({w['lines']:,} lines) — past "
+                                       f"the {READ_CAP_BYTES:,} B one-read budget for the agent "
+                                       f"read cap, but this is a CLASS A ledger and that is "
+                                       "expected rather than a fault. Delivery is an ordered "
+                                       "prefix and the file is newest-on-top, so what a "
+                                       "whole-file read drops is the OLDEST records; the front "
+                                       "matter and the newest ones still arrive, which is what "
+                                       "the protocol reads (Phase 0 reconciles from `git log`, "
+                                       "Phase 3A reads ONE record). NO ACTION IS EXPECTED here: "
+                                       f"the archive threshold for this class is {CLASS_A_FIRE_BYTES:,} B, "
+                                       f"{CLASS_A_FIRE_BYTES - wb:,} B away. If you need the "
+                                       "whole file, read it with an explicit offset/limit"})
+                else:
+                    risks.append({
+                        "severity": "high",
+                        "description": f"{w['path']} is {wb:,} B ({w['lines']:,} lines) — past the "
+                                       f"{READ_CAP_BYTES:,} B one-read budget for the agent read cap, "
+                                       f"which is denominated in tokens ({READ_CAP_TOKENS:,}) and "
+                                       f"converted here at the densest content measured "
+                                       f"({MIN_BYTES_PER_TOKEN} B/token). A session reading it whole "
+                                       "gets a PARTIAL view — truncated to the prefix that fits the "
+                                       "token cap, and it SAYS SO in a banner naming the true "
+                                       "length, so the failure is loud rather than silent; an "
+                                       "explicit line range spanning the excess errors outright, "
+                                       "returning nothing. This is a CLASS B file: the trimmer "
+                                       "answers NO_CONFIG for it, and nothing guarantees the part "
+                                       "you need is in the delivered prefix — a backlog's bottom "
+                                       "items are as live as its top ones, so what truncates may "
+                                       "be open work, and you are told THAT something was cut, "
+                                       "never WHAT"})
 
     # S38: the trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
     # the Component C signals above use. The collector owns the gate, the population and the

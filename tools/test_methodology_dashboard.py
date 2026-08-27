@@ -26,6 +26,7 @@ sys.dont_write_bytecode = True
 
 import contextlib
 import filecmp
+import copy
 import importlib.util
 import io
 import json
@@ -2156,10 +2157,14 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.16.1")
+        """⚠ PINNED TWICE ON PURPOSE — the module attribute AND the starter-kit source text. Bump
+        BOTH or this goes red; S115 lost a run to changing one. 2.17.0 is Phase C2 (per-class D4(b)
+        severity + the collector's read arm on CLASS_A_FIRE_BYTES): changed output on a distributed
+        tool, and the severity change is fleet-visible, so MINOR rather than patch."""
+        self.assertEqual(md.DASHBOARD_VERSION, "2.17.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.16\.1"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.16.1")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.17\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.17.0")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general
@@ -3224,6 +3229,28 @@ class TestD4ReadCapTruncation(unittest.TestCase):
         self.assertLess(md.READ_CAP_BYTES, md.READ_REFUSE_BYTES,
                         "the soft cap must sit below the hard refusal, or the refusal branch is "
                         "unreachable and its row is dead code")
+        # PHASE C2 pins the Class A pair the same way, by parsing the OTHER tool's source. Same
+        # discipline, same limit: this keeps the two copies CONSISTENT and says nothing about
+        # whether the pair is right, which only plan Appendix A can answer.
+        mf = re.search(r"^CLASS_A_FIRE_BYTES\s*=\s*(\d+)\s*\*\s*(\d+)", trim_src, re.MULTILINE)
+        self.assertIsNotNone(mf, "methodology_trim.py must declare CLASS_A_FIRE_BYTES")
+        self.assertEqual(md.CLASS_A_FIRE_BYTES, int(mf.group(1)) * int(mf.group(2)))
+        ms = re.search(r"^CLASS_A_STOP_BYTES\s*=\s*(\d+)\s*\*\s*(\d+)", trim_src, re.MULTILINE)
+        self.assertIsNotNone(ms, "methodology_trim.py must declare CLASS_A_STOP_BYTES")
+        self.assertEqual(md.CLASS_A_STOP_BYTES, int(ms.group(1)) * int(ms.group(2)))
+        # AND THE BUDGET, which is the half option C1 moved. It is written `192 * 1024`, so a
+        # digits-only regex would miss it -- the same trap _parse_trim_budget exists for. Reusing
+        # that parser here would make this an identity against the module under test, so the
+        # arithmetic is redone independently.
+        mdb = re.search(r"^DEFAULT_BUDGET_BYTES\s*=\s*(\d+)\s*\*\s*(\d+)", trim_src, re.MULTILINE)
+        self.assertIsNotNone(mdb, "methodology_trim.py must declare DEFAULT_BUDGET_BYTES")
+        self.assertEqual(int(mdb.group(1)) * int(mdb.group(2)), md.CLASS_A_FIRE_BYTES,
+                         "option C1 raised the byte budget to MEET the Class A arm; if they have "
+                         "drifted apart, one of the two arms is pre-empting the other again and "
+                         "that is the inertness plan §5 warns about")
+        self.assertLess(md.CLASS_A_STOP_BYTES, md.CLASS_A_FIRE_BYTES,
+                        "hysteresis: the stop must be below the fire, or a trim re-fires on the "
+                        "next record (ledger-trimmer-design.md §5.2)")
 
     def test_the_line_denominated_cap_is_gone_from_both_tools(self):
         """Phase B DELETED it rather than re-tuning it, and a deletion is only durable if
@@ -3369,13 +3396,25 @@ class TestD4ReadCapTruncation(unittest.TestCase):
         self.assertFalse(any("read cap" in r["description"] for r in m["scores"]["risks"]))
 
     def test_one_row_per_breaching_file(self):
+        """PHASE C2 SPLIT THE SEVERITY, NOT THE POPULATION. Still one row per file — that half is
+        untouched and is what this test was written for. What changed is the blanket
+        `all(... == "high")`, which stopped being true the moment the rows became per-class: a
+        Class A ledger over the one-read cap is the adjudicated case and reports `low`.
+
+        The per-file count is asserted first and separately, so a future change that collapsed the
+        rows would still fail here even if every surviving row had the right severity."""
         m = md.collect_all(self._repo({"CHANGELOG.md": self._bytes(md.READ_CAP_BYTES + 2),
                                        "HANDOFFS.md": self._bytes(md.READ_CAP_BYTES + 4),
                                        "SESSION_NOTES.md": self._bytes(md.READ_CAP_BYTES + 6)}))
         rows = [r for r in m["scores"]["risks"] if "read cap" in r["description"]]
         self.assertEqual(len(rows), 3, "each file is separately actionable; an aggregate row "
                                        "naming only the worst hides the others")
-        self.assertTrue(all(r["severity"] == "high" for r in rows))
+        by_file = {n: r["severity"] for n in ("CHANGELOG.md", "HANDOFFS.md", "SESSION_NOTES.md")
+                   for r in rows if r["description"].startswith(n)}
+        self.assertEqual(by_file, {"CHANGELOG.md": "low", "HANDOFFS.md": "low",
+                                   "SESSION_NOTES.md": "high"},
+                         "Class A drops to low at this size, Class B stays high — same bytes, "
+                         "different class, different severity")
 
     def test_backlog_is_watched_at_every_documented_location(self):
         n = md.READ_CAP_BYTES + 2
@@ -4220,7 +4259,11 @@ class TestS38TrimTriggerRow(unittest.TestCase):
         nothing checks that it says anything useful. It must name the FILE it was computed
         against (a generic noun in this position once misdirected an adopter) and must not name
         a command the adopter does not have."""
-        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
+        # PHASE C2: sized off CLASS_A_FIRE_BYTES, not READ_CAP_BYTES. This is a Class A ledger and
+        # that is now the arm that fires it; at the old size the branch stays silent and the
+        # "must still speak" assertion below fails on a fixture precondition rather than on the
+        # behaviour it is guarding.
+        p = self._sized("CHANGELOG.md", md.CLASS_A_FIRE_BYTES + 2)
 
         descs, trim_metrics = self._descs(p)
         self.assertFalse(trim_metrics["tool_present"],
@@ -4322,14 +4365,30 @@ class TestS38TrimTriggerRow(unittest.TestCase):
             proc = subprocess.run(
                 ["python3", TRIM_PY, "--file", rel, "--check"],
                 cwd=str(self.REPO), capture_output=True, text=True, timeout=120)
-            m = re.search(r"\[TRIGGER_READ\] ([\d,]+) B against a ([\d,]+) B one-read cap",
-                          proc.stdout)
+            # PHASE C2 RE-POINTED THIS REGEX, and the reason is the whole point of the test.
+            # The row now names the threshold ACTUALLY IN FORCE, which for a root Class A ledger
+            # is the archive threshold and not the one-read cap. Matching only the old wording
+            # would have made this test fail loudly (it did) rather than quietly agree about a
+            # number the trimmer no longer keys on -- so the alternation below is written to
+            # accept EITHER row and then assert WHICH one it got, never to accept both silently.
+            m = re.search(r"\[TRIGGER_READ\] ([\d,]+) B against (?:a|the) ([\d,]+) B "
+                          r"(one-read cap|Class A archive threshold)", proc.stdout)
             self.assertIsNotNone(
                 m, "unexpected --check output for %s: %s" % (rel, proc.stdout))
             self.assertEqual(led["bytes"], int(m.group(1).replace(",", "")),
                              "displayed size for %s must equal --check's" % rel)
-            self.assertEqual(md.READ_CAP_BYTES, int(m.group(2).replace(",", "")),
+            expected_arm = (md.CLASS_A_FIRE_BYTES if m.group(3) == "Class A archive threshold"
+                            else md.READ_CAP_BYTES)
+            self.assertEqual(expected_arm, int(m.group(2).replace(",", "")),
                              "the reporter and the remedy must agree where the cliff is")
+            # Every entry in collect_trim_metrics["ledgers"] is class A by the collector's own
+            # filter AND is repo-root-relative, so the trimmer -- which decides root-ness by an
+            # independent relative_to check -- must reach the same conclusion. If these two ever
+            # drift, this is where it shows.
+            self.assertEqual(m.group(3), "Class A archive threshold",
+                             "%s is in the collector's Class A ledger list, so the trimmer must "
+                             "also have classified it as a ROOT Class A ledger; a 'one-read cap' "
+                             "row here means the two tools disagree about scoping" % rel)
             self.assertEqual(led["read_fires"],
                              led["bytes"] > int(m.group(2).replace(",", "")),
                              "the displayed verdict for %s must follow from the two numbers "
@@ -4726,23 +4785,45 @@ class TestS38TrimTriggerRow(unittest.TestCase):
                          "fixture: baseline blob record count")
         return p
 
-    def test_read_level_exactly_at_the_cap_does_not_fire(self):
-        """`size > cap` fires; the cap itself does not. Nothing else in this class exercises a
-        ledger sitting exactly on the boundary, and `>` -> `>=` is precisely the mutant that
-        survived the whole suite one session ago on this very signal."""
-        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES)
+    def test_read_level_exactly_at_the_class_a_threshold_does_not_fire(self):
+        """`size > threshold` fires; the threshold itself does not. `>` -> `>=` is precisely the
+        mutant that survived the whole suite one session ago on this very signal, so the exact
+        boundary is exercised deliberately.
+
+        PHASE C2 MOVED THE BOUNDARY THIS PAIR GUARDS, and the rename is part of the change: these
+        ledgers are Class A, and the arm that decides for them is CLASS_A_FIRE_BYTES. Testing the
+        old constant here would have kept a green pair guarding a boundary the collector no longer
+        keys on -- true arithmetic about a dead threshold."""
+        p = self._sized("CHANGELOG.md", md.CLASS_A_FIRE_BYTES)
         led = [l for l in md.collect_all(p)["trim"]["ledgers"] if l["path"] == "CHANGELOG.md"][0]
-        self.assertEqual(led["bytes"], md.READ_CAP_BYTES, "fixture: exactly the cap")
-        self.assertFalse(led["read_fires"], "a file of exactly the cap still fits in one read")
+        self.assertEqual(led["bytes"], md.CLASS_A_FIRE_BYTES, "fixture: exactly the threshold")
+        self.assertFalse(led["read_fires"], "a file of exactly the threshold does not fire")
         self.assertFalse(led["refused"])
 
-    def test_read_level_just_past_the_cap_fires(self):
+    def test_read_level_just_past_the_class_a_threshold_fires(self):
         """The control for the test above: same fixture shape, two bytes larger."""
-        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
+        p = self._sized("CHANGELOG.md", md.CLASS_A_FIRE_BYTES + 2)
         led = [l for l in md.collect_all(p)["trim"]["ledgers"] if l["path"] == "CHANGELOG.md"][0]
         self.assertTrue(led["read_fires"])
-        self.assertFalse(led["refused"], "past the cap is truncation, not the hard refusal")
+        self.assertFalse(led["refused"], "past the threshold is not yet the hard refusal")
         self.assertTrue(led["fires"])
+
+    def test_a_class_a_ledger_BETWEEN_the_cap_and_the_threshold_stays_QUIET(self):
+        """THE BAND PHASE C2 CREATED, and the assertion that proves the move actually happened.
+
+        Before C2 this size fired. It is now the adjudicated band: past the one-read cap, so a
+        whole-file read truncates, but nowhere near the point where archiving is worth doing.
+        Without this test the pair above would pass equally well against an implementation that
+        simply never fires."""
+        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
+        led = [l for l in md.collect_all(p)["trim"]["ledgers"] if l["path"] == "CHANGELOG.md"][0]
+        self.assertGreater(led["bytes"], md.READ_CAP_BYTES, "fixture: over the one-read cap")
+        self.assertLess(led["bytes"], md.CLASS_A_FIRE_BYTES, "fixture: under the Class A arm")
+        self.assertFalse(led["read_fires"],
+                         "a Class A ledger in this band must NOT fire -- if it does, the "
+                         "collector is still keying on READ_CAP_BYTES")
+        self.assertFalse(led["fires"], "and the byte arm must not fire here either, or option C1 "
+                                       "was not applied and the trigger is inert")
 
     def test_size_exactly_at_the_budget_does_not_fire(self):
         """`size > budget` fires; equality does not. Same edge, the other metric. The fixture
@@ -4881,12 +4962,19 @@ class TestS38TrimTriggerRow(unittest.TestCase):
         self.assertIn("{:,} B HARD REFUSAL".format(md.READ_REFUSE_BYTES), d)
         self.assertIn("NO CONTENT AT ALL", d,
                       "the whole point of this branch is that the delivered prefix is empty")
-        self.assertNotIn("one-read budget", d,
-                         "a refused file is not a truncated one; emitting both gives one file two "
-                         "contradictory remedies")
-        under = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
+        self.assertNotIn("Class A archive threshold", d,
+                         "a refused file is not a merely-oversized one; emitting both gives one "
+                         "file two contradictory remedies")
+        # PHASE C2 RE-SIZED AND RE-WORDED THIS CONTROL. It used to sit at READ_CAP_BYTES + 2 and
+        # grep for "one-read budget"; at the new arm that size emits NOTHING, so the control went
+        # empty and the assertion failed -- correctly, because an empty control cannot show the two
+        # branches are distinct. It now sits just past the Class A arm, where the non-refusal
+        # branch does speak, and greps that branch's own new wording.
+        under = self._sized("CHANGELOG.md", md.CLASS_A_FIRE_BYTES + 2)
         d2 = "\n".join(self._descs(under)[0])
-        self.assertIn("one-read budget", d2, "control: the truncation branch must be distinct")
+        self.assertTrue(d2, "control: the non-refusal branch must actually emit something")
+        self.assertIn("Class A archive threshold", d2,
+                      "control: the truncation branch must be distinct")
         self.assertNotIn("HARD REFUSAL", d2)
 
     def test_the_named_tool_must_content_verify_not_merely_exist(self):
@@ -5154,6 +5242,13 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
 
         # Positive control: the same harness, one directory up, does produce the row -- so the
         # empty result above is the filter working, not the fixture failing to reach the code.
+        #
+        # ⚠ PHASE C2 HAD TO GROW THIS CONTROL'S FILE. It used to inherit whatever size the fixture
+        # happened to have, which fired the old 65,536 B arm; at 196,608 it went silent and this
+        # assertion failed -- correctly. A control that does not fire proves nothing about the
+        # branch it is controlling for, so the size is now set EXPLICITLY from the constant rather
+        # than left to the fixture, and it moves with any future retune.
+        (p / "CHANGELOG.md").write_bytes(b"x" * (md.CLASS_A_FIRE_BYTES + 1))
         classified = md.collect_trim_metrics(
             p, {"read_cap_watch": [{"path": "CHANGELOG.md", "lines": 9, "bytes": None}]})
         self.assertEqual([l["path"] for l in classified["ledgers"]], ["CHANGELOG.md"])
@@ -5231,43 +5326,199 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
 
     # --- the phase's own boundary -----------------------------------------------------------------
 
-    def test_phase_c1_moved_no_threshold(self):
-        """Plan section 8: option A1 "changes no threshold and cannot degenerate anything". The
-        constants are pinned to the trimmer elsewhere; what this adds is that the CLASSES did not
-        acquire thresholds of their own, which is Phase C2's job and would be inert before option
-        C1 settles `DEFAULT_BUDGET_BYTES` (plan section 5).
+    def test_phase_c2_moved_exactly_the_ratified_thresholds_and_nothing_else(self):
+        """SUCCESSOR TO `test_phase_c1_moved_no_threshold`, converted deliberately at Phase C2.
 
-        ⚠ BOTH HALVES OF THIS TEST WERE REWRITTEN AFTER REVIEW, and the reasons are the two traps
-        this class exists to avoid. The value half asserted `READ_CAP_BYTES == READ_CAP_TOKENS *
-        MIN_BYTES_PER_TOKEN` — which is the module's own definition of `READ_CAP_BYTES`, so both
-        operands moved together and a threshold could be moved to any value with this test still
-        green. It is Learning #43 again, in the class that ships Learning #43. FROZEN LITERALS are
-        used instead: an operand that does not move is the whole point. (Consistency between the
-        derivation and the trimmer is a different question, already owned by
-        test_cap_agrees_with_the_trimmer — this test's job is only "did a number move".)
+        C1's version asserted the classes had acquired NO thresholds, because attaching one was
+        C2's job and would be inert before option C1 settled `DEFAULT_BUDGET_BYTES`. C2 did both
+        in one change, so the guard flips from "none exist" to "exactly these exist".
 
-        The structural half grepped four INVENTED constant names that appear nowhere in the plan or
-        the codebase, and the mutant that "killed" it was written to use one of those exact names —
-        fitting the mutant to the guard. It is replaced by a check over the module's actual
-        namespace, which no per-class threshold can slip past whatever it is called.
+        ⚠ AND C1'S VERSION HAD A HOLE THAT C2 WALKED STRAIGHT THROUGH — recorded rather than
+        quietly fixed, because it is the failure this class already ships two learnings about.
+        Its docstring claimed a namespace check "which no per-class threshold can slip past
+        WHATEVER IT IS CALLED". It was implemented as
+        `[n for n in dir(md) if n.startswith("READ_CAP_CLASS")]` — one prefix. C2's constants are
+        named `CLASS_A_FIRE_BYTES` / `CLASS_A_STOP_BYTES`, chosen for what they guard rather than
+        to evade anything, and the guard stayed GREEN through the very phase it was written to
+        gate. A guard you can walk around by picking a name has coverage that is a property of the
+        change, not of the codebase. The check below is a SUBSTRING sweep over the whole namespace
+        asserting the EXACT expected set, which is what C1's docstring already claimed.
 
-        KILLS: any threshold move; any per-class threshold constant landing early under any name —
-        which would ship a trigger that never fires while the byte arm fires first (plan §5)."""
+        KILLS: any of the six pinned literals moving; any further per-class constant landing under
+        any spelling without a session deciding to add it here."""
+        # FROZEN LITERALS on both sides. `READ_CAP_BYTES` is defined in this module as
+        # `int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN)`, so asserting that identity would assert
+        # nothing — Learning #43, earned in this very class.
         self.assertEqual(md.READ_CAP_BYTES, 56_750,
-                         "the one-read budget moved; that is Phase C2's change, not C1's")
-        self.assertEqual(md.READ_REFUSE_BYTES, 262_144,
-                         "the hard refusal moved; that is Phase C2's change, not C1's")
+                         "C2 did NOT move the one-read budget. It is a measured harness fact, not "
+                         "a policy knob; the Class A arm is a separate constant beside it")
+        self.assertEqual(md.READ_REFUSE_BYTES, 262_144, "the hard refusal did not move either")
         self.assertEqual(md.READ_CAP_TOKENS, 25_000)
         self.assertEqual(md.MIN_BYTES_PER_TOKEN, 2.27)
+        self.assertEqual(md.CLASS_A_FIRE_BYTES, 196_608, "192 KiB, ratified at Phase C2")
+        self.assertEqual(md.CLASS_A_STOP_BYTES, 98_304, "96 KiB, ratified at Phase C2")
+        self.assertLess(md.CLASS_A_FIRE_BYTES, md.READ_REFUSE_BYTES,
+                        "plan §3 caveat 1: the Class A arm fires BELOW the hard refusal, never at "
+                        "it — a trigger set at the refusal parks the file on the cliff edge")
+        self.assertGreater(md.CLASS_A_FIRE_BYTES, md.READ_CAP_BYTES,
+                           "control: the Class A arm must be LOOSER than the one-read cap, or the "
+                           "phase changed nothing")
+
+        # The population is still two frozen sets and still carries no threshold of its own.
         class_names = sorted(n for n in dir(md) if n.startswith("READ_CAP_CLASS"))
-        self.assertEqual(class_names, ["READ_CAP_CLASS_A", "READ_CAP_CLASS_B"],
-                         "Phase C1 adds the two classes and NOTHING attached to them. A per-class "
-                         "threshold belongs to Phase C2, which plan §5 says is INERT until option "
-                         "C1 (DEFAULT_BUDGET_BYTES) is decided in the same change: %r" % class_names)
+        self.assertEqual(class_names, ["READ_CAP_CLASS_A", "READ_CAP_CLASS_B"])
         for name in class_names:
             self.assertIsInstance(getattr(md, name), frozenset,
                                   "%s must stay a set of names; a threshold smuggled in as a dict "
                                   "value would pass the name check above" % name)
+
+        # THE WIDENED GUARD — substring, not prefix, over every public module-level name. The
+        # expected set is exhaustive and sorted, so an addition fails rather than being absorbed.
+        per_class = sorted(n for n in dir(md)
+                           if not n.startswith("_") and ("CLASS_A" in n or "CLASS_B" in n))
+        self.assertEqual(per_class,
+                         ["CLASS_A_FIRE_BYTES", "CLASS_A_STOP_BYTES",
+                          "READ_CAP_CLASS_A", "READ_CAP_CLASS_B"],
+                         "a per-class name landed that no phase ratified, or one was renamed. "
+                         "Update this list in the session that adds it, and say why: %r"
+                         % per_class)
+
+class TestPhaseC2PerClassRiskRows(unittest.TestCase):
+    """Phase C2's DASHBOARD half — the two threshold sites the plan's §6 inventory left owned by
+    no phase, and which S115 fenced at the top of the plan rather than resolving.
+
+    WHY THIS IS IN C2 AT ALL, since §9's C2 criterion names only trimmer-side things. Because C2
+    is the change that CREATES the disagreement: move the trimmer's trigger and leave this file,
+    and `collect_trim_metrics` keeps emitting "the archive trigger fires; run `--check`" beside a
+    `--check` that reports it does not. The row would name a command whose output contradicts it —
+    which the comment above that remedy says the wording exists to avoid. The operator widened C2
+    to cover both sites; this class is that half.
+
+    ⚠ CLASS B CANNOT BE EXERCISED BY THIS REPOSITORY. Its only Class B file within the watched set
+    is `docs/planning/BACKLOG.md`, which is comfortably under the cap, so the Class B branch of the
+    risk row is unreachable through `collect_all` here. Every Class B assertion below therefore
+    drives `assess_risks` with a CONSTRUCTED metrics dict. That is a real limitation, not a
+    workaround: it means the Class B row is covered by unit test only and has never been observed
+    on a live tree in this repo.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        """A REAL scan supplies the metrics shape; only `read_cap_watch` is substituted.
+
+        The first draft hand-built the dict and it raised KeyError on `tests.test_file_count` --
+        assess_risks reads far more of the structure than the D4(b) rows do. Hand-shaping it would
+        have coupled this class to every future key assess_risks learns to read, and the failure
+        mode is an ERROR that looks like a product bug rather than a fixture one."""
+        cls._td = tempfile.TemporaryDirectory()
+        cls.addClassCleanup(cls._td.cleanup)
+        p = Path(cls._td.name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        (p / "SESSION_RUNNER.md").write_text("# r\n")
+        (p / "README.md").write_text("# fx\n")
+        subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                        "commit", "-q", "-m", "init"], check=True)
+        cls._base = md.collect_all(p)
+        cls._base["trim"] = {"signals": []}      # the trim row is asserted separately, below
+
+    @classmethod
+    def _metrics(cls, path, size, lines=100):
+        m = copy.deepcopy(cls._base)
+        m["files"]["read_cap_watch"] = [{"path": path, "bytes": size, "lines": lines}]
+        return m
+
+    def test_FIXTURE_the_base_scan_emits_no_read_cap_row_of_its_own(self):
+        """Control. If the borrowed scan already carried a read-cap row, every assertion below
+        would be reading someone else's row and would pass for the wrong reason."""
+        rows = [r for r in md.assess_risks(copy.deepcopy(self._base))
+                if "read cap" in r["description"]]
+        self.assertEqual(rows, [], "the fixture repo must be clean of read-cap rows: %r" % rows)
+
+    def _rows_for(self, path, size):
+        rows = md.assess_risks(self._metrics(path, size))
+        return [r for r in rows if path in r["description"] and "read cap" in r["description"]]
+
+    def test_a_class_A_ledger_over_the_cap_is_LOW_and_says_no_action_is_expected(self):
+        """The fleet-visible half of this phase. A Class A ledger between the one-read cap and the
+        archive threshold is the ADJUDICATED case (BL-52 third addendum): truncation is ordered and
+        the file is newest-on-top, so what drops is the oldest records. Reporting that as HIGH
+        taught a reader to ignore the row."""
+        rows = self._rows_for("HANDOFFS.md", md.READ_CAP_BYTES + 1)
+        self.assertEqual(len(rows), 1, "exactly one read-cap row per watched file: %r" % rows)
+        self.assertEqual(rows[0]["severity"], "low",
+                         "a Class A ledger over the cap but under the archive threshold is "
+                         "expected, not a fault")
+        self.assertIn("CLASS A", rows[0]["description"])
+        self.assertIn("NO ACTION IS EXPECTED", rows[0]["description"])
+        self.assertIn("{:,}".format(md.CLASS_A_FIRE_BYTES), rows[0]["description"],
+                      "the row must name the threshold that WOULD matter, so the reader can see "
+                      "how far away it is")
+
+    def test_a_class_B_file_over_the_cap_is_still_HIGH_and_says_why(self):
+        """Class B rows STAY. The trimmer answers NO_CONFIG for them, nothing guarantees the part
+        you need is in the delivered prefix, and a backlog's bottom items are as live as its top
+        ones. This is plan §7's "make the rows DIFFERENT, not delete one"."""
+        rows = self._rows_for("SESSION_NOTES.md", md.READ_CAP_BYTES + 1)
+        self.assertEqual(len(rows), 1, "%r" % rows)
+        self.assertEqual(rows[0]["severity"], "high")
+        self.assertIn("CLASS B", rows[0]["description"])
+        self.assertIn("NO_CONFIG", rows[0]["description"])
+
+    def test_THE_DISCRIMINATOR_same_size_opposite_severity(self):
+        """The pair above proves little separately — a rule that returned `low` for everything
+        would pass the first, and one that returned `high` for everything would pass the second.
+        Identical bytes, different class, opposite severity is what proves the branch is live."""
+        size = md.READ_CAP_BYTES + 1
+        a = self._rows_for("HANDOFFS.md", size)
+        b = self._rows_for("SESSION_NOTES.md", size)
+        self.assertEqual(len(a), 1); self.assertEqual(len(b), 1)
+        self.assertNotEqual(a[0]["severity"], b[0]["severity"],
+                            "same size, different class, and the severity did not move — the "
+                            "per-class branch is not wired")
+        self.assertEqual((a[0]["severity"], b[0]["severity"]), ("low", "high"))
+
+    def test_the_hard_refusal_row_is_UNCHANGED_and_still_HIGH_for_BOTH_classes(self):
+        """C2 relaxed nothing past READ_REFUSE_BYTES. There the prefix stops existing, the
+        consolation that makes truncation survivable is FALSE, and ordering buys neither class
+        anything — so this row must not have acquired a class."""
+        for path in ("HANDOFFS.md", "SESSION_NOTES.md"):
+            rows = md.assess_risks(self._metrics(path, md.READ_REFUSE_BYTES + 1))
+            hits = [r for r in rows if path in r["description"] and "hard limit" in r["description"]]
+            self.assertEqual(len(hits), 1, "%s: %r" % (path, rows))
+            self.assertEqual(hits[0]["severity"], "high",
+                             "%s past the hard refusal must stay HIGH whatever its class" % path)
+            self.assertIn("NO CONTENT AT ALL", hits[0]["description"])
+
+    def test_a_class_A_ledger_UNDER_the_cap_emits_no_read_cap_row_at_all(self):
+        """Control against the severity drop becoming a row that is simply always present."""
+        self.assertEqual(self._rows_for("HANDOFFS.md", md.READ_CAP_BYTES - 1), [])
+
+    def test_collect_trim_metrics_keys_on_the_class_A_arm_not_the_one_read_cap(self):
+        """The SECOND unowned site. This collector re-implements the trimmer's trigger — it must,
+        because it reports on repos where the tool is not installed — so a threshold that moved in
+        the trimmer alone leaves it contradicting `--check`.
+
+        Driven at three sizes across both thresholds rather than at one, because a single sample
+        cannot distinguish "keys on the new arm" from "always False"."""
+        files = {"read_cap_watch": [{"path": "CHANGELOG.md", "bytes": 0, "lines": 1}]}
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            (repo / "SESSION_RUNNER.md").write_text("# r\n")
+            for size, expected in ((md.READ_CAP_BYTES + 1, False),
+                                   (md.CLASS_A_FIRE_BYTES, False),
+                                   (md.CLASS_A_FIRE_BYTES + 1, True)):
+                (repo / "CHANGELOG.md").write_bytes(b"x" * size)
+                out = md.collect_trim_metrics(repo, files, role="framework")
+                led = [l for l in out["ledgers"] if l["path"] == "CHANGELOG.md"]
+                self.assertEqual(len(led), 1, "%d: %r" % (size, out["ledgers"]))
+                self.assertEqual(led[0]["read_fires"], expected,
+                                 "at %s B the read arm must be %s — it keys on "
+                                 "CLASS_A_FIRE_BYTES (%s), not READ_CAP_BYTES (%s)"
+                                 % ("{:,}".format(size), expected,
+                                    "{:,}".format(md.CLASS_A_FIRE_BYTES),
+                                    "{:,}".format(md.READ_CAP_BYTES)))
 
 
 if __name__ == "__main__":

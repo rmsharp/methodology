@@ -540,7 +540,24 @@ FOOTER = ("\n---\n\n**Release history before v3.0:** not re-narrated here — se
           "[`CLAUDE.md` §Versioning](CLAUDE.md#versioning). This ledger is prepend-only.\n")
 
 
-def make_repo(tmp, n_records=30, body=3500, footer=False):
+# ⚠ `body` GREW 3,500 -> 7,000 AT PHASE C2, AND THE REASON IS NOT COSMETIC. These fixtures must be
+# large enough to FIRE the shipped trigger, and C2 raised it from 65,536 B to 196,608 B. At the old
+# size make_repo() produced ~108 KB, which fired the old byte arm and is silent under the new one:
+# 22 tests in this file went red as [NOTHING_TO_DO], every one of them about shard mechanics, SRF,
+# or losslessness rather than about calibration.
+#
+# THE ALTERNATIVE WAS CONSIDERED AND REJECTED, recorded so it is not re-litigated: passing
+# `--budget-bytes 65536` at each call site would have held every downstream number byte-identical
+# and made these tests immune to future recalibration. It was rejected because it would leave the
+# SHIPPED configuration unexercised end-to-end — every trim in this file would run at a budget no
+# adopter has — which is the "a guard you can walk around by picking a parameter" shape this repo
+# already has a learning about. Growing the fixture keeps the default on the tested path.
+#
+# Measured after the change: 123 tests pass, and the fixture is NON-VACUOUS — make_repo() yields
+# 213,704 B against a 196,608 B trigger, --check reports FIRES, and a real --write lands at
+# 93,909 B, inside (READ_CAP_BYTES, CLASS_A_STOP_BYTES]. Retained-record counts moved 9 -> 13; no
+# assertion in this file encodes either number, which is why nothing needed hand-editing.
+def make_repo(tmp, n_records=30, body=7000, footer=False):
     p = Path(tmp)
     (p / "docs" / "archive").mkdir(parents=True)
     entries = "".join(
@@ -560,7 +577,9 @@ def make_repo(tmp, n_records=30, body=3500, footer=False):
     return p
 
 
-def make_handoff_repo(tmp, n_hf_records=6, hf_body=1200, n_cl_records=3, cl_body=50):
+# `hf_body` grew 1,200 -> 34,000 at Phase C2, for the reason stated above make_repo(). Measured:
+# HANDOFFS.md is 205,662 B, over the 196,608 B trigger, and --check reports FIRES.
+def make_handoff_repo(tmp, n_hf_records=6, hf_body=34000, n_cl_records=3, cl_body=50):
     """A repo holding BOTH ledgers, seeded in ONE commit — HANDOFFS.md fence-kind records with the
     real declared regen field (`This file currently holds **N**`), plus a minimal CHANGELOG.md
     (check_P1's ledger_rel_for() is hardcoded to CHANGELOG.md regardless of which file is trimmed,
@@ -1936,6 +1955,215 @@ class TestGrammarMismatch(unittest.TestCase):
         self.assertRegex(prose, r"\d{4}-\d{2}-\d{2}", "control: the line does carry a date")
         self.assertIsNone(mod.LEDGERS["CHANGELOG.md"].content_probe.search(prose),
                           "an anchored probe must ignore prose that merely mentions a date")
+
+
+
+class TestPhaseC2ClassAThreshold(unittest.TestCase):
+    """Phase C2 — the Class A archive threshold, and DEFAULT_BUDGET_BYTES raised to meet it.
+
+    WHAT THIS CLASS IS DEFENDING AGAINST, stated because it is subtle and it nearly shipped.
+    Before C2 the read arm's FIRE and its STOP were the same constant, READ_CAP_BYTES. The plan
+    describes option A2 as "replace the read arm's threshold" — singular — and an implementer who
+    moved only `read_fires` would get a trigger that fires in the right place and a `choose_cut`
+    that still cuts back to 56,750 B. Nothing in the suite before this class asserted what a trim
+    cuts back TO, so that half-application would have been GREEN. Every assertion below that
+    touches `read_stop_at` exists for that reason.
+    """
+
+    # --- the constants, against FROZEN LITERALS ----------------------------------------------
+    # Learning #43: an assertion whose operands both come from the module under test is an
+    # identity. `CLASS_A_STOP_BYTES == int(DEFAULT_BUDGET_BYTES * BYTE_STOP_FRACTION)` is TRUE and
+    # is asserted below as an intentional coincidence — but it cannot be the only check, because
+    # both sides move together when the budget moves. So each number is also pinned to a literal.
+
+    def test_the_three_constants_are_the_ratified_values(self):
+        """KILLS: any of the three moving without a session deciding to move it."""
+        self.assertEqual(mod.CLASS_A_FIRE_BYTES, 196_608, "192 KiB — the Class A fire point")
+        self.assertEqual(mod.CLASS_A_STOP_BYTES, 98_304, "96 KiB — the Class A stop")
+        self.assertEqual(mod.DEFAULT_BUDGET_BYTES, 196_608,
+                         "option C1 raised this to 192 KiB; at 65,536 the byte arm pre-empts the "
+                         "Class A arm and option A2 is inert (plan §5, §10 dragon 1)")
+
+    def test_the_fire_stop_coincidence_is_intentional_not_accidental(self):
+        """The byte arm and the Class A read arm land on the same two numbers today.
+
+        That is a real convergence and it is asserted so that moving ONE of them is a visible
+        decision rather than a silent divergence. It is deliberately NOT expressed by deriving one
+        constant from the other in the source: the two arms answer different questions (context
+        tax vs. distance from the hard refusal), and a derivation would assert they are one
+        question. Both operands here are pinned to literals above, so this is not an identity."""
+        self.assertEqual(int(mod.DEFAULT_BUDGET_BYTES * mod.BYTE_STOP_FRACTION),
+                         mod.CLASS_A_STOP_BYTES,
+                         "the byte arm's hysteresis stop and the Class A read stop coincide by "
+                         "design; if you moved one on purpose, update this test and say why")
+
+    def test_the_class_a_arm_sits_below_the_hard_refusal_with_real_margin(self):
+        """Plan §3 caveat 1: fire BELOW READ_REFUSE_BYTES, never at it. A trigger set at the
+        refusal parks the file on the edge where degradation stops being graceful."""
+        self.assertLess(mod.CLASS_A_FIRE_BYTES, mod.READ_REFUSE_BYTES)
+        self.assertEqual(mod.READ_REFUSE_BYTES - mod.CLASS_A_FIRE_BYTES, 65_536,
+                         "64 KiB of margin under the refusal")
+        self.assertGreater(mod.CLASS_A_FIRE_BYTES, mod.READ_CAP_BYTES,
+                           "control: the Class A arm must be LOOSER than the one-read cap, or "
+                           "this phase changed nothing")
+
+    # --- the fire/stop pair is per class, and BOTH halves moved ------------------------------
+
+    def test_read_fire_at_and_read_stop_at_are_both_class_aware(self):
+        """KILLS the half-application this class exists for: moving the fire and not the stop."""
+        a = mod.Trigger(); a.class_a = True
+        b = mod.Trigger(); b.class_a = False
+        self.assertEqual(a.read_fire_at, mod.CLASS_A_FIRE_BYTES)
+        self.assertEqual(a.read_stop_at, mod.CLASS_A_STOP_BYTES)
+        self.assertEqual(b.read_fire_at, mod.READ_CAP_BYTES)
+        self.assertEqual(b.read_stop_at, mod.READ_CAP_BYTES)
+        self.assertNotEqual(a.read_stop_at, b.read_stop_at,
+                            "if these are equal the stop half was never wired")
+
+    def test_a_class_a_trim_cuts_back_to_96_KiB_not_to_the_one_read_cap(self):
+        """THE ASSERTION THAT WOULD HAVE CAUGHT A FIRE-ONLY CHANGE.
+
+        With the stop half unwired, stops() falls back to READ_CAP_BYTES and a size of exactly
+        96 KiB returns False — the trim keeps cutting, down to 56,750 B, silently."""
+        t = mod.Trigger(); t.class_a = True; t.budget = mod.DEFAULT_BUDGET_BYTES
+        self.assertTrue(t.stops(mod.CLASS_A_STOP_BYTES),
+                        "exactly at the Class A stop must stop — the boundary is inclusive")
+        self.assertFalse(t.stops(mod.CLASS_A_STOP_BYTES + 1), "one byte over must not stop")
+        self.assertGreater(mod.CLASS_A_STOP_BYTES, mod.READ_CAP_BYTES,
+                           "control: 96 KiB is ABOVE the one-read cap, so a fire-only "
+                           "implementation would answer False here")
+
+    def test_the_default_is_the_conservative_arm(self):
+        """A Trigger nobody classified must get the TIGHTER threshold. Forgetting to classify has
+        to err toward firing early, never toward silence."""
+        t = mod.Trigger()
+        self.assertFalse(t.class_a, "class_a must default False")
+        self.assertEqual(t.read_fire_at, mod.READ_CAP_BYTES)
+        self.assertEqual(t.read_stop_at, mod.READ_CAP_BYTES)
+
+    def test_no_ledger_can_stop_above_the_hard_refusal_at_any_budget(self):
+        """Plan §9's C2 criterion, and the `--budget-bytes` guard restated at the new value.
+
+        The knob is adopter-facing; a raised budget must not quietly let a file stop above the
+        read arm's stop. Exercised at absurd budgets, where the byte arm alone would allow it."""
+        for budget in (mod.DEFAULT_BUDGET_BYTES, 512 * 1024, 4 * 1024 * 1024, 10 ** 9):
+            for class_a in (True, False):
+                t = mod.Trigger(); t.class_a = class_a; t.budget = budget
+                self.assertFalse(t.stops(mod.READ_REFUSE_BYTES),
+                                 "budget=%d class_a=%s: stopping AT the hard refusal must be "
+                                 "impossible" % (budget, class_a))
+                self.assertFalse(t.stops(mod.CLASS_A_STOP_BYTES + 1),
+                                 "budget=%d class_a=%s: the read arm must cap the byte arm"
+                                 % (budget, class_a))
+
+    # --- the ROOT scoping (operator decision 3) ----------------------------------------------
+
+    @staticmethod
+    def _seed(tmp, rel_paths, body):
+        """A git repo holding the SAME bytes at several paths. Uses the module's own helpers so
+        this class stays on the file's idiom (`sh`, `Path`, TemporaryDirectory)."""
+        d = Path(tmp)
+        sh(d, "git", "init", "-q", ".")
+        for rel in rel_paths:
+            p = d / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(body, encoding="utf-8")
+        return d
+
+    def test_is_root_class_a_is_a_path_question_not_a_basename_question(self):
+        """OPERATOR DECISION, Phase C2. LEDGERS is resolved by BASENAME at any depth
+        (`LEDGERS.get(path.name)`), so a nested CHANGELOG.md gets a spec and a fully evaluated
+        trigger. Only a ROOT ledger earns the relaxed arm — otherwise any */CHANGELOG.md anywhere
+        silently inherits a threshold 3.38x the one-read cap without ever being classified."""
+        with tempfile.TemporaryDirectory() as tmp:
+            d = self._seed(tmp, ["CHANGELOG.md", "docs/x/CHANGELOG.md",
+                                 "starter-kit/CHANGELOG.md"], "x")
+            spec = mod.LEDGERS["CHANGELOG.md"]
+            root = d.resolve()
+            self.assertTrue(mod.is_root_class_a(root, d / "CHANGELOG.md", spec))
+            self.assertFalse(mod.is_root_class_a(root, d / "docs/x/CHANGELOG.md", spec),
+                             "a nested ledger must NOT get the relaxed arm")
+            self.assertFalse(mod.is_root_class_a(root, d / "starter-kit/CHANGELOG.md", spec),
+                             "this repo's own distributed SEED is the live instance of this case")
+
+    def test_is_root_class_a_returns_False_rather_than_raising_on_a_foreign_path(self):
+        """It routes to the tighter arm on anything it cannot resolve, and does not explode."""
+        with tempfile.TemporaryDirectory() as tmp:
+            spec = mod.LEDGERS["CHANGELOG.md"]
+            self.assertFalse(mod.is_root_class_a(Path(tmp).resolve(),
+                                                 Path("/nowhere/CHANGELOG.md"), spec))
+
+    def test_root_and_nested_ledgers_of_IDENTICAL_SIZE_get_opposite_verdicts(self):
+        """THE DISCRIMINATING CASE, and the only one that proves the scoping does anything.
+
+        Both files hold the same bytes. At a size BETWEEN the two thresholds the root one must be
+        quiet and the nested one must fire. A test at 256 KB would see both fire and prove
+        nothing; a test at 10 KB would see both stay quiet and prove nothing."""
+        front = "# L\n\nfront\n\n---\n\n## 2026-08\n\n"
+        rec = lambda i: ("### 2026-08-%02d \u00b7 [ad hoc] r%d\n\n" % ((i % 28) + 1, i)
+                         + "- filler line giving this record realistic bulk\n" * 40 + "\n")
+        body = front + "".join(rec(i) for i in range(47))
+        size = len(body.encode("utf-8"))
+        self.assertGreater(size, mod.READ_CAP_BYTES,
+                           "control: the fixture must be OVER the one-read cap")
+        self.assertLess(size, mod.CLASS_A_FIRE_BYTES,
+                        "control: and UNDER the Class A arm, or the case is not discriminating")
+        with tempfile.TemporaryDirectory() as tmp:
+            d = self._seed(tmp, ["CHANGELOG.md", "docs/x/CHANGELOG.md"], body)
+            spec = mod.LEDGERS["CHANGELOG.md"]
+            rt = d.resolve()
+            root = mod.Trigger(); root.size_bytes = size
+            root.class_a = mod.is_root_class_a(rt, d / "CHANGELOG.md", spec)
+            nest = mod.Trigger(); nest.size_bytes = size
+            nest.class_a = mod.is_root_class_a(rt, d / "docs/x/CHANGELOG.md", spec)
+            self.assertTrue(root.class_a, "control: the root file must classify as Class A")
+            self.assertFalse(nest.class_a, "control: the nested file must not")
+            self.assertFalse(root.read_fires, "the ROOT ledger must be quiet at this size")
+            self.assertTrue(nest.read_fires, "the NESTED one, same bytes, must fire")
+
+    def test_END_TO_END_a_real_write_lands_between_the_cap_and_the_class_a_stop(self):
+        """THE STRONGEST FORM OF THIS CLASS'S CENTRAL ASSERTION, and the only one that exercises
+        the whole path — trigger, choose_cut, stops(), and the write — at the SHIPPED defaults.
+
+        The resulting size is the tell. A correct C2 lands it in the band
+        (READ_CAP_BYTES, CLASS_A_STOP_BYTES]. An implementation that moved `read_fires` and left
+        `read_ok` on READ_CAP_BYTES lands it at or below 56,750 instead, and every OTHER assertion
+        in this file would still be green — the trim happened, the shard is lossless, the proof
+        passes. Only the resting SIZE distinguishes them."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            before = (p / "CHANGELOG.md").stat().st_size
+            self.assertGreater(before, mod.CLASS_A_FIRE_BYTES,
+                               "control: the fixture must actually fire, or this proves nothing")
+            r = run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+            self.assertEqual(r.returncode, 0, r.stdout)
+            after = (p / "CHANGELOG.md").stat().st_size
+            self.assertLessEqual(after, mod.CLASS_A_STOP_BYTES,
+                                 "a Class A trim must reach the 96 KiB stop")
+            self.assertGreater(after, mod.READ_CAP_BYTES,
+                               "IT MUST NOT KEEP CUTTING TO 56,750 B — that is the signature of a "
+                               "fire-only change, where stops() still reads READ_CAP_BYTES")
+
+    # --- the shipped ledgers, and the ---check row -------------------------------------------
+
+    def test_the_check_row_reports_the_threshold_actually_in_force(self):
+        """A row that prints READ_CAP_BYTES for a file the trigger no longer keys on is arithmetic
+        about a threshold nothing uses. The one-read cap is still MENTIONED for Class A — the
+        property is real — but it must not be presented as the fault condition."""
+        body = "# L\n\nfront\n\n---\n\n## 2026-08\n\n" + (
+            "### 2026-08-01 \u00b7 [ad hoc] r\n\n" + "- x\n" * 40 + "\n") * 47
+        with tempfile.TemporaryDirectory() as tmp:
+            d = self._seed(tmp, ["CHANGELOG.md", "docs/x/CHANGELOG.md"], body)
+            sh(d, "git", "add", "-A")
+            sh(d, "git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "i")
+            root = run_trim(d, "--file", "CHANGELOG.md", "--check").stdout
+            nest = run_trim(d, "--file", "docs/x/CHANGELOG.md", "--check").stdout
+            self.assertIn("Class A archive threshold", root)
+            self.assertIn("{:,}".format(mod.CLASS_A_FIRE_BYTES), root)
+            self.assertNotIn("Class A archive threshold", nest,
+                             "a nested ledger must not be told it has the relaxed arm")
+            self.assertIn("one-read cap", nest)
+            self.assertIn("{:,}".format(mod.READ_CAP_BYTES), nest)
 
 
 if __name__ == "__main__":
