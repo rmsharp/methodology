@@ -183,6 +183,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S117 — a full-scope file-management plan for the framework (DRAFT)
+
+- **Model:** Claude Opus 5 (1M context).
+- **Deliverable:** [`docs/planning/file-management-system-plan.md`](docs/planning/file-management-system-plan.md)
+  (31,643 B, against a **declared 65,000 B budget** stated in its own header — the plan is file 32
+  in an ungoverned directory and says so). **Planning session: nothing is implemented.**
+- **Evidence base:** a 6-census / 12-verifier / 1-critic read-only workflow, plus direct measurement
+  with the no-content token meter. Every figure was reproduced by a command; §10 carries the
+  reproductions. Tree asserted clean throughout — no agent wrote to this repo or to any adopter.
+- **THE CENTRAL FINDING, metered rather than estimated:** the mandatory Phase 0 read set —
+  `CLAUDE.md` + `starter-kit/SESSION_RUNNER.md` + `starter-kit/SAFEGUARDS.md` — is **80,813 B =
+  28,832 tokens = 115.3% of the 25,000-token single-read limit.** It cannot be delivered in one
+  read and would have to shed 10,741 B to fit. **No per-file ceiling can catch it: the failure is a
+  sum nothing sums.** `starter-kit/context_budget.py:888-898` totals exactly one class and hardcodes
+  which (`cfg["classes"]["resident"]`), and that class has one member.
+- **Six more structural findings, each reproduced:** (F2) the ceilings sit on the files that can
+  afford to grow — `CHANGELOG.md`/`HANDOFFS.md` are frontier-read and newest-first, so truncation
+  costs them their *oldest* records, while the unwatched oldest-first files lose their *newest*;
+  (F3) **the only automated decay mechanism is net-additive by 1.79×** — trim `9038e40` relieved
+  22,146 B and added 39,672 B for a **net +17,526 B**, the proof script being 70% of the shard it
+  certifies, and `docs/archive/` is now 35.0% of the tracked repo with no ceiling and no deletion
+  ever; (F4) **in 693 commits exactly one tracked file has ever been deleted** (`LICENSE`, `d207d1c`,
+  re-added as a mistake) — the framework has a create verb and no retire verb; (F5) nothing
+  mechanically enforces any ceiling, and the one hook that *is* installed forces growth; (F6)
+  `docs/planning/` and the archive tier are ungoverned, and `git log --oneline` is **56,856 B**, a
+  read artifact with zero possible decay; (F7) three live ceilings, two densities differing by 25%,
+  and **20 copies of the literal `65536` across 8 files** with nothing keeping them consistent.
+- **Fleet evidence, measured read-only across 11 real adopters:** **8 of 11 exceed the single-read
+  limit** on mandatory Phase 0 reading — robust at both the measured mix density and the most
+  token-sparse density in the repo — while only **3 of 11** hold any size instrument, and 10 files
+  across 5 adopters are already past the 262,144 B hard refusal.
+- **SIX OPERATOR DECISIONS (§6) GATE PHASE 1 and are not derivable from measurement:** the target
+  cost per session; how many of each thing the framework should carry; the semantic retirement
+  event; whether "undeliverable in one read" is a fault or an accepted state; conservative floor vs
+  measured density; and whether the framework has jurisdiction over adopter-owned files.
+- **BL-45 is absorbed, not closed.** Its remedy becomes Phase 4's first instance. Its byte columns
+  were re-derived and **still reproduce exactly**; its citation figure does not — *"five, in two
+  files"* at N=10 is **9, in 4 files**, measured by running the checker. **This session's own claim
+  commit (`fd44454`) was wrong to say every figure in it is stale, and that is corrected here.**
+- **Defects found and deliberately NOT fixed** (handed forward, out of a planning session's scope):
+  a **new current-generation `.verify.sh` failure** (`HANDOFFS-through-2026-08-25`, `L2 FRONT MATTER
+  lost 1 line(s)`) making **5 of 16** shipped proofs red; `bin/check-learnings` **silently disarmed
+  by a single blank line** (prints `OK — 21 rows` at exit 0 with 43 present); its dead
+  ascending-order guard; four `[[N]]` citations invisible to its sweep; and the seed budget
+  declaring `LEARNINGS.md`, a filename no manifest dest installs.
+- **Not in scope / not taken:** implementing any phase, BL-51 Phase C3, `RECORD_BUDGET_BYTES`,
+  trimming either ledger, and **any outward-facing action whatsoever.** Phase 6 (upstream PR)
+  explicitly requires the operator's go-ahead and is **not** implied by approving this plan.
+
 ### 2026-08-27 · [ad hoc] S117 RE-AIM — the deliverable becomes a full-scope file-management plan
 
 - **Model:** Claude Opus 5 (1M context).
