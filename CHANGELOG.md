@@ -183,6 +183,80 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S118 RE-AIM — the deliverable becomes a product-scoped shrink plan plus a size gate, aimed at one upstream PR
+
+- **Model:** Claude Opus 5 (1M context).
+- **The operator re-scoped the session mid-flight, and the re-scoping is the substance, not a detail.**
+  In their words: *"much of my problem in understanding you is that you are solving two problems and,
+  presently, I am only concerned with one … 1) fixing the `methodology` repository's customized files.
+  2) fixing the files and code that goes to adopters. The problem that is most important is to fix the
+  files and code that goes to adopters via https://github.com/KJ5HST/methodology.git"* — and then:
+  *"Our goal is to create a PR for upstream that addresses the file management problem we are working on."*
+- **The re-scoping was earned by a defect in how S118 was presenting the decisions.** Every option in §6
+  had been costed without sorting Problem 1 from Problem 2, so fork-only work (`.context-budget.json`,
+  `docs/planning/`, `docs/archive/`, the root ledgers) was priced beside product work as though both
+  reached adopters. **The product is exactly `bin/_manifest.py`'s DISTRIBUTION list: 26 rows / 936,867 B**
+  — 21 TRACKED (906,419 B) + 5 SEED (30,448 B). Nothing else reaches an adopter by any route.
+- **THE THREE ASSIGNED DELIVERABLES**, all planning-mode (FM #18: nothing implemented this session):
+  **(1)** analyse `starter-kit/FRAMEWORK_LEARNINGS.md` and `ITERATIVE_METHODOLOGY.md` for shortening —
+  duplication removal, merging near-identical learnings (the operator named **#7/#8** as a candidate pair,
+  and row 8 says of itself *"This is Learning #7 applied to procedure summaries rather than citations"*),
+  abbreviations for frequent phrases, removal of rarely-used learnings, and truncation of example lists
+  that enumerate every instance from the original finding. **(2)** design a gate preventing
+  `SESSION_RUNNER.md` + `SAFEGUARDS.md` from becoming undeliverable. **(3)** aim both at one upstream PR.
+- **The premise was checked before the work started, and it is conditionally true — the condition matters.**
+  At the 2.27 floor (decision D5 below) one read is 56,750 B, so `FRAMEWORK_LEARNINGS.md` (73,483 B) is over
+  by **16,733 B** and `ITERATIVE_METHODOLOGY.md` (68,240 B) by **11,490 B**. **Metered directly, both still
+  fit** — 24,110 and 23,432 tokens against the 25,000 cap. `FRAMEWORK_LEARNINGS.md`'s true runway is
+  **2,714 B ≈ one to two rows**, so the shortening buys headroom that is nearly gone rather than recovering
+  headroom already lost. Recorded this way so no successor inherits the stronger claim.
+- **The load-bearing number for the whole effort:** the framework's *own* shipped Phase 0 read —
+  `starter-kit/SESSION_RUNNER.md` (54,363 B) + `starter-kit/SAFEGUARDS.md` (15,386 B) = **69,749 B =
+  24,597 metered tokens = 98.4% of one 25,000-token read**, before the adopter's `CLAUDE.md` — which the
+  framework does **not** own (`CLAUDE_TEMPLATE.md` is the manifest dest, never `CLAUDE.md`) — contributes a
+  byte. Across 11 real adopters that file runs 2,725–43,956 B.
+- **Superseded, not abandoned:** the claim entry above stands. D1/D2/D3/D4 and D6 remain unanswered and are
+  now re-posed against the product rather than against this fork.
+- **No outward-facing action taken.** No fetch, no push, no PR, no issue, no comment. `main` is 97 ahead of
+  `origin/main` and **438 ahead of `upstream/main`** (1 behind, `512c2ed`), measured against refs last fetched
+  2026-08-15 / 2026-08-11 and therefore **stale**; the operator asked about resyncing as a *question* and it
+  was answered, not executed (FM #23).
+
+### 2026-08-27 · [ad hoc] S118 DECISIONS (3 of 7) — the density floor, the fork-local ceiling, and the fleet instrument
+
+- **Model:** Claude Opus 5 (1M context).
+- Three **operator decisions** from §6, recorded per FM #27 before any carrier is edited. Four remain open
+  (D1, D2, D3, D4, D6 — re-posed against the product after the re-aim above).
+- **(1) D5 — CEILINGS ARE DENOMINATED IN THE CONSERVATIVE `MIN_BYTES_PER_TOKEN = 2.27` FLOOR**, giving
+  `READ_CAP_BYTES = 56,750`. Chosen over per-file measured density, a per-class denominator, and two
+  labelled denominators. **This ratifies what already ships** — the floor is already the constant in
+  `starter-kit/methodology_trim.py:120` and both dashboard twins, all TRACKED. Two consequences were put to
+  the operator before the choice was recorded: it leaves `SESSION_RUNNER.md` **2,387 B** of headroom against
+  a floor-denominated ceiling, when that file's four largest single commits are **+8,084 / +5,325 / +5,101 /
+  +4,436 B**; and it disagrees with the 73,728 B ceiling S114 derived for `FRAMEWORK_LEARNINGS.md` at that
+  file's *measured* 3.03 density. **Both collisions are Problem 1** — they live in the fork-only
+  `.context-budget.json` — so neither blocks the product work. **The in-scope residue is a product defect:**
+  the SEED `starter-kit/context-budget.json` declares `bytes_per_token: 2.93`, a *fourth* denominator that
+  contradicts the floor and ships to every future adopter.
+- **(2) D7(a) — YES, the canonical repo may hold itself to a ceiling on `SESSION_RUNNER.md` and
+  `SAFEGUARDS.md`.** **Problem 1**, and the plan's stated ground for fencing it was measured and **refuted**:
+  §6's *"Adding them … ships upstream"* and dragon 3 are false for the edit the decision actually requires.
+  `.context-budget.json` is **never a manifest SOURCE** (only ever a DEST, from the SEED
+  `starter-kit/context-budget.json`) and **does not exist in `upstream/main`** — `git cat-file -e
+  upstream/main:.context-budget.json` exits 128 while `origin/main` exits 0. The *other* half of the ground
+  stands: a ceiling constrains what future canonical sessions may write into a TRACKED file.
+- **(3) D7(b) — NO, the fleet-wide instrument must not flag those two files.** **This ratifies shipped
+  behaviour**: `starter-kit/methodology_dashboard.py:420-425` already excludes them from `READ_CAP_WATCHED`,
+  and `:350-356` states the reason — *"one canonical breach would light up every adopter at once over a file
+  they cannot edit."* **No product change; the value is that the exclusion is now a decision on record with
+  a reason, so no future session re-opens it as an oversight.** The two declines rest on *different* grounds
+  and only the first was affected by the refutation above.
+- **The distinction the decision turns on, from the manifest's own header:** `SAFEGUARDS.md` is protected at
+  an adopter (TRACKED — `bin/sync`'s `classify_target()` marks a locally edited copy `modified` and declines
+  to overwrite) and **editable here**, where it is the original — 8 commits, 7,850 → 15,386 B. So a ceiling
+  here is actionable and a fleet flag is not, which is exactly what `.context-budget.json`'s `_synced` key
+  already argues.
+
 ### 2026-08-27 · [ad hoc] S118 claim — answer the six operator decisions gating Phase 1 of the file-management plan
 
 - **Model:** Claude Opus 5 (1M context).
