@@ -35,6 +35,77 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-08-28 · [ad hoc] The Learnings table leaves the every-session read for a read-on-demand sibling
+
+- **Change:** the `## Learnings (added by sessions)` table moves out of
+  `starter-kit/SESSION_RUNNER.md` into a new distributed sibling,
+  `starter-kit/FRAMEWORK_LEARNINGS.md` → adopter root `FRAMEWORK_LEARNINGS.md`, `TRACKED`.
+  `SESSION_RUNNER.md` keeps a one-paragraph pointer; Phase 3C's two routing bullets now name the
+  sibling. The learnings are **reference, not procedure** — a session needs them when a learning
+  applies, not to run a session.
+- **What it buys, measured on both files rather than argued.** The Phase 0 mandatory read
+  (`SESSION_RUNNER.md` + `SAFEGUARDS.md`) goes **80,526 B → 67,581 B (−12,945, −16.1%)**.
+  `SESSION_RUNNER.md` alone: **65,140 → 52,195 B**. `SAFEGUARDS.md` is untouched. Against the
+  56,750 B one-read floor the pair is **over by 23,776 B before and 10,831 B after — a 54.4%
+  cut with no content deleted.** The sibling is 56,673 B and is read on demand.
+- **Nothing is lost — the rows move, and then some.** The 13 rows that lived here arrive as rows
+  **#1–#13** of a 46-row table; rows #1–#11 are byte-identical, and **#12 and #13 arrive compacted**
+  (2,401 → 1,451 B and 1,573 → 1,447 B) under the 1,500 B per-row budget the new file publishes.
+  Compaction is *said shorter without saying less*: every mechanism, figure and citation is kept,
+  and each compacted row was read back by an independent reader asked only what was lost.
+- **`#14` is deliberately absent and must stay absent.** It is reserved by
+  `docs/operator-gated-review-plan`'s D3; the table numbers **1..47 with 14 reserved**. Renumbering
+  would break every `Learning #N` citation, which is what "append only, never renumber" exists to
+  prevent. `bin/check-learnings` now parses the file's own prose for reserved numbers, so the gap
+  is not reported as a missing row.
+- **Tooling follows the table, because the file publishes rules that must be true.**
+  `bin/check-learnings` locates the table by its header row rather than by a `## Learnings` heading
+  (portable across both layouts), honours the reserved gap, and enforces the **1,500 B row budget
+  the new file's front matter names it for** — held against every row, not only the row being
+  written. `bin/tests.sh` Test 23 retargets to the new file and now asserts on each mutation's
+  **specific finding text** rather than the exit code, which is a union over every check and would
+  otherwise be satisfied by the new budget arm.
+- **Scanner:** `FRAMEWORK_LEARNINGS.md` joins `FRAMEWORK_AMBIGUOUS_DOCS` (the ambiguous root-name
+  set grows 6 → 7, a behaviour change, so `DASHBOARD_VERSION` 2.10.6 → 2.10.7 on both byte-identical
+  twins) and gains a `CHECKLIST_EXEMPT` entry rather than a `METHODOLOGY_ITEMS` row —
+  `METHODOLOGY_MAX` is a derived denominator, so scoring it would move every already-compliant
+  adopter's percentage for a change they did not make. That exemption was driven **RED** first: with
+  it removed, `test_every_distributed_adopter_root_file_is_scored_or_exempt` fails on exactly
+  `['FRAMEWORK_LEARNINGS.md']`.
+- **Every count claim is derived from the manifest and asserted, not carried over.** The
+  originating commit's count edits were computed against a 22-row `DISTRIBUTION`; this one is 24, so
+  its "+1" arithmetic lands two short here. Parsing `bin/_manifest.py` gives **total 25, markdown
+  dests 22, TRACKED markdown 18, TRACKED markdown at the adopter root 7, `workstreams/` sources 9**,
+  and all **eight** count claims across four files were re-checked against that derivation — 8
+  correct, 0 wrong. Three needed correcting: the `FRAMEWORK_ITEMS` comment (*"9 of the 22"* → **25**),
+  `docs/tutorials/T8_keeping_current.md` (*"all 23 distributed files"* → **25**), and
+  `tools/test_methodology_dashboard.py` (*"21 installed markdown files"* → **22**). **Two of the
+  three units of the first two corrections are pre-existing drift** from `df6a991`, which added the
+  context-budget rows without updating the prose — not this change.
+- **Referents a reader of this tree cannot resolve, disclosed because no check covers them.** Seven
+  backticked artifacts named inside the rows do not exist here (`.context-budget.json`,
+  `methodology_trim.py`, `docs/planning/BACKLOG.md`, `docs/audits/…`, `.verify.sh`, two `BACKLOG.md`
+  paths), across 10 of the 46 rows; and **32 of 46 rows cite session numbers S35–S119** from the
+  canonical fork's sequence, which runs separately from this repo's and **collides with it**. None is
+  a broken hyperlink — they are prose code spans, which is exactly why `bin/check-links` is green and
+  correctly so: it strips inline code, so its green says nothing about them. **They are left as-is
+  deliberately, and a clarifying note in the front matter is affordable rather than blocked** — the
+  earlier reading of the budget was wrong on both counts and is corrected here. This file's class is
+  `on-demand`, ceiling **73,728 B**; at 56,673 B it has **17,055 B of headroom**, so a ~400 B note
+  costs nothing it does not have. The **56,750 B** figure is the `read-set` *class total* — the
+  Phase 0 mandatory pair — and was never this file's ceiling. Nor does a note threaten anything about
+  `bin/sync`: `read_local` reads a **working tree** (`bin/sync:52`) and `read_github` reads
+  `KJ5HST/methodology`; neither consults a local ref, the two sources already differ on several
+  tracked files in every measured adopter, and nothing compares them. The note is **deferred to a
+  follow-up, not declined on cost** — per-row provenance is content, and this change is an extraction.
+- **Verification:** `bin/check-learnings` **0** (*46 rows, contiguous 1..46, all citations resolve,
+  0 over 1,500 B*); `tools/test_methodology_dashboard.py` **211 passed**; twins byte-identical.
+  `bin/tests.sh` row-for-row against a pristine control — see the PR body for the table.
+- **Provenance:** ported from `rmsharp/methodology` `ed22ace` (the extraction) plus the compaction
+  and checker repairs that followed it. The fork's own ledgers, `docs/planning/`, and the two
+  unrelated `SESSION_RUNNER.md` changes it also carries (issue #75's *name the surface* additions
+  and the Phase 3F `Model:` bullet) are **deliberately excluded**.
+
 ### 2026-08-12 · [ad hoc] Released v3.7 — the artifacts Phase 0 mandates reading now have ceilings
 
 - **Change:** release narration commit on `release/v3.7` — `README.md` §What's New in v3.7 (folding
