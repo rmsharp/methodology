@@ -183,6 +183,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S118 close-out amended — the ordered next-action plan the first report omitted
+
+- **Model:** Claude Opus 5 (1M context).
+- **The operator rejected the first close-out report: *"That does not look like a phase 3 close-out report. For one thing it does not propose next actions."*** Correct — `SESSION_RUNNER.md` Phase 3G requires *"What the next session should do"* and the report gave a state dump instead. The receipt's `next_steps` is rewritten as an **ordered critical path**, because a next-step that lives only in chat is unreadable to the next session (Phase 3D: *"Write to files FIRST"*).
+- **The sharper finding that came out of writing it: PHASE 2 SHOULD PRECEDE PHASE 1, and the plan lists them the other way round.** Compact before porting, so upstream receives a file already under the cap rather than inheriting one 16,733 B over. Phase 2 also clears the blocker below.
+- **The compaction cost is now split and measured. 18 of the 20 over-budget rows are ones upstream has NEVER SEEN — 16,579 B, ZERO test anchors, ZERO edits to content upstream holds.** The other 2 (#12, #13, 974 B) cost three `bin/tests.sh` Test 32 anchor updates (`:2033`, `:2040`, `:2058`) *and* edit rows upstream already has. The 18 alone give **57,133 B — 383 B still over**; all 20 give **56,159 B, 591 B under**. That trade is the whole of Phase 2.
+- **The append-only question is narrower than it looks.** The front matter's stated harm is *renumbering* — *"Renumbering would break every existing `Learning #N` citation, which is exactly what 'append only, never renumber' exists to prevent."* Compaction changes row **content**, not row **numbers**. The same front matter already says *"Say it shorter rather than raising the budget."* Still the operator's call; **and a third ceiling raise is the `every raise is defensible` failure D1 exists to stop.**
+- **A method failure worth recording: I trimmed the wrong prose first.** A record here is **fence-to-NEXT-fence**, so S118's record carries **S117's** trailing prose (2,978 B), not its own — cutting my own 3A/3B essays moved the number not at all. Four rounds of nibbling followed because I drafted replacements without measuring them; two were *longer* than what they replaced. Fixed by verifying the resulting record size in-script before writing. **Final: 12,256 / 12,288 B, 32 B under.** This is [Learning #46]'s sibling and the reason `bin/check-handoff` exists: run the checker, never predict it.
+
 ### 2026-08-27 · [ad hoc] S118 close-out — product-scoped PR plan delivered; self-score 7/10, predecessor S117 scored 8/10
 
 - **Model:** Claude Opus 5 (1M context).
