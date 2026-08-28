@@ -183,6 +183,72 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S119 DECISION (operator) — compaction of existing `FRAMEWORK_LEARNINGS.md` rows is PERMITTED, all 20
+
+**Decided by the operator (rmsharp) at S119's Phase 0 report. This is the operator's answer, not an
+agent's recommendation** — recorded so a successor cannot read it as a ratified suggestion.
+
+**The question**, put by S118's `next_steps` (a): may a session compact the over-budget rows of
+`starter-kit/FRAMEWORK_LEARNINGS.md`? The file's own front matter says *"append only; do not edit
+existing rows"*, but the harm that rule names is **renumbering** — *"Renumbering would break every
+existing `Learning #N` citation"*. Compaction changes row **content**, not row **numbers**, so it
+does not cause the named harm; and the same front matter already says *"Say it shorter rather than
+raising the budget."* The rule as literally written still forbids it, which is why it was the
+operator's call and not an agent's reading.
+
+**The answer: YES — all 20 over-budget rows, including #12 and #13.** The operator was shown both
+costed options and chose the wider one:
+
+| option | rows | excess shed | file after | vs the 56,750 B one-read cap |
+|---|--:|--:|--:|---|
+| the 18 upstream has never seen | #15–#32 | 16,561 B | 57,151 B | **401 B OVER** |
+| **all 20** (chosen) | +#12, #13 | **17,533 B** | **56,179 B** | **571 B UNDER** |
+
+*(Excess measured excluding each row's line terminator. The plan's 17,553 B counts it — same
+measurement, two units.)*
+
+**What the wider option costs, stated before it was chosen:** rows #12 and #13 are the only two
+upstream already holds, so they are the only two where *"do not edit existing rows"* is genuinely
+engaged; and they carry Test 32's live anchors. **The 18 carry none.**
+
+**Explicitly NOT the answer: raising the ceiling a third time** (60,000 → 65,536 → 73,728). That is
+the *"every raise is defensible"* failure D1 exists to stop, and S118 named it as the wrong route
+before the question was asked.
+
+### 2026-08-27 · [ad hoc] S119 — claim: Phase 2 of the upstream read-set PR plan (repair the scope, then compact)
+
+**Phase 1B claim.** Deliverable: **Phase 2 of
+[`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md)** — repair
+`bin/check-learnings`'s row-budget scope, drive it RED against today's 20 violators, then compact all
+20 rows of `starter-kit/FRAMEWORK_LEARNINGS.md` to under the published 1,500 B budget.
+
+**WHY PHASE 2 BEFORE PHASE 1, against the plan's own ordering.** S118's `next_steps` (b) inverted
+them and gave the reason: compacting first means upstream receives a file **already under the cap**,
+rather than inheriting one 16,733 B over and needing a second change to fix it. Phase 2 also clears
+the blocker in S118's (c).
+
+**THE BLOCKER THIS CLEARS, re-measured at this claim rather than inherited:**
+`starter-kit/FRAMEWORK_LEARNINGS.md` is **73,712 B against a 73,728 B ceiling — 16 B of headroom**,
+and the smallest row the file has ever carried is 419 B. **No learning row of any size fits.** Every
+session that reaches Phase 3C before this lands must record that it wrote no learning, and why.
+
+**THE GUARD THAT CANNOT FIRE, verified live at this claim.** `bin/check-learnings` exits **0** and
+prints `row budget: 0 unfrozen row(s), 0 over 1,500 B` — **with 20 violators present**. Its
+`check_row_budget` scopes the budget to rows whose text differs from git HEAD, so every frozen row is
+permanently exempt. That is the *"unkillable guard"* shape this repo has deleted before. Repairing
+the scope is part of the deliverable, and **it must be seen to report 20 before anything is
+compacted** — a guard never watched to fail is not a guard.
+
+**MEASURED AT THIS CLAIM, not quoted from the plan.** The plan's `≤ 55,930 B` target was computed
+against a **73,483 B** file; S118's own Learning #46 added 229 B afterwards, so the file is now
+73,712 B and the equivalent target moves with it. Re-derived, not inherited — which is the same
+discipline S118 applied to S117's figures.
+
+**NOT IN SCOPE:** Phase 1 (the port to `upstream/main`), Phase 3 (the size gate and the two shipped
+`context_budget.py` defects), decisions D1/D2/D3/D4/D6, BL-45's remedy, issue #75's unsent PR,
+trimming `CHANGELOG.md` or `HANDOFFS.md`, the `upstream/main` resync, and **any outward-facing action
+whatsoever.** No outward-facing action is approved, implied, or taken.
+
 ### 2026-08-27 · [ad hoc] S118 close-out amended — the ordered next-action plan the first report omitted
 
 - **Model:** Claude Opus 5 (1M context).

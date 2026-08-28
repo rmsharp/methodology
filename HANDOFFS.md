@@ -70,6 +70,22 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 
+<!-- claim stub written at session start; completed at close-out -->
+```handoff
+session: S119
+date: 2026-08-27
+status: pending
+self_score: pending
+predecessor_score: 7
+active_task: **PHASE 2 OF `docs/planning/upstream-read-set-pr-plan.md` — REPAIR THE ROW-BUDGET SCOPE, THEN COMPACT.** Assigned by the operator at this claim, after they answered S118's gating decision: **compaction of existing `starter-kit/FRAMEWORK_LEARNINGS.md` rows IS PERMITTED, all 20 over-budget rows, including #12 and #13.** That answer is the operator's, recorded in `CHANGELOG.md` at this claim; a successor must not read it as an agent's recommendation. **TWO PARTS, IN ORDER:** (1) repair `bin/check-learnings`'s `ROW_BUDGET_BYTES` frozen-row scope and **drive it RED** — it must report today's 20 violators before anything is compacted; (2) compact all 20 rows to under the 1,500 B budget. **PHASE 2 BEFORE PHASE 1 DELIBERATELY** — S118's `next_steps` (b): compact first so upstream receives a file already under the cap instead of inheriting one over it. **NOT IN SCOPE:** Phase 1 (the port to `upstream/main`), Phase 3 (the size gate), decisions D1/D2/D3/D4/D6, issue #75's unsent PR, trimming either ledger, **any outward-facing action whatsoever.**
+what_was_done: pending
+next_steps: pending
+key_files: `starter-kit/FRAMEWORK_LEARNINGS.md` — the 20 over-budget rows, **measured at this claim**: #12 (2,400 B), #13 (1,572), #15 (2,107), #16 (2,034), #17 (1,970), #18 (2,375), #19 (2,250), #20 (2,549), #21 (2,600), #22 (1,890), #23 (2,120), #24 (2,875), #25 (2,945), #26 (2,137), #27 (2,748), #28 (1,992), #29 (3,451), #30 (2,489), #31 (2,259), #32 (2,770). · `bin/check-learnings:94` `ROW_BUDGET_BYTES`, **`:243-266` `check_row_budget`** — the `unfrozen = [... if frozen.get(n) != raw]` line is the defect's exact site, and `:214-239` `frozen_rows` is the helper it leans on. · `bin/tests.sh:2002` `RUNNER="$STARTER/FRAMEWORK_LEARNINGS.md"` — Test 32 reads **this** file, so its anchors are live; `:2033`/`:2040` anchor the string `| 13 | **A forward-looking`, `:2047` anchors `^| 11 | **Heterogeneous` (row #11 is **not** over budget), `:2058` anchors `mechanical, encode it as a test` **inside row #12**.
+gotchas: **(1) THE FOUR TEST 32 ANCHORS ARE CONTENT SUBSTRINGS, NOT LINE NUMBERS — so preserving the substring is cheaper than updating the test, and it is a thing to VERIFY BY RUNNING, never by reasoning.** Two of them live in rows I am compacting (#13's opening `| 13 | **A forward-looking`; #12's `mechanical, encode it as a test`). A mutation whose anchor I destroy fails LOUDLY as `mutation was vacuous`, which is the good failure — but `^| 11 | **Heterogeneous` is a *wrong-target* hazard the suite's own comment says the vacuity guard cannot catch. **(2) DRIVE THE CHECKER RED FIRST.** `check-learnings` today exits **0** and prints `0 unfrozen row(s), 0 over 1,500 B` **with 20 violators present** — a guard that cannot fire on its own population. Watch it report 20 before compacting anything, or the compaction has nothing holding it. **(3) THE PLAN'S `≤ 55,930 B` TARGET WAS SET AGAINST A 73,483 B FILE AND THE FILE IS NOW 73,712 B** — S118's own Learning #46 added 229 B after the plan was written. Re-derive the target; do not quote it. **(4) EXCESS FIGURES DIFFER BY THE LINE TERMINATOR:** the plan's 17,553 B counts each row's trailing newline, my 17,533 B does not. Same measurement, two units — state which. **(5) `bin/tests.sh` TAKES ~7 MIN AND EXITS 1 EVEN WHEN GREEN; Tests 32/34/37 MUTATE `FRAMEWORK_LEARNINGS.md` AND `HANDOFFS.md`** — never measure or edit those two while the suite runs. **(6) `bin/check-*` ARE PYTHON; the two `*.jsonl` go dirty from Phase 0 alone — DO NOT `git reset --hard`** (inherited). **(7) `context_budget.py` exits 2 and `trim --check` fires on NEITHER ledger** — the adjudicated BL-52 state, expected, and **not** a licence to trim.
+runtime_smoke: pending
+```
+
+
 **Predecessor S117 scored 8/10.** **+** **Its gotcha (2) held exactly and saved me from republishing
 stale numbers** — *"EVERY FIGURE IN §6 … SOME ARE ALREADY STALE BY CONSTRUCTION … Re-measure before
 quoting"*: `CHANGELOG.md` 98,811 → 109,968, `HANDOFFS.md` 128,081 → 140,966. **+** **Its gotcha (3)
