@@ -183,6 +183,68 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S119 — all 20 over-budget Learning rows compacted; 73,712 B → 56,673 B
+
+**Phase 2, part 2 — the deliverable.** Every row of `starter-kit/FRAMEWORK_LEARNINGS.md` is now
+within the 1,500 B budget the file's own front matter publishes. `check-learnings` goes RED(1, 20
+issues) → **GREEN(0)**: *"46 Learning row(s), contiguous 1..46; all citations resolve; row budget:
+46 row(s), 0 over 1,500 B."*
+
+**THE BLOCKER IS CLEARED, AND BY A WIDE MARGIN.** It was *"73,712 / 73,728 — 16 B of headroom, and
+NO ROW OF ANY SIZE FITS"* (the smallest row this file has ever carried is 419 B). It is now
+**56,673 / 73,728 — 17,055 B of headroom**, roughly eleven more rows. `context_budget.py` reports
+`ok` for this file.
+
+**MEASURED AGAINST BOTH TARGETS, AND THEY DISAGREE — the distinction matters to the next session:**
+
+| | bytes | vs plan's 55,930 B target | vs 56,750 B one-read cap |
+|---|--:|--:|--:|
+| compaction alone (Phase 2 proper) | **55,498** | **432 B under** | 1,252 B under |
+| + this session's mandatory Learning #47 | **56,673** | 743 B over | **77 B under** |
+
+**The compaction beat the plan's target by 432 B. Writing the row the protocol requires then put it
+743 B over.** The plan's figure was computed as *"73,483 − 17,553"* — full budget compliance and
+nothing else — and **never budgeted for the Phase 3C row every session must write.** That is a
+defect in the target, not in the compaction, and it is recorded here rather than left for the next
+executor to trip over.
+
+**77 B OF MARGIN AGAINST THE ONE-READ CAP MEANS THE NEXT ROW OF ANY SIZE BREACHES IT.** The plan
+predicted this — *"820 B is thin … it re-crosses within a session or two"* — and it arrives
+immediately. **Compaction is a one-time payment against a recurring cost; only §3.4's gate makes it
+durable.** Do not read *"all rows compliant"* as *"the file fits"*.
+
+**HOW THE COMPACTION WAS DONE, AND WHY THE METHOD IS THE FINDING.** 20 rows, one agent each,
+followed by an independent adversarial reader per row asked only *what was lost*. **The first pass
+cleared every mechanical gate — byte budget, column count, row number, full citation set, both live
+`bin/tests.sh` anchors — and the adversarial pass found 33 blocking losses across 16 of the 20
+rows**: dropped causal mechanisms, deleted counter-examples, quantifiers softened from "every" to a
+bare plural. A repair round restored them; **19 of 20 came back FAITHFUL, 0 non-transferable.**
+Row #30's last residual — *"assert on the SPECIFIC finding's wording rather than on the exit code,
+which is a union over every clause"* — was restored by hand, paid for by compressing the same row.
+Recorded as **Learning #47**.
+
+**TOTALS:** 20 rows, **47,533 B → 29,025 B, shed 18,508 B**. Largest cut #29 (3,451 → 1,474);
+smallest #13 (1,572 → 1,446). No row number changed; no citation lost — `check-learnings`'
+distributed-corpus sweep proves every `Learning #N` still resolves.
+
+**SUITE, run on the final tree and diffed row-for-row against the control at the claim commit:**
+**289 rows, 288 passed / 1 failed / 0 skipped, exit 1** (control: 287, 286/1/0, exit 1 — the suite
+exits 1 even when green). Sole failure **by name** both sides: `github source dry-run failed`,
+Test 9's standing `--source=github` 404. **Zero status flips across 279 shared assertion texts;
+zero skips**, which is what proves Test 34 stayed in its ANCHORED arm. The population changed by
+**+2**, and every one of the 18 differing rows is accounted for: **8 lost** are the old Test 37's
+frozen-exemption and skip-arm assertions, deliberately removed with the behaviour they described;
+**10 gained** are the inverted scope assertion and its frozen-ness control, the two untracked-file
+checks, the new domain mutant and its control, and one renamed row. The last difference is a derived
+number — the fixture's appended row moves `#47 → #48` because this session added Learning #47, which
+is exactly the staleness Test 37's `max+1` derivation exists to absorb.
+
+**CARVE-OUT, parsed on `bin/_manifest.py`'s SOURCE column (a bare-filename grep matches DEST and
+inverts the answer):** `starter-kit/FRAMEWORK_LEARNINGS.md` **IS** a manifest source, so the new
+front-matter rule **and all 20 compacted rows reach every adopter at their next `bin/sync`.**
+`bin/check-learnings` and `bin/tests.sh` are **canonical-only** — adopters receive the compacted file
+and the rule, but **not** the checker that enforces it.
+
 ### 2026-08-27 · [ad hoc] S119 — the row-budget scope repaired and driven RED: 0 violators → 20
 
 **Phase 2, part 1 of [`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md).**
