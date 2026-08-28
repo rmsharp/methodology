@@ -183,6 +183,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S119 — the row-budget scope repaired and driven RED: 0 violators → 20
+
+**Phase 2, part 1 of [`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md).**
+The guard now fires on its own population. **Committed RED deliberately**, before any row is
+compacted, so *"drive the new assertion RED against unpatched code and watch it fail"* — the file's
+own Learning #12 — is a matter of record rather than a claim made afterwards.
+
+**BEFORE:** `check-learnings` exit **0**, `row budget: 0 unfrozen row(s), 0 over 1,500 B`.
+**AFTER:** exit **1**, `FAIL — 20 issue(s)`, naming every violator and its overage — #12 (+900),
+#13 (+72), #15 (+607), #16 (+534), #17 (+470), #18 (+875), #19 (+750), #20 (+1,049), #21 (+1,100),
+#22 (+390), #23 (+620), #24 (+1,375), #25 (+1,445), #26 (+637), #27 (+1,248), #28 (+492),
+#29 (+1,951), #30 (+989), #31 (+759), #32 (+1,270). The same 20 rows and the same byte counts an
+independent measurement found at Phase 0.
+
+**THIS IS NOT A BUG FIX, AND RECORDING IT AS ONE WOULD BE WRONG.** The exemption was *correct while
+it held*: its docstring said so — holding frozen rows to a budget *"nobody is permitted to edit"*
+would emit *"a permanently red finding with no legal remedy, which is a gate that cannot be obeyed
+rather than a gate that works."* That reasoning was sound. What changed is its **premise**: the
+operator's decision (entry above) supplied the missing remedy. **A constraint's release is an action
+too**, and this entry is that action's record.
+
+**WHAT CHANGED**
+- `bin/check-learnings` — `check_row_budget` now scopes over every row. `frozen_rows()` deleted: it
+  existed only to compute the exemption. **The SKIP arm went with it**, and that is a
+  strengthening — a row's size is a property of its own bytes and needs no history, so a file with
+  no git HEAD is now fully checked instead of stated-but-unchecked. Disposition changes from
+  `N unfrozen row(s)` to `N row(s)`.
+- `bin/tests.sh` Test 37 — **rewritten, not patched.** Its assertion (3) asserted the *opposite*
+  property (*"the 20 committed rows already over 1,500 B are exempt as frozen"*) and it drew its
+  subject from the live table's incidental content. **The same session that inverts the scope also
+  compacts all 20 of those rows away**, so leaving it would have left an assertion passing over an
+  empty subject — green, proving nothing. The over-budget frozen row is now **constructed and
+  committed inside the fixture**, with a control asserting it really is frozen. The fixture control
+  (0) now demands a **positive** row count beside the zero, so `0 rows, 0 over` cannot read as a
+  pass. Mutant M3 (the skip arm) is gone with the arm; a new **M2 narrows the budget's domain to
+  the newest row only** — the pre-decision behaviour — and asserts an earlier violation is missed.
+- `starter-kit/FRAMEWORK_LEARNINGS.md` front matter — **distributed**, so this reaches adopters.
+  *"append only; do not edit existing rows"* → *"append only; never renumber"*, with the permitted
+  edit named: content may be **compacted**, numbers never change. The scope sentence *"covers only
+  rows not yet frozen in git HEAD"* is now *"covers every row"*.
+
+**THE PLAN UNDER-COSTED THIS PHASE.** Its Phase 2 DONE criteria name *"Test 32's four anchors"* and
+say nothing about **Test 37**, which is the larger cost by far — Test 32's anchors are content
+substrings that survive if the compaction preserves them, while Test 37 is built end-to-end on the
+scoping this phase inverts. Cost recorded here rather than discovered by the next executor.
+
+**NOT YET DONE at this commit:** the compaction itself. `bin/tests.sh` Test 37 (0) is expected RED
+until it lands.
+
 ### 2026-08-27 · [ad hoc] S119 DECISION (operator) — compaction of existing `FRAMEWORK_LEARNINGS.md` rows is PERMITTED, all 20
 
 **Decided by the operator (rmsharp) at S119's Phase 0 report. This is the operator's answer, not an

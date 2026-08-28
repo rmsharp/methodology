@@ -4,14 +4,19 @@ The methodology's own framework learnings, recorded as the canonical repo dogfoo
 file is the companion to [`SESSION_RUNNER.md`](SESSION_RUNNER.md) — Phase 3C routes every session
 to the right learnings home, and for a framework-level learning that home is here.
 
-**Canonical methodology repo:** append a new row at Phase 3C — **append only; do not edit existing
-rows.** The rows below are real framework learnings, not placeholders.
+**Canonical methodology repo:** append a new row at Phase 3C — **append only; never renumber.**
+A row's NUMBER is fixed forever: every `Learning #N` citation in the corpus resolves by number, and
+`bin/check-learnings` sweeps the distributed corpus to prove they all still land. A row's CONTENT
+may be **compacted** — said shorter without saying less, keeping every mechanism, figure and
+citation. That is the one edit permitted to an existing row, and it is what the budget below asks
+for. The rows below are real framework learnings, not placeholders.
 
 **Budget the row before writing it — 1,500 B, checked by `bin/check-learnings`.** A partial read of
 this table returns whole rows, because a row is one physical line, so row size is what a session
 actually spends here: measured over 80 transcripts of the canonical repo, this file was read whole
-once and read in part 243 times. The check covers only rows not yet frozen in git HEAD — the one row
-you may still edit. Say it shorter rather than raising the budget.
+once and read in part 243 times. **The check covers every row, not only the one you are writing** —
+a row that sits over budget is a finding with a remedy (compact it), not a permanent red mark. Say
+it shorter rather than raising the budget.
 
 > **`#14` is reserved, and the gap between 13 and 15 is deliberate — do not close it by renumbering.**
 > It is held by `docs/operator-gated-review-plan`'s D3, a branch from the *upstream* session sequence
