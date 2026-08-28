@@ -1,0 +1,297 @@
+# The upstream read-set PR — what it carries, and what it must not claim
+
+**Status: DRAFT. This plan is S118's deliverable; nothing in it is implemented (FM #18).**
+It is scoped by an operator re-aim recorded at `CHANGELOG.md` 2026-08-27 · *"S118 RE-AIM"*.
+
+> **Declared budget: 45,000 B**, so this file is deliverable in one agent `Read` at the settled
+> denominator (`READ_CAP_BYTES = 56,750`). It is file 33 in `docs/planning/`, which has no ceiling —
+> the same instance-of-the-problem this directory always is. Stated rather than discovered.
+
+---
+
+## 1. The target, in the operator's words
+
+> *"Our goal is to create a PR for upstream that addresses the file management problem we are
+> working on."*
+
+and the scoping that produced it:
+
+> *"you are solving two problems and, presently, I am only concerned with one … 1) fixing the
+> `methodology` repository's customized files. 2) fixing the files and code that goes to adopters.
+> The problem that is most important is to fix the files and code that goes to adopters via
+> `https://github.com/KJ5HST/methodology.git`."*
+
+**The product is exactly `bin/_manifest.py`'s `DISTRIBUTION` list and nothing else.** Parse it on the
+**SOURCE** column — a bare-filename grep matches the DEST column and returns the opposite answer.
+Upstream: **24 rows (19 TRACKED + 5 SEED), 658,788 B.** This fork: **26 rows, 936,867 B.**
+Everything else here — the root `.context-budget.json`, `docs/planning/`, `docs/archive/`, `bin/*`,
+the root ledgers — reaches no adopter by any route and is out of scope.
+
+**No outward-facing action is authorised by this plan.** `git fetch upstream` was run with explicit
+permission and is a read. The PR itself needs the operator's go-ahead, separately, each time.
+
+---
+
+## 2. The baseline, verified 2026-08-27
+
+`git fetch upstream` confirmed `upstream/main` is still **`512c2ed`** (2026-08-11) — unmoved.
+`main` is **439 ahead, 1 behind**.
+
+### 2.1 The Phase 0 mandatory read — the number the PR is about
+
+| | upstream | this fork |
+|---|---:|---:|
+| `starter-kit/SESSION_RUNNER.md` | **65,140 B** | 54,363 B |
+| `starter-kit/SAFEGUARDS.md` | 15,386 B | 15,386 B |
+| **pair** | **80,526 B** | 69,749 B |
+| metered tokens | **28,234 = 112.9% of one read** | 24,597 = 98.4% |
+| at the floor (56,750 B) | **over by 23,776 B** | over by 12,999 B |
+
+**Upstream's read set is over on *both* denominators, so no choice of density rescues it.** That is
+the strongest sentence available for the PR body, and it is true only of the product — metered, the
+*fork's* pair fits with 403 tokens to spare. A design measured against this fork is measured against
+the wrong tree.
+
+The adopter's `CLAUDE.md` is added on top and the framework does not own it (no manifest row has
+`CLAUDE.md` as a dest; only `CLAUDE_TEMPLATE.md`). Across 11 measured adopters it runs
+**2,725 – 43,956 B**, median 20,583.
+
+### 2.2 Nothing is lost by porting — the fork is a strict superset
+
+- `SAFEGUARDS.md` is **byte-identical** on both sides (blob `f0964195…`).
+- `SESSION_RUNNER.md` has **identical heading structure** — the symmetric difference of all headings
+  is empty in both directions.
+- **Exactly three sections differ**, accounting for the −10,777 B to the byte:
+
+| section | upstream | fork | delta |
+|---|---:|---:|---:|
+| `## Learnings (added by sessions)` | 13,422 | 442 | **−12,980** |
+| `## Phase 2: Execute` | 8,923 | 10,900 | +1,977 |
+| `## Phase 3: Close Out` | 10,303 | 10,529 | +226 |
+
+- Upstream's **13 inline learnings are byte-for-byte the fork's rows #1–#13** (478/545/418/712/422/
+  485/1067/942/1164/1346/1356/2400/1572 on both sides).
+
+So the fork **moved** 12,980 B out of the every-session read into a file that is a superset of what
+was moved (44 rows vs 13), and **added** 2,203 B of procedure. Upstream has no content the fork lacks.
+
+**Upstream lacks two whole product files:** `starter-kit/FRAMEWORK_LEARNINGS.md` and
+`starter-kit/methodology_trim.py`.
+
+---
+
+## 3. What the PR carries
+
+### 3.1 Port the extraction — the largest win, already built
+
+`ed22ace` (S34) moved the learnings table out of the mandatory read. **It has never shipped.**
+Porting it takes upstream **80,526 → 69,749 B**, overage **23,776 → 12,999 B — a 45.3% cut with zero
+new authoring.**
+
+**But porting alone hands upstream a new over-cap file**: it creates `FRAMEWORK_LEARNINGS.md`
+upstream at 73,483 B, itself 16,733 B past the cap. The trade is still right (bytes move from
+read-every-session to read-on-demand), but shipping a file that is over on arrival is the pattern
+this PR exists to end. Hence 3.2.
+
+### 3.2 Compact the 20 over-budget rows — the remedy that actually closes the gap
+
+`starter-kit/FRAMEWORK_LEARNINGS.md` is 73,483 B; **44 data rows are 97.3% of it** (1,934 B of
+non-row prose is the only part no row-level remedy can reach). **20 of the 44 exceed the 1,500 B row
+budget the file's own preamble publishes, by 17,553 B.**
+
+**73,483 − 17,553 = 55,930 B — 820 B UNDER the 56,750 B cap.** Compliance with the framework's own
+already-published budget is the only measured remedy that closes the gap. No deletions, no merges,
+no abbreviations are required to reach it.
+
+**Two facts make this far cheaper than it looks.**
+
+1. **Of the 20 rows, upstream has only two** — #12 and #13, together **972 B** of the excess. The
+   other **18 rows (16,561 B) upstream has never seen**, so they arrive already compliant rather
+   than being edited in place. The file's *"append only; do not edit existing rows"* rule is
+   genuinely engaged by two rows, not twenty.
+2. **The checker cannot currently see any of it.** `bin/check-learnings` scopes `ROW_BUDGET_BYTES`
+   to rows **not yet frozen in git HEAD**, so all 44 frozen rows are permanently exempt: it prints
+   `0 unfrozen row(s), 0 over 1,500 B` against a table with 20 violators. A guard that cannot fire
+   on the population it was written for is the *"unkillable guard"* shape this repo has deleted
+   before. **Repairing that scope is part of this PR**, or the compaction has nothing holding it.
+
+**820 B is thin.** The file gains roughly a row per session against a median row of ~1,626 B, so it
+re-crosses within a session or two. That is the argument for §3.4 covering this file too.
+
+### 3.3 `ITERATIVE_METHODOLOGY.md` — 68,240 B, needs to shed 11,490 B
+
+Essentially identical upstream (68,247 B), so this is entirely new work. `## The 6 Phases` alone is
+**20,796 B = 30%** of the file. Measured proposals total **12,358 B**, which reaches the target —
+but three of them do not survive review as written and the PR must not carry them unfixed:
+
+- **`MERGE-EROSION` would lose content.** Prevention #1 (*"Treat the methodology as if you've never
+  read it. Every session."*) has **no counterpart** in `SESSION_RUNNER.md` or `SAFEGUARDS.md`; the
+  runner's only *"2 minutes"* sentence is **conditional**, this one is unconditional.
+- **`EXTRACT-EV-DUPLICATE-PERFTABLE` deletes a unique column.** *"Gaps identified"* exists **exactly
+  once in the entire distributed markdown corpus** — inside the block proposed for deletion.
+- **Any extraction creates dangling links for hand-installing adopters.** `starter-kit/BOOTSTRAP.md`
+  names the manual copy set as exactly *"ITERATIVE_METHODOLOGY.md, HOW_TO_USE.md, workstreams/"* —
+  and that file **ships**. A new sibling needs a manifest row *and* that sentence updated, in the
+  same commit.
+
+### 3.4 The gate
+
+**Design: per-file ceilings first, then a generalised class total whose ceiling is a partition.**
+
+**(a) The part that needs no Python and is live the moment the config lands.** `precommit()` already
+iterates `cfg["files"]`, reads `ceil = spec.get("max_bytes")`, and refuses on
+`if ceil and new > ceil and new > old`. Declaring the two files with `max_bytes` makes the gate live
+with **zero lines changed**. Its **relative rule is what makes this a ratchet rather than a wall**:
+measured over 32 points and 31 steps on the two files, it refuses **29 of 31 growth steps and 0 of 2
+reductions** — a commit that shrinks an over-budget pair always passes, so the tool never prevents
+its own remedy.
+
+**(b) The aggregate arm, because two per-file ceilings do not sum.** With per-file ceilings alone,
+bytes can move from `SAFEGUARDS.md` into `SESSION_RUNNER.md` with both rows green and the Phase 0
+read unchanged. This is the plan's Phase 1 — and **it must extend `precommit()` as well as `main()`**,
+or it ships an aggregate that reports and cannot gate.
+
+**(c) The ceiling is derived, not picked.** `framework_share := READ_CAP_BYTES − adopter_reserve_bytes`,
+asserted at run time. Recommended first ship: `total_bytes = 56,750`, `adopter_reserve_bytes = 0`,
+with 28,000 B carried in the config as a documented candidate. **Reserve zero still leaves upstream
+23,776 B over** — which proves the reserve is not what causes the shortfall — and raising the reserve
+later is a raise in *strictness*, the one direction that never needs an excuse.
+
+**(d) Two shipped defects the gate depends on, both verified by running the code.**
+
+- **`precommit()` measures one byte short.** `run()` returns `p.stdout.strip()`, so
+  `len(staged.encode())` gives **54,362** for a file that is **54,363 B**. Fix: size the index and
+  HEAD blobs with `git cat-file -s`. *A size gate that miscounts bytes is the wrong thing to build on.*
+- **`cfg["classes"]["resident"]` is a direct key access at `:339` and `:892`.** A config without a
+  `classes` key raises `KeyError`. Both sites must move together.
+
+**(e) D7(b) is honoured by non-participation.** No change to `READ_CAP_WATCHED`, `read_cap_class()`,
+or either dashboard twin. The ceilings live in the canonical root `.context-budget.json`, which is
+**not a manifest SOURCE**, so `bin/sync` has nothing to copy; the SEED carries schema documentation
+only and declares no total; and at an adopter these two files are `synced[]` entries, which
+`check_synced()` never size-checks by its own docstring. **Four independent locks, none of them a
+rule someone must remember.**
+
+**Do not port this fork's `.context-budget.json` wholesale.** Its `CLAUDE.md` ceiling of 18,600 B is
+calibrated on this fork's 11,064 B file; **upstream's `CLAUDE.md` is 58,652 B**, so importing it
+turns the bare run red on day one for an unrelated reason.
+
+---
+
+## 4. What was refuted — three avenues that do not pay
+
+Recorded so no successor re-runs them.
+
+**Removal of rarely-used learnings yields ZERO.** Every candidate died in verification. Deleting
+rows #39–#42 makes `bin/check-learnings` exit 1 (*"not contiguous from 1 — missing #39, #40, #41"*),
+and **`bin/tests.sh` Test 32 goes red too** — it runs two presence controls asserting
+`^check-learnings: OK` and carries **four hardcoded content anchors into the live distributed file**
+(rows #11, #12, #13 twice). The census ranked 44 rows for removal without enumerating the file's
+non-human readers.
+
+**Abbreviation / tokenisation does not pay, and the measurement is the interesting part.** At the
+settled 2.27 floor, the proposed abbreviation's 1,593 B would be *credited* as 702 tokens; metered,
+it delivers **170**. **The floor overstates abbreviation by 4.13× while overstating plain deletion by
+only 1.23×** — because abbreviation is precisely the operation that lowers B/token. *A floor that is
+conservative for prose is anti-conservative for this remedy.* The generous whole-corpus upper bound
+is **1,203 B = 0.849%** of the two files. Second, independent kill: fixed-length truncation is **not
+injective** over this corpus and silently merges distinct technical terms.
+
+**Example-list truncation is correct in kind and cannot be the mechanism.** The operator's hypothesis
+is real — `EX-7`, `EX-5`, `EX-3`, `IM-2` are genuine, ~1,258 B in total. But truncating **every**
+comma series of 3+ members in both files — an absurd edit that would gut both — recovers **10,484 B,
+7.4% of the two files and 37% of the gap.** The defensible portion falls **22× short**. Any plan
+budgeting example truncation as the route to the cap is budgeting against a number nobody measured.
+
+**Merging is real but small, and needs a scheme decided first.** The operator's #7/#8 pair is a
+genuine specialisation (row 8 says so verbatim) and one row can carry both countermeasures — but
+both rows are already under budget, so the merge nets **303 B**. Total across all clusters: 6,782 B.
+**The enabling decision is disposal of the vacated number, and the two schemes are not equivalent** —
+proven by running the checker on scratchpad copies. **Reservation** keeps contiguity green but makes
+surviving citations dangle: `main()` builds `valid` from existing row numbers only and never adds the
+reserved set, so retiring #8 fails on 4 checker-gating citations. **A tombstone row** (~250 B, keeps
+the number, redirects to the survivor) keeps contiguity **and** citations green. Use tombstones.
+
+---
+
+## 5. Phases — each one session, each closing at its own STOP
+
+**Phase 1 — Port the extraction.** Branch from `upstream/main` (`512c2ed`), never from `origin/main`.
+**DONE:** upstream's `SESSION_RUNNER.md` matches this fork's; `FRAMEWORK_LEARNINGS.md` and its
+manifest row exist upstream; `bin/tests.sh` row-for-row against a control; the §7 meter re-run.
+**Surface:** a branch cut from upstream, `git apply --check` on every hunk. **STOP.**
+
+**Phase 2 — Repair the row-budget scope, then compact.** Fix `ROW_BUDGET_BYTES`'s frozen-row exemption
+first — driven **RED** against today's 20 violators — then compact. **DONE:** the checker reports 20
+violators before and 0 after; the file is ≤ 55,930 B; every `Learning #N` and `[[N]]` citation still
+resolves; Test 32's four anchors updated in the same commit. **STOP.**
+
+**Phase 3 — The gate.** In order: the `blob_bytes` fix and the `KeyError`, then per-file ceilings,
+then the class total in `main()` **and** `precommit()`, then the reserve identity. **DONE:** a bare
+run prints the aggregate row and exits BREACH; `--precommit` refuses a growth commit and passes a
+shrink commit; a synthetic third class totals correctly; `(resident total)` stays byte-identical for
+the three instrumented adopters. **Ships to every adopter who syncs.** **STOP.**
+
+**Phase 4 — `ITERATIVE_METHODOLOGY.md`,** with the three §3.3 defects fixed and `BOOTSTRAP.md`
+updated in the same commit as any extraction. **STOP.**
+
+**Phase 5 — Assemble and open the PR.** **REQUIRES THE OPERATOR'S EXPLICIT GO-AHEAD, and approving
+this plan is not it.**
+
+---
+
+## 6. Here be dragons
+
+1. **The gate binds only someone who chooses to be bound, and the PR must not claim otherwise.**
+   `core.hooksPath` is **local git config, never in the repo**. There is **no CI**. `.githooks/` is
+   in neither manifest. A framework author on a fresh clone of `KJ5HST/methodology` has *no* gate —
+   not a weakened one, none — and nothing in the clone tells them to set one.
+2. **The bypass is already a trained reflex, and `.githooks/pre-commit` says so about itself:**
+   *"32 of 32 commits in this repo's history whose entire diff is `HANDOFFS.md` alone were refused …
+   and every claim among them shipped with `--no-verify`. A gate bypassed 100% of the time at a
+   known, mandatory point is not a gate — it is a trained reflex — **and the derived-value checks
+   planned for this same hook inherit that reflex unless it is removed first.**"* That is a direct
+   warning against the design in §3.4, written before it, and it must be answered in the PR.
+3. **The residual hole: bytes moved into a fourth mandatory file.** Split `SESSION_RUNNER.md`, add a
+   manifest row, have Phase 0 read both — the aggregate *falls* and nothing fires. Partial
+   mitigation: a `bin/tests.sh` case asserting that the adopter-root filenames Phase 0 names as
+   read-in-full equal the declared membership. It catches the honest split, not the determined one.
+4. **The framework ships a size gate its own procedure never mentions.**
+   `grep -n context_budget starter-kit/SESSION_RUNNER.md starter-kit/SAFEGUARDS.md` returns nothing;
+   Phase 0 step 5 runs the dashboard. Closing that gap means editing Phase 0, which **grows the very
+   file being capped** by ~300 B. An operator decision, made visibly.
+5. **`bin/tests.sh` takes ~7 min and EXITS 1 EVEN WHEN GREEN.** Background it, read `$?` bare, never
+   through a pipe. Tests 32/34/37 **mutate the live `HANDOFFS.md` and `FRAMEWORK_LEARNINGS.md`** — do
+   not measure those files while it runs.
+6. **`bin/check-*` are Python with no extension; the two `*.jsonl` go dirty from Phase 0 alone —
+   do not `git reset --hard`.** A bare `context_budget.py` run **appends** to a tracked `.jsonl`;
+   `--precommit` writes nothing.
+7. **Exit codes are tiered `CLEAN/WARN/BREACH = 0/1/2`.** Never assert on a bare run's exit code as a
+   success criterion, and never read one through a pipe.
+8. **439 commits ahead of upstream.** The PR must be *scoped*, never "merge the fork."
+
+---
+
+## 7. Reproduction
+
+```sh
+# the product, from the manifest's SOURCE column — never a bare-filename grep
+python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;print(len(m.DISTRIBUTION))"
+
+# the Phase 0 pair, both trees
+git cat-file -s upstream/main:starter-kit/SESSION_RUNNER.md   # 65,140
+wc -c starter-kit/SESSION_RUNNER.md starter-kit/SAFEGUARDS.md # 54,363 + 15,386
+
+# the token meter: doubled file, spanning limit, halve. Returns NO content, costs nothing.
+cat A B A B > /tmp/x.txt && wc -l /tmp/x.txt   # then Read /tmp/x.txt offset=1 limit=<lines>
+
+# the 20 over-budget rows and what compliance would buy
+python3 -c "import re;rows=[l for l in open('starter-kit/FRAMEWORK_LEARNINGS.md','rb').read().split(b'\n') if re.match(rb'^\s*\|\s*\d+\s*\|',l)];sz=[len(r)+1 for r in rows];o=[s for s in sz if s>1500];print(len(sz),len(o),sum(s-1500 for s in o))"
+
+# the precommit byte defect
+python3 -c "import subprocess;raw=subprocess.run(['git','show','HEAD:starter-kit/SESSION_RUNNER.md'],capture_output=True).stdout;print(len(raw), len(raw.decode().strip().encode()))"
+```
+
+**Every checker is run bare with `$?` read on the next line.** `producer | grep -q` under
+`set -o pipefail` reports a *failed* pipeline even when the pattern matched, because grep
+short-circuits and the producer takes SIGPIPE.
