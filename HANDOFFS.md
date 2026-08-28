@@ -101,6 +101,15 @@ edit spent 459 B before I had accounted for it**, and I had to claw ~260 B back 
 error one file over.
 
 ```handoff
+session: S120
+date: 2026-08-28
+status: pending
+active_task: **PHASE 1 OF `docs/planning/upstream-read-set-pr-plan.md` — THE PORT.** Branch from `upstream/main` (`512c2ed`), never `origin/main`; carry the S34 extraction (`ed22ace`) plus today's compacted `starter-kit/FRAMEWORK_LEARNINGS.md`, taking upstream's Phase 0 mandatory read from **80,526 B to 69,749 B** (overage 23,776 → 12,999 B). **RE-DERIVED AT THE CLAIM:** the three-section diff still holds to the byte (−12,980 / +1,977 / +226 = −10,777); the plan's byte-identity claim does **not** — it is **11/13**, since S119 compacted #12 (2,401→1,451) and #13 (1,573→1,447), so the port replaces **1,076 B upstream can see today**. **THREE SCOPE CORRECTIONS:** `context_budget.py` is in `starter-kit/`, not `bin/`; **upstream already HAS `bin/check-learnings`** and it reads `SESSION_RUNNER.md`, so the port must repoint it; and `git diff upstream/main HEAD -- starter-kit/SESSION_RUNNER.md` is **not** the patch — it bundles issue #75's additions and the `Model:` bullet, while `ed22ace` itself touched **18 files**. **NO OUTWARD-FACING ACTION: local branch only, nothing pushed, no PR.**
+changelog_ref: CHANGELOG.md "2026-08-28 · [ad hoc] S120 — claim: Phase 1 of the read-set PR plan, the port"
+commit: pending
+```
+
+```handoff
 session: S119
 date: 2026-08-27
 status: complete

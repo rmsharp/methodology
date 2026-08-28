@@ -183,6 +183,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-28 · [ad hoc] S120 — claim: Phase 1 of the read-set PR plan, the port
+
+**Phase 1B claim.** Deliverable: **Phase 1 of [`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md)** — port the S34 learnings extraction (`ed22ace`) onto a branch cut from **`upstream/main` (`512c2ed`)**, carrying today's compacted `starter-kit/FRAMEWORK_LEARNINGS.md`, so upstream's Phase 0 mandatory read drops from **80,526 B to 69,749 B**.
+
+**Re-derived at this claim, not quoted from the plan.** S119's `next_steps` (a) required both.
+
+- **The three-section diff still holds to the byte.** `## Learnings (added by sessions)` **−12,980**, `## Phase 2: Execute` **+1,977**, `## Phase 3: Close Out` **+226** = **−10,777**, reconciling exactly to the file delta. Heading sets are symmetric-difference empty in both directions; `SAFEGUARDS.md` is the same blob (`f096419…`) on both sides.
+- **The plan's byte-identity claim no longer holds, exactly as predicted.** §2.2 says upstream's 13 inline learnings are byte-for-byte the fork's rows #1–#13. Today it is **11/13**: S119 compacted **#12 (2,401 → 1,451 B)** and **#13 (1,573 → 1,447 B)**. The port therefore **replaces 1,076 B of text upstream can see today**, engaging the file's own *"append only; do not edit existing rows"* rule on exactly the two rows the plan predicted, and the PR body must disclose it rather than present the port as purely additive.
+
+**Three corrections to the inherited scope, each found by reading rather than assuming.**
+
+1. **`starter-kit/context_budget.py` is not in `bin/`.** The plan §3.4 and S119's `next_steps` (d) both cite it without a path.
+2. **Upstream already has `bin/check-learnings`** — S119's `next_steps` (c) reasoned about the port on the premise it does not. Upstream's copy (247 lines) reads `starter-kit/SESSION_RUNNER.md`; the fork's (320 lines) reads `starter-kit/FRAMEWORK_LEARNINGS.md`. **The port must repoint it, or upstream ships a checker aimed at a table that is no longer there.**
+3. **`git diff upstream/main HEAD -- starter-kit/SESSION_RUNNER.md` is NOT the port's patch.** It bundles three unrelated changes: the extraction, issue #75's *name the surface* additions (already prepared separately at [`docs/planning/issue75-upstream-pr.md`](docs/planning/issue75-upstream-pr.md)), and the Phase 3F `Model:` bullet. **The originating commit `ed22ace` touched 18 files**, including `README.md`, `HOW_TO_USE.md`, `ITERATIVE_METHODOLOGY.md`, `starter-kit/BOOTSTRAP.md`, `starter-kit/CLAUDE_TEMPLATE.md`, two tutorials and the dashboard twin — cross-references that dangle if they do not ship together.
+
+**Also found at Phase 0, recorded rather than fixed.** `starter-kit/FRAMEWORK_LEARNINGS.md` numbers **1..47 with #14 deliberately reserved** (46 rows), yet `bin/check-learnings` prints *"contiguous 1..46"* — the span is 1..47. That is **BL-44** observed live, not a new defect, and it is **not this session's deliverable**; it ports as-is.
+
+**NOT IN SCOPE:** Phase 3 (the gate), Phase 4 (`ITERATIVE_METHODOLOGY.md`), Phase 5 (the PR itself), D1/D2/D3/D4/D6, issue #75's unsent PR, BL-36's failing proofs, BL-44's repair, trimming either ledger, and **any outward-facing action whatsoever** — the branch is local, nothing is pushed, no PR is opened.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in [`HANDOFFS.md`](HANDOFFS.md).
+
 ### 2026-08-27 · [ad hoc] S119 close-out — Phase 2 shipped, self-score 8/10, predecessor S118 scored 8/10
 
 **Deliverable complete: Phase 2 of the upstream read-set PR plan.** The row-budget scope repaired
