@@ -183,6 +183,80 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-28 · [ad hoc] S120 close-out — Phase 1 (the port) shipped, self-score 8/10, predecessor S119 scored 9/10
+
+**Deliverable complete: Phase 1 of the upstream read-set PR plan.** The S34 learnings extraction is
+ported onto **`port/framework-learnings-extraction`**, cut from **`upstream/main` (`512c2ed`)** — one
+commit, **18 files, 352 insertions / 113 deletions**, local only. **No PR opened, nothing pushed.**
+
+**What it delivers, measured on the branch and metered, not quoted.** Upstream's Phase 0 mandatory
+read (`SESSION_RUNNER.md` + `SAFEGUARDS.md`) goes **80,526 → 67,581 B (−12,945, −16.1%)**, which
+reproduces `ed22ace`'s own reported runner delta to the byte. **Metered by the plan's §7 doubled-file
+method: 28,234 tok = 112.9% of one read → 23,902 tok = 95.6% — the mandatory read now FITS**, with
+1,098 tokens spare. The upstream figure reproduces the plan's §2.1 measurement **exactly**. On the
+deliberately conservative 56,750 B floor the pair is still over — 23,776 → **10,831 B, a 54.4% cut**
+— and both numbers are reported because that floor's 2.27 B/token is ~26% conservative for this
+content (metered: 2.852 and 2.827).
+
+**Four of the plan's own figures were superseded, all favourably; §8 of the plan now records them.**
+The plan predicted 69,749 B because it equated *"ported runner"* with *"the fork's runner"* — but the
+fork's also carries issue #75's additions (+1,977 B) and the Phase 3F `Model:` bullet (+191 B),
+**2,168 B this port does not take**. Its 45.3% became **54.4%**. And its §2.2 byte-identity claim is
+now **11 of 13**: S119 compacted #12 and #13, so the port **replaces 1,076 B of text upstream can see
+today** — disclosed rather than presented as purely additive. All nine load-bearing ideas of row #12
+were checked present after compaction.
+
+**Three scope facts the plan did not have, each found by reading.** (1) **Upstream already ships
+`bin/check-learnings`**, pointed at `SESSION_RUNNER.md` — the plan never mentions it, and S119's
+`next_steps` (c) reasoned from the premise that it does not exist. (2) The fork-vs-upstream runner
+diff **is not the patch**; `ed22ace` itself touched **18 files**, of which 12 `git apply --check`
+clean, four are fork-only ledgers that must not port (their failure is *correct*), and three needed
+hand-porting. (3) `context_budget.py` lives in `starter-kit/`, not `bin/`.
+
+**The whole checker had to go, and the file's own front matter is why.** It publishes *"1,500 B,
+checked by `bin/check-learnings`"* and declares the `#14` reservation. Shipping the file without the
+budget arm and the reserved-number handling would ship two false claims and report the deliberate
+gap as a missing row — proved by running upstream's checker against the ported file: exit 1,
+*"missing #14"*.
+
+**Verification.** `bin/tests.sh` row-for-row against a **pristine `upstream/main` control in its own
+worktree**: control **114 passed / 0 failed, exit 0**; branch **113 / 1, exit 1**. Both populations
+114, **zero skips, zero status flips across 111 shared assertion texts**, and all six differing rows
+pair exactly (`24 → 25` manifest counts twice, plus the one regression). **That regression is this
+change's own precondition and self-resolves on merge** — Test 9 dry-runs `--source=github` and the
+error names the cause: *"gh api failed for starter-kit/FRAMEWORK_LEARNINGS.md: 404"*. Do not weaken
+Test 9. Also: `tools/test_methodology_dashboard.py` **211 passed**, and the new `CHECKLIST_EXEMPT`
+entry was **driven RED first** — removed, it fails on exactly `['FRAMEWORK_LEARNINGS.md']`.
+`check-learnings` **0**, `check-links` **0** (83/21 → **88/22**, matching `ed22ace`'s own figure),
+`check-handoff` **0**, twins byte-identical, and a real `bin/sync` into a scratch adopter delivers
+`FRAMEWORK_LEARNINGS.md` byte-identical to canonical.
+
+**Two defects I introduced and caught, disclosed rather than quietly fixed.** I applied `ed22ace`'s
+count edits where they applied cleanly — and *cleanly* is not *correctly*: its arithmetic was computed
+on a 22-row `DISTRIBUTION` and upstream's is 24. `T8_keeping_current.md` shipped **"23 distributed
+files"** and the dashboard test **"21 installed markdown files"**. My first sweep had corrected the
+dashboard twins' four counts and missed these two, because it enumerated the constant and not its
+derived neighbours. All **eight** count claims across four files are now derived from the manifest
+and asserted: 8 correct, 0 wrong.
+
+**PHASE 3C IS NOW UNSATISFIABLE, AND THAT IS THE MOST IMPORTANT THING THIS SESSION FOUND.**
+`FRAMEWORK_LEARNINGS.md` is **56,673 B with 77 B of headroom** under the 56,750 B one-read cap. The
+**smallest row the file has ever carried is 229 B**, so an append of any size overshoots by at least
+152 B. The framework's own mandatory close-out step therefore cannot be performed against its own
+published budget. **This session did not append a Learning row** — doing so would breach the cap and
+break the byte-identity that lets `bin/sync` agree from either source. The learning is recorded in
+the `HANDOFFS.md` receipt instead, and the collision is the next session's headline.
+
+**Disclosed, deliberately unfixed:** seven backticked artifacts named inside the rows do not exist
+upstream, across 10 of 46 rows, and **32 of 46 rows cite session numbers S35–S119** from a sequence
+that runs separately from upstream's **and collides with it**. None is a broken hyperlink —
+`bin/check-links` strips inline code spans, so its green says nothing about them. A clarifying
+front-matter note would cost ~400 B against 77 B of headroom.
+
+**NO OUTWARD-FACING ACTION.** Nothing pushed; the port branch exists on neither remote. `main` is
+**447 ahead of `upstream/main`** (1 behind), 106 ahead of `origin/main`. Issue #75's PR remains
+local-only and unsent.
+
 ### 2026-08-28 · [ad hoc] S120 — claim: Phase 1 of the read-set PR plan, the port
 
 **Phase 1B claim.** Deliverable: **Phase 1 of [`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md)** — port the S34 learnings extraction (`ed22ace`) onto a branch cut from **`upstream/main` (`512c2ed`)**, carrying today's compacted `starter-kit/FRAMEWORK_LEARNINGS.md`, so upstream's Phase 0 mandatory read drops from **80,526 B to 69,749 B**.

@@ -1,6 +1,10 @@
 # The upstream read-set PR — what it carries, and what it must not claim
 
-**Status: DRAFT. This plan is S118's deliverable; nothing in it is implemented (FM #18).**
+**Status: PHASES 1 AND 2 SHIPPED (fork-side, unpushed); 3–5 open.** This plan was S118's
+deliverable. **Phase 2** shipped at S119 (`364b410`). **Phase 1** shipped at S120 on branch
+`port/framework-learnings-extraction`, cut from `upstream/main` (`512c2ed`) — one commit,
+local only, **no PR opened**. Four of this plan's own numbers were superseded in the doing;
+see §8.
 It is scoped by an operator re-aim recorded at `CHANGELOG.md` 2026-08-27 · *"S118 RE-AIM"*.
 
 > **Declared budget: 45,000 B**, so this file is deliverable in one agent `Read` at the settled
@@ -216,10 +220,13 @@ the number, redirects to the survivor) keeps contiguity **and** citations green.
 
 ## 5. Phases — each one session, each closing at its own STOP
 
-**Phase 1 — Port the extraction.** Branch from `upstream/main` (`512c2ed`), never from `origin/main`.
-**DONE:** upstream's `SESSION_RUNNER.md` matches this fork's; `FRAMEWORK_LEARNINGS.md` and its
-manifest row exist upstream; `bin/tests.sh` row-for-row against a control; the §7 meter re-run.
-**Surface:** a branch cut from upstream, `git apply --check` on every hunk. **STOP.**
+**Phase 1 — Port the extraction. ✅ SHIPPED S120** (`port/framework-learnings-extraction`, 18 files,
+1 commit). Its first DONE criterion was **wrong as written** — *"upstream's `SESSION_RUNNER.md`
+matches this fork's"* would have carried issue #75's additions and the `Model:` bullet, neither of
+which belongs to this port. What was delivered instead: upstream's runner matches this fork's **in
+the Learnings region only**, and is 2,168 B smaller overall. Everything else was met — the manifest
+row and the file exist, `bin/tests.sh` ran row-for-row against a pristine control (114/0 vs 113/1,
+**zero status flips across 111 shared assertions**), and the §7 meter was re-run. **STOP.**
 
 **Phase 2 — Repair the row-budget scope, then compact.** Fix `ROW_BUDGET_BYTES`'s frozen-row exemption
 first — driven **RED** against today's 20 violators — then compact. **DONE:** the checker reports 20
@@ -295,3 +302,33 @@ python3 -c "import subprocess;raw=subprocess.run(['git','show','HEAD:starter-kit
 **Every checker is run bare with `$?` read on the next line.** `producer | grep -q` under
 `set -o pipefail` reports a *failed* pipeline even when the pattern matched, because grep
 short-circuits and the producer takes SIGPIPE.
+
+---
+
+## 8. What S120 superseded — read this before quoting §2 or §3
+
+Four figures in this plan are now wrong, all in the **favourable** direction. Re-derive, don't quote.
+
+| § | The plan said | Measured at S120 | Why it moved |
+|---|---|---|---|
+| 2.1 / 3.1 | port takes upstream to **69,749 B**, overage **12,999** | **67,581 B**, overage **10,831** | The plan equated "ported runner" with "the fork's runner". The fork's also carries issue #75's additions (+1,977 B) and the Phase 3F `Model:` bullet (+191 B) — **2,168 B this port does not take**. |
+| 3.1 | a **45.3%** cut in the overage | **54.4%** | Follows from the row above. |
+| 2.2 | upstream's 13 inline learnings are **byte-for-byte** the fork's rows #1–#13 | **11 of 13** | S119 compacted #12 (2,401 → 1,451 B) and #13 (1,573 → 1,447 B). The port therefore **replaces 1,076 B of text upstream can see today** — disclosed in the commit body rather than presented as purely additive. |
+| 3.2 | compaction lands the file at **55,930 B** | **56,673 B** | Superseded at S119 by its own mandatory Learning row; already recorded in that receipt. |
+
+**And three scope facts this plan did not have.**
+
+1. **Upstream already ships `bin/check-learnings`** (247 lines, pointed at `SESSION_RUNNER.md`).
+   The plan never mentions it. The port had to carry the fork's version, because the shipped
+   `FRAMEWORK_LEARNINGS.md` front matter publishes *"1,500 B, checked by `bin/check-learnings`"* and
+   declares the `#14` reservation — shipping the file without the budget arm and the reserved-number
+   handling would ship two false claims and flag the deliberate gap as a missing row.
+2. **`git diff upstream/main HEAD -- starter-kit/SESSION_RUNNER.md` is not the patch.** The
+   originating commit `ed22ace` touched **18 files**; 12 of its per-file patches `git apply --check`
+   clean onto `upstream/main`, four are fork-only ledgers/plans that must not port (their failure is
+   *correct*), and three — both dashboard twins and the dashboard test — needed hand-porting.
+3. **The metered figure and the byte figure disagree, and both belong in the PR.** On the settled
+   56,750 B floor the ported pair is still over by 10,831 B. **Metered** by §7's own doubled-file
+   method it is **23,902 tok = 95.6% of one read — it fits**, down from 28,234 tok = 112.9%
+   (which reproduces §2.1's figure exactly). The floor's 2.27 B/token is ~26% conservative for this
+   content. Claim the metered result *and* the floor, never only the flattering one.
