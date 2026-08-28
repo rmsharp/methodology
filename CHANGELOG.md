@@ -183,6 +183,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S118 close-out — product-scoped PR plan delivered; self-score 7/10, predecessor S117 scored 8/10
+
+- **Model:** Claude Opus 5 (1M context).
+- Phase 3 close-out. Receipt in [`HANDOFFS.md`](HANDOFFS.md); **Learning #46 appended** to `starter-kit/FRAMEWORK_LEARNINGS.md` (**229 B**, measured against 245 B of headroom before writing it, per S117's instruction — it fit with 16 B spare).
+- **`FRAMEWORK_LEARNINGS.md` IS NOW 73,712 / 73,728 B — 16 B OF HEADROOM, AND NO ROW OF ANY SIZE FITS.** Not an inference: the smallest row the file has ever carried is 419 B. The next session must raise the fork-local ceiling, compact, or record explicitly that it wrote no learning and why.
+- **Self-score 7/10.** The verification discipline held — the tombstone scheme, the row budget and the `run()`-strip byte defect were each settled by **running** the code rather than reasoning about it, and a refutation-of-a-refutation was caught before publication. **Against that: I stated nine current-implementation limits as structural ones and the operator caught it, not me**; I conflated the fork with the product for most of the session when `bin/_manifest.py` is the definition of the product and I had already read it; and I published *"`docs/planning/`, `CHANGELOG.md`, `HANDOFFS.md` and `bin/` are fork-only"*, which is **wrong** — upstream has all four.
+- **Predecessor S117 scored 8/10.** Its gotchas were exceptional and changed this session's method — the stale-figure warning, the *"2.27 is a FLOOR, not a density"* line that the 4.13× abbreviation finding descends from, and *"measure the row you intend to write"*. Against that: **§6 scopes every decision to the fork with no column separating what ships**, **D7's stated ground is false** (`.context-budget.json` ships nowhere and is absent from `upstream/main`), and **F4's *"nothing has ever tested otherwise"* over-reaches** — 113 receipts and 11 backlog rows have been retired with a semantic event, a retention floor and a losslessness proof.
+- **Verification:** `bin/tests.sh` **287 rows, 286/1/0, exit 1**, row-for-row identical to S117's control, sole failure by name `github source dry-run failed`; `check-links` 0; `check-learnings` 0 (45 rows, contiguous 1..45); `check-handoff` 0; `context_budget.py` exit 2 (the adjudicated BL-52 ledger breach). `git fetch upstream` exit 0 — the one network call, authorised and read-only.
+- **Nothing pushed; no PR, issue, comment or tag. `origin/main` was not fetched.**
+
 ### 2026-08-27 · [ad hoc] S118 — the upstream read-set PR plan: port, compact, gate (DRAFT)
 
 - **Model:** Claude Opus 5 (1M context).
