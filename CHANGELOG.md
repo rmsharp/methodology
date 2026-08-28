@@ -183,6 +183,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-27 · [ad hoc] S119 close-out — Phase 2 shipped, self-score 8/10, predecessor S118 scored 8/10
+
+**Deliverable complete: Phase 2 of the upstream read-set PR plan.** The row-budget scope repaired
+and driven RED (20 violators), then all 20 compacted to compliance. Full receipt in
+[`HANDOFFS.md`](HANDOFFS.md).
+
+**Commits:** `c28f788` (1B claim + the operator's decision) · `28551a5` (scope repair, committed
+RED) · `364b410` (the compaction) · this close-out.
+
+**Final state, measured last.** `starter-kit/FRAMEWORK_LEARNINGS.md` **56,673 B**: `ok` against its
+73,728 B ceiling with **17,055 B free**, and **77 B under** the 56,750 B one-read cap. 46 rows,
+median 1,436 B, max 1,498 B, **none over budget**. `bin/tests.sh` **289 rows, 288/1/0, exit 1**
+against a control of 287, 286/1/0 — zero status flips across 279 shared assertions, zero skips, sole
+failure by name `github source dry-run failed` both sides. `check-learnings` **0**, `check-links`
+**0**, `check-handoff` **0**, `context_budget.py` **2** (the adjudicated BL-52 ledger breach,
+unchanged).
+
+**Predecessor S118 scored 8/10.** Its inversion of the plan's phase order (compact before port) was
+right and shaped this session; its costed split reproduced to within the line terminator. **It
+missed Test 37 entirely** — Phase 2's largest cost, built end-to-end on the scoping this phase
+inverts — and described Test 32's anchors as line numbers when they are content substrings, counting
+three where there are four.
+
+**Self-scored 8/10.** RED committed separately so the sequence is verifiable rather than asserted.
+**The adversarial pass refuted my own mechanical gate**: 20/20 through it, 19/20 judged DEGRADED by
+an independent reader. Against that: I wrote Learning #47 before measuring the room and resized it
+four times, and spent 459 front-matter bytes before accounting for them.
+
+**NO OUTWARD-FACING ACTION.** Nothing pushed. `main` is **445 ahead of `upstream/main`** (1 behind)
+and 104 ahead of `origin/main`. Issue #75's PR remains local-only and unsent.
+
+**Next session: Phase 1, the port** — branch from `upstream/main` (`512c2ed`), never `origin/main`.
+Upstream has no `FRAMEWORK_LEARNINGS.md`, so it is an ADD; **re-derive S118's section diff, which was
+measured against a file 17,039 B larger**, and re-check the claimed byte-identity of upstream's
+inline rows #1–#13 now that #12/#13 are compacted.
+
 ### 2026-08-27 · [ad hoc] S119 — all 20 over-budget Learning rows compacted; 73,712 B → 56,673 B
 
 **Phase 2, part 2 — the deliverable.** Every row of `starter-kit/FRAMEWORK_LEARNINGS.md` is now
