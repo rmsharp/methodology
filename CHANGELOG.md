@@ -183,6 +183,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-28 · [ad hoc] S121 — claim: adjudicate the Phase 3C deadlock
+
+**Phase 1B claim.** Deliverable: **one adjudication document in `docs/planning/`** settling what to do about the finding S120 raised — that `starter-kit/FRAMEWORK_LEARNINGS.md` sits at **56,673 B with 77 B of headroom** under the 56,750 B one-read cap, while the smallest row the table has ever carried is **229 B**, so `starter-kit/SESSION_RUNNER.md:223` Phase 3C's mandatory *"append a Learning row"* step overshoots the cap by ≥152 B no matter how short the row is.
+
+**The deliverable is a decision, not its execution.** The Present→Implement gate holds: nothing is compacted, retired, split, or re-ceilinged this session without the operator's ratification. Implementation, if ratified, is a separate session.
+
+**The premise is itself a claim and is tested before any remedy is ranked.** S120 asserted three things in one breath, and they are separable: (1) that 56,750 B is the binding constraint on *this* file, (2) that Phase 3C's append is per-session mandatory for a canonical session, and (3) that 229 B is the correct floor for a new row. Each is checked against its own authority — the runner's own text, `bin/check-learnings:104`, and the table's measured row distribution — before the remedy set is ranked. A refusal is a claim to test, not an obstacle to route around.
+
+**NOT IN SCOPE:** Phase 3 (the gate) and its two `starter-kit/context_budget.py` defects, Phase 4, Phase 5 (the PR — which needs the operator's explicit go-ahead), BL-44, BL-52, trimming either ledger, and **any outward-facing action whatsoever**.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in [`HANDOFFS.md`](HANDOFFS.md).
+
 ### 2026-08-28 · [ad hoc] S120 close-out — Phase 1 (the port) shipped, self-score 8/10, predecessor S119 scored 9/10
 
 **Deliverable complete: Phase 1 of the upstream read-set PR plan.** The S34 learnings extraction is

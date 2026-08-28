@@ -101,6 +101,22 @@ edit spent 459 B before I had accounted for it**, and I had to claw ~260 B back 
 error one file over.
 
 ```handoff
+session: S121
+date: 2026-08-28
+status: pending
+active_task: **ADJUDICATE THE PHASE 3C DEADLOCK.** `starter-kit/FRAMEWORK_LEARNINGS.md` is 56,673 B with **77 B of headroom** under the 56,750 B one-read cap, and the smallest row the table has ever carried is 229 B — so S120 reported that `SESSION_RUNNER.md` Phase 3C's mandatory "append a Learning row" step cannot be performed against the framework's own published budget. **The deliverable is ONE adjudication document in `docs/planning/`, not a remedy applied.** Present→Implement gate holds; no file is compacted, retired, split, or re-ceilinged this session without the operator's ratification.
+what_was_done: pending
+next_steps: pending
+key_files: starter-kit/FRAMEWORK_LEARNINGS.md:13 (the published 1,500 B row budget) — file is 56,673 B; starter-kit/SESSION_RUNNER.md:223 (Phase 3C) and :375 (the read-on-demand routing sentence); bin/check-learnings:104 (ROW_BUDGET_BYTES = 1500); starter-kit/methodology_trim.py READ_CAP_BYTES; .context-budget.json:1; docs/planning/upstream-read-set-pr-plan.md:100 (§3.2).
+gotchas: **THE PREMISE IS ITSELF A CLAIM AND IS TESTED BEFORE ANY REMEDY IS RANKED** — whether 56,750 B binds *this* file, whether Phase 3C is per-session mandatory, and whether the 229 B floor is the right minimum are three separate questions S120 asserted together.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+**Phase 1B claim — S121.** Deliverable: the Phase 3C adjudication document. Scored at close-out.
+
+```handoff
 session: S120
 date: 2026-08-28
 status: complete
