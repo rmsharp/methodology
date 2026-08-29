@@ -183,6 +183,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S122 — claim: express the size ceiling in tokens instead of bytes
+
+**Phase 1B claim.** Operator directive, given verbatim after S121's adjudication: *"express the limit in tokens instead of bytes."* It is the durable half of that document's §6(1) — lowering `73,728 → 69,632` was measured to break nothing, but a byte ceiling rots again at the next compaction, and only a token denomination does not.
+
+**The defect being fixed.** `.context-budget.json` declares `max_bytes` only, and [`starter-kit/context_budget.py`](starter-kit/context_budget.py)`:122` enforces it with a bare byte comparison. So every ceiling silently encodes a bytes-per-token density fixed at the moment it was set. S121 measured the consequence: the declared 73,728 B ceiling for `starter-kit/FRAMEWORK_LEARNINGS.md` certifies `ok` a size that the read tool **refuses at 25,486 tokens**.
+
+**⚠ DISTRIBUTED — this reaches the fleet.** `starter-kit/context_budget.py` is a manifest SOURCE with disposition `tracked`, verified on the SOURCE column rather than a bare-filename grep. Every adopter who runs `bin/sync` receives the change.
+
+**⚠ THE DESIGN PROBLEM IS REAL AND IS SOLVED BEFORE ANY CODE IS WRITTEN.** This repo is Python-3-stdlib-only and cross-platform, so the script **cannot invoke the agent's tokenizer** and cannot measure tokens itself. A `max_tokens` evaluated as `bytes ÷ bytes_per_token` would merely **move the rot into the density field**. The design must make density an explicit, dated, re-derivable **input** whose staleness is visible, or it reproduces the defect it is fixing. The design is presented for approval before implementation — the file is distributed and the schema is public.
+
+**NOT IN SCOPE:** the other three §6 items (the dashboard's *"budget"* wording, the live-artifact check, the port-branch decision), the `73,728` value itself, BL-44, BL-52, and **any outward-facing action whatsoever**.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in [`HANDOFFS.md`](HANDOFFS.md).
+
 ### 2026-08-29 · [ad hoc] S121 close-out — the Phase 3C deadlock adjudicated: not real, and the ceiling is inverted
 
 **Session claimed 2026-08-28 and closed 2026-08-29**; the receipt in [`HANDOFFS.md`](HANDOFFS.md) keys on `S121` + **2026-08-28**, its claim date, so the two ledgers name the same session rather than drifting apart. Self-score **8/10**; predecessor **S120 scored 6/10**.

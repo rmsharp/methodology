@@ -101,6 +101,22 @@ edit spent 459 B before I had accounted for it**, and I had to claw ~260 B back 
 error one file over.
 
 ```handoff
+session: S122
+date: 2026-08-29
+status: pending
+active_task: **EXPRESS THE SIZE CEILING IN TOKENS INSTEAD OF BYTES — operator directive, given verbatim after S121's adjudication.** Today `.context-budget.json` declares `max_bytes` only and `starter-kit/context_budget.py:122` compares bytes only, so every ceiling silently encodes a bytes-per-token density that goes stale whenever the file is compacted — the defect S121 measured (declared ceiling 73,728 B permits a size that is refused at 25,486 tokens). **`starter-kit/context_budget.py` IS DISTRIBUTED** (`bin/_manifest.py`, SOURCE column, `tracked`), so this reaches every adopter who runs `bin/sync`.
+what_was_done: pending
+next_steps: pending
+key_files: starter-kit/context_budget.py:122 (the only site enforcing max_bytes, a bare byte comparison), :324 and :642 (the only two reads of bytes_per_token, neither validating a ceiling); .context-budget.json:1 (schema, five files[] entries); docs/planning/phase3c-deadlock-adjudication.md:1 (S121's measurements and the D4/D5 framing); starter-kit/methodology_trim.py:120 (MIN_BYTES_PER_TOKEN, the conservative floor that must NOT be reused as a budget).
+gotchas: **THE DESIGN PROBLEM IS REAL AND MUST BE SOLVED BEFORE ANY CODE:** the repo is Python-3-stdlib-only and cross-platform, so this script **cannot invoke the agent's tokenizer** and cannot measure tokens directly. A naive `max_tokens` that is evaluated as `bytes / bytes_per_token` moves the rot into the density field rather than removing it. The design must make the density an explicit, dated, re-derivable INPUT and make its staleness visible, or it reproduces the defect it is fixing.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+**Phase 1B claim — S122.** Deliverable: the token-denominated ceiling. Scored at close-out.
+
+```handoff
 session: S121
 date: 2026-08-28
 status: complete
