@@ -476,5 +476,157 @@ class TestToolInvariants(unittest.TestCase):
         self.assertNotIn('"--force" in args', src)
 
 
+class TestTokenCeiling(unittest.TestCase):
+    """The ceiling is denominated in TOKENS, the unit the read cap is actually in.
+
+    WHY THIS CLASS EXISTS. A byte ceiling is `tokens x density`, and density is a property
+    of the content, so every compaction silently moves it. Measured on this repo: the
+    declared 73,728 B ceiling for starter-kit/FRAMEWORK_LEARNINGS.md certified `ok` a size
+    the agent read tool REFUSES at 25,486 tokens, and four of the five configured ceilings
+    converted to more than the 25,000-token cap. Nothing went red, because nothing checked.
+
+    THE CLASS GATE IS THE LOAD-BEARING PART, and it is Learning #34's: the read cap binds a
+    file that is read WHOLE. A file read in PART is not bound by it -- measured over 80
+    transcripts, one such file was read whole once and in part 243 times. So an on-demand
+    file must NOT be judged against the cap, and test_narrowing_* below shows that dropping
+    the class gate gives the WRONG answer on the same fixture rather than merely a louder one.
+    """
+
+    def _spec(self, **kw):
+        d = {"path": "t.md", "class": "read-mandated"}
+        d.update(kw)
+        return d
+
+    # --- fixture proof -------------------------------------------------------------
+
+    def test_fixture_is_what_the_other_tests_assume(self):
+        """Prove the fixture BEFORE asserting anything about the code that reads it."""
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "t.md").write_bytes(b"x" * 60000)
+            self.assertEqual(os.path.getsize(os.path.join(d, "t.md")), 60000)
+            r = cb.measure_file(d, self._spec())
+            self.assertEqual(r["bytes"], 60000, "fixture size must reach measure_file intact")
+            self.assertEqual(r["class"], "read-mandated")
+
+    # --- the guard that makes the shipped defect unrepresentable -------------------
+
+    def test_a_max_tokens_above_the_read_cap_is_a_config_defect(self):
+        cfg = {"read_cap_tokens": 25000}
+        bad = cb.config_defects({"files": [self._spec(max_tokens=26000)]}, cfg)
+        self.assertTrue(bad, "a ceiling above the read cap must be reported, not clamped silently")
+        self.assertIn("26,000", " ".join(bad))
+
+    def test_a_max_tokens_at_or_below_the_cap_is_clean(self):
+        cfg = {"read_cap_tokens": 25000}
+        self.assertEqual(cb.config_defects({"files": [self._spec(max_tokens=25000)]}, cfg), [])
+
+    # --- the core check ------------------------------------------------------------
+
+    def test_a_whole_read_file_over_its_token_ceiling_is_over(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "t.md").write_bytes(b"x" * 60000)
+            r = cb.measure_file(d, self._spec(max_tokens=20000),
+                                cfg={"bytes_per_token": 2.5})
+            self.assertEqual(r["tokens"], 24000, "60,000 B / 2.5 = 24,000 tok")
+            self.assertEqual(r["status"], "over")
+            self.assertTrue([f for f in r["findings"] if f["kind"] == "tokens"])
+
+    def test_a_whole_read_file_under_its_token_ceiling_is_ok(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "t.md").write_bytes(b"x" * 40000)
+            r = cb.measure_file(d, self._spec(max_tokens=20000),
+                                cfg={"bytes_per_token": 2.5})
+            self.assertEqual(r["tokens"], 16000)
+            self.assertEqual(r["status"], "ok")
+
+    # --- the class gate, narrowed rather than merely deleted -----------------------
+
+    def test_an_on_demand_file_is_not_judged_against_the_read_cap(self):
+        """Learning #34: the cap binds a WHOLE read. wsfct ships a 1.2 MB on-demand file."""
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "t.md").write_bytes(b"x" * 900000)
+            r = cb.measure_file(d, self._spec(**{"class": "on-demand", "max_tokens": 20000}),
+                                cfg={"bytes_per_token": 2.5})
+            self.assertIsNone(r.get("tokens"),
+                              "an on-demand file must not be given a token verdict at all")
+            self.assertEqual(r["status"], "ok")
+
+    def test_narrowing_the_class_gate_to_all_classes_gives_the_wrong_answer(self):
+        """The weaker implementation (no class gate) is shown WRONG on the same fixture."""
+        self.assertNotIn("on-demand", cb.WHOLE_READ_CLASSES,
+                         "on-demand inside WHOLE_READ_CLASSES would redden every "
+                         "partially-read file -- the per-file-vs-per-row error itself")
+        self.assertEqual(set(cb.WHOLE_READ_CLASSES), {"resident", "read-mandated"})
+
+    # --- adopter compatibility: an un-migrated config keeps working ----------------
+
+    def test_max_tokens_is_derived_from_max_bytes_when_absent(self):
+        """Every shipped adopter config declares max_bytes and nothing else."""
+        mt, derived = cb.token_ceiling({}, self._spec(max_bytes=45400))
+        self.assertTrue(derived)
+        self.assertEqual(mt, 20000, "45,400 / 2.27 = 20,000 -- derived at the FLOOR")
+
+    def test_the_derived_ceiling_is_conservative_not_optimistic(self):
+        """Dividing by the FLOOR maximises the token estimate, so it can never certify
+        an unreadable file as fine. Direction matters and has been got wrong twice."""
+        lo, _ = cb.token_ceiling({}, self._spec(max_bytes=100000))
+        self.assertGreater(100000 / 2.27, 100000 / 2.89)
+        self.assertEqual(lo, min(int(100000 / 2.27), 25000))
+
+    def test_a_derived_ceiling_is_clamped_at_the_read_cap(self):
+        """vscode_quarto_ext declares 65,536 B = 28,870 tok. It must not become a
+        ceiling ABOVE the cap -- that is the defect being fixed."""
+        mt, derived = cb.token_ceiling({}, self._spec(max_bytes=65536))
+        self.assertTrue(derived)
+        self.assertEqual(mt, 25000)
+
+    def test_a_file_with_no_ceiling_of_either_kind_gets_no_token_verdict(self):
+        mt, derived = cb.token_ceiling({}, self._spec())
+        self.assertIsNone(mt)
+
+    # --- density: per-file measured beats global beats floor -----------------------
+
+    def test_a_per_file_measured_density_overrides_the_global(self):
+        bpt, src = cb.file_density({"bytes_per_token": 2.8},
+                                   self._spec(bytes_per_token=2.4193))
+        self.assertAlmostEqual(bpt, 2.4193)
+        self.assertEqual(src, "measured")
+
+    def test_the_floor_is_used_when_nothing_is_declared(self):
+        bpt, src = cb.file_density({}, self._spec())
+        self.assertAlmostEqual(bpt, cb.MIN_BYTES_PER_TOKEN)
+        self.assertEqual(src, "floor")
+
+    # --- a green you cannot justify becomes a warn --------------------------------
+
+    def test_a_file_that_has_drifted_from_its_measured_density_warns(self):
+        """S119 compacted a file 23.6% and its density moved 3.0444 -> 2.8897, which is
+        what inverted the ceiling. Drift past the threshold must stop the confident ok."""
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "t.md").write_bytes(b"x" * 40000)
+            spec = self._spec(max_tokens=20000, bytes_per_token=2.5, measured_bytes=60000)
+            r = cb.measure_file(d, spec, cfg={})
+            self.assertEqual(r["status"], "warn",
+                             "33% drift from the measured size must not report a bare ok")
+            self.assertTrue([f for f in r["findings"] if f["kind"] == "density"])
+
+    def test_no_drift_leaves_the_ok_intact(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "t.md").write_bytes(b"x" * 40000)
+            spec = self._spec(max_tokens=20000, bytes_per_token=2.5, measured_bytes=40000)
+            r = cb.measure_file(d, spec, cfg={})
+            self.assertEqual(r["status"], "ok")
+
+    # --- the second enforcement site must move with the first ---------------------
+
+    def test_precommit_enforces_the_token_ceiling_too(self):
+        """The plan's own lesson: cfg['classes'] was a KeyError at BOTH sites. A gate that
+        reports and cannot refuse is half a gate."""
+        src = CB_PY.read_text()
+        pre = src.split("def precommit")[1].split("# === SELFTEST")[0]
+        self.assertIn("token_ceiling", pre,
+                      "precommit still gates on bytes alone while the report gates on tokens")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)
