@@ -183,6 +183,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S123 — claim: cost the three port-branch options and adjudicate
+
+**Phase 1B claim.** The operator selected S122's `next_steps` **(a)**. Both [`phase3c-deadlock-adjudication.md`](docs/planning/phase3c-deadlock-adjudication.md) §6(4) and S122's receipt record the three options as **uncosted** — and that single omission has now cost **two consecutive sessions their Learning row**: S121 and S122 each appended none, each citing this decision. The deliverable is **the costing and an adjudication**, not the remedy.
+
+**The finding under adjudication.** `HEAD:starter-kit/FRAMEWORK_LEARNINGS.md` and `port/framework-learnings-extraction:starter-kit/FRAMEWORK_LEARNINGS.md` carry the identical blob **`b21854cc`** (re-verified at this claim). Appending a Learning row to `main` breaks that identity with the unpushed, PR-ready port branch S120 cut from `upstream/main` (`512c2ed`) as the single commit `30ddf26` over 18 files. The three options on record: **(i)** append on both and keep them identical; **(ii)** hold Phase 3C until Phase 5 ships or is abandoned; **(iii)** accept divergence and re-run the port's end-to-end `bin/sync` check.
+
+**What has to be established before any of them can be ranked, none of it on record.** Whether the byte-identity is **load-bearing or incidental** — does any test, checker, manifest row, or `bin/sync` path actually read it, or is it an artifact of how S120 happened to build the branch? What each option costs **per future session**, since option (ii) is the status quo and its cost is unbounded. And whether the three options **span the space** — a derived branch that is rebuilt at PR time would make divergence a non-event, and no record considers it.
+
+**NOT IN SCOPE:** appending any Learning row (that is the remedy, and it waits on ratification), the `cfg["classes"]` KeyError at `starter-kit/context_budget.py:1025`, the dashboard *"budget"* wording, the live-artifact check, the `HANDOFFS.md` trim, and **any outward-facing action whatsoever**.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in [`HANDOFFS.md`](HANDOFFS.md).
+
 ### 2026-08-29 · [ad hoc] S122 close-out — the size ceiling denominated in tokens, gated by read class
 
 Operator directive after S121's adjudication: *"express the limit in tokens instead of bytes."* Self-score **8/10**; predecessor **S121 scored 8/10**. Commits `99cedc0` (claim) → **`0d3e3a6` (RED)** → **`28a02a6` (GREEN)** → **`97c8066`** (configs) → this close-out. `starter-kit/context_budget.py` **1.1.0 → 1.2.0**, and it is **DISTRIBUTED**, so this reaches every adopter who syncs.

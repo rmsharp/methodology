@@ -101,6 +101,22 @@ edit spent 459 B before I had accounted for it**, and I had to claw ~260 B back 
 error one file over.
 
 ```handoff
+session: S123
+date: 2026-08-29
+status: pending
+active_task: **COST THE THREE PORT-BRANCH OPTIONS AND ADJUDICATE — the decision that blocks Phase 3C.** Operator selected S122's `next_steps` (a). `HEAD` and `port/framework-learnings-extraction` carry the identical blob **`b21854cc`** for `starter-kit/FRAMEWORK_LEARNINGS.md` (re-verified at this claim); appending a Learning row to `main` breaks it. Both S121 §6(4) and S122 record the options as **uncosted**, and that omission has cost **two consecutive sessions their Learning row**. The deliverable is the costing plus an adjudication document in `docs/planning/`, following S121's precedent. **The remedy is NOT in scope** — Present→Implement holds.
+what_was_done: pending
+next_steps: pending
+key_files: docs/planning/phase3c-deadlock-adjudication.md:236 (§6(4), where the three options are named and left uncosted); docs/planning/upstream-read-set-pr-plan.md:221 (§5, the phase sequence, and why Phase 5 needs a separate go-ahead); bin/_manifest.py (the DISTRIBUTION list — parse the SOURCE column, never a bare-filename grep); bin/check-learnings (the row/contiguity checker an append must still satisfy); starter-kit/FRAMEWORK_LEARNINGS.md (46 rows, 56,673 B, the file whose blob is at issue).
+gotchas: **THE QUESTION IS WHETHER THE IDENTITY IS LOAD-BEARING OR INCIDENTAL, AND NO RECORD ANSWERS IT.** S120 built the port branch from `upstream/main` and populated the file with `main`'s already-compacted (S119) content, so byte-identity may be a *snapshot property* rather than an invariant — in which case option (iii)'s "re-run the check" is costing a defence of something nothing depends on. **The three options may not span the space:** a branch that is REBUILT from `main` at Phase 5 time makes divergence a non-event, and nothing on record considers it. **`HANDOFFS.md` HAS 2,239 B OF HEADROOM against the trimmer's 196,608 B budget** and the newest five receipts average 11,439 B — this session's own close-out is what breaks it. **Both ledgers are already OVER their `context_budget.py` ceilings, so the pre-commit hook refuses a growth commit; the established precedent for a claim is `--no-verify`** (`.githooks/pre-commit` documents 32 of 32).
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+**Phase 1B claim — S123.** Deliverable: the port-branch adjudication. Scored at close-out.
+
+```handoff
 session: S122
 date: 2026-08-29
 status: complete
