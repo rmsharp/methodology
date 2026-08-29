@@ -619,6 +619,30 @@ class TestTokenCeiling(unittest.TestCase):
 
     # --- the second enforcement site must move with the first ---------------------
 
+    def test_a_fired_token_ceiling_is_reported_in_tokens(self):
+        """The row must show the figure behind its own verdict. A file UNDER its byte
+        ceiling and OVER the read cap is the case bytes cannot explain."""
+        r = {"class": "read-mandated", "bytes": 56673, "max_bytes": 73728,
+             "tokens": 25514, "max_tokens": 25000,
+             "findings": [{"kind": "tokens", "msg": "x"}]}
+        self.assertEqual(cb.ledger_dimension(r), ("≈25,514 tok", "25,000 tok"))
+
+    def test_bytes_still_win_when_both_fire(self):
+        """The first size finding decides the dimension; bytes are appended first."""
+        r = {"class": "read-mandated", "bytes": 162781, "max_bytes": 65536,
+             "tokens": 65979, "max_tokens": 25000,
+             "findings": [{"kind": "bytes", "msg": "x"}, {"kind": "tokens", "msg": "y"}]}
+        self.assertEqual(cb.ledger_dimension(r)[0], "162,781 B")
+
+    def test_main_passes_cfg_into_measure_file(self):
+        """cfg is optional on measure_file so old callers keep working -- which means a
+        caller that forgets it runs the token arm at the FLOOR and silently ignores every
+        per-file measured density. Green tests would not have caught it; this does."""
+        src = CB_PY.read_text()
+        self.assertIn("measure_file(root, s, cfg)", src,
+                      "main() must pass cfg, or the density and read_cap_tokens a "
+                      "project declares are computed and then discarded")
+
     def test_precommit_enforces_the_token_ceiling_too(self):
         """The plan's own lesson: cfg['classes'] was a KeyError at BOTH sites. A gate that
         reports and cannot refuse is half a gate."""

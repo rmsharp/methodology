@@ -38,7 +38,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 CONFIG_NAME = ".context-budget.json"
 HISTORY_NAME = ".context-budget-history.jsonl"
 
@@ -47,6 +47,83 @@ RED = "\033[31m"; YEL = "\033[33m"; GRN = "\033[32m"; CYN = "\033[36m"
 W = 74
 
 CLEAN, WARN, BREACH, USAGE = 0, 1, 2, 3
+
+# === THE READ CAP, AND WHY THE CEILING IS DENOMINATED IN TOKENS ===
+#
+# A size ceiling exists to keep a file readable. "Readable" is denominated in TOKENS --
+# the agent read tool refuses a range over READ_CAP_TOKENS -- while a ceiling written in
+# BYTES is `tokens x density`, and density is a property of the CONTENT. So every edit
+# that changes how densely the file is written silently moves a byte ceiling, and nothing
+# goes red. Measured on the repo that authors this tool: a declared 73,728 B ceiling
+# certified `ok` a file the read tool REFUSES at 25,486 tokens, and four of five declared
+# ceilings converted to more than the cap. Declaring the ceiling in tokens makes that
+# class of defect unrepresentable rather than merely fixed once.
+READ_CAP_TOKENS = 25_000
+
+# The FLOOR of a measured 2.2705-3.0300 B/token band, not its mean. Dividing bytes by the
+# floor MAXIMISES the token estimate, so a ceiling derived from it is conservative: it can
+# never certify an unreadable file as fine. Direction matters here and is easy to invert --
+# a LOWER B/token yields a HIGHER token count. Only ever use this to DERIVE a ceiling when
+# no measured density is available; never as a measurement of a file you can meter.
+MIN_BYTES_PER_TOKEN = 2.27
+
+# Learning #34: "A file-size ceiling only bites when the file is read WHOLE ... measured
+# over 80 transcripts, one such file was read whole once and in part 243 times, and a
+# partial read returns whole ROWS. The cost was per-row; the guard was per-file. A budget
+# on the wrong unit is not conservative, it is unmeasured." So the read cap is applied ONLY
+# to classes the protocol orders read whole. An on-demand file gets no token verdict at
+# all -- its budget belongs on the unit actually read (a row, a record, a section).
+WHOLE_READ_CLASSES = ("resident", "read-mandated")
+
+# A density is measured against a particular content. Once the file has drifted this far
+# from the size it was measured at, the derived ceiling is no longer justified: report a
+# warn rather than a confident ok, and say so. This is the signal whose absence let a
+# stale ceiling report `ok` for two days after the compaction that invalidated it.
+DENSITY_DRIFT_WARN = 0.25
+
+
+def file_density(cfg, spec):
+    """(bytes_per_token, source). Per-file measured beats the config global beats the
+    floor. Returns the source so output can say which, rather than presenting a derived
+    number and a measured one in the same voice."""
+    d = spec.get("bytes_per_token")
+    if d:
+        return float(d), "measured"
+    g = (cfg or {}).get("bytes_per_token")
+    if g:
+        return float(g), "config"
+    return MIN_BYTES_PER_TOKEN, "floor"
+
+
+def token_ceiling(cfg, spec):
+    """(max_tokens, derived). An explicit max_tokens governs. Otherwise derive one from
+    max_bytes at the conservative floor so an un-migrated config keeps working AND gains
+    the guard with no edit. Either way the result is clamped at the read cap: a ceiling
+    above it cannot be satisfied by any file, so honouring it would be honouring nonsense.
+    None when the spec declares no ceiling of either kind."""
+    cap = int((cfg or {}).get("read_cap_tokens", READ_CAP_TOKENS))
+    mt = spec.get("max_tokens")
+    if mt:
+        return min(int(mt), cap), False
+    mb = spec.get("max_bytes")
+    if mb:
+        return min(int(mb / MIN_BYTES_PER_TOKEN), cap), True
+    return None, False
+
+
+def config_defects(cfg, defaults=None):
+    """Ceilings that cannot be satisfied by any file. Reported, never silently clamped --
+    a clamp would fix the symptom and leave the operator believing a number that is not
+    in force. Returns a list of human-readable strings; empty means clean."""
+    cap = int((defaults or cfg or {}).get("read_cap_tokens", READ_CAP_TOKENS))
+    out = []
+    for spec in (cfg or {}).get("files", []):
+        mt = spec.get("max_tokens")
+        if mt and int(mt) > cap:
+            out.append(f"{spec.get('path')}: max_tokens {int(mt):,} exceeds the "
+                       f"{cap:,}-token read cap by {int(mt)-cap:,} — no file can satisfy it")
+    return out
+
 
 
 # === PLUMBING ===
@@ -93,8 +170,11 @@ def load_config(root):
 
 # === MEASUREMENT ===
 
-def measure_file(root, spec):
-    """One budgeted file. status ∈ ok | warn | over | unmeasured."""
+def measure_file(root, spec, cfg=None):
+    """One budgeted file. status ∈ ok | warn | over | unmeasured.
+
+    `cfg` is optional so existing callers keep working; without it the token arm
+    falls back to the conservative floor rather than silently not running."""
     path = expand(root, spec["path"])
     out = {"path": spec["path"], "abs": path, "class": spec.get("class", "resident"),
            "findings": [], "status": "ok"}
@@ -137,6 +217,37 @@ def measure_file(root, spec):
             worst = max(long, key=lambda t: t[1])
             over(f"{len(long)} line(s) exceed {cap} B — worst is line {worst[0]} at "
                  f"{worst[1]:,} B. A line ceiling alone just creates longer lines.", "line_bytes")
+
+    # --- the token arm: the unit the read cap is actually denominated in ---------
+    # Applied ONLY to classes the protocol orders read WHOLE (Learning #34). An
+    # on-demand file is read in part, so its whole-file token count is not the cost
+    # it pays and is deliberately not computed -- a verdict on the wrong unit is
+    # worse than no verdict, because it reads as though someone measured something.
+    if out["class"] in WHOLE_READ_CLASSES:
+        max_tok, derived = token_ceiling(cfg, spec)
+        if max_tok:
+            bpt, dsrc = file_density(cfg, spec)
+            out["tokens"] = int(out["bytes"] / bpt)
+            out["max_tokens"] = max_tok
+            out["density"] = bpt
+            out["density_source"] = dsrc
+            out["ceiling_derived"] = derived
+            if out["tokens"] > max_tok:
+                over(f"≈{out['tokens']:,} tokens exceeds the {max_tok:,}-token ceiling by "
+                     f"{out['tokens']-max_tok:,} — at {bpt:.4f} B/token ({dsrc})"
+                     + (f", derived from max_bytes at the {MIN_BYTES_PER_TOKEN} floor"
+                        if derived else ""), "tokens")
+            # A density is only justified near the size it was measured at. Past the
+            # drift threshold say so, rather than reporting an ok nobody can defend.
+            mb = spec.get("measured_bytes")
+            if mb and out["status"] == "ok":
+                drift = abs(out["bytes"] - int(mb)) / float(mb)
+                if drift > DENSITY_DRIFT_WARN:
+                    out["findings"].append({"kind": "density", "msg":
+                        f"density {bpt:.4f} B/token was measured at {int(mb):,} B; the file "
+                        f"is now {out['bytes']:,} B ({drift*100:.0f}% drift). The token "
+                        f"figure above is provisional — re-measure before trusting it."})
+                    out["status"] = "warn"
 
     # structure: a declared pattern matching FEWER records than expected is an
     # instrument failure, not a pass (learning #22 / #26a).
@@ -391,9 +502,19 @@ def ledger_dimension(r):
     moved. `bytes` is appended before `lines` in measure_file, so a file over both reports
     bytes. A `max_lines` ceiling that fires is still reported in lines -- the ceilings are
     not being removed here, only the default when neither has fired.
+
+    A TOKEN ceiling can now fire too, and when it does the row reports tokens -- the unit
+    this docstring already argued the cap is denominated in, back when bytes were the best
+    available proxy for it. Bytes are appended before tokens in measure_file, so a file
+    over both still reports bytes; tokens surface exactly in the case bytes cannot explain,
+    which is a file UNDER its byte ceiling and OVER the read cap. That case is not
+    hypothetical: it is the shipped defect this arm was added for.
     """
     fired = next((f["kind"] for f in r.get("findings", [])
-                  if f["kind"] in ("bytes", "lines")), None)
+                  if f["kind"] in ("bytes", "lines", "tokens")), None)
+    if fired == "tokens":
+        return (f"≈{r['tokens']:,} tok",
+                f"{r['max_tokens']:,} tok" if r.get("max_tokens") else "—")
     if (fired or "bytes") == "lines":
         return (f"{r['lines']:,} ln",
                 f"{r['max_lines']:,} ln" if r.get("max_lines") else "—")
@@ -703,13 +824,25 @@ def precommit(root, cfg):
         old = len(head.encode()) if rc2 == 0 else 0
         ceil = spec.get("max_bytes")
         if ceil and new > ceil and new > old:
-            bad.append((spec["path"], old, new, ceil))
+            bad.append((spec["path"], old, new, ceil, "B", f"{ceil:,} B"))
+            continue
+        # The token ceiling gates here too, or the tool reports in one unit and refuses
+        # in another. Same relative rule: a commit that SHRINKS an over-budget file is
+        # never blocked, so the gate can never prevent its own remedy.
+        if spec.get("class", "resident") in WHOLE_READ_CLASSES:
+            max_tok, _derived = token_ceiling(cfg, spec)
+            if max_tok:
+                bpt, _src = file_density(cfg, spec)
+                ntok, otok = int(new / bpt), int(old / bpt)
+                if ntok > max_tok and ntok > otok:
+                    bad.append((spec["path"], otok, ntok, max_tok, "tok",
+                                f"{max_tok:,} tok"))
     if not bad:
         return CLEAN
     print(f"\n{RED}{B}context-budget: REFUSED{R}")
-    for path, old, new, ceil in bad:
-        print(f"  {B}{path}{R}  {old:,} -> {new:,} B   ceiling {ceil:,} B")
-        print(f"    +{new-old:,} B this commit, {new-ceil:,} B over.")
+    for path, old, new, ceil, unit, ceil_s in bad:
+        print(f"  {B}{path}{R}  {old:,} -> {new:,} {unit}   ceiling {ceil_s}")
+        print(f"    +{new-old:,} {unit} this commit, {new-ceil:,} {unit} over.")
     print(f"\n  Cheapest legal actions:")
     for i, (name, how) in enumerate(REMEDIES["bytes"], 1):
         print(f"    {i}. {B}{name}{R} — {how}")
@@ -883,7 +1016,7 @@ def main():
     if "--precommit" in args:
         return precommit(root, cfg)
 
-    results = [measure_file(root, s) for s in cfg.get("files", [])]
+    results = [measure_file(root, s, cfg) for s in cfg.get("files", [])]
     synced = [check_synced(root, s) for s in cfg.get("synced", [])]
     resident = sum(r.get("bytes", 0) for r in results if r["class"] == "resident")
     snapshot = {"resident_bytes": resident,
