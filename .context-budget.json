@@ -1,6 +1,7 @@
 {
  "_": "THIS REPO'S OWN context budget — BL-37 half (a), provisioned by S90 (2026-08-15) from starter-kit/context-budget.json and then CALIBRATED, per that seed's own instruction to replace every inherited number with one defensible from a measurement of this project. This repo AUTHORS and DISTRIBUTES the FM #28 gate (bin/_manifest.py:54 ships starter-kit/context_budget.py -> adopter context_budget.py, :60 ships the seed -> adopter .context-budget.json) and until now had never configured it for itself — the same blind-at-home shape as BL-29 and upstream issue #59, arriving through configuration rather than path resolution. Run: python3 starter-kit/context_budget.py (there is no root copy of the tool here; see _tool_location below).",
  "_tool_location": "The tool is NOT at this repo's root. bin/_manifest.py installs it at ADOPTER roots; canonically it lives only at starter-kit/context_budget.py. Two consequences, both measured not assumed: (1) invoke it as `python3 starter-kit/context_budget.py` — find_root() then walks up to this repo root via .git and reads this file, which is why a root-relative `path` below still resolves; (2) `install-hook` would write a hook that execs $(git rev-parse --show-toplevel)/context_budget.py, which does not exist here, AND this clone already sets core.hooksPath=.githooks whose pre-commit is the FM #27 ledger gate, so install-hook correctly declines with 'already exists and is not ours'. The budget gate is therefore MEASURING here, not BLOCKING. Wiring it into .githooks/pre-commit would edit a canonical file that ships upstream — deliberately not done here; raised as a follow-on instead.",
+ "read_cap_tokens": 25000,
  "bytes_per_token": 2.8,
  "_bytes_per_token": "MEASURED ON THIS REPO, 2026-08-15 (S90). Regression of each session's opening context on the size of CLAUDE.md at that session's start, over n=75 transcripts in ~/.claude/projects/-Users-rmsharp-Development-methodology: opening_tokens ~= 42,033.2 + 0.356891 x bytes, R^2 = 0.8083 => 2.8020 B/tok, rounded here to 2.80. Corroborated by two independent local instruments: the same fit with only the lineage defect corrected gives 2.93 (R^2 = 0.6854), and the natural experiment across commit 7603f10 (CLAUDE.md 52,909 -> 8,519 B, -44,390 B) using the two sessions bracketing it within 20 minutes on each side gives 44,390 B / 17,616 tok = 2.52. Three local estimates spanning 2.52-2.93, and the seed's 2.93 from a different project, all agree within ~15%. THE TOOL NOW AGREES — BL-38 FIXED IT (S91, 2026-08-15). The warning that used to live in this key said `--calibrate` prints 14.45 B/tok at R^2 = 0.0513 and must not be adopted; that is no longer true and the key would otherwise have become a false claim about a tool that had been repaired. The two defects behind it (D1: `git log -- CLAUDE.md` walked ALL merged ancestry, so upstream's own CLAUDE.md lineage interleaved with this fork's by commit date and 'size at time T' stopped being a function; D2: ISO timestamps were sorted and compared AS STRINGS across mixed offsets) are fixed in starter-kit/context_budget.py. Re-run `python3 starter-kit/context_budget.py --calibrate` rather than trusting this sentence: at n=76 it prints 2.81 B/tok at R^2 = 0.8054, against the 2.80 recorded here from S90's n=75. The small drift is the extra transcript, not a disagreement. A fit below R^2 = 0.50 is now REFUSED by the tool rather than printed, so this key can no longer be 'corrected' to noise by a session that reads the number and not the statistic.",
  "fixed_harness_tokens": 42033,
@@ -20,6 +21,10 @@
    "class": "resident",
    "max_lines": 200,
    "max_bytes": 18600,
+   "max_tokens": 7114,
+   "bytes_per_token": 2.6144,
+   "measured_bytes": 11064,
+   "measured_on": "2026-08-29",
    "warn_bytes": 16000,
    "structure": [
     {
@@ -35,6 +40,10 @@
    "class": "read-mandated",
    "max_lines": 2000,
    "max_bytes": 65536,
+   "max_tokens": 25000,
+   "bytes_per_token": 2.4674,
+   "measured_bytes": 162781,
+   "measured_on": "2026-08-29",
    "structure": [
     {
      "pattern": "^### \\d{4}-\\d{2}-\\d{2} · \\[",
@@ -49,6 +58,10 @@
    "class": "read-mandated",
    "max_lines": 1200,
    "max_bytes": 65536,
+   "max_tokens": 25000,
+   "bytes_per_token": 2.3648,
+   "measured_bytes": 186617,
+   "measured_on": "2026-08-29",
    "structure": [
     {
      "pattern": "^```handoff",
@@ -63,6 +76,10 @@
    "class": "read-mandated",
    "max_lines": 2000,
    "max_bytes": 65536,
+   "max_tokens": 25000,
+   "bytes_per_token": 2.3808,
+   "measured_bytes": 30786,
+   "measured_on": "2026-08-29",
    "structure": [
     {
      "pattern": "^\\| \\*\\*BL-[0-9]+\\*\\* \\|.*BACKLOG-DETAIL\\.md#bl-",
@@ -76,6 +93,9 @@
    "path": "starter-kit/FRAMEWORK_LEARNINGS.md",
    "class": "on-demand",
    "max_bytes": 73728,
+   "bytes_per_token": 2.8897,
+   "measured_bytes": 56673,
+   "measured_on": "2026-08-29",
    "structure": [
     {
      "pattern": "^\\| *[0-9]+ *\\|",
