@@ -1,9 +1,12 @@
 # The port-branch byte-identity — adjudicated, and the options costed
 
-**Status: ADJUDICATION. Awaiting the operator's ratification. No remedy is applied by this document.**
-S123's deliverable, against the decision S121 recorded as `§6(4)` and S122 carried forward as
-`next_steps (a)`, both explicitly marking the options **uncosted**. The Present→Implement gate holds:
-nothing is appended, rebuilt, refreshed or frozen until the operator chooses.
+**Status: TIER 1 RATIFIED by the operator 2026-08-29 and acted on the same session. TIER 2 DEFERRED to
+the Phase 5 go-ahead, deliberately unranked.** S123's deliverable, against the decision S121 recorded as
+`§6(4)` and S122 carried forward as `next_steps (a)`, both explicitly marking the options **uncosted**.
+
+The document was written and presented before any remedy: the Present→Implement gate held, the operator
+chose, and **only then** was Learning #48 appended (`dd6ee0f`) and `§6(4)` struck. `30ddf26` is
+**untouched**. Nothing was pushed and no PR was opened — Tier 2 is not this document's to settle.
 
 > **Declared budget: 35,000 B.** File 35 in `docs/planning/`, which has no ceiling — the same
 > instance-of-the-problem this directory always is. Stated rather than discovered.

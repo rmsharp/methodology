@@ -245,6 +245,25 @@ updated in the same commit as any extraction. **STOP.**
 **Phase 5 — Assemble and open the PR.** **REQUIRES THE OPERATOR'S EXPLICIT GO-AHEAD, and approving
 this plan is not it.**
 
+> **Two line items Phase 5 must settle, added at S123 (2026-08-29). Neither is session-reachable and
+> neither is ranked here** — see [`port-branch-identity-adjudication.md`](port-branch-identity-adjudication.md) §6 Tier 2.
+>
+> **(a) What table does the port carry?** `main` now diverges from `30ddf26` (Learning #48 landed at
+> `dd6ee0f`), and that divergence is **accepted, not a defect** — the byte-identity is incidental and
+> nothing reads it (§2 of that document). Three live answers: **freeze** the 46-row table (`30ddf26`'s
+> three derived counts stay true; upstream lands N rows behind); **refresh** from `main` (all three
+> counts become false and need hand re-derivation with no checker, and 9 of 46 rows name artifacts
+> absent upstream); or ship **the extraction only** — the 13,894 B / 13-row blob `ed22ace` itself
+> created, after which the PR matches its own title, since it currently carries 42,779 B (75.5%) that
+> is not the extraction.
+>
+> **(b) Rewrite `30ddf26:CHANGELOG.md:92-93` — a standing defect that ships upstream in the PR.** It
+> declines a ~400 B note because that *"would break the file's byte-identity with the fork, which is
+> what lets `bin/sync` agree from either source."* **False in both halves:** `bin/sync --source` reads
+> a working tree or `KJ5HST/methodology`, never a local ref, and the two sources already disagree on
+> 7–8 tracked files for every measured adopter. It also carries a stale 56,750 B / 77 B derivation.
+> This needs rewriting under **every** option, including freeze.
+
 ---
 
 ## 6. Here be dragons

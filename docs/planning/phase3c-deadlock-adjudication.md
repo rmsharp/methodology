@@ -217,7 +217,8 @@ criterion S119's adversarial pass already found violated 33 times), retirement w
 shard split, and raising the ceiling (**moves 0 B of content**, and the ceiling is the defect). A growth
 policy is **viable but not now** — it answers the recurrence, not today.
 
-Four parts, in order. **(1)–(3) need the operator's choice; (4) is a precondition.**
+Four parts, in order. **(1)–(3) need the operator's choice; ~~(4) is a precondition~~ — see the ⚠ under
+(4): that classification was an agent's, and (4) is now RESOLVED.**
 
 1. **Correct `.context-budget.json`'s 73,728 B to a satisfiable value, and prefer a token
    denomination.** `73,728 → 69,632` was tested on a scratch clone: **nothing breaks** — all three
@@ -233,10 +234,20 @@ Four parts, in order. **(1)–(3) need the operator's choice; (4) is a precondit
    `max_bytes / bytes_per_token` assertion is documentation, not a limit (Learning #38). The measured
    form — concatenate the live file and assert `f(1) < 25,000` — is the only check that would have caught
    both the BL-45 drift and today's.
-4. **Decide the port-branch question before unblocking Phase 3C.** Appending breaks the `b21854cc`
-   byte-identity with the unpushed PR-ready branch. Three uncosted options: (i) append on both and keep
-   them identical; (ii) hold Phase 3C until Phase 5 ships or is abandoned; (iii) accept divergence and
-   re-run the port's end-to-end `bin/sync` check.
+4. ~~**Decide the port-branch question before unblocking Phase 3C.**~~ **RESOLVED at S123 (2026-08-29)
+   — and the premise was false.** This item read: *"Appending breaks the `b21854cc` byte-identity with
+   the unpushed PR-ready branch. Three uncosted options: (i) append on both and keep them identical;
+   (ii) hold Phase 3C until Phase 5 ships or is abandoned; (iii) accept divergence and re-run the port's
+   end-to-end `bin/sync` check."*
+   **The identity is INCIDENTAL, not a constraint — nothing in the repository reads it.** The options
+   were costed, two more were added, and the premise all five rest on was refuted three independent
+   ways in [`port-branch-identity-adjudication.md`](port-branch-identity-adjudication.md) §2.
+   **Operator ratified 2026-08-29; Phase 3C resumed the same session** (Learning #48, `dd6ee0f`), and
+   `30ddf26` is left byte-frozen. **The Phase 5 PR-content question is deferred**, deliberately unranked
+   — see that document's §6 Tier 2 and `upstream-read-set-pr-plan.md` §5.
+   ⚠ **Also struck: "(4) is a precondition" in the line above.** That classified this question as
+   agent-decidable — an agent's sentence, in a document marked *"awaiting the operator's ratification."*
+   S123 declined to inherit it silently and put Tier 1 to the operator instead.
 
 **This is an answer to two open operator decisions, not an agent's correction.**
 `file-management-system-plan.md:287` registers **D5** (*"are ceilings denominated in the conservative
