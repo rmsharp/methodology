@@ -183,6 +183,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S121 close-out — the Phase 3C deadlock adjudicated: not real, and the ceiling is inverted
+
+**Session claimed 2026-08-28 and closed 2026-08-29**; the receipt in [`HANDOFFS.md`](HANDOFFS.md) keys on `S121` + **2026-08-28**, its claim date, so the two ledgers name the same session rather than drifting apart. Self-score **8/10**; predecessor **S120 scored 6/10**.
+
+**Deliverable: [`docs/planning/phase3c-deadlock-adjudication.md`](docs/planning/phase3c-deadlock-adjudication.md)** (19,104 B), commits `43387e1` (1B claim) + **`4b7224e`** (the deliverable) + this close-out.
+
+**VERDICT: S120's *"the framework's own mandatory close-out step cannot be performed against its own published budget"* is FALSE AS WRITTEN.** The arithmetic is right and the denominator is wrong. Four independent refutations, each handed to an agent instructed to break it; all six lenses returned SURVIVES_WITH_CORRECTION.
+
+1. **Metered, the file is at 78.5% of one read.** Six collinear probe points with **zero residual** on the three the model never saw (5×/6×/7× predicted and actual 98,065 / 117,677 / 137,289). The concatenation seam was **measured at exactly zero tokens** across five one- and two-seam windows, so `f(n) = 19,612n + 5` gives `f(1) = 19,617 tok` as a **measurement, not an extrapolation**. Headroom **5,383 tokens**.
+2. **56,750 B reaches this file through no code path.** `methodology_trim.py --check` → `[NO_CONFIG]`, exit 3; both dashboard twins' `read_cap_class()` → `None` for the canonical path *and* the adopter dest; `bin/check-learnings` has no whole-file arm. It is a **detector floor** (`MIN_BYTES_PER_TOKEN = 2.27`, the conservative end of a measured band), not a budget.
+3. **Learning #34 — in this very table, at S97 — already moved the guard off the per-file axis:** read whole once, in part 243 times. The file's real published budget is **1,500 B per row**, and all 46 rows comply.
+4. **BL-45 is the precedent:** S110–S114 ran through an identical declared deadlock and closed normally.
+
+**THE REAL DEFECT RUNS THE OTHER WAY AND IT IS MEASURED, NOT MODELLED.** **73,646 B of this content — 82 B *under* the declared 73,728 B ceiling — is refused at 25,486 tokens** (a bare read returns a `PARTIAL view` banner delivering 106 of 128 lines). BL-45 deliberately set that ceiling **2,023 B under** the then-cliff, stating *"a ceiling must sit below where the file stops fitting, not on it."* S119's compaction lowered density **3.0444 → 2.8897** and inverted the margin. **A byte ceiling is `tokens × density`, and compaction is the operation that changes density — so it rots silently, and nothing goes red.** That is Learning #46's own mechanism, committed by the framework's most recent remedy.
+
+**THE FINDING THAT ACTUALLY MATTERS — a quality tax, not a blocked append.** Whenever headroom falls below ~1,500 B, the row written **equals the headroom minus a few bytes**: #34 = 604 B at 604 B available, #38 = 981 at 997, #45 = 837 at 1,082, #46 = 229 at 245. The file has saturated against its ceiling **four times** (S97, S109, S118, S120). That also makes the 229 B row **circular evidence** — it is that small *because* it was squeezed. Before the extraction the all-time minimum was **419 B**, in a population (`SESSION_RUNNER.md`'s history) that S120's *"smallest it has ever carried"* never searched.
+
+**SIX OF MY OWN NUMBERS WERE WRONG AND ARE CORRECTED IN PLACE, marked ⚠ in the document. Two repeat, one level down, the exact error the document faults S120 for.**
+
+- **I converted token headroom to bytes at the WHOLE-FILE density (2.8897) when the headroom is consumed by ROWS**, which meter **3.1974 B/token** (measured: rows #39–#42 = 4,163 B / 1,302 tok). Every byte-denominated capacity figure I published — *"~11 rows"*, *"8–13 rows"* — was **low**. Corrected: **11.5–16.5 rows, and the only safe unit is tokens (5,383)**.
+- **I withdrew a refutation I had already published to the operator.** *"The config refutes itself: 73,728 / 2.8 = 26,331 tok"* is **unsound** — `bytes_per_token` is explicitly declared non-comparable, being calibrated on opening context against `CLAUDE.md`. The sound proof is the direct read.
+- **I put a fabricated quotation into the record** in claim `43387e1`: *"append a Learning row"* appears **nowhere** in the protocol; I quoted S120's paraphrase as if it were Phase 3C's own words.
+- **The 63.6% append rate is bimodal, not a base rate** — 12/12, then 3/15 while the file sat 16 B under its ceiling, then 6/6. **When the file has room, essentially every session appends.**
+- **S112 contributed zero rows** (I said three); the multi-row session is **S114**, with four.
+
+**WHAT S120 GOT RIGHT.** It was applying **its own ratified plan's standard** — `upstream-read-set-pr-plan.md` sets 56,750 B as this file's acceptance standard at `:95`, `:106` and `:123`. **The defect is in the plan.** And **its second reason was correct, load-bearing, and unrefuted**: appending breaks the byte-identity that lets `bin/sync` agree from either source — `HEAD` and `port/framework-learnings-extraction` carry the **identical blob `b21854cc`**. Six refutation lenses missed it; a critic found it. **That, not the cap, is why this session appended no Learning row.**
+
+**S119's COMPACTION MUST NOT BE REVERTED.** It had two authorising legs, and **leg 1 — the 1,500 B row budget — independently justifies every row it touched**: 20 real violators, the checker driven RED in its own commit (`28551a5`), and decisively, the 18-row option leaves #12 (1,451 B) and #13 (1,447 B) in breach, so **only** the 20-row option turns the checker green. Reverting restores 20 violations. Leg 2 — the file-level arithmetic — does not survive: the **pre-compaction** file metered **24,363 tok = 97.45% of one read**. It fit. Nothing was ever over.
+
+**THE OPERATOR CHOSE ON A MIS-SCALED COLUMN.** `CHANGELOG.md`'s S119 decision table scored the options in a *"vs the 56,750 B one-read cap"* column, marking the 18-row option *"401 B OVER"* and the 20-row option *"571 B UNDER"*. At the true cliff for that content (~76,111 B) **both were ~19,000 B under** — mis-scaled by roughly 19 KB. The outcome is unchanged (leg 1 settles it), **but that is a finding the operator is entitled to be told, not one an agent may assume on his behalf.**
+
+**NOT DONE, each deliberately.** No remedy applied — **the Present→Implement gate holds**, and §6 is an answer *proposed* to the open decisions **D4/D5** (`file-management-system-plan.md:287`, whose own heading says *"none is derivable from measurement"*), not a correction an agent may apply. No Learning row appended (see the port-branch reason above). No ceiling edited, no file compacted, retired or split. Phase 3/4/5 untouched — and **Phase 3 must not ship as specified**, since it would hard-wire 56,750 B into a gate. BL-44, BL-52 and the pre-existing `A2 truth VIOLATED` front-matter failure recorded, not fixed. **NO OUTWARD-FACING ACTION WHATSOEVER.**
+
+**Build-equivalent, run against a control worktree at the pre-claim commit `a4c4420`:** control **287 passed / 2 failed / 0 skipped, exit 1**; live **identical**, with **zero status flips across 284 shared assertion texts**. The three differing rows pair exactly and are all this session's own receipt increment. **Both failures are pre-existing and neither is this session's** — the known Test 9 upstream-404, and `A2 truth VIOLATED` on a front matter that is **byte-identical at both commits**. `check-links` **0**, `check-learnings` **0**, `check-handoff` **0**, `context_budget.py` **2** (the adjudicated BL-52 breach, untouched).
+
 ### 2026-08-28 · [ad hoc] S121 — claim: adjudicate the Phase 3C deadlock
 
 **Phase 1B claim.** Deliverable: **one adjudication document in `docs/planning/`** settling what to do about the finding S120 raised — that `starter-kit/FRAMEWORK_LEARNINGS.md` sits at **56,673 B with 77 B of headroom** under the 56,750 B one-read cap, while the smallest row the table has ever carried is **229 B**, so `starter-kit/SESSION_RUNNER.md:223` Phase 3C's mandatory *"append a Learning row"* step overshoots the cap by ≥152 B no matter how short the row is.
