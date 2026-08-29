@@ -183,6 +183,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S124 — claim: adjudicate the trimmer's SRF-RED refusal of the `HANDOFFS.md` trim
+
+**Phase 1B claim.** The operator selected S123's `next_steps` **(c)** — but not as the mechanical chore that receipt described. S123 called the `HANDOFFS.md` trim *"the obvious next deliverable"* and said to run `--check` rather than trust its numbers. Both were run at this claim. `--check` **FIRES** (205,704 B against a 196,608 B Class A threshold, exit 1). A dry run at `--cut 3` **REFUSES**: exit 2, `SRF_RED` — *"the last archive has been entirely given back; archiving again resets the LEVEL and not the RATE."* The deliverable is **the adjudication of that refusal**, not the trim.
+
+**Why a refusal is worth a session.** A refusal is a claim, and this one is boundary-dependent in a way the tool itself flags: SRF is **7.2806** against the most recent archive `9038e40`, but **0.4550** against H3's own largest-drop boundary `a46f2f9` — a **16× spread on one file**, where [`ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md) §3.3 states *"the largest single size drop"* and `starter-kit/methodology_trim.py:985` uses `events[-1]`, the most recent. The tool labels that choice a policy addition rather than a reading. One of the two boundaries governs; nothing on record says which, and the answer flips the verdict.
+
+**Measured at this claim, and it is the fact that reframes the session.** All ten archive events were enumerated with their own pre/post sizes. `9038e40` removed **22,146 B** — the **smallest removal in the file's entire history**, against a maximum of 369,255 B (`a46f2f9`) and a run of 171,441 / 169,853 / 214,539 / 103,014 / 68,955 / 56,208 / 52,902 / 50,531. SRF divides regrowth by that removal, so the most recent boundary supplies the **smallest denominator ever recorded** and 7.2806 is substantially an artifact of it. **That does not vacate the refusal** — the removals are monotonically shrinking while the file returns to ~200 KB each cycle, which is the decay-rate claim with independent support.
+
+**What must be established, none of it on record.** Which boundary governs, decided from the plan's provenance rather than by reading the sentence harder. What a trim would actually **deliver** — this ledger is newest-on-top and delivered as an ordered prefix, so what a one-read cap truncates is the OLDEST records, and archiving records nobody reads may free bytes that were never costing anything. What the remedy's **net** cost is: the `9038e40` trim freed 22,146 B and the same operation's shard and proof added more than it freed. And whether `--force` is warranted, or whether the correct remedy is not a trim at all.
+
+**NOT IN SCOPE:** running the trim, `--force`, or any write to `HANDOFFS.md` beyond this claim and the close-out receipt; the `check-learnings:314-315` range misreport; the `cfg["classes"]` KeyError at `starter-kit/context_budget.py:1025`; the dashboard twins' *"budget"* wording; the 229→228 B floor correction; Tier 2 of the read-set PR plan (the operator's, at Phase 5); and **any outward-facing action whatsoever**.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in [`HANDOFFS.md`](HANDOFFS.md).
+
 ### 2026-08-29 · [ad hoc] S123 close-out — the port-branch blocker refuted, Phase 3C resumed
 
 Operator selected S122's `next_steps` **(a)**. Self-score **8/10**; predecessor **S122 scored 8/10**. Commits `ccfbe1c` (claim) → **`136fb34`** (the adjudication) → **`dd6ee0f`** (Learning #48) → `1593cb5` (planning docs) → this close-out.

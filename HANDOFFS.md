@@ -101,6 +101,22 @@ edit spent 459 B before I had accounted for it**, and I had to claw ~260 B back 
 error one file over.
 
 ```handoff
+session: S124
+date: 2026-08-29
+status: pending
+active_task: **ADJUDICATE THE TRIMMER'S `SRF_RED` REFUSAL OF THE `HANDOFFS.md` TRIM.** Operator selected S123's `next_steps` (c) — which named the trim *"the obvious next deliverable"* and said to run `--check` rather than trust its numbers. Both were run at this claim: `--check` **FIRES** (205,704 B vs 196,608 B, exit 1) and the `--cut 3` dry run **REFUSES** (exit 2, `SRF_RED`). **A refusal is a claim, not an obstacle to route around**, and this one is boundary-dependent: SRF **7.2806** vs the most recent archive `9038e40`, **0.4550** vs H3's largest-drop `a46f2f9` — 16x on one file, and the tool labels its own choice a policy addition on top of the plan's stated rule. The deliverable is an adjudication document in `docs/planning/`, following S121/S123 precedent. **Running the trim is NOT in scope; neither is `--force`.**
+what_was_done: pending
+next_steps: pending
+key_files: starter-kit/methodology_trim.py:203 (`SRF_RED = 1.00`), :977-987 (the SRF computation and the two boundaries), :934-943 (the topo-order comment and its recorded surviving mutant), :1862-1901 (the SRF/SRF_RED result rows and the `--force` escape), :2154 (`--force`). docs/planning/ledger-trimmer-design.md (H3 and §3.3, the plan the tool cites for its action rule). HANDOFFS.md front matter (the 9-row archive table; the stated count is **4** and `grep -c '^```handoff'` returns **17**). docs/archive/HANDOFFS-through-*.md + .verify.sh (10 shards and their proofs).
+gotchas: **THE REFUSAL'S DENOMINATOR IS THE SMALLEST ARCHIVE IN THE FILE'S HISTORY.** All ten archive events were enumerated at this claim with their own pre/post sizes: `9038e40` removed **22,146 B** against a maximum of **369,255 B** (`a46f2f9`) and a run of 171,441 / 169,853 / 214,539 / 103,014 / 68,955 / 56,208 / 52,902 / 50,531. SRF divides regrowth by that removal, so the most recent boundary supplies the smallest denominator ever recorded. **This does NOT vacate the refusal** — the removals shrink monotonically while the file returns to ~200 KB each cycle, which is the decay-rate claim with independent support. Do not report the artifact and drop the signal. **ORPHANED PROSE FOUND AT `HANDOFFS.md:73-101` — a predecessor-score + self-assessment block with NO `handoff` record above it**, sitting between the front matter and the newest receipt; it scores S118 and cites `28551a5`. If its record was archived and this text was not, the losslessness proof passed over text that is not a *record* — verify before publishing. **ANCHOR TO LINE START:** this file quotes its own ``` handoff ``` delimiter in prose, so `text.index` finds line 9, not the record. **The two `.jsonl` go dirty from Phase 0 alone; do NOT `git reset --hard`** (inherited).
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+**Phase 1B claim — S124.** Deliverable: the SRF-RED refusal adjudication. Scored at close-out.
+
+```handoff
 session: S123
 date: 2026-08-29
 status: complete
