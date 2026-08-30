@@ -1,10 +1,11 @@
 # The upstream read-set PR — what it carries, and what it must not claim
 
-**Status: PHASES 1 AND 2 SHIPPED (fork-side, unpushed); 3–5 open.** This plan was S118's
+**Status: PHASES 1, 2 AND 3 SHIPPED (fork-side, unpushed); 4–5 open.** This plan was S118's
 deliverable. **Phase 2** shipped at S119 (`364b410`). **Phase 1** shipped at S120 on branch
 `port/framework-learnings-extraction`, cut from `upstream/main` (`512c2ed`) — one commit,
-local only, **no PR opened**. Four of this plan's own numbers were superseded in the doing;
-see §8.
+local only, **no PR opened**. **Phase 3** shipped at S129 (`9999410` + `beffbd0`) on `main`,
+all four DONE criteria demonstrated. Four of this plan's own numbers were superseded in the
+doing, and **§3.4(d) and §3.4(e) each carry a claim S129 refuted**; see §8.
 It is scoped by an operator re-aim recorded at `CHANGELOG.md` 2026-08-27 · *"S118 RE-AIM"*.
 
 > **Declared budget: 45,000 B**, so this file is deliverable in one agent `Read` at the settled
@@ -233,11 +234,14 @@ first — driven **RED** against today's 20 violators — then compact. **DONE:*
 violators before and 0 after; the file is ≤ 55,930 B; every `Learning #N` and `[[N]]` citation still
 resolves; Test 32's four anchors updated in the same commit. **STOP.**
 
-**Phase 3 — The gate.** In order: the `blob_bytes` fix and the `KeyError`, then per-file ceilings,
-then the class total in `main()` **and** `precommit()`, then the reserve identity. **DONE:** a bare
-run prints the aggregate row and exits BREACH; `--precommit` refuses a growth commit and passes a
-shrink commit; a synthetic third class totals correctly; `(resident total)` stays byte-identical for
-the three instrumented adopters. **Ships to every adopter who syncs.** **STOP.**
+**Phase 3 — The gate. ✅ SHIPPED S129** (`9999410` step 1, `beffbd0` steps 2–4). In order: the
+`blob_bytes` fix and the `KeyError`, then per-file ceilings, then the class total in `main()` **and**
+`precommit()`, then the reserve identity. **DONE:** a bare run prints the aggregate row and exits
+BREACH; `--precommit` refuses a growth commit and passes a shrink commit; a synthetic third class
+totals correctly; `(resident total)` stays byte-identical for the three instrumented adopters.
+**Ships to every adopter who syncs.** **All four met — see §8's S129 rows for what the phase found
+that this section had wrong, including that "the three instrumented adopters" is named nowhere in
+this plan.** **STOP.**
 
 **Phase 4 — `ITERATIVE_METHODOLOGY.md`,** with the three §3.3 defects fixed and `BOOTSTRAP.md`
 updated in the same commit as any extraction. **STOP.**
@@ -351,3 +355,44 @@ Four figures in this plan are now wrong, all in the **favourable** direction. Re
    method it is **23,902 tok = 95.6% of one read — it fits**, down from 28,234 tok = 112.9%
    (which reproduces §2.1's figure exactly). The floor's 2.27 B/token is ~26% conservative for this
    content. Claim the metered result *and* the floor, never only the flattering one.
+
+---
+
+## 9. What S129 superseded — read this before quoting §3.4
+
+Phase 3's own execution refuted three claims in §3.4 and left one term undefined. Same discipline as
+§8: **re-derive, do not quote.**
+
+| § | The plan said | Measured at S129 | Why it moved |
+|---|---|---|---|
+| 3.4(e) | *"the SEED carries schema documentation only and **declares no total**"* | **FALSE.** `starter-kit/context-budget.json` declares `classes.resident = {total_bytes: 34000, warn_bytes: 30000}`, and `git show upstream/main:starter-kit/context-budget.json` carries the byte-identical block | The claim was never checked against the file. **It matters:** it is offered as one of *"four independent locks"* on D7(b), and that lock does not exist. The other three were re-verified and **do** hold — `.context-budget.json` appears only in the manifest's DEST column, `check_synced()` genuinely never size-checks, and no dashboard twin is touched. |
+| 3.4(d) | `precommit()` *"measures **one byte** short"* | **One byte is the FLOOR of the error, not its size.** CRLF content loses **3 B**; content that is not valid UTF-8 does not miscount at all — it raises `UnicodeDecodeError` **out of `run()`**, which does not catch it, taking the pre-commit hook and the commit down | Two independent loss paths, not one. `run()` passes `text=True`, so subprocess applies universal-newline translation **before** `.strip()` takes the trailing byte. Deleting `.strip()` would have fixed only the smaller half. `git cat-file -s` fixes both by never decoding. |
+| 3.4(d) | the `KeyError` sites are at `:339` and `:892` | Stale. They were `:450`/`:1025` when S129 opened and are **gone** now, replaced by `class_spec()` | The plan's numbers belong to blob `9e71f83` (919 lines). **Navigate by symbol** (`grep 'def <name>'`), never by this plan's line numbers. |
+| 5, Phase 3 | *"the three instrumented adopters"* | **Named nowhere in this repository.** The phrase occurs exactly once — in that DONE line | S129 identified them as `chat_verification`, `vscode_quarto_ext` and `wsfct`: the only siblings carrying `.context-budget.json` **and** `context_budget.py` **and** a history file, corroborated by `file-management-system-plan.md`'s fleet table (`guard=budget`, *"3 of 11 have any size instrument"*). That is an **inference**, not a quotation. **A future phase that re-uses this population should say so explicitly rather than inheriting it.** |
+
+**And three facts Phase 3 had that this plan did not.**
+
+1. **The literal DONE criterion was VACUOUS as written, and the stronger reading was used instead.**
+   `(resident total)` — with parentheses — is a pseudo-row emitted **only when the class exceeds its
+   ceiling**. None of the three adopters is over (20,583/34,000; 16,607/34,000; 43,956/44,000), so an
+   assertion over that string runs on an empty population and passes whatever the code does. S129
+   compared the **unconditional summary line**, found the **entire stdout** byte-identical for all
+   three, and separately built a deliberately-over fixture so the parenthesised row has a
+   non-vacuous witness. **State which output a byte-identity criterion is about.**
+2. **Both sides of such a comparison must be run with the CANONICAL tool, on FROZEN inputs.** All
+   three adopters run stale copies (29,549 / 41,986 / 29,549 B against 68,081 B canonical), so
+   comparing against output they produced would compare two different programs. And the rendered line
+   ends in `growth run R/L`, where `R` is a function of the history file **the run itself appends
+   to** — a bare run and a `--json` run both append, since `append_history()` precedes the `--json`
+   branch. Only `--precommit`, `--selftest` and `--help` are write-free.
+3. **`config_defects()` had zero call sites.** It was defined and unit-tested and never run, while
+   the distributed seed tells every adopter that a `max_tokens` above the cap *"is rejected as a
+   config defect"*. §3.4(c)'s *"asserted at run time"* could not have been satisfied inside it. S129
+   wired it into `main()` and `precommit()` after checking that no adopter reddens.
+
+> **Left for a successor, deliberately not done here (FM #17).** The growth-run advisory prints
+> *"Nothing is over a ceiling yet — that is the point"* whenever the run fires, including when files
+> **are** over — visibly false on this repo's own output today, and **pre-existing**, not a Phase 3
+> regression. And `append_history()`'s change test compares `snapshot["files"]` alone, so the new
+> `class_bytes` key lands on disk only when a file size also moved. Neither is Phase 3's scope; both
+> are one-line decisions someone should take on purpose.

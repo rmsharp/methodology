@@ -183,6 +183,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S129 — the read-set plan records Phase 3 shipped, and the three claims it refuted
+
+`docs/planning/upstream-read-set-pr-plan.md` only. **Status line and §5 Phase 3 marked SHIPPED**
+(`9999410` + `beffbd0`), and a **new §9** written on the model of the existing §8 — the section this
+plan already keeps for facts its own execution superseded, so this follows precedent rather than
+inventing a place to put corrections.
+
+**§9 records three refutations and one undefined term**, each measured rather than argued:
+§3.4(e)'s *"the SEED declares no total"* is **false** on both trees, which costs one of the four
+claimed D7(b) locks (**the other three were re-verified and hold**); §3.4(d)'s *"one byte short"* is
+the **floor** of a two-path error, not its size; §3.4(d)'s `:339`/`:892` are stale, navigate by
+symbol; and **"the three instrumented adopters" is named nowhere in this repository** — the
+identification is an inference, labelled as one, so a later phase re-using that population has to say
+so rather than inherit it silently.
+
+Plus three facts Phase 3 had and the plan did not: the literal byte-identity criterion was **vacuous**
+as written and the stronger reading was used; both sides of such a comparison need the **canonical**
+tool on **frozen** inputs, because the adopters run stale copies (29,549 / 41,986 / 29,549 B against
+68,081 B — re-measured, not quoted) and the rendered line ends in a growth run the run itself
+mutates; and `config_defects()` had **zero call sites**, so §3.4(c)'s *"asserted at run time"* was
+unsatisfiable inside it.
+
+**Two defects deliberately NOT fixed (FM #17), recorded so they are chosen rather than forgotten:**
+the growth-run advisory says *"Nothing is over a ceiling yet"* even when files are — **pre-existing,
+not a Phase 3 regression** — and `append_history()`'s change test means the new `class_bytes` key
+lands only when a file size also moves. The plan is **28,007 B**, inside its declared 45,000 B budget.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-30 · [ad hoc] S129 — Phase 3 steps 2–4: per-file ceilings, the class total, the reserve identity
 
 **Adopter-facing.** Completes Phase 3 of `docs/planning/upstream-read-set-pr-plan.md` §5. **All four
