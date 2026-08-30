@@ -183,6 +183,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S129 close-out — Phase 3 "the gate" shipped and repaired, self-score 6/10
+
+**Phase 3D/3F close-out.** `HANDOFFS.md` receipt written to `status: complete`;
+`bin/check-handoff` **exit 0**, record inside the 12,288 B budget. **Six commits:** `7a43cf0` claim,
+`9999410` step 1, `beffbd0` steps 2–4, `6f8fe34` plan §9, `c9c9b7b` the repair round, this close-out.
+
+**Deliverable: Phase 3 of `docs/planning/upstream-read-set-pr-plan.md` §5, ADOPTER-FACING, all four
+DONE criteria demonstrated on named surfaces.** A bare run prints `(read-set total) 69,749 B /
+56,750 B over` and exits BREACH; `--precommit` on the real config refuses +1 B and passes a −5,000 B
+shrink **and** a member deletion; a synthetic third class totals on its own members in both the unit
+tests and the shipped `--selftest`; two of three instrumented adopters are byte-identical whole-stdout
+and the third differs by one word, disclosed rather than absorbed.
+
+**Self-score 6/10.** The phase is delivered and verified — **but I committed two false claims into
+this ledger and needed a 10-defect repair round on my own work**, in the very arm the phase exists to
+build. The gate as shipped at `beffbd0` refused the remedy it was written to permit, and printed *"A
+commit that SHRINKS one of these always passes"* four lines beneath that refusal. **+** for freezing
+the diff and dispatching adversarial reviewers rather than closing out on a green suite, for driving
+every fix red first, and for retracting in the ledger rather than quietly correcting. **−** for
+publishing *"the relative rule survives"* without ever testing a member deletion, and for verifying
+byte-identity before the fixes and having to redo it.
+
+**Predecessor S128 scored 8/10** — its operator-set ordered critical path named the deliverable, the
+file, the section and why the order mattered, and its gotchas were load-bearing. **−1** for *"prints
+NO class-aggregate row"*, literally false; **−1** for setting a DONE criterion on *"the three
+instrumented adopters"*, a population named nowhere in this repository.
+
+**STATE HANDED FORWARD.** Phase 4 is the assigned next deliverable. Phase 5 still needs the
+operator's explicit go-ahead. **One decision is queued for the operator:** whether `wsfct`'s new
+` warn` is accepted — it is the single adopter-visible output change and I made the call myself.
+Two defects were left deliberately (FM #17) and are recorded in plan §9, and **`context_budget.py`
+grew 44.4% while nothing declares a ceiling for it**.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-30 · [ad hoc] S129 — the Phase 3 gate, adversarially reviewed: 10 confirmed defects fixed, two published claims retracted
 
 **A repair round on this session's own work, and two of the claims it retracts are mine.** The Phase 3
