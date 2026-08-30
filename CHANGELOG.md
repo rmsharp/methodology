@@ -183,6 +183,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S128 — claim: repair the two stale `TestS38TrimTriggerRow` assertions
+
+**Phase 1B claim.** Operator selected this from the Phase 0 menu: repair the only two non-network
+failures in `bin/tests.sh`. Control captured before any change — **287 passed / 2 failed / 0
+skipped, exit 1** — identical to S127's.
+
+**BOTH FAILURES ARE LIVE-FIXTURE ROT, NOT A REGRESSION.** `TestS38TrimTriggerRow` sets
+`REPO = Path(HERE).parent` and asserts against *this repository's own* dashboard output, so the
+assertions decay as the repository's ledgers grow. What moved is the Class A arm (onset `ccfbe1c`,
+2026-08-29): a root ledger is now denominated against the **196,608 B** archive threshold rather
+than the **56,750 B** one-read cap.
+
+- `test_the_advisory_carries_the_numbers_that_were_measured:4942` requires a `read_fires` row to
+  quote `56,750 B one-read budget`. The row this repo now emits for `CHANGELOG.md` reads
+  `211,851 B against the 196,608 B Class A archive threshold`.
+- `test_the_authored_severities_are_pinned:4896` builds a synthetic `READ_CAP_BYTES + 2`
+  CHANGELOG and expects `{"medium"}`. The signal set comes back **empty** — 56,752 B is under the
+  196,608 B threshold, so nothing fires at all.
+
+**THE CONSTRAINT THIS CLAIM PUTS ON ITS OWN FIX.** The cheap repair — restate each assertion as
+whatever the code prints today — would make both tautological, which is exactly what their
+docstrings say they exist to prevent (*"asserting the sentence around them is asserting the
+packaging"*). Intent is to be settled from the Class A change's provenance, and each repaired
+assertion must be shown to still go **red** under mutation of the dashboard's producer. A `skipTest`
+outcome is not a pass.
+
+**Scope: `tools/test_methodology_dashboard.py`.** Canonical-only — it carries no `bin/_manifest.py`
+row, so no adopter receives it and there is no adopter impact. No distributed file. No
+outward-facing action. Test 9's `--source=github` 404 is **not** in scope: it needs an upstream
+merge, so the expected outcome is 288 / 1, not 289 / 0.
+
 ### 2026-08-30 · [ad hoc] S127 close-out — retention policy adopted and applied, self-score 8/10
 
 **Phase 3D/3F.** Three commits: `ec5ef57` (claim + reconcile), **`59a7677`** (the trim), this

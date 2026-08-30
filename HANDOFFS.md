@@ -72,6 +72,21 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S128
+date: 2026-08-30
+status: pending
+predecessor_score: pending
+active_task: **REPAIR THE TWO STALE `TestS38TrimTriggerRow` ASSERTIONS IN `tools/test_methodology_dashboard.py` — the only non-network failures in `bin/tests.sh`.** Both are **live-fixture** failures: the assertions were written against the dashboard's PRE-CLASS-A advisory, and this repo's own `CHANGELOG.md` (211,851 B) now trips the Class A arm instead. `test_the_advisory_carries_the_numbers_that_were_measured:4942` demands the row quote `56,750 B one-read budget`; the row actually reads `211,851 B against the 196,608 B Class A archive threshold`. `test_the_authored_severities_are_pinned:4896` builds a `READ_CAP_BYTES + 2` CHANGELOG and expects a `medium` signal; the set comes back **EMPTY**, because a root ledger is now denominated against 196,608 B and 56,752 B is under it. **THE FIX MUST NOT BE "MAKE THE ASSERTION MATCH THE OUTPUT"** — that converts both into tautologies, which is precisely what their own docstrings say they were written to stop ("*asserting the sentence around them is asserting the packaging*"). Settle intent from the Class A change's provenance, repair the fixtures, then **prove the repaired assertions still go red** under producer mutation. **Scope: `tools/test_methodology_dashboard.py` only — CANONICAL-ONLY (no `bin/_manifest.py` row), so NO adopter impact. NO distributed file. NO OUTWARD-FACING ACTION.**
+what_was_done: pending
+next_steps: pending
+key_files: **Derived at claim; re-derive at close-out.** `tools/test_methodology_dashboard.py:4056` `class TestS38TrimTriggerRow` (REPO = the canonical repo, used as a LIVE fixture — that is why these rot), `:4877` `test_the_authored_severities_are_pinned` with the failing `:4896` and its `self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)` fixture at `:4893`, `:4899` `test_the_advisory_carries_the_numbers_that_were_measured` with the failing `:4942`. `tools/methodology_dashboard.py` — `READ_CAP_BYTES` / `READ_REFUSE_BYTES` / the Class A threshold and the advisory the row is rendered from. Onset per S126: `ccfbe1c` (2026-08-29). Control: `bash bin/tests.sh` = **287 / 2 / 0, exit 1**, captured before any change.
+gotchas: **(1) THESE TESTS READ THE LIVE REPO ON PURPOSE, so "fixing" them by pinning to today's numbers just re-arms the same rot.** The `_sized` half is the repairable one — it is synthetic and should be denominated against whatever threshold the arm it is testing actually uses. **(2) A REPAIRED ASSERTION THAT CANNOT GO RED IS WORSE THAN THE RED ONE IT REPLACED** — mutate the dashboard's producer (swap the two ledgers' figures; print a different threshold; downgrade the severity) and confirm each repaired assertion kills it. Coverage of the line is not coverage of the claim. **(3) `test_the_authored_severities_are_pinned` ALREADY HAS A `skipTest` ARM** for "trigger not firing" — do not let the repair fall into it and score itself green by skipping; a SKIP here is not a pass. **(4) Test 9's `--source=github` 404 is the OTHER failure and is NOT this session's** — it needs an upstream merge. Expect **288 / 1** at close-out, not 289 / 0, unless Test 9 is separately explained. **(5) The two `.jsonl` go dirty from Phase 0 alone; do NOT `git reset --hard`.** **(6) `core.hooksPath` is `.githooks`, so every commit needs `CHANGELOG.md` co-staged or it is refused.**
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S127
 date: 2026-08-30
 status: complete
