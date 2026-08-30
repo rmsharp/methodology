@@ -183,6 +183,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S126 — claim: Phase 3 of the record-budget plan, the gate measurement
+
+**Phase 1B claim.** The operator selected
+[`record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md) **Phase 3**
+(`:289-326`) from four options put at Phase 0. Phase 3 is the only one of the three phases never
+started, and its gate measurement has never been run — three receipts say so, and
+`git log --all -- docs/planning/record-budget-reduction-plan.md` returns exactly three commits
+(`a3242ff`, `6ebe84d`, `eec1cbb`), none after 2026-08-25.
+
+**The deliverable is a measurement and a recommendation — explicitly NOT a constant change.** The
+plan says so twice: *"a measurement, and a recommendation — **not** a further reduction taken on
+assumption"*, under a **Gate: do not reduce below the measured fenced-field maximum.** §9 already
+establishes that the number itself is the operator's to ratify, so a session that lowered
+`RECORD_BUDGET_BYTES` on its own findings would be taking a decision this plan reserves.
+
+**Why it was selected, stated as arithmetic rather than as a preference.** `HANDOFFS.md` is
+**229,270 B** against `READ_REFUSE_BYTES` **262,144 B** — **32,874 B**, and at the measured
+**11,475 B/session** (n=8, close-out to close-out) the hard refusal lands on **S128's close-out**.
+The only automated remedy — archiving — is refused (`SRF 8.3447` against `SRF_RED 1.00`) and that
+refusal is a standing adjudication (S112, S124, BL-52). The rate cut is what the record prescribes
+instead, and it does not exist. This session measures whether it can.
+
+**The surface figure in the plan is stale and is re-derived here.** Phase 3 names *"the full
+111-receipt population"*; the population today is **132 receipts** across `HANDOFFS.md` (19) and ten
+`docs/archive/HANDOFFS*.md` shards. The recommendation rests on 132, not on the 19 survivors — a
+figure drawn from the survivors alone is drawn from whatever the last trim happened to retain.
+
+**What this session will NOT do:** change `RECORD_BUDGET_BYTES` or any other constant; edit any
+historical receipt or shard (prepend-only, and §7 risk 4 says the old number is correct as written in
+every site that states it); touch `methodology_trim.py`, the 65,536 B ceiling, Test 34's floor, or
+anything distributed. **NO OUTWARD-FACING ACTION.**
+
+**Control at this claim, run bare with `$?` read on the next line:** `bin/tests.sh`
+**287 passed / 2 failed / 0 skipped**, both failures pre-existing and named (Test 9's `--source=github`
+404 — two of 26 distributed files still 404 upstream; Test 18's two `TestS38TrimTriggerRow`
+assertions, bisected this session to `ccfbe1c`, the commit at which `HANDOFFS.md` crossed
+`CLASS_A_FIRE_BYTES`). All four checkers exit 0. `context_budget.py` exits **2** (BREACH), expected.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; superseded by this session's close-out entry.
+
 ### 2026-08-29 · [ad hoc] S125 close-out — the three misplaced 3A/3B prose blocks restored, self-score 8/10
 
 **Phase 3D/3F.** Receipt in [`HANDOFFS.md`](HANDOFFS.md), `status: complete`, **12,150 B against the

@@ -71,6 +71,23 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S126
+date: 2026-08-30
+status: pending
+predecessor_score: pending
+active_task: **RUN PHASE 3 OF `record-budget-reduction-plan.md` — THE GATE MEASUREMENT, NEVER RUN.** Operator selected it from four options at Phase 0. **The deliverable is a MEASUREMENT AND A RECOMMENDATION, explicitly not a constant change** (`:293-294`), under the plan's own **Gate: do not reduce below the measured fenced-field maximum** (`:295-296`), and §9 reserves the number itself for the operator. Surface is **the full receipt population — 132 receipts** across `HANDOFFS.md` (19) and ten `docs/archive/HANDOFFS*.md` shards, **not** the plan's stale *"111"* and **not** the 19 survivors. Selected because the rate cut is the remedy the record prescribes while forbidding the only one that is ready: `HANDOFFS.md` 229,270 B, 32,874 B under `READ_REFUSE_BYTES`, 11,475 B/session, refusal at **S128's close-out**; archiving refused at `SRF 8.3447` vs `SRF_RED 1.00`. **NO OUTWARD-FACING ACTION.**
+what_was_done: pending
+next_steps: pending
+key_files: **Derived against THIS tree at claim time; re-derive at close-out rather than copying.** `docs/planning/record-budget-reduction-plan.md:289-326` (Phase 3: Do, DONE, Gate, verification heredoc, Surface), `:83-116` §4 the decision and §4.3 the conceptual change, `:329-349` §7 blast radius — which puts `methodology_trim.py`, the 65,536 B ceiling, Test 34's floor and anything distributed OUT of scope, and whose risk 4 forbids rewriting historical prose. `bin/check-handoff:663` `HEADER_RESERVE_BYTES = 7168`, `:665` `RECORD_BUDGET_BYTES = 12288`, `:668-670` `record_extents` (opening fence to NEXT opening fence, trailing prose included), `:711` `check_record_budget`, `:595-640` the derivation comment carrying A1/A2 and the *"WHY 12 KiB AND NOT LOWER"* paragraph this phase re-opens. `starter-kit/SESSION_RUNNER.md:247-256` — the six mandatory requirements, which are the FENCED fields; the trailing 3A/3B essays are additive.
+gotchas: **(1) THE PLAN'S OWN VERIFICATION HEREDOC IS UNVALIDATED — DO NOT TRUST ITS SPLIT.** `:301-316` finds the closing fence with `rec.index('\n```\n', 3)`. This file documents its own format and quotes its own delimiter in prose, so a record whose fields or essays contain a fenced block would split at the wrong place, silently and plausibly. Assert the parse against a second method before using any number it produces. **(2) THE GATE IS AMBIGUOUS ABOUT ITS POPULATION AND THAT DECIDES THE ANSWER.** *"the measured fenced-field maximum"* over all 132 receipts is a different number from the maximum over recent ones, and the historical max predates the budget entirely. Settle it from provenance — `bin/check-handoff:632-640` reasons from the *current* fenced-field range (*"current fenced fields run 10,920-13,019 B"*), not from an all-time max — and label any departure as adding policy. **(3) A CUT BUYS LESS THAN IT LOOKS LIKE AT THIS DEADLINE.** The budget bounds the WHOLE record, so per-session growth ≈ the budget; 8,192 B would move the refusal from ~S128 to ~S130. State the sessions bought, not the percentage saved. **(4) `bin/tests.sh` DOES NOT MUTATE THE LIVE LEDGER** — `mutate()` reads `src` and writes a separate `dst`. S125 verified this over three runs after inheriting the opposite as fact; do not re-propagate the false version. It takes ~8 minutes: run it, do not budget for it. **(5) DO NOT `git reset --hard`** — `.context-budget-history.jsonl` and `dashboard_history.jsonl` go dirty from Phase 0 alone. **(6) MY OWN RECEIPT IS BOUND BY THE CONSTANT I AM MEASURING** — 12,288 B fence-to-next-fence, trailing prose included. Run `bin/check-handoff`; do not predict it.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+**Phase 1B claim — S126.** Deliverable: Phase 3's gate measurement and recommendation. Scored at close-out.
+
+```handoff
 session: S125
 date: 2026-08-29
 status: complete
