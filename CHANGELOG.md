@@ -183,6 +183,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S127 — claim: adopt a retention policy for `HANDOFFS.md`, N = 4
+
+**Phase 1B claim, and a reconcile the trimmer caught.** The operator directed *"adopt a retention
+policy"* after challenging the premise this repository has been operating on — *"the only part of the
+HANDOFFS file needed is the last entry ... it could be trimmed without cost."* That challenge is
+substantially correct and is the warrant for this session.
+
+**RECONCILE (Phase 0 step 6, the one write Phase 0 permits).** `3fc37a7` — S126's close-out — is
+**undocumented**: it was committed with `--no-verify` so it touched no ledger, leaving the
+`CHANGELOG.md` frontier at `7e984e2`. `methodology_trim.py` refused the trim on exactly this
+(`[P1_UNDOCUMENTED]`, exit 2) with the right reason: *"A trim commit advances that frontier and would
+hide them PERMANENTLY."* The commit's content is fully recorded in the S126 close-out entry below;
+this line records the **commit** so the frontier is true. **A `--no-verify` that is correct about the
+ledger's content can still be wrong about its frontier.**
+
+**THE POLICY, and it is a steady state rather than another reset.** The live `HANDOFFS.md` retains
+**4 receipts**; everything older is archived once. Steady state = front matter + 4 × 11,432 B ≈
+**52,090 B**, permanently — under the **56,750 B** one-read cap, so the whole live ledger is
+deliverable in a single Read, and **there is no countdown to re-derive** because each new receipt
+displaces the oldest.
+
+**Why 4.** It is the largest N that stays under the one-read cap (5 → 63,522 B, truncating), and it
+leaves **one receipt of margin** above `RETENTION_FLOOR = 3` — the floor set by `bin/tests.sh` Test
+34, which reads mutation anchors as `ids[1]`/`ids[2]` of the live file and silently SKIPs six
+assertions below three.
+
+**Why this is not the reset H3's RED rule forbids.** Three reasons, and the first is this
+repository's own measurement. **(1)** H3 says *"do not archive again; the next deliverable is a rate
+cut, not another reset"* — and S127's predecessor **measured that rate cut** (`7e984e2`): it buys
+**one session**, and the plan's own §4.2 condition for a deeper cut is not met. The rule's prescribed
+alternative is exhausted. **(2)** BL-52's *"a trim is cosmetic"* argument carries its own addendum
+that it is **REGIME-DEPENDENT** — true only *"once a file is already well past the cap"*, and
+*"at the boundary, a trim moves a file from truncated to fully delivered, which is not cosmetic."*
+At 241,085 B against a 262,144 B refusal, this is that boundary. **(3)** A **record** budget cannot
+produce a steady state (growth is monotone for every B > 0 — S126's own finding); a **retention cap**
+can, and that lever was never costed. The sawtooth SRF exists to detect is a repeated *ad hoc* reset;
+a stated retention policy is the thing it exists to push toward.
+
+**`--force` WILL BE TAKEN, deliberately and on the record.** `SRF 8.8782` against `SRF_RED 1.00`
+refuses any write. S124 forbade *"a session arriving at the deadline, finding the refusal in its way,
+and forcing past it because nothing else was ready."* Something else is now ready: a policy, an
+operator decision, and a measurement showing the prescribed alternative cannot reach. **The warrant is
+the policy, not the deadline.**
+
+**Scope.** `HANDOFFS.md` only. **Not** `CHANGELOG.md` (a different artifact whose retention question
+has a different answer — noted as a follow-on, not taken). **No distributed file is touched**:
+`starter-kit/methodology_trim.py` is a manifest SOURCE and teaching it to enforce retention
+automatically is a separate, adopter-facing deliverable needing its own go-ahead. **NO
+OUTWARD-FACING ACTION.**
+
+**Ledger:** `CHANGELOG: pending` — set at claim; superseded by this session's close-out entry.
+
 ### 2026-08-30 · [ad hoc] S126 close-out — record-budget Phase 3 measured, recommendation DO NOT REDUCE
 
 **Phase 3D/3F.** Deliverable: the gate measurement, appended inline to
