@@ -183,6 +183,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S124 close-out — the `SRF_RED` refusal adjudicated, self-score 8/10
+
+**Phase 3D/3F.** Receipt in [`HANDOFFS.md`](HANDOFFS.md), `status: complete`, measured at **11,414 B against the 12,288 B record budget before it was written** — 874 B spare, not resized after the fact. **Predecessor S123 scored 7/10:** its instruction to run `--check` rather than trust its numbers is what produced this session's finding, but its `next_steps` (c) called the trim *"the obvious next deliverable"* while a standing instruction not to trim this file on sight sat four receipts below in the ledger it was writing into — one grep away, and finding it was the whole job.
+
+**`bash bin/tests.sh` was run — the first receipt in six to say so.** `TESTS_EXIT=1`, **286 passed / 3 failed / 0 skipped**, each failure attributed to its onset commit rather than lumped: Test 39's `A2 truth VIOLATED` (`2b4dcc6`, the stranded prose, red six sessions), Test 18's two dashboard failures (`ccfbe1c`, the trigger crossing), and the long-standing Test 9 upstream 404. `check-links` 88/22 exit 0; `check-handoff` exit 0 both modes — **blind to the stranded prose, which is the point**. `context_budget.py` exit 2, expected per S113 (d).
+
+**Two method faults worth carrying.** A cross-document section reference needs its document named — the tool's *"see plan §3.3"* resolves to the campaign plan, not the design doc that also has a §3.3, and I shipped that error in my own claim (`5637383` corrects it). And **a subagent's quotation is a claim, not a quote**: a critic reported S113 as saying *"DO NOT TRIM HANDOFFS.md ON SIGHT … SRF_RED refuses; honour it"*; that string is nowhere in the tree. The finding was real, the quotation invented, and it nearly reached this ledger.
+
 ### 2026-08-29 · [ad hoc] S124 — the `SRF_RED` refusal adjudicated: the trim was already declined, and the adjudication expires in ~4.6 sessions
 
 **Deliverable:** [`docs/planning/srf-red-refusal-adjudication.md`](docs/planning/srf-red-refusal-adjudication.md). **Verdict: the refusal STANDS, the trim must not be forced, and the reason is not the one the tool gives.** Nothing was trimmed or forced; `HANDOFFS.md` was touched only by this session's claim stub and close-out receipt.
