@@ -183,6 +183,54 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S128 close-out amended — OPERATOR DECISIONS: next is Phase 3 (the gate); D4 stays queued
+
+- **Model:** Claude Opus 5 (1M context).
+- **The operator rejected the close-out report on two grounds, both correct.** *"You say 'Needs your
+  attention' but I do not see a question"* — Phase 3G requires next actions and a decision needs a
+  question, and the report gave neither. And: *"it is my understanding you had a plan already worked
+  out to solve all of the file size budget problems."* **There is one, and this session had not read
+  it before writing that section.**
+
+- **TWO DECISIONS, RECORDED PER FM #27 (a grooming decision is an action).**
+  **(1) THE NEXT SESSION DOES PHASE 3 — THE GATE** of
+  [`upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md) §5.
+  **(2) D4 STAYS QUEUED** — not settled now; it is to be cited as a known open decision, never
+  re-raised as a discovery.
+
+- **THE DRIFT THIS CORRECTS, and it is the substantive finding.** **Sessions S124–S128 — this one
+  included — were all Problem 1**, fork-local ledger housekeeping. At S118 the operator scoped that
+  out in their own words: *"you are solving two problems and, presently, I am only concerned with one
+  … the problem that is most important is to fix the files and code that goes to adopters."* **No
+  decision to switch back was ever recorded.** Five sessions drifted one at a time, each picking its
+  task from the previous receipt's `next_steps` rather than from the plan. The receipt's `next_steps`
+  is rewritten as an ordered critical path, following the S118 close-out amendment precedent — a next
+  step that lives only in chat is unreadable to the next session (Phase 3D: *write to files FIRST*).
+
+- **PLAN STATUS, verified against code rather than the plans' own prose.** Phase 1 (port) **SHIPPED**
+  S120; Phase 2 (compact) **SHIPPED** S119; **Phase 3 (the gate) is HALF BUILT** —
+  `starter-kit/context_budget.py` run bare already exits **BREACH (2)** and prints per-file ceilings,
+  but prints **no class-aggregate row**, which is that phase's first DONE criterion; the class total
+  in `main()` and `precommit()` is the missing piece. Phase 4 (`ITERATIVE_METHODOLOGY.md`) not
+  started. Phase 5 needs an explicit go-ahead. **Phase 3 is adopter-facing** — `context_budget.py`
+  carries a `bin/_manifest.py` row, so it reaches every adopter who syncs.
+
+- **D4 IS LIVE AND REPRODUCIBLE IN TWO COMMANDS, which is why it was mistaken for a new finding.**
+  `python3 starter-kit/methodology_trim.py --file HANDOFFS.md --check` reports *"FOR REFERENCE AND NOT
+  AS A FAULT: it is also past the 56,750 B one-read cap"* and `trigger does not fire`, while
+  `python3 starter-kit/context_budget.py` calls the same file **over by 2,075 tokens** and exits
+  BREACH. **Both ship.** That is verbatim what `file-management-system-plan.md` §6 D4 predicted:
+  *"The trimmer has already answered not a fault in code; `.context-budget.json` still answers fault.
+  Both ship. Nobody has adjudicated."*
+
+- **FIVE DECISIONS REMAIN OPEN, NOT FOUR — a correction to this ledger.** The S118 DECISIONS entry
+  says *"Four remain open"* and then lists **five**: D1, D2, D3, D4, D6. The list is right and the
+  count is wrong. S118 settled D5, D7(a) and D7(b); `file-management-system-plan.md` is **DRAFT** and
+  its §6 states *"Phase 1 does not start until these are answered."*
+
+- **Nothing was implemented for Phase 3 this session** — S128's one deliverable was the test repair
+  and it is closed. **No outward-facing action.**
+
 ### 2026-08-30 · [ad hoc] S128 close-out — stale trim assertions repaired, self-score 8/10
 
 **Deliverable complete.** `bin/tests.sh` **287 / 2 / 0 → 288 / 1 / 0**, the remaining failure being
