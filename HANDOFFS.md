@@ -5,16 +5,21 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Older receipts are archived.** This file currently holds **4** (recounted at S109's close-out,
-2026-08-25 — recount with `grep -c '^```handoff' HANDOFFS.md` rather than trusting this number: it
-read **3** from the S94 trim until this line was corrected, one close-out later, which is exactly the
-span the note below predicts); the oldest **19**
-(2026-07-08 → 2026-07-30) live in [`docs/archive/HANDOFFS-archive.md`](docs/archive/HANDOFFS-archive.md),
-same format, same newest-on-top order. Archiving is safe by construction: `bin/check-handoff`
-validates only the newest receipt, and Phase 0 reconcile is frontier-based, so neither reads past the
-top of this file. `bin/model-report --handoffs <archive>` reaches the older prose when you need it.
-Archive again — a new file, same format — when this one approaches ~1,200 lines, the trigger the
-action ledger already uses.
+**Retention policy — this ledger keeps FOUR receipts.** This file currently holds **4**; everything
+older is archived under `docs/archive/` and indexed in the table below. **A steady state by design —
+but NOT yet enforced by tooling, and that distinction is load-bearing.** Held at four, the live file
+rests near 52 KB, under the **56,750 B** one-read cap, so the whole ledger is deliverable in a single
+Read and no size countdown accrues. **`methodology_trim.py` fires on BYTES (196,608 B), never on a
+record count**, so left alone this file climbs to ~205 KB over ~14 sessions — 3.6× the one-read cap —
+before the tool says anything. **Until the trimmer learns a retention mode, this policy is applied by
+the session that notices: at Phase 0 run `grep -c '^```handoff' HANDOFFS.md` and if it exceeds 4, trim
+to 4.** Four is the largest N that stays under the cap while leaving one receipt of margin above the
+floor of three explained below. Adopted at **S127 (2026-08-30)** by operator decision; the warrant —
+including why a retention cap is not the periodic reset H3's RED rule forbids — is in that session's
+`CHANGELOG.md` entry. `bin/check-handoff` validates its 13-key schema on the **newest** receipt, but
+two of its other scopes traverse every receipt and `--all` checks all of them: *"validates only the
+newest receipt"*, stated here until S127, was **false**. `bin/model-report --handoffs <shard>` reaches
+archived prose when you need it.
 
 **Two session sequences share this ledger and their numbers collide.** This fork and
 `upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
@@ -32,21 +37,16 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
 
-> **⚠ A trim of this file should retain at least THREE receipts — the tool's default cut does not
-> know that.** `bin/tests.sh` Test 34 mutates *this* ledger to check `check-handoff --all`'s
-> whole-ledger invariants, reading two mutation anchors from the live file: not hardcoded, so it
-> survives *which* receipts rotate, but it needs three to exist. S94's first attempt took the
-> budget-driven default, retained **2**, and the suite went 235/1 → **229/6**. Pass `--cut 3` (or
-> more) explicitly, and re-run `bash bin/tests.sh` after any trim of this file.
->
-> **Since S96 (2026-08-17) a short ledger is STATED rather than silent — which is not the same as
-> fixed** (BL-40 (b)). The anchors are an asserted population: below the floor those six assertions
-> print as `SKIP` rows naming themselves and the reason, the summary line carries a skip count, and
-> a ledger with *zero* receipts still FAILS, because corruption is not rotation. A cut to two no
-> longer reads as a checker regression, and it still leaves six invariants unexercised. **Nothing
-> prevents that cut** — judging it worth the coverage is the reader's call, which is why the count
-> is on the summary line.
-**Archived shards — 9 trims, 94 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
+> **⚠ THREE is the floor the retention policy sits one above.** `bin/tests.sh` Test 34 mutates *this*
+> ledger to check `check-handoff --all`'s whole-ledger invariants, reading two anchors from the live
+> file — not hardcoded, so it survives *which* receipts rotate, but it needs three to exist. S94
+> retained **2** on the tool's default cut and the suite went 235/1 → **229/6**. Since S96 a short
+> ledger is **stated rather than silent** (BL-40 (b)): below the floor those six assertions print as
+> `SKIP` rows naming themselves, the summary carries a skip count, and a ledger with *zero* receipts
+> still FAILS — corruption is not rotation. **Nothing prevents a cut below three; the policy is what
+> makes it not happen.** Re-run `bash bin/tests.sh` after any trim of this file.
+
+**Archived shards — 10 trims, 111 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
 and its proof is that same path plus `.verify.sh`; same format, same newest-on-top order, frozen at
 write. **Run the proof rather than trusting this table** — each re-derives L1/L2/L3 from git, and
 that instruction is the whole reason these rows exist.
@@ -62,35 +62,57 @@ that instruction is the whole reason these rows exist.
 | 3 | 2026-08-18 → 2026-08-23 | [`HANDOFFS-through-2026-08-23.md`](docs/archive/HANDOFFS-through-2026-08-23.md) | [proof](docs/archive/HANDOFFS-through-2026-08-23.md.verify.sh) | v1.3.0 |
 | 3 | 2026-08-24 → 2026-08-24 | [`HANDOFFS-through-2026-08-24.md`](docs/archive/HANDOFFS-through-2026-08-24.md) | [proof](docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh) | v1.3.0 |
 | 2 | 2026-08-25 → 2026-08-25 | [`HANDOFFS-through-2026-08-25.md`](docs/archive/HANDOFFS-through-2026-08-25.md) | [proof](docs/archive/HANDOFFS-through-2026-08-25.md.verify.sh) | v1.3.0 |
+| 17 | 2026-08-25 → 2026-08-29 | [`HANDOFFS-through-2026-08-29.md`](docs/archive/HANDOFFS-through-2026-08-29.md) | [proof](docs/archive/HANDOFFS-through-2026-08-29.md.verify.sh) | v1.5.0 |
 
 <!-- NEXT TRIMMING SESSION: methodology_trim.py appends a 3-line pointer block at the end of this
-     front matter (starter-kit/methodology_trim.py:935 build_pointer_block, :944 insert_pointer).
+     front matter (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer).
      Fold it into the table above as one row and delete the block — the table costs ~160 B per
      trim where the block costs ~447 B. The generator is DISTRIBUTED, so teaching it this format
      is an upstream change and is deliberately not done here. -->
 
 
-**Archived 17 record(s), 2026-08-25 → 2026-08-29** into [`docs/archive/HANDOFFS-through-2026-08-29.md`](docs/archive/HANDOFFS-through-2026-08-29.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-29.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-29.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
-than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
-
 ```handoff
 session: S127
 date: 2026-08-30
-status: pending
-predecessor_score: pending
-active_task: **ADOPT A RETENTION POLICY FOR `HANDOFFS.md` AND APPLY IT ONCE. N = 4, operator-set.** The live ledger retains **4 receipts**; older ones are archived once. Steady state = front matter + 4 x 11,432 B ≈ **52,090 B, permanently** — under the **56,750 B** one-read cap, so the whole live ledger is deliverable in a single Read, and **there is no countdown left to re-derive.** 4 is the largest N that stays under that cap (5 → 63,522 B, truncating) and leaves one receipt of margin above `RETENTION_FLOOR = 3`. **`--force` is taken deliberately** — `SRF 8.8782` vs `SRF_RED 1.00` refuses any write, and the warrant is the policy, not the deadline. **Scope: `HANDOFFS.md` only. NO distributed file. NO OUTWARD-FACING ACTION.**
-what_was_done: pending
-next_steps: pending
-key_files: **Derived at claim; re-derive at close-out.** `starter-kit/methodology_trim.py` — `:1892` `check_P1` (runs BEFORE the SRF guard and is what refused the first dry run), `:1895` the `SRF_RED and not opts.force` guard, `:203` `SRF_RED = 1.00`, `:164-165` `CLASS_A_FIRE_BYTES`/`CLASS_A_STOP_BYTES`, `:1093` `build_pointer_block` + `:1103` `insert_pointer` (the generated block the front matter's own HTML comment orders folded into the compact table by hand), `:338` the regenerated `This file currently holds **N**` regex. `bin/check-handoff:664` `RETENTION_FLOOR = 3`, `:612` the A1 fit. `bin/tests.sh` Test 34 (anchors `ids[1]`/`ids[2]` of the LIVE file) and Test 38 (drops a leading `status: pending` record before counting — **so 4 retained is 3 to that test**). `docs/planning/framework-context-cost-plan.md:246-247,260-267` H3; `docs/planning/BACKLOG-DETAIL.md:1388-1392` BL-52's regime addendum.
-gotchas: **(1) THE CUT STRADDLES A DAY AND THAT IS A NAMING PROBLEM, NOT A SAFETY ONE.** With this stub prepended, `--cut 4` retains S127/S126/S125/S124 and archives from S123 — but S124 and S123 are **both 2026-08-29**, so the shard name would be a span label rather than a day boundary. The clean seams sit at cut 2, 6 and 8; **none of them is 4.** Decide it explicitly and record the choice; do not let the tool pick. **(2) `--no-verify` COST THIS SESSION A REFUSAL.** S126's close-out `3fc37a7` carried no ledger line, so `check_P1` refused the trim: *"a trim commit advances that frontier and would hide them PERMANENTLY."* Reconciled in the claim. **A commit whose CONTENT is documented can still be undocumented as a COMMIT.** **(3) PROVE LOSSLESSNESS ON THE ARTIFACTS, NOT FROM THE TOOL'S SAY-SO** — re-extract every receipt from `git show HEAD:HANDOFFS.md` and byte-compare against live + shard; assert `retained + archived == before` and that no receipt is in two places. A missing warning is not evidence. **(4) THE COUNT SENTENCE IS REGENERATED BY THE TRIM** (`:338`) but nothing updates it when a session merely prepends — it is right immediately after this trim and wrong from the next close-out on. **(5) RUN `bin/tests.sh`, DO NOT BUDGET FOR IT** (~8 min); a control is already in flight. **(6) The two `.jsonl` go dirty from Phase 0 alone; do NOT `git reset --hard`.**
-runtime_smoke: pending
-changelog_ref: pending
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: **RETENTION POLICY ADOPTED AND APPLIED. `HANDOFFS.md` KEEPS FOUR RECEIPTS.** Three commits: `ec5ef57` (claim + reconcile), **`59a7677`** (the trim), this close-out. 17 receipts archived to `docs/archive/HANDOFFS-through-2026-08-29.md`; live **244,443 B → 45,478 B**, under the **56,750 B** one-read cap, so the whole ledger is again deliverable in one Read. **The S128 deadline is gone.** `--force` taken deliberately (`SRF 9.0298` vs `SRF_RED 1.00`); SRF is **0.0447** after, so the refusal is disarmed for the useful range. **NO distributed file touched. NO OUTWARD-FACING ACTION.**
+what_was_done: **Commits `ec5ef57` + `59a7677` + this close-out.** **THE POLICY IS STATED WITH ITS OWN LIMIT, WHICH IS THE PART THAT NEARLY WENT WRONG.** `methodology_trim.py` fires on **BYTES** (196,608 B), never on a record count — so left alone this file climbs back to ~205 KB over ~14 sessions, **3.6× the one-read cap**, before the tool says anything. **Until the trimmer learns a retention mode the policy is session-applied**, and the front matter now carries that as a Phase 0 instruction (`grep -c '^```handoff' HANDOFFS.md` against 4). **I wrote *"no countdown accrues"* into the front matter BEFORE checking that the tooling enforced it**, then verified and corrected it — the same class of false front-matter claim this session also removed (*"`bin/check-handoff` validates only the newest receipt"*, false since S124's §8 and standing here until now). **LOSSLESSNESS PROVED SIX WAYS INDEPENDENTLY OF THE TOOL:** 21 = 4 + 17; every record byte-identical across the move; live ∩ shard = ∅ and live ∪ shard = before; order preserved exactly; record bytes 38,738 + 199,343 = 238,081; and **whole-file byte accounting** (front matter + records == `wc -c` on all three files) — the axis a record-only proof cannot see. The tool's emitted `verify.sh` passes too.
+next_steps: **(a) THE FRONT MATTER IS THE NEW TIGHT RESOURCE: 6,740 B against a 7,168 B reserve, 428 B spare — about TWO more folded trim rows.** Test 39's A2 asserts it. **The next trimming session MUST fold its generated pointer block into the shard table** (block ~449 B, row ~160 B) — the front matter's own HTML comment orders this — or A2 goes red. **(b) TEACH `methodology_trim.py` A RETENTION MODE — the enforcement gap above.** It is a manifest **SOURCE**, so this is adopter-facing: it needs its own go-ahead and should be batched with issue #75's prepared PR, not sent alone. **(c) `CHANGELOG.md` IS THE SAME PROBLEM UNSOLVED: 203 KB, its Class A trigger firing since S125.** Its retention question has a *different* answer — entries are read for Phase 0 reconcile, not just the newest — so do not copy N=4 across without measuring. **(d) S126's THREE STALE-INSTRUMENT JOBS STAND, all fork-local:** Test 18's two assertions pinned to pre-Class-A advisory text (onset `ccfbe1c`); `.context-budget.json`'s `3 x 12,288 + 8,000` against `bin/check-handoff:612`'s `+ 7,168`; BL-44's `contiguous 1..47` for a range validated as 1..48 with #14 reserved. **(e) FIVE LOSSLESSNESS PROOFS FAIL and only four are BL-36's** — `HANDOFFS-through-2026-08-25.md.verify.sh` also fails and was **already failing at `ec5ef57`**, verified in a worktree; it is not this session's doing and is not fixed.
+key_files: **Re-derived at close-out.** `HANDOFFS.md:8-24` — the retention policy paragraph, and it is the authority; `:46-53` the compressed floor blockquote; `:55-70` the shard table (now 10 trims / 111 receipts) and the HTML comment ordering the fold, whose stale `:935`/`:944` citations are corrected to `:1093`/`:1103`. `docs/archive/HANDOFFS-through-2026-08-29.md` + `.verify.sh` — the shard and its runnable proof. `starter-kit/methodology_trim.py:1892` `check_P1` (refused the first attempt), `:1895` the `SRF_RED and not opts.force` guard, `:164` `CLASS_A_FIRE_BYTES = 196608` — **the byte trigger that is why the policy is not self-enforcing.** `bin/check-handoff:664` `RETENTION_FLOOR = 3`, `:612` the A1 fit. `bin/tests.sh` Test 34 (live-ledger anchors) and Test 39 (A1/A2).
+gotchas: **(1) THE SHARD'S OWN PROOF FORBIDS BUNDLING THE TRIM WITH ANYTHING ELSE.** `verify.sh` compares the **trim commit's** before/after and reads any unexplained front-matter change as a *loss*. My first attempt edited the front matter after trimming in the same working tree; the proof went **FAIL: L2 FRONT MATTER lost 26 line(s)**. I reverted, re-ran the trim, committed it **alone**, then re-applied the edits as a second commit. **Found by running the proofs, not by design — commit the trim by itself.** **(2) `--no-verify` LEAVES A COMMIT UNDOCUMENTED EVEN WHEN ITS CONTENT IS LOGGED.** S126's close-out `3fc37a7` carried no ledger line, so `check_P1` refused this trim outright: *"a trim commit advances that frontier and would hide them PERMANENTLY."* Correct, and it cost a reconcile. **A commit whose CONTENT is documented can still be undocumented as a COMMIT.** **(3) A COUNT-BASED POLICY STRADDLES DAYS BY CONSTRUCTION.** `[CUT_STRADDLES_DAY]` fired: 2026-08-29 is both retained and archived, so the shard name is a span label. Several sessions run per day, so this recurs — the day-named shard convention no longer fits a count policy. Accepted and recorded, not worked around. **(4) VERIFY WHAT A POLICY CLAIMS BEFORE WRITING IT DOWN** — see `what_was_done`. **(5) The two `.jsonl` go dirty from Phase 0 alone; do NOT `git reset --hard`.**
+runtime_smoke: **`bash bin/tests.sh` RUN TWICE — control before any change, and after — exit read bare on the next line each time. CONTROL at `ec5ef57`: 287 passed / 2 failed / 0 skipped, exit 1. AFTER: 287 / 2 / 0, exit 1.** Both failures pre-existing and named (Test 9's `--source=github` 404; Test 18's two `TestS38TrimTriggerRow` assertions). **ROW-FOR-ROW DIFF, both populations asserted non-empty (289 / 289): ZERO status flips, ZERO skips, 7 lost and 7 gained — every one the same assertion carrying a derived number the trim legitimately moved:** front matter 6,362 → 6,741 B (A2 green, 94% used), anchor population 21 → 4, and the frozen over-budget control 3 → 1, which **cannot reach 0 because its fixture builder pads the oldest record and self-arms** (inherited from S125, held). **Zero skips is the load-bearing number: it proves Test 34 stayed in its ANCHORED arm, which is the whole reason the floor is 3 and N is 4.** **CHECKERS, each bare:** `check-handoff --allow-pending` **0**, `--all --allow-pending` **0**, `check-links` **0** (88 links / 22 files), `check-learnings` **0**. `check-handoff` without `--allow-pending` returns **1** while this receipt is a stub — expected, and stated because an earlier session published an OK that existed on no tree. **PROOFS: 11 OK / 5 FAIL, unchanged from the claim commit** (verified in a worktree at `ec5ef57`); the new shard's proof **passes**. **WHAT THIS DOES NOT EXERCISE:** whether the policy holds without enforcement — nothing tests the record count, which is next_steps (b); and handoff *quality*, which only the next session's 3A score reaches.
+changelog_ref: CHANGELOG.md "2026-08-30 · [ad hoc] S127 close-out — retention policy adopted and applied, self-score 8/10"
+commit: ec5ef57 (claim + reconcile) + 59a7677 (the trim) + this close-out
 ```
 
-**Phase 1B claim — S127.** Deliverable: the retention policy and its first application. Scored at close-out.
+Model: Claude Opus 5 (1M context).
 
+**Predecessor S126 scored 7/10.** **+** **Every fact in it held under re-derivation** — the deadline,
+`CHANGELOG.md`'s first-ever threshold crossing, Test 18's onset at `ccfbe1c`, the two conflicting
+header terms, BL-44. Its *"re-derive, never quote"* discipline is why I re-measured rather than
+inherited. **+** Its gotchas were accurate and load-bearing. **−−** **Its central framing had a hole
+one operator question opened.** It concluded the deadline could only be met by archiving, a ceiling
+raise, or D1/D4 — because it costed the *record-size* budget and never costed a **retention cap**,
+then stated *"no budget produces a steady state"* as structural. True of a record budget; false of a
+count cap, which is exactly what this session shipped in one commit. **−** **Its `--no-verify` on
+`3fc37a7` left a commit undocumented**, and the trimmer refused this session's first attempt on
+precisely that. Its receipt did not flag the consequence. Not an 8: the deliverable was sound but its
+recommendation section closed off the answer. Not a 6: nothing it asserted was wrong.
+
+**Self-assessment: 8/10.** **+** **I proved losslessness on the artifacts six ways including
+whole-file byte accounting**, rather than accepting the tool's own L1/L2/L3. **+** **I caught that my
+own front-matter claim was conditional on tooling that does not enforce it**, and corrected it —
+having just removed a different false claim from the same paragraph. **+** **I ran the proofs and
+found the commit structure would permanently break the shard's own verification**, then reverted,
+re-ran and split it. **−−** **I wrote the claim before checking it.** *"No countdown accrues"* went
+into a distributed-adjacent authority file on my assumption about the trigger; one command settled
+it, and I ran that command only because I went back to re-read what I had written. **−** **I did not
+plan for the front matter being the next binding constraint** — the trim's pointer block took it to
+29 B of margin and I had to compress an existing blockquote mid-session to recover room. **−** The
+straddle warning was accepted correctly but I did not notice until it fired that a *count* policy
+makes day-named shards structurally wrong.
 ```handoff
 session: S126
 date: 2026-08-30

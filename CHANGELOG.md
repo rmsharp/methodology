@@ -183,6 +183,59 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S127 close-out — retention policy adopted and applied, self-score 8/10
+
+**Phase 3D/3F.** Three commits: `ec5ef57` (claim + reconcile), **`59a7677`** (the trim), this
+close-out. **The policy:** the live `HANDOFFS.md` retains **4 receipts**; everything older is archived
+once. **Applied:** 17 receipts moved to
+[`docs/archive/HANDOFFS-through-2026-08-29.md`](docs/archive/HANDOFFS-through-2026-08-29.md); live
+file **244,443 B → 45,478 B**, under the **56,750 B** one-read cap, so the whole ledger is again
+deliverable in a single Read. **The S128 deadline is gone.**
+
+**THE POLICY IS STATED HONESTLY, INCLUDING WHAT IT DOES NOT YET DO.** `methodology_trim.py` fires on
+**bytes** (196,608 B), never on a record count — so left alone this file climbs back to ~205 KB over
+~14 sessions, 3.6× the one-read cap, before the tool says anything. **Until the trimmer learns a
+retention mode the policy is session-applied**, and `HANDOFFS.md`'s front matter now carries that
+instruction as a Phase 0 check. I wrote the *"no countdown accrues"* claim before verifying the
+tooling enforced it, then checked and corrected it — the same class of false front-matter statement
+this session also removed (*"validates only the newest receipt"*, false since at least S124's §8).
+
+**LOSSLESSNESS PROVED SIX WAYS, INDEPENDENTLY OF THE TOOL.** 21 records before = 4 retained + 17
+archived; every record byte-identical across the move; live ∩ shard = ∅ and live ∪ shard = before;
+relative order preserved exactly; record bytes 38,738 + 199,343 = 238,081; and **whole-file byte
+accounting** — front matter + records == `wc -c` on all three files, which is what a record-only
+proof cannot see. The tool's own emitted `verify.sh` also passes.
+
+**THE COMMIT STRUCTURE IS PART OF THE DELIVERABLE.** The emitted proof compares the **trim commit's**
+before/after and reads any unexplained front-matter change as a loss. Shipping the trim and the
+policy rewrite in one commit would have **permanently broken the shard's own proof** — found by
+running the proofs, not by design. The trim was reverted, re-run, and committed alone; the
+front-matter work ships here.
+
+**`--force` TAKEN DELIBERATELY.** `SRF 9.0298` vs `SRF_RED 1.00`. S124 forbade forcing *"because
+nothing else was ready"*; a policy, an operator decision, and S126's measurement that the prescribed
+rate cut buys only one session now are. **SRF is 0.0447 after the trim** — the refusal is disarmed
+for the whole useful range, so the next application needs no force.
+
+**VERIFICATION.** `bin/tests.sh` **287 passed / 2 failed / 0 skipped**, identical to control;
+row-for-row **289/289, zero status flips, zero skips** — the zero is load-bearing, it proves Test 34
+stayed in its anchored arm. The 7 lost / 7 gained rows are the same assertions carrying derived
+numbers the trim moved (front matter 6,362 → 6,741 B, anchor population 21 → 4, the self-arming
+frozen control 3 → 1). All four checkers exit 0. **Losslessness proofs 11 OK / 5 FAIL — unchanged
+from the claim commit**; the five are BL-36's four plus `HANDOFFS-through-2026-08-25`, which was
+**already failing before this session** (verified in a worktree at `ec5ef57`).
+
+**FRONT MATTER IS TIGHT: 6,740 B against the 7,168 B reserve, 428 B spare** — about two more folded
+trim rows. Test 39's A2 asserts this, so the next trimming session must fold its pointer block into
+the table (the block costs ~449 B, the row ~160 B) or A2 goes red.
+
+**NOT DONE, deliberately:** `CHANGELOG.md` (203 KB, its own trigger firing, a different retention
+question — follow-on, not taken); teaching `methodology_trim.py` a retention mode (**it is a manifest
+SOURCE — adopter-facing, needs its own go-ahead**); the three stale-instrument jobs S126 queued.
+**NO OUTWARD-FACING ACTION.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-30 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-29.md` (17 record(s), 244,443 B → 45,549 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
