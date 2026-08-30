@@ -243,8 +243,13 @@ totals correctly; `(resident total)` stays byte-identical for the three instrume
 that this section had wrong, including that "the three instrumented adopters" is named nowhere in
 this plan.** **STOP.**
 
-**Phase 4 — `ITERATIVE_METHODOLOGY.md`,** with the three §3.3 defects fixed and `BOOTSTRAP.md`
-updated in the same commit as any extraction. **STOP.**
+**Phase 4 — `ITERATIVE_METHODOLOGY.md`. ✅ SHIPPED S130.** Approach **APPARATUS-EXTRACT**, approved by
+the operator at the Present gate: the six contiguous apparatus sections `L541–861` moved verbatim into
+a new **distributed** sibling `FRAMEWORK_APPARATUS.md` → `docs/methodology/FRAMEWORK_APPARATUS.md`.
+**68,240 → 55,895 B — shed 12,345 B against a requirement of 11,490, 855 B under the cap.** All three
+§3.3 defects discharged: nothing was deleted, so #1 and #2 are unreachable by construction, and #3 is
+carried in-commit by the `bin/_manifest.py` row plus `starter-kit/BOOTSTRAP.md` `:30`/`:72`/`:95`.
+**See §10 for what this phase refuted in the section above.** **STOP.**
 
 **Phase 5 — Assemble and open the PR.** **REQUIRES THE OPERATOR'S EXPLICIT GO-AHEAD, and approving
 this plan is not it.**
@@ -396,3 +401,79 @@ Phase 3's own execution refuted three claims in §3.4 and left one term undefine
 > regression. And `append_history()`'s change test compares `snapshot["files"]` alone, so the new
 > `class_bytes` key lands on disk only when a file size also moved. Neither is Phase 3's scope; both
 > are one-line decisions someone should take on purpose.
+
+---
+
+## 10. What S130 superseded — read this before quoting §3.3
+
+Phase 4's execution refuted the section that assigned it. Same discipline as §8 and §9:
+**re-derive, do not quote.**
+
+| § | The plan said | Measured at S130 | Why it moved |
+|---|---|---|---|
+| 3.3 | *"Measured proposals total **12,358 B**, which reaches the target"* | **The inventory does not exist.** `MERGE-EROSION` and `EXTRACT-EV-DUPLICATE-PERFTABLE` occur **nowhere in this repository** outside §3.3 itself and the receipts quoting it; `git log -S` traces both to `fe906c2`, this plan's own drafting commit. Both are named only as **defects** — so the figure describes a set no successor can read | The section reads as though a costed inventory were on file and Phase 4 need only execute it. It was not. **A total is not an inventory**; a phase whose plan states a sum without its addends has to re-derive them, and Phase 4 did |
+| 3.3 | the third defect is that an extraction needs a manifest row and *"`BOOTSTRAP.md`'s manual-copy sentence updated"* — **singular** | **SIX prose sites, not one.** `starter-kit/BOOTSTRAP.md` `:30` (tree), `:72` (the `bin/sync` paragraph), `:95` (Step 1, manual copy) — **and three that neither the plan nor S130's own enumeration reached: `README.md:75` (Option A prose), `README.md:79` (Option B, the *manual install*), and `docs/tutorials/T1_setup.md:63`.** An adopter following README Option B copies `ITERATIVE_METHODOLOGY.md` and `HOW_TO_USE.md` and ends up with an IM carrying **five links to a file that is not in their tree** | Found by adversarial review, **not by any tool**. `bin/check-links` builds its simulated tree from `bin/_manifest.py` — which was correct — so **the manual path it never models stayed green**. `bin/_manifest.py:9-13` names README Option B as the authority for the layout it implements, so the manifest was citing a description that had become a strict subset of what it ships |
+| 3.3 / 6 | the defects are the risk to manage | **The larger risk was the fix.** An adversarial reviewer found the drafted cross-reference patch would have truncated the tails of `L189`, `L190` and `L290`, destroying three corpus-unique fragments — *"Is this the right problem to solve? …"*, *"Are you using the right tools for this domain …"* and the Phase 6 self-assessment clause | This is **§3.3 defect #2's exact shape committed a third time, by the patch written to honour it.** Shipped fix: rewrite **only the parenthetical**, never the surrounding prose |
+| 6.3 | the residual hole is *"bytes moved into a fourth mandatory file"* | **Not engaged, and worth saying so.** `FRAMEWORK_APPARATUS.md` is read **on demand**, not at Phase 0; the mandatory pair is unchanged at 69,749 B. This extraction moves bytes *out of* a one-read file into another one-read file, which is the §3.1 trade, not the §6.3 hole | A future phase must not cite this precedent to justify splitting `SESSION_RUNNER.md` — that split *would* be §6.3 |
+
+**And six facts Phase 4 had that this plan did not — items 1–3 written during execution, 4–6 added
+after an adversarial review of the shipped change found what execution had missed.**
+
+1. **No checker in this repository can catch a broken anchor, so the grep IS the proof.**
+   `bin/check-links:105` strips the fragment — *"Strip an anchor fragment; file existence only
+   (Phase 2)"* — and validates existence only. Phase 4 therefore built the proof mechanically rather
+   than by inspection: every heading slugified GitHub-style, every `ITERATIVE_METHODOLOGY.md#…`
+   reference in every tracked `.md` resolved to a line number. **16 distinct fragments across 52
+   sites, ZERO inside `L541–861`, ZERO already dangling**; re-run after the move, **56 references,
+   0 unresolved**. The nearest neighbour, `#adapting-to-your-domain`, resolves to **L862** — which is
+   what makes the span boundary right rather than lucky. **Any later phase that moves a heading owes
+   this same proof, because nothing else will produce it.**
+2. **`README.md`'s two cost tables are stale independently of this work, and Phase 4 deliberately did
+   not fix them.** The published *"Disk — paid once"* table says markdown **22** / 487,269 B, total
+   **24** / 767,284 B, *"Thirteen of the twenty-four … the other eleven"*; the same README's own
+   generator (`:302`) printed **23** / 535,605 B / **26** / 952,905 B / **15 at root** on the
+   *pre-change* tree. The read-on-demand table carries `FRAMEWORK_LEARNINGS.md` at **23,654 B**
+   against an actual **58,119 B**. **These were corrected and then reverted inside this session**: the
+   `103,302 B` sentence at `README.md:352` is derived as `79,648 + 23,654`, so correcting the row in
+   isolation silently falsifies the sum. **The cluster needs one deliberate pass with its dependents
+   traced — it is not a row edit.**
+3. **`.context-budget.json` carried this file's size in prose, and that key already warned about
+   exactly that.** `_deliberate_exclusions` held `ITERATIVE_METHODOLOGY.md 68,240 B` beside its own
+   sentence *"Never derive a ceiling from a size written in prose"* — written after a 1,977 B stale
+   figure for `SESSION_RUNNER.md`. Updated in the same commit; **the key is a documented repeat
+   offender and should be re-read whenever any excluded file changes size.**
+
+**4. THE REACHABILITY AXIS, WHICH AN ANCHOR PROOF CANNOT SEE — the finding that mattered most.**
+The anchor proof in item 1 was exhaustive **on links** and structurally blind to what actually broke.
+An adversarial reader stated the pattern exactly: *"the change updated every place that **names** the
+six sections and no place that **invokes what is in them**."* The moved sections were mostly reached
+by **scrolling**, not by linking. So Phase 6 step 4 kept a pointer — it happened to carry a
+parenthetical already — while steps **5 and 6**, whose entire content moved, carried none; Principle 7
+said *"each level"* of a table now in another file; four workstreams say *"Apply the Splitting Test"*
+against an IM that no longer defines it. **None of these is an anchor reference, so none of them can
+appear in a 56-reference proof reporting 0 unresolved.** Repaired by adding nine pointers at the
+points of need — Principles 4–7, Phase 2 step 8, Phase 6 steps 5–6 and its gate, and the
+self-referencing `### Across the Full Series (Performance Tracking)` heading. **Cost: 901 B back into
+the file, taking headroom from 1,672 B to 855 B, and that trade is the right one** — a file under the
+cap whose content cannot be found is the failure this phase existed to prevent. **A future extraction
+must audit invocation sites, not only link sites, and there is no tool for it.**
+
+**5. THE STUB ASSERTED A TOPOLOGY THAT DID NOT EXIST.** S130's pointer stub first read *"Principles
+4–7 above keep their own statements; only the apparatus each points at moved."* The first half was
+verified true; the second was false — those principles contained **zero links, before and after**, and
+never "pointed at" anything. A reviewer named the consequence precisely: the sentence tells the next
+reader that the principle statements are still self-sufficient routes, *"which is exactly the
+inference that makes findings 2, 3 and 6 above invisible during review."* **A stub that asserts
+reachability manufactures the evidence against its own audit.** Repaired by making the claim true —
+adding the links — rather than by softening the sentence.
+
+**6. `README.md`'s "Disk — paid once" cluster WAS regenerated; the read-on-demand cluster was NOT.**
+Item 2 above recorded both as deferred. That was right for one and wrong for the other: this change
+**falsified** *"the other eleven under `docs/methodology/`"* (eleven was accurate pre-change; it is
+twelve now), so the cost table and its sentence were re-derived from the README's own generator at
+`:302` and now reconcile exactly — 24 markdown + 3 python = 27 files, 539,121 + 417,373 = 956,494 B,
+15 at root + 12 under `docs/methodology/` = 27. **The read-on-demand table is still stale and still
+deferred** (`FRAMEWORK_LEARNINGS.md` 23,654 B published vs 58,119 B actual): correcting that row in
+isolation silently falsifies `README.md:352`, whose **103,302 B is derived as 79,648 + 23,654**. It
+needs its dependents traced, which is a separate pass. **The distinction that governed every such
+call this session: fix what this change broke, record what was already broken.**

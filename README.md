@@ -72,11 +72,11 @@ Each phase is gated. You cannot enter the next phase until the current one is co
 ../methodology/bin/sync your-project/ --source=github  # or: pull from GitHub (needs gh CLI)
 ```
 
-This copies the full methodology corpus into the target: the operating files (`SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`, `methodology_trim.py`) to the project root, and the framework (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`, `workstreams/`) to `docs/methodology/`. These are kept current on every run. `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` are *seeded* at the root only when absent — once they exist they are yours and `bin/sync` never overwrites them. See [`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md) for the difference between committed and ignored modes.
+This copies the full methodology corpus into the target: the operating files (`SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`, `methodology_trim.py`) to the project root, and the framework (`ITERATIVE_METHODOLOGY.md`, `FRAMEWORK_APPARATUS.md`, `HOW_TO_USE.md`, `workstreams/`) to `docs/methodology/`. These are kept current on every run. `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` are *seeded* at the root only when absent — once they exist they are yours and `bin/sync` never overwrites them. See [`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md) for the difference between committed and ignored modes.
 
 **Option B — manual:**
 
-Copy the starter-kit root-files to your project root — `SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`, `methodology_trim.py`, plus `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` as starting points you then own. Copy the framework files (`ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`) and `workstreams/` to `docs/methodology/`. (Option A's `bin/sync` does all of this in one command.)
+Copy the starter-kit root-files to your project root — `SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`, `methodology_trim.py`, plus `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` as starting points you then own. Copy the framework files (`ITERATIVE_METHODOLOGY.md`, `FRAMEWORK_APPARATUS.md`, `HOW_TO_USE.md`) and `workstreams/` to `docs/methodology/`. (Option A's `bin/sync` does all of this in one command.)
 
 ### 2. Tell Claude to use it
 
@@ -175,6 +175,7 @@ New to the methodology? The **[tutorials](docs/tutorials/)** are a hands-on, pro
 ```
 ├── README.md                         ← You are here
 ├── ITERATIVE_METHODOLOGY.md          ← Master framework (9 principles, 6 phases, 12 gates)
+├── FRAMEWORK_APPARATUS.md            ← Its reference apparatus, read on demand
 ├── HOW_TO_USE.md                     ← Practical guide with 3 worked examples
 │
 ├── workstreams/                      ← Domain-specific adaptations and campaign templates
@@ -291,12 +292,12 @@ print('README.md' in [d for _,d,_ in m.DISTRIBUTION])"      # False
 
 | What lands in your repo | Files | Bytes |
 |---|---|---|
-| Markdown corpus | 22 | 487,269 |
-| The two executables (`methodology_dashboard.py`, `methodology_trim.py`) | 2 | 280,015 |
-| **Total installed** | **24** | **767,284** |
-| …of which **seeds**: yours from day one, never overwritten by an update | 4 | 23,804 |
+| Markdown corpus | 24 | 539,121 |
+| The three executables (`methodology_dashboard.py`, `methodology_trim.py`, `context_budget.py`) | 3 | 417,373 |
+| **Total installed** | **27** | **956,494** |
+| …of which **seeds**: yours from day one, never overwritten by an update | 5 | 31,820 |
 
-Thirteen of the twenty-four land at your repository root; the other eleven under `docs/methodology/`.
+Fifteen of the twenty-seven land at your repository root; the other twelve under `docs/methodology/`.
 
 ```sh
 python3 - <<'PY'
@@ -338,14 +339,15 @@ On top of the floor, a session opens what its work needs and nothing else. Range
 | `FRAMEWORK_LEARNINGS.md` | 23,654 | When a learning applies. Phase 3C *writes* here only in the canonical repo; adopters record learnings in their `CLAUDE.md` |
 | One campaign template | 40,043 – 50,349 | Only when the deliverable genuinely spans sessions |
 | `RECOMMENDED_SKILLS.md` | 17,182 | When a phase cites a skill |
-| `ITERATIVE_METHODOLOGY.md` | 68,240 | When no workstream fits, or you want the theory |
+| `ITERATIVE_METHODOLOGY.md` | 55,895 | When no workstream fits, or you want the theory |
+| `FRAMEWORK_APPARATUS.md` | 15,493 | When you are filling in a session document, validating a scope, or scoring a claim |
 | `HOW_TO_USE.md` | 55,352 | Rarely — it is the long-form guide, not a session read |
 
 ```sh
 wc -c workstreams/{DESIGN,ARCHITECTURE,DEVELOPMENT,AUDIT,RESEARCH_DOCUMENTATION}_WORKSTREAM.md \
       workstreams/{RESEARCH_EXHAUSTIVE_VERIFICATION,INHERITED_CODEBASE_FAMILIARIZATION}_CAMPAIGN.md \
       starter-kit/FRAMEWORK_LEARNINGS.md starter-kit/RECOMMENDED_SKILLS.md \
-      ITERATIVE_METHODOLOGY.md HOW_TO_USE.md
+      ITERATIVE_METHODOLOGY.md FRAMEWORK_APPARATUS.md HOW_TO_USE.md
 ```
 
 So an ordinary development session opens roughly **79,648 B** of framework prose (floor + `DEVELOPMENT_WORKSTREAM.md` at 14,797 B), or **103,302 B** if a learning is consulted. A research-documentation session opens more; a session that also needs a campaign template opens more again.

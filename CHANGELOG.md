@@ -183,6 +183,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S130 — Phase 4 follow-through: the six documents that describe the corpus
+
+**The consumer half of the extraction, separated from the mechanism so the blast radius of each is
+legible.** The prior commit made `FRAMEWORK_APPARATUS.md` exist and ship; this one makes every document
+that *describes* the corpus tell the truth about it.
+
+**THE HIGH-SEVERITY ONE: `README.md:79` DESCRIBED A BROKEN MANUAL INSTALL.** `starter-kit/BOOTSTRAP.md`
+was updated in the prior commit; its twin on the front page was not. An adopter following **README
+Option B** copied `ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md` and `workstreams/` and ended up with an IM
+carrying **five links to a file not in their tree** — every one of the six moved sections unreachable,
+with nothing on screen saying the file was meant to exist. **`bin/check-links` cannot see this**: it
+builds its simulated tree from `bin/_manifest.py`, which was correct, so the manual path it never models
+**stayed green**. `bin/_manifest.py:9-13` names README Option B as the authority for the layout it
+implements — so the manifest was citing a description that had become a strict subset of what it ships.
+Fixed at `README.md:75` (Option A prose), `README.md:79` (Option B) and `docs/tutorials/T1_setup.md:63`.
+
+**`README.md`'s "Disk — paid once" cluster, RE-DERIVED from the README's own generator at `:302`.**
+This change **falsified** *"the other eleven under `docs/methodology/`"* — eleven was accurate before,
+twelve now — and the published table was independently stale besides. It now reconciles exactly:
+**24 markdown + 3 python = 27 files**, **539,121 + 417,373 = 956,494 B**, **15 at root + 12 under
+`docs/methodology/` = 27**. All three identities checked.
+
+**The read-on-demand table is DELIBERATELY left stale, and that is the interesting half.** Its
+`FRAMEWORK_LEARNINGS.md` row publishes **23,654 B** against an actual **58,119 B**. This session
+corrected it, then **reverted the correction**: `README.md:352` derives **103,302 B** as
+**79,648 + 23,654**, so fixing the row in isolation silently falsifies the sum. **A stale number with a
+dependent is not a row edit.** Recorded in the plan's §10 for a pass that traces them.
+
+**The rest.** `HOW_TO_USE.md` — the "Three-Layer Hierarchy" section was internally consistent
+(three/three/three/three) and *this change* made it four, so the heading and its sentence were repaired
+and the new file given a row. `CLAUDE.md` — a Reference-apparatus row, and *"Three layers"* corrected
+over a table this change took to five (`git blame` dates that sentence's drift to **2026-03-13**, but
+the row is mine, so the sentence is mine to fix). `.context-budget.json` — the exclusion note carried
+`ITERATIVE_METHODOLOGY.md 68,240 B` **beside its own sentence "Never derive a ceiling from a size
+written in prose"**; updated, with `README.md`'s figure (also falsified by this session's own README
+edits) re-measured and stamped. Both dashboard twins: *"11 of the 24 manifest entries"* → 27, the other
+half of a sentence the prior commit had already edited.
+
+**The governing distinction, applied to every call in this session: fix what this change broke, record
+what was already broken.** `CLAUDE.md`'s layer count and the dashboards' entry count were touched
+because this change touched the same sentence or table; `README.md`'s read-on-demand staleness was left
+because it is independent and has a dependent sum.
+
+**Plan §10 extended from three findings to six**, adding the reachability axis, the stub that asserted a
+topology it did not have, and the two README clusters — with items 1–3 marked as written during
+execution and 4–6 as found by adversarial review afterwards.
+
+**Verification.** `bin/tests.sh` **288 passed / 1 failed**, zero status flips against the pre-change
+control. All published figures re-derived and agreeing (a checker written for the purpose). `bin/sync`
+into a scratch repo lands the sibling; `bin/check-links` 105 links resolve; dashboard twins
+byte-identical.
+
 ### 2026-08-30 · [ad hoc] S130 — Phase 4: `ITERATIVE_METHODOLOGY.md` sheds 12,345 B into a distributed sibling
 
 **The mechanism, committed atomically.** `ITERATIVE_METHODOLOGY.md` **68,240 → 55,895 B** — shed
