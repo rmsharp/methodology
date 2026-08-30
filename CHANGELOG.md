@@ -183,6 +183,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S125 close-out — the three misplaced 3A/3B prose blocks restored, self-score 8/10
+
+**Phase 3D/3F.** Receipt in [`HANDOFFS.md`](HANDOFFS.md), `status: complete`, **12,150 B against the
+12,288 B per-record budget, 138 B spare** — measured by running `bin/check-handoff`, which refused the first draft at
+13,104 B and named the remedy ("cut the trailing prose first"). Four trim passes, which is one more than
+the discipline this repo already records.
+
+**Result.** `bash bin/tests.sh` **287 passed / 2 failed / 0 skipped**, against a pre-change control of
+**286 / 3 / 0**; row-for-row over 289 rows each side, **0 status flips, 0 skips**, and all 14 changed
+rows are the same assertions carrying a derived number the change moved. Every checker exits 0;
+`context_budget.py` exits 2 as expected per S113 (d). **18 of 19 records now carry prose in their own
+slot with 0 mismatches** — the exception is S107, whose prose was never authored.
+
+**The half-fix, and what caught it.** The first pass moved three prose blocks and left two lines of a
+four-part block behind, where they read as S118's metadata. An adversarial pass (7 claims, 10 read-only
+agents; 4 held, 3 refuted, 0 refutations overturned) found it; `git blame` — one command, never run
+until an agent ran it — settles the ownership. **A refutation is a claim too, so each of the three was
+re-verified by hand before any of them changed the deliverable.** The one that did was worth the whole
+exercise: `bin/model-report` had been filing S117's model self-report under S118.
+
+**Corrections this session owes.** (1) The front-matter figures published in the claim entry above,
+**9,040 → 6,361 B**, are in a unit `fmbytes39` does not use; it counts the terminating newline, so the
+figures are **9,041 → 6,362 B**. The suite printed the right number before the wrong one was written.
+(2) **`bin/tests.sh` does not mutate the live ledger** — `mutate()` reads `src` and writes a separate
+`dst`, and no call passes `$LEDGER` as a destination. That claim was inherited from S107's receipt and
+repeated unchecked in this session's own claim stub.
+
+**Carried forward.** The `READ_REFUSE_BYTES` clock is **3.8 sessions** before this receipt (220,586 B
+against 262,144 B, mean growth 11,082 B over the last five) and shortens every session — **re-derive it,
+never quote it.** Two records (S119, S117) now read over the per-record budget; that is **revealed, not
+created**, and receipts are prepend-only, so it is not to be "fixed" by editing them. Three pre-existing
+prose gaps were found and deliberately not fixed (FM #17): S116's missing self-assessment, S107's
+unjustified `predecessor_score: 9`, and an S104 score contradiction inside a frozen archive shard. The
+governing rule is **fork-only** — absent from `upstream/main`'s stale seed — which is a real contribution
+gap needing the operator's go-ahead. **NO OUTWARD-FACING ACTION.**
+
 ### 2026-08-29 · [ad hoc] S125 — the three misplaced Phase 3A/3B prose blocks restored to their own records
 
 **Deliverable:** a pure relocation inside [`HANDOFFS.md`](HANDOFFS.md). **Zero bytes authored, zero text
