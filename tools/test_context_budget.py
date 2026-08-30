@@ -557,7 +557,16 @@ class TestTokenCeiling(unittest.TestCase):
         self.assertNotIn("on-demand", cb.WHOLE_READ_CLASSES,
                          "on-demand inside WHOLE_READ_CLASSES would redden every "
                          "partially-read file -- the per-file-vs-per-row error itself")
-        self.assertEqual(set(cb.WHOLE_READ_CLASSES), {"resident", "read-mandated"})
+        # A FROZEN LITERAL, not a set derived from the tuple -- deriving it would make this
+        # an identity that no narrowing mutant can falsify. Widened DELIBERATELY at S129 to
+        # admit "read-set", the Phase 0 mandatory read pair (SESSION_RUNNER.md +
+        # SAFEGUARDS.md). That pair is read WHOLE, which is exactly Learning #34's condition
+        # for the cap to bind, so gating it in BYTES ONLY would have reintroduced the density
+        # drift the token arm exists to remove -- on the two files the read-set PR is about.
+        # The assertion above is the one that carries this test's purpose and is unchanged:
+        # "on-demand" must stay OUT.
+        self.assertEqual(set(cb.WHOLE_READ_CLASSES),
+                         {"resident", "read-mandated", "read-set"})
 
     # --- adopter compatibility: an un-migrated config keeps working ----------------
 
@@ -812,6 +821,22 @@ class TestBlobBytes(unittest.TestCase):
             self.assertEqual(cb.precommit(d, cfg), cb.BREACH,
                              "6 B over a 4 B ceiling, measured without decoding")
 
+    def test_crlf_content_loses_more_than_the_single_trailing_byte(self):
+        """A SECOND, INDEPENDENT loss path, and the larger one. run() passes text=True, so
+        subprocess applies universal-newline translation and every CRLF collapses to LF
+        BEFORE .strip() takes the trailing one. Deleting .strip() would not have fixed
+        this; not decoding at all does. The plan's 'one byte short' framing is the
+        floor of the error, not its size."""
+        with tempfile.TemporaryDirectory() as d:
+            new_repo(d)
+            Path(d, "CRLF.md").write_bytes(b"alpha\r\nbeta\r\n")   # 13 B on disk
+            git(d, "add", "CRLF.md")
+            self.assertEqual(cb.blob_bytes(d, ":CRLF.md"), 13)
+            self.assertEqual(_stripped_size(d, ":CRLF.md"), 10,
+                             "2 B to newline translation + 1 B to strip = 3 B lost")
+            self.assertEqual(cb.blob_bytes(d, ":CRLF.md")
+                             - _stripped_size(d, ":CRLF.md"), 3)
+
     def test_precommit_no_longer_measures_through_a_stripped_stdout(self):
         """Pin the call site, not just the helper: a later edit could reintroduce the
         stripped read beside a blob_bytes() that is still defined and no longer used."""
@@ -874,6 +899,29 @@ class TestClassSpec(unittest.TestCase):
             self.assertIn("no ceiling declared", p.stdout,
                           "an undeclared ceiling must SAY so, not print a bare number")
 
+    def test_the_over_ceiling_pseudo_row_is_still_labelled_resident_total(self):
+        """A NON-VACUOUS WITNESS for the parenthesised label. It is emitted ONLY when the
+        class is over its ceiling, and none of the three instrumented adopters is over --
+        so an assertion taken against their output runs on an empty population and passes
+        whatever the code does. This fixture is deliberately OVER so the row exists."""
+        with tempfile.TemporaryDirectory() as d:
+            new_repo(d)
+            Path(d, ".context-budget.json").write_text(json.dumps({
+                "classes": {"resident": {"total_bytes": 1000}},
+                "files": [{"path": "CLAUDE.md", "class": "resident"}]}))
+            Path(d, "CLAUDE.md").write_text("x" * 1500)
+            p = subprocess.run([sys.executable, str(CB_PY), "--json"], cwd=d,
+                               capture_output=True, text=True)
+            rows = json.loads(p.stdout)
+            paths = [r["path"] for r in rows["files"]]
+            self.assertIn("(resident total)", paths,
+                          "the pseudo-row must exist when the class is over")
+            row = [r for r in rows["files"] if r["path"] == "(resident total)"][0]
+            self.assertEqual(row["bytes"], 1500)
+            self.assertEqual(row["status"], "over")
+            self.assertIn("across all auto-loaded files", row["findings"][0]["msg"],
+                          "the resident wording is what the adopters are compared on")
+
     def test_a_declared_ceiling_still_renders_exactly_as_before(self):
         """The byte-identity criterion, asserted on the rendered text rather than assumed:
         the instrumented adopters all declare a resident total, and their line must not
@@ -888,6 +936,265 @@ class TestClassSpec(unittest.TestCase):
                                capture_output=True, text=True)
             plain = re.sub(r"\x1b\[[0-9;]*m", "", p.stdout)
             self.assertIn("resident total 5,000 B / 34,000 B ceiling", plain)
+
+
+# ---------------------------------------------------------------------------------
+# D5 — the class aggregate. Two per-file ceilings DO NOT SUM: bytes can move out of
+# SAFEGUARDS.md into SESSION_RUNNER.md leaving both rows green while the Phase 0 read
+# is unchanged. main() reports the total; precommit() must be able to REFUSE on it, or
+# the tool ships an aggregate that reports and cannot gate.
+# ---------------------------------------------------------------------------------
+
+class TestClassTotals(unittest.TestCase):
+
+    def _cfg(self, total=1000, **kw):
+        c = {"classes": {"pair": dict({"total_bytes": total}, **kw)},
+             "files": [{"path": "A.md", "class": "pair"},
+                       {"path": "B.md", "class": "pair"}]}
+        return c
+
+    def _results(self, a, b, cls="pair"):
+        return [{"path": "A.md", "class": cls, "bytes": a, "findings": [], "status": "ok"},
+                {"path": "B.md", "class": cls, "bytes": b, "findings": [], "status": "ok"}]
+
+    # --- the core arithmetic --------------------------------------------------------
+
+    def test_a_class_total_is_the_sum_of_its_members(self):
+        t = cb.class_totals(self._cfg(), self._results(400, 300))
+        pair = [c for c in t if c["class"] == "pair"][0]
+        self.assertEqual(pair["bytes"], 700)
+        self.assertEqual(pair["status"], "ok")
+
+    def test_the_total_fires_while_every_member_is_individually_green(self):
+        """THE WHOLE POINT. Neither file has a per-file ceiling at all here, so nothing
+        could have caught this except the aggregate."""
+        t = cb.class_totals(self._cfg(total=1000), self._results(600, 600))
+        pair = [c for c in t if c["class"] == "pair"][0]
+        self.assertEqual(pair["bytes"], 1200)
+        self.assertEqual(pair["status"], "over")
+
+    def test_moving_bytes_between_members_leaves_the_total_unmoved(self):
+        """The failure mode in one assertion: a transfer both per-file rows would allow."""
+        a = cb.class_totals(self._cfg(), self._results(900, 300))
+        b = cb.class_totals(self._cfg(), self._results(300, 900))
+        self.assertEqual(a[-1]["bytes"], b[-1]["bytes"], 1200)
+
+    def test_a_class_warn_line_is_read_rather_than_merely_declared(self):
+        """The distributed SEED has carried classes.resident.warn_bytes since it shipped
+        and NOTHING read it. A declared number no code consults is a false claim."""
+        t = cb.class_totals(self._cfg(total=1000, warn_bytes=600), self._results(400, 300))
+        self.assertEqual([c for c in t if c["class"] == "pair"][0]["status"], "warn")
+
+    # --- narrowing, not only deleting -----------------------------------------------
+
+    def test_a_declared_class_with_no_members_totals_zero_rather_than_vanishing(self):
+        t = cb.class_totals({"classes": {"ghost": {"total_bytes": 10}}, "files": []}, [])
+        self.assertIn("ghost", [c["class"] for c in t],
+                      "a class that disappears when its files are renamed is a gate that "
+                      "stops gating without saying so")
+        self.assertEqual([c for c in t if c["class"] == "ghost"][0]["bytes"], 0)
+
+    def test_pseudo_rows_are_not_counted_a_second_time(self):
+        """main() appends `(pair total)` INTO results. A second call must not re-sum it."""
+        res = self._results(600, 600) + [
+            {"path": "(pair total)", "class": "pair", "bytes": 1200,
+             "findings": [], "status": "over"}]
+        self.assertEqual(cb.class_totals(self._cfg(), res)[-1]["bytes"], 1200,
+                         "a parenthesised row is this function's own output, not a member")
+
+    def test_resident_is_reported_even_when_the_config_declares_no_class(self):
+        t = cb.class_totals({"files": []}, [])
+        self.assertEqual([c["class"] for c in t], ["resident"])
+        self.assertIsNone(t[0]["total_bytes"])
+
+    def test_resident_leads_and_the_rest_are_alphabetical(self):
+        """Deterministic, and NOT dict order — otherwise the rendered output depends on
+        how the config happened to be typed."""
+        cfg = {"classes": {"zeta": {}, "alpha": {}, "resident": {}}, "files": []}
+        self.assertEqual([c["class"] for c in cb.class_totals(cfg, [])],
+                         ["resident", "alpha", "zeta"])
+
+    # --- a SYNTHETIC THIRD CLASS, the phase's own DONE criterion ---------------------
+
+    def test_a_synthetic_third_class_totals_correctly(self):
+        cfg = {"classes": {"resident": {"total_bytes": 100},
+                           "pair": {"total_bytes": 1000},
+                           "third": {"total_bytes": 50}},
+               "files": []}
+        res = (self._results(600, 600)
+               + [{"path": "C.md", "class": "third", "bytes": 80,
+                   "findings": [], "status": "ok"},
+                  {"path": "D.md", "class": "third", "bytes": 5,
+                   "findings": [], "status": "ok"},
+                  {"path": "CLAUDE.md", "class": "resident", "bytes": 40,
+                   "findings": [], "status": "ok"}])
+        got = {c["class"]: (c["bytes"], c["status"]) for c in cb.class_totals(cfg, res)}
+        self.assertEqual(got["resident"], (40, "ok"))
+        self.assertEqual(got["pair"], (1200, "over"))
+        self.assertEqual(got["third"], (85, "over"),
+                         "the third class must be totalled on its OWN members, 80 + 5")
+
+
+class TestPrecommitClassArm(unittest.TestCase):
+    """A gate that reports and cannot refuse is half a gate (plan 3.4(b))."""
+
+    CEIL = 1000
+
+    def _repo(self, d, a, b):
+        new_repo(d)
+        Path(d, ".context-budget.json").write_text(json.dumps({
+            "classes": {"pair": {"total_bytes": self.CEIL}},
+            "files": [{"path": "A.md", "class": "pair"},
+                      {"path": "B.md", "class": "pair"}]}))
+        Path(d, "A.md").write_text("a" * a)
+        Path(d, "B.md").write_text("b" * b)
+        git(d, "add", "-A"); git(d, "commit", "-m", "base", when="2026-01-01T00:00:00Z")
+        return json.loads(Path(d, ".context-budget.json").read_text())
+
+    def _stage(self, d, a, b):
+        Path(d, "A.md").write_text("a" * a)
+        Path(d, "B.md").write_text("b" * b)
+        git(d, "add", "-A")
+
+    def test_fixture_starts_under_the_class_ceiling(self):
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._repo(d, 400, 300)
+            self.assertEqual(cb.precommit(d, cfg), cb.CLEAN)
+
+    def test_a_commit_that_pushes_the_class_over_is_refused(self):
+        """Neither file has a per-file ceiling, so ONLY the aggregate can catch this."""
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._repo(d, 400, 300)
+            self._stage(d, 600, 600)
+            self.assertEqual(cb.precommit(d, cfg), cb.BREACH)
+
+    def test_a_commit_that_shrinks_an_over_budget_class_passes(self):
+        """The relative rule on the aggregate: the gate must never block its own remedy.
+
+        The interesting case is a commit that is STILL OVER the ceiling and merely smaller
+        than HEAD. Shrinking to green would pass under any implementation and would prove
+        nothing about the relative rule; this fixture is over on both sides.
+        """
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._repo(d, 600, 600)
+            self.assertEqual(cb.blob_bytes(d, "HEAD:A.md")
+                             + cb.blob_bytes(d, "HEAD:B.md"), 1200)
+            self.assertGreater(1200, self.CEIL,
+                               "fixture proof: HEAD is already over the class ceiling")
+            self._stage(d, 550, 550)                       # 1,100 — still over, but smaller
+            self.assertGreater(1100, self.CEIL, "fixture proof: the remedy is still over")
+            self.assertEqual(cb.precommit(d, cfg), cb.CLEAN,
+                             "a reduction must pass even while the class stays over")
+
+    def test_the_same_over_class_still_refuses_a_commit_that_grows_it(self):
+        """Paired control for the test above: over-and-shrinking passes, over-and-growing
+        does not. Without this pair, 'passes' could just mean 'never refuses'."""
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._repo(d, 600, 600)
+            self._stage(d, 700, 600)                       # 1,300 — over and grown
+            self.assertEqual(cb.precommit(d, cfg), cb.BREACH)
+
+    def test_moving_bytes_between_members_is_refused_though_both_files_are_green(self):
+        """The exact hole the aggregate exists to close, driven end to end."""
+        with tempfile.TemporaryDirectory() as d:
+            cfg = json.loads(json.dumps(self._repo(d, 400, 300)))
+            for f in cfg["files"]:
+                f["max_bytes"] = 5000          # per-file ceilings neither file can trip
+            self._stage(d, 1100, 100)          # 1,200 total: over the CLASS ceiling only
+            self.assertEqual(cb.precommit(d, cfg), cb.BREACH)
+
+    def test_without_the_class_arm_that_same_commit_would_pass(self):
+        """NARROW the guard rather than only deleting it: the weaker implementation —
+        per-file ceilings alone — is shown to give the WRONG answer on the same fixture."""
+        with tempfile.TemporaryDirectory() as d:
+            cfg = json.loads(json.dumps(self._repo(d, 400, 300)))
+            for f in cfg["files"]:
+                f["max_bytes"] = 5000
+            self._stage(d, 1100, 100)
+            weaker = dict(cfg); weaker["classes"] = {}      # aggregate removed, nothing else
+            self.assertEqual(cb.precommit(d, weaker), cb.CLEAN,
+                             "per-file ceilings alone must be shown to MISS this")
+
+    def test_an_undeclared_class_total_gates_nothing(self):
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._repo(d, 600, 600)
+            cfg["classes"]["pair"].pop("total_bytes")
+            self.assertEqual(cb.precommit(d, cfg), cb.CLEAN)
+
+
+class TestReserveIdentity(unittest.TestCase):
+    """framework_share := READ_CAP_BYTES - adopter_reserve_bytes, plan 3.4(c)."""
+
+    def test_read_cap_bytes_is_computed_not_written(self):
+        self.assertEqual(cb.READ_CAP_BYTES,
+                         int(cb.READ_CAP_TOKENS * cb.MIN_BYTES_PER_TOKEN))
+        self.assertEqual(cb.READ_CAP_BYTES, 56750)
+
+    def test_it_agrees_with_the_trimmer_which_computes_it_the_same_way(self):
+        """Two tools carrying the same cap must not drift by someone editing a literal."""
+        src = (REPO / "starter-kit" / "methodology_trim.py").read_text()
+        self.assertIn("READ_CAP_BYTES = int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN)", src)
+
+    def test_the_share_is_the_cap_minus_the_reserve(self):
+        self.assertEqual(cb.framework_share({}), (56750, 0, 56750))
+        self.assertEqual(cb.framework_share({"adopter_reserve_bytes": 28000}),
+                         (28750, 28000, 56750))
+
+    def test_a_derived_class_ceiling_ignores_the_written_number(self):
+        """DERIVED, NOT PICKED: the computed value is what is in force."""
+        ceil, derived = cb.class_ceiling({"adopter_reserve_bytes": 6750},
+                                         {"total_bytes": 999, "derive_from_read_cap": True})
+        self.assertTrue(derived)
+        self.assertEqual(ceil, 50000)
+
+    def test_a_written_ceiling_that_disagrees_with_the_derivation_is_reported(self):
+        bad = cb.config_defects({"classes": {"read-set":
+                                {"total_bytes": 999, "derive_from_read_cap": True}}})
+        self.assertTrue(bad, "a number not in force must be reported, never silently used")
+        self.assertIn("56,750", " ".join(bad))
+
+    def test_a_written_ceiling_that_agrees_is_clean(self):
+        self.assertEqual(cb.config_defects({"classes": {"read-set":
+                         {"total_bytes": 56750, "derive_from_read_cap": True}}}), [])
+
+    def test_a_reserve_that_consumes_the_whole_cap_is_reported(self):
+        bad = cb.config_defects({"adopter_reserve_bytes": 56750})
+        self.assertTrue(bad)
+        self.assertIn("no file can satisfy", " ".join(bad))
+
+    def test_a_negative_reserve_is_reported(self):
+        self.assertTrue(cb.config_defects({"adopter_reserve_bytes": -1}))
+
+    def test_the_identity_is_not_asserted_at_module_scope(self):
+        """A module-scope assert runs at IMPORT, so a mutant violating it dies with a
+        traceback BEFORE the code under test runs and is scored killed by the crash."""
+        src = CB_PY.read_text()
+        top = [l for l in src.splitlines()
+               if l.startswith("assert ") or l.startswith("assert(")]
+        self.assertEqual(top, [], f"module-scope assert(s) found: {top}")
+
+    def test_config_defects_is_actually_called_by_the_tool(self):
+        """It was defined, unit-tested, and NEVER RUN, while the distributed seed told
+        adopters a max_tokens above the cap 'is rejected as a config defect'. A guard
+        nothing calls is a comment shaped like a guard — and 'asserted at run time' is
+        not true of a function with no call site."""
+        src = CB_PY.read_text()
+        calls = [l.strip() for l in src.splitlines()
+                 if "config_defects(" in l and not l.strip().startswith("def ")]
+        self.assertGreaterEqual(len(calls), 2,
+                                "expected a call in main() and one in precommit()")
+
+    def test_a_config_defect_makes_the_run_breach(self):
+        with tempfile.TemporaryDirectory() as d:
+            new_repo(d)
+            Path(d, ".context-budget.json").write_text(json.dumps({
+                "adopter_reserve_bytes": 99999,
+                "files": [{"path": "CLAUDE.md", "class": "resident"}]}))
+            Path(d, "CLAUDE.md").write_text("ok\n")
+            p = subprocess.run([sys.executable, str(CB_PY)], cwd=d,
+                               capture_output=True, text=True)
+            self.assertEqual(p.returncode, cb.BREACH)
+            self.assertIn("config defect", re.sub(r"\x1b\[[0-9;]*m", "", p.stdout))
 
 
 if __name__ == "__main__":

@@ -183,6 +183,99 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S129 — Phase 3 steps 2–4: per-file ceilings, the class total, the reserve identity
+
+**Adopter-facing.** Completes Phase 3 of `docs/planning/upstream-read-set-pr-plan.md` §5. **All four
+DONE criteria demonstrated, each on a named surface** (upstream
+[issue #75](https://github.com/KJ5HST/methodology/issues/75)'s requirement).
+
+**STEP 2 — PER-FILE CEILINGS, and they are a PARTITION.** `starter-kit/SESSION_RUNNER.md` (41,364 B)
+and `starter-kit/SAFEGUARDS.md` (15,386 B) declared in the canonical root `.context-budget.json`
+under a new `read-set` class; **41,364 + 15,386 = 56,750 exactly**, so the two per-file ceilings SUM
+to the class total rather than being a second unrelated number. SAFEGUARDS.md is pinned at its
+current size because it is **byte-identical on `upstream/main`** — verified, blob `f0964195`, 15,386 B
+both sides — so the whole 12,999 B of headroom debt sits on the file the plan actually wants shrunk.
+**Not `synced[]`:** `check_synced()` is drift-only by its own docstring and `precommit()` iterates
+`files[]` alone, so a `max_bytes` written into a synced entry looks configured and refuses nothing.
+`read-set` joins `WHOLE_READ_CLASSES` — **a deliberate decision, recorded**: the pair is read WHOLE,
+which is exactly Learning #34's condition, and gating it in bytes only would reintroduce the density
+drift the token arm exists to remove, on the two files the PR is about.
+
+**STEP 3 — THE CLASS TOTAL, IN `main()` AND `precommit()`.** `class_totals()` generalises what was a
+hardcoded `resident` aggregate to N classes, deterministic order, resident first. **Per-file ceilings
+do not sum** — bytes can move out of SAFEGUARDS.md into SESSION_RUNNER.md leaving both rows green
+while the Phase 0 read is unchanged — and an aggregate that reports and cannot refuse is half a gate,
+so `precommit()` gained the same arm under the same relative rule. A class declared with **no**
+members totals 0 rather than vanishing; a member that cannot be sized is announced as making the
+total a **lower bound**, never silently counted as zero.
+
+**STEP 4 — THE CEILING IS DERIVED, NOT PICKED.** `READ_CAP_BYTES = int(READ_CAP_TOKENS *
+MIN_BYTES_PER_TOKEN)` = **56,750**, the same expression `starter-kit/methodology_trim.py:129` uses, so
+the two tools cannot drift by someone editing a literal in one. `framework_share := READ_CAP_BYTES −
+adopter_reserve_bytes`; a class declaring `derive_from_read_cap` gets the computed value **in force**,
+and a written `total_bytes` that disagrees is **reported**, never silently honoured. Reserve ships at
+**0** — the least favourable assumption for the framework's own numbers, so a shortfall measured
+there cannot be blamed on the reserve. **Checked at run time, NOT at module scope**: a module-scope
+`assert` runs at import, so a mutant violating it dies with a traceback before the code under test
+executes and is scored killed by the crash rather than by the behaviour.
+
+**A GUARD NOTHING CALLED.** `config_defects()` was defined, unit-tested, and had **zero call sites**,
+while the distributed seed tells adopters a `max_tokens` above the cap *"is rejected as a config
+defect"* — false in every adopter's copy. *"Asserted at run time"* is not true of a function nothing
+runs, so it is now wired into `main()` and `precommit()`. Checked first that **no adopter reddens**:
+all three declare `max_tokens ≤ cap`.
+
+**THE FOUR DONE CRITERIA.**
+
+1. **A bare run prints the aggregate row and exits BREACH.** `(read-set total) 69,749 B / 56,750 B
+   over` in the table and `read-set total 69,749 B / 56,750 B ceiling` in the summary; **exit 2**,
+   read bare on the next line.
+2. **`--precommit` refuses a growth commit and passes a shrink commit** — demonstrated on the REAL
+   config in a scratch clone, not only on synthetic fixtures. +1 byte to `SESSION_RUNNER.md` →
+   **REFUSED (2)**, naming both the per-file row and `(read-set total) 69,749 -> 69,750 B`. −5,000 B,
+   leaving the class **still 8,000 B over** → **PASSED (0)**. The gate never prevents its own remedy.
+3. **A synthetic third class totals correctly** — `{resident: 40, pair: 1200, third: 85}`, the third
+   summed on its own two members. Covered in `tools/test_context_budget.py` **and** in the shipped
+   `--selftest`, which is the only gate coverage an adopter receives.
+4. **`(resident total)` byte-identical for the three instrumented adopters.** The plan never names
+   them; they are `chat_verification`, `vscode_quarto_ext` and `wsfct` — the only siblings carrying
+   `.context-budget.json` + `context_budget.py` + a history file. **Result: the ENTIRE stdout is
+   byte-identical**, not merely that line, with the same exit code, for all three. Method forced by
+   two hazards: the growth-run suffix is a function of the history file the run itself appends to, and
+   all three run **stale tool copies**, so both sides were run with the **canonical** tool against a
+   **frozen** copy of each adopter's config, history and declared files. **Limitation stated:** in the
+   frozen fixture the `synced[]` canonical paths do not resolve, so those rows are `unmeasured` on
+   both sides and this comparison does **not** exercise `vscode_quarto_ext`'s synced row for
+   `context_budget.py`, whose blob this change moves.
+
+**THREE PLACES THE PLAN IS WRONG, recorded in its §8 rather than left to propagate.** (1) §3.4(e)'s
+*"the SEED carries schema documentation only and declares no total"* is **false** — the seed declares
+`classes.resident.total_bytes = 34000`, and `upstream/main`'s copy is byte-identical, so it is false
+for the target tree too. (2) §3.4(d)'s *"one byte short"* is the **floor** of the error, not its size:
+CRLF content loses **3 B** (universal-newline translation plus `.strip()`), and non-UTF-8 content does
+not miscount at all — it raises `UnicodeDecodeError` and takes the commit down. (3) §3.4(d)'s
+`:339`/`:892` are stale; navigate by symbol.
+
+**Config hygiene done in the same commit, because leaving it would contradict `files[]`:**
+`_deliberate_exclusions` still listed both files as deliberately un-ceilinged *"NOT taken (FM #17)"*,
+and both it and `_synced` carried `starter-kit/SESSION_RUNNER.md` at **52,386 B — 1,977 B stale**
+(it is 54,363 B). Retired and corrected.
+
+**Verification.** `bash bin/tests.sh` run bare, exit read on the next line: **288 passed / 1 failed /
+0 skipped, exit 1 — identical to the control** taken at `6a8aacc` before any change. The one failure
+is Test 9's `--source=github` 404, pre-existing and out of scope. `tools/test_context_budget.py`
+**61 → 108 tests, OK**. `--selftest` **35 → 50 PASS rows, 0 FAIL, exit 0**.
+**A RUN THAT WAS DISCARDED, and why:** an earlier suite run reported 6 `bin/sync` gitignore failures.
+They did **not** reproduce — that run overlapped edits I was making to the tool underneath it. A suite
+run against a moving tree is uninterpretable; the numbers above come from a frozen one.
+
+**Cost, stated rather than absorbed: the tool that polices size grew 50,580 → 68,081 B, +17,501 B
+(+34.6%).** 5,747 B (33%) is the `--selftest` gates, which are the only coverage adopters get;
+11,754 B is the arms and their rationale. **Not itself budgeted** — no config declares a ceiling for
+`context_budget.py` — which is worth a successor's attention.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-30 · [ad hoc] S129 — Phase 3 step 1: the two shipped defects the gate depends on
 
 **Adopter-facing** (`starter-kit/context_budget.py`, `bin/_manifest.py:54`). Plan step 1 of 4:
