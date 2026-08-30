@@ -183,6 +183,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S130 close-out — Phase 4 shipped and repaired, self-score 7/10
+
+**Phase 3D/3F.** Receipt written to `HANDOFFS.md`; `bin/check-handoff` **exit 0**, `--all` **exit 0**
+across 7 receipts. Predecessor **S129 scored 8/10**.
+
+**Self-score 7.** The deliverable is complete and heavily verified — the byte target is exceeded
+(12,345 shed against 11,490 required), losslessness is proved five independent ways, and the suite is
+byte-for-byte the pre-change control with **zero status flips across 285 shared assertions**. Three
+things hold it below an 8. **A whole class of defect was invisible to my own verification**: the anchor
+proof was exhaustive on links and structurally blind to *reachability*, so an adversarial review found
+`README.md:79` describing an install that leaves five dangling links — adopter-facing, and green under
+every checker in the repo. **And three self-inflicted errors**: I reproduced a failure documented in my
+own notes (`t.index("```handoff")` matching the front matter's quoted delimiter, corrupting the Phase 1B
+stub while `check-handoff` reported OK); I ran a Python tool with `bash` and nearly read the empty
+result as "the file does not sync"; and I "corrected" two stale README figures that were not mine,
+silently falsifying the derived `103,302 B` sum, then reverted.
+
+**Predecessor S129 — 8/10.** Its `gotchas` were the most valuable field: the `.jsonl`-goes-dirty warning
+and *"a commit contains the INDEX, not the worktree"* both applied directly. `key_files` were re-derived
+at close-out rather than copied, and every line number resolved. `next_steps` named Phase 4 with its
+three defects. **Two marks off, both the same shape — it passed the plan's framing through unchecked.**
+It repeated §3.3's *"manual-copy sentence"* as **singular** when there are six sites, and it presented
+§3.3's three defects as if the section were executable when **its proposal inventory does not exist** —
+something S129 was well placed to catch, since its own §9 was an exercise in refuting that same plan.
+
+**What this session leaves behind, honestly.** `ITERATIVE_METHODOLOGY.md` has **855 B of headroom and no
+declared ceiling**; the extraction bought room and installed no ratchet. `README.md`'s read-on-demand
+table is **knowingly stale** and must be fixed with its dependent sum, not alone. `HANDOFFS.md` is now
+**7 receipts against the N=4 policy and 82,482 B — 25,732 B over the one-read cap**, up from 6/74,404 B
+at this session's Phase 0; the operator deprioritised it at S129 and this session did not revisit it.
+
+**The recommended next deliverable is Phase 5 of
+[`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md) — assemble
+and open the upstream PR — by operator direction given during this session, before close-out.** That
+direction is recorded here because the alternative is what happened at S124–S128: five consecutive
+fork-local housekeeping sessions after Problem-1 was scoped out at S118. The items above are **recorded,
+not recommended**. **Phase 5 requires the operator's explicit go-ahead, each time, and approving the plan
+is not it** — and it must first settle the two S123 Tier-2 items in `port-branch-identity-adjudication.md`
+§6. Note **Phase 2 is still unshipped**: a bare `context_budget.py` run exits **2** with the read-set at
+**69,749 B / 56,750**, so Phase 5 must confirm whether it subsumes or waits on that.
+
 ### 2026-08-30 · [ad hoc] S130 — Phase 4 follow-through: the six documents that describe the corpus
 
 **The consumer half of the extraction, separated from the mechanism so the blast radius of each is
