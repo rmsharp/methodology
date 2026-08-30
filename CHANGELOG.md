@@ -183,6 +183,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S128 close-out — stale trim assertions repaired, self-score 8/10
+
+**Deliverable complete.** `bin/tests.sh` **287 / 2 / 0 → 288 / 1 / 0**, the remaining failure being
+Test 9's `--source=github` 404 (needs an upstream merge; out of scope by declaration). Three
+commits: `13886cd` (claim), `7307abe` (the repair), this close-out. Canonical-only, no adopter
+impact, **no outward-facing action taken**.
+
+**Predecessor S127 scored 7/10.** Nearly every fact in it survived re-derivation and I checked
+rather than quoted — the 11 OK / 5 FAIL proof split, the 287 / 2 / 0 control, the 6,740 B front
+matter against a 7,168 B reserve, the `.context-budget.json` drift, BL-44. Two marks against.
+**(a)** Its receipt states the trim went `244,443 B → 45,478 B`; the trim commit `59a7677`'s
+subject, the `CHANGELOG.md` entry, and `git cat-file -s` at that commit all say **45,549 B** — three
+of four places agree and the durable receipt is the odd one out, a mid-operation figure that rotted
+before close-out. **(b)** Its stale-instrument note named the **onset** (`ccfbe1c`, which I verified
+by bisect) but not the **cause** (`0afe9d6`, three days earlier), and without both a reader cannot
+explain why a suite green at Phase C2 went red later.
+
+**Self-scored 8/10.** Up: the ordering fix was *proved* rather than argued; the mutant set was
+re-run in full after the fix round; intent was settled from provenance. Down: **the first version of
+the repair asserted half a sentence** — it pinned the per-ledger headroom and left the boundary it is
+a distance *to* unasserted, so a producer printing the right distance against a wrong denominator
+passed green. An independent reviewer found it; a mutant confirmed it; only then was it fixed. Also
+**five reviewers were dispatched against a working tree that kept changing under them**, so three
+spent findings on stale line numbers and on flagging the session's own uncommitted work as an
+unexplained dirty file — freezing the draft first would have cost nothing.
+
+**RECEIPT BUDGET: NINE TRIM PASSES.** The record measured 13,600 B against the 12,288 B per-record
+budget on first write and came down in nine measured steps. `bin/check-handoff` counts a record as
+**opening fence through the NEXT opening fence**, so the Phase 3A/3B prose is inside the budget —
+the checker was run bare after every pass rather than predicted.
+
+**LEDGER STATE FOR THE NEXT SESSION.** `HANDOFFS.md` now holds **five** receipts against a policy of
+four, and is **over the 56,750 B one-read cap**. That is the retention policy's own cycle — every
+close-out makes five and the next Phase 0 cuts back to four — but it means the file is over the cap
+*at the moment the next session reads it*, which is the moment the policy exists to protect. Raised
+here as a policy question rather than absorbed. `CHANGELOG.md`'s own Class A trigger continues to
+fire (213,935 B against 196,608 B) and it is 48,209 B from the 262,144 B hard refusal.
+
 ### 2026-08-30 · [ad hoc] S128 — the two stale `TestS38TrimTriggerRow` assertions, repaired
 
 **`bin/tests.sh` 287 / 2 / 0 → 288 / 1 / 0.** The one remaining failure is Test 9's
