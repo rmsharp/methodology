@@ -101,6 +101,24 @@ edit spent 459 B before I had accounted for it**, and I had to claw ~260 B back 
 error one file over.
 
 ```handoff
+session: S125
+date: 2026-08-29
+status: pending
+predecessor_score: pending
+active_task: **RESTORE THE THREE MISPLACED PHASE 3A/3B PROSE BLOCKS TO THE SLOTS `starter-kit/HANDOFFS.md:129-130` ASSIGNS THEM.** Operator selected this over S124's `next_steps` (b), which named only one of the three. The seed's rule is explicit: *"A record is a `handoff` block **plus the prose beneath it**, not the fence alone. The self-score and predecessor-score paragraphs sit outside the fence and belong to the receipt **above** them."* Matching every fence's `self_score`/`predecessor_score` against the prose in its slot: **15 of 18 records are correct; S119, S118 and S117 are not, and the three form a closed rotation whose missing element is exactly the front-matter prose at `:73-101`.** Pure relocation — no bytes authored, no receipt reworded, one file.
+what_was_done: pending
+next_steps: pending
+key_files: **Line numbers derived against THIS tree at claim time; they MOVE as soon as the rotation starts — re-derive, do not copy.** `HANDOFFS.md:73-101` (S119's prose, stranded in the front matter), `:222` S119 fence / `:239-265` the prose in its slot (**S118's**), `:267` S118 fence / `:288-317` the prose in its slot (**S117's**), `:319` S117 fence / slot **empty**. `starter-kit/HANDOFFS.md:129-130` — the governing rule, and it is DISTRIBUTED (`bin/_manifest.py`, SOURCE column). `bin/check-handoff:663` `HEADER_RESERVE_BYTES = 7168`, `:665` `RECORD_BUDGET_BYTES = 12288`, `:711` `check_record_budget` — which reads `extents[0]` ONLY, and only when the newest record differs from its committed form. `bin/tests.sh:3046` `fmbytes39` (front matter = everything above the first fence) and Test 39's A2 assertion.
+gotchas: **(1) THE MINIMAL FIX IS WORSE THAN THE FULL ONE, AND THAT IS COUNTER-INTUITIVE.** `check-handoff` measures a record fence-to-**NEXT**-fence. S119's record is **12,280 B against a 12,288 B budget — 8 B of margin.** Inserting S119's prose there while S118's prose still sits in the same extent takes it to ~14,959 B. Only the full three-way rotation avoids inflating it. **(2) THE ROTATION LEAVES LATENT OVER-BUDGET RECORDS THAT NOTHING REPORTS** — `check_record_budget` inspects `extents[0]` and only when unwritten, so a historical record over 12,288 B is invisible. Measure every touched extent by hand and state the result; do not infer it from a green checker. **(3) PROVENANCE, NOT INFERENCE, SETTLES WHOSE PROSE IS WHOSE:** `git log -S` gives `2b4dcc6` (S119), `f48d860` (S118), `9491cb6` (S117), and all three hunks land at line ~70 — each session wrote its prose ABOVE its own fence, replacing the claim-stub comment. S117's and S118's stayed adjacent (misattributed only); S119's was orphaned when S120's prepend anchor landed below it. **(4) SEPARATOR CONVENTION IS NOT UNIFORM** — S124/S123 use one blank after fence-close and two before the next fence-open; S120/S119 use two on both sides. Preserve what is there rather than normalising, or the diff stops being a pure move. **(5) DO NOT `git reset --hard`** — the two `.jsonl` go dirty from Phase 0 alone (inherited, held again). **(6) `bin/tests.sh` MUTATES THIS FILE (Test 34) and takes ~8 min** — run it, do not budget for it, and confirm the file is restored afterwards.
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+**Phase 1B claim — S125.** Deliverable: the three-block prose rotation in `HANDOFFS.md`. Scored at close-out.
+
+
+```handoff
 session: S124
 date: 2026-08-29
 status: complete

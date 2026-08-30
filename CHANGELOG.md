@@ -183,6 +183,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S125 — claim: restore the three misplaced Phase 3A/3B prose blocks in `HANDOFFS.md`
+
+**Phase 1B claim.** The operator selected this over S124's `next_steps` **(b)**, which named the same
+defect one third of its actual size. S124 found **2,678 B of S119's prose stranded in the front
+matter** at `HANDOFFS.md:73-101` and prescribed relocating it below S119's block, to clear Test 39's
+red `A2 truth VIOLATED` row. Re-derived at this claim, the defect is **three blocks, and S124's
+minimal fix would have made one number worse.**
+
+**The rule is distributed and explicit, so this is a repair and not a policy choice.**
+[`starter-kit/HANDOFFS.md:129-130`](starter-kit/HANDOFFS.md) — a manifest SOURCE, so it reaches every
+adopter — states: *"A record is a `handoff` block **plus the prose beneath it**, not the fence alone.
+The self-score and predecessor-score paragraphs sit outside the fence and belong to the receipt
+**above** them."* Matching each fence's `self_score` / `predecessor_score` against the prose actually
+occupying its slot, **15 of 18 records agree**. The three that do not form a closed rotation:
+S119's slot holds **S118's** prose (`Predecessor S117 … Self 7/10`, matching S118's `pred: 8` /
+`self: 7`), S118's slot holds **S117's** (`Predecessor S116 … Self 8/10`), S117's slot is **empty** —
+and the element missing from the cycle is exactly the stranded front-matter block.
+
+**Provenance, not inference.** `git log -S` returns `2b4dcc6` (S119 close-out), `f48d860` (S118) and
+`9491cb6` (S117); all three hunks land at line ~70, each replacing the claim-stub comment *above* its
+own fence. S117's and S118's prose stayed adjacent to their records and are misattributed only;
+S119's was orphaned when S120's prepend anchor landed below it, and has accreted into the front
+matter ever since.
+
+**Why the minimal fix is the worse one.** `bin/check-handoff` measures a record fence-to-**next**-fence.
+S119's record is **12,280 B against the 12,288 B budget — 8 B of margin**. Inserting S119's prose
+there while S118's prose still occupies the same extent takes it to ~14,959 B. The full rotation is
+the only variant that does not inflate it.
+
+**Scope: one file, pure relocation, zero bytes authored.** Expected: front matter **9,040 B → 6,361 B**
+against a 7,168 B reserve, `bin/tests.sh` **286/3 → 287/2**. Control run at this claim, exit read bare:
+**286 passed / 3 failed / 0 skipped**; all four checkers exit 0; `context_budget.py` exit 2
+(`HANDOFFS.md` 217,119 B / ≈91,812 tok — expected, per S113 (d)). **NO OUTWARD-FACING ACTION.**
+
 ### 2026-08-29 · [ad hoc] S124 close-out — the `SRF_RED` refusal adjudicated, self-score 8/10
 
 **Phase 3D/3F.** Receipt in [`HANDOFFS.md`](HANDOFFS.md), `status: complete`, measured at **11,414 B against the 12,288 B record budget before it was written** — 874 B spare, not resized after the fact. **Predecessor S123 scored 7/10:** its instruction to run `--check` rather than trust its numbers is what produced this session's finding, but its `next_steps` (c) called the trim *"the obvious next deliverable"* while a standing instruction not to trim this file on sight sat four receipts below in the ledger it was writing into — one grep away, and finding it was the whole job.
