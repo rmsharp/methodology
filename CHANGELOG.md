@@ -183,6 +183,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S126 close-out — record-budget Phase 3 measured, recommendation DO NOT REDUCE
+
+**Phase 3D/3F.** Deliverable: the gate measurement, appended inline to
+[`record-budget-reduction-plan.md`](docs/planning/record-budget-reduction-plan.md) §6 Phase 3
+(`:325-437`), following S109's Phase 2 precedent — **no new `docs/planning/` file**, in a session
+about file growth. Two commits: `1501783` (claim) + the deliverable + this close-out.
+
+**THE PHASE'S `Do` CLAUSE, ANSWERED: THE FENCED FIELDS DO NOT COMPRESS.** Deflate-9 on the fenced
+block, n=132 receipts, **0.484**, against size-matched controls cut from this repo's own prose —
+`ITERATIVE_METHODOLOGY.md` 0.435, `SESSION_RUNNER.md` 0.448, `README.md` 0.445. **Receipts are
+measurably less redundant than the documentation this framework ships.** Named removable slack in
+the six: 3.03% markup + 2.41% cross-record boilerplate + 0.00% cross-field overlap ≈ **1–3%**,
+against **16.7%** (10,240) and **33.3%** (8,192). §4.2 made this the condition — *"Revisit only
+after measuring whether fields compress"* — and it is not met.
+
+**RECOMMENDATION: do not reduce `RECORD_BUDGET_BYTES`.** The whole benefit available is **one
+session** (breach moves S128 → S129), invariant across every utilization estimator 89.2%–100%.
+
+**A NEGATIVE RESULT DELIVERED HONESTLY.** A frozen draft was attacked by six independent read-only
+lenses; **all six returned PARTIALLY_REFUTED** and their corrections were verified against the source
+and adopted. They overturned the cohort boundary (S105 wrote under 18,432, not 12,288 — its receipt
+completed 45 min before `6ebe84d`), the "~94.6% utilization across two regimes" law (really 89.2%
+and 95.7%), the −24.1% figure (**−18.6%** corrected), the confound's sign (**−4.5%**, not +1.1%), the
+"sharp step at S98" in the 3A scores (a **smooth** 8.25→7.75 drift, no discontinuity), a citation
+(`check-handoff:632-640`'s *"10,920–13,019 B"* is S103/S104, written by the cut commit itself), an
+invented 11,264 B candidate, a `check-handoff --all` result that exists on no tree, and a
+cross-check that was **self-confirmation** (record extents and file deltas agree to 0.1 B because
+they are the same measurement). **The recommendation is the only part of the first draft that
+survived unchanged.**
+
+**NOT DONE, each deliberately.** No constant changed — §9 reserves the number for the operator and
+Phase 3 asks for a recommendation, not a reduction. No historical receipt or shard edited
+(prepend-only; §7 risk 4). `methodology_trim.py`, the 65,536 B ceiling, Test 34's floor and every
+distributed file untouched. `bin/tests.sh` deliberately not re-run — this phase scopes it *"only if a
+constant actually changes"*. **NO OUTWARD-FACING ACTION.**
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-30 · [ad hoc] S126 — claim: Phase 3 of the record-budget plan, the gate measurement
 
 **Phase 1B claim.** The operator selected

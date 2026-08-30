@@ -322,6 +322,117 @@ the last trim happened to retain. **What this surface cannot enforce:** handoff 
 a smaller receipt is still a good one. If Phase 3 reduces the budget, the only real detector is the
 next session's 3A score — treat one low score after the change as a signal to revert, not as noise.
 
+**MEASURED 2026-08-30 (S126) — the gate measurement, RUN. Recommendation: DO NOT REDUCE.**
+
+**Method, and the verification heredoc above is not what produced these numbers.** Its split,
+`rec.index('\n```\n', 3)`, is sound only if no receipt holds a second bare fence — which it never
+checks, in a file that documents its own format. Probed: across 11 files every one of the **132**
+receipts holds exactly one bare ` ``` ` line. The parse was then *asserted*, not trusted: `fenced +
+prose == extent` on all 132; `front matter + Σ extents == wc -c` on every file; `Σ field bytes + 2
+fence lines == fenced` on all 132. Baseline is **`41b27fb`**, the pre-claim tree, so S126's own stub
+is outside its own population. **This phase's stated surface of *"111 receipts"* is stale — it is 132.**
+
+**1. THE `Do` CLAUSE, ANSWERED: THE FENCED FIELDS DO NOT COMPRESS.** Deflate-9 ratio of the fenced
+block, n=132, unit compressed/raw bytes: **0.484** (min 0.435, max 0.594). Size-matched controls cut
+from this repo's own prose at the 9,116 B mean block size: `ITERATIVE_METHODOLOGY.md` **0.435**,
+`starter-kit/SESSION_RUNNER.md` **0.448**, `README.md` **0.445**. A higher ratio is *less* redundancy,
+so **receipts are measurably less redundant than the documentation this framework ships.** Named,
+removable slack inside the six (cohort E, n=20): `**` emphasis **3.03%**, cross-record boilerplate
+(8-word shingles shared with any other receipt) **2.41%**, within-record cross-field overlap
+**0.00%**. Total identifiable ≈ **1–3%**, against the **16.7%** that 10,240 requires and the **33.3%**
+that 8,192 requires. *(De-shouting recovers nothing: lowercase costs the same bytes.)*
+
+**This is decisive because §4.2 made it the condition.** Its 8,192 row reads *"Revisit only after
+measuring whether fields compress — see §6, Phase 3."* Measured: they do not. **The revisit does not
+open.** Its 10,240 row already read *"cuts into fenced fields for the two largest recent receipts"* —
+still true, `max(fenced)` in the current cohort is **10,827 B** (S117). Phase 3 adds no new permission
+for either number; it closes the one door §4.2 left ajar.
+
+**2. WHAT A REDUCTION WOULD BUY: ONE SESSION.** `HANDOFFS.md` at the baseline is 229,270 B with
+**32,874 B** to `READ_REFUSE_BYTES` *(at `HEAD` after S126's claim it is 233,147 B / 28,997 B / 20
+records — the projection is unchanged, since a stub becomes part of its own session's record)*.
+Measured close-out-to-close-out growth **11,432 B/session** (n=7) → breach at **S128's close-out**.
+10,240 → **S129**. 8,192 → **S130**. **Invariant across every utilization estimator from 89.2% to
+100%.** ⚠ The record-extent and file-delta series agree to **0.1 B** because they are the *same*
+measurement — each close-out appends one record and the front matter barely moves. That is not
+corroboration, and an earlier draft of this block wrongly presented it as such.
+
+**3. GROWTH IS MONOTONE ONLY UNDER THE STANDING REFUSAL TO TRIM — not structurally.** This file has
+shrunk twice inside the current cohort (82,406 → 31,875 B at `9cf4ae0`; 66,614 → 44,468 B at
+`9038e40`). Archiving is the only mechanism that removes bytes and it is presently refused
+(`SRF 8.3447` vs `SRF_RED 1.00`; S112, S124, BL-52). **So a rate cut defers the date and never
+resolves it — but that is a consequence of the refusal, not of the budget.**
+
+**4. WHAT THE LAST CUT DID TO THE SIX: direction survives, magnitude and causation do not.** Cohorts
+by *the constant in force at close-out* — S105's receipt was `status: complete` 45 minutes before
+`6ebe84d`, so it belongs to the 18,432 regime. D (S98–S105, n=8) → E (S106–S125, n=20): the six
+**−18.6%**, essays **−48.2%**; `next_steps` −27.8%, `what_was_done` −24.0%, `key_files` −18.6%,
+`active_task` −12.2%, `gotchas` −2.0%. **But the confound is not cleared.** Cohort C (the last
+pre-budget fortnight) is itself a **+36.2%** excursion over cohort B that began *six days before
+`RECORD_BUDGET_BYTES` existed*; E sits **+2.7%** above the pooled 92-receipt pre-08-12 baseline and at
+the **48th percentile** of all 132 per-record six-field values. The six returned to corpus normal from
+a pre-budget excursion that was already receding inside D (D is −4.5% from C). **`check-handoff:638`'s
+*"the six requirements survive unchanged"* is therefore UNVERIFIED, not falsified** — they moved, and
+this design cannot separate the cut from the excursion's own decay.
+
+**5. THE PLAN'S NAMED QUALITY DETECTOR SHOWS A SMOOTH DRIFT, NOT A STEP.** An 8-receipt rolling mean
+of `predecessor_score` falls **8.25 → 7.75** across S103→S125 with **no discontinuity at either budget
+event**. The longest run of 9s is S90–S97 (**eight**, pre-budget) and the corpus record is nine
+(S60–S67); a two-run (S103, S104) *does* occur after the budget. Post-08-12 there are **five** 7s
+(S88, S102, S106, S113, S124) and one 6 (S121). Scores grade the **predecessor**, so grouping them by
+the scorer's cohort misattributes — S98's 8 grades a receipt written before the budget commit.
+**The detector neither indicts nor exonerates the last cut. It supplies no evidence that a further one
+is safe.**
+
+**6. THE GATE'S POPULATION IS UNDER-DETERMINED, AND THE `Do` CLAUSE IS WHAT SETTLES IT.**
+`max(fenced)` is **16,889 B** over all 132 (S38), **14,310 B** in D (S100), **10,827 B** in E (S117).
+The all-132 reading would forbid the very 12,288 this plan's status line records as ratified, so it
+cannot be the intended one. Nor does `bin/check-handoff:632-640` supply a cohort: its *"current fenced
+fields run 10,920–13,019 B"* is **S103 and S104** (S102's 12,386 B between them; mean 12,108 B = this
+plan's own *"fenced-field mean"*), written **by `6ebe84d` itself**, before a single 12,288-era receipt
+existed. And a floor that forbids 10,240 contradicts §4.2, which rated it *viable* while saying
+outright that it cuts into fenced fields — making this phase self-cancelling. **Settled from
+provenance instead: §4.2 + the `Do` clause define the gate as a test — *does compression move the
+floor down?* It does not (§1). So the floor stays where it is, and neither candidate becomes
+available.**
+
+**RECOMMENDATION — do not reduce `RECORD_BUDGET_BYTES`.** In order of strength: **(a)** the condition
+§4.2 attached to 8,192 is measured and not met — the fields do not compress, by an order of magnitude
+(1–3% available against 16.7% / 33.3% required); **(b)** 10,240 still cuts into fenced fields, exactly
+as §4.2 said, since `max(fenced)` is 10,827 B; **(c)** the whole benefit available is **one session**
+(S128 → S129), against a deadline that returns; **(d)** the six demonstrably moved across the last cut
+and nothing here shows they were spared. **This phase's question — *"only if the operator wants a
+harder stop"* — is answered: this lever cannot deliver one.**
+
+**The one durable finding for a future cut, so it is not re-derived — and its population matters.**
+Over **cohort E (n=20)** `runtime_smoke` is the largest single field at **1,990 B/receipt, 21.0%** of
+field bytes, and it is **not one of the six** (the six 75.9%; remainder 3.1%). Over **all 132** the
+picture inverts: the six are **80.5%**, `runtime_smoke` is **14.4%** and ranks **fourth**, behind
+`what_was_done` (2,161 B, 23.7%). It is the only substantial non-six mass either way, so it is where a
+cut should land — but at **95.7%** utilization a *sub-budget* reallocates rather than reduces. Only
+the total budget moves the rate.
+
+**Verification, reported as it actually returned.** `python3 bin/check-handoff --all` on the working
+tree: **FAIL, exit 1, 20 receipts** — the sole finding is S126's own `status: pending` stub. Against
+the measured tree (`git show 41b27fb:HANDOFFS.md`): **OK, exit 0, 19 receipts.** `bash bin/tests.sh`
+deliberately not re-run: this section scopes it *"only if a constant actually changes"*, and none did.
+**No reformatting trial was run**, so the stated purpose of the `--all` command here — *"population
+intact after any reformatting trial"* — was not exercised. Nothing in the tree was modified by the
+measurement; it reads `41b27fb` through `git show`.
+
+**Surface, and what it cannot enforce.** The committed ledger plus all ten shards — 132 receipts. It
+cannot enforce handoff *quality*: §5 is observational with no control arm, and the scores are assigned
+by successors, so a stricter scoring culture would produce the same curve. It cannot separate the
+budget from the pre-budget excursion (§4). And the compression measurement (§1) bounds *lossless*
+redundancy — it cannot rule out that a human editor could say the same things in fewer words.
+
+**Adversarial review.** Six independent read-only lenses were run against a frozen draft of this
+block; **all six returned PARTIALLY_REFUTED**, and their corrections are incorporated above. They
+overturned the cohort boundary, the utilization claim, the −24.1% magnitude, the confound's sign, the
+"sharp step" in §5, the citation in §6, an invented 11,264 B candidate, a false `check-handoff` result,
+and a cross-check that was self-confirmation. **The recommendation is the only part of the first draft
+that survived unchanged.**
+
 **STOP. Close out.**
 
 ---
