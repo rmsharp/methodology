@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S129
+date: 2026-08-30
+status: pending
+active_task: **PHASE 3 OF `docs/planning/upstream-read-set-pr-plan.md` §5 — "THE GATE."** Assigned by the operator at the S128 close-out as the next deliverable, reversing the five-session drift into fork-local housekeeping that S118 had scoped out. Adopter-facing: `starter-kit/context_budget.py` carries `bin/_manifest.py:54`, so it reaches every adopter who syncs. In the plan's order: the `blob_bytes` fix and the `classes` `KeyError`, then per-file ceilings, then the class total in `main()` **AND** `precommit()`, then the reserve identity. **NO OUTWARD-FACING ACTION** — Phase 5 (the PR) needs its own separate go-ahead.
+```
+
+```handoff
 session: S128
 date: 2026-08-30
 status: complete

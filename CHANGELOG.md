@@ -183,6 +183,54 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S129 — claim: Phase 3 of the upstream read-set PR plan, "the gate"
+
+**Phase 1B claim.** Operator selected this at the Phase 0 gate, confirming the ordered critical path
+recorded at the S128 close-out. This is **Phase 3 of
+[`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md) §5** and it
+is the first **adopter-facing** deliverable in five sessions: `starter-kit/context_budget.py` carries a
+`bin/_manifest.py:54` row, so it lands at every adopter root that runs `bin/sync`. S124–S128 were all
+Problem-1 fork-local housekeeping, which the operator scoped **out** at S118; that drift is what this
+claim reverses.
+
+**CONTROL, MEASURED BEFORE ANY CHANGE.** `python3 starter-kit/context_budget.py` run bare, exit code
+read on the next line: **exit 2 (BREACH)**. It prints five per-file ceiling rows (`CLAUDE.md` ok,
+`CHANGELOG.md` over, `HANDOFFS.md` over on tokens, `docs/planning/BACKLOG.md` ok,
+`starter-kit/FRAMEWORK_LEARNINGS.md` ok) and one aggregate row — `resident total 11,064 B / 18,600 B
+ceiling`, growth run 98/10. **That aggregate is the whole of what exists.** `.context-budget.json`
+declares exactly **one** class, `resident`, whose sole member is `CLAUDE.md`; the read-set class the
+PR is about (`SESSION_RUNNER.md` + `SAFEGUARDS.md`) is **not declared at all**, in `main()` or in
+`precommit()`. So the phase's first DONE criterion — *a bare run prints the aggregate row* — is
+unmet in the sense that matters, even though a one-file class total is on screen.
+
+**THE TWO SHIPPED DEFECTS THE GATE DEPENDS ON, re-located against today's file** (the plan's §3.4(d)
+line numbers are stale — the file has grown since):
+
+- **`precommit()` measures one byte short.** `run()` returns `p.stdout.strip()` (`:137`), so
+  `new = len(staged.encode())` at **`:822`** undercounts any file whose content ends in a newline.
+  Fix: size the index and HEAD blobs with `git cat-file -s` — which this file already does at
+  **`:602`**, so the technique is in-tree, not new. *A size gate that miscounts bytes is the wrong
+  thing to build on.*
+- **`cfg["classes"]["resident"]` is a direct key access** at **`:450`** and **`:1025`** (the plan
+  says `:339`/`:892`). A config with no `classes` key raises `KeyError`. **Both sites must move
+  together** — an adopter's config is exactly the one that will lack the key.
+
+**WHAT THIS CLAIM FORBIDS ITSELF.** The ceiling must be **derived, not picked**:
+`framework_share := READ_CAP_BYTES − adopter_reserve_bytes`, asserted at run time. Do **not** port
+this fork's `.context-budget.json` wholesale — its `CLAUDE.md` ceiling of 18,600 B is calibrated on
+this fork's 11,064 B file, and upstream's `CLAUDE.md` is **58,652 B**, so importing it turns the bare
+run red on day one for an unrelated reason. No change to `READ_CAP_WATCHED`, `read_cap_class()`, or
+either dashboard twin (D7(b) is honoured by non-participation).
+
+**Scope:** `starter-kit/context_budget.py` and the canonical root `.context-budget.json`, plus tests.
+**DISTRIBUTED — this one reaches adopters.** **NO OUTWARD-FACING ACTION:** Phase 5 opens the PR and
+needs the operator's explicit go-ahead, separately, and approving the plan is not it.
+
+**Ledger note carried forward, per operator decision at this gate:** `HANDOFFS.md` holds **5**
+receipts against the N=4 retention policy and is **64,055 B — 7,305 B over the 56,750 B one-read
+cap**. Left in place deliberately (Problem-1 is deprioritised); recorded here so it stays visible
+rather than absorbed.
+
 ### 2026-08-30 · [ad hoc] S128 close-out amended — OPERATOR DECISIONS: next is Phase 3 (the gate); D4 stays queued
 
 - **Model:** Claude Opus 5 (1M context).
