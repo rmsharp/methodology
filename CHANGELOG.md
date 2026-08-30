@@ -183,6 +183,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-29 · [ad hoc] S125 — the three misplaced Phase 3A/3B prose blocks restored to their own records
+
+**Deliverable:** a pure relocation inside [`HANDOFFS.md`](HANDOFFS.md). **Zero bytes authored, zero text
+reworded, one file.** The governing rule is [`starter-kit/HANDOFFS.md:128-130`](starter-kit/HANDOFFS.md):
+*"A record is a `handoff` block **plus the prose beneath it**, not the fence alone. The self-score and
+predecessor-score paragraphs sit outside the fence and belong to the receipt **above** them."*
+
+**What moved.** S119's prose (stranded in the front matter above every fence) → S119's slot; the prose
+occupying S119's slot, which is **S118's**, → S118's slot; the prose occupying S118's slot, which is
+**S117's**, → S117's slot, which was empty. A closed three-cycle. Provenance rather than inference:
+`git log -S` returns `2b4dcc6` (S119), `f48d860` (S118), `9491cb6` (S117), and each of those three diffs
+shows the same signature — the commit deleted the claim-stub comment sitting *above* its own fence,
+wrote its prose there, and in the same diff flipped its own fence from `self_score: pending`. **The
+misplacement is three consecutive close-outs caught in the act, and it stopped at S120.**
+
+**The rotation was incomplete on the first pass, and an adversarial review caught it.** S117's close-out
+added **four** contiguous parts above its fence — the stub comment, `Model: Claude Opus 5 (1M context).`,
+and the two prose paragraphs. The first pass moved parts 3 and 4 and left parts 1 and 2 behind, where
+they read as S118's metadata — plausible, because S118 was *also* re-aimed mid-session. `git blame`
+settles it: both lines are `9491cb6`, and `git show f48d860` shows S118's close-out **deleted** its own
+(differently worded) comment and wrote no `Model:` line. **The consequence was live:** `bin/model-report`
+Source 2 filed S117's model self-report under S118, leaving S117 the only gap in the S108–S118 run. After
+the second pass the attribution reads `S117 Model: …` and S118 correctly carries none.
+
+**Losslessness, proved on four axes over the whole session** (`BEFORE` = `git show e6d8442:HANDOFFS.md`):
+the multiset of non-blank lines is **identical** (653 = 653); non-blank content bytes are **219,854 on
+both sides, delta 0**; the relative order of all **559 unmoved** non-blank lines is preserved exactly;
+each moved block is contiguous and byte-identical. **The only authored change in the entire file is one
+blank line** (79 → 80).
+
+**Result — measured, not predicted.** `bash bin/tests.sh` **287 passed / 2 failed / 0 skipped**, against
+a pre-change control of **286 / 3 / 0**. Row-for-row over both populations (289 rows each, both asserted
+non-empty): **0 status flips, 0 skips, 7 rows lost and 7 gained — every one the same assertion carrying a
+derived number the change legitimately moved** (receipt population 18 → 19 from this session's own claim;
+front matter 9,041 → 6,362 B; the frozen over-budget scope control 1 → 3). The one real change is
+`A2 truth VIOLATED` → **`A2 truth: live front matter 6362 B <= 7168 B reserve (88% used)`**. The two
+remaining failures are named and pre-existing: Test 9 `github source dry-run` and Test 18 dashboard unit
+tests (onset `ccfbe1c`); neither is touched by this change.
+
+**Stated in the unit the tool measures, correcting this session's own claim entry.** `fmbytes39`
+(`bin/tests.sh:3047`) computes `len(t[:m.start()])` against the first `^```handoff$`, so the measured
+prefix **includes the newline terminating the last front-matter line**: the figures are **9,041 → 6,362 B**,
+not the 9,040 → 6,361 published at claim. 806 B of headroom, so the off-by-one is not decision-changing —
+but it was wrong, and the claim entry above it stands uncorrected by design (prepend-only).
+
+**The cost, stated rather than left to be discovered.** Measured with `check-handoff`'s own
+`record_extents`: S119 **12,281 → 12,462 B** and S117 **10,828 → 13,805 B** now exceed the
+`RECORD_BUDGET_BYTES = 12288` (`bin/check-handoff:665`); S118 falls to 11,778 B. **The rotation reveals
+this breach rather than creating it.** Replaying the gate on the three historical trees with the
+checker's own `scan()` + `record_extents()`, the newest-record extent it measured was S117 10,828 B,
+S118 11,831 B, S119 12,281 B — all under budget, **all passing precisely because each had filed its prose
+outside its own fence.** Two of the three receipts never actually fit the budget. Nothing reddens:
+`check_record_budget` (`:711`) scores `extents[0]` only and only when unwritten, deliberately — the
+docstring's reason is that a whole-ledger budget "would be permanently red against records nobody may
+touch". `bin/tests.sh` does report the count, as `3 record(s) over budget … exempt as frozen`, on a
+fixture whose builder self-arms one record.
+
+**Blast radius: none.** Parsed by column, root `HANDOFFS.md` is a manifest **DEST** (`bin/_manifest.py`,
+from the `starter-kit/HANDOFFS.md` **SEED** row) and **never a SOURCE** — `bin/sync` installs the seed, not
+this file, so no adopter receives the rotation. Only `HANDOFFS.md` was modified. **NO OUTWARD-FACING ACTION.**
+
 ### 2026-08-29 · [ad hoc] S125 — claim: restore the three misplaced Phase 3A/3B prose blocks in `HANDOFFS.md`
 
 **Phase 1B claim.** The operator selected this over S124's `next_steps` **(b)**, which named the same
