@@ -111,6 +111,17 @@ def token_ceiling(cfg, spec):
     return None, False
 
 
+def class_spec(cfg, name):
+    """The declared budget for one class, or {} when the config declares none.
+
+    `cfg["classes"]["resident"]` was a DIRECT key access at two sites, so a config that
+    declares no `classes` key raised KeyError -- and an adopter's hand-written config is
+    exactly the one that will lack it. Both sites move together or the crash relocates
+    rather than closing. Returning {} rather than None keeps every caller a `.get()`.
+    """
+    return ((cfg or {}).get("classes") or {}).get(name) or {}
+
+
 def config_defects(cfg, defaults=None):
     """Ceilings that cannot be satisfied by any file. Reported, never silently clamped --
     a clamp would fix the symptom and leave the operator believing a number that is not
@@ -141,6 +152,23 @@ def run(argv, cwd=None):
         return 124, "", "timeout"
     except OSError as e:
         return 126, "", str(e)
+
+
+def blob_bytes(root, rev):
+    """Size of a git blob in BYTES, asked of git. None when `rev` does not resolve.
+
+    NEVER `len(run(["git", "show", rev]).encode())`. run() returns `p.stdout.strip()`,
+    so any content ending in a newline measures one byte short: this repository's own
+    starter-kit/SESSION_RUNNER.md is 54,363 B and that expression returns 54,362. A size
+    gate that miscounts bytes is the wrong thing to build on -- and the error is silent,
+    self-consistent, and in the direction that makes an over-budget file look smaller.
+
+    `git cat-file -s` reports the object's recorded size and never decodes it, so it is
+    also correct for content that is not valid UTF-8, where `text=True` would have
+    replaced bytes and changed the length. Same idiom as size_history() already uses.
+    """
+    rc, size, _ = run(["git", "cat-file", "-s", rev], cwd=root)
+    return int(size) if rc == 0 and size.isdigit() else None
 
 
 def expand(root, p):
@@ -447,10 +475,14 @@ def render(root, results, synced, run_len, run_hit, cfg, snapshot):
         cc = status_colour(r["status"])
         print(f"  {short(r['path']):<34s}{'synced':>12s}{'canonical':>12s}  {cc}{r['status']}{R}")
 
-    tot = cfg["classes"]["resident"]
+    # A declared ceiling renders exactly as before -- this line is byte-identical for
+    # any config that declares one, which is what the instrumented adopters check.
+    # Only the undeclared case is new, and it says so rather than crashing.
+    ceil = class_spec(cfg, "resident").get("total_bytes")
+    ceil_s = f"{ceil:,} B ceiling" if ceil else "no ceiling declared"
     print(f"{D}{'─'*W}{R}")
     print(f"  resident total {B}{snapshot['resident_bytes']:,} B{R} / "
-          f"{tot['total_bytes']:,} B ceiling   "
+          f"{ceil_s}   "
           f"{D}growth run {run_len}/{cfg.get('growth_run', 10)}{R}")
 
     findings = [(r, f) for r in results + synced for f in r["findings"]]
@@ -816,12 +848,10 @@ def precommit(root, cfg):
         path = expand(root, spec["path"])
         if not os.path.exists(path) or os.path.isabs(spec["path"]):
             continue  # files outside the repo are not staged by this commit
-        rc, staged, _ = run(["git", "show", f":{spec['path']}"], cwd=root)
-        if rc:
-            continue  # not staged
-        new = len(staged.encode())
-        rc2, head, _ = run(["git", "show", f"HEAD:{spec['path']}"], cwd=root)
-        old = len(head.encode()) if rc2 == 0 else 0
+        new = blob_bytes(root, f":{spec['path']}")
+        if new is None:
+            continue  # not tracked, or staged for deletion — nothing to size
+        old = blob_bytes(root, f"HEAD:{spec['path']}") or 0
         ceil = spec.get("max_bytes")
         if ceil and new > ceil and new > old:
             bad.append((spec["path"], old, new, ceil, "B", f"{ceil:,} B"))
@@ -1022,13 +1052,13 @@ def main():
     snapshot = {"resident_bytes": resident,
                 "files": {r["path"]: r.get("bytes") for r in results}}
 
-    tot = cfg["classes"]["resident"]
-    if resident > tot["total_bytes"]:
+    rtot = class_spec(cfg, "resident").get("total_bytes")
+    if rtot and resident > rtot:
         results.append({"path": "(resident total)", "class": "resident", "status": "over",
-                        "bytes": resident, "max_bytes": tot["total_bytes"], "findings":
+                        "bytes": resident, "max_bytes": rtot, "findings":
                         [{"kind": "bytes", "msg":
                           f"{resident:,} B across all auto-loaded files exceeds the "
-                          f"{tot['total_bytes']:,} B ceiling"}]})
+                          f"{rtot:,} B ceiling"}]})
 
     hist = load_history(root)
     run_len, run_hit = growth_run(hist, snapshot, cfg.get("growth_run", 10))

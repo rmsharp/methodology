@@ -34,6 +34,7 @@ be2721a` — should anyone need to re-run the four-way fit that motivated this.
 import importlib.util
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -650,6 +651,243 @@ class TestTokenCeiling(unittest.TestCase):
         pre = src.split("def precommit")[1].split("# === SELFTEST")[0]
         self.assertIn("token_ceiling", pre,
                       "precommit still gates on bytes alone while the report gates on tokens")
+
+
+# ---------------------------------------------------------------------------------
+# D3 — the size a GATE measures. run() returns p.stdout.strip(), so precommit()'s
+# `len(staged.encode())` measured one byte short on any content ending in a newline,
+# which is all of it. The error is silent, self-consistent, and in the direction that
+# makes an over-budget file look smaller than it is.
+# ---------------------------------------------------------------------------------
+
+def _stripped_size(repo, rev):
+    """VERBATIM re-implementation of the pre-change measurement, kept so the defect can be
+    exhibited rather than only described -- the same role `_string_size_at` plays for D2.
+    This is what precommit() computed before blob_bytes() existed."""
+    rc, out, _ = cb.run(["git", "show", rev], cwd=str(repo))
+    return len(out.encode()) if rc == 0 else None
+
+
+class TestBlobBytes(unittest.TestCase):
+    """The gate's unit of measurement.
+
+    WHY THIS CLASS EXISTS. A one-byte undercount sounds cosmetic. It is not: a ceiling is a
+    strict `>` comparison, so a file at exactly ceiling+1 true bytes measures at exactly the
+    ceiling and the gate ALLOWS it. The defect is therefore not "a slightly wrong number in
+    a report" but "a commit that is over budget passes" -- exhibited below on a fixture
+    built to sit on that edge, because a fixture 500 B over would be caught either way and
+    would prove nothing about the boundary.
+    """
+
+    CEIL = 1000
+
+    def _repo(self, d):
+        """BIG.md at exactly CEIL+1 true bytes: CEIL 'x' plus one newline. HEAD holds a
+        5-byte version, so the relative rule's `new > old` arm is satisfied and cannot be
+        what decides these tests."""
+        new_repo(d)
+        Path(d, ".context-budget.json").write_text(json.dumps({
+            "classes": {"resident": {"total_bytes": 999999}},
+            "files": [{"path": "BIG.md", "class": "resident", "max_bytes": self.CEIL}]}))
+        Path(d, "BIG.md").write_text("tiny\n")
+        git(d, "add", "-A"); git(d, "commit", "-m", "base", when="2026-01-01T00:00:00Z")
+        Path(d, "BIG.md").write_text("x" * self.CEIL + "\n")
+        git(d, "add", "BIG.md")
+        return d
+
+    # --- fixture proof -------------------------------------------------------------
+
+    def test_fixture_sits_exactly_one_byte_past_the_ceiling(self):
+        """Prove the fixture BEFORE asserting anything about the code that reads it. If it
+        drifts off the edge these tests keep passing while testing nothing about it."""
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            true = int(git(d, "cat-file", "-s", ":BIG.md"))
+            self.assertEqual(true, self.CEIL + 1,
+                             "fixture must sit exactly one byte over, or the edge is untested")
+            self.assertEqual(int(git(d, "cat-file", "-s", "HEAD:BIG.md")), 5)
+
+    # --- the defect, exhibited ------------------------------------------------------
+
+    def test_the_pre_change_expression_measures_one_byte_short(self):
+        """RED: green is not evidence until red has been observed."""
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            self.assertEqual(_stripped_size(d, ":BIG.md"), self.CEIL,
+                             "the pre-change expression must land exactly ON the ceiling")
+
+    def test_blob_bytes_reports_the_true_object_size(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            self.assertEqual(cb.blob_bytes(d, ":BIG.md"), self.CEIL + 1)
+            self.assertEqual(cb.blob_bytes(d, "HEAD:BIG.md"), 5)
+
+    def test_the_two_measurements_differ_by_exactly_the_trailing_newline(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            self.assertEqual(cb.blob_bytes(d, ":BIG.md") - _stripped_size(d, ":BIG.md"), 1)
+
+    # --- and the one byte is enough to flip the verdict -----------------------------
+
+    def test_one_byte_decides_whether_an_over_budget_commit_is_refused(self):
+        """The whole point. Same fixture, same ceiling, opposite answers."""
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            true, stripped = cb.blob_bytes(d, ":BIG.md"), _stripped_size(d, ":BIG.md")
+            self.assertGreater(true, self.CEIL, "true size IS over the ceiling")
+            self.assertFalse(stripped > self.CEIL,
+                             "the pre-change size is NOT over it — so the gate passed")
+
+    def test_precommit_now_refuses_that_commit(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            cfg = json.loads(Path(d, ".context-budget.json").read_text())
+            self.assertEqual(cb.precommit(d, cfg), cb.BREACH)
+
+    # --- the relative rule must survive the fix, or the gate blocks its own remedy ---
+
+    def _restage(self, d, size):
+        Path(d, "BIG.md").write_text("x" * size + "\n")
+        git(d, "add", "BIG.md")
+
+    def test_a_commit_that_shrinks_an_over_budget_file_still_passes(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            git(d, "commit", "-m", "over", "--no-verify", when="2026-01-02T00:00:00Z")
+            self._restage(d, 900)
+            cfg = json.loads(Path(d, ".context-budget.json").read_text())
+            self.assertEqual(cb.blob_bytes(d, "HEAD:BIG.md"), self.CEIL + 1,
+                             "fixture proof: HEAD really is the over-budget version")
+            self.assertEqual(cb.precommit(d, cfg), cb.CLEAN)
+
+    def test_a_commit_that_grows_an_already_over_budget_file_is_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            git(d, "commit", "-m", "over", "--no-verify", when="2026-01-02T00:00:00Z")
+            self._restage(d, 1500)
+            cfg = json.loads(Path(d, ".context-budget.json").read_text())
+            self.assertEqual(cb.precommit(d, cfg), cb.BREACH)
+
+    # --- narrowing, not only deletion ----------------------------------------------
+
+    def test_blob_bytes_is_none_rather_than_zero_for_a_rev_that_does_not_resolve(self):
+        """None and 0 are different facts. A missing HEAD blob means 'new file', which the
+        caller turns into 0; a helper that returned 0 itself would make 'absent' and
+        'empty' the same, and an empty file would read as unchanged rather than as new."""
+        with tempfile.TemporaryDirectory() as d:
+            self._repo(d)
+            self.assertIsNone(cb.blob_bytes(d, "HEAD:NOT_THERE.md"))
+            self.assertIsNone(cb.blob_bytes(d, ":NOT_THERE.md"))
+            Path(d, "EMPTY.md").write_text("")
+            git(d, "add", "EMPTY.md")
+            self.assertEqual(cb.blob_bytes(d, ":EMPTY.md"), 0,
+                             "an EMPTY staged file is 0 bytes, which is not the same as absent")
+
+    def test_blob_bytes_survives_content_that_is_not_valid_utf8(self):
+        """The narrowed alternative does not merely give a wrong NUMBER here — it CRASHES.
+
+        run() passes text=True, and subprocess decodes with the strict default, so a
+        budgeted file that is not valid UTF-8 raises UnicodeDecodeError inside run(). That
+        exception is not one of the four run() catches (FileNotFoundError, Timeout, OSError
+        and its subclasses), so it propagates out of precommit() and takes the pre-commit
+        hook — and therefore the commit — down with it. `git cat-file -s` never decodes,
+        so it answers correctly instead. Found by running this test, not by predicting it.
+        """
+        with tempfile.TemporaryDirectory() as d:
+            new_repo(d)
+            Path(d, "B.bin").write_bytes(b"\xff\xfe\x00abc")
+            git(d, "add", "B.bin")
+            self.assertEqual(cb.blob_bytes(d, ":B.bin"), 6)
+            with self.assertRaises(UnicodeDecodeError):
+                _stripped_size(d, ":B.bin")
+
+    def test_precommit_completes_on_a_repo_with_a_non_utf8_budgeted_file(self):
+        """The end-to-end consequence of the line above: before the fix this call raised."""
+        with tempfile.TemporaryDirectory() as d:
+            new_repo(d)
+            Path(d, "B.bin").write_bytes(b"\xff\xfe\x00abc")
+            git(d, "add", "B.bin")
+            cfg = {"classes": {"resident": {"total_bytes": 999999}},
+                   "files": [{"path": "B.bin", "class": "resident", "max_bytes": 4}]}
+            self.assertEqual(cb.precommit(d, cfg), cb.BREACH,
+                             "6 B over a 4 B ceiling, measured without decoding")
+
+    def test_precommit_no_longer_measures_through_a_stripped_stdout(self):
+        """Pin the call site, not just the helper: a later edit could reintroduce the
+        stripped read beside a blob_bytes() that is still defined and no longer used."""
+        src = CB_PY.read_text()
+        pre = src.split("def precommit")[1].split("# === SELFTEST")[0]
+        self.assertIn("blob_bytes(root", pre)
+        self.assertNotIn("len(staged.encode())", pre)
+        self.assertNotIn("len(head.encode())", pre)
+
+
+# ---------------------------------------------------------------------------------
+# D4 — cfg["classes"]["resident"] was a DIRECT key access at two sites. A config that
+# declares no `classes` key raised KeyError, and an adopter's hand-written config is
+# exactly the one that will lack it.
+# ---------------------------------------------------------------------------------
+
+def _direct_class_access(cfg):
+    """VERBATIM re-implementation of the pre-change access, so the crash is exhibited."""
+    return cfg["classes"]["resident"]
+
+
+class TestClassSpec(unittest.TestCase):
+
+    NO_CLASSES = {"files": [{"path": "CLAUDE.md", "class": "resident", "max_bytes": 100000}]}
+
+    def test_the_pre_change_access_raises_on_a_config_with_no_classes_key(self):
+        """RED."""
+        with self.assertRaises(KeyError):
+            _direct_class_access(self.NO_CLASSES)
+
+    def test_class_spec_returns_an_empty_mapping_instead(self):
+        self.assertEqual(cb.class_spec(self.NO_CLASSES, "resident"), {})
+        self.assertEqual(cb.class_spec({"classes": None}, "resident"), {})
+        self.assertEqual(cb.class_spec({"classes": {}}, "resident"), {})
+        self.assertEqual(cb.class_spec(None, "resident"), {})
+
+    def test_class_spec_returns_the_declared_budget_when_there_is_one(self):
+        cfg = {"classes": {"resident": {"total_bytes": 34000, "warn_bytes": 30000}}}
+        self.assertEqual(cb.class_spec(cfg, "resident")["total_bytes"], 34000)
+        self.assertEqual(cb.class_spec(cfg, "read-mandated"), {},
+                         "a class the config does not declare has no budget, not a crash")
+
+    def test_neither_site_still_reaches_through_the_classes_key_directly(self):
+        """Both sites had to move together or the crash relocates rather than closing.
+        Scoped past the docstring that quotes the old expression on purpose."""
+        src = CB_PY.read_text()
+        code = src.split('def class_spec')[0] + src.split('    return ((cfg or {})')[1]
+        self.assertNotIn('cfg["classes"]', code)
+
+    def test_a_run_over_a_config_with_no_classes_key_completes(self):
+        """End to end: the crash was in render() and main(), not in a helper."""
+        with tempfile.TemporaryDirectory() as d:
+            new_repo(d)
+            Path(d, ".context-budget.json").write_text(json.dumps(self.NO_CLASSES))
+            Path(d, "CLAUDE.md").write_text("hello\n")
+            p = subprocess.run([sys.executable, str(CB_PY)], cwd=d,
+                               capture_output=True, text=True)
+            self.assertNotIn("KeyError", p.stderr)
+            self.assertIn("resident total", p.stdout)
+            self.assertIn("no ceiling declared", p.stdout,
+                          "an undeclared ceiling must SAY so, not print a bare number")
+
+    def test_a_declared_ceiling_still_renders_exactly_as_before(self):
+        """The byte-identity criterion, asserted on the rendered text rather than assumed:
+        the instrumented adopters all declare a resident total, and their line must not
+        move because a class they do not declare became representable."""
+        with tempfile.TemporaryDirectory() as d:
+            new_repo(d)
+            Path(d, ".context-budget.json").write_text(json.dumps({
+                "classes": {"resident": {"total_bytes": 34000}},
+                "files": [{"path": "CLAUDE.md", "class": "resident", "max_bytes": 100000}]}))
+            Path(d, "CLAUDE.md").write_text("x" * 4999 + "\n")
+            p = subprocess.run([sys.executable, str(CB_PY)], cwd=d,
+                               capture_output=True, text=True)
+            plain = re.sub(r"\x1b\[[0-9;]*m", "", p.stdout)
+            self.assertIn("resident total 5,000 B / 34,000 B ceiling", plain)
 
 
 if __name__ == "__main__":

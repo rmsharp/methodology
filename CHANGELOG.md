@@ -183,6 +183,50 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S129 — Phase 3 step 1: the two shipped defects the gate depends on
+
+**Adopter-facing** (`starter-kit/context_budget.py`, `bin/_manifest.py:54`). Plan step 1 of 4:
+`docs/planning/upstream-read-set-pr-plan.md` §3.4(d). Both defects were exhibited RED before being
+fixed, and each fix is pinned by a verbatim re-implementation of the pre-change expression so the
+defect stays exhibited rather than only described.
+
+**(1) THE GATE MEASURED ONE BYTE SHORT — AND THAT IS ENOUGH TO LET AN OVER-BUDGET COMMIT THROUGH.**
+`run()` returns `p.stdout.strip()` (`:137`), so `precommit()`'s `len(staged.encode())` undercounted
+any content ending in a newline, which is all of it. **A ceiling is a strict `>`,** so a file at
+exactly `ceiling + 1` true bytes measured at exactly the ceiling and the gate **passed it**. Proven
+on a fixture built to sit on that edge — 1,000 B ceiling, 1,001 B staged: the pre-change tool exits
+**0 (allowed)**, the fixed tool exits **2 (REFUSED)**. New helper `blob_bytes(root, rev)` asks git
+for the object's recorded size via `git cat-file -s` — the idiom `size_history()` already used at
+`:602`, so the technique was in-tree, not invented here.
+
+**A SECOND, LARGER DEFECT FOUND BY RUNNING THE TEST RATHER THAN PREDICTING IT.** On content that is
+not valid UTF-8 the pre-change path does not return a wrong number — it raises `UnicodeDecodeError`
+inside `run()` (`text=True`, strict default decode). That exception is **not** among the four
+`run()` catches, so it propagated out of `precommit()` and would take the pre-commit hook, and
+therefore the commit, down with it. `git cat-file -s` never decodes. Now covered end to end.
+
+**(2) `cfg["classes"]["resident"]` WAS A DIRECT KEY ACCESS AT TWO SITES** — `render()` and `main()`
+(the plan's `:339`/`:892`; today `:450`/`:1025`). A config declaring no `classes` key raised
+`KeyError`, and an adopter's hand-written config is exactly the one that will lack it. Verified:
+the pre-change tool exits **1** with `KeyError: 'classes'`; the fixed tool exits **0**. New accessor
+`class_spec(cfg, name)` returns `{}` rather than `None`, so every caller stays a `.get()`. **Both
+sites moved together** — moving one relocates the crash rather than closing it — and a test asserts
+no `cfg["classes"]` reach-through survives anywhere outside the docstring that quotes it on purpose.
+
+**BYTE-IDENTITY HELD, MEASURED NOT ASSUMED.** For a config that declares a resident total, the full
+rendered output is **byte-identical** before and after (`diff` clean, same exit code 2) — the
+`resident total X B / Y B ceiling   growth run N/M` line is unchanged. Only the *undeclared* case is
+new, and it prints `no ceiling declared` rather than crashing.
+
+**Tests:** `tools/test_context_budget.py` **61 → 79**, `OK`. Two new classes, `TestBlobBytes` and
+`TestClassSpec`, written under the file's stated discipline — prove the fixture first (the edge
+fixture asserts it sits at exactly ceiling+1 before anything else runs), drive each guard red,
+narrow rather than only delete. The relative rule is re-proven intact: a commit that **shrinks** an
+over-budget file still passes, one that **grows** it is still refused, so the gate still cannot
+prevent its own remedy. **CANONICAL-ONLY test file** — no `bin/_manifest.py` row.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-30 · [ad hoc] S129 — claim: Phase 3 of the upstream read-set PR plan, "the gate"
 
 **Phase 1B claim.** Operator selected this at the Phase 0 gate, confirming the ordered critical path
