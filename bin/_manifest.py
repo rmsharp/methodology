@@ -61,6 +61,7 @@ DISTRIBUTION = [
     # framework docs -> docs/methodology/
     ("ITERATIVE_METHODOLOGY.md", "docs/methodology/ITERATIVE_METHODOLOGY.md", TRACKED),
     ("HOW_TO_USE.md", "docs/methodology/HOW_TO_USE.md", TRACKED),
+    ("FRAMEWORK_APPARATUS.md", "docs/methodology/FRAMEWORK_APPARATUS.md", TRACKED),
     # workstreams + campaigns + templates -> docs/methodology/workstreams/
     ("workstreams/DESIGN_WORKSTREAM.md",
      "docs/methodology/workstreams/DESIGN_WORKSTREAM.md", TRACKED),

@@ -183,6 +183,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S130 — Phase 4: `ITERATIVE_METHODOLOGY.md` sheds 12,345 B into a distributed sibling
+
+**The mechanism, committed atomically.** `ITERATIVE_METHODOLOGY.md` **68,240 → 55,895 B** — shed
+**12,345 B** against a requirement of 11,490, landing **855 B under** the 56,750 B one-read cap. The six
+contiguous apparatus sections at `L541–861` (`## Knowledge Accumulation System`,
+`## Honest Accounting Framework`, `## Scope Validation System`, `## Verification Hierarchy`,
+`## Session Document Template`, `## Performance Tracking` — 14,647 B) moved **verbatim** into a new
+**distributed** sibling `FRAMEWORK_APPARATUS.md` → `docs/methodology/FRAMEWORK_APPARATUS.md`, leaving a
+`## Reference Apparatus` stub that names all six and links the file.
+
+**Nothing was deleted, so §3.3's defects #1 and #2 are unreachable by construction.**
+`## Protocol Erosion` (`L497–540`) was never in the span, so Prevention #1 is untouched; the corpus's
+only *"Gaps identified"* travelled with its block and is now `FRAMEWORK_APPARATUS.md:108`, still exactly
+one occurrence across the **23** distributed markdown sources.
+
+**LOSSLESSNESS, PROVED FIVE WAYS.** (1) all **318** removed content lines present in the sibling;
+(2) the sibling's body **byte-identical** to the reconstructed span, modulo two documented edits;
+(3) IM's head and tail byte-identical outside the span; (4) all four original parentheticals rewritten
+with no old form left; (5) each of the **13** edited lines has prose identical to HEAD once the added
+pointer is stripped.
+
+**THE ANCHOR PROOF, BUILT MECHANICALLY BECAUSE NO CHECKER CAN DO IT.** `bin/check-links:105` strips the
+`#fragment` and validates existence only. Every IM heading was slugified GitHub-style and every
+`ITERATIVE_METHODOLOGY.md#…` reference in every tracked `.md` resolved to a line number: **16 distinct
+fragments across 52 sites, ZERO inside `L541–861`, ZERO already dangling.** Re-run after the move: **66
+references, 0 unresolved.** `#adapting-to-your-domain` resolves to **L862**, the line immediately after
+the span — which is what makes the boundary right rather than lucky.
+
+**THE REACHABILITY REPAIR — what the anchor proof could not see.** An adversarial review found the
+pattern: *the change updated every place that **names** the six sections and no place that **invokes
+what is in them**.* Those sections were reached by **scrolling**, not linking, so none of it appears in
+a link-based proof. **Nine pointers added at the points of need** — Principles 4–7, Phase 2 step 8,
+Phase 6 steps 5–6 and its gate, and the self-referencing `### Across the Full Series (Performance
+Tracking)` heading. **Cost 901 B, taking headroom from 1,672 to 855 B**; the trade is deliberate, since
+a file under the cap whose content cannot be found is the failure this phase exists to prevent.
+
+**DEFECT #3 IS A SIX-SITE PROBLEM, NOT THE ONE THE PLAN NAMES.** `starter-kit/BOOTSTRAP.md` `:30`
+(tree), `:72` (`bin/sync` prose), `:95` (manual copy) land here; the other three
+(`README.md:75`, `README.md:79`, `docs/tutorials/T1_setup.md:63`) land in the follow-up commit.
+
+**Verification.** `bin/tests.sh` **288 passed / 1 failed**, byte-for-byte the control taken before any
+edit — **zero status flips across 285 shared assertions**, the only two differing rows being the
+manifest count `26 → 27`, both passing. The one failure (`github source dry-run failed`) is the
+pre-existing network-dependent case, present in the control. `bin/check-links` 105 links resolve; the
+dashboard twins are byte-identical; `set(DISTINCTIVE) | set(AMBIGUOUS) == set(tracked_md)` holds at 19;
+`python3 bin/sync` into a scratch repo lands the sibling with all cross-file links intact.
+
+**Blast radius, stated rather than absorbed.** `starter-kit/SAFEGUARDS.md:49` caps a commit at five
+files; this one is seven. The extraction, the manifest row, the dashboard doc-set constant (both twins)
+and `BOOTSTRAP.md` **cannot be split** — any subset leaves `bin/tests.sh` red or ships an install that
+omits the file. The consumer documentation that merely *describes* the change is a separate commit.
+
 ### 2026-08-30 · [ad hoc] S130 — claim: Phase 4 of the upstream read-set PR plan, `ITERATIVE_METHODOLOGY.md`
 
 **Phase 1B claim.** Operator confirmed at the Phase 0 gate and approved the approach at the Present
