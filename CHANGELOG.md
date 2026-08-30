@@ -183,6 +183,71 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S130 — claim: Phase 4 of the upstream read-set PR plan, `ITERATIVE_METHODOLOGY.md`
+
+**Phase 1B claim.** Operator confirmed at the Phase 0 gate and approved the approach at the Present
+gate. This is **Phase 4 of
+[`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md) §5** —
+`ITERATIVE_METHODOLOGY.md` must shed **≥ 11,490 B** (68,240 → ≤ **56,750 B**, the one-read cap).
+**Adopter-facing:** the file carries `bin/_manifest.py:62`, and this claim adds a second distributed
+row beside it.
+
+**CONTROL, MEASURED BEFORE ANY CHANGE.** `wc -c ITERATIVE_METHODOLOGY.md` = **68,240**;
+`git cat-file -s upstream/main:ITERATIVE_METHODOLOGY.md` = **68,247**, and the two trees differ by a
+**single line** — so this is essentially virgin work that will port cleanly. The nineteen L2 sections
+sum to 67,953 B over a 287 B preamble; `## The 6 Phases` alone is 20,796 B = 30.5%.
+
+**THE PLAN'S §3.3 RESTS ON AN INVENTORY THAT DOES NOT EXIST.** It states *"Measured proposals total
+12,358 B, which reaches the target"*, but `MERGE-EROSION` and `EXTRACT-EV-DUPLICATE-PERFTABLE` occur
+**nowhere in this repository** outside that paragraph and the S129 receipt quoting it, and both are
+named only as **defects**. `git log -S` traces each to `fe906c2`, the plan's own drafting commit. So
+Phase 4 cannot execute a recorded plan; the proposals were **re-derived** this session and measured
+from scratch.
+
+**THE THREE §3.3 DEFECTS, RE-VERIFIED RATHER THAN QUOTED.** (1) Merging `## Protocol Erosion` would
+lose Prevention #1 — confirmed: the runner's only *"2 minutes"* sentence (`SESSION_RUNNER.md:369`) is
+**conditional**, IM's is **unconditional**, and no counterpart exists. (2) *"Gaps identified"* is
+corpus-unique — confirmed, exactly one occurrence, `ITERATIVE_METHODOLOGY.md:634`. (3) An extraction
+needs a manifest row **and** `starter-kit/BOOTSTRAP.md` updated — confirmed, and the plan **understates
+it**: BOOTSTRAP names the manual-copy set at **`:72` and `:95`**, two sites, plus a tree diagram at
+**`:30`**.
+
+**THE APPROVED APPROACH — APPARATUS-EXTRACT.** Move the six **contiguous** sections `L541–861`
+(`## Knowledge Accumulation System`, `## Honest Accounting Framework`, `## Scope Validation System`,
+`## Verification Hierarchy`, `## Session Document Template`, `## Performance Tracking`; **14,647 B**
+gross) into a new **distributed** sibling `FRAMEWORK_APPARATUS.md` →
+`docs/methodology/FRAMEWORK_APPARATUS.md`, leaving a pointer stub. Net ≈ **13,367 B**, landing IM at
+≈ **54,873 B** — ≈ 1,877 B under the cap. **Extraction deletes nothing, so defects #1 and #2 are
+unreachable by construction**; the seam separates the framework's *apparatus* (tables you fill in,
+tests you run, scales you score against) from the *argument* that says when to reach for each, which
+is the same move `CLAUDE.md` → `docs/RELEASE_HISTORY.md` and `SESSION_RUNNER.md` →
+`starter-kit/FRAMEWORK_LEARNINGS.md` already made here.
+
+**THE ANCHOR PROOF, BECAUSE NO CHECKER CAN DO IT.** `bin/check-links:105` strips the `#fragment` and
+tests file existence only — *"Strip an anchor fragment; file existence only (Phase 2)"* — so a broken
+anchor is invisible to tooling and the grep **is** the entire defense. Every heading in IM was
+slugified GitHub-style, every `ITERATIVE_METHODOLOGY.md#…` reference in every tracked `.md` was
+resolved to a line number, and the result is **16 distinct fragments across 52 sites, of which ZERO
+resolve inside L541–861, and ZERO are already dangling**. The nearest neighbour,
+`#adapting-to-your-domain`, resolves to **L862** — the line immediately after the span, which is what
+makes the boundary exactly right.
+
+**WHAT THIS CLAIM FORBIDS ITSELF.** No deletion of any kind. No touching `## Protocol Erosion`
+(`L497–540`) or the `Gaps identified` row. No re-pathing of the moved text (it contains **zero**
+relative links). The cross-reference rewrites at `L189`, `L190`, `L290`, `L309` must alter **only the
+parenthetical** — an adversarial reviewer found that the drafted patch would have truncated their
+tails and destroyed three corpus-unique fragments, which is the §3.3 defect shape committed a third
+time by the fix for it.
+
+**Scope:** `ITERATIVE_METHODOLOGY.md`, the new `FRAMEWORK_APPARATUS.md`, `bin/_manifest.py`,
+`starter-kit/BOOTSTRAP.md`, both `methodology_dashboard.py` twins and their prose counts, `README.md`,
+`HOW_TO_USE.md`, `CLAUDE.md`, `.context-budget.json`. **NO OUTWARD-FACING ACTION:** Phase 5 opens the
+PR and needs the operator's explicit go-ahead, separately.
+
+**Ledger note, carried forward.** `HANDOFFS.md` holds **6** receipts against the N=4 retention policy
+and is **74,404 B — 17,654 B over the 56,750 B one-read cap**, up from 5 receipts / 7,305 B over when
+the operator last chose to leave it (S129). Recorded so it stays visible, not absorbed.
+
 ### 2026-08-30 · [ad hoc] S129 close-out — Phase 3 "the gate" shipped and repaired, self-score 6/10
 
 **Phase 3D/3F close-out.** `HANDOFFS.md` receipt written to `status: complete`;

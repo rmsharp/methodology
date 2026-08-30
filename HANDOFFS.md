@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S130
+date: 2026-08-30
+status: pending
+active_task: **PHASE 4 OF `docs/planning/upstream-read-set-pr-plan.md` §5** — `ITERATIVE_METHODOLOGY.md` sheds ≥ 11,490 B (68,240 → ≤ 56,750 B, the one-read cap). Approach approved by the operator at the Present gate: **APPARATUS-EXTRACT** — move the six contiguous apparatus sections `L541–861` (Knowledge Accumulation System, Honest Accounting Framework, Scope Validation System, Verification Hierarchy, Session Document Template, Performance Tracking; 14,647 B gross) into a new **distributed** sibling `FRAMEWORK_APPARATUS.md` → `docs/methodology/FRAMEWORK_APPARATUS.md`, leaving a pointer stub. Net ≈ **13,367 B**; IM lands at ≈ **54,873 B**, ≈ 1,877 B under the cap. Nothing is deleted, so §3.3's defects #1 and #2 are unreachable by construction; defect #3 is discharged in-commit by the `bin/_manifest.py` row plus `starter-kit/BOOTSTRAP.md` `:30`, `:72`, `:95`. **ADOPTER-FACING.** **NO OUTWARD-FACING ACTION** — Phase 5 (open the PR) needs the operator's explicit go-ahead separately.
+```
+
+```handoff
 session: S129
 date: 2026-08-30
 status: complete
