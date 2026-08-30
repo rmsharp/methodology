@@ -183,6 +183,86 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S129 — the Phase 3 gate, adversarially reviewed: 10 confirmed defects fixed, two published claims retracted
+
+**A repair round on this session's own work, and two of the claims it retracts are mine.** The Phase 3
+diff (`9999410` + `beffbd0`) was frozen and reviewed by four independent lenses; every finding then went
+to a separate skeptic instructed to REFUTE it. **12 raised → 10 confirmed → 2 refuted as pre-existing.**
+
+**THE TWO FALSE CLAIMS, retracted here rather than left standing in the ledger.**
+
+1. **I wrote that *"a commit that shrinks an over-budget class always passes."* IT DID NOT.** Measured on
+   `beffbd0`: a class going **60,000 → 45,000 B** by `git rm` of one member was **REFUSED**, reported as
+   `30,000 -> 45,000` — the wrong baseline and the wrong sign. The tool printed its own sentence *"A
+   commit that SHRINKS one of these always passes"* four lines beneath that refusal. This is the failure
+   the relative rule exists to prevent, in the arm I added to prevent it.
+2. **I wrote that *"a member that cannot be sized is announced, never silently counted as zero."* IT WAS
+   NOT.** An index holding **1,800 B against a 1,000 B ceiling PASSED**, because the member was absent
+   from the worktree and skipped before any bookkeeping.
+
+**ONE ROOT CAUSE, AND IT IS A SENTENCE WORTH KEEPING: A COMMIT CONTAINS THE INDEX, NOT THE WORKTREE.**
+`precommit()`'s pre-existing `if not os.path.exists(path): continue` ran *before* the new bookkeeping, so
+a member removed by `git rm` was subtracted from the **HEAD** side as well as the staged side. The guard
+predates this session; the arm that depends on it does not, so the defect is **mine**. The loop is now
+driven by `git cat-file -s :path`, which reads the index and does not care whether the worktree copy
+still exists — exactly the question a pre-commit hook asks.
+
+**A SECOND ENTRY POINT I WOULD HAVE MISSED, found by a reviewer and confirmed by its skeptic.** With the
+worktree fix alone, a **rename** still failed: the deleted path is no longer a config member, so the
+worktree guard never sees it, and the HEAD baseline — summed over **today's** member list — silently
+dropped its bytes. A 69,749 → 66,363 B reduction was refused as `54,363 -> 66,363`. **The baseline now
+comes from `HEAD:.context-budget.json` — HEAD's own declaration of what the class contained.** Any member
+that *leaves* a class (deleted, renamed, or reclassified) now keeps its bytes in the baseline it is being
+compared against. Generalised in the fix, not patched per-shape.
+
+**EIGHT MORE, each confirmed by an independent skeptic.** (3) The headline printed a green **OK** while
+the process exited **BREACH** — `worst` was computed over `results + synced` while defects were
+deliberately kept out of `results`. (4) A class between its warn line and its ceiling set `status:
+"warn"` that **nothing read**: render printed only bytes and ceiling, and the exit code saw class rows
+only when they were over — a declared number honoured by no code path, in a tool whose whole subject is
+exactly that. Class statuses now print and now vote. (5) A declared `total_bytes: 0` was read as *no
+ceiling declared* — `is not None` now, never truthiness. (6) The pseudo-row filter tested
+`path.startswith("(")`, **user-supplied data**, so a project declaring `(draft) notes.md` had it dropped
+from every class total while two other code paths still counted it; the marker is now a flag we set.
+(7) `assertEqual(a, b, 1200)` passes 1200 as unittest's failure **message** — that test asserted only
+symmetry, which addition gives for free, and survived a mutant that halved every total. (8) The
+`config_defects` call-site guard counted the substring file-wide, matching three `selftest()` calls and
+one **comment**, so it stayed green with **both** real call sites deleted; it is now scoped to the two
+function bodies and dies on either. (9) The `>` → `>=` class-ceiling **edge** mutant survived all 108
+tests — a class sitting exactly ON its ceiling was untested. (10) `framework_share()` did not use the
+constant it named; the identity now runs as written, and the defect message reports the cap in force
+rather than printing the module constant beside a different number.
+
+**REFUTED, correctly, and recorded so nobody re-raises them:** the `sum(r.get("bytes", 0))` zero-default
+in `class_totals()` and one other condition are **byte-identical at `6a8aacc`** — pre-existing, not
+introduced here.
+
+**AN ADOPTER-VISIBLE CHANGE I DID NOT REVERT, and the operator should see it.** Re-measured after the
+fixes: `chat_verification` and `vscode_quarto_ext` remain **byte-identical**, whole stdout, same exit
+code. **`wsfct` now differs by one word** — its resident line gains ` warn` (43,956 B against a
+`warn_bytes: 39000` it has always declared and nothing has ever read). Reverting to satisfy the
+byte-identity criterion literally would mean **keeping a declared number unread**, which is the defect
+class this repository exists to catch. Kept, and flagged rather than absorbed.
+
+**A CORRECTION TO THIS SESSION'S OWN COST FIGURE.** The earlier entry said the selftest gates were
+**5,747 B (33%)** of the growth. **Wrong** — that measurement ran from `def selftest` to `if __name__`,
+which swallows `main()`. Measured on the function body: the tool is **50,580 → 73,014 B, +22,434
+(+44.4%)**, of which `selftest()` is **+4,599 B (20.5%)** and everything else **+17,835 B (79.5%)**.
+**A 44% growth in the tool that polices size is worth a successor's attention**, and nothing declares a
+ceiling for `context_budget.py` itself.
+
+**Plan `§9` corrected twice from reviewer findings:** `--calibrate` is **also** write-free (verified by
+running it and diffing the directory), and `9e71f83` is a **commit**, not a blob (`git cat-file -t`).
+
+**VERIFICATION, all run bare with `$?` read on the next line.** `bash bin/tests.sh`: **288 passed / 1
+failed / 0 skipped, exit 1 — identical to the pre-session control**, and compared **row-for-row: 286
+shared labels, ZERO status flips**. The one failure is Test 9's `--source=github` 404. `--selftest`
+**52 PASS / 0 FAIL, exit 0**. `tools/test_context_budget.py` **61 → 116 tests, OK**. The four new
+regression tests were driven **RED against `beffbd0`** (4 failures) and pass now; the repaired
+call-site guard was mutation-tested against **each** call site and dies on both.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-30 · [ad hoc] S129 — the read-set plan records Phase 3 shipped, and the three claims it refuted
 
 `docs/planning/upstream-read-set-pr-plan.md` only. **Status line and §5 Phase 3 marked SHIPPED**

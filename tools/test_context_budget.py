@@ -974,10 +974,51 @@ class TestClassTotals(unittest.TestCase):
         self.assertEqual(pair["status"], "over")
 
     def test_moving_bytes_between_members_leaves_the_total_unmoved(self):
-        """The failure mode in one assertion: a transfer both per-file rows would allow."""
+        """The failure mode in one assertion: a transfer both per-file rows would allow.
+
+        The first version of this test read `assertEqual(a, b, 1200)`, where unittest takes
+        the third positional as the failure MESSAGE. It therefore asserted only that
+        class_totals is symmetric under swapping member sizes — which addition is by
+        construction — and stayed green against a mutant that halved every total.
+        """
         a = cb.class_totals(self._cfg(), self._results(900, 300))
         b = cb.class_totals(self._cfg(), self._results(300, 900))
-        self.assertEqual(a[-1]["bytes"], b[-1]["bytes"], 1200)
+        self.assertEqual(a[-1]["bytes"], 1200)
+        self.assertEqual(b[-1]["bytes"], 1200)
+        self.assertEqual(a[-1]["bytes"], b[-1]["bytes"])
+
+    def test_a_class_exactly_at_its_ceiling_is_not_over(self):
+        """THE EDGE. `total > ceil` and `total >= ceil` agree on every fixture except a
+        class sitting exactly ON the ceiling, so without this case the `>`/`>=` mutant
+        survives the whole suite — it did, until this test was added."""
+        t = cb.class_totals(self._cfg(total=1000), self._results(500, 500))
+        pair = [c for c in t if c["class"] == "pair"][0]
+        self.assertEqual(pair["bytes"], 1000)
+        self.assertEqual(pair["status"], "ok", "at the ceiling is not over it")
+
+    def test_one_byte_past_the_ceiling_is_over(self):
+        """Paired control: without it, 'at the ceiling is ok' could be satisfied by a
+        predicate that never fires at all."""
+        t = cb.class_totals(self._cfg(total=1000), self._results(500, 501))
+        self.assertEqual([c for c in t if c["class"] == "pair"][0]["status"], "over")
+
+    def test_a_declared_ceiling_of_zero_is_still_a_ceiling(self):
+        """`if ceil and ...` made a DECLARED 0 indistinguishable from an undeclared one,
+        which silently disables the gate for a config that plainly declares it."""
+        t = cb.class_totals({"classes": {"z": {"total_bytes": 0}}},
+                            [{"path": "a", "class": "z", "bytes": 1,
+                              "findings": [], "status": "ok"}])
+        self.assertEqual(t[-1]["status"], "over")
+
+    def test_a_declared_file_whose_name_starts_with_a_paren_is_counted(self):
+        """The pseudo-row filter must key on a FLAG we set, never on a path the project
+        supplies. Filtering on `path.startswith("(")` dropped this file from every class
+        total while main()'s resident sum and precommit()'s arm still counted it."""
+        t = cb.class_totals({"classes": {"pair": {"total_bytes": 1000}}},
+                            [{"path": "(draft) notes.md", "class": "pair", "bytes": 1200,
+                              "findings": [], "status": "ok"}])
+        self.assertEqual(t[-1]["bytes"], 1200)
+        self.assertEqual(t[-1]["status"], "over")
 
     def test_a_class_warn_line_is_read_rather_than_merely_declared(self):
         """The distributed SEED has carried classes.resident.warn_bytes since it shipped
@@ -997,10 +1038,11 @@ class TestClassTotals(unittest.TestCase):
     def test_pseudo_rows_are_not_counted_a_second_time(self):
         """main() appends `(pair total)` INTO results. A second call must not re-sum it."""
         res = self._results(600, 600) + [
-            {"path": "(pair total)", "class": "pair", "bytes": 1200,
+            {"path": "(pair total)", "class": "pair", "bytes": 1200, "aggregate": True,
              "findings": [], "status": "over"}]
         self.assertEqual(cb.class_totals(self._cfg(), res)[-1]["bytes"], 1200,
-                         "a parenthesised row is this function's own output, not a member")
+                         "an aggregate-flagged row is this function's own output, "
+                         "not a member")
 
     def test_resident_is_reported_even_when_the_config_declares_no_class(self):
         t = cb.class_totals({"files": []}, [])
@@ -1115,6 +1157,61 @@ class TestPrecommitClassArm(unittest.TestCase):
             self.assertEqual(cb.precommit(d, weaker), cb.CLEAN,
                              "per-file ceilings alone must be shown to MISS this")
 
+    def test_deleting_a_member_is_credited_as_the_reduction_it_is(self):
+        """THE REMEDY THE GATE MUST NOT BLOCK. Removing a member is the most direct way to
+        shrink an over-budget class. The first version of this arm skipped any member
+        absent from the WORKTREE before bookkeeping, so `git rm` dropped the member from
+        the HEAD side too and the survivors read as pure growth: a measured 60,000 ->
+        45,000 B reduction was REFUSED, reported as `30,000 -> 45,000`."""
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._repo(d, 30000, 30000)
+            cfg["classes"]["pair"]["total_bytes"] = 40000
+            self.assertEqual(cb.blob_bytes(d, "HEAD:A.md")
+                             + cb.blob_bytes(d, "HEAD:B.md"), 60000)
+            git(d, "rm", "-q", "B.md")
+            Path(d, "A.md").write_text("a" * 45000)
+            git(d, "add", "-A")
+            self.assertEqual(cb.precommit(d, cfg), cb.CLEAN,
+                             "60,000 -> 45,000 B is a reduction and must pass")
+
+    def test_a_member_staged_but_absent_from_the_worktree_is_still_counted(self):
+        """The mirror failure: the index is what gets committed. A member present in the
+        index but deleted from disk was skipped and counted as ZERO, so an index holding
+        1,800 B against a 1,000 B ceiling PASSED."""
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._repo(d, 100, 100)
+            self._stage(d, 900, 900)
+            os.remove(os.path.join(d, "B.md"))          # gone from disk, still in the index
+            self.assertEqual(cb.blob_bytes(d, ":B.md"), 900,
+                             "fixture proof: the index still holds B.md")
+            self.assertEqual(cb.precommit(d, cfg), cb.BREACH,
+                             "1,800 B against a 1,000 B ceiling must refuse")
+
+    def test_a_rename_that_shrinks_the_class_passes(self):
+        """The second entry point, found only by an adversarial reviewer. Here the deleted
+        path is not a config member at all — the config was updated to name the new file —
+        so the worktree fix does not reach it. The HEAD baseline must therefore be summed
+        over HEAD'S OWN config, not today's, or every member that LEAVES a class takes its
+        HEAD bytes out of the baseline the relative rule compares against."""
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._repo(d, 30000, 30000)
+            cfg["classes"]["pair"]["total_bytes"] = 40000
+            git(d, "mv", "B.md", "C.md")
+            Path(d, "C.md").write_text("c" * 20000)     # 60,000 -> 50,000: a reduction
+            cfg["files"] = [{"path": "A.md", "class": "pair"},
+                            {"path": "C.md", "class": "pair"}]
+            Path(d, ".context-budget.json").write_text(json.dumps(cfg))
+            git(d, "add", "-A")
+            self.assertEqual(cb.precommit(d, cfg), cb.CLEAN,
+                             "a rename that shrinks the class must not be refused")
+
+    def test_the_head_baseline_comes_from_heads_config_not_the_staged_one(self):
+        """Pin the mechanism, not just the symptom."""
+        src = CB_PY.read_text()
+        pre = src.split("def precommit")[1].split("# === SELFTEST")[0]
+        self.assertIn('f"HEAD:{CONFIG_NAME}"', pre,
+                      "the baseline must consult HEAD's own declaration of the class")
+
     def test_an_undeclared_class_total_gates_nothing(self):
         with tempfile.TemporaryDirectory() as d:
             cfg = self._repo(d, 600, 600)
@@ -1179,10 +1276,23 @@ class TestReserveIdentity(unittest.TestCase):
         nothing calls is a comment shaped like a guard — and 'asserted at run time' is
         not true of a function with no call site."""
         src = CB_PY.read_text()
-        calls = [l.strip() for l in src.splitlines()
-                 if "config_defects(" in l and not l.strip().startswith("def ")]
-        self.assertGreaterEqual(len(calls), 2,
-                                "expected a call in main() and one in precommit()")
+        # Scoped to the two function BODIES. Counting "config_defects(" across the whole
+        # file matched three calls inside selftest() and one occurrence inside a comment,
+        # so the guard stayed green with BOTH real call sites deleted — a guard whose net
+        # is wider than its claim asserts nothing about the claim.
+        def body_of(fn):
+            """The body of one top-level def, ending at the next top-level def. `main()`
+            lives AFTER the SELFTEST banner, so slicing the file at that banner drops it
+            entirely — which is how the first version of this fix raised IndexError."""
+            i = src.index(f"def {fn}(")
+            rest = src[i:]
+            m = re.search(r"\n(?=def |if __name__)", rest[1:])
+            return rest[: m.start() + 1] if m else rest
+        for name, chunk in (("main()", body_of("main")),
+                            ("precommit()", body_of("precommit"))):
+            code = [l for l in chunk.splitlines()
+                    if "config_defects(" in l and not l.lstrip().startswith("#")]
+            self.assertTrue(code, f"config_defects() is not called in {name}")
 
     def test_a_config_defect_makes_the_run_breach(self):
         with tempfile.TemporaryDirectory() as d:

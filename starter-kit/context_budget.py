@@ -141,6 +141,10 @@ def framework_share(cfg):
 
         framework_share := READ_CAP_BYTES - adopter_reserve_bytes
 
+    where READ_CAP_BYTES is this module's constant unless the config overrides
+    `read_cap_tokens`, in which case the cap is re-derived from it at the same floor and
+    returned as `cap_bytes` so callers report the number in force, not the constant.
+
     THE CEILING IS DERIVED, NOT PICKED. A number someone typed drifts from the cap it is
     supposed to be a partition of and nothing notices; a number computed from the cap
     cannot. `adopter_reserve_bytes` is the share of one read reserved for the ADOPTER's own
@@ -149,8 +153,12 @@ def framework_share(cfg):
     LEAST favourable assumption for the framework's own numbers, so a shortfall measured
     at reserve zero cannot be blamed on the reserve.
     """
-    cap = int((cfg or {}).get("read_cap_tokens", READ_CAP_TOKENS))
-    cap_bytes = int(cap * MIN_BYTES_PER_TOKEN)
+    # READ_CAP_BYTES is the default, so the identity in the docstring is the one that
+    # runs. A project that overrides `read_cap_tokens` gets its own cap re-derived at the
+    # same floor -- reported as `cap_bytes` so a caller can name the number actually in
+    # force rather than printing the module constant beside a different value.
+    cap = (cfg or {}).get("read_cap_tokens")
+    cap_bytes = READ_CAP_BYTES if cap is None else int(int(cap) * MIN_BYTES_PER_TOKEN)
     reserve = int((cfg or {}).get("adopter_reserve_bytes", 0) or 0)
     return cap_bytes - reserve, reserve, cap_bytes
 
@@ -196,15 +204,18 @@ def class_totals(cfg, results):
     names = sorted(set(declared) | {"resident"}, key=lambda n: (n != "resident", n))
     out = []
     for name in names:
-        spec = declared.get(name) or {}
+        spec = class_spec(cfg, name)
         total = sum(r.get("bytes", 0) for r in results
-                    if r.get("class") == name and not str(r.get("path", "")).startswith("("))
+                    if r.get("class") == name and not r.get("aggregate"))
         ceil, _derived = class_ceiling(cfg, spec)
         warn = spec.get("warn_bytes")
         status = "ok"
-        if ceil and total > ceil:
+        # `is not None`, never truthiness: a DECLARED total_bytes of 0 is a ceiling that
+        # nothing can satisfy, and reading it as "undeclared" disables the gate while the
+        # config plainly declares one.
+        if ceil is not None and total > ceil:
             status = "over"
-        elif warn and total > warn:
+        elif warn is not None and total > warn:
             status = "warn"
         out.append({"class": name, "bytes": total, "total_bytes": ceil,
                     "warn_bytes": warn, "status": status})
@@ -248,7 +259,7 @@ def config_defects(cfg, defaults=None):
             # believe the number they typed.
             out.append(f"class {name}: total_bytes {int(written):,} disagrees with the "
                        f"derived framework share {share:,} B "
-                       f"(READ_CAP_BYTES {cap_bytes:,} - adopter_reserve_bytes "
+                       f"(read cap {cap_bytes:,} B - adopter_reserve_bytes "
                        f"{reserve:,}) — the DERIVED value is in force, not the written one")
     return out
 
@@ -572,9 +583,16 @@ def render(root, results, synced, run_len, run_hit, cfg, snapshot, totals=None,
     print(f"\n{D}{'─'*W}{R}")
     worst = "ok"
     order = {"ok": 0, "unmeasured": 1, "warn": 2, "instrument-failed": 3, "over": 4}
-    for r in results + synced:
+    for r in list(results) + list(synced) + list(totals or []):
         if order[r["status"]] > order[worst]:
             worst = r["status"]
+    # A config defect is an instrument failure and main() exits BREACH on one, so the
+    # headline has to say so. It was computed over `results + synced` alone while defects
+    # were deliberately kept out of `results`, which put a green OK on the most-read line
+    # of a run that exits 2. The class totals join for the same reason: a class past its
+    # warn line had its status computed and then read by nothing.
+    if defects and order["instrument-failed"] > order[worst]:
+        worst = "instrument-failed"
     c = status_colour(worst)
     print(f"  {B}context budget{R}  {c}{B}{worst.upper()}{R}   "
           f"{D}resident {snapshot['resident_bytes']:,} B "
@@ -606,7 +624,13 @@ def render(root, results, synced, run_len, run_hit, cfg, snapshot, totals=None,
         # not computed over would put a true number in a place that makes it false.
         run_s = (f"   {D}growth run {run_len}/{cfg.get('growth_run', 10)}{R}"
                  if ct["class"] == "resident" else "")
-        print(f"  {ct['class']} total {B}{ct['bytes']:,} B{R} / {ceil_s}{run_s}")
+        # The status is PRINTED, not merely computed. A class between its warn line and
+        # its ceiling used to set status="warn" that nothing read: render showed only
+        # bytes and ceiling, and main()'s exit code saw class rows only when they were
+        # OVER. The declared warn_bytes therefore produced no warning anywhere, in a tool
+        # whose whole subject is numbers that are declared and not honoured.
+        st = "" if ct["status"] == "ok" else f"  {status_colour(ct['status'])}{ct['status']}{R}"
+        print(f"  {ct['class']} total {B}{ct['bytes']:,} B{R} / {ceil_s}{st}{run_s}")
 
     # Config defects print SEPARATELY from file findings and are not a results row: a row
     # must be able to show the figure behind its own verdict (ledger_dimension), and a
@@ -983,22 +1007,33 @@ def precommit(root, cfg):
     # not a file that grew, and the relative rule has nothing to say about it.
     for m in config_defects(cfg):
         print(f"{YEL}context-budget: config defect — {m}{R}")
-    staged, head, unsized = {}, {}, {}
+    staged, head = {}, {}
     for spec in cfg.get("files", []):
-        path = expand(root, spec["path"])
-        if not os.path.exists(path) or os.path.isabs(spec["path"]):
-            continue  # files outside the repo are not staged by this commit
+        if os.path.isabs(spec["path"]):
+            continue  # files outside the repo are not part of this commit
+        # A COMMIT CONTAINS THE INDEX, NOT THE WORKTREE, and this loop must be driven by
+        # the index or the aggregate below is wrong in BOTH directions. The worktree test
+        # that used to stand here (`if not os.path.exists(path): continue`) ran BEFORE any
+        # bookkeeping, which meant:
+        #   * a member removed by `git rm` was dropped from the HEAD side as well as the
+        #     staged side, so deleting a member -- the most direct remedy for an
+        #     over-budget class -- was not credited and the survivors read as pure growth.
+        #     Measured: a 4,200 -> 1,300 B reduction was REFUSED, reported as 1,200 -> 1,300.
+        #   * a member staged with content but absent from the worktree was skipped
+        #     entirely and counted as ZERO, so an index holding 1,800 B against a 1,000 B
+        #     ceiling PASSED.
+        # Both are the same line, and both are the failure the relative rule exists to
+        # prevent. `git cat-file -s :path` reads the INDEX and does not care whether the
+        # worktree copy still exists, which is exactly the question a pre-commit hook asks.
         new = blob_bytes(root, f":{spec['path']}")
-        if new is None:
-            # Not tracked, or staged for deletion — nothing to size. Recorded rather than
-            # skipped silently: a class total that quietly counts an unsizeable member as
-            # zero UNDERSTATES itself, which is the direction that lets a breach through.
-            unsized.setdefault(spec.get("class", "resident"), []).append(spec["path"])
-            continue
-        old = blob_bytes(root, f"HEAD:{spec['path']}") or 0
+        old = blob_bytes(root, f"HEAD:{spec['path']}")
+        if new is None and old is None:
+            continue  # not tracked on either side — nothing this commit can be judged on
         cls = spec.get("class", "resident")
-        staged[cls] = staged.get(cls, 0) + new
-        head[cls] = head.get(cls, 0) + old
+        staged[cls] = staged.get(cls, 0) + (new or 0)
+        if new is None:
+            continue  # deleted: there is no per-file verdict to give, only the aggregate
+        old = old or 0
         ceil = spec.get("max_bytes")
         if ceil and new > ceil and new > old:
             bad.append((spec["path"], old, new, ceil, "B", f"{ceil:,} B"))
@@ -1015,6 +1050,30 @@ def precommit(root, cfg):
                     bad.append((spec["path"], otok, ntok, max_tok, "tok",
                                 f"{max_tok:,} tok"))
 
+    # THE BASELINE IS HEAD'S OWN DECLARATION, NOT TODAY'S.
+    # `head` must answer "what did this class contain at HEAD?", and only HEAD's config can
+    # say. Summing HEAD blob sizes over the CURRENT member list silently drops the bytes of
+    # any member that LEAVES the class in this commit — renamed with the config updated to
+    # match, or reclassified — so a rename that shrinks a class read as pure growth and was
+    # refused. Falls back to the current list when HEAD has no config (the first commit that
+    # adds one), which is the only case where there is no prior declaration to consult.
+    head = {}
+    rc_cfg, head_cfg_raw, _ = run(["git", "show", f"HEAD:{CONFIG_NAME}"], cwd=root)
+    head_files = cfg.get("files", [])
+    if rc_cfg == 0:
+        try:
+            head_files = (json.loads(head_cfg_raw) or {}).get("files", head_files)
+        except ValueError:
+            pass          # unparseable HEAD config — fall back rather than guess
+    for spec in head_files:
+        if os.path.isabs(spec.get("path", "")):
+            continue
+        prev = blob_bytes(root, f"HEAD:{spec['path']}")
+        if prev is None:
+            continue
+        cls = spec.get("class", "resident")
+        head[cls] = head.get(cls, 0) + prev
+
     # --- the class-aggregate arm ---------------------------------------------------
     # PER-FILE CEILINGS DO NOT SUM. Bytes can move out of SAFEGUARDS.md and into
     # SESSION_RUNNER.md leaving both rows green while the Phase 0 read is unchanged, so
@@ -1023,16 +1082,11 @@ def precommit(root, cfg):
     # REPORTS AND CANNOT REFUSE, which is half a gate. Same relative rule throughout.
     for name, cspec in sorted((cfg.get("classes") or {}).items()):
         ceil, _derived = class_ceiling(cfg, cspec)
-        if not ceil:
-            continue
+        if ceil is None:
+            continue  # `not ceil` would treat a DECLARED total_bytes of 0 as undeclared
         new_t, old_t = staged.get(name, 0), head.get(name, 0)
         if new_t > ceil and new_t > old_t:
             bad.append((f"({name} total)", old_t, new_t, ceil, "B", f"{ceil:,} B"))
-        elif unsized.get(name):
-            # Under the ceiling only because a member could not be sized. Say so instead
-            # of passing: the total is a LOWER BOUND here, not a measurement.
-            print(f"{YEL}context-budget: {name} total is a lower bound — "
-                  f"{', '.join(unsized[name])} could not be sized{R}")
     if not bad:
         return CLEAN
     print(f"\n{RED}{B}context-budget: REFUSED{R}")
@@ -1196,7 +1250,16 @@ def selftest(root, cfg):
     check("this function's own pseudo-row is not counted a second time",
           class_totals(pair, _rows(600, 600) + [{"path": "(pair total)", "class": "pair",
                                                  "bytes": 1200, "findings": [],
+                                                 "aggregate": True,
                                                  "status": "over"}])[-1]["bytes"] == 1200)
+    check("a DECLARED file whose name starts with '(' is still counted",
+          class_totals({"classes": {"pair": {"total_bytes": 1000}}},
+                       [{"path": "(draft) notes.md", "class": "pair", "bytes": 1200,
+                         "findings": [], "status": "ok"}])[-1]["bytes"] == 1200)
+    check("a declared class ceiling of 0 is a ceiling, not an absent one",
+          class_totals({"classes": {"z": {"total_bytes": 0}}},
+                       [{"path": "a", "class": "z", "bytes": 1, "findings": [],
+                         "status": "ok"}])[-1]["status"] == "over")
 
     # --- the reserve identity: framework_share := READ_CAP_BYTES - adopter_reserve_bytes
     check("READ_CAP_BYTES is computed from the cap, never written",
@@ -1299,6 +1362,10 @@ def main():
                  else f"across the {ct['class']} class")
         results.append({"path": f"({ct['class']} total)", "class": ct["class"],
                         "status": "over", "bytes": ct["bytes"], "max_bytes": ceil,
+                        # The marker class_totals() filters on. A flag, never the path:
+                        # the path is user-supplied data and a project may legitimately
+                        # declare a file whose name starts with "(".
+                        "aggregate": True,
                         "findings": [{"kind": "bytes", "msg":
                                       f"{ct['bytes']:,} B {where} exceeds the "
                                       f"{ceil:,} B ceiling"}]})
@@ -1316,7 +1383,9 @@ def main():
         render(root, results, synced, run_len, run_hit, cfg, snapshot, totals,
                defects)
 
-    states = [r["status"] for r in results + synced]
+    # Class totals vote too. Without them a class in WARN was invisible to the exit code,
+    # so a CI step gating on it could not see the one signal that arrives before a breach.
+    states = [r["status"] for r in results + synced] + [c["status"] for c in totals]
     # A config defect is an INSTRUMENT failure, which this tool's own ordering already
     # ranks above `over`: if a declared ceiling is not the one in force, every verdict
     # measured against it is unreliable, including the green ones.
