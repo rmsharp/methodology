@@ -4878,23 +4878,45 @@ class TestS38TrimTriggerRow(unittest.TestCase):
         """`medium` -> `critical` and `low` -> `high` both survived the suite. Severity is not
         decoration here: worst_risk() drives the portfolio row, the terminal colour and the
         High+ Risk count, so a wrong tier is a wrong dashboard for every project."""
+        # THE SYNTHETIC HALF RUNS FIRST, AND THAT ORDER IS THE POINT -- S128. This half depends
+        # on no live file at all, but it used to sit BELOW the `skipTest` that guards the live
+        # half, so whenever this repo's own trigger fell quiet the skip aborted the method and
+        # took the synthetic pin with it. That is not hypothetical: it is exactly how this test
+        # hid a dead fixture for three days. Phase C2 (0afe9d6) re-denominated the Class A read
+        # arm and re-sized this same `READ_CAP_BYTES + 2` fixture in two sibling tests, missed
+        # this one, and its own 287/287 run could not see the miss -- C2 silenced the live rows,
+        # so this method skipped and never reached the stale line. It surfaced only at ccfbe1c,
+        # when HANDOFFS.md crossed 196,608 B and un-muted it. A skip that covers assertions it
+        # has no bearing on is a mute button, so the guard now covers only what it is about.
+        #
+        # The `low` tier went with the "watched but unmeasured" advisory Phase B deleted, so the
+        # only severity this row can now author is `medium`. Pinned from the other side: a
+        # firing ledger with no trimmer must still be advisory, never escalated. At
+        # READ_CAP_BYTES + 2 that ledger fires NEITHER arm post-C2 (the byte arm is None here --
+        # no trimmer, no budget), so the signal set came back EMPTY and the severity assertion
+        # went vacuous in the only direction that matters: a set with nothing in it can never
+        # contain the wrong tier. Both fixture preconditions are therefore asserted separately
+        # and BEFORE it, so a future re-denomination fails as a fixture defect and names itself.
+        p = self._sized("CHANGELOG.md", md.CLASS_A_FIRE_BYTES + 2)
+        _d2, tm2 = self._descs(p)
+        self.assertTrue(tm2["signals"],
+                        "fixture: a ledger past the Class A arm must emit a row, or the severity "
+                        "assertion below passes on an empty set")
+        self.assertFalse(tm2["tool_present"],
+                         "fixture: this half is the NO-TRIMMER path -- if the tool is present "
+                         "here it is exercising the other branch")
+        self.assertEqual({sev for sev, _d in tm2["signals"]}, {"medium"},
+                         "a firing archive trigger is advisory even with no tool to run")
+
+        # ...and now the live half, which is the only part with a live precondition.
         _descs, tm = self._descs(self.REPO, expect_role="framework")
         if not tm["signals"]:
             self.skipTest("this repo's own trim trigger is not currently firing on either "
-                          "ledger (S64 cleared HANDOFFS.md's; CHANGELOG.md's was already clear) "
-                          "-- this test's fixture precondition needs a live over-budget ledger "
-                          "and will run again once one exists")
+                          "ledger -- only the LIVE half below needs that precondition; the "
+                          "synthetic pin above has already run")
         sevs = {s for s, _d in tm["signals"]}
         self.assertEqual(sevs, {"medium"},
                          "a firing archive trigger is advisory, not a high+ finding: %r" % sevs)
-
-        # The `low` tier went with the "watched but unmeasured" advisory Phase B deleted, so the
-        # only severity this row can now author is `medium`. Pinned from the other side: a
-        # firing ledger with no trimmer must still be advisory, never escalated.
-        p = self._sized("CHANGELOG.md", md.READ_CAP_BYTES + 2)
-        _d2, tm2 = self._descs(p)
-        self.assertEqual({sev for sev, _d in tm2["signals"]}, {"medium"},
-                         "a firing archive trigger is advisory even with no tool to run")
 
     def test_the_advisory_carries_the_numbers_that_were_measured(self):
         """Swapping the byte figures between two ledgers, or printing any other headroom, left
@@ -4916,11 +4938,21 @@ class TestS38TrimTriggerRow(unittest.TestCase):
                           "the row must quote the size it measured, for %s" % rel)
             # ONE ARM AT A TIME. Before Phase B the first half was a records-per-line RATE, so a
             # firing row ALWAYS carried the byte reason too and this could assert it
-            # unconditionally. Both halves are byte LEVELS now with DIFFERENT thresholds -- the
+            # unconditionally. Both halves are byte LEVELS now, so assert the reason for each arm
+            # that actually fired and the absence of the one that did not, or the row could quote
+            # a threshold nothing tested against.
+            #
+            # THE PARAGRAPH HERE UNTIL S128 DESCRIBED A STATE THAT NO LONGER EXISTS, and it is
+            # recorded rather than merely deleted because it is what made the stale assertion
+            # below look reasonable. It said the two arms had "DIFFERENT thresholds -- the
             # one-read cap is the lower -- so a ledger can fire on the read arm alone, and this
-            # repo's own CHANGELOG.md is in exactly that state. Assert the reason for each arm
-            # that actually fired, and assert the absence of the one that did not, or the row
-            # could quote a threshold nothing tested against.
+            # repo's own CHANGELOG.md is in exactly that state." Phase C2 falsified both halves:
+            # the read arm is CLASS_A_FIRE_BYTES, which on this repo is BYTE-EQUAL to the
+            # trimmer's default budget (196,608 == 196,608), so the arms move together and
+            # CHANGELOG.md fires BOTH. The `else` branch just below is therefore unreachable on
+            # self.REPO while those two constants remain equal -- it is kept because the
+            # constants are independent by design and may diverge again, but it is NOT currently
+            # a live guard, and the synthetic siblings are what cover that state today.
             if led["byte_fires"]:
                 self.assertIn("{:,} B budget".format(tm["budget_bytes"]), d,
                               "a byte-arm breach must quote the budget, for %s" % rel)
@@ -4935,11 +4967,34 @@ class TestS38TrimTriggerRow(unittest.TestCase):
                 # No ledger in this repo is past 262,144 B today, so nothing would have caught it
                 # -- test_the_refusal_advisory_says_nothing_is_delivered exercises it synthetically.
                 self.assertIn("{:,} B HARD REFUSAL".format(md.READ_REFUSE_BYTES), d, rel)
-                self.assertNotIn("one-read budget", d,
-                                 "%s is past the hard refusal; there is no delivered prefix to "
-                                 "describe as truncated" % rel)
+                # PHASE C2 EMPTIED THIS GUARD AND IT STAYED GREEN THAT WAY. It read
+                # `assertNotIn("one-read budget", ...)`, which was the read arm's own wording
+                # until C2 reworded it; `collect_trim_metrics` has not emitted that substring
+                # since (the only two sites are the D4(b) risk row, a different function), so the
+                # guard could no longer fail for any producer. The PROPERTY it was defending is
+                # live and still worth defending -- `refused` and `read_fires` are exclusive
+                # branches, and a file getting both sentences gets two contradictory remedies --
+                # so it is restated against the wording the branch actually emits now. This is
+                # the same assertion test_the_refusal_advisory_says_nothing_is_delivered makes
+                # synthetically; kept here too because that one cannot see the live population.
+                self.assertNotIn("Class A archive threshold", d,
+                                 "%s is past the hard refusal; it is not a merely-oversized "
+                                 "file and must not also be described as one" % rel)
             elif led["read_fires"]:
-                self.assertIn("{:,} B one-read budget".format(md.READ_CAP_BYTES), d, rel)
+                self.assertIn("{:,} B Class A archive threshold".format(md.CLASS_A_FIRE_BYTES),
+                              d, rel)
+                # THE HEADROOM IS PER-LEDGER, AND THAT IS THE POINT. The string this replaces was
+                # a bare constant -- identical for every ledger, so it survived exactly the figure
+                # swap this method's docstring says it exists to catch. `READ_REFUSE_BYTES -
+                # on_disk` is a function of THIS ledger's own size, computed here from Path.stat()
+                # rather than from the collector, so the two operands stay independent and a row
+                # quoting another ledger's distance fails.
+                # THE WHOLE CLAUSE, NOT THE HEADROOM ALONE. Stopping after the distance left the
+                # DENOMINATOR it is a distance *to* asserted by nothing: a producer printing the
+                # right headroom against the wrong stated boundary passed green (mutant M10).
+                # Both figures are matched in one span so the pair has to agree.
+                self.assertIn("within {:,} B of the {:,} B hard refusal".format(
+                    md.READ_REFUSE_BYTES - on_disk, md.READ_REFUSE_BYTES), d, rel)
             self.assertTrue(led["read_fires"] or led["byte_fires"],
                             "a row was emitted for %s with neither arm firing" % rel)
             self.assertNotIn("{:,} B".format(

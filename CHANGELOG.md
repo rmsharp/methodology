@@ -183,6 +183,79 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S128 — the two stale `TestS38TrimTriggerRow` assertions, repaired
+
+**`bin/tests.sh` 287 / 2 / 0 → 288 / 1 / 0.** The one remaining failure is Test 9's
+`--source=github` 404, which needs an upstream merge and was out of scope by declaration.
+`tools/test_methodology_dashboard.py` only — **canonical-only** (no `bin/_manifest.py` row; the
+sole grep hit in that file is a comment, not a row), so **no adopter impact, no distributed file,
+no outward-facing action**.
+
+**WHAT WAS ACTUALLY WRONG — an omission by Phase C2 (`0afe9d6`, 2026-08-26), not a regression.**
+That commit moved the Class A read arm from `READ_CAP_BYTES` (56,750 B) to `CLASS_A_FIRE_BYTES`
+(196,608 B) and reworded the advisory to match. It applied *exactly* the repair these two needed to
+**two sibling tests in the same class** — `test_the_refusal_advisory_says_nothing_is_delivered` and
+`test_read_level_exactly_at_the_class_a_threshold_does_not_fire` — narrating its rule in both
+("*Testing the old constant here would have kept a green pair guarding a boundary the collector no
+longer keys on — true arithmetic about a dead threshold*"). It missed these two. So the repair is
+**C2's own stated rule applied to the instances it skipped**, not a restatement of today's output.
+
+**WHY C2's OWN 287/287 COULD NOT SEE THE MISS, which is the durable finding.** C2 silenced this
+repo's live trim rows, and that put both stale assertions out of reach at once:
+`test_the_authored_severities_are_pinned` took its `skipTest` arm, and the loop in
+`test_the_advisory_carries_the_numbers_that_were_measured` ran **zero iterations**. Both were
+**dormant, not passing.** They surfaced three days later at `ccfbe1c` (2026-08-29), when
+`HANDOFFS.md` crossed 196,608 B and un-muted both. Verified by bisect in a worktree:
+`ccfbe1c^` (HANDOFFS 194,369 B) → `OK (skipped=4)`; `ccfbe1c` (196,768 B) → `FAILED (failures=2)`.
+**S126's onset attribution to `ccfbe1c` was right; the *cause* is `0afe9d6`.** These are two
+different commits answering two different questions, and only naming both explains the three-day gap.
+
+**THE REPAIR, four parts.**
+1. **The dead fixture** — `_sized("CHANGELOG.md", READ_CAP_BYTES + 2)` → `CLASS_A_FIRE_BYTES + 2`.
+   At 56,752 B *neither* arm fires (the byte arm is `None` — a fixture repo installs no trimmer), so
+   the signal set came back **empty**, and `assertEqual(set(), {"medium"})` was vacuous in the only
+   direction that matters: an empty set can never contain the wrong tier. Two fixture preconditions
+   are now asserted **before** it, so a future re-denomination fails as a fixture defect and names
+   itself.
+2. **The stale grep** — `assertIn("56,750 B one-read budget")` → the threshold the arm actually
+   keys on, **plus the per-ledger headroom clause in one span**:
+   `"within {N} B of the {M} B hard refusal"`. The old string was a bare constant, identical for
+   every ledger, so it survived precisely the figure-swap the method's docstring says it exists to
+   catch. Pinning the headroom *alone* was not enough either — a producer printing the right
+   distance against the wrong stated boundary passed green (mutant M10), found by an independent
+   reviewer and confirmed here before the fix.
+3. **An unfalsifiable guard** — `assertNotIn("one-read budget", ...)` in the `refused` branch could
+   not fail for **any** producer: `collect_trim_metrics` has not emitted that substring since C2
+   (its only two sites are the D4(b) risk row, a different function). Re-pointed at the wording the
+   branch emits now. It is **not a live guard today** — no ledger is past 262,144 B — but
+   `CHANGELOG.md` is 48,209 B away, so it is kept rather than deleted, and it is falsifiable when
+   reached.
+4. **A false rationale comment** — the paragraph above the branch claimed the two arms have
+   "DIFFERENT thresholds — the one-read cap is the lower — so a ledger can fire on the read arm
+   alone, and this repo's own CHANGELOG.md is in exactly that state." Measured: `CLASS_A_FIRE_BYTES`
+   and `budget_bytes` are both **196,608 — byte-equal**, and `CHANGELOG.md` fires **both** arms.
+   False on both counts. Corrected, with the old text recorded rather than deleted, because it is
+   what made the stale assertion look reasonable.
+
+**THE ORDERING FIX, and it is the part that stops this recurring.** The `skipTest` guarded the
+**whole** method, so it took the *synthetic* no-trimmer pin — which depends on no live file at all —
+down with the live half. That is the mechanism that hid the dead fixture for three days, and it was
+about to fire again: `CHANGELOG.md`'s trim trigger is live, and a trim makes the live rows quiet.
+The synthetic half now runs **first**, unconditionally; the skip covers only what it is about.
+**Proved, not asserted** — with the live trigger forced quiet, the severity mutant is scored
+**green by skipping** under the original ordering and **KILLED** under the new one.
+
+**MUTATION: 13 producer mutants, 13 killed, 0 did-not-apply**, re-run in full *after* the fix round.
+The one apparent survivor (M9, headroom replaced by the literal `48209`) is **fitted to this
+instant** — `48209` *is* the correct value at `CHANGELOG.md`'s current 213,935 B, so no correct
+assertion can distinguish it. Demonstrated rather than argued: grow the ledger three bytes and the
+same mutant is **KILLED**. Every mutant was applied by anchor with a post-write diff assert, so
+"did not apply" is a distinct outcome from "survived", and all mutation ran in a **throwaway git
+worktree** — the canonical tree was never mutated.
+
+**Checkers, each run bare:** `check-handoff --allow-pending` **0**, `--all --allow-pending` **0**,
+`check-links` **0**, `check-learnings` **0**.
+
 ### 2026-08-30 · [ad hoc] S128 — claim: repair the two stale `TestS38TrimTriggerRow` assertions
 
 **Phase 1B claim.** Operator selected this from the Phase 0 menu: repair the only two non-network
