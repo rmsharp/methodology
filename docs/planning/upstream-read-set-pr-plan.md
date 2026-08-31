@@ -1,10 +1,10 @@
 # The upstream read-set PR — what it carries, and what it must not claim
 
-**Status: PHASES 1, 2 AND 3 SHIPPED (fork-side, unpushed); 4–5 open.** This plan was S118's
+**Status: PHASES 1–4 SHIPPED (fork-side, unpushed); 5 open — corrections in §11.** This plan was S118's
 deliverable. **Phase 2** shipped at S119 (`364b410`). **Phase 1** shipped at S120 on branch
 `port/framework-learnings-extraction`, cut from `upstream/main` (`512c2ed`) — one commit,
 local only, **no PR opened**. **Phase 3** shipped at S129 (`9999410` + `beffbd0`) on `main`,
-all four DONE criteria demonstrated. Four of this plan's own numbers were superseded in the
+all four DONE criteria demonstrated. **Phase 4** shipped at S130 (`e02881a`+`e5cdc66`) on `main`. Four of this plan's own numbers were superseded in the
 doing, and **§3.4(d) and §3.4(e) each carry a claim S129 refuted**; see §8.
 It is scoped by an operator re-aim recorded at `CHANGELOG.md` 2026-08-27 · *"S118 RE-AIM"*.
 
@@ -266,7 +266,7 @@ this plan is not it.**
 > created, after which the PR matches its own title, since it currently carries 42,779 B (75.5%) that
 > is not the extraction.
 >
-> **(b) Rewrite `30ddf26:CHANGELOG.md:92-93` — a standing defect that ships upstream in the PR.** It
+> **(b) Rewrite `30ddf26:CHANGELOG.md:92-94` — a standing defect that ships upstream in the PR.** It
 > declines a ~400 B note because that *"would break the file's byte-identity with the fork, which is
 > what lets `bin/sync` agree from either source."* **False in both halves:** `bin/sync --source` reads
 > a working tree or `KJ5HST/methodology`, never a local ref, and the two sources already disagree on
@@ -477,3 +477,103 @@ deferred** (`FRAMEWORK_LEARNINGS.md` 23,654 B published vs 58,119 B actual): cor
 isolation silently falsifies `README.md:352`, whose **103,302 B is derived as 79,648 + 23,654**. It
 needs its dependents traced, which is a separate pass. **The distinction that governed every such
 call this session: fix what this change broke, record what was already broken.**
+
+---
+
+## 11. What S131 corrected — the records, not the work
+
+**No phase shipped at S131 and no measurement in §§2–4 changed.** What changed is the *record* of
+what is already shipped, because the receipt a next session's Phase 0 reads first was telling it
+otherwise. Citations below are **sha-qualified** where they point into a frozen record, because a
+bare line number into a growing ledger is the defect this section exists to correct.
+
+| Where | It said | It is | Evidence |
+|---|---|---|---|
+| `3e065f6:HANDOFFS.md` S130 `next_steps` | *"Phase 2 … is **NOT** [shipped]"* | **Shipped at S119** | `364b410` + `28551a5`; `bin/check-learnings` run bare = *OK, 47 rows, contiguous 1..47, 0 over 1,500 B*, **exit 0** |
+| ″ (its proof) | *"read-set total **69,749 B / 56,750**"* | **True, wrong population** | 69,749 B is `starter-kit/SESSION_RUNNER.md` 54,363 + `starter-kit/SAFEGUARDS.md` 15,386. `starter-kit/FRAMEWORK_LEARNINGS.md` is class `on-demand`, ceiling 73,728 B, and is not a read-set member |
+| `3e065f6:HANDOFFS.md` S130 `runtime_smoke` | that same breach *"is Phase 2's territory, not Phase 4's"* | **Owned by no phase of this plan** | The 12,999 B is `SESSION_RUNNER.md` against its own 41,364 B ceiling — **deliberately over on arrival**, a ratchet (`.context-budget.json`). Phase 2 compacts the learnings rows; `e02881a`/`e5cdc66` touch neither file |
+| ″ `next_steps` | `30ddf26:CHANGELOG.md:92-93` | **`:92-94`** | `:94` carries *"which is what lets `bin/sync` agree from either source"* — the false half. **Repaired at all three live sites:** §5 (b) above, `port-branch-identity-adjudication.md:287`, and this table |
+| `3e065f6:CHANGELOG.md:224` | *"Phase 2 is still unshipped"* | Same two errors | **Not edited.** That ledger declares itself append-only at `:3`; precedent `6a8aacc` amended S128 by appending 48 lines and deleting none. Superseded by S131's entries |
+| This document `:3` | *"4–5 open"* | **5 open** | Its own §5 marks *"Phase 4 … ✅ SHIPPED S130"*. Written by `6f8fe34` at S129, before Phase 4 existed |
+
+**THE FAILURE WORTH NAMING IS NOT THE TYPO.** S128 verified and recorded *"Phase 2 (compact) SHIPPED
+S119"* at `6a8aacc`, and this document's own header says the same. S130 asserted the opposite two
+sessions later. **A fact can be established, written down, and still lost** — because each session
+took its premise from the previous *receipt* rather than from the plan the receipt points at. Same
+mechanism §8 recorded for S124–S128's five-session drift, in a smaller compass.
+
+### 11.1 What the port branch actually carries — this changes Tier-2 (a)
+
+**`port/framework-learnings-extraction` does NOT carry "Phase 1 alone."** It is `upstream/main`
+(`512c2ed`) **+ one commit**, `30ddf26`, and that commit carries **Phase 1's extraction together with
+Phase 2's output**: `git rev-parse 30ddf26:starter-kit/FRAMEWORK_LEARNINGS.md` and
+`364b410:starter-kit/FRAMEWORK_LEARNINGS.md` return the **same blob** `b21854cc`, 56,673 B — the
+*compacted* 46-row table, not the 73,712 B pre-compaction one — and `30ddf26` also carries Phase 2's
+`bin/check-learnings` repair (+153 lines). Its own ledger says so: *"ported from `rmsharp/methodology`
+`ed22ace` (the extraction) plus the compaction and checker repairs that followed it."*
+
+**Why this matters to the decision:** "**freeze** the 46-row table" means **keeping Phase 2's own
+output** on the branch, not reverting to a pre-Phase-2 state. **One commit is not one phase of
+content.** What the branch does **not** carry is **Phase 3 or Phase 4**, both of which landed on fork
+`main`.
+
+### 11.2 A claim S131 nearly published, and the record that refuted it
+
+S131 first wrote that `starter-kit/FRAMEWORK_LEARNINGS.md` is *"58,119 B — **1,369 B over the
+56,750 B one-read cap**, and no checker can see it."* **That is false, and this repository had already
+ruled it false for this exact file.** It is recorded here because the claim reached the operator
+before it reached a check.
+
+- **56,750 B is a detector FLOOR, not this file's cap.** `starter-kit/context_budget.py` defines
+  `READ_CAP_TOKENS = 25_000` and `MIN_BYTES_PER_TOKEN = 2.27` — the **floor** of a measured
+  2.2705–3.0300 B/token band — and its own comment at `:66–67` states the rule the claim broke:
+  *"Only ever use this to DERIVE a ceiling when no measured density is available; **never as a
+  measurement of a file you can meter**."* 56,750 is `25,000 × 2.27`, computed for files with no
+  measured density.
+- **This file is meterable and has one.** Its `.context-budget.json` entry declares
+  `bytes_per_token: 2.8897`. Metered: **58,119 / 2.8897 ≈ 20,112 tokens of 25,000 — about 80% of one
+  read**, with roughly 4,900 tokens of headroom. It delivers in one read.
+- **S121 already adjudicated this**, through six refutation lenses, and its verdict stands in
+  `CHANGELOG.md` (S121 close-out): *"56,750 B reaches this file through no code path … It is a
+  **detector floor**, not a budget"*, and metered *"the file is at 78.5% of one read"* by direct
+  measurement, not extrapolation.
+- **What is true and worth carrying forward:** the file has regrown **56,673 → 58,119 B (46 → 47
+  rows)**, and **no checker measures its total against any read-derived bound** — its declared
+  73,728 B `max_bytes` is a byte ceiling, which is the rot-prone form
+  `phase3c-deadlock-adjudication.md` flags. That document's recommendation 2 is literally *"stop
+  publishing the detector floor as a budget"*, and its items 1–3 remain **open**: `1593cb5` records
+  that the operator ratified **Tier 1** on 2026-08-29 and **deferred Tier 2 as a whole** — both (a)
+  the table question and (b) the `:92-94` rewrite.
+
+**Method note, recorded because it is added policy.** `HANDOFFS.md:6` states *"Newest on top;
+**prepend-only**."* Two precedents (`6a8aacc`, and the S118 amendment it cites) amended a prior
+receipt **in place**; S131 began that way and reverted it. **No frozen receipt was edited.** The
+corrections live in S131's own close-out receipt — which is the record Phase 0 reads first — and in
+this section. That makes both ledgers consistent: neither `CHANGELOG.md` nor `HANDOFFS.md` has a
+frozen record rewritten, and each is corrected by a newer one.
+
+### 11.3 What Phase 5 still owes
+
+From the ten-item readiness list the operator ranked at S131 (items 3, 4, 9 and 10 are operator
+decisions; the list is enumerated in S131's `CHANGELOG.md` close-out entry):
+
+1. **The PR's scope — four candidate payloads, not two.** Phase 1+2 (on the branch), Phase 3, Phase 4,
+   and `starter-kit/methodology_trim.py`. The trimmer is **113,629 B, distributed, and has never been
+   upstream**; it is named in `read-cap-phase-c-plan.md:259` but **belongs to no phase of *this*
+   plan.**
+2. **The adopter fact that inverts this PR's headline.** Exactly **3 of 27** `bin/_manifest.py`
+   **source** paths are absent from `upstream/main` — `starter-kit/FRAMEWORK_LEARNINGS.md`,
+   `starter-kit/methodology_trim.py`, `FRAMEWORK_APPARATUS.md` — and `bin/sync`'s `fetch_all_github`
+   **`sys.exit()`s before writing anything** when any source is absent. So `--source=github` installs
+   **nothing** today, and **merging Phases 1+3+4 still leaves it broken** while the trimmer is absent.
+   `CLAUDE.md` asserts the trimmer *"lands at every adopter root"*; for the GitHub source that is
+   currently false.
+3. **Tier-2 (a)**, deferred 2026-08-29 (`1593cb5`) and now due — re-read §11.1 first, it changes the
+   options' meaning.
+4. **The `:92-94` rewrite**, which ships upstream under every option.
+5. **A branch that carries the intended phases**, pushed. Nothing exists to open a PR from today.
+6. **`bin/tests.sh` row-for-row** on that branch against a pristine control.
+7. **A PR body**, which **does not exist** — the two `issue75-upstream-pr*.md` drafts are a different,
+   unsent PR — and which owes answers to §6's dragons 1, 2 and 4.
+8. **A version decision** (v3.8 + release, or unversioned feature PR), then **the go-ahead itself**.
+

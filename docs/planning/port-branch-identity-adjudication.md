@@ -284,7 +284,7 @@ session FOUND?*
 
 | site | what is wrong |
 |---|---|
-| `30ddf26:CHANGELOG.md:92-93` | **Ships upstream in the PR.** Declines a ~400 B note because it *"would break the file's byte-identity with the fork, which is what lets `bin/sync` agree from either source"* — false in both halves, and it carries a stale 56,750 B / 77 B derivation. **A standing defect, not a per-option cost.** |
+| `30ddf26:CHANGELOG.md:92-94` | **Ships upstream in the PR.** Declines a ~400 B note because it *"would break the file's byte-identity with the fork, which is what lets `bin/sync` agree from either source"* — false in both halves, and it carries a stale 56,750 B / 77 B derivation. **A standing defect, not a per-option cost.** |
 | `docs/planning/phase3c-deadlock-adjudication.md:236` | §6(4) states the options; add the verdict and strike "precondition" |
 | `docs/planning/upstream-read-set-pr-plan.md:221` (§5) | Phase 5 needs the two Tier-2 line items named, not an option label |
 | the published **229 B** smallest-row floor | ⚠ **It is 228 B.** `check-learnings` budgets `len(raw.encode())` on the raw line; 229 counts the trailing newline. Off by one against the gate that enforces it, and already propagated into three documents. |
