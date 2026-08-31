@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S132
+date: 2026-08-31
+status: pending
+active_task: **READINESS ITEM 2 — MAKE BOTH LEDGERS READABLE.** Operator-confirmed remedy: adopt a RETENTION POLICY for `CHANGELOG.md` (a rate fix answering the trimmer's `SRF_RED` refusal, not an override of it), then apply retention to BOTH ledgers, **each trim in its own commit** (S127 gotcha 1). `CHANGELOG.md` is 281,443 B and a default Read returns ZERO content; `HANDOFFS.md` holds 8 receipts against a stated N = 4.
+```
+
+```handoff
 session: S131
 date: 2026-08-30
 status: complete

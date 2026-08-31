@@ -183,6 +183,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-31 · [ad hoc] S132 — claim: make both ledgers readable (readiness item 2)
+
+**Phase 1B claim.** Operator-confirmed at the Phase 0 gate as **item 2** of the ten-item
+upstream-PR readiness list. The operator chose both the remedy and the scope: adopt an explicit
+**retention policy** for `CHANGELOG.md` — a *rate* fix, which is what the trimmer's `SRF_RED`
+refusal complains is missing — then apply retention to **both** ledgers, each trim in its **own**
+commit (S127 gotcha 1).
+
+**THE STATE, VERIFIED EMPIRICALLY RATHER THAN FROM THE CONSTANT.** A default `Read` of this file
+returns *"File content (274.8KB) exceeds maximum allowed size (256KB)"* — **zero content, front
+matter included.** 281,443 B against a 65,536 B ceiling (215,907 over, 4.3×), past
+`methodology_trim.py`'s 262,144 B `READ_REFUSE_BYTES`. **The ledger every Phase 0 must reconcile
+against cannot be opened.** `HANDOFFS.md`: 91,098 B, **8 receipts against its own stated N = 4**.
+
+**THE REFUSAL IS ARITHMETICALLY RIGHT AND WILL NOT BE FORCED.** Dry run, `$?` read **bare** on the
+next line: `[SRF_RED] SRF 7.7399 (RED) against 730a309 … archiving again resets the LEVEL and not
+the RATE`, exit **2**. Traced commit by commit: `730a309` (2026-08-26) left this file at
+**32,900 B**; ~21 sessions later, 281,443 B — **248,543 B regrowth against ~32,100 B relief**. Over
+S128–S131 alone the rate is **17,398 B/session**, so a level-only trim buys ≈13 sessions.
+
+**Ledger: `CHANGELOG: pending`** — set at claim; actions recorded here at Phase 3F. Until close-out
+this line is the crash breadcrumb for the next session's Phase 0 reconcile.
+
 ### 2026-08-30 · [ad hoc] S131 close-out — the records repaired, and one claim of my own retracted, self-score 6/10
 
 **Item 1 of a ten-item upstream-PR readiness list.** Documentary only — three files, all
