@@ -183,6 +183,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.3.0.
 
 ## 2026-08
 
+### 2026-08-30 · [ad hoc] S131 — claim: repair the false records that gate every Phase-5 decision
+
+**Phase 1B claim.** Operator-assigned at the Phase 0 gate as **item 1** of a ten-item PR-readiness
+list produced this session by a nine-dimension verification of
+[`docs/planning/upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md) against
+the tree. The deliverable is **documentary repair only** — no code, no tool, no outward-facing action.
+
+**WHY THIS RANKS FIRST.** The next session's Phase 0 reads `HANDOFFS.md` before it reads the plan.
+Today that receipt tells it Phase 2 is unshipped work in its scope. It is not, and the correction
+already existed: **S128 verified and recorded it at `6a8aacc`** (*"Phase 2 (compact) SHIPPED S119"*),
+and the plan states it at `:4`. S130's receipt reasserted the opposite two sessions later. A fact
+established, recorded, and then lost is the failure this repair addresses — not a typo.
+
+**THE FIVE DEFECTS, each verified against the tree before this claim was written.**
+
+1. **`HANDOFFS.md` S130 `next_steps` — *"Phase 2 (compact the 20 over-budget `FRAMEWORK_LEARNINGS.md`
+   rows) is NOT [shipped]"*. FALSE.** Phase 2 shipped at **S119**: `364b410 feat(learnings): compact
+   all 20 over-budget rows -- 73,712 B -> 56,673 B` and `28551a5 fix(check-learnings): scope the row
+   budget to EVERY row, and drive it RED`. `python3 bin/check-learnings` run **bare** returns
+   *"OK — 47 Learning row(s), contiguous 1..47; all citations resolve; row budget: 47 row(s), 0 over
+   1,500 B"*, **exit 0**.
+2. **The same sentence's evidence is a WRONG-POPULATION error.** It offers *"a bare `context_budget.py`
+   run still exits 2, read-set total 69,749 B / 56,750"* as proof about `FRAMEWORK_LEARNINGS.md`. The
+   `read-set` class is `starter-kit/SESSION_RUNNER.md` (54,363 B) + `starter-kit/SAFEGUARDS.md`
+   (15,386 B) = **69,749 B** — verified by `wc -c` and by parsing `.context-budget.json`, where
+   `starter-kit/FRAMEWORK_LEARNINGS.md` is class **`on-demand`**, `max_bytes` **73,728**, and is not a
+   read-set member at all. Both halves are true; the inference between them is not. The BREACH is real
+   and stays — it is Phase 4's residue on a different pair of files.
+3. **`CHANGELOG.md:224` repeats both** — *"Note **Phase 2 is still unshipped**"* with the same
+   69,749 B / 56,750 citation.
+4. **The same `next_steps` cites the standing upstream defect as `30ddf26:CHANGELOG.md:92-93`. The
+   sentence spans `:92-94`,** and `:94` — *"the fork, which is what lets `bin/sync` agree from either
+   source"* — is the half that is false. A citation that stops one line short of the false clause
+   sends the repairing session to the wrong text.
+5. **`docs/planning/upstream-read-set-pr-plan.md:3` says *"4–5 open"*** while its own `:246` says
+   **"Phase 4 — `ITERATIVE_METHODOLOGY.md`. ✅ SHIPPED S130."** Line 3 was last written by `6f8fe34`
+   (S129), before Phase 4 existed; S130 updated §5 and not the header. **Note what is NOT wrong here:**
+   the same line says *"PHASES 1, 2 AND 3 SHIPPED"* and `:4` names `364b410` — **the plan has been
+   right about Phase 2 all along.** Only the `4–5` half is stale.
+
+**PLUS ONE FACT NO RECORD STATES, AND NO CHECKER CAN SEE.**
+`starter-kit/FRAMEWORK_LEARNINGS.md` is **58,119 B — 1,369 B OVER the 56,750 B one-read cap**, having
+regrown from the 56,673 B Phase 2 left it at (46 rows → 47). It is **green in every checker**: its own
+`on-demand` ceiling is 73,728 B, so `context_budget.py` is silent, and `bin/check-learnings` measures
+per-row budget, not file total. This is the file whose one-read deliverability the entire plan exists
+to buy, and nothing measures it against that cap.
+
+**METHOD.** Amend the prior receipt in place, justification in the commit message — the precedent is
+`6a8aacc` (*"next_steps is rewritten as an ordered critical path, per the S118 amendment precedent"*).
+Historical narration is not rewritten; only claims that are false and forward-looking are corrected,
+each marked as an S131 correction naming its evidence.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; receipt stub with `status: pending` in
+[`HANDOFFS.md`](HANDOFFS.md).
+
 ### 2026-08-30 · [ad hoc] S130 close-out — Phase 4 shipped and repaired, self-score 7/10
 
 **Phase 3D/3F.** Receipt written to `HANDOFFS.md`; `bin/check-handoff` **exit 0**, `--all` **exit 0**

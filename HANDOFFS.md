@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
 
 
 ```handoff
+session: S131
+date: 2026-08-30
+status: pending
+active_task: **REPAIR THE FALSE RECORDS THAT ARE THE INPUTS TO EVERY PHASE-5 DECISION.** Operator-assigned as item 1 of a ten-item readiness list produced this session. **FIVE defects, all documentary, no code:** (1) `HANDOFFS.md` S130 `next_steps` says *"Phase 2 … is NOT [shipped]"* — **false; Phase 2 shipped at S119 (`364b410` + `28551a5`)**, which the plan itself records at `:4` and which S128 had already verified at `6a8aacc`; (2) the same sentence's evidence is a **wrong-population error** — it cites the `read-set` class (`SESSION_RUNNER.md` + `SAFEGUARDS.md` = 69,749 B) as proof about `FRAMEWORK_LEARNINGS.md`, which is class `on-demand`; (3) `CHANGELOG.md:224` repeats both; (4) the same `next_steps` cites the standing upstream defect as `30ddf26:CHANGELOG.md:92-93` when the sentence **spans `:92-94`** and `:94` is the half that is false; (5) `docs/planning/upstream-read-set-pr-plan.md:3` says *"4–5 open"* while its own `:246` says **Phase 4 SHIPPED S130**. **Plus one fact no record states:** `starter-kit/FRAMEWORK_LEARNINGS.md` is **58,119 B, 1,369 B over the 56,750 B one-read cap**, and **no checker can see it** — its own ceiling is 73,728 B. Method: amend the prior receipt in place per the `6a8aacc` / S118 precedent, justification in the commit message. **NO OUTWARD-FACING ACTION.**
+```
+
+```handoff
 session: S130
 date: 2026-08-30
 status: complete
