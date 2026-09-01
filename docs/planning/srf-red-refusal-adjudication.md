@@ -411,3 +411,137 @@ sed -n '1474,1524p' docs/planning/BACKLOG-DETAIL.md
   **16,889 B**, above today's cap, which would make the gate as literally written block 10,240, 8,192
   *and* the status quo. That needs its own session.
 - **It changes no constant, ships no code, and takes no outward-facing action.**
+
+---
+
+## 11. S132 (2026-08-31) — the refusal is structurally unsatisfiable, and both ledgers were trimmed
+
+**S124 adjudicated the refusal for `HANDOFFS.md` and was right.** This section does not disturb that.
+It records three things S124 could not have known: an impossibility proof about the rule itself, a
+regime this document's governing authority explicitly excluded, and a claim S132 published and
+retracted.
+
+### 11.1 `SRF_RED` cannot be satisfied by any steady-state retention policy — a proof, not a complaint
+
+`SRF_RED = 1.00` (`:203`) and the refusal votes with the **most recent** archive
+(`:1895`, `trigger.srf[0] >= SRF_RED`), where `srf(pre, post) = (size - post) / (pre - post)` —
+that is, **regrowth ÷ relief** (`:982`).
+
+Let a policy trim at a high-water mark **X** back to a low-water mark **Y**. Relief is `X − Y`. The
+trigger next fires when the file returns to **X**, so regrowth is also `X − Y`. Therefore
+
+> **SRF = (X − Y) / (X − Y) = 1.0000 exactly — and the test is `>=`.**
+
+**Every on-schedule trim under any retention policy is refused, for any X, any Y, and any file.**
+The rule is satisfiable only by trimming *late* — letting the ledger overshoot X so the prior relief
+exceeds the next regrowth. It therefore **rewards overshoot and punishes maintenance on time**, which
+is precisely how `CHANGELOG.md` reached 283,078 B. Executed here: this session's cut gives SRF
+**0.0149** today and **≈1.07** at the next trigger — but a trim *then*, back to the same level, makes
+the trigger after that **exactly 1.0000**. The deadlock is two cycles away, by construction.
+
+**H3 as written does not have this defect.** H3 says *"the largest single size drop"*. Against that
+boundary a steady-state policy stays green forever, because the largest relief is a maximum and
+regrowth is bounded by `X − Y`. The tool **computes** that number (`trigger.srf_largest`), **prints**
+it in every report, and **never votes with it** — and says so in its own output: *"the refusal below
+uses the MOST RECENT one, which is a policy addition on top of H3 … labelled as an addition, not
+dressed as a reading."* This is the *measured-but-never-voted* shape: the evidence is produced and
+discarded at the decision.
+
+**What is new here, stated against §6 (ii) so it is not read as a re-proposal.** §6 (ii) offered
+*flipping the boundary* as a remedy and rated it **WEAK**, on the ground that it *"delivers option (i)
+while hiding that it did"*. **That objection stands and this section does not lift it.** What is new
+is not the remedy but the **impossibility**: §6 (ii) treated the boundary choice as a judgement call
+with a symptom attached; the arithmetic above shows the current choice makes the rule *unsatisfiable
+in principle* by the very instrument the refusal text tells you to build instead
+(*"the next deliverable is a rate cut"*). §10's open question — whether the most-recent boundary was
+ever **ratified** — becomes materially more important as a result. **No constant was changed here.**
+
+### 11.2 Why `CHANGELOG.md` was trimmed anyway, and on whose warrant
+
+**Not on this session's judgement.** BL-52's third addendum — the authority behind the standing
+*"do not trim it on sight"* — **self-limits in its own words**:
+
+> *"It settles **this file, at this size, with these record sizes** — the middle regime, between the
+> 25,000-token cap and the 256 KiB refusal. It does **not** settle the general question, and it says
+> nothing about **a repo well past the refusal, where a cut back under it turns nothing into
+> something**."*
+
+`CHANGELOG.md` was at **283,078 B**, past `READ_REFUSE_BYTES` = 262,144. Verified **empirically, not
+from the constant**: a default `Read` returned `File content (274.8KB) exceeds maximum allowed size
+(256KB)` — zero content, front matter included. That is the excluded regime, and the same addendum
+names it as *"the threshold that will actually bite"*.
+
+**The depth is the ratified one, not a new number.** No `--cut` was passed; `choose_cut` applied
+`CLASS_A_STOP_BYTES = 98,304` — *"cut back to at or under this"* — which Phase C2 (S116) set **by
+operator decision** and which `methodology_trim.py:142-153` denominates against the **refusal**, not
+the one-read cap, because *"these ledgers are newest-on-top and delivery is an ORDERED PREFIX, so
+truncation removes the OLDEST records, which is the end nothing was reading."* 58 of 79 records
+archived; **283,078 → 98,037 B**. `--force` was required (SRF 7.7908) and **operator-approved for
+this file, in this regime, on this evidence** — it is not a precedent for any other trim.
+
+**`HANDOFFS.md` needed no force** (SRF 0.2315) and was cut to the S127 retention of **four** —
+91,588 → 34,721 B, then 34,462 B after the pointer-block fold.
+
+### 11.3 What the trim achieved, and what it did not — measured, with the shortfall stated first
+
+**It did NOT make the ledger deliverable in one read, and no one should record that it did.** A
+default `Read` now **succeeds** but returns a banner:
+
+> `[Truncated: PARTIAL view — … showing lines 1-667 of 1276 total (40592 tokens, cap 25000) …]`
+
+So the file went from **zero content** to **the front matter plus the newest ~52%, announced**. That
+is the graceful, oldest-first degradation Phase C2 ratified as *not a fault* — and this measurement
+is the first direct confirmation that its premise holds on this file. The one-read cap was **not**
+the target; had it been, the cut would have had to reach ~9 entries, which would have archived the
+retention policy's own warrant (§11.5).
+
+**Two second-order effects, both predicted before the run and both confirmed after:**
+
+- **`context_budget.py` moved `HANDOFFS.md` from `over` to `warn`, and that is correct behaviour.**
+  Under ceiling, the density-drift check unmasks: *"density 2.3648 B/token was measured at 186,617 B;
+  the file is now 34,462 B (82% drift). The token figure above is provisional."* **`measured_bytes`
+  was deliberately NOT bumped.** It records the size at which the density was measured, not the
+  file's size; raising it without re-deriving the density would write a false provenance record and
+  silence the check exactly where it is designed to speak. The honest remedy — a per-file
+  re-measurement — has no instrument here: `--calibrate` fits one global constant against `CLAUDE.md`.
+- **`bin/model-report` lost most of its primary structured source, silently and greenly.**
+  `**Model:**` bullets: **43 live before → 8 live after**, 238 now in shards. `bin/tests.sh` Test 30's
+  real-file arm passes on **one** bullet, so an 81% loss is invisible to it. The repo has already
+  fixed this exact shape once — Test 29 was re-scoped to glob `docs/archive/CHANGELOG-*.md` because
+  *"a correct, operator-directed archive turned this test red while nothing had eroded"* — and the
+  precedent was never generalised to the tool the test guards. **This is a real cost of the trim,
+  not a hypothetical, and it is not repaired here.**
+
+### 11.4 A claim S132 published in its own claim entry and retracts here
+
+S132's Phase 1B claim states: ***"The ledger every Phase 0 must reconcile against cannot be
+opened."*** **The operative half is false.** `starter-kit/SESSION_RUNNER.md` Phase 0 step 6 is
+**frontier-based**: it runs `git log -1 --format=%H -- CHANGELOG.md` and lists
+`<frontier>..HEAD`. **That reads git history, not the file** — the correction is already recorded at
+`tools/methodology_dashboard.py:329-333`, from BL-52's second addendum, and S132 reproduced the error
+anyway. Reconcile was never blocked.
+
+**What the refusal actually cost is the front matter** — 14,295 B carrying the archive index, the
+published audit grep, the trim-trigger rule and the retention doctrine, none of which arrived. That
+is a smaller claim than the one made, and it is still sufficient warrant for the cut: it is the
+half of the file a trimming session reads *to decide whether to trim*.
+
+### 11.5 What is now owed — ordered, and none of it done here
+
+1. **A per-entry budget for `CHANGELOG.md`.** This is the *rate* fix BL-52 named (*"the record
+   budget, not archiving"*) and the one `SRF_RED`'s own text asks for. The repo has the pattern twice
+   — `RECORD_BUDGET_BYTES = 12,288` (`bin/check-handoff:665`), `ROW_BUDGET_BYTES = 1,500`
+   (`bin/check-learnings:104`) — and **no `CHANGELOG` analogue exists**. Mean entry: 3,402 B.
+2. **`bin/model-report` must glob the shards**, as Test 29 already does. Until then every trim silently
+   guts its aggregate and no test says so.
+3. **`bin/tests.sh` L1b/L2b name only `HANDOFFS-archive.md`**, so the eleven `HANDOFFS-through-*.md`
+   shards are checked by nothing; each trim narrows the asserted population and the greens get cheaper.
+4. **The retention policy's warrant is a dangling reference.** `HANDOFFS.md` says the warrant *"is in
+   that session's `CHANGELOG.md` entry"* with **no sha and no shard name**. Those entries survived
+   this cut with three entries of margin; the next cut takes them. Give it a sha.
+5. **`HANDOFFS.md`'s stated N=4 warrant rests on the retired axis** — *"under the 56,750 B one-read
+   cap"*, a detector floor, the same substitution S131 retracted a claim for. The policy stands as an
+   operator decision; **a later session must not re-derive its depth from that sentence.**
+6. **Out-of-repo citation rot, which no checker here can see.** 15 bare `CHANGELOG.md:<line>` /
+   `HANDOFFS.md:<line>` anchors live in the operator's cross-session memory; at least two were already
+   stale before this session, and this trim invalidates more.

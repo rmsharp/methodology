@@ -191,6 +191,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-08
 
+### 2026-08-31 · [ad hoc] S132 — the record: `SRF_RED` is unsatisfiable at steady state, and one claim retracted
+
+**[`srf-red-refusal-adjudication.md`](docs/planning/srf-red-refusal-adjudication.md) §11.** S124
+adjudicated that refusal for `HANDOFFS.md` and was right; §11 disturbs none of it.
+
+**§11.1 — a proof about the rule, not a complaint about the file.** `SRF_RED = 1.00`, the refusal
+votes with the **most recent** archive, and `srf = (size − post) / (pre − post)` is regrowth ÷ relief.
+A policy that trims at high-water **X** back to low-water **Y** relieves `X − Y`; the trigger next
+fires when the file returns to **X**, so regrowth is *also* `X − Y`. **SRF = 1.0000 exactly, and the
+test is `>=`.** Every on-schedule trim under any retention policy is refused, for any X, Y, or file.
+The rule is satisfiable only by trimming **late**, so it **rewards overshoot and punishes maintenance
+on time** — which is how this file reached 283,078 B while its own front-matter rate rule sat at
+**−31 entries of headroom**. Under H3 *as written* (*"the largest single size drop"*) the defect does
+not exist; the tool **computes** that boundary, **prints** it, and **never votes with it**, saying so
+itself: *"a policy addition on top of H3 … not dressed as a reading."*
+
+**Stated against §6 (ii) so it is not read as a re-proposal:** S124 already costed flipping the
+boundary and rated it **WEAK** — *"it delivers option (i) while hiding that it did"* — and **that
+objection stands.** What is new is the *impossibility*, not the remedy. **No constant was changed.**
+
+**§11.4 — S132 retracts a claim from its own claim entry above.** *"The ledger every Phase 0 must
+reconcile against cannot be opened"* is **false in its operative half**: Phase 0 step 6 is
+**frontier-based** (`git log -1 --format=%H -- CHANGELOG.md`, then `<frontier>..HEAD`) and reads git
+history, not the file. The correction was already on record at `tools/methodology_dashboard.py:329-333`
+and S132 reproduced the error anyway. **What the refusal actually cost is the front matter** — the
+archive index, the audit grep, the trigger rule, the retention doctrine. Smaller claim; still
+sufficient warrant, since that is the half a session reads *to decide whether to trim*.
+
+**§11.3 — what the trim did NOT achieve, recorded first.** A default Read now succeeds but returns
+`PARTIAL view — lines 1-667 of 1276 (40592 tokens, cap 25000)`. Zero content → front matter plus the
+newest ~52%, announced. **Not one-read delivery, and no one should record that it was.**
+
+**§11.5 owes five things, none done here** — chiefly a **per-entry budget for `CHANGELOG.md`** (the
+rate fix BL-52 named, still unbuilt; the repo has the pattern twice and no `CHANGELOG` analogue), and
+`bin/model-report` globbing the shards: live `**Model:**` bullets went **43 → 8** and `bin/tests.sh`
+Test 30 passed **identically** on both, so an 81% loss of its primary structured source is green and
+silent.
+
 ### 2026-08-31 · [ad hoc] S132 — fold the trim's pointer block, and repair a front-matter sentence eight trims stale
 
 **The hand-maintained half of a trim, which no tool does.** `HANDOFFS.md`: the generated 448 B
