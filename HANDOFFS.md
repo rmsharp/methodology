@@ -46,7 +46,7 @@ within a shared date the fork's receipts precede the arriving upstream ones (pre
 > still FAILS — corruption is not rotation. **Nothing prevents a cut below three; the policy is what
 > makes it not happen.** Re-run `bash bin/tests.sh` after any trim of this file.
 
-**Archived shards — 10 trims, 111 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
+**Archived shards — 11 trims, 116 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
 and its proof is that same path plus `.verify.sh`; same format, same newest-on-top order, frozen at
 write. **Run the proof rather than trusting this table** — each re-derives L1/L2/L3 from git, and
 that instruction is the whole reason these rows exist.
@@ -63,17 +63,13 @@ that instruction is the whole reason these rows exist.
 | 3 | 2026-08-24 → 2026-08-24 | [`HANDOFFS-through-2026-08-24.md`](docs/archive/HANDOFFS-through-2026-08-24.md) | [proof](docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh) | v1.3.0 |
 | 2 | 2026-08-25 → 2026-08-25 | [`HANDOFFS-through-2026-08-25.md`](docs/archive/HANDOFFS-through-2026-08-25.md) | [proof](docs/archive/HANDOFFS-through-2026-08-25.md.verify.sh) | v1.3.0 |
 | 17 | 2026-08-25 → 2026-08-29 | [`HANDOFFS-through-2026-08-29.md`](docs/archive/HANDOFFS-through-2026-08-29.md) | [proof](docs/archive/HANDOFFS-through-2026-08-29.md.verify.sh) | v1.5.0 |
+| 5 | 2026-08-29 → 2026-08-30 | [`HANDOFFS-through-2026-08-30.md`](docs/archive/HANDOFFS-through-2026-08-30.md) | [proof](docs/archive/HANDOFFS-through-2026-08-30.md.verify.sh) | v1.5.0 |
 
 <!-- NEXT TRIMMING SESSION: methodology_trim.py appends a 3-line pointer block at the end of this
      front matter (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer).
      Fold it into the table above as one row and delete the block — the table costs ~160 B per
      trim where the block costs ~447 B. The generator is DISTRIBUTED, so teaching it this format
      is an upstream change and is deliberately not done here. -->
-
-
-**Archived 5 record(s), 2026-08-29 → 2026-08-30** into [`docs/archive/HANDOFFS-through-2026-08-30.md`](docs/archive/HANDOFFS-through-2026-08-30.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-08-30.md.verify.sh`](docs/archive/HANDOFFS-through-2026-08-30.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
-than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
 session: S132

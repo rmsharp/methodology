@@ -51,8 +51,12 @@ under the topmost `## YYYY-MM`, and when the month changes open a new one above 
 (`starter-kit/methodology_dashboard.py`) and `CHANGELOG_ENTRY_RE` (`bin/model-report`) both key on
 exactly that level.
 
-**Everything older than 2026-08-02 is archived, across two shards.** This file holds that day forward;
-the preceding spans live in
+**Everything below the most recent cut is archived — and that boundary is POSITIONAL, not a
+calendar seam.** `2026-08-30` carries records on *both* sides of it, so a shard's dated filename is a
+**span label, not a day boundary**; `methodology_trim.py` says so itself (`CUT_STRADDLES_DAY`,
+design §2.3). Every shard is listed in a pointer block below, and **no count is written here** —
+the one that was (*"across two shards"*, plus *"this file holds that day forward"*) went stale
+eight trims and 24 days ago and was still being read as current at S132. The two earliest spans are
 [`docs/archive/CHANGELOG-through-2026-08-01.md`](docs/archive/CHANGELOG-through-2026-08-01.md)
 (2026-07-27 → 2026-08-01) and
 [`docs/archive/CHANGELOG-through-v3.6.md`](docs/archive/CHANGELOG-through-v3.6.md)
@@ -186,6 +190,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ---
 
 ## 2026-08
+
+### 2026-08-31 · [ad hoc] S132 — fold the trim's pointer block, and repair a front-matter sentence eight trims stale
+
+**The hand-maintained half of a trim, which no tool does.** `HANDOFFS.md`: the generated 448 B
+pointer block folded into the shard table as one 190 B row and deleted — the file's own HTML comment
+orders exactly this, and names the 448 B vs ~160 B cost as the reason. Its `10 trims, 111 receipts`
+header is now `11 trims, 116 receipts` (111 + 5 archived; the table's own column sums to 116).
+**34,721 → 34,462 B.**
+
+**`CHANGELOG.md`: *"Everything older than 2026-08-02 is archived, across two shards. This file holds
+that day forward"* was false by eight trims and 24 days** — nine shards existed and the live file
+began at 2026-08-26. It is the exact sentence a trimming session reads to decide what is already
+archived, and S132 read it. Replaced with a **count-free** statement, because the count is what
+rotted: the boundary is now stated as **positional, not a calendar seam** — `2026-08-30` carries
+records on both sides of it, which `methodology_trim.py` itself reports as `CUT_STRADDLES_DAY`.
+
+**Committed separately from both trims on purpose** (S127 gotcha 1): a shard's `.verify.sh` reads any
+unexplained front-matter change *inside a trim commit* as a LOSS. Both proofs were re-run bare after
+this edit and both still pass — the `HANDOFFS.md` proof re-anchored itself to the trim commit
+`78a29f8` and holds, which is the evidence the sequencing was right rather than merely cautious.
 
 ### 2026-08-31 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-08-30.md` (5 record(s), 91,588 B → 34,721 B)
 
