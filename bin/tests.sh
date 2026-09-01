@@ -3149,6 +3149,148 @@ else fail "M3 mutation DID NOT APPLY"; fi
 
 rm -f "$M39"
 
+echo "== Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) =="
+# The defect this catches, measured: a trim moved 238 of 246 `**Model:**` bullets into
+# docs/archive/ and Source 1 -- the tool's own PRIMARY STRUCTURED source -- went 43 -> 8 while
+# THIS SUITE PASSED IDENTICALLY. Test 30's real-file check only asserts the population is
+# non-empty, so 8 satisfied it exactly as well as 43 did. Non-empty is not coverage.
+#
+# Every assertion below is RELATIONAL or COMPUTED ON BOTH SIDES. None carries a hardcoded
+# population: a literal would be falsified by the very next trim, which is the same
+# count-written-into-a-file-is-a-future-lie shape that produced the bug.
+#
+# ANCHORING: a bare (discovering) invocation resolves its root through `git rev-parse
+# --show-toplevel` against the PROCESS CWD (bin/model-report:111-119), whereas this suite
+# derives $METHODOLOGY from the script's own location. Those differ whenever the suite is run
+# from elsewhere, so every default-mode call below runs inside a subshell that cd's to
+# $METHODOLOGY first. Without it this test would silently measure whatever repo the caller
+# happened to be standing in.
+s1_count() { echo "$1" | sed -n '/=== SOURCE 1/,/=== SOURCE 2/p' | grep -cE '^[0-9]{4}-[0-9]{2}-[0-9]{2}  '; }
+
+OUT40_DEFAULT="$( (cd "$METHODOLOGY" && "$BIN/model-report" --no-git) 2>&1 )"
+OUT40_LIVEONLY="$("$BIN/model-report" --changelog "$METHODOLOGY/CHANGELOG.md" \
+                   --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
+N40_DEFAULT="$(s1_count "$OUT40_DEFAULT")"
+N40_LIVEONLY="$(s1_count "$OUT40_LIVEONLY")"
+SHARDS40=("$METHODOLOGY"/docs/archive/CHANGELOG-*.md)
+
+# Control first: the comparison is only meaningful if archived bullets actually exist. Stated
+# as a SKIP, never folded into a pass -- a repo that has never trimmed cannot exercise this.
+ARCHIVED_BULLETS40=0
+for sh40 in "${SHARDS40[@]}"; do
+    [ -e "$sh40" ] || continue
+    ARCHIVED_BULLETS40=$(( ARCHIVED_BULLETS40 + $(grep -cE '^-?[[:space:]]*\*\*Model:\*\*' "$sh40") ))
+done
+
+if [ "$ARCHIVED_BULLETS40" -gt 0 ]; then
+    # (1) THE ASSERTION THAT WOULD HAVE CAUGHT 43->8. Trim-invariant: it stays true after every
+    # future trim (which can only move bullets from live to archived), and it is exactly false
+    # in the pre-fix tool, which reported the live count in both modes.
+    if [ "$N40_DEFAULT" -gt "$N40_LIVEONLY" ]; then
+        pass "default run sees MORE than the live file alone ($N40_DEFAULT > $N40_LIVEONLY; $ARCHIVED_BULLETS40 archived bullets exist)"
+    else
+        fail "default run sees $N40_DEFAULT vs live-only $N40_LIVEONLY -- archives are NOT being read"
+    fi
+
+    # (2) CONSERVATION, decomposed a DIFFERENT way than the tool aggregates it: sum of
+    # per-file EXPLICIT invocations must equal the single discovering run. A parser or
+    # aggregation bug that drops one file's contribution shows up here and nowhere else.
+    SUM40="$N40_LIVEONLY"
+    for sh40 in "${SHARDS40[@]}"; do
+        [ -e "$sh40" ] || continue
+        SUM40=$(( SUM40 + $(s1_count "$("$BIN/model-report" --changelog "$sh40" \
+                    --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)") ))
+    done
+    [ "$N40_DEFAULT" = "$SUM40" ] \
+        && pass "discovering run equals the sum of per-file runs ($N40_DEFAULT = $SUM40)" \
+        || fail "discovering run $N40_DEFAULT != sum of per-file runs $SUM40 -- a file's contribution is lost or double-counted"
+else
+    skip "no archived **Model:** bullets on disk -- (1) coverage and (2) conservation cannot be built"
+fi
+
+# (3) PROVENANCE, set-equal in BOTH directions: every shard on disk is named in the report and
+# the report names no shard that is not on disk. A count-only check would pass while naming the
+# wrong files.
+MISSING40=0; EXTRA40=0
+for sh40 in "${SHARDS40[@]}"; do
+    [ -e "$sh40" ] || continue
+    echo "$OUT40_DEFAULT" | grep -q "docs/archive/$(basename "$sh40") (archived)" || MISSING40=$((MISSING40+1))
+done
+while read -r named40; do
+    [ -n "$named40" ] || continue
+    [ -e "$METHODOLOGY/$named40" ] || EXTRA40=$((EXTRA40+1))
+done <<< "$(echo "$OUT40_DEFAULT" | sed -n 's/^-- \(docs\/archive\/[^ ]*\) (archived).*/\1/p' | sort -u)"
+[ "$MISSING40" = "0" ] && [ "$EXTRA40" = "0" ] \
+    && pass "every archive shard on disk is named in the report, and none that is not ($MISSING40 missing, $EXTRA40 extra)" \
+    || fail "shard set mismatch: $MISSING40 on disk but unnamed, $EXTRA40 named but absent"
+
+# (4) A repo with NO docs/archive/ must report live-only and SAY so -- "found nothing" is not
+# "could not read", and neither is a crash. This is the adopter / fresh-repo case.
+P40="$(mktemp_project)"
+printf '# Changelog\n\n### 2026-01-01 · [ad hoc] fixture\n\n**Model:** Fixture Model 1\n' > "$P40/CHANGELOG.md"
+printf '```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n\nprose mentioning a model here\n' > "$P40/HANDOFFS.md"
+OUT40_BARE="$( (cd "$P40" && "$BIN/model-report" --no-git) 2>&1 )"
+RC40=$?
+[ "$RC40" = "0" ] && pass "no docs/archive/: exits 0 rather than crashing" || fail "no docs/archive/: exit $RC40"
+echo "$OUT40_BARE" | grep -q 'across 1 file: live 1 + archived 0' \
+    && pass "no docs/archive/: population states live-only explicitly (1 file, archived 0)" \
+    || fail "no docs/archive/: population line does not state the live-only read set -- $(echo "$OUT40_BARE" | grep -c 'across')"
+
+# (5) An UNREADABLE shard must be NAMED and EXCLUDED, never counted as a silent zero -- the
+# "found nothing" / "could not read this" conflation this repo has fixed twice before.
+mkdir -p "$P40/docs/archive"
+printf '# Changelog\n\n### 2025-12-01 · [ad hoc] archived fixture\n\n**Model:** Fixture Model 2\n' > "$P40/docs/archive/CHANGELOG-through-2025-12-01.md"
+OUT40_TWO="$( (cd "$P40" && "$BIN/model-report" --no-git) 2>&1 )"
+echo "$OUT40_TWO" | grep -q 'across 2 files: live 1 + archived 1' \
+    && pass "a discovered shard in a scratch repo is read and counted (live 1 + archived 1)" \
+    || fail "scratch shard not counted: $(echo "$OUT40_TWO" | grep 'across')"
+chmod 000 "$P40/docs/archive/CHANGELOG-through-2025-12-01.md"
+if [ -r "$P40/docs/archive/CHANGELOG-through-2025-12-01.md" ]; then
+    # Running as root (or a permissive FS) defeats chmod. Scope the skip to exactly that
+    # precondition -- it must not also mute assertions (1)-(4), which already ran above.
+    skip "chmod 000 did not make the shard unreadable (running as root?) -- the UNREADABLE path is not exercised"
+else
+    OUT40_UNREAD="$( (cd "$P40" && "$BIN/model-report" --no-git) 2>&1 )"
+    echo "$OUT40_UNREAD" | grep -q 'UNREADABLE' \
+        && pass "an unreadable shard is named UNREADABLE, not silently dropped" \
+        || fail "unreadable shard vanished silently from the report"
+    echo "$OUT40_UNREAD" | grep -q '1 file UNREADABLE and excluded' \
+        && pass "the population line states the unreadable file rather than deflating silently" \
+        || fail "population line hides the unreadable file: $(echo "$OUT40_UNREAD" | grep 'across')"
+    chmod 644 "$P40/docs/archive/CHANGELOG-through-2025-12-01.md"
+fi
+rm -rf "$P40"
+
+# MUTATION: prove the assertions above have teeth rather than merely running. Each mutant
+# NARROWS behaviour rather than deleting a line, so a guard that only proves "the code ran"
+# cannot score itself killed.
+M40="$(mktemp)"
+# M1: the glob stops discovering anything -- the exact pre-fix state. Assertion (1) must die.
+if mutate "$BIN/model-report" "$M40" 's.replace("return sorted(adir.glob(\"%s-*.md\" % stem))", "return []", 1)'; then
+    chmod +x "$M40"
+    NM40="$(s1_count "$( (cd "$METHODOLOGY" && "$M40" --no-git) 2>&1 )")"
+    if [ "$ARCHIVED_BULLETS40" -gt 0 ] && [ "$NM40" -le "$N40_LIVEONLY" ]; then
+        pass "mutant killed: with discovery disabled the default run collapses to live-only ($NM40)"
+    else
+        fail "MUTANT SURVIVED: discovery disabled still reported $NM40 vs live-only $N40_LIVEONLY"
+    fi
+else fail "M1 mutation DID NOT APPLY"; fi
+# M2: discovery still runs, but the population line counts only the live file -- the silent
+# under-report wearing the fixed tool's clothes. Assertion (2)'s conservation check must die.
+if mutate "$BIN/model-report" "$M40" 's.replace("total = sum(len(s[\"items\"]) for s in readable)", "total = sum(len(s[\"items\"]) for s in readable if s[\"kind\"] == \"live\")", 1)'; then
+    chmod +x "$M40"
+    OUT_M2_40="$( (cd "$METHODOLOGY" && "$M40" --no-git) 2>&1 )"
+    if echo "$OUT_M2_40" | grep -qE '^\([0-9]+ entries carry a \*\*Model:\*\* bullet across [0-9]+ files: live [0-9]+ \+ archived '; then
+        LIVE_M2="$(echo "$OUT_M2_40" | sed -n 's/^(\([0-9]*\) entries carry.*/\1/p' | head -1)"
+        [ "$LIVE_M2" -lt "$N40_DEFAULT" ] \
+            && pass "mutant killed: a live-only total under-reports the population ($LIVE_M2 < $N40_DEFAULT)" \
+            || fail "MUTANT SURVIVED: live-only total still reported $LIVE_M2"
+    else
+        pass "mutant killed: a live-only total breaks the population line's own arithmetic"
+    fi
+else fail "M2 mutation DID NOT APPLY"; fi
+rm -f "$M40"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]

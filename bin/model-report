@@ -38,11 +38,26 @@ one step further: this tool cannot even verify presence/structure of a TRUE
 fact, only of a self-reported string. Read and display, never adjudicate --
 feeds a retrospective (e.g. BL-8), never settles one.
 
+THE POPULATION IS THE WHOLE LEDGER, NOT WHICHEVER SHARD IS LIVE TODAY. Sources
+1 and 2 each read the live ledger PLUS every frozen shard the trimmer has cut
+into docs/archive/, discovered by glob (see archive_shards). This is not a
+refinement; without it the tool silently under-reports by however much has been
+archived. Measured before the fix, against the tree at 2b71ec7: Source 1 saw 8
+of 246 `**Model:**` bullets -- 96.7% of its own PRIMARY STRUCTURED source
+invisible -- because a trim had moved 238 of them into ten shards, and
+bin/tests.sh passed identically before and after that loss. Live and archived
+records are ONE source spanning several files, never separate sources: the
+trimmer refuses to write unless the move is provably lossless, so archiving
+changes where a bullet sits, not how much it can be trusted.
+
 Usage:
   bin/model-report                              # this fork's own root CHANGELOG.md /
-                                                 # HANDOFFS.md, falling back to
-                                                 # starter-kit/ + this repo's git history
+                                                 # HANDOFFS.md PLUS their docs/archive/
+                                                 # shards, falling back to starter-kit/
+                                                 # + this repo's git history
   bin/model-report --changelog PATH --handoffs PATH --no-git   # explicit files (tests)
+                                                 # -- an explicit path means EXACTLY that
+                                                 # file and discovers no shards
 
 Python 3 stdlib only; cross-platform. Canonical-only (like bin/check-handoff):
 absent from bin/_manifest.py, adopters copy it manually if wanted.
@@ -60,6 +75,17 @@ CHANGELOG_MODEL_RE = re.compile(r"^-?\s*\*\*Model:\*\*\s*(.+)$")
 CHANGELOG_SESSION_RE = re.compile(r"\*\*Session:\*\*\s*(\S+)")
 CHANGELOG_FENCE_RE = re.compile(r"^```")
 CHANGELOG_BULLET_RE = re.compile(r"^-\s")
+
+# Where the trimmer freezes archived records. Owned by starter-kit/methodology_trim.py
+# (`ARCHIVE_DIR`, :204); duplicated here as a literal rather than imported, because that
+# module is 113 KB of trimming machinery and this is a read-only reporter -- see
+# archive_shards() for the discovery rule and why it globs.
+ARCHIVE_DIR = "docs/archive"
+
+# Record-header date anchors, used ONLY to order files against each other (see
+# newest_record_date). Anchored to the header, never a free scan of the file's prose.
+CHANGELOG_DATE_RE = re.compile(r"^### (\d{4}-\d{2}-\d{2})", re.MULTILINE)
+HANDOFF_DATE_RE = re.compile(r"^date:\s*(\d{4}-\d{2}-\d{2})", re.MULTILINE)
 
 HANDOFF_OPEN_RE = re.compile(r"^```handoff[ \t]*$")
 HANDOFF_SESSION_RE = re.compile(r"^session:\s*(\S+)")
@@ -101,6 +127,108 @@ def default_changelog(root: Path) -> Path:
 def default_handoffs(root: Path) -> Path:
     root_file = root / "HANDOFFS.md"
     return root_file if root_file.exists() else root / "starter-kit" / "HANDOFFS.md"
+
+
+def archive_shards(root: Path, live: Path) -> list:
+    """Every frozen archive shard of `live`, discovered by GLOB -- never by a
+    hardcoded list of paths.
+
+    This mirrors `starter-kit/methodology_trim.py`'s own `archive_events`
+    (:909-930), which is the authority here: that tool WRITES the shards, owns
+    `ARCHIVE_DIR = "docs/archive"` (:204), and mandates the flat
+    `docs/archive/<BASENAME>-through-<CUTKEY>.md` shape (:1816-1821). Its
+    docstring states the reason a glob and not a literal list: "bin/tests.sh
+    wires exactly one shard by literal path in two places, so a second shard
+    would never be checked and the suite would still pass". The same argument
+    applies to a reporter: a literal list goes stale at the very next trim,
+    silently, which is the defect this function exists to close.
+
+    Matching `<STEM>-*.md` rather than `<STEM>-through-*.md` is deliberate and
+    measured, not lax: it is what catches `HANDOFFS-archive.md`, a pre-`through`
+    shard that a `-through-` pattern would silently drop. The trailing `.md`
+    anchors the end of the name, so the `.verify.sh` proof siblings that share
+    each shard's stem cannot be swept in.
+
+    A missing `docs/archive/` is not an error and needs no guard -- `glob` over
+    an absent directory yields nothing. That case is reported as a file count,
+    never as silence: see `render`.
+    """
+    adir = root / ARCHIVE_DIR
+    stem = live.name[:-3] if live.name.endswith(".md") else live.name
+    return sorted(adir.glob("%s-*.md" % stem))
+
+
+def newest_record_date(text: str, date_re) -> str:
+    """The latest record date in `text`, or "" when it carries no dated record.
+
+    ANCHORED to the record header (`^### YYYY-MM-DD` / `^date: YYYY-MM-DD`),
+    never "the newest date appearing anywhere in the file". That distinction is
+    load-bearing and was verified against this repo's real archives, not
+    assumed: `docs/archive/CHANGELOG-through-v3.6.md` holds records dated
+    2026-06-25..2026-07-26 -- it is the OLDEST shard -- but its front-matter
+    PROSE mentions 2026-08-02, so an unanchored scan keys it as 2026-08-02 and
+    files it eighth of ten instead of last. Anchored, all ten order correctly.
+    """
+    hits = date_re.findall(text)
+    return max(hits) if hits else ""
+
+
+def scan_ledger(live: Path, shards: list, parse_fn, date_re) -> list:
+    """One scan record per file, live first, then shards newest-record first.
+
+    A scan is {"path", "kind", "key", "items", "extra", "error"}. `items` is
+    whatever parse_fn returns first (entries / hits); `extra` is its second
+    return value when it has one (Source 1's unparsed headers), else [].
+
+    `error` separates "could not read this" from "found nothing" -- the
+    conflation this repo has fixed twice before (UAT F1; methodology_trim.py's
+    classify_empty). An unreadable file keeps its row, carries the OS error,
+    and is EXCLUDED from the population totals rather than contributing a
+    silent zero; render() states the count of unreadable files beside the
+    total, so a shrunken population can never be read as a real one.
+
+    ORDERING. The live file is pinned first: it holds the newest records by
+    definition of a trim. Shards follow, ordered by their own newest record
+    date, descending, with undated files last and filename ascending as the
+    tie-break (the trimmer emits `<stem>-through-<cutkey>-<N>.md` on a
+    same-day collision, :1980-1982, so ties are reachable and must be stable).
+
+    This orders FILES. It deliberately does NOT claim to produce one
+    chronological stream of records, because on this repo's real archives the
+    shard spans OVERLAP -- `CHANGELOG-through-2026-08-11.md` spans
+    2026-08-02..08-11 and strictly contains `-2026-08-09.md`'s 08-03..08-09.
+    Records keep their own file's internal order and are never merge-sorted
+    across files; merging every file into one undifferentiated list is the
+    shape this tool's docstring exists to refuse.
+    """
+    scans = []
+    for path, kind in [(live, "live")] + [(s, "archived") for s in shards]:
+        rec = {"path": path, "kind": kind, "key": "", "items": [], "extra": [],
+               "error": None}
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            rec["error"] = str(exc)
+            scans.append(rec)
+            continue
+        parsed = parse_fn(text)
+        if isinstance(parsed, tuple):
+            rec["items"], rec["extra"] = parsed[0], parsed[1]
+        else:
+            rec["items"] = parsed
+        rec["key"] = newest_record_date(text, date_re)
+        scans.append(rec)
+    head, tail = scans[:1], scans[1:]
+    # Two stable passes, because the two keys run in OPPOSITE directions: name
+    # ascending as the tie-break, date descending as the primary. Sorting the
+    # tie-break first and letting the stable primary sort preserve it is the
+    # standard way to do that without encoding one direction as arithmetic on
+    # the other. `key != ""` under reverse=True puts dated files above undated
+    # ones (an undated or unreadable file sorts last), and ISO dates compare
+    # correctly as plain strings.
+    tail.sort(key=lambda r: r["path"].name)
+    tail.sort(key=lambda r: (r["key"] != "", r["key"]), reverse=True)
+    return head + tail
 
 
 def parse_changelog_models(text: str) -> tuple:
@@ -290,39 +418,109 @@ def git_trailers(no_git: bool, root: Path) -> list:
     return trailers
 
 
-def render(changelog_entries, unparsed_headers, changelog_path, handoffs_hits, trailers) -> str:
+def plural(n, one, many) -> str:
+    return one if n == 1 else many
+
+
+def coverage_line(scans, unit) -> str:
+    """The population sentence: how many `unit`, over how many files, and how
+    many of those files could not be read.
+
+    The unreadable count is never omitted and never folded into the total. A
+    report that says "212 entries across 11 files" when one shard failed to
+    open is the silent-population bug this whole change exists to close, wearing
+    a different hat.
+    """
+    readable = [s for s in scans if s["error"] is None]
+    unreadable = [s for s in scans if s["error"] is not None]
+    total = sum(len(s["items"]) for s in readable)
+    live_n = sum(len(s["items"]) for s in readable if s["kind"] == "live")
+    text = ("(%d %s across %d %s: live %d + archived %d"
+            % (total, unit, len(readable), plural(len(readable), "file", "files"),
+               live_n, total - live_n))
+    if unreadable:
+        text += ("; %d %s UNREADABLE and excluded"
+                 % (len(unreadable), plural(len(unreadable), "file", "files")))
+    return text + ")"
+
+
+def display_path(path: Path, root: Path) -> str:
+    """Repo-relative where possible, so the report is comparable between
+    machines and checkouts (an absolute /Users/... path is noise, and makes any
+    test that reads these headers machine-specific)."""
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except (ValueError, OSError):
+        return str(path)
+
+
+def file_header(scan, root: Path, unit_note="") -> str:
+    """Per-file provenance header.
+
+    MUST NOT begin with a four-digit year: Test 31 counts Source-1 entries with
+    `grep -c '^20[0-9][0-9]-'` over the whole output, so a header starting with a
+    date would inflate that instrument. The leading `-- ` keeps it sound.
+    """
+    shown = display_path(scan["path"], root)
+    if scan["error"] is not None:
+        return "-- %s (%s) -- UNREADABLE: %s" % (shown, scan["kind"], scan["error"])
+    n = len(scan["items"])
+    return "-- %s (%s) -- %d %s" % (shown, scan["kind"], n, unit_note)
+
+
+def render(source1_scans, source2_scans, trailers, root: Path) -> str:
     lines = []
     lines.append("model-report -- self-reported model/tier attribution, read-only, non-gating.")
     lines.append("See docs/planning/model-use-provenance-plan.md for the full design.")
     lines.append("")
 
     lines.append("=== SOURCE 1 -- PRIMARY (self-reported, structured): CHANGELOG.md **Model:** bullets ===")
-    if changelog_entries:
-        for e in changelog_entries:
-            session = e["session"] or "?"
-            lines.append("%s  %-5s %s  %s" % (e["date"], session, e["source"], e["model"]))
-            lines.append("    %s" % e["summary"])
-        n = len(changelog_entries)
-        lines.append("(%d %s **Model:** bullet)"
-                      % (n, "entry carries a" if n == 1 else "entries carry a"))
+    # Live and archived records are ONE source spanning several files, never two
+    # sources. A trim is a storage move the trimmer refuses to make unless it is
+    # provably lossless -- it changes where a `**Model:**` bullet sits, not how
+    # reliable it is. Splitting them into separate sources would assert a
+    # difference in KIND that does not exist, which is the same error the
+    # docstring forbids, mirrored: a false split rather than a false merge.
+    total1 = sum(len(s["items"]) for s in source1_scans if s["error"] is None)
+    if total1:
+        for scan in source1_scans:
+            lines.append(file_header(scan, root, plural(len(scan["items"]), "entry carrying a **Model:** bullet", "entries carrying a **Model:** bullet")))
+            for e in scan["items"]:
+                session = e["session"] or "?"
+                lines.append("%s  %-5s %s  %s" % (e["date"], session, e["source"], e["model"]))
+                lines.append("    %s" % e["summary"])
+        lines.append(coverage_line(source1_scans, "entries carry a **Model:** bullet"))
     else:
+        # Sentinel preserved verbatim: bin/tests.sh Test 30 asserts this exact
+        # string is ABSENT against the real ledger, so it stays load-bearing.
         lines.append("(no CHANGELOG.md entries carry a **Model:** bullet)")
-    if unparsed_headers:
+    unparsed_total = sum(len(s["extra"]) for s in source1_scans)
+    if unparsed_total:
         lines.append("")
-        lines.append("WARNING: %d '### '-prefixed line(s) in %s did NOT match "
+        lines.append("WARNING: %d '### '-prefixed line(s) did NOT match "
                       "CHANGELOG_ENTRY_RE (BL-33) -- dropped, NOT folded into the "
-                      "preceding entry:" % (len(unparsed_headers), changelog_path))
-        for lineno, raw in unparsed_headers:
-            lines.append("  %s:%d: %s" % (changelog_path, lineno, raw))
+                      "preceding entry:" % unparsed_total)
+        for scan in source1_scans:
+            for lineno, raw in scan["extra"]:
+                lines.append("  %s:%d: %s" % (display_path(scan["path"], root), lineno, raw))
     lines.append("")
 
     lines.append('=== SOURCE 2 -- SECONDARY (self-reported, best-effort/regex-fuzzy): '
                   'HANDOFFS.md free-text "model" mentions ===')
     lines.append("(fuzzy match on the bare word \"model\" in each receipt's free-text prose;")
     lines.append(" false positives are expected by design -- NOT a structured field)")
-    if handoffs_hits:
-        for session, line in handoffs_hits:
-            lines.append("%-5s %s" % (session, line))
+    lines.append(" NOTE: receipts are NOT deduplicated across files. Measured on this repo,")
+    lines.append(" 140 `session:` records span 133 distinct ids -- HANDOFFS-archive.md overlaps")
+    lines.append(" the dated shards for S5/S7/S8/S9/S10/S11 (and S3 twice within one file), so a")
+    lines.append(" session can legitimately appear under more than one file below. Collapsing")
+    lines.append(" them would be adjudicating which copy is canonical; this tool reports.")
+    total2 = sum(len(s["items"]) for s in source2_scans if s["error"] is None)
+    if total2:
+        for scan in source2_scans:
+            lines.append(file_header(scan, root, plural(len(scan["items"]), "matched line", "matched lines")))
+            for session, line in scan["items"]:
+                lines.append("%-5s %s" % (session, line))
+        lines.append(coverage_line(source2_scans, "matched line(s)"))
     else:
         lines.append("(no free-text \"model\" mentions found)")
     lines.append("")
@@ -375,14 +573,20 @@ def main() -> int:
         print("error: HANDOFFS.md not found: %s" % handoffs_path)
         return 1
 
-    changelog_entries, unparsed_headers = parse_changelog_models(
-        changelog_path.read_text(encoding="utf-8", errors="replace"))
-    handoffs_hits = parse_handoffs_secondary(
-        handoffs_path.read_text(encoding="utf-8", errors="replace"))
+    # An EXPLICIT path means exactly that file and discovers nothing. Explicit
+    # beats implicit; it is the pre-existing way to narrow the report; and it is
+    # what lets Tests 23/30/31 -- which all pass explicit paths, two of them at
+    # the real ledger -- keep asserting single-file populations unchanged.
+    changelog_shards = [] if args.changelog else archive_shards(root, changelog_path)
+    handoffs_shards = [] if args.handoffs else archive_shards(root, handoffs_path)
+
+    source1_scans = scan_ledger(changelog_path, changelog_shards,
+                                parse_changelog_models, CHANGELOG_DATE_RE)
+    source2_scans = scan_ledger(handoffs_path, handoffs_shards,
+                                parse_handoffs_secondary, HANDOFF_DATE_RE)
     trailers = git_trailers(args.no_git, root)
 
-    print(render(changelog_entries, unparsed_headers, changelog_path, handoffs_hits, trailers),
-          end="")
+    print(render(source1_scans, source2_scans, trailers, root), end="")
     return 0
 
 

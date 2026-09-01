@@ -191,6 +191,65 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-08
 
+### 2026-08-31 · [ad hoc] S133 — `bin/model-report` reads the whole ledger: Source 1 goes 9 → 247
+
+**The deliverable.** `bin/model-report` Sources 1 and 2 now read the live ledger **plus every
+frozen shard** under `docs/archive/`, discovered by glob. Source 1 — the tool's own *primary
+structured* source — went from **9 entries to 247** (live 9 + archived 238) across 11 files.
+Measured against the pre-claim tree `2b71ec7` the defect was **8 of 246, 96.7% invisible**.
+
+**Discovery mirrors the authority that WRITES the shards**, rather than inventing a rule:
+`starter-kit/methodology_trim.py`'s `archive_events` (`:909-930`) already globs
+`docs/archive/<STEM>-*.md`, and its docstring states the reason — *"bin/tests.sh wires exactly
+one shard by literal path in two places, so a second shard would never be checked and the suite
+would still pass."* Matching `<STEM>-*.md` rather than `<STEM>-through-*.md` is what catches
+`HANDOFFS-archive.md`, a pre-`through` shard the narrower pattern drops; the trailing `.md`
+keeps the `.verify.sh` proof siblings out. A missing `docs/archive/` needs no guard.
+
+**ONE source spanning many files, not a fourth source.** A trim is a storage move the trimmer
+refuses to make unless it is provably lossless — it changes where a bullet sits, not how far it
+can be trusted. Splitting live from archived would assert a difference in *kind* that does not
+exist: the mirror of the false merge the docstring forbids. Provenance is carried by a per-file
+header (`-- docs/archive/… (archived) -- 35 entries…`) and one population line.
+
+**ORDERING, AND THE TRAP UNDER IT.** Files sort live-first, then by newest record date
+descending. The key is **anchored** to the record header (`^### YYYY-MM-DD`), never "the newest
+date anywhere in the file" — verified, not assumed: `CHANGELOG-through-v3.6.md` holds the
+**oldest** records (2026-06-25 → 2026-07-26) but its front-matter *prose* mentions 2026-08-02,
+so an unanchored scan files it 8th of 10 instead of last. A design-panel review asserted the
+anchored rule was falsified; re-running it showed the refutation had tested the unanchored
+variant. **It orders FILES and claims nothing more** — the shard spans genuinely overlap
+(`-2026-08-11` spans 08-02→08-11, strictly containing `-2026-08-09`), so no file order is a
+chronological record stream, and records are never merge-sorted across files.
+
+**Test 40, RED-observed against the real pre-fix tool, not inherited from a mutant.** Ten
+assertions, none carrying a hardcoded population — a literal would be falsified by the very next
+trim, the same shape that caused the bug. (1) the discovering run must exceed live-only — this
+is exactly what 43 → 8 slipped past, and it is **9 vs 9 → FAIL** on `HEAD`'s tool; (2)
+conservation against a *different* decomposition, the sum of per-file explicit runs (247 = 247);
+(3) shard set-equality in both directions; (4) a repo with no `docs/archive/`; (5) an unreadable
+shard is **named and excluded, never a silent zero**. Two mutants killed: discovery disabled
+collapses to 9, and a live-only total under-reports 9 < 247. The `chmod 000` case degrades to a
+**stated SKIP** scoped to that precondition alone, so it cannot mute the assertions above it.
+
+**Not deduplicated, and that is a decision.** 140 `session:` records across live + shards carry
+**133 distinct ids** — `HANDOFFS-archive.md` overlaps the dated shards for S5/S7/S8/S9/S10/S11,
+and S3 appears twice within one file. Collapsing them would be adjudicating which copy is
+canonical; the tool reports and says so in Source 2's header.
+
+**Verification.** `bin/tests.sh` **298 passed, 1 failed, 0 skipped** — the one failure is Test 9,
+the pre-existing upstream-absence failure (3 of 27 manifest sources not yet merged upstream),
+unrelated and unchanged. Diffed **row for row** against the pre-change baseline: **zero status
+flips**; the only three text changes are PASS→PASS counters moved by this session's own claim
+commit (8→9 bullets, 4→5 receipts, ledger 46,244→47,328 B). Test 30's empty-population sentinel
+is preserved byte-for-byte and confirmed still reachable.
+
+**Canonical-only — this ships to nobody.** `bin/model-report` appears nowhere in
+`bin/_manifest.py`, verified by grepping the whole file for the name rather than one column.
+**No outward-facing action.**
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-31 · [ad hoc] S133 — claim: `bin/model-report` learns to read the archive shards
 
 **Phase 1B claim.** Operator-confirmed at the Phase 0 gate. S132's `next_steps` item (2) — its own
