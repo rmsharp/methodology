@@ -191,6 +191,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-08
 
+### 2026-08-31 · [ad hoc] S133 — claim: `bin/model-report` learns to read the archive shards
+
+**Phase 1B claim.** Operator-confirmed at the Phase 0 gate. S132's `next_steps` item (2) — its own
+pick for *"the highest-value thing a session may take unilaterally"*, the readiness items 3/4/9/10
+being operator decisions no session may take.
+
+**THE DEFECT, MEASURED WITH THE TOOL ITSELF RATHER THAN PREDICTED.** `bin/model-report` resolves the
+root ledger and falls back to `starter-kit/`, with **no archive glob** — `bin/model-report:97-103`,
+`changelog_path()` / `handoffs_path()`. Run bare it reports **8 entries** carry a `**Model:**`
+bullet. Run once per shard with `--changelog <shard>` it reports **238** more across ten
+`docs/archive/CHANGELOG-*.md`. So its own **primary structured source** is **8 of 246 — 96.7%
+invisible**, and `bin/tests.sh` Test 30 passes identically either way. **The repo already fixed this
+exact shape once** and did not generalise it: Test 29 was re-scoped to glob the shards; the tool that
+test guards was left resolving one file.
+
+**A SECOND CLAIM TO ADJUDICATE, NOT YET A FINDING.** This file's own front matter (`:73-79`) states
+Source 1 *"matches only the seed's list form `- **Model:**`"* and *"cannot parse"* the bare
+`**Model:**` this file uses — **BL-20**. That is in tension with the measurement above: the live
+regex `CHANGELOG_MODEL_RE` (`:59`) carries an optional `-?`, and a bare-form run returned 8 rather
+than 0. **Both cannot be true.** Which is stale — the sentence or the tool — is a question for
+`git log`, not for reading either one harder, and it changes what a correct fix must cover.
+
+**SCOPE.** One deliverable: the tool sees the shards. **`bin/model-report` is canonical-only** — it
+is not in `bin/_manifest.py`, so no adopter receives it and this ships to no one; that is to be
+re-verified against the manifest's *source* column, not a bare filename grep, before it is asserted
+in the close-out. The per-entry `CHANGELOG` budget (§11.5's other owed item) is **not** this session.
+**No outward-facing action.**
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-31 · [ad hoc] S132 close-out — both ledgers readable, one claim of my own retracted, self-score 7/10
 
 **Readiness item 2, complete.** Five commits plus this one: `7af4356` claim, **`db4f629`**

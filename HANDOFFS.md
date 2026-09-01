@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S133
+date: 2026-08-31
+status: pending
+active_task: **`bin/model-report` LEARNS TO READ THE ARCHIVE SHARDS.** S132 `next_steps` (2), operator-confirmed at the Phase 0 gate — its own pick for the highest-value item a session may take unilaterally. **Measured with the tool, not predicted:** `changelog_path()`/`handoffs_path()` (`bin/model-report:97-103`) resolve the root ledger with a `starter-kit/` fallback and **no archive glob**, so Source 1 — the tool's own *primary structured* source — sees **8 of 246 `**Model:**` bullets (96.7% invisible)**; 238 sit in ten `docs/archive/CHANGELOG-*.md` shards. Test 30 passes identically either way. Precedent to generalise: **Test 29 already globs the shards**; the tool it guards was never taught to. **SECOND CLAIM TO ADJUDICATE FIRST:** `CHANGELOG.md:73-79` says the parser *"cannot parse"* the bare `**Model:**` form (**BL-20**), which contradicts the 8 non-zero rows and the `-?` in `CHANGELOG_MODEL_RE` (`:59`) — settle it from `git log`, not by re-reading the sentence. **NO OUTWARD-FACING ACTION.**
+```
+
+```handoff
 session: S132
 date: 2026-08-31
 status: complete
