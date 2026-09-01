@@ -3208,20 +3208,29 @@ else
     skip "no archived **Model:** bullets on disk -- (1) coverage and (2) conservation cannot be built"
 fi
 
-# (3) PROVENANCE, set-equal in BOTH directions: every shard on disk is named in the report and
-# the report names no shard that is not on disk. A count-only check would pass while naming the
-# wrong files.
+# (3) PROVENANCE, set-equal in BOTH directions, over BOTH ledgers. Every shard on disk is named
+# in the report and the report names no shard that is not on disk. A count-only check would pass
+# while naming the wrong files.
+#
+# COVERING BOTH STEMS IS NOT SYMMETRY FOR ITS OWN SAKE -- it is the only assertion here that
+# constrains Source 2 at all. Found by mutation while writing this test: narrowing the glob to
+# `<STEM>-through-*.md` leaves every CHANGELOG shard matched (all ten ARE `-through-`) and
+# silently drops `HANDOFFS-archive.md`, the one pre-`through` shard. That mutant survives
+# assertions (1) and (2) untouched, because both are Source-1 only. `-through-` is the
+# documented naming convention, so "tightening" the glob to it is a plausible future edit.
 MISSING40=0; EXTRA40=0
-for sh40 in "${SHARDS40[@]}"; do
-    [ -e "$sh40" ] || continue
-    echo "$OUT40_DEFAULT" | grep -q "docs/archive/$(basename "$sh40") (archived)" || MISSING40=$((MISSING40+1))
+for stem40 in CHANGELOG HANDOFFS; do
+    for sh40 in "$METHODOLOGY"/docs/archive/"$stem40"-*.md; do
+        [ -e "$sh40" ] || continue
+        echo "$OUT40_DEFAULT" | grep -q "docs/archive/$(basename "$sh40") (archived)" || MISSING40=$((MISSING40+1))
+    done
 done
 while read -r named40; do
     [ -n "$named40" ] || continue
     [ -e "$METHODOLOGY/$named40" ] || EXTRA40=$((EXTRA40+1))
 done <<< "$(echo "$OUT40_DEFAULT" | sed -n 's/^-- \(docs\/archive\/[^ ]*\) (archived).*/\1/p' | sort -u)"
 [ "$MISSING40" = "0" ] && [ "$EXTRA40" = "0" ] \
-    && pass "every archive shard on disk is named in the report, and none that is not ($MISSING40 missing, $EXTRA40 extra)" \
+    && pass "every archive shard on disk (both ledgers) is named in the report, and none that is not ($MISSING40 missing, $EXTRA40 extra)" \
     || fail "shard set mismatch: $MISSING40 on disk but unnamed, $EXTRA40 named but absent"
 
 # (4) A repo with NO docs/archive/ must report live-only and SAY so -- "found nothing" is not
@@ -3289,6 +3298,21 @@ if mutate "$BIN/model-report" "$M40" 's.replace("total = sum(len(s[\"items\"]) f
         pass "mutant killed: a live-only total breaks the population line's own arithmetic"
     fi
 else fail "M2 mutation DID NOT APPLY"; fi
+# M3: the glob narrowed to the DOCUMENTED `-through-` convention. Source 1 is completely
+# unaffected (all ten CHANGELOG shards are `-through-`), so assertions (1) and (2) stay green;
+# only the both-ledgers set check in (3) sees HANDOFFS-archive.md go missing. This mutant is why
+# (3) iterates both stems, and it dies against the report's own shard names rather than a count.
+if mutate "$BIN/model-report" "$M40" 's.replace("adir.glob(\"%s-*.md\" % stem)", "adir.glob(\"%s-through-*.md\" % stem)", 1)'; then
+    chmod +x "$M40"
+    OUT_M3_40="$( (cd "$METHODOLOGY" && "$M40" --no-git) 2>&1 )"
+    if [ -e "$METHODOLOGY/docs/archive/HANDOFFS-archive.md" ]; then
+        echo "$OUT_M3_40" | grep -q "docs/archive/HANDOFFS-archive.md (archived)" \
+            && fail "MUTANT SURVIVED: a -through- glob still named the pre-through shard" \
+            || pass "mutant killed: a -through- glob drops HANDOFFS-archive.md and (3) sees it"
+    else
+        skip "no pre-\`through\` shard on disk -- the -through- narrowing cannot be exercised"
+    fi
+else fail "M3 mutation DID NOT APPLY"; fi
 rm -f "$M40"
 
 echo ""

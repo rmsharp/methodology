@@ -195,6 +195,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-08
 
+### 2026-08-31 · [ad hoc] S133 — a hole in this session's own Test 40, found by unanticipated mutation
+
+**Self-caught, before the review returned.** Test 40 as first committed (`8967b92`) asserted the
+shard set for **`CHANGELOG` only**. Mutating the glob from `<STEM>-*.md` to the *documented*
+`<STEM>-through-*.md` leaves **all ten CHANGELOG shards matched** — every one of them is
+`-through-` — and silently drops **`HANDOFFS-archive.md`**, the single pre-`through` shard. Source
+1 is untouched, so assertions (1) and (2), which are Source-1 only, **stay green**. The mutant
+survived the whole test.
+
+**That is the shipped bug's own shape, one level up:** a check whose population silently excludes
+part of what it claims to cover, staying green while coverage is lost. And `-through-` is the
+convention the trimmer documents, so narrowing the glob to it is a *plausible* future edit, not a
+contrived one.
+
+**The repair.** Assertion (3) now iterates **both stems**, which makes it the only assertion in the
+test that constrains Source 2 at all. Added **M3**, the `-through-` mutant, which dies against the
+report's own shard names rather than against any count. Test 40 is now **11 assertions, 3 mutants**.
+
+**Found by mutating in a direction the test did not anticipate** — deleting or disabling the glob
+was already covered; *narrowing* it was not. Coverage of a predicate is not coverage of its edge.
+
+**Verification.** `bin/tests.sh` **299 passed, 1 failed, 0 skipped** (Test 9 only, unchanged).
+
+**A pre-existing defect found while verifying, NOT introduced here and NOT fixed here (FM #17):**
+**5 of 19 `docs/archive/*.verify.sh` losslessness proofs FAIL**, and nothing in `bin/tests.sh` runs
+them. Confirmed pre-existing by running them against `2b71ec7`, `16fbba0`, `3e065f6` and `cebdba8`
+— **5 failing at every one**, so it predates this session by at least four. Recorded in
+`next_steps`.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-08-31 · [ad hoc] S133 — the two front-matter claims the archive fix made false, repaired
 
 **The documentation half of the same change, in its own commit.** Both root ledgers carried live,
