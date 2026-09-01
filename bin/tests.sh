@@ -3204,6 +3204,35 @@ if [ "$ARCHIVED_BULLETS40" -gt 0 ]; then
     [ "$N40_DEFAULT" = "$SUM40" ] \
         && pass "discovering run equals the sum of per-file runs ($N40_DEFAULT = $SUM40)" \
         || fail "discovering run $N40_DEFAULT != sum of per-file runs $SUM40 -- a file's contribution is lost or double-counted"
+
+    # (2b) THE INDEPENDENT VOTE. Assertions (1) and (2) both compute their operands with THIS
+    # tool and THIS parser, so a loss inside parse_changelog_models cancels on both sides and
+    # they agree on a wrong population. ARCHIVED_BULLETS40 is the only figure here measured
+    # without the tool -- an anchored grep -- and until now it was computed and never voted on,
+    # which is a measurement that cannot fail. It is voted here.
+    #
+    # Safe to compare as an equality because the archives are FROZEN by construction: a shard is
+    # written once and never edited, so the two counts cannot drift apart under normal operation.
+    # They can differ legitimately if a future shard carries a `**Model:**` inside a fenced block
+    # (grep is fence-blind, the parser is not) or two bullets in one entry -- both currently zero
+    # across live+archives. That divergence SHOULD go red and be looked at, not be papered over.
+    TOOL_ARCHIVED40="$(echo "$OUT40_DEFAULT" | sed -n 's/^(.*: live [0-9]* + archived \([0-9]*\)).*/\1/p' | head -1)"
+    if [ -n "$TOOL_ARCHIVED40" ]; then
+        [ "$TOOL_ARCHIVED40" = "$ARCHIVED_BULLETS40" ] \
+            && pass "the tool's archived count agrees with an INDEPENDENT anchored grep ($TOOL_ARCHIVED40 = $ARCHIVED_BULLETS40)" \
+            || fail "tool reports $TOOL_ARCHIVED40 archived, independent grep counts $ARCHIVED_BULLETS40 -- one of them is wrong"
+    else
+        fail "could not parse the archived subtotal out of the population line -- the independent vote cannot be cast"
+    fi
+
+    # (6) SOURCE 2 IS HALF THE SHIPPED CHANGE and every count above is Source-1 only. Without
+    # this, disabling Source 2's discovery leaves every counting assertion green.
+    s2_count() { echo "$1" | sed -n '/=== SOURCE 2/,/=== SOURCE 3/p' | grep -cE '^[A-Za-z0-9?]+ +\S'; }
+    N40S2_DEFAULT="$(s2_count "$OUT40_DEFAULT")"
+    N40S2_LIVEONLY="$(s2_count "$OUT40_LIVEONLY")"
+    [ "$N40S2_DEFAULT" -gt "$N40S2_LIVEONLY" ] \
+        && pass "Source 2 also reads the archives ($N40S2_DEFAULT > $N40S2_LIVEONLY matched lines)" \
+        || fail "Source 2 default $N40S2_DEFAULT vs live-only $N40S2_LIVEONLY -- HANDOFFS shards are NOT being read"
 else
     skip "no archived **Model:** bullets on disk -- (1) coverage and (2) conservation cannot be built"
 fi
@@ -3268,6 +3297,34 @@ else
         || fail "population line hides the unreadable file: $(echo "$OUT40_UNREAD" | grep 'across')"
     chmod 644 "$P40/docs/archive/CHANGELOG-through-2025-12-01.md"
 fi
+
+# (7) THE ZERO-POPULATION UNREADABLE CASE -- the branch an adversarial review found open after
+# the first commit. When the READABLE files happen to yield zero items, the provenance rows and
+# the population line must STILL print: gating them on a non-zero total prints
+# "(no CHANGELOG.md entries carry a **Model:** bullet)" for a ledger that could not be OPENED,
+# which is the very conflation this change exists to close. Test 40's other UNREADABLE
+# assertions cannot reach it -- their live fixture carries a bullet, so the total is never zero.
+# Reachable with no chmod at all: an explicit path to a DIRECTORY passes .exists() and raises
+# IsADirectoryError, and an explicit path suppresses discovery, so the total is 0.
+OUT40_DIR="$("$BIN/model-report" --changelog "$METHODOLOGY/docs/archive" \
+              --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
+echo "$OUT40_DIR" | grep -q 'UNREADABLE' \
+    && pass "zero readable items + an unreadable file still prints the UNREADABLE row" \
+    || fail "zero-population unreadable file vanished -- 'could not read' rendered as 'found nothing'"
+echo "$OUT40_DIR" | grep -q 'no CHANGELOG.md entries carry a' \
+    && fail "zero-population unreadable file was reported with the found-nothing sentinel" \
+    || pass "the found-nothing sentinel is correctly WITHHELD when the file could not be read"
+
+# Control on the line above: the sentinel must still appear when the file really IS empty of
+# bullets and readable. Without this, a mutant that deletes the sentinet entirely would pass the
+# assertion above -- and Test 30's real-file guard depends on that exact string existing.
+EMPTY40="$(mktemp)"
+printf '# Changelog\n\n### 2026-01-01 · [ad hoc] readable, genuinely no bullet\n\nprose.\n' > "$EMPTY40"
+"$BIN/model-report" --changelog "$EMPTY40" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1 \
+    | grep -q 'no CHANGELOG.md entries carry a' \
+    && pass "control: a readable ledger with no bullets DOES print the found-nothing sentinel" \
+    || fail "the found-nothing sentinel is gone -- Test 30's real-file guard is now vacuous"
+rm -f "$EMPTY40"
 rm -rf "$P40"
 
 # MUTATION: prove the assertions above have teeth rather than merely running. Each mutant

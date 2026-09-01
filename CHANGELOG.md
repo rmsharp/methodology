@@ -72,20 +72,31 @@ dashboard's `_find_action_ledger` resolves the root file only, and `_find_change
 
 **`bin/model-report` used to be the one consumer that lost coverage here. Since S133 (2026-08-31)
 it does not.** Its Sources 1 and 2 now read the live ledger **plus every `docs/archive/` shard** by
-default, so a split no longer shrinks what it sees: Source 1 reports **247 entries across 11 files**
-(live 9 + archived 238) where it reported 9. `bin/model-report --changelog <shard>` still narrows to
-one file — an **explicit path means exactly that file** and discovers nothing.
+default, so a split no longer shrinks what it sees. `bin/model-report --changelog <shard>` still
+narrows to one file — an **explicit path means exactly that file** and discovers nothing.
+
+**No population figure is written here, deliberately.** A first draft of this paragraph published
+*"247 entries across 11 files (live 9 + archived 238)"* in the present tense. It was **already
+false when committed**: 247/live-9 was the tree *before* the fix, and the fix commit and this one
+each add an entry carrying a `**Model:**` bullet, so the tool reported **249/live-11** at the
+moment the sentence was written. An always-read file, a number that rots on the next commit —
+the exact defect the rest of this paragraph is about, reintroduced by the session fixing it. **Run
+the tool, or the command below.**
 
 **Two claims that stood in this paragraph were stale, and both are recorded rather than quietly
 deleted.** It said Source 1 *"matches only the seed's list form `- **Model:**`"* and *"cannot parse"*
 this file's bare form, and that a bare run *"reports an empty Source 1"*. Both were true when written
 (`020ba3f0`, 2026-08-02) and **false from 2026-08-11**, when `b434183` fixed **BL-20** by widening
-`CHANGELOG_MODEL_RE` to accept either dialect — 20 days and roughly ten sessions during which the
-sentence read as current. Its cited `bin/model-report:51` had drifted too. **BL-20's residual option
+`CHANGELOG_MODEL_RE` to accept either dialect. It stood false for **20 days**, during which
+**61 receipts** were written (`cat HANDOFFS.md docs/archive/HANDOFFS-*.md | grep -cE '^date: 2026-08-(1[1-9]|2[0-9]|3[01])'`).
+The 2026-08-31 entry below says *"roughly ten sessions"* — a guess, stated as a fact, wrong by
+6x, in the very entry that criticises an unchecked sentence. It stands there (this ledger is
+append-only) and is corrected here and in the entry that follows it. Measured, not recalled. Its cited `bin/model-report:51` had drifted too. **BL-20's residual option
 (3) remains open**; only the parser defect closed. The form itself did drift at `1298af7`
 (2026-08-02) and has held unbroken since. Count both dialects, never one — a single literal is a
-sample, not a population, and the command below is still the independent check on the tool's own
-number (it counts *lines*, where the tool counts *entries carrying* a bullet):
+sample, not a population, and the command below is the independent check on the tool's own number
+(it counts *lines*, where the tool counts *entries carrying* a bullet; `bin/tests.sh` Test 40 votes
+the two against each other rather than merely computing them):
 
 ```sh
 grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md docs/archive/CHANGELOG-*.md
@@ -194,6 +205,67 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ---
 
 ## 2026-08
+
+### 2026-08-31 · [ad hoc] S133 — 15 review findings, all mine, all confirmed: one real bug and four false claims
+
+**A 4-lens adversarial review of `273afff` raised 15 findings and my own re-runs confirmed every
+one.** Zero refuted. They collapse into five distinct defects, all in this session's own work.
+
+**1. A REAL BUG, and it broke the guarantee this change was made to provide.** `render` gated the
+per-file provenance rows *and* the population line on a non-zero total (`if total1:` / `if
+total2:`). When the readable files happen to yield zero, every `UNREADABLE` row and the whole
+*"N files … M UNREADABLE and excluded"* line were suppressed, printing **"(no CHANGELOG.md entries
+carry a `**Model:**` bullet)" for a ledger that could not be OPENED** — the exact *"could not read
+this"* / *"found nothing"* conflation my own docstrings claimed to close, two functions above the
+bug. It also converted the pre-change tool's **loud traceback into a confident exit 0**. Reachable
+with no `chmod` at all: `--changelog <a directory>` passes `.exists()` and raises
+`IsADirectoryError`. **Fixed** — the gate is now *"is there anything to say about the read set"*.
+Test 40's existing UNREADABLE assertions could never reach it: their fixture's live file carries a
+bullet, so the total is never zero. **Now covered, RED-verified against `273afff`'s tool**, with a
+control proving the found-nothing sentinel still fires when a file really is empty and readable
+(without it, deleting the sentinel would pass — and Test 30's real-file guard depends on it).
+
+**2. THE TOOL PRINTED A HARDCODED MEASUREMENT OF THIS REPO, ON EVERY RUN, IN ANY REPO.** Source 2's
+header carried the literal *"140 `session:` records span 133 distinct ids — HANDOFFS-archive.md
+overlaps … S5/S7/S8/S9/S10/S11"*. False in any other tree and false in this one after the next
+receipt. **Replaced by `duplicate_sessions()`, measured at run time from the scans in hand**, which
+prints only when overlap is actually observed — and the note now says the absence means *no session
+in this read set matched twice*, not that the ledger has no overlap, since a receipt with no
+`model` prose never reaches Source 2 at all.
+
+**3. I PUBLISHED A POPULATION FIGURE THAT WAS ALREADY FALSE WHEN COMMITTED.** The always-read front
+matter said *"Source 1 reports 247 entries across 11 files (live 9 + archived 238)"*. 247/live-9 was
+the tree **before** the fix; the fix commit and the front-matter commit each added an entry carrying
+a `**Model:**` bullet, so the tool reported **249/live-11** at the moment that sentence was written,
+and 250 now. **The measurer effect, in an always-read file, published by the session whose entire
+subject is a miscounted population.** The figure is **deleted, not corrected** — the paragraph now
+carries the command instead, which is that paragraph's own doctrine.
+
+**4. THE ORDERING JUSTIFICATION WAS OVERSTATED — three lenses caught it independently.**
+`newest_record_date`'s docstring, this ledger, and `8967b92`'s commit message all claimed an
+unanchored key *"files `CHANGELOG-through-v3.6.md` eighth of ten instead of last"*. **It does not.**
+Run through the *shipped* two-pass sort, the unanchored key leaves it **10th of 10** — its
+three-way tie at 2026-08-02 is broken by filename ascending, which puts `…-v3.6.md` last within a
+group that already sorts lowest. I read "8th" off a key-sorted table instead of running my own sort:
+**predicting the checker rather than running it, on the one axis I had already been burned on this
+session.** The anchor is still correct — unanchored, that file keys **five weeks after its own
+newest record** — but the *consequence* was invented. Corrected in the docstring, which now states
+plainly what the anchor does not buy.
+
+**5. "ROUGHLY TEN SESSIONS" WAS A GUESS STATED AS A FACT, WRONG BY 6x.** Measured: **61 receipts**
+are dated in the 20-day window the stale sentence stood. The entry above says *"roughly ten"* and,
+this ledger being append-only, it stays there and is corrected here.
+
+**Also strengthened, from findings that were about test power rather than defects.** Assertion (2)
+computed both operands with the same binary and the same parser, so a loss inside
+`parse_changelog_models` cancels on both sides — and `ARCHIVED_BULLETS40`, the one figure in Test 40
+measured **without** the tool, was computed and **never voted on**. It is voted now (238 = 238).
+Source 2 — half the shipped change — had **no counting assertion at all**; it has one now (45 > 2).
+
+**Test 40 is now 16 assertions and 3 mutants.** `bin/tests.sh` **304 passed, 1 failed, 0 skipped**;
+the failure is Test 9, pre-existing and unrelated. **No outward-facing action.**
+
+- **Model:** Claude Opus 5 (1M context).
 
 ### 2026-08-31 · [ad hoc] S133 — a hole in this session's own Test 40, found by unanticipated mutation
 

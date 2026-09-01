@@ -162,12 +162,21 @@ def newest_record_date(text: str, date_re) -> str:
     """The latest record date in `text`, or "" when it carries no dated record.
 
     ANCHORED to the record header (`^### YYYY-MM-DD` / `^date: YYYY-MM-DD`),
-    never "the newest date appearing anywhere in the file". That distinction is
-    load-bearing and was verified against this repo's real archives, not
-    assumed: `docs/archive/CHANGELOG-through-v3.6.md` holds records dated
-    2026-06-25..2026-07-26 -- it is the OLDEST shard -- but its front-matter
-    PROSE mentions 2026-08-02, so an unanchored scan keys it as 2026-08-02 and
-    files it eighth of ten instead of last. Anchored, all ten order correctly.
+    never "the newest date appearing anywhere in the file".
+
+    Measured on this repo's real archives: `docs/archive/CHANGELOG-through-v3.6.md`
+    holds records dated 2026-06-25..2026-07-26 -- it is the OLDEST shard -- but
+    its front-matter PROSE mentions 2026-08-02, so an unanchored scan keys it
+    **five weeks after its own newest record**, tied with two genuinely newer
+    shards. Anchoring is what makes the key mean what it says.
+
+    WHAT THAT DOES *NOT* BUY, stated because an earlier draft of this docstring
+    claimed it and was wrong: on today's tree the unanchored key does not
+    actually move this file. Its three-way tie at 2026-08-02 is broken by
+    filename ascending, which puts `...-v3.6.md` last among the tied group, and
+    that group already sorts lowest -- so it lands 10th of 10 either way. The
+    anchor is correct on its own terms; the visible-misordering consequence was
+    an overstatement, and the tie-break was doing the work.
     """
     hits = date_re.findall(text)
     return max(hits) if hits else ""
@@ -468,6 +477,29 @@ def file_header(scan, root: Path, unit_note="") -> str:
     return "-- %s (%s) -- %d %s" % (shown, scan["kind"], n, unit_note)
 
 
+def duplicate_sessions(scans) -> str:
+    """Measured overlap across the Source-2 read set, or "" when there is none.
+
+    Computed from the scans in hand at run time, never carried as a literal. An
+    earlier draft printed this repo's own figures ("140 records, 133 distinct
+    ids") as fixed text in every run -- false in any other tree, and false in
+    this one after the next receipt is written. That is precisely the
+    count-written-into-a-file-is-a-future-lie shape the repo names, reproduced
+    inside the tool whose own subject is a miscounted population.
+    """
+    seen = {}
+    for scan in scans:
+        if scan["error"] is not None:
+            continue
+        for session, _line in scan["items"]:
+            seen.setdefault(session, set()).add(scan["path"].name)
+    multi = sorted(sid for sid, files in seen.items() if len(files) > 1)
+    if not multi:
+        return ""
+    return ("MEASURED: %d session id(s) appear in more than one file -- %s"
+            % (len(multi), ", ".join(multi)))
+
+
 def render(source1_scans, source2_scans, trailers, root: Path) -> str:
     lines = []
     lines.append("model-report -- self-reported model/tier attribution, read-only, non-gating.")
@@ -482,7 +514,16 @@ def render(source1_scans, source2_scans, trailers, root: Path) -> str:
     # difference in KIND that does not exist, which is the same error the
     # docstring forbids, mirrored: a false split rather than a false merge.
     total1 = sum(len(s["items"]) for s in source1_scans if s["error"] is None)
-    if total1:
+    # Gate on "is there anything to SAY about the read set", not on "did we find
+    # anything". Gating on total alone suppressed every UNREADABLE row and the
+    # whole population line whenever the readable files happened to yield zero --
+    # printing "(no ... entries carry a **Model:** bullet)" for a ledger that
+    # could not be OPENED. That is the exact conflation this change exists to
+    # close, and it also turned the pre-change tool's loud traceback into a
+    # confident exit-0 false negative. Reachable with no chmod at all:
+    # `--changelog <a directory>` passes .exists() and raises IsADirectoryError.
+    unreadable1 = [s for s in source1_scans if s["error"] is not None]
+    if total1 or unreadable1:
         for scan in source1_scans:
             lines.append(file_header(scan, root, plural(len(scan["items"]), "entry carrying a **Model:** bullet", "entries carrying a **Model:** bullet")))
             for e in scan["items"]:
@@ -509,13 +550,18 @@ def render(source1_scans, source2_scans, trailers, root: Path) -> str:
                   'HANDOFFS.md free-text "model" mentions ===')
     lines.append("(fuzzy match on the bare word \"model\" in each receipt's free-text prose;")
     lines.append(" false positives are expected by design -- NOT a structured field)")
-    lines.append(" NOTE: receipts are NOT deduplicated across files. Measured on this repo,")
-    lines.append(" 140 `session:` records span 133 distinct ids -- HANDOFFS-archive.md overlaps")
-    lines.append(" the dated shards for S5/S7/S8/S9/S10/S11 (and S3 twice within one file), so a")
-    lines.append(" session can legitimately appear under more than one file below. Collapsing")
-    lines.append(" them would be adjudicating which copy is canonical; this tool reports.")
+    lines.append(" NOTE: receipts are NOT deduplicated across files -- a session id can appear")
+    lines.append(" under more than one file below. Collapsing them would be adjudicating which")
+    lines.append(" copy is canonical; this tool reports. Any overlap is MEASURED at run time and")
+    lines.append(" stated below WHEN PRESENT, never carried here as a literal. Absent means no")
+    lines.append(" session in this read set matched in two files -- not that the ledger has no")
+    lines.append(" overlap, since a receipt with no `model` prose never reaches this source.")
+    dup_note = duplicate_sessions(source2_scans)
+    if dup_note:
+        lines.append(" " + dup_note)
     total2 = sum(len(s["items"]) for s in source2_scans if s["error"] is None)
-    if total2:
+    unreadable2 = [s for s in source2_scans if s["error"] is not None]
+    if total2 or unreadable2:
         for scan in source2_scans:
             lines.append(file_header(scan, root, plural(len(scan["items"]), "matched line", "matched lines")))
             for session, line in scan["items"]:
