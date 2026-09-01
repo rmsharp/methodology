@@ -70,18 +70,22 @@ again. Archiving is safe by construction: the FM #27 pre-commit gate matches the
 dashboard's `_find_action_ledger` resolves the root file only, and `_find_changelog` scans only
 `(<root>, <root>/docs)` — so no shard in `docs/archive/` can shadow this file by sort order.
 
-**`bin/model-report` is the one consumer that loses coverage, and it loses more than it looks.** Its
-Source 1 matches only the seed's list form `- **Model:**` (`bin/model-report:51`). This file's bullets
-are all written in a bare `**Model:**` form it cannot parse, so **every bullet Source 1 could actually
-see moved into the 2026-08-01 shard at this split** — run with no arguments it now reports an empty
-Source 1 against a ledger whose entries visibly carry the bullet. Reach a span with
-`bin/model-report --changelog <shard>`. The parser blindness is **not a consequence of this split**:
-the form drifted at `1298af7` (2026-08-02) and has held unbroken since — *every* live entry, this
-file's own newest included. Raised as **BL-20**, deliberately not fixed here (FM #17). The count that
-stood here ("nine entries since") was falsified by the very next entry written above it, which is the
-plan's own **DELETE** sink applied on the spot: the reader can count the list, and the command below
-does it. Count both dialects,
-never one — a single literal is a sample, not a population:
+**`bin/model-report` used to be the one consumer that lost coverage here. Since S133 (2026-08-31)
+it does not.** Its Sources 1 and 2 now read the live ledger **plus every `docs/archive/` shard** by
+default, so a split no longer shrinks what it sees: Source 1 reports **247 entries across 11 files**
+(live 9 + archived 238) where it reported 9. `bin/model-report --changelog <shard>` still narrows to
+one file — an **explicit path means exactly that file** and discovers nothing.
+
+**Two claims that stood in this paragraph were stale, and both are recorded rather than quietly
+deleted.** It said Source 1 *"matches only the seed's list form `- **Model:**`"* and *"cannot parse"*
+this file's bare form, and that a bare run *"reports an empty Source 1"*. Both were true when written
+(`020ba3f0`, 2026-08-02) and **false from 2026-08-11**, when `b434183` fixed **BL-20** by widening
+`CHANGELOG_MODEL_RE` to accept either dialect — 20 days and roughly ten sessions during which the
+sentence read as current. Its cited `bin/model-report:51` had drifted too. **BL-20's residual option
+(3) remains open**; only the parser defect closed. The form itself did drift at `1298af7`
+(2026-08-02) and has held unbroken since. Count both dialects, never one — a single literal is a
+sample, not a population, and the command below is still the independent check on the tool's own
+number (it counts *lines*, where the tool counts *entries carrying* a bullet):
 
 ```sh
 grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md docs/archive/CHANGELOG-*.md
@@ -190,6 +194,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ---
 
 ## 2026-08
+
+### 2026-08-31 · [ad hoc] S133 — the two front-matter claims the archive fix made false, repaired
+
+**The documentation half of the same change, in its own commit.** Both root ledgers carried live,
+always-read front matter describing `bin/model-report`'s coverage. The fix in `8967b92` made both
+false the moment it landed, and a known-false sentence in an always-read file is the defect class
+this repo treats most seriously.
+
+**`CHANGELOG.md` — a claim that had already been stale for 20 days.** It read *"Source 1 matches
+only the seed's list form"* and *"cannot parse"* the bare form, and that a bare run *"reports an
+empty Source 1."* True when written (`020ba3f0`, 2026-08-02); **false from `b434183`
+(2026-08-11)**, which fixed **BL-20**. Roughly ten sessions read it as current — including this
+one, which queued it at claim time as *"a second claim to adjudicate, not yet a finding"* and
+settled it from `git blame` and `git log` rather than by re-reading the sentence. Corrected, with
+the staleness itself recorded rather than quietly deleted, and **BL-20's residual option (3) noted
+as still open** — only the parser defect closed.
+
+**`HANDOFFS.md` — kept deliberately terse, because its front matter is on a byte budget.** The
+first draft of this repair ran 186 B over `check-handoff`'s **7,168 B header reserve** and turned
+Test 39's A2 assertion RED. The reserve is load-bearing — it is what makes three records plus the
+header fit the 65,536 B ceiling — so the **edit was cut to fit rather than the budget raised**
+(*"raise the ceiling"* is last on the remedy list for exactly this reason). Now **6,995 B, 97% of
+reserve**: a later session has ~173 B of headroom here, not a blank cheque.
+
+**A measurement trap worth recording.** Sizing that edit by `text.index("```handoff")` returned
+**1,177 B** — wrong, because line 9 of this ledger's own front matter quotes ```` ```handoff ````
+inside a code span, so the slice stopped there instead of at the first real record. The correct
+figure, 6,995 B, came from **running `bin/tests.sh`**. An authority existed; predicting it by
+reimplementing its unit is what produced the wrong number.
+
+**Verification.** `bin/tests.sh` **298 passed, 1 failed, 0 skipped** — Test 9 only, unchanged and
+unrelated. **No outward-facing action.**
+
+- **Model:** Claude Opus 5 (1M context).
 
 ### 2026-08-31 · [ad hoc] S133 — `bin/model-report` reads the whole ledger: Source 1 goes 9 → 247
 

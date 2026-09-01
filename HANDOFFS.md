@@ -18,8 +18,8 @@ floor of three explained below. Adopted at **S127 (2026-08-30)** by operator dec
 including why a retention cap is not the periodic reset H3's RED rule forbids — is in that session's
 `CHANGELOG.md` entry. `bin/check-handoff` validates its 13-key schema on the **newest** receipt, but
 two of its other scopes traverse every receipt and `--all` checks all of them: *"validates only the
-newest receipt"*, stated here until S127, was **false**. `bin/model-report --handoffs <shard>` reaches
-archived prose when you need it.
+newest receipt"*, stated here until S127, was **false**. Since S133 `bin/model-report` globs the shards,
+so its **default** run already reaches archived prose; `--handoffs <shard>` narrows to one file.
 
 **Two session sequences share this ledger and their numbers collide.** This fork and
 `upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
