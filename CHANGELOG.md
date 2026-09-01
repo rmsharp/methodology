@@ -206,6 +206,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-01 · [ad hoc] S133 — the receipt's `commit:` field named 1 of 7, and the hook let the fix through
+
+**`edbbf33`.** The S133 receipt's `commit:` field carried a single sha (`1aa3bf5`) where every
+predecessor lists the session's whole commit set, using *"this close-out"* for the one that cannot
+name itself (S132, S131, S130, S129 all take that shape). **A reader tracing this session from the
+receipt would have found a seventh of it.** Now lists all seven. The longer field pushed the record
+**128 B over** the 12,288 B budget; trailing prose was trimmed as `check-handoff` instructs, with
+the checker **run between passes rather than predicted** — 12,275 B.
+
+**AN OBSERVATION ABOUT THE HOOK, NOT A DEFECT CLAIM.** `edbbf33` staged **only `HANDOFFS.md`**, so
+it passed `.githooks/pre-commit` under the deliberate **Phase 1B claim exemption**
+(`.githooks/pre-commit:97-98`) — but it was a **correction, not a claim**, and it left this ledger's
+frontier one commit behind `HEAD`. The backstop worked as designed in the sense that matters: the
+gap is recorded here, in-session, rather than being left for the next Phase 0 reconcile to find.
+Whether the exemption should also require the added lines to be a *new* `status: pending` receipt is
+a question for a session that owns the hook — **raised, not answered, and not fixed here (FM #17).**
+
+**Verification.** `bin/tests.sh` **304 passed, 1 failed, 0 skipped** (Test 9); `check-handoff` **0**,
+`check-links` **0**, `check-learnings` **0**, all read bare. With this entry both ledger frontiers
+sit at `HEAD`, so the next session's Phase 0 reconcile is a clean no-op.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S133 — the "new finding" was BL-36, and the five failures are two classes
 
 **A correction to this session's own close-out, prompted by the operator asking whether the next
