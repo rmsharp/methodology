@@ -191,6 +191,50 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-08
 
+### 2026-08-31 · [ad hoc] S132 close-out — both ledgers readable, one claim of my own retracted, self-score 7/10
+
+**Readiness item 2, complete.** Five commits plus this one: `7af4356` claim, **`db4f629`**
+`CHANGELOG.md` **283,078 → 98,037 B**, **`78a29f8`** `HANDOFFS.md` **91,588 → 34,721 B**, `ec87d08`
+fold + front-matter repair, `53ce324` the record. One distributed file touched
+(`starter-kit/FRAMEWORK_LEARNINGS.md`, +row #49). **No outward-facing action.**
+
+**THE HEADLINE, WITH ITS SHORTFALL FIRST.** The trim did **not** make the ledger deliverable in one
+read and nobody should record that it did. A default `Read` now **succeeds** but returns
+`PARTIAL view — lines 1-667 of 1276 (40,592 tokens, cap 25,000)`. What changed is that it returned
+**zero content, front matter included** before — verified by running the Read, not by reading the
+constant. Front matter plus the newest ~52%, announced, is the graceful oldest-first degradation
+Phase C2 ratified as *not a fault*, and this is the first direct confirmation of that premise here.
+
+**DEPTH WAS THE RATIFIED NUMBER, NOT ONE THIS SESSION DERIVED.** No `--cut`; `choose_cut` applied
+`CLASS_A_STOP_BYTES = 98,304` — Phase C2 (S116), **by operator decision**, denominated against the
+**refusal** rather than the one-read cap. `--force` was required (SRF 7.7908) and
+**operator-approved**, warranted because BL-52's third addendum **self-limits** — *"it settles this
+file, at this size … the middle regime"*, and *"says nothing about a repo well past the refusal,
+where a cut back under it turns nothing into something."* **Not a precedent for any other trim.**
+`HANDOFFS.md` needed **no force** (SRF 0.2315) and took the ratified S127 N=4.
+
+**VERIFICATION.** `bin/tests.sh` run **three times** — pre-trim control, post-trim, and final after
+the distributed row — **288 / 1 / 0 every time**, compared **row for row** across 289 rows, **zero
+status flips**. The rows that differ are all PASS→PASS tracking the trim, including `Model:` **43 →
+8**. Both shard proofs **exit 0**, re-run again after the fold. `check-links` 0, `check-learnings` 0
+(48 rows), `check-handoff` and `--all` 0. **Losslessness re-parsed from disk, not computed from the
+transform:** action total **384 → 386** (+2 = the two trims' own entries), receipt total **139 →
+139**.
+
+**TWO ERRORS OF MY OWN, BOTH RETRACTED IN THE RECORD.** (1) My retention-depth derivation (N=9/N=10)
+optimised the **one-read cap** — an axis Phase C2 retired for these two files by operator decision,
+in a comment directly above the constants I was reading. A completeness critic caught it, not me.
+(2) My claim entry above asserts *"the ledger every Phase 0 must reconcile against cannot be
+opened"* — **false**; Phase 0 step 6 is **frontier-based** and reads `git log`. Retracted in §11.4.
+This ledger is append-only, so both stand as written and are corrected here.
+
+**THE COST NOBODY HAD ENUMERATED, now in `next_steps`:** `bin/model-report` has no archive glob, so
+live `**Model:**` bullets went **43 → 8** (238 in shards) and `bin/tests.sh` Test 30 passed
+**identically** on both — an 81% loss of its primary structured source, green and silent. The repo
+fixed this exact shape once (Test 29 globs the shards) and never generalised it to the tool.
+
+**Self-assessment 7/10; predecessor S131 scored 7/10** — full breakdown in the `HANDOFFS.md` receipt.
+
 ### 2026-08-31 · [ad hoc] S132 — the record: `SRF_RED` is unsatisfiable at steady state, and one claim retracted
 
 **[`srf-red-refusal-adjudication.md`](docs/planning/srf-red-refusal-adjudication.md) §11.** S124
