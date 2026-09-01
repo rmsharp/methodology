@@ -206,6 +206,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-01 · [ad hoc] S133 — commit the two append-only measurement series, operator-directed
+
+**Operator-directed.** Both files were dirty when this session began and were deliberately left
+untouched through it (SAFEGUARDS: *"if there are uncommitted changes from a previous session, do not
+touch them"*); the operator then directed that they be committed.
+
+**THIS IS A MULTI-SESSION BACKLOG, NOT THIS SESSION'S OUTPUT — measured, not assumed.**
+`.context-budget-history.jsonl` gains **52 rows** and `dashboard_history.jsonl` **32**. The budget
+rows span `CHANGELOG.md` from **37,659 B** up through the **281,443 B** pre-trim peak and back down
+into the post-S132 band — so they accumulated across many sessions that never committed them. The
+dashboard rows span **2026-08-26 → 2026-09-01**. Only a minority belong to S133. A first attribution
+attempt here used *"CHANGELOG ≥ 98,037"* as a proxy for *"post-trim"* and was **unsound** — the
+pre-trim file was far larger than that threshold, so the test selected the wrong era. Re-derived by
+banding the actual sizes.
+
+**Verified pure appends before staging:** `git diff --numstat` shows **0 deletions** on both, which
+is the property `.gitignore` asserts for them (*"append-only, non-regenerable project-health
+history"*, and `context_budget.py`'s growth-run trigger reads the series and must survive a fresh
+clone).
+
+**Both tools were re-run first so the committed series ends at the truth.** The newest budget row
+had gone stale during close-out — `CHANGELOG.md` 116,418 recorded vs 132,989 actual — because the
+series appends only when a measurement is taken and this session kept writing entries after the
+last one. After re-running, every file in the newest row matches its actual size.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S133 — the receipt's `commit:` field named 1 of 7, and the hook let the fix through
 
 **`edbbf33`.** The S133 receipt's `commit:` field carried a single sha (`1aa3bf5`) where every
