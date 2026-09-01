@@ -204,6 +204,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ---
 
+## 2026-09
+
+### 2026-09-01 · [ad hoc] S133 close-out — the whole ledger is visible, five of my own claims corrected, self-score 6/10
+
+**Deliverable complete.** `bin/model-report` Sources 1 and 2 now read the live ledger plus every
+`docs/archive/` shard. Source 1 went from **8 of 246 visible** (measured against the pre-claim tree
+`2b71ec7`) to the whole population. Six commits: `1c5b1d5` claim, **`8967b92`** fix + Test 40,
+`273afff` front-matter repair, `4b99e1e` a hole in my own test, **`1aa3bf5`** 15 review findings,
+and this close-out. **No distributed file touched — `bin/model-report` and `bin/tests.sh` are both
+canonical-only**, verified by grepping the whole manifest for the name rather than one column.
+**NO OUTWARD-FACING ACTION.**
+
+**WHAT THIS SESSION GOT RIGHT.** RED was **observed against the actual pre-fix tool** (`9 > 9`
+fails), not inherited from a mutant. The BL-20 adjudication was settled from `git blame` and
+`git log` — the thing the claim entry promised — rather than by re-reading the sentence. I found a
+hole in **my own** Test 40 before the review did, by mutating in a direction it did not anticipate:
+narrowing the glob to the *documented* `-through-*` left Source 1 untouched and survived every
+assertion. And I checked the reviewers rather than deferring — the design panel's *"the ordering
+key is falsified"* refutation had tested the **unanchored** variant, not the anchored rule shipped.
+
+**WHAT IT GOT WRONG, AND THE PATTERN IS ONE PATTERN.** A real bug shipped in `8967b92`: gating
+provenance on a non-zero total made an **unreadable** ledger print as *"found nothing"* — the exact
+conflation this change exists to close, with my own docstring promising the opposite two functions
+above it. And **four false published claims**, of which the worst was *"247 entries (live 9)"* in
+**always-read front matter**, already false when committed because this session's own entries carry
+`**Model:**` bullets. **The measurer effect — a rule I hold explicitly — violated by the session
+whose entire subject is a miscounted population.** *"Eighth of ten"* was **predicted rather than
+run**, on an axis I had already been burned on *in this same session*. *"Roughly ten sessions"* was
+a guess stated as fact, wrong by 6x (measured: **61 receipts**). All are corrected on the record
+with their cause named; the ledger being append-only, the originals stand where they were written.
+
+**Verification.** `bin/tests.sh` **304 passed, 1 failed, 0 skipped**; the failure is **Test 9**,
+pre-existing and unrelated (3 of 27 manifest sources absent from `upstream/main`). Baseline was
+288/1/0, diffed **row for row: zero status flips**. `check-links` **0**, `check-learnings` **0**,
+`check-handoff` **0** — every exit code read **bare**, never through a pipe. Test 40 is 16
+assertions and 3 mutants.
+
+**A PRE-EXISTING DEFECT FOUND AND DELIBERATELY NOT FIXED (FM #17): 5 of 19
+`docs/archive/*.verify.sh` losslessness proofs FAIL, and `bin/tests.sh` runs none of them.**
+Confirmed not this session's by running them against `2b71ec7`, `16fbba0`, `3e065f6` and `cebdba8`
+— **5 failing at every one**. The archive table instructs every reader to *"run the proof rather
+than trusting this table"*; a quarter of them are red and nothing says so. **It is the same failure
+shape this session just fixed, one level up**, and it is the recommended next unilateral item.
+
+**Next is the operator's:** readiness **item 3**, the upstream PR's scope
+(`docs/planning/upstream-read-set-pr-plan.md` §11.3). Unchanged from S132 — this session took the
+unilateral item, not that one.
+
+**Self-assessment 6/10; predecessor S132 scored 8/10** — full breakdown in the `HANDOFFS.md`
+receipt.
+
+- **Model:** Claude Opus 5 (1M context).
+
+---
+
 ## 2026-08
 
 ### 2026-08-31 · [ad hoc] S133 — 15 review findings, all mine, all confirmed: one real bug and four false claims
