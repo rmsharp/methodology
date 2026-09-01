@@ -206,6 +206,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-01 · [ad hoc] S133 — the "new finding" was BL-36, and the five failures are two classes
+
+**A correction to this session's own close-out, prompted by the operator asking whether the next
+session would receive the archive-proof work.** Checking that question is what exposed the error.
+
+**IT WAS NEVER A NEW FINDING.** My receipt called it *"A NEW FINDING"*; it is **BL-36**
+(`docs/planning/BACKLOG.md:135`, `BACKLOG-DETAIL.md#bl-36`), raised **2026-08-15 (S87)**, open
+residual *"the four frozen `.verify.sh` artifacts already shipped"*. I re-measured a tracked item
+and announced it as a discovery — **the fifth false claim of this session**, and the only one no
+review caught.
+
+**THE OMISSION WAS WORSE THAN THE MISLABEL.** BL-36 carries a binding constraint my `next_steps`
+did not: *"Do not regenerate the scripts before answering that question — a regenerated proof over
+lost content would pass, and would destroy the only evidence that anything is wrong."* My handoff
+would have sent the next session at a repair whose cheap form **destroys the evidence** for the
+expensive one. The receipt now leads with BL-36 and quotes that sentence.
+
+**WHY I MISSED IT — a real gap, not just carelessness.** `SESSION_RUNNER.md` Phase 0 step 3 says
+check `gh issue list`, falling back to `BACKLOG.md` *"if no repo exists."* This repo **has** a
+remote, so the literal reading sends a session to GitHub (one open issue, #75) and **past the fork
+backlog entirely**. Every fork-local BL item is invisible on that path. Recorded as a
+discoverability warning in the receipt; the step's wording is a candidate defect, not fixed here.
+
+**THE TRIAGE, WHICH CHANGES THE SHAPE OF THE WORK — the five are TWO classes, not one population.**
+**Class A (4 shards, all `v1.1.1`)** fail on **L1/L3**: *records-zone not byte-identical*, *record
+count 73 != 72*, *record `[0]` not byte-identical*. Claims about **record content** — BL-36's
+serious case. **Class B (1 shard, `HANDOFFS-through-2026-08-25.md`, `v1.3.0` while five other
+v1.3.0 proofs pass)** fails on **L2 only**: *"FRONT MATTER lost 1 line(s), first: '**Archived shards
+— 8 trims, 92 receipts.**'"* — the **regenerated count line `HANDOFFS.md`'s own front matter
+documents as drifting**, and the line S132 edited in `ec87d08`. Class B is therefore **most likely
+benign front-matter maintenance, not record loss** — stated as a hypothesis, **not proven here.**
+
+**AND A CORRECTION INSIDE THE CORRECTION.** I first wrote that this fifth failure *"breaks BL-36's
+generator-version correlation."* It does not: a **different failure class is not a counter-example**,
+and the correlation still holds for Class A. Overstated, then fixed, in the same receipt.
+
+**Not this session's doing, measured rather than assumed:** all five fail at `2b71ec7`, and each
+proof is frozen at its own trim commit (`show(TRIM^, LIVE)`), so this session's front-matter edits
+cannot reach them.
+
+**Receipt trimmed to fit.** The additions pushed it to 13,046 B against the **12,288 B** per-record
+budget; `check-handoff` names the remedy — *cut the trailing prose first* — so the Phase 3A/3B
+essays were condensed and the operational fields left intact. Three passes to **12,269 B**, the
+checker run between each rather than predicted.
+
+**Verification.** `bin/tests.sh` **304 passed, 1 failed, 0 skipped** (Test 9); `check-handoff` **0**.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S133 close-out — the whole ledger is visible, five of my own claims corrected, self-score 6/10
 
 **Deliverable complete.** `bin/model-report` Sources 1 and 2 now read the live ledger plus every
