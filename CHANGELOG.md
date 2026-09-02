@@ -206,6 +206,63 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S139 close-out — dashboard half GREEN; the trimmer half is 19 failures, not 4, and now a decision
+
+**Deliverable is split.** The dashboard half is **done**; the trimmer half turned out to be a
+different problem than option 1 was chosen to solve. PR 2 remains unopened — `pr2/ledger-trimmer` =
+`ff51d36`, unpushed. `origin` carries **0** `pr2/` refs, upstream has **0 open PRs**, `main`
+`512c2ed4`.
+
+**DASHBOARD: GREEN — 211 tests, exit 0**, verified in a clone with no fork objects. Three surgical
+edits, twins kept byte-identical: `FRAMEWORK_INSTALLED_SOURCE` (`:360`) gains the trimmer in manifest
+order; `_FRAMEWORK_FILE_SIGNATURES` (`:483`) gains an entry with its **own** `TRIM_VERSION` pattern —
+the shared `_VERSION_RE` matches `DASHBOARD_VERSION` only, so reusing it would fall through to the
+signature path on every scan, which is the defect that table's own comment describes; and
+`CHECKLIST_EXEMPT` (`:404`) gains the trimmer's exemption **ported verbatim from the fork**.
+
+**THE SESSION'S CENTRAL FINDING — MY OWN TEST SURFACE WAS INVALID.** S138 and I both measured the
+trimmer suite in a **`git worktree` of the fork**, which shares the fork's object database. So
+`show("020ba3f:…")` and `show("7a71df0:…")` resolved there and will not upstream. Re-measured in
+`git clone --no-local --single-branch` — fork commits unreachable, `docs/archive/` absent:
+
+| Surface | Trimmer suite |
+|---|---|
+| fork worktree (what S138 and I first used) | 123 tests, **4 failed** |
+| clean clone (upstream-like) | 123 tests, **19 failed / 104 passed** |
+
+**This is issue #75's own failure species** — a criterion demonstrated on a surface that cannot fail
+the way the real one does — committed by the sessions porting the fix for it.
+
+**The 19 group with no remainder**, which is what makes the choice costable:
+
+| Fixture | Tests | Which |
+|---|---|---|
+| commit `020ba3f` | **11** | **all of `TestL2`** + fixture controls + `TestReviewRegressions` |
+| commit `7a71df0` | **7** | **all of `TestL3`** + `TestL1` |
+| `HEAD:docs/archive/HANDOFFS-archive.md` | 1 | `TestTransform.test_round_trip…` |
+
+**OPTION 1's PREMISE NO LONGER HOLDS, AND GUARDING IS NOW THE WRONG MECHANISM.** `TestL2` and
+`TestL3` fail *entirely*, so guarding them would leave upstream's suite asserting **nothing about L2
+or L3** — a mute button at class granularity, which is precisely what option 1 was chosen to avoid.
+
+**Four options, costed for the operator.** **(A)** Guard 19 on 3 preconditions — cheap; no L2/L3
+coverage upstream. **(B)** Ship only the 104 — same gap, honestly stated, no misleading skips.
+**(C)** Write synthetic L2/L3 fixtures — the right answer, real engineering, and it makes the tool
+testable by adopters. **(D)** Extract the 6 fork blobs as test fixtures — **668,341 B (652 KB)** —
+preserves all 19 assertions verbatim with zero skips and is mechanical, but ships 652 KB of this
+fork's ledger history into upstream's repo **in a PR whose subject is reducing file size**. `tools/`
+is canonical-only, so no adopter would receive it. The 6 blobs: `020ba3f:CHANGELOG.md` 49,382 B;
+`020ba3f:docs/archive/CHANGELOG-through-2026-08-01.md` 65,898 B; `020ba3f^:CHANGELOG.md` 102,407 B;
+`7a71df0:HANDOFFS.md` 52,927 B; `7a71df0^:HANDOFFS.md` 224,368 B;
+`7a71df0:docs/archive/HANDOFFS-archive.md` 173,359 B.
+
+**Two further mechanical errors recorded rather than hidden:** a `sed -n 'A,Bp'` range that overshot
+by one line duplicated a dict key and produced a `SyntaxError` pointing at the *second* copy; and the
+analysis workflow crashed on `parallel()` being passed `(array, fn)` instead of an array of thunks,
+losing the two adversarial critiques after the six analyses had run.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S139 — claim: make PR 2 green (option 1), then open it
 
 **Ledger:** `CHANGELOG: pending` — set at claim; actions recorded here at Phase 3F.
