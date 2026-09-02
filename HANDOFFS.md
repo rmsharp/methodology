@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S138
+date: 2026-09-02
+status: pending
+active_task: **BUILD AND OPEN PR 2 — THE LEDGER TRIMMER — AGAINST `read-set-budgets`.** Operator said *"open PR 2"*, which authorizes building it, pushing a head branch, and opening the PR; nothing beyond that. **PR #76 IS MERGED — verified from the server, not taken on report:** `state=MERGED`, `mergedAt 2026-09-02T19:02:48Z`, `mergedBy rmsharp`, `base read-set-budgets`, merge commit **`46b56fdb`**, and our `5b92b2f` is an ancestor of it. **`main` IS STILL UNTOUCHED at `512c2ed4` and remains the default.** So PR 2's base is the ADVANCED `read-set-budgets` (`46b56fd`), not `512c2ed`. **PAYLOAD, measured against the new base:** `starter-kit/methodology_trim.py` (113,629 B, DISTRIBUTED, **absent** on base) + `tools/test_methodology_trim.py` (130,827 B, canonical-only, **absent**) + its `bin/_manifest.py` row (**0** on base) + the `bin/tests.sh` wiring (**0** on base, **1** on fork). **THE ORDER IS MEASURED, NOT ASSUMED:** the dashboard's canonical-only tests abort with **13 errors** without the trimmer present and **0** with it, which is why the trimmer precedes the apparatus extraction. **Manifest invariant: 25 → 26, the row landing WITH its file.**
+```
+
+```handoff
 session: S137
 date: 2026-09-02
 status: complete

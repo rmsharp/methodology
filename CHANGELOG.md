@@ -206,6 +206,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S138 — **PR [#76](https://github.com/KJ5HST/methodology/pull/76) MERGED** (upstream event), and claim: build and open PR 2, the trimmer
+
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded here at Phase 3F.
+
+**THE MERGE IS AN UPSTREAM EVENT THAT LEAVES NO COMMIT HERE**, so it is recorded by the same
+write-gate that recorded the open (failure mode #27). **Verified from the server rather than taken on
+report:** `gh pr view 76` gives `state=MERGED`, `mergedAt 2026-09-02T19:02:48Z`, `mergedBy rmsharp`,
+`base read-set-budgets`, merge commit **`46b56fdb`**; and `git merge-base --is-ancestor 5b92b2f
+upstream/read-set-budgets` succeeds.
+
+| Ref | Before | After |
+|---|---|---|
+| `read-set-budgets` | `512c2ed4` | **`46b56fdb`** |
+| `main` | `512c2ed4` | **`512c2ed4` — untouched, still default** |
+
+The staging design is doing what it was set up to do: the work is testable on a branch and `main` has
+not moved.
+
+**Claim — PR 2 is the ledger trimmer**, and its base is the **advanced** `read-set-budgets`, not the
+commit PR 1 was cut from. Payload measured against that new base:
+
+| Item | Fork | On base | Class |
+|---|---|---|---|
+| `starter-kit/methodology_trim.py` | 113,629 B | **absent** | **distributed** (manifest row) |
+| `tools/test_methodology_trim.py` | 130,827 B | **absent** | canonical-only |
+| `bin/_manifest.py` row | present | **0 matches** | — |
+| `bin/tests.sh` wiring | 1 match | **0 matches** | canonical-only |
+
+**Manifest invariant 25 → 26**, the row landing together with its file so sources-listed equals
+files-present at every step.
+
+**Why the trimmer precedes the apparatus extraction — measured, not assumed:** the dashboard's
+canonical-only tests abort with **13 errors** when `methodology_trim.py` is absent (*"the canonical
+repo must locate its own trimmer, or the present branch is not under test at all"*) and **0** with it.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S137 — OUTWARD-FACING ACTIONS TAKEN: head branch pushed, **PR [#76](https://github.com/KJ5HST/methodology/pull/76) OPENED**
 
 **This entry exists because neither action leaves a commit in this repository.** A push to `origin` and
