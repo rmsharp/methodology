@@ -206,6 +206,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S136 — OUTWARD-FACING ACTION TAKEN: upstream branch `read-set-budgets` created
+
+**This entry exists because the action leaves no commit in this repository.** Creating a ref on
+another repository is exactly the class failure mode #27's write-gate is responsible for — the Phase 0
+reconcile cannot find it, because there is nothing in `git log` to find.
+
+**What was done, and by whose authority.** Created `refs/heads/read-set-budgets` on
+**`KJ5HST/methodology`** at **`512c2ed440e5bc1ff15bc5ba70fc73c9e3401a6e`** — upstream's `main` tip,
+unchanged since 2026-08-11. The operator named the branch and gave the go-ahead in the same message;
+`gh api` reports `push=true`, `admin=false` for this account on that repository.
+
+**Verified from the server rather than from the call's own echo:**
+`gh api repos/KJ5HST/methodology/branches` now lists four —
+`fix/issue-67-stale-version-remedy`, `main`, **`read-set-budgets`**, `release/v3.7`.
+**`main` is untouched at `512c2ed4` and remains the default branch.**
+
+**What is NOT authorized and did not happen:** no head branch pushed to `origin`, no pull request
+opened, no comment posted anywhere. Those need their own go-ahead, each time.
+
+**What the branch is for.** Project developers test the read-set / file-size-budget work selectively
+without it reaching `main`. Four PRs will target it in order — candidate A (learnings extraction),
+the trimmer, the apparatus extraction, the gate — each landing its `bin/_manifest.py` row together
+with its file so sources-listed equals files-present at every step (24→25→26→27).
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S136 — claim: create the upstream `read-set-budgets` branch, then prepare PR 1
 
 **Ledger:** `CHANGELOG: pending` — set at claim; actions recorded here at Phase 3F.
