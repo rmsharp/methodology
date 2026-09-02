@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S136
+date: 2026-09-02
+status: pending
+active_task: **CREATE THE UPSTREAM INTEGRATION BRANCH `read-set-budgets`, THEN PREPARE PR 1 (CANDIDATE A) AGAINST IT — STOP BEFORE PUSH.** **THE BRANCH CREATION IS AN OUTWARD-FACING WRITE TO `KJ5HST/methodology` AND THE OPERATOR GAVE EXPLICIT GO-AHEAD FOR IT** (branch name and authorization both stated by him; `gh api` shows `push=true`, `admin=false`). It is the first outward action in this thread. Everything after it — pushing a head branch, opening the PR — is **NOT** authorized and this session stops before it. Rationale for a non-`main` base: the operator wants project developers to test selectively without touching `main`; upstream already carries `fix/issue-67-stale-version-remedy` and `release/v3.7`, so the shape is established there. **⚠ TWO TRAPS TO CARRY INTO THE PR BODY:** `bin/sync --source=github` is pinned to `main` (`:93` sends no `?ref=`, `:162` is literally `commits/main`), so a tester on this branch who uses `--source=github` **silently tests `main`'s files and sees a clean run** — they must use `--source=local`; and **Test 9 stays RED on this branch by construction** until it merges to `main`. **⚠ Tier-2 (a) is still unanswered; proceeding on FREEZE** (the 46-row compacted table the branch already holds, zero-cost, reversible before push) and flagging it.
+```
+
+```handoff
 session: S135
 date: 2026-09-01
 status: complete

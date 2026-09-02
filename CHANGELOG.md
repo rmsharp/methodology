@@ -206,6 +206,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S136 — claim: create the upstream `read-set-budgets` branch, then prepare PR 1
+
+**Ledger:** `CHANGELOG: pending` — set at claim; actions recorded here at Phase 3F.
+
+**OUTWARD-FACING ACTION, EXPLICITLY AUTHORIZED.** The operator named the branch
+(`read-set-budgets`) and gave the go-ahead in the same message. It is the **first** outward action in
+this thread. `gh api repos/KJ5HST/methodology` reports `push=true`, `admin=false`. **Pushing a head
+branch and opening the PR are NOT authorized** and this session stops before both.
+
+**Why a non-`main` base:** the operator wants project developers to test selectively without the work
+reaching `main` or `master`. Upstream already carries `fix/issue-67-stale-version-remedy` and
+`release/v3.7`, so a non-default target branch is an established shape there. All four planned PRs
+target this branch; the manifest invariant (24→25→26→27 sources, each row landing with its file)
+holds on it at every step, and `main` is untouched until the maintainer decides.
+
+**⚠ TWO TRAPS THAT MUST REACH THE PR BODY, both measured:**
+1. **`bin/sync --source=github` is pinned to `main`** — `:93` issues `gh api repos/{REPO}/contents/{src}`
+   with **no `?ref=`** (so it resolves the default branch) and `:162` is literally
+   `repos/{REPO}/commits/main`. A developer testing this branch with `--source=github` **silently
+   syncs `main`'s files and sees a clean run against the wrong tree.** They must use `--source=local`
+   from a checkout of the branch. This is the exact species issue #75 is about — a criterion
+   demonstrated on a surface that cannot fail the way the real one does.
+2. **Test 9 stays RED on this branch by construction**, because each PR adds a manifest row for a file
+   that is not on `main` yet and `bin/sync` reads only `main`. It self-heals when the branch merges.
+   Declared here so a tester does not file it as a regression.
+
+**⚠ Tier-2 (a) is still an open operator decision.** Proceeding on **freeze** — the 46-row compacted
+table `port/framework-learnings-extraction` already holds — because it is zero-cost and fully
+reversible before any push. Stated as an assumption, not taken as an answer.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S135 close-out — candidate D verified and ready; the remaining blocker is a promise, not a defect
 
 **Deliverable:** [`docs/planning/issue75-pr-readiness-2026-09-01.md`](docs/planning/issue75-pr-readiness-2026-09-01.md).
