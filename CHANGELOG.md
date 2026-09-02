@@ -206,6 +206,54 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-01 · [ad hoc] S134 — BL-36 Class B adjudicated: the archives are intact, the cause is not the one on record
+
+**Deliverable:** [`docs/audits/2026-09-01-bl36-classb-adjudication.md`](docs/audits/2026-09-01-bl36-classb-adjudication.md).
+0 critical, 3 moderate, 2 minor. **Nothing in `docs/archive/` was modified** — verified
+`git status --porcelain docs/archive/` empty throughout. BL-36's do-not-regenerate rule obeyed.
+
+**THE ANSWER: NO RECORD LOSS.** Across the trim commit `9038e40`, 6 receipts → 4 retained + 2
+archived, **0 missing and 0 added**, measured by SHA-256 of each receipt body keyed on `session:`
+— a different function from the one L1/L3 assert on, so not an identity that cannot fail. Receipts
+split on **line-start** fences, never `text.index`.
+
+**S133's STATED CAUSE IS FALSE, AND FALSE BY CONSTRUCTION.** Its hypothesis was that S132's
+`ec87d08` rewrote the line at HEAD. The proof derives every operand from `show(TRIM^, LIVE)` /
+`show(TRIM, LIVE)` (`…08-25.md.verify.sh:163`) and **never reads HEAD** — its own first output line
+says `source : the trim commit 9038e40`. The rewrite is *inside* that commit:
+`**Archived shards — 8 trims, 92 receipts.**` → `9 trims, 94 receipts`. S133 labelled the
+hypothesis unproven and was right to; the cause it named is the wrong one.
+
+**THE PROOF IS CORRECT, AND THIS FILE'S OWN INSTRUCTIONS WALK SESSIONS INTO IT.** `HANDOFFS.md`
+front matter carries **two** derived counts; the `LedgerSpec` declares **one**
+(`starter-kit/methodology_trim.py:336-339`). `holds **5**` → `**4**` is declared and correctly
+excused; `Archived shards` is undeclared and correctly reported lost. The trimmer did not write it
+— `HANDOFFS.md:68-72` tells the next trimming session to fold the pointer block into the table, and
+doing that **inside the trim commit** is what reddens the proof. Added table rows are a permitted
+*gain*; L2 reports exactly **one** lost line, and the count rewrite is its sole cause.
+
+**MEASURED OVER ALL ELEVEN `HANDOFFS` TRIMS, 1-TO-1: `9038e40` is the only one that folded in-commit
+and the only v1.3.0+ failure.** The other ten left the count stale in-commit and corrected it later,
+out of band. **The proof rewards deferring the documented fold-in and punishes doing it promptly,
+and nothing says so.**
+
+**REGENERATING DOES NOT FIX IT — RUN, NOT PREDICTED.** v1.5.0 logic (copied from the 08-30 proof,
+only `SHARD` substituted) against the 08-25 trim fails with identical text, **exit 1 read bare**;
+control on its own shard exits 0. So BL-36's standing *"regenerate under v1.2.0"* disposition
+applies to Class A only. The one code fix that would work was tested too: `field_reversible`
+compares the residue byte-for-byte, so a `REGEN` pattern must span **both** numbers — single-number
+patterns measured **False**, the both-numbers pattern **True**. Distributed file; named, not taken.
+
+**Two record corrections.** S88's *"Defect B genuinely fixed v1.1.1 → v1.1.3"* is true of the six
+proofs it enumerated and does not generalise — an *undeclared* derived line reproduces the shape in
+every version since. And `9038e40`'s own ledger entry calls it *"a tool action, not a session's
+judgment"* while the commit carries the session hand-edit that is this whole finding.
+
+**Coverage stated, not implied:** identity re-derivation covers **one** trim. The six trims created
+after S88 have never had one. A gap, not a clearance.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S134 — claim: adjudicate BL-36's Class B, the one open losslessness question
 
 **Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded here at Phase 3F.
