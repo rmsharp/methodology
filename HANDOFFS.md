@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S137
+date: 2026-09-02
+status: pending
+active_task: **PUSH THE PR 1 HEAD BRANCH AND OPEN THE PULL REQUEST — OPERATOR SAID "push PR #1".** Two outward-facing writes, both authorized by that message and neither before it: (a) `git push origin pr1/framework-learnings-extraction`, (b) `gh pr create --repo KJ5HST/methodology --base read-set-budgets --head rmsharp:pr1/framework-learnings-extraction`. **BASE IS `read-set-budgets`, NEVER `main`** — the operator's standing requirement is that developers test selectively without this reaching `main` or `master`. **PRE-FLIGHT RE-RUN AT CLAIM because both checks are HEAD-dependent:** base still `512c2ed`, branch **0 behind / 1 ahead**, `merge-tree` **exit 0**, 18 files **+358/−113**. Body is `docs/planning/pr1-read-set-budgets-body.md` (5,862 B), every figure re-derived at S136. **⚠ IF THIS SESSION CRASHES, CHECK `gh pr list --repo KJ5HST/methodology` BEFORE ASSUMING NOTHING SHIPPED** — a PR opened here leaves no commit in this repository, so Phase 0 reconcile cannot see it. **NOTHING ELSE IS AUTHORIZED:** no merge, no comment on issue #75, no tag, no release, and PRs 2–4 are not opened.
+```
+
+```handoff
 session: S136
 date: 2026-09-02
 status: complete

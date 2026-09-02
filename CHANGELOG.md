@@ -206,6 +206,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S137 — claim: push the PR 1 head branch and open the pull request
+
+**Ledger:** `CHANGELOG: pending` — set at claim; the actions are recorded here at Phase 3F.
+
+**TWO OUTWARD-FACING WRITES, AUTHORIZED BY THE OPERATOR'S "push PR #1"** and by nothing earlier:
+push `pr1/framework-learnings-extraction` to `origin`, then open the PR against
+`KJ5HST/methodology` with **`--base read-set-budgets`**. The base is never `main` — the operator's
+standing requirement is that project developers test this selectively without it reaching `main`.
+
+**Pre-flight re-run at claim, because both checks are HEAD-dependent and S136's handoff said so:**
+base still `512c2ed`, branch **0 behind / 1 ahead**, `git merge-tree --write-tree` **exit 0**,
+18 files **+358/−113**, head `5b92b2f`.
+
+**⚠ Crash note for the next session: a pull request leaves no commit in this repository.** If this
+entry is still the frontier and no close-out follows, run
+`gh pr list --repo KJ5HST/methodology --state all` before concluding nothing shipped — Phase 0
+reconcile is structurally blind to it (failure mode #27).
+
+**Not authorized, not done:** no merge, no comment on issue #75, no tag, no release; PRs 2–4
+(trimmer, apparatus, gate) stay unopened.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S136 close-out — PR 1 prepared against `read-set-budgets`, stopped at the authorization boundary
 
 **Deliverable:** [`docs/planning/pr1-read-set-budgets-body.md`](docs/planning/pr1-read-set-budgets-body.md)
