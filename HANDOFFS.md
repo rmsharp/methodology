@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S134
+date: 2026-09-01
+status: pending
+active_task: **BL-36 CLASS B — ADJUDICATION, NOT REPAIR.** S133 `next_steps` (2), operator-confirmed at the Phase 0 gate; readiness items 3/4/9/10 are operator decisions and were declined here. Re-derived at claim, not inherited: **5 of 19** `docs/archive/*.verify.sh` proofs FAIL. Four are **Class A** (all `v1.1.1`, L1/L3 record-content), already ANSWERED by S88 — archives intact, fault in the proofs, root cause `injected` a 0/1 flag. **The open question is Class B: `HANDOFFS-through-2026-08-25.md.verify.sh`, generator `v1.3.0`, failing L2 ONLY** — *"FRONT MATTER lost 1 line(s), first: '**Archived shards — 8 trims, 92 receipts.**'"* — while **five sibling v1.3.0 proofs pass**. S133's hypothesis (benign: S132's `ec87d08` rewrote that count line) is explicitly UNPROVEN and is what this session tests. **BINDING CONSTRAINT FROM BL-36, obeyed: do not regenerate any `.verify.sh` before answering whether content is intact** — a regenerated proof over lost content passes and destroys the only evidence. Deliverable is ONE audit report. No distributed file, no outward-facing action.
+```
+
+```handoff
 session: S133
 date: 2026-08-31
 status: complete
