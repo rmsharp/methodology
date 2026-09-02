@@ -206,6 +206,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-01 · [ad hoc] S135 close-out — candidate D verified and ready; the remaining blocker is a promise, not a defect
+
+**Deliverable:** [`docs/planning/issue75-pr-readiness-2026-09-01.md`](docs/planning/issue75-pr-readiness-2026-09-01.md).
+Two commits: `a26a34b` claim + this close-out. **Nothing left this machine** — no push, no PR, no
+comment; `git ls-remote --heads origin` still carries no `docs/issue75*`.
+
+**ALL SEVEN FIGURES THE DRAFTED PR BODY PUBLISHES TO THE MAINTAINER WERE RE-DERIVED IN FRESH
+`--no-local` CLONES** (control `512c2ed`, branch `60246e7`), never the live repo — Tests 32/34/37
+mutate live ledgers. Control **114 passed / 0 failed, exit 0**; branch **120 passed / 0 failed,
+exit 0**; row-for-row **0 lost, exactly 6 added**, all six Test 26's. RED reconstructed: **5 of Test
+26's 6 rows fail**, populations `crit=390 items=6 slice=5469` identical to the digit. `check-links`
+**0** (83 links / 21 files), `check-learnings` **0** (13 rows). Adopter smoke: `SESSION_RUNNER.md`
+sha256-identical, **7** checklist items, **2** occurrences of the quoted phrase. The commit message's
+three orphan-proving greps re-measured **against `512c2ed`, not HEAD**: 1 / 0 / 1, all correct.
+**The body needs no edits.**
+
+**BRANCH POSITION:** `upstream/main` **+ 1, 0 behind**, `git merge-tree --write-tree` **exit 0**,
+3 files **+172 / −1**, carrying **upstream's** `CHANGELOG.md` — no fork-local path in the diff.
+
+**⚠ THE REMAINING BLOCKER IS NOT TECHNICAL AND IS THE OPERATOR'S.** Issue #75 was filed by
+**KJ5HST**; this fork's **2026-08-16** comment ends *"I won't send anything unasked"*, and **he has
+not replied in ~16 days**. Opening the PR would reverse a public undertaking on the maintainer's own
+issue. Three options costed in the readiness doc — wait / ask on the issue / open anyway with the
+body acknowledging it. **PR #64 — opened without authorisation and closed — is why this pauses
+rather than presumes.** The payload is ready either way.
+
+**A FALSE CRITICISM CAUGHT BEFORE IT SHIPPED.** `grep -A12` truncated Test 26's fifth failing row and
+I nearly published *"the body claims 5 of 6, it is 4"* as a defect in a predecessor's work. Bound a
+test block by its own delimiters, never by a line count. Recorded as a gotcha because it is the same
+species as S134's nine.
+
+**Ranking, stated so it cannot drift again:** next is **candidate A** (`port/framework-learnings-
+extraction`, 18 files, +352/−113, also `upstream/main`+1 and clean) — **not** fork housekeeping. It
+still needs the Tier-2 (a) decision, the `CHANGELOG.md:92-94` rewrite the plan requires *under every
+option*, and a PR body from scratch. Fork hygiene (`HANDOFFS.md` now **7 receipts against a cap of
+4**) comes after both PRs.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S135 — claim: candidate D upstream PR readiness, prepare only, stop before push
 
 **Ledger:** `CHANGELOG: pending` — set at claim; actions recorded here at Phase 3F.
