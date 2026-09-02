@@ -206,6 +206,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-01 · [ad hoc] S134 close-out — BL-36 Class B answered, nine of my own defects corrected, self-score 7/10
+
+**Deliverable complete:** [`docs/audits/2026-09-01-bl36-classb-adjudication.md`](docs/audits/2026-09-01-bl36-classb-adjudication.md).
+Four commits: `c6da504` claim, **`10d4fbf`** the adjudication, **`65536f2`** the adversarial review
+of my own draft, and this close-out. **BL-36's binding constraint held throughout: no `.verify.sh`
+regenerated, `docs/archive/` untouched** at every step. No distributed file. No outward-facing action.
+
+**THE ANSWER: the archives are intact, the proof is correct to fail, and the cause is a trap that
+recurs.** Records at `9038e40`: 6 → 4 retained + 2 archived, **0 missing, 0 added**. Widened to all
+11 trims / **180 pre-trim instances: 0 unreachable**, 11 hash-misses, every one a `pending` →
+`complete` finalize. The L2 failure is the undeclared `Archived shards` aggregate, rewritten inside
+the trim commit as part of the fold-in `HANDOFFS.md:68-72` instructs.
+
+**S133 named the right mechanism and flagged its own corroboration unproven** — which is precisely
+what made this session's test possible, and is why its `next_steps` scored 8.
+
+**Three open items this session did not take, in rank order.** (1) Readiness item 3 remains the
+**operator's** — the upstream PR's scope (`docs/planning/upstream-read-set-pr-plan.md` §11.3);
+I took the unilateral item again, not this one. (2) The cheapest BL-36 repair is **already policy
+and needs no go-ahead**: `starter-kit/HANDOFFS.md:115-116` forbids a hand-maintained count, and
+`HANDOFFS.md:49` is exactly one. (3) **`HANDOFFS.md` is now SIX receipts against its ratified cap of
+FOUR**, its front matter still says four, and the file is past its own 56,750 B one-read cap. Phase 0
+reported this; a trim was sequenced after the adjudication because it writes a 20th `.verify.sh`
+into the artifact class under adjudication. **It is the next housekeeping item and it is now two
+over.**
+
+**A finding worth carrying past this item:** the corpus is **22 shards but only 19 proofs**, and the
+three unproven archives are the same two-of-three that were **edited after archiving**. Nothing in
+the repo asserts the archive-freeze invariant — every proof reads the blob its creating commit wrote,
+never the file at HEAD.
+
+**Build equivalent: `bash bin/tests.sh` 304 passed, 1 failed, 0 skipped — byte-identical to the
+Phase 0 baseline, zero status flips.** Test 9 is the pre-existing `--source=github` failure that
+closes only by merging upstream. `check-links` **0**, `check-learnings` **0**, `check-handoff` **0**
+at close-out. Every exit code read bare.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S134 — the adjudication adversarially reviewed: 3 claims refuted, 9 defects, answer unchanged
 
 **11 reviewers against the frozen draft `10d4fbf`** — 8 claim-refuters (each told to refute, each
