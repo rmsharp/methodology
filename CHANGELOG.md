@@ -206,6 +206,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S138 close-out — PR 2 NOT opened: it adds two failures over its own base
+
+**The deliverable is the blocker, not the PR.** The operator authorized *"open PR 2"*; building it
+showed it would ship a red suite, so it was not opened. The payload is assembled and preserved on
+local branch **`pr2/ledger-trimmer` (`a59b338`)**, unpushed. `origin` carries **0** `pr2/` refs,
+upstream has **0 open PRs**, and **`main` is untouched at `512c2ed4`**.
+
+**Measured as a delta, which is the only correct frame here.** The base is **not** green and should
+not be: `read-set-budgets` @ `46b56fd` is **113 passed / 1 failed**, the failure being Test 9, because
+`starter-kit/FRAMEWORK_LEARNINGS.md` is manifest row 25 on that branch but not on `main` and
+`bin/sync` reads only `main`. PR #76's body predicted and declared exactly this. **PR 2's tree is 3
+failures — it adds two:**
+
+| Added failure | Cause | Tractability |
+|---|---|---|
+| dashboard, **2 of 211** | Adding a manifest row obliges a matching entry in `FRAMEWORK_INSTALLED_SOURCE` (`tools/methodology_dashboard.py:360`) **and** the per-name signature table `:462` asserts on | **BL-31's species. Belongs in this PR. Tractable.** |
+| trimmer, **5 of 123** | All five couple to **this fork's own repository state** — the live root `HANDOFFS.md`'s `currently holds **N**` sentence (**BL-48**, absent from both seeds), the `docs/archive/` shard corpus, and a string asserted absent from the live `CHANGELOG.md` footer | **Portability problem in a canonical-only test file. The real cost.** |
+
+**The finding worth carrying:** for the third payload running, the distributed file ports cleanly and
+its **canonical-only test file** is the obstacle. `tools/test_methodology_trim.py` and
+`tools/test_methodology_dashboard.py` both assert against artifacts that exist only here.
+
+**An operator decision this surfaced:** should `tools/test_methodology_trim.py` go upstream at all? It
+is canonical-only, so it is not required — but omitting it hands upstream a **113,629 B distributed
+executable with zero tests running on it**, which is precisely the hole S39' closed in this repo.
+
+**A process failure recorded rather than hidden.** Mid-diagnosis I ran `git stash` in the dirty
+worktree; it swept the whole payload into `stash@{0}`, and I then took **three measurements on a tree
+with no trimmer in it** and briefly believed them. Caught by checking `git status` after. **In a dirty
+worktree, never `stash` to isolate a variable — copy the tree, or revert one named path.**
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S138 — **PR [#76](https://github.com/KJ5HST/methodology/pull/76) MERGED** (upstream event), and claim: build and open PR 2, the trimmer
 
 **Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded here at Phase 3F.
