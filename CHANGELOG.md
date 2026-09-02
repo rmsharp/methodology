@@ -206,6 +206,77 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-01 · [ad hoc] S134 — the adjudication adversarially reviewed: 3 claims refuted, 9 defects, answer unchanged
+
+**11 reviewers against the frozen draft `10d4fbf`** — 8 claim-refuters (each told to refute, each
+re-running the command) and 3 completeness critics on distinct lenses. 0 errors. **Every reviewer
+finding was re-verified here before being acted on; a review's refutation is a claim too, and one
+reviewer's byte figures were themselves convention-dependent and are reported as such.**
+
+**THE ANSWER DID NOT CHANGE. THE EVIDENCE LARGELY DID.** Nine corrections, all recorded in the
+report's own §Review corrections table rather than silently fixed:
+
+1. **The headline table was wrong in 3 of 11 cells and the population was inflated 11 → 3.** The
+`Archived shards` line **did not exist** at eight of the eleven trims — it and the fold-in
+instruction both entered at `eec1cbb` (2026-08-25). The real contrast is **one positive, two
+negatives**, not an eleven-row correlation. My raw measurement said `none -> none`; I transcribed it
+into the report as *"unchanged"*. The data was right and the table was not.
+2. **`273afff` does not touch either count line.** The out-of-band correctors are `28b2361` and
+**`ec87d08`** — the very commit Finding #2 faults S133 for citing. I held the right commit in one
+finding and cited the wrong one in the next.
+3. ***"The script never reads HEAD"* / *"false by construction"* — both overstated.** The `:166`
+else-branch reads HEAD **and** the working tree, and **flips the verdict to green, exit 0**. Branch
+selection is a runtime condition, not a construction. Promoted to its own **Finding #6**: the
+artifact whose purpose is *"run it, do not trust a digest"* has a reachable path on which running it
+proves nothing.
+4. ***"five sibling v1.3.0 proofs pass"*** — **inherited from S133 and never re-derived.** There are
+**7** v1.3.0 proofs; six siblings, all pass.
+5. **S110's *"3,858 B → 9,890 B"* are CHARACTERS.** Bytes are **3,880 → 9,988** on my convention —
+and reviewers reported 3,881/9,989 and 3,896/10,004 on two others. The figure is
+convention-sensitive and I named none. My own standing lesson, violated inside an audit whose
+method section is measurement discipline.
+6. ***"differing only in the fields close-out writes"* is wrong** — only `session` and `date` survive
+verbatim; `active_task` and `next_steps` were rewritten and **shrank**.
+7. **Finding #5's charge against S88 WITHDRAWN.** *"Regenerated"* is this codebase's term of art for
+a **declared** field, so S88 scoped its claim correctly and v1.1.3 did fix it. The issue is
+**timing**: the second count line arrived ten days after that audit. Also surfaced: the 08-09 proof
+already failed L2 on the **declared** line, so a front-matter L2 failure predates Class B.
+8. **Finding #6's charge against `9038e40` WITHDRAWN.** Its commit message states the fold-in and
+says *"RECOUNTED from the table, not incremented"*. The generic *"a tool action"* sentence is emitted
+verbatim by the distributed tool (`methodology_trim.py:1168`), not written by that session.
+9. ***"Coverage: 19 of 19. Nothing skipped"* was false.** The corpus is **22 shards / 19 proofs** —
+`HANDOFFS-archive.md`, `CHANGELOG-through-v3.6.md`, `CHANGELOG-through-2026-08-01.md` have **no
+proof at all**, and two of the three were **edited after archiving**. Now **Finding #7**: the
+archive-freeze invariant is asserted by nothing and has already failed twice, on exactly the
+unproven set.
+
+**Two things the review attacked and could not break:** the record-intactness re-derivation —
+independently reproduced, including under `bin/check-handoff`'s **wider** fence-to-next-fence record
+unit (6 of 6 identical, 0 delta) — and the measured claim that regeneration cannot fix Class B.
+
+**Two findings STRENGTHENED by re-measurement.** The reachability sweep widened from 6 identities to
+**180 pre-trim instances across all 11 trims: 0 unreachable by `(session, date)`, exactly 11
+body-hash misses, every one a `status: pending` → `complete` finalize** — an 11-of-11 invariant, not
+an anomaly. And the off-diagonal instrument, built for Class B and **not** pointed at Class A in the
+draft, was run: **regenerating takes the two `CHANGELOG` Class A proofs GREEN and gives the two
+`HANDOFFS` ones a named missing record** — 5 red would become 3.
+
+**A better recommendation the draft never considered**, found by a critic reading the distributed
+seed: `starter-kit/HANDOFFS.md:115-116` already rules that a shard pointer carries *"the command
+that recomputes those counts, **never a hand-maintained number**"*. Deleting the aggregate is
+**existing policy**, needs no protocol rule, no distributed code change and no go-ahead. The draft's
+preferred *"a trim commit touches nothing but the trim"* is also **not achievable as worded** —
+`.githooks/pre-commit` forces `CHANGELOG.md` co-staging — and is restated narrowly, with the cost
+the draft never priced: it removes the only detector that has ever noticed this line change.
+
+**Build equivalent: `bash bin/tests.sh` 304 passed, 1 failed, 0 skipped — identical to the Phase 0
+baseline, zero status flips.** Failure is Test 9, pre-existing (`bin/sync --source=github`, 3 of 27
+manifest sources not yet upstream). `check-links` **0**, `check-learnings` **0**, all read bare.
+`check-handoff` **1**, correct — the S134 receipt is still `status: pending`. `docs/archive/`
+untouched throughout.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S134 — BL-36 Class B adjudicated: the archives are intact, the cause is not the one on record
 
 **Deliverable:** [`docs/audits/2026-09-01-bl36-classb-adjudication.md`](docs/audits/2026-09-01-bl36-classb-adjudication.md).
