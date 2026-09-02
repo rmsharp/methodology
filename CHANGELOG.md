@@ -206,6 +206,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S136 close-out — PR 1 prepared against `read-set-budgets`, stopped at the authorization boundary
+
+**Deliverable:** [`docs/planning/pr1-read-set-budgets-body.md`](docs/planning/pr1-read-set-budgets-body.md)
+plus local branch `pr1/framework-learnings-extraction` (`5b92b2f`). Three commits: `d2417cc` claim,
+`a265503` the outward-action record, and this close-out.
+
+**THE AUTHORIZATION BOUNDARY HELD.** The operator authorized *creating the branch*. That was done and
+recorded. **Pushing a head branch and opening the PR were not authorized and did not happen** —
+`git ls-remote --heads origin` matches **0** of `pr1/`, `port/`, `issue75`; upstream carries 4 branches
+and **0 open PRs**; `main` is untouched at `512c2ed4` and still the default.
+
+**PR 1 MEASURED, NOT PREDICTED.** Base +1, merges clean, 18 files **+358/−113**. Control at `512c2ed`
+**114 passed / 0 failed, exit 0**; PR 1 **113 / 1, exit 1**. Row-for-row: **114 rows both sides, zero
+lost, zero added, exactly one status flip** — Test 9, which is red on this branch *by construction*
+until the content reaches `main`, and which the PR body declares rather than hides. Manifest **25
+listed / 25 present** — the invariant that heals it on merge. `check-links` **0**,
+`check-learnings` **0** (46 rows, contiguous). All in fresh `--no-local` clones; every code read bare.
+
+**THE `:92-94` REWRITE WENT PAST THE PLAN'S OWN RULING.** §5(b) called the passage *"false in both
+halves"* with *"a stale 56,750 B / 77 B derivation."* Measured, the derivation was not stale — it cited
+**the wrong class**. **56,750 B is the `read-set` class total** (the Phase 0 pair); this file's class is
+**`on-demand`, ceiling 73,728 B**, so its real headroom is **17,055 B, not 77 B**. The ~400 B note the
+entry declined as unaffordable is affordable, and the rewrite now defers it as *content* rather than
+declining it on *cost*. The byte-identity half is false as the plan said: `read_local` reads a working
+tree (`bin/sync:52`), never a ref.
+
+**A TRAP THAT MUST TRAVEL WITH THIS BRANCH.** `bin/sync --source=github` is pinned to `main` —
+`:93` sends no `?ref=`, `:162` is literally `commits/main` — so a developer testing `read-set-budgets`
+with it **syncs `main`'s files, sees a clean run, and has tested nothing.** It is in the PR body under
+its own heading. This is issue #75's own failure species: a criterion demonstrated on a surface that
+cannot fail the way the real one does.
+
+**PR 2 IS THE TRIMMER, AND THE ORDER IS MEASURED.** The dashboard's canonical-only tests abort with
+**13 errors** when `methodology_trim.py` is absent (*"the canonical repo must locate its own trimmer,
+or the present branch is not under test at all"*); adding it takes them to **0 errors**. Trimmer before
+apparatus, then the gate.
+
+**Correcting an estimate this session's predecessor shipped:** *"three payloads need hand-porting"* is
+wrong. Upstream has touched **no** payload file since the merge-base, so every fork version is a strict
+descendant and porting is `git checkout main -- <file>`, not a patch replay. `git apply` fails only
+because each commit bundles the fork's own ledger hunks. **There is no merge to do.**
+
+**Still outstanding, unchanged:** Tier-2 (a) (proceeded on freeze, reversible until push), and
+`HANDOFFS.md` at **8 receipts against a ratified cap of 4** with its front matter still claiming 4.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S136 — OUTWARD-FACING ACTION TAKEN: upstream branch `read-set-budgets` created
 
 **This entry exists because the action leaves no commit in this repository.** Creating a ref on
