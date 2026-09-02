@@ -206,6 +206,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-01 · [ad hoc] S135 — claim: candidate D upstream PR readiness, prepare only, stop before push
+
+**Ledger:** `CHANGELOG: pending` — set at claim; actions recorded here at Phase 3F.
+
+**Operator-chosen at the Phase 1 gate**, after S135's predecessor mapped the dependency question with
+9 agents and three independent adjudicators, all three returning **pr-first-is-fine**.
+
+**THE FINDING THAT UNBLOCKED THIS, VERIFIED NOT ASSUMED:** both candidate branches are
+`upstream/main` (`512c2ed`) **+ exactly one commit**, **0 behind**, and merge clean into the current
+upstream tip (`git merge-tree --write-tree` exit 0 for each). The port branch carries **upstream's**
+`CHANGELOG.md` grown 81,730 → 87,446 B — **not** the fork's 148,602 B one. So the fork's retention
+breach, its 148 KB ledger, its five red `.verify.sh` proofs and its three unproven archives sit on
+paths **absent from both diffs and absent from `bin/_manifest.py`'s SOURCE column**. They cannot
+travel upstream and were never PR prerequisites. Three sessions ranked them above the PR anyway.
+
+**A CORRECTION TO THIS SESSION'S OWN PREDECESSOR REPORT.** S134 told the operator that Test 9's red
+means *"an adopter following the documented GitHub install path gets nothing at all."* **False as
+scoped.** `bin/sync` loads the manifest from its own `bin/` (`bin/sync:14-15`) while `REPO` is
+hardcoded to `KJ5HST/methodology` (`:17`); **upstream's manifest is 24 sources / 24 present —
+self-consistent, and its Test 9 passes.** `bin/` has **zero** manifest rows, so no adopter ever
+receives `bin/sync`. The red requires pairing *this fork's* 27-source manifest against *upstream's*
+contents — a condition existing only inside this checkout. Plan §11.3 item 2 carries the same
+overstatement and **must not be inherited into a PR body**.
+
+**Chosen payload: candidate D alone** — `docs/issue75-plan-surface-upstream`, 3 files, +172/−1,
+answering issue **#75, filed by the maintainer himself and still OPEN**, with a body already drafted
+at `docs/planning/issue75-upstream-pr-body.md`. Upstream has **0 open PRs**; nothing is queued.
+
+**⚠ RAISED AT CLAIM, OPERATOR'S CALL, NOT A SESSION'S:** our own 2026-08-16 comment on #75 closes
+*"Entirely your call whether you'd like it offered as a PR … and I won't send anything unasked."*
+The maintainer has not replied in ~16 days. Opening a PR now would contradict a public commitment
+this side made. This session prepares and stops; it does not resolve that.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-01 · [ad hoc] S134 close-out — BL-36 Class B answered, nine of my own defects corrected, self-score 7/10
 
 **Deliverable complete:** [`docs/audits/2026-09-01-bl36-classb-adjudication.md`](docs/audits/2026-09-01-bl36-classb-adjudication.md).

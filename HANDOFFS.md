@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S135
+date: 2026-09-01
+status: pending
+active_task: **UPSTREAM PR READINESS — CANDIDATE D (`docs/issue75-plan-surface-upstream`), PREPARE ONLY, STOP BEFORE PUSH.** Operator-chosen at the Phase 1 gate after S134's dependency map established that **PR preparation is NOT dependent on fork cleanup**: both candidate branches are `upstream/main` (`512c2ed`) **+ exactly one commit**, 0 behind, merge clean (`git merge-tree` exit 0), and carry **upstream's** `CHANGELOG.md` (81,730 → 87,446 B) not the fork's 148,602 B one. Deliverable is a verified readiness package: branch checked against issue #75 and our own 2026-08-16 comment, `bin/tests.sh` row-for-row against a pristine `upstream/main` control **in scratch clones** (plan §6 dragon 5 — Tests 32/34/37 mutate the live ledgers), and the drafted PR body re-verified line by line. **NOTHING LEAVES THIS MACHINE: no push, no PR, no comment.** **⚠ FLAG RAISED AT CLAIM, FOR THE OPERATOR, NOT A SESSION: our own comment on #75 ends *"I won't send anything unasked"*, and the maintainer has not replied in ~16 days.** Opening a PR would contradict a commitment this side made in public; that is the operator's call at the go-ahead, and this session does not take it.
+```
+
+```handoff
 session: S134
 date: 2026-09-01
 status: complete
