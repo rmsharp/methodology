@@ -206,6 +206,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S137 — OUTWARD-FACING ACTIONS TAKEN: head branch pushed, **PR [#76](https://github.com/KJ5HST/methodology/pull/76) OPENED**
+
+**This entry exists because neither action leaves a commit in this repository.** A push to `origin` and
+a pull request on `KJ5HST/methodology` are both invisible to Phase 0 reconcile — there is nothing in
+`git log` to find. Failure mode #27's write-gate is the only mechanism that records them.
+
+**Authorization:** the operator's message *"push PR #1"*, and nothing earlier. It covered exactly the
+two writes described in S136's close-out and no others.
+
+**What was done.**
+1. `git push -u origin pr1/framework-learnings-extraction` — confirmed by `git ls-remote --heads
+   origin`, which returns **`5b92b2f`** for the branch. *(The push's own exit code printed empty:
+   `${PIPESTATUS[1]}` is not zsh's idiom. Server-side confirmation is the better check regardless.)*
+2. `gh pr create --repo KJ5HST/methodology --base read-set-budgets --head
+   rmsharp:pr1/framework-learnings-extraction` → **pull request #76**.
+
+**Verified from the server, not from the commands' output** (`gh pr view 76`):
+
+| Property | Value |
+|---|---|
+| State | **OPEN** |
+| **Base** | **`read-set-budgets`** — never `main`, which is the operator's standing requirement |
+| Head | `rmsharp:pr1/framework-learnings-extraction` |
+| Diff | 18 files, **+358 / −113** |
+| Mergeable | `MERGEABLE` |
+
+**`main` is untouched at `512c2ed4` and remains the default branch.** `read-set-budgets` is also still
+at `512c2ed4` — opening a PR does not advance its base. `gh pr list` shows exactly one open PR.
+
+**Pre-flight was re-run at claim**, as S136's handoff required because both checks are HEAD-dependent:
+0 behind / 1 ahead, `git merge-tree --write-tree` exit 0.
+
+**What is NOT authorized and did not happen:** no merge, no comment on PR #76, no comment on issue #75,
+no tag, no release. **PRs 2–4 (trimmer → apparatus → gate) stay unopened**, and that order is measured
+rather than assumed — the dashboard's canonical-only tests abort with 13 errors when the trimmer is
+absent and 0 with it.
+
+**One consequence worth recording:** Tier-2 (a) shipped on **freeze** (the 46-row compacted table),
+which was an assumption, not an answer. It is no longer cheaply reversible — changing it now means a
+force-push to a branch a reviewer may already have read.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S137 — claim: push the PR 1 head branch and open the pull request
 
 **Ledger:** `CHANGELOG: pending` — set at claim; the actions are recorded here at Phase 3F.
