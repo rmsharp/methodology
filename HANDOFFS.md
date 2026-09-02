@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S139
+date: 2026-09-02
+status: pending
+active_task: **MAKE PR 2 GREEN, THEN OPEN IT — operator chose option 1.** Two halves, both named by S138. **(a) DASHBOARD, 2 of 211:** add `"methodology_trim.py"` to `FRAMEWORK_INSTALLED_SOURCE` (`tools/methodology_dashboard.py:360` on the base — a literal tuple) **and** its per-name signature-table entry (`:462` states the invariant the test asserts). **DO NOT take the fork's dashboard twins wholesale** — fork `:753` is `tuple(_FRAMEWORK_INSTALLED_CONTENT)`, a restructure that would drag unrelated work. Twins must stay byte-identical (Test 19). **(b) TRIMMER, 5 of 123:** guard each on its own fixture. **⚠ A SKIP IS NOT A PASS.** Each guard must cover ONLY its own precondition and ship a control that proves it fires — force the precondition false and confirm the test skips, force it true and confirm a mutant still dies. An over-broad `skipTest` is a mute button and this repo has been bitten by one before. **BASELINE TO BEAT: base is 113/1 (Test 9 only); PR 2 must return to 113/1, i.e. add ZERO failures.** Payload is on local `pr2/ledger-trimmer` (`a59b338`), unpushed. Opening the PR IS authorized this time; merging, commenting, tagging are not.
+```
+
+```handoff
 session: S138
 date: 2026-09-02
 status: complete

@@ -206,6 +206,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S139 — claim: make PR 2 green (option 1), then open it
+
+**Ledger:** `CHANGELOG: pending` — set at claim; actions recorded here at Phase 3F.
+
+**Operator chose option 1** from S138's close-out: fix both halves properly rather than ship a red PR
+or drop the trimmer's tests.
+
+**(a) Dashboard, 2 of 211.** Add `"methodology_trim.py"` to `FRAMEWORK_INSTALLED_SOURCE`
+(`tools/methodology_dashboard.py:360`, a literal tuple on the base) and the per-name signature-table
+entry whose invariant `:462` documents. **Surgical, not wholesale** — the fork's twin is restructured
+(`:753` builds the tuple from `_FRAMEWORK_INSTALLED_CONTENT`) and taking it would drag unrelated work
+into this PR. Both twins must stay byte-identical; Test 19 asserts it.
+
+**(b) Trimmer, 5 of 123.** Guard each on its own fixture. **⚠ A skip is not a pass** — the standing
+lesson here is that a `skipTest` covering more than its own precondition is a mute button that hid two
+dead assertions for three days across a GREEN run. So each guard ships with a control: force the
+precondition false and the test must skip; force it true and a mutant must still die.
+
+**The bar is a delta, not an absolute.** The base (`read-set-budgets` @ `46b56fd`) is **113 passed /
+1 failed** — Test 9 only, by construction, until the content reaches `main`. PR 2 must return to
+**113/1**, adding zero failures. Anything else is not openable.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S138 close-out — PR 2 NOT opened: it adds two failures over its own base
 
 **The deliverable is the blocker, not the PR.** The operator authorized *"open PR 2"*; building it
