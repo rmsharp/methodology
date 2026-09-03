@@ -1,8 +1,9 @@
 # PR 3 body — the apparatus extraction (read-set budgets, 3 of 4)
 
-**Status: SHIPPED — [PR #78](https://github.com/KJ5HST/methodology/pull/78) is OPEN against
-`read-set-budgets`.** Pushed and opened by S143 (2026-09-02) on the operator's explicit go-ahead,
-three commits as-is. Body as submitted is below.
+**Status: MERGED — [PR #78](https://github.com/KJ5HST/methodology/pull/78) landed on
+`read-set-budgets` as `cea3068` (2026-09-03T02:04:28Z).** Opened by S143 and merged by S144, both on
+the operator's explicit go-ahead, three commits as-is and no squash. **`tree(cea3068)` is identical to
+`tree(2c30d0f)`** — the merge added nothing and lost nothing. Body as submitted is below.
 
 - **Head:** `pr3/apparatus-extraction` = `2c30d0f`, on `origin`
 - **Base:** `read-set-budgets` — advanced to `907a696` when [#77](https://github.com/KJ5HST/methodology/pull/77)

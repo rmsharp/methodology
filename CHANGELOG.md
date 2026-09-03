@@ -206,6 +206,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S144 — OUTWARD-FACING ACTION TAKEN: **PR [#78](https://github.com/KJ5HST/methodology/pull/78) MERGED** into `read-set-budgets`
+
+**Recorded here because a merge on `KJ5HST/methodology` leaves no commit in this repository.** Phase 0
+reconcile is structurally blind to it; the failure-mode-#27 write-gate is the only mechanism that
+records it.
+
+**Authorization:** the operator's *"merge PR #78"*, scope narrowed by their own follow-up to the merge
+alone. **`gh pr merge` printed NOTHING**, which is neither success nor failure — every property below
+was read back from the server afterwards.
+
+| Property | Value |
+|---|---|
+| #78 | **MERGED** 2026-09-03T02:04:28Z, merge commit **`cea3068`** |
+| `read-set-budgets` | `907a696` → **`cea3068`**, parents `[907a696, 2c30d0f]` — a merge commit, matching #76 and #77 |
+| `upstream/main` | **untouched at `512c2ed`** |
+| Open PRs | **none** |
+
+**The merge was checked for what it DELIVERED, not merely that it succeeded.** `tree(cea3068)` is
+**identical** to `tree(2c30d0f)` — the merge added nothing and lost nothing. On `read-set-budgets`
+now: `FRAMEWORK_APPARATUS.md` **present at 15,493 B**, `ITERATIVE_METHODOLOGY.md` **55,976 B**,
+manifest **27 rows**.
+
+**Three of four PRs in the read-set-budget series are now in.** `main` has received none of them and
+is not a target yet.
+
+**Also at close-out:** reconciled S143's `commit:` answer slot to `29331e5` (claim) + `601e432`
+(close-out), each verified by reading that commit's own copy of the S143 block — `29331e5` holds it
+`status: pending`, `601e432` holds it `status: complete`. **`check-handoff` also caught this receipt's
+own `key_files` carrying no `path:line` token**, which the spec requires; fixed with three real
+anchors rather than by loosening the sentence. Both read **0** bare afterwards.
+
 ### 2026-09-02 · [ad hoc] S144 — claim: merge PR [#78](https://github.com/KJ5HST/methodology/pull/78) into `read-set-budgets`
 
 **Authorization:** the operator's *"merge PR #78"*, with the scope narrowed by their follow-up —
