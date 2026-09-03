@@ -1,7 +1,11 @@
 # PR 4 plan — ship the context-budget gate to `read-set-budgets` (read-set budgets, 4 of 4)
 
-**Status: PLAN, written S145 (2026-09-02), adversarially reviewed and repaired in the same session.
-Nothing here is implemented, pushed, or opened.** The plan is the session's one deliverable
+**Status: RATIFIED by the operator 2026-09-03, at S146 — D1–D11 stand as recorded in §4's ratification
+record (D1–D10 as recommended; D4 reshaped and D11 added on the second review's findings). Phase B
+(build on `cea3068` in a clean clone, verify, do not push) is authorized as the next session's single
+deliverable; Phases C and D are NOT authorized by this ratification and each needs its own explicit
+go-ahead. Nothing here is implemented, pushed, or opened.** Written S145 (2026-09-02), adversarially
+reviewed and repaired in the same session and again at S146 (below). The plan is the session's one deliverable
 (`starter-kit/SESSION_RUNNER.md` Phase 2 §Planning Sessions; FM #18). It is the fourth and last
 payload of [`upstream-read-set-pr-plan.md`](upstream-read-set-pr-plan.md) §5 — **Phase 3, "the gate"**,
 shipped in this fork at S129 and never carried upstream. PRs 1–3 of the series are merged into
@@ -18,7 +22,14 @@ the command that produced it is in §8. Where the plan cannot measure — the ma
 network — it says so by name. **The first draft was frozen at `5394079` and attacked by eight
 independent read-only reviewers** (five refuters over disjoint claim slices, three critique lenses):
 97 claims confirmed, 28 refuted, 2 unverifiable, 32 findings. Every refutation and every HIGH/MEDIUM
-finding is repaired below; the ones that changed the design are named in §4.
+finding is repaired below; the ones that changed the design are named in §4. **A second round ran at
+S146 (2026-09-03) against the frozen close-out tree `67982cc`** — eight read-only slices, then one
+independent skeptic per refutation and per HIGH/MEDIUM finding, 45 agents in all: 120 claims re-derived
+(102 confirmed, 17 refuted, 1 unverifiable); of round 1's 59 items 53 fixed, 5 partial, 1 not; 19 new
+findings (1 HIGH, 9 MEDIUM, 9 LOW); 36 of the 37 adjudications stand and one was overturned (the claim
+that the round-1 repair dropped nothing — it had dropped Phase C's post-push read-back, restored below).
+Every standing item is repaired in this draft; the four that reached a decision are in §4's ratification
+record.
 
 ---
 
@@ -39,10 +50,10 @@ and it was run on `cea3068`: bare exit **2** with `(read-set total) 67,581 B / 5
 10,831 B the series exists to make visible; **0** config defects; `--selftest` **52 PASS / 0 FAIL**;
 the 116-test module **OK, 2 skipped**; `--precommit` refuses a 2 B growth on every one of the five
 over-or-pinned files and passes every shrink; `bin/tests.sh` **115 passed / 1 failed** against a
-control of **114 / 1** — 115 shared rows, one added, zero flips, measured on both drafts of the
-config. **Two things the review
-changed:** the PR's own upstream ledger entry is a commit the shipped gate refuses, so the commits
-must land in a fixed order (D4); and the trimmer the first draft named as the ledgers' remedy does
+control of **114 / 1** — 115 shared rows, one added, zero flips, measured on the shipped config and
+re-measured at S146. **Two things the review
+changed:** the PR's own upstream ledger entry is a commit the shipped gate refuses by hand, and upstream's
+own pre-commit hook wants a ledger line on every commit, so both commits carry one (D4, reshaped at S146); and the trimmer the first draft named as the ledgers' remedy does
 not fire at their sizes, so the remedy is now a named command (D1).
 
 ---
@@ -105,17 +116,20 @@ down by 9 lines (the CB block heading moves `:591` → `:600`).
 
 ### 2.2 The files the canonical config budgets, sized on `cea3068`
 
-`git cat-file -s cea3068:<path>`:
+Bytes: `git cat-file -s cea3068:<path>`. Lines: `git show cea3068:<path> | wc -l` — the tool reports
+**one more** for every file here (`len(text.split("\n"))`, `context_budget.py:347-349`, keeps the empty
+string after the final newline, and every file listed ends in one), so `max_lines: 200` fires at `wc -l`
+199. One unit per column, the tool's count in parentheses:
 
 | File | Bytes | Lines | Against |
 |---|---|---|---|
-| `CLAUDE.md` | 59,168 | 126 (`wc -l`; the tool counts 127) | seed resident 28,000 / class 34,000 → **over by 31,168 / 25,168** under the seed; pinned at 59,168 (D2); `max_lines` 200 → green |
-| `starter-kit/SESSION_RUNNER.md` | 52,195 | 391 | partition ceiling 41,364 → **over by 10,831** |
-| `starter-kit/SAFEGUARDS.md` | 15,386 | 243 | pinned at 15,386 → **at ceiling** (`new > ceil` is strict); blob `f0964195` on both trees |
+| `CLAUDE.md` | 59,168 | 126 (tool 127) | seed resident 28,000 / class 34,000 → **over by 31,168 / 25,168** under the seed; pinned at 59,168 (D2); `max_lines` 200 → green |
+| `starter-kit/SESSION_RUNNER.md` | 52,195 | 390 (tool 391) | partition ceiling 41,364 → **over by 10,831** |
+| `starter-kit/SAFEGUARDS.md` | 15,386 | 242 (tool 243) | pinned at 15,386 → **at ceiling** (`new > ceil` is strict); blob `f0964195` on both trees |
 | read-set pair | **67,581** | | derived class ceiling 56,750 → **over by 10,831** |
-| `CHANGELOG.md` | 91,365 | 1,029 | 65,536 → over by 25,829; ≈37,028 tok at the measured 2.4674 B/tok, over the 25,000 cap |
-| `HANDOFFS.md` | 70,182 | 227 | 65,536 → over by 4,646; ≈29,677 tok at 2.3648 B/tok, over the cap (at the seed's 2.93 it would read 23,952, under — which is why the measured density is carried) |
-| `starter-kit/FRAMEWORK_LEARNINGS.md` | 56,673 | 80 | on-demand 73,728 → ok; blob `b21854cc`, the exact blob the fork's density was measured on (D7) |
+| `CHANGELOG.md` | 91,365 | 1,028 (tool 1,029) | 65,536 → over by 25,829; ≈37,028 tok at the measured 2.4674 B/tok, over the 25,000 cap |
+| `HANDOFFS.md` | 70,182 | 226 (tool 227) | 65,536 → over by 4,646; ≈29,677 tok at 2.3648 B/tok, over the cap (at the seed's 2.93 it would read 23,952, under — which is why the measured density is carried) |
+| `starter-kit/FRAMEWORK_LEARNINGS.md` | 56,673 | 79 (tool 80) | on-demand 73,728 → ok; blob `b21854cc`, the exact blob the fork's density was measured on (D7) |
 | `FRAMEWORK_APPARATUS.md` / `ITERATIVE_METHODOLOGY.md` / `README.md` / `HOW_TO_USE.md` / `starter-kit/BOOTSTRAP.md` | 15,493 / 55,976 / 74,636 / 55,528 / 28,211 | | not budgeted — read on demand, by humans; listed in the config's `_deliberate_exclusions` |
 
 Structure witnesses the config's `structure` patterns need, counted on `cea3068`: **39**
@@ -129,9 +143,9 @@ Structure witnesses the config's `structure` patterns need, counted on `cea3068`
 |---|---|---|
 | **A** | fork tool + fork test module dropped onto pristine `cea3068`, **no root config** | `Ran 116 tests … FAILED (failures=1, skipped=2)`. The one failure: `TestToolInvariants.test_the_tool_and_its_selftest_agree_the_gates_all_fire` (`tools/test_context_budget.py:468`), *"0 not greater than 30 : selftest row population collapsed"* — it runs `--selftest` with `cwd=REPO`. |
 | **A′** | `python3 starter-kit/context_budget.py --selftest` at that root, no config | **exit 3**, *"no .context-budget.json found at or above … This tool refuses to invent budgets for a project that has not declared them."* Zero rows. Same message and exit from the upstream 1.0.0 tool. **This is why the config is in the PR and not left to the maintainer.** |
-| **B** | the distributed SEED copied to `cea3068`'s root as the config | **exit 2**, four red lines from three causes: `CLAUDE.md 59,168 B / 28,000 B over`; its derived token ceiling (`≈20,193 tok … exceeds the 12,334-token ceiling`); `(resident total) 59,168 / 34,000 over`; *"the budget:protected fence is missing"*. None of it about the read-set. `upstream-read-set-pr-plan.md` §3.4 predicted this. |
+| **B** | the distributed SEED copied to `cea3068`'s root as the config | **exit 2**, four red lines from three causes: `CLAUDE.md 59,168 B / 28,000 B over`; its derived token ceiling (verbatim: `≈20,193 tokens exceeds the 12,334-token ceiling by 7,859 — at 2.9300 B/token (config), derived from max_bytes at the 2.27 floor`); `(resident total) 59,168 / 34,000 over`; *"the budget:protected fence is missing"* — printed in the order byte, token, fence, resident total. None of it about the read-set. `upstream-read-set-pr-plan.md` §3.4 predicted this. |
 | **C** | fork tool vs upstream tool, each run in an empty adopter dir holding the **unchanged upstream seed** and only a 954 B `CLAUDE.md` (the fence plus 900 `y`, `bin/tests.sh:613-614`'s fixture) | whole-stdout byte-identical, same exit. **A reviewer showed this fixture cannot exhibit the changes** — two of the seed's three files were absent. Superseded by C4. |
-| **C4** | same, with a seed-compliant `SESSION_NOTES.md` (one `## ACTIVE TASK`, two `## ` headings, 304 lines, lines < 280 B) at four sizes and a `LEARNINGS.md` | **Two adopter-visible changes.** (1) When nothing fires, the read-mandated row reports **bytes, not lines**: `305 ln / 400 ln ok` → `60,048 B / 120,000 B ok`; exit unchanged (1). (2) At **≥ 73,250 B** (25,000 tok × the seed's 2.93 B/tok) the new tool derives a token ceiling the old tool never had: `72,948 B` → identical verdicts, exit 1 both; `73,548 B` → old `ok`, exit **1**; new `≈25,101 tok / 25,000 tok over`, header `UNMEASURED` → `OVER`, exit **2**. A compliant file under every ceiling the adopter declared goes red on sync. Disclosed in Appendix B. |
+| **C4** | same, with a seed-compliant `SESSION_NOTES.md` (one `## ACTIVE TASK`, two `## ` headings, 304 lines by `wc -l` — `305 ln` as the tool counts — lines < 280 B) at four sizes and a `LEARNINGS.md` | **Two adopter-visible changes.** (1) When nothing fires, the read-mandated row reports **bytes, not lines**: `305 ln / 400 ln ok` → `60,048 B / 120,000 B ok`; exit unchanged (1). (2) Above **73,252 B** — the first size whose truncated estimate `int(bytes / 2.93)` exceeds 25,000 tokens is **73,253 B** (≈25,001 tok; `:386` truncates, `:391` compares strictly; 73,250–73,252 B still `ok`) — the new tool derives a token ceiling the old tool never had: `72,948 B` → identical verdicts, exit 1 both; `73,548 B` → old `ok`, exit **1**; new `≈25,101 tok / 25,000 tok over`, header `UNMEASURED` → `OVER`, exit **2**. A compliant file under every ceiling the adopter declared goes red on sync. Disclosed in Appendix B. |
 | **D** | the candidate config (§3.3, Appendix A) on `cea3068` with the fork tool | §3.3 — the numbers in §0. |
 
 ### 2.4 Who has the tool today
@@ -148,7 +162,9 @@ three instrumented adopters"*, inferred there and stated here):
 **The first draft called `73fb90aa` "a locally modified or hand-copied intermediate" that "matches no
 commit in this repository's history". That was false, and the cause was a shell bug, not the
 adopter:** in `zsh`, `$c:starter-kit/context_budget.py` applies the `:s` history modifier to `$c`, so
-every `git rev-parse` in the enumeration returned empty and no blob matched anything. Written as
+every `git rev-parse` in the enumeration received the mangled argument `<sha>/context_budget.py`, exited
+128 with `fatal: ambiguous argument` on stderr and the mangled path on stdout, and the trailing
+`grep 73fb90aa` matched nothing — loud on stderr, empty only where it was read. Written as
 `${c}:starter-kit/…` the loop finds it at once (§8, R2). The same bug had already bitten the blob-identity
 check earlier in the session and was caught there; it was not caught here until a reviewer re-ran the
 loop. None of the three adopters is at `c5ff15e5`; all three reach it only after `read-set-budgets`
@@ -165,8 +181,9 @@ merges to `main` and they sync (`bin/sync --source=github` reads `main`).
 patches also apply in sequence, each intermediate blob equal to that commit's own. The DONE criterion
 is the blob, not the patch: `git rev-parse <branch>:starter-kit/context_budget.py` = `c5ff15e5…`.
 
-**Why not seven commits (refuted):** every intermediate state fails the wired unit test until the
-root config exists (Probe A′), so a 7-commit replay is either 7 red intermediate states or the config
+**Why not seven commits (refuted):** every intermediate state fails the fork's test module — it tests
+features the intermediates lack, config or not (`73fb90aa`: 14 failures, 49 errors) — and the end state
+fails until the root config exists (Probe A′), so a 7-commit replay is either 7 red intermediate states or the config
 landing first against a tool that does not yet read half its keys. The series' convention is 1–3
 commits per PR (#76: 1, #77: 1, #78: 3). The fork's history stays citable from the PR body.
 
@@ -178,10 +195,10 @@ changes to the wrong commits by reading the messages:
 |---|---|---|
 | `6a91660` | 2026-08-15 | **BL-38, five defects.** D1 `size_history()` walks `--first-parent` (two lineages interleaved by date after a sync, so "size at T" stopped being a function); D2 ISO stamps compared as aware datetimes (`parse_iso`, `_ISO`), not strings; D3 `calibration_verdict()` + `MIN_R2 = 0.50` refuse a fit below R² 0.50, a negative slope, an undefined R² — and a refused fit **suppresses** the bytes/token line; D4 `ledger_dimension()` names the ceiling that fired in its own unit; D5 remediation prose stops naming the home project. `linfit` extracted. **`VERSION` 1.0.0 → 1.1.0.** Effect at n=76: 14.75 B/tok at R² 0.05 → 2.81 at 0.81. |
 | `84abc60` | 2026-08-26 | 7 lines: the `ledger_dimension()` docstring stops asserting the read cap is line-denominated. |
-| `9e71f83` | 2026-08-26 | 42 lines: `ledger_dimension()`'s nothing-fired default flips lines → bytes; docstring and three selftest checks follow. The line-rate deletion this commit is known for happened in the dashboard twins and the trimmer, **not in this tool** — `READ_CAP_LINES` never existed here. |
+| `9e71f83` | 2026-08-26 | 42 lines: `ledger_dimension()`'s nothing-fired default flips lines → bytes; the docstring and two selftest checks follow (one rewritten to expect bytes with nothing fired, one added to prove a `lines` finding still reports lines). The line-rate deletion this commit is known for happened in the dashboard twins and the trimmer, **not in this tool** — `READ_CAP_LINES` never existed here. |
 | `28a02a6` | 2026-08-29 | **Ceilings denominated in tokens, gated by class.** `READ_CAP_TOKENS = 25_000`, `MIN_BYTES_PER_TOKEN = 2.27`, `WHOLE_READ_CLASSES`, `DENSITY_DRIFT_WARN`; `file_density()` (per-file measured beats the config global beats the floor, and returns its source), `token_ceiling()` (explicit `max_tokens` governs; else derived from `max_bytes` at the 2.27 floor; **clamped at the cap either way**), `config_defects()` (a declared `max_tokens` above the cap is reported as a defect — the clamp is never *silent*) — defined and unit-tested, **not yet called**. `VERSION` 1.1.0 → 1.2.0. |
-| `9999410` | 2026-08-30 | `blob_bytes()` via `git cat-file -s` — the old `len(stdout.strip().encode())` was 1 B short on LF content, **1 + (number of CRLF line endings)** short on CRLF (3 B on the two-line fixture at `tools/test_context_budget.py:824-838`), and **raised `UnicodeDecodeError`** on non-UTF-8; `class_spec()` replaces two `cfg["classes"]["resident"]` accesses that raised `KeyError`. |
-| `beffbd0` | 2026-08-30 | **The class-aggregate gate**: `READ_CAP_BYTES` computed at import; `class_totals()` over N classes, in `main()`, `render()` **and `precommit()`**; `framework_share()`, `class_ceiling()` with `derive_from_read_cap`; `read-set` joins `WHOLE_READ_CLASSES`; **`config_defects()` gains its first call sites** (`main()`, `precommit()`). |
+| `9999410` | 2026-08-30 | `blob_bytes()` via `git cat-file -s` — the old path — in effect `len(stdout.strip().encode())` — was at least 1 B short on LF content (`.strip()` removes every trailing whitespace byte, so 1 B is the floor of the error, as the fixture's own docstring at `tools/test_context_budget.py:828-829` says), **1 + (number of CRLF line endings)** short on CRLF (3 B on the two-line fixture at `tools/test_context_budget.py:824-838`), and **raised `UnicodeDecodeError`** on non-UTF-8; `class_spec()` replaces two `cfg["classes"]["resident"]` accesses that raised `KeyError`. |
+| `beffbd0` | 2026-08-30 | **The class-aggregate gate**: `READ_CAP_BYTES` computed at import; `class_totals()` over N classes, called from `main()` and `render()`, with `precommit()` summing staged/HEAD bytes per class inline and sharing only `class_ceiling()` with them; `framework_share()`, `class_ceiling()` with `derive_from_read_cap`; `read-set` joins `WHOLE_READ_CLASSES`; **`config_defects()` gains its first call sites** (`main()`, `precommit()`). |
 | `c9c9b7b` | 2026-08-30 | Ten reviewed defects in the above — chiefly **a commit contains the index, not the worktree**: `precommit()` is index-driven and reads `HEAD:.context-budget.json` for its baseline, so a `git rm` or rename of a member is a shrink, not a refusal; the test module's call-site guard narrowed so it no longer matches its own comment. |
 
 Symbols, at blob `c5ff15e5` (navigate by `grep -n 'def <name>'`; these numbers are true of that blob
@@ -199,7 +216,7 @@ module constants (`_ISO DENSITY_DRIFT_WARN MIN_BYTES_PER_TOKEN MIN_R2 READ_CAP_B
 WHOLE_READ_CLASSES`), one `def` removed (`cfg_lookup`). Config keys newly read: `read_cap_tokens`,
 `max_tokens`, `bytes_per_token` (per file at `:103`, and as the config-global fallback at `:106`),
 `measured_bytes`, `adopter_reserve_bytes`, `derive_from_read_cap`. **Every one of them defaults when
-absent** — `read_cap_tokens` to `READ_CAP_TOKENS` (`:118`, `:160`, `:229`) — which is why Probe C4's
+absent** — `read_cap_tokens` to `READ_CAP_TOKENS` (`:118`, `:229`; at `:161` the same default arrives as `READ_CAP_BYTES` through a `None` check) — which is why Probe C4's
 first two sizes are verdict-identical.
 
 ### 3.2 `tools/test_context_budget.py` — canonical-only, 116 tests
@@ -214,17 +231,23 @@ scratch git repository built in `tempfile` (`git()` helper `:55`). Four tests re
 | Test | Reads | On `cea3068` |
 |---|---|---|
 | `TestToolInvariants.test_the_tool_and_its_selftest_agree_the_gates_all_fire` (`:468`) | a root `.context-budget.json` — it runs `--selftest` at `REPO` | **FAILS without the config** (Probe A), **passes with the candidate** (Probe D). |
-| `TestFitGateEndToEnd` ×2 (`:330`; `:356`, `:362`) | *this repository's* session transcripts under `~/.claude/projects/<slug>/*.jsonl` **and** a root config | **skip** in the clean clone — by design, its docstring says *"Skipped is honest."* **On this fork, on this machine, both RUN and pass** (`Ran 116 … OK`, no skips). |
+| `TestFitGateEndToEnd` ×2 (`:330`; `:356`, `:362`) | *this repository's* session transcripts under `~/.claude/projects/<slug>/*.jsonl` **and** a root config | **skip** in the clean clone — by design, its docstring says *"Skipped is honest."* **On this fork, on this machine, both RUN and pass** — recorded at S146 (2026-09-03): `python3 tools/test_context_budget.py -v > u.log 2>&1; echo $?` → 0, `Ran 116 tests … OK`, both `TestFitGateEndToEnd` rows `ok`, no skips (87 transcripts under `~/.claude/projects/-Users-rmsharp-Development-methodology`). |
 | `TestReserveIdentity.test_it_agrees_with_the_trimmer_which_computes_it_the_same_way` (`:1230`; class `:1222`) | `starter-kit/methodology_trim.py` source carrying `READ_CAP_BYTES = int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN)` | **passes** — #77 put that line upstream at `:129`. |
 
 **The two skips are a surface this plan cannot verify (Learning #13), and they can fail for reasons that
 are not defects.** On the maintainer's machine the slug resolves to *his* checkout path; if
 `~/.claude/projects/<that slug>/*.jsonl` exists, both tests **run** against his transcripts and the
 candidate config's `calibrate_against`. `calibrate()` (`:855`) returns `WARN` **without** the *"no
-constant recommended"* line when fewer than 4 sessions carry usage records, or when the fit is
-undefined (a `CLAUDE.md` that never changed size) — and then **both** tests fail: one wants that line,
-the other wants `CLEAN` and a `bytes/token` line. A negative slope fails the second alone. None of that
-is the tool. Appendix B names the two tests, the three causes, and the diagnosis command.
+constant recommended"* line for three reasons, each printing its own line: fewer than 3 first-parent
+commits touch the `calibrate_against` file (`:880-882`; not live on `cea3068`, which has 38), fewer than
+4 transcripts carry a parseable opening timestamp, a usage record **and** a recorded size at that moment
+(`:922-924` — sessions opened before the file's first first-parent record are dropped), or the file was
+the same size at every usable session (`:926-928`, `linfit` returns `None`) — and under any of them
+**both** tests fail: one wants that line, the other wants `CLEAN` and a `bytes/token` line. A fitted
+slope ≤ 0 or an undefined R² (opening context that never varied) fails the second alone. None of that
+is the tool. Appendix B names the two tests, the causes, and the diagnosis command — which must read the
+`AssertionError:` line, because the tests capture `calibrate()`'s stdout (`_run`, `:349-354`) and the
+tool's own diagnosis appears only inside it.
 
 **Four fork-relative identifiers ship in the module and must be scrubbed (D9):** `BL-38` at `:8` and
 `:288`, `S129` at `:561`, `S119` at `:613`. Each names a record in a repository the maintainer does not
@@ -236,7 +259,7 @@ claiming byte-identity.
 
 **Design: pin what is over, derive what the series is about, declare what Phase 0 reads, and mark
 every number the maintainer may move as a PROPOSAL.** The candidate is Appendix A /
-[`pr4-candidate.context-budget.json`](pr4-candidate.context-budget.json) (14,200 B). It is the fork's
+[`pr4-candidate.context-budget.json`](pr4-candidate.context-budget.json) (17,194 B). It is the fork's
 config with every fork-specific measurement removed or re-labelled and every ceiling re-derived from
 `cea3068`. The review's *what-was-lost* lens found the first draft had dropped design intent the
 fork's config carries; the second draft restores it (marked ↺ below).
@@ -244,12 +267,12 @@ fork's config carries; the second draft restores it (marked ↺ below).
 | Entry | Value | Derivation | Day one |
 |---|---|---|---|
 | top-level `_` | prose | this repo's own budget; the tool lives in `starter-kit/`; **do not run `install-hook` here** — on a fresh clone (`core.hooksPath` unset) it *installs* `.git/hooks/pre-commit` exec'ing `<root>/context_budget.py`, which does not exist here, and **every commit then fails** with `can't open file`; recover with `rm .git/hooks/pre-commit`; with `core.hooksPath=.githooks` set it declines instead. The gate is measuring-only until chained. Exit 3 without a config is the tool's own 1.0.0 behaviour | — |
-| `_precommit_scope` ↺ | prose | `--precommit` sizes the index against HEAD and **does not evaluate `structure`**; bare/`--json` runs do, and append to the history file | — |
-| `read_cap_tokens` | 25,000 | the Claude Code Read tool's own refusal message (*"exceeds maximum allowed tokens (25000)"*), observed 2026-08; equals the tool's module default; **upstream's seed does not carry this key** — the +6-line seed edit in this PR introduces it. If the harness differs, set it and every derived ceiling follows | — |
+| `_precommit_scope` ↺ | prose | `--precommit` sizes the index against HEAD and **evaluates neither `structure` nor `max_lines`**; bare/`--json` runs do, create the history file on the first run and append only when the measurement changes | — |
+| `read_cap_tokens` | 25,000 | the Claude Code Read tool's own refusal message (*"exceeds maximum allowed tokens (25000)"*), first observed 2026-08-26 (S111) and re-confirmed 2026-09-03 on Claude Code 2.1.259; equals the tool's module default; **upstream's seed does not carry this key** — the +6-line seed edit in this PR introduces it. If the harness differs, set it and every derived ceiling follows | — |
 | `bytes_per_token` 2.93 · `fixed_harness_tokens` 35,700 · `growth_run` 10 | seed values on `cea3068` | inherited, labelled; `--calibrate` **proposes and writes nothing** | — |
 | `classes.resident.total_bytes` | 59,168 **PROPOSAL** | pinned = `git cat-file -s cea3068:CLAUDE.md`; one-file class; ↺ *not* an identity check (a second resident file would be seen); ↺ agent memory excluded, per-operator | ok, at ceiling |
 | `files[CLAUDE.md]` | `max_lines` 200 ↺ · `max_bytes` 59,168 · `structure` `^## Versioning` ≥ 1 | 200 is `starter-kit/BOOTSTRAP.md:198`'s *"roughly 200 lines"* — the framework's own published number, green at 126 lines; no `warn_bytes` (a warn under a pin at current size fires on every run); no `protected_fence` (the file has none) | ok |
-| `classes.read-set` | 56,750 derived, `warn_bytes` 51,000 | `READ_CAP_BYTES − adopter_reserve_bytes`, computed at run time; a written value that disagrees is a config defect; ↺ why a class separate from read-mandated; ↺ **the aggregate arm cannot fire before a per-file arm on this config** — the two ceilings partition the total exactly — so it is redundant by construction today and its witness is the shipped `--selftest`, not this repo's rows | **over by 10,831** |
+| `classes.read-set` | 56,750 derived, `warn_bytes` 51,000 | `READ_CAP_BYTES − adopter_reserve_bytes`, computed at run time; a written value that disagrees is a config defect; ↺ why a class separate from read-mandated; ↺ **the aggregate arm cannot fire before a per-file arm on this config** — the two ceilings partition the total exactly — so it is redundant by construction today and its witness is the shipped `--selftest`, not this repo's rows; `warn_bytes` 51,000 is inert while the class is over (`over` shadows `warn`, and the class arm in `precommit()` reads only the ceiling) — labelled so in the config (D10) | **over by 10,831** |
 | `files[starter-kit/SESSION_RUNNER.md]` | 41,364 | 56,750 − 15,386, the partition; identical to the fork's row | **over by 10,831** — the ratchet |
 | `files[starter-kit/SAFEGUARDS.md]` | 15,386 **PROPOSAL** (the split) | pinned; blob `f0964195` on both trees | at ceiling |
 | `files[CHANGELOG.md]` / `files[HANDOFFS.md]` | `read-mandated`, 65,536 B **PROPOSAL**, 25,000 tok, `bytes_per_token` **2.4674 / 2.3648** ↺ | the fork's ledger ceilings since 2026-08-15, **decoupled from the trimmer since 2026-08-26** (D1); densities measured on the fork's ledgers 2026-08-29, same format — carried so the token arm is load-bearing (at the seed's 2.93, `HANDOFFS.md` would read *under* the cap) | **over**, byte and token arms both |
@@ -258,8 +281,10 @@ fork's config carries; the second draft restores it (marked ↺ below).
 | `synced` | `[]` | this repo *is* the canonical | — |
 
 **Measured on `cea3068` with the fork tool (Probe D, config v2, `39c81ab` in the scratch clone) —
-the box and the finding lines; the full stdout is 49 lines, the rest being the five-item *Cheapest
-legal actions* block printed under each over-ceiling finding:**
+the box and the finding lines; the full stdout is 49 lines, the rest being the five-item remedies block
+(Move / Compute / Archive / Delete / Raise the ceiling — the list `--precommit` labels *Cheapest legal
+actions*; the bare run prints it unlabelled) printed under each of the **four byte-ceiling** findings;
+the two token-ceiling findings print none, because `REMEDIES` has no `tokens` key:**
 
 ```
 context budget  OVER   resident 59,168 B ≈ 20,194 tok
@@ -284,7 +309,10 @@ HANDOFFS.md — ≈29,677 tokens exceeds the 25,000-token ceiling by 4,677 — a
 
 exit **2**; **0** occurrences of *defect*; `--json` reports `config_defects: []`; `--selftest` **52 PASS
 / 0 FAIL, exit 0**; the unit module **116 run, OK, 2 skipped**. The `--precommit` matrix, each case
-staged against a commit holding the candidate, exit read bare on the next line (the "+2" is `x\n`):
+staged against a commit holding the candidate, exit read bare on the next line (the "+2" is `x\n`). A
+growth refusal on a class member prints **two** rows — the file row and then the class row beneath it
+(`(read-set total) 67,581 -> 67,583 B ceiling 56,750 B`, `(resident total) 59,168 -> 59,170 B ceiling
+59,168 B`) — because the class grew too; the table quotes the file row:
 
 | Staged change | Exit | Output |
 |---|---|---|
@@ -295,7 +323,7 @@ staged against a commit holding the candidate, exit read bare on the next line (
 | `HANDOFFS.md` +2 B / −1,000 B | **2 / 0** | |
 | `FRAMEWORK_LEARNINGS.md` +2 B | **0** | under its ceiling |
 | `README.md` +2 B (unbudgeted) | **0** | |
-| `CLAUDE.md` with `## Versioning` → `## Version` (−3 B) | **0** | **`--precommit` does not see structure**; the bare run on the same worktree exits 2, `CLAUDE.md … instrument-failed` |
+| `CLAUDE.md` with `## Versioning` → `## Version` (−3 B) | **0** | **`--precommit` sees neither structure nor `max_lines`** (a 250-line, 512 B `CLAUDE.md` passes it and the bare run reports `251 ln / 200 ln over`); the bare run on the same worktree exits 2, `CLAUDE.md … instrument-failed` |
 | nothing staged | **0** | |
 
 **Not ported from the fork's config, each named:** `docs/planning/BACKLOG.md` (fork-only file);
@@ -315,7 +343,9 @@ touching a row-for-row baseline.
 
 The one addition goes immediately after the trimmer's wiring (`:240-244`, the `fi` closing
 `test_methodology_trim.py`), mirroring how #77 wired the trimmer. **Its comment is adapted from the
-fork's `:263-266`, not copied**: the fork's names `BL-38` and `Test 35`, both fork-relative.
+fork's `:263-266`, not copied**: the fork's names `BL-38` and `Test 35`, both fork-relative. The fork's own
+`bin/tests.sh:263-266` therefore differs from the ported block once PR 4 lands — a fork-side follow-on
+beside the D9 back-port (D11).
 
 ```sh
 # Same argument as the trimmer's, one tool over. The context_budget.py block below covers the
@@ -329,14 +359,17 @@ else
 fi
 ```
 
-**Measured effect on the suite** (§8, R6): control `cea3068` **114 passed / 1 failed**; candidate v1
-**115 / 1** — 115 shared row labels, exactly one row added (`context budget gate unit tests green`),
-zero status flips; candidate v2 (the shipped config) **115 / 1**, the same 115 shared rows, the same
-one added row, zero flips. The one failure on both sides is Test 9, `github source
-dry-run failed`: `bin/sync`'s `read_github()` (`:80-86`) passes no `ref`, so `--source=github` reads
-`KJ5HST/methodology:main`, where three manifest sources are still absent. It stays red on this branch
-unless that function grows a `ref` parameter, which this PR does not do; merging `read-set-budgets` to
-`main` clears it.
+**Measured effect on the suite** (§8, R6): control `cea3068` **114 passed / 1 failed**; the candidate
+(the shipped config) **115 / 1** — 115 shared row labels, exactly one row added (`context budget gate
+unit tests green`), zero status flips; re-measured at S146 on fresh clones with the same result. The one
+failure on both sides is Test 9, `github source dry-run failed`: `bin/sync`'s `read_github()` (`:80-86`)
+passes no `ref`, so `--source=github` reads `KJ5HST/methodology:main`, where three manifest sources are
+still absent — `starter-kit/FRAMEWORK_LEARNINGS.md` (#76), `starter-kit/methodology_trim.py` (#77),
+`FRAMEWORK_APPARATUS.md` (#78). The log names only the **first** (`FRAMEWORK_LEARNINGS.md`, HTTP 404)
+because `read_github()` exits on the first failure (`:88-90`); do not go hunting for the other two. It
+stays red on this branch unless that function grows a `ref` parameter, which this PR does not do;
+merging `read-set-budgets` to `main` is expected to clear it (the row also needs the network and `gh`
+auth).
 
 ### 3.5 `starter-kit/context-budget.json` (the SEED) — +6 lines, port
 
@@ -345,7 +378,10 @@ The fork adds a `read_cap_tokens: 25000` key with its `_` note, `max_tokens: 123
 `max_tokens: 25000` on `SESSION_NOTES.md`, and a `_max_tokens` note on `LEARNINGS.md` explaining why an
 on-demand file gets no token verdict. It is **documentation of keys the new tool reads**, distributed
 as a seed-once file (`bin/_manifest.py:52`, `SEED`), so it overwrites no existing config. Covered by the
-existing `seed .context-budget.json parses as JSON` row.
+existing `seed .context-budget.json parses as JSON` row. The +6 is `--numstat`'s count: five content
+lines and one blank. The seed's `SESSION_NOTES.md` keeps its `max_lines: 400` beside the new
+`max_tokens: 25000` — different guards (line count; whole-file read cap), neither subsuming the other —
+and its `_` note is not extended in PR 4, so +6 stays +6.
 
 ### 3.6 `.gitignore` — seven comment lines, optional but recommended
 
@@ -358,14 +394,14 @@ file. Comments only; no ignore rule changes.
 
 | Not carried | Why | Where it belongs |
 |---|---|---|
-| `starter-kit/methodology_dashboard.py` / `tools/methodology_dashboard.py` | upstream `2.10.7` vs fork `2.17.0`: 7 version labels, of which the read-cap work is 3 (Phase B `2.16.0`, C1 `2.16.1`, C2 `2.17.0`; Phase A bumped nothing); a 1,318-line diff per twin plus 2,841 in its tests | its own PR series. The inconsistency it leaves: upstream's trimmer (#77) and this tool carry `READ_CAP_TOKENS`/`MIN_BYTES_PER_TOKEN`; upstream's dashboard carries **no** read-cap premise at all |
+| `starter-kit/methodology_dashboard.py` / `tools/methodology_dashboard.py` | upstream `2.10.7` vs fork `2.17.0`: **ten** fork-only version labels above the base (`2.11.0`, `2.12.0`, `2.13.0`, `2.14.0`, `2.15.0`, `2.15.1`, `2.15.2`, `2.16.0`, `2.16.1`, `2.17.0` — enumerate `DASHBOARD_VERSION` over `git log --full-history main -- starter-kit/methodology_dashboard.py` and subtract the labels reachable from `upstream/read-set-budgets`; the first draft's 7 and a round-2 reviewer's 9 each missed some), of which the read-cap work is 3 (Phase B `2.16.0`, C1 `2.16.1`, C2 `2.17.0`; Phase A bumped nothing); a 1,318-line diff per twin plus 2,841 in its tests | its own PR series. The inconsistency it leaves: upstream's trimmer (#77) and this tool carry `READ_CAP_TOKENS`/`MIN_BYTES_PER_TOKEN`; upstream's dashboard carries **no** read-cap premise at all |
 | `.githooks/pre-commit` (+86 lines on the fork) | the Phase 1B claim carve-out and its corpus measurements — fork doctrine | the fork; or a separate proposal |
 | `bin/_manifest.py` comments and `SEED_FORMAT_MARKERS` | the marker change is S40 doctrine the upstream seeds do not carry | the deferred documentation PR, if at all |
 | `bin/check-handoff` comments naming `.context-budget.json` (`:596`, `:650`) | fork-only checker text | — |
 | `starter-kit/BOOTSTRAP.md` ownership table naming `.context-budget.json` adopter-owned (`:355-356`) | upstream's BOOTSTRAP has no such table | the **deferred small PR** (S143, operator-chosen) |
 | `.context-budget-history.jsonl` | measurements belong to whoever runs the tool | created by the maintainer's first bare run (D3) |
-| the fork's own root config | calibrated to an 11,368 B `CLAUDE.md`, cites fork sessions | replaced by Appendix A |
-| the two deliberately-left defects (`upstream-read-set-pr-plan.md` §9 footer) | the growth-run advisory prints *"Nothing is over a ceiling yet"* while files are over — the string is split across a line break at `c5ff15e5:653`, so a one-line grep for it returns nothing; `append_history()`'s change test ignores `class_bytes` | follow-ons; both one-line decisions. Neither is day-one visible upstream (the advisory needs a 10-run history) |
+| the fork's own root config | calibrated to an 11,368 B `CLAUDE.md`, cites fork sessions | upstream gets Appendix A; **the fork keeps its own** (D11) |
+| the three deliberately-left defects (two from `upstream-read-set-pr-plan.md` §9's footer, one found at S146) | the growth-run advisory prints *"Nothing is over a ceiling yet"* while files are over — the string is split across a line break at `c5ff15e5:653`, so a one-line grep for it returns nothing; `append_history()`'s change test ignores `class_bytes`; and the exit-3 message `no .context-budget.json found at or above <dir>` prints `os.getcwd()` (`c5ff15e5:1321`, identical in upstream 1.0.0), not the directory `find_root()` stopped at — cosmetic, exit and rows unaffected | follow-ons; all one-line decisions. None changes an exit code, and the advisory needs a 10-run history before it is visible upstream |
 | governing-plan **dragon 2** (the bypass reflex: the upstream hook documents `--no-verify`; a budget check chained into it inherits that bypass) | answered in Appendix B as a sentence, not a mechanism | the PR body |
 | governing-plan **dragon 3** (bytes moved into a fourth mandatory file evade the aggregate) and its partial mitigation — a `bin/tests.sh` row asserting the filenames Phase 0 orders read in full equal the `read-set` members | not built; the honest split is caught only by a reader | follow-on, named here so it is not lost |
 | any edit to `starter-kit/SESSION_RUNNER.md` naming the gate (governing-plan dragon 4) | grows the capped file ~300 B; an operator decision | raised in the PR body as a question |
@@ -373,6 +409,21 @@ file. Comments only; no ignore rule changes.
 ---
 
 ## 4. Decisions for the operator — recommendation first, alternative stated
+
+**Ratification record — 2026-09-03, S146.** Put to the operator as one question after the Phase 0
+report, with the ten recommendations and their alternatives tabled: *"All ten as recommended."* Then,
+once the second review round had run against the frozen close-out tree `67982cc` (header), the four
+items it reopened were put back as separate questions and answered: **D4** reshaped (two commits, each
+with a ledger line); **D11** added (the fork keeps its own config); **D2**'s token arm (accept the
+derived clamp, document it); **D6**'s residue (the #77 backfill is not in PR 4). **D1–D11 stand as
+recorded below.** The six pins in §2.2 were re-read at ratification with `git cat-file -s` on
+`upstream/read-set-budgets` (still `cea3068`) and are unchanged. **What this ratifies:** Appendix A as
+the config Phase B copies (after re-checking the pins, §5), with the `_`-key corrections made at S146;
+the two-commit shape (D4); the D7 row; the D8 entry shape and date rule; the D9 scrub. **What it
+authorizes:** Phase B, as the next session's single deliverable, and nothing more. **What it does not:**
+Phases C and D each need their own explicit go-ahead; the version (D5) and the PROPOSAL-labelled numbers
+(D10) remain the maintainer's. **D5, the observation half of D6, and D10 are records, not decisions** —
+D5 defers the version event, D6 reports upstream's missing #77 entry, D10 lists what the maintainer owns.
 
 **D1 — Declare the two ledgers, or not?** *Recommend: declare them* (as the candidate does). FM #28's
 own text says every artifact the protocol mandates reading gets a declared ceiling; Phase 0 step 6
@@ -390,23 +441,51 @@ that sentence. The remedy is `python3 starter-kit/methodology_trim.py --file <le
 on a tree whose newest commits have no ledger line — or moving the number. **65,536 B is the fork's
 number and needs its own defence; the PR body marks it a proposal.** *Alternative:* omit the ledgers
 and let the trimmer's 196,608 B be their only control; the bare run still exits 2 on the read-set.
+**Added at S146, measured:** trim `CHANGELOG.md` **first** — a `HANDOFFS.md` trim writes its own P1A
+entry into `CHANGELOG.md` (91,504 → 92,284 B in a clone), which the gate refuses while that file is
+over; the other order passes both. The trimmer stops at **half** the budget (`BYTE_STOP_FRACTION` 0.5:
+91,365 → 30,920 B, 30 of 39 records; 70,182 → 26,891 B, 7 of 10), appends one ledger entry per trim,
+warns `[FRONTMATTER_FIELD_ABSENT]` on upstream's `HANDOFFS.md` (its front matter lacks the *retained
+receipt count* field the trimmer's `LedgerSpec` declares), and refuses `[P1_UNDOCUMENTED]` on any tree
+with commits past the ledger frontier. And its own `--check` names **56,750 B** as the one-read cap, so
+65,536 B sits *above* the number the sibling tool prints — part of the defence D1 says the ceiling needs.
 
 **D2 — `CLAUDE.md` at 59,168 B: pin, or seed number?** *Recommend: pin at arrival size*, plus the
 framework's own `max_lines: 200` (green at 126 lines). The seed's 28,000 / 34,000 reads `over by
 31,168` on day one for a reason unrelated to the read-set, and the target for that file is the
-maintainer's. A pin refuses growth today and shrink passes.
+maintainer's. A pin refuses growth today and shrink passes. *(The tool counts 127: `text.split("\n")`
+keeps the empty string after the final newline, so `max_lines: 200` fires at `wc -l` 199.)* **Token arm,
+ratified at S146:** with `max_bytes` set and no `max_tokens`, `token_ceiling()` derives 59,168 / 2.27 =
+26,065 tok and clamps it to the 25,000 cap **silently** — `config_defects()` reports a clamp only on a
+*declared* `max_tokens` — and the verdict (20,193 tok, `ok`) is computed at the seed's 2.93 B/tok, the
+one file on this config that uses the fallback; at the 2.27 floor the same file would read 26,065, over.
+**Decision: accept the derived clamp and document it** (no `max_tokens` key; the config's `_` keys say
+so; re-judge after `--calibrate`). *Alternative:* declare `max_tokens` at arrival (20,193 at 2.93), a
+second ratchet whose meaning moves with the density constant.
 
 **D3 — `.context-budget-history.jsonl`: ship, track, or ignore?** *Recommend: ship nothing; port the
 `.gitignore` comment; the maintainer commits the file after his first bare run,* as the fork does.
 
-**D4 — Commit shape and ORDER.** *Recommend two commits, in this order:* **(1)** `feat(starter-kit): …`
-— the tool, the scrubbed test module, the `bin/tests.sh` wiring, the seed, **and the upstream
-`CHANGELOG.md` entry (D6/D8)**; **(2)** `chore(budget): …` — the canonical root config and the
-`.gitignore` comments. **The order is forced, not stylistic:** once the config exists, the gate refuses
-the ledger entry — a reviewer reproduced it (`91,365 -> 94,746 B … REFUSED`, exit 2, on a 3,381 B
-entry) — and the first draft's "in whichever commit the build session finds cleanest" would have had
-the build session commit past its own gate on day one. It also keeps the policy file separable from
-the code. Seven commits is refuted (§3.1); one is acceptable if the ledger entry is in it.
+**D4 — Commit shape and ORDER.** *Ratified at S146 as: two commits, in this order, **each carrying a
+`CHANGELOG.md` line.*** **(1)** `feat(starter-kit): ship the context-budget gate — token ceilings, class
+totals, and the repairs beneath them (read-set budgets, 4 of 4)` — the tool, the scrubbed test module,
+the `bin/tests.sh` wiring, the seed, **and the upstream `CHANGELOG.md` entry (D6/D8)**; **(2)**
+`chore(budget): declare this repository's own context budget` — the canonical root config, the
+`.gitignore` comments, **and one bullet appended to that same entry naming the config** (the #78
+precedent: its entry was edited across two of its three commits, `2897983` +3,073 B then `2c30d0f`
++220 B). No fork session or BL number in either message. **The second draft's reason for the order was
+refuted at S146 and is replaced.** It said the gate would pass commit (1)'s entry and refuse it once the
+config existed. Measured in a clean clone, `--precommit` by hand **exits 3** on commit (1) staged
+against `cea3068` with the worktree at commit (1) — no config, nothing evaluated — and **exits 2** on
+the same index with the candidate present (`91,365 -> 92,471 B` for a 1,106 B entry; `94,746` for a
+3,381 B one); on commit (2) it **exits 2** because of its own ledger bullet (0 without it). The order
+buys nothing the unwired gate can see. What forces a ledger line on **both** commits is upstream's own
+`.githooks/pre-commit`, which refuses a content commit without `CHANGELOG.md` co-staged (FM #27) — and
+without one, commit (2) would be an undocumented commit that Phase 0 step 6 reports and the trimmer's
+`P1_UNDOCUMENTED` check refuses on. What the two-commit shape still buys is separability: the policy
+file apart from the code. Seven commits is refuted (§3.1). *Alternative, also measured:* one commit
+with the entry inside it — by hand the gate exits 2 on it; the policy file and the code are no longer
+separable.
 
 **D5 — Version.** Not PR 4's to decide. PRs 1–3 were unversioned feature PRs onto `read-set-budgets`;
 the version event, if any, belongs to `read-set-budgets` → `main`. The tool's own `VERSION` moves
@@ -417,8 +496,13 @@ no `HANDOFFS.md` receipt* (#76 `5b92b2f` +6,342 B and #78 `2897983` +3,073 B did
 newest receipt is its own S12). **Observation for the operator, not a PR 4 task:** #77 (the trimmer)
 left **no** upstream ledger entry — `grep -i methodology_trim` on `cea3068:CHANGELOG.md` finds one
 line, `:124`, which `git blame` puts in PR 1's entry (`5b92b2f`); `grep -i trimmer` finds nothing;
-`git show --stat 56997af -- CHANGELOG.md` is empty. That is FM #27 on the upstream ledger; a one-line
-backfill could ride with PR 4's entry or the deferred docs PR.
+`git show --stat 56997af -- CHANGELOG.md` is empty. That is FM #27 on the upstream ledger — and one no mechanism will surface: the frontier-based
+reconcile (Phase 0 step 6, and the trimmer's `P1` check) looks only past the last commit that touched
+`CHANGELOG.md`, which is `2c30d0f` (PR 3), and `56997af` sits below it. **Decision, ratified at S146:
+the #77 backfill is NOT in PR 4.** It is listed under *After D* (§5) with its shape — its own dated
+`Backfilled (reconcile-on-read)` heading in its own commit; PR 4's diff stays about the gate. Also for
+the record: #78's entry was edited across two of its commits (`2897983` +3,073 B, `2c30d0f` +220 B),
+the precedent D4's second commit follows.
 
 **D7 — `starter-kit/FRAMEWORK_LEARNINGS.md`: budget it?** *Recommend: yes, port the fork's row* —
 the first draft said no on a reason a reviewer refuted. The fork's `bytes_per_token: 2.8897` was
@@ -432,32 +516,68 @@ measurement method, and the caveat that 73,728 B sits 1,486 B above the one-read
 density. **No `max_tokens`**, by the tool's own on-demand rule.
 
 **D8 — The upstream `CHANGELOG.md` entry, as a checklist** (the first draft pointed at two commits and
-gave no format): heading `### <UTC date of the commit> · [ad hoc] <title>` — one source tag, `[ad hoc]`
-matching #76/#78 (the fork commits were BL-tagged; BL numbers do not exist upstream); prepended
-directly under the `---` at `cea3068:CHANGELOG.md:36`, above PR 3's entry; bullets in the #76/#78 shape
-(**Change** / **What it buys** / **What changes for adopters** / **Verification**); no `Model:` bullet
-(upstream's ledger excludes it, `:144`). **Before committing anything that lands upstream, run
-`grep -nE '\bS[0-9]{1,3}\b|BL-[0-9]+'` over every added or changed file** — the test module has four
-hits today (D9); the tool has none; the candidate config has none.
+gave no format; the second draft's date rule and bullet shape were refuted at S146 and are replaced):
+heading `### <date> · [ad hoc] <title>` where `<date>` is the **author date of commit (1) in the
+author's local zone**, as the ledger's own entries are dated — #78's (`cea3068:CHANGELOG.md:38`) reads
+2026-09-02 for a commit authored 20:33 −04:00, i.e. 00:33Z the next day, and #76's (`:75`) kept its
+2026-08-28 author date through a 2026-09-02 rebase — never re-dated on rebase; one source tag,
+`[ad hoc]`, matching #76/#78 (the fork commits were BL-tagged; the fork's `BACKLOG.md` does not exist
+upstream, though `BL-` identifiers already appear in 16 files there via #76/#77); prepended directly
+under the `---` at `cea3068:CHANGELOG.md:36`, above PR 3's entry; bullets in the shape #76 and #78
+actually use — **Change:** / **What it buys** / one or more narrative sentence-headed bullets /
+**Scanner:**, plus **Verification:** and **Provenance:** as #76 carries (`:138`, `:141`; #78 carries
+neither) — *What changes for adopters* is Appendix B's section, not a ledger bullet; no `Model:` bullet
+(upstream's ledger excludes it, `:144`). **Before committing anything that lands upstream, grep the
+ADDED LINES of the diff, not the whole files:** `git diff cea3068 pr4/… | grep '^+' | grep -v '^+++' |
+grep -nE '\bS[0-9]{1,3}\b|BL-[0-9]+'` must print nothing — `CHANGELOG.md` (65 matching lines) and
+`bin/tests.sh` (11) already carry such identifiers on `cea3068`, which PR 4 neither touches nor may
+scrub. Today the only source of hits is the test module's four (D9); the tool, the candidate config,
+the seed's six added lines and the `.gitignore` comments have none. Apply the same regex to both commit
+messages.
 
 **D9 — Scrub the four fork-relative identifiers in the test module.** *Recommend: yes.* `BL-38` (`:8`,
 `:288`) → *"the 2026-08-15 `calibrate()` repair"*; `S129` (`:561`) and `S119` (`:613`) → their dates
-(2026-08-30, 2026-08-27). #76/#77 already carry S-numbers upstream (35 in `FRAMEWORK_LEARNINGS.md`,
-5 in the trimmer), so this is a consistency choice, made visibly. Fork-side follow-on: back-port the
+(2026-08-30, 2026-08-27). #76/#77 already carry such identifiers upstream — by D8's regex on `cea3068`,
+`FRAMEWORK_LEARNINGS.md` has 50 matches on 37 lines (42 S-numbers, 8 `BL-`) and `methodology_trim.py`
+28 on 23 (6 S-numbers, 22 `BL-` across BL-9/27/28/32/36/41/52); the second draft's 35 and 5 were line
+counts under a narrower, unstated regex — so this is a consistency choice, made visibly, and a weaker
+one than it read. Fork-side follow-on: back-port the
 four scrubbed lines so the two copies agree.
 
-**D10 — The maintainer's numbers.** Three values in the candidate are labelled **PROPOSAL** in their
-`_` keys and in Appendix B: the `CLAUDE.md` pin (D2), the two ledger ceilings (D1), and the
-`SAFEGUARDS.md` pin that puts all headroom debt on `SESSION_RUNNER.md`. The `FRAMEWORK_LEARNINGS.md`
-ceiling is a fourth. The PR body says they are his.
+**D10 — The maintainer's numbers.** **Four** values in the candidate are labelled **PROPOSAL** in their
+`_` keys and listed in Appendix B: the `CLAUDE.md` pin (D2), the two ledger ceilings (D1, one decision),
+the `SAFEGUARDS.md` pin that puts all headroom debt on `SESSION_RUNNER.md`, and the
+`FRAMEWORK_LEARNINGS.md` ceiling (D7). **Two more thresholds are inherited rather than proposed and,
+since S146, labelled so they move the same way:** `read-set.warn_bytes` 51,000 — inert while the class
+is over (`over` shadows `warn`; the class arm in `precommit()` reads only the ceiling), so it informs
+nobody until the pair is under 56,750 B — and `CLAUDE.md.max_lines` 200. `calibrate_against` now
+carries its own `_` key; `fixed_harness_tokens` is read by nothing in the tool and is carried for seed
+parity, and its `_` says so. **`--calibrate` is the maintainer's step after merge; Phase B does not run
+it.** The PR body says all of them are his.
+
+**D11 — What the fork does the day PR 4 merges.** *Ratified at S146: the fork keeps its own root
+config.* Its ceilings and narrative are its own (the same 65,536 B on ledgers now at 202,279 B and
+159,483 B; a `CLAUDE.md` pin against an 11,368 B file), and nothing changes for the fork on merge day —
+its `.githooks/pre-commit` does not chain the gate either. The fork-side follow-ons are fork commits made
+**after Phase D and before the next upstream sync**: the D9 back-port of the four scrubbed lines, and
+aligning the fork's `bin/tests.sh:263-266` wiring comment with the ported block (§3.4). That sync will
+conflict add/add on `.context-budget.json` (fork 29,813 B vs upstream's candidate) and on
+`tools/test_context_budget.py`, plus one `bin/tests.sh` hunk — expected, and resolved by keeping the
+fork's config and taking upstream's test module and comment. §3.7's *"replaced by Appendix A"* row now
+says which repository. *Alternative:* the fork adopts Appendix A — red on every ledger commit and
+mis-pinned on `CLAUDE.md` from day one.
 
 ---
 
 ## 5. Phases — each one session, each closing at its own STOP
 
-**Phase A — this plan. ✅ DONE at S145.** *Verification:* the eight-agent adversarial review named in
-the header, on the frozen draft `5394079`; every refutation re-derived by this session before being
-adopted. *Surface:* this machine; it cannot verify the maintainer's environment (§3.2). STOP.
+**Phase A — this plan. ✅ DONE at S145; ratified at S146.** *Verification, runnable:* `git cat-file -e
+5394079 && git cat-file -e 29054c7 && git cat-file -e 67982cc; echo $?` → 0 (the frozen draft, the
+repaired draft and the close-out all exist); `git diff --stat 5394079 29054c7 -- 'docs/planning/pr4-*'`
+→ 2 files changed, 517 insertions, 326 deletions (the round-1 repair is real, not a re-label); the S145
+receipt in `HANDOFFS.md` and the S146 ratification record in §4. *Verification, not a command:* the two
+adversarial rounds named in the header, every refutation re-derived before adoption. *Surface:* this
+machine; it cannot verify the maintainer's environment (§3.2). STOP.
 
 **Phase B — Build PR 4 on `cea3068`, verify, do not push.** One session.
 
@@ -466,15 +586,16 @@ refs/remotes/upstream/read-set-budgets:refs/heads/read-set-budgets`. A bare `git
 this repository does **not** work: it clones local branches only, so `cea3068` is unreachable and
 fork fixtures are reachable — a reviewer measured both (`git cat-file -t cea3068` → *not a valid
 object*, `7a71df0` → *commit*). **Prove fixture unreachability per clone**, as S142 did: `git cat-file
--t` on `020ba3f`, `7a71df0`, `e02881a`, `e5cdc66` each fails, and `ls docs/archive/` is empty. Never a
+-t` on `020ba3f`, `7a71df0`, `e02881a`, `e5cdc66` each fails, and `docs/archive/` does not exist. Never a
 worktree of this repo, whose `bin/tests.sh` mutates live ledgers. Then: branch `pr4/context-budget-gate`
 from `cea3068`; `git show main:starter-kit/context_budget.py >` the tool (mode 100755); copy
 `tools/test_context_budget.py` and apply D9; insert the §3.4 block after `:244`; apply the seed's +6
-lines; write the D8 ledger entry; **commit (1)**. Then copy
+lines; write the D8 ledger entry; **commit (1)** (subject in D4). Then copy
 `docs/planning/pr4-candidate.context-budget.json` to `.context-budget.json` **after re-running
 `git cat-file -s` on `CLAUDE.md`, `SESSION_RUNNER.md`, `SAFEGUARDS.md` at the base and confirming the
 pins still equal the sizes** (if the base moved, re-derive; a stale pin *below* the new size turns a
-ratchet into a red row on arrival); add the `.gitignore` comments; **commit (2)**. Write
+ratchet into a red row on arrival); add the `.gitignore` comments and append the one-bullet ledger
+line naming the config to PR 4's entry (D4); **commit (2)**. Do not run `--calibrate` (D10). Write
 `docs/planning/pr4-read-set-budgets-body.md` (the series' recording precedent: pr1/pr2/pr3 bodies)
 with the body as it will be submitted and a status header that Phases C and D update from server
 reads.
@@ -482,18 +603,25 @@ reads.
 *DONE looks like — every figure taken from the tree that will be pushed, after the last edit:*
 `git rev-parse pr4/…:starter-kit/context_budget.py` = `c5ff15e5…`; the test module's diff against
 `main:tools/test_context_budget.py` touches exactly the four D9 lines; `python3
-tools/test_context_budget.py > u.log 2>&1; echo $?` → 0 and `Ran 116 … OK (skipped=2)`; `--selftest
+tools/test_context_budget.py > u.log 2>&1; echo $?` → 0 and `Ran 116 … OK (skipped=2)` (the two skips are the machine-dependent pair; the fork-machine run that exercises them is recorded in §3.2, not repeated in the clone); `--selftest
 > s.log 2>&1; echo $?` → 0, `grep -cE '^\s*PASS' s.log` 52, `grep -cE '^\s*FAIL' s.log` 0; the bare run
 → exit 2 = BREACH, expected, and the §3.3 rows **with `CHANGELOG.md` re-measured after the D8 entry
 landed** (its row grows by the entry's size — state the number); the §3.3 `--precommit` matrix
-reproduced (13 cases); **`--precommit` run with each PR commit's tree staged against its parent, and
-the exit recorded for each** — commit (1)'s ledger entry passes only because commit (2) does not yet
-exist, and the body says so; `bin/tests.sh` on a pristine control clone **and** on the branch, run to
+reproduced (13 cases); **`--precommit` run by hand with each PR commit's index staged against its parent, the exit read bare
+and recorded for each** — measured at S146: commit (1) with the worktree at commit (1) (no config) →
+**exit 3**, nothing evaluated; the same index with the candidate present in the worktree → **exit 2**,
+`CHANGELOG.md 91,365 -> <after> B ceiling 65,536 B`; commit (2) against commit (1) → **exit 2** on its own
+ledger bullet (0 without it). The body says so: the gate this PR ships refuses the PR that ships it, by
+hand, and is not wired; `bin/tests.sh` on a pristine control clone **and** on the branch, run to
 their summaries, rows diffed: one added row, zero flips, both 1 failure = Test 9; `bin/check-links`,
 `bin/check-learnings`, `bin/check-handoff`, `bin/check-handoff --all` each **0**, read bare; `git
-status --porcelain` empty after deleting the history file the bare run created; `git diff --stat
-cea3068 pr4/…` lists exactly the §3 files; `grep -nE '\bS[0-9]{1,3}\b|BL-[0-9]+'` over the added
-and changed files → 0 hits. **Fix-round discipline (S142's precedent):** after any edit that follows a
+status --porcelain` empty after deleting `.context-budget-history.jsonl` — the bare and `--json` runs
+create it on the first run and it reappears on every later one, so delete it last; `git diff --stat
+cea3068 pr4/…` lists exactly seven files — the six of §3.1–3.6 plus `CHANGELOG.md` (D8);
+`git diff cea3068 pr4/… | grep '^+' | grep -v '^+++' | grep -nE '\bS[0-9]{1,3}\b|BL-[0-9]+'` prints
+nothing — the check is over **added lines**, because `CHANGELOG.md` (65 lines) and `bin/tests.sh` (11)
+already carry such identifiers on `cea3068` and PR 4 may not scrub them; the same regex over both
+commit messages (`git log -2 --format=%B`) prints nothing. **Fix-round discipline (S142's precedent):** after any edit that follows a
 measurement, re-run the suite on a *fresh* clone of the fixed tree; one adversarial self-review of the
 frozen branch before STOP; every Appendix B number re-derived from `git rev-parse <branch>^{tree}`.
 
@@ -508,7 +636,10 @@ in this repository's own worktree. **STOP.**
 **Phase C — Push the branch and open the PR. REQUIRES THE OPERATOR'S EXPLICIT GO-AHEAD; approving this
 plan is not it.** One session. Record the claim in this fork's `CHANGELOG.md` **before** acting (a push
 and a PR leave no commit here). Re-check `git rev-parse pr4/…^{tree}` equals the tree Phase B measured;
-push to `origin`; `gh pr create --repo KJ5HST/methodology --base read-set-budgets` with the body
+push to `origin`; after the push, `git fetch origin && git rev-parse origin/pr4/context-budget-gate^{tree}`
+equals that tree, and once the PR exists `gh pr view --json headRefOid` equals `git rev-parse
+pr4/context-budget-gate` (the read-back the round-1 repair dropped, restored at S146); `gh pr create
+--repo KJ5HST/methodology --base read-set-budgets` with the body
 finalised from Phase B's numbers; read back `gh pr view --json state,baseRefName,mergeable,
 mergeStateStatus,files` — OPEN, `read-set-budgets`, MERGEABLE, the §3 file list; `upstream/main`
 untouched; update the body file's status header from those reads. *Surface:* GitHub. **What it cannot
@@ -516,16 +647,22 @@ enforce:** MERGEABLE is server-computed against the base at that moment; nothing
 maintainer's review or his machine. **STOP.**
 
 **Phase D — Merge, on its own go-ahead.** One session. Record the claim in this fork's `CHANGELOG.md`
-first. `gh pr merge --merge` (never squash: #76/#77/#78 are all two-parent, and a squash breaks the
-ancestry `read-set-budgets` → `main` will later carry); `gh pr merge` can print nothing — read
+first. `gh pr merge --merge` (never squash: #76/#77/#78 are all two-parent — measured, `46b56fd`, `907a696`, `cea3068` — and a
+squash is expected to break the ancestry `read-set-budgets` → `main` will later carry, an inference from
+S144's gotcha, not a measurement); `gh pr merge` can print nothing — read
 `gh pr view --json state,mergeCommit` back; `tree(<merge>) == tree(<head>)`; `git ls-remote --heads
 upstream` shows `main` unchanged and `read-set-budgets` at the merge sha; `gh pr list --state open`
 empty; the tool's blob read off the merged branch; the body file's header updated. *Surface:* GitHub,
 same limits as C. **STOP.**
 
-*After D, outside this plan:* `read-set-budgets` → `main` (clears Test 9; the version decision), the
-deferred documentation PR, the D9 fork back-port, dragon 3's mitigation test, and the three adopters'
-`bin/sync`.
+*After D, outside this plan:* `read-set-budgets` → `main` (expected to clear Test 9; the version decision);
+the deferred documentation PR; **the #77 ledger backfill (D6, not in PR 4)** — its own heading
+`### 2026-09-02 · [ad hoc] Backfilled (reconcile-on-read): undocumented commit 56997af (PR #77, merged
+907a696) — the ledger trimmer`, in its own `docs(changelog): backfill …` commit per `SESSION_RUNNER.md`
+Phase 0 step 6, and written deliberately, because the frontier-based reconcile can never surface it
+(`56997af` sits below the frontier `2c30d0f`); the fork-side follow-ons of D11 (the D9 back-port, the
+`bin/tests.sh` comment alignment, the add/add conflicts on the next sync); dragon 3's mitigation test;
+the maintainer's `--calibrate` (D10); and the three adopters' `bin/sync`.
 
 ---
 
@@ -557,7 +694,7 @@ holds this plan adds the plan's own mentions):
 
 Consumers of the root `.context-budget.json` other than the tool, on `cea3068`: the dashboard
 recognises the file as framework-installed through its per-file signature entry
-(`starter-kit/methodology_dashboard.py:498-508` upstream, since #71) and an exclusion tuple (`:361`) —
+(`starter-kit/methodology_dashboard.py:508-523` upstream — the tool's own `context_budget.py` entry is `:498-507` — since #71, `b5be407:479`) and an exclusion tuple (`:360-361`) —
 the fork's `_CONTEXT_BUDGET_JSON_SIGNATURES` symbol the first draft named **does not exist upstream** —
 and upstream's own comment on that entry (`:509`) says it is *"Structurally unreachable today"* for
 scoring, so it reads nothing and scores nothing. `bin/tests.sh` copies the **seed** into scratch projects,
@@ -574,34 +711,48 @@ never the root file. No other reader.
    fresh clone (`core.hooksPath` unset) it **installs** `.git/hooks/pre-commit` exec'ing
    `<root>/context_budget.py`, which lives in `starter-kit/` here, and every subsequent commit fails
    with `can't open file`; recover with `rm .git/hooks/pre-commit`. With `core.hooksPath=.githooks`
-   set (BOOTSTRAP Step 10) it declines. The gate is **measuring only** here until someone chains it
+   set (BOOTSTRAP Step 10) it declines — because a `pre-commit` that is not ours already exists there
+   (the FM #27 ledger gate), not because of the setting itself; a `hooksPath` pointing at an empty
+   directory would be installed into. The gate is **measuring only** here until someone chains it
    into `.githooks/pre-commit` — governing-plan dragons 1 and 2, answered in Appendix B as a
    disclosure, not a mechanism.
 3. **With the ledgers declared (D1), a wired gate refuses every close-out until the appended file is
    under 65,536 B** — and the trimmer does not fire until 196,608 B. Measured both ways.
-4. **The PR's own ledger entry is such a commit.** D4's order exists for this; the body says it.
-5. **Bare and `--json` runs append to `.context-budget-history.jsonl`; `--precommit` does not evaluate
-   `structure`.** Measure in the clone; delete the history file before `git status` is a criterion;
+4. **Every PR 4 commit is such a commit** — both carry a ledger line (D4), and by hand the gate exits 3
+   before the config exists and 2 after. The body says it.
+5. **Bare and `--json` runs create `.context-budget-history.jsonl` on the first run and append only when
+   the measurement changes — the file reappears on every later run; `--precommit` evaluates neither
+   `structure` nor `max_lines`.** Measure in the clone; delete the history file before `git status` is a criterion;
    never run a bare measurement in this repository's worktree while `bin/tests.sh` runs.
 6. **The two skipped tests may run on the maintainer's machine and fail for non-defect reasons** (§3.2).
    The body names both, the three causes, and the diagnosis.
 7. **Do not port the fork's config or its narrative.** It pins `CLAUDE.md` at 18,600 B against an
    11,368 B file and cites S90/S129/BL-37; every such sentence is false on the target tree.
 8. **The pins are true of `cea3068` only** (§5 Phase B). The partition numbers (41,364 / 15,386 /
-   56,750) move only if `SAFEGUARDS.md` does.
+   56,750) move if `SAFEGUARDS.md` does, if `read_cap_tokens` changes, or if the `SAFEGUARDS.md` pin (a
+   PROPOSAL) is moved.
 9. **Keep mode 100755 on the tool.** `git apply` warns on a 644 target; the suite asserts
    `context_budget.py is executable`.
-10. **In `zsh`, `$c:path` is a history modifier, not a git revision.** Write `${c}:path`. It silently
-    emptied two enumerations this session; one reached the frozen draft.
-11. **Read every exit code bare on the next line.** `producer | grep -c` reports grep's exit and, under
-    `pipefail`, can report a failed pipeline on a match. §8's commands redirect to files first.
-12. **Test 9 is red on both trees and stays red** until `read-set-budgets` reaches `main`; the limit
+10. **In `zsh`, `$c:starter-kit/…` is a `:s` substitution modifier on `$c`, not a git revision.** It
+    rewrites the argument to `<c>/context_budget.py`; `git rev-parse` then exits 128, prints `fatal:
+    ambiguous argument` on stderr and echoes the mangled path on stdout, so a trailing `| grep <blob>`
+    matches nothing. Loud on stderr; it looks silent only when stderr is discarded or only the final
+    grep is read. Write `${c}:path`. It mangled two enumerations at S145; one reached the frozen draft.
+11. **Read every exit code bare on the next line.** A pipeline reports only its last stage's status, and
+    under `pipefail` an early-exiting consumer (`grep -q`, `head`, `grep -m1`) closes the pipe, the
+    producer dies of SIGPIPE (141) and the pipeline reports failure **on a match**; `grep -c` reads to
+    EOF and is immune to that inversion but exits 1 on zero matches. §8's commands redirect to files
+    first.
+12. **Test 9 is red on both trees and is expected to stay red** until `read-set-budgets` reaches `main`
+    (it also needs the network and `gh` auth); the limit
     lives in `bin/sync`'s `read_github()` (`:80-86`), not in the branch model.
 13. **`gh pr merge` can succeed silently** (S144). Read state back; compare trees.
 14. **Dates cross midnight in UTC.** #78 merged at `2026-09-03T02:04Z` in a 2026-09-02 local session.
 15. **The PR 1 body wrote *"The remaining 10,831 B is what the later PRs on this branch are for."***
     No later PR shrank the pair; PR 4 makes the 10,831 B **refuse to grow**. The body must not imply
     the pair is fixed — it is exactly as over as PR 1 left it, and now says so out loud.
+16. **Two units answer to "lines".** `wc -l` and the tool's count differ by one on every LF-terminated
+    file (§2.2); a fixture described as 304 lines prints `305 ln`. Name the unit.
 
 ---
 
@@ -688,14 +839,15 @@ new = `main:`, seed = `upstream/read-set-budgets:starter-kit/context-budget.json
 # SESSION_NOTES.md: '## ACTIVE TASK\nsomething\n\n## What Session 1 Did\n' + 300 lines of (W-1) 'x' + '\n'
 # W=200 → 60,048 B: both exit 1, stdout differs only in the row's unit (ln → B)
 # W=243 → 72,948 B: same.   W=245 → 73,548 B: old exit 1 `ok`; new exit 2 `≈25,101 tok / 25,000 tok over`
+# the flip is at 73,253 B exactly (≈25,001 tok): 73,250–73,252 B still `ok`, exit 1 — int() truncates, the compare is strict
 ```
 
 ---
 
 ## Appendix A — the candidate canonical root config
 
-Shipped as [`pr4-candidate.context-budget.json`](pr4-candidate.context-budget.json) (14,200 B; second
-draft) so the build session copies a file rather than transcribing one. Its shape, without the `_` prose:
+Shipped as [`pr4-candidate.context-budget.json`](pr4-candidate.context-budget.json) (17,194 B; third
+draft, S146) so the build session copies a file rather than transcribing one. Its shape, without the `_` prose:
 
 ```json
 {
@@ -721,8 +873,10 @@ draft) so the build session copies a file rather than transcribing one. Its shap
 }
 ```
 
-Every `_` key in the shipped file states the derivation of the number beside it, names the command
-that re-derives it, and marks the four PROPOSAL values (D10). The calibration constants are labelled
+Every number's `_` key in the shipped file states its derivation and the command that re-derives it
+(`calibrate_against` gained its key at S146), marks the four PROPOSAL values, and labels the two
+inherited thresholds that move the same way — `read-set.warn_bytes` 51,000 and `CLAUDE.md.max_lines`
+200 (D10). The calibration constants are labelled
 **inherited from the seed, not measured on this repo**, with `--calibrate` as the remedy — which
 proposes and writes nothing.
 
@@ -742,9 +896,18 @@ proposes and writes nothing.
 > | `starter-kit/SESSION_RUNNER.md` | 52,195 | 41,364 | over by 10,831 |
 > | `starter-kit/SAFEGUARDS.md` | 15,386 | 15,386 | at ceiling |
 > | read-set pair | **67,581** | **56,750** | **over by 10,831** — exactly what PR 1's table left |
+> | `CHANGELOG.md` | 91,365 | 65,536 | over by 25,829; ≈37,028 tok at 2.4674 B/tok |
+> | `HANDOFFS.md` | 70,182 | 65,536 | over by 4,646; ≈29,677 tok at 2.3648 B/tok |
 >
-> The bare run exits 2 and prints that. `--precommit` refuses any commit that grows either file and
-> passes any that shrinks one (verified: +2 B refused; −5,000 B passed while still over). **Nothing on
+> The bare run exits 2 and prints more than the pair: with the two ledgers declared it also shows
+> `CHANGELOG.md 91,365 B / 65,536 B over` and `HANDOFFS.md 70,182 B / 65,536 B over`, and each of those
+> fires a second, token-denominated line — ≈37,028 and ≈29,677 tokens against the 25,000-token read cap,
+> at 2.4674 and 2.3648 B/token. Those two densities were measured on the fork's copies of the same-format
+> ledgers, not on this tree; the config's `_` keys say so and give the doubled-file method to re-measure
+> them here. Five red lines on day one, three files. `--precommit` refuses any commit that grows either
+> file in bytes (or, for a whole-read class, in estimated tokens) and passes any that shrinks one
+> (verified: +2 B refused; −5,000 B passed while still over); line-count and structure checks run in the
+> bare and `--json` modes only. **Nothing on
 > this branch shrinks the pair; this PR makes it stop growing and say why.**
 >
 > ## The tool refuses to run without a config, so this PR provisions one
@@ -753,37 +916,60 @@ proposes and writes nothing.
 > — at any root without `.context-budget.json`; that is unchanged. The seed adopters receive reads red
 > here for reasons unrelated to this series (`CLAUDE.md` is 59,168 B against the seed's 28,000). So the
 > config in this PR **pins** `CLAUDE.md` at its arrival size, **derives** the read-set ceiling from the
-> read cap (25,000 tok × 2.27 B/tok = 56,750, computed at run time), and **declares** the two ledgers
+> read cap (25,000 tok × 2.27 B/tok = 56,750, computed at run time — 25,000 is `read_cap_tokens` in the
+> config; 2.27 is the tool's `MIN_BYTES_PER_TOKEN` floor at `starter-kit/context_budget.py:68`, a
+> constant, not a key, so a different floor is a tool edit), and **declares** the two ledgers
 > Phase 0 reads and the Learnings table your `bin/check-learnings` already cites this file for.
 >
-> ## Four numbers in that config are proposals, and they are yours
+> ## Every ceiling in that config is yours; four are proposals rather than measurements
 >
 > 1. **`CLAUDE.md` pinned at 59,168 B** (growth refused, shrink passes). Alternative: the seed's
 >    28,000 / 34,000, which reads *over by 31,168* today.
 > 2. **`CHANGELOG.md` and `HANDOFFS.md` at 65,536 B** — the fork's ceiling, **not the trimmer's**:
 >    #77's `methodology_trim.py` triggers at 196,608 B and reports *trigger does not fire* on both
 >    ledgers today (91,365 B and 70,182 B). Bringing either under this ceiling is
->    `python3 starter-kit/methodology_trim.py --file <ledger> --budget-bytes 65536` (dry-run first).
+>    `python3 starter-kit/methodology_trim.py --file <ledger> --budget-bytes 65536` (dry-run by
+>    default; add `--write`), `CHANGELOG.md` first — a `HANDOFFS.md` trim writes its own entry into
+>    `CHANGELOG.md`, which the gate refuses while that file is over. Three things #77's trimmer does that
+>    the number alone does not say: it stops at **half** the budget (`BYTE_STOP_FRACTION` 0.5: 91,365 →
+>    30,920 B archiving 30 of 39 records; 70,182 → 26,891 B, 7 of 10), it appends one `CHANGELOG.md`
+>    entry per trim, and it refuses (`P1_UNDOCUMENTED`) on a tree with commits the ledger does not
+>    record — reconcile first. Its own `--check` names 56,750 B as the one-read cap, so 65,536 B sits
+>    above the number the sibling tool prints; the ceiling is a proposal for that reason too.
 >    Alternative: omit them and let the trimmer's number govern.
 > 3. **`SAFEGUARDS.md` pinned at 15,386 B**, so the whole 10,831 B of debt sits on `SESSION_RUNNER.md`.
 > 4. **`FRAMEWORK_LEARNINGS.md` at 73,728 B**, on-demand, no token ceiling — at its measured 2.8897
 >    B/tok that sits 1,486 B above the one-read cliff; the `_` key says so.
+> 5. **Two thresholds are inherited rather than proposed and move the same way:** `read-set.warn_bytes`
+>    51,000 B — ~10% under the derived total so the class warns before it refuses; inert while the class
+>    is over, which it is today — and `CLAUDE.md.max_lines` 200, `starter-kit/BOOTSTRAP.md:198`'s own
+>    *"roughly 200 lines"* applied to your `CLAUDE.md` (126 lines today; the tool counts 127; the bare run
+>    reports it, `--precommit` does not).
 >
 > The calibration constants are the seed's, labelled as such; `--calibrate` proposes replacements and
-> writes nothing. The 25,000-token cap is the number in the Claude Code Read tool's own refusal
-> message as of 2026-08; if your harness differs, set `read_cap_tokens` and every derived ceiling
-> follows.
+> writes nothing, and it is yours to run after merge — this PR does not run it. Until a fit is adopted,
+> `CLAUDE.md`'s token verdict is computed at the seed's 2.93 B/tok: 20,193 tok against a derived ceiling
+> of 59,168 / 2.27 = 26,065 clamped to 25,000 — silent, because the tool reports a clamp only on a
+> *declared* `max_tokens`; at the 2.27 floor the same file would read 26,065, over. The 25,000-token cap
+> is the number in the Claude Code Read tool's own refusal message (`File content (N tokens) exceeds
+> maximum allowed tokens (25000)`), first observed 2026-08-26 and re-confirmed 2026-09-03 on Claude Code
+> 2.1.259 — reproduce it by reading any over-cap file with an explicit `limit` that spans it; if your
+> harness differs, set `read_cap_tokens` and every derived ceiling follows.
 >
 > ## Day one, and what does not change
 >
 > - `python3 starter-kit/context_budget.py` exits 2 with the table above and creates
 >   `.context-budget-history.jsonl`, untracked (the fork tracks it; your call — the `.gitignore` comment
 >   explains). `--precommit`, `--selftest`, `bin/tests.sh` write nothing.
-> - **Nothing in your workflow changes unless you wire the hook.** `core.hooksPath` is local config;
+> - **Nothing in your workflow changes unless you wire the hook — except one added `bin/tests.sh` row**,
+>   which fails whenever the unit module fails (including the two machine-dependent tests under
+>   Verification). `core.hooksPath` is local config;
 >   `.githooks/pre-commit` is the ledger gate and this PR does not chain the budget into it. If you do
 >   chain it: with the ledgers declared, it refuses every commit that appends to a ledger until **that**
->   file is under 65,536 B — including this PR's own `CHANGELOG.md` entry, which is why that entry is
->   in the first commit and the config in the second. And the hook you would chain into documents
+>   file is under 65,536 B — including both of this PR's own commits, which each carry a `CHANGELOG.md`
+>   line because your `.githooks/pre-commit` requires one: run by hand, `--precommit` exits 3 on the
+>   first (no config yet) and 2 on the second. The gate this PR ships would refuse the PR that ships it;
+>   it is not wired, and this sentence is the disclosure. And the hook you would chain into documents
 >   `--no-verify` as its bypass; a budget check inside it inherits that bypass. This PR claims no
 >   enforcement.
 > - **Do not run `install-hook` at this root.** On a clone without `core.hooksPath` it installs
@@ -792,16 +978,17 @@ proposes and writes nothing.
 >   `core.hooksPath=.githooks` it declines.
 > - `SESSION_RUNNER.md` Phase 0 still never names the tool. Adding one line grows the capped file
 >   ~300 B. Not done here; your decision.
-> - The dashboard twins are untouched (the fork is 7 versions ahead; separate series).
+> - The dashboard twins are untouched (the fork is ten version labels ahead, `2.17.0` vs `2.10.7`; separate
+>   series).
 >
 > ## What changes for adopters who sync
 >
 > Exit codes are unchanged (`0/1/2/3`). On an unchanged seed config, two things differ:
 > (1) when nothing fires, a read-mandated row reports **bytes, not lines** (`305 ln / 400 ln ok` →
-> `60,048 B / 120,000 B ok`); (2) a read-mandated file at or above **73,250 B** (25,000 tok × the
-> seed's 2.93 B/tok) now gets a **derived token ceiling** the old tool never had, and goes `ok` →
-> `over`, exit 1 → 2, even under every byte and line ceiling the adopter declared — measured at
-> 73,548 B. Also new: ceilings may be declared in tokens (`max_tokens`); a `max_tokens` above the cap
+> `60,048 B / 120,000 B ok`); (2) a read-mandated file **above 73,252 B** — the first size whose
+> truncated estimate `int(bytes / 2.93)` exceeds 25,000 tokens is 73,253 B (≈25,001 tok) — now gets a
+> **derived token ceiling** the old tool never had, and goes `ok` → `over`, exit 1 → 2, even under every
+> byte and line ceiling the adopter declared — measured at 73,253 B and 73,548 B; 73,252 B still `ok`. Also new: ceilings may be declared in tokens (`max_tokens`); a `max_tokens` above the cap
 > is **clamped to the cap and reported as a config defect** — the clamp is never silent; the gate sizes
 > the **index** with `git cat-file -s` (the old path was 1 B short on LF, more on CRLF, and raised on
 > non-UTF-8 content); `precommit` gains a class-total arm; `calibrate` walks first-parent history,
@@ -813,10 +1000,15 @@ proposes and writes nothing.
 > Clean clone of `cea3068`. Unit module 116 run, OK, **2 skipped** — `TestFitGateEndToEnd`
 > (`tools/test_context_budget.py:330`), which needs *this repository's* session transcripts on the
 > running machine. **On yours they run if `~/.claude/projects/<your-checkout-slug>/*.jsonl` exists,
-> and they can fail for three reasons that are not the tool:** fewer than 4 sessions with usage
-> records, a `CLAUDE.md` that never changed size, or a negative fitted slope. If the new `bin/tests.sh`
-> row is red, run `python3 tools/test_context_budget.py -v 2>&1 | grep -A3 FitGate` and read which.
+> and they can fail for reasons that are not the tool:** fewer than 3 commits touching `CLAUDE.md`, fewer
+> than 4 transcripts with a usage record dated at or after the file's first recorded size, a `CLAUDE.md`
+> that was the same size at every usable session, a fitted slope ≤ 0, or opening context that never
+> varied (R² undefined). If the new `bin/tests.sh` row is red, run `python3 tools/test_context_budget.py
+> -v 2>&1 | grep -B1 -A1 AssertionError` — the tests capture `calibrate()`'s stdout, so its own
+> diagnosis (*"only N usable sessions — not enough to fit"*, *"no variation in CLAUDE.md size"*) appears
+> only inside the `AssertionError:` text; `grep -A2 FitGateEndToEnd` shows a `skipped` suffix naming the
+> missing directory. On the fork's machine both run and pass (recorded 2026-09-03).
 > `--selftest` 52 PASS / 0 FAIL. `bin/tests.sh` **115 passed / 1 failed** vs **114 / 1** on the
 > untouched base: one row added, zero status flips; the failure on both is Test 9 (`bin/sync
 > --source=github` reads `main`, where three manifest sources are absent until this branch merges).
-> `check-links`/`check-learnings`/`check-handoff`/`--all` 0/0/0/0.
+> `bin/check-links`, `bin/check-learnings`, `bin/check-handoff`, `bin/check-handoff --all`: 0/0/0/0.
