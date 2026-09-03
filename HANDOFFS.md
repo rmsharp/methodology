@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S140
+date: 2026-09-02
+status: pending
+active_task: **OPTION (C) — GIVE THE TRIMMER'S L1/L2/L3 TESTS SYNTHETIC FIXTURES SO THEY RUN ANYWHERE.** Operator chose it over guarding (A), shipping-104 (B), and extracting 652 KB of fork blobs (D). **Target: `tools/test_methodology_trim.py` 123/123 green in a `git clone --no-local --single-branch`, zero skips.** 19 tests currently fail there. **SHAPE, read before starting:** `TestL1` ALREADY uses a synthetic fixture — only its one `test_red_on_the_real_7a71df0_event` is coupled. `TestL2.setUp` needs only a CHANGELOG-shaped text with a **non-empty footer**; every test then synthesises its own operands. `TestL3.setUp` needs a `(before, after, shard)` record triple whose counts partition while one RETAINED record was edited — the property `7a71df0` supplied and which is trivially constructible. **⚠ THE AUTHORS CHOSE REAL FIXTURES ON PURPOSE** (*"a synthetic one tests the test"*) and that reasoning is respected, not overridden: a synthetic fixture must be **proved capable of failing**, so every converted test ships a mutation control showing it still kills the defect it names. **The declared-regen-field tests keep their real-artifact reasoning and stay guarded** — their point IS that the count really drifted. **MEASURE ONLY IN A CLEAN CLONE** (a worktree of the fork resolves `020ba3f`/`7a71df0` and lies). Payload on `pr2/ledger-trimmer` (`ff51d36`); dashboard half already green at 211/211.
+```
+
+```handoff
 session: S139
 date: 2026-09-02
 status: complete

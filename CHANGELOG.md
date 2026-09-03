@@ -206,6 +206,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S140 — claim: option (C), synthetic L1/L2/L3 fixtures for the trimmer suite
+
+**Ledger:** `CHANGELOG: pending` — set at claim; actions recorded here at Phase 3F.
+
+**Operator chose (C)** over guarding (A), shipping only the portable 104 (B), and extracting 652 KB of
+fork blobs as fixtures (D). (C) is the option that leaves upstream with real L1/L2/L3 coverage and
+makes the trimmer testable by adopters rather than only by this repository.
+
+**Target: `tools/test_methodology_trim.py` 123/123 in a clean clone, zero skips.** 19 fail there now.
+
+**The shape, established before starting rather than discovered mid-way:**
+- `TestL1` **already uses a synthetic fixture**; only `test_red_on_the_real_7a71df0_event` is coupled.
+- `TestL2.setUp` needs only a CHANGELOG-shaped text with a **non-empty footer** — every test then
+  synthesises its own operands from `self.z`.
+- `TestL3.setUp` needs a `(before, after, shard)` triple whose counts partition while one **retained**
+  record was edited. That is exactly the property `7a71df0` supplied, and it is constructible in a
+  few lines.
+
+**⚠ The authors chose real fixtures deliberately** — *"a synthetic one tests the test"* — and that
+reasoning is respected rather than overridden. Every converted test ships a **mutation control**
+proving the synthetic fixture still kills the defect the test names. The two declared-regen-field
+tests keep their real-artifact rationale and stay guarded: their whole point is that the live count
+really drifted by hand.
+
+**Measure only in `git clone --no-local --single-branch`.** A worktree of this fork resolves
+`020ba3f` and `7a71df0` and reports a suite far healthier than it is — the error that made S138's and
+S139's first numbers wrong.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S139 close-out — dashboard half GREEN; the trimmer half is 19 failures, not 4, and now a decision
 
 **Deliverable is split.** The dashboard half is **done**; the trimmer half turned out to be a
