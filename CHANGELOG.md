@@ -206,6 +206,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S147 — claim: Phase B of the PR 4 plan — build `pr4/context-budget-gate` on `cea3068`, verify, do not push
+
+**Authorization:** the operator's *"Item (1) of S146's handoff"*, given after the Phase 0 report:
+[`docs/planning/pr4-read-set-budgets-plan.md`](docs/planning/pr4-read-set-budgets-plan.md) §5 Phase B
+(`:599`), ratified at S146 (the §4 record, `:414`; D1–D11). **The built, verified, unpushed branch is the
+ONE deliverable** — a clean clone made only by the §8 R1 recipe, fixture unreachability proved per clone;
+two commits, each co-staging a `CHANGELOG.md` line (D4 as ratified); every DONE-list figure taken from the
+tree that would be pushed; `docs/planning/pr4-read-set-budgets-body.md` written in the series' precedent.
+**No push, no PR, no `--calibrate`, no `install-hook` at the clone root, no `bin/tests.sh` in this
+worktree, nothing outward-facing.** Phases C and D each keep their own go-ahead.
+
+**Reconciled at claim:** S146's receipt `commit:` slot named its last two commits by description; this
+commit names them — `a05e23a` (close-out) and `a5fa2ae` (`chore(history)`, `--no-verify`). `a5fa2ae` was
+the one commit above both ledger frontiers at Phase 0 (`git rev-list --count --no-merges a05e23a..HEAD`
+→ 1); S146's close-out entry already records it, so no backfill entry is owed and none is written.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F.
+
 ### 2026-09-03 · [ad hoc] S146 close-out — the PR 4 plan RATIFIED (D1–D11), after the second review round ran
 
 **Phase 3D/3F.** Deliverable: the ratified plan —

@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S147
+date: 2026-09-03
+status: pending
+active_task: **PHASE B OF THE PR 4 PLAN — BUILD `pr4/context-budget-gate` ON `cea3068`, VERIFY, DO NOT PUSH.** `docs/planning/pr4-read-set-budgets-plan.md` §5 Phase B (`:599`), ratified at S146 (§4 record, `:414`): a clean clone by the §8 R1 recipe only; two commits, each co-staging a `CHANGELOG.md` line (D4 as ratified); the DONE list measured on the tree that would be pushed; `docs/planning/pr4-read-set-budgets-body.md` written. Operator's words: *"Item (1) of S146's handoff"*. No push, no PR, no `--calibrate`, no `install-hook`; Phases C and D each keep their own go-ahead.
+```
+
+```handoff
 session: S146
 date: 2026-09-03
 status: complete
@@ -84,7 +91,7 @@ key_files: `docs/planning/pr4-read-set-budgets-plan.md:3` the RATIFIED status; `
 gotchas: **(1) "THE GATE PASSES COMMIT 1" WAS A MECHANISM STATED AS A FACT, AND IT SURVIVED TWO ROUNDS AND A RATIFICATION.** Run by hand without a config the tool exits 3 — it evaluates nothing, and "passes" is not a word for exit 3. Before sequencing commits around a check, list the hooks that fire on the target (`git config core.hooksPath`, `ls .githooks`) and their preconditions. **(2) THE FRONTIER RECONCILE IS BLIND BELOW THE FRONTIER.** `56997af` (PR 2's content commit) has no ledger line and never will be flagged: PR 3's ledger commit sits above it. Reconcile per PR after a merge (Learning #51). **(3) AGENTS DISAGREED 9 vs 10 ON THE DASHBOARD LABELS; the enumeration is the answer** (`2.15.2` was the one missed). Re-run any agent count you publish. **(4) THE PLAN IS 91,883 B ≈ 34k tokens — over the one-read cap.** Read it in sections. **(5) `AskUserQuestion` CAN COME BACK REJECTED WITH PARTIAL ANSWERS** when the operator wants clarification; the answered items were kept and re-confirmed in the second form rather than assumed. **(6) THE ROUND-2 REVIEWERS' `tree_status` EXPECTATION MUST NAME EVERY FILE THE SESSION MAY DIRTY** — I held all ledger edits until the self-review returned so their final check stayed meaningful. **(7) The two `.jsonl` go dirty from Phase 0 alone; commit them as `chore(history)`, never `git reset --hard`. `bin/tests.sh` in this worktree mutates the live ledgers — never edit `HANDOFFS.md` while it runs.** **(8) IN zsh, `$c:starter-kit/…` IS A `:s` MODIFIER** and the R2 loop prints `<sha>/` per row — loud on stderr, not silent (dragon 10, corrected).
 runtime_smoke: **THIS REPO SHIPS NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`.** Run bare in this worktree at close-out with both Learnings rows and both ledger edits in place: **304 passed / 1 failed / 0 skipped, exit 1 — the summary S145's close-out recorded, to the row.** The one failure is Test 9 (`--source=github`, three manifest sources not yet on `upstream/main`), pre-existing. **Checkers, each bare at close-out:** `check-handoff` **0**, `--all` **0**, `check-links` **0** (105 links / 23 files), `check-learnings` **0** (51 rows, 0 over 1,500 B). `python3 tools/test_context_budget.py -v` in this worktree: **116 run, OK, exit 0, both `TestFitGateEndToEnd` rows `ok`** — the fork-machine run §3.2 now records. The candidate config parses (`json.load`). **The plan's own numbers were re-measured by 45 + 18 agents in clean clones of `cea3068`, never in this worktree**; every refutation adopted was re-derived by an independent skeptic first, and four by me. **WHAT THIS DOES NOT EXERCISE:** the maintainer's machine, the network (Test 9), and Phase B itself — the plan is ratified, not executed.
 changelog_ref: CHANGELOG.md "2026-09-03 · [ad hoc] S146 close-out — the PR 4 plan RATIFIED (D1–D11), after the second review round ran" + the 2026-09-03 S146 claim entry
-commit: a78e404 (claim) + 98c6e10 (draft 3, --no-verify) + c2b3106 (draft 3 repaired, --no-verify) + this close-out + the chore(history) that follows it
+commit: a78e404 (claim) + 98c6e10 (draft 3, --no-verify) + c2b3106 (draft 3 repaired, --no-verify) + a05e23a (close-out) + a5fa2ae (chore(history), --no-verify) — reconciled by S147 per the spec's answer-slot rule
 ```
 
 Model: Claude Fable 5.1.
