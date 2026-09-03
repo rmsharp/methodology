@@ -206,6 +206,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S146 — claim: ratification of the PR 4 plan's decisions D1–D10
+
+**Authorization:** the operator's *"1"*, given after the Phase 0 report, selecting item (1) of S145's
+`next_steps`: *"the operator ratifies or amends D1–D10"* (`docs/planning/pr4-read-set-budgets-plan.md`
+§4, `:375-455`). **The ratified plan is the ONE deliverable** — each of the ten decisions answered by
+the operator and recorded in the plan's status line and §4, in the shape
+`docs/planning/read-cap-phase-c-plan.md:3` set at S115. Verification in service of it: the second
+adversarial review round S145 could not run (every agent hit the usage limit) runs first, against the
+frozen close-out tree `67982cc`, so the operator ratifies on checked premises. **No Phase B build, no
+push, no PR, nothing outward-facing.** Phase B remains its own session; Phases C and D each keep their
+own go-ahead.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F.
+
 ### 2026-09-03 · [ad hoc] S145 close-out — the PR 4 plan, delivered and adversarially reviewed
 
 **Phase 3D/3F.** Deliverable: [`docs/planning/pr4-read-set-budgets-plan.md`](docs/planning/pr4-read-set-budgets-plan.md)

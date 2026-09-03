@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S146
+date: 2026-09-03
+status: pending
+active_task: **RATIFY THE PR 4 PLAN'S D1–D10** — `docs/planning/pr4-read-set-budgets-plan.md` §4 (`:375-455`), each decision answered by the operator and recorded in the plan's status line and §4; the deferred second adversarial review round runs first against the frozen close-out tree `67982cc`. Operator's word: *"1"*, selecting item (1) of S145's `next_steps`. No Phase B build; nothing outward-facing.
+```
+
+```handoff
 session: S145
 date: 2026-09-02
 status: complete
@@ -84,7 +91,7 @@ key_files: `docs/planning/pr4-read-set-budgets-plan.md` — `:25` §0 the answer
 gotchas: **(1) IN zsh, `$c:starter-kit/file` IS A HISTORY MODIFIER, NOT A GIT REVISION** — it silently emptied two enumerations this session and one false finding reached the frozen draft; write `${c}:path`. `for spec in "300 200"; do f $spec` does not word-split in zsh either. **(2) A `git show <blob>` RUN INSIDE THE SCRATCH REPO WROTE AN EMPTY BASE FILE**, and every patch "failed" against it — hash the base blob before believing a patch does not apply. **(3) A `git clone --no-local` OF THIS FORK DOES NOT CARRY `cea3068`** (remote-tracking refs are not cloned) and DOES carry fork fixtures; use the R1 fetch recipe and prove `020ba3f 7a71df0 e02881a e5cdc66` absent. **(4) THE FORK TOOL EXITS 3 WITHOUT A ROOT CONFIG**; `install-hook` at the canonical root on a fresh clone INSTALLS a hook exec'ing a file that is not there (`can't open file` on every commit) — recover with `rm .git/hooks/pre-commit`. **(5) `--precommit` DOES NOT EVALUATE `structure`; bare and `--json` runs APPEND to `.context-budget-history.jsonl`.** **(6) THE TRIMMER'S TRIGGER IS 196,608 B — it does not fire on ledgers over the 65,536 B budget ceiling**; the remedy is `--budget-bytes 65536`. **(7) WORKFLOW AGENTS CAN FAIL ON THE ACCOUNT'S USAGE LIMIT AND RETURN null** while the task reports "completed" — read `<failures>` and the journal before treating a null as "nothing found". **(8) The two `.jsonl` go dirty from Phase 0 alone; `bin/tests.sh` in this worktree mutates the live ledgers — do not edit `HANDOFFS.md` while it runs.**
 runtime_smoke: **THIS REPO SHIPS NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`.** Run bare in this worktree at close-out with Learning #50 and both ledger edits in place: **304 passed / 1 failed / 0 skipped, exit 1** — the baseline the S13x receipts recorded, to the row. A first run BEFORE the S144 `commit:` reconcile read 302 / 3 / 0: its two extra failures (`L1 live ledger has an unreconciled commit: answer slot` and the `exactly-12,288 B record` edge, which builds its fixture from the live ledger) were that slot, and both PASS in the second run; diffed row for row, the only other label changes are counters my own entries moved (`Model:` bullets 36 → 37, the derived fixture id S145 → S146). Test 9 (`--source=github`) is the one failure and is pre-existing. **Checkers, each bare at close-out:** `check-handoff` **0**, `--all` **0**, `check-links` **0** (105 links / 23 files), `check-learnings` **0** (49 rows, 0 over 1,500 B). **The plan's own measurements, all in clean clones of `cea3068`, never in this worktree:** control suite 114/1; candidate v1 and v2 115/1, 115 shared rows, one added, zero flips; unit module 116 OK (2 skipped) in the clone and 116 OK (0 skipped) in this fork; `--selftest` 52/0; bare exit 2; 13 `--precommit` cases with exits read bare. **WHAT THIS DOES NOT EXERCISE:** the maintainer's machine (the two environment-dependent tests), the network (Test 9), and the second review round, which never ran.
 changelog_ref: CHANGELOG.md "2026-09-03 · [ad hoc] S145 close-out — the PR 4 plan, delivered and adversarially reviewed" + the 2026-09-02 S145 claim entry
-commit: 209dd51 (claim) + 5394079 (draft 1, --no-verify) + 29054c7 (draft 2, --no-verify) + e13ceda (chore, --no-verify) + this close-out
+commit: 209dd51 (claim) + 5394079 (draft 1, --no-verify) + 29054c7 (draft 2, --no-verify) + e13ceda (chore, --no-verify) + 67982cc (close-out) — reconciled by S146 per the spec's answer-slot rule
 ```
 
 Model: Claude Fable 5.1.
