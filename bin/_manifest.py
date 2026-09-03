@@ -42,6 +42,7 @@ DISTRIBUTION = [
     ("starter-kit/CLAUDE_TEMPLATE.md", "CLAUDE_TEMPLATE.md", TRACKED),
     ("starter-kit/BOOTSTRAP.md", "BOOTSTRAP.md", TRACKED),
     ("starter-kit/methodology_dashboard.py", "methodology_dashboard.py", TRACKED),
+    ("starter-kit/methodology_trim.py", "methodology_trim.py", TRACKED),
     ("starter-kit/context_budget.py", "context_budget.py", TRACKED),
     # seed-once root-files: created if absent, then adopter-owned (never clobbered)
     ("starter-kit/SESSION_NOTES.md", "SESSION_NOTES.md", SEED),

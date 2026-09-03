@@ -357,7 +357,8 @@ _VERSION_RE = re.compile(r'''^DASHBOARD_VERSION\s*=\s*["']([^"']+)["']''', re.MU
 # added two more non-markdown dests to bin/_manifest.py without this tuple being extended to
 # match — exactly the silent drift the paragraph above warns about, caught by the
 # machine-checkable cross-reference test below, not by inspection.
-FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py", "context_budget.py", ".context-budget.json")
+FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py", "methodology_trim.py",
+                              "context_budget.py", ".context-budget.json")
 
 # The markdown half of the same problem, and the mirror of the defect above. `bin/sync` also
 # installs 22 markdown files, which on its own satisfies detect_doc_only's corpus
@@ -476,6 +477,20 @@ _FRAMEWORK_FILE_SIGNATURES = {
             "def score_health",
             "def assess_risks",
             "https://github.com/KJ5HST/methodology",
+        ),
+        "min_hits": 2,
+    },
+    "methodology_trim.py": {
+        # Its own constant is TRIM_VERSION, not VERSION or DASHBOARD_VERSION, so it needs its own
+        # pattern rather than the scanner's: a shared _VERSION_RE would never match and the file
+        # would fall through to the signature path on every scan, which is the silent-skip defect
+        # the comment above this table describes.
+        "version_re": re.compile(r'''^TRIM_VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE),
+        "signatures": (
+            "LEDGERS",
+            "def classify_zones",
+            "def apply_regenerated",
+            "def build_pointer_block",
         ),
         "min_hits": 2,
     },

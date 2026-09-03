@@ -401,6 +401,14 @@ CHECKLIST_EXEMPT = {
     "CLAUDE_TEMPLATE.md": "template; the operating artifact is the adopter's CLAUDE.md instance",
     "BOOTSTRAP.md": "one-time setup guide, not a per-session operating artifact",
     "methodology_dashboard.py": "the scanner itself — scoring its own presence is circular",
+    "methodology_trim.py": "the ledger trimmer (S39'): sync installs it automatically alongside "
+                           "the scanner, so like FRAMEWORK_LEARNINGS.md its presence measures "
+                           "sync, not adoption — an adopter cannot fail to have it and cannot "
+                           "demonstrate anything by having it. Scoring it would also re-cut "
+                           "METHODOLOGY_MAX and move every already-compliant adopter's percentage "
+                           "for a change they did not make. Whether an adopter USES it is a "
+                           "different question, and the dashboard already answers it in the "
+                           "trim-trigger row rather than in the compliance checklist",
     "context_budget.py": "an elective size-governance gate, same class as the scanner above — "
                          "its presence indicates a pre-commit hook was installed, not that the "
                          "session-operating discipline this checklist measures was followed",

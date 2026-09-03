@@ -234,6 +234,14 @@ if python3 "$METHODOLOGY/tools/test_methodology_dashboard.py" >/dev/null 2>&1; t
 else
     fail "dashboard scoring unit tests failed"
 fi
+# The trimmer's own tests ran in NOTHING until this line. That was tolerable while the tool was
+# canonical-only; it stops being tolerable once `bin/sync` installs it at adopter roots, because
+# `bash bin/tests.sh` would stay green with a shipped executable arbitrarily broken.
+if python3 "$METHODOLOGY/tools/test_methodology_trim.py" >/dev/null 2>&1; then
+    pass "ledger trimmer unit tests green"
+else
+    fail "ledger trimmer unit tests failed"
+fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
 diff -q "$METHODOLOGY/tools/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null \
