@@ -361,13 +361,13 @@ FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py", "methodology_trim.py",
                               "context_budget.py", ".context-budget.json")
 
 # The markdown half of the same problem, and the mirror of the defect above. `bin/sync` also
-# installs 22 markdown files, which on its own satisfies detect_doc_only's corpus
+# installs 23 markdown files, which on its own satisfies detect_doc_only's corpus
 # disjunction (>= 3 doc files). Excluding only the scanner therefore FLIPPED the defect rather
 # than fixing it: a 148-LOC utility repo that correctly read `code` before sync read `doc-only`
 # after it, and lost a TRUE "No test infrastructure" risk. The old source cap had been masking
 # that; removing the cap's grip on synced repos exposes it.
 #
-# ALL 22 markdown dests are listed, TRACKED *and* SEED. Listing only the 18 TRACKED ones was
+# ALL 23 markdown dests are listed, TRACKED *and* SEED. Listing only the 19 TRACKED ones was
 # tried first, on the reasoning that a SEED is adopter-owned from creation (bin/_manifest.py) —
 # and MEASURED AGAINST A REAL `bin/sync` RUN it does not close the hole: the four seeds
 # (SESSION_NOTES/CHANGELOG/HANDOFFS/ROADMAP) plus the adopter's own README are 5 doc files, which
@@ -399,6 +399,7 @@ FRAMEWORK_INSTALLED_SOURCE = ("methodology_dashboard.py", "methodology_trim.py",
 # added to protect those four. Found by the pre-PR review; reproduced under both scanners.
 FRAMEWORK_DISTINCTIVE_DOCS = (
     "docs/methodology/ITERATIVE_METHODOLOGY.md",
+    "docs/methodology/FRAMEWORK_APPARATUS.md",
     "docs/methodology/HOW_TO_USE.md",
     "docs/methodology/workstreams/DESIGN_WORKSTREAM.md",
     "docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md",
@@ -425,7 +426,7 @@ FRAMEWORK_AMBIGUOUS_DOCS = (
 )
 
 # The full markdown dest set, kept as the union so the canonical drift test against
-# bin/_manifest.py keeps checking all 22 names rather than silently narrowing to a subset.
+# bin/_manifest.py keeps checking all 23 names rather than silently narrowing to a subset.
 FRAMEWORK_INSTALLED_DOCS = FRAMEWORK_DISTINCTIVE_DOCS + FRAMEWORK_AMBIGUOUS_DOCS
 
 # How many of the six ambiguous root names must co-occur to stand in for a docs/methodology/ path.

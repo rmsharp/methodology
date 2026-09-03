@@ -729,9 +729,9 @@ This distinction was discovered through a post-mortem analysis of repeated sessi
 
 **The root cause:** The methodology document explains WHAT to do and WHY. It does not provide a step-by-step procedure that an agent can execute mechanically. Agents understand concepts but skip steps. They read the flight manual and think they can fly — but they need a pre-flight checklist.
 
-#### The Three-Layer Hierarchy
+#### The Layer Hierarchy
 
-The solution is three layers of documentation, each serving a different purpose:
+The solution is three layers of documentation, each serving a different purpose — plus the flight manual's read-on-demand sibling:
 
 ```
 SESSION_RUNNER.md          ← Cockpit checklist (FOLLOW this)
@@ -744,7 +744,8 @@ Workstream prompts          ← Mission procedures (EXECUTE these)
 | Layer | Document | Read it to... | Length |
 |-------|----------|---------------|--------|
 | **Operating procedure** | `SESSION_RUNNER.md` (project root) | Know what to do RIGHT NOW, step by step | ~400 lines |
-| **Master framework** | `ITERATIVE_METHODOLOGY.md` | Understand WHY the steps exist | ~880 lines |
+| **Master framework** | `ITERATIVE_METHODOLOGY.md` | Understand WHY the steps exist | ~580 lines |
+| **Reference apparatus** | `FRAMEWORK_APPARATUS.md` | Fill in a session document, validate a scope, score a claim | ~330 lines |
 | **Workstream prompts** | e.g., `DEVELOPMENT_WORKSTREAM.md` | Know HOW to execute for a specific domain | Varies |
 
 The session runner is deliberately short. It fits in a single read. Every line is an imperative instruction, not an explanation. It does not teach — it directs.

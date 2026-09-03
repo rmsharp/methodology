@@ -35,6 +35,43 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-02 · [ad hoc] The flight manual sheds its apparatus into a read-on-demand sibling
+
+- **Change:** the six contiguous apparatus sections of `ITERATIVE_METHODOLOGY.md` — Knowledge
+  Accumulation System, Honest Accounting Framework, Scope Validation System, Verification
+  Hierarchy, Session Document Template, Performance Tracking — move **verbatim** into a new
+  distributed sibling, `FRAMEWORK_APPARATUS.md` → `docs/methodology/FRAMEWORK_APPARATUS.md`,
+  `TRACKED`. The manual keeps a *Reference Apparatus* stub naming all six and linking the file.
+  **Nothing was deleted.** The apparatus is reference, not theory — you open it to fill in a
+  session document, validate a scope or score a claim, not to understand why the phases exist.
+- **What it buys.** `ITERATIVE_METHODOLOGY.md` **68,240 → 55,976 B (−12,264, −18.0%)**, landing
+  **774 B under the 56,750 B one-read cap** it had been over. The sibling is **15,493 B** and is
+  read on demand. Manifest **26 → 27** rows.
+- **The extraction was the easy half; reachability was not.** The move updated every place that
+  *names* the six sections and, at first, no place that *invokes* what is in them — those
+  sections used to be reached by scrolling, so no link-based proof can see their loss.
+  `bin/check-links` strips the `#fragment` and validates existence only, so it stays green either
+  way. Nine pointers were therefore added where none existed (Principles 4–7, Phase 2 step 8,
+  Phase 6 steps 5–6 and its gate, and the self-referencing *Across the Full Series* heading, whose
+  bare parenthetical became a link); four more sites already pointed at these sections in prose and
+  were converted in place. `ITERATIVE_METHODOLOGY.md` now carries **14** references to the sibling —
+  **13 pointer sites** plus the stub's own link — and the stub enumerates all thirteen.
+- **The manual-copy path is documented, not just the tool path.** `README.md`'s Option B and
+  `starter-kit/BOOTSTRAP.md`'s Step 1 both enumerate the framework files by hand. Left alone they
+  would have told an adopter to copy a `docs/methodology/` **missing the file those 14 links point
+  at** — an install broken in a way `bin/check-links` structurally cannot report, because it builds
+  its simulated tree from `bin/_manifest.py`, which was correct. Fixed at `README.md` (both the
+  Option A sentence and the Option B list), `starter-kit/BOOTSTRAP.md` (the tree diagram, the sync
+  sentence and the manual-copy step) and `docs/tutorials/T1_setup.md`.
+- **The documents that describe the corpus now describe this one.** `CLAUDE.md` gains a Reference
+  apparatus row and its layer count is corrected; `HOW_TO_USE.md`'s layer table gains a row and its
+  `ITERATIVE_METHODOLOGY.md` length is re-derived (**~880 → ~580 lines**, sibling ~330).
+- **Scanner:** `docs/methodology/FRAMEWORK_APPARATUS.md` joins `FRAMEWORK_DISTINCTIVE_DOCS` in both
+  `methodology_dashboard.py` twins, so a synced project is still classified by a name only this
+  framework installs. The twins remain byte-identical. The installed-markdown counts in the
+  surrounding comments were **re-derived from `bin/_manifest.py` on this tree** (27 rows / 23
+  markdown / 19 tracked-markdown) rather than carried over from the branch this was ported from.
+
 ### 2026-08-28 · [ad hoc] The Learnings table leaves the every-session read for a read-on-demand sibling
 
 - **Change:** the `## Learnings (added by sessions)` table moves out of

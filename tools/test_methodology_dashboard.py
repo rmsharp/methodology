@@ -2850,7 +2850,7 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         """The MIRROR defect, unmasked by the source exclusion and closed by operator decision.
 
         RED against the source-exclusion-only tree: this repo read doc_only=True and LOST its
-        "No test infrastructure" risk, because bin/sync's 22 installed markdown files clear
+        "No test infrastructure" risk, because bin/sync's 23 installed markdown files clear
         DOC_ONLY_DOC_FILES_MIN (3) on their own. Installing the methodology must not answer the
         question "is this a document project?" in EITHER direction.
         """
