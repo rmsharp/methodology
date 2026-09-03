@@ -554,7 +554,8 @@ demand** rather than every session. Six sections moved there intact, content unc
 | **Performance Tracking** | Cross-session metric columns, their interpretation, maturity and erosion indicators |
 
 Nothing was condensed or dropped, and every point of need above links onward — Principles 4–7,
-Phase 2 step 8, Phase 6 steps 4–6 and its gate. This file is read to understand the methodology, that
+Phase 2 steps 6–8, Phase 6 steps 4–6 with its honest-accounting bullet and its gate, and the
+*Across the Full Series* heading. This file is read to understand the methodology, that
 one while operating it: the split `SESSION_RUNNER.md` made when its learnings became
 `FRAMEWORK_LEARNINGS.md`.
 

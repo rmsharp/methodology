@@ -44,16 +44,18 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   `TRACKED`. The manual keeps a *Reference Apparatus* stub naming all six and linking the file.
   **Nothing was deleted.** The apparatus is reference, not theory — you open it to fill in a
   session document, validate a scope or score a claim, not to understand why the phases exist.
-- **What it buys.** `ITERATIVE_METHODOLOGY.md` **68,240 → 55,895 B (−12,345, −18.1%)**, landing
-  **855 B under the 56,750 B one-read cap** it had been over. The sibling is **15,493 B** and is
+- **What it buys.** `ITERATIVE_METHODOLOGY.md` **68,240 → 55,976 B (−12,264, −18.0%)**, landing
+  **774 B under the 56,750 B one-read cap** it had been over. The sibling is **15,493 B** and is
   read on demand. Manifest **26 → 27** rows.
 - **The extraction was the easy half; reachability was not.** The move updated every place that
   *names* the six sections and, at first, no place that *invokes* what is in them — those
   sections used to be reached by scrolling, so no link-based proof can see their loss.
   `bin/check-links` strips the `#fragment` and validates existence only, so it stays green either
-  way. Nine pointers were therefore added at the points of need (Principles 4–7, Phase 2 step 8,
-  Phase 6 steps 5–6 and its gate, and the self-referencing *Across the Full Series* heading);
-  `ITERATIVE_METHODOLOGY.md` now carries **14** references to the sibling.
+  way. Nine pointers were therefore added where none existed (Principles 4–7, Phase 2 step 8,
+  Phase 6 steps 5–6 and its gate, and the self-referencing *Across the Full Series* heading, whose
+  bare parenthetical became a link); four more sites already pointed at these sections in prose and
+  were converted in place. `ITERATIVE_METHODOLOGY.md` now carries **14** references to the sibling —
+  **13 pointer sites** plus the stub's own link — and the stub enumerates all thirteen.
 - **The manual-copy path is documented, not just the tool path.** `README.md`'s Option B and
   `starter-kit/BOOTSTRAP.md`'s Step 1 both enumerate the framework files by hand. Left alone they
   would have told an adopter to copy a `docs/methodology/` **missing the file those 14 links point
