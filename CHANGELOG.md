@@ -206,6 +206,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S144 — claim: merge PR [#78](https://github.com/KJ5HST/methodology/pull/78) into `read-set-budgets`
+
+**Authorization:** the operator's *"merge PR #78"*, with the scope narrowed by their follow-up —
+*"we will start PR 4 in the next session"* — so this session's ONE deliverable is the merge. PR 4 is
+explicitly **not** in scope.
+
+**Recorded before the action, because a merge on `KJ5HST/methodology` leaves no commit in this
+repository.** Phase 0 reconcile cannot see it; the failure-mode-#27 write-gate is the only mechanism
+that records it.
+
+**Pre-merge state, read from the server:** `gh pr view 78` -> **OPEN**, base **`read-set-budgets`**,
+`mergeable` **MERGEABLE**, `mergeStateStatus` **CLEAN**.
+
+**Method: a merge commit, matching this series' precedent** — `46b56fd` (#76) and `907a696` (#77) each
+have two parents. Consistency matters here because PR 4 will be built on whatever tree this creates,
+and a squash would give that tree a new sha with no ancestry link to `2c30d0f`.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F.
 ### 2026-09-02 · [ad hoc] S143 — OUTWARD-FACING ACTIONS TAKEN: branch pushed, **PR [#78](https://github.com/KJ5HST/methodology/pull/78) OPENED**
 
 **Recorded here because neither action leaves a commit in this repository.** A push to `origin` and a

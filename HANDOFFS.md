@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S144
+date: 2026-09-02
+status: pending
+active_task: **MERGE PR [#78](https://github.com/KJ5HST/methodology/pull/78) INTO `read-set-budgets`, AND NOTHING ELSE.** Operator authorized the merge, then narrowed the scope explicitly: *"we will start PR 4 in the next session."* Pre-merge state read from the server: OPEN, base `read-set-budgets`, MERGEABLE, mergeStateStatus CLEAN. **Method: a merge commit**, matching `46b56fd` (#76) and `907a696` (#77), both two-parent — PR 4 will be built on the tree this creates, and a squash would break its ancestry link to `2c30d0f`.
+```
+
+```handoff
 session: S143
 date: 2026-09-02
 status: complete
