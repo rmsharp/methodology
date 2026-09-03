@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S143
+date: 2026-09-02
+status: pending
+active_task: **PUSH `pr3/apparatus-extraction` (`2c30d0f`) AND OPEN PR 3 AGAINST `read-set-budgets`, THREE COMMITS AS-IS.** Operator authorized both after seeing the pre-flight. **Base verified ADVANCED from the server:** #77 MERGED, `read-set-budgets` now `907a696`, whose tree is **identical** to the `56997af` PR 3 was measured on — so no re-measurement is owed and no rebase is needed (`merge-tree` exit 0, 3 ahead / 1 behind). `upstream/main` untouched at `512c2ed`. **NOT IN SCOPE:** the trimmer-documentation gap (operator chose a separate later PR) and PR 4.
+```
+
+```handoff
 session: S142
 date: 2026-09-02
 status: complete

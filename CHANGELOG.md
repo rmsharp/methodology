@@ -206,6 +206,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S143 — claim: push `pr3/apparatus-extraction` and open PR 3 against `read-set-budgets`
+
+**Authorization:** the operator's *"Open it, 3 commits as-is"*, given after being shown the verified
+pre-flight — base advanced, no rebase needed, `merge-tree` clean, three commits.
+
+**Recorded before the action, because neither a push nor a pull request leaves a commit in this
+repository.** Phase 0 reconcile is structurally blind to both; the failure-mode-#27 write-gate is the
+only mechanism that records them.
+
+**Pre-flight, re-run against the ADVANCED base and read from the server, not from a handoff:**
+`gh pr view 77` -> **MERGED** 2026-09-03T01:38:22Z, merge commit `907a696`; `read-set-budgets`
+`46b56fd` -> **`907a696`**; `upstream/main` **unchanged at `512c2ed`**. **`tree(907a696)` is identical
+to `tree(56997af)`** — the new base is byte-for-byte the tree PR 3 was built and measured on, so
+S142's verification carries over rather than needing a re-run. **0 conflicts** (`merge-tree` exit 0),
+**3 ahead / 1 behind**, the 1 being the merge commit itself, which changes no content.
+
+**Scope of this session: the push and the PR open, nothing else.** The trimmer-documentation gap
+merged by #77 is deliberately NOT folded in — operator chose a separate small PR later.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F.
 ### 2026-09-02 · [ad hoc] S142 close-out — PR 3 built and verified on a stacked base; 3 self-inflicted defects found by review and fixed
 
 **Deliverable: branch `pr3/apparatus-extraction` = `2c30d0f`, 3 commits, 12 files, +426/−348.**
