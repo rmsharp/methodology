@@ -206,6 +206,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S141 — OUTWARD-FACING ACTIONS TAKEN: head branch pushed, **PR [#77](https://github.com/KJ5HST/methodology/pull/77) OPENED**
+
+**Recorded here because neither action leaves a commit in this repository.** A push to `origin` and a
+pull request on `KJ5HST/methodology` are both invisible to Phase 0 reconcile; failure mode #27's
+write-gate is the only mechanism that records them.
+
+**Authorization:** the operator's *"re-run the two HEAD-dependent pre-flight checks, push, and open it
+with `--base read-set-budgets`"* — the pre-flight, the push and the base all named explicitly.
+
+**Verified from the server, not from the commands' output** (`gh pr view 77`):
+
+| Property | Value |
+|---|---|
+| State | **OPEN**, `MERGEABLE` |
+| **Base** | **`read-set-budgets`** — never `main` |
+| Head | `rmsharp:pr2/ledger-trimmer` (`56997af`, confirmed by `git ls-remote`) |
+| Diff | 9 files, **+4,691 / −6**, **1 commit** |
+
+**`main` is untouched at `512c2ed4` and remains the default branch**; `read-set-budgets` is still
+`46b56fdb`, since opening a PR does not advance its base. `gh pr list` shows exactly one open PR.
+
+**One step the operator did not name, disclosed in the claim before it was taken.** The branch carried
+three WIP commits — two labelled *"WIP"*, one literally *"NOT ready to open"* — which would have
+misdescribed the work to its reviewer. They were squashed into a single authored commit, and **the
+tree was proved unchanged by comparing `HEAD^{tree}` against `81eedb0^{tree}`** rather than assumed:
+a rebase that quietly drops a hunk looks exactly like a tidy history. Pre-flight was then re-run,
+because the squash changed the very thing the first run had measured.
+
+**The staging design is holding.** Two PRs have now landed on a branch created for selective developer
+testing, and `main` has not moved once: `512c2ed4` before #76, before #77, and now.
+
+**Not authorized, not done:** no merge, no comment on #75, #76 or #77, no tag, no release. **PRs 3–4
+(apparatus, gate) stay unopened.** PR 3 is now unblocked — the ordering was measured, not assumed: the
+dashboard's canonical-only tests abort with 13 errors without the trimmer present and 0 with it — and
+it must be built on the **advanced** base once #77 merges, not on `46b56fd`.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S141 — claim: push `pr2/ledger-trimmer` and open PR 2 against `read-set-budgets`
 
 **Ledger:** `CHANGELOG: pending` — set at claim; the actions are recorded here at Phase 3F.
