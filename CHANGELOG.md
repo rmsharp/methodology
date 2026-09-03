@@ -206,6 +206,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S145 — claim: planning session for PR 4 (`starter-kit/context_budget.py` to `read-set-budgets`)
+
+**Authorization:** the operator's *"PR 4 planning session"*, given after the Phase 0 report. The
+predecessor (S144) scoped PR 4 to its own session and named a planning session as the expected first
+step for this shape — a divergent file with no single commit to port — and the operator chose exactly
+that. **The plan is the ONE deliverable** (`SESSION_RUNNER.md` Phase 2 §Planning Sessions; FM #18): no
+port branch is built, no PR is opened, nothing outward-facing happens this session.
+
+**Scope of the plan:** `starter-kit/context_budget.py` (fork `main` **73,014 B / 1,400 lines**;
+`upstream/read-set-budgets` **29,549 B / 674 lines**, byte-identical to `upstream/main`), the seven fork
+commits on that path since `14bd88a`, and every file coupled to it — `tools/test_context_budget.py`,
+`.context-budget.json`, `bin/tests.sh`, `bin/_manifest.py`, and the prose that names it. Base is
+**`cea3068`**, the tip of `read-set-budgets` after PR #78; nothing else is in flight, so no stacking.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F.
+
 ### 2026-09-02 · [ad hoc] S144 — OUTWARD-FACING ACTION TAKEN: **PR [#78](https://github.com/KJ5HST/methodology/pull/78) MERGED** into `read-set-budgets`
 
 **Recorded here because a merge on `KJ5HST/methodology` leaves no commit in this repository.** Phase 0

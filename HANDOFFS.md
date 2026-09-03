@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S145
+date: 2026-09-02
+status: pending
+active_task: **PLANNING SESSION FOR PR 4 OF 4 (read-set budgets): the plan is the deliverable, nothing is implemented.** Operator's words: *"PR 4 planning session."* Output: one plan document in `docs/planning/` for porting `starter-kit/context_budget.py` — fork 73,014 B / 1,400 lines vs `upstream/read-set-budgets` 29,549 B / 674 lines — plus every file coupled to it (tests, config, manifest, docs, `bin/tests.sh`), onto base `cea3068`. Grep-based inventory, per-phase DONE criteria with the surface named, one STOP per phase (FM #18). **NO OUTWARD-FACING ACTION.**
+```
+
+```handoff
 session: S144
 date: 2026-09-02
 status: complete
