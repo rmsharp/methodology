@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S141
+date: 2026-09-02
+status: pending
+active_task: **PUSH `pr2/ledger-trimmer` AND OPEN PR 2 WITH `--base read-set-budgets`.** Operator authorized exactly this, naming the pre-flight, the push and the base. **Pre-flight re-run at claim, both HEAD-dependent:** base `46b56fd`, branch **0 behind / 3 ahead**, `merge-tree` **exit 0**, 9 files **+4,691/−6**. **ONE PREPARATION STEP THE OPERATOR DID NOT NAME AND I AM TAKING ANYWAY, RECORDED SO IT IS NOT A SURPRISE:** the three commits are my own WIP steps and two say *"WIP"* — one literally *"NOT ready to open"*. Squashing them into a single authored commit before pushing; the **tree is unchanged**, only the history is presentable. Verified after by diffing the squashed tree against `81eedb0`. **NOTHING ELSE:** no merge, no comment on #75 or #76, no tag, no release, PRs 3–4 unopened. **⚠ IF THIS CRASHES, RUN `gh pr list --repo KJ5HST/methodology --state all`** — a PR leaves no commit here and Phase 0 reconcile is blind to it.
+```
+
+```handoff
 session: S140
 date: 2026-09-02
 status: complete

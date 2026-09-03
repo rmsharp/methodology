@@ -206,6 +206,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S141 — claim: push `pr2/ledger-trimmer` and open PR 2 against `read-set-budgets`
+
+**Ledger:** `CHANGELOG: pending` — set at claim; the actions are recorded here at Phase 3F.
+
+**Operator authorized exactly this**, naming the pre-flight, the push and the base. Pre-flight re-run
+at claim because both checks are HEAD-dependent: base `46b56fd`, branch **0 behind / 3 ahead**,
+`git merge-tree --write-tree` **exit 0**, 9 files **+4,691 / −6**.
+
+**One preparation step the operator did not name, taken and recorded rather than done silently:** the
+branch's three commits are this arc's WIP steps, two labelled *"WIP"* and one literally *"NOT ready
+to open"*. Shipping those into a pull request would misdescribe the work to its reviewer. They are
+squashed into a single authored commit before the push — **the tree is unchanged**, only the history
+is presentable, and that is verified by diffing the squashed tree against `81eedb0`.
+
+**⚠ Crash note: a pull request leaves no commit in this repository.** If this entry is the frontier
+with no close-out after it, run `gh pr list --repo KJ5HST/methodology --state all` before concluding
+nothing shipped (failure mode #27).
+
+**Not authorized, not done:** no merge, no comment on #75 or #76, no tag, no release; PRs 3–4 stay
+unopened.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S140 close-out — option (C) delivered: PR 2 is green, 19 failures to zero added
 
 **Deliverable:** `pr2/ledger-trimmer` = **`81eedb0`** plus
