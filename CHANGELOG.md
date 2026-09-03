@@ -206,6 +206,76 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S146 close-out — the PR 4 plan RATIFIED (D1–D11), after the second review round ran
+
+**Phase 3D/3F.** Deliverable: the ratified plan —
+[`docs/planning/pr4-read-set-budgets-plan.md`](docs/planning/pr4-read-set-budgets-plan.md) (third draft,
+91,883 B) and [`pr4-candidate.context-budget.json`](docs/planning/pr4-candidate.context-budget.json)
+(17,934 B). **Status line and §4 now carry the ratification record: D1–D11 stand — D1–D10 as
+recommended, D4 reshaped and D11 added on the second review's findings. Phase B is authorized as the
+next session's single deliverable; Phases C and D are not.** Nothing built, pushed, or opened.
+
+**Commits this session, all recorded here:** `a78e404` (claim; also reconciled S145's `commit:` slot);
+`98c6e10` `[WIP]` third draft, frozen for self-review, and `c2b3106` `[WIP]` its repairs, frozen again for
+one verifier — both committed `--no-verify`, both bypasses recorded by this line; this close-out; and a `chore(history)` for the two `.jsonl` series Phase 0 dirtied (`--no-verify`, recorded here).
+
+**THE RATIFICATION, IN THE ORDER IT HAPPENED.** Item (1) of S145's `next_steps` was the operator's pick
+(*"1"*). The ten recommendations and their alternatives were tabled as one question; the answer was *"All
+ten as recommended."* Before recording it, the second adversarial review round S145 could not run (usage
+limit) was run against the frozen close-out tree `67982cc`: **eight read-only slices, then one independent
+skeptic per refutation and per HIGH/MEDIUM finding — 45 agents, 0 failed, 0 empty.** 120 claims
+re-derived: **102 confirmed, 17 refuted, 1 unverifiable**; of round 1's 59 items **53 fixed, 5 partial,
+1 not**; **19 new findings (1 HIGH, 9 MEDIUM, 9 LOW)**; **36 of 37 adjudications stand, 1 overturned.**
+Four facts the repairs rest on were re-derived by hand rather than taken from an agent: upstream's
+`.githooks/pre-commit` refuses a content commit without `CHANGELOG.md` co-staged; the fork carries **ten**
+dashboard version labels above `2.10.7` (one agent said 9, another 10 — the enumeration settled it);
+`claude --version` = 2.1.259; the two machine-dependent tests run and pass here (`Ran 116 … OK`). Four
+items reopened a decision and went back to the operator as separate questions, each answered as
+recommended: **D4** — the two-commit order's rationale was refuted (HIGH: by hand the gate exits **3** on
+commit 1, no config yet, and would refuse commit 2's own ledger line; upstream's hook wants a ledger line
+on every commit) → two commits, **each carrying a `CHANGELOG.md` line**; **D11**, new — the fork keeps its
+own root config after merge; **D2**'s token arm — `CLAUDE.md` carries a silently clamped derived ceiling
+(59,168 / 2.27 = 26,065 → 25,000; judged at 2.93 → 20,193, ok) → accept and document; **D6**'s residue —
+the #77 ledger backfill is **not** in PR 4, and no frontier-based reconcile can ever surface it
+(`56997af` sits below the frontier `2c30d0f`).
+
+**WHAT THE REPAIRS CHANGED, BESIDES THE DECISIONS.** The zsh dragon said the mangled `$c:path` "silently
+emptied" an enumeration — it is loud on stderr and `<sha>/` on stdout; dragon 11 blamed `grep -c` for a
+SIGPIPE hazard that belongs to `grep -q`; §2.2's Lines column mixed `wc -l` with the tool's count (which
+is one higher on every LF-terminated file); the adopter flip threshold is **73,253 B**, not "≥ 73,250"
+(`int()` truncates, the compare is strict); D8's date rule was UTC where the ledger's convention is the
+author's local date, its bullet shape was invented, and its identifier grep was unsatisfiable as written
+(`CHANGELOG.md` and `bin/tests.sh` already carry 65 and 11 hits on `cea3068` → grep the added lines of the
+diff); D9's "35 / 5" were line counts under a narrower regex (50 / 28 matches by D8's); D10's "three plus
+a fourth" is four, plus two inherited thresholds now labelled (`warn_bytes` 51,000 is inert while the
+class is over; `max_lines` 200); `class_totals()` is not called from `precommit()`; the dashboard cite was
+`:508-523`, not `:498-508`; Phase A gained a runnable verification; Phase C regained the post-push
+read-back the round-1 repair had dropped; the `calibrate()` failure causes and the FitGate diagnosis
+command were wrong in detail; the PR body now says the bare run prints **five** red lines on day one,
+that 2.27 is a constant not a key, what the trimmer does on its first `--write`, and that the gate this
+PR ships would refuse the PR that ships it. Config: `_calibrate_against` added; `_bytes_per_token` now
+names `CLAUDE.md` as the one consumer of the fallback; `_fixed_harness_tokens` says the tool reads it
+nowhere; the `## Versioning` `why` no longer attributes a rule to a `CLAUDE.md` that does not state it
+upstream (twelve `CHANGELOG.md` links and one fixture do the work).
+
+**FIX-ROUND DISCIPLINE.** The third draft was frozen at `98c6e10` and given a four-lens self-review
+(the S146 edits re-derived; a whole-plan contradiction sweep; the config prose run and read; the PR body
+as the maintainer) with one skeptic per refutation — 17 agents, 4 lenses + 13 skeptics: 41 claims (36 confirmed, 5 refuted), 20 findings (2 HIGH, 6 MEDIUM, 12 LOW), all 13
+adjudications standing — every one a defect in my own S146 edits, repaired in a third pass (`c2b3106`), whose 26 added
+claims one more independent verifier then re-derived: 22 confirmed, 2 refuted (both in D11's merge arithmetic: 17
+base conflicts, not 18, the draft having counted `merge-tree`'s OID line; PR 4's share two, not one), 2 unverifiable
+from the tree — repaired in this close-out commit.
+
+**Learnings #51 and #52** appended to `starter-kit/FRAMEWORK_LEARNINGS.md`: frontier-based reconcile is
+blind to an omission a later ledger commit has buried; sequence commits around the check that actually
+runs on the target, not the check the PR ships.
+
+**Adopter impact:** none — fork-only planning documents and a canonical-only Learnings table. **Nothing
+outward-facing.** The plan is 91,883 B and no longer fits one Read; a build session reads §4's
+record, §5 Phase B, §3.3 and §8, not the whole file.
+
+**Model:** Claude Fable 5.1.
+
 ### 2026-09-03 · [ad hoc] S146 — claim: ratification of the PR 4 plan's decisions D1–D10
 
 **Authorization:** the operator's *"1"*, given after the Phase 0 report, selecting item (1) of S145's

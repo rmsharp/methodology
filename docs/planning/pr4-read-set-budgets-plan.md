@@ -119,7 +119,7 @@ down by 9 lines (the CB block heading moves `:591` → `:600`).
 
 Bytes: `git cat-file -s cea3068:<path>`. Lines: `git show cea3068:<path> | wc -l` — the tool reports
 **one more** for every file here (`len(text.split("\n"))`, `context_budget.py:347-349`, keeps the empty
-string after the final newline, and every file listed ends in one), but the ceiling check is a strict `>`, so `max_lines: 200` fires at `wc -l`
+string after the final newline, and every file listed ends in one), but the ceiling check (`context_budget.py:366`) is a strict `>`, so `max_lines: 200` fires at `wc -l`
 200, when the tool counts 201. One unit per column, the tool's count in parentheses:
 
 | File | Bytes | Lines | Against |
@@ -260,7 +260,7 @@ claiming byte-identity.
 
 **Design: pin what is over, derive what the series is about, declare what Phase 0 reads, and mark
 every number the maintainer may move as a PROPOSAL.** The candidate is Appendix A /
-[`pr4-candidate.context-budget.json`](pr4-candidate.context-budget.json) (17,910 B). It is the fork's
+[`pr4-candidate.context-budget.json`](pr4-candidate.context-budget.json) (17,934 B). It is the fork's
 config with every fork-specific measurement removed or re-labelled and every ceiling re-derived from
 `cea3068`. The review's *what-was-lost* lens found the first draft had dropped design intent the
 fork's config carries; the second draft restores it (marked ↺ below).
@@ -281,7 +281,7 @@ fork's config carries; the second draft restores it (marked ↺ below).
 | `_deliberate_exclusions` ↺ | prose | the five on-demand files with `cea3068` sizes | — |
 | `synced` | `[]` | this repo *is* the canonical | — |
 
-**Measured on `cea3068` with the fork tool (Probe D, the shipped third draft — its non-`_` keys are byte-identical to config v2, on which `39c81ab` measured) —
+**Measured on `cea3068` with the fork tool (Probe D, the shipped third draft — every key the tool evaluates — all but the `_` prose and the `why` strings — is identical to config v2, on which `39c81ab` measured) —
 the box and the finding lines; the full stdout is 49 lines, the rest being the five-item remedies block
 (Move / Compute / Archive / Delete / Raise the ceiling — the list `--precommit` labels *Cheapest legal
 actions*; the bare run prints it unlabelled) printed under each of the **four byte-ceiling** findings;
@@ -461,7 +461,7 @@ The alternative therefore has two shapes: drop `max_bytes` and keep `max_tokens`
 framework's own `max_lines: 200` (green at 126 lines). The seed's 28,000 / 34,000 reads `over by
 31,168` on day one for a reason unrelated to the read-set, and the target for that file is the
 maintainer's. A pin refuses growth today and shrink passes. *(The tool counts 127: `text.split("\n")`
-keeps the empty string after the final newline; the check is a strict `>`, so `max_lines: 200` fires at
+keeps the empty string after the final newline; the check (`:366`) is a strict `>`, so `max_lines: 200` fires at
 `wc -l` 200, when the tool counts 201.)* **Token arm,
 ratified at S146:** with `max_bytes` set and no `max_tokens`, `token_ceiling()` derives 59,168 / 2.27 =
 26,065 tok and clamps it to the 25,000 cap **silently** — `config_defects()` reports a clamp only on a
@@ -547,7 +547,9 @@ messages.
 
 **D9 — Scrub the four fork-relative identifiers in the test module.** *Recommend: yes.* `BL-38` (`:8`,
 `:288`) → *"the 2026-08-15 `calibrate()` repair"*; `S129` (`:561`) and `S119` (`:613`) → their dates
-(2026-08-30, 2026-08-27). #76/#77 already carry such identifiers upstream — by D8's regex on `cea3068`,
+(2026-08-30, 2026-08-27). At `:288` reword the sentence whole — *"The table from the 2026-08-15
+`calibrate()` repair is a claim about arithmetic"* — rather than substituting the phrase, or it reads *"The
+the …"* (a verifier built it at S146 and saw it). #76/#77 already carry such identifiers upstream — by D8's regex on `cea3068`,
 `FRAMEWORK_LEARNINGS.md` has 50 matches on 37 lines (42 S-numbers, 8 `BL-`) and `methodology_trim.py`
 28 on 23 (6 S-numbers, 22 `BL-` across BL-9/27/28/32/36/41/52); the second draft's 35 and 5 were line
 counts under a narrower, unstated regex — so this is a consistency choice, made visibly, and a weaker
@@ -575,12 +577,16 @@ with `max_tokens` 7,114, calibrated against an 11,368 B file), and nothing chang
 its `.githooks/pre-commit` does not chain the gate either. The fork-side follow-ons are fork commits made
 **after Phase D and before the next upstream sync**: the D9 back-port of the four scrubbed lines, and
 aligning the fork's `bin/tests.sh:263-266` wiring comment with the ported block (§3.4). That sync — a merge, the
-fork's usual shape — already conflicts on **18 paths** between fork `main` and `cea3068` with no PR 4 at
-all (`git merge-tree --write-tree --name-only`, measured at S146: the two ledgers, `CLAUDE.md`,
+fork's usual shape — already conflicts on **17 paths** between fork `main` and `cea3068` with no PR 4 at
+all (`git merge-tree --write-tree --name-only`, measured at S146 — the command prints the result tree's OID
+first; a draft that counted it said 18: the two ledgers, `CLAUDE.md`,
 `README.md`, the dashboards and their tests, `bin/tests.sh` in 5 hunks, and more). PR 4's own share is
-**one more**: the add/add on `tools/test_context_budget.py` (4 hunks, the D9 lines) — `.context-budget.json`
-is add/add whichever upstream config lands, and the §3.4 block merges cleanly. Resolve PR 4's share by
-keeping the fork's config and taking upstream's test module and comment. The §3.7 row for the fork's own
+**two more, 19 in all**: the add/add on `tools/test_context_budget.py` (4 hunks, the D9 lines) and the
+add/add on `.context-budget.json` (the fork's 29,813 B config against the candidate — unavoidable whichever
+upstream config lands); the §3.4 block's first two comment lines land inside `bin/tests.sh`'s pre-existing
+second hunk against the fork's `:263-264` (the `if/else/fi` merges as shared text), so that file stays at
+5 hunks — which is §3.4's point. Resolve PR 4's share by keeping the fork's config and taking upstream's
+test module and comment. The §3.7 row for the fork's own
 root config now says which repository gets which file. *Alternative:* the fork adopts Appendix A — red on every ledger commit and
 mis-pinned on `CLAUDE.md` from day one.
 
@@ -679,7 +685,7 @@ the deferred documentation PR; **the #77 ledger backfill (D6, not in PR 4)** —
 907a696) — the ledger trimmer`, in its own `docs(changelog): backfill …` commit per `SESSION_RUNNER.md`
 Phase 0 step 6, and written deliberately, because the frontier-based reconcile can never surface it
 (`56997af` sits below the frontier `2c30d0f`); the fork-side follow-ons of D11 (the D9 back-port, the
-`bin/tests.sh` comment alignment, PR 4's one added conflict on the next sync); the three deliberately-left
+`bin/tests.sh` comment alignment, PR 4's two added conflicts on the next sync); the three deliberately-left
 tool defects (§3.7), each a one-line follow-on; dragon 3's mitigation test;
 the maintainer's `--calibrate` (D10); and the three adopters' `bin/sync`.
 
@@ -865,7 +871,7 @@ new = `main:`, seed = `upstream/read-set-budgets:starter-kit/context-budget.json
 
 ## Appendix A — the candidate canonical root config
 
-Shipped as [`pr4-candidate.context-budget.json`](pr4-candidate.context-budget.json) (17,910 B; third
+Shipped as [`pr4-candidate.context-budget.json`](pr4-candidate.context-budget.json) (17,934 B; third
 draft, S146) so the build session copies a file rather than transcribing one. Its shape, without the `_` prose:
 
 ```json
