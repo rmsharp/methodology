@@ -206,6 +206,56 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S140 close-out — option (C) delivered: PR 2 is green, 19 failures to zero added
+
+**Deliverable:** `pr2/ledger-trimmer` = **`81eedb0`** plus
+[`docs/planning/pr2-read-set-budgets-body.md`](docs/planning/pr2-read-set-budgets-body.md).
+**PR 2 is ready to open and was NOT opened** — see the close-out receipt's `next_steps` (1).
+
+**Measured in a clone where `020ba3f` and `7a71df0` are unreachable and `docs/archive/` is absent** —
+never a worktree, which is the error that gave S138 and S139 two wrong counts:
+
+| | Result |
+|---|---|
+| Base (`read-set-budgets` @ `46b56fd`) | 113 passed, 1 failed |
+| **PR 2** | **114 passed, 1 failed** |
+| **Delta** | **+1 passing row, ZERO added failures** |
+| `tools/test_methodology_trim.py` alone | **123 tests, exit 0**, 2 skipped *(was 19 failures)* |
+| `tools/test_methodology_dashboard.py` | **211 tests, exit 0** |
+
+The one failure is the Test 9 #76 already declared: `bin/sync` reads `main`, and this branch's newest
+manifest rows name files not yet there. It heals on merge to `main`.
+
+**THE FIXTURES REPRODUCE STRUCTURE, NOT BYTES.** `SYNTHETIC_CHANGELOG` — front matter, records, and a
+non-empty footer carrying a **rebasable `](link)`**, which is load-bearing: without one the
+footer-moved clause is only ever tested verbatim and the `transform_record` path goes uncovered. And
+a **25 = 6 + 19** partition with one **retained** record edited — precisely the property that made
+`7a71df0` the event worth testing against.
+
+**THE AUTHORS' OBJECTION — *"a synthetic one tests the test"* — IS ANSWERED EMPIRICALLY.** Three
+mutants of the code under test were disabled in turn and each was **killed**:
+
+| Mutant | Tests failing |
+|---|---|
+| `L2_FOOTER_MOVED` never emitted | **6** |
+| `L3_RECORD_ALTERED` never emitted | **4** |
+| `L1_MISMATCH` never emitted | **5** |
+
+The source was restored byte-identically afterwards (`cmp` clean) and the baseline re-confirmed at
+exit 0. **Without that evidence the conversion would be indistinguishable from deleting 19 tests.**
+
+**Nothing was dropped to get green.** The three fixture controls were *rewritten*, keeping the
+insight that a whole-file grep cannot distinguish *"the footer is present"* from *"a record merely
+quotes it"* — the reason zones exist at all. And the two declared-regenerated-field tests **keep
+their real artifacts and skip**: their point is that the live count really drifted by hand, so a
+synthetic anchor there would test the test. Their precondition is read from the raw file, never
+through `classify_zones`, which is the code under test.
+
+**PR 3 (apparatus extraction) is now unblocked** — the coupling was measured, not assumed: the
+dashboard's canonical-only tests abort with 13 errors without the trimmer present and 0 with it.
+
+- **Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-02 · [ad hoc] S140 — claim: option (C), synthetic L1/L2/L3 fixtures for the trimmer suite
 
 **Ledger:** `CHANGELOG: pending` — set at claim; actions recorded here at Phase 3F.
