@@ -206,6 +206,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S142 close-out — PR 3 built and verified on a stacked base; 3 self-inflicted defects found by review and fixed
+
+**Deliverable: branch `pr3/apparatus-extraction` = `2c30d0f`, 3 commits, 12 files, +426/−348.**
+**NOT PUSHED. PR 3 NOT OPENED.** Body prepared at `docs/planning/pr3-read-set-budgets-body.md`.
+
+**The assigned base did not exist.** S141 assigned PR 3 "on the ADVANCED base once #77 merges";
+`gh pr view 77` says **OPEN**, so `read-set-budgets` is still `46b56fd`, which carries no
+`starter-kit/methodology_trim.py` — and PR 3 touches the dashboard twins, whose canonical-only tests
+abort with 13 errors without it. Stacked on `pr2/ledger-trimmer` (`56997af`) instead: the exact tree
+#77 proposes, so the branch retargets on merge with no rebase.
+
+**Two large blocks `git` offered as conflict resolutions were dropped, not force-fitted.**
+`collect_trim_metrics()` (11,834 B, both twins) and README's `## What It Costs` (14,429 B) exist in
+the fork and not on this base; the originating commits edited text *inside* each, so a 3-way merge
+presented the whole block as an addition. Importing either would have smuggled a fork feature in
+under the guise of resolving a comment edit.
+
+**Ported counts were re-derived, and the manifest row SET diffed** — 27 rows / 23 markdown / 19
+tracked-markdown, and **0 rows differing either way** against `e02881a`, so the agreement is
+structural rather than a coincidence of equal totals.
+
+**Two fork-relative session numbers were removed.** The port would have written *"Extracted at S130"*
+into `CLAUDE.md` and *"since S130"* into `HOW_TO_USE.md`. `git grep -oE '\bS[0-9]{1,3}\b' -- '*.md'`
+returns **nothing** on this base, so these would have been the first two — each naming a session in a
+different repository's counter.
+
+**Verified in `git clone --no-local --single-branch`, never a worktree.** Base 114/1, branch 114/1,
+diffed **row for row: 113 shared labels, zero status flips**; the only two differing rows are the
+manifest counters, passing on both sides. Dashboard suite **211 OK**, trimmer suite **exit 0**, the
+three checkers **0/0/0** read bare. End to end: a real `bin/sync` into a scratch repo lands the
+sibling, and in that installed layout **14 references resolve, 7 fragments, 0 unresolved**.
+
+**ADVERSARIAL REVIEW OF MY OWN WORK: 6 lenses → 25 findings → 3 skeptics each → 9 confirmed,
+collapsing to 3 real defects, all mine, all fixed (`2c30d0f`) and re-verified.**
+(1) I updated the `22 → 23` markdown count only where the patch touched it, leaving `README.md:138`
+and `tools/test_methodology_dashboard.py:2853` stale — **while my own ledger entry claimed the counts
+had been re-derived from the manifest**, a false claim that had already shipped into a commit.
+Classified against the **pre-change** tree: both read 22 and were correct on base, so both were mine.
+(2) The distributed stub's *"every point of need above links onward"* enumerated 9 of the 13 sites
+that actually link, and contradicted this branch's own ledger entry. Settled by measuring the base —
+5 sites already pointed in prose, 8 gained a pointer, 1 had a bare parenthetical converted — so
+"nine added" was right and the stub's list was wrong. (3) Fixing (2) edited the file whose size I had
+published, so **55,895 → 55,976 B** and every derived figure moved.
+
+**Reported, not fixed — two pre-existing defects with no author here.** Both dashboard twins (`:185`)
+and `docs/tutorials/T8_keeping_current.md:183` say *"25 distributed sources/files"* where the manifest
+holds **26** on the base and **27** here: wrong before this change and after it.
+
+**Also this session:** `ef51dc9` reconciled S141's `commit:` answer slot to `72b9b54` + `4329d33`
+(the checker went 0 → 1 the moment a newer receipt was prepended); `e0adcec` repaired that commit's
+missing ledger line; `1949a83` committed the two append-only measurement series.
+
 ### 2026-09-02 · [ad hoc] S142 — claim: build PR 3 (apparatus extraction) STACKED on `pr2/ledger-trimmer`
 
 **Deliverable:** the PR-3 branch for `docs/planning/upstream-read-set-pr-plan.md` §5 — the port of the
