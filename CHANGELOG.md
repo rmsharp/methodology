@@ -206,6 +206,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S142 — claim: build PR 3 (apparatus extraction) STACKED on `pr2/ledger-trimmer`
+
+**Deliverable:** the PR-3 branch for `docs/planning/upstream-read-set-pr-plan.md` §5 — the port of the
+S130 apparatus extraction (`e02881a`) to an upstream-like tree. **No outward-facing action.** The
+branch is built and verified locally; opening PR 3 needs its own operator go-ahead.
+
+**Why stacked rather than on `46b56fd`.** S141's handoff assigned PR 3 "on the ADVANCED base once #77
+merges". [PR #77](https://github.com/KJ5HST/methodology/pull/77) is **still OPEN** (verified from the
+server this session), so `read-set-budgets` is still `46b56fd`, which carries **no**
+`starter-kit/methodology_trim.py`. PR 3 touches the dashboard twins, whose canonical-only tests abort
+with **13 errors** without the trimmer present. Building on `46b56fd` is therefore not available;
+stacking on `pr2/ledger-trimmer` (`56997af`, the exact tree #77 proposes) is the same base #77 will
+create on merge, so the branch retargets cleanly.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded here at Phase 3F.
+
 ### 2026-09-02 · [ad hoc] S141 — OUTWARD-FACING ACTIONS TAKEN: head branch pushed, **PR [#77](https://github.com/KJ5HST/methodology/pull/77) OPENED**
 
 **Recorded here because neither action leaves a commit in this repository.** A push to `origin` and a

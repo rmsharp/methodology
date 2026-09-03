@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S142
+date: 2026-09-02
+status: pending
+active_task: **BUILD PR 3 — the apparatus extraction — STACKED ON `pr2/ledger-trimmer`, NOT ON `46b56fd`.** Port S130's `e02881a` (`FRAMEWORK_APPARATUS.md` new + `ITERATIVE_METHODOLOGY.md` 68,240 -> 55,895 B + the dashboard twins + `BOOTSTRAP.md`, manifest 26 -> 27) onto the tree PR #77 proposes, and verify it in `git clone --no-local --single-branch` — never a worktree. **NO OUTWARD-FACING ACTION:** the branch is not pushed and PR 3 is not opened; each needs its own go-ahead. Base chosen because #77 is still OPEN, so `read-set-budgets` carries no trimmer and PR 3's dashboard tests would abort with 13 errors on it.
+```
+
+```handoff
 session: S141
 date: 2026-09-02
 status: complete
