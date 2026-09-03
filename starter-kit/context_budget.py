@@ -286,8 +286,8 @@ def blob_bytes(root, rev):
     """Size of a git blob in BYTES, asked of git. None when `rev` does not resolve.
 
     NEVER `len(run(["git", "show", rev]).encode())`. run() returns `p.stdout.strip()`,
-    so any content ending in a newline measures one byte short: this repository's own
-    starter-kit/SESSION_RUNNER.md is 54,363 B and that expression returns 54,362. A size
+    so any content ending in a newline measures one byte short: on the authoring fork a
+    54,363 B starter-kit/SESSION_RUNNER.md came back as 54,362 from that expression. A size
     gate that miscounts bytes is the wrong thing to build on -- and the error is silent,
     self-consistent, and in the direction that makes an over-budget file look smaller.
 
@@ -672,7 +672,7 @@ def short(path, width=34):
 def ledger_dimension(r):
     """(size, ceiling) for one ledger row — reported in the dimension that ACTUALLY FIRED.
 
-    A read-mandated file now defaults to BYTES, and that changed at Phase B (2026-08-26).
+    A read-mandated file now defaults to BYTES, and that changed on 2026-08-26.
     It defaulted to lines because lines were the unit the surrounding trim rule was written
     in -- never because the cap came in lines. It does not: the agent read cap is
     TOKEN-denominated, and tokens track bytes, not lines. Measured across the fleet, the
@@ -680,7 +680,7 @@ def ledger_dimension(r):
     is the one least able to explain a read-cap verdict. The trim rule has since been
     re-denominated onto bytes as well (methodology_trim.py READ_CAP_BYTES), so the default
     here and the unit the rule is written in agree again -- on the other axis.
-    (Reproduction: docs/planning/read-cap-premise-correction-plan.md, Appendix A.)
+    (Reproduction: rmsharp/methodology, docs/planning/read-cap-premise-correction-plan.md, App. A.)
 
     The BYTE ceiling was already able to be the one that fires, and a row reading
     `359 ln / 1,200 ln  over` then pointed at a ceiling that did not, while the 72,449 B
@@ -730,7 +730,7 @@ def parse_iso(s):
 
     Timestamps reach this tool from two sources that do not agree on format: git
     `%cI` emits a numeric offset that moves with the season (`-05:00` and `-04:00`
-    both occur in this repository's own history), while session transcripts end in
+    both occur in the authoring repository's history), while session transcripts end in
     `Z`. Ordering those AS STRINGS is not chronological — `2026-08-01T19:42:50-05:00`
     is really `2026-08-02T00:42:50Z` but string-sorts *before* `2026-08-01T21:25:28Z`,
     which scores that session against the wrong file size. Every comparison in this
@@ -1201,7 +1201,7 @@ def selftest(root, cfg):
            "findings": [{"kind": "bytes", "msg": "x"}]}
     check("the row shows the ceiling that fired, not the class default",
           ledger_dimension(row) == ("72,449 B", "65,536 B"))
-    check("with nothing fired, a read-mandated row now reports BYTES (Phase B)",
+    check("with nothing fired, a read-mandated row now reports BYTES (since 2026-08-26)",
           ledger_dimension({**row, "findings": [], "status": "ok"}) == ("72,449 B", "65,536 B"))
     check("a LINE finding still reports lines -- only the default moved, not the dispatch",
           ledger_dimension({**row, "findings": [{"kind": "lines", "msg": "x"}]})

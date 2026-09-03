@@ -206,6 +206,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S148 — reword the fork-relative comments in `context_budget.py`, its test module and the PR 4 candidate config (the fix-round's fork-side half: rows 2 and 3)
+
+**The fork-side prerequisite of the fix-round, committed on `main` BEFORE the branch is rebuilt so the
+ported tool blob stays byte-identical to fork `main` (the shape row 2 of the decision table prescribes).**
+Comment-only, behaviour unchanged, line counts unchanged in both Python files (so the plan's §3.1 symbol
+line numbers still hold), every edited line ≤ 99 columns. `starter-kit/context_budget.py` blob
+`c5ff15e5` → **`0b103baf`** (73,014 → 73,040 B): `:289-290` (*"this repository's own
+SESSION_RUNNER.md is 54,363 B"* → the authoring fork's, which it was), `:675` and `:1204` (*"Phase B"*
+→ the date, 2026-08-26), `:683` (the planning-doc pointer now names `rmsharp/methodology`), `:733`
+(*"this repository's own history"* → the authoring repository's). `tools/test_context_budget.py` blob
+`a671113` → **`f6c94d85`**: `:417`, `:424` (*"Phase B"* → the date), `:484` (*"Measured on this repo"*
+→ the authoring fork), `:546` (*"wsfct"* → one adopter) — the folds the table's *Kept as ratified*
+paragraph assigns to row 2, plus `:484`, found by this session's grep for the same class. **One row-2
+site is NOT fork residue and is left alone:** `:409` *"learning #22 / #26a"* is upstream's own 1.0.0
+text — `git blame` → `df6a991` (KJ5HST, 2026-08-08), present in blob `be2721a5` — so the review had
+attributed the maintainer's own citation to the port; scrubbing it would have edited his line under the
+name of removing ours. Row 3, fork side: `docs/planning/pr4-candidate.context-budget.json` (17,934 →
+17,893 B) — `read-set._` no longer cites `upstream-read-set-pr-plan.md`, a file the maintainer cannot
+open (the sentence now says the seed's own `CLAUDE.md.max_bytes` is the candidate and that the
+authoring fork's design names it), and the `CLAUDE.md` `_` key's *"Accepted as is (ratified
+2026-09-03)"* becomes *"Left as is, deliberately"*. Verified in this worktree after the edits:
+`python3 tools/test_context_budget.py` → exit 0, `Ran 116 … OK` (both `TestFitGateEndToEnd` rows run
+here); `--selftest` → exit 0, 52 PASS / 0 FAIL, the relabelled check at `:1204` among them; the
+candidate parses. The `"Phase B"` vocabulary upstream's trimmer (#77) still carries in nine comment
+sites is untouched, as D9 left the trimmer's S-numbers — a consistency choice, made visibly.
+
 ### 2026-09-03 · [ad hoc] S148 — claim: the six-row fix-round on `pr4/context-budget-gate` (item (1) of S147's handoff)
 
 **Authorization:** the operator's *"Item (1) of S147's handoff"*, given after the Phase 0 report: the

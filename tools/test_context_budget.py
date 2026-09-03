@@ -414,14 +414,14 @@ class TestLedgerRow(unittest.TestCase):
                                               "findings": []}), ("900 B", "1,000 B"))
 
     def test_a_non_size_finding_does_not_hijack_the_dimension(self):
-        """Unchanged in intent, re-pointed by Phase B: a `protected` finding still must not select
+        """Unchanged in intent, re-pointed 2026-08-26: a `protected` finding still must not select
         a dimension, so the row falls through to the default -- which is now bytes. Paired with
         the line case below, so this cannot pass merely because everything reports bytes."""
         r = {**self.OVER_BYTES, "findings": [{"kind": "protected", "msg": "x"}]}
         self.assertEqual(cb.ledger_dimension(r)[0], "72,449 B")
 
     def test_a_line_finding_still_selects_lines(self):
-        """The control that keeps the test above honest. Phase B moved the DEFAULT, not the
+        """The control that keeps the test above honest. 2026-08-26 moved the DEFAULT, not the
         dispatch: a fired `lines` ceiling must still be reported in lines, or the row would once
         again name a ceiling that did not fire -- the exact defect ledger_dimension exists for."""
         r = {**self.OVER_BYTES, "findings": [{"kind": "lines", "msg": "x"}]}
@@ -481,7 +481,7 @@ class TestTokenCeiling(unittest.TestCase):
     """The ceiling is denominated in TOKENS, the unit the read cap is actually in.
 
     WHY THIS CLASS EXISTS. A byte ceiling is `tokens x density`, and density is a property
-    of the content, so every compaction silently moves it. Measured on this repo: the
+    of the content, so every compaction silently moves it. Measured on the authoring fork: the
     declared 73,728 B ceiling for starter-kit/FRAMEWORK_LEARNINGS.md certified `ok` a size
     the agent read tool REFUSES at 25,486 tokens, and four of the five configured ceilings
     converted to more than the 25,000-token cap. Nothing went red, because nothing checked.
@@ -543,7 +543,7 @@ class TestTokenCeiling(unittest.TestCase):
     # --- the class gate, narrowed rather than merely deleted -----------------------
 
     def test_an_on_demand_file_is_not_judged_against_the_read_cap(self):
-        """Learning #34: the cap binds a WHOLE read. wsfct ships a 1.2 MB on-demand file."""
+        """Learning #34: the cap binds a WHOLE read. One adopter ships a 1.2 MB on-demand file."""
         with tempfile.TemporaryDirectory() as d:
             Path(d, "t.md").write_bytes(b"x" * 900000)
             r = cb.measure_file(d, self._spec(**{"class": "on-demand", "max_tokens": 20000}),
