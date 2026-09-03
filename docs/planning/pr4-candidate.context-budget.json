@@ -1,30 +1,32 @@
 {
-  "_": "THIS REPOSITORY'S OWN context budget -- the canonical methodology repo dogfooding starter-kit/context_budget.py on itself. Provisioned from starter-kit/context-budget.json (the SEED adopters receive) and then calibrated to THIS tree, per the seed's own instruction. Every ceiling below is derived or pinned from a measurement named in its neighbouring _ key; nothing is a round number chosen to read clean. The tool is NOT at this repo's root: invoke it as `python3 starter-kit/context_budget.py`; find_root() walks up via .git and reads this file. Do NOT run `install-hook` here -- it would write a hook that execs <root>/context_budget.py, which does not exist at the canonical root, and this repo's .githooks/pre-commit is the FM #27 ledger gate. The budget gate therefore MEASURES here; run `python3 starter-kit/context_budget.py --precommit` by hand before a commit that touches a budgeted file, or chain it into .githooks/pre-commit as a separate change.",
+  "_": "THIS REPOSITORY'S OWN context budget -- the canonical methodology repo dogfooding starter-kit/context_budget.py on itself. Provisioned from starter-kit/context-budget.json (the SEED adopters receive) and then calibrated to THIS tree at cea3068 (read-set-budgets after PR #78). Every ceiling below states its derivation in the neighbouring _ key; numbers marked PROPOSAL are the fork's choices offered to the maintainer, not measurements. THE TOOL IS NOT AT THIS REPO'S ROOT: bin/_manifest.py installs it at ADOPTER roots; canonically it lives only at starter-kit/context_budget.py. Invoke it as `python3 starter-kit/context_budget.py` -- find_root() walks up via .git and reads this file. DO NOT RUN `install-hook` HERE. On a fresh clone core.hooksPath is unset, so install-hook WRITES .git/hooks/pre-commit exec'ing <root>/context_budget.py, which does not exist at this root, and every commit after that fails with `can't open file`; recover with `rm .git/hooks/pre-commit`. With `git config core.hooksPath .githooks` set (BOOTSTRAP Step 10) it declines instead, because that hook is the FM #27 ledger gate. The budget gate therefore MEASURES here: run `python3 starter-kit/context_budget.py --precommit` by hand before a commit that touches a budgeted file, or chain it into .githooks/pre-commit as a separate, deliberate change. Refusing to run without this file (exit 3, `refuses to invent budgets`) is the tool's own 1.0.0 behaviour, unchanged by the 1.2.0 port.",
+
+  "_precommit_scope": "`--precommit` sizes the INDEX against HEAD for each declared file and class; it does NOT evaluate the `structure` patterns below. Those run in the bare and --json modes only, where a pattern that stops matching reports `instrument-failed`. Bare and --json runs APPEND to .context-budget-history.jsonl; --precommit, --selftest, --calibrate and --help write nothing.",
 
   "read_cap_tokens": 25000,
-  "_read_cap_tokens": "The agent read cap in TOKENS, stated verbatim by the read tool's own error text. Inherited from the seed, which inherited it from the same measurement; a whole-file read past it is truncated or refused.",
+  "_read_cap_tokens": "The per-read cap in TOKENS: the number in the Claude Code Read tool's own refusal message (`File content (N tokens) exceeds maximum allowed tokens (25000)`), as observed 2026-08. The tool's module default READ_CAP_TOKENS carries the same value, so this key restates the default rather than changing it; the seed edit in this same PR declares it for adopters. It is a fact about the harness, not a policy: if yours differs, set this key and every derived ceiling below follows.",
 
   "bytes_per_token": 2.93,
-  "_bytes_per_token": "INHERITED FROM THE SEED, NOT MEASURED ON THIS REPO. Run `python3 starter-kit/context_budget.py --calibrate` on a machine that holds this repository's session transcripts and replace this number with the fitted constant if the fit is admitted (R^2 >= 0.50, positive slope). Until then every token estimate below that says `(config)` is an estimate at the seed's density.",
+  "_bytes_per_token": "INHERITED FROM THE SEED, NOT MEASURED ON THIS REPO. It is the fallback density for any file below that declares none of its own; the ledgers and the Learnings table below carry measured per-file densities and do not use it. `python3 starter-kit/context_budget.py --calibrate` fits this repo's own value from its session transcripts; it PROPOSES and writes nothing -- edit this key if the fit is admitted (R^2 >= 0.50, positive slope).",
 
   "fixed_harness_tokens": 35700,
-  "_fixed_harness_tokens": "INHERITED FROM THE SEED, NOT MEASURED ON THIS REPO. Same remedy as bytes_per_token: --calibrate.",
+  "_fixed_harness_tokens": "INHERITED FROM THE SEED, NOT MEASURED ON THIS REPO. Same remedy: --calibrate.",
 
   "growth_run": 10,
-  "_growth_run": "INHERITED FROM THE SEED, NOT DERIVED. It cannot be calibrated on day one: this repo has no .context-budget-history.jsonl until this config's first bare run, so the series the trigger reads is empty. The history file is APPENDED by every bare and --json run; --precommit, --selftest, --calibrate and --help write nothing. Decide whether to track it once it exists.",
+  "_growth_run": "INHERITED FROM THE SEED, NOT DERIVED. It cannot be calibrated on day one: this repo has no .context-budget-history.jsonl until this config's first bare run, so the series the trigger reads is empty. Decide whether to track that file once it exists (the fork tracks it, deliberately; see .gitignore).",
 
   "calibrate_against": "CLAUDE.md",
 
   "classes": {
     "resident": {
       "total_bytes": 59168,
-      "_": "Resident is a ONE-FILE class in this repo -- CLAUDE.md is the only artifact the harness injects in full before the session starts; there is no root SESSION_RUNNER.md (the runner is the distributed starter-kit/SESSION_RUNNER.md) and no root SESSION_NOTES.md (continuity lives in HANDOFFS.md). So this total equals CLAUDE.md's own ceiling by construction, and it is PINNED AT ARRIVAL SIZE (git cat-file -s cea3068:CLAUDE.md = 59,168 B): a ratchet, not a budget anyone has defended. Growth is refused, shrink passes. The seed's 34,000 B resident total would read `over` by 25,168 B on day one for a reason unrelated to the read-set work this branch is about; pinning states the true size and lets the maintainer choose the target."
+      "_": "Resident is a ONE-FILE class in this repo -- CLAUDE.md is the only artifact the harness injects in full before the session starts; there is no root SESSION_RUNNER.md (the runner is the distributed starter-kit/SESSION_RUNNER.md) and no root SESSION_NOTES.md (continuity lives in HANDOFFS.md). So this total equals CLAUDE.md's own ceiling by construction. That is deliberate and it is NOT a check that cannot fail: the per-file ceiling cannot see a SECOND resident file being added, and this one can. Agent-level memory (~/.claude/projects/.../MEMORY.md) is genuinely resident too but is per-operator and per-machine, outside this repo, and not a reviewable diff -- deliberately excluded. PROPOSAL: PINNED AT ARRIVAL SIZE (git cat-file -s cea3068:CLAUDE.md = 59,168 B), a ratchet, not a defended budget: growth is refused, shrink passes. The seed's 34,000 B total would read `over` by 25,168 B on day one for a reason unrelated to the read-set work; the pin states the true size and leaves the target to the maintainer."
     },
     "read-set": {
       "total_bytes": 56750,
       "warn_bytes": 51000,
       "derive_from_read_cap": true,
-      "_": "THE PHASE 0 MANDATORY READ -- starter-kit/SESSION_RUNNER.md, which Phase 0 orders read in full before any work, plus starter-kit/SAFEGUARDS.md, which its step 1 orders read in full too. total_bytes is NOT typed here: derive_from_read_cap makes it READ_CAP_BYTES - adopter_reserve_bytes = 25,000 x 2.27 - 0 = 56,750, computed at run time; a written value that disagrees with the derivation is reported as a config defect rather than silently honoured. The pair is 52,195 + 15,386 = 67,581 B on cea3068 -- 10,831 B OVER on arrival, which is the number this whole branch exists to make visible and refuse. warn_bytes sits ~10% under the total so the warning arrives before the refusal."
+      "_": "THE PHASE 0 MANDATORY READ -- starter-kit/SESSION_RUNNER.md, which Phase 0 orders read in full before any work, plus starter-kit/SAFEGUARDS.md, which its step 1 orders read in full too. This class exists SEPARATELY from read-mandated because that label here covers the ledgers, which are per-file rows with no aggregate by design; totalling them with the procedure pair would produce a number that partitions nothing. total_bytes is NOT typed here: derive_from_read_cap makes it READ_CAP_BYTES - adopter_reserve_bytes = 25,000 x 2.27 - 0 = 56,750, computed at run time; a written value that disagrees with the derivation is reported as a config defect rather than silently honoured. The pair is 52,195 + 15,386 = 67,581 B on cea3068 -- 10,831 B OVER on arrival, which is the number this branch exists to make visible and refuse. warn_bytes sits ~10% under the total so the warning arrives before the refusal. NOTE ON THE AGGREGATE ARM: because the two per-file ceilings below partition this total exactly, no class breach can precede a per-file breach on THIS config -- the class arm is redundant by construction today and earns its keep the day the partition is broken (a third member, a raised per-file ceiling, a reserve). Its witness is the shipped --selftest, not this repo's rows."
     }
   },
 
@@ -32,12 +34,13 @@
     {
       "path": "CLAUDE.md",
       "class": "resident",
+      "max_lines": 200,
       "max_bytes": 59168,
       "structure": [
         { "pattern": "^## Versioning", "expect_min": 1,
-          "why": "CLAUDE.md's own Versioning section says the heading must stay put because existing CLAUDE.md#versioning links resolve to it. A compaction that removes it breaks frozen citations silently." }
+          "why": "CLAUDE.md's own Versioning section says the heading must stay put because existing CLAUDE.md#versioning links resolve to it. A compaction that removes it breaks frozen citations silently. Evaluated by the bare run only, not by --precommit." }
       ],
-      "_": "PINNED AT ARRIVAL SIZE, see classes.resident. NO protected_fence is declared, deliberately: the seed's budget:protected fence does not exist in this file, and declaring it would report `over` for a missing fence -- a red manufactured by this config rather than a real defect. Adding the fence is an edit to CLAUDE.md, raised separately."
+      "_": "max_lines 200 is THIS FRAMEWORK'S OWN PUBLISHED NUMBER, not an invention: starter-kit/BOOTSTRAP.md ('Keep CLAUDE.md lean') says Claude Code targets roughly 200 lines and tells adopters to extract before that budget is crowded. The file is 126 lines on cea3068, so this arm is green on arrival. max_bytes is a PROPOSAL, PINNED AT ARRIVAL SIZE -- see classes.resident. NO warn_bytes: a warning threshold below a pin set at the current size would fire on every run and inform nobody. NO protected_fence, deliberately: the seed's budget:protected fence does not exist in this file, and declaring it would report `over` for a missing fence -- a red manufactured by this config rather than a real defect. Adding the fence is an edit to CLAUDE.md, raised separately."
     },
     {
       "path": "starter-kit/SESSION_RUNNER.md",
@@ -49,31 +52,46 @@
       "path": "starter-kit/SAFEGUARDS.md",
       "class": "read-set",
       "max_bytes": 15386,
-      "_": "THE CEILING IS THIS FILE'S CURRENT SIZE (git cat-file -s cea3068:starter-kit/SAFEGUARDS.md), a deliberate no-growth pin: it is the smaller, stabler half, so the whole 10,831 B of headroom debt sits on SESSION_RUNNER.md, the file the series wants shrunk. At exactly 15,386 B the file is AT its ceiling, not over: `new > ceil` is strict, so today's content passes and the next byte does not."
+      "_": "THE CEILING IS THIS FILE'S CURRENT SIZE (git cat-file -s cea3068:starter-kit/SAFEGUARDS.md = 15,386 B; blob f0964195, byte-identical on fork main and upstream), a deliberate no-growth pin: it is the smaller, stabler half, so the whole 10,831 B of headroom debt sits on SESSION_RUNNER.md, the file the series wants shrunk. At exactly 15,386 B the file is AT its ceiling, not over: `new > ceil` is strict, so today's content passes and the next byte does not. PROPOSAL -- the split of the partition is a choice."
     },
     {
       "path": "CHANGELOG.md",
       "class": "read-mandated",
       "max_bytes": 65536,
       "max_tokens": 25000,
+      "bytes_per_token": 2.4674,
       "structure": [
         { "pattern": "^### \\d{4}-\\d{2}-\\d{2} · \\[", "expect_min": 5,
           "why": "the entry anchor the ledger's own front-matter audit grep uses and methodology_trim.py's CHANGELOG LedgerSpec keys records on. If it stops matching, the file has been restructured and every size check here is measuring something else." }
       ],
-      "_": "Phase 0 step 6 orders this ledger reconciled every session and its newest entries read. 65,536 B is the ceiling the fork has used for both ledgers since 2026-08-15; max_tokens 25,000 is the read cap itself -- a file past it cannot be read whole. 91,365 B on cea3068, so OVER on arrival; methodology_trim.py (PR #77) is the remedy and fires on its own trigger."
+      "_": "Phase 0 step 6 orders this ledger reconciled every session and its newest entries read. max_tokens 25,000 is the read cap itself -- a file past it cannot be read whole. bytes_per_token 2.4674 was MEASURED on the fork's CHANGELOG.md on 2026-08-29 (same ledger format; re-measure here by the doubled-file method described under FRAMEWORK_LEARNINGS.md); at that density 91,365 B is about 37,000 tokens, so a whole read of this file truncates today. max_bytes 65,536 is a PROPOSAL: the fork's ledger ceiling since 2026-08-15, and DECOUPLED from methodology_trim.py since 2026-08-26 -- that tool's DEFAULT_BUDGET_BYTES is 196,608 B (3x this number) and on cea3068 `python3 starter-kit/methodology_trim.py --file CHANGELOG.md --check` reports `trigger does not fire`. The two answer different questions: this ceiling asks what Phase 0 pays to read the file; the trimmer's asks whether archiving is worth doing. Bringing the file under this ceiling means `python3 starter-kit/methodology_trim.py --file CHANGELOG.md --budget-bytes 65536` (dry-run first, then --write) on a reconciled tree, or moving this number. While the file is over it, --precommit refuses any commit that grows it -- including a ledger entry -- and passes any that shrinks it."
     },
     {
       "path": "HANDOFFS.md",
       "class": "read-mandated",
       "max_bytes": 65536,
       "max_tokens": 25000,
+      "bytes_per_token": 2.3648,
       "structure": [
         { "pattern": "^```handoff", "expect_min": 1,
           "why": "receipts are fenced blocks -- the shape bin/check-handoff validates and methodology_trim.py's HANDOFFS LedgerSpec keys on. Zero matches means the receipts are no longer receipts." }
       ],
-      "_": "Phase 0 reads the newest receipt and reconciles the frontier. Same ceilings and same reasoning as CHANGELOG.md. 70,182 B on cea3068, so OVER on arrival."
+      "_": "Phase 0 reads the newest receipt and reconciles the frontier; Phase 3A reads the predecessor's receipt in full. Same ceilings and same PROPOSAL status as CHANGELOG.md. bytes_per_token 2.3648 was MEASURED on the fork's HANDOFFS.md on 2026-08-29 (same receipt format); at that density 70,182 B is about 29,700 tokens, over the read cap -- at the seed's 2.93 it would read as under, which is why the measured density is carried rather than the fallback. The trimmer's trigger does not fire at 70,182 B either; the remedy command is the same as CHANGELOG.md's with `--file HANDOFFS.md`."
+    },
+    {
+      "path": "starter-kit/FRAMEWORK_LEARNINGS.md",
+      "class": "on-demand",
+      "max_bytes": 73728,
+      "bytes_per_token": 2.8897,
+      "structure": [
+        { "pattern": "^\\| *[0-9]+ *\\|", "expect_min": 5,
+          "why": "the Learnings table's own row shape, which bin/check-learnings parses for contiguity. A shape check is cheap and two malformed rows once stood for ~40 sessions before anything looked." }
+      ],
+      "_": "ON-DEMAND, so NO max_tokens by design: the read cap binds a file read WHOLE, and this file is read in PART -- measured over 80 transcripts on the fork, read whole once and in part 243 times, and a partial read returns whole ROWS. The unit actually paid is the row, and the primary guard is bin/check-learnings' ROW_BUDGET_BYTES = 1,500 B per row (canonical-only), whose two independent bases that checker restates in its own comment; this entry is the long-form home that comment points at. bytes_per_token 2.8897 was MEASURED 2026-08-29 on blob b21854cc -- the exact blob cea3068 carries (46 rows, 56,673 B) -- by the doubled-file method: `cat F F > x.md`, Read x.md with a spanning `limit`, halve the token count the refusal reports (an over-cap explicit limit returns no content and costs nothing). max_bytes 73,728 is a PROPOSAL, the fork's ceiling: derived on 2026-08-26 at the pre-compaction density 3.0300 as the size that stays inside one read even if every new byte is 20% denser. At today's 2.8897 it sits 1,486 B ABOVE the one-read cliff (25,000 x 2.8897 = 72,242 B), so read it as a growth signal, not a guarantee of one read; a re-derivation at today's density would land near 70,000 B. NO max_line_bytes: a per-row cap set anywhere useful is red on day one against rows nobody may edit."
     }
   ],
+
+  "_deliberate_exclusions": "Measured on cea3068 and left out on purpose, with the numbers a future session needs: README.md 74,636 B, ITERATIVE_METHODOLOGY.md 55,976 B, FRAMEWORK_APPARATUS.md 15,493 B, HOW_TO_USE.md 55,528 B, starter-kit/BOOTSTRAP.md 28,211 B. Large, but read on demand and by humans (or by an adopter at setup), not mandated at Phase 0; the two the series shrank (ITERATIVE_METHODOLOGY.md via #78, its apparatus into FRAMEWORK_APPARATUS.md) now each fit one read, which is the argument, not their size. Adding any of these means declaring a ceiling nobody has defended yet, which is policy, not provisioning.",
 
   "synced": [],
   "_synced": "DELIBERATELY EMPTY. The seed ships two synced entries (SESSION_RUNNER.md, SAFEGUARDS.md) that drift-check an adopter's local copy against a canonical checkout. THIS REPO IS THAT CANONICAL: pointing path and canonical at the same file would compare a blob to itself, an identity no change can falsify. Here those two files are editable, so a SIZE finding is actionable -- which is why they carry per-file ceilings in files[] under read-set instead. check_synced() is drift-only and never enters an aggregate; a max_bytes written into a synced entry would look configured and refuse nothing."
