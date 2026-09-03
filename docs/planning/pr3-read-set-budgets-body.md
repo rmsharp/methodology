@@ -1,14 +1,16 @@
 # PR 3 body — the apparatus extraction (read-set budgets, 3 of 4)
 
-**Status: BRANCH BUILT AND VERIFIED, NOT PUSHED, PR NOT OPENED.** Opening it needs the operator's
-explicit go-ahead, as does the push. Prepared by S142 (2026-09-02).
+**Status: SHIPPED — [PR #78](https://github.com/KJ5HST/methodology/pull/78) is OPEN against
+`read-set-budgets`.** Pushed and opened by S143 (2026-09-02) on the operator's explicit go-ahead,
+three commits as-is. Body as submitted is below.
 
-- **Head:** `pr3/apparatus-extraction` = `2c30d0f` (3 commits)
-- **Base to use:** `read-set-budgets` — **but only after [#77](https://github.com/KJ5HST/methodology/pull/77) merges.**
-  The branch is stacked on `pr2/ledger-trimmer` (`56997af`), which is the exact tree #77 proposes, so
-  once #77 merges the base advances to that tree and this branch retargets with no rebase. **Opening
-  it against today's `read-set-budgets` (`46b56fd`) would show PR 2's whole diff as well as this one.**
-- **Payload:** 12 files, +426 / −348.
+- **Head:** `pr3/apparatus-extraction` = `2c30d0f`, on `origin`
+- **Base:** `read-set-budgets` — advanced to `907a696` when [#77](https://github.com/KJ5HST/methodology/pull/77)
+  merged at 2026-09-03T01:38:22Z. **`tree(907a696)` is identical to `tree(56997af)`**, the tree PR 3
+  was built and measured on, so S142's verification carried over and no rebase was needed
+  (`merge-tree` exit 0).
+- **Server-verified on open:** OPEN, base `read-set-budgets`, head `rmsharp:pr3/apparatus-extraction`,
+  **12 files +426/−348**, 3 commits, `MERGEABLE`. `upstream/main` untouched at `512c2ed`.
 
 ---
 

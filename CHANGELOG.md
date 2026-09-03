@@ -206,6 +206,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-02 · [ad hoc] S143 — OUTWARD-FACING ACTIONS TAKEN: branch pushed, **PR [#78](https://github.com/KJ5HST/methodology/pull/78) OPENED**
+
+**Recorded here because neither action leaves a commit in this repository.** A push to `origin` and a
+pull request on `KJ5HST/methodology` are both invisible to Phase 0 reconcile; the failure-mode-#27
+write-gate is the only mechanism that records them.
+
+**Authorization:** the operator's *"Open it, 3 commits as-is"*, given after reviewing the pre-flight,
+together with the decision that the trimmer-documentation gap becomes **a separate small PR later** —
+so it was deliberately not folded in.
+
+**Every property verified from the server, never from the command's own output.** `gh pr create`
+prints the same URL whatever base it used; `gh pr view --json baseRefName` is what proves the base,
+and `git ls-remote` rather than the push transcript is what proves the push.
+
+| Property | Value |
+|---|---|
+| State | **OPEN**, `MERGEABLE` |
+| Base | **`read-set-budgets`** — the operator's standing requirement that this never target `main` |
+| Head | `rmsharp:pr3/apparatus-extraction` = `2c30d0f`, confirmed on `origin` by `git ls-remote` |
+| Size | **12 files, +426 / −348**, matching the local measurement exactly |
+| Commits | **3** — `786aa24`, `2897983`, `2c30d0f`; no squash, per the operator's choice |
+| `upstream/main` | **untouched at `512c2ed`** |
+| `read-set-budgets` | still `907a696` — **a pull request does not advance its base** |
+
+**No re-measurement was owed and none was invented.** `tree(907a696)` — the base created when #77
+merged — is **identical** to `tree(56997af)`, the tree S142 built and measured PR 3 on. The suite was
+therefore not re-run: it would have measured the same tree.
+
 ### 2026-09-02 · [ad hoc] S143 — claim: push `pr3/apparatus-extraction` and open PR 3 against `read-set-budgets`
 
 **Authorization:** the operator's *"Open it, 3 commits as-is"*, given after being shown the verified

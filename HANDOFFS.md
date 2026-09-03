@@ -74,9 +74,45 @@ that instruction is the whole reason these rows exist.
 ```handoff
 session: S143
 date: 2026-09-02
-status: pending
-active_task: **PUSH `pr3/apparatus-extraction` (`2c30d0f`) AND OPEN PR 3 AGAINST `read-set-budgets`, THREE COMMITS AS-IS.** Operator authorized both after seeing the pre-flight. **Base verified ADVANCED from the server:** #77 MERGED, `read-set-budgets` now `907a696`, whose tree is **identical** to the `56997af` PR 3 was measured on — so no re-measurement is owed and no rebase is needed (`merge-tree` exit 0, 3 ahead / 1 behind). `upstream/main` untouched at `512c2ed`. **NOT IN SCOPE:** the trimmer-documentation gap (operator chose a separate later PR) and PR 4.
+status: complete
+self_score: 8
+predecessor_score: 8
+active_task: **PR 3 IS OPEN: [KJ5HST/methodology#78](https://github.com/KJ5HST/methodology/pull/78)**, base **`read-set-budgets`**, head `rmsharp:pr3/apparatus-extraction` = `2c30d0f`, **12 files +426/-348, 3 commits, MERGEABLE.** Operator authorized the push and the open, three commits as-is, and separately chose to defer the trimmer-documentation gap to its own later PR. Two commits here: the S143 claim + this close-out.
+what_was_done: **EVERY PROPERTY READ FROM THE SERVER, NEVER FROM THE COMMAND'S OWN OUTPUT.** `gh pr create` prints the same URL whatever base it used, so the base was proved by `gh pr view 78 --json baseRefName` -> **`read-set-budgets`**, and the push by `git ls-remote --heads origin` returning `2c30d0f` rather than by the push transcript. **`upstream/main` UNTOUCHED at `512c2ed`; `read-set-budgets` still `907a696`** — a pull request does not advance its base. **THE PREDICTION S142 LABELLED AS A PREDICTION WAS TESTED BEFORE IT WAS TRUSTED:** #77 merged as a true merge commit `907a696` with parents `[46b56fd, 56997af]`, and **`tree(907a696)` is IDENTICAL to `tree(56997af)`** — the tree PR 3 was built and measured on. So the base advanced with **zero content change**, `merge-tree` exits **0**, the branch is 3 ahead / 1 behind (the 1 being the merge commit itself), and **no rebase and no re-measurement were owed**. The suite was deliberately NOT re-run: it would have measured the same tree, and saying so is more honest than a run that proves nothing. The PR shows **exactly the three commits**, not PR 2's, because `56997af` is an ancestor of the new base.
+next_steps: **(1) NOTHING FURTHER IS AUTHORIZED.** Merging #78, commenting on it, tagging, releasing and opening PR 4 each need their own go-ahead. **(2) PR 4 IS THE LAST OF THE FOUR AND THE HARDEST** — `context_budget.py`, upstream 29,549 B vs fork 73,014 B, the only payload with no clean starting point. **Build it on the base #78 creates, once #78 merges** — and verify that with `git rev-parse <merge>^{tree}` against the tree it was measured on, exactly as this session did, rather than assuming. **(3) THE DEFERRED SMALL PR, operator-chosen and now unblocked:** `read-set-budgets` installs `starter-kit/methodology_trim.py` at every adopter root via `bin/_manifest.py` while **`BOOTSTRAP.md`, `README.md` and `docs/tutorials/T1_setup.md` all mention it ZERO times** (fork `main` mentions it 5 times in BOOTSTRAP alone). Fold in the two pre-existing count errors while there: both dashboard twins `:185` and `docs/tutorials/T8_keeping_current.md:183` say *"25 distributed sources/files"* where the manifest holds 27. **(4) TEST 9 STAYS RED until `read-set-budgets` reaches `main`** — `bin/sync --source=github` reads `main`, which has neither `methodology_trim.py` nor `FRAMEWORK_LEARNINGS.md`. It is not a regression and no branch off `read-set-budgets` can fix it. **(5) `HANDOFFS.md` NOW HOLDS 15 RECEIPTS AGAINST A RATIFIED CAP OF 4.**
+key_files: `docs/planning/pr3-read-set-budgets-body.md` — the body as submitted, with its status header now updated to SHIPPED and carrying the server-verified open properties. Branch `pr3/apparatus-extraction` = `2c30d0f`, now on `origin`. On that branch the two files a reviewer will actually judge: `ITERATIVE_METHODOLOGY.md:556-558`, the Reference Apparatus stub that enumerates all thirteen pointer sites, and `README.md:79`, the Option B manual-install path no checker models.
+gotchas: **(1) VERIFY AN OUTWARD ACTION FROM THE SERVER.** `gh pr create` printed `.../pull/78` and would have printed the same URL against `main`; only `--json baseRefName` proves the base. Same for the push: `git ls-remote`, not the transcript. **(2) A MERGE COMMIT CAN ADVANCE A BRANCH WITHOUT CHANGING ITS TREE.** `907a696` has two parents but `tree(907a696) == tree(56997af)`, because the other parent was already an ancestor. That is what made "no rebase needed" a fact rather than a hope — **compare the trees, do not reason about the parents.** **(3) "3 AHEAD / 1 BEHIND" IS NOT A REASON TO REBASE** when the 1 is a content-free merge commit; rebasing would have rewritten three verified shas for nothing. **(4) A PR OPENED ON A STACK SHOWS ONLY ITS OWN COMMITS ONCE ITS PARENT MERGES** — opening #78 before #77 merged would have displayed PR 2's whole diff as well. **(5) The two `.jsonl` go dirty from Phase 0 alone; do not `git reset --hard`.**
+runtime_smoke: **NO SUITE RE-RUN THIS SESSION AND NONE WAS OWED, FOR A REASON THAT WAS PROVED RATHER THAN ASSERTED:** the base `read-set-budgets` advanced from `46b56fd` to `907a696`, and `git rev-parse` shows **both `907a696^{tree}` and `56997af^{tree}` are `263a202d`** — byte-for-byte the tree S142 measured PR 3 against in a clean clone (base **114 passed / 1 failed**, branch **114 passed / 1 failed**, diffed row for row: **113 shared labels, zero status flips**; dashboard **211 OK**; trimmer **exit 0**; `check-links`/`check-learnings`/`check-handoff` **0/0/0** read bare; a real `bin/sync` landing the sibling with **14 references, 7 fragments, 0 unresolved** in the installed layout). Re-running would have measured the same bytes. **WHAT WAS VERIFIED INSTEAD IS THE OUTWARD STATE, ALL FROM THE SERVER:** `gh pr view 78` OPEN / base `read-set-budgets` / head `rmsharp:pr3/apparatus-extraction` / 12 files +426-348 / 3 commits / MERGEABLE; `git ls-remote --heads origin` -> `2c30d0f`; `upstream/main` `512c2ed`; `gh pr list` showing exactly one open PR. **WHAT THIS DOES NOT EXERCISE:** nothing was measured against the post-merge tree of #78 itself, which does not exist yet.
+changelog_ref: CHANGELOG.md — two S143 entries dated 2026-09-02: the claim and this close-out, which carries the PR-opened record.
+commit: the S143 claim + this close-out
 ```
+
+**Self-assessment: 8/10.** **+** The authorized action was executed exactly as scoped — the push, the
+open, three commits, base `read-set-budgets` — and **every outward property was proved from the
+server**, including the base, which `gh` reports identically whatever it used. **+** I tested the one
+thing my predecessor explicitly labelled a prediction instead of inheriting it: comparing
+`tree(907a696)` to `tree(56997af)` is what turned "no rebase needed" into a fact, and it is also why
+declining to re-run the suite is honest rather than lazy. **+** I recorded the claim *before* the
+outward action, which is the only mechanism that records a push or a PR at all. **+** I did not fold
+in the trimmer-documentation gap, because the operator had chosen otherwise — a defect I found is
+still not a licence to widen an authorized action. **−** The scope was narrow and largely mechanical;
+the hard work was S142's. **−** I did not re-read the submitted body against the final tree before
+sending it, relying on it having been written from measurements taken on that same tree; that held,
+but it was an assumption rather than a check. **Not a 9:** that unchecked assumption on the one
+artifact a reviewer reads first.
+
+**Predecessor (S142) evaluation: 8/10.** **+** Its `next_steps` (2) named the forced ordering — #77
+merges first, then PR 3 opens — and said *why*, so this session never risked opening a PR that would
+display PR 2's diff. **+** It labelled the no-rebase claim **as a prediction** and named the exact
+command to test it (`git merge-base --is-ancestor`, which I extended to a tree comparison); a handoff
+that marks its own untested claims is what let this session verify in one step instead of re-deriving.
+**+** The PR body was already written and measured, so the open was a single command. **+** It found a
+real defect in the then-open #77 and refused to touch it, leaving the operator the decision — which is
+the reason there is now a clean, separately-scoped follow-up. **−** Its report to the operator was
+dense enough that the operator had to ask which branch the work even targeted; the receipt was
+accurate but the summary was not readable by someone not already inside the stack. **−** It left the
+branch 1 behind the base it predicted, and did not say what to do about that ordinary state — I had to
+determine that a content-free merge commit is not a reason to rebase.
 
 ```handoff
 session: S142
