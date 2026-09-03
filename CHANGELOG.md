@@ -220,6 +220,23 @@ with **13 errors** without the trimmer present. Building on `46b56fd` is therefo
 stacking on `pr2/ledger-trimmer` (`56997af`, the exact tree #77 proposes) is the same base #77 will
 create on merge, so the branch retargets cleanly.
 
+**Also at claim, and it is a separate action with its own commit `ef51dc9`: reconciled S141's
+`commit:` answer slot.** `bin/check-handoff --allow-pending` went **0 -> 1** the moment this session's
+receipt was prepended — a slot reading `the S141 claim + this close-out` is legal only while that
+receipt is newest, and the spec (`starter-kit/HANDOFFS.md:64`, `:78-79`) makes the next session
+resolve it. Set to `72b9b54` (claim) + `4329d33` (close-out), each verified by reading **that commit's
+own copy of the S141 block** rather than inferred from subject lines: `72b9b54` holds it
+`status: pending`, `4329d33` holds it `status: complete`. Checker back to **0**, read bare.
+
+**`ef51dc9` reached history with no ledger line, and this entry is the repair.** The edit that should
+have added it aborted on its own uniqueness assertion — the `**Ledger:** ... set at claim` boilerplate
+occurs **3** times in this file, not once — but the `git commit` on the following line was never
+chained to it and ran anyway. `.githooks/pre-commit` did not stop it: `git add CHANGELOG.md` on an
+**unmodified** file stages nothing, so the co-staging test saw no ledger change to demand. **A
+co-staging gate keyed on the path being staged cannot distinguish "ledger updated" from "ledger
+mentioned",** which is exactly the reflex §6 dragon 2 of `docs/planning/upstream-read-set-pr-plan.md`
+warns the derived-value checks would inherit.
+
 **Ledger:** `CHANGELOG: pending` — set at claim; this session's actions are recorded here at Phase 3F.
 
 ### 2026-09-02 · [ad hoc] S141 — OUTWARD-FACING ACTIONS TAKEN: head branch pushed, **PR [#77](https://github.com/KJ5HST/methodology/pull/77) OPENED**
