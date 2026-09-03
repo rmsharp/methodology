@@ -206,6 +206,68 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S147 close-out — PR 4 BUILT (Phase B): `pr4/context-budget-gate` = `f3a4b6d` on `cea3068`, verified, NOT pushed
+
+**Phase 3D/3F.** Deliverable: the built, verified, unpushed branch — Phase B of
+[`docs/planning/pr4-read-set-budgets-plan.md`](docs/planning/pr4-read-set-budgets-plan.md) §5, executed as
+ratified (D1–D11). Head `f3a4b6d` (tree `7541e3ee`), two commits on `cea3068` — `28406ce`
+`feat(starter-kit): …` (the tool at blob `c5ff15e5`, the test module scrubbed on exactly four lines, the
+9-line `bin/tests.sh` wiring, the seed's +6, the D8 ledger entry) and `f3a4b6d` `chore(budget): …` (the
+root config byte-identical to the candidate, the seven `.gitignore` comment lines, one ledger bullet) —
+built in a clean clone made only by the §8 R1 recipe (fixtures `020ba3f 7a71df0 e02881a e5cdc66` proved
+unreachable, no `docs/archive/`), each commit **through** upstream's `.githooks/pre-commit` with
+`core.hooksPath` set in the clone, and fetched into this fork as a **local ref only**.
+`upstream/read-set-budgets` re-read at `cea3068` and the three pins re-read before the config was copied.
+Body file: [`docs/planning/pr4-read-set-budgets-body.md`](docs/planning/pr4-read-set-budgets-body.md).
+**Nothing pushed, nothing opened; Phases C and D still need their own go-aheads.**
+
+**Commits this session, all recorded here:** `bfba325` (claim; also reconciled S146's `commit:` slot to
+`a05e23a` + `a5fa2ae`); `8dc31e2` `chore(history)` for the two `.jsonl` series Phase 0 dirtied
+(`--no-verify`, recorded by this line, committed *before* this close-out so nothing sits above the
+frontier); this close-out (Learning #53, the plan's Phase B record, the body file, both ledgers).
+
+**EVERY DONE-LIST FIGURE, TAKEN FROM THE TREE THAT WOULD BE PUSHED:** blob `c5ff15e5`, mode 100755; the
+test module differs from `main:tools/test_context_budget.py` in exactly the four D9 lines (8, 288, 561,
+613 — widths 95/97/97/97 under the module's 99-column norm); `python3 tools/test_context_budget.py` →
+exit 0, `Ran 116 … OK (skipped=2)`; `--selftest` → 0, 52 PASS / 0 FAIL; the bare run → exit 2, 49 lines,
+0 *defect*, six findings, `CHANGELOG.md` **96,750 B** (91,365 + 5,385 for the entry; ≈39,211 tok);
+`--json` `config_defects: []`; the 13-case `--precommit` matrix reproduced (exits 2 0 2 2 0 2 0 2 0 0 0 0 0;
+case 12's bare run 2 with `instrument-failed`); **by hand, each commit's index against its parent:
+commit (1) vs `cea3068` with no config → exit 3; the same index with the candidate in the worktree → 2
+(`91,365 -> 95,079 B`); commit (2) vs commit (1) → 2 (`95,079 -> 96,750 B`), and 0 with its bullet
+unstaged** — the exits D4 ratified, measured again on the real commits; `bin/tests.sh` on a pristine
+control **114 passed / 1 failed** vs **115 / 1** on a fresh clone of the head — 115 shared rows, exactly
+one added (`context budget gate unit tests green`), zero flips, both failures Test 9 — and **114 / 2 at
+commit (1) alone** (the wired row is red until the config lands; that commit's message says so);
+`check-links` / `check-learnings` / `check-handoff` / `--all` 0/0/0/0; `git status --porcelain` empty
+after deleting the history file; `git diff --stat cea3068 f3a4b6d` exactly seven files (2,315 / 98); the
+identifier regex over the diff's added lines and over both commit messages prints nothing;
+`grep -c PROPOSAL .context-budget.json` 8; the config `cmp`-identical to the candidate.
+
+**THE FIX-ROUND DISCIPLINE RAN: two independent read-only reviewers on the frozen branch, each in its
+own clone.** The plan-compliance lens re-derived every DONE item — all MET, no departures, three cosmetic
+observations. The maintainer's-eye lens returned **twelve** items (3 HIGH, 4 MEDIUM, 5 LOW), and every one
+re-derives by hand: the shipped tool blob says *"this repository's own SESSION_RUNNER.md is 54,363 B"*
+(52,195 B on `cea3068`) and cites a fork planning file at `:683`; the test module still says *"Test 35"*
+and *"bin/tests.sh:248-251"* at `:9`/`:13`, outside D9's four regex hits; the config's `read-set` `_` key
+cites `upstream-read-set-pr-plan.md`, absent upstream; the ported `.gitignore` comment says a file *"is
+tracked"* that upstream does not track; the ledger entry says *"PRs 1 and 3"* where upstream knows #76
+and #78; two overstatements of my own in commit (1)'s message. **None repaired — each sits inside an
+artifact the plan ratified (D9's four lines, Appendix A verbatim, the `c5ff15e5` blob, the §3.6 lines) —
+so the six-row decision table, with proposed wording per row, is in the body file's header, and the
+recommendation is a fix-round before Phase C.** The remaining items stand as ratified for the reasons the
+table gives (the two machine-dependent tests, the fork-measured densities, the PROPOSAL count, the
+rounding, the trailers).
+
+**Learning #53** appended to `starter-kit/FRAMEWORK_LEARNINGS.md`: a per-clone hook is off in a fresh
+clone of the target; enable it before the first commit, and let one refusal prove it binds.
+
+**Adopter impact:** none yet — nothing has left this machine. When PR 4 merges and adopters sync, the two
+changes the body discloses apply (bytes-not-lines rows when nothing fires; a derived token ceiling above
+73,252 B). **Nothing outward-facing.**
+
+**Model:** Claude Fable 5.1.
+
 ### 2026-09-03 · [ad hoc] S147 — claim: Phase B of the PR 4 plan — build `pr4/context-budget-gate` on `cea3068`, verify, do not push
 
 **Authorization:** the operator's *"Item (1) of S146's handoff"*, given after the Phase 0 report:

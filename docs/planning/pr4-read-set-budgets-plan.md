@@ -4,7 +4,7 @@
 record (D1–D10 as recommended; D4 reshaped and D11 added on the second review's findings). Phase B
 (build on `cea3068` in a clean clone, verify, do not push) is authorized as the next session's single
 deliverable; Phases C and D are NOT authorized by this ratification and each needs its own explicit
-go-ahead. Nothing here is implemented, pushed, or opened.** Written S145 (2026-09-02), adversarially
+go-ahead. Phase B BUILT at S147 (2026-09-03): `pr4/context-budget-gate` = `f3a4b6d`, verified, NOT pushed, NOT opened — see §5 Phase B for the record and the fix-round the self-review recommends before Phase C.** Written S145 (2026-09-02), adversarially
 reviewed and repaired in the same session and again at S146 (below). The plan is the session's one deliverable
 (`starter-kit/SESSION_RUNNER.md` Phase 2 §Planning Sessions; FM #18). It is the fourth and last
 payload of [`upstream-read-set-pr-plan.md`](upstream-read-set-pr-plan.md) §5 — **Phase 3, "the gate"**,
@@ -603,6 +603,23 @@ adversarial rounds named in the header, every refutation re-derived before adopt
 machine; it cannot verify the maintainer's environment (§3.2). STOP.
 
 **Phase B — Build PR 4 on `cea3068`, verify, do not push.** One session.
+
+**✅ DONE at S147 (2026-09-03) — built and verified in the R1 clone; NOT pushed; fetched into this fork as
+the local ref `pr4/context-budget-gate` only.** Head `f3a4b6d` (tree `7541e3ee`): `28406ce` commit (1),
+`f3a4b6d` commit (2), both through upstream's `.githooks/pre-commit` with `core.hooksPath` set in the
+clone — it refused a first attempt whose edit script had aborted before a ledger line was staged
+(Learning #53). Every item of the DONE list below was measured on that tree and matched: blob `c5ff15e5`;
+four D9 hunks; `Ran 116 … OK (skipped=2)`, exit 0; `--selftest` 52 / 0; bare exit 2 with `CHANGELOG.md`
+at **96,750 B** (+5,385 B, the entry), six findings, `config_defects: []`; the 13-case matrix; by-hand
+exits **3 / 2 / 2 / 0**; suite 114/1 → 115/1 (115 shared rows, one added, zero flips; **114/2 at commit (1)
+alone** — the wired row is red until the config lands, and that commit's message says so); checkers
+0/0/0/0; seven files; both identifier greps empty; PROPOSAL 8; config byte-identical to Appendix A.
+*Verification, runnable:* `git rev-parse pr4/context-budget-gate^{tree}` → `7541e3ee…`; `git diff --stat
+cea3068 pr4/context-budget-gate` → 7 files. Body: [`pr4-read-set-budgets-body.md`](pr4-read-set-budgets-body.md).
+**The self-review (two read-only reviewers, one against this DONE list, one as the maintainer) found
+twelve items, every one re-derived by hand, none repaired — each sits inside a ratified artifact** (the
+D9 four-line scrub, the verbatim Appendix A, the `c5ff15e5` blob, the §3.6 lines); the decision table is
+in the body file's header, and the recommendation is a fix-round before Phase C.
 
 *Do:* make a clean clone with the **§8 R1 recipe only** — `git init` + `git fetch <this repo>
 refs/remotes/upstream/read-set-budgets:refs/heads/read-set-budgets`. A bare `git clone --no-local` of
