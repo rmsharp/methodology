@@ -559,8 +559,8 @@ Consumers of the root `.context-budget.json` other than the tool, on `cea3068`: 
 recognises the file as framework-installed through its per-file signature entry
 (`starter-kit/methodology_dashboard.py:498-508` upstream, since #71) and an exclusion tuple (`:361`) —
 the fork's `_CONTEXT_BUDGET_JSON_SIGNATURES` symbol the first draft named **does not exist upstream** —
-and upstream's own comment on that entry says it is *"structurally unreachable today"* for scoring,
-so it reads nothing and scores nothing. `bin/tests.sh` copies the **seed** into scratch projects,
+and upstream's own comment on that entry (`:509`) says it is *"Structurally unreachable today"* for
+scoring, so it reads nothing and scores nothing. `bin/tests.sh` copies the **seed** into scratch projects,
 never the root file. No other reader.
 
 ---

@@ -206,6 +206,71 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S145 close-out — the PR 4 plan, delivered and adversarially reviewed
+
+**Phase 3D/3F.** Deliverable: [`docs/planning/pr4-read-set-budgets-plan.md`](docs/planning/pr4-read-set-budgets-plan.md)
+(67,657 B) and its companion [`pr4-candidate.context-budget.json`](docs/planning/pr4-candidate.context-budget.json)
+(14,200 B) — the plan for the fourth and last read-set-budget PR, porting `starter-kit/context_budget.py`
+(fork blob `c5ff15e5`, 73,014 B) and everything coupled to it onto `read-set-budgets` at `cea3068`.
+**Planned, not built; nothing pushed, nothing opened.** Session began 2026-09-02 local; this entry is
+dated by its commit.
+
+**Commits this session, all recorded here:** `209dd51` (claim); `5394079` `[WIP]` draft 1, frozen for
+review, committed `--no-verify`; `29054c7` `[WIP]` draft 2 after the review, `--no-verify`; `e13ceda`
+`chore(history)` the two append-only `.jsonl` series dirtied by Phase 0, `--no-verify`; and this
+close-out. The three bypasses are each recorded by this line, which is what the bypass rule requires.
+
+**WHAT THE PLAN ESTABLISHED, MEASURED IN CLEAN CLONES OF `cea3068`.** (1) The file port is clean by
+construction: upstream's blob `be2721a5` is the exact ancestor of the fork's seven linear commits; the
+end-state patch and all seven per-commit patches apply. (2) The hard part is the coupling: the fork
+tool **exits 3 without a root `.context-budget.json`**, upstream has none, and the distributed seed
+dropped in as that config reads red for reasons unrelated to the series (`CLAUDE.md` 59,168 B vs
+28,000). So PR 4 must ship a canonical root config, and the plan ships a candidate that was **run**:
+exit 2 with `(read-set total) 67,581 B / 56,750 B over` — the 10,831 B the series exists to make
+visible — 0 config defects, `--selftest` 52/0, the 116-test module OK (2 environment skips), a
+13-case `--precommit` matrix (every over-or-pinned file refuses +2 B, every shrink passes, `structure`
+is not evaluated by `--precommit`), and `bin/tests.sh` **115 passed / 1 failed against a control of
+114 / 1** — 115 shared rows, one added, zero flips. (3) Under the unchanged seed an adopter sees two
+changes on sync: read-mandated rows report bytes instead of lines when nothing fires, and a compliant
+file at ≥ 73,250 B flips `ok` → `over`, exit 1 → 2 (Probe C4). (4) Ten operator decisions D1–D10 with
+recommendations; Phases B–D with DONE, surface, and STOP each.
+
+**THE RECORD CORRECTED.** Six receipts (S136, S140–S144) called this payload *"no clean starting
+point"*; S144 glossed it *"the two versions diverged rather than one being a prefix of the other"*.
+`git rev-parse` on the two blobs refutes the file half. The tree half is true.
+
+**REVIEW.** Draft 1 was frozen at `5394079` and attacked by eight independent read-only agents — five
+refuters over disjoint claim slices, three critique lenses: **97 claims confirmed, 28 refuted, 2
+unverifiable, 32 findings.** Every refutation was re-derived before adoption. Refuted in my own work:
+three per-commit mis-attributions (read from commit messages instead of path-restricted diffs); a
+false *"hand-copied intermediate"* verdict on `vscode_quarto_ext`'s blob, caused by zsh parsing
+`$c:path` as a history modifier (it is `6a91660`'s blob, six versions behind fork `main`); the trimmer
+named as the declared ledgers' remedy when its trigger is 196,608 B, 3× the ceiling, and does not fire
+at 91,365 or 70,182 B; a Probe C fixture holding one of the seed's three files, which could not
+exhibit the changes it was published as not finding; the PR's own upstream ledger entry being a
+commit the shipped gate refuses, which fixes the commit order (D4); the `FRAMEWORK_LEARNINGS.md`
+row dropped on a false reason when its density was measured on the very blob upstream carries and
+upstream's `bin/check-learnings:87-89` already cites the derivation (D7 reversed). **A second review
+round was launched against `29054c7` and FAILED: all five agents hit the account's session usage
+limit and returned null.** The repaired draft is therefore self-verified only (the round-2 claims I
+had not re-derived were checked by hand: `calibrate()`'s too-few-sessions path, the upstream ledger
+anchors at `:36`/`:144`, the dashboard's `:361`/`:498`/`:508` entries, `install_hook()`'s write path).
+
+**Also at close-out:** reconciled S144's `commit:` answer slot to `710390b` (claim) + `8c701b5`
+(close-out), each verified by reading that commit's own copy of the S144 block. Appended **Learning
+#50** to `starter-kit/FRAMEWORK_LEARNINGS.md` (a true ratio carrying a false inference through six
+receipts); `check-learnings` OK, 49 rows, 0 over 1,500 B.
+
+**VERIFICATION AT CLOSE-OUT.** `bash bin/tests.sh` in this worktree, bare, after both ledger edits:
+**304 passed / 1 failed / 0 skipped, exit 1** — the recorded baseline to the row. A first run before
+the S144 `commit:` reconcile read 302 / 3 / 0; its two extra failures were that unreconciled slot (the
+`L1` row and the 12,288 B edge case whose fixture is built from the live ledger) and both pass in the
+second run. The one failure is Test 9, pre-existing. `check-handoff` 0, `--all` 0, `check-links` 0, `check-learnings` 0,
+each read bare. **NO OUTWARD-FACING ACTION.** Phases C and D of the plan each require their own
+go-ahead; approving the plan is not it.
+
+**Model:** Claude Fable 5.1.
+
 ### 2026-09-02 · [ad hoc] S145 — claim: planning session for PR 4 (`starter-kit/context_budget.py` to `read-set-budgets`)
 
 **Authorization:** the operator's *"PR 4 planning session"*, given after the Phase 0 report. The
