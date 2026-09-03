@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S148
+date: 2026-09-03
+status: pending
+active_task: **THE SIX-ROW FIX-ROUND ON `pr4/context-budget-gate` — REWRITE THE TWO UNPUSHED COMMITS, RE-MEASURE ON A FRESH CLONE, DO NOT PUSH.** The decision table at `docs/planning/pr4-read-set-budgets-body.md:23`: row 2 first as a fork commit on `main` (the tool's four fork-relative comment sites, then re-port so the blob stays byte-identical to fork `main`), rows 1/3/4/5/6 inside the branch (row 3 also amends `pr4-candidate.context-budget.json`), plus the *Kept as ratified* folds into rows 2 and 3; re-measure by the plan's §8 recipe; one review lens. Operator's words: *"Item (1) of S147's handoff"*. No push, no PR, no `--calibrate`, no `install-hook`; Phases C and D each keep their own go-ahead.
+```
+
+```handoff
 session: S147
 date: 2026-09-03
 status: complete
@@ -84,7 +91,7 @@ key_files: `docs/planning/pr4-read-set-budgets-body.md:1` the status header (hea
 gotchas: **(1) A FRESH CLONE RUNS NO HOOKS.** `core.hooksPath` is per-clone; set it before the first commit or the D4 premise is never tested (Learning #53). **(2) THE SCRATCHPAD IS SESSION-SPECIFIC** — the build clone can vanish; the branch survives only as this repo's local ref `pr4/context-budget-gate` (tree `7541e3ee`). Push from here in Phase C. **(3) `git reset --soft <parent>` FROM A DETACHED COMMIT IS THE BY-HAND GATE RECIPE** (index = the commit's tree, HEAD = its parent, worktree = the commit); `--precommit` reads the config from the worktree, so the exit-3 case needs it absent there. **(4) A ONE-LINE EDIT CAN EXCEED THE MODULE'S 99-COLUMN NORM** — assert widths before writing; my first script died at line 613 (100 chars) and left the build half-applied, which the hook then caught. **(5) `echo ======` IS AN EQUALS-EXPANSION IN zsh** (`=cmd` resolves a command name): quote separators. **(6) THE TWO `.jsonl` GO DIRTY FROM PHASE 0 ALONE; commit them as `chore(history)` BEFORE the close-out so nothing sits above the frontier.** **(7) `bin/tests.sh` in this worktree mutates the live ledgers — never edit `HANDOFFS.md` while it runs.** **(8) A REVIEWER'S HIGH CAN SIT INSIDE A RATIFIED ARTIFACT** — re-derive it, record it, route it to the operator; do not amend a ratified decision alone.
 runtime_smoke: **THIS REPO SHIPS NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`.** Run bare in this worktree at close-out with Learning #53, the plan record, the body file and both ledger edits in place: **304 passed / 1 failed / 0 skipped, exit 1 — S146's close-out summary, to the row.** The one failure is Test 9 (`--source=github`, three manifest sources not yet on `upstream/main`), pre-existing; the run mutated and restored the ledgers as Test 34 does, and the tree after it carried only this session's edits. **Checkers, each bare at close-out with the receipt in place:** `check-handoff` **0**, `--all` **0** (19 receipts), `check-links` **0** (105 links / 23 files), `check-learnings` **0** (52 rows, 0 over 1,500 B). **The deliverable's own smoke is the DONE list, measured in clean clones of `cea3068` and never in this worktree:** unit 116 OK (2 skipped) exit 0; selftest 52/0 exit 0; bare exit 2; the 13-case matrix; by-hand 3/2/2/0; suites 114/1 (control) vs 115/1 (head) vs 114/2 (commit (1)); checkers 0/0/0/0 on the head. **WHAT THIS DOES NOT EXERCISE:** the maintainer's machine (the two skipped tests run there if transcripts exist and can fail for non-defect reasons — body §Verification), the network (Test 9), `--calibrate` (not run, D10), and Phases C/D.
 changelog_ref: CHANGELOG.md "2026-09-03 · [ad hoc] S147 close-out — PR 4 BUILT (Phase B): `pr4/context-budget-gate` = `f3a4b6d` on `cea3068`, verified, NOT pushed" + the 2026-09-03 S147 claim entry
-commit: bfba325 (claim) + 8dc31e2 (chore, --no-verify) + this close-out
+commit: bfba325 (claim) + 8dc31e2 (chore, --no-verify) + ae5ff8d (close-out) — reconciled by S148 per the spec's answer-slot rule
 ```
 
 Model: Claude Fable 5.1.

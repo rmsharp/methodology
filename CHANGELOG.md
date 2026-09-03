@@ -206,6 +206,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S148 — claim: the six-row fix-round on `pr4/context-budget-gate` (item (1) of S147's handoff)
+
+**Authorization:** the operator's *"Item (1) of S147's handoff"*, given after the Phase 0 report: the
+six-row decision table at [`docs/planning/pr4-read-set-budgets-body.md`](docs/planning/pr4-read-set-budgets-body.md)
+`:23`, the fix-round S147's self-review recommended before Phase C. **The rewritten, re-measured, still
+unpushed branch is the ONE deliverable:** row 2 first, as a fork commit on `main` (the tool's four
+fork-relative comment sites), then the branch rebuilt on `cea3068` by the plan's §8 R1 recipe with rows
+1, 3, 4, 5 and 6 applied inside it (row 3 also amends `pr4-candidate.context-budget.json`) and the
+fork-vocabulary folds the table's *Kept as ratified* paragraph assigns to rows 2 and 3; every DONE-list
+figure re-measured on the fresh tree; one review lens re-run; the plan's `c5ff15e5` criterion re-stated
+with the new blob id. **No push, no PR, no `--calibrate`, no `install-hook` at the clone root, no
+`bin/tests.sh` in this worktree, nothing outward-facing.** Phases C and D each keep their own go-ahead.
+
+**Reconciled at claim:** S147's receipt `commit:` slot named its close-out by description; this commit
+names it — `ae5ff8d`. Both ledger frontiers stood at `ae5ff8d` at Phase 0 (`git rev-list --count
+--no-merges ae5ff8d..HEAD` → 0), so no backfill is owed and none is written.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F.
+
 ### 2026-09-03 · [ad hoc] S147 close-out — PR 4 BUILT (Phase B): `pr4/context-budget-gate` = `f3a4b6d` on `cea3068`, verified, NOT pushed
 
 **Phase 3D/3F.** Deliverable: the built, verified, unpushed branch — Phase B of
