@@ -206,6 +206,71 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S148 close-out — the PR 4 fix-round DONE: `pr4/context-budget-gate` REBUILT as `cf15489` on `cea3068`, re-verified, NOT pushed
+
+**Phase 3D/3F.** Deliverable: the six-row fix-round from S147's self-review, applied, and the branch
+rebuilt and re-measured — item (1) of S147's handoff, the operator's words. Head **`cf15489`** (tree
+`c857734`), two commits on `cea3068` — `8df8faa` commit (1), `cf15489` commit (2) — built in a clean
+clone by the §8 R1 recipe (fixtures `020ba3f 7a71df0 e02881a e5cdc66` unreachable, no `docs/archive/`),
+each committed **through** upstream's `.githooks/pre-commit` with `core.hooksPath` set, and fetched into
+this fork as the local ref `pr4/context-budget-gate`. The two earlier heads are kept as refs, not
+branches: S147's `f3a4b6d` and this session's `46089f1` and `c6577f2` (the two the review lenses read),
+under `refs/archive/pr4-context-budget-gate-<sha>`. **Nothing pushed, nothing opened; Phases C and D
+still need their own go-aheads.** Records: the body file's header and its *fix-round* section
+([`docs/planning/pr4-read-set-budgets-body.md`](docs/planning/pr4-read-set-budgets-body.md)), the plan's
+§5 Phase B record, §3.1 heading and DONE criterion re-stated with the new blob id.
+
+**Commits this session, all recorded here:** `1086f5c` (claim; S147's `commit:` slot reconciled to
+`ae5ff8d`); `6887b67` `chore(history)` (`--no-verify`, the dashboard series Phase 0 dirtied); `22c6cf0`
+and `544cfb0`, the two fork-side passes (one entry below, extended for the second); this close-out
+(Learning #54, the plan and body records, both ledgers).
+
+**WHAT THE SIX ROWS BECAME.** Rows 2 and 3's fork halves first (`22c6cf0`: the tool's five fork-authored
+sites plus the test module's four, the candidate config's two sentences), then the branch: row 1
+(`tools/test_context_budget.py:9`, `:13` → the unnumbered upstream block and `bin/tests.sh:237-244`),
+row 4 (`.gitignore:5`, later `:8`), row 5 (the two PRs by absolute URL, and *"eight fork commits (seven
+that went through the fork's own review rounds, plus one comment-only reword made for this port)"*),
+row 6 (*"every git fixture"*, the seed's on-demand note named, *"six lines"* for *"four"*, the tool's
+size 73,040 B). **The one site left alone, on evidence:** `starter-kit/context_budget.py:409` *"learning
+#22 / #26a"* is upstream's own 1.0.0 text — `git blame` → `df6a991` (KJ5HST, 2026-08-08), present in blob
+`be2721a5` — so S147's review had attributed the maintainer's own citation to the port; Learning #54.
+
+**THE REVIEW LENS RE-RAN, TWICE.** A maintainer's-eye reviewer read the first rebuild (`46089f1`) in its
+own R1 clone and returned **fourteen** items (3 HIGH, 5 MEDIUM, 6 LOW), every one re-derived by hand:
+repaired in `544cfb0` and the third build — `tools/test_context_budget.py:214` (a fork commit `7603f10`
+attributed to *"this framework's own repository"*), `:404` (*"PHASE B"* in capitals, missed by a
+case-sensitive grep), the ledger entry's 73,014 B (stale by this session's own +26 B), the tool's `:57` /
+`:1157` and the seed's *"the project that authors this tool"* (a fork measurement stated as the tool's
+home's), the bare `#76`/`#78` (the ledger's own front-matter rule wants absolute URLs), `.gitignore:8`
+(*"must survive a fresh clone"* — untracked there), the *"seven reviewed"* wording; kept with the reason
+recorded in the body file — `:683` names the fork so it resolves, *"five values"* is D10 (five distinct,
+seven sites), the config's sizes are scoped to `cea3068`, `:71` is correct on the tree; two follow-ons
+disclosed in the PR body rather than built — `bin/check-learnings:87-89`'s comment goes stale when commit
+(2) lands (an eighth file, outside the ratified seven) and the pre-existing `:341` `ResourceWarning`.
+Then a second, delta lens on the frozen third build `c6577f2`: all fourteen dispositions confirmed, seven more items — two false provenance sentences the rebuild itself had written (*"eight commits … one reword"* where it is nine and two; *"every intermediate fails"* where the last two pass), a `.gitignore` subject and a bullet naming only one of the two histories, all four repaired in the fourth build `cf15489`; the module's colliding `D1`–`D5` labels, the 20,193/20,194 rounding pair and the seed naming the fork disclosed in the PR body. The lens's verdict, *"not yet — fix F1 and F2 first"*, was acted on; no lens ran on the fourth build's four text edits, which were checked by grep against the reviewer's own commands.
+
+**EVERY DONE ITEM RE-MEASURED ON THE FOURTH BUILD AND MATCHED:** blob `d91677b5`, mode 100755, equal to
+fork `main`'s; the module differs from `main:tools/test_context_budget.py` in exactly six lines (8, 9,
+13, 288, 561, 613); unit → exit 0, `Ran 116 … OK (skipped=2)`; `--selftest` → 0, 52 / 0; bare → exit 2,
+49 lines, 0 *defect*, six findings, `CHANGELOG.md` **97,257 B** (91,365 + 5,892; ≈39,416 tok); `--json`
+`config_defects: []`; the 13-case matrix (2 0 2 2 0 2 0 2 0 0 0 0 0; case 12's bare run 2 with
+`instrument-failed`); by hand — commit (1) vs `cea3068` no config → **3**; with the candidate in the
+worktree → **2** (`91,365 -> 95,557 B`); commit (2) vs commit (1) → **2** (`95,557 -> 97,257 B`); bullet
+unstaged → **0**; suites on fresh clones **114/1** (control) vs **115/1** (head) vs **114/2** (commit (1))
+— 115 shared rows, one added, zero flips, every failure Test 9; checkers 0/0/0/0; seven files, 2,320 /
+98; the identifier regex over added lines and both messages empty; a case-insensitive sweep of the added
+lines for the residue class empty; PROPOSAL 8; config `cmp`-identical to the amended candidate; `git
+status --porcelain` empty after deleting the history file.
+
+**Runtime smoke in this worktree, at close-out with every edit in place:** `bash bin/tests.sh` → **304 passed / 1 failed / 0 skipped, exit 1 — S147's close-out summary, to the row**
+(the one failure Test 9, pre-existing; the run mutated and restored the ledgers as Test 34 does).
+Checkers, each bare: `check-handoff` **0** (20 receipts, the newest complete, 0 over 12,288 B), `--all` **0** (20 receipts), `check-links` **0** (105 links / 23 files), `check-learnings` **0** (53 rows, 0 over 1,500 B).
+
+**Two harness gotchas, recorded for the next builder:** in `zsh` an unquoted `$CB` holding `python3
+starter-kit/context_budget.py` does not word-split, so every by-hand and matrix case came back **127**
+(*command not found*) on the first pass — eighteen identical exits no case is specified to produce; use a
+shell function. And a residue grep must be case-insensitive: *"PHASE B"* survived a `Phase B` sweep.
+
 ### 2026-09-03 · [ad hoc] S148 — reword the fork-relative comments in `context_budget.py`, its test module and the PR 4 candidate config (the fix-round's fork-side half: rows 2 and 3)
 
 **The fork-side prerequisite of the fix-round, committed on `main` BEFORE the branch is rebuilt so the

@@ -4,7 +4,7 @@
 record (D1–D10 as recommended; D4 reshaped and D11 added on the second review's findings). Phase B
 (build on `cea3068` in a clean clone, verify, do not push) is authorized as the next session's single
 deliverable; Phases C and D are NOT authorized by this ratification and each needs its own explicit
-go-ahead. Phase B BUILT at S147 (2026-09-03): `pr4/context-budget-gate` = `f3a4b6d`, verified, NOT pushed, NOT opened — see §5 Phase B for the record and the fix-round the self-review recommends before Phase C.** Written S145 (2026-09-02), adversarially
+go-ahead. Phase B BUILT at S147 (2026-09-03) as `f3a4b6d`; the self-review's six-row fix-round ran at S148 (2026-09-03), a review lens added fourteen items, and the branch was REBUILT as `pr4/context-budget-gate` = `cf15489` (tree `c857734`), re-verified, NOT pushed, NOT opened — see §5 Phase B for both records.** Written S145 (2026-09-02), adversarially
 reviewed and repaired in the same session and again at S146 (below). The plan is the session's one deliverable
 (`starter-kit/SESSION_RUNNER.md` Phase 2 §Planning Sessions; FM #18). It is the fourth and last
 payload of [`upstream-read-set-pr-plan.md`](upstream-read-set-pr-plan.md) §5 — **Phase 3, "the gate"**,
@@ -175,12 +175,12 @@ merges to `main` and they sync (`bin/sync --source=github` reads `main`).
 
 ## 3. What PR 4 carries, file by file — and what it does not
 
-### 3.1 `starter-kit/context_budget.py` → blob `c5ff15e5`, byte-identical to fork `main`
+### 3.1 `starter-kit/context_budget.py` → blob `c5ff15e5`, byte-identical to fork `main` (since S148: `d91677b5`, after the comment-only `22c6cf0` and `544cfb0`)
 
 **Ship the end state, not a replay.** Verified (§8, R3): the single path-restricted patch
 `git diff 14bd88a main -- starter-kit/context_budget.py` applies to `be2721a5`; the seven per-commit
 patches also apply in sequence, each intermediate blob equal to that commit's own. The DONE criterion
-is the blob, not the patch: `git rev-parse <branch>:starter-kit/context_budget.py` = `c5ff15e5…`.
+is the blob, not the patch: `git rev-parse <branch>:starter-kit/context_budget.py` = `c5ff15e5…` — **re-stated at S148 as `d91677b5…`**, fork `main`'s blob after `22c6cf0` and `544cfb0` reworded eight comment lines for the port (size and line count unchanged, so the symbol numbers below hold for both blobs).
 
 **Why not seven commits (refuted):** every intermediate state fails the fork's test module — it tests
 features the intermediates lack, config or not (`73fb90aa`: 14 failures, 49 errors) — and the end state
@@ -254,7 +254,9 @@ tool's own diagnosis appears only inside it.
 `:288`, `S129` at `:561`, `S119` at `:613`. Each names a record in a repository the maintainer does not
 have; S142 scrubbed two such numbers from PR 3 as a recorded step. After the scrub the module's blob
 differs from fork `main`'s by exactly those four lines — the DONE criterion says so rather than
-claiming byte-identity.
+claiming byte-identity. *(S148: six lines — row 1 of the fix-round re-pointed `:9` and `:13` at the
+unnumbered upstream block — and the fork's copy itself changed in `22c6cf0` and `544cfb0`, six
+vocabulary lines the branch carries identically.)*
 
 ### 3.3 The canonical root `.context-budget.json` — the decision
 
@@ -621,6 +623,30 @@ twelve items, every one re-derived by hand, none repaired — each sits inside a
 D9 four-line scrub, the verbatim Appendix A, the `c5ff15e5` blob, the §3.6 lines); the decision table is
 in the body file's header, and the recommendation is a fix-round before Phase C.
 
+**✅ FIX-ROUND DONE at S148 (2026-09-03) — the six rows applied, one review lens re-run, the branch REBUILT
+as `cf15489` (tree `c857734`; `8df8faa` commit (1), `cf15489` commit (2)), every DONE item above re-measured
+on the fresh tree and matched again; `f3a4b6d` and the two reviewed intermediates `46089f1` and `c6577f2`
+kept under `refs/archive/pr4-context-budget-gate-*`; still NOT pushed.** Fork side first: `22c6cf0` on `main` reworded
+six comment lines of the tool and four of the test module and amended the candidate config (row 3); a
+maintainer's-eye lens on the first rebuild returned fourteen items, all re-derived, and `544cfb0` reworded
+four more sites of the same class (two tool comments, two test comments, the seed's `_read_cap_tokens`);
+tool blob `c5ff15e5` → `d91677b5` (73,040 B, size and line count unchanged), so the ported blob stays
+byte-identical to fork `main`; then rows 1, 4, 5, 6 inside the branch. A delta lens on the third build
+(`c6577f2`) confirmed all fourteen dispositions and returned seven more — two of them false provenance
+sentences the rebuild itself had written into commit (1)'s message and the entry (*"eight commits … one
+reword"* where it is nine and two; *"every intermediate fails"* where the last two pass) — repaired in the
+fourth build together with a `.gitignore` clause and the bullet naming both histories; three disclosed in
+the PR body (the module's colliding `D1`–`D5` labels, the 20,193/20,194 rounding pair, the seed naming the
+fork). **One row-2 site was left alone on
+evidence:** `:409` *"learning #22 / #26a"* is upstream's own 1.0.0 line (`git blame` → `df6a991`, KJ5HST,
+2026-08-08; in blob `be2721a5`) — the review had read the maintainer's citation as fork residue (Learning
+#54). New figures: `CHANGELOG.md` 97,257 B at the head (+5,892 B, the entry, now citing #76/#78 by absolute
+URL per the ledger's own rule); by hand `91,365 -> 95,557` at commit (1) with the candidate present and
+`95,557 -> 97,257` at commit (2); `git diff --stat` 7 files, 2,320 / 98; the module differs from fork `main`
+in six lines. Two follow-ons for the maintainer are disclosed in the PR body (`bin/check-learnings:87-89`'s
+comment, an eighth file this plan does not include; the `:341` `ResourceWarning`). The record, the numbers
+and both review lenses are in the body file's header.
+
 *Do:* make a clean clone with the **§8 R1 recipe only** — `git init` + `git fetch <this repo>
 refs/remotes/upstream/read-set-budgets:refs/heads/read-set-budgets`. A bare `git clone --no-local` of
 this repository does **not** work: it clones local branches only, so `cea3068` is unreachable and
@@ -641,8 +667,8 @@ with the body as it will be submitted and a status header that Phases C and D up
 reads.
 
 *DONE looks like — every figure taken from the tree that will be pushed, after the last edit:*
-`git rev-parse pr4/…:starter-kit/context_budget.py` = `c5ff15e5…`; the test module's diff against
-`main:tools/test_context_budget.py` touches exactly the four D9 lines; `python3
+`git rev-parse pr4/…:starter-kit/context_budget.py` = `c5ff15e5…` (**`d91677b5…` since S148**); the test module's diff against
+`main:tools/test_context_budget.py` touches exactly the four D9 lines (**six since S148: plus row 1's `:9` and `:13`**); `python3
 tools/test_context_budget.py > u.log 2>&1; echo $?` → 0 and `Ran 116 … OK (skipped=2)` (the two skips are the machine-dependent pair; the fork-machine run that exercises them is recorded in §3.2, not repeated in the clone); `--selftest
 > s.log 2>&1; echo $?` → 0, `grep -cE '^\s*PASS' s.log` 52, `grep -cE '^\s*FAIL' s.log` 0; the bare run
 → exit 2 = BREACH, expected, and the §3.3 rows **with `CHANGELOG.md` re-measured after the D8 entry
