@@ -35,6 +35,70 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-03 · [ad hoc] The context-budget gate ships — ceilings in tokens, class totals, and the repairs beneath them
+
+- **Change:** `starter-kit/context_budget.py` `1.0.0` → `1.2.0` (29,549 → 73,040 B), shipped as the
+  end state of nine fork commits (seven that went through the fork's own review rounds, plus two
+  comment-only rewords made for this port) rather than a replay — the tests arrive as one file, and
+  every intermediate state of the tool before its reviewed end state fails them. Ceilings may now be declared in **tokens** (`max_tokens`, against `read_cap_tokens`
+  25,000 — the number in the Read tool's own refusal message); a whole-read file with only `max_bytes`
+  gets a ceiling derived at the 2.27 B/token floor and clamped at the cap; **class totals**
+  (`resident`, `read-set`) are summed and gated in the bare run and in `--precommit`;
+  `config_defects()` reports a declared `max_tokens` above the cap and a typed class total that
+  disagrees with its derivation; `calibrate()` walks first-parent history, compares timezone-aware
+  stamps and refuses a fit below R² 0.50 instead of printing noise; the index is sized with
+  `git cat-file -s` (the old path was 1 B short on LF, more on CRLF, and raised on non-UTF-8 content);
+  the ledger row names the ceiling that fired in its own unit and reports bytes, not lines, when
+  nothing fired. Exit codes are unchanged (`0/1/2/3`), and so is the refusal to run at a root with no
+  `.context-budget.json` (exit 3).
+- **What it buys.** [#76](https://github.com/KJ5HST/methodology/pull/76) and
+  [#78](https://github.com/KJ5HST/methodology/pull/78) shed bytes; this one **refuses growth**. On this branch the Phase 0
+  mandatory pair is 52,195 + 15,386 = **67,581 B against the 56,750 B one-read cap — over by
+  10,831 B, exactly what [#76](https://github.com/KJ5HST/methodology/pull/76)'s table left.** Nothing here shrinks it. Once a root config declares
+  the pair, `--precommit` refuses any commit that grows either file and passes any that shrinks one.
+- **The tests travel with the tool.** `tools/test_context_budget.py` — 116 tests, canonical-only
+  (not in `bin/_manifest.py`, like the trimmer's), every git fixture a scratch repository — plus one
+  `bin/tests.sh` row wiring it, immediately after the trimmer's. Until that row `calibrate()`'s
+  arithmetic had no test anywhere: the existing `== Test: context_budget.py ==` block covers
+  install-hook, sync distribution and the selftest gates, all of which stay green while the fit
+  returns noise. Two tests fit this repository's own session transcripts against `CLAUDE.md` and
+  **skip**, by design, on a machine without them.
+- **The seed follows the tool.** `starter-kit/context-budget.json` gains `read_cap_tokens`, a
+  `max_tokens` on each of its two whole-read entries and a note on the on-demand entry saying why it
+  gets none (+6 lines) — documentation of keys the new tool reads. It is a seed-once file: no
+  adopter's existing config changes on sync.
+- **Scanner:** untouched. Both dashboard twins already list `context_budget.py` and
+  `.context-budget.json` as framework-installed files and score neither.
+- **Verification:** clean clone of `cea3068`, measured at the branch head with the root config in
+  place. `python3 tools/test_context_budget.py` — 116 run, OK, 2 skipped; `--selftest` 52 PASS /
+  0 FAIL; `bin/tests.sh` **115 passed / 1 failed** against **114 / 1** on the untouched base — one
+  row added, zero status flips; the failure on both is Test 9 (`bin/sync --source=github` reads
+  `main`, where three manifest sources are absent until this branch merges). `bin/check-links`,
+  `bin/check-learnings`, `bin/check-handoff` and `bin/check-handoff --all` each 0.
+- **Provenance:** ported from `rmsharp/methodology` `main` — the tool byte-identical (blob
+  `d91677b5`), the test module differing in six lines: four where a fork-relative identifier became
+  the date of the change, two where a reference to the fork's numbered `bin/tests.sh` block became a
+  description of this tree's. The fork's own root config, its measurement history, its dashboard
+  series and its ledgers are **deliberately excluded**.
+- **This repository declares its own budget** — a root `.context-budget.json`, in a second commit so
+  the policy file is reviewable apart from the code. It **pins** `CLAUDE.md` at its arrival size
+  (59,168 B: growth refused, shrink passes), **derives** the `read-set` total from the read cap at run
+  time (25,000 tok × 2.27 B/tok = 56,750 B) and splits it 41,364 / 15,386 across `SESSION_RUNNER.md`
+  / `SAFEGUARDS.md`, so all 10,831 B of debt sits on the file the series wants shrunk, and
+  **declares** the two ledgers Phase 0 reads at 65,536 B and 25,000 tokens each and
+  `FRAMEWORK_LEARNINGS.md` at 73,728 B — the derivation `bin/check-learnings` already cites this
+  file for. Every number's `_` key says how it was derived; five values are marked PROPOSAL, and the
+  calibration constants are the seed's (`--calibrate` proposes and writes nothing). Day one: the bare
+  run exits 2 with six findings — `SESSION_RUNNER.md` and the pair over by 10,831 B, both ledgers over
+  in bytes and in tokens — none of them new. This file is also what turns the wired `bin/tests.sh`
+  row green: without a root config the tool exits 3 and the unit module's selftest test fails. The
+  gate is **not wired** into `.githooks/pre-commit`: run `--precommit` by hand, and never
+  `install-hook` at this root (the config's `_` key says why). Run by hand, this PR's own two commits
+  fail it — exit 3 on the first (no config yet), exit 2 on this one (this bullet grows a ledger
+  already over its ceiling). `.gitignore` gains the comments explaining why neither measurement history
+  (the dashboard's, this tool's) is ignored; this tool's appears on the first bare run and is yours to
+  track or not.
+
 ### 2026-09-02 · [ad hoc] The flight manual sheds its apparatus into a read-on-demand sibling
 
 - **Change:** the six contiguous apparatus sections of `ITERATIVE_METHODOLOGY.md` — Knowledge
