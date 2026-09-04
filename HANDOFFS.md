@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S149
+date: 2026-09-03
+status: pending
+active_task: **PHASE C OF THE PR 4 PLAN — PUSH `pr4/context-budget-gate` (`cf15489`, tree `c857734`) TO `origin` AND OPEN THE PR AGAINST `KJ5HST/methodology:read-set-budgets`, THEN READ IT BACK.** Operator's words: *"1"*, answering the S148 close-out's numbered list (item 1 = Phase C). The plan's Phase C paragraph (`docs/planning/pr4-read-set-budgets-plan.md:703`) is the procedure; the body file's *Title* and *Body* are the PR text. No merge, no tag, no release, no push of `main`; Phase D keeps its own go-ahead.
+```
+
+```handoff
 session: S148
 date: 2026-09-03
 status: complete
@@ -84,7 +91,7 @@ key_files: `docs/planning/pr4-read-set-budgets-body.md:1` the status header, and
 gotchas: **(1) `git blame` BEFORE SCRUBBING A "RESIDUE" SITE** — one of six flagged lines was the maintainer's own (Learning #54). **(2) A RESIDUE GREP MUST BE CASE-INSENSITIVE** — *"PHASE B"* survived a `Phase B` sweep and cost a second fork commit and a third build. **(3) YOUR OWN EDIT MOVES THE NUMBERS YOU COPIED** — +26 B of comment made *"73,014 B"* stale in the entry I was rewriting. **(4) zsh DOES NOT WORD-SPLIT `$CB`** — `CB="python3 file.py"; $CB --flag` is *command not found*, exit 127; eighteen identical 127s are a harness failure, not a measurement; use a function. **(5) `${r}:path` WITH BRACES in zsh** — `main:starter-kit/…` unquoted is a `:s` modifier (dragon 10; it bit twice this session). **(6) THE CHECKERS ARE PYTHON, NOT BASH** — `bash bin/check-links` exits 2 on a syntax error; run `python3 bin/<checker>`. **(7) A FRESH CLONE RUNS NO HOOKS** — set `core.hooksPath` before the first commit (Learning #53). **(8) THE SCRATCHPAD IS SESSION-SPECIFIC** — the branch survives only as this repo's local ref; push from here in Phase C. **(9) `git reset --soft <parent>` FROM A DETACHED COMMIT IS THE BY-HAND GATE RECIPE**; `--precommit` reads the config from the worktree. **(10) THE TWO `.jsonl` GO DIRTY FROM PHASE 0 ALONE; commit them as `chore(history)` early. `bin/tests.sh` in this worktree mutates the live ledgers — never edit `HANDOFFS.md` while it runs.**
 runtime_smoke: **THIS REPO SHIPS NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`.** Run bare in this worktree at close-out with Learning #54, the plan and body records and both ledger edits in place: **304 passed / 1 failed / 0 skipped, exit 1 — S147's close-out summary, to the row**. The one failure is Test 9 (`--source=github`, three manifest sources not yet on `upstream/main`), pre-existing; the run mutated and restored the ledgers as Test 34 does. **Checkers, each bare at close-out with the receipt in place:** `check-handoff` **0** (20 receipts, the newest complete, 0 over 12,288 B), `--all` **0** (20 receipts), `check-links` **0** (105 links / 23 files), `check-learnings` **0** (53 rows, 0 over 1,500 B). **After each fork-side commit, in this worktree:** `python3 tools/test_context_budget.py` → exit 0, `Ran 116 … OK` (both `TestFitGateEndToEnd` rows run here); `--selftest` → 0, 52 / 0. **The deliverable's own smoke is the DONE list, measured in clean clones of `cea3068` and never in this worktree** — figures in `what_was_done` and the ledger entry. **WHAT THIS DOES NOT EXERCISE:** the maintainer's machine (the two skipped tests), the network (Test 9), `--calibrate` (D10), and Phases C/D.
 changelog_ref: CHANGELOG.md "2026-09-03 · [ad hoc] S148 close-out — the PR 4 fix-round DONE: `pr4/context-budget-gate` REBUILT as `cf15489` on `cea3068`, re-verified, NOT pushed" + the 2026-09-03 S148 fork-side entry (two passes) + the 2026-09-03 S148 claim entry
-commit: 1086f5c (claim) + 6887b67 (chore, --no-verify) + 22c6cf0 + 544cfb0 (fork-side fixes) + this close-out
+commit: 1086f5c (claim) + 6887b67 (chore, --no-verify) + 22c6cf0 + 544cfb0 (fork-side fixes) + 9a49f09 (close-out) — reconciled by S149 per the spec's answer-slot rule
 ```
 
 ```handoff

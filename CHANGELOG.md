@@ -206,6 +206,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S149 — claim: Phase C of the PR 4 plan — push `pr4/context-budget-gate` (`cf15489`) to `origin` and open the PR against `read-set-budgets`
+
+**Authorization:** the operator's *"1"*, answering the S148 close-out report's numbered list, whose item 1
+was Phase C — the explicit, per-action go-ahead `CLAUDE.md` requires for an outward-facing action on
+`KJ5HST/methodology`. Recorded here **before** acting, because a push and a PR leave no commit in this
+fork ([`docs/planning/pr4-read-set-budgets-plan.md`](docs/planning/pr4-read-set-budgets-plan.md) §5 Phase
+C, `:703`). **The ONE deliverable: the branch on `origin` and the PR open, read back from the server** —
+`git rev-parse pr4/context-budget-gate^{tree}` still `c857734`; push; `origin/pr4/context-budget-gate`'s
+tree read back equal; `gh pr create --repo KJ5HST/methodology --base read-set-budgets` with the body
+file's *Title* and *Body*; `gh pr view` read back (state OPEN, base `read-set-budgets`, `headRefOid` =
+`cf15489`, mergeable, the seven files); `upstream/main` untouched; the body file's status header updated
+from those reads. **No merge (Phase D keeps its own go-ahead), no tag, no release, no comment, no push of
+`main`.**
+
+**Reconciled at claim:** S148's receipt `commit:` slot named its close-out by description; this commit
+names it — `9a49f09`. Both ledger frontiers stood at `9a49f09` at Phase 0 (gap 0); no backfill is owed.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F.
+
 ### 2026-09-03 · [ad hoc] S148 close-out — the PR 4 fix-round DONE: `pr4/context-budget-gate` REBUILT as `cf15489` on `cea3068`, re-verified, NOT pushed
 
 **Phase 3D/3F.** Deliverable: the six-row fix-round from S147's self-review, applied, and the branch
