@@ -206,6 +206,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-04 · [ad hoc] S150 — claim: plan the merge of `upstream/read-set-budgets` (`598c459`) into fork `main`
+
+**Authorization:** the operator's *"in the next session make a plan to complete the merge as you have
+described"* (2026-09-04), after the S149 assessment of GitHub's *Sync fork* dialog (unusable here: it
+targets upstream `main`, which lacks the four PRs, and the ledgers conflict on every sync). **The ONE
+deliverable is the plan document** — `docs/planning/upstream-read-set-budgets-merge-plan.md`: the
+evidence-based inventory of every path the merge touches (20 conflicting, plus the auto-merged set),
+a resolution rule per path with its verification command, the DONE criteria, the surface, and the
+session boundary — committed and self-reviewed. **The merge itself is NOT this session's work** (Planning
+Sessions: the plan is the deliverable, not a preamble). No push, no upstream action.
+
+**Reconciled at claim:** S149's receipt `commit:` slot named its close-out by description; this commit
+names it — `10d5268`. Both ledger frontiers stood at `10d5268` at Phase 0 (gap 0); no backfill is owed.
+**A non-commit action to record, done by the operator, not a session:** PR #79 was MERGED on
+`KJ5HST/methodology` at `2026-09-04T01:24:30Z` by rmsharp — merge commit `598c459` on `read-set-budgets`,
+parents `cea3068` + `cf15489`, tree `c857734` = the head's; `read-set-budgets` is still not in upstream
+`main` (`512c2ed`). The PR 4 plan's Phase D record and the body file's header are updated from those
+server reads in the next commit, before the planning work.
+
+**Ledger:** `CHANGELOG: pending` — set at claim; recorded at Phase 3F.
+
 ### 2026-09-03 · [ad hoc] S149 close-out — Phase C DONE: `pr4/context-budget-gate` (`cf15489`) pushed to `origin` and OPEN upstream as PR #79 against `read-set-budgets`, NOT merged
 
 **Phase 3D/3F.** Deliverable: Phase C of

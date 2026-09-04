@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S150
+date: 2026-09-04
+status: pending
+active_task: **PLAN THE MERGE OF `upstream/read-set-budgets` (`598c459`, PR #79 merged) INTO FORK `main` — the plan document is the deliverable, the merge is the next session's.** Operator's words: *"in the next session make a plan to complete the merge as you have described"*. Inventory: 20 conflicting paths (5 add/add, 15 content) plus the auto-merged set; a resolution rule per path; DONE criteria; surface; session boundary; one adversarial self-review before STOP. Bookkeeping first: record the operator's merge of #79 (Phase D) in the PR 4 records. No merge, no push, no upstream action.
+```
+
+```handoff
 session: S149
 date: 2026-09-03
 status: complete
@@ -84,7 +91,7 @@ key_files: `docs/planning/pr4-read-set-budgets-body.md:3` the status header (PR 
 gotchas: **(1) RECORD THE CLAIM BEFORE THE OUTWARD ACTION** — a push and a PR leave no commit here, so the claim commit is the only fork-side trace until close-out. **(2) `mergeable` READS `UNKNOWN` FOR A FEW SECONDS AFTER CREATION** — read it twice; the first read is not a verdict. **(3) THE BODY FILE'S BODY SECTION IS BLOCKQUOTED** (`> ` prefix) and the two sections after the `---` are part of the submitted body (pr3 precedent); strip the prefix, keep the tail, grep the result for fork identifiers before sending. **(4) `--head rmsharp:pr4/…`** — name the fork owner explicitly; `gh` run from the fork with `--repo` upstream needs it. **(5) DATES CROSS MIDNIGHT IN UTC** — #79 is stamped 2026-09-04 from a 2026-09-03 session (dragon 14). **(6) THE TWO `.jsonl` GO DIRTY FROM PHASE 0 ALONE; commit them as `chore(history)` early. `bin/tests.sh` in this worktree mutates the live ledgers — never edit `HANDOFFS.md` while it runs.**
 runtime_smoke: **THIS REPO SHIPS NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`.** Run bare in this worktree at close-out with the body header, the plan record and both ledger edits in place: **304 passed / 1 failed / 0 skipped, exit 1 — S148's close-out summary, to the row**. The one failure is Test 9 (`--source=github`, three manifest sources not yet on `upstream/main`), pre-existing and expected until `read-set-budgets` reaches `main`; the run mutated and restored the ledgers as Test 34 does. **Checkers, each bare at close-out with the receipt in place:** `check-handoff` **0** (21 receipts, the newest complete, 0 over 12,288 B), `--all` **0** (21 receipts), `check-links` **0** (105 links / 23 files), `check-learnings` **0** (53 rows, 0 over 1,500 B). **The deliverable's own verification is the server read-back** recorded in `what_was_done` — every field re-read from GitHub after the action, none predicted. **WHAT THIS DOES NOT EXERCISE:** the maintainer's review and machine, the merge (Phase D), and `--calibrate`.
 changelog_ref: CHANGELOG.md "2026-09-03 · [ad hoc] S149 close-out — Phase C DONE: `pr4/context-budget-gate` (`cf15489`) pushed to `origin` and OPEN upstream as PR #79 against `read-set-budgets`, NOT merged" + the 2026-09-03 S149 claim entry
-commit: 974db79 (claim) + 6e4c56b (chore, --no-verify) + this close-out
+commit: 974db79 (claim) + 6e4c56b (chore, --no-verify) + 10d5268 (close-out) — reconciled by S150 per the spec's answer-slot rule
 ```
 
 ```handoff
