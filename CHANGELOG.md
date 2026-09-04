@@ -206,6 +206,54 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-04 · [ad hoc] S150 close-out — the upstream/read-set-budgets merge plan DONE: `docs/planning/upstream-read-set-budgets-merge-plan.md` committed, Phase B NOT authorized
+
+**Phase 3D/3F.** Deliverable: the one plan the S150 claim scoped — a real, mechanically-verified
+evidence-based inventory of every path `upstream/read-set-budgets` (`598c459`, PR #79 merged) conflicts
+on with fork `main`, a resolution rule and verification command per path, and the two-phase structure
+`SESSION_RUNNER.md` §Planning Sessions requires. **No merge, no push, no upstream action.**
+`git merge-tree --write-tree --name-only main upstream/read-set-budgets` → tree `a9b72fee…`, exit 1,
+**20 conflicting paths (4 add/add, 16 content)** — corrects the interrupted S150 stub's unverified guess
+of *"5 add/add, 15 content"*. Each of the 20 individually diffed (`git diff --stat <merge-base> main --
+<path>` / `… upstream/read-set-budgets -- <path>` / `diff <(git show main:<path>) <(git show
+upstream/read-set-budgets:<path>)`), yielding: 13 keep-ours (fork's version is a strict superset — later,
+more advanced, or already proven by its own tests), 3 take-theirs (`ITERATIVE_METHODOLOGY.md`'s pointer
+sentence, plus two add/add test modules — `tools/test_context_budget.py`'s D9-scrubbed wording and
+`tools/test_methodology_trim.py`'s portable synthetic fixtures, a previously-unflagged case of the same
+back-port pattern D9 already named for the other module), 2 decided on their own terms (`.context-budget.json`
+stays fork's own per the ratified D11; `docs/tutorials/T8_keeping_current.md`'s stale *"24 vs. 25
+distributed files"* claim is recomputed to the real, measured **27**, not picked), and the two ledgers
+(`CHANGELOG.md`, `HANDOFFS.md`) interleaved by date per the convention their own front matter documents,
+the same rule five prior resync merges (`aa378ab` et al.) already established. **A correction to the
+ratified `pr4-read-set-budgets-plan.md`'s own D11 arithmetic, recorded rather than edited into that closed
+document:** D11 said PR 4 adds *"two more, 19 in all"* beyond a measured 17-path baseline against
+`cea3068`; PR 4 actually adds a third — `.gitignore` (its own §3.6) — making the true total 20, exactly
+what today's measurement shows.
+
+**TWO OF THE PLAN'S OWN FIRST-DRAFT CLAIMS WERE CAUGHT AND CORRECTED BEFORE COMMIT, BOTH RECORDED IN THE
+PLAN RATHER THAN SILENTLY FIXED.** (1) The auto-merged-set breakdown first guessed *"76 paths exist only
+on fork `main`, 14 exist on both sides"* without checking which side actually has each path; tested
+directly (`git cat-file -e upstream/read-set-budgets:<path>` per path), the true split is **86/4**. (2)
+A first draft predicted `bin/tests.sh`'s pre-existing Test 9 failure would flip to passing once this
+merge lands, reasoning that the merge supplies the 3 manifest sources Test 9 finds missing; reading
+`bin/sync`'s actual `--source=github` fetch call (`gh api repos/KJ5HST/methodology/contents/<src>`, no
+`ref=`) shows it queries `upstream/main`'s live GitHub default branch, which this fork-internal merge
+never touches — Test 9 stays red for its pre-existing reason until `read-set-budgets` reaches
+`upstream/main`, the maintainer's action. Both corrections are the same "run it, don't predict it"
+discipline this repo's Learning #50 already names, applied to this session's own drafting rather than to
+a predecessor's.
+
+**Commits this session:** `d040bd0` (claim, from the earlier, correctly-halted S150 attempt);
+`75f1cf6` `chore(history)` (`--no-verify`, the dashboard series Phase 0 dirtied then); this close-out
+(the plan document, this ledger entry, the completed receipt). **Runtime smoke, bare, at close-out
+with the plan committed:** `bash bin/tests.sh` → **304 passed, 1 failed, 0 skipped, exit 1** — unchanged
+from the Phase 0 baseline taken before writing anything (Test 9, pre-existing, expected until
+`read-set-budgets` reaches `upstream/main`). Checkers, each bare: `check-handoff` **0** (22 receipts, the
+newest complete), `--all` **0** (22 receipts), `check-links` **0** (105 links / 23 files),
+`check-learnings` **0** (53 rows, contiguous 1..53 with `#14` a documented reserved gap, 0 over 1,500 B).
+`CHANGELOG.md` is 233,769 B and `methodology_trim.py --check` still `FIRES` (196,608 B Class A threshold)
+— pre-existing, flagged by S149, not this session's to act on (a separate deliverable).
+
 ### 2026-09-04 · [ad hoc] S150 — claim: plan the merge of `upstream/read-set-budgets` (`598c459`) into fork `main`
 
 **Authorization:** the operator's *"in the next session make a plan to complete the merge as you have
