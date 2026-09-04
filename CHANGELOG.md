@@ -206,6 +206,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-03 · [ad hoc] S149 close-out — Phase C DONE: `pr4/context-budget-gate` (`cf15489`) pushed to `origin` and OPEN upstream as PR #79 against `read-set-budgets`, NOT merged
+
+**Phase 3D/3F.** Deliverable: Phase C of
+[`docs/planning/pr4-read-set-budgets-plan.md`](docs/planning/pr4-read-set-budgets-plan.md) (`:703`), on the
+operator's *"1"* (item 1 of the S148 close-out's list), claimed in this ledger before acting. **Two
+outward-facing actions, both authorized, both read back:** (1) `git push origin pr4/context-budget-gate`
+— a new branch on `rmsharp/methodology`, read back `cf15489` / tree `c857734` (re-checked against the
+local branch before the push); (2) `gh pr create --repo KJ5HST/methodology --base read-set-budgets --head
+rmsharp:pr4/context-budget-gate` with the body file's *Title* and its Body plus the two sections after
+the divider (14,003 B; grep for fork-internal identifiers empty) →
+**[PR #79](https://github.com/KJ5HST/methodology/pull/79)**, created `2026-09-04T00:59:58Z` (a 2026-09-03
+local session; dragon 14). Read back from the server: `state OPEN`, base `read-set-budgets`, `headRefOid
+cf15489…` = the local branch, `mergeable MERGEABLE`, `mergeStateStatus CLEAN` (UNKNOWN on the first read,
+seconds after creation), `changedFiles 7` = the §3 list exactly, `+2,320 / −98`, two commits (`8df8faa`,
+`cf15489`), body 14,004 B with the eight headings sent, not a draft, `reviewDecision` empty.
+`upstream/main` `512c2ed` and `upstream/read-set-budgets` `cea3068` untouched; `origin/main` untouched
+(`143ff2b`, 2026-08-15). **Not done, deliberately:** no merge (Phase D keeps its own go-ahead), no tag, no
+release, no comment on the PR, no push of `main`. Records: the body file's status header (`:3`), the plan's
+status line and Phase C record.
+
+**Commits this session, all recorded here:** `974db79` (claim; S148's `commit:` slot reconciled to
+`9a49f09`); `6e4c56b` `chore(history)` (`--no-verify`, the dashboard series Phase 0 dirtied); this
+close-out (the body header, the plan's status line and Phase C record, both ledgers).
+
+**Runtime smoke in this worktree, at close-out with every edit in place:** `bash bin/tests.sh` → **304 passed / 1 failed / 0 skipped, exit 1 — S148's close-out summary, to the row**
+(the one failure Test 9, pre-existing — and still expected to stay red until `read-set-budgets` reaches
+`main`; the run mutated and restored the ledgers as Test 34 does). Checkers, each bare: `check-handoff` **0** (21 receipts, the newest complete, 0 over 12,288 B), `--all` **0** (21 receipts), `check-links` **0** (105 links / 23 files), `check-learnings` **0** (53 rows, 0 over 1,500 B).
+
 ### 2026-09-03 · [ad hoc] S149 — claim: Phase C of the PR 4 plan — push `pr4/context-budget-gate` (`cf15489`) to `origin` and open the PR against `read-set-budgets`
 
 **Authorization:** the operator's *"1"*, answering the S148 close-out report's numbered list, whose item 1

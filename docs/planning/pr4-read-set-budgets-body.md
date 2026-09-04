@@ -1,12 +1,16 @@
 # PR 4 body — the context-budget gate (read-set budgets, 4 of 4)
 
-**Status: REBUILT BY THE FIX-ROUND AND RE-VERIFIED, NOT PUSHED (S148, 2026-09-03).** Branch
-`pr4/context-budget-gate` = `cf15489` (tree `c857734`), two commits on `cea3068`, rebuilt in a clean
-clone made by the plan's §8 R1 recipe and fetched into this fork as a **local ref only** — it exists on
-no remote and no PR is open. The three earlier heads are kept as refs, not branches, under
-`refs/archive/pr4-context-budget-gate-<sha>`: S147's `f3a4b6d`, and this session's `46089f1` and `c6577f2`,
-the two the review lenses read. Phases C (push + open) and D (merge)
-each need the operator's explicit go-ahead; this header is updated from server reads when they happen.
+**Status: OPEN UPSTREAM AS [PR #79](https://github.com/KJ5HST/methodology/pull/79), NOT MERGED (Phase C,
+S149, 2026-09-03 local / `2026-09-04T00:59:58Z`).** Branch `pr4/context-budget-gate` = `cf15489` (tree
+`c857734`), two commits on `cea3068`, pushed to `origin` (`rmsharp/methodology`) and opened against
+`KJ5HST/methodology:read-set-budgets` with this file's *Title* and *Body* (the quoted Body section plus the
+two sections after the divider, 14,003 B sent). **Read back from the server after opening:** state `OPEN`,
+`headRefOid` `cf15489…` (= the local branch), base `read-set-budgets`, `mergeable` `MERGEABLE`,
+`mergeStateStatus` `CLEAN`, not a draft, 7 files / +2,320 / −98, two commits (`8df8faa`, `cf15489`), the
+body 14,004 B with the eight headings sent (the one-byte difference is a trailing newline).
+`upstream/main` (`512c2ed`) and `upstream/read-set-budgets` (`cea3068`) untouched. The three earlier heads
+stay under `refs/archive/pr4-context-budget-gate-<sha>` (`f3a4b6d`, `46089f1`, `c6577f2`). **Phase D
+(merge) needs its own explicit go-ahead**; this header is updated from server reads when it happens.
 Plan: [`pr4-read-set-budgets-plan.md`](pr4-read-set-budgets-plan.md).
 
 - **Head:** `pr4/context-budget-gate` = `cf15489` — `8df8faa` `feat(starter-kit): ship the

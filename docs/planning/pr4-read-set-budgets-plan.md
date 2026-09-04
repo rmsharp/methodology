@@ -4,7 +4,7 @@
 record (D1–D10 as recommended; D4 reshaped and D11 added on the second review's findings). Phase B
 (build on `cea3068` in a clean clone, verify, do not push) is authorized as the next session's single
 deliverable; Phases C and D are NOT authorized by this ratification and each needs its own explicit
-go-ahead. Phase B BUILT at S147 (2026-09-03) as `f3a4b6d`; the self-review's six-row fix-round ran at S148 (2026-09-03), a review lens added fourteen items, and the branch was REBUILT as `pr4/context-budget-gate` = `cf15489` (tree `c857734`), re-verified, NOT pushed, NOT opened — see §5 Phase B for both records.** Written S145 (2026-09-02), adversarially
+go-ahead. Phase B BUILT at S147 (2026-09-03) as `f3a4b6d`; the self-review's six-row fix-round ran at S148 (2026-09-03), a review lens added fourteen items, and the branch was REBUILT as `pr4/context-budget-gate` = `cf15489` (tree `c857734`), re-verified. Phase C DONE at S149 (2026-09-03): pushed to `origin` and OPEN upstream as [PR #79](https://github.com/KJ5HST/methodology/pull/79) against `read-set-budgets`, MERGEABLE, NOT merged — see §5 Phase B and Phase C for the records; Phase D still needs its own go-ahead.** Written S145 (2026-09-02), adversarially
 reviewed and repaired in the same session and again at S146 (below). The plan is the session's one deliverable
 (`starter-kit/SESSION_RUNNER.md` Phase 2 §Planning Sessions; FM #18). It is the fourth and last
 payload of [`upstream-read-set-pr-plan.md`](upstream-read-set-pr-plan.md) §5 — **Phase 3, "the gate"**,
@@ -712,6 +712,20 @@ mergeStateStatus,files` — OPEN, `read-set-budgets`, MERGEABLE, the §3 file li
 untouched; update the body file's status header from those reads. *Surface:* GitHub. **What it cannot
 enforce:** MERGEABLE is server-computed against the base at that moment; nothing here verifies the
 maintainer's review or his machine. **STOP.**
+
+**✅ DONE at S149 (2026-09-03) — the operator's *"1"* answering the S148 close-out's numbered list; the
+claim recorded in `CHANGELOG.md` first (`974db79`).** Tree re-checked `c857734`; `git push origin
+pr4/context-budget-gate` → `* [new branch]`; `origin/pr4/context-budget-gate` read back `cf15489` / tree
+`c857734`; `gh pr create --repo KJ5HST/methodology --base read-set-budgets --head
+rmsharp:pr4/context-budget-gate` with the body file's *Title* and the Body + two trailing sections (14,003 B,
+no fork-internal identifier by grep) → **[PR #79](https://github.com/KJ5HST/methodology/pull/79)**, created
+`2026-09-04T00:59:58Z` (dragon 14: a 2026-09-03 local session); read back `state OPEN`, `baseRefName
+read-set-budgets`, `headRefOid cf15489…` = `git rev-parse pr4/context-budget-gate`, `mergeable UNKNOWN` at
+creation then **`MERGEABLE` / `CLEAN`** on the second read, `changedFiles 7` (the §3 list exactly),
+`+2,320 / −98`, two commits, body 14,004 B (a trailing newline), `isDraft false`; `upstream/main` `512c2ed`
+and `upstream/read-set-budgets` `cea3068` untouched; `gh pr list --state open` → #79 alone; the body file's
+header updated from those reads. **What this did not verify:** the maintainer's review or machine
+(§3.2). STOP.
 
 **Phase D — Merge, on its own go-ahead.** One session. Record the claim in this fork's `CHANGELOG.md`
 first. `gh pr merge --merge` (never squash: #76/#77/#78 are all two-parent — measured, `46b56fd`, `907a696`, `cea3068` — and a
