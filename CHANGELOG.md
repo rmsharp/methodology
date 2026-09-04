@@ -80,6 +80,24 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   the date of the change, two where a reference to the fork's numbered `bin/tests.sh` block became a
   description of this tree's. The fork's own root config, its measurement history, its dashboard
   series and its ledgers are **deliberately excluded**.
+- **This repository declares its own budget** — a root `.context-budget.json`, in a second commit so
+  the policy file is reviewable apart from the code. It **pins** `CLAUDE.md` at its arrival size
+  (59,168 B: growth refused, shrink passes), **derives** the `read-set` total from the read cap at run
+  time (25,000 tok × 2.27 B/tok = 56,750 B) and splits it 41,364 / 15,386 across `SESSION_RUNNER.md`
+  / `SAFEGUARDS.md`, so all 10,831 B of debt sits on the file the series wants shrunk, and
+  **declares** the two ledgers Phase 0 reads at 65,536 B and 25,000 tokens each and
+  `FRAMEWORK_LEARNINGS.md` at 73,728 B — the derivation `bin/check-learnings` already cites this
+  file for. Every number's `_` key says how it was derived; five values are marked PROPOSAL, and the
+  calibration constants are the seed's (`--calibrate` proposes and writes nothing). Day one: the bare
+  run exits 2 with six findings — `SESSION_RUNNER.md` and the pair over by 10,831 B, both ledgers over
+  in bytes and in tokens — none of them new. This file is also what turns the wired `bin/tests.sh`
+  row green: without a root config the tool exits 3 and the unit module's selftest test fails. The
+  gate is **not wired** into `.githooks/pre-commit`: run `--precommit` by hand, and never
+  `install-hook` at this root (the config's `_` key says why). Run by hand, this PR's own two commits
+  fail it — exit 3 on the first (no config yet), exit 2 on this one (this bullet grows a ledger
+  already over its ceiling). `.gitignore` gains the comments explaining why neither measurement history
+  (the dashboard's, this tool's) is ignored; this tool's appears on the first bare run and is yours to
+  track or not.
 
 ### 2026-09-02 · [ad hoc] The flight manual sheds its apparatus into a read-on-demand sibling
 
