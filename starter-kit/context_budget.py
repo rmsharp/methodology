@@ -54,7 +54,7 @@ CLEAN, WARN, BREACH, USAGE = 0, 1, 2, 3
 # the agent read tool refuses a range over READ_CAP_TOKENS -- while a ceiling written in
 # BYTES is `tokens x density`, and density is a property of the CONTENT. So every edit
 # that changes how densely the file is written silently moves a byte ceiling, and nothing
-# goes red. Measured on the repo that authors this tool: a declared 73,728 B ceiling
+# goes red. Measured on the authoring fork of this tool: a declared 73,728 B ceiling
 # certified `ok` a file the read tool REFUSES at 25,486 tokens, and four of five declared
 # ceilings converted to more than the cap. Declaring the ceiling in tokens makes that
 # class of defect unrepresentable rather than merely fixed once.
@@ -1154,7 +1154,7 @@ def selftest(root, cfg):
     check("a missing binary surfaces as rc=127, never as empty success", rc == 127)
 
     # --- calibration: the comparisons, the arithmetic, and the gate on the result ---
-    # This exact pair is the one this framework's own repository was mis-fitted on.
+    # This exact pair is the one the authoring fork of this tool was mis-fitted on.
     # The second check is the CONTROL: it asserts the string comparison really does
     # give the wrong answer here, so the first check is not passing for free.
     early = parse_iso("2026-08-01T19:42:50-05:00")        # = 2026-08-02T00:42:50Z

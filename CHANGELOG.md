@@ -232,6 +232,17 @@ here); `--selftest` → exit 0, 52 PASS / 0 FAIL, the relabelled check at `:1204
 candidate parses. The `"Phase B"` vocabulary upstream's trimmer (#77) still carries in nine comment
 sites is untouched, as D9 left the trimmer's S-numbers — a consistency choice, made visibly.
 
+**Second pass, after the review lens ran on the rebuilt branch (`46089f1`) and found the same class at
+four more sites, each re-derived by hand before it was touched:** `starter-kit/context_budget.py` `:57`
+(*"the repo that authors this tool"* → *"the authoring fork of this tool"*) and `:1157` (*"this
+framework's own repository"* → the same), blob `0b103baf` → **`d91677b5`** (73,040 B, size and line count
+unchanged); `tools/test_context_budget.py` `:214` (*"this framework's own repository: commit 7603f10"* →
+*"the authoring fork: its commit 7603f10"* — a fork sha stated as this repository's) and `:404` (*"PHASE
+B"* in capitals: the first pass's grep was case-sensitive), blob `f6c94d85` → **`04d6aaf6`**; the seed
+`starter-kit/context-budget.json` `_read_cap_tokens` (*"On the project that authors this tool"* → the
+fork where 1.2.0 was developed, named), 5,766 B. Same verification in this worktree: unit 116 OK,
+`--selftest` 52 / 0, and a case-insensitive sweep of all three files for the class is empty.
+
 ### 2026-09-03 · [ad hoc] S148 — claim: the six-row fix-round on `pr4/context-budget-gate` (item (1) of S147's handoff)
 
 **Authorization:** the operator's *"Item (1) of S147's handoff"*, given after the Phase 0 report: the

@@ -211,7 +211,7 @@ def _string_size_at(hist_iso, iso):
 
 class TestTimezone(unittest.TestCase):
 
-    # The real pair from this framework's own repository: commit 7603f10 shrank CLAUDE.md
+    # The real pair from the authoring fork: its commit 7603f10 shrank CLAUDE.md
     # 52,909 -> 8,519 B at 19:42:50-05:00, which is 2026-08-02T00:42:50Z — AFTER a session
     # that opened at 2026-08-01T21:25:28Z. String order says the opposite.
     COMMIT = "2026-08-01T19:42:50-05:00"
@@ -401,7 +401,7 @@ class TestLedgerRow(unittest.TestCase):
         self.assertEqual(cb.ledger_dimension(r)[0], "72,449 B")
 
     def test_nothing_fired_falls_back_to_bytes_for_every_class(self):
-        """PHASE B CHANGED THIS EXPECTATION, and the change is the assertion. A read-mandated file
+        """2026-08-26 CHANGED THIS EXPECTATION; the change is the assertion. A read-mandated file
         used to fall back to LINES because that was the unit the surrounding trim rule was written
         in. The rule is byte-denominated now, and the cap it proxies always was token-denominated,
         so lines were the figure least able to explain the verdict -- across these same files the
