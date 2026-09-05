@@ -72,6 +72,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S151
+date: 2026-09-04
+status: pending
+active_task: **PHASE B OF `docs/planning/upstream-read-set-budgets-merge-plan.md` §3 — MERGE `upstream/read-set-budgets` (`598c459`, PR #79 merged) INTO FORK `main`.** Authorized by the operator's explicit go-ahead this session (*"do phase B"*), the same gate PR 4's Phases C and D each required. Fork-internal: `origin` only, **no action on `KJ5HST/methodology`**. Claim tree `94ea01f`. 20 conflicting paths re-derived at Phase 0 and matching §2.2 row-for-row. This stub is the crash breadcrumb; Phase 3D overwrites it to `status: complete`.
+```
+
+```handoff
 session: S150
 date: 2026-09-04
 status: complete

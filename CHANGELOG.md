@@ -206,6 +206,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-04 · [ad hoc] S151 — claim: Phase B of the merge plan — merge `upstream/read-set-budgets` (`598c459`) into fork `main`
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: execute
+**Phase B** of [`docs/planning/upstream-read-set-budgets-merge-plan.md`](docs/planning/upstream-read-set-budgets-merge-plan.md)
+§3 — the real 3-way merge of `upstream/read-set-budgets` (`598c459`, PR #79 merged) into fork `main`
+(`94ea01f` at claim), authorized by the operator's explicit go-ahead this session (*"do phase B"*),
+the same gate PR 4's own Phases C and D each required. **Fork-internal: `origin` only. No action on
+`KJ5HST/methodology` — no PR, no comment, no tag, no release.**
+
+Scope, exactly as §2.2/§2.3/§2.4 state it and no wider: `git merge upstream/read-set-budgets
+--no-commit` (never a `-X ours`/`-X theirs` shortcut), all **20** conflicting paths resolved per
+their stated rule (13 keep-ours, 3 take-theirs, 2 decided on their own terms, 2 ledgers), both
+ledgers interleaved by date per §2.3's rule, the full §2.4 command set run bare and its **measured**
+results recorded in the merge commit message, then a real two-parent merge commit (never a squash)
+pushed to `origin`. Conflict count re-derived at Phase 0 against today's tree: `git merge-tree
+--write-tree --name-only main upstream/read-set-budgets` → **20 CONFLICT lines**, matching §2.2
+row-for-row.
+
+Phase 0 baseline, run bare before any edit: `bash bin/tests.sh` **304 passed / 1 failed / 0 skipped,
+exit 1** (the one failure `github source dry-run failed` is Test 9, pre-existing, and §2.4 states
+plainly it will NOT flip from this merge). `check-handoff` **0**, `--all` **0** (22 receipts),
+`check-links` **0**, `check-learnings` **0** (53 rows, contiguous 1..53), `context_budget.py`
+**exit 2** (read-set total 69,749 B / 56,750 — pre-existing, the never-executed Phase 2 of the older
+read-set PR plan, out of scope here).
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-04 · [ad hoc] S150 close-out — the upstream/read-set-budgets merge plan DONE: `docs/planning/upstream-read-set-budgets-merge-plan.md` committed, Phase B NOT authorized
 
 **Phase 3D/3F.** Deliverable: the one plan the S150 claim scoped — a real, mechanically-verified
