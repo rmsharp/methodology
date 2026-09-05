@@ -206,6 +206,73 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-04 · [ad hoc] S151 close-out — Phase B DONE: `upstream/read-set-budgets` (`598c459`) MERGED into fork `main` as `213f841` and pushed to `origin`
+
+**Phase 3D/3F.** Deliverable: Phase B of
+[`docs/planning/upstream-read-set-budgets-merge-plan.md`](docs/planning/upstream-read-set-budgets-merge-plan.md)
+§3, under the operator's explicit go-ahead. **A real two-parent merge commit `213f841` (parents
+`8bfff1e` + `598c459`), never a squash and never an `-X` strategy shortcut**, pushed to the fork:
+`origin/main` = local `main` = `f7c7008`, 0 unpushed. **FORK-INTERNAL — no PR, comment, tag or
+release anywhere; `upstream` refs re-read after the push and unchanged from Phase 0** (`main`
+`512c2ed`, `read-set-budgets` `598c459`), `gh pr list` empty on both repos. Completeness measured,
+not assumed: `git rev-list --count main..upstream/read-set-budgets` = **0** and `main..upstream/main`
+= **0**, so upstream's own S12 release commit came in too, and all four `pr1`–`pr4` branches now
+report as fully merged.
+
+`git merge --no-commit` produced **exactly the 20 conflicts §2.2 enumerates**, re-derived against
+today's tree before starting rather than trusted from the plan's snapshot. **14 keep-ours, each
+verified byte-identical to `HEAD` after resolution**; **2 take-theirs verified byte-identical to
+upstream's blob** (`tools/test_context_budget.py`, which discharges D11's back-port follow-on by
+construction, and `tools/test_methodology_trim.py` 2,170 → 2,259 lines, the portable synthetic
+fixtures). **Row 7 was adjudicated on the merits rather than on the plan's authority:** measuring the
+file's real link sites showed fork's *"Phase 2 step 8"* named **one of three** (`:189`–`:191` are
+steps 6, 7 and 8), while upstream's sentence additionally names `:309`'s honest-accounting bullet and
+`:478`'s *Across the Full Series*, both of which genuinely carry links — all seven anchors confirmed
+to resolve in `FRAMEWORK_APPARATUS.md`. **Row 13 recomputed to the measured 27** (23 markdown + 4
+non-markdown); both sides' *"24"*/*"25"* were stale. Ledgers interleaved by date per §2.3: upstream's
+four `CHANGELOG.md` entries placed **after** fork's of the same date (the tie-break this file's own
+front matter documents), the two pre-2026-08-30 ones at the bottom, **no frozen archive shard
+touched**; upstream's S12 receipt kept, placed last, its `---` separator normalised to
+`HANDOFFS.md`'s convention, and the front matter's collision paragraph now names the resulting
+**live** S12 collision (fork's own S12 is 2026-07-25, archived). **Beyond what the plan asked:** it
+says only to "re-verify" the 90-path auto-merged set, so this session checked whether upstream
+content had been *dropped* there — of the four both-sides paths upstream had touched only
+`starter-kit/SESSION_RUNNER.md`, and **all 3 of its added lines survive while 0 of its 18 deleted
+lines do.**
+
+**Two of the plan's own verify-column expected values were wrong, recorded as measured rather than
+smoothed over:** `context_budget.py` was to *"exit 0 after"* — it exits **2**, identically before and
+after (the pre-existing read-set overage, Phase 2 of the older plan, never executed); and `grep -c
+'methodology_trim.py' starter-kit/BOOTSTRAP.md` was to be **1** — it is **5**, and was 5 pre-merge.
+The second invites a destructive repair. Recorded as new **Learning #55** in
+`starter-kit/FRAMEWORK_LEARNINGS.md` (54 rows, contiguous, 0 over the 1,500 B row budget).
+
+**The retention trim was deliberately NOT done, on provenance rather than oversight.**
+`HANDOFFS.md` holds **24** receipts against the ratified cap of **4**, and both ledgers now fire
+`methodology_trim.py --check`. §2.3 step 4 says *"trim to 4"*, but the same plan's `next_steps` (3)
+says the overage is *"not this plan's or this close-out's to act on"*, and **the operator
+deprioritised this trim at S129 with no repeal on record**. Step 4 assumed a file already near the
+cap; a 24 → 4 trim is a deliverable with its own losslessness proof. Raised for the operator, not
+absorbed.
+
+**Verified.** `bash bin/tests.sh` **304 passed / 1 failed / 0 skipped, exit 1** — compared **row for
+row** against the pre-merge baseline: **zero status flips**. The one failure is Test 9
+(`--source=github`), pre-existing, and §2.4 predicted a fork-internal merge could not flip it — it
+did not. An intermediate run read **303/2**: this session's own front-matter edit had pushed
+`HANDOFFS.md`'s header 205 B over its 7,168 B reserve and turned Test 39's A2 RED. Fixed as this
+repo's own notes prescribe — **cut the edit, do not raise the reserve** — now 7,122 B. `check-links`
+**0** (105 links / 23 files), `check-learnings` **0**, `check-handoff --all` **0** at close-out.
+`unittest`: dashboard **321 OK**, context_budget **116 OK**, methodology_trim **123 OK** — the last
+being row 20's never-before-run combination. `cmp` of the two dashboard twins silent. Ledger
+accounting: **74 → 78** dated entries and **437 → 441** source-tagged across live + archives;
+receipts **23 → 24**. Both ledgers `shasum -c` clean after every suite run. Adopter surface, which
+the plan did not ask for: `bin/sync <tmp> --mode=commit` exit **0**, **27 files** installed, the
+merged `ITERATIVE_METHODOLOGY.md` sentence and Learning #55 both landing. Not exercised: upstream CI
+(neither side has `.github/workflows` — confirmed absent, not assumed), the maintainer's machine,
+`--calibrate`.
+
+**Model:** Claude Opus 5 (1M context).
+
 ### 2026-09-04 · [ad hoc] S151 — claim: Phase B of the merge plan — merge `upstream/read-set-budgets` (`598c459`) into fork `main`
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: execute
