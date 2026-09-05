@@ -53,6 +53,67 @@ def records_of(text, spec):
     return z.records() if z else []
 
 
+# =============================================================================================
+# SYNTHETIC FIXTURES — portable stand-ins for this repository's own archive events.
+#
+# UPSTREAM PORT. L1/L2/L3 were originally driven by two commits in the canonical fork's history:
+# `020ba3f`, a CHANGELOG archive that carried the scope footer out of the live file, and
+# `7a71df0`, a HANDOFFS archive that bundled a record edit with the move. Neither is reachable in
+# any other clone, so the whole L-series could only run in one repository — including for an
+# adopter who installs the trimmer and wants to know it works.
+#
+# These reproduce the STRUCTURAL PROPERTIES those events supplied, never their bytes:
+#   * SYNTHETIC_CHANGELOG — front matter, records, and a NON-EMPTY footer carrying a rebasable
+#     `](link)`. The link is load-bearing: it is what makes the footer-moved clause detectable
+#     through `transform_record`, and a footer without one silently weakens that test.
+#   * SYNTHETIC_BEFORE / _AFTER / _SHARD — a 25 = 6 + 19 partition in which one RETAINED record
+#     was edited. Counts partition; content does not. That is precisely what made `7a71df0` the
+#     event worth testing against.
+#
+# The original docstrings warned that "a synthetic one tests the test". That warning is ANSWERED,
+# not waved away, by TestSyntheticFixtureControls below: it proves each fixture actually carries
+# the property the tests rely on, and that the assertions still go RED against it. A fixture
+# nobody has driven red is not a fixture.
+# =============================================================================================
+
+SYNTHETIC_CHANGELOG = (
+    "# Changelog\n"
+    "\n"
+    "Front-matter prose. A trim pins this zone and must never move it.\n"
+    "\n"
+    "### 2026-01-03 · [ad hoc] third\n"
+    "\n"
+    "body three\n"
+    "\n"
+    "### 2026-01-02 · [ad hoc] second\n"
+    "\n"
+    "body two\n"
+    "\n"
+    "### 2026-01-01 · [ad hoc] first\n"
+    "\n"
+    "body one\n"
+    "\n"
+    "---\n"
+    "\n"
+    "**Release history before v1.0:** not re-narrated here — see\n"
+    "[`docs/RELEASE_HISTORY.md`](docs/RELEASE_HISTORY.md) for the per-version entries.\n"
+)
+
+
+def _syn_receipt(n, extra=""):
+    """One HANDOFFS-shaped record. `extra` makes an otherwise identical record differ."""
+    return "```handoff\nsession: S%d\ndate: 2026-01-%02d\nstatus: complete%s\n```\n\n" % (
+        n, n, extra)
+
+
+# 25 = 6 retained + 19 archived, with retained record [0] EDITED across the move — the shape of a
+# close-out finalised in the same commit as the archive write.
+SYNTHETIC_BEFORE = [_syn_receipt(i) for i in range(1, 26)]
+SYNTHETIC_AFTER = ([_syn_receipt(1, "\nnote: finalised at close-out")]
+                   + SYNTHETIC_BEFORE[1:6])
+SYNTHETIC_SHARD = SYNTHETIC_BEFORE[6:]
+
+
 # The token the two shipped seeds carry until first real use. The TOOL no longer reads it — an
 # exemption keyed on it left one shape of F1 uncovered — see the 120-entry sealed-table-row test
 # below — so this is
@@ -93,64 +154,86 @@ CL = mod.LEDGERS["CHANGELOG.md"]
 HF = mod.LEDGERS["HANDOFFS.md"]
 
 
+def live_handoffs_declares_the_regen_field():
+    """True iff the live root HANDOFFS.md carries HANDOFFS.md's declared regenerated-count sentence.
+
+    UPSTREAM-PORT PRECONDITION. `LEDGERS["HANDOFFS.md"]` declares one regenerated field, the retained
+    receipt count. A repository that keeps every receipt declares no retention policy and so carries
+    no count to regenerate — upstream's root HANDOFFS.md is exactly that. The two tests below use the
+    REAL field on the REAL front matter deliberately (a synthetic anchor would test the test), so they
+    have no fixture there and must skip rather than fail.
+
+    Read from the RAW FILE with the declared pattern, never from `classify_zones(...).front`: a
+    precondition computed by the code under test would agree with a broken zone-splitter and convert
+    a real defect into a silent skip. Reading raw is also the SAFE direction — it is true at least as
+    often as the front-zone form, so a sentence present but mis-zoned still RUNS the test and fails
+    its `assertIsNotNone` control, which is the signal we want rather than a skip.
+    """
+    try:
+        raw = (REPO / "HANDOFFS.md").read_text(encoding="utf-8")
+    except OSError:
+        return False
+    return HF.regenerated[0][1].search(raw) is not None
+
+
 # =============================================================================================
 # Controls — prove the fixtures before asserting anything about the code.
 # =============================================================================================
 
 class TestFixtureControls(unittest.TestCase):
 
-    def test_L2_fixture_is_the_tree_that_still_had_the_footer(self):
-        text = show("020ba3f^:CHANGELOG.md")
-        self.assertIsNotNone(text, "fixture commit 020ba3f^ is unreachable — history changed")
-        z = mod.classify_zones(text, CL, mod.Result("x"))
-        self.assertEqual(len(z.starts), 27, "fixture must hold 27 records")
-        self.assertIn("Release history before v3.0", z.footer,
-                      "the L2 fixture is only a fixture if the footer is actually IN it")
-        self.assertGreater(len(z.footer.encode("utf-8")), 300)
+    def test_L2_fixture_really_carries_a_footer_worth_pinning(self):
+        """A fixture nobody has checked is an assumption. SYNTHETIC_CHANGELOG is only a fixture for
+        the L2 clauses if its footer is genuinely IN the footer zone and genuinely rebasable."""
+        z = mod.classify_zones(SYNTHETIC_CHANGELOG, CL, mod.Result("x"))
+        self.assertEqual(len(z.starts), 3, "fixture must hold 3 records")
+        self.assertTrue(z.footer.strip(), "the L2 fixture is only a fixture if a footer exists")
+        self.assertIn("Release history before v1.0", z.footer,
+                      "the phrase must be in the FOOTER zone, not merely in the file")
+        self.assertIn("](", z.footer,
+                      "control: the footer must carry a rebasable link, or the footer-moved clause "
+                      "is tested only in its verbatim form and the transform path goes uncovered")
+        self.assertEqual(z.front + "".join(z.records()) + z.footer, SYNTHETIC_CHANGELOG,
+                         "control: the zones must partition the fixture exactly")
 
-    def test_L2_fixture_loss_actually_happened_and_is_still_unrepaired(self):
-        """The defect this assertion exists to prevent is live, not historical.
+    def test_L2_fixture_can_actually_exhibit_the_loss_it_stands_for(self):
+        """The insight the original fork-history version carried, kept and made portable.
 
-        Asserted over the FOOTER ZONE, not over the whole file — deliberately. The design's own D1
-        command is `grep -rn 'Release history before v3.0' CHANGELOG.md docs/archive/`, and that
-        command now returns a FALSE POSITIVE: S35's close-out entry quotes the phrase inside a dated
-        record while the footer itself is still gone. A whole-file grep can no longer tell "the
-        footer is present" from "something talks about the footer". Zones can.
-        """
-        after = show("020ba3f:CHANGELOG.md")
-        head = show("HEAD:CHANGELOG.md")
-        shard = show("020ba3f:docs/archive/CHANGELOG-through-2026-08-01.md")
-        za = mod.classify_zones(after, CL, mod.Result("x"))
-        zh = mod.classify_zones(head, CL, mod.Result("x"))
-        zs = mod.classify_zones(shard, CL, mod.Result("x"))
-        self.assertNotIn("Release history before v3.0", za.footer, "the footer left the live file")
-        self.assertNotIn("Release history before v3.0", zh.footer, "and it has never come back")
-        self.assertIn("Release history before v3.0", zs.footer, "it is now the SHARD's footer")
-        # The control matches the design's own D1 scope (`CHANGELOG.md docs/archive/`), not the
-        # live file alone: S35's quoting entry migrates by position on every later trim just like
-        # any other record (Learning #15), and did — a S63 archive moved it out of the live file
-        # into docs/archive/CHANGELOG-through-2026-08-09.md. The whole-CORPUS grep stays ambiguous
-        # even after it moves; only the live file's grep would stop being.
-        archive_dir = REPO / "docs" / "archive"
-        corpus = head + "".join(
-            show(f"HEAD:{p.relative_to(REPO).as_posix()}") or ""
-            for p in sorted(archive_dir.glob("CHANGELOG-*.md"))
-        )
-        self.assertIn("Release history before v3.0", corpus,
-                      "control: the phrase IS in the live corpus (live file or an archive "
-                      "shard), just not as any shard's footer")
+        That version asserted a real footer had left a real live file and still had not come back.
+        The transferable half is WHY zones were needed at all: a whole-file substring grep cannot
+        tell "the footer is present" from "something merely quotes it", and that ambiguity is what
+        made the loss invisible. Asserted here on the fixture rather than on one repository's
+        history, so it runs in any clone."""
+        z = mod.classify_zones(SYNTHETIC_CHANGELOG, CL, mod.Result("x"))
+        phrase = "Release history before v1.0"
 
-    def test_L3_fixture_is_the_event_that_bundled_an_edit_with_the_move(self):
-        before = show("7a71df0^:HANDOFFS.md")
-        after = show("7a71df0:HANDOFFS.md")
-        shard = show("7a71df0:docs/archive/HANDOFFS-archive.md")
-        self.assertIsNotNone(before, "fixture commit 7a71df0 is unreachable — history changed")
-        b, a, s = (records_of(t, HF) for t in (before, after, shard))
+        # The loss shape: footer gone from live, present in the shard.
+        lost_live = z.front + "".join(z.records())
+        shard = "shard body\n" + z.footer
+        r = mod.Result("x")
+        ok = mod.assert_L2(z, z.front + "PTR\n", "", shard, ["PTR\n"], [], r)
+        self.assertFalse(ok, "the fixture must be able to go RED, or it proves nothing")
+        self.assertIn("L2_FOOTER_MOVED", r.codes)
+
+        # ...and the control that justifies zones over grep: a record that merely QUOTES the
+        # phrase makes a whole-file search green while the footer is genuinely gone.
+        quoting = lost_live + "### 2026-01-04 · [ad hoc] quoting\n\nwe removed the %s line\n" % phrase
+        self.assertIn(phrase, quoting, "a whole-file grep still finds it — the false positive")
+        zq = mod.classify_zones(quoting, CL, mod.Result("x"))
+        self.assertNotIn(phrase, zq.footer, "but the FOOTER zone correctly reports it gone")
+
+    def test_L3_fixture_is_a_partition_that_bundled_an_edit_with_the_move(self):
+        """The counts DO partition, so any L3 failure is about record BYTES, not a miscount. That
+        is the whole reason this triple is the interesting one."""
+        b, a, s = SYNTHETIC_BEFORE, SYNTHETIC_AFTER, SYNTHETIC_SHARD
         self.assertEqual((len(b), len(a), len(s)), (25, 6, 19),
                          "fixture must be the 25 = 6 + 19 partition the design describes")
-        # The control that makes this a fixture: the counts DO partition, so any failure below is
-        # about record BYTES, not about a miscount.
-        self.assertEqual(len(a) + len(s), len(b))
+        self.assertEqual(len(a) + len(s), len(b), "control: the counts partition")
+        edited = [i for i, (x, y) in enumerate(zip(b, a)) if x != y]
+        self.assertEqual(edited, [0],
+                         "exactly one RETAINED record differs, and it is the frontier one — the "
+                         "close-out-finalised-in-the-trim-commit shape")
+        self.assertEqual(s, b[6:], "control: the archived records themselves are untouched")
 
     def test_seed_files_hold_zero_records_under_the_declared_grammar(self):
         """Fence-awareness control. Both seeds contain record-shaped lines that are NOT records."""
@@ -220,10 +303,10 @@ class TestL1(unittest.TestCase):
         mod.assert_L1(self.before, self.before[2:], [mod.transform_record(x) for x in self.before[:2]], r)
         self.assertIn("L1_MISMATCH", r.codes)
 
-    def test_red_on_the_real_7a71df0_event(self):
-        b = records_of(show("7a71df0^:HANDOFFS.md"), HF)
-        a = records_of(show("7a71df0:HANDOFFS.md"), HF)
-        s = records_of(show("7a71df0:docs/archive/HANDOFFS-archive.md"), HF)
+    def test_red_on_an_archive_that_edited_a_retained_record(self):
+        """The shape `7a71df0` had: counts partition, one retained record altered. L1 must refuse
+        it on the CONCATENATION, independently of L3's partition check."""
+        b, a, s = SYNTHETIC_BEFORE, SYNTHETIC_AFTER, SYNTHETIC_SHARD
         r = mod.Result("x")
         self.assertFalse(mod.assert_L1(b, a, [mod.transform_record(x) for x in s], r))
         self.assertIn("L1_MISMATCH", r.codes)
@@ -236,7 +319,7 @@ class TestL1(unittest.TestCase):
 class TestL2(unittest.TestCase):
 
     def setUp(self):
-        self.text = show("020ba3f^:CHANGELOG.md")
+        self.text = SYNTHETIC_CHANGELOG
         self.z = mod.classify_zones(self.text, CL, mod.Result("x"))
 
     def test_green_when_the_footer_stays_live_and_out_of_the_shard(self):
@@ -281,6 +364,9 @@ class TestL2(unittest.TestCase):
         self.assertIn("L2_FRONTMATTER_UNDECLARED", r.codes)
 
     def test_a_declared_regenerated_field_is_permitted_and_confined(self):
+        if not live_handoffs_declares_the_regen_field():
+            self.skipTest("fixture absent: the live root HANDOFFS.md carries no match for "
+                          "HANDOFFS.md's declared regenerated-count field")
         """Uses the REAL declared field on the REAL front matter — not a synthetic anchor, because
         a synthetic one tests the test. HANDOFFS.md declares its retained-receipt count regenerated,
         and that count has already drifted by hand, which is why it is declared at all.
@@ -311,6 +397,9 @@ class TestL2(unittest.TestCase):
         self.assertTrue(ok, [f.message for f in r2.findings])
 
     def test_a_regenerated_field_does_not_license_an_edit_elsewhere(self):
+        if not live_handoffs_declares_the_regen_field():
+            self.skipTest("fixture absent: the live root HANDOFFS.md carries no match for "
+                          "HANDOFFS.md's declared regenerated-count field")
         """NARROWED: the carve-out must not become a blanket permit for front-matter edits."""
         hf_text = (REPO / "HANDOFFS.md").read_text(encoding="utf-8")
         zh = mod.classify_zones(hf_text, HF, mod.Result("x"))
@@ -339,9 +428,9 @@ class TestL2(unittest.TestCase):
 class TestL3(unittest.TestCase):
 
     def setUp(self):
-        self.before = records_of(show("7a71df0^:HANDOFFS.md"), HF)
-        self.after = records_of(show("7a71df0:HANDOFFS.md"), HF)
-        self.shard = records_of(show("7a71df0:docs/archive/HANDOFFS-archive.md"), HF)
+        self.before = list(SYNTHETIC_BEFORE)
+        self.after = list(SYNTHETIC_AFTER)
+        self.shard = list(SYNTHETIC_SHARD)
 
     def test_green_on_a_pure_partition_of_the_same_fixture(self):
         r = mod.Result("x")
@@ -424,8 +513,8 @@ class TestTransform(unittest.TestCase):
         self.assertIn("`](CONTEXT.md)`", out, "an inline code span must not be rewritten")
         self.assertIn("```sh\n[b](CLAUDE.md)\n```", out, "a fenced block must not be rewritten")
 
-    def test_round_trip_is_the_identity_on_the_real_shard_corpus(self):
-        recs = records_of(show("HEAD:docs/archive/HANDOFFS-archive.md"), HF)
+    def test_round_trip_is_the_identity_on_a_record_corpus(self):
+        recs = records_of("".join(SYNTHETIC_SHARD), HF)
         self.assertGreater(len(recs), 10, "control: the corpus must be non-trivial")
         for rec in recs:
             self.assertEqual(mod.invert_record(mod.transform_record(rec)), rec)
@@ -1484,7 +1573,7 @@ class TestReviewRegressions(unittest.TestCase):
     def test_the_footer_moved_clause_sees_through_the_rebase(self):
         """A footer swept into the records zone is transformed on its way into the shard, so a
         verbatim substring test misses it. The real 020ba3f footer contains exactly such a link."""
-        z = mod.classify_zones(show("020ba3f^:CHANGELOG.md"), CL, mod.Result("x"))
+        z = mod.classify_zones(SYNTHETIC_CHANGELOG, CL, mod.Result("x"))
         self.assertIn("](", z.footer, "control: the fixture footer must contain a rebasable link")
         rebased = mod.transform_record(z.footer)
         self.assertNotEqual(rebased, z.footer, "control: the rebase must actually change it")

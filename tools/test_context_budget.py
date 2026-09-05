@@ -5,12 +5,12 @@ CANONICAL-ONLY. Not in bin/_manifest.py, so adopters do not receive it. The tool
 `--selftest` ships to them and covers every pure gate; what cannot ship is this file's
 git fixtures, which need a scratch repository with a real merge in it.
 
-WHY THIS FILE EXISTS AT ALL. Until BL-38 the tool's `calibrate()` had no test asserting
-its arithmetic — Test 35 in bin/tests.sh covered install-hook, sync distribution and the
+WHY THIS FILE EXISTS AT ALL. Until the 2026-08-15 `calibrate()` repair it had no test asserting
+its arithmetic — the tool's bin/tests.sh block covered install-hook, sync distribution and the
 selftest gates, all of which stayed green while the fit itself returned noise on any repo
 that had merged another lineage of its regressor. A shipped executable can be arbitrarily
 wrong in a dimension nothing asserts. That is the same argument the harness already makes
-for the ledger trimmer at bin/tests.sh:248-251.
+for the ledger trimmer at bin/tests.sh:237-244.
 
 DISCIPLINE THIS FILE IS WRITTEN UNDER (inherited from tools/test_methodology_trim.py):
 
@@ -285,7 +285,7 @@ class TestFitGate(unittest.TestCase):
         self.assertAlmostEqual(r2, 1.0, places=9)
 
     def test_this_repos_own_four_way_fit_is_reproduced_from_its_recorded_points(self):
-        """The BL-38 table is a claim about arithmetic; this pins the arithmetic itself.
+        """The 2026-08-15 `calibrate()` repair's table is a claim about arithmetic; this pins it.
         Points chosen so the corrected fit is strong and the scrambled one is not."""
         good = [(8519, 45000), (11064, 46000), (20000, 49000), (52909, 61000)]
         _, _, r2_good = cb.linfit(good)
@@ -558,7 +558,7 @@ class TestTokenCeiling(unittest.TestCase):
                          "on-demand inside WHOLE_READ_CLASSES would redden every "
                          "partially-read file -- the per-file-vs-per-row error itself")
         # A FROZEN LITERAL, not a set derived from the tuple -- deriving it would make this
-        # an identity that no narrowing mutant can falsify. Widened DELIBERATELY at S129 to
+        # an identity that no narrowing mutant can falsify. Widened DELIBERATELY on 2026-08-30 to
         # admit "read-set", the Phase 0 mandatory read pair (SESSION_RUNNER.md +
         # SAFEGUARDS.md). That pair is read WHOLE, which is exactly Learning #34's condition
         # for the cap to bind, so gating it in BYTES ONLY would have reintroduced the density
@@ -610,7 +610,7 @@ class TestTokenCeiling(unittest.TestCase):
     # --- a green you cannot justify becomes a warn --------------------------------
 
     def test_a_file_that_has_drifted_from_its_measured_density_warns(self):
-        """S119 compacted a file 23.6% and its density moved 3.0444 -> 2.8897, which is
+        """A 2026-08-27 compaction cut a file 23.6%; its density moved 3.0444 -> 2.8897, which is
         what inverted the ceiling. Drift past the threshold must stop the confident ok."""
         with tempfile.TemporaryDirectory() as d:
             Path(d, "t.md").write_bytes(b"x" * 40000)

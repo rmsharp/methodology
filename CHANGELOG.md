@@ -699,6 +699,70 @@ go-ahead; approving the plan is not it.
 
 **Model:** Claude Fable 5.1.
 
+### 2026-09-03 · [ad hoc] The context-budget gate ships — ceilings in tokens, class totals, and the repairs beneath them
+
+- **Change:** `starter-kit/context_budget.py` `1.0.0` → `1.2.0` (29,549 → 73,040 B), shipped as the
+  end state of nine fork commits (seven that went through the fork's own review rounds, plus two
+  comment-only rewords made for this port) rather than a replay — the tests arrive as one file, and
+  every intermediate state of the tool before its reviewed end state fails them. Ceilings may now be declared in **tokens** (`max_tokens`, against `read_cap_tokens`
+  25,000 — the number in the Read tool's own refusal message); a whole-read file with only `max_bytes`
+  gets a ceiling derived at the 2.27 B/token floor and clamped at the cap; **class totals**
+  (`resident`, `read-set`) are summed and gated in the bare run and in `--precommit`;
+  `config_defects()` reports a declared `max_tokens` above the cap and a typed class total that
+  disagrees with its derivation; `calibrate()` walks first-parent history, compares timezone-aware
+  stamps and refuses a fit below R² 0.50 instead of printing noise; the index is sized with
+  `git cat-file -s` (the old path was 1 B short on LF, more on CRLF, and raised on non-UTF-8 content);
+  the ledger row names the ceiling that fired in its own unit and reports bytes, not lines, when
+  nothing fired. Exit codes are unchanged (`0/1/2/3`), and so is the refusal to run at a root with no
+  `.context-budget.json` (exit 3).
+- **What it buys.** [#76](https://github.com/KJ5HST/methodology/pull/76) and
+  [#78](https://github.com/KJ5HST/methodology/pull/78) shed bytes; this one **refuses growth**. On this branch the Phase 0
+  mandatory pair is 52,195 + 15,386 = **67,581 B against the 56,750 B one-read cap — over by
+  10,831 B, exactly what [#76](https://github.com/KJ5HST/methodology/pull/76)'s table left.** Nothing here shrinks it. Once a root config declares
+  the pair, `--precommit` refuses any commit that grows either file and passes any that shrinks one.
+- **The tests travel with the tool.** `tools/test_context_budget.py` — 116 tests, canonical-only
+  (not in `bin/_manifest.py`, like the trimmer's), every git fixture a scratch repository — plus one
+  `bin/tests.sh` row wiring it, immediately after the trimmer's. Until that row `calibrate()`'s
+  arithmetic had no test anywhere: the existing `== Test: context_budget.py ==` block covers
+  install-hook, sync distribution and the selftest gates, all of which stay green while the fit
+  returns noise. Two tests fit this repository's own session transcripts against `CLAUDE.md` and
+  **skip**, by design, on a machine without them.
+- **The seed follows the tool.** `starter-kit/context-budget.json` gains `read_cap_tokens`, a
+  `max_tokens` on each of its two whole-read entries and a note on the on-demand entry saying why it
+  gets none (+6 lines) — documentation of keys the new tool reads. It is a seed-once file: no
+  adopter's existing config changes on sync.
+- **Scanner:** untouched. Both dashboard twins already list `context_budget.py` and
+  `.context-budget.json` as framework-installed files and score neither.
+- **Verification:** clean clone of `cea3068`, measured at the branch head with the root config in
+  place. `python3 tools/test_context_budget.py` — 116 run, OK, 2 skipped; `--selftest` 52 PASS /
+  0 FAIL; `bin/tests.sh` **115 passed / 1 failed** against **114 / 1** on the untouched base — one
+  row added, zero status flips; the failure on both is Test 9 (`bin/sync --source=github` reads
+  `main`, where three manifest sources are absent until this branch merges). `bin/check-links`,
+  `bin/check-learnings`, `bin/check-handoff` and `bin/check-handoff --all` each 0.
+- **Provenance:** ported from `rmsharp/methodology` `main` — the tool byte-identical (blob
+  `d91677b5`), the test module differing in six lines: four where a fork-relative identifier became
+  the date of the change, two where a reference to the fork's numbered `bin/tests.sh` block became a
+  description of this tree's. The fork's own root config, its measurement history, its dashboard
+  series and its ledgers are **deliberately excluded**.
+- **This repository declares its own budget** — a root `.context-budget.json`, in a second commit so
+  the policy file is reviewable apart from the code. It **pins** `CLAUDE.md` at its arrival size
+  (59,168 B: growth refused, shrink passes), **derives** the `read-set` total from the read cap at run
+  time (25,000 tok × 2.27 B/tok = 56,750 B) and splits it 41,364 / 15,386 across `SESSION_RUNNER.md`
+  / `SAFEGUARDS.md`, so all 10,831 B of debt sits on the file the series wants shrunk, and
+  **declares** the two ledgers Phase 0 reads at 65,536 B and 25,000 tokens each and
+  `FRAMEWORK_LEARNINGS.md` at 73,728 B — the derivation `bin/check-learnings` already cites this
+  file for. Every number's `_` key says how it was derived; five values are marked PROPOSAL, and the
+  calibration constants are the seed's (`--calibrate` proposes and writes nothing). Day one: the bare
+  run exits 2 with six findings — `SESSION_RUNNER.md` and the pair over by 10,831 B, both ledgers over
+  in bytes and in tokens — none of them new. This file is also what turns the wired `bin/tests.sh`
+  row green: without a root config the tool exits 3 and the unit module's selftest test fails. The
+  gate is **not wired** into `.githooks/pre-commit`: run `--precommit` by hand, and never
+  `install-hook` at this root (the config's `_` key says why). Run by hand, this PR's own two commits
+  fail it — exit 3 on the first (no config yet), exit 2 on this one (this bullet grows a ledger
+  already over its ceiling). `.gitignore` gains the comments explaining why neither measurement history
+  (the dashboard's, this tool's) is ignored; this tool's appears on the first bare run and is yours to
+  track or not.
+
 ### 2026-09-02 · [ad hoc] S145 — claim: planning session for PR 4 (`starter-kit/context_budget.py` to `read-set-budgets`)
 
 **Authorization:** the operator's *"PR 4 planning session"*, given after the Phase 0 report. The
@@ -1359,6 +1423,43 @@ table `port/framework-learnings-extraction` already holds — because it is zero
 reversible before any push. Stated as an assumption, not taken as an answer.
 
 - **Model:** Claude Opus 5 (1M context).
+
+### 2026-09-02 · [ad hoc] The flight manual sheds its apparatus into a read-on-demand sibling
+
+- **Change:** the six contiguous apparatus sections of `ITERATIVE_METHODOLOGY.md` — Knowledge
+  Accumulation System, Honest Accounting Framework, Scope Validation System, Verification
+  Hierarchy, Session Document Template, Performance Tracking — move **verbatim** into a new
+  distributed sibling, `FRAMEWORK_APPARATUS.md` → `docs/methodology/FRAMEWORK_APPARATUS.md`,
+  `TRACKED`. The manual keeps a *Reference Apparatus* stub naming all six and linking the file.
+  **Nothing was deleted.** The apparatus is reference, not theory — you open it to fill in a
+  session document, validate a scope or score a claim, not to understand why the phases exist.
+- **What it buys.** `ITERATIVE_METHODOLOGY.md` **68,240 → 55,976 B (−12,264, −18.0%)**, landing
+  **774 B under the 56,750 B one-read cap** it had been over. The sibling is **15,493 B** and is
+  read on demand. Manifest **26 → 27** rows.
+- **The extraction was the easy half; reachability was not.** The move updated every place that
+  *names* the six sections and, at first, no place that *invokes* what is in them — those
+  sections used to be reached by scrolling, so no link-based proof can see their loss.
+  `bin/check-links` strips the `#fragment` and validates existence only, so it stays green either
+  way. Nine pointers were therefore added where none existed (Principles 4–7, Phase 2 step 8,
+  Phase 6 steps 5–6 and its gate, and the self-referencing *Across the Full Series* heading, whose
+  bare parenthetical became a link); four more sites already pointed at these sections in prose and
+  were converted in place. `ITERATIVE_METHODOLOGY.md` now carries **14** references to the sibling —
+  **13 pointer sites** plus the stub's own link — and the stub enumerates all thirteen.
+- **The manual-copy path is documented, not just the tool path.** `README.md`'s Option B and
+  `starter-kit/BOOTSTRAP.md`'s Step 1 both enumerate the framework files by hand. Left alone they
+  would have told an adopter to copy a `docs/methodology/` **missing the file those 14 links point
+  at** — an install broken in a way `bin/check-links` structurally cannot report, because it builds
+  its simulated tree from `bin/_manifest.py`, which was correct. Fixed at `README.md` (both the
+  Option A sentence and the Option B list), `starter-kit/BOOTSTRAP.md` (the tree diagram, the sync
+  sentence and the manual-copy step) and `docs/tutorials/T1_setup.md`.
+- **The documents that describe the corpus now describe this one.** `CLAUDE.md` gains a Reference
+  apparatus row and its layer count is corrected; `HOW_TO_USE.md`'s layer table gains a row and its
+  `ITERATIVE_METHODOLOGY.md` length is re-derived (**~880 → ~580 lines**, sibling ~330).
+- **Scanner:** `docs/methodology/FRAMEWORK_APPARATUS.md` joins `FRAMEWORK_DISTINCTIVE_DOCS` in both
+  `methodology_dashboard.py` twins, so a synced project is still classified by a name only this
+  framework installs. The twins remain byte-identical. The installed-markdown counts in the
+  surrounding comments were **re-derived from `bin/_manifest.py` on this tree** (27 rows / 23
+  markdown / 19 tracked-markdown) rather than carried over from the branch this was ported from.
 
 ### 2026-09-01 · [ad hoc] S135 close-out — candidate D verified and ready; the remaining blocker is a promise, not a defect
 
@@ -3180,3 +3281,105 @@ constant actually changes"*. **NO OUTWARD-FACING ACTION.**
 
 **Model:** Claude Opus 5 (1M context).
 
+### 2026-08-28 · [ad hoc] The Learnings table leaves the every-session read for a read-on-demand sibling
+
+- **Change:** the `## Learnings (added by sessions)` table moves out of
+  `starter-kit/SESSION_RUNNER.md` into a new distributed sibling,
+  `starter-kit/FRAMEWORK_LEARNINGS.md` → adopter root `FRAMEWORK_LEARNINGS.md`, `TRACKED`.
+  `SESSION_RUNNER.md` keeps a one-paragraph pointer; Phase 3C's two routing bullets now name the
+  sibling. The learnings are **reference, not procedure** — a session needs them when a learning
+  applies, not to run a session.
+- **What it buys, measured on both files rather than argued.** The Phase 0 mandatory read
+  (`SESSION_RUNNER.md` + `SAFEGUARDS.md`) goes **80,526 B → 67,581 B (−12,945, −16.1%)**.
+  `SESSION_RUNNER.md` alone: **65,140 → 52,195 B**. `SAFEGUARDS.md` is untouched. Against the
+  56,750 B one-read floor the pair is **over by 23,776 B before and 10,831 B after — a 54.4%
+  cut with no content deleted.** The sibling is 56,673 B and is read on demand.
+- **Nothing is lost — the rows move, and then some.** The 13 rows that lived here arrive as rows
+  **#1–#13** of a 46-row table; rows #1–#11 are byte-identical, and **#12 and #13 arrive compacted**
+  (2,401 → 1,451 B and 1,573 → 1,447 B) under the 1,500 B per-row budget the new file publishes.
+  Compaction is *said shorter without saying less*: every mechanism, figure and citation is kept,
+  and each compacted row was read back by an independent reader asked only what was lost.
+- **`#14` is deliberately absent and must stay absent.** It is reserved by
+  `docs/operator-gated-review-plan`'s D3; the table numbers **1..47 with 14 reserved**. Renumbering
+  would break every `Learning #N` citation, which is what "append only, never renumber" exists to
+  prevent. `bin/check-learnings` now parses the file's own prose for reserved numbers, so the gap
+  is not reported as a missing row.
+- **Tooling follows the table, because the file publishes rules that must be true.**
+  `bin/check-learnings` locates the table by its header row rather than by a `## Learnings` heading
+  (portable across both layouts), honours the reserved gap, and enforces the **1,500 B row budget
+  the new file's front matter names it for** — held against every row, not only the row being
+  written. `bin/tests.sh` Test 23 retargets to the new file and now asserts on each mutation's
+  **specific finding text** rather than the exit code, which is a union over every check and would
+  otherwise be satisfied by the new budget arm.
+- **Scanner:** `FRAMEWORK_LEARNINGS.md` joins `FRAMEWORK_AMBIGUOUS_DOCS` (the ambiguous root-name
+  set grows 6 → 7, a behaviour change, so `DASHBOARD_VERSION` 2.10.6 → 2.10.7 on both byte-identical
+  twins) and gains a `CHECKLIST_EXEMPT` entry rather than a `METHODOLOGY_ITEMS` row —
+  `METHODOLOGY_MAX` is a derived denominator, so scoring it would move every already-compliant
+  adopter's percentage for a change they did not make. That exemption was driven **RED** first: with
+  it removed, `test_every_distributed_adopter_root_file_is_scored_or_exempt` fails on exactly
+  `['FRAMEWORK_LEARNINGS.md']`.
+- **Every count claim is derived from the manifest and asserted, not carried over.** The
+  originating commit's count edits were computed against a 22-row `DISTRIBUTION`; this one is 24, so
+  its "+1" arithmetic lands two short here. Parsing `bin/_manifest.py` gives **total 25, markdown
+  dests 22, TRACKED markdown 18, TRACKED markdown at the adopter root 7, `workstreams/` sources 9**,
+  and all **eight** count claims across four files were re-checked against that derivation — 8
+  correct, 0 wrong. Three needed correcting: the `FRAMEWORK_ITEMS` comment (*"9 of the 22"* → **25**),
+  `docs/tutorials/T8_keeping_current.md` (*"all 23 distributed files"* → **25**), and
+  `tools/test_methodology_dashboard.py` (*"21 installed markdown files"* → **22**). **Two of the
+  three units of the first two corrections are pre-existing drift** from `df6a991`, which added the
+  context-budget rows without updating the prose — not this change.
+- **Referents a reader of this tree cannot resolve, disclosed because no check covers them.** Seven
+  backticked artifacts named inside the rows do not exist here (`.context-budget.json`,
+  `methodology_trim.py`, `docs/planning/BACKLOG.md`, `docs/audits/…`, `.verify.sh`, two `BACKLOG.md`
+  paths), across 10 of the 46 rows; and **32 of 46 rows cite session numbers S35–S119** from the
+  canonical fork's sequence, which runs separately from this repo's and **collides with it**. None is
+  a broken hyperlink — they are prose code spans, which is exactly why `bin/check-links` is green and
+  correctly so: it strips inline code, so its green says nothing about them. **They are left as-is
+  deliberately, and a clarifying note in the front matter is affordable rather than blocked** — the
+  earlier reading of the budget was wrong on both counts and is corrected here. This file's class is
+  `on-demand`, ceiling **73,728 B**; at 56,673 B it has **17,055 B of headroom**, so a ~400 B note
+  costs nothing it does not have. The **56,750 B** figure is the `read-set` *class total* — the
+  Phase 0 mandatory pair — and was never this file's ceiling. Nor does a note threaten anything about
+  `bin/sync`: `read_local` reads a **working tree** (`bin/sync:52`) and `read_github` reads
+  `KJ5HST/methodology`; neither consults a local ref, the two sources already differ on several
+  tracked files in every measured adopter, and nothing compares them. The note is **deferred to a
+  follow-up, not declined on cost** — per-row provenance is content, and this change is an extraction.
+- **Verification:** `bin/check-learnings` **0** (*46 rows, contiguous 1..46, all citations resolve,
+  0 over 1,500 B*); `tools/test_methodology_dashboard.py` **211 passed**; twins byte-identical.
+  `bin/tests.sh` row-for-row against a pristine control — see the PR body for the table.
+- **Provenance:** ported from `rmsharp/methodology` `ed22ace` (the extraction) plus the compaction
+  and checker repairs that followed it. The fork's own ledgers, `docs/planning/`, and the two
+  unrelated `SESSION_RUNNER.md` changes it also carries (issue #75's *name the surface* additions
+  and the Phase 3F `Model:` bullet) are **deliberately excluded**.
+
+### 2026-08-12 · [ad hoc] Released v3.7 — the artifacts Phase 0 mandates reading now have ceilings
+
+- **Change:** release narration commit on `release/v3.7` — `README.md` §What's New in v3.7 (folding
+  in the stale "Since v3.6 (unreleased)" section), `CLAUDE.md` §Versioning entry, and the
+  "Current version" line 3.6 → 3.7. Cite-don't-restate: the full narrative lives in
+  [`CLAUDE.md` §Versioning "v3.7"](CLAUDE.md#versioning); this entry is the action record.
+- **Scope:** 38 commits and 13 ledger entries since `v3.6` (`d7a482a`). **Minor**, not patch,
+  because the framework gained a failure mode (**#28**, count 27 → 28 — the first since v3.1) and a
+  new distributed tool (`starter-kit/context_budget.py`, TRACKED, with a SEED config). **Not major**
+  because no principle, phase, gate, or workstream changed. Learnings 12 → 13; `DASHBOARD_VERSION`
+  2.10.2 → 2.10.6 across four separate fixes; `bin/tests.sh` 84 → 114; unit suite 197 → 211.
+- **The "unreleased" README section was stale and is why this was worth catching.** It still ended
+  *"the failure-mode count stays 27"* — written before PR #66 appended FM #28, and true when
+  written. A section that describes itself as pending release is exactly the text nobody re-reads;
+  it is Learning #7's cross-reference problem applied to the release notes themselves.
+- **Tag and Release — recorded after the action, not predicted before it.** Annotated tag `v3.7`
+  (tag object `0138e095`) cut at **`dcb6fc6`**, the PR [#74](https://github.com/KJ5HST/methodology/pull/74)
+  merge commit, plus GitHub Release *"v3.7 — The artifacts Phase 0 mandates reading now have
+  ceilings"*, published 2026-08-12T04:50:42Z, not a draft and not a prerelease:
+  <https://github.com/KJ5HST/methodology/releases/tag/v3.7>. Written into this entry only once each
+  fact existed and had been read back — a tag SHA asserted in advance is exactly the forward-looking
+  claim Learning #13 says to compute rather than predict.
+- **Unlike v3.6, this release has a narration commit of its own** (`2bddc3e`), so the tag+publish
+  step is recorded here against a real commit rather than reconstructed four days late. That was
+  v3.6's failure: a release is the non-commit action failure mode #27 names, and the one class
+  Phase 0 reconcile-on-read cannot catch by design — reconcile diffs `git log` against the ledger
+  frontier, and a tag plus a Release move neither.
+- **Commit/PR:** narration `2bddc3e` → merge `dcb6fc6` (PR #74); this ledger completion rides the
+  S12 close-out commit.
+- **Session:** S12 · **Verified:** tag confirmed annotated (`git cat-file -t` → `tag`) and pointing
+  at `dcb6fc6`; present on `origin`; Release confirmed published, non-draft, non-prerelease.
