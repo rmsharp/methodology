@@ -210,6 +210,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-07 · [ad hoc] S152 — pushed `main` to `origin`, deleted five merged local branches, and rewrote a `next_steps` that stated facts instead of naming actions
+
+**Three actions, all operator-directed.** (1) `git push origin main` — `defefb0..71a8d33`, **verified
+by reading the remote back** rather than from the push output: `git ls-remote --heads origin main`
+and `git rev-parse origin/main` both `71a8d33`, `git rev-list --count origin/main..main` = **0**.
+(2) `git branch -d` on the five branches `git branch --merged main` listed —
+`docs/learning-13-handoff-predictions` (`73b72c0`), `pr1/framework-learnings-extraction`
+(`5b92b2f`), `pr2/ledger-trimmer` (`56997af`), `pr3/apparatus-extraction` (`2c30d0f`),
+`pr4/context-budget-gate` (`cf15489`). Each was confirmed an ancestor of `main` with
+`git merge-base --is-ancestor` **before** deletion, and `-d` (never `-D`) would have refused any that
+was not. **LOCAL ONLY — one copy of each still exists on `origin`**, and removing those is an
+outward action on the fork that was not requested; it is `next_steps` (6). **Nothing on
+`KJ5HST/methodology`:** `upstream/main` `512c2ed` and `read-set-budgets` `598c459` unchanged, 0 open
+PRs.
+
+**(3) THE `next_steps` FIELD WAS REWRITTEN BECAUSE THE OPERATOR CAUGHT IT STATING STATE INSTEAD OF
+PRESCRIBING ACTION** — and that is a **protocol violation**, not a style note.
+`starter-kit/SESSION_RUNNER.md` §3D's Minimum Handoff Requirement **3** is *"What's next — specific
+and actionable"*, whose own bad example is *"Pick next from backlog"* and whose rule is that a
+handoff missing it *"will score ≤4/10 by the next session."* The version shipped at `71a8d33` failed
+it three ways: item (1) opened *"DO NOT START …"*, a **prohibition** with no accompanying task;
+items (2) and (3) opened *"`HANDOFFS.md` IS NOW THE LOUD ONE"* and *"THE TRIMMER SHIPS A STOP IT DOES
+NOT HONOUR"*, both **descriptions of a condition** with no verb; and the two genuinely-next actions —
+push, delete the branches — sat **outside the numbered list** as loose trailing prose, so the ranked
+list did not contain the ranked work.
+
+**What replaced it.** Six items, each opening with an **imperative** and carrying its first command,
+with any gate named **before** the verb: (1) *put Tier-2 (a) to the operator as a three-option
+decision, then build the branch* — the upstream plan's next phase, §11.1 read first because it
+changes what the options mean; (2) *rewrite `30ddf26:CHANGELOG.md:92-94`*, explicitly **not** blocked
+by (1); (3) *ask the operator to release `HANDOFFS.md`, then trim it*, with the three gates that trim
+must clear; (4) *change `HOW_TO_USE.md:774` 27 → 28*; (5) *fix `choose_cut`*; (6) *delete the five
+branches on `origin`*. **The ranking rule is unchanged and is why (1) is (1):** handoff item 1 is the
+upstream plan's next phase, never fork housekeeping.
+
+**The budget forced the trade, and the checker dictated which way it went.** Adding the actions took
+the record to **13,132 B** against the 12,288 B per-record budget. `bin/check-handoff`'s refusal text
+is prescriptive — *"CUT THE TRAILING PROSE FIRST … the Phase 3A/3B essays below the closing fence are
+what it is sized to exclude"* — so the 3A/3B essays were cut across four rounds and **no finding was
+removed from `next_steps`**. Final record **12,282 B**, 6 B of margin. `bin/check-handoff` **0** bare
+and `--all`.
+
 ### 2026-09-07 · [ad hoc] S152 — Phase 3 completed: the 3A/3B evaluations and Learning #56 that the close-out skipped, and a self-score revised 8 → 7
 
 **A correction to this session's own close-out (`00347a7`), recorded rather than quietly patched.**
