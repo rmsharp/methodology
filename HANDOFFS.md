@@ -74,6 +74,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S152
+date: 2026-09-07
+status: pending
+active_task: **Phase 1B claim stub.** Trim `CHANGELOG.md`, which at **263,953 B** is **1,809 B past the 262,144 B `READ_REFUSE_BYTES` hard refusal** (`starter-kit/methodology_trim.py:130`) — a default `Read` returns NO CONTENT AT ALL, front matter included, verified by running it rather than by reading the constant. `starter-kit/methodology_trim.py --file CHANGELOG.md --write`, default POSITIONAL cut (design §2.3 and this ledger's own front matter `:56` both make position the ratified key; `--cut <date>` is refused on provenance, not preference). **The S129 deprioritisation was released by the operator at this session's Phase 0 gate on the changed fact pattern — a HARD refusal, on the OTHER ledger.** `HANDOFFS.md` is deliberately out of scope: past its own 196,608 B trigger but **40,538 B clear of the refusal**, and one deliverable is one deliverable. **FORK-INTERNAL ONLY — no PR, comment, tag or release on `KJ5HST/methodology`.** Phase 0 baseline, bare: `bin/tests.sh` **304 passed / 1 failed / 0 skipped, exit 1** (Test 9 `github source dry-run failed`, pre-existing — 3 of 27 manifest sources absent from `upstream/main`); `check-links`/`check-learnings`/`check-handoff`/`--all` all **0**; **442** source-tagged entries live+archives, **79** live records, **24** receipts.
+```
+
+```handoff
 session: S151
 date: 2026-09-04
 status: complete

@@ -206,6 +206,74 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-07 · [ad hoc] S152 — claim: trim `CHANGELOG.md`, which is 1,809 B PAST the 262,144 B hard read refusal
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: run
+[`starter-kit/methodology_trim.py`](starter-kit/methodology_trim.py) `--file CHANGELOG.md --write`
+on **this** file, archiving its oldest records into a frozen shard under `docs/archive/` with the
+tool's own losslessness proof and `.verify.sh`. **Fork-internal: `origin` only. No action on
+`KJ5HST/methodology` — no PR, no comment, no tag, no release.**
+
+**The warrant is a measurement, and it is new since S151 wrote its handoff.** This file is
+**263,953 B**. `starter-kit/methodology_trim.py:130` sets `READ_REFUSE_BYTES = 256 * 1024` =
+262,144 B — *"a SECOND and HARDER boundary, and it is NOT truncation"* — so this ledger is **1,809 B
+(1.0069×) past it**. Verified by running the tool rather than by reading the constant: a default
+`Read` of `CHANGELOG.md` returns **no content at all**, front matter included —
+*"File content (257.8KB) exceeds maximum allowed size (256KB)"*. The artifact Phase 0 mandates
+reconciling is, today, unreadable by the tool Phase 0 uses. S151 measured **243,957 B** and called it
+*"~18 KB from"* the refusal; its own five close-out commits carried it across.
+
+**THE BLOCKER WAS RELEASED BY THE OPERATOR THIS SESSION, AND THAT RELEASE IS ITSELF THE RECORDED
+ACTION.** The trim was deprioritised at **S129** — when the file in question was `HANDOFFS.md` at
+5 receipts and 7,305 B over a *soft* one-read cap — and no repeal stood on record; S151 declined the
+trim on exactly that provenance and was right to. Presented at this session's Phase 0 gate with the
+changed fact pattern (a *hard* refusal, on the *other* ledger), the operator chose **"Trim
+CHANGELOG.md"**. `HANDOFFS.md` is deliberately **out of scope**: at 221,606 B it is past its own
+196,608 B trigger but still **40,538 B clear of the refusal**, and one deliverable is one deliverable.
+
+**The cut is POSITIONAL and this session will not override it.** The dry run flags
+`CUT_STRADDLES_DAY` and offers `--cut <earlier date>` for a clean calendar seam. **Refused, on
+provenance, not on preference.** Design
+[`docs/planning/ledger-trimmer-design.md`](docs/planning/ledger-trimmer-design.md) §2.3 states *"cuts
+are by **position in file order**, never by sorting on a parsed key"* and its §3.1 table gives this
+file's cut key as literally `position`; this file's own front matter (`:56`) ratifies the same rule —
+*"that boundary is POSITIONAL, not a calendar seam … The sections are the calendar; the file boundary
+is not."* A survey of the nine dated shards shows **8 honour a clean day boundary and 1 does not** —
+and the one that does not, `CHANGELOG-through-2026-08-30.md`, is precisely the shard the front matter
+cites as the reason the convention is a span label. **That 8-of-9 count is a sample that points the
+wrong way**; the ninth carries the policy.
+
+**Planned cut, from the dry run and to be re-derived before `--write`:** archive **52 of 79** records
+(span 2026-08-12 → 2026-09-02) to `docs/archive/CHANGELOG-through-2026-09-02.md`; live
+**263,953 B → 98,303 B**, one byte under the 98,304 B `CLASS_A_STOP_BYTES`. Proof clauses all green
+on the dry run: `L1_OK` (records-zone concatenation byte-identical), `L2_OK` (zones pinned,
+front-matter diff confined to declared changes), `L3_OK` (79 records partitioned, every one
+byte-identical across the move).
+
+**Phase 0 baseline, every command run bare before any edit.** `bash bin/tests.sh` **304 passed /
+1 failed / 0 skipped, exit 1** — the one failure is `github source dry-run failed`, pre-existing, and
+its cause was measured this session rather than assumed: **3 of 27** `bin/_manifest.py` source paths
+(`FRAMEWORK_APPARATUS.md`, `starter-kit/FRAMEWORK_LEARNINGS.md`, `starter-kit/methodology_trim.py`)
+are absent from `upstream/main`, and `bin/sync:134` `sys.exit()`s before writing anything. Nothing in
+a fork-internal trim can flip it. `bin/check-links` **0**, `bin/check-learnings` **0** (54 rows,
+contiguous 1..54, 0 over 1,500 B), `bin/check-handoff` **0**, `--all` **0** (24 receipts).
+`starter-kit/context_budget.py` **exit 2** (read-set total 69,749 B / 56,750) — pre-existing and
+out of scope. Ledger accounting before: **442** source-tagged dated entries across live + archives,
+**79** records live, **24** receipts. Both ledgers backed up outside the repo and `shasum -c` clean
+after the baseline suite run, which mutates and restores them.
+
+**A correction to S151's handoff, carried here because it misdirects the next session.** Its
+`next_steps` (4) calls the `context_budget.py` exit-2 *"Phase 2 of the older
+`upstream-read-set-pr-plan.md`, **never executed**."* **Phase 2 shipped at S119** — `28551a5` (scope
+the row budget to every row, driven RED) and `364b410` (compact all 20 over-budget rows, 73,712 →
+56,673 B), both verified ancestors of `main`; `bin/check-learnings` reports **0 over 1,500 B**,
+exit 0. And the 69,749 B is `starter-kit/SESSION_RUNNER.md` (54,363) + `starter-kit/SAFEGUARDS.md`
+(15,386) — class `read-set` in `.context-budget.json`; `starter-kit/FRAMEWORK_LEARNINGS.md` is class
+`on-demand` and is not a member, so Phase 2 could never have closed that gap. This is the **third**
+recurrence of the drift §11 of that plan was written to stop — each session taking its premise from
+the previous *receipt* rather than from the plan the receipt cites. **All four executable phases
+(1–4) are shipped; only Phase 5, which needs the operator's explicit go-ahead, remains.**
+
 ### 2026-09-04 · [ad hoc] S151 close-out — Phase B DONE: `upstream/read-set-budgets` (`598c459`) MERGED into fork `main` as `213f841` and pushed to `origin`
 
 **Phase 3D/3F.** Deliverable: Phase B of
