@@ -210,6 +210,58 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-07 · [ad hoc] S152 — Phase 3 completed: the 3A/3B evaluations and Learning #56 that the close-out skipped, and a self-score revised 8 → 7
+
+**A correction to this session's own close-out (`00347a7`), recorded rather than quietly patched.**
+That commit reported Phase 3 complete. **It was 3 of 7 steps short:** 3A (evaluate the predecessor's
+handoff), 3B (self-assess) and 3C (document learnings) were never performed. The operator had to ask
+for them. Steps 3D–3G *were* done, which is why nothing caught it — **`bin/check-handoff` returned
+exit 0 throughout**, and that is exactly what `starter-kit/SESSION_RUNNER.md` §3D says it means:
+the checker *"asserts its presence and completeness, never its quality (a green check is not a good
+handoff — that stays the next session's 3A score)."* A mechanical gate passing over a missing
+compounding step is the gate behaving correctly and the session behaving badly.
+
+**3C — Learning #56 appended to [`starter-kit/FRAMEWORK_LEARNINGS.md`](starter-kit/FRAMEWORK_LEARNINGS.md):**
+*"A convention counted across a corpus can be a sample of the rule's OUTPUT, not the rule — and the
+lone exception is often the case the written policy was built around."* Sourced from this session's
+8-of-9 shard survey, which argued for a calendar cut and was backwards. `bin/check-learnings` **OK —
+55 rows, contiguous 1..55, 0 over 1,500 B**. **The next number was 56, not 55:** `#14` is
+deliberately reserved (`bin/check-learnings:74`, `RESERVED_RE`), so the checker's *"contiguous
+1..54"* message describes a count while the highest live row number was already **55**. Read the
+raw rows, not the summary line.
+
+**3A/3B — written below the receipt's closing fence, and the budget is what constrains them.**
+`bin/check-handoff` refused the first draft: *"record S152 is 13,786 B, over the 12,288 B
+per-record budget by 1,498 … CUT THE TRAILING PROSE FIRST."* The budget is sized so the six
+mandatory fenced requirements fit and the 3A/3B essays are what it excludes; the receipt already
+carries their conclusions as `self_score` and `predecessor_score`. Three lower-value lines were cut
+rather than any finding. Final record **12,222 B**, 66 B of margin. Worth noting the house
+convention is genuinely mixed: S150, S149 and S148 carry **2 B** of trailing prose — none at all —
+while S151 carries 3,106 B.
+
+**`self_score` revised 8 → 7 in the receipt, and the reason is the skip, not the deliverable.** The
+trim itself is unchanged: complete, and proved twice from independent instruments. But a phase
+reported complete while 3 of its 7 steps were missing is not an 8, and the three missing steps are
+precisely the ones that exist for someone other than this session. **Predecessor S151 scored 7/10** —
+its refusal to trim on unrepealed operator provenance was the single most useful thing it did for
+this session, against a `next_steps` (4) that was false and ranked already-finished work.
+
+**A DEFECT FOUND BY THE 3F CROSS-REFERENCE SWEEP, RECORDED NOT FIXED (FM #17).**
+[`HOW_TO_USE.md`](HOW_TO_USE.md)`:774` says the failure-mode table is *"A table of **27** documented
+agent tendencies"*. **The highest FM row is 28**, and [`CLAUDE.md`](CLAUDE.md)`:104` already says 28.
+It is **live prose** under *#### What the Session Runner Contains* — not frozen release notes, so it
+is unlike `README.md`'s v3.2–v3.6 sections where *"the count stays 27"* is correct as shipped and
+must **not** be "fixed". **`HOW_TO_USE.md` is `TRACKED` in `bin/_manifest.py`, so the stale count
+ships to every adopter.** Pre-existing, unrelated to this session's diff, and left for a session that
+can own it. ⚠ **Do not count it with `grep -c '^| [0-9]* | \*\*' starter-kit/SESSION_RUNNER.md` —
+that returns 34**, because the runner holds more than one numbered table; take the highest FM row
+number instead. That is S12's gotcha (2), reproduced exactly here.
+
+**No new verification claim is made for the deliverable.** The trim's evidence stands as recorded at
+`00347a7`. This commit re-ran what its own diff can affect: `bin/tests.sh` (a distributed file
+changed), `check-learnings`, `check-handoff` bare and `--all`, `check-links` — results in the
+receipt's `runtime_smoke`. **Fork-internal: no PR, comment, tag or release.**
+
 ### 2026-09-07 · [ad hoc] S152 close-out — `CHANGELOG.md` is readable again: 269,571 B → 98,341 B, 54 records to a frozen shard, self-score 8/10
 
 **Phase 3D/3F. Deliverable complete.** Three commits plus this close-out: `0f3f693` the claim,
