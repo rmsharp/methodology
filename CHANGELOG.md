@@ -210,6 +210,92 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-07 · [ad hoc] S152 close-out — `CHANGELOG.md` is readable again: 269,571 B → 98,341 B, 54 records to a frozen shard, self-score 8/10
+
+**Phase 3D/3F. Deliverable complete.** Three commits plus this close-out: `0f3f693` the claim,
+**`aaa6d30` the trim**, `f2117bd` the `chore(history)` for the append-only `.jsonl`.
+**FORK-INTERNAL ONLY — no PR, comment, tag or release on `KJ5HST/methodology`.** `upstream` refs
+re-read at Phase 0 and unchanged: `main` `512c2ed`, `read-set-budgets` `598c459`; `gh pr list` empty
+on **both** repos.
+
+**THE FILE PHASE 0 MANDATES READING WAS UNREADABLE, AND THAT IS NOW MEASURED RATHER THAN INFERRED.**
+At claim time `CHANGELOG.md` was 263,953 B and by the claim commit 269,571 B, against
+`READ_REFUSE_BYTES` = 262,144 B (`starter-kit/methodology_trim.py:130`). I did not read the constant
+and predict: a default `Read` returned **no content at all** — *"File content (257.8KB) exceeds
+maximum allowed size (256KB)"*. It is now **98,341 B**, with **163,803 B** of headroom to the refusal
+and **98,267 B** to the 196,608 B fire trigger. `methodology_trim.py --file CHANGELOG.md --check`
+exits **0** — the trigger no longer fires.
+
+**LOSSLESSNESS IS PROVED TWICE, FROM TWO INDEPENDENT INSTRUMENTS.** (1) The tool's own clauses, all
+green on the artifacts: `L1_OK` (records-zone concatenation byte-identical), `L2_OK` (zones pinned,
+front-matter diff confined to declared changes), `L3_OK` (80 records partitioned, every one
+byte-identical across the move), `P1A_OK` (26 → 27 entries). `bash
+docs/archive/CHANGELOG-through-2026-09-02.md.verify.sh` re-derives all three **from git** at the trim
+commit and exits **0**. (2) **`bin/tests.sh` conserves the population without being asked to** —
+live `**Model:**` bullets **41 → 8**, archived **238 → 271**, total **279 → 279**. The two deltas are
+exactly ±33. That check exists only because S132 taught `bin/model-report` to glob the shards; before
+that fix this trim would have blinded it to 33 of 41 entries with every row still green.
+
+**THE ONE DESIGN CHOICE WAS SETTLED FROM PROVENANCE, AGAINST MY OWN FIRST MEASUREMENT.** The dry run
+raises `CUT_STRADDLES_DAY` and offers `--cut <earlier date>`. I surveyed the nine dated shards and
+found **8 honour a clean day boundary and 1 does not**, and was ready to recommend a calendar cut on
+that 8-of-9 evidence. **It points the wrong way.** The ninth —
+`CHANGELOG-through-2026-08-30.md` — is precisely the shard this file's own front matter (`:54`)
+cites when it ratifies *"that boundary is POSITIONAL, not a calendar seam … The sections are the
+calendar; the file boundary is not."* [`ledger-trimmer-design.md:219`](docs/planning/ledger-trimmer-design.md)
+§2.3 says the same at the source — *"cuts are by **position in file order**, never by sorting on a
+parsed key"* — and its §3.1 table gives this file's cut key as literally `position`. **A majority
+across a corpus is a sample; the outlier was the one carrying the policy.** Default cut taken, no
+override.
+
+**A DEFECT IN THE DISTRIBUTED TRIMMER, FOUND BY ASKING WHY A NUMBER WAS 37 B TOO BIG.** The dry run
+projected **98,341 B** while `CLASS_A_STOP_BYTES` (`:165`) is **98,304**. `choose_cut` (`:1014`)
+selects the largest retained count `k` for which `stops(b)` holds, computing `b` from the
+**pre-trim** front matter: `resulting(26)` = **97,108 B**, comfortably under. The write then adds
+**1,233 B** of front matter — a 453 B pointer block plus regenerated fields — so the file lands
+**37 B above the stop the selection was supposed to guarantee**. Immaterial here (0.04%, against
+98,267 B of hysteresis) and **deliberately not worked around with `--cut`**: overriding the ratified
+default to hide a tool defect would have made the next session's dry run inconsistent with this one
+and left nothing on the record. **The tool is DISTRIBUTED** (`bin/_manifest.py`), so the fix is
+adopter-facing and is its own deliverable. **Recorded, not fixed** (FM #17).
+
+**A FALSE PREMISE IN MY PREDECESSOR'S HANDOFF, CAUGHT BEFORE IT COST THE SESSION.** S151
+`next_steps` (4) calls the `context_budget.py` exit-2 *"Phase 2 of the older
+`upstream-read-set-pr-plan.md`, **never executed**."* **Phase 2 shipped at S119** — `28551a5` (scope
+the row budget to every row, driven RED) and `364b410` (compact all 20 over-budget rows, 73,712 →
+56,673 B), both verified ancestors of `main`; `bin/check-learnings` reports **0 over 1,500 B**,
+exit 0. And the 69,749 B is `starter-kit/SESSION_RUNNER.md` (54,363) + `starter-kit/SAFEGUARDS.md`
+(15,386), class `read-set`; `starter-kit/FRAMEWORK_LEARNINGS.md` is class `on-demand` and is **not a
+member**, so Phase 2 could never have closed that gap. **§11 of that very plan
+(`upstream-read-set-pr-plan.md:483`) had already corrected both errors, naming S130 for making them.
+This is the third recurrence, and the mechanism is identical each time: the session took its premise
+from the previous receipt rather than from the plan the receipt cites.** Consequence for ranking:
+**all four executable phases (1–4) are shipped**; only **Phase 5**, which needs the operator's
+explicit go-ahead, remains.
+
+**Verification, every command run bare, compared row-for-row against a Phase 0 baseline.**
+`bash bin/tests.sh` **304 passed / 1 failed / 0 skipped, exit 1** — identical summary, identical
+**305** rows, and **ZERO status flips**; every differing row is `PASS` on both sides and every changed
+value is a count the trim moved. The one failure, `github source dry-run failed`, is pre-existing and
+its cause was measured rather than assumed: **3 of 27** `bin/_manifest.py` source paths
+(`FRAMEWORK_APPARATUS.md`, `starter-kit/FRAMEWORK_LEARNINGS.md`, `starter-kit/methodology_trim.py`)
+are absent from `upstream/main`, and `bin/sync:134` `sys.exit()`s before writing anything.
+`check-links` **0**, `check-learnings` **0** (54 rows, contiguous 1..54), `check-handoff
+--allow-pending` **0**, `--all --allow-pending` **0**. `unittest`: dashboard **321 OK**,
+`methodology_trim` **123 OK**, `context_budget` **116 OK** (result row isolated from the advisory
+prose it prints after it). Dashboard twins `cmp` **silent**. `context_budget.py` **exit 2**,
+unchanged and pre-existing. Both ledgers verified byte-identical to their commits **after** the suite
+run, which mutates and restores them — checked against `git status`, not against a copy of themselves.
+
+**ZERO ADOPTER SURFACE, established by grepping the whole manifest rather than one column.** The only
+`CHANGELOG` row in `bin/_manifest.py` is `("starter-kit/CHANGELOG.md", "CHANGELOG.md", SEED)` — the
+**seed**. The root ledger trimmed here is this repository's own and is distributed nowhere.
+
+**`HANDOFFS.md` was deliberately left alone.** At 222,968 B it is past its own 196,608 B trigger but
+**39,176 B clear of the refusal**, and it holds 25 receipts against the ratified cap of 4. One
+deliverable is one deliverable; that trim is a real piece of work with its own losslessness proof and
+its own `bin/tests.sh` Test 34 three-receipt floor to respect.
+
 ### 2026-09-07 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-02.md` (54 record(s), 269,571 B → 98,341 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
