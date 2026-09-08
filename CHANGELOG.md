@@ -210,6 +210,89 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-08 · [ad hoc] S153 close-out — Tier-2 (a) settled FREEZE; the port branch is `upstream/main` + 2 commits and passes row-for-row with zero status flips
+
+**The decision is the operator's and it is recorded here as an action, because a decision leaves no
+commit.** Tier-2 (a) — *what table does the Phase 5 port carry upstream?* — was deferred as a whole
+on 2026-08-29 (`1593cb5`) alongside (b), and
+[`port-branch-identity-adjudication.md`](docs/planning/port-branch-identity-adjudication.md) §6
+Tier 2 deliberately declined to rank its three answers. Put to the operator with a measured
+consequence column, he chose **freeze (iii)**: upstream receives the 46-row table as of 2026-08-27,
+`starter-kit/FRAMEWORK_LEARNINGS.md` held byte-identical to blob `b21854cc`. He also directed that
+the §5(b) `:92-94` rewrite ride along **as a second commit** rather than an amend, and that the
+branch stay **local** — not pushed.
+
+**EVERY CONSEQUENCE IN THE DECISION TABLE WAS RUN, NOT REASONED — AND THAT IS WHAT FOUND THE
+DEFECT.** Each option's payload went through `bash bin/tests.sh` in a real worktree at `30ddf26`:
+**freeze 113/1** (the control), **refresh 113/1**, and **option (v) as written 110/4**. The
+`ed22ace` blob that §5's option (v) names by SHA **predates Phase 2's compaction**, so rows **#12
+(2,400 B)** and **#13 (1,572 B)** breach the 1,500 B row budget that this very branch adds to
+`bin/check-learnings` — upstream has the checker but not that arm (`ROW_BUDGET_BYTES`: 0 occurrences
+on `upstream/main`, 7 on `30ddf26`). Three failures, all from those two rows. The option is
+recoverable — Phase 2's *compacted* rows #1–#13 come back **113/1** at 14,072 B — but as posed
+across three documents for ten days it would have shipped a branch whose own checker fails. **No
+document had ever executed it.** New **Learning #57**.
+
+**TWO OF MY OWN INSTRUMENTS WERE WRONG AND WERE CAUGHT BEFORE THE NUMBER REACHED THE OPERATOR.**
+(1) The absent-artifact count first read **14 of 46** because it compared bare basenames
+(`SESSION_NOTES.md`, `RECOMMENDED_SKILLS.md`) against full upstream paths; resolved by basename it is
+**9 of 46**, which is *independently* the figure S123 recorded — agreement from a separate derivation,
+not a copy. (2) The session-citation count first read **35 of 46**; restricted to the range the entry
+actually claims (S35–S119) it is **32 of 46**, exactly as written. Both corrections happened before
+publication; the raw matched items were eyeballed rather than trusted.
+
+**The measured decision table, at today's tree rather than 2026-08-27's.** freeze **56,673 B / 46
+rows / 78.4% of one read / 9 rows naming an artifact absent upstream / 35 citing a fork session**;
+refresh **67,634 B / 55 / 93.6% / 9 / 44**; extraction **14,072 B / 13 / 19.5% / 0 / 3**. The fork's
+table has drifted **10,961 B and 9 rows in the ten days** since `30ddf26`, which is freeze's standing
+cost. Metered at the declared 2.8897 B/token against the 25,000-token read cap.
+
+**True under every option, so it was stated as not bearing on the choice:** the fork's Test 9 stays
+RED (2 of 27 manifest sources — `methodology_trim.py`, `FRAMEWORK_APPARATUS.md` — remain absent
+upstream and `bin/sync:136` `sys.exit()`s before writing — **`:136`, not the `:134` this session's own claim entry and S152's handoff both carry; verified by grep at close-out.** That entry is left as written, per this ledger's append-only rule; the number is corrected here); the `:92-94` rewrite ships regardless; and
+upstream's distributed seed carries no ceiling entry for this file, so nothing upstream measures
+whatever is sent.
+
+**The branch, built and verified — `port/framework-learnings-extraction` = `upstream/main` + 2.**
+`30ddf26` is **untouched**, deliberately: it is cited **41 times across 8 files**, three of them
+frozen archives, so an amend would have orphaned a SHA the record depends on. `7d5b186` rewrites the
+referents bullet only. `starter-kit/FRAMEWORK_LEARNINGS.md` `hash-object` is still
+`b21854cc2fc6a736801a5e87ae43b4407872eeef` — freeze verified as an identity, not asserted.
+**Row-for-row, twice:** against `30ddf26`, **114 rows both sides, 114 shared, 0 status flips, 0 rows
+added or removed**; against pristine `upstream/main` (**114/0**), **113 shared, 0 flips**, the single
+differing row being `github source dry-run works` → `failed`. **That one failure has exactly one
+cause and it is self-curing:** of the branch's 25 manifest sources, **1** is absent from
+`KJ5HST/methodology` — `starter-kit/FRAMEWORK_LEARNINGS.md`, the file this PR adds. Merging the PR
+cures its own only failure. **NOT PUSHED, NO PR** — `git ls-remote --heads origin` empty for the
+branch; `upstream/main` `512c2ed` and `read-set-budgets` `598c459` unchanged; 0 open PRs on either repo.
+
+### 2026-09-08 · [ad hoc] S153 — the `:92-94` defect rewritten on the port branch: a note declined on two false premises and a constant that resolves nowhere in its own tree
+
+**`7d5b186`, the second commit on `port/framework-learnings-extraction`.** Plan §5(b) and §11.3 item 4
+both say this rewrite ships under **every** Tier-2 (a) option, freeze included. The sentence it
+removes declined a ~400 B clarifying note because it *"would break the file's byte-identity with the
+fork, which is what lets `bin/sync` agree from either source."*
+
+**Three defects, each verified against the branch's own tree rather than argued.** (1) **`bin/sync`
+never reads a local ref** — `30ddf26:bin/sync:191` declares `--source choices=("local", "github")`: a
+working tree, or the GitHub repo. No byte-identity between two local branches can make those agree.
+(2) **The two sources already disagree** — of the 27 paths `bin/_manifest.py` distributes, **11
+differ** between the fork's tree and `KJ5HST/methodology` and **3 more exist in only one**, so 14 of
+27 disagree independent of this file. (3) **The 56,750 B / 77 B derivation resolves nowhere in the
+tree it ships in** — `grep` finds no `READ_CAP_TOKENS`, no `MIN_BYTES_PER_TOKEN` and no `56750` in
+that tree's `starter-kit/context_budget.py`. **A bullet whose subject is unresolvable referents closed
+by citing one.** Sharper than the plan's *"stale derivation"* framing, and found by checking rather
+than by accepting it.
+
+**The disclosure itself was also short, and that was corrected in the same bullet.** Re-derived
+against the branch tree, the rows name **8 unresolvable artifacts across 11 of the 46 rows**, not
+*"Seven … across 10"*: `ledger-trimmer-design.md` (row 18) was missing from the list, and
+`methodology_trim.py` appears both bare (24) and as `starter-kit/methodology_trim.py` (37). Every row
+number is now printed so the claim is checkable. *"32 of 46 rows cite session numbers S35–S119"* was
+re-derived and is **exactly right**. The note is still not added — but the reason is now the true one:
+the file is held byte-identical to the ported blob, so the entry's counts stay checkable against it.
+`bin/check-learnings` **0**, `bin/check-links` **0**, each read bare.
+
 ### 2026-09-07 · [ad hoc] S153 — claim: put Tier-2 (a) to the operator as a three-option decision, then build the branch it settles
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: the
