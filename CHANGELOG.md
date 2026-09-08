@@ -210,6 +210,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-07 · [ad hoc] S153 — claim: put Tier-2 (a) to the operator as a three-option decision, then build the branch it settles
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: the
+**Tier-2 (a)** decision — *what does the Phase 5 port branch actually carry upstream?* — presented to
+the operator as the three live options with **measured consequences attached to each**, then the
+branch that his answer settles, assembled and verified. This is item (1) of S152's `next_steps` and
+[`upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md) §11.3 items 3 and 5.
+
+**The options are not this session's to invent.** They are the three left standing in
+[`port-branch-identity-adjudication.md`](docs/planning/port-branch-identity-adjudication.md) §6
+Tier 2 — **freeze (iii)**, **refresh (iv)**, **extraction only (v)** — a table that document wrote
+and then **deliberately declined to rank**, on the precedent that an operator's choice must not be
+dressed as a measurement. Tier 1 was ratified 2026-08-29 (`1593cb5`); **Tier 2 was deferred as a
+whole**, both (a) this table question and (b) the `:92-94` rewrite. This session re-derives the
+consequence column against **today's** tree rather than quoting figures measured on 2026-08-27.
+
+**§11.1 IS READ BEFORE THE OPTIONS ARE DRAFTED, BECAUSE IT CHANGES WHAT ONE OF THEM MEANS.**
+`port/framework-learnings-extraction` is `upstream/main` (`512c2ed`) **plus one commit**, `30ddf26`,
+and that commit carries **Phase 1's extraction together with Phase 2's output** — verified by blob
+identity, `30ddf26:starter-kit/FRAMEWORK_LEARNINGS.md` and `364b410:starter-kit/FRAMEWORK_LEARNINGS.md`
+are the same object `b21854cc` — so **"freeze the 46-row table" means keeping Phase 2's compacted
+output, not reverting to a pre-Phase-2 state.** One commit is not one phase of content.
+
+**Scope boundary, stated at claim time.** Branch assembly is §11.3 item **5**; **item 8 — the version
+decision and the go-ahead itself — is not this session's**, and **opening the PR is a separate
+go-ahead that this session does not have.** Fork-internal only: no PR, comment, tag or release on
+`KJ5HST/methodology`.
+
+**Phase 0 baseline, every exit code read bare, never through a pipe.** `bash bin/tests.sh`
+**304 passed / 1 failed / 0 skipped, exit 1** — the one failure `github source dry-run failed` is
+pre-existing (3 of 27 `bin/_manifest.py` source paths absent from `upstream/main`;
+`bin/sync:134` `sys.exit()`s before writing anything). `bin/check-handoff` **0**, `bin/check-links`
+**0**, `bin/check-learnings` **0**, `starter-kit/context_budget.py` **exit 2** (pre-existing,
+read-set total 69,749 B / 56,750 B). Both live ledgers backed up outside the repo before the suite
+ran and `shasum`-verified **byte-identical** after. **Ledger reconcile: nothing to backfill** — the
+`CHANGELOG.md` and `HANDOFFS.md` frontiers are both `f8531cf` = `HEAD`, and
+`git rev-list --count --no-merges <frontier>..HEAD` is **0** for each. Dashboard **76/100**, risk
+medium. `upstream/main` `512c2ed` and `upstream/read-set-budgets` `598c459` unchanged; `gh pr list`
+empty on both repos; `gh issue list` empty upstream (all 23 closed).
+
 ### 2026-09-07 · [ad hoc] S152 — pushed `main` to `origin`, deleted five merged local branches, and rewrote a `next_steps` that stated facts instead of naming actions
 
 **Three actions, all operator-directed.** (1) `git push origin main` — `defefb0..71a8d33`, **verified

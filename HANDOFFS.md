@@ -74,6 +74,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S153
+date: 2026-09-07
+status: pending
+active_task: **Phase 1B claim stub.** Put **Tier-2 (a)** — the Phase 5 PR-content question deferred by the operator on 2026-08-29 (`1593cb5`) — to the operator as a **three-option decision with measured consequences per option, not a recommendation**, then build the branch that decision settles. The three options are `docs/planning/port-branch-identity-adjudication.md` §6 Tier 2: **freeze (iii)** / **refresh (iv)** / **extraction only (v)**. **`docs/planning/upstream-read-set-pr-plan.md` §11.1 is read FIRST and it changes what the options mean:** `port/framework-learnings-extraction` is `upstream/main` + **one commit** `30ddf26`, and that commit carries Phase 1's extraction **together with Phase 2's compacted output** (`30ddf26:starter-kit/FRAMEWORK_LEARNINGS.md` = `364b410:` = blob `b21854cc`), so *freeze* means **keeping Phase 2's output**, not reverting to a pre-Phase-2 state. Branch assembly is §11.3 item 5 — **nothing exists to open a PR from today**. **OPENING THE PR IS A SEPARATE GO-AHEAD AND IS NOT IN THIS SESSION'S SCOPE** — no PR, comment, tag or release on `KJ5HST/methodology`. Phase 0 baseline, every command bare: `bin/tests.sh` **304 passed / 1 failed / 0 skipped, exit 1** (Test 9 `github source dry-run failed`, pre-existing — 3 of 27 manifest sources absent from `upstream/main`, `bin/sync:134` `sys.exit()`s before writing); `check-handoff` **0**, `check-links` **0**, `check-learnings` **0**; `context_budget.py` **exit 2**, pre-existing; both ledger frontiers = `HEAD` = `f8531cf`, `rev-list --count` **0** each, no backfill needed; dashboard **76/100**; `upstream/main` `512c2ed`, 0 open PRs on either repo.
+```
+
+```handoff
 session: S152
 date: 2026-09-07
 status: complete
