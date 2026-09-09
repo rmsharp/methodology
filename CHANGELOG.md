@@ -264,6 +264,11 @@ to 65,531. The constant was never touched.
 **New Learning #59** (1,094 B of a 1,500 B budget): *a plan's open decision can be closed by events rather
 than by a decision, and no document will say so.*
 
+**Three commits this session:** `3a3f52c` (the Phase 1B claim), `c3b9465` (`chore(history)` for the
+append-only `.context-budget-history.jsonl`, which a bare `context_budget.py` run appends to), and
+`2cb6fc2` (this close-out). `main` is **13 ahead of `origin/main`**; `upstream/main` `512c2ed` and
+`read-set-budgets` `598c459` untouched; 0 open PRs on either repo.
+
 - **Model:** Claude Opus 5 (claude-opus-5)
 
 ### 2026-09-09 · [ad hoc] S155 — claim: draft the PR body for `read-set-budgets` → `upstream/main`, the one upstream step still unopened
