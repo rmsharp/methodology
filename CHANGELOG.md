@@ -210,6 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-08 · [ad hoc] S154 — the receipt quoted a size its own writing had already moved
+
+**`active_task` said *"`HANDOFFS.md` IS 42,938 B"*. True at `bad0489`; false by the time the
+sentence existed.** Writing the close-out receipt and the two repair commits took the live file to
+**54,258 B** — still four receipts, still under `CEILING_BYTES` 65,536, and the trimmer's trigger
+still does not fire, but not the number written. Rewritten to quote **the delta the trim actually
+made** — 245,254 → 42,938 B at `bad0489`, 27 receipts → 4 — plus a stated ~54 KB steady state, so no
+future edit to this receipt can falsify it again. Same shape as S148's *"your own edit moves the
+numbers you copied"*, in the field a next session reads first.
+
+Refitting under the 12,288 B record budget after that rewrite took three more passes, landing at
+**12,286 B**. Across this session that budget refused an edit **eleven times** and was never raised.
+
 ### 2026-09-08 · [ad hoc] S154 — an all-numeric abbreviated sha is invisible to `bin/check-handoff`, and it flipped the suite 304/1 → 303/2
 
 **Found by the close-out suite run, not by review, and it is a checker limitation rather than a
