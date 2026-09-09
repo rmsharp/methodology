@@ -210,6 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-08 · [ad hoc] S154 — four drifted `key_files` anchors in the S154 receipt, caught by the 3F sweep
+
+**The close-out's own cross-reference check found them; nothing else would have.** Phase 3F says to
+grep each cited destination rather than trust it, and four of this receipt's anchors had moved
+between being written and the file settling: `bin/tests.sh:3095` → **`:3097`** (the A2 assertion —
+`:3095` is a bare `fi`), `HANDOFFS.md:78` → **`:67`** (the archive table's new row 12 — `:78` had
+become `status: complete`, inside a receipt), `HANDOFFS.md:68-72` → **`:69-73`**, and
+`srf-red-refusal-adjudication.md:418` → **`:417`** (§11). The last one is instructive: it was read
+off a saved command output whose **first line was a `wc -c` figure**, so every line number in that
+capture was one too high — a citation taken from a transcript rather than from the file. Each
+corrected anchor was re-read after the fix; the receipt stays at 12,208 B of the 12,288 B budget.
+
 ### 2026-09-08 · [ad hoc] S154 close-out — `HANDOFFS.md` trimmed under operator-approved `--force`: 245,254 B → 42,938 B, 27 receipts → 4
 
 **The receipt ledger is back inside its retention policy for the first time since S132.**
