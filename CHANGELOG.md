@@ -210,6 +210,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-08 · [ad hoc] S154 — the pointer-block fold, and three front-matter claims that had gone false
+
+Follows the trim commit rather than riding in it, **and that separation is a measured requirement,
+not a style choice.** [`HANDOFFS.md`](HANDOFFS.md)`:68-72` instructs every trimming session to fold
+`methodology_trim.py`'s generated 3-line pointer block into the archive table as one row (~160 B
+against ~447 B) and delete the block. The tool's own closing line says the opposite — *"one ledger,
+one shard, one entry, **one commit**, one revert."* **Tested in an isolated clone instead of
+reasoned about: folding inside the trim commit FAILS the shipped proof** —
+`FAIL: L2 FRONT MATTER lost 1 line(s), first: '**Archived shards — 11 trims, 116 receipts.**…'`,
+exit **1**. Folded in the next commit, the same proof exits **0**, because it pins to the trim
+commit. Both shapes were run; the green one shipped.
+
+**Row 12 added** (23 records, 2026-08-12 → 2026-09-04, v1.5.0) and the undeclared
+*"11 trims, 116 receipts"* count advanced to **12 / 139** — undeclared, so nothing regenerates it;
+the `LedgerSpec` declares only the retained-receipt count, which the tool itself rewrote 24 → 4.
+`116` was re-derived as the sum of the table's own `n` column before adding to it, not copied.
+
+**THE FRONT MATTER HAD TO SHRINK, AND THE BYTES CAME OUT OF CLAIMS THAT WERE FALSE.**
+`bin/tests.sh` Test 39 (2) asserts the live front matter fits `HEADER_RESERVE_BYTES = 7,168`
+([`bin/check-handoff`](bin/check-handoff)`:663`), and it stood at **7,122 B — 46 B clear** before this
+session. The fold's net cost would have breached it. S153's instruction was followed as written —
+**cut the edit, never raise the reserve** — and the three cuts were chosen for being *wrong*, not for
+being long:
+
+- **The N=4 warrant was the detector-floor substitution this repo has already retracted twice.**
+  *"Held at four, the live file rests near 52 KB, under the 56,750 B one-read cap"* — that figure is
+  `READ_CAP_TOKENS × MIN_BYTES_PER_TOKEN`, a **floor for files with no measured density**, and
+  [`srf-red-refusal-adjudication.md`](docs/planning/srf-red-refusal-adjudication.md) §11.5 (5) says
+  in terms that *"a later session must not re-derive its depth from that sentence."* It was also
+  numerically stale: the file is **43 KB**, not 52. Replaced with what is actually true — N=4 is an
+  operator decision — and the sibling clause *"Four is the largest N that stays under the cap"*, the
+  same substitution in the same paragraph, went with it.
+- **The dangling warrant pointer §11.5 (4) predicted, now actually dangling.** The front matter said
+  the retention policy's warrant *"is in that session's `CHANGELOG.md` entry"* with no sha and no
+  shard. **S152's trim moved it**: the S127 entries are at
+  [`docs/archive/CHANGELOG-through-2026-09-02.md`](docs/archive/CHANGELOG-through-2026-09-02.md)`:2070`
+  and `:2131`. Located by grep, not assumed — the live `CHANGELOG.md` still matches `S127` twice, so
+  a bare presence check would have called this reference healthy.
+- **The S7/S8 collision example outlived its referents.** *"One is live here now: the bottom receipt
+  is upstream's S12 (2026-08-12)"* — this trim archived every upstream receipt, so the sentence became
+  false the moment it ran. The **rule** it illustrates (identify a receipt by session + date, never by
+  number) is load-bearing at a resync and was kept; the four archived examples were not.
+
+**Result: 7,570 → 7,096 B, 72 B of headroom — more than the 46 B this session inherited**, so the
+next trim starts with more room rather than less. `bin/tests.sh` Test 39 reads
+*"A2 truth: live front matter 7,096 B <= 7,168 B reserve (98% used)"*.
+
 ### 2026-09-08 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-04.md` (23 record(s), 245,254 B → 43,412 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
