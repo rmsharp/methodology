@@ -210,6 +210,62 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-09 · [ad hoc] S155 close-out — the PR body for `read-set-budgets` → `upstream/main`, written and not opened
+
+**Deliverable: [`docs/planning/read-set-budgets-to-main-pr-body.md`](docs/planning/read-set-budgets-to-main-pr-body.md), 14,806 B** — the
+title, body, reviewer guide and verification record for a PR from `KJ5HST/methodology:read-set-budgets`
+(`598c459`) to `upstream/main` (`512c2ed`). **NOT OPENED. Nothing pushed, no PR, no tag, no comment.**
+Opening it is a separate go-ahead this session did not have and did not ask for.
+
+**The headline is measured, and the instrument was validated before it was trusted.** The Phase 0
+mandatory read — `SESSION_RUNNER.md` + `SAFEGUARDS.md` — goes **80,526 B / 28,234 tokens → 67,581 B /
+23,902 tokens**, from **112.9%** of the 25,000-token read cap to **95.6%**, one read with 1,098 tokens
+to spare. Both figures came off the doubled-file meter (`upstream-read-set-pr-plan.md` §7): concatenate
+the pair, double it, read it, halve the refusal's token count. **The control ran first** — `upstream/main`'s
+pair read *undoubled* reports **28,237** and doubled-and-halved reports **28,234**, reproducing §2.1's
+recorded figure to 3 tokens. Without that check the number would have been a density transferred across
+content types, which this repository has three separate learnings against.
+
+**One draft claim was false and was caught by diffing rather than by re-reading.** The body first said
+upstream's 13 inline learnings arrive in `FRAMEWORK_LEARNINGS.md` *"byte-for-byte"*. Row by row, **11 do;
+#12 and #13 do not** — 2,400 → 1,450 B and 1,572 → 1,446 B, −1,076 B. The reason is in the same PR:
+`bin/check-learnings` gains `ROW_BUDGET_BYTES = 1500` (`:106` on the branch, a constant `upstream/main`
+does not have), and those two rows are the ones that breach it. The corrected sentence is the stronger
+one, and rows #12/#13 are now item 2 of the body's reviewer list.
+
+**Verification, every exit code read bare.** `bash bin/tests.sh` on `main`: Phase 0 baseline and close-out
+both **304 passed / 1 failed / 0 skipped, exit 1**, diffed row for row by normalised assertion label —
+**305 rows both sides, 0 status flips, 0 added, 0 removed**; the nine rows whose text differs each state a
+count this session's own writes moved. In two detached worktrees, as the deliverable's own evidence:
+pristine `upstream/main` **114 passed / 0 failed, exit 0**; `read-set-budgets` **115 passed / 1 failed,
+exit 1**, **111 shared rows and zero status flips**. That single failure is `github source dry-run failed`,
+and its cause was measured, not assumed: **3 of the branch's 27 manifest SOURCE paths are absent from
+`upstream/main` and 0 from the branch**, so it fails a test about `main`'s contents and the merge is the
+only thing that can flip it.
+
+**A NEW MEASUREMENT THIS CLOSE-OUT PRODUCED, AND DID NOT ACT ON.** With this receipt `HANDOFFS.md` is
+**65,531 B — 5 B under `CEILING_BYTES`** and, metered the same way, **28,287 tokens (56,573 doubled)
+against a 25,000-token cap: over by 3,287.** That is failure mode #28 in the receipt ledger the PR body is
+about. The byte ceiling is the wrong instrument here — 25,000 tokens is ≈57,900 B at the **measured
+2.3164 B/token**, while `.context-budget.json` still declares **2.3648** and under-reports the file as
+27,708 tokens. **The config was deliberately not edited**: re-deriving a density is one deliverable and
+rewriting a provenance record is another, which is the same reason S154 declined the mirror-image bump.
+The file also now holds **5 receipts against a retention policy of 4**, and the trimmer does not fire
+(`--check` exits 0; trigger 196,608 B) — so the remedy is the by-hand policy at `HANDOFFS.md:8`, and
+**S154's operator-approved `--force` is explicitly not a precedent for it.**
+
+**Two operator decisions at the Phase 0 gate, each asked and neither inferred:** the deliverable (this
+body, chosen over repairing the stale planning documents and over the `HOW_TO_USE.md` count fix), and
+**keep `HEADER_RESERVE_BYTES` at 7,168 B** — closing S154's item (4). The front matter is untouched at
+7,096 B. The receipt above was cut to fit in **twelve passes across two rounds** — written at 65,972 B and
+cut to 65,526; then reopened to carry the token measurement below, which took it to 66,009; then cut again
+to 65,531. The constant was never touched.
+
+**New Learning #59** (1,094 B of a 1,500 B budget): *a plan's open decision can be closed by events rather
+than by a decision, and no document will say so.*
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-09 · [ad hoc] S155 — claim: draft the PR body for `read-set-budgets` → `upstream/main`, the one upstream step still unopened
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: the PR
