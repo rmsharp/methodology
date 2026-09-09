@@ -210,6 +210,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-08 · [ad hoc] S154 — an all-numeric abbreviated sha is invisible to `bin/check-handoff`, and it flipped the suite 304/1 → 303/2
+
+**Found by the close-out suite run, not by review, and it is a checker limitation rather than a
+ledger defect.** [`bin/check-handoff`](bin/check-handoff)`:211` defines
+`SHA_RE = re.compile(r"\b(?=[0-9a-f]{7,40}\b)[0-9a-f]*[a-f][0-9a-f]*\b")` — **at least one hex
+letter**, and its own docstring at `:477-478` states the consequence in terms: *"a bare 7+ digit
+decimal is not a sha."* This session's claim commit abbreviates to **`1695734`**, seven digits and no
+letter, so the answer-slot rule read the `commit:` field as naming no sha at all.
+
+**It was invisible until a fixture moved the receipt.** `check_answer_slots` skips `blocks[0]`
+unconditionally — the newest receipt is exempt, positionally — so while S154 sat newest, every
+checker returned 0. `bin/tests.sh` Test 38 prepends a synthetic record to measure the per-record
+budget edge, which pushes this receipt to second and subjects it to the rule: **`edge: exactly-12,288
+B record wrongly rejected`**, and the suite went **304 passed / 1 failed → 303 / 2**. The failing
+assertion names a *size* edge and the actual cause was a *sha* predicate — the message was about the
+fixture, not the finding.
+
+**Repaired by abbreviating to the first length that carries a letter**, `1695734f` (8 chars, unique,
+`git rev-parse --short=8`) — the same commit, written so the predicate can see it. **The constant was
+not touched**, consistently with the three other budgets this session cut an edit to satisfy. The
+`commit:` slot was also **reconciled in full rather than deferred to S155**: `1695734f` + `aa1c476` +
+`bad0489` + `f61c9d5` + `7e5d205` + this commit.
+
+**A self-inflicted error inside the repair, recorded because it nearly shipped.** The first version
+of that reconciled slot named **`0d7f1b5`** for the drifted-anchors commit. That sha was never read —
+it was invented while typing a line whose entire purpose is to name real commits. The true value is
+**`7e5d205`**. Caught by re-running `git rev-parse --short HEAD` immediately afterwards. Cutting the
+receipt back under the 12,288 B record budget after adding gotcha (8) took six passes, and the
+budget refused each one until it fit at **12,286 B**.
+
 ### 2026-09-08 · [ad hoc] S154 — four drifted `key_files` anchors in the S154 receipt, caught by the 3F sweep
 
 **The close-out's own cross-reference check found them; nothing else would have.** Phase 3F says to
