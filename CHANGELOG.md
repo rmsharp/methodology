@@ -266,8 +266,10 @@ than by a decision, and no document will say so.*
 
 **Three commits this session:** `3a3f52c` (the Phase 1B claim), `c3b9465` (`chore(history)` for the
 append-only `.context-budget-history.jsonl`, which a bare `context_budget.py` run appends to), and
-`2cb6fc2` (this close-out). `main` is **13 ahead of `origin/main`**; `upstream/main` `512c2ed` and
-`read-set-budgets` `598c459` untouched; 0 open PRs on either repo.
+`2cb6fc2` (this close-out), plus the ledger-enumeration repair that carries this paragraph. **Nothing was
+pushed: `origin/main` is unmoved at `f8531cf`**, `upstream/main` at `512c2ed`, `read-set-budgets` at
+`598c459`; 0 open PRs on either repo. The ahead-count is deliberately not quoted — it drifts with each
+repair commit that quotes it, which is precisely the defect S154 had to fix in its own receipt.
 
 - **Model:** Claude Opus 5 (claude-opus-5)
 
