@@ -210,6 +210,63 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-09 · [ad hoc] S155 — claim: draft the PR body for `read-set-budgets` → `upstream/main`, the one upstream step still unopened
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: the PR
+body for **`KJ5HST/methodology:read-set-budgets` (`598c459`) → `upstream/main` (`512c2ed`)**
+([`upstream-read-set-pr-plan.md`](docs/planning/upstream-read-set-pr-plan.md) §11.3 item 7). Chosen
+by the operator at the Phase 0 gate from three offered deliverables. **Writing the body is fork-side
+and needs no go-ahead; OPENING the PR is a separate ask, and this session does not have it.** No
+push, no PR, no tag, no comment.
+
+**PHASE 0 FOUND THE RANKED NEXT STEP MOOT, AND THAT IS WHY THE DELIVERABLE MOVED.** S153 and S154
+each ranked §11.3 item 1 — *"the PR's scope — four candidate payloads"* — first. **All four are
+already merged upstream**, into the staging branch `read-set-budgets`, by PRs
+[#76](https://github.com/KJ5HST/methodology/pull/76)–[#79](https://github.com/KJ5HST/methodology/pull/79)
+between S141 and S151:
+
+| payload | PR | present on `upstream/read-set-budgets` |
+|---|---|---|
+| Phase 1+2 — the learnings extraction | #76 | `starter-kit/FRAMEWORK_LEARNINGS.md` 56,673 B, blob `b21854cc` |
+| `starter-kit/methodology_trim.py` | #77 | 113,629 B |
+| Phase 3 — the apparatus | #78 | `FRAMEWORK_APPARATUS.md` 15,493 B |
+| Phase 4 — the context-budget gate | #79 | `starter-kit/context_budget.py` 73,040 B + `.context-budget.json` 17,893 B |
+
+**The scope question was answered incrementally, by four merges, while two documents went on posing
+it as open.** `grep -n 'read-set-budgets'` returns **zero hits** in both
+`upstream-read-set-pr-plan.md` and `port-branch-identity-adjudication.md`; each predates the series
+and neither was revised after it. `port/framework-learnings-extraction` is **content-redundant** with
+what shipped — same `starter-kit/SESSION_RUNNER.md` blob `c0550acd` (52,195 B, read-set pair
+67,581 B) and the same `FRAMEWORK_LEARNINGS.md` blob `b21854cc` that S153's Tier-2 (a) froze — and
+§11.3 item 4's `:92-94` defect **never reached upstream at all** (0 hits on both `upstream/main` and
+`read-set-budgets`; it lives on `30ddf26` and on fork `main`).
+
+**What is actually open is one PR that has never been opened.** `gh pr list --state all` shows no PR
+with base `main` and head `read-set-budgets`. `upstream/main` **is an ancestor** of it
+(`git rev-list --count upstream/read-set-budgets..upstream/main` = 0), so the merge is clean, and the
+headline is measurable rather than rhetorical: of `bin/_manifest.py`'s **27 SOURCE** paths, **3 are
+absent from `upstream/main`** — `starter-kit/FRAMEWORK_LEARNINGS.md`, `starter-kit/methodology_trim.py`,
+`FRAMEWORK_APPARATUS.md` — and `bin/sync`'s `fetch_all_github` `sys.exit()`s before writing when any
+source is absent, so `--source=github` installs **nothing** today. **0 of 27 are absent from
+`read-set-budgets`.** That merge cures `bin/tests.sh` Test 9, this repository's only failing
+assertion.
+
+**The second operator decision at the same gate, recorded because a release and a refusal are both
+actions.** S154's `next_steps` (4) asked whether to raise `HEADER_RESERVE_BYTES`
+([`bin/check-handoff:663`](bin/check-handoff)) now that `HANDOFFS.md`'s front matter sits at
+**7,096 of 7,168 B (99%, 72 B of headroom)** and the A1 fit leaves 21,504 B of slack. The operator
+chose **keep 7,168 B**. The constant is unchanged and the reserve stays a real constraint: a
+front-matter edit is still a byte negotiation, and the cut is what gets taken.
+
+**Phase 0 baseline, exit codes read bare.** `bash bin/tests.sh` → **304 passed / 1 failed / 0 skipped,
+exit 1**, matching S154's close-out row for row in count; the single failure is Test 9
+`github source dry-run failed`, pre-existing. Both live ledgers backed up outside the repo and
+`shasum -c` verified byte-identical after the run. Ledger reconciled against `git log` — every commit
+since S152 carries an entry here, no ghost session. 0 open PRs on either repo. `main` 10 ahead of
+`origin/main`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-08 · [ad hoc] S154 — the receipt quoted a size its own writing had already moved
 
 **`active_task` said *"`HANDOFFS.md` IS 42,938 B"*. True at `bad0489`; false by the time the

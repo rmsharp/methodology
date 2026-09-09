@@ -73,6 +73,23 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S155
+date: 2026-09-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **DRAFT THE PR BODY FOR `read-set-budgets` → `upstream/main`** (`upstream-read-set-pr-plan.md` §11.3 item 7). Chosen by the operator at this session's Phase 0 gate from three offered deliverables. **Fork-side only: writing the body needs no go-ahead; OPENING the PR is a separate ask this session does not have.** No push, no PR, no tag, no comment on `KJ5HST/methodology`.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/upstream-read-set-pr-plan.md:555` (§11.3, the eight Phase 5 owings), `docs/planning/pr4-read-set-budgets-body.md:1` (the closest precedent for body shape), `bin/_manifest.py:1` (the 27 SOURCE rows the headline is measured on).
+gotchas: **Phase 0 found the ranked next step MOOT.** §11.3 item 1's four candidate payloads are all already merged into `upstream/read-set-budgets` (`598c459`) by PRs #76–#79; neither `upstream-read-set-pr-plan.md` nor `port-branch-identity-adjudication.md` mentions that branch at all. Do not re-ask the scope question.
+runtime_smoke: Phase 0 baseline `bash bin/tests.sh` **304 passed / 1 failed / 0 skipped, exit 1 read bare** — the one failure is Test 9 `github source dry-run failed`, pre-existing.
+changelog_ref: CHANGELOG.md "2026-09-09 · [ad hoc] S155 — claim: draft the PR body for `read-set-budgets` → `upstream/main`, the one upstream step still unopened"
+commit: pending
+```
+*(Phase 1B stub — the crash breadcrumb. Overwritten in place at close-out.)*
+
+```handoff
 session: S154
 date: 2026-09-08
 status: complete
