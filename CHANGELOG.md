@@ -210,6 +210,87 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-08 · [ad hoc] S154 close-out — `HANDOFFS.md` trimmed under operator-approved `--force`: 245,254 B → 42,938 B, 27 receipts → 4
+
+**The receipt ledger is back inside its retention policy for the first time since S132.**
+`methodology_trim.py --check` now **exits 0 — *"trigger does not fire"*** (42,938 B against a
+196,608 B budget), where at Phase 0 it exited 1. 23 records (2026-08-12 → 2026-09-04) are frozen in
+[`docs/archive/HANDOFFS-through-2026-09-04.md`](docs/archive/HANDOFFS-through-2026-09-04.md) with its
+`.verify.sh`. Four commits: `1695734` claim, `aa1c476` the trim, `bad0489` the fold, this close-out.
+
+**TWO OPERATOR DECISIONS, ASKED ONE AT A TIME, NEITHER INFERRED.** The S129 deprioritisation was
+released at the Phase 0 gate. The **`--force`** was a *second* gate, found while sizing the work and
+put back separately — because
+[`srf-red-refusal-adjudication.md`](docs/planning/srf-red-refusal-adjudication.md) §2 says of this
+exact file *"the refusal STANDS, the trim must not be forced"*, and §11.2 supersedes that only in
+part: S132 trimmed this file with **no force at all** and forced only `CHANGELOG.md`, on approval it
+fenced as *"not a precedent for any other trim."* **A go-ahead for the deliverable is not a go-ahead
+for a flag that overrides a standing written refusal.** The evidence offered with the ask: SRF
+**3.7022 RED** against the most recent archive `78a29f8` but **0.5621 GREEN** against H3's
+largest-drop boundary `a46f2f9`; §11.1's proof that the voting boundary is unsatisfiable by *any*
+steady-state retention policy; §10's record that it may never have been ratified. None of that
+repeals §2 — the operator did. **The force is scoped to this file, this regime, this evidence. The
+next trim asks again.**
+
+**THE PREDECESSOR'S RECIPE DOES NOT RUN, AND THAT IS WHY THE GATE WAS FOUND.** S153's `next_steps`
+(4) said *"`--check`, `--write`, then `verify.sh`"*. `--check` exits 1 and reports the trigger; it
+says nothing about the refusal. **`--write` alone exits 2 and writes nothing.** The refusal is also
+**cut-independent** — `--cut 4` reproduces it byte for byte, the trigger being evaluated before any
+depth is chosen — so no choice of depth routes around it. This is **Learning #57 — authored by S153
+in that same session** — applied to its own handoff: an option nobody has executed is a proposal.
+
+**BOTH COMMIT SHAPES WERE BUILT AND THE PROOF RUN ON EACH; THE ONE THE TOOL ITSELF PRESCRIBES FAILS.**
+`methodology_trim.py` closes with *"one ledger, one shard, one entry, **one commit**, one revert"*,
+while [`HANDOFFS.md`](HANDOFFS.md)`:68-72` orders a hand fold of the generated pointer block into the
+archive table. Folded **inside** the trim commit the shipped proof fails — `L2 FRONT MATTER lost 1
+line(s)`, exit **1**; folded in the **next** commit it exits **0**, the proof pinning to the trim
+commit. New **Learning #58**. Distinct from **BL-50**, which is the *writer's* L2 refusing at write
+time; this is the *generated proof* failing at re-derivation.
+
+**THREE BUDGETS REFUSED AN EDIT AND ALL THREE TIMES THE CUT WAS TAKEN, NEVER THE CONSTANT.**
+(1) `HEADER_RESERVE_BYTES = 7,168` — the fold's net cost would have breached the 46 B of headroom, so
+the front matter was cut to **7,096 B (72 B clear, up from 46)**, and the bytes came out of claims
+that had gone **false**: the N=4 warrant resting on the 56,750 B detector floor (§11.5 (5) forbids
+re-deriving a depth from it) with its stale *"near 52 KB"*; the S127 warrant pointer **dangling
+exactly as §11.5 (4) predicted**, since S152's trim moved those entries — now cited to
+[`docs/archive/CHANGELOG-through-2026-09-02.md`](docs/archive/CHANGELOG-through-2026-09-02.md)`:2070`,
+found by grep, the live file still matching `S127` twice so a presence check would have called it
+healthy; and the S7/S8 collision example, every referent of which this trim archived. (2)
+`bin/check-learnings`'s 1,500 B row cap refused Learning #58's first draft at 1,511 B — rewritten to
+1,455 B. (3) `bin/check-handoff`'s 12,288 B record cap refused this receipt twice — the Phase 3A/3B
+essays are what that budget is sized to exclude, and they were cut to fit at 12,208 B. **A comment
+edit carrying Learning #58's rule into the front matter was measured, applied, and then REVERTED**
+because it left 7 B of headroom; the rule lives in the Learning row instead.
+
+**HANDED FORWARD AS A QUESTION, NOT DECIDED: the header reserve.** The front matter now sits at
+**99% of 7,168 B** and blocked **two** correct edits in this one session, while the A1 fit uses only
+**44,032 of 65,536 B — 21,504 B of slack**. Raising `HEADER_RESERVE_BYTES` is therefore
+arithmetically free, which is precisely why S153 forbade doing it silently and why
+[`bin/check-handoff`](bin/check-handoff)`:612` exists. **The trade is the operator's; this session
+did not take it.**
+
+**Verification — the deliverable's own proof run AFTER committing, four times with a negative
+control.** `bash docs/archive/HANDOFFS-through-2026-09-04.md.verify.sh` → **exit 0**, *"L1,
+L2/front-matter, L3 hold"*, source pinned to `aa1c476`, *"27 before = 4 retained + 23 archived"* — on
+the raw trim in a clone, after the fold in a clone, and on the live tree; the one-commit shape,
+deliberately built as a control, **failed (1)**. Write-time clauses all green: `L1_OK`, `L2_OK`,
+`L3_OK` (27 records partitioned, every one byte-identical), `P1A_OK`, and the stale front-matter
+count regenerated **24 → 4**. `bash bin/tests.sh` **304 passed / 1 failed / 0 skipped, exit 1 read
+bare** — diffed **row for row** against the Phase 0 baseline by normalised assertion label: **303 rows
+both sides, zero status flips, zero added, zero removed**; the failure is Test 9, pre-existing.
+Checkers each bare: `check-links` **0** (105 links / 23 files), `check-learnings` **0** (57 rows),
+`check-handoff` **0**. **`bin/model-report` reads the new shard** — 14 files, live 0 + archived 48,
+the new shard contributing 5 — so the S133 glob fix held and this trim did **not** gut the tool the
+way §11.3 records the `CHANGELOG.md` trim doing. `context_budget.py` now reports `HANDOFFS.md` as
+**`warn` with a 77% density drift** (2.3648 B/token was measured at 186,617 B); `measured_bytes` was
+deliberately **not** bumped, since raising it without re-deriving the density writes a false
+provenance record. `CUT_STRADDLES_DAY` was **not** overridden — cuts are positional by design and
+S152 refused the same override on the same provenance. Both live ledgers backed up outside the repo
+and `shasum -c` verified byte-identical after every suite run.
+
+**Self-score 8/10; predecessor S153 scored 8/10.** Both evaluations are below the receipt's closing
+fence in [`HANDOFFS.md`](HANDOFFS.md).
+
 ### 2026-09-08 · [ad hoc] S154 — the pointer-block fold, and three front-matter claims that had gone false
 
 Follows the trim commit rather than riding in it, **and that separation is a measured requirement,
