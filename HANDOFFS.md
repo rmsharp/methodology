@@ -74,6 +74,13 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S154
+date: 2026-09-08
+status: pending
+active_task: **Trim THIS file to the S127 retention of 4 receipts.** 244,288 B / 26 receipts; `--check` exits 1. **The operator released the S129 deprioritisation at this session's Phase 0 gate — asked, not inferred.** TWO GATES FOUND AT CLAIM: (1) the trim needs **`--force`** — `SRF_RED` 3.6852 vs `78a29f8`, cut-independent — and `srf-red-refusal-adjudication.md` §2 still says of this exact file *"the trim must not be forced"*, unrepealed by §11.2, which forced only `CHANGELOG.md` on approval fenced as not a precedent. That is a SECOND operator decision this session does not yet have. (2) the A2 reserve has **46 B** of headroom (front matter 7,122 B vs `HEADER_RESERVE_BYTES` 7,168) and a new archive-table row costs ~160 B, so front-matter prose must be cut in the same commit — **cut the edit, never raise the reserve**. Fork-internal: `origin` only, no PR/comment/tag on `KJ5HST`.
+```
+
+```handoff
 session: S153
 date: 2026-09-08
 status: complete

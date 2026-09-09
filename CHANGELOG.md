@@ -210,6 +210,80 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-08 · [ad hoc] S154 — claim: trim `HANDOFFS.md`, 26 receipts against a retention policy of 4
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: run
+[`starter-kit/methodology_trim.py`](starter-kit/methodology_trim.py) `--file HANDOFFS.md --cut 4
+--write` on **this** repository's receipt ledger, archiving its oldest records into a frozen shard
+under `docs/archive/` with the tool's own losslessness proof and `.verify.sh`, folding the generated
+pointer block into the archive table as `HANDOFFS.md:68-72` instructs. **Fork-internal: `origin`
+only. No action on `KJ5HST/methodology` — no PR, no comment, no tag, no release.**
+
+**THE BLOCKER WAS RELEASED BY THE OPERATOR THIS SESSION, AND THAT RELEASE IS ITSELF THE RECORDED
+ACTION.** This trim was deprioritised at **S129** and no repeal stood on record; S151, S152 and S153
+each declined it on exactly that provenance and each was right to — S152 put the release question for
+`CHANGELOG.md` and got `CHANGELOG.md` only, and said so in its own claim (*"`HANDOFFS.md` is
+deliberately out of scope"*). Presented at this session's Phase 0 gate with the current measurement,
+the operator chose **"2"** — the `HANDOFFS.md` trim — from a two-item ranking. **Asked, not inferred**,
+which is the whole point: the S129 deprioritisation was never a standing prohibition, and neither is
+its release a licence for the *next* ledger.
+
+**The warrant, measured at Phase 0 and re-derivable.** This file is **244,288 B** across **26**
+receipts against a retention policy of **4** (`HANDOFFS.md:8`, adopted at S127 by operator decision).
+`python3 starter-kit/methodology_trim.py --file HANDOFFS.md --check` **exits 1 — the trigger FIRES**,
+at 244,288 B against a 196,608 B Class A threshold. **It is NOT past the 262,144 B hard refusal** —
+it clears it by **17,856 B** — so this is emphatically *not* the regime S132 forced `CHANGELOG.md`
+in, and that difference is stated here so no later session reads the two as one precedent.
+
+**A GATE FOUND AT THE CLAIM, NOT CARRIED IN FROM THE BRIEF: THE TRIM REQUIRES `--force`, AND THAT IS
+A SECOND OPERATOR DECISION THIS SESSION DOES NOT YET HAVE.** The dry run **refuses, exit 2**:
+`SRF_RED`, **SRF 3.6852** against the most recent archive `78a29f8`. The refusal is **cut-independent**
+— `--cut 4` reproduces it byte for byte, because the trigger is evaluated before any depth is chosen —
+so no choice of depth routes around it. Three facts bear on it and all three are already on record:
+
+- **Against H3 as written the same trim is GREEN.** The tool reports **0.5595** vs H3's largest-drop
+  boundary `a46f2f9` in the same breath, and labels its own voting boundary *"a policy addition on top
+  of H3 … not dressed as a reading."* The two differ by **6.59x** on one file.
+- **[`srf-red-refusal-adjudication.md`](docs/planning/srf-red-refusal-adjudication.md) §11.1 proves
+  the voting boundary unsatisfiable by any steady-state retention policy** — an on-schedule trim scores
+  exactly **1.0000** and the test is `>=`. That is this repository's own proof about its own rule.
+  §10 records that the most-recent boundary may never have been **ratified**.
+- **§2 of that same document says, for this exact file, *"the refusal STANDS, the trim must not be
+  forced."*** §11.2 supersedes it only in part: S132 trimmed `HANDOFFS.md` with **no force at all**
+  (SRF 0.2315) and forced only `CHANGELOG.md`, on approval it explicitly fenced as *"not a precedent
+  for any other trim."* **So the standing instruction against forcing THIS file has never been
+  repealed, and this session will not repeal it by inference.** The `--force` question goes back to
+  the operator with the payload measured, per the record's own rule that a refusal is a claim to test.
+
+**A second gate, arithmetic and unavoidable: the A2 reserve has 46 B of headroom and the trim spends
+more than that.** `bin/tests.sh` Test 39 (2) asserts the live front matter fits
+`HEADER_RESERVE_BYTES = 7,168` (`bin/check-handoff:663`). Measured now: **7,122 B, 75 lines — 46 B
+clear.** A trim adds an archive-table row (~160 B by this file's own accounting at `:68-72`) and
+rewrites the regenerated count, so **the front matter must be cut in the same commit**. S153's
+instruction is followed as written: **cut the edit, never raise the reserve** — raising it is the
+re-derive-the-budget-from-the-ceiling move `bin/check-handoff:612` exists to forbid.
+
+**Two gates that are already satisfied, checked rather than assumed.** `bin/tests.sh` Test 34 reads
+`ids[1]`/`ids[2]` of the live ledger and needs **three** receipts; retaining **4** clears it with one
+of margin, which is the margin S127 chose the number for. And passing `--cut 4` **explicitly bypasses
+the `choose_cut` defect S153 filed** (`starter-kit/methodology_trim.py:1014` — `resulting(k)` omits
+the pointer block and regenerated-field growth before testing `stops(b)`): that arithmetic runs only
+on the automatic search, never on an explicit retain count. The defect is unfixed and stays unfixed
+here — it is distributed, so it wants upstream consideration, not a quiet fork fix.
+
+**Phase 0 baseline, every exit code read BARE before any edit.** `bash bin/tests.sh` **304 passed /
+1 failed / 0 skipped, exit 1** — the one failure is `github source dry-run failed`, pre-existing and
+unrelated: 3 of 27 `bin/_manifest.py` sources are absent from `upstream/main` and `bin/sync` exits
+before writing; nothing in a fork-internal trim can flip it. `bin/check-links` **0**,
+`bin/check-learnings` **0** (56 rows, contiguous 1..56, 0 over 1,500 B), `bin/check-handoff` **0**.
+Dashboard **76/100**, risk medium, 0 open issues. Reconcile clean: both ledger frontiers are
+`d0c3813` with **0** undocumented commits and **0** line-anchored `status: pending`. Remotes
+unchanged from S153's record — `upstream/main` `512c2ed`, `upstream/read-set-budgets` `598c459`,
+0 open PRs on either repo. `core.hooksPath` **is set to `.githooks` in this clone** — the first
+session in five able to say so; the four-session `--no-verify` streak is over. Both live ledgers
+backed up outside the repo and `shasum -c` clean after the baseline suite, which mutates and
+restores them.
+
 ### 2026-09-08 · [ad hoc] S153 close-out — Tier-2 (a) settled FREEZE; the port branch is `upstream/main` + 2 commits and passes row-for-row with zero status flips
 
 **The decision is the operator's and it is recorded here as an action, because a decision leaves no
