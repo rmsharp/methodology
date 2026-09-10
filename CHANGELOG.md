@@ -210,6 +210,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-10 · [ad hoc] S159 — claim: resolve `FRAMEWORK_LEARNINGS.md`'s ceiling breach, 73,920 B against 73,728 B, and write the two learnings S158 withheld
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: put the size
+ceiling of `starter-kit/FRAMEWORK_LEARNINGS.md` to the operator with each option costed by running it,
+apply the operator's choice, and write the two learnings S158 withheld — chosen by the operator (*"A"*)
+from this session's Phase 0 report, where it stood as S158's handoff item (2). **Fork-internal: no push,
+no PR, no tag, no comment; PR #80 untouched.**
+
+**The breach, measured at Phase 0:** `wc -c` gives **73,920 B against `max_bytes` 73,728** at
+`.context-budget.json:101` — **192 B over**, unchanged since S157's close-out `07c750b`, the last commit
+to touch the file. **Precedent: BL-45**, closed at S114 when the operator chose *raise* (65,536 →
+73,728 B) from four costed options. The file is distributed, so whatever shape it takes reaches adopters
+at their next `bin/sync` — part of each option's cost, not a footnote.
+
+**The operator's decision is a hard gate.** Nothing in `starter-kit/FRAMEWORK_LEARNINGS.md` or
+`.context-budget.json` changes before it.
+
+The Phase 0 dashboard run's `dashboard_history.jsonl` snapshot rides in this commit, as it did in
+S158's claim (`e5812e2`).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-10 · [ad hoc] S158 follow-up — the ROI line the evaluation of S157 left out, added on the operator's request
 
 The S158 close-out report found that the written 3A evaluation of S157 — the *Predecessor (S157)*

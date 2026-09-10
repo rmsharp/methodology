@@ -71,6 +71,23 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S159
+date: 2026-09-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **RESOLVE `starter-kit/FRAMEWORK_LEARNINGS.md`'S CEILING BREACH — 73,920 B against the 73,728 B declared at `.context-budget.json:101`, 192 B over since `07c750b`** — chosen by the operator (*"A"*) from this session's Phase 0 report, S158's handoff item (2). Cost each option by running it (raise, archive older rows to a shard, compact), put them to the operator, apply the choice, then write the two learnings S158 withheld. **The operator's decision is a hard gate: no edit to the file or its config before it. Fork-internal: no push, no PR, no comment; PR #80 untouched.**
+what_was_done: pending
+next_steps: pending
+key_files: `starter-kit/FRAMEWORK_LEARNINGS.md` (the file). `.context-budget.json:99-101` (its entry; `max_bytes` 73,728). `docs/planning/BACKLOG-DETAIL.md` BL-45 (the S114 precedent and its costed options). CHANGELOG.md entry "2026-09-10 · [ad hoc] S158 close-out" (the two owed learnings' text).
+gotchas: **THE FILE IS DISTRIBUTED** — any reshaping reaches adopters at their next `bin/sync`. **`context_budget.py` ALREADY EXITS 2** for pre-existing overages, so read its rows, not its exit code; and a bare run appends to `.context-budget-history.jsonl`. **`bin/tests.sh` MUTATES BOTH LIVE LEDGERS** — back them up outside the repo first.
+runtime_smoke: S158 close-out suite **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing); dashboard 76/100 at Phase 0; both ledger frontiers at `d8cc976`, 0 undocumented commits; tree clean apart from the Phase 0 `dashboard_history.jsonl` snapshot.
+changelog_ref: CHANGELOG.md "2026-09-10 · [ad hoc] S159 — claim: resolve `FRAMEWORK_LEARNINGS.md`'s ceiling breach, 73,920 B against 73,728 B, and write the two learnings S158 withheld"
+commit: pending
+```
+*(Phase 1B stub — the crash breadcrumb. Overwritten in place at close-out.)*
+
+```handoff
 session: S158
 date: 2026-09-10
 status: complete
