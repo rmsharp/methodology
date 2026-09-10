@@ -210,6 +210,79 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-09 · [ad hoc] S156 close-out — `HANDOFFS.md` back inside every budget: 67,336 → 42,923 B, 6 receipts → 4, and it fits in one read again
+
+**The remedy the operator selected from S155's close-out is done and measured.** `HANDOFFS.md` is
+**42,923 B** with **22,613 B of ceiling headroom** and **19,040 tokens — 76.2% of the 25,000-token
+cap**, down from 28,287 at claim time. The token figure is off the doubled-file meter (38,081 halved),
+not off the config's declared density, which is exactly what Learning #60 below is about. Front matter
+**7,159 B of the 7,168 B reserve** the operator kept at S155. S152 and S151 are frozen in
+[`docs/archive/HANDOFFS-through-2026-09-07.md`](docs/archive/HANDOFFS-through-2026-09-07.md).
+**Fork-internal throughout: `origin/main` unmoved at `f8531cf`, `upstream/main` `512c2ed`,
+`read-set-budgets` `598c459`, 0 open PRs.**
+
+**THE WARRANT WAS CORRECTED MID-SESSION, AND THE CORRECTION IS THE INTERESTING PART.** The claim entry
+above leads with the byte ceiling because `methodology_trim.py`'s own `[TRIGGER_READ]` line rules the
+token overage *"FOR REFERENCE AND NOT AS A FAULT: … delivery is an ordered prefix and this ledger is
+newest-on-top, so what truncates is the OLDEST records."* That is BL-52's point made by the tool about
+this file: a newest-on-top ledger degrades gracefully under truncation, so 28,287-vs-25,000 was the
+loud number and not the load-bearing one. **The forcing condition was 2 B of byte headroom** — the next
+session physically could not write a receipt.
+
+**No gate, and that is worth recording next to S154's.** `--cut 4` dry-ran at **exit 0** with **SRF
+0.1096** against the most recent archive `aa1c476`, where S154 hit **SRF_RED at 3.7022** and needed an
+operator-approved `--force`. **None was needed or asked for here.** The trigger does not fire at all
+(196,608 B threshold), so this was the retention policy at `HANDOFFS.md:8` — *"applied by the session
+that notices"* — executed **with the tool via an explicit `--cut`**, which is what produces the shard,
+the losslessness proof and this ledger's own trim entry. A literal hand edit would have produced none
+of the three.
+
+**The post-claim re-derive changed the answer.** Pre-claim, `--cut 4` would have archived **1** record;
+after the claim stub made it six, **2**. That is S153's gate, and this is the second consecutive session
+where obeying it changed what got written.
+
+**Learning #58 was verified rather than cited.** The fold of the tool's pointer block into the archive
+table went in as its **own commit** (`b19be54`), and `docs/archive/HANDOFFS-through-2026-09-07.md.verify.sh`
+was run **twice** — immediately after the trim commit `c581ac4` (exit 0) and again after the fold (exit
+0). The trim's own write had grown the front matter to **7,286 B, 118 B over the reserve**; the fold
+traded a ~447 B pointer block for a ~182 B row and the remaining bytes came out of **spent claims** —
+a correction of a sentence this file no longer contains, and a drift example's commit sha — not out of
+live content. 7,286 → **7,159 B**.
+
+**Verification.** `bash bin/tests.sh` bare: **304 passed / 1 failed / 0 skipped, exit 1**, diffed row
+for row against S155's final run — **305 rows both sides, PASS→PASS throughout, zero status flips, zero
+added, zero removed**. Every differing row states a number this session moved (receipts 5→4, front
+matter 7,096→7,159 B, `**Model:**` bullets 10→11). **`0 skipped` is load-bearing:** Test 34 needs three
+receipts and four were retained, so BL-40 (b)'s SKIP rows never appeared. The single failure is Test 9
+`github source dry-run failed`, pre-existing.
+
+**New Learning #60** (1,260 B): *a file's `bytes_per_token` is a snapshot of the content it held when
+measured, not a property of the file — and a "conservative" floor can be breached by real content.*
+`HANDOFFS.md` metered **2.3164 B/token at 65,531 B** and **2.2543 at 42,923 B** the same day. The second
+sits **below `MIN_BYTES_PER_TOKEN = 2.27`** (`starter-kit/context_budget.py:68`), whose comment claims a
+floor-derived ceiling *"can never certify an unreadable file as fine"* — at that floor this file
+estimates 18,908 tokens against a true 19,040, optimistic by 0.7%. **The config was not edited:** with
+two conflicting measurements in hand the right value is a judgment, and it is handed forward as such.
+
+**Four commits:** `6ec5aec` (claim), `c581ac4` (the trim), `b19be54` (the fold), and this close-out.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-09 · [ad hoc] S156 — the pointer-block fold, and the front-matter bytes that paid for it
+
+`b19be54`. `methodology_trim.py` appends a ~447 B pointer block to the front matter on every trim;
+`HANDOFFS.md:69-73` instructs the next session to fold it into the archive table as one ~182 B row and
+delete the block. Done here as a **separate commit**, because folded into the trim commit the shipped
+`.verify.sh` fails `L2 FRONT MATTER lost 1 line(s)` — S154 established that by building both shapes,
+and this session re-ran the proof after the fold to confirm the separate-commit shape stays green.
+
+The archive table's counts were corrected with the new row — **12 trims / 139 receipts → 13 / 141** —
+and the regenerated *"currently holds 4"* field is true again. The `NEXT TRIMMING SESSION` comment now
+carries the own-commit rule S154 recorded as not fitting the reserve; it fits now because the same edit
+removed more than it added.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-09 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-07.md` (2 record(s), 67,336 B → 43,308 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
