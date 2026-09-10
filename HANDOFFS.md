@@ -73,6 +73,23 @@ that instruction is the whole reason these rows exist.
      is an upstream change and is deliberately not done here. -->
 
 ```handoff
+session: S156
+date: 2026-09-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **APPLY THE RETENTION POLICY TO `HANDOFFS.md` AND RESTORE IT TO ONE-READ HEALTH.** Chosen by the operator as item (2) of S155's close-out. At claim time the file is **65,534 B — 2 B under `CEILING_BYTES`** and **28,287 tokens against a 25,000 cap** (measured, doubled-file meter), holding **5 receipts against a policy of 4** (`HANDOFFS.md:8`, operator-adopted S127). **Fork-internal: no push, no PR, no tag, no comment.**
+what_was_done: pending
+next_steps: pending
+key_files: `HANDOFFS.md:8` (the retention paragraph — its by-hand instruction is what this session executes), `starter-kit/methodology_trim.py:1014` (`choose_cut`, bypassed by an explicit `--cut`), `bin/check-handoff:662` (`CEILING_BYTES = 65536`).
+gotchas: **THE PRE-CLAIM DRY RUN EXITS 0 — NO `SRF_RED`, NO `--force` GATE** (SRF 0.1096 vs `aa1c476`), unlike S154. **It must be RE-DERIVED after this claim commit**, which adds a sixth record: `--cut 4` will then archive **2**, not 1. **The pointer-block fold must be its OWN commit** — Learning #58; folded into the trim commit the shipped `.verify.sh` fails `L2 FRONT MATTER lost 1 line(s)`.
+runtime_smoke: Pre-claim dry run `--file HANDOFFS.md --cut 4` **exit 0**: would archive 1 of 5 records to `docs/archive/HANDOFFS-through-2026-09-04-2.md`, live 65,534 → 53,796 B, L1/L2/L3 all OK. S155's close-out suite: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing).
+changelog_ref: CHANGELOG.md "2026-09-09 · [ad hoc] S156 — claim: apply the retention policy to `HANDOFFS.md`, 5 receipts against a policy of 4 and 2 B under the ceiling"
+commit: pending
+```
+*(Phase 1B stub — the crash breadcrumb. Overwritten in place at close-out.)*
+
+```handoff
 session: S155
 date: 2026-09-09
 status: complete

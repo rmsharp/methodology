@@ -210,6 +210,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-09 · [ad hoc] S156 — claim: apply the retention policy to `HANDOFFS.md`, 5 receipts against a policy of 4 and 2 B under the ceiling
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: bring
+`HANDOFFS.md` back inside its declared budgets by applying the retention policy at `HANDOFFS.md:8` —
+adopted at **S127 by operator decision**, and selected as the session's work by the operator from
+S155's close-out. **Fork-internal: `origin` and `upstream` untouched — no push, no PR, no tag, no
+comment.**
+
+**The forcing condition is the BYTE ceiling, not the token overage, and the difference matters.** At
+claim time the file was **65,534 B — 2 B under `CEILING_BYTES` (65,536)**. The next session
+physically could not write a receipt. The token figure is worse in appearance — **28,287 tokens
+against a 25,000 cap, over by 3,287**, measured at S155 on the doubled-file meter — but
+`methodology_trim.py`'s own `[TRIGGER_READ]` line rules that condition *"FOR REFERENCE AND NOT AS A
+FAULT: … delivery is an ordered prefix and this ledger is newest-on-top, so what truncates is the
+OLDEST records."* That is BL-52's point applied to this file: a newest-on-top ledger degrades
+gracefully under truncation. **So the warrant quoted here is the 2 B of byte headroom and the
+5-against-4 record count, not the token number.**
+
+**THE TRIGGER DOES NOT FIRE, AND THIS TRIM IS NOT S154's.** `--check` **exits 0** — 65,534 B against
+a 196,608 B Class A threshold — so this is the by-hand policy the retention paragraph describes
+(*"applied by the session that notices"*), executed with the tool via an explicit `--cut`, not a
+tool-initiated trim. **The pre-claim dry run `--cut 4` exits 0 with no `SRF_RED` and no `--force`
+gate** (SRF **0.1096** vs the most recent archive `aa1c476`, against the **3.7022** that refused at
+S154), and reports L1/L2/L3 all OK: 1 of 5 records to
+`docs/archive/HANDOFFS-through-2026-09-04-2.md`, live 65,534 → 53,796 B. **S154's operator-approved
+`--force` is not a precedent and is not needed here** — a fact recorded because the two trims will
+otherwise read as one.
+
+**This claim commit invalidates that dry run and it will be re-derived.** The stub above is a sixth
+record and takes the file to **67,336 B, 1,800 B OVER the ceiling** — a deliberate, temporary breach
+that the trim closes; nothing enforces the ceiling at commit time (the gate is wired to nothing).
+`--cut 4` will therefore archive **2** records, not 1. Re-deriving after the claim is S153's gate,
+and S154 recorded what skipping it costs.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-09 · [ad hoc] S155 close-out — the PR body for `read-set-budgets` → `upstream/main`, written and not opened
 
 **Deliverable: [`docs/planning/read-set-budgets-to-main-pr-body.md`](docs/planning/read-set-budgets-to-main-pr-body.md), 14,806 B** — the
