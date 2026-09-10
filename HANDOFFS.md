@@ -106,7 +106,9 @@ itself.** *"52,493 B at claim, so bytes are not pressing"* — its own close-out
 59,187 B, leaving 6,349 B, smaller than any record in it (8,521–12,286 B), so the next session could
 not close out without a trim whatever it chose. That is the class of error its own Learning #61 names.
 And its row 61 took `FRAMEWORK_LEARNINGS.md` 192 B past its ceiling while its receipt reported
-`check-learnings` **0**, without noting that that checker never measures the file.
+`check-learnings` **0**, without noting that that checker never measures the file. **ROI: positive** —
+item (5) took this session straight to execution, and the one claim it got wrong cost a single
+measurement to correct.
 
 ```handoff
 session: S157

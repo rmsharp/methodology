@@ -210,6 +210,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-10 · [ad hoc] S158 follow-up — the ROI line the evaluation of S157 left out, added on the operator's request
+
+The S158 close-out report found that the written 3A evaluation of S157 — the *Predecessor (S157)*
+paragraph under the S158 receipt in `HANDOFFS.md` — gave the score, what helped, what was wrong and what
+was missing, but not the ROI that `starter-kit/SESSION_RUNNER.md` Phase 3A asks for. One sentence added:
+positive. The score stays 7/10, and the sentence sits outside the receipt's fence, so the 13-key schema
+is untouched.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-10 · [ad hoc] S158 close-out — `HANDOFFS.md` back to four receipts (61,122 → 38,425 B), and `FRAMEWORK_LEARNINGS.md` found 192 B over its ceiling
 
 **The deliverable is done and proved.** `HANDOFFS.md` holds four receipts again — S158, S157, S156,
