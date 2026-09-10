@@ -73,6 +73,23 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S157
+date: 2026-09-09
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **OPEN THE PR: `read-set-budgets` (`598c459`) → `upstream/main` (`512c2ed`) ON `KJ5HST/methodology`.** The operator gave the explicit go-ahead — *"open the PR"* — which is the gate `CLAUDE.md` requires for every outward-facing action and which S153, S154, S155 and S156 each recorded as absent. **THIS IS THE FIRST OUTWARD-FACING ACTION IN THIS ARC.** Body: `docs/planning/read-set-budgets-to-main-pr-body.md` §1 Title, §2 Body, written at S155. **The go-ahead covers OPENING the PR and nothing else — no merge, no tag, no release, no push of fork `main`, no branch deletions.**
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/read-set-budgets-to-main-pr-body.md:43` (§1 the title), `:49` (§2 the body to paste), `:180` (§5, the command behind every number).
+gotchas: **PRE-FLIGHT RE-VERIFIED BEFORE CLAIMING:** `upstream/main` `512c2ed` and `read-set-budgets` `598c459` both unmoved, ancestry still clean, 28 files / +7,783 / −553 unchanged, and **no PR has ever existed for this head/base**. **ONE BODY NUMBER HAD DRIFTED AND IS FIXED BEFORE PUBLISHING:** *"580 commits ahead"* is now **590**, moved by this fork's own S155/S156 commits — it will be dated rather than re-quoted. The 5 drifted distributed sources re-derived unchanged, same five names.
+runtime_smoke: S156 close-out suite **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing); all four checkers **0**; tree clean at `7b30980`.
+changelog_ref: CHANGELOG.md "2026-09-09 · [ad hoc] S157 — claim: open the PR for `read-set-budgets` → `upstream/main`, on the operator's explicit go-ahead"
+commit: pending
+```
+*(Phase 1B stub — the crash breadcrumb. Overwritten in place at close-out.)*
+
+```handoff
 session: S156
 date: 2026-09-09
 status: complete

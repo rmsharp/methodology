@@ -210,6 +210,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-09 · [ad hoc] S157 — claim: open the PR for `read-set-budgets` → `upstream/main`, on the operator's explicit go-ahead
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: open the
+pull request from `KJ5HST/methodology:read-set-budgets` (`598c459`) into `upstream/main` (`512c2ed`),
+using the Title and Body written at S155 in
+[`docs/planning/read-set-budgets-to-main-pr-body.md`](docs/planning/read-set-budgets-to-main-pr-body.md).
+
+**THIS IS THE FIRST OUTWARD-FACING ACTION OF THIS ARC, AND IT HAS THE GATE `CLAUDE.md` REQUIRES.** The
+operator's words were *"open the PR"* — given after S156's close-out put it as the ranked item. S153,
+S154, S155 and S156 each recorded the absence of this go-ahead and each declined to act without it; the
+grant, not the PR, is the thing only the operator could supply. **The go-ahead covers opening the PR and
+nothing else: no merge, no tag, no release, no push of fork `main`, no deletion of the five merged
+`origin` branches.** Each of those remains its own ask.
+
+**Pre-flight, re-derived before this claim rather than trusted from S155.** `upstream/main` **`512c2ed`**
+and `read-set-budgets` **`598c459`** are both unmoved; `upstream/main` is still an ancestor of the head,
+so the merge stays clean; the diff is still **28 files, +7,783 / −553**; and `gh pr list --state all
+--head read-set-budgets --base main` returns **0** — no PR has ever existed for this pair, so this opens
+rather than reopens.
+
+**One body number had drifted and is corrected before publishing.** §2's *"`rmsharp/methodology` is 580
+commits ahead of this branch"* is now **590**, moved by this fork's own S155 and S156 commits — the same
+self-referential drift S155 had to repair in its own receipt, here caught in pre-flight instead. It will
+be published as a **dated** measurement, which a frozen PR body can carry without going false. The
+companion claim — **5 of 27 distributed sources drifted further on fork `main`** — was re-derived and is
+unchanged, the same five names.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-09 · [ad hoc] S156 close-out — `HANDOFFS.md` back inside every budget: 67,336 → 42,923 B, 6 receipts → 4, and it fits in one read again
 
 **The remedy the operator selected from S155's close-out is done and measured.** `HANDOFFS.md` is
