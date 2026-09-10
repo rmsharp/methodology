@@ -14,10 +14,8 @@ record count**, so left alone this file climbs to ~205 KB over ~14 sessions — 
 cap — before the tool says anything. **Until the trimmer learns a retention mode, this policy is applied by the
 session that notices: at Phase 0 run `grep -c '^```handoff' HANDOFFS.md`; if it exceeds 4, trim to 4.** Adopted at **S127 (2026-08-30)** by operator decision; the warrant — including why a retention
 cap is not the periodic reset H3's RED rule forbids — is
-[`docs/archive/CHANGELOG-through-2026-09-02.md`](docs/archive/CHANGELOG-through-2026-09-02.md)`:2070`,
-where S152's trim moved it. `bin/check-handoff` validates its 13-key schema on the **newest** receipt, but
-two of its other scopes traverse every receipt and `--all` checks all of them — it is not
-newest-only. Since S133 `bin/model-report` globs the shards,
+[`docs/archive/CHANGELOG-through-2026-09-02.md`](docs/archive/CHANGELOG-through-2026-09-02.md)`:2070`. `bin/check-handoff` validates its 13-key schema on the **newest** receipt, but
+two of its other scopes traverse every receipt and `--all` checks all of them. `bin/model-report` globs the shards,
 so its **default** run reaches archived prose; `--handoffs <shard>` narrows to one file.
 
 **Two session sequences share this ledger and their numbers collide.** This fork and
@@ -31,21 +29,20 @@ upstream ones (precedent: `fc4d297`).
 > (`starter-kit/methodology_trim.py`, the `HANDOFFS.md` `LedgerSpec`), so a **trim** rewrites it and
 > the proof's L2 clause excuses that one span — but nothing updates it when a session **prepends** a
 > receipt, which is most sessions. So it is right immediately after a trim and wrong from the next
-> close-out onward: it read **6** for three sessions once. That is
+> close-out onward. That is
 > [Learning #12](starter-kit/FRAMEWORK_LEARNINGS.md) pointed at this file, and it is the receipt-ledger
 > half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
 > trusting it.
 
 > **⚠ THREE is the floor the retention policy sits one above.** `bin/tests.sh` Test 34 mutates *this*
 > ledger to check `check-handoff --all`'s whole-ledger invariants, reading two anchors from the live
-> file — not hardcoded, so it survives *which* receipts rotate, but it needs three to exist. S94
-> retained **2** on the tool's default cut and the suite went 235/1 → **229/6**. Since S96 a short
+> file — not hardcoded, so it survives *which* receipts rotate, but it needs three to exist. A short
 > ledger is **stated rather than silent** (BL-40 (b)): below the floor those six assertions print as
 > `SKIP` rows naming themselves, the summary carries a skip count, and a ledger with *zero* receipts
 > still FAILS — corruption is not rotation. **Nothing prevents a cut below three; the policy is what
 > makes it not happen.** Re-run `bash bin/tests.sh` after any trim of this file.
 
-**Archived shards — 13 trims, 141 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
+**Archived shards — 14 trims, 143 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
 and its proof is that same path plus `.verify.sh`; same format, same newest-on-top order, frozen at
 write. **Run the proof rather than trusting this table** — each re-derives L1/L2/L3 from git, and that
 instruction is why these rows exist.
@@ -65,16 +62,13 @@ instruction is why these rows exist.
 | 5 | 2026-08-29 → 2026-08-30 | [`HANDOFFS-through-2026-08-30.md`](docs/archive/HANDOFFS-through-2026-08-30.md) | [proof](docs/archive/HANDOFFS-through-2026-08-30.md.verify.sh) | v1.5.0 |
 | 23 | 2026-08-12 → 2026-09-04 | [`HANDOFFS-through-2026-09-04.md`](docs/archive/HANDOFFS-through-2026-09-04.md) | [proof](docs/archive/HANDOFFS-through-2026-09-04.md.verify.sh) | v1.5.0 |
 | 2 | 2026-09-04 → 2026-09-07 | [`HANDOFFS-through-2026-09-07.md`](docs/archive/HANDOFFS-through-2026-09-07.md) | [proof](docs/archive/HANDOFFS-through-2026-09-07.md.verify.sh) | v1.5.0 |
+| 2 | 2026-09-08 → 2026-09-08 | [`HANDOFFS-through-2026-09-08.md`](docs/archive/HANDOFFS-through-2026-09-08.md) | [proof](docs/archive/HANDOFFS-through-2026-09-08.md.verify.sh) | v1.5.0 |
 
 <!-- NEXT TRIMMING SESSION: methodology_trim.py appends a 3-line pointer block here
      (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer). Fold it into
      the table above as one row (~182 B vs the block's ~447) and delete the block, IN ITS OWN
      COMMIT: inside the trim commit the shipped .verify.sh fails L2 (Learning #58). The generator
      is DISTRIBUTED, so teaching it this is an upstream change. -->
-
-**Archived 2 record(s), 2026-09-08 → 2026-09-08** into [`docs/archive/HANDOFFS-through-2026-09-08.md`](docs/archive/HANDOFFS-through-2026-09-08.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-08.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-08.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
-than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
 session: S158

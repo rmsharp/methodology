@@ -210,6 +210,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-10 · [ad hoc] S158 — the pointer-block fold, paid for with four spent clauses
+
+The trim commit `000a843e` left `methodology_trim.py`'s generated pointer block in the front matter,
+because folding it in the same commit makes the shipped `.verify.sh` fail L2 (Learning #58). This
+commit folds it into the archive table as one row, per the `NEXT TRIMMING SESSION` comment in
+`HANDOFFS.md`'s front matter: **448 B of block out, a 190 B row in**, and the table's counts
+**13 trims / 141 receipts → 14 / 143**, with the `n` column re-summed to match (asserted, not eyeballed).
+
+**The row still did not fit on its own.** Before the trim the front matter was 7,159 B, 9 B under the
+7,168 B reserve the operator kept at S155, so the row needed **181 B** found elsewhere. They came from
+four clauses whose facts are recorded elsewhere and whose presence here was history, not instruction:
+*"where S152's trim moved it"* (28 B); *"— it is not newest-only. Since S133"* (37 B, left over from
+correcting a sentence the file no longer contains); the *"read 6 for three sessions once"* anecdote
+(39 B); and S94's *"235/1 → 229/6"* evidence for the three-receipt floor (97 B). BL-40 (b) is still
+cited there, and the floor, the SKIP rows and the re-run instruction all stay. Front matter **7,607 →
+7,148 B, 20 B spare**; live file **38,884 → 38,425 B**.
+
+**This cost recurs, and it is recorded rather than fixed.** Every trim adds a ~190 B row against a
+reserve that is already full, so every fold has to find that much spent text again. That is an
+inference from this fold and S156's, not a measurement of how much spent text is left. The table's
+shape is the operator's decision, not this session's.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-10 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-08.md` (2 record(s), 61,122 B → 38,884 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
