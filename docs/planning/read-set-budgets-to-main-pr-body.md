@@ -169,8 +169,8 @@ part of this PR.
 >   starter-kit/SESSION_RUNNER.md starter-kit/SAFEGUARDS.md` returns **0 hits on this branch**,
 >   exactly as on `main`. Closing that gap means editing Phase 0, which grows the very file this PR
 >   shrinks — deliberately left as your call rather than smuggled in here.
-> - **It does not bring the fork's `main` across.** `rmsharp/methodology` is 580 commits ahead of
->   this branch and 5 of the 27 distributed sources have drifted further there since #79 merged
+> - **It does not bring the fork's `main` across.** As of 2026-09-09 `rmsharp/methodology` is 590
+>   commits ahead of this branch, and 5 of the 27 distributed sources have drifted further there since #79 merged
 >   (`SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`, `BOOTSTRAP.md`, `methodology_dashboard.py`,
 >   `HOW_TO_USE.md`). Those are later PRs, if you want them at all. **This is scoped, not
 >   "merge the fork."**
