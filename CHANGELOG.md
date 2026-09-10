@@ -210,6 +210,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-10 · [ad hoc] S158 close-out — `HANDOFFS.md` back to four receipts (61,122 → 38,425 B), and `FRAMEWORK_LEARNINGS.md` found 192 B over its ceiling
+
+**The deliverable is done and proved.** `HANDOFFS.md` holds four receipts again — S158, S157, S156,
+S155 — at **38,425 B before this close-out's receipt**, from 61,122 B after the claim. S154 and S153
+are frozen in [`docs/archive/HANDOFFS-through-2026-09-08.md`](docs/archive/HANDOFFS-through-2026-09-08.md),
+whose `.verify.sh` exits **0** against the trim commit `000a843e` and again after the fold `e2600a06`.
+No `--force`, no gate (SRF 0.7414). Front matter **7,148 of the 7,168 B reserve**. `bash bin/tests.sh`,
+bare, before the trim and after the fold: **304 / 1 / 0, exit 1** both times, 305 rows, **0 status
+flips**, each of the 10 changed rows a number this session moved. **Fork-internal throughout:
+`origin/main` unmoved at `f8531cf`, PR #80 untouched.**
+
+**The finding is in the file next to it.** `starter-kit/FRAMEWORK_LEARNINGS.md` is **73,920 B against
+the 73,728 B** its `.context-budget.json` entry declares (`:101`) — **192 B over since S157's close-out
+`07c750b`**, which took it from 72,692 B with its Learning #61. `context_budget.py` prints the row.
+**No session saw it, for two reasons that compound.** The checker close-outs actually run on that file,
+`bin/check-learnings`, budgets **rows** (1,500 B each) and never the file; and `context_budget.py`, which
+does measure the file against its ceiling, already exits **2** for pre-existing overages (the read-set
+total, `CHANGELOG.md`, `SESSION_RUNNER.md`), so a new `over` row changes nothing a session reads.
+**Not fixed here:** it is a second deliverable, in a DISTRIBUTED file, and its ceiling is the operator's
+decision — at S114 (BL-45) the operator chose *raise* from four costed options.
+
+**Two learnings are owed to `FRAMEWORK_LEARNINGS.md` and deliberately not written**, because a ~1.2 KB
+row would deepen the breach FM #28 calls a defect. Write them once the ceiling is decided:
+
+- **An already-failing checker cannot report a new failure.** When a gate is red for a known reason, a
+  second breach changes no exit code and no summary line; only a row-level diff against the last run
+  shows it. This repo already diffs `bin/tests.sh` row for row because its Test 9 is a standing,
+  known failure — and does not do the same for `context_budget.py`.
+- **State a ceiling's headroom in units of the next write.** S157 recorded *"52,493 B at claim, so
+  bytes are not pressing"*; its own close-out left 6,349 B under `CEILING_BYTES`, less than the smallest
+  of the file's five records (8,521 B). Judged against the total, the file looked fine; judged against
+  the record the next session had to write, it was full.
+
+**Commits:** `e5812e2a` (claim, with the Phase 0 `dashboard_history.jsonl` snapshot), `000a843e` (the
+trim), `e2600a06` (the fold), and this close-out, which also carries `.context-budget-history.jsonl`,
+appended by this session's `context_budget.py` run.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-10 · [ad hoc] S158 — the pointer-block fold, paid for with four spent clauses
 
 The trim commit `000a843e` left `methodology_trim.py`'s generated pointer block in the front matter,
