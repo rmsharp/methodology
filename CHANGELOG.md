@@ -264,7 +264,10 @@ floor-derived ceiling *"can never certify an unreadable file as fine"* — at th
 estimates 18,908 tokens against a true 19,040, optimistic by 0.7%. **The config was not edited:** with
 two conflicting measurements in hand the right value is a judgment, and it is handed forward as such.
 
-**Four commits:** `6ec5aec` (claim), `c581ac4` (the trim), `b19be54` (the fold), and this close-out.
+**Five commits:** `6ec5aec` (claim), `c581ac4` (the trim), `b19be54` (the fold), `b3d19b0` (this
+close-out), and a `chore(history)` for `.context-budget-history.jsonl`, which a bare
+`context_budget.py` run appends to — three ran this session. The ahead-count is deliberately not
+quoted; it drifts with each repair commit that quotes it (S155's lesson, one session old).
 
 - **Model:** Claude Opus 5 (claude-opus-5)
 
