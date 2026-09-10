@@ -210,6 +210,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-10 · [ad hoc] S158 — claim: apply the retention policy to `HANDOFFS.md` again, 5 receipts against a policy of 4 and no room for a sixth
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: trim
+`HANDOFFS.md` back to four receipts under the retention policy at `HANDOFFS.md:8` — adopted at **S127
+by operator decision** — chosen by the operator (*"A"*) from this session's Phase 0 report, where it
+stood as S157's handoff item (5). **Fork-internal: no push, no PR, no tag, no comment; PR #80
+untouched.**
+
+**The forcing condition is the record count plus the byte ceiling, measured in the checker's own
+unit.** At claim time the file is **59,187 B, 6,349 B under `CEILING_BYTES` (65,536)**, and its five
+records measure **8,521–12,286 B each**, trailing prose included — the unit `bin/check-handoff:657`
+budgets. None of them would fit in the space left. **The Phase 0 report understated this:** it quoted
+S157's close-out growth (6,694 B) as its receipt's cost; the whole record is 8,521 B. Same conclusion,
+wider margin.
+
+**The trigger does not fire and there is no gate.** `--check` exits **0** (59,187 B against the
+196,608 B Class A threshold). The pre-claim dry run `--cut 4` exits **0**: **SRF 0.6609** against the
+most recent archive `c581ac4` — no `SRF_RED`, no `--force` — L1/L2/L3 OK, **1 of 5** records (S153) to
+`docs/archive/HANDOFFS-through-2026-09-08.md`, live 59,187 → 49,235 B, with `CUT_STRADDLES_DAY`
+because S154 shares 2026-09-08 and would have stayed.
+
+**This claim invalidates that dry run, and it will be re-derived.** The stub is a sixth record, so
+`--cut 4` should now take **two** — S154 and S153, both 2026-09-08 — which would also clear the
+straddle. That is an expectation until the post-claim run measures it.
+
+The Phase 0 dashboard run's `dashboard_history.jsonl` snapshot rides in this commit, as it did in
+S154's claim (`1695734f`).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-09 · [ad hoc] PR OPENED: [KJ5HST/methodology#80](https://github.com/KJ5HST/methodology/pull/80) — `read-set-budgets` → `main`
 
 **A non-commit action, recorded because FM #27 names "a PR open" explicitly.** Opened

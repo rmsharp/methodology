@@ -73,6 +73,23 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S158
+date: 2026-09-10
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **TRIM `HANDOFFS.md` BACK TO FOUR RECEIPTS** under the retention policy at `HANDOFFS.md:8` (operator decision, S127), chosen by the operator from this session's Phase 0 report. **59,187 B at claim, 6,349 B under `CEILING_BYTES`, and every record it holds is 8,521–12,286 B** — no room for this session's own. With the tool (`methodology_trim.py --file HANDOFFS.md --cut 4 --write`), never by hand; the fold in its own commit. **Fork-internal: no push, no PR, no comment; PR #80 untouched.**
+what_was_done: pending
+next_steps: pending
+key_files: `HANDOFFS.md:8` (the retention paragraph), `:48` (the archive table), `:69-73` (the `NEXT TRIMMING SESSION` comment — its `:1093`/`:1103` anchors re-verified). `starter-kit/methodology_trim.py:1014` (`choose_cut`), `:1093` (`build_pointer_block`). `bin/check-handoff:662` (`CEILING_BYTES`), `:663` (`HEADER_RESERVE_BYTES`, 7,168).
+gotchas: **THE PRE-CLAIM DRY RUN IS ALREADY STALE:** exit 0, SRF 0.6609 vs `c581ac4`, no gate, **1 of 5** (S153) to `docs/archive/HANDOFFS-through-2026-09-08.md` — but this stub is a sixth record, so the post-claim run should take **2**. Re-derive before writing. **FRONT MATTER 7,159 of 7,168 B, 9 B spare** — the fold's new row must be paid for in cut text, never by raising the constant.
+runtime_smoke: S157 close-out suite **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing); `check-handoff` **0** and `methodology_trim.py --check` **0** at Phase 0; tree clean at `07c750b` apart from the Phase 0 `dashboard_history.jsonl` snapshot.
+changelog_ref: CHANGELOG.md "2026-09-10 · [ad hoc] S158 — claim: apply the retention policy to `HANDOFFS.md` again, 5 receipts against a policy of 4 and no room for a sixth"
+commit: pending
+```
+*(Phase 1B stub — the crash breadcrumb. Overwritten in place at close-out.)*
+
+```handoff
 session: S157
 date: 2026-09-09
 status: complete
