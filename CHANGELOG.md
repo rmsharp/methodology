@@ -210,6 +210,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-09 · [ad hoc] PR OPENED: [KJ5HST/methodology#80](https://github.com/KJ5HST/methodology/pull/80) — `read-set-budgets` → `main`
+
+**A non-commit action, recorded because FM #27 names "a PR open" explicitly.** Opened
+2026-09-09 against `KJ5HST/methodology`, base `main` (`512c2ed`), head `read-set-budgets`
+(`598c459`), by `rmsharp` under the upstream push+triage grant. **State OPEN, `MERGEABLE`, 28 files,
++7,783 / −553.** Title and body are §1 and §2 of
+[`docs/planning/read-set-budgets-to-main-pr-body.md`](docs/planning/read-set-budgets-to-main-pr-body.md),
+written at S155.
+
+**Authorised by the operator's explicit *"open the PR"*, and by nothing wider.** Not merged, not
+tagged, no release, fork `main` not pushed, the five merged `origin` branches not deleted — each of
+those remains its own ask. This is the **first outward-facing action of the read-set arc**; S153,
+S154, S155 and S156 each recorded the gate as absent and each declined to act without it.
+
+**Verified after the fact rather than assumed:** `gh pr view 80 --json` reports the state, mergeability
+and diffstat above, and the live body **round-trips byte-identical to the file sent — 8,722 chars both
+sides**. The published body carries the Claude Code attribution tail that the committed document does
+not, by design; that 129 B difference is expected and is recorded as gotcha (1) in this session's
+receipt.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-09 · [ad hoc] S157 close-out — PR #80 opened, and the stale number caught in pre-flight
+
+**`c64ee4b` corrected the body before it was published.** §2 said `rmsharp/methodology` was **"580
+commits ahead"** of the branch it proposes merging; at publish time it was **590**, moved by S155's and
+S156's own commits — including the session that wrote the sentence. It now reads as a **dated**
+measurement, which a frozen PR body can carry without going false. The companion claim — 5 of 27
+distributed sources drifted further on fork `main` — was re-derived and is **unchanged, the same five
+names**.
+
+**That is the session's finding, and it is now Learning #61** (1,227 B): *a document that waits for an
+approval keeps measuring the tree it was written against — re-derive its self-referential numbers at
+publish time, not at authoring time.* It is deliberately **not** Learning #13's territory: nothing here
+was a prediction, and re-reading the file would not have caught it, because the file was still exactly
+what its author wrote. The measurement was true when made and false when published, and the gap is
+however long the approval takes. Numbers about the *other* side of a comparison need only a re-fetch;
+numbers about *your own* tree are the ones that move while you wait.
+
+**Pre-flight was re-derived rather than trusted**, which is why the drift surfaced at all: both shas
+unmoved, ancestry still clean, diffstat identical at 28 files, and `gh pr list --state all --head
+read-set-budgets --base main` returning **0** — so #80 opened rather than reopened. The extracted body
+was read in full before sending, with zero stray blockquote prefixes surviving the de-quoting.
+
+**Verification.** `bash bin/tests.sh` bare: **304 passed / 1 failed / 0 skipped, exit 1**, diffed row
+for row against S156's — **305 rows both sides, PASS→PASS throughout, zero status flips, zero added,
+zero removed**; every differing row states a count this session moved. The one failure is Test 9
+`github source dry-run failed` — **pre-existing, and exactly what #80 exists to cure.** All checkers 0.
+
+**Three commits plus one non-commit action:** `18aa587` (claim), `c64ee4b` (the dated ahead-count), this
+close-out, and the PR open recorded in its own entry above. **`origin/main` remains unmoved at
+`f8531cf`**; the ahead-count is deliberately not quoted here, for the reason this entry is about.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-09 · [ad hoc] S157 — claim: open the PR for `read-set-budgets` → `upstream/main`, on the operator's explicit go-ahead
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: open the
