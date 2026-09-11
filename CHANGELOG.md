@@ -210,6 +210,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-11 · [ad hoc] S160 follow-up — the operator's request for S161 (clarify the upstream merge options), added to the S160 receipt with the measurements it starts from
+
+After the close-out commit `2cb11c23`, the operator asked what remains before `read-set-budgets` can be
+used locally, then asked for *"more clarification on upstream merge options in the next session."*
+That request is now item (1) of the S160 receipt's `next_steps`, replacing the PR #80 watch line it
+subsumes — **scheduled, not started.** The receipt carries the facts measured in answering:
+`bin/sync --source=github` has no ref option and reads upstream `main`, which lacks 3 of the 27
+distributed files, so a GitHub dry run exits 1; the branch's own `bin/sync`, run from a checkout at
+`598c459`, dry-runs clean with `--source=local`; fork `main` differs from the branch in 5 of the 27.
+Both dry runs targeted an empty scratch project and wrote nothing. Item (2) gains one measurement: no
+`bin/tests.sh` line runs the trimmer on the live `CHANGELOG.md`, so crossing its trigger should not
+flip the suite.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-11 · [ad hoc] S160 close-out — `HANDOFFS.md` back to four receipts (59,110 → 37,492 B), its archive table's `proof` column dropped, and `CHANGELOG.md` one session from its own trim trigger
 
 **The deliverable is done and verified.** Claim `467d3ab6`, trim `cd52df79` (S156 and S155 to
