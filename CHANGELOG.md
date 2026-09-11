@@ -210,6 +210,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-11 · [ad hoc] S160 — the pointer-block fold, paid for by dropping the archive table's `proof` column
+
+The trim commit `cd52df79` left `methodology_trim.py`'s generated pointer block in the front matter,
+because folding it there makes the shipped `.verify.sh` fail L2 (Learning #58); the proof exits **0**
+at that commit. This commit folds the block into `HANDOFFS.md`'s archive table as one row and, **on the
+operator's decision at this session's Phase 0**, drops the table's `proof` column to pay for it: the
+block (448 B) and the column's 14 cells, header and separator (922 B) out, one 125 B row in. The
+table's counts **14 trims / 143 receipts → 15 / 145**, with the `n` column re-summed to 145 over 15
+rows (asserted).
+
+**The dropped column loses nothing, and that was asserted rather than eyeballed.** Before removal,
+each of the 14 `[proof](…)` cells was checked equal to its own row's shard path plus `.verify.sh` —
+the rule the front matter already states at `HANDOFFS.md:46` (*"its proof is that same path plus
+`.verify.sh`"*), which now carries the derivation alone. What is lost is a one-click link per row.
+
+**The reserve is no longer what binds a fold.** Front matter 7,596 B (7,148 B plus the block) →
+**6,351 B, 817 B under the 7,168 B `HEADER_RESERVE_BYTES`** — about six more rows at 125 B each, where
+S156 and S158 each had to cut ~190 B of spent prose. The `NEXT TRIMMING SESSION` comment's size
+figures now read *"~125 B vs the block's ~448"*. Live file 38,737 → 37,492 B.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-11 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-09.md` (2 record(s), 59,110 B → 38,737 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

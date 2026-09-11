@@ -42,37 +42,34 @@ upstream ones (precedent: `fc4d297`).
 > still FAILS — corruption is not rotation. **Nothing prevents a cut below three; the policy is what
 > makes it not happen.** Re-run `bash bin/tests.sh` after any trim of this file.
 
-**Archived shards — 14 trims, 143 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
+**Archived shards — 15 trims, 145 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
 and its proof is that same path plus `.verify.sh`; same format, same newest-on-top order, frozen at
 write. **Run the proof rather than trusting this table** — each re-derives L1/L2/L3 from git, and that
 instruction is why these rows exist.
 
-| n | span | shard | proof | by |
-|--:|---|---|---|---|
-| 16 | 2026-07-30 → 2026-08-02 | [`HANDOFFS-through-2026-08-02.md`](docs/archive/HANDOFFS-through-2026-08-02.md) | [proof](docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh) | v1.1.1 |
-| 30 | 2026-08-03 → 2026-08-09 | [`HANDOFFS-through-2026-08-09.md`](docs/archive/HANDOFFS-through-2026-08-09.md) | [proof](docs/archive/HANDOFFS-through-2026-08-09.md.verify.sh) | v1.1.1 |
-| 25 | 2026-08-02 → 2026-08-11 | [`HANDOFFS-through-2026-08-11.md`](docs/archive/HANDOFFS-through-2026-08-11.md) | [proof](docs/archive/HANDOFFS-through-2026-08-11.md.verify.sh) | v1.1.3 |
-| 8 | 2026-08-11 → 2026-08-15 | [`HANDOFFS-through-2026-08-15.md`](docs/archive/HANDOFFS-through-2026-08-15.md) | [proof](docs/archive/HANDOFFS-through-2026-08-15.md.verify.sh) | v1.2.0 |
-| 4 | 2026-08-15 → 2026-08-17 | [`HANDOFFS-through-2026-08-17.md`](docs/archive/HANDOFFS-through-2026-08-17.md) | [proof](docs/archive/HANDOFFS-through-2026-08-17.md.verify.sh) | v1.2.0 |
-| 3 | 2026-08-17 → 2026-08-18 | [`HANDOFFS-through-2026-08-18.md`](docs/archive/HANDOFFS-through-2026-08-18.md) | [proof](docs/archive/HANDOFFS-through-2026-08-18.md.verify.sh) | v1.3.0 |
-| 3 | 2026-08-18 → 2026-08-23 | [`HANDOFFS-through-2026-08-23.md`](docs/archive/HANDOFFS-through-2026-08-23.md) | [proof](docs/archive/HANDOFFS-through-2026-08-23.md.verify.sh) | v1.3.0 |
-| 3 | 2026-08-24 → 2026-08-24 | [`HANDOFFS-through-2026-08-24.md`](docs/archive/HANDOFFS-through-2026-08-24.md) | [proof](docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh) | v1.3.0 |
-| 2 | 2026-08-25 → 2026-08-25 | [`HANDOFFS-through-2026-08-25.md`](docs/archive/HANDOFFS-through-2026-08-25.md) | [proof](docs/archive/HANDOFFS-through-2026-08-25.md.verify.sh) | v1.3.0 |
-| 17 | 2026-08-25 → 2026-08-29 | [`HANDOFFS-through-2026-08-29.md`](docs/archive/HANDOFFS-through-2026-08-29.md) | [proof](docs/archive/HANDOFFS-through-2026-08-29.md.verify.sh) | v1.5.0 |
-| 5 | 2026-08-29 → 2026-08-30 | [`HANDOFFS-through-2026-08-30.md`](docs/archive/HANDOFFS-through-2026-08-30.md) | [proof](docs/archive/HANDOFFS-through-2026-08-30.md.verify.sh) | v1.5.0 |
-| 23 | 2026-08-12 → 2026-09-04 | [`HANDOFFS-through-2026-09-04.md`](docs/archive/HANDOFFS-through-2026-09-04.md) | [proof](docs/archive/HANDOFFS-through-2026-09-04.md.verify.sh) | v1.5.0 |
-| 2 | 2026-09-04 → 2026-09-07 | [`HANDOFFS-through-2026-09-07.md`](docs/archive/HANDOFFS-through-2026-09-07.md) | [proof](docs/archive/HANDOFFS-through-2026-09-07.md.verify.sh) | v1.5.0 |
-| 2 | 2026-09-08 → 2026-09-08 | [`HANDOFFS-through-2026-09-08.md`](docs/archive/HANDOFFS-through-2026-09-08.md) | [proof](docs/archive/HANDOFFS-through-2026-09-08.md.verify.sh) | v1.5.0 |
+| n | span | shard | by |
+|--:|---|---|---|
+| 16 | 2026-07-30 → 2026-08-02 | [`HANDOFFS-through-2026-08-02.md`](docs/archive/HANDOFFS-through-2026-08-02.md) | v1.1.1 |
+| 30 | 2026-08-03 → 2026-08-09 | [`HANDOFFS-through-2026-08-09.md`](docs/archive/HANDOFFS-through-2026-08-09.md) | v1.1.1 |
+| 25 | 2026-08-02 → 2026-08-11 | [`HANDOFFS-through-2026-08-11.md`](docs/archive/HANDOFFS-through-2026-08-11.md) | v1.1.3 |
+| 8 | 2026-08-11 → 2026-08-15 | [`HANDOFFS-through-2026-08-15.md`](docs/archive/HANDOFFS-through-2026-08-15.md) | v1.2.0 |
+| 4 | 2026-08-15 → 2026-08-17 | [`HANDOFFS-through-2026-08-17.md`](docs/archive/HANDOFFS-through-2026-08-17.md) | v1.2.0 |
+| 3 | 2026-08-17 → 2026-08-18 | [`HANDOFFS-through-2026-08-18.md`](docs/archive/HANDOFFS-through-2026-08-18.md) | v1.3.0 |
+| 3 | 2026-08-18 → 2026-08-23 | [`HANDOFFS-through-2026-08-23.md`](docs/archive/HANDOFFS-through-2026-08-23.md) | v1.3.0 |
+| 3 | 2026-08-24 → 2026-08-24 | [`HANDOFFS-through-2026-08-24.md`](docs/archive/HANDOFFS-through-2026-08-24.md) | v1.3.0 |
+| 2 | 2026-08-25 → 2026-08-25 | [`HANDOFFS-through-2026-08-25.md`](docs/archive/HANDOFFS-through-2026-08-25.md) | v1.3.0 |
+| 17 | 2026-08-25 → 2026-08-29 | [`HANDOFFS-through-2026-08-29.md`](docs/archive/HANDOFFS-through-2026-08-29.md) | v1.5.0 |
+| 5 | 2026-08-29 → 2026-08-30 | [`HANDOFFS-through-2026-08-30.md`](docs/archive/HANDOFFS-through-2026-08-30.md) | v1.5.0 |
+| 23 | 2026-08-12 → 2026-09-04 | [`HANDOFFS-through-2026-09-04.md`](docs/archive/HANDOFFS-through-2026-09-04.md) | v1.5.0 |
+| 2 | 2026-09-04 → 2026-09-07 | [`HANDOFFS-through-2026-09-07.md`](docs/archive/HANDOFFS-through-2026-09-07.md) | v1.5.0 |
+| 2 | 2026-09-08 → 2026-09-08 | [`HANDOFFS-through-2026-09-08.md`](docs/archive/HANDOFFS-through-2026-09-08.md) | v1.5.0 |
+| 2 | 2026-09-09 → 2026-09-09 | [`HANDOFFS-through-2026-09-09.md`](docs/archive/HANDOFFS-through-2026-09-09.md) | v1.5.0 |
 
 <!-- NEXT TRIMMING SESSION: methodology_trim.py appends a 3-line pointer block here
      (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer). Fold it into
-     the table above as one row (~182 B vs the block's ~447) and delete the block, IN ITS OWN
+     the table above as one row (~125 B vs the block's ~448) and delete the block, IN ITS OWN
      COMMIT: inside the trim commit the shipped .verify.sh fails L2 (Learning #58). The generator
      is DISTRIBUTED, so teaching it this is an upstream change. -->
-
-**Archived 2 record(s), 2026-09-09 → 2026-09-09** into [`docs/archive/HANDOFFS-through-2026-09-09.md`](docs/archive/HANDOFFS-through-2026-09-09.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-09.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-09.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
-than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
 session: S160
