@@ -210,6 +210,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-11 · [ad hoc] S160 close-out — `HANDOFFS.md` back to four receipts (59,110 → 37,492 B), its archive table's `proof` column dropped, and `CHANGELOG.md` one session from its own trim trigger
+
+**The deliverable is done and verified.** Claim `467d3ab6`, trim `cd52df79` (S156 and S155 to
+`docs/archive/HANDOFFS-through-2026-09-09.md`, no `--force`, SRF 0.9095), fold `d254adcc`. On the
+operator's Phase 0 decision the fold was paid for by dropping the archive table's derivable `proof`
+column instead of cutting prose, on condition that the suite and `bin/check-links` stay clean in a
+clone: the suite read **304/1/0 before and after, 305 rows, 0 status flips**. Front matter 6,351 B,
+**817 B under the 7,168 B reserve**. The full verification record is in the S160 receipt's
+`runtime_smoke`. **Fork-internal: nothing pushed, no PR, no comment, no distributed file changed; PR
+#80 untouched.**
+
+**Half of that condition could not have failed.** `bin/check-links` validates the 23 distributed
+markdown files in a simulated adopter tree (`bin/check-links:2-12`); `HANDOFFS.md` is not one, so its
+exit 0 says nothing about this change. The session named it in the condition without checking, and
+caught it from the checker's own summary line. The file's links were resolved directly instead — 21
+links, 19 relative, 0 unresolved.
+
+**All fifteen `HANDOFFS` shard proofs were run; three fail, none because of this session.**
+`HANDOFFS-through-2026-08-02` and `-08-09` are BL-36's. `-08-25` fails L2 because its trim commit
+`9038e40` folded in-commit — no record loss, per `docs/archive/CHANGELOG-through-2026-09-02.md:590`.
+All three give byte-identical output in a control clone of `7a6ea4b`, before any S160 change. BL-36's
+table lists six shards and is now stale; recorded here, not edited.
+
+**The next forcing item is the other ledger.** `CHANGELOG.md` was 189,582 B before this entry against
+the 196,608 B Class A trigger, and S156–S159 each added 6,283–9,548 B — so the trigger should fire at
+S161 (an estimate). SRF 0.5329 vs `aaa6d30` today, no `SRF_RED`. **No learning row:** the
+`check-links` lesson is in the family of Learnings #24 and #62, and `FRAMEWORK_LEARNINGS.md` has about
+four rows of room before BL-53's question must be answered; it is a gotcha in the receipt instead.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-11 · [ad hoc] S160 — the pointer-block fold, paid for by dropping the archive table's `proof` column
 
 The trim commit `cd52df79` left `methodology_trim.py`'s generated pointer block in the front matter,
