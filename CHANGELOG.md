@@ -210,6 +210,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-10 · [ad hoc] S159 — `FRAMEWORK_LEARNINGS.md`'s limit raised to 81,920 B and re-labelled a growth warning, on the operator's decision; BL-53 raised
+
+**Operator decision (*"A, reworded as a growth warning"*), from four options, each run in a
+`--no-local` clone before it was offered.** In `.context-budget.json`, the file's entry: `max_bytes`
+73,728 → **81,920**, and its note rewritten to claim only what the number does — warn about growth —
+with no promise that one Read delivers the file. The density fields now carry today's measurement
+(2.9051 B/token at 73,920 B, doubled-file method), replacing the 2026-08-29 figure of 2.8897 at
+56,673 B.
+
+**Why the old number could not simply be raised as it stood:** 73,728 was a token limit expressed in
+bytes (S114: 25,000 tokens × 3.0300 B/token, less a margin). S119's compaction changed the density
+under it, and the byte figure drifted past the limit it stood for — the file measured **25,445
+tokens** before this change, already too big for one Read. For an on-demand file `context_budget.py`
+computes no token verdict by design (Learning #34), so the honest reading of any byte limit here is a
+growth warning. The operator asked why bytes and not tokens before deciding; that exchange is what
+turned *raise* into *raise and re-label*.
+
+**Costed and not taken:** tombstone rows 1–10 (2 rows of room), archive rows 1–10 (4 rows, but 9 new
+test failures and 7 citations to missing rows in 4 distributed files), archive rows 1–5 (no room),
+compact ~25 rows (estimated from a 3-row trial). The full table is in **BL-53**, raised in this commit
+for the question none of them answers: how many learnings the framework should carry before old ones
+retire. **Adopters are unaffected:** the adopter seed does not budget this file.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-10 · [ad hoc] S159 — claim: resolve `FRAMEWORK_LEARNINGS.md`'s ceiling breach, 73,920 B against 73,728 B, and write the two learnings S158 withheld
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: put the size

@@ -1523,3 +1523,40 @@ what the trim would deliver first, and the honest answer was nothing.
 justification that was written once, plausibly, and never re-checked against the step it cites.
 Whoever takes Phase B or BL-52 should decide whether the fix is to correct the comment, to narrow
 `READ_CAP_WATCHED`, or to make step 6 actually require the read it is credited with.
+
+<a id="bl-53"></a>
+
+**BL-53 — how many learnings should the framework carry before old ones retire? `FRAMEWORK_LEARNINGS.md`'s
+limit is now only a growth warning, and it will fire again. Raised 2026-09-10 (S159).**
+
+At S157's close-out the file reached 73,920 B against its 73,728 B limit. At S159 the operator raised
+the limit to **81,920 B** and had it re-labelled a **growth warning**, not a readability guarantee
+(`.context-budget.json`, the file's entry). After Learnings #62 and #63 the file is 76,007 B, so the
+room left is **4 rows** at the 1,239 B median of rows #48–#61 — **about 10 sessions** at the 583 B per
+session measured from S132 to S157. **This is the second raise in 15 days** (BL-45 was the first,
+S114, 2026-08-26), and neither answers the question underneath — Learning #26's: the rows nobody may
+drop *are* the file.
+
+**Readability is already gone, and this limit does not guard it.** Metered by the doubled-file method,
+the file was **25,445 tokens at 73,920 B** (2.9051 B/token), past the 25,000-token Read cap, and
+26,189 tokens at 76,007 B. A whole Read fails — here, and in any adopter that syncs the file. The
+tool computes no token verdict for on-demand files by design (`starter-kit/context_budget.py:77-83`),
+because sessions read this one in part. Guarding adopter readability anyway would mean a token limit
+for on-demand files in the distributed `context_budget.py` — an upstream change and its own session.
+
+**The options, costed at S159 by running each in a `--no-local` clone** with both new rows appended,
+against a 304 passed / 1 failed baseline (Test 9, pre-existing), so they need not be re-derived:
+
+| option | file | room left | whole Read | tests | cost |
+|---|--:|--:|---|---|---|
+| **raise to 81,920 B** ✅ | 76,007 B | 4 rows | fails (26,189 tok) | 304 / 1, no change | canonical-only config. **Taken.** |
+| tombstone rows 1–10 | 70,879 B | 2 rows | fits, 222 tok spare | 304 / 1, no change | 10 distributed rows become ~246 B stubs linking to an archive that exists upstream only after a merge |
+| archive rows 1–10 | 68,418 B | 4 rows | fits, 1,412 tok spare | 295 / 10 | a checker change for the numbering gap; 7 citations to missing rows in 4 distributed files; 9 tests built on the live file |
+| archive rows 1–5 | 73,427 B | 0 rows | fails (25,328 tok) | 295 / 10 | the same checker change, for 301 B |
+| compact ~25 rows | ~69,000 B (est.) | ~4 rows (est.) | fits (est.) | not run | a 3-row trial saved 20% (880 B); rows 12–33 were already compacted once (S119), so returns there will be lower |
+
+**What would answer it** is a retirement rule decided once, as policy, instead of a byte negotiation at
+every breach. Tombstoning is the mechanism that keeps `Learning #N` citations resolving; what it lacks
+is a rule for *which* rows retire (for example, a row whose lesson the runner itself now carries as an
+FM or a phase step). **Decide it before the warning fires again.** Anything that changes the
+distributed file's shape is an upstream change.
