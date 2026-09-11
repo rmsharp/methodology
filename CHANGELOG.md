@@ -210,6 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-10 · [ad hoc] S159 — Learnings #62 and #63, the two S158 withheld
+
+`starter-kit/FRAMEWORK_LEARNINGS.md` rows **#62** (a gate already red for a known reason cannot report
+a new failure; 1,067 B) and **#63** (state a ceiling's headroom in units of the next write; 1,018 B) —
+both found at S158 and held back while the file was over its limit. Written from S158's close-out
+entry, with each figure re-checked first: the three rows already over (`context_budget.py --json` in a
+clone of `867087b`), and the 52,493 / 6,349 / 8,521 B figures against S157's and S158's records. File
+73,920 → 76,007 B, byte-identical to the copy metered at 26,189 tokens, leaving 5,913 B — 4 rows of the
+usual size — under the new 81,920 B limit. `bin/check-learnings` OK, 62 rows. **Distributed:** adopters
+receive both rows at their next `bin/sync`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-10 · [ad hoc] S159 — `FRAMEWORK_LEARNINGS.md`'s limit raised to 81,920 B and re-labelled a growth warning, on the operator's decision; BL-53 raised
 
 **Operator decision (*"A, reworded as a growth warning"*), from four options, each run in a
