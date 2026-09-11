@@ -72,6 +72,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S161
+date: 2026-09-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **WRITE THE ROUTES FOR USING `read-set-budgets` IN THE OPERATOR'S PROJECTS BEFORE PR #80 MERGES — a fork-only document in `docs/planning/`, each route dry-run in a scratch copy, never in a real project.** S160's item (1), scoped by the operator at Phase 0 to part (a), *local use now*; (b) the merge method's effect on this fork and (c) upstream-help options were not chosen. **`CHANGELOG.md` crosses its 196,608 B trigger this session by the operator's choice** (193,073 B at Phase 0). **Fork-internal: no push, no PR, no comment; PR #80 untouched.**
+what_was_done: pending
+next_steps: pending
+key_files: `bin/sync` (the source handling S160 cited at `:17`, `:25-27`, `:90-94` — re-read before quoting), `bin/_manifest.py` (the distributed paths), `bin/status`. `upstream/read-set-budgets` at `598c459`. `docs/planning/read-set-budgets-to-main-pr-body.md` (PR #80's body).
+gotchas: **DRY RUNS GO INTO SCRATCH COPIES ONLY** — a `git clone --no-local` of an adopter, never the adopter itself. **`bin/tests.sh` MUTATES BOTH LIVE LEDGERS** — run it only in a `git clone --no-local`. **`CHANGELOG.md` WILL CROSS ITS TRIGGER** — expected; S160 found no `bin/tests.sh` row runs the trimmer on the live file.
+runtime_smoke: Baseline at `6f3d422` in a `--no-local` clone: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing); dashboard 76/100 at Phase 0; both ledger frontiers at `6f3d422`, 0 undocumented commits; tree clean apart from the Phase 0 `dashboard_history.jsonl` snapshot.
+changelog_ref: CHANGELOG.md "2026-09-11 · [ad hoc] S161 — claim: the routes for using `read-set-budgets` in the operator's projects before PR #80 merges"
+commit: pending
+```
+
+```handoff
 session: S160
 date: 2026-09-11
 status: complete

@@ -210,6 +210,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-11 · [ad hoc] S161 — claim: the routes for using `read-set-budgets` in the operator's projects before PR #80 merges
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: a fork-only
+document in `docs/planning/` on how to use the `read-set-budgets` content (`upstream/read-set-budgets`
+at `598c459`) in the operator's projects before
+[PR #80](https://github.com/KJ5HST/methodology/pull/80) merges, each route dry-run in a scratch copy
+and never in a real project. It answers S160's item (1), the operator's request to *"clarify the
+upstream merge options"*, which the operator scoped at this session's Phase 0 to part (a), **local use
+now**, of three offered; (b) what the maintainer's merge method on #80 does to this fork and (c) what
+could be sent upstream were not chosen. **Fork-internal: no push, no PR, no comment; PR #80 untouched**
+(OPEN, `MERGEABLE`, 0 reviews, 0 comments at Phase 0; `upstream/main` still `512c2ed`).
+
+**`CHANGELOG.md` will cross its trim trigger this session, by the operator's choice.** It is 193,073 B
+at Phase 0, 3,535 B under the 196,608 B Class A threshold (`methodology_trim.py --check` exit 0, no
+`SRF_RED`), and S156–S159 each added 6.3–9.5 KB. Offered a CHANGELOG trim as this session's
+deliverable instead, the operator kept the merge-options document; S162 then has both ledgers to trim.
+
+Baseline at `6f3d422`, in a `git clone --no-local`: `bash bin/tests.sh` **304 passed / 1 failed / 0
+skipped, exit 1** (Test 9, `github source dry-run failed`, pre-existing). Dashboard 76/100, unchanged;
+its `dashboard_history.jsonl` snapshot rides in this commit.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-11 · [ad hoc] S160 follow-up — the operator's request for S161 (clarify the upstream merge options), added to the S160 receipt with the measurements it starts from
 
 After the close-out commit `2cb11c23`, the operator asked what remains before `read-set-budgets` can be
