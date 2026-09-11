@@ -210,6 +210,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-11 · [ad hoc] S160 — claim: trim `HANDOFFS.md` to four receipts, and pay for the fold by dropping the archive table's `proof` column
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: trim
+`HANDOFFS.md` back to four receipts under the retention policy at `HANDOFFS.md:8` — adopted at **S127
+by operator decision** — chosen by the operator (*"Trim only"*) from this session's Phase 0 report,
+where it stood as S159's handoff item (2). **Fork-internal: no push, no PR, no tag, no comment; PR #80
+untouched** (OPEN, `MERGEABLE`, 0 reviews, 0 comments at Phase 0).
+
+**The forcing condition, in the checker's unit.** At claim time the file is **56,954 B, 8,582 B under
+`CEILING_BYTES` (65,536)**, and its five records measure **8,521–11,276 B** each, trailing prose
+included (S159 10,668; S158 9,796; S157 8,521; S156 9,545; S155 11,276). Only a record the size of the
+smallest ever written would fit.
+
+**The trigger does not fire and there is no gate.** `--check` exits **0** (56,954 B against the
+196,608 B Class A threshold). The pre-claim dry run `--cut 4` exits **0**: **SRF 0.8126** against the
+most recent archive `000a843` — no `SRF_RED`, no `--force` — L1/L2/L3 OK, **1 of 5** records (S155) to
+`docs/archive/HANDOFFS-through-2026-09-09.md`, live 56,954 → 46,126 B, with `CUT_STRADDLES_DAY`.
+**This claim invalidates that dry run.** The stub is a sixth record, so `--cut 4` should take **two** —
+S156 and S155 — and the straddle should remain, since S157 also carries 2026-09-09. An expectation
+until the post-claim run measures it.
+
+**The fold is paid differently this time — operator decision.** The front matter is **7,148 of the
+7,168 B** `HEADER_RESERVE_BYTES` (`bin/check-handoff:663`), and S158's fold (`e2600a0`) records that
+every fold must find ~190 B again. Offered at Phase 0 against cutting more spent text, the operator
+chose to **drop the archive table's `proof` column** — **922 B** measured (header, separator and 14
+rows), and derivable from the shard name, which `HANDOFFS.md:46` already states. **Conditional:** it
+runs through `bash bin/tests.sh` in a `git clone --no-local` and through `bin/check-links` before it is
+committed, and if either breaks on it the fold falls back to cutting spent text. A grep of `bin/`,
+`tools/`, `starter-kit/`, `.githooks/` and `docs/planning/` found no reader of the column and no pinned
+link count.
+
+The Phase 0 dashboard run's `dashboard_history.jsonl` snapshot rides in this commit, as it did in
+S159's claim (`867087b`).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-10 · [ad hoc] S159 close-out — `FRAMEWORK_LEARNINGS.md`'s limit now guards growth only (81,920 B), Learnings #62 and #63 written, BL-53 raised
 
 **The deliverable is done and verified.** The operator chose *"A, reworded as a growth warning"* from

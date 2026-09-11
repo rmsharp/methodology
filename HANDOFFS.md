@@ -71,6 +71,23 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S160
+date: 2026-09-11
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **TRIM `HANDOFFS.md` TO FOUR RECEIPTS — 5 against the policy of 4 (`HANDOFFS.md:8`), 56,954 B against the 65,536 B `CEILING_BYTES` (`bin/check-handoff:662`), 8,582 B of room against records of 8,521–11,276 B** — chosen by the operator (*"Trim only"*) from this session's Phase 0 report, S159's handoff item (2). `methodology_trim.py --file HANDOFFS.md --cut 4 --write`, re-derived after this claim; fold the pointer block into the archive table in its OWN commit (Learning #58). **The fold is paid by dropping the table's `proof` column (922 B) — operator decision, conditional: if the suite or `bin/check-links` breaks on it in a `git clone --no-local`, fall back to cutting spent text.** **Fork-internal: no push, no PR, no comment; PR #80 untouched.**
+what_was_done: pending
+next_steps: pending
+key_files: `HANDOFFS.md:8` (retention paragraph), `:45-65` (archive table and its `proof` column), `:67-71` (`NEXT TRIMMING SESSION` comment). `starter-kit/methodology_trim.py:328` (the `HANDOFFS.md` `LedgerSpec`), `:1093` (`build_pointer_block`), `:1103` (`insert_pointer`). `bin/check-handoff:662-665` (`CEILING_BYTES`, `HEADER_RESERVE_BYTES` 7,168, `RECORD_BUDGET_BYTES`).
+gotchas: **RE-DERIVE THE DRY RUN AFTER THIS CLAIM** — pre-claim it archives 1 of 5 (S155); this stub is a sixth record. **FRONT MATTER IS 7,148 OF 7,168 B** — the fold must net out under the reserve. **`bin/tests.sh` MUTATES BOTH LIVE LEDGERS** — run it only in a `git clone --no-local`.
+runtime_smoke: S159 close-out suite **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing); dashboard 76/100 at Phase 0; both ledger frontiers at `7a6ea4b`, 0 undocumented commits; `bin/check-handoff` 0; tree clean apart from the Phase 0 `dashboard_history.jsonl` snapshot.
+changelog_ref: CHANGELOG.md "2026-09-11 · [ad hoc] S160 — claim: trim `HANDOFFS.md` to four receipts, and pay for the fold by dropping the archive table's `proof` column"
+commit: pending
+```
+*(Phase 1B stub — the crash breadcrumb. Overwritten in place at close-out.)*
+
+```handoff
 session: S159
 date: 2026-09-10
 status: complete
