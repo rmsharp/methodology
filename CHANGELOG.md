@@ -210,6 +210,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-10 · [ad hoc] S159 close-out — `FRAMEWORK_LEARNINGS.md`'s limit now guards growth only (81,920 B), Learnings #62 and #63 written, BL-53 raised
+
+**The deliverable is done and verified.** The operator chose *"A, reworded as a growth warning"* from
+four remedies, each run in a `--no-local` clone with a full `bash bin/tests.sh` before it was offered.
+`a51d848` raised the limit (73,728 → 81,920 B), re-metered its density and rewrote its note to promise
+nothing about readability; `cd0ac72` wrote the two learnings S158 withheld. The file is 76,007 B with
+4 rows of room. The final suite run, on this close-out's own content, is in the S159 receipt's
+`runtime_smoke`. **Fork-internal: nothing pushed, no PR, no comment; PR #80 untouched.**
+
+**The finding that changed the option:** before this session's change the file already measured
+**25,445 tokens**, past the 25,000-token Read cap, because the old limit was a token limit written in
+bytes at a density S119's compaction had since changed. The operator asked why the budget was in bytes
+before deciding; the answer is that the tool deliberately gives on-demand files no token verdict
+(Learning #34), so a byte limit here can only guard growth. **Recorded, not fixed:** adopters receive
+the file byte for byte, so their agents cannot read it whole either; guarding that would take a token
+limit for on-demand files in the distributed `context_budget.py` — upstream work, offered and not
+pursued now.
+
+**A regression this session caused and fixed before close-out.** At `cd0ac72` the suite went 304/1 →
+303/2: Test 31 (`bin/tests.sh:1968`) greps all of `bin/model-report`'s output case-insensitively, and
+the decision entry's heading, committed in `a51d848`, contained the word it looks for. **That heading
+was reworded in this close-out commit** to *"re-labelled to guard growth, not readability"* — the only
+edit to an already-committed entry, and it changes no fact. The test's grep is the real defect;
+anchoring it to the tool's own `WARNING:` prefix (`bin/model-report:541`) is handed forward.
+
+**No new learning row from S159:** its lesson — cost a limit in the unit it guards — is Learning #34
+applied. **After this close-out `HANDOFFS.md` holds five receipts against a policy of four**, so S160's
+Phase 0 trims. This commit also carries `.context-budget-history.jsonl`, appended by this session's
+`context_budget.py` run on the live tree.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-10 · [ad hoc] S159 — Learnings #62 and #63, the two S158 withheld
 
 `starter-kit/FRAMEWORK_LEARNINGS.md` rows **#62** (a gate already red for a known reason cannot report
@@ -223,7 +255,7 @@ receive both rows at their next `bin/sync`.
 
 - **Model:** Claude Opus 5 (claude-opus-5)
 
-### 2026-09-10 · [ad hoc] S159 — `FRAMEWORK_LEARNINGS.md`'s limit raised to 81,920 B and re-labelled a growth warning, on the operator's decision; BL-53 raised
+### 2026-09-10 · [ad hoc] S159 — `FRAMEWORK_LEARNINGS.md`'s limit raised to 81,920 B and re-labelled to guard growth, not readability, on the operator's decision; BL-53 raised
 
 **Operator decision (*"A, reworded as a growth warning"*), from four options, each run in a
 `--no-local` clone before it was offered.** In `.context-budget.json`, the file's entry: `max_bytes`
