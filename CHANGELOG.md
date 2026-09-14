@@ -210,6 +210,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 follow-up — `CHANGELOG.md` removed from this repo's read budget on the operator's decision: sessions reach it through git, never read it whole
+
+The operator's rationale: a session looking for something in `CHANGELOG.md` greps it or runs git, so
+only those results enter its context — the file is never read whole. The runner agrees: Phase 0 step 6
+takes the reconcile's frontier and gap from `git log`, and Phase 3F prepends under the topmost month
+heading. So `.context-budget.json` no longer declares it `read-mandated`: its entry (65,536 B, 2,000
+lines, 25,000 tokens, plus a heading-shape check) is removed, the reason recorded in
+`_deliberate_exclusions`, the old entry recoverable with `git show bb6eb72:.context-budget.json`.
+Asserted before writing: the file parses, `files[]` went 7 → 6, and nothing else changed.
+`context_budget.py` still exits 2 — rows diffed against the run before the edit: only `CHANGELOG.md`'s
+row left, findings 24 → 15, and the reds that remain are the known ones (`SESSION_RUNNER.md` and the
+Phase 0 read-set total). **Its size is still bounded:** `methodology_trim.py`'s own 196,608 B trigger
+still fires, so S162's trim stands. `HANDOFFS.md` keeps its entry. Canonical-only config; no test reads
+it. The checker's two runs, before and after, are appended to `.context-budget-history.jsonl`,
+committed here as that append-only history always has been.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 follow-up — BL-56 raised on the operator's request: rewrite `airqino`'s `CHANGELOG.md` to the current ledger format
 
 The operator asked for a backlog item, not the rewrite. **BL-56** (`docs/planning/BACKLOG-DETAIL.md`,
