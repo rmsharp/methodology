@@ -210,6 +210,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-09-2.md` (1 record(s), 58,802 B → 50,737 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-09 → 2026-09-09) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-09-2.md`](docs/archive/HANDOFFS-through-2026-09-09-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-09-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-09-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 58,802 B → 50,737 B (−13.7%).
+
 ### 2026-09-14 · [ad hoc] S161 follow-up — BL-47 and BL-52 updated now that `CHANGELOG.md` has left the read budget; one false clause in the exclusion note corrected
 
 On the operator's request. **BL-52** gains a fourth addendum: the operator has now decided its byte
