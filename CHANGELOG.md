@@ -210,6 +210,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 follow-up — `HANDOFFS.md` back to four receipts: the pointer block folded into the archive table
+
+On the operator's request (*"trim HANDOFFS"*), under the retention policy at `HANDOFFS.md:8` (5
+receipts against 4). The trim itself is the tool's own entry below (`16ac3fc97`: S157 to
+`docs/archive/HANDOFFS-through-2026-09-09-2.md`, 58,802 → 50,737 B, SRF 0.9849 vs `cd52df7` — no
+`SRF_RED`, no `--force`). Nothing was added to the ledger before trimming: about 308 B more would have
+taken SRF past 1.0 and into the refusal. This commit folds the generated pointer block into the archive
+table as one row — in its own commit, since inside the trim commit the shard's proof fails L2 (Learning
+#58) — so the table reads 16 trims and 146 receipts, each row cross-checked against the fence count of
+the shard it names. The S161 receipt's item (1) now says the `HANDOFFS.md` half is done;
+`CHANGELOG.md`'s trim remains the operator's decision.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-09-2.md` (1 record(s), 58,802 B → 50,737 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
