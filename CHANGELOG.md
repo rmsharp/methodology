@@ -210,6 +210,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 follow-up — BL-55 raised on the operator's request: nothing enforces removing a completed `BACKLOG.md` item
+
+After S161's close-out (`a5ba9ea`) the operator asked for the backlog item its receipt had offered.
+**BL-55** (`docs/planning/BACKLOG-DETAIL.md`, index row in `docs/planning/BACKLOG.md`): the removal
+rule is required in five places, `starter-kit/SESSION_RUNNER.md:284` first, and checked by none; the
+dashboard's Signal F only reports done-marked items. Measured with Signal F, `nprcgenekeepr` went from
+28 done-marks (2026-09-11) to 0 after its S687 removed them by hand on 2026-09-14, and its `BACKLOG.md`
+from 218,350 B to 102,069 B. A gate keyed on the `[BL-N]` tag would miss that project: its backlog
+names no `BL-` id, and 5 of its 322 tagged ledger entries carry one. Options are costed in the item,
+none decided; the S161 receipt's item (6) now points to it. The operator's other question — could
+Route A run on six named projects — was answered with no change made: re-checked on fresh copies, it
+is clean only for `airqino`, identical to 2026-09-11. **Fork-internal; no project was written to.**
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 close-out — local use of `read-set-budgets` answered; `CHANGELOG.md` now past its trim trigger, so S162 has both ledgers to trim
 
 **The deliverable is done, approved and committed** (`14ffe204`); Learning #64 and BL-54 followed

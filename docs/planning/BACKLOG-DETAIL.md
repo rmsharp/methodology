@@ -1587,3 +1587,43 @@ projects' current states is this defect
 whether `bin/status`'s *N versions behind* count — an index into that walk — should count the side
 branch's versions; and a test that fails on the default walk, built on a merge that does not keep the
 merged-in side's change to the path.
+
+<a id="bl-55"></a>
+
+**BL-55 — nothing enforces removing a completed `BACKLOG.md` item; the one detector only reports, and
+cannot join a backlog item to the ledger entry that closed it. Raised 2026-09-14 (S161, on the
+operator's request).**
+
+**The rule exists; the gate does not.** Removing a completed item in the commit that logs it is required
+by `starter-kit/SESSION_RUNNER.md:284` (Phase 3F), FM #27's countermeasure (`:335`),
+`ITERATIVE_METHODOLOGY.md:294`, the ledger seed `starter-kit/CHANGELOG.md:29` and
+`starter-kit/BOOTSTRAP.md:141`. Nothing checks it: `.githooks/pre-commit:49` requires only that
+`CHANGELOG.md` be staged; Phase 0 reconcile compares `CHANGELOG.md` with `git log`, never with
+`BACKLOG.md`; `bin/check-handoff:453` rejects only *"pick next from backlog"*; `methodology_trim.py` and
+`context_budget.py` do not cover `BACKLOG.md`.
+
+**The one detector is the dashboard's Signal F** (`starter-kit/methodology_dashboard.py:1933-1985`). It
+reads `BACKLOG.md` alone, counts items still marked done — `[x]`, or a DONE-type Status cell — as a proxy
+for *completed, never migrated*, and adds a risk line for adopters (`:2032`). It never blocks, and it
+cannot see a completed item left in place without a done-mark.
+
+**The instance that raised it — `nprcgenekeepr`, measured with Signal F both times.** 2026-09-11: 28
+done-marks in a 218,350 B, 2,494-line `BACKLOG.md` that the project reads for its priorities
+(`CLAUDE.md:133-143`). That day its S686 adopted a project-level removal rule (`CLAUDE.md:269`,
+`eac246f1`); on 2026-09-14 its S687 removed all 28 by hand (`9ae0c99c`, `20fd9c08`). Signal F now reads
+0, and the file is 102,069 B, 1,226 lines. **A checklist worked once; nothing stops the next
+accumulation.**
+
+**Why the obvious gate does not reach adopters.** The rule's own join key is the `[BL-<N>]` source tag
+(`starter-kit/CHANGELOG.md:29`): a gate could refuse a commit that adds a `[BL-N]` entry while `BL-N`
+still names an open item. But `nprcgenekeepr`'s backlog names **no** `BL-` id, and only **5 of its 322**
+tagged ledger entries carry `[BL-N]`; this repo carries **61 of 484** across the live ledger and its
+archives. In practice the key is optional, so each design has to answer that first.
+
+**Options to cost, none decided:** (a) a `[BL-N]` join check — in `.githooks/pre-commit`, which is
+canonical-only (BL-6 item 3), or in a distributed checker; it covers only adopters that use the key.
+(b) Signal F promoted from a report to a close-out gate — covers done-marked items in the two formats
+it recognizes (checkbox, Status table), never unmarked ones. (c) A mechanical check named in Phase 3F —
+grows `SESSION_RUNNER.md`, whose Phase 0 pair has ~400 tokens of read-cap headroom on fork `main`.
+(d) Keep the report and rely on the warning row at `SESSION_RUNNER.md:366` (*the same finding for
+several sessions → add a gate*). Anything distributed is an upstream change.
