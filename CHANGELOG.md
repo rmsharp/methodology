@@ -210,6 +210,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 follow-up — `airqino` synced by Route A on the operator's request: every tracked file current, on a new local branch
+
+Using the S161 document's Route A (`docs/planning/read-set-budgets-local-use-routes.md` §6), from a
+pristine full clone of `upstream/read-set-budgets` at `598c459`. The operator chose a new branch,
+`chore/methodology-read-set-budgets`, off `airqino`'s open PR #1 branch
+(`chore/methodology-pr2527-remediation`, `0c59e5e9`) — the only branch whose files sync without
+`--force`, since `main`'s `SESSION_RUNNER.md` and `SAFEGUARDS.md` match no published version. A dry
+run against the real project first matched the scratch-copy result exactly. The sync updated 10
+files, added 8 and created 2 seeds; `bin/status` now reads every tracked file `current`. Committed in
+`airqino` as `dfe26fd17` — 21 files, one commit for one tool-generated sync, with an entry in
+`airqino`'s own `CHANGELOG.md`; its two pre-existing untracked files were left untouched. **Not
+pushed; PR #1 and `main` unchanged.** The S161 receipt's item (3) records it.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 follow-up — BL-55 raised on the operator's request: nothing enforces removing a completed `BACKLOG.md` item
 
 After S161's close-out (`a5ba9ea`) the operator asked for the backlog item its receipt had offered.
