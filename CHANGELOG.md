@@ -210,6 +210,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 close-out — local use of `read-set-budgets` answered; `CHANGELOG.md` now past its trim trigger, so S162 has both ledgers to trim
+
+**The deliverable is done, approved and committed** (`14ffe204`); Learning #64 and BL-54 followed
+(`0c81e399`). The S161 receipt carries the verification record, and this entry closes the claim's
+`CHANGELOG: pending`. **This entry keeps `CHANGELOG.md` past its 196,608 B trigger, as the operator
+chose at Phase 0** — it was 197,584 B before this entry — and `HANDOFFS.md` now holds five receipts
+against its policy of four, so **S162 opens with both ledgers to trim.** **One regression, mine,
+caught before this close-out:** the claim stub's `key_files` carried no `path:line` token, so
+`bin/tests.sh` Test 34 read three extra failures at `18957077f`, `14ffe204` and `0c81e399` (301/4 at
+`0c81e399`, found by an intermediate run; S160's claim-time ledger, as a control, passes). This
+close-out's receipt replaces the stub, and the live ledger passes `check-handoff --all`. Claimed 2026-09-11 and closed
+2026-09-14; before committing the document the session re-checked that nothing it measured had moved
+(PR #80 OPEN, 0 reviews, 0 comments; `upstream/main` `512c2ed`; `origin/main` `f8531cf`). It also
+answered the operator's mid-session question, read-only: completed `BACKLOG.md` items must be removed
+(`starter-kit/SESSION_RUNNER.md:284`), but nothing enforces it — the dashboard's Signal F only reports,
+and on `nprcgenekeepr` it counts 28 done-marked items. **Fork-internal: nothing pushed, no PR, no
+comment.**
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 — Learning #64 (a dry run into an empty target cannot exercise a refusal), and BL-54 raised (`bin/sync`'s history walk misses a merge's other side)
 
 Two records of what the deliverable found. **Learning #64** (`starter-kit/FRAMEWORK_LEARNINGS.md`,
