@@ -210,6 +210,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 follow-up — BL-47 and BL-52 updated now that `CHANGELOG.md` has left the read budget; one false clause in the exclusion note corrected
+
+On the operator's request. **BL-52** gains a fourth addendum: the operator has now decided its byte
+half for this repo's `CHANGELOG.md` (`3c8acd5`), on the reasoning its own S98/S112 measurements
+supplied (one whole-file read per root ledger in 85 transcripts). It records what stays open: the
+trimmer's 196,608 B Class A trigger, which lives in the distributed tool and still fires; the
+262,144 B default-Read refusal, the boundary BL-52 says actually bites, about 58 KB away;
+`HANDOFFS.md`, still in the budget; and this ledger's own archive rule, still stated against the
+2,000-line read-cap proxy. **BL-47** gains a note that its premise moved twice: this repo's config no
+longer lists `CHANGELOG.md`, and the trimmer has budgeted to 196,608 B since S116, not 65,536 B.
+**Corrected:** the exclusion note said `HANDOFFS.md`'s 65,536 B "backs" `bin/check-handoff`'s
+`CEILING_BYTES`; that checker has its own constant and never reads the config, so the entry only
+mirrors it. `BACKLOG-DETAIL.md.verify.sh` covers only BL-32 and BL-36, so neither backlog edit touches
+its proof.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 follow-up — `CHANGELOG.md` removed from this repo's read budget on the operator's decision: sessions reach it through git, never read it whole
 
 The operator's rationale: a session looking for something in `CHANGELOG.md` greps it or runs git, so

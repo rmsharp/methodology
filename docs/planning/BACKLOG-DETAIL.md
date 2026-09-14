@@ -1218,6 +1218,14 @@ signal anywhere in Phase 0.
 the trimmer deliberately, so `context_budget.py` REPORTS what `methodology_trim.py` would ACT on.
 Distributed file — needs a go-ahead.
 
+**Update, 2026-09-14 (S161 follow-up): the premise has moved twice — re-decide before acting.**
+This repo's `.context-budget.json` no longer lists `CHANGELOG.md`: the operator removed it
+(`3c8acd5`) because sessions reach the ledger through git and never read it whole (BL-52's fourth
+addendum). It still lists `HANDOFFS.md` at 65,536 B. And *"the same constant `methodology_trim.py`
+budgets to"* stopped being true at S116, when the trimmer's budget went to 196,608 B, deliberately
+decoupled from this config. Shipping both ledgers in the seed at 65,536 B would now give adopters a
+`CHANGELOG.md` gate this repo has just decided it does not need.
+
 **BL-48 — the seed `HANDOFFS.md` lacks the count sentence its own `LedgerSpec` declares, so every
 adopter gets `FRONTMATTER_FIELD_ABSENT` forever. Raised 2026-08-26 from `vscode_quarto_ext` S254.**
 
@@ -1523,6 +1531,28 @@ what the trim would deliver first, and the honest answer was nothing.
 justification that was written once, plausibly, and never re-checked against the step it cites.
 Whoever takes Phase B or BL-52 should decide whether the fix is to correct the comment, to narrow
 `READ_CAP_WATCHED`, or to make step 6 actually require the read it is credited with.
+
+**⚠ FOURTH ADDENDUM (2026-09-14, S161 follow-up, operator decision): the byte half is now decided
+for this repo's `CHANGELOG.md`.** The operator removed it from `.context-budget.json` (`3c8acd5`): a
+session looking for something in the ledger greps it or runs git, so only those results enter its
+context. That is the reasoning this item's own measurements supplied — one whole-file read per root
+ledger in 85 transcripts (S112), after S98 found the same for `HANDOFFS.md` in 81 — applied to the
+byte metric, which the addenda above had deliberately left open. `context_budget.py` no longer
+reports the file; nothing else changed.
+
+**What it leaves open, each still true at 203,649 B:**
+- **The trimmer's Class A trigger still fires** (196,608 B, `starter-kit/methodology_trim.py:164`).
+  It lives in the distributed tool, reads no config file and gates nothing; its only knob is a
+  per-run `--budget-bytes` flag. Retargeting it is an upstream change, and its dashboard mirror
+  (`starter-kit/methodology_dashboard.py:322`) moves with it.
+- **The 262,144 B default-Read refusal** (`:130`) is still the boundary this item says actually
+  bites — about 58 KB away. Reads with `offset`/`limit` are unaffected.
+- **`HANDOFFS.md` stays in the budget** only because the decision named `CHANGELOG.md`; the S112
+  argument covers it equally.
+- **This ledger's own archive rule** (`CHANGELOG.md`, *When to archive again*) is still stated
+  against the 2,000-line read-cap proxy.
+- **`READ_CAP_WATCHED`'s justification** — the dashboard comment quoted in the second addendum —
+  still credits step 6 with reading both ledgers in full.
 
 <a id="bl-53"></a>
 
