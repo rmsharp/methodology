@@ -210,6 +210,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 — `read-set-budgets` can be used in the operator's projects today: two local routes, each run against copies of all 12 projects
+
+**The deliverable, approved by the operator before commit:**
+[`docs/planning/read-set-budgets-local-use-routes.md`](docs/planning/read-set-budgets-local-use-routes.md)
+(16,238 B, under its declared 20,000 B), answering S160's item (1) as scoped at Phase 0 — how to use
+the branch's content before PR #80 merges. **Nothing waits on the maintainer.** A sync from a full
+clone of the branch (`598c459`) is clean for 3 of the 12 projects under `~/Development` that carry a
+`SESSION_RUNNER.md`, and those 3 are current against upstream the moment #80 merges unchanged; a sync
+from fork `main` is clean for 8 of 12 but leaves 5 files per project that upstream reads as locally
+modified; `--source=github` exits 1 today and, simulated after the merge with `bin/sync`'s own code,
+still refuses all 12 projects (7–13 files each) because that path keeps no history. Both local routes
+fit the Phase 0 pair in one read: 23,902 tokens from the branch (PR #80's recorded figure, reproduced)
+and 24,598 from fork `main`. Four projects are blocked on every route by genuine local edits,
+`nprcgenekeepr`'s 49-line trimmer extension among them. **Every sync ran against scratch copies**
+holding exactly the files `bin/sync` reads; no real project was written to. Measured 2026-09-11 and
+re-verified unchanged before this commit (PR #80 OPEN, 0 reviews; `upstream/main` `512c2ed`).
+**Fork-internal: no push, no PR, no comment.**
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-11 · [ad hoc] S161 — claim: the routes for using `read-set-budgets` in the operator's projects before PR #80 merges
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: a fork-only
