@@ -210,6 +210,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 — Learning #64 (a dry run into an empty target cannot exercise a refusal), and BL-54 raised (`bin/sync`'s history walk misses a merge's other side)
+
+Two records of what the deliverable found. **Learning #64** (`starter-kit/FRAMEWORK_LEARNINGS.md`,
+952 B): S160 recorded the branch route as working from a dry run into an empty project; run against
+copies of the twelve real projects it synced 3 and refused 9. `bin/check-learnings` exit 0, 0 rows over
+1,500 B. The file is 76,959 B against its 81,920 B growth warning — **4 rows of room** at BL-53's
+1,239 B median. The row is distributed: it reaches projects that sync from fork `main`. **BL-54, raised
+on the operator's go-ahead** (`docs/planning/BACKLOG-DETAIL.md`, index row in
+`docs/planning/BACKLOG.md`): `bin/sync:60` and `bin/status:56` walk history without `--full-history`, so
+a version that exists only on the merged-in side of `213f841` reads as locally modified — measured on 4
+files for each of the 3 projects synced from the branch and then from fork `main`. Recorded, not fixed;
+neither file is distributed. `BACKLOG-DETAIL.md.verify.sh` exit 0.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 — `read-set-budgets` can be used in the operator's projects today: two local routes, each run against copies of all 12 projects
 
 **The deliverable, approved by the operator before commit:**

@@ -1560,3 +1560,30 @@ every breach. Tombstoning is the mechanism that keeps `Learning #N` citations re
 is a rule for *which* rows retire (for example, a row whose lesson the runner itself now carries as an
 FM or a phase step). **Decide it before the warning fires again.** Anything that changes the
 distributed file's shape is an upstream change.
+
+<a id="bl-54"></a>
+
+**BL-54 — `bin/sync` and `bin/status` walk history without `--full-history`, so a version that exists
+only on the merged-in side of a merge reads as a local modification. Raised 2026-09-14 (S161).**
+
+`local_history_blobs` (`bin/sync:55-77`) and `local_history` (`bin/status:52-74`) collect the versions a
+file has had with `git log --format=%H -- <path>` (`bin/sync:60`, `bin/status:56`). Git's default history
+simplification follows only a merge's TREESAME parent, so when a merge keeps one side's content for a
+path, the other side's commits for that path are never visited. Fork `main` kept its own content for
+several distributed files when it merged `upstream/read-set-budgets` (`213f841`): for
+`starter-kit/SESSION_RUNNER.md` the default walk visits 46 commits and never reaches the branch's version
+(`c0550acd`); `--full-history` visits 77 and finds it at `46b56fdb`.
+
+**Measured consequence (S161, on scratch copies):** the three projects that sync cleanly from a clone of
+the branch (`airqino`, `church_growth`, `dalia_martinez_funeral`), once synced that way and then synced
+from fork `main`, are refused (exit 2) on `SESSION_RUNNER.md`, `BOOTSTRAP.md`,
+`methodology_dashboard.py` and `HOW_TO_USE.md` — all four in fork `main`'s full history, none in its
+default walk. `--force` is safe there, and the tool cannot say so. None of the refusals in the 12
+projects' current states is this defect
+([`read-set-budgets-local-use-routes.md`](read-set-budgets-local-use-routes.md) §3, §5.1).
+
+**The fix** is `--full-history` on both `git log` calls. Neither file is distributed (`bin/` has no row in
+`bin/_manifest.py`), so it lands here and, through a PR, upstream. Two things to settle when it is made:
+whether `bin/status`'s *N versions behind* count — an index into that walk — should count the side
+branch's versions; and a test that fails on the default walk, built on a merge that does not keep the
+merged-in side's change to the path.
