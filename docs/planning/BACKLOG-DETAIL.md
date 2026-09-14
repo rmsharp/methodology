@@ -1683,3 +1683,78 @@ PR, is a separate go-ahead. **Done** when both `bin/status` versions read `prese
 
 **Out of scope, recorded:** S161's run of fork `main`'s `bin/status` (2026-09-11) found the same *present
 (stale format)* verdict on other projects' `CHANGELOG.md` or `HANDOFFS.md`; this item is `airqino` only.
+
+<a id="bl-57"></a>
+
+**BL-57 — HIGH PRIORITY: the framework's rules for `CHANGELOG.md` contradict each other; remove the
+contradictions here and roll the fix into six adopters, aiming at an upstream PR. Raised 2026-09-14
+(S161 follow-up, on the operator's request).**
+
+**Priority and shape, as the operator set them.** High priority. The next step is a **planning
+session** — the plan in `docs/planning/` is its deliverable (`starter-kit/SESSION_RUNNER.md` §Planning
+Sessions: a grep inventory, per-phase DONE criteria, the surface each is shown on, one session per
+phase) — then implementation sessions under it. Scope: this repo plus `airqino`,
+`model_project_constructor`, `mts-system`, `nprcgenekeepr`, `vscode_quarto_ext` and `wsfct`. **Intent:
+an upstream PR, or commits added to one** — [PR #80](https://github.com/KJ5HST/methodology/pull/80) was
+open on 2026-09-14 — and each such action is its own go-ahead (`CLAUDE.md` §Contributing upstream).
+
+**The contradictions, each line re-read 2026-09-14:**
+
+1. **Whether a session reads the file.** The seed says *"Phase 0 reads it every session"* and prices
+   its byte cap as *"every session pays for the whole file, every time"*
+   (`starter-kit/CHANGELOG.md:96-97`, `:104`). But Phase 0 step 6 reads `git log`, not the file
+   (`starter-kit/SESSION_RUNNER.md:37-38`); `starter-kit/BOOTSTRAP.md:420` calls it a reference doc
+   *"not required at session start"*; and S112 measured one whole-file read in 85 transcripts (BL-52).
+   The dashboard's watched-set rationale (`starter-kit/methodology_dashboard.py:259`) and the trimmer's
+   *"per-file context-tax budget"* (`starter-kit/methodology_trim.py:186`) rest on the seed's premise;
+   this repo's budget config dropped it (`3c8acd5`).
+2. **Three archive triggers for one file.** The seed: a line rate plus a byte level, *"default 65,536
+   B"* (`starter-kit/CHANGELOG.md:103-104`). This repo's front matter: the line rate alone
+   (`CHANGELOG.md`, *When to archive again*). The tool it ships with: 196,608 B
+   (`starter-kit/methodology_trim.py:164`, `:186`) — so the seed's default is stale, and PR #80 ships
+   the two disagreeing.
+3. **"Append" or "prepend".** *"Append … newest on top"*: `starter-kit/SESSION_RUNNER.md:284`,
+   `ITERATIVE_METHODOLOGY.md:294`, `HOW_TO_USE.md:767`. *"Prepend"*: `starter-kit/CHANGELOG.md:17` and
+   the runner's own backfill step (`starter-kit/SESSION_RUNNER.md:39`).
+4. **When a trim happens.** The seed: a trim *"does not belong in Phase 0"*
+   (`starter-kit/CHANGELOG.md:167-169`). This repo's `HANDOFFS.md:15`: count *"at Phase 0"* and *"trim
+   to 4"*. The runner names no trimmer at all.
+5. **Two definitions of a stale seed.** PR #80's `bin/_manifest.py` keys `SEED_FORMAT_MARKERS` on the
+   seeds' titles (`Authoritative Action Ledger`, `Handoff Receipts`); fork `main` keys both on `Size,
+   and when to archive`. `bin/status` answers differently depending on which checkout runs it.
+6. **The source-tag vocabulary is closed in the seed and open in practice.** The seed allows exactly
+   `[issue #<N>]`, `[BL-<N>]` and `[ad hoc]` (`starter-kit/CHANGELOG.md:23-32`); adopters write
+   `[BL-OPS-ADMIN-PW-RECOVERY-001]` (`mts-system`), `[BACKLOG: …]` (`vscode_quarto_ext`),
+   `[BL-backlogXBlockBackfill]` (`nprcgenekeepr`), or no tag (`model_project_constructor`). The `[BL-N]`
+   removal rule that depends on the tag is BL-55.
+7. **The Phase 1B marker has no home in this repo.** The runner puts `CHANGELOG: pending` in
+   `SESSION_NOTES.md` (`starter-kit/SESSION_RUNNER.md:88`); this repo keeps none, so each claim writes a
+   permanent ledger entry carrying the marker. Fork-only, and not written down as an adaptation.
+8. **One entry per action** (`starter-kit/SESSION_RUNNER.md:284`) against this repo's habit of
+   bundling several actions into one entry.
+
+**What the rollout will meet — measured 2026-09-14, read-only, from raw match positions:**
+
+| repo | `CHANGELOG.md` | seed's rules text carried | tag style | trimmer | notes |
+|---|--:|---|---|---|---|
+| `methodology` | 206,897 B | its own front matter, no seed copy | closed | 1.5.0 | the canonical source of items 1–5 |
+| `airqino` | 1,309 B | none — the pre-v3.1 template | closed | 1.5.0 | BL-56; a branch off open PR #1 |
+| `model_project_constructor` | 666,365 B | none — `### date — summary`, untagged | none | none | runner customized (step 5) |
+| `mts-system` | 358,377 B | none | its own `[BL-…-001]` ids | 1.1.1 | |
+| `nprcgenekeepr` | 413,383 B | yes, `:3946`–`:3983`, an older copy that still calls truncation *silent* | its own `[BL-…]` ids | 1.1.2 plus a local `SESSION_NOTES.md` ledger | its 2026-09 entries sit under `## 2026-08` |
+| `vscode_quarto_ext` | 87,837 B | none | `[BACKLOG: …]` | 1.3.0 | its `.context-budget.json` lists `CHANGELOG.md` (BL-47's question) |
+| `wsfct` | 162,549 B | yes, the seed's sections at `:13`–`:196`, above its entries — also the older copy (`:101` still says *silent*) | closed | 1.1.2 | |
+
+What that means for a plan:
+- **Two delivery routes.** The runner, `BOOTSTRAP.md`, `HOW_TO_USE.md`, `ITERATIVE_METHODOLOGY.md`, the
+  dashboard and the trimmer are TRACKED, so `bin/sync` carries the fix (Route A or B per project —
+  [`read-set-budgets-local-use-routes.md`](read-set-budgets-local-use-routes.md)). Each adopter's
+  `CHANGELOG.md` and `HANDOFFS.md` are SEEDS, never overwritten, so the copies in `nprcgenekeepr` and
+  `wsfct` must be migrated by hand, and each `CLAUDE.md`'s own ledger rules reviewed.
+- **Three adopter ledgers are already past the 262,144 B default-Read refusal** —
+  `model_project_constructor`, `mts-system`, `nprcgenekeepr` — the boundary BL-52 says actually bites.
+  The plan must say what the rule is for them.
+- **Known blockers from S161:** `nprcgenekeepr`'s local trimmer entry (it re-adds cleanly onto 1.5.0),
+  the customized runner in `model_project_constructor`, and `airqino`'s open PR #1.
+- **Batch with** BL-47, BL-52's open list, BL-55 and BL-56 where they touch the same files; the
+  maintainer's review time favours one substantial, vetted PR.

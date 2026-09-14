@@ -210,6 +210,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 follow-up — BL-57 raised as HIGH PRIORITY on the operator's request: the `CHANGELOG.md` rules contradict each other; a planning session comes next, aiming at an upstream PR
+
+The operator asked for the contradictions to be logged, and for a high-priority future session to plan
+removing them in this repo and in `airqino`, `model_project_constructor`, `mts-system`,
+`nprcgenekeepr`, `vscode_quarto_ext` and `wsfct`, with the intent of an upstream PR or adding to one.
+**BL-57** (`docs/planning/BACKLOG-DETAIL.md`, index row in `docs/planning/BACKLOG.md`, marked HIGH
+PRIORITY) records eight contradictions with every cited line re-read today, and a per-repo table of what
+the rollout will meet, measured read-only: `nprcgenekeepr` and `wsfct` carry copies of the seed's rules
+text, which `bin/sync` never rewrites; three adopter ledgers are already past the 262,144 B default-Read
+refusal; four adopters use their own tag styles. A first survey counted "65,536" anywhere in each file
+and a second stopped at the seed's example headings, so the table was taken from raw match positions.
+The S161 receipt's item (1) now names the planning session first. No plan was written and no other
+repository changed.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 follow-up — `HANDOFFS.md` back to four receipts: the pointer block folded into the archive table
 
 On the operator's request (*"trim HANDOFFS"*), under the retention policy at `HANDOFFS.md:8` (5

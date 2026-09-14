@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-56.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-56, BL-57.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -149,6 +149,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-54** | `bin/sync` and `bin/status` walk history without `--full-history`, so a version from a merge's other side reads as locally modified | [detail](BACKLOG-DETAIL.md#bl-54) |
 | **BL-55** | Nothing enforces removing a completed `BACKLOG.md` item — Signal F only reports, and adopters rarely carry the `[BL-N]` join key | [detail](BACKLOG-DETAIL.md#bl-55) |
 | **BL-56** | Rewrite `airqino`'s `CHANGELOG.md` to the current ledger format — the Route A sync left its pre-v3.1 seed as it was | [detail](BACKLOG-DETAIL.md#bl-56) |
+| **BL-57** | **HIGH PRIORITY** — the `CHANGELOG.md` rules contradict each other across the framework; fix here and in six adopters, aiming at an upstream PR (a planning session comes first) | [detail](BACKLOG-DETAIL.md#bl-57) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45)
 
