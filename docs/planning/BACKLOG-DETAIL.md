@@ -1627,3 +1627,29 @@ it recognizes (checkbox, Status table), never unmarked ones. (c) A mechanical ch
 grows `SESSION_RUNNER.md`, whose Phase 0 pair has ~400 tokens of read-cap headroom on fork `main`.
 (d) Keep the report and rely on the warning row at `SESSION_RUNNER.md:366` (*the same finding for
 several sessions → add a gate*). Anything distributed is an upstream change.
+
+<a id="bl-56"></a>
+
+**BL-56 — rewrite `airqino`'s `CHANGELOG.md` to the current ledger format. Raised 2026-09-14 (S161, on
+the operator's request).**
+
+`bin/status` reads `airqino`'s `CHANGELOG.md` as *present (stale format)* under both the branch's and
+fork `main`'s markers: the file (1,309 B) carries neither `Authoritative Action Ledger` nor `Size, and
+when to archive`, and the current seed (`starter-kit/CHANGELOG.md`, 12,893 B) carries both. It is the
+pre-v3.1 Keep-a-Changelog template, and `bin/sync` never rewrites a seed (`bin/_manifest.py`, the `SEED`
+disposition), so S161's Route A sync (`dfe26fd17` in `airqino`, branch
+`chore/methodology-read-set-budgets`) left it as it was. The `HANDOFFS.md` that sync created from the
+current seed already reads `present`.
+
+**Almost nothing to preserve:** the file holds one dated entry — the 2026-09-14 sync entry — and no
+earlier history. That makes the second remedy in `starter-kit/BOOTSTRAP.md:86` the cheap one: delete the
+file, re-run `bin/sync` to reseed the current shape, carry the one entry across, and delete the seed's
+`METHODOLOGY-SEED-SENTINEL` line (`starter-kit/CHANGELOG.md:10-13`), which its own text says to remove at
+the first real entry. The by-hand reconcile, the other remedy there, rebuilds the same file in more steps.
+
+**Where it lands:** on `chore/methodology-read-set-budgets`, the branch that holds the entry, as one
+commit with its own ledger entry — the work is `airqino`'s. Pushing either `airqino` branch, or opening a
+PR, is a separate go-ahead. **Done** when both `bin/status` versions read `present` for `CHANGELOG.md`.
+
+**Out of scope, recorded:** S161's run of fork `main`'s `bin/status` (2026-09-11) found the same *present
+(stale format)* verdict on other projects' `CHANGELOG.md` or `HANDOFFS.md`; this item is `airqino` only.

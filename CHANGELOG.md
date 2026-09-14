@@ -210,6 +210,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] S161 follow-up — BL-56 raised on the operator's request: rewrite `airqino`'s `CHANGELOG.md` to the current ledger format
+
+The operator asked for a backlog item, not the rewrite. **BL-56** (`docs/planning/BACKLOG-DETAIL.md`,
+index row in `docs/planning/BACKLOG.md`): `airqino`'s `CHANGELOG.md` (1,309 B) reads *present (stale
+format)* under both `bin/status` versions — it lacks both markers the current seed carries — and the
+Route A sync (`dfe26fd17` in `airqino`) left it as it was, since `bin/sync` never rewrites a seed. It
+holds one dated entry, the sync's own, so reseeding and carrying that entry across is the cheap remedy
+(`starter-kit/BOOTSTRAP.md:86`). Nothing in `airqino` was changed.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 follow-up — `airqino` synced by Route A on the operator's request: every tracked file current, on a new local branch
 
 Using the S161 document's Route A (`docs/planning/read-set-budgets-local-use-routes.md` §6), from a
