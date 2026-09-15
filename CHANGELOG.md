@@ -210,6 +210,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S163 — `HANDOFFS.md`: the trim's pointer block folded into the archive table
+
+- **Change:** the three-line pointer block `methodology_trim.py` appended for
+  `docs/archive/HANDOFFS-through-2026-09-10.md` becomes one table row (n = 2, the shard's own fence
+  count), and the heading now reads 17 trims, 148 receipts. Its own commit, after the trim, because
+  folding inside the trim commit fails the shipped proof's L2 (Learning #58).
+- **Verified:** the table has 17 rows summing to 148; each edit matched exactly once.
+- **Commit/PR:** this commit
+
 ### 2026-09-15 · [ad hoc] S163 — PR #80: the reply to the maintainer's review posted (non-commit action, operator go-ahead)
 
 - **Action:** one comment on [PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5676599724),
