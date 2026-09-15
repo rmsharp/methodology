@@ -168,6 +168,22 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-15 · [BL-57] The `HANDOFFS.md` seed names no size — archive when the trimmer's trigger fires; the trimmer's budget comment drops *"context-tax"*
+
+- **Change:** `starter-kit/HANDOFFS.md` §Size, and when to archive keeps its heading, which `bin/status`
+  keys on (D9), and replaces what follows it: the premise that Phase 0 reads the file every session, and
+  the two-cap table with its 65,536 B default and its citations of BL-52 and a fork-only plan, give way
+  to the reads the protocol makes and one rule — *"Archive it when the trimmer's trigger fires. The tool
+  states the trigger, and this file names no size of its own."* The pointer to §The Action Ledger names
+  *Reading and archiving* and what it holds, and the *three files* list says receipts move *"when the
+  file is archived"*, not *"once the file outgrows a session's read"*. `starter-kit/methodology_trim.py:186`:
+  *"the per-file context-tax budget"* → *"the per-file byte budget"* — a comment; the module's AST is
+  identical to `b82dcff`'s. 11,505 → 10,417 B.
+- **Why:** steps 2 and 3 of BL-57's P2 (C1, C2, C12, C14). This file's own archive rule otherwise stands
+  (D7); whether *optional* extends to it is the operator's call.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-15 · [BL-57] §The Action Ledger: the ledger is never read whole, and archiving is optional — the two-cap size rule goes
 
 - **Change:** `FRAMEWORK_APPARATUS.md`'s *Size, and when to archive* becomes *Reading and archiving*,
