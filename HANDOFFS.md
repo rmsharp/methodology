@@ -79,18 +79,38 @@ instruction is why these rows exist.
 ```handoff
 session: S169
 date: 2026-09-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: **A REVIEW OF UPSTREAM PR #82 (THE QUALITY RATCHET, HEAD `c84e7d96`): ITS FILE BUDGETS FIRST — WHERE IT MEASURES SIZE IN BYTES WE HAVE SINCE REPLACED WITH BETTER MEASURES — THEN ANY OTHER CHALLENGE TO WHAT IT PROPOSES.** The operator's request after Phase 0. One fork-only document, `docs/planning/pr82-review.md`; nothing posted upstream (a comment on #82 is its own go-ahead). BL-57's P3 waits.
-what_was_done: pending
-next_steps: pending
-key_files: `docs/planning/pr82-review.md` (to be written); at #82's head `c84e7d96`: `.context-budget.json:27`, `:46` (the re-split), `.githooks/pre-commit:29` (the ratchet), `ITERATIVE_METHODOLOGY.md:294`.
-gotchas: #82 is live and can move — re-fetch, and pin every finding to a head sha. On #82's tree the runner measures 18,878 of 18,900 tokens (`context_budget.py --json`). `bin/tests.sh` mutates both live ledgers — clone only. zsh: brace `${r}:path` — hit again at this Phase 0.
-runtime_smoke: Phase 0 at `4c07b91`: both ledger frontiers current, 0 undocumented commits; 5 receipts, so this session trims to four (dry run SRF 0.7809, no `SRF_RED`); dashboard 76/100; `CHANGELOG.md` 250,649 B, 11,495 B under the read refusal, not trimmed (the operator's decision); #82 OPEN/CLEAN, 0 comments. Suites not re-run at Phase 0.
-changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S169 claim — a review of upstream PR #82's file budgets and other challenges"
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: **A FORK-ONLY REVIEW OF UPSTREAM PR #82 (THE QUALITY RATCHET, HEAD `c84e7d96`) IS DONE — `docs/planning/pr82-review.md` AND ITS REPRO SCRIPT, RECORD `4ffcb253`; NOTHING POSTED UPSTREAM.** The operator's question, answered with measurements: two budgets rest on bytes where measured tokens are the better measure — `CLAUDE.md`'s 59,168 B arrival-size pin passed a **+62-token** change as −15 B, and the runner's token ceiling uses a density measured before #82 edited the file (18,897.5 of 18,900 tokens measured: 2.5 of room, not the 22 the tool reports); `context_budget.py --status` is outside the ratchet. Seven defects demonstrated (§3). BL-57's P3 waits, and #82 moves its ground (§5).
+what_was_done: **Fork `main`:** `f89c0faf` claim (with the Phase 0 `dashboard_history.jsonl` snapshot); `0ccfce84` the `HANDOFFS.md` retention trim, 54,851 → 35,001 B, S165 + S164 to `docs/archive/HANDOFFS-through-2026-09-15-2.md`, no `--force` (SRF 0.8644); `da8af503` the fold (20 trims, 154 receipts); `4ffcb253` the record — the review (§2 budgets, §3 seven defects, §4 design challenges, §5 what #82 means here, §6 the asks ranked) and `docs/planning/pr82-review-repro.sh`; this close-out. **Method:** #82's suites re-run in a `--no-local` clone at `c84e7d96` (134 passed / 1 failed, Test 9 by construction; `--selftest` 17 OK; `--run` 9/9 with the S20 receipt's own results hash `74c773523dab`; no tracked file changed); tokens by the doubled-file Read, the instrument first reproducing three recorded figures exactly (48,555; 49,683; 36,955); each defect run in a throwaway repository; the saved script re-run end to end, every row as recorded; every cited anchor re-checked on its tree.
+next_steps: **(1) THE OPERATOR DECIDES WHAT, IF ANYTHING, GOES TO #82** — the ranked asks are `docs/planning/pr82-review.md:377` (§6); a comment, reply or review is each its own go-ahead. First `gh pr view 82 --repo KJ5HST/methodology --json headRefOid,state,comments`, then re-run `bash docs/planning/pr82-review-repro.sh` against the head of the day (and §8's token Reads if the runner or `CLAUDE.md` moved). **(2) BL-57'S P3 — ITS OWN SESSION** (`docs/planning/changelog-rules-contradictions-plan.md:490`), as S168 left it, with two changes from #82: if #82 has merged, P3 starts by merging `upstream/main` into the branch (a same-line conflict at `ITERATIVE_METHODOLOGY.md:294`; `CLAUDE.md` already conflicts); and P3's runner criterion (`:508`) and P4's (`:538`) are in bytes — restate them in tokens, measured by the doubled-file Read on the merged tree. **(3) `CHANGELOG.md` IS 256,220 B AFTER THIS CLOSE-OUT, 5,924 B UNDER THE 262,144 B READ REFUSAL** — S170 very likely crosses it — an estimate: S169 added 5,571 B and S168 6,800 B; past it, read with `offset`/`limit`. Not trimming it is the operator's decision — raise it at Phase 0. **(4) `HANDOFFS.md` HOLDS FOUR RECEIPTS** after this close-out: S170's Phase 0 finds four, no trim. **CARRIED, EACH ITS OWN GO-AHEAD:** pushing fork `main` (5 commits ahead of `origin/main` after this close-out); F5/F6 (`docs/planning/pr80-review-response.md:243`); the fork resync; BL-54; BL-36; BL-53; `choose_cut`.
+key_files: `docs/planning/pr82-review.md:17` (§0), `:65` (§2 budgets), `:168` (§3.1), `:210` (§3.3), `:233` (§3.4), `:352` (§5, this fork), `:377` (§6, the asks); `docs/planning/pr82-review-repro.sh:1`; on #82 at `c84e7d96`: `.context-budget.json:36` (the pin), `:46` (the runner's ceiling and stale density), `.quality-gates.json:3`, `.githooks/pre-commit:35`, `starter-kit/quality_ratchet.py:177`, `bin/check-handoff:101`, `starter-kit/methodology_dashboard.py:1938`, `:2011`; fork: `docs/planning/changelog-rules-contradictions-plan.md:508`, `:538`; `HANDOFFS.md:15`.
+gotchas: **(1) #82 IS LIVE** — pin every claim to a head sha and re-run the script before relaying one. **(2) THE TOKEN INSTRUMENT IS THE READ TOOL'S REFUSAL** — double the file, Read it with a spanning `limit`, halve the count; reproduce a recorded figure first (48,555 for `main`'s pair). **(3) A `sort`ED STAGED LIST FAILS A STRING GUARD** — locale collation; the claim commit silently did not happen until re-guarded as a set (S165's trap, now its own memory). **(4) zsh reads `$r:path` as a modifier** — hit again at this Phase 0; brace it. **(5) #82's `bin/tests.sh` LEAVES TRACKED FILES CLEAN** — the "mutates the live ledgers" caution is this fork's suite's, not #82's; do not raise it upstream. **(6) `HANDOFFS.md`'S FRONT MATTER IS 6,984 OF ITS 7,168 B RESERVE** (`bin/tests.sh` A2, 97%) — the next fold row (this one was 129 B) fits; the fold after that needs a cut first.
+runtime_smoke: **NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`,** in `--no-local` clones, exit codes read bare. **Fork, at the record `4ffcb253`:** 305 passed / 0 failed / 0 skipped, as at a same-time control at `4c07b91` — 0 status flips, no row added or removed, 10 rows differing only in numbers this session moved (the `**Model:**` bullets, now 57, and the model-report totals, now 328; receipts, now 4; the ledger, then 34,674 B, and its front matter, 6,984 B); `check-links` 105 links in 23 files and `check-learnings` OK at both; `context_budget.py --status` exits 2 at both — fork `main`'s runner over its declared 41,364 B byte ceiling, pre-existing and by design. `check-handoff --all --allow-pending` 0 after the claim, trim, fold and record; the shard's `.verify.sh` exit 0 at the trim `0ccfce84` and after the fold. **#82, at `c84e7d96`:** as `what_was_done` records; `context_budget.py --status` 0 there. **NOT EXERCISED:** any push or post; #82 in a real adopter; CI (none); a second reader of the review's findings.
+changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S169 close-out — a fork-only review of upstream PR #82; nothing posted", plus the record, fold, trim and claim entries
+commit: f89c0faf (claim) + 0ccfce84 (trim) + da8af503 (fold) + 4ffcb253 (record) + this close-out
 ```
+
+**Self-assessment: 8/10.** Plus: the operator's question was answered in the unit that matters — every figure
+came from the doubled-file Read, whose instrument first reproduced three recorded figures exactly — and that
+turned up what a byte view hides (−15 B, +62 tokens). Every defect was run in a throwaway repository rather
+than read off the code, the saved script was re-run end to end, and every cited anchor was re-checked on its
+tree. #82's own claims were reproduced before any was questioned, and one would-be finding — that its suite
+mutates the live ledgers — was checked and dropped. The review turned the operator's point on this fork's own
+plan: BL-57's P3/P4 runner criteria are in bytes. Nothing went outward. **Minus:** the claim commit silently
+failed on S165's sorted-string guard, a trap recorded where I did not look (now its own feedback memory);
+zsh's `$r:path` once at Phase 0; no second reader has checked the findings, and the review runs to 24 KB —
+§0 and §6 carry it. **Reduction:** `HANDOFFS.md` trimmed to four receipts; `CHANGELOG.md` grew 5,571 B
+toward its read refusal. **No learning row** (BL-53 leaves about three).
+
+**Predecessor (S168): 9/10.** Item (2) was exact and used as written: 4,065 B of room against the stub (mine
+was 1,550 B), SRF re-derived after the claim, no `--force`. Item (3) put the `CHANGELOG.md` question into the
+Phase 0 report, and gotcha (5)'s `rev-parse` trap was avoided this time. Item (1) went unused only because the
+operator redirected the session; its P3 sites all re-derived on the branch. **Not 10:** one fact this session
+needed was not in it — fork `main`'s own `.context-budget.json` still budgets the read-set in bytes (a 41,364 B
+runner ceiling) while upstream moved to tokens at #80's F3 — and it bore directly on today's question. **ROI:
+positive.**
 
 ```handoff
 session: S168

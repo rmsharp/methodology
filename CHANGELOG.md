@@ -210,6 +210,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S169 close-out — a fork-only review of upstream PR #82; nothing posted
+
+- **Change:** S169's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S168 9/10). On the
+  operator's request after Phase 0 the session reviewed upstream PR #82 at `c84e7d96` (the record entry
+  below) instead of BL-57's P3, which waits; and it trimmed `HANDOFFS.md` to four receipts under its
+  retention rule. Nothing was posted upstream. No learning row (BL-53 leaves about three); the lessons are in
+  agent memory.
+- **Commit/PR:** this commit (claim `f89c0faf`, trim `0ccfce84`, fold `da8af503`, record `4ffcb253`)
+- **Session:** S169 · **Verified:** on the record `4ffcb253` in a `--no-local` clone, `bin/tests.sh` 305 passed / 0 failed / 0 skipped, as at a same-time control at `4c07b91`, with 0 status flips and 10 rows differing only in numbers this session moved; `check-links` 105 links; `check-learnings` OK; `check-handoff --all` 0; the shard's `.verify.sh` exit 0 at the trim and after the fold
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S169 — a fork-only review of upstream PR #82 (the quality ratchet): its file budgets, and seven demonstrated defects
 
 - **Change:** `docs/planning/pr82-review.md` reviews KJ5HST/methodology#82 at `c84e7d96` on the operator's
