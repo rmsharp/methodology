@@ -74,6 +74,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S164
+date: 2026-09-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **PR #80 REVIEW, F2 — GUARD THE DASHBOARD'S DOC-ONLY EXCLUSION FOR EVERY FRAMEWORK-INSTALLED FILE, RED FIRST.** The operator's choice at Phase 0 (A). Generalize `test_a_synced_repo_with_context_budget_installed_is_still_doc_only` over every `FRAMEWORK_INSTALLED_SOURCE` name using the real `starter-kit/` file, and show it fails on the maintainer's mutant (`methodology_trim.py`'s `version_re` and signatures neutralized in both twins) while the current suite stays green. On a local branch from #80's head `d4e1570`, tested in a clone. **Nothing pushed, no PR edit, no reply — each its own go-ahead**; Phase 0 suggested holding F2 locally so F2 and F3 go up in one push.
+what_was_done: pending
+next_steps: pending
+key_files: `tools/test_methodology_dashboard.py:2666` (the test to generalize, at `d4e1570`), `tools/test_methodology_dashboard.py:2642` (the name-completeness gate), `starter-kit/methodology_dashboard.py:360` (`FRAMEWORK_INSTALLED_SOURCE`), `starter-kit/methodology_dashboard.py:484` (the `methodology_trim.py` signature entry), `docs/planning/pr80-review-response.md:79` (§4, the F2 setup).
+gotchas: **F2 IS A TEST CHANGE — edit neither dashboard twin except to plant the mutant in a clone.** **`.context-budget.json` IS CONFIG, NEVER SOURCE** (`starter-kit/methodology_dashboard.py:508` at `d4e1570`): decide whether the new test covers it with a config assertion or excludes it with the reason stated. **Branch ledger entries go with #80's block, below `main`'s**; run `git merge-tree` before any push. **`bin/tests.sh` MUTATES BOTH LIVE LEDGERS** — clone only; a `--no-local` clone lacks `upstream/*` refs.
+runtime_smoke: Baseline at `755ef09` in a `--no-local` clone: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing). Dashboard 76/100 at Phase 0. Both ledger frontiers current, 0 undocumented commits; tree clean apart from the Phase 0 `dashboard_history.jsonl` snapshot. PR #80 OPEN at `d4e1570`, `MERGEABLE`/`CLEAN`, 2 comments, none new since S163's reply.
+changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S164 claim — PR #80 review F2: guard the dashboard's doc-only exclusion for every framework-installed file, RED first"
+commit: pending
+```
+
+```handoff
 session: S163
 date: 2026-09-15
 status: complete

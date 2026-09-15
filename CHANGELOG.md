@@ -210,6 +210,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S164 claim — PR #80 review F2: guard the dashboard's doc-only exclusion for every framework-installed file, RED first
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: F2 of the
+maintainer's PR #80 review ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153)),
+chosen by the operator at this session's Phase 0 (A). On a local branch from #80's head `d4e1570`:
+generalize `test_a_synced_repo_with_context_budget_installed_is_still_doc_only`
+(`tools/test_methodology_dashboard.py:2666`) over every `FRAMEWORK_INSTALLED_SOURCE` name
+(`starter-kit/methodology_dashboard.py:360`) using the real `starter-kit/` file, RED first on the
+maintainer's mutant — `methodology_trim.py`'s `version_re` and signatures (`:484`–`:496`) neutralized in
+both twins — while the current suite stays green. A test change: neither dashboard twin is edited except
+to plant the mutant in a clone. Tested in a `--no-local` clone. **Nothing pushed, no PR edit, no reply** —
+each is its own go-ahead; Phase 0 suggested holding F2 locally so F2 and F3 go up in one push. Carries
+the Phase 0 `dashboard_history.jsonl` snapshot.
+
 ### 2026-09-15 · [ad hoc] S163 follow-up — fork `main` pushed to `origin`, `f8531cf..6007db3` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main` on the operator's *"push main"*, after S163's close-out: a
