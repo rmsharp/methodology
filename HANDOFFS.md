@@ -77,6 +77,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S170
+date: 2026-09-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **DEVELOP AND POST ONE COMMENT ON UPSTREAM PR #82 (THE QUALITY RATCHET, HEAD `c84e7d96` AT PHASE 0) WITH SUGGESTED CHANGES TO IMPROVE THE PR.** The operator scheduled it at S169's close-out. The comment is drafted to a file, its full text is presented before anything is posted (the Present gate), it is posted only on the operator's explicit go-ahead, and then read back. **It must use generally recognized terminology with no jargon or private descriptors** — the operator's bar, which is also one of the improvements to suggest. BL-57's P3 waits.
+what_was_done: pending
+next_steps: pending
+key_files: the draft (to be written, precedent `docs/planning/pr80-reply-f2-f3.md`); `docs/planning/pr82-review.md:17` (§0), `:65` (§2 budgets), `:168` (§3.1), `:377` (§6, the asks ranked); `docs/planning/pr82-review-repro.sh:1`; at #82's head: `.context-budget.json:36`, `:46`, `starter-kit/quality_ratchet.py:177`.
+gotchas: #82 is live — re-pin every claim to the head of the day and re-run the repro script before relaying a finding. The review is written in this fork's shorthand and must be translated, never pasted. Nothing goes outward without a go-ahead, each time. zsh: brace `${r}:path`.
+runtime_smoke: Phase 0 at `1d88eaa`: both ledger frontiers current, 0 undocumented commits; `check-handoff --all` OK on 4 receipts, so no trim this session; dashboard 76/100, medium risk, 932 commits; `CHANGELOG.md` 259,241 B, 2,903 B under the 262,144 B read refusal, not trimmed (the operator's decision); #82 OPEN, head `c84e7d96`, 0 comments and 0 reviews. Suites not re-run at Phase 0.
+changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S170 claim — a comment on upstream PR #82 with suggested changes"
+commit: pending
+```
+
+```handoff
 session: S169
 date: 2026-09-15
 status: complete

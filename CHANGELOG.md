@@ -210,6 +210,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S170 claim — a comment on upstream PR #82 with suggested changes
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: one comment on
+upstream PR #82 (the maintainer's quality ratchet, plan #81) carrying suggested changes to improve it —
+drafted to a file, its full text presented before anything is posted, posted only on the operator's explicit
+go-ahead, then read back. Scheduled by the operator at S169's close-out: *"for the next session, plan on
+developing and posting a comment for PR #82 with suggested changes to improve the PR."* The substance comes
+from S169's fork-only review (`docs/planning/pr82-review.md`, recorded at `4ffcb253`) and is **translated,
+not pasted** — the operator's bar for the comment is generally recognized terminology with no jargon or
+private descriptors, which is also one of the improvements it suggests. Phase 0: #82 OPEN at head
+`c84e7d96`, unmoved since the review, 0 comments and 0 reviews; both ledger frontiers at `1d88eaa` with 0
+undocumented commits; `HANDOFFS.md` 4 receipts, no trim owed; `CHANGELOG.md` 259,241 B, 2,903 B under the
+262,144 B read refusal, not trimmed (the operator's 2026-09-14 decision). BL-57's P3 waits. Carries the
+Phase 0 `dashboard_history.jsonl` snapshot.
+
 ### 2026-09-15 · [ad hoc] S169 follow-up — the receipt's "unpushed" statement corrected after the push (nothing posted)
 
 - **Change:** S169's receipt, `next_steps` item (1), said the review and its script *"exist only on this fork's
