@@ -42,7 +42,7 @@ upstream ones (precedent: `fc4d297`).
 > still FAILS — corruption is not rotation. **Nothing prevents a cut below three; the policy is what
 > makes it not happen.** Re-run `bash bin/tests.sh` after any trim of this file.
 
-**Archived shards — 17 trims, 148 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
+**Archived shards — 18 trims, 150 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
 and its proof is that same path plus `.verify.sh`; same format, same newest-on-top order, frozen at
 write. **Run the proof rather than trusting this table** — each re-derives L1/L2/L3 from git, and that
 instruction is why these rows exist.
@@ -66,16 +66,13 @@ instruction is why these rows exist.
 | 2 | 2026-09-09 → 2026-09-09 | [`HANDOFFS-through-2026-09-09.md`](docs/archive/HANDOFFS-through-2026-09-09.md) | v1.5.0 |
 | 1 | 2026-09-09 → 2026-09-09 | [`HANDOFFS-through-2026-09-09-2.md`](docs/archive/HANDOFFS-through-2026-09-09-2.md) | v1.5.0 |
 | 2 | 2026-09-10 → 2026-09-10 | [`HANDOFFS-through-2026-09-10.md`](docs/archive/HANDOFFS-through-2026-09-10.md) | v1.5.0 |
+| 2 | 2026-09-11 → 2026-09-11 | [`HANDOFFS-through-2026-09-11.md`](docs/archive/HANDOFFS-through-2026-09-11.md) | v1.5.0 |
 
 <!-- NEXT TRIMMING SESSION: methodology_trim.py appends a 3-line pointer block here
      (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer). Fold it into
      the table above as one row (~125 B vs the block's ~448) and delete the block, IN ITS OWN
      COMMIT: inside the trim commit the shipped .verify.sh fails L2 (Learning #58). The generator
      is DISTRIBUTED, so teaching it this is an upstream change. -->
-
-**Archived 2 record(s), 2026-09-11 → 2026-09-11** into [`docs/archive/HANDOFFS-through-2026-09-11.md`](docs/archive/HANDOFFS-through-2026-09-11.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-11.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-11.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
-than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ```handoff
 session: S165

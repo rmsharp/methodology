@@ -210,6 +210,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S165 — `HANDOFFS.md`: the trim's pointer block folded into the archive table (18 trims, 150 receipts)
+
+- **Change:** the 3-line pointer block `methodology_trim.py` appended for
+  `docs/archive/HANDOFFS-through-2026-09-11.md` (trim `d9ace03`) becomes one table row (n = 2, the
+  shard's own fence count), and the table header moves 17 trims / 148 receipts → 18 / 150. Its own
+  commit, after the trim (Learning #58). No `--force` was needed: SRF 0.9383 after the claim.
+- **Commit/PR:** this commit
+- **Session:** S165 · **Verified:** the shard's `.verify.sh` exit 0 at the trim commit `d9ace03`
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-11.md` (2 record(s), 60,236 B → 37,186 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
