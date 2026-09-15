@@ -210,6 +210,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S164 — PR #80 review F2 done on a local branch, not pushed: every non-markdown file `bin/sync` installs is now tested, RED first
+
+- **Change:** local branch `pr80/f2-installed-source-guard` (worktree `../methodology-pr80-f2`) from #80's
+  head `d4e1570`, one commit, **`37740763`**: `tools/test_methodology_dashboard.py:2666` generalizes
+  `test_a_synced_repo_with_context_budget_installed_is_still_doc_only` in place as
+  `test_a_synced_repo_with_each_installed_source_file_is_still_doc_only` — every non-markdown dest in
+  `bin/_manifest.py`, written from its real `starter-kit/` source into a doc-only fixture, alone and all
+  together, plus a direct `is_framework_installed` call per file. Its entry sits in the branch's own ledger
+  (`CHANGELOG.md:95` there), above F1's and below `main`'s. Test-only and canonical-only: neither scanner
+  twin changes. On fork `main`: `docs/planning/pr80-review-response.md` §4 records the branch and its
+  evidence, and its header now says F1 was published at S163 (it still read *"Nothing below has been
+  pushed"*); new `docs/planning/pr80-f2-mutants.py` plants the six mutants.
+- **RED first:** the review's mutant (M1), `.context-budget.json`'s signatures (M4) and a narrowing of the
+  one `collect_all` call site (M6) pass the old suite (211 OK) and fail the new test. The scanner's own
+  entry (M3) is not caught by this test — its neutralized strings sit in its own signature table, so the
+  real file matches itself — and the docstring says so.
+- **Verified**, in `--no-local` clones, every exit code read bare: `bin/tests.sh` 115 / 1, exit 1 at
+  `d4e1570` and at `37740763` — 116 rows, 0 status flips, 0 rows differing (Test 9, pre-existing); unit
+  suites 211, 123 (2 skipped) and 116 (2 skipped) OK on both; `check-links` OK (105 / 23) and
+  `check-learnings` OK (13 rows) on both. `git merge-tree` against `upstream/main` `9fa3141`: no
+  conflicts; the push would fast-forward `read-set-budgets`.
+- **Not pushed, no description edit, no reply** — held so F2 and F3 go up in one push and one reply;
+  each is its own go-ahead.
+- **Commit/PR:** this commit; branch `37740763`
+
 ### 2026-09-15 · [ad hoc] S164 claim — PR #80 review F2: guard the dashboard's doc-only exclusion for every framework-installed file, RED first
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: F2 of the

@@ -1,17 +1,19 @@
-# PR #80 — answering the maintainer's review (F1 done locally; F2 and F3 next)
+# PR #80 — answering the maintainer's review (F1 published; F2 done locally; F3 next)
 
-**Fork-only.** S163, 2026-09-15. The review is the maintainer's comment on
-[PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153), posted 2026-09-15
+**Fork-only.** S163, 2026-09-15; F2 added at S164, the same day. The review is the maintainer's comment
+on [PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153), posted 2026-09-15
 04:19 UTC and addressed to the contributor. His upstream receipt (S18) says the thread is now ours and
-that he will not merge until F1 is answered. **Nothing below has been pushed, edited on the PR, or
-posted.** Each of those three is its own go-ahead from the operator.
+that he will not merge until F1 is answered. **F1 was published at S163**: pushed (`b82dcff..d4e1570`),
+the description updated, the reply posted ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5676599724)).
+**F2 is on a local branch and not pushed** (§4). Every push, description edit and comment is its own
+go-ahead from the operator.
 
 ## 1. The review, in one table
 
 | | Kind | What it asks | Status |
 |---|---|---|---|
-| F1 | decision | `starter-kit/FRAMEWORK_LEARNINGS.md` carries 46 rows; the description says 13. (a) cut to 1–13 + the `#14` callout, or (b) argue for 46 | **(a), chosen by the operator at S163. Done on a local branch (§2), not pushed** |
-| F2 | fix | the `methodology_trim.py` doc-only exclusion is unguarded: generalize the regression test over every `FRAMEWORK_INSTALLED_SOURCE` name, RED first | **next session** (§4) |
+| F1 | decision | `starter-kit/FRAMEWORK_LEARNINGS.md` carries 46 rows; the description says 13. (a) cut to 1–13 + the `#14` callout, or (b) argue for 46 | **(a), chosen by the operator at S163; pushed, described and answered at S163** (§2, §3) |
+| F2 | fix | the `methodology_trim.py` doc-only exclusion is unguarded: generalize the regression test over every `FRAMEWORK_INSTALLED_SOURCE` name, RED first | **done at S164 on local branch `pr80/f2-installed-source-guard`, `37740763`; not pushed** (§4) |
 | F3 | fix or state | the root `.context-budget.json` reports the PR's own headline as `OVER` | **next session; starts with a decision** (§5) |
 | F4 | can follow | two limits on `CHANGELOG.md`: the budget's 65,536 B against the trimmer's 196,608 B | BL-57's C2, fixed by its P2 — a new PR after #80 merges (plan D5) |
 | F5 | can follow | the trimmer's docstring cites an unpublished design doc and a `--no-renames` the branch's hook lacks | open (§6) |
@@ -76,28 +78,69 @@ that reproduced the description's own 658,788 / 881,137 B first: sum `git cat-fi
 
 After the push, `git worktree remove ../methodology-pr80`; the branch can stay until #80 merges.
 
-## 4. F2 — set up for the next session
+## 4. F2 — done at S164 on a local branch, not pushed
 
 **The ask:** *"Neutralize its `version_re` and its four signatures in both twins and the unit suite stays
 OK (211) while the synced fixture flips to `code` with the false HIGH … Parametrize it over every
 `FRAMEWORK_INSTALLED_SOURCE` name using the real `starter-kit/` file, RED first."*
 
-Where, at `d4e15706`:
-- `tools/test_methodology_dashboard.py:2666` — `test_a_synced_repo_with_context_budget_installed_is_still_doc_only`,
-  the test to generalize; `:2642` the name-completeness gate; `:2653` the real-artifact guard for
-  `context_budget.py`, the model for the other names.
-- `starter-kit/methodology_dashboard.py:360` — `FRAMEWORK_INSTALLED_SOURCE` (four names);
-  `:468` `_FRAMEWORK_FILE_SIGNATURES`; `:484`–`:489` the `methodology_trim.py` entry and its `version_re`.
-  `tools/methodology_dashboard.py` is its byte-identical twin — **F2 is a test change; edit neither
-  twin**, except to plant the mutant.
+**What the branch holds.** `pr80/f2-installed-source-guard`, from #80's head `d4e1570`, one commit:
+**`37740763`**, touching `tools/test_methodology_dashboard.py` and the branch's `CHANGELOG.md` only —
+canonical-only, so adopters receive nothing, and neither scanner twin changes. The test at `:2666`
+(`d4e1570`), `test_a_synced_repo_with_context_budget_installed_is_still_doc_only`, is generalized in
+place as `test_a_synced_repo_with_each_installed_source_file_is_still_doc_only`:
+- every non-markdown dest in `bin/_manifest.py`'s `DISTRIBUTION` (the four `FRAMEWORK_INSTALLED_SOURCE`
+  names today) is written from its real `starter-kit/` source into the Quarto doc-only fixture, alone and
+  then all together, and must leave `source_loc` 0, `doc_only` true and no "No test infrastructure" risk;
+- each file must also pass `is_framework_installed` directly;
+- the names come from the manifest, not the constant under test, so a file the manifest installs and the
+  scanner does not list fails here by name, and a last assertion checks the test covered exactly the
+  scanner's list. A fifth name is therefore parametrized without anyone adding it — the *"cannot
+  enforce"* this section used to carry.
 
-**RED first, the way the review did it:** plant the mutant (neutralized `version_re` and signatures for
-`methodology_trim.py`, both twins) in a clone, show the current suite stays green and the new
-parametrized test goes red, restore, show green. One name is different: `.context-budget.json` is
-*"structurally unreachable"* (`:508`–`:515`) — a `.json` is config, never source — so decide whether the
-parametrized test covers it with a config assertion or excludes it with the reason stated. **Surface:** a
-clone of the branch head; the dashboard suite. **Cannot enforce:** that a future fifth name is added to
-the parametrization — the completeness gate at `:2642` covers the signature table, not this test.
+**`.context-budget.json` is covered, not excluded.** It categorizes as `config` before the predicate is
+consulted, so its end-to-end half cannot fail on its signatures: the direct predicate call holds its
+signature entry, and its category is asserted so that reason stays checked.
+
+**RED first — six mutants,** each planted in both twins of a `--no-local` clone by
+[`pr80-f2-mutants.py`](pr80-f2-mutants.py) (its docstring has the commands), which asserts every edit
+matched once per file; the old test file (`d4e1570`) and the new one run against each. Controls
+211 OK on both sides; the clone verified clean after every mutant. The round ran twice — the second time
+on the final docstring — with identical results.
+
+| mutant | old suite | new suite |
+|---|---|---|
+| M1 — `methodology_trim.py`'s `version_re` and 4 signatures neutralized (the review's) | **OK (211)** | FAIL ×2 — `2181 != 0` source LOC, alone and all together |
+| M2 — the same for `context_budget.py` | FAIL ×2 | FAIL ×3 |
+| M3 — the same for `methodology_dashboard.py` | FAIL ×12 | FAIL ×12, **none of them this test** |
+| M4 — `.context-budget.json`'s 4 signatures neutralized | **OK (211)** | FAIL ×1 — the direct predicate call |
+| M5 — `methodology_trim.py` dropped from the tuple and the table | FAIL ×1 | FAIL ×4 — this test by name, and its coverage check |
+| M6 — the `collect_all` call site skips `methodology_trim.py`; predicate untouched | **OK (211)** | FAIL ×2 — end to end |
+
+**Cannot enforce: M3.** The neutralized strings sit in the scanner's own signature table, so the real
+`methodology_dashboard.py` still matches itself; the class's twelve stand-in fixtures
+(`installed_scanner()`) catch it, and the docstring says so. M4 shows the direct half is live on its own,
+M6 the end-to-end half.
+
+**Verified**, in `--no-local` clones, every exit code read bare:
+
+| | `d4e1570` (control) | `37740763` |
+|---|---|---|
+| `tools/test_methodology_dashboard.py` | 211 OK | 211 OK |
+| `tools/test_methodology_trim.py` | 123 OK (2 skipped) | 123 OK (2 skipped) |
+| `tools/test_context_budget.py` | 116 OK (2 skipped) | 116 OK (2 skipped) |
+| `bin/check-links` | OK, 105 links / 23 files | OK, 105 links / 23 files |
+| `bin/check-learnings` | OK, 13 rows | OK, 13 rows |
+| `bin/tests.sh` | 115 / 1, exit 1 (Test 9) | 115 / 1, exit 1 (Test 9) — 116 rows, 0 status flips, 0 rows differing |
+
+`git merge-tree --write-tree --name-only upstream/main 37740763` (`upstream/main` = `9fa3141`): no
+conflicts; `read-set-budgets` is an ancestor, so the push is a fast-forward.
+
+**Publishing is held** (S164 Phase 0's suggestion) so F2 and F3 go up in one push and one reply. F3 commits
+on top of `37740763`; then §3's order applies — re-check the head and comments, push, then the
+description, then the reply (`gh api -X PATCH` for the description; `gh pr edit` fails). The description
+needs nothing for F2: it names no test and quotes no figure F2 moves. The reply's F2 paragraph can take the
+table above.
 
 ## 5. F3 — set up for the next session; it starts with a decision
 
