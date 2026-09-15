@@ -210,6 +210,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S168 follow-up — fork `main` pushed to `origin`, `6142d53..2d1bcc3` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main` after the close-out, a fast-forward of 8 commits — S167's five and
+  S168's three — run only inside a guard that re-fetched `origin` and re-checked, in the same command,
+  `origin/main` = `6142d538`, `main` = `2d1bcc30`, 8 ahead, an ancestor, a clean tree. Read back:
+  `git ls-remote origin refs/heads/main` = `2d1bcc30`, equal to local `main`, 0 ahead. This entry's own
+  commit is pushed the same way, so `origin/main` equals `main` again; S168's receipt says so at item (4).
+- **Go-ahead:** the operator's, after S168's close-out (*"push fork main to origin (8 commits)"*).
+
 ### 2026-09-15 · [BL-57] S168 close-out — BL-57's P2 done on a branch, not pushed; P3 next
 
 - **Change:** S168's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S167 9/10). The session
