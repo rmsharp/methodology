@@ -210,6 +210,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S163 — PR #80 review F1 (a) prepared on a local branch, not pushed; the updated description and the reply drafted; the BL-57 plan amended
+
+- **Change:** local branch `pr80/f1-learnings-1-13` (worktree `../methodology-pr80`) from #80's head
+  `b82dcff`, two commits: `5c9f0f3` states the rule where eight citations of Learnings past #13 stood
+  (`starter-kit/context_budget.py:77`, `:378`, `:409`, and five in the canonical-only tests), then
+  `d4e15706` cuts `starter-kit/FRAMEWORK_LEARNINGS.md` to rows 1–13 plus the reserved `#14` (56,673 →
+  13,983 B). Their entries sit in the branch's own ledger, with #80's block, below `main`'s. New
+  fork-only files: `docs/planning/pr80-review-response.md` (the review, what was done, the publish
+  commands, and F2 and F3 set up for the next session), `docs/planning/pr80-body-after-f1.md` (the PR
+  description to publish) and `docs/planning/pr80-reply-f1.md` (the reply). The BL-57 plan's header
+  now says it is approved and that no row past #13 will exist upstream; its P1 step 5 states Learning
+  #19's rule instead of citing it.
+- **Why:** the operator chose F1 option (a) at S163's Phase 0. Pushing, editing the PR description and
+  replying are each the operator's go-ahead; none is done.
+- **Verified:** in `--no-local` clones, `bin/tests.sh` 115/1 at `b82dcff`, `5c9f0f3` and `d4e15706` —
+  116 rows each, 0 status flips (Test 9, pre-existing); unit suites 450 OK (4 skipped) at all three;
+  `check-links` OK (105/23); `check-learnings` 13 rows, contiguous, citations resolve, and a planted
+  `Learning #20` is caught; `git merge-tree` against upstream `main` `9fa3141`: no conflicts
+- **Commit/PR:** this commit (fork `main`); the two branch commits are recorded in the branch's ledger
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S163 claim — PR #80 review F1 (a): trim the branch's `FRAMEWORK_LEARNINGS.md` to rows 1–13 and repair the citations the cut breaks
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: F1 of the

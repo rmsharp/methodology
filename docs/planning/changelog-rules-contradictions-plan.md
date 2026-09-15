@@ -1,6 +1,7 @@
 # BL-57 — one set of `CHANGELOG.md` rules, kept in one place
 
-**Status:** DRAFT awaiting the operator's approval — S162, 2026-09-14. Nothing in it is implemented.
+**Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163
+(see **Trees**). Nothing in it is implemented.
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -11,6 +12,12 @@ confirmed.
 **Trees:** the upstream work targets `KJ5HST/methodology:read-set-budgets` at **`b82dcff`** (PR #80's
 head); fork `main` at **`7ea7346b`**; six adopters under `~/Development/`. Every line number is
 `b82dcff`'s unless marked *fork*.
+**Amended at S163 (2026-09-15):** the maintainer's #80 review (F1, option (a)) cuts the branch's
+`starter-kit/FRAMEWORK_LEARNINGS.md` to rows 1–13 plus the reserved `#14` — local branch
+`pr80/f1-learnings-1-13`, commits `5c9f0f3` and `d4e15706`, not pushed when this was written. Once
+pushed, #80's head moves past `b82dcff`, so P1 starts from the new head (hazard 1), and **no row past
+#13 exists upstream**: a fork learning reaches an upstream file only as its rule, stated inline, never
+as a number (P1 step 5). §1.1's C5 and §7's *Keep keying on the titles* row describe `b82dcff` itself.
 
 ---
 
@@ -361,7 +368,9 @@ This repo: 494 → 494 of 494 (live + 11 shards). `b82dcff`'s root ledger: 43 of
 4. `starter-kit/methodology_trim.py:358–363`: the comment says the seeds' fenced examples *"are the
    proof"* of fence-awareness; after the move they live in the home and the tests' fixture. Comment only.
 5. `bin/_manifest.py:78–98`: `CHANGELOG.md` keys on the new marker; `HANDOFFS.md` keys on
-   `Size, and when to archive` (D9). Rewrite the comment, citing Learning #19.
+   `Size, and when to archive` (D9). Rewrite the comment, stating *fork* Learning #19's rule inline — a
+   marker keyed to something that never changes across versions cannot fire — rather than citing its
+   number: after #80's F1 (a), no row past #13 exists upstream (amended at S163).
 6. **The stale-seed advice (C16).** `BOOTSTRAP.md:85` and `bin/status:188–192` describe the thin-seed
    migration: replace the rules text above the first entry with the current seed's header; leave every
    entry as written; reseed only a file that holds no history. The marker makes every adopter read stale
