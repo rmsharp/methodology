@@ -210,6 +210,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S169 — a fork-only review of upstream PR #82 (the quality ratchet): its file budgets, and seven demonstrated defects
+
+- **Change:** `docs/planning/pr82-review.md` reviews KJ5HST/methodology#82 at `c84e7d96` on the operator's
+  request, and `docs/planning/pr82-review-repro.sh` re-runs its seven demonstrations (its section 8, the
+  token measurements, is manual). **Budgets:** `CLAUDE.md` is held by a 59,168 B arrival-size byte pin —
+  #82 closed 15 B under it yet measures 62 tokens over `main` (23,482.5 against 23,420.5, by the
+  doubled-file Read), and the tool judges it at an unmeasured 2.93 B/token (measured: 2.519); the runner's
+  token ceiling is applied at a density measured before #82 edited the file — 18,897.5 of 18,900 tokens
+  measured, 2.5 of room where the tool reports 22; `context_budget.py --status` is outside the ratchet.
+  **Defects, each run in a throwaway repository:** deleting the manifest passes the hook, and deleting then
+  re-adding it lower is invisible to hook and dashboard; the count gates pass over failing and skipped
+  tests; the gate-run citation lint accepts `0/9 pass`, and no Phase 0 step performs the comparison; the
+  dashboard's mirror of `compare()` misses direction flips and command edits; the coverage bonus keys on a
+  gate's name; the installed hook locks an adopter out after a deletion; `install-hook` in a fresh
+  canonical clone breaks every commit. **Nothing posted upstream.**
+- **Commit/PR:** this commit
+- **Session:** S169 · **Verified:** #82's suites in a `--no-local` clone at `c84e7d96` — `bin/tests.sh`
+  134 passed / 1 failed (Test 9, by construction), `--selftest` 17 OK, `--run` 9/9 with the S20
+  receipt's own results hash `74c773523dab`, `context_budget.py --status` 0, no tracked file changed; the
+  token instrument first reproduced three recorded figures exactly (48,555; 49,683; 36,955); the saved
+  script re-run end to end, every row as the review records it
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S169 — `HANDOFFS.md`: the trim's pointer block folded into the archive table (20 trims, 154 receipts)
 
 - **Change:** the 3-line pointer block `methodology_trim.py` appended for
