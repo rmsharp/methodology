@@ -210,6 +210,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S163 — PR #80: the reply to the maintainer's review posted (non-commit action, operator go-ahead)
+
+- **Action:** one comment on [PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5676599724),
+  author `rmsharp`, 2026-09-15 07:42:05 UTC, body `docs/planning/pr80-reply-f1.md`: F1 answered with (a)
+  and its two commits; F2 and F3 next; F4 left to the BL-57 plan's own PR after #80 merges; F5 and F6 can
+  follow. Read back through the API: equal to the file.
+- **Go-ahead:** the operator's, at S163 (*"push edit reply"*).
+
+### 2026-09-15 · [ad hoc] S163 — PR #80: the description updated to the F1 head (non-commit action, operator go-ahead)
+
+- **Action:** the PR body replaced with `docs/planning/pr80-body-after-f1.md` — the head and diff size,
+  the corpus total (658,788 → 838,416 B), the `FRAMEWORK_LEARNINGS.md` and `context_budget.py` rows, a
+  verification row, and one sentence saying the file holds rows 1–13 and the reserved `#14`. **`gh pr
+  edit` failed** (exit 1, a GraphQL error about the deprecated Projects (classic) API) and changed nothing
+  — the description read back as the original, so the reply was held back. The edit then went through
+  the REST API (`gh api -X PATCH repos/KJ5HST/methodology/pulls/80 -F body=@…`) and read back equal to the
+  file.
+- **Go-ahead:** the operator's, at S163.
+
+### 2026-09-15 · [ad hoc] S163 — PR #80: F1 (a) pushed, `read-set-budgets` fast-forwarded `b82dcff..d4e1570` (non-commit action, operator go-ahead)
+
+- **Action:** `git push upstream pr80/f1-learnings-1-13:read-set-budgets`, after re-checking that #80's
+  head was still `b82dcff`, upstream `main` still `9fa3141`, one comment, and `git merge-tree` clean.
+  After: head `d4e15706`, `MERGEABLE`, `CLEAN`. The two commits carry their entries in the branch's own
+  ledger. The worktree `../methodology-pr80` was removed once clean and pushed; the local branch stays
+  until #80 merges.
+- **Go-ahead:** the operator's, at S163.
+
 ### 2026-09-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-10.md` (2 record(s), 61,471 B → 41,455 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
