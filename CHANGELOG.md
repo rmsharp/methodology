@@ -210,6 +210,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S166 follow-up — fork `main` pushed to `origin`, `755ef09..632f575` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main` after the close-out, a fast-forward of 11 commits — S164's three,
+  S165's five and S166's three — run only after checking that `origin/main` was an ancestor of `main`, 0
+  commits behind, with a clean tree. Read back: `git ls-remote origin refs/heads/main` = `632f5758`, equal
+  to local `main`. This entry's own commit is pushed the same way, so `origin/main` equals `main` again.
+- **Go-ahead:** the operator's, after S166's close-out (*"push main to origin"*).
+
 ### 2026-09-15 · [ad hoc] S166 close-out — PR #80's F2 and F3 published (push, description, reply); the maintainer's move next
 
 - **Change:** S166's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S165 9/10). The session
