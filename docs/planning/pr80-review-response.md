@@ -1,21 +1,22 @@
-# PR #80 — answering the maintainer's review (F1 published; F2 done locally; F3 next)
+# PR #80 — answering the maintainer's review (F1 published; F2 and F3 done locally, held for one publish)
 
-**Fork-only.** S163, 2026-09-15; F2 added at S164, the same day. The review is the maintainer's comment
-on [PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153), posted 2026-09-15
-04:19 UTC and addressed to the contributor. His upstream receipt (S18) says the thread is now ours and
-that he will not merge until F1 is answered. **F1 was published at S163**: pushed (`b82dcff..d4e1570`),
-the description updated, the reply posted ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5676599724)).
-**F2 is on a local branch and not pushed** (§4). Every push, description edit and comment is its own
-go-ahead from the operator.
+**Fork-only.** S163, 2026-09-15; F2 added at S164 and F3 at S165, the same day. The review is the
+maintainer's comment on [PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153),
+posted 2026-09-15 04:19 UTC and addressed to the contributor. His upstream receipt (S18) says the thread
+is now ours and that he will not merge until F1 is answered. **F1 was published at S163**: pushed
+(`b82dcff..d4e1570`), the description updated, the reply posted ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5676599724)).
+**F2 and F3 are on local branches and not pushed** (§4, §5). F3's branch
+`pr80/f3-read-set-token-ceilings` (`aa36fd8b`) carries F2's commit beneath it, so one fast-forward push
+publishes both. Every push, description edit and comment is its own go-ahead from the operator.
 
 ## 1. The review, in one table
 
 | | Kind | What it asks | Status |
 |---|---|---|---|
 | F1 | decision | `starter-kit/FRAMEWORK_LEARNINGS.md` carries 46 rows; the description says 13. (a) cut to 1–13 + the `#14` callout, or (b) argue for 46 | **(a), chosen by the operator at S163; pushed, described and answered at S163** (§2, §3) |
-| F2 | fix | the `methodology_trim.py` doc-only exclusion is unguarded: generalize the regression test over every `FRAMEWORK_INSTALLED_SOURCE` name, RED first | **done at S164 on local branch `pr80/f2-installed-source-guard`, `37740763`; not pushed** (§4) |
-| F3 | fix or state | the root `.context-budget.json` reports the PR's own headline as `OVER` | **next session; starts with a decision** (§5) |
-| F4 | can follow | two limits on `CHANGELOG.md`: the budget's 65,536 B against the trimmer's 196,608 B | BL-57's C2, fixed by its P2 — a new PR after #80 merges (plan D5) |
+| F2 | fix | the `methodology_trim.py` doc-only exclusion is unguarded: generalize the regression test over every `FRAMEWORK_INSTALLED_SOURCE` name, RED first | **done at S164 on local branch `pr80/f2-installed-source-guard`, `37740763`; not pushed** — F3's branch carries it (§4) |
+| F3 | fix or state | the root `.context-budget.json` reports the PR's own headline as `OVER` | **R1 L1, the operator's choice at S165: done on local branch `pr80/f3-read-set-token-ceilings`, `aa36fd8b`, on top of F2; not pushed** (§5) |
+| F4 | can follow | two limits on `CHANGELOG.md`: the budget's 65,536 B against the trimmer's 196,608 B | **answered by F3 as the review framed it** — `CHANGELOG.md` leaves the budget, so the trimmer's is its one limit; the seeds' prose naming 65,536 B stays with BL-57's P2 (§5) |
 | F5 | can follow | the trimmer's docstring cites an unpublished design doc and a `--no-renames` the branch's hook lacks | open (§6) |
 | F6 | can follow | *"`--source=github` installs nothing today"* is true of the branch's copy only | open (§6) |
 
@@ -55,28 +56,42 @@ d4e15706` against `9fa3141`: **no conflicts**.
 all three, as before. A `Learning #20` planted in `starter-kit/SAFEGUARDS.md` is caught (exit 1) and the
 restored tree passes. `context_budget.py --status` changes no row's status.
 
-## 3. Publishing it — three separate go-aheads, in this order
+## 3. Publishing — three separate go-aheads, in this order (F1 published at S163; F2 + F3 next)
 
 ```sh
-# 0. Nothing moved? #80's head must still be b82dcff, and no new comment unanswered.
-git fetch upstream && git rev-parse --short upstream/read-set-budgets
+# 0. Nothing moved? #80's head must still be d4e1570 and main 9fa3141, with no comment beyond the two.
+git fetch upstream && git rev-parse upstream/read-set-budgets upstream/main | cut -c1-8
 gh pr view 80 --repo KJ5HST/methodology --json headRefOid,comments --jq '.headRefOid, (.comments|length)'
-# 1. Push, fast-forward only.
-git push upstream pr80/f1-learnings-1-13:read-set-budgets
-# 2. The description: every figure F1 moves, plus a verification row.
-gh pr edit 80 --repo KJ5HST/methodology --body-file docs/planning/pr80-body-after-f1.md
+# 1. Push, fast-forward only -- F2 (37740763) and F3 (aa36fd8b) together.
+git push upstream pr80/f3-read-set-token-ceilings:read-set-budgets
+# 2. The description. `gh pr edit` fails on the Projects-classic deprecation; S163 used the REST API.
+gh api -X PATCH repos/KJ5HST/methodology/pulls/80 -F body=@docs/planning/pr80-body-after-f3.md
 # 3. The reply.
-gh pr comment 80 --repo KJ5HST/methodology --body-file docs/planning/pr80-reply-f1.md
+gh pr comment 80 --repo KJ5HST/methodology --body-file docs/planning/pr80-reply-f2-f3.md
 ```
 
-If the head has moved, **do not force.** Rebase the two commits onto the new head, re-run the suites and
-`git merge-tree`, and re-derive every figure in the description (head sha, `28 files, +7,795 / −554`,
-the corpus total 838,416 B, the two table rows) at publish time — a document that waits for approval
-keeps measuring the tree it was written against (*fork* Learning #61). The figures come from the method
-that reproduced the description's own 658,788 / 881,137 B first: sum `git cat-file -s` over
-`bin/_manifest.py`'s `DISTRIBUTION` sources at the ref.
+Read each back before the next: the branch head equals `aa36fd8b`; the live body equals the file (compare
+after stripping the one trailing newline `gh api --jq` adds, not with `cmp`); the comment count is 3.
+(`git rev-parse --short` takes one revision only — given two it fails with *"Needed a single revision"*.)
 
-After the push, `git worktree remove ../methodology-pr80`; the branch can stay until #80 merges.
+If anything has moved, **do not force.** Rebase F2 and F3 onto the new head, re-run the suites,
+`git merge-tree` and `context_budget.py --status` on the branch and on its merge into `main`, and
+re-derive every figure in the description at publish time — a document that waits for approval keeps
+measuring the tree it was written against (*fork* Learning #61). The S165 figures, each from a method
+that first reproduced the figure it replaces:
+
+- the diff: `git diff --shortstat $(git merge-base upstream/main <head>) <head>` — 28 files,
+  +7,892 / −580 at `aa36fd8b`, after reproducing +7,795 / −554 at `d4e1570`;
+- the corpus: sum `git cat-file -s` over `bin/_manifest.py`'s `DISTRIBUTION` sources at `upstream/main` and
+  at the merged tree — 659,755 → 839,383 B, after reproducing 658,788 at `512c2ed` and 838,416 at `d4e1570`;
+- the pair: the doubled-file method on `main` and on the merged tree — 28,610 and 24,278 tokens, after
+  reproducing 47,805 for this branch's doubled pair.
+
+If `main` has touched `SESSION_RUNNER.md` or `SAFEGUARDS.md` again, re-measure the two `max_tokens` in
+the branch's `.context-budget.json` too: `SAFEGUARDS.md`'s is pinned at `main`'s size at `9fa3141`.
+
+The three local `pr80/*` branches can stay until #80 merges; F3's worktree `../methodology-pr80-f3` is
+removed at S165's close-out.
 
 ## 4. F2 — done at S164 on a local branch, not pushed
 
@@ -142,27 +157,77 @@ description, then the reply (`gh api -X PATCH` for the description; `gh pr edit`
 needs nothing for F2: it names no test and quotes no figure F2 moves. The reply's F2 paragraph can take the
 table above.
 
-## 5. F3 — set up for the next session; it starts with a decision
+## 5. F3 — done at S165 on a local branch, not pushed: R1 L1, the operator's choice
 
-`context_budget.py --status` on the branch exits 2. At `d4e15706`, from the root `.context-budget.json`:
+**The ask:** *"the root `.context-budget.json` reports this PR's own result as OVER … Either denominate
+the read-set ceiling in tokens at measured density …, or set the ledger ceilings where the ledgers are
+and let the ratchet hold from there, or say 'over at install, by design' in the file and the body."*
+At `37740763`, `--status` exited 2: runner 52,195 B vs 41,364 B, read-set total 67,581 B vs 56,750 B
+(derived: 25,000 × 2.27), `CHANGELOG.md` 108,552 B and `HANDOFFS.md` 82,069 B vs 65,536 B each.
 
-| row | size | ceiling | config line |
-|---|---:|---:|---|
-| read-set total | 67,581 B | 56,750 B (derived: 25,000 × 2.27) | `:26`–`:30` |
-| `starter-kit/SESSION_RUNNER.md` | 52,195 B | 41,364 B | `:47`–`:49` |
-| `CHANGELOG.md` | 105,876 B (grows with every entry) | 65,536 B | `:59`–`:61` |
-| `HANDOFFS.md` | 82,069 B | 65,536 B | `:71`–`:73` |
+**The four rows are two decisions** — the read-set pair and its total; the two ledgers — and every answer
+was built as a config and run before any was offered: `--status`, and six staged commits under
+`--precommit` (+300 B to each ledger; the runner +100 B, +2,100 B and −100 B; `SAFEGUARDS.md` +100 B), on
+two trees: `37740763`, and its merge into `upstream/main` (`9fa3141`). [`pr80-f3-variants.py`](pr80-f3-variants.py)
+reproduces every row; its docstring has the commands.
 
-The maintainer offers three answers: **(i)** denominate the read-set ceiling in tokens at measured
-density (the tool already does this for `CHANGELOG.md`, *"at 2.4674 B/token (measured)"*); **(ii)** set
-the ledger ceilings where the ledgers are and let the ratchet hold from there; **(iii)** say *"over at
-install, by design"* in the file and the body. The read-set pair measured 23,902 tokens by the
-doubled-file method — it fits at every measured density and not at the 2.27 floor.
+| variant | `--status` | `--precommit` refuses |
+|---|---|---|
+| V0 — as shipped | 2 OVER, both trees | every ledger append; any read-set growth |
+| (ii) as written — ledgers pinned at their size | 2 OVER — the ledgers still over on tokens | every ledger append (the pin); any read-set growth |
+| (ii) workable — ledgers `on-demand` at 196,608 B | 2 OVER (read-set) | read-set growth only |
+| (iv) — ledgers dropped | 2 OVER (read-set) | read-set growth only |
+| (iii) — byte ceilings kept, re-pinned for the merge | 2 OVER | every ledger append; every read-set growth; the runner's derived token arm also reads 17 over |
+| (i) — read-set in tokens, class ceiling removed | 2 OVER (ledgers) | ledger appends; runner +2,100 B; `SAFEGUARDS.md` +100 B on the merge |
+| (i) with the class typed at 70,587 B | 2 OVER (ledgers) | as (i), plus the typed class arm |
+| **R1 L1 — (i) + (iv), chosen** | **0 OK, both trees** | runner +2,100 B (19,220 tok vs 19,200); `SAFEGUARDS.md` +100 B on the merge |
+| R1 L2 — (i) + (ii) workable | 0 OK, both trees | the same |
 
-**Bring the operator this link before choosing:** under BL-57's Q2 A, `CHANGELOG.md` is not a
-read-budget file at all — nothing reads it whole — and this fork removed it from its own budget
-(`3c8acd5`). That is a fourth answer for the ledger rows (drop them), and it is the one BL-57's P2
-will argue upstream anyway. Explain the options in prose and take a letter.
+**Two findings bound the choice.** (ii) cannot work as written: `token_ceiling()`
+(`starter-kit/context_budget.py:112`) clamps every whole-read file to the 25,000-token cap whatever its
+`max_bytes` says, so a ledger past ~60 KB is over for good unless it leaves the whole-read classes. And (i)
+cannot be written as a class ceiling: `class_ceiling()` (`:166`) takes a typed byte total or one derived at
+the 2.27 B/token floor (`framework_share()`, `:139`) — so the pair is bounded per file, its two token
+ceilings partitioning the cap.
+
+**The measurements the config carries**, by the doubled-file method, after it reproduced the description's
+recorded 47,805 tokens for this branch's doubled pair: runner (blob `c0550acd`) ×2 → 36,955 tokens,
+2.8248 B/token; `SAFEGUARDS.md` (blob `656beae7`, `main`'s, which the merge takes) ×7 → 40,605, 2.8191; the
+merged pair ×2 → 48,555 → **24,278 tokens (68,548 B)**; `main`'s pair ×2 → 57,219 → 28,610 (81,493 B),
+undoubled 28,612. **The merge is 967 B larger than this branch** — `main`'s S16 paragraph in
+`SAFEGUARDS.md`, which landed after the description was measured — and that also put `SAFEGUARDS.md` over
+its 15,386 B pin on the merged tree.
+
+**The operator chose R1 L1** (S165): (i) for the pair, the review's first answer; (iv) for the ledgers.
+The `CHANGELOG.md` half of (iv) is BL-57's D8 (ii), pulled forward into #80 (this fork did the same at
+`3c8acd5`); the `HANDOFFS.md` half goes past that plan, whose D7 left `HANDOFFS.md` to the operator. F4 —
+two limits on `CHANGELOG.md` — goes with it as the review framed it; the seeds' prose still names 65,536 B
+(`starter-kit/CHANGELOG.md:104`, `starter-kit/HANDOFFS.md:98` at `aa36fd8b`), which stays with BL-57's P2.
+
+**What the branch holds.** `pr80/f3-read-set-token-ceilings`, from F2's `37740763`, one commit,
+**`aa36fd8b`**, touching `.context-budget.json` and the branch's `CHANGELOG.md` only (its entry above F2's,
+below `main`'s). Canonical-only: `bin/_manifest.py` ships the seed, not this file. The config was
+hand-edited to keep its layout, by a script that asserted every touched line and checked the result
+against `HEAD` key by key; then the edited file itself was re-run through `--status` (exit 0 on both
+trees), `--json` and `--selftest` (exit 0) and the six commits — the same as R1 L1's row above.
+
+**Verified**, in `--no-local` clones, every exit code read bare:
+
+| | `37740763` (control) | `aa36fd8b` |
+|---|---|---|
+| `bin/tests.sh` | 115 / 1, exit 1 (Test 9) | 115 / 1, exit 1 (Test 9) — 116 rows, 0 status flips, 0 rows differing |
+| unit suites | 211 · 123 (2 skipped) · 116 (2 skipped) OK | the same |
+| `bin/check-links` | OK, 105 links / 23 files | OK, 105 links / 23 files |
+| `bin/check-learnings` | OK, 13 rows | OK, 13 rows |
+
+`git merge-tree --write-tree --name-only upstream/main aa36fd8b`: no conflicts. `read-set-budgets`
+(`d4e1570`) is an ancestor, so the push is a fast-forward and carries F2 with it.
+
+**Prepared for the publish, not published:** [`pr80-body-after-f3.md`](pr80-body-after-f3.md) — the
+description with every figure re-derived at S165 (the head, 28 files +7,892 / −580, the headline table,
+the pair paragraph, a paragraph on the config, the corpus 659,755 → 839,383 B, two verification rows),
+each method first reproducing the figure it replaces; [`pr80-reply-f2-f3.md`](pr80-reply-f2-f3.md) — one
+reply for F2 and F3.
 
 ## 6. F5 and F6 — open, can follow the merge
 

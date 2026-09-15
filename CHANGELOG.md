@@ -210,6 +210,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S165 — PR #80 review F3 done on a local branch, not pushed: the root `.context-budget.json` reports OK on the branch and on its merge into `main`
+
+- **Change:** local branch `pr80/f3-read-set-token-ceilings` (worktree `../methodology-pr80-f3`) from F2's
+  `37740763`, one commit, **`aa36fd8b`**: the branch's root `.context-budget.json` gives
+  `SESSION_RUNNER.md` and `SAFEGUARDS.md` token ceilings at measured densities (19,200 + 5,800 tokens,
+  partitioning the 25,000-token cap), declares no `read-set` class ceiling, and moves `CHANGELOG.md` and
+  `HANDOFFS.md` to `_deliberate_exclusions`; its entry sits in the branch's own ledger above F2's.
+  Canonical-only. The operator chose **R1 L1** at this session's Present gate, from nine variants measured
+  first on the branch and on its merge into `upstream/main` (`docs/planning/pr80-f3-variants.py`). Record:
+  `docs/planning/pr80-review-response.md` §5 (header, §1 and §3 updated); drafted for the publish, the
+  description with every figure re-derived (`docs/planning/pr80-body-after-f3.md`) and one reply for F2 and
+  F3 (`docs/planning/pr80-reply-f2-f3.md`). **Nothing pushed, no description edit, no reply** — three
+  go-aheads, in §3's order.
+- **Found:** the merge is 967 B larger than the branch (upstream S16's paragraph in `SAFEGUARDS.md`), so
+  the description's headline row was stale — the merged pair is 68,548 B / 24,278 tokens, not
+  67,581 / 23,902; and the review's answer (ii) cannot work as written, because `token_ceiling()` clamps
+  every whole-read file to the 25,000-token cap.
+- **Commit/PR:** this commit (branch `aa36fd8b`, not pushed)
+- **Session:** S165 · **Verified:** `--status` exit 0 on both trees from the committed config; branch
+  `bin/tests.sh` 115/1 at `37740763` and `aa36fd8b` — 116 rows, 0 status flips, 0 rows differing; unit
+  suites 211 · 123 · 116 OK; `check-links` and `check-learnings` OK; `merge-tree` against `9fa3141` clean;
+  the push is a fast-forward
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S165 — `HANDOFFS.md`: the trim's pointer block folded into the archive table (18 trims, 150 receipts)
 
 - **Change:** the 3-line pointer block `methodology_trim.py` appended for
