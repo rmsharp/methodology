@@ -210,6 +210,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S163 follow-up — fork `main` pushed to `origin`, `f8531cf..6007db3` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main` on the operator's *"push main"*, after S163's close-out: a
+  fast-forward of 60 commits (`origin/main` was `f8531cf`; no commit on `origin` was missing from
+  `main`; the tree was clean). `origin/main` read back as `6007db3`. This entry's own commit is pushed
+  the same way, so the two stay equal. Nothing else was pushed — the local branch
+  `pr80/f1-learnings-1-13` already matches upstream's `read-set-budgets`.
+- **Go-ahead:** the operator's, after S163's close-out. It discharges the S163 receipt's carried item
+  *"pushing fork `main`"*.
+
 ### 2026-09-15 · [ad hoc] S163 close-out — PR #80's F1 answered and published; F2 and F3 next
 
 - **Change:** S163's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S162 7/10). The
