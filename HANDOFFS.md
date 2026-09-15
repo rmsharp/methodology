@@ -76,6 +76,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S169
+date: 2026-09-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **A REVIEW OF UPSTREAM PR #82 (THE QUALITY RATCHET, HEAD `c84e7d96`): ITS FILE BUDGETS FIRST — WHERE IT MEASURES SIZE IN BYTES WE HAVE SINCE REPLACED WITH BETTER MEASURES — THEN ANY OTHER CHALLENGE TO WHAT IT PROPOSES.** The operator's request after Phase 0. One fork-only document, `docs/planning/pr82-review.md`; nothing posted upstream (a comment on #82 is its own go-ahead). BL-57's P3 waits.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/pr82-review.md` (to be written); at #82's head `c84e7d96`: `.context-budget.json:27`, `:46` (the re-split), `.githooks/pre-commit:29` (the ratchet), `ITERATIVE_METHODOLOGY.md:294`.
+gotchas: #82 is live and can move — re-fetch, and pin every finding to a head sha. On #82's tree the runner measures 18,878 of 18,900 tokens (`context_budget.py --json`). `bin/tests.sh` mutates both live ledgers — clone only. zsh: brace `${r}:path` — hit again at this Phase 0.
+runtime_smoke: Phase 0 at `4c07b91`: both ledger frontiers current, 0 undocumented commits; 5 receipts, so this session trims to four (dry run SRF 0.7809, no `SRF_RED`); dashboard 76/100; `CHANGELOG.md` 250,649 B, 11,495 B under the read refusal, not trimmed (the operator's decision); #82 OPEN/CLEAN, 0 comments. Suites not re-run at Phase 0.
+changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S169 claim — a review of upstream PR #82's file budgets and other challenges"
+commit: pending
+```
+
+```handoff
 session: S168
 date: 2026-09-15
 status: complete

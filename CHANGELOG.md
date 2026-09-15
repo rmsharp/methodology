@@ -210,6 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S169 claim — a review of upstream PR #82's file budgets and other challenges
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: one fork-only
+review of upstream PR #82 — the maintainer's quality ratchet (plan #81), head `c84e7d96`, OPEN and CLEAN
+with 0 comments at Phase 0 — written to `docs/planning/pr82-review.md`. The operator's request after Phase
+0: *"Look at PR #82 and the way it manages file budgets. Some look to be using bytes in a way we have
+recently replaced with better measures of size"* — and any other challenge to what it proposes. Nothing is
+posted upstream; a comment on #82 is its own go-ahead. BL-57's P3 waits. Phase 0: both ledger frontiers at
+`4c07b91`, 0 undocumented commits; `HANDOFFS.md` 5 receipts, so this session trims to four after this
+claim; `CHANGELOG.md` 250,649 B, 11,495 B under the 262,144 B read refusal, not trimmed (the operator's
+2026-09-14 decision). Carries the Phase 0 `dashboard_history.jsonl` snapshot.
+
 ### 2026-09-15 · [ad hoc] S168 follow-up — fork `main` pushed to `origin` again, `a6520fe..bc7d1e9` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, a fast-forward of the one commit that records the branch push
