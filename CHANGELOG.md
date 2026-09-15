@@ -210,6 +210,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S169 follow-up — the receipt's "unpushed" statement corrected after the push (nothing posted)
+
+- **Change:** S169's receipt, `next_steps` item (1), said the review and its script *"exist only on this fork's
+  unpushed `main`"*. That went false when `main` reached `origin` (`4c07b91..c0d7eee`, then `c0d7eee..31b574b`),
+  so the line now records the push, gives the absolute URL a comment would need, and says the comment carries
+  its substance in plain terms rather than leaning on a link into this fork. A correction is a new entry here,
+  never an edited one.
+- **Recorded:** this commit, pushed the same way, so `origin/main` equals `main`. Nothing posted upstream.
+
 ### 2026-09-15 · [ad hoc] S169 follow-up — fork `main` pushed to `origin`, `4c07b91..c0d7eee` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, a fast-forward of S169's seven commits — claim `f89c0faf`, trim
