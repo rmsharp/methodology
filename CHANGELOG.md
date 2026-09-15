@@ -210,6 +210,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S168 follow-up — fork `main` pushed to `origin` again, `a6520fe..bc7d1e9` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, a fast-forward of the one commit that records the branch push
+  (`bc7d1e9`), inside a guard that re-fetched `origin` and re-checked, in the same command, `origin/main` =
+  `a6520fe9`, `main` = `bc7d1e91`, 1 ahead, an ancestor, a clean tree. Read back: `git ls-remote origin
+  refs/heads/main` = `bc7d1e91`. This entry's own commit is pushed the same way, so `origin/main` equals
+  `main`; S168's receipt, item (4), says so without naming a final sha.
+- **Go-ahead:** the operator's (*"push fork main to origin"*).
+
 ### 2026-09-15 · [BL-57] S168 follow-up — branch `bl57/changelog-rules` pushed to `origin` as a backup, at `775ba238` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin bl57/changelog-rules`, creating the branch on the fork — run only inside a
