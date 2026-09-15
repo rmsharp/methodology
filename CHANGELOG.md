@@ -210,6 +210,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S167 close-out — BL-57's P1 done on a branch, not pushed; PR #80 merged upstream; P2 next
+
+- **Change:** S167's receipt is completed in `HANDOFFS.md` (self 7/10, predecessor S166 9/10). The session
+  did BL-57's P1 on branch `bl57/changelog-rules` (four commits, not pushed; the entry below), trimmed
+  `HANDOFFS.md` to four receipts, and recorded #80's merge (`4d9e2715`), which landed mid-session. No
+  learning row: the one candidate, *a green suite cannot see a gate it never runs*, is in memory, and BL-53
+  leaves about three rows.
+- **Commit/PR:** this commit (claim `6f9162f1`, trim `50498451`, fold `943059f5`, record `f63460e5`)
+- **Session:** S167 · **Verified:** on this content committed inside a `--no-local` clone, `bin/tests.sh`
+  305 passed / 0 failed / 0 skipped, as is a same-time control at `6142d538` — Test 9 passes on fork `main`
+  too since #80's merge — with 0 status flips and 11 rows differing only in numbers this session moved;
+  unit suites 321 · 123 · 116 OK; `check-handoff --all` 0
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [BL-57] S167 — BL-57's P1 done on branch `bl57/changelog-rules` (4 commits, not pushed); the plan amended; PR #80 merged upstream the same day
 
 - **Change:** branch `bl57/changelog-rules` created from PR #80's head `aa36fd8b` in the worktree
