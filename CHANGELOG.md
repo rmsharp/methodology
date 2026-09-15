@@ -210,6 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S165 claim — PR #80 review F3: the root `.context-budget.json` reports the PR's own headline as OVER
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: F3 of the
+maintainer's PR #80 review ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153)),
+chosen by the operator at this session's Phase 0 (A). Measure the four answers — (i) the read-set ceiling
+in tokens at measured density; (ii) the ledger ceilings set where the ledgers are; (iii) *"over at install,
+by design"*, stated; (iv) the ledgers dropped from the read budget, as this fork did at `3c8acd5` — on
+branch `pr80/f2-installed-source-guard`, bring them to the operator in prose, and commit the chosen one on
+top of `37740763`, tested in a `--no-local` clone. First, `HANDOFFS.md`'s retention trim to four (5
+receipts at Phase 0, SRF 0.8687: no `--force` needed if this stub keeps the file under 61,471 B —
+re-derived after this commit). **Nothing pushed, no PR edit, no reply** — each is its own go-ahead.
+Carries the Phase 0 `dashboard_history.jsonl` snapshot.
+
 ### 2026-09-15 · [ad hoc] S164 close-out — PR #80's F2 done on a local branch and held for one push with F3; F3 next
 
 - **Change:** S164's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S163 9/10). The session

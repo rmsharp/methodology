@@ -74,6 +74,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S165
+date: 2026-09-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **PR #80 REVIEW, F3 — THE ROOT `.context-budget.json` REPORTS THE PR'S OWN HEADLINE AS `OVER`.** The operator's choice at Phase 0 (A). Measure the four answers on branch `pr80/f2-installed-source-guard`, bring them to the operator in prose, commit the chosen one on top of `37740763`, tested in a clone. **Nothing pushed, no PR edit, no reply — each its own go-ahead.** First, the `HANDOFFS.md` retention trim to four.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/pr80-review-response.md:145` (§5, F3's setup); `.context-budget.json:26`, `:47`, `:59`, `:71` (the four `OVER` rows, per §5 at `d4e15706`).
+gotchas: **`SRF_RED` returns at 61,471 B** — re-derive the trim after this commit. **Branch ledger entries go with #80's block, above F2's.** `bin/tests.sh` mutates both live ledgers — clone only.
+runtime_smoke: Baseline at `5235d4b` in a `--no-local` clone: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing). Dashboard 76/100. Both ledger frontiers current, 0 undocumented commits. PR #80 OPEN at `d4e1570`, `MERGEABLE`/`CLEAN`, 2 comments.
+changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S165 claim — PR #80 review F3: the root `.context-budget.json` reports the PR's own headline as OVER"
+commit: pending
+```
+
+```handoff
 session: S164
 date: 2026-09-15
 status: complete
