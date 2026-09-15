@@ -73,6 +73,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S163
+date: 2026-09-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **PR #80 REVIEW, F1 (a) — CUT THE BRANCH'S `starter-kit/FRAMEWORK_LEARNINGS.md` TO ROWS 1–13 PLUS THE RESERVED-`#14` NOTE, AND REPAIR THE CITATIONS THE CUT BREAKS.** The operator's choice at Phase 0, from the maintainer's review posted on #80 (2026-09-15 04:19 UTC). On a local branch from `b82dcff`, tested in a clone. **Nothing pushed, no PR edit, no reply — each its own go-ahead.** F2 and F3 are set up for the next session.
+what_was_done: pending
+next_steps: pending
+key_files: `starter-kit/FRAMEWORK_LEARNINGS.md:20` (the reserved-`#14` note, at `b82dcff`), `starter-kit/context_budget.py:77` and `starter-kit/context_budget.py:378` (Learning #34, at `b82dcff`), `docs/planning/changelog-rules-contradictions-plan.md:363` (P1 step 5 cites Learning #19), `bin/check-learnings:256` (the citation sweep keeps `.md` files only, at `b82dcff`).
+gotchas: **`HANDOFFS.md` HAS NO ROOM FOR THIS RECEIPT** — 59,548 B at Phase 0 against 65,536 B, and `methodology_trim.py --cut 4` refuses with `SRF_RED` (1.0925 vs `16ac3fc`); `--force` is the operator's decision, pending. **THE REVIEW WAS PUBLIC BEFORE S162 CLOSED** — S162's receipt still calls it private. **`bin/tests.sh` MUTATES BOTH LIVE LEDGERS** — clone only; a `--no-local` clone lacks `upstream/*` refs, so fetch `b82dcff` into it first.
+runtime_smoke: Baseline at `022d40a` in a `--no-local` clone: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing). Dashboard 76/100 at Phase 0. Both ledger frontiers at `022d40a`, 0 undocumented commits; tree clean apart from the Phase 0 `dashboard_history.jsonl` snapshot.
+changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S163 claim — PR #80 review F1 (a): trim the branch's `FRAMEWORK_LEARNINGS.md` to rows 1–13 and repair the citations the cut breaks"
+commit: pending
+```
+
+```handoff
 session: S162
 date: 2026-09-14
 status: complete

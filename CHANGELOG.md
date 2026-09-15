@@ -210,6 +210,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S163 claim — PR #80 review F1 (a): trim the branch's `FRAMEWORK_LEARNINGS.md` to rows 1–13 and repair the citations the cut breaks
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: F1 of the
+maintainer's PR #80 review ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153),
+2026-09-15 04:19 UTC), option (a), chosen by the operator at this session's Phase 0. On a local branch
+from #80's head `b82dcff`: cut `starter-kit/FRAMEWORK_LEARNINGS.md` to rows 1–13 plus the reserved-`#14`
+note; repair every citation the cut leaves dangling — `starter-kit/context_budget.py:77` and `:378` cite
+Learning #34, and `bin/check-learnings` scans Markdown only, so it would not see them; draft the
+replacement for the PR description; amend the BL-57 plan's P1 step 5
+(`docs/planning/changelog-rules-contradictions-plan.md:363`, which cites Learning #19). Tested in a
+clone. **Nothing pushed, no PR edit, no reply** — each is its own go-ahead. F2 and F3 are set up for the
+next session. `HANDOFFS.md` holds five receipts and its trim refuses with `SRF_RED` (SRF 1.0925 vs
+`16ac3fc`); the operator's decision on `--force` is pending. Carries the Phase 0
+`dashboard_history.jsonl` snapshot.
+
 ### 2026-09-15 · [BL-57] S162 close-out — the BL-57 plan approved and committed; P1 is next
 
 - **Change:** S162's receipt is completed in `HANDOFFS.md` (self 7/10, predecessor S161 8/10). BL-57's
