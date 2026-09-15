@@ -35,13 +35,89 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-15 · [ad hoc] Merged PR #80 — the read-set budgets series (#76–#79)
+
+- **Action:** merge [PR #80](https://github.com/KJ5HST/methodology/pull/80) (rmsharp) at head `aa36fd8` into
+  `main` with a merge commit, the repo's convention. Preceded by the internal review of 2026-09-14 (F1–F6,
+  posted as one comment by S18) and the internal re-review of 2026-09-15 of the four answering commits
+  (`5c9f0f3`/`d4e1570` F1 (a), `3774076` F2, `aa36fd8` F3), which returned **merge** with one new
+  non-blocking finding (G1: the read-set token partition is prose-only since the byte class ceiling left).
+  Session S19. **Merge commit `4d9e271`** (parents `e5e2661` + `aa36fd8`), read back from the API.
+- **Verified on the merged `main`:** `bin/tests.sh` 115 / 1 — Test 9 now **passes** (main has the three new files);
+  the one failure is `tools/test_context_budget.py` `TestFitGateEndToEnd`, **environmental** (this machine has exactly
+  2 transcripts for the repo path: enough for the test to run, too few for `calibrate()` to fit; the test file and tool
+  are identical at `aa36fd8` and here, and a worktree path skips it) — fix queued as the next session's first step.
+  Dashboard unit 211 OK; trim unit 123 OK; `check-links` OK; `check-learnings` OK (13 rows); `commit-msg --selftest`
+  OK; twins byte-identical at `DASHBOARD_VERSION` 2.10.7; `context_budget.py --status` OK, exit 0. Adopters now
+  receive 27 manifest rows on their next `bin/sync` (24 → 27; corpus 659,755 → 839,383 B).
+- **Deferred to the next Orient by design:** 11 `status: reconciled` receipts for #80's non-merge commits, the
+  one-time ledger reorder S15's below-`main` placement made necessary, and the v3.8 release PR.
+
+### 2026-09-15 · [ad hoc] Posted the PR #80 review findings to the PR (non-commit action)
+
+- **Action:** one maintainer comment on [PR #80](https://github.com/KJ5HST/methodology/pull/80) carrying the
+  six findings of the 2026-09-14 review (internal, oversight venue): **F1** the Learnings payload —
+  `starter-kit/FRAMEWORK_LEARNINGS.md` ships 46 rows (13 canonical + the fork's #15–#47) while the PR body says
+  rows #1–#13; **F2** the `methodology_trim.py` doc-only exclusion is unguarded at the predicate level (RED-shown);
+  **F3** the shipped root `.context-budget.json` reports the PR's own headline OVER; **F4–F6** optional
+  (two limits on one file; a docstring describing the fork; the `--source=github` wording). Reproduction
+  commands included; nothing merged, nothing changed on the branch. Session S18: claim `75405be` + the
+  close-out commit. Comment: <https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153> (read back via the API).
+
+### 2026-09-14 · [ad hoc] Housekeeping — merged branches and stray refs deleted (non-commit actions)
+
+- **Deleted, all verified merged into `main` by `git branch --merged` first:** local `docs/quality-ratchet-plan`,
+  `feat/context-budget`, `feature/protocols-as-first-class-upstream`, `fix/issue-32-phase2-link-reconciliation`,
+  `fix/issue-32-phase3-sync-coverage`, `fix/issue-32-phase4-status-per-file`, `fix/issue-36-check-links-no-mutate`;
+  remote `origin/docs/quality-ratchet-plan` (#81), `origin/fix/issue-67-stale-version-remedy` (#73),
+  `origin/release/v3.7` (#74); the stray `refs/remotes/pr/63` (merged long ago). Also the local tracking copy
+  of `read-set-budgets` created in S15 — `origin/read-set-budgets` is PR #80's head and is untouched.
+- **Kept, deliberately:** `docs/operator-gated-review-plan` (3 unpushed commits; reserves Learning #14) and
+  `experimental/pocock-audit` (17 unmerged commits, 2026-05-02) — both are the maintainer's to decide.
+- **Not done:** no history rewrite. The S16 truncated commits (`356556f`, `ad7bd37`, `ed9ab7e`) stay in
+  `main`'s history with the repair `ed98444` on top; removing them would force-push a public branch with a
+  fork downstream and is not a housekeeping call. Session S17: claim `b3c9e9d` + the close-out commit; the
+  ref list above is the post-deletion read-back (`git branch -a`: 3 local, 2 remote; #80 OPEN/MERGEABLE).
+
+### 2026-09-14 · [ad hoc] Shipped `.githooks/commit-msg` — the disclosure gate (FM #16's honesty counterpart)
+
+- **Change:** new `.githooks/commit-msg` (canonical-only, like the ledger hook beside it — `.githooks/`
+  is in no `bin/_manifest.py` row) + a short "Disclosure Hook" paragraph in `starter-kit/SAFEGUARDS.md`
+  (distributed). When `AI_AGENT`, `CLAUDECODE`, or `CLAUDE_CODE_SESSION_ID` is in the environment — or
+  `METHODOLOGY_REQUIRE_COAUTHOR=1` — the commit message must carry a well-formed
+  `Co-Authored-By: <name> <email>` trailer outside comment lines; otherwise the hook is silent, so a
+  human committing by hand is never asked to disclose an agent that was not there. `--no-verify`
+  bypasses once; `METHODOLOGY_REQUIRE_COAUTHOR=0` disables. Built-in `--selftest` (7 checks).
+  Session S16: claim `356556f`, hook + SAFEGUARDS `ad7bd37`, plus the close-out commit completing this entry.
+  SAFEGUARDS.md grows by the one paragraph; the Phase 0 pair PR #80 measures stays under its cap
+  (checked at close-out against the branch's own figure).
+- **What the trailer is, and is not:** the agent never takes credit. The human is the author of every
+  commit and owns it. The trailer is *disclosure* — so that no reader of the history is misled about
+  how the work was produced. Disclosure was an instruction every session had to remember on every
+  commit — an actor-side rule, the class the quality-ratchet plan (§3) says does not scale; under a
+  harness this makes forgetting it impossible. The first draft of this entry framed the trailer as
+  the agent's credit; the maintainer corrected it before anything was pushed.
+- **Deferred, deliberately:** wiring `--selftest` into `bin/tests.sh` and the `BOOTSTRAP.md` Step 10
+  mention wait for PR #80, which edits both files (S15 just un-conflicted it).
+- **Incident, same session:** the script that reframed this entry sliced the file to the next `---`
+  line — which is not the next entry boundary but a separator 316 lines down — and **deleted the ten
+  entries between here and 2026-08-10** (S15, S14, S13, the v3.7 release, issue #67, and five more) in
+  the amended claim `356556f`, carried by `ad7bd37` and `ed9ab7e`, all pushed. Found by the S15
+  merge-tree check re-conflicting where it should not have; restored from `f8fc3ca` by the commit
+  after `ed9ab7e` — `diff` against `f8fc3ca` shows 0 lines removed, 21 added (this entry), 41 headings,
+  55 source tags. The co-staging hook cannot see this: it checks that the ledger was *touched*, not
+  that it did not shrink. A ledger-count ratchet (staged `### ` headings ≥ HEAD's) is the mechanical
+  fix and is proposed, not shipped, in the S16 receipt.
+
 ### 2026-09-14 · [ad hoc] Resolved the CHANGELOG.md conflict S13/S14 created for PR #80
 
 - **Change:** `main` merged into the PR #80 head branch `read-set-budgets` (which lives in this repo) with
   the one conflicting file, `CHANGELOG.md`, resolved as a union in ledger order — today's S13–S15 entries
   on top, #80's four entries (2026-09-02..04) below them, everything else common. No other file conflicted
   (`git merge-tree --write-tree --name-only origin/main origin/read-set-budgets` → `CHANGELOG.md` only).
-  Session S15; the merge commit is completed at close-out from real command output.
+  Session S15: claim `8fdc50f` (main) → resolution merge `b82dcff` (pushed to `origin/read-set-budgets`)
+  → close-out commit on main. Union verified: 57 source-tagged entries = the branch's 54 + today's 3.
+  `git merge-tree` empty after the push and again after the close-out prepend.
 - **Why:** #80 was MERGEABLE/CLEAN at `512c2ed` this morning; S13/S14's ledger and receipt commits
   prepended at the same anchor #80 prepends at, so the first session to record anything on `main` after
   #80 opened made it conflict — S13 should have computed that before merging PR #81 (Learning #13) and did
