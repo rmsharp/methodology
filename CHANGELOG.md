@@ -210,6 +210,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S168 close-out — BL-57's P2 done on a branch, not pushed; P3 next
+
+- **Change:** S168's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S167 9/10). The session
+  did BL-57's P2 on branch `bl57/changelog-rules` — a merge of `upstream/main` and two commits, not pushed
+  (the entry below). No trim: `HANDOFFS.md` held four receipts at Phase 0 and holds five now, so S169's
+  Phase 0 trims. No learning row (BL-53 leaves about three).
+- **Commit/PR:** this commit (claim `5eef31f1`, record `30a96bb9`)
+- **Session:** S168 · **Verified:** on the record `30a96bb9` in a `--no-local` clone, `bin/tests.sh` 305 passed / 0 failed / 0 skipped, as at a same-time control at `d2347a16`, with 0 status flips and 8 rows differing only in numbers this session moved; unit suites 321 · 123 · 116 OK; the branch as the entry below records; `check-handoff --all` 0
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [BL-57] S168 — BL-57's P2 done on branch `bl57/changelog-rules` (a merge of `upstream/main` and two commits, not pushed); the plan amended
 
 - **Change:** in the worktree `../methodology-bl57`, the branch merged `upstream/main` `8b4dc2c3`

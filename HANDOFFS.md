@@ -78,18 +78,34 @@ instruction is why these rows exist.
 ```handoff
 session: S168
 date: 2026-09-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: **BL-57's P2 — READING AND ARCHIVING (C1, C2, C4, C9, C12, C14): §The Action Ledger's *Size, and when to archive* rewritten to Q2 A (the three reads, archiving optional, the tool's `--check` the only trigger, never in Phase 0, conservation), the `HANDOFFS.md` seed's premise and 65,536 B row replaced by a pointer, the trimmer's `:186` comment corrected.** The operator's "A" at Phase 0. First, merge `upstream/main` (`8b4dc2c3`; #80 merged) into `bl57/changelog-rules` at `77b21a20` in `../methodology-bl57`, then re-run every suite and §9.7. D8 (ii) was done inside #80 by F3, so it is recorded, not redone. Nothing pushed.
-what_was_done: pending
-next_steps: pending
-key_files: `docs/planning/changelog-rules-contradictions-plan.md:440` (P2), `:349` (§5.0), `:816` (§9.7); on the branch, `starter-kit/HANDOFFS.md:91`, `:98`, `starter-kit/methodology_trim.py:186`, `FRAMEWORK_APPARATUS.md:338` (§The Action Ledger).
-gotchas: The plan's line numbers are `b82dcff`'s — re-derive each before editing. No suite runs `context_budget.py --status`: run §9.7 at every boundary, and keep upstream `CLAUDE.md` net ≤ 0. `bin/tests.sh` mutates both live ledgers — clone only. After the merge, branch commits must satisfy upstream's new `.githooks/commit-msg`. `git rev-parse --short a b` fails — hit again at this Phase 0.
-runtime_smoke: Phase 0 at `d2347a16`: both ledger frontiers current, 0 undocumented commits; 4 receipts (no trim); dashboard 76/100, one medium risk (`CHANGELOG.md` 243,849 B, 18,295 B under the 262,144 B refusal). `upstream/main` `8b4dc2c3`; #80 MERGED, 3 comments; no open upstream issues or PRs. `git merge-tree` of the branch with `upstream/main` exits 0. Suites not re-run at Phase 0 (last known, S167: fork 305/0/0, branch 118/0).
-changelog_ref: CHANGELOG.md "2026-09-15 · [BL-57] S168 claim — BL-57's P2: reading and archiving, on the branch after merging `upstream/main`"
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: **BL-57'S P2 IS DONE ON BRANCH `bl57/changelog-rules`: `upstream/main` MERGED IN (`9e1dfeb`), THEN `f2bcc22` AND `775ba238` — NOT PUSHED.** §The Action Ledger's archive text is now *Reading and archiving* (Q2 A); the `HANDOFFS.md` seed names no size and defers to the trimmer's trigger; the trimmer's `:186` comment drops *"context-tax"*. P2's step 4, D8 (ii), needed no commit — #80's F3 did it. **Next: P3.**
+what_was_done: **Fork `main`:** `5eef31f1` claim (with the Phase 0 `dashboard_history.jsonl` snapshot); `30a96bb9` the record (the plan's header and S168 amendment, BL-57's backlog row); this close-out. **Branch**, each commit with its own entry in the branch ledger: `9e1dfeb` merges `upstream/main` `8b4dc2c3`, clean, bringing `.githooks/commit-msg`; `f2bcc22` rewrites `FRAMEWORK_APPARATUS.md` :426–:498 — three partial reads, offset and limit past `READ_REFUSE_BYTES`, archiving optional, `--check` the only trigger, conservation, never in Phase 0 — and drops two *"verbatim"* self-descriptions P2 would falsify (28,022 → 25,983 B; its entry quotes each rule with its line, as P2's DONE asks); `775ba238` rewrites `starter-kit/HANDOFFS.md` :89–:152 (heading kept, D9; rule kept, D7; 11,505 → 10,417 B) and the trimmer comment (AST identical to `b82dcff`). Instruments checked before their numbers were used: §9.1 reproduced the plan's 1,577 lines on `b82dcff`; the new shard enumeration matched a Python count in bash and zsh with no shard (55) and eleven (526).
+next_steps: **(1) BL-57'S P3 — ITS OWN SESSION** (`docs/planning/changelog-rules-contradictions-plan.md:490`): the source tags and the anchored, shard-spanning audit in §The Action Ledger; runner `:39` (net ≤ 0), `:278`, `:329`; `ITERATIVE_METHODOLOGY.md:294`; `.githooks/pre-commit:57` — `b82dcff`'s numbers, so re-derive on the branch — **plus the S168 amendment's item (1)**, the `HANDOFFS.md` seed's bare glob (`:117`), which zsh refuses where no shard exists. **(2) `HANDOFFS.md` HOLDS FIVE RECEIPTS**, so S169's Phase 0 trims to four. `SRF_RED` returns at 57,366 B and the file is 53,073 B after this close-out: 4,293 B for S169's claim stub (S168's was 2,050 B). Measure; if the stub would cross, trim before the claim (S161's follow-up precedent) or ask for `--force`. **(3) `CHANGELOG.md` IS 248,213 B, 13,931 B UNDER THE 262,144 B READ REFUSAL**; not trimming it is the operator's decision — raise it at Phase 0. **(4) CARRIED, EACH ITS OWN GO-AHEAD:** pushing the branch (to `origin`, as a backup) and fork `main` (8 ahead of `origin/main`); F5/F6 (`docs/planning/pr80-review-response.md:243`); the fork resync (4 conflicting files); BL-54; BL-36; BL-53; `choose_cut`.
+key_files: Branch at `775ba238`: `FRAMEWORK_APPARATUS.md:426` (*Reading and archiving*), `:440`, `:476` (conservation), `:486`; `starter-kit/HANDOFFS.md:89` (heading, D9), `:91` (the rule), `:117` (the bare glob, P3); `starter-kit/methodology_trim.py:186`; the branch's `CHANGELOG.md:171` (P2's entries; P1's from `:211`). Fork: `docs/planning/changelog-rules-contradictions-plan.md:36` (S168 amendment), `:490` (P3), `:832` (§9.7); `docs/planning/BACKLOG.md:152`; `HANDOFFS.md:15`.
+gotchas: **(1) THE BRANCH LEDGER'S TOP IS NOW `upstream/main`'S BLOCK** — a new branch entry goes above BL-57's (`CHANGELOG.md:171` there), below `main`'s. **(2) `git diff --quiet upstream/main <branch>` OVER THE PINNED FILES EXITS 1** — P1's `CLAUDE.md` row (−9 B), not a regression; attribute it before reading it. **(3) P3 EDITS THE RUNNER, WHICH HAS NO SPARE BYTES (K2)** — §9.7 at every boundary; no suite runs it. **(4) GATE EVERY BOUNDARY, NOT ONLY THE END:** a clean clone per commit plus a same-time control, rows compared; `bin/tests.sh` uses `mktemp`, so clones can run side by side. **(5) `git rev-parse --short a b` FAILS** — hit again at this Phase 0.
+runtime_smoke: **NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`,** in `--no-local` clones, exit codes read bare. **Branch:** 118 passed / 0 failed at `77b21a20` (control), `9e1dfeb`, `f2bcc22` and `775ba238`, 0 status flips, no row added or removed; unit suites 211 · 124 · 116 OK at each; `check-links` 107 links in 23 files; `check-learnings` 13 rows; `context_budget.py --status` 0 at each; §9.7 on `775ba238` *nothing over budget* (`CLAUDE.md` 59,159 of 59,168 B); P2's three DONE greps print nothing on `775ba238` and match on `9e1dfeb`. **Fork:** `bin/tests.sh` 305 passed / 0 failed / 0 skipped at the record `30a96bb9`, as at a same-time control at `d2347a16` — 0 status flips, 8 rows differing only in numbers this session moved (receipts, now 5; the `**Model:**` bullets, now 54, and the model-report totals, now 325; the ledger's size); unit suites 321 · 123 · 116 OK; `check-links` 105 links; `check-learnings` 64 rows; `context_budget.py --status` exits 2 at both, the runner over the 41,364 B ceiling its config declares over on arrival (2026-08-30) — by design, not S168's; `check-handoff --all --allow-pending` 0 after the record. **NOT EXERCISED:** any push; GitHub's rendering of the anchor; what *optional* does to ledger growth, which shows only across sessions.
+changelog_ref: CHANGELOG.md "2026-09-15 · [BL-57] S168 close-out — BL-57's P2 done on a branch, not pushed; P3 next", plus the record and claim entries
+commit: 5eef31f1 (claim) + 30a96bb9 (record) + this close-out; branch 9e1dfeb (merge) + f2bcc22 + 775ba238
 ```
+
+**Self-assessment: 8/10.** Plus: P2 landed as scoped, with every DONE check run on the committed tree and every
+boundary — the control, the merge, both steps — run through every gate in its own clean clone, rows compared,
+0 flips. Each instrument was checked before its number was used (§9.1, the shard enumeration, the trimmer by
+AST), and two things P2's line list missed were found by reading: the apparatus called the rewritten text
+*verbatim* twice, and the seed's pointer described reasoning P2 removed. Minus: `git rev-parse --short a b`
+at Phase 0 despite S167's gotcha; §9.1 ran mid-phase rather than at its start (still before the first P2
+commit); the seed's matching glob is left to P3 — a scope judgment, not a fix. **Reduction:** none —
+`HANDOFFS.md` goes to five receipts, which S169 trims; `CHANGELOG.md` stays untrimmed by the operator's
+decision. **No learning row** (BL-53 leaves about three).
+
+**Predecessor (S167): 9/10.** Item (1) was this session's plan exactly — merge first, re-run the suites and
+§9.7, then P2 at `:440`, and amend D8 since F3 had done its (ii), which Phase 0 confirmed in one command.
+Gotcha (1) is why §9.7 ran at every boundary; gotcha (4), *"re-check where the merged ledger puts them"*, was
+the first check after the merge. Every number re-derived held. **Not 10:** the two *"verbatim"* sentences
+S167 wrote into the apparatus were certain to go false at P2 and were not flagged. **ROI: strongly positive.**
 
 ```handoff
 session: S167
