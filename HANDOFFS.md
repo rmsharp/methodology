@@ -75,6 +75,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S167
+date: 2026-09-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57's P1 — STRUCTURE ONLY: THE SEED'S THREE `CHANGELOG.md` RULE SECTIONS MOVE VERBATIM TO `FRAMEWORK_APPARATUS.md` §The Action Ledger, THE SEEDS THIN, `bin/status` KEYS ON A NEW MARKER, THE STALE-SEED ADVICE STOPS REWRITING ENTRIES (C16).** The operator's "A" at Phase 0. Branch `bl57/changelog-rules` from #80's head `aa36fd8b`, worktree `../methodology-bl57`; nothing pushed. First, `HANDOFFS.md`'s retention trim (5 receipts → 4), re-derived after this claim.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:359` (P1), `:335` (§5.0, how every phase works), `:749` (§9.3, the verbatim check), `:773` (§9.4, the marker check); `HANDOFFS.md:15` (the retention rule).
+gotchas: The plan's line numbers are `b82dcff`'s and P1 branches from `aa36fd8b` — re-derive each before editing. A `--no-local` clone lacks `upstream/*` refs — clone with `-b` a local branch. `bin/tests.sh` mutates both live ledgers — clone only. `git rev-parse --short a b` fails — one revision per call (hit again at this Phase 0).
+runtime_smoke: Baseline at `6142d538` in a `--no-local` clone: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing). Dashboard 76/100. Both ledger frontiers current, 0 undocumented commits. PR #80 OPEN at `aa36fd8b`, `MERGEABLE`/`CLEAN`, 3 comments; `upstream/main` `9fa3141`.
+changelog_ref: CHANGELOG.md "2026-09-15 · [BL-57] S167 claim — BL-57's P1: the `CHANGELOG.md` rules to one home, thin seeds, one stale-seed rule (structure only), on a branch from #80's head"
+commit: pending
+```
+
+```handoff
 session: S166
 date: 2026-09-15
 status: complete

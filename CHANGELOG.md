@@ -210,6 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S167 claim — BL-57's P1: the `CHANGELOG.md` rules to one home, thin seeds, one stale-seed rule (structure only), on a branch from #80's head
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: P1 of the
+approved BL-57 plan (`docs/planning/changelog-rules-contradictions-plan.md:359`), the operator's *"A"* at
+this session's Phase 0. Branch `bl57/changelog-rules` from PR #80's current head `aa36fd8b` (the plan was
+written at `b82dcff`; its hazard 1), in a worktree at `../methodology-bl57`; nothing is pushed. Phase 0:
+#80 OPEN at `aa36fd8b`, `MERGEABLE`/`CLEAN`, 3 comments, nothing from the maintainer since S166's reply;
+`upstream/main` `9fa3141`; both ledger frontiers current; `bin/tests.sh` 304 / 1 / 0 at `6142d538` (Test
+9). `HANDOFFS.md` holds 5 receipts, so this session trims it to 4 after this claim (dry run: S162 to
+`docs/archive/HANDOFFS-through-2026-09-14.md`, SRF 0.8013, no `SRF_RED`). `CHANGELOG.md` is 237,544 B,
+24,600 B under the 262,144 B read refusal; not trimmed — the operator's 2026-09-14 decision, asked about
+at Phase 0 and not changed. Carries the Phase 0 `dashboard_history.jsonl` snapshot.
+
 ### 2026-09-15 · [ad hoc] S166 follow-up — fork `main` pushed to `origin`, `755ef09..632f575` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main` after the close-out, a fast-forward of 11 commits — S164's three,
