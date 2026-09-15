@@ -210,6 +210,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S169 follow-up — the operator adds a requirement for the PR #82 comment: generally recognized terminology (nothing posted)
+
+- **Decision:** the operator added that one improvement to suggest on #82 is the readability of its stated
+  purpose and methods: *"Use generally recognized terminology with no jargon or private descriptors."* S169's
+  receipt, `next_steps` item (1), now carries it, for the suggestion and for the comment itself —
+  `docs/planning/pr82-review.md` is written in this fork's shorthand and is to be translated, not pasted.
+- **Recorded:** this commit. Nothing was drafted or posted in S169.
+
 ### 2026-09-15 · [ad hoc] S169 follow-up — the operator schedules the next session: a comment on PR #82 with suggested changes (nothing posted)
 
 - **Decision:** after S169's close-out the operator directed: *"for the next session, plan on developing and
