@@ -1,7 +1,8 @@
 # BL-57 — one set of `CHANGELOG.md` rules, kept in one place
 
-**Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163 and
-S167 (see **Trees**). **P1 is done** on branch `bl57/changelog-rules` (S167, not pushed); P2–P12 are not.
+**Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
+S167 and S168 (see **Trees**). **P1 and P2 are done** on branch `bl57/changelog-rules` (S167, S168; not
+pushed); P3–P12 are not.
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -32,6 +33,21 @@ pre-P1 seed is one file, `tools/fixtures/seed-CHANGELOG-ledger-format-1.md`, rea
 controls and by Test 20 (b2), with its blob id `47bc8485` asserted — not two literals. (4) A third index of
 the apparatus, `ITERATIVE_METHODOLOGY.md` §Reference Apparatus, listed six sections; step 4 updated it with
 the plan's two. (5) The marker line reads `ledger-format: 2 — keep this marker; bin/status reads it.`
+**Amended at S168 (2026-09-15):** P2 ran after `upstream/main` was merged into the branch (`9e1dfeb`,
+clean; `bin/tests.sh` 118/0 before and after, 0 flips): `f2bcc22` (the home, step 1) and `775ba238` (the
+`HANDOFFS.md` seed and the trimmer's comment, steps 2–3), not pushed. **Step 4 needed no commit:** #80's
+F3 had already moved both ledgers out of upstream's root `.context-budget.json` into
+`_deliberate_exclusions` (checked on `upstream/main`), so D8 is now (i) alone, in P4. What P2 found, for
+P3–P5: (1) The home's shard enumeration now reads `cat CHANGELOG.md $(git ls-files
+'docs/archive/CHANGELOG-*.md')`, equal in bash, zsh and a Python count with no shard (55) and eleven
+(526). **The `HANDOFFS.md` seed's matching bullet still publishes the bare glob** `HANDOFFS.md
+docs/archive/HANDOFFS-*.md`, which zsh refuses where no shard exists — C10's class, outside P2's lines;
+P3 takes it with the audit. (2) After the merge, `upstream/main`'s own entries sit at the top of the
+branch's ledger, then BL-57's, then #80's; a new branch entry goes above BL-57's block, below `main`'s.
+(3) Upstream's `.githooks/commit-msg` refuses an agent-driven commit that lacks a `Co-Authored-By`
+trailer, a merge commit included. (4) `HOW_TO_USE.md:748` gives the apparatus as *"~515 lines"*; it is
+501 after P2. P4 edits that file and re-measures. (5) §9.1 still reproduces 1,577 lines on `b82dcff`; the
+branch reads 1,616 after the merge and 1,611 after P2.
 
 ---
 

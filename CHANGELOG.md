@@ -210,6 +210,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S168 — BL-57's P2 done on branch `bl57/changelog-rules` (a merge of `upstream/main` and two commits, not pushed); the plan amended
+
+- **Change:** in the worktree `../methodology-bl57`, the branch merged `upstream/main` `8b4dc2c3`
+  (`9e1dfeb`, clean; it brings upstream's `.githooks/commit-msg` and the maintainer's S17–S19 records),
+  then took P2 in two commits, each with its own entry in the branch's ledger. `f2bcc22`:
+  `FRAMEWORK_APPARATUS.md`'s *Size, and when to archive* becomes *Reading and archiving* — the protocol's
+  three reads are each partial; past `READ_REFUSE_BYTES`, read with an offset and a limit; archiving is
+  optional and the tool's `--check` the only trigger, no size named; conservation across the live file and
+  its shards; a trim never in Phase 0 — and the two-cap table and its rate-versus-level argument go,
+  28,022 → 25,983 B. `775ba238`: the `HANDOFFS.md` seed's premise and two-cap table give way to *"Archive
+  it when the trimmer's trigger fires … this file names no size of its own"* (heading kept, D9; its rule
+  otherwise stands, D7), and the trimmer's `:186` comment drops *"context-tax"* (AST identical to
+  `b82dcff`). P2's step 4, D8 (ii), needed no commit: #80's F3 did it. **Not pushed; no PR.** Here: the
+  plan's header and S168 amendment (`docs/planning/changelog-rules-contradictions-plan.md:3`, `:36`), and
+  BL-57's backlog row.
+- **Found:** the `HANDOFFS.md` seed's shard bullet still publishes a bare glob that zsh refuses where no
+  shard exists (C10's class, recorded for P3); `HOW_TO_USE.md:748`'s *"~515 lines"* is now 501 (P4).
+- **Commit/PR:** this commit; branch `9e1dfeb` (merge), `f2bcc22`, `775ba238`
+- **Session:** S168 · **Verified:** in `--no-local` clones, `bin/tests.sh` 118 passed / 0 failed at
+  `77b21a20` (the control), `9e1dfeb`, `f2bcc22` and `775ba238`, with 0 status flips and no row added or
+  removed; unit suites 211 · 124 · 116 OK at each; `check-links` 107 links in 23 files; `check-learnings`
+  13 rows; `context_budget.py --status` 0 at each, and §9.7 on `775ba238` — its merge with `upstream/main`
+  is its own tree — *nothing over budget*, `CLAUDE.md` 59,159 of 59,168 B; P2's three DONE greps print
+  nothing on `775ba238`
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [BL-57] S168 claim — BL-57's P2: reading and archiving, on the branch after merging `upstream/main`
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: P2 of the
