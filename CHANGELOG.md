@@ -92,6 +92,20 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-15 · [BL-57] The trimmer's fence-awareness controls read a frozen copy of today's seed, so they survive the seed shrinking
+
+- **Change:** `tools/test_methodology_trim.py` and a new `tools/fixtures/seed-CHANGELOG-ledger-format-1.md`,
+  both canonical-only; nothing distributed changes. Three controls asserted that the live
+  `starter-kit/CHANGELOG.md` holds record-shaped example lines inside fences. They now read the fixture —
+  the seed exactly as it ships today, git blob `47bc8485`, which a new test asserts — while the live seed
+  must still hold no records. The dated-prose test's `.replace()` anchor, `## How to add an entry`,
+  becomes the `---` line, asserted to occur exactly once before the replace; a docstring cites the
+  sentinel by its token, not by line number. Green with either seed.
+- **Why:** step 1 of BL-57's P1. The seed's rules text moves to `FRAMEWORK_APPARATUS.md` next, and every
+  adopter seeded before then keeps the fenced examples, so the controls stay meaningful on the copy.
+- **Placed** above #80's entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-15 · [ad hoc] PR #80 review F3: the root `.context-budget.json` holds the Phase 0 pair to the read cap in tokens at its measured density, and drops the two ledgers it could only report as over
 
 - **Change:** `.context-budget.json` only — this repository's own config, which `bin/_manifest.py` does not
