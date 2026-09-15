@@ -210,6 +210,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S166 — PR #80: the reply for F2 and F3 posted (non-commit action, operator go-ahead)
+
+- **Action:** one comment on [PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5685701488),
+  author `rmsharp`, 2026-09-15 18:21:28 UTC, body `docs/planning/pr80-reply-f2-f3.md`, posted through the
+  REST API (`gh api repos/KJ5HST/methodology/issues/80/comments -F body=@…`): F2's generalized test and its
+  six-mutant table; F3 as (i) for the pair with the ledgers dropped, (ii) shown unworkable as written, F4
+  answered as framed; the corrected headline (68,548 B / 24,278 tokens on the merge); F5 and F6 after the
+  merge. Read back through the API: equal to the file. #80 now has 3 comments.
+- **Go-ahead:** the operator's, at S166 (*"A B C"*), gated on B's read-back.
+
+### 2026-09-15 · [ad hoc] S166 — PR #80: the description updated to the F3 head (non-commit action, operator go-ahead)
+
+- **Action:** the PR body replaced with `docs/planning/pr80-body-after-f3.md` through `gh api -X PATCH
+  repos/KJ5HST/methodology/pulls/80 -F body=@…` — the head `aa36fd8`, 28 files +7,892 / −580 (re-derived at
+  Phase 0, after reproducing +7,795 / −554 at `d4e1570`), the headline table re-measured on the merge
+  (68,548 B / 24,278 tokens, 97.1%; `main` 81,493 B / 28,610), the paragraph on the root
+  `.context-budget.json`, the corpus 659,755 → 839,383 B, and the F2 and F3 verification rows. Before it,
+  the live body was checked equal to `pr80-body-after-f1.md`, so the maintainer had not edited it. Read
+  back after: equal to the file, byte for byte.
+- **Go-ahead:** the operator's, at S166, gated on A's read-back.
+
+### 2026-09-15 · [ad hoc] S166 — PR #80: F2 + F3 pushed, `read-set-budgets` fast-forwarded `d4e1570..aa36fd8` (non-commit action, operator go-ahead)
+
+- **Action:** `git push upstream pr80/f3-read-set-token-ceilings:read-set-budgets`, run only when the same
+  command had re-checked #80's head (`d4e1570`), `upstream/main` (`9fa3141`) and its 2 comments. It carries
+  F2 (`37740763`) and F3 (`aa36fd8b`), each with its entry in the branch's own ledger. Read back: the remote
+  ref and the API's branch head both `aa36fd8b`; #80's head `aa36fd8b`, 16 commits, `MERGEABLE`/`CLEAN` —
+  on the second read: the first, seconds after the push, still showed `d4e1570` and `UNKNOWN`. The three
+  local `pr80/*` branches stay until #80 merges.
+- **Go-ahead:** the operator's, at S166.
+
 ### 2026-09-15 · [ad hoc] S166 claim — PR #80: publish F2 + F3 (push, description, reply) on the operator's go-ahead for all three
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: S165's next

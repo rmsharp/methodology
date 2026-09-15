@@ -1,21 +1,24 @@
-# PR #80 — answering the maintainer's review (F1 published; F2 and F3 done locally, held for one publish)
+# PR #80 — answering the maintainer's review (F1 published at S163; F2 and F3 published at S166)
 
 **Fork-only.** S163, 2026-09-15; F2 added at S164 and F3 at S165, the same day. The review is the
 maintainer's comment on [PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153),
 posted 2026-09-15 04:19 UTC and addressed to the contributor. His upstream receipt (S18) says the thread
 is now ours and that he will not merge until F1 is answered. **F1 was published at S163**: pushed
 (`b82dcff..d4e1570`), the description updated, the reply posted ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5676599724)).
-**F2 and F3 are on local branches and not pushed** (§4, §5). F3's branch
-`pr80/f3-read-set-token-ceilings` (`aa36fd8b`) carries F2's commit beneath it, so one fast-forward push
-publishes both. Every push, description edit and comment is its own go-ahead from the operator.
+**F2 and F3 were published at S166** (§4, §5), on the operator's go-ahead for all three actions: one
+fast-forward push, `d4e1570..aa36fd8` — F3's branch `pr80/f3-read-set-token-ceilings` carries F2's
+commit beneath it — then the description from [`pr80-body-after-f3.md`](pr80-body-after-f3.md), then
+the reply ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5685701488)). F4 is
+answered with F3; F5 and F6 remain (§6). Every push, description edit and comment is its own go-ahead
+from the operator.
 
 ## 1. The review, in one table
 
 | | Kind | What it asks | Status |
 |---|---|---|---|
 | F1 | decision | `starter-kit/FRAMEWORK_LEARNINGS.md` carries 46 rows; the description says 13. (a) cut to 1–13 + the `#14` callout, or (b) argue for 46 | **(a), chosen by the operator at S163; pushed, described and answered at S163** (§2, §3) |
-| F2 | fix | the `methodology_trim.py` doc-only exclusion is unguarded: generalize the regression test over every `FRAMEWORK_INSTALLED_SOURCE` name, RED first | **done at S164 on local branch `pr80/f2-installed-source-guard`, `37740763`; not pushed** — F3's branch carries it (§4) |
-| F3 | fix or state | the root `.context-budget.json` reports the PR's own headline as `OVER` | **R1 L1, the operator's choice at S165: done on local branch `pr80/f3-read-set-token-ceilings`, `aa36fd8b`, on top of F2; not pushed** (§5) |
+| F2 | fix | the `methodology_trim.py` doc-only exclusion is unguarded: generalize the regression test over every `FRAMEWORK_INSTALLED_SOURCE` name, RED first | **done at S164 (`37740763`); published at S166** with F3's push (§4) |
+| F3 | fix or state | the root `.context-budget.json` reports the PR's own headline as `OVER` | **R1 L1, the operator's choice at S165 (`aa36fd8b`, on top of F2); published at S166** — pushed, described and answered (§3, §5) |
 | F4 | can follow | two limits on `CHANGELOG.md`: the budget's 65,536 B against the trimmer's 196,608 B | **answered by F3 as the review framed it** — `CHANGELOG.md` leaves the budget, so the trimmer's is its one limit; the seeds' prose naming 65,536 B stays with BL-57's P2 (§5) |
 | F5 | can follow | the trimmer's docstring cites an unpublished design doc and a `--no-renames` the branch's hook lacks | open (§6) |
 | F6 | can follow | *"`--source=github` installs nothing today"* is true of the branch's copy only | open (§6) |
@@ -56,7 +59,7 @@ d4e15706` against `9fa3141`: **no conflicts**.
 all three, as before. A `Learning #20` planted in `starter-kit/SAFEGUARDS.md` is caught (exit 1) and the
 restored tree passes. `context_budget.py --status` changes no row's status.
 
-## 3. Publishing — three separate go-aheads, in this order (F1 published at S163; F2 + F3 next)
+## 3. Publishing — three separate go-aheads, in this order (F1 published at S163; F2 + F3 at S166)
 
 ```sh
 # 0. Nothing moved? #80's head must still be d4e1570 and main 9fa3141, with no comment beyond the two.
@@ -73,6 +76,13 @@ gh pr comment 80 --repo KJ5HST/methodology --body-file docs/planning/pr80-reply-
 Read each back before the next: the branch head equals `aa36fd8b`; the live body equals the file (compare
 after stripping the one trailing newline `gh api --jq` adds, not with `cmp`); the comment count is 3.
 (`git rev-parse --short` takes one revision only — given two it fails with *"Needed a single revision"*.)
+
+**S166 ran this recipe as written.** Every precondition held, and each read-back matched, with one lag:
+seconds after the push, #80's `headRefOid` still read `d4e1570` (`mergeable` `UNKNOWN`); the second
+query read `aa36fd8b`, `MERGEABLE`/`CLEAN`. Read the PR itself back, not only the ref, before a step
+that names the new head. The reply went through the REST API (`gh api
+repos/KJ5HST/methodology/issues/80/comments -F body=@…`), which returns the comment's id for the
+read-back.
 
 If anything has moved, **do not force.** Rebase F2 and F3 onto the new head, re-run the suites,
 `git merge-tree` and `context_budget.py --status` on the branch and on its merge into `main`, and
@@ -151,7 +161,8 @@ M6 the end-to-end half.
 `git merge-tree --write-tree --name-only upstream/main 37740763` (`upstream/main` = `9fa3141`): no
 conflicts; `read-set-budgets` is an ancestor, so the push is a fast-forward.
 
-**Publishing is held** (S164 Phase 0's suggestion) so F2 and F3 go up in one push and one reply. F3 commits
+**Publishing was held** (S164 Phase 0's suggestion) so F2 and F3 went up in one push and one reply, at
+S166. F3 commits
 on top of `37740763`; then §3's order applies — re-check the head and comments, push, then the
 description, then the reply (`gh api -X PATCH` for the description; `gh pr edit` fails). The description
 needs nothing for F2: it names no test and quotes no figure F2 moves. The reply's F2 paragraph can take the
@@ -223,7 +234,7 @@ trees), `--json` and `--selftest` (exit 0) and the six commits — the same as R
 `git merge-tree --write-tree --name-only upstream/main aa36fd8b`: no conflicts. `read-set-budgets`
 (`d4e1570`) is an ancestor, so the push is a fast-forward and carries F2 with it.
 
-**Prepared for the publish, not published:** [`pr80-body-after-f3.md`](pr80-body-after-f3.md) — the
+**Prepared for the publish at S165, published at S166:** [`pr80-body-after-f3.md`](pr80-body-after-f3.md) — the
 description with every figure re-derived at S165 (the head, 28 files +7,892 / −580, the headline table,
 the pair paragraph, a paragraph on the config, the corpus 659,755 → 839,383 B, two verification rows),
 each method first reproducing the figure it replaces; [`pr80-reply-f2-f3.md`](pr80-reply-f2-f3.md) — one
