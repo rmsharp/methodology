@@ -168,6 +168,30 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-15 · [BL-57] §The Action Ledger: the ledger is never read whole, and archiving is optional — the two-cap size rule goes
+
+- **Change:** `FRAMEWORK_APPARATUS.md`'s *Size, and when to archive* becomes *Reading and archiving*,
+  on the operator's Q2 A. Each rule, at its line in this commit: `:428` *"The protocol never asks a
+  session to read this file whole"*, then its three partial reads — Phase 0 reconcile from `git log`
+  (`:430`), close-out at the top (`:432`), a lookup by `grep` or `git log --grep` (`:433`); `:436`–`:438`,
+  past the trimmer's `READ_REFUSE_BYTES`, read the top with an offset and a limit; `:440` *"Archiving is
+  optional"*; `:442` *"The tool's trigger is the only statement of when — these rules name no size"*;
+  `:476` conservation, *"the live file and its shards together never lose an entry"*, so a count spans
+  both and never the live file alone, or a count ratchet refuses every trim (C9); `:486`, kept, a trim
+  *"does not belong in Phase 0"*. The two-cap table goes — its 65,536 B default (C2), its *"every session
+  pays"* premise (C1), its citations of BL-52 and a planning document this repository does not hold
+  (C12) — with the rate-versus-level argument, which describes a line cap the trimmer no longer has. The
+  shard convention stays; its enumeration becomes `cat CHANGELOG.md $(git ls-files
+  'docs/archive/CHANGELOG-*.md')`, equal in bash, zsh and a Python count with no shard (55) and with
+  eleven (526). The *three files* paragraph (`:498`) no longer says the ledger splits *"once it outgrows
+  a session's read"*, and the file's intro (`:13`) and the section's opening (`:342`) no longer call the
+  moved text verbatim. 28,022 → 25,983 B.
+- **Why:** step 1 of BL-57's P2 (C1, C2, C9, C12, and C4's half in this file). The protocol reads only
+  parts of the ledger, so its size costs no session a read; the trimmer stays, for a project that wants
+  a smaller live file.
+- **Placed** above BL-57's P1 entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-15 · [BL-57] The documents that describe `FRAMEWORK_APPARATUS.md` name its seventh section
 
 - **Change:** `HOW_TO_USE.md`'s layer table (the apparatus row gains *write a ledger entry*; ~330 → ~515

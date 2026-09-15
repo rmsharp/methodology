@@ -10,7 +10,7 @@ The first six sections below were moved here **verbatim** from that file, which 
 size a single read can hold. Nothing was rewritten, condensed, or dropped in the move; the only edit
 was to turn one in-file cross-reference into a link back to `ITERATIVE_METHODOLOGY.md`. The seventh,
 [§The Action Ledger](#the-action-ledger), holds the rules for a project's `CHANGELOG.md`, moved here
-verbatim from the starter-kit seed so that `bin/sync` keeps them current.
+from the starter-kit seed so that `bin/sync` keeps them current.
 
 ---
 
@@ -339,8 +339,8 @@ Maintain a performance comparison table across ALL sessions in the methodology p
 
 The rules for a project's `CHANGELOG.md`, the authoritative action ledger. They live here, in a
 file `bin/sync` keeps current, rather than in the starter-kit seed, which each project receives
-once and never again — so a correction made here reaches every project. The three subsections
-below were moved **verbatim** from that seed, one heading level down; the seed now carries a
+once and never again — so a correction made here reaches every project. The subsections
+below began as that seed's text, moved one heading level down; the seed now carries a
 pointer to this section and its format marker. Inside them, *this file* and *this ledger* mean
 your `CHANGELOG.md`.
 
@@ -423,51 +423,35 @@ entry: mark it `(in progress)` in the summary, and a later session closes it out
 the revert as its own entry. Reverse-chronological, prepend-only, so close-out never re-sorts.
 Promote to `## YYYY-MM` sections as the list grows — group by month, **not** by release.
 
-### Size, and when to archive
+### Reading and archiving
 
-Sectioning organises this file; it does not shrink it. The file grows without bound and Phase 0
-reads it every session, so it also has a size discipline. **Two caps, because there are two
-distinct failure modes and neither subsumes the other. Fire if either fires; stop only when both
-stop conditions hold.**
+**The protocol never asks a session to read this file whole.** Its three reads are each partial:
 
-| Cap | Protects against | Form | Fire when | Cut until |
-|---|---|---|---|---|
-| **Lines** — ~2,000, a **proxy** for the agent `Read` cap (the cap itself is denominated in **tokens**, not lines) | **measures an unread tail** — it does not, on its own, establish a remedy. A read past the cap returns only the prefix that fits, and says so: a `PARTIAL view` banner names the delivered span, the true length and the cap, and an explicit over-cap line range errors outright with no content at all. **Announced, not silent.** **Whether archiving the tail REMEDIES this is an open question, not a settled benefit.** Truncation is ordered top-down and this file is newest-on-top, so the records a cut removes are ones a whole-file read was not delivering anyway: the delivered prefix is the same before and after, and what changes is that the reader stops being warned. Raised as BL-52. **Re-measure rather than trusting this row** — the reproduction is `docs/planning/read-cap-premise-correction-plan.md` Appendix A in the framework repo | a **rate** | headroom < **15** entries | headroom > **30** |
-| **Bytes** — a per-file budget, default **65,536 B** (64 KB) | **context tax**: every session pays for the whole file, every time | a **level with hysteresis** | `size > budget` | `size ≤ ½ × budget` |
+- **Phase 0 reconcile** takes the frontier from git — `git log -1 --format=%H -- CHANGELOG.md` — and
+  lists the commits after it with `git log`; a backfill it owes goes on at the top.
+- **Close-out** reads the top and prepends the session's entries there.
+- **A lookup** — when was X done, which entry records commit Y — is a `grep` or a `git log --grep`,
+  not a read.
 
-**Run this. Do not eyeball it, and do not trust a size written here or anywhere else** — a number
-in prose is stale the next time anyone prepends:
+So the file's size costs no session a read, and it has no place in a read budget. Past the
+harness's default-read refusal — the trimmer's `READ_REFUSE_BYTES`, beyond which a default read
+returns no content at all, front matter included — read the top with an offset and a limit.
+
+**Archiving is optional.** A project that wants a smaller live file moves its oldest entries to a
+frozen shard with `methodology_trim.py`, which refuses to write unless it can prove the split
+lossless. The tool's trigger is the only statement of *when* — these rules name no size:
 
 ```sh
 python3 methodology_trim.py --file CHANGELOG.md --check
 ```
 
-`--check` evaluates both conditions, reports whether the trigger fires, and never writes. `--write`
-performs the trim; a dry run is the default, and it refuses to write unless it can prove the split
-lossless. **It neither commits nor stages** — it leaves the live file modified and the new shard
-*untracked*, prints the rollback, and leaves the commit to you. Stage both yourself:
+`--check` evaluates the trigger, reports whether it fires, and never writes. For a project that has
+chosen not to archive, its report is information, not a fault. `--write` performs the trim; a dry
+run is the default. **It neither commits nor stages** — it leaves the live file modified and the new
+shard *untracked*, prints the rollback, and leaves the commit to you. Stage both yourself:
 `git add CHANGELOG.md docs/archive/` — committing with `-a` alone would land the shortened ledger
-while the shard, being untracked, never enters history at all.
-
-**Why the line cap is a rate.** Headroom is `(2000 − lines) × entries-added ÷ lines-added` since the
-last split, so it re-derives itself from the file on every read. A hand-written level cannot: it is
-a derived value frozen at the moment someone typed it. This framework's own receipt ledger is the
-worked example — it states its trigger as a level, *"approaches ~1,200 lines"*, and **that level has
-never once fired.** The single archive that file has ever had was taken on judgment at 997 lines,
-*before* the level was written; since then the file has grown several times past its byte budget
-while still reading "under 1,200 lines". A level in the wrong unit says *fine* indefinitely. Where
-there is no slope yet — before the first split, or immediately after one — the rate **abstains out
-loud** rather than print a number it cannot support.
-
-**Why the byte cap is not.** *"Cut until headroom is back above 30"* is unreachable on bytes at any
-budget: a tool applying it would trim the file to a single record and still report the trigger
-unsatisfied. A level with hysteresis terminates, and the ½ factor is what keeps the next entry from
-re-firing the trigger immediately.
-
-**The budget is judgment, and it is yours to set.** It does not follow from the line cap — at real
-ledger densities, 2,000 lines is a different byte count for every file. Calibrate it the way this
-default was: take the sizes your repo has actually operated at comfortably after previous archives,
-and set the budget just above them. `--budget-bytes <N>` overrides it for a single run.
+while the shard, being untracked, never enters history at all. `--budget-bytes <N>` overrides the
+tool's byte budget for a single run.
 
 **Archiving again is not always the answer.** If the file has already given back everything the
 last archive removed, another archive resets the *level* and not the *rate* — the tool measures
@@ -489,9 +473,11 @@ An archive is a **shard** — a new frozen file, same format, same newest-on-top
   own count. It must **not** restate a forward-looking rule. A shard is frozen, so a rule copied
   into one is wrong the moment the live rule moves, and correcting it means editing a frozen
   record. Cite the live file; do not copy it.
-- **After a split the authority is the live file *and* its shards.** Any command that enumerates
-  this ledger must span both by glob — `CHANGELOG.md docs/archive/CHANGELOG-*.md` — or the split
-  silently shrinks the population the audit was counting.
+- **Conservation: the live file and its shards together never lose an entry.** A trim moves entries
+  and deletes none, so anything that counts or enumerates this ledger reads both, never the live file
+  alone — `cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md')`, which runs the same in
+  bash and zsh, shard or no shard. The live file's own count falls at every trim by design, so a guard
+  that compared it across commits would refuse every trim.
 - **Prefer a release frontier as the cut key**, because a shipped release is a boundary nothing can
   ever be written back into. A calendar date works too, but it is frozen only by convention; if you
   cut at one, say in the shard's own front matter that you departed and why.
@@ -509,7 +495,7 @@ grooming problem, and its completed items belong here, in this ledger, not in a 
 
 `SESSION_NOTES.md` is the **transient handoff** — *"what's next, what traps?"* — overwritten
 every session. `CHANGELOG.md` is the **cumulative ledger** — *"what was done, ever?"* —
-append-only, and split into shards once it outgrows a session's read (see above). Nothing is
-ever deleted; the oldest entries move. The commit SHA is the only intended intersection. Close-out **distills** the
+append-only, and never read whole (see above). Nothing is ever deleted: when a project archives,
+the oldest entries move to a shard. The commit SHA is the only intended intersection. Close-out **distills** the
 durable outcome into a ledger entry; it does not copy the handoff. The belongs-here test:
 *would the operator, six months out, need this to know what the repo does or how it got there?*
