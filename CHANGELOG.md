@@ -210,6 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S162 — Learning #65: procedure written into a seed-once file cannot be corrected by the framework
+
+- **Change:** `starter-kit/FRAMEWORK_LEARNINGS.md` gains row 65, the structural cause the BL-57 plan
+  found (§1.2). Rules shipped inside a seed are frozen at each adopter's seeding, so every correction
+  strands a copy: the two adopters whose ledgers still carry the rules both teach the pre-correction
+  *silent* truncation, and their fenced examples inflate a line-based audit. The row is fork-only; the
+  upstream PR adds none (plan K4).
+- **Commit/PR:** this commit
+- **Session:** S162 · **Verified:** `bin/check-learnings` exit 0 — 64 rows, contiguous, 0 over 1,500 B.
+  Row 65 is 1,144 B; the file is 78,103 B, 3,817 B under the 81,920 B growth warning — about three more
+  rows of this size
+- **Model:** Claude Opus 5, 1M context (claude-opus-5[1m])
+
 ### 2026-09-15 · [BL-57] S162 — the BL-57 plan: one set of `CHANGELOG.md` rules, kept in one place (operator-approved)
 
 - **Change:** `docs/planning/changelog-rules-contradictions-plan.md` (812 lines) plans the removal of
