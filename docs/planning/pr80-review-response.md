@@ -103,7 +103,7 @@ the branch's `.context-budget.json` too: `SAFEGUARDS.md`'s is pinned at `main`'s
 The three local `pr80/*` branches can stay until #80 merges; F3's worktree `../methodology-pr80-f3` is
 removed at S165's close-out.
 
-## 4. F2 — done at S164 on a local branch, not pushed
+## 4. F2 — done at S164 on a local branch, published at S166
 
 **The ask:** *"Neutralize its `version_re` and its four signatures in both twins and the unit suite stays
 OK (211) while the synced fixture flips to `code` with the false HIGH … Parametrize it over every
@@ -168,7 +168,7 @@ description, then the reply (`gh api -X PATCH` for the description; `gh pr edit`
 needs nothing for F2: it names no test and quotes no figure F2 moves. The reply's F2 paragraph can take the
 table above.
 
-## 5. F3 — done at S165 on a local branch, not pushed: R1 L1, the operator's choice
+## 5. F3 — done at S165 on a local branch, published at S166: R1 L1, the operator's choice
 
 **The ask:** *"the root `.context-budget.json` reports this PR's own result as OVER … Either denominate
 the read-set ceiling in tokens at measured density …, or set the ledger ceilings where the ledgers are

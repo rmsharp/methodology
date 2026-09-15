@@ -210,6 +210,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S166 close-out — PR #80's F2 and F3 published (push, description, reply); the maintainer's move next
+
+- **Change:** S166's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S165 9/10). The session
+  published F2 (`37740763`) and F3 (`aa36fd8b`) of the maintainer's #80 review on the operator's go-ahead
+  for all three actions — the push `d4e1570..aa36fd8`, the description, the reply — each read back before
+  the next (the three entries below). The response plan's §4 and §5 headings now say published too. No
+  trim: `HANDOFFS.md` held 4 receipts at Phase 0, and holds 5 after this commit, so S167's Phase 0 trims.
+- **Commit/PR:** this commit (claim `32c90db4`, record `6e109e45`)
+- **Session:** S166 · **Verified:** A, B and C each read back through the GitHub API; `check-handoff --all`
+  0 (5 receipts); `bin/tests.sh` 304/1/0 at Phase 0 (`5ce7bb2`) and again on this close-out content
+  committed inside a clone — 305 rows, 0 status flips (the counter proved on a planted flip), 9 rows
+  differing only in numbers this session moved
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S166 — PR #80: the reply for F2 and F3 posted (non-commit action, operator go-ahead)
 
 - **Action:** one comment on [PR #80](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5685701488),
