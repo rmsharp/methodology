@@ -1226,6 +1226,12 @@ budgets to"* stopped being true at S116, when the trimmer's budget went to 196,6
 decoupled from this config. Shipping both ledgers in the seed at 65,536 B would now give adopters a
 `CHANGELOG.md` gate this repo has just decided it does not need.
 
+**Update, S162 (2026-09-14): the `CHANGELOG.md` half is settled by decision.** BL-57's plan
+([`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md), Q2 A: archiving is
+optional, and the ledger is never read whole) makes a `CHANGELOG.md` entry in the seed
+`context-budget.json` wrong on its own terms, so none will be added. The `HANDOFFS.md` half stays open
+(the plan's D7).
+
 **BL-48 — the seed `HANDOFFS.md` lacks the count sentence its own `LedgerSpec` declares, so every
 adopter gets `FRONTMATTER_FIELD_ABSENT` forever. Raised 2026-08-26 from `vscode_quarto_ext` S254.**
 
@@ -1684,6 +1690,10 @@ PR, is a separate go-ahead. **Done** when both `bin/status` versions read `prese
 **Out of scope, recorded:** S161's run of fork `main`'s `bin/status` (2026-09-11) found the same *present
 (stale format)* verdict on other projects' `CHANGELOG.md` or `HANDOFFS.md`; this item is `airqino` only.
 
+**Folded into BL-57's plan (S162):** the reseed happens in its P6, against the thin seed that plan
+introduces, so it is done once rather than twice
+([`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) §5, P6).
+
 <a id="bl-57"></a>
 
 **BL-57 — HIGH PRIORITY: the framework's rules for `CHANGELOG.md` contradict each other; remove the
@@ -1760,3 +1770,15 @@ What that means for a plan:
   maintainer's review time favours one substantial, vetted PR.
 - **Operator decision, 2026-09-14: do not trim this repo's `CHANGELOG.md`.** Its trimmer trigger keeps
   firing; the plan settles what the archive rule becomes, starting from that decision.
+
+**Planned at S162 (2026-09-14 → 09-15), operator-approved:
+[`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) (`9292132e`).** The
+operator decided four questions, all A: the rules move to one synced home (`FRAMEWORK_APPARATUS.md`
+§The Action Ledger) and the seed becomes a linked pointer with a format marker; archiving is optional;
+`[BL-<id>]` takes any backlog id; one entry per commit, never edited. The inventory grew the eight
+contradictions above to sixteen findings. Two corrections to this item: `nprcgenekeepr`'s rules block
+runs :3946–:4065, between two runs of entries; and contradiction 1's dashboard citation (:259) is
+half-stale, because the fork dashboard's own comment (:325–345) already rejects the premise and keeps
+the ledgers in its watched set only as a property report. **Next: the plan's P1**, one session, on
+branch `bl57/changelog-rules` created from `b82dcff`. BL-56 folds into the plan's P6, and BL-47's
+`CHANGELOG.md` half is settled by Q2 A (both noted in those items).

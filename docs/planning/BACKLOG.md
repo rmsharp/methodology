@@ -149,7 +149,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-54** | `bin/sync` and `bin/status` walk history without `--full-history`, so a version from a merge's other side reads as locally modified | [detail](BACKLOG-DETAIL.md#bl-54) |
 | **BL-55** | Nothing enforces removing a completed `BACKLOG.md` item — Signal F only reports, and adopters rarely carry the `[BL-N]` join key | [detail](BACKLOG-DETAIL.md#bl-55) |
 | **BL-56** | Rewrite `airqino`'s `CHANGELOG.md` to the current ledger format — the Route A sync left its pre-v3.1 seed as it was | [detail](BACKLOG-DETAIL.md#bl-56) |
-| **BL-57** | **HIGH PRIORITY** — the `CHANGELOG.md` rules contradict each other across the framework; fix here and in six adopters, aiming at an upstream PR (a planning session comes first) | [detail](BACKLOG-DETAIL.md#bl-57) |
+| **BL-57** | **HIGH PRIORITY** — the `CHANGELOG.md` rules contradict each other across the framework; fix here and in six adopters, aiming at an upstream PR. **Planned at S162, operator-approved** (Q1–Q4 all A): [`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) — next is its P1 | [detail](BACKLOG-DETAIL.md#bl-57) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45)
 

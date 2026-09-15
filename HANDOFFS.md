@@ -75,18 +75,44 @@ instruction is why these rows exist.
 ```handoff
 session: S162
 date: 2026-09-14
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: **PLAN BL-57 — REMOVE THE CONTRADICTIONS IN THE FRAMEWORK'S `CHANGELOG.md` RULES, HERE AND IN SIX ADOPTERS, AIMING AT AN UPSTREAM PR.** The operator's choice at Phase 0 (option A; S161 item 1; high priority). Deliverable: a plan in `docs/planning/`, presented for approval before it is committed; nothing implemented. **Fork-internal: no push, no PR, no comment.**
-what_was_done: pending
-next_steps: pending
-key_files: `docs/planning/BACKLOG-DETAIL.md:1687` (BL-57: its eight contradictions and the adopter table), `starter-kit/CHANGELOG.md:96` (the seed's reads-every-session premise), `starter-kit/SESSION_RUNNER.md:284` (Phase 3F), `starter-kit/methodology_trim.py:164` (the 196,608 B trigger) — BL-57's citations, re-read before quoting.
-gotchas: **UPSTREAM MOVED TODAY** — PR #80's head is `b82dcff`, not `598c459`; its review is private (F1–F3 pending); upstream's S16 receipt proposes a heading-count ratchet that would refuse every trim. **FORK `main` CONFLICTS WITH `upstream/main`** in `CHANGELOG.md` and `HANDOFFS.md` (`git merge-tree`). **`bin/tests.sh` MUTATES BOTH LIVE LEDGERS** — clone only. **DO NOT TRIM `CHANGELOG.md`** (operator, 2026-09-14).
-runtime_smoke: Baseline at `3745748` in a `--no-local` clone: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing). Dashboard 76/100 at Phase 0. Both ledger frontiers at `3745748`, 0 undocumented commits; tree clean apart from the Phase 0 `dashboard_history.jsonl` snapshot.
-changelog_ref: CHANGELOG.md "2026-09-14 · [BL-57] S162 claim — plan BL-57: remove the contradictions in the framework's `CHANGELOG.md` rules, here and in six adopters, aiming at an upstream PR"
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: **THE BL-57 PLAN IS WRITTEN, REVIEWED, APPROVED BY THE OPERATOR AND COMMITTED — [`docs/planning/changelog-rules-contradictions-plan.md`](docs/planning/changelog-rules-contradictions-plan.md) (`9292132e`).** It removes the contradictions in the framework's `CHANGELOG.md` rules — sixteen findings across fourteen files — here and in six adopters, through a new upstream PR once #80 merges. The operator answered four questions, all A: the rules move to one synced home (`FRAMEWORK_APPARATUS.md` §The Action Ledger) and the seed becomes a linked pointer with a format marker; archiving is optional; `[BL-<id>]` takes any backlog id; one entry per commit, never edited. D5–D10 were approved with the plan. **Claimed 2026-09-14, closed 2026-09-15. Planning only — nothing implemented; fork-internal — nothing pushed, no PR, no comment.**
+what_was_done: **Four commits: `7ea7346b` claim (with the Phase 0 `dashboard_history.jsonl` snapshot), `9292132e` the plan, `64f085b2` Learning #65, and this close-out.** Phase 0 found that upstream had moved that day: PR #81 merged, the maintainer ran S13–S17, and PR #80's head went `598c459` → `b82dcff`. **The inventory** is `git grep` over three trees (`b82dcff`, `upstream/main`, fork `main`) with twelve patterns — 1,577 lines in 45 files on `b82dcff`, each classified — plus six adopters measured read-only: sizes, rules text, tag families, sync state, `CLAUDE.md` ledger rules, and a conformance count under the old and the new tag rule. **The decisions:** the operator asked for the options to be explained in chat before choosing, then chose Q4 A on a measured A-versus-B comparison (fork: 56 of 60 ledger commits were pure insertions; upstream: every S13–S17 entry was rewritten at close-out, and S16's rewrite deleted ten entries). **An independent read-only reviewer** found 4 errors, 9 risks and 6 nits in the first draft; I reproduced each before fixing it and recomposed the plan rather than patching it. My own checks then caught two line ranges I had cited from memory. The plan's checkers were mutation-tested: §9.3 caught 4 of 4 mutants, §9.8 both kinds of entry damage. **Backlog:** BL-57's row and note point at the plan; BL-47's `CHANGELOG.md` half is recorded as settled by Q2 A; BL-56 is recorded as folded into P6.
+next_steps: **(1) THE PLAN'S P1 — its own session** (`docs/planning/changelog-rules-contradictions-plan.md:352`). Create branch `bl57/changelog-rules` from `b82dcff` in a worktree; move the seed's three rule sections verbatim into `FRAMEWORK_APPARATUS.md` §The Action Ledger; make the seed thin; key `CHANGELOG.md` on the new marker; fix the stale-seed advice (C16). **Re-fetch first:** if #80's head has moved past `b82dcff`, branch from the new head. The commit order and every DONE check are in the plan. **(2) `HANDOFFS.md` HOLDS FIVE RECEIPTS** after this close-out, and its headroom to the 65,536 B ceiling is less than one receipt of the usual size — its own policy (`HANDOFFS.md:15`) trims to four at the next Phase 0. That trim is its own action; re-derive its dry run after the claim. **(3) CARRIED, unchanged:** S161's merge-options parts (b) and (c); BL-54's fix; the two stale planning documents; `HOW_TO_USE.md:774`; BL-36; Test 31; BL-53 (about three rows of room after #65); `choose_cut`; the nine merged `origin` branches; pushing `main`. Each deletion and the push is its own go-ahead. **(4) UPSTREAM TO WATCH:** #80's private review (F1–F3), quality-ratchet Phase 1 and the proposed heading-count ratchet (plan C9) all touch this plan's files — compute conflicts with `git merge-tree` at P12.
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:17` (§0 the answer), `:40` (§1.1 the sixteen findings), `:110` (§2.1 the decisions), `:154` (§3.1 the home's outline), `:257` (§4.2 the sites that change), `:308` (§4.4 the adopters), `:352` (P1, the next session), `:591` (P12), `:697` (§9 the commands). `starter-kit/CHANGELOG.md:94` (the size section P1 moves); `starter-kit/HANDOFFS.md:89` (the heading that becomes its marker); `bin/_manifest.py:95` on `b82dcff` (the markers P1 changes); `starter-kit/FRAMEWORK_LEARNINGS.md:97` (row 65); `docs/planning/BACKLOG-DETAIL.md:1697` (BL-57).
+gotchas: **(1) A `--no-local` CLONE HAS NO `upstream/*` REFS.** `git checkout b82dcff` failed in one, the `&&` chain skipped `bin/tests.sh` silently, and the next command ran the unit suite on fork `main` and printed exit 0. Fetch the ref into the clone first (plan hazard 12). **(2) zsh ABORTS ON AN UNMATCHED GLOB** — the shard-spanning audit printed 0 where bash gives 43; the plan publishes a `$(git ls-files …)` form instead (K8). **(3) THE `$R:path` TRAP BIT AGAIN**, although S161's gotchas name it: `$R:starter-kit/…` is a history modifier. **(4) AIM A MUTANT AT THE UNIT IT TESTS** — my first mutation of the §9.3 checker changed section 1 and checked section 2, so its "VERBATIM" proved nothing. **(5) EXPLAIN A HARD CHOICE IN PROSE FIRST** — the operator declined a four-question picker and asked *"chat; explain the differences among these choices"*, then answered by letter. **(6) `bin/tests.sh` MUTATES BOTH LIVE LEDGERS** — clone only.
+runtime_smoke: **NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`** in `--no-local` clones. Phase 0 baseline at `3745748`: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing). Plan-time baseline at `b82dcff`, with the ref fetched into the clone: **115 / 1, exit 1** (Test 9); unit suites 450 tests OK (4 skipped); `check-links` OK, 105 links in 23 files. Bare, live tree at close-out: `check-learnings` **0** (64 rows, 0 over 1,500 B); `BACKLOG-DETAIL.md.verify.sh` **0**; the links the plan and the backlog add resolve. **Close-out run, on this content committed inside a clone (this sentence added after it): 304 / 1 / 0, exit 1 — 305 rows, 0 status flips against the Phase 0 baseline, 10 rows differing only in numbers this session moved** (the live `**Model:**` bullets, now 43; receipts, now 5; the fixtures' derived ids, now #66 and S163; the ledger, then 59,109 B). `check-handoff` **0** and `--all` **0** (5 receipts; this record 8,667 B of 12,288 B before this sentence). **NOT EXERCISED:** any adopter (read-only surveys and scratch copies only); the branch the plan creates; GitHub.
+changelog_ref: CHANGELOG.md "2026-09-15 · [BL-57] S162 close-out — the BL-57 plan approved and committed; P1 is next", plus the Learning #65 entry, the plan entry and the S162 claim entry
+commit: 7ea7346b (claim) + 9292132e (the plan) + 64f085b2 (Learning #65) + this close-out
 ```
+
+**Self-assessment: 7/10.** Plus: **the inventory ran on the upstream target tree, not only on fork
+`main`**, so the plan's line numbers are the ones an upstream PR will meet. It found eight findings
+BL-57 did not list, among them the structural cause — rules inside a seed — that made Q1 the decision
+the rest hangs on. **The four decisions are the operator's**, taken after an explanation the operator
+asked for, and Q4 on a measured comparison rather than on my preference. **Every finding of the
+independent review was reproduced before it was fixed**, the plan was recomposed rather than patched,
+and its checkers were shown to fail on planted mutants. **Minus: the first draft carried four errors in
+its own DONE criteria** — a test the thin seed breaks, a grep that could never print nothing, adopter
+criteria that could not be met, and an audit that returns 0 under zsh. The reviewer found them, not I,
+and each was a forward claim of the kind Learning #13 says to compute, not write. My first baseline
+attempt failed silently, and I nearly took the unit suite's exit 0 on fork `main` for `b82dcff`'s. The
+zsh trap S161 named still cost a call; my first mutant was aimed at the wrong section; two line ranges
+I cited from memory were wrong; and my first question packed four decisions into terse options, which
+cost the operator a round trip. **Reduction:** none. `HANDOFFS.md` goes to five receipts, and its policy
+trims at the next Phase 0; `CHANGELOG.md` is not trimmed, by the operator's decision.
+
+**Predecessor (S161): 8/10.** Its item (1) named the deliverable and where to start. BL-57, which it
+raised after close-out, carried eight contradictions with citations and an adopter table, and every
+one of the eight held when re-read on `b82dcff`. Gotcha (8) spared this session S161's own regression:
+my claim stub carried `path:line` tokens and passed `check-handoff --all --allow-pending` first time.
+Gotchas (6) and (7) were used as written. **Not 9, for two small inaccuracies in BL-57:** contradiction
+1's dashboard clause (`starter-kit/methodology_dashboard.py:259`) rests on a premise the same file's
+comment at :325–345 already rejects, and its `nprcgenekeepr` range (:3946–:3983) is the start of a
+block that runs to :4065. Its zsh gotcha (3) was right; I still hit the trap. **ROI: strongly
+positive** — BL-57 was most of this plan's starting inventory.
 
 ```handoff
 session: S161

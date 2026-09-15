@@ -210,6 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S162 close-out — the BL-57 plan approved and committed; P1 is next
+
+- **Change:** S162's receipt is completed in `HANDOFFS.md` (self 7/10, predecessor S161 8/10). BL-57's
+  row and note in `docs/planning/BACKLOG.md` and `BACKLOG-DETAIL.md` point at the plan; BL-47's
+  `CHANGELOG.md` half is recorded as settled by Q2 A, and BL-56 as folded into the plan's P6.
+  `HANDOFFS.md` now holds five receipts, and its own policy trims to four at the next Phase 0.
+- **Commit/PR:** this commit (claim `7ea7346b`, plan `9292132e`, Learning #65 `64f085b2`)
+- **Session:** S162 · **Verified:** `check-learnings` 0; `BACKLOG-DETAIL.md.verify.sh` 0;
+  `check-handoff --all` 0 (5 receipts); `bin/tests.sh` on this content in a `--no-local` clone 304/1/0,
+  exit 1, with 0 status flips against the Phase 0 baseline (the one failure is Test 9, pre-existing)
+- **Model:** Claude Opus 5, 1M context (claude-opus-5[1m])
+
 ### 2026-09-15 · [BL-57] S162 — Learning #65: procedure written into a seed-once file cannot be corrected by the framework
 
 - **Change:** `starter-kit/FRAMEWORK_LEARNINGS.md` gains row 65, the structural cause the BL-57 plan
