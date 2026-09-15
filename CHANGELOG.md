@@ -210,6 +210,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-10.md` (2 record(s), 61,471 B → 41,455 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-10 → 2026-09-10) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-10.md`](docs/archive/HANDOFFS-through-2026-09-10.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-10.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-10.md.verify.sh)
+rather than trusting a digest printed here. Live file 61,471 B → 41,455 B (−32.6%).
+
 ### 2026-09-15 · [ad hoc] S163 — PR #80 review F1 (a) prepared on a local branch, not pushed; the updated description and the reply drafted; the BL-57 plan amended
 
 - **Change:** local branch `pr80/f1-learnings-1-13` (worktree `../methodology-pr80`) from #80's head
