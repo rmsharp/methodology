@@ -1758,3 +1758,5 @@ What that means for a plan:
   the customized runner in `model_project_constructor`, and `airqino`'s open PR #1.
 - **Batch with** BL-47, BL-52's open list, BL-55 and BL-56 where they touch the same files; the
   maintainer's review time favours one substantial, vetted PR.
+- **Operator decision, 2026-09-14: do not trim this repo's `CHANGELOG.md`.** Its trimmer trigger keeps
+  firing; the plan settles what the archive rule becomes, starting from that decision.

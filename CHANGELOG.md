@@ -210,6 +210,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [ad hoc] Operator decision: do not trim `CHANGELOG.md`
+
+The operator decided not to trim this ledger, although `methodology_trim.py --check` fires — the file
+is past the tool's 196,608 B Class A trigger. It follows the same day's decision that sessions reach the
+ledger through git and never read it whole (`3c8acd5`), and S112's precedent of declining a trim that
+buys nothing (BL-52). **Expected from now on:** `--check` keeps exiting 1 and the dashboard keeps
+showing the trigger; past 262,144 B a default `Read` returns nothing, so read the file with
+`offset`/`limit` — verified today on `nprcgenekeepr`'s 413,383 B ledger. Recorded in the S161 receipt's
+item (1), in BL-57 (whose plan settles the archive rule), and in memory. Nothing was trimmed.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-14 · [ad hoc] S161 follow-up — BL-57 raised as HIGH PRIORITY on the operator's request: the `CHANGELOG.md` rules contradict each other; a planning session comes next, aiming at an upstream PR
 
 The operator asked for the contradictions to be logged, and for a high-priority future session to plan
