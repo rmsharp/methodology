@@ -76,6 +76,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S168
+date: 2026-09-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57's P2 — READING AND ARCHIVING (C1, C2, C4, C9, C12, C14): §The Action Ledger's *Size, and when to archive* rewritten to Q2 A (the three reads, archiving optional, the tool's `--check` the only trigger, never in Phase 0, conservation), the `HANDOFFS.md` seed's premise and 65,536 B row replaced by a pointer, the trimmer's `:186` comment corrected.** The operator's "A" at Phase 0. First, merge `upstream/main` (`8b4dc2c3`; #80 merged) into `bl57/changelog-rules` at `77b21a20` in `../methodology-bl57`, then re-run every suite and §9.7. D8 (ii) was done inside #80 by F3, so it is recorded, not redone. Nothing pushed.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:440` (P2), `:349` (§5.0), `:816` (§9.7); on the branch, `starter-kit/HANDOFFS.md:91`, `:98`, `starter-kit/methodology_trim.py:186`, `FRAMEWORK_APPARATUS.md:338` (§The Action Ledger).
+gotchas: The plan's line numbers are `b82dcff`'s — re-derive each before editing. No suite runs `context_budget.py --status`: run §9.7 at every boundary, and keep upstream `CLAUDE.md` net ≤ 0. `bin/tests.sh` mutates both live ledgers — clone only. After the merge, branch commits must satisfy upstream's new `.githooks/commit-msg`. `git rev-parse --short a b` fails — hit again at this Phase 0.
+runtime_smoke: Phase 0 at `d2347a16`: both ledger frontiers current, 0 undocumented commits; 4 receipts (no trim); dashboard 76/100, one medium risk (`CHANGELOG.md` 243,849 B, 18,295 B under the 262,144 B refusal). `upstream/main` `8b4dc2c3`; #80 MERGED, 3 comments; no open upstream issues or PRs. `git merge-tree` of the branch with `upstream/main` exits 0. Suites not re-run at Phase 0 (last known, S167: fork 305/0/0, branch 118/0).
+changelog_ref: CHANGELOG.md "2026-09-15 · [BL-57] S168 claim — BL-57's P2: reading and archiving, on the branch after merging `upstream/main`"
+commit: pending
+```
+
+```handoff
 session: S167
 date: 2026-09-15
 status: complete

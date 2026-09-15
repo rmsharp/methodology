@@ -210,6 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S168 claim — BL-57's P2: reading and archiving, on the branch after merging `upstream/main`
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: P2 of the
+approved BL-57 plan (`docs/planning/changelog-rules-contradictions-plan.md:440`), the operator's *"A"* at
+this session's Phase 0. In the worktree `../methodology-bl57`, branch `bl57/changelog-rules` (`77b21a20`,
+S167's P1) first merges `upstream/main` `8b4dc2c3` (#80 merged at `4d9e2715`), then takes P2's scope;
+nothing is pushed. P2's item 4 — D8 (ii), drop `CHANGELOG.md` from upstream's root `.context-budget.json`
+— is already done: #80's F3 moved both ledgers to `_deliberate_exclusions`, verified on `upstream/main` at
+Phase 0, so the plan records it rather than redoing it. Phase 0: both ledger frontiers at `d2347a16`, 0
+undocumented commits; `HANDOFFS.md` 4 receipts, no trim; `CHANGELOG.md` 243,849 B, 18,295 B under the
+262,144 B read refusal, not trimmed (the operator's 2026-09-14 decision); no open upstream issues or PRs.
+Carries the Phase 0 `dashboard_history.jsonl` snapshot.
+
 ### 2026-09-15 · [BL-57] S167 close-out — BL-57's P1 done on a branch, not pushed; PR #80 merged upstream; P2 next
 
 - **Change:** S167's receipt is completed in `HANDOFFS.md` (self 7/10, predecessor S166 9/10). The session
