@@ -210,6 +210,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S164 close-out — PR #80's F2 done on a local branch and held for one push with F3; F3 next
+
+- **Change:** S164's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S163 9/10). The session
+  answered F2 of the maintainer's #80 review on local branch `pr80/f2-installed-source-guard` (`37740763`,
+  test-only), RED first on the review's mutant, and recorded it in `docs/planning/pr80-review-response.md`
+  §4. Nothing was pushed: F2 is held so F2 and F3 go up in one push and one reply. The worktree
+  `../methodology-pr80-f2` was removed once clean (local housekeeping); the branch stays. F3 starts with
+  an operator decision (§5).
+- **Commit/PR:** this commit (claim `8791a272`, record `95d84cfd`; branch `37740763`, not pushed)
+- **Session:** S164 · **Verified:** `check-handoff --all` 0 (5 receipts); branch suites 115/1 at
+  `d4e1570` and `37740763` with 0 status flips; fork `bin/tests.sh` on this content in a `--no-local`
+  clone 304/1/0, exit 1, 0 status flips against the Phase 0 baseline (the one failure is Test 9,
+  pre-existing)
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S164 — PR #80 review F2 done on a local branch, not pushed: every non-markdown file `bin/sync` installs is now tested, RED first
 
 - **Change:** local branch `pr80/f2-installed-source-guard` (worktree `../methodology-pr80-f2`) from #80's
