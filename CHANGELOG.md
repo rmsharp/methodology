@@ -210,6 +210,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S163 close-out — PR #80's F1 answered and published; F2 and F3 next
+
+- **Change:** S163's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S162 7/10). The
+  session answered F1 of the maintainer's #80 review with option (a) — two commits on
+  `read-set-budgets`, pushed; the description updated; the reply posted — and trimmed `HANDOFFS.md` to
+  four receipts, forced past `SRF_RED` on the operator's decision. F2 and F3 are set up in
+  `docs/planning/pr80-review-response.md` §4–§5; F3 starts with an operator decision.
+- **Commit/PR:** this commit (claim `9f66ebd9`, preparation `42e52f9`, trim `ae44dec9`, outward actions
+  `b9091fe`, fold `49685a9`; branch `5c9f0f3`, `d4e15706` on
+  [PR #80](https://github.com/KJ5HST/methodology/pull/80))
+- **Session:** S163 · **Verified:** `check-handoff --all` 0 (4 receipts); the shard proof 0 after the
+  fold; branch suites 115/1 at `b82dcff`, `5c9f0f3` and `d4e15706` with 0 status flips; `bin/tests.sh`
+  on this content in a `--no-local` clone 304/1/0, exit 1, 0 status flips against the Phase 0 baseline
+  (the one failure is Test 9, pre-existing)
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S163 — `HANDOFFS.md`: the trim's pointer block folded into the archive table
 
 - **Change:** the three-line pointer block `methodology_trim.py` appended for
