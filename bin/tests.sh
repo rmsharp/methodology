@@ -270,14 +270,24 @@ OUT="$("$BIN/status" "$P")"
 echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && fail "status: current-format (fresh) seed mis-flagged stale" || pass "status: current-format (fresh) seed not flagged"
 echo "$OUT" | grep -q "^note:" && fail "status: spurious stale-format note on fresh tree" || pass "status: no stale-format note on fresh tree"
 # (b) In-use current-format ledger: the METHODOLOGY-SEED-SENTINEL is deleted (as the adopter does on its
-# first real entry) and a dated entry appended, but the ledger TITLE is retained. This is the exact case
-# the marker choice is engineered around (key on the lifetime-stable title, NOT the deletable sentinel);
-# it must NOT be flagged, or binding constraint #2 (no false positive on a current-format seed) breaks.
-printf '# Changelog — Authoritative Action Ledger\n\nThe action ledger.\n\n---\n\n### 2026-01-01 · [ad hoc] a real entry\n- Change: something real.\n' > "$P/CHANGELOG.md"
-grep -q "METHODOLOGY-SEED-SENTINEL" "$P/CHANGELOG.md" && fail "test-bug: in-use fixture still carries the sentinel" || pass "test: in-use fixture is title-only (sentinel deleted)"
+# first real entry) and a dated entry appended, but the seed's marker line is retained. This is the exact
+# case the marker choice is engineered around (key on a lifetime-stable line the seed tells adopters to
+# keep, NOT the deletable sentinel); it must NOT be flagged, or binding constraint #2 (no false positive
+# on a current-format seed) breaks.
+printf '# Changelog — Authoritative Action Ledger\n\nThe action ledger. ledger-format: 2 — keep this marker.\n\n---\n\n### 2026-01-01 · [ad hoc] a real entry\n- Change: something real.\n' > "$P/CHANGELOG.md"
+grep -q "METHODOLOGY-SEED-SENTINEL" "$P/CHANGELOG.md" && fail "test-bug: in-use fixture still carries the sentinel" || pass "test: in-use fixture is current-format with the sentinel deleted"
 OUT="$("$BIN/status" "$P")"
 echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && fail "status: in-use current-format ledger mis-flagged stale (constraint #2)" || pass "status: in-use current-format ledger not flagged"
 echo "$OUT" | grep -q "^note:" && fail "status: spurious note on in-use current-format ledger" || pass "status: no note on in-use current-format ledger"
+# (b2) The seed as shipped before ledger-format 2, frozen in tools/fixtures/: it carries the current TITLE
+# and the full rules text, and must still read stale. BOOTSTRAP.md:85 promises status "flags any seed
+# whose format predates the current methodology"; a marker present in any earlier format can never keep
+# that promise. Driven RED against the title-keyed marker before the marker moved.
+SEED1="$METHODOLOGY/tools/fixtures/seed-CHANGELOG-ledger-format-1.md"
+grep -q "Authoritative Action Ledger" "$SEED1" && pass "test: the frozen pre-ledger-format-2 seed carries the current title" || fail "test-bug: the frozen seed lacks the title it stands for"
+cp "$SEED1" "$P/CHANGELOG.md"
+ROW="$("$BIN/status" "$P" | grep "CHANGELOG.md" | grep -v '^note:')"
+echo "$ROW" | grep -q "stale format" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md:85 promises it is"
 # (c) Replace the seed with a pre-v3.1 (Keep-a-Changelog) shape lacking the ledger-title marker.
 printf '# Changelog\n\nAll notable changes to this project.\n\n## [Unreleased]\n' > "$P/CHANGELOG.md"
 OUT="$("$BIN/status" "$P")"

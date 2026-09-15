@@ -92,6 +92,25 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-15 · [BL-57] `bin/status` keys the `CHANGELOG.md` seed on `ledger-format: 2`, and its migration advice stops rewriting entries
+
+- **Change:** `bin/_manifest.py`'s `SEED_FORMAT_MARKERS` key `CHANGELOG.md` on `ledger-format: 2`, the
+  seed's pointer line, instead of its title, and `HANDOFFS.md` on its `Size, and when to archive` heading
+  instead of its title; the comment states why a title can never fire. `bin/status`'s migration note and
+  `BOOTSTRAP.md`'s *Updating an existing project* paragraph now say: replace the text above the first
+  entry with the current seed's, leave every entry as written, and reseed only a file with no history.
+  `bin/tests.sh` Test 20: the in-use fixture carries the marker line, and a new case (b2) holds the frozen
+  pre-ledger-format-2 seed, which must read *present (stale format)*.
+- **Why:** step 3 of BL-57's P1. A title never changed across formats, so keying on it reported every old
+  seed as current; and the old advice — *"reconcile its header and per-entry format"* — told adopters to
+  rewrite committed entries.
+- **Verified:** (b2) fails against the title-keyed marker (116 passed / 2 failed) and passes with this
+  commit (117 / 1; the other failure is Test 9 throughout). On copies of six adopters, `bin/status` reads
+  every `CHANGELOG.md` *present (stale format)*, with the new advice beneath, and its six `HANDOFFS.md`
+  verdicts equal fork `main`'s, which already keys on that heading.
+- **Placed** above #80's entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-15 · [BL-57] The `CHANGELOG.md` rules move to `FRAMEWORK_APPARATUS.md` §The Action Ledger; the seed becomes a pointer with a format marker
 
 - **Change:** the seed's three rule sections — *How to add an entry*, *Size, and when to archive* and
