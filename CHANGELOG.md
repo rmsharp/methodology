@@ -92,6 +92,23 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-15 · [BL-57] The `CHANGELOG.md` rules move to `FRAMEWORK_APPARATUS.md` §The Action Ledger; the seed becomes a pointer with a format marker
+
+- **Change:** the seed's three rule sections — *How to add an entry*, *Size, and when to archive* and
+  *CHANGELOG.md vs SESSION_NOTES.md* — move verbatim, one heading level down, into a seventh section of
+  `FRAMEWORK_APPARATUS.md` (15,493 → 28,022 B), whose intro now says so. `starter-kit/CHANGELOG.md` keeps
+  its title, purpose paragraph, sentinel and footer, and gains a linked pointer carrying
+  `ledger-format: 2` (12,893 → 1,335 B). `starter-kit/HANDOFFS.md`'s cross-reference points at the new
+  home, and `methodology_trim.py`'s fence-tracking comment says where the fenced examples live now
+  (comment only: its AST is unchanged). No rule changes.
+- **Why:** step 2 of BL-57's P1. `bin/sync` writes a seed once and never again, so rules kept in a seed
+  froze at each project's seeding; in a synced file a correction reaches every project.
+- **Verified:** each moved section occurs byte for byte in the home (the plan's §9.3 check); the trimmer
+  reports `NO_RECORDS` on the new seed; `bin/sync` into an empty directory seeds it; `bin/check-links`
+  resolves the two new links (105 → 107).
+- **Placed** above #80's entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-15 · [BL-57] The trimmer's fence-awareness controls read a frozen copy of today's seed, so they survive the seed shrinking
 
 - **Change:** `tools/test_methodology_trim.py` and a new `tools/fixtures/seed-CHANGELOG-ledger-format-1.md`,

@@ -120,9 +120,10 @@ An archive is a **shard**: a new frozen file, same format, same newest-on-top or
 - **After a split, anything that enumerates receipts must span both** — `HANDOFFS.md
   docs/archive/HANDOFFS-*.md` — or it silently counts a shrunken population.
 
-If a `CHANGELOG.md` sits beside this file, its own **Size, and when to archive** section carries the
-reasoning both files share: why the line cap must be a rate, why the byte cap cannot be one, and how
-to choose the budget. Everything needed to *act* is here.
+The reasoning this file shares with `CHANGELOG.md` — why the line cap must be a rate, why the byte
+cap cannot be one, and how to choose the budget — is in the *Size, and when to archive* subsection of
+[§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger). Everything needed to
+*act* is here.
 
 What is specific to *this* file, and gets receipts wrong if assumed:
 
