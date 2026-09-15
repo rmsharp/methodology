@@ -210,6 +210,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S165 close-out — PR #80's F3 done on a local branch, held with F2 for one publish; three go-aheads next
+
+- **Change:** S165's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S164 9/10). The session
+  answered F3 of the maintainer's #80 review on local branch `pr80/f3-read-set-token-ceilings`
+  (`aa36fd8b`, on top of F2's `37740763`) with the operator's R1 L1, and recorded it in
+  `docs/planning/pr80-review-response.md` §5, with the description re-derived and one reply drafted. It
+  also trimmed `HANDOFFS.md` to four receipts without `--force`. The worktree `../methodology-pr80-f3` was
+  removed once clean (local housekeeping); the branch stays. Nothing was pushed.
+- **Commit/PR:** this commit (claim `8e0a7a72`, trim `d9ace03`, fold `ef55d77`, record `95a4845`; branch
+  `aa36fd8b`, not pushed)
+- **Session:** S165 · **Verified:** `check-handoff --all` 0 (4 receipts); branch suites 115/1 at `37740763`
+  and `aa36fd8b` with 0 status flips; `--status` exit 0 on both trees; fork `bin/tests.sh` 304/1/0 at
+  `ef55d775` with 0 status flips against Phase 0, and 304/1/0 again on this close-out content committed
+  inside a clone — 0 status flips, 7 rows differing only in numbers this session moved
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S165 — PR #80 review F3 done on a local branch, not pushed: the root `.context-budget.json` reports OK on the branch and on its merge into `main`
 
 - **Change:** local branch `pr80/f3-read-set-token-ceilings` (worktree `../methodology-pr80-f3`) from F2's
