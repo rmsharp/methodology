@@ -73,6 +73,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S162
+date: 2026-09-14
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **PLAN BL-57 — REMOVE THE CONTRADICTIONS IN THE FRAMEWORK'S `CHANGELOG.md` RULES, HERE AND IN SIX ADOPTERS, AIMING AT AN UPSTREAM PR.** The operator's choice at Phase 0 (option A; S161 item 1; high priority). Deliverable: a plan in `docs/planning/`, presented for approval before it is committed; nothing implemented. **Fork-internal: no push, no PR, no comment.**
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/BACKLOG-DETAIL.md:1687` (BL-57: its eight contradictions and the adopter table), `starter-kit/CHANGELOG.md:96` (the seed's reads-every-session premise), `starter-kit/SESSION_RUNNER.md:284` (Phase 3F), `starter-kit/methodology_trim.py:164` (the 196,608 B trigger) — BL-57's citations, re-read before quoting.
+gotchas: **UPSTREAM MOVED TODAY** — PR #80's head is `b82dcff`, not `598c459`; its review is private (F1–F3 pending); upstream's S16 receipt proposes a heading-count ratchet that would refuse every trim. **FORK `main` CONFLICTS WITH `upstream/main`** in `CHANGELOG.md` and `HANDOFFS.md` (`git merge-tree`). **`bin/tests.sh` MUTATES BOTH LIVE LEDGERS** — clone only. **DO NOT TRIM `CHANGELOG.md`** (operator, 2026-09-14).
+runtime_smoke: Baseline at `3745748` in a `--no-local` clone: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing). Dashboard 76/100 at Phase 0. Both ledger frontiers at `3745748`, 0 undocumented commits; tree clean apart from the Phase 0 `dashboard_history.jsonl` snapshot.
+changelog_ref: CHANGELOG.md "2026-09-14 · [BL-57] S162 claim — plan BL-57: remove the contradictions in the framework's `CHANGELOG.md` rules, here and in six adopters, aiming at an upstream PR"
+commit: pending
+```
+
+```handoff
 session: S161
 date: 2026-09-11
 status: complete

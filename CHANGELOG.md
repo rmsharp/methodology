@@ -210,6 +210,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-14 · [BL-57] S162 claim — plan BL-57: remove the contradictions in the framework's `CHANGELOG.md` rules, here and in six adopters, aiming at an upstream PR
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: a plan in
+`docs/planning/` for BL-57 (`docs/planning/BACKLOG-DETAIL.md`, anchor `bl-57`) — a grep inventory taken
+on the upstream target tree as well as fork `main`, per-phase DONE criteria naming each phase's surface,
+one session per phase — presented to the operator for approval before it is committed. The operator
+chose it at this session's Phase 0 (option A of three) and set the deepest reasoning mode. **Nothing is
+implemented, and nothing is outward-facing: no push, no PR, no comment.** Upstream moved today and the
+plan starts from it: PR #80's head is `b82dcff` (the maintainer merged `main` into it to clear a
+`CHANGELOG.md` conflict), its review is private and pending (F1–F3), and upstream's S16 receipt proposes
+a `CHANGELOG.md` heading-count ratchet that would refuse every trim (`aaa6d30` took the headings
+80 → 27). Fork `main` now conflicts with `upstream/main` in `CHANGELOG.md` and `HANDOFFS.md`. Carries
+the Phase 0 `dashboard_history.jsonl` snapshot.
+
 ### 2026-09-14 · [ad hoc] Operator decision: do not trim `CHANGELOG.md`
 
 The operator decided not to trim this ledger, although `methodology_trim.py --check` fires — the file
