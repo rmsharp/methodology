@@ -1,8 +1,8 @@
 # BL-57 — one set of `CHANGELOG.md` rules, kept in one place
 
 **Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
-S167 and S168 (see **Trees**). **P1 and P2 are done** on branch `bl57/changelog-rules` (S167, S168; not
-pushed); P3–P12 are not.
+S167 and S168 (see **Trees**). **P1 and P2 are done** on branch `bl57/changelog-rules` (S167, S168; backed
+up to `origin`, not upstream); P3–P12 are not.
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.

@@ -210,6 +210,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S168 follow-up — branch `bl57/changelog-rules` pushed to `origin` as a backup, at `775ba238` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin bl57/changelog-rules`, creating the branch on the fork — run only inside a
+  guard that re-fetched `origin` and re-checked, in the same command, the local branch at `775ba238`, its
+  worktree clean, and no branch of that name on `origin`, so nothing could be overwritten. Read back:
+  `git ls-remote origin refs/heads/bl57/changelog-rules` = `775ba238`, equal to local. Nothing upstream,
+  and no PR — GitHub's *create a pull request* hint was not followed. Rewriting the branch from here — a
+  rebase at P12 — needs a force-push of the backup. The plan's header, BL-57's backlog row and S168's
+  receipt (`active_task`, item (4)) now say so. This entry's own commit is not pushed.
+- **Go-ahead:** the operator's, after S168's close-out (*"push the branch to origin as a backup"*).
+
 ### 2026-09-15 · [ad hoc] S168 follow-up — fork `main` pushed to `origin`, `6142d53..2d1bcc3` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main` after the close-out, a fast-forward of 8 commits — S167's five and
