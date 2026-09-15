@@ -210,6 +210,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S169 follow-up — the operator schedules the next session: a comment on PR #82 with suggested changes (nothing posted)
+
+- **Decision:** after S169's close-out the operator directed: *"for the next session, plan on developing and
+  posting a comment for PR #82 with suggested changes to improve the PR."* S169's receipt, `next_steps` item
+  (1), now says so, with the recipe: re-fetch #82, re-run `docs/planning/pr82-review-repro.sh` against its head,
+  draft from `docs/planning/pr82-review.md` §6, present the final text, post it through
+  `gh api repos/KJ5HST/methodology/issues/82/comments`, read it back. BL-57's P3 follows it.
+- **Recorded:** this commit. Nothing was drafted or posted in S169; the comment is the next session's action.
+
 ### 2026-09-15 · [ad hoc] S169 close-out — a fork-only review of upstream PR #82; nothing posted
 
 - **Change:** S169's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S168 9/10). On the
