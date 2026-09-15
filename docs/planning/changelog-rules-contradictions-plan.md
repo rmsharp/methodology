@@ -1,7 +1,7 @@
 # BL-57 — one set of `CHANGELOG.md` rules, kept in one place
 
-**Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163
-(see **Trees**). Nothing in it is implemented.
+**Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163 and
+S167 (see **Trees**). **P1 is done** on branch `bl57/changelog-rules` (S167, not pushed); P2–P12 are not.
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -18,6 +18,20 @@ head); fork `main` at **`7ea7346b`**; six adopters under `~/Development/`. Every
 pushed, #80's head moves past `b82dcff`, so P1 starts from the new head (hazard 1), and **no row past
 #13 exists upstream**: a fork learning reaches an upstream file only as its rule, stated inline, never
 as a number (P1 step 5). §1.1's C5 and §7's *Keep keying on the titles* row describe `b82dcff` itself.
+**Amended at S167 (2026-09-15):** P1 ran from #80's head `aa36fd8b` — `eb06625b`, `b0634606`, `2d5dc6e9`,
+`77b21a20` on `bl57/changelog-rules`, worktree `../methodology-bl57`, not pushed. **#80 merged the same
+day** (`4d9e2715`; `upstream/main` `8b4dc2c3`), so D5's route is open and `aa36fd8b` is an ancestor of
+`upstream/main`: P2 starts by merging `upstream/main` into the branch (`git merge-tree` clean at S167),
+which also brings upstream's new `.githooks/commit-msg`. What P1 found, for P2–P4:
+(1) `.context-budget.json` pins upstream `CLAUDE.md`'s ceiling at its size, 59,168 B, so K2 covers
+`CLAUDE.md` too — every edit to it is net ≤ 0. P1's step-4 row first went 116 B over while all four suites
+stayed green: none runs `context_budget.py --status` on the tree, so §9.7 is the only check that sees it.
+Run it at every boundary, on the branch and on its merge. (2) §9.4's command as first published printed
+nothing in zsh — `"$c:starter-kit/…"` is a history modifier (hazard 13); corrected below. (3) The frozen
+pre-P1 seed is one file, `tools/fixtures/seed-CHANGELOG-ledger-format-1.md`, read by the trimmer's
+controls and by Test 20 (b2), with its blob id `47bc8485` asserted — not two literals. (4) A third index of
+the apparatus, `ITERATIVE_METHODOLOGY.md` §Reference Apparatus, listed six sections; step 4 updated it with
+the plan's two. (5) The marker line reads `ledger-format: 2 — keep this marker; bin/status reads it.`
 
 ---
 
@@ -775,9 +789,12 @@ each of four mutants: a one-character change inside each section, and one headin
 ```bash
 M='ledger-format: 2'     # whatever token P1 settles on
 git log --all --format=%H -- starter-kit/CHANGELOG.md | while read c; do
-  git show "$c:starter-kit/CHANGELOG.md" 2>/dev/null | grep -qF "$M" && echo "$c"
+  git show "${c}:starter-kit/CHANGELOG.md" 2>/dev/null | grep -qF "$M" && echo "$c"
 done                     # must print only P1's commit and later ones
 ```
+
+*(S167: the braces are load-bearing. The first published form, `"$c:starter-kit/…"`, printed nothing in
+zsh; at S167 the braced form printed only `b0634606` of nine versions.)*
 
 ### 9.5 The distributed files
 

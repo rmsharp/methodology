@@ -210,6 +210,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S167 — BL-57's P1 done on branch `bl57/changelog-rules` (4 commits, not pushed); the plan amended; PR #80 merged upstream the same day
+
+- **Change:** branch `bl57/changelog-rules` created from PR #80's head `aa36fd8b` in the worktree
+  `../methodology-bl57` (a branch operation), and P1 of the approved plan committed on it — four commits,
+  each with its own entry in the branch's own `CHANGELOG.md`: `eb06625b` the trimmer's fence controls read
+  a frozen copy of today's seed (`tools/fixtures/seed-CHANGELOG-ledger-format-1.md`); `b0634606` the seed's
+  three rule sections move verbatim to `FRAMEWORK_APPARATUS.md` §The Action Ledger, and the seed becomes a
+  1,335 B pointer carrying `ledger-format: 2`; `2d5dc6e9` `bin/status` keys on that marker and its advice
+  stops rewriting entries; `77b21a20` the three documents that describe the apparatus name its seventh
+  section. **Not pushed; no PR** — each is its own go-ahead. In this repo: the plan's header and an S167
+  amendment (`docs/planning/changelog-rules-contradictions-plan.md:3`, `:21`), its §9.4 command corrected
+  for zsh, and BL-57's backlog row.
+- **Found:** (1) step 4 first landed as `d4841721`, 116 B over upstream `CLAUDE.md`'s pinned 59,168 B
+  ceiling, with all four suites green — none runs `context_budget.py --status` on the tree. The plan's §9.7
+  check caught it, and the commit was amended to `77b21a20` (the row is now 9 B shorter than before;
+  unpushed, so nothing published was rewritten). (2) The plan's §9.4 command printed nothing under zsh:
+  `"$c:…"` is a history modifier. (3) **PR #80 merged** at 19:59 UTC (`4d9e2715`; `upstream/main`
+  `8b4dc2c3`), which is why Test 9 now passes on every tree.
+- **Commit/PR:** this commit (the record); branch `eb06625b`, `b0634606`, `2d5dc6e9`, `77b21a20`
+- **Session:** S167 · **Verified:** at `77b21a20`, in a `--no-local` clone: `bin/tests.sh` 118 passed / 0
+  failed, against 116 / 0 at `aa36fd8b` run at the same time — 1 row renamed, 3 added, 0 status flips; unit
+  suites 211 · 124 · 116 OK (4 skipped); `check-links` 107 links (from 105); `check-learnings` 13 rows.
+  `context_budget.py --status` exits 0 on the branch and on its merge into `upstream/main`. The plan's P1
+  DONE checks: §9.3 VERBATIM ×3; §9.4 prints only `b0634606`; the seed ≤ 1,600 B with no `## `, `NO_RECORDS`
+  exit 0, seeded by `bin/sync`; all six adopters' `CHANGELOG.md` copies read stale with the new advice, and
+  their `HANDOFFS.md` verdicts equal fork `main`'s.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-15 · [ad hoc] S167 — `HANDOFFS.md`: the trim's pointer block folded into the archive table (19 trims, 152 receipts)
 
 - **Change:** the 3-line pointer block `methodology_trim.py` appended for
