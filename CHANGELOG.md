@@ -210,6 +210,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [BL-57] S162 — the BL-57 plan: one set of `CHANGELOG.md` rules, kept in one place (operator-approved)
+
+- **Change:** `docs/planning/changelog-rules-contradictions-plan.md` (812 lines) plans the removal of
+  the contradictions in the framework's `CHANGELOG.md` rules, here and in six adopters, through a new
+  upstream PR once #80 merges. It inventories sixteen findings across fourteen files on three trees
+  (`b82dcff`, `upstream/main`, fork `main`; 1,577 matching lines in 45 files on `b82dcff`) and six
+  adopters, and sets twelve one-session phases, each with DONE criteria, verification commands, its
+  surface and what that surface cannot enforce. **The operator's decisions (S162):** Q1 A, the rules
+  move to one synced home, `FRAMEWORK_APPARATUS.md` §The Action Ledger, and the seed becomes a linked
+  pointer with a format marker; Q2 A, archiving is optional; Q3 A, `[BL-<id>]` takes any backlog id;
+  Q4 A, one entry per commit, never edited. Recommendations D5–D10 were approved with the plan.
+  Planning only: nothing implemented, nothing outward-facing.
+- **Commit/PR:** this commit
+- **Session:** S162 · **Verified:** an independent read-only review found 4 errors, 9 risks and 6 nits
+  in the first draft, each reproduced before it was fixed; §9.1 and §9.2 reproduce; the §9.3 and §9.8
+  checkers catch every planted mutant; the links resolve; baselines at `b82dcff` (`bin/tests.sh` 115/1,
+  450 unit tests OK, `check-links` OK) and fork `main` (304/1)
+- **Model:** Claude Opus 5, 1M context (claude-opus-5[1m])
+
 ### 2026-09-14 · [BL-57] S162 claim — plan BL-57: remove the contradictions in the framework's `CHANGELOG.md` rules, here and in six adopters, aiming at an upstream PR
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: a plan in
