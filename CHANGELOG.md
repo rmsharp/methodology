@@ -210,6 +210,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S166 claim — PR #80: publish F2 + F3 (push, description, reply) on the operator's go-ahead for all three
+
+**Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: S165's next
+step (1) — publish F2 (`37740763`) and F3 (`aa36fd8b`) of the maintainer's #80 review, by
+`docs/planning/pr80-review-response.md` §3. The operator approved all three outward actions at this
+session's Phase 0 (*"A B C"*): A, push `pr80/f3-read-set-token-ceilings:read-set-budgets` (a fast-forward
+from `d4e1570`); B, the description from `docs/planning/pr80-body-after-f3.md`; C, the reply
+`docs/planning/pr80-reply-f2-f3.md`. Each is read back before the next, and any mismatch stops the
+sequence. Phase 0: #80 still at `d4e1570`, `upstream/main` at `9fa3141`, 2 comments; `HANDOFFS.md` at 4
+receipts, so no trim. Carries the Phase 0 `dashboard_history.jsonl` snapshot.
+
 ### 2026-09-15 · [ad hoc] S165 close-out — PR #80's F3 done on a local branch, held with F2 for one publish; three go-aheads next
 
 - **Change:** S165's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S164 9/10). The session

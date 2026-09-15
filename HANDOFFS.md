@@ -75,6 +75,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S166
+date: 2026-09-15
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **PR #80: PUBLISH F2 + F3 — THE OPERATOR'S "A B C" AT PHASE 0.** A: push `pr80/f3-read-set-token-ceilings` (`aa36fd8b`) to `read-set-budgets`, a fast-forward from `d4e1570`; B: the description from `docs/planning/pr80-body-after-f3.md`, through `gh api -X PATCH`; C: the reply `docs/planning/pr80-reply-f2-f3.md`. Each read back before the next; any mismatch stops the sequence.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/pr80-review-response.md:59` (§3, the publish recipe); `docs/planning/pr80-body-after-f3.md:1` (the description); `docs/planning/pr80-reply-f2-f3.md:1` (the reply).
+gotchas: `gh pr edit` fails on the Projects-classic deprecation — use `gh api -X PATCH`. Compare the live body after stripping the one trailing newline `--jq` adds. `bin/tests.sh` mutates both live ledgers — clone only.
+runtime_smoke: Baseline at `5ce7bb2` in a `--no-local` clone: **304 passed / 1 failed / 0 skipped, exit 1** (Test 9, pre-existing). Dashboard 76/100. Both ledger frontiers current, 0 undocumented commits. PR #80 OPEN at `d4e1570`, `MERGEABLE`/`CLEAN`, 2 comments; `upstream/main` `9fa3141`; the push a fast-forward, `merge-tree` clean.
+changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S166 claim — PR #80: publish F2 + F3 (push, description, reply) on the operator's go-ahead for all three"
+commit: pending
+```
+
+```handoff
 session: S165
 date: 2026-09-15
 status: complete
