@@ -92,6 +92,20 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-15 · [BL-57] The documents that describe `FRAMEWORK_APPARATUS.md` name its seventh section
+
+- **Change:** `HOW_TO_USE.md`'s layer table (the apparatus row gains *write a ledger entry*; ~330 → ~515
+  lines), `CLAUDE.md`'s Document Hierarchy row, and `ITERATIVE_METHODOLOGY.md` §Reference Apparatus, whose
+  table listed the six sections that moved there and now lists §The Action Ledger as well. Wording only.
+  The `CLAUDE.md` row is 9 B shorter than before: `.context-budget.json` pins that file's ceiling at its
+  size (59,168 B), so it names the rules and drops *"Extracted so the manual fits one read"*, which the
+  apparatus's own intro already says.
+- **Why:** step 4 of BL-57's P1 — the file gained a section in step 2, and three documents that describe
+  it did not know. The plan named the first two; the third is the same kind of index, found by grepping
+  for the set-size claim (*"Six sections moved there"*).
+- **Placed** above #80's entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-15 · [BL-57] `bin/status` keys the `CHANGELOG.md` seed on `ledger-format: 2`, and its migration advice stops rewriting entries
 
 - **Change:** `bin/_manifest.py`'s `SEED_FORMAT_MARKERS` key `CHANGELOG.md` on `ledger-format: 2`, the

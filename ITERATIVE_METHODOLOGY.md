@@ -542,7 +542,8 @@ A second factor: **workstream transfer amnesia.** Discipline built on one type o
 
 The apparatus these principles operate — the tables you fill in, the tests you run, the scales you
 score against — lives in [`FRAMEWORK_APPARATUS.md`](FRAMEWORK_APPARATUS.md), a sibling read **on
-demand** rather than every session. Six sections moved there intact, content unchanged:
+demand** rather than every session. Six sections moved there intact, content unchanged; a seventh
+holds the `CHANGELOG.md` rules the starter-kit seed used to carry:
 
 | Section | What it gives you |
 |---|---|
@@ -552,6 +553,7 @@ demand** rather than every session. Six sections moved there intact, content unc
 | **Verification Hierarchy** | The seven ascending levels of verification |
 | **Session Document Template** | The copy-paste template for a session document |
 | **Performance Tracking** | Cross-session metric columns, their interpretation, maturity and erosion indicators |
+| **The Action Ledger** | The rules for a project's `CHANGELOG.md`: entry format, source tags, size and archiving |
 
 Nothing was condensed or dropped, and every point of need above links onward — Principles 4–7,
 Phase 2 steps 6–8, Phase 6 steps 4–6 with its honest-accounting bullet and its gate, and the

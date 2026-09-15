@@ -18,7 +18,7 @@ Four layers, each serving a distinct purpose — plus the flight manual's read-o
 |-------|------|------|
 | Cockpit checklist | `starter-kit/SESSION_RUNNER.md` | Step-by-step operating procedure for every session |
 | Flight manual | `ITERATIVE_METHODOLOGY.md` | Theory: 9 principles, 6 phases, 12 quality gates |
-| Reference apparatus | `FRAMEWORK_APPARATUS.md` | The flight manual's read-on-demand sibling: the tables you fill in, the tests you run, the scales you score against. Extracted so the manual fits one read; distributed, so adopters get it too |
+| Reference apparatus | `FRAMEWORK_APPARATUS.md` | The flight manual's read-on-demand sibling: the tables you fill in, the tests you run, the scales you score against, and the `CHANGELOG.md` rules. Distributed, so adopters get it too |
 | Mission procedures | `workstreams/*_WORKSTREAM.md` | Domain-specific adaptations (design, architecture, development, audit, research documentation) |
 | Campaign templates | `workstreams/*_CAMPAIGN.md` | Multi-session campaigns extending a workstream |
 
