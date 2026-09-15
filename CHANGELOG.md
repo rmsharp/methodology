@@ -210,6 +210,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S169 follow-up — fork `main` pushed to `origin`, `4c07b91..c0d7eee` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, a fast-forward of S169's seven commits — claim `f89c0faf`, trim
+  `0ccfce84`, fold `da8af503`, the review record `4ffcb253`, close-out `4c86987`, and the two follow-ups
+  `885fd77` and `c0d7eee` — run only inside a guard that re-fetched `origin` and re-checked, in the same
+  command, `origin/main` = `4c07b916`, `main` = `c0d7eee3`, 7 ahead, 0 behind, an ancestor, and a clean tree.
+  Read back: `git ls-remote origin refs/heads/main` = `c0d7eee3`, equal to local `main`, 0 ahead. Nothing was
+  pushed to `upstream`; no PR, comment or reply was opened. This entry's own commit is pushed the same way, so
+  `origin/main` equals `main`.
+- **Go-ahead:** the operator's, after S169's close-out (*"push fork main to origin"*).
+
 ### 2026-09-15 · [ad hoc] S169 follow-up — the operator adds a requirement for the PR #82 comment: generally recognized terminology (nothing posted)
 
 - **Decision:** the operator added that one improvement to suggest on #82 is the readability of its stated
