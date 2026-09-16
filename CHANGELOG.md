@@ -35,6 +35,21 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
+
+- **Action:** one maintainer comment on [PR #82](https://github.com/KJ5HST/methodology/pull/82) answering
+  rmsharp's review comment of 2026-09-16: the review **reproduces** (its own repro script 7/7 sections, the
+  four token figures by the doubled-file Read, the `--run` hash `74c773523dab` on a third tree; the §1
+  rewording accurate on every checkable claim) — with six corrections from the internal check (oversight
+  venue, 2026-09-16): fix 1 alone *refuses* a `git rm` via `find_root`'s exit 3, so `find_root` is the
+  prerequisite; the dashboard fix never runs while the manifest stays deleted; "one new test offsets one
+  failure" is false at the unit-suite level (one `tests.sh` check each); the receipt-vs-results comparison is
+  specified in `starter-kit/HANDOFFS.md` §Citing the gate run, absent only from the runner's Phase 0
+  procedure; the stale-density finding applies to `SAFEGUARDS.md` too; the proposed `context-budget` gate
+  writes an un-ignored history file. Two items the review did not raise: merge/rebase commits skip the
+  ratchet; an unparseable HEAD manifest is the delete/re-add hole with one `--no-verify`. Fixes are the
+  next session's work, in the corrected order. Session S21; comment URL completed at close-out.
+
 ### 2026-09-15 · [ad hoc] Merged PR #80 — the read-set budgets series (#76–#79)
 
 - **Action:** merge [PR #80](https://github.com/KJ5HST/methodology/pull/80) (rmsharp) at head `aa36fd8` into

@@ -8,6 +8,13 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S21
+date: 2026-09-16
+status: pending
+active_task: Post the maintainer's confirmation of rmsharp's PR #82 review comment (2026-09-16T03:31Z) to the PR as one comment — that the review reproduces (its script 7/7, the token figures 4/4, the --run hash a third time), the six corrections from the internal check of 2026-09-16 (E1 fix-1-alone refuses; E2 the offset claim; E3 the comparison is specified in HANDOFFS.md; O1 the dashboard fix is unreachable when the manifest stays deleted; O2 SAFEGUARDS density equally stale; E4 the context-budget gate's history-file side effect), and two unraised items (merge/rebase skip; unparseable HEAD). Operator trigger: "post the confirmation. We'll do the fixes next." ONE DELIVERABLE (the comment — a non-commit action, recorded here and in the ledger). IN PROGRESS.
+```
+
+```handoff
 session: S19
 date: 2026-09-15
 status: complete
