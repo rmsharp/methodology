@@ -26,6 +26,7 @@ sys.dont_write_bytecode = True
 
 import filecmp
 import importlib.util
+import hashlib
 import json
 import os
 import re
@@ -414,6 +415,13 @@ CHECKLIST_EXEMPT = {
                          "session-operating discipline this checklist measures was followed",
     ".context-budget.json": "SEED config for the context-budget gate above; scored the same way "
                             "for the same reason, not a session-operating artifact",
+    "quality_ratchet.py": "the quality-ratchet gate (quality-ratchet plan D2), same class as "
+                          "context_budget.py: sync installs it, so its presence measures sync, "
+                          "not adoption; whether a project DECLARES gates is answered by the "
+                          "dashboard's gate metrics, not by the compliance checklist",
+    ".quality-gates.json": "SEED manifest for the ratchet above — starts empty by decision "
+                           "(plan §8.4), so its presence proves only that sync ran; a declared "
+                           "gate count and its outcomes are reported as risks/points instead",
 }
 
 
@@ -2134,6 +2142,228 @@ class TestFrameworkEndToEnd(unittest.TestCase):
                 self.assertIn("does not verify these files are used", card)
 
 
+class TestQualityGateSignals(unittest.TestCase):
+    """Quality-ratchet plan D6 / Phase 3. RED-first against the 2.10.7 scanner, which has no
+    `gates` key: every assertion below on a risk, a point, or a card string failed there.
+
+    Silence is asserted as deliberately as signal (v3.6 D4): an absent manifest and the EMPTY
+    seed bin/sync installs must produce no risk, or every synced adopter would gain one for a
+    change they did not make."""
+
+    def _repo(self, files_map, commits=None):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        def commit(msg):
+            subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+            subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                            "commit", "-q", "-m", msg], check=True)
+        for name, content in files_map.items():
+            fp = p / name
+            fp.parent.mkdir(parents=True, exist_ok=True)
+            fp.write_text(content)
+        commit("init")
+        for msg, extra in (commits or []):
+            for name, content in extra.items():
+                (p / name).write_text(content)
+            commit(msg)
+        return p
+
+    CODE = {
+        "app.py": "def f():\n    return 1\n" * 40,
+        "tests/test_app.py": "def test_f():\n    assert True\n" * 10,
+        "README.md": "# App\n\nA thing.\n" * 5,
+    }
+
+    @staticmethod
+    def _manifest(*gates):
+        return json.dumps({"version": 1, "gates": list(gates)})
+
+    @staticmethod
+    def _gate(name, direction="min", threshold=1, **kw):
+        g = {"name": name, "direction": direction, "threshold": threshold}; g.update(kw); return g
+
+    @staticmethod
+    def _results(cfg_text, statuses):
+        cfg = json.loads(cfg_text)
+        digest = hashlib.sha256(json.dumps(cfg["gates"], sort_keys=True).encode()).hexdigest()[:12]
+        return json.dumps({"manifest": digest, "ran_at": "2026-09-15T00:00:00+00:00",
+                           "gates": [{"name": g["name"], "status": st}
+                                     for g, st in zip(cfg["gates"], statuses)],
+                           "summary": {k: statuses.count(k) for k in ("pass", "fail", "unmeasured")}})
+
+    def _gate_risks(self, m):
+        return [r["description"] for r in m["scores"]["risks"]
+                if "quality" in r["description"].lower() or "gate" in r["description"].lower()]
+
+    def test_no_manifest_is_silent(self):
+        m = md.collect_all(self._repo(self.CODE))
+        self.assertFalse(m["gates"]["manifest_present"])
+        self.assertEqual(self._gate_risks(m), [])
+        self.assertIn("Quality Gates: <b>None</b>", md.render_project_card(m))
+
+    def test_the_empty_seed_is_silent(self):
+        seed = (CANONICAL_ROOT / "starter-kit" / "quality-gates.json").read_text(encoding="utf-8")
+        m = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": seed}))
+        self.assertTrue(m["gates"]["manifest_present"])
+        self.assertEqual(m["gates"]["declared"], 0)
+        self.assertEqual(self._gate_risks(m), [], "the seed is a template: presence proves sync")
+        self.assertIn("manifest seeded, none declared", md.render_project_card(m))
+
+    def test_declared_but_never_run_is_an_advisory(self):
+        cfg = self._manifest(self._gate("cov", "min", 80), self._gate("lint", "max", 0))
+        m = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": cfg}))
+        self.assertEqual(m["gates"]["declared"], 2)
+        risks = self._gate_risks(m)
+        self.assertEqual(len(risks), 1)
+        self.assertIn("2 declared quality gate(s), never run here", risks[0])
+        self.assertIn("2 declared, never run", md.render_project_card(m))
+
+    def test_a_failing_gate_is_named_and_high(self):
+        cfg = self._manifest(self._gate("cov", "min", 80), self._gate("lint", "max", 0))
+        m = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": cfg,
+                                       ".quality-gates-results.json": self._results(cfg, ["pass", "fail"])}))
+        risk = [r for r in m["scores"]["risks"] if "outside their threshold" in r["description"]]
+        self.assertEqual(len(risk), 1)
+        self.assertEqual(risk[0]["severity"], "high")
+        self.assertIn("lint", risk[0]["description"])
+        self.assertIn("1 pass / 1 fail / 0 unmeasured", md.render_project_card(m))
+        self.assertEqual(self._gate_risks(m).__len__(), 1, "a run present: no 'never run' advisory")
+
+    def test_stale_results_are_flagged_and_earn_no_points(self):
+        cfg_old = self._manifest(self._gate("coverage", "min", 80))
+        cfg_new = self._manifest(self._gate("coverage", "min", 85))
+        m = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": cfg_new,
+                                       ".quality-gates-results.json": self._results(cfg_old, ["pass"])}))
+        self.assertTrue(m["gates"]["results_stale"])
+        self.assertTrue(any("predate the current manifest" in r for r in self._gate_risks(m)))
+        self.assertIn("(stale)", md.render_project_card(m))
+
+    def test_a_gate_named_coverage_earns_no_points(self):
+        # PR #82 review, section 4: the +2 keyed on a passing gate NAMED "coverage" — `echo 100`
+        # earned it, from a gitignored results file no reviewer saw. Dropped until a faithfulness
+        # gate is required beside it (the plan's own condition); score a measurement, never a name.
+        base = md.collect_all(self._repo(self.CODE))
+        cfg = self._manifest(self._gate("coverage", "min", 80, command="echo 100", extract=r"(\d+)"))
+        with_cov = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": cfg,
+                                              ".quality-gates-results.json": self._results(cfg, ["pass"])}))
+        self.assertEqual(with_cov["scores"]["health"]["testing"], base["scores"]["health"]["testing"])
+        self.assertNotIn("coverage_measured_pass", with_cov["gates"])
+
+    def test_an_unmeasured_gate_is_a_low_advisory(self):
+        cfg = self._manifest(self._gate("cov", "min", 80), self._gate("declared-only", "min", 1))
+        m = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": cfg,
+                                       ".quality-gates-results.json": self._results(cfg, ["pass", "unmeasured"])}))
+        self.assertTrue(any("unmeasured (no command)" in r for r in self._gate_risks(m)))
+
+    def test_a_loosening_in_git_history_is_a_risk_with_its_sha(self):
+        cfg1 = self._manifest(self._gate("cov", "min", 80), self._gate("cc", "max", 10))
+        cfg2 = self._manifest(self._gate("cov", "min", 70), self._gate("cc", "max", 10))   # floor lowered
+        cfg3 = self._manifest(self._gate("cov", "min", 70))                                # gate removed
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg1},
+                       commits=[("loosen", {".quality-gates.json": cfg2}),
+                                ("remove", {".quality-gates.json": cfg3})])
+        m = md.collect_all(p)
+        kinds = [(l["name"], l["kind"]) for l in m["gates"]["loosened"]]
+        self.assertEqual(kinds, [("cc", "removed"), ("cov", "floor lowered")], "newest first")
+        sha = subprocess.run(["git", "-C", str(p), "rev-parse", "--short", "HEAD"],
+                             capture_output=True, text=True).stdout.strip()
+        risk = [r for r in m["scores"]["risks"] if "thresholds only tighten" in r["description"]]
+        self.assertEqual(len(risk), 1)
+        self.assertIn(f"`cc` removed in {sha}", risk[0]["description"])
+        self.assertIn("(+1 earlier)", risk[0]["description"])
+        self.assertIn("2 loosened", md.render_project_card(m))
+
+    def _git(self, p, *args):
+        return subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t", *args],
+                              check=True, capture_output=True, text=True).stdout.strip()
+
+    def test_a_deleted_manifest_is_reported_while_it_stays_deleted(self):
+        # The largest loosening available: delete the file. The scanner used to return before
+        # its history walk whenever the worktree had no manifest, so this state reported nothing.
+        cfg = self._manifest(self._gate("cov", "min", 80), self._gate("cc", "max", 10))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg})
+        self._git(p, "rm", "-q", ".quality-gates.json"); self._git(p, "commit", "-q", "-m", "delete")
+        sha = self._git(p, "rev-parse", "--short", "HEAD")
+        m = md.collect_all(p)
+        self.assertFalse(m["gates"]["manifest_present"])
+        self.assertTrue(m["gates"]["manifest_deleted"])
+        self.assertEqual(sorted((l["name"], l["kind"]) for l in m["gates"]["loosened"]),
+                         [("cc", "removed"), ("cov", "removed")])
+        self.assertTrue(all(l["sha"] == sha for l in m["gates"]["loosened"]))
+        risk = [r for r in m["scores"]["risks"] if "thresholds only tighten" in r["description"]]
+        self.assertEqual(len(risk), 1)
+        self.assertIn("manifest deleted", risk[0]["description"])
+        self.assertIn(sha, risk[0]["description"])
+        self.assertIn("deleted", md.render_project_card(m))
+
+    def test_delete_then_readd_lower_reports_the_net_loosening(self):
+        # Mirrors quality_ratchet.newest_committed: each version is compared to the nearest OLDER
+        # version that declared a gate, so 80 -> (deleted) -> 1 reads as 80 -> 1, not as "added".
+        cfg1 = self._manifest(self._gate("cov", "min", 80))
+        cfg2 = self._manifest(self._gate("cov", "min", 1))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg1})
+        self._git(p, "rm", "-q", ".quality-gates.json"); self._git(p, "commit", "-q", "-m", "delete")
+        (p / ".quality-gates.json").write_text(cfg2)
+        self._git(p, "add", "-A"); self._git(p, "commit", "-q", "-m", "re-add lower")
+        m = md.collect_all(p)
+        kinds = [(l["name"], l["kind"], l["from"], l["to"]) for l in m["gates"]["loosened"]]
+        self.assertEqual(kinds, [("cov", "floor lowered", 80.0, 1.0), ("cov", "removed", 80.0, None)])
+
+    def test_a_direction_flip_is_a_loosening(self):
+        cfg1 = self._manifest(self._gate("cov", "min", 80))
+        cfg2 = self._manifest(self._gate("cov", "max", 80))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg1},
+                       commits=[("flip", {".quality-gates.json": cfg2})])
+        m = md.collect_all(p)
+        self.assertEqual([(l["name"], l["kind"]) for l in m["gates"]["loosened"]],
+                         [("cov", "direction flipped")])
+        self.assertTrue(any("thresholds only tighten" in r for r in self._gate_risks(m)))
+
+    def test_a_changed_command_is_a_low_advisory_not_a_loosening(self):
+        cfg1 = self._manifest(self._gate("cov", "min", 80, command="pytest --cov", extract=r"(\d+)%"))
+        cfg2 = self._manifest(self._gate("cov", "min", 80, command="echo 'TOTAL 99%'", extract=r"(\d+)%"))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg1},
+                       commits=[("swap", {".quality-gates.json": cfg2})])
+        m = md.collect_all(p)
+        self.assertEqual(m["gates"]["loosened"], [])
+        self.assertEqual([(c["name"], c["field"]) for c in m["gates"]["commands_changed"]], [("cov", "command")])
+        risk = [r for r in m["scores"]["risks"] if "command" in r["description"] and "cov" in r["description"]]
+        self.assertEqual(len(risk), 1)
+        self.assertEqual(risk[0]["severity"], "low")
+
+    def test_tightening_and_adding_are_not_loosenings(self):
+        cfg1 = self._manifest(self._gate("cov", "min", 80))
+        cfg2 = self._manifest(self._gate("cov", "min", 90), self._gate("cc", "max", 10))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg1},
+                       commits=[("tighten+add", {".quality-gates.json": cfg2})])
+        m = md.collect_all(p)
+        self.assertEqual(m["gates"]["loosened"], [])
+        self.assertFalse(any("thresholds only tighten" in r for r in self._gate_risks(m)))
+
+    def test_history_scan_is_git_only_and_never_runs_a_gate_command(self):
+        # A gate whose command would leave a footprint if executed: the scanner must not run it.
+        marker = "scanner-ran-me.txt"
+        cfg = self._manifest(self._gate("touch", "max", 0, command=f"touch {marker}"))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg})
+        md.collect_all(p)
+        self.assertFalse((p / marker).exists(), "collect_all executed a declared gate command")
+
+    def test_doc_only_repo_keeps_its_render_slot(self):
+        # The measured-coverage bonus lives in the code branch only; a doc-only repo's 2nd slot is
+        # the render proxy, and a coverage gate there must not leak points into it.
+        cfg = self._manifest(self._gate("coverage", "min", 80))
+        docs = {"chapter1.md": "# Ch1\n" + "prose line\n" * 400,
+                "chapter2.md": "# Ch2\n" + "prose line\n" * 400,
+                "_quarto.yml": "format:\n  pdf:\n    mainfont: TeX Gyre\n",
+                ".quality-gates.json": cfg,
+                ".quality-gates-results.json": self._results(cfg, ["pass"])}
+        m = md.collect_all(self._repo(docs))
+        self.assertTrue(m["doc_only"]["is_doc_only"])
+        self.assertEqual(m["scores"]["health"]["testing"], m["render"]["score"])
+
+
 class TestFmtRatioAndTwins(unittest.TestCase):
     def test_fmt_ratio(self):
         self.assertEqual(md.fmt_ratio(0.0, 0, True), "n/a (doc-only)")    # actually doc-only
@@ -2146,10 +2376,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.10.7")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.11.1")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.10\.7"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.10.7")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.11\.1"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.11.1")
 
 
 class TestCliRemedyProportionality(unittest.TestCase):
