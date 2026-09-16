@@ -46,6 +46,8 @@ Usage:
   bin/check-learnings                  # canonical table + distributed-corpus citations
   bin/check-learnings --file PATH      # check an explicit file (what bin/tests.sh uses)
   bin/check-learnings --no-citations   # table shape only (for isolated fixtures)
+  bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations
+                                       # this fork's own rows, #15 on (resync D1)
 
 Exit: 0 = clean; 1 = at least one structural finding.
 Python 3 stdlib only; cross-platform. Canonical-only — NOT in bin/_manifest.py, so
@@ -172,9 +174,10 @@ def parse_table(text: str):
     return rows, findings
 
 
-def check_table(rows: list, findings: list, reserved: set = frozenset()) -> list:
-    """Append shape findings: 4 columns per row, numbers contiguous from 1 (modulo
-    any explicitly `reserved` numbers, which are not a gap — see RESERVED_RE)."""
+def check_table(rows: list, findings: list, reserved: set = frozenset(), first: int = 1) -> list:
+    """Append shape findings: 4 columns per row, numbers contiguous from `first` (modulo
+    any explicitly `reserved` numbers, which are not a gap — see RESERVED_RE). `first` is 1
+    for the distributed table; this fork's docs/FORK_LEARNINGS.md holds rows from #15 on."""
     if not rows:
         findings.append("Learnings table has no data rows")
         return findings
@@ -204,14 +207,14 @@ def check_table(rows: list, findings: list, reserved: set = frozenset()) -> list
             seen[n] = line_no
 
     if numbers:
-        expected = list(range(1, len(numbers) + len(reserved) + 1))
+        expected = list(range(first, first + len(numbers) + len(reserved)))
         actual = [n for n, _ in numbers]
         if sorted(actual + list(reserved)) != expected:
             missing = sorted(set(expected) - set(actual) - reserved)
             if missing:
                 findings.append(
-                    "Learning numbers are not contiguous from 1 — missing %s"
-                    % ", ".join("#%d" % m for m in missing)
+                    "Learning numbers are not contiguous from %d — missing %s"
+                    % (first, ", ".join("#%d" % m for m in missing))
                 )
             if actual != sorted(actual):
                 findings.append(
@@ -288,7 +291,11 @@ def main() -> int:
     p.add_argument("--file", help="explicit Learnings-table file path (what bin/tests.sh uses)")
     p.add_argument("--no-citations", action="store_true",
                    help="skip the distributed-corpus citation sweep (isolated fixtures)")
+    p.add_argument("--first", type=int, default=1, metavar="N",
+                   help="the table's first row number (default 1; docs/FORK_LEARNINGS.md is 15)")
     args = p.parse_args()
+    if args.first < 1:
+        p.error("--first must be at least 1")
 
     path = Path(args.file) if args.file else default_path()
     if not path.exists():
@@ -297,7 +304,7 @@ def main() -> int:
 
     text = path.read_text(encoding="utf-8", errors="replace")
     rows, findings = parse_table(text)
-    findings = check_table(rows, findings, reserved_numbers(text))
+    findings = check_table(rows, findings, reserved_numbers(text), args.first)
 
     valid = {int(n) for n, _c, _l, _r in rows if n.isdigit()}
     budget = check_row_budget(rows, findings)
@@ -311,8 +318,10 @@ def main() -> int:
         return 1
 
     scope = "table shape only (--no-citations)" if args.no_citations else "all citations resolve"
-    print("check-learnings: OK — %d Learning row(s), contiguous 1..%d; %s; %s."
-          % (len(rows), len(rows), scope, budget))
+    # The span is read off the rows, not derived from their count: a reserved gap inside it
+    # (#14 in a 65-row table) made the count-derived form print 1..65 for rows ending at #66.
+    print("check-learnings: OK — %d Learning row(s), contiguous %d..%d; %s; %s."
+          % (len(rows), min(valid), max(valid), scope, budget))
     return 0
 
 

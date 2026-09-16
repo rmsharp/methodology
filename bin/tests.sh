@@ -2063,6 +2063,26 @@ if mutate "$RUNNER" "$F" 's.replace("mechanical, encode it as a test", "mechanic
         && pass "row split across two physical lines caught" \
         || fail "row split across two physical lines not caught: $OUT"
 else fail "line-wrap mutation was vacuous"; fi
+
+# This fork's own rows, #15 on, left the distributed table at the resync's first stage (D1 (A),
+# docs/planning/upstream-resync-2026-09-plan.md §3) and are checked from 15. The run without
+# --first proves the flag is read; the deleted row proves the gap check reaches this file.
+# Here-strings, not `echo | grep -q`: under pipefail that form can score a match as failed.
+FORK_LEARNINGS="$METHODOLOGY/docs/FORK_LEARNINGS.md"
+OUT="$("$BIN/check-learnings" --file "$FORK_LEARNINGS" --first 15 --no-citations 2>&1)"
+grep -q '^check-learnings: OK .* contiguous 15\.\.' <<<"$OUT" \
+    && pass "fork Learnings table (#15 on) is clean" \
+    || fail "fork Learnings table: expected clean from #15, got: $OUT"
+OUT="$("$BIN/check-learnings" --file "$FORK_LEARNINGS" --no-citations 2>&1)"
+grep -q "not contiguous from 1 .* missing #1, #2," <<<"$OUT" \
+    && pass "fork Learnings table without --first reports #1 missing (the flag is read)" \
+    || fail "fork Learnings table without --first: expected #1 missing, got: $OUT"
+if mutate "$FORK_LEARNINGS" "$F" 're.sub(r"(?m)^\| 40 \| .*\n", "", s, count=1)'; then
+    OUT="$("$BIN/check-learnings" --file "$F" --first 15 --no-citations 2>&1)"
+    grep -q "not contiguous from 15 .* missing #40" <<<"$OUT" \
+        && pass "deleted fork row (numbering gap from #15) caught" \
+        || fail "deleted fork row (numbering gap from #15) not caught: $OUT"
+else fail "fork row-deletion mutation was vacuous"; fi
 rm -f "$F"
 
 echo "== Test 33: check-learnings — citations into the distributed corpus resolve =="

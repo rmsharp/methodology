@@ -214,6 +214,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-53] S176 — the fork's Learnings #15–#66 move verbatim to `docs/FORK_LEARNINGS.md`, checked from #15
+
+- **Decision carried out:** D1 (A) of the resync plan (§3), ratified after S175. The merge `5c2bd59` made
+  the distributed `starter-kit/FRAMEWORK_LEARNINGS.md` upstream's copy (rows 1–13 and the reserved `#14`). This commit gives
+  the fork's 52 rows a home.
+- **`docs/FORK_LEARNINGS.md` (new, 67,177 B):** a front matter (why the file exists, *fork Learning #N*
+  as the citation form, append here from #67, the same append-only and 1,500 B rules), then the table
+  header and rows #15–#66. **A Python comparison shows every row byte-identical to rows 15–66 of
+  `git show b85851f:starter-kit/FRAMEWORK_LEARNINGS.md`**, in order, with the header row and separator
+  identical too. It sits in `docs/`, not `docs/archive/`, because a dashboard test reads every
+  `docs/archive/*.md` as a ledger. It is not in `bin/_manifest.py`, so it is not distributed.
+- **`bin/check-learnings`:** `--first N` (default 1): rows must be contiguous from N. The default path's
+  behaviour is unchanged. The OK line now reads its span off the rows (`min..max`). The count-derived form
+  printed `1..65` for the old 65-row table ending at #66, because the reserved `#14` sits inside the span.
+- **`bin/tests.sh` Test 32, three new rows:** the fork file is clean from #15; without `--first` it
+  reports #1 missing, which proves the flag is read; a deleted row #40 is caught. The three use
+  here-strings, not `echo | grep -q`, which can score a match as failed under pipefail. Run standalone:
+  9/9 pass. A checker mutant that ignores `first` fails two of the three new rows.
+- **`.context-budget.json`:** the on-demand entry is re-pointed from `starter-kit/FRAMEWORK_LEARNINGS.md`
+  to `docs/FORK_LEARNINGS.md` (measured 67,177 B, 2026-09-16), and its notes cite *fork* Learnings #26,
+  #34, #62/#63 and #16. **The 81,920 B ceiling did not move** (the plan's §4), so this file has 14,743 B
+  of headroom where the whole table had 2,437 B. The note says so: BL-53's pressure eased because rows moved,
+  not because the retirement question was answered. `context_budget.py --status`: the row reads `ok`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S176 — resync stage M1 merged (`5c2bd59`), and Test 27.N1b passes the arriving `commit-msg` hook
 
 - **Merge `5c2bd59`** (parents `b85851f`, `0fd003a`): the first of the resync plan's four stages
