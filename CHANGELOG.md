@@ -214,6 +214,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S172 follow-up — the unpushed-commit count replaced by the command that produces it
+
+- **Why the previous entry did not settle it:** the correction from 17 to 18 was committed, and that
+  commit made the answer 19. **A count of unpushed commits cannot be written into a file inside the
+  repository it counts** — recording it is itself one of the commits, so every fix falsifies the
+  figure it just wrote. Two sessions' worth of this is avoidable in one line.
+- **Change:** the receipt's carried item now names the command,
+  `git rev-list --count origin/main..main`, instead of a number, and says why. This is
+  §The Action Ledger's own advice — *replace a hand-maintained count with the command that produces
+  it* — applied to the file that advises it.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** `bin/check-handoff --all` exit 0, 7 receipts; the receipt now
+  contains no commit-count figure (`grep -c 'commits ahead of' HANDOFFS.md` finds none in S172's block).
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [ad hoc] S172 follow-up — the receipt's unpushed-commit count corrected, 17 to 18
 
 - **What was wrong:** S172's receipt gave fork `main` as *"17 commits ahead of `origin/main`"* under
