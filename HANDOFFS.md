@@ -6,7 +6,7 @@ This repository dogfoods its own methodology: every session records a durable, m
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
 **Retention policy — keep ONE receipt, trim above TWO.** Everything older is archived under
-`docs/archive/` and indexed in the table below. **N=1 is an operator decision (2026-09-16, S172)
+`docs/archive/` and indexed in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md). **N=1 is an operator decision (2026-09-16, S172)
 replacing S127's N=4**, taken against BL-59's measurement of what actually reads this file: the
 handoff is done by the newest receipt alone. **Depth and trigger are separate on purpose:**
 every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **`methodology_trim.py` fires on BYTES (196,608 B),
@@ -16,15 +16,10 @@ warranted, not an override — `SRF_RED` refuses every on-schedule retention tri
 (BL-59). `bin/check-handoff` validates the 13-key schema on the **newest** receipt; `--all` checks
 every receipt and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent.
 
-> **⚠ THE 7,168 B HEADER RESERVE (Test 39 A2) IS SPENT.** Each trim-and-fold adds ~147 B of
-> archive-table row and only ~60 B remain. **The next trim reddens Test 39 unless this front matter
-> is shortened first** — the table is the cut. The trigger at 2 halves the rate, not the debt
-> (BL-59; measured S172, not projected).
-
 **Two session sequences share this ledger and their numbers collide.** This fork and
 `upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
-never by number alone. **Every upstream receipt is now archived**; all four retained here are the
-fork's. At a resync the two sequences stay separate and unrenumbered, each incoming receipt is
+never by number alone. **Every upstream receipt is now archived**; every receipt retained here is
+the fork's. At a resync the two sequences stay separate and unrenumbered, each incoming receipt is
 checked against ours before it is kept, and within a shared date the fork's precede the arriving
 upstream ones (precedent: `fc4d297`).
 
@@ -43,40 +38,14 @@ upstream ones (precedent: `fc4d297`).
 > still FAILS — corruption is not rotation. **Nothing prevents a cut below three; the policy is what
 > makes it not happen.** Re-run `bash bin/tests.sh` after any trim of this file.
 
-**Archived shards — 20 trims, 154 receipts.** Every shard is `docs/archive/HANDOFFS-through-<date>.md`
-and its proof is that same path plus `.verify.sh`; same format, same newest-on-top order, frozen at
-write. **Run the proof rather than trusting this table** — each re-derives L1/L2/L3 from git, and that
-instruction is why these rows exist.
-
-| n | span | shard | by |
-|--:|---|---|---|
-| 16 | 2026-07-30 → 2026-08-02 | [`HANDOFFS-through-2026-08-02.md`](docs/archive/HANDOFFS-through-2026-08-02.md) | v1.1.1 |
-| 30 | 2026-08-03 → 2026-08-09 | [`HANDOFFS-through-2026-08-09.md`](docs/archive/HANDOFFS-through-2026-08-09.md) | v1.1.1 |
-| 25 | 2026-08-02 → 2026-08-11 | [`HANDOFFS-through-2026-08-11.md`](docs/archive/HANDOFFS-through-2026-08-11.md) | v1.1.3 |
-| 8 | 2026-08-11 → 2026-08-15 | [`HANDOFFS-through-2026-08-15.md`](docs/archive/HANDOFFS-through-2026-08-15.md) | v1.2.0 |
-| 4 | 2026-08-15 → 2026-08-17 | [`HANDOFFS-through-2026-08-17.md`](docs/archive/HANDOFFS-through-2026-08-17.md) | v1.2.0 |
-| 3 | 2026-08-17 → 2026-08-18 | [`HANDOFFS-through-2026-08-18.md`](docs/archive/HANDOFFS-through-2026-08-18.md) | v1.3.0 |
-| 3 | 2026-08-18 → 2026-08-23 | [`HANDOFFS-through-2026-08-23.md`](docs/archive/HANDOFFS-through-2026-08-23.md) | v1.3.0 |
-| 3 | 2026-08-24 → 2026-08-24 | [`HANDOFFS-through-2026-08-24.md`](docs/archive/HANDOFFS-through-2026-08-24.md) | v1.3.0 |
-| 2 | 2026-08-25 → 2026-08-25 | [`HANDOFFS-through-2026-08-25.md`](docs/archive/HANDOFFS-through-2026-08-25.md) | v1.3.0 |
-| 17 | 2026-08-25 → 2026-08-29 | [`HANDOFFS-through-2026-08-29.md`](docs/archive/HANDOFFS-through-2026-08-29.md) | v1.5.0 |
-| 5 | 2026-08-29 → 2026-08-30 | [`HANDOFFS-through-2026-08-30.md`](docs/archive/HANDOFFS-through-2026-08-30.md) | v1.5.0 |
-| 23 | 2026-08-12 → 2026-09-04 | [`HANDOFFS-through-2026-09-04.md`](docs/archive/HANDOFFS-through-2026-09-04.md) | v1.5.0 |
-| 2 | 2026-09-04 → 2026-09-07 | [`HANDOFFS-through-2026-09-07.md`](docs/archive/HANDOFFS-through-2026-09-07.md) | v1.5.0 |
-| 2 | 2026-09-08 → 2026-09-08 | [`HANDOFFS-through-2026-09-08.md`](docs/archive/HANDOFFS-through-2026-09-08.md) | v1.5.0 |
-| 2 | 2026-09-09 → 2026-09-09 | [`HANDOFFS-through-2026-09-09.md`](docs/archive/HANDOFFS-through-2026-09-09.md) | v1.5.0 |
-| 1 | 2026-09-09 → 2026-09-09 | [`HANDOFFS-through-2026-09-09-2.md`](docs/archive/HANDOFFS-through-2026-09-09-2.md) | v1.5.0 |
-| 2 | 2026-09-10 → 2026-09-10 | [`HANDOFFS-through-2026-09-10.md`](docs/archive/HANDOFFS-through-2026-09-10.md) | v1.5.0 |
-| 2 | 2026-09-11 → 2026-09-11 | [`HANDOFFS-through-2026-09-11.md`](docs/archive/HANDOFFS-through-2026-09-11.md) | v1.5.0 |
-| 2 | 2026-09-14 → 2026-09-15 | [`HANDOFFS-through-2026-09-15.md`](docs/archive/HANDOFFS-through-2026-09-15.md) | v1.5.0 |
-| 2 | 2026-09-15 → 2026-09-15 | [`HANDOFFS-through-2026-09-15-2.md`](docs/archive/HANDOFFS-through-2026-09-15-2.md) | v1.5.0 |
-| 6 | 2026-09-15 → 2026-09-16 | [`HANDOFFS-through-2026-09-16.md`](docs/archive/HANDOFFS-through-2026-09-16.md) | v1.5.0 |
+**The shard index is not in this front matter, on purpose.** It lived here until S174 and grew a row
+with every trim against the fixed 7,168 B header reserve (Test 39 A2), so it moved out rather than the
+reserve rising: a trim no longer grows this file's front matter. The fold rule is in the index.
 
 <!-- NEXT TRIMMING SESSION: methodology_trim.py appends a 3-line pointer block here
      (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer). Fold it into
-     the table above as one row (~125 B vs the block's ~448) and delete the block, IN ITS OWN
-     COMMIT: inside the trim commit the shipped .verify.sh fails L2 (Learning #58). The generator
-     is DISTRIBUTED, so teaching it this is an upstream change. -->
+     docs/HANDOFFS_ARCHIVE_INDEX.md as one row and delete the block, IN ITS OWN COMMIT: inside the
+     trim commit the shipped .verify.sh fails L2 (Learning #58). -->
 
 ```handoff
 session: S174

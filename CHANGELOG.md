@@ -214,6 +214,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-59] S174 — `HANDOFFS.md`'s shard index moves out of its front matter, so a trim no longer grows it
+
+- **Change:** the archive table (21 rows), its intro and the fold rule move from `HANDOFFS.md`'s front
+  matter to a new [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md). The rows are unchanged
+  except for their links (`docs/archive/…` → `archive/…`). Front matter **7,028 B → 3,929 B** against
+  the 7,168 B header reserve (`bin/check-handoff:663`, Test 39 A2): **3,239 B left**, where 140 B
+  remained and each trim-and-fold row cost ~147 B. The trimmer's ~448 B pointer block now fits even
+  inside the trim commit, before the fold.
+- **Why not `docs/archive/`:** `bin/model-report:158`, `starter-kit/methodology_trim.py:921` and
+  `starter-kit/methodology_dashboard.py:1135` find shards by the glob `docs/archive/HANDOFFS-*.md`. The
+  trimmer would even have read this commit as an archive event (a file added there, `HANDOFFS.md`
+  shrinking). `tools/test_methodology_dashboard.py:4426` treats every `docs/archive/*.md` as a ledger.
+  Nothing globs `docs/*.md`.
+- **Corrected in the move, each checked:** the table intro's *"20 trims, 154 receipts"* was stale
+  (21 and 160; every row's `n` equals its shard's fence count). Its *"every shard is
+  `HANDOFFS-through-<date>.md`"* skipped `HANDOFFS-archive.md` (19 receipts, 2026-07-08 → 2026-07-30,
+  no proof), which the index now names. The index gives commands to derive the totals instead of
+  writing them (22 files, 179 receipts). In the front matter, *"indexed in the table below"* and
+  *"all four retained here"* (stale since N=1) are rewritten, and the spent-reserve callout goes. It
+  also said ~60 B remained, where 140 B did.
+- **Not changed:** the trimmer (distributed), `HEADER_RESERVE_BYTES`, and the shipped `.verify.sh`
+  proofs, each of which compares its own trim commit with that commit's parent
+  (`docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh:163`).
+- **Depends on `e8bd62d`,** which moved Test 39's M2 mutant under the smaller front matter first.
+
 ### 2026-09-16 · [BL-59] S174 — Test 39's M2 mutant moves below the front matter the header cut leaves
 
 - **Change:** `bin/tests.sh` Test 39's M2 plants `HEADER_RESERVE_BYTES = 2048` instead of `4096`. M2 counts
