@@ -1,29 +1,116 @@
-I went through this branch at `c84e7d96` and re-ran its own checks before questioning any of them. Everything I could check reproduced. In a fresh clone: `quality_ratchet.py --run` gave **9/9 pass, results hash `74c773523dab`** — the same hash the receipt in `HANDOFFS.md` cites, so the hash really is deterministic across machines; `--selftest` observed all 17 checks; `bin/tests.sh` read 134 passed / 1 failed (test 9, by construction, as the description says); `context_budget.py --status` exited 0; and no tracked file changed. `--precommit` refused every loosening it claims to refuse. The token figures in the description reproduce too.
+I went through this branch at `c84e7d96` and re-ran its own checks before questioning any of them. Everything I could check reproduced: in a fresh clone, `quality_ratchet.py --run` gave **9/9 pass with results hash `74c773523dab`** — the same hash the receipt in `HANDOFFS.md` cites, so that hash really is reproducible on another machine; `--selftest` observed all 17 checks; `bin/tests.sh` printed `134 passed, 1 failed` (test 9, by construction, as you say); `context_budget.py --status` exited 0; no tracked file changed. `--precommit` refused every loosening it claims to refuse.
 
-Below are the changes I'd suggest before merge: two about how file sizes are measured, three about what the ratchet holds, four smaller ones, and one about the description itself. Everything is measured at `c84e7d96` and reproducible — see the bottom.
+My main suggestion is about the description rather than the code, so I've put it first and written it as text you could lift. Everything after it uses the vocabulary that section establishes. All of it is measured at `c84e7d96` and reproducible — see the last section.
 
 ---
 
-## 1. Two budgets are denominated in bytes where tokens is the measure that matters
+## 1. The description needs a plain statement of purpose, approach and mechanism
 
-**How I measured tokens.** I concatenated each file with itself, read the result through a tool that refuses any file over 25,000 tokens, and halved the number in the refusal message. I checked the instrument before trusting it, by reproducing three figures already recorded in this repository exactly (48,555, 49,683 and 36,955).
+I had to read the plan alongside the PR to follow it, and I don't think a reader should have to. The description opens on decision codes (`D1`–`D10`, `P0`, `G1`), cross-references that aren't summarized ("the #80 shape", "the PR #71 discipline"), and coined phrases used before they're defined ("the ratchet, not the ruler", "scanner twins", "the doubled-file Read" — the last is the measurement method behind the headline numbers, so it especially needs a sentence). Each one is resolvable if you've read the plan. None is resolvable from this page.
 
-**`CLAUDE.md` — the reduction went the other way in tokens.** The description says the PR pays for its growth by reduction rather than by a raised ceiling, and against the byte pin that is true: 59,168 → **59,153 B, 15 B under**. Measured in tokens the same change is **23,420.5 → 23,482.5, 62 tokens larger**. A byte pin cannot see this, because bytes per token is a property of the content: the new table rows are dense with backticked paths and tokenize at fewer bytes per token than the prose that was shortened to pay for them. This is the same substitution PR #80 already made for the orientation read-set, where a byte class ceiling became per-file token ceilings at measured densities.
+More importantly, **the description never says plainly what a quality gate is, or why the thing is called a ratchet.** Here is a rewording that tries to. Take it as a starting point, not a correction — the facts are yours, only the framing is mine.
 
-Two facts behind it:
+> **The problem.** Almost every quality check in this repository is a question a session asks itself: *did the tests pass? is the handoff complete? is the file still small enough?* That works when the session is careful. It degrades quietly when the session is in a hurry, or when a weaker agent answers the question loosely, and nothing anywhere notices the difference. Replacing the judge with a better judge doesn't fix this — it's the *kind* of check that's weak, not the judge.
+>
+> **The approach: put the standard in a file instead of in a judgment.** A new file at the repository root, `.quality-gates.json` — the **manifest** — lists that repository's **quality gates**. A gate is three things: a name, a command to run, and a number the result must clear — for example, *run `bin/tests.sh`, read the number of passing tests, require at least 134.* A gate whose command has no number to extract uses its exit code instead, so *"this check must exit 0"* is expressible too. Gates are declared **at the values the repository measures today**, not at aspirational ones, so the file is green the day it lands.
+>
+> **The mechanism, and why it's a ratchet.** Raising a gate's number is always allowed and needs no approval. *Lowering* one is a **loosening** — and so is deleting a gate, or flipping "at least" into "at most", because both make things pass that used to fail. A pre-commit hook runs `quality_ratchet.py --precommit`, compares the gates you are about to commit against the ones already committed, and **refuses the commit if any gate got looser.** That is the whole metaphor: a ratchet's teeth let the wheel turn one way and catch it if it turns back. Declared quality can rise freely; it cannot quietly fall. Loosening on purpose is still possible — `git commit --no-verify` — but that leaves a deliberate, reviewable act in the history instead of a silent edit, and the tool prints what the bypass costs before you take it.
+>
+> **What you see.** `quality_ratchet.py --run` measures every gate and prints one summary line. Sessions paste that line into their close-out receipt, so "everything was green" arrives with its own evidence attached rather than as an assertion. The dashboard reads the manifest, the last run, and the manifest's own git history, and flags any threshold that was lowered, naming the commit.
+>
+> **Scope.** The tool ships to adopters with an **empty** gate list, deliberately: a ratchet starts where a project actually is. This repository declares nine gates for itself as the first worked example. Adopter rollout and the release are separate, later steps.
 
-- The budget tool judges this file at **2.93 bytes/token**, the seed's fallback — `.context-budget.json` is explicit that this is inherited and not measured here. Measured on this branch it is **2.519**. So the tool reports 20,188 tokens where there are 23,482.5: **14% low**, and it shows roughly 4,800 tokens of headroom under its derived 25,000 where there are about 1,500.
-- Worth noting what the pin is mostly pinning: **87% of the file's bytes** (51,617 of 59,153) are the release history below `## Versioning`. Whether that belongs in a file injected into every session is a bigger decision than this PR.
+Two notes on that rewording. It drops every decision code — where one mattered I'd state the decision instead ("the principle ships as a section, not as a tool-only change"). And it states the metaphor explicitly, which matters because the rest of my comment is about places the metaphor doesn't yet hold.
 
-*Suggested:* measure this file's density and declare `max_tokens` — 23,483 if a no-growth pin is what's wanted — keeping `max_bytes` only as a coarse backstop.
+---
 
-**`starter-kit/SESSION_RUNNER.md` — right unit, stale density.** This one is budgeted in tokens, which is the right call. The density 2.8248 was measured correctly in `008d656`, on the file as it stood then (52,195 bytes). The **next** commit, `628d218`, edited that file to 53,301 bytes, and `b4226d3` took it to 53,328 — and the density was never re-measured. The config comment still describes the measured blob as "this branch's file", which it stopped being two commits later.
+## 2. Three ways the ratchet can still turn backwards
 
-The effect is small but it points the wrong way. Measured on the current file the runner is **18,897.5 of its 18,900 tokens — 2.5 tokens of room**, not the 22 the tool reports and the description repeats. Because the tool divides by the stale density, it would admit growth to 53,391 bytes, which measures about **18,920 tokens — roughly 20 over the ceiling the config itself declares.** The safeguard meant for this, `measured_bytes`, warns only at 25% drift, about 13,000 bytes away, against a margin of 2.5 tokens.
+A ratchet holds because a pawl rests on the teeth. Each of these is a way the pawl lifts off. I ran all three in scratch repositories rather than reading them off the code.
 
-*Suggested:* re-measure and record 53,328 bytes at 2.8220, and consider binding a density to the blob it was measured on so an edit to that file invalidates it. Practically, after this PR every edit to the runner has to be net-negative in tokens.
+### (a) Removing the whole manifest is treated as nothing happening
 
-**No declared gate covers any of this.** `context_budget.py --status` is the actual verdict on every budget above, and it is not one of the nine gates, not chained into `.githooks/pre-commit`, and not run by `bin/tests.sh` — which runs the tool's self-test and unit tests but never `--status` against the tree. So a commit that breaks the read budget passes every gate this PR declares. It passes today, so declaring it costs nothing:
+The teeth here are the gates listed in `.quality-gates.json`. Delete that file and there is nothing left to catch anything — and every part of the system treats its absence as a non-event rather than as the largest possible loosening:
+
+- the pre-commit hook runs the tool only when `.quality-gates.json` is present in the working tree, so deleting it skips the check entirely;
+- `precommit()` returns clean when the file isn't in the commit ("manifest not in this commit: nothing to ratchet");
+- the dashboard's history walk reads the manifest at each commit that touched it, and a commit that *deleted* it fails to parse — so that version, **and both pairs it sits between**, are skipped rather than read as "every gate removed."
+
+**What I ran.** A scratch repository with one gate reading *"at least 5"*, and the hook chained exactly as this PR chains it. Committing each step in turn:
+
+| Step | Result |
+|---|---|
+| Edit the gate from *at least 5* to *at least 4* | **Refused** (exit 1) — the ratchet works |
+| The same, with `--no-verify` | Allowed, as designed — a recorded bypass |
+| Delete `.quality-gates.json` | **Allowed** (exit 0) |
+| Re-add it reading *at least 1* | **Allowed** (exit 0) — "first manifest commit, nothing to compare against" |
+
+So the gate went from *at least 5* to *at least 1* in two ordinary commits, neither of which was refused and neither of which needed a bypass. Afterwards the dashboard reported exactly one thing: the 5 → 4 attempt that had already been refused. The 5 → 1 that actually happened appears nowhere.
+
+*Suggested:* refuse in `precommit()` when the previous commit had gates and the new one has no manifest at all, with a message like "manifest removed"; run the hook whenever the manifest is tracked in `HEAD`, not only when it's on disk; and in the dashboard, read a failed parse at a deletion as an empty gate set — `_gate_loosenings` already has a "removed" branch, it just never reaches it.
+
+### (b) Most of the gates count tests rather than check them
+
+Four of the nine gates measure `Ran (\d+) tests` — how many test methods **executed**, not how they turned out. A failing test still ran. A skipped test still ran. So those four gates rise and fall with the size of the suite and are blind to its health.
+
+**What I ran.** Three gates, each requiring *at least 3*, pointed at deliberately sick suites:
+
+| Gate's command | Reality | Gate said |
+|---|---|---|
+| A suite of 3 tests, 2 of them failing | red | **pass** |
+| A suite of 3 tests, all 3 skipped | nothing verified | **pass** |
+| A command printing `134 passed, 1 failed` | red | **pass** |
+
+`--run` reported **3 of 3 passing and exited 0.**
+
+The manifest's own note anticipates this and says pass/fail is carried by the gate that counts *passing* tests instead. That holds only while the suite doesn't grow: one new passing test exactly offsets one new failure, and the count gate never dips. The gate that would actually catch it — `tests-sh-failed` at *at most 0* — is deferred until after the merge, because test 9 fails on the branch by construction.
+
+*Suggested:* the deferral isn't necessary. **Declare `tests-sh-failed` now at *at most 1*** — the value the branch genuinely measures, which is what the manifest says gates should be declared at. It's green today, it catches a *second* failure immediately, and it tightens to 0 in the first commit after the merge, which is a tightening and so needs no approval. Separately, pairing each count gate with an exit-code gate on the same suite would make a red suite fail its own gate. That would also relieve a side effect of counting that the plan itself warns about ("'130 checks' is a count, not a target"): with five of nine gates counting tests, deleting a dead or duplicated test is a loosening that needs plan-mode approval.
+
+### (c) The evidence in the receipt is checked for shape, not for content
+
+The close-out receipt is supposed to carry proof that the gates were run. `bin/check-handoff` enforces that by looking for text matching `quality_ratchet: <number>/<number> pass`.
+
+**What I ran.** Three versions of the newest receipt:
+
+| The receipt says | Checker |
+|---|---|
+| `quality_ratchet: 9/9 pass` (as published) | passes |
+| `quality_ratchet: 0/9 pass` — every gate failing | **passes** |
+| nothing at all | fails |
+
+So the check confirms a sentence is present, not that it says anything good.
+
+The plan asked for more than that — *"a lint that the citation resolves … Phase 0 reconcile compares the newest receipt's claim to the newest results"* — and the description says Phase 0 performs that comparison. It doesn't: Phase 0 in `starter-kit/SESSION_RUNNER.md` is byte-unchanged by this PR (the runner's diff touches only the Phase 3C, Phase 3E and failure-mode sections), and the results file is gitignored, so a fresh clone has nothing to compare against anyway.
+
+**Worth stating plainly, because it's the good news:** the comparison itself is sound. The results hash deliberately excludes the commit and the timestamp, and my clean-clone re-run reproduced the published `74c773523dab` exactly. The mechanism works; nothing currently runs it.
+
+*Suggested:* have the checker require that the cited numbers say *0 failed, 0 unmeasured, and as many gates measured as the manifest declares* — cheap, local, and it turns the citation from a formality into a claim. Then either add the comparison to Phase 0 as an actual numbered step, or give the tool something like `--status --expect <hash>`. If neither is wanted, say in the docs that the citation is checked for shape only, so nobody relies on more.
+
+---
+
+## 3. Two file budgets are measured in bytes where tokens is the operative unit
+
+Separately from the gates, this repository already budgets the *size* of the documents a session must read, because the read tool refuses any single file over 25,000 tokens and the always-loaded file costs tokens on every session. That budget is what this PR's "pays for its own growth by reduction" claim is measured against — and in two places it's measured in bytes, which can move opposite to tokens.
+
+**How I measured tokens.** I concatenated each file with itself, read the result through the tool that refuses anything over 25,000 tokens, and halved the number in its refusal message. I checked the instrument before trusting it, by reproducing three figures already recorded in this repository exactly (48,555, 49,683 and 36,955).
+
+**`CLAUDE.md`: the reduction went the other way.** Against the byte pin the claim holds — 59,168 → **59,153 bytes, 15 under**. Measured in tokens the same change is **23,420.5 → 23,482.5: 62 tokens larger.** The file grew in the unit that costs, and shrank in the unit that's checked. That isn't a fluke: bytes-per-token depends on content, and the new table rows are dense with backticked paths, which tokenize at fewer bytes per token than the prose that was shortened to pay for them. A byte pin structurally cannot see this. It's the same substitution PR #80 already made for the two orientation files, where a byte ceiling became per-file token ceilings at measured densities.
+
+Two supporting facts:
+
+- The budget tool judges this file at **2.93 bytes/token** — the seed's fallback, and `.context-budget.json` says outright that the value is inherited rather than measured here. Measured on this branch it is **2.519**. So the tool reports 20,188 tokens where there are 23,482.5 (**14% low**) and shows about 4,800 tokens of headroom where there are about 1,500.
+- Worth knowing what the pin is mostly pinning: **87% of the file's bytes** (51,617 of 59,153) are release history below `## Versioning`. Whether that belongs in a file injected into every session is a larger question than this PR.
+
+*Suggested:* measure this file's density and declare a token ceiling — 23,483 if a no-growth pin is the intent — keeping the byte figure only as a coarse backstop.
+
+**`starter-kit/SESSION_RUNNER.md`: right unit, stale number.** This file *is* budgeted in tokens, which is the right call. The density 2.8248 was measured correctly in `008d656`, against the file as it stood at that commit (52,195 bytes). The **next** commit, `628d218`, edited that same file to 53,301 bytes, and `b4226d3` took it to 53,328 — and the density was never re-measured. The config comment still describes the measured version as "this branch's file", which it stopped being two commits later.
+
+The gap is small but points the wrong way. Measured against the current file, the runner sits at **18,897.5 of its 18,900-token ceiling — 2.5 tokens of room**, not the 22 the tool reports and the description repeats. Because the tool divides by the stale density it would admit growth to 53,391 bytes, which actually measures about **18,920 tokens, roughly 20 over the ceiling the config itself declares.** The guard meant for exactly this, `measured_bytes`, only warns at 25% drift — about 13,000 bytes away, against a real margin of 2.5 tokens.
+
+*Suggested:* re-measure and record 53,328 bytes at 2.8220, and consider tying a density to the specific file version it was measured on so that editing the file invalidates it. Practically: after this PR, every edit to that file has to be net-negative in tokens.
+
+**And no gate covers any of it.** `context_budget.py --status` is the actual verdict on every budget above, and it is not one of the nine gates, not in the pre-commit hook, and not run by `bin/tests.sh` — which runs that tool's self-test and unit tests but never `--status` against the tree itself. So a commit that breaks the read budget passes every gate this PR declares. It exits 0 today, so declaring it costs nothing:
 
 ```json
 { "name": "context-budget", "direction": "max", "threshold": 0,
@@ -31,62 +118,30 @@ The effect is small but it points the wrong way. Measured on the current file th
   "why": "exit code: every declared file and class within its budget" }
 ```
 
-This is also the PR's own new rule applied to itself — the Phase 3C branch it adds says a mechanical invariant is a gate, not a row.
+That is also this PR's own new rule turned on itself — the Phase 3C branch it adds says a mechanical invariant belongs in a gate rather than in a written row.
 
 ---
 
-## 2. Three things the ratchet doesn't hold
+## 4. Four smaller things
 
-Each of these I ran in a scratch repository rather than reading off the code.
+- **Backing out of the ratchet locks the repository.** The hook that `install-hook` writes calls the tool unconditionally, and with no manifest the tool exits 3. So after someone deletes the manifest with `--no-verify`, **every later commit is refused**, including unrelated ones, with *"no `.quality-gates.json` found … refuses to invent thresholds"* — a message that doesn't say what to do about it. An adopter who tries the ratchet and backs out can't commit again without `--no-verify` every time. *Suggested:* when there's no manifest in the commit, pass cleanly if the previous commit had none either, and refuse with (a)'s "removed" message if it did.
 
-**(a) Deleting the manifest is the loosest possible loosening, and everything passes it.** The hook only runs the tool when `.quality-gates.json` exists in the working tree; `precommit()` returns clean when the index has no manifest ("manifest not in this commit: nothing to ratchet"); and the dashboard returns early when the file is absent, so its history walk skips that version rather than reading it as a removal.
+- **The dashboard misses two loosenings the tool catches.** It reports a changed threshold only when the direction stayed the same, and it ignores commands entirely. A direction flip (*at least 5* → *at most 5*) is refused by the tool but **reported as nothing**; swapping a gate's command for `echo 'Ran 999 tests'` is warned about by the tool and **reported as nothing**. That matters because the bypass message promises the opposite: *"the manifest's git history shows the loosening and the dashboard reports it as a risk."* A bypassed flip leaves no advisory at all. *Suggested:* report flips as loosenings, and command or extract changes as "gate redefined" at low severity.
 
-Observed, in order: lowering a floor 5 → 4 is **refused** (exit 1, correctly); deleting the manifest **passes** (exit 0); re-adding it at floor 1 **passes**, reporting "first manifest commit — nothing to compare against". The dashboard afterwards reports only the 5 → 4 attempt. **The 4 → 1 achieved by deleting and re-adding is invisible to every mechanism in this PR.**
+- **The coverage bonus rewards a gate's name.** The dashboard awards +2 testing points when a *passing* gate's **name** matches "coverage". A gate named `coverage` whose command is `echo 100` earns it — I checked. The plan explicitly declined "any coverage floor without a faithfulness check beside it", and this rewards exactly that, from a file that is locally written and gitignored. *Suggested:* drop the bonus until a faithfulness gate is required alongside, and either way don't key on names.
 
-*Suggested:* in `precommit()`, refuse when `HEAD` carries a manifest with gates and the index carries none ("manifest removed"); in the hook, run the tool whenever `HEAD` tracks the manifest, not only when the working tree has it; in the dashboard, read a deletion as an empty gate set so every gate reads as removed.
-
-**(b) The count gates cannot see failures or skips.** Four of the nine gates extract `Ran (\d+) tests` — the number of test methods that exist, not how they did. Given a manifest of such gates, `--run` reported **3/3 pass and exited 0** over: a suite where two of three tests fail; a suite where all three are skipped; and a summary line reading `134 passed, 1 failed`.
-
-The manifest's note says green/red is carried by the passed-count gate, and that holds only while no test is added — one new passing check offsets one new failure. The gate that would catch it, `tests-sh-failed ≤ 0`, is deferred until after merge because test 9 fails on the branch. I'd suggest that deferral isn't needed: **declare it now at `max 1`**, the value the branch actually measures. That follows the manifest's own rule of declaring gates at their current measured values, it catches a second failure today, and it tightens to 0 in the first commit after merge. Pairing each unit-suite count with an exit-code gate would likewise make a red suite fail its own gate — and it would ease a second consequence of counting, which the plan itself flags ("'130 checks' is a count, not a target"): with five of the nine gates counting, pruning a dead or duplicated test becomes a loosening that needs plan-mode approval.
-
-**(c) The receipt's gate citation is checked for shape only, and nothing performs the comparison.** `bin/check-handoff` requires a match for `quality_ratchet:\s*\d+/\d+\s+pass`. A receipt citing **`quality_ratchet: 0/9 pass` exits 0**; only a receipt citing nothing exits 1.
-
-The plan asked for "a lint that the citation resolves … Phase 0 reconcile compares the newest receipt's claim to the newest results", and the description says Phase 0 compares the cited counts against the results file. But Phase 0 in `starter-kit/SESSION_RUNNER.md` has no such step — its eight steps are unchanged by this PR, and the only places the runner mentions gates are Phase 3C, Phase 3E and failure mode 17. The results file is also gitignored, so a fresh clone has nothing to compare against.
-
-Worth saying clearly: **the comparison itself is sound.** The results hash excludes the commit and the timestamp, and my clean-clone re-run reproduced the receipt's `74c773523dab` exactly. It just needs someone or something to run it.
-
-*Suggested:* have the lint require 0 failed, 0 unmeasured, and a measured count equal to the declared gate count — cheap and local. Then either add the comparison to Phase 0 as a step, or support something like `--status --expect <hash>`. If neither, say in the docs that the citation is checked for shape only.
+- **`install-hook` breaks every commit in a fresh clone of this repository.** It exits 0, and then the next commit fails with *"can't open file `<root>/quality_ratchet.py`"* — because the tool lives under `starter-kit/` here, and a fresh clone has no `core.hooksPath` set. `.context-budget.json` already carries exactly this warning for the sibling tool ("DO NOT RUN `install-hook` HERE", with the `rm .git/hooks/pre-commit` recovery); `.quality-gates.json` carries none. *Suggested:* add the same warning, or have `install-hook` write the path of the file that's actually running.
 
 ---
 
-## 3. Four smaller ones
+## 5. One thing about who is bound
 
-- **A forced manifest deletion locks the repository.** The hook `install-hook` writes runs the tool with no guard, and with no manifest the tool exits 3. After deleting the manifest with `--no-verify`, **every later commit is refused**, including unrelated ones, with "no `.quality-gates.json` found … refuses to invent thresholds" — a message that doesn't name the cause. An adopter who tries the ratchet and backs out by deleting its manifest can't commit again without `--no-verify`. Suggested: with no manifest in the index, pass cleanly when `HEAD` has none, and refuse with the "removed" message when it does.
-
-- **The dashboard's loosening detector misses two changes the tool catches.** It reports a changed threshold only when the direction is unchanged, and it ignores commands. A direction flip (`min 5` → `max 5`) is refused by the tool but **reported as nothing**; a command swapped for `echo 'Ran 999 tests'` is warned by the tool and **reported as nothing**. That matters because the bypass message promises "the manifest's git history shows the loosening and the dashboard reports it as a risk" — so a bypassed flip leaves no advisory at all. Suggested: report flips as loosenings, and command or extract changes as "gate redefined" at low severity.
-
-- **The coverage bonus keys on a gate's name.** A passing gate whose *name* matches `coverage` earns +2 testing points. A gate named `coverage` running `echo 100` earns it — I checked. The plan explicitly did not adopt "any coverage floor without a faithfulness check beside it", and this rewards exactly that, from a file that is gitignored and locally written. Suggested: drop the bonus until a faithfulness gate is required beside a coverage gate, and in any case don't key on names.
-
-- **`install-hook` in a fresh clone of this repository breaks every commit.** It exits 0; the next commit fails with "can't open file `<root>/quality_ratchet.py`", because the tool lives under `starter-kit/` here and a fresh clone has no `core.hooksPath`. `.context-budget.json` already carries exactly this warning for the sibling tool ("DO NOT RUN `install-hook` HERE", with the `rm .git/hooks/pre-commit` recovery); `.quality-gates.json` carries none. Suggested: add the same warning, or have `install-hook` write the path of the file actually running.
-
----
-
-## 4. One thing about enforcement, and one about the description
-
-**What binds today.** The new section says the mechanical form "binds every actor: every tier, every agent, every human, every session". What enforces it right now is a per-clone, opt-in hook that each clone enables separately and that `--no-verify` bypasses, and this repository has no CI. That's a real gap between the claim and the mechanism, not a defect in the code — a CI job running `--run` plus the comparison against the base branch is what would bind someone who never sets a hook. Short of that, I'd state the enforcement point plainly in the section itself.
-
-**The description is hard to read without the plan open beside it.** This is worth fixing because the PR description is the durable explanation of what shipped and why, and it is what a newcomer or a future maintainer reads first. As written it assumes the reader has read the plan and several earlier PRs:
-
-- Decision codes (`D1–D10`, `D4`, `D9`, `P0`, `G1`) appear without expansion; a reader on this page can't resolve them.
-- References like "the #80 shape", "the PR #71 discipline" and "the #80 re-review's G1" name discussions that aren't linked or summarized.
-- Coined phrases — "the ratchet, not the ruler", "scanner twins", "the doubled-file Read" — carry real meaning but are never defined here. The last is the measurement method behind the headline token numbers, so it especially deserves a sentence.
-
-None of this is wrong, and the density is clearly deliberate. But the same content reads much more easily if each code is replaced by what it decided ("the principle ships as a section, not as a tool-only change"), each cross-reference says in a clause what it refers to, and the measurement method gets one plain sentence. Concretely: "the Phase 0 pair is measured by the doubled-file Read at 24,842 tokens" becomes "the two files a session must read at orientation measure 24,842 tokens together — measured by concatenating them, doubling the result, reading it through the 25,000-token limit, and halving the count in the refusal." Same fact, no prior reading required.
+The new section says the mechanical form "binds every actor: every tier, every agent, every human, every session". What enforces it today is a pre-commit hook that each clone opts into separately by setting `core.hooksPath`, that `--no-verify` bypasses, and that (per section 2a) disappears with the manifest — in a repository with no CI. That's a gap between the claim and the mechanism rather than a defect in the code, and I raise it only because the claim is doing real work in the argument. A CI job running `--run`, plus the ratchet comparison against the base branch, is what would bind someone who never sets a hook. Short of that, I'd state the enforcement point plainly in the section itself, so the claim and the mechanism match.
 
 ---
 
 ## Reproduction, and what I did not check
 
-Every result above came from a run, not from reading the code. The behavioural ones are scripted end to end — each prints what it observed beside what I recorded — at [`pr82-review-repro.sh`](https://github.com/rmsharp/methodology/blob/4ffcb25327cabc3bfcf0f76dfca39d8fd231b7ce/docs/planning/pr82-review-repro.sh) in my fork; it writes only under a temporary directory and touches no repository. Run it as `bash pr82-review-repro.sh upstream/feat/quality-ratchet`. The token measurements in section 1 are manual, since the instrument is a tool's refusal message; the script prints the exact steps and the figures to expect.
+Every result above came from a run, not from reading the code. The behavioural ones are scripted end to end, each printing what it observed beside what I recorded: [`pr82-review-repro.sh`](https://github.com/rmsharp/methodology/blob/4ffcb25327cabc3bfcf0f76dfca39d8fd231b7ce/docs/planning/pr82-review-repro.sh) in my fork. It writes only under a temporary directory and touches no repository. Run it as `bash pr82-review-repro.sh upstream/feat/quality-ratchet`. The token measurements in section 3 are manual, since the instrument is a tool's refusal message; the script prints the steps and the figures to expect.
 
-Not checked: CI (there is none); `bin/sync` of this branch into a real adopter; the fleet delta of 27 repositories; Windows; and the tokens of the release-history section separately from the rest of `CLAUDE.md`. All of it is pinned to `c84e7d96` — if the branch moves, re-run before relying on any of it.
+Not checked: CI (there is none); `bin/sync` of this branch into a real adopter; the fleet delta across 27 repositories; Windows; and the release-history section's tokens separately from the rest of `CLAUDE.md`. Everything is pinned to `c84e7d96` — if the branch moves, re-run before relying on any of it.

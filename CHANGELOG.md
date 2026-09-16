@@ -210,6 +210,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S170 — the PR #82 comment recomposed for a reader who has not read the plan (not posted)
+
+**Operator critique at the Present gate, acted on:** the draft assumed too much knowledge — *"Deleting the
+manifest is the loosest possible loosening"* carried no meaning without context, `floor 5->4` was never
+defined, and the PR's own gap (no understandable statement of purpose, approach and mechanism) was
+described rather than remedied. **Recomposed, not patched:** the comment now opens with a proposed
+rewording of the PR's purpose/approach/mechanism, offered as liftable text — it defines a quality gate, the
+manifest, a loosening, and *why the thing is called a ratchet* (teeth that let the wheel turn one way and
+catch it turning back) — and every later section uses only that vocabulary. The three ratchet findings are
+reframed as *ways the pawl lifts off*, each with a step-by-step table in plain language (*"at least 5"* →
+*"at least 1"* in two unrefused commits); the byte/token section gains the one-sentence setup a reader
+needs for why file size is budgeted at all. 2,310 → 3,188 words, deliberately: the operator asked for
+clarity, not brevity. **One mechanism verified before describing it plainly:** the dashboard's history walk
+skips a deletion commit *and both pairs it sits between* (`methodology_dashboard.py` `_gate_manifest_history`
+returns `None` on a failed parse; the pairing loop `continue`s on either side), and `_gate_loosenings`
+already carries the `removed` branch it never reaches — which is what makes the suggested fix a two-line
+one. Terminology re-audited: no session, backlog or finding codes; the PR's decision codes survive on one
+line only, where the comment quotes them as examples a reader cannot resolve. **Still nothing posted.**
+
 ### 2026-09-15 · [ad hoc] S170 — the comment on upstream PR #82 drafted (not posted)
 
 **Deliverable, drafted:** `docs/planning/pr82-comment.md` — one comment on upstream PR #82 carrying ten
