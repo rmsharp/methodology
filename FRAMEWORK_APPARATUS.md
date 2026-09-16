@@ -352,16 +352,34 @@ yes, an entry is owed — "too small to log" or "I'll batch it next time" **is**
 #27, not an exception. The only exemption is a session whose diff is empty and that took no
 action at all.
 
-**Source tag — exactly one per entry, from this closed vocabulary** (so the audit
-`grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md` enumerates every logged action and proves all
-three sources landed):
+**Source tag — exactly one per entry, from this closed vocabulary:**
 
 - `[issue #<N>]` — a repository issue. If issues live in another repo (e.g. an upstream parent
   of a fork), cite an absolute URL, not a bare `#<N>`.
-- `[BL-<N>]` — a `BACKLOG.md` item. Remove it from `BACKLOG.md` in the same commit.
+- `[BL-<id>]` — a `BACKLOG.md` item, under whatever id that backlog gives it. Remove it from
+  `BACKLOG.md` in the same commit.
 - `[ad hoc]` — work with no backlog or issue origin (the source most prone to vanishing):
   releases, tag/branch ops, PR opens, upstream issue closes, access grants, and
   decline/wontfix/grooming decisions all land here.
+
+**The audit** enumerates every logged action and proves all three sources landed. It counts the
+archived shards as well as the live file, because a trim moves entries from one into the other,
+and it gives the same number in `bash` and in `zsh`:
+
+```
+cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') \
+  | grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[(issue #[0-9]+|BL-[^]]+|ad hoc)\]'
+```
+
+Three details in that command are load-bearing. **`git ls-files`, not a bare glob** — zsh aborts
+a command whose glob matches nothing, so `docs/archive/CHANGELOG-*.md` written directly would
+return no count at all in the common case of a project that has never trimmed. **Anchored to the
+entry heading** — an unanchored pattern also matches the vocabulary's own definitions and every
+mention of a tag in prose; on this framework's own ledger that form returned 78 against 64
+actions. **`BL-[^]]+`, not `BL-[0-9]+`** — it counts whatever id the project's backlog uses.
+
+Entries written before a project adopted this vocabulary stay as written; the audit does not
+count them, and that gap is expected rather than a defect to repair.
 
 **Format** — the `###` header line is the required, greppable unit; the detail bullets are
 recommended, plus one further bullet, `Model`, that is optional even relative to the others:
@@ -374,7 +392,7 @@ recommended, plus one further bullet, `Model`, that is optional even relative to
 - **Model:** <acting model> (optional — omit the line entirely when not recorded)
 ```
 
-*(The `[SOURCE]`, `[issue #<N>]`, `[BL-<N>]`, and `[ad hoc]` tokens above are illustrative; the
+*(The `[SOURCE]`, `[issue #<N>]`, `[BL-<id>]`, and `[ad hoc]` tokens above are illustrative; the
 freshness check keys on dated `###` entries, of which a fresh seed has none.)*
 
 **Model:** — self-reported, free text; omit the line when not recorded. Names which model

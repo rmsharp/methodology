@@ -168,6 +168,30 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-16 · [BL-57] §The Action Ledger: a source tag admits any backlog id, and the audit reads the archived shards
+
+- **Change:** `FRAMEWORK_APPARATUS.md` §The Action Ledger states the vocabulary as `[issue #<N>]`,
+  `[BL-<id>]` and `[ad hoc]` — `<id>` being whatever id the project's backlog gives the item, not a
+  number. The audit moves out of the vocabulary sentence into its own paragraph and becomes
+  `cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') | grep -cE '^### …'`. Three
+  properties of that command are stated in place, because each fixes a way the old one-line form
+  gave a wrong number rather than an error: **`git ls-files`, not a bare glob** — zsh aborts a
+  command whose glob matches nothing, so in a project that has never trimmed the bare form returns
+  no count at all; **anchored to the entry heading** — unanchored it also matches the vocabulary's
+  own definitions and every mention of a tag in prose, which on this repository's ledger returned
+  78 against 64 actions; and **`BL-[^]]+`, not `BL-[0-9]+`** — it counts whatever id the backlog
+  uses. A closing sentence says entries written before a project adopted the vocabulary stay as
+  written and are not counted, so the shortfall is expected rather than a defect to repair.
+- **Why:** C6 and C10, the source-tag half of BL-57's P3. The rules live in one place now, so the
+  audit published beside them is the one every project runs.
+- **Measured, not asserted.** The two shells disagree on the bare-glob form in a repository with no
+  shard: zsh prints `0`, bash prints `1`. Across the six adopter repositories, widening
+  `BL-[0-9]+` to `BL-[^]]+` moves the count 96 → 262, 599 → 784 and 236 → 247 in three of them —
+  **362 logged actions the numeric-only pattern could not see** — and leaves the other three
+  unchanged. One of those adopters tags with `BL-OPS-ADMIN-PW-RECOVERY-001`.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-15 · [BL-57] The `HANDOFFS.md` seed names no size — archive when the trimmer's trigger fires; the trimmer's budget comment drops *"context-tax"*
 
 - **Change:** `starter-kit/HANDOFFS.md` §Size, and when to archive keeps its heading, which `bin/status`
