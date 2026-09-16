@@ -214,6 +214,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S175 follow-up — fork `main` pushed to `origin`, `4735c6c..a614a89` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, `4735c6c..a614a89`, a fast-forward of 6 commits: S175's claim, the
+  `HANDOFFS.md` trim and fold, the resync plan, the close-out, and the ratification record. Before the
+  push, a guard confirmed that `origin` still read `4735c6c` and that it was an ancestor of `main`.
+  Afterwards `git ls-remote` read `a614a89358a3dbaa2436eb2a6d1bec5926bfb880`, equal to local `main`. The
+  go-ahead was the operator's message *"push fork main to origin"*, and this recording commit is pushed
+  under the same go-ahead. Fork only; nothing sent upstream.
+
 ### 2026-09-16 · [BL-57] S175 follow-up — the operator ratifies the resync plan: every recommendation (picker)
 
 - **Decisions, taken by picker after S175's close-out:**
