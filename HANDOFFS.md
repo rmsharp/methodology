@@ -46,11 +46,7 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
 <!-- NEXT TRIMMING SESSION: methodology_trim.py appends a 3-line pointer block here
      (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer). Fold it into
      docs/HANDOFFS_ARCHIVE_INDEX.md as one row and delete the block, IN ITS OWN COMMIT: inside the
-     trim commit the shipped .verify.sh fails L2 (Learning #58). -->
-
-**Archived 9 record(s), 2026-09-14 → 2026-09-16** into [`docs/archive/HANDOFFS-through-2026-09-16-3.md`](docs/archive/HANDOFFS-through-2026-09-16-3.md) — same format, same order, frozen.
-Losslessness is proved by [`docs/archive/HANDOFFS-through-2026-09-16-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16-3.md.verify.sh), which re-derives L1/L2/L3 from git; run it rather
-than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
+     trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
 session: S176

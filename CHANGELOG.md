@@ -214,6 +214,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S176 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- **Fold** of `084ba1b`'s pointer block by the index's rule (`docs/HANDOFFS_ARCHIVE_INDEX.md:51`): one
+  124 B row at the bottom of the table, `| 9 | 2026-09-14 → 2026-09-16 | HANDOFFS-through-2026-09-16-3.md |
+  v1.5.0 |`, and the block deleted from `HANDOFFS.md`, in its own commit as the rule requires (fork Learning #58).
+  The shard holds S174 and upstream's S21, S19–S13, the receipts the M1 merge brought.
+- **Also in `HANDOFFS.md`'s front matter:** the fold comment's `Learning #58` now reads *fork Learning #58*.
+  Commit `82f0d3a`'s inventory skipped the two ledgers as history, but this comment is a live
+  instruction; an anchored-fence search of both ledgers' front matter found no other citation past #13.
+- **Front matter:** 4,475 B inside the trim commit, 4,024 B after the fold (4,019 B at S175, plus 5 B
+  for *fork* ), against Test 39 A2's 7,168 B reserve. `bin/check-handoff --all --allow-pending` exit 0 on
+  2 receipts.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-16-3.md` (9 record(s), 68,571 B → 16,296 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
