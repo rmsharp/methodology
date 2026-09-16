@@ -1782,3 +1782,85 @@ half-stale, because the fork dashboard's own comment (:325–345) already reject
 the ledgers in its watched set only as a property report. **Next: the plan's P1**, one session, on
 branch `bl57/changelog-rules` created from `b82dcff`. BL-56 folds into the plan's P6, and BL-47's
 `CHANGELOG.md` half is settled by Q2 A (both noted in those items).
+
+<a id="bl-58"></a>
+
+**BL-58 — consider giving adopters instructions on trimming a ledger losslessly. They receive the
+tool and almost none of the operating knowledge. Raised 2026-09-16 (S171, on the operator's request,
+immediately after this repository trimmed `CHANGELOG.md` and hit four of the hazards below).**
+
+**The gap, measured rather than asserted.** `bin/_manifest.py` installs
+`starter-kit/methodology_trim.py` at every adopter root as a **tracked** file, so every adopter has
+the tool. Guidance is a different story — `grep -ciE 'trim'` over the adopter-facing set on fork
+`main`:
+
+| file | disposition | matches |
+|---|---|--:|
+| `starter-kit/SESSION_RUNNER.md` | tracked | **0** |
+| `FRAMEWORK_APPARATUS.md` | tracked | **0** |
+| `starter-kit/SAFEGUARDS.md` | tracked | **0** |
+| `starter-kit/BOOTSTRAP.md` | tracked | 6 (a table row and a file-tree caption) |
+| `starter-kit/CHANGELOG.md` | **seed** | 4 |
+| `starter-kit/HANDOFFS.md` | **seed** | 6 |
+
+So the only real instructions live in the two files `bin/sync` **never overwrites once they exist**.
+An adopter who seeded before a rule was written never receives it, and the one file every session
+actually reads says nothing at all. (BL-57's P2 adds a *Reading and archiving* section to
+`FRAMEWORK_APPARATUS.md`, which is tracked and would reach everyone — but it is on branch
+`bl57/changelog-rules`, not on `main` and not upstream, and it documents reading and the trigger
+rather than the operating hazards below.)
+
+**What a trimming session has to know, and where each item was learned.** Every one of these is
+either a refusal this repository hit or a defect it shipped:
+
+1. **The tool never stages and never commits.** It leaves the live file modified and the shard
+   *untracked*; committing with `-a` lands the shortened ledger while the shard never enters history
+   at all — the lossless proof would then certify a file no one has. Stage both by hand.
+2. **Reconcile before trimming, not after.** The `P1_UNDOCUMENTED` guard refuses while any commit
+   sits unrecorded in the ledger, and it is right to: a trim advances
+   `git log -1 --format=%H -- CHANGELOG.md`, so `<frontier>..HEAD` would never contain that commit
+   again and Phase 0 reconcile could not recover it. **The usual discharge — naming a `--no-verify`
+   housekeeping commit in the close-out entry — is unavailable here, because close-out comes after
+   the trim.** S171 hit this and had to write a ledger entry mid-session to clear it.
+3. **The `SRF_RED` refusal is a property of the rule, not of your file.** `regrowth / relief >= 1.00`
+   is 1.0000 by construction at steady state, so it refuses any recurring maintenance policy and is
+   satisfiable only by trimming *late*. An adopter meeting it needs to know that before deciding
+   whether `--force` is an override or a correction; the adjudication is
+   [`srf-red-refusal-adjudication.md`](srf-red-refusal-adjudication.md) §11.1, and it is **fork-only**.
+4. **A trim relocates bytes; it does not free them.** Across this repository's **first ten** archive
+   events: relief 1,304,337 B against additions 1,448,576 B — **net +144,239 B, every one
+   net-additive** ([`srf-red-refusal-adjudication.md`](srf-red-refusal-adjudication.md) §2.3, measured
+   at S124). **That figure has not been re-derived since, and there have been many trims after it** —
+   re-run its accounting rather than quoting the number. Two current measurements do stand: the last
+   `CHANGELOG.md` trim before S171 (`aaa6d30`) relieved 171,230 B and wrote 189,158 B, **net +17,928 B
+   (1.10×)**; and the proof script is a near-fixed cost (15,992 B at v1.5.0), which is 9% of a large
+   shard and 47% of a small one, so **small trims are the expensive ones.** `docs/archive/` here is
+   **40.6% of the tracked repository (3,381,678 of 8,328,854 B at S171) and is inside no ceiling
+   anywhere.**
+5. **Run the shipped `.verify.sh`, and know it reads differently either side of the commit** — before
+   it reports *"HEAD vs the working tree (trim not yet committed)"*, after it names the trim commit.
+6. **For a ledger whose front matter carries a shard *table*, folding the tool's pointer block into it
+   belongs in its own commit** — inside the trim commit the shipped proof fails L2 (Learning #58).
+7. **A retention count is an operator decision and is not re-derivable** from any threshold in the
+   tool, which fires on bytes and knows nothing about record counts.
+8. **Trimming a receipt ledger moves what the whole-ledger checks see** — re-run the checker against
+   each shard, and never trim to zero receipts (an empty ledger is indistinguishable from a broken one).
+
+**The question this item exists to answer, and it is genuinely open:** *should* adopters be told all
+of this, or is the honest answer that archiving is optional and most projects should never trim? The
+work is a decision first and an edit second. Three shapes, none costed yet:
+
+- **(a) A section in the tracked `FRAMEWORK_APPARATUS.md`,** beside BL-57's *Reading and archiving* —
+  reaches every adopter on the next `bin/sync`, costs nothing at Phase 0 because the apparatus is read
+  on demand, and is the natural home. Distributed, so it is an upstream change.
+- **(b) A short procedure in `SESSION_RUNNER.md`.** Reaches the one file every session reads, and for
+  that exact reason is the expensive option — the runner is already **54,363 B against a 41,364 B
+  declared ceiling** on fork `main`, and `context_budget.py --status` exits 2 today.
+- **(c) Leave the tool to speak for itself** and improve its own output instead. It already prints the
+  rollback, the verify command and *"Then commit yourself"*; items 1, 2 and 5 could become lines the
+  tool emits, which is guidance that cannot go stale in a seed.
+
+**Related.** BL-53 (retirement policy for a grow-only file) is the same family of question one file
+over. The trimmer's own design record is
+[`ledger-trimmer-design.md`](ledger-trimmer-design.md). **Any distributed fix is an upstream change
+and its own go-ahead.**

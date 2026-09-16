@@ -214,6 +214,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S171 — BL-58 raised on the operator's request: should adopters be told how to trim a ledger losslessly?
+
+**Change:** `docs/planning/BACKLOG.md` gains the index row and open-list entry; the body is in
+`BACKLOG-DETAIL.md` under `<a id="bl-58"></a>`. **The gap is measured, not asserted:** `bin/_manifest.py`
+installs `methodology_trim.py` at every adopter root as a **tracked** file, while `grep -ciE 'trim'`
+returns **0** for `starter-kit/SESSION_RUNNER.md`, `FRAMEWORK_APPARATUS.md` and `starter-kit/SAFEGUARDS.md`
+— so the only real instructions sit in the two **seeds** `bin/sync` never overwrites once they exist, and
+the one file every session reads says nothing. The item lists eight operating hazards, **four of them hit
+by this session**: the tool stages nothing (commit with `-a` and the shard never enters history);
+`P1_UNDOCUMENTED` demands the reconcile happen *before* the trim, because the usual discharge — naming a
+`--no-verify` commit at close-out — comes too late; the proof reads differently either side of the commit;
+and `SRF_RED` is a property of the rule, not of the file. It is framed as a **decision first**, with three
+uncosted shapes: the tracked apparatus beside BL-57's P2 section, a procedure in the runner (expensive —
+the runner is 54,363 B against a 41,364 B declared ceiling), or better output from the tool itself.
+**One stale figure was caught before it was published:** the *"net +144,239 B across ten archive events"*
+accounting is S124's and covers only the first ten, so the entry attributes it and says to re-derive rather
+than quote it.
+
+- **Commit/PR:** this commit
+- **Session:** S171 · **Verified:** the disposition and install path read from `bin/_manifest.py`
+  directly; each `grep -ciE 'trim'` count run per file; the proof-cost percentages and the 40.6%
+  archive share re-measured this session
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-14.md` (65 record(s), 276,657 B → 98,495 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
