@@ -51,6 +51,8 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   **10/10 pass · 0 fail · 0 unmeasured · results `6542e640a956` · manifest `97a7aab85b9a`** (2 m 50 s).
   `_first_tightening_owed` in the manifest now records the discharge and the standing rule: raise floors
   when a measurement rises, never lower them.
+- Session S23: claim `b4c04af` + tightening `fb81c4b` + the close-out commit (receipt complete, cites the run).
+  The ledger hook refused the first close-out attempt — `CHANGELOG.md` was not co-staged — as designed.
 
 ### 2026-09-16 · [ad hoc] PR #82 review-response fixes — the six corrections and the review's accepted findings, one checkpoint per fix
 
