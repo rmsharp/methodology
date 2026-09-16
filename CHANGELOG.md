@@ -35,6 +35,14 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-16 · [ad hoc] PR #82 merged — post-merge verification on main and the first tightening
+
+- **Action:** the operator merged [PR #82](https://github.com/KJ5HST/methodology/pull/82) (quality ratchet,
+  plan #81 Phases 1–4 + the review-response fixes) at merge commit `64f23bf` (2026-09-16T18:05:47Z; parents
+  `0fd003a` + `5c9d3b4`). Session S23 verifies `main` and takes the tightening the S22 receipt records as
+  owed: `tests-sh-failed` 1 → 0 and `tests-sh-passed` 138 → 139, Test 9 turning green on `main`. Local
+  `feat/quality-ratchet` deleted (merged; the remote branch was already gone). Results appended at close-out.
+
 ### 2026-09-16 · [ad hoc] PR #82 review-response fixes — the six corrections and the review's accepted findings, one checkpoint per fix
 
 - **Action:** the fix set the maintainer's confirmation comment promised, built on `feat/quality-ratchet`
