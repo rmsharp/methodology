@@ -55,5 +55,5 @@ it into one row at the bottom of this table — `n` is the record count, the spa
 cell the bare file name linked as `archive/<name>`, and `by` the trimmer version; the block's `.verify.sh`
 link is dropped, since the proof sits beside its shard — and delete the block from `HANDOFFS.md`, **in its
 own commit**: inside the trim commit the
-shipped `.verify.sh` fails L2 ([Learning #58](../starter-kit/FRAMEWORK_LEARNINGS.md)). The generator is
+shipped `.verify.sh` fails L2 ([fork Learning #58](FORK_LEARNINGS.md)). The generator is
 distributed, so teaching it to write the row itself is an upstream change.

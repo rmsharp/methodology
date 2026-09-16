@@ -214,11 +214,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-53] S176 — `CLAUDE.md` routes this fork's Phase 3C learnings to `docs/FORK_LEARNINGS.md`
+
+- **`CLAUDE.md`, new subsection *Where this fork's learnings go*** (7 lines, in the fork-only part of
+  *What This Repository Is*): the runner's Phase 3C (`starter-kit/SESSION_RUNNER.md:228`) sends a
+  canonical-repo session to the distributed file. On this fork that file is upstream's, so fork
+  learnings append to `docs/FORK_LEARNINGS.md`, cited as *fork Learning #N*. This is the one line D1 (A)
+  owed (plan §3). It sits outside the table row that upstream rewrites at M3, so it adds no conflict hunk
+  there. `CLAUDE.md` is 11,808 B against the 18,600 B resident ceiling.
+- **`docs/HANDOFFS_ARCHIVE_INDEX.md:58`:** the fold rule's `Learning #58` link now reads
+  *fork Learning #58* and points at `FORK_LEARNINGS.md`. That was the last of the plan's 23 live
+  citation sites, 25 with the two wrapped ones.
+- **Correction to the entry below, made in place:** its test-file breakdown read *#16 ×9, #26, #43*; the
+  sites are #16 ×8, #26 ×2 (the pin's docstring and its message) and #43. The 11 and 18 totals were right.
+- **Verified:** every relative link in `CLAUDE.md`, the index and `docs/FORK_LEARNINGS.md` resolves
+  (Python); `bin/check-links` exit 0 (105 links, the distributed corpus).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-53] S176 — live code cites *fork* Learnings, and the two suite rows D1 turned red pass again
 
 - **Citations, following D1 (A):** 18 sites in 5 files now read *fork Learning #N*: both dashboard twins
-  `:452` (#16) and the `archiv` result line (#15); `tools/test_methodology_dashboard.py`, 11 sites (#16 ×9,
-  #26, #43); `bin/tests.sh:1713`, `:3003`, `:3089` (#16, #34 ×2). **Two more that the plan's count of 23
+  `:452` (#16) and the `archiv` result line (#15); `tools/test_methodology_dashboard.py`, 11 sites (#16 ×8,
+  #26 ×2, #43); `bin/tests.sh:1713`, `:3003`, `:3089` (#16, #34 ×2). **Two more that the plan's count of 23
   missed:** in both twins the text `Learning`/`#26` wraps across two comment lines (`:409`), which a per-line grep cannot
   see (found with a multi-line Python search). The `archiv` result line also says its #15 row has since
   left the distributed corpus. Ledgers, plans, audits and `README.md` stay as written. `docs/audits/`

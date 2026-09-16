@@ -28,6 +28,13 @@ a single correction and writing it into a ratified plan — and it re-ranked ten
 this repository's stated purpose before anyone noticed. If you find a blocker in a document, check
 who imposed it and when; an unattributed blocker is a defect, not a constraint.
 
+### Where this fork's learnings go
+
+**Phase 3C on this fork appends to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md), not to
+`starter-kit/FRAMEWORK_LEARNINGS.md`.** The runner routes a canonical-repo session to the distributed
+file, but here that file is upstream's; the fork's rows, #15 on, moved out at the resync (decision D1,
+S176). Cite them as *fork Learning #N*; a bare *Learning #N* past #13 means the distributed file's row.
+
 ## Document Hierarchy
 
 Four layers, each serving a distinct purpose — plus the flight manual's read-on-demand sibling:
