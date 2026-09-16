@@ -210,6 +210,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S170 — the PR #82 comment states the ratchet's actual mechanism, and the findings reorganize around it (not posted)
+
+**Operator question at the Present gate:** *"What is the mechanism that makes raising or lowering a gate's
+number have an effect? What is the relationship to a gate and its number?"* — a gap in the rewording, not
+in the code. **Answered from the source, verified before asserting:** a gate's number is a pass/fail
+boundary whose meaning depends on its `direction` AND on its `command` (the quantity measured), and **two
+parts of the system read it differently.** `--run` executes the command and applies the boundary
+(`quality_ratchet.py:232`). `--precommit` — the ratchet — **runs no command at all** (`compare()`, `:134`,
+docstring *"Pure; no git"*): it reads the staged manifest and `HEAD`'s and compares them field by field, so
+the hook sees the EDIT, not its consequences. That is why it works without measuring anything, and it is
+also the boundary of the guarantee, in the code's own warning string: **it holds thresholds, not
+measurements** — a changed `command` can only warn, since the tool cannot know whether the new command is
+easier without running both. **The comment reorganizes around that sentence:** §1 gains three paragraphs
+(what the number does / at run time / at commit time / where the guarantee stops), and §2's three findings
+stop being a list and become consequences of the one design choice — (a) a comparison with no second side,
+(b) thresholds guarded perfectly over a quantity that cannot see failure, (c) the record of the run checked
+only for shape. 3,188 → 3,516 words. **Still nothing posted.**
+
 ### 2026-09-15 · [ad hoc] S170 — the PR #82 comment recomposed for a reader who has not read the plan (not posted)
 
 **Operator critique at the Present gate, acted on:** the draft assumed too much knowledge — *"Deleting the

@@ -14,26 +14,32 @@ More importantly, **the description never says plainly what a quality gate is, o
 >
 > **The approach: put the standard in a file instead of in a judgment.** A new file at the repository root, `.quality-gates.json` — the **manifest** — lists that repository's **quality gates**. A gate is three things: a name, a command to run, and a number the result must clear — for example, *run `bin/tests.sh`, read the number of passing tests, require at least 134.* A gate whose command has no number to extract uses its exit code instead, so *"this check must exit 0"* is expressible too. Gates are declared **at the values the repository measures today**, not at aspirational ones, so the file is green the day it lands.
 >
-> **The mechanism, and why it's a ratchet.** Raising a gate's number is always allowed and needs no approval. *Lowering* one is a **loosening** — and so is deleting a gate, or flipping "at least" into "at most", because both make things pass that used to fail. A pre-commit hook runs `quality_ratchet.py --precommit`, compares the gates you are about to commit against the ones already committed, and **refuses the commit if any gate got looser.** That is the whole metaphor: a ratchet's teeth let the wheel turn one way and catch it if it turns back. Declared quality can rise freely; it cannot quietly fall. Loosening on purpose is still possible — `git commit --no-verify` — but that leaves a deliberate, reviewable act in the history instead of a silent edit, and the tool prints what the bypass costs before you take it.
+> **What the number does.** A gate's number is a pass/fail boundary, and its direction says which side passes: *at least* means the measurement must reach the number, *at most* means it must stay under. The number is only meaningful together with the command, which decides *what quantity* is being measured — the same number against a different command is a different claim entirely. Two separate parts of the system read that number, and they work differently.
 >
-> **What you see.** `quality_ratchet.py --run` measures every gate and prints one summary line. Sessions paste that line into their close-out receipt, so "everything was green" arrives with its own evidence attached rather than as an assertion. The dashboard reads the manifest, the last run, and the manifest's own git history, and flags any threshold that was lowered, naming the commit.
+> **When you run the gates,** `quality_ratchet.py --run` executes each gate's command, pulls the number out of its output, and applies the boundary. That is what says whether the repository is green today, and it is the number's ordinary, obvious job.
+>
+> **When you commit, and this is the ratchet:** the pre-commit hook runs `quality_ratchet.py --precommit`, which **runs no commands at all.** It reads two versions of the manifest — the one you are about to commit and the one already committed — and compares them field by field. If a gate disappeared, if a direction flipped, if an *at least* number went down or an *at most* number went up, **the commit is refused.** Nothing is measured; the hook is reading your edit, not its consequences. That is precisely why it works as a ratchet: it doesn't need to know whether the tests pass, only whether you have just made it easier for them to count as passing. Teeth that let the wheel turn forward and catch it turning back — declared quality can rise freely and cannot quietly fall.
+>
+> **Where that guarantee stops.** Because the check is a comparison of declarations rather than of results, it holds **thresholds, not measurements.** Changing a gate's *command* is therefore a warning rather than a refusal: the tool has no way to know whether the new command is easier than the old one without running both. Loosening on purpose also remains possible with `git commit --no-verify` — which leaves a deliberate, reviewable act in the history instead of a silent edit, and the tool prints what the bypass costs before you take it.
+>
+> **What you see.** `--run` also prints a one-line summary of the whole set, which sessions paste into their close-out receipt — so "everything was green" arrives with its own evidence attached rather than as an assertion. The dashboard reads the manifest, the most recent run, and the manifest's own git history, and flags any threshold that was lowered, naming the commit that did it.
 >
 > **Scope.** The tool ships to adopters with an **empty** gate list, deliberately: a ratchet starts where a project actually is. This repository declares nine gates for itself as the first worked example. Adopter rollout and the release are separate, later steps.
 
-Two notes on that rewording. It drops every decision code — where one mattered I'd state the decision instead ("the principle ships as a section, not as a tool-only change"). And it states the metaphor explicitly, which matters because the rest of my comment is about places the metaphor doesn't yet hold.
+Two notes on that rewording. It drops every decision code — where one mattered I'd state the decision instead ("the principle ships as a section, not as a tool-only change"). And it spends a paragraph on what the number actually does and where the guarantee stops, because that is the part I could not reconstruct from the description alone, and because everything else in this comment turns out to follow from it.
 
 ---
 
 ## 2. Three ways the ratchet can still turn backwards
 
-A ratchet holds because a pawl rests on the teeth. Each of these is a way the pawl lifts off. I ran all three in scratch repositories rather than reading them off the code.
+Everything above follows from one design choice: the ratchet compares two *declarations* — the manifest you are committing against the manifest already committed. That is what makes it cheap and unarguable, and it also draws the boundary of what it can protect. Three gaps follow from that boundary directly: the comparison can be made not to happen at all (a); it can be guarding a number whose underlying quantity barely tracks quality (b); and the record that the gates were ever actually run is checked only for shape (c). I ran all three in scratch repositories rather than reading them off the code.
 
 ### (a) Removing the whole manifest is treated as nothing happening
 
-The teeth here are the gates listed in `.quality-gates.json`. Delete that file and there is nothing left to catch anything — and every part of the system treats its absence as a non-event rather than as the largest possible loosening:
+A comparison needs two sides. Delete `.quality-gates.json` and there is no second side — and every part of the system reads that absence as a non-event rather than as the largest loosening available:
 
 - the pre-commit hook runs the tool only when `.quality-gates.json` is present in the working tree, so deleting it skips the check entirely;
-- `precommit()` returns clean when the file isn't in the commit ("manifest not in this commit: nothing to ratchet");
+- even when the tool does run, `precommit()` returns clean the moment it finds no manifest in the commit ("manifest not in this commit: nothing to ratchet");
 - the dashboard's history walk reads the manifest at each commit that touched it, and a commit that *deleted* it fails to parse — so that version, **and both pairs it sits between**, are skipped rather than read as "every gate removed."
 
 **What I ran.** A scratch repository with one gate reading *"at least 5"*, and the hook chained exactly as this PR chains it. Committing each step in turn:
@@ -51,7 +57,7 @@ So the gate went from *at least 5* to *at least 1* in two ordinary commits, neit
 
 ### (b) Most of the gates count tests rather than check them
 
-Four of the nine gates measure `Ran (\d+) tests` — how many test methods **executed**, not how they turned out. A failing test still ran. A skipped test still ran. So those four gates rise and fall with the size of the suite and are blind to its health.
+This is the case the boundary above matters for. The ratchet guards these four numbers perfectly; the trouble is what the numbers are attached to. Four of the nine gates measure `Ran (\d+) tests` — how many test methods **executed**, not how they turned out. A failing test still ran. A skipped test still ran. So those four numbers track the size of the suite and are blind to its health, and holding them steady holds nothing steady.
 
 **What I ran.** Three gates, each requiring *at least 3*, pointed at deliberately sick suites:
 
