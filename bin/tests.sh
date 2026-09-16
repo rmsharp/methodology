@@ -1278,7 +1278,9 @@ P="$(mk_hookrepo)"
 git -C "$P" add HANDOFFS.md
 [ "$(hook_verdict "$P")" = "pass" ] && pass "27.N1 a Phase 1B claim staging only HANDOFFS.md passes" \
     || fail "27.N1 the claim carve-out did not fire ($(hook_verdict "$P"))"
-if git -C "$P" commit -q -m "claim S2" 2>/dev/null; then
+# The live hooks dir also holds upstream's commit-msg disclosure gate (ad7bd37), which refuses this
+# trailer-less fixture commit under an agent harness; its documented override keeps N1b about pre-commit.
+if METHODOLOGY_REQUIRE_COAUTHOR=0 git -C "$P" commit -q -m "claim S2" 2>/dev/null; then
     pass "27.N1b the same claim commits for real, with no --no-verify"
 else
     fail "27.N1b a real claim commit still needs --no-verify — the bypass is not removed"

@@ -214,6 +214,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S176 — resync stage M1 merged (`5c2bd59`), and Test 27.N1b passes the arriving `commit-msg` hook
+
+- **Merge `5c2bd59`** (parents `b85851f`, `0fd003a`): the first of the resync plan's four stages
+  ([`upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md) §5 R1). It is a real
+  3-way merge, resolved per §2.3. `.context-budget.json` keeps ours, by D11 (`git diff HEAD` empty).
+  `starter-kit/FRAMEWORK_LEARNINGS.md` takes upstream's copy, by D1 (A): byte-identical to `0fd003a`'s, rows 1–13
+  and the reserved `#14`. **`CHANGELOG.md`:** upstream's 12 new entries are interleaved by date, and on a
+  shared date the fork's come first. A Python check shows each upstream entry verbatim in the result, and
+  removing them gives back the fork's file byte for byte. **`HANDOFFS.md`:** upstream's S21 and S19–S13
+  follow the fork's receipts. There is no session+date collision, and `check-handoff --all` exits 0 on
+  11 receipts. The hooks skip merge commits, so the merge is recorded here, in the next ordinary commit.
+- **Measured on the merge, in a `--no-local` clone at `5c2bd59`:** `bash bin/tests.sh` gave **303 passed / 3
+  failed / 0 skipped**. The three failures are the ones the plan's D1 trial found (§3): Test 18's Learning
+  #26 pin, Test 37's `add_row37` numbering onto the reserved `#14`, and Test 27.N1b. Run on their own:
+  the dashboard suite, 321 tests with 1 failure (that pin, and nothing else behind the row); the
+  context-budget suite 116 OK; the trimmer suite 123 OK; `bin/check-learnings` exit 0 (13 rows);
+  `.githooks/commit-msg --selftest` OK (7 checks).
+- **This commit, `bin/tests.sh:1283`:** Test 27.N1b's real fixture commit runs with
+  `METHODOLOGY_REQUIRE_COAUTHOR=0`, the documented override of the disclosure gate that arrived with M1
+  (`ad7bd37`). The test points `core.hooksPath` at the live hooks and makes a real commit with no trailer,
+  so the gate refused the commit before the test could observe `pre-commit`'s claim carve-out. It stays a
+  one-line change (plus a comment), because BL-57's P5 removes Test 27 with the carve-out.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S176 claim — R1 of the resync plan: merge stage M1 (`0fd003a`) and carry out D1 (in progress)
 
 **Deliverable:** R1 of [`docs/planning/upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md)
