@@ -168,6 +168,29 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-16 · [BL-57] The runner cites the ledger rules instead of restating their audit; three files adopt `[BL-<id>]`
+
+- **Change:** `starter-kit/SESSION_RUNNER.md:39` (Phase 0, the backfill step) drops the inline
+  `grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md` for a link to
+  [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger), so the audit is
+  published in exactly one place. `:278` (Phase 3F) and `:329` (failure mode #27) change
+  `[BL-<N>]` to `[BL-<id>]`, as do `ITERATIVE_METHODOLOGY.md:294` and `.githooks/pre-commit:57`.
+  After this commit `grep -F '[BL-<N>]'` over the runner, the flight manual, `HOW_TO_USE.md`, the
+  hook, §The Action Ledger and both seeds finds nothing.
+- **Why:** C6 and C10, the distributed half of BL-57's P3. One rule, one home, one audit.
+- **Two duplicate clauses paid for the link.** The step already showed `[ad hoc]` in its own entry
+  template, so *"default `[ad hoc]`"* was removed; and the note's closing paragraph already says the
+  backfill *"does not become this session's deliverable"*, so the step's weaker *"separate from this
+  session's later deliverable"* was removed. **The runner ends smaller than it started: 52,195 →
+  52,163 B, and 18,477.5 → 18,463.5 tokens.**
+- **The two units disagreed about the link, which is why the size rule is now stated in tokens.**
+  Adding the cross-reference and the two id changes alone measured **+36 B but only +9 tokens** — a
+  path tokenizes at about 4 B/token where this file averages 2.8248 — so a byte rule overstates what
+  a cross-reference costs and understates what cut prose saves. Tokens are the unit the read cap and
+  the file's own ceiling are written in.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-16 · [BL-57] §The Action Ledger: a source tag admits any backlog id, and the audit reads the archived shards
 
 - **Change:** `FRAMEWORK_APPARATUS.md` §The Action Ledger states the vocabulary as `[issue #<N>]`,
