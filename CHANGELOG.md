@@ -214,6 +214,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S175 follow-up — the operator ratifies the resync plan: every recommendation (picker)
+
+- **Decisions, taken by picker after S175's close-out:**
+  - **D1 (A), BL-53:** the distributed `starter-kit/FRAMEWORK_LEARNINGS.md` becomes upstream's at each
+    merge stage, and the fork's rows #15–#66 move verbatim, numbers kept, to `docs/FORK_LEARNINGS.md`,
+    where new fork learnings are appended. Carried out in R1.
+  - **D2 (a):** adopt upstream's quality ratchet, then tighten its thresholds to the fork's measured
+    values in R2, after stage 4.
+  - **D3 (a):** `DASHBOARD_VERSION` 2.18.0 for the merged dashboard.
+  - **D4 (a):** R1 merges stage 1 (`0fd003a`); R2 merges stages 2–4.
+- **Recorded in:** the plan's status line and §3, BL-53's and BL-57's backlog rows, and S175's receipt
+  (`next_steps`). Nothing outward; no push.
+
 ### 2026-09-16 · [BL-57] S175 close-out — the resync is planned, not merged; D1–D4 wait on the operator
 
 - **Deliverable:** the resync plan (`e3bc12c`), after the operator re-scoped the session from merging to

@@ -1,7 +1,7 @@
 # Resync plan — merge `upstream/main` `6b29d3d` into fork `main`
 
-**Status: DRAFT for operator ratification.** Written at S175 (2026-09-16), a planning session: nothing
-is merged. Evidence taken at fork `main` `1f34e75`, `upstream/main` `6b29d3d`, and PR #83's head
+**Status: RATIFIED — the operator chose every recommendation, D1 (A), D2 (a), D3 (a), D4 (a), by
+picker after S175's close-out (2026-09-16).** Written at S175, a planning session: nothing is merged. Evidence taken at fork `main` `1f34e75`, `upstream/main` `6b29d3d`, and PR #83's head
 `219fb9d`. Carried out by **R1** and **R2** (§5), one session each. Precedent: the plan
 [`upstream-read-set-budgets-merge-plan.md`](upstream-read-set-budgets-merge-plan.md) (S150), carried
 out as merge `213f841` (S151).
@@ -185,6 +185,10 @@ context-budget suite, which fails one test here and passes in a clone, so a whol
 checkout is expected to read `tests-sh-failed` 1 (not run) and reads 0 in a clone (run).
 
 ## 3. Decisions for the operator
+
+**Decided (operator, picker, after S175's close-out):** D1 (A) the fork-only learnings file; D2 (a) tighten
+the ratchet to the fork's values; D3 (a) `DASHBOARD_VERSION` 2.18.0; D4 (a) R1 + R2. The options below
+stay as the record of what was weighed.
 
 ### D1 — The fork's Learnings #15–#66, now that upstream has its own #15 and #16 (BL-53)
 
