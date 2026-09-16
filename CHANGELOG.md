@@ -8,18 +8,20 @@ This repository dogfoods its own methodology: every session records its actions 
 close-out (`starter-kit/SESSION_RUNNER.md` Phase 3F), and Phase 0 reconciles the ledger against
 `git log` and backfills anything a crashed or out-of-band session missed. Taking an action — any
 commit, or any non-commit action (release, tag, PR, upstream issue close, access grant, grooming
-decision) — and not recording it is failure mode #27. The full close-out and reconcile rules, plus
-the reusable seed, live in [`starter-kit/CHANGELOG.md`](starter-kit/CHANGELOG.md).
+decision) — and not recording it is failure mode #27. The rules for this file live in
+[`FRAMEWORK_APPARATUS.md` §The Action Ledger](FRAMEWORK_APPARATUS.md#the-action-ledger); the reusable
+seed, [`starter-kit/CHANGELOG.md`](starter-kit/CHANGELOG.md), points there.
 
-**Source tag — exactly one per entry**, so `grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md`
-enumerates every logged action and proves all three sources landed:
+**Source tag — exactly one per entry**, so the audit in §The Action Ledger — anchored to the entry
+heading, and reading any archived shards — enumerates every logged action and proves all three
+sources landed:
 
 - `[issue #<N>]` — a repository issue. Issues live in `KJ5HST/methodology`; the fork
   `rmsharp/methodology` has Issues disabled, so entries — authored from either side — cite an
   **absolute URL**, never a bare `#<N>`, and resolve identically from both.
-- `[BL-<N>]` — a backlog item, removed from the backlog in the same commit. That backlog is
+- `[BL-<id>]` — a backlog item, removed from the backlog in the same commit. That backlog is
   [`docs/planning/BACKLOG.md`](https://github.com/rmsharp/methodology/blob/main/docs/planning/BACKLOG.md)
-  on fork `main` only — **this repo has no `docs/planning/BACKLOG.md`** — so a `[BL-<N>]` entry here
+  on fork `main` only — **this repo has no `docs/planning/BACKLOG.md`** — so a `[BL-<id>]` entry here
   records work whose origin lives in the fork.
 - `[ad hoc]` — work with no backlog or issue origin: releases, tag/branch ops, PR opens, upstream
   issue closes, access grants, and decline/wontfix/grooming decisions.
@@ -31,7 +33,8 @@ non-release work (housekeeping, doc-only PRs, adopter coordination, backlog groo
 otherwise has no home but raw `git log`. Where the two overlap — a release — this ledger carries a
 **one-line pointer** into §Versioning, never a re-narration (cite, don't restate).
 
-Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sections as it grows.
+Reverse-chronological, newest on top; prepend-only. Month headings (`## YYYY-MM`) start at this
+ledger's next new month, and nothing below is retrofitted (§The Action Ledger, *Placement*).
 
 ---
 
@@ -388,6 +391,30 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 - **Verification:** 425 lines; 26 `file:line` anchors on `main @ 512c2ed` re-checked by script (26/26);
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
+
+### 2026-09-16 · [BL-57] This ledger's front matter points to §The Action Ledger for its rules, its audit and its month headings
+
+- **Change, in this file's front matter only** (the maintainer's own file — the PR body will say it can
+  be dropped, and that dropping it leaves the pointer false):
+  - `:11`–`:13` — the rules *"live in [`FRAMEWORK_APPARATUS.md` §The Action Ledger]"*; the seed *"points
+    there"*. It said the rules and the seed both *"live in `starter-kit/CHANGELOG.md`"*, which P1 made
+    false when it moved the rules out of the seed.
+  - `:15`–`:17` — the source-tag paragraph cites *"the audit in §The Action Ledger — anchored to the entry
+    heading, and reading any archived shards"*, where it published the unanchored one-file
+    `grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md`. On this commit that form matches **94** lines
+    against **68** entries: it also counts the tag definitions and every in-prose mention of a tag.
+  - `:22`, `:24` — `[BL-<N>]` becomes `[BL-<id>]` in the tag definitions, the item P3 recorded as left
+    for P4. What `[BL-<N>]` remains on this tree is history: entry bodies here, `CLAUDE.md:123` (v3.1)
+    and `README.md:365` (*What's New*).
+  - `:36`–`:37` — *"Promote to `## YYYY-MM` sections as it grows"* becomes *"Month headings start at this
+    ledger's next new month, and nothing below is retrofitted"*. This ledger has none today, so the
+    first one opens at the first entry dated in October.
+- **Why:** BL-57 D8 (i), in one commit as the plan requires; C10, C13 and P3's finding (4).
+- **Checked:** the audit gives **68** in `zsh` and in `bash` on this commit, equal to the file's `^### `
+  count — this tree has no shards. `FRAMEWORK_APPARATUS.md:338` is `## The Action Ledger`, the link's
+  target.
+- **Placed** above the previous `[BL-57]` entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
 
 ### 2026-09-16 · [BL-57] `CHANGELOG.md` is described as the action ledger, not as completed-work history — and `CLAUDE.md` is back under its token ceiling
 
