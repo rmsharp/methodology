@@ -389,6 +389,29 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-16 · [BL-57] A newest-on-top ledger is prepended to, not appended to; the claim commit's entry says *(in progress)*
+
+- **Change:** seven instructions that said *"append … newest on top"* now say *prepend*: the runner's
+  Phase 3F (`starter-kit/SESSION_RUNNER.md:281`), failure mode #27's countermeasure (`:332`) and its
+  Degradation row (`:360`); `ITERATIVE_METHODOLOGY.md:294`, Phase 6 step 8; `HOW_TO_USE.md:767` and
+  `:804`; and the ledger hook's refusal text (`.githooks/pre-commit:70`). The runner's Phase 1B stub
+  (`:88`) and the flight manual's Phase 1B step 1 (`ITERATIVE_METHODOLOGY.md:169`) now say the claim
+  commit's ledger entry reads *(in progress)* and close-out records the rest, where they said the
+  session's actions are recorded at Phase 3F — which a claim commit's own entry contradicts.
+- **Why:** BL-57 C3 and C7. §The Action Ledger already said *prepend*; these seven sites were the other
+  side of that disagreement. *Append-only*, meaning never edited, is a different claim and stays.
+- **Size, in tokens, against the criterion restated before this phase's first edit:** the runner reads
+  **37,717** doubled (18,858.5 tokens) against **≤ 37,731** (`upstream/main`'s blob `2a3e410d`) — 7 tokens
+  more than P4's start at the merge, 7 under the criterion; the 36,955 control reproduced in the same
+  run. Bytes: runner +9, `ITERATIVE_METHODOLOGY.md` +45, `HOW_TO_USE.md` +2, the hook +1. The flight
+  manual's +45 misses the plan's *"byte-neutral wording"*; it has no budget row — `.context-budget.json`
+  lists it under `_deliberate_exclusions`.
+- **Checked:** `grep -nE '[Aa]ppends? (a|one) dated|Append the owed entry'` over the runner,
+  `ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md` and the hook exits 1 — no matches. No test or tool pins
+  the changed text (`git grep` over `bin`, `tools` and the starter-kit scripts).
+- **Placed** above the previous `[BL-57]` entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-16 · [BL-57] §The Action Ledger states when an entry is written and where it goes: one per commit, never edited, under the topmost month
 
 - **Change:** `FRAMEWORK_APPARATUS.md` §The Action Ledger replaces its closing paragraph — *"Work
