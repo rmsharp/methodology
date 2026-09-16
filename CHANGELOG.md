@@ -214,6 +214,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S173 follow-up — fork `main` pushed to `origin`, `3f9210c..d5ea5c4` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, `3f9210c..d5ea5c4` — 1 commit, a fast-forward, run behind a guard
+  that confirmed the remote still read `3f9210c`. Read back with `git ls-remote`:
+  `d5ea5c412e57a26ab3ba7a5ad4afd8045d6ee870`, equal to local `main`. Go-ahead: the operator's picker answer
+  *"Push now"*. This recording commit follows under the same go-ahead.
+
 ### 2026-09-16 · [ad hoc] S173 follow-up — grooming decisions on F5/F6, BL-53, BL-54, BL-36 and BL-60 (operator, picker)
 
 - **Decisions,** each re-checked against current state before the operator was asked:
