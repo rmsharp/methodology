@@ -1097,6 +1097,24 @@ precedent for any other file. **A second, smaller action rides with it:** a back
 adopters should be told how to trim a ledger losslessly. **Ledger:** `CHANGELOG: pending` — the crash
 breadcrumb until Phase 3F.
 
+### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
+
+- **Action:** one maintainer comment on [PR #82](https://github.com/KJ5HST/methodology/pull/82) answering
+  rmsharp's review comment of 2026-09-16: the review **reproduces** (its own repro script 7/7 sections, the
+  four token figures by the doubled-file Read, the `--run` hash `74c773523dab` on a third tree; the §1
+  rewording accurate on every checkable claim) — with six corrections from the internal check (oversight
+  venue, 2026-09-16): fix 1 alone *refuses* a `git rm` via `find_root`'s exit 3, so `find_root` is the
+  prerequisite; the dashboard fix never runs while the manifest stays deleted; "one new test offsets one
+  failure" is false at the unit-suite level (one `tests.sh` check each); the receipt-vs-results comparison is
+  specified in `starter-kit/HANDOFFS.md` §Citing the gate run, absent only from the runner's Phase 0
+  procedure; the stale-density finding applies to `SAFEGUARDS.md` too; the proposed `context-budget` gate
+  writes an un-ignored history file. Two items the review did not raise: merge/rebase commits skip the
+  ratchet; an unparseable HEAD manifest is the delete/re-add hole with one `--no-verify`. Fixes are the
+  next session's work, in the corrected order. Session S21: claim `07d166e` + the close-out commit.
+  Comment: <https://github.com/KJ5HST/methodology/pull/82#issuecomment-5701463025> (read back via the API).
+  S21's ledger prepends conflict with the branch's S20 prepends in this file and `HANDOFFS.md` (`git merge-tree`
+  exit 1; clean against `8b4dc2c`) — resolve as a union on the PR branch before merge, the S15 precedent.
+
 ### 2026-09-15 · [ad hoc] S170 close-out — the learning row, the receipt, and what the post left open
 
 **Deliverable posted and verified; this entry closes the session.** Phase 3C: **Learning #66 appended** —
@@ -1858,6 +1876,133 @@ next session. `HANDOFFS.md` holds five receipts and its trim refuses with `SRF_R
   450 unit tests OK, `check-links` OK) and fork `main` (304/1)
 - **Model:** Claude Opus 5, 1M context (claude-opus-5[1m])
 
+### 2026-09-15 · [ad hoc] Merged PR #80 — the read-set budgets series (#76–#79)
+
+- **Action:** merge [PR #80](https://github.com/KJ5HST/methodology/pull/80) (rmsharp) at head `aa36fd8` into
+  `main` with a merge commit, the repo's convention. Preceded by the internal review of 2026-09-14 (F1–F6,
+  posted as one comment by S18) and the internal re-review of 2026-09-15 of the four answering commits
+  (`5c9f0f3`/`d4e1570` F1 (a), `3774076` F2, `aa36fd8` F3), which returned **merge** with one new
+  non-blocking finding (G1: the read-set token partition is prose-only since the byte class ceiling left).
+  Session S19. **Merge commit `4d9e271`** (parents `e5e2661` + `aa36fd8`), read back from the API.
+- **Verified on the merged `main`:** `bin/tests.sh` 115 / 1 — Test 9 now **passes** (main has the three new files);
+  the one failure is `tools/test_context_budget.py` `TestFitGateEndToEnd`, **environmental** (this machine has exactly
+  2 transcripts for the repo path: enough for the test to run, too few for `calibrate()` to fit; the test file and tool
+  are identical at `aa36fd8` and here, and a worktree path skips it) — fix queued as the next session's first step.
+  Dashboard unit 211 OK; trim unit 123 OK; `check-links` OK; `check-learnings` OK (13 rows); `commit-msg --selftest`
+  OK; twins byte-identical at `DASHBOARD_VERSION` 2.10.7; `context_budget.py --status` OK, exit 0. Adopters now
+  receive 27 manifest rows on their next `bin/sync` (24 → 27; corpus 659,755 → 839,383 B).
+- **Deferred to the next Orient by design:** 11 `status: reconciled` receipts for #80's non-merge commits, the
+  one-time ledger reorder S15's below-`main` placement made necessary, and the v3.8 release PR.
+
+### 2026-09-15 · [ad hoc] Posted the PR #80 review findings to the PR (non-commit action)
+
+- **Action:** one maintainer comment on [PR #80](https://github.com/KJ5HST/methodology/pull/80) carrying the
+  six findings of the 2026-09-14 review (internal, oversight venue): **F1** the Learnings payload —
+  `starter-kit/FRAMEWORK_LEARNINGS.md` ships 46 rows (13 canonical + the fork's #15–#47) while the PR body says
+  rows #1–#13; **F2** the `methodology_trim.py` doc-only exclusion is unguarded at the predicate level (RED-shown);
+  **F3** the shipped root `.context-budget.json` reports the PR's own headline OVER; **F4–F6** optional
+  (two limits on one file; a docstring describing the fork; the `--source=github` wording). Reproduction
+  commands included; nothing merged, nothing changed on the branch. Session S18: claim `75405be` + the
+  close-out commit. Comment: <https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153> (read back via the API).
+
+### 2026-09-15 · [ad hoc] PR #80 review F3: the root `.context-budget.json` holds the Phase 0 pair to the read cap in tokens at its measured density, and drops the two ledgers it could only report as over
+
+- **Change:** `.context-budget.json` only — this repository's own config, which `bin/_manifest.py` does not
+  distribute (adopters receive the seed, `starter-kit/context-budget.json`, unchanged).
+  `starter-kit/SESSION_RUNNER.md` and `starter-kit/SAFEGUARDS.md` trade their byte ceilings for token
+  ceilings at densities measured by the doubled-file method — 19,200 + 5,800 tokens, which partition the
+  25,000-token read cap — and the `read-set` class keeps its total as a measurement but declares no byte
+  ceiling, because `class_ceiling()` can only take a typed byte total or derive one at the 2.27 B/token
+  floor. `CHANGELOG.md` and `HANDOFFS.md` leave `files[]` for `_deliberate_exclusions`, with the reason
+  and the command that recovers their entries.
+- **Why:** F3 of the review ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153)):
+  `context_budget.py --status` printed OVER at the head — for the pair the headline says fits, and for
+  both ledgers — and wired as a gate it would have refused every ledger append. The operator chose the
+  review's answer (i) for the pair, and for the ledgers a fourth: a ledger is read in part, and in a
+  whole-read class `token_ceiling()` clamps every file to the 25,000-token cap, so answer (ii) left both
+  ledgers over and its pin refused the next append (measured).
+- **Measured on both trees** — this branch, and its merge into `main` at `9fa3141`: `--status` exits
+  **0 (OK)** on each, where it exited 2. `--precommit`: a 300 B append to either ledger passes; the
+  runner passes +100 B and is refused at +2,100 B (19,220 tokens against 19,200); `SAFEGUARDS.md` is
+  pinned at its size in the merge; a shrink passes. The merged pair is 68,548 B and 24,278 tokens,
+  967 B more than this branch's 67,581 B — `main`'s own S16 paragraph in `SAFEGUARDS.md`.
+- **Placed** with this PR's own entries, above F2's, below `main`'s.
+- **Commit:** this commit, on `read-set-budgets` (PR #80)
+
+### 2026-09-15 · [ad hoc] PR #80 review F2: the doc-only exclusion is tested for every non-markdown file `bin/sync` installs, from its real `starter-kit/` source
+
+- **Change:** `tools/test_methodology_dashboard.py` only — canonical-only, so adopters receive nothing,
+  and neither scanner twin changes. `test_a_synced_repo_with_context_budget_installed_is_still_doc_only`
+  is generalized in place as `test_a_synced_repo_with_each_installed_source_file_is_still_doc_only`.
+  Every non-markdown dest in `bin/_manifest.py`'s `DISTRIBUTION` (today `methodology_dashboard.py`,
+  `methodology_trim.py`, `context_budget.py`, `.context-budget.json`) is written from its real
+  `starter-kit/` source into the Quarto doc-only fixture, one at a time and then all together, and must
+  leave `source_loc` 0, `doc_only` true and no "No test infrastructure" risk; each must also pass
+  `is_framework_installed` directly. The names come from the manifest, not `FRAMEWORK_INSTALLED_SOURCE`,
+  so a file the manifest installs and the scanner does not list fails here by name; a last assertion
+  checks the test covered exactly the scanner's list. Still 211 tests — the names are subtests.
+- **Why:** F2 of the review ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153)):
+  with `methodology_trim.py`'s `version_re` and four signatures neutralized in both twins, the suite
+  stayed OK (211) while a synced doc-only fixture read `code` with the false HIGH.
+- **RED first.** Six mutants, each planted in both twins of a clone, the old and the new suite run
+  against each; controls 211 OK on both sides, the clone verified clean after every mutant:
+  - M1, the review's mutant: old **OK (211)**; new FAILS — `2181 != 0` source LOC, alone and all together.
+  - M2, the same neutralization of `context_budget.py`: old fails 2; new fails 3.
+  - M3, the same of `methodology_dashboard.py`: old and new fail the same 12. **Not this test:** the
+    neutralized strings sit in the scanner's own signature table, so the real file still matches itself;
+    the stand-in fixtures catch it. The docstring says so.
+  - M4, `.context-budget.json`'s signatures neutralized: old **OK (211)**; new FAILS on the direct
+    predicate call — the file is `config`, so end to end it cannot fail.
+  - M5, `methodology_trim.py` dropped from the tuple and the table: old fails 1; new fails 4, this test
+    by name.
+  - M6, the one `collect_all` call site skipping `methodology_trim.py`, predicate untouched: old **OK
+    (211)**; new FAILS end to end.
+- **Placed** with this PR's own entries, above F1's, below `main`'s.
+- **Commit:** this commit, on `read-set-budgets` (PR #80)
+
+### 2026-09-15 · [ad hoc] PR #80 review F1 (a), step 2: `FRAMEWORK_LEARNINGS.md` ships rows 1–13 and the reserved `#14`, as this PR's description says
+
+- **Change:** rows #15–#47 — 33 learnings from the contributor's fork, 32 of them citing fork sessions —
+  leave the distributed `starter-kit/FRAMEWORK_LEARNINGS.md` (56,673 → 13,983 B). Rows 1–13 are
+  byte-identical to what this PR carried. The `#14` callout stays, reworded because no row 15 exists now:
+  the next row appended is `#15`, and its two sentences about fork sessions S34 and S35 are gone.
+  `bin/check-learnings`' comment quoting the old callout follows it. The fork keeps its rows in its own
+  copy; any of them can come upstream later, one PR at a time.
+- **Why:** F1 of the review ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153)),
+  option (a), the reviewer's default, taken by the contributor: the canonical numbered set grows one row
+  at a time, and this PR's description says 13 rows.
+- **Placed** above step 1, with this PR's own entries.
+- **Verified:** `bin/check-learnings` exit 0 — *"13 Learning row(s), contiguous 1..13; all citations
+  resolve"*; a `Learning #20` planted in `starter-kit/SAFEGUARDS.md` is caught (exit 1, *"cites Learning
+  #20, which does not exist"*) and the restored tree passes. `bin/check-links` OK (105 links, 23 files);
+  `tools/test_methodology_dashboard.py` 211 OK; `context_budget.py --status` reports the file `ok` at
+  13,983 of 73,728 B.
+- **Commit:** this commit, on `read-set-budgets` (PR #80)
+
+### 2026-09-15 · [ad hoc] PR #80 review F1 (a), step 1: citations of Learnings past #13 now state their rule, before the table keeps only rows 1–13
+
+- **Change:** comments and two docstrings, in three files; no behaviour changes. The review of this PR
+  ([comment](https://github.com/KJ5HST/methodology/pull/80#issuecomment-5674670153), F1) asks that
+  `starter-kit/FRAMEWORK_LEARNINGS.md` ship rows 1–13 plus the reserved `#14` rather than 46 rows. Before
+  that cut, every citation it would leave dangling is rewritten to state the rule instead of a number:
+  `starter-kit/context_budget.py:77` and `:378` (Learning #34) and `:409` (*"learning #22 / #26a"* — this
+  table has no `#26a`, and its #22 is about backlog deletion, so the pair cites another numbering);
+  `tools/test_context_budget.py:489`, `:546`, `:563` (#34); `tools/test_methodology_trim.py:1244` (#16)
+  and `:2063` (#43).
+- **Why:** `bin/check-learnings` sweeps only the Markdown files of the distributed corpus
+  (`distributed_md_files`), so the two `context_budget.py` citations — a file every adopter receives —
+  would have dangled with the check green. Repaired first, so no commit carries a dangling citation. The
+  `Learning #N` mentions past 13 that remain are history (the #28/#29/#30/#34 that never existed, in
+  `CLAUDE.md`, `README.md` and `bin/check-learnings:36`), a planted test value (`bin/tests.sh`, #4242),
+  and a dated audit citing another project's numbering (`docs/audits/2026-05-02-mattpocock-skills-evaluation.md`).
+- **Placed** with this PR's own entries, below `main`'s, for the reason the conflict-resolution entry at
+  the top of this ledger gives: an entry prepended at the top re-conflicts with the next `main` prepend.
+- **Verified:** `starter-kit/context_budget.py` and `tools/test_methodology_trim.py` parse to an AST
+  identical to `b82dcff`'s; `tools/test_context_budget.py` differs in exactly the two docstrings.
+  `tools/test_context_budget.py` 116 tests OK, `tools/test_methodology_trim.py` 123 OK,
+  `context_budget.py --selftest` exit 0, `bin/check-learnings` exit 0.
+- **Commit:** this commit, on `read-set-budgets` (PR #80)
+
 ### 2026-09-14 · [BL-57] S162 claim — plan BL-57: remove the contradictions in the framework's `CHANGELOG.md` rules, here and in six adopters, aiming at an upstream PR
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: a plan in
@@ -2032,4 +2177,108 @@ files for each of the 3 projects synced from the branch and then from fork `main
 neither file is distributed. `BACKLOG-DETAIL.md.verify.sh` exit 0.
 
 - **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-14 · [ad hoc] Housekeeping — merged branches and stray refs deleted (non-commit actions)
+
+- **Deleted, all verified merged into `main` by `git branch --merged` first:** local `docs/quality-ratchet-plan`,
+  `feat/context-budget`, `feature/protocols-as-first-class-upstream`, `fix/issue-32-phase2-link-reconciliation`,
+  `fix/issue-32-phase3-sync-coverage`, `fix/issue-32-phase4-status-per-file`, `fix/issue-36-check-links-no-mutate`;
+  remote `origin/docs/quality-ratchet-plan` (#81), `origin/fix/issue-67-stale-version-remedy` (#73),
+  `origin/release/v3.7` (#74); the stray `refs/remotes/pr/63` (merged long ago). Also the local tracking copy
+  of `read-set-budgets` created in S15 — `origin/read-set-budgets` is PR #80's head and is untouched.
+- **Kept, deliberately:** `docs/operator-gated-review-plan` (3 unpushed commits; reserves Learning #14) and
+  `experimental/pocock-audit` (17 unmerged commits, 2026-05-02) — both are the maintainer's to decide.
+- **Not done:** no history rewrite. The S16 truncated commits (`356556f`, `ad7bd37`, `ed9ab7e`) stay in
+  `main`'s history with the repair `ed98444` on top; removing them would force-push a public branch with a
+  fork downstream and is not a housekeeping call. Session S17: claim `b3c9e9d` + the close-out commit; the
+  ref list above is the post-deletion read-back (`git branch -a`: 3 local, 2 remote; #80 OPEN/MERGEABLE).
+
+### 2026-09-14 · [ad hoc] Shipped `.githooks/commit-msg` — the disclosure gate (FM #16's honesty counterpart)
+
+- **Change:** new `.githooks/commit-msg` (canonical-only, like the ledger hook beside it — `.githooks/`
+  is in no `bin/_manifest.py` row) + a short "Disclosure Hook" paragraph in `starter-kit/SAFEGUARDS.md`
+  (distributed). When `AI_AGENT`, `CLAUDECODE`, or `CLAUDE_CODE_SESSION_ID` is in the environment — or
+  `METHODOLOGY_REQUIRE_COAUTHOR=1` — the commit message must carry a well-formed
+  `Co-Authored-By: <name> <email>` trailer outside comment lines; otherwise the hook is silent, so a
+  human committing by hand is never asked to disclose an agent that was not there. `--no-verify`
+  bypasses once; `METHODOLOGY_REQUIRE_COAUTHOR=0` disables. Built-in `--selftest` (7 checks).
+  Session S16: claim `356556f`, hook + SAFEGUARDS `ad7bd37`, plus the close-out commit completing this entry.
+  SAFEGUARDS.md grows by the one paragraph; the Phase 0 pair PR #80 measures stays under its cap
+  (checked at close-out against the branch's own figure).
+- **What the trailer is, and is not:** the agent never takes credit. The human is the author of every
+  commit and owns it. The trailer is *disclosure* — so that no reader of the history is misled about
+  how the work was produced. Disclosure was an instruction every session had to remember on every
+  commit — an actor-side rule, the class the quality-ratchet plan (§3) says does not scale; under a
+  harness this makes forgetting it impossible. The first draft of this entry framed the trailer as
+  the agent's credit; the maintainer corrected it before anything was pushed.
+- **Deferred, deliberately:** wiring `--selftest` into `bin/tests.sh` and the `BOOTSTRAP.md` Step 10
+  mention wait for PR #80, which edits both files (S15 just un-conflicted it).
+- **Incident, same session:** the script that reframed this entry sliced the file to the next `---`
+  line — which is not the next entry boundary but a separator 316 lines down — and **deleted the ten
+  entries between here and 2026-08-10** (S15, S14, S13, the v3.7 release, issue #67, and five more) in
+  the amended claim `356556f`, carried by `ad7bd37` and `ed9ab7e`, all pushed. Found by the S15
+  merge-tree check re-conflicting where it should not have; restored from `f8fc3ca` by the commit
+  after `ed9ab7e` — `diff` against `f8fc3ca` shows 0 lines removed, 21 added (this entry), 41 headings,
+  55 source tags. The co-staging hook cannot see this: it checks that the ledger was *touched*, not
+  that it did not shrink. A ledger-count ratchet (staged `### ` headings ≥ HEAD's) is the mechanical
+  fix and is proposed, not shipped, in the S16 receipt.
+
+### 2026-09-14 · [ad hoc] Resolved the CHANGELOG.md conflict S13/S14 created for PR #80
+
+- **Change:** `main` merged into the PR #80 head branch `read-set-budgets` (which lives in this repo) with
+  the one conflicting file, `CHANGELOG.md`, resolved as a union in ledger order — today's S13–S15 entries
+  on top, #80's four entries (2026-09-02..04) below them, everything else common. No other file conflicted
+  (`git merge-tree --write-tree --name-only origin/main origin/read-set-budgets` → `CHANGELOG.md` only).
+  Session S15: claim `8fdc50f` (main) → resolution merge `b82dcff` (pushed to `origin/read-set-budgets`)
+  → close-out commit on main. Union verified: 57 source-tagged entries = the branch's 54 + today's 3.
+  `git merge-tree` empty after the push and again after the close-out prepend.
+- **Why:** #80 was MERGEABLE/CLEAN at `512c2ed` this morning; S13/S14's ledger and receipt commits
+  prepended at the same anchor #80 prepends at, so the first session to record anything on `main` after
+  #80 opened made it conflict — S13 should have computed that before merging PR #81 (Learning #13) and did
+  not. Ordering #80's entries below today's, rather than above, is what stops the next `main` prepend
+  from re-conflicting: the two hunks are no longer adjacent.
+
+### 2026-09-14 · [ad hoc] Redacted the quality-ratchet plan to its published source only
+
+- **Change:** `docs/planning/quality-ratchet-plan.md` — every statement derived from the maintainer's
+  private correspondence with the article's author removed (the S13 version had paraphrased it, never
+  quoted it). The article <https://campusiq.com/blogs/everybody-ships> is now the plan's only source for
+  CampusIQ's practice. 15 edits, 425 → 410 lines; residue grep for correspondence-derived phrasing: 0 hits.
+  Session S14, committed directly on `main` (the S12 close-out precedent): `4a5aab0` (claim), `762e7bc`
+  (redaction), plus the close-out commit completing this entry and the S14 receipt. PR #81's body was
+  edited to match. Hook ran clean on every commit.
+- **Why:** the maintainer was no longer sure the exchange was not in confidence. Removing it from the live
+  record is cheap and reversible; publishing it is neither. Git history (`993aa89`, PR #81) retains the
+  S13 text — stated in the receipt, not hidden.
+
+### 2026-09-14 · [ad hoc] Published the quality-ratchet plan — what the methodology should take from CampusIQ's Forseti layer
+
+- **Change:** new `docs/planning/quality-ratchet-plan.md` (canonical-only planning record; not in
+  `bin/_manifest.py`, so adopters receive nothing via `bin/sync`). No framework file changed; nothing
+  implemented. Session S13; branch `docs/quality-ratchet-plan` → [PR #81](https://github.com/KJ5HST/methodology/pull/81)
+  → merge `db121ce` (2026-09-14). Commits: `f62699a` (claim), `993aa89` (plan), `db121ce` (merge), plus the
+  close-out commit completing this entry and the S13 receipt. All three session commits ran the ledger
+  co-staging hook clean — no `--no-verify` (the first session since S8 to do so; the entry was written
+  at claim and completed here).
+- **Source:** Aaron Benz, *"Everybody Ships: How CampusIQ Built an AI-Native Company"*,
+  <https://campusiq.com/blogs/everybody-ships> — quoted verbatim; the maintainer's correspondence with
+  the author is paraphrased as personal communication, never quoted.
+- **The finding the plan records:** CampusIQ enforces quality on the *artifact* — the same 130+ checks
+  for every actor, thresholds that only tighten, checks that never pass by default — while this
+  methodology enforces it on the *actor*: 10 of its 12 quality gates are self-certifications and 26 of
+  28 failure modes bind by text alone (only #27 → `.githooks/pre-commit` and #28 → `context_budget.py`
+  have a distributed mechanical gate). Self-certification multiplies under N agents rather than scaling;
+  a stronger reviewer changes the judge, not the class of gate. Corpus grep for any code-quality
+  threshold: 0 hits; the one ratchet that exists (`starter-kit/context_budget.py:504`) guards document size.
+- **What it proposes** (D1–D10, six one-session phases): ship the ratchet, not the ruler —
+  `.quality-gates.json` SEED + `quality_ratchet.py` TRACKED (refuses a commit that loosens a declared
+  threshold), a `SAFEGUARDS.md` hard rule, a flight-manual section generalizing the capability-tiered
+  clause from elective to universal, Phase 3C routing "a mechanical learning is a gate, not a row",
+  advisory dashboard scoring of gate outcomes, receipt citation of the gate run. Not adopted: two-day
+  default approval, PR-throughput floors, coverage floors without a faithfulness check. No new FM.
+- **Blocked on:** PR #80 (relocates the Learnings table every prose phase touches). Nothing executes
+  until #80 is decided.
+- **Verification:** 425 lines; 26 `file:line` anchors on `main @ 512c2ed` re-checked by script (26/26);
+  leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
+  `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
