@@ -210,6 +210,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S170 — the PR #82 comment states the links its facts rested on implicitly (not posted)
+
+**Operator challenge at the Present gate:** *"How does '`_gate_loosenings` already has a removed branch, it
+just never reaches it' relate to the empty gate set?"* — two facts set side by side with the causal link
+left out. **The link, verified in the source before writing it:** `_gate_map` returns `{}` for a manifest
+whose gate list is empty (`methodology_dashboard.py:1931`), and `_gate_loosenings` walks the OLDER version's
+gates asking whether each name still exists in the newer, appending `"removed"` when it does not. So an
+empty gate set is simply the input that makes *"every gate is missing"* true — and *"a gate is missing"* is
+the one case the function already handles. Representing a deleted manifest as zero gates rather than as
+unreadable therefore needs **no new detection logic**, only a different answer to *"what was the manifest at
+that commit?"* **Audited the rest for the same fault — asserting two facts without their connective — and
+fixed three more.** (1) The `install-hook` bullet asserted that a fresh clone has no `core.hooksPath` without
+saying why that matters: `install_hook` (`quality_ratchet.py:333`) uses it to choose the hooks directory, so
+with it set it finds `.githooks/pre-commit`, declines and prints a chain line, while unset it writes
+`.git/hooks/pre-commit` — and `HOOK` (`:325`) execs `<root>/quality_ratchet.py`, the ADOPTER layout, which
+does not exist in a repo that keeps the tool under `starter-kit/`. (2) The `CLAUDE.md` bullet gave "4,800
+tokens of headroom" without naming what it is headroom under (the 25,000-token ceiling the tool derives for
+that file). (3) The coverage bullet said the results file is gitignored without saying the consequence —
+the number earning the points was written by whoever last ran the tool locally and no reviewer saw it.
+4,002 → 4,286 words. **Still nothing posted.**
+
 ### 2026-09-15 · [ad hoc] S170 — the PR #82 comment's remedies made precise; one had the wrong cause (not posted)
 
 **Operator challenge at the Present gate:** *"'run the hook whenever the manifest is tracked in HEAD, not
