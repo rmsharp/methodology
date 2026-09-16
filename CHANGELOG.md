@@ -214,6 +214,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S172 follow-up — BL-59 raised on the operator's question: does `HANDOFFS.md` need to keep four receipts?
+
+- **Change:** BL-59 raised in `docs/planning/BACKLOG-DETAIL.md` with an index row in
+  `docs/planning/BACKLOG.md`. The operator asked why the receipt ledger grows when the handoff is
+  only used between two sessions, and whether `CHANGELOG.md` or `BACKLOG.md` could take the proof
+  half. **The premise holds:** the file does two jobs with opposite retention needs — the *handoff*,
+  done by the newest receipt alone, and the *proof*, which is what makes it append-only.
+- **All five consumers were checked rather than assumed.** Only `bin/model-report` reads the content
+  of a receipt below the newest, and it discovers archive shards by glob (`bin/model-report:158`), so
+  archiving costs it nothing; `bin/check-handoff --archived` validates a frozen shard, so the
+  integrity scope survives too. **Nothing requires an old receipt to be in the live file.** The
+  number is an operator decision, as the file's own front matter says, and the S127 warrant
+  (`docs/archive/CHANGELOG-through-2026-09-02.md:2070`) justifies the trim, never the four.
+- **Measured at this session's close-out:** 75,185 B across 7 receipts — front matter 9.3%, the
+  newest receipt 17.8%, **spent receipts 72.9%** — and **6,793 tokens over the 25,000-token ceiling**.
+  S171 costed the same decision in bytes alone, where it read as a preference; in tokens it is a
+  red gate.
+- **The second question answered in the item:** `BACKLOG.md` cannot take the proof job at all (it
+  holds open work only, and completion *removes* an item). `CHANGELOG.md` already carries the
+  *occurrence* proof and the duplication is real — but it cannot carry the `pending`→`complete` crash
+  breadcrumb (the only one this repo has, having no `SESSION_NOTES.md`), the 13-key schema that makes
+  the six Minimum Handoff Requirements checkable, or per-session granularity. So it proves close-out
+  *happened*, never that the handoff was *complete*.
+- **One citation in the item was wrong and was corrected before commit.** The fixture precedent
+  `tools/fixtures/seed-CHANGELOG-ledger-format-1.md` was cited as present; `git rev-parse` finds it on
+  branch `bl57/changelog-rules` only, on neither fork `main` nor `upstream/main`. The item now says so.
+- **Nothing was decided and nothing distributed was touched** — the retention number, Test 34's
+  fixture split and a retention mode for `methodology_trim.py` are all left to the operator, and the
+  last is a distributed change needing its own go-ahead.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** every cited destination re-read on the ref the item claims it on;
+  `bin/check-handoff --all` exit 0 (7 receipts); fork-only files, no distributed file changed.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [ad hoc] S172 follow-up — the unpushed-commit count replaced by the command that produces it
 
 - **Why the previous entry did not settle it:** the correction from 17 to 18 was committed, and that

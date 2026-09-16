@@ -1785,6 +1785,93 @@ branch `bl57/changelog-rules` created from `b82dcff`. BL-56 folds into the plan'
 
 <a id="bl-58"></a>
 
+**BL-59 — `HANDOFFS.md` retains four receipts, and no consumer needs more than one. Decide the
+retention number from what reads the file, and settle whether the *proof* half belongs in
+`CHANGELOG.md` at all. Raised 2026-09-16 (S172, on the operator's question: "I thought `HANDOFFS.md`
+was only used between 2 sessions").**
+
+**The premise is correct, and the file does two jobs with opposite retention needs.** The *handoff*
+— session N briefing session N+1 — is done by the **newest receipt only**: Phase 0 reads it, Phase 3A
+scores it, and its content has then done its work. The *proof* — the file's own framing,
+*"the durable answer to 'was close-out actually performed?'"* — is what makes the file append-only,
+because a proof that can be deleted is not one. The first job wants a retention of 1. The second
+wants never to delete. They were merged into one artifact and the retention number is the seam.
+
+**What actually reads a receipt below the newest — all five consumers checked, not assumed:**
+
+| consumer | what it does with older receipts |
+|---|---|
+| Phase 0 reconcile | **nothing** — frontier-based, newest only |
+| `bin/check-handoff --all` | traverses all, but checks *integrity*, not content: the answer-slot rule requires every receipt below the newest to name a commit sha, so a session that claimed and never finished stays detectable |
+| `bin/model-report` | **the only content consumer** — reads the free-text prose after every block for model mentions |
+| `bin/tests.sh` Test 34 | reads the **live** ledger and derives its anchors from it (`bin/tests.sh:2089`); below three receipts six assertions become named `SKIP` rows (BL-40's fix), never a failure |
+| `methodology_dashboard.py` | presence, freshness, size class — never content |
+
+Two facts follow, and together they are the case. **`model-report` discovers archive shards by glob**
+(`bin/model-report:158`), so archiving a receipt does not remove it from the one tool that reads
+historical content. And **`bin/check-handoff --archived` validates a frozen shard**, so the integrity
+scope survives archiving too. **Nothing requires an old receipt to be in the *live* file.**
+
+**So the number is a choice, and the file says so:** *"N=4 is an operator decision, never
+re-derivable from the 56,750 B detector floor."* Adopted at S127 (2026-08-30); the warrant
+(`docs/archive/CHANGELOG-through-2026-09-02.md`:2070) justifies the *trim*, never the *four*.
+
+**What it costs, measured at S172's close-out (75,185 B, 7 receipts):**
+
+| | bytes | share |
+|---|--:|--:|
+| front matter | 6,984 | 9.3% |
+| newest receipt (the one doing the handoff) | 13,388 | 17.8% |
+| **receipts that have already done their job** | **54,813** | **72.9%** |
+
+The file is over its byte ceiling by 9,649 B and **over its 25,000-token ceiling by 6,793**
+(≈31,793 tokens at a measured 2.3648 B/token). At S171 the same decision was costed in bytes alone
+and read as a preference (*"roughly 1.9× net-additive"*); in tokens it is a red gate.
+
+**The recommendation, for the operator to accept or reject:** cut retention to **1–2** — one for the
+handoff, a second as insurance for the case where the newest receipt is a crashed `pending` stub.
+
+**Two things block going below three, and neither is large.**
+
+1. **Test 34 reads the live ledger.** It takes its test anchors from whichever receipts happen to be
+   in `HANDOFFS.md` at that commit, so its inputs change every session and its coverage depends on a
+   retention policy. A **fixture** — a small frozen purpose-built ledger checked into the repo — would
+   decouple them. The precedent is BL-57's own P1 work — but note where it lives:
+   `tools/fixtures/seed-CHANGELOG-ledger-format-1.md` (blob `47bc8485`), read by `bin/tests.sh:286`,
+   exists on branch `bl57/changelog-rules` **only** — `git rev-parse` finds it on neither fork `main`
+   nor `upstream/main`, so it arrives wherever BL-57 lands and cannot be cited as present today.
+   `bin/check-handoff` already takes `--file PATH` (*"what tests use"*) and `--archived`, on every ref. **The honest
+   version is a split, not a move:** whole-ledger invariants go to the fixture, and a thin assertion
+   stays on the live file, because only the live file catches format drift a frozen fixture cannot.
+2. **`methodology_trim.py` has no retention mode** — it fires on bytes (196,608 B), never on a record
+   count, so any retention policy stays session-applied until the tool learns one. That is the same
+   gap `HANDOFFS.md`'s own front matter already documents as a Phase 0 instruction.
+
+**Can `CHANGELOG.md` or `BACKLOG.md` take the proof job instead? — the operator's second question.**
+
+- **`BACKLOG.md`: no, and not close.** It holds open work only, by explicit design (*"this file holds
+  open work only"*); the narrative of what was done belongs to `CHANGELOG.md`. It is a queue, not a
+  record, and a completed item is *removed* from it — the opposite of a proof.
+- **`CHANGELOG.md`: it already carries the *occurrence* proof, and the duplication is real.** Every
+  session writes a close-out entry there, and Phase 0 reconciles it against `git log`. What it cannot
+  carry is the other three things the receipt does: **(a)** the `pending` → `complete` lifecycle — in a
+  repo with no `SESSION_NOTES.md`, and this is one, the committed `status: pending` receipt is the
+  **only** crash breadcrumb; **(b)** a checkable schema — the 13 required keys make the six Minimum
+  Handoff Requirements structurally enforceable, where a ledger entry's detail bullets are only
+  *recommended*, so `CHANGELOG.md` can prove close-out *happened* but not that the handoff was
+  *complete*; **(c)** per-session granularity — a session emits N ledger entries and one receipt, so
+  *"did session N hand off?"* is one lookup rather than a reconstruction.
+
+So the split to consider is not *"fold the file into `CHANGELOG.md`"* but: **`CHANGELOG.md` already
+proves close-out occurred; `HANDOFFS.md`'s distinct value is the newest receipt plus the schema
+check.** Which is the same conclusion the consumer table reaches from the other direction, and is why
+the retention number, not the file's existence, is what this item asks the operator to decide.
+
+**Not decided here, deliberately.** Whether to cut to 1 or 2; whether Test 34's split is worth its
+own session; whether the trimmer should learn a retention mode (**that one is a distributed change
+and its own go-ahead**, since `methodology_trim.py` lands at every adopter root). Any change to
+`starter-kit/HANDOFFS.md`'s stated policy is adopter-facing.
+
 **BL-58 — consider giving adopters instructions on trimming a ledger losslessly. They receive the
 tool and almost none of the operating knowledge. Raised 2026-09-16 (S171, on the operator's request,
 immediately after this repository trimmed `CHANGELOG.md` and hit four of the hazards below).**

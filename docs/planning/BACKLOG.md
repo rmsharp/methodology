@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-56, BL-57, BL-58.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-56, BL-57, BL-58, BL-59.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -150,6 +150,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-55** | Nothing enforces removing a completed `BACKLOG.md` item — Signal F only reports, and adopters rarely carry the `[BL-N]` join key | [detail](BACKLOG-DETAIL.md#bl-55) |
 | **BL-56** | Rewrite `airqino`'s `CHANGELOG.md` to the current ledger format — the Route A sync left its pre-v3.1 seed as it was | [detail](BACKLOG-DETAIL.md#bl-56) |
 | **BL-57** | **HIGH PRIORITY** — the `CHANGELOG.md` rules contradict each other across the framework; fix here and in six adopters, aiming at an upstream PR. **Planned at S162, operator-approved** (Q1–Q4 all A): [`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) — **P1 done at S167, P2 at S168, P3 at S172** on branch `bl57/changelog-rules` (`cf20a3b`; P1–P2 backed up to `origin`, P3 not pushed anywhere; `upstream/main` merged in at `9e1dfeb`); next is P4, entry lifecycle and the words | [detail](BACKLOG-DETAIL.md#bl-57) |
+| **BL-59** | `HANDOFFS.md` retains four receipts and no consumer needs more than one — 72.9% of the file is spent receipts and it is 6,793 tokens over its ceiling. Decide the number from what reads the file; blockers are Test 34 reading the live ledger and the trimmer having no retention mode. Includes why `CHANGELOG.md` can prove close-out *occurred* but not that the handoff was *complete* | [detail](BACKLOG-DETAIL.md#bl-59) |
 | **BL-58** | Consider instructing adopters on lossless ledger trimming — they receive `methodology_trim.py` at their root but the runner, the apparatus and `SAFEGUARDS.md` say nothing about it; the only guidance sits in two never-overwritten seeds. Decision first: (a) the tracked apparatus, (b) the runner, (c) better tool output | [detail](BACKLOG-DETAIL.md#bl-58) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45)
