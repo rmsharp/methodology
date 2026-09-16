@@ -214,6 +214,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S172 close-out — P3 done, the size rule now in tokens, and a measurement three handoffs called outstanding was already taken
+
+- **Change:** S172's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S171 8/10). The
+  deliverable was BL-57's P3 on branch `bl57/changelog-rules` — four commits, not pushed — plus the
+  plan amendment on fork `main` that discharges S169's instruction to restate P3's and P4's runner
+  criteria in tokens.
+- **The restated criterion caught its own session.** The first edit measured **+9 tokens** against a
+  rule this session had just rewritten. The fix went into the edit, not the rule: two clauses
+  duplicated elsewhere on the same step came out, and the runner ended **32 B and 14 tokens under
+  where P3 started**. A session that restates the gate binding it is grading its own paper, and the
+  only defence is to take the measurement afterwards and let it fail.
+- **`b82dcff`, `upstream/main` and P3's start are one blob (`c0550acd`).** So S169's recorded control
+  *"`main`'s runner 36,955"* **was** the baseline the last three handoffs each carried forward as an
+  unmeasured item. Two `git rev-parse` calls closed it.
+- **Two figures the plan said would be findings if they moved, both explained to the entry that
+  caused them.** Four of six adopters reproduce §4.4 exactly; `airqino` 1→2 and `mts-system` 96→262
+  each gained one entry dated 2026-09-15. This repo reads **556** against §4.4's 494 — and **494 is
+  exactly the count of entries dated on or before 2026-09-14**, §4.4's measurement date, so the
+  twelfth shard S171 wrote moved nothing out of the audit's reach. Conservation measured, not assumed.
+- **One defect was found in this session's own text, at close-out, and corrected on the branch
+  (`18962a9`).** §The Action Ledger attributed the *78 against 64* count to *"this framework's own
+  ledger"* — but that comparison was run on the project whose ledger was split at v3.6, and the tree
+  the sentence now ships in records none of it. Every gate passed it; a grep for the figure's
+  provenance did not. The sentence leads with the mechanism now and names the figure for what it is.
+- **No learning row, deliberately.** The candidate rule is already carried by rows #46 and #60, and
+  `starter-kit/FRAMEWORK_LEARNINGS.md` is 79,483 of 81,920 B with about two rows left under BL-53's
+  unresolved retirement policy.
+- **`HANDOFFS.md` now holds seven receipts against a retention policy of four,** and the decision
+  S171 deferred is sharper in tokens than in bytes: `context_budget.py --status` reports it
+  **≈27,446 tokens against a 25,000-token ceiling, over by 2,446.** Cutting to four removes 26,140 B
+  of body, leaving ≈16,393 tokens — red to 8,600 tokens of headroom. Still the operator's call.
+- **Commit/PR:** this commit (fork `main`)
+- **Session:** S172 · **Verified:** in `--no-local` clones with HEAD shas asserted — branch `cf20a3b`
+  and again `18962a9`, `bin/tests.sh` **118/0**, `check-links` 0 (**108** links, 107 at `775ba23`),
+  budget 0, `grep -F '[BL-<N>]'` exit 1 over all seven files; fork `main`
+  `44a1e20` `bin/tests.sh` **305 passed / 0 failed / 0 skipped**, `check-links` 0, `check-learnings` 0,
+  `check-handoff --all` 0, budget exit 2 with **0 status flips** against the Phase 0 reading.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [BL-57] S172 — BL-57's P3 done on branch `bl57/changelog-rules` (3 commits, not pushed); the plan amended and its size rule restated in tokens
 
 - **Change:** P3 ran on the branch as it stood — upstream PR #82 was re-checked at Phase 0 and is
