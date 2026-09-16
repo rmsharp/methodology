@@ -214,6 +214,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-59] S174 — Test 39's M2 mutant moves below the front matter the header cut leaves
+
+- **Change:** `bin/tests.sh` Test 39's M2 plants `HEADER_RESERVE_BYTES = 2048` instead of `4096`. M2 counts
+  as killed only when the planted reserve is under the **live** `HANDOFFS.md` front matter, which it
+  measures, so the live file was the mutant's unstated fixture. The header cut, run first in a
+  throwaway clone, took the front matter from 7,028 B to 3,929 B, under 4,096 B, and the suite went from
+  306 passed / 0 failed to 305 / 1 on exactly this row:
+  `MUTANT SURVIVED: reserve 4096 B vs front matter 3929 B (fits ceiling: 1)`.
+- **Landed before the cut, so every commit stays green:** 2,048 B is under both 7,028 B and 3,929 B,
+  and A1 still fits (3 × 12,288 + 2,048 = 38,912 B ≤ 65,536 B). The block's comment now states the
+  constraint and what happens if the front matter is ever cut below it.
+
 ### 2026-09-16 · [BL-59] S174 claim — the `HANDOFFS.md` header cut (in progress)
 
 **Deliverable:** shorten `HANDOFFS.md`'s front matter so the retention trim S175's Phase 0 will call

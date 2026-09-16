@@ -3155,8 +3155,12 @@ if mutate "$BIN/check-handoff" "$M39" 's.replace("HEADER_RESERVE_BYTES = 7168", 
 else fail "M1 mutation DID NOT APPLY"; fi
 
 # M2: the reserve cut below the measured front matter. This is the mutant A1 CANNOT kill, and it
-# is the whole reason A2 exists -- 4,096 B still fits the ceiling comfortably.
-if mutate "$BIN/check-handoff" "$M39" 's.replace("HEADER_RESERVE_BYTES = 7168", "HEADER_RESERVE_BYTES = 4096", 1)'; then
+# is the whole reason A2 exists -- 2,048 B still fits the ceiling comfortably. THE MUTANT MUST SIT
+# BELOW THE LIVE FRONT MATTER, which this block measures: it was 4,096 B until S174 moved the shard
+# index out of HANDOFFS.md and the front matter fell from 7,028 B to 3,929 B, under it -- so the
+# mutant survived. The front matter no longer grows per trim; if it is ever cut below 2,048 B this
+# reports MUTANT SURVIVED rather than passing, and the literal moves again.
+if mutate "$BIN/check-handoff" "$M39" 's.replace("HEADER_RESERVE_BYTES = 7168", "HEADER_RESERVE_BYTES = 2048", 1)'; then
     R39="$(const39 "$M39" HEADER_RESERVE_BYTES)"
     if [ -f "$METHODOLOGY/HANDOFFS.md" ]; then
         FM39="$(fmbytes39 "$METHODOLOGY/HANDOFFS.md")"
