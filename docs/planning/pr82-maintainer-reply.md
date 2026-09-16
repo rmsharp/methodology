@@ -1,0 +1,22 @@
+Thanks — I re-ran this before replying, and it holds up.
+
+**Reproduced.** Your `pr82-review-repro.sh` (refs re-pointed to `origin/`, nothing else changed) matches your recorded results in all seven sections — every exit code and every dashboard line. The four token figures reproduce here by the same doubled-file Read: 46,841 / 46,965 (`CLAUDE.md`: −15 bytes, +62 tokens), 37,795 (the runner at 18,897.5 of 18,900), 49,683 (the pair at 99.4 %). `--run` gives `9/9 pass · results 74c773523dab` on this tree too, so that hash is now three-for-three. Your §1 rewording checks out against the code on every point I could test, and it will be the base for the description — with one sentence of §2a's caveat folded in, so the two don't read as contradicting each other.
+
+**Corrections, before the fixes get built on the text.** None changes the direction of a recommendation, but the deletion fix set has to be built in a different order than §2a implies.
+
+1. **§2a — "fixing either one alone still lets the deletion through" is not true of fix 1.** Widening the hook condition alone *refuses* an ordinary `git rm` of the manifest: `find_root()` walks the working tree, finds nothing, exits 3, and the hook's `|| exit $?` refuses the commit — wrong message, right outcome (measured in a scratch repo). Only `git rm --cached`, with the file still in the tree, reaches `precommit()` and passes. Your §4 already says why ("exits 3 … before `precommit()` is ever reached"), which makes the `find_root` change the prerequisite rather than a separate small thing: without it, neither hook variant ever reaches the "manifest removed" check that fix 2 adds. Order: `find_root` via `git rev-parse --show-toplevel` → hook fires when HEAD has a manifest → `precommit` refuses removal.
+
+2. **§2a fix 3 (dashboard) is unreachable in the state that matters most.** `collect_gate_metrics` returns before the history walk when the manifest is absent from the working tree (`tools/methodology_dashboard.py:1980`), so in the deleted-and-never-re-added state it reports `manifest_present False, loosened []` (measured). Representing the deleted version as an empty gate list only helps once the file is back. The walk has to run whenever `git log -- .quality-gates.json` is non-empty. Same shape one level over: `precommit` returns clean when HEAD's copy doesn't parse (`:192`), and the walk skips both pairs around an unparseable version — so "compare against HEAD" should be "compare against the newest *parseable* committed version".
+
+3. **§2b — "one new passing test exactly offsets one new failure."** Each unit suite is one check in `bin/tests.sh` (`:232-260`), so any unit-test failure drops `tests-sh-passed` by exactly one regardless of how many tests were added; the offset exists only at the tests.sh-check level. Your demonstration that count gates are blind to health is exact and stands on its own — and `tests-sh-failed` at `max 1` goes in now, as you suggest.
+
+4. **§2c — "nothing currently runs it."** The comparison is specified in the distributed `starter-kit/HANDOFFS.md` §Citing the gate run (`:158-170`), including "or re-runs `--run`", which is the answer to the gitignored results file. What's true, and what gets fixed: the runner's Phase 0 procedure doesn't carry it (byte-identical to `main`, as you say), so a session following the checklist won't do it. It becomes a numbered sub-step of Phase 0 step 6 — paid for by reduction, since the runner has 2.5 tokens of room.
+
+5. **§3 applies to `SAFEGUARDS.md` as well.** Its 2.8191 was measured on blob `656beae7` (`main`'s 16,353 B); the branch's file is `df86355b`, 16,765 B, and the config still says the measurement is on the merge's blob. Benign — ≈5,944 real vs 5,947 reported, 156 tokens under 6,100 — but both densities get re-measured, and the `CLAUDE.md` token ceiling goes in.
+
+6. **The proposed `context-budget` gate has a side effect.** `--status` writes `.context-budget-history.jsonl` into the tree on every run, and `.gitignore` deliberately doesn't ignore it. Tracked-or-ignored gets decided first; then the gate.
+
+**Two you didn't raise, same class.** Merge and rebase commits never run the ratchet — the hook exits at the `MERGE_HEAD`/`REBASE_HEAD` marker loop before the ratchet block — so a manifest conflict resolved by loosening lands with no refusal and no bypass message. And an unparseable HEAD manifest is the delete/re-add hole with one `--no-verify` in it (covered under 2).
+
+§4 bullets 2–4 and §5 stand as written. Fixes next, in the order above.
+

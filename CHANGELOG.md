@@ -222,6 +222,35 @@ Moved the oldest **6** record(s) (2026-09-15 → 2026-09-16) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh)
 rather than trusting a digest printed here. Live file 75,185 B → 20,820 B (−72.3%).
 
+### 2026-09-16 · [ad hoc] S172 follow-up — the maintainer replied on #82; the receipt's `next_steps` rewritten around it
+
+- **Found while re-verifying before restating, not by looking for it.** Rewriting `next_steps`
+  required restating #82's state, so it was re-fetched rather than relayed from Phase 0 — and **three
+  things had changed**: the maintainer replied (comment **`5701463025`**, KJ5HST,
+  2026-09-16T17:09:39Z); **#82's head moved `c84e7d96` → `5c9d3b40`**; and `upstream/main` moved to
+  `0fd003a`. Our comment `5691623656` remains unedited.
+- **What the reply says, in substance.** He re-ran our reproduction and it held in all seven sections,
+  all four token figures, and `--run`'s results hash. He takes our §1 rewording as the base for the PR
+  description. He then gives **six corrections and two findings of his own**, and closes *"Fixes next,
+  in the order above."* **Four corrections say specific claims of ours were wrong** — on the fix order
+  for the deletion hole, on the dashboard fix being unreachable while the manifest is absent, on the
+  pass-offsets-fail claim, and on whether the gate-run comparison is specified anywhere.
+- **Saved verbatim** to `docs/planning/pr82-maintainer-reply.md` (4,582 B). **sha256-identical to the
+  API body both with and without `jq`'s trailing newline** — `520a7b60…` and `245d388e…` on each
+  side — so the label is a measurement, not a description. Precedent: `docs/planning/pr82-comment.md`.
+- **The receipt's `next_steps` rewritten.** Item (1) is now the reply — ranked above BL-57's P4 because
+  it is the upstream engagement this repository exists for, and because our pinned findings are stale
+  against the moved head until re-run. P4 is (2). The front-matter cut is (3) **with a computed
+  deadline**: the next trim lands at S175's Phase 0, so the cut belongs to S173 or S174. The expected
+  `FRONTMATTER_FIELD_ABSENT` notice and BL-60 follow.
+- **Nothing was posted.** A reply is an outward action and the item says so in capitals. **Also
+  confirmed while there:** `origin` holds `bl57/changelog-rules` at `775ba238`, P2's head, so **P3's
+  four commits exist only in the local worktree.**
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** `gh pr view 82` and `gh api .../issues/82/comments` re-run;
+  `git ls-remote origin 'refs/heads/bl57*'` returns `775ba238`; `bin/check-handoff --all` exit 0.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [ad hoc] S172 follow-up — a defect the policy rewrite introduced: the trimmer's regenerated field no longer exists
 
 - **What was wrong, and it was mine.** `methodology_trim.py`'s `HANDOFFS.md` `LedgerSpec` declares one
