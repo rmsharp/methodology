@@ -210,6 +210,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S170 — the PR #82 comment's remedies made precise; one had the wrong cause (not posted)
+
+**Operator challenge at the Present gate:** *"'run the hook whenever the manifest is tracked in HEAD, not
+only when it is on disk' is not clear. What does 'run the hook' mean in this context?"* — it meant nothing
+coherent. **The hook script always runs;** what is conditional is the line INSIDE it that calls the tool.
+Re-read on the branch: `.githooks/pre-commit` guards on `[ -f "$top/.quality-gates.json" ]`, the WORKING
+TREE file, while `precommit()` reads the INDEX (`blob_text(root, ":.quality-gates.json")` → `git cat-file -p
+:<path>`). **Two independent doors, each on its own sufficient to wave a deletion past** — so the remedy is
+now three numbered places with that dependency stated, rather than one run-on sentence. **Audited every
+other remedy for the same fault, since the operator has now flagged it twice; two more failed.** The
+lockout bullet named the WRONG CAUSE: it is not that the tool exits 3 on a missing manifest inside
+`precommit()` — `find_root()` (`:61`) locates the project by walking up for `.quality-gates.json` ITSELF, so
+with the file gone the tool never reaches `precommit()` at all and exits at `main()` (`:473`). The remedy is
+therefore to find the root via `git rev-parse --show-toplevel`, as the chained hook already does. The
+dashboard bullet said "report flips as loosenings" without saying where or why they are missed:
+`_gate_loosenings` compares thresholds only after confirming both versions share a direction, so a flip
+falls through both branches. 3,711 → 4002 words. **Still nothing posted.**
+
 ### 2026-09-15 · [ad hoc] S170 — the PR #82 comment drops a false contrast: not file vs judgment, but diffable vs not (not posted)
 
 **Operator challenge at the Present gate, and it was fatal to the phrase:** *"Explain what is meant by 'put
