@@ -1804,7 +1804,8 @@ wants never to delete. They were merged into one artifact and the retention numb
 | Phase 0 reconcile | **nothing** — frontier-based, newest only |
 | `bin/check-handoff --all` | traverses all, but checks *integrity*, not content: the answer-slot rule requires every receipt below the newest to name a commit sha, so a session that claimed and never finished stays detectable |
 | `bin/model-report` | **the only content consumer** — reads the free-text prose after every block for model mentions |
-| `bin/tests.sh` Test 34 | reads the **live** ledger and derives its anchors from it (`bin/tests.sh:2089`); below three receipts six assertions become named `SKIP` rows (BL-40's fix), never a failure |
+| `bin/tests.sh` Test 34 | reads the **live** ledger for its anchors (`bin/tests.sh:2089`); below three receipts six assertions become named `SKIP` rows (BL-40's fix), never a failure |
+| `bin/tests.sh` Test 38 | **copies the live ledger into a temp fixture and exits if it holds fewer than two records** (`bin/tests.sh:2752`). This is a HARD failure, not a skip, and it was missing from this item's first draft |
 | `methodology_dashboard.py` | presence, freshness, size class — never content |
 
 Two facts follow, and together they are the case. **`model-report` discovers archive shards by glob**
@@ -1828,24 +1829,65 @@ The file is over its byte ceiling by 9,649 B and **over its 25,000-token ceiling
 (≈31,793 tokens at a measured 2.3648 B/token). At S171 the same decision was costed in bytes alone
 and read as a preference (*"roughly 1.9× net-additive"*); in tokens it is a red gate.
 
-**The recommendation, for the operator to accept or reject:** cut retention to **1–2** — one for the
-handoff, a second as insurance for the case where the newest receipt is a crashed `pending` stub.
+**DECIDED BY THE OPERATOR, 2026-09-16 (S172): cut retention to 1.** What follows is what the
+decision met when it was executed — measured in a throwaway clone at `dd18114`, never predicted.
 
-**Two things block going below three, and neither is large.**
+**N=1 IS NOT REACHABLE TODAY, AND THIS ITEM'S FIRST DRAFT SAID OTHERWISE.** It claimed the only cost
+below three receipts was six stated `SKIP` rows, *"never a failure."* That was wrong. Run for real:
 
-1. **Test 34 reads the live ledger.** It takes its test anchors from whichever receipts happen to be
-   in `HANDOFFS.md` at that commit, so its inputs change every session and its coverage depends on a
-   retention policy. A **fixture** — a small frozen purpose-built ledger checked into the repo — would
-   decouple them. The precedent is BL-57's own P1 work — but note where it lives:
-   `tools/fixtures/seed-CHANGELOG-ledger-format-1.md` (blob `47bc8485`), read by `bin/tests.sh:286`,
-   exists on branch `bl57/changelog-rules` **only** — `git rev-parse` finds it on neither fork `main`
-   nor `upstream/main`, so it arrives wherever BL-57 lands and cannot be cited as present today.
-   `bin/check-handoff` already takes `--file PATH` (*"what tests use"*) and `--archived`, on every ref. **The honest
-   version is a split, not a move:** whole-ledger invariants go to the fixture, and a thin assertion
-   stays on the live file, because only the live file catches format drift a frozen fixture cannot.
-2. **`methodology_trim.py` has no retention mode** — it fires on bytes (196,608 B), never on a record
-   count, so any retention policy stays session-applied until the tool learns one. That is the same
-   gap `HANDOFFS.md`'s own front matter already documents as a Phase 0 instruction.
+| live ledger | `bin/tests.sh` | verdict |
+|---|---|---|
+| 7 receipts (baseline) | exit 0 — **305 passed, 0 failed, 0 skipped** | — |
+| **1 receipt** (`--cut 1`) | exit 1 — **285 passed, 14 failed, 6 skipped** | **not viable** |
+| **2 receipts** (`--cut 2`), before the fold | exit 1 — 298 passed, **1 failed**, 6 skipped | the one failure is the fold-pending state below |
+| **2 receipts, after the fold** | exit 0 — **299 passed, 0 failed, 6 skipped** | **clean** |
+
+**The floor is 2, and it is Test 38, not Test 34.** Test 38 copies the live ledger into a temp fixture
+and exits `FIXTURE SOURCE TOO SHORT: need >= 2 records, found 1`; the fixture is then never built, so
+its 13 downstream assertions all error with *"handoff file not found"*. Test 34's six `SKIP` rows are
+the tolerable, stated degradation — they appear at both 1 and 2, because Test 34 wants three. **So
+N=1 costs a fixture rewrite in Test 38; N=2 costs six stated skips and nothing else.**
+
+**A second constraint applies at ANY cut depth, and it is tighter than the retention question.**
+`bin/tests.sh` Test 39's A2 asserts the live front matter fits a 7,168 B header reserve. A trim
+appends a ~448 B pointer block, taking it to 7,440 B — **over by 272** — and the fold that the file's
+own `NEXT TRIMMING SESSION` comment prescribes replaces that block with one table row, landing at
+**7,139 B, under by 29**. Verified by running it, and the fold must be **its own commit** (inside the
+trim commit the shipped `.verify.sh` fails L2, Learning #58). **29 B of headroom means the trim after
+this one overflows the reserve** — S169 predicted exactly this. That argues for cutting deep once
+rather than shallow repeatedly.
+
+**The trim needs `--force`, and the warrant is strong rather than an override.** `--check` reports
+**SRF 2.0244 (RED)**. But §11.1 of
+[`srf-red-refusal-adjudication.md`](srf-red-refusal-adjudication.md) proves **every on-schedule trim
+under any retention policy is refused, for any file and any depth** — the refusal votes with the
+*most recent* archive, an unratified policy addition on top of H3. H3 as written votes with the
+largest single drop, and the tool prints that number in the same breath: **0.1016**, deep green.
+Forcing here is using the rule as written, not overriding it.
+
+**Measured cost of the cut (throwaway clone, `--force --write`):**
+
+| depth | live file | shard | proof | repo net |
+|---|--:|--:|--:|--:|
+| `--cut 1` | 75,185 → **20,820 B** | 55,368 | 16,011 | **+17,014 B (1.226×)** |
+| `--cut 2` | 75,185 → **30,760 B** | — | — | — |
+
+L1/L2/L3 all OK and the emitted `.verify.sh` exits 0. Note the ratio: at 54 KB of relief against a
+**fixed** ~16 KB proof, this is far cheaper per byte than S171's trim-to-four estimate of ~1.9× —
+S171's own finding that *small trims are the expensive ones*, running in the operator's favour.
+
+**What remains for N=1:** give Test 38 a frozen fixture instead of the live ledger, the same change
+Test 34 wants. `bin/check-handoff` already takes `--file PATH` (*"what tests use"*) and `--archived`,
+and BL-57's P1 established `tools/fixtures/` as the pattern — but note where it lives:
+`tools/fixtures/seed-CHANGELOG-ledger-format-1.md` (blob `47bc8485`) is on branch
+`bl57/changelog-rules` **only**, on neither fork `main` nor `upstream/main`, so it arrives wherever
+BL-57 lands. **The honest shape is a split, not a move:** whole-ledger invariants go to the fixture,
+a thin assertion stays on the live file, because only the live file catches format drift a frozen
+fixture cannot see.
+
+**Still unenforced either way:** `methodology_trim.py` fires on bytes (196,608 B), never on a record
+count, so any retention policy stays session-applied until the tool learns one. Teaching it a
+retention mode is a **distributed** change and its own go-ahead.
 
 **Can `CHANGELOG.md` or `BACKLOG.md` take the proof job instead? — the operator's second question.**
 
@@ -1867,10 +1909,12 @@ proves close-out occurred; `HANDOFFS.md`'s distinct value is the newest receipt 
 check.** Which is the same conclusion the consumer table reaches from the other direction, and is why
 the retention number, not the file's existence, is what this item asks the operator to decide.
 
-**Not decided here, deliberately.** Whether to cut to 1 or 2; whether Test 34's split is worth its
-own session; whether the trimmer should learn a retention mode (**that one is a distributed change
-and its own go-ahead**, since `methodology_trim.py` lands at every adopter root). Any change to
-`starter-kit/HANDOFFS.md`'s stated policy is adopter-facing.
+**Open after the decision:** whether to apply N=2 now as the reachable floor and leave N=1 standing
+as policy until Test 38 has a fixture, or to do the fixture work first and land N=1 in one step.
+**Nothing adopter-facing is involved either way** — `bin/_manifest.py:58` installs
+`starter-kit/HANDOFFS.md` as a seed-once file and it names **no retention number at all**, so this
+repository's retention policy is fork-local. Teaching the trimmer a retention mode would be the
+one distributed piece, and its own go-ahead.
 
 **BL-58 — consider giving adopters instructions on trimming a ledger losslessly. They receive the
 tool and almost none of the operating knowledge. Raised 2026-09-16 (S171, on the operator's request,

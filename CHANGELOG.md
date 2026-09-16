@@ -214,6 +214,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-59] S172 follow-up — the operator decides N=1; measured, the reachable floor is 2, and BL-59's first draft was wrong about why
+
+- **Decision recorded:** the operator set `HANDOFFS.md` retention to **1**. **Nothing was trimmed** —
+  executing it was tried in a throwaway clone first, and the result sends the decision back.
+- **What the experiment found, run rather than predicted.** Baseline 7 receipts: `bin/tests.sh`
+  exit 0, 305 passed / 0 failed / 0 skipped. At **`--cut 1`: exit 1, 285 passed, 14 failed**, 6
+  skipped. At **`--cut 2`: exit 1, 298 passed, 1 failed**, 6 skipped — and **after the fold the
+  prescribed next step, exit 0, 299 passed, 0 failed, 6 skipped.**
+- **BL-59's first draft was wrong and is corrected.** It said the only cost below three receipts was
+  six stated `SKIP` rows, *"never a failure."* **The real floor is Test 38, which this item had not
+  mentioned at all:** it copies the live ledger into a temp fixture and exits
+  `FIXTURE SOURCE TOO SHORT: need >= 2 records, found 1` (`bin/tests.sh:2752`), after which 13
+  assertions error with *"handoff file not found"*. Test 34's six skips are the tolerable part.
+- **A second constraint binds at any depth.** Test 39's A2 gives the live front matter a 7,168 B
+  reserve; a trim's ~448 B pointer block takes it to 7,440 B (**over by 272**) and the fold replaces
+  that block with one table row at **7,139 B (under by 29)** — measured, and the fold must be its own
+  commit (Learning #58). **29 B of headroom means the trim after this one overflows the reserve**,
+  which S169 predicted and which argues for cutting deep once rather than shallow repeatedly.
+- **The `--force` warrant, checked rather than assumed:** `--check` reports SRF 2.0244 (RED), but
+  §11.1 of the SRF adjudication proves **every on-schedule retention trim is refused for any file at
+  any depth** — the refusal votes with the most recent archive, an unratified addition on top of H3.
+  H3 as written votes with the largest single drop, printed in the same report: **0.1016**, deep green.
+- **Measured cost:** `--cut 1` takes the live file 75,185 → 20,820 B with the repo net **+17,014 B
+  (1.226×)** — far cheaper per byte relieved than S171's trim-to-four estimate, because the ~16 KB
+  proof is a fixed cost. `--cut 2` takes it to 30,760 B. L1/L2/L3 OK; the emitted `.verify.sh` exits 0.
+- **Also confirmed by running it:** `bin/model-report` opens the live ledger **and every archived
+  `HANDOFFS-*` shard**, and today finds **0 matched lines in the live file** against matches in ten
+  shards — so the one consumer of historical receipt content already reads the archives, not the
+  live file. Archiving costs it nothing, which was the load-bearing claim under the whole decision.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** all four suite runs in a `--no-local` clone whose HEAD sha was
+  asserted equal to the working tree's (`dd18114`); `bin/check-handoff --all` exit 0 throughout.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [ad hoc] S172 follow-up — BL-59 raised on the operator's question: does `HANDOFFS.md` need to keep four receipts?
 
 - **Change:** BL-59 raised in `docs/planning/BACKLOG-DETAIL.md` with an index row in
