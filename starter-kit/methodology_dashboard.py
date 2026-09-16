@@ -405,11 +405,12 @@ CLASS_A_STOP_BYTES = 96 * 1024    # 98,304  — reported, never applied here; th
 # DISPOSITION OF THE TWO `docs/**` BACKLOG LOCATIONS: KEEP, BY ANALOGY, AND THE ANALOGY IS SAID
 # OUT LOUD. Plan section 9 requires this be DECIDED rather than inherited. Neither is named as a
 # file to read anywhere in SESSION_RUNNER.md or SAFEGUARDS.md, and across the whole DISTRIBUTED
-# .md corpus (22 files, taken off bin/_manifest.py's SOURCE column) `docs/BACKLOG.md` appears
-# ZERO times and `docs/planning/BACKLOG.md` appears once -- in FRAMEWORK_LEARNINGS.md Learning
-# #26, which cites this repo's own backlog as a WORKED EXAMPLE, not as a file anyone is told to
-# open. So they are watched by analogy to the root basename, and that is a weaker warrant than
-# the other four have. They are kept anyway, for the reason plan section 7 rejects option D on:
+# .md corpus (23 files at S176, taken off bin/_manifest.py's SOURCE column) both appear ZERO
+# times. `docs/planning/BACKLOG.md` appeared once, in fork Learning #26, which cites this repo's
+# own backlog as a WORKED EXAMPLE, not as a file anyone is told to open -- and that row left the
+# distributed corpus for docs/FORK_LEARNINGS.md at the S176 resync. So they are watched by analogy
+# to the root basename, and that is a weaker warrant than the other four have. They are kept
+# anyway, for the reason plan section 7 rejects option D on:
 # the row reports a REAL PROPERTY -- does one read deliver this file? -- which stays true however
 # rarely anyone reads it, and dropping a name is a fleet-visible narrowing that buys nothing.
 # Measured cost of keeping them: `docs/BACKLOG.md` matches NO file in the 5-repo fleet, so it
@@ -449,7 +450,7 @@ def read_cap_class(rel_posix):
 # dashboard "reads the number rather than re-deriving it" AND that S38 owes an agreement test --
 # "with the trimmer present, the dashboard's displayed headroom equals --check's". Those cannot
 # both hold. A number OBTAINED by parsing `--check` makes that test an identity, which cannot
-# fail; the repo has already paid for that mistake once (Learning #16 -- three losslessness
+# fail; the repo has already paid for that mistake once (fork Learning #16 -- three losslessness
 # guards inert at their call site behind a 13/13 mutation score). The owed test is only
 # meaningful if the two sides are computed independently, so this module computes the line
 # metric itself and the test compares it against a real `--check` run.
@@ -2149,8 +2150,9 @@ def collect_trim_metrics(path, files, role="adopter"):
       python3 -c "import sys;sys.path.insert(0,'bin');import _manifest as m;\
         print('\n'.join(sorted(e[0] for e in m.DISTRIBUTION if e[0].endswith('.md'))))" \
         | xargs grep -l -i archiv
-    -> `starter-kit/FRAMEWORK_LEARNINGS.md` (Learning #15's prose about PROVING a split lossless,
-       not a procedure for performing one), `HOW_TO_USE.md` (a worked example project's
+    -> `starter-kit/FRAMEWORK_LEARNINGS.md` (fork Learning #15's prose about PROVING a split
+       lossless, not a procedure for performing one; that row has since left for
+       docs/FORK_LEARNINGS.md), `HOW_TO_USE.md` (a worked example project's
        `POST /projects/:id/archive` endpoint), and, since S39', `starter-kit/BOOTSTRAP.md` (the
        one-line inventory entry describing what the newly distributed tool DOES -- a tool
        description, not a policy: it states no size norm, no trigger, and no procedure). None of

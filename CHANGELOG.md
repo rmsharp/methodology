@@ -214,6 +214,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-53] S176 — live code cites *fork* Learnings, and the two suite rows D1 turned red pass again
+
+- **Citations, following D1 (A):** 18 sites in 5 files now read *fork Learning #N*: both dashboard twins
+  `:452` (#16) and the `archiv` result line (#15); `tools/test_methodology_dashboard.py`, 11 sites (#16 ×9,
+  #26, #43); `bin/tests.sh:1713`, `:3003`, `:3089` (#16, #34 ×2). **Two more that the plan's count of 23
+  missed:** in both twins the text `Learning`/`#26` wraps across two comment lines (`:409`), which a per-line grep cannot
+  see (found with a multi-line Python search). The `archiv` result line also says its #15 row has since
+  left the distributed corpus. Ledgers, plans, audits and `README.md` stay as written. `docs/audits/`
+  cites several numbers past #13, most of them another project's.
+- **Test 18's pin, rewritten as its docstring asks:** `docs/planning/BACKLOG.md` now appears in no
+  distributed `.md` file, so the assertion is `[]`. Because `[]` is also what a net that reads nothing returns,
+  a presence control first asserts that the root basename's hits include `SESSION_RUNNER.md`. A mutant
+  whose net reads `""` fails on that control. The dashboard's disposition comment beside
+  `READ_CAP_CLASS_A` is rewritten to match: both locations appear ZERO times. Its corpus count is
+  corrected from 22 to 23, measured off `bin/_manifest.py`. The KEEP decision and its warrant are unchanged.
+- **Test 37's `add_row37`:** skips any number the fixture's prose reserves (check-learnings'
+  `RESERVED_RE` form). At M1 max+1 landed on the reserved `#14`. Measured on a copy of the live
+  table: the helper now appends #15 and check-learnings reads OK. A mutant without the skip appends #14
+  and fails with *"missing #15"*, the trial's failure.
+- **Verified:** `TestPhaseC1ReadCapClasses` 10 OK; the twins `cmp` equal; `py_compile` clean; no added
+  line over 102 characters.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-53] S176 — the fork's Learnings #15–#66 move verbatim to `docs/FORK_LEARNINGS.md`, checked from #15
 
 - **Decision carried out:** D1 (A) of the resync plan (§3), ratified after S175. The merge `5c2bd59` made

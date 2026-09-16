@@ -3313,7 +3313,7 @@ class TestD4ReadCapTruncation(unittest.TestCase):
         install them and keep them current. Flagging one would re-earn Layer 7's narrowing at
         fleet scale — a single canonical breach lighting up every adopter at once over a file they
         cannot edit. Asserted against `bin/_manifest.py` itself, so the two sides are genuinely
-        independent (Learning #16) rather than two spellings of one comprehension."""
+        independent (fork Learning #16) rather than two spellings of one comprehension."""
         manifest_src = (Path(STARTER_PY).parent.parent / "bin" / "_manifest.py").read_text(
             encoding="utf-8")
         tracked = set(re.findall(r'\(\s*"[^"]+"\s*,\s*"([^"]+)"\s*,\s*TRACKED\s*\)', manifest_src))
@@ -3373,7 +3373,7 @@ class TestD4ReadCapTruncation(unittest.TestCase):
     def test_boundary_is_exactly_the_cap(self):
         """Pins the comparison itself, both sides. Without this the `>` -> `>=` producer mutant
         survived the entire suite: nothing exercised a file of exactly the cap, so the boundary
-        was free to move by one in either direction undetected. Learning #16's lesson one level
+        was free to move by one in either direction undetected. Fork Learning #16's lesson one level
         down — the predicate was covered, its EDGE was not.
 
         Phase B moved the axis, and BOTH boundaries now need this treatment: the soft cap and the
@@ -3520,7 +3520,7 @@ class TestD4RootCommitDate(unittest.TestCase):
     def _dated_repo(self, dates):
         """A repo with one commit per date, in the order given. Dates are pinned through the
         environment, so the fixture's own history is a REAL git history and the assertion reads
-        it back through the scanner rather than being handed it (Learning #16)."""
+        it back through the scanner rather than being handed it (fork Learning #16)."""
         td = tempfile.TemporaryDirectory()
         self.addCleanup(td.cleanup)
         p = Path(td.name)
@@ -4085,7 +4085,7 @@ def _load_trimmer():
     The dashboard never imports it -- that is the whole architecture (§7.1: interrogate by
     regex, without importing). These tests do, precisely so that the value the dashboard parsed
     out of the tool's SOURCE TEXT can be compared against the value the tool itself defines.
-    Two spellings of one comprehension would assert nothing (Learning #16)."""
+    Two spellings of one comprehension would assert nothing (fork Learning #16)."""
     spec = importlib.util.spec_from_file_location("methodology_trim_under_test", TRIM_PY)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
@@ -5150,7 +5150,7 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
 
     # The six names as they stood at the END of Phase B, copied here as a FROZEN literal and
     # deliberately never derived from the module. Comparing the module's union against the
-    # module's own parts would be an identity that cannot fail (Learning #16).
+    # module's own parts would be an identity that cannot fail (fork Learning #16).
     POPULATION_AT_PHASE_B = frozenset((
         "SESSION_NOTES.md", "CHANGELOG.md", "HANDOFFS.md",
         "BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md",
@@ -5165,7 +5165,7 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
         ⚠ THE COVERAGE HALF IS ASSERTED AGAINST THE FROZEN POPULATION, NEVER AGAINST
         `READ_CAP_WATCHED`, AND THAT IS NOT A STYLE CHOICE. The union is DERIVED from the two
         classes, so `assertEqual(A | B, READ_CAP_WATCHED)` expands to `A | B == A | B` — an
-        identity that cannot fail (Learning #16). The first draft of this test asserted exactly
+        identity that cannot fail (fork Learning #16). The first draft of this test asserted exactly
         that, and the mutation round is what caught it: narrowing a class (M1, M8) shrinks the
         union in lockstep, so the tautological form stayed green on both while claiming to be
         the assertion that covers them. Compare to a literal that does not move.
@@ -5229,7 +5229,7 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
         it here means the widening turns this red and a human moves the name deliberately.
 
         Operands are independent: one side is this module's constant, the other is the trimmer's
-        own executed module (Learning #16). This is the pattern
+        own executed module (fork Learning #16). This is the pattern
         test_grammars_agree_with_the_trimmer_config_table established, applied to the class.
 
         KILLS: moving CHANGELOG.md or HANDOFFS.md to Class B; adding a third name to Class A."""
@@ -5274,7 +5274,7 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
         """The class and the old basename filter select the same two names today. That is the
         precondition for Phase C1 changing no behaviour, so it is asserted rather than assumed --
         and asserted at BOTH ends, because agreeing at the constants says nothing about what the
-        collector actually emitted (Learning #16 again).
+        collector actually emitted (fork Learning #16 again).
 
         GUARD-THE-GUARD on the output half: it also passes against the pre-change collector, since
         the two filters coincide. Its companion below is the one that can tell them apart."""
@@ -5362,9 +5362,11 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
 
         The net is the WHOLE distributed .md corpus taken off bin/_manifest.py's SOURCE column,
         not just the two protocol files: a claim about "no distributed file" cannot be settled by
-        a net that misses most of them. The single hit that does exist is Learning #26 citing this
-        repo's own backlog as a WORKED EXAMPLE, which is evidence ABOUT the file, not an
-        instruction to open it -- so it is allowed for by name rather than papered over.
+        a net that misses most of them. Until the S176 resync the net had one hit, fork Learning #26
+        citing this repo's own backlog as a WORKED EXAMPLE (evidence ABOUT the file, not an
+        instruction to open it), allowed for by name. That row left the distributed corpus for
+        docs/FORK_LEARNINGS.md, so both locations now read [] -- which a net that read nothing
+        would also return, so the root basename's own hits are asserted non-empty first.
 
         THIS TEST IS SUPPOSED TO GO RED IF THE PROTOCOL CHANGES. That is its job: the day a runner
         edit gives one of these locations a real basis, the KEEP decision has a stronger warrant
@@ -5391,13 +5393,17 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
 
         hits = {loc: sorted(f for f in distributed_md
                             if loc in (root / f).read_text(encoding="utf-8"))
-                for loc in ("docs/BACKLOG.md", "docs/planning/BACKLOG.md")}
+                for loc in ("BACKLOG.md", "docs/BACKLOG.md", "docs/planning/BACKLOG.md")}
+        self.assertIn("starter-kit/SESSION_RUNNER.md", hits["BACKLOG.md"],
+                      "fixture check: the net must read the corpus -- the runner names the ROOT "
+                      "backlog, so an empty hit list here means nothing below was read")
         self.assertEqual(hits["docs/BACKLOG.md"], [],
                          "docs/BACKLOG.md is named nowhere in the distributed corpus; if that has "
                          "changed, its disposition is no longer 'by analogy'")
-        self.assertEqual(hits["docs/planning/BACKLOG.md"], ["starter-kit/FRAMEWORK_LEARNINGS.md"],
-                         "the only distributed mention must remain Learning #26's worked example, "
-                         "which is evidence about the file rather than an instruction to read it")
+        self.assertEqual(hits["docs/planning/BACKLOG.md"], [],
+                         "docs/planning/BACKLOG.md is named nowhere in the distributed corpus since "
+                         "fork Learning #26 left it (S176); if that has changed, revisit the comment "
+                         "beside READ_CAP_CLASS_A")
 
     def test_the_fleet_facts_the_disposition_was_decided_on_are_stated_not_assumed(self):
         """The other half of the KEEP decision: keeping these two costs nothing measurable.
@@ -5442,7 +5448,7 @@ class TestPhaseC1ReadCapClasses(unittest.TestCase):
         any spelling without a session deciding to add it here."""
         # FROZEN LITERALS on both sides. `READ_CAP_BYTES` is defined in this module as
         # `int(READ_CAP_TOKENS * MIN_BYTES_PER_TOKEN)`, so asserting that identity would assert
-        # nothing — Learning #43, earned in this very class.
+        # nothing — fork Learning #43, earned in this very class.
         self.assertEqual(md.READ_CAP_BYTES, 56_750,
                          "C2 did NOT move the one-read budget. It is a measured harness fact, not "
                          "a policy knob; the Class A arm is a separate constant beside it")

@@ -1710,7 +1710,7 @@ BS="$STARTER/BOOTSTRAP.md"
 # Anchor on the TABLE ROW, not on the phrase. 'never overwrite' also appears in the surrounding
 # prose, and an earlier draft of this test grepped the first match -- so it read the prose line,
 # found no filenames in it, and reported all four seeds missing from a row that was in fact fine.
-# An assertion that cannot see its own artifact fails for the wrong reason (Learning #16).
+# An assertion that cannot see its own artifact fails for the wrong reason (fork Learning #16).
 NOOVERWRITE="$(grep -n '^| \*\*Adopter-owned\*\*' "$BS" | head -1 | cut -d: -f1)"
 [ -n "$NOOVERWRITE" ] && pass "bootstrap: a 'never overwrite' rule exists in the update path" \
     || fail "bootstrap: no 'never overwrite' rule found — the URL update path can destroy history"
@@ -2572,6 +2572,9 @@ cl37m() { (cd "$FIXREPO" && python3 "$1" --file "$FIXFILE" --no-citations 2>&1);
 #   - The row NUMBER is derived from the fixture as max+1, never hardcoded. The fixture is a copy
 #     of the live table, so a hardcoded number collides with a real row the moment a session
 #     appends one at that number -- which it did, one Phase 3C row later, in this same session.
+#     A number the table's prose reserves is skipped, as check-learnings' RESERVED_RE reads it:
+#     at the resync's stage M1 the table ended at #13 beside a reserved `#14`, max+1 landed on
+#     it, and the edge rows below failed on "missing #15" rather than on the budget.
 add_row37() {
     python3 - "$FIXFILE" "$1" <<'PY37'
 import sys, re
@@ -2580,7 +2583,10 @@ text = open(path, encoding="utf-8").read()
 nums = [int(m.group(1)) for m in re.finditer(r"(?m)^\| *([0-9]+) *\|", text)]
 if not nums:
     sys.exit("EMPTY ROW POPULATION -- fixture is not a Learnings table")
+reserved = {int(n) for n in re.findall(r"`#(\d+)`\s+is reserved", text)}
 num = max(nums) + 1
+while num in reserved:
+    num += 1
 s = text.rstrip("\n") + "\n"
 head, tail = "| %d | " % num, " | src | when |\n"
 pad = nbytes - len((head + tail).encode()) + 1  # +1: tail's "\n" is not part of the row line
@@ -3000,7 +3006,7 @@ restore38
 # "DID NOT APPLY" can never be scored as "killed". Every assertion CAPTURES output before
 # grepping: under `set -o pipefail` a `producer | grep -q` that MATCHES still reports a failed
 # pipeline, because grep closes the pipe and the producer takes SIGPIPE -- which on a
-# `&& fail || pass` polarity lands on pass and asserts nothing (Learning #34).
+# `&& fail || pass` polarity lands on pass and asserts nothing (fork Learning #34).
 M38="$(mktemp)"
 
 # M1: the boundary. Kills a `>` silently widened to `>=`.
@@ -3086,7 +3092,7 @@ echo "== Test 39: check-handoff — the header reserve and the fit assertion (S1
 # EVERY ASSERTION BELOW CAPTURES INTO A VARIABLE and compares numerically. It never uses
 # `producer | grep -q`: under `set -o pipefail` (this file, line 5) grep -q exits at the first
 # match, the producer can take SIGPIPE, and the pipeline is scored FAILED even though the pattern
-# MATCHED (Learning #34). Six assertions in this file still carry that form and flake because of
+# MATCHED (fork Learning #34). Six assertions in this file still carry that form and flake because of
 # it -- :2591, :2596, :2605, :2620, :2864, :2880, all on the `&& pass || fail` polarity, so they
 # fail noisily rather than passing silently. Recorded, not fixed here.
 
