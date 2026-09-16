@@ -198,6 +198,17 @@ class TestRunStatusAndResultsFile(unittest.TestCase):
         self.assertEqual(rc, qr.WARN)
         self.assertTrue(json.loads(buf.getvalue())["stale"])
 
+    def test_two_gates_over_one_command_run_it_once(self):
+        # Two extracts over the same suite (passed count, failed count) must not run it twice:
+        # a --run that takes bin/tests.sh twice is a --run nobody cites.
+        marker = os.path.join(self.d, "runs.txt")
+        cmd = f'"{PY}" -c "open({marker!r}, \'a\').write(\'x\'); print(\'7 passed, 1 failed\')"'
+        cfg = manifest(gate("passed", "min", 7, command=cmd, extract=r"(\d+) passed"),
+                       gate("failed", "max", 1, command=cmd, extract=r"passed, (\d+) failed"))
+        snap = qr.run_gates(self.d, cfg)
+        self.assertEqual([r["status"] for r in snap["gates"]], ["pass", "pass"])
+        self.assertEqual(open(marker).read(), "x", "the shared command ran more than once")
+
     def test_a_failing_gate_exits_refused_and_an_unmeasured_one_warns(self):
         failing = manifest(gate("three", "min", 4, command=f'"{PY}" -c "print(3)"', extract=r"(\d+)"))
         self.assertEqual(qr.do_run(self.d, failing, as_json=True), qr.REFUSED)

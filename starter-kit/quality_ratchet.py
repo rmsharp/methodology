@@ -263,15 +263,22 @@ def precommit(root):
 
 # === MEASUREMENT (--run) ===
 
-def measure_gate(root, g, timeout):
-    """Run one gate. Returns a result dict; `status` is pass | fail | unmeasured."""
+def measure_gate(root, g, timeout, memo=None):
+    """Run one gate. Returns a result dict; `status` is pass | fail | unmeasured. `memo` is a
+    per-run dict: two gates over the same command (a suite's passed count and its failed
+    count) run it once — the same run, the same output, two numbers read from it."""
     res = {"name": g["name"], "direction": g["direction"], "threshold": float(g["threshold"]),
            "measured": None, "status": "unmeasured", "note": ""}
     cmd = g.get("command")
     if not cmd:
         res["note"] = "declared, no command"
         return res
-    rc, out, err = run(cmd, cwd=root, timeout=timeout, shell=True)
+    if memo is not None and cmd in memo:
+        rc, out, err = memo[cmd]
+    else:
+        rc, out, err = run(cmd, cwd=root, timeout=timeout, shell=True)
+        if memo is not None:
+            memo[cmd] = (rc, out, err)
     text = out + err
     if g.get("extract"):
         m = re.search(g["extract"], text, re.MULTILINE)
@@ -292,7 +299,8 @@ def measure_gate(root, g, timeout):
 
 
 def run_gates(root, cfg, timeout=600):
-    results = [measure_gate(root, g, timeout) for g in cfg.get("gates", [])]
+    memo = {}
+    results = [measure_gate(root, g, timeout, memo) for g in cfg.get("gates", [])]
     summary = {s: sum(1 for r in results if r["status"] == s)
                for s in ("pass", "fail", "unmeasured")}
     snapshot = {"gates": results, "summary": summary,

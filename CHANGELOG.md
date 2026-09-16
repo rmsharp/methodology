@@ -68,6 +68,12 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   `command`/`extract` is a separate LOW advisory, as the bypass message promised. The +2 for a passing
   gate *named* coverage is dropped (`echo 100` earned it, from a gitignored file). Unit 222 → 226 (6 RED
   first, incl. the version pin); fleet delta 0 by construction — no sibling repo has a manifest history.
+- **F3 — `tests-sh-failed` at `max 1`** (review 2b): declared now at the branch's measured value (Test 9 by
+  construction), so a second failure is caught today; tightens to 0 in the first commit after merge.
+  Manifest 9 → 10 gates (the ratchet's own verdict on the staged edit: "1 gate(s) added"). Because two
+  gates now read one `bash bin/tests.sh`, `run_gates` memoizes identical commands within a run — the
+  suite runs once, two numbers are read from it; a `--run` that took the suite twice is one nobody
+  cites (unit 44 → 45, RED first).
 
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 
