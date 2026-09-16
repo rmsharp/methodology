@@ -39,7 +39,8 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 - **Action:** the fix set the maintainer's confirmation comment promised, built on `feat/quality-ratchet`
   after merging `main` (`b2aea23`, ledger union). Operator-directed bundling across subsystems (the S8
-  shape), one independently verified checkpoint commit per fix. Session S22; bullets appended per checkpoint.
+  shape), one independently verified checkpoint commit per fix. Session S22: merge `b2aea23`, claim `563a6e2`,
+  seven checkpoints `b742344`..`b5dda4e`, the close-out commit. PR head `b5dda4e` + close-out; NOT merged.
 - Merge `b2aea23`: `origin/main` (S21) into the branch; `CHANGELOG.md` and `HANDOFFS.md` resolved as a union.
 - **F1 — the deletion hole** (review 2a + 4, bullets 1 and 4): `quality_ratchet.py` 1.0.0 → 1.1.0. `find_root`
   falls back to the git toplevel, so `--precommit` can judge a commit that removes the manifest instead of
@@ -96,6 +97,13 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   222 → 226, `ratchet-unit-tests` 33 → 45 — three tightenings, no approval needed, the hook's verdict on the
   staged edit exit 0. `--run`: **10/10 pass · 0 fail · 0 unmeasured · results `efccbc7f2195` · manifest
   `08423c179055`**, 2 m 46 s with `bin/tests.sh` executed once for its two gates.
+- **Non-commit actions:** branch pushed at `b5dda4e`; PR #82 body replaced — rmsharp's §1 rewording as the
+  description (facts updated: base = newest committed manifest with gates, ten gates, 2.11.1, the two
+  limits), the decisions in plain words, a "Review findings and what changed" section (read back: 9,876
+  chars). **Learning #16** appended (1,137 B; 15 rows, `#14` reserved). `git merge-tree --write-tree
+  --name-only origin/main feat/quality-ratchet` **exit 0 at this close-out** — clean, by exit code (S21's
+  lesson). Not built, recorded: `measured_blob` self-check in the budget tool; the `context-budget` gate
+  (history-file decision first); CI.
 
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 
