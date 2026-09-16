@@ -214,6 +214,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S175 close-out — the resync is planned, not merged; D1–D4 wait on the operator
+
+- **Deliverable:** the resync plan (`e3bc12c`), after the operator re-scoped the session from merging to
+  planning. Preceded by the retention trim of `HANDOFFS.md` (`4679cca`) and its fold (`1f34e75`).
+- **Close-out commit:** S175's receipt (self 7/10, S174 scored 8/10). BL-53's and BL-57's backlog rows
+  point to the plan. One sentence is added to R1's step 3: keep Test 27.N1b's fix to one line, because
+  BL-57's P5 removes Test 27 with the hook's claim carve-out. The instrument snapshot from the close-out's
+  `context_budget.py --status` rides along.
+- **No `FRAMEWORK_LEARNINGS.md` row:** the file's fate is decision D1, and it is 2,437 B under its growth
+  warning. The session's learning (an arriving enforcement hook binds the test suite's own fixture
+  commits) is in the plan's D1 trial and the receipt, to be written into whichever file D1 names.
+- **Next:** the operator's D1–D4, then R1. S175's close-out leaves 2 receipts, so R1's Phase 0 does not
+  trim. **Nothing outward;** fork `main` is 5 commits ahead of `origin/main` after this close-out (`git rev-list --count origin/main..main`), and
+  pushing it is its own go-ahead.
+
 ### 2026-09-16 · [BL-57] S175 — the fork resync planned: four merge stages over two sessions, four decisions for the operator
 
 - **Deliverable:** [`docs/planning/upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md),

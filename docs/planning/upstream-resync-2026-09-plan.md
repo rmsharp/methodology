@@ -284,6 +284,8 @@ dashboard PR reconciles them upstream. Recorded here, not solved.
    merged, note it and add a final stage to R2.
 2. `git merge --no-ff --no-commit 0fd003a`; resolve rows 1, 3, 5, 10; commit the merge.
 3. Test 27.N1b's fix (D1's trial, failure 3) — needed under any option, since M1 brings the hook.
+   Keep it to the one-line override: BL-57's P5 removes the hook's claim carve-out and Test 27 with it,
+   unless the operator keeps them (`changelog-rules-contradictions-plan.md:278`, `:683`).
 4. D1's follow-through, each commit at most 5 files with its ledger entry; under (A) that includes the
    two test fixes the trial found (failures 1 and 2).
 5. The ledger entry recording the merge; the `HANDOFFS.md` retention trim and fold if above two.
