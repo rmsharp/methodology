@@ -49,6 +49,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (Learning #58). -->
 
 ```handoff
+session: S175
+date: 2026-09-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **TRIM `HANDOFFS.md` AND FOLD THE POINTER INTO THE INDEX, THEN RESYNC FORK `main` WITH `upstream/main` `6b29d3d`, CHOSEN BY THE OPERATOR AFTER PHASE 0 (picker).** Fork `main` is 56 commits behind (25 first-parent, merge base `598c459`); `git merge-tree --write-tree --name-only main upstream/main` lists 13 conflicting files. BL-53's retirement rule is decided inside the resync. Upstream PR #83 (planning only) conflicts in the same 13 files and is not acted on. Fork-local; nothing pushed, nothing sent upstream.
+what_was_done: pending
+next_steps: pending
+key_files: `HANDOFFS.md:8` (retention policy), `:46` (the fold comment); `docs/HANDOFFS_ARCHIVE_INDEX.md:50` (the fold rule); `starter-kit/methodology_trim.py:1093` (`build_pointer_block`); `docs/planning/BACKLOG.md:148` (BL-53), `:152` (BL-57); the 13 conflicting files, re-listed by the command above
+gotchas: The trim runs with `--cut 2`, not S174's `--cut 1`: this stub is an extra record, and `--cut 2` archives the same S173 and S172. Fold the pointer block in its own commit (Learning #58). Upstream's `.githooks/commit-msg` (`ad7bd37`) and the ratchet chained into `.githooks/pre-commit` arrive with the merge, and `core.hooksPath` is `.githooks` here, so every commit after the merge passes through them.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-16 · [BL-57] S175 claim"
+commit: pending
+```
+
+```handoff
 session: S174
 date: 2026-09-16
 status: complete

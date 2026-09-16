@@ -214,6 +214,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S175 claim — trim `HANDOFFS.md`, then resync fork `main` with `upstream/main` (in progress)
+
+**Deliverable:** the fork resync, merging `upstream/main` `6b29d3d` into fork `main`, preceded by the
+retention trim `HANDOFFS.md`'s policy calls. Chosen by the operator after Phase 0 (picker, *"Trim, then
+resync"*), in the order decided after S173: the header cut (done at S174), this resync, then BL-57's P5.
+BL-53's retirement rule is decided inside the resync (operator, S173).
+
+- **Measured at Phase 0:** 3 receipts, above 2. Fork `main` is 56 commits behind `upstream/main` (25
+  first-parent) from merge base `598c459`; `git merge-tree --write-tree --name-only main upstream/main`
+  lists 13 conflicting files, the same 13 as at S174. `upstream/main` has not moved since S174.
+- **The trim runs after this claim with `--cut 2`, not the `--cut 1` S174's receipt names.** That
+  `--cut 1` was written for a Phase 0 trim, before a claim exists; this claim's stub is a fourth record,
+  so `--cut 2` archives the same two receipts (S173, S172) and keeps S174's beside this stub.
+- **Observed, not acted on:** upstream PR #83 opened (the maintainer's parallel-sessions plan, planning
+  only: `docs/planning/parallel-sessions-plan.md`, `CHANGELOG.md`, `HANDOFFS.md`). Its head `219fb9d`
+  conflicts with fork `main` in the same 13 files, so it adds none to the resync. No open upstream issues.
+- Phase 0 ledger reconcile: `CHANGELOG.md` frontier at `HEAD` `4735c6c`, no gap; `HANDOFFS.md` frontier
+  `9b8a438`, and the one later commit only records the push S174's follow-up names. Nothing backfilled.
+  Dashboard 76/100, medium risk. The two Phase 0 instrument snapshots ride with this claim.
+
 ### 2026-09-16 · [ad hoc] S174 follow-up — fork `main` pushed to `origin`, `f2c49f7..9b8a438` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, `f2c49f7..9b8a438` — 6 commits (S174's claim, `e8bd62d`, `ad3479a`,
