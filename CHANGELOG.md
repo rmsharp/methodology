@@ -222,6 +222,41 @@ Moved the oldest **6** record(s) (2026-09-15 → 2026-09-16) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh)
 rather than trusting a digest printed here. Live file 75,185 B → 20,820 B (−72.3%).
 
+### 2026-09-16 · [BL-59] S172 follow-up — the retention trigger moves to "above 2", and BL-60 is raised on the proof scripts
+
+- **Change:** `HANDOFFS.md`'s policy separates two numbers it had conflated. **Depth stays 1** — the
+  handoff is one receipt — but the **trigger moves to "above 2"**, so a trim runs every second
+  session instead of every session. The heading now reads *"keep ONE receipt, trim above TWO."*
+- **Why, measured.** Every trim emits a `.verify.sh` of **16,011 B**, a fixed cost independent of what
+  it archives. Amortised, that is **16,158 B per session at a trigger of 1 and 8,079 B at 2** — the
+  proof alone costing more than the **9,545 B** median receipt it proves. The ceilings do not bind
+  here: at the median the live file stays under both `max_bytes` and `max_tokens` up to **five**
+  receipts, and 2 is the largest trigger still safe at the **13,276 B** worst-case receipt observed
+  (a trigger of 3 peaks at 4 receipts, ~26,576 tokens, over the 25,000 cap).
+- **It also works with the SRF rule rather than against it.** The adjudication proves that rule
+  *"rewards overshoot and punishes maintenance on time"*; a later, larger trim amortises the fixed
+  proof over more relief. It still will not go green — any steady state gives SRF exactly 1.0000 by
+  construction — so `--force` remains required, but the warrant is stronger, not weaker.
+- **What it does not fix, stated so it is not mistaken for a fix:** the header reserve. ~60 B remain
+  against ~147 B per trim, so **the next trim still reddens Test 39 unless this front matter is cut
+  first.** The trigger halves the rate, not the debt. Test 34's six `SKIP` rows are likewise
+  unaffected — it wants three live receipts, which this policy reaches only momentarily.
+- **BL-60 raised:** 31 proof scripts hold **453,689 B**, **12.4% of `docs/archive/` and 5.4% of the
+  tracked repo**, and two consecutive ones differ by **4 lines / 336 B — 97.9% of each new proof is
+  bytes the repository already holds**. Three shapes costed roughly, none chosen; the item records
+  three constraints a fix must respect, the binding one being that **`methodology_trim.py` is
+  installed at every adopter root (`bin/_manifest.py:50`, TRACKED), so any fix is a distributed
+  change and its own go-ahead.**
+- **The policy edit took four passes to fit,** which is the front-matter debt demonstrating itself:
+  the first draft ran 184 B over the reserve, and it fitted only once the SRF reasoning and the
+  consumer measurement moved out to BL-59, leaving the instruction here.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** front matter 7,107 B against the 7,168 B reserve;
+  `bin/check-handoff --all` exit 0 (1 receipt); `bin/check-links` exit 0; every figure above
+  re-derived from `git ls-files 'docs/archive/*.verify.sh'` and `diff`, and `bin/_manifest.py:50`
+  re-read rather than recalled.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [ad hoc] S172 follow-up — fork `main` pushed to `origin`, `1d88eaa..ef83601` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main` on the operator's explicit go-ahead — **27 commits**,

@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-56, BL-57, BL-58, BL-59.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-56, BL-57, BL-58, BL-59, BL-60.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -150,6 +150,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-55** | Nothing enforces removing a completed `BACKLOG.md` item — Signal F only reports, and adopters rarely carry the `[BL-N]` join key | [detail](BACKLOG-DETAIL.md#bl-55) |
 | **BL-56** | Rewrite `airqino`'s `CHANGELOG.md` to the current ledger format — the Route A sync left its pre-v3.1 seed as it was | [detail](BACKLOG-DETAIL.md#bl-56) |
 | **BL-57** | **HIGH PRIORITY** — the `CHANGELOG.md` rules contradict each other across the framework; fix here and in six adopters, aiming at an upstream PR. **Planned at S162, operator-approved** (Q1–Q4 all A): [`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) — **P1 done at S167, P2 at S168, P3 at S172** on branch `bl57/changelog-rules` (`cf20a3b`; P1–P2 backed up to `origin`, P3 not pushed anywhere; `upstream/main` merged in at `9e1dfeb`); next is P4, entry lifecycle and the words | [detail](BACKLOG-DETAIL.md#bl-57) |
+| **BL-60** | Every trim writes a ~16 KB proof script **97.9% identical** to the last; 31 of them hold **453,689 B, 5.4% of the tracked repo**, and the proof costs more than the median receipt it proves. Shapes: shared harness + per-shard manifest, publish the command instead, or stop tracking it. **Distributed — `methodology_trim.py` lands at every adopter root, so its own go-ahead** | [detail](BACKLOG-DETAIL.md#bl-60) |
 | **BL-59** | `HANDOFFS.md` retention — **operator decided N=1 (2026-09-16)**; measured, **N=1 is not reachable today** (Test 38 needs ≥2 live records: 14 failures), **N=2 + the fold is clean** (299/0/6 skips). Remaining for N=1: a frozen fixture for Test 38. Fork-local — the distributed seed names no retention number | [detail](BACKLOG-DETAIL.md#bl-59) |
 | **BL-58** | Consider instructing adopters on lossless ledger trimming — they receive `methodology_trim.py` at their root but the runner, the apparatus and `SAFEGUARDS.md` say nothing about it; the only guidance sits in two never-overwritten seeds. Decision first: (a) the tracked apparatus, (b) the runner, (c) better tool output | [detail](BACKLOG-DETAIL.md#bl-58) |
 

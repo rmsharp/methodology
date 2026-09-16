@@ -1785,6 +1785,55 @@ branch `bl57/changelog-rules` created from `b82dcff`. BL-56 folds into the plan'
 
 <a id="bl-58"></a>
 
+**BL-60 — every trim writes a ~16 KB proof script that is 97.9% identical to the last one. 31 of them
+now hold 453,689 B, 5.4% of the tracked repository. Raised 2026-09-16 (S172, on the operator's
+request, after the retention change made trim frequency a live cost).**
+
+**The measurement.** `methodology_trim.py` emits one `<shard>.verify.sh` per trim, re-deriving L1/L2/L3
+from git. It is a **fixed cost per trim** — the same harness whatever the shard holds:
+
+| | |
+|---|--:|
+| proof scripts under `docs/archive/` | **31** |
+| their total bytes | **453,689 B** |
+| each proof | **16,011 B**, 357 lines |
+| two consecutive `HANDOFFS` proofs differ by | **4 lines / 336 B — 2.1%** |
+| a `CHANGELOG` proof vs a `HANDOFFS` proof differ by | 16 lines |
+| proofs as a share of `docs/archive/` | **12.4%** |
+| proofs as a share of the tracked repo | **5.4%** |
+
+All 31 blobs are distinct, so git stores 31 near-copies rather than one. **97.9% of each new proof is
+bytes the repository already holds.**
+
+**Why it matters more now than it did.** Until S172 this was a slow accrual at roughly one trim per
+4.5 sessions. The N=1 retention decision made it one trim per session until the trigger was moved to
+2, and it is still the dominant per-session overhead: ~16 KB of proof against a median receipt of
+9,545 B. **The proof costs more than the thing it proves.** It is also why S171 measured small trims
+as the expensive ones — a fixed cost amortised over less relief.
+
+**The shape of a fix, not a decision.** The variable part is small and enumerable: the shard path, the
+commit sha, the record count, the byte totals. So a generated proof could be **one shared harness
+plus a per-shard manifest** — the harness tracked once, each shard carrying a few hundred bytes of
+parameters. Alternatives worth costing against it: emit no script and publish the verification
+*command* (the harness becomes documentation, and `docs/archive/` stops growing a script per trim);
+or keep the script but stop tracking it, regenerating on demand.
+
+**Three constraints any fix has to respect, each of them load-bearing.**
+
+1. **A shipped proof must be runnable from the shard alone.** Its whole purpose is that a reader runs
+   it rather than trusting the table — `HANDOFFS.md`'s own archive table says exactly that. A fix
+   that makes verification depend on a file the shard does not name trades a real property for bytes.
+2. **The generator is DISTRIBUTED.** `bin/_manifest.py:50` installs `starter-kit/methodology_trim.py`
+   at every adopter root as a **TRACKED** file, so this is an adopter-facing change and **its own
+   go-ahead**, not a fork-local cleanup.
+3. **Frozen proofs must keep working.** The 31 existing scripts are frozen artifacts beside frozen
+   shards; a new scheme applies to new trims, and migrating the old ones is a separate question with
+   its own losslessness burden — rewriting a proof is exactly the kind of edit a proof exists to catch.
+
+**Not decided here:** which of the three shapes; whether existing proofs migrate; whether this is
+worth doing before the `HANDOFFS.md` front-matter cut BL-59 leaves owed. **Measured at S172, and the
+numbers above are re-derivable** — `git ls-files 'docs/archive/*.verify.sh'` and `diff` on any two.
+
 **BL-59 — `HANDOFFS.md` retains four receipts, and no consumer needs more than one. Decide the
 retention number from what reads the file, and settle whether the *proof* half belongs in
 `CHANGELOG.md` at all. Raised 2026-09-16 (S172, on the operator's question: "I thought `HANDOFFS.md`

@@ -5,20 +5,21 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Retention policy — this ledger keeps ONE receipt.** Everything older is archived under
+**Retention policy — keep ONE receipt, trim above TWO.** Everything older is archived under
 `docs/archive/` and indexed in the table below. **N=1 is an operator decision (2026-09-16, S172)
-replacing S127's N=4**, taken against BL-59's measurement: of five consumers only `bin/model-report`
-reads a receipt below the newest, and it globs the shards, so archiving costs it nothing. The handoff is done by the newest receipt alone. **`methodology_trim.py` fires on BYTES
-(196,608 B), never on a record count**, so the policy is applied by the session that notices: at
-Phase 0 run `grep -c '^```handoff' HANDOFFS.md`; above 1, trim with `--cut 1 --force`. The force is
-warranted, not an override: `SRF_RED` refuses every on-schedule retention trim by construction, and
-H3's own largest-drop boundary reads green in the same report (BL-59). `bin/check-handoff` validates the 13-key schema on the **newest** receipt; `--all` checks every
-receipt and `--archived` a frozen shard. Below three receipts `bin/tests.sh` Test 34 prints six
-named `SKIP` rows — stated, never silent.
+replacing S127's N=4**, taken against BL-59's measurement of what actually reads this file: the
+handoff is done by the newest receipt alone. **Depth and trigger are separate on purpose:**
+every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **`methodology_trim.py` fires on BYTES (196,608 B),
+never on a record count**, so the policy is applied by the session that notices: at Phase 0 run
+`grep -c '^```handoff' HANDOFFS.md`; **above 2**, trim with `--cut 1 --force`. The force is
+warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
+(BL-59). `bin/check-handoff` validates the 13-key schema on the **newest** receipt; `--all` checks
+every receipt and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent.
 
-> **⚠ N=1 MEANS A TRIM EVERY SESSION AND THE 7,168 B HEADER RESERVE (Test 39 A2) IS SPENT.** Each
-> trim-and-fold adds ~147 B of archive-table row. **The next trim reddens Test 39 unless this front
-> matter is shortened first** — the table is the cut (BL-59; measured S172, not projected).
+> **⚠ THE 7,168 B HEADER RESERVE (Test 39 A2) IS SPENT.** Each trim-and-fold adds ~147 B of
+> archive-table row and only ~60 B remain. **The next trim reddens Test 39 unless this front matter
+> is shortened first** — the table is the cut. The trigger at 2 halves the rate, not the debt
+> (BL-59; measured S172, not projected).
 
 **Two session sequences share this ledger and their numbers collide.** This fork and
 `upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
