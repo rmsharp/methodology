@@ -222,6 +222,25 @@ Moved the oldest **6** record(s) (2026-09-15 → 2026-09-16) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh)
 rather than trusting a digest printed here. Live file 75,185 B → 20,820 B (−72.3%).
 
+### 2026-09-16 · [ad hoc] S172 follow-up — fork `main` pushed to `origin`, `1d88eaa..ef83601` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main` on the operator's explicit go-ahead — **27 commits**,
+  `1d88eaa..ef83601`, a fast-forward (0 behind before the push). To **`rmsharp/methodology`**, the
+  fork. **Nothing went to `KJ5HST/methodology`;** upstream is untouched and still needs its own
+  go-ahead for anything.
+- **Read back from the remote, not from the push output.** `git ls-remote origin refs/heads/main`
+  returns `ef836018398ee59b709a8d164b6cb3c978237d94`, identical to local `main` — the remote's own
+  answer rather than a cached tracking ref or the transcript of the push.
+- **What became public:** this session's whole arc — BL-57's P3 record and plan amendment, BL-59 and
+  its correction, the Test 38 fixture decoupling, the `HANDOFFS.md` trim to one receipt with its
+  shard and proof, the density recalibration, and three receipt corrections.
+- **Still on no remote:** branch `bl57/changelog-rules` at `18962a9`, which carries P3's four
+  commits. Backing it up is its own go-ahead and was not given here.
+- **Commit/PR:** the push itself left no commit; this entry is its record
+- **Session:** S172 · **Verified:** `git rev-list --count origin/main..main` = 0 after the fetch;
+  `ls-remote` sha matches local `main` exactly.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [ad hoc] S172 follow-up — the receipt's `NOT EXERCISED` list still named the retention trim
 
 - **What was wrong:** S172's `runtime_smoke` listed *"the `HANDOFFS.md` retention trim"* among the
