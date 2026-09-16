@@ -2740,11 +2740,17 @@ echo "== Test 38: check-handoff — the per-RECORD byte budget, scoped to the re
 # only ever exercise the SKIP arm. The live canonical ledger is never written to.
 FIXREPO38="$(mktemp_project)"
 FIXFILE38="$FIXREPO38/HANDOFFS.md"
-# The copy DROPS any leading `status: pending` record. Not cosmetic: this repo's own ledger
-# carries a Phase 1B stub mid-session, and once a record is prepended above it that stub becomes
-# an OLDER pending receipt with no `commit:` -- which check_answer_slots reports, reddening this
-# fixture for a reason that has nothing to do with the budget.
-python3 - "$METHODOLOGY/HANDOFFS.md" "$FIXFILE38" <<'PY38A'
+# THE SOURCE IS A FROZEN FIXTURE, NOT THE LIVE LEDGER (BL-59). It used to be the live root
+# HANDOFFS.md, which made this test's inputs a function of a RETENTION POLICY: at one retained
+# receipt the copy below exits `FIXTURE SOURCE TOO SHORT` and all thirteen assertions error with
+# "handoff file not found" -- measured, 14 failures, not a skip. The budget logic under test has
+# nothing to do with how many receipts the repository keeps, so the population is now controlled
+# here. Assertion (8) keeps the frozen fixture honest against the live format.
+# The copy still DROPS any leading `status: pending` record. The fixture carries none, so this is
+# now a fixture-integrity guard rather than a workaround for this repo's mid-session Phase 1B stub:
+# a pending record with no `commit:` below a prepended one reddens check_answer_slots for a reason
+# that has nothing to do with the budget.
+python3 - "$METHODOLOGY/tools/fixtures/handoff-ledger-2-records.md" "$FIXFILE38" <<'PY38A'
 import re, sys
 src, dst = sys.argv[1], sys.argv[2]
 text = open(src, encoding="utf-8").read()
@@ -2760,11 +2766,11 @@ if not recs:
 out = head + "".join(recs)
 # THE OVER-BUDGET FROZEN RECORD IS CONSTRUCTED HERE, NOT INHERITED. Assertion (4) below proves
 # that committed records are exempt from the budget -- which proves nothing unless the frozen
-# population really holds one over it. It used to, by accident: the live ledger happened to carry
-# receipts above the budget. The 2026-08-23 trim archived the last two (S97 20,086 B, S96 19,408 B),
-# and NO cut can both clear this file's byte ceiling and retain one -- retaining S97 means five
-# receipts, 101,053 B against a 65,536 B ceiling. So the property was never durable enough to
-# inherit, and the control below caught its loss the first time a trim took it away.
+# population really holds one over it. It once did by accident, when this fixture was a copy of the
+# live ledger and that ledger happened to carry receipts above the budget; the 2026-08-23 trim
+# archived the last two (S97 20,086 B, S96 19,408 B) and the control below caught the loss the same
+# day. Inheriting the property was never durable, which is the second reason the source is now
+# frozen: the fixture supplies the SHAPE and this step supplies the SIZE.
 # Padding goes on the OLDEST record's TRAILING PROSE: the newest record is the subject of every
 # other assertion in this test, and prose is the axis M5 exists to defend.
 BUDGET38, TARGET38 = 12288, 12288 + 512
@@ -2791,8 +2797,10 @@ restore38() { (cd "$FIXREPO38" && git checkout -q -- HANDOFFS.md); }
 # $2 selects where the padding goes: "field" puts it inside `active_task`, "prose" puts it in the
 # TRAILING prose below the closing fence. The two are not interchangeable -- "prose" is the only
 # one that can kill a record-extent measured on the fenced block alone (M5).
-# The session NUMBER is derived from the fixture as max+1, never hardcoded: the fixture is a copy
-# of the live ledger, so a literal collides with a real receipt the moment one is written at it.
+# The session NUMBER is derived from the fixture as max+1, never hardcoded. That mattered when the
+# fixture was a copy of the live ledger, where a literal collided with the next real receipt; it
+# still holds now that the fixture is frozen, because deriving keeps this helper correct if the
+# fixture's own ids ever move.
 add_record38() {
     python3 - "$FIXFILE38" "$1" "$2" <<'PY38B'
 import sys, re
@@ -2879,9 +2887,9 @@ echo "$OUT38" | grep -q "record $S38 is 20,000 B" \
 restore38
 
 # (4) THE SCOPING CHOICE IS FACED, NOT IMPLICIT. Committed records are exempt: the ledger is
-# prepend-only, so a finding against a receipt nobody may edit has no legal remedy. The fixture
-# is a copy of the live ledger and really does contain records over the budget, so a wrong scope
-# would show here as red rather than as nothing.
+# prepend-only, so a finding against a receipt nobody may edit has no legal remedy. The frozen
+# population really does contain a record over the budget -- armed by the padding step above, and
+# re-counted from the artifact here -- so a wrong scope shows as red rather than as nothing.
 OVER38="$(python3 - "$FIXFILE38" <<'PY38C'
 import re, sys
 t = open(sys.argv[1], encoding="utf-8").read()
@@ -2925,6 +2933,34 @@ echo "$OUT38" | grep -q 'unwritten record(s)' \
     && fail "the skip printed a checked-population figure, so it reads as a pass: $OUT38" \
     || pass "the skip does NOT print a checked-population figure"
 rm -f "$UNTRACKED38"
+
+# (8) DRIFT GUARD -- THE HALF THAT STILL READS THE LIVE LEDGER. Freezing the fixture bought
+# independence from the retention policy and cost the one thing the live copy gave for nothing:
+# a fixture cannot notice that the real receipt format moved out from under it. So the budget
+# assertions run on the fixture and THIS one runs on the live ledger, asserting only the grammar
+# they depend on -- a field appearing in real receipts and missing from the fixture reddens here
+# instead of rotting there. It compares field NAMES, not content: sizes are the fixture's job.
+DRIFT38="$(python3 - "$METHODOLOGY/HANDOFFS.md" "$METHODOLOGY/tools/fixtures/handoff-ledger-2-records.md" <<'PY38E'
+import re, sys
+def newest_fields(path):
+    text = open(path, encoding="utf-8").read()
+    st = [m.start() for m in re.finditer(r"(?m)^```handoff$", text)] + [len(text)]
+    if len(st) < 2:
+        return None
+    return frozenset(m.group(1) for m in re.finditer(r"(?m)^([a-z_]+): ", text[st[0]:st[1]]))
+live = newest_fields(sys.argv[1])
+fix = newest_fields(sys.argv[2])
+if live is None:
+    sys.exit("LIVE LEDGER HAS NO LINE-ANCHORED RECORD")
+if fix is None:
+    sys.exit("FIXTURE HAS NO LINE-ANCHORED RECORD")
+missing = live - fix
+print(",".join(sorted(missing)) if missing else "OK")
+PY38E
+)"
+[ "$DRIFT38" = "OK" ] \
+    && pass "drift guard: the frozen fixture carries every field the live ledger's newest receipt uses" \
+    || fail "drift guard: fixture is stale against the live format, missing: $DRIFT38"
 
 # (7) --all MUST NOT RUN THE BUDGET, and that is a decision with a reason, so it is asserted.
 # Test 34's presence control asserts on check-handoff's EXIT CODE against the live ledger. An

@@ -214,6 +214,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-59] S172 — Test 38 reads a frozen fixture instead of the live ledger, and a drift guard keeps the fixture honest
+
+- **Change:** `bin/tests.sh` Test 38 sourced its fixture from the live root `HANDOFFS.md`, which made
+  its inputs a function of a **retention policy**: at one retained receipt the copy exits
+  `FIXTURE SOURCE TOO SHORT` and all thirteen assertions error with *"handoff file not found"* — 14
+  failures, measured. It now reads **`tools/fixtures/handoff-ledger-2-records.md`** (2,985 B), a
+  frozen two-record ledger: one record to pad past the 12,288 B per-record budget so assertion (4)
+  is armed, one to be the subject of every other assertion. The three comments that asserted the old
+  provenance (*"the fixture is a copy of the live ledger"*) are corrected rather than left standing.
+- **The live half was kept, because a frozen fixture cannot notice the format moving.** New
+  assertion **(8)**, a drift guard: it reads the **live** ledger's newest receipt and the fixture's,
+  and fails if the live one carries a field the fixture lacks. **Mutation-tested in both directions
+  before it was trusted** — deleting `gotchas` from the fixture reports `gotchas`; deleting two
+  reports both; adding a key to a live receipt reports that key; the unmutated control reports `OK`.
+- **Why a split and not a move:** the budget assertions want a population the test controls; the
+  format check wants the real artifact. Each now runs against the one it needs.
+- **Fork-local, verified rather than assumed.** Test 38 does not exist upstream — `grep -q` on the
+  branch's `bin/tests.sh` exits 1 while fork `main` exits 0, read bare — and neither `tools/` nor
+  `bin/tests.sh` has a row in `bin/_manifest.py` (both appear there only inside comments, which is
+  why a bare `grep -c` on the filename answers the wrong question). No adopter receives either.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** `bash bin/tests.sh` exit 0 — **306 passed, 0 failed, 0 skipped**,
+  against a 305/0/0 baseline; the one added test is the drift guard. `bin/check-handoff --file
+  tools/fixtures/handoff-ledger-2-records.md --allow-pending` reports OK and
+  `record budget: 0 unwritten record(s), 0 over 12,288 B` — the two strings Test 38's control greps.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [BL-59] S172 follow-up — the operator decides N=1; measured, the reachable floor is 2, and BL-59's first draft was wrong about why
 
 - **Decision recorded:** the operator set `HANDOFFS.md` retention to **1**. **Nothing was trimmed** —
