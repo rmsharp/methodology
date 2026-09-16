@@ -389,6 +389,31 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-16 · [BL-57] `CHANGELOG.md` is described as the action ledger, not as completed-work history — and `CLAUDE.md` is back under its token ceiling
+
+- **Change:** *"Completed work history"* becomes the action ledger at `starter-kit/BOOTSTRAP.md:23`, `:107`,
+  `:131`, `README.md:96`, `:114`, `:200` and `CLAUDE.md:51`. Two instructions that framed an entry as
+  something written when work *completes* now say to record each action, and to remove a finished
+  backlog item from `BACKLOG.md`: `starter-kit/BOOTSTRAP.md:139` and the matching sentence in
+  `README.md:96`. The migration step at `starter-kit/BOOTSTRAP.md:145` moves completed items in *as
+  entries, newest on top*, where it said *"into reverse-chronological sections"*.
+- **Also:** `CLAUDE.md:21`, the *Reference apparatus* row, now reads *"its tables, tests, scoring scales
+  and ledger rules; distributed"*. It pays back the 4 tokens the merge `52ad407` carried over
+  `CLAUDE.md`'s `max_tokens` 23,483 — P1's *"and the `CHANGELOG.md` rules"* was 9 B shorter and 4
+  tokens longer than the wording it replaced.
+- **Why:** BL-57 C11. The seed's ledger records every action, including releases, PRs and declines, and
+  an instruction keyed to *completing work* misses all three.
+- **What *"completed work"* still says, and why it stays:** `README.md:530` is the v2.1 *What's New* entry
+  (history); `CLAUDE.md:128` is the v3.6 release narrative quoting a dashboard label; `starter-kit/BOOTSTRAP.md:134`
+  says that open work, completed work and plans belong in separate files, which is the backlog split
+  and still true. `grep -ni 'completed work history'` over the three files finds only `README.md:530`.
+- **Size, in tokens:** `CLAUDE.md` reads **46,953** doubled (23,476.5 tokens) against **≤ 46,965**
+  (`upstream/main`'s blob `1244e95b`, whose recorded figure reproduced in the same run): 6 under
+  `upstream/main`, 10 under the merge. Bytes: `CLAUDE.md` −25, `README.md` +13, `BOOTSTRAP.md` +81; the
+  last two carry no budget row. The runner is untouched by this commit.
+- **Placed** above the previous `[BL-57]` entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-16 · [BL-57] A newest-on-top ledger is prepended to, not appended to; the claim commit's entry says *(in progress)*
 
 - **Change:** seven instructions that said *"append … newest on top"* now say *prepend*: the runner's
