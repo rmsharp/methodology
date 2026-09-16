@@ -214,6 +214,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S171 close-out — `CHANGELOG.md` readable again, measured as a transfer and not a saving
+
+- **Change:** S171's receipt is completed in `HANDOFFS.md` (self 7/10, predecessor S170 9/10). The session
+  did two things on the operator's instruction: trimmed this file under approved `--force` (the tool's own
+  entry below) and raised **BL-58** (the entry below that). **The trim's net was projected before the run
+  and measured after: +17,928 B projected, +18,138 B actual (1.102×)** — relief 178,162 B against
+  196,300 B written, so the repository grew while the read path shrank, and this ledger says so rather
+  than crediting a saving. `docs/archive/` is now **42.8% of the tracked repo**, inside no ceiling.
+  **The benefit is exactly one thing and is not the context budget:** `CHANGELOG.md` is a deliberate
+  exclusion from the read-set, so `context_budget.py --status` is byte-for-byte unmoved by the trim
+  (69,749 B, `over`, exit 2) — what changed is that a default `Read` returned **zero content** before and
+  the front matter plus the newest ~51% with an announced `PARTIAL view` banner after. The file's own
+  rate rule moved **−67 → +33 entries of headroom**, clearing its published *"back above 30"* stop.
+- **Found, and self-inflicted:** the `chore(history)` commit `c01854f` was made `--no-verify` **before**
+  the trim and tripped the trimmer's `P1_UNDOCUMENTED` guard. The guard is right — a trim advances
+  `git log -1 --format=%H -- CHANGELOG.md`, so the commit would have been unrecoverable by Phase 0
+  reconcile — and the usual discharge, naming such a commit in the close-out entry, comes too late.
+  `f2840fc` records it instead. **S152's trim put its `chore(history)` after the trim; that precedent had
+  been read minutes earlier.**
+- **Not done, deliberately and with a number:** `HANDOFFS.md` holds **six** receipts against its retention
+  policy of four. Its byte trigger does not fire (54,177 B of 196,608), so a retention trim would relieve
+  ~18 KB and write a fixed ~16 KB proof — **roughly 1.9× net-additive**, the expensive end of the curve
+  measured today. That is an operator decision, not Phase 0 housekeeping, and S172 should put it as one.
+- **No learning row.** `starter-kit/FRAMEWORK_LEARNINGS.md` is 79,483 of 81,920 B with about two rows
+  left and **BL-53's retirement policy still open**; the transferable content of this session is recorded
+  in BL-58's eight hazards, where it is useful to adopters rather than competing for the last rows.
+- **Commit/PR:** this commit (claim `ff29a8d`, history `c01854f`, reconcile `f2840fc`, trim `101fa78`,
+  BL-58 `1c4e941`)
+- **Session:** S171 · **Verified:** in a `--no-local` clone with HEAD asserted equal (`1c4e941` both
+  sides), `bin/tests.sh` **305 passed / 0 failed / 0 skipped**, matching the S168–S170 controls; dashboard
+  321 OK, trimmer 123 OK, budget 116 OK; `check-links` 0, `check-learnings` 0, `check-handoff --all` 0
+  read bare; `context_budget.py --status` exit 2 with 0 status flips against the Phase 0 reading and
+  exactly two rows moved, both by this session's own writes; the shard's `.verify.sh` exit 0 twice, before
+  and after the trim commit. **The suite run was reported by the harness as exit 1; the chain's own
+  echoed code was `tests.sh exit=0` and the 1 belonged to a trailing `grep -c` matching zero SKIP lines.**
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] S171 — BL-58 raised on the operator's request: should adopters be told how to trim a ledger losslessly?
 
 **Change:** `docs/planning/BACKLOG.md` gains the index row and open-list entry; the body is in

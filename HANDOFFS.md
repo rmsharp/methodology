@@ -79,18 +79,50 @@ instruction is why these rows exist.
 ```handoff
 session: S171
 date: 2026-09-16
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: **TRIM `CHANGELOG.md` BACK UNDER THE 262,144 B HARD READ REFUSAL, UNDER OPERATOR-APPROVED `--force`, AND FILE ONE BACKLOG ITEM ON LOSSLESS-TRIM GUIDANCE FOR ADOPTERS.** The file is 274,805 B; a default `Read` returns zero content, verified this session, not inferred. `--check` reports the byte trigger FIRES and `SRF_RED 1.0306` (RED), so `--force` is required; the operator gave the go-ahead after the accounting was presented. Depth is the ratified `CLASS_A_STOP_BYTES` = 98,304 B — no `--cut` is passed.
-what_was_done: pending
-next_steps: pending
-key_files: `CHANGELOG.md:1` (front matter, the half the refusal costs); `:110` (the file's own rate rule, printing -67 entries of headroom); `starter-kit/methodology_trim.py:130` (`READ_REFUSE_BYTES`), `:165` (`CLASS_A_STOP_BYTES`), `:203` (`SRF_RED`); `docs/planning/srf-red-refusal-adjudication.md:176` (the self-limitation), `:459` (S132's warrant), `:106` (every trim is net-additive); `docs/planning/BACKLOG.md`.
-gotchas: `--force` reads as destructive to the harness classifier and was refused once at Phase 0 on a DRY RUN; it is the operator's approval that authorizes it, and a dry run writes nothing. The trimmer neither stages nor commits — stage `CHANGELOG.md` and `docs/archive/` by hand or the shard never enters history. This file's convention is a pointer BLOCK, not the table `HANDOFFS.md` uses, so no fold commit is owed. zsh: brace `${r}:path`; write scripts to a file rather than chaining heredocs.
-runtime_smoke: Phase 0 at `6d06dfc`: both ledger frontiers equal HEAD, 0 undocumented commits, no ghost session; `check-links`, `check-learnings`, `check-handoff --all --allow-pending` all exit 0 read bare; `context_budget.py --status` exits 2 (runner over its declared byte ceiling, pre-existing); dashboard 76/100 but risk **medium -> high**, the new HIGH flag being this file's refusal; upstream PR #82 OPEN, head unmoved at `c84e7d96`, and the S170 comment `5691623656` re-fetched and still sha256-identical to its source. Suites not re-run at Phase 0.
-changelog_ref: CHANGELOG.md "2026-09-16 · [ad hoc] S171 claim — trim `CHANGELOG.md` back under the hard read refusal, on operator go-ahead"
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: **`CHANGELOG.md` TRIMMED BACK UNDER THE 262,144 B HARD READ REFUSAL UNDER OPERATOR-APPROVED `--force` — 276,657 B → 98,495 B, 65 records to `docs/archive/CHANGELOG-through-2026-09-14.md`, L1/L2/L3 re-derived by the shipped proof both before and after the commit (exit 0 each time). AND BL-58 RAISED** — should adopters be told how to trim a ledger losslessly? The operator asked for the benefit and the cost first; both were measured rather than recalled, and the trim followed his go-ahead.
+what_was_done: **Fork `main`, 5 commits:** `ff29a8d` claim; `c01854f` the `chore(history)` for the two append-only `.jsonl` series; `f2840fc` the reconcile that unblocked the trim; `101fa78` the trim; `1c4e941` BL-58. **The accounting the operator asked for, every figure re-derived here:** SRF 1.0306 reproduced independently (176,464 B regrown ÷ 171,230 B relieved); the previous trim's net measured at **+17,928 B, 1.102×**; the proof script shown to be a **fixed** 15,992 B cost — 9% of a large shard, 47% of a small one, so small trims are the expensive ones; `docs/archive/` measured at 40.6% of the tracked repo, inside no ceiling. **The refusal was confirmed empirically at both ends, never from the constant:** before, a default `Read` returned `File content (268.4KB) exceeds maximum allowed size (256KB)` — zero content; after, it returns the front matter plus the newest ~51% with an announced `PARTIAL view` banner (lines 1–606 of 1,184). **The trim's own net was predicted then measured: +17,928 B projected, +18,138 B actual (1.102×)** — a transfer, not a saving, and recorded as one. The file's own rate rule went **−67 → +33 entries of headroom**, clearing its published "back above 30" stop. **One blocker was self-inflicted and is the session's real lesson:** the `chore(history)` commit was made `--no-verify` BEFORE the trim, which tripped `P1_UNDOCUMENTED` — the guard is right, since a trim advances the ledger frontier and would hide that commit permanently, and the usual discharge (naming it at close-out) comes too late. S152's precedent, which I had just read, puts that commit AFTER the trim.
+next_steps: **(1) BL-57'S P3 — ITS OWN SESSION, AND IT IS NOW THE RANKED DELIVERABLE** (`docs/planning/changelog-rules-contradictions-plan.md:490`, source tags and the audit, C6/C10). #82 is still OPEN at `c84e7d96`, so the merge-first amendment does NOT trigger; P3 starts on the branch as it stands. **S169's other amendment does apply: P3's runner criterion (`:508`) and P4's (`:538`) are written in bytes and must be restated in tokens — that measurement is not done, so P3 begins with it.** Worktree `../methodology-bl57`, branch `bl57/changelog-rules` at `775ba238`. **(2) `HANDOFFS.md` NOW HOLDS SIX RECEIPTS AGAINST A RETENTION POLICY OF FOUR, AND I DID NOT TRIM IT — deliberately, with a number.** Its byte trigger does not fire (54,177 B of 196,608), so a retention trim relieves ~18 KB and writes a fixed ~16 KB proof: **roughly 1.9× net-additive, the expensive end of the curve this session measured.** That is a decision, not housekeeping — put it to the operator at Phase 0 rather than running it on sight. **(3) NO REPLY ON #82 YET** — checked at Phase 0 (`gh api repos/KJ5HST/methodology/issues/82/comments`): one comment, ours, `5691623656`, re-fetched and still sha256-identical to `docs/planning/pr82-comment.md`, `updated_at` == `created_at` so unedited. A reply is its own operator go-ahead. **(4) BL-58 IS A DECISION FIRST, NOT AN EDIT** — three shapes costed roughly, none chosen; any distributed fix is an upstream change and its own go-ahead. **CARRIED, EACH ITS OWN GO-AHEAD:** pushing fork `main` (**13 commits ahead of `origin/main`**); F5/F6 (`docs/planning/pr80-review-response.md:243`); the fork resync; BL-53; BL-54; BL-36; `choose_cut`.
+key_files: `CHANGELOG.md:1` (front matter, readable again); `:105` (the rate rule, now +33); `docs/archive/CHANGELOG-through-2026-09-14.md` and its `.verify.sh` (the shard and its proof); `docs/planning/BACKLOG-DETAIL.md:1788` (BL-58, eight hazards), `docs/planning/BACKLOG.md:153` (its index row); `starter-kit/methodology_trim.py:130` (`READ_REFUSE_BYTES`), `:165` (`CLASS_A_STOP_BYTES`), `:203` (`SRF_RED`); `docs/planning/srf-red-refusal-adjudication.md:176` (the self-limitation that warrants the force), `:459` (S132's precedent), `:106` (the net-additive accounting, S124's and covering only the first ten trims).
+gotchas: **(1) SEQUENCE A HOUSEKEEPING COMMIT AFTER AN ACTION THAT ADVANCES THE LEDGER FRONTIER, NEVER BEFORE IT** — see `what_was_done`; this cost an extra commit and 773 B of permanent ledger, and the precedent was on screen when I got it wrong. **(2) `grep -c` EXITS 1 WHEN IT MATCHES NOTHING** — the Phase 3E suite run was reported as *failed, exit 1* while `bin/tests.sh` itself exited **0**; the 1 was the trailing `grep -c '  SKIP:'` finding zero skips. Read the chain's own echoed exit code before believing the task status. **(3) `--force` READS AS DESTRUCTIVE TO THE HARNESS CLASSIFIER** and was refused once at Phase 0 **on a dry run**, which writes nothing; it is the operator's approval that authorizes it. **(4) THE TRIMMER STAGES AND COMMITS NOTHING** — `git add` the live file AND the shard AND the proof, or the proof certifies a file no one has. **(5) `CHANGELOG.md` IS NOT IN THE READ-SET BUDGET,** so the trim moved `context_budget.py --status` not at all: still 69,749 B, still `over`, still exit 2. The benefit was the Read refusal alone — do not credit the trim with a budget it never touched. **(6) THE ARCHIVE TIER IS NOW 42.8% OF THE TRACKED REPO** and has no ceiling anywhere.
+runtime_smoke: **NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`,** run in a `--no-local` clone whose HEAD sha was asserted equal to the working repo's (`1c4e941` both sides) before anything was measured. **`bin/tests.sh` exit 0 — `== Summary: 305 passed, 0 failed, 0 skipped ==`, identical to S168's, S169's and S170's controls.** Unit suites in the same clone: dashboard **321 OK** (4 skipped), trimmer **123 OK**, budget **116 OK** (2 skipped). `check-links` 0 (105 links, 23 files), `check-learnings` 0 (65 rows), `check-handoff --all --allow-pending` 0 (6 receipts) — all read bare. `context_budget.py --status` exits 2, **unchanged and unrelated to the trim**: diffed against the Phase 0 reading, 0 status flips and exactly two rows moved, both by this session's own writes (`HANDOFFS.md` +2,312 B, `BACKLOG.md` +379 B). The shard's `.verify.sh` exit 0 twice — pre-commit (*"HEAD vs the working tree"*) and post-commit (naming `101fa78`). **NOT EXERCISED:** any reply from the maintainer; the `HANDOFFS.md` retention trim; BL-58's remedy; the fork `main` push; CI (there is none).
+changelog_ref: CHANGELOG.md "2026-09-16 · [ad hoc] S171 close-out", plus the claim, the reconcile, the tool's own trim entry and the BL-58 entry
+commit: ff29a8d (claim) + c01854f (history) + f2840fc (reconcile) + 101fa78 (trim) + 1c4e941 (BL-58) + this close-out
 ```
+
+**Self-assessment: 7/10.** Plus: the operator asked what a trim buys and costs, and every figure in the
+answer was derived here — SRF reproduced to the fourth decimal, the previous trim's net measured at
++17,928 B, the proof script shown to be a fixed cost that makes *small* trims the expensive ones, the
+archive tier's unbounded share measured. The refusal was confirmed by running into it, not by reading a
+constant, at both ends. **I predicted this trim's net before running it and then measured it: +17,928 B
+projected, +18,138 B actual** — the kind of check this repository keeps finding nobody ran. I caught a
+stale figure before publishing it (the *"net +144,239 B"* accounting is S124's and covers only the first
+ten trims), and I attributed a background task's *exit 1* to a trailing `grep -c` rather than recording a
+failed suite. **Minus, and it is the session's real story: I created the only blocker I hit.** Committing
+the `chore(history)` before the trim tripped `P1_UNDOCUMENTED`; the fix cost an extra commit and 773 B of
+permanent ledger in a session whose entire subject was that this file grows too fast. S152's commit
+sequence — history *after* the trim — was on my screen minutes earlier, and *sequence commits around the
+hook that runs* is a lesson already in my own memory. Also: I left `HANDOFFS.md` at six receipts against a
+policy of four. That deferral is costed and argued in the receipt rather than silent, but it hands the
+same decision to the next session. **Reduction:** the deliverable is a 178,162 B reduction in the file
+that had stopped being readable — and a **+18,138 B addition to the repository**, which is what a trim
+actually is and is recorded as such in the ledger entry, not as a saving.
+
+**Predecessor (S170): 9/10.** Item (1) was exact and was the first thing this session did: the command,
+the comment id, the requirement to re-verify rather than assume, and the note that a reply is its own
+go-ahead. **Five of its checkable claims were tested and five reproduced** — #82's state and head sha, the
+posted comment's sha256, `CHANGELOG.md` at 274,805 B, `HANDOFFS.md` at five receipts,
+`FRAMEWORK_LEARNINGS.md` at 79,483 B. Item (3) stated the read refusal as a fact rather than a projection
+and told the next session what to do about it, which is exactly what Phase 0 needed. Its gotcha (3), *an
+exit code read through a pipe is the pipe's*, has a sibling that fired here and I recognised it because
+that gotcha was in hand. **Not 10:** item (2) carries S169's amendment that P3's and P4's runner criteria
+are in bytes and must be restated in tokens, but not the token figures themselves — so the phase it ranks
+first still opens with a measurement its two predecessors both had the instrument to take. **ROI: strongly
+positive.**
+
+
 
 ```handoff
 session: S170
