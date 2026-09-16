@@ -2237,22 +2237,19 @@ class TestQualityGateSignals(unittest.TestCase):
         m = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": cfg_new,
                                        ".quality-gates-results.json": self._results(cfg_old, ["pass"])}))
         self.assertTrue(m["gates"]["results_stale"])
-        self.assertFalse(m["gates"]["coverage_measured_pass"])
         self.assertTrue(any("predate the current manifest" in r for r in self._gate_risks(m)))
         self.assertIn("(stale)", md.render_project_card(m))
 
-    def test_measured_passing_coverage_earns_two_points_over_configured(self):
+    def test_a_gate_named_coverage_earns_no_points(self):
+        # PR #82 review, section 4: the +2 keyed on a passing gate NAMED "coverage" — `echo 100`
+        # earned it, from a gitignored results file no reviewer saw. Dropped until a faithfulness
+        # gate is required beside it (the plan's own condition); score a measurement, never a name.
         base = md.collect_all(self._repo(self.CODE))
-        cfg = self._manifest(self._gate("coverage", "min", 80))
+        cfg = self._manifest(self._gate("coverage", "min", 80, command="echo 100", extract=r"(\d+)"))
         with_cov = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": cfg,
                                               ".quality-gates-results.json": self._results(cfg, ["pass"])}))
-        self.assertTrue(with_cov["gates"]["coverage_measured_pass"])
-        self.assertEqual(with_cov["scores"]["health"]["testing"],
-                         min(20, base["scores"]["health"]["testing"] + 2))
-        # Presence control for the control: a FAILING coverage gate earns nothing.
-        failing = md.collect_all(self._repo({**self.CODE, ".quality-gates.json": cfg,
-                                             ".quality-gates-results.json": self._results(cfg, ["fail"])}))
-        self.assertEqual(failing["scores"]["health"]["testing"], base["scores"]["health"]["testing"])
+        self.assertEqual(with_cov["scores"]["health"]["testing"], base["scores"]["health"]["testing"])
+        self.assertNotIn("coverage_measured_pass", with_cov["gates"])
 
     def test_an_unmeasured_gate_is_a_low_advisory(self):
         cfg = self._manifest(self._gate("cov", "min", 80), self._gate("declared-only", "min", 1))
@@ -2277,6 +2274,64 @@ class TestQualityGateSignals(unittest.TestCase):
         self.assertIn(f"`cc` removed in {sha}", risk[0]["description"])
         self.assertIn("(+1 earlier)", risk[0]["description"])
         self.assertIn("2 loosened", md.render_project_card(m))
+
+    def _git(self, p, *args):
+        return subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t", *args],
+                              check=True, capture_output=True, text=True).stdout.strip()
+
+    def test_a_deleted_manifest_is_reported_while_it_stays_deleted(self):
+        # The largest loosening available: delete the file. The scanner used to return before
+        # its history walk whenever the worktree had no manifest, so this state reported nothing.
+        cfg = self._manifest(self._gate("cov", "min", 80), self._gate("cc", "max", 10))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg})
+        self._git(p, "rm", "-q", ".quality-gates.json"); self._git(p, "commit", "-q", "-m", "delete")
+        sha = self._git(p, "rev-parse", "--short", "HEAD")
+        m = md.collect_all(p)
+        self.assertFalse(m["gates"]["manifest_present"])
+        self.assertTrue(m["gates"]["manifest_deleted"])
+        self.assertEqual(sorted((l["name"], l["kind"]) for l in m["gates"]["loosened"]),
+                         [("cc", "removed"), ("cov", "removed")])
+        self.assertTrue(all(l["sha"] == sha for l in m["gates"]["loosened"]))
+        risk = [r for r in m["scores"]["risks"] if "thresholds only tighten" in r["description"]]
+        self.assertEqual(len(risk), 1)
+        self.assertIn("manifest deleted", risk[0]["description"])
+        self.assertIn(sha, risk[0]["description"])
+        self.assertIn("deleted", md.render_project_card(m))
+
+    def test_delete_then_readd_lower_reports_the_net_loosening(self):
+        # Mirrors quality_ratchet.newest_committed: each version is compared to the nearest OLDER
+        # version that declared a gate, so 80 -> (deleted) -> 1 reads as 80 -> 1, not as "added".
+        cfg1 = self._manifest(self._gate("cov", "min", 80))
+        cfg2 = self._manifest(self._gate("cov", "min", 1))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg1})
+        self._git(p, "rm", "-q", ".quality-gates.json"); self._git(p, "commit", "-q", "-m", "delete")
+        (p / ".quality-gates.json").write_text(cfg2)
+        self._git(p, "add", "-A"); self._git(p, "commit", "-q", "-m", "re-add lower")
+        m = md.collect_all(p)
+        kinds = [(l["name"], l["kind"], l["from"], l["to"]) for l in m["gates"]["loosened"]]
+        self.assertEqual(kinds, [("cov", "floor lowered", 80.0, 1.0), ("cov", "removed", 80.0, None)])
+
+    def test_a_direction_flip_is_a_loosening(self):
+        cfg1 = self._manifest(self._gate("cov", "min", 80))
+        cfg2 = self._manifest(self._gate("cov", "max", 80))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg1},
+                       commits=[("flip", {".quality-gates.json": cfg2})])
+        m = md.collect_all(p)
+        self.assertEqual([(l["name"], l["kind"]) for l in m["gates"]["loosened"]],
+                         [("cov", "direction flipped")])
+        self.assertTrue(any("thresholds only tighten" in r for r in self._gate_risks(m)))
+
+    def test_a_changed_command_is_a_low_advisory_not_a_loosening(self):
+        cfg1 = self._manifest(self._gate("cov", "min", 80, command="pytest --cov", extract=r"(\d+)%"))
+        cfg2 = self._manifest(self._gate("cov", "min", 80, command="echo 'TOTAL 99%'", extract=r"(\d+)%"))
+        p = self._repo({**self.CODE, ".quality-gates.json": cfg1},
+                       commits=[("swap", {".quality-gates.json": cfg2})])
+        m = md.collect_all(p)
+        self.assertEqual(m["gates"]["loosened"], [])
+        self.assertEqual([(c["name"], c["field"]) for c in m["gates"]["commands_changed"]], [("cov", "command")])
+        risk = [r for r in m["scores"]["risks"] if "command" in r["description"] and "cov" in r["description"]]
+        self.assertEqual(len(risk), 1)
+        self.assertEqual(risk[0]["severity"], "low")
 
     def test_tightening_and_adding_are_not_loosenings(self):
         cfg1 = self._manifest(self._gate("cov", "min", 80))
@@ -2321,10 +2376,10 @@ class TestFmtRatioAndTwins(unittest.TestCase):
                         "tools/ and starter-kit/ dashboards must be byte-identical")
 
     def test_dashboard_version(self):
-        self.assertEqual(md.DASHBOARD_VERSION, "2.11.0")
+        self.assertEqual(md.DASHBOARD_VERSION, "2.11.1")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.11\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.11.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.11\.1"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.11.1")
 
 
 class TestCliRemedyProportionality(unittest.TestCase):

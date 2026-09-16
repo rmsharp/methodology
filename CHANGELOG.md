@@ -58,6 +58,16 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 - **F1b** — the F1 base note fired on every ordinary commit ("HEAD has none") because `git log -- manifest`
   names the newest commit that *touched* the file, not HEAD; seen in the F1 checkpoint's own hook output.
   The note now prints only when HEAD's copy is absent, unparseable, or empty. Unit 43 → 44 (RED first).
+- **F2 — the dashboard** (review 2a fix 3 + O1, §4 bullets 2–3): `DASHBOARD_VERSION` 2.11.0 → 2.11.1, both
+  twins. The history walk runs whenever the manifest *has* a history, not only when the worktree has the
+  file — the early return made the deleted-and-never-re-added state report nothing; it now reports
+  `manifest deleted in <sha>` with every gate that went with it. A deleted or unparseable version is
+  recorded as an empty gate list (flagged), never skipped. Each version is compared to the nearest OLDER
+  version that declared a gate — the base `quality_ratchet.py` now uses — so 80 → (deleted) → 1 reads
+  as `floor lowered 80 → 1`, not "added". A direction flip is a loosening in its own right; a changed
+  `command`/`extract` is a separate LOW advisory, as the bypass message promised. The +2 for a passing
+  gate *named* coverage is dropped (`echo 100` earned it, from a gitignored file). Unit 222 → 226 (6 RED
+  first, incl. the version pin); fleet delta 0 by construction — no sibling repo has a manifest history.
 
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 
