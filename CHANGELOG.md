@@ -214,6 +214,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S173 claim — BL-57's P4: merge #82 into the branch first, then entry lifecycle and the words
+
+**Deliverable:** BL-57's **P4** (`docs/planning/changelog-rules-contradictions-plan.md:551`) on branch
+`bl57/changelog-rules` (worktree `../methodology-bl57`, at `18962a9`): the lifecycle and placement rules
+in §The Action Ledger, "append" becomes "prepend" where the file is newest-on-top, the claim commit's
+*(in progress)* entry, "completed work history" becomes the action ledger, and upstream's root
+`CHANGELOG.md` front matter.
+
+- **Observed, not taken by this fork: upstream PR #82 MERGED** at 2026-09-16T18:05:47Z — merge commit
+  `64f23bf`, head `5c9d3b40`, merged by `rmsharp` — six minutes after S172's last commit. Before it
+  merged, the maintainer answered this fork's comment (`5701463025`) and pushed his fixes F1b–F6.
+  Verified at Phase 0 with `gh pr view 82`. No open upstream PRs or issues remain.
+- **So S169's merge-first amendment triggers.** P4 starts by merging `upstream/main` `64f23bf` into the
+  branch. `git merge-tree` at Phase 0: conflicts in `CLAUDE.md` and `ITERATIVE_METHODOLOGY.md` only.
+- **P4's token criterion predates #82** (`:575`, doubled read ≤ 36,955 on blob `c0550acd`): the merged
+  runner is 53,220 B against the branch's 52,163 B. It is re-measured on the merge result and restated
+  before any P4 edit.
+- Phase 0 ledger reconcile: both frontiers at `HEAD` `c509190`, no gap, nothing backfilled. The two Phase 0
+  instrument snapshots ride with this claim.
+
 ### 2026-09-16 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-16.md` (6 record(s), 75,185 B → 20,820 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

@@ -79,6 +79,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S173
+date: 2026-09-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57's P4 -- ENTRY LIFECYCLE AND THE WORDS (C3, C7, C8, C11, C13) -- ON BRANCH `bl57/changelog-rules`** (`docs/planning/changelog-rules-contradictions-plan.md:551`; worktree `../methodology-bl57` at `18962a9`). **Upstream PR #82 MERGED at 2026-09-16T18:05:47Z (`64f23bf`, head `5c9d3b40`), verified at Phase 0 with `gh pr view 82`, so S169's merge-first amendment TRIGGERS:** P4 starts by merging `upstream/main` `64f23bf` into the branch. `git merge-tree` at Phase 0: conflicts in `CLAUDE.md` and `ITERATIVE_METHODOLOGY.md` only, 10 other files auto-merge, 28 upstream commits enter. **The token criterion (`:575`, doubled read <= 36,955 on blob `c0550acd`) predates #82 and the merged runner is 53,220 B against the branch's 52,163 B, so it is re-measured on the merge result and restated in the plan BEFORE any P4 edit.**
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:551` (P4), `:575` (the token criterion to re-baseline), `:222` (§3.1, items 4 and 5 are P4's), `:704` (hazard 1, upstream moves); `docs/planning/pr82-maintainer-reply.md:1`; on the branch after the merge: `FRAMEWORK_APPARATUS.md` §The Action Ledger, `starter-kit/SESSION_RUNNER.md`, `ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md`, `.githooks/pre-commit`, `BOOTSTRAP.md`, `README.md`, `CLAUDE.md`, root `CHANGELOG.md` front matter -- every line number re-located by grep, since the plan's are `b82dcff`'s.
+gotchas: The token instrument is the Read tool's refusal -- double the file, Read it, halve the count; reproduce a recorded control first (36,955 on `c0550acd`; the maintainer's 37,795 on #82's `c84e7d96`) and check `bytes / 2.8 > 25,000` before building the multiple. #82 put a quality ratchet in `.githooks/pre-commit` and a token ceiling on upstream's `CLAUDE.md`, so a `CLAUDE.md` edit is measured in tokens too. A merge commit skips the pre-commit hook and the ratchet; `.githooks/commit-msg` still wants a `Co-Authored-By` trailer. `bin/tests.sh` rewrites both live ledgers: `--no-local` clone only, HEAD sha asserted. `context_budget.py --status` leaves an untracked `.context-budget-history.jsonl` in an upstream tree.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-16 · [BL-57] S173 claim"
+commit: pending
+```
+
+```handoff
 session: S172
 date: 2026-09-16
 status: complete
