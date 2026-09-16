@@ -214,6 +214,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S173 follow-up — fork `main` pushed to `origin`, `ef83601..22a78b3` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, `ef83601..22a78b3` — 8 commits, a fast-forward, run behind a guard
+  that confirmed the remote head was an ancestor of `main`. Read back with `git ls-remote`:
+  `22a78b3c0d6c64d6310ba9466a89aca2c53caa6f`, equal to local `main`. The go-ahead was the operator's
+  picker answer *"Push fork main"*. The commit carrying this entry follows it to `origin` under the
+  same go-ahead, as S168's recording commit did.
+
 ### 2026-09-16 · [BL-57] S173 follow-up — the operator's two decisions, and the branch pushed to `origin` (non-commit actions)
 
 - **Decisions, taken by picker after the close-out:** (1) P5 starts from a **resync of fork `main` with
