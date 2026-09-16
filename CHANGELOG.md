@@ -214,6 +214,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-16-3.md` (9 record(s), 68,571 B → 16,296 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **9** record(s) (2026-09-14 → 2026-09-16) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-16-3.md`](docs/archive/HANDOFFS-through-2026-09-16-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 68,571 B → 16,296 B (−76.2%).
+
 ### 2026-09-16 · [BL-53] S176 — `CLAUDE.md` routes this fork's Phase 3C learnings to `docs/FORK_LEARNINGS.md`
 
 - **`CLAUDE.md`, new subsection *Where this fork's learnings go*** (7 lines, in the fork-only part of
