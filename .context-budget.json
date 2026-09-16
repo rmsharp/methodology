@@ -47,9 +47,9 @@
    "max_lines": 1200,
    "max_bytes": 65536,
    "max_tokens": 25000,
-   "bytes_per_token": 2.3648,
-   "measured_bytes": 186617,
-   "measured_on": "2026-08-29",
+   "bytes_per_token": 2.2657,
+   "measured_bytes": 20310,
+   "measured_on": "2026-09-16",
    "structure": [
     {
      "pattern": "^```handoff",

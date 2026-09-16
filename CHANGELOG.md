@@ -222,6 +222,29 @@ Moved the oldest **6** record(s) (2026-09-15 → 2026-09-16) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh)
 rather than trusting a digest printed here. Live file 75,185 B → 20,820 B (−72.3%).
 
+### 2026-09-16 · [BL-59] S172 — `HANDOFFS.md`'s token density re-measured after the trim; the budget row goes green
+
+- **Change:** `.context-budget.json`'s `HANDOFFS.md` entry moves from `bytes_per_token` **2.3648**
+  (measured 2026-08-29 at **186,617 B**) to **2.2657** (measured today at **20,310 B**). The tool
+  itself asked: after the trim it reported *"density ... was measured at 186,617 B; the file is now
+  20,310 B (89% drift). The token figure above is provisional — re-measure before trusting it."*
+- **Measured, not derived.** The quadrupled-file Read refused at **35,857 tokens**, so the live file
+  is **8,964.25 tokens** at 20,310 B. The stale density would have reported 8,588 — under-reporting by
+  376 tokens, about 4.4%. Neither figure changes the verdict against a 25,000-token ceiling, so this
+  is precision, not rescue.
+- **The row is now `ok`.** At Phase 0 it read **over by 2,446 tokens**; it is green on both arms.
+  Learning #60 is why this was worth doing now rather than later: a density is a snapshot of the
+  content a file held when measured, and this file's composition changed character completely — one
+  receipt plus front matter, where front matter is now 35% of it.
+- **Two mistakes on the way in, both caught by asserts rather than by the diff.** A first patch
+  assumed six-space JSON indentation and matched nothing (the file uses three); the replacement then
+  had to key on line numbers because `"measured_on": "2026-08-29"` appears three times, once per
+  budgeted file. A pattern edit would have rewritten the wrong entry silently.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** `context_budget.py --status` reports `HANDOFFS.md ... ok`; the
+  config re-parses as JSON and the parsed entry is asserted to carry the new values.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [BL-59] S172 — `HANDOFFS.md` retention is now N=1: the fold, the policy, and a header reserve that is spent
 
 - **Change:** the trim's pointer block is folded into the archive table as one row — in its own
