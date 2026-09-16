@@ -77,6 +77,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S171
+date: 2026-09-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **TRIM `CHANGELOG.md` BACK UNDER THE 262,144 B HARD READ REFUSAL, UNDER OPERATOR-APPROVED `--force`, AND FILE ONE BACKLOG ITEM ON LOSSLESS-TRIM GUIDANCE FOR ADOPTERS.** The file is 274,805 B; a default `Read` returns zero content, verified this session, not inferred. `--check` reports the byte trigger FIRES and `SRF_RED 1.0306` (RED), so `--force` is required; the operator gave the go-ahead after the accounting was presented. Depth is the ratified `CLASS_A_STOP_BYTES` = 98,304 B — no `--cut` is passed.
+what_was_done: pending
+next_steps: pending
+key_files: `CHANGELOG.md:1` (front matter, the half the refusal costs); `:110` (the file's own rate rule, printing -67 entries of headroom); `starter-kit/methodology_trim.py:130` (`READ_REFUSE_BYTES`), `:165` (`CLASS_A_STOP_BYTES`), `:203` (`SRF_RED`); `docs/planning/srf-red-refusal-adjudication.md:176` (the self-limitation), `:459` (S132's warrant), `:106` (every trim is net-additive); `docs/planning/BACKLOG.md`.
+gotchas: `--force` reads as destructive to the harness classifier and was refused once at Phase 0 on a DRY RUN; it is the operator's approval that authorizes it, and a dry run writes nothing. The trimmer neither stages nor commits — stage `CHANGELOG.md` and `docs/archive/` by hand or the shard never enters history. This file's convention is a pointer BLOCK, not the table `HANDOFFS.md` uses, so no fold commit is owed. zsh: brace `${r}:path`; write scripts to a file rather than chaining heredocs.
+runtime_smoke: Phase 0 at `6d06dfc`: both ledger frontiers equal HEAD, 0 undocumented commits, no ghost session; `check-links`, `check-learnings`, `check-handoff --all --allow-pending` all exit 0 read bare; `context_budget.py --status` exits 2 (runner over its declared byte ceiling, pre-existing); dashboard 76/100 but risk **medium -> high**, the new HIGH flag being this file's refusal; upstream PR #82 OPEN, head unmoved at `c84e7d96`, and the S170 comment `5691623656` re-fetched and still sha256-identical to its source. Suites not re-run at Phase 0.
+changelog_ref: CHANGELOG.md "2026-09-16 · [ad hoc] S171 claim — trim `CHANGELOG.md` back under the hard read refusal, on operator go-ahead"
+commit: pending
+```
+
+```handoff
 session: S170
 date: 2026-09-15
 status: complete

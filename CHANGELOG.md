@@ -210,6 +210,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S171 claim — trim `CHANGELOG.md` back under the hard read refusal, on operator go-ahead
+
+**Deliverable:** one trim of this file, authorized by the operator at Phase 1 after the benefit and the
+cost were put to him measured. **The file is 274,805 B against the 262,144 B refusal, confirmed
+empirically rather than from the constant** — a default `Read` returns `File content (268.4KB) exceeds
+maximum allowed size (256KB)`, zero content, front matter included. `methodology_trim.py --check` reports
+the byte trigger FIRES and `SRF_RED 1.0306`, so the trim needs `--force`; the warrant is the governing
+adjudication's own self-limitation to *"the middle regime, between the 25,000-token cap and the 256 KiB
+refusal"*, the regime this file has now left — the same warrant as S132's and S152's forces, and no
+precedent for any other file. **A second, smaller action rides with it:** a backlog item asking whether
+adopters should be told how to trim a ledger losslessly. **Ledger:** `CHANGELOG: pending` — the crash
+breadcrumb until Phase 3F.
+
 ### 2026-09-15 · [ad hoc] S170 close-out — the learning row, the receipt, and what the post left open
 
 **Deliverable posted and verified; this entry closes the session.** Phase 3C: **Learning #66 appended** —
