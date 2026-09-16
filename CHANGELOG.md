@@ -214,6 +214,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S171 follow-up — the append-only `.context-budget-history.jsonl`, dirtied by Phase 3E
+
+A bare `context_budget.py --status` appends to its own run history, so Phase 3E left the file modified
+after the close-out commit. Recorded here and committed with this entry rather than with `--no-verify`:
+this session's one finding was that an unrecorded housekeeping commit is a debt the next frontier-advancing
+action makes permanent, and leaving one behind in the close-out would be the same mistake twice.
+
 ### 2026-09-16 · [ad hoc] S171 close-out — `CHANGELOG.md` readable again, measured as a transfer and not a saving
 
 - **Change:** S171's receipt is completed in `HANDOFFS.md` (self 7/10, predecessor S170 9/10). The session
