@@ -35,6 +35,13 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-16 · [ad hoc] PR #82 review-response fixes — the six corrections and the review's accepted findings, one checkpoint per fix
+
+- **Action:** the fix set the maintainer's confirmation comment promised, built on `feat/quality-ratchet`
+  after merging `main` (`b2aea23`, ledger union). Operator-directed bundling across subsystems (the S8
+  shape), one independently verified checkpoint commit per fix. Session S22; bullets appended per checkpoint.
+- Merge `b2aea23`: `origin/main` (S21) into the branch; `CHANGELOG.md` and `HANDOFFS.md` resolved as a union.
+
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 
 - **Action:** one maintainer comment on [PR #82](https://github.com/KJ5HST/methodology/pull/82) answering

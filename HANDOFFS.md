@@ -8,6 +8,13 @@ This repository dogfoods its own methodology: every session records a durable, m
 ---
 
 ```handoff
+session: S22
+date: 2026-09-16
+status: pending
+active_task: Build the PR #82 review-response fix set on feat/quality-ratchet, in the order posted in the maintainer's confirmation comment (2026-09-16): (1) the deletion hole — find_root via git, precommit refuses removal and compares against the newest PARSEABLE committed manifest, the hook fires when HEAD has a manifest, install-hook writes the real path; (2) the dashboard — history walk when the file is absent, deleted/unparseable as an empty gate list, direction flips and command changes reported, the name-keyed coverage bonus dropped; (3) tests-sh-failed max 1; (4) docs — Phase 0 step 6 gate-citation sub-step paid by reduction, the merge/rebase clause, the enforcement-point sentence; (5) both read-set densities re-measured and CLAUDE.md's token ceiling; (6) tighten to measured, --run, the PR description on rmsharp's rewording. OPERATOR-DIRECTED BUNDLING across subsystems (the S8 shape, not a slice) — recorded as such; one independently verified checkpoint commit per fix, RED-first for every refusal. OUT: the context-budget gate (the history-file decision is the operator's) and the merge. Operator trigger: "go". IN PROGRESS.
+```
+
+```handoff
 session: S21
 date: 2026-09-16
 status: complete
