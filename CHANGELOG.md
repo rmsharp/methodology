@@ -214,6 +214,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-59] S174 — corrections to `e8bd62d` and `ad3479a`, found by a claims review before close-out
+
+- **Wrong number, and the urgency it carried:** both earlier entries and `ad3479a`'s message say a fold
+  adds **~147 B** and that the trim S175's Phase 0 calls *"would have failed A2"*. Measured in bytes, the 21
+  table rows are **125–129 B**, and the last fold added **123 B** (6,984 → 7,107 B, `1ec509d^` →
+  `1266282`). With 140 B left the next fold would have landed at ~7,157 B and passed. Only the trim
+  commit itself would have exceeded the reserve before its fold, as `5049845` (7,178 B), `0ccfce8`
+  (7,311 B) and `1ec509d` (7,432 B) already did. **The cut was due one trim later than stated.** The
+  ~147 B figure came from the spent-reserve callout `ad3479a` removed, which also said ~60 B remained.
+- **Also overstated in `ad3479a`'s entry:** *"a file added there"* would not be read as a shard; only
+  a `HANDOFFS-*.md` name in `docs/archive/` would, and `tools/test_methodology_dashboard.py:4426` would pick
+  up any `*.md` there. The index's own warning already said it precisely.
+- **Text corrected in this commit:** the index said its rows were *"unchanged"* (their links changed),
+  that *"the next row would have overflowed"*, and that every shard is `HANDOFFS-through-<date>.md` (two
+  carry `-2`). Its fold rule now says where the trimmer inserts the block, that the shard cell takes the
+  bare name, and that the proof link is dropped. The front matter now says a trim *commit* still carries
+  the ~448 B block until the fold. `bin/tests.sh`'s M2 comment no longer says the mutant survived at
+  a commit where the move had not happened. BL-59's row no longer says N=1 is unreachable next to the
+  commit that made it reachable, and records the measurement: a `--cut 1 --force` trim plus its fold on
+  `ad3479a` ran **300 passed / 0 failed / 6 stated skips**.
+- **Front matter after this commit: 4,019 B** of 7,168 B.
+- **Left as written:** `docs/planning/BACKLOG-DETAIL.md` BL-60 (*"`HANDOFFS.md`'s own archive table says
+  exactly that"*) and BL-59's detail (the fold *"replaces that block with one table row"*; *"What remains
+  for N=1: give Test 38 a frozen fixture"*). Item bodies are deliberately not edited, and
+  `BACKLOG-DETAIL.md.verify.sh` proves them byte-identical.
+
 ### 2026-09-16 · [BL-59] S174 — `HANDOFFS.md`'s shard index moves out of its front matter, so a trim no longer grows it
 
 - **Change:** the archive table (21 rows), its intro and the fold rule move from `HANDOFFS.md`'s front

@@ -1,12 +1,13 @@
 # Handoff Receipt Archive — Shard Index
 
 One row per `methodology_trim.py` trim of the root [`HANDOFFS.md`](../HANDOFFS.md). The table lived in
-that file's front matter until S174 (2026-09-16), moved here with its rows unchanged: each trim added a
-row, and the front matter has a fixed 7,168 B reserve (`bin/check-handoff` `HEADER_RESERVE_BYTES`,
-asserted by `bin/tests.sh` Test 39 A2) that the next row would have overflowed.
+that file's front matter until S174 (2026-09-16) and moved here with its rows unchanged except that their
+links now start `archive/`. Each fold added a 125–129 B row against a fixed 7,168 B front-matter reserve
+(`bin/check-handoff` `HEADER_RESERVE_BYTES`, asserted by `bin/tests.sh` Test 39 A2); with 140 B left, one
+more row would have fit and the one after would not.
 
 **Run the proofs rather than trusting this table.** Every row's shard is
-`docs/archive/HANDOFFS-through-<date>.md`, and its proof is the same path plus `.verify.sh`, which
+`docs/archive/HANDOFFS-through-<date>.md`, with `-2` appended when that name was already taken, and its proof is the same path plus `.verify.sh`, which
 re-derives L1/L2/L3 from git. A shard keeps the live file's format and newest-on-top order, frozen at
 write. **No total is written here**, because a hand-maintained count is stale by the next trim; derive it:
 
@@ -46,9 +47,12 @@ and `methodology_dashboard.py` all find shards by that glob, so an index there w
 | 2 | 2026-09-15 → 2026-09-15 | [`HANDOFFS-through-2026-09-15-2.md`](archive/HANDOFFS-through-2026-09-15-2.md) | v1.5.0 |
 | 6 | 2026-09-15 → 2026-09-16 | [`HANDOFFS-through-2026-09-16.md`](archive/HANDOFFS-through-2026-09-16.md) | v1.5.0 |
 
-**Adding a row — the fold.** A trim appends a 3-line pointer block to the end of `HANDOFFS.md`'s front
-matter (`starter-kit/methodology_trim.py:1093` `build_pointer_block`, `:1103` `insert_pointer`). Turn it
-into one row at the bottom of this table (`n`, the span, the shard link as `archive/…`, the trimmer
-version) and delete the block from `HANDOFFS.md`, **in its own commit**: inside the trim commit the
+**Adding a row — the fold.** A trim writes a pointer block (three lines and a blank) into `HANDOFFS.md`'s
+front matter — before its last standalone `---` line if it has one, at its end otherwise, which is where it
+lands today (`starter-kit/methodology_trim.py:1093` `build_pointer_block`, `:1103` `insert_pointer`). Turn
+it into one row at the bottom of this table — `n` is the record count, the span its two dates, the shard
+cell the bare file name linked as `archive/<name>`, and `by` the trimmer version; the block's `.verify.sh`
+link is dropped, since the proof sits beside its shard — and delete the block from `HANDOFFS.md`, **in its
+own commit**: inside the trim commit the
 shipped `.verify.sh` fails L2 ([Learning #58](../starter-kit/FRAMEWORK_LEARNINGS.md)). The generator is
 distributed, so teaching it to write the row itself is an upstream change.

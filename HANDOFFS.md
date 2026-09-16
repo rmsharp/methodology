@@ -40,7 +40,8 @@ upstream ones (precedent: `fc4d297`).
 
 **The shard index is not in this front matter, on purpose.** It lived here until S174 and grew a row
 with every trim against the fixed 7,168 B header reserve (Test 39 A2), so it moved out rather than the
-reserve rising: a trim no longer grows this file's front matter. The fold rule is in the index.
+reserve rising. A trim commit still carries the trimmer's ~448 B pointer block; the fold removes it, so a
+trim-and-fold no longer grows this front matter. The fold rule is in the index.
 
 <!-- NEXT TRIMMING SESSION: methodology_trim.py appends a 3-line pointer block here
      (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer). Fold it into
