@@ -92,6 +92,10 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   the coarse backstop — the S20 reduction was −15 B and **+62 tokens**, which a byte pin cannot see. The
   tool now reports 23,482 / 18,865 / 6,029 against 23,483 / 18,900 / 6,100, within one token of the
   measurements. Not built: a `measured_blob` key the tool checks itself (follow-up).
+- **F6 — tightened to measured** (the ratchet doing its job): `tests-sh-passed` 134 → 138, `dashboard-unit-tests`
+  222 → 226, `ratchet-unit-tests` 33 → 45 — three tightenings, no approval needed, the hook's verdict on the
+  staged edit exit 0. `--run`: **10/10 pass · 0 fail · 0 unmeasured · results `efccbc7f2195` · manifest
+  `08423c179055`**, 2 m 46 s with `bin/tests.sh` executed once for its two gates.
 
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 

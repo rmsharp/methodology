@@ -1,5 +1,5 @@
 {
-  "_": "This repository's own declared quality gates — the checks it already runs, declared at their CURRENT measured values on 2026-09-15 (S20, the quality-ratchet slice) so the ratchet starts where the repo is. Held by starter-kit/quality_ratchet.py --precommit, chained into .githooks/pre-commit: a commit that lowers any `min` below, raises any `max`, or removes a gate is refused; tightening and adding pass. Loosening is a plan-mode decision in its own commit with the reason in CHANGELOG.md, committed with --no-verify (SAFEGUARDS.md Blast Radius Limits). Measure with `python3 starter-kit/quality_ratchet.py --run` (about three minutes: it runs bin/tests.sh) and cite the summary line in the close-out receipt (HANDOFFS.md, runtime_smoke); bin/check-handoff lints for it.",
+  "_": "This repository's own declared quality gates — the checks it already runs, declared at their CURRENT measured values on 2026-09-15 (S20, the quality-ratchet slice; tightened to the new measured values on 2026-09-16, S22) so the ratchet starts where the repo is. Held by starter-kit/quality_ratchet.py --precommit, chained into .githooks/pre-commit: a commit that lowers any `min` below, raises any `max`, or removes a gate is refused; tightening and adding pass. Loosening is a plan-mode decision in its own commit with the reason in CHANGELOG.md, committed with --no-verify (SAFEGUARDS.md Blast Radius Limits). Measure with `python3 starter-kit/quality_ratchet.py --run` (about three minutes: it runs bin/tests.sh) and cite the summary line in the close-out receipt (HANDOFFS.md, runtime_smoke); bin/check-handoff lints for it.",
   "_first_tightening_owed": "`tests-sh-failed` is declared at `max 1`, the value this branch measures (Test 9 fails by construction: `--source=github` reads main, which lacks the new starter-kit files). It catches a SECOND failure today. Tighten it to `max 0` in the first commit after this branch merges, when bin/tests.sh reads N/0 on main — a tightening, no approval needed. (The review's point: a count gate is blind to health — a failing test still ran — so the failed count, not the passed count, is what makes the suite's colour a gate.)",
   "version": 1,
   "results_file": ".quality-gates-results.json",
@@ -7,7 +7,7 @@
     {
       "name": "tests-sh-passed",
       "direction": "min",
-      "threshold": 134,
+      "threshold": 138,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
       "why": "the framework's build equivalent; the passed count is a ratchet — every suite it wires in (dashboard, trim, budget, ratchet units) reports through it"
@@ -23,7 +23,7 @@
     {
       "name": "dashboard-unit-tests",
       "direction": "min",
-      "threshold": 222,
+      "threshold": 226,
       "command": "python3 tools/test_methodology_dashboard.py",
       "extract": "Ran (\\d+) tests",
       "why": "test count never drops; green/red is carried by tests-sh-passed"
@@ -45,7 +45,7 @@
     {
       "name": "ratchet-unit-tests",
       "direction": "min",
-      "threshold": 33,
+      "threshold": 45,
       "command": "python3 tools/test_quality_ratchet.py",
       "extract": "Ran (\\d+) tests"
     },
