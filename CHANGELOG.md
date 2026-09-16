@@ -222,6 +222,36 @@ Moved the oldest **6** record(s) (2026-09-15 → 2026-09-16) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh)
 rather than trusting a digest printed here. Live file 75,185 B → 20,820 B (−72.3%).
 
+### 2026-09-16 · [BL-59] S172 — `HANDOFFS.md` retention is now N=1: the fold, the policy, and a header reserve that is spent
+
+- **Change:** the trim's pointer block is folded into the archive table as one row — in its own
+  commit, because inside the trim commit the shipped `.verify.sh` fails L2 (Learning #58). The
+  retention paragraph now states **N=1, replacing S127's N=4**, with the measurement it rests on and
+  the reason `--force` is warranted rather than an override. The live ledger holds **one receipt**,
+  20,820 B against 75,185 B before.
+- **The retained receipt was corrected in place.** Its `next_steps` item (2) said this file held
+  *"seven receipts against a retention policy of four"* — false the moment the trim landed, and it is
+  the one receipt the next session reads. It now records what happened, including the test fix N=1
+  required. Precedent for correcting a receipt in a follow-up rather than editing history: `1d88eaa`.
+- **A consequence the decision did not anticipate, and it is now the binding constraint.** **N=1
+  means a trim EVERY session** — each close-out prepends a receipt, so the steady state is exceeded
+  immediately. Each trim-and-fold adds one archive-table row, about **147 B** of the **7,168 B**
+  header reserve `bin/tests.sh` Test 39 (A2) asserts on this front matter. After this fold the front
+  matter is **7,107 B — 61 B of room, which is room for none.** The next trimming session must
+  shorten it first; folding the archive table into a shard index of its own is the obvious cut, and
+  it is recorded in BL-59 rather than left to be rediscovered.
+- **Three passes were needed to write that warning, which is the finding in miniature:** every
+  version long enough to explain the problem was long enough to cause it — the first pushed the front
+  matter to 7,718 B (over by 550), the second to 7,220 B (over by 52). The reasoning moved to BL-59
+  and the instruction stayed here, which is the same move §The Action Ledger prescribes for a rule
+  that outgrows the file it is stated in.
+- **Commit/PR:** this commit; the trim is `1ec509d`, the test fix `d13a165`
+- **Session:** S172 · **Verified:** `bash bin/tests.sh` exit 0 — **300 passed, 0 failed, 6 skipped**;
+  the six are Test 34's stated BL-40 rows, which want three receipts, and Test 38 no longer degrades
+  because `d13a165` decoupled it. `bin/check-handoff --all` exit 0 (1 receipt); `bin/check-links`
+  exit 0; the shard's `.verify.sh` exit 0 both before and after the trim commit.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [BL-59] S172 — Test 38 reads a frozen fixture instead of the live ledger, and a drift guard keeps the fixture honest
 
 - **Change:** `bin/tests.sh` Test 38 sourced its fixture from the live root `HANDOFFS.md`, which made
