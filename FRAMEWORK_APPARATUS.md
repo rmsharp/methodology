@@ -375,8 +375,8 @@ Three details in that command are load-bearing. **`git ls-files`, not a bare glo
 a command whose glob matches nothing, so `docs/archive/CHANGELOG-*.md` written directly would
 return no count at all in the common case of a project that has never trimmed. **Anchored to the
 entry heading** — an unanchored pattern also matches the vocabulary's own definitions and every
-mention of a tag in prose; on this framework's own ledger that form returned 78 against 64
-actions. **`BL-[^]]+`, not `BL-[0-9]+`** — it counts whatever id the project's backlog uses.
+mention of a tag in prose, so it can report more actions than the ledger holds; the project this
+was measured on counted 78 where 64 had happened. **`BL-[^]]+`, not `BL-[0-9]+`** — it counts whatever id the project's backlog uses.
 
 Entries written before a project adopted this vocabulary stay as written; the audit does not
 count them, and that gap is expected rather than a defect to repair.

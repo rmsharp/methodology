@@ -168,6 +168,23 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-16 · [BL-57] Correction: §The Action Ledger attributed a measurement to a ledger that does not record it
+
+- **What was wrong:** the entry above, and the text it describes, said the unanchored audit *"returned
+  78 against 64 actions"* **"on this framework's own ledger."** The measurement is real, but it was
+  taken on the project whose ledger was split at v3.6, not on this repository's — whose root
+  `CHANGELOG.md` carries no such record. A reader of this tree could not check the claim, and merged
+  upstream it would attribute the count to a ledger where the comparison was never run.
+- **Change:** the sentence now states the failure first and the number as what it is —
+  *"an unanchored pattern … can report more actions than the ledger holds; the project this was
+  measured on counted 78 where 64 had happened."* The mechanism is checkable anywhere; the figure no
+  longer claims a home it does not have.
+- **Why:** an unverifiable number in a distributed file is the thing §The Action Ledger's own advice
+  warns against — it is right when written and unfalsifiable afterwards. Caught by grepping this
+  tree for the figure's provenance before close-out, not by any gate.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-16 · [BL-57] The `HANDOFFS.md` seed enumerates its shards with `git ls-files`, not a bare glob
 
 - **Change:** `starter-kit/HANDOFFS.md`'s rule that anything counting receipts must span the live
