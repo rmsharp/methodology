@@ -249,6 +249,12 @@ reply for F2 and F3.
 - **F6:** the description's *"`bin/sync --source=github` installs nothing today"* is true of the
   branch's copy only; `main`'s 24-row sync works (Test 9 passes there). Wording.
 
+**Decided by the operator at S173 (2026-09-16, picker), after #80 merged:** **F5 rides BL-57's upstream PR
+(its P12)**, which already edits `starter-kit/methodology_trim.py`, so the maintainer reviews the file once.
+Re-checked on `upstream/main` `64f23bf` first: `:33`'s `--no-renames` claim still stands against 0
+occurrences in upstream's hook, and `:9`/`:155` still cite a design doc upstream does not have.
+**F6 is closed:** it was wording in #80's description, and #80 merged on 2026-09-15.
+
 ## 7. Hazards
 
 - `context_budget.py --status` writes an untracked `.context-budget-history.jsonl` into the tree it

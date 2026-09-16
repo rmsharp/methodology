@@ -214,6 +214,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S173 follow-up — grooming decisions on F5/F6, BL-53, BL-54, BL-36 and BL-60 (operator, picker)
+
+- **Decisions,** each re-checked against current state before the operator was asked:
+  - **F5 rides BL-57's upstream PR (P12); F6 is closed.** On `upstream/main` `64f23bf`,
+    `starter-kit/methodology_trim.py:33` still says the ledger hook runs `--no-renames` (upstream's hook
+    has 0), and `:9`/`:155` still cite a design doc upstream lacks. BL-57 already edits that file. F6 was
+    wording in #80's description, and #80 merged on 2026-09-15.
+  - **BL-53: the retirement rule is decided inside the fork resync.** Fork `main`'s file is 79,483 of
+    81,920 B (about 2 rows); upstream's is 16,560 B (13 rows); the file is one of the resync's 12 conflicts.
+  - **BL-54: fixed after BL-57's P5, before P6** — when the adopters first sync from the resynced fork
+    `main`, the merge shape the bug breaks. `bin/sync:60` and `bin/status:56` are unchanged upstream.
+  - **BL-60: one planning session costs its three shapes and folds BL-36 in**, so the four frozen
+    proofs that report FAIL over intact archives are decided inside the new scheme, not rewritten twice.
+    31 proofs, 453,689 B, re-counted.
+- **Recorded in:** `docs/planning/BACKLOG.md` (the four index rows);
+  `docs/planning/pr80-review-response.md` §6; the BL-57 plan's finding (11); the S173 receipt's
+  `next_steps`.
+
 ### 2026-09-16 · [ad hoc] S173 follow-up — fork `main` pushed to `origin`, `ef83601..22a78b3` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, `ef83601..22a78b3` — 8 commits, a fast-forward, run behind a guard

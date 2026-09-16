@@ -141,6 +141,10 @@ Upstream's own rule is to re-measure when `HEAD:starter-kit/SESSION_RUNNER.md` s
 (it now reads `4811f02f`) and `CLAUDE.md` stops reading `1244e95b`. The PR re-measures both on its final
 blobs and updates `bytes_per_token`/`measured_bytes`. `context_budget.py` prices a file at its recorded
 density, so a wording change can pass it while crossing the real ceiling: P1's row did, by 4 tokens.
+(11) **P12 also carries #80's review item F5, by operator decision (S173, picker):** correct
+`starter-kit/methodology_trim.py`'s false claims — `:33` says the ledger hook runs `--no-renames` (upstream's
+hook has 0), and `:9`/`:155` cite `docs/planning/ledger-trimmer-design.md`, which upstream lacks — on the
+branch before P12, since BL-57 already edits that file. Detail: `docs/planning/pr80-review-response.md` §6.
 
 ---
 
