@@ -80,6 +80,36 @@ after measuring, or the next Phase 0 finds a dirty worktree.
 (6) `bin/check-links` moved 107 → 108, the one link P3 added; `bin/tests.sh` is 118 passed / 0 failed
 before and after, in a clone whose HEAD sha was asserted equal to the worktree's.
 
+**Amended at S173 (2026-09-16), before any P4 edit:** **upstream PR #82 merged** (`64f23bf`, 18:05:47 UTC),
+so S169's merge-first amendment triggered and P4 began by merging `upstream/main` into the branch —
+`52ad407`, two one-line conflicts, both predicted by `git merge-tree` (`CLAUDE.md`'s *Reference apparatus*
+row; `ITERATIVE_METHODOLOGY.md` Phase 6 step 8, upstream's new step (c) kept with P3's `[BL-<id>]`).
+**P4's size criterion is restated below on the new base,** because `c0550acd` is no longer upstream's
+runner and #82 gave upstream's root `.context-budget.json` token ceilings of its own. What the restatement
+rests on:
+(1) **Every figure is a doubled-file read, and the instrument was checked first.** Two recorded controls
+reproduced exactly — 36,955 on `c0550acd`, and 37,731 on `64f23bf`'s runner blob `2a3e410d`, which is the
+figure upstream's config records for that blob. `CLAUDE.md`'s blob `1244e95b` reproduced upstream's
+recorded 46,965. **The instrument's behaviour changed:** the Read no longer refuses a file over 25,000
+tokens; it returns a 25,000-token first page and prints the whole-file count in its truncation notice. A
+spanning `limit` prints no count. So each reading costs a full page of context — take them in a subagent
+that reproduces a control in the same run, and copy the notice verbatim.
+(2) **P3's saving survived the merge exactly.** The merged runner reads 37,703 (18,851.5 tokens), 14 under
+`upstream/main`'s 18,865.5 — the same 14 P3 measured against `c0550acd`.
+(3) **The merge is 4 tokens OVER `CLAUDE.md`'s token ceiling.** It reads 46,973 (23,486.5 tokens) against
+upstream's 46,965 (23,482.5) and a `max_tokens` of 23,483. The only difference is the one row carrying
+P1's wording — *"and the `CHANGELOG.md` rules"* for *"extracted so the manual fits one read"*: **9 B
+shorter and 4 tokens longer.** `context_budget.py` cannot see it, because it prices the file at upstream's
+measured 2.519 B/token and so counts 59,144 B as 23,479. P4 edits `CLAUDE.md` anyway (step 4) and pays
+the 4 back there.
+(4) **`starter-kit/SAFEGUARDS.md` is blob `933816b4` on the merge and on `upstream/main`** — unchanged by
+identity, so no reading is owed.
+(5) **Both trees' gates, in `--no-local` clones with HEAD asserted.** `upstream/main`: `bin/tests.sh` 139
+passed / 0 failed; `quality_ratchet.py --run` 10/10, results `15c73dda424f`; `bin/check-links` 107;
+`context_budget.py --status` exit 0. The merge `52ad407`: 141 / 0; 10/10, results `c5fca86e4674`; 110 links
+(the 3 P1–P3 added); exit 0, and a row-by-row diff against upstream's output shows only sizes — no status
+flips, read-set total 70,244 B against 70,276 B.
+
 ---
 
 ## 0. The answer
@@ -572,13 +602,19 @@ At least three commits.
   (`README.md`'s *What's New*). List what remains, and why.
 - §The Action Ledger states every rule in §3.1 items 4 and 5. The ledger entry quotes each with its line
   number, as in P2.
-- **`starter-kit/SESSION_RUNNER.md` is no larger in TOKENS than at `b82dcff` — 18,477.5 tokens,
-  doubled read ≤ 36,955** (`b82dcff:starter-kit/SESSION_RUNNER.md` is blob `c0550acd`, the same blob
-  P3 started from, so one measurement serves both criteria), **`starter-kit/SAFEGUARDS.md` is
-  unchanged** (≈5,800.8 tokens measured, ×6 → 34,805; 5,800.0 derived from the pair), and the read-set
-  total `python3 starter-kit/context_budget.py` reports is no larger than at the baseline (§9.7).
-  **P3 left 18,463.5 tokens (52,163 B), so P4 starts 14 tokens under `b82dcff`'s figure.**
-- Suites and `bin/check-links` are green.
+- **Restated at S173, after #82's merge, before any P4 edit — the base is now `upstream/main` `64f23bf`:**
+  - **`starter-kit/SESSION_RUNNER.md` is no larger in TOKENS than `upstream/main`'s — 18,865.5 tokens,
+    doubled read ≤ 37,731** (blob `2a3e410d`; upstream's recorded figure, reproduced). P4 starts at
+    37,703, 14 under.
+  - **`CLAUDE.md` is no larger in TOKENS than `upstream/main`'s — 23,482.5 tokens, doubled read ≤ 46,965**
+    (blob `1244e95b`, `max_tokens` 23,483). **P4 starts 4 tokens over, at 46,973** — the merge carries P1's
+    row — so this criterion fails until P4 pays them back.
+  - **`starter-kit/SAFEGUARDS.md` is blob `933816b4`**, `upstream/main`'s.
+  - `python3 starter-kit/context_budget.py --status` on the branch tree flips no row against
+    `upstream/main`'s, and the read-set total it reports is no larger (§9.7).
+  - *Superseded:* the `b82dcff` criterion (doubled read ≤ 36,955 on `c0550acd`), which P3 met at 18,463.5.
+- Suites and `bin/check-links` are green, and `python3 starter-kit/quality_ratchet.py --run` passes
+  every gate the branch declares (#82's `.quality-gates.json`, merged at S173).
 
 **Surface.** As P1, plus `context_budget.py` on the branch tree. **Cannot enforce:** that the
 maintainer's practice changes. Q4 A asks it to; the PR presents the evidence, not a verdict.

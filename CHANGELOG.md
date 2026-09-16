@@ -214,6 +214,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S173 — #82 merged into BL-57's branch; P4's size criterion restated on the new base before any P4 edit
+
+- **Change:** `docs/planning/changelog-rules-contradictions-plan.md` gains the S173 amendment (above §0)
+  and P4's DONE criterion is restated against `upstream/main` `64f23bf` instead of `b82dcff`: the runner
+  no larger than **18,865.5 tokens (doubled ≤ 37,731)**, `CLAUDE.md` no larger than **23,482.5 tokens
+  (doubled ≤ 46,965)** — newly a criterion, since #82 gave it a token ceiling — `SAFEGUARDS.md` at blob
+  `933816b4`, no `context_budget.py` status flip, and `quality_ratchet.py --run` passing.
+- **The branch action it rests on:** `52ad407` on `bl57/changelog-rules` merges `upstream/main`; two
+  one-line conflicts, both predicted at Phase 0 (`CLAUDE.md`, `ITERATIVE_METHODOLOGY.md`). A merge skips
+  the ledger hook, so the branch carries no entry of its own for it — as `9e1dfeb` did at S168.
+- **Found:** the merge is **4 tokens over `CLAUDE.md`'s ceiling** (46,973 doubled) — P1's row wording is
+  9 B shorter and 4 tokens longer, and `context_budget.py` prices it at 2.519 B/token and reports it ok.
+  P4's `CLAUDE.md` edit pays it back. P3's 14-token runner saving survived the merge exactly (37,703).
+- **Found:** the Read tool no longer refuses a file over 25,000 tokens — it returns a 25,000-token page and
+  prints the count in the truncation notice — so each doubled-file reading costs a page of context.
+  Readings were taken in a subagent that reproduced the 36,955 control in the same run.
+- **Session:** S173 · **Verified:** upstream 139/0, ratchet 10/10, links 107, budget exit 0; merge 141/0,
+  10/10 (`c5fca86e4674`), 110, exit 0 with no status flips — both in `--no-local` clones, HEAD asserted.
+
 ### 2026-09-16 · [BL-57] S173 claim — BL-57's P4: merge #82 into the branch first, then entry lifecycle and the words
 
 **Deliverable:** BL-57's **P4** (`docs/planning/changelog-rules-contradictions-plan.md:551`) on branch
