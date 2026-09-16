@@ -1,6 +1,6 @@
 # Resync plan — merge `upstream/main` `6b29d3d` into fork `main`
 
-**Status: RATIFIED — the operator chose every recommendation, D1 (A), D2 (a), D3 (a), D4 (a), by
+**Status: RATIFIED; R1 DONE AT S176 (§7), R2 NEXT — the operator chose every recommendation, D1 (A), D2 (a), D3 (a), D4 (a), by
 picker after S175's close-out (2026-09-16).** Written at S175, a planning session: nothing is merged. Evidence taken at fork `main` `1f34e75`, `upstream/main` `6b29d3d`, and PR #83's head
 `219fb9d`. Carried out by **R1** and **R2** (§5), one session each. Precedent: the plan
 [`upstream-read-set-budgets-merge-plan.md`](upstream-read-set-budgets-merge-plan.md) (S150), carried
@@ -351,3 +351,42 @@ v3.8 PR's files; P5's simplification.
 
 **Not run:** any resolution beyond the trial of (A); the suite on a fully merged tree; the ratchet on fork
 `main`.
+
+## 7. R1 as carried out (S176, 2026-09-16) — what R2 inherits
+
+**R1 is done:** merge `5c2bd59`, then `8c35872` (Test 27.N1b), `8cfaf0d` (`docs/FORK_LEARNINGS.md`,
+`check-learnings --first`), `82f0d3a` (citations, the #26 pin, `add_row37`), `4ef6390` (`CLAUDE.md`
+routing), the retention trim `084ba1b` and its fold `28ae585`. Where the result differs from §2–§5, this
+section wins:
+
+1. **Suite, each in a `--no-local` clone:** the merge 303 / 3 / 0 (the trial's three failures; 0 skips at
+   11 receipts); after D1 (`4ef6390`) 309 / 0 / 0; after the trim and fold (`28ae585`) 303 / 0 / 6, the six being Test 34's stated skips at 2 receipts (a digit-masked row diff against `4ef6390` shows nothing else).
+2. **Conflict sets against `28ae585`, computed** with `git merge-tree --write-tree --name-only 28ae585
+   <target>`: `cca7941` → 7 files (`.context-budget.json`, `CHANGELOG.md`, `HANDOFFS.md`, `bin/tests.sh`,
+   both dashboard twins, `tools/test_methodology_dashboard.py`); `64f23bf` and `6b29d3d` → 12 (those
+   plus `.githooks/pre-commit`, `CLAUDE.md`, `README.md`, `bin/check-handoff`,
+   `docs/tutorials/T1_setup.md`). `starter-kit/FRAMEWORK_LEARNINGS.md` conflicts at no later stage. Each
+   stage still re-derives against the previous stage's committed result (§2.1). **`cca7941` does not contain
+   `0fd003a`** (`git merge-base --is-ancestor` exit 1): it is on PR #82's branch, and its `HANDOFFS.md`
+   holds S20 as a `pending` stub directly above S19.
+3. **`HANDOFFS.md` conflicts at every later stage because R1's retention trim archived S21 and S19–S13**,
+   the text upstream's later receipts are inserted against. Against the pre-trim `4ef6390` it merged
+   cleanly with `cca7941` and `64f23bf`. The rule is still §2.4, with one addition: keep only the incoming
+   receipts that are in neither the live file nor a shard — S20 (a stub at M2, completed at M3), S22 (M3),
+   S23 (M4). Never re-add S13–S19 or S21, which are in `docs/archive/HANDOFFS-through-2026-09-16-3.md`.
+4. **`CHANGELOG.md` is already over the trimmer's trigger:** `methodology_trim.py --file CHANGELOG.md
+   --check` FIRES at 200,985 B on `28ae585`. §2.4's trim (R2 step 3) is owed whatever M2–M4 add, and only
+   after every merge commit is recorded.
+5. **The citation sites were 26, not D1's 23:** in both twins at `:409` the text `Learning`/`#26` wraps
+   across two comment lines, and `HANDOFFS.md`'s fold comment sits in front matter, which is live text,
+   not ledger history. All 26 now read *fork Learning #N*. At M1, line numbers in
+   `tools/test_methodology_dashboard.py` moved +39 (upstream's F2 test).
+6. **`bin/check-learnings` already took `--file`.** What the fork file needed was contiguity from #15:
+   `--first N`, wired into Test 32 with a no-flag run and a deleted-row mutant. The change is fork-side, in a file
+   upstream ships, but upstream does not touch it after `0fd003a` (`git diff 0fd003a 6b29d3d --
+   bin/check-learnings` is empty), so M2–M4 do not conflict there.
+7. **`context_budget.py --status`**, rows diffed against Phase 0, exit 2 both times:
+   `starter-kit/SAFEGUARDS.md` ok → over, 15,386 → 16,353 B (M1's four upstream lines; §2.2 predicts
+   17,024 B at the full merge). The learnings row is re-pointed to `docs/FORK_LEARNINGS.md` (67,177 B, ok,
+   under the unchanged 81,920 B warning: 14,743 B of headroom where the table had 2,437 B).
+   `HANDOFFS.md` 24,200 → 15,845 B; `CLAUDE.md` 11,368 → 11,808 B.

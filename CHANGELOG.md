@@ -214,6 +214,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S176 close-out — resync R1 done: stage M1 merged, D1 carried out, suite green; R2 is next
+
+- **Deliverable, done:** R1 of [`upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md). Merge
+  `5c2bd59`, then `8c35872`, `8cfaf0d`, `82f0d3a`, `4ef6390`, the retention trim `084ba1b` and its fold
+  `28ae585`, each with its own entry below. R1's DONE criteria, run bare on `28ae585`: `0fd003a` is an
+  ancestor of `main`; no unmerged paths; the distributed learnings file equals `0fd003a`'s; the fork file's
+  rows equal `1f34e75`'s 15–66; `check-learnings` (both tables), `check-handoff --all --allow-pending`,
+  `check-links` and `commit-msg --selftest` all exit 0. **Suite in a `--no-local` clone of `28ae585`: exit 0,
+  303 passed / 0 failed / 6 skipped**, the six being Test 34's stated rows at 2 receipts (digit-masked
+  row diff against `4ef6390`'s 309 / 0 / 0).
+- **This commit:** the `HANDOFFS.md` receipt (`status: complete`, self 8, predecessor S175 8); the plan's
+  new **§7, *R1 as carried out — what R2 inherits***, and its status line. §7 holds the conflict sets
+  computed against `28ae585` (M2 7 files, M3 and M4 12). It records that R1's trim makes `HANDOFFS.md`
+  conflict at every later stage, that `cca7941` does not contain `0fd003a`, that the `CHANGELOG.md`
+  trigger already fires (200,985 B), and the 26 citation sites against D1's 23. It also diffs
+  `context_budget.py --status`: `SAFEGUARDS.md` ok -> over at 16,353 B, recorded, not remedied. Also here:
+  BL-53's and BL-57's backlog rows, and **fork Learnings #67** (S175's deferred learning: an arriving hook
+  binds the suite's own fixture commits) and **#68** (a grep inventory is line-scoped; wrapped references
+  are invisible to it), 1,175 B and 1,043 B, checked from #15.
+- **Not done, and not this session's:** R2; the `CHANGELOG.md` trim (R2 step 3); any push. Fork `main` is
+  ahead of `origin/main` by 37 commits with this one: 9 of this session's and the 28 upstream commits the merge brought. Pushing
+  needs the operator's go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] S176 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **Fold** of `084ba1b`'s pointer block by the index's rule (`docs/HANDOFFS_ARCHIVE_INDEX.md:51`): one
