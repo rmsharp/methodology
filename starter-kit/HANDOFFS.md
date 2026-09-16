@@ -115,7 +115,10 @@ An archive is a **shard**: a new frozen file, same format, same newest-on-top or
   forward-looking rule: a shard is frozen, so a rule copied into one cannot be corrected when the
   live rule moves.
 - **After a split, anything that enumerates receipts must span both** — `HANDOFFS.md
-  docs/archive/HANDOFFS-*.md` — or it silently counts a shrunken population.
+  $(git ls-files 'docs/archive/HANDOFFS-*.md')` — or it silently counts a shrunken
+  population. Enumerate the shards with `git ls-files`, never as a bare glob: zsh aborts a
+  command whose glob matches nothing, so before the first split the bare form counts nothing
+  at all — the same reason the ledger's audit is written that way.
 
 The reasoning this file shares with `CHANGELOG.md` — how a ledger is read, why the tool is the only
 statement of its trigger, and what a split must conserve — is in the *Reading and archiving*

@@ -168,6 +168,21 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-16 · [BL-57] The `HANDOFFS.md` seed enumerates its shards with `git ls-files`, not a bare glob
+
+- **Change:** `starter-kit/HANDOFFS.md`'s rule that anything counting receipts must span the live
+  file and its shards published that span as the bare glob `HANDOFFS.md docs/archive/HANDOFFS-*.md`.
+  It now reads `HANDOFFS.md $(git ls-files 'docs/archive/HANDOFFS-*.md')`, with the reason stated:
+  zsh aborts a command whose glob matches nothing, so before the first split the bare form counts
+  nothing at all — the same reason the ledger's audit is written that way. 10,417 → 10,676 B.
+- **Why:** C10. The bullet was outside P2's lines and was carried to P3 with the audit it matches.
+- **Reproduced in a throwaway repository with one entry and no shard:** the bare form prints `0`
+  under zsh (with `no matches found` on stderr, exit 1) and `1` under bash (with a `cat` error on
+  stderr, exit 0); the `git ls-files` form prints `1` and exits 0 under both. The failure the fix
+  removes is not an error the caller sees — it is **two shells returning two different counts**.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-16 · [BL-57] The runner cites the ledger rules instead of restating their audit; three files adopt `[BL-<id>]`
 
 - **Change:** `starter-kit/SESSION_RUNNER.md:39` (Phase 0, the backfill step) drops the inline
