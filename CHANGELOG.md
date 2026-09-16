@@ -214,6 +214,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-59] S174 close-out — the header cut is done; S175's Phase 0 trims and folds into the new index
+
+- **Change (this commit):** the S174 receipt in `HANDOFFS.md` goes from `pending` to `complete`
+  (self 7, S173 scored 8). The context-budget reading taken at close-out rides with it.
+- **Deliverable, on fork `main`, local and not pushed:** `e8bd62d` (Test 39's M2 literal 4096 → 2048),
+  `ad3479a` (the shard table moves to `docs/HANDOFFS_ARCHIVE_INDEX.md`; front matter 7,028 → 3,929 B)
+  and `67ac209` (corrections from a claims review, front matter 4,019 B). Each has its own entry below.
+- **Verified, not predicted:** `bin/tests.sh` in `--no-local` clones, each asserted to be at its commit —
+  306 passed / 0 failed at `be405b3`, `e8bd62d`, `ad3479a` and `67ac209`, with the same assertion set;
+  305 / 1 for the cut without the M2 fix; 300 / 0 / 6 stated skips after a simulated S175 trim and fold.
+  All 21 handoff-shard proofs gave the same exit codes before and after (18 pass, 3 pre-existing BL-36
+  failures). `context_budget.py --status` shows no status flips against Phase 0.
+- **For S175:** 3 receipts, so its Phase 0 trims with `--cut 1 --force` and then folds the pointer block
+  into the index by the rule at `docs/HANDOFFS_ARCHIVE_INDEX.md:50`, in its own commit. Then comes the
+  fork resync (`upstream/main` is now `6b29d3d`, 56 commits, 13 conflicting files), then BL-57's P5.
+- **Raised for the operator, not acted on:** whether to lower `HEADER_RESERVE_BYTES` to bank the freed
+  ~3 KB (the S109 precedent), and whether BL-59 closes now that N=1 is measured reachable.
+
 ### 2026-09-16 · [BL-59] S174 — corrections to `e8bd62d` and `ad3479a`, found by a claims review before close-out
 
 - **Wrong number, and the urgency it carried:** both earlier entries and `ad3479a`'s message say a fold
