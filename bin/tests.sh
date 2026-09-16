@@ -730,7 +730,28 @@ git -C "$P" add .quality-gates.json
 git -C "$P" commit -q -m "remove" >/dev/null 2>&1 \
     && fail "removing a declared gate was committed through the hook" \
     || pass "removing a declared gate is refused like a loosening"
-git -C "$P" checkout -q -- .quality-gates.json
+git -C "$P" checkout -q HEAD -- .quality-gates.json   # index AND worktree: the refused edit was staged
+# The deletion hole (PR #82 review, 2a/4): removing the manifest is refused; a bypassed removal
+# does not lock the repo; re-adding it lower than the removed version is still a loosening.
+git -C "$P" rm -q .quality-gates.json
+git -C "$P" commit -q -m "remove the manifest" >/dev/null 2>&1 \
+    && fail "removing .quality-gates.json was committed through the installed hook" \
+    || pass "removing .quality-gates.json is refused as the loosest loosening"
+git -C "$P" commit -q --no-verify -m "remove anyway" >/dev/null 2>&1
+echo x > "$P/unrelated.txt"; git -C "$P" add unrelated.txt
+git -C "$P" commit -q -m "unrelated" >/dev/null 2>&1 \
+    && pass "a repo that removed its manifest with --no-verify is not locked" \
+    || fail "every commit after a bypassed removal is refused (the lockout)"
+printf '{"version":1,"gates":[{"name":"floor","direction":"min","threshold":10}]}\n' > "$P/.quality-gates.json"
+git -C "$P" add .quality-gates.json
+git -C "$P" commit -q -m "re-add lower" >/dev/null 2>&1 \
+    && fail "re-adding the manifest lower than the removed one was committed" \
+    || pass "re-adding the manifest lower than the removed one is refused"
+printf '{"version":1,"gates":[{"name":"floor","direction":"min","threshold":85}]}\n' > "$P/.quality-gates.json"
+git -C "$P" add .quality-gates.json
+git -C "$P" commit -q -m "re-add as it was" >/dev/null 2>&1 \
+    && pass "re-adding the manifest at the removed thresholds passes" \
+    || fail "re-adding the manifest at the removed thresholds was refused"
 BEFORE="$(md5 -q "$P/.quality-gates.json" 2>/dev/null || md5sum "$P/.quality-gates.json" | cut -d" " -f1)"
 "$BIN/sync" "$P" --mode=commit --source=local >/dev/null 2>&1
 AFTER="$(md5 -q "$P/.quality-gates.json" 2>/dev/null || md5sum "$P/.quality-gates.json" | cut -d" " -f1)"

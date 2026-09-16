@@ -41,6 +41,20 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   after merging `main` (`b2aea23`, ledger union). Operator-directed bundling across subsystems (the S8
   shape), one independently verified checkpoint commit per fix. Session S22; bullets appended per checkpoint.
 - Merge `b2aea23`: `origin/main` (S21) into the branch; `CHANGELOG.md` and `HANDOFFS.md` resolved as a union.
+- **F1 — the deletion hole** (review 2a + 4, bullets 1 and 4): `quality_ratchet.py` 1.0.0 → 1.1.0. `find_root`
+  falls back to the git toplevel, so `--precommit` can judge a commit that removes the manifest instead of
+  exiting 3 "refuses to invent thresholds" (the exit that, in the hook `install-hook` writes, refused every
+  later commit). The comparison base is now the **newest parseable committed manifest that declares a
+  gate** — not HEAD's copy — so removing the manifest is refused as the loosest loosening, re-adding it
+  lower after a bypassed removal is still refused against the removed version, and a corrupted or emptied
+  HEAD copy is skipped; a branch that removed its manifest and left it removed is not locked. The
+  empty-gates rule was found by the test, not the review: the first cut used "newest parseable" and a
+  bypassed `{"gates": []}` became a base that let a lower re-declaration through. `install-hook` writes
+  the path of the copy that is running (`starter-kit/quality_ratchet.py` here, root for adopters).
+  `.githooks/pre-commit` fires when the worktree OR HEAD has a manifest. Tests: unit 33 → 43 (8 RED
+  first, 2 controls), selftest 17 → 22, `bin/tests.sh` +4 through real git (one RED on the old tool: the
+  lockout) — and the pre-existing `git checkout -- manifest` in that block restored the worktree from a
+  still-staged refused edit; now `checkout HEAD --`.
 
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 
