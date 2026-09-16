@@ -251,6 +251,13 @@ if python3 "$METHODOLOGY/tools/test_context_budget.py" >/dev/null 2>&1; then
 else
     fail "context budget gate unit tests failed"
 fi
+# The ratchet is the third shipped executable; same argument. Its --selftest below covers the
+# install/hook surface in a scratch repo; the unit suite covers the arithmetic every rule rests on.
+if python3 "$METHODOLOGY/tools/test_quality_ratchet.py" >/dev/null 2>&1; then
+    pass "quality ratchet unit tests green"
+else
+    fail "quality ratchet unit tests failed"
+fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
 diff -q "$METHODOLOGY/tools/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null \
@@ -678,6 +685,134 @@ BEFORE="$(md5 -q "$P/.context-budget.json" 2>/dev/null || md5sum "$P/.context-bu
 AFTER="$(md5 -q "$P/.context-budget.json" 2>/dev/null || md5sum "$P/.context-budget.json" | cut -d" " -f1)"
 [ "$BEFORE" = "$AFTER" ] && pass "re-sync does not clobber an adopter-owned config" \
     || fail "re-sync overwrote the adopter's .context-budget.json"
+rm -rf "$P"
+
+echo "== Test: quality_ratchet.py =="
+QR="$STARTER/quality_ratchet.py"
+[ -x "$QR" ] && pass "quality_ratchet.py is executable" || fail "quality_ratchet.py not executable"
+python3 "$QR" --selftest >/dev/null 2>&1 \
+    && pass "quality_ratchet --selftest: every gate observed failing and passing" \
+    || fail "quality_ratchet --selftest reported a failing gate"
+python3 -c "import json,sys; d=json.load(open('$STARTER/quality-gates.json')); sys.exit(0 if d['gates']==[] else 1)" 2>/dev/null \
+    && pass "seed .quality-gates.json parses as JSON and starts empty (plan §8.4)" \
+    || fail "seed quality-gates.json is invalid or not empty"
+grep -q '"--force" in args and' "$QR" && fail "quality_ratchet.py honours --force" \
+    || pass "quality_ratchet.py has no --force escape hatch (it refuses the flag by name)"
+
+# The ratchet through a REAL install: sync a scratch adopter tree, declare one gate, install the
+# hook, then try to commit a loosened threshold. Refused without --no-verify; passes with it
+# (recorded, not exempt); a tightening passes without it. The seed must survive a re-sync.
+P="$(mktemp_project)"
+git -C "$P" config user.email t@t; git -C "$P" config user.name t
+"$BIN/sync" "$P" --mode=commit --source=local >/dev/null 2>&1
+[ -f "$P/quality_ratchet.py" ] && pass "sync distributes quality_ratchet.py" \
+    || fail "sync did not distribute quality_ratchet.py"
+[ -f "$P/.quality-gates.json" ] && pass "sync seeds .quality-gates.json" \
+    || fail "sync did not seed .quality-gates.json"
+printf '{"version":1,"gates":[{"name":"floor","direction":"min","threshold":80}]}\n' > "$P/.quality-gates.json"
+git -C "$P" add -A >/dev/null 2>&1 && git -C "$P" commit -q -m "declare" >/dev/null 2>&1
+(cd "$P" && python3 quality_ratchet.py install-hook >/dev/null 2>&1)
+printf '{"version":1,"gates":[{"name":"floor","direction":"min","threshold":70}]}\n' > "$P/.quality-gates.json"
+git -C "$P" add .quality-gates.json
+git -C "$P" commit -q -m "loosen" >/dev/null 2>&1 \
+    && fail "a loosened threshold was committed through the installed hook" \
+    || pass "a loosened threshold cannot be committed without --no-verify"
+git -C "$P" commit -q --no-verify -m "loosen anyway" >/dev/null 2>&1 \
+    && pass "--no-verify bypasses the ratchet (recorded in history, not exempt)" \
+    || fail "--no-verify did not bypass the ratchet"
+printf '{"version":1,"gates":[{"name":"floor","direction":"min","threshold":85}]}\n' > "$P/.quality-gates.json"
+git -C "$P" add .quality-gates.json
+git -C "$P" commit -q -m "tighten" >/dev/null 2>&1 \
+    && pass "a tightened threshold commits without --no-verify" \
+    || fail "a tightened threshold was refused"
+printf '{"version":1,"gates":[]}\n' > "$P/.quality-gates.json"
+git -C "$P" add .quality-gates.json
+git -C "$P" commit -q -m "remove" >/dev/null 2>&1 \
+    && fail "removing a declared gate was committed through the hook" \
+    || pass "removing a declared gate is refused like a loosening"
+git -C "$P" checkout -q HEAD -- .quality-gates.json   # index AND worktree: the refused edit was staged
+# The deletion hole (PR #82 review, 2a/4): removing the manifest is refused; a bypassed removal
+# does not lock the repo; re-adding it lower than the removed version is still a loosening.
+git -C "$P" rm -q .quality-gates.json
+git -C "$P" commit -q -m "remove the manifest" >/dev/null 2>&1 \
+    && fail "removing .quality-gates.json was committed through the installed hook" \
+    || pass "removing .quality-gates.json is refused as the loosest loosening"
+git -C "$P" commit -q --no-verify -m "remove anyway" >/dev/null 2>&1
+echo x > "$P/unrelated.txt"; git -C "$P" add unrelated.txt
+git -C "$P" commit -q -m "unrelated" >/dev/null 2>&1 \
+    && pass "a repo that removed its manifest with --no-verify is not locked" \
+    || fail "every commit after a bypassed removal is refused (the lockout)"
+printf '{"version":1,"gates":[{"name":"floor","direction":"min","threshold":10}]}\n' > "$P/.quality-gates.json"
+git -C "$P" add .quality-gates.json
+git -C "$P" commit -q -m "re-add lower" >/dev/null 2>&1 \
+    && fail "re-adding the manifest lower than the removed one was committed" \
+    || pass "re-adding the manifest lower than the removed one is refused"
+printf '{"version":1,"gates":[{"name":"floor","direction":"min","threshold":85}]}\n' > "$P/.quality-gates.json"
+git -C "$P" add .quality-gates.json
+git -C "$P" commit -q -m "re-add as it was" >/dev/null 2>&1 \
+    && pass "re-adding the manifest at the removed thresholds passes" \
+    || fail "re-adding the manifest at the removed thresholds was refused"
+BEFORE="$(md5 -q "$P/.quality-gates.json" 2>/dev/null || md5sum "$P/.quality-gates.json" | cut -d" " -f1)"
+"$BIN/sync" "$P" --mode=commit --source=local >/dev/null 2>&1
+AFTER="$(md5 -q "$P/.quality-gates.json" 2>/dev/null || md5sum "$P/.quality-gates.json" | cut -d" " -f1)"
+[ "$BEFORE" = "$AFTER" ] && pass "re-sync does not clobber an adopter-owned gate manifest" \
+    || fail "re-sync overwrote the adopter's .quality-gates.json"
+rm -rf "$P"
+
+# This repo dogfoods the ratchet: its own manifest must parse with no defects and declare gates,
+# and its ledger hook must chain the ratchet. (--run is NOT invoked here — it runs this script.)
+python3 - "$METHODOLOGY" <<'PY' >/dev/null 2>&1 && pass "this repo's .quality-gates.json declares gates with no defects" \
+    || fail "this repo's .quality-gates.json is missing, empty, or defective"
+import importlib.util, json, sys
+root = sys.argv[1]
+spec = importlib.util.spec_from_file_location("qr", root + "/starter-kit/quality_ratchet.py")
+qr = importlib.util.module_from_spec(spec); spec.loader.exec_module(qr)
+cfg = json.load(open(root + "/.quality-gates.json"))
+sys.exit(0 if cfg["gates"] and not qr.config_defects(cfg) else 1)
+PY
+grep -q 'quality_ratchet.py" --precommit' "$METHODOLOGY/.githooks/pre-commit" \
+    && pass ".githooks/pre-commit chains the quality ratchet before the ledger gate" \
+    || fail ".githooks/pre-commit does not run quality_ratchet.py --precommit"
+
+# D9: check-handoff's gate-run citation lint, observed silent / failing / passing.
+P="$(mktemp -d)"
+cat > "$P/HANDOFFS.md" <<'EOF2'
+# Handoff Receipts
+
+```handoff
+session: S2
+date: 2026-09-15
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: did a thing
+what_was_done: did it, commit a1b2c3d
+next_steps: run bin/x at src/x.py:10 next
+key_files: src/x.py:10
+gotchas: none known
+runtime_smoke: n/a — docs-only
+changelog_ref: PR #1
+commit: a1b2c3d
+```
+EOF2
+"$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && pass "check-handoff: no manifest, no citation demanded" \
+    || fail "check-handoff demanded a gate citation with no manifest present"
+printf '{"version":1,"gates":[]}\n' > "$P/.quality-gates.json"
+"$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && pass "check-handoff: the empty seed demands no citation" \
+    || fail "check-handoff demanded a gate citation for an empty seed"
+printf '{"version":1,"gates":[{"name":"t","direction":"max","threshold":0}]}\n' > "$P/.quality-gates.json"
+"$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && fail "check-handoff passed a complete receipt that cites no gate run while a gate is declared" \
+    || pass "check-handoff: a declared gate with no citation in the newest receipt is a finding"
+"$BIN/check-handoff" --all --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && fail "check-handoff --all missed the uncited gate run" \
+    || pass "check-handoff --all: the same finding, on the newest receipt only"
+sed -i.bak 's|runtime_smoke: n/a — docs-only|runtime_smoke: quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results abc123def456 · manifest 0123456789ab|' "$P/HANDOFFS.md"
+"$BIN/check-handoff" --file "$P/HANDOFFS.md" >/dev/null 2>&1 \
+    && pass "check-handoff: a cited gate run satisfies the lint" \
+    || fail "check-handoff rejected a receipt that cites its gate run"
 rm -rf "$P"
 
 echo ""
