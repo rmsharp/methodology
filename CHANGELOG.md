@@ -214,6 +214,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-59] S174 claim — the `HANDOFFS.md` header cut (in progress)
+
+**Deliverable:** shorten `HANDOFFS.md`'s front matter so the retention trim S175's Phase 0 will call
+does not break Test 39 A2 (`bin/tests.sh:3047`). Chosen by the operator at Phase 0 (picker), in the
+order decided after S173: this cut, then the fork resync, then BL-57's P5.
+
+- **Measured at Phase 0:** front matter 7,028 B against `HEADER_RESERVE_BYTES` 7,168 B
+  (`bin/check-handoff:663`) — 140 B left; one trim-and-fold row is ~147 B. The file's own callout says
+  ~60 B, which is wrong.
+- **Observed, not acted on:** `upstream/main` moved `64f23bf` → `6b29d3d` — three maintainer commits,
+  the first ratchet tightening after #82 (`.quality-gates.json`: tests-sh-failed max 0, tests-sh-passed
+  min 139) and his receipts. Fork `main` is 56 behind, not 53. No open upstream PRs or issues.
+- Phase 0 ledger reconcile: `CHANGELOG.md` frontier at `HEAD` `f2c49f7`, no gap; `HANDOFFS.md` frontier
+  `d5ea5c4`, and the one later commit only records a push S173's receipt already names. Nothing
+  backfilled. Dashboard 76/100, medium risk. The two Phase 0 instrument snapshots ride with this claim.
+
 ### 2026-09-16 · [ad hoc] S173 follow-up — fork `main` pushed to `origin`, `3f9210c..d5ea5c4` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, `3f9210c..d5ea5c4` — 1 commit, a fast-forward, run behind a guard

@@ -79,6 +79,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S174
+date: 2026-09-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **THE `HANDOFFS.md` HEADER CUT (BL-59), CHOSEN BY THE OPERATOR AT PHASE 0 (picker).** The front matter above the first receipt is 7,028 B against `bin/check-handoff`'s 7,168 B `HEADER_RESERVE_BYTES` -- 140 B left, measured the way Test 39 A2 measures it (`bin/tests.sh:3083`, anchored `^```handoff$`), not the ~60 B the file's own callout says. This claim makes three receipts, so S175's Phase 0 trims, and each trim-and-fold adds a ~147 B archive-table row: the cut must land now. Fork-local; nothing goes upstream.
+what_was_done: pending
+next_steps: pending
+key_files: `HANDOFFS.md:8`-`:79` (the front matter), `:51` (the archive table, the identified cut); `bin/check-handoff:607` (the reserve), `:663`; `bin/tests.sh:3047` (Test 39), `:3083` (how A2 measures); `starter-kit/methodology_trim.py:1093` (`build_pointer_block`), `:1103` (`insert_pointer`); `docs/planning/BACKLOG-DETAIL.md:1837` (BL-59)
+gotchas: A search for the fence must be anchored to line start -- an unanchored `find('```handoff')` matches the inline code span at `HANDOFFS.md:14` and reports 1,034 B. Anything that reads the archive table or the front matter by text (tests, the trimmer's pointer insertion, `bin/check-links`) must be found before the table moves.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-16 · [BL-59] S174 claim"
+commit: pending
+```
+
+```handoff
 session: S173
 date: 2026-09-16
 status: complete
