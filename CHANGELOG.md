@@ -210,6 +210,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S170 — the comment on upstream PR #82 drafted (not posted)
+
+**Deliverable, drafted:** `docs/planning/pr82-comment.md` — one comment on upstream PR #82 carrying ten
+suggested changes, ranked: two on file budgets measured in bytes where tokens is the operative unit, three
+on what the quality ratchet does not hold, four smaller ones, and one on the readability of the PR
+description. **Nothing posted** — the post is its own operator go-ahead, and the text is presented in full
+first. **Every claim re-verified this session before drafting, none relayed:** #82 unmoved at head
+`c84e7d96` with 0 comments and 0 reviews; `docs/planning/pr82-review-repro.sh` re-run end to end, all seven
+sections matching what S169 recorded; all six token figures re-measured, both controls (48,555 and 36,955)
+reproducing exactly; `quality_ratchet.py --run` re-run in a **verified** `--no-local` clone at `c84e7d96`
+(HEAD sha asserted before use) giving **9/9 pass, results `74c773523dab`** — the receipt's own hash,
+reproduced firsthand — plus `--selftest` 17 OK, `bin/tests.sh` `== Summary: 134 passed, 1 failed ==` read
+directly, and `context_budget.py --status` exit 0. **Two findings sharpened against the review:** the
+runner's density 2.8248 was measured correctly in `008d656` and went stale two commits later (`628d218`
+53,301 B, `b4226d3` 53,328 B), which is the fair framing and is what the comment says; and Phase 0 is
+byte-unchanged by the PR (its runner diff touches only lines 220+, 271+, 316+, 359+), so the description's
+"Phase 0 compares the cited counts" has nothing behind it. **One would-be finding dropped:** an
+archive-and-`git init` tree measured 131 passed, not 134 — an artifact of the reproduction method, not a
+defect, and it did not reach the draft. Terminology audited against the operator's bar: no session
+numbers, no backlog or finding codes, no coined names; the PR's own decision codes appear only where the
+comment quotes them as examples of what a reader cannot resolve.
+
 ### 2026-09-15 · [ad hoc] S170 claim — a comment on upstream PR #82 with suggested changes
 
 **Phase 1B claim stub. `CHANGELOG: pending` until this session's close-out.** Deliverable: one comment on
