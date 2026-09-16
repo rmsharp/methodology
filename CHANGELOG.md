@@ -389,6 +389,38 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-16 · [BL-57] §The Action Ledger states when an entry is written and where it goes: one per commit, never edited, under the topmost month
+
+- **Change:** `FRAMEWORK_APPARATUS.md` §The Action Ledger replaces its closing paragraph — *"Work
+  committed but not finished … Promote to `## YYYY-MM` sections as the list grows"* — with two rules,
+  and its opening sentence stops saying entries are written *"At close-out"*, which a claim commit's
+  entry contradicts. Each rule, as it now reads on this commit:
+  - `:439` — *"**Lifecycle — one entry per commit, never edited.** The commit is the unit the ledger
+    co-staging hook checks, so each commit carries its own entry, and each non-commit action gets one
+    of its own."*
+  - `:442` — *"A claim commit carries an *(in progress)* entry, and close-out adds its own entry rather
+    than rewriting the claim's."* Work committed but unfinished is marked the same way.
+  - `:446` — *"A committed entry is never edited. A correction is a new entry that names what was
+    wrong. The one exception is removing content that must not be published … and that removal is
+    recorded by an entry of its own."*
+  - `:449` — *"A Phase 0 backfill is the one entry that may span several commits."*
+  - `:451` — *"The Phase 1B `CHANGELOG: pending` marker lives in `SESSION_NOTES.md`. A project that
+    keeps no `SESSION_NOTES.md` relies on its `status: pending` `HANDOFFS.md` receipt instead."*
+  - `:454` — *"**Placement — prepend under the topmost `## YYYY-MM`.** … When the month changes, open
+    the new month's heading above the last one: group by month, not by release. A ledger that has no
+    month headings starts them at its next new month, and nothing already written is retrofitted.
+    Entries stay at `###`, the level the tools key on."* — `_DATED_ENTRY_RE`
+    (`starter-kit/methodology_dashboard.py:211`) and the trimmer's `record_start`
+    (`starter-kit/methodology_trim.py:307`) both anchor on `^###`.
+- **Also:** `HOW_TO_USE.md:748` gives the apparatus as *"~535 lines"* — 534 after this change; it said
+  515, which P2 had already made stale at 501.
+- **Why:** BL-57 C7, C8 and C13, as the operator decided at Q4 A (one entry per commit, never edited).
+  The rules had one sentence on a claim's entry (*"mark it `(in progress)`"*) and none on editing,
+  and the month rule said *"promote … as the list grows"*, which names no point at which to start —
+  this ledger holds 65 entries and no month heading.
+- **Placed** above the previous `[BL-57]` entry, below `upstream/main`'s block, after the merge `52ad407`.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-16 · [BL-57] Correction: §The Action Ledger attributed a measurement to a ledger that does not record it
 
 - **What was wrong:** the entry above, and the text it describes, said the unanchored audit *"returned

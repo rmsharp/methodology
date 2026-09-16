@@ -346,8 +346,8 @@ your `CHANGELOG.md`.
 
 ### How to add an entry
 
-At close-out, prepend one entry per action, **newest on top**. Key on a mechanical fact, not
-judgment: *did this session author or retain any commit, or take any non-commit action?* If
+Prepend one entry per action, **newest on top** — when and where are *Lifecycle* and *Placement*,
+below. Key on a mechanical fact, not judgment: *did this session author or retain any commit, or take any non-commit action?* If
 yes, an entry is owed — "too small to log" or "I'll batch it next time" **is** failure mode
 #27, not an exception. The only exemption is a session whose diff is empty and that took no
 action at all.
@@ -436,10 +436,25 @@ back alongside `HANDOFFS.md`'s free-text mentions and git's `Co-Authored-By` tra
 three visually separate — see that tool's own docstring for why trailers are corroboration-only,
 never authoritative.
 
-Work committed but not finished — an in-progress hand-off, a reverted slice — still owes an
-entry: mark it `(in progress)` in the summary, and a later session closes it out or records
-the revert as its own entry. Reverse-chronological, prepend-only, so close-out never re-sorts.
-Promote to `## YYYY-MM` sections as the list grows — group by month, **not** by release.
+**Lifecycle — one entry per commit, never edited.** The commit is the unit the ledger co-staging
+hook checks, so each commit carries its own entry, and each non-commit action gets one of its own.
+
+- **A claim commit carries an *(in progress)* entry**, and close-out adds its own entry rather than
+  rewriting the claim's. Work committed but not finished — an in-progress hand-off, a reverted
+  slice — is marked `(in progress)` the same way, and a later session closes it out or records the
+  revert as its own entry.
+- **A committed entry is never edited.** A correction is a new entry that names what was wrong. The
+  one exception is removing content that must not be published — a credential, personal data — and
+  that removal is recorded by an entry of its own.
+- **A Phase 0 backfill is the one entry that may span several commits**: it records history that no
+  close-out reached.
+- **The Phase 1B `CHANGELOG: pending` marker lives in `SESSION_NOTES.md`.** A project that keeps no
+  `SESSION_NOTES.md` relies on its `status: pending` `HANDOFFS.md` receipt instead.
+
+**Placement — prepend under the topmost `## YYYY-MM`.** Reverse-chronological and prepend-only, so
+close-out never re-sorts. When the month changes, open the new month's heading above the last one:
+group by month, **not** by release. A ledger that has no month headings starts them at its next new
+month, and nothing already written is retrofitted. Entries stay at `###`, the level the tools key on.
 
 ### Reading and archiving
 
