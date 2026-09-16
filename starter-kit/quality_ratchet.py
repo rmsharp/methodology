@@ -241,10 +241,11 @@ def precommit(root):
         print(f"{D}quality-ratchet: first manifest commit ({len(new_cfg['gates'])} gate(s)) — "
               f"nothing to compare against{R}")
         return CLEAN
-    head = head_sha(root)
-    if sha != head:
-        print(f"{D}quality-ratchet: comparing against {sha}, the newest parseable committed "
-              f"manifest (HEAD {head} has none, or one that does not parse){R}")
+    head_copy = blob_text(root, f"HEAD:{CONFIG_NAME}")
+    head_cfg = load_manifest_text(head_copy, "HEAD")[0] if head_copy is not None else None
+    if head_copy is None or not gate_map(head_cfg or {}):
+        print(f"{D}quality-ratchet: comparing against {sha}, the newest committed manifest that "
+              f"declares a gate (HEAD's copy is absent, unparseable, or empty){R}")
     refusals, warnings = compare(old_cfg, new_cfg)
     for m in warnings:
         print(f"{YEL}quality-ratchet: warning — {m}{R}")

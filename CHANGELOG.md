@@ -55,6 +55,9 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   first, 2 controls), selftest 17 → 22, `bin/tests.sh` +4 through real git (one RED on the old tool: the
   lockout) — and the pre-existing `git checkout -- manifest` in that block restored the worktree from a
   still-staged refused edit; now `checkout HEAD --`.
+- **F1b** — the F1 base note fired on every ordinary commit ("HEAD has none") because `git log -- manifest`
+  names the newest commit that *touched* the file, not HEAD; seen in the F1 checkpoint's own hook output.
+  The note now prints only when HEAD's copy is absent, unparseable, or empty. Unit 43 → 44 (RED first).
 
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 

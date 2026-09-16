@@ -249,6 +249,17 @@ class TestPrecommitThroughGit(unittest.TestCase):
         self._stage(manifest(gate("cov", "min", 90)))
         self.assertEqual(self._precommit()[0], qr.CLEAN)
 
+    def test_no_base_note_when_head_holds_the_base(self):
+        # An unrelated commit after the manifest's last change: HEAD still holds the base, and
+        # `git log -- manifest` naming an older commit is not "HEAD has none".
+        open(os.path.join(self.d, "unrelated.txt"), "w").write("x\n")
+        subprocess.run(["git", "-C", self.d, "add", "unrelated.txt"], check=True)
+        subprocess.run(["git", "-C", self.d, "commit", "-q", "-m", "unrelated"], check=True)
+        self._stage(manifest(gate("cov", "min", 90)))
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.CLEAN)
+        self.assertNotIn("comparing against", out)
+
     def test_the_index_not_the_worktree_is_what_is_ratcheted(self):
         # Stage a tightening, then loosen only the worktree copy: the commit is the index.
         self._stage(manifest(gate("cov", "min", 90)))
