@@ -77,6 +77,22 @@ instruction is why these rows exist.
      is DISTRIBUTED, so teaching it this is an upstream change. -->
 
 ```handoff
+session: S172
+date: 2026-09-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57's P3 -- SOURCE TAGS AND THE AUDIT (C6, C10) -- ON BRANCH `bl57/changelog-rules`** (`docs/planning/changelog-rules-contradictions-plan.md:490`; worktree `../methodology-bl57` at `775ba238`). `[BL-<N>]` becomes `[BL-<id>]` and the audit becomes the shard-reading form, in `FRAMEWORK_APPARATUS.md` the Action Ledger section, `starter-kit/SESSION_RUNNER.md` (`:39`, `:278`, `:329`), `ITERATIVE_METHODOLOGY.md:294` and `.githooks/pre-commit:57`. **Upstream PR #82 is still OPEN at `c84e7d96`, re-checked at Phase 0, so S169's merge-first amendment does NOT trigger** -- P3 starts on the branch as it stands. **Two carried items ride with P3:** P2's finding that the `HANDOFFS.md` seed still publishes a bare glob zsh refuses where no shard exists (C10's class, assigned to P3), and S169's amendment that P3's runner criterion (`:508`) and P4's (`:538`) are written in BYTES and must be restated in TOKENS -- that measurement is not yet taken, so it comes first.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:490` (P3), `:508` (the byte criterion to restate), `:514` (P4), `:538` (its byte criterion), `:191` (the target state), `:755` (the conformance commands), `:345` (the adopter figures); on the branch: `FRAMEWORK_APPARATUS.md` the Action Ledger section, `starter-kit/SESSION_RUNNER.md:39`, `:278`, `:329`, `ITERATIVE_METHODOLOGY.md:294`, `.githooks/pre-commit:57`, `starter-kit/HANDOFFS.md` (the bare glob).
+gotchas: The token instrument is the Read tool's refusal -- double the file, Read it with a spanning `limit`, halve the count, and reproduce a recorded figure BEFORE using a new one. A byte pin is not a token pin: S169 measured a change that was -15 B and +62 tokens. zsh: brace `${r}:path`; an unmatched glob aborts the command so a count reads 0; write scripts to a file rather than chaining heredocs. The branch carries upstream's `.githooks/commit-msg`, which refuses a commit with no `Co-Authored-By` trailer. `grep -c` exits 1 on ZERO matches.
+runtime_smoke: Phase 0 at `716506c`: both ledger frontiers reconciled (`CHANGELOG.md` frontier == HEAD, 0 undocumented commits; `HANDOFFS.md` frontier `1232dc6` with `716506c` after it, already in the ledger at `CHANGELOG.md:217`), no ghost session, newest receipt `status: complete`. Dashboard 76/100, risk medium (back from S171's mid-trim high), 947 commits, 0 vulns. `context_budget.py --status` exits 2 -- runner ~19,415 tokens against an 18,222-token ceiling, read-set total 69,749 B against 56,750 B, pre-existing and by design; captured as this session's baseline for diffing. Upstream PR #82 OPEN, head unmoved at `c84e7d96`, zero open upstream issues; the S170 comment `5691623656` re-fetched, unedited, and still sha256-identical (`62821afb...`) to `docs/planning/pr82-comment.md`. Suites not re-run at Phase 0.
+changelog_ref: CHANGELOG.md "2026-09-16 - [BL-57] S172 claim -- BL-57's P3: source tags and the audit, on the branch"
+commit: pending
+```
+
+```handoff
 session: S171
 date: 2026-09-16
 status: complete

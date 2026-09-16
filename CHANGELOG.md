@@ -214,6 +214,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S172 claim — BL-57's P3: source tags and the audit, on the branch
+
+**Deliverable:** BL-57's **P3** (`docs/planning/changelog-rules-contradictions-plan.md:490`) on branch
+`bl57/changelog-rules` (worktree `../methodology-bl57`, at `775ba238`): `[BL-<N>]` becomes `[BL-<id>]`,
+and the source-tag audit becomes the shard-reading form that gives the same count in zsh and bash — in
+`FRAMEWORK_APPARATUS.md` §The Action Ledger, `starter-kit/SESSION_RUNNER.md` (`:39`, `:278`, `:329`),
+`ITERATIVE_METHODOLOGY.md:294` and `.githooks/pre-commit:57`.
+
+- **Upstream PR #82 is still OPEN at `c84e7d96`**, re-checked at Phase 0 rather than assumed, so S169's
+  merge-first amendment does **not** trigger: P3 starts on the branch as it stands.
+- **Two carried items ride with P3.** P2 found that the `HANDOFFS.md` seed still publishes a bare glob
+  zsh refuses where no shard exists — C10's class, outside P2's lines, assigned to P3. And S169's
+  amendment holds: P3's runner criterion (`:508`) and P4's (`:538`) are written in **bytes** and must be
+  restated in **tokens**. That measurement has not been taken, so it comes first.
+- **Riding with this claim:** the Phase 0 `dashboard_history.jsonl` and `.context-budget-history.jsonl`
+  snapshots, both appended by mandatory Phase 0 instrument runs. They are recorded here and committed
+  with this entry rather than left for a later `--no-verify` — S171's finding, applied at the one point
+  in the session where it costs nothing.
+
+**Ledger:** `CHANGELOG: pending` — the crash breadcrumb until Phase 3F.
+
 ### 2026-09-16 · [ad hoc] S171 follow-up — the append-only `.context-budget-history.jsonl`, dirtied by Phase 3E
 
 A bare `context_budget.py --status` appends to its own run history, so Phase 3E left the file modified
