@@ -214,6 +214,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S175 — the fork resync planned: four merge stages over two sessions, four decisions for the operator
+
+- **Deliverable:** [`docs/planning/upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md),
+  a DRAFT for ratification. It merges `upstream/main` `6b29d3d` into fork `main` in four stages cut where
+  upstream's commits introduce the conflicts (`0fd003a`, `cca7941`, `64f23bf`, `6b29d3d`: 4, 4, 5 and 0
+  newly conflicting files). Each of the 13 conflicting files gets a resolution and a verification, and the
+  execution runs in R1 (stage 1) and R2 (stages 2–4).
+- **Decisions put to the operator:** D1, the fork's Learnings #15–#66 now that upstream has its own #15
+  and #16 (BL-53; recommended: the distributed file becomes upstream's, the fork's 52 rows move verbatim
+  to a fork-only file); D2, adopting upstream's quality ratchet and tightening it to the fork's measured
+  values; D3, the dashboard's version across two numbering lines (2.18.0 recommended); D4, the session
+  split.
+- **Measured, not predicted:** a trial of D1's recommendation, merging stage 1 in a throwaway clone:
+  297 passed / 3 failed / 6 skipped against 300 / 0 / 6, exactly three flips. Two are D1's cost (a
+  dashboard test pinned to Learning #26; Test 37's helper numbering a row with the reserved #14). **One
+  is not D1's:** the `commit-msg` hook stage 1 brings refuses Test 27.N1b's trailer-less fixture commit
+  under an agent harness, whatever D1 decides. Also measured: upstream's 11 receipts pass the fork's
+  `check-handoff` (`--all`, `--archived`), and the merge takes `CHANGELOG.md` to ~206,596 B, over the
+  trimmer's 196,608 B trigger.
+- **Reviewed:** a read-only claims review by an independent subagent checked ~150 claims and found 15
+  wrong in the draft. The author re-ran each one and corrected them before this commit: the stage 2 and 3
+  re-conflicts, where upstream's #15 and S20 arrive, two DONE criteria that could not pass as written,
+  and several counts and citations.
+- **Session:** S175 · **Model:** Claude Opus 5 (claude-opus-5) · Nothing outward.
+
+### 2026-09-16 · [BL-57] S175 — the operator re-scopes the session: plan the resync first, merge in later sessions (picker)
+
+- **Decision, taken by picker during S175:** *"Write the merge plan"*, chosen over merging in this
+  session or merging stage 1 only. The claim entry below named the merge itself as the deliverable;
+  the deliverable is now the plan, and the merge runs in the sessions it defines.
+- **Why it was put to the operator:** `git merge-tree` on `main` against `upstream/main` gave about two
+  dozen conflict hunks in 13 files, only 4 of them insertions on both sides. Several resolutions are the
+  operator's to decide: the Learning #15/#16 numbering collision (BL-53), adopting upstream's quality
+  ratchet, and the dashboard's two numbering lines. And the previous resync, `213f841`, carried out a
+  plan ratified first (`docs/planning/upstream-read-set-budgets-merge-plan.md`).
+- **Recorded in:** this entry and S175's receipt. Nothing outward.
+
 ### 2026-09-16 · [ad hoc] S175 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **Change:** the 3-line pointer block `methodology_trim.py` wrote for
