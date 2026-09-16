@@ -222,6 +222,22 @@ Moved the oldest **6** record(s) (2026-09-15 → 2026-09-16) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh)
 rather than trusting a digest printed here. Live file 75,185 B → 20,820 B (−72.3%).
 
+### 2026-09-16 · [ad hoc] S172 follow-up — the receipt's `NOT EXERCISED` list still named the retention trim
+
+- **What was wrong:** S172's `runtime_smoke` listed *"the `HANDOFFS.md` retention trim"* among the
+  things the session did not exercise. True when written; false from `1ec509d` onward, and this is
+  the one receipt the next session reads in full.
+- **Change:** the trim moves out of that list into an `EXERCISED AFTER CLOSE-OUT, NOT AT IT` clause
+  naming its commit. The distinction is kept rather than erased: the trim was operator-directed
+  follow-up, not part of the close-out the receipt attests to.
+- **This is the third stale claim this session's own receipt has needed correcting** — the unpushed
+  commit count, `next_steps` item (2), and now this. All three share a shape: a receipt states the
+  world as of close-out, and work continued afterwards. The first was fixed by naming a command
+  instead of a number; these two could not be, because they are statements about what happened.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** `bin/check-handoff --all` exit 0 (1 receipt).
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [BL-59] S172 — `HANDOFFS.md`'s token density re-measured after the trim; the budget row goes green
 
 - **Change:** `.context-budget.json`'s `HANDOFFS.md` entry moves from `bytes_per_token` **2.3648**
