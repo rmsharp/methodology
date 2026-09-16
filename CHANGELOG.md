@@ -214,6 +214,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S173 follow-up — the operator's two decisions, and the branch pushed to `origin` (non-commit actions)
+
+- **Decisions, taken by picker after the close-out:** (1) P5 starts from a **resync of fork `main` with
+  `upstream/main`**, then ports BL-57's own change from `64f23bf`, not the plan's `b82dcff` form.
+  (2) **S174 does the `HANDOFFS.md` header cut** first, because the trim S175's Phase 0 calls needs
+  it. Recorded in the plan (finding (9), `docs/planning/changelog-rules-contradictions-plan.md:129`),
+  BL-57's backlog row, and the S173 receipt's `next_steps`, which is rewritten around them.
+- **Action:** `git push origin bl57/changelog-rules`, `775ba23..83a12f0` — a fast-forward, run behind a
+  guard that confirmed the remote still read `775ba238` and was an ancestor. Read back with
+  `git ls-remote`: `83a12f0380b7d23c9a2e339a38fffc49314c7ad2`. P3, P4 and both upstream merges are now
+  backed up; fork only, nothing sent upstream.
+- **Also:** the operator asked that requests for input come as a picker, to reduce typing. That is a
+  change in how I ask, recorded in agent memory; no repository file changed for it.
+
 ### 2026-09-16 · [BL-57] S173 close-out — BL-57's P4 done on the branch, not pushed; P5 opens with an operator decision about its base
 
 - **Change (branch `bl57/changelog-rules`, `83a12f0`, not pushed):** P4's four commits after the merge

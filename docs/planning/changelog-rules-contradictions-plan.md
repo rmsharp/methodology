@@ -1,8 +1,8 @@
 # BL-57 — one set of `CHANGELOG.md` rules, kept in one place
 
 **Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
-S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-rules` (S167, S168, S172, S173; P1 and P2
-backed up to `origin`, P3 and P4 not pushed anywhere); P5–P12 are not. **Read the S173 block before P5: its
+S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-rules` (S167, S168, S172, S173; all four
+backed up to `origin` at `83a12f0`); P5–P12 are not. **Read the S173 block before P5: its
 port command, as written, would now carry #80's and #82's upstream changes too.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
@@ -133,6 +133,9 @@ same exclusions, is **16 files, +532/−252**. Fork `main` is **53 commits behin
 `git merge-tree` of the two conflicts in 12 files. So P5 starts with a choice that is the operator's: port
 from `64f23bf` (BL-57 only, onto a `main` that lacks #82), or resync fork `main` with `upstream/main` first
 (its own go-ahead) and then port. P5's *"494"* audit figure is also stale: the audit read 556 at S172.
+**DECIDED by the operator after S173's close-out (picker, 2026-09-16): resync fork `main` with
+`upstream/main` first, then port BL-57's own change from `64f23bf`** — and S174 takes the `HANDOFFS.md`
+header cut before either, because the trim S175's Phase 0 calls needs it.
 (10) **For P12: the branch's `.context-budget.json` density notes name blobs the branch no longer has.**
 Upstream's own rule is to re-measure when `HEAD:starter-kit/SESSION_RUNNER.md` stops reading `2a3e410d`
 (it now reads `4811f02f`) and `CLAUDE.md` stops reading `1244e95b`. The PR re-measures both on its final
