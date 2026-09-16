@@ -214,6 +214,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S172 — BL-57's P3 done on branch `bl57/changelog-rules` (3 commits, not pushed); the plan amended and its size rule restated in tokens
+
+- **Change:** P3 ran on the branch as it stood — upstream PR #82 was re-checked at Phase 0 and is
+  still OPEN at `c84e7d96`, so S169's merge-first amendment did not trigger. Branch commits:
+  `d771439` rewrites `FRAMEWORK_APPARATUS.md` §The Action Ledger's source-tag vocabulary to
+  `[BL-<id>]` and replaces the one-line audit with the anchored, shard-reading, `git ls-files` form;
+  `e47ca14` drops the runner's inline audit grep at `:39` for a link to that section and moves
+  `:278`, `:329`, `ITERATIVE_METHODOLOGY.md:294` and `.githooks/pre-commit:57` to `[BL-<id>]`;
+  `cf20a3b` replaces the `HANDOFFS.md` seed's bare glob with `git ls-files` — the bullet P2 left to
+  P3. On fork `main`: this entry, the plan's S172 amendment and BL-57's backlog row.
+- **S169's amendment is discharged.** P3's and P4's runner criteria were written in bytes; both are
+  now in tokens at `docs/planning/changelog-rules-contradictions-plan.md`. **The measurement came
+  first and its instrument was checked first:** both published controls reproduced exactly — the
+  runner doubled to **36,955** (18,477.5 tokens) and the Phase 0 pair to **48,555** (24,277.5), the
+  figures S169 recorded, on the same blob `c0550acd` that is both P3's start and `b82dcff`'s file.
+- **The two units disagreed, which is the point.** The link plus the id changes measured **+36 B but
+  only +9 tokens** — a path runs near 4 B/token where the runner averages 2.8248. Two duplicate
+  clauses on the same step then came out (the step already showed `[ad hoc]` in its own template;
+  the note's closing paragraph already forbids the backfill becoming the deliverable), leaving the
+  runner at **52,163 B / 18,463.5 tokens — 32 B and 14 tokens under where P3 started**, and the pair
+  at 24,263.5 of the 25,000-token read cap.
+- **Every DONE criterion was run, not predicted.** `grep -F '[BL-<N>]'` over the runner, the flight
+  manual, `HOW_TO_USE.md`, the hook, §The Action Ledger and both seeds exits 1 (no matches). The
+  audit returns the same number in zsh and bash on the branch (57, equal to its heading count), on
+  this repo (556) and on all six adopters. In a throwaway repository with one entry and no shard the
+  **bare glob makes the two shells disagree — zsh prints 0, bash prints 1** — while the `git ls-files`
+  form prints 1 and exits 0 in both; that is the failure the fix removes, and it is a wrong number
+  rather than a visible error.
+- **Two §4.4 figures moved and both are explained.** Four of six adopters reproduce exactly;
+  `airqino` 1→2 and `mts-system` 96→262 each gained one entry dated 2026-09-15. This repo reads 556
+  against §4.4's 494 — and **494 is exactly the count of entries dated on or before 2026-09-14**, its
+  measurement date, so S171's 12th shard moved nothing out of the audit's reach. Widening
+  `BL-[0-9]+` to `BL-[^]]+` recovers **362 logged actions** across three adopters.
+- **Commit/PR:** this commit (fork `main`); branch `d771439` + `e47ca14` + `cf20a3b`
+- **Session:** S172 · **Verified:** in a `--no-local` clone whose HEAD sha was asserted equal to the
+  worktree's (`cf20a3b` both sides), `bin/tests.sh` **118 passed / 0 failed**, `bin/check-links` 0
+  (**108** links, 23 files — 107 at `775ba23`, the one link P3 added), `context_budget.py --status` 0.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [BL-57] S172 claim — BL-57's P3: source tags and the audit, on the branch
 
 **Deliverable:** BL-57's **P3** (`docs/planning/changelog-rules-contradictions-plan.md:490`) on branch

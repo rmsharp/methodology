@@ -1,8 +1,8 @@
 # BL-57 — one set of `CHANGELOG.md` rules, kept in one place
 
 **Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
-S167 and S168 (see **Trees**). **P1 and P2 are done** on branch `bl57/changelog-rules` (S167, S168; backed
-up to `origin`, not upstream); P3–P12 are not.
+S167 and S168 (see **Trees**). **P1, P2 and P3 are done** on branch `bl57/changelog-rules` (S167, S168, S172; P1 and P2 backed
+up to `origin`, P3 not pushed anywhere); P4–P12 are not.
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -48,6 +48,37 @@ branch's ledger, then BL-57's, then #80's; a new branch entry goes above BL-57's
 trailer, a merge commit included. (4) `HOW_TO_USE.md:748` gives the apparatus as *"~515 lines"*; it is
 501 after P2. P4 edits that file and re-measures. (5) §9.1 still reproduces 1,577 lines on `b82dcff`; the
 branch reads 1,616 after the merge and 1,611 after P2.
+
+**Amended at S172 (2026-09-16):** P3 ran on the branch as it stood — upstream PR #82 was re-checked at
+Phase 0 and is still OPEN at `c84e7d96`, so S169's merge-first amendment did not trigger. Commits
+`d771439` (the home), `e47ca14` (the runner, the flight manual, the hook) and `cf20a3b` (the
+`HANDOFFS.md` seed's bare glob, carried from P2), not pushed. **S169's amendment is discharged above:**
+P3's and P4's runner criteria are now in tokens, against a measurement taken this session in which both
+published controls reproduced exactly (the runner doubled to 36,955, the pair to 48,555). What P3 found,
+for P4–P5:
+(1) **The two units disagree about a cross-reference.** Replacing the runner's inline audit grep with a
+link, plus the two id changes, measured **+36 B but only +9 tokens** — about 4 B/token for a path against
+the file's 2.8248 average. Cutting two duplicate clauses on the same step then took the file to
+**52,163 B / 18,463.5 tokens**, under its start in both units. A byte rule overstates what a
+cross-reference costs and understates what cut prose saves.
+(2) **§4.4's adopter figures re-derived: four of six reproduce exactly** (`model_project_constructor`
+0→0, `nprcgenekeepr` 599→784, `vscode_quarto_ext` 236→247, `wsfct` 130→130). Two moved by exactly +1,
+each explained by one entry dated 2026-09-15: `airqino` 1→2 and `mts-system` 96→262. The widened id
+pattern recovers **362 logged actions** across three adopters that `BL-[0-9]+` could not see; one of them
+tags with `BL-OPS-ADMIN-PW-RECOVERY-001`, which is the case Q3 A exists for.
+(3) **This repo's audit reads 556, not §4.4's 494 — and 494 is exactly the count of entries dated on or
+before 2026-09-14**, §4.4's measurement date. The difference is 55 entries logged on 2026-09-15 and 7 on
+2026-09-16. S171's trim wrote a 12th shard and moved no entry out of the audit's reach, because the audit
+sums the live file and its shards: conservation holds, measured rather than assumed.
+(4) **P4 inherits a vocabulary item its scope does not name.** The last live `[BL-<N>]` outside frozen
+history is in the branch's root `CHANGELOG.md` front matter, in its own tag-definition list — upstream's
+front matter has grown past `b82dcff`, where P4 step 5's `:14` was the inline audit grep, not a
+definition list. Treat the tag definitions there as their own item.
+(5) **`python3 starter-kit/context_budget.py --status` leaves an untracked `.context-budget-history.jsonl`
+in an upstream tree** — upstream neither tracks nor ignores it, where fork `main` tracks it. Delete it
+after measuring, or the next Phase 0 finds a dirty worktree.
+(6) `bin/check-links` moved 107 → 108, the one link P3 added; `bin/tests.sh` is 118 passed / 0 failed
+before and after, in a clone whose HEAD sha was asserted equal to the worktree's.
 
 ---
 
@@ -505,7 +536,13 @@ later sessions; or the 256 KiB refusal itself, which no test here can exercise (
   - on this repo's 11 shards it gives 494;
   - on each adopter copy it gives the §4.4 figures. A changed figure is a finding: explain it before
     closing.
-- `wc -c starter-kit/SESSION_RUNNER.md` is no larger than at P3's start.
+- **`starter-kit/SESSION_RUNNER.md` is no larger in TOKENS than at P3's start — 18,477.5 tokens**,
+  measured on blob `c0550acd` (52,195 B). The instrument is the Read tool's refusal: concatenate the
+  file with itself, Read the doubled file with a spanning `limit`, and halve the count the refusal
+  prints — so the check is **doubled read ≤ 36,955**. Reproduce a recorded figure before trusting a
+  new one; on the same tree the Phase 0 pair doubles to 48,555 (24,277.5 tokens). Bytes are a proxy,
+  not the rule: the file's own ceiling (`.context-budget.json`, `max_tokens` 19,200) and the 25,000
+  read cap are both written in tokens, and a byte count misprices an edit that trades prose for a path.
 - Suites are green.
 
 **Surface.** As P1. **Cannot enforce:** that adopters' future entries use `[BL-<id>]`.
@@ -535,9 +572,12 @@ At least three commits.
   (`README.md`'s *What's New*). List what remains, and why.
 - §The Action Ledger states every rule in §3.1 items 4 and 5. The ledger entry quotes each with its line
   number, as in P2.
-- **`starter-kit/SESSION_RUNNER.md` is no larger than at `b82dcff` (52,195 B), `starter-kit/SAFEGUARDS.md`
-  is unchanged,** and the read-set total `python3 starter-kit/context_budget.py` reports is no larger than
-  at the baseline (§9.7).
+- **`starter-kit/SESSION_RUNNER.md` is no larger in TOKENS than at `b82dcff` — 18,477.5 tokens,
+  doubled read ≤ 36,955** (`b82dcff:starter-kit/SESSION_RUNNER.md` is blob `c0550acd`, the same blob
+  P3 started from, so one measurement serves both criteria), **`starter-kit/SAFEGUARDS.md` is
+  unchanged** (≈5,800.8 tokens measured, ×6 → 34,805; 5,800.0 derived from the pair), and the read-set
+  total `python3 starter-kit/context_budget.py` reports is no larger than at the baseline (§9.7).
+  **P3 left 18,463.5 tokens (52,163 B), so P4 starts 14 tokens under `b82dcff`'s figure.**
 - Suites and `bin/check-links` are green.
 
 **Surface.** As P1, plus `context_budget.py` on the branch tree. **Cannot enforce:** that the
