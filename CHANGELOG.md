@@ -48,7 +48,8 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   procedure; the stale-density finding applies to `SAFEGUARDS.md` too; the proposed `context-budget` gate
   writes an un-ignored history file. Two items the review did not raise: merge/rebase commits skip the
   ratchet; an unparseable HEAD manifest is the delete/re-add hole with one `--no-verify`. Fixes are the
-  next session's work, in the corrected order. Session S21; comment URL completed at close-out.
+  next session's work, in the corrected order. Session S21: claim `07d166e` + the close-out commit.
+  Comment: <https://github.com/KJ5HST/methodology/pull/82#issuecomment-5701463025> (read back via the API).
 
 ### 2026-09-15 · [ad hoc] Merged PR #80 — the read-set budgets series (#76–#79)
 
