@@ -210,6 +210,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S171 — `c01854f` recorded before the trim advances the ledger frontier
+
+A `chore(history)` commit for the two append-only `.jsonl` run series that Phase 0's dashboard and
+`context_budget.py` runs appended to. It was committed `--no-verify` and so carried no ledger line of
+its own, which past sessions have discharged by naming such commits in the close-out entry instead.
+**That is not available here:** `methodology_trim.py`'s `P1_UNDOCUMENTED` guard refused the trim while
+it stood unrecorded, and the refusal is right — a trim commit advances `git log -1 -- CHANGELOG.md`,
+so `<frontier>..HEAD` would never contain `c01854f` again and Phase 0 reconcile could not recover it.
+Recorded here, before the trim, rather than at close-out after it.
+
 ### 2026-09-16 · [ad hoc] S171 claim — trim `CHANGELOG.md` back under the hard read refusal, on operator go-ahead
 
 **Deliverable:** one trim of this file, authorized by the operator at Phase 1 after the benefit and the
