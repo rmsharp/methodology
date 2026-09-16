@@ -28,14 +28,12 @@ fork's. At a resync the two sequences stay separate and unrenumbered, each incom
 checked against ours before it is kept, and within a shared date the fork's precede the arriving
 upstream ones (precedent: `fc4d297`).
 
-> **The count above drifts between trims.** `methodology_trim.py` declares it a regenerated field
-> (`starter-kit/methodology_trim.py`, the `HANDOFFS.md` `LedgerSpec`), so a **trim** rewrites it and
-> the proof's L2 clause excuses that one span — but nothing updates it when a session **prepends** a
-> receipt, which is most sessions. So it is right immediately after a trim and wrong from the next
-> close-out onward. That is
-> [Learning #12](starter-kit/FRAMEWORK_LEARNINGS.md) pointed at this file, and it is the receipt-ledger
-> half of upstream [issue #65](https://github.com/KJ5HST/methodology/issues/65). Recount before
-> trusting it.
+> **THE HAND-MAINTAINED RECEIPT COUNT IS GONE, DELIBERATELY.** S172's rewrite dropped *"This file
+> currently holds **N**"* — the number [Learning #12](starter-kit/FRAMEWORK_LEARNINGS.md) and upstream
+> [issue #65](https://github.com/KJ5HST/methodology/issues/65) both cite as always wrong by the next
+> close-out. The trimmer still declares it, so **every trim now reports `FRONTMATTER_FIELD_ABSENT`**:
+> stated, expected, not a failure. Removing the declaration is distributed — its own go-ahead (BL-60).
+> **Count with `grep -c '^```handoff' HANDOFFS.md`.**
 
 > **⚠ THREE is the floor the retention policy sits one above.** `bin/tests.sh` Test 34 mutates *this*
 > ledger to check `check-handoff --all`'s whole-ledger invariants, reading two anchors from the live

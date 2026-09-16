@@ -222,6 +222,38 @@ Moved the oldest **6** record(s) (2026-09-15 → 2026-09-16) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16.md.verify.sh)
 rather than trusting a digest printed here. Live file 75,185 B → 20,820 B (−72.3%).
 
+### 2026-09-16 · [ad hoc] S172 follow-up — a defect the policy rewrite introduced: the trimmer's regenerated field no longer exists
+
+- **What was wrong, and it was mine.** `methodology_trim.py`'s `HANDOFFS.md` `LedgerSpec` declares one
+  regenerated front-matter field, matched by the literal `This file currently holds **<N>**`
+  (`starter-kit/methodology_trim.py:336`). **S172's policy rewrite deleted that sentence**, so the
+  declaration now matches nothing. Found by reading the spec while answering a question about
+  something else — no gate reports it, because `--check` never writes and so never evaluates the
+  regenerated fields.
+- **The consequence, read from the code rather than guessed:** `apply_regenerated` emits
+  **`FRONTMATTER_FIELD_ABSENT`** and continues (`:1131`). Not a crash, not a silent skip — a stated
+  diagnostic on every future trim. The same rewrite also left the blockquote below it dangling: it
+  opened *"The count above drifts between trims"* with no count above.
+- **Disposition: keep the deletion, state it.** The number is the one
+  [Learning #12](starter-kit/FRAMEWORK_LEARNINGS.md) and upstream
+  [issue #65](https://github.com/KJ5HST/methodology/issues/65) both cite as *always wrong by the next
+  close-out*; restoring it would restore a documented defect to buy a quieter tool. The dangling
+  blockquote is replaced by one that says the field is gone on purpose and that the trim notice is
+  expected. **The real fix — dropping the declaration from the spec — is a change to a tool every
+  adopter holds, so it is distributed and its own go-ahead.**
+- **A side effect that changes a scheduling fact:** the replacement is 645 B out for 505 B in, so the
+  front matter drops **7,107 → 7,028 B** and the header reserve goes from ~60 B of room to **140 B —
+  one more trim-and-fold row.** The debt BL-59 records is deferred by one trim, not paid.
+- **Third time in this session the front matter refused its own explanation.** The first draft of
+  this note ran 833 B against the 645 it replaced and put the file 127 B over the reserve; it fitted
+  only after the reasoning moved here. A file that cannot afford to explain its own changes is the
+  argument for the structural cut, stated as a measurement rather than an opinion.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** front matter 7,028 B against the 7,168 B reserve;
+  `bin/check-handoff --all` exit 0; `bin/check-links` exit 0; `grep -c 'This file currently holds'`
+  returns 0, and `starter-kit/methodology_trim.py:336`-`:339` re-read for the exact regex.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [BL-59] S172 follow-up — the retention trigger moves to "above 2", and BL-60 is raised on the proof scripts
 
 - **Change:** `HANDOFFS.md`'s policy separates two numbers it had conflated. **Depth stays 1** — the
