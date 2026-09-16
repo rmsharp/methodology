@@ -214,6 +214,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S172 follow-up — the receipt's unpushed-commit count corrected, 17 to 18
+
+- **What was wrong:** S172's receipt gave fork `main` as *"17 commits ahead of `origin/main`"* under
+  its carried go-ahead items. The figure was computed before the close-out commit and stated without
+  the qualifier that would have made it true, so as a description of the tree the next session finds
+  it is short by one. Measured after the close-out: `git rev-list --count origin/main..main` = **18**.
+- **Change:** the receipt now reads 18 and says when it was counted. Nothing else in the receipt
+  moved. Precedent for correcting a receipt in a follow-up commit rather than in place: `1d88eaa`.
+- **Commit/PR:** this commit
+- **Session:** S172 · **Verified:** `git rev-list --count origin/main..main` re-run after this commit
+  is staged returns 18; `bin/check-handoff --all` exit 0, 7 receipts.
+- **Model:** Claude Opus 5
+
 ### 2026-09-16 · [BL-57] S172 close-out — P3 done, the size rule now in tokens, and a measurement three handoffs called outstanding was already taken
 
 - **Change:** S172's receipt is completed in `HANDOFFS.md` (self 8/10, predecessor S171 8/10). The
