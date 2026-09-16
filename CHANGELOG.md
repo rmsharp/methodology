@@ -210,6 +210,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S170 — the PR #82 comment drops a false contrast: not file vs judgment, but diffable vs not (not posted)
+
+**Operator challenge at the Present gate, and it was fatal to the phrase:** *"Explain what is meant by 'put
+the standard in a file instead of in a judgment.' Standard of what? What is the attribute of a standard
+that is captured in a file that is not captured in a judgement? How do you preserve a judgment if not via
+something stored in a file?"* — **the contrast was false, and the phrase was mine, not the PR's.** This
+repository is judgments stored in files; storage was never the distinction. **Re-grounded in the PR's own
+principle section** (`ITERATIVE_METHODOLOGY.md`, read on the branch rather than recalled): the thesis is
+*"enforce quality on the artifact, not on the actor"*, and *"a more capable agent or a sharper adversarial
+reviewer changes the JUDGE, not the CLASS of gate."* **Rewritten to say what a file actually adds, in two
+parts:** (1) who evaluates it — a question the session asks itself is answered by whoever is running, and
+the answer moves with care, haste and capability; (2) the part that matters here — **a judgment leaves no
+record of how strict it was.** One session requiring 134 passing tests and the next settling for 120
+changes no artifact, so there is nothing to compare and nothing to notice. A number in a committed file is
+a versioned object with an author, a date and a diff. The distinction is **diffable vs not**, not stored vs
+unstored: *"the handoff must be specific and actionable"* is stored in a file and still cannot reveal that
+this session's "specific" was laxer than the last one's. Closing line, which is now the hinge of the whole
+comment: **you can only refuse to let a standard slip if the standard is a thing that has a former self.**
+3,520 → 3,711 words. **Still nothing posted.**
+
 ### 2026-09-15 · [ad hoc] S170 — the PR #82 comment states the ratchet's actual mechanism, and the findings reorganize around it (not posted)
 
 **Operator question at the Present gate:** *"What is the mechanism that makes raising or lowering a gate's
