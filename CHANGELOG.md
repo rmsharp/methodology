@@ -84,6 +84,14 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   §Mechanical Gates states the enforcement point beside the "every actor" claim (opt-in hook, on-record
   bypass, merge skip; CI is what makes "every" literal). `BOOTSTRAP.md` Step 10: the manifest itself is
   ratcheted; the two limits stated plainly.
+- **F5 — the budget config** (review §3 + O2): both read-set densities re-measured on the blobs they now
+  describe — runner **2.8248 → 2.8227** on `2a3e410d` (53,252 B, 18,865.5 tokens), SAFEGUARDS **2.8191 →
+  2.8234** on `933816b4` (17,024 B, 6,029.7) — each entry naming its blob and the rule: re-measure when
+  `git rev-parse HEAD:<path>` changes; `measured_bytes` at 25 % drift is not a substitute. `CLAUDE.md`
+  gains a **token ceiling, 23,483 at its measured 2.519 B/token** (blob `1244e95b`), the byte pin kept as
+  the coarse backstop — the S20 reduction was −15 B and **+62 tokens**, which a byte pin cannot see. The
+  tool now reports 23,482 / 18,865 / 6,029 against 23,483 / 18,900 / 6,100, within one token of the
+  measurements. Not built: a `measured_blob` key the tool checks itself (follow-up).
 
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 
