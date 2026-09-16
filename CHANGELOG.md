@@ -210,6 +210,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-15 · [ad hoc] S170 close-out — the learning row, the receipt, and what the post left open
+
+**Deliverable posted and verified; this entry closes the session.** Phase 3C: **Learning #66 appended** —
+*a remedy you cannot state in one unambiguous sentence is evidence you have not located the defect* —
+`starter-kit/FRAMEWORK_LEARNINGS.md` 78,103 → 79,483 B against its 81,920 B ceiling (about two rows left).
+Phase 3E, in a sha-verified `--no-local` clone at `40cf1a4`: `bin/tests.sh` **305 passed / 0 failed / 0
+skipped**, matching S169's control; dashboard unit 321 OK, budget 116 OK (2 skipped, honestly), trimmer 123
+OK; `check-links`, `check-learnings` and `check-handoff --all --allow-pending` all exit 0 read bare;
+`context_budget.py --status` exits 2, fork `main` over its declared byte ceiling — pre-existing and by
+design. **One instrument trap hit and recorded:** `check-learnings` reported *"65 rows, contiguous 1..65"*
+after row #66 landed, which looked like the row had not registered; the parser was run directly and does
+see it (65 rows, numbers ending 64, 65, 66). The summary prints `len(rows)` for BOTH numbers, so the
+reserved `#14` makes the printed range understate the true maximum. **That is BL-44, raised at S109, not a
+new finding** — found by searching the backlog before calling it one. Not fixed: it is not this session's
+deliverable. **`CHANGELOG.md` has now crossed the 262,144 B single-Read refusal** — 271,613 B at this
+entry, so it must be read with `offset`/`limit` from here. Not trimmed: the operator's decision.
+
+### 2026-09-15 · [ad hoc] S170 — the comment POSTED to upstream PR #82 (non-commit action, operator go-ahead)
+
+- **Action:** one comment posted to `KJ5HST/methodology` PR #82 on the operator's explicit go-ahead, via
+  `gh api repos/KJ5HST/methodology/issues/82/comments -F body=@docs/planning/pr82-comment.md`.
+- **Result:** comment id **5691623656**, by `rmsharp`, created `2026-09-16T03:31:57Z`,
+  <https://github.com/KJ5HST/methodology/pull/82#issuecomment-5691623656>.
+- **Read back before this was recorded, byte for byte:** the posted body was fetched again and compared to
+  the local file — **sha256 `9d669dc6ee90ba312937453889cf701b2bbb37d83979dc946b6db96936179b30` on both**,
+  `cmp` silent. The one-byte delta in a naive `wc -c` is the newline `jq` appends when printing, and the
+  API's `len: 25612` is **characters**, not bytes: the body is 25,611 characters and **25,743 bytes**.
+- **Pre-flight:** `upstream` re-fetched immediately before posting; #82 still OPEN at head `c84e7d96`,
+  unmoved since the review, with 0 comments and 0 reviews — so every claim in the comment was still pinned
+  to the tree it was measured on. Working tree clean at `40cf1a4`.
+- **Content:** ten suggested changes, ranked — a proposed rewording of the PR's purpose, approach and
+  mechanism; three ways the ratchet can still turn backwards; two file budgets denominated in bytes where
+  tokens is the operative unit; four smaller defects; and one note on who the mechanism actually binds.
+  4,286 words, every result from a run rather than from reading the code, with a reproduction script
+  linked by permalink.
+
 ### 2026-09-15 · [ad hoc] S170 — the PR #82 comment states the links its facts rested on implicitly (not posted)
 
 **Operator challenge at the Present gate:** *"How does '`_gate_loosenings` already has a removed branch, it

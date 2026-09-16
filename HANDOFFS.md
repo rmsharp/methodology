@@ -79,18 +79,47 @@ instruction is why these rows exist.
 ```handoff
 session: S170
 date: 2026-09-15
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: **DEVELOP AND POST ONE COMMENT ON UPSTREAM PR #82 (THE QUALITY RATCHET, HEAD `c84e7d96` AT PHASE 0) WITH SUGGESTED CHANGES TO IMPROVE THE PR.** The operator scheduled it at S169's close-out. The comment is drafted to a file, its full text is presented before anything is posted (the Present gate), it is posted only on the operator's explicit go-ahead, and then read back. **It must use generally recognized terminology with no jargon or private descriptors** — the operator's bar, which is also one of the improvements to suggest. BL-57's P3 waits.
-what_was_done: pending
-next_steps: pending
-key_files: the draft (to be written, precedent `docs/planning/pr80-reply-f2-f3.md`); `docs/planning/pr82-review.md:17` (§0), `:65` (§2 budgets), `:168` (§3.1), `:377` (§6, the asks ranked); `docs/planning/pr82-review-repro.sh:1`; at #82's head: `.context-budget.json:36`, `:46`, `starter-kit/quality_ratchet.py:177`.
-gotchas: #82 is live — re-pin every claim to the head of the day and re-run the repro script before relaying a finding. The review is written in this fork's shorthand and must be translated, never pasted. Nothing goes outward without a go-ahead, each time. zsh: brace `${r}:path`.
-runtime_smoke: Phase 0 at `1d88eaa`: both ledger frontiers current, 0 undocumented commits; `check-handoff --all` OK on 4 receipts, so no trim this session; dashboard 76/100, medium risk, 932 commits; `CHANGELOG.md` 259,241 B, 2,903 B under the 262,144 B read refusal, not trimmed (the operator's decision); #82 OPEN, head `c84e7d96`, 0 comments and 0 reviews. Suites not re-run at Phase 0.
-changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S170 claim — a comment on upstream PR #82 with suggested changes"
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 9
+active_task: **ONE COMMENT POSTED TO UPSTREAM PR #82 (THE QUALITY RATCHET, HEAD `c84e7d96`) WITH TEN SUGGESTED CHANGES, RANKED — `5691623656`, READ BACK BYTE FOR BYTE.** Drafted to `docs/planning/pr82-comment.md`, presented in full at the Present gate, revised through three rounds of operator critique, posted on the explicit go-ahead, then re-fetched and compared: **sha256 identical on both sides.** It uses generally recognized terminology throughout — the operator's bar, and itself the comment's lead suggestion.
+what_was_done: **Fork `main`, 7 commits:** `840c5fb` claim; `24f11b3` the draft; `657b3b8` recomposed for a reader who has not read the plan; `b4bfa70` the ratchet's actual mechanism; `f64d219` a false contrast dropped; `9833c93` the remedies made precise; `40cf1a4` the implicit links stated; plus this close-out. **Nothing was relayed from S169's review — every claim re-verified first:** #82 unmoved at `c84e7d96`; `pr82-review-repro.sh` re-run end to end, all seven sections matching; all six token figures re-measured with both controls (48,555 and 36,955) reproducing exactly; `--run` re-run in a **sha-verified** `--no-local` clone giving **9/9 pass, results `74c773523dab`** — the receipt's own hash, firsthand — with `bin/tests.sh` `== Summary: 134 passed, 1 failed ==` read directly. **One would-be finding killed before it reached the draft:** an archive-and-`git init` tree measured 131 passed, an artifact of the reproduction method, not a defect. **Three operator critiques, each recomposed rather than patched, and each followed by an audit of siblings for the same fault** — which found three more, two of them errors of fact.
+next_steps: **(1) CHECK FOR A REPLY ON #82 BEFORE ANYTHING ELSE** — `gh pr view 82 --repo KJ5HST/methodology --json headRefOid,state,comments,reviews`. The comment is `5691623656`; the maintainer may answer, and a reply is its own operator go-ahead. If #82's head has moved, re-run `bash docs/planning/pr82-review-repro.sh` before relying on any finding in it — every one is pinned to `c84e7d96`. **(2) BL-57'S P3 — ITS OWN SESSION** (`docs/planning/changelog-rules-contradictions-plan.md:490`), unchanged by this session and still carrying S169's two amendments: if #82 has merged, P3 starts by merging `upstream/main` into the branch (a same-line conflict at `ITERATIVE_METHODOLOGY.md:294`; `CLAUDE.md` already conflicts), and P3's runner criterion (`:508`) and P4's (`:538`) are in bytes — restate them in tokens. Worktree `../methodology-bl57`, branch `bl57/changelog-rules` at `775ba238`. **(3) `CHANGELOG.md` HAS CROSSED THE READ REFUSAL — THIS IS NOW A FACT, NOT AN ESTIMATE:** 274,805 B against the 262,144 B cap, so Phase 0 must read it with `offset`/`limit`. Not trimming it is the operator's decision — raise it at Phase 0. **(4) `HANDOFFS.md` HOLDS FIVE RECEIPTS** after this close-out: S171's Phase 0 finds five and trims to four. **(5) `FRAMEWORK_LEARNINGS.md` IS 79,483 OF 81,920 B** after Learning #66 — about two rows left; BL-53's retirement policy is still open. **CARRIED, EACH ITS OWN GO-AHEAD:** pushing fork `main` (**7 commits ahead of `origin/main`** before this close-out); F5/F6 (`docs/planning/pr80-review-response.md:243`); the fork resync; BL-54; BL-36; BL-53; `choose_cut`.
+key_files: `docs/planning/pr82-comment.md:1` (the posted text, byte-identical to the comment); `:27` (§2, the three ratchet gaps), `:58` (the three-place remedy), `:92` (§3, the budgets); `docs/planning/pr82-review.md:377` (§6, the asks it was built from); `docs/planning/pr82-review-repro.sh:1`; `starter-kit/FRAMEWORK_LEARNINGS.md` row 66 (last line); on #82 at `c84e7d96`: `starter-kit/quality_ratchet.py:61` (`find_root`), `:134` (`compare`), `:176` (`precommit`), `:325` (the hook template), `:333` (`install_hook`); `starter-kit/methodology_dashboard.py:1931` (`_gate_map`), `:1938` (`_gate_loosenings`), `:2015` (the pairing loop); `.githooks/pre-commit:35`.
+gotchas: **(1) A VAGUE REMEDY IS USUALLY A WRONG DIAGNOSIS, NOT A WORDING PROBLEM** — Learning #66, earned three times this session; two of the three were errors of fact, and one introduced an error into a source that had it right. **(2) `check-learnings` PRINTS A RANGE IT HAS NOT MEASURED** — it reported *"contiguous 1..65"* after row #66 landed, because it prints `len(rows)` for both numbers and `#14` is reserved. The row IS registered; run `parse_table` directly rather than believing the summary. **That is BL-44, not a new finding.** **(3) AN EXIT CODE READ THROUGH A PIPE IS THE PIPE'S** — `./bin/check-learnings | tail -3; echo $?` reported `tail`'s 0; re-run bare before believing it. **(4) THE GITHUB API'S `.body | length` IS CHARACTERS, NOT BYTES** — 25,611 characters against 25,743 bytes here; compare by sha256, not by `wc -c`, and strip the newline `jq` appends. **(5) AN ARCHIVE-AND-`git init` TREE IS NOT A CLONE** — it measured 131 passed where a real clone measures 134; assert the HEAD sha before trusting any run. **(6) #82 IS LIVE** — re-fetch and re-pin before relaying any finding.
+runtime_smoke: **NO APPLICATION; THE BUILD-EQUIVALENT IS `bash bin/tests.sh`,** run in a `--no-local` clone whose HEAD sha was asserted equal to the working repo's, exit codes read bare. **At `40cf1a4`:** `bin/tests.sh` **305 passed / 0 failed / 0 skipped**, matching S169's control at `4c07b91`; dashboard unit **321 OK**, budget **116 OK** (2 skipped, honestly), trimmer **123 OK**; `check-links` 0, `check-learnings` 0 (65 rows, all citations resolve, 0 rows over 1,500 B), `check-handoff --all --allow-pending` 0; `context_budget.py --status` **exits 2** — fork `main` over its declared 41,364 B runner ceiling, pre-existing and by design. **The outward action was verified, not assumed:** the posted comment was re-fetched and is sha256-identical to the local file. **NOT EXERCISED:** any reply from the maintainer; the suggestions applied to #82; CI (there is none); a second reader of the comment's findings; the fork `main` push.
+changelog_ref: CHANGELOG.md "2026-09-15 · [ad hoc] S170 close-out" and "2026-09-15 · [ad hoc] S170 — the comment POSTED to upstream PR #82", plus the claim, draft and four revision entries
+commit: 840c5fb (claim) + 24f11b3 (draft) + 657b3b8 + b4bfa70 + f64d219 + 9833c93 + 40cf1a4 (revisions) + this close-out; the post itself left no commit (comment 5691623656)
 ```
+
+**Self-assessment: 7/10.** Plus: nothing was relayed. Every figure in S169's review was re-derived before
+it reached the draft, the gate run was reproduced firsthand in a clone whose HEAD sha was asserted first,
+and one would-be finding — 131 passed rather than 134 — was killed as an artifact of my own reproduction
+method before anyone saw it. The outward action was verified rather than assumed: the posted comment was
+re-fetched and matched by sha256, and I caught that the API's `len` counts characters, not bytes. I caught
+my own exit code read through a pipe, and searched the backlog before calling the `check-learnings` range a
+finding — it was BL-44. **Minus, and it is the session's real story: the operator found three defects in
+the draft that I should have found.** Twice they were errors of fact, not of clarity. *"Run the hook
+whenever the manifest is tracked in HEAD"* described a guard that does not exist; the lockout bullet blamed
+`precommit()` for an exit the tool takes in `main()`, before `precommit()` is reached — and S169's review
+had that right, so I introduced an error into a correct source. Worse in kind: *"put the standard in a file
+instead of in a judgment"* was my own phrase, substituted for the maintainer's correct framing, and it was
+a false contrast in a repository built out of judgments stored in files. Each time the fix was a
+recomposition and an audit of siblings, and each audit found more — which is itself the evidence that I was
+not applying the standard the operator had to impose three times. Also: two ledger entries stated word
+counts I had predicted rather than measured, both corrected before commit. **Reduction:** none — this
+session added to three grow-only files and removed nothing. **Learning #66** records the transferable part.
+
+**Predecessor (S169): 9/10.** Item (1) was exact and was used as written, start to finish: the deliverable,
+the command to check #82's state, the script to re-run, the file precedent for drafting, the posting
+recipe, and the read-back requirement. It carried the operator's terminology bar verbatim, which was the
+constraint the whole session turned on. Every one of its seven demonstrations reproduced, all six token
+figures reproduced including both controls, and its warning that #82 is live was the right first move.
+Gotchas (3) and (4) both applied. **Not 10:** its runner-density finding was framed as a measurement taken
+against the wrong file, which reads as an error by whoever measured it. Tracing the branch showed the
+density was measured correctly and went stale two commits later — a materially fairer account, and the one
+thing I needed that the handoff had not already derived. **ROI: strongly positive** — it turned a
+translation task into a verification task, which is the cheaper of the two.
 
 ```handoff
 session: S169
