@@ -50,6 +50,8 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   ratchet; an unparseable HEAD manifest is the delete/re-add hole with one `--no-verify`. Fixes are the
   next session's work, in the corrected order. Session S21: claim `07d166e` + the close-out commit.
   Comment: <https://github.com/KJ5HST/methodology/pull/82#issuecomment-5701463025> (read back via the API).
+  S21's ledger prepends conflict with the branch's S20 prepends in this file and `HANDOFFS.md` (`git merge-tree`
+  exit 1; clean against `8b4dc2c`) — resolve as a union on the PR branch before merge, the S15 precedent.
 
 ### 2026-09-15 · [ad hoc] Merged PR #80 — the read-set budgets series (#76–#79)
 
