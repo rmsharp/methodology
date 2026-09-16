@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-56, BL-57, BL-58, BL-59, BL-60.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-56, BL-57, BL-58, BL-60, BL-61.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -151,12 +151,13 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-56** | Rewrite `airqino`'s `CHANGELOG.md` to the current ledger format — the Route A sync left its pre-v3.1 seed as it was | [detail](BACKLOG-DETAIL.md#bl-56) |
 | **BL-57** | **HIGH PRIORITY** — the `CHANGELOG.md` rules contradict each other across the framework; fix here and in six adopters, aiming at an upstream PR. **Planned at S162, operator-approved** (Q1–Q4 all A): [`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) — **P1 done at S167, P2 at S168, P3 at S172, P4 at S173** on branch `bl57/changelog-rules` (`83a12f0`, all backed up to `origin`; `upstream/main` merged in at `9e1dfeb` and, after #82 merged, at `52ad407`); next is P5, fork `main` adopts it — **after a resync of fork `main` with `upstream/main`** (operator, S173) | [detail](BACKLOG-DETAIL.md#bl-57) |
 | **BL-60** | Every trim writes a ~16 KB proof script **97.9% identical** to the last; 31 of them hold **453,689 B, 5.4% of the tracked repo**, and the proof costs more than the median receipt it proves. Shapes: shared harness + per-shard manifest, publish the command instead, or stop tracking it. **Distributed — `methodology_trim.py` lands at every adopter root, so its own go-ahead.** **Operator, S173 (2026-09-16, picker):** **one planning session costs the three shapes and folds BL-36 in** | [detail](BACKLOG-DETAIL.md#bl-60) |
-| **BL-59** | `HANDOFFS.md` retention — **operator decided N=1 (2026-09-16)**; measured at S172, **N=1 was not reachable** (Test 38 needed ≥2 live records: 14 failures) and **N=2 + the fold was clean** (299/0/6 skips). Test 38 has since read a frozen fixture (`d13a165`), and **S174 measured N=1 reachable**: a `--cut 1 --force` trim plus its fold on `ad3479a` ran 300 passed / 0 failed / 6 stated skips. Fork-local — the distributed seed names no retention number. **S174: the header cut is done** — the shard index moved to [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../HANDOFFS_ARCHIVE_INDEX.md) and the front matter fell 7,028 → 3,929 B of the 7,168 B reserve, so a trim no longer grows it | [detail](BACKLOG-DETAIL.md#bl-59) |
 | **BL-58** | Consider instructing adopters on lossless ledger trimming — they receive `methodology_trim.py` at their root but the runner, the apparatus and `SAFEGUARDS.md` say nothing about it; the only guidance sits in two never-overwritten seeds. Decision first: (a) the tracked apparatus, (b) the runner, (c) better tool output | [detail](BACKLOG-DETAIL.md#bl-58) |
+| **BL-61** | Lower `HEADER_RESERVE_BYTES` (`bin/check-handoff:663`, 7,168 B) now that `HANDOFFS.md`'s front matter is 4,019 B and no longer grows per trim — bank the freed ~3 KB as S109 did. **Operator, S174 (2026-09-16, picker): scheduled for a later small session.** Canonical-only | [detail](BACKLOG-DETAIL.md#bl-61) |
 
-## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45)
+## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45, BL-59)
 
 | **BL-45** | `FRAMEWORK_LEARNINGS.md` 16 B from its ceiling — **CLOSED 2026-08-26 (S114)** by raising it to a re-derived 73,728 B and writing the four owed rows; the other three options stay costed in the detail file | [detail](BACKLOG-DETAIL.md#bl-45) |
+| **BL-59** | `HANDOFFS.md` retention — **CLOSED 2026-09-16 (S174), operator (picker).** N=1 (operator, S172) is now measured reachable: Test 38 reads a frozen fixture (`d13a165`), and a `--cut 1 --force` trim plus its fold ran 300 passed / 0 failed / 6 stated skips. The front-matter cut it left owed is done (`ad3479a`, `67ac209`; the index is [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../HANDOFFS_ARCHIVE_INDEX.md)). Not done, and distributed: teaching `methodology_trim.py` a retention mode. The reserve follow-up is BL-61 | [detail](BACKLOG-DETAIL.md#bl-59) |
 
 | Item | Scope | Outcome |
 |------|-------|---------|

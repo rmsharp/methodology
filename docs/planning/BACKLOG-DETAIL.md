@@ -2044,3 +2044,26 @@ work is a decision first and an edit second. Three shapes, none costed yet:
 over. The trimmer's own design record is
 [`ledger-trimmer-design.md`](ledger-trimmer-design.md). **Any distributed fix is an upstream change
 and its own go-ahead.**
+
+<a id="bl-61"></a>
+
+**BL-61 — Lower `HEADER_RESERVE_BYTES` now that `HANDOFFS.md`'s front matter no longer grows per trim.
+Raised 2026-09-16 (S174); scheduled by the operator (picker) for a later small session, not done.**
+
+**Why.** S174 moved the shard table out of `HANDOFFS.md` into `docs/HANDOFFS_ARCHIVE_INDEX.md`
+(`ad3479a`, `67ac209`). The front matter fell from 7,028 B to **4,019 B** against the 7,168 B reserve
+(`bin/check-handoff:663`) — 56% used — and a trim-and-fold no longer grows it. S109 set the reserve above
+the measured front matter *"and BELOW the old 8,000 so the saving is BANKED as slack"*
+(`bin/check-handoff:618`). The same argument now applies: ~3 KB of reserve guards nothing, and Test 39's
+A2 would not notice the front matter creeping back up by that much.
+
+**What the session must measure and decide, not assume:**
+- **The value.** Should it hold the front matter plus the trimmer's pointer block *inside* a trim commit
+  (S174 measured +456 B there: 3,929 → 4,385 B), or only the size after the fold? The last three trim
+  commits (`5049845`, `0ccfce8`, `1ec509d`) exceeded the old reserve before their folds.
+- **Test 39's constraints.** M2's planted value (`bin/tests.sh:3164`, 2,048 B) must stay under the live
+  front matter, M1's must still break A1, and A1 must still hold: 3 × 12,288 + reserve ≤ 65,536.
+- **The record.** `bin/check-handoff:590`–`:631` narrates S109's reasoning and says its figures are *"a
+  record of one moment"*; add a dated paragraph rather than rewriting it.
+- **Scope.** Canonical-only — neither `bin/check-handoff` nor `bin/tests.sh` has a `bin/_manifest.py`
+  row (checked at S174) — so no adopter impact and no upstream action.

@@ -214,6 +214,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-59] S174 follow-up — the operator closes BL-59 and schedules BL-61; fork `main` push approved (picker)
+
+- **Decisions, taken by picker after the close-out:**
+  - **BL-59 is CLOSED.** The retention it set (N=1, S172) is now measured reachable: Test 38 reads a
+    frozen fixture (`d13a165`), and a `--cut 1 --force` trim plus its fold on `ad3479a` ran 300 passed /
+    0 failed / 6 stated skips. The front-matter cut it left owed is done. What stays undone is teaching
+    `methodology_trim.py` a retention mode, which ships to adopters and needs its own go-ahead. The row
+    moves to §Completed items; the detail body stays, as BL-45's did.
+  - **BL-61 is raised and scheduled:** lower `HEADER_RESERVE_BYTES` (`bin/check-handoff:663`) now that
+    the front matter is 4,019 B and no longer grows per trim, banking the freed ~3 KB as S109 did. It
+    runs as a later small session, not ahead of S175's trim, the fork resync or BL-57's P5.
+    Canonical-only.
+  - **Push fork `main` to `origin`:** approved. Recorded in the next entry once it is done.
+- **Recorded in:** `docs/planning/BACKLOG.md` (the open list, the BL-61 row, BL-59's completed row),
+  `docs/planning/BACKLOG-DETAIL.md` (BL-61's body), and the S174 receipt's `next_steps`.
+
 ### 2026-09-16 · [BL-59] S174 close-out — the header cut is done; S175's Phase 0 trims and folds into the new index
 
 - **Change (this commit):** the S174 receipt in `HANDOFFS.md` goes from `pending` to `complete`
