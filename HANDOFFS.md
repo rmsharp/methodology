@@ -49,6 +49,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (Learning #58). -->
 
 ```handoff
+session: S176
+date: 2026-09-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **R1 OF THE RATIFIED RESYNC PLAN (`docs/planning/upstream-resync-2026-09-plan.md` §5): MERGE STAGE M1, `0fd003a`, INTO FORK `main`, AND CARRY OUT D1 (A), CHOSEN BY THE OPERATOR AFTER PHASE 0 (picker).** Pre-flight re-derived at Phase 0: `upstream/main` still `6b29d3d`, PR #83 still open at `219fb9d`, and `git merge-tree --write-tree --name-only main 0fd003a` lists the same 4 files as §2.1. D1 (A): the distributed learnings file becomes upstream's; fork rows #15–#66 move verbatim to `docs/FORK_LEARNINGS.md`. Fork-local; nothing pushed.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/upstream-resync-2026-09-plan.md:127` (§2.3 row 1), `:136` (row 10), `:141` (§2.4 ledgers), `:193` (D1), `:216` (D1's trial, three failures), `:285` (R1); `bin/tests.sh:1281` (Test 27.N1b's commit), `:2561` (`add_row37`); `tools/test_methodology_dashboard.py:5359` (the Learning #26 pin); `bin/check-learnings:123` (the fixed path)
+gotchas: `CLAUDECODE=1` and `core.hooksPath` = `.githooks` here, so the arriving `.githooks/commit-msg` refuses any commit without a `Co-Authored-By:` trailer from M1 on, including the suite's own fixture commit (Test 27.N1b). The merge commit skips the hooks; its ledger entry rides the next ordinary commit. Run the suite in a `--no-local` clone of a committed state.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-16 · [BL-57] S176 claim"
+commit: pending
+```
+
+```handoff
 session: S175
 date: 2026-09-16
 status: complete

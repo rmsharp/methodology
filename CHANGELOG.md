@@ -214,6 +214,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S176 claim — R1 of the resync plan: merge stage M1 (`0fd003a`) and carry out D1 (in progress)
+
+**Deliverable:** R1 of [`docs/planning/upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md)
+(§5): merge `0fd003a` into fork `main`, resolve its four conflicts per §2.3, apply Test 27.N1b's one-line
+override, and carry out D1 (A). Chosen by the operator after Phase 0 (picker), over BL-61 and a comment on
+upstream PR #83.
+
+- **Pre-flight, re-derived at Phase 0:** `upstream/main` is still `6b29d3d`, so R2 gains no stage. PR #83
+  is still open at `219fb9d`, with no reviews or comments. `git merge-tree --write-tree --name-only main
+  0fd003a` lists `.context-budget.json`, `CHANGELOG.md`, `HANDOFFS.md`,
+  `starter-kit/FRAMEWORK_LEARNINGS.md`, the same four as §2.1. The full merge still conflicts in 13 files.
+- Phase 0 ledger reconcile: `CHANGELOG.md` frontier at `HEAD` `f1ae291`, no gap; `HANDOFFS.md` frontier
+  `a614a89`, and the one later commit only records S175's push. Nothing backfilled. 2 receipts, so no
+  Phase 0 trim. Dashboard 76/100, medium risk. `context_budget.py --status` exit 2, as at S175. The two
+  Phase 0 instrument snapshots ride with this claim.
+
 ### 2026-09-16 · [ad hoc] S175 follow-up — fork `main` pushed to `origin`, `4735c6c..a614a89` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, `4735c6c..a614a89`, a fast-forward of 6 commits: S175's claim, the
