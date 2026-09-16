@@ -214,6 +214,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S173 close-out — BL-57's P4 done on the branch, not pushed; P5 opens with an operator decision about its base
+
+- **Change (branch `bl57/changelog-rules`, `83a12f0`, not pushed):** P4's four commits after the merge
+  `52ad407`. `0c20022` gives §The Action Ledger its *Lifecycle* and *Placement* rules; `f235db3` turns
+  *append* into *prepend* at seven sites and records the claim commit's *(in progress)* entry; `836e0d2`
+  replaces *completed work history* with the action ledger and brings `CLAUDE.md` back under its ceiling;
+  `83a12f0` rewrites upstream's root `CHANGELOG.md` front matter (D8 i). Each commit has its own branch
+  ledger entry.
+- **Change (fork `main`, this commit):** the plan records P4 done, with findings (6)–(10) for P5–P12
+  (`docs/planning/changelog-rules-contradictions-plan.md:114`) and a status-line warning about P5's port.
+  BL-57's backlog row reads *P4 at S173, next P5*. The S173 receipt is completed in `HANDOFFS.md`.
+- **Found, for the next session:** P5's port command as the plan writes it is **34 files, +3,015/−358**,
+  because the branch now carries #80's fixes and #82's ratchet; BL-57's own net change on `64f23bf` is
+  **16 files, +532/−252**. Fork `main` is 53 commits behind `upstream/main`, and merging the two conflicts
+  in 12 files. So P5 starts with the operator's choice: port from `64f23bf`, or resync fork `main` first.
+- **No learning row:** `starter-kit/FRAMEWORK_LEARNINGS.md` is within about two rows of its ceiling, and
+  neither finding is new at the framework level. That a recorded density can hide token growth is already
+  stated in upstream's `.context-budget.json`, in the runner's entry: *"A DENSITY IS TIED TO THE BLOB IT
+  WAS MEASURED ON"*. The instrument change is a harness behaviour,
+  recorded in the plan and in the receipt's gotchas.
+- **Session:** S173 · **Verified:** see the receipt's `runtime_smoke` — the branch head `83a12f0`, in a
+  `--no-local` clone with HEAD asserted: `bin/tests.sh` 141 / 0; ratchet 10/10 (`c5fca86e4674`);
+  `bin/check-links` 110; `context_budget.py --status` exit 0, no status flips against `upstream/main`, read-set
+  total 70,253 B against 70,276 B.
+- **One status flip on fork `main`, caused by this session and left as it is:** `context_budget.py --status`
+  (exit 2 at Phase 0 and now, the runner's standing breach) moves `HANDOFFS.md` from ok to **warn** — not
+  a ceiling: its density was measured at 20,310 B and the file is 32,800 B after this session's claim stub
+  and receipt, a 61% drift that marks its ≈14,500-token figure provisional. Re-measuring is a budget
+  commit of its own, as `24d9645` was. An estimate, not a measurement: the next retention trim should take
+  the file back near the measured size.
+  Runner doubled 37,717 (≤ 37,731) and `CLAUDE.md` 46,953 (≤ 46,965), each beside a reproduced control.
+
 ### 2026-09-16 · [BL-57] S173 — #82 merged into BL-57's branch; P4's size criterion restated on the new base before any P4 edit
 
 - **Change:** `docs/planning/changelog-rules-contradictions-plan.md` gains the S173 amendment (above §0)

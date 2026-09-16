@@ -1,8 +1,9 @@
 # BL-57 — one set of `CHANGELOG.md` rules, kept in one place
 
 **Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
-S167 and S168 (see **Trees**). **P1, P2 and P3 are done** on branch `bl57/changelog-rules` (S167, S168, S172; P1 and P2 backed
-up to `origin`, P3 not pushed anywhere); P4–P12 are not.
+S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-rules` (S167, S168, S172, S173; P1 and P2
+backed up to `origin`, P3 and P4 not pushed anywhere); P5–P12 are not. **Read the S173 block before P5: its
+port command, as written, would now carry #80's and #82's upstream changes too.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -109,6 +110,34 @@ passed / 0 failed; `quality_ratchet.py --run` 10/10, results `15c73dda424f`; `bi
 `context_budget.py --status` exit 0. The merge `52ad407`: 141 / 0; 10/10, results `c5fca86e4674`; 110 links
 (the 3 P1–P3 added); exit 0, and a row-by-row diff against upstream's output shows only sizes — no status
 flips, read-set total 70,244 B against 70,276 B.
+
+**P4 done at S173:** `0c20022` (§The Action Ledger's *Lifecycle* and *Placement*), `f235db3` (*prepend* at
+seven sites; the claim commit's *(in progress)* entry), `836e0d2` (*action ledger* for *completed work
+history*; `CLAUDE.md` back under its ceiling), `83a12f0` (upstream's root `CHANGELOG.md` front matter, D8 i).
+Not pushed. What P4 found, for P5–P12:
+(6) **Against the restated criterion:** the runner reads **37,717** doubled (18,858.5 tokens; ≤ 37,731, 7
+over P4's start); `CLAUDE.md` **46,953** (23,476.5; ≤ 46,965, 6 under upstream); `SAFEGUARDS.md` is
+`933816b4`. Each file was `cmp`-verified against the committed blob doubled, and each reading ran beside a
+reproduced control. `ITERATIVE_METHODOLOGY.md` grew 45 B against the plan's *"byte-neutral wording"*; the
+file has no budget row on this tree.
+(7) **The plan's P4 line numbers were `b82dcff`'s and three had moved:** runner :278/:329/:357 are
+:281/:332/:360, and the hook's refusal text is `.githooks/pre-commit:70` (#82 added lines above it). The
+rest held. P5 re-locates every site on fork `main` by grep.
+(8) **`README.md:96` carried the same completed-work instruction as `starter-kit/BOOTSTRAP.md:139`**
+(*"When you complete work, remove it from `BACKLOG.md` and add an entry"*), inside a line the plan names
+for its phrase only. P4 changed both. Grep for the sentence, not only the phrase, in P5 and the adopters.
+(9) **P5'S PORT, AS WRITTEN, IS NOW A FORK RESYNC.** `git diff b82dcff bl57/changelog-rules` (ledgers and
+budget excluded) is **34 files, +3,015/−358**: it carries #80's review fixes and #82's quality ratchet as
+well as BL-57. BL-57's own net change on current upstream, `git diff 64f23bf bl57/changelog-rules` with the
+same exclusions, is **16 files, +532/−252**. Fork `main` is **53 commits behind `upstream/main`**, and
+`git merge-tree` of the two conflicts in 12 files. So P5 starts with a choice that is the operator's: port
+from `64f23bf` (BL-57 only, onto a `main` that lacks #82), or resync fork `main` with `upstream/main` first
+(its own go-ahead) and then port. P5's *"494"* audit figure is also stale: the audit read 556 at S172.
+(10) **For P12: the branch's `.context-budget.json` density notes name blobs the branch no longer has.**
+Upstream's own rule is to re-measure when `HEAD:starter-kit/SESSION_RUNNER.md` stops reading `2a3e410d`
+(it now reads `4811f02f`) and `CLAUDE.md` stops reading `1244e95b`. The PR re-measures both on its final
+blobs and updates `bytes_per_token`/`measured_bytes`. `context_budget.py` prices a file at its recorded
+density, so a wording change can pass it while crossing the real ceiling: P1's row did, by 4 tokens.
 
 ---
 
