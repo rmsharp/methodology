@@ -214,6 +214,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-44] S176 follow-up — the check-learnings span fix in `8cfaf0d` was BL-44, not a new finding
+
+- **Correction to the record:** `8cfaf0d`'s commit message, its ledger entry and the S176 receipt describe
+  the `contiguous 1..65` message as a defect found this session. It is **BL-44**, raised at S109
+  (`docs/planning/BACKLOG-DETAIL.md` §BL-44), and my Phase 0 backlog read did not reach it. The fix reads the span
+  off the parsed rows, which is BL-44's core defect. BL-44's proposed fix also names the reserved gap in the
+  message (*"#1..#38, 1 reserved (#14)"*), and `8cfaf0d` does not. **BL-44 stays open**; its row now says so, and
+  closing it is the operator's decision.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S176 close-out — resync R1 done: stage M1 merged, D1 carried out, suite green; R2 is next
 
 - **Deliverable, done:** R1 of [`upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md). Merge

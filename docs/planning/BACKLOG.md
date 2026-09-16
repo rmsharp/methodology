@@ -137,7 +137,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-39** | Issue #75's two *Related* items — carry the named surface forward into close-out | [detail](BACKLOG-DETAIL.md#bl-39) |
 | **BL-42** | `methodology_trim.py` still generates the fat pointer block S109's compaction removed | [detail](BACKLOG-DETAIL.md#bl-42) |
 | **BL-43** | Six `bin/tests.sh` assertions flake under `pipefail` — diagnosed, enumerated, not fixed | [detail](BACKLOG-DETAIL.md#bl-43) |
-| **BL-44** | `bin/check-learnings` reports `contiguous 1..N` from `len(rows)`, so a reserved gap makes it false | [detail](BACKLOG-DETAIL.md#bl-44) |
+| **BL-44** | `bin/check-learnings` reports `contiguous 1..N` from `len(rows)`, so a reserved gap makes it false. **S176: half fixed, without knowing this item existed** — `8cfaf0d` reads the span off the parsed rows (`min..max`), but the message does not yet name the reserved gap as the detail's fix proposes; open until the operator decides | [detail](BACKLOG-DETAIL.md#bl-44) |
 | **BL-46** | An adopter's trimmer inert since bootstrap; the seed's own removal has no detector | [detail](BACKLOG-DETAIL.md#bl-46) |
 | **BL-47** | Seed `context-budget.json` omits the two ledgers `methodology_trim.py` exists to bound | [detail](BACKLOG-DETAIL.md#bl-47) |
 | **BL-48** | Seed `HANDOFFS.md` lacks the count sentence its own `LedgerSpec` declares | [detail](BACKLOG-DETAIL.md#bl-48) |
