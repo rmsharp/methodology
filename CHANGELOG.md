@@ -74,6 +74,16 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
   gates now read one `bash bin/tests.sh`, `run_gates` memoizes identical commands within a run — the
   suite runs once, two numbers are read from it; a `--run` that took the suite twice is one nobody
   cites (unit 44 → 45, RED first).
+- **F4 — the docs** (review 2c, §5, and the unraised merge/rebase skip): `SESSION_RUNNER.md` Phase 0 step 6
+  gains the gate-citation check — the newest complete receipt's `quality_ratchet:` line against the results
+  file, or a re-run — **paid for by reduction**: the step's HANDOFFS clause no longer restates the note eight
+  lines below it, and step 5 loses an aside; measured by the doubled-file Read **18,897.5 → 18,865.5 tokens**
+  (53,328 → 53,252 B), 34.5 under the 18,900 ceiling. `SAFEGUARDS.md` ratchet row: removing the manifest is
+  refused; merge/rebase commits skip the hook and the dashboard's history read is the catch (16,765 → 17,024
+  B, 6,029.7 tokens, 70 under 6,100; the pair 24,894.5 = 99.58 % of the cap). `ITERATIVE_METHODOLOGY.md`
+  §Mechanical Gates states the enforcement point beside the "every actor" claim (opt-in hook, on-record
+  bypass, merge skip; CI is what makes "every" literal). `BOOTSTRAP.md` Step 10: the manifest itself is
+  ratcheted; the two limits stated plainly.
 
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 
