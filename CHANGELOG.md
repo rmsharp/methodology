@@ -199,6 +199,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S180 close-out — P6 (`airqino`) recorded, BL-56 closed; decide the sync commit cap, then P7 (`wsfct`)
+
+- `HANDOFFS.md`: S180's receipt is complete (self 7, S179 scored 8), with the Phase 3A evaluation and
+  self-assessment beneath it. 3 receipts now, so the next Phase 0 owes the retention trim.
+- `docs/FORK_LEARNINGS.md`: fork Learning #73. A read-only phase is read-only only if `git status` says so:
+  this session's Phase 0 report said nothing had changed after `context_budget.py --status` had appended a
+  tracked row.
+- **Gates:** clone of `04fccc5`, `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results c86e8ef9b42b ·
+  manifest 3a87b16f1b31`, `tests-sh-passed` 311 at 3 receipts.
+- **Next:** the operator decides plan item (18) (split a sync across commits of five, or one run as one commit),
+  then P7 in `~/Development/wsfct` as its own session. Fork `main` is pushed to `origin` after this commit
+  (operator go-ahead, S180's second picker).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S180 — P6 (`airqino`) recorded as done; P7 (`wsfct`) next
 
 - **Recorded:** `docs/planning/changelog-rules-contradictions-plan.md`'s status line, a P6 block with items
