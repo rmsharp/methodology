@@ -2492,9 +2492,11 @@ rm -f "$UNTRACKED38"
 # did. The next session's Phase 1B claim then prepends a record with nothing after it, and the
 # guard reads OK again. So the window is close-out to claim: the close-out's own gate citation is
 # measured before the close-out commit exists, and the claim erases the evidence a few minutes
-# after the next Phase 0 could see it. (8b) and (8c) below are what close that window: the first
-# is the defect, frozen as an assertion that does not depend on what the live ledger happens to
-# say today; the second stops the pair being satisfied by a guard that returns OK unconditionally.
+# after the next Phase 0 could see it. (8b) and (8c) below plant into the LIVE ledger, so they ride
+# that window with it rather than closing it -- S183 struck the claim that they did not. The pair
+# that does not ride it is (8d)/(8e), which plants into a doctored copy of the frozen fixture and
+# so stays armed whatever the live ledger rotates to. Within each pair, the second assertion stops
+# it being satisfied by a guard that returns OK unconditionally.
 DRIFT38_PY="$(mktemp)"
 cat > "$DRIFT38_PY" <<'PY38E'
 import re, sys, importlib.machinery, importlib.util

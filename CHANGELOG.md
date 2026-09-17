@@ -199,6 +199,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S183 close-out — Test 38's landing check made positional, the gate green, the ledger trimmed
+
+- **Deliverable:** `bin/tests.sh` Test 38's plant-landing check now asks where the plant landed instead of whether
+  the planted name appears (`1cb4e44`), with two assertions frozen on a doctored fixture so the case cannot be
+  cleared by rotating a receipt. Phase 0 found the gate red at `5ae7902` (`9/10 pass · 1 fail · results
+  aff8a2e08e15`) although S182's receipt cites `10/10 pass · results 83c5e3fed6f3`, measured at `b25fc19` — one
+  commit before the close-out it certifies.
+- **Also this session, authorized at the Phase 0 picker as its own action:** the `HANDOFFS.md` retention trim
+  (`128efa4`, `--cut 2 --force`, 34,289 → 17,712 B, shard
+  [`docs/archive/HANDOFFS-through-2026-09-17-2.md`](docs/archive/HANDOFFS-through-2026-09-17-2.md)) and its fold
+  into [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md) (`94031ed`).
+- **Correction to `94031ed`'s entry, recorded rather than quietly edited.** That entry says the fold left
+  `HANDOFFS.md` at **17,264 B**. It does not: `wc -c` reads **17,256 B**. The figure was derived by subtracting the
+  front matter's documented *"~448 B pointer block"* from 17,712 instead of measuring the file — a derived number
+  published as a measured one. The entry stands as written; this line is the correction.
+- **Gate, clone of `1cb4e44`:** `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 8e12f40caec1 ·
+  manifest 3a87b16f1b31`, `tests-sh-passed` 309 at 2 receipts. Manifest digest unchanged, so no threshold moved in
+  either direction.
+- Close-out: fork Learning #76, the `HANDOFFS.md` receipt, this entry. Predecessor scored 7/10; self-assessment
+  8/10. Nothing was sent upstream and nothing was pushed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-64] `bin/tests.sh` Test 38's plant-landing check asks about position, not about text
 
 - **The defect.** The planter that arms Test 38's drift guard decided which side of the closing fence its plant
