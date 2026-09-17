@@ -214,6 +214,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S177 — D2: this repository's quality gates tightened to the fork's measured values (`tests-sh-passed` 327, `dashboard-unit-tests` 336)
+
+- **Measured:** `python3 starter-kit/quality_ratchet.py --run` in a `--no-local` clone of `f4a8ec6`, after the
+  `HANDOFFS.md` trim and fold, gave **`quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  508b2b5489f3 · manifest 97a7aab85b9a`**. The measured values: `tests-sh-passed` 327, `tests-sh-failed` 0,
+  `dashboard-unit-tests` 336, `context-budget-unit-tests` 118, `trimmer-unit-tests` 123,
+  `ratchet-unit-tests` 45, and 0 on each of the four exit-code gates.
+- **Change, `.quality-gates.json`:** `tests-sh-passed` 139 → **327** and `dashboard-unit-tests` 226 →
+  **336**. The other three count gates already sat at their measured values, and every max-gate sits at 0.
+  Both changes tighten, which the manifest's own rule lets through without approval, and the chained
+  `--precommit` passed on this commit. A fork-only note key `_fork_tightening` records the values and why.
+  Every gate's name, direction, command and extract pattern still equals `upstream/main`'s, and
+  `config_defects` is `[]`.
+- **Why 327 and not 333:** `bin/tests.sh` Test 34 turns six rows into stated skips when `HANDOFFS.md` holds
+  fewer than three receipts. Every close-out leaves two and every claim makes three, so the same tree reads
+  333 at M4 (6 receipts) and 327 here. A floor taken at 333 would refuse every close-out's gate run.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] S177 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `75056a9` wrote into `HANDOFFS.md`'s front matter is now one row of
