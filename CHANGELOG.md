@@ -199,6 +199,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-54] S179 — `tests-sh-passed` floor tightened 294 → 305, the count measured with Test 41
+
+- `.quality-gates.json` `tests-sh-passed` 294 → 305: `quality_ratchet.py --run` in a `--no-local` clone of `2c4f801`
+  (HEAD asserted), with `HANDOFFS.md` holding two receipts, the state every close-out leaves, and Test 9 green
+  (`tests-sh-failed` 0): `10/10 pass · 0 fail · 0 unmeasured · results aa1eb690b169`. 305 is S178's 294 plus Test 41's
+  11 rows. A tightening needs no approval; the other count gates are unchanged at their measured values.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-54] S179 — the history walks look up blobs in one batched call, recovering the fix's run time
 
 - **Why:** the BL-54 fix walks 732 commits across the tracked files where the default walk visited 327, and both
