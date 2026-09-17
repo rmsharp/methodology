@@ -1624,6 +1624,19 @@ whether `bin/status`'s *N versions behind* count — an index into that walk —
 branch's versions; and a test that fails on the default walk, built on a merge that does not keep the
 merged-in side's change to the path.
 
+**Fixed fork-side at S179 (2026-09-17): `2c4f801`, with `865119f` batching the blob lookups.** Both questions above were
+settled. `bin/sync` walks with `--full-history`; it asks only whether a version is known. For `bin/status` three counts
+were measured on the six adopters and **the operator chose C (picker)**: N is the distinct versions newer than the
+project's along the checkout's **first-parent** line, one per merge however many commits the merged branch had, and a
+version that only ever existed on a merged branch is counted along the full walk instead. Rejected: A, the flag alone,
+whose raw position read 63 behind for `mts-system`'s learnings file, and B, distinct versions over the full walk, which
+counts every commit inside a merged branch. The test is `bin/tests.sh` Test 41: a repository with both hiding shapes
+(a merge taking the side branch's content, `22ce71b`'s, and one keeping main's, `213f841`'s) at fixed dates. It failed
+4 rows on the old code, passes 11, and eight mutants fail it, A and B among them. On the real adopters, 8 of 174 rows
+change state, all *locally modified* → *N versions behind*, including `vscode_quarto_ext`'s `context_budget.py`, already
+misread before `22ce71b`. The fork-side commits changed `bin/status`'s run time from 3.0 s to 4.0 s over the six, and
+`bin/sync --dry-run`'s on `wsfct` from 2.9 s to 2.3 s. **Still open: the upstream PR, its own go-ahead.**
+
 <a id="bl-55"></a>
 
 **BL-55 — nothing enforces removing a completed `BACKLOG.md` item; the one detector only reports, and

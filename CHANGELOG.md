@@ -199,6 +199,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-54] S179 — BL-54 recorded: fixed fork-side, open for its upstream PR; BL-57 row and plan status; fork Learning #72
+
+- `docs/planning/BACKLOG.md`: the BL-54 row says it is fixed fork-side (`2c4f801`, `865119f`), states the operator's
+  option C, and stays **open only for its upstream PR** (its own go-ahead), so it is not removed; the BL-57 row's next
+  step becomes P6–P11. `docs/planning/BACKLOG-DETAIL.md` BL-54: a resolution paragraph settling both of the detail's
+  open questions (the count rule, the test), with the options and the measurements. The detail's `.verify.sh` exits 0.
+- `docs/planning/changelog-rules-contradictions-plan.md` status line: BL-54, which came before P6, is fixed, so adopters
+  can sync from fork `main` again.
+- `docs/FORK_LEARNINGS.md` fork Learning #72: a rejected design option is a ready-made mutant; pin the values it
+  computes differently and run it against the test. `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15
+  --no-citations` exits 0 (15..72, no row over 1,500 B); `bin/check-links` exits 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-54] S179 — `tests-sh-passed` floor tightened 294 → 305, the count measured with Test 41
 
 - `.quality-gates.json` `tests-sh-passed` 294 → 305: `quality_ratchet.py --run` in a `--no-local` clone of `2c4f801`
