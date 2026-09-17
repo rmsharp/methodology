@@ -214,6 +214,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S177 — resync stage M2 merged (`421ebf9`); two of its three red rows fixed, the third waits on the operator
+
+- **Merge `421ebf9`** (parents `374bd8c`, `cca7941`): stage M2 of
+  [`upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md) §5 R2, PR #82 through
+  its P3. The 7 conflicting files were resolved per §2.3. `.context-budget.json` keeps ours (D11).
+  **`CHANGELOG.md`:** upstream's one new entry (the quality-ratchet slice, still headed
+  `CHANGELOG: pending` here) sits after the fork's entries for 2026-09-15, above upstream's
+  "Merged PR #80". Removing it gives back ours byte for byte. **`HANDOFFS.md`: ours, unchanged — a deviation
+  from §7 item 3.** Upstream's only new receipt at this stage is S20, a `status: pending` stub. Below the
+  fork's receipts it fails `check-handoff --all --allow-pending`, because only the newest receipt may be
+  pending. Test 34's presence control runs exactly that check on the live ledger, and upstream completes S20
+  at M3, so the completed S20 is kept there instead (§2.4: an incoming receipt is checked against ours
+  before it is kept). **`bin/tests.sh`:** the fork's Tests 36–40, then upstream's ratchet block; additions
+  only. **Dashboard twins:** `DASHBOARD_VERSION` stays 2.17.0 until D3's own commit. The fork's
+  `_FRAMEWORK_INSTALLED_CONTENT` gains `quality_ratchet.py` and `.quality-gates.json` in manifest order,
+  with upstream's patterns and signatures, checked equal by evaluating both modules. Upstream's
+  `_FRAMEWORK_FILE_SIGNATURES` dict is dropped, and the docstring's *"no tool's constant satisfies
+  another's"* now names the one pair that does (both name theirs `VERSION`). **Test file:** both imports,
+  2.17.0 pins, and two pre-existing mentions of the dropped dict renamed.
+- **Measured on the merge, in a `--no-local` clone at `421ebf9`:** `bash bin/tests.sh` exit 1, **319 passed /
+  3 failed / 0 skipped**, against 309 / 0 / 0 at the claim `374bd8c`. A digit-masked row diff shows upstream's
+  11 new ratchet rows passing and exactly three pass→fail flips:
+  1. **The dashboard suite:** `test_every_shipped_executable_is_recognized_from_its_real_source` pins 4
+     installed files and the table now holds 6. **Fixed in this commit** (`tools/test_methodology_dashboard.py`,
+     4 → 6). The guard's loop checks each file against its real shipped source, so it is what proves the two
+     new table entries. With `quality_ratchet.py`'s rule neutralized the test fails, and the same holds for
+     `.quality-gates.json`; with neither neutralized it passes. The suite: 332 tests OK.
+  2. **Test 28:** the fork's never-overwrite row in `starter-kit/BOOTSTRAP.md` did not name the arriving
+     seed. **Fixed in this commit:** the Adopter-owned row names `.quality-gates.json` and the Tracked row
+     names `quality_ratchet.py`. The row is fork-only (upstream's `BOOTSTRAP.md` has no such table), and its
+     converse check still finds no tracked file in it.
+  3. **The context-budget suite: not fixed, operator decision pending.** Upstream's new
+     `TestThisRepoReadSetPartition` (P0, `008d656`) asserts two properties of this repository's root
+     `.context-budget.json`, which D11 keeps as the fork's. First, the read-set pair declares `max_tokens`:
+     the fork's declares byte ceilings only. Second, every whole-read class's token ceilings sum within one
+     25,000-token Read: the fork's `read-mandated` class declares 25,000 on each of `HANDOFFS.md` and
+     `docs/planning/BACKLOG.md`, 50,000 in total. Three ratified constraints cannot all hold: D11 with §4
+     (no ceiling changes), R2's DONE (`tools/test_context_budget.py` identical to upstream's), and a green
+     suite.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S177 claim — R2 of the resync plan: merge stages M2–M4 (`cca7941`, `64f23bf`, `6b29d3d`), D2, D3 and the trims (in progress)
 
 **Deliverable:** R2 of [`docs/planning/upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md)

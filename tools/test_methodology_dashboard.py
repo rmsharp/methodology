@@ -2725,7 +2725,9 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         hardcoding it here would re-introduce exactly the duplicated cross-reference the
         manifest-agreement test exists to prevent."""
         src_for = {dest: src for src, dest, _d in self._manifest().DISTRIBUTION}
-        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 4,
+        # 6 since the resync's stage M2 (S177): upstream's quality ratchet ships quality_ratchet.py
+        # and its .quality-gates.json seed, and the loop below checks both against their real files.
+        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 6,
                          "population guard: update this test's expectations deliberately when a "
                          "further executable ships, rather than letting the loop silently cover less")
         for dest in md.FRAMEWORK_INSTALLED_SOURCE:
