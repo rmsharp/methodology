@@ -49,6 +49,27 @@ def local_canonical_sha(methodology_root: Path, src: str) -> str:
     return blob_sha(content)
 
 
+def blobs_at(methodology_root: Path, commits: list, src: str) -> dict:
+    """commit -> blob SHA of src at that commit (None where it is not a blob), in one git call.
+
+    One batched lookup rather than a git ls-tree per commit: the full walk visits over twice
+    the commits the default walk did, and a subprocess each tripled the run time."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(methodology_root), "cat-file", "--batch-check=%(objectname) %(objecttype)"],
+            input="".join(f"{commit}:{src}\n" for commit in commits),
+            capture_output=True, text=True, check=True,
+        ).stdout.splitlines()
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return {}
+    result = {}
+    for commit, line in zip(commits, out):
+        # "<sha> blob", or "<commit>:<path> missing"
+        parts = line.split()
+        result[commit] = parts[0] if len(parts) == 2 and parts[1] == "blob" else None
+    return result
+
+
 def history_walk(methodology_root: Path, src: str, walk_flag: str, blobs: dict) -> list:
     """List of (commit_sha, blob_sha) for the file along one walk, newest first.
 
@@ -60,22 +81,10 @@ def history_walk(methodology_root: Path, src: str, walk_flag: str, blobs: dict) 
         ).stdout.strip().splitlines()
     except (FileNotFoundError, subprocess.CalledProcessError):
         return []
-    history = []
-    for commit in log:
-        if commit not in blobs:
-            try:
-                tree = subprocess.run(
-                    ["git", "-C", str(methodology_root), "ls-tree", commit, "--", src],
-                    capture_output=True, text=True, check=True,
-                ).stdout.strip()
-            except subprocess.CalledProcessError:
-                continue
-            # format: <mode> blob <sha>\t<path>
-            parts = tree.split()
-            blobs[commit] = parts[2] if len(parts) >= 3 and parts[1] == "blob" else None
-        if blobs[commit]:
-            history.append((commit, blobs[commit]))
-    return history
+    unseen = [commit for commit in log if commit not in blobs]
+    if unseen:
+        blobs.update(blobs_at(methodology_root, unseen, src))
+    return [(commit, blobs[commit]) for commit in log if blobs.get(commit)]
 
 
 def local_history(methodology_root: Path, src: str) -> dict:

@@ -199,6 +199,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-54] S179 — the history walks look up blobs in one batched call, recovering the fix's run time
+
+- **Why:** the BL-54 fix walks 732 commits across the tracked files where the default walk visited 327, and both
+  tools ran one `git ls-tree` subprocess per commit, so `bin/status` over the six adopters went 3.0 s → 10.1 s and
+  `bin/sync --dry-run` on `wsfct` 2.9 s → 7.5 s.
+- **The change:** one `git cat-file --batch-check` per walk, fed `<commit>:<path>` lines — `bin/status` `blobs_at`
+  (`:52`), used by `history_walk`; `bin/sync` `local_history_blobs` (`:55`). A separate commit from the fix, so it can be
+  judged or left out of an upstream PR on its own.
+- **Behaviour-neutral, measured:** `bin/status` over the six adopters is byte-identical to the fix commit's output
+  (174 rows); `bin/sync --dry-run` output on each of the six is identical apart from the `version:` line (HEAD
+  moved), with the same exit codes; Test 41 still 11 / 0.
+- **Run time now:** `bin/status` 4.0 s (3.0 s before the fix); `bin/sync --dry-run` on `wsfct` 2.3 s (2.9 s before).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-54] S179 — `bin/status` and `bin/sync` see versions a merge hid; *N versions behind* counts main-line versions
 
 - **The defect:** both tools listed a file's past versions with a plain `git log -- <path>`, which follows only a
