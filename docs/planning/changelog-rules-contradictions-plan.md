@@ -4,7 +4,7 @@
 S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-rules` (S167, S168, S172, S173; all four
 backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S178 block)**, and BL-54, which came
 before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in that repository, recorded here at S180
-(see the P6 block)**; P7–P12 are not.
+(see the P6 block)**; P7–P12 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one commit.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -194,6 +194,18 @@ at five; that session disclosed the breach without asking first, and `airqino`'s
 P7–P11 each meet the same cap (the S180 dry runs would write 14 files in `wsfct`, 14 in `vscode_quarto_ext`, 16 in
 `mts-system`), so it is one decision for the operator, best taken before P7: split a sync's files
 across commits of five, or treat one `bin/sync` run as one commit.
+
+**Item (18) decided at S181 (2026-09-17), by the operator (picker): one `bin/sync` run is one commit.** It binds
+P7–P11 and is written into step 2 below. That commit holds exactly the files the run wrote, as its dry run listed
+them, plus the commit's own `CHANGELOG.md` entry, and nothing else. The header migration and the `CLAUDE.md` wording
+stay in their own commits under the cap, as P6 kept them (`airqino` `5e4b483`, `9f150a5`). The entry states the file
+count and cites this item. **Why the exception holds here:** every file is a byte-for-byte copy of a fork `main`
+blob, the dry run lists them before anything is written, and one `git revert` undoes them all, which is the
+recoverability the cap exists for. Splitting would leave commits where the new `SESSION_RUNNER.md` and
+`SAFEGUARDS.md` cite `quality_ratchet.py` and `.quality-gates.json` before the commit that adds them (checked in
+`wsfct` at S181: its copies mention neither, and neither file exists). `airqino`'s `28022fe` already fits: the 14
+synced files and its entry. **Not decided here:** whether the distributed `SAFEGUARDS.md` (the same on
+`upstream/main`) or `BOOTSTRAP.md` should say so for every adopter. That is BL-63, for the upstream PR.
 
 ---
 
@@ -757,7 +769,9 @@ runner's session-notes boundary rule).
 
 1. Run `bin/status` from the source checkout: fork `main` for Route B, the branch for Route A. Decide the
    route from its output; §4.4 is only where to start (S161 §3).
-2. Sync the tracked files: a dry run, then for real.
+2. Sync the tracked files: a dry run, then for real. Commit the run as one commit, past `SAFEGUARDS.md`'s
+   five-file cap: exactly the files the dry run listed, plus that commit's ledger entry, and nothing else
+   (item (18), decided at S181).
 3. Migrate the `CHANGELOG.md` seed by hand. Replace the rules text or old header — the *block*, with its
    line range recorded before editing — with the thin header, and leave **every entry byte-identical**.
 4. Bring the project's `CLAUDE.md` ledger wording into line, and record any legacy tag format or layout as
@@ -782,7 +796,7 @@ decision; medium otherwise.
 | Phase | Adopter | Specifics |
 |---|---|---|
 | P6 | `airqino` | **DONE 2026-09-17, recorded at S180 (the P6 block, items (16)–(18)).** BL-56 folds in: reseed from the thin seed and carry its ~~one entry~~ entries (two by then; the header was migrated by hand) across, unchanged. ~~Route A from the branch, because its files are the branch's versions; from fork `main`, BL-54 refuses four files.~~ Route B, since S179 fixed BL-54. ~~It is on `chore/methodology-read-set-budgets`, off open PR #1~~ Landed on `chore/methodology-bl57-p6`, taken from that branch's `1402ad4` |
-| P7 | `wsfct` | Replace the older full seed copy (block :13–196, 5 `### ` lines) with the thin header. Route B. `CLAUDE.md` :43, :218, :695 (*"Completed work history"*) and :162, :206 (completed-work framing) |
+| P7 | `wsfct` | **At the claim, check first that `wsfct` is clean, with no other session's claim staged or uncommitted** (at S181 its own S629 had one staged). At fork `main` `b0bf91f` the dry run exits 0 and would write 14 files. Replace the older full seed copy (block :13–196, 5 `### ` lines) with the thin header. Route B. `CLAUDE.md` :43, :218, :695 (*"Completed work history"*) and :162, :206 (completed-work framing) |
 | P8 | `vscode_quarto_ext` | Replace the Keep-a-Changelog header (:1–8) with the thin header, keeping the shard pointer. Record the `[BACKLOG: …]` entries as legacy in `CLAUDE.md`. Drop `CHANGELOG.md` from its `.context-budget.json` (Q2 A; the project's call). Route B. `CLAUDE.md` :102, :146 |
 | P9 | `mts-system` | Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189 |
 | P10 | `nprcgenekeepr` | **Decide first.** Its 49-line local extension of `methodology_trim.py` blocks every sync, because one modified file refuses the whole run. Three options: send the extension upstream; migrate the seed only and leave the pointer dangling until it can sync; or `--force`, which discards the extension. Then replace the rules block (:3946–:4065, 2 `### ` lines, between two runs of entries) and record the S325 legacy block and September's `## 2026-08` placement in `CLAUDE.md` (:271) |

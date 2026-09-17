@@ -199,6 +199,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S181 — plan item (18) decided by the operator: one `bin/sync` run is one commit, for P7–P11; P7 gains a start check
+
+- **Decided (operator, S181 picker):** `docs/planning/changelog-rules-contradictions-plan.md` records it under item
+  (18) and in step 2 of P6–P11. A sync commit holds exactly the files the run wrote, as its dry run listed them, plus
+  its own ledger entry, and nothing else; hand edits stay in their own commits under `SAFEGUARDS.md`'s five-file cap.
+  The rejected option, commits of five, would leave commits where the new `SESSION_RUNNER.md` and `SAFEGUARDS.md` cite
+  `quality_ratchet.py` and `.quality-gates.json` before the files exist (checked in `wsfct`, read-only).
+  `airqino`'s `28022fe` fits the rule: its 14 synced files and its entry.
+- **P7's row** now opens with a check that `wsfct` is clean, with no other session's claim staged (its S629 had
+  one at S181), and the dry-run figure at `b0bf91f` (exit 0, 14 files). The plan's status line and the BL-57 row
+  in `docs/planning/BACKLOG.md` name the decision. Whether every adopter should be told the same is raised as
+  BL-63 in the next commit.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S181 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `89cbf05` wrote into `HANDOFFS.md`'s front matter is now one row of
