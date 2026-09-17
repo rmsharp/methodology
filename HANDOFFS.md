@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S183
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **REPAIR `bin/tests.sh` TEST 38'S PLANT-LANDING CHECK, WHICH A RECEIPT THAT MERELY QUOTES THE PLANTED NAME FALSIFIES.** The planter asks `"phantom_drift" in reblocks[0]["content"]` (`bin/tests.sh:2548`) to decide which side of the closing fence its plant landed on. S182's own receipt quotes that string inside its `what_was_done` field (`HANDOFFS.md:60`), so the check reports *inside the fence* for a plant made below it and assertion (8b) refuses to run: `PLANT MISSED: aimed at 'prose' but inside-the-fence is True`. Chosen by the operator after Phase 0 (picker), which also authorized the `HANDOFFS.md` retention trim. Fork-local; nothing upstream.
+what_was_done: pending
+next_steps: pending
+key_files: `bin/tests.sh:2548` (the landing check), `:2523`-`:2551` (the planter), `:2553` (`plant38`, which always reads the live ledger), `:2561` ((8b)), `:2572` ((8c)); `bin/check-handoff:227` (`scan`, whose `line` and `content` give the record's extent in lines); `tools/fixtures/handoff-ledger-2-records.md` (the frozen fixture); `HANDOFFS.md:60` (the quote that fires it)
+gotchas: **The gate was red BEFORE this session touched anything** - `9/10 pass · 1 fail · 0 unmeasured · results aff8a2e08e15 · manifest 3a87b16f1b31` in a `--no-local` clone of `5ae7902`, against S182's `10/10 · results 83c5e3fed6f3` measured one commit earlier at `b25fc19`. The manifest digest is unchanged, so no threshold moved and none may be moved to clear it. Planting through `bin/check-handoff`'s own `scan()` at `git show <rev>:HANDOFFS.md` pins the flip to `93656a1`, S182's close-out commit: the same BL-64 window, two sessions running. This claim names the marker deliberately, so the live-ledger control stays red until the fix lands rather than being cleared by a quieter claim.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-64] S183 claim"
+commit: pending
+```
+
+```handoff
 session: S182
 date: 2026-09-17
 status: complete

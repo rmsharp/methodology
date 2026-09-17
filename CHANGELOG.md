@@ -199,6 +199,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S183 claim — repair `bin/tests.sh` Test 38's plant-landing check, red on `main` since S182's own close-out (in progress)
+
+**Deliverable:** one fix to Test 38's planter (`bin/tests.sh:2523`-`2553`). Its landing check asks whether the string
+`phantom_drift` appears anywhere in the newest record's content; S182's receipt quotes that string inside its
+`what_was_done` field (`HANDOFFS.md:60`), so a plant made below the closing fence is reported as landing inside it and
+assertion (8b) refuses to run. Chosen by the operator after Phase 0 (picker), which also authorized the `HANDOFFS.md`
+retention trim as its own action. Canonical-only: `bin/tests.sh` is not in `bin/_manifest.py`'s distributed set, so no
+adopter is affected.
+
+**Phase 0 found it, as S182's Phase 0 found its predecessor's:** `starter-kit/quality_ratchet.py --run` in a
+`--no-local` clone of `5ae7902` reads `9/10 pass · 1 fail · 0 unmeasured · results aff8a2e08e15 · manifest
+3a87b16f1b31`, where S182's receipt cites `10/10 pass · results 83c5e3fed6f3` measured at `b25fc19`. `tests-sh-failed`
+is 1 against a max of 0; `tests-sh-passed` is 312 against a floor of 305. Replaying the planter through
+`bin/check-handoff`'s `scan()` against `git show <rev>:HANDOFFS.md` pins the flip to `93656a1` — S182's own close-out
+commit, which its citation was measured one commit too early to see (BL-64). The Phase 0 context-budget and dashboard
+snapshots ride with this claim.
+
 ### 2026-09-17 · [ad hoc] S182 — fork `main` pushed to `origin`, `29b0feb..93656a1` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main:refs/heads/main`, `29b0feb..93656a1`, a fast-forward of S182's 6 commits
