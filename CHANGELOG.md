@@ -199,6 +199,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S180 — P6 (`airqino`) recorded as done; P7 (`wsfct`) next
+
+- **Recorded:** `docs/planning/changelog-rules-contradictions-plan.md`'s status line, a P6 block with items
+  (16)–(18), and the P6 row, whose two stale facts are struck through rather than rewritten; and the BL-57 row
+  in `docs/planning/BACKLOG.md`. P6 ran in `airqino`'s own repository (its Session 6, local branch
+  `chore/methodology-bl57-p6`, `2b0230a`..`e947798`, not pushed). BL-56 closed in the previous commit.
+- **Found:** (16) the row's Route A reason was false once S179 fixed BL-54. (17) Its *one entry* was two by the
+  time P6 ran, so §4.4's figures for P7–P11 need re-deriving at each claim. (18) A sync writes more than the
+  five files `SAFEGUARDS.md` allows per commit (`28022fe`: 15), which P7–P11 all meet: one operator decision,
+  best taken before P7.
+- **Measured, read-only, from fork `main` `b5a422b`:** `bin/sync --dry-run` exits 0 with no refusals for `wsfct`,
+  `vscode_quarto_ext` and `mts-system` (14, 14 and 16 files to write), and 2 for `nprcgenekeepr` and
+  `model_project_constructor`, refusing only their genuine local edits. No adopter's `git status` changed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-56] S180 — BL-56 closed: `airqino`'s `CHANGELOG.md` is in the current ledger format
 
 - **Closed:** removed from `docs/planning/BACKLOG.md`'s open list and index, with a closed row under §Completed

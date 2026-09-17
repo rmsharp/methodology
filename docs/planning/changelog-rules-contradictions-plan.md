@@ -2,8 +2,9 @@
 
 **Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
 S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-rules` (S167, S168, S172, S173; all four
-backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S178 block)**; P6–P12 are not. **BL-54, which
-came before P6, is fixed fork-side at S179** (`2c4f801`), so adopters can sync from fork `main` again.
+backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S178 block)**, and BL-54, which came
+before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in that repository, recorded here at S180
+(see the P6 block)**; P7–P12 are not.
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -170,6 +171,29 @@ copies read `CHANGELOG.md` *present (stale format)*. The suite reads 294 passed 
 `starter-kit/methodology_trim.py:33` still says it does. F5's fix on the branch reaches fork `main` by the next merge.
 (15) **Found, not fixed:** `README.md`'s fork-only cost section (`:374`–`:404`, S42's 2026-08-04 measurements)
 still describes a 2,000-line cap and the old seed sizes. It needs its own rewrite, which no phase here covers.
+
+**P6 done (2026-09-17) in `airqino`'s own repository, its Session 6; recorded here at S180.** Local branch
+`chore/methodology-bl57-p6`, taken from `1402ad4`, not pushed: `2b0230a` (claim), `28022fe` (the sync from fork `main`
+`ff02b5c`: 14 files plus its entry), `5e4b483` (the header), `9f150a5` (`CLAUDE.md`'s ledger wording), `e947798`
+(close-out). DONE, as that session reported and as re-run from here: `bin/status` reads `CHANGELOG.md` `present` from
+the branch `83a12f0`, from `upstream/main` `6b29d3d` and from fork `main` `ff02b5c`; `5e4b483` removes only lines 1–11
+(§9.8); the heading count and the audit each went 4 → 5, the block holding neither. BL-56 is closed. What P6 found,
+for P7–P11:
+(16) **P6's row gave a reason S179 had already made false.** It chose Route A because BL-54 refused four files from
+fork `main`. After `2c4f801` the dry run from fork `main` exited 0 with no refusals, so P6 took Route B. P7–P9 already
+name Route B. Re-run at S180 from fork `main` (`b5a422b`), read-only: `wsfct`, `vscode_quarto_ext` and `mts-system`
+exit 0 with no refusals; `nprcgenekeepr` (P10) and `model_project_constructor` (P11) exit 2, refusing only the genuine
+local edits (the first's `methodology_trim.py`, the second's `SESSION_RUNNER.md` and `SAFEGUARDS.md`).
+(17) **A row's fixed figures go stale before its phase runs.** The row said *one entry*; there were two, because
+`airqino`'s own Session 5 had added one. The DONE counts are deltas across the migration commit, so they held, but
+§4.4's figures for P7–P11 (measured 2026-09-14) need re-deriving at each claim. `airqino` dropped `## [Unreleased]`
+rather than converting it, and opens its first `## YYYY-MM` at its next new month: a precedent for P8's
+Keep-a-Changelog header.
+(18) **A sync is one tool run that writes more than five files.** `28022fe` holds 15. `SAFEGUARDS.md` caps a commit
+at five; that session disclosed the breach without asking first, and `airqino`'s previous sync, `dfe26fd`, held 21.
+P7–P11 each meet the same cap (the S180 dry runs would write 14 files in `wsfct`, 14 in `vscode_quarto_ext`, 16 in
+`mts-system`), so it is one decision for the operator, best taken before P7: split a sync's files
+across commits of five, or treat one `bin/sync` run as one commit.
 
 ---
 
@@ -757,7 +781,7 @@ decision; medium otherwise.
 
 | Phase | Adopter | Specifics |
 |---|---|---|
-| P6 | `airqino` | BL-56 folds in: reseed from the thin seed and carry its one entry across, unchanged. Route A from the branch, because its files are the branch's versions; from fork `main`, BL-54 refuses four files. It is on `chore/methodology-read-set-budgets`, off open PR #1 |
+| P6 | `airqino` | **DONE 2026-09-17, recorded at S180 (the P6 block, items (16)–(18)).** BL-56 folds in: reseed from the thin seed and carry its ~~one entry~~ entries (two by then; the header was migrated by hand) across, unchanged. ~~Route A from the branch, because its files are the branch's versions; from fork `main`, BL-54 refuses four files.~~ Route B, since S179 fixed BL-54. ~~It is on `chore/methodology-read-set-budgets`, off open PR #1~~ Landed on `chore/methodology-bl57-p6`, taken from that branch's `1402ad4` |
 | P7 | `wsfct` | Replace the older full seed copy (block :13–196, 5 `### ` lines) with the thin header. Route B. `CLAUDE.md` :43, :218, :695 (*"Completed work history"*) and :162, :206 (completed-work framing) |
 | P8 | `vscode_quarto_ext` | Replace the Keep-a-Changelog header (:1–8) with the thin header, keeping the shard pointer. Record the `[BACKLOG: …]` entries as legacy in `CLAUDE.md`. Drop `CHANGELOG.md` from its `.context-budget.json` (Q2 A; the project's call). Route B. `CLAUDE.md` :102, :146 |
 | P9 | `mts-system` | Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189 |
