@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S182
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **REPAIR `bin/tests.sh` TEST 38'S DRIFT GUARD, WHICH ITS OWN RECORD EXTENT TURNED RED ON `main`.** The guard measures the newest receipt as opening fence → next record's opening fence, so it reads the self-assessment prose between records as receipt fields; `HANDOFFS.md:85` wraps onto `applied: `, and the frozen fixture has no such field. Chosen by the operator after Phase 0 (picker), with the go-ahead to push fork `main` to `origin` at close-out and to raise a backlog item for what Phase 0 found. Fork-local until the push; nothing upstream.
+what_was_done: pending
+next_steps: pending
+key_files: `bin/tests.sh:2472` (the guard's comment), `:2475` (the extent), `:2495` (the failing assertion); `bin/check-handoff:269` (`scan`, the fence-bounded parser the checker already uses), `:359` (`parse_block`, whose docstring names this exact hazard); `tools/fixtures/handoff-ledger-2-records.md:10` (the frozen fixture); `HANDOFFS.md:85` (the prose line that fires it)
+gotchas: The gate is red BEFORE this session touches anything — `8/10 pass · 2 fail · results 9ccbc3cb49b6 · manifest 3a87b16f1b31` at `29b0feb`, against S181's `10/10 · results 330ab6a19d4b` measured a commit earlier at `755fe0d`. Do not read the red as this session's doing, and do not tighten or loosen a threshold to clear it: the manifest digest is unchanged and the fix belongs in the guard. `tests-sh-passed` reads 304 at 2 receipts; with this claim making 3, Test 34's six stated skips become assertions and the same broken tree reads 310.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-64] S182 claim"
+commit: pending
+```
+
+```handoff
 session: S181
 date: 2026-09-17
 status: complete

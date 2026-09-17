@@ -199,6 +199,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S182 claim — repair `bin/tests.sh` Test 38's drift guard, which its own extent turned red on `main` (in progress)
+
+**Deliverable:** one fix to the Test 38 drift guard (`bin/tests.sh:2472`–`2495`). It measures the newest receipt as
+*opening fence → next record's opening fence*, so it reads the self-assessment prose between records as part of the
+record; `HANDOFFS.md:85` is a wrapped prose line beginning `applied: `, taken as a 14th receipt field that the frozen
+fixture does not carry. Chosen by the operator after Phase 0 (picker). The same picker gave the go-ahead to push fork
+`main` to `origin` at close-out and to raise a backlog item for what Phase 0 found.
+
+- **The gate is RED on `main`, and S181's citation could not have seen it.** S181 cited `10/10 pass · 0 fail ·
+  results 330ab6a19d4b · manifest 3a87b16f1b31`, measured in a clone of `755fe0d`. Re-run this Phase 0 in a
+  `--no-local` clone with HEAD `29b0feb` asserted: `quality_ratchet: 8/10 pass · 2 fail · 0 unmeasured · results
+  9ccbc3cb49b6 · manifest 3a87b16f1b31`. `tests-sh-passed` 304 against the 305 floor, `tests-sh-failed` 1 against 0.
+  The manifest digest is unchanged, so no threshold moved — only the measurement. One failing assertion, and it is the
+  drift guard.
+- **Bisected on the guard's own logic, not inferred:** `OK` at `b0bf91f` and `755fe0d`, `['applied']` at `473c83d`
+  and `29b0feb`. `473c83d` is S181's own close-out — the one commit a citation measured before the close-out can
+  never cover. That timing gap is the second finding and goes to the backlog with the first.
+- **Adopter impact: none.** `bin/tests.sh` is not in `bin/_manifest.py` (a bare grep for it hits only a comment at
+  `:109`); the distributed set is 23 files and does not include it.
+- Phase 0 ledger reconcile: `CHANGELOG.md` frontier `29b0feb` = HEAD, no gap; `HANDOFFS.md` frontier `473c83d`, one
+  commit behind, and that commit is S181's authorized push record under the standing grant — ledger-recorded, its
+  session's receipt present, so nothing backfilled. 2 receipts, so no retention trim is owed; this claim makes 3.
+  `upstream/main` still `6b29d3d`; PR #83 still open; no open upstream issues. Dashboard (a second clone) 76/100 with
+  **one HIGH risk flag, and it is this same breach** — *"2 of 10 declared quality gate(s) measured outside their
+  threshold"* — a second instrument reaching the same reading. `context_budget.py --status` exit 2 with the same
+  three `over` rows; its snapshot row rides with this claim.
+- **Read-only, in `wsfct`: P7 is already done there.** Its own S630 ran it today on branch
+  `chore/s630-methodology-bl57-p7`, `790c77d1`..`3a257097`, tree clean, pushed to that project's `origin`, not merged.
+  The sync is ONE commit — `8a41741c`, 14 files from fork `main` `29b0feb` — which is decision (18) applied.
+  `bin/sync ../wsfct --source=local --dry-run` from here exits 0 with all 23 files `unchanged`. Recording P7 in this
+  repository is the next session's work, not this one's.
+
 ### 2026-09-17 · [ad hoc] S181 — fork `main` pushed to `origin`, `b0bf91f..473c83d` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main:refs/heads/main`, `b0bf91f..473c83d`, a fast-forward of S181's 6 commits
