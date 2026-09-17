@@ -214,6 +214,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S177 — `.context-budget.json` restates its token ceilings so upstream's partition test passes, every verdict unchanged (operator decision, an exception to D11)
+
+- **Decision (operator, picker, after `8c429ed`):** *"Restate the config"*, chosen over patching the fork's copy
+  of `tools/test_context_budget.py` and over stopping R2 after M2. It is an exception to D11 and to plan §4's
+  *"no ceiling changes"*, taken because both limits in effect stay as they were.
+- **Change, `.context-budget.json` only:** `starter-kit/SESSION_RUNNER.md` declares `max_tokens` 18,222 and
+  `starter-kit/SAFEGUARDS.md` declares 6,777. These are `int(41,364 / 2.27)` and `int(15,386 / 2.27)`, the
+  ceilings the tool already derived from their byte ceilings; they sum to 24,999, inside the 25,000-token
+  read cap. `HANDOFFS.md` and `docs/planning/BACKLOG.md` drop the `max_tokens` 25,000 declared at `97c8066`,
+  which the tool derives anyway by clamping `max_bytes / 2.27` to the cap. Each of the four entries' notes
+  says so in its first sentence. Upstream's test file is untouched.
+- **Measured:** `context_budget.py --json` before and after on the live tree: every row keeps its status,
+  sizes, class totals and finding text (aside from the *"derived from max_bytes"* suffix), `config_defects`
+  stays `[]`, and only `ceiling_derived` flips on the four rows. `tools/test_context_budget.py`: 118 tests
+  OK. **The whole suite, in a throwaway `--no-local` clone of `8c429ed` with these values committed: exit 0,
+  322 passed / 0 failed / 0 skipped**, and a digit-masked row diff against M2's run shows exactly its three
+  FAIL→PASS flips (this change plus `8c429ed`'s two fixes).
+- **Left for later, outward:** upstream's `TestThisRepoReadSetPartition` sums *every* whole-read class against
+  one Read, but a class of separately-read ledgers is not one Read. Raising that upstream is its own go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S177 — resync stage M2 merged (`421ebf9`); two of its three red rows fixed, the third waits on the operator
 
 - **Merge `421ebf9`** (parents `374bd8c`, `cca7941`): stage M2 of
