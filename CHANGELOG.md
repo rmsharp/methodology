@@ -214,6 +214,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S177 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- The pointer block `75056a9` wrote into `HANDOFFS.md`'s front matter is now one row of
+  [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md) (4 records, 2026-09-15 → 2026-09-16,
+  `HANDOFFS-through-2026-09-16-4.md`, v1.5.0). The block is deleted, taking the file from 16,224 to 15,768 B,
+  in its own commit per the index's fold rule. `docs/archive/HANDOFFS-through-2026-09-16-4.md.verify.sh` exits
+  0 after the fold, `check-handoff --all --allow-pending` passes on 2 receipts, and `bin/check-links` exits 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-16-4.md` (4 record(s), 47,200 B → 16,224 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
