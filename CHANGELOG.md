@@ -214,6 +214,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S176 follow-up — fork `main` pushed to `origin`, `f1ae291..9aa1eb9`; BL-44 kept open (non-commit action and a grooming decision, operator go-ahead)
+
+- **Action:** `git push origin main`, `f1ae291..9aa1eb9`, a fast-forward of 38 commits: S176's claim, the
+  stage-M1 merge `5c2bd59` with the 28 upstream commits it brings, D1's four commits, the `HANDOFFS.md` trim
+  and fold, the close-out and the BL-44 note. Before the push, a guard confirmed `origin` still read `f1ae291`
+  and that it was an ancestor of `main`. Afterwards `git ls-remote` read
+  `9aa1eb9304773f3987a2566186420145b2f468e7`, equal to local `main`. The go-ahead was given by picker after
+  S176's close-out (*"Push fork main to origin"*), and this recording commit is pushed under it. Fork only;
+  nothing sent upstream.
+- **Decision (same picker):** **BL-44 stays open.** `8cfaf0d` fixed its span half; naming the reserved gap
+  in the message remains. The backlog row records the decision.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-44] S176 follow-up — the check-learnings span fix in `8cfaf0d` was BL-44, not a new finding
 
 - **Correction to the record:** `8cfaf0d`'s commit message, its ledger entry and the S176 receipt describe
