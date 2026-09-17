@@ -25,6 +25,17 @@ way to take it is to edit .quality-gates.json under plan-mode approval and commi
 with --no-verify, which the hook prints as a recorded bypass (SAFEGUARDS.md, Blast
 Radius Limits; SESSION_RUNNER.md failure mode #17).
 
+The comparison is between the staged manifest and the NEWEST PARSEABLE COMMITTED one
+in the branch's history that declares a gate -- not merely HEAD's copy. So removing
+the manifest (or emptying it) is refused as the loosest loosening, re-adding it lower
+after a bypassed removal is still a loosening against the version that was removed,
+and a corrupted or emptied HEAD copy is skipped rather than treated as a fresh start. A branch that removed its manifest and left it
+removed is not locked: with nothing staged and nothing at HEAD there is nothing to
+ratchet. What the hook cannot see: merge, rebase and cherry-pick commits, which the
+chained ledger hook skips before the ratchet runs -- a manifest conflict resolved by
+loosening during a merge is caught by the dashboard's read of the manifest's history,
+not by the hook.
+
 Python 3 stdlib only, cross-platform. Conventions follow context_budget.py.
 """
 import hashlib
@@ -36,7 +47,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 CONFIG_NAME = ".quality-gates.json"
 DEFAULT_RESULTS = ".quality-gates-results.json"
 DIRECTIONS = ("min", "max")
@@ -59,14 +70,22 @@ def run(argv, cwd=None, timeout=None, shell=False):
 
 
 def find_root(start=None):
-    d = os.path.abspath(start or os.getcwd())
+    """The project root: the nearest directory at or above `start` holding the manifest, else
+    the git toplevel. The fallback is what lets --precommit judge a commit that REMOVES the
+    manifest from the worktree (PR #82 review, 2a/4): a walk that only looks for the file
+    exited 3 there, before the removal was ever compared to anything -- and in the hook
+    install-hook writes, that exit refused every later commit in the repository."""
+    start = os.path.abspath(start or os.getcwd())
+    d = start
     while True:
         if os.path.exists(os.path.join(d, CONFIG_NAME)):
             return d
         parent = os.path.dirname(d)
         if parent == d:
-            return None
+            break
         d = parent
+    rc, out, _ = run(["git", "rev-parse", "--show-toplevel"], cwd=start)
+    return out.strip() if rc == 0 and out.strip() else None
 
 
 def load_manifest_text(text, where):
@@ -118,6 +137,29 @@ def gate_map(cfg):
 def blob_text(root, rev_path):
     rc, out, _ = run(["git", "cat-file", "-p", rev_path], cwd=root)
     return out if rc == 0 else None
+
+
+HISTORY_MAX = 50   # manifest commits walked back from HEAD for the comparison base
+
+
+def newest_committed(root):
+    """(cfg, sha) of the newest PARSEABLE, defect-free manifest in HEAD's history of the file
+    THAT DECLARES AT LEAST ONE GATE, or (None, None) if none was ever committed. A commit
+    that deleted the file, one whose copy does not parse, and one whose gate list is empty
+    (a bypassed emptying, or the seed adopters receive) are all skipped rather than read as
+    a fresh start: the base is what was last declared, and only a tightening moves it."""
+    rc, out, _ = run(["git", "log", "--format=%H", f"--max-count={HISTORY_MAX}", "--", CONFIG_NAME],
+                     cwd=root)
+    if rc != 0:
+        return None, None
+    for sha in out.split():
+        text = blob_text(root, f"{sha}:{CONFIG_NAME}")
+        if text is None:
+            continue
+        cfg, defects = load_manifest_text(text, f"{sha[:7]} {CONFIG_NAME}")
+        if cfg is not None and not defects and gate_map(cfg):
+            return cfg, sha[:7]
+    return None, None
 
 
 def head_sha(root):
@@ -175,21 +217,35 @@ BYPASS_COST = """\
 def precommit(root):
     staged = blob_text(root, f":{CONFIG_NAME}")
     if staged is None:
-        return CLEAN  # manifest not in this commit: nothing to ratchet
+        # Not in the index. Either it was never here / already removed at HEAD (nothing to
+        # ratchet -- a branch that opted out must not be locked), or this commit REMOVES it.
+        if blob_text(root, f"HEAD:{CONFIG_NAME}") is None:
+            return CLEAN
+        old_cfg, sha = newest_committed(root)
+        gone = gate_map(old_cfg) if old_cfg else {}
+        if not gone:
+            return CLEAN  # nothing parseable ever declared a gate; removing it loosens nothing
+        print(f"{RED}{B}quality-ratchet: REFUSED — manifest removed ({len(gone)} gate(s) declared "
+              f"in {sha}: {', '.join(sorted(gone))}){R}")
+        print(f"  {RED}✗ removing the manifest is the loosest loosening there is{R}")
+        print(BYPASS_COST)
+        return REFUSED
     new_cfg, defects = load_manifest_text(staged, "staged " + CONFIG_NAME)
     if new_cfg is None or defects:
         for m in defects:
             print(f"{RED}quality-ratchet: config defect — {m}{R}")
         print(f"{RED}refused: a manifest with defects would gate nothing{R}")
         return REFUSED
-    old = blob_text(root, f"HEAD:{CONFIG_NAME}")
-    if old is None:
+    old_cfg, sha = newest_committed(root)
+    if old_cfg is None:
         print(f"{D}quality-ratchet: first manifest commit ({len(new_cfg['gates'])} gate(s)) — "
               f"nothing to compare against{R}")
         return CLEAN
-    old_cfg, _ = load_manifest_text(old, "HEAD " + CONFIG_NAME)
-    if old_cfg is None:
-        return CLEAN  # HEAD's copy is unparseable; the staged one is the first valid manifest
+    head_copy = blob_text(root, f"HEAD:{CONFIG_NAME}")
+    head_cfg = load_manifest_text(head_copy, "HEAD")[0] if head_copy is not None else None
+    if head_copy is None or not gate_map(head_cfg or {}):
+        print(f"{D}quality-ratchet: comparing against {sha}, the newest committed manifest that "
+              f"declares a gate (HEAD's copy is absent, unparseable, or empty){R}")
     refusals, warnings = compare(old_cfg, new_cfg)
     for m in warnings:
         print(f"{YEL}quality-ratchet: warning — {m}{R}")
@@ -207,15 +263,22 @@ def precommit(root):
 
 # === MEASUREMENT (--run) ===
 
-def measure_gate(root, g, timeout):
-    """Run one gate. Returns a result dict; `status` is pass | fail | unmeasured."""
+def measure_gate(root, g, timeout, memo=None):
+    """Run one gate. Returns a result dict; `status` is pass | fail | unmeasured. `memo` is a
+    per-run dict: two gates over the same command (a suite's passed count and its failed
+    count) run it once — the same run, the same output, two numbers read from it."""
     res = {"name": g["name"], "direction": g["direction"], "threshold": float(g["threshold"]),
            "measured": None, "status": "unmeasured", "note": ""}
     cmd = g.get("command")
     if not cmd:
         res["note"] = "declared, no command"
         return res
-    rc, out, err = run(cmd, cwd=root, timeout=timeout, shell=True)
+    if memo is not None and cmd in memo:
+        rc, out, err = memo[cmd]
+    else:
+        rc, out, err = run(cmd, cwd=root, timeout=timeout, shell=True)
+        if memo is not None:
+            memo[cmd] = (rc, out, err)
     text = out + err
     if g.get("extract"):
         m = re.search(g["extract"], text, re.MULTILINE)
@@ -236,7 +299,8 @@ def measure_gate(root, g, timeout):
 
 
 def run_gates(root, cfg, timeout=600):
-    results = [measure_gate(root, g, timeout) for g in cfg.get("gates", [])]
+    memo = {}
+    results = [measure_gate(root, g, timeout, memo) for g in cfg.get("gates", [])]
     summary = {s: sum(1 for r in results if r["status"] == s)
                for s in ("pass", "fail", "unmeasured")}
     snapshot = {"gates": results, "summary": summary,
@@ -324,10 +388,16 @@ def do_status(root, cfg, as_json=False):
 
 HOOK = """#!/bin/sh
 # installed by quality_ratchet.py — refuses a commit that LOOSENS a declared quality
-# threshold in .quality-gates.json. Tightening and adding gates always pass.
-exec python3 "$(git rev-parse --show-toplevel)/quality_ratchet.py" --precommit
+# threshold in .quality-gates.json, or removes the manifest. Tightening and adding pass.
+exec python3 "$(git rev-parse --show-toplevel)/{tool}" --precommit
 """
-HOOK_LINE = HOOK.strip().splitlines()[-1]
+
+
+def hook_text(tool_relpath):
+    """The hook execs the copy that installed it. Adopters hold the tool at the root; the
+    canonical repo under starter-kit/ — a hook that assumed the root broke every commit
+    in a fresh clone of the latter (PR #82 review, section 4)."""
+    return HOOK.format(tool=tool_relpath.replace(os.sep, "/"))
 
 
 def install_hook(root):
@@ -335,6 +405,9 @@ def install_hook(root):
     if rc:
         print(f"{RED}not a git repository: {err}{R}"); return USAGE
     gd = gd.strip() if os.path.isabs(gd.strip()) else os.path.join(root, gd.strip())
+    rc3, top, _ = run(["git", "rev-parse", "--show-toplevel"], cwd=root)
+    top = top.strip() if rc3 == 0 and top.strip() else root
+    tool = os.path.relpath(os.path.abspath(__file__), top)
     rc2, configured, _ = run(["git", "config", "--get", "core.hooksPath"], cwd=root)
     configured = configured.strip()
     if rc2 == 0 and configured:
@@ -349,9 +422,9 @@ def install_hook(root):
             print(f"  already installed at {p}"); return CLEAN
         print(f"{YEL}a pre-commit hook already exists at {p} and is not ours — chain it:{R}")
         print(f"  add this line before its final exit (after a ledger gate, if you run one):\n"
-              f"    python3 \"$(git rev-parse --show-toplevel)/quality_ratchet.py\" --precommit || exit $?")
+              f"    python3 \"$(git rev-parse --show-toplevel)/{tool}\" --precommit || exit $?")
         return WARN
-    open(p, "w").write(HOOK); os.chmod(p, 0o755)
+    open(p, "w").write(hook_text(tool)); os.chmod(p, 0o755)
     print(f"  installed {p}")
     print(f"  {D}bypass with `git commit --no-verify` — recorded, not exempt{R}")
     return CLEAN
@@ -430,6 +503,26 @@ def selftest():
         run(["git", "-C", d, "add", CONFIG_NAME])
         rc, _, _ = run(["git", "-C", d, "commit", "-q", "-m", "tighten"])
         check("the installed hook passes a tightened threshold", rc == 0)
+        # the deletion hole: removal refused; re-add lower after a bypass still refused; no lockout
+        run(["git", "-C", d, "rm", "-q", CONFIG_NAME])
+        rc, out, err = run(["git", "-C", d, "commit", "-q", "-m", "remove the manifest"])
+        check("removing the manifest is refused as the loosest loosening",
+              rc != 0 and "manifest removed" in out + err)
+        rc, _, _ = run(["git", "-C", d, "commit", "-q", "--no-verify", "-m", "remove anyway"])
+        check("--no-verify bypasses the removal too (recorded)", rc == 0)
+        open(os.path.join(d, "unrelated.txt"), "w").write("x\n")
+        run(["git", "-C", d, "add", "unrelated.txt"])
+        rc, _, _ = run(["git", "-C", d, "commit", "-q", "-m", "unrelated"])
+        check("a branch that removed its manifest is not locked", rc == 0)
+        json.dump(loosened, open(os.path.join(d, CONFIG_NAME), "w"))
+        run(["git", "-C", d, "add", CONFIG_NAME])
+        rc, out, err = run(["git", "-C", d, "commit", "-q", "-m", "re-add lower"])
+        check("re-adding the manifest lower than the removed one is refused",
+              rc != 0 and "REFUSED" in out + err)
+        json.dump(tightened, open(os.path.join(d, CONFIG_NAME), "w"))
+        run(["git", "-C", d, "add", CONFIG_NAME])
+        rc, _, _ = run(["git", "-C", d, "commit", "-q", "-m", "re-add as it was"])
+        check("re-adding it at or above the removed thresholds passes", rc == 0)
     if fails:
         print(f"\n{RED}selftest: {len(fails)} of {len(fails) + passed[0]} checks FAILED{R}")
         return REFUSED
@@ -476,6 +569,10 @@ def main():
         return USAGE
     if "--precommit" in args:
         return precommit(root)
+    if not os.path.exists(os.path.join(root, CONFIG_NAME)):
+        print(f"{RED}no {CONFIG_NAME} found at or above {os.getcwd()}{R}")
+        print("  This tool refuses to invent thresholds for a project that has not declared them.")
+        return USAGE
     cfg, defects = load_manifest_text(open(os.path.join(root, CONFIG_NAME)).read(), CONFIG_NAME)
     if cfg is None or defects:
         for m in defects:

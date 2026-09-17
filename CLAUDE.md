@@ -78,6 +78,8 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 | `starter-kit/ROADMAP.md` | Feature inventory and future plans template |
 | `starter-kit/methodology_dashboard.py` | Health scanner — copy to project root for per-project dashboard |
 | `starter-kit/methodology_trim.py` | Ledger trimmer — archives the oldest records of a grow-and-must-be-read ledger (`CHANGELOG.md`, `HANDOFFS.md`) into a frozen shard, and refuses to write unless the reconstruction is provably lossless. Dry-run by default; `--check` reports the trigger without writing. **Distributed since S39'** (`bin/_manifest.py`), so it lands at every adopter root beside the dashboard |
+| `starter-kit/context_budget.py` | Context-budget gate (FM #28) — byte and token ceilings on the files a session must read, reported by `--status`. **Distributed**, with its seed `starter-kit/context-budget.json` → `.context-budget.json`. This repo's root config is its own, not the seed |
+| `starter-kit/quality_ratchet.py` | Quality ratchet (upstream PR #82) — thresholds declared in the root `.quality-gates.json` that only tighten: `--precommit`, chained into `.githooks/pre-commit`, refuses a loosened or removed gate; `--run` measures every gate. **Distributed**, with an empty seed `starter-kit/quality-gates.json` → `.quality-gates.json` |
 
 ### Tools
 
@@ -86,6 +88,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 | `tools/methodology_dashboard.py` | Portfolio health scanner — scores projects on activity, testing, docs, CI/CD, and methodology, where the 2nd and 5th dimensions adapt to the repo class (testing → render/verification for a doc-only repo; compliance → framework integrity for a repo that publishes the framework, overridable via `.methodology-profile`); generates HTML dashboard. Place in parent directory above project repos. Python 3 stdlib only, cross-platform. |
 | `tools/test_methodology_dashboard.py` | Functional scoring tests for the health scanner (stdlib `unittest`). **Canonical-only** — not in `bin/_manifest.py`, so adopters do not receive it. Wired into `bin/tests.sh`; it imports only the `tools/` module and byte-compares the `starter-kit/` twin. Since S38 it also *loads* `starter-kit/methodology_trim.py` for the trim-row couplings, and still generates no `starter-kit/__pycache__` — `sys.dont_write_bytecode = True` is set before the imports (`:25`), which is what keeps that true rather than the import list. |
 | `tools/test_methodology_trim.py` | Behaviour tests for the ledger trimmer (stdlib `unittest`, 66 tests). **Canonical-only.** Wired into `bin/tests.sh` as of S39' — before that the trimmer's own tests ran in nothing, which stopped being tolerable once `bin/sync` began installing the tool at adopter roots. Sets `sys.dont_write_bytecode` (`:34`) for the same reason its sibling does. |
+| `tools/test_context_budget.py`, `tools/test_quality_ratchet.py` | Unit suites for the context-budget gate and the quality ratchet (stdlib `unittest`). **Canonical-only**; wired into `bin/tests.sh`. |
 
 ### Workstreams (domain-specific adaptations)
 

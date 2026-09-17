@@ -198,6 +198,17 @@ class TestRunStatusAndResultsFile(unittest.TestCase):
         self.assertEqual(rc, qr.WARN)
         self.assertTrue(json.loads(buf.getvalue())["stale"])
 
+    def test_two_gates_over_one_command_run_it_once(self):
+        # Two extracts over the same suite (passed count, failed count) must not run it twice:
+        # a --run that takes bin/tests.sh twice is a --run nobody cites.
+        marker = os.path.join(self.d, "runs.txt")
+        cmd = f'"{PY}" -c "open({marker!r}, \'a\').write(\'x\'); print(\'7 passed, 1 failed\')"'
+        cfg = manifest(gate("passed", "min", 7, command=cmd, extract=r"(\d+) passed"),
+                       gate("failed", "max", 1, command=cmd, extract=r"passed, (\d+) failed"))
+        snap = qr.run_gates(self.d, cfg)
+        self.assertEqual([r["status"] for r in snap["gates"]], ["pass", "pass"])
+        self.assertEqual(open(marker).read(), "x", "the shared command ran more than once")
+
     def test_a_failing_gate_exits_refused_and_an_unmeasured_one_warns(self):
         failing = manifest(gate("three", "min", 4, command=f'"{PY}" -c "print(3)"', extract=r"(\d+)"))
         self.assertEqual(qr.do_run(self.d, failing, as_json=True), qr.REFUSED)
@@ -249,6 +260,17 @@ class TestPrecommitThroughGit(unittest.TestCase):
         self._stage(manifest(gate("cov", "min", 90)))
         self.assertEqual(self._precommit()[0], qr.CLEAN)
 
+    def test_no_base_note_when_head_holds_the_base(self):
+        # An unrelated commit after the manifest's last change: HEAD still holds the base, and
+        # `git log -- manifest` naming an older commit is not "HEAD has none".
+        open(os.path.join(self.d, "unrelated.txt"), "w").write("x\n")
+        subprocess.run(["git", "-C", self.d, "add", "unrelated.txt"], check=True)
+        subprocess.run(["git", "-C", self.d, "commit", "-q", "-m", "unrelated"], check=True)
+        self._stage(manifest(gate("cov", "min", 90)))
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.CLEAN)
+        self.assertNotIn("comparing against", out)
+
     def test_the_index_not_the_worktree_is_what_is_ratcheted(self):
         # Stage a tightening, then loosen only the worktree copy: the commit is the index.
         self._stage(manifest(gate("cov", "min", 90)))
@@ -266,12 +288,141 @@ class TestPrecommitThroughGit(unittest.TestCase):
         self.assertIn("config defect", out)
 
     def test_first_manifest_commit_has_nothing_to_compare(self):
+        # "First" means never committed on this branch's history -- not "absent at HEAD".
+        fresh = tempfile.TemporaryDirectory(); self.addCleanup(fresh.cleanup)
+        for argv in (["git", "init", "-q", fresh.name],
+                     ["git", "-C", fresh.name, "config", "user.email", "t@t"],
+                     ["git", "-C", fresh.name, "config", "user.name", "t"]):
+            subprocess.run(argv, check=True)
+        open(os.path.join(fresh.name, "README"), "w").write("x\n")
+        subprocess.run(["git", "-C", fresh.name, "add", "-A"], check=True)
+        subprocess.run(["git", "-C", fresh.name, "commit", "-q", "-m", "base"], check=True)
+        json.dump(manifest(gate("cov", "min", 1)), open(os.path.join(fresh.name, qr.CONFIG_NAME), "w"))
+        subprocess.run(["git", "-C", fresh.name, "add", qr.CONFIG_NAME], check=True)
+        import contextlib, io
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = qr.precommit(fresh.name)
+        self.assertEqual(rc, qr.CLEAN)
+        self.assertIn("first manifest commit", buf.getvalue())
+
+    # --- the deletion hole (PR #82 review, section 2a): a comparison needs two sides ---
+
+    def _commit_removal(self):
+        """Commit the manifest's removal as `--no-verify` would: index has none, HEAD keeps history."""
         subprocess.run(["git", "-C", self.d, "rm", "-q", "--cached", qr.CONFIG_NAME], check=True)
         subprocess.run(["git", "-C", self.d, "commit", "-q", "-m", "drop"], check=True)
+
+    def test_removing_the_manifest_is_refused_as_the_loosest_loosening(self):
+        subprocess.run(["git", "-C", self.d, "rm", "-q", "--cached", qr.CONFIG_NAME], check=True)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED)
+        self.assertIn("manifest removed", out)
+        self.assertIn("--no-verify", out)
+
+    def test_readding_lower_after_a_committed_removal_is_refused(self):
+        self._commit_removal()
         self._stage(manifest(gate("cov", "min", 1)))
         rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED)       # 80 -> 1 via delete + re-add is still 80 -> 1
+        self.assertIn("floor lowered", out)
+        self._stage(manifest(gate("cov", "min", 80)))
+        self.assertEqual(self._precommit()[0], qr.CLEAN)
+
+    def test_an_already_removed_manifest_does_not_lock_the_repo(self):
+        self._commit_removal()
+        open(os.path.join(self.d, "unrelated.txt"), "w").write("x\n")
+        subprocess.run(["git", "-C", self.d, "add", "unrelated.txt"], check=True)
+        self.assertEqual(self._precommit()[0], qr.CLEAN)
+
+    def test_an_unparseable_head_copy_is_skipped_for_the_newest_parseable(self):
+        open(os.path.join(self.d, qr.CONFIG_NAME), "w").write("not json")
+        subprocess.run(["git", "-C", self.d, "add", qr.CONFIG_NAME], check=True)
+        subprocess.run(["git", "-C", self.d, "commit", "-q", "-m", "corrupt"], check=True)
+        self._stage(manifest(gate("cov", "min", 70)))
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED)       # compared against the 80 two commits back
+        self.assertIn("floor lowered", out)
+        self._stage(manifest(gate("cov", "min", 80)))
+        self.assertEqual(self._precommit()[0], qr.CLEAN)
+
+    def test_an_emptied_manifest_is_not_a_comparison_base(self):
+        # Emptying the gate list is refused like a removal; bypassed, it must not become the
+        # base that lets a later re-declaration land lower than what was declared before.
+        self._stage(manifest())
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED)
+        subprocess.run(["git", "-C", self.d, "commit", "-q", "--no-verify", "-m", "empty anyway"], check=True)
+        self._stage(manifest(gate("cov", "min", 1)))
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED)       # 80 -> 1, with an empty manifest in between
+        self.assertIn("floor lowered", out)
+
+    def test_a_synced_empty_seed_is_not_a_comparison_base_either(self):
+        # The seed adopters receive is empty; the first real declaration is a first commit.
+        fresh = tempfile.TemporaryDirectory(); self.addCleanup(fresh.cleanup)
+        for argv in (["git", "init", "-q", fresh.name],
+                     ["git", "-C", fresh.name, "config", "user.email", "t@t"],
+                     ["git", "-C", fresh.name, "config", "user.name", "t"]):
+            subprocess.run(argv, check=True)
+        json.dump(manifest(), open(os.path.join(fresh.name, qr.CONFIG_NAME), "w"))
+        subprocess.run(["git", "-C", fresh.name, "add", "-A"], check=True)
+        subprocess.run(["git", "-C", fresh.name, "commit", "-q", "-m", "seed"], check=True)
+        json.dump(manifest(gate("cov", "min", 50)), open(os.path.join(fresh.name, qr.CONFIG_NAME), "w"))
+        subprocess.run(["git", "-C", fresh.name, "add", qr.CONFIG_NAME], check=True)
+        import contextlib, io
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = qr.precommit(fresh.name)
         self.assertEqual(rc, qr.CLEAN)
-        self.assertIn("first manifest commit", out)
+        self.assertIn("first manifest commit", buf.getvalue())
+
+    def test_precommit_cli_survives_a_manifest_missing_from_the_worktree(self):
+        # Through the CLI: an ordinary `git rm` empties the worktree copy too. The tool must
+        # still find the repo (git toplevel) and judge the removal, not exit 3 "refuses to invent".
+        subprocess.run(["git", "-C", self.d, "rm", "-q", qr.CONFIG_NAME], check=True)
+        p = subprocess.run([PY, str(STARTER), "--precommit"], cwd=self.d, capture_output=True, text=True)
+        self.assertEqual(p.returncode, qr.REFUSED, p.stdout + p.stderr)
+        self.assertIn("manifest removed", p.stdout)
+
+
+class TestFindRootAndHookPath(unittest.TestCase):
+    def setUp(self):
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        self.d = td.name
+        for argv in (["git", "init", "-q", self.d],
+                     ["git", "-C", self.d, "config", "user.email", "t@t"],
+                     ["git", "-C", self.d, "config", "user.name", "t"]):
+            subprocess.run(argv, check=True)
+
+    def test_find_root_is_the_git_toplevel_even_without_a_manifest(self):
+        sub = os.path.join(self.d, "a", "b"); os.makedirs(sub)
+        self.assertEqual(os.path.realpath(qr.find_root(sub)), os.path.realpath(self.d))
+
+    def test_find_root_walks_up_to_a_manifest_outside_git(self):
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        json.dump(manifest(), open(os.path.join(td.name, qr.CONFIG_NAME), "w"))
+        sub = os.path.join(td.name, "x"); os.makedirs(sub)
+        self.assertEqual(os.path.realpath(qr.find_root(sub)), os.path.realpath(td.name))
+
+    def test_install_hook_writes_the_path_of_the_file_that_is_running(self):
+        # The canonical repo keeps the tool under starter-kit/; an adopter at the root. The hook
+        # must exec whichever copy installed it, or every commit fails "can't open file".
+        tools = os.path.join(self.d, "tools"); os.makedirs(tools)
+        import shutil; shutil.copy(STARTER, os.path.join(tools, "quality_ratchet.py"))
+        json.dump(manifest(gate("g", "min", 1, command="true")), open(os.path.join(self.d, qr.CONFIG_NAME), "w"))
+        subprocess.run(["git", "-C", self.d, "add", "-A"], check=True)
+        subprocess.run(["git", "-C", self.d, "commit", "-q", "-m", "base"], check=True)
+        p = subprocess.run([PY, os.path.join(tools, "quality_ratchet.py"), "install-hook"],
+                           cwd=self.d, capture_output=True, text=True)
+        self.assertEqual(p.returncode, qr.CLEAN, p.stdout + p.stderr)
+        hook = open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+        self.assertIn("tools/quality_ratchet.py", hook)
+        open(os.path.join(self.d, "unrelated.txt"), "w").write("x\n")
+        subprocess.run(["git", "-C", self.d, "add", "unrelated.txt"], check=True)
+        p = subprocess.run(["git", "-C", self.d, "commit", "-q", "-m", "after install"],
+                           capture_output=True, text=True)
+        self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
 
 
 class TestToolInvariants(unittest.TestCase):

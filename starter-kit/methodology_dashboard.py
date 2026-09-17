@@ -2811,7 +2811,6 @@ def collect_render_metrics(path, files, ci, meth):
 GATES_MANIFEST = ".quality-gates.json"
 GATES_RESULTS_DEFAULT = ".quality-gates-results.json"
 GATES_HISTORY_MAX = 50          # manifest commits scanned for loosenings, newest first
-_COVERAGE_GATE_RE = re.compile(r"coverage", re.IGNORECASE)
 
 
 def _gate_map(cfg):
@@ -2822,48 +2821,105 @@ def _gate_map(cfg):
 
 
 def _gate_loosenings(old_cfg, new_cfg):
-    """Loosenings in old -> new: a `min` lowered, a `max` raised, a gate removed. Mirrors
-    quality_ratchet.compare() deliberately (the scanner cannot import an adopter-root tool)."""
+    """Loosenings in old -> new: a `min` lowered, a `max` raised, a direction flipped, a gate
+    removed. Mirrors quality_ratchet.compare() deliberately (the scanner cannot import an
+    adopter-root tool). A flip used to fall through both threshold branches and out of the
+    function — refused by the tool, reported as nothing here (PR #82 review, section 4)."""
     out = []
     old, new = _gate_map(old_cfg), _gate_map(new_cfg)
     for name, og in old.items():
         ng = new.get(name)
         if ng is None:
-            out.append({"name": name, "from": og.get("threshold"), "to": None, "kind": "removed"})
+            out.append({"name": name, "from": _num(og.get("threshold")), "to": None, "kind": "removed"})
+            continue
+        if og.get("direction") != ng.get("direction"):
+            out.append({"name": name, "from": f"{og.get('direction')} {og.get('threshold')}",
+                        "to": f"{ng.get('direction')} {ng.get('threshold')}", "kind": "direction flipped"})
             continue
         try:
             ot, nt = float(og.get("threshold")), float(ng.get("threshold"))
         except (TypeError, ValueError):
             continue
-        if og.get("direction") == "min" and ng.get("direction") == "min" and nt < ot:
+        if og.get("direction") == "min" and nt < ot:
             out.append({"name": name, "from": ot, "to": nt, "kind": "floor lowered"})
-        elif og.get("direction") == "max" and ng.get("direction") == "max" and nt > ot:
+        elif og.get("direction") == "max" and nt > ot:
             out.append({"name": name, "from": ot, "to": nt, "kind": "ceiling raised"})
     return out
 
 
+def _num(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return v
+
+
+def _gate_command_changes(old_cfg, new_cfg):
+    """A gate whose `command` or `extract` differs between two versions. Not a loosening — the
+    scanner cannot know whether the new command is easier — but the tool warns on it at commit
+    time and the bypass message promises the dashboard shows it, so it is an advisory here."""
+    out = []
+    old, new = _gate_map(old_cfg), _gate_map(new_cfg)
+    for name, og in old.items():
+        ng = new.get(name)
+        if ng is None:
+            continue
+        for field in ("command", "extract"):
+            if og.get(field) != ng.get(field):
+                out.append({"name": name, "field": field})
+    return out
+
+
 def _gate_manifest_history(path):
-    """[(sha, date, cfg)] newest first, capped, from the manifest's own git history."""
+    """[(sha, date, cfg)] newest first, capped, from the manifest's own git history. A version
+    the commit deleted, or one that does not parse, is recorded as an EMPTY gate list flagged
+    `_deleted` / `_unreadable` — never skipped. Skipping it dropped the deletion AND both pairs
+    around it from the comparison (PR #82 review, 2a): an empty gate set is exactly the input
+    that makes "every gate is missing" true, and that is the one case _gate_loosenings already
+    handles."""
     log = git_cmd(path, "log", f"--max-count={GATES_HISTORY_MAX}", "--format=%h|%ad",
                   "--date=short", "--", GATES_MANIFEST)
     hist = []
     for line in log.splitlines():
         sha, _, date = line.partition("|")
+        if not _blob_exists(path, sha):
+            hist.append((sha, date, {"gates": [], "_deleted": True}))
+            continue
         raw = git_cmd(path, "show", f"{sha}:{GATES_MANIFEST}")
         try:
-            hist.append((sha, date, json.loads(raw)))
+            cfg = json.loads(raw)
+            if not isinstance(cfg, dict):
+                raise ValueError("not an object")
+            hist.append((sha, date, cfg))
         except ValueError:
-            hist.append((sha, date, None))
+            hist.append((sha, date, {"gates": [], "_unreadable": True}))
     return hist
 
 
+def _blob_exists(path, sha):
+    """Whether the manifest exists at `sha` — by exit code, which git_cmd discards. `git show`
+    on a deleted path prints nothing to stdout, indistinguishable from an empty file."""
+    try:
+        r = subprocess.run(["git", "-C", str(path), "cat-file", "-e", f"{sha}:{GATES_MANIFEST}"],
+                           capture_output=True, timeout=5)
+        return r.returncode == 0
+    except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+        return False
+
+
 def collect_gate_metrics(path):
-    m = {"manifest_present": False, "declared": 0, "results_present": False,
-         "results_stale": False, "summary": None, "failing": [], "unmeasured": [],
-         "coverage_measured_pass": False, "loosened": [], "ran_at": None,
+    m = {"manifest_present": False, "manifest_deleted": False, "declared": 0,
+         "results_present": False, "results_stale": False, "summary": None, "failing": [],
+         "unmeasured": [], "loosened": [], "commands_changed": [], "ran_at": None,
          "convention": "quality-gates.json v1"}
     mp = path / GATES_MANIFEST
+    # The history walk runs whenever the manifest HAS a history — including when the worktree
+    # no longer has the file. Returning early on `not mp.is_file()` made the deleted-and-never-
+    # re-added state, the largest loosening available, report nothing (PR #82 review, 2a).
+    hist = _gate_manifest_history(path) if (mp.is_file() or _manifest_has_history(path)) else []
+    _fold_history(m, hist)
     if not mp.is_file():
+        m["manifest_deleted"] = bool(hist)
         return m
     m["manifest_present"] = True
     try:
@@ -2894,18 +2950,26 @@ def collect_gate_metrics(path):
                             for k in ("pass", "fail", "unmeasured")}
             m["failing"] = [r.get("name") for r in results if r.get("status") == "fail"]
             m["unmeasured"] = [r.get("name") for r in results if r.get("status") == "unmeasured"]
-            m["coverage_measured_pass"] = (not m["results_stale"]) and any(
-                r.get("status") == "pass" and _COVERAGE_GATE_RE.search(str(r.get("name")))
-                for r in results)
+    return m
 
-    hist = _gate_manifest_history(path)
-    for (sha, date, newer), (_osha, _odate, older) in zip(hist, hist[1:]):
-        if newer is None or older is None:
+
+def _manifest_has_history(path):
+    return bool(git_cmd(path, "log", "--max-count=1", "--format=%h", "--", GATES_MANIFEST))
+
+
+def _fold_history(m, hist):
+    """Each version is compared to the nearest OLDER version that declared a gate — the same
+    base quality_ratchet.py uses — so 80 -> (deleted) -> 1 reads as 80 -> 1, not as 'added'."""
+    for i, (sha, date, newer) in enumerate(hist):
+        older = next((c for (_s, _d, c) in hist[i + 1:] if _gate_map(c)), None)
+        if older is None:
             continue
         for l in _gate_loosenings(older, newer):
-            l.update({"sha": sha, "date": date})
+            l.update({"sha": sha, "date": date, "manifest_deleted": bool(newer.get("_deleted"))})
             m["loosened"].append(l)
-    return m
+        for c in _gate_command_changes(older, newer):
+            c.update({"sha": sha, "date": date})
+            m["commands_changed"].append(c)
 
 
 def _profile_tokens(path):
@@ -3062,6 +3126,8 @@ def gates_summary_html(g):
     """One line: 'none declared' | 'N declared, never run' | 'P pass / F fail / U unmeasured
     (stale)' · 'k loosened'. Advisory text only; the numbers are the ratchet's, not the scanner's."""
     if not g or not g.get("manifest_present"):
+        if g and g.get("manifest_deleted"):
+            return f"manifest deleted &bull; {len(g.get('loosened', []))} loosened"
         return "None"
     n = g.get("declared", 0)
     if not n:
@@ -3130,11 +3196,10 @@ def score_health(metrics):
             scores["testing"] = 0
         if metrics.get("coverage_configs"):
             scores["testing"] = min(20, scores["testing"] + 2)
-        # D6: MEASURED coverage over CONFIGURED coverage — the first number (not file-existence)
-        # the scanner scores. A passing gate named *coverage* in a current results file earns +2
-        # on top of the configured +2; the cap is unchanged, so a saturated repo moves nothing.
-        if metrics.get("gates", {}).get("coverage_measured_pass"):
-            scores["testing"] = min(20, scores["testing"] + 2)
+        # No points for a gate NAMED coverage (2.11.0 gave +2): `echo 100` earned it, from a
+        # results file that is gitignored by default. The plan's own condition — a faithfulness
+        # check beside any coverage floor — is not expressible from a name; until it is, gate
+        # outcomes are advisory risks only (PR #82 review, section 4).
 
     # 3. Documentation (0-20)
     doc = metrics["docs"]
@@ -3214,6 +3279,14 @@ def assess_risks(metrics):
     # Quality gates (D6) — advisory outcomes of the ratchet; a repo with no manifest, or the
     # empty seed, says nothing here (see collect_gate_metrics).
     g = metrics.get("gates", {})
+    if g.get("manifest_deleted") and not g.get("declared"):
+        last = g["loosened"][0] if g.get("loosened") else None
+        where = f" in {last['sha']} ({last['date']})" if last else ""
+        gone = len({l["name"] for l in g.get("loosened", []) if l.get("manifest_deleted")})
+        risks.append({"severity": "medium",
+                      "description": f"Quality-gate manifest deleted{where} — {gone} declared gate(s) "
+                                     f"gone with it; thresholds only tighten (SAFEGUARDS Blast Radius; "
+                                     f"FM #17)"})
     if g.get("declared"):
         n = g["declared"]
         if not g.get("results_present"):
@@ -3237,13 +3310,24 @@ def assess_risks(metrics):
                                              f"measures is a suggestion"})
         if g.get("loosened"):
             last = g["loosened"][0]
-            what = ("removed" if last["kind"] == "removed"
-                    else f"{last['kind']} {last['from']:g} → {last['to']:g}")
+            if last["kind"] == "removed":
+                what = "removed (manifest deleted)" if last.get("manifest_deleted") else "removed"
+            elif last["kind"] == "direction flipped":
+                what = f"direction flipped {last['from']} → {last['to']}"
+            else:
+                what = f"{last['kind']} {last['from']:g} → {last['to']:g}"
             more = f" (+{len(g['loosened']) - 1} earlier)" if len(g["loosened"]) > 1 else ""
             risks.append({"severity": "medium",
                           "description": f"Quality threshold `{last['name']}` {what} in "
                                          f"{last['sha']} ({last['date']}){more} — thresholds only "
                                          f"tighten (SAFEGUARDS Blast Radius; FM #17)"})
+        if g.get("commands_changed"):
+            c = g["commands_changed"][0]
+            more = f" (+{len(g['commands_changed']) - 1} more)" if len(g["commands_changed"]) > 1 else ""
+            risks.append({"severity": "low",
+                          "description": f"Quality gate `{c['name']}` `{c['field']}` changed in "
+                                         f"{c['sha']} ({c['date']}){more} — the ratchet holds "
+                                         f"thresholds, not commands; review what it now measures"})
 
     # Both thresholds are stated in percent, so the partial-adoption test reads the normalized
     # percentage. The "none at all" test deliberately stays on the RAW sum: it is scale-

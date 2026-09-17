@@ -1335,6 +1335,76 @@ precedent for any other file. **A second, smaller action rides with it:** a back
 adopters should be told how to trim a ledger losslessly. **Ledger:** `CHANGELOG: pending` — the crash
 breadcrumb until Phase 3F.
 
+### 2026-09-16 · [ad hoc] PR #82 review-response fixes — the six corrections and the review's accepted findings, one checkpoint per fix
+
+- **Action:** the fix set the maintainer's confirmation comment promised, built on `feat/quality-ratchet`
+  after merging `main` (`b2aea23`, ledger union). Operator-directed bundling across subsystems (the S8
+  shape), one independently verified checkpoint commit per fix. Session S22: merge `b2aea23`, claim `563a6e2`,
+  seven checkpoints `b742344`..`b5dda4e`, the close-out commit. PR head `b5dda4e` + close-out; NOT merged.
+- Merge `b2aea23`: `origin/main` (S21) into the branch; `CHANGELOG.md` and `HANDOFFS.md` resolved as a union.
+- **F1 — the deletion hole** (review 2a + 4, bullets 1 and 4): `quality_ratchet.py` 1.0.0 → 1.1.0. `find_root`
+  falls back to the git toplevel, so `--precommit` can judge a commit that removes the manifest instead of
+  exiting 3 "refuses to invent thresholds" (the exit that, in the hook `install-hook` writes, refused every
+  later commit). The comparison base is now the **newest parseable committed manifest that declares a
+  gate** — not HEAD's copy — so removing the manifest is refused as the loosest loosening, re-adding it
+  lower after a bypassed removal is still refused against the removed version, and a corrupted or emptied
+  HEAD copy is skipped; a branch that removed its manifest and left it removed is not locked. The
+  empty-gates rule was found by the test, not the review: the first cut used "newest parseable" and a
+  bypassed `{"gates": []}` became a base that let a lower re-declaration through. `install-hook` writes
+  the path of the copy that is running (`starter-kit/quality_ratchet.py` here, root for adopters).
+  `.githooks/pre-commit` fires when the worktree OR HEAD has a manifest. Tests: unit 33 → 43 (8 RED
+  first, 2 controls), selftest 17 → 22, `bin/tests.sh` +4 through real git (one RED on the old tool: the
+  lockout) — and the pre-existing `git checkout -- manifest` in that block restored the worktree from a
+  still-staged refused edit; now `checkout HEAD --`.
+- **F1b** — the F1 base note fired on every ordinary commit ("HEAD has none") because `git log -- manifest`
+  names the newest commit that *touched* the file, not HEAD; seen in the F1 checkpoint's own hook output.
+  The note now prints only when HEAD's copy is absent, unparseable, or empty. Unit 43 → 44 (RED first).
+- **F2 — the dashboard** (review 2a fix 3 + O1, §4 bullets 2–3): `DASHBOARD_VERSION` 2.11.0 → 2.11.1, both
+  twins. The history walk runs whenever the manifest *has* a history, not only when the worktree has the
+  file — the early return made the deleted-and-never-re-added state report nothing; it now reports
+  `manifest deleted in <sha>` with every gate that went with it. A deleted or unparseable version is
+  recorded as an empty gate list (flagged), never skipped. Each version is compared to the nearest OLDER
+  version that declared a gate — the base `quality_ratchet.py` now uses — so 80 → (deleted) → 1 reads
+  as `floor lowered 80 → 1`, not "added". A direction flip is a loosening in its own right; a changed
+  `command`/`extract` is a separate LOW advisory, as the bypass message promised. The +2 for a passing
+  gate *named* coverage is dropped (`echo 100` earned it, from a gitignored file). Unit 222 → 226 (6 RED
+  first, incl. the version pin); fleet delta 0 by construction — no sibling repo has a manifest history.
+- **F3 — `tests-sh-failed` at `max 1`** (review 2b): declared now at the branch's measured value (Test 9 by
+  construction), so a second failure is caught today; tightens to 0 in the first commit after merge.
+  Manifest 9 → 10 gates (the ratchet's own verdict on the staged edit: "1 gate(s) added"). Because two
+  gates now read one `bash bin/tests.sh`, `run_gates` memoizes identical commands within a run — the
+  suite runs once, two numbers are read from it; a `--run` that took the suite twice is one nobody
+  cites (unit 44 → 45, RED first).
+- **F4 — the docs** (review 2c, §5, and the unraised merge/rebase skip): `SESSION_RUNNER.md` Phase 0 step 6
+  gains the gate-citation check — the newest complete receipt's `quality_ratchet:` line against the results
+  file, or a re-run — **paid for by reduction**: the step's HANDOFFS clause no longer restates the note eight
+  lines below it, and step 5 loses an aside; measured by the doubled-file Read **18,897.5 → 18,865.5 tokens**
+  (53,328 → 53,252 B), 34.5 under the 18,900 ceiling. `SAFEGUARDS.md` ratchet row: removing the manifest is
+  refused; merge/rebase commits skip the hook and the dashboard's history read is the catch (16,765 → 17,024
+  B, 6,029.7 tokens, 70 under 6,100; the pair 24,894.5 = 99.58 % of the cap). `ITERATIVE_METHODOLOGY.md`
+  §Mechanical Gates states the enforcement point beside the "every actor" claim (opt-in hook, on-record
+  bypass, merge skip; CI is what makes "every" literal). `BOOTSTRAP.md` Step 10: the manifest itself is
+  ratcheted; the two limits stated plainly.
+- **F5 — the budget config** (review §3 + O2): both read-set densities re-measured on the blobs they now
+  describe — runner **2.8248 → 2.8227** on `2a3e410d` (53,252 B, 18,865.5 tokens), SAFEGUARDS **2.8191 →
+  2.8234** on `933816b4` (17,024 B, 6,029.7) — each entry naming its blob and the rule: re-measure when
+  `git rev-parse HEAD:<path>` changes; `measured_bytes` at 25 % drift is not a substitute. `CLAUDE.md`
+  gains a **token ceiling, 23,483 at its measured 2.519 B/token** (blob `1244e95b`), the byte pin kept as
+  the coarse backstop — the S20 reduction was −15 B and **+62 tokens**, which a byte pin cannot see. The
+  tool now reports 23,482 / 18,865 / 6,029 against 23,483 / 18,900 / 6,100, within one token of the
+  measurements. Not built: a `measured_blob` key the tool checks itself (follow-up).
+- **F6 — tightened to measured** (the ratchet doing its job): `tests-sh-passed` 134 → 138, `dashboard-unit-tests`
+  222 → 226, `ratchet-unit-tests` 33 → 45 — three tightenings, no approval needed, the hook's verdict on the
+  staged edit exit 0. `--run`: **10/10 pass · 0 fail · 0 unmeasured · results `efccbc7f2195` · manifest
+  `08423c179055`**, 2 m 46 s with `bin/tests.sh` executed once for its two gates.
+- **Non-commit actions:** branch pushed at `b5dda4e`; PR #82 body replaced — rmsharp's §1 rewording as the
+  description (facts updated: base = newest committed manifest with gates, ten gates, 2.11.1, the two
+  limits), the decisions in plain words, a "Review findings and what changed" section (read back: 9,876
+  chars). **Learning #16** appended (1,137 B; 15 rows, `#14` reserved). `git merge-tree --write-tree
+  --name-only origin/main feat/quality-ratchet` **exit 0 at this close-out** — clean, by exit code (S21's
+  lesson). Not built, recorded: `measured_blob` self-check in the budget tool; the `context-budget` gate
+  (history-file decision first); CI.
+
 ### 2026-09-16 · [ad hoc] Posted the maintainer's confirmation of the PR #82 review to the PR (non-commit action)
 
 - **Action:** one maintainer comment on [PR #82](https://github.com/KJ5HST/methodology/pull/82) answering
@@ -2114,13 +2184,18 @@ next session. `HANDOFFS.md` holds five receipts and its trim refuses with `SRF_R
   450 unit tests OK, `check-links` OK) and fork `main` (304/1)
 - **Model:** Claude Opus 5, 1M context (claude-opus-5[1m])
 
-### 2026-09-15 · [ad hoc] Quality ratchet — the plan's Phases 1–4 built as one pre-declared vertical slice — CHANGELOG: pending
+### 2026-09-15 · [ad hoc] Quality ratchet — the plan's Phases 1–4 built as one pre-declared vertical slice (PR opened, not merged)
 
 - **Action:** implement [`docs/planning/quality-ratchet-plan.md`](docs/planning/quality-ratchet-plan.md)
   (PR #81, the plan; D1–D10) through its four buildable layers on branch `feat/quality-ratchet`, one
   checkpoint commit per layer with the full matrix at each boundary, and open a PR for review. Phases 5
-  (adopter dogfood) and 6 (release) are separate sessions by the plan's own text. Session S20; the
-  checkpoint list and the PR number are completed at close-out.
+  (adopter dogfood) and 6 (release) are separate sessions by the plan's own text. Session S20. **Checkpoints:**
+  claim `5cd300e` · P0 `008d656` · P1 `628d218` · P2a `9d34485` · P2b `727d9ff` · P2c `d433739` · P3 `cca7941` ·
+  P4a `bae6b05` · P4b `58babe6` · P4c `04044f1` · self-review `b4226d3` + `d24fb2c` · close-out (this commit).
+  **Gate run cited in the receipt:** `quality_ratchet: 9/9 pass · results 74c773523dab · manifest 2424c429b2c6`.
+  **§8 decisions** taken at the plan's recommendations (1 yes; 2 gitignored; 3 amend #17; 4 empty seed; 5 separate
+  file; 7 separate plan) and listed in the PR body for the operator to reverse. **PR opened:**
+  [#82](https://github.com/KJ5HST/methodology/pull/82) (a non-commit action; the branch pushed as `e13958d`).
 - **P0 — preconditions (checkpoint 1).** `tools/test_context_budget.py`: `TestFitGateEndToEnd` skipped only
   when NO transcript existed, but `calibrate()` refuses to fit below 4 usable sessions — on this machine (2
   transcripts for the repo path) both tests ran and failed against *"not enough to fit"*, so `bin/tests.sh`
@@ -2201,6 +2276,46 @@ next session. `HANDOFFS.md` holds five receipts and its trim refuses with `SRF_R
   (`TestQualityGateSignals`), **RED first against the 2.10.7 scanner: 11 ran, 2 failures + 7 errors**; unit
   suite **211 → 222** OK. **Fleet delta: 27 repos re-scanned under 2.10.7 and 2.11.0 — 0 changed class,
   score, or risk set** (none has a manifest). `bin/tests.sh` 127/1 (Test 9 by construction).
+- **P4a — workstreams and the honesty citation (checkpoint 7).** `workstreams/DEVELOPMENT_WORKSTREAM.md`: Step 4's
+  "what's the current standard?" now has its answer (the declared floors/ceilings in `.quality-gates.json`;
+  measure and declare at the current value where none exist) and *Code Health Metrics* is generated by
+  `quality_ratchet.py --run`, not hand-filled. `workstreams/AUDIT_WORKSTREAM.md`: anti-pattern **#10 "Findings
+  that stay prose"** (list was 1–9) — a mechanical-invariant finding becomes a declared gate. **D9**:
+  `starter-kit/HANDOFFS.md` documents the gate-run citation (the `quality_ratchet: N/M pass · …` summary line
+  in `runtime_smoke`) and the Phase 0 comparison of the cited counts against the results file, with the
+  v3.3-style ceiling (structure at lint, counts at reconcile, truth of nothing a gate does not express);
+  `bin/check-handoff` gains the lint — when a manifest beside the ledger declares ≥ 1 gate, the **newest**
+  complete receipt must carry the token (newest-only, so receipts written before the manifest are not
+  re-judged and `--all` stays green on history). Observed in a scratch ledger: silent with no manifest and
+  with the empty seed; FAIL with one gate and no citation (both modes); OK once cited.
+- **P4b — this repo dogfoods the ratchet (checkpoint 8).** Root `.quality-gates.json` declares **9 gates at
+  their current measured values** — `tests-sh-passed ≥ 134`, the four unit-suite counts (dashboard ≥ 222,
+  budget ≥ 118, trimmer ≥ 123, ratchet ≥ 33), and five exit-code gates (`check-links`, `check-learnings`,
+  `check-handoff --all --allow-pending`, `commit-msg --selftest`) — with `tests-sh-failed ≤ 0` recorded as the
+  **first tightening owed after merge** (Test 9 is red by construction on the branch, and a gate declared
+  red teaches bypass). First `--run`: **9/9 pass**. `.githooks/pre-commit` chains `--precommit` before the
+  ledger gate — **observed live in this repo**: a staged floor 127 → 100 was refused with the bypass cost
+  printed, then reverted. `bin/tests.sh` 128 → **135** checks: the manifest parses with no defects and
+  declares gates; the hook chains the ratchet; the D9 lint observed silent (no manifest; empty seed),
+  failing (one gate, no citation — both modes) and passing (cited).
+- **P4c — completeness sweep (checkpoint 9; Learning #10).** Every site that enumerates the distributed corpus
+  now names the ratchet — and, found by the same sweep, the two tools that v3.7/#80 shipped **without ever
+  reaching these lists**: `README.md` (§Option A/B copy lists, the repo tree — `starter-kit/` gains
+  `methodology_trim.py`, `context_budget.py` + `context-budget.json`, `quality_ratchet.py` +
+  `quality-gates.json`; `tools/` gains the three canonical-only unit suites), `CLAUDE.md` (starter-kit and
+  tools tables), `docs/tutorials/T1_setup.md` (the expected-result file list and the seeds), and
+  `HOW_TO_USE.md`'s Phase 3C line (the mechanical branch). No count claim moved. `bin/check-links` 107 OK.
+- **Self-review (checkpoints 10–11), before the PR.** (a) The gate run is now a named close-out step everywhere
+  close-out is enumerated (Learning #8): `SESSION_RUNNER.md` 3E (one line — `--run` is the smoke test's
+  mechanical half; cite its summary line), `ITERATIVE_METHODOLOGY.md` Phase 6 step 8 (c), `HOW_TO_USE.md` 3E.
+  (b) Learning #15's *"26 of 28 failure modes bind by text alone"* put in the past tense — this ratchet is
+  what changes it. (c) **Two budget consequences, paid by reduction, not by a raised ceiling** (the rule this
+  PR adds): the P4c table rows had pushed `CLAUDE.md` **984 B over its arrival-size pin** (59,168 B — the F3
+  class flagged on #80); six existing rows/bullets were tightened and it reads **59,153 B, 15 under**;
+  the runner's two new lines were shaved so it sits at 18,878 / 18,900 tokens. Measured pair after the
+  trims: doubled Read **49,683 → 24,842 tokens** (99.4 % of the cap; tool estimate 24,824, within 18).
+  `context_budget.py --status` OK, exit 0. (The ledger hook refused the CLAUDE.md commit until this line was
+  co-staged — the fast path working as designed.)
 
 ### 2026-09-15 · [ad hoc] Merged PR #80 — the read-set budgets series (#76–#79)
 
