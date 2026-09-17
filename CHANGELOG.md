@@ -8,31 +8,39 @@ This repository dogfoods its own methodology: every session records its actions 
 close-out (`starter-kit/SESSION_RUNNER.md` Phase 3F), and Phase 0 reconciles the ledger against
 `git log` and backfills anything a crashed or out-of-band session missed. Taking an action — any
 commit, or any non-commit action (release, tag, PR, upstream issue close, access grant, grooming
-decision) — and not recording it is failure mode #27. The full close-out and reconcile rules, plus
-the reusable seed, live in [`starter-kit/CHANGELOG.md`](starter-kit/CHANGELOG.md).
+decision) — and not recording it is failure mode #27. The rules for this file live in
+[`FRAMEWORK_APPARATUS.md` §The Action Ledger](FRAMEWORK_APPARATUS.md#the-action-ledger); the reusable
+seed, [`starter-kit/CHANGELOG.md`](starter-kit/CHANGELOG.md), points there.
 
 **Source tag — exactly one per entry.** This enumerates every logged action across the live file
 and its archives, and proves all three sources landed:
 
 ```
-grep -hE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[(issue #[0-9]+|BL-[0-9]+|ad hoc)\]' \
-  CHANGELOG.md docs/archive/CHANGELOG-*.md | wc -l
+cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') \
+  | grep -cE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[(issue #[0-9]+|BL-[^]]+|ad hoc)\]'
 ```
 
 It is anchored to the entry heading, and it reads the archives, for two separate reasons. The
 unanchored single-file form published here before the v3.6 split returned **78** against 64 actions —
 it also matched the three tag definitions just below and eleven in-prose mentions of a tag — and after
-the split it would have stopped counting the archived entries at all.
+the split it would have stopped counting the archived entries at all. It lists the shards with
+`git ls-files`, not a bare glob, because zsh aborts a glob that matches nothing; it is the audit in
+§The Action Ledger, which counts the same in zsh and bash.
 
 - `[issue #<N>]` — a repository issue. Issues live in `KJ5HST/methodology`; the fork
   `rmsharp/methodology` has Issues disabled, so entries — authored from either side — cite an
   **absolute URL**, never a bare `#<N>`, and resolve identically from both.
-- `[BL-<N>]` — a backlog item, removed from the backlog in the same commit. That backlog is
+- `[BL-<id>]` — a backlog item, removed from the backlog in the same commit. That backlog is
   [`docs/planning/BACKLOG.md`](https://github.com/rmsharp/methodology/blob/main/docs/planning/BACKLOG.md)
-  on fork `main` only — **this repo has no `docs/planning/BACKLOG.md`** — so a `[BL-<N>]` entry here
+  on fork `main` only — **upstream has no `docs/planning/BACKLOG.md`** — so a `[BL-<id>]` entry
   records work whose origin lives in the fork.
 - `[ad hoc]` — work with no backlog or issue origin: releases, tag/branch ops, PR opens, upstream
   issue closes, access grants, and decline/wontfix/grooming decisions.
+
+**Claims.** A session's claim commit carries an *(in progress)* entry here, and its close-out adds its
+own (§The Action Ledger, *Lifecycle*). This repo keeps no `SESSION_NOTES.md`, so the Phase 1B crash
+breadcrumb is the claim's `status: pending` receipt in [`HANDOFFS.md`](HANDOFFS.md). The pre-commit hook
+exempts no claim: one that stages no entry is refused like any other commit.
 
 **Boundary vs. `CLAUDE.md` §Versioning — so the two ledgers cannot diverge.** §Versioning owns
 *released-version semantics* (one narrated entry per shipped version); `README.md` §What's New is
@@ -102,43 +110,16 @@ the two against each other rather than merely computing them):
 grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md docs/archive/CHANGELOG-*.md
 ```
 
-**When to archive again — a rate, not a level.** Archive when the headroom to the 2,000-line
-`READ_CAP_LINES` proxy — the agent `Read` cap is denominated in **tokens**, and 2,000 lines is a
-stand-in for it pending Phase B of
-[`read-cap-premise-correction-plan.md`](docs/planning/read-cap-premise-correction-plan.md) —
-divided by the observed growth per ledger *entry*, falls below **15 entries**; then cut
-oldest-first until that ratio is back above **30**. Both are denominated in entries — the framework's
-own unit — deliberately: commits-per-session is the most adopter-variable quantity in the system, so a
-team committing 10× per session reads a 10× lower slope for identical growth, and the same file
-crosses or clears the threshold depending only on which denominator you picked. Compute it; never
-recall it:
-
-```sh
-split=$(git log --diff-filter=A -1 --format=%H -- 'docs/archive/CHANGELOG-*.md')
-live=$(wc -l < CHANGELOG.md)
-dl=$(( live - $(git show $split:CHANGELOG.md | wc -l) ))
-de=$(( $(grep -c '^### ' CHANGELOG.md) - $(git show $split:CHANGELOG.md | grep -c '^### ') ))
-if [ "$de" -gt 0 ] && [ "$dl" -gt 0 ]; then
-  echo "$(( (2000 - live) * de / dl )) entries of headroom"
-else
-  echo "no slope yet — fewer than one entry written since the last split ($de entries, $dl lines)"
-fi
-```
-
-It **abstains out loud** rather than printing a confident number it cannot support: immediately after
-a split both deltas are zero, and against a superseded baseline they go negative. Either way you get
-a sentence saying so, never a figure. That is the same discipline the numbers above are asking for.
-
-A **level** was the previous rule, and it failed in the file next door: `HANDOFFS.md` states its
-trigger as "approaches ~1,200 lines" and the archive actually fired at 997 — 203 lines early, with
-nothing watching. A level is a hand-written derived value that decays silently; a rate re-derives
-itself from the file every time it is read. This file crossed the cap once already, at 2,090 lines,
-and its ten oldest entries were not reaching a reader who read it whole. **That was recorded here
-as *silent* dropping, and that word was wrong** — truncation is announced, with a `PARTIAL view`
-banner naming the true length; what was silent was that **nothing in the repo was checking**, so
-the overrun was found by accident. Re-measured since, the file was 186,704 B — roughly 2.8–3.1×
-the token cap — so it had been truncating well before it reached 2,090 lines: the incident dates
-when the problem was *noticed*, not when it began.
+**When to archive — the operator's decision, not a rate.** Archiving is optional (§The Action Ledger,
+*Archiving is optional*), and `methodology_trim.py --file CHANGELOG.md --check` is the only statement of a
+trigger. **The operator decided on 2026-09-14 not to trim this file at that trigger** (`3745748`) and
+reaffirmed it at S177 (2026-09-16): `--check` keeps firing, and a trim is raised with the operator only
+once the file passes the 262,144 B hard read refusal (`READ_REFUSE_BYTES`). Nothing reads this file
+whole: Phase 0 takes its frontier from `git log`, close-out prepends under the topmost month, and a
+lookup greps; past the refusal, read the top with an offset and a limit. The rate rule that stood here
+(archive below 15 entries of headroom to a 2,000-line `READ_CAP_LINES` proxy) went with the seed's
+two-cap rule at BL-57's P2; `git show cba2166:CHANGELOG.md` recovers it, with the 2,090-line overrun it
+recorded.
 
 **Reconcile-on-read entries below — the compact form, and the method stated once.** Each
 `[ad hoc] Reconcile-on-read` entry records one Phase 0 discharge of BL-14's shipped half
@@ -213,6 +194,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ---
 
 ## 2026-09
+
+### 2026-09-16 · [BL-57] S178 — P5 step 2: this ledger's front matter and `HANDOFFS.md`'s retention line follow the one-home rules
+
+- **`CHANGELOG.md` front matter, five changes:**
+  - The rules *"live in [`FRAMEWORK_APPARATUS.md` §The Action Ledger]"*, and the seed *"points there"*. It
+    said the rules and the seed both *"live in `starter-kit/CHANGELOG.md`"*, which the merge made false.
+  - The audit takes any backlog id (`BL-[^]]+`) and lists shards with `git ls-files`, the home's cross-shell
+    form. It reads **638 in zsh and bash alike, equal to the heading count**. At Phase 0 the old form, the
+    new form in each shell and the heading count all read 635, so widening the id changed nothing here.
+  - `[BL-<N>]` becomes `[BL-<id>]` in the tag definitions, and *"this repo has no
+    `docs/planning/BACKLOG.md`"* (upstream's wording, false here) becomes *"upstream has no …"*.
+  - A new **Claims** paragraph (C7): a claim commit carries an *(in progress)* entry; the crash breadcrumb is
+    the pending receipt, since this repo keeps no `SESSION_NOTES.md`; the hook exempts no claim (D10).
+  - *When to archive again — a rate, not a level* (the 2,000-line `READ_CAP_LINES` rate rule) becomes the
+    operator's decision: archiving optional, `--check` the only trigger statement, no trim at it
+    (`3745748`, reaffirmed at S177), a trim raised only past 262,144 B. `git show cba2166:CHANGELOG.md`
+    recovers the old text. Net −959 B before this entry.
+- **`HANDOFFS.md` front matter (C4):** Phase 0 counts receipts and reports; a trim above 2 is its own action
+  after that report, never inside Phase 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
 
 ### 2026-09-16 · [BL-57] S178 — D10: the pre-commit hook's Phase 1B claim carve-out and its Test 27 are removed (operator decision)
 

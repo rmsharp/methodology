@@ -10,8 +10,10 @@ This repository dogfoods its own methodology: every session records a durable, m
 replacing S127's N=4**, taken against BL-59's measurement of what actually reads this file: the
 handoff is done by the newest receipt alone. **Depth and trigger are separate on purpose:**
 every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **`methodology_trim.py` fires on BYTES (196,608 B),
-never on a record count**, so the policy is applied by the session that notices: at Phase 0 run
-`grep -c '^```handoff' HANDOFFS.md`; **above 2**, trim with `--cut 1 --force`. The force is
+never on a record count**, so the policy is applied by the session that notices: Phase 0 runs
+`grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
+that report, never inside Phase 0, which is read-only apart from the reconcile backfill
+(`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 1 --force`. The force is
 warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
 (BL-59). `bin/check-handoff` validates the 13-key schema on the **newest** receipt; `--all` checks
 every receipt and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent.
