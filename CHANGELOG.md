@@ -199,6 +199,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S181 close-out — item (18) decided (one sync run, one commit), `HANDOFFS.md` trimmed; P7 (`wsfct`) waits for its S629
+
+- `HANDOFFS.md`: S181's receipt is complete (self 7, S180 scored 8), with the Phase 3A evaluation and
+  self-assessment beneath it. 2 receipts, so the next Phase 0 owes no trim.
+- `docs/FORK_LEARNINGS.md`: fork Learning #74. Another repository's state is a timed reading even inside one
+  session: `wsfct` read clean at Phase 0, and its own S629 had staged a claim minutes later (committed as
+  `94dd56ae` by close-out). A plan names the check to run at a phase's claim, never a state seen earlier.
+- **Gates:** clone of `755fe0d`, `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 330ab6a19d4b ·
+  manifest 3a87b16f1b31`, `tests-sh-passed` 305 at 2 receipts.
+- **Next:** P7 from `~/Development/wsfct` as its own session, once its S629 has closed out; then a session here
+  records it. Fork `main` is pushed to `origin` after this commit (operator go-ahead, S181's picker).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-63] S181 — BL-63 raised: a sync writes more files than a commit may hold, and no distributed document says how to commit it
 
 - **Raised** in `docs/planning/BACKLOG.md` with its detail in `docs/planning/BACKLOG-DETAIL.md` (`#bl-63`).

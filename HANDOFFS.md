@@ -53,18 +53,42 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
 ```handoff
 session: S181
 date: 2026-09-17
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: **TRIM `HANDOFFS.md`, RECORD THE OPERATOR'S ANSWER TO BL-57 PLAN ITEM (18) (ONE `bin/sync` RUN IS ONE COMMIT, FOR P7–P11), AND ADD A START CHECK TO THE P7 ROW.** Chosen by the operator after Phase 0 (picker), with item (18) answered and the go-ahead to push fork `main` to `origin` at close-out in the same picker. P7 itself runs later from `~/Development/wsfct`, as that project's own session. Fork-local until the push; nothing upstream.
-what_was_done: pending
-next_steps: pending
-key_files: `docs/planning/changelog-rules-contradictions-plan.md:5` (status), `:192` (item (18)), `:753` (P6–P11), `:785` (P7 row); `docs/planning/BACKLOG.md:151` (BL-57); `docs/HANDOFFS_ARCHIVE_INDEX.md` (the fold)
-gotchas: `wsfct` is not clean: its own S629 has a claim staged (`HANDOFFS.md`, `SESSION_NOTES.md`), so P7 cannot start there until that session closes. With this claim the ledger holds 4 receipts; `--cut 2 --force` keeps this stub and S180's receipt, as S179's trim did after its claim.
-runtime_smoke: pending
-changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S181 claim"
-commit: pending
+status: complete
+self_score: 7
+predecessor_score: 8
+active_task: **BL-57 PLAN ITEM (18) IS DECIDED: ONE `bin/sync` RUN IS ONE COMMIT, FOR P7–P11 (operator, picker). `HANDOFFS.md` IS TRIMMED AND FOLDED. P7, `wsfct`, IS NEXT, BUT ONLY AFTER `wsfct`'S OWN S629 CLOSES; THAT SESSION WAS OPEN WHILE THIS ONE RAN.** The same picker gave the go-ahead to push fork `main` to `origin` after this close-out. Before choosing, the operator asked whether waiting for the `wsfct` or `nprcgenekeepr` sessions to end would change this session's options. It would not: adopter phases run in the adopters' own repositories. Nothing sent upstream.
+what_was_done: **Phase 0:** no gap in either ledger. S180's gate citation, re-run in a clone of `b0bf91f`, matched (`c86e8ef9b42b`). Dashboard (second clone) 76/100, no high risk. `context_budget.py --status` exit 2 with the same three `over` rows; its row rode the claim, and the report said so. **`74cee65`** claim. **`89cbf05`** retention trim, `--cut 2 --force`: S179 and S178 to `docs/archive/HANDOFFS-through-2026-09-17.md`, 33,267 → 13,883 B; its proof exits 0 before and after the commit. **`2784cc4`** fold into the index, 13,435 B. **`82a0b3b`** item (18) recorded (a decision paragraph, step 2 of P6–P11, the status line, the BL-57 row) and P7's start check. Every claim was checked before the picker: `wsfct`'s dry run at `b0bf91f` (exit 0, 14 files, its `git status` the same before and after); its current `SESSION_RUNNER.md` and `SAFEGUARDS.md` mention neither `quality_ratchet.py` nor `.quality-gates.json`, and neither file exists there; `airqino`'s `28022fe` holds its 14 synced files plus its entry. **`755fe0d`** BL-63 raised, with its own `[BL-63]` entry, as BL-62's raising had: no distributed document says how to commit a sync, so every adopter meets the cap. **This close-out:** fork Learning #74, this receipt, the ledger entry.
+next_steps: **(1) P7, `wsfct`** (plan `docs/planning/changelog-rules-contradictions-plan.md:799`), run from `~/Development/wsfct` as that project's own session, **and only once `git status --porcelain` there is empty and its S629 (claim `94dd56ae`, Dependabot PR #901) has closed out.** Route B from fork `main`: re-run the dry run at the claim (14 files at `b0bf91f`). Commit the sync as ONE commit: exactly the files the run wrote plus its ledger entry, nothing else (step 2, `:772`; decision `:198`). The header migration and the `CLAUDE.md` wording go in their own commits. The block is still `CHANGELOG.md:13`–`196` (`## 2026-09` at `:197`, checked at S181), but re-derive the `CLAUDE.md` lines. `wsfct` merges through PRs, so branch there. **(2) After P7 reports, a session here records it,** as S180 recorded P6: its claims checked read-only from here, then the plan block, row and BL-57 row. **(3) Push, authorized:** fork `main` goes to `origin` right after this close-out commit; its record follows under the standing grant. **(4) The next Phase 0 here finds 2 receipts: no trim.** **(5) Upstream go-aheads, still pending:** BL-54's PR, and now BL-63 (whether `SAFEGUARDS.md` or `BOOTSTRAP.md` tells every adopter how to commit a sync); both fit P12. **CARRIED:** BL-61; BL-60 (folds BL-36); BL-62 and #80's F5 ride P12; `README.md`'s stale cost section (plan item (15)); the runner and `SAFEGUARDS.md` stay `over`. P10 (`nprcgenekeepr`) opens with a decision this repository can prepare while its S696 runs: its 49 added lines register `SESSION_NOTES.md` as a third trimmer ledger, which is BL-32.
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:7` (status line), `:192` (item (18)), `:198` (the decision), `:772` (step 2), `:799` (P7 row); `docs/planning/BACKLOG.md:151` (BL-57), `:156` (BL-63); `docs/planning/BACKLOG-DETAIL.md:2130` (BL-63); `docs/FORK_LEARNINGS.md:86` (#74); `docs/HANDOFFS_ARCHIVE_INDEX.md:53` (the new row); `docs/archive/HANDOFFS-through-2026-09-17.md` and its `.verify.sh`; in `~/Development/wsfct`: `CHANGELOG.md:13`–`196` (the block)
+gotchas: **(1) `wsfct` HAS A SESSION OPEN.** Its S629 claimed while this session ran: clean at Phase 0, then staged, then committed as `94dd56ae`. Check `git status --porcelain` and its newest receipt at P7's claim, not before (fork Learning #74). **(2) A TRIM AFTER A CLAIM IS `--cut 2`, NOT `--cut 1`.** `HANDOFFS.md`'s header and S180's item (3) say `--cut 1`, which fits only a trim made before any claim; the claim is a fourth record. S175 and S179 met the same mismatch. **(3) `tests-sh-passed` READS 305 AT 2 RECEIPTS** (this close-out) and 311 once the next claim makes 3. Never tighten from 311. **(4) PHASE 0 STILL WRITES A TRACKED ROW** (`context_budget.py --status` → `.context-budget-history.jsonl`); it rides the claim. **(5) NO `git add -p` HERE:** to commit one hunk of a file, write the partial version, stage it, then restore the full file (used for `BACKLOG.md` between `82a0b3b` and `755fe0d`). **(6) RUN SUITES ONE AT A TIME** (Test 9 and GitHub's rate limit). **(7) `git fetch upstream origin` FETCHES A REF NAMED `origin` FROM `upstream`** and fails; fetch each remote separately.
+runtime_smoke: **NO APPLICATION; THE BUILD-EQUIVALENT IS `quality_ratchet.py --run` (which runs `bash bin/tests.sh`) IN A `--no-local` CLONE WITH HEAD ASSERTED.** **Final, clone of `755fe0d`: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 330ab6a19d4b · manifest 3a87b16f1b31`**, `tests-sh-passed` 305 at 2 receipts, the same results digest as S179's 2-receipt run. The Phase 0 run on `b0bf91f` matched S180's citation (`c86e8ef9b42b`, 311 at 3 receipts). On the live tree after the commits: `docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh` 0 (after the trim and after the fold); `bin/check-handoff --all --allow-pending` 0 on 2 receipts, `--archived --file` the shard 0; `bin/check-links` 0; `docs/planning/BACKLOG-DETAIL.md.verify.sh` 0; `docs/planning/BACKLOG-archive-2026-08-15.md.verify.sh` 0; `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` 0 with row 74. **Adopters, read-only:** `bin/sync ../wsfct --source=local --dry-run` exit 0, 14 files; `airqino` `28022fe`, `dfe26fd`, `5e4b483`, `9f150a5` by `git show --stat`; `nprcgenekeepr`'s trimmer diffed against the closest fork version (`c43e7ee`, 49 lines). **NOT EXERCISED:** any real sync, any upstream action, CI (none).
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S181 close-out", plus the claim, the trim and fold, the item-(18) and BL-63 entries
+commit: 74cee65 (claim) + 89cbf05 (trim) + 2784cc4 (fold) + 82a0b3b (item (18)) + 755fe0d (BL-63) + this close-out
 ```
+
+**Self-assessment: 7/10.** Plus: I checked each claim before it reached the picker. That covered `wsfct`'s dry run, the
+claim that split commits would cite missing files (in `wsfct` itself), and the makeup of `airqino`'s sync commit. Re-running
+that check with `git status` before and after is what caught another session opening in `wsfct` while this one ran,
+which became the P7 start check and fork Learning #74. The operator's two follow-up questions were answered with
+measurements (PR #901's files, where the block sits against the newest entry, the 49 lines in `nprcgenekeepr`'s
+trimmer), not with the rule alone. The trim's proof ran before and after its commit and after the fold. The records
+were split so each ledger entry carries one tag. **Minus:** my Phase 0 picker did not say that no option here depended on
+other repositories' sessions, or that P10's opening decision could be prepared from here, so it took the operator two
+questions to reach the choice. I had `--cut 1` in mind from memory and S180's handoff until S179's commits showed
+`--cut 2`. I told the operator I would not record S629's details in the P7 row, then added a dated parenthetical about it.
+**Growth:** six ledger entries (one written by the trimmer), the plan's decision paragraph and edits (+17 −3 lines),
+BL-63's row and a 30-line detail, fork Learning #74, this receipt. **Reduction:** `HANDOFFS.md` 33,267 → 13,435 B
+before this receipt.
+
+**Predecessor (S180): 8/10.** Its item (1) put the right decision first and named both options exactly, and its
+figures held when re-run (14 files for `wsfct`, `ef04625d`). Gotcha (1), that Phase 0 writes tracked files, was
+applied: my report named the row. Gotcha (2), 311 at 3 receipts, matched the Phase 0 run exactly. Gotcha (6),
+suites one at a time, was followed. **Not 9:** item (3) gave `--cut 1` for a trim that follows a claim, where
+`--cut 2` is right, a mismatch two earlier sessions had already recorded. Item (1) posed the decision without the
+cost of either option: under the synced rules each split commit carries its own entry, and a split leaves the
+framework citing missing tools. Nor did it note that the question applies to every adopter, not only this plan
+(now BL-63). Its *"`wsfct` … clean"* was true when written and went stale within this session, and that is not
+something it could have known. **ROI: strongly positive.**
 
 ```handoff
 session: S180
