@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S181
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **TRIM `HANDOFFS.md`, RECORD THE OPERATOR'S ANSWER TO BL-57 PLAN ITEM (18) (ONE `bin/sync` RUN IS ONE COMMIT, FOR P7–P11), AND ADD A START CHECK TO THE P7 ROW.** Chosen by the operator after Phase 0 (picker), with item (18) answered and the go-ahead to push fork `main` to `origin` at close-out in the same picker. P7 itself runs later from `~/Development/wsfct`, as that project's own session. Fork-local until the push; nothing upstream.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:5` (status), `:192` (item (18)), `:753` (P6–P11), `:785` (P7 row); `docs/planning/BACKLOG.md:151` (BL-57); `docs/HANDOFFS_ARCHIVE_INDEX.md` (the fold)
+gotchas: `wsfct` is not clean: its own S629 has a claim staged (`HANDOFFS.md`, `SESSION_NOTES.md`), so P7 cannot start there until that session closes. With this claim the ledger holds 4 receipts; `--cut 2 --force` keeps this stub and S180's receipt, as S179's trim did after its claim.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S181 claim"
+commit: pending
+```
+
+```handoff
 session: S180
 date: 2026-09-17
 status: complete

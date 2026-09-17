@@ -199,6 +199,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S181 claim — trim `HANDOFFS.md`, record plan item (18) (one sync run, one commit), and a start check for P7 (in progress)
+
+**Deliverable:** the retention trim `HANDOFFS.md`'s policy calls for, and the operator's answer to plan item (18) of
+`docs/planning/changelog-rules-contradictions-plan.md` recorded for P7–P11: one `bin/sync` run is one commit, as
+an exception to `SAFEGUARDS.md`'s five-file cap. The P7 row gains a check to run at that session's start.
+Chosen by the operator after Phase 0 (picker). The same picker gave the go-ahead to push fork `main` to
+`origin` at close-out.
+
+- Phase 0 ledger reconcile: `CHANGELOG.md` frontier `b0bf91f` (S180's push record), `HANDOFFS.md` frontier
+  `10955f1`. The one commit between them is that push record, which S180's receipt announced. Nothing
+  backfilled. 3 receipts, so the retention trim is owed; this claim makes 4. S180's gate citation re-run in a
+  `--no-local` clone of `b0bf91f`: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results c86e8ef9b42b ·
+  manifest 3a87b16f1b31`, identical to the receipt. `upstream/main` still `6b29d3d`; PR #83 still open; no open
+  upstream issues. Dashboard (a second clone) 76/100, no high risk. `context_budget.py --status` exit 2 with the
+  same three `over` rows; its snapshot row rides with this claim.
+- **Read-only, in `wsfct`:** fork `main` `b0bf91f`'s `bin/sync ../wsfct --source=local --dry-run` exits 0 with no
+  refusals and would write 14 files, as at S180; `wsfct`'s `git status` was the same before and after. It is no
+  longer clean: its S629 (Dependabot PR #901, which touches only `web/package.json` and `web/package-lock.json`)
+  has a claim staged in `HANDOFFS.md` and `SESSION_NOTES.md`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S180 — fork `main` pushed to `origin`, `ff02b5c..10955f1` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main:refs/heads/main`, `ff02b5c..10955f1`, a fast-forward of S180's 4 commits
