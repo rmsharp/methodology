@@ -195,6 +195,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-54] S179 claim — `bin/status` and `bin/sync` walk history with `--full-history` (in progress)
+
+**Deliverable:** BL-54 ([`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md#bl-54)): add
+`--full-history` to the history walks at `bin/status:56` and `bin/sync:60`, test first on a merge that keeps
+one side's content for a path, and settle what *N versions behind* counts. Chosen by the operator after
+Phase 0 (picker), as S178 recommended.
+
+- **Operator go-aheads, same picker:** trim `CHANGELOG.md` now, the file being past the 262,144 B refusal
+  (the 2026-09-14 decision's condition); push fork `main` to `origin` at this session's close-out.
+- Phase 0 ledger reconcile: `CHANGELOG.md` and `HANDOFFS.md` frontiers both at `HEAD` `8e62af6`, no gap,
+  nothing backfilled. 3 receipts, so the retention trim (`--cut 2 --force`, after this claim) is owed.
+  S178's gate citation re-run in a `--no-local` clone of `fbdd47d`: `quality_ratchet: 10/10 pass · 0 fail ·
+  0 unmeasured · results 1552052a766d · manifest 8d8ddc767cdc`, identical to the receipt. `upstream/main`
+  still `6b29d3d`; PR #83 still open at `219fb9d`; no open upstream issues. Dashboard 76/100, high risk (the
+  ledger past the refusal). `context_budget.py --status` exit 2 with S178's rows (runner 55,406 B,
+  `SAFEGUARDS.md` 17,024 B, read-set total 72,430 B). The two Phase 0 instrument snapshots ride with this claim.
+- **The trim was trialled before it was offered,** in a `--no-local` clone of `8e62af6`: 103 of 162 records
+  to `docs/archive/CHANGELOG-through-2026-09-16.md`, live 262,253 → 98,347 B, the shard's `.verify.sh` exit 0
+  before and after the commit, gates 10/10 with the suite at 300 / 0 / 0 as untrimmed, and the dashboard's
+  high risk gone.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S178 close-out — P5 done by merge; BL-54 next, before P6
 
 - `HANDOFFS.md`: S178's receipt is complete (self 7, S177 scored 7), with the Phase 3A evaluation and

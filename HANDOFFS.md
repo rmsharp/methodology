@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S179
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-54 (`docs/planning/BACKLOG-DETAIL.md:1602`, row `docs/planning/BACKLOG.md:149`): `bin/status` AND `bin/sync` WALK HISTORY WITH `--full-history`, SO A VERSION FROM A MERGE'S OTHER SIDE NO LONGER READS AS LOCALLY MODIFIED. CHOSEN BY THE OPERATOR AFTER PHASE 0 (picker).** Same picker: trim `CHANGELOG.md` now (past the 262,144 B refusal), and push fork `main` to `origin` at close-out. The retention trim of `HANDOFFS.md` is owed after this claim. Fork-local until the push; the upstream PR is its own go-ahead.
+what_was_done: pending
+next_steps: pending
+key_files: `bin/status:52` (`local_history`, the walk at `:56`); `bin/sync:55` (`local_history_blobs`, the walk at `:60`); `docs/planning/changelog-rules-contradictions-plan.md:149` (S178 block, item (12)); `bin/tests.sh` (where the test lands)
+gotchas: The default walk follows a merge's TREESAME parent, so `22ce71b` hides the fork-side trimmer versions (3 commits visited, 14 before the merge, 25 with the flag). *N versions behind* indexes the walk and inflates with the flag (`mts-system`'s `FRAMEWORK_LEARNINGS.md` went to 63 behind on S178's scratch copies). The `CHANGELOG.md` trim adds its own entry, and the receipt count reads 4 until the retention trim. Run suites one at a time (Test 9).
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-54] S179 claim"
+commit: pending
+```
+
+```handoff
 session: S178
 date: 2026-09-16
 status: complete
