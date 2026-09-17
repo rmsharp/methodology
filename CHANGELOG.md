@@ -214,6 +214,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S177 follow-up — the S177 receipt's next steps updated for what happened after close-out
+
+- `HANDOFFS.md`, S177's receipt only. `next_steps` items (2) and (3) are replaced by their outcomes: fork `main` was
+  pushed (`9b96ac1..7b55ee3`, `7b55ee3..70265f3`, then `c857e50` under the push-record grant), and the upstream
+  test finding is BL-62, riding BL-57's P12 PR. Gotcha (7) carries the ledger's size at this update and the
+  grant is named. Item (1)'s P5 conflict set was recomputed against `c857e50`: still the same 5 files. The same
+  edit was made after S175's close-out (its receipt opens `next_steps` with the operator's later decision).
+- Prepared for a new session: tree clean, `main` level with `origin`, 0 commits behind `upstream/main`
+  (`6b29d3d`), PR #83 still open at `219fb9d`, 2 receipts (the next claim makes 3, no Phase 0 trim).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] Operator decision: push records are pushed to `origin` without asking (standing grant)
 
 - **Decision (operator, after S177, in their own words):** *"yes, push the push records without asking"*.
