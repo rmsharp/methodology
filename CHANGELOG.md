@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] S182 — fork `main` pushed to `origin`, `29b0feb..93656a1` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main:refs/heads/main`, `29b0feb..93656a1`, a fast-forward of S182's 6 commits
+  (`45bf347`..`93656a1`, its close-out). Before the push a guard confirmed a clean tree, that `origin/main` still
+  read `29b0feb`, that the range was a fast-forward, and that it held exactly the six expected commits. Read back
+  afterwards: `origin/main` is `93656a1`, identical to local `main`.
+- **Authorization:** the operator's go-ahead at this session's Phase 0 picker, for a push after the close-out. This
+  recording commit itself rides the standing grant of 2026-09-16 (a `CHANGELOG.md`-only commit that records an
+  already-authorized push). Nothing reached `KJ5HST/methodology`; upstream PR #83 is untouched and still open.
+
 ### 2026-09-17 · [BL-64] S182 close-out — Test 38's drift guard repaired, the gate green again, three findings raised
 
 **Deliverable:** one fix — `bin/tests.sh` Test 38's drift guard now bounds a receipt by its own closing fence
