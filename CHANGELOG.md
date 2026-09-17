@@ -214,6 +214,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S178 — fork `main` pushed to `origin`, `c857e50..fc4fe0c` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin fc4fe0c:refs/heads/main`, `c857e50..fc4fe0c`, a fast-forward of 1 commit: `fc4fe0c`
+  (S177's receipt updated with what followed its close-out). Before the push, a guard confirmed a clean tree, that
+  `origin/main` still read `c857e50`, and that exactly that one commit was ahead in a fast-forward. Afterwards
+  `git ls-remote origin refs/heads/main` read `fc4fe0c07a0ecdcf4dc691013ba53c100908927e`. The go-ahead was the
+  operator's S178 Phase 0 picker answer *"Push it now"*. Fork only; nothing sent upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] S177 follow-up — the S177 receipt's next steps updated for what happened after close-out
 
 - `HANDOFFS.md`, S177's receipt only. `next_steps` items (2) and (3) are replaced by their outcomes: fork `main` was
