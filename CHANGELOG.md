@@ -199,6 +199,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S183 — the close-out commit re-measured in a clone of itself, the check its own citation cannot make
+
+- **The action:** `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `7c8f049`,
+  this session's close-out commit — run after that commit landed, which is the one moment BL-64 says a close-out's
+  own citation can never reach. Result: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  8e12f40caec1 · manifest 3a87b16f1b31`, `tests-sh-passed` 309 at 2 receipts — byte-identical results digest to the
+  clone of `1cb4e44` the receipt cites.
+- **What it proves, specifically.** `bin/tests.sh` Test 38 reads the live `HANDOFFS.md`, so a close-out that writes
+  a receipt changes that test's input. This close-out's receipt quotes `phantom_drift` three times, which is the
+  exact string that reddened the suite at S182's close-out; after `1cb4e44` it is inert. The window BL-64 names
+  stays open in general — only a run *after* the commit can see what the commit wrote — but for this session the
+  reading exists and is here.
+- This entry's own commit touches `CHANGELOG.md` alone, which no assertion in `bin/tests.sh` reads as a test input
+  (Test 40 counts `**Model:**` lines by tool and by grep and votes the two against each other, so an entry moves
+  both), so the reading above still describes the tree it certifies.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-64] S183 close-out — Test 38's landing check made positional, the gate green, the ledger trimmed
 
 - **Deliverable:** `bin/tests.sh` Test 38's plant-landing check now asks where the plant landed instead of whether
