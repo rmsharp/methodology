@@ -214,6 +214,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S177 — resync stage M3 merged (`7245f79`): PR #82 whole, the repository's own gates, and the ratchet chained into `pre-commit`; `CHANGELOG.md` stays untrimmed (operator decision)
+
+- **Merge `7245f79`** (parents `0e8c6ac`, `64f23bf`). There were 11 conflicting files, not the 12 computed
+  against `9b96ac1`: M2 had already taken upstream's `bin/tests.sh` block. **`.context-budget.json`:** ours.
+  **`.githooks/pre-commit`:** upstream's ratchet block, then the fork's `--no-renames` comment and
+  staged-path line, which appears exactly once. **`CLAUDE.md`:** the fork's whole file, which also refuses
+  upstream's shortened rows in hunks git would have merged cleanly. It gains starter-kit rows for
+  `context_budget.py` and `quality_ratchet.py` and a Tools row for their test suites, taking it from
+  11,808 to 12,667 B. **`README.md`, `docs/tutorials/T1_setup.md`:** upstream's lists; every name on the
+  fork's side is on upstream's. **`bin/check-handoff`:** the fork's block, then upstream's
+  `declared_gate_count` and `validate_gate_citation`. Every line either side added is present in order
+  (528 and 40). **Dashboard twins and their test file:** `DASHBOARD_VERSION` pins stay 2.17.0.
+  **`CHANGELOG.md`:** upstream's quality-ratchet entry is replaced in place by its completed text (heading
+  *"PR opened, not merged"*), and its one new entry sits above its upstream neighbour. **`HANDOFFS.md`:**
+  upstream's S22 and its completed S20 follow the fork's receipts, and S21 stays in its shard.
+  `check-handoff --all` passes on 5 receipts. Every upstream-only path equals `64f23bf`'s, and so does
+  `starter-kit/FRAMEWORK_LEARNINGS.md` (D1). `SAFEGUARDS.md` is 17,024 B and the runner 55,420 B, both as
+  plan §2.2 measured. `DISTRIBUTION` has 29 rows, and `.githooks/commit-msg --selftest` exits 0.
+- **Measured on the merge, in a `--no-local` clone at `7245f79`:** `bash bin/tests.sh` exit 0, **333 passed / 0 failed / 0 skipped**.
+  The digit-masked row diff against the M2 checkpoint shows upstream's 11 new rows passing (the manifest-removal
+  cases, this repository's gates, the hook chain, and `check-handoff`'s D9 lint) and no flips.
+- **The M2 checkpoint, in a clone at `0e8c6ac`:** exit 0, **322 passed / 0 failed / 0 skipped**. Its rows are
+  identical to the trial that preceded the config commit.
+- **This commit is the first the ratchet's `--precommit` checks:** the hook M3 merged runs it before the
+  ledger gate, and it passed.
+- **Decision (operator, picker, during M3's suite run): no `CHANGELOG.md` trim in R2.** The resync plan's R2
+  step 3 and §7 item 4 schedule one at the trimmer's 196,608 B trigger. They do not cite the operator's
+  2026-09-14 decision not to trim this file at that trigger (`3745748`; `BACKLOG-DETAIL.md`, BL-57), and that
+  decision governs. `--check` keeps firing, and that is stated. As S171 did, a trim is raised with the
+  operator only if the file passes the 262,144 B hard read refusal. It is 232,771 B after M3's merge.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S177 — `.context-budget.json` restates its token ceilings so upstream's partition test passes, every verdict unchanged (operator decision, an exception to D11)
 
 - **Decision (operator, picker, after `8c429ed`):** *"Restate the config"*, chosen over patching the fork's copy
