@@ -1707,6 +1707,16 @@ PR, is a separate go-ahead. **Done** when both `bin/status` versions read `prese
 introduces, so it is done once rather than twice
 ([`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) §5, P6).
 
+**Closed at S180 (2026-09-17): done in `airqino`'s own repository, as BL-57's P6** (its Session 6, local branch
+`chore/methodology-bl57-p6`, not pushed). Two things above no longer held by then. The file held **two** dated
+entries, not one: `airqino`'s Session 5 had added its own. And the landing branch is a new one taken from
+`1402ad4`, not `chore/methodology-read-set-budgets`. So the header was migrated by hand rather than reseeded:
+`5e4b483` replaces lines 1–11, the Keep-a-Changelog header and its `## [Unreleased]`, with the thin seed's
+header less its `METHODOLOGY-SEED-SENTINEL` line, and leaves every entry byte-identical. `28022fe` is the sync
+before it, from fork `main` `ff02b5c`. **The done test holds, re-run from here:** `bin/status` reads
+`CHANGELOG.md` `present` in `airqino` from three trees, each a `--no-local` clone with HEAD asserted: the
+branch `83a12f0`, `upstream/main` `6b29d3d` and fork `main` `ff02b5c`.
+
 <a id="bl-57"></a>
 
 **BL-57 — HIGH PRIORITY: the framework's rules for `CHANGELOG.md` contradict each other; remove the

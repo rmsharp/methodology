@@ -199,6 +199,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-56] S180 — BL-56 closed: `airqino`'s `CHANGELOG.md` is in the current ledger format
+
+- **Closed:** removed from `docs/planning/BACKLOG.md`'s open list and index, with a closed row under §Completed
+  items, and a closing paragraph in `docs/planning/BACKLOG-DETAIL.md` §BL-56. The work was done in `airqino`'s
+  own repository as BL-57's P6 (its Session 6, local branch `chore/methodology-bl57-p6`, not pushed): `28022fe`
+  synced from fork `main` `ff02b5c`, and `5e4b483` migrated the header by hand, keeping both entries
+  byte-identical. The item had expected one entry and a reseed.
+- **The done test, re-run from here:** `bin/status` reads `airqino`'s `CHANGELOG.md` as `present` from the branch
+  `83a12f0`, from `upstream/main` `6b29d3d` and from fork `main` `ff02b5c`, each a `--no-local` clone with HEAD
+  asserted. `BACKLOG-DETAIL.md.verify.sh`, the archive's proof and `bin/check-links` exit 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S180 claim — record P6 (`airqino`) as done in the fork, and close BL-56 (in progress)
 
 **Deliverable:** record in the fork that BL-57's P6 is done. It ran in `airqino`'s own repository, on its local
