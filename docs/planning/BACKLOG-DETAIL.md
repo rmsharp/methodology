@@ -2248,3 +2248,55 @@ The skip guard was built for absence, not for data that is present and unfittabl
 control a synthetic fixture with a known positive slope, so it stops depending on whoever's machine it runs on.
 (c) Leave it and accept a test that fails on some developer machines — which is what happens today, silently, since
 the clone run never sees it. Canonical-only: `tools/test_context_budget.py` is not in `bin/_manifest.py`.
+
+---
+
+**BL-66 — `README.md`'s Quick Start tells every adopter to update from the GitHub URL, a route that cannot update
+any file that is behind, and reports the refusal as "local modifications" on projects that have none. Raised
+2026-09-17 (S182) from an operator question. Upstream-facing; not fixed.**
+
+**What.** `README.md:61` (Quick Start note): *"To update an existing project to the latest version, use the same
+approach: 'Update methodology using https://github.com/KJ5HST/methodology'."* `bin/sync --source=github` fetches
+file **contents** only — `gh api repos/KJ5HST/methodology/contents/<path>` at `bin/sync:100` — with no git history.
+The acceptance rule is *matches canonical, or any version in that source's history*; a file that is merely behind
+matches an older canonical version, and with no history there is nothing for it to match. So it is classified as
+locally modified and held back. **The GitHub route cannot update a file that is out of date**, which is the only
+reason the route is run.
+
+**This is already documented, in the opposite direction.** `starter-kit/BOOTSTRAP.md:86`: *"Prefer `--source=local`
+from a **full** methodology checkout — an unmodified file that matches an older canonical version is recognized as
+upgradable and updated cleanly with no `--force`; a shallow clone or a downloaded tarball loses that git history, so
+the same files look 'locally modified' and are held back."* `--source=github` is exactly that historyless case. Two
+distributed documents give opposite advice for the same operation, and `README.md` is the first one an adopter reads.
+
+**Measured on a clean-room adopter, not inferred.** A scratch `git init` project, installed with
+`bin/sync --source=local` from a checkout of `upstream/main` at `008d656`, committed, never edited — an ordinary
+adopter, N versions behind, zero local modifications. Both routes then targeted `6b29d3d`:
+
+| Route | Result |
+|---|---|
+| `--source=github` (what `README.md:61` tells adopters to do) | **exit 2**, nine files reported as *"local modifications"*, nothing updated |
+| `--source=local` from a full checkout (`BOOTSTRAP.md:86`) | **exit 0** — 10 would be written, 1 created, 13 unchanged, no errors |
+
+Corroborated on a real project: `wsfct`, synced clean from fork `main` the same morning with a `git status` of zero
+and `--source=local` reporting all 23 files `unchanged`, was told by `--source=github` that seven files *"have local
+modifications"*. They do not.
+
+**The diagnosis is the second defect.** The message asserts a cause it has not established. `bin/sync` already has
+the precedent for fixing exactly this class of misreport: `fetch_all_github`'s docstring (`bin/sync:117`–`130`)
+records that a file missing upstream used to be reported as an auth failure, and concludes *"A missing file is a
+VERSION statement, not a failure of the caller: this checkout's manifest is ahead of the upstream repository. Say
+that, name every file, and point at the source that does work."* The same reasoning was never extended to the
+modification check, where the source's lack of history — not the project's contents — is what produced the verdict.
+
+**Shapes, none costed.** (a) Fix the README to name `--source=local` from a full checkout for updates, keeping the
+URL for first install where it works correctly. (b) Teach `--source=github` to compare against upstream history
+(`gh api .../commits?path=` per file, or a shallow-but-deepened clone), so a behind-but-unmodified file upgrades
+cleanly. (c) At minimum, make the refusal say what it actually knows — *this source carries no history, so a file
+that is merely behind cannot be recognized; re-run with `--source=local` from a full checkout* — rather than
+asserting local modification. (a) and (c) are small and independent; (b) is the real fix.
+
+**Distributed, and upstream's own front page.** Both `README.md` and `bin/sync` live in the canonical repository,
+and this affects every adopter following the documented instruction, not only this fork's projects. An upstream pull
+request is its own go-ahead. Not recorded anywhere before this: checked `BACKLOG.md`, this file, the archive,
+`CHANGELOG.md`, and upstream issues in all states.

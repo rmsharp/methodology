@@ -199,6 +199,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-66] Raised — the README's update instruction points at the one route that cannot update
+
+**Raised** from an operator question: *"I should be able to update `../nprcgenekeepr` with 'Update methodology using
+https://github.com/KJ5HST/methodology'. Is that not going to work?"* Measured rather than answered from the
+documents. `README.md:61` tells adopters exactly that; `bin/sync --source=github` fetches file contents only
+(`gh api repos/KJ5HST/methodology/contents/<path>`, `bin/sync:100`) with no git history, and the acceptance rule
+needs history to recognize a file that is merely *behind*. So the route refuses every out-of-date file as a
+*"local modification"* — the one thing an update exists to change.
+
+Clean-room measurement, on a scratch adopter installed from upstream `008d656` and never edited: the URL route
+exits 2 naming nine files; `--source=local` from a full checkout exits 0 and would write 10, create 1, leave 13
+unchanged. Corroborated on `wsfct`, which had a `git status` of zero and was told seven files were locally
+modified. `starter-kit/BOOTSTRAP.md:86` already prefers the local route and gives this exact reason, so two
+distributed documents contradict each other and the README is the one an adopter reads first.
+
+Second defect recorded with it: the refusal asserts a cause it has not established. `bin/sync:117`–`130` already
+fixed this class once for missing files — *"A missing file is a VERSION statement, not a failure of the caller"* —
+and the reasoning was never extended to the modification check. Three shapes in the detail file, none costed.
+Upstream-facing: both files are canonical and every adopter following the instruction is affected. Its pull
+request is its own go-ahead. Nothing sent upstream this session.
+
 ### 2026-09-17 · [BL-65] Raised — a unit test that skips in every clone and fails in the working tree, on a premise the tool does not hold
 
 **Raised** while verifying the Test 38 repair. `tools/test_context_budget.py:372` sets `calibrate_min_r2` to `0.0`
