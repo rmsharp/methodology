@@ -2,8 +2,8 @@
 
 **Status:** APPROVED by the operator at S162 and committed (`9292132e`, 2026-09-15); amended at S163,
 S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-rules` (S167, S168, S172, S173; all four
-backed up to `origin` at `83a12f0`); P5–P12 are not. **Read the S173 block before P5: its
-port command, as written, would now carry #80's and #82's upstream changes too.**
+backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S178 block)**; P6–P12 are not, and
+**BL-54 comes before P6**.
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -145,6 +145,31 @@ density, so a wording change can pass it while crossing the real ceiling: P1's r
 `starter-kit/methodology_trim.py`'s false claims — `:33` says the ledger hook runs `--no-renames` (upstream's
 hook has 0), and `:9`/`:155` cite `docs/planning/ledger-trimmer-design.md`, which upstream lacks — on the
 branch before P12, since BL-57 already edits that file. Detail: `docs/planning/pr80-review-response.md` §6.
+
+**P5 done at S178 (2026-09-16), by merge. The operator chose a merge over §P5's port, so the branch's
+commits are in fork history, and chose D10 as written.** Commits: `22ce71b` (the merge: 5 conflicts, 9 hunks;
+`CHANGELOG.md` ours, `bin/_manifest.py` and `bin/tests.sh` theirs, `CLAUDE.md` and the runner combined),
+`6774627` (a fork-only test), `1664860` (D10), `dee680c` (this repo's two ledgers), `fd611a6` (two fork-only
+sentences), `368b29c` (`tests-sh-passed` 327 → 294, operator-approved) and `d10f9af` (a tightening). What P5
+found, for BL-54 and P6–P12:
+(12) **THE MERGE MAKES BL-54 BITE.** Git's default history walk follows a merge's same-content parent. After
+`22ce71b`, `git log -- starter-kit/methodology_trim.py` visits 3 commits where it visited 14, so `bin/status`
+reads the trimmer as *locally modified* in the `mts-system`, `vscode_quarto_ext` and `wsfct` copies (each
+read *N versions behind* before). Adding `--full-history` at `bin/status:56` restored every row on the same
+copies. It also cleared the 4 `FRAMEWORK_LEARNINGS.md` rows the resync merges had already turned; the
+genuine local changes in `model_project_constructor` and `nprcgenekeepr` stay. **So P5's DONE item
+*"tracked files read as before, or upgradable"* is not met for those 3 rows. BL-54 is next, before P6
+(operator, S178).** `bin/sync` refuses a locally modified file, so no adopter syncs from fork `main` until
+then. The other DONE items hold. The five distributed files that were identical between `main` and `64f23bf`
+equal the branch's blobs. The audit reads the same in zsh and bash, and its old form matched the new (635 at
+Phase 0, not the 494 written above). A claim-only commit is refused in a scratch repository. All six adopter
+copies read `CHANGELOG.md` *present (stale format)*. The suite reads 294 passed / 0 failed at two receipts.
+(13) **A fork-only test pinned the old seed** (hazard 6, in a test the branch never had): `tools/test_methodology_dashboard.py`
+`test_fenced_records_are_not_counted` now reads the frozen format-1 seed. It is fork-only; P12 carries nothing for it.
+(14) **D10 makes item (11)'s F5 claim false on fork `main` too.** Neither hook has `--no-renames` now, and
+`starter-kit/methodology_trim.py:33` still says it does. F5's fix on the branch reaches fork `main` by the next merge.
+(15) **Found, not fixed:** `README.md`'s fork-only cost section (`:374`–`:404`, S42's 2026-08-04 measurements)
+still describes a 2,000-line cap and the old seed sizes. It needs its own rewrite, which no phase here covers.
 
 ---
 

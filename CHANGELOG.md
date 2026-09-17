@@ -195,6 +195,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S178 — P5 recorded: plan S178 block, BL-57 and BL-54 rows, fork Learning #71
+
+- `docs/planning/changelog-rules-contradictions-plan.md`: the status line says P5 is done by merge and BL-54
+  comes before P6. The S178 block, items (12)–(15), covers BL-54 now biting, the fork-only test, F5's claim
+  now false on fork `main`, and `README.md`'s stale cost section.
+- `docs/planning/BACKLOG.md`: the BL-57 row is rewritten, not extended (P5 done, next BL-54 then P6–P11), and
+  the BL-54 row is marked NEXT with the measured cause. `docs/FORK_LEARNINGS.md` #71: run the phase's DONE
+  checks on every route before recommending one; routes to the same tree differ in history.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S178 — `trimmer-unit-tests` floor tightened 123 → 124, the count measured after the merge
 
 - The merge brought `bl57/changelog-rules`' trimmer tests. `quality_ratchet.py --run` measured **124** in a
