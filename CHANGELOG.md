@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] S180 — fork `main` pushed to `origin`, `ff02b5c..10955f1` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main:refs/heads/main`, `ff02b5c..10955f1`, a fast-forward of S180's 4 commits
+  (`5b5a19a`..`10955f1`, its close-out). Before the push, a guard confirmed a clean tree, that `origin/main` still
+  read `ff02b5c`, and that the push was a fast-forward. Afterwards `git ls-remote origin refs/heads/main` read
+  `10955f1708e468c01b5704519af57bb998929c14`, equal to local `main`. The go-ahead was the operator's answer in
+  S180's second picker, *"Push after close-out"*. Fork only; nothing sent upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S180 close-out — P6 (`airqino`) recorded, BL-56 closed; decide the sync commit cap, then P7 (`wsfct`)
 
 - `HANDOFFS.md`: S180's receipt is complete (self 7, S179 scored 8), with the Phase 3A evaluation and
