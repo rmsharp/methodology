@@ -49,6 +49,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S178
+date: 2026-09-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57's P5 (`docs/planning/changelog-rules-contradictions-plan.md:659`, with the S173 block at `:84`–`:138` overriding its port command): FORK `main` ADOPTS THE ONE-HOME `CHANGELOG.md` RULES FROM `bl57/changelog-rules` (`83a12f0`). CHOSEN BY THE OPERATOR AFTER PHASE 0 (picker).** Pre-flight re-derived at Phase 0: `upstream/main` still `6b29d3d` (0 commits ahead of fork `main`), PR #83 still open at `219fb9d`, so no resync stage comes first. `git merge-tree --write-tree --name-only main bl57/changelog-rules` lists the same 5 files S177 computed. Merge vs port is measured before either is chosen. Fork-local.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:659` (P5), `:84` (S173 block: port from `64f23bf`, item (9)), `:933` (§9.6 identical files), `:944` (§9.7 budget); `FRAMEWORK_APPARATUS.md` §The Action Ledger (the one home, on the branch); `.githooks/pre-commit` (D10 claim carve-out); `bin/tests.sh` (Test 27)
+gotchas: `CHANGELOG.md` is 251,064 B at Phase 0, 11,080 B under the 262,144 B refusal, and the operator's decision is no trim until past it. Every close-out owes a `quality_ratchet.py --run` citation from a `--no-local` clone (~17 min). `tests-sh-passed` 327 is the 2-receipt value; this claim makes 3 receipts, so the suite reads 333. D10 (remove or keep the hook's claim carve-out) is the operator's.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-16 · [BL-57] S178 claim"
+commit: pending
+```
+
+```handoff
 session: S177
 date: 2026-09-16
 status: complete

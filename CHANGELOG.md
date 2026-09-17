@@ -214,6 +214,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S178 claim — P5 of the `CHANGELOG.md` rules plan: fork `main` adopts the one-home rules (in progress)
+
+**Deliverable:** P5 of [`docs/planning/changelog-rules-contradictions-plan.md`](docs/planning/changelog-rules-contradictions-plan.md)
+(§P5, with the S173 block overriding its port command): bring BL-57's own change from branch
+`bl57/changelog-rules` (`83a12f0`) onto fork `main`, including this repo's own ledger front matter and the
+D10 decision on the pre-commit hook's claim carve-out. Chosen by the operator after Phase 0 (picker).
+
+- **Pre-flight, re-derived at Phase 0:** `upstream/main` is still `6b29d3d`, 0 commits ahead of fork `main`;
+  PR #83 is still open at `219fb9d`. `git merge-tree --write-tree --name-only main bl57/changelog-rules`
+  lists 5 files (`CHANGELOG.md`, `CLAUDE.md`, `bin/_manifest.py`, `bin/tests.sh`,
+  `starter-kit/SESSION_RUNNER.md`), the set S177 computed. Merge vs port is measured before choosing.
+- Phase 0 ledger reconcile: `CHANGELOG.md` and `HANDOFFS.md` frontiers both at `HEAD` `fc4fe0c`, no gap,
+  nothing backfilled. 2 receipts, so no Phase 0 trim. S177's gate citation re-run in a `--no-local` clone of
+  `fc4fe0c`: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results db4e547cc884 · manifest
+  c09d7e7f9109`, identical to the receipt. Dashboard 76/100, medium risk. `context_budget.py --status`
+  exit 2 with the rows S177 recorded (runner 55,420 B, `SAFEGUARDS.md` 17,024 B, read-set total 72,444 B).
+  `methodology_trim.py --file CHANGELOG.md --check` fires at 251,064 B; not trimmed, by the operator's
+  standing decision. The two Phase 0 instrument snapshots ride with this claim.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] S178 — fork `main` pushed to `origin`, `c857e50..fc4fe0c` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin fc4fe0c:refs/heads/main`, `c857e50..fc4fe0c`, a fast-forward of 1 commit: `fc4fe0c`
