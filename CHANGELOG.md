@@ -214,6 +214,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-16-4.md` (4 record(s), 47,200 B → 16,224 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **4** record(s) (2026-09-15 → 2026-09-16) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-16-4.md`](docs/archive/HANDOFFS-through-2026-09-16-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-16-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-16-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 47,200 B → 16,224 B (−65.6%).
+
 ### 2026-09-16 · [BL-57] S177 — resync stage M4 merged (`d4ac950`), fork `main` now contains `upstream/main`; D3: `DASHBOARD_VERSION` 2.18.0
 
 - **Merge `d4ac950`** (parents `d23d1a3`, `6b29d3d`), the last of the four stages. One file conflicted,
