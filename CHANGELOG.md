@@ -214,6 +214,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S178 — D10: the pre-commit hook's Phase 1B claim carve-out and its Test 27 are removed (operator decision)
+
+- **Decision (operator, S178, picker, after a plain-language explanation):** remove the carve-out. It was
+  added at S32 (`a56dff8`, 2026-08-03), when claims wrote no ledger entry and every claim shipped with
+  `--no-verify`. 61 claims used it, the last S95 (`a35a14f`, 2026-08-17); all 94 claims since carry an
+  *(in progress)* entry, which Q4 A (S162) makes the rule. Upstream's hook never had it.
+- **Change:** `.githooks/pre-commit` is now byte-identical to `bl57/changelog-rules`' hook (blob `a2457774`):
+  the carve-out, its `--no-renames` (which only guarded the carve-out) and the refusal text's exemption
+  paragraph go. `bin/tests.sh` Test 27 (508 lines, 34 rows) is replaced by a three-line comment; nothing
+  outside it used its helpers. Canonical-only: no adopter receives the hook.
+- **Shown in a scratch repository with a real `git commit`:** a claim commit staging only `HANDOFFS.md` exits 1
+  with *"failure mode #27"* under the new hook and 0 under the old one; with a `CHANGELOG.md` entry
+  co-staged it exits 0 under both.
+- **Owed next, in its own commit:** the suite loses 34 rows, so `tests-sh-passed` (327) must come down to the
+  measured count, on the same operator approval.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S178 — a fork-only dashboard test read the live `CHANGELOG.md` seed's fenced examples, which P1 moved; it reads the frozen format-1 seed now
 
 - **Change:** `tools/test_methodology_dashboard.py` `test_fenced_records_are_not_counted` (`TestS38TrimTriggerRow`,
