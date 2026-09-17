@@ -195,6 +195,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S178 — `tests-sh-passed` floor lowered 327 → 294: Test 27 left with the carve-out (operator-approved loosening, `--no-verify`)
+
+- **Approval:** the operator's D10 answer (S178, picker) approved lowering this floor to the count measured
+  after the removal. This is the loosening itself, in its own commit, with its reason here, as
+  `.quality-gates.json` and `SAFEGUARDS.md` §Blast Radius Limits require. The hook's ratchet refused it when
+  staged (*"floor lowered 327 -> 294"*, exit 2), so it is committed with `--no-verify`. The manifest's
+  history records the bypass, and the dashboard reports it.
+- **The figure is measured:** `quality_ratchet.py --run` in a `--no-local` clone of `1664860`, with
+  `HANDOFFS.md` cut to two receipts (the state a trimmed ledger returns to, fork Learning #70), read
+  **294 passed, 0 failed** (results `839fb8a9f80a`). That is 327 − 34 (Test 27) + 1 (Test 20 (b2)). An
+  earlier run read 293 with Test 9 failing on GitHub's API rate limit; that value was not used, because a
+  floor must not absorb a Test 9 failure.
+- A new `_fork_loosening_d10` note in the manifest carries the same record.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S178 — two fork-only sentences the one-home rules made false: `BOOTSTRAP.md`'s seed-migration step and `README.md`'s archive budget
 
 - **Found by re-running plan §9.1's inventory on the merge and diffing it against the branch's:** 1,128
