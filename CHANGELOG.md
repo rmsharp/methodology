@@ -2052,6 +2052,94 @@ next session. `HANDOFFS.md` holds five receipts and its trim refuses with `SRF_R
   450 unit tests OK, `check-links` OK) and fork `main` (304/1)
 - **Model:** Claude Opus 5, 1M context (claude-opus-5[1m])
 
+### 2026-09-15 · [ad hoc] Quality ratchet — the plan's Phases 1–4 built as one pre-declared vertical slice — CHANGELOG: pending
+
+- **Action:** implement [`docs/planning/quality-ratchet-plan.md`](docs/planning/quality-ratchet-plan.md)
+  (PR #81, the plan; D1–D10) through its four buildable layers on branch `feat/quality-ratchet`, one
+  checkpoint commit per layer with the full matrix at each boundary, and open a PR for review. Phases 5
+  (adopter dogfood) and 6 (release) are separate sessions by the plan's own text. Session S20; the
+  checkpoint list and the PR number are completed at close-out.
+- **P0 — preconditions (checkpoint 1).** `tools/test_context_budget.py`: `TestFitGateEndToEnd` skipped only
+  when NO transcript existed, but `calibrate()` refuses to fit below 4 usable sessions — on this machine (2
+  transcripts for the repo path) both tests ran and failed against *"not enough to fit"*, so `bin/tests.sh`
+  read 115/1 on `main` (S19 gotcha 1); the class now asks the tool (a probe at an impossible floor) and skips
+  on its "not enough". New `TestThisRepoReadSetPartition` (**G1** of the #80 re-review): the repo's own
+  `.context-budget.json` per-file token ceilings in a whole-read class must sum to ≤ `read_cap_tokens` —
+  RED first at 27,800 with the 22,000 mutant, OK at 25,000. And the read-set partition is **re-split
+  19,200 + 5,800 → 18,900 + 6,100**: `SAFEGUARDS.md` was pinned at its exact size (5,800/5,800), which would
+  have refused the one Blast Radius row D3 adds; 300 tokens move from the runner's margin. `--status` OK,
+  `config_defects []`, budget suite 116 → **118** OK.
+- **P1 — prose (checkpoint 2).** **D3** `starter-kit/SAFEGUARDS.md` Blast Radius gains one row: *never loosen a
+  declared quality threshold to make a change pass — loosening requires plan mode approval; tightening never
+  does*. **D4** `ITERATIVE_METHODOLOGY.md` gains §**Mechanical Gates Bind Every Actor** beside §Matching
+  Reasoning Effort to Stakes — enforce on the artifact, not the actor; four consequences (never re-done by
+  judgment or waived by tier; judgment reserved for what no gate expresses, before and after implementation;
+  checks never pass by default or timeout; thresholds only tighten); cites the capability-tiered paragraph
+  rather than duplicating it; states the ceiling (a floor without a faithfulness check measures effort).
+  No principle, phase, or gate added — "9 principles / 6 phases / 12 quality gates" claims re-grepped, true.
+  **D5** `starter-kit/SESSION_RUNNER.md` Phase 3C gains the mechanical branch: *a mechanical learning is a
+  gate, not a row* (Learning #12 generalized from "test" to "gate"; the decay term FM #28 names).
+  **D8** FM #17 gains one clause (loosening a threshold is erosion in mechanical form; `--no-verify` is a
+  recorded bypass, not an exemption) and Degradation Detection gains one row — **FMs 1–28 byte-unchanged,
+  count stays 28** (28 table rows re-counted). **Learning #15** appended to `starter-kit/FRAMEWORK_LEARNINGS.md`
+  (1,331 B, under the 1,500 B row budget; `#14` stays reserved, callout reworded to "rows continue from
+  #15"). **Cost, measured:** the Phase 0 pair is 70,066 B; doubled-file Read reports 49,643 → **24,822
+  tokens, 99.3 % of the read cap** (the tool estimates 18,868 + 5,946 = 24,814 — within 8 tokens of the
+  measurement); the runner sits 32 tokens under its 18,900 ceiling, so the next runner growth must be paid
+  for by a reduction. `bin/check-links` 105 OK; `bin/check-learnings` OK (14 rows, contiguous with #14
+  reserved); `bin/tests.sh` 116/0; dashboard unit 211 OK.
+- **P2a — the tool (checkpoint 3).** New `starter-kit/quality_ratchet.py` (**D2**; 494 lines, stdlib only, no
+  `--force`): `--precommit` refuses a staged `.quality-gates.json` whose thresholds are looser than `HEAD`'s
+  (a `min` lowered, a `max` raised, a gate removed, a direction flipped); tightening and adding always pass;
+  a changed `command`/`extract` warns (the ratchet holds thresholds, not commands). `--run` executes each
+  declared gate (regex `extract` → the number; no `extract` → the exit code), writes a results file
+  (`.quality-gates-results.json`, hash-stamped, time-independent hash) and prints a **citable summary line**
+  (`quality_ratchet: N/M pass · F fail · U unmeasured · results <sha12> · manifest <sha12>`); a gate with
+  no command is **unmeasured, never pass** (exit 1). `--status`, `--selftest` (17 checks, each observed
+  failing and passing, incl. the installed hook refusing a loosening through real `git commit`),
+  `install-hook` (honours `core.hooksPath`; prints the chain line for a foreign hook). New
+  `starter-kit/quality-gates.json` seed (**§8.4 empty**, with the schema and one valid `_example`). New
+  canonical-only `tools/test_quality_ratchet.py` — **33 tests** (pure ratchet arithmetic; config defects;
+  measurement incl. the index-not-worktree rule and a 127 exit for a missing command; results/status;
+  precommit through git; stdlib/no-force/selftest/seed invariants).
+- **P2b — distribution (checkpoint 4).** `bin/_manifest.py` **27 → 29** rows (`quality_ratchet.py` TRACKED,
+  `.quality-gates.json` SEED). Adding the rows with nothing else changed turned **6 guard tests RED** — the
+  F2-generalized installed-file test (by name, and end to end for both files), the checklist
+  scored-or-exempt invariant, and the exclusion-matches-manifest cross-reference — exactly the guards
+  v3.6/v3.7/#80 built for this moment. Both scanner twins gain the two names in
+  `FRAMEWORK_INSTALLED_SOURCE` (in manifest order — the cross-reference is order-sensitive) with their own
+  `_FRAMEWORK_FILE_SIGNATURES` entries (the tool's `VERSION` regex + 4 signatures; the seed's `_example`
+  keys), so a 494-LOC install cannot flip a document project to `code` (PR #71's lesson, measured by the
+  real-file test); `CHECKLIST_EXEMPT` records why neither is scored. Twins byte-identical; 211 OK;
+  `bin/sync` into a scratch tree installs both, `bin/status` reports `tracked current` / `seed present`;
+  `bin/tests.sh` 115/1 — **Test 9 by construction** (`--source=github` reads `main`, which lacks the new
+  starter-kit file until merge; the #80 shape).
+- **P2c — install path and shell checks (checkpoint 5).** `bin/tests.sh` **116 → 128** checks: the unit suite
+  wired in beside the budget suite, plus a `quality_ratchet.py` block that syncs a scratch adopter tree,
+  declares one gate, installs the hook, and proves through real `git commit` that a loosened threshold is
+  refused, `--no-verify` bypasses it, a tightening passes, removing the gate is refused, and a re-sync
+  leaves the adopter's manifest alone — **RED first**: with `compare()` neutralized, the loosening
+  committed. `starter-kit/BOOTSTRAP.md` Step 10 retitled *(Optional) → (Recommended)* and gains the
+  ratchet paragraph (start where you are; chain after the ledger hook with one line; the results file and
+  the receipt citation) plus a tool-agnostic per-stack table (Python/Node/Rust/JVM/Docs — the methodology
+  ships the ratchet, not the ruler). `.gitignore` gains `.quality-gates-results.json` (**§8.2**: gitignored
+  by default, with the reason). `bin/check-links` 105 → **107** (both new adopter-layout links resolve).
+- **P3 — dashboard (checkpoint 6), `DASHBOARD_VERSION` 2.10.7 → 2.11.0, both twins byte-identical.** New
+  `collect_gate_metrics` (**D6**): reads `.quality-gates.json` (declared count), the results file where it
+  exists (pass/fail/unmeasured, a `manifest`-hash staleness check, a passing gate named *coverage*), and a
+  **git-only** loosening history (`git log -- .quality-gates.json`, capped at 50, each pair diffed for a
+  lowered floor / raised ceiling / removed gate — the scanner never executes a project command, and a test
+  proves it with a `touch`-marker gate). Advisory risks: *N declared, never run here* (medium); *results
+  predate the manifest* (low); *K of N measured outside their threshold: names* (high); *unmeasured (no
+  command)* (low); *threshold `x` floor lowered a → b in `sha` (date) (+k earlier) — thresholds only tighten*
+  (medium). `score_health`: a **measured** passing coverage gate earns +2 on top of configured coverage's
+  +2, cap unchanged — the first number, not file-existence, the scanner scores; doc-only repos keep their
+  render slot. Card: a *Quality Gates* row beside *Coverage Config*. **Silence is deliberate**: no manifest,
+  and the **empty seed** every synced adopter receives, produce no risk. 11 new tests
+  (`TestQualityGateSignals`), **RED first against the 2.10.7 scanner: 11 ran, 2 failures + 7 errors**; unit
+  suite **211 → 222** OK. **Fleet delta: 27 repos re-scanned under 2.10.7 and 2.11.0 — 0 changed class,
+  score, or risk set** (none has a manifest). `bin/tests.sh` 127/1 (Test 9 by construction).
+
 ### 2026-09-15 · [ad hoc] Merged PR #80 — the read-set budgets series (#76–#79)
 
 - **Action:** merge [PR #80](https://github.com/KJ5HST/methodology/pull/80) (rmsharp) at head `aa36fd8` into
