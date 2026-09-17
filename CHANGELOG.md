@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-54] S179 close-out — BL-54 fixed fork-side; P6 next, in `airqino`'s own repository
+
+- `HANDOFFS.md`: S179's receipt is complete (self 8, S178 scored 8), with the Phase 3A evaluation and the
+  self-assessment beneath it. The gate citation comes from a `--no-local` clone of `dd11c0c`:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 330ab6a19d4b · manifest 3a87b16f1b31`; the suite
+  read 305 / 0 / 6.
+- Next: P6 (`airqino`), run in that repository. BL-54's upstream route (its own PR, or inside P12's) is a go-ahead.
+  The push of fork `main` to `origin`, authorized at Phase 0, follows this commit.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-54] S179 — BL-54 recorded: fixed fork-side, open for its upstream PR; BL-57 row and plan status; fork Learning #72
 
 - `docs/planning/BACKLOG.md`: the BL-54 row says it is fixed fork-side (`2c4f801`, `865119f`), states the operator's
