@@ -199,6 +199,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-65] Raised — a unit test that skips in every clone and fails in the working tree, on a premise the tool does not hold
+
+**Raised** while verifying the Test 38 repair. `tools/test_context_budget.py:372` sets `calibrate_min_r2` to `0.0`
+and asserts `calibrate()` returns `CLEAN`, on the premise that a zero floor admits every fit. `calibrate()` has a
+second refusal that never consults the floor — a negative slope. On this machine the fit is
+`opening_tokens ≈ 58,435 + -0.1773 × bytes`, `R² = 0.0004`, so it refuses and the assertion fails. Its `setUp`
+screens only for the *"not enough"* path.
+
+The test reads this machine's Claude Code transcripts, keyed on the repository's own path, so it **skips in every
+`--no-local` clone** — which is where `HANDOFFS.md` §Citing the gate run has the build-equivalent measured. Hence
+two honest, disagreeing readings this session: the clone of `4c6da50` read `10/10 pass · 0 fail`, the working tree
+read `312 passed, 1 failed`. Recorded separately in the detail file: all four `*-unit-tests` gates in
+`.quality-gates.json` extract `Ran (\d+) tests`, which counts tests run and is blind to failures — only the suite's
+`tests-sh-failed` colour catches this one. Not fixed; three shapes recorded, none costed. Canonical-only.
+
 ### 2026-09-17 · [BL-64] Raised — the close-out gate run cannot cover the close-out commit (the guard half is fixed)
 
 **Raised** as the open residual of the Test 38 repair committed at `4c6da50` the same session. The guard is fixed;

@@ -2202,3 +2202,49 @@ session did it by hand. (c) Accept the window and make the next Phase 0's compar
 customary, which is closest to what `SESSION_RUNNER.md` Phase 0 step 6 already asks for. Canonical-only either
 way: `bin/tests.sh` is not in `bin/_manifest.py`, so no adopter received the defect, but the Phase 3E timing rule
 IS distributed and the same window exists at every adopter that declares gates.
+
+---
+
+**BL-65 — `tools/test_context_budget.py`'s fit-gate end-to-end test assumes the r² floor is `calibrate()`'s only
+refusal path, so it fails on a machine whose transcripts fit a negative slope — and it skips in every clone, which
+is where the documented build-equivalent runs. Raised 2026-09-17 (S182), found while verifying an unrelated fix.
+Not fixed.**
+
+**What.** `TestFitGateEndToEnd.test_an_admitting_floor_prints_the_constant`
+(`tools/test_context_budget.py:372`) sets `calibrate_min_r2` to `0.0` and asserts `calibrate()` returns `CLEAN`
+and prints a bytes-per-token constant — the presence control for the test above it, which asserts that an
+impossible floor suppresses the constant. The premise is that an r² floor of zero admits every fit.
+
+It does not. `calibrate()` has a second, independent refusal: a **negative slope**. On this machine, right now:
+
+```
+opening_tokens ≈ 58,435 + -0.1773 × bytes      R² = 0.0004
+no constant recommended — the slope is -0.1773 — more bytes fitting FEWER tokens is not a conversion
+```
+
+`rc = 1` (WARN), and no floor value can change that, because the refusal does not consult the floor. The test's
+`setUp` screens only for the *"not enough"* path (`:355`), so this one reaches the assertion and is scored a
+failure.
+
+**Where it is visible, and where it is not.** The test's inputs are this machine's Claude Code transcripts —
+`~/.claude/projects/-Users-rmsharp-Development-methodology/*.jsonl`, derived from the repo path at `:340`. A
+`--no-local` clone has a different path, so the slug misses, so the test **skips**. The documented build-equivalent
+(`quality_ratchet.py --run` in a clone with HEAD asserted, `HANDOFFS.md` §Citing the gate run) therefore never runs
+it: the clone of `4c6da50` read `10/10 pass · 0 fail`, while `bash bin/tests.sh` in the working tree read
+`312 passed, 1 failed`. Both readings are honest and they disagree, because they exercise different populations.
+
+The test is not un-guarded: `bin/tests.sh` Test 18 checks the suite's exit status, and the failure surfaces through
+the `tests-sh-failed` gate. Worth noting separately, though, is that the four unit-test gates in
+`.quality-gates.json` — `dashboard-unit-tests`, `context-budget-unit-tests`, `trimmer-unit-tests`,
+`ratchet-unit-tests` — all extract `Ran (\d+) tests`, the number of tests **run**, which is blind to whether any
+passed. A failing unit test raises no alarm in its own gate; only the suite's colour catches it.
+
+**Also note the test's own docstring is right about intent** (*"Skipped is honest; asserting against whatever
+transcripts happen to be present would not be"*) — and this failure is exactly the case it was trying to avoid.
+The skip guard was built for absence, not for data that is present and unfittable.
+
+**Shapes, none costed.** (a) Widen the `setUp` probe to skip when `calibrate()` refuses for any reason, not just
+*"not enough"* — smallest change, keeps the presence control where the data supports it. (b) Give the presence
+control a synthetic fixture with a known positive slope, so it stops depending on whoever's machine it runs on.
+(c) Leave it and accept a test that fails on some developer machines — which is what happens today, silently, since
+the clone run never sees it. Canonical-only: `tools/test_context_budget.py` is not in `bin/_manifest.py`.
