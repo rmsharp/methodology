@@ -199,6 +199,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-17.md` (2 record(s), 33,267 B → 13,883 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-16 → 2026-09-17) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-17.md`](docs/archive/HANDOFFS-through-2026-09-17.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh)
+rather than trusting a digest printed here. Live file 33,267 B → 13,883 B (−58.3%).
+
 ### 2026-09-17 · [BL-57] S181 claim — trim `HANDOFFS.md`, record plan item (18) (one sync run, one commit), and a start check for P7 (in progress)
 
 **Deliverable:** the retention trim `HANDOFFS.md`'s policy calls for, and the operator's answer to plan item (18) of
