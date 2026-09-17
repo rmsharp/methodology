@@ -85,12 +85,13 @@ from collections import defaultdict
 # Every other copy (portfolio root + per-project) is a synced copy of the canonical and must
 # carry the same value. A copy whose DASHBOARD_VERSION is older than the canonical is stale —
 # re-sync from the canonical. Bump on any change to the canonical script.
-# 2.17.0: Phase C2 — the D4(b) read-cap risk row is now PER CLASS (a Class A ledger over the
-# one-read cap drops from `high` to `low` and says no action is expected; Class B is unchanged at
-# `high`), and collect_trim_metrics' re-implemented read arm keys on CLASS_A_FIRE_BYTES instead of
-# READ_CAP_BYTES so it cannot contradict the trimmer's own --check. Changed output on a
-# distributed tool, and the severity change is fleet-visible: MINOR, not patch.
-DASHBOARD_VERSION = "2.17.0"
+# 2.18.0: the fork's resync with upstream/main (docs/planning/upstream-resync-2026-09-plan.md, D3)
+# merges upstream's two releases on its own numbering line into this one at 2.17.0 -- 2.11.0 (quality-
+# gate outcomes scored, advisory, and the gates panel) and 2.11.1 (the gate-history walk fixes). The
+# gates panel is changed output on a distributed tool: MINOR, the next above both lines. Upstream's
+# line continues from 2.11.1, so the two stay apart until a dashboard PR reconciles them. (2.17.0,
+# Phase C2's per-class read-cap risk row, is described in git: `git log -S'2.17.0'` on this file.)
+DASHBOARD_VERSION = "2.18.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally

@@ -2388,13 +2388,13 @@ class TestFmtRatioAndTwins(unittest.TestCase):
 
     def test_dashboard_version(self):
         """⚠ PINNED TWICE ON PURPOSE — the module attribute AND the starter-kit source text. Bump
-        BOTH or this goes red; S115 lost a run to changing one. 2.17.0 is Phase C2 (per-class D4(b)
-        severity + the collector's read arm on CLASS_A_FIRE_BYTES): changed output on a distributed
-        tool, and the severity change is fleet-visible, so MINOR rather than patch."""
-        self.assertEqual(md.DASHBOARD_VERSION, "2.17.0")
+        BOTH or this goes red; S115 lost a run to changing one. 2.18.0 is the resync's merge of
+        upstream's 2.11.0 and 2.11.1 (the gates panel and its history walk) into this line at 2.17.0:
+        changed output on a distributed tool, so MINOR (resync plan D3)."""
+        self.assertEqual(md.DASHBOARD_VERSION, "2.18.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.17\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.17.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.18\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.18.0")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general

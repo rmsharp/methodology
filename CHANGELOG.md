@@ -214,6 +214,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S177 — resync stage M4 merged (`d4ac950`), fork `main` now contains `upstream/main`; D3: `DASHBOARD_VERSION` 2.18.0
+
+- **Merge `d4ac950`** (parents `d23d1a3`, `6b29d3d`), the last of the four stages. One file conflicted,
+  `CHANGELOG.md`: upstream's one new entry (*"PR #82 merged — post-merge verification on main and the first
+  tightening"*) now sits above its upstream neighbour, after the fork's 2026-09-16 entries. `HANDOFFS.md`
+  merged cleanly and was rebuilt by the same rule: upstream's S23 sits above S22, after the fork's receipts,
+  and `check-handoff --all` passes on 6 receipts. `.quality-gates.json` is upstream's (`fb81c4b`:
+  `tests-sh-failed` max 0, `tests-sh-passed` min 139) until D2's commit. `git rev-list --count
+  main..upstream/main` is **0**. The plan's M3 and M4 were predicted against a pre-M2 tree and are now
+  measured: 11 conflicting files at M3 and 1 at M4, against the 12 and 12 computed at `9b96ac1`.
+- **Measured on the merge, in a `--no-local` clone at `d4ac950`:** `bash bin/tests.sh` exit 0, **333 passed / 0 failed / 0
+  skipped**, and its digit-masked rows are identical to M3's.
+- **D3, this commit:** `DASHBOARD_VERSION` 2.17.0 → **2.18.0** in both twins. It is the next minor version
+  above both numbering lines, because the merge brings upstream's 2.11.0 gates panel (changed output) and
+  2.11.1 history walk. The comment above the constant now describes 2.18.0 and points to git for 2.17.0,
+  following `0afe9d6`'s pattern. Both pins in `tools/test_methodology_dashboard.py` (the module attribute
+  and the starter-kit source text) and the test's docstring follow. A whole-file search (fork Learning #68)
+  found exactly those sites. The only remaining `2.17.0` text is in the two new comments, which name the
+  prior version on purpose. The dashboard suite: 336 tests OK in the live checkout.
+  `python3 starter-kit/methodology_dashboard.py` exits 0, reports `v2.18.0` at 76/100, and `dashboard.html`
+  shows the gates panel (*"Quality Gates: 10 declared, never run"*).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S177 — resync stage M3 merged (`7245f79`): PR #82 whole, the repository's own gates, and the ratchet chained into `pre-commit`; `CHANGELOG.md` stays untrimmed (operator decision)
 
 - **Merge `7245f79`** (parents `0e8c6ac`, `64f23bf`). There were 11 conflicting files, not the 12 computed
