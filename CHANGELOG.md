@@ -199,6 +199,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S182 close-out — Test 38's drift guard repaired, the gate green again, three findings raised
+
+**Deliverable:** one fix — `bin/tests.sh` Test 38's drift guard now bounds a receipt by its own closing fence
+(`4c6da50`), which returns `main` to `10/10 pass`. Chosen by the operator after Phase 0 (picker), which also
+authorized the push to `origin` and the raising of backlog items. Nothing sent upstream.
+
+- **Phase 0 found the gate red at `29b0feb` although S181's receipt cited `10/10 pass`.** `8/10 pass · 2 fail ·
+  results 9ccbc3cb49b6 · manifest 3a87b16f1b31` in a `--no-local` clone; same manifest digest as S181's, so no
+  threshold moved. Bisected to `473c83d`, S181's own close-out commit. The dashboard reached the same reading by a
+  different route: 76/100, one HIGH flag naming both breached gates.
+- **Final, clone of `b25fc19` with HEAD asserted:** `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  83c5e3fed6f3 · manifest 3a87b16f1b31`, `tests-sh-passed` 313 at 3 receipts.
+- **`bash bin/tests.sh` in the working tree reads `312 passed, 1 failed`, and both readings are honest** — the
+  failure is BL-65's test, which skips in every clone. Recorded rather than left for the next session to rediscover.
+- **Three findings raised, none fixed beyond the deliverable:** BL-64 (`0f03f0e`, the open residual — a close-out's
+  gate citation cannot cover the close-out commit), BL-65 (`89ef2ab`), BL-66 (`b25fc19`, upstream-facing).
+- **P7 was done by `wsfct`'s own S630 while this session ran.** Checked read-only from here at close-out:
+  `bin/sync ../wsfct --source=local --dry-run` exits 0 with all 23 files `unchanged`. Recording it here is the next
+  session's item (1); this session did not record it, to keep one deliverable.
+- **This close-out:** fork Learning #75, the receipt, this entry.
+- **Model:** Claude Opus 5.
+
 ### 2026-09-17 · [BL-66] Raised — the README's update instruction points at the one route that cannot update
 
 **Raised** from an operator question: *"I should be able to update `../nprcgenekeepr` with 'Update methodology using
