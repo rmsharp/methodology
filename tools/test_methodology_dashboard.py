@@ -4674,17 +4674,27 @@ class TestS38TrimTriggerRow(unittest.TestCase):
         """The live ledgers cannot prove this: every dated heading in the root CHANGELOG.md is a
         real entry, so a fence-blind counter scores identically there. The SEED ledgers are the
         discriminating fixture and they are real artifacts, not synthetic ones -- every dated
-        heading in `starter-kit/CHANGELOG.md` and the one ```handoff block in
-        `starter-kit/HANDOFFS.md` sit inside documentation fences. A fence-blind counter reads
-        3 and 1 where the truth is 0, and would print a confident slope for a freshly seeded
-        ledger that holds no records at all."""
-        seed_cl = (self.REPO / "starter-kit" / "CHANGELOG.md").read_text(encoding="utf-8")
+        heading in the `CHANGELOG.md` seed as shipped before ledger-format 2 and the one
+        ```handoff block in `starter-kit/HANDOFFS.md` sit inside documentation fences. A
+        fence-blind counter reads 3 and 1 where the truth is 0, and would print a confident slope
+        for a freshly seeded ledger that holds no records at all. Since ledger-format 2 the live
+        `CHANGELOG.md` seed is a pointer with no fenced examples, so that half reads the frozen
+        copy in tools/fixtures/ (its blob id asserted, as tools/test_methodology_trim.py does)."""
+        fixture = self.REPO / "tools" / "fixtures" / "seed-CHANGELOG-ledger-format-1.md"
+        raw = fixture.read_bytes()
+        self.assertEqual(hashlib.sha1(b"blob %d\0" % len(raw) + raw).hexdigest(),
+                         "47bc848591fb4ee6906dde885c28f53348af0f26",
+                         "the frozen format-1 seed changed; it must stay the seed as shipped")
+        seed_cl = raw.decode("utf-8")
         seed_ho = (self.REPO / "starter-kit" / "HANDOFFS.md").read_text(encoding="utf-8")
         # Fixture control: the naive counts really are non-zero, or "0" proves nothing.
         self.assertGreater(len(re.findall(r"(?m)^### \d{4}-\d{2}-\d{2}", seed_cl)), 0)
         self.assertGreater(len(re.findall(r"(?m)^```handoff", seed_ho)), 0)
         self.assertEqual(md._trim_record_count(seed_cl, "CHANGELOG.md"), 0)
         self.assertEqual(md._trim_record_count(seed_ho, "HANDOFFS.md"), 0)
+        # The live thin seed is still a fresh ledger: no records.
+        live_cl = (self.REPO / "starter-kit" / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertEqual(md._trim_record_count(live_cl, "CHANGELOG.md"), 0)
 
     def test_record_counter_matches_the_trimmers_zoning_on_every_real_ledger(self):
         """Seven real files, including both archives and both seeds. The dashboard's counter and

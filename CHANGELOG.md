@@ -214,6 +214,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S178 — a fork-only dashboard test read the live `CHANGELOG.md` seed's fenced examples, which P1 moved; it reads the frozen format-1 seed now
+
+- **Change:** `tools/test_methodology_dashboard.py` `test_fenced_records_are_not_counted` (`TestS38TrimTriggerRow`,
+  fork-only). Its fixture control asserted that `starter-kit/CHANGELOG.md` holds fenced dated headings; the
+  ledger-format-2 seed holds none, so the merge below failed Test 18 with *"0 not greater than 0"*. This is the
+  plan's hazard 6 in a test the branch never had. The control now reads
+  `tools/fixtures/seed-CHANGELOG-ledger-format-1.md` with its blob id asserted, as
+  `tools/test_methodology_trim.py` does, and the live thin seed is asserted to hold 0 records.
+- **Verified:** the dashboard suite runs 336 tests, OK. A fence-blind record-counter mutant fails the test.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-16 · [BL-57] S178 — P5: fork `main` merges `bl57/changelog-rules` (`83a12f0`), adopting the one-home `CHANGELOG.md` rules (merge `22ce71b`)
+
+- **Operator decisions (S178, picker):** merge the branch rather than port it (plan §P5 wrote a port), so the
+  branch's P1–P4 commits enter fork history and the resync after the upstream PR merges does not re-resolve
+  them (#80 and #82 were merged upstream as real merge commits). And D10: remove the hook's claim carve-out,
+  including lowering the `tests-sh-passed` floor once Test 27 goes; both come in later commits.
+- **The merge** (base `64f23bf`; the branch's net change is 16 files): 5 conflicts, 9 hunks, as
+  `git merge-tree` predicted. `CHANGELOG.md` ours (the branch's file is upstream's ledger, and its BL-57
+  entries record work this ledger already records); `bin/_manifest.py` and `bin/tests.sh` theirs (the fork's
+  S41 marker design, which BL-57 replaces for `CHANGELOG.md`); `CLAUDE.md` the fork's row naming the ledger
+  rules; `starter-kit/SESSION_RUNNER.md` the branch's Phase 3F bullet plus the fork's `Model:` sentence,
+  re-pointed from the seed's format section to `FRAMEWORK_APPARATUS.md` §The Action Ledger (runner −14 B).
+- **Checked on the merge:** the 8 files identical between `main` and the base equal the branch's blobs; in the
+  8 files where `main` differs from the base, and in both ledgers and the budget config, the differences
+  from the branch are exactly the fork's own changes plus the resolutions above (a line-multiset comparison). Suite in a `--no-local` clone: 332 passed / 2 failed / 0
+  skipped against the parent's 332 / 1 / 0. The row diff is Test 20 (b2) swapped for the branch's
+  frozen-seed pair (+1) and Test 18 failing (fixed above). Test 9 fails on both from GitHub API rate limiting.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S178 claim — P5 of the `CHANGELOG.md` rules plan: fork `main` adopts the one-home rules (in progress)
 
 **Deliverable:** P5 of [`docs/planning/changelog-rules-contradictions-plan.md`](docs/planning/changelog-rules-contradictions-plan.md)
