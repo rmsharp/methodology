@@ -199,6 +199,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S180 claim — record P6 (`airqino`) as done in the fork, and close BL-56 (in progress)
+
+**Deliverable:** record in the fork that BL-57's P6 is done. It ran in `airqino`'s own repository, on its local
+branch `chore/methodology-bl57-p6` (`2b0230a`..`e947798`, not pushed). The records: the plan's status line
+and P6 row, the BL-57 row, and BL-56's closure. Chosen by the operator (picker) after that session reported;
+the same picker gave the go-ahead to push fork `main` to `origin` at close-out.
+
+- Phase 0 ledger reconcile: `CHANGELOG.md` frontier `ff02b5c` (S179's push record), `HANDOFFS.md` frontier
+  `9cd1008`. The one commit between them is that push record, which S179's receipt announced. Nothing
+  backfilled; 2 receipts, so no trim is due. S179's gate citation re-run in a `--no-local` clone of `ff02b5c`:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 330ab6a19d4b · manifest 3a87b16f1b31`,
+  identical to the receipt. `upstream/main` still `6b29d3d`; PR #83 still open; no open upstream issues.
+  Dashboard (same clone) 76/100, no high risk. `context_budget.py --status` exit 2 with S179's three `over` rows.
+- **Phase 0 was not read-only, and its report said it was.** `context_budget.py --status` at the root appended
+  its snapshot to `.context-budget-history.jsonl`. That row rides with this claim, as S176–S179's did.
+- **Before P6 ran,** fork `main`'s `bin/sync ../airqino --source=local --dry-run` exited 0 with no refusals, so
+  the plan's reason to sync from the branch (BL-54's four refusals) was already stale. **After P6, checked
+  from here, read-only:** `bin/status ../airqino --source=local` reads every tracked file `current` and all six
+  seeds `present`; `5e4b483`'s diff removes only `CHANGELOG.md` lines 1–11; `### ` headings 7 and the audit 7;
+  `airqino`'s tree clean apart from its two older untracked files. The sync commit `28022fe` holds 15 files,
+  which that session disclosed; the previous sync there, `dfe26fd`, held 21.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S179 — fork `main` pushed to `origin`, `29321da..9cd1008` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main:refs/heads/main`, `29321da..9cd1008`, a fast-forward of 35 commits: S178's 26

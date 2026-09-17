@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S180
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **RECORD BL-57'S P6 AS DONE AND CLOSE BL-56.** P6 ran in `airqino`'s own repository (local branch `chore/methodology-bl57-p6`, `2b0230a`..`e947798`, not pushed). Chosen by the operator (picker) after that session reported; the same picker gave the go-ahead to push fork `main` to `origin` at close-out. Fork-local until then; nothing upstream.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:5` (status), `:729` (P6–P11); `docs/planning/BACKLOG.md:151` (BL-56), `:152` (BL-57); `docs/planning/BACKLOG-DETAIL.md:1680` (BL-56)
+gotchas: P6's commits exist only in `airqino`'s local branch, so every citation names that repository. The plan's P6 row carries two stale facts (the BL-54 route reason; *one* entry, where there were two): correct them visibly rather than rewrite them silently. With this claim the ledger holds 3 receipts, so the suite reads 311 until the next Phase 0 trim.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S180 claim"
+commit: pending
+```
+
+```handoff
 session: S179
 date: 2026-09-17
 status: complete
