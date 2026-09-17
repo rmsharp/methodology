@@ -2156,3 +2156,49 @@ their own commits under the cap.
 **Open.** Whether the distributed `SAFEGUARDS.md` names the exception (a tool-generated copy of canonical files,
 listed by a dry run, is one commit), or `BOOTSTRAP.md` says how to commit a sync, or both. Either lands at every
 adopter, so it rides BL-57's P12 pull request or its own, and opening either is its own go-ahead.
+
+---
+
+**BL-64 — `bin/tests.sh` Test 38's drift guard read the prose between receipts as receipt fields, and the
+close-out gate run is measured one commit too early to catch what the close-out writes. Raised 2026-09-17
+(S182), at Phase 0, from a red quality gate on `main`. The guard half is FIXED the same session (`4c6da50`);
+the timing half is open.**
+
+**What (fixed half).** Test 38's drift guard compares the field names of the newest receipt in `HANDOFFS.md`
+against the newest record in `tools/fixtures/handoff-ledger-2-records.md`, so a frozen fixture cannot rot
+unnoticed. It took the live receipt's extent as *its opening fence to the NEXT record's opening fence* — the
+extent `bin/check-handoff` uses for the per-record BYTE budget, deliberately, because trailing prose costs the
+ledger bytes (Test 38 assertion (5)). Field names are not bytes. Between two receipts sits the close-out's
+self-assessment prose, and any line of it that wraps onto a word followed by a colon was read as a field.
+`HANDOFFS.md:85` wrapped onto `applied: my report named the row.`
+
+**Measured.** In a `--no-local` clone of `29b0feb` with HEAD asserted: `quality_ratchet: 8/10 pass · 2 fail ·
+results 9ccbc3cb49b6 · manifest 3a87b16f1b31` — `tests-sh-passed` 304 against the 305 floor, `tests-sh-failed`
+1 against 0. The manifest digest is the same as S181's, so no threshold moved. The dashboard reached the same
+reading independently: 76/100 with one HIGH flag naming both gates.
+
+**Fixed at `4c6da50`.** The guard now loads `bin/check-handoff` as a module and calls its `scan()` — fence-bounded
+and fence-nesting aware. Two assertions keep it fixed, written RED first and run in that state: a phantom field
+planted in the prose below the closing fence must not reach the comparison, and the same phantom inside the fence
+must still be named. `bin/check-handoff`'s `parse_block` docstring already named this hazard — *"Only recognized
+keys (REQUIRED_KEYS) are captured, so free-text prose lines never masquerade as a field."*
+
+**Open — why it shipped, which is the part not fixed.** The guard clears itself. Only a close-out puts prose
+between the newest receipt and the one below it, and only some of that prose wraps onto a colon-word: S180's did
+not, S181's did. The next session's Phase 1B claim then prepends a receipt with nothing after it, and the guard
+reads OK again. Verified on the guard's own logic across four commits: `OK` at `755fe0d` and `b0bf91f`,
+`['applied']` at `473c83d` (S181's close-out) and `29b0feb`, `OK` again at `45bf347` (S182's claim).
+
+So the red window runs from a close-out commit to the next claim, and **nothing in the protocol looks inside it.**
+`starter-kit/SESSION_RUNNER.md` Phase 3E has every close-out cite a gate run measured *before* the close-out commit
+exists — the commit that writes the receipt, the ledger entry and the learnings row is the one commit its own
+citation can never cover. Phase 0 of the next session is the only reader positioned to see it, and Phase 1B erases
+the evidence minutes later. S181 cited `10/10 pass` in good faith and shipped a red tree.
+
+**Shapes, none costed yet.** (a) Have the close-out re-run the gate *after* the close-out commit and amend or
+follow up with the true citation — honest, but it puts a write after the write-gate. (b) Have Phase 0 record its
+own gate reading in the ledger before the claim, so the window is always measured by someone — cheap, and this
+session did it by hand. (c) Accept the window and make the next Phase 0's comparison mandatory rather than
+customary, which is closest to what `SESSION_RUNNER.md` Phase 0 step 6 already asks for. Canonical-only either
+way: `bin/tests.sh` is not in `bin/_manifest.py`, so no adopter received the defect, but the Phase 3E timing rule
+IS distributed and the same window exists at every adopter that declares gates.

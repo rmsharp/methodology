@@ -199,6 +199,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] Raised — the close-out gate run cannot cover the close-out commit (the guard half is fixed)
+
+**Raised** as the open residual of the Test 38 repair committed at `4c6da50` the same session. The guard is fixed;
+what is not fixed is why it reached `main` at all. `starter-kit/SESSION_RUNNER.md` Phase 3E has every close-out cite
+a `quality_ratchet.py --run` measured **before** the close-out commit exists, so the commit that writes the receipt,
+the ledger entry and the learnings row is the one commit its own citation can never cover. The next session's Phase 0
+is the only reader positioned to see it, and Phase 1B's claim clears the evidence minutes later — verified on the
+guard's own logic: `OK` at `755fe0d`, `['applied']` at `473c83d` and `29b0feb`, `OK` again at `45bf347`. S181 cited
+`10/10 pass` in good faith and shipped a red tree.
+
+Three shapes are recorded in the detail file, none costed. The guard is canonical-only (`bin/tests.sh` is not in
+`bin/_manifest.py`), but the Phase 3E timing rule is distributed, so the same window exists at every adopter that
+declares gates in `.quality-gates.json`.
+
 ### 2026-09-17 · [BL-64] `bin/tests.sh` Test 38's drift guard now bounds a receipt by its own closing fence
 
 **What was wrong.** The drift guard exists so a *frozen* fixture cannot rot: it reads the newest receipt in the live

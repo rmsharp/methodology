@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only).**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -154,6 +154,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-61** | Lower `HEADER_RESERVE_BYTES` (`bin/check-handoff:663`, 7,168 B) now that `HANDOFFS.md`'s front matter is 4,019 B and no longer grows per trim — bank the freed ~3 KB as S109 did. **Operator, S174 (2026-09-16, picker): scheduled for a later small session.** Canonical-only | [detail](BACKLOG-DETAIL.md#bl-61) |
 | **BL-62** | Upstream's `TestThisRepoReadSetPartition` (`tools/test_context_budget.py:1256`) sums the token ceilings of **every** whole-read class against one 25,000-token Read, but only the read-set pair is read together; a read-mandated class's files are read separately. Hit at resync M2 by the fork's two ledgers (25,000 tokens declared on each, 50,000 in sum), worked around at `0e8c6ac`. Test is canonical-only: no adopter impact. **Operator, after S177: carry it in BL-57's P12 PR**, not a standalone issue | [detail](BACKLOG-DETAIL.md#bl-62) |
 | **BL-63** | A committed-mode `bin/sync` writes more files in one run than the distributed `SAFEGUARDS.md` lets one commit hold (15 and 21 in `airqino`'s two syncs; 14–16 in the S180 and S181 dry runs, against a cap of 5), and no distributed document says how to commit a sync. **Operator, S181 (picker):** for BL-57's P7–P11, one run is one commit (plan item (18)). Whether `SAFEGUARDS.md` or `BOOTSTRAP.md` should say so for every adopter rides the upstream PR. **Distributed, so its own go-ahead** | [detail](BACKLOG-DETAIL.md#bl-63) |
+| **BL-64** | Test 38's drift guard measured a receipt from its opening fence to the NEXT receipt's, so the close-out prose between them read as receipt fields and `applied: ` turned the quality gate red on `main`. **Guard FIXED 2026-09-17 (S182)** (`4c6da50`, RED-first, two new assertions). **Open:** the close-out cites a gate run measured before the close-out commit exists, so the commit that writes the receipt is the one its own citation can never cover — S181 cited `10/10 pass` and shipped a red tree. Guard canonical-only; the Phase 3E timing rule is distributed | [detail](BACKLOG-DETAIL.md#bl-64) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45, BL-56, BL-59)
 
