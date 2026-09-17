@@ -195,6 +195,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S178 — `trimmer-unit-tests` floor tightened 123 → 124, the count measured after the merge
+
+- The merge brought `bl57/changelog-rules`' trimmer tests. `quality_ratchet.py --run` measured **124** in a
+  `--no-local` clone of `1664860` (results `839fb8a9f80a`), above the 123 floor. The manifest says a tightening
+  is owed whenever a measured value rises. The ratchet's `--precommit` passes it: a tightening needs no
+  approval.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S178 — `tests-sh-passed` floor lowered 327 → 294: Test 27 left with the carve-out (operator-approved loosening, `--no-verify`)
 
 - **Approval:** the operator's D10 answer (S178, picker) approved lowering this floor to the count measured
