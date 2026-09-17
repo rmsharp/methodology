@@ -214,6 +214,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] S177 follow-up — fork `main` pushed to `origin`, `9b96ac1..7b55ee3` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 7b55ee3:refs/heads/main`, `9b96ac1..7b55ee3`, a fast-forward of 41 commits: S177's
+  claim, the three resync merges `421ebf9`, `7245f79`, `d4ac950` with the upstream commits they bring, the M2
+  fixes, the config restatement, D3, the `HANDOFFS.md` trim and fold, D2, plan §8 and the close-out. Before the
+  push, a guard confirmed that `origin/main` still read `9b96ac1`, that local `main` read `7b55ee3`, and that the
+  push was a fast-forward. Afterwards `git ls-remote origin refs/heads/main` read
+  `7b55ee30b5814c04214ada57c8ab722e0832f539`. The go-ahead was the operator's message after S177's close-out
+  (*"push fork main (9b96ac1..7b55ee3) to origin"*). Fork only; nothing sent upstream.
+- **Not pushed:** this recording commit, which is outside the range the go-ahead named.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S177 close-out — resync R2 done: fork `main` contains `upstream/main`; D2, D3 carried out; BL-57's P5 is next
 
 - **Deliverable:** R2 of [`upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md), recorded in its
