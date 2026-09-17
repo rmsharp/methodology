@@ -195,6 +195,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S178 close-out — P5 done by merge; BL-54 next, before P6
+
+- `HANDOFFS.md`: S178's receipt is complete (self 7, S177 scored 7), with the Phase 3A evaluation and
+  self-assessment beneath it. The gate citation comes from a `--no-local` clone of `fbdd47d`:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 1552052a766d · manifest 8d8ddc767cdc`; the
+  suite read 300 / 0 / 0.
+- This close-out takes `CHANGELOG.md` past the 262,144 B hard read refusal. Under the operator's standing
+  decision a trim is now raised with the operator, not taken; the receipt's next steps ask it.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S178 — P5 recorded: plan S178 block, BL-57 and BL-54 rows, fork Learning #71
 
 - `docs/planning/changelog-rules-contradictions-plan.md`: the status line says P5 is done by merge and BL-54
