@@ -214,6 +214,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S177 — resync plan §8 (R2 as carried out), the BL-57 row, and fork Learnings #69–#70
+
+- [`upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md) §8 records R2 as carried out
+  and overrides §2–§5 and §7 where they differ: per-stage suite results, the measured conflict sets (7 / 11 / 1),
+  M2's three unpredicted red rows and the operator's config decision, the `HANDOFFS.md` deviation at M2, the
+  whole-file `CLAUDE.md` resolution, the operator's no-trim decision, D2's values and why 327, D3, and the
+  `context_budget.py --status` diff (exit 2 at both ends, no row changes status). Its status line now reads
+  carried out. **Next, computed:** `git merge-tree --write-tree --name-only main bl57/changelog-rules` lists 5
+  conflicting files for P5.
+- `docs/planning/BACKLOG.md` BL-57 row: R2 done, P5 next.
+- `docs/FORK_LEARNINGS.md` gains **#69**: an arriving test that reads the repository's own config binds
+  whichever config a merge keeps. It also gains **#70**: a count floor holds only if it is measured at the
+  state every close-out leaves. `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15
+  --no-citations` passes: 56 rows, contiguous 15..70, none over 1,500 B.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S177 — D2: this repository's quality gates tightened to the fork's measured values (`tests-sh-passed` 327, `dashboard-unit-tests` 336)
 
 - **Measured:** `python3 starter-kit/quality_ratchet.py --run` in a `--no-local` clone of `f4a8ec6`, after the

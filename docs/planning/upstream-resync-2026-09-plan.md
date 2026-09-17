@@ -1,6 +1,6 @@
 # Resync plan — merge `upstream/main` `6b29d3d` into fork `main`
 
-**Status: RATIFIED; R1 DONE AT S176 (§7), R2 NEXT — the operator chose every recommendation, D1 (A), D2 (a), D3 (a), D4 (a), by
+**Status: RATIFIED AND CARRIED OUT — R1 AT S176 (§7), R2 AT S177 (§8); fork `main` contains `upstream/main` `6b29d3d`. The operator chose every recommendation, D1 (A), D2 (a), D3 (a), D4 (a), by
 picker after S175's close-out (2026-09-16).** Written at S175, a planning session: nothing is merged. Evidence taken at fork `main` `1f34e75`, `upstream/main` `6b29d3d`, and PR #83's head
 `219fb9d`. Carried out by **R1** and **R2** (§5), one session each. Precedent: the plan
 [`upstream-read-set-budgets-merge-plan.md`](upstream-read-set-budgets-merge-plan.md) (S150), carried
@@ -390,3 +390,61 @@ section wins:
    17,024 B at the full merge). The learnings row is re-pointed to `docs/FORK_LEARNINGS.md` (67,177 B, ok,
    under the unchanged 81,920 B warning: 14,743 B of headroom where the table had 2,437 B).
    `HANDOFFS.md` 24,200 → 15,845 B; `CLAUDE.md` 11,368 → 11,808 B.
+
+## 8. R2 as carried out (S177, 2026-09-16) — the resync is done
+
+**R2 is done: fork `main` contains `upstream/main` `6b29d3d`** (`git rev-list --count main..upstream/main` = 0).
+The merges are `421ebf9` (M2), `7245f79` (M3) and `d4ac950` (M4). Around them: `8c429ed` fixes M2's two
+mechanical red rows, `0e8c6ac` restates the root budget config, `d23d1a3` records M3, `e1b6bdf` is D3,
+`75056a9` and `f4a8ec6` are the `HANDOFFS.md` trim and fold, and `e55f204` is D2. Where the result differs
+from §2–§5 and §7, this section wins:
+
+1. **Suite, each run in a `--no-local` clone:** claim `374bd8c` 309 / 0 / 0. M2 `421ebf9` 319 / 3 / 0. M2
+   checkpoint `0e8c6ac` 322 / 0 / 0. M3 `7245f79` 333 / 0 / 0. M4 `d4ac950` 333 / 0 / 0, rows identical to
+   M3's. Each run was diffed row by row, with digits masked, against the one before, and every flip is
+   explained in its ledger entry. After the trim and fold, `f4a8ec6` (2 receipts) inside D2's gate run: 327 passed / 0 failed, the six
+   Test 34 rows reading as stated skips.
+2. **Conflict sets, measured against each stage's committed predecessor:** M2 7 files (as §7 item 2), M3 11
+   (not 12: M2 had already resolved `bin/tests.sh`), M4 1 (`CHANGELOG.md`; `HANDOFFS.md` merged cleanly).
+3. **M2 turned three suite rows red that the plan did not predict.** (a) The dashboard's installed-file
+   population guard pinned 4 files, and the table now holds 6. Raised to 6, and a mutant check shows the loop
+   it guards fails for each new entry. (b) The fork-only never-overwrite row in `starter-kit/BOOTSTRAP.md`
+   did not name the arriving seed; `.quality-gates.json` and `quality_ratchet.py` were added. (c) **Upstream's
+   `TestThisRepoReadSetPartition` asserts properties of this repository's root `.context-budget.json`, which
+   D11 keeps as the fork's.** Operator decision (picker): **restate the config**. The read-set pair declares
+   `max_tokens` 18,222 and 6,777, the values the tool already derived, and the two read-mandated ledgers drop
+   the redundant 25,000. Every verdict is unchanged (`--json` diffed), and the upstream test file is
+   untouched. It is an exception to D11 and to §4's *"no ceiling changes"*, taken because no ceiling in
+   effect moved.
+4. **`HANDOFFS.md` at M2 kept ours, a deviation from §7 item 3's *"S20 (a stub at M2)"*.** Below the fork's
+   receipts a pending stub fails `check-handoff --all --allow-pending`, and Test 34 runs that check on the
+   live ledger. Upstream completes S20 at M3, and the completed receipt was kept there (§2.4: checked
+   against ours before it is kept). S21 stayed in its shard. The live ledger held 6 receipts before the
+   trim.
+5. **`CLAUDE.md` at M3 is the fork's whole file plus three rows**, not only its conflict hunks: git would
+   otherwise have taken upstream's shortened rows in hunks that merged cleanly (row 4's *"keep ours"*).
+6. **No `CHANGELOG.md` trim — operator decision (picker).** §2.4, §5 R2 step 3 and §7 item 4 schedule one
+   at the trimmer's trigger, and none of them cites the operator's 2026-09-14 decision not to trim this
+   file there (`3745748`). That decision governs. `--check` keeps firing. A trim is raised with the operator
+   only past the 262,144 B hard read refusal. The file is 242,695 B before this close-out's own entries.
+7. **D2:** `quality_ratchet.py --run` in a clone of `f4a8ec6` gave 10/10 pass (results `508b2b5489f3`). `e55f204`
+   tightens `tests-sh-passed` 139 → 327 and `dashboard-unit-tests` 226 → 336. The other count gates already
+   sat at their measured values (118, 123, 45), and every max-gate sits at 0. **327, not the 333 measured at
+   M4:** Test 34 turns six rows into stated skips below three `HANDOFFS.md` receipts, and every close-out
+   leaves two, so the floor is measured at that state (fork Learning #70). Every gate's name, direction,
+   command and extract pattern equals `upstream/main`'s, and the file differs from it only in those two
+   thresholds and a `_fork_tightening` note.
+8. **D3:** `DASHBOARD_VERSION` 2.18.0 in both twins and both pins (`e1b6bdf`). The dashboard suite has 336
+   tests. `dashboard.html` shows the gates panel.
+9. **`context_budget.py --status`:** exit 2 at Phase 0 and at close-out, with no row changing status. The runner is 54,363 → 55,420 B and
+   `SAFEGUARDS.md` 16,353 → 17,024 B, both upstream's merged lines, as §2.2 measured. `CLAUDE.md` is
+   11,808 → 12,667 B (M3's three rows). `HANDOFFS.md` is 24,567 → 15,768 B (the trim).
+   `docs/FORK_LEARNINGS.md` is 69,397 → 71,275 B (#69, #70). The read-set total is 70,716 → 72,444 B. The
+   restatement at `0e8c6ac` changes no verdict.
+
+**Next: BL-57's P5** (`changelog-rules-contradictions-plan.md:659`). §4's prediction still stands and still
+needs re-deriving: now that fork `main` contains `64f23bf`, P5's port may reduce to merging
+`bl57/changelog-rules` (which merged `64f23bf` at `52ad407`). Computed at this close-out: the branch
+(`83a12f0`, 16 commits not on `main`) does not contain `6b29d3d`, and `git merge-tree --write-tree --name-only
+main bl57/changelog-rules` lists 5 conflicting files: `CHANGELOG.md`, `CLAUDE.md`, `bin/_manifest.py`,
+`bin/tests.sh`, `starter-kit/SESSION_RUNNER.md`.
