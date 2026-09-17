@@ -199,6 +199,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-17-2.md` (2 record(s), 34,289 B → 17,712 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-17 → 2026-09-17) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-17-2.md`](docs/archive/HANDOFFS-through-2026-09-17-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-17-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-17-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 34,289 B → 17,712 B (−48.3%).
+
 ### 2026-09-17 · [BL-64] S183 claim — repair `bin/tests.sh` Test 38's plant-landing check, red on `main` since S182's own close-out (in progress)
 
 **Deliverable:** one fix to Test 38's planter (`bin/tests.sh:2523`-`2553`). Its landing check asks whether the string
