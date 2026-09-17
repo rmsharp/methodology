@@ -199,6 +199,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-63] S181 — BL-63 raised: a sync writes more files than a commit may hold, and no distributed document says how to commit it
+
+- **Raised** in `docs/planning/BACKLOG.md` with its detail in `docs/planning/BACKLOG-DETAIL.md` (`#bl-63`).
+  `starter-kit/SAFEGUARDS.md:49` caps a commit at five files (the same on `upstream/main`); `starter-kit/BOOTSTRAP.md`
+  `:55` and `:86` tell an adopter to run `bin/sync`, which does not commit, and say nothing about committing its
+  output. Measured: `airqino`'s syncs `28022fe` (15 files) and `dfe26fd` (21); dry runs of 14–16 files.
+- **The operator decided BL-57's case** (previous entry): one sync run is one commit. What stays open is whether the
+  distributed `SAFEGUARDS.md` or `BOOTSTRAP.md` says so for every adopter; that rides BL-57's P12 pull request or its
+  own, each its own go-ahead. `BACKLOG-DETAIL.md.verify.sh` exits 0 with the new section.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S181 — plan item (18) decided by the operator: one `bin/sync` run is one commit, for P7–P11; P7 gains a start check
 
 - **Decided (operator, S181 picker):** `docs/planning/changelog-rules-contradictions-plan.md` records it under item

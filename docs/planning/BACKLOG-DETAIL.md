@@ -2126,3 +2126,33 @@ the fork (`upstream-resync-2026-09-plan.md` §2.2), so where the change lands fi
 **Where it goes.** BL-57's P12 (`docs/planning/changelog-rules-contradictions-plan.md:742`), the fork's next
 substantial pull request, per the batching rule in `CLAUDE.md` §Contributing upstream. Opening that PR is
 its own go-ahead.
+
+<a id="bl-63"></a>
+
+**BL-63 — A committed-mode `bin/sync` writes more files than one commit may hold, and no distributed document
+says how to commit it. Raised 2026-09-17 (S181), from BL-57 plan item (18). Operator decision the same day (picker):
+for BL-57's P7–P11, one sync run is one commit; the question for every adopter goes to the upstream PR.**
+
+**What.** `starter-kit/SAFEGUARDS.md:49` caps a commit at five files, per commit (identical on `upstream/main`).
+`starter-kit/BOOTSTRAP.md:55` (*Setup with `bin/sync`*) and `:86` (*Updating an existing project*) tell an adopter to
+run `bin/sync`, which copies the whole distributed corpus and does not commit. Neither says how the result is
+committed, so every committed-mode sync that updates more than five files breaks the cap, or leaves the adopter to
+invent a split.
+
+**Measured.** `airqino`'s syncs `28022fe` (15 files: 14 synced plus its ledger entry) and `dfe26fd` (21). Read-only
+dry runs from fork `main`: `wsfct` 14 files at `b0bf91f` (S181); `vscode_quarto_ext` 14 and `mts-system` 16 at
+`b5a422b` (S180).
+
+**Why one commit is the sound answer for a sync.** Every file is a byte-for-byte copy of a canonical blob, the dry
+run lists them before anything is written, and one `git revert` undoes them all: the recoverability the cap exists
+for. A split is worse, not safer. The new `SESSION_RUNNER.md` and `SAFEGUARDS.md` cite `quality_ratchet.py` and
+`.quality-gates.json`, so a commit holding them without those files leaves the adopter's framework citing tools it
+does not have (checked in `wsfct` at S181).
+
+**Decided for BL-57.** `docs/planning/changelog-rules-contradictions-plan.md:198` (the decision) and `:772` (step 2):
+the commit holds exactly the files the run wrote, plus its own ledger entry, and nothing else; hand edits stay in
+their own commits under the cap.
+
+**Open.** Whether the distributed `SAFEGUARDS.md` names the exception (a tool-generated copy of canonical files,
+listed by a dry run, is one commit), or `BOOTSTRAP.md` says how to commit a sync, or both. Either lands at every
+adopter, so it rides BL-57's P12 pull request or its own, and opening either is its own go-ahead.
