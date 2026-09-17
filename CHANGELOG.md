@@ -214,6 +214,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S177 close-out — resync R2 done: fork `main` contains `upstream/main`; D2, D3 carried out; BL-57's P5 is next
+
+- **Deliverable:** R2 of [`upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md), recorded in its
+  §8. Merges `421ebf9` (M2), `7245f79` (M3), `d4ac950` (M4); `git rev-list --count main..upstream/main` = 0.
+  D3 `e1b6bdf` (2.18.0), D2 `e55f204` (`tests-sh-passed` 327, `dashboard-unit-tests` 336), `HANDOFFS.md` trim
+  `75056a9` and fold `f4a8ec6`. Two operator decisions: the config restatement `0e8c6ac`, and no
+  `CHANGELOG.md` trim (`d23d1a3`).
+- **Final, in a `--no-local` clone of `b4c3a45`:** `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  db4e547cc884 · manifest c09d7e7f9109`; `bash bin/tests.sh` exit 0, **327 passed / 0 failed / 6 skipped** (Test 34's
+  six rows, stated skips at 2 receipts, the only rows that differ from M4's run); `python3
+  starter-kit/methodology_dashboard.py` exit 0, v2.18.0, 76/100, gates panel *"10 declared • 10 pass / 0 fail / 0
+  unmeasured"*.
+- **This commit:** S177's `HANDOFFS.md` receipt completed with that citation (the D9 lint now binds every
+  close-out), the self-assessment (8/10) and S176's evaluation (7/10).
+- **Not taken:** pushing fork `main` to `origin` (its own go-ahead); raising upstream's
+  `TestThisRepoReadSetPartition` finding (outward, its own go-ahead).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S177 — resync plan §8 (R2 as carried out), the BL-57 row, and fork Learnings #69–#70
 
 - [`upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md) §8 records R2 as carried out
