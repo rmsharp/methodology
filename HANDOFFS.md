@@ -49,6 +49,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S177
+date: 2026-09-16
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **R2 OF THE RATIFIED RESYNC PLAN (`docs/planning/upstream-resync-2026-09-plan.md` §5 `:310`, with §7 `:355` overriding): MERGE STAGES M2 `cca7941`, M3 `64f23bf` AND M4 `6b29d3d` INTO FORK `main`, THEN D2's RATCHET TIGHTENING, D3's `DASHBOARD_VERSION` 2.18.0, AND THE `CHANGELOG.md` AND `HANDOFFS.md` TRIMS. CHOSEN BY THE OPERATOR AFTER PHASE 0 (picker).** Pre-flight re-derived at Phase 0: `upstream/main` still `6b29d3d`; PR #83 still open at `219fb9d`; `git merge-tree --write-tree --name-only HEAD <target>` lists 7 / 12 / 12 files, the same sets as §7 item 2. Fork-local; nothing pushed.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/upstream-resync-2026-09-plan.md:310` (R2), `:355` (§7), `:120` (§2.3 rows), `:141` (§2.4 ledgers), `:166` (§2.5 gates), `:242` (D2), `:254` (D3); `docs/archive/HANDOFFS-through-2026-09-16-3.md` (S13–S19, S21: never re-add)
+gotchas: `.githooks/commit-msg` has no merge skip, so every merge message needs its `Co-Authored-By:` trailer. `HANDOFFS.md` conflicts at every stage: keep only S20 (stub at M2, complete at M3), S22 (M3), S23 (M4). `cca7941` does not contain `0fd003a`. Run the suite in a `--no-local` clone of each committed stage; re-run a lone Test 9 failure, never waive it.
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-16 · [BL-57] S177 claim"
+commit: pending
+```
+
+```handoff
 session: S176
 date: 2026-09-16
 status: complete

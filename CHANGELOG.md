@@ -214,6 +214,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S177 claim — R2 of the resync plan: merge stages M2–M4 (`cca7941`, `64f23bf`, `6b29d3d`), D2, D3 and the trims (in progress)
+
+**Deliverable:** R2 of [`docs/planning/upstream-resync-2026-09-plan.md`](docs/planning/upstream-resync-2026-09-plan.md)
+(§5, with §7 overriding): merge the three remaining stages into fork `main`, resolving each per §2.3 and
+§7 item 3, then D2's tightening commit, D3's 2.18.0, the `CHANGELOG.md` trim and the `HANDOFFS.md`
+retention trim and fold. Chosen by the operator after Phase 0 (picker), over a read-only review of
+upstream PR #83.
+
+- **Pre-flight, re-derived at Phase 0:** `upstream/main` is still `6b29d3d`, so R2 gains no stage. PR #83
+  is still open at `219fb9d`. `git merge-tree --write-tree --name-only HEAD <target>` against `9b96ac1`
+  lists 7 files for `cca7941` and 12 for each of `64f23bf` and `6b29d3d`, the same sets as §7 item 2.
+- Phase 0 ledger reconcile: `CHANGELOG.md` frontier at `HEAD` `9b96ac1`, no gap; `HANDOFFS.md` frontier
+  `4a0a5a7`, and its two later commits are S176's recorded follow-ups. Nothing backfilled. 2 receipts, so
+  no Phase 0 trim. `methodology_trim.py --file CHANGELOG.md --check` FIRES at 204,886 B (owed in R2).
+  Dashboard 76/100, medium risk. `context_budget.py --status` exit 2; its `over` rows are the runner (54,363 B),
+  `SAFEGUARDS.md` (16,353 B, as §7 item 7 recorded) and the read-set total (70,716 B).
+  The two Phase 0 instrument snapshots ride with this claim.
+
 ### 2026-09-16 · [ad hoc] S176 follow-up — fork `main` pushed to `origin`, `f1ae291..9aa1eb9`; BL-44 kept open (non-commit action and a grooming decision, operator go-ahead)
 
 - **Action:** `git push origin main`, `f1ae291..9aa1eb9`, a fast-forward of 38 commits: S176's claim, the
