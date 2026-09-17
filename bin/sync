@@ -53,11 +53,15 @@ def read_local(methodology_root: Path, src: str) -> bytes:
 
 
 def local_history_blobs(methodology_root: Path, src: str) -> set:
-    """Set of blob SHAs this file has had across methodology git history."""
+    """Set of blob SHAs this file has had across methodology git history.
+
+    --full-history, because git's default walk follows only a merge's TREESAME parent: a version
+    on the side a merge did not keep was never visited, so an unmodified copy of it was refused
+    as a local modification (BL-54)."""
     path = src
     try:
         log = subprocess.run(
-            ["git", "-C", str(methodology_root), "log", "--format=%H", "--", path],
+            ["git", "-C", str(methodology_root), "log", "--full-history", "--format=%H", "--", path],
             capture_output=True, text=True, check=True,
         ).stdout.strip().splitlines()
     except (FileNotFoundError, subprocess.CalledProcessError):

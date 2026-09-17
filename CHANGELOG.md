@@ -199,6 +199,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-54] S179 — `bin/status` and `bin/sync` see versions a merge hid; *N versions behind* counts main-line versions
+
+- **The defect:** both tools listed a file's past versions with a plain `git log -- <path>`, which follows only a
+  merge's TREESAME parent. A version on the side a merge did not keep was never visited, so an unmodified copy of it
+  read *locally modified* and `bin/sync` refused it (exit 2).
+- **The fix:** `bin/sync:64` walks with `--full-history`; it only asks whether a version is known. `bin/status` walks
+  twice (`:81` `local_history`, `:52` `history_walk`, with a shared commit → blob cache): the first-parent line and
+  the full history. **N counts distinct versions newer than the project's along the first-parent line**, falling
+  back to the full walk for a version that only ever existed on a merged branch (`:96` `versions_behind`, `:121`
+  `file_status`). **Operator decision, S179 (picker), option C** over A (the flag alone, a raw position: 63 behind for
+  `mts-system`'s learnings file) and B (distinct versions over the full walk, counting each commit inside a merged
+  branch), each measured on the six adopters before it was offered.
+- **RED first:** `bin/tests.sh` Test 41 (`:3076`) builds a methodology repo with both hiding shapes — a merge taking a
+  side branch's content (`22ce71b`'s) and one keeping main's (`213f841`'s) — at fixed commit dates, proves the
+  shapes (the walks visit 4 / 8 / 4 commits), then pins 6 status rows and 3 sync outcomes. On the old code it failed
+  exactly the 4 hidden-version rows; the fixture checks and the real-local-edit controls passed. After the fix,
+  11 / 0. **Eight mutants, all killed:** option A, option B, the walks swapped, no fallback, no `--full-history` in
+  status, no `--first-parent`, a positional rather than distinct count, and sync without the flag.
+- **Runtime, on the six real adopters (read-only):** `bin/status` over 174 rows changes **8 states**, every one
+  *locally modified* → *N versions behind* (`FRAMEWORK_LEARNINGS.md` in `mts-system`, `nprcgenekeepr`,
+  `vscode_quarto_ext`, `wsfct`; `methodology_trim.py` in `mts-system`, `vscode_quarto_ext`, `wsfct`; and
+  `vscode_quarto_ext`'s `context_budget.py`, which S178's scratch copies did not list and which was already misread
+  before `22ce71b`). 35 rows change only their count; 131 are unchanged; the 3 genuine local edits
+  (`model_project_constructor`'s runner and `SAFEGUARDS.md`, `nprcgenekeepr`'s trimmer) still read *locally
+  modified*. `bin/sync --dry-run`: `mts-system`, `vscode_quarto_ext`, `wsfct` go from exit 2 to 0;
+  `model_project_constructor` and `nprcgenekeepr` still refuse, on their genuine edits only; no adopter's
+  `git status` changed.
+- **Cost, stated:** `bin/status` over the six took 3.0 s before and 10.1 s after; `bin/sync --dry-run` on `wsfct`
+  2.9 s → 7.5 s (732 commits walked across the tracked files, where the default walk visited 327).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S179 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `90da3e1` wrote into `HANDOFFS.md`'s front matter is now one row of
