@@ -2541,16 +2541,28 @@ for j in range(open_ln, len(lines)):
         break
 if close_i is None:
     sys.exit("NEWEST RECORD HAS NO CLOSING FENCE -- nothing to plant below")
-lines.insert(open_ln if where == "field" else close_i + 1,
-             "phantom_drift: planted by bin/tests.sh Test 38\n")
+ins = open_ln if where == "field" else close_i + 1     # 0-based index the plant is inserted at
+lines.insert(ins, "phantom_drift: planted by bin/tests.sh Test 38\n")
 open(dst, "w", encoding="utf-8").write("".join(lines))
+# WHERE the plant landed is a question about POSITION, and is asked as one. Asking instead
+# whether the planted NAME occurs anywhere in the newest record hands the answer to the record's
+# prose: S182's receipt quoted this guard's own failure line, so the name was already in there and
+# every prose plant reported itself as landing inside the fence. scan() gives the record's extent
+# in lines -- ["line"] is the 1-based line of its opening fence, hence the 0-based index of its
+# first content line, and ["content"] holds exactly the lines between the fences.
 reblocks, _ = ch.scan(open(dst, encoding="utf-8").read())
-inside = "phantom_drift" in reblocks[0]["content"]
+first = reblocks[0]["line"]
+last = first + len(reblocks[0]["content"].splitlines()) - 1
+inside = first <= ins <= last
 if (where == "field") != inside:
-    sys.exit("PLANT MISSED: aimed at %r but inside-the-fence is %s" % (where, inside))
+    sys.exit("PLANT MISSED: aimed at %r but inside-the-fence is %s -- planted at line %d, and the "
+             "newest record's content spans lines %d-%d" % (where, inside, ins, first, last))
 PY38F
 VARIANT38="$(mktemp)"
-plant38() { python3 "$PLANT38_PY" "$BIN/check-handoff" "$METHODOLOGY/HANDOFFS.md" "$VARIANT38" "$1" 2>&1; }
+# $1 is the side aimed at; $2 the ledger to plant into, defaulting to the live one. The source is
+# a parameter because (8d) below needs an input whose newest record QUOTES the planted name -- a
+# shape the live ledger holds only between a close-out and the next claim.
+plant38() { python3 "$PLANT38_PY" "$BIN/check-handoff" "${2:-$METHODOLOGY/HANDOFFS.md}" "$VARIANT38" "$1" 2>&1; }
 
 # (8a) THE LIVE ASSERTION.
 DRIFT38="$(drift38 "$METHODOLOGY/HANDOFFS.md")"
@@ -2579,6 +2591,57 @@ else
         && pass "drift guard: mutant killed -- a genuine new field INSIDE the fence is still named" \
         || fail "drift guard: a new field inside the newest record was not reported: $MUTANT38"
 fi
+# (8d) AND THE SAME PAIR ON A RECORD THAT QUOTES THE PLANTED NAME -- the defect S183 found,
+# frozen on an input the live ledger cannot clear. The landing check used to ask whether the name
+# appeared ANYWHERE in the newest record, so a receipt that merely quoted it -- S182's
+# what_was_done cited this guard's own RED-first failure line verbatim -- answered for the plant.
+# A prose plant then read as landing inside the fence, (8b) refused to run, and `bin/tests.sh`
+# went red on main in S182's own close-out commit (93656a1), which its gate citation was measured
+# one commit too early to see. The window is the same one (8b) describes and BL-64 names; what is
+# new here is that the control reporting on the plant was itself falsifiable by prose. The doctored
+# copy reproduces that shape deliberately, so this pair fails for that reason and no other.
+QUOTED38="$(mktemp)"
+python3 - "$FIXSRC38" "$QUOTED38" <<'PY38G'
+import sys
+src, dst = sys.argv[1], sys.argv[2]
+lines = open(src, encoding="utf-8").read().splitlines(True)
+hits = [i for i, ln in enumerate(lines) if ln.startswith("what_was_done: ")]
+if not hits:
+    sys.exit("FIXTURE HAS NO what_was_done FIELD -- nothing to quote the marker in")
+i = hits[0]
+lines[i] = lines[i].rstrip("\n") + ' The guard was RUN red as: "reached the comparison as: phantom_drift".\n'
+open(dst, "w", encoding="utf-8").write("".join(lines))
+PY38G
+
+PLANTED38="$(plant38 prose "$QUOTED38")"
+if [ -n "$PLANTED38" ]; then
+    fail "drift guard: a record that merely QUOTES the planted name defeated the landing check: $PLANTED38"
+else
+    QUOTE38="$(drift38 "$VARIANT38")"
+    [ "$QUOTE38" = "OK" ] \
+        && pass "drift guard: a record quoting the planted name still lets a prose plant read as prose" \
+        || fail "drift guard: quoted name, prose plant reached the comparison as: $QUOTE38"
+fi
+
+# (8e) AND THAT INPUT KEEPS THE GUARD KILLABLE TOO: (8d) alone is satisfied by a drift38 that
+# returns OK unconditionally, so the in-fence plant must still be named on the very same doctored
+# copy. What this pair does NOT do is kill a landing check rewritten into `inside = (where ==
+# "field")`: both plants stay real and both answers unchanged, so the tautology survives here.
+# The landing check guards the planter's own line arithmetic against the scanner -- it turns a
+# plant that lands on the wrong side into a named failure instead of a silent one -- and the
+# evidence that it is not vacuous is a run, not this comment: with the substring form restored,
+# (8b) and (8d) both go red (S183, recorded in CHANGELOG.md).
+PLANTED38="$(plant38 field "$QUOTED38")"
+if [ -n "$PLANTED38" ]; then
+    fail "drift guard: could not plant the in-fence mutant beside a quoted name: $PLANTED38"
+else
+    QMUTANT38="$(drift38 "$VARIANT38")"
+    [ "$QMUTANT38" = "phantom_drift" ] \
+        && pass "drift guard: mutant killed beside a quoted name -- an in-fence field is still named" \
+        || fail "drift guard: quoted name, in-fence plant was not reported: $QMUTANT38"
+fi
+rm -f "$QUOTED38"
+
 rm -f "$VARIANT38" "$PLANT38_PY" "$DRIFT38_PY"
 
 # (7) --all MUST NOT RUN THE BUDGET, and that is a decision with a reason, so it is asserted.

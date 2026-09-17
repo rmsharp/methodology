@@ -199,6 +199,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] `bin/tests.sh` Test 38's plant-landing check asks about position, not about text
+
+- **The defect.** The planter that arms Test 38's drift guard decided which side of the closing fence its plant
+  landed on by asking whether the planted name occurred anywhere in the newest record's content
+  (`bin/tests.sh:2548` before this commit). S182's receipt quoted this guard's own RED-first failure line —
+  `reached the comparison as: phantom_drift` — inside its `what_was_done` field, so the record answered for the
+  plant: every plant below the fence reported itself as landing inside it, assertion (8b) refused to run, and the
+  quality gate went red on `main`. Replaying the planter through `bin/check-handoff`'s `scan()` against
+  `git show <rev>:HANDOFFS.md` pins the flip to `93656a1`, S182's own close-out commit — the BL-64 window, second
+  session running.
+- **The fix.** The landing check is now positional: `scan()` gives the newest record's extent in lines (`["line"]`
+  is its opening fence's 1-based number, so the 0-based index of its first content line; `["content"]` holds the
+  lines between the fences), and the planter asks whether the index it inserted at falls inside that span. Its
+  failure message now names the planted line and the span, so a real misplant says where it went.
+- **Two assertions added, RED-first and RUN red in their final home.** (8d) and (8e) plant into a doctored copy of
+  `tools/fixtures/handoff-ledger-2-records.md` whose newest record quotes the marker in its `what_was_done` — the
+  exact shape S182's receipt had — so the case is frozen on an input the live ledger cannot clear by rotating a
+  receipt. With the substring form still in place the suite read `307 passed, 2 failed, 6 skipped`, the two being
+  (8b) against the live ledger and the new (8d); with the positional check it reads `309 passed, 0 failed,
+  6 skipped`. `plant38` gained an optional source argument for that input.
+- **What (8e) does not do, stated in the file:** it does not kill a landing check rewritten into
+  `inside = (where == "field")`. That tautology leaves both plants real and both answers unchanged. The evidence
+  the check is not vacuous is the red run above, not the comment beside it.
+- Canonical-only: `bin/tests.sh` is not in `bin/_manifest.py`'s distributed set, so no adopter is affected.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S183 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `128efa4` wrote into `HANDOFFS.md`'s front matter is now one row of
