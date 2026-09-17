@@ -214,6 +214,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [ad hoc] Operator decision: push records are pushed to `origin` without asking (standing grant)
+
+- **Decision (operator, after S177, in their own words):** *"yes, push the push records without asking"*.
+- **Scope, and nothing wider:** a commit whose only change is the `CHANGELOG.md` entry recording a push the operator
+  already authorized goes to fork `origin` `main` without a separate ask. It must be a guarded fast-forward, read
+  back with `git ls-remote`. Such a commit records its own push in that same entry, so no further record is owed
+  and the chain ends there. Every other push still needs its own go-ahead, and so does every upstream action.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-16 · [ad hoc] S177 follow-up — fork `main` pushed to `origin`, `7b55ee3..70265f3` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 70265f3:refs/heads/main`, `7b55ee3..70265f3`, a fast-forward of 2 commits: `80f0eef`
+  (the record of the previous push) and `70265f3` (BL-62). Before the push, a guard confirmed a clean tree, that
+  `origin/main` still read `7b55ee3`, and that exactly those two commits were ahead in a fast-forward. Afterwards
+  `git ls-remote origin refs/heads/main` read `70265f390acfd3c5cdb2c762feb573677fb0fc14`. The go-ahead was the
+  operator's *"push the two local commits to origin"*. Fork only; nothing sent upstream.
+- **This recording commit is pushed too**, under the standing grant recorded in the entry above.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-62] S177 follow-up — BL-62 raised: upstream's partition test sums every whole-read class as one Read; it rides BL-57's P12 PR (operator decision)
 
 - **Raised on the operator's request** after S177's explanation. **Decision (operator): carry it in BL-57's P12 pull
