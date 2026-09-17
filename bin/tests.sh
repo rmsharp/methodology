@@ -2472,27 +2472,114 @@ rm -f "$UNTRACKED38"
 # assertions run on the fixture and THIS one runs on the live ledger, asserting only the grammar
 # they depend on -- a field appearing in real receipts and missing from the fixture reddens here
 # instead of rotting there. It compares field NAMES, not content: sizes are the fixture's job.
-DRIFT38="$(python3 - "$METHODOLOGY/HANDOFFS.md" "$METHODOLOGY/tools/fixtures/handoff-ledger-2-records.md" <<'PY38E'
-import re, sys
-def newest_fields(path):
-    text = open(path, encoding="utf-8").read()
-    st = [m.start() for m in re.finditer(r"(?m)^```handoff$", text)] + [len(text)]
-    if len(st) < 2:
-        return None
-    return frozenset(m.group(1) for m in re.finditer(r"(?m)^([a-z_]+): ", text[st[0]:st[1]]))
-live = newest_fields(sys.argv[1])
-fix = newest_fields(sys.argv[2])
-if live is None:
-    sys.exit("LIVE LEDGER HAS NO LINE-ANCHORED RECORD")
-if fix is None:
-    sys.exit("FIXTURE HAS NO LINE-ANCHORED RECORD")
-missing = live - fix
+#
+# THE EXTENT IS THE FENCED BLOCK, AND THAT IS THE POINT OF THIS VERSION. It used to run from the
+# newest opening fence to the NEXT record's opening fence -- the extent check-handoff's BYTE
+# budget uses deliberately, because trailing prose costs the ledger bytes (assertion (5), "unit:
+# trailing prose below the closing fence counts toward the record"). Field NAMES are not bytes.
+# Between two records sits the close-out's self-assessment, and any prose line that WRAPS onto a
+# word followed by a colon reads as a field there. On 2026-09-17 one did -- "...Gotcha (1) ... was
+# / applied: my report named the row." -- and this guard went red on main for an `applied` field
+# no receipt has ever carried, in S181's own close-out commit (473c83d), which its gate citation
+# was measured one commit too early to see. check-handoff had already solved this twice over:
+# scan() bounds a block by its own fences and is fence-nesting aware, and parse_block's docstring
+# names the masquerade in so many words. So the guard now borrows that parser instead of
+# re-deriving a weaker one -- a guard that disagrees with the checker about where a record ENDS
+# is not measuring the checker's grammar.
+#
+# IT SURVIVED BECAUSE IT CLEARS ITSELF. Only a close-out puts prose between the newest record and
+# the one below it, and only some of that prose wraps onto a colon-word -- S180's did not, S181's
+# did. The next session's Phase 1B claim then prepends a record with nothing after it, and the
+# guard reads OK again. So the window is close-out to claim: the close-out's own gate citation is
+# measured before the close-out commit exists, and the claim erases the evidence a few minutes
+# after the next Phase 0 could see it. (8b) and (8c) below are what close that window: the first
+# is the defect, frozen as an assertion that does not depend on what the live ledger happens to
+# say today; the second stops the pair being satisfied by a guard that returns OK unconditionally.
+DRIFT38_PY="$(mktemp)"
+cat > "$DRIFT38_PY" <<'PY38E'
+import re, sys, importlib.machinery, importlib.util
+sys.dont_write_bytecode = True
+ldr = importlib.machinery.SourceFileLoader("ch38drift", sys.argv[1])
+spec = importlib.util.spec_from_loader("ch38drift", ldr)
+ch = importlib.util.module_from_spec(spec); ldr.exec_module(ch)
+FIELD38 = re.compile(r"(?m)^([a-z_]+): ")
+def newest_fields(path, label):
+    blocks, _ = ch.scan(open(path, encoding="utf-8").read())
+    if not blocks:
+        sys.exit("%s HAS NO ```handoff RECORD" % label)
+    return frozenset(FIELD38.findall(blocks[0]["content"]))
+missing = newest_fields(sys.argv[2], "LIVE LEDGER") - newest_fields(sys.argv[3], "FIXTURE")
 print(",".join(sorted(missing)) if missing else "OK")
 PY38E
-)"
+FIXSRC38="$METHODOLOGY/tools/fixtures/handoff-ledger-2-records.md"
+drift38() { python3 "$DRIFT38_PY" "$BIN/check-handoff" "$1" "$FIXSRC38" 2>&1; }
+
+# The planter builds a VARIANT of the live ledger with one phantom field, on either side of the
+# newest record's closing fence. It plants by re-reading the artifact through the same scanner and
+# then asserting the plant landed on the side it was aimed at: a control that silently plants in
+# the wrong half proves nothing, and the line arithmetic that places it is exactly the kind of
+# thing that goes quietly wrong. The name is [a-z_] only -- the field regex does not match digits,
+# so a phantom named with one would be a control that cannot fire.
+PLANT38_PY="$(mktemp)"
+cat > "$PLANT38_PY" <<'PY38F'
+import sys, importlib.machinery, importlib.util
+sys.dont_write_bytecode = True
+ldr = importlib.machinery.SourceFileLoader("ch38plant", sys.argv[1])
+spec = importlib.util.spec_from_loader("ch38plant", ldr)
+ch = importlib.util.module_from_spec(spec); ldr.exec_module(ch)
+src, dst, where = sys.argv[2], sys.argv[3], sys.argv[4]
+lines = open(src, encoding="utf-8").read().splitlines(True)
+blocks, _ = ch.scan("".join(lines))
+if not blocks:
+    sys.exit("NO ```handoff RECORD IN THE LIVE LEDGER -- nothing to plant against")
+open_ln = blocks[0]["line"]          # 1-based line of the newest opening fence
+close_i = None                       # 0-based index of its closing fence
+for j in range(open_ln, len(lines)):
+    s = lines[j].strip()
+    if s and set(s) == {"`"} and len(s) >= 3:
+        close_i = j
+        break
+if close_i is None:
+    sys.exit("NEWEST RECORD HAS NO CLOSING FENCE -- nothing to plant below")
+lines.insert(open_ln if where == "field" else close_i + 1,
+             "phantom_drift: planted by bin/tests.sh Test 38\n")
+open(dst, "w", encoding="utf-8").write("".join(lines))
+reblocks, _ = ch.scan(open(dst, encoding="utf-8").read())
+inside = "phantom_drift" in reblocks[0]["content"]
+if (where == "field") != inside:
+    sys.exit("PLANT MISSED: aimed at %r but inside-the-fence is %s" % (where, inside))
+PY38F
+VARIANT38="$(mktemp)"
+plant38() { python3 "$PLANT38_PY" "$BIN/check-handoff" "$METHODOLOGY/HANDOFFS.md" "$VARIANT38" "$1" 2>&1; }
+
+# (8a) THE LIVE ASSERTION.
+DRIFT38="$(drift38 "$METHODOLOGY/HANDOFFS.md")"
 [ "$DRIFT38" = "OK" ] \
     && pass "drift guard: the frozen fixture carries every field the live ledger's newest receipt uses" \
     || fail "drift guard: fixture is stale against the live format, missing: $DRIFT38"
+
+# (8b) THE DEFECT, FROZEN AS AN ASSERTION. Prose below the closing fence is not a receipt field.
+PLANTED38="$(plant38 prose)"
+if [ -n "$PLANTED38" ]; then
+    fail "drift guard: could not plant the prose control: $PLANTED38"
+else
+    PROSE38="$(drift38 "$VARIANT38")"
+    [ "$PROSE38" = "OK" ] \
+        && pass "drift guard: a prose line below the closing fence is NOT read as a receipt field" \
+        || fail "drift guard: prose below the closing fence reached the comparison as: $PROSE38"
+fi
+
+# (8c) AND THE GUARD IS STILL KILLABLE. The same phantom INSIDE the fence is real drift.
+PLANTED38="$(plant38 field)"
+if [ -n "$PLANTED38" ]; then
+    fail "drift guard: could not plant the in-fence mutant: $PLANTED38"
+else
+    MUTANT38="$(drift38 "$VARIANT38")"
+    [ "$MUTANT38" = "phantom_drift" ] \
+        && pass "drift guard: mutant killed -- a genuine new field INSIDE the fence is still named" \
+        || fail "drift guard: a new field inside the newest record was not reported: $MUTANT38"
+fi
+rm -f "$VARIANT38" "$PLANT38_PY" "$DRIFT38_PY"
 
 # (7) --all MUST NOT RUN THE BUDGET, and that is a decision with a reason, so it is asserted.
 # Test 34's presence control asserts on check-handoff's EXIT CODE against the live ledger. An

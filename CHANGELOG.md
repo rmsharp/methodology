@@ -199,6 +199,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] `bin/tests.sh` Test 38's drift guard now bounds a receipt by its own closing fence
+
+**What was wrong.** The drift guard exists so a *frozen* fixture cannot rot: it reads the newest receipt in the live
+`HANDOFFS.md`, reads the newest record in `tools/fixtures/handoff-ledger-2-records.md`, and fails if the live one uses
+a field name the fixture lacks. It took the live receipt's extent as *its opening fence to the NEXT record's opening
+fence* — which is the extent `bin/check-handoff` uses for the per-record BYTE budget, deliberately, because trailing
+prose costs the ledger bytes (Test 38 assertion (5)). Field names are not bytes. Between two receipts sits the
+close-out's self-assessment prose, and any line of it that wraps onto a word followed by a colon was read as a receipt
+field. `HANDOFFS.md:85` wrapped onto `applied: my report named the row.`, so the guard reported `applied` — a field no
+receipt has ever carried.
+
+**Why it shipped.** It clears itself. Only a close-out puts prose between the newest receipt and the one below it, and
+only some of that prose wraps onto a colon-word: S180's did not, S181's did. The next session's Phase 1B claim then
+prepends a receipt with nothing after it and the guard reads OK again. Verified on the guard's own logic across four
+commits: `OK` at `755fe0d` and `b0bf91f`, `['applied']` at `473c83d` (S181's close-out) and `29b0feb`, `OK` again at
+`45bf347` (this session's claim). So the window runs from a close-out to the next claim — and
+`starter-kit/SESSION_RUNNER.md` Phase 3E has every close-out measure its gate run *before* the close-out commit exists,
+while Phase 1B erases the evidence minutes after the next Phase 0 could see it. **That second half is not fixed here
+and is the open residual of BL-64.**
+
+**The fix.** The guard now loads `bin/check-handoff` as a module and calls its `scan()`, the same parser the checker
+uses: it bounds a block by its own fences and is fence-nesting aware. `bin/check-handoff`'s `parse_block` docstring
+already names this exact hazard — *"Only recognized keys (REQUIRED_KEYS) are captured, so free-text prose lines never
+masquerade as a field."* A guard that disagrees with the checker about where a receipt ENDS is not measuring the
+checker's grammar.
+
+**Two new assertions keep it fixed, both written RED first and run in that state** (312 passed / 1 failed was reached
+only after; the RED run read `FAIL: drift guard: prose below the closing fence reached the comparison as:
+phantom_drift`):
+- **(8b)** a phantom field planted in the prose *below* the newest closing fence must not reach the comparison — this
+  is the defect itself, frozen as an assertion that does not depend on what `HANDOFFS.md` happens to say today;
+- **(8c)** the same phantom planted *inside* the fence must still be named, so the pair cannot be satisfied by a guard
+  that returns OK unconditionally.
+
+The planter re-reads the artifact through `scan()` and refuses if the plant landed on the wrong side of the fence,
+rather than trusting the line arithmetic that placed it.
+
+**Adopter impact: none.** `bin/tests.sh` is not in `bin/_manifest.py`; the distributed set is 23 files and a
+`bin/sync --dry-run` against any adopter neither writes nor mentions it.
+
 ### 2026-09-17 · [BL-64] S182 claim — repair `bin/tests.sh` Test 38's drift guard, which its own extent turned red on `main` (in progress)
 
 **Deliverable:** one fix to the Test 38 drift guard (`bin/tests.sh:2472`–`2495`). It measures the newest receipt as
