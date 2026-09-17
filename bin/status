@@ -187,9 +187,10 @@ def main() -> int:
         print(
             f"\nnote: {len(stale_rows)} {noun} the current format ({', '.join(dests)}, marked "
             f"'{STALE_SEED}'). These are adopter-owned and are never auto-overwritten. To migrate, "
-            f"reconcile against the current starter-kit seed by hand, or delete the file and re-run "
-            f"bin/sync to reseed (see BOOTSTRAP.md \"Updating an existing project from an earlier "
-            f"methodology version\")."
+            f"replace the text above the first entry (or receipt) with the current starter-kit "
+            f"seed's, and leave every entry as written; delete the file and re-run bin/sync to reseed "
+            f"only if it holds no history (see BOOTSTRAP.md \"Updating an existing project from an "
+            f"earlier methodology version\")."
         )
     return 0
 

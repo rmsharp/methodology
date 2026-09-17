@@ -20,7 +20,7 @@ your-projects/                        <-- parent directory (portfolio level)
 │   ├── SAFEGUARDS.md                 ← Safety rails (synced from methodology)
 │   ├── SESSION_NOTES.md              ← Session continuity (copied from starter kit)
 │   ├── BACKLOG.md                    ← Open work items only (you create this)
-│   ├── CHANGELOG.md                  ← Completed work history (copied from starter kit)
+│   ├── CHANGELOG.md                  ← Action ledger (copied from starter kit)
 │   ├── HANDOFFS.md                   ← Durable close-out receipts (copied from starter kit)
 │   ├── ROADMAP.md                    ← Feature inventory & future plans (copied from starter kit)
 │   ├── methodology_dashboard.py      ← Health scanner (synced from methodology)
@@ -83,7 +83,7 @@ Check status with `bin/status`:
 
 You'll see `current`, `N versions behind`, `locally modified`, or `missing` per file.
 
-**Updating an existing project from an earlier methodology version:** re-run `bin/sync`. Prefer `--source=local` from a *full* methodology checkout — an unmodified file that matches an older canonical version is recognized as upgradable and updated cleanly with no `--force`; a shallow clone or a downloaded tarball loses that git history, so the same files look "locally modified" and are held back. Run `bin/status` first: it shows which tracked files are `N versions behind`, and it flags any seed whose *format* predates the current methodology as `present (stale format)` (with a one-line migration note beneath the table) so the format lag is surfaced rather than silent. **Seed files do not update:** because `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` are seeded-once and never overwritten, a project moving up from an earlier methodology keeps its existing copies — including their *format*. So if you are adopting the authoritative action-ledger `CHANGELOG.md` (methodology v3.1+) over an older changelog, `bin/status` marks it `present (stale format)` and sync leaves your file untouched **by design**: reconcile its header and per-entry format against the current `starter-kit/CHANGELOG.md` seed by hand, or — if it holds no history worth keeping — delete it and re-run `bin/sync` to reseed the current shape.
+**Updating an existing project from an earlier methodology version:** re-run `bin/sync`. Prefer `--source=local` from a *full* methodology checkout — an unmodified file that matches an older canonical version is recognized as upgradable and updated cleanly with no `--force`; a shallow clone or a downloaded tarball loses that git history, so the same files look "locally modified" and are held back. Run `bin/status` first: it shows which tracked files are `N versions behind`, and it flags any seed whose *format* predates the current methodology as `present (stale format)` (with a one-line migration note beneath the table) so the format lag is surfaced rather than silent. **Seed files do not update:** because `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, and `ROADMAP.md` are seeded-once and never overwritten, a project moving up from an earlier methodology keeps its existing copies — including their *format*. So when the seed's format moves on — the authoritative action-ledger `CHANGELOG.md` (methodology v3.1+) over an older changelog, or the seed that points at `FRAMEWORK_APPARATUS.md` §The Action Ledger instead of carrying the rules itself (`ledger-format: 2`) — `bin/status` marks your copy `present (stale format)` and sync leaves it untouched **by design**. To migrate, replace the text above your first entry with the current `starter-kit/CHANGELOG.md` seed's, and leave every entry as written; delete the file and re-run `bin/sync` to reseed only if it holds no history.
 
 ---
 
@@ -105,7 +105,7 @@ From the methodology `starter-kit/` directory:
 | `FRAMEWORK_LEARNINGS.md` | The framework's own learnings — reference the runner links to, read on demand |
 | `SAFEGUARDS.md` | Safety rails — commit discipline, blast radius limits, mode switching |
 | `SESSION_NOTES.md` | Session continuity — where handoff notes live between sessions |
-| `CHANGELOG.md` | Completed work history — add entries as work is finished |
+| `CHANGELOG.md` | Action ledger — one dated entry per action, newest on top |
 | `HANDOFFS.md` | Durable close-out receipts — one machine-checkable block per session |
 | `ROADMAP.md` | Feature inventory and future plans — what's built, what's next |
 | `methodology_dashboard.py` | Health scanner — scores project health and methodology compliance |
@@ -130,7 +130,7 @@ Create three files at your project root for tracking work:
 | File | Purpose | Source |
 |------|---------|--------|
 | `BACKLOG.md` | Open work items only (actionable tasks) | You create this — see example below |
-| `CHANGELOG.md` | Completed work history with dates | From `starter-kit/CHANGELOG.md` (template) |
+| `CHANGELOG.md` | Action ledger — every action, dated and source-tagged | From `starter-kit/CHANGELOG.md` (template) |
 | `ROADMAP.md` | Feature inventory and future plans | From `starter-kit/ROADMAP.md` (template) |
 
 **Why three files?** A single backlog file that accumulates completed items becomes unreadable. Keeping open work, completed work, and plans in separate files means:
@@ -138,13 +138,13 @@ Create three files at your project root for tracking work:
 - `CHANGELOG.md` captures what was done and when (reference only, not read at session start)
 - `ROADMAP.md` tracks what's built and what's planned (reference only)
 
-When you complete work: remove it from `BACKLOG.md`, add an entry to `CHANGELOG.md`.
+When you take an action, record it in `CHANGELOG.md`; when it completes a backlog item, remove that item from `BACKLOG.md` in the same commit.
 
 ### Migrating an existing BACKLOG.md
 
 If your project already has a `BACKLOG.md` that has accumulated completed items, split it:
 
-1. Create `CHANGELOG.md` — move all completed work entries (with dates and notes) out of BACKLOG.md into reverse-chronological sections
+1. Create `CHANGELOG.md` from the starter-kit seed, and move BACKLOG.md's completed items (with dates and notes) into it as entries, newest on top
 2. Create `ROADMAP.md` — move the feature inventory ("what's built") and future plans/proposals out of BACKLOG.md
 3. Trim `BACKLOG.md` — remove all completed items, struck-through entries, and historical sections. Only open/actionable work remains.
 4. Update your `CLAUDE.md` (or equivalent) references to mention all three files
