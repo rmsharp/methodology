@@ -214,6 +214,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-62] S177 follow-up — BL-62 raised: upstream's partition test sums every whole-read class as one Read; it rides BL-57's P12 PR (operator decision)
+
+- **Raised on the operator's request** after S177's explanation. **Decision (operator): carry it in BL-57's P12 pull
+  request, not as a standalone upstream issue.** `tools/test_context_budget.py:1256`
+  (`test_whole_read_class_token_ceilings_partition_the_read_cap`, upstream `008d656`) applies the one-Read token
+  sum to every class in `WHOLE_READ_CLASSES`, where only the read-set pair is read together. It fired at resync
+  M2 against the fork's two read-mandated ledgers and was worked around at `0e8c6ac`.
+- **Checked before writing:** no existing backlog item covers it (the test name and *"whole-read class"* grep
+  empty in `BACKLOG.md` and `BACKLOG-DETAIL.md`). Upstream's root config gives token ceilings only to its
+  read-set pair and one resident file, so upstream cannot see it. No test file has a `bin/_manifest.py` row,
+  so no adopter is affected.
+- **Files:** `docs/planning/BACKLOG-DETAIL.md` gains `#bl-62` (the proof `BACKLOG-DETAIL.md.verify.sh` still
+  exits 0); `docs/planning/BACKLOG.md` gains its index row, the open list gains BL-62, and the BL-57 row says
+  P12 carries it. Nothing outward.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [ad hoc] S177 follow-up — fork `main` pushed to `origin`, `9b96ac1..7b55ee3` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin 7b55ee3:refs/heads/main`, `9b96ac1..7b55ee3`, a fast-forward of 41 commits: S177's

@@ -2067,3 +2067,39 @@ A2 would not notice the front matter creeping back up by that much.
   record of one moment"*; add a dated paragraph rather than rewriting it.
 - **Scope.** Canonical-only — neither `bin/check-handoff` nor `bin/tests.sh` has a `bin/_manifest.py`
   row (checked at S174) — so no adopter impact and no upstream action.
+
+<a id="bl-62"></a>
+
+**BL-62 — Upstream's read-set partition test applies the one-Read sum to every whole-read class.
+Raised 2026-09-16 (S177). Operator decision, after S177's close-out: carry it in BL-57's P12 pull request,
+not as a standalone upstream issue.**
+
+**What.** `test_whole_read_class_token_ceilings_partition_the_read_cap` (`tools/test_context_budget.py:1256`,
+upstream `008d656`, PR #82's P0) loops over every class in `WHOLE_READ_CLASSES`
+(`starter-kit/context_budget.py:83`: resident, read-mandated, read-set). For each class with two or more
+token-ceilinged files, it asserts that their `max_tokens` sum to at most the 25,000-token read cap (`:1260`).
+Its docstring states that rule for the Phase 0 read pair, which is read in ONE Read. A read-mandated class
+holds files that are each read whole but *separately*, so the sum is not an invariant there.
+
+**Why upstream has not seen it.** Upstream's root `.context-budget.json` declares token ceilings on two
+read-set files and one resident file (checked on `upstream/main`), so no other class reaches the loop.
+
+**How it showed here.** At resync stage M2 (`421ebf9`), the fork's root config declared 25,000 on each of
+`HANDOFFS.md` and `docs/planning/BACKLOG.md` (read-mandated). That is 50,000 tokens against 25,000: a red row with
+nothing wrong. It was worked around at `0e8c6ac` (operator decision) by dropping the two redundant
+declarations, since the tool derives the same 25,000 per file by clamping. The fork's copy of the test stays
+identical to upstream's.
+
+**Impact: low.** The test file is canonical-only (no `bin/_manifest.py` row), so no adopter runs it. It binds
+only a repository whose own config puts token ceilings on two separately-read files, and it discourages that
+config.
+
+**The change to propose.** Restrict the sum to the class that is read together (for example
+`if cls != "read-set" or len(members) < 2`), or have the tool declare which classes share one Read, and keep
+the presence control. Show it RED-first: a fixture config with two read-mandated files at 25,000 each fails
+today and passes after, while a read-set pair summing past the cap still fails. The file is upstream-only on
+the fork (`upstream-resync-2026-09-plan.md` §2.2), so where the change lands first is P12's call.
+
+**Where it goes.** BL-57's P12 (`docs/planning/changelog-rules-contradictions-plan.md:742`), the fork's next
+substantial pull request, per the batching rule in `CLAUDE.md` §Contributing upstream. Opening that PR is
+its own go-ahead.
