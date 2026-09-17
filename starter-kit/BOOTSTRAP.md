@@ -380,9 +380,10 @@ overwritten, a project moving up from an earlier methodology keeps its ledgers *
 format* — gaining the new behaviour while silently missing the new structure. Diff your
 `CHANGELOG.md` and `HANDOFFS.md` front matter against the current seeds in `starter-kit/` and bring
 across whatever is missing above your first record. Nothing below your first record is touched: this
-is a front-matter merge, never a rewrite of history. As of the ledger-doctrine release that means
-the **`## Size, and when to archive`** section in both files — the size norm, the archive trigger and
-the shard convention.
+is a front-matter change, never a rewrite of history. For `CHANGELOG.md` since `ledger-format: 2`,
+replace the text above your first entry with the current seed's header: its pointer to
+`FRAMEWORK_APPARATUS.md` §The Action Ledger takes the place of the rules your copy carries. For
+`HANDOFFS.md`, bring across the **`## Size, and when to archive`** section.
 
 **3. Verify afterwards, don't assume.** From a full methodology checkout,
 `../methodology/bin/status your-project/` lists every file as `current`, `N versions behind`,

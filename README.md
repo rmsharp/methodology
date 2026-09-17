@@ -410,7 +410,7 @@ python3 starter-kit/methodology_trim.py --file CHANGELOG.md --check   # in this 
 python3 methodology_trim.py --file CHANGELOG.md --check               # at YOUR root, where sync installs it
 ```
 
-Its default budget is **64 KB per ledger** (`DEFAULT_BUDGET_BYTES` in the tool). Both ledger seeds carry a `## Size, and when to archive` section stating the norm and the trigger.
+Its trigger is `DEFAULT_BUDGET_BYTES` in the tool, and `--check` is the only statement of it. Archiving `CHANGELOG.md` is optional (`FRAMEWORK_APPARATUS.md` §The Action Ledger); the `HANDOFFS.md` seed's `## Size, and when to archive` section points at the same trigger.
 
 **`methodology_dashboard.py` is a tripwire, not a gauge**, and the distinction matters for budgeting. It raises a flag once a ledger's archive trigger fires, and it reports remaining line headroom only for a ledger that has been archived at least once — the rate metric has no baseline before that, so a new adopter's headroom reads as unknown. Below the trigger it says nothing at all. It tells you that you have arrived, not that you are approaching.
 

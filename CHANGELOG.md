@@ -195,6 +195,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-16 · [BL-57] S178 — two fork-only sentences the one-home rules made false: `BOOTSTRAP.md`'s seed-migration step and `README.md`'s archive budget
+
+- **Found by re-running plan §9.1's inventory on the merge and diffing it against the branch's:** 1,128
+  matching lines exist only on fork `main`, in 22 files. Most are code or measured history. Two present-tense
+  rules contradicted §The Action Ledger:
+  - `starter-kit/BOOTSTRAP.md:383` (distributed; the fork's S41 text, `12463dd`) told an adopter to bring
+    *"the `## Size, and when to archive` section in both files"* into its ledgers. The `CHANGELOG.md` seed
+    no longer has that section. The step now says: for `CHANGELOG.md` since `ledger-format: 2`, replace the
+    text above the first entry with the seed's header, as `:85` already says; for `HANDOFFS.md`, the section.
+  - `README.md:413` (the fork's S42 text, `8804635`) gave *"64 KB per ledger"* as the trimmer's default
+    budget (`DEFAULT_BUDGET_BYTES` is 196,608 B) and said both seeds carry the size section. It now names
+    the constant without a figure, calls archiving `CHANGELOG.md` optional, and says only the `HANDOFFS.md`
+    seed has the section.
+- **Found, not fixed (scope):** `README.md`'s cost section (`:374`–`:404`) still describes a 2,000-line cap
+  and seed doctrine sizes measured on 2026-08-04. It is fork-only measured history and needs its own
+  rewrite. Recorded for P12 in the plan.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-16 · [BL-57] S178 — P5 step 2: this ledger's front matter and `HANDOFFS.md`'s retention line follow the one-home rules
 
 - **`CHANGELOG.md` front matter, five changes:**
