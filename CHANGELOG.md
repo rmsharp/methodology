@@ -392,6 +392,30 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-62] The read-cap partition test sums only the files read together, not every whole-read class
+
+- **Change:**
+  - `tools/test_context_budget.py` — `TestThisRepoReadSetPartition` summed the `max_tokens` of every class in
+    `WHOLE_READ_CLASSES` (resident, read-mandated, read-set) against the one 25,000-token Read. Only the read-set
+    pair, the Phase 0 mandatory read, is read in one Read; a read-mandated or resident file is read whole but on its
+    own. So a config declaring two read-mandated ledgers at 25,000 tokens each, two full Reads, failed the test as
+    50,000 > 25,000. The check moves into `token_partition(cfg)`, which sums only `READ_TOGETHER_CLASSES`
+    (`("read-set",)`); the repo test and its presence control run on it unchanged in meaning, and the renamed
+    `test_the_read_set_token_ceilings_partition_the_read_cap` replaces
+    `test_whole_read_class_token_ceilings_partition_the_read_cap`. New `TestTokenPartitionRule`, four tests on
+    fixture configs: separately-read files do not share the cap; a read-set pair past the cap is still refused;
+    one within it passes; one at exactly the cap fits.
+  - `.context-budget.json` — the read-set note said the test fails any edit whose ceilings *"in a whole-read
+    class"* exceed the cap. It now says *"in the read-set class"*.
+- **Why:** the fork hit it with its own config (two read-mandated ledgers at 25,000 each) and had to drop the two
+  declarations to pass. Canonical-only: the test file is not distributed, so no adopter runs it.
+- **Checked:** test-first. With the check extracted but the old every-class rule kept, two of the new tests failed
+  (50,000 > 25,000); with the rule restricted, the file runs 122 tests, 0 failures, 2 skipped (118 and the same
+  2 skips before). Five mutants each fail it: the old every-class rule (2 failures), no class summed (4), `>`
+  becoming `>=` at the cap (2), a pair skipped (4), `checked` never counted (4).
+- **Placed** above the previous `[BL-57]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] `methodology_trim.py` links its design doc's public copy, and stops citing a hook flag no hook has
 
 - **Change:** `starter-kit/methodology_trim.py`, comments only.
