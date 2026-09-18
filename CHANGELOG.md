@@ -199,6 +199,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S186 — the close-out commit re-measured in a clone of itself
+
+- `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `1707051` (the S186 close-out):
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 8e12f40caec1 · manifest 3a87b16f1b31`,
+  `tests-sh-passed` 309 at 2 receipts. The same results digest as the receipt's citation on `102d5ef`, so the
+  close-out commit changed no gate reading.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S186 close-out — `HANDOFFS.md` trimmed, item (21) decided and recorded, item (22) raised for P12
 
 - **Deliverable:** the owed `HANDOFFS.md` trim (`67c3e10`; pointer moved to the index at `fbc1aaf`) and the operator's
