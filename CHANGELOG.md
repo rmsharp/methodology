@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] S186 — fork `main` pushed to `origin`, `5ae7902..9a55354` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main:refs/heads/main`, `5ae7902..9a55354`, a fast-forward of 22 commits: S183's
+  close-out tail through S185, and S186's `34434b4`..`9a55354` (its post-close-out gate record). Before the push, a
+  guard confirmed a clean tree, that `origin/main` still read `5ae7902`, and that the push fast-forwarded. Afterwards
+  `git ls-remote origin refs/heads/main` read `9a55354f9400175fa9a1c4426ed6da502e3c5d01`, equal to local `main`. The
+  go-ahead was the operator's answer in S186's picker, *"Push fork main to origin"*. Fork only; nothing sent upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-64] S186 — the close-out commit re-measured in a clone of itself
 
 - `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `1707051` (the S186 close-out):
