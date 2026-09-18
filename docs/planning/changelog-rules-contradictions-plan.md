@@ -8,7 +8,8 @@ before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in 
 S185 (see the P7 block)**; P8–P12 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
 commit. Item (21) was decided by the operator at S186: P8–P11 also migrate a stale `HANDOFFS.md` seed. Item (22) was
 done at S187, on the branch (`100f09b`) and merged into fork `main` (`2d5ce70`). At S188 the operator put the
-three fixes P12 carries (F5, BL-62, BL-63) on the branch before P12, and chose P12's merge (item (23)).**
+three fixes P12 carries (F5, BL-62, BL-63) on the branch before P12, and chose P12's merge (item (23)); all three are
+on the branch (`657acb7`, `5223afb`, `0d63410`) and merged into fork `main` (`5f5a400`). P12 is next.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -295,6 +296,24 @@ upstream, or removing the file's design citations. **BL-63:** `starter-kit/BOOTS
 sync run, one run one commit (item (18)'s rule, stated for every adopter); `SAFEGUARDS.md` stays untouched (K2), not
 both. **P12 step 2: merge** `upstream/main` into the branch, as `9e1dfeb` and `52ad407` did, so the commits already on
 `origin` keep their hashes; not a rebase.
+**BL-63's route amended the same session (operator, third picker):** `SAFEGUARDS.md` opens *"When this file and other
+guidance conflict, this file wins"* and lists the cap under *Hard Rules (No Exceptions)*, so a `BOOTSTRAP.md`-only
+exception would have shipped a new contradiction; the recommendation that led to *BOOTSTRAP only* had missed that. The
+cap's row now names the case in one sentence linking `BOOTSTRAP.md`, and the how-to stays in `BOOTSTRAP.md`. **K2 is
+amended for this one sentence:** `SAFEGUARDS.md` 17,024 → 17,129 B, about 6,067 tokens at its recorded 2.8234 B/token
+against upstream's 6,100 `max_tokens` (the read-set partition 18,900 + 6,100 unchanged). On fork `main` it adds 105 B to a
+file already over the fork's own 15,386 B ceiling. It is its own commit, so the PR can drop it.
+**DONE at S188.** On `bl57/changelog-rules`, each with its own branch entry: `657acb7` (F5; comments only, the link
+pinned to `979dc73`, which resolves on GitHub at the blob fork `main` holds; `git log -S` finds `--no-renames` in no
+hook on the branch or `upstream/main`), `5223afb` (BL-62; test-first, two of four new fixture tests red under the old
+every-class rule, then 122 tests / 0 failures, 118 before; five mutants each fail it; the branch's
+`.context-budget.json` note now says *"in the read-set class"*) and `0d63410` (BL-63). Branch gate on `0d63410`:
+`10/10 pass · results 1a14fa9610cb`, `tests-sh-passed` 149, `context_budget.py --status` nothing over budget,
+`bin/check-links` 111. Merged into fork `main` as `5f5a400`: `CHANGELOG.md` and `.context-budget.json` conflicted and
+resolve ours, and the four merged files' 109 changed lines equal the branch patch. `bin/status` on the six adopters,
+from `53733f3` and from `5f5a400`: every present copy of the three distributed files reads one version further behind,
+and none newly *locally modified*. Fork `main`'s own config note on the test (the `HANDOFFS.md` row) is updated to
+match.
 
 ---
 

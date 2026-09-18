@@ -199,6 +199,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S188 — P12's three carried fixes on the branch and merged into fork `main`: F5 `657acb7`, BL-62 `5223afb`, BL-63 `0d63410`; merge `5f5a400` (plan item (23))
+
+- **On `bl57/changelog-rules`** (worktree `../methodology-bl57`), each with its own entry in the branch's ledger:
+  - `657acb7`, F5 of the PR #80 review: `starter-kit/methodology_trim.py`'s docstring links the design doc's public
+    copy at `979dc73` (it resolves on GitHub: 74,109 B, blob `09c99c14`, fork `main`'s), in place of *"not published
+    … no URL on purpose"*; `:33` drops the `--no-renames` claim, which `git log -S` finds in no hook on the branch or
+    `upstream/main`. Comments only.
+  - `5223afb`, BL-62: `tools/test_context_budget.py`'s partition check moves into `token_partition(cfg)` and sums
+    only `READ_TOGETHER_CLASSES` (the read-set pair). Test-first in a `--no-local` clone: with the check extracted
+    and the old every-class rule kept, two of four new fixture tests failed (50,000 > 25,000); after the fix 122
+    tests, 0 failures, 2 skipped (118 and the same skips before). Five mutants each fail it. The branch's
+    `.context-budget.json` note now says *"in the read-set class"*.
+  - `0d63410`, BL-63: `starter-kit/BOOTSTRAP.md` gains *Committing a sync* (one run, one commit: the dry run's files
+    plus the ledger entry; hand edits stay under the cap), and `starter-kit/SAFEGUARDS.md`'s cap row names the case
+    in one sentence. **Operator decision (S188, third picker):** the `SAFEGUARDS.md` sentence too, after I found that
+    a `BOOTSTRAP.md`-only rule contradicts *"this file wins"* and *No Exceptions*, which my earlier recommendation
+    had missed. Plan K2 is amended for that sentence: 17,024 → 17,129 B, about 6,067 of upstream's 6,100
+    `max_tokens`; on fork `main`, +105 B to a file already over the fork's 15,386 B ceiling.
+- **Branch gate**, `--no-local` clone of `0d63410`, HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0
+  unmeasured · results 1a14fa9610cb · manifest 08423c179055`, `tests-sh-passed` 149, 183 s; `context_budget.py
+  --status` *nothing over budget*; `bin/check-links` 111 links.
+- **Merge `5f5a400`:** `CHANGELOG.md` and `.context-budget.json` conflicted and resolve ours (this ledger and this
+  repo's config are the fork's own). The four merged files' 109 changed lines equal the branch patch (compared in
+  bash: a first zsh attempt compared two empty diffs, because an unquoted `$F` does not split there), and three of
+  them are blob-identical to the branch. `bin/status` on the six adopters, read-only, from `53733f3` and from
+  `5f5a400`: every present copy of `BOOTSTRAP.md`, `SAFEGUARDS.md` and `methodology_trim.py` reads one version further
+  behind, and none newly *locally modified*.
+- **This commit:** plan item (23)'s BL-63 amendment and DONE block, and the status line; the BL-57, BL-62 and BL-63
+  rows in `docs/planning/BACKLOG.md` (BL-62 and BL-63 stay open until P12's PR merges); this repo's
+  `.context-budget.json` note on the test, which said it sums every whole-read class, now in the past tense.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S188 — re-scoped by the operator: P12's three carried fixes land on the branch first; F5's, BL-63's and P12 step 2's routes decided (plan item (23))
 
 - **Found:** the claim's picker offered P12 as carrying BL-62, BL-63, #80's F5 and item (22), but only item (22) is on
