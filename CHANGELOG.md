@@ -199,6 +199,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] S189 — `bl57/changelog-rules` pushed to `origin`, `83a12f0..20db3f0` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin bl57/changelog-rules`, a fast-forward of 15 commits (the merge `f572068` and fourteen on
+  the branch since `83a12f0`, through `20db3f0`). Guarded: clean worktree, `origin` still at `83a12f0`, ancestor
+  checked. Read back: `git ls-remote origin refs/heads/bl57/changelog-rules` = `20db3f09…`, equal to local. GitHub's
+  compare against `KJ5HST/methodology:main`: ahead 28, behind 0, 20 files; no pull request exists for this head. The
+  go-ahead was the operator's Phase 0 picker answer, *"Push branch at step 6"*. Nothing sent upstream.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S189 — the independent review answered: five fixes on the branch, the PR body rewritten
 
 - **Review:** an opus subagent, read-only, on the frozen branch (`036d840`) and draft (`72450d8`): no blockers, ten
