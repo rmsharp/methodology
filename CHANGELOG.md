@@ -199,6 +199,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S187 — the close-out commit re-measured in a clone of itself
+
+- `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `d84d86a` (the S187
+  close-out): `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results e7deb63146bb · manifest
+  3a87b16f1b31`, `tests-sh-passed` 323 at 3 receipts, identical to the run on `5b9a3e3` that the receipt cites.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S187 close-out — fork Learning #79, the receipt, and a count claim made exact
 
 - **Receipt:** `HANDOFFS.md`'s S187 block, `status: complete`, self 7/10, predecessor (S186) 8/10;
