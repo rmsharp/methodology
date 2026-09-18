@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68, BL-69, BL-70, BL-71.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -158,6 +158,9 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-65** | `tools/test_context_budget.py:372` assumes the r² floor is `calibrate()`'s only refusal, but a **negative slope** refuses independently of it — so the presence control fails on this machine's transcripts (slope −0.1773, R² 0.0004) while skipping in every clone, where the documented build-equivalent runs. The clone read `10/10 pass`; the working tree read `312 passed, 1 failed`. Note also that all four `*-unit-tests` gates extract `Ran (\d+) tests`, blind to failures. Canonical-only | [detail](BACKLOG-DETAIL.md#bl-65) |
 | **BL-66** | **UPSTREAM-FACING** — `README.md:61` tells every adopter to update with the GitHub URL, but `bin/sync --source=github` fetches contents without history (`bin/sync:100`), so a file that is merely *behind* cannot be recognized and is refused as a *"local modification"*. Measured clean-room: an unedited adopter at upstream `008d656` got **exit 2 / nine files** from the URL route and **exit 0 / 10 written** from `--source=local`. `starter-kit/BOOTSTRAP.md:86` already says to prefer the local route, for this exact reason — two distributed documents, opposite advice. Its PR is its own go-ahead | [detail](BACKLOG-DETAIL.md#bl-66) |
 | **BL-68** | Investigate the dashboard's *"Large files detected"* penalty when the large files are the framework's own `methodology_*.py` tools and their tests: here all five are over 2,000 lines (the dashboard 4,729 per copy, the trimmer 2,181, the tests 5,867 and 2,291). *Layer 7* exempts an adopter's installed copies by version signature; the canonical repo pays for its own on purpose, and today's flag names `tools/test_methodology_dashboard.py`. Raised at S189 on the operator's request, widened the same session from the dashboard to every `methodology_*.py`; not investigated | [detail](BACKLOG-DETAIL.md#bl-68) |
+| **BL-69** | Delete the branches whose work is finished — 10 local, 11 on `origin` (the five `fix/*`, `pr1`–`pr4`, `pr80/*`, `learning-13`, `bl-10`, the frozen `port/*`). **Decided by the operator (picker, S189)**; not done. Re-derive merged-ness first; delete on `origin` only at the recorded sha | [detail](BACKLOG-DETAIL.md#bl-69) |
+| **BL-70** | Upstream's runner lacks issue #75's plan-surface rule: the maintainer closed #75 silently the day after the fork's PR was verified ready, and the PR (`docs/issue75-plan-surface-upstream`, `60246e7`, local only) was never sent. Branch kept (operator, S189); what to do upstream is open | [detail](BACKLOG-DETAIL.md#bl-70) |
+| **BL-71** | The dashboard's *"Multiple branches"* signal counts `git branch -a` (HEAD aliases, upstream's branches), so a fork can never clear it; count unmerged local branches instead. Raised at S189 (operator); not investigated | [detail](BACKLOG-DETAIL.md#bl-71) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45, BL-56, BL-59, BL-67)
 

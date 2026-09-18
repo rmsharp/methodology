@@ -2398,3 +2398,63 @@ one for 15+ sessions, which is the Degradation table's *"same finding for severa
 4. **Remedies, not chosen:** exempt the framework's own tool files and their tests in the canonical repository; keep
    the penalty but label it as the framework's own; split the file; or leave it as is, with the reason recorded. An
    exemption edits a distributed file, so it is upstream-facing and its pull request is its own go-ahead.
+
+---
+
+<a id="bl-69"></a>
+
+**BL-69 — Delete the branches whose work is finished: 10 local and 11 on `origin`. Raised 2026-09-18 (S189), after
+close-out, from the operator's question about the dashboard's *"Multiple branches (31)"*. Decided by the operator
+(picker); not done.**
+
+**What the 31 are.** `methodology_dashboard.py` counts `git branch -a`: 13 local branches plus 18 remote-tracking refs,
+none stale (`git remote prune --dry-run` lists nothing). Five are `main`, `origin/main`, `upstream/main` and the two
+`HEAD` aliases; two are the maintainer's (`upstream/read-set-budgets`, #80 merged; `upstream/docs/parallel-sessions-plan`,
+#83 open); `bl57/changelog-rules`, local and on `origin`, is PR #84's head.
+
+**Decided (operator, picker, S189):** delete the merged ones locally and on `origin`, and the two settled unmerged ones;
+keep `docs/issue75-plan-surface-upstream` (BL-70). Measured at S189, read-only:
+- **Merged in substance.** The five `fix/*` (PRs #68–#72): each local copy is a stale pre-rebase draft, and every
+  commit it holds beyond its `origin` copy has a same-subject commit on that branch and in `upstream/main` (for
+  `fix/handoffs-receipt-spec-upstream`, the changed lines were compared: identical). `origin/pr1`–`pr4` (#76–#79),
+  `origin/docs/learning-13-handoff-predictions` (#63) and local `pr80/f1`–`f3` are ancestors of `upstream/main`.
+- **Settled, unmerged.** `docs/bl-10-dangling-learning-citations`: PR #64 closed unmerged, BL-10 closed because the
+  defect was fixed another way, and its `bin/check-citations` exists on neither `main`; its commits also survive
+  upstream as PR #64's head. `port/framework-learnings-extraction` (local): frozen 2026-09-08 as redundant with #76.
+- **The refs and shas at S189:** local `fix/bl31-context-budget-dashboard-exclusion` `9845b4d`, `fix/caveman-length-citation-upstream` `f1dd996`, `fix/dashboard-r-quarto-rmarkdown-extensions` `6380139`, `fix/doc-only-thresholds-upstream` `b52c1a9`, `fix/handoffs-receipt-spec-upstream` `311c554`, `pr80/f1-learnings-1-13` `d4e1570`, `pr80/f2-installed-source-guard` `3774076`, `pr80/f3-read-set-token-ceilings` `aa36fd8`, `docs/bl-10-dangling-learning-citations` `268f1e5`, `port/framework-learnings-extraction` `7d5b186`; origin `fix/bl31-context-budget-dashboard-exclusion` `b2ef20a`, `fix/caveman-length-citation-upstream` `b4ceb73`, `fix/dashboard-r-quarto-rmarkdown-extensions` `c4fd879`, `fix/doc-only-thresholds-upstream` `86adc6c`, `fix/handoffs-receipt-spec-upstream` `dc75cf6`, `pr1/framework-learnings-extraction` `5b92b2f`, `pr2/ledger-trimmer` `56997af`, `pr3/apparatus-extraction` `2c30d0f`, `pr4/context-budget-gate` `cf15489`, `docs/learning-13-handoff-predictions` `73b72c0`, `docs/bl-10-dangling-learning-citations` `268f1e5`.
+
+**How, when it runs.** Re-derive every claim above first; branches move. Local `fix/*`, `bl-10` and `port/*` need
+`git branch -D` (they are not ancestors of `main`); `pr80/*` take `-d`. Delete on `origin` only at the recorded sha,
+`git push --force-with-lease=refs/heads/<b>:<sha> origin :refs/heads/<b>`, then `git fetch --prune origin` and record the
+list in the ledger. After it, `git branch -a` still reads about 10, so the signal still fires: that is BL-71.
+
+---
+
+<a id="bl-70"></a>
+
+**BL-70 — Upstream's runner lacks the plan-surface rule from issue #75, which the maintainer closed silently.
+Raised 2026-09-18 (S189), after close-out. Operator (picker): a backlog item, keep the unsent branch. Not decided
+beyond that.**
+
+The maintainer filed [issue #75](https://github.com/KJ5HST/methodology/issues/75). The fork commented on 2026-08-16,
+ending *"I won't send anything unasked"*; prepared the PR on 2026-08-24 (branch `docs/issue75-plan-surface-upstream`,
+`60246e7`, local only, never pushed); and verified it ready on 2026-09-01
+([`issue75-pr-readiness-2026-09-01.md`](issue75-pr-readiness-2026-09-01.md)). KJ5HST closed the issue on 2026-09-02 with
+no comment and no commit. Fork `main`'s runner carries the rule (§Planning Sessions: each phase names its **surface**);
+`upstream/main`'s does not, so adopters syncing from upstream never get it. Nothing in this repository records the
+closure or a decision about it before now. The branch is based on `512c2ed`, now far behind `upstream/main`.
+**Open:** ask the maintainer on #75 whether he wants it (an outward action, its own go-ahead), fold it into a later
+PR, or record it as declined and delete the branch.
+
+---
+
+<a id="bl-71"></a>
+
+**BL-71 — The dashboard's *"Multiple branches"* signal counts `git branch -a`, so a fork can never clear it.
+Raised 2026-09-18 (S189), after close-out. Operator (picker): add it. Not investigated.**
+
+`starter-kit/methodology_dashboard.py:1522`–`1523` counts every line of `git branch -a`, and `:3396`–`3397` raises a low
+risk above 5. That count includes the two `HEAD` aliases, all three `main` refs, the upstream's own branches (which a fork
+always carries), and an open PR's head. After BL-69 this repository still reads about 10. A count of local branches not
+merged into `main`, or one excluding remote-tracking refs and aliases, would say what the message claims (*"may indicate
+incomplete merges"*). A fix edits a distributed file, so its upstream PR is its own go-ahead; same family as BL-68.

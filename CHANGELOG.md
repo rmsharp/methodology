@@ -199,6 +199,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [ad hoc] Raised BL-69, BL-70 and BL-71 — the branch-count question, recorded rather than worked (after S189's close-out)
+
+- **Why:** the operator asked, after close-out, whether this repository should still have *"Multiple branches
+  (31)"*. I answered with a read-only branch-by-branch audit, then took the picker's answers as a go-ahead to act in
+  this session. The operator corrected that: it was a backlog request. **Nothing was deleted or changed**
+  (13 local branches, 13 on `origin`, before and after); the decisions are recorded in the items instead.
+- **BL-69:** delete 10 local and 11 `origin` branches whose work is merged or settled (operator's picker), with the
+  refs and shas as measured. **BL-70:** upstream's runner lacks issue #75's plan-surface rule; the maintainer closed #75
+  silently and the prepared PR was never sent; the branch is kept. **BL-71:** the dashboard's branch count reads
+  `git branch -a`, so a fork can never clear it.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [ad hoc] S189 — fork `main` pushed to `origin`, `c5af062..a96eae4` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main:refs/heads/main`, a fast-forward of 9 commits (`7df4328`..`a96eae4`: the claim, the
