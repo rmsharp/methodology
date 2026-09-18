@@ -199,6 +199,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S189 — P12 recorded: the plan's status, item (24), step 3's `HANDOFFS.md` bullet, the BL-57 row
+
+- **Plan** `docs/planning/changelog-rules-contradictions-plan.md`: status line (P12 done), P12's *Done at S189* line, and
+  item (24): the review's five fixes, D9 revised (`HANDOFFS.md` keys on `handoffs-format: 2`), and what that means
+  for P8–P11. Fork `main` lacks the branch's last eight commits (`f572068`..`20db3f0`), so the branch merges into
+  fork `main` before P8 syncs from it; `airqino` and `nprcgenekeepr` now read `HANDOFFS.md` stale.
+- **Backlog:** the BL-57 row says P12 is done and names the merge as next.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S189 — upstream [PR #84](https://github.com/KJ5HST/methodology/pull/84) opened (non-commit action, operator go-ahead)
+
+- **Action:** `gh pr create -R KJ5HST/methodology --base main --head rmsharp:bl57/changelog-rules`, title *"Put the
+  CHANGELOG.md rules in one synced home: the seed becomes a pointer, and the rules stop contradicting each other"*,
+  body from `docs/planning/changelog-rules-pr-body.md` (`f452f30`) below its rule. Before: `git ls-remote` confirmed the
+  remote head equals local `20db3f0`. Read back: `state=OPEN`, `mergeable=MERGEABLE`, head `20db3f0`, base `main`,
+  cross-repository, 20 files, +1,156 / −299, created 2026-09-18T05:06:46Z; the posted body equals the file (17,325 B;
+  the read-back adds one trailing newline). The go-ahead was the operator's answer to the step-6 picker, *"Open it
+  now"*. Nothing else upstream: no comment, no change to PR #83.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S189 — `bl57/changelog-rules` pushed to `origin`, `83a12f0..20db3f0` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin bl57/changelog-rules`, a fast-forward of 15 commits (the merge `f572068` and fourteen on

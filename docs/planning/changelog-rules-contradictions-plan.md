@@ -5,11 +5,11 @@ S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-ru
 backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S178 block)**, and BL-54, which came
 before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in that repository, recorded here at S180
 (see the P6 block), and P7 (`wsfct`) is done in that repository and MERGED to its default branch, recorded here at
-S185 (see the P7 block)**; P8–P12 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
+S185 (see the P7 block)**; P8–P11 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
 commit. Item (21) was decided by the operator at S186: P8–P11 also migrate a stale `HANDOFFS.md` seed. Item (22) was
 done at S187, on the branch (`100f09b`) and merged into fork `main` (`2d5ce70`). At S188 the operator put the
 three fixes P12 carries (F5, BL-62, BL-63) on the branch before P12, and chose P12's merge (item (23)); all three are
-on the branch (`657acb7`, `5223afb`, `0d63410`) and merged into fork `main` (`5f5a400`). P12 is next.**
+on the branch (`657acb7`, `5223afb`, `0d63410`) and merged into fork `main` (`5f5a400`). **P12 is done at S189: [PR #84](https://github.com/KJ5HST/methodology/pull/84) is OPEN, head `20db3f0` (item (24)). Fork `main` lacks the branch's last eight commits; merge them in before P8 syncs from it.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -314,6 +314,30 @@ resolve ours, and the four merged files' 109 changed lines equal the branch patc
 from `53733f3` and from `5f5a400`: every present copy of the three distributed files reads one version further behind,
 and none newly *locally modified*. Fork `main`'s own config note on the test (the `HANDOFFS.md` row) is updated to
 match.
+
+
+**P12 done at S189 (2026-09-18): [PR #84](https://github.com/KJ5HST/methodology/pull/84), OPEN and MERGEABLE, head
+`20db3f0`, opened on the operator's go-ahead.** Step 1: PR #80 and #82 are ancestors of the branch; `upstream/main`'s three
+new commits touch no rule file. Step 2: the merge `f572068`, then `adaa4a3` (item (10): the three read-set densities
+re-measured on the branch's blobs, each run reproducing the previous figure as a control) and `036d840` (two code comments
+stop citing *"BL-57 item (22)"*). Step 3: dry runs from `upstream/main`, the branch and fork `main` into scratch copies of
+the six adopters: the PR adds no refusal and removes three in `airqino` and `wsfct`; every refusal is a fork-only version
+or a genuine local edit. Step 4: gates 10/10 in `--no-local` clones. Step 5: the body, frozen at `72450d8` for review.
+(24) **An independent review of the frozen branch and body found five defects in the diff; the operator chose to fix them
+before opening (picker).** `f4e974c`: `HANDOFFS.md` keys on `handoffs-format: 2`, the first line of the seed's size
+section. **This revises D9:** the heading had been in upstream's seed since `56997af`, over the size premise this plan
+removes, so it failed its own property 2, and `airqino` and `nprcgenekeepr` read current while carrying that text.
+`7813652`: the `CHANGELOG.md` route keeps the trimmer's archive-pointer block and month heading (item (19)'s hazard, now in
+the note itself). `f7d3b8c`, `91f7646`, `20db3f0`: wording. Gate on `20db3f0`: `10/10 pass · results f6b5a63009e8`,
+`tests-sh-passed` 153. Also decided in that picker: F5 keeps the pinned link, and the body says it departs from the
+maintainer's *"publish the design doc"*; the fork codes in commit subjects are explained in the body, not rewritten.
+Decided earlier the same session: the history-walk fix (BL-54) goes upstream as its own PR.
+**What (24) means for P8–P11.** (a) **Fork `main` lacks `f572068`..`20db3f0`**: its `bin/status` still keys `HANDOFFS.md`
+on the heading, and its `CHANGELOG.md` route still deletes the trimmer's lines. Merge the branch into fork `main` before
+P8 syncs from it (Route B), as items (11), (14), (22) and (23) did. Expect `CHANGELOG.md` and `.context-budget.json` to
+conflict (resolve ours, as at `5f5a400`). (b) Step 3's `HANDOFFS.md` bullet now keys on the marker line. (c) `airqino` (P6,
+done) and `nprcgenekeepr` (P10) now read `HANDOFFS.md` stale: P10 carries it, and `airqino` needs a follow-up in its own
+repository.
 
 ---
 
@@ -884,7 +908,8 @@ runner's session-notes boundary rule).
    line range recorded before editing — with the thin header, and leave **every entry byte-identical**.
    - **And the `HANDOFFS.md` seed, where step 1 read it *present (stale format)*** (item (21), decided at S186).
      Bring the current `starter-kit/HANDOFFS.md`'s **`## Size, and when to archive`** section in above the first
-     real receipt, as `starter-kit/BOOTSTRAP.md:386` says; that heading is what `bin/status` keys on. Add, don't
+     real receipt, as `starter-kit/BOOTSTRAP.md:386` says. Since item (24), `bin/status` keys on that section's first
+     line, `handoffs-format: 2`; where an older copy of the section is present, replace that section. Otherwise add, don't
      replace: every receipt stays byte-identical, and so do the trimmer's archive-pointer blocks and the *"This
      file currently holds **N**"* sentence where present — the trimmer's regenerated field
      (`starter-kit/methodology_trim.py:337`), which the seed lacks (BL-48), and which `bin/status`'s note told
@@ -952,6 +977,7 @@ recorded; a ledger entry records the PR open (a non-commit action); this fork ha
 **Surface.** GitHub. **Cannot enforce:** the maintainer's decision, or what the merge method does to fork
 `main` (S161's unanswered part (b)).
 **One session. STOP.** Reasoning: the deepest available.
+**Done at S189:** [PR #84](https://github.com/KJ5HST/methodology/pull/84) is OPEN; see item (24).
 
 ---
 
