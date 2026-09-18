@@ -199,6 +199,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S187 claim — plan item (22): align `bin/status`'s stale-seed migration note with `BOOTSTRAP.md`'s per-file routes (in progress)
+
+**Deliverable:** item (22) of `docs/planning/changelog-rules-contradictions-plan.md`. `bin/status`'s note tells an
+adopter to *replace the text above the first entry (or receipt)* for either stale seed; `starter-kit/BOOTSTRAP.md:384`–`386`
+says that for `CHANGELOG.md` only, and for `HANDOFFS.md` *bring across the `## Size, and when to archive` section*.
+The note is aligned and pinned by a new `bin/tests.sh` assertion (none pins it today). **Chosen by the operator after
+Phase 0 (picker)**, over P8 (which runs from `~/Development/vscode_quarto_ext`) and two found housekeeping fixes.
+
+- **Phase 0:** `CHANGELOG.md` frontier `ae406d2` = HEAD, no gap; `HANDOFFS.md` frontier `1707051`, two commits behind,
+  and both (`9a55354` gate record, `ae406d2` push record) carry their own ledger entries and no receipt by design.
+  Nothing backfilled. 2 receipts, no trim owed; `methodology_trim.py --check` fires on neither ledger (162,492 B and
+  26,495 B against 196,608 B). S186's gate citation re-run in a `--no-local` clone of `ae406d2`, HEAD asserted:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 8e12f40caec1 · manifest 3a87b16f1b31`, the digest
+  S186 cited, `tests-sh-passed` 309 at 2 receipts, 2:51. Dashboard 76/100, medium risk, no high-or-above flags;
+  `context_budget.py --status` shows the runner, `SAFEGUARDS.md` and the read-set total `over`, all already known.
+  `origin/main` = `ae406d2`; `upstream/main` still `6b29d3d`; PR #83 still open, no reviews; no open upstream issues.
+  `vscode_quarto_ext`, read-only: `master` `58f7bcbd`, only `scratchpad/` untracked, as S186 recorded. Phase 0's two
+  tracked rows ride here.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S186 — fork `main` pushed to `origin`, `5ae7902..9a55354` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main:refs/heads/main`, `5ae7902..9a55354`, a fast-forward of 22 commits: S183's

@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S187
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57 PLAN ITEM (22): ALIGN `bin/status`'s STALE-SEED MIGRATION NOTE WITH `starter-kit/BOOTSTRAP.md:384`–`386`.** The note (`bin/status:229`–`235`) tells an adopter holding a stale `CHANGELOG.md` *or* `HANDOFFS.md` seed to *replace the text above the first entry (or receipt)*; `BOOTSTRAP.md` says that for `CHANGELOG.md` only, and for `HANDOFFS.md` *bring across the `## Size, and when to archive` section*. Fork-side, before P8 so P8–P11 see the right route on screen, and before P12, which would ship both texts upstream. No test pins the note's wording today, so the change carries a new assertion. Chosen by the operator after Phase 0 (picker), over P8 (from `vscode_quarto_ext`) and two found housekeeping fixes. Nothing upstream.
+what_was_done: pending
+next_steps: pending
+key_files: `bin/status:229` (the note), `:149` (`STALE_SEED`), `:170`; `starter-kit/BOOTSTRAP.md:384`–`386` (the per-file routes), `:86`; `bin/_manifest.py:117` (the `HANDOFFS.md` marker); `docs/planning/changelog-rules-contradictions-plan.md:256` (item (22)); `bin/tests.sh`
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S187 claim"
+commit: pending
+```
+
+```handoff
 session: S186
 date: 2026-09-17
 status: complete
