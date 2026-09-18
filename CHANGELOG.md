@@ -199,6 +199,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-62] S188 — `context-budget-unit-tests` tightened 118 → 122, locking in BL-62's four new tests
+
+- `.quality-gates.json`: the gate's `threshold` 118 → 122. BL-62 (`5223afb`, merged at `5f5a400`) took
+  `tools/test_context_budget.py` from 118 to 122 tests, and every other unit-suite gate here sits at its measured
+  count, so at 118 the four new tests could be deleted with the gate still passing. Measured 122 on `main` in the
+  `--no-local` clone of `d9d1424` (`results 5f7606011e93`) and on the branch at `0d63410`. A tightening, so
+  `quality_ratchet.py --precommit` accepts it without approval. Fork `main` only; the branch's gates are upstream's.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S188 — P12's three carried fixes on the branch and merged into fork `main`: F5 `657acb7`, BL-62 `5223afb`, BL-63 `0d63410`; merge `5f5a400` (plan item (23))
 
 - **On `bl57/changelog-rules`** (worktree `../methodology-bl57`), each with its own entry in the branch's ledger:
