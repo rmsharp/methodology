@@ -38,6 +38,25 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
 
 ---
 
+### 2026-09-16 · [ad hoc] PR #82 merged — post-merge verification on main and the first tightening
+
+- **Action:** the operator merged [PR #82](https://github.com/KJ5HST/methodology/pull/82) (quality ratchet,
+  plan #81 Phases 1–4 + the review-response fixes) at merge commit `64f23bf` (2026-09-16T18:05:47Z; parents
+  `0fd003a` + `5c9d3b4`). Session S23 verifies `main` and takes the tightening the S22 receipt records as
+  owed: `tests-sh-failed` 1 → 0 and `tests-sh-passed` 138 → 139, Test 9 turning green on `main`. Local
+  `feat/quality-ratchet` deleted (merged; the remote branch was already gone). Results appended at close-out.
+- **Verified on `main` at `64f23bf`:** `bin/tests.sh` **139/0** — Test 9 green for the first time since the
+  branch was cut; dashboard unit 226 OK, budget 118 OK (2 skipped), trimmer 123 OK (2 skipped), ratchet 45
+  OK, `check-links` OK, `check-learnings` OK, `check-handoff --all` OK, twins byte-identical at 2.11.1,
+  `context_budget.py --status` exit 0, `quality_ratchet.py --selftest` OK (22), `commit-msg --selftest` OK.
+- **The first tightening, discharged:** `tests-sh-failed` `max 1 → 0`, `tests-sh-passed` `min 138 → 139`;
+  the hook's verdict on the staged edit exit 0 (two tightenings). `--run` at the tightened manifest:
+  **10/10 pass · 0 fail · 0 unmeasured · results `6542e640a956` · manifest `97a7aab85b9a`** (2 m 50 s).
+  `_first_tightening_owed` in the manifest now records the discharge and the standing rule: raise floors
+  when a measurement rises, never lower them.
+- Session S23: claim `b4c04af` + tightening `fb81c4b` + the close-out commit (receipt complete, cites the run).
+  The ledger hook refused the first close-out attempt — `CHANGELOG.md` was not co-staged — as designed.
+
 ### 2026-09-16 · [ad hoc] PR #82 review-response fixes — the six corrections and the review's accepted findings, one checkpoint per fix
 
 - **Action:** the fix set the maintainer's confirmation comment promised, built on `feat/quality-ratchet`
