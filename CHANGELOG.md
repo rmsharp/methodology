@@ -199,6 +199,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [ad hoc] S191 — the gate re-run on the close-out `6cdec69`: 10/10 pass, results 511119b3196e
+
+- In a `--no-local` clone with HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  511119b3196e · manifest 58d766958ae1`, `tests-sh-passed` 327, the same digest as the receipt's citation on `0b7e672`.
+  The close-out's `CHANGELOG.md` and `HANDOFFS.md` edits change no measured value (BL-64).
+
 ### 2026-09-18 · [BL-57] S191 close-out — P8 recorded (`10f931a`, fixed at `0b7e672`); BL-72 next, before P9
 
 - **Receipt:** `HANDOFFS.md` S191, `status: complete`, self 7, predecessor (S190) 9. Gate on `0b7e672`:
