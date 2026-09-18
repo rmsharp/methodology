@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [ad hoc] S189 — fork `main` pushed to `origin`, `c5af062..a96eae4` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main:refs/heads/main`, a fast-forward of 9 commits (`7df4328`..`a96eae4`: the claim, the
+  draft, BL-68, the body rewrite, the branch-push record, the PR record, the close-out, its gate record, BL-68's
+  widening). Guarded: clean tree, `origin/main` still `c5af062`, ancestor checked. Read back: `git ls-remote origin
+  refs/heads/main` = `a96eae4b…`, equal to local. The go-ahead was the operator's Phase 0 picker answer, *"Push main
+  after close-out"*. Nothing sent upstream by this push.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-68] Widened — the large-file penalty question covers every `methodology_*.py`, not only the dashboard
 
 - **Why:** the operator's second request, after close-out: investigate the penalty when the large file(s) are
