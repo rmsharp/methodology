@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S189
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57 PLAN P12: PREPARE THE UPSTREAM PULL REQUEST.** Plan `docs/planning/changelog-rules-contradictions-plan.md` §P12 (`:926`): re-derive what PR #80's merge changed in the files this plan touches; **merge** `upstream/main` into `bl57/changelog-rules` (decided at S188, item (23); `git merge-tree` at Phase 0 lists no conflicting paths; the branch is 20 ahead and 3 behind `6b29d3d`); dry-run `bin/sync` from the branch into scratch copies of all six adopters; run the suites in a `--no-local` clone; re-run §9.1; draft the PR body. Chosen by the operator after Phase 0 (picker), over BL-53 and two small backlog fixes. The same picker approved pushing the branch to `origin` at step 6 and fork `main` to `origin` after close-out. Opening the PR (step 6) waits for its own go-ahead, with the draft body in hand.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:926` (§P12), `:933`–`:948` (steps), `:10` (status line); `docs/planning/BACKLOG.md:151` (BL-57); branch `bl57/changelog-rules` (tip `0d63410`, worktree `../methodology-bl57`)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S189 claim"
+commit: pending
+```
+
+```handoff
 session: S188
 date: 2026-09-17
 status: complete
@@ -63,7 +79,7 @@ key_files: `starter-kit/methodology_trim.py:11` (the permalink), `:32` (the `git
 gotchas: **(1) IN zsh AN UNQUOTED `$F` DOES NOT SPLIT, SO A COMPARISON OF TWO DIFFS OVER `$F` COMPARED TWO EMPTY FILES AND PRINTED "IDENTICAL".** Caught only because the line count beside it read 0. Print the count beside every `cmp`, and run multi-path checks in `bash -c`. **(2) `echo ====` ABORTED A COMMAND AGAIN** (quote it). **(3) A BRANCH→`main` MERGE NOW ALSO CONFLICTS IN `.context-budget.json` when the branch touches upstream's config:** resolve ours (this repo's config is its own), then fix this repo's note by hand, as `d9d1424` did. **(4) `SAFEGUARDS.md` HAS ≈33 TOKENS LEFT under upstream's 6,100 `max_tokens`** (at its recorded 2.8234 B/token); P12 must not grow it further. **(5) THE DESIGN-DOC LINK IS PINNED TO `979dc73` ON FORK `main`:** never rewrite fork `main`'s history, or the distributed link 404s. **(6) THE BRANCH'S `HANDOFFS.md` IS UPSTREAM'S (20 receipts);** Test 34's anchors there are upstream's. **(7) PHASE 0 WRITES TWO TRACKED ROWS;** they rode `0743825`.
 runtime_smoke: **NO APPLICATION; THE BUILD-EQUIVALENT IS `quality_ratchet.py --run` IN A `--no-local` CLONE WITH HEAD ASSERTED.** **Citation, fork `main`, clone of `d9d1424` (merge plus record): `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 5f7606011e93 · manifest 3a87b16f1b31`**, `tests-sh-passed` 317 at 2 receipts, `context-budget-unit-tests` 122; `context_budget.py --status` on that tree flips no row (the runner, `SAFEGUARDS.md` and the read-set total were already `over`). Branch, clone of `0d63410`: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 1a14fa9610cb · manifest 08423c179055`, `tests-sh-passed` 149, budget *nothing over budget*, `bin/check-links` 111. `733aa17` (the tightening) and this close-out are not covered by that run (BL-64), so they are re-measured in a clone of the close-out after it lands and recorded as their own entry. Also: the trim's `.verify.sh` 0 before its commit and after the fold; `bin/check-handoff --all --allow-pending` 0; `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` 0 with row 80; `bin/status` on six adopters, read-only, before and after the merge. **NOT EXERCISED:** an adopter following the new *Committing a sync* paragraph (P8's sync will be the first); anything upstream; CI (none).
 changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S188 close-out", plus the claim, trim, fold, item (23), merge record and gate-tightening entries; the branch's three entries are in `657acb7`, `5223afb`, `0d63410`
-commit: 0743825 (claim) + 83099b5 (trim) + 77fe511 (fold) + 53733f3 (item (23)) + 657acb7, 5223afb, 0d63410 (branch) + 5f5a400 (merge) + d9d1424 (recorded) + 733aa17 (gate) + this close-out
+commit: 6e94f3b (close-out; reconciled at S189's Phase 0) + 0743825 (claim) + 83099b5 (trim) + 77fe511 (fold) + 53733f3 (item (23)) + 657acb7, 5223afb, 0d63410 (branch) + 5f5a400 (merge) + d9d1424 (recorded) + 733aa17 (gate)
 ```
 
 **Self-assessment: 6/10.** Plus: the trim and its fold each ran their proof before and after. BL-62 went in

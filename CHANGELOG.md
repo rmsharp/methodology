@@ -199,6 +199,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S189 claim — plan P12: prepare the upstream pull request (in progress)
+
+**Deliverable:** §P12 of `docs/planning/changelog-rules-contradictions-plan.md`, steps 1–5: re-derive what PR #80's
+merge changed, merge `upstream/main` into `bl57/changelog-rules` (the route decided at S188), dry-run `bin/sync` from the
+branch into scratch copies of all six adopters, run the suites in a `--no-local` clone, re-run §9.1, and draft the PR
+body. **Chosen by the operator after Phase 0 (picker)**, over BL-53 and two small backlog fixes. The same picker approved
+two fork-side pushes: the branch to `origin` at step 6, and fork `main` to `origin` after close-out. Opening the PR
+waits for its own go-ahead, with the draft body in hand.
+
+- **Phase 0:** `CHANGELOG.md` frontier `c5af062` = HEAD, no gap; `HANDOFFS.md` frontier `6e94f3b` (S188's close-out),
+  two behind, both `CHANGELOG.md`-only records (the gate re-run and the push) with no receipt by design. Nothing
+  backfilled. **S188's receipt `commit:` slot reconciled** to lead with its close-out sha `6e94f3b`: it led with
+  `0743825`, all decimal digits, which `bin/check-handoff`'s answer-slot rule (`leads_with_sha`, at least one hex
+  letter) does not read as a sha, so the claim's check failed until the slot named `6e94f3b`, as the spec
+  (`starter-kit/HANDOFFS.md`) asks the next session to do. 2 receipts, no trim owed; `methodology_trim.py --check` fires on neither ledger. Gate re-run in a
+  `--no-local` clone of `c5af062`, HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  582ea833e011 · manifest 58d766958ae1`, identical to the last recorded run (on `6e94f3b`), `tests-sh-passed` 317,
+  169 s. Dashboard 76/100, medium risk, no high-or-above flags; `context_budget.py --status` shows the runner,
+  `SAFEGUARDS.md` and the read-set total `over`, all already known. `docs/FORK_LEARNINGS.md` 81,721 of 81,920 B.
+  `origin/main` = `c5af062`; `upstream/main` still `6b29d3d`; PR #83 still open, no reviews; no open upstream issues.
+  `git merge-tree --write-tree --name-only upstream/main bl57/changelog-rules` lists no conflicting paths. Phase 0's
+  two tracked rows ride here.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S188 — fork `main` pushed to `origin`, `ae406d2..5d2a2c1` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main:refs/heads/main`, `ae406d2..5d2a2c1`, a fast-forward of 18 commits: S187's six
