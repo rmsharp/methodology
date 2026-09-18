@@ -9,7 +9,7 @@ S185 (see the P7 block)**; P8–P11 are not. **Item (18) was decided by the oper
 commit. Item (21) was decided by the operator at S186: P8–P11 also migrate a stale `HANDOFFS.md` seed. Item (22) was
 done at S187, on the branch (`100f09b`) and merged into fork `main` (`2d5ce70`). At S188 the operator put the
 three fixes P12 carries (F5, BL-62, BL-63) on the branch before P12, and chose P12's merge (item (23)); all three are
-on the branch (`657acb7`, `5223afb`, `0d63410`) and merged into fork `main` (`5f5a400`). **P12 is done at S189: [PR #84](https://github.com/KJ5HST/methodology/pull/84) is OPEN, head `20db3f0` (item (24)). Fork `main` lacks the branch's last eight commits; merge them in before P8 syncs from it.**
+on the branch (`657acb7`, `5223afb`, `0d63410`) and merged into fork `main` (`5f5a400`). **P12 is done at S189: [PR #84](https://github.com/KJ5HST/methodology/pull/84) is OPEN, head `20db3f0` (item (24)). At S190 the branch's last eight commits were merged into fork `main` (`2410657`); P8 is next.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -338,6 +338,16 @@ P8 syncs from it (Route B), as items (11), (14), (22) and (23) did. Expect `CHAN
 conflict (resolve ours, as at `5f5a400`). (b) Step 3's `HANDOFFS.md` bullet now keys on the marker line. (c) `airqino` (P6,
 done) and `nprcgenekeepr` (P10) now read `HANDOFFS.md` stale: P10 carries it, and `airqino` needs a follow-up in its own
 repository.
+**(a) DONE at S190: merged into fork `main` as `2410657`** (parents `1f5dcae`, `20db3f0`; two merge bases, `0d63410` and
+`6b29d3d`, since `upstream/main`'s side of `f572068` was already in fork `main`). `CHANGELOG.md` and `.context-budget.json`
+conflicted, as `git merge-tree` predicted, and resolve ours: `adaa4a3`'s densities are for upstream's `CLAUDE.md` and runner
+blobs, and this repo's config budgets neither by measured density, so no note needed a hand fix. The other eight files'
+66 changed lines equal the branch patch `f572068..20db3f0`; four are blob-identical to the branch. `bin/status` on the six
+adopters from a `--no-local` clone of `1f5dcae` and from `2410657`, the adopters unchanged between the two readings: 15
+rows move, all the merge's. (c) is now observed: `airqino` and `nprcgenekeepr` `HANDOFFS.md` read `present (stale format)`
+(7 → 9 stale seeds). Every present copy of `BOOTSTRAP.md`, `ITERATIVE_METHODOLOGY.md` and `FRAMEWORK_APPARATUS.md` reads one
+version further behind, and none is newly *locally modified*. Gate in a `--no-local` clone of `2410657`: `10/10 pass ·
+results 91c29bff06ce`, `tests-sh-passed` 321 at 2 receipts (the diff adds 6 assertions and removes 2, all in Test 20; its marker and route rows pass).
 
 ---
 

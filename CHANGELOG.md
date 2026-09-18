@@ -199,6 +199,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S190 — `bl57/changelog-rules` (`20db3f0`, PR #84's head) merged into fork `main` as `2410657` (plan item (24) (a))
+
+- **Merge `2410657`** (parents `1f5dcae`, `20db3f0`): the branch's last eight commits reach fork `main` before P8 syncs
+  from it: `f4e974c` keys the `HANDOFFS.md` seed on `handoffs-format: 2`, `7813652` keeps the trimmer's lines in the
+  `CHANGELOG.md` route, plus `adaa4a3`, `036d840`, `f7d3b8c`, `91f7646`, `20db3f0`. Two merge bases (`0d63410`, `6b29d3d`):
+  `upstream/main`'s side of `f572068` was already here. `CHANGELOG.md` and `.context-budget.json` conflicted, as
+  `git merge-tree` predicted at Phase 0, and resolve ours; `adaa4a3`'s densities are for upstream's `CLAUDE.md` and
+  runner blobs, which this repo's config does not budget by measured density, so no note needed a hand fix. The other
+  eight files' 66 changed lines equal the branch patch `f572068..20db3f0` (compared in bash); four are blob-identical
+  to the branch.
+- **`bin/status` on the six adopters, read-only**, from a `--no-local` clone of `1f5dcae` and from `2410657`, with each
+  adopter's HEAD and porcelain digest unchanged between the two readings: 15 rows move, all the merge's. `airqino` and
+  `nprcgenekeepr` `HANDOFFS.md` flip to `present (stale format)` (7 → 9 stale seeds, as plan item (24) (c) predicted);
+  every present copy of `BOOTSTRAP.md`, `ITERATIVE_METHODOLOGY.md` and `FRAMEWORK_APPARATUS.md` reads one version further
+  behind; none newly *locally modified*. My first before/after pair was confounded: `airqino` (`9995f62`) and
+  `nprcgenekeepr` (`cd63250c`) committed between its readings; the controlled re-read matched it row for row.
+- **Gate**, `--no-local` clone of `2410657`, HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured ·
+  results 91c29bff06ce · manifest 58d766958ae1`, 343 s; `tests-sh-passed` 321 at 2 receipts: Phase 0 measured 323 at 3,
+  the trim turned Test 34's six rows into stated skips, and the diff adds 6 assertions and removes 2, all in Test 20. A second `bash bin/tests.sh` in the same clone read 320 / 1: Test 38 (5), the
+  `echo | grep -q` race BL-43 already names (`BACKLOG-DETAIL.md:1059`); the merge touches only Test 20's hunks.
+- **This commit:** plan item (24) (a) DONE block and the status line; the BL-57 row.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [ad hoc] S190 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `69ad9c9` wrote into `HANDOFFS.md`'s front matter is now one row of
