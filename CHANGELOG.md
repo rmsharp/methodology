@@ -199,10 +199,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S191 — fix: three lines `10f931a` wrote began with inline backticks, which line-based parsers read as a code fence
+
+- **The defect, found by the close-out gate** (clone of `10f931a`: `9/10 pass · 1 fail`, `tests-sh-failed` 3). A reflowed
+  line of the BL-72 entry below began, after its indent, with inline code quoting an `sh` fence; `bin/model-report` toggles its fence
+  state on any stripped line starting with three backticks, so it read the rest of this ledger as one code block. Tests
+  30, 31 and 40 failed. The plan's item (27) and `BACKLOG-DETAIL.md` §BL-72 had one such line each.
+- **The fix:** the three lines reworded so no line starts with a backtick run; nothing else changed. BL-72's own subject,
+  a scanner that misreads fences, is the same family.
+
 ### 2026-09-18 · [BL-72] Raised — `bin/check-handoff` skips the newest receipt in any `HANDOFFS.md` that carries the seed's size section, and reports OK
 
-- **The item.** Reported by `vscode_quarto_ext`'s Session 264 (BL-57's P8) and reproduced here: the seed section's
-  ```` ```sh ```` block ends in a bare fence that `scan()` (`bin/check-handoff:254`–`:290`) reads as a wrapper opener, so
+- **The item.** Reported by `vscode_quarto_ext`'s Session 264 (BL-57's P8) and reproduced here: the seed section's `sh`
+  code block ends in a bare fence that `scan()` (`bin/check-handoff:254`–`:290`) reads as a wrapper opener, so
   the first receipt is skipped and the second validated as the newest. On the real files it already hides `airqino`'s
   S19, `nprcgenekeepr`'s S714 and `vscode_quarto_ext`'s S264; `methodology_trim.py` is unaffected; this repo's own
   gates are unaffected (no such block in its `HANDOFFS.md`). Detail: `docs/planning/BACKLOG-DETAIL.md` §BL-72.

@@ -382,8 +382,8 @@ arrive with the sync, so the claim (`48d1790c`) and the package commit predate t
 claim's, one commit late. At P9–P11's claim, grep the project's backlog for migration and methodology-update items and tag
 those commits with the item.
 (27) **`bin/check-handoff` skips the newest receipt in any `HANDOFFS.md` that carries the seed's size section: BL-72.** The
-section holds a ```` ```sh ```` block. The scanner (`bin/check-handoff:254`–`:290`) knows only bare fences and
-```` ```handoff ````, so it reads that block's closing ```` ``` ```` as an opener and skips to the first receipt's close,
+section holds a ```` ```sh ```` block. The scanner (`bin/check-handoff:254`–`:290`) knows only bare fences and the
+`handoff` opener, so it reads that block's closing ```` ``` ```` as an opener and skips to the first receipt's close,
 then reports OK with one receipt fewer. Measured at S191 on the files as they stand: `vscode_quarto_ext` (S264 skipped),
 `airqino` (S19) and `nprcgenekeepr` (S714), the last two through an older copy of the section; `mts-system` reads its
 newest correctly until P9 adds the section. `methodology_trim.py` is unaffected (17 records in `vscode_quarto_ext`, S264

@@ -2482,8 +2482,8 @@ the defect on any ledger that has one.
 
 **Fix shape (not built):** CommonMark's rule, which the scanner's docstring already cites for wrappers: an opening fence
 is three or more backticks followed by an optional info string, and it closes only on a bare run at least as long. So a
-non-`handoff` fence is skipped to its closer, as a wrapper is. RED first on the two fixtures above, plus a
-```` ```sh ```` block *inside* a receipt's prose tail and one inside a four-backtick wrapper. The checker is
+non-`handoff` fence is skipped to its closer, as a wrapper is. RED first on the two fixtures above, plus an
+`sh` block *inside* a receipt's prose tail and one inside a four-backtick wrapper. The checker is
 canonical-only, so no adopter receives it (adopters may copy it, `starter-kit/SAFEGUARDS.md` §Close-Out Completeness
 Hook); the fix still goes upstream, where the seed carries the same block: inside PR #84 (whose route puts the section
 into adopters' files) or as its own PR, decided in the fix session, its own go-ahead.
