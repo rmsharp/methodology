@@ -245,14 +245,22 @@ and `mts-system` both stale; `nprcgenekeepr` `CHANGELOG.md` stale, `HANDOFFS.md`
 this plan's DONE list checks `CHANGELOG.md` only, so **no item owns the `HANDOFFS.md` seed today**. Whether P8–P11
 should carry it, or it becomes its own item, is the operator's call — it is not silently in scope.
 **Decided by the operator at S186 (picker): P8–P11 carry it.** Where step 1's `bin/status` reads `HANDOFFS.md`
-*present (stale format)*, the phase migrates that seed too, the way `bin/status`'s own note says: replace the text
-above the first receipt with the current seed's, and leave every receipt byte-identical (step 3's bullet, and a
-DONE item). Re-read at S186 with `bin/status <project> --source=local` from fork `main` `fbc1aaf` — readings with a
+*present (stale format)*, the phase migrates that seed too, the way `starter-kit/BOOTSTRAP.md:386` says: bring the
+current seed's `## Size, and when to archive` section in above the first receipt, and leave every receipt
+byte-identical (step 3's bullet, and a DONE item). Not the *replace* route `bin/status`'s note gives — item (22). Re-read at S186 with `bin/status <project> --source=local` from fork `main` `fbc1aaf` — readings with a
 time on them (fork Learning #74), the same as S184's and S185's: **P8 `vscode_quarto_ext` and P9 `mts-system` are
 stale, so in scope; P10 `nprcgenekeepr` reads `present`, nothing to do; P11 `model_project_constructor` has no
 `HANDOFFS.md`, so nothing to migrate** — `bin/sync` writes a seed only when it is absent (`bin/sync:235`), so P11's
 step-2 sync creates the current one if its dry run lists it. **Outside the decision:** `wsfct`'s `HANDOFFS.md`, still
 stale; P7 is done and the answer named P8–P11.
+(22) **Found at S186, for P12: two fork-side instructions disagree on how to migrate a stale `HANDOFFS.md` seed.**
+`bin/status:231`–`236`'s note, written by P1 (`2d5dc6e`), tells an adopter holding either stale seed to *replace the
+text above the first entry (or receipt) with the current starter-kit seed's*; `starter-kit/BOOTSTRAP.md:384`–`386` says
+that for `CHANGELOG.md` only, and for `HANDOFFS.md` *bring across the `## Size, and when to archive` section* — the
+heading `bin/status` keys on (`bin/_manifest.py:117`). Neither text is on `upstream/main`; both would ship in P12's
+PR. Followed literally in `vscode_quarto_ext`, the note would delete the trimmer's pointer block and its *"currently
+holds"* count sentence, the regenerated field the seed lacks (BL-48). S186 wrote the replace route into step 3
+first, and corrected it before close-out. **P8–P11 follow `BOOTSTRAP.md`; align the note before P12.**
 **Not a P7 effect, recorded so it is not rediscovered:** S630 reported that `wsfct`'s three
 `docs/archive/CHANGELOG-*.md.verify.sh` proofs fail. Re-run at S185 in a `--no-local` clone: all three were generated
 by `methodology_trim.py` v1.1.2 and fail L1 and L3 (record counts 12/8, 37/35, 29/28), identically at `55c293f7`
@@ -827,12 +835,13 @@ runner's session-notes boundary rule).
 3. Migrate the `CHANGELOG.md` seed by hand. Replace the rules text or old header — the *block*, with its
    line range recorded before editing — with the thin header, and leave **every entry byte-identical**.
    - **And the `HANDOFFS.md` seed, where step 1 read it *present (stale format)*** (item (21), decided at S186).
-     The block is everything above the first real receipt — locate it fence-aware, since an older seed's worked
-     example is a `^```handoff` line inside a four-backtick wrapper — recorded before editing. Replace it with the
-     current `starter-kit/HANDOFFS.md`, less its `METHODOLOGY-SEED-SENTINEL` comment (the file has receipts), and
-     keep what the trimmer owns there: its archive-pointer blocks, and the *"This file currently holds **N**"*
-     sentence if present — the trimmer's regenerated field (`starter-kit/methodology_trim.py:337`), which the seed
-     lacks (BL-48). Its own commit, so §9.8 checks it against its own block.
+     Bring the current `starter-kit/HANDOFFS.md`'s **`## Size, and when to archive`** section in above the first
+     real receipt, as `starter-kit/BOOTSTRAP.md:386` says; that heading is what `bin/status` keys on. Add, don't
+     replace: every receipt stays byte-identical, and so do the trimmer's archive-pointer blocks and the *"This
+     file currently holds **N**"* sentence where present — the trimmer's regenerated field
+     (`starter-kit/methodology_trim.py:337`), which the seed lacks (BL-48), and which `bin/status`'s *replace*
+     note would delete (item (22)). Find the first real receipt fence-aware: an older seed's worked example is a
+     `^```handoff` line inside a four-backtick wrapper. Its own commit, so §9.8 checks it.
 4. Bring the project's `CLAUDE.md` ledger wording into line, and record any legacy tag format or layout as
    an adaptation.
 5. Verify, as below.
@@ -845,8 +854,9 @@ runner's session-notes boundary rule).
   own entries) minus (the block's own `### ` lines): 5 in `wsfct`, 2 in `nprcgenekeepr`, 0 elsewhere.
 - **The audit count moved as predicted:** it fell by the block's examples that matched it (`wsfct`: 3,
   so ~~130 → 127~~ 132 → 130 with its 1 entry, re-measured at P7) and rose by the migration's own entries.
-- **Where `HANDOFFS.md` was stale:** `bin/status` reads `present` for it; §9.8 with `HANDOFFS.md` as its third
-  argument prints *only the block changed* on that commit; and the trimmer's dry run
+- **Where `HANDOFFS.md` was stale:** `bin/status` reads `present` for it; §9.8 on that commit, with the insertion
+  line as both bounds and `HANDOFFS.md` as its third argument, prints *only the block changed* (an insertion
+  removes nothing, so a removed line is what it catches); and the trimmer's dry run
   (`python3 methodology_trim.py --file HANDOFFS.md --cut 1 --force`, no `--write`) prints `L1_OK`, `L2_OK` and
   `L3_OK`, so the new front matter still classifies.
 - The project's own build or test command still passes; the change touches documents only.
@@ -860,8 +870,8 @@ decision; medium otherwise.
 |---|---|---|
 | P6 | `airqino` | **DONE 2026-09-17, recorded at S180 (the P6 block, items (16)–(18)).** BL-56 folds in: reseed from the thin seed and carry its ~~one entry~~ entries (two by then; the header was migrated by hand) across, unchanged. ~~Route A from the branch, because its files are the branch's versions; from fork `main`, BL-54 refuses four files.~~ Route B, since S179 fixed BL-54. ~~It is on `chore/methodology-read-set-budgets`, off open PR #1~~ Landed on `chore/methodology-bl57-p6`, taken from that branch's `1402ad4` |
 | P7 | `wsfct` | **DONE 2026-09-17 in that repository and MERGED there (PR #903, squash `66e14daa`); recorded here at S185 (the P7 block, items (19)–(21)).** At the claim, check first that `wsfct` is clean, with no other session's claim staged or uncommitted (at S181 its own S629 had one staged). At fork `main` `b0bf91f` the dry run exits 0 and would write 14 files; it ran from `29b0feb`, 14 files, `8a41741c`. Replace the older full seed copy (block ~~:13–196~~ **:8–182**, re-derived at the claim; 5 `### ` lines) with the thin header, `12fb758e`. Route B. `CLAUDE.md` :43, :218, :695 (*"Completed work history"*) and :162, :206 (completed-work framing), `8d0e696a` |
-| P8 | `vscode_quarto_ext` | Replace the Keep-a-Changelog header (:1–8) with the thin header, keeping the shard pointer. Record the `[BACKLOG: …]` entries as legacy in `CLAUDE.md`. Drop `CHANGELOG.md` from its `.context-budget.json` (Q2 A; the project's call). Route B. `CLAUDE.md` :102, :146. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `58f7bcbd`, to re-derive at the claim: the block is :1–32, above the first receipt at :33. Keep the count sentence (:20–22) and the pointer block (:29–31). The *fence-aware* warning (:23–27) is the project's own text, which the step replaces. It comes true again once the seed's four-backtick example returns (`grep -c '^```handoff'` then over-counts by one), so whether it moves to `CLAUDE.md` is the project's call |
-| P9 | `mts-system` | Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `710a0f7`: the block is :1–76; the first `^```handoff` match (:32) is the old seed's worked example inside a four-backtick wrapper (:31–55), and the first receipt is :77. No count sentence, no pointer block. The file is 373,021 B, past the 262,144 B read refusal. **Found, not a P9 effect:** the fence opened at :216 (`session: S131`) never closes before the next at :219, and `bin/check-handoff --all --file ../mts-system/HANDOFFS.md` reads them as one block (*"first two keys must be `session` then `date` (got session, session)"*). Check it before P9, and don't attribute it to P9 |
+| P8 | `vscode_quarto_ext` | Replace the Keep-a-Changelog header (:1–8) with the thin header, keeping the shard pointer. Record the `[BACKLOG: …]` entries as legacy in `CLAUDE.md`. Drop `CHANGELOG.md` from its `.context-budget.json` (Q2 A; the project's call). Route B. `CLAUDE.md` :102, :146. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `58f7bcbd`, to re-derive at the claim: the first receipt is at :33, below the pointer block (:29–31); the section goes in above that block. The count sentence (:20–22), the pointer block and the project's own *fence-aware* warning (:23–27) all stay |
+| P9 | `mts-system` | Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `710a0f7`: the first receipt is :77, and the section goes in above it. The first `^```handoff` match (:32) is the old seed's worked example inside a four-backtick wrapper (:31–55), not a receipt. No count sentence, no pointer block. The file is 373,021 B, past the 262,144 B read refusal. **Found, not a P9 effect:** the fence opened at :216 (`session: S131`) never closes before the next at :219, and `bin/check-handoff --all --file ../mts-system/HANDOFFS.md` reads them as one block (*"first two keys must be `session` then `date` (got session, session)"*). Check it before P9, and don't attribute it to P9 |
 | P10 | `nprcgenekeepr` | **Decide first.** Its 49-line local extension of `methodology_trim.py` blocks every sync, because one modified file refuses the whole run. Three options: send the extension upstream; migrate the seed only and leave the pointer dangling until it can sync; or `--force`, which discards the extension. Then replace the rules block (:3946–:4065, 2 `### ` lines, between two runs of entries) and record the S325 legacy block and September's `## 2026-08` placement in `CLAUDE.md` (:271) |
 | P11 | `model_project_constructor` | **Decide first.** (a) Its runner customization (step 5) moves into `CLAUDE.md` Adaptations before any `--force` sync (*fork* `BOOTSTRAP.md:75`). (b) Its ledger is a release-grouped work log of 143 untagged `### date — …` entries, which the trimmer refuses by design: either adopt the action-ledger format going forward (the S325 *"freeze legacy, go forward"* precedent) or record an adaptation. It has no `HANDOFFS.md` and no trimmer today |
 

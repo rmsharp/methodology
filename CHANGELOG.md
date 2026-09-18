@@ -199,6 +199,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S186 — item (21)'s migration route corrected to `BOOTSTRAP.md`'s, and item (22): the two fork-side instructions that disagree
+
+- **A correction to `6bae791`**, whose entry below stands as written: it put *replace the block above the first real
+  receipt with the current seed* into step 3 of P6–P11, following `bin/status:231`–`236`'s migration note.
+  `starter-kit/BOOTSTRAP.md:384`–`386` says that for `CHANGELOG.md` only; for `HANDOFFS.md` it says *bring across the
+  `## Size, and when to archive` section*. Step 3's bullet, item (21)'s paragraph, the DONE item and the P8/P9 rows now
+  follow `BOOTSTRAP.md`: add the section above the first receipt and leave everything else in place. In `vscode_quarto_ext`
+  that keeps the pointer block, the count sentence and the project's own warning with no special cases. The DONE
+  item runs §9.8 with the insertion line as both bounds. Tested in a `--no-local` clone: the insertion `34434b4` passes
+  `53 53 HANDOFFS.md`; the removal `fbc1aaf` fails `10 10 HANDOFFS.md`, naming `(53, 4)`.
+- **Item (22), for P12:** the two instructions disagree. `bin/status`'s note was written by P1 (`2d5dc6e`), and neither
+  text is on `upstream/main`, so both would ship in P12's PR. Followed literally, the note deletes the trimmer's
+  pointer block and its count sentence (BL-48). P8–P11 follow `BOOTSTRAP.md`; the note wants aligning before P12.
+  Searched first: no match for the note's wording in `BACKLOG.md`, `BACKLOG-DETAIL.md`, the backlog archive or
+  `docs/FORK_LEARNINGS.md`. The `CHANGELOG.md` entry for S178 (`BOOTSTRAP.md`'s step) did not touch the note.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S186 — plan item (21) decided by the operator: P8–P11 also migrate a stale `HANDOFFS.md` seed
 
 - **Decided (operator, S186 picker):** *carry it in P8–P11*, over raising it as its own item or leaving it out of
