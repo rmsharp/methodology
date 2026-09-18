@@ -411,6 +411,16 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] The `HANDOFFS.md` seed says its archive rule is its own, not the ledger's optional one
+
+- **Change:** `starter-kit/HANDOFFS.md`'s pointer to *Reading and archiving* adds one sentence: that subsection makes
+  archiving optional for `CHANGELOG.md`, and this file keeps its own rule — archive when the trimmer's trigger fires.
+- **Why:** the seed states that rule and then sends the reader to a subsection that concludes *"Archiving is
+  optional"*, which read as a contradiction. The two rules differ on purpose; this branch changes the ledger's and
+  leaves `HANDOFFS.md`'s as it was. Found by the same independent review.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] The `CHANGELOG.md` migration route keeps the lines a trimmer wrote above the first entry
 
 - **Change:** `bin/status`'s route for a stale `CHANGELOG.md`, and `starter-kit/BOOTSTRAP.md`'s *Updating an existing

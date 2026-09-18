@@ -125,7 +125,8 @@ An archive is a **shard**: a new frozen file, same format, same newest-on-top or
 The reasoning this file shares with `CHANGELOG.md` — how a ledger is read, why the tool is the only
 statement of its trigger, and what a split must conserve — is in the *Reading and archiving*
 subsection of [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger).
-Everything needed to *act* is here.
+That subsection makes archiving optional for `CHANGELOG.md`; this file keeps its own rule, above —
+archive it when the trimmer's trigger fires. Everything needed to *act* is here.
 
 What is specific to *this* file, and gets receipts wrong if assumed:
 
