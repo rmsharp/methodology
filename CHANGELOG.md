@@ -199,6 +199,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-72] S192 claim — fix `bin/check-handoff`'s fence scanner on `bl57/changelog-rules`, riding PR #84, then merge into fork `main` (in progress)
+
+**Deliverable:** BL-72's fix. `scan()` (`bin/check-handoff:227` here, `:104` on the branch, byte-identical) reads a
+fence with an info string other than `handoff` as prose, so the seed's `sh` block's closing fence opens a wrapper and
+the newest receipt is skipped while the checker reports OK. The fix skips such a block to its closer (CommonMark), with
+failing tests first on the fixtures in `docs/planning/BACKLOG-DETAIL.md` §BL-72. **Chosen by the operator after Phase 0
+(picker)**, over P9, BL-54's PR and BL-53, as S191's handoff and the operator's S191 decision ordered. The same picker
+chose the route, building on `bl57/changelog-rules` so the fix rides PR #84 (over its own PR, or fork `main` only), and
+approved two close-out pushes, each only after the gate passes and read back: fork `main` to `origin`, and the branch
+to PR #84.
+
+**Phase 0:** `CHANGELOG.md` frontier `fa0e36e` = HEAD, no gap; `HANDOFFS.md` frontier `6cdec69` (S191's close-out), two
+commits behind, both post-close-out records (`1760f96` the gate run, `fa0e36e` the push) with their own entries and no
+receipt by design. Nothing backfilled. The gate in a `--no-local` clone of `fa0e36e` reads `10/10 pass · 0 fail · 0
+unmeasured · results 511119b3196e · manifest 58d766958ae1`, S191's citation. Dashboard 76/100, one medium risk;
+`context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set total, all known. `upstream/main`
+still `6b29d3d`; PR #84 open at `20db3f0`, no reviews or comments; PR #83 open; no open upstream issues. Three receipts,
+so the `HANDOFFS.md` trim is owed after this claim. `CHANGELOG.md` is 210,395 B, past its trigger, under the operator's
+standing no-trim decision. Phase 0's two tracked rows ride here.
+
 ### 2026-09-18 · [ad hoc] S191 — fork `main` pushed to `origin`, `0ab3881..1760f96` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, a fast-forward of 5 commits, all this session's: the claim `793fa84`, the P8

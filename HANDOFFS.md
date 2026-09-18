@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S192
+date: 2026-09-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-72 — FIX `bin/check-handoff`'s FENCE SCANNER, ON `bl57/changelog-rules` SO IT RIDES PR #84, THEN MERGE INTO FORK `main`.** `scan()` reads a fenced block with an info string other than `handoff` (the seed's `sh` block) as prose, takes its closing fence for a wrapper opener, and skips the newest receipt while reporting OK. The fix skips such a block to its closer, per CommonMark, as a wrapper already is; failing tests first, on the fixtures in `docs/planning/BACKLOG-DETAIL.md` §BL-72, then re-read `airqino`, `nprcgenekeepr` and `vscode_quarto_ext` `HANDOFFS.md`. Chosen by the operator after Phase 0 (picker), with the route (ride PR #84, over its own PR or fork `main` only) and two close-out go-aheads: push fork `main` to `origin`, and push the fix to PR #84's branch, each after the gate passes and read back. The owed `HANDOFFS.md` trim and its fold follow this claim.
+what_was_done: pending
+next_steps: pending
+key_files: `bin/check-handoff:227` (`scan()` on fork `main`), `:253`–`:292` (its loop; `:104` on `bl57/changelog-rules` and `upstream/main`, byte-identical); `docs/planning/BACKLOG-DETAIL.md:2464` (§BL-72); `starter-kit/HANDOFFS.md:101` (the seed's `sh` fence); `bin/tests.sh:2296` (Test 38 on fork `main`, which calls `scan()`)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-18 · [BL-72] S192 claim"
+commit: pending
+```
+
+```handoff
 session: S191
 date: 2026-09-18
 status: complete
