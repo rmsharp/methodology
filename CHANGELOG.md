@@ -199,44 +199,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
-### 2026-09-17 · [BL-57] P7 (`wsfct`) recorded — the phase is done and merged in that repository, with items (19)–(21) for P8–P11
+### 2026-09-17 · [ad hoc] S184 reverted — a session was opened after a close-out report that should have ended it
 
-- **What happened there, not here.** `wsfct`'s own Session 630 ran BL-57's P7 on branch
-  `chore/s630-methodology-bl57-p7`: `790c77d1` (claim), `8a41741c` (the sync from fork `main` `29b0feb` — 14 files
-  plus its ledger entry, 15 in all, which is plan item (18) applied), `12fb758e` (the header migration), `8d0e696a`
-  (`CLAUDE.md`'s ledger wording), `6891645c` (its own learnings row), `3a257097` (close-out). **PR #903
-  squash-merged it to that project's `master` as `66e14daa` at 2026-09-18T00:36Z** and the local branch was deleted.
-- **Recorded here** in [`docs/planning/changelog-rules-contradictions-plan.md`](docs/planning/changelog-rules-contradictions-plan.md):
-  the status line, a P7 block modelled on S180's P6 block, and the P7 row rewritten with its stale figures struck
-  rather than deleted. The BL-57 row in [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md) now reads P8 as next.
-- **Verified read-only from here before recording**, with `wsfct`'s `git status --porcelain` empty before and after:
-  `bin/status ../wsfct` reads `CHANGELOG.md` `present`; the migration removed line 8 and lines 10–181, inside the
-  block the session re-derived; `grep -c '^### '` 75 → 71 (1 entry added, 5 `### ` lines removed with the block);
-  the source-tag audit 72 → 70 (3 of the block's examples matched it, 1 entry added); `bin/sync ../wsfct
-  --source=local --dry-run` exits 0 with 23 files unchanged; `git diff 3a257097 66e14daa` is empty, so the squash
-  preserved the branch tree exactly.
-- **Three findings for P8–P11, all measured:** (19) the row's block range (`:13`–`196`) was stale and the session
-  re-derived it as `:8`–`182` — the §9.8 DONE check holds only against the re-derived range; (20) a PR-merging
-  adopter can squash, and then item (18)'s one-run-one-commit shape survives on the branch ref, not on the default
-  branch, so cite both; (21) the phase migrates `CHANGELOG.md` and leaves the `HANDOFFS.md` seed, which `bin/status`
-  then reports as *present (stale format)* — measured across all six adopters, and **no item owns that seed today**,
-  BL-56 having put it out of scope explicitly. Whether P8–P11 carry it is the operator's call.
+- **What was reverted and why.** `a6320ae` (BL-57's P7 recorded in the plan and the backlog) and `d657968` (the
+  S184 claim) are reverted in full: the tree over `CHANGELOG.md`, `HANDOFFS.md`, `docs/planning/` and the two
+  instrument-history files is byte-identical to `1c2ee88` again, and the `status: pending` receipt goes with them.
+  **Operator, 2026-09-17:** *"Since you had already provided the close-out report, you should not have effectively
+  started another session's work. You should have put in the backlog to respond to wsfct's report."* The close-out
+  report ends the session; a report relayed from another repository is new information to record, not a mandate to
+  execute, and opening a second session in the same breath skips the ranking that belongs to the operator.
+- **No work is lost.** The reverted recording is verified and complete at `a6320ae` — `git show a6320ae` or
+  `git revert a6320ae` re-applies it — and the session that picks the item up should re-verify rather than trust it,
+  since `wsfct` moves (fork Learning #74).
+- **This commit and the backlog entry that follows it carry no receipt, by design.** They are post-close-out
+  corrective actions taken at the operator's direction, recorded here as the push records are (`5ae7902`,
+  `29b0feb`); the next Phase 0 should read them as recorded actions, not as a gap to backfill.
 - **Model:** Claude Opus 5 (claude-opus-5)
-
-### 2026-09-17 · [BL-57] S184 claim — record P7 (`wsfct`) in the plan and the backlog (in progress)
-
-**Deliverable:** the recording of BL-57's P7 in this repository, as S180 recorded P6 — the plan's status line, a P7
-block with what the phase found for P8–P11, and the BL-57 backlog row. Assigned by the operator relaying `wsfct`'s
-own report that the phase is done. The work itself was done in `wsfct`'s repository by its Session 630; this session
-reads that repository and writes only here.
-
-**Phase 0:** `CHANGELOG.md` frontier `1c2ee88` = HEAD, no gap; `HANDOFFS.md` frontier `7c8f049`, one commit behind
-and that commit is S183's post-close-out gate record, which carries its own ledger entry — nothing backfilled. Two
-receipts, no trim owed. The gate re-run in a `--no-local` clone of `1c2ee88` reads `10/10 pass · 0 fail · 0
-unmeasured · results 8e12f40caec1 · manifest 3a87b16f1b31`, the digest S183's receipt cites. Dashboard 76/100,
-medium risk, no high-or-above flags. **P7 is further along than S183's handoff knew:** PR #903 squash-merged it to
-`wsfct`'s `master` as `66e14daa` at 2026-09-18T00:36Z, after that handoff recorded it as unmerged — fork Learning
-#74 again. The Phase 0 context-budget and dashboard rows ride with this claim.
 
 ### 2026-09-17 · [BL-64] S183 — the close-out commit re-measured in a clone of itself, the check its own citation cannot make
 

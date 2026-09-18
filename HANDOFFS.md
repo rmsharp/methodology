@@ -51,22 +51,6 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
-session: S184
-date: 2026-09-17
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: **RECORD BL-57's P7 (`wsfct`) IN THIS REPOSITORY**, as S180 recorded P6: the plan's status line, a P7 block carrying what the phase found for P8–P11, and the BL-57 backlog row (`docs/planning/changelog-rules-contradictions-plan.md:7`, `:175`, `:799`; `docs/planning/BACKLOG.md:151`). Assigned by the operator relaying `wsfct`'s own report that P7 is done. **It is further along than S183's handoff knew: PR #903 squash-merged it to that project's `master` as `66e14daa` at 2026-09-18T00:36Z.** Nothing here goes upstream, and nothing in `wsfct` is touched — this session only reads it.
-what_was_done: pending
-next_steps: pending
-key_files: `docs/planning/changelog-rules-contradictions-plan.md:7` (status line), `:175` (the P6 block, the model for this one), `:798`-`:799` (the P6/P7 rows), `:765` (the P6-P11 procedure), `:1015` (§9.8, the only-the-block DONE rule); `docs/planning/BACKLOG.md:151` (the BL-57 row); in `~/Development/wsfct`: `66e14daa` (the squash merge), `origin/chore/s630-methodology-bl57-p7` (the six commits), `12fb758e` (the header migration), `8a41741c` (the 15-file sync)
-gotchas: **The P7 row's figures were stale before the phase ran, and the session re-derived them** — the block is lines **8–182**, not the row's `13–196`, and the DONE check only holds against the re-derived range. Plan item (17) predicted exactly this for P7–P11. **The local branch is gone:** `wsfct`'s six commits survive on `origin/chore/s630-methodology-bl57-p7` and as one squashed commit on `master`, so cite both. `git diff 3a257097 66e14daa` is empty, which is how the squash was checked rather than assumed.
-runtime_smoke: pending
-changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S184 claim"
-commit: pending
-```
-
-```handoff
 session: S183
 date: 2026-09-17
 status: complete
