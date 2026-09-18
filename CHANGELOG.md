@@ -199,6 +199,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S187 close-out — fork Learning #79, the receipt, and a count claim made exact
+
+- **Receipt:** `HANDOFFS.md`'s S187 block, `status: complete`, self 7/10, predecessor (S186) 8/10;
+  `bin/check-handoff` exit 0. It leaves 3 receipts, so the next Phase 0 run here owes the trim.
+- **Learning:** fork Learning #79 in `docs/FORK_LEARNINGS.md`: to align a tool's message with a document, open
+  the section the message cites, and read each text on the tree that ships it. 864 B, leaving the file at
+  80,916 B against its 81,920 B ceiling; `bin/check-learnings --first 15 --no-citations` exit 0. No workstream
+  change: the pattern is recorded fork-side, and `workstreams/DEVELOPMENT_WORKSTREAM.md` is distributed.
+- **Corrected:** `5b9a3e3` (the plan's item (22) block and the entry below) said every adopter's
+  `BOOTSTRAP.md` moved one version further behind across the merge, but I had run the pre-merge tree on four
+  adopters of six. Measured at close-out from `ae406d2`: `mts-system` and `nprcgenekeepr` 8 → 9, so it
+  holds for all five present copies; `model_project_constructor` has none. The plan's wording now says so;
+  the entry below stands as written.
+- **Gate:** fork `main`, `--no-local` clone of `5b9a3e3`: `quality_ratchet: 10/10 pass · 0 fail · 0
+  unmeasured · results e7deb63146bb · manifest 3a87b16f1b31`, `tests-sh-passed` 323 at 3 receipts. This
+  commit is re-measured in a clone of itself after it lands (BL-64).
+- **Not pushed:** fork `main` and `bl57/changelog-rules` are ahead of `origin`; each push is its own go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S187 — plan item (22) done: `bin/status`'s stale-seed note gives each seed its own migration route (branch `100f09b`, merged into fork `main` as `2d5ce70`)
 
 - **Operator decision (S187, picker):** land it by the plan's route for a fix P12 ships (items (11), (14)):

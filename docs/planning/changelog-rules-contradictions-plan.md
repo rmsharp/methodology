@@ -270,8 +270,8 @@ the section above the first receipt and keep the rest of the front matter — an
 `bin/tests.sh` Test 20 (g) pins both with eight assertions: run alone, 5 failures before the fix and 24/0 after;
 two mutants fail it. Branch gate on that tree: `10/10 pass`, `results dd16434fe5f5`, `tests-sh-passed` 149.
 Merged as `2d5ce70`, `CHANGELOG.md` the one conflict, resolved ours; the three files' changed lines are identical
-to the tested patch. Every adopter's `BOOTSTRAP.md` reads one version further behind than before the merge,
-none *locally modified*. **One premise above did not hold:** `BOOTSTRAP.md:384`–`386` is fork-only. It sits in
+to the tested patch. Each of the five adopters' present `BOOTSTRAP.md` copies reads one version further behind
+than before the merge, none *locally modified*; `model_project_constructor` has none. **One premise above did not hold:** `BOOTSTRAP.md:384`–`386` is fork-only. It sits in
 the *Without `bin/sync`* rules the fork added at S41 (`12463dd`, made per-file at `fd611a6`), which the branch
 never had, so it does not ship in P12. On the branch the paragraph the note cites is the only statement of the
 migration, which is why that paragraph carries the `HANDOFFS.md` route now.
