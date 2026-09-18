@@ -392,6 +392,26 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-63] `BOOTSTRAP.md` says how to commit a `bin/sync` run, and `SAFEGUARDS.md`'s five-file cap names it
+
+- **Change:**
+  - `starter-kit/BOOTSTRAP.md`, *Setup with `bin/sync`* — a new *Committing a sync* paragraph after *Drift safety*:
+    in committed mode, one `bin/sync` run is one commit, holding exactly the files it wrote (which `--dry-run` lists
+    first) plus that commit's `CHANGELOG.md` entry; the adopter's own edits afterwards go in their own commits under
+    the cap. It gives the reasons: every file is a byte-for-byte copy of a canonical one, one `git revert` undoes the
+    run, and a split can leave operating files citing tools that have not arrived yet.
+  - `starter-kit/SAFEGUARDS.md`, the five-file cap row — one sentence, *"A committed-mode `bin/sync` run is one
+    commit, whatever its file count"*, linking `BOOTSTRAP.md`. Without it the new paragraph would contradict a file
+    that says it wins over other guidance and lists the cap under *No Exceptions*.
+- **Why:** `bin/sync` copies the whole distributed corpus and does not commit, and no distributed document said how
+  its result is committed, so every committed-mode sync that updates more than five files broke the cap or left the
+  adopter to invent a split. Measured in one adopter's syncs: 15 and 21 files; dry runs in three others: 14–16.
+- **Size:** `SAFEGUARDS.md` 17,024 → 17,129 B, about 6,067 tokens at its recorded 2.8234 B/token against its 6,100
+  `max_tokens`; the read-set pair's partition (18,900 + 6,100) is unchanged. `BOOTSTRAP.md` +584 B; it has no budget.
+- **Separable:** this commit touches nothing else, so it can be dropped from the pull request on its own.
+- **Placed** above the previous `[BL-62]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-62] The read-cap partition test sums only the files read together, not every whole-read class
 
 - **Change:**
