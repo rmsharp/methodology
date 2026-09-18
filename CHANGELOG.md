@@ -199,6 +199,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S186 — plan item (21) decided by the operator: P8–P11 also migrate a stale `HANDOFFS.md` seed
+
+- **Decided (operator, S186 picker):** *carry it in P8–P11*, over raising it as its own item or leaving it out of
+  scope. [`docs/planning/changelog-rules-contradictions-plan.md`](docs/planning/changelog-rules-contradictions-plan.md)
+  records it in the status line, under item (21), as a bullet under step 3 of P6–P11 (replace the block above the
+  first real receipt with the current seed, less its sentinel; keep the trimmer's pointer blocks and its
+  *"currently holds"* count sentence, BL-48; its own commit), and as a DONE item (`bin/status` `present`; §9.8 on that
+  commit; the trimmer's dry run prints `L1_OK`/`L2_OK`/`L3_OK`). §9.8's script takes an optional third argument, the
+  file, defaulting to `CHANGELOG.md` so the two-argument form P6 and P7 ran is unchanged. Tested on `fbc1aaf`, which
+  removed `HANDOFFS.md` :53–56: `53 56 HANDOFFS.md` prints *only the block changed*; `53 54 HANDOFFS.md` names `(53, 4)`.
+- **Measured, read-only, with `bin/status <project> --source=local` from `fbc1aaf`:** `HANDOFFS.md` is stale in
+  `vscode_quarto_ext` (P8) and `mts-system` (P9), `present` in `nprcgenekeepr` and `airqino`, absent in
+  `model_project_constructor` (whose sync writes the current seed, `bin/sync:235`), and stale in `wsfct`, which is
+  outside the decision because P7 is done. The P8 and P9 rows carry their blocks (`:1–32` and `:1–76`) and what to
+  keep. **Found in `mts-system`, not a P9 effect:** a `handoff` fence opened at `:216` never closes, and
+  `bin/check-handoff --all` reads it and `:219` as one block. The BL-57 row in
+  [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md) names the decision.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S186 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `67c3e10` wrote into `HANDOFFS.md`'s front matter is now one row of
