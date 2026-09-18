@@ -411,6 +411,23 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] The three read-set densities re-measured on the blobs this branch ships
+
+- **Change:** `.context-budget.json` — `bytes_per_token` and `measured_bytes` for `CLAUDE.md`,
+  `starter-kit/SESSION_RUNNER.md` and `starter-kit/SAFEGUARDS.md`, and each entry's note: which blob was measured,
+  and which blob id to watch for the next re-measure. The config's own rule is to re-measure when a file's blob
+  changes; this branch changed all three, and the densities still named `1244e95b`, `2a3e410d` and `933816b4`.
+- **Measured** by the doubled-file method (seven copies for `SAFEGUARDS.md`), each run reproducing the previous
+  measurement exactly as a control: `CLAUDE.md` `dd416ea` 46,953 doubled → 23,476.5 tokens, 2.5182 B/token (control
+  46,965); the runner `4811f02` 37,717 → 18,858.5, 2.8225 (control 37,731); `SAFEGUARDS.md` `ed49b97` 42,586 over seven
+  → 6,083.7, 2.8155 (control 42,208).
+- **Every ceiling holds:** 6.5 tokens under `CLAUDE.md`'s 23,483, 41.5 under the runner's 18,900, 16.3 under
+  `SAFEGUARDS.md`'s 6,100; the pair is 24,942.2 of the 25,000-token read cap (99.77%). No ceiling changed.
+- **Correction:** the `[BL-63]` entry below gave `SAFEGUARDS.md` as *"about 6,067 tokens"*, an estimate at the old
+  density. It measures 6,083.7. Left at 2.8234, the tool counted 6,066, 18 tokens under.
+- **Placed** above the `[BL-63]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-63] `BOOTSTRAP.md` says how to commit a `bin/sync` run, and `SAFEGUARDS.md`'s five-file cap names it
 
 - **Change:**
