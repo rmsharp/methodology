@@ -199,6 +199,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-64] S190 — the close-out commit re-measured in a clone of itself
+
+- `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `61b2fc2` (the S190 close-out):
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 91c29bff06ce · manifest 58d766958ae1`, `tests-sh-passed`
+  321 at 2 receipts, 516 s — identical to the receipt's citation on the merge `2410657`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-57] S190 close-out — item (24) (a) done (merge `2410657`), the receipt, learnings withheld pending BL-53
 
 - **`HANDOFFS.md`:** S190's receipt completed (`self_score` 8, `predecessor_score` 9 for S189), citing the gate on the
