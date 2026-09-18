@@ -199,6 +199,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-72] Raised — `bin/check-handoff` skips the newest receipt in any `HANDOFFS.md` that carries the seed's size section, and reports OK
+
+- **The item.** Reported by `vscode_quarto_ext`'s Session 264 (BL-57's P8) and reproduced here: the seed section's
+  ```` ```sh ```` block ends in a bare fence that `scan()` (`bin/check-handoff:254`–`:290`) reads as a wrapper opener, so
+  the first receipt is skipped and the second validated as the newest. On the real files it already hides `airqino`'s
+  S19, `nprcgenekeepr`'s S714 and `vscode_quarto_ext`'s S264; `methodology_trim.py` is unaffected; this repo's own
+  gates are unaffected (no such block in its `HANDOFFS.md`). Detail: `docs/planning/BACKLOG-DETAIL.md` §BL-72.
+- **Operator, S191 (picker):** fixed before P9, in its own session; its upstream route is decided then, its own go-ahead.
+
+### 2026-09-18 · [BL-57] S191 — P8 (`vscode_quarto_ext`) recorded, its DONE re-run read-only from here; three operator decisions
+
+- **Recorded:** the plan's status line, a P8 block with items (25)–(27), the P8 row DONE and the D7 row
+  (`docs/planning/changelog-rules-contradictions-plan.md`), and the BL-57 backlog row. P8 is `vscode_quarto_ext`'s
+  Session 264, `48d1790c`..`57750bb2` on its `master`, not pushed.
+- **Re-run from here,** in a `--no-local` clone at `57750bb2` with `bin/status` and `bin/sync` from a clone of `0ab3881`:
+  both ledgers `present`, every tracked file current, `bin/sync --dry-run` exit 0 with 23 unchanged; §9.8 *only the
+  block changed* on `acb43e0b` (1–8; the 1–7 control fails) and on `69f0dd43` (a pure 61-line insertion); headings
+  25 → 26 and audit 20 → 21, the migration's own entry; trimmer `L1_OK`–`L3_OK` on both ledgers. The build item rests on
+  S264's receipt.
+- **Found (items (25)–(27)):** the sync's new root files broke `vscode_quarto_ext`'s package allowlist, fixed there one
+  commit ahead, and `nprcgenekeepr`'s `.Rbuildignore` covers none of them (P10); the phase finished two of the project's
+  backlog items, first left open; `bin/check-handoff`'s fence defect, raised as BL-72.
+- **Operator, S191 (picker):** `vscode_quarto_ext` keeps `HANDOFFS.md` budgeted (D7, for that project); BL-72 before P9;
+  P9–P11 keep the plan. Measured before the last: from fork `main`, 8 of the 11 local projects with a runner sync
+  cleanly, 3 refused for genuine edits; from a simulated `upstream/main` + PR #84, 9 are refused, 6 only for fork-only
+  versions.
+
 ### 2026-09-18 · [BL-57] S191 claim — record P8 (`vscode_quarto_ext`) here, re-verified first; file the `bin/check-handoff` fence defect it reported (in progress)
 
 **Deliverable:** the recording of BL-57's P8 in this repository, as S180 recorded P6 and S185 P7: P8's DONE checks

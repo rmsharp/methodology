@@ -2458,3 +2458,32 @@ risk above 5. That count includes the two `HEAD` aliases, all three `main` refs,
 always carries), and an open PR's head. After BL-69 this repository still reads about 10. A count of local branches not
 merged into `main`, or one excluding remote-tracking refs and aliases, would say what the message claims (*"may indicate
 incomplete merges"*). A fix edits a distributed file, so its upstream PR is its own go-ahead; same family as BL-68.
+
+<a id="bl-72"></a>
+
+**BL-72 — `bin/check-handoff` skips the newest receipt in any `HANDOFFS.md` that carries the seed's size section, and
+still reports OK. Raised 2026-09-18 (S191), from BL-57's P8 report; reproduced here. Operator (picker): fix before P9.**
+
+The seed's `## Size, and when to archive` section (`starter-kit/HANDOFFS.md:89`, on `upstream/main` and fork `main`
+alike) holds a ```` ```sh ```` code block. `scan()` (`bin/check-handoff:254`–`:290`) recognises two openers only: a bare
+run of backticks (a wrapper) and ```` ```handoff ````. A fence with any other info string is read as prose, so the
+block's closing ```` ``` ```` is taken as a bare wrapper *opener*, and the scanner skips to the next bare fence of three or
+more backticks: the closing fence of the first receipt. That receipt is never parsed. The checker then validates the
+second receipt as the newest and exits 0; `--all` counts one fewer.
+
+**Reproduced at S191.** Two fixtures built from this repository's two receipts: without the section, *"all 1 older
+receipt(s)"*; with it above them, *"all 0 older receipt(s)"*, and `--all` reads 1 receipt, both OK. On the real files,
+`scan()`'s first block is the second receipt in `vscode_quarto_ext` at `57750bb2` (S264 skipped; line 94 unread, 109
+read), `airqino` (S19, 158 unread) and `nprcgenekeepr` (S714, 146 unread), the last two through an older copy of the same
+section; `mts-system` reads its newest (line 77) until BL-57's P9 adds the section. **Not affected:** the distributed
+`methodology_trim.py`, which counts all 17 records in `vscode_quarto_ext`, S264 among them; and this repository's own
+gates, since its `HANDOFFS.md` has no such block. Test 38's drift guard calls this `scan()` (`4c6da50`), so it inherits
+the defect on any ledger that has one.
+
+**Fix shape (not built):** CommonMark's rule, which the scanner's docstring already cites for wrappers: an opening fence
+is three or more backticks followed by an optional info string, and it closes only on a bare run at least as long. So a
+non-`handoff` fence is skipped to its closer, as a wrapper is. RED first on the two fixtures above, plus a
+```` ```sh ```` block *inside* a receipt's prose tail and one inside a four-backtick wrapper. The checker is
+canonical-only, so no adopter receives it (adopters may copy it, `starter-kit/SAFEGUARDS.md` §Close-Out Completeness
+Hook); the fix still goes upstream, where the seed carries the same block: inside PR #84 (whose route puts the section
+into adopters' files) or as its own PR, decided in the fix session, its own go-ahead.
