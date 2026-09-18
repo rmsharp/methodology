@@ -199,6 +199,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S188 close-out — P12's three carried fixes landed (item (23)), fork Learning #80, the receipt
+
+- **Deliverable:** F5 (`657acb7`), BL-62 (`5223afb`) and BL-63 (`0d63410`) on `bl57/changelog-rules`, merged into fork
+  `main` as `5f5a400`, recorded at `d9d1424`, and the gate tightened at `733aa17`. P12, the upstream PR, is the next
+  session: its step 2 merges `upstream/main` (operator, S188), and `git merge-tree` lists no conflicting paths.
+- **Receipt:** `HANDOFFS.md` S188, `status: complete`, self-score 6, S187 scored 8. Two recommendation errors, each
+  costing the operator an extra picker: P12 offered as carrying three fixes not yet on the branch, and a
+  `BOOTSTRAP.md`-only home for BL-63 that `SAFEGUARDS.md`'s *this file wins* would have contradicted.
+- **Fork Learning #80** (`docs/FORK_LEARNINGS.md:92`): before recommending a home for a rule, read what the
+  neighbouring files say about precedence. 805 B, taking the file to 81,721 of its 81,920 B ceiling; the next row
+  crosses, and BL-53 answers it.
+- **Gate citation** (the receipt's): clone of `d9d1424`, `10/10 pass · results 5f7606011e93`, `tests-sh-passed` 317
+  at 2 receipts. `733aa17` and this commit are re-measured in a clone of this commit after it lands (BL-64).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-62] S188 — `context-budget-unit-tests` tightened 118 → 122, locking in BL-62's four new tests
 
 - `.quality-gates.json`: the gate's `threshold` 118 → 122. BL-62 (`5223afb`, merged at `5f5a400`) took
