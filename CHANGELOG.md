@@ -199,6 +199,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-18.md` (2 record(s), 38,813 B → 18,023 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-17 → 2026-09-18) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-18.md`](docs/archive/HANDOFFS-through-2026-09-18.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,813 B → 18,023 B (−53.6%).
+
 ### 2026-09-18 · [BL-72] S192 claim — fix `bin/check-handoff`'s fence scanner on `bl57/changelog-rules`, riding PR #84, then merge into fork `main` (in progress)
 
 **Deliverable:** BL-72's fix. `scan()` (`bin/check-handoff:227` here, `:104` on the branch, byte-identical) reads a
