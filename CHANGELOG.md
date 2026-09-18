@@ -199,6 +199,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [ad hoc] S188 — fork `main` pushed to `origin`, `ae406d2..5d2a2c1` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main:refs/heads/main`, `ae406d2..5d2a2c1`, a fast-forward of 18 commits: S187's six
+  (`6fb428f`..`2f97bd0`) and S188's twelve (`0743825`..`5d2a2c1`, including the branch commits `657acb7`, `5223afb`
+  and `0d63410` through the merge `5f5a400`). Before the push a guard confirmed a clean tree, `origin/main` still at
+  `ae406d2`, and a fast-forward. Afterwards `git ls-remote origin refs/heads/main` read
+  `5d2a2c1b07a0c4a74bee681582087871505efb8c`, equal to local `main`. The go-ahead was the operator's answer in S188's
+  Phase 0 picker, *"Push fork main to origin"*. `origin/bl57/changelog-rules` was not pushed: that waits for P12's
+  step 6. Fork only; nothing sent upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-64] S188 — the close-out commit re-measured in a clone of itself
 
 - `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `6e94f3b` (the S188 close-out,
