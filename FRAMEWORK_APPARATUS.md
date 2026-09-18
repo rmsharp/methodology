@@ -392,8 +392,7 @@ recommended, plus one further bullet, `Model`, that is optional even relative to
 - **Model:** <acting model> (optional — omit the line entirely when not recorded)
 ```
 
-*(The `[SOURCE]`, `[issue #<N>]`, `[BL-<id>]`, and `[ad hoc]` tokens above are illustrative; the
-freshness check keys on dated `###` entries, of which a fresh seed has none.)*
+*(The `[SOURCE]`, `[issue #<N>]`, `[BL-<id>]`, and `[ad hoc]` tokens above are illustrative.)*
 
 **Model:** — self-reported, free text; omit the line when not recorded. Names which model
 executed the action — an agent-independent key with a concrete value, the same pattern

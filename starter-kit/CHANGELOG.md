@@ -5,9 +5,9 @@ items, repository issues, and ad-hoc work. It is the authoritative answer to *"w
 here, ever?"* Every session records its actions here at close-out (`SESSION_RUNNER.md`
 Phase 3F); Phase 0 reconciles it against `git log` and backfills anything a crashed or
 out-of-band session missed. Taking an action — any commit, or any non-commit action — and
-not recording it is failure mode #27. Old entries are archived, never deleted.
+not recording it is failure mode #27. Old entries may be archived, never deleted.
 
-**The rules** — how to add an entry, source tags, size and archiving — are in
+**The rules** — how to add an entry, source tags, reading and archiving — are in
 [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger), which `bin/sync`
 keeps current. ledger-format: 2 — keep this marker; `bin/status` reads it.
 

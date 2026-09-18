@@ -287,14 +287,14 @@ OUT="$("$BIN/status" "$P")"
 echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && fail "status: in-use current-format ledger mis-flagged stale (constraint #2)" || pass "status: in-use current-format ledger not flagged"
 echo "$OUT" | grep -q "^note:" && fail "status: spurious note on in-use current-format ledger" || pass "status: no note on in-use current-format ledger"
 # (b2) The seed as shipped before ledger-format 2, frozen in tools/fixtures/: it carries the current TITLE
-# and the full rules text, and must still read stale. BOOTSTRAP.md:85 promises status "flags any seed
+# and the full rules text, and must still read stale. BOOTSTRAP.md ("Updating an existing project…") promises status "flags any seed
 # whose format predates the current methodology"; a marker present in any earlier format can never keep
 # that promise. Driven RED against the title-keyed marker before the marker moved.
 SEED1="$METHODOLOGY/tools/fixtures/seed-CHANGELOG-ledger-format-1.md"
 grep -q "Authoritative Action Ledger" "$SEED1" && pass "test: the frozen pre-ledger-format-2 seed carries the current title" || fail "test-bug: the frozen seed lacks the title it stands for"
 cp "$SEED1" "$P/CHANGELOG.md"
 ROW="$("$BIN/status" "$P" | grep "CHANGELOG.md" | grep -v '^note:')"
-echo "$ROW" | grep -q "stale format" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md:85 promises it is"
+echo "$ROW" | grep -q "stale format" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md's "Updating an existing project" paragraph promises it is"
 # (c) Replace the seed with a pre-v3.1 (Keep-a-Changelog) shape lacking the ledger-title marker.
 printf '# Changelog\n\nAll notable changes to this project.\n\n## [Unreleased]\n' > "$P/CHANGELOG.md"
 OUT="$("$BIN/status" "$P")"

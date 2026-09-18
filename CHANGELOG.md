@@ -411,6 +411,21 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] Four wording fixes: the thin seed, the flight manual's index row, a moved note, two test references
+
+- **Change:**
+  - `starter-kit/CHANGELOG.md` — *"Old entries are archived"* becomes *may be archived* (archiving is optional), and
+    *"size and archiving"* becomes *reading and archiving* (the rules name no size).
+  - `ITERATIVE_METHODOLOGY.md:575` — the §Reference Apparatus row, the same *reading and archiving*.
+  - `FRAMEWORK_APPARATUS.md` — the note under the entry format kept a clause about the seed's freshness check, which
+    no longer applies where the note now lives; it says only that the tokens are illustrative.
+  - `bin/tests.sh` Test 20 (b2) — two references to `BOOTSTRAP.md:85`, which this branch moved to `:87`, cite the
+    paragraph by name instead.
+- **Why:** each was found by the same independent review. No rule changes; no marker changes, so no seed reads stale
+  because of this.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] *Placement* covers the trimmer's first month heading and a merged branch's entries
 
 - **Change:** two sentences in `FRAMEWORK_APPARATUS.md` §The Action Ledger, *Placement*. A ledger with no month
