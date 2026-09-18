@@ -199,6 +199,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S191 claim — record P8 (`vscode_quarto_ext`) here, re-verified first; file the `bin/check-handoff` fence defect it reported (in progress)
+
+**Deliverable:** the recording of BL-57's P8 in this repository, as S180 recorded P6 and S185 P7: P8's DONE checks
+re-run read-only against `vscode_quarto_ext` at `57750bb2` (its Session 264, 11 commits from `48d1790c`, not pushed),
+then the plan's status line, a P8 block carrying what the phase found for P9–P11, the P8 row, and the BL-57 backlog row.
+The same deliverable files, as a new backlog item, the `bin/check-handoff` defect P8 reported. **Chosen by the operator
+after Phase 0 (picker)**, over a lighter recording that trusts the report. The same picker decided three things this
+session records in the plan: `vscode_quarto_ext` keeps `HANDOFFS.md` in its budget (D7, left open at §8); the checker is
+fixed before P9, in its own session; P9–P11 keep the plan rather than a generic `bin/status` → `bin/sync` route.
+
+**Phase 0:** `CHANGELOG.md` frontier `0ab3881` = HEAD, no gap; `HANDOFFS.md` frontier `61b2fc2` (S190's close-out),
+two commits behind, both post-close-out records (`18dead3` the gate run, `0ab3881` the push) that carry their own entries
+and no receipt by design. Nothing backfilled. Two receipts, no trim owed. The gate in a `--no-local` clone of `0ab3881`
+reads `10/10 pass · 0 fail · 0 unmeasured · results 91c29bff06ce · manifest 58d766958ae1`, S190's citation. Dashboard
+76/100, one medium risk; `context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set total, all
+known. `upstream/main` still `6b29d3d`; PR #84 open, no reviews or comments; PR #83 open; no open upstream issues.
+`CHANGELOG.md` is 203,162 B, past its trigger, under the operator's standing no-trim decision. Phase 0's two tracked
+rows ride here, regenerated after the first pair was discarded while the operator ran P8 in its own project.
+
 ### 2026-09-18 · [ad hoc] S190 — fork `main` pushed to `origin`, `e4db0cc..18dead3` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, a fast-forward of 16 commits: on `main`, `bce805c` (BL-69–71, left unpushed by

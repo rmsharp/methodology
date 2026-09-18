@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S191
+date: 2026-09-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57 — RECORD P8 (`vscode_quarto_ext`) IN THIS REPOSITORY**, as S180 recorded P6 and S185 recorded P7: re-run P8's DONE checks read-only against `vscode_quarto_ext` at `57750bb2` (its Session 264), then the plan's status line, a P8 block carrying what the phase found for P9–P11, the P8 row, and the BL-57 backlog row. Also file the `bin/check-handoff` defect P8 reported (a fence with an info string, the seed's ```` ```sh ````, makes the checker skip the newest receipt; reproduced here) as a new backlog item, to be fixed before P9. Chosen by the operator after Phase 0 (picker), with three decisions recorded in the plan: D7 for `vscode_quarto_ext` keeps `HANDOFFS.md` budgeted; the checker fix lands before P9; P9–P11 keep the plan. Nothing goes upstream, and nothing in `vscode_quarto_ext` is touched.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:12` (status line), `:341` (S190's DONE block, the P8 block goes below it), `:956` (the P8 row), `:958` (the P9 row), `:1040` (D7, left open); `docs/planning/BACKLOG.md:151` (BL-57); `bin/check-handoff:254`-`:290` (the fence scanner); in `~/Development/vscode_quarto_ext`: `48d1790c`..`57750bb2` (P8's 11 commits)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-18 · [BL-57] S191 claim"
+commit: pending
+```
+
+```handoff
 session: S190
 date: 2026-09-18
 status: complete
