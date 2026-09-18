@@ -199,6 +199,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S189 — P12 steps 2–5 on the branch, and the upstream PR body drafted (frozen for review)
+
+- **Step 1:** PR #80 (`4d9e2715`) and PR #82 (`64f23bf`) are ancestors of the branch; `upstream/main`'s three new
+  commits (`b4c04af`, `fb81c4b`, `6b29d3d`) touch `.quality-gates.json`, `CHANGELOG.md` and `HANDOFFS.md` only, none a
+  rule file the plan changes.
+- **Step 2, on `bl57/changelog-rules`:** `f572068` merges `upstream/main` `6b29d3d` (clean; upstream's new entry on
+  top). Then `adaa4a3`: plan item (10), the three read-set densities re-measured on the blobs the branch ships
+  (`CLAUDE.md` `dd416ea` 23,476.5 tokens, the runner `4811f02` 18,858.5, `SAFEGUARDS.md` `ed49b97` 6,083.7; controls
+  37,731, 46,965 and 42,208 reproduced in the same runs, two opus subagents); it corrects the BL-63 entry's 6,067
+  estimate. Then `036d840`: two code comments (`bin/status:112`, `bin/tests.sh:323`) stop citing *"BL-57 item (22)"*,
+  a fork-only plan reference found while vetting. Each has its own branch entry.
+- **Step 3:** `bin/sync --dry-run` from `upstream/main`, the branch and fork `main` into scratch copies (`.gitignore`
+  plus the distributed paths) of all six adopters. From the branch: no new refusal; three fewer in `airqino` and
+  `wsfct`; every refusal is a fork-only version or a genuine local edit (classified against each source's own `HEAD`
+  history with `--full-history`; a first pass used `--all` and wrongly read every refusal as in-history, because the
+  worktree and the clone share the fork's refs). From fork `main`: four clean, two refusing only local edits.
+- **Step 4:** gate on `f572068` and on `adaa4a3`, each in a `--no-local` clone with HEAD asserted: `10/10 pass ·
+  results c40034920130 · manifest 97a7aab85b9a`, `tests-sh-passed` 149, `bin/check-links` 111, budget nothing over,
+  `check-handoff --all` 21 receipts. §9.1 reads 1,706 lines in 50 files on the branch (1,622 in 49 on `upstream/main`).
+  The fifteen upstream-text findings checked by grep before and after: each site gone or restated.
+- **Step 5:** [`docs/planning/changelog-rules-pr-body.md`](docs/planning/changelog-rules-pr-body.md), the title and
+  body in recognized terms. Two claims were corrected before freezing: no adopter's live ledger still carries the
+  old *silent* text (restated as what held at planning time), and `main` resolves 107 links, not 108.
+- **Operator, mid-session (picker):** the history-walk fix (`2c4f801`, BL-54) goes upstream as its own PR, not in
+  this one.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S189 claim — plan P12: prepare the upstream pull request (in progress)
 
 **Deliverable:** §P12 of `docs/planning/changelog-rules-contradictions-plan.md`, steps 1–5: re-derive what PR #80's
