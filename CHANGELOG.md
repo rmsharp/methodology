@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-67] Closed — P7's recording landed at `313459c`, re-verified rather than re-applied
+
+- BL-67 moves from the open list and index of [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md) to §Completed
+  items, and its body in [`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) §BL-67 gains a closing note: what
+  held, the one stale citation (the merged branch is deleted; the commits live at `refs/pull/903/head`), and where
+  its three findings now live (plan items (19)–(21)).
+- **Not closed by this:** the `HANDOFFS.md` seed that no item owns (item (21)) — the operator's call, still open.
+- `BACKLOG-DETAIL.md.verify.sh` exits 0 after the append.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] P7 (`wsfct`) recorded — done and merged in that repository, re-verified from here, with items (19)–(21) for P8–P11
 
 - **What happened there, not here.** `wsfct`'s own Session 630 ran BL-57's P7: `790c77d1` (claim), `8a41741c` (the
