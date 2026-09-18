@@ -338,6 +338,29 @@ MULTI="$("$BIN/status" "$P" "$P2")"
 NROWS="$(echo "$MULTI" | grep -v '^note:' | grep -c "stale format")"
 [ "$NROWS" = "2" ] && pass "status: two stale rows across two projects" || fail "status: expected 2 stale rows, got $NROWS"
 echo "$MULTI" | grep '^note:' | grep -q "2 seeds predate" && pass "status: note count matches flagged rows (2), not deduped file types" || fail "status: note count != flagged rows"
+# (g) Each flagged file gets ITS OWN migration route (BL-57 item (22)). A stale CHANGELOG.md replaces its
+# header with the seed's; a stale HANDOFFS.md only lacks the seed's size section, and replacing its front
+# matter would delete what a trimmer wrote there (a pointer block, a count sentence). The note once gave
+# the replace route for both. P is stale in CHANGELOG.md only (c/e); P2 gets a stale HANDOFFS.md alone.
+NOTE="$("$BIN/status" "$P" | grep '^note:')"
+echo "$NOTE" | grep -q "for CHANGELOG.md, replace the text above the first entry" && pass "status: a stale CHANGELOG.md gets the replace-the-header route" || fail "status: the note lacks CHANGELOG.md's route"
+echo "$NOTE" | grep -q "Size, and when to archive" && fail "status: the note gives HANDOFFS.md's route when only CHANGELOG.md is stale" || pass "status: no HANDOFFS.md route when only CHANGELOG.md is stale"
+cp "$STARTER/CHANGELOG.md" "$P2/CHANGELOG.md"   # P2's CHANGELOG.md was stale from (f): current seed again
+printf '# Handoff Receipts\n\nNewest on top; prepend-only.\n\n```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n' > "$P2/HANDOFFS.md"
+OUT="$("$BIN/status" "$P2")"
+echo "$OUT" | grep "HANDOFFS.md" | grep -v '^note:' | grep -q "stale format" && pass "status: a HANDOFFS.md without the size section flagged 'present (stale format)'" || fail "status: the stale HANDOFFS.md NOT flagged"
+NOTE="$(echo "$OUT" | grep '^note:')"
+echo "$NOTE" | grep -q "1 seed predates the current format (HANDOFFS.md," && pass "test: HANDOFFS.md is the only stale seed in P2" || fail "test-bug: P2 is not stale in HANDOFFS.md alone"
+echo "$NOTE" | grep -q "for HANDOFFS.md, bring across the current starter-kit seed's '## Size, and when to archive' section" && pass "status: a stale HANDOFFS.md gets the bring-across-the-section route" || fail "status: the note lacks HANDOFFS.md's own route"
+echo "$NOTE" | grep -qi "replace" && fail "status: the note tells a stale HANDOFFS.md to replace its front matter" || pass "status: no replace route for a stale HANDOFFS.md"
+# Both stale in one project: both routes, one each.
+cp "$SEED1" "$P2/CHANGELOG.md"
+NOTE="$("$BIN/status" "$P2" | grep '^note:')"
+echo "$NOTE" | grep -q "for CHANGELOG.md, replace" && echo "$NOTE" | grep -q "for HANDOFFS.md, bring across" && pass "status: two stale seeds in one project get both routes" || fail "status: the note lacks a route when both seeds are stale"
+# The section the note points to gives the same HANDOFFS.md route, so following the pointer cannot
+# contradict the note (the note cites BOOTSTRAP.md's "Updating an existing project from an earlier
+# methodology version" paragraph).
+grep '^\*\*Updating an existing project from an earlier methodology version:\*\*' "$STARTER/BOOTSTRAP.md" | grep -q "Size, and when to archive" && pass "BOOTSTRAP.md: the paragraph the note cites gives HANDOFFS.md's route too" || fail "BOOTSTRAP.md: the paragraph the note cites has no HANDOFFS.md route"
 rm -rf "$P" "$P2"
 
 # Shared fixture builder for Tests 21-22: a fully well-formed, status: complete
