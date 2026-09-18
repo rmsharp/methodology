@@ -199,6 +199,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S188 — the close-out commit re-measured in a clone of itself
+
+- `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `6e94f3b` (the S188 close-out,
+  which also covers `733aa17`'s tightening): `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  582ea833e011 · manifest 58d766958ae1`, `tests-sh-passed` 317 at 2 receipts, `context-budget-unit-tests` 122 against
+  the new 122, 162 s. The manifest digest differs from the receipt's `3a87b16f1b31` because `733aa17` changed the
+  manifest; the measured counts match the receipt's run on `d9d1424`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S188 close-out — P12's three carried fixes landed (item (23)), fork Learning #80, the receipt
 
 - **Deliverable:** F5 (`657acb7`), BL-62 (`5223afb`) and BL-63 (`0d63410`) on `bl57/changelog-rules`, merged into fork
