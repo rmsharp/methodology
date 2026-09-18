@@ -199,6 +199,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S189 close-out — P12 done (PR #84 open), the receipt, learnings withheld pending BL-53
+
+- **Deliverable:** plan P12. [PR #84](https://github.com/KJ5HST/methodology/pull/84) is OPEN and MERGEABLE at `20db3f0`, after
+  the merge of `upstream/main`, the density re-measure, and five fixes from an independent review. **Owed next:** merge
+  the branch into fork `main` before P8 (plan item (24)).
+- **Receipt:** `HANDOFFS.md` S189, `status: complete`, self-score 7, S188 scored 8. Minus: five claims in the frozen
+  draft were wrong or overstated, all found by the reviewer; the marker defect was in text I had read; zsh traps recurred.
+- **Learnings:** no row. `docs/FORK_LEARNINGS.md` is 81,721 of 81,920 B, and S188 asked that BL-53 be answered before
+  the next row. Three candidates are written under the receipt; one is already a gate (Test 20 (g)'s old-section fixture).
+- **Gate citation** (the receipt's): clone of `c64cbd8`, `10/10 pass · results 949e9e0b4269`, `tests-sh-passed` 323 at
+  3 receipts. This commit is re-measured in a clone of itself after it lands (BL-64).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-57] S189 — P12 recorded: the plan's status, item (24), step 3's `HANDOFFS.md` bullet, the BL-57 row
 
 - **Plan** `docs/planning/changelog-rules-contradictions-plan.md`: status line (P12 done), P12's *Done at S189* line, and
