@@ -199,6 +199,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-68] Widened — the large-file penalty question covers every `methodology_*.py`, not only the dashboard
+
+- **Why:** the operator's second request, after close-out: investigate the penalty when the large file(s) are
+  `methodology_*.py`. BL-68 already held the dashboard case, so it is widened rather than duplicated.
+- **Added to the item:** every `methodology_*.py` here and both test files are over the 2,000-line threshold
+  (`tools/test_methodology_dashboard.py` 5,867, the dashboard 4,729 per copy, `tools/test_methodology_trim.py` 2,291,
+  `starter-kit/methodology_trim.py` 2,181). The adopter exemption recognizes the trimmer by its version line alone
+  (`starter-kit/methodology_dashboard.py:764`–`:773`), so a copy without it would be penalized; item 2 now checks both
+  tools. Recorded only; nothing investigated or changed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-64] S189 — the close-out commit re-measured in a clone of itself
 
 - `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `5217d1d` (the S189 close-out):

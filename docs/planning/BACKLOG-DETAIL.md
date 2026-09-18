@@ -2359,8 +2359,9 @@ open, and not closed by this:** item (c)/(21), the `HANDOFFS.md` seed that no it
 
 <a id="bl-68"></a>
 
-**BL-68 — Investigate the penalty the dashboard imposes for a large file when the large file is
-`methodology_dashboard.py` itself. Raised 2026-09-17 (S189) at the operator's request. Not investigated yet.**
+**BL-68 — Investigate the penalty the dashboard imposes for a large file when the large file is one of the
+framework's own `methodology_*.py` tools (and their tests). Raised 2026-09-17 (S189) at the operator's request for
+`methodology_dashboard.py`, widened the same session to every `methodology_*.py`. Not investigated yet.**
 
 **The check.** `starter-kit/methodology_dashboard.py:3376`–`3389` (fork `main`; `upstream/main` carries the same
 *Layer 7* text) raises a **medium** risk, *"Large files detected (<path>: N lines)"*, for the first file in the top-ten
@@ -2369,24 +2370,31 @@ points: the score is `score_health(metrics)` (`:3641`), computed apart from `ass
 feed only the project's risk level (`worst_risk`, `:3557`), which the dashboard prints beside the score.
 
 **What is already exempt, and what is not.** *Layer 7* (`:3380`) exempts a copy the framework installed at an
-adopter's root, because it was firing on 4 of 10 real repositories: *"we put our scanner in their repo, then flagged it
+adopter's root, recognized by its version line or signature (`_FRAMEWORK_INSTALLED_CONTENT`, `:764`–`:773`:
+`methodology_dashboard.py`, `methodology_trim.py`, `context_budget.py`, `quality_ratchet.py`), because it was firing on 4 of 10 real repositories: *"we put our scanner in their repo, then flagged it
 as their problem."* The same comment keeps the penalty in the canonical repository on purpose: it *"still pays for
 the copies it authors (`tools/`, `starter-kit/`)"*.
 
 **Measured here at S189 (2026-09-17).** This repository reads 76/100, **medium** risk, and `dashboard.html` flags
 *"Large files detected (tools/test_methodology_dashboard.py: 5,867 lines)"*: the dashboard's own test file. The
 dashboard itself is 4,729 lines in each of its two copies, so it trips the same check as soon as the test file is not
-first in the list. Fork Learning #27 records a *"Large files detected"* risk shown at every Phase 0 and read by no
+first in the list. **Every `methodology_*.py` here is over the 2,000-line threshold, and so are both their test
+files:** `tools/test_methodology_dashboard.py` 5,867, `starter-kit/methodology_dashboard.py` and
+`tools/methodology_dashboard.py` 4,729 each, `tools/test_methodology_trim.py` 2,291, `starter-kit/methodology_trim.py`
+2,181 (`wc -l $(git ls-files '*methodology_*.py')`). The trimmer at an adopter's root is 2,181 lines too, so its
+exemption matters there as much as the dashboard's. Fork Learning #27 records a *"Large files detected"* risk shown at every Phase 0 and read by no
 one for 15+ sessions, which is the Degradation table's *"same finding for several consecutive sessions"* sign.
 
 **To investigate:**
 1. **What the penalty is, exactly.** The risk flag and the project's risk level, as above. Does `score_health`
    also count file size or lines of code anywhere in its dimensions? Read it; don't infer it from the flag.
 2. **Whether it holds for every adopter copy.** Run the dashboard on the six adopters and check that *Layer 7* exempts
-   each installed copy: one that is locally modified, one installed by hand, and one in an ignore-mode install.
-3. **Whether the canonical repository should pay for its own tool.** The file is one stdlib-only script by design,
+   each installed copy of **both** tools: one that is locally modified (`nprcgenekeepr`'s trimmer carries a 49-line local
+   extension), one installed by hand, and one in an ignore-mode install. The trimmer has no fallback signature
+   (`:767`–`:769`), so a copy that lost its `TRIM_VERSION` line would be recognized by nothing and penalized.
+3. **Whether the canonical repository should pay for its own tools.** Each is one stdlib-only script by design,
    copied whole to adopter roots, so its size is not the smell the check looks for. The same question applies to the
-   test file that trips it today.
+   test files, one of which trips it today.
 4. **Remedies, not chosen:** exempt the framework's own tool files and their tests in the canonical repository; keep
    the penalty but label it as the framework's own; split the file; or leave it as is, with the reason recorded. An
    exemption edits a distributed file, so it is upstream-facing and its pull request is its own go-ahead.
