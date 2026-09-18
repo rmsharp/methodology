@@ -199,6 +199,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] P7 (`wsfct`) recorded — done and merged in that repository, re-verified from here, with items (19)–(21) for P8–P11
+
+- **What happened there, not here.** `wsfct`'s own Session 630 ran BL-57's P7: `790c77d1` (claim), `8a41741c` (the
+  sync from fork `main` `29b0feb`, 14 files plus its entry — item (18) applied), `12fb758e` (the header), `8d0e696a`
+  (`CLAUDE.md`), `6891645c` (its learnings row), `3a257097` (close-out). **PR #903 squash-merged them to its `master`
+  as `66e14daa` at 2026-09-18T00:36Z.**
+- **Recorded here** in [`docs/planning/changelog-rules-contradictions-plan.md`](docs/planning/changelog-rules-contradictions-plan.md):
+  the status line, a P7 block after the P6 block, the P7 row with its stale range struck, and the procedure's stale
+  `130 → 127` struck for the measured `132 → 130`. The BL-57 row in [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md)
+  now names P8 (`vscode_quarto_ext`) as next.
+- **Re-verified, not re-applied blind.** The recording written at `a6320ae` and reverted at `61eb9ab` held, except
+  for one citation: it named `origin/chore/s630-methodology-bl57-p7` as where the six commits survive, and `wsfct`
+  deletes a branch when its PR merges — GitHub answers *Branch not found*. They survive at `refs/pull/903/head`
+  (`3a257097`), which item (20) now cites. Every DONE check re-run from git objects, `wsfct` clean before and after:
+  `bin/status` `present`; §9.8 *only the block changed* on 8–182 and `(8, 1), (10, 172)` outside 13–196; headings
+  75 → 71; audit 72 → 70 live and 132 → 130 with shards; sync dry run exit 0, 23 unchanged; `git diff 3a257097
+  66e14daa` empty; the six adopters' seed verdicts unchanged since S184.
+- **Added from S630's own receipt:** the row's 13–196 would have deleted three archive-pointer blocks (item (19));
+  and `wsfct`'s three shard proofs fail, re-run here and found to be BL-36's class (v1.1.2-generated, identical
+  before and after P7) — noted in the block, no new item.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-67] S185 claim — record BL-57's P7 (`wsfct`) here, re-verified rather than re-applied blind (in progress)
 
 **Deliverable:** BL-67 — the recording of BL-57's P7 in this repository, as S180 recorded P6: the plan's status line,

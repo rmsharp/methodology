@@ -4,7 +4,9 @@
 S167 and S168 (see **Trees**). **P1–P4 are done** on branch `bl57/changelog-rules` (S167, S168, S172, S173; all four
 backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S178 block)**, and BL-54, which came
 before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in that repository, recorded here at S180
-(see the P6 block)**; P7–P12 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one commit.**
+(see the P6 block), and P7 (`wsfct`) is done in that repository and MERGED to its default branch, recorded here at
+S185 (see the P7 block)**; P8–P12 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
+commit.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -206,6 +208,44 @@ recoverability the cap exists for. Splitting would leave commits where the new `
 `wsfct` at S181: its copies mention neither, and neither file exists). `airqino`'s `28022fe` already fits: the 14
 synced files and its entry. **Not decided here:** whether the distributed `SAFEGUARDS.md` (the same on
 `upstream/main`) or `BOOTSTRAP.md` should say so for every adopter. That is BL-63, for the upstream PR.
+
+**P7 done (2026-09-17) in `wsfct`'s own repository, its Session 630, and MERGED there; recorded here at S185.** Six
+commits on `chore/s630-methodology-bl57-p7`: `790c77d1` (claim), `8a41741c` (the sync from fork `main` `29b0feb`: 14
+files plus its entry, 15 in all — item (18) applied), `12fb758e` (the header), `8d0e696a` (`CLAUDE.md`'s ledger
+wording), `6891645c` (its own learnings row and pointer), `3a257097` (close-out). **PR #903 squash-merged them to
+`master` as `66e14daa` at 2026-09-18T00:36Z.** `wsfct` deletes a branch when its PR merges, so the branch is gone from
+GitHub; the six commits survive at **`refs/pull/903/head`** (`3a257097`). DONE, re-run read-only from here at S185 from
+git objects alone, with `wsfct`'s `git status --porcelain` empty before and after: `bin/status ../wsfct` reads
+`CHANGELOG.md` `present`; §9.8 on `12fb758e` prints *only the block changed* for 8–182 — line 8 modified, lines 10–181
+replaced by the thin header, and one pure insertion after old line 198, its own entry; `grep -c '^### '` went 75 → 71,
+the migration's 1 entry minus the block's 5 `### ` lines; the audit went 72 → 70 over the live file and 132 → 130 over
+the live file and its three shards (§9.2's form), the block's 3 matching examples out and that 1 entry in;
+`bin/sync ../wsfct --source=local --dry-run` exits 0 with 23 files unchanged; and `git diff 3a257097 66e14daa` is
+empty, so the squash preserved the branch tree exactly. The build item rests on S630's receipt (no `web/` code
+touched) and was not re-run from here. What P7 found, for P8–P11:
+(19) **The row's block range was stale before the phase ran, and following it would have lost records.** This row
+said `CHANGELOG.md:13`–`196`; S630 re-measured the block by content at its claim and migrated 8–182. By its own
+receipt, 13–196 would have deleted the three archive-pointer blocks below the header, and §9.8 fails against it,
+naming `(8, 1), (10, 172)`. So **re-derive the block at the claim, by content, and record the range in the migration
+commit** — item (17) generalized from a count to the block boundary itself.
+(20) **An adopter that merges through pull requests can squash, and then item (18)'s shape survives only on the PR's
+head ref.** `wsfct`'s `master` carries the whole phase as the one commit `66e14daa`; the one-run-one-commit history is
+at `refs/pull/903/head`. A branch name is not a durable citation there: the recording first written for this block
+(`a6320ae`, reverted at `61eb9ab`) cited `origin/chore/s630-methodology-bl57-p7`, and by S185 GitHub had deleted it.
+P8–P11 in PR-merging projects should cite the merge commit and `refs/pull/<N>/head`.
+(21) **The phase migrates one seed and leaves its neighbour, and `bin/status` keeps saying so.** After P7, `wsfct`
+reads `CHANGELOG.md` `present` and `HANDOFFS.md` *present (stale format)*. Measured across all six adopters, the same
+at S184 and at S185: `airqino` both `present`; `wsfct` `CHANGELOG.md` `present`, `HANDOFFS.md` stale; `vscode_quarto_ext`
+and `mts-system` both stale; `nprcgenekeepr` `CHANGELOG.md` stale, `HANDOFFS.md` `present`; `model_project_constructor`
+`CHANGELOG.md` stale, `HANDOFFS.md` absent. BL-56 explicitly put the other projects' *(stale format)* verdicts —
+`CHANGELOG.md` and `HANDOFFS.md` alike — outside its scope ([`BACKLOG-DETAIL.md`](BACKLOG-DETAIL.md) §BL-56), and
+this plan's DONE list checks `CHANGELOG.md` only, so **no item owns the `HANDOFFS.md` seed today**. Whether P8–P11
+should carry it, or it becomes its own item, is the operator's call — it is not silently in scope.
+**Not a P7 effect, recorded so it is not rediscovered:** S630 reported that `wsfct`'s three
+`docs/archive/CHANGELOG-*.md.verify.sh` proofs fail. Re-run at S185 in a `--no-local` clone: all three were generated
+by `methodology_trim.py` v1.1.2 and fail L1 and L3 (record counts 12/8, 37/35, 29/28), identically at `55c293f7`
+before the phase and at `66e14daa` after it. That is BL-36's class — proofs frozen before v1.2.0 fixed Defect A — in
+an adopter; BL-36 rides BL-60's design session.
 
 ---
 
@@ -785,7 +825,7 @@ runner's session-notes boundary rule).
 - **The heading count moved as predicted:** `grep -c '^### ' CHANGELOG.md` changed by (the migration's
   own entries) minus (the block's own `### ` lines): 5 in `wsfct`, 2 in `nprcgenekeepr`, 0 elsewhere.
 - **The audit count moved as predicted:** it fell by the block's examples that matched it (`wsfct`: 3,
-  so 130 → 127) and rose by the migration's own entries.
+  so ~~130 → 127~~ 132 → 130 with its 1 entry, re-measured at P7) and rose by the migration's own entries.
 - The project's own build or test command still passes; the change touches documents only.
 
 **Surface.** The adopter's repository, in its own session. **Cannot enforce:** that its later sessions
@@ -796,7 +836,7 @@ decision; medium otherwise.
 | Phase | Adopter | Specifics |
 |---|---|---|
 | P6 | `airqino` | **DONE 2026-09-17, recorded at S180 (the P6 block, items (16)–(18)).** BL-56 folds in: reseed from the thin seed and carry its ~~one entry~~ entries (two by then; the header was migrated by hand) across, unchanged. ~~Route A from the branch, because its files are the branch's versions; from fork `main`, BL-54 refuses four files.~~ Route B, since S179 fixed BL-54. ~~It is on `chore/methodology-read-set-budgets`, off open PR #1~~ Landed on `chore/methodology-bl57-p6`, taken from that branch's `1402ad4` |
-| P7 | `wsfct` | **At the claim, check first that `wsfct` is clean, with no other session's claim staged or uncommitted** (at S181 its own S629 had one staged). At fork `main` `b0bf91f` the dry run exits 0 and would write 14 files. Replace the older full seed copy (block :13–196, 5 `### ` lines) with the thin header. Route B. `CLAUDE.md` :43, :218, :695 (*"Completed work history"*) and :162, :206 (completed-work framing) |
+| P7 | `wsfct` | **DONE 2026-09-17 in that repository and MERGED there (PR #903, squash `66e14daa`); recorded here at S185 (the P7 block, items (19)–(21)).** At the claim, check first that `wsfct` is clean, with no other session's claim staged or uncommitted (at S181 its own S629 had one staged). At fork `main` `b0bf91f` the dry run exits 0 and would write 14 files; it ran from `29b0feb`, 14 files, `8a41741c`. Replace the older full seed copy (block ~~:13–196~~ **:8–182**, re-derived at the claim; 5 `### ` lines) with the thin header, `12fb758e`. Route B. `CLAUDE.md` :43, :218, :695 (*"Completed work history"*) and :162, :206 (completed-work framing), `8d0e696a` |
 | P8 | `vscode_quarto_ext` | Replace the Keep-a-Changelog header (:1–8) with the thin header, keeping the shard pointer. Record the `[BACKLOG: …]` entries as legacy in `CLAUDE.md`. Drop `CHANGELOG.md` from its `.context-budget.json` (Q2 A; the project's call). Route B. `CLAUDE.md` :102, :146 |
 | P9 | `mts-system` | Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189 |
 | P10 | `nprcgenekeepr` | **Decide first.** Its 49-line local extension of `methodology_trim.py` blocks every sync, because one modified file refuses the whole run. Three options: send the extension upstream; migrate the seed only and leave the pointer dangling until it can sync; or `--force`, which discards the extension. Then replace the rules block (:3946–:4065, 2 `### ` lines, between two runs of entries) and record the S325 legacy block and September's `## 2026-08` placement in `CLAUDE.md` (:271) |
