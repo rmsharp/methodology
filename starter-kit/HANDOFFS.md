@@ -88,6 +88,8 @@ corruption. `bin/check-handoff --all` keys on the pair for this reason.
 
 ## Size, and when to archive
 
+handoffs-format: 2 — keep this marker, and bring it across with this section; `bin/status` reads it.
+
 This file gains a receipt every session and nothing removes one, so it grows without bound. The
 protocol never asks a session to read it whole: Phase 0 reconciles it against `git log` and checks
 the newest receipt, and a session reads that receipt at the top — past the harness's default-read

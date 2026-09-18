@@ -411,6 +411,22 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] The `HANDOFFS.md` seed gets a versioned format marker; its section heading could not tell an old seed from a new one
+
+- **Change:** `starter-kit/HANDOFFS.md` opens its *Size, and when to archive* section with `handoffs-format: 2`, a line
+  the seed asks adopters to keep; `bin/_manifest.py` keys `HANDOFFS.md` on it, as `CHANGELOG.md` keys on
+  `ledger-format: 2`; `bin/status`'s route names the section, which carries the marker, and says to replace any older
+  copy of it.
+- **Why:** the heading arrived in the seed that shipped with the trimmer (`56997af`), over the size premise this
+  branch removes (a 65,536 B byte row priced as a *context tax*). Keyed on the heading, that seed read current: a
+  marker present in the earlier format can never flag it. Two of six real adopters carry exactly that text and read
+  current. Found by an independent review of this branch before the pull request.
+- **Test:** `bin/tests.sh` Test 20 (g) gains the shipped-marker check and a fixture with the heading, the old premise
+  and no marker. Run against the heading key, that fixture read `present`; against the marker, `present (stale format)`.
+  A freshly synced project reads `present` for both seeds, with no note.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] Two code comments stop citing a plan item that exists only in the contributor's fork
 
 - **Change:** `bin/status:112` and `bin/tests.sh:323` each ended a sentence with *"(BL-57 item (22))"*, a pointer into

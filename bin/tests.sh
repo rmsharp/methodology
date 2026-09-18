@@ -335,6 +335,14 @@ NOTE="$(echo "$OUT" | grep '^note:')"
 echo "$NOTE" | grep -q "1 seed predates the current format (HANDOFFS.md," && pass "test: HANDOFFS.md is the only stale seed in P2" || fail "test-bug: P2 is not stale in HANDOFFS.md alone"
 echo "$NOTE" | grep -q "for HANDOFFS.md, bring across the current starter-kit seed's '## Size, and when to archive' section" && pass "status: a stale HANDOFFS.md gets the bring-across-the-section route" || fail "status: the note lacks HANDOFFS.md's own route"
 echo "$NOTE" | grep -qi "replace" && fail "status: the note tells a stale HANDOFFS.md to replace its front matter" || pass "status: no replace route for a stale HANDOFFS.md"
+# The HANDOFFS.md seed as shipped before handoffs-format 2 already had the size section's heading, but
+# with the old premise in it (a 65,536 B byte row priced as a "context tax"). Keyed on that heading, it read
+# current in two of six real adopters that carry exactly that text. Keyed on the versioned marker, it is stale.
+grep -q "handoffs-format: 2" "$STARTER/HANDOFFS.md" && pass "test: the shipped HANDOFFS.md seed carries its format marker" || fail "the shipped HANDOFFS.md seed lacks 'handoffs-format: 2'"
+cp "$STARTER/CHANGELOG.md" "$P2/CHANGELOG.md"
+printf '# Handoff Receipts\n\n## Size, and when to archive\n\n| **Bytes** — a per-file budget, default **65,536 B** (64 KB) | **context tax**: every session pays for the whole file |\n\n```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n' > "$P2/HANDOFFS.md"
+ROW="$("$BIN/status" "$P2" | grep "HANDOFFS.md" | grep -v '^note:')"
+echo "$ROW" | grep -q "stale format" && pass "status: a HANDOFFS.md with the old size section but no format marker flagged stale" || fail "status: the pre-handoffs-format-2 seed read current — its heading alone is not a format marker"
 # Both stale in one project: both routes, one each.
 cp "$SEED1" "$P2/CHANGELOG.md"
 NOTE="$("$BIN/status" "$P2" | grep '^note:')"
