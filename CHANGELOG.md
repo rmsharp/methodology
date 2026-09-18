@@ -392,6 +392,24 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] `methodology_trim.py` links its design doc's public copy, and stops citing a hook flag no hook has
+
+- **Change:** `starter-kit/methodology_trim.py`, comments only.
+  - The module docstring said the design doc (`docs/planning/ledger-trimmer-design.md`) *"has not been published
+    to a public remote"*, so it gave no URL. The doc is public in the `rmsharp/methodology` fork, so the docstring
+    now links it at the commit that last changed it (`979dc73`), where the link cannot drift. The file's section
+    citations (*design §2*, *§4*, *§5*, *P2* and the rest) now resolve through that link.
+  - The *defaults* paragraph said the tool never runs `git mv` because *"`--no-renames` in the FM #27 pre-commit
+    hook"* would let a rename-shaped trim pass. This repository's hook has no `--no-renames`, and never did. The
+    paragraph now keeps the rule and says what the tool does instead: it writes a new shard and edits the live
+    ledger in place, so the ledger keeps its path and its history.
+- **Why:** item F5 of the PR #80 review, open since #80 merged. A distributed comment that cites a missing document
+  and a flag that does not exist sends the next maintainer of the tool looking for both.
+- **Checked:** the module still parses; `grep -c 'no-renames\|not been published'` on the file reads 0; the link
+  resolves on GitHub (74,109 B, blob `09c99c14`, the blob the fork's `main` holds). No test reads the docstring.
+- **Placed** above the previous `[BL-57]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] `bin/status`'s stale-seed note gives each seed its own migration route, and the `BOOTSTRAP.md` paragraph it cites gives the `HANDOFFS.md` one too
 
 - **Change:**

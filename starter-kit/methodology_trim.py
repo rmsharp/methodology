@@ -5,15 +5,14 @@ Moves the oldest records out of a grow-and-must-be-read ledger into a frozen sha
 `docs/archive/`, and refuses to do it unless the move is provably lossless.
 
 Implements the ledger-trimmer design (S35). `bin/sync` installs this file at your project root
-and does NOT install that design, which lives only in the methodology repository as
-`docs/planning/ledger-trimmer-design.md` — deliberately, since it is a working document for the
-tool's authors rather than something an adopter operates. No URL is given for it on purpose: it
-has not been published to a public remote, and a link that 404s is worse than a path plus the
-repository's name. The design is the spec and this file does not re-open it; whoever changes this
-module reads its §2 (the three-zone record model), §4 (the three assertions) and §5 (the trigger)
-first, from a checkout of that repository. Nothing mechanical protects this reference:
-`bin/check-links` validates only the distributed *markdown*, so a dangling citation inside this
-module is never reported.
+and does NOT install that design, a working document for the tool's authors rather than something
+an adopter operates. It is `docs/planning/ledger-trimmer-design.md` in the rmsharp/methodology
+fork, linked here at the commit that last changed it, so the link cannot drift:
+https://github.com/rmsharp/methodology/blob/979dc7382702be0963b0534846e3dd23d5b6d4ca/docs/planning/ledger-trimmer-design.md
+The design is the spec and this file does not re-open it; whoever changes this module reads its
+§2 (the three-zone record model), §4 (the three assertions) and §5 (the trigger) first. Nothing
+mechanical protects this reference: `bin/check-links` validates only the distributed *markdown*,
+so a dangling citation inside this module is never reported.
 
 WHY THREE ASSERTIONS AND NOT ONE
     The manual procedure this replaces proved whole-file byte identity under concatenation, and
@@ -30,8 +29,8 @@ WHY THREE ASSERTIONS AND NOT ONE
 
 DEFAULTS THAT ARE INVERTED ON PURPOSE
     Dry run is the default; `--write` is required to touch anything. The tool never commits, and
-    it never runs `git mv` (design P2 — `--no-renames` in the FM #27 pre-commit hook means a
-    rename-shaped trim passes a gate meant to notice it).
+    it never runs `git mv` (design P2): a trim writes a new shard and edits the live ledger in
+    place, so the ledger keeps its path and its history.
 
 Python 3 stdlib only, cross-platform — this file is destined for adopter roots (design §6.1).
 """
