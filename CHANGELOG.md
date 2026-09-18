@@ -199,6 +199,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S186 claim — trim `HANDOFFS.md`, and record the operator's answer to plan item (21): P8–P11 carry the `HANDOFFS.md` seed (in progress)
+
+**Deliverable:** the retention trim `HANDOFFS.md`'s policy calls for (3 receipts at Phase 0; this claim makes 4, so
+`--cut 2 --force`, then the fold in its own commit), and the operator's answer to item (21) of
+`docs/planning/changelog-rules-contradictions-plan.md` recorded for P8–P11. **Chosen by the operator after Phase 0
+(picker)**, from the trim alone, BL-61, BL-66's fork-side fix and two small found defects; P8 runs from
+`~/Development/vscode_quarto_ext` as its own session. The same picker gave the go-ahead to push fork `main` to
+`origin` after close-out, and answered item (21): *carry it in P8–P11*.
+
+- **Phase 0:** `CHANGELOG.md` frontier `9ee08a1` = HEAD, no gap; `HANDOFFS.md` frontier `2d226c1`, one commit behind,
+  and that commit (`9ee08a1`, S185's post-close-out gate record) carries its own ledger entry and no receipt by
+  design. Nothing backfilled. S185's gate citation re-run in a `--no-local` clone of `9ee08a1`, HEAD asserted:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 4433567c1f55 · manifest 3a87b16f1b31`, the digest
+  S185 cited, `tests-sh-passed` 315 at 3 receipts. Dashboard 76/100, medium risk, no high-or-above flags;
+  `context_budget.py --status` shows the runner, `SAFEGUARDS.md` and the read-set total `over`, all already known.
+  `upstream/main` still `6b29d3d`; PR #83 still open; no open upstream issues. `vscode_quarto_ext`, read-only:
+  `master` `58f7bcbd`, only `scratchpad/` untracked, as S185 recorded. Phase 0's two tracked rows ride here.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-64] S185 — the close-out commit re-measured in a clone of itself
 
 - `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `2d226c1` (the S185 close-out):

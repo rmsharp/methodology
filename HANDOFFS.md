@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S186
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **THE OWED `HANDOFFS.md` RETENTION TRIM, AND THE OPERATOR'S ANSWER TO BL-57 PLAN ITEM (21) RECORDED FOR P8–P11.** S185's close-out left 3 receipts; this claim makes 4, so the trim is `--cut 2 --force` (S181/S183 precedent), then the pointer block folded into `docs/HANDOFFS_ARCHIVE_INDEX.md` in its own commit. Item (21) (`docs/planning/changelog-rules-contradictions-plan.md:239`): the operator chose *carry it in P8–P11* — each adopter phase also refreshes the `HANDOFFS.md` seed where `bin/status` reads it *(stale format)*. Chosen by the operator after Phase 0 (picker), which also gave the go-ahead to push fork `main` to `origin` after close-out. P8 itself runs from `~/Development/vscode_quarto_ext` as its own session. Nothing upstream.
+what_was_done: pending
+next_steps: pending
+key_files: `HANDOFFS.md:48` (the fold comment), `docs/HANDOFFS_ARCHIVE_INDEX.md` (the shard index and its fold rule), `starter-kit/methodology_trim.py`; `docs/planning/changelog-rules-contradictions-plan.md:7` (status line), `:239` (item (21)), `:808` (the P6–P11 procedure), `:843` (the P8 row)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S186 claim"
+commit: pending
+```
+
+```handoff
 session: S185
 date: 2026-09-17
 status: complete
