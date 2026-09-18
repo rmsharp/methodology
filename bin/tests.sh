@@ -476,6 +476,75 @@ F="$(mktemp)"
 "$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && pass "prose outside the fenced block does not trigger the lint (block isolation)" || fail "block isolation: outside prose leaked into the check"
 rm -f "$F"
 
+# Fences with an info string. CommonMark opens a fence with three or more backticks and an
+# optional info string (```sh), and closes it only with a bare run at least as long. The
+# seed's "Size, and when to archive" section carries a ```sh block, so an adopter's ledger
+# has one above its receipts. Read as prose, that block's closing fence was taken for a
+# wrapper opener: everything up to the next bare fence was skipped, the newest receipt with
+# it, and the check still reported OK. Most fixtures below put a receipt with a defect where
+# a skip would hide it; the first assertion is the control that shows the defect is caught
+# whenever the receipt is read.
+receipt() {  # receipt SESSION [KEY] — good_handoff as SESSION, without KEY's line if given
+    good_handoff | sed "s/^session:.*/session: $1/" | grep -v "^${2:-no-such-key}:"
+}
+seed_front() {  # the seed as an adopter keeps it: sentinel comment deleted, receipts to follow
+    python3 - "$STARTER/HANDOFFS.md" <<'PY'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+new = re.sub(r"<!-- METHODOLOGY-SEED-SENTINEL.*?-->\n", "", s, count=1, flags=re.S)
+if new == s or not re.search(r"^```(?!handoff)[^`\s]", new, flags=re.M):
+    sys.exit(2)  # no sentinel to delete, or no info-string fence left: the fixture is vacuous
+sys.stdout.write(new)
+PY
+}
+all_reads_two() {  # all_reads_two FILE — --all exits 0 and counts exactly two receipts
+    local out rc
+    out="$("$BIN/check-handoff" --file "$1" --all 2>&1)"; rc=$?
+    [ "$rc" = 0 ] && [[ "$out" == *"— 2 receipt(s) in"* ]]
+}
+
+F="$(mktemp)"
+{ receipt S13 gotchas; receipt S12; } > "$F"
+"$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && fail "control: a newest receipt missing gotchas passed" || pass "control: a newest receipt missing gotchas is caught"
+
+{ printf 'Run this:\n\n```sh\npython3 methodology_trim.py --file HANDOFFS.md --check\n```\n\n'; receipt S13 gotchas; receipt S12; } > "$F"
+"$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && fail "a \`\`\`sh block above the receipts hid the newest one" || pass "a \`\`\`sh block above the receipts does not hide the newest"
+
+if seed_front > "$F"; then
+    { receipt S13 gotchas; receipt S12; } >> "$F"
+    "$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && fail "the seed's own front matter hid the newest receipt" || pass "the seed's front matter does not hide the newest receipt"
+    seed_front > "$F"; { receipt S13; receipt S12; } >> "$F"
+    all_reads_two "$F" && pass "--all reads both receipts below the seed's front matter" || fail "--all under the seed's front matter did not read exactly two receipts"
+else
+    fail "fixture: the seed has no sentinel comment or no info-string fence — the seed cases would test nothing"
+fi
+
+{ receipt S13; printf '\n```sh\nbin/check-handoff --all\n```\n\n'; receipt S12 gotchas; } > "$F"
+"$BIN/check-handoff" --file "$F" --all >/dev/null 2>&1 && fail "a \`\`\`sh block in a receipt's prose hid the receipt below it from --all" || pass "a \`\`\`sh block in a receipt's prose does not hide the receipt below it"
+
+{ printf '````\n```sh\necho example\n```\n```handoff\nsession: S0\n```\n````\n\n'; receipt S13 gotchas; receipt S12; } > "$F"
+"$BIN/check-handoff" --file "$F" >/dev/null 2>&1 && fail "a \`\`\`sh block inside a 4-backtick wrapper hid the newest receipt" || pass "a \`\`\`sh block inside a 4-backtick wrapper stays inert"
+
+# A line that starts with inline code quoting a fence is prose: an info string may not
+# contain a backtick, so this line opens nothing.
+{ printf '```` ```sh ```` is the fence the seed carries; this line is prose, not a fence.\n\n'; receipt S13; receipt S12; } > "$F"
+all_reads_two "$F" && pass "a prose line quoting a fence in inline code opens no fence" || fail "a prose line quoting a fence in inline code was read as a fence"
+
+# A longer fence closes only on a run at least as long: its inner ``` is content.
+{ printf '````sh\n```\n````\n\n'; receipt S13; receipt S12; } > "$F"
+all_reads_two "$F" && pass "a \`\`\`\`sh fence is closed only by a run of four" || fail "a \`\`\`\`sh fence was closed by a shorter run"
+
+{ receipt S13; receipt S12; printf '\n```sh\necho never closed\n'; } > "$F"
+"$BIN/check-handoff" --file "$F" --all >/dev/null 2>&1 && fail "an unclosed \`\`\`sh fence not caught by --all" || pass "an unclosed \`\`\`sh fence caught by --all"
+
+# A receipt whose fence tag is misspelled is not a receipt, and its fields are still
+# reported as orphaned, from its first field's own line: skipping the block must not
+# hide what it holds.
+{ receipt S13 | sed 's/^```handoff$/```handof/'; receipt S12; } > "$F"
+out="$("$BIN/check-handoff" --file "$F" --all 2>&1)"; rc=$?
+[ "$rc" != 0 ] && [[ "$out" == *"line 2: receipt field outside"* ]] && pass "a receipt under a misspelled fence tag is reported as orphaned, at its own line" || fail "a receipt under a misspelled fence tag went unreported, or was reported at the wrong line"
+rm -f "$F"
+
 
 # ---------------------------------------------------------------------------
 # Tests 23-25 — structural invariants for the repo's OWN numbered sets (issue #65).

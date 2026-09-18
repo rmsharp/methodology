@@ -411,6 +411,24 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-18 · [BL-72] `bin/check-handoff` skips a fenced block with an info string, instead of the newest receipt behind it
+
+- **Defect:** `scan()` recognised two fence openers, a bare backtick run (a wrapper) and a `handoff` fence. A fence
+  with any other info string, such as the `sh` block in the seed's *Size, and when to archive* section, was read as
+  prose, so its closing fence opened a wrapper that ran to the next bare fence: the closing fence of the newest
+  receipt. That receipt was never parsed. The checker validated the one below it and exited 0, and `--all` counted
+  one receipt fewer. Every adopter ledger that keeps the seed's section above its receipts was affected.
+- **Fix:** such a fence is now skipped whole, to a bare closer at least as long (CommonMark), as a wrapper already
+  was. An info string may not contain a backtick, so a prose line that starts with inline code quoting a fence
+  opens nothing. Unlike a wrapper's, the block's lines stay visible to the orphan check, so a receipt under a
+  misspelled tag is reported field by field, at its own lines. An unclosed one is reported like an unclosed
+  wrapper. A `handoff` fence is read as before.
+- **Tests:** ten assertions in `bin/tests.sh` Test 22, after block isolation. Six fail on the previous checker, and
+  each of six mutants of the fix fails at least one. The seed fixtures read the seed itself, and fail loudly if it
+  loses its sentinel comment or its info-string fence, rather than passing on a fixture that tests nothing.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] Four wording fixes: the thin seed, the flight manual's index row, a moved note, two test references
 
 - **Change:**
