@@ -199,6 +199,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S189 — the independent review answered: five fixes on the branch, the PR body rewritten
+
+- **Review:** an opus subagent, read-only, on the frozen branch (`036d840`) and draft (`72450d8`): no blockers, ten
+  should-fix, a dozen nits; its gate run reproduced 10/10. Findings 1, 2 and 4–7 re-checked here before acting.
+- **Operator (picker):** a versioned `HANDOFFS.md` marker now; keep the pinned design-doc link and say so; all four
+  text-fix groups; note the fork codes in the body rather than reword history.
+- **On `bl57/changelog-rules`, each with its own branch entry:** `f4e974c` (`HANDOFFS.md` keys on
+  `handoffs-format: 2`; test-first, the old-section fixture read `present` under the heading key), `7813652` (the
+  `CHANGELOG.md` route keeps the trimmer's pointer block and month heading), `f7d3b8c` (the `HANDOFFS.md` seed says
+  its archive rule is its own), `91f7646` (*Placement*: first-trim heading, merged-branch order), `20db3f0` (four
+  wording fixes). Gate on `20db3f0` in a `--no-local` clone: `10/10 pass · results f6b5a63009e8 · manifest
+  97a7aab85b9a`, `tests-sh-passed` 153, links 111, budget nothing over. Dry runs re-run on fresh adopter copies:
+  refusals unchanged; from the branch `HANDOFFS.md` now reads stale in all five adopters that have one (from
+  `main`, none), `airqino` and `nprcgenekeepr` included.
+- **Body:** [`docs/planning/changelog-rules-pr-body.md`](docs/planning/changelog-rules-pr-body.md), recomposed rather
+  than patched: the title-marker claim narrowed to what `main` actually misses, the *silent* example replaced by an
+  upstream one, F5 stated as a departure from what the maintainer asked, counts and line lists corrected, the fork
+  codes explained, the drop procedure stated.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-68] Raised — investigate the dashboard's large-file penalty when the large file is the dashboard itself
 
 - **Why:** the operator's request, mid-session (S189). Recorded only; nothing investigated or changed.
