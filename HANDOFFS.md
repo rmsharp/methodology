@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S188
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57 PLAN P12: PREPARE THE UPSTREAM PULL REQUEST.** Plan `docs/planning/changelog-rules-contradictions-plan.md` §P12 (`:892`): re-derive what PR #80's merge changed in the files this plan touches, bring `bl57/changelog-rules` onto `upstream/main` (`git merge-tree` at Phase 0 lists no conflicting paths; the branch is 17 ahead and 3 behind), dry-run `bin/sync` from the branch into scratch copies of all six adopters, run the suites in a `--no-local` clone, re-run §9.1, and draft the PR body. Pushing the branch and opening the PR (step 6) each wait for the operator's go-ahead. Chosen by the operator after Phase 0 (picker), over the trim alone with P8 next, BL-53, and two small backlog fixes. The `HANDOFFS.md` trim this session owes runs first, as its own commits.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:892` (§P12), `:9` (status line), `:50` (the branch-ledger placement rule); `docs/planning/BACKLOG.md:151` (BL-57); branch `bl57/changelog-rules` (tip `100f09b`, worktree `../methodology-bl57`)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-57] S188 claim"
+commit: pending
+```
+
+```handoff
 session: S187
 date: 2026-09-17
 status: complete

@@ -199,6 +199,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S188 claim — plan P12: prepare the upstream pull request (in progress)
+
+**Deliverable:** §P12 of `docs/planning/changelog-rules-contradictions-plan.md`, steps 1–5: re-derive what PR #80's
+merge changed, bring `bl57/changelog-rules` onto `upstream/main`, dry-run `bin/sync` from the branch into scratch copies
+of all six adopters, run the suites in a `--no-local` clone, re-run §9.1, and draft the PR body. Step 6, pushing the
+branch and opening the PR, waits for the operator's go-ahead. **Chosen by the operator after Phase 0 (picker)**, over the
+owed trim alone with P8 next, BL-53, and two small backlog fixes. The same picker gave go-aheads to push fork `main` to
+`origin` after close-out, and the branch (at step 6).
+
+- **Phase 0:** `CHANGELOG.md` frontier `2f97bd0` = HEAD, no gap; `HANDOFFS.md` frontier `d84d86a`, one behind, and that
+  commit (`2f97bd0`, the gate record) carries its own ledger entry and no receipt by design. Nothing backfilled.
+  3 receipts, so the trim is owed after this claim; `methodology_trim.py --check` fires on neither ledger (169,452 B and
+  38,153 B against 196,608 B). S187's gate citation re-run in a `--no-local` clone of `2f97bd0`, HEAD asserted:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results e7deb63146bb · manifest 3a87b16f1b31`, the digest
+  S187 cited, `tests-sh-passed` 323 at 3 receipts, 164 s. Dashboard 76/100, medium risk, no high-or-above flags;
+  `context_budget.py --status` shows the runner, `SAFEGUARDS.md` and the read-set total `over`, all already known;
+  `docs/FORK_LEARNINGS.md` 80,916 of 81,920 B. `origin/main` = `ae406d2`; `upstream/main` still `6b29d3d`; PR #80
+  merged 2026-09-15; PR #83 still open, no reviews; no open upstream issues. `git merge-tree --write-tree --name-only
+  upstream/main bl57/changelog-rules` lists no conflicting paths. Phase 0's two tracked rows ride here.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-64] S187 — the close-out commit re-measured in a clone of itself
 
 - `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `d84d86a` (the S187
