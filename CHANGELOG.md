@@ -411,6 +411,21 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] The `CHANGELOG.md` migration route keeps the lines a trimmer wrote above the first entry
+
+- **Change:** `bin/status`'s route for a stale `CHANGELOG.md`, and `starter-kit/BOOTSTRAP.md`'s *Updating an existing
+  project* paragraph, said to replace **everything** above the first entry with the seed's header. They now say to
+  replace the rules text or old header, keeping any archive-pointer block and month heading a trimmer wrote there.
+  The `HANDOFFS.md` route in both says to replace any older copy of the size section, and the paragraph names the
+  `handoffs-format: 2` line as what makes a copy current (the previous entry's marker).
+- **Why:** `methodology_trim.py` writes its shard pointer block and the topmost `## YYYY-MM` heading into that
+  zone (`:310`, `:1191`), so the old route, followed literally, deleted them; one adopter's migration nearly did. The
+  `HANDOFFS.md` route already kept them; the `CHANGELOG.md` one did not. Found by the same independent review.
+- **Test:** Test 20 (g) — the route assertion follows the new wording, and two new assertions require the keep
+  clause in the note and in the paragraph it cites. Neither text carried it at the previous commit.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] The `HANDOFFS.md` seed gets a versioned format marker; its section heading could not tell an old seed from a new one
 
 - **Change:** `starter-kit/HANDOFFS.md` opens its *Size, and when to archive* section with `handoffs-format: 2`, a line
