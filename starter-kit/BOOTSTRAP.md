@@ -74,6 +74,8 @@ If you have a local `methodology/` checkout (sibling to your projects), use the 
 
 **Drift safety:** `bin/sync` refuses to overwrite a file that has local modifications not matching canonical or any historical version. The recommended pattern is to move per-project customizations into your CLAUDE.md's "Project-Specific Methodology Adaptations" section (see Step 5), then run sync. If you really need to discard local edits, pass `--force`.
 
+**Committing a sync:** in committed mode, commit one `bin/sync` run as one commit — exactly the files it wrote, which `--dry-run` lists first, plus that commit's `CHANGELOG.md` entry, and nothing else. `SAFEGUARDS.md`'s five-file cap names this case: every file is a byte-for-byte copy of a canonical one, and one `git revert` undoes the whole run. Splitting a run is not safer, because the operating files it brings can cite tools that arrive in the same run. Your own edits afterwards, such as a seed migration or your `CLAUDE.md` wording, go in their own commits under the cap.
+
 Check status with `bin/status`:
 
 ```bash
