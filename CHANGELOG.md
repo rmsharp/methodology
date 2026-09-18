@@ -199,6 +199,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S184 claim — record P7 (`wsfct`) in the plan and the backlog (in progress)
+
+**Deliverable:** the recording of BL-57's P7 in this repository, as S180 recorded P6 — the plan's status line, a P7
+block with what the phase found for P8–P11, and the BL-57 backlog row. Assigned by the operator relaying `wsfct`'s
+own report that the phase is done. The work itself was done in `wsfct`'s repository by its Session 630; this session
+reads that repository and writes only here.
+
+**Phase 0:** `CHANGELOG.md` frontier `1c2ee88` = HEAD, no gap; `HANDOFFS.md` frontier `7c8f049`, one commit behind
+and that commit is S183's post-close-out gate record, which carries its own ledger entry — nothing backfilled. Two
+receipts, no trim owed. The gate re-run in a `--no-local` clone of `1c2ee88` reads `10/10 pass · 0 fail · 0
+unmeasured · results 8e12f40caec1 · manifest 3a87b16f1b31`, the digest S183's receipt cites. Dashboard 76/100,
+medium risk, no high-or-above flags. **P7 is further along than S183's handoff knew:** PR #903 squash-merged it to
+`wsfct`'s `master` as `66e14daa` at 2026-09-18T00:36Z, after that handoff recorded it as unmerged — fork Learning
+#74 again. The Phase 0 context-budget and dashboard rows ride with this claim.
+
 ### 2026-09-17 · [BL-64] S183 — the close-out commit re-measured in a clone of itself, the check its own citation cannot make
 
 - **The action:** `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `7c8f049`,
