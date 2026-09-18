@@ -199,6 +199,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S186 close-out — `HANDOFFS.md` trimmed, item (21) decided and recorded, item (22) raised for P12
+
+- **Deliverable:** the owed `HANDOFFS.md` trim (`67c3e10`; pointer moved to the index at `fbc1aaf`) and the operator's
+  answer to BL-57 plan item (21), recorded at `6bae791` with its route corrected to `starter-kit/BOOTSTRAP.md:386`'s at
+  `102d5ef`, where item (22) records that `bin/status`'s migration note disagrees. Claim `34434b4`.
+- **[fork Learning #78](docs/FORK_LEARNINGS.md):** a tool's printed advice wins by proximity. Before writing an
+  instruction into a plan, grep every document that already gives it. When a draft needs special cases to protect what
+  its route would destroy, suspect the route.
+- **Receipt** in [`HANDOFFS.md`](HANDOFFS.md), `status: complete`, self 7, predecessor (S185) 9. Gate citation, a
+  `--no-local` clone of `102d5ef`: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 8e12f40caec1 ·
+  manifest 3a87b16f1b31` (`tests-sh-passed` 309 at 2 receipts). The close-out commit is re-measured after it lands.
+- **Next:** P8 (`vscode_quarto_ext`, from that project; it now migrates both seeds); item (22) before P12. No trim
+  owed at the next Phase 0 (2 receipts). Fork `main` is pushed to `origin` after this commit (operator go-ahead,
+  S186's picker).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S186 — item (21)'s migration route corrected to `BOOTSTRAP.md`'s, and item (22): the two fork-side instructions that disagree
 
 - **A correction to `6bae791`**, whose entry below stands as written: it put *replace the block above the first real
