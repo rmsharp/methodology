@@ -199,6 +199,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S188 — re-scoped by the operator: P12's three carried fixes land on the branch first; F5's, BL-63's and P12 step 2's routes decided (plan item (23))
+
+- **Found:** the claim's picker offered P12 as carrying BL-62, BL-63, #80's F5 and item (22), but only item (22) is on
+  `bl57/changelog-rules`. `starter-kit/methodology_trim.py:33` still claims a `--no-renames` hook (no hook on either tree
+  has one; the fork's went with D10, `1664860`), and `:9`–`16` still say the design doc has no public copy, while
+  `rmsharp/methodology` is public and holds it on `origin/main`. `tools/test_context_budget.py:1256` is one blob
+  (`cc31f9cf`) on the branch, fork `main` and `upstream/main`. The claim entry above stands as written.
+- **Operator decisions (S188, second picker):** this session puts F5, BL-62 and BL-63 on the branch, each its own branch
+  commit with its entry, then merges the branch into fork `main`; P12's steps 1–6 are the next session. F5 links the
+  design doc's public copy pinned to a commit and drops the `--no-renames` claim (not: publish the doc upstream, or
+  remove the citations). BL-63's rule goes in `starter-kit/BOOTSTRAP.md` only (not `SAFEGUARDS.md`, not both, not
+  left out). P12 step 2 merges `upstream/main` into the branch (not a rebase). Recorded as plan item (23), the status
+  line and P12 step 2; the pending receipt's `active_task` now names the re-scoped deliverable.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S188 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `83099b5` wrote into `HANDOFFS.md`'s front matter is now one row of

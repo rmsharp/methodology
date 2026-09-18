@@ -7,7 +7,8 @@ before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in 
 (see the P6 block), and P7 (`wsfct`) is done in that repository and MERGED to its default branch, recorded here at
 S185 (see the P7 block)**; P8–P12 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
 commit. Item (21) was decided by the operator at S186: P8–P11 also migrate a stale `HANDOFFS.md` seed. Item (22) was
-done at S187, on the branch (`100f09b`) and merged into fork `main` (`2d5ce70`).**
+done at S187, on the branch (`100f09b`) and merged into fork `main` (`2d5ce70`). At S188 the operator put the
+three fixes P12 carries (F5, BL-62, BL-63) on the branch before P12, and chose P12's merge (item (23)).**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -280,6 +281,20 @@ migration, which is why that paragraph carries the `HANDOFFS.md` route now.
 by `methodology_trim.py` v1.1.2 and fail L1 and L3 (record counts 12/8, 37/35, 29/28), identically at `55c293f7`
 before the phase and at `66e14daa` after it. That is BL-36's class — proofs frozen before v1.2.0 fixed Defect A — in
 an adopter; BL-36 rides BL-60's design session.
+
+**Decided by the operator at S188 (2026-09-17, picker), before P12.**
+(23) **P12's three carried fixes were not on the branch, so they land first, in their own session.** S188 was claimed
+for P12 and found only item (22) on `bl57/changelog-rules`: F5 (item (11)), BL-62 and BL-63 were not there. The operator
+chose to put all three on the branch in S188, each its own branch commit with its own entry, the branch then merged
+into fork `main` as at items (11), (14) and (22), and to leave P12 itself (steps 1–6) to the next session. Three routes
+were decided with it. **F5:** `starter-kit/methodology_trim.py` links the design doc's public copy on
+`rmsharp/methodology`, pinned to a commit, in place of *"not published to a public remote … no URL on purpose"*
+(`:9`–`16`), which stopped being true when fork `main` reached `origin`; and `:33` drops the `--no-renames` claim,
+which no hook on either tree makes (the fork's went with D10, `1664860`). Not chosen: publishing the 74 KB design doc
+upstream, or removing the file's design citations. **BL-63:** `starter-kit/BOOTSTRAP.md` only says how to commit a
+sync run, one run one commit (item (18)'s rule, stated for every adopter); `SAFEGUARDS.md` stays untouched (K2), not
+both. **P12 step 2: merge** `upstream/main` into the branch, as `9e1dfeb` and `52ad407` did, so the commits already on
+`origin` keep their hashes; not a rebase.
 
 ---
 
@@ -899,7 +914,7 @@ precondition.
 1. Fetch, and compare #80's merged content with `b82dcff`. Re-derive anything it changed in a file this
    plan touches.
 2. Run `git merge-tree --write-tree --name-only upstream/main bl57/changelog-rules`, then bring the branch
-   onto `upstream/main` (merge or rebase — the operator's choice then).
+   onto `upstream/main` (merge or rebase — the operator's choice then). **Merge, decided at S188 (item (23)).**
 3. Dry-run `bin/sync` from the branch into scratch copies of all six adopters. Record, per adopter, the
    files it would change and the refusals that already existed (S161 §3).
 4. Run the suites in a `--no-local` clone. Re-run §9.1: no contradiction sites should remain.
