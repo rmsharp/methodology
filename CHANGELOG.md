@@ -392,6 +392,30 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] `bin/status`'s stale-seed note gives each seed its own migration route, and the `BOOTSTRAP.md` paragraph it cites gives the `HANDOFFS.md` one too
+
+- **Change:**
+  - `bin/status` — the note beneath the table told an adopter holding either stale seed to *"replace the text
+    above the first entry (or receipt) with the current starter-kit seed's"*. It now gives each flagged file
+    its own route: for `CHANGELOG.md`, replace the text above the first entry with the seed's header; for
+    `HANDOFFS.md`, bring across the seed's `## Size, and when to archive` section, above the first receipt,
+    and keep the rest of the front matter. The routes sit in `MIGRATION_ROUTES`, beside `STALE_SEED`; the
+    `HANDOFFS.md` one names the section from `bin/_manifest.py`'s marker, and a file with no route gets the
+    general rule.
+  - `starter-kit/BOOTSTRAP.md:85` — the paragraph the note cites named only the `CHANGELOG.md` formats and
+    route. It now also names a `HANDOFFS.md` without the size section, and gives that file's route.
+  - `bin/tests.sh` Test 20 (g) — eight assertions: a route appears only for a flagged file; a stale
+    `HANDOFFS.md` is flagged and gets its own route and no *replace*; two stale seeds get both routes; the
+    cited paragraph gives the `HANDOFFS.md` route.
+- **Why:** BL-57 item (22). The `HANDOFFS.md` seed differs from an older copy by one section, the one the
+  marker keys on. Replacing the front matter instead deletes whatever an adopter's trimmer wrote there, an
+  archive pointer and a count sentence among them.
+- **Checked:** Test 20 was run alone before the fix: 5 failures, among them *"the note tells a stale
+  HANDOFFS.md to replace its front matter"*; 24 passed, 0 failed after. Two mutants fail it: routes printed
+  for files that are not flagged (2 failures), and no `HANDOFFS.md` route (1).
+- **Placed** above the previous `[BL-57]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-16 · [BL-57] This ledger's front matter points to §The Action Ledger for its rules, its audit and its month headings
 
 - **Change, in this file's front matter only** (the maintainer's own file — the PR body will say it can
