@@ -411,6 +411,18 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] *Placement* covers the trimmer's first month heading and a merged branch's entries
+
+- **Change:** two sentences in `FRAMEWORK_APPARATUS.md` §The Action Ledger, *Placement*. A ledger with no month
+  headings starts them at its next new month **or at its first trim**, whose entry `methodology_trim.py` files under
+  the current month's heading (`insert_ledger_entry`). A merged branch's entries keep their branch order as one block
+  rather than being re-sorted by date.
+- **Why:** the rule as written contradicted the trimmer, which adds the current month's heading on its first trim;
+  and it said nothing about a merged branch, whose newer entries sit below older-dated ones on `main` today (PR #80's
+  did, and this branch's will). Found by the same independent review.
+- **Placed** above the previous entry, below `upstream/main`'s — the case the second sentence describes.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] The `HANDOFFS.md` seed says its archive rule is its own, not the ledger's optional one
 
 - **Change:** `starter-kit/HANDOFFS.md`'s pointer to *Reading and archiving* adds one sentence: that subsection makes
