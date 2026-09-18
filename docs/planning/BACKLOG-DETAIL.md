@@ -2300,3 +2300,46 @@ asserting local modification. (a) and (c) are small and independent; (b) is the 
 and this affects every adopter following the documented instruction, not only this fork's projects. An upstream pull
 request is its own go-ahead. Not recorded anywhere before this: checked `BACKLOG.md`, this file, the archive,
 `CHANGELOG.md`, and upstream issues in all states.
+
+---
+
+**BL-67 — `wsfct`'s report that BL-57's P7 is done and merged is owed a recording here, and the recording that was
+written for it was reverted because it was written in the wrong place in the sequence. Raised 2026-09-17 (S184'),
+operator-directed. Fork-only; not fixed.**
+
+**What.** `wsfct`'s own Session 630 ran BL-57's P7 in that repository and its work was squash-merged there as
+`66e14daa` (PR #903, 2026-09-18T00:36Z). The plan
+([`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) §P6–P11) expects a session
+*here* to record each finished adopter phase, as S180 recorded P6: the status line, a P7 block carrying what the
+phase found for the phases after it, and the BL-57 row. That recording is still owed.
+
+**Why it is an item rather than work already done.** It *was* done, at `a6320ae`, and then reverted at `61eb9ab`.
+The operator's reason is about sequence, not content: the report arrived after S183's Phase 3G close-out report,
+and a close-out report ends the session. New information arriving after it belongs in this file, where the next
+Phase 0 will read it and the operator can rank it against everything else open — not in a second session opened and
+executed in the same breath.
+
+**The material already exists and is re-appliable.** `git show a6320ae` is the full recording, and `git revert
+a6320ae` re-applies it. It was verified read-only before it was written, with `wsfct`'s `git status --porcelain`
+empty before and after: `bin/status ../wsfct` reads `CHANGELOG.md` `present`; the migration removed line 8 and lines
+10–181, inside the block that session re-derived; `grep -c '^### '` went 75 → 71 (its 1 entry in, the block's 5
+`### ` lines out); the source-tag audit went 72 → 70 (3 of the block's examples out, 1 entry in); `bin/sync
+../wsfct --source=local --dry-run` exits 0 with 23 files unchanged; and `git diff 3a257097 66e14daa` is empty, so
+the squash preserved the branch tree exactly. **Re-verify rather than trust it** — another repository's state is a
+reading with a time on it (fork Learning #74), and it has already moved once: S183's handoff recorded the branch as
+unmerged, and it was merged hours later.
+
+**Three findings the reverted block carried, worth keeping whatever shape the recording takes.** (a) The P7 row's
+block range (`CHANGELOG.md:13`–`196`) was stale before the phase ran and S630 re-derived it as `:8`–`182`; §9.8's
+DONE check holds only against the re-derived range, so P8–P11 should re-derive at the claim and record the range in
+the migration commit. (b) A pull-request-merging adopter can squash, and then item (18)'s *one sync run, one commit*
+shape survives on the branch ref and not on the default branch — cite both. (c) The phase migrates `CHANGELOG.md`
+and leaves the `HANDOFFS.md` seed, which `bin/status` then reports as *present (stale format)*. Measured across all
+six adopters: `airqino` both `present`; `wsfct` `CHANGELOG.md` `present` and `HANDOFFS.md` stale;
+`vscode_quarto_ext` and `mts-system` both stale; `nprcgenekeepr` `CHANGELOG.md` stale, `HANDOFFS.md` `present`;
+`model_project_constructor` `CHANGELOG.md` stale, `HANDOFFS.md` absent. BL-56 put the other projects' *(stale
+format)* verdicts explicitly outside its scope, and this plan's DONE list checks `CHANGELOG.md` only, so **no item
+owns the `HANDOFFS.md` seed today** — whether P8–P11 carry it is the operator's call.
+
+**Fork-only.** The plan, this backlog and `docs/FORK_LEARNINGS.md` are not distributed; no adopter is affected by
+the recording either way.

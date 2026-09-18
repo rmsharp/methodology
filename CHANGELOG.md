@@ -199,6 +199,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-67] Raised — `wsfct`'s P7 report is owed a recording here, and the recording it got was reverted for arriving out of sequence
+
+- **The item.** `wsfct`'s Session 630 ran BL-57's P7 and had it squash-merged there as `66e14daa` (PR #903). The
+  plan expects a session here to record each finished adopter phase, as S180 recorded P6. That recording is owed,
+  and this is where it waits until the operator ranks it —
+  [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md) row BL-67, body in
+  [`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) §BL-67.
+- **Why the item exists rather than the recording.** The recording was written at `a6320ae` and reverted at
+  `61eb9ab`: it followed S183's Phase 3G close-out report, which ends the session. `git revert a6320ae` re-applies
+  it, and the body says to re-verify rather than trust it, because `wsfct` has already moved once under a handoff's
+  description of it.
+- **Three findings carried into the item** so they survive the revert: the P7 row's block range was stale and the
+  adopter session re-derived it (`:13`–`196` → `:8`–`182`); a squash-merging adopter keeps item (18)'s one-run-one-commit
+  shape only on its branch ref; and the phase leaves the `HANDOFFS.md` seed stale, which no item owns today —
+  measured across all six adopters.
+- `BACKLOG-DETAIL.md.verify.sh` exits 0 after the append, and `bin/check-links` exits 0 (110 links, 23 files).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [ad hoc] S184 reverted — a session was opened after a close-out report that should have ended it
 
 - **What was reverted and why.** `a6320ae` (BL-57's P7 recorded in the plan and the backlog) and `d657968` (the
