@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -157,6 +157,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-64** | Test 38's drift guard measured a receipt from its opening fence to the NEXT receipt's, so the close-out prose between them read as receipt fields and `applied: ` turned the quality gate red on `main`. **Guard FIXED 2026-09-17 (S182)** (`4c6da50`, RED-first, two new assertions). **Open:** the close-out cites a gate run measured before the close-out commit exists, so the commit that writes the receipt is the one its own citation can never cover — S181 cited `10/10 pass` and shipped a red tree. Guard canonical-only; the Phase 3E timing rule is distributed | [detail](BACKLOG-DETAIL.md#bl-64) |
 | **BL-65** | `tools/test_context_budget.py:372` assumes the r² floor is `calibrate()`'s only refusal, but a **negative slope** refuses independently of it — so the presence control fails on this machine's transcripts (slope −0.1773, R² 0.0004) while skipping in every clone, where the documented build-equivalent runs. The clone read `10/10 pass`; the working tree read `312 passed, 1 failed`. Note also that all four `*-unit-tests` gates extract `Ran (\d+) tests`, blind to failures. Canonical-only | [detail](BACKLOG-DETAIL.md#bl-65) |
 | **BL-66** | **UPSTREAM-FACING** — `README.md:61` tells every adopter to update with the GitHub URL, but `bin/sync --source=github` fetches contents without history (`bin/sync:100`), so a file that is merely *behind* cannot be recognized and is refused as a *"local modification"*. Measured clean-room: an unedited adopter at upstream `008d656` got **exit 2 / nine files** from the URL route and **exit 0 / 10 written** from `--source=local`. `starter-kit/BOOTSTRAP.md:86` already says to prefer the local route, for this exact reason — two distributed documents, opposite advice. Its PR is its own go-ahead | [detail](BACKLOG-DETAIL.md#bl-66) |
+| **BL-68** | Investigate the dashboard's *"Large files detected"* penalty when the large file is `methodology_dashboard.py` itself (4,729 lines per copy). *Layer 7* exempts an adopter's installed copy; the canonical repo pays for its own on purpose, and today's flag here names the dashboard's own test file (5,867 lines). Raised at S189 on the operator's request; not investigated | [detail](BACKLOG-DETAIL.md#bl-68) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45, BL-56, BL-59, BL-67)
 

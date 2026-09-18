@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-68] Raised — investigate the dashboard's large-file penalty when the large file is the dashboard itself
+
+- **Why:** the operator's request, mid-session (S189). Recorded only; nothing investigated or changed.
+- **What is known:** `starter-kit/methodology_dashboard.py:3376`–`3389` raises a medium *"Large files detected"* risk
+  for the first source file over 2,000 lines in the top ten. *Layer 7* (`:3380`) exempts an adopter's installed copy,
+  and the canonical repo pays for its own copies on purpose. Here today the flag names
+  `tools/test_methodology_dashboard.py` (5,867 lines); the dashboard is 4,729 lines per copy.
+- **Rows:** `docs/planning/BACKLOG.md` (index row and open list), `docs/planning/BACKLOG-DETAIL.md` §BL-68.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S189 — P12 steps 2–5 on the branch, and the upstream PR body drafted (frozen for review)
 
 - **Step 1:** PR #80 (`4d9e2715`) and PR #82 (`64f23bf`) are ancestors of the branch; `upstream/main`'s three new
