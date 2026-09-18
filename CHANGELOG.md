@@ -199,6 +199,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-64] S185 — the close-out commit re-measured in a clone of itself
+
+- `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `2d226c1` (the S185 close-out):
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 4433567c1f55 · manifest 3a87b16f1b31`,
+  `tests-sh-passed` 315 at 3 receipts. The same results digest as the receipt's citation on `aee4771`, so the close-out
+  commit changed no gate reading.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-67] S185 close-out — P7 recorded and BL-67 closed; the reverted recording's branch citation was never true, and item (20) now says so
 
 - **Deliverable:** BL-57's P7 (`wsfct`) recorded at `313459c`, BL-67 closed at `aee4771` — both re-verified from
