@@ -231,8 +231,11 @@ commit** — item (17) generalized from a count to the block boundary itself.
 (20) **An adopter that merges through pull requests can squash, and then item (18)'s shape survives only on the PR's
 head ref.** `wsfct`'s `master` carries the whole phase as the one commit `66e14daa`; the one-run-one-commit history is
 at `refs/pull/903/head`. A branch name is not a durable citation there: the recording first written for this block
-(`a6320ae`, reverted at `61eb9ab`) cited `origin/chore/s630-methodology-bl57-p7`, and by S185 GitHub had deleted it.
-P8–P11 in PR-merging projects should cite the merge commit and `refs/pull/<N>/head`.
+(`a6320ae`, reverted at `61eb9ab`) cited `origin/chore/s630-methodology-bl57-p7` as still carrying the six, and it was
+already gone — GitHub deleted it at 00:36:55Z, two seconds after the merge, eight minutes before that text was
+committed. What resolved was `wsfct`'s local remote-tracking ref, which git keeps until a pruning fetch (fork
+Learning #77). P8–P11 in PR-merging projects should cite the merge commit and `refs/pull/<N>/head`, and ask the
+remote (`git ls-remote`) rather than `git branch -a`.
 (21) **The phase migrates one seed and leaves its neighbour, and `bin/status` keeps saying so.** After P7, `wsfct`
 reads `CHANGELOG.md` `present` and `HANDOFFS.md` *present (stale format)*. Measured across all six adopters, the same
 at S184 and at S185: `airqino` both `present`; `wsfct` `CHANGELOG.md` `present`, `HANDOFFS.md` stale; `vscode_quarto_ext`

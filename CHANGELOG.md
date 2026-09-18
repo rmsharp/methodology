@@ -199,6 +199,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-67] S185 close-out — P7 recorded and BL-67 closed; the reverted recording's branch citation was never true, and item (20) now says so
+
+- **Deliverable:** BL-57's P7 (`wsfct`) recorded at `313459c`, BL-67 closed at `aee4771` — both re-verified from
+  `wsfct`'s git objects rather than re-applied from `a6320ae`. Claim `4cb67c6`.
+- **A correction to `313459c`, made here:** its item (20) said the reverted recording's
+  `origin/chore/s630-methodology-bl57-p7` citation went stale *"by S185"*. PR #903's event timeline says
+  `head_ref_deleted` at 00:36:55Z, two seconds after the merge and eight minutes before `a6320ae` was committed:
+  the citation read `wsfct`'s local remote-tracking ref and was never true. The plan's item (20) is rewritten to
+  say so; `313459c`'s ledger entry stands as written. **[fork Learning #77](docs/FORK_LEARNINGS.md)** records the
+  rule: ask the remote, and cite the ref the host keeps (`refs/pull/<N>/head`), not a branch it deletes.
+- **Receipt** in [`HANDOFFS.md`](HANDOFFS.md), `status: complete`, self 8, predecessor (S183) 8. Gate citation, a
+  `--no-local` clone of `aee4771`: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 4433567c1f55 ·
+  manifest 3a87b16f1b31` (`tests-sh-passed` 315 at 3 receipts). The close-out commit is re-measured after it lands.
+- **Owed next:** P8 (`vscode_quarto_ext`, from that project); a `HANDOFFS.md` trim at the next Phase 0 (3 receipts);
+  item (21) is the operator's call. Found, not fixed: `docs/planning/BACKLOG.md`'s open list omits BL-63.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-67] Closed — P7's recording landed at `313459c`, re-verified rather than re-applied
 
 - BL-67 moves from the open list and index of [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md) to §Completed
