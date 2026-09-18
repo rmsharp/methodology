@@ -199,6 +199,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S190 claim — plan item (24): merge `bl57/changelog-rules` into fork `main` (in progress)
+
+**Deliverable:** merge the branch's last eight commits (`f572068`..`20db3f0`, PR #84's head) into fork `main` before
+P8 syncs from it, as at `5f5a400`. **Chosen by the operator after Phase 0 (picker)**, over BL-54's PR, BL-53 and P8.
+The same picker approved pushing fork `main` to `origin` after close-out. It also approved a trim of this ledger at
+its trigger, but my option had not cited the operator's standing 2026-09-14 decision not to trim this file there
+(`BACKLOG-DETAIL.md`, BL-57; plan K5); asked again with it, **the operator kept the standing decision.** This entry
+takes the file past 196,608 B, so `--check` fires; that is reported, not acted on.
+
+- **Phase 0:** `CHANGELOG.md` frontier `bce805c` = HEAD, no gap; `HANDOFFS.md` frontier `5217d1d` (S189's close-out),
+  four behind, each a post-close-out record with its own entry and no receipt by design. Nothing backfilled. Gate
+  re-run in a `--no-local` clone of `bce805c`, HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured ·
+  results 949e9e0b4269 · manifest 58d766958ae1`, identical to S189's citation; `tests-sh-passed` 323, 157 s.
+  Dashboard 76/100, medium risk, no high-or-above flags; budget `over` in the same three rows. 3 receipts, so the
+  `HANDOFFS.md` trim is owed. This ledger 195,371 of 196,608 B before this entry. PR #84 open, mergeable, no reviews;
+  PR #83 open, no reviews; no upstream issues. `git merge-tree --write-tree --name-only main bl57/changelog-rules`:
+  `CHANGELOG.md` and `.context-budget.json`. Phase 0's two tracked rows ride here.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [ad hoc] Raised BL-69, BL-70 and BL-71 — the branch-count question, recorded rather than worked (after S189's close-out)
 
 - **Why:** the operator asked, after close-out, whether this repository should still have *"Multiple branches

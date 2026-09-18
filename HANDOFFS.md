@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S190
+date: 2026-09-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57 PLAN ITEM (24): MERGE `bl57/changelog-rules` (`20db3f0`) INTO FORK `main`, BEFORE P8.** Fork `main` lacks the branch's last eight commits (`f572068`..`20db3f0`): its `bin/status` still keys `HANDOFFS.md` on the heading, and its `CHANGELOG.md` route still deletes the trimmer's lines. `git merge-tree` at Phase 0 predicts conflicts in `CHANGELOG.md` and `.context-budget.json` only, resolved ours as at `5f5a400`. Then Test 20 (g) on fork `main`, `bin/status` on the six adopters read-only before and after, the gates in a `--no-local` clone. Chosen by the operator after Phase 0 (picker), over BL-54's PR, BL-53 and P8. The same picker approved pushing fork `main` to `origin` after close-out. It also approved a `CHANGELOG.md` trim at its trigger, but my option had not cited the operator's standing 2026-09-14 decision not to trim there; asked again, the operator kept that decision. No `CHANGELOG.md` trim.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:326` (item (24)), `:335` (what it means for P8–P11), `:12` (status); `docs/planning/BACKLOG.md:151` (BL-57); branch `bl57/changelog-rules` (tip `20db3f0`, worktree `../methodology-bl57`)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-18 · [BL-57] S190 claim"
+commit: pending
+```
+
+```handoff
 session: S189
 date: 2026-09-17
 status: complete
