@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [ad hoc] S191 — fork `main` pushed to `origin`, `0ab3881..1760f96` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, a fast-forward of 5 commits, all this session's: the claim `793fa84`, the P8
+  recording `10f931a`, its fix `0b7e672`, the close-out `6cdec69` and the gate record `1760f96`. Guarded: clean tree,
+  `origin/main` still `0ab3881`, ancestor checked. Read back: `git ls-remote origin refs/heads/main` = `1760f961…`,
+  equal to local. The go-ahead was the operator's instruction after the close-out report, *"push fork main to
+  origin"*. Nothing sent upstream by this push.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [ad hoc] S191 — the gate re-run on the close-out `6cdec69`: 10/10 pass, results 511119b3196e
 
 - In a `--no-local` clone with HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
