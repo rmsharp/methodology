@@ -199,6 +199,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S190 close-out — item (24) (a) done (merge `2410657`), the receipt, learnings withheld pending BL-53
+
+- **`HANDOFFS.md`:** S190's receipt completed (`self_score` 8, `predecessor_score` 9 for S189), citing the gate on the
+  merge `2410657`: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 91c29bff06ce · manifest
+  58d766958ae1`. Next step (1) is P8, `vscode_quarto_ext`, from that project. `bin/check-handoff` passes on 2 receipts,
+  so no trim is owed at the next Phase 0.
+- **Learnings:** withheld from `docs/FORK_LEARNINGS.md` (81,721 of 81,920 B, BL-53 unanswered); two candidates are
+  below the receipt. **Reduction:** the `HANDOFFS.md` trim, 40,364 → 17,521 B. **Not done:** this ledger is past its
+  196,608 B trigger, and by the operator's decision this session it stays untrimmed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-57] S190 — `bl57/changelog-rules` (`20db3f0`, PR #84's head) merged into fork `main` as `2410657` (plan item (24) (a))
 
 - **Merge `2410657`** (parents `1f5dcae`, `20db3f0`): the branch's last eight commits reach fork `main` before P8 syncs

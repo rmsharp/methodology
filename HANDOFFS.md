@@ -53,18 +53,43 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
 ```handoff
 session: S190
 date: 2026-09-18
-status: pending
-self_score: pending
-predecessor_score: pending
-active_task: **BL-57 PLAN ITEM (24): MERGE `bl57/changelog-rules` (`20db3f0`) INTO FORK `main`, BEFORE P8.** Fork `main` lacks the branch's last eight commits (`f572068`..`20db3f0`): its `bin/status` still keys `HANDOFFS.md` on the heading, and its `CHANGELOG.md` route still deletes the trimmer's lines. `git merge-tree` at Phase 0 predicts conflicts in `CHANGELOG.md` and `.context-budget.json` only, resolved ours as at `5f5a400`. Then Test 20 (g) on fork `main`, `bin/status` on the six adopters read-only before and after, the gates in a `--no-local` clone. Chosen by the operator after Phase 0 (picker), over BL-54's PR, BL-53 and P8. The same picker approved pushing fork `main` to `origin` after close-out. It also approved a `CHANGELOG.md` trim at its trigger, but my option had not cited the operator's standing 2026-09-14 decision not to trim there; asked again, the operator kept that decision. No `CHANGELOG.md` trim.
-what_was_done: pending
-next_steps: pending
-key_files: `docs/planning/changelog-rules-contradictions-plan.md:326` (item (24)), `:335` (what it means for P8–P11), `:12` (status); `docs/planning/BACKLOG.md:151` (BL-57); branch `bl57/changelog-rules` (tip `20db3f0`, worktree `../methodology-bl57`)
-gotchas: pending
-runtime_smoke: pending
-changelog_ref: CHANGELOG.md "2026-09-18 · [BL-57] S190 claim"
-commit: pending
+status: complete
+self_score: 8
+predecessor_score: 9
+active_task: **BL-57 PLAN ITEM (24) (a) IS DONE: `bl57/changelog-rules` (`20db3f0`, PR #84's head) IS MERGED INTO FORK `main` AS `2410657`, RECORDED AT `b7585e6`. P8 (`vscode_quarto_ext`) IS NEXT, FROM THAT PROJECT.** Fork `main`'s `bin/status` now keys `HANDOFFS.md` on `handoffs-format: 2`, and its `CHANGELOG.md` route keeps the trimmer's lines, so P8 syncs the rules PR #84 proposes. Chosen by the operator after Phase 0 (picker), over BL-54's PR, BL-53 and P8. The same picker approved pushing fork `main` to `origin` after close-out. It also approved a `CHANGELOG.md` trim at its trigger, but my option had not cited the operator's standing 2026-09-14 decision not to trim there; asked again, **the operator kept that decision.** No `CHANGELOG.md` trim. PR #84 unchanged at close-out: OPEN, head `20db3f0`, no reviews or comments.
+what_was_done: **Phase 0:** `CHANGELOG.md` frontier `bce805c` = HEAD; `HANDOFFS.md` frontier `5217d1d`, four post-close-out records behind, no receipt owed; nothing backfilled. Gate in a `--no-local` clone of `bce805c`: `results 949e9e0b4269`, identical to S189's citation. **`c868134`** claim (Phase 0's two tracked rows). **`69ad9c9`** trim, `methodology_trim.py --file HANDOFFS.md --cut 2 --force --write`: S188 and S187 to `docs/archive/HANDOFFS-through-2026-09-17-5.md`, 40,364 → 17,977 B; `.verify.sh`, `check-handoff --all --allow-pending` and `--archived --file <shard>` exit 0. **`1f5dcae`** fold into `docs/HANDOFFS_ARCHIVE_INDEX.md`, → 17,521 B. **`2410657`** merge: conflicts exactly the two `git merge-tree` predicted, resolved ours; the fork's config budgets neither of `adaa4a3`'s re-measured blobs by density, so no hand fix; the other eight files' 66 changed lines equal the branch patch `f572068..20db3f0` (four blob-identical). `bin/status` on six adopters from a `--no-local` clone of `1f5dcae` and from `2410657`, adopters held still: 15 rows move, all the merge's; `airqino` and `nprcgenekeepr` `HANDOFFS.md` now `present (stale format)` (7 → 9). **`b7585e6`** record: plan item (24) (a) DONE block, status line, BL-57 row, ledger entry.
+next_steps: **(1) P8, `vscode_quarto_ext`, ITS OWN SESSION, RUN FROM THAT PROJECT.** Plan row `docs/planning/changelog-rules-contradictions-plan.md:956`, step 3's `HANDOFFS.md` bullet `:919`, item (18) (one `bin/sync` run is one commit) `:197`. Read at this close-out, from `2410657`, read-only: HEAD still `58f7bcbd` (the commit S186 read the plan row's line numbers on), working tree only an untracked `scratchpad/`; `CHANGELOG.md` and `HANDOFFS.md` both `present (stale format)`, `quality_ratchet.py` and `docs/methodology/FRAMEWORK_APPARATUS.md` *missing*, `BOOTSTRAP.md` 9 versions behind, `methodology_trim.py` 6. Re-derive at its claim anyway. **(2) WATCH PR #84:** `gh pr view 84 -R KJ5HST/methodology --json state,reviews,comments`; every reply is its own go-ahead; a review change lands on the branch, then merges into fork `main` as `2410657` did. **(3) BL-54's own upstream PR** (`2c4f801` + `865119f`), its own go-ahead. **(4) ANSWER BL-53 BEFORE ANY LEARNINGS ROW:** `docs/FORK_LEARNINGS.md` is 81,721 of 81,920 B; S189's and this session's candidates are withheld below their receipts. **(5) NO `HANDOFFS.md` TRIM OWED at the next Phase 0:** 2 receipts (S190, S189). **(6) `CHANGELOG.md` IS PAST ITS 196,608 B TRIGGER** (about 202 KB after this close-out; `--check` fires); the operator kept the no-trim decision this session, so report it and raise a trim only at 262,144 B. **(7) OPTIONAL, ITS OWN ACTION:** `tests-sh-passed` floor is 305 against 321 measured at 2 receipts; tightening needs no approval. **CARRIED:** BL-43 (Test 38 (5) recurred here), BL-68, BL-61, BL-60, BL-65, BL-66, `README.md`'s stale cost section, `docs/planning/BACKLOG.md:9`–`11` still omits BL-63, `airqino`'s `HANDOFFS.md` migration in its own repository (now confirmed stale by `bin/status`).
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:12` (status), `:326` (item (24)), `:335` (what it means for P8–P11), `:341` (S190's DONE block), `:919` (step 3's `HANDOFFS.md` bullet), `:956` (the P8 row); `docs/planning/BACKLOG.md:151` (BL-57); `docs/planning/BACKLOG-DETAIL.md:1055` (BL-43), `:1059` (Test 38 (5)); on fork `main` since `2410657`: `bin/_manifest.py:119` (`handoffs-format: 2`), `bin/status:157` (`MIGRATION_ROUTES`), `bin/tests.sh:341` (Test 20 (g)), `:364` (the old-section fixture), `starter-kit/HANDOFFS.md:91` (the marker line), `starter-kit/BOOTSTRAP.md:386`–`388` (the update paragraph's two routes); `docs/HANDOFFS_ARCHIVE_INDEX.md:57` (the new shard row)
+gotchas: **(1) ADOPTERS MOVE UNDER A BEFORE/AFTER READING:** `airqino` and `nprcgenekeepr` both committed between my two `bin/status` readings. `bin/status` takes its source from its own repository (`bin/status:35`), so a `--no-local` clone at the pre-change commit gives a *before* reading at any moment; run both readings back to back with each adopter's HEAD and porcelain digest recorded on either side. **(2) THE PLAN'S `BOOTSTRAP.md:386` CITATION (`:921`) NOW LANDS ON THE `CHANGELOG.md` HALF OF THE PARAGRAPH;** the `HANDOFFS.md` route is `:388`. **(3) A SECOND `bash bin/tests.sh` IN A CLONE THE RATCHET JUST RAN CAN FLAKE ON TEST 38 (5)** (BL-43's `echo | grep -q` race): cite the ratchet's run and name the flake rather than re-running until green. **(4) `bin/check-handoff --archived` TAKES `--file <shard>`,** not a positional path (exit 2). **(5) BEFORE OFFERING A GO-AHEAD ON AN ARTIFACT, GREP THE BACKLOG AND THE PLAN'S K-CONSTRAINTS FOR A STANDING DECISION ON IT** (`BACKLOG-DETAIL.md:1794`, plan K5 `:434`): I didn't, and the operator had to answer twice. **(6) PHASE 0 WRITES TWO TRACKED ROWS;** they rode `c868134`.
+runtime_smoke: **NO APPLICATION; THE BUILD-EQUIVALENT IS `quality_ratchet.py --run` IN A `--no-local` CLONE WITH HEAD ASSERTED.** **Citation, fork `main`, clone of `2410657` (the merge): `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 91c29bff06ce · manifest 58d766958ae1`**, 343 s, `tests-sh-passed` 321 at 2 receipts (6 stated Test 34 skips), Test 20's 28 rows pass including the marker and old-section fixture. A second `bash bin/tests.sh` in that clone read 320 / 1, Test 38 (5), BL-43's known race. The runtime behaviour changed (`bin/status`'s marker and routes) was exercised directly on six real adopters, before and after. `b7585e6` and this close-out are docs-only and not covered by that run (BL-64): re-measured in a clone of the close-out after it lands and recorded as its own entry. **NOT EXERCISED:** an adopter following the new routes (P8's to run); the maintainer's review; CI (none).
+changelog_ref: CHANGELOG.md "2026-09-18 · [BL-57] S190 close-out", plus the claim, trim, fold and merge-record entries
+commit: c868134 (claim) + 69ad9c9 (trim) + 1f5dcae (fold) + 2410657 (merge) + b7585e6 (record) + this close-out
 ```
+
+**Self-assessment: 8/10.** Plus: the conflicts were computed before the merge, and they held exactly. Every merged file
+was checked against the branch patch rather than trusting a clean auto-merge. When the adopters moved under my first
+`bin/status` pair, I found why, held them still with a clone of the pre-merge commit, and confirmed the diff row for
+row before citing it. The one red suite row was traced to BL-43 before it went into any record, not re-run until green.
+The owed trim and fold each ran their proof. **Minus:** (1) I offered the `CHANGELOG.md` trim as a go-ahead without
+grepping for a standing decision on that file. My own memory names that exact check, and the operator had to answer a
+second picker. I caught it before acting, but only because the BL-57 row surfaced in an unrelated grep. (2) A
+redundant second suite run cost about three minutes, though it surfaced the flake. (3) `check-handoff --archived`
+took a positional path on the first try. **Growth:** five ledger entries, one plan block (9 lines), one index row.
+**Reduction:** the `HANDOFFS.md` trim (40,364 → 17,521 B).
+
+**Learnings withheld from `docs/FORK_LEARNINGS.md`, again:** it is 81,721 of 81,920 B and BL-53 is unanswered. Candidates:
+(a) a before/after reading of a tool whose source is its own repository can be taken from a clone at the old commit, at
+the same moment as the new one, so the subjects under measurement cannot move between readings (gotcha (1)); (b) a
+go-ahead option on an artifact must cite every standing decision on that artifact, or the answer it gets is to a
+different question (gotcha (5); a recurrence of S177's lesson, so a gate, not a row, is the better home).
+
+**Predecessor (S189): 9/10.** Next step (1) was exact and every part held: the `git merge-tree` instruction, the
+`5f5a400` convention, the hedge on `adaa4a3`'s notes (they did not matter here, which it left open rather than
+guessed), and the prediction that `airqino` and `nprcgenekeepr` flip to stale. Step (5)'s trim command held to the
+flag. Gotcha (3), the parallel adopter session, recurred in two adopters, and the warning is why I checked heads
+beside the readings. **Not 10:** it did not say that `CHANGELOG.md` sat 1,237 B under its trigger with a standing
+no-trim decision on it, which the next claim was certain to cross. **ROI: strongly positive:** the merge needed no
+discovery at all.
 
 ```handoff
 session: S189
