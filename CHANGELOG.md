@@ -199,6 +199,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S191 close-out — P8 recorded (`10f931a`, fixed at `0b7e672`); BL-72 next, before P9
+
+- **Receipt:** `HANDOFFS.md` S191, `status: complete`, self 7, predecessor (S190) 9. Gate on `0b7e672`:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 511119b3196e · manifest 58d766958ae1`, 327 passed at
+  3 receipts; on `10f931a` it read `9/10 · tests-sh-failed 3`, the defect `0b7e672` fixed.
+- **Next:** BL-72 (`bin/check-handoff`'s fence scanner), its own session, with the operator deciding whether it rides
+  PR #84; then P9 (`mts-system`) from that project. A `HANDOFFS.md` trim is owed at the next Phase 0 (3 receipts).
+  Fork `main` is 4 commits ahead of `origin`, unpushed. Learnings withheld again (BL-53); no reduction this session.
+
 ### 2026-09-18 · [BL-57] S191 — fix: three lines `10f931a` wrote began with inline backticks, which line-based parsers read as a code fence
 
 - **The defect, found by the close-out gate** (clone of `10f931a`: `9/10 pass · 1 fail`, `tests-sh-failed` 3). A reflowed
