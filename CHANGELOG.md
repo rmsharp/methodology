@@ -199,6 +199,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-67] S185 claim — record BL-57's P7 (`wsfct`) here, re-verified rather than re-applied blind (in progress)
+
+**Deliverable:** BL-67 — the recording of BL-57's P7 in this repository, as S180 recorded P6: the plan's status line,
+a P7 block carrying what the phase found for P8–P11, the P7 row, and the BL-57 backlog row; BL-67 closes with it.
+**Chosen by the operator after Phase 0 (picker)**, from BL-67, BL-61, BL-65 and BL-66's PR preparation. The material
+exists at `a6320ae` (reverted at `61eb9ab`); this session re-verifies `wsfct` read-only before re-applying any of it,
+and writes only here.
+
+**Phase 0:** `CHANGELOG.md` frontier `19eb19b` = HEAD, no gap; `HANDOFFS.md` frontier `61eb9ab`, one commit behind,
+and that commit (`19eb19b`, BL-67 raised) carries its own ledger entry and no receipt by design — nothing backfilled.
+Two receipts, no trim owed. The gate in a `--no-local` clone of `19eb19b` reads `10/10 pass · 0 fail · 0 unmeasured ·
+results 8e12f40caec1 · manifest 3a87b16f1b31`, the digest S183 cited. Dashboard 76/100, medium risk, no high-or-above
+flags; `context_budget.py --status` exits 2 on the runner and `SAFEGUARDS.md`, both already known `over`. `upstream/main`
+is still `6b29d3d`; PR #83 is still open; no open upstream issues. **Numbered S185**, not S184, because the reverted
+claim `d657968` used that number. The Phase 0 context-budget and dashboard rows ride with this claim.
+
 ### 2026-09-17 · [BL-67] Raised — `wsfct`'s P7 report is owed a recording here, and the recording it got was reverted for arriving out of sequence
 
 - **The item.** `wsfct`'s Session 630 ran BL-57's P7 and had it squash-merged there as `66e14daa` (PR #903). The

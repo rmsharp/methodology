@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S185
+date: 2026-09-17
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-67 — RECORD BL-57's P7 (`wsfct`) IN THIS REPOSITORY**, as S180 recorded P6: the plan's status line, a P7 block carrying what the phase found for P8–P11, the P7 row, and the BL-57 backlog row (`docs/planning/changelog-rules-contradictions-plan.md:5`, `:175`, `:799`; `docs/planning/BACKLOG.md:151`, `:160`). Chosen by the operator after Phase 0 (picker). The recording exists at `a6320ae`, reverted at `61eb9ab` for arriving after S183's close-out report; this session re-verifies `wsfct` read-only before re-applying it. Nothing here goes upstream, and nothing in `wsfct` is touched.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:5` (status line), `:175` (the P6 block, the model), `:798`-`:799` (the P6/P7 rows), `:765` (the P6–P11 procedure), `:1015` (§9.8); `docs/planning/BACKLOG.md:151` (BL-57), `:160` (BL-67); `docs/planning/BACKLOG-DETAIL.md` §BL-67; in `~/Development/wsfct`: `66e14daa` (the squash merge on `master`)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-17 · [BL-67] S185 claim"
+commit: pending
+```
+
+```handoff
 session: S183
 date: 2026-09-17
 status: complete
