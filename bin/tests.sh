@@ -320,7 +320,7 @@ MULTI="$("$BIN/status" "$P" "$P2")"
 NROWS="$(echo "$MULTI" | grep -v '^note:' | grep -c "stale format")"
 [ "$NROWS" = "2" ] && pass "status: two stale rows across two projects" || fail "status: expected 2 stale rows, got $NROWS"
 echo "$MULTI" | grep '^note:' | grep -q "2 seeds predate" && pass "status: note count matches flagged rows (2), not deduped file types" || fail "status: note count != flagged rows"
-# (g) Each flagged file gets ITS OWN migration route (BL-57 item (22)). A stale CHANGELOG.md replaces its
+# (g) Each flagged file gets ITS OWN migration route. A stale CHANGELOG.md replaces its
 # header with the seed's; a stale HANDOFFS.md only lacks the seed's size section, and replacing its front
 # matter would delete what a trimmer wrote there (a pointer block, a count sentence). The note once gave
 # the replace route for both. P is stale in CHANGELOG.md only (c/e); P2 gets a stale HANDOFFS.md alone.

@@ -411,6 +411,14 @@ ledger's next new month, and nothing below is retrofitted (§The Action Ledger, 
   leak check for private-correspondence phrasing, internal-only paths, project names and brand names: 0 hits;
   `bin/check-links` OK (83/21), `bin/check-handoff --allow-pending` OK.
 
+### 2026-09-17 · [BL-57] Two code comments stop citing a plan item that exists only in the contributor's fork
+
+- **Change:** `bin/status:112` and `bin/tests.sh:323` each ended a sentence with *"(BL-57 item (22))"*, a pointer into
+  a planning document on `rmsharp/methodology` that this repository does not have. Both sentences already state the
+  reason in full, so the citation is dropped and nothing replaces it. Comments only; no behaviour changes.
+- **Placed** above the density entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
 ### 2026-09-17 · [BL-57] The three read-set densities re-measured on the blobs this branch ships
 
 - **Change:** `.context-budget.json` — `bytes_per_token` and `measured_bytes` for `CLAUDE.md`,

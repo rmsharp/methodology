@@ -109,7 +109,7 @@ STALE_SEED = "present (stale format)"
 # from an earlier methodology version" gives it. Per file, because the routes differ: the CHANGELOG.md
 # seed's header replaces the rules an older copy carries, while an older HANDOFFS.md only lacks the
 # section its marker names, and replacing its front matter would delete what a trimmer wrote there — a
-# pointer block, a regenerated count (BL-57 item (22)). A file with no route here gets the general rule.
+# pointer block, a regenerated count. A file with no route here gets the general rule.
 MIGRATION_ROUTES = {
     "CHANGELOG.md": "replace the text above the first entry with the current starter-kit seed's header",
     "HANDOFFS.md": (
