@@ -199,6 +199,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] P7 (`wsfct`) recorded — the phase is done and merged in that repository, with items (19)–(21) for P8–P11
+
+- **What happened there, not here.** `wsfct`'s own Session 630 ran BL-57's P7 on branch
+  `chore/s630-methodology-bl57-p7`: `790c77d1` (claim), `8a41741c` (the sync from fork `main` `29b0feb` — 14 files
+  plus its ledger entry, 15 in all, which is plan item (18) applied), `12fb758e` (the header migration), `8d0e696a`
+  (`CLAUDE.md`'s ledger wording), `6891645c` (its own learnings row), `3a257097` (close-out). **PR #903
+  squash-merged it to that project's `master` as `66e14daa` at 2026-09-18T00:36Z** and the local branch was deleted.
+- **Recorded here** in [`docs/planning/changelog-rules-contradictions-plan.md`](docs/planning/changelog-rules-contradictions-plan.md):
+  the status line, a P7 block modelled on S180's P6 block, and the P7 row rewritten with its stale figures struck
+  rather than deleted. The BL-57 row in [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md) now reads P8 as next.
+- **Verified read-only from here before recording**, with `wsfct`'s `git status --porcelain` empty before and after:
+  `bin/status ../wsfct` reads `CHANGELOG.md` `present`; the migration removed line 8 and lines 10–181, inside the
+  block the session re-derived; `grep -c '^### '` 75 → 71 (1 entry added, 5 `### ` lines removed with the block);
+  the source-tag audit 72 → 70 (3 of the block's examples matched it, 1 entry added); `bin/sync ../wsfct
+  --source=local --dry-run` exits 0 with 23 files unchanged; `git diff 3a257097 66e14daa` is empty, so the squash
+  preserved the branch tree exactly.
+- **Three findings for P8–P11, all measured:** (19) the row's block range (`:13`–`196`) was stale and the session
+  re-derived it as `:8`–`182` — the §9.8 DONE check holds only against the re-derived range; (20) a PR-merging
+  adopter can squash, and then item (18)'s one-run-one-commit shape survives on the branch ref, not on the default
+  branch, so cite both; (21) the phase migrates `CHANGELOG.md` and leaves the `HANDOFFS.md` seed, which `bin/status`
+  then reports as *present (stale format)* — measured across all six adopters, and **no item owns that seed today**,
+  BL-56 having put it out of scope explicitly. Whether P8–P11 carry it is the operator's call.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S184 claim — record P7 (`wsfct`) in the plan and the backlog (in progress)
 
 **Deliverable:** the recording of BL-57's P7 in this repository, as S180 recorded P6 — the plan's status line, a P7
