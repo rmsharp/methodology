@@ -107,12 +107,14 @@ DISTRIBUTION = [
 #     §The Action Ledger, which holds the rules the seed used to carry; the seed asks adopters to
 #     keep that line. Bump the number whenever the seed's format changes again, and drive the stale
 #     case in bin/tests.sh Test 20 red before trusting it — a marker that never moves never fires.
-#   * HANDOFFS.md keys on its "Size, and when to archive" heading: a copy without the size section
-#     predates the current format.
+#   * HANDOFFS.md keys on "handoffs-format: 2", the first line of the seed's "Size, and when to
+#     archive" section, so bringing that section across (the documented migration) carries it. It
+#     used to key on the heading itself, which failed property 2: the seed that shipped with the
+#     trimmer already had the heading, over the size premise this format replaced.
 #   * SESSION_NOTES.md is deliberately omitted: it is rewritten wholesale every session, so no
 #     token is stable enough to detect its format without false positives. Add an entry here only
 #     when a seed gains a marker with both properties.
 SEED_FORMAT_MARKERS = {
     "CHANGELOG.md": "ledger-format: 2",
-    "HANDOFFS.md": "Size, and when to archive",
+    "HANDOFFS.md": "handoffs-format: 2",
 }

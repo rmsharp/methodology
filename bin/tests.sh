@@ -305,14 +305,14 @@ OUT="$("$BIN/status" "$P")"
 echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && fail "status: in-use current-format ledger mis-flagged stale (constraint #2)" || pass "status: in-use current-format ledger not flagged"
 echo "$OUT" | grep -q "^note:" && fail "status: spurious note on in-use current-format ledger" || pass "status: no note on in-use current-format ledger"
 # (b2) The seed as shipped before ledger-format 2, frozen in tools/fixtures/: it carries the current TITLE
-# and the full rules text, and must still read stale. BOOTSTRAP.md:85 promises status "flags any seed
+# and the full rules text, and must still read stale. BOOTSTRAP.md ("Updating an existing project…") promises status "flags any seed
 # whose format predates the current methodology"; a marker present in any earlier format can never keep
 # that promise. Driven RED against the title-keyed marker before the marker moved.
 SEED1="$METHODOLOGY/tools/fixtures/seed-CHANGELOG-ledger-format-1.md"
 grep -q "Authoritative Action Ledger" "$SEED1" && pass "test: the frozen pre-ledger-format-2 seed carries the current title" || fail "test-bug: the frozen seed lacks the title it stands for"
 cp "$SEED1" "$P/CHANGELOG.md"
 ROW="$("$BIN/status" "$P" | grep "CHANGELOG.md" | grep -v '^note:')"
-echo "$ROW" | grep -q "stale format" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md:85 promises it is"
+echo "$ROW" | grep -q "stale format" && pass "status: the pre-ledger-format-2 seed flagged 'present (stale format)'" || fail "status: the pre-ledger-format-2 seed NOT flagged — BOOTSTRAP.md's "Updating an existing project" paragraph promises it is"
 # (c) Replace the seed with a pre-v3.1 (Keep-a-Changelog) shape lacking the ledger-title marker.
 printf '# Changelog\n\nAll notable changes to this project.\n\n## [Unreleased]\n' > "$P/CHANGELOG.md"
 OUT="$("$BIN/status" "$P")"
@@ -338,12 +338,15 @@ MULTI="$("$BIN/status" "$P" "$P2")"
 NROWS="$(echo "$MULTI" | grep -v '^note:' | grep -c "stale format")"
 [ "$NROWS" = "2" ] && pass "status: two stale rows across two projects" || fail "status: expected 2 stale rows, got $NROWS"
 echo "$MULTI" | grep '^note:' | grep -q "2 seeds predate" && pass "status: note count matches flagged rows (2), not deduped file types" || fail "status: note count != flagged rows"
-# (g) Each flagged file gets ITS OWN migration route (BL-57 item (22)). A stale CHANGELOG.md replaces its
+# (g) Each flagged file gets ITS OWN migration route. A stale CHANGELOG.md replaces its
 # header with the seed's; a stale HANDOFFS.md only lacks the seed's size section, and replacing its front
 # matter would delete what a trimmer wrote there (a pointer block, a count sentence). The note once gave
 # the replace route for both. P is stale in CHANGELOG.md only (c/e); P2 gets a stale HANDOFFS.md alone.
 NOTE="$("$BIN/status" "$P" | grep '^note:')"
-echo "$NOTE" | grep -q "for CHANGELOG.md, replace the text above the first entry" && pass "status: a stale CHANGELOG.md gets the replace-the-header route" || fail "status: the note lacks CHANGELOG.md's route"
+echo "$NOTE" | grep -q "for CHANGELOG.md, replace the rules text or old header above the first entry" && pass "status: a stale CHANGELOG.md gets the replace-the-header route" || fail "status: the note lacks CHANGELOG.md's route"
+# The trimmer writes an archive-pointer block and a month heading above the first entry; a route that
+# replaced everything there would delete them (an adopter's migration hit exactly this).
+echo "$NOTE" | grep -q "keeping any archive-pointer block and month heading" && pass "status: the CHANGELOG.md route keeps what the trimmer wrote" || fail "status: the CHANGELOG.md route would delete the trimmer's pointer block"
 echo "$NOTE" | grep -q "Size, and when to archive" && fail "status: the note gives HANDOFFS.md's route when only CHANGELOG.md is stale" || pass "status: no HANDOFFS.md route when only CHANGELOG.md is stale"
 cp "$STARTER/CHANGELOG.md" "$P2/CHANGELOG.md"   # P2's CHANGELOG.md was stale from (f): current seed again
 printf '# Handoff Receipts\n\nNewest on top; prepend-only.\n\n```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n' > "$P2/HANDOFFS.md"
@@ -353,6 +356,14 @@ NOTE="$(echo "$OUT" | grep '^note:')"
 echo "$NOTE" | grep -q "1 seed predates the current format (HANDOFFS.md," && pass "test: HANDOFFS.md is the only stale seed in P2" || fail "test-bug: P2 is not stale in HANDOFFS.md alone"
 echo "$NOTE" | grep -q "for HANDOFFS.md, bring across the current starter-kit seed's '## Size, and when to archive' section" && pass "status: a stale HANDOFFS.md gets the bring-across-the-section route" || fail "status: the note lacks HANDOFFS.md's own route"
 echo "$NOTE" | grep -qi "replace" && fail "status: the note tells a stale HANDOFFS.md to replace its front matter" || pass "status: no replace route for a stale HANDOFFS.md"
+# The HANDOFFS.md seed as shipped before handoffs-format 2 already had the size section's heading, but
+# with the old premise in it (a 65,536 B byte row priced as a "context tax"). Keyed on that heading, it read
+# current in two of six real adopters that carry exactly that text. Keyed on the versioned marker, it is stale.
+grep -q "handoffs-format: 2" "$STARTER/HANDOFFS.md" && pass "test: the shipped HANDOFFS.md seed carries its format marker" || fail "the shipped HANDOFFS.md seed lacks 'handoffs-format: 2'"
+cp "$STARTER/CHANGELOG.md" "$P2/CHANGELOG.md"
+printf '# Handoff Receipts\n\n## Size, and when to archive\n\n| **Bytes** — a per-file budget, default **65,536 B** (64 KB) | **context tax**: every session pays for the whole file |\n\n```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n' > "$P2/HANDOFFS.md"
+ROW="$("$BIN/status" "$P2" | grep "HANDOFFS.md" | grep -v '^note:')"
+echo "$ROW" | grep -q "stale format" && pass "status: a HANDOFFS.md with the old size section but no format marker flagged stale" || fail "status: the pre-handoffs-format-2 seed read current — its heading alone is not a format marker"
 # Both stale in one project: both routes, one each.
 cp "$SEED1" "$P2/CHANGELOG.md"
 NOTE="$("$BIN/status" "$P2" | grep '^note:')"
@@ -361,6 +372,7 @@ echo "$NOTE" | grep -q "for CHANGELOG.md, replace" && echo "$NOTE" | grep -q "fo
 # contradict the note (the note cites BOOTSTRAP.md's "Updating an existing project from an earlier
 # methodology version" paragraph).
 grep '^\*\*Updating an existing project from an earlier methodology version:\*\*' "$STARTER/BOOTSTRAP.md" | grep -q "Size, and when to archive" && pass "BOOTSTRAP.md: the paragraph the note cites gives HANDOFFS.md's route too" || fail "BOOTSTRAP.md: the paragraph the note cites has no HANDOFFS.md route"
+grep '^\*\*Updating an existing project from an earlier methodology version:\*\*' "$STARTER/BOOTSTRAP.md" | grep -q "keeping any archive-pointer block and month heading" && pass "BOOTSTRAP.md: the paragraph the note cites keeps the trimmer's lines in CHANGELOG.md's route too" || fail "BOOTSTRAP.md: the cited paragraph's CHANGELOG.md route would delete the trimmer's pointer block"
 rm -rf "$P" "$P2"
 
 # Shared fixture builder for Tests 21-22: a fully well-formed, status: complete

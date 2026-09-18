@@ -88,6 +88,8 @@ corruption. `bin/check-handoff --all` keys on the pair for this reason.
 
 ## Size, and when to archive
 
+handoffs-format: 2 — keep this marker, and bring it across with this section; `bin/status` reads it.
+
 This file gains a receipt every session and nothing removes one, so it grows without bound. The
 protocol never asks a session to read it whole: Phase 0 reconciles it against `git log` and checks
 the newest receipt, and a session reads that receipt at the top — past the harness's default-read
@@ -123,7 +125,8 @@ An archive is a **shard**: a new frozen file, same format, same newest-on-top or
 The reasoning this file shares with `CHANGELOG.md` — how a ledger is read, why the tool is the only
 statement of its trigger, and what a split must conserve — is in the *Reading and archiving*
 subsection of [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger).
-Everything needed to *act* is here.
+That subsection makes archiving optional for `CHANGELOG.md`; this file keeps its own rule, above —
+archive it when the trimmer's trigger fires. Everything needed to *act* is here.
 
 What is specific to *this* file, and gets receipts wrong if assumed:
 

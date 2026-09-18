@@ -392,8 +392,7 @@ recommended, plus one further bullet, `Model`, that is optional even relative to
 - **Model:** <acting model> (optional — omit the line entirely when not recorded)
 ```
 
-*(The `[SOURCE]`, `[issue #<N>]`, `[BL-<id>]`, and `[ad hoc]` tokens above are illustrative; the
-freshness check keys on dated `###` entries, of which a fresh seed has none.)*
+*(The `[SOURCE]`, `[issue #<N>]`, `[BL-<id>]`, and `[ad hoc]` tokens above are illustrative.)*
 
 **Model:** — self-reported, free text; omit the line when not recorded. Names which model
 executed the action — an agent-independent key with a concrete value, the same pattern
@@ -454,7 +453,10 @@ hook checks, so each commit carries its own entry, and each non-commit action ge
 **Placement — prepend under the topmost `## YYYY-MM`.** Reverse-chronological and prepend-only, so
 close-out never re-sorts. When the month changes, open the new month's heading above the last one:
 group by month, **not** by release. A ledger that has no month headings starts them at its next new
-month, and nothing already written is retrofitted. Entries stay at `###`, the level the tools key on.
+month, or at its first trim, whose own entry `methodology_trim.py` files under the current month's
+heading; nothing already written is retrofitted. A merged branch's entries keep the order they had on
+the branch, as one block, rather than being re-sorted into the dates around them. Entries stay at
+`###`, the level the tools key on.
 
 ### Reading and archiving
 

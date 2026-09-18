@@ -572,7 +572,7 @@ holds the `CHANGELOG.md` rules the starter-kit seed used to carry:
 | **Verification Hierarchy** | The seven ascending levels of verification |
 | **Session Document Template** | The copy-paste template for a session document |
 | **Performance Tracking** | Cross-session metric columns, their interpretation, maturity and erosion indicators |
-| **The Action Ledger** | The rules for a project's `CHANGELOG.md`: entry format, source tags, size and archiving |
+| **The Action Ledger** | The rules for a project's `CHANGELOG.md`: entry format, source tags, reading and archiving |
 
 Nothing was condensed or dropped, and every point of need above links onward — Principles 4–7,
 Phase 2 steps 6–8, Phase 6 steps 4–6 with its honest-accounting bullet and its gate, and the
