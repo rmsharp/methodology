@@ -6,7 +6,8 @@ backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S17
 before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in that repository, recorded here at S180
 (see the P6 block), and P7 (`wsfct`) is done in that repository and MERGED to its default branch, recorded here at
 S185 (see the P7 block)**; P8–P12 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
-commit. Item (21) was decided by the operator at S186: P8–P11 also migrate a stale `HANDOFFS.md` seed.**
+commit. Item (21) was decided by the operator at S186: P8–P11 also migrate a stale `HANDOFFS.md` seed. Item (22) was
+done at S187, on the branch (`100f09b`) and merged into fork `main` (`2d5ce70`).**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -261,6 +262,19 @@ heading `bin/status` keys on (`bin/_manifest.py:117`). Neither text is on `upstr
 PR. Followed literally in `vscode_quarto_ext`, the note would delete the trimmer's pointer block and its *"currently
 holds"* count sentence, the regenerated field the seed lacks (BL-48). S186 wrote the replace route into step 3
 first, and corrected it before close-out. **P8–P11 follow `BOOTSTRAP.md`; align the note before P12.**
+**DONE at S187, by the plan's route for a fix P12 ships (items (11), (14); operator, picker): a commit on the
+branch, merged into fork `main`.** `100f09b` on `bl57/changelog-rules`: the note gives each flagged seed its own
+route (`bin/status` `MIGRATION_ROUTES`) — for `CHANGELOG.md` replace the header, for `HANDOFFS.md` bring across
+the section above the first receipt and keep the rest of the front matter — and the paragraph it cites
+(`starter-kit/BOOTSTRAP.md:85` on the branch, `:86` here) now names a stale `HANDOFFS.md` and its route.
+`bin/tests.sh` Test 20 (g) pins both with eight assertions: run alone, 5 failures before the fix and 24/0 after;
+two mutants fail it. Branch gate on that tree: `10/10 pass`, `results dd16434fe5f5`, `tests-sh-passed` 149.
+Merged as `2d5ce70`, `CHANGELOG.md` the one conflict, resolved ours; the three files' changed lines are identical
+to the tested patch. Every adopter's `BOOTSTRAP.md` reads one version further behind than before the merge,
+none *locally modified*. **One premise above did not hold:** `BOOTSTRAP.md:384`–`386` is fork-only. It sits in
+the *Without `bin/sync`* rules the fork added at S41 (`12463dd`, made per-file at `fd611a6`), which the branch
+never had, so it does not ship in P12. On the branch the paragraph the note cites is the only statement of the
+migration, which is why that paragraph carries the `HANDOFFS.md` route now.
 **Not a P7 effect, recorded so it is not rediscovered:** S630 reported that `wsfct`'s three
 `docs/archive/CHANGELOG-*.md.verify.sh` proofs fail. Re-run at S185 in a `--no-local` clone: all three were generated
 by `methodology_trim.py` v1.1.2 and fail L1 and L3 (record counts 12/8, 37/35, 29/28), identically at `55c293f7`
@@ -839,8 +853,8 @@ runner's session-notes boundary rule).
      real receipt, as `starter-kit/BOOTSTRAP.md:386` says; that heading is what `bin/status` keys on. Add, don't
      replace: every receipt stays byte-identical, and so do the trimmer's archive-pointer blocks and the *"This
      file currently holds **N**"* sentence where present — the trimmer's regenerated field
-     (`starter-kit/methodology_trim.py:337`), which the seed lacks (BL-48), and which `bin/status`'s *replace*
-     note would delete (item (22)). Find the first real receipt fence-aware: an older seed's worked example is a
+     (`starter-kit/methodology_trim.py:337`), which the seed lacks (BL-48), and which `bin/status`'s note told
+     adopters to replace until S187 (item (22)). Find the first real receipt fence-aware: an older seed's worked example is a
      `^```handoff` line inside a four-backtick wrapper. Its own commit, so §9.8 checks it.
 4. Bring the project's `CLAUDE.md` ledger wording into line, and record any legacy tag format or layout as
    an adaptation.

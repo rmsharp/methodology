@@ -199,6 +199,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-17 · [BL-57] S187 — plan item (22) done: `bin/status`'s stale-seed note gives each seed its own migration route (branch `100f09b`, merged into fork `main` as `2d5ce70`)
+
+- **Operator decision (S187, picker):** land it by the plan's route for a fix P12 ships (items (11), (14)):
+  a commit on `bl57/changelog-rules`, then the branch merged into fork `main`. Offered beside the same patch
+  committed on each tree, and fork `main` alone; the merge's conflicts and the patch's fit on fork `main` were
+  measured before offering.
+- **The fix, `100f09b` on the branch** (committed in the `methodology-bl57` worktree, with the branch's own
+  ledger entry placed above its `[BL-57]` block, as the plan's P2 finding (2) says): `bin/status` gains
+  `MIGRATION_ROUTES` beside `STALE_SEED`, and the note names a route per flagged file — for `CHANGELOG.md`,
+  replace the text above the first entry with the seed's header; for `HANDOFFS.md`, bring across the seed's
+  `## Size, and when to archive` section above the first receipt and keep the rest of the front matter (the
+  heading comes from `bin/_manifest.py`'s marker). It said *replace the text above the first entry (or
+  receipt)* for both, which in `vscode_quarto_ext` would delete the trimmer's pointer block and count sentence.
+  `starter-kit/BOOTSTRAP.md:86` here (`:85` on the branch), the paragraph the note cites, names a stale
+  `HANDOFFS.md` and its route too. `bin/tests.sh` Test 20 (g) adds eight assertions.
+- **Checked:** Test 20, run alone on the branch before the fix: 5 failures, among them *"the note tells a
+  stale HANDOFFS.md to replace its front matter"*; 24 passed, 0 failed after, on the branch and on the merge.
+  Two mutants fail it (routes for unflagged files: 2 failures; no `HANDOFFS.md` route: 1). Branch gate on the
+  committed tree (blobs checked equal to the tested files): `quality_ratchet: 10/10 pass · 0 fail · 0
+  unmeasured · results dd16434fe5f5 · manifest 08423c179055`, `tests-sh-passed` 149.
+- **The merge, `2d5ce70`:** one conflict, as `git merge-tree` predicted — `CHANGELOG.md`, resolved ours, as
+  at P5. `bin/status`, `bin/tests.sh` and `starter-kit/BOOTSTRAP.md` auto-merged, and their changed lines are
+  identical to the tested patch. `bin/status` on the six adopters, read-only: every `BOOTSTRAP.md` reads one
+  version further behind than the pre-merge tree gives (`airqino` and `wsfct` current → 1 behind,
+  `vscode_quarto_ext` 6 → 7), none *locally modified*; `model_project_constructor`'s *missing* predates it.
+- **Recorded (this commit):** the plan's status line, item (22)'s DONE block, and step 3's `HANDOFFS.md`
+  bullet (it cited the *replace* note); the BL-57 row in `docs/planning/BACKLOG.md`. **Premise corrected in
+  item (22):** `BOOTSTRAP.md:384`–`386` is fork-only (S41's *Without `bin/sync`* rules, `12463dd`), not on the
+  branch, so P12 does not ship it; on the branch the cited paragraph is the only statement of the migration.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-17 · [BL-57] S187 claim — plan item (22): align `bin/status`'s stale-seed migration note with `BOOTSTRAP.md`'s per-file routes (in progress)
 
 **Deliverable:** item (22) of `docs/planning/changelog-rules-contradictions-plan.md`. `bin/status`'s note tells an
