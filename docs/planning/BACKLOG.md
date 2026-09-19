@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68, BL-69, BL-70, BL-71, BL-73.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68, BL-69, BL-70, BL-71, BL-73, BL-74.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -162,6 +162,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-70** | Upstream's runner lacks issue #75's plan-surface rule: the maintainer closed #75 silently the day after the fork's PR was verified ready, and the PR (`docs/issue75-plan-surface-upstream`, `60246e7`, local only) was never sent. Branch kept (operator, S189); what to do upstream is open | [detail](BACKLOG-DETAIL.md#bl-70) |
 | **BL-71** | The dashboard's *"Multiple branches"* signal counts `git branch -a` (HEAD aliases, upstream's branches), so a fork can never clear it; count unmerged local branches instead. Raised at S189 (operator); not investigated | [detail](BACKLOG-DETAIL.md#bl-71) |
 | **BL-73** | `bin/check-handoff` reads a second `handoff` opener inside an open receipt as content, so a receipt begun twice reads as one block, and `--all` reports it only when the key order breaks. `mts-system`'s `HANDOFFS.md` has three (`:216`, `:320`, `:671` at `710a0f7`); `--all` reports two. Raised at S192, found while verifying BL-72; not fixed. Canonical-only; its upstream route is its own go-ahead | [detail](BACKLOG-DETAIL.md#bl-73) |
+| **BL-74** | Keep `README.md` current: the canonical file (plan item (15)'s stale cost section) and the copies five adopters carry at `docs/methodology/README.md`, which `bin/sync` never updates (23–39 README commits behind; one matches no version). Raised at S195 on the operator's request; not investigated | [detail](BACKLOG-DETAIL.md#bl-74) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45, BL-56, BL-59, BL-67, BL-72)
 

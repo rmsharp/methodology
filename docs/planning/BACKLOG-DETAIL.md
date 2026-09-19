@@ -2514,3 +2514,36 @@ session)"*). `:320` passes, because its `date:` comes before the second opener. 
 opened at line N is opened again at line M before it closes"*), so `--all` reports every instance whatever the key
 order. RED first, on the three `mts-system` shapes as fixtures. The checker is canonical-only; its upstream route is its
 own go-ahead. `mts-system`'s ledger is that project's: repairing it belongs to P9 or to that project, not to this item.
+
+<a id="bl-74"></a>
+
+**BL-74 — Keep `README.md` from going stale: the canonical one, and the copies adopters carry at
+`docs/methodology/README.md`, which `bin/sync` never updates. Raised 2026-09-19 (S195), on the operator's request. Not
+investigated past the measurements below.**
+
+**The request.** The operator, at S195: *"add to backlog to ensure methodology/README.md is not stale."* That path fits
+two files, so both were measured, read-only, against fork `main` `00893e0`, whose first-parent history holds 63
+versions of `README.md` (last changed 2026-09-16, `fd611a65`).
+
+**The adopters' copies.** `bin/_manifest.py` does not distribute `README.md`, so a copy an adopter took at bootstrap is
+never refreshed by `bin/sync`, and `bin/status` never lists it. Five directories under `~/Development` carry
+`docs/methodology/README.md`: `model_project_constructor` holds the 2026-05-25 version (`d7fcd6ab`), 39 README commits
+behind; `airqino` 2026-06-22 (`90bad48e`), 31 behind; `nprcgenekeepr` 2026-07-08 (`d1396420`), 24 behind;
+`dalia_martinez_funeral` 2026-07-08 (`c7f10b42`), 23 behind; `feedback-loop-comparison` matches no version of the file on
+any ref (edited there, or from history the fork no longer holds: plan item (32)). No other directory there has one.
+`model_project_constructor`'s `NOTICE` counts its copy among the methodology material, so the copy is tracked there on
+purpose.
+
+**The canonical `README.md`.** Spot-checked, not audited: `:241`'s *"28 known failure modes"* matches the runner, and
+`:528`'s *"27"* sits inside the v3.1 entry, true when written. Known stale: the fork-only cost section (`:383`, `:398`)
+still describes S42's 2026-08-04 measurements and a 2,000-line cap, recorded as found-not-fixed at
+`changelog-rules-contradictions-plan.md` item (15) (`:185`). Fork `main`'s `README.md` differs from `upstream/main`'s by
+168 lines added and 5 removed, most of them that section.
+
+**Shapes (none chosen).** (1) Distribute it: add `README.md` → `docs/methodology/README.md` to `bin/_manifest.py`, so
+`bin/sync` keeps copies current and `bin/status` reports them. That edits a distributed file, so it is an upstream PR
+and its own go-ahead, and the fork-only section would ship unless it moves out first. (2) Stop carrying copies: each
+adopter drops its copy for a link to the canonical file; each adopter's call. (3) A check on the canonical file itself:
+its counts and file lists against the runner and the manifest. By the runner's Phase 3C rule, a mechanical invariant is
+a gate, not a row. (4) Rewrite the stale section, item (15); fork-only. The design session starts by settling which of
+the two files the request meant, or both.

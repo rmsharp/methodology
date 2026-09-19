@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-74] S195 — raised on the operator's request: keep `README.md` from going stale
+
+- **Filed, not worked** (`docs/planning/BACKLOG.md` index row and open list; `docs/planning/BACKLOG-DETAIL.md` §BL-74).
+  The request, *"ensure methodology/README.md is not stale"*, fits two files, and both were measured read-only. **Five
+  adopters** carry `docs/methodology/README.md`, which `bin/_manifest.py` does not distribute, so `bin/sync` never updates
+  it: four are canonical versions 23–39 README commits behind fork `main`, and `feedback-loop-comparison`'s matches none.
+  **The canonical file** passed a spot-check (`:241`'s 28 failure modes); its known stale part is the fork-only cost
+  section, plan item (15). Four shapes recorded, none chosen.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
 ### 2026-09-19 · [ad hoc] S195 — fork `main` pushed to `origin`, `f921596..00893e0` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin 00893e0:refs/heads/main`, a fast-forward of three commits: the claim `25249d7`, P10's
