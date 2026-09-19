@@ -2547,3 +2547,31 @@ adopter drops its copy for a link to the canonical file; each adopter's call. (3
 its counts and file lists against the runner and the manifest. By the runner's Phase 3C rule, a mechanical invariant is
 a gate, not a row. (4) Rewrite the stale section, item (15); fork-only. The design session starts by settling which of
 the two files the request meant, or both.
+
+<a id="bl-75"></a>
+
+**BL-75 — `context_budget.py` has no `--status` command, and an unknown argument is silently ignored, so every
+*"`context_budget.py --status`"* this repository has ever cited ran the default measurement. Raised 2026-09-19 (S195),
+from BL-57's P11 report (plan item (35)). Not fixed.**
+
+**What.** `python3 starter-kit/context_budget.py --help` lists the default run, `install-hook`, `--precommit`,
+`--calibrate`, `--selftest` and `--json`. There is no `--status`. Measured here: `python3 starter-kit/context_budget.py
+--zzz-nonsense` exits 2, performs the default measurement and appends a row to the tracked
+`.context-budget-history.jsonl` — so the argument is not rejected, and the writing side effect happens either way.
+`model_project_constructor`'s Session 259 found it while following S195's launch prompt, which cited the flag twice.
+
+**Where the string is.** This repo's `CLAUDE.md:81` (*"reported by `--status`"*), scores of `CHANGELOG.md` entries and
+archived receipts, both adopter launch prompts, and `docs/planning/pr82-comment.md:131` and `pr82-review.md:155`, which
+propose `python3 starter-kit/context_budget.py --status` to the maintainer as a declared gate command. **No declared
+gate runs it today:** `.quality-gates.json:37` runs `tools/test_context_budget.py`.
+
+**What is and is not wrong.** The readings those sessions reported are sound — the default run measures and prints the
+same ledger — so no number needs revisiting. What is wrong is the citation, the advice in a PR comment, and the premise
+that a gate could be declared on that string: declared, it would measure the default run and append a tracked row on
+every invocation.
+
+**Shapes (none chosen).** (1) Add `--status` as an explicit alias of the default run — smallest, makes every existing
+citation true, distributed, so an upstream PR and its own go-ahead. (2) Reject unknown arguments (exit 3, the tool's own
+usage code) and correct the live citations — honest, but a bare `--status` in an adopter's habit then fails. (3) Correct
+the citations only. Whichever is chosen, the PR-comment text is outward-facing and already sent; correcting it there is
+its own go-ahead.

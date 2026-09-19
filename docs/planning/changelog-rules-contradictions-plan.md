@@ -16,8 +16,9 @@ on the branch (`657acb7`, `5223afb`, `0d63410`) and merged into fork `main` (`5f
 the operator's choice) and merged into fork `main` (`ea1a057`). P9 (`mts-system`) is done in that repository, recorded
 here at S193 (the P9 block), with one remainder there (item (28)). PR #84's description names the fix since S193. P10
 (`nprcgenekeepr`) was decided by the operator at S194 (force the sync, then re-apply its trimmer extension), done in that
-repository from S194's launch prompt, and recorded here at S194 (the P10 block). P11 (`model_project_constructor`) was
-decided by the operator at S195 (the P11 paragraph after item (31)); its launch prompt is written, and it runs next.**
+repository from S194's launch prompt, and recorded here at S194 (the P10 block). **P11 (`model_project_constructor`) was
+decided by the operator at S195, run there from S195's launch prompt (its Session 259) and recorded here at S195 (the
+P11 block, items (35)–(37)) — so every adopter phase P6–P11 is done, and what remains is PR #84's review upstream.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -524,9 +525,53 @@ nothing had to override. The synced runner's Phase 0 step 6 would backfill every
 100 there. At any adopter, grep its conventions for the ledger's cadence before posing a format question.
 (34) **Adopting the rules above an untagged ledger makes the legacy one record's body, for the trimmer.** In the scratch
 clone: at zero tagged records `methodology_trim.py` refuses (`GRAMMAR_MISMATCH`); at one it fires and archives nothing
-(`NOTHING_TO_DO`); at three its dry run would archive *"1 of 3 record(s) (2026-09-19 → 2026-09-19)"*, carrying all 156
-legacy entries back to 2026-04-10 inside that record: lossless (`L1_OK`–`L3_OK`) and mislabelled. BL-49's class, now
-measured. The project's S257 ruling says nothing trims this file, so it bites only if that ruling changes.
+(`NOTHING_TO_DO`); at three its dry run would archive *"1 of 3 record(s) (2026-09-19 → 2026-09-19)"*, carrying ~~all 156
+legacy entries back to 2026-04-10~~ **143 of the 156 back to 2026-04-16** inside that record: lossless
+(`L1_OK`–`L3_OK`) and mislabelled. BL-49's class, now measured. The project's S257 ruling says nothing trims this file,
+so it bites only if that ruling changes. **Corrected at the recording (S259 found it, re-measured here):** a standalone
+`---` above the oldest two release groups zones the last 13 entries as the FOOTER, which a trim never moves, and the cut
+also emits `CUT_STRADDLES_DAY` because the cut key is a date the retained records share. Written out in a scratch clone
+of `159e739`: the shard took 143 legacy entries plus the claim entry's own heading, oldest `### 2026-04-16`; 13 entries
+and both `## [0.1.0 …]`/`## [0.0.1 …]` groups stayed live; 680,944 B → 19,869 B. So the hazard is real and its size was
+overstated — read a ledger's footer zone before predicting what a trim moves.
+
+**P11 done (2026-09-19) in `model_project_constructor`'s own repository, its Session 259; recorded here at S195.** Run
+from S195's launch prompt. Nine commits on `master`, not pushed (25 ahead of `origin/master` `5f173f8`): `bb91fda`
+(claim, with the first tagged entry under a new `## 2026-09`), `5935288` (the three tool run logs ignored: items (25)
+and (29)), `3d96eb6` (decision (a): the seven task rows and the *Wiki sync* paragraph into `CLAUDE.md`, step 5 retired,
+`:59` and `:102` fixed), `8da685f` (the forced sync from fork `main` `v3.7-975-ga69ef73`: 26 files, 13 updated and 13
+created, plus its entry, item (18) applied), `886945a` (`NOTICE` §1 and the `CLAUDE.md` attribution), `8b32939` (the
+`CHANGELOG.md` header, block `:5`–`:6`), `3f35793` (`PROJECT_CONVENTIONS.md` §2 superseded, the `CLAUDE.md` ledger
+adaptations, `BACKLOG.md:569` narrowed), `7e575ba` (three corrections its own review caught), `159e739` (close-out, its
+first `HANDOFFS.md` receipt). DONE, re-run read-only from here at S195 in a `--no-local` clone of
+`model_project_constructor` at `159e739`, with `bin/status` and `bin/sync` from fork `main` `a69ef73`: `bin/status`
+reads `CHANGELOG.md` and `HANDOFFS.md` `present`, every tracked file current and nothing locally modified; `bin/sync
+--dry-run` exits 0 with every file unchanged; §9.8 on `8b32939` with bounds `5 6` prints *only the block changed* and
+the `5 5` control names `(5, 2)` (the script extracted from §9.8 hashes `80318e27`); `git diff --numstat a18706f
+159e739 -- CHANGELOG.md` is `59 2`, and a subsequence scan finds every old line but `:5`–`:6` still in order;
+`grep -c '^### '` went 156 → 165 and the anchored audit 0 → 9, one entry per commit; `check-handoff --file` reads the
+receipt OK; the trimmer refuses nothing now (`CHECK` fires on `CHANGELOG.md`, does not fire on `HANDOFFS.md` at
+15,666 B). The project's own gates were re-run here, not rested on the report: `pytest -q` 1,395 passed, 9 skipped,
+97.98%; `ruff check src/ tests/ packages/ scripts/` and `mypy` (68 files) clean. Its 11 ledger proofs, its guard suite
+and the 613-mutant round rest on S259's report. What P11 found, for the upstream route:
+(35) **A flag this repository cites everywhere does not exist.** `context_budget.py` has no `--status` command (`--help`
+lists the default run, `install-hook`, `--precommit`, `--calibrate`, `--selftest`, `--json`), and an unknown argument is
+ignored: `python3 starter-kit/context_budget.py --zzz-nonsense` exits 2 and performs the default measurement, which
+appends a row to the tracked `.context-budget-history.jsonl`. So every *"`context_budget.py --status`"* in this repo's
+`CLAUDE.md:81`, in scores of ledger entries and receipts, and in the P10 and P11 launch prompts, actually ran the
+default. The readings were never wrong, but the citation is, and `docs/planning/pr82-comment.md:131` proposes that
+string as a gate command to the maintainer. No declared gate uses it today (`.quality-gates.json:37` runs
+`tools/test_context_budget.py`). Raised as **BL-75**; not fixed here.
+(36) **An adopter can reasonably ignore what this repository tracks.** S259 gitignored all three synced-tool run logs,
+against this repo's practice of tracking `dashboard_history.jsonl` and `.context-budget-history.jsonl`, and gave a
+reason the framework does not answer: a tracked history dirties the tree at every Phase 0, and under a per-action
+ledger each commit of one owes an entry. Item (29) tells a phase to check what the tools write; it does not say what to
+do with them. The upstream PR could say.
+(37) **The synced tools fail a Python project's own default lint.** In the synced clone `ruff check .` reports 294
+errors in the four root tools while CI's scoped `ruff check src/ tests/ packages/ scripts/` stays clean (both re-run
+here); S259 measured `uv build --sdist` growing 219,852 B, which was not re-run here. S259 declined the obvious
+`extend-exclude` because it fails for explicitly-named paths and hand-copying the fork's file list duplicates an unread
+list. An adopter whose lint is unscoped inherits all 294.
 
 ---
 
@@ -1135,7 +1180,7 @@ decision; medium otherwise.
 | P8 | `vscode_quarto_ext` | **DONE 2026-09-18 in that repository (Session 264, `48d1790c`..`57750bb2`, not pushed); recorded here at S191 (the P8 block, items (25)–(27)).** Replace the Keep-a-Changelog header (:1–8) with the thin header, keeping the shard pointer. Record the `[BACKLOG: …]` entries as legacy in `CLAUDE.md`. Drop `CHANGELOG.md` from its `.context-budget.json` (Q2 A; the project's call). Route B. `CLAUDE.md` :102, :146. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `58f7bcbd`, to re-derive at the claim: the first receipt is at :33, below the pointer block (:29–31); the section goes in above that block. The count sentence (:20–22), the pointer block and the project's own *fence-aware* warning (:23–27) all stay |
 | P9 | `mts-system` | **DONE 2026-09-18 in that repository (Session 139, `a48f543`..`b8a20ce`, ~~not pushed~~ pushed 2026-09-19, the P9 block); recorded here at S193 (the P9 block, items (28)–(29)). One remainder: the superseded rules block at :782, item (28), filed there as CLEANUP-006.** Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `710a0f7`: the first receipt is :77, and the section goes in above it. The first `^```handoff` match (:32) is the old seed's worked example inside a four-backtick wrapper (:31–55), not a receipt. No count sentence, no pointer block. The file is 373,021 B, past the 262,144 B read refusal. **Found, not a P9 effect:** the fence opened at :216 (`session: S131`) never closes before the next at :219, and `bin/check-handoff --all --file ../mts-system/HANDOFFS.md` reads them as one block (*"first two keys must be `session` then `date` (got session, session)"*). Check it before P9, and don't attribute it to P9 **S192, at `710a0f7`: the same shape recurs at `:320` (`S126`) and `:671` (`S106`), three in all; `--all` reports `:216` and `:671` only, since `:320`'s `date:` precedes its second opener (BL-73).** |
 | P10 | `nprcgenekeepr` | **DONE 2026-09-19 in that repository (Session 719, `74243f04`..`4565c39d`, ~~not pushed~~ pushed 2026-09-19 with CI green, the P10 block); recorded here at S194 (the P10 block, items (30)–(31)).** **DECIDED at S194 (operator, picker): `--force` the sync, then re-apply the extension in its own commit** (measured in a scratch clone: the patch applies onto trimmer 1.5.0 and its `SESSION_NOTES.md` dry run matches the old copy's). **Launch prompt, with the facts measured at `312996b0`: [`bl57-p10-nprcgenekeepr-launch-prompt.md`](bl57-p10-nprcgenekeepr-launch-prompt.md).** ~~**Decide first.**~~ Its 49-line local extension of `methodology_trim.py` blocks every sync, because one modified file refuses the whole run. Three options: send the extension upstream; migrate the seed only and leave the pointer dangling until it can sync; or `--force`, which discards the extension. ~~Then replace the rules block (:3946–:4065, 2 `### ` lines, between two runs of entries)~~ **The block has left the live file** (its S702 trim, `6bac092f`, moved it into the frozen `docs/archive/CHANGELOG-through-2026-09-17.md`, `:4171`), so the `CHANGELOG.md` step is a pure insertion of the pointer and marker. Then record the S325 legacy block and September's `## 2026-08` placement in `CLAUDE.md` (:271) |
-| P11 | `model_project_constructor` | **DECIDED at S195 (operator, picker), not yet run: (a) move the task-to-workstream rows and the *Wiki sync* paragraph into `CLAUDE.md`, retire step 5; (b) adopt the rules going forward, cadence included (the P11 paragraph after item (31), items (32)–(34)). Launch prompt, with the facts measured at `a18706f`: [`bl57-p11-model-project-constructor-launch-prompt.md`](bl57-p11-model-project-constructor-launch-prompt.md).** ~~**Decide first.**~~ (a) Its runner customization (step 5) moves into `CLAUDE.md` Adaptations before any `--force` sync (*fork* `BOOTSTRAP.md:75`). (b) Its ledger is a release-grouped work log of 143 untagged `### date — …` entries, which the trimmer refuses by design: either adopt the action-ledger format going forward (the S325 *"freeze legacy, go forward"* precedent) or record an adaptation. It has no `HANDOFFS.md` and no trimmer today. **S192, after close-out (the operator asked why it has no `HANDOFFS.md`), read-only at `a18706f`: `bin/sync --dry-run` exits 2 before writing anything, refusing `SESSION_RUNNER.md` and `SAFEGUARDS.md`, so no seed has reached it since the receipt shipped (`4f0bea7`, 2026-07-08); its runner never mentions `HANDOFFS.md`. The runner's local edits are three, not one:** step 5, the task-to-workstream table (seven project rows in place of four canonical ones) and a *Wiki sync* paragraph (which `CLAUDE.md:75` already corrects). They are 10 lines of the 29 that differ from the closest canonical version (`7073dec`, 2026-04-07); the other 19 are later canonical text grafted in. `SAFEGUARDS.md` differs from `3d648ab` by one line. (a) must move all three before any `--force` |
+| P11 | `model_project_constructor` | **DONE 2026-09-19 in that repository (Session 259, `bb91fda`..`159e739`, not pushed); recorded here at S195 (the P11 block, items (35)–(37)). DECIDED at S195 (operator, picker): (a) move the task-to-workstream rows and the *Wiki sync* paragraph into `CLAUDE.md`, retire step 5; (b) adopt the rules going forward, cadence included (the P11 paragraph after item (31), items (32)–(34)). Launch prompt, with the facts measured at `a18706f`: [`bl57-p11-model-project-constructor-launch-prompt.md`](bl57-p11-model-project-constructor-launch-prompt.md).** ~~**Decide first.**~~ (a) Its runner customization (step 5) moves into `CLAUDE.md` Adaptations before any `--force` sync (*fork* `BOOTSTRAP.md:75`). (b) Its ledger is a release-grouped work log of 143 untagged `### date — …` entries, which the trimmer refuses by design: either adopt the action-ledger format going forward (the S325 *"freeze legacy, go forward"* precedent) or record an adaptation. It has no `HANDOFFS.md` and no trimmer today. **S192, after close-out (the operator asked why it has no `HANDOFFS.md`), read-only at `a18706f`: `bin/sync --dry-run` exits 2 before writing anything, refusing `SESSION_RUNNER.md` and `SAFEGUARDS.md`, so no seed has reached it since the receipt shipped (`4f0bea7`, 2026-07-08); its runner never mentions `HANDOFFS.md`. The runner's local edits are three, not one:** step 5, the task-to-workstream table (seven project rows in place of four canonical ones) and a *Wiki sync* paragraph (which `CLAUDE.md:75` already corrects). They are 10 lines of the 29 that differ from the closest canonical version (`7073dec`, 2026-04-07); the other 19 are later canonical text grafted in. `SAFEGUARDS.md` differs from `3d648ab` by one line. (a) must move all three before any `--force` |
 
 ### P12 — The upstream PR (after #80 merges; outward, its own go-ahead)
 

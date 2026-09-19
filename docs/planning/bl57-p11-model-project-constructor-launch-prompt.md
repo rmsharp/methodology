@@ -15,6 +15,15 @@ taken for (a): move all three verbatim, which leaves step 5 forbidding a file ev
 new format with the old cadence, and pointer-only with everything kept; both would need `CLAUDE.md` to override the
 runner's Phase 0 step 6 and Phase 3F, which name one opt-out only (delete the file and record it).
 
+**Corrections, made at the recording (the prompt below is left as it was sent).** Three facts measured differently in
+Session 259, none of which changed a step. **Fact 6** overstated the trim: it would archive **143** of the 156 legacy
+entries, back to **2026-04-16**, not all 156 back to 2026-04-10 — a standalone `---` zones the last 13 as the footer,
+which a trim never moves — and it also emits `CUT_STRADDLES_DAY`. Re-measured here by writing the trim in a scratch
+clone; plan item (34) carries the corrected figures. **Facts 9 and 10** name `context_budget.py --status`; that command
+does not exist, and the tool ignores the unknown argument and performs its default run (BL-75). **Fact 4** says that
+project's `docs/methodology/README.md` dates from its first commit `ff0228e`: it was added there and last updated
+2026-06-01 (`5c37d2b`) to the canonical 2026-05-25 version (BL-74).
+
 ---
 
 **Task: BL-57 phase P11 — bring this project's `CHANGELOG.md` to the current methodology's ledger rules, syncing the

@@ -199,6 +199,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S195 — P11 (`model_project_constructor`) recorded: done in that repository's Session 259, re-verified from here; items (35)–(37)
+
+- **Run there from this session's launch prompt**, nine commits `bb91fda`..`159e739` on `master`, not pushed (25 ahead
+  of `origin/master`). The plan's P11 block lists them; its row and status line say done, and **every adopter phase
+  P6–P11 is now complete**, leaving PR #84's review.
+- **Re-verified read-only in a `--no-local` clone at `159e739`, not transcribed:** `bin/status` reads both ledgers
+  `present` with every tracked file current and nothing locally modified; `bin/sync --dry-run` exits 0, all unchanged;
+  §9.8 on `8b32939` prints *only the block changed* for `5 6` and names `(5, 2)` for the `5 5` control (the extracted
+  script hashes `80318e27`); `numstat a18706f 159e739` is `59 2`, and every old line but `:5`–`:6` survives in order;
+  `### ` 156 → 165 and the anchored audit 0 → 9; `check-handoff --file` OK on its first receipt. The project's own gates
+  re-run here: `pytest` 1,395 passed / 9 skipped / 97.98%, scoped `ruff` and `mypy` clean. Its proofs, guards and mutant
+  round rest on S259's report.
+- **Item (34) was wrong and is corrected in place.** A trim would archive 143 of the 156 legacy entries, back to
+  2026-04-16, not all 156 back to 2026-04-10: a standalone `---` zones the last 13 as the footer. Re-measured by writing
+  the trim in the clone (`680,944 B → 19,869 B`, `CUT_STRADDLES_DAY`, `L1_OK`–`L3_OK`). The launch prompt carries a
+  corrections note; its fact 4 (that project's README date) is corrected too.
+- **New items:** (35) the `--status` flag that does not exist, raised as BL-75; (36) the adopter ignored the run logs
+  this repo tracks, with a reason the framework does not answer; (37) the synced tools draw 294 errors from an unscoped
+  `ruff check .`, re-run here, while CI's scoped form stays clean.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
+### 2026-09-19 · [BL-75] S195 — raised: `context_budget.py` has no `--status`, and every citation of it ran the default
+
+- **Found by `model_project_constructor`'s Session 259** while following this session's launch prompt, and re-measured
+  here: `--help` lists no `--status`, and `--zzz-nonsense` exits 2 while performing the default measurement and
+  appending a row to the tracked `.context-budget-history.jsonl`. The readings sessions reported are sound; the citation
+  is not. It appears in `CLAUDE.md:81`, in scores of entries and receipts, in both adopter launch prompts, and in
+  `docs/planning/pr82-comment.md:131`, which proposed it to the maintainer as a gate command. No declared gate uses it
+  (`.quality-gates.json:37` runs `tools/test_context_budget.py`). Filed with three shapes, none chosen; not fixed.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
 ### 2026-09-19 · [BL-74] S195 — raised on the operator's request: keep `README.md` from going stale
 
 - **Filed, not worked** (`docs/planning/BACKLOG.md` index row and open list; `docs/planning/BACKLOG-DETAIL.md` §BL-74).
