@@ -199,6 +199,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [ad hoc] S192 — `bl57/changelog-rules` pushed to `origin`, `20db3f0..77afc12`: PR #84's head is now the fence fix (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin bl57/changelog-rules`, a fast-forward of one commit, `77afc12`. Guarded: `origin`'s branch
+  still `20db3f0`, ancestor checked, worktree clean. Read back: `git ls-remote` = `77afc127790f…`, and `gh pr view 84`
+  reads OPEN, head `77afc12`, 29 commits. The go-ahead was the operator's picker after Phase 0, for after close-out
+  and only once the gate passed: `77afc12` read `10/10 pass · results 93ea168d093e`. PR #84's description was not
+  edited; that is its own go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S192 — the gate re-run on the close-out `f6d1c0b`: 10/10 pass, results d56e26f10caf
+
+- In a `--no-local` clone with HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  d56e26f10caf · manifest 58d766958ae1`, `tests-sh-passed` 331, the same digest as the merge `ea1a057`'s run. The record
+  commit's one unnamed failure (`4c96234`, 9/10) did not recur. The close-out's edits change no measured value (BL-64).
+
 ### 2026-09-18 · [BL-72] S192 close-out — the fence fix done (`77afc12` on the branch, `ea1a057` in fork `main`); BL-73 raised; P9 next
 
 - **Receipt** in `HANDOFFS.md` (S192, `status: complete`, self 8, predecessor S191 9). Learnings withheld from
