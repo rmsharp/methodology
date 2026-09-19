@@ -199,6 +199,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S193 — PR #84's description drafted for its head `77afc12`: the fence fix named, the figures re-measured (not posted)
+
+- `docs/planning/changelog-rules-pr-body.md`: a bullet under *What this changes* naming the `bin/check-handoff` fence
+  fix, in the PR's outward terms (no session, backlog or plan codes). It says why the fix belongs in this PR: the seed
+  section the PR's migration route brings into adopters holds the `sh` block the checker misread. `main`'s checker is
+  identical to the branch's before the fix, and `main`'s seed has carried the block since `56997af`. The header line
+  moves to head `77afc12`, 26 commits plus three merges, 20 files +770 / −296, `CHANGELOG.md` +494 / −7. The previous
+  figures were reproduced first on `20db3f0` as a control (they exclude `CHANGELOG.md`). *Verified* now reads 163 passed:
+  in a `--no-local` clone of `77afc12`, `quality_ratchet.py --run` read `10/10 pass · results 93ea168d093e`, S192's digest.
+  `bin/check-links` still read 111 links across 23 files, and `context_budget.py --status` still read nothing over budget.
+  `git merge-tree` against `upstream/main` exits 0.
+- **Not posted.** Editing the live description is its own go-ahead, asked after the operator reads this draft.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [ad hoc] S193 — `tests-sh-passed` floor tightened 305 → 331, the count measured at two receipts
 
 - `.quality-gates.json` `tests-sh-passed` 305 → 331: `quality_ratchet.py --run` in a `--no-local` clone of `037335d`

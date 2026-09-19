@@ -3,15 +3,17 @@
 Fork-only working file: the draft title and body for the pull request from `rmsharp:bl57/changelog-rules`
 into `KJ5HST/methodology:main`. Everything below the rule is the body as it would be posted. Written under
 plan [`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) §P12, step 5; revised
-after an independent review of the frozen draft (S189).
+after an independent review of the frozen draft (S189). Revised at S193 for head `77afc12` (the `bin/check-handoff`
+fence fix): a bullet under *What this changes*, and the head, commit, diff and suite figures, each re-measured.
+**Not yet posted:** the live description still reads as at `20db3f0` until the operator approves the edit.
 
 **Title:** Put the CHANGELOG.md rules in one synced home: the seed becomes a pointer, and the rules stop contradicting each other
 
 ---
 
-**Base `main` (`6b29d3d`), head `rmsharp:bl57/changelog-rules` (`20db3f0`).** 25 commits, plus three merges
+**Base `main` (`6b29d3d`), head `rmsharp:bl57/changelog-rules` (`77afc12`).** 26 commits, plus three merges
 of `main` into the branch (the last at `f572068`, after your first tightening), so `git merge-tree` against
-`main` reports no conflicts. 19 files, +680 / −292, and `CHANGELOG.md` +476 / −7: one entry per commit, as
+`main` reports no conflicts. 20 files, +770 / −296, and `CHANGELOG.md` +494 / −7: one entry per commit, as
 #76–#79 did, plus your root ledger's front matter (+34 / −7, its own commit). No Learning row, no
 failure-mode change, no hook behaviour change.
 
@@ -55,6 +57,17 @@ restated, differently, wherever a session needed them.
   hook's refusal text changes the same two words; its behaviour does not.
 - **Your root `CHANGELOG.md` front matter** points to the home for its rules, audit and month headings — its
   own commit, `83a12f0`, because it is your file (see *What can be dropped*).
+- **`bin/check-handoff` no longer skips the newest receipt behind the seed's fenced example** (`77afc12`, added
+  since this PR opened). The `HANDOFFS.md` seed's *Size, and when to archive* section, which this PR's migration
+  route brings into adopters above their receipts, holds a fenced `sh` block. The checker knew two fence openers,
+  a bare backtick run and `handoff`, so it read that block's closing fence as an opener and skipped to the next
+  bare fence: the newest receipt's closing one. It then checked the receipt below and exited 0, and `--all`
+  counted one fewer. `main` has the same checker, and its seed has carried the block since `56997af`. A fence with
+  any other info string is now skipped to its closing fence, as CommonMark reads it; its lines stay visible to the
+  check that reports a receipt under a misspelled tag, and an unclosed one is reported. Ten assertions in
+  `bin/tests.sh` Test 22: six fail on the previous checker, and each of six mutants of the fix fails at least one.
+  It was found by running the checker on three adopter ledgers that carry a copy of the section; in each, the
+  newest receipt was the one skipped.
 - **Three smaller fixes ride along.**
   - **Your review's F5 on #80.** `methodology_trim.py` stops citing a `--no-renames` flag no hook has. For the
     design document, you asked for it to be published with the PR; this PR instead links the contributor's
@@ -137,7 +150,7 @@ the new densities with the blobs they were measured on (`adaa4a3`), as its own r
 
 On the branch tip, in a fresh `--no-local` clone with `HEAD` asserted:
 
-- `python3 starter-kit/quality_ratchet.py --run` — **10/10 pass**: `bin/tests.sh` 153 passed / 0 failed,
+- `python3 starter-kit/quality_ratchet.py --run` — **10/10 pass**: `bin/tests.sh` 163 passed / 0 failed,
   dashboard units 226, budget units 122, trimmer units 124, ratchet units 45, and `check-links`,
   `check-learnings`, `check-handoff --all`, `commit-msg --selftest` all at 0.
 - `python3 starter-kit/context_budget.py --status` — nothing over budget.
@@ -148,7 +161,7 @@ On the branch tip, in a fresh `--no-local` clone with `HEAD` asserted:
   marker read *present* under a heading key and reads *present (stale format)* now (`bin/tests.sh` Test 20 (g)).
 
 Three floors in `.quality-gates.json` now sit below what the branch measures (`tests-sh-passed` 139 against
-153, `context-budget-unit-tests` 118 against 122, `trimmer-unit-tests` 123 against 124). The manifest is
+163, `context-budget-unit-tests` 118 against 122, `trimmer-unit-tests` 123 against 124). The manifest is
 yours, so this PR does not raise them.
 
 ## Adopters: `bin/sync` dry runs
