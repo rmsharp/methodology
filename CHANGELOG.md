@@ -199,6 +199,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S193 close-out — P9 done in `mts-system` and recorded here; three side actions done; P10 next
+
+- **Receipt** in `HANDOFFS.md` (self 8, predecessor S192 9). P9 ran in `mts-system`'s Session 139 from this session's
+  launch prompt, and was recorded and re-verified here (`676ca33`). One remainder stays there: the superseded rules block,
+  item (28). The side actions were the push of `037335d`, the floor 305 → 331 (`e9b7962`), and PR #84's description,
+  drafted (`8db82c2`) and posted (`99fb6bf`). Close-out gate, `--no-local` clone of `676ca33`: `10/10 pass · 0 fail · 0
+  unmeasured · results 6d2ca2197aa7`, 337 passed at 3 receipts. Learnings withheld (BL-53); candidates are below the
+  receipt. Next: P10 (`nprcgenekeepr`, which starts with a decision); P9's remainder in `mts-system`; the push of fork
+  `main` (6 commits) needs a go-ahead. 3 receipts: the `HANDOFFS.md` trim is owed after the next claim.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-57] S193 — P9 (`mts-system`) recorded: done in that repository's Session 139, re-verified from here; one remainder there, items (28)–(29)
 
 - **Recorded** in `docs/planning/changelog-rules-contradictions-plan.md`: the status line, a P9 block with items (28) and
