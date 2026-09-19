@@ -199,6 +199,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S195 — P11 (`model_project_constructor`) decided and its launch prompt written, from facts measured read-only there
+
+- **Decided by the operator (picker)**, from options each run first in a `--no-local` scratch clone of
+  `model_project_constructor` at `a18706f`: **(a)** the runner's seven task-to-workstream rows and its *Wiki sync*
+  paragraph (live path) move into `CLAUDE.md`, and its step 5 (*"external dashboard, never a copy here"*) is retired,
+  since the sync installs `methodology_dashboard.py` at the root; **(b)** the ledger adopts the rules going forward,
+  cadence included: 156 legacy entries frozen, pointer and marker in place of the header's Keep-a-Changelog lines (`:5`–`:6`),
+  a tagged entry per action under `## YYYY-MM` above `## [0.3.0]`, superseding that project's `PROJECT_CONVENTIONS.md` §2
+  and its two SETTLED rulings (2026-08-17, 2026-08-25). Not taken: all three edits verbatim; the new format with the old
+  cadence; pointer only (both of the last need `CLAUDE.md` to override the runner's Phase 0 step 6 and 3F).
+- **Measured in the clone:** the forced sync writes 26 files; the project's suite is 1395 passed, 9 skipped, 97.98% at
+  `a18706f`, after the sync and after a (b)-shaped ledger; its ledger proofs pass both modes before and after; CI's ruff and mypy
+  pass on the synced tree; three tool outputs land untracked. `SAFEGUARDS.md` holds no local edit: it equals blob `6ba2c156` from the fork's pre-rebase merge
+  `b91ac8c`, only on `backup/pr9-pre-rebase`. With three tagged entries the trimmer's dry run would archive the 156 legacy
+  entries inside one record, lossless and mislabelled.
+- **Written:** `docs/planning/bl57-p11-model-project-constructor-launch-prompt.md` (eleven facts, ten steps); the plan's
+  P11 row, status line, a P11 paragraph and items (32)–(34); BL-57's backlog row.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
 ### 2026-09-19 · [BL-57] S195 — P10's records corrected: `nprcgenekeepr` pushed `4cfe2dad..4565c39d` after S194's close-out, and its CI is green
 
 - **The plan** (`docs/planning/changelog-rules-contradictions-plan.md`): the P10 block's *"not pushed"* is struck with
