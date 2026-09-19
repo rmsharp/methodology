@@ -199,6 +199,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S193 claim — P9 (`mts-system`) runs in that project's own session; this session records it here when the operator relays its report (in progress)
+
+**Deliverable:** the recording of P9 in `docs/planning/changelog-rules-contradictions-plan.md` (a P9 block, the P9 row and
+the status line), once the operator relays the report of `mts-system`'s own session, as S191 recorded P8. **Chosen by the
+operator after Phase 0 (picker)**, over BL-73, BL-53 and BL-54's PR, as S192's handoff ranked it. The same picker approved
+three separate actions, each with its own entry: push `037335d` to `origin` (done, the entry below), draft one paragraph
+for PR #84's description naming the `bin/check-handoff` fence fix its head now carries (editing the live PR stays its own
+go-ahead), and raise the fork's `tests-sh-passed` floor 305 → 331. The P9 option said this session would claim nothing
+until the relay; it claims now because two of the approved actions commit.
+
+**Phase 0:** `CHANGELOG.md` frontier `037335d` = HEAD, no gap; `HANDOFFS.md` frontier `f6d1c0b` (S192's close-out), three
+commits behind, all post-close-out records with their own entries (`6d62e1b`, `730331c`, `037335d`), no receipt by
+design. Nothing backfilled. The gate in a `--no-local` clone of `037335d` reads `10/10 pass · 0 fail · 0 unmeasured ·
+results d56e26f10caf · manifest 58d766958ae1`, S192's citation, `tests-sh-passed` 331 at two receipts. Dashboard 76/100,
+one medium risk; `context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set total, all known.
+`upstream/main` still `6b29d3d`; PR #84 open at `77afc12`, no reviews or comments; PR #83 open; no open upstream issues.
+Two receipts, so no `HANDOFFS.md` trim is owed. `CHANGELOG.md` is 221,415 B, past its trigger, under the operator's
+standing no-trim decision. `mts-system` is clean at `710a0f7`, the tree the P9 row was read at. Phase 0's two tracked
+rows ride here.
+
+### 2026-09-18 · [ad hoc] S193 — fork `main` pushed to `origin`, `730331c..037335d` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 037335d:refs/heads/main`, a fast-forward of one commit: S192's after-close-out correction
+  to P11's plan row. Guarded: `origin/main` re-fetched and still `730331c`, an ancestor of `037335d`. Read back:
+  `git ls-remote origin refs/heads/main` = `037335db2336…`. The go-ahead was the operator's picker after Phase 0; the
+  standing push-record grant did not cover it, since the commit records no push. This claim commit is not pushed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-57] S192, after close-out — P11's row corrected: `model_project_constructor`'s runner carries three local edits, not one
 
 - The operator asked why `../model_project_constructor` has no `HANDOFFS.md`. Answered read-only, at its `a18706f`:

@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S193
+date: 2026-09-18
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57 P9 (`mts-system`) RUNS IN THAT PROJECT'S OWN SESSION; THIS SESSION RECORDS IT HERE WHEN THE OPERATOR RELAYS ITS REPORT, AS S191 DID FOR P8.** Chosen by the operator after Phase 0 (picker), over BL-73, BL-53 and BL-54's PR, as S192's handoff ranked it. The same picker approved three separate actions: push `037335d` to `origin` (done before this claim, read back), draft one paragraph for PR #84's description naming the `bin/check-handoff` fence fix its head now carries (editing the live PR is its own go-ahead, asked after the operator reads the text), and raise the fork's `tests-sh-passed` floor 305 → 331. The P9 option said this session would claim nothing until the relay; it claims now because two of the approved actions commit.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:961` (P6–P11: steps and DONE), `:1011` (the P9 row), `:370`, `:379`, `:385` (items (25)–(27)), `:1226` (§9.8); `.quality-gates.json:12` (the `tests-sh-passed` floor), `:4` (why it is measured at two receipts); `docs/planning/changelog-rules-pr-body.md` (PR #84's description); `../mts-system/HANDOFFS.md:77` (its first receipt at `710a0f7`), `:216`, `:320`, `:671` (BL-73's three)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: pending
+commit: pending
+```
+
+```handoff
 session: S192
 date: 2026-09-18
 status: complete
