@@ -199,6 +199,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S195 close-out — P11 decided, run in `model_project_constructor` from this session's prompt, and recorded; every adopter phase is done
+
+**Deliverable:** BL-57's P11, carried the way S194 carried P10 — measured read-only, every option run first in a
+`--no-local` scratch clone, both decisions put to the operator in a picker, the launch prompt committed under
+`docs/planning/`, and the relayed report recorded here after re-verification from a clone of `159e739`. With P11 done,
+**P6–P11 are all complete** and BL-57's remainder is PR #84's review upstream.
+
+**Actions this session, each with its own entry above:** the claim (`25249d7`), P10's records corrected now that
+`nprcgenekeepr` has pushed with green CI (`a7b40a9`), P11 decided with its launch prompt (`00893e0`), the push of fork
+`main` to `origin` on the operator's go-ahead (`de4652c`), BL-74 raised on request (`a69ef73`), and P11 recorded with
+items (35)–(37) and BL-75 (`a127ba1`).
+
+**Gate, in a `--no-local` clone of `a127ba1` with HEAD asserted:** `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured ·
+results 6d2ca2197aa7 · manifest 61cd292c36bd`; `bin/tests.sh` 337 passed, 0 failed, 0 skipped at three receipts, with
+Test 34's six assertions live again. Phase 0 on `f921596` read `results a5197f8a439f`, 331 at two receipts.
+
+**Learnings, withheld as rows and recorded here instead.** `docs/FORK_LEARNINGS.md` is 81,721 B of its 81,920 B ceiling
+— 199 B, less than any row's median — so BL-53's question is due before the next row, as its config note says. The three
+candidates this session would have written: (a) *a command a repository has cited for months may not exist — read
+`--help` before citing it in a prompt, a receipt or a proposed gate, and note what the tool does with an unknown
+argument*; (b) *predicting what a ledger trim moves needs the file's ZONES, not its record count — a standalone `---`
+creates a footer no trim touches*; (c) *an adopter's own conventions can set a rule the framework's rules contradict, so
+read them before framing a decision as a format question*. **Nothing was removed from a mandated-read file this
+session** (the runner's decay-term prompt): the two backlog items and this entry add to what Phase 0 reads, and
+`CHANGELOG.md` is now 8,706 B from the refusal ceiling where the operator's no-trim decision ends.
+
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
 ### 2026-09-19 · [BL-57] S195 — P11 (`model_project_constructor`) recorded: done in that repository's Session 259, re-verified from here; items (35)–(37)
 
 - **Run there from this session's launch prompt**, nine commits `bb91fda`..`159e739` on `master`, not pushed (25 ahead
