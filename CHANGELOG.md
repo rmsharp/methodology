@@ -199,6 +199,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S193 — PR #84's description updated on GitHub to the `8db82c2` draft (non-commit action, operator go-ahead)
+
+- **Action:** `gh api -X PATCH repos/KJ5HST/methodology/pulls/84 -F body=@…`, with the body below the rule in
+  `docs/planning/changelog-rules-pr-body.md` at `8db82c2`. Guarded: the live body was re-fetched first and was
+  byte-identical to the one the draft was diffed against, so no one had edited it in between. GitHub's `updated_at` was
+  `2026-09-19T04:21:50Z`. Read back: the live body equals the draft apart from the one trailing newline `jq` adds. PR #84
+  is OPEN at head `77afc12`, with no reviews or comments. The go-ahead was the operator's second picker, after reading
+  the draft; the first picker had approved only the draft. The draft file's front matter now says it is posted (this
+  commit).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-57] S193 — PR #84's description drafted for its head `77afc12`: the fence fix named, the figures re-measured (not posted)
 
 - `docs/planning/changelog-rules-pr-body.md`: a bullet under *What this changes* naming the `bin/check-handoff` fence

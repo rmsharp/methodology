@@ -5,7 +5,7 @@ into `KJ5HST/methodology:main`. Everything below the rule is the body as it woul
 plan [`changelog-rules-contradictions-plan.md`](changelog-rules-contradictions-plan.md) §P12, step 5; revised
 after an independent review of the frozen draft (S189). Revised at S193 for head `77afc12` (the `bin/check-handoff`
 fence fix): a bullet under *What this changes*, and the head, commit, diff and suite figures, each re-measured.
-**Not yet posted:** the live description still reads as at `20db3f0` until the operator approves the edit.
+**Posted at S193 (2026-09-19T04:21:50Z, operator go-ahead)**, and read back identical to the text below.
 
 **Title:** Put the CHANGELOG.md rules in one synced home: the seed becomes a pointer, and the rules stop contradicting each other
 
