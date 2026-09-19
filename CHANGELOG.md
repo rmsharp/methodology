@@ -199,6 +199,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-57] S192, after close-out — P11's row corrected: `model_project_constructor`'s runner carries three local edits, not one
+
+- The operator asked why `../model_project_constructor` has no `HANDOFFS.md`. Answered read-only, at its `a18706f`:
+  `bin/sync --dry-run --source=local` exits 2 before writing anything, refusing its `SESSION_RUNNER.md` and
+  `SAFEGUARDS.md` as locally modified, so no seed has reached it since the receipt shipped (`4f0bea7`, 2026-07-08), and
+  its runner never mentions `HANDOFFS.md`. The plan's P11 row named one customization (step 5). Classified line by line
+  against every canonical version, there are three: step 5, the task-to-workstream table and a *Wiki sync* paragraph,
+  10 of the 29 lines that differ from `7073dec`; the other 19 are later canonical text. Recorded in the P11 row; P11 is
+  not started. Committed locally, not pushed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [ad hoc] S192 — fork `main` pushed to `origin`, `fa0e36e..6d62e1b` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin main`, a fast-forward of 8 commits, all this session's: the claim `96de3ee`, the trim
