@@ -199,6 +199,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S196 claim — trim this file, 6,284 B from the hard read refusal; the owed `HANDOFFS.md` retention trim and a push ride with it (in progress)
+
+**Deliverable:** the `CHANGELOG.md` trim that the operator's no-trim decision (2026-09-14, `3745748`, reaffirmed at
+S177) defers until this file passes the 262,144 B hard read refusal. It is **255,860 B — 6,284 B of headroom, less than
+one session writes** (S195 added about 9,500 B), so the trim is raised now rather than after the refusal, which is what
+S195's close-out asked for. **Chosen by the operator after Phase 0 (picker)**, over BL-53, BL-75 and BL-74. Method: the
+cut is chosen and written in a `--no-local` scratch clone first (S195's gotcha (2) — a prediction from a record count
+was wrong by 13 entries and six days, because a standalone `---` zones a footer no trim moves), the shard's shipped
+`.verify.sh` proves the reconstruction lossless, and `bash bin/tests.sh` re-runs after.
+
+**Two side actions approved in the same picker, each with its own entry:** the `HANDOFFS.md` retention trim owed at this
+Phase 0 — 3 receipts, 4 with this claim, against a retention of 1 and a trigger above 2 — with its pointer block folded
+into [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md) in its own commit (fork Learning #58); and the
+push of `a69ef73`, `a127ba1` and `431279b` to `origin`, which is at `de4652c`.
+
+**Phase 0:** both frontiers are HEAD `431279b` — `git log <frontier>..HEAD` empty on each — the newest receipt is
+`status: complete`, no `CHANGELOG: pending` stub stands, and nothing was backfilled. The gate re-run in the clean
+working tree at HEAD reads `10/10 pass · 0 fail · 0 unmeasured · results 6d2ca2197aa7 · manifest 61cd292c36bd`, S195's
+citation exactly, with `tests-sh-passed` 337 at three receipts. Dashboard 76/100 (Activity 20/20, Testing 20/20,
+Documentation 16/20, CI/CD 0/20, Framework 20/20): four medium flags — no CI/CD pipeline; the `tests-sh-passed`
+327 → 294 lowering in `368b29c`, which is the **operator-approved D10 loosening** recorded in `.quality-gates.json` and
+here, and which the dashboard cannot see as approved; large files (BL-68); and this file's size — plus one low, 31
+branches (BL-71). `upstream/main` is still `6b29d3d`; PR #84 is open at `77afc12`, mergeable, with no reviews or
+comments; PR #83 is open; upstream has no open issues. `docs/FORK_LEARNINGS.md` is 81,721 of 81,920 B (BL-53).
+`context_budget.py` was **not** run: it has no `--status` (BL-75, confirmed here from `--help`) and its default run
+appends a row to the tracked `.context-budget-history.jsonl`, which Phase 0's read-only rule does not permit. Phase 0's
+one tracked row — the dashboard's — rides here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-57] S195 close-out — P11 decided, run in `model_project_constructor` from this session's prompt, and recorded; every adopter phase is done
 
 **Deliverable:** BL-57's P11, carried the way S194 carried P10 — measured read-only, every option run first in a

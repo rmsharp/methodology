@@ -11,7 +11,23 @@ replacing S127's N=4**, taken against BL-59's measurement of what actually reads
 handoff is done by the newest receipt alone. **Depth and trigger are separate on purpose:**
 every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **`methodology_trim.py` fires on BYTES (196,608 B),
 never on a record count**, so the policy is applied by the session that notices: Phase 0 runs
-`grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
+`grep -c '^```handoff
+session: S196
+date: 2026-09-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **TRIM `CHANGELOG.md`, WHICH IS 255,860 B — 6,284 B UNDER THE 262,144 B HARD READ REFUSAL** where the operator's no-trim decision (2026-09-14, `3745748`, reaffirmed S177) ends. Chosen by the operator after Phase 0 (picker), over BL-53, BL-75 and BL-74. The cut is chosen and written in a `--no-local` scratch clone before anything is written here, the shard's shipped `.verify.sh` proves the reconstruction lossless, and `bash bin/tests.sh` re-runs after. **Two side actions approved in the same picker, each its own commit:** the owed `HANDOFFS.md` retention trim (3 receipts at Phase 0, 4 with this claim; retention is 1, trigger above 2) with its pointer block folded into `docs/HANDOFFS_ARCHIVE_INDEX.md` in its own commit (fork Learning #58), and the push of `a69ef73`, `a127ba1` and `431279b` to `origin`.
+what_was_done: pending
+next_steps: pending
+key_files: `CHANGELOG.md:60`–`:80` (the shard pointer block and the archiving-is-the-operator's-decision paragraph the trim must leave true), `:198` (the standalone `---` that zones the footer), `:200` (the topmost `## 2026-09`); `HANDOFFS.md:8`–`:16` (the retention policy) and `:50` (the fold comment); `starter-kit/methodology_trim.py:1014` (`choose_cut`; `--cut N` RETAINS N records, `_explicit_retain:1045`), `:1093` (`build_pointer_block`); `docs/HANDOFFS_ARCHIVE_INDEX.md` (the fold target)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-19 · [ad hoc] S196 claim"
+commit: pending
+```
+
+```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
 that report, never inside Phase 0, which is read-only apart from the reconcile backfill
 (`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 1 --force`. The force is
 warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
