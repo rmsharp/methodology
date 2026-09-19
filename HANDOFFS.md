@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S194
+date: 2026-09-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57 P10 (`nprcgenekeepr`): WRITE ITS LAUNCH PROMPT FROM FACTS MEASURED READ-ONLY IN THAT PROJECT, AND RECORD P10 HERE WHEN THE OPERATOR RELAYS ITS REPORT, AS S193 DID FOR P9.** Chosen by the operator after Phase 0 (picker), over P9's remainder, BL-53 and BL-73. P10 runs in `nprcgenekeepr`'s own session and starts with a decision about its 49-line local extension of `methodology_trim.py`. That project's own S718 was claimed at 02:03 today, so the launch waits for it to close. The same picker approved one side action: correct this repo's P9 records, which still say `mts-system` is not pushed (`b8a20ce` is on its `origin/master`, verified).
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:1056` (the P10 row), `:372` and `:377` (item (25)), `:431` (item (28)), `:443` (item (29)), `:408`–`:409` (the P9 block), `:1055` (the P9 row), `:1270` (§9.8); `../nprcgenekeepr/CLAUDE.md:271`
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-19 · [BL-57] S194 claim"
+commit: pending
+```
+
+```handoff
 session: S193
 date: 2026-09-18
 status: complete

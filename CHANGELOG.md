@@ -199,6 +199,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S194 claim — P10 (`nprcgenekeepr`): its launch prompt from facts measured read-only there; this session records P10 when the operator relays its report (in progress)
+
+**Deliverable:** the launch prompt for P10 (`docs/planning/changelog-rules-contradictions-plan.md:1056`), written from
+`bin/status` and `bin/sync --dry-run` run read-only on `nprcgenekeepr`, then the recording of P10 here once the operator
+relays that project's report, as S193 did for P9. **Chosen by the operator after Phase 0 (picker)**, over P9's remainder,
+BL-53 and BL-73. `nprcgenekeepr`'s own S718 was claimed at 02:03 today, so the launch waits for it to close. The same
+picker approved one side action, with its own entry: correct this repo's P9 records, which still say `mts-system` is not
+pushed (`b8a20ce` is on its `origin/master`, checked here with `git rev-parse`).
+
+**Phase 0:** `CHANGELOG.md` frontier `04b2e9f` = HEAD, no gap; `HANDOFFS.md` frontier `bbcb0af` (S193's close-out), one
+commit behind, the push record `04b2e9f` with its own entry, no receipt by design. Nothing backfilled. The gate in a
+`--no-local` clone of `04b2e9f` reads `10/10 pass · 0 fail · 0 unmeasured · results 6d2ca2197aa7 · manifest
+61cd292c36bd`, S193's citation; `bin/tests.sh` 337 passed, 0 failed, 0 skipped at three receipts. Dashboard 76/100, one
+medium risk; `context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set total, all known.
+`upstream/main` still `6b29d3d`; PR #84 open at `77afc12`, no reviews or comments; PR #83 open; no open upstream issues.
+Three receipts, so the `HANDOFFS.md` trim is owed after this claim. `CHANGELOG.md` is 230,970 B, under the operator's
+standing no-trim decision. **Asked after Phase 0:** what `mts-system`'s push report meant. Its Drift Sentinel failure is
+production (`/health` at `e2041b0`) behind `origin/master`; the failed run's annotation says so, and the scheduled runs at
+`710a0f7` were already failing. Phase 0's two tracked rows ride here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S193 — fork `main` pushed to `origin`, `037335d..bbcb0af` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin bbcb0af:refs/heads/main`, a fast-forward of 6 commits, all this session's: the claim
