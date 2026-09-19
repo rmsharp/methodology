@@ -6,13 +6,15 @@ backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S17
 before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in that repository, recorded here at S180
 (see the P6 block), and P7 (`wsfct`) is done in that repository and MERGED to its default branch, recorded here at
 S185 (see the P7 block), and P8 (`vscode_quarto_ext`) is done in that repository, recorded here at S191 (see the P8
-block)**; P9–P11 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
+block)**, and P9 (`mts-system`) is done there, recorded here at S193 (see the P9 block); P10–P11 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
 commit. Item (21) was decided by the operator at S186: P8–P11 also migrate a stale `HANDOFFS.md` seed. Item (22) was
 done at S187, on the branch (`100f09b`) and merged into fork `main` (`2d5ce70`). At S188 the operator put the
 three fixes P12 carries (F5, BL-62, BL-63) on the branch before P12, and chose P12's merge (item (23)); all three are
 on the branch (`657acb7`, `5223afb`, `0d63410`) and merged into fork `main` (`5f5a400`). **P12 is done at S189: [PR #84](https://github.com/KJ5HST/methodology/pull/84) is OPEN, head `20db3f0` (item (24)). At S190 the branch's last eight commits were merged into fork `main` (`2410657`). P8 is done (S191). BL-72, the
 `bin/check-handoff` fence fix the operator put before P9 (S191), is done at S192: on the branch (`77afc12`, riding PR #84,
-the operator's choice) and merged into fork `main` (`ea1a057`). P9 is next.**
+the operator's choice) and merged into fork `main` (`ea1a057`). P9 (`mts-system`) is done in that repository, recorded
+here at S193 (the P9 block), with one remainder there (item (28)). PR #84's description names the fix since S193. P10
+is next.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -402,6 +404,48 @@ generic `bin/status` → `bin/sync` route. Measured first, read-only, against th
 merged (a `--no-ff` merge, as the maintainer merged #80 and #82), nine are refused, six of them only because they hold
 versions from this fork's history that upstream's never had. So after PR #84 merges, these projects keep syncing from fork
 `main`, or each takes one `--force` after checking what it would overwrite.
+
+**P9 done (2026-09-18) in `mts-system`'s own repository, its Session 139; recorded here at S193.** Nine commits on
+`master`, not pushed (the operator there declined a push; `origin/master` is still `710a0f7`): `a48f543` (claim),
+`76c7f38` (`.gitignore` gains `.quality-gates-results.json`, one commit ahead of the sync: item (25) applied, and item
+(29)), `adb2c9b` (the sync from fork `main` `v3.7-956-g99fb6bf`: 16 files plus its entry, 17 in all, item (18) applied),
+`f70358c` (the `CHANGELOG.md` pointer and marker, a pure 10-line insertion after old :9), `24c590f` (the `HANDOFFS.md`
+section, a pure 61-line insertion above the first receipt), `e4b36f1` (`CLAUDE.md`'s ledger wording at three sites and a
+legacy-layout adaptation), `97f8aa7` (item (28), filed there as CLEANUP-006), `6b9cbb4` (its learnings), `b8a20ce`
+(close-out). The row's line numbers, read at `710a0f7`, still held. DONE, re-run read-only from here at S193 in a
+`--no-local` clone of `mts-system` at `b8a20ce`, with `bin/status` and `bin/sync` from a clone of fork `main` `99fb6bf`:
+`bin/status` reads `CHANGELOG.md` and `HANDOFFS.md` `present` and every tracked file current; `bin/sync --dry-run` exits 0
+with nothing to write; neither ledger lost a line across the phase (`git diff --numstat 710a0f7 b8a20ce`: `CHANGELOG.md`
++61/−0, `HANDOFFS.md` +78/−0), and every old line survives in order; at `f70358c` `grep -c '^### '` went 266 → 267 and
+the anchored audit 265 → 266, the migration's 1 entry (no shards); the trimmer's dry run prints `L1_OK`, `L2_OK` and
+`L3_OK` on both ledgers. **§9.8 cannot fail on either commit:** both are pure insertions, and a control range prints the
+same (S139 found this; confirmed here), so the zero-deletion count and the order check carry that item. The build item
+(backend 664, admin 1336 and web 105 tests passed) rests on S139's receipt and was not re-run from here.
+**BL-72's fix, on a real ledger for the first time.** Asked which receipt is the newest (`scan()`'s first block): at
+`710a0f7` every checker reads S138. At `b8a20ce`, with the seed's section and its `sh` block above the receipts, the
+unfixed checker (`20db3f0`, identical to `upstream/main`'s) still reads S138, 70 blocks, skipping S139; the fixed one
+(`77afc12`, and fork `main` `99fb6bf`) reads S139, 71 blocks. From fork `main`, `check-handoff --all` reports the same 33
+issues before and after, all in older receipts, only their line numbers moved: P9 added none. BL-73's three twice-opened
+receipts now open at :294, :397 and :749 (:216, :319 and :671 at `710a0f7`).
+What P9 found, for P10–P11:
+(28) **A ledger can hold a second, superseded rules block below its header, and the phase row did not name it.**
+`mts-system`'s `CHANGELOG.md` keeps the pre-v3.5 seed's rules text, from `## How to add an entry` to the seed's
+`<!-- Entries go below … -->` comment: 48 lines at :782 on `b8a20ce`, first added by `28e9bb3` (its v3.5 sync), now
+between two runs of entries. Its fenced format example holds one `### ` line, and its tag list matches the old-form
+audit four times; the anchored audit matches none of it. S139 found it by scanning the whole file's headings and filed
+it there as CLEANUP-006 rather than widen the phase. By step 3's own rule (replace *the rules text … the block*) it is
+part of the migration, as the P10 row already treats `nprcgenekeepr`'s block between two runs of entries, so it is
+**P9's remainder**: one commit in `mts-system`, on which §9.8 with the block's bounds can fail, since the commit removes
+lines. Predicted for that commit: `grep -c '^### '` +0 (−1 for the block, +1 for its entry), the anchored audit +1, the
+old-form audit −3 (−4, and +1 only if the entry's own text matches once: the unanchored form also counts prose). **S139 asked whether P9's recorded counts should be restated: no.** Each count is recorded
+against the commit it was measured on, and the remainder records its own. **At P10 and P11's claim, list the whole
+ledger's `## ` headings (`grep -n '^## ' CHANGELOG.md`), not only the header.**
+(29) **A strict deploy gate refuses what the synced tools write, not only what the sync adds.** `mts-system`'s
+`scripts/deploy_vps.sh` refuses to deploy while any file is untracked (:82) and rsyncs with `--exclude-from=.gitignore`
+(:111–112), so every file a synced tool writes must be tracked or ignored. `76c7f38` covers
+`.quality-gates-results.json`. Not covered there: `context_budget.py` appends `.context-budget-history.jsonl` when a
+measurement changes (S139's receipt, gotcha (b)), and `mts-system`'s `.gitignore` does not list it. At P10 and P11's
+claim, check what the synced tools write when they run, beside item (25)'s new root files.
 
 ---
 
@@ -1008,7 +1052,7 @@ decision; medium otherwise.
 | P6 | `airqino` | **DONE 2026-09-17, recorded at S180 (the P6 block, items (16)–(18)).** BL-56 folds in: reseed from the thin seed and carry its ~~one entry~~ entries (two by then; the header was migrated by hand) across, unchanged. ~~Route A from the branch, because its files are the branch's versions; from fork `main`, BL-54 refuses four files.~~ Route B, since S179 fixed BL-54. ~~It is on `chore/methodology-read-set-budgets`, off open PR #1~~ Landed on `chore/methodology-bl57-p6`, taken from that branch's `1402ad4` |
 | P7 | `wsfct` | **DONE 2026-09-17 in that repository and MERGED there (PR #903, squash `66e14daa`); recorded here at S185 (the P7 block, items (19)–(21)).** At the claim, check first that `wsfct` is clean, with no other session's claim staged or uncommitted (at S181 its own S629 had one staged). At fork `main` `b0bf91f` the dry run exits 0 and would write 14 files; it ran from `29b0feb`, 14 files, `8a41741c`. Replace the older full seed copy (block ~~:13–196~~ **:8–182**, re-derived at the claim; 5 `### ` lines) with the thin header, `12fb758e`. Route B. `CLAUDE.md` :43, :218, :695 (*"Completed work history"*) and :162, :206 (completed-work framing), `8d0e696a` |
 | P8 | `vscode_quarto_ext` | **DONE 2026-09-18 in that repository (Session 264, `48d1790c`..`57750bb2`, not pushed); recorded here at S191 (the P8 block, items (25)–(27)).** Replace the Keep-a-Changelog header (:1–8) with the thin header, keeping the shard pointer. Record the `[BACKLOG: …]` entries as legacy in `CLAUDE.md`. Drop `CHANGELOG.md` from its `.context-budget.json` (Q2 A; the project's call). Route B. `CLAUDE.md` :102, :146. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `58f7bcbd`, to re-derive at the claim: the first receipt is at :33, below the pointer block (:29–31); the section goes in above that block. The count sentence (:20–22), the pointer block and the project's own *fence-aware* warning (:23–27) all stay |
-| P9 | `mts-system` | Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `710a0f7`: the first receipt is :77, and the section goes in above it. The first `^```handoff` match (:32) is the old seed's worked example inside a four-backtick wrapper (:31–55), not a receipt. No count sentence, no pointer block. The file is 373,021 B, past the 262,144 B read refusal. **Found, not a P9 effect:** the fence opened at :216 (`session: S131`) never closes before the next at :219, and `bin/check-handoff --all --file ../mts-system/HANDOFFS.md` reads them as one block (*"first two keys must be `session` then `date` (got session, session)"*). Check it before P9, and don't attribute it to P9 **S192, at `710a0f7`: the same shape recurs at `:320` (`S126`) and `:671` (`S106`), three in all; `--all` reports `:216` and `:671` only, since `:320`'s `date:` precedes its second opener (BL-73).** |
+| P9 | `mts-system` | **DONE 2026-09-18 in that repository (Session 139, `a48f543`..`b8a20ce`, not pushed); recorded here at S193 (the P9 block, items (28)–(29)). One remainder: the superseded rules block at :782, item (28), filed there as CLEANUP-006.** Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `710a0f7`: the first receipt is :77, and the section goes in above it. The first `^```handoff` match (:32) is the old seed's worked example inside a four-backtick wrapper (:31–55), not a receipt. No count sentence, no pointer block. The file is 373,021 B, past the 262,144 B read refusal. **Found, not a P9 effect:** the fence opened at :216 (`session: S131`) never closes before the next at :219, and `bin/check-handoff --all --file ../mts-system/HANDOFFS.md` reads them as one block (*"first two keys must be `session` then `date` (got session, session)"*). Check it before P9, and don't attribute it to P9 **S192, at `710a0f7`: the same shape recurs at `:320` (`S126`) and `:671` (`S106`), three in all; `--all` reports `:216` and `:671` only, since `:320`'s `date:` precedes its second opener (BL-73).** |
 | P10 | `nprcgenekeepr` | **Decide first.** Its 49-line local extension of `methodology_trim.py` blocks every sync, because one modified file refuses the whole run. Three options: send the extension upstream; migrate the seed only and leave the pointer dangling until it can sync; or `--force`, which discards the extension. Then replace the rules block (:3946–:4065, 2 `### ` lines, between two runs of entries) and record the S325 legacy block and September's `## 2026-08` placement in `CLAUDE.md` (:271) |
 | P11 | `model_project_constructor` | **Decide first.** (a) Its runner customization (step 5) moves into `CLAUDE.md` Adaptations before any `--force` sync (*fork* `BOOTSTRAP.md:75`). (b) Its ledger is a release-grouped work log of 143 untagged `### date — …` entries, which the trimmer refuses by design: either adopt the action-ledger format going forward (the S325 *"freeze legacy, go forward"* precedent) or record an adaptation. It has no `HANDOFFS.md` and no trimmer today. **S192, after close-out (the operator asked why it has no `HANDOFFS.md`), read-only at `a18706f`: `bin/sync --dry-run` exits 2 before writing anything, refusing `SESSION_RUNNER.md` and `SAFEGUARDS.md`, so no seed has reached it since the receipt shipped (`4f0bea7`, 2026-07-08); its runner never mentions `HANDOFFS.md`. The runner's local edits are three, not one:** step 5, the task-to-workstream table (seven project rows in place of four canonical ones) and a *Wiki sync* paragraph (which `CLAUDE.md:75` already corrects). They are 10 lines of the 29 that differ from the closest canonical version (`7073dec`, 2026-04-07); the other 19 are later canonical text grafted in. `SAFEGUARDS.md` differs from `3d648ab` by one line. (a) must move all three before any `--force` |
 

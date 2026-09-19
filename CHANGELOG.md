@@ -199,6 +199,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S193 — P9 (`mts-system`) recorded: done in that repository's Session 139, re-verified from here; one remainder there, items (28)–(29)
+
+- **Recorded** in `docs/planning/changelog-rules-contradictions-plan.md`: the status line, a P9 block with items (28) and
+  (29), and the P9 row marked DONE; the BL-57 row in `docs/planning/BACKLOG.md` (BL-72's and P9's status, next P10). P9
+  ran in `mts-system`'s own Session 139, `a48f543`..`b8a20ce` on its `master`, not pushed there. The operator said
+  *continue*, and its report was read from that session's receipt.
+- **Re-verified read-only**, in a `--no-local` clone of `mts-system` at `b8a20ce` with `bin/status` and `bin/sync` from a
+  clone of fork `main` `99fb6bf` (the version it synced from): both ledgers `present`, every tracked file current, and the
+  sync dry run exits 0 with nothing to write. Across the phase both ledgers only gained lines (+61/−0 and +78/−0), and
+  every old line is kept in order. `### ` went 266 → 267 and the anchored audit 265 → 266 at `f70358c`. The trimmer's dry
+  run printed `L1_OK`–`L3_OK` on both. §9.8 cannot fail on a pure insertion, and its control prints the same. The
+  project's tests rest on its receipt.
+- **BL-72's fix, seen on a real ledger:** after P9 the unfixed checker (`20db3f0` = `upstream/main`) reads S138 as the newest
+  receipt, skipping S139, and the fixed one (`77afc12`, `99fb6bf`) reads S139. `--all` finds the same 33 issues before and
+  after. BL-73's three are now at :294, :397 and :749.
+- **Items:** (28) a superseded 48-line rules block sits partway down `mts-system`'s `CHANGELOG.md` (from `28e9bb3`). By
+  step 3's rule it is P9's remainder there (its CLEANUP-006), with predicted counts, and P9's recorded counts stand. P10
+  and P11 list the ledger's `## ` headings at the claim. (29) The synced tools write files a strict deploy gate refuses;
+  `.context-budget-history.jsonl` is not yet ignored there.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-57] S193 — PR #84's description updated on GitHub to the `8db82c2` draft (non-commit action, operator go-ahead)
 
 - **Action:** `gh api -X PATCH repos/KJ5HST/methodology/pulls/84 -F body=@…`, with the body below the rule in
