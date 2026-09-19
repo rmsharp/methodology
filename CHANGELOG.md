@@ -199,6 +199,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S195 — P10's records corrected: `nprcgenekeepr` pushed `4cfe2dad..4565c39d` after S194's close-out, and its CI is green
+
+- **The plan** (`docs/planning/changelog-rules-contradictions-plan.md`): the P10 block's *"not pushed"* is struck with
+  the push beside it, and *"the push"* struck from what stays open there; the P10 row says pushed, CI green. Read back
+  with `git rev-parse origin/master` in `nprcgenekeepr`: `4565c39d`, also its HEAD. **CI on `4565c39d`**, read with
+  `gh run list` there: lint, test-coverage, pkgdown and R-CMD-check all `success` (R-CMD-check run `35466135548`,
+  finished 20:34:58Z), the first full `R CMD check` of P10's tree. `shinytest2` runs nightly or on dispatch, not per push.
+- **`docs/planning/BACKLOG.md`:** BL-57's row loses the *"Owed here"* sentence `6434065` wrote; it now says the push
+  and CI are recorded. The side action the operator approved in this session's first picker.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
 ### 2026-09-19 · [BL-57] S195 claim — P11 (`model_project_constructor`): its two decisions and launch prompt from facts measured read-only there; this session records P11 when the operator relays its report (in progress)
 
 **Deliverable:** P11 (`docs/planning/changelog-rules-contradictions-plan.md:1104`), done the way S194 did P10: measure
