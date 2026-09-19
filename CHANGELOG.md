@@ -199,6 +199,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S194 — P10 (`nprcgenekeepr`) decided and its launch prompt written, from facts measured read-only there
+
+- **Decided by the operator (picker), from four options each run first in a `--no-local` scratch clone of
+  `nprcgenekeepr` at `312996b0`:** `--force` the sync, then re-apply the project's 49-line `SESSION_NOTES.md` extension
+  to `methodology_trim.py` in its own commit. Measured: the forced dry run lists 15 files; after the sync the trimmer
+  answers `NO_CONFIG` (exit 3) on `SESSION_NOTES.md`; the patch passes `git apply --check` onto 1.5.0 and the extended
+  trimmer's `SESSION_NOTES.md` dry run matches the old 1.1.2 copy's (`L1_OK`–`L3_OK`, 18 of 19 records, 70,138 → 3,979
+  B). 1.5.0 fires at 196,608 B, not 65,536; `--budget-bytes 65536` restores the old verdict. Not taken: seed only (the
+  new header's link would dangle), force and drop (breaks its `SESSION_NOTES.md` archive), settle BL-32 first.
+- **Written:** [`docs/planning/bl57-p10-nprcgenekeepr-launch-prompt.md`](docs/planning/bl57-p10-nprcgenekeepr-launch-prompt.md),
+  nine measured facts and ten steps. The P10 row in `docs/planning/changelog-rules-contradictions-plan.md` records the
+  decision and links it; the BL-57 row in `docs/planning/BACKLOG.md` too.
+- **Found, re-measured since 2026-09-14:** the rules block the P10 row named (`:3946`–`:4065`) has left the live
+  `CHANGELOG.md` (37,090 B now). S700's and S710's trims moved it into the frozen shard
+  `docs/archive/CHANGELOG-through-2026-09-17.md` (`:4171`), so the ledger step becomes a pure insertion. `HANDOFFS.md`
+  holds an older `## Size, and when to archive` at `:62`–`:117`, to be replaced; §9.8 can fail on that commit. Six root files match no
+  `.Rbuildignore` pattern (item (25)); both tool outputs show untracked (item (29)); 13 of 35 live entries use a bare
+  `[BL]` tag; `CLAUDE.md:277` still says the trimmer isn't distributed (`upstream/main`'s `bin/_manifest.py:45` ships it).
+  BL-32's detail says `bin/sync` *"silently discards"* a local edit to the trimmer; the dry run refuses it (exit 2).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-57] S194 — P9's records corrected: `mts-system` pushed `710a0f7..b8a20ce` after S193's close-out
 
 - **Corrected** in `docs/planning/changelog-rules-contradictions-plan.md`: the P9 block's *"not pushed"* (struck, with the
