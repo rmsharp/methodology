@@ -199,6 +199,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-18-2.md` (2 record(s), 39,126 B → 17,052 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-18 → 2026-09-18) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-18-2.md`](docs/archive/HANDOFFS-through-2026-09-18-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-18-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-18-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,126 B → 17,052 B (−56.4%).
+
 ### 2026-09-19 · [BL-57] S194 claim — P10 (`nprcgenekeepr`): its launch prompt from facts measured read-only there; this session records P10 when the operator relays its report (in progress)
 
 **Deliverable:** the launch prompt for P10 (`docs/planning/changelog-rules-contradictions-plan.md:1056`), written from
