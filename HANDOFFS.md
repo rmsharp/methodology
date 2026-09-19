@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S195
+date: 2026-09-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **BL-57 P11 (`model_project_constructor`): DECIDE ITS TWO QUESTIONS FROM FACTS MEASURED READ-ONLY THERE AND OPTIONS RUN IN A SCRATCH CLONE, WRITE ITS LAUNCH PROMPT, AND RECORD P11 HERE WHEN THE OPERATOR RELAYS ITS REPORT, AS S194 DID FOR P10.** Chosen by the operator after Phase 0 (picker), over BL-53, P10's record correction alone and BL-73. The two decisions (plan row `docs/planning/changelog-rules-contradictions-plan.md:1104`): (a) the runner's three local edits move into `CLAUDE.md` Adaptations before any `--force` sync; (b) its 143 untagged `### date — …` entries freeze as legacy or get an adaptation. The same picker approved one side action: correct P10's records here (*"not pushed"*; `nprcgenekeepr`'s `origin/master` is `4565c39d`) with its CI result once R-CMD-check on `4565c39d` finishes.
+what_was_done: pending
+next_steps: pending
+key_files: `docs/planning/changelog-rules-contradictions-plan.md:1104` (the P11 row), `:458` and `:1103` (P10's block and row), `:1052` (P6–P11 steps and DONE); `docs/planning/bl57-p10-nprcgenekeepr-launch-prompt.md` (the template); `../model_project_constructor` at `a18706f`
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-19 · [BL-57] S195 claim"
+commit: pending
+```
+
+```handoff
 session: S194
 date: 2026-09-19
 status: complete

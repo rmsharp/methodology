@@ -199,6 +199,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S195 claim — P11 (`model_project_constructor`): its two decisions and launch prompt from facts measured read-only there; this session records P11 when the operator relays its report (in progress)
+
+**Deliverable:** P11 (`docs/planning/changelog-rules-contradictions-plan.md:1104`), done the way S194 did P10: measure
+`bin/status` and `bin/sync --dry-run` read-only on `model_project_constructor`, run each option for its two decisions in a
+`--no-local` scratch clone, put them to the operator in a picker, write the launch prompt as a committed file under
+`docs/planning/`, then record P11 here once the operator relays that project's report. **Chosen by the operator after
+Phase 0 (picker)**, over BL-53, P10's record correction alone and BL-73. The same picker approved one side action, with
+its own entry: correct P10's records here, which still say `nprcgenekeepr` is not pushed (`origin/master` = `4565c39d`,
+read with `git rev-parse`), adding its CI result once R-CMD-check on `4565c39d` finishes.
+
+**Phase 0:** `CHANGELOG.md` frontier `f921596` = HEAD, no gap; `HANDOFFS.md` frontier `4be5f0d` (S194's close-out), four
+commits behind, all S194's post-close-out work with their own entries, no receipt by design. Nothing backfilled. The gate
+in a `--no-local` clone of `f921596` reads `10/10 pass · 0 fail · 0 unmeasured · results a5197f8a439f · manifest
+61cd292c36bd`, S194's citation exactly; `bin/tests.sh` 331 passed, 0 failed, 6 skipped at two receipts (Test 34's six).
+Dashboard 76/100, one medium risk; `context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set
+total, all known. `upstream/main` still `6b29d3d`; PR #84 open at `77afc12`, mergeable, no reviews or comments; PR #83
+open; no open upstream issues. Two receipts, so no `HANDOFFS.md` trim is owed. `CHANGELOG.md` is 243,951 B, under the
+operator's standing no-trim decision (18,193 B below 262,144 B). `model_project_constructor` last committed `a18706f`
+(2026-09-18 17:22), clean. Phase 0's two tracked rows ride here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S194 — fork `main` pushed to `origin`, `f566905..9484c5a` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin 9484c5a:refs/heads/main`, a fast-forward of one commit: the BL-53 provenance record
