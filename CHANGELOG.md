@@ -199,6 +199,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-72] S192 close-out — the fence fix done (`77afc12` on the branch, `ea1a057` in fork `main`); BL-73 raised; P9 next
+
+- **Receipt** in `HANDOFFS.md` (S192, `status: complete`, self 8, predecessor S191 9). Learnings withheld from
+  `docs/FORK_LEARNINGS.md` (81,721 of 81,920 B) pending BL-53; three candidates under the receipt.
+- **The gate on the docs-only record `4c96234`** read `quality_ratchet: 9/10 pass · 1 fail · 0 unmeasured · results
+  9091857edc91 · manifest 58d766958ae1` (`tests-sh-failed` 1, `tests-sh-passed` 330). The ratchet keeps no suite output,
+  so the failing test is unnamed; a diagnostic `bash bin/tests.sh` in a fresh clone of the same commit read 331 passed,
+  0 failed, 6 skipped. Treated as intermittent (BL-43 the known candidate, unconfirmed); the receipt cites the merge's
+  10/10 and this run both. This close-out is re-measured after it lands, and fork `main` is pushed only if that passes.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-73] Raised — `bin/check-handoff` reads a second `handoff` opener inside an open receipt as content
 
 - Found while verifying BL-72 on `mts-system` (read-only, at `710a0f7`): a receipt begun twice, an opener and a
