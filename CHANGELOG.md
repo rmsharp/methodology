@@ -199,6 +199,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S194 — P10 (`nprcgenekeepr`) recorded: done in that repository's Session 719, re-verified from here; items (30)–(31)
+
+- **Recorded** in `docs/planning/changelog-rules-contradictions-plan.md`: the status line, a P10 block with items (30) and
+  (31), and the P10 row marked DONE; the BL-57 row in `docs/planning/BACKLOG.md`, next P11. P10 ran in `nprcgenekeepr`'s
+  own Session 719 from S194's launch prompt, `74243f04`..`4565c39d` on its `master`, not pushed there. The operator
+  relayed its report here.
+- **Re-verified read-only**, in a `--no-local` clone of `nprcgenekeepr` at `4565c39d` with `bin/status` and `bin/sync`
+  from fork `main` `ce14b3f`: both ledgers `present`, 22 tracked files current, the trimmer *locally modified* by design
+  (the dry run exits 2 on it alone). The synced trimmer equals fork `main`'s blob, and the re-applied extension adds
+  exactly the original 49 lines. §9.8 `62 117 HANDOFFS.md` on `47364f51` prints *only the block changed*, and the new
+  section equals the seed's. `ba1f0135` is 13/0 with all 540 old lines in order. `### ` 37 → 46 and the anchored audit
+  24 → 33 (nine `[ad hoc]`). Trimmer `L1_OK`–`L3_OK` on all three ledgers. The six item-(25) files are excluded from the
+  build, and both tool outputs are ignored. The project's tests rest on its report.
+- **Two of the report's differences explained:** its trimmer counts (43, 11, 20) are those at `2f451d1d`, and its
+  `bin/_manifest.py:50` is fork `main`'s line where the prompt cited `upstream/main`'s `:45`. **Items:** (30) a phase
+  row's block can leave the live file before the phase runs (trimmed into a frozen shard); (31) a locally extended synced
+  tool costs every later sync a refusal until BL-32, and the 1.1.2 → 1.5.0 sync changes an adopter's trim cadence.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-57] S194 — P10 (`nprcgenekeepr`) decided and its launch prompt written, from facts measured read-only there
 
 - **Decided by the operator (picker), from four options each run first in a `--no-local` scratch clone of

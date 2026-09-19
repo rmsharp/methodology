@@ -6,7 +6,8 @@ backed up to `origin` at `83a12f0`). **P5 is done at S178, by merge (see the S17
 before P6, was fixed fork-side at S179 (`2c4f801`). **P6 (`airqino`) is done in that repository, recorded here at S180
 (see the P6 block), and P7 (`wsfct`) is done in that repository and MERGED to its default branch, recorded here at
 S185 (see the P7 block), and P8 (`vscode_quarto_ext`) is done in that repository, recorded here at S191 (see the P8
-block)**, and P9 (`mts-system`) is done there, recorded here at S193 (see the P9 block); P10–P11 are not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
+block)**, and P9 (`mts-system`) is done there, recorded here at S193 (see the P9 block), and P10 (`nprcgenekeepr`) is
+done there, recorded here at S194 (see the P10 block); P11 is not. **Item (18) was decided by the operator at S181: one `bin/sync` run is one
 commit. Item (21) was decided by the operator at S186: P8–P11 also migrate a stale `HANDOFFS.md` seed. Item (22) was
 done at S187, on the branch (`100f09b`) and merged into fork `main` (`2d5ce70`). At S188 the operator put the
 three fixes P12 carries (F5, BL-62, BL-63) on the branch before P12, and chose P12's merge (item (23)); all three are
@@ -14,7 +15,8 @@ on the branch (`657acb7`, `5223afb`, `0d63410`) and merged into fork `main` (`5f
 `bin/check-handoff` fence fix the operator put before P9 (S191), is done at S192: on the branch (`77afc12`, riding PR #84,
 the operator's choice) and merged into fork `main` (`ea1a057`). P9 (`mts-system`) is done in that repository, recorded
 here at S193 (the P9 block), with one remainder there (item (28)). PR #84's description names the fix since S193. P10
-is next.**
+(`nprcgenekeepr`) was decided by the operator at S194 (force the sync, then re-apply its trimmer extension), done in that
+repository from S194's launch prompt, and recorded here at S194 (the P10 block). P11 is next.**
 **Workstream:** [`ARCHITECTURE_WORKSTREAM.md`](../../workstreams/ARCHITECTURE_WORKSTREAM.md) (a migration
 plan), under [`SESSION_RUNNER.md` §Planning Sessions](../../starter-kit/SESSION_RUNNER.md).
 **Source:** [BL-57](BACKLOG-DETAIL.md#bl-57), raised 2026-09-14 on the operator's request, high priority.
@@ -452,6 +454,45 @@ ledger's `## ` headings (`grep -n '^## ' CHANGELOG.md`), not only the header.**
 `.quality-gates-results.json`. Not covered there: `context_budget.py` appends `.context-budget-history.jsonl` when a
 measurement changes (S139's receipt, gotcha (b)), and `mts-system`'s `.gitignore` does not list it. At P10 and P11's
 claim, check what the synced tools write when they run, beside item (25)'s new root files.
+
+**P10 done (2026-09-19) in `nprcgenekeepr`'s own repository, its Session 719; recorded here at S194.** Decided first by
+the operator at S194 (picker), from four options each run in a scratch clone at `312996b0`: `--force` the sync, then
+re-apply the project's 49-line `SESSION_NOTES.md` extension to `methodology_trim.py`. Run from S194's launch prompt,
+[`bl57-p10-nprcgenekeepr-launch-prompt.md`](bl57-p10-nprcgenekeepr-launch-prompt.md). Eleven commits on `master`, not
+pushed (16 ahead of `origin/master` `4cfe2dad` in all, with S717's backfill and S718's four): `74243f04` (Phase 0 backfill of `312996b0`), `d064993a` (claim),
+`00b8a4ca` (six `.Rbuildignore` patterns and two `.gitignore` entries, ahead of the sync: items (25) and (29) applied),
+`b773ddb6` (the forced sync from fork `main` `v3.7-964-gce14b3f`: 15 files plus its entry, 16 in all, item (18)
+applied), `63b3286f` (the extension re-applied), `ba1f0135` (the `CHANGELOG.md` pointer and marker, a pure insertion),
+`47364f51` (the `HANDOFFS.md` `## Size, and when to archive` section replaced), `2f451d1d` (`CLAUDE.md`: the trimmer
+checklist corrected, the bare `[BL]` tag and the empty `## 2026-08` recorded as legacy forms, and the trim-budget choice),
+`f88afcb2` (its backlog), `a095f4be` (close-out), `4565c39d` (receipt sha). DONE, re-run read-only from here at S194 in a
+`--no-local` clone of `nprcgenekeepr` at `4565c39d`, with `bin/status` and `bin/sync` from fork `main` `ce14b3f`:
+`bin/status` reads `CHANGELOG.md` and `HANDOFFS.md` `present`, 22 tracked files current and `methodology_trim.py`
+*locally modified*, by design; the dry run exits 2 on that file alone, and with `--force` would write only it. The
+trimmer at `b773ddb6` is byte-identical to fork `main`'s, and `63b3286f` adds exactly the original 49 lines (the same
+added lines as `git diff 18d8e3c7 312996b0`), nothing removed. §9.8 with bounds `62 117 HANDOFFS.md` on `47364f51`
+prints *only the block changed*, and the new section (`:62`–`:121`) equals the seed's `:89`–`:148`. `ba1f0135` is 13/0
+in `CHANGELOG.md`, and all 540 old lines survive in order. From the claim `d064993a` to `4565c39d`, `grep -c '^### '`
+went 37 → 46 and the anchored audit 24 → 33: nine entries, all `[ad hoc]`. The trimmer's dry run prints `L1_OK`–`L3_OK`
+on all three ledgers (46, 11 and 21 records at `4565c39d`; the report's 43, 11 and 20 are the counts at `2f451d1d`).
+All six files from item (25) match an `.Rbuildignore` pattern, and `git check-ignore` confirms both tool outputs are
+ignored. The build item (the R CMD build tarball ships none of the tooling or ledger files; the test suite 2,437 blocks,
+0 failed, equal to S718's baseline) rests on S719's report and was not re-run from here; a full `R CMD check` was not run
+there. The report's *"`bin/_manifest.py` lists the trimmer at `:50`, not `:45`"* reads fork `main`, where it is `:50`;
+the prompt named `upstream/main`, where it is `:45`. Both are right. **Open there, that project's go-ahead:** the push,
+the trim-budget cadence (it took 1.5.0's 196,608 B default; `--budget-bytes 65536` restores the old 65,536 B), and
+whether to adopt `context_budget.py`.
+What P10 found, for P11 and the upstream route:
+(30) **The block a phase row names can leave the live file before the phase runs.** Measured on 2026-09-14 at
+`:3946`–`:4065`, `nprcgenekeepr`'s rules block was gone by P10: its own trims (S700, S710) had moved it into the frozen
+shard `docs/archive/CHANGELOG-through-2026-09-17.md` (`:4171`). A shard is not edited, so the ledger step became a pure
+insertion, like P9's. At P11's claim, re-derive the row's line ranges against the live file, and search the shards too.
+(31) **A locally extended synced tool can be kept, at a price every later sync pays.** Force, then re-apply, works: the
+patch applies onto trimmer 1.5.0, and the extended copy's dry run matched the old one's. The file then reads *locally
+modified*, so every later `bin/sync` refuses the whole run (exit 2) until BL-32 gives adopters a supported way to add a
+ledger. BL-32's detail says `bin/sync` *"silently discards"* such an edit; today it refuses. The same sync also moved
+the trimmer 1.1.2 → 1.5.0, which raises the byte trigger from 65,536 to 196,608 B and drops the line trigger: an adopter
+on an old trimmer gets a new trim cadence from a sync, and only `--budget-bytes` keeps the old one.
 
 ---
 
@@ -1059,7 +1100,7 @@ decision; medium otherwise.
 | P7 | `wsfct` | **DONE 2026-09-17 in that repository and MERGED there (PR #903, squash `66e14daa`); recorded here at S185 (the P7 block, items (19)–(21)).** At the claim, check first that `wsfct` is clean, with no other session's claim staged or uncommitted (at S181 its own S629 had one staged). At fork `main` `b0bf91f` the dry run exits 0 and would write 14 files; it ran from `29b0feb`, 14 files, `8a41741c`. Replace the older full seed copy (block ~~:13–196~~ **:8–182**, re-derived at the claim; 5 `### ` lines) with the thin header, `12fb758e`. Route B. `CLAUDE.md` :43, :218, :695 (*"Completed work history"*) and :162, :206 (completed-work framing), `8d0e696a` |
 | P8 | `vscode_quarto_ext` | **DONE 2026-09-18 in that repository (Session 264, `48d1790c`..`57750bb2`, not pushed); recorded here at S191 (the P8 block, items (25)–(27)).** Replace the Keep-a-Changelog header (:1–8) with the thin header, keeping the shard pointer. Record the `[BACKLOG: …]` entries as legacy in `CLAUDE.md`. Drop `CHANGELOG.md` from its `.context-budget.json` (Q2 A; the project's call). Route B. `CLAUDE.md` :102, :146. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `58f7bcbd`, to re-derive at the claim: the first receipt is at :33, below the pointer block (:29–31); the section goes in above that block. The count sentence (:20–22), the pointer block and the project's own *fence-aware* warning (:23–27) all stay |
 | P9 | `mts-system` | **DONE 2026-09-18 in that repository (Session 139, `a48f543`..`b8a20ce`, ~~not pushed~~ pushed 2026-09-19, the P9 block); recorded here at S193 (the P9 block, items (28)–(29)). One remainder: the superseded rules block at :782, item (28), filed there as CLEANUP-006.** Add the pointer and marker under its title and intro (:1–8); its 165 non-numeric `[BL-…]` entries now conform. Route B. Its hook is on, so every commit carries an entry. `CLAUDE.md` :152, :182, :189. **`HANDOFFS.md` is stale too (item (21)).** Read at S186 on `710a0f7`: the first receipt is :77, and the section goes in above it. The first `^```handoff` match (:32) is the old seed's worked example inside a four-backtick wrapper (:31–55), not a receipt. No count sentence, no pointer block. The file is 373,021 B, past the 262,144 B read refusal. **Found, not a P9 effect:** the fence opened at :216 (`session: S131`) never closes before the next at :219, and `bin/check-handoff --all --file ../mts-system/HANDOFFS.md` reads them as one block (*"first two keys must be `session` then `date` (got session, session)"*). Check it before P9, and don't attribute it to P9 **S192, at `710a0f7`: the same shape recurs at `:320` (`S126`) and `:671` (`S106`), three in all; `--all` reports `:216` and `:671` only, since `:320`'s `date:` precedes its second opener (BL-73).** |
-| P10 | `nprcgenekeepr` | **DECIDED at S194 (operator, picker): `--force` the sync, then re-apply the extension in its own commit** (measured in a scratch clone: the patch applies onto trimmer 1.5.0 and its `SESSION_NOTES.md` dry run matches the old copy's). **Launch prompt, with the facts measured at `312996b0`: [`bl57-p10-nprcgenekeepr-launch-prompt.md`](bl57-p10-nprcgenekeepr-launch-prompt.md).** ~~**Decide first.**~~ Its 49-line local extension of `methodology_trim.py` blocks every sync, because one modified file refuses the whole run. Three options: send the extension upstream; migrate the seed only and leave the pointer dangling until it can sync; or `--force`, which discards the extension. ~~Then replace the rules block (:3946–:4065, 2 `### ` lines, between two runs of entries)~~ **The block has left the live file** (S700/S710 trimmed it into the frozen `docs/archive/CHANGELOG-through-2026-09-17.md`, `:4171`), so the `CHANGELOG.md` step is a pure insertion of the pointer and marker. Then record the S325 legacy block and September's `## 2026-08` placement in `CLAUDE.md` (:271) |
+| P10 | `nprcgenekeepr` | **DONE 2026-09-19 in that repository (Session 719, `74243f04`..`4565c39d`, not pushed); recorded here at S194 (the P10 block, items (30)–(31)).** **DECIDED at S194 (operator, picker): `--force` the sync, then re-apply the extension in its own commit** (measured in a scratch clone: the patch applies onto trimmer 1.5.0 and its `SESSION_NOTES.md` dry run matches the old copy's). **Launch prompt, with the facts measured at `312996b0`: [`bl57-p10-nprcgenekeepr-launch-prompt.md`](bl57-p10-nprcgenekeepr-launch-prompt.md).** ~~**Decide first.**~~ Its 49-line local extension of `methodology_trim.py` blocks every sync, because one modified file refuses the whole run. Three options: send the extension upstream; migrate the seed only and leave the pointer dangling until it can sync; or `--force`, which discards the extension. ~~Then replace the rules block (:3946–:4065, 2 `### ` lines, between two runs of entries)~~ **The block has left the live file** (S700/S710 trimmed it into the frozen `docs/archive/CHANGELOG-through-2026-09-17.md`, `:4171`), so the `CHANGELOG.md` step is a pure insertion of the pointer and marker. Then record the S325 legacy block and September's `## 2026-08` placement in `CLAUDE.md` (:271) |
 | P11 | `model_project_constructor` | **Decide first.** (a) Its runner customization (step 5) moves into `CLAUDE.md` Adaptations before any `--force` sync (*fork* `BOOTSTRAP.md:75`). (b) Its ledger is a release-grouped work log of 143 untagged `### date — …` entries, which the trimmer refuses by design: either adopt the action-ledger format going forward (the S325 *"freeze legacy, go forward"* precedent) or record an adaptation. It has no `HANDOFFS.md` and no trimmer today. **S192, after close-out (the operator asked why it has no `HANDOFFS.md`), read-only at `a18706f`: `bin/sync --dry-run` exits 2 before writing anything, refusing `SESSION_RUNNER.md` and `SAFEGUARDS.md`, so no seed has reached it since the receipt shipped (`4f0bea7`, 2026-07-08); its runner never mentions `HANDOFFS.md`. The runner's local edits are three, not one:** step 5, the task-to-workstream table (seven project rows in place of four canonical ones) and a *Wiki sync* paragraph (which `CLAUDE.md:75` already corrects). They are 10 lines of the 29 that differ from the closest canonical version (`7073dec`, 2026-04-07); the other 19 are later canonical text grafted in. `SAFEGUARDS.md` differs from `3d648ab` by one line. (a) must move all three before any `--force` |
 
 ### P12 — The upstream PR (after #80 merges; outward, its own go-ahead)
