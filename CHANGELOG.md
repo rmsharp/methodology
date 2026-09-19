@@ -199,6 +199,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S194 — fork `main` pushed to `origin`, `f566905..9484c5a` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 9484c5a:refs/heads/main`, a fast-forward of one commit: the BL-53 provenance record
+  `9484c5a`. Guarded: `origin/main` re-fetched and still `f566905`, an ancestor; clean tree. Read back: `git ls-remote
+  origin refs/heads/main` = `9484c5a06ad3…`. The go-ahead was the operator's *"push fork main to origin"*. Nothing sent
+  upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-53] S194, after close-out — provenance of "no new learning row until BL-53": a session's inference, not an operator decision
 
 - **Recorded in BL-53's row** in `docs/planning/BACKLOG.md`, at the operator's request after asking what the item meant.
