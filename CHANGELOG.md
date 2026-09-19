@@ -199,6 +199,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [ad hoc] S193 — `tests-sh-passed` floor tightened 305 → 331, the count measured at two receipts
+
+- `.quality-gates.json` `tests-sh-passed` 305 → 331: `quality_ratchet.py --run` in a `--no-local` clone of `037335d`
+  (HEAD asserted), with `HANDOFFS.md` holding two receipts, the state the floor is defined at (`.quality-gates.json`
+  `_fork_tightening`), and Test 9 green (`tests-sh-failed` 0): `10/10 pass · 0 fail · 0 unmeasured · results
+  d56e26f10caf`, the digest S192 measured on `ea1a057`. 305 was S179's; the rows since, the last ten BL-72's, bring it to
+  331. With three receipts Test 34's six rows run and the count is higher, never lower. A tightening needs no approval;
+  the operator approved this one in the Phase 0 picker, as S192's handoff offered it. The other gates are unchanged.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [BL-57] S193 claim — P9 (`mts-system`) runs in that project's own session; this session records it here when the operator relays its report (in progress)
 
 **Deliverable:** the recording of P9 in `docs/planning/changelog-rules-contradictions-plan.md` (a P9 block, the P9 row and

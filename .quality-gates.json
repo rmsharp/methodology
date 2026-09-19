@@ -9,7 +9,7 @@
     {
       "name": "tests-sh-passed",
       "direction": "min",
-      "threshold": 305,
+      "threshold": 331,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
       "why": "the framework's build equivalent; the passed count is a ratchet — every suite it wires in (dashboard, trim, budget, ratchet units) reports through it"
