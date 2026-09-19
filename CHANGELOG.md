@@ -199,6 +199,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-53] S194, after close-out — provenance of "no new learning row until BL-53": a session's inference, not an operator decision
+
+- **Recorded in BL-53's row** in `docs/planning/BACKLOG.md`, at the operator's request after asking what the item meant.
+  The practice starts at S188's close-out (`6e94f3b`); S189 cited it (`5217d1d`) and S190–S194 followed. The
+  operator's S159 note in `.context-budget.json` says answer BL-53 when the warning fires, not stop writing rows.
+  Nothing refuses a row: `bin/check-learnings` caps rows (`:106`), not the file, and no hook runs `context_budget.py`.
+  S194's handoff repeated the practice as a rule (next step (6)); the row now says where it came from.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S194 — fork `main` pushed to `origin`, `04b2e9f..6434065` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin 6434065:refs/heads/main`, a fast-forward of 8 commits, all S194's: the claim `6822b8f`,
