@@ -199,6 +199,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S194 close-out — P10 decided, run in `nprcgenekeepr` from this session's prompt, and recorded; P11 next
+
+- **Receipt** in `HANDOFFS.md` (self 8, predecessor S193 9). P10's route was decided by the operator from four options
+  run first in a scratch clone (`ce14b3f`, with the launch prompt), run in `nprcgenekeepr`'s Session 719, and recorded and
+  re-verified here (`be63205`). Side actions: the `HANDOFFS.md` trim and fold (`d1647ce`, `42b7d5d`), P9's *"not
+  pushed"* corrected (`c20d6ab`). Close-out gate, `--no-local` clone of `be63205`: `10/10 pass · 0 fail · 0 unmeasured ·
+  results a5197f8a439f`, 331 passed and 6 skipped at 2 receipts, exactly on the floor. Learnings withheld (BL-53);
+  candidates are below the receipt.
+- **Correction:** `ce14b3f`'s entry, the plan and the prompt credited the move of `nprcgenekeepr`'s rules block to
+  *"S700's and S710's trims"*. The shard holding it was written by S702's trim (`6bac092f`, 2026-09-17). The plan's
+  P10 row and item (30) now say so; the prompt carries a note and is otherwise left as sent.
+- **Answered at close-out, no action here:** push `nprcgenekeepr` now (recommended; a fast-forward from `4cfe2dad`, no
+  package files among the 16 commits). That is that project's go-ahead; once it pushes, P10's *"not pushed"* here is
+  corrected as P9's was. Fork `main` (7 commits) needs a push go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-57] S194 — P10 (`nprcgenekeepr`) recorded: done in that repository's Session 719, re-verified from here; items (30)–(31)
 
 - **Recorded** in `docs/planning/changelog-rules-contradictions-plan.md`: the status line, a P10 block with items (30) and

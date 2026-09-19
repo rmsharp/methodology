@@ -14,6 +14,10 @@ only (the new header's link would dangle, since `docs/methodology/FRAMEWORK_APPA
 force and drop the extension (`SESSION_NOTES.md` then reads `NO_CONFIG`, exit 3); settle BL-32 first (a design
 session and an upstream PR before P10 could run).
 
+**Correction, S194 close-out (the prompt below is left as it was sent):** fact 4 credits the rules block's move to
+*"S700's and S710's trims"*. The shard holding it was written by S702's trim (`6bac092f`, 2026-09-17); S700 archived
+`SESSION_NOTES.md`, and S710 trimmed `CHANGELOG.md` again later. P10's steps did not depend on which session it was.
+
 ---
 
 **Task: BL-57 phase P10 — bring this project's `CHANGELOG.md` and `HANDOFFS.md` to the current methodology's ledger
