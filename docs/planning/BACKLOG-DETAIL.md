@@ -2487,3 +2487,30 @@ non-`handoff` fence is skipped to its closer, as a wrapper is. RED first on the 
 canonical-only, so no adopter receives it (adopters may copy it, `starter-kit/SAFEGUARDS.md` §Close-Out Completeness
 Hook); the fix still goes upstream, where the seed carries the same block: inside PR #84 (whose route puts the section
 into adopters' files) or as its own PR, decided in the fix session, its own go-ahead.
+
+**Closed at S192 (2026-09-18): fixed as shaped above, on `bl57/changelog-rules` (`77afc12`) so it rides PR #84 (the
+operator's choice, picker, over its own PR or fork `main` only), and merged into fork `main` as `ea1a057`.** Beyond the
+shape: an info string may not contain a backtick, so a prose line that starts with inline code quoting a fence opens
+nothing; the skipped block's lines stay visible to the orphan check, so a receipt under a misspelled tag is reported at
+its own lines; an unclosed one is a finding, like an unclosed wrapper. A `handoff`-tagged fence takes the old paths
+unchanged. Ten assertions in `bin/tests.sh` Test 22 (six failed on the unfixed checker); six mutants of the fix each
+fail one or more. Re-read against the three adopters, read-only: the first block `scan()` returns moved from S18 to S19
+in `airqino`, S714 to S715 in `nprcgenekeepr` (which has moved on since S191) and S263 to S264 in `vscode_quarto_ext`;
+`mts-system` is unchanged. Found while verifying, and filed apart: BL-73.
+
+**BL-73 — `bin/check-handoff` reads a second `handoff` opener inside an open receipt as content, so a receipt begun
+twice reads as one block, and `--all` reports it only when the key order breaks. Raised 2026-09-18 (S192), while
+verifying BL-72 on `mts-system`. Not fixed.**
+
+**What.** `scan()`'s receipt loop (`bin/check-handoff:289`–`:306` on fork `main` since `ea1a057`) collects every line up
+to the first bare fence as the receipt's content, including a line that is itself a `handoff` opener. `mts-system`'s
+`HANDOFFS.md` (read at `710a0f7`, the file last changed 2026-09-15) holds three instances of one shape: an opener and a
+`session:` line (at `:320` a `date:` line too), a blank line, then a second opener carrying the whole receipt. They are
+`:216`/`:219` (`S131`), `:320`/`:323` (`S126`) and `:671`/`:674` (`S106`); each reads as one block. `--all` reports `:216`
+and `:671` only through `validate_ledger`'s key-order rule (*"first two keys must be `session` then `date` (got session,
+session)"*). `:320` passes, because its `date:` comes before the second opener. BL-57's P9 row named only `:216`.
+
+**Fix shape (not built).** A `handoff` opener inside an open receipt is a structural finding in `scan()` (*"a receipt
+opened at line N is opened again at line M before it closes"*), so `--all` reports every instance whatever the key
+order. RED first, on the three `mts-system` shapes as fixtures. The checker is canonical-only; its upstream route is its
+own go-ahead. `mts-system`'s ledger is that project's: repairing it belongs to P9 or to that project, not to this item.

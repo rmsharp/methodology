@@ -199,6 +199,44 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-18 · [BL-73] Raised — `bin/check-handoff` reads a second `handoff` opener inside an open receipt as content
+
+- Found while verifying BL-72 on `mts-system` (read-only, at `710a0f7`): a receipt begun twice, an opener and a
+  `session:` line and then a second opener with the whole receipt, reads as one block. Three instances, at `:216`, `:320`
+  and `:671`; `--all` reports `:216` and `:671` only, through the key-order rule, and `:320` passes. BL-57's P9 row named
+  only `:216`, and now names all three. Row in `docs/planning/BACKLOG.md`, detail in `BACKLOG-DETAIL.md` §BL-73: fix
+  shape, not built. Searched the backlog first: no existing item covers it.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-72] S192 — the fence fix on `bl57/changelog-rules` (`77afc12`, for PR #84), merged into fork `main` as `ea1a057`; BL-72 closed
+
+- **Fix `77afc12`** on the branch (worktree `../methodology-bl57`): `scan()` skips a fence with an info string (the seed's
+  `sh` block) to a bare closer at least as long, as it already skipped a wrapper, instead of reading it as prose and
+  letting its closing fence swallow the newest receipt. An info string may not contain a backtick (CommonMark), so a
+  prose line starting with inline code that quotes a fence opens nothing. The block's lines stay visible to the orphan
+  check, so a receipt under a misspelled tag is still reported; an unclosed one is a finding. A `handoff` fence takes the
+  old paths unchanged. The branch's own ledger entry is written for the PR's reader: no session numbers.
+- **Tests, RED first:** ten assertions in `bin/tests.sh` Test 22, after block isolation. On the unfixed checker six
+  failed: the five §BL-72 predicted, plus the misspelled-tag case, where the unfixed read swallowed the valid receipt
+  below and reported *"no receipt block found"*. Six mutants of the fix (backticks allowed in the info string; a
+  shorter closer; the orphan lines dropped; the old bare-only arm; the orphan line off by one; an unclosed info fence
+  not reported) each fail one or more.
+- **Merge `ea1a057`** (parents `1c7e3c2`, `77afc12`): `CHANGELOG.md` and `bin/tests.sh` conflicted, exactly as `git
+  merge-tree` predicted. The ledger resolves ours; `bin/tests.sh` resolves ours plus the branch's 69-line block after
+  this repo's block-isolation case. Both code files' changed lines equal the branch patch `20db3f0..77afc12`.
+- **Adopters re-read, read-only**, with the checker at `1c7e3c2` and at `ea1a057` back to back, HEADs recorded before and
+  after (`airqino` `da040da`, `nprcgenekeepr` `d5008091`, `vscode_quarto_ext` `e075a9ca`, `mts-system` `710a0f7`): the first
+  block `scan()` returns moves S18 → S19, S714 → S715 (that project has moved on since S191) and S263 → S264;
+  `mts-system` is unchanged (S138, 70 blocks).
+- **Gates**, `--no-local` clones, HEAD asserted. Branch at `77afc12`: `quality_ratchet: 10/10 pass · 0 fail · 0
+  unmeasured · results 93ea168d093e · manifest 97a7aab85b9a`, `tests-sh-passed` 163. Fork `main` at `ea1a057`:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results d56e26f10caf · manifest 58d766958ae1`,
+  `tests-sh-passed` 331 at 2 receipts (S190 measured 321 at 2; the fix adds 10).
+- **This commit:** BL-72 moved to Completed items with its closing note in `BACKLOG-DETAIL.md`; the plan's status line
+  (BL-72 done, P9 next) and its P9 row (BL-73). **Not done here:** pushing the branch to PR #84 and fork `main` to
+  `origin`, both approved for close-out after the gate; PR #84's description does not mention the fix.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-18 · [ad hoc] S192 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `b27236e` wrote into `HANDOFFS.md`'s front matter is now one row of

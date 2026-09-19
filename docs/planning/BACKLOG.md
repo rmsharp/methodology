@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68, BL-69, BL-70, BL-71, BL-72.**
+BL-42, BL-43, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68, BL-69, BL-70, BL-71, BL-73.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -161,14 +161,15 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-69** | Delete the branches whose work is finished — 10 local, 11 on `origin` (the five `fix/*`, `pr1`–`pr4`, `pr80/*`, `learning-13`, `bl-10`, the frozen `port/*`). **Decided by the operator (picker, S189)**; not done. Re-derive merged-ness first; delete on `origin` only at the recorded sha | [detail](BACKLOG-DETAIL.md#bl-69) |
 | **BL-70** | Upstream's runner lacks issue #75's plan-surface rule: the maintainer closed #75 silently the day after the fork's PR was verified ready, and the PR (`docs/issue75-plan-surface-upstream`, `60246e7`, local only) was never sent. Branch kept (operator, S189); what to do upstream is open | [detail](BACKLOG-DETAIL.md#bl-70) |
 | **BL-71** | The dashboard's *"Multiple branches"* signal counts `git branch -a` (HEAD aliases, upstream's branches), so a fork can never clear it; count unmerged local branches instead. Raised at S189 (operator); not investigated | [detail](BACKLOG-DETAIL.md#bl-71) |
-| **BL-72** | `bin/check-handoff` skips the newest receipt, and still reports OK, in any `HANDOFFS.md` that carries the seed's size section: its ```` ```sh ```` block's closing fence is read as an opener. Already true of `airqino`, `nprcgenekeepr` and `vscode_quarto_ext`; `mts-system` after P9. Reproduced at S191, from BL-57's P8 report. **Operator, S191 (picker): fix before P9.** Canonical-only; its upstream route is its own go-ahead | [detail](BACKLOG-DETAIL.md#bl-72) |
+| **BL-73** | `bin/check-handoff` reads a second `handoff` opener inside an open receipt as content, so a receipt begun twice reads as one block, and `--all` reports it only when the key order breaks. `mts-system`'s `HANDOFFS.md` has three (`:216`, `:320`, `:671` at `710a0f7`); `--all` reports two. Raised at S192, found while verifying BL-72; not fixed. Canonical-only; its upstream route is its own go-ahead | [detail](BACKLOG-DETAIL.md#bl-73) |
 
-## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45, BL-56, BL-59, BL-67)
+## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-45, BL-56, BL-59, BL-67, BL-72)
 
 | **BL-45** | `FRAMEWORK_LEARNINGS.md` 16 B from its ceiling — **CLOSED 2026-08-26 (S114)** by raising it to a re-derived 73,728 B and writing the four owed rows; the other three options stay costed in the detail file | [detail](BACKLOG-DETAIL.md#bl-45) |
 | **BL-56** | Rewrite `airqino`'s `CHANGELOG.md` to the current ledger format — **CLOSED 2026-09-17 (S180)**, done in `airqino`'s own repository as BL-57's P6 (local branch `chore/methodology-bl57-p6`): the header migrated to the thin seed, both entries byte-identical, and `bin/status` reads `present` from the branch, `upstream/main` and fork `main` | [detail](BACKLOG-DETAIL.md#bl-56) |
 | **BL-59** | `HANDOFFS.md` retention — **CLOSED 2026-09-16 (S174), operator (picker).** N=1 (operator, S172) is now measured reachable: Test 38 reads a frozen fixture (`d13a165`), and a `--cut 1 --force` trim plus its fold ran 300 passed / 0 failed / 6 stated skips. The front-matter cut it left owed is done (`ad3479a`, `67ac209`; the index is [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../HANDOFFS_ARCHIVE_INDEX.md)). Not done, and distributed: teaching `methodology_trim.py` a retention mode. The reserve follow-up is BL-61 | [detail](BACKLOG-DETAIL.md#bl-59) |
 | **BL-67** | `wsfct`'s report that BL-57's P7 is done and merged, owed a recording here — **CLOSED 2026-09-17 (S185)**: recorded at `313459c` after every DONE check was re-run from here, not by re-applying the reverted `a6320ae`. One of its citations had gone stale (the merged branch is deleted; the commits live at `refs/pull/903/head`), and its three findings are plan items (19)–(21) | [detail](BACKLOG-DETAIL.md#bl-67) |
+| **BL-72** | `bin/check-handoff` skipped the newest receipt, and still reported OK, in any `HANDOFFS.md` carrying the seed's size section — **CLOSED 2026-09-18 (S192)**: `scan()` now skips a fence with an info string to its closer (`77afc12` on `bl57/changelog-rules`, for PR #84, operator's choice of route; merged into fork `main` as `ea1a057`). Ten assertions, six RED first, six mutants killed; the newest receipt is now read in `airqino`, `nprcgenekeepr` and `vscode_quarto_ext`. Upstream lands with PR #84 | [detail](BACKLOG-DETAIL.md#bl-72) |
 
 | Item | Scope | Outcome |
 |------|-------|---------|
