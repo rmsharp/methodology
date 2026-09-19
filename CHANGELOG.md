@@ -199,6 +199,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-57] S194 — P9's records corrected: `mts-system` pushed `710a0f7..b8a20ce` after S193's close-out
+
+- **Corrected** in `docs/planning/changelog-rules-contradictions-plan.md`: the P9 block's *"not pushed"* (struck, with the
+  push beside it) and the P9 row. The push is recorded there at `27c77ec`, which is local; `git ls-remote origin
+  refs/heads/master` in `mts-system` reads `b8a20ce01f9f`. S193's receipt stays as written.
+- **Drift Sentinel, read from here:** on `b8a20ce`, Lint passed and Drift Sentinel failed, as its scheduled runs at
+  `710a0f7` already had (none of its last 100 runs succeeded). The failed run's annotation gives the cause: production's
+  `/health` reports `e2041b0`, not `origin/master`. `e2041b0..b8a20ce` changes no application code (19 root files, five
+  under `docs/`). It clears at the next `scripts/deploy_vps.sh`, which refuses unless HEAD equals `origin/master` (:94), so
+  `27c77ec` is pushed first. Both are `mts-system`'s go-ahead. Approved by the operator's picker after Phase 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S194 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - The pointer block `d1647ce` wrote into `HANDOFFS.md`'s front matter is now one row of
