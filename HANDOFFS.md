@@ -51,6 +51,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S197
+date: 2026-09-19
+status: pending
+self_score: pending
+predecessor_score: pending
+active_task: **FINISH BL-43 — the `pipefail` + `grep -q` race in `bin/tests.sh`.** Chosen by the operator after Phase 0 (picker), over BL-60's planning session, BL-53 and BL-61. Two halves: **(a) RE-DERIVE THE POPULATION BY PATTERN** — the item's six enumerated line numbers (`:2591`, `:2596`, `:2605`, `:2620`, `:2864`, `:2880`) no longer point at assertions, and Test 40 postdates the enumeration, so the set is a stale sample, not a population (S196 found a seventh site by accident); **(b) FIX EACH REMAINING SITE RED-FIRST**, starting from `bin/tests.sh:3203`, the same construct on the same 97,507-character variable, measured NOT firing today only because its probe matches at line 1,082 of 1,095. The fix shape is S196's: a here-string, not a pipe. Each site needs its own proof that it still fails when it should — a capture that silently stops asserting is the failure being fixed. **Side action, approved in the same picker:** push `08c5327`..HEAD to fork `origin` (13 commits, fast-forward onto `431279b`), fork only.
+what_was_done: pending
+next_steps: pending
+key_files: `bin/tests.sh:5` (`set -uo pipefail`, the enabling condition), `:3083`–`:3091` (S196's fixed site and the measurement beside it — the fix shape to copy), `:3203` (the same construct, measured not firing today, one reordering away); `docs/planning/BACKLOG-DETAIL.md:1055` (BL-43's body, wrong in the two ways above), `docs/planning/BACKLOG.md:139` (its index row); `starter-kit/quality_ratchet.py` (`--run`, the build-equivalent; `tests-sh-passed` floor 331)
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "2026-09-19 · [ad hoc] S197 claim"
+commit: pending
+```
+
+```handoff
 session: S196
 date: 2026-09-19
 status: complete

@@ -211,6 +211,41 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-43] S197 claim — the `pipefail` race: re-derive the population by pattern, then fix each remaining site RED-first (in progress)
+
+**Deliverable:** **BL-43**, open since 2026-08-25 (S109) — `bin/tests.sh:5` is `set -uo pipefail`, so
+`echo "$(producer)" | grep -q PAT` scores a **matched** pipeline as failed when `grep -q` exits first and `echo`
+takes SIGPIPE. **Chosen by the operator after Phase 0 (picker)**, over BL-60's planning session, BL-53 and BL-61.
+Two halves. **(a)** The item's enumerated population — `:2591`, `:2596`, `:2605`, `:2620`, `:2864`, `:2880` — is a
+**stale sample**: those line numbers no longer point at assertions, and Test 40 postdates the enumeration, which is
+how S196 met a seventh site (`:3083`) by accident rather than by list. Re-derive the set **by pattern**, and let the
+count fall out of the derivation. **(b)** Fix each remaining site with S196's shape — a here-string, not a pipe —
+starting from `:3203`, the same construct on the same 97,507-character variable, measured today as **not firing**
+only because its probe matches at line 1,082 of 1,095. **Each site gets its own RED-first proof**: BL-43's own body
+says a capture that silently stops asserting is the defect being fixed, so a green suite after the edit proves
+nothing by itself.
+
+**Side action, approved in the same picker:** push `08c5327`..HEAD to fork `origin`, stated as a **range** because
+any count written here is changed by the commit that writes it. 13 commits at the time of the Phase 0 report,
+fast-forward onto `origin/main` `431279b`. **Fork only — nothing reaches `KJ5HST/methodology`.**
+
+**Phase 0:** both frontiers are HEAD `5ffd6f9` — `git log <frontier>..HEAD` empty on each — the newest receipt is
+`status: complete`, no `CHANGELOG: pending` stub stands, and nothing was backfilled. The gate ran in a `--no-local`
+clone with HEAD asserted by sha (S196's own minus was running it in the working tree):
+`10/10 pass · 0 fail · 0 unmeasured · results a5197f8a439f · manifest 61cd292c36bd` — **S196's citation exactly** —
+with `tests-sh-passed` 331 at two receipts. Dashboard 76/100, medium risk, unchanged flags (no CI/CD, the
+operator-approved D10 lowering the dashboard cannot see as approved, large files (BL-68), this file's size, 31
+branches (BL-71)). `upstream/main` is still `6b29d3d`; **PR #84 open at `77afc12`, MERGEABLE, no reviews or
+comments, unchanged since 2026-09-19T04:21Z**; PR #83 open; upstream has no open issues. This file is 104,216 B —
+**157,928 B under the 262,144 B hard read refusal** — across 71 records. `docs/FORK_LEARNINGS.md` is 81,721 of
+81,920 B (BL-53). **Receipts: 2 at the report, 3 with this claim**, so the retention trim (`--cut 2`) falls due
+immediately after it and is raised with the operator rather than taken unasked. `context_budget.py` was **not**
+run: it has no `--status` (BL-75) and its default run appends a row to the tracked
+`.context-budget-history.jsonl`, which Phase 0's read-only rule does not permit. Phase 0's one tracked row — the
+dashboard's — rides here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S196, after close-out — the receipt's commit count replaced by a range
 
 The S196 receipt's `next_steps` (1) said *"push this session's TEN commits"*. Ten was true of the tree before the
