@@ -2576,10 +2576,20 @@ usage code) and correct the live citations — honest, but a bare `--status` in 
 the citations only. Whichever is chosen, the PR-comment text is outward-facing and already sent; correcting it there is
 its own go-ahead.
 
+**Observed a second time, 2026-09-20 (S198), in this repository rather than in an adopter's.** Phase 0 ran
+`python3 starter-kit/context_budget.py --status` from this repo's own `CLAUDE.md:81` citation. The argument was
+silently ignored, the default measurement ran, and a row was appended to the tracked
+`.context-budget-history.jsonl` — during a phase the runner declares read-only apart from the reconcile backfill. The
+row was reverted (`git checkout --`) and the reading itself was sound, as this item already says. Recorded as
+evidence that the wrong citation keeps being followed by sessions reading the live file; nothing above is edited.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it
-chains stop running. Found 2026-09-19 (S197), not fixed.**
+chains stop running. Found 2026-09-19 (S197).**
+
+**✅ CLOSED 2026-09-20 (S198) by shape (1), chosen from the three below on measured grounds rather than on
+size.** Everything below is the item as it stood; the closure note is at its end.
 
 The hook skips replayed commits by exiting 0 if any of `MERGE_HEAD`, `REBASE_HEAD`, `CHERRY_PICK_HEAD`,
 `rebase-merge` or `rebase-apply` exists under the git dir (`.githooks/pre-commit:24`). Git **removes**
@@ -2609,3 +2619,69 @@ type. (2) Test only for the directories and `MERGE_HEAD` / `CHERRY_PICK_HEAD`. (
 require the marker to be *newer than the index*, which is the general form and the most fragile. Any of
 them needs a RED-first test; `.githooks/commit-msg --selftest` is the precedent for a hook that tests
 itself, and `.quality-gates.json` already runs that selftest as a gate.
+
+**Closure (S198, 2026-09-20).** **Shape (1)**, and the choice was made from a measurement rather than from
+which edit looked smallest. Every git operation in the list was run to completion on git 2.50.1 and its
+markers observed at each stage:
+
+| operation | markers while in progress | survives completion |
+|---|---|---|
+| rebase, no conflict | (never stops) | — |
+| rebase stopped by a conflict | `REBASE_HEAD` + `rebase-merge` | **`REBASE_HEAD`** |
+| `rebase --apply`, conflict | `REBASE_HEAD` + `rebase-apply` | — (abort clears) |
+| `rebase -i` parked at `edit` | `REBASE_HEAD` + `rebase-merge` | **`REBASE_HEAD`** |
+| merge, conflict | `MERGE_HEAD` | — |
+| cherry-pick, conflict | `CHERRY_PICK_HEAD` | — |
+| `git am`, conflict | `rebase-apply` | — |
+
+Two facts settle it. `REBASE_HEAD` is the **only** marker that leaks — the other four are removed when
+their operation ends or is aborted, so none of them needs the same treatment. And it is **redundant**:
+every rebase in-progress state carries a *directory* alongside it, so dropping it costs no in-progress
+coverage. That makes shape (3)'s newer-than-the-index comparison unnecessary as well as fragile, and shape
+(2) the same marker set as (1) by another description. A third measured fact explains the five weeks: a
+**clean** rebase leaks nothing, so only a rebase that *stopped* arms the trap.
+
+**What shipped.** `REBASE_HEAD` dropped from the marker loop, with the measurement in a comment beside it;
+a **`--selftest`** on the `.githooks/commit-msg --selftest` precedent (10 checks); the gate
+`pre-commit-selftest` in `.quality-gates.json`; and `bin/tests.sh` **Test 43** (10 assertions), which reads
+the marker names off the `for marker in` line rather than off the file — the fix's own comment names
+`REBASE_HEAD` a dozen times, so a bare grep would report the bug cured while it stood.
+
+**Proof.** RED-first: the selftest was written against the **unfixed** hook and went red on exactly one of
+its ten assertions, the other nine green, so it isolates the defect instead of being vacuously red; 0 red
+after. Mutation: **9 mutants, 9 killed** — restoring `REBASE_HEAD`, dropping each of the four remaining
+markers, `-e` narrowed to `-f`, deleting the loop, and short-circuiting each of the two gates.
+End-to-end against real git, not planted files: a real conflicted rebase was completed, the leaked
+`REBASE_HEAD` confirmed, and a real `git commit` without a ledger line **refused** (exit 1); co-staging the
+ledger passed (exit 0); and committing *during* a genuine in-progress rebase was still **skipped** (exit 0).
+
+**Not done, deliberately.** `upstream/main` carries the same hook text and the same defect. The hook is
+canonical-only (BL-6 item 3), so **no adopter is affected** and the upstream fix is **its own go-ahead** —
+it did not ride this session.
+
+<a id="bl-77"></a>
+
+**BL-77 — Phase 0 reconciles the ledger but never checks that the gates protecting it are armed in this
+clone. Raised 2026-09-20 (S198), from BL-76's closure. Not fixed.**
+
+**What.** Phase 0 step 6 verifies the *record* thoroughly — both frontiers against `git log`, pending stubs,
+and the newest receipt's `quality_ratchet` citation. Nothing verifies that the mechanism guarding that
+record is switched on. `core.hooksPath` is **per-clone** and opt-in (`BOOTSTRAP.md` Step 10), so a correct
+hook in a correct `.githooks/` does nothing at all in a clone where it was never enabled, and every gate
+still reads green: the hook fails **open**, so its failure mode is silence.
+
+**Why it is not already covered.** S198's new `pre-commit-selftest` gate tests the hook's *logic*; it says
+nothing about whether that hook is *wired in* here. The two are independent, and BL-76 was the second of
+the pair: the hook was enabled and correct-looking, and still ran nothing for five weeks. It was found by
+luck — S197 went looking only because one of its own commits landed ungated (its self-assessment says so).
+
+**Scope.** Canonical-only in its current form, since `.githooks/` is not distributed. The general shape —
+*a project's Phase 0 should confirm its own gates fire* — is not, and BL-58 is the adjacent distributed
+question.
+
+**Shapes (none chosen, none measured).** (1) A Phase 0 read-only line reporting `git config core.hooksPath`
+— cheapest, but the runner's own Degradation Detection table says a signal nothing gates on is not the
+remedy. (2) A `bin/tests.sh` assertion — but the suite runs in clones where an unset `core.hooksPath` is
+legitimate, so it would be wrong exactly where it ran. (3) Have the hook record that it fired, and have
+Phase 0 read that trace against the commits in the span it is already reconciling. Each needs its own
+RED-first proof; none has been costed.

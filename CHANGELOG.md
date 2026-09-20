@@ -211,6 +211,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S198 — backlog: BL-76 closed, BL-77 raised, and BL-75 recorded as observed a second time
+
+- **BL-76 → §Completed items,** removed from the open list and from the open-item index, with the closure narrative
+  appended to its body in `BACKLOG-DETAIL.md` (the item as it stood is untouched above it — the measured marker table,
+  what shipped, the proof, and what was deliberately left for upstream).
+- **BL-77 raised** (side action 3, operator-approved in the Phase 0 picker), from BL-76's closure: **Phase 0 reconciles
+  the ledger thoroughly but never checks that the gates protecting it are ARMED in this clone.** `core.hooksPath` is
+  per-clone and opt-in, so a correct hook that was never enabled runs nothing while every gate reads green — the hook
+  fails **open**, and its failure mode is silence. S198's new `pre-commit-selftest` tests the hook's *logic* and says
+  nothing about whether it is wired in; the two are independent, and BL-76 was the second of the pair. Three shapes
+  recorded, **none costed and none measured** — the item is written from what is known and stopped there.
+- **BL-75 observed a second time, here rather than in an adopter's repo.** Phase 0 ran
+  `python3 starter-kit/context_budget.py --status`, following this repo's own `CLAUDE.md:81` citation; the unknown
+  argument was silently ignored, the default measurement ran, and it appended a row to the tracked
+  `.context-budget-history.jsonl` — during a phase the runner declares read-only. The row was reverted with
+  `git checkout --`. Recorded as *new evidence appended* to the item, which is not the same as editing one of its
+  figures: per this backlog's convention the item bodies are left as written (FM #17).
+- **A correction to S197's receipt, which no item body carries.** It states `docs/FORK_LEARNINGS.md` at 82,626 B and
+  706 B over its 81,920 B ceiling. Measured at `2c9ec03`: **82,652 B, 732 B over.** The 26 B gap is the post-clone
+  correction to row #81 that the receipt itself describes. The reading's *sense* — over, a warning, nothing refuses a
+  row — is unchanged.
+- **Why this is its own commit rather than riding the fix.** Phase 3F asks that a completed item leave `BACKLOG.md` in
+  the commit that records it, and `SAFEGUARDS.md` caps a commit at five files. Together they exceeded the cap here, so
+  the closure was split back-to-back within the session: the fix and its ledger entry, then this. Stated rather than
+  done silently.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-76] S198 — the ledger hook's stale-marker skip fixed, with the hook's own selftest declared as a gate
 
 **The defect.** `.githooks/pre-commit` skipped replayed commits by exiting 0 when any of `MERGE_HEAD`, `REBASE_HEAD`,
