@@ -211,6 +211,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S202 — the P5 note's own BL-75 clause corrected, and BL-75 narrowed by measurement
+
+- **Found by measuring, not by reading:** the P5 note repeated BL-75's wording — *"the default run appends a
+  tracked history row"* — and then this session ran `context_budget.py` **three** times while
+  `.context-budget-history.jsonl` gained **one** row. `append_history` (`starter-kit/context_budget.py:506`)
+  returns without writing when the new snapshot's `files` equals the previous row's, deliberately, so a tracked
+  file does not put a diff in every commit.
+- **The note now says so precisely** (`.context-budget.json`, `files[3]._`): `--status` does not exist and is
+  silently ignored, so that spelling **is** the default run; the default run appends a history row **only when a
+  measured size changed**. One key changed, proved the same way as P5 itself: `['/files[3]/_']`.
+- **BL-75's detail gains the narrowing, with nothing above it edited** (FM #17): a Phase 0 run on an unchanged
+  tree writes nothing, so the read-only concern recorded there applies to the first run after a change, not to
+  every run. The item is smaller than it read, not larger.
+- **This correction is exactly fork Learning #86's failure mode, caught inside the same session that wrote the
+  row** — a clause inherited into a rewrite because it was true somewhere else, here true of an earlier version
+  of the tool's behaviour as the backlog described it, never re-resolved against the code.
+- **Verified:** `python3 starter-kit/context_budget.py` bare → exit 2, unchanged state;
+  `bash docs/planning/BACKLOG-DETAIL.md.verify.sh` **C1–C5 OK**.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S202 — Phase 3C: fork Learning #86, and the D3 statement it owes
 
 - **Row #86 appended** to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md), 1,405 B, under the 1,500 B per-row

@@ -2665,6 +2665,14 @@ silently ignored, the default measurement ran, and a row was appended to the tra
 row was reverted (`git checkout --`) and the reading itself was sound, as this item already says. Recorded as
 evidence that the wrong citation keeps being followed by sessions reading the live file; nothing above is edited.
 
+**THE SECOND HALF OF THIS ITEM'S SENTENCE IS ITSELF IMPRECISE — MEASURED S202 (2026-09-20), nothing above
+edited.** *"The default run appends a tracked history row"* is true only when a measured size **changed**:
+`append_history` (`starter-kit/context_budget.py:506`) returns without writing when the new snapshot's `files`
+equals the previous row's, precisely so a tracked file does not put a diff in every commit. S202 ran the tool
+**three** times and `.context-budget-history.jsonl` gained **one** row. This narrows the item rather than
+enlarging it: a Phase 0 run on an unchanged tree writes nothing at all, so the read-only concern above applies
+to the first run after a change, not to every run.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it
