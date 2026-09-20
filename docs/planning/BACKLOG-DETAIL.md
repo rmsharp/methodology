@@ -1630,6 +1630,24 @@ D3 and taking **option C** — demote the ceiling to a reported series, keep the
 (oldest-first to an operator-stated depth) still the only option that recovers real bytes, now costed row
 by row rather than by age. **That choice is open; P4 (writing D3 into `CLAUDE.md`) is a separate session.**
 
+**THE CHOICE IS MADE AND P4 IS DONE, S201 (2026-09-20).** The operator ratified **option C** at this
+session's Phase 0 picker, with **D3 retained**, and **declined B with its cost known** — 14,502 B at ten
+rows, the live advice named row by row in the adjudication's §5. So **D4 is now C, not (i)**: the 81,920 B
+figure becomes a **reported series** rather than a limit, and the per-row budget (`bin/check-learnings`,
+`ROW_BUDGET_BYTES` = 1,500, green at 0 violations) is what still refuses. **That reverses the S200 block's
+*"D4 the ceiling unchanged … so no P5"* above** — left standing as written (FM #17) and corrected here:
+**P5 is owed**, and it is the one remaining phase. `.context-budget.json` still calls the figure a warning
+until it runs.
+
+**P4 shipped at `24fe658`**: D3 written into `CLAUDE.md` §*Where this fork's learnings go* — the obligation,
+D1's three limbs in full (a session cannot honestly refuse against a criterion it must open a plan to
+read), D2's mechanism in one sentence, and the ceiling's new standing. Fork-only, **not** the distributed
+`starter-kit/SESSION_RUNNER.md`. 12,688 B → 14,392 B against an 18,600 B ceiling. **P4's gate half is not
+owed:** §8 makes it conditional on D4 choosing a *mechanical* form and C is not one.
+
+**What is left of BL-53 is P5 and nothing else.** The rule is decided, applied to every row, and written
+where sessions read it; the file stands at **86,727 B, 4,807 B over** a number that C has just demoted.
+
 **What would answer it** is a retirement rule decided once, as policy, instead of a byte negotiation at
 every breach. Tombstoning is the mechanism that keeps `Learning #N` citations resolving; what it lacks
 is a rule for *which* rows retire (for example, a row whose lesson the runner itself now carries as an
@@ -2788,3 +2806,26 @@ number and treat the row as a reported series, which is the same question BL-53'
 different file. **The blob comparison is already done (above), so the open question is not *what
 happened* but *which number is right now*: re-pin at 17,129 B, re-pin at upstream's 17,024 B and treat
 `0d63410` as the fork's own delta, or stop pinning this file at all.**
+
+**SECOND INSTANCE, AND THE RATCHET IS NOT MERELY UNWIRED — IT DOES NOT EXIST. Measured at S201's Phase 0.**
+The sibling this item already quotes has breached the same way: `starter-kit/SESSION_RUNNER.md` is
+**55,406 B against the `measured_bytes` 54,363 B its own entry declares**, written at `beffbd0e`
+(2026-08-30) — **+1,043 B** — under the note that says *"every commit that grows it is refused while every
+commit that shrinks it passes: a ratchet, not a wall."* Both read-set files have now grown past their
+declared sizes, so shape (1)'s *"which number is right now"* question is owed twice.
+
+**Verify the size at the blamed commit, not from position in `git log`.** `git log --since=... --
+starter-kit/SESSION_RUNNER.md` reports the file at 52,195 B on 2026-08-28 and no change until
+2026-09-15, which would make the declared 54,363 B look invented; history simplification had pruned the
+resync merge. `git cat-file -s beffbd0e:starter-kit/SESSION_RUNNER.md` reads **54,363 B exactly**. The
+config is right and the first instrument was wrong.
+
+**And there is no per-file growth check for the tool to be wired to.** `measured_bytes` appears **exactly
+once** in `starter-kit/context_budget.py` (`:398`) and feeds **only a density-drift warning**, itself
+gated on `status == "ok"` — so for a file already `over`, which this one is by design, it does not even
+emit that. Nothing in the tool compares a file to its own previous size. The one growth signal it does
+have, `growth_run` (`:518`), is *"a series over `resident_bytes`"* (`:622`) — **`CLAUDE.md` alone**, which
+is why the run counter read 159 while both read-set files were quietly growing. So reason 1 above holds at
+two levels: **no gate runs the tool, and for these files the tool has no growth refusal to run.** Shape
+(2) is therefore larger than *"add a gate"* — it has to build the check first, which is a point in favour
+of shape (3) for exactly the reason BL-53's option C was ratified.

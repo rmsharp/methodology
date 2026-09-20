@@ -211,6 +211,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S201 — option C recorded, and BL-78 gains a second instance the tool cannot see
+
+**BL-53's remedy is decided.** The operator ratified **option C with D3 retained** and **declined B with its cost
+known** (14,502 B at ten rows; the adjudication's §5 names the live advice row by row). Recorded in
+[`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) as an **S201 block appended beneath S200's**, which is left
+standing as written (FM #17) — including its *"D4 the ceiling unchanged … so **no P5**"*, which the new block
+**explicitly reverses**: D4 is C, so **P5 is owed and is the one remaining phase.**
+
+**BL-78 — a second instance, and a correction to what the item can claim.**
+
+- `starter-kit/SESSION_RUNNER.md` is **55,406 B against the 54,363 B `measured_bytes` its own entry declares**
+  (`beffbd0e`, 2026-08-30) — **+1,043 B**, under a note reading *"every commit that grows it is refused … a
+  ratchet, not a wall."* **Both** read-set files have now grown past their declared sizes.
+- **The first instrument was wrong and was caught before it was published.** `git log --since=… --
+  starter-kit/SESSION_RUNNER.md` reports 52,195 B on 2026-08-28 with no change until 2026-09-15 — which would
+  have made the declared figure look invented. History simplification had pruned the resync merge.
+  `git cat-file -s beffbd0e:starter-kit/SESSION_RUNNER.md` reads **54,363 B exactly**: the config is right.
+- **The ratchet is not unwired — it does not exist.** `measured_bytes` appears **once** in
+  `starter-kit/context_budget.py` (`:398`) and feeds **only** a density-drift warning, gated on `status == "ok"`,
+  so for a file already `over` it does not even emit that. The one growth signal, `growth_run` (`:518`), is *"a
+  series over `resident_bytes`"* (`:622`) — **`CLAUDE.md` alone**, which is why that counter read **159** while
+  both read-set files grew. BL-78's shape (2) must therefore **build** the check before it can wire it.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-53] S201 — P4: the steady-state obligation written where every session reads it
 
 **Deliverable: D3 in `CLAUDE.md`**, in the §*Where this fork's learnings go* section that already owns the routing
