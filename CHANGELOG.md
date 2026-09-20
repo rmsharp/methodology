@@ -211,6 +211,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S196, after close-out — two line citations in the receipt corrected against the tree that shipped
+
+`HANDOFFS.md:30` and `bin/tests.sh:3195` were read before this session's own edits moved them: the front-matter line
+that quotes the receipt delimiter is `HANDOFFS.md:14`, and the second `echo "$VAR" | grep -q` site is
+`bin/tests.sh:3203`, eight lines lower than when it was measured because the fix above it added a comment block. Both
+corrected in the S196 receipt (`key_files` and `next_steps`). A line number is a claim about one tree, and the tree
+that invalidated these two was the one the same session was editing.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S196 close-out — `CHANGELOG.md` trimmed on a clean day seam, the no-trim decision discharged, and a BL-43 site fixed
 
 **Deliverable:** the `CHANGELOG.md` trim, raised at Phase 0 with 6,284 B of headroom left and taken the same session on
