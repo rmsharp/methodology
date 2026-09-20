@@ -211,6 +211,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S202 claim — the ceiling stops being a limit in the one file that still calls it one (in progress)
+
+**Deliverable:** **BL-53 P5**, the last phase of
+[`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md) §8 —
+**`.context-budget.json`'s `docs/FORK_LEARNINGS.md` entry rewritten to say what the 81,920 B figure means under the
+ratified option C: a reported series, not a limit.** Chosen by the operator after Phase 0 (picker) over BL-78's
+costing and over BL-77's. P5 needs no further decision — D4 was settled at S201 and the phase block carries its own
+DONE, Verify and Surface lines.
+
+**Why this is owed at all, since the S200 block says it is not.** S200 recorded *"D4 the ceiling unchanged … so no
+P5"*; the operator then ratified **C**, which is a change, so P5 came back. The S201 block in
+`docs/planning/BACKLOG-DETAIL.md` records that reversal and leaves the older text standing (FM #17). Until this
+entry's commit lands, the config is the **only** artifact still describing the figure as a warning that must be
+answered — `CLAUDE.md` (`24fe658`) already describes it as a reported series.
+
+**Scope, stated so the close-out can be checked against it.** This session rewrites one `_` note and leaves
+`max_bytes` at **81920** — C demotes the number's *meaning*, it does not delete or raise the number, and a removed
+key is a different change with a different blast radius. It does **not** add a gate (P4's gate half is not owed:
+§8 makes it conditional on D4 choosing a *mechanical* form, and C is not one), does not retire a row, and does not
+touch `bin/check-learnings`' `ROW_BUDGET_BYTES`, which is what still refuses.
+
+**Phase 0 found nothing to backfill.** `CHANGELOG.md` frontier = HEAD `13ed767`, gap empty; `HANDOFFS.md` frontier
+`b0cc32b` with only the push record above it, already ledgered. No `status: pending` stub, **2** receipts. The
+newest receipt's gate citation was **re-run, not read** — the local `.quality-gates-results.json` is still S195's
+(head `431279b`, manifest `61cd292c36bd`, ten gates) — giving `11/11 · results 10575dac7361 · manifest
+01a4ae7aa511` in a `--no-local` clone with HEAD asserted by sha, **S201's citation exactly**.
+
+**Side actions approved in the same picker:** the owed `HANDOFFS.md` retention trim with its fold, the Phase 3C row
+with its D3 statement, and this fork's push to `origin` at close-out. Nothing goes to `upstream`.
+
+**Ledger:** `CHANGELOG: pending` — this entry is the claim's *(in progress)* line; Phase 3F records the rest.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S201 — fork `main` pushed to `origin`, `bf64541..b0cc32b` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin HEAD:main`, a fast-forward of this session's **8** commits — `6de1d8d` (claim),

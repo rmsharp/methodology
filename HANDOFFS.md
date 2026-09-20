@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S202
+date: 2026-09-20
+status: pending
+active_task: **BL-53 P5** — rewrite `.context-budget.json`'s `docs/FORK_LEARNINGS.md` entry so it states what the 81,920 B figure means under the ratified option C: a **reported series, not a limit**. Last phase of [`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md) §8 (`:351`). Chosen by the operator at this session's Phase 0 picker over BL-78's costing and BL-77's. Side actions approved in the same picker: the owed retention trim of this file with its fold, the Phase 3C row with its D3 statement, and the fork push to `origin` at close-out.
+commit: pending
+```
+
+```handoff
 session: S201
 date: 2026-09-20
 status: complete
