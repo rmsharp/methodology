@@ -211,6 +211,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S201 — P4: the steady-state obligation written where every session reads it
+
+**Deliverable: D3 in `CLAUDE.md`**, in the §*Where this fork's learnings go* section that already owns the routing
+rule it qualifies — **not** in the distributed `starter-kit/SESSION_RUNNER.md`, because the rule is fork-only and
+the runner belongs to upstream. 12,688 B → 14,392 B, against an 18,600 B ceiling.
+
+**What it says, and why each part is there:**
+
+- **The obligation.** A session whose Phase 3C appends a row **either retires one or states in its handoff that
+  none qualifies, naming the rows it considered.** Written as a close-out obligation and explicitly **not keyed to
+  the ceiling** — the plan's own reason: a rule that fires only when a number goes red produces the five-week
+  scramble it was written during.
+- **D1's three limbs in full**, because a session cannot honestly state *"none qualifies"* against a criterion it
+  would have to open a planning document to read. Mechanized / superseded / spent, each with its citation duty, and
+  the explicit *"age and file size are never grounds"* — which is the limb S200's pass turned out to depend on.
+- **D2's mechanism in one sentence**, for the session that does retire: verbatim move to
+  `docs/archive/FORK_LEARNINGS-retired.md`, one reserved-number line, numbers never change. That file **does not
+  exist yet** — nothing has qualified — so it is named in a code span and deliberately not linked.
+- **The ceiling's standing, so the number is not misread as the control.** *"The 81,920 B figure is not what holds
+  the line; this rule is."*
+
+**P4's conditional half is NOT done, by the plan's own terms.** §8 asks for a gate *"if D4 chose a mechanical
+form"*; **C is not one**, so no gate was added and none is owed. What P4 cannot enforce either way is stated in the
+plan: the *quality* of a *"no row qualifies"* statement, only its presence.
+
+**Verified, not asserted:** `bin/check-links` OK (111 links / 23 distributed files — and `CLAUDE.md` is
+canonical-only, so its three new destinations were resolved by hand instead: both planning documents exist, and
+`bin/check-learnings:106` reads `ROW_BUDGET_BYTES = 1500` exactly as the new text cites it).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S201 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **Action:** the ~456 B pointer block `methodology_trim.py` wrote into `HANDOFFS.md`'s front matter at `f049525`

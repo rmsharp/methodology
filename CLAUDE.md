@@ -35,6 +35,27 @@ who imposed it and when; an unattributed blocker is a defect, not a constraint.
 file, but here that file is upstream's; the fork's rows, #15 on, moved out at the resync (decision D1,
 S176). Cite them as *fork Learning #N*; a bare *Learning #N* past #13 means the distributed file's row.
 
+**Appending a row costs a retirement or an explicit refusal — every time.** A session whose Phase 3C
+appends to that file **either retires a row or states in its handoff that none qualifies, naming the
+rows it considered.** This is D3 of
+[`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md) §6,
+ratified 2026-09-20. It is a close-out obligation, **deliberately not keyed to the ceiling** — a rule
+that fires only when a number goes red produces the five-week scramble that plan was written during.
+
+A row retires **only** when **(a)** a gate in `.quality-gates.json`, a test in `bin/tests.sh` or a
+numbered failure mode now enforces its lesson, **(b)** a later row states that lesson at least as
+generally, or **(c)** the artifact, tool or defect it is about no longer exists — **cite the gate, row
+or commit in the retiring commit.** Age and file size are never grounds. The mechanism (D2) is
+reserved-gap retirement: the row's text moves verbatim to `docs/archive/FORK_LEARNINGS-retired.md`,
+the live file gains one reserved-number line, and numbers never change.
+
+**The 81,920 B figure is not what holds the line; this rule is.** S200 tested all 69 rows against the
+criterion and retired **none** — the row-by-row basis is in
+[`fork-learnings-adjudication-2026-09-20.md`](docs/planning/fork-learnings-adjudication-2026-09-20.md) §5;
+read it before re-adjudicating anything. The operator ratified **option C** the same day: the ceiling
+becomes a reported series and the per-row budget (`bin/check-learnings`, `ROW_BUDGET_BYTES` = 1,500)
+stays. `.context-budget.json` still calls the figure a warning until the plan's P5 rewrites it.
+
 ## Document Hierarchy
 
 Four layers, each serving a distinct purpose — plus the flight manual's read-on-demand sibling:
