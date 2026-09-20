@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S198
+date: 2026-09-20
+status: pending
+active_task: **BL-76** — `.git/REBASE_HEAD` survives a completed rebase and `.githooks/pre-commit:23`-`:27` reads it as "rebase in progress", exiting 0 before BOTH gates it chains: the FM #27 ledger gate and `quality_ratchet.py --precommit`. Chosen by the operator after Phase 0 (picker), over BL-53's planning session, BL-75 and BL-69. Deliverable: choose one of the three recorded shapes, fix it RED-first, and give the hook a `--selftest` on the `.githooks/commit-msg` precedent. Canonical-only — nothing goes upstream this session; that route is its own go-ahead. Three side actions approved in the same picker: the owed `HANDOFFS.md` retention trim at `--cut 2` with its fold, the push of this session's commits to fork `origin` at close-out, and two Phase 0 findings filed as backlog rows.
+```
+
+```handoff
 session: S197
 date: 2026-09-19
 status: complete

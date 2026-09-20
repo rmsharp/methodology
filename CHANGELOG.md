@@ -211,6 +211,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-76] S198 claim — the pre-commit hook's stale-marker skip: one rebase disarms both gates for the life of the clone (in progress)
+
+**Deliverable:** **BL-76**, found 2026-09-19 (S197). `.githooks/pre-commit:23`–`:27` skips replayed commits by
+exiting 0 when any of `MERGE_HEAD`, `REBASE_HEAD`, `CHERRY_PICK_HEAD`, `rebase-merge` or `rebase-apply` exists under
+the git dir. Git removes all of them when the operation ends **except `REBASE_HEAD`**, which it leaves behind after a
+rebase completes — so a single rebase, ever, disarms the hook permanently in that clone. The loop runs **before** both
+gates the hook chains, so the casualty is not only the FM #27 ledger gate but `quality_ratchet.py --precommit`, whose
+whole job is refusing a loosened threshold. Measured at S197: disarmed here since 2026-08-11, **69** first-parent
+commits changing tracked content while it was off. **Chosen by the operator after Phase 0 (picker)**, over BL-53's
+planning session, BL-75 and BL-69. Three shapes were recorded and none chosen; choosing one is part of the
+deliverable, and the fix is **RED-first** — a hook that is green because it exits early is the defect being fixed, so
+a passing commit proves nothing by itself. The hook gets a `--selftest` on the `.githooks/commit-msg --selftest`
+precedent, which `.quality-gates.json` already runs as a gate.
+
+**Scope — canonical-only.** `.githooks/pre-commit` is deliberately not distributed (BL-6 item 3), so **no adopter is
+affected**. `upstream/main` carries the same hook text, so an upstream fix exists to be made and **is its own
+go-ahead**; nothing reaches `KJ5HST/methodology` this session.
+
+**Side actions, all approved in the same picker.** (1) The owed `HANDOFFS.md` retention trim at **`--cut 2`**
+(`--cut N` RETAINS N) with its fold into `docs/HANDOFFS_ARCHIVE_INDEX.md` in its own commit — due the moment this
+claim made three receipts. (2) The push of this session's commits to fork `origin` at close-out. (3) Two Phase 0
+findings filed as backlog rows.
+
+**Phase 0:** both frontiers are HEAD `2c9ec03` — `git log <frontier>..HEAD` empty on each — the newest receipt is
+`status: complete`, no `CHANGELOG: pending` stub stands, and nothing was backfilled. **2** receipts before this
+claim. The gate ran in a `--no-local` clone with HEAD asserted by sha:
+`10/10 pass · 0 fail · 0 unmeasured · results 76936c1a7fb1 · manifest 899394e1aad3` — **S197's citation exactly** —
+with `tests-sh-passed` 333 at two receipts. Dashboard 76/100, medium risk. `origin/main` = HEAD, nothing unpushed;
+`upstream/main` `6b29d3d`, 0 behind. PR #84 OPEN at `77afc12`, MERGEABLE, still no reviews or comments since
+2026-09-19T04:21Z. **BL-76's own check ran first, per S197's handoff:** `.git/REBASE_HEAD` absent,
+`rebase-merge`/`rebase-apply` absent, `core.hooksPath` = `.githooks` — the gate is armed in this clone.
+
+**Two findings from Phase 0 itself, to be filed as rows (side action 3).** **BL-75 reproduced:** `python3
+starter-kit/context_budget.py --status` was run during orientation; the unknown argument was silently ignored, the
+default measurement ran and appended a row to the tracked `.context-budget-history.jsonl`, which was restored so
+Phase 0 stayed read-only. **S197's learnings figure is 26 B stale:** its receipt says `docs/FORK_LEARNINGS.md` is
+82,626 B / 706 B over, measured at HEAD it is **82,652 B, 732 B over** the 81,920 B ceiling — the gap is the
+post-clone correction to row #81 the receipt itself describes. Per the backlog convention neither item body is
+edited; the correction stands here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S197 — fork `main` pushed to `origin`, `5ffd6f9..40193bf` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin HEAD:main`, a fast-forward of this session's **7** commits — `1ccaf65` (claim),
