@@ -211,6 +211,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S197 — fork `main` pushed to `origin`, `5ffd6f9..40193bf` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin HEAD:main`, a fast-forward of this session's **7** commits — `1ccaf65` (claim),
+  `5d3bd5a` (BL-43's nine sites, Test 42, the tightened floor), `2b6554d` (S196's push record), `6eeafd0` (the
+  retention trim), `8400fca` (the fold), `7d4bc48` (BL-76) and `40193bf` (the close-out). Approved in this session's
+  second picker, which was put **after** those commits existed, so unlike the earlier range this one is not a
+  go-ahead reaching forward. Guarded before: `git ls-remote origin refs/heads/main` = `5ffd6f9` and
+  `git merge-base --is-ancestor origin/main HEAD`. Read back after: `40193bf`.
+- **This entry's own commit rides the standing grant** for a `CHANGELOG.md`-only push record (operator, 2026-09-16),
+  and it is pushed with the receipt correction beside it, so nothing further is owed for that push. Nothing sent
+  upstream; PR #84 untouched.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-43] S197 close-out — the `pipefail` population derived instead of listed, nine sites fixed, and a disarmed pre-commit gate found on the way
 
 **Deliverable: BL-43, closed.** The full account is in this session's earlier entries; what belongs here is what the
