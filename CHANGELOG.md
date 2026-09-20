@@ -211,6 +211,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-43] S197 close-out — the `pipefail` population derived instead of listed, nine sites fixed, and a disarmed pre-commit gate found on the way
+
+**Deliverable: BL-43, closed.** The full account is in this session's earlier entries; what belongs here is what the
+session cost, what it found beyond its brief, and what it leaves.
+
+**Beyond the brief, and recorded rather than fixed:** the commit that landed **half** a fold — the index row without
+the pointer-block deletion — did so because its `git add` was not chained to the assertion that had just failed, **and
+because the pre-commit ledger gate that should have refused a `CHANGELOG.md`-less commit was not running.**
+`.git/REBASE_HEAD` had sat in this clone since **2026-08-11 15:14**, and `.githooks/pre-commit:23` treats it as a
+rebase in progress — before *both* gates it chains, so `quality_ratchet.py --precommit` was off too. Filed as
+**BL-76** with three shapes and none chosen; re-armed here by removing the stale file, with a control commit proving
+the refusal fires again. **The pair behaved exactly as `SAFEGUARDS.md` claims:** the fast path was off for five weeks,
+and the guarantee — Phase 0 reconcile — caught the one ungated commit one commit later. This repo had never measured
+that division of labour; now it has.
+
+**Side actions, each operator-approved in a picker and each with its own entry:** the owed `HANDOFFS.md` retention
+trim (`6eeafd0`, `--cut 2`, 26,338 B → 16,131 B) and its fold (`8400fca`); the push of S196's 13 commits by sha
+(`2b6554d`); and this session's own push. **The trim was owed the moment this session claimed** — Phase 0 reported 2
+receipts and the claim made 3 — which the Phase 0 picker should have carried and did not, so it cost a second picker
+mid-session.
+
+**Phase 3C wrote fork Learning #81**, the operator choosing that over an eighth consecutive withheld row: *a
+population recorded as a LIST decays into a wrong answer; record the DERIVATION that recomputes it.*
+`docs/FORK_LEARNINGS.md` is now **82,626 B against an 81,920 B warning** — 706 B over, a warning and not a refusal,
+and **BL-53 is what answers it.** The row's first draft said *"three years of edits later"*; the item was raised **25
+days** and **492 first-parent commits** earlier, both measured, and the row says so now.
+
+**Scores.** Predecessor **9/10** — S196's pointer at `:3203` named the site, the mechanism and the measurement, and
+was directly usable; its gate citation reproduced byte-for-byte at this Phase 0; every one of its six gotchas was
+load-bearing here. One point off: it reported BL-43's body *"wrong in two ways"* when the third — the severity claim,
+*"a nuisance rather than a hole"* — was the one that mattered, and the polarity split was available to the same
+measurement it had already run. **Self 8/10** — the deliverable is finished, derived rather than remembered, proven
+RED-first per site, and shipped with a detector; three instruments were audited before their numbers were published.
+Against that: the half-fold commit, a 451 B label on a 455 B block (its character count, in the session whose own
+instrument exists to keep bytes and characters apart), a scanner that first reported 3 of 9 sites, and a Phase 0
+picker that omitted an action already due.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-76] S197 — raised: a stale `.git/REBASE_HEAD` had disarmed the pre-commit gate since 2026-08-11
 
 **Found while investigating why a commit of this session's landed without a `CHANGELOG.md` entry.**
