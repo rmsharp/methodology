@@ -211,6 +211,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S200 close-out — the catch-up pass ran, and the criterion retires nothing
+
+**Deliverable: BL-53 P3, complete as an adjudication and explicit about the DONE bullet it cannot meet.**
+All 69 rows of `docs/FORK_LEARNINGS.md` were read in full and tested against the D1 criterion ratified at
+this session's Phase 0; each has a recorded verdict and basis in
+[`docs/planning/fork-learnings-adjudication-2026-09-20.md`](docs/planning/fork-learnings-adjudication-2026-09-20.md)
+(18.5 KB). **0 retirements.** P3's DONE list also asks for *"the file under 81,920 B"* — **that bullet is
+unreachable under the ratified criterion and is reported as unmet rather than quietly dropped.** No
+`docs/archive/FORK_LEARNINGS-retired.md` was created, because nothing qualified to move into it.
+
+**Seven commits:** `fc2dac1` claim · `f1f51b3` the owed retention trim (26,597 → 16,014 B, three stated
+findings, L1/L2/L3 OK) · `9d30247` its fold, in its own commit · `d4690d8` the adjudication · `53ba69e`
+P2 recorded in BL-53's row and **BL-78** raised · `c2feca4` fork Learning **#84** · this close-out.
+
+**What the pass established, measured rather than argued.** Limb **(b)** is unsatisfiable: 13 rows cite an
+earlier row and every citation **differentiates** — *sibling of*, *distinct from*, *the converse of* — so a
+session whose lesson would have superseded one wrote a narrower row citing it instead; and **8 rows are
+cited BY another live row or live config**, so removal is resisted at both ends. Limb **(c)** is
+unsatisfiable: 38 rows name a file path, **56 mentions, all 56 resolving to a tracked file**. Limb **(a)**
+is partial by construction — a gate pins the instance a lesson came from, not the next one; for row `#47`
+it is unsatisfiable by the row's own content.
+
+**The plan's estimate was a bound, not a yield.** *"At most 2, ~2,900 B"* came from a ten-row sample that
+scored `#15` and `#19` **partly** covered. D1 says *when, and only when, one of these holds*. Six rows are
+partly covered in all. **Census: 0.**
+
+**Phase 0 also found something the gates cannot see,** filed as **BL-78**: `starter-kit/SAFEGUARDS.md` is
+1,743 B above a ceiling `.context-budget.json` declares to BE the file's own size, and has been since
+2026-09-14. Nothing measures it, and the already-red checker carried no news (fork Learning #62). The pin's
+warrant was checked rather than quoted: **both halves are false** — neither side is the cited blob
+`f0964195`, and the two have diverged by exactly one line (`0d63410`).
+
+**Not done, deliberately:** no ceiling moved (P5, which D4 did not authorise), D3 not written into the
+close-out path (P4, a separate session), BL-78 not worked, nothing outward-facing.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S200 — Phase 3C: fork Learning #84, and D3 honoured in the same breath
 
 - **Row #84** appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) — *every limb of a retirement rule
