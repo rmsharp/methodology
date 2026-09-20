@@ -211,6 +211,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-76] S198 close-out — a gate that fails open, closed by measuring git rather than by picking a shape
+
+**Deliverable: BL-76, closed.** The full account is in this session's other entries; what this one records is the
+close-out itself and the two things it is obliged to state.
+
+**Phase 3A — S197's handoff scored 9/10.** Its item (2) named the exact command to run first (`ls .git/REBASE_HEAD`)
+and it was the right first command; the three shapes, the `.githooks/commit-msg --selftest` precedent, and the
+*`--cut N` RETAINS N* warning all landed as written, and its prediction that the trim would fall due immediately
+after this session's claim was exactly right. **Six of its `key_files` line citations were re-checked against the
+tree it handed over (`2c9ec03`) and all six resolve.** Against that: its `docs/FORK_LEARNINGS.md` figure was 26 B
+stale (706 B over where the tree said 732 B), corrected in this session's backlog entry; and shapes (1) and (2) read
+as two options where measurement showed them to be one marker set described twice — which cost nothing, because the
+item said plainly that none had been chosen or measured.
+
+**Phase 3B — self-assessed 8/10.** Plus: the shape was settled by **running every operation in the marker list to
+completion** rather than by reasoning about which edit was smallest, which is what turned three shapes into one and
+exposed shape (2) as a restatement; the RED-first proof **isolates** (1 red of 10, nine green) instead of merely being
+red; 10 mutants all killed, including one aimed at the test's own fixture builder; the fix was exercised **end-to-end
+against a real completed rebase**, not only against planted marker files; the floor was **measured** and the +10 used
+only to check it; and testing the test surfaced two defects in it before either could ship. **Minus, four:**
+**(1)** Phase 0 ran `context_budget.py --status` — a citation this repository's own BL-75 records as broken — which
+silently performed the default measurement and wrote a row to a tracked file **during a phase the runner declares
+read-only**. Reverted, and it became evidence on BL-75, but the phase was still violated by the session that then
+wrote about gates failing open. **(2)** *"9 mutants, 9 killed"* went into two backlog files while a tenth mutant was
+still being written; the fix's own ledger entry said 10 at the same moment. Caught before close-out by re-deriving
+every such claim in the tree — but it is the exact defect class of fork Learning #81, which this session cites.
+**(3)** The membership assertion was first written `grep -qF " $M "`, which reports the last element of a
+`;`-terminated list missing; it would have shipped a test that fails on a correct file. **(4)** The learnings ceiling
+went from 732 B to 1,848 B over on this session's watch, and nothing was removed.
+
+**Phase 3E, the build-equivalent.** `quality_ratchet.py --run` in a `--no-local` clone of `5015eb0` with HEAD asserted
+by sha: **`11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`**, the eleventh gate
+being the `pre-commit-selftest` added this session. `bash bin/tests.sh` in the same clone: **343 passed / 0 failed /
+6 skipped at two receipts**, captured to a file, sitting exactly on the newly tightened floor.
+
+**Also in this commit — a correction to this session's own text, not a prior session's.** The BL-76 closure rows in
+`BACKLOG.md` and `BACKLOG-DETAIL.md` said *"9 mutants, 9 killed"* and now say **10**. Recorded here rather than
+amended away.
+
+**Nothing reached `KJ5HST/methodology`.** The upstream half of BL-76 is open and is its own go-ahead.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S198 — Phase 3C: fork Learning #82, and the ceiling it crosses further
 
 - **Row #82** appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md): *a hook is the one gate nothing else

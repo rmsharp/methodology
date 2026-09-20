@@ -2649,8 +2649,10 @@ the marker names off the `for marker in` line rather than off the file — the f
 
 **Proof.** RED-first: the selftest was written against the **unfixed** hook and went red on exactly one of
 its ten assertions, the other nine green, so it isolates the defect instead of being vacuously red; 0 red
-after. Mutation: **9 mutants, 9 killed** — restoring `REBASE_HEAD`, dropping each of the four remaining
-markers, `-e` narrowed to `-f`, deleting the loop, and short-circuiting each of the two gates.
+after. Mutation: **10 mutants, 10 killed** — restoring `REBASE_HEAD`; dropping each of the four remaining
+markers; `-e` narrowed to `-f`; deleting the loop; short-circuiting each of the two gates; and breaking the
+fixture builder, which the selftest's own fixture assertion catches (a probe run against a repo that failed
+to build answers about nothing, and would do it in green).
 End-to-end against real git, not planted files: a real conflicted rebase was completed, the leaked
 `REBASE_HEAD` confirmed, and a real `git commit` without a ledger line **refused** (exit 1); co-staging the
 ledger passed (exit 0); and committing *during* a genuine in-progress rebase was still **skipped** (exit 0).
