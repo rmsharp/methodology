@@ -211,6 +211,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S198 — Phase 3C: fork Learning #82, and the ceiling it crosses further
+
+- **Row #82** appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md): *a hook is the one gate nothing else
+  watches, and it fails **open** — so its failure mode is silence, not red.* Written as **a pointer to the gate rather
+  than an essay**, which is what Phase 3C asks for when a learning is mechanical: the lesson is carried by
+  `pre-commit-selftest`, `.githooks/pre-commit --selftest` and Test 43, and the row says where they are. 1,116 B
+  against the 1,500 B row budget; `bin/check-learnings` reads **68 rows, contiguous 15..82, 0 over budget**.
+- **THE CEILING IS NOW 1,848 B OVER, AND NOTHING WAS REMOVED THIS SESSION.** `docs/FORK_LEARNINGS.md` is **83,768 B**
+  against the 81,920 B warning in `.context-budget.json` (`files[3]`). It was **732 B** over at `2c9ec03` — which is
+  itself a correction: S197's receipt records 706 B, measured before its own row #81 was revised. The crossing was the
+  operator's call at S197; this session widened it by one row without narrowing anything, which is the decay-term gap
+  the runner's own Degradation Detection table names. Stated here rather than left unsaid, per that table's remedy.
+  **BL-53 is the item that answers it** and S197 already called it overdue.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S198 — backlog: BL-76 closed, BL-77 raised, and BL-75 recorded as observed a second time
 
 - **BL-76 → §Completed items,** removed from the open list and from the open-item index, with the closure narrative
