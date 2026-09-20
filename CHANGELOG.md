@@ -208,6 +208,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S196 — fork `main` pushed to `origin`, `de4652c..431279b` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 431279b:refs/heads/main`, a fast-forward of the three commits S195 left unpushed —
+  `a69ef73` (BL-74), `a127ba1` (BL-57 P11 recorded) and `431279b` (S195's close-out). Guarded before the push: clean
+  worktree, `git ls-remote origin refs/heads/main` = `de4652c`, and `git merge-base --is-ancestor de4652c 431279b`.
+  Read back after: `git ls-remote origin refs/heads/main` = `431279b`.
+- **Scope:** exactly the three commits the operator's Phase 0 picker approved, pushed by sha rather than by branch tip,
+  so this session's own commits are not carried along without their own go-ahead. Nothing sent upstream.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S196 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 Folded the three-line pointer block `methodology_trim.py` wrote into `HANDOFFS.md`'s front matter (`108cc93`) into one
