@@ -211,6 +211,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S202 close-out — the last phase lands, and the item closes with its limits named
+
+**Deliverable: BL-53 P5, complete on its own DONE criterion** (`9db2c18`). `.context-budget.json`'s
+`docs/FORK_LEARNINGS.md` entry states ratified **option C** in the last artifact that still called the 81,920 B
+figure a warning to be answered: it is a **reported series, not a limit**. `max_bytes` stays **81920** — C
+demotes the number's meaning, not the number — and exactly one key changed, proved each time by walking the
+re-parsed object against the pre-edit one (`['/files[3]/_']`).
+
+**BL-53 closed** (`fc4a006`): P1–P5 all done, row moved to **Completed items**, and the closure **names what it
+does not include** — no row has ever been retired (D2 rests on S199's E2 experiment), option **B** stays
+declined and un-foreclosed, and **D3 is held by prose and close-out discipline, not by a gate**.
+
+**Three claims failed verification this session; all three were corrected rather than carried forward, and one
+of them was mine.** The old note's *"adopters … receive the file itself (`bin/_manifest.py:38`)"* entered
+**true** at `a51d848` (S159, when the entry watched the distributed file) and inverted at `8cfaf0d` (S176), the
+re-point that never touched it — false for **26 sessions**. *"No gate reads budget status"* needed narrowing to
+survive a grep (four `budget` hits in `.quality-gates.json`; one is a gate that runs the tool's **unit suite**).
+And the draft repeated BL-75's *"the default run appends a tracked history row"*, which measurement refuted
+inside the same session — `append_history` (`starter-kit/context_budget.py:506`) writes only when a size
+changed, and three runs left **one** row (`4504996`, with BL-75's detail narrowed and nothing above it edited).
+
+**Phase 3A — S201's handoff scored 9/10.** Load-bearing, and its forward-looking claims **held exactly**: item
+(7) predicted the retention trim would fall due right after this session's report at `--cut 2`, and it did;
+gotcha (3) named the tracked history files the claim commit must carry, so the claim needed no amend; gotcha (4)
+(`check-learnings` bare checks the *distributed* file) and (5) (`--cut N` RETAINS N) were both used as written;
+item (1) named P5's plan line and warned that its verify command takes no `--status`. **What was missing, and it
+is small:** `key_files` pointed at `.context-budget.json:99` (`SESSION_RUNNER.md`'s `measured_bytes`, for BL-78)
+but never at `:79`–`:92`, the entry P5 actually rewrites — a minute of grep, not a wrong claim. Nothing in it
+was inaccurate. The point is deducted for that one omission, not for anything it got wrong.
+
+**Phase 3B — self-assessment 8/10.** **What went right:** the deliverable is done and verified with its own
+command run **bare**; two inherited false claims were found by resolving citations instead of trusting them, and
+**dated** with `git log -S` rather than argued; the backlog closure states its own limits so it cannot be read
+as more than it is; the owed trim, its fold and the Phase 3C row all landed with the D3 statement D3 itself
+requires. **What went wrong:** I read an exit code **through a pipe** and briefly believed the budget tool exits
+0 — it exits 2 — and nearly wrote that into the deliverable's verify line; the note grew 2,716 → ~5,000 B in a
+config whose whole subject is size discipline (defensible: it is read on demand and in no budget, but it is
+growth); and the first side-action picker came back internally contradictory, costing a second round trip to
+resolve rather than a guess.
+
+**Phase 3C:** fork Learning **#86** (`7bdc97e`) — re-pointing a note to a new subject silently inverts every
+clause that was true of the old one. **D3: 0 retired, 1 appended, no row qualifies**, with **#34**, **#26** and
+**#85** considered and named. This is the second consecutive close-out D3 has bound, and the second that
+refused rather than retired — both refusals reasoned, neither reflexive.
+
+**Phase 3E:** `quality_ratchet.py --run` in a `--no-local` clone of **`4504996`** — the final tree, re-run after
+a commit landed past the first measurement rather than citing the earlier one: **11/11 pass · 0 fail · 0
+unmeasured · results 10575dac7361 · manifest 01a4ae7aa511**, bare exit 0, `tests-sh-passed` **343 / 0 failed**.
+
+**Receipt** in `HANDOFFS.md` (S202, `status: complete`, self 8, predecessor 9). `CHANGELOG.md` is 204,924 B
+before this entry — **57,220 B under the 262,144 B refusal**, having grown 12,736 B this session, which makes a
+`CHANGELOG.md` trim the likeliest next thing to fall due.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S202 — the P5 note's own BL-75 clause corrected, and BL-75 narrowed by measurement
 
 - **Found by measuring, not by reading:** the P5 note repeated BL-75's wording — *"the default run appends a
