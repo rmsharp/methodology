@@ -211,6 +211,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S197 — fork `main` pushed to `origin`, `431279b..5ffd6f9` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 5ffd6f9:main`, a fast-forward of the **13** commits S196 left unpushed
+  (`08c5327`..`5ffd6f9`: the S196 claim, both ledger trims, the decision's end, the receipt repair, the fold, S196's
+  push record, the cut-boundary correction, the BL-43 finding and fix, S196's close-out and its two receipt
+  corrections). Guarded before the push: `git ls-remote origin refs/heads/main` = `431279b` and
+  `git merge-base --is-ancestor 431279b 5ffd6f9`. Read back after: `git ls-remote origin refs/heads/main` = `5ffd6f9`.
+- **Scope:** the range the operator's Phase 0 picker approved, **pushed by sha rather than by branch tip** — so this
+  session's own commits (`1ccaf65` the claim, `5d3bd5a` the BL-43 fix) are **not** carried along on a go-ahead given
+  before they existed. They need their own. Nothing sent upstream; PR #84 is untouched.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-43] S197 — the `pipefail` race closed: the population re-derived by measurement, nine sites fixed, and Test 42 so the list cannot go stale again
 
 **BL-43 is CLOSED, and its enumerated population was the wrong one.** The item named six line numbers
