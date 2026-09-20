@@ -211,6 +211,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S200 — BL-78 raised: a no-growth pin breached for six days, and the gate that would say so is unwired
+
+- **Raised, not worked** (FM #17/#18 — this session's deliverable was BL-53 P3): `starter-kit/SAFEGUARDS.md`
+  is **17,129 B against the 15,386 B ceiling `.context-budget.json` declares to BE the file's own size**, a
+  no-growth pin in its own words. It passed the pin at `ad7bd37` (2026-09-14, 16,353 B) and grew in three
+  further commits — `628d218` 16,765 B, `df926b6` 17,024 B, `0d63410` (2026-09-17) 17,129 B. **1,743 B over.**
+- **Two reasons nothing said so.** `python3 starter-kit/context_budget.py` is not run by
+  `.githooks/pre-commit` and `.quality-gates.json` declares no budget-status gate (only
+  `context-budget-unit-tests`, which tests the tool), so the sibling entry's *"every commit that grows it is
+  refused … a ratchet, not a wall"* is **unwired in this clone**. And the checker was **already red** for two
+  by-design breaches, so the row's flip from `ok` to `over` carried no news — **fork Learning #62**, in the
+  one file whose config entry says a size finding here *is* actionable.
+- **The pin's warrant was checked rather than quoted, and both halves are false.** It reads *"byte-identical
+  on `upstream/main` (blob `f0964195`), so pinning it here cannot diverge the two trees."* Ours is
+  `ed49b977` (17,129 B), upstream's `933816b4` (17,024 B) — **neither is `f0964195`** — and the two have
+  **diverged by exactly one line**: upstream's blob equals the fork's at `df926b6`, and the only content
+  commit the fork carries beyond `upstream/main` for this path is `0d63410` (BL-63), a 1-insertion,
+  1-deletion diff. The sibling's whole 12,999 B of headroom debt was parked on `SESSION_RUNNER.md` on the
+  strength of that warrant.
+- **Filed with three shapes, none costed** (`docs/planning/BACKLOG-DETAIL.md` BL-78), index row and open-item
+  list updated, `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK, `bin/check-links` 111 links / 23 files.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-20 · [BL-53] S200 — P2 ratified and recorded in the backlog; BL-53's own row now carries the rule
+
+- **P2's DONE criterion** (plan §8) is *"the answers recorded in `CHANGELOG.md` and in BL-53's backlog row"*.
+  The ledger half is this session's claim entry; the backlog half is now written: `BACKLOG-DETAIL.md` BL-53
+  carries D1–D4 as ratified, P3's zero-retirement result, and the two measurements that make limbs (b) and
+  (c) unsatisfiable here. **P2 is closed; BL-53 stays open on the operator's choice between C and B.**
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-53] S200 — P3, the catch-up pass: every row adjudicated, and none retires
 
 - **Deliverable:** [`docs/planning/fork-learnings-adjudication-2026-09-20.md`](docs/planning/fork-learnings-adjudication-2026-09-20.md)

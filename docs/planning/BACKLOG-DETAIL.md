@@ -1606,6 +1606,30 @@ proceed: **adjudicating the ten oldest rows yields at most two retirements (~2,9
 headroom** — age is not a proxy for spentness here, the oldest band being the densest. The trade that buys
 real headroom retires live advice, and that is the operator's call.
 
+**RATIFIED AND APPLIED, S200 (2026-09-20) — and the catch-up pass retires nothing.** The operator
+answered D1–D4 at S200's Phase 0 picker: **option A + C's D3 pairing.** **D1** a row retires only when
+**mechanized** (a `.quality-gates.json` gate, a `bin/tests.sh` test or a numbered FM enforces the lesson),
+**superseded** (a later row states it at least as generally) or **spent** (its artifact no longer exists),
+with the citation in the retiring commit; **D2** reserved-gap retirement — text moved verbatim to
+`docs/archive/FORK_LEARNINGS-retired.md`, one reserved-number line in the live file, no renumbering;
+**D3** a session that appends a row either retires one or states in its handoff that none qualifies,
+naming what it considered; **D4** the 81,920 B ceiling unchanged as a growth warning, so **no P5**.
+
+P3 then adjudicated **all 69 rows** (15–83), each read in full, in
+[`fork-learnings-adjudication-2026-09-20.md`](fork-learnings-adjudication-2026-09-20.md). **Yield: 0.**
+The *"at most two, ~2,900 B"* above was the optimistic bound of a ten-row sample that marked `#15` and
+`#19` **partly** covered; D1 retires a row *"when, and only when, one of these holds"*, and partly is not
+holds. Six rows are partly covered in all (`#15`, `#19`, `#24`, `#38`, `#45`, `#82`). **Two limbs are
+unsatisfiable across this corpus, measured rather than argued:** (b) 13 rows cite an earlier row and every
+citation is a *differentiation* — "sibling of", "distinct from", "the converse of" — never a restatement,
+while **eight** rows are cited BY another live row or live config, so retiring one strands an in-table
+reference (row `#22`'s lesson, applied to the file `#22` lives in); (c) 38 rows name a file path, **56
+mentions, every one resolving to a tracked file.** **The file therefore stands at 85,228 B, 3,308 B over,
+and the plan's central finding is stronger than the plan stated it.** The adjudication recommends keeping
+D3 and taking **option C** — demote the ceiling to a reported series, keep the per-row budget — with **B**
+(oldest-first to an operator-stated depth) still the only option that recovers real bytes, now costed row
+by row rather than by age. **That choice is open; P4 (writing D3 into `CLAUDE.md`) is a separate session.**
+
 **What would answer it** is a retirement rule decided once, as policy, instead of a byte negotiation at
 every breach. Tombstoning is the mechanism that keeps `Learning #N` citations resolving; what it lacks
 is a rule for *which* rows retire (for example, a row whose lesson the runner itself now carries as an
@@ -2717,3 +2741,50 @@ remedy. (2) A `bin/tests.sh` assertion — but the suite runs in clones where an
 legitimate, so it would be wrong exactly where it ran. (3) Have the hook record that it fired, and have
 Phase 0 read that trace against the commits in the span it is already reconciling. Each needs its own
 RED-first proof; none has been costed.
+
+<a id="bl-78"></a>
+
+**BL-78 — `starter-kit/SAFEGUARDS.md` has been over its declared no-growth pin since 2026-09-14, and
+nothing in the commit path measures it. Raised 2026-09-20 (S200), at Phase 0. Not fixed.**
+
+**What.** `.context-budget.json` gives `starter-kit/SAFEGUARDS.md` a `max_bytes` of **15,386 B** and says
+in its own `_` note that this **is the file's current size** — *"a deliberate no-growth pin rather than a
+measurement dressed as a budget"*, with *"at exactly 15,386 B the file is AT its ceiling, not over: `new >
+ceil` is strict, so today's content passes and the next byte does not."* The file is **17,129 B — 1,743 B
+over.** Measured back through its history, it passed the pin at `ad7bd37` (2026-09-14, 16,353 B) and grew
+in three further commits: `628d218` (16,765 B), `df926b6` (17,024 B), `0d63410` (2026-09-17, 17,129 B).
+
+**Why nothing said so.** Two independent reasons, and the second is the substantive one.
+
+1. **No gate measures it.** `python3 starter-kit/context_budget.py` is **not** run by
+   `.githooks/pre-commit`, and `.quality-gates.json` declares no budget-status gate — only
+   `context-budget-unit-tests`, which tests the tool, not this repository's budget. So the sibling entry's
+   claim for the read-set pair — *"every commit that grows it is refused while every commit that shrinks
+   it passes: a ratchet, not a wall"* — describes an enforcement that is **not wired in this clone**.
+2. **The checker was already red, so the new row carried no news.** The read-set total and
+   `SESSION_RUNNER.md` are over by design (*"being over on arrival is the POINT"*), so
+   `context_budget.py` exits non-zero every run and the `SAFEGUARDS.md` row's flip from `ok` to `over` sat
+   in output nobody diffed. **That is fork Learning `#62` exactly**, in the one file whose entry says a
+   size finding here *is* actionable.
+
+**Why it matters more than 1,743 B — measured, not left as a question.** The pin's stated warrant is that
+the file is **byte-identical on `upstream/main`** (blob `f0964195`), *"so pinning it here cannot diverge
+the two trees"*, and the sibling's whole 12,999 B of headroom debt was parked on `SESSION_RUNNER.md` on
+that basis. **Both halves of that warrant are now false.** Ours is `ed49b977` (17,129 B), upstream's is
+`933816b4` (17,024 B) — **neither is `f0964195`, so the cited blob is stale on both sides** — and the two
+have **diverged**. The divergence is exactly one line: upstream's blob equals the fork's blob at
+`df926b6`, and the only content commit the fork carries beyond `upstream/main` for this path is
+**`0d63410`** (BL-63, 2026-09-17), `git diff upstream/main HEAD -- starter-kit/SAFEGUARDS.md` reading
+**1 insertion, 1 deletion**. So this is a small, well-understood divergence in an **upstream-facing**
+file, not a mystery — but it is a divergence the config says cannot happen, in the note that justifies
+where a 12,999 B debt was parked.
+
+**Not investigated, and deliberately not fixed here** (FM #17, FM #18): this was a Phase 0 finding in a
+session whose deliverable was BL-53 P3. **Shapes, none costed.** (1) Re-pin: if the growth was intended
+and upstream carries it too, move the number and say why. (2) Wire the gate: add a budget-status gate to
+`.quality-gates.json` so the pin refuses rather than reports — which is BL-77's shape for a different
+mechanism, and inherits its objection that a clone is a legitimate place for it to be unset. (3) Leave the
+number and treat the row as a reported series, which is the same question BL-53's option C asks about a
+different file. **The blob comparison is already done (above), so the open question is not *what
+happened* but *which number is right now*: re-pin at 17,129 B, re-pin at upstream's 17,024 B and treat
+`0d63410` as the fork's own delta, or stop pinning this file at all.**

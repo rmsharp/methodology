@@ -8,7 +8,7 @@ This is a backlog, **not** GitHub issues, by operator decision.
 
 **Open: BL-11, BL-12, BL-13, BL-14, BL-16, BL-17, BL-18, BL-19, BL-20 (residual only), BL-21,
 BL-22, BL-23, BL-26, BL-30, BL-31, BL-32, BL-36, BL-37 (half (a) done, half (b) open), BL-39,
-BL-42, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68, BL-69, BL-70, BL-71, BL-73, BL-74, BL-75, BL-77.**
+BL-42, BL-44, BL-46, BL-47, BL-48, BL-49, BL-50, BL-51, BL-52, BL-53, BL-54, BL-55, BL-57, BL-58, BL-60, BL-61, BL-62, BL-64 (residual only), BL-65, BL-66, BL-68, BL-69, BL-70, BL-71, BL-73, BL-74, BL-75, BL-77, BL-78.**
 Re-derive rather than trust that list —
 it is hand-maintained, and it has been wrong before:
 
@@ -164,6 +164,7 @@ grep -nE '^\*\*BL-[0-9]+ —' docs/planning/BACKLOG-DETAIL.md
 | **BL-74** | Keep `README.md` current: the canonical file (plan item (15)'s stale cost section) and the copies five adopters carry at `docs/methodology/README.md`, which `bin/sync` never updates (23–39 README commits behind; one matches no version). Raised at S195 on the operator's request; not investigated | [detail](BACKLOG-DETAIL.md#bl-74) |
 | **BL-75** | `context_budget.py` has no `--status` command and ignores unknown arguments, so every cited *"`--status`"* run (including a gate command proposed to the maintainer in a PR comment) was the default measurement, which also appends a tracked history row. Raised at S195 from BL-57 P11; not fixed | [detail](BACKLOG-DETAIL.md#bl-75) |
 | **BL-77** | Phase 0 reconciles the ledger thoroughly but never checks that the gates protecting it are ARMED in this clone: `core.hooksPath` is per-clone and opt-in, so a correct hook that was never enabled runs nothing while every gate reads green — the hook fails open, and its failure mode is silence. S198's `pre-commit-selftest` tests the hook's logic, not whether it is wired in. Raised at S198 from BL-76's closure; three shapes, none costed | [detail](BACKLOG-DETAIL.md#bl-77) |
+| **BL-78** | `starter-kit/SAFEGUARDS.md` is **17,129 B against a 15,386 B ceiling that `.context-budget.json` declares to BE the file's current size — a no-growth pin** — and has been since `ad7bd37` (2026-09-14), growing in four commits. Nothing measures it: `context_budget.py` is not in `.githooks/pre-commit` and no `.quality-gates.json` gate reads budget status, so the config's *"a ratchet, not a wall"* is unwired; and the checker was already red for known reasons, so the new row carried no news (fork Learning #62). The pin's warrant — byte-identical with `upstream/main` — is also false: the blobs have diverged by one line (`0d63410`). Raised at S200's Phase 0; three shapes, none costed | [detail](BACKLOG-DETAIL.md#bl-78) |
 
 ## Completed items (BL-1 – BL-7, BL-9, BL-10, BL-43, BL-45, BL-56, BL-59, BL-67, BL-72, BL-76)
 
