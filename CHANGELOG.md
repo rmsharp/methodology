@@ -211,6 +211,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S202 — Phase 3C: fork Learning #86, and the D3 statement it owes
+
+- **Row #86 appended** to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md), 1,405 B, under the 1,500 B per-row
+  budget that is now the file's only refusal. **Lesson:** re-pointing a note to a new subject silently inverts
+  every clause that was true of the old one — re-verify the whole note, not the line you changed.
+- **Dated, not asserted.** The clause entered at `a51d848` (S159) about
+  `starter-kit/FRAMEWORK_LEARNINGS.md`, where it was **true**; the re-point at `8cfaf0d` (S176) changed the
+  entry's subject without touching it, which is where it became false; `9db2c18` removed it. `git log -S` on the
+  clause is what fixes both endpoints — position and blame would not have.
+- **It cites fork Learning #85 and differentiates**, per this table's convention: #85 is prose describing a
+  mechanism that never existed; #86 is prose that was verified true once, about a different file.
+- **D3 statement (`CLAUDE.md` §*Where this fork's learnings go*): 0 retired, 1 appended, and no row qualifies.**
+  Three were considered against D1. **#34** (*a ceiling guards a cost — measure whether that cost is ever paid,
+  and in what unit*) is the row that **justified** option C; the ceiling still exists as a reported series, so
+  the row is neither spent nor mechanized. **#26** (*archiving everything finished can still leave a file over
+  its ceiling*) is about budgets generally, and no gate enforces it. **#85** is one session old and states a
+  different failure from #86. None is mechanized, superseded or spent.
+- **Verified:** `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` — **72 rows,
+  contiguous 15..86, 0 over 1,500 B**, exit 0. The bare invocation checks the *distributed* file and would have
+  been green for the wrong table.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-53] S202 — BL-53 closed: the backlog row moves to Completed items
 
 - **Why now:** P5 was the plan's last phase and it shipped at `9db2c18`. P1–P5 are done, so the item is closed
