@@ -211,6 +211,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S200 claim — the catch-up pass, under a rule ratified at this session's Phase 0 (in progress)
+
+**Deliverable:** **BL-53 P3**, the catch-up pass of
+[`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md) §8.
+Chosen by the operator after Phase 0 (picker) over BL-77's costing, over this session's own SAFEGUARDS finding and
+over BL-74.
+
+**P2 is answered in the same picker — option A + C's D3 pairing** (plan §7), and it is recorded here because a
+decision has no test:
+
+- **D1 — the criterion.** A row retires only when **(a)** a gate in `.quality-gates.json`, a test in `bin/tests.sh`
+  or a numbered failure mode now enforces the lesson, **(b)** a later row states it at least as generally, or
+  **(c)** the artifact, tool, file or defect it is about no longer exists. The citation goes in the retiring commit.
+  A row matching none of these does not retire, whatever its age or the file's size.
+- **D2 — the mechanism.** Reserved-gap retirement (the plan's E2): the row's text moves **verbatim** to
+  `docs/archive/FORK_LEARNINGS-retired.md`, the live file gains one reserved-number line, numbers never change.
+  Measured at S199 to need **no checker change** — `bin/check-learnings`'s `RESERVED_RE` already tolerates a
+  declared gap — which falsified the cost BL-53 had carried since S159.
+- **D3 — the trigger.** A session that appends a row **either** retires one under D1 **or states in its handoff
+  that no row qualifies**, naming the rows it considered. Deliberately not keyed to the ceiling.
+- **D4 — the ceiling.** Unchanged: 81,920 B stays the growth warning S159's operator decision made it. No P5.
+
+**What this buys, stated before it is done:** the plan's central finding is negative — adjudicating the ten oldest
+rows yields at most **2 retirements, ~2,900 B, about one session of headroom.** The operator chose A knowing that,
+over B's 14,502 B at ten rows, which buys ~12 sessions by retiring advice that is still live.
+
+**Phase 0 for the record.** Both frontiers reconciled with nothing backfilled: `CHANGELOG.md` frontier = HEAD
+`05fc293` with an empty gap; `HANDOFFS.md` frontier `1530bbc` with only the push record above it, already ledgered.
+No `status: pending` stub. **2** receipts. The gate was re-run rather than read from the stale local results file
+(S195's, head `431279b`): in a `--no-local` clone with HEAD asserted by sha, **11/11 pass · results
+`10575dac7361` · manifest `01a4ae7aa511`** — S199's citation exactly. `core.hooksPath` = `.githooks`, no stale
+markers on disk (BL-77's own check). Dashboard 76/100.
+
+**One Phase 0 finding, filed rather than worked (side action):** `starter-kit/SAFEGUARDS.md` is **17,129 B against
+a 15,386 B ceiling that `.context-budget.json` declares to be the file's own size — a no-growth pin** — and has been
+over since `ad7bd37` (2026-09-14), growing in four commits to `0d63410` (2026-09-17). No receipt since has mentioned
+it. `context_budget.py` is not run by `.githooks/pre-commit` and no `.quality-gates.json` gate measures budget
+status, so the config's own claim for the read-set pair — *"every commit that grows it is refused … a ratchet, not
+a wall"* — is not wired in this clone.
+
+**Side actions approved in the same picker:** the owed `HANDOFFS.md` retention trim at `--cut 2` with its fold (due
+the moment this claim makes three receipts), the push of this session's commits to fork `origin` at close-out, and
+the backlog item above. **Nothing outward-facing** — PRs #84 and #85 stay as they are.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S199 — fork `main` pushed to `origin`, `1cec033..1530bbc` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin HEAD:main`, a fast-forward of this session's **7** commits — `7b5899d` (claim),

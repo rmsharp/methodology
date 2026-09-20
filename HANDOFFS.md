@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S200
+date: 2026-09-20
+status: pending
+active_task: **BL-53 P3 — the catch-up pass**, under a rule ratified in this session's own Phase 0 picker. The operator chose it over BL-77's costing, over this session's SAFEGUARDS finding and over BL-74. **P2 is answered: option A + C's D3 pairing** (`docs/planning/fork-learnings-retirement-rule-plan.md` §7) — **D1** a row retires only when mechanized, superseded or spent, cited in the retiring commit; **D2** reserved-gap retirement, text moved verbatim to `docs/archive/FORK_LEARNINGS-retired.md` with a reserved line in place and no renumbering; **D3** every session that appends a row either retires one or states in its handoff that none qualifies, naming what it considered; **D4** the 81,920 B ceiling stays exactly what S159 made it, a growth warning. The plan's own finding is that this buys about one session of headroom, and that was known before the choice was made. Three side actions approved in the same picker: the owed `HANDOFFS.md` retention trim at `--cut 2` with its fold, the close-out push to fork `origin`, and filing this session's Phase 0 finding — `starter-kit/SAFEGUARDS.md` 1,743 B above a declared no-growth pin since 2026-09-14, with nothing in the commit path that measures it — as a backlog item.
+```
+
+```handoff
 session: S199
 date: 2026-09-20
 status: complete
