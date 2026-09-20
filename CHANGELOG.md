@@ -211,6 +211,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S202 — P5: the 81,920 B figure stops being a limit in the one artifact that still called it one
+
+**BL-53 P5, the plan's last phase, done on its own DONE criterion.** `.context-budget.json`'s
+`docs/FORK_LEARNINGS.md` entry (`files[3]`) now states what the number means under the ratified **option C**:
+**a reported series, not a limit.** One key changed — `files[3]._` — proved by re-parsing the file and walking
+it against the pre-edit object: `['/files[3]/_']`, nothing else. `max_bytes` is **still 81920**: C demotes the
+number's *meaning*, and deleting or raising it is a different change with a different blast radius.
+
+**What the note now says, and what it deliberately does not.** It says `over` on this row is the expected
+state rather than a breach; that the guard which still refuses is `bin/check-learnings`' per-row
+`ROW_BUDGET_BYTES` = 1,500 (`:106`); that what holds the line is the **D3** obligation in `CLAUDE.md`
+(`24fe658`); and that the figure was demoted rather than raised a third time because S200's 69-row pass
+retired 0. It does **not** restate D1's limbs or D2's mechanism — those live in `CLAUDE.md`, and a rule stated
+in two places is a rule that will diverge. It also replaces the old note's *"answer BL-53 when it fires"*
+instruction, which a ratified answer has retired.
+
+**Two claims failed verification and were corrected rather than carried forward — one of them inherited.**
+
+- **`bin/_manifest.py:38` does not distribute this file.** The old note ended *"adopters … receive the file
+  itself (bin/_manifest.py:38)"*. That line is `("starter-kit/FRAMEWORK_LEARNINGS.md", "FRAMEWORK_LEARNINGS.md",
+  TRACKED)` — **upstream's** file. `grep -c FORK_LEARNINGS bin/_manifest.py` is **0**: adopters do not receive
+  `docs/FORK_LEARNINGS.md` at all. The sentence was true of the file this entry watched **before** the
+  2026-09-16 re-point and inverted silently with it, unread for 26 sessions. The new note says so, and why.
+- **"No gate reads budget status" needed a narrower wording.** `.quality-gates.json` has four `budget` hits.
+  Three are prose (`why` strings); the fourth is the gate `context-budget-unit-tests`, which runs
+  `python3 tools/test_context_budget.py` — **the tool's unit suite, not this repo's measurement**. The claim
+  holds; the loose phrasing would have read as refuted by the next session that grepped. The note now names the
+  gate and the distinction, and adds the fact behind it: the tool **exits 2** on this state and nothing
+  consumes that exit code.
+
+**Verified.** P5's own command, run bare so the exit code is the tool's and not a pipe's: `python3
+starter-kit/context_budget.py` → **exit 2**, `docs/FORK_LEARNINGS.md 88,197 B / 81,920 B over` — the pre-existing
+red state (this file, `SESSION_RUNNER.md`, `SAFEGUARDS.md` and the read-set total), unchanged by this edit, and
+now *described* by the entry it sits under. `python3 tools/test_context_budget.py` **122 tests, OK, exit 0**.
+`bin/check-links` **111 links across 23 files**. The note grew 2,716 B → 4,806 B; `.context-budget.json` 27,813
+B → 29,256 B. That file is read on demand and is in no budget, and the added bytes are the reasoning a later
+session would otherwise rebuild from three planning documents.
+
+**BL-53 is now closed except for its backlog bookkeeping.** P1–P5 are all done; the rule is decided, applied to
+every row, written where sessions read it, and the number it replaced now says what it is.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S202 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-3.md` became one row at
