@@ -211,6 +211,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S197 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- **Action:** the fold the index's own rule and [fork Learning #58](docs/FORK_LEARNINGS.md) require in **its own
+  commit** — one row appended to [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md) (1 record,
+  2026-09-19 → 2026-09-19, `HANDOFFS-through-2026-09-19-2.md`, v1.5.0) and the trimmer's **455 B** three-line block (451 *characters* — it carries `→` and `—`; the
+  first draft of this entry printed the character count under a `B` label)
+  deleted from `HANDOFFS.md`'s front matter, so a trim-and-fold leaves that always-read front matter no larger.
+  The shard's shipped `.verify.sh` prints L1, L2/front-matter and L3 OK after the fold.
+- **It took two attempts, and the first is worth recording.** The fold's `git add`/`git commit` was not chained to
+  the check that precedes it, so when the deletion's own assertion failed — it looked for `methodology_trim.py
+  v1.5.0` where the block writes `` `methodology_trim.py` v1.5.0 ``, backticks and all — the commit ran anyway and
+  landed **half the fold** (the index row, no deletion) under a message describing both. Amended, with the
+  assertion corrected. This is the exact trap S177 hit and the memory names: **gate `git add` on the check that
+  precedes it.**
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19-2.md` (1 record(s), 26,338 B → 16,131 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
