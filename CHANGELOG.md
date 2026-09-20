@@ -211,6 +211,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S199 — Phase 3C: fork Learning #83, and the ceiling it widens
+
+- **Action:** fork Learning **#83** appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) — a reference
+  inventory keyed to a numbering pattern counts another project's numbering as your own, and a planted test
+  fixture as a citation. Earned in this session's own mandatory inventory, where three of the few hits that
+  mattered were not what the count said. 1,459 B, under the 1,500 B per-row budget;
+  `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` reads **69 rows, contiguous
+  15..83, 0 over budget**.
+- **The ceiling, stated rather than left unsaid.** The file is **85,228 B, 3,308 B over** the 81,920 B growth
+  warning — it was 1,848 B over at this session's claim. **This session appended a row and retired none**, which
+  is the decay term the runner's Degradation Detection table names, and it is the third consecutive session to do
+  so. **The reason is not reflex:** this session's own deliverable is the retirement rule, and that plan's P2 —
+  operator ratification of D1–D4 — gates P3, the pass that would retire anything. Retiring a row here would be
+  applying an unratified rule and bleeding a plan into its own implementation (FM #18). The cost of waiting is
+  recorded here in bytes so the next session inherits a number, not an impression.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S199 — the hook fix sent upstream as PR #85 (non-commit action, operator go-ahead)
 
 - **Action:** [PR #85](https://github.com/KJ5HST/methodology/pull/85) opened against `KJ5HST/methodology` `main`
