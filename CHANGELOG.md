@@ -211,6 +211,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S202 — BL-53 closed: the backlog row moves to Completed items
+
+- **Why now:** P5 was the plan's last phase and it shipped at `9db2c18`. P1–P5 are done, so the item is closed
+  rather than left open with nothing in it — the Phase 3F step *"for a completed backlog item, remove it from
+  `BACKLOG.md`"*, taken the way this file has always taken it: the row moves to **Completed items** with a
+  `CLOSED 2026-09-20 (S202)` summary, and the detail heading stays where `BL-53`'s citations point.
+- **Three hand-maintained places updated together**, because the header list is the one this repo has been wrong
+  about before: the `Open:` enumeration (BL-53 removed), the `## Completed items (…)` heading (BL-53 added, in
+  numeric order between BL-45 and BL-56), and the row itself.
+- **The closure states its own limits**, so a later session does not read it as more than it is: no row has ever
+  been retired, so D2's mechanism rests on S199's E2 experiment rather than on use; option **B** stays declined
+  and **not foreclosed**; and **D3 is held by prose and close-out discipline, not by a gate** — P4's gate half
+  was conditional on a mechanical D4, and C is not one.
+- **Verified:** `bash docs/planning/BACKLOG-DETAIL.md.verify.sh` — **C1–C5 all OK** (18 items byte-identical,
+  27 raised since the split, no moved body left behind, every item reachable, preamble verbatim).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-53] S202 — P5: the 81,920 B figure stops being a limit in the one artifact that still called it one
 
 **BL-53 P5, the plan's last phase, done on its own DONE criterion.** `.context-budget.json`'s

@@ -1648,6 +1648,31 @@ owed:** §8 makes it conditional on D4 choosing a *mechanical* form and C is not
 **What is left of BL-53 is P5 and nothing else.** The rule is decided, applied to every row, and written
 where sessions read it; the file stands at **86,727 B, 4,807 B over** a number that C has just demoted.
 
+**CLOSED 2026-09-20 (S202). P5 SHIPPED AT `9db2c18` AND BL-53 IS DONE.** `.context-budget.json`'s
+`docs/FORK_LEARNINGS.md` entry (`files[3]._`) now states option C in the artifact that was still calling the
+figure a warning to be answered: **a reported series, not a limit**; `over` on that row is the expected state,
+the per-row `ROW_BUDGET_BYTES` = 1,500 is what refuses, and the D3 obligation in `CLAUDE.md` is what holds the
+line. `max_bytes` stays **81920** — C demotes the number's meaning, not the number. Exactly one key changed,
+proved by walking the re-parsed object against the pre-edit one (`['/files[3]/_']`). Verified with the phase's
+own command run **bare**, so the exit code is the tool's and not a pipe's: `python3
+starter-kit/context_budget.py` → **exit 2**, the pre-existing OVER state (this file, `SESSION_RUNNER.md`,
+`SAFEGUARDS.md`, the read-set total), unchanged by the edit.
+
+**Two claims in the old note failed verification and were corrected rather than carried into the rewrite.**
+`bin/_manifest.py` has **no** row for `docs/FORK_LEARNINGS.md` (`grep -c` = 0); its `:38` distributes
+`starter-kit/FRAMEWORK_LEARNINGS.md`, upstream's file — so the old note's *"adopters … receive the file itself
+(bin/_manifest.py:38)"* was true of the file this entry watched **before** the 2026-09-16 re-point and inverted
+silently with it. And *"no `.quality-gates.json` gate reads budget status"* needed narrowing: four `budget` hits
+exist there, three prose and one the gate `context-budget-unit-tests`, which runs the tool's **unit suite**, not
+this repo's measurement. The claim holds; the loose wording would have read as refuted by the next session that
+grepped.
+
+**What this closure does NOT include, stated so it is not read as more than it is.** No row has ever been
+retired, so D2's mechanism is still proven by S199's E2 experiment rather than by use; option **B** stays
+declined and **not foreclosed**; P4's gate half was never owed (§8 makes it conditional on D4 choosing a
+*mechanical* form, and C is not one), so **D3 is held by prose and by close-out discipline, not by a check** —
+the first thing to revisit if it is ever skipped.
+
 **What would answer it** is a retirement rule decided once, as policy, instead of a byte negotiation at
 every breach. Tombstoning is the mechanism that keeps `Learning #N` citations resolving; what it lacks
 is a rule for *which* rows retire (for example, a row whose lesson the runner itself now carries as an
