@@ -208,6 +208,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S196 — the claim receipt landed inside `HANDOFFS.md`'s front matter; repaired, and what caught it
+
+- **Defect, in the claim commit `08c5327`:** the receipt was inserted at the first `` ```handoff `` **substring** in the
+  file, which is not the first receipt. The front matter quotes the delimiter inside the sentence *"Phase 0 runs
+  `grep -c '^```handoff' HANDOFFS.md` and reports the count"*, so the receipt landed at `:15`, inside the
+  retention-policy paragraph, and the tail of that sentence became a new line **starting** with the delimiter.
+- **What it broke:** the file's own documented count command then answered 4 with three receipts present, since the
+  quoted fragment matched at line start; and `bin/check-handoff` validated **S195** as the newest receipt and printed
+  *"OK … all 1 older receipt(s) name a commit sha"* with two older receipts present.
+- **What caught it:** `methodology_trim.py --file HANDOFFS.md --cut 2 --force` refused with `CUT_OUT_OF_RANGE` —
+  *"must retain between 1 and 1 records"* — because it parses records, not fences. Re-checked afterwards against the
+  committed blob: `bin/check-handoff --all` **does** report the corruption (six `receipt field outside any ```handoff
+  fence` errors), so the `check-handoff-all` quality gate would have caught it at the next `--run`; the default
+  single-receipt mode is the one that printed OK.
+- **Repair (this commit):** the receipt moved to the first line-anchored `` ```handoff ``, directly above S195's, and
+  the split sentence restored — same byte count, 39,800 B either way. `grep -c '^```handoff' HANDOFFS.md` now reads 4
+  (S196, S195, S194, S193), and `bin/check-handoff` correctly reports the newest receipt as still pending.
+- **Cause:** `str.index('```handoff')` where the anchor had to be `^```handoff`, in the one file that quotes its own
+  delimiter — the trap S191 hit in `bin/model-report`, hit again here in the file that documents it.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S196 — the 2026-09-14 no-trim decision discharged, and the paragraph that carried it made true
 
 **The constraint's release is an action, so it is logged here.** The operator's decision of 2026-09-14 not to trim this
