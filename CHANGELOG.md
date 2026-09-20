@@ -211,6 +211,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-20-2.md` (1 record(s), 24,915 B → 15,309 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-20-2.md`](docs/archive/HANDOFFS-through-2026-09-20-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 24,915 B → 15,309 B (−38.6%).
+
 ### 2026-09-20 · [BL-53] S201 claim — the steady-state obligation gets written where sessions read it (in progress)
 
 **Deliverable:** **BL-53 P4**, the steady-state obligation of
