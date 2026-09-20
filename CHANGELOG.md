@@ -211,6 +211,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S196 — `bin/tests.sh:3083` fixed: BL-43's race, with the control the earlier entry lacked
+
+**The mechanism is now demonstrated rather than attributed.** Instrumenting the assertion named the three shards it
+called unnamed — `CHANGELOG-through-2026-09-14.md`, `-2026-09-16.md` and `-2026-09-17.md` — all tracked, and all
+present in the report it was searching, at lines **112, 287 and 376 of 1,095**. Under bash, with the same captured
+97,507-character output: a probe matching at line 112 reported pipeline **failure 3/3**, a probe matching at line 1,082
+reported **0/3**, and a SIGPIPE-free here-string reported 0/3 at both. Position in the stream is the whole story —
+`grep -q` exits at its first match, `echo` is killed mid-write, and `set -uo pipefail` scores the matched pipeline
+failed. Under zsh the same loop reports 0 either way, which is why a first standalone check looked clean.
+
+**The fix (this commit), operator-approved after the evidence:** the one site becomes
+`grep -qF "…" <<< "$OUT40_DEFAULT"`, with the measurement recorded beside it. **RED-first proof, as BL-43 requires:**
+with the fixed form the real tree reports 0 unnamed three times over, a shard genuinely absent from the report (an
+injected `CHANGELOG-through-9999-12-31.md`) is still counted — 1 unnamed — and removing it returns 0. The assertion
+did not stop asserting.
+
+**Correction to the entry below** (*"BL-43's flake population is incomplete"*, same session): it called the failure a
+flake and advised re-running a red before believing it. At `c5db2a7` it did behave that way — one run red, the next
+green — but at `211cae5` it reproduced in **3 of 3** suite runs. The rule that survives is not *"re-run it"* but
+*"re-run it **and** re-test its subject without the pipe"*: only the here-string control distinguished a defective
+assertion from a real breach.
+
+**Still standing, and measured rather than assumed:** `bin/tests.sh:3195` is the same construct on the same
+97,507-character variable, but its probe matches at line 1,082 — the tail — so it reports 0/3 today. It is one shard
+reordering away from firing, and is left to BL-43's own session rather than swept in here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S196 — BL-43's flake population is incomplete: `bin/tests.sh:3083` is a seventh site, caught in the act
 
 **Observed, not inferred.** Two runs of `bash bin/tests.sh` in the same `--no-local` clone of `c5db2a7`, nothing else

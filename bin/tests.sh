@@ -3080,7 +3080,15 @@ MISSING40=0; EXTRA40=0
 for stem40 in CHANGELOG HANDOFFS; do
     for sh40 in "$METHODOLOGY"/docs/archive/"$stem40"-*.md; do
         [ -e "$sh40" ] || continue
-        echo "$OUT40_DEFAULT" | grep -q "docs/archive/$(basename "$sh40") (archived)" || MISSING40=$((MISSING40+1))
+        # A HERE-STRING, NOT A PIPE -- this line was BL-43's race, caught in the act at S196.
+        # `grep -q` exits at its first match while `echo` still has ~90 KB to write; SIGPIPE kills
+        # `echo`, and `set -uo pipefail` (:5) scores the MATCHED pipeline as FAILED, so the shards
+        # whose names print EARLIEST were counted as unnamed. Measured on this repo's own
+        # 97,507-character report, under bash: a match at line 112 of 1,095 reported failure 3/3, a
+        # match at line 1,082 reported 0/3, and the here-string form reported 0/3 at both. It fires
+        # only above the pipe buffer, which is why it appeared when the ledger grew a shard rather
+        # than when the test was written. `-F`: a shard name is a literal, never a pattern.
+        grep -qF "docs/archive/$(basename "$sh40") (archived)" <<< "$OUT40_DEFAULT" || MISSING40=$((MISSING40+1))
     done
 done
 while read -r named40; do
