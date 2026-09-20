@@ -211,6 +211,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S198 — fork `main` pushed to `origin`, `2c9ec03..23ec4b9` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 23ec4b99ea2ae3132285831eb05be4875729af83:refs/heads/main`, a fast-forward of this
+  session's **7** commits — `6d619ef` (claim), `59b9001` (retention trim), `efee857` (fold), `d50107d` (the BL-76 fix,
+  Test 43, the tightened floor), `23cb0b9` (BL-76 closed, BL-77 raised), `5015eb0` (fork Learning #82) and `23ec4b9`
+  (close-out). **Pushed by sha, not by branch tip,** so the go-ahead cannot reach a commit it was not given for.
+- **Guarded before:** `git ls-remote origin refs/heads/main` = `2c9ec03` and `git merge-base --is-ancestor`.
+  **Read back after:** `23ec4b9`.
+- **Approved in this session's Phase 0 picker.** **Fork only — nothing reached `KJ5HST/methodology`;** PR #84 was not
+  touched, and the upstream half of BL-76 remains open and its own go-ahead.
+- **This entry's own commit rides the standing grant** for a `CHANGELOG.md`-only push record (operator, 2026-09-16),
+  so nothing further is owed for that push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-76] S198 close-out — a gate that fails open, closed by measuring git rather than by picking a shape
 
 **Deliverable: BL-76, closed.** The full account is in this session's other entries; what this one records is the
