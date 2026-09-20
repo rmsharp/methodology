@@ -1591,6 +1591,21 @@ against a 304 passed / 1 failed baseline (Test 9, pre-existing), so they need no
 | archive rows 1–5 | 73,427 B | 0 rows | fails (25,328 tok) | 295 / 10 | the same checker change, for 301 B |
 | compact ~25 rows | ~69,000 B (est.) | ~4 rows (est.) | fits (est.) | not run | a 3-row trial saved 20% (880 B); rows 12–33 were already compacted once (S119), so returns there will be lower |
 
+**S199 (2026-09-20): the rule is COSTED and written, and it is waiting on the operator, not on a session.**
+[`fork-learnings-retirement-rule-plan.md`](fork-learnings-retirement-rule-plan.md) re-measures the whole
+question against `docs/FORK_LEARNINGS.md`, which is what D1 left BL-53 governing — **83,768 B, 68 rows,
+1,848 B over and widening across three receipts.** Four decisions are open (D1 criterion, D2 mechanism,
+D3 trigger, D4 what the ceiling then means) and four mechanisms were **run, not reasoned about**, in a
+`--no-local` clone at `6a475b6`. Two results change the options this item records: **(1)** `bin/check-learnings`
+already tolerates a declared gap (`RESERVED_RE`, `:76`), so retiring a row needs **no checker change** and need
+not start at the oldest — the "checker change for the numbering gap" costed above is false today; **(2)** the
+whole distributed-corpus exposure is **zero** — the two apparent hits (`README.md:467`,
+`docs/RELEASE_HISTORY.md:53`) are rad-con's numbering narrated as a defect, and no assertion anywhere depends
+on a row existing. Against that, the plan's central finding is negative and is why it does not simply
+proceed: **adjudicating the ten oldest rows yields at most two retirements (~2,900 B), about one session of
+headroom** — age is not a proxy for spentness here, the oldest band being the densest. The trade that buys
+real headroom retires live advice, and that is the operator's call.
+
 **What would answer it** is a retirement rule decided once, as policy, instead of a byte negotiation at
 every breach. Tombstoning is the mechanism that keeps `Learning #N` citations resolving; what it lacks
 is a rule for *which* rows retire (for example, a row whose lesson the runner itself now carries as an

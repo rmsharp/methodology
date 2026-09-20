@@ -211,6 +211,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S199 — the fork learnings retirement rule, costed against the file D1 left it governing
+
+- **Deliverable:** [`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md),
+  21,538 B. **The plan only** — nothing applied, no row retired (FM #18). Four decisions are put to the operator:
+  **D1** the criterion (mechanized / superseded / spent, each cited), **D2** the mechanism, **D3** the trigger, **D4**
+  what the 81,920 B warning then means.
+- **Why it was re-costed rather than read off BL-53:** that item's option table was measured at S159 against the
+  **distributed** `starter-kit/FRAMEWORK_LEARNINGS.md`. Resync decision D1 (S176) moved the fork's rows to
+  `docs/FORK_LEARNINGS.md`, so the blast radius, the route and the citation exposure all changed. **BL-53's fork half
+  is now entirely fork-side — the first time that has been true.**
+- **Four mechanisms RUN, not reasoned about**, in a `--no-local` clone at `6a475b6`: oldest-first removal recovers
+  **14,502 B** at 10 rows but moves `--first` across 4 files and 10 sites; **reserved-gap retirement needs no checker
+  change at all** — `bin/check-learnings:76`'s `RESERVED_RE` already tolerates a declared gap, so retirement need not
+  start at the oldest row (**this falsifies the "checker change for the numbering gap" cost BL-53 records**);
+  tombstones recover 13,152 B at 135 B each; `methodology_trim.py` **refuses** the file (`NO_CONFIG`) and teaching it
+  is a distributed change.
+- **The inventory found less coupling than anyone assumed, and the instrument needed three corrections.** 837
+  citations across 94 files; of the 8 in executables, **every one is a comment or an assertion message — no
+  assertion's outcome depends on a row existing.** `Learning #4242` in `bin/tests.sh:1714` is a planted fixture, not
+  a citation; slash-joined forms are under-counted; and `README.md:467` / `docs/RELEASE_HISTORY.md:53` cite
+  **rad-con's** numbering narrated as a defect, not this table — so **no distributed markdown cites a fork row at
+  all.** Two couplings are real: Test 32 mutates row **#40 by number**, and `.context-budget.json` holds the warning.
+- **The central finding is negative, and it is why the plan stops at a recommendation.** Adjudicating the ten oldest
+  rows against the criterion yields **at most 2 retirements, ~2,900 B — about one session of headroom.** Age is not a
+  proxy for spentness: #15–#33 are all ≥1,400 B, the densest band in the file, and mostly still live advice. Buying
+  real headroom means retiring advice that is still live, which is the operator's trade to make. Fork Learning #26's
+  rule applied to this file: ship the reduction **plus the finding**, not the ceiling.
+- **One finding recorded, not fixed:** `bin/check-learnings`'s citation sweep reads `.md` files in the manifest only,
+  so `starter-kit/methodology_dashboard.py:411` — distributed, citing `fork Learning #26` — is invisible to it.
+  Adjacent to BL-11; owed a backlog row.
+- BL-53's index row and detail body now point at the plan; `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK after the edit.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S199 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **Action:** the ~448 B pointer block `methodology_trim.py` wrote into `HANDOFFS.md`'s front matter became one row
