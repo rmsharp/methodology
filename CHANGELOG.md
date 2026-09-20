@@ -211,6 +211,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S201 claim — the steady-state obligation gets written where sessions read it (in progress)
+
+**Deliverable:** **BL-53 P4**, the steady-state obligation of
+[`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md) §8 —
+**D3 written into `CLAUDE.md`, not the distributed `SESSION_RUNNER.md`, because the rule is fork-only.** Chosen by
+the operator after Phase 0 (picker) over BL-78's costing and over BL-77's.
+
+**The remedy question left open at S200 is answered in the same picker — option C, with D3 retained** (plan §7,
+[`fork-learnings-adjudication-2026-09-20.md`](docs/planning/fork-learnings-adjudication-2026-09-20.md) §4), and it
+is recorded here because a decision has no test:
+
+- **D4 — the ceiling's meaning: option C.** The 81,920 B figure on `docs/FORK_LEARNINGS.md` becomes a **reported
+  series rather than a limit**; the **per-row budget stays** (`bin/check-learnings`, `ROW_BUDGET_BYTES` = 1,500,
+  green at 0 violations). **Recovers 0 B** — deliberately. After S200's 69-row pass, C is the option that *matches
+  the measurement* rather than accommodating it: every row is live, none is over the row budget, and the whole-file
+  number was guarding a read that fork Learning `#34` measured at once in 80 transcripts against 243 partial reads.
+- **B was declined, with its cost known.** Oldest-first to a stated depth is still the only option that recovers
+  real bytes (14,502 B at ten rows), and S200's §5 now names row by row which live advice it would retire. The
+  operator declined that trade; it is not foreclosed.
+- **D3 rides with C, which is the whole point of the pairing.** Plan §7 says C "pays no decay term unless D3 rides
+  with it" — with the ceiling demoted, D3 becomes the *only* thing holding the line, which is what makes P4 the
+  work that follows this decision rather than an optional tidy-up.
+
+**Scope, stated so the close-out can be checked against it.** This session writes D3 into `CLAUDE.md` and records
+the decision. **It does not implement C** — rewriting `.context-budget.json`'s entry is the plan's **P5**, a
+separate session. It does not add the gate P4 mentions: that half is conditional on D4 choosing a *mechanical*
+form, and C is not one.
+
+**Ledger:** `CHANGELOG: pending` — this entry is the claim's *(in progress)* line; Phase 3F records the rest.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S200 — fork `main` pushed to `origin`, `05fc293..c648179` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin HEAD:main`, a fast-forward of this session's **7** commits — `fc2dac1` (claim),

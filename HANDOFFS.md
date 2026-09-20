@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S201
+date: 2026-09-20
+status: pending
+active_task: **BL-53 P4 — D3 written into `CLAUDE.md`**, the steady-state obligation of [`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md) §8, fork-only and deliberately NOT in the distributed `SESSION_RUNNER.md`. Chosen by the operator after Phase 0 (picker) over BL-78's costing and BL-77's. **The remedy left open at S200 is answered in the same picker: option C — the 81,920 B ceiling on `docs/FORK_LEARNINGS.md` becomes a reported series, the per-row budget stays, B declined with its 14,502 B known.** Implementing C is P5, a separate session; this one writes the rule and records the decision. Session claimed. Work beginning.
+```
+
+```handoff
 session: S200
 date: 2026-09-20
 status: complete
