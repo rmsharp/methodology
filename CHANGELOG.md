@@ -211,6 +211,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S201 — fork `main` pushed to `origin`, `bf64541..b0cc32b` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin HEAD:main`, a fast-forward of this session's **8** commits — `6de1d8d` (claim),
+  `f049525` (the owed retention trim), `a2250c5` (its fold), `24fe658` (P4, the deliverable), `90419ed` (option C
+  and BL-78 recorded), `6adaaf4` (fork Learning #85), `af5af54` (the PR #84 chase) and `b0cc32b` (the close-out).
+  Read back after a fetch: `refs/heads/main` = `b0cc32b8abd8f476a3c3003556f90d18103e162a`, equal to local `HEAD`;
+  ahead/behind **0/0**. Nothing unpushed.
+- **Outward-facing beyond the fork, once, and approved verbatim:** the comment on
+  [PR #84](https://github.com/KJ5HST/methodology/pull/84), recorded in its own entry above. **#85 and #83 were
+  read at Phase 0 and left untouched** — both still MERGEABLE with 0 reviews and 0 comments.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-53] S201 close-out — the rule is written where sessions read it, and BL-53 is down to one phase
 
 **Deliverable: BL-53 P4, complete on its own DONE criterion.** D3 written into `CLAUDE.md` §*Where this fork's
