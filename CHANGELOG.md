@@ -211,6 +211,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S200 — P3, the catch-up pass: every row adjudicated, and none retires
+
+- **Deliverable:** [`docs/planning/fork-learnings-adjudication-2026-09-20.md`](docs/planning/fork-learnings-adjudication-2026-09-20.md)
+  (18.5 KB) — **all 69 rows** of `docs/FORK_LEARNINGS.md` (numbered 15–83) read in full and tested against
+  all three limbs of the D1 criterion ratified at this session's Phase 0. **Result: 0 retirements.** The file
+  is untouched at **85,228 B, 3,308 B over** its 81,920 B growth warning.
+- **This corrects the plan's estimate in the direction it already pointed.** The plan's *"at most 2 rows,
+  ~2,900 B"* was the optimistic bound of a ten-row sample that marked `#15` and `#19` **partly** covered.
+  D1 as ratified retires a row *"when, and only when, one of these holds"* — **partly is not holds**, so the
+  yield is zero, not two. Six rows are partly covered in total (`#15`, `#19`, `#24`, `#38`, `#45`, `#82`).
+- **Two limbs are unsatisfiable across this corpus, and both were measured rather than argued:**
+  - **(b) superseded — 0 possible.** Resolving every intra-table reference gives **13 rows citing an earlier
+    row** across 6 targets, and every one is a *differentiation* — "sibling of", "distinct from", "the
+    converse of", "one level up" — never a restatement. The curation discipline that makes the table readable
+    is the same property that makes it irreducible. It also cuts the other way: **eight rows are cited by
+    another live row or by live config** (`#16`, `#26`, `#28`, `#31`, `#34`, `#35`, `#43`, `#53`), so
+    retiring one strands an in-table reference — row `#22`'s own lesson applied to the file `#22` lives in.
+  - **(c) spent — 0 possible.** 38 rows name at least one file path: **56 mentions, every one resolving to a
+    tracked file**; the only non-resolvers are three bare `.verify.sh` suffixes, two of which this session
+    executed. Six named constants all exist. A fork that dogfoods its framework keeps its lessons' subjects alive.
+  - **(a) mechanized** is partial by construction for a table of review practices: a gate pins the instance a
+    lesson was learned on, while the row exists for the next instance, which has no gate yet. For `#47` limb
+    (a) is unsatisfiable **by the row's own content**.
+- **The instrument was audited and it had failed.** The naive `Learning #N` sweep returned six false hits in
+  four rows — **FM #27** in `#52`/`#53`, upstream's quoted *"learning #22 / #26a"* in `#54`, rad-con's
+  `#28/#29/#30/#34` in `#83` — while simultaneously dropping bare `#28`-style references by collecting two of
+  three regex groups. That is **fork Learning #83 reproduced by the document written to adjudicate it**,
+  recorded rather than quietly fixed.
+- **Recommendation to the operator (not a decision):** keep A's **D3** — it stops future growth — and take
+  **C**, which after this pass matches the measurement rather than accommodating it: every row is live, the
+  per-row guard is green (`bin/check-learnings`: 69 rows, contiguous 15..83, **0 over 1,500 B**), and the
+  whole-file number guards a read fork Learning `#34` measured at once in 80 transcripts. **B remains
+  available and is now costed row by row rather than by age.**
+- **Not done, deliberately:** no row changed, no ceiling moved (that would be P5, which D4 did not
+  authorise), D3 not yet written into the close-out path (P4, a separate session).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S200 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **Action:** the ~444 B pointer block `methodology_trim.py` wrote into `HANDOFFS.md`'s front matter at `f1f51b3`
