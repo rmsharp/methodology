@@ -211,6 +211,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S196 close-out — `CHANGELOG.md` trimmed on a clean day seam, the no-trim decision discharged, and a BL-43 site fixed
+
+**Deliverable:** the `CHANGELOG.md` trim, raised at Phase 0 with 6,284 B of headroom left and taken the same session on
+the operator's go-ahead. `--cut 2026-09-17` moved 126 of 185 records into
+[`docs/archive/CHANGELOG-through-2026-09-17.md`](docs/archive/CHANGELOG-through-2026-09-17.md), 258,656 B → 87,463 B
+(`0dfca7e`); the live file is 99,795 B after this session's own entries, **162,349 B under the 262,144 B refusal**.
+Three cuts were dry-run in a `--no-local` clone before any write and the operator chose among them; `v3.7` is tagged
+2026-08-12, older than every live record, so no release frontier existed inside the file.
+
+**Actions this session, each with its own entry above:** the claim (`08c5327`), the trim (`0dfca7e`), the no-trim
+decision's end with the *When to archive* paragraph rewritten (`b6264c8`), the repair of a receipt the claim wrote into
+the front matter (`5587240`), the `HANDOFFS.md` retention trim (`108cc93`) and its fold (`c5db2a7`), the push of S195's
+three commits to `origin` (`ef121f8`), the cut-boundary sentence made true of a dated cut (`4e457fc`), the red suite
+investigated (`211cae5`) and `bin/tests.sh:3083` fixed RED-first (`bb2e544`).
+
+**Gate, in a `--no-local` clone of `bb2e544` with HEAD asserted and the suite output saved:** `quality_ratchet: 10/10
+pass · 0 fail · 0 unmeasured · results a5197f8a439f · manifest 61cd292c36bd`; `bash bin/tests.sh` 331 passed, 0 failed,
+6 skipped at two receipts. Before the fix the same clone read `8/10 · results 57f06751b3b9`, 330/1/6, three runs
+running. Phase 0 on `431279b` read `results 6d2ca2197aa7`, 337 at three receipts.
+
+**Learnings, withheld as rows and recorded here instead.** `docs/FORK_LEARNINGS.md` is unchanged at 81,721 B of its
+81,920 B ceiling, so BL-53 is still due before any row. One of this session's four is already a **gate rather than a
+row** — the measurement now sits beside the fixed assertion at `bin/tests.sh:3083`, which is what 3C asks for a
+mechanical invariant. The four: (a) *write into a file that quotes its own delimiter only at a line-anchored match —
+and the file most likely to quote a delimiter is the one that documents it*; (b) *a structural checker's default mode
+may validate a different record than the one you just wrote, so run the whole-file mode, which is also the mode the
+gate runs*; (c) *a red suite is a claim about its assertion as much as about the tree — re-running is not the control,
+re-testing the subject without the pipe is*; (d) *a retention instruction inherited from the previous session is
+denominated in that session's record count, so re-derive the depth after the claim*.
+
+**Nothing was removed from a mandated-read file except by a proved trim** (the runner's decay-term prompt): the two
+ledgers lost 126 records and 2 receipts to frozen shards whose `.verify.sh` scripts re-derive L1/L2/L3 from git, and
+both front-matter edits added rather than removed a rule.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S196 — `bin/tests.sh:3083` fixed: BL-43's race, with the control the earlier entry lacked
 
 **The mechanism is now demonstrated rather than attributed.** Instrumenting the assertion named the three shards it
