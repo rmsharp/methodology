@@ -211,6 +211,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S196, after close-out — the receipt's commit count replaced by a range
+
+The S196 receipt's `next_steps` (1) said *"push this session's TEN commits"*. Ten was true of the tree before the
+close-out commit, which made eleven, and the citation correction after it made twelve — the count is changed by the
+commit that writes it (S195's gotcha (3), BL-64's shape). Replaced with the range `08c5327..HEAD`, which stays true
+however many commits follow it, rather than corrected to a number that would go stale in the same way.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S196, after close-out — two line citations in the receipt corrected against the tree that shipped
 
 `HANDOFFS.md:30` and `bin/tests.sh:3195` were read before this session's own edits moved them: the front-matter line
