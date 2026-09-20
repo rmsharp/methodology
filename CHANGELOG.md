@@ -211,6 +211,56 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S199 close-out — a retirement rule costed, and a plan whose central finding is negative
+
+**Deliverable: the plan, not its application.** [`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md)
+(21,538 B) puts **D1–D4** to the operator and re-costs BL-53 against `docs/FORK_LEARNINGS.md`, which is what
+resync decision D1 left it governing. No row was retired: P2 (ratification) gates P3 (the pass), and applying an
+unratified rule in the session that wrote it is FM #18.
+
+**Three results that move the item.** (1) **`bin/check-learnings` already tolerates a declared gap** —
+`RESERVED_RE` (`:76`) — so retiring a row needs **no checker change** and need not start at the oldest. The
+"checker change for the numbering gap" BL-53 has recorded since S159 is **false today**, measured by running it.
+(2) **The distributed-corpus exposure is zero**, and of 8 apparent citations in executables, **none is
+load-bearing** — every one a comment or an assertion message. (3) **The criterion under-yields:** adjudicating
+the ten oldest rows gives at most 2 retirements, ~2,900 B, about one session of headroom. Age is not a proxy for
+spentness — `#15`–`#33` are all ≥1,400 B, the densest band in the file. Buying real headroom means retiring live
+advice, which is the operator's trade, so the plan recommends and stops.
+
+**Phase 0:** `CHANGELOG.md`'s frontier was HEAD `1cec033`, gap empty; `HANDOFFS.md`'s was `23ec4b9` with only
+S198's own push record above it — already in the ledger. Nothing backfilled, no pending stub, **2** receipts. The
+gate re-ran in a `--no-local` clone with HEAD asserted by sha: `11/11 pass · results 10575dac7361 · manifest
+01a4ae7aa511`, **S198's citation exactly**. The working tree's `.quality-gates-results.json` is a stale 10-gate
+run from head `431279b` and is gitignored — named in the claim so no later reconcile reads it as a contradiction.
+`core.hooksPath` = `.githooks`, no markers on disk: **the gates are armed here** (BL-77's subject, checked by
+hand because nothing checks it).
+
+**The session's commits.** `7b5899d` claim · `6c964ec` the owed retention trim (`--cut 2 --force`, 28,347 →
+16,845 B; SRF / `SHARD_NAME_DISAMBIGUATED` / `FRONTMATTER_FIELD_ABSENT` all stated and expected; L1/L2/L3 OK) ·
+`6a475b6` the fold, its own commit · `1059262` the plan · `9fa3df8` the record of PR #85 · `73a2dad` fork
+Learning **#83** · this close-out.
+
+**The upstream half of BL-76 was sent as [PR #85](https://github.com/KJ5HST/methodology/pull/85)** — operator
+go-ahead in the Phase 0 picker, over this session's recommendation to hold it while PR #84 sits unreviewed.
+Re-derived against `upstream/main`, not cherry-picked: upstream has no Test 43 and no suite coverage of a hook
+selftest at all, so its own precedent is the **gate**, and the PR adds `pre-commit-selftest` beside
+`commit-msg-selftest` with `bin/tests.sh` untouched — a smaller change than this fork's. 139/0 before and after
+in a clone; gates 10/10 → 11/11; RED-first 1-of-10; **10 mutants, 10 killed**; an end-to-end control in which the
+unfixed hook passes the very commit the fixed one refuses.
+
+**Build-equivalent at `73a2dad`, in a `--no-local` clone with HEAD asserted by sha:** `bin/tests.sh` **343
+passed / 0 failed / 6 skipped** (Test 34's six stated skips at two receipts), exactly on the floor;
+`quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`. Also re-run
+green: `docs/planning/BACKLOG-DETAIL.md.verify.sh` C1–C5 after both backlog edits, and
+`docs/archive/HANDOFFS-through-2026-09-19-4.md.verify.sh` L1/L2/L3 after the fold.
+
+**One measurement this session got wrong and re-took.** The upstream baseline was first run in the **working
+tree** while the hook was being edited — a before/after on a moving subject — and read 138/1, the failure being
+BL-65's context-budget test, which depends on local transcript data. Re-measured in a clone: **139/0**. The
+documented build-equivalent names the clone for exactly this reason.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S199 — Phase 3C: fork Learning #83, and the ceiling it widens
 
 - **Action:** fork Learning **#83** appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) — a reference
