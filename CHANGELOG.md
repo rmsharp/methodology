@@ -211,6 +211,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S201 — [PR #84](https://github.com/KJ5HST/methodology/pull/84) chased (non-commit action, operator go-ahead on the exact text)
+
+- **Action:** one comment,
+  [`#issuecomment-5753335477`](https://github.com/KJ5HST/methodology/pull/84#issuecomment-5753335477), 1,073 B,
+  read back after posting: **1 comment, author `rmsharp`, 2026-09-20T23:07:31Z.** The operator was shown the full
+  text and approved it as written before anything was sent.
+- **Target chosen for reach, not age.** #84 is the one whose merge unblocks the most — the adopter-side work it
+  carries is complete in all six downstream projects, so its review is the only part outstanding — and it was the
+  most static of the three, unchanged since 2026-09-19. **#85 and #83 were left untouched**; a chase is its own
+  go-ahead, each time.
+- **Every figure in the comment was measured this session, not carried forward.** The fast-forward claim from
+  `git merge-base --is-ancestor 6b29d3d 77afc12` (true, so the PR head **is** the merge result); the suite and
+  gates from `quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted by sha at `77afc12` —
+  **`10/10 pass · 0 fail · 0 unmeasured · results 93ea168d093e · manifest 97a7aab85b9a`**, `tests-sh-passed`
+  **163** against that tree's declared floor of **139**.
+- **Written in recognized terms:** no session numbers, backlog codes or fork-local names; the split offer names the
+  three separable parts in the repository's own vocabulary.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S201 — Phase 3C: fork Learning #85, and the first close-out D3 actually binds
 
 **[fork Learning #85](docs/FORK_LEARNINGS.md)** — *a config's note can describe an enforcement the tool does not
