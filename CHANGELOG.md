@@ -211,6 +211,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19-3.md` (1 record(s), 26,714 B → 17,475 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-19 → 2026-09-19) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-19-3.md`](docs/archive/HANDOFFS-through-2026-09-19-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-19-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-19-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 26,714 B → 17,475 B (−34.6%).
+
 ### 2026-09-20 · [BL-76] S198 claim — the pre-commit hook's stale-marker skip: one rebase disarms both gates for the life of the clone (in progress)
 
 **Deliverable:** **BL-76**, found 2026-09-19 (S197). `.githooks/pre-commit:23`–`:27` skips replayed commits by
