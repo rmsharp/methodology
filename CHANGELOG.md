@@ -211,6 +211,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S199 — fork `main` pushed to `origin`, `1cec033..1530bbc` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin HEAD:main`, a fast-forward of this session's **7** commits — `7b5899d` (claim),
+  `6c964ec` (the owed retention trim), `6a475b6` (its fold), `1059262` (the plan), `9fa3df8` (PR #85 recorded),
+  `73a2dad` (fork Learning #83) and `1530bbc` (the close-out). Read back: `refs/heads/main` =
+  `1530bbc0f6f8dadf9be8496a287ea4bc0e4ebbbb`, equal to local `HEAD`. Nothing unpushed.
+- **The branch behind PR #85 was pushed separately and earlier** — `fix/pre-commit-stale-rebase-marker` at
+  `e2501c5`, branched from `upstream/main` `6b29d3d`, read back before the pull request was opened.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-53] S199 close-out — a retirement rule costed, and a plan whose central finding is negative
 
 **Deliverable: the plan, not its application.** [`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md)
