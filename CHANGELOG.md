@@ -211,6 +211,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S199 — the hook fix sent upstream as PR #85 (non-commit action, operator go-ahead)
+
+- **Action:** [PR #85](https://github.com/KJ5HST/methodology/pull/85) opened against `KJ5HST/methodology` `main`
+  from `rmsharp:fix/pre-commit-stale-rebase-marker` (`e2501c5`, branched from `upstream/main` `6b29d3d`), the
+  upstream half of BL-76. **OPEN, MERGEABLE, 3 files, +131/−1** at the read-back. The go-ahead was given in the
+  Phase 0 picker, **over this session's recommendation to hold it until PR #84 moves** — recorded because the
+  reasoning, not only the outcome, is what a later session needs.
+- **Re-derived against `upstream/main`, not cherry-picked.** Upstream's hook differs from the fork's pre-fix text
+  only in two words of the error message, but its *surroundings* differ: there is no Test 43 there, and no
+  `bin/tests.sh` coverage of a hook selftest at all. Upstream's own precedent is the **gate** —
+  `commit-msg-selftest` — so the PR adds `pre-commit-selftest` beside it and leaves `bin/tests.sh` untouched.
+  That is a smaller change than the fork's and matches the target repo's conventions rather than this one's.
+- **Measured on upstream's tree, in a `--no-local` clone with HEAD asserted by sha.** Before, at `6b29d3d`:
+  `bin/tests.sh` **139 passed / 0 failed**; gates `10/10 pass · results 6542e640a956 · manifest 97a7aab85b9a`
+  — **the same `results` hash upstream's own newest receipt cites**, so the baseline is the one that repository
+  last recorded. After: **139 / 0 unchanged**; gates `11/11 pass · results acddacb93988 · manifest ec617cec62ed`.
+- **The working tree is not the surface, and this session met that first-hand:** the same suite read
+  **138 passed / 1 failed** in the working tree, the failure being the context-budget unit test that depends on
+  local transcript data (BL-65). Measuring in the clone is what the documented build-equivalent is for.
+- **Evidence beyond the gate:** RED-first — 1 of 10 checks red against the unfixed marker list, 9 green, 0 red
+  after. **10 mutants, 10 killed** (restore `REBASE_HEAD`; drop each of the four remaining markers; `-e`→`-f`;
+  delete the loop; short-circuit the ledger gate; two fixture-builder breaks). End-to-end on upstream's text
+  against real git with a **control**: a real conflicted rebase stopped, resolved and completed leaves
+  `REBASE_HEAD` on disk; the fixed hook then **refuses** an unledgered commit (exit 1, asserted bare), **passes**
+  it with the ledger co-staged, and still **skips** during a genuine in-progress rebase — while the unfixed hook
+  lets the unledgered commit straight through in the identical scenario.
+- **One scope correction the fork's own record did not make.** `.githooks/` is not in `bin/_manifest.py`, so
+  nothing is synced — but the **distributed** `SAFEGUARDS.md` calls this file the canonical reference
+  implementation and tells adopters to enable it. An adopter who followed that instruction copied the defect.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-53] S199 — the fork learnings retirement rule, costed against the file D1 left it governing
 
 - **Deliverable:** [`docs/planning/fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md),

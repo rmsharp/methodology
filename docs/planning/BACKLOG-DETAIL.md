@@ -2672,9 +2672,24 @@ End-to-end against real git, not planted files: a real conflicted rebase was com
 `REBASE_HEAD` confirmed, and a real `git commit` without a ledger line **refused** (exit 1); co-staging the
 ledger passed (exit 0); and committing *during* a genuine in-progress rebase was still **skipped** (exit 0).
 
-**Not done, deliberately.** `upstream/main` carries the same hook text and the same defect. The hook is
+**Not done, deliberately, at S198.** `upstream/main` carries the same hook text and the same defect. The hook is
 canonical-only (BL-6 item 3), so **no adopter is affected** and the upstream fix is **its own go-ahead** —
-it did not ride this session.
+it did not ride that session.
+
+**S199 (2026-09-20): SENT — [PR #85](https://github.com/KJ5HST/methodology/pull/85), OPEN, MERGEABLE, head
+`e2501c5`, 3 files, +131/−1.** Operator go-ahead in the Phase 0 picker, over this session's recommendation to
+hold it until PR #84 moves. **Re-derived against `upstream/main`, not cherry-picked:** upstream's hook differs
+from the fork's pre-fix text in two words of the error message, and upstream has **no Test 43 and no
+`bin/tests.sh` coverage of a hook selftest at all** — its precedent is the *gate*, `commit-msg-selftest`, so the
+PR adds `pre-commit-selftest` beside it and leaves `bin/tests.sh` untouched. Measured on upstream's tree in a
+`--no-local` clone with HEAD asserted by sha: before `6b29d3d` **139 passed / 0 failed**, gates `10/10 · results
+6542e640a956` — **the same `results` hash upstream's own newest receipt cites**; after, **139 / 0 unchanged**,
+gates `11/11 · results acddacb93988 · manifest ec617cec62ed`. RED-first 1-of-10 red before and 0 after, **10
+mutants 10 killed**, and the end-to-end control run on upstream's text: the unfixed hook lets the unledgered
+commit through (exit 0) in the identical scenario where the fixed one refuses it. One scope correction the fork
+row did not make: `.githooks/` is not in `bin/_manifest.py`, but the **distributed** `SAFEGUARDS.md` calls this
+file the canonical reference implementation and tells adopters to enable it, so an adopter who followed that
+instruction copied the defect. **Open until the PR is reviewed.**
 
 <a id="bl-77"></a>
 
