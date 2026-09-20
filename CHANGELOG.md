@@ -211,6 +211,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S200 — Phase 3C: fork Learning #84, and D3 honoured in the same breath
+
+- **Row #84** appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) — *every limb of a retirement rule
+  can be defeated by a property the corpus was given on purpose; test the criterion against the corpus's own
+  conventions before ratifying it.* 1,498 B against the 1,500 B row budget (it was drafted three times and the
+  guard refused the first two at 1,601 B and 1,508 B). `bin/check-learnings`: **70 rows, contiguous 15..84, 0
+  over 1,500 B.**
+- **D3, in force since this session's Phase 0, is satisfied by the strongest available form.** A session that
+  appends a row must retire one **or state that none qualifies, naming the rows it considered.** This session
+  considered **all 69** and recorded a verdict and basis for each
+  ([`fork-learnings-adjudication-2026-09-20.md`](docs/planning/fork-learnings-adjudication-2026-09-20.md) §5).
+  **None qualifies.**
+- **The arithmetic, stated rather than left unsaid:** the file goes 85,228 B → **86,727 B**, so the overage
+  widens from 3,308 B to **4,807 B**. That is the fourth consecutive session to append and the fourth to retire
+  nothing — and unlike the previous three, this one has established *why* no retirement was available. The
+  remedy is now an operator choice between option C and option B, not another session's adjudication.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S200 — BL-78 raised: a no-growth pin breached for six days, and the gate that would say so is unwired
 
 - **Raised, not worked** (FM #17/#18 — this session's deliverable was BL-53 P3): `starter-kit/SAFEGUARDS.md`
