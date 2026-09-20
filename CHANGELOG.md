@@ -211,6 +211,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-76] S197 — raised: a stale `.git/REBASE_HEAD` had disarmed the pre-commit gate since 2026-08-11
+
+**Found while investigating why a commit of this session's landed without a `CHANGELOG.md` entry.**
+`.githooks/pre-commit:24` exits 0 when any rebase/merge marker exists, to avoid double-logging replayed
+commits — but git leaves `REBASE_HEAD` behind after a rebase **completes**, unlike `MERGE_HEAD`,
+`CHERRY_PICK_HEAD` and the `rebase-merge` / `rebase-apply` directories. The marker loop runs before both
+gates the hook chains, so **one rebase disarms the FM #27 ledger gate and `quality_ratchet.py --precommit`
+together**, permanently, in that clone. Measured: the file was dated **2026-08-11 15:14** and pointed at
+`d56b983`, a commit not in this history; **69** commits on this clone's first-parent line since then changed
+tracked content without co-staging the ledger. That is the hook's *exposure*, not a count of unrecorded
+actions — the guarantee is Phase 0 reconcile, which has reported clean each session and caught this
+session's own ungated commit one commit later. **The fast path was off for five weeks and the guarantee
+held**, which is exactly the division of labour `SAFEGUARDS.md` claims for the pair, measured for the first
+time. Re-armed in this clone by removing the stale file (backed up), with a control commit confirming the
+refusal fires again — **that is not the fix**, and the item is open with three shapes and none chosen.
+`.githooks/pre-commit` is canonical-only, so no adopter is affected; `upstream/main` carries the same text,
+so its fix is an upstream change and its own go-ahead. Raised as
+**[BL-76](docs/planning/BACKLOG-DETAIL.md#bl-76)**; not worked, per the rule that an item is written from
+what is known and then left.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S197 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **Action:** the fold the index's own rule and [fork Learning #58](docs/FORK_LEARNINGS.md) require in **its own

@@ -2575,3 +2575,37 @@ citation true, distributed, so an upstream PR and its own go-ahead. (2) Reject u
 usage code) and correct the live citations — honest, but a bare `--status` in an adopter's habit then fails. (3) Correct
 the citations only. Whichever is chosen, the PR-comment text is outward-facing and already sent; correcting it there is
 its own go-ahead.
+
+<a id="bl-76"></a>
+
+**BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it
+chains stop running. Found 2026-09-19 (S197), not fixed.**
+
+The hook skips replayed commits by exiting 0 if any of `MERGE_HEAD`, `REBASE_HEAD`, `CHERRY_PICK_HEAD`,
+`rebase-merge` or `rebase-apply` exists under the git dir (`.githooks/pre-commit:24`). Git **removes**
+`MERGE_HEAD`, `CHERRY_PICK_HEAD` and the `rebase-merge` / `rebase-apply` directories when the operation
+ends — but it **leaves `REBASE_HEAD` behind after a rebase completes.** So a single rebase, ever, disarms
+the hook permanently in that clone. The marker loop runs **before** both gates the hook chains, so the
+casualty is not only the FM #27 ledger gate but `quality_ratchet.py --precommit`, whose whole job is to
+refuse a loosened threshold.
+
+**Measured here, not inferred.** `.git/REBASE_HEAD` was dated **2026-08-11 15:14**, pointing at
+`d56b983`, a commit not in this history — a dropped one from that rebase. On this clone's first-parent
+line, **69** commits since that timestamp changed tracked content without co-staging `CHANGELOG.md`:
+each would have been refused, or needed `--no-verify`. The count is the hook's exposure, **not** a count
+of unrecorded actions — that question belongs to Phase 0 reconcile, which has reported clean every
+session, and which caught this session's own ungated commit (`9344c3e`, half a fold) one commit later.
+**The fast path was off for five weeks and the guarantee held**, which is the division of labour
+`SAFEGUARDS.md` claims for the pair; it is the first time this repo has measured it.
+
+**Scope.** `.githooks/pre-commit` is **canonical-only** (BL-6 item 3, deliberately not distributed), so
+no adopter is affected — but `upstream/main` carries the same hook text, so a fix is an upstream change
+and **its own go-ahead**. The marker was removed in this clone (backed up first), which **re-arms the
+gate and is not the fix**; a control commit confirmed the refusal fires again.
+
+**Shapes (none chosen).** (1) Drop `REBASE_HEAD` from the list — the `rebase-merge` / `rebase-apply`
+directories are the real in-progress indicators, and `git rebase` creates one of them for every rebase
+type. (2) Test only for the directories and `MERGE_HEAD` / `CHERRY_PICK_HEAD`. (3) Keep the list but
+require the marker to be *newer than the index*, which is the general form and the most fragile. Any of
+them needs a RED-first test; `.githooks/commit-msg --selftest` is the precedent for a hook that tests
+itself, and `.quality-gates.json` already runs that selftest as a gate.
