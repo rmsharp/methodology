@@ -211,6 +211,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S201 — Phase 3C: fork Learning #85, and the first close-out D3 actually binds
+
+**[fork Learning #85](docs/FORK_LEARNINGS.md)** — *a config's note can describe an enforcement the tool does not
+implement; grep the tool for the field before citing the note as a control.* 1,469 B against the 1,500 B row budget
+(a first draft measured 1,505 B and was refused before it was written). The file is now **88,197 B**, 71 rows,
+contiguous 15..85.
+
+**D3 discharged — and this is the first session bound by the rule it wrote an hour earlier.** A session that
+appends either retires a row or states that none qualifies, **naming what it considered**:
+
+- **(b) superseded — considered `#62` and `#82`, the two nearest neighbours, and neither retires.** `#62` (*a gate
+  already red for a known reason cannot report a new failure*) is about an exit code being **spent**; `#82` (*a hook
+  fails open, so its failure mode is silence*) is about a **correct** mechanism not being **armed**. `#85` is about a
+  described mechanism that **does not exist**. All three were live in this one finding at once, which is evidence
+  they are distinct rather than duplicative — no one of them states another at least as generally.
+- **(a) mechanized — nothing newly enforces any row.** No gate, `bin/tests.sh` test or numbered failure mode was
+  added this session.
+- **(c) spent — nothing was removed.** The prior pass measured 56 path mentions all resolving to tracked files;
+  this session removed no artifact, tool or file, so that census is unchanged.
+
+**Count: 0 retire, 1 appended.** The file stands **6,277 B above the 81,920 B figure** — stated plainly, and that
+figure is now a reported series rather than a limit by the same session's decision, with the per-row budget (green
+at 0 violations over all 71 rows) doing the refusing.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-53] S201 — option C recorded, and BL-78 gains a second instance the tool cannot see
 
 **BL-53's remedy is decided.** The operator ratified **option C with D3 retained** and **declined B with its cost
