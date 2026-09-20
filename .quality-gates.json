@@ -3,13 +3,14 @@
   "_first_tightening_owed": "DISCHARGED 2026-09-16 (S23, the first commit after PR #82 merged): `tests-sh-failed` tightened 1 -> 0 and `tests-sh-passed` 138 -> 139 once Test 9 turned green on main. Kept as the record of why the failed-count gate exists: a count gate is blind to health (a failing test still ran), so the FAILED count, held at 0, is what makes the suite's colour a gate. The next tightening is owed whenever a measured value rises: run --run, read the table, raise the floors — never lower them.",
   "_fork_tightening": "FORK-ONLY, D2 of docs/planning/upstream-resync-2026-09-plan.md (S177, 2026-09-16), after this fork merged upstream/main 6b29d3d: tests-sh-passed 139 -> 327 and dashboard-unit-tests 226 -> 336, the values `quality_ratchet.py --run` measured in a --no-local clone of f4a8ec6 (10/10 pass, results 508b2b5489f3). The other count gates already sat at their measured values (118, 123, 45) and every max gate at 0. tests-sh-passed IS MEASURED WITH HANDOFFS.md HOLDING TWO RECEIPTS, the state every close-out leaves: bin/tests.sh Test 34 turns six rows into stated skips below three receipts, so the same tree reads 333 right after a claim and 327 at close-out. A floor taken at the higher state would refuse every close-out.",
   "_fork_loosening_d10": "FORK-ONLY LOOSENING, operator-approved (S178, 2026-09-16, BL-57 P5 decision D10): tests-sh-passed 327 -> 294. Removing the pre-commit hook's Phase 1B claim carve-out removed bin/tests.sh Test 27, 34 rows that tested only the carve-out; the same merge added 1 row (Test 20 (b2)). 294 is what `quality_ratchet.py --run` measured with HANDOFFS.md holding two receipts, the state a trimmed ledger returns to, in a --no-local clone of 1664860 with GitHub reachable (Test 9 passing; tests-sh-failed 0; results 839fb8a9f80a). Committed with --no-verify, as this manifest requires for a loosening; the reason is in CHANGELOG.md.",
+  "_s197_tightening_bl43": "FORK-ONLY TIGHTENING (S197, 2026-09-19, BL-43): tests-sh-passed 331 -> 333. bin/tests.sh gained Test 42, whose two assertions re-derive BL-43's population on every run and prove the scanner fires. 333 is MEASURED, not derived from the +2: a --no-local clone of the fix, with HANDOFFS.md reduced to the TWO receipts every close-out leaves -- the state this gate is measured in -- read `333 passed, 0 failed, 6 skipped` (Test 34's six stated SKIPs). The same tree reads 339 at three receipts, right after a claim. Tightening needs no approval and the hook accepts it; only a loosening is a plan-mode decision.",
   "version": 1,
   "results_file": ".quality-gates-results.json",
   "gates": [
     {
       "name": "tests-sh-passed",
       "direction": "min",
-      "threshold": 331,
+      "threshold": 333,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
       "why": "the framework's build equivalent; the passed count is a ratchet — every suite it wires in (dashboard, trim, budget, ratchet units) reports through it"

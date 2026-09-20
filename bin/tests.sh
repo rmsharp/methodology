@@ -1326,7 +1326,8 @@ if [ -n "$NOOVERWRITE" ]; then
     ROWTEXT="$(sed -n "${NOOVERWRITE}p" "$BS")"
     MISSING=""
     while IFS= read -r seed; do
-        echo "$ROWTEXT" | grep -qF "$seed" || MISSING="$MISSING $seed"
+        # A here-string, not a pipe -- BL-43: the producer is a row of the real BOOTSTRAP.md.
+        grep -qF "$seed" <<< "$ROWTEXT" || MISSING="$MISSING $seed"
     done < <(python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; \
         print('\n'.join(d for _s, d, x in _manifest.DISTRIBUTION if x == _manifest.SEED))")
     [ -z "$MISSING" ] && pass "bootstrap: every adopter-owned seed is named in the never-overwrite row" \
@@ -1335,7 +1336,9 @@ if [ -n "$NOOVERWRITE" ]; then
     # the adopter's old version forever, and no sync would ever correct it.
     WRONG=""
     while IFS= read -r t; do
-        echo "$ROWTEXT" | grep -qF "$t" && WRONG="$WRONG $t"
+        # A here-string, not a pipe -- BL-43, and this arm is the SILENT direction: a pipeline
+        # scored failed on a match drops a real finding instead of raising it.
+        grep -qF "$t" <<< "$ROWTEXT" && WRONG="$WRONG $t"
     done < <(python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; \
         print('\n'.join(d for _s, d, x in _manifest.DISTRIBUTION if x == _manifest.TRACKED and '/' not in d))")
     [ -z "$WRONG" ] && pass "bootstrap: no tracked file is mislabelled adopter-owned" \
@@ -1499,7 +1502,12 @@ echo "$OUT30" | grep -q "S12" && fail "control entry with no Model bullet was fa
 # live CHANGELOG.md. Before the fix, this invocation prints the empty-population sentinel string
 # against a file that in fact carries multiple bullets -- the exact silent failure BL-20 describes.
 OUT30_REAL="$("$BIN/model-report" --changelog "$METHODOLOGY/CHANGELOG.md" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
-echo "$OUT30_REAL" | grep -q "no CHANGELOG.md entries carry a" && fail "Source 1 still reports empty against this repo's own live CHANGELOG.md" || pass "Source 1 reports a non-empty population against this repo's own live CHANGELOG.md"
+# A HERE-STRING, NOT A PIPE -- BL-43. The producer is the report over this repo's own LIVE
+# ledgers, so it grows with them (11,488 B measured today, against a 65,536 B pipe capacity).
+# `grep -q` exits at its first match while `echo` may still have bytes to write; SIGPIPE kills
+# `echo`, and `set -uo pipefail` (:5) scores the MATCHED pipeline as FAILED. The failing arm
+# here is `|| pass`, so the race would make a real BL-20 regression read as green.
+grep -q "no CHANGELOG.md entries carry a" <<< "$OUT30_REAL" && fail "Source 1 still reports empty against this repo's own live CHANGELOG.md" || pass "Source 1 reports a non-empty population against this repo's own live CHANGELOG.md"
 
 echo "== Test 31: model-report -- Source 1 parses a multi-tag \`### \` header and reports (not folds) any header it still can't parse (BL-33, RED-first, Learning #12) =="
 # BL-33: CHANGELOG_ENTRY_RE required exactly one bracketed tag, so a real header carrying two
@@ -1575,7 +1583,9 @@ if [ "$TOOL_COUNT" = "$RAW_COUNT" ]; then
 else
     fail "Source 1's entry count ($TOOL_COUNT) still disagrees with the raw anchored **Model:** grep ($RAW_COUNT) -- BL-33 population gap unfixed"
 fi
-echo "$OUT31_REAL" | grep -qi "WARNING" && fail "Source 1 raised a WARNING against this repo's own live, well-formed CHANGELOG.md" || pass "no false-positive WARNING against this repo's own live CHANGELOG.md"
+# A HERE-STRING, NOT A PIPE -- BL-43, same producer and same silent direction as Test 30's
+# sentinel check above: a WARNING printed early in a grown report would be scored as no match.
+grep -qi "WARNING" <<< "$OUT31_REAL" && fail "Source 1 raised a WARNING against this repo's own live, well-formed CHANGELOG.md" || pass "no false-positive WARNING against this repo's own live CHANGELOG.md"
 
 # ---------------------------------------------------------------------------
 # Tests 32-34 — structural invariants for the repo's OWN numbered sets (issue #65).
@@ -1618,7 +1628,8 @@ F="$(mktemp)"
 # authoring commits, 11b843a/12463dd (S84, 2026-08-11) — this asserts the current clean
 # state, not the once-disclosed exception.
 OUT32="$("$BIN/check-learnings" --file "$RUNNER" --no-citations 2>&1)"
-if echo "$OUT32" | grep -q '^check-learnings: OK'; then
+# A here-string, not a pipe -- BL-43: $OUT32 is measured over the real SESSION_RUNNER.md.
+if grep -q '^check-learnings: OK' <<< "$OUT32"; then
     pass "canonical Learnings table has no malformed rows (presence control)"
 else
     fail "canonical Learnings table presence control: expected clean, got: $OUT32"
@@ -3145,10 +3156,13 @@ fi
 # IsADirectoryError, and an explicit path suppresses discovery, so the total is 0.
 OUT40_DIR="$("$BIN/model-report" --changelog "$METHODOLOGY/docs/archive" \
               --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
-echo "$OUT40_DIR" | grep -q 'UNREADABLE' \
+# Here-strings, not pipes -- BL-43: both read a report over the real repo, and the second
+# assertion is in the SILENT direction (`&& fail || pass`), where a pipeline scored failed on a
+# match would report the sentinel as correctly withheld when it had in fact been printed.
+grep -q 'UNREADABLE' <<< "$OUT40_DIR" \
     && pass "zero readable items + an unreadable file still prints the UNREADABLE row" \
     || fail "zero-population unreadable file vanished -- 'could not read' rendered as 'found nothing'"
-echo "$OUT40_DIR" | grep -q 'no CHANGELOG.md entries carry a' \
+grep -q 'no CHANGELOG.md entries carry a' <<< "$OUT40_DIR" \
     && fail "zero-population unreadable file was reported with the found-nothing sentinel" \
     || pass "the found-nothing sentinel is correctly WITHHELD when the file could not be read"
 
@@ -3183,7 +3197,12 @@ else fail "M1 mutation DID NOT APPLY"; fi
 if mutate "$BIN/model-report" "$M40" 's.replace("total = sum(len(s[\"items\"]) for s in readable)", "total = sum(len(s[\"items\"]) for s in readable if s[\"kind\"] == \"live\")", 1)'; then
     chmod +x "$M40"
     OUT_M2_40="$( (cd "$METHODOLOGY" && "$M40" --no-git) 2>&1 )"
-    if echo "$OUT_M2_40" | grep -qE '^\([0-9]+ entries carry a \*\*Model:\*\* bullet across [0-9]+ files: live [0-9]+ \+ archived '; then
+    # A HERE-STRING, NOT A PIPE -- BL-43. This producer is the whole report over the real repo:
+    # 99,524 B measured, well past the 65,536 B pipe capacity, and the population line it looks
+    # for is the FIRST line, so `grep -qE` exits immediately. Scored through a pipe the condition
+    # reads FALSE on a match, the else arm passes, and the conservation check below -- M2's actual
+    # assertion -- never runs. The mutant would be reported killed without being tested.
+    if grep -qE '^\([0-9]+ entries carry a \*\*Model:\*\* bullet across [0-9]+ files: live [0-9]+ \+ archived ' <<< "$OUT_M2_40"; then
         LIVE_M2="$(echo "$OUT_M2_40" | sed -n 's/^(\([0-9]*\) entries carry.*/\1/p' | head -1)"
         [ "$LIVE_M2" -lt "$N40_DEFAULT" ] \
             && pass "mutant killed: a live-only total under-reports the population ($LIVE_M2 < $N40_DEFAULT)" \
@@ -3200,7 +3219,12 @@ if mutate "$BIN/model-report" "$M40" 's.replace("adir.glob(\"%s-*.md\" % stem)",
     chmod +x "$M40"
     OUT_M3_40="$( (cd "$METHODOLOGY" && "$M40" --no-git) 2>&1 )"
     if [ -e "$METHODOLOGY/docs/archive/HANDOFFS-archive.md" ]; then
-        echo "$OUT_M3_40" | grep -q "docs/archive/HANDOFFS-archive.md (archived)" \
+        # A HERE-STRING, NOT A PIPE -- BL-43, and `-F` because a shard name is a literal, never a
+        # pattern. 99,246 B measured. This is the site S196 measured as NOT firing only because
+        # the shard is named at line 1,092 of 1,105; a surviving mutant whose line printed EARLIER
+        # would be scored as no match, and `|| pass` would report the mutant killed. The guard
+        # could not fail -- which is the whole of what it exists to do.
+        grep -qF "docs/archive/HANDOFFS-archive.md (archived)" <<< "$OUT_M3_40" \
             && fail "MUTANT SURVIVED: a -through- glob still named the pre-through shard" \
             || pass "mutant killed: a -through- glob drops HANDOFFS-archive.md and (3) sees it"
     else
@@ -3408,6 +3432,85 @@ bl54_sync v2 0 v5 "hidden by merge B, upgraded without --force"
 bl54_sync v4side 0 v5 "hidden by merge A, upgraded without --force"
 bl54_sync v2-local 2 v2-local "a real local edit is still refused"
 rm -rf "$M" "$P"
+
+echo "== Test 42: no producer that reads the real repo is piped into an early-exiting consumer (BL-43, RED-first) =="
+# BL-43's population was a LIST of six line numbers, and the list went stale: by S196 none of the
+# six pointed at an assertion any more, Test 40 postdated the enumeration, and its seventh site was
+# met by accident. This test replaces the list with the DERIVATION, so the population is recomputed
+# on every run instead of being remembered.
+#
+# The defect: `:5` sets `pipefail`, and a consumer that exits at its first match (`grep -q`,
+# `grep -m`, `head`, `sed q`) can leave the producer with bytes still to write. The producer then
+# takes SIGPIPE and the MATCHED pipeline is scored FAILED. Measured on this machine: a payload of
+# 65,519 B survives and 65,582 B does not -- a 65,536 B pipe -- and whether it fires depends on
+# where the pattern sits in the output, which is not a property any assertion here is about.
+# Both directions are wrong, and one is silent: on `&& pass || fail` the suite goes noisily red,
+# but on `&& fail || pass` (or an `if` whose `then` arm fails) a real defect reads GREEN.
+#
+# The criterion is the producer's SIZE BOUND, not its current size: a producer read from a fixture
+# is bounded by that fixture, while one read from the real repository grows with the ledgers and
+# the report. So the scanner flags a status-consuming, early-exiting pipeline whose producer
+# variable was last assigned from anything reaching $METHODOLOGY. A capture is not flagged --
+# `VAR="$(... | head -1)"` uses stdout, which SIGPIPE cannot corrupt, only the status it discards.
+# NOTE for a future fix: a here-string cures the HEAD of a pipeline. In a longer chain
+# (`... | grep X | grep -q Y`) the middle stage can still be signalled, so such a site needs the
+# early-exiting consumer removed, not just its producer rewritten.
+SCAN42="$(mktemp)"
+cat > "$SCAN42" <<'PY42'
+import re, sys
+EARLY = re.compile(r'\|\s*(?:grep\b[^|]*?-[A-Za-z]*q[A-Za-z]*(?=\s|$)|grep\b[^|]*?-m\s*\d|head\b|sed\b[^|]*\bq\b)')
+PROD  = re.compile(r'(?:echo|printf)\s+(?:\S+\s+)?"\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?"\s*\|')
+ASSIGN = re.compile(r'^\s*([A-Za-z_][A-Za-z0-9_]*)=(.*)$')
+ROOTS = {"METHODOLOGY"}
+real, findings = {}, []
+for n, ln in enumerate(open(sys.argv[1], encoding="utf-8"), 1):
+    s = ln.rstrip("\n")
+    if s.lstrip().startswith("#"):
+        continue
+    m = ASSIGN.match(s)
+    if m:
+        refs = set(re.findall(r'\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?', m.group(2)))
+        real[m.group(1)] = bool(refs & (ROOTS | {k for k, v in real.items() if v}))
+    if not EARLY.search(s):
+        continue
+    pm = PROD.search(s)
+    if not pm or not real.get(pm.group(1)):
+        continue
+    before = s[:pm.start()]
+    if before.count("$(") > before.count(")"):
+        continue
+    if re.match(r'^\s*[A-Za-z_][A-Za-z0-9_]*=\s*"?\$\(', s):
+        continue
+    findings.append((n, pm.group(1)))
+for n, v in findings:
+    print("BL43-SITE %d $%s" % (n, v))
+print("BL43-TOTAL %d" % len(findings))
+PY42
+
+# (1) the live suite: the derived population must be EMPTY.
+SITES42="$(python3 "$SCAN42" "$BIN/tests.sh")"
+TOTAL42="$(grep -oE 'BL43-TOTAL [0-9]+' <<< "$SITES42" | awk '{print $2}')"
+[ "$TOTAL42" = "0" ] && pass "no real-repo producer is piped into an early-exiting consumer" \
+    || fail "BL-43 site(s) present: $SITES42"
+
+# (2) THE SCANNER, PROVEN TO FIRE. A detector no input can trip is a comment. Revert one fixed
+# site on a COPY -- never the live file -- and the scanner must name that line and no other.
+M42="$(mktemp)"
+# The replacement is BUILT BY CONCATENATION on purpose: spelled out whole, this very line
+# would itself be a producer piped into `grep -q`, and the scanner -- which reads this file --
+# would report its own control string as a site. It did, on this test's first run.
+if mutate "$BIN/tests.sh" "$M42" 's.replace("grep -qF \"docs/archive/HANDOFFS-archive.md (archived)\" <<< \"$OUT_M3_40\"", "echo \"$OUT_M3_40\"" + " | grep -qF \"docs/archive/HANDOFFS-archive.md (archived)\"", 1)'; then
+    MUT42="$(python3 "$SCAN42" "$M42")"
+    MUTTOTAL42="$(grep -oE 'BL43-TOTAL [0-9]+' <<< "$MUT42" | awk '{print $2}')"
+    MUTLINE42="$(grep -oE 'BL43-SITE [0-9]+ \$OUT_M3_40' <<< "$MUT42" | awk '{print $2}')"
+    EXPECT42="$(grep -n 'HANDOFFS-archive.md (archived)" <<< "\$OUT_M3_40"' "$BIN/tests.sh" | cut -d: -f1)"
+    [ "$MUTTOTAL42" = "1" ] && [ -n "$MUTLINE42" ] && [ "$MUTLINE42" = "$EXPECT42" ] \
+        && pass "the scanner fires on a reverted site, and names it ($MUTLINE42)" \
+        || fail "scanner control: expected 1 site at line $EXPECT42, got: $MUT42"
+else
+    fail "scanner control mutation DID NOT APPLY -- the reverted form no longer matches"
+fi
+rm -f "$SCAN42" "$M42"
 
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="

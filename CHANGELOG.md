@@ -211,6 +211,69 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [BL-43] S197 — the `pipefail` race closed: the population re-derived by measurement, nine sites fixed, and Test 42 so the list cannot go stale again
+
+**BL-43 is CLOSED, and its enumerated population was the wrong one.** The item named six line numbers
+(`:2591`, `:2596`, `:2605`, `:2620`, `:2864`, `:2880`); none points at an assertion today, Test 40 postdates
+the enumeration, and S196 met a seventh site (`:3083`) by accident rather than by list. A list of line numbers
+was the defect — so this session replaced it with a derivation, and with measurement.
+
+**What was measured, not assumed.** (1) **The pipe capacity on this machine: 65,536 B** — a multi-line payload
+of **65,519 B survives** `echo … | grep -q` and **65,582 B does not**, by binary search under bash 5.2.37,
+which is the shell `bin/tests.sh` runs. (2) **Every candidate pipeline's producer size, at runtime:** all
+**107** variable-producer pipelines were instrumented in a `--no-local` clone (the producer written to a file
+and `wc -c` read, because `${#VAR}` counts *characters* under a UTF-8 locale while a pipe carries *bytes*), and
+**all 107 executed** — so the population is measured, not sampled. Largest fixture-bounded producer: **8,300 B**.
+Over capacity: **four**, all reading the real repository — `:3048` (99,529 B), `:3186` (99,524 B), `:3187`
+(99,524 B), `:3203` (99,246 B). (3) **The criterion that follows from it:** a producer read from a *fixture* is
+bounded by that fixture; one read from *this repository* grows with the ledgers and the report. So the
+population is not "what is big today" but **"whose producer reads the real repo, with the pipeline's status
+consumed"** — a capture (`VAR="$(… | head -1)"`) is exempt, since SIGPIPE cannot corrupt the stdout it uses,
+only the status it discards. **That criterion gives nine sites, and they are now fixed:** `:1329`, `:1338`
+(a row of the real `BOOTSTRAP.md`), `:1502`, `:1578` (the report over the live ledgers), `:1628` (the canonical
+Learnings table), `:3155`, `:3158` (the report with an unreadable explicit path), `:3186`, `:3203`. Each reads a
+**here-string** now, not a pipe.
+
+**The item's severity claim was false, and this is the part that mattered.** It said all six sites were on
+`&& pass || fail`, *"so each fails NOISILY … a nuisance rather than a hole."* Of the **125** candidate pipelines
+in the file, **23 sit on `&& fail || pass`** and 11 more behind an `if` — the direction where a matched pipeline
+scored FAILED makes a real defect **read green**. Two of the nine were there: **`:3203`, Test 40's M3 mutant
+guard, could not fail** — a surviving mutant whose shard line printed early would have been reported killed —
+and **`:3186`, M2's `if`, would have taken its else arm**, passing with a message about arithmetic while the
+conservation check that is M2's actual assertion never ran. Both are latent only because of *where* their
+pattern currently sits: a 2×2 probe on the real 99,530 B report (patterns at lines 1,000 and 1,092 of 1,105)
+gave **pipe/late 0 0 0 0 0, pipe/early 141 141 141 141 141, here-string 0 0 0 0 0 in both** — same bytes, same
+patterns, only the match position moved.
+
+**Nine RED-first proofs, each wired to the shipped line.** The proof harness *extracts the assertion text from
+`bin/tests.sh` by line number* rather than retyping it, stubs `pass`/`fail`/`skip` to record which arm fires, and
+runs each site against small and oversized payloads. Against the pre-fix tree: **9 RED, one per site**. Against
+the fix: **0 RED across 28 checks**, and every site still takes its `fail` arm when it should — the
+"capture that silently stops asserting" hazard BL-43's own body warns about is excluded by construction.
+
+**Test 42 re-derives the population on every run**, so the class cannot regrow silently. Its scanner recomputes
+which producers reach `$METHODOLOGY` (last-assignment-wins) and reports any status-consuming, early-exiting
+pipeline among them; the live suite must report **zero**. Its second assertion is the control: a **reverted site
+on a copy** must be named, with the line number checked against the live file — a detector no input can trip is
+a comment. `.quality-gates.json` `tests-sh-passed` is tightened **331 → 333**, the value measured in a clone with
+`HANDOFFS.md` at the two receipts the gate is measured in (339 at three, right after a claim).
+
+**Three instrument defects found and fixed before any number was published.** (a) The instrumented run read
+**325 passed / 12 failed**; the control — the same commit, unmodified, in its own clone — read **337 / 0**, so
+the twelve were the instrument, not the tree, and its size figures were kept only for sites the twelve do not
+touch. (b) The scanner's own flag-cluster regex was `-[A-Za-z]*q\b`, which **misses `-qE`, `-qi`, `-qF`**: it
+reported 3 sites where there were 9, and would have shipped as a guard blind to two thirds of the class.
+(c) Test 42 **reported its own control literal as a site** on its first run — the mutation string spelled out a
+producer piped into `grep -q`, in the one file the scanner reads — so that literal is now built by concatenation,
+with the reason on the line above it.
+
+**Not changed, deliberately:** the two capture sites (`:3048`, `:3187`) keep their pipes — their status is
+discarded and their value is correct — and the ~100 fixture-bounded pipelines are left alone rather than swept,
+since a 107-site rewrite is a refactor and each site would need the proof this session gave nine. BL-43's own
+body is **not edited** (FM #17); it stands wrong in three ways, corrected here and in the closure row.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [BL-43] S197 claim — the `pipefail` race: re-derive the population by pattern, then fix each remaining site RED-first (in progress)
 
 **Deliverable:** **BL-43**, open since 2026-08-25 (S109) — `bin/tests.sh:5` is `set -uo pipefail`, so
