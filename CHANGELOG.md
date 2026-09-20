@@ -211,6 +211,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S199 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- **Action:** the ~448 B pointer block `methodology_trim.py` wrote into `HANDOFFS.md`'s front matter became one row
+  at the bottom of [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md)'s table
+  (`| 1 | 2026-09-19 → 2026-09-19 | HANDOFFS-through-2026-09-19-4.md | v1.5.0 |`), and the block was deleted from the
+  front matter. The `.verify.sh` link is dropped by the fold rule, since the proof sits beside its shard.
+- **Its own commit, deliberately.** Inside the trim commit the shipped `.verify.sh` fails L2 (fork Learning #58).
+  Re-run after the fold: **L1, L2/front-matter and L3 all OK**, source `the trim commit 6c964ec`.
+- **Fourth shard ending 2026-09-19.** The date in a shard name is a span label, not a key — cuts are positional — so
+  the index now carries four rows with the same span and four distinct file names. That is the disambiguator working,
+  not a collision.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19-4.md` (1 record(s), 28,347 B → 16,845 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
