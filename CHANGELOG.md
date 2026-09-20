@@ -59,10 +59,13 @@ under the topmost `## YYYY-MM`, and when the month changes open a new one above 
 (`starter-kit/methodology_dashboard.py`) and `CHANGELOG_ENTRY_RE` (`bin/model-report`) both key on
 exactly that level.
 
-**Everything below the most recent cut is archived — and that boundary is POSITIONAL, not a
-calendar seam.** `2026-08-30` carries records on *both* sides of it, so a shard's dated filename is a
-**span label, not a day boundary**; `methodology_trim.py` says so itself (`CUT_STRADDLES_DAY`,
-design §2.3). Every shard is listed in a pointer block below, and **no count is written here** —
+**Everything below the most recent cut is archived, and a cut boundary is POSITIONAL unless the cut
+was given a date.** The trimmer's computed cut is positional, not a calendar seam: `2026-08-30`
+carries records on *both* sides of it, so a shard's dated filename is in general a **span label, not
+a day boundary**; `methodology_trim.py` says so itself (`CUT_STRADDLES_DAY`, design §2.3). **The
+newest cut is the other kind** — `--cut 2026-09-17` (S196) took a clean day seam, so that shard's
+name *is* a boundary and this file holds 2026-09-18 onward. Read the shard's own front matter, or
+the row in the entry that made it, rather than inferring which kind a name is. Every shard is listed in a pointer block below, and **no count is written here** —
 the one that was (*"across two shards"*, plus *"this file holds that day forward"*) went stale
 eight trims and 24 days ago and was still being read as current at S132. The two earliest spans are
 [`docs/archive/CHANGELOG-through-2026-08-01.md`](docs/archive/CHANGELOG-through-2026-08-01.md)
@@ -207,6 +210,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ---
 
 ## 2026-09
+
+### 2026-09-19 · [ad hoc] S196 — the front matter's cut-boundary sentence made true of the newest cut
+
+The paragraph opening *"Everything below the most recent cut is archived — and that boundary is POSITIONAL, not a
+calendar seam"* described every cut this file had taken until today. This session's cut was given a date
+(`--cut 2026-09-17`), so the newest boundary **is** calendrical and `docs/archive/CHANGELOG-through-2026-09-17.md`
+names a real day. Rewritten, not appended to: the default cut is positional, a dated cut is not, and a reader is told
+to check the shard's front matter or the entry that made it rather than infer from the name. The `2026-08-30` example
+and the `CUT_STRADDLES_DAY` pointer stand unchanged.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
 
 ### 2026-09-19 · [ad hoc] S196 — fork `main` pushed to `origin`, `de4652c..431279b` (non-commit action, operator go-ahead)
 
