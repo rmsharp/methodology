@@ -211,6 +211,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S201 close-out — the rule is written where sessions read it, and BL-53 is down to one phase
+
+**Deliverable: BL-53 P4, complete on its own DONE criterion.** D3 written into `CLAUDE.md` §*Where this fork's
+learnings go* (`24fe658`), fork-only and deliberately **not** in the distributed `starter-kit/SESSION_RUNNER.md`.
+12,688 B → 14,392 B against an 18,600 B ceiling. **P4's gate half is not owed:** §8 makes it conditional on D4
+choosing a *mechanical* form, and the ratified option C is not one — stated rather than quietly dropped.
+
+**The decision S200 handed back was taken.** Option **C** with **D3 retained**; **B declined with its cost known**
+(14,502 B at ten rows, the live advice named row by row). **BL-53 now has exactly one phase left — P5**, and the
+S201 block records that this **reverses** the S200 block's *"no P5"*, which is left standing as written (FM #17).
+
+**BL-78 gained a second instance and a correction that changes its costing.** `starter-kit/SESSION_RUNNER.md` is
+**55,406 B against the 54,363 B its own entry declares** (`beffbd0e`) — both read-set files have now grown past
+their declared sizes. And **the ratchet that config note describes does not exist**: `measured_bytes` appears once
+in `context_budget.py` (`:398`) and feeds only a density warning gated on `status == "ok"`; the sole growth signal
+is a series over `resident_bytes` (`:622`) — `CLAUDE.md` alone. **Shape (2) must build the check before wiring it.**
+
+**An instrument was caught before it published a false claim.** `git log -- starter-kit/SESSION_RUNNER.md` reported
+the file at 52,195 B on 2026-08-28 and unchanged until 2026-09-15, which would have made the declared figure look
+invented; history simplification had pruned the resync merge. `git cat-file -s beffbd0e:…` reads 54,363 B exactly.
+
+**Seven commits + this close-out:** `6de1d8d` claim (amended once with `--no-verify` to carry the two Phase 0
+history rows it missed) · `f049525` the owed retention trim (24,915 → 15,309 B, four stated-and-expected findings,
+L1/L2/L3 OK) · `a2250c5` its fold · `24fe658` the deliverable · `90419ed` option C and BL-78 recorded · `6adaaf4`
+fork Learning **#85** · `af5af54` the PR #84 chase.
+
+**Phase 3A — S200's handoff scored 9/10.** Load-bearing and specific: its next_steps named P4 as the next session
+needing no further decision, its item (6) predicted the trim's exact due point and depth, and its gotcha (3) —
+*the local `.quality-gates-results.json` is not a current reading* — was correct and saved this session from citing
+a five-session-stale file. Its `.context-budget.json:104`–`:110` citation re-checked and still exact. **The one
+defect:** its BL-53 block recorded *"D4 the ceiling unchanged … so no P5"*, a reading its own adjudication document
+recommended against in the same session; the contradiction had to be resolved here before the deliverable could be
+scoped. **Self-assessment 8/10** — Phase 0 re-ran rather than read, every cited destination was resolved by hand,
+the row budget refused a 1,505 B draft and it was trimmed rather than waived, and a wrong instrument was caught
+before publication; against that, the claim commit shipped incomplete and needed an amend.
+
+**Gate run — clone of `af5af54`, HEAD asserted by sha:**
+`quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`;
+`tests-sh-passed` 343 / 0 failed at two receipts, exactly on the floor.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S201 — [PR #84](https://github.com/KJ5HST/methodology/pull/84) chased (non-commit action, operator go-ahead on the exact text)
 
 - **Action:** one comment,
