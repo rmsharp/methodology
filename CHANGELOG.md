@@ -211,6 +211,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S200 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- **Action:** the ~444 B pointer block `methodology_trim.py` wrote into `HANDOFFS.md`'s front matter at `f1f51b3`
+  became one row at the bottom of [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md)
+  (`| 1 | 2026-09-20 → 2026-09-20 | HANDOFFS-through-2026-09-20.md | v1.5.0 |`) and was deleted from the ledger.
+  `HANDOFFS.md` 16,014 B → 15,566 B, so the trim-and-fold pair leaves the front matter no larger than it found it.
+- **Its own commit, never the trim's:** inside the trim commit the shipped `.verify.sh` fails L2
+  ([fork Learning #58](docs/FORK_LEARNINGS.md)). Re-run after the fold against the trim commit `f1f51b3`:
+  **L1, L2/front-matter, L3 all OK.**
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-20.md` (1 record(s), 26,597 B → 16,014 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
