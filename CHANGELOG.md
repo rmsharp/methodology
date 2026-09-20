@@ -113,8 +113,13 @@ grep -cE '^-?[[:space:]]*\*\*Model:\*\*' CHANGELOG.md docs/archive/CHANGELOG-*.m
 **When to archive — the operator's decision, not a rate.** Archiving is optional (§The Action Ledger,
 *Archiving is optional*), and `methodology_trim.py --file CHANGELOG.md --check` is the only statement of a
 trigger. **The operator decided on 2026-09-14 not to trim this file at that trigger** (`3745748`) and
-reaffirmed it at S177 (2026-09-16): `--check` keeps firing, and a trim is raised with the operator only
-once the file passes the 262,144 B hard read refusal (`READ_REFUSE_BYTES`). Nothing reads this file
+reaffirmed it at S177 (2026-09-16); **that decision ran to its stated end on 2026-09-19 (S196), and the trim
+it deferred was taken** (`0dfca7e`, the entry below). It held until the file came within less than one
+session's writing of the 262,144 B hard read refusal (`READ_REFUSE_BYTES`) — 6,284 B at that session's
+Phase 0 — and the trim was raised there rather than after the refusal. **What it leaves behind is the same
+rule, not a rate:** `--check` firing is not by itself a reason to trim, and a trim is raised with the
+operator as this file approaches the refusal — never later than it, since past that line a default read
+returns no content at all. Nothing reads this file
 whole: Phase 0 takes its frontier from `git log`, close-out prepends under the topmost month, and a
 lookup greps; past the refusal, read the top with an offset and a limit. The rate rule that stood here
 (archive below 15 entries of headroom to a 2,000-line `READ_CAP_LINES` proxy) went with the seed's
@@ -202,6 +207,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 ---
 
 ## 2026-09
+
+### 2026-09-19 · [ad hoc] S196 — the 2026-09-14 no-trim decision discharged, and the paragraph that carried it made true
+
+**The constraint's release is an action, so it is logged here.** The operator's decision of 2026-09-14 not to trim this
+file (`3745748`, reaffirmed at S177) named its own end: a trim is raised once the file approaches the 262,144 B hard
+read refusal. Phase 0 measured **255,860 B — 6,284 B of headroom, less than one session writes** (S195 added about
+9,500 B), so the trim was raised there, the operator gave the go-ahead in the Phase 0 picker, and it was taken the same
+session (`0dfca7e`, and the tool's own entry below).
+
+**The cut was chosen from three measured in a `--no-local` scratch clone of `08c5327`, not predicted** (S195's gotcha
+(2)): **`--cut 2026-09-17`**, archiving 126 of 185 records and taking the live file 258,656 B → 87,463 B. It is a clean
+day seam — no `CUT_STRADDLES_DAY`, so the shard's dated name means what it says — and `v3.7` was tagged 2026-08-12,
+older than every live record, so no release frontier existed inside this file and a day cut was the only boundary
+available, the case the 2026-08-01 shard's front matter describes. Not taken: the tool's computed positional cut (117
+records, 99,343 B live, 2026-09-17 on both sides) and a shallow seam at 2026-09-16 (57 records, 180,719 B live, about
+eight sessions of headroom against this one's eighteen).
+
+**Front matter:** the *When to archive* paragraph above was **rewritten rather than appended to**, so the always-read
+file states the decision's end and the rule that outlives it instead of a constraint that no longer stands.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
 
 ### 2026-09-19 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-17.md` (126 record(s), 258,656 B → 87,463 B)
 
