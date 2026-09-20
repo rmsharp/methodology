@@ -211,6 +211,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-76] S198 — the ledger hook's stale-marker skip fixed, with the hook's own selftest declared as a gate
+
+**The defect.** `.githooks/pre-commit` skipped replayed commits by exiting 0 when any of `MERGE_HEAD`, `REBASE_HEAD`,
+`CHERRY_PICK_HEAD`, `rebase-merge` or `rebase-apply` existed under the git dir. Git **leaves `REBASE_HEAD` behind**
+when a rebase that *stopped* completes, so one such rebase disarmed the hook for the life of the clone — and the loop
+runs **before both gates the hook chains**, so `quality_ratchet.py --precommit` went with it. Found at S197, which
+measured it disarmed here since 2026-08-11, across 69 first-parent commits.
+
+**The shape was chosen from a measurement, not by size.** Every operation in the marker list was run to completion on
+**git 2.50.1** and its markers observed at each stage. A rebase stopped by a conflict, and a `-i` parked at `edit`,
+both leave `REBASE_HEAD` behind; a **clean** rebase leaves nothing, which is why only a *stopped* rebase arms the trap
+and why five weeks passed unnoticed. `MERGE_HEAD`, `CHERRY_PICK_HEAD`, `rebase-merge` and `rebase-apply` are all
+removed when their operation ends or is aborted. Two facts then settle it: `REBASE_HEAD` is the **only** marker that
+leaks, and it is **redundant** — every rebase in-progress state carries `rebase-merge` (merge backend) or
+`rebase-apply` (`--apply`, and `git am`) alongside it, so dropping it costs no in-progress coverage. That is
+**shape (1)**; shape (2) is the same marker set described differently, and shape (3)'s newer-than-the-index test is
+unnecessary as well as fragile.
+
+**What shipped.** `REBASE_HEAD` dropped from the loop, the measurement in a comment beside it. A **`--selftest`**
+(10 checks) on the `.githooks/commit-msg --selftest` precedent. The gate **`pre-commit-selftest`** in
+`.quality-gates.json`. And `bin/tests.sh` **Test 43** (10 assertions), which reads the marker names off the
+`for marker in` line rather than off the file — the fix's own comment names `REBASE_HEAD` a dozen times and the
+selftest plants it by name, so a bare grep would report the bug cured while it stood.
+
+**Proof, RED-first.** The selftest was written **against the unfixed hook** and went red on exactly **one** of its ten
+assertions — the other nine green, so it isolates the defect rather than being vacuously red — and 0 red after.
+**Mutation: 10 mutants, 10 killed** — restoring `REBASE_HEAD`; dropping each of the four remaining markers; `-e`
+narrowed to `-f`; deleting the loop; short-circuiting the marker test; short-circuiting the ledger test; and breaking
+the fixture builder, which the selftest's own fixture assertion catches (a probe against a repo that failed to build
+answers about nothing, in green). **End-to-end against real git, not planted files:** a real conflicted rebase was
+completed, the leaked `REBASE_HEAD` confirmed on disk, and a real `git commit` with no ledger line **refused**
+(exit 1); the same clone with the ledger co-staged **passed** (exit 0); and a commit taken *during* a genuine
+in-progress rebase was still **skipped** (exit 0).
+
+**Two hardenings the first draft lacked, both found by testing the test.** The membership assertion was first written
+`grep -qF " $M "`, which reports the **last** marker missing because it is followed by `;` — it would have failed on a
+correct file; measured, then fixed. And the selftest's probe repos are now created with `git init --template=`, so a
+user's `init.templateDir` cannot install *its* hooks into them and answer for the hook under test.
+
+**`tests-sh-passed` 333 → 343**, measured at the two receipts the gate is measured in (`343 passed, 0 failed,
+6 skipped`, output captured), not derived from the +10 — the two agree, which is a check on the measurement rather
+than a substitute for it. Adding a gate and raising a floor are tightenings; the ratchet accepted the commit.
+
+**Not done, deliberately.** `upstream/main` carries the same hook text and the same defect. The hook is
+canonical-only (BL-6 item 3), so **no adopter is affected**, and the upstream fix is **its own go-ahead** — it did not
+ride this session. Nothing reached `KJ5HST/methodology`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S198 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **Action:** the ~448 B pointer block `methodology_trim.py` wrote into `HANDOFFS.md`'s front matter became one row

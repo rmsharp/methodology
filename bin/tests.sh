@@ -3512,6 +3512,69 @@ else
 fi
 rm -f "$SCAN42" "$M42"
 
+echo "== Test 43: the ledger hook's own selftest, and the marker list it gates on (BL-76, RED-first) =="
+# A git hook is the one gate no other gate watches, and it fails OPEN: when it exits 0 too
+# early, every commit sails through and nothing anywhere goes red. BL-76 was exactly that --
+# git LEAVES .git/REBASE_HEAD behind when a rebase that STOPPED completes, the hook read it as
+# "rebase in progress", and both gates it chains were off here for five weeks and 69 commits.
+#
+# (1) THE SHIPPED HOOK'S SELFTEST PASSES. It is also a declared gate (.quality-gates.json
+# pre-commit-selftest); run here too so the suite names it rather than only the ratchet.
+OUT43="$("$METHODOLOGY/.githooks/pre-commit" --selftest 2>&1)"; RC43=$?
+[ "$RC43" = "0" ] && pass ".githooks/pre-commit --selftest passes" \
+    || fail ".githooks/pre-commit --selftest exited $RC43: $OUT43"
+grep -qE '^pre-commit selftest: OK \([0-9]+ checks\)$' <<< "$OUT43" \
+    && pass "the selftest reports its own check count" \
+    || fail "the selftest printed no OK summary line: $OUT43"
+
+# (2) THE MARKER LIST, READ FROM THE LOOP LINE AND NOT FROM THE FILE. The fix's comment names
+# REBASE_HEAD a dozen times to explain why it is gone, and the selftest plants it by name, so a
+# bare `grep REBASE_HEAD .githooks/pre-commit` matches the explanation and reports the bug cured
+# when it is not. Anchor on the `for marker in` line itself. Each name is asserted on its own
+# rather than against one sorted string, which compares locale order instead of membership.
+LOOP43="$(grep -E '^for marker in ' "$METHODOLOGY/.githooks/pre-commit")"
+if [ -z "$LOOP43" ]; then
+    skip "the marker loop line was not found — (2) could not be built"
+    skip "the marker loop line was not found — MERGE_HEAD membership"
+    skip "the marker loop line was not found — CHERRY_PICK_HEAD membership"
+    skip "the marker loop line was not found — rebase-merge membership"
+    skip "the marker loop line was not found — rebase-apply membership"
+else
+    grep -qv 'REBASE_HEAD' <<< "$LOOP43" \
+        && pass "the marker loop does not gate on REBASE_HEAD (BL-76)" \
+        || fail "REBASE_HEAD is back in the marker loop: $LOOP43"
+    # The LAST marker is followed by `;`, not a space, so a naive " $M " test reports the
+    # final name missing and the assertion fails on a correct file. Measured, not guessed.
+    for M43 in MERGE_HEAD CHERRY_PICK_HEAD rebase-merge rebase-apply; do
+        grep -qE "[[:space:]]$M43([[:space:]]|;)" <<< "$LOOP43" \
+            && pass "the marker loop still skips a genuine $M43" \
+            || fail "$M43 dropped from the marker loop: $LOOP43"
+    done
+fi
+
+# (3) THE SELFTEST, PROVEN TO FAIL. A selftest that no mutation can turn red is a comment with
+# an exit code. Put REBASE_HEAD back on a COPY -- never the live hook -- and it must go red on
+# the BL-76 assertion specifically, while the four in-progress assertions stay green: the cheap
+# fix over-corrects, and a control that only counted failures could not tell the two apart.
+M43F="$(mktemp)"
+if mutate "$METHODOLOGY/.githooks/pre-commit" "$M43F" 's.replace("for marker in MERGE_HEAD CHERRY_PICK_HEAD", "for marker in MERGE_HEAD REBASE_HEAD CHERRY_PICK_HEAD", 1)'; then
+    chmod +x "$M43F"
+    MUTOUT43="$("$M43F" --selftest 2>&1)"; MUTRC43=$?
+    MUTFAILS43="$(grep -c '  FAIL:' <<< "$MUTOUT43")"
+    [ "$MUTRC43" != "0" ] && [ "$MUTFAILS43" = "1" ] \
+        && pass "restoring REBASE_HEAD turns the selftest red, on exactly one assertion" \
+        || fail "selftest control: expected exit!=0 with 1 FAIL, got rc=$MUTRC43 fails=$MUTFAILS43"
+    grep -qF 'FAIL: stale REBASE_HEAD' <<< "$MUTOUT43" \
+        && pass "the red assertion is the BL-76 one, named" \
+        || fail "selftest control: the failing assertion was not the BL-76 one: $MUTOUT43"
+    grep -qF 'PASS: stopped rebase (REBASE_HEAD + rebase-merge) -> skipped' <<< "$MUTOUT43" \
+        && pass "a genuinely in-progress rebase is still skipped under the mutant" \
+        || fail "selftest control: the in-progress assertion did not survive the mutation"
+else
+    fail "selftest control mutation DID NOT APPLY -- the marker loop no longer matches"
+fi
+rm -f "$M43F"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
