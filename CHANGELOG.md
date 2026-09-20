@@ -211,6 +211,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-19 · [ad hoc] S196 — BL-43's flake population is incomplete: `bin/tests.sh:3083` is a seventh site, caught in the act
+
+**Observed, not inferred.** Two runs of `bash bin/tests.sh` in the same `--no-local` clone of `c5db2a7`, nothing else
+touching the tree, gave **330 passed / 1 failed / 6 skipped** and then **331 / 0 / 6**. The two outputs differ in
+exactly one line — Test 40's provenance assertion, *"shard set mismatch: 1 on disk but unnamed, 0 named but absent"* —
+and every count elsewhere, including its own `482 > 50` and `432 = 432`, is identical, so the population was the same
+both times. Re-running the test's own loop standalone against the same clone gives `MISSING=0`.
+
+**Mechanism, and it is [BL-43](docs/planning/BACKLOG-DETAIL.md#bl-43)'s exactly:** `bin/tests.sh:5` is
+`set -uo pipefail`, and `:3083` is `echo "$OUT40_DEFAULT" | grep -q "docs/archive/<shard> (archived)" || MISSING40=…`.
+`grep -q` exits at the first match, `echo` takes SIGPIPE, and the pipeline is scored **failed although the pattern
+matched** — so a matched shard is counted as unnamed. Noisy rather than silent, like BL-43's other six.
+
+**What this adds to BL-43:** its population was *"enumerated, not sampled"* at S109 — `:2591`, `:2596`, `:2605`,
+`:2620`, `:2864`, `:2880` — and none of those six line numbers points at an assertion in today's file; Test 40 itself
+was written at S133, after the enumeration. So the item's list is both drifted and short by at least this site. Per this
+repo's backlog convention the item body is **not** edited; the correction lands here, and the next session re-derives
+the population by pattern rather than by those line numbers. One phrasing of the shape,
+`grep -nE '^\s*echo "\$[A-Z0-9_]+" \| grep -q' bin/tests.sh`, matches **79** lines today — a sample of the exposure,
+not its measure, since `printf … | grep -q` and `"$(…)" | grep -q` are the same race in other words, and only the
+sites whose pipeline status is consumed by `&&`/`||` can turn into a verdict.
+
+**Consequence for the gate:** `tests-sh-failed <= 0` and `tests-sh-passed >= 331` can both go red on a clean tree for
+this reason alone. A red run is therefore re-run before it is believed, and the suite's output is saved rather than
+read off the summary line.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-19 · [ad hoc] S196 — the front matter's cut-boundary sentence made true of the newest cut
 
 The paragraph opening *"Everything below the most recent cut is archived — and that boundary is POSITIONAL, not a
