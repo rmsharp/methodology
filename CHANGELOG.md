@@ -211,6 +211,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S202 — the budget measurement row from this session's verify runs, committed not reverted
+
+- **What:** one row appended to the tracked `.context-budget-history.jsonl` (now **163**) by P5's own verify
+  command. It is kept rather than reverted: the row is a real measurement of this tree, and the growth run is a
+  series that only means anything if measurements are not selectively dropped.
+- **Why only one row, from four runs:** `append_history` (`starter-kit/context_budget.py:506`) writes only when
+  a measured size changed — the same fact this session used to narrow BL-75 and to correct P5's own note.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S202 — fork `main` pushed to `origin`, `13ed767..629c39a` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin HEAD:main`, a fast-forward of this session's **8** commits — `2faff89` (claim),
