@@ -211,6 +211,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-53] S199 claim — how many learnings the fork carries before old ones retire (in progress)
+
+**Deliverable:** **BL-53**, raised 2026-09-10 (S159), chosen by the operator after Phase 0 (picker) over BL-77's
+costing, BL-61 and BL-69. `docs/FORK_LEARNINGS.md` is **83,768 B against its 81,920 B warning — 1,848 B over**, and
+the overage is widening: 706 B claimed at S197 (26 B stale), 732 B measured at S198's claim, 1,848 B now. Two
+sessions in a row appended a row and removed none, which is precisely the gap the runner's Degradation Detection
+table names — *"a close-out appends to a mandated-read file, and no close-out has ever removed anything from one"* —
+and failure mode #28's decay term. **This session's deliverable is the plan, not its application** (FM #18): a
+costed retirement rule written to `docs/planning/`, re-measured against the file the rule would actually govern.
+
+**Why the existing costing does not answer it.** BL-53's option table was measured at S159 against
+`starter-kit/FRAMEWORK_LEARNINGS.md` — the **distributed** file, where every option carried an upstream change and
+citations in four distributed files. Resync decision **D1** (S176) moved the fork's rows #15 onward to
+`docs/FORK_LEARNINGS.md`, which is fork-only; the distributed file is upstream's to steward. So the numbers, the
+blast radius and the go-ahead requirement have all changed since the options were costed, and the costing is
+re-run here rather than carried forward.
+
+**Side actions, all approved in the same picker.** (1) The owed `HANDOFFS.md` retention trim at **`--cut 2`**
+(`--cut N` RETAINS N) with its fold into `docs/HANDOFFS_ARCHIVE_INDEX.md` in its own commit — due the moment this
+claim made three receipts. (2) The push of this session's commits to fork `origin` at close-out. (3) **BL-76's
+upstream half:** re-derive the `REBASE_HEAD` fix against `upstream/main` and open a PR there. The fork patch does
+not apply as-is — upstream has no Test 43 and no `pre-commit-selftest` gate. Recommended against this session on
+batching grounds (PR #84 has sat unreviewed for three sessions); **the operator overrode that and gave the
+go-ahead**, which is recorded here because the reasoning, not only the outcome, is what a later session needs.
+
+**Phase 0:** `CHANGELOG.md`'s frontier is HEAD `1cec033` with an empty gap; `HANDOFFS.md`'s frontier is `23ec4b9`,
+and the one commit above it is `1cec033`, S198's own CHANGELOG-only push record, already in the ledger — not an
+unrecorded action. The newest receipt is `status: complete`, no `CHANGELOG: pending` stub stands, and nothing was
+backfilled. **2** receipts before this claim. The gate ran in a `--no-local` clone with HEAD asserted by sha:
+`11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511` — **S198's citation exactly** —
+with `tests-sh-passed` 343 at two receipts. Dashboard 76/100, medium risk, its two risk factors being BL-68 and
+BL-71. `origin/main` = HEAD, nothing unpushed; `upstream/main` `6b29d3d`, 0 behind. PR #84 OPEN at `77afc12`,
+MERGEABLE, still no reviews or comments since 2026-09-19T04:21Z. **BL-77's own subject was checked by hand, since
+nothing checks it:** `core.hooksPath` = `.githooks` and no rebase, merge or cherry-pick marker is on disk — the
+gates are armed in this clone.
+
+**One Phase 0 note, not a finding.** The working tree's `.quality-gates-results.json` is a stale local run (head
+`431279b`, ten gates, `tests-sh-passed` 337) and does **not** contradict S198's citation: it is gitignored, so the
+clone runs that produce the cited hashes never write it back. Named here so no later reconcile reads it as a
+contradiction.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S198 — fork `main` pushed to `origin`, `2c9ec03..23ec4b9` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin 23ec4b99ea2ae3132285831eb05be4875729af83:refs/heads/main`, a fast-forward of this

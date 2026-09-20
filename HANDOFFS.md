@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S199
+date: 2026-09-20
+status: pending
+active_task: **BL-53** — `docs/FORK_LEARNINGS.md` is **83,768 B against its 81,920 B warning, 1,848 B over and widening** (706 B claimed at S197, 732 B at S198's claim, 1,848 B now): two consecutive sessions appended a row and removed none, the decay-term gap the runner's Degradation Detection table names and FM #28's second half. Chosen by the operator after Phase 0 (picker) over BL-77's costing, BL-61 and BL-69. Deliverable: **the plan, not its application** (FM #18) — a costed retirement rule in `docs/planning/`, re-measured against `docs/FORK_LEARNINGS.md` rather than carried forward from S159's table, which was costed against the **distributed** `starter-kit/FRAMEWORK_LEARNINGS.md` before resync decision D1 moved the fork's rows out. Three side actions approved in the same picker: the owed `HANDOFFS.md` retention trim at `--cut 2` with its fold, the push of this session's commits to fork `origin` at close-out, and **BL-76's upstream half** — re-derived against `upstream/main` and opened as a PR, which I recommended holding on batching grounds and the operator overrode.
+```
+
+```handoff
 session: S198
 date: 2026-09-20
 status: complete
