@@ -3150,3 +3150,8 @@ Its claims are the review's own, not re-derived, except that the repro was re-ru
 fused block was read to word *what goes wrong*. It is longer than before (about 1,075 words pasted, against
 523): the definitions cost words. **Remaining: (2) posting it to #83 — outward, its own go-ahead on the exact
 text,** after the operator's review. The pre-posting checks in S206's receipt still apply.
+
+**Operator review, after S207's close-out:** *"Those look fine"* — recorded as approval of the rewritten §6 text.
+It is **not** a go-ahead to post; posting stays its own outward go-ahead. Whether *"those"* also covered the two
+pre-posting considerations S207 raised (the untested `CHANGELOG.md` trim-against-prepend case under union; item
+10's example resting on agent memory only) is not settled by those words, so the posting picker asks.

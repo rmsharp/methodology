@@ -215,6 +215,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S207 — operator review after close-out: the rewritten §6 approved
+
+The operator, on the §6 text shown in S207's close-out report: *"Those look fine."* Recorded as **approval of
+the rewritten comment** in [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md) §6,
+which is unchanged. **It is not a go-ahead to post:** posting to PR #83 is outward and needs its own go-ahead on
+the exact text. The words do not settle whether *"those"* also covered the two pre-posting considerations the
+report raised: the untested `CHANGELOG.md` trim-against-prepend case under union, and item 10's example resting
+on agent memory only. The posting picker asks. Recorded in S207's receipt (next step (1)), BL-82's index row and
+its detail block.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S207 close-out — §6 recomposed for the operator's review; nothing posted
 
 **Deliverable: BL-82's §6 rewritten** (`1259287`). The proposed comment for upstream PR #83 in
