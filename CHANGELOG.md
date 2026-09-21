@@ -35,6 +35,34 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `context_budget.py`: a row over a ceiling stays `over` when a structure pattern also fails
+
+- **Action:** `measure_file()` in `starter-kit/context_budget.py` gave a row the status of whichever check wrote
+  last. A ceiling check (bytes, lines, line length, tokens) sets `over`; a structure pattern that matched fewer
+  records than its `expect_min` then set `instrument-failed` unconditionally, overwriting it. `render()` ranks
+  `instrument-failed` just below `over`, so the headline read `INSTRUMENT-FAILED`, the row read
+  `instrument-failed`, and when the growth run fired the advisory said *"Nothing is over a ceiling yet"* directly
+  above the finding that said the ceiling was exceeded. That write was the only one in `measure_file()` that could
+  lower a status. It now leaves an `over` row as it is, so a check can raise a row's status and never lower it.
+  Both findings still print, and the exit code is 2 either way. This is the case the growth-run entry two below
+  lists under *Not changed here*.
+- **A comment corrected:** the comment above `main()`'s exit said the tool's ordering *"already ranks"* an
+  instrument failure *"above `over`"*; `render()`'s ranking puts it just below. The comment now says what the code
+  does: a config defect exits 2 exactly as `over` does.
+- **Tests, RED first against the unchanged tool** (blob `f75482c2`): 4 in a new `TestStatusPrecedence` class in
+  `tools/test_context_budget.py`. (1) The real `main()` → `render()` path under `--status`, on a file over its byte
+  ceiling that also fails a pattern, with the growth run fired: the headline reads `OVER`, both findings print,
+  the advisory gives the over-state sentence, and the exit is 2. (2) `--status --json` reports that row as `over`.
+  (3) A control: a row that only fails its pattern still reads `instrument-failed`. (4) Raising still works: a
+  row past its warn line that fails its pattern reads `instrument-failed`. Tests (1) and (2) fail on the old tool;
+  (3) and (4) pass on it by design, and the mutants below are what they catch.
+- **Mutants, run rather than predicted,** after the fixed tool passed the same harness: the guard removed, so the
+  last writer wins again (tests 1 and 2); the guard made to never set the status (tests 3 and 4); raising from
+  `warn` blocked (test 4 alone); raising from `ok` blocked (test 3 alone). `--selftest` catches the two that stop
+  a pattern-only row reading `instrument-failed`, and neither of the others.
+- **Counts:** `tools/test_context_budget.py` 136 → 140 tests, `--selftest` 52 checks unchanged, `bin/tests.sh`
+  142 passed, 0 failed (unchanged: no shell row added). No gate threshold changes in this commit.
+
 ### 2026-09-21 · [ad hoc] `context_budget.py`: `--check` is a second name for `--status`, and a refused argument is told what it most likely meant
 
 - **Action:** the refusal added below (exit 3 and the usage text) said what was wrong and not what to do instead.

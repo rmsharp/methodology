@@ -764,6 +764,94 @@ class TestGrowthRunAdvisory(unittest.TestCase):
             self.assertIn(FIRED_AS_WELL, out)
 
 
+# ---------------------------------------------------------------------------------
+# Status precedence in measure_file(). Each check wrote the row's status in turn, so the
+# last one to run won: a byte ceiling set `over`, then a structure pattern below its
+# minimum overwrote it with `instrument-failed`, which render() ranks BELOW `over`. The
+# headline followed the row, and the growth-run advisory said nothing was over a ceiling
+# directly above the finding that said one was. A check may raise a status, never lower it.
+# ---------------------------------------------------------------------------------
+
+# No line of the fixture files below starts with "## ", so this pattern always fails.
+FAILING_PATTERN = [{"pattern": "^## ", "expect_min": 1}]
+
+
+class TestStatusPrecedence(unittest.TestCase):
+
+    def _project(self, d):
+        """A resident file over its byte ceiling that also fails a structure pattern, and a
+        history the current size extends to a growth run of 2 against a limit of 2. No
+        class total is declared, so the file's row is the only one that can be over."""
+        new_repo(d)
+        Path(d, ".context-budget.json").write_text(json.dumps({
+            "growth_run": 2,
+            "files": [{"path": "CLAUDE.md", "class": "resident", "max_bytes": 1000,
+                       "structure": FAILING_PATTERN}]}))
+        Path(d, "CLAUDE.md").write_text("x" * 1500)
+        Path(d, cb.HISTORY_NAME).write_text("".join(
+            json.dumps({"resident_bytes": n, "files": {"CLAUDE.md": n}}) + "\n"
+            for n in (1300, 1400)))
+
+    def _run(self, d, *args):
+        return subprocess.run([sys.executable, str(CB_PY), *args], cwd=d,
+                              capture_output=True, text=True)
+
+    def _measure(self, d, **spec):
+        """1,500 B in a class outside the token arm, so the byte and structure checks are
+        the only two that can write the row's status."""
+        Path(d, "t.md").write_text("x" * 1500)
+        return cb.measure_file(d, {"path": "t.md", "class": "on-demand",
+                                   "structure": FAILING_PATTERN, **spec})
+
+    @staticmethod
+    def _kinds(row):
+        return sorted(f["kind"] for f in row["findings"])
+
+    def test_a_row_over_its_ceiling_that_also_fails_a_pattern_reads_over_end_to_end(self):
+        """The real main() -> render() path. The exit is BREACH either way; what changed is
+        what the headline and the advisory say."""
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d)
+            p = self._run(d, "--status")
+            out = _plain(p.stdout)
+            self.assertNotIn("Traceback", p.stderr)
+            # Prove the fixture: both checks fired, and the run fired.
+            self.assertIn("1,500 B exceeds the 1,000 B ceiling", out)
+            self.assertIn("fewer than the declared minimum", out)
+            self.assertIn("growth run: 2 consecutive", out)
+            self.assertIn("context budget OVER ", out)
+            self.assertNotIn("Nothing is over a ceiling", out)
+            self.assertIn(FIRED_AS_WELL, out)
+            self.assertEqual(p.returncode, cb.BREACH)
+
+    def test_the_json_report_gives_that_row_as_over(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d)
+            p = self._run(d, "--status", "--json")
+            self.assertNotIn("Traceback", p.stderr)
+            row = json.loads(p.stdout)["files"][0]
+            self.assertEqual(row["path"], "CLAUDE.md")
+            self.assertIn("bytes", self._kinds(row), "fixture: the byte ceiling must fire")
+            self.assertIn("instrument", self._kinds(row), "fixture: the pattern must fail")
+            self.assertEqual(row["status"], "over")
+
+    def test_a_row_that_only_fails_its_pattern_is_still_instrument_failed(self):
+        """CONTROL: the guard must not stop the status being set at all."""
+        with tempfile.TemporaryDirectory() as d:
+            r = self._measure(d, max_bytes=2000)
+            self.assertEqual(self._kinds(r), ["instrument"], "fixture: only the pattern fails")
+            self.assertEqual(r["status"], "instrument-failed")
+
+    def test_a_warn_row_that_fails_its_pattern_is_raised_to_instrument_failed(self):
+        """Raising still works: `warn` ranks below `instrument-failed`."""
+        with tempfile.TemporaryDirectory() as d:
+            r = self._measure(d, max_bytes=2000, warn_bytes=1000)
+            self.assertEqual(self._kinds(r), ["bytes", "instrument"])
+            self.assertIn("warn line", r["findings"][0]["msg"],
+                          "fixture: the byte finding must be the warn line, not a ceiling")
+            self.assertEqual(r["status"], "instrument-failed")
+
+
 class TestTokenCeiling(unittest.TestCase):
     """The ceiling is denominated in TOKENS, the unit the read cap is actually in.
 

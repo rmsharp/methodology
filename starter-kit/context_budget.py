@@ -427,7 +427,12 @@ def measure_file(root, spec, cfg=None):
             out["findings"].append({"kind": "instrument", "msg":
                 f"pattern {s['pattern']!r} matched {n}, fewer than the declared minimum "
                 f"{s['expect_min']} — the check is not measuring what it claims"})
-            out["status"] = "instrument-failed"
+            # A check may raise a row's status, never lower it. `over` is the one status
+            # render() ranks above this, and a ceiling that fired is still exceeded
+            # whatever a pattern matched: overwriting it put an INSTRUMENT-FAILED headline
+            # over a row whose own finding said it was over.
+            if out["status"] != "over":
+                out["status"] = "instrument-failed"
         elif "max" in s and n > s["max"]:
             over(f"{n}× {s['pattern']!r}, expected at most {s['max']}"
                  + (f" — {s['why']}" if s.get("why") else ""), "structure")
@@ -1449,9 +1454,10 @@ def main():
     # Class totals vote too. Without them a class in WARN was invisible to the exit code,
     # so a CI step gating on it could not see the one signal that arrives before a breach.
     states = [r["status"] for r in results + synced] + [c["status"] for c in totals]
-    # A config defect is an INSTRUMENT failure, which this tool's own ordering already
-    # ranks above `over`: if a declared ceiling is not the one in force, every verdict
-    # measured against it is unreliable, including the green ones.
+    # A config defect is an INSTRUMENT failure, and it exits BREACH exactly as `over` does:
+    # if a declared ceiling is not the one in force, every verdict measured against it is
+    # unreliable, including the green ones. (render()'s ranking puts `instrument-failed`
+    # just below `over`; that decides the headline, not this exit.)
     if defects or "over" in states or "instrument-failed" in states:
         return BREACH
     if "warn" in states or "unmeasured" in states or run_hit:
