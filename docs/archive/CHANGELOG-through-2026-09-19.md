@@ -1,0 +1,1194 @@
+# CHANGELOG.md — archive: 2026-09-18 → 2026-09-19
+
+Retired records from [`CHANGELOG.md`](../../CHANGELOG.md), moved here so the live ledger stays small enough to read
+in one pass. Same format, same newest-on-top order — this is the same ledger, continued.
+
+Holds **79 record(s), 2026-09-18 → 2026-09-19**. Cut key: `2026-09-19`. Counts here are computed from the file
+itself, never carried forward. This shard is frozen: it states no forward-looking rule,
+because the live file owns those and a copy of one was wrong a day after it was written.
+
+---
+
+### 2026-09-19 · [ad hoc] S197 — fork `main` pushed to `origin`, `5ffd6f9..40193bf` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin HEAD:main`, a fast-forward of this session's **7** commits — `1ccaf65` (claim),
+  `5d3bd5a` (BL-43's nine sites, Test 42, the tightened floor), `2b6554d` (S196's push record), `6eeafd0` (the
+  retention trim), `8400fca` (the fold), `7d4bc48` (BL-76) and `40193bf` (the close-out). Approved in this session's
+  second picker, which was put **after** those commits existed, so unlike the earlier range this one is not a
+  go-ahead reaching forward. Guarded before: `git ls-remote origin refs/heads/main` = `5ffd6f9` and
+  `git merge-base --is-ancestor origin/main HEAD`. Read back after: `40193bf`.
+- **This entry's own commit rides the standing grant** for a `CHANGELOG.md`-only push record (operator, 2026-09-16),
+  and it is pushed with the receipt correction beside it, so nothing further is owed for that push. Nothing sent
+  upstream; PR #84 untouched.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-43] S197 close-out — the `pipefail` population derived instead of listed, nine sites fixed, and a disarmed pre-commit gate found on the way
+
+**Deliverable: BL-43, closed.** The full account is in this session's earlier entries; what belongs here is what the
+session cost, what it found beyond its brief, and what it leaves.
+
+**Beyond the brief, and recorded rather than fixed:** the commit that landed **half** a fold — the index row without
+the pointer-block deletion — did so because its `git add` was not chained to the assertion that had just failed, **and
+because the pre-commit ledger gate that should have refused a `CHANGELOG.md`-less commit was not running.**
+`.git/REBASE_HEAD` had sat in this clone since **2026-08-11 15:14**, and `.githooks/pre-commit:23` treats it as a
+rebase in progress — before *both* gates it chains, so `quality_ratchet.py --precommit` was off too. Filed as
+**BL-76** with three shapes and none chosen; re-armed here by removing the stale file, with a control commit proving
+the refusal fires again. **The pair behaved exactly as `SAFEGUARDS.md` claims:** the fast path was off for five weeks,
+and the guarantee — Phase 0 reconcile — caught the one ungated commit one commit later. This repo had never measured
+that division of labour; now it has.
+
+**Side actions, each operator-approved in a picker and each with its own entry:** the owed `HANDOFFS.md` retention
+trim (`6eeafd0`, `--cut 2`, 26,338 B → 16,131 B) and its fold (`8400fca`); the push of S196's 13 commits by sha
+(`2b6554d`); and this session's own push. **The trim was owed the moment this session claimed** — Phase 0 reported 2
+receipts and the claim made 3 — which the Phase 0 picker should have carried and did not, so it cost a second picker
+mid-session.
+
+**Phase 3C wrote fork Learning #81**, the operator choosing that over an eighth consecutive withheld row: *a
+population recorded as a LIST decays into a wrong answer; record the DERIVATION that recomputes it.*
+`docs/FORK_LEARNINGS.md` is now **82,626 B against an 81,920 B warning** — 706 B over, a warning and not a refusal,
+and **BL-53 is what answers it.** The row's first draft said *"three years of edits later"*; the item was raised **25
+days** and **492 first-parent commits** earlier, both measured, and the row says so now.
+
+**Scores.** Predecessor **9/10** — S196's pointer at `:3203` named the site, the mechanism and the measurement, and
+was directly usable; its gate citation reproduced byte-for-byte at this Phase 0; every one of its six gotchas was
+load-bearing here. One point off: it reported BL-43's body *"wrong in two ways"* when the third — the severity claim,
+*"a nuisance rather than a hole"* — was the one that mattered, and the polarity split was available to the same
+measurement it had already run. **Self 8/10** — the deliverable is finished, derived rather than remembered, proven
+RED-first per site, and shipped with a detector; three instruments were audited before their numbers were published.
+Against that: the half-fold commit, a 451 B label on a 455 B block (its character count, in the session whose own
+instrument exists to keep bytes and characters apart), a scanner that first reported 3 of 9 sites, and a Phase 0
+picker that omitted an action already due.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-76] S197 — raised: a stale `.git/REBASE_HEAD` had disarmed the pre-commit gate since 2026-08-11
+
+**Found while investigating why a commit of this session's landed without a `CHANGELOG.md` entry.**
+`.githooks/pre-commit:24` exits 0 when any rebase/merge marker exists, to avoid double-logging replayed
+commits — but git leaves `REBASE_HEAD` behind after a rebase **completes**, unlike `MERGE_HEAD`,
+`CHERRY_PICK_HEAD` and the `rebase-merge` / `rebase-apply` directories. The marker loop runs before both
+gates the hook chains, so **one rebase disarms the FM #27 ledger gate and `quality_ratchet.py --precommit`
+together**, permanently, in that clone. Measured: the file was dated **2026-08-11 15:14** and pointed at
+`d56b983`, a commit not in this history; **69** commits on this clone's first-parent line since then changed
+tracked content without co-staging the ledger. That is the hook's *exposure*, not a count of unrecorded
+actions — the guarantee is Phase 0 reconcile, which has reported clean each session and caught this
+session's own ungated commit one commit later. **The fast path was off for five weeks and the guarantee
+held**, which is exactly the division of labour `SAFEGUARDS.md` claims for the pair, measured for the first
+time. Re-armed in this clone by removing the stale file (backed up), with a control commit confirming the
+refusal fires again — **that is not the fix**, and the item is open with three shapes and none chosen.
+`.githooks/pre-commit` is canonical-only, so no adopter is affected; `upstream/main` carries the same text,
+so its fix is an upstream change and its own go-ahead. Raised as
+**[BL-76](../../docs/planning/BACKLOG-DETAIL.md#bl-76)**; not worked, per the rule that an item is written from
+what is known and then left.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S197 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- **Action:** the fold the index's own rule and [fork Learning #58](../../docs/FORK_LEARNINGS.md) require in **its own
+  commit** — one row appended to [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../../docs/HANDOFFS_ARCHIVE_INDEX.md) (1 record,
+  2026-09-19 → 2026-09-19, `HANDOFFS-through-2026-09-19-2.md`, v1.5.0) and the trimmer's **455 B** three-line block (451 *characters* — it carries `→` and `—`; the
+  first draft of this entry printed the character count under a `B` label)
+  deleted from `HANDOFFS.md`'s front matter, so a trim-and-fold leaves that always-read front matter no larger.
+  The shard's shipped `.verify.sh` prints L1, L2/front-matter and L3 OK after the fold.
+- **It took two attempts, and the first is worth recording.** The fold's `git add`/`git commit` was not chained to
+  the check that precedes it, so when the deletion's own assertion failed — it looked for `methodology_trim.py
+  v1.5.0` where the block writes `` `methodology_trim.py` v1.5.0 ``, backticks and all — the commit ran anyway and
+  landed **half the fold** (the index row, no deletion) under a message describing both. Amended, with the
+  assertion corrected. This is the exact trap S177 hit and the memory names: **gate `git add` on the check that
+  precedes it.**
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19-2.md` (1 record(s), 26,338 B → 16,131 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-19 → 2026-09-19) out of [`HANDOFFS.md`](../../HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-19-2.md`](../../docs/archive/HANDOFFS-through-2026-09-19-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh`](../../docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 26,338 B → 16,131 B (−38.8%).
+
+### 2026-09-19 · [ad hoc] S197 — fork `main` pushed to `origin`, `431279b..5ffd6f9` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 5ffd6f9:main`, a fast-forward of the **13** commits S196 left unpushed
+  (`08c5327`..`5ffd6f9`: the S196 claim, both ledger trims, the decision's end, the receipt repair, the fold, S196's
+  push record, the cut-boundary correction, the BL-43 finding and fix, S196's close-out and its two receipt
+  corrections). Guarded before the push: `git ls-remote origin refs/heads/main` = `431279b` and
+  `git merge-base --is-ancestor 431279b 5ffd6f9`. Read back after: `git ls-remote origin refs/heads/main` = `5ffd6f9`.
+- **Scope:** the range the operator's Phase 0 picker approved, **pushed by sha rather than by branch tip** — so this
+  session's own commits (`1ccaf65` the claim, `5d3bd5a` the BL-43 fix) are **not** carried along on a go-ahead given
+  before they existed. They need their own. Nothing sent upstream; PR #84 is untouched.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-43] S197 — the `pipefail` race closed: the population re-derived by measurement, nine sites fixed, and Test 42 so the list cannot go stale again
+
+**BL-43 is CLOSED, and its enumerated population was the wrong one.** The item named six line numbers
+(`:2591`, `:2596`, `:2605`, `:2620`, `:2864`, `:2880`); none points at an assertion today, Test 40 postdates
+the enumeration, and S196 met a seventh site (`:3083`) by accident rather than by list. A list of line numbers
+was the defect — so this session replaced it with a derivation, and with measurement.
+
+**What was measured, not assumed.** (1) **The pipe capacity on this machine: 65,536 B** — a multi-line payload
+of **65,519 B survives** `echo … | grep -q` and **65,582 B does not**, by binary search under bash 5.2.37,
+which is the shell `bin/tests.sh` runs. (2) **Every candidate pipeline's producer size, at runtime:** all
+**107** variable-producer pipelines were instrumented in a `--no-local` clone (the producer written to a file
+and `wc -c` read, because `${#VAR}` counts *characters* under a UTF-8 locale while a pipe carries *bytes*), and
+**all 107 executed** — so the population is measured, not sampled. Largest fixture-bounded producer: **8,300 B**.
+Over capacity: **four**, all reading the real repository — `:3048` (99,529 B), `:3186` (99,524 B), `:3187`
+(99,524 B), `:3203` (99,246 B). (3) **The criterion that follows from it:** a producer read from a *fixture* is
+bounded by that fixture; one read from *this repository* grows with the ledgers and the report. So the
+population is not "what is big today" but **"whose producer reads the real repo, with the pipeline's status
+consumed"** — a capture (`VAR="$(… | head -1)"`) is exempt, since SIGPIPE cannot corrupt the stdout it uses,
+only the status it discards. **That criterion gives nine sites, and they are now fixed:** `:1329`, `:1338`
+(a row of the real `BOOTSTRAP.md`), `:1502`, `:1578` (the report over the live ledgers), `:1628` (the canonical
+Learnings table), `:3155`, `:3158` (the report with an unreadable explicit path), `:3186`, `:3203`. Each reads a
+**here-string** now, not a pipe.
+
+**The item's severity claim was false, and this is the part that mattered.** It said all six sites were on
+`&& pass || fail`, *"so each fails NOISILY … a nuisance rather than a hole."* Of the **125** candidate pipelines
+in the file, **23 sit on `&& fail || pass`** and 11 more behind an `if` — the direction where a matched pipeline
+scored FAILED makes a real defect **read green**. Two of the nine were there: **`:3203`, Test 40's M3 mutant
+guard, could not fail** — a surviving mutant whose shard line printed early would have been reported killed —
+and **`:3186`, M2's `if`, would have taken its else arm**, passing with a message about arithmetic while the
+conservation check that is M2's actual assertion never ran. Both are latent only because of *where* their
+pattern currently sits: a 2×2 probe on the real 99,530 B report (patterns at lines 1,000 and 1,092 of 1,105)
+gave **pipe/late 0 0 0 0 0, pipe/early 141 141 141 141 141, here-string 0 0 0 0 0 in both** — same bytes, same
+patterns, only the match position moved.
+
+**Nine RED-first proofs, each wired to the shipped line.** The proof harness *extracts the assertion text from
+`bin/tests.sh` by line number* rather than retyping it, stubs `pass`/`fail`/`skip` to record which arm fires, and
+runs each site against small and oversized payloads. Against the pre-fix tree: **9 RED, one per site**. Against
+the fix: **0 RED across 28 checks**, and every site still takes its `fail` arm when it should — the
+"capture that silently stops asserting" hazard BL-43's own body warns about is excluded by construction.
+
+**Test 42 re-derives the population on every run**, so the class cannot regrow silently. Its scanner recomputes
+which producers reach `$METHODOLOGY` (last-assignment-wins) and reports any status-consuming, early-exiting
+pipeline among them; the live suite must report **zero**. Its second assertion is the control: a **reverted site
+on a copy** must be named, with the line number checked against the live file — a detector no input can trip is
+a comment. `.quality-gates.json` `tests-sh-passed` is tightened **331 → 333**, the value measured in a clone with
+`HANDOFFS.md` at the two receipts the gate is measured in (339 at three, right after a claim).
+
+**Three instrument defects found and fixed before any number was published.** (a) The instrumented run read
+**325 passed / 12 failed**; the control — the same commit, unmodified, in its own clone — read **337 / 0**, so
+the twelve were the instrument, not the tree, and its size figures were kept only for sites the twelve do not
+touch. (b) The scanner's own flag-cluster regex was `-[A-Za-z]*q\b`, which **misses `-qE`, `-qi`, `-qF`**: it
+reported 3 sites where there were 9, and would have shipped as a guard blind to two thirds of the class.
+(c) Test 42 **reported its own control literal as a site** on its first run — the mutation string spelled out a
+producer piped into `grep -q`, in the one file the scanner reads — so that literal is now built by concatenation,
+with the reason on the line above it.
+
+**Not changed, deliberately:** the two capture sites (`:3048`, `:3187`) keep their pipes — their status is
+discarded and their value is correct — and the ~100 fixture-bounded pipelines are left alone rather than swept,
+since a 107-site rewrite is a refactor and each site would need the proof this session gave nine. BL-43's own
+body is **not edited** (FM #17); it stands wrong in three ways, corrected here and in the closure row.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-43] S197 claim — the `pipefail` race: re-derive the population by pattern, then fix each remaining site RED-first (in progress)
+
+**Deliverable:** **BL-43**, open since 2026-08-25 (S109) — `bin/tests.sh:5` is `set -uo pipefail`, so
+`echo "$(producer)" | grep -q PAT` scores a **matched** pipeline as failed when `grep -q` exits first and `echo`
+takes SIGPIPE. **Chosen by the operator after Phase 0 (picker)**, over BL-60's planning session, BL-53 and BL-61.
+Two halves. **(a)** The item's enumerated population — `:2591`, `:2596`, `:2605`, `:2620`, `:2864`, `:2880` — is a
+**stale sample**: those line numbers no longer point at assertions, and Test 40 postdates the enumeration, which is
+how S196 met a seventh site (`:3083`) by accident rather than by list. Re-derive the set **by pattern**, and let the
+count fall out of the derivation. **(b)** Fix each remaining site with S196's shape — a here-string, not a pipe —
+starting from `:3203`, the same construct on the same 97,507-character variable, measured today as **not firing**
+only because its probe matches at line 1,082 of 1,095. **Each site gets its own RED-first proof**: BL-43's own body
+says a capture that silently stops asserting is the defect being fixed, so a green suite after the edit proves
+nothing by itself.
+
+**Side action, approved in the same picker:** push `08c5327`..HEAD to fork `origin`, stated as a **range** because
+any count written here is changed by the commit that writes it. 13 commits at the time of the Phase 0 report,
+fast-forward onto `origin/main` `431279b`. **Fork only — nothing reaches `KJ5HST/methodology`.**
+
+**Phase 0:** both frontiers are HEAD `5ffd6f9` — `git log <frontier>..HEAD` empty on each — the newest receipt is
+`status: complete`, no `CHANGELOG: pending` stub stands, and nothing was backfilled. The gate ran in a `--no-local`
+clone with HEAD asserted by sha (S196's own minus was running it in the working tree):
+`10/10 pass · 0 fail · 0 unmeasured · results a5197f8a439f · manifest 61cd292c36bd` — **S196's citation exactly** —
+with `tests-sh-passed` 331 at two receipts. Dashboard 76/100, medium risk, unchanged flags (no CI/CD, the
+operator-approved D10 lowering the dashboard cannot see as approved, large files (BL-68), this file's size, 31
+branches (BL-71)). `upstream/main` is still `6b29d3d`; **PR #84 open at `77afc12`, MERGEABLE, no reviews or
+comments, unchanged since 2026-09-19T04:21Z**; PR #83 open; upstream has no open issues. This file is 104,216 B —
+**157,928 B under the 262,144 B hard read refusal** — across 71 records. `docs/FORK_LEARNINGS.md` is 81,721 of
+81,920 B (BL-53). **Receipts: 2 at the report, 3 with this claim**, so the retention trim (`--cut 2`) falls due
+immediately after it and is raised with the operator rather than taken unasked. `context_budget.py` was **not**
+run: it has no `--status` (BL-75) and its default run appends a row to the tracked
+`.context-budget-history.jsonl`, which Phase 0's read-only rule does not permit. Phase 0's one tracked row — the
+dashboard's — rides here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196, after close-out — the receipt's commit count replaced by a range
+
+The S196 receipt's `next_steps` (1) said *"push this session's TEN commits"*. Ten was true of the tree before the
+close-out commit, which made eleven, and the citation correction after it made twelve — the count is changed by the
+commit that writes it (S195's gotcha (3), BL-64's shape). Replaced with the range `08c5327..HEAD`, which stays true
+however many commits follow it, rather than corrected to a number that would go stale in the same way.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196, after close-out — two line citations in the receipt corrected against the tree that shipped
+
+`HANDOFFS.md:30` and `bin/tests.sh:3195` were read before this session's own edits moved them: the front-matter line
+that quotes the receipt delimiter is `HANDOFFS.md:14`, and the second `echo "$VAR" | grep -q` site is
+`bin/tests.sh:3203`, eight lines lower than when it was measured because the fix above it added a comment block. Both
+corrected in the S196 receipt (`key_files` and `next_steps`). A line number is a claim about one tree, and the tree
+that invalidated these two was the one the same session was editing.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196 close-out — `CHANGELOG.md` trimmed on a clean day seam, the no-trim decision discharged, and a BL-43 site fixed
+
+**Deliverable:** the `CHANGELOG.md` trim, raised at Phase 0 with 6,284 B of headroom left and taken the same session on
+the operator's go-ahead. `--cut 2026-09-17` moved 126 of 185 records into
+[`docs/archive/CHANGELOG-through-2026-09-17.md`](../../docs/archive/CHANGELOG-through-2026-09-17.md), 258,656 B → 87,463 B
+(`0dfca7e`); the live file is 99,795 B after this session's own entries, **162,349 B under the 262,144 B refusal**.
+Three cuts were dry-run in a `--no-local` clone before any write and the operator chose among them; `v3.7` is tagged
+2026-08-12, older than every live record, so no release frontier existed inside the file.
+
+**Actions this session, each with its own entry above:** the claim (`08c5327`), the trim (`0dfca7e`), the no-trim
+decision's end with the *When to archive* paragraph rewritten (`b6264c8`), the repair of a receipt the claim wrote into
+the front matter (`5587240`), the `HANDOFFS.md` retention trim (`108cc93`) and its fold (`c5db2a7`), the push of S195's
+three commits to `origin` (`ef121f8`), the cut-boundary sentence made true of a dated cut (`4e457fc`), the red suite
+investigated (`211cae5`) and `bin/tests.sh:3083` fixed RED-first (`bb2e544`).
+
+**Gate, in a `--no-local` clone of `bb2e544` with HEAD asserted and the suite output saved:** `quality_ratchet: 10/10
+pass · 0 fail · 0 unmeasured · results a5197f8a439f · manifest 61cd292c36bd`; `bash bin/tests.sh` 331 passed, 0 failed,
+6 skipped at two receipts. Before the fix the same clone read `8/10 · results 57f06751b3b9`, 330/1/6, three runs
+running. Phase 0 on `431279b` read `results 6d2ca2197aa7`, 337 at three receipts.
+
+**Learnings, withheld as rows and recorded here instead.** `docs/FORK_LEARNINGS.md` is unchanged at 81,721 B of its
+81,920 B ceiling, so BL-53 is still due before any row. One of this session's four is already a **gate rather than a
+row** — the measurement now sits beside the fixed assertion at `bin/tests.sh:3083`, which is what 3C asks for a
+mechanical invariant. The four: (a) *write into a file that quotes its own delimiter only at a line-anchored match —
+and the file most likely to quote a delimiter is the one that documents it*; (b) *a structural checker's default mode
+may validate a different record than the one you just wrote, so run the whole-file mode, which is also the mode the
+gate runs*; (c) *a red suite is a claim about its assertion as much as about the tree — re-running is not the control,
+re-testing the subject without the pipe is*; (d) *a retention instruction inherited from the previous session is
+denominated in that session's record count, so re-derive the depth after the claim*.
+
+**Nothing was removed from a mandated-read file except by a proved trim** (the runner's decay-term prompt): the two
+ledgers lost 126 records and 2 receipts to frozen shards whose `.verify.sh` scripts re-derive L1/L2/L3 from git, and
+both front-matter edits added rather than removed a rule.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196 — `bin/tests.sh:3083` fixed: BL-43's race, with the control the earlier entry lacked
+
+**The mechanism is now demonstrated rather than attributed.** Instrumenting the assertion named the three shards it
+called unnamed — `CHANGELOG-through-2026-09-14.md`, `-2026-09-16.md` and `-2026-09-17.md` — all tracked, and all
+present in the report it was searching, at lines **112, 287 and 376 of 1,095**. Under bash, with the same captured
+97,507-character output: a probe matching at line 112 reported pipeline **failure 3/3**, a probe matching at line 1,082
+reported **0/3**, and a SIGPIPE-free here-string reported 0/3 at both. Position in the stream is the whole story —
+`grep -q` exits at its first match, `echo` is killed mid-write, and `set -uo pipefail` scores the matched pipeline
+failed. Under zsh the same loop reports 0 either way, which is why a first standalone check looked clean.
+
+**The fix (this commit), operator-approved after the evidence:** the one site becomes
+`grep -qF "…" <<< "$OUT40_DEFAULT"`, with the measurement recorded beside it. **RED-first proof, as BL-43 requires:**
+with the fixed form the real tree reports 0 unnamed three times over, a shard genuinely absent from the report (an
+injected `CHANGELOG-through-9999-12-31.md`) is still counted — 1 unnamed — and removing it returns 0. The assertion
+did not stop asserting.
+
+**Correction to the entry below** (*"BL-43's flake population is incomplete"*, same session): it called the failure a
+flake and advised re-running a red before believing it. At `c5db2a7` it did behave that way — one run red, the next
+green — but at `211cae5` it reproduced in **3 of 3** suite runs. The rule that survives is not *"re-run it"* but
+*"re-run it **and** re-test its subject without the pipe"*: only the here-string control distinguished a defective
+assertion from a real breach.
+
+**Still standing, and measured rather than assumed:** `bin/tests.sh:3195` is the same construct on the same
+97,507-character variable, but its probe matches at line 1,082 — the tail — so it reports 0/3 today. It is one shard
+reordering away from firing, and is left to BL-43's own session rather than swept in here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196 — BL-43's flake population is incomplete: `bin/tests.sh:3083` is a seventh site, caught in the act
+
+**Observed, not inferred.** Two runs of `bash bin/tests.sh` in the same `--no-local` clone of `c5db2a7`, nothing else
+touching the tree, gave **330 passed / 1 failed / 6 skipped** and then **331 / 0 / 6**. The two outputs differ in
+exactly one line — Test 40's provenance assertion, *"shard set mismatch: 1 on disk but unnamed, 0 named but absent"* —
+and every count elsewhere, including its own `482 > 50` and `432 = 432`, is identical, so the population was the same
+both times. Re-running the test's own loop standalone against the same clone gives `MISSING=0`.
+
+**Mechanism, and it is [BL-43](../../docs/planning/BACKLOG-DETAIL.md#bl-43)'s exactly:** `bin/tests.sh:5` is
+`set -uo pipefail`, and `:3083` is `echo "$OUT40_DEFAULT" | grep -q "docs/archive/<shard> (archived)" || MISSING40=…`.
+`grep -q` exits at the first match, `echo` takes SIGPIPE, and the pipeline is scored **failed although the pattern
+matched** — so a matched shard is counted as unnamed. Noisy rather than silent, like BL-43's other six.
+
+**What this adds to BL-43:** its population was *"enumerated, not sampled"* at S109 — `:2591`, `:2596`, `:2605`,
+`:2620`, `:2864`, `:2880` — and none of those six line numbers points at an assertion in today's file; Test 40 itself
+was written at S133, after the enumeration. So the item's list is both drifted and short by at least this site. Per this
+repo's backlog convention the item body is **not** edited; the correction lands here, and the next session re-derives
+the population by pattern rather than by those line numbers. One phrasing of the shape,
+`grep -nE '^\s*echo "\$[A-Z0-9_]+" \| grep -q' bin/tests.sh`, matches **79** lines today — a sample of the exposure,
+not its measure, since `printf … | grep -q` and `"$(…)" | grep -q` are the same race in other words, and only the
+sites whose pipeline status is consumed by `&&`/`||` can turn into a verdict.
+
+**Consequence for the gate:** `tests-sh-failed <= 0` and `tests-sh-passed >= 331` can both go red on a clean tree for
+this reason alone. A red run is therefore re-run before it is believed, and the suite's output is saved rather than
+read off the summary line.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196 — the front matter's cut-boundary sentence made true of the newest cut
+
+The paragraph opening *"Everything below the most recent cut is archived — and that boundary is POSITIONAL, not a
+calendar seam"* described every cut this file had taken until today. This session's cut was given a date
+(`--cut 2026-09-17`), so the newest boundary **is** calendrical and `docs/archive/CHANGELOG-through-2026-09-17.md`
+names a real day. Rewritten, not appended to: the default cut is positional, a dated cut is not, and a reader is told
+to check the shard's front matter or the entry that made it rather than infer from the name. The `2026-08-30` example
+and the `CUT_STRADDLES_DAY` pointer stand unchanged.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196 — fork `main` pushed to `origin`, `de4652c..431279b` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 431279b:refs/heads/main`, a fast-forward of the three commits S195 left unpushed —
+  `a69ef73` (BL-74), `a127ba1` (BL-57 P11 recorded) and `431279b` (S195's close-out). Guarded before the push: clean
+  worktree, `git ls-remote origin refs/heads/main` = `de4652c`, and `git merge-base --is-ancestor de4652c 431279b`.
+  Read back after: `git ls-remote origin refs/heads/main` = `431279b`.
+- **Scope:** exactly the three commits the operator's Phase 0 picker approved, pushed by sha rather than by branch tip,
+  so this session's own commits are not carried along without their own go-ahead. Nothing sent upstream.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+Folded the three-line pointer block `methodology_trim.py` wrote into `HANDOFFS.md`'s front matter (`108cc93`) into one
+row at the bottom of [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../../docs/HANDOFFS_ARCHIVE_INDEX.md) — `| 2 | 2026-09-18 →
+2026-09-19 | HANDOFFS-through-2026-09-19.md | v1.5.0 |` — and deleted the block, so the front matter does not grow a
+line per trim against its fixed 7,168 B reserve (Test 39 A2). **Its own commit**, because inside the trim commit this
+edit fails the shipped `.verify.sh` L2 check (fork Learning #58); the script anchors to `108cc93` and still prints OK.
+`HANDOFFS.md` 16,911 B → 16,463 B. `bin/check-links` 111 links across 23 files.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-19.md` (2 record(s), 39,953 B → 16,911 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-18 → 2026-09-19) out of [`HANDOFFS.md`](../../HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-19.md`](../../docs/archive/HANDOFFS-through-2026-09-19.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh`](../../docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,953 B → 16,911 B (−57.7%).
+
+### 2026-09-19 · [ad hoc] S196 — the claim receipt landed inside `HANDOFFS.md`'s front matter; repaired, and what caught it
+
+- **Defect, in the claim commit `08c5327`:** the receipt was inserted at the first `` ```handoff `` **substring** in the
+  file, which is not the first receipt. The front matter quotes the delimiter inside the sentence *"Phase 0 runs
+  `grep -c '^```handoff' HANDOFFS.md` and reports the count"*, so the receipt landed at `:15`, inside the
+  retention-policy paragraph, and the tail of that sentence became a new line **starting** with the delimiter.
+- **What it broke:** the file's own documented count command then answered 4 with three receipts present, since the
+  quoted fragment matched at line start; and `bin/check-handoff` validated **S195** as the newest receipt and printed
+  *"OK … all 1 older receipt(s) name a commit sha"* with two older receipts present.
+- **What caught it:** `methodology_trim.py --file HANDOFFS.md --cut 2 --force` refused with `CUT_OUT_OF_RANGE` —
+  *"must retain between 1 and 1 records"* — because it parses records, not fences. Re-checked afterwards against the
+  committed blob: `bin/check-handoff --all` **does** report the corruption (six `receipt field outside any ```handoff
+  fence` errors), so the `check-handoff-all` quality gate would have caught it at the next `--run`; the default
+  single-receipt mode is the one that printed OK.
+- **Repair (this commit):** the receipt moved to the first line-anchored `` ```handoff ``, directly above S195's, and
+  the split sentence restored — same byte count, 39,800 B either way. `grep -c '^```handoff' HANDOFFS.md` now reads 4
+  (S196, S195, S194, S193), and `bin/check-handoff` correctly reports the newest receipt as still pending.
+- **Cause:** `str.index('```handoff')` where the anchor had to be `^```handoff`, in the one file that quotes its own
+  delimiter — the trap S191 hit in `bin/model-report`, hit again here in the file that documents it.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S196 — the 2026-09-14 no-trim decision discharged, and the paragraph that carried it made true
+
+**The constraint's release is an action, so it is logged here.** The operator's decision of 2026-09-14 not to trim this
+file (`3745748`, reaffirmed at S177) named its own end: a trim is raised once the file approaches the 262,144 B hard
+read refusal. Phase 0 measured **255,860 B — 6,284 B of headroom, less than one session writes** (S195 added about
+9,500 B), so the trim was raised there, the operator gave the go-ahead in the Phase 0 picker, and it was taken the same
+session (`0dfca7e`, and the tool's own entry below).
+
+**The cut was chosen from three measured in a `--no-local` scratch clone of `08c5327`, not predicted** (S195's gotcha
+(2)): **`--cut 2026-09-17`**, archiving 126 of 185 records and taking the live file 258,656 B → 87,463 B. It is a clean
+day seam — no `CUT_STRADDLES_DAY`, so the shard's dated name means what it says — and `v3.7` was tagged 2026-08-12,
+older than every live record, so no release frontier existed inside this file and a day cut was the only boundary
+available, the case the 2026-08-01 shard's front matter describes. Not taken: the tool's computed positional cut (117
+records, 99,343 B live, 2026-09-17 on both sides) and a shallow seam at 2026-09-16 (57 records, 180,719 B live, about
+eight sessions of headroom against this one's eighteen).
+
+**Front matter:** the *When to archive* paragraph above was **rewritten rather than appended to**, so the always-read
+file states the decision's end and the rule that outlives it instead of a constraint that no longer stands.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-17.md` (126 record(s), 258,656 B → 87,463 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **126** record(s) (2026-09-16 → 2026-09-17) out of [`CHANGELOG.md`](../../CHANGELOG.md) into
+[`docs/archive/CHANGELOG-through-2026-09-17.md`](../../docs/archive/CHANGELOG-through-2026-09-17.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh`](../../docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh)
+rather than trusting a digest printed here. Live file 258,656 B → 87,463 B (−66.2%).
+
+### 2026-09-19 · [ad hoc] S196 claim — trim this file, 6,284 B from the hard read refusal; the owed `HANDOFFS.md` retention trim and a push ride with it (in progress)
+
+**Deliverable:** the `CHANGELOG.md` trim that the operator's no-trim decision (2026-09-14, `3745748`, reaffirmed at
+S177) defers until this file passes the 262,144 B hard read refusal. It is **255,860 B — 6,284 B of headroom, less than
+one session writes** (S195 added about 9,500 B), so the trim is raised now rather than after the refusal, which is what
+S195's close-out asked for. **Chosen by the operator after Phase 0 (picker)**, over BL-53, BL-75 and BL-74. Method: the
+cut is chosen and written in a `--no-local` scratch clone first (S195's gotcha (2) — a prediction from a record count
+was wrong by 13 entries and six days, because a standalone `---` zones a footer no trim moves), the shard's shipped
+`.verify.sh` proves the reconstruction lossless, and `bash bin/tests.sh` re-runs after.
+
+**Two side actions approved in the same picker, each with its own entry:** the `HANDOFFS.md` retention trim owed at this
+Phase 0 — 3 receipts, 4 with this claim, against a retention of 1 and a trigger above 2 — with its pointer block folded
+into [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../../docs/HANDOFFS_ARCHIVE_INDEX.md) in its own commit (fork Learning #58); and the
+push of `a69ef73`, `a127ba1` and `431279b` to `origin`, which is at `de4652c`.
+
+**Phase 0:** both frontiers are HEAD `431279b` — `git log <frontier>..HEAD` empty on each — the newest receipt is
+`status: complete`, no `CHANGELOG: pending` stub stands, and nothing was backfilled. The gate re-run in the clean
+working tree at HEAD reads `10/10 pass · 0 fail · 0 unmeasured · results 6d2ca2197aa7 · manifest 61cd292c36bd`, S195's
+citation exactly, with `tests-sh-passed` 337 at three receipts. Dashboard 76/100 (Activity 20/20, Testing 20/20,
+Documentation 16/20, CI/CD 0/20, Framework 20/20): four medium flags — no CI/CD pipeline; the `tests-sh-passed`
+327 → 294 lowering in `368b29c`, which is the **operator-approved D10 loosening** recorded in `.quality-gates.json` and
+here, and which the dashboard cannot see as approved; large files (BL-68); and this file's size — plus one low, 31
+branches (BL-71). `upstream/main` is still `6b29d3d`; PR #84 is open at `77afc12`, mergeable, with no reviews or
+comments; PR #83 is open; upstream has no open issues. `docs/FORK_LEARNINGS.md` is 81,721 of 81,920 B (BL-53).
+`context_budget.py` was **not** run: it has no `--status` (BL-75, confirmed here from `--help`) and its default run
+appends a row to the tracked `.context-budget-history.jsonl`, which Phase 0's read-only rule does not permit. Phase 0's
+one tracked row — the dashboard's — rides here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-57] S195 close-out — P11 decided, run in `model_project_constructor` from this session's prompt, and recorded; every adopter phase is done
+
+**Deliverable:** BL-57's P11, carried the way S194 carried P10 — measured read-only, every option run first in a
+`--no-local` scratch clone, both decisions put to the operator in a picker, the launch prompt committed under
+`docs/planning/`, and the relayed report recorded here after re-verification from a clone of `159e739`. With P11 done,
+**P6–P11 are all complete** and BL-57's remainder is PR #84's review upstream.
+
+**Actions this session, each with its own entry above:** the claim (`25249d7`), P10's records corrected now that
+`nprcgenekeepr` has pushed with green CI (`a7b40a9`), P11 decided with its launch prompt (`00893e0`), the push of fork
+`main` to `origin` on the operator's go-ahead (`de4652c`), BL-74 raised on request (`a69ef73`), and P11 recorded with
+items (35)–(37) and BL-75 (`a127ba1`).
+
+**Gate, in a `--no-local` clone of `a127ba1` with HEAD asserted:** `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured ·
+results 6d2ca2197aa7 · manifest 61cd292c36bd`; `bin/tests.sh` 337 passed, 0 failed, 0 skipped at three receipts, with
+Test 34's six assertions live again. Phase 0 on `f921596` read `results a5197f8a439f`, 331 at two receipts.
+
+**Learnings, withheld as rows and recorded here instead.** `docs/FORK_LEARNINGS.md` is 81,721 B of its 81,920 B ceiling
+— 199 B, less than any row's median — so BL-53's question is due before the next row, as its config note says. The three
+candidates this session would have written: (a) *a command a repository has cited for months may not exist — read
+`--help` before citing it in a prompt, a receipt or a proposed gate, and note what the tool does with an unknown
+argument*; (b) *predicting what a ledger trim moves needs the file's ZONES, not its record count — a standalone `---`
+creates a footer no trim touches*; (c) *an adopter's own conventions can set a rule the framework's rules contradict, so
+read them before framing a decision as a format question*. **Nothing was removed from a mandated-read file this
+session** (the runner's decay-term prompt): the two backlog items and this entry add to what Phase 0 reads, and
+`CHANGELOG.md` is now 8,706 B from the refusal ceiling where the operator's no-trim decision ends.
+
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
+### 2026-09-19 · [BL-57] S195 — P11 (`model_project_constructor`) recorded: done in that repository's Session 259, re-verified from here; items (35)–(37)
+
+- **Run there from this session's launch prompt**, nine commits `bb91fda`..`159e739` on `master`, not pushed (25 ahead
+  of `origin/master`). The plan's P11 block lists them; its row and status line say done, and **every adopter phase
+  P6–P11 is now complete**, leaving PR #84's review.
+- **Re-verified read-only in a `--no-local` clone at `159e739`, not transcribed:** `bin/status` reads both ledgers
+  `present` with every tracked file current and nothing locally modified; `bin/sync --dry-run` exits 0, all unchanged;
+  §9.8 on `8b32939` prints *only the block changed* for `5 6` and names `(5, 2)` for the `5 5` control (the extracted
+  script hashes `80318e27`); `numstat a18706f 159e739` is `59 2`, and every old line but `:5`–`:6` survives in order;
+  `### ` 156 → 165 and the anchored audit 0 → 9; `check-handoff --file` OK on its first receipt. The project's own gates
+  re-run here: `pytest` 1,395 passed / 9 skipped / 97.98%, scoped `ruff` and `mypy` clean. Its proofs, guards and mutant
+  round rest on S259's report.
+- **Item (34) was wrong and is corrected in place.** A trim would archive 143 of the 156 legacy entries, back to
+  2026-04-16, not all 156 back to 2026-04-10: a standalone `---` zones the last 13 as the footer. Re-measured by writing
+  the trim in the clone (`680,944 B → 19,869 B`, `CUT_STRADDLES_DAY`, `L1_OK`–`L3_OK`). The launch prompt carries a
+  corrections note; its fact 4 (that project's README date) is corrected too.
+- **New items:** (35) the `--status` flag that does not exist, raised as BL-75; (36) the adopter ignored the run logs
+  this repo tracks, with a reason the framework does not answer; (37) the synced tools draw 294 errors from an unscoped
+  `ruff check .`, re-run here, while CI's scoped form stays clean.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
+### 2026-09-19 · [BL-75] S195 — raised: `context_budget.py` has no `--status`, and every citation of it ran the default
+
+- **Found by `model_project_constructor`'s Session 259** while following this session's launch prompt, and re-measured
+  here: `--help` lists no `--status`, and `--zzz-nonsense` exits 2 while performing the default measurement and
+  appending a row to the tracked `.context-budget-history.jsonl`. The readings sessions reported are sound; the citation
+  is not. It appears in `CLAUDE.md:81`, in scores of entries and receipts, in both adopter launch prompts, and in
+  `docs/planning/pr82-comment.md:131`, which proposed it to the maintainer as a gate command. No declared gate uses it
+  (`.quality-gates.json:37` runs `tools/test_context_budget.py`). Filed with three shapes, none chosen; not fixed.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
+### 2026-09-19 · [BL-74] S195 — raised on the operator's request: keep `README.md` from going stale
+
+- **Filed, not worked** (`docs/planning/BACKLOG.md` index row and open list; `docs/planning/BACKLOG-DETAIL.md` §BL-74).
+  The request, *"ensure methodology/README.md is not stale"*, fits two files, and both were measured read-only. **Five
+  adopters** carry `docs/methodology/README.md`, which `bin/_manifest.py` does not distribute, so `bin/sync` never updates
+  it: four are canonical versions 23–39 README commits behind fork `main`, and `feedback-loop-comparison`'s matches none.
+  **The canonical file** passed a spot-check (`:241`'s 28 failure modes); its known stale part is the fork-only cost
+  section, plan item (15). Four shapes recorded, none chosen.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
+### 2026-09-19 · [ad hoc] S195 — fork `main` pushed to `origin`, `f921596..00893e0` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 00893e0:refs/heads/main`, a fast-forward of three commits: the claim `25249d7`, P10's
+  record correction `a7b40a9`, and P11's decision and launch prompt `00893e0`. Guarded: `origin/main` re-fetched and
+  still `f921596`, an ancestor; clean tree. Read back: `git ls-remote origin refs/heads/main` = `00893e0c8bef…`, and
+  GitHub serves `docs/planning/bl57-p11-model-project-constructor-launch-prompt.md` (14,220 B). The go-ahead was the
+  operator's *"push"*. Nothing sent upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
+### 2026-09-19 · [BL-57] S195 — P11 (`model_project_constructor`) decided and its launch prompt written, from facts measured read-only there
+
+- **Decided by the operator (picker)**, from options each run first in a `--no-local` scratch clone of
+  `model_project_constructor` at `a18706f`: **(a)** the runner's seven task-to-workstream rows and its *Wiki sync*
+  paragraph (live path) move into `CLAUDE.md`, and its step 5 (*"external dashboard, never a copy here"*) is retired,
+  since the sync installs `methodology_dashboard.py` at the root; **(b)** the ledger adopts the rules going forward,
+  cadence included: 156 legacy entries frozen, pointer and marker in place of the header's Keep-a-Changelog lines (`:5`–`:6`),
+  a tagged entry per action under `## YYYY-MM` above `## [0.3.0]`, superseding that project's `PROJECT_CONVENTIONS.md` §2
+  and its two SETTLED rulings (2026-08-17, 2026-08-25). Not taken: all three edits verbatim; the new format with the old
+  cadence; pointer only (both of the last need `CLAUDE.md` to override the runner's Phase 0 step 6 and 3F).
+- **Measured in the clone:** the forced sync writes 26 files; the project's suite is 1395 passed, 9 skipped, 97.98% at
+  `a18706f`, after the sync and after a (b)-shaped ledger; its ledger proofs pass both modes before and after; CI's ruff and mypy
+  pass on the synced tree; three tool outputs land untracked. `SAFEGUARDS.md` holds no local edit: it equals blob `6ba2c156` from the fork's pre-rebase merge
+  `b91ac8c`, only on `backup/pr9-pre-rebase`. With three tagged entries the trimmer's dry run would archive the 156 legacy
+  entries inside one record, lossless and mislabelled.
+- **Written:** `docs/planning/bl57-p11-model-project-constructor-launch-prompt.md` (eleven facts, ten steps); the plan's
+  P11 row, status line, a P11 paragraph and items (32)–(34); BL-57's backlog row.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
+### 2026-09-19 · [BL-57] S195 — P10's records corrected: `nprcgenekeepr` pushed `4cfe2dad..4565c39d` after S194's close-out, and its CI is green
+
+- **The plan** (`docs/planning/changelog-rules-contradictions-plan.md`): the P10 block's *"not pushed"* is struck with
+  the push beside it, and *"the push"* struck from what stays open there; the P10 row says pushed, CI green. Read back
+  with `git rev-parse origin/master` in `nprcgenekeepr`: `4565c39d`, also its HEAD. **CI on `4565c39d`**, read with
+  `gh run list` there: lint, test-coverage, pkgdown and R-CMD-check all `success` (R-CMD-check run `35466135548`,
+  finished 20:34:58Z), the first full `R CMD check` of P10's tree. `shinytest2` runs nightly or on dispatch, not per push.
+- **`docs/planning/BACKLOG.md`:** BL-57's row loses the *"Owed here"* sentence `6434065` wrote; it now says the push
+  and CI are recorded. The side action the operator approved in this session's first picker.
+- **Model:** Claude Opus 5 (claude-opus-5[1m])
+
+### 2026-09-19 · [BL-57] S195 claim — P11 (`model_project_constructor`): its two decisions and launch prompt from facts measured read-only there; this session records P11 when the operator relays its report (in progress)
+
+**Deliverable:** P11 (`docs/planning/changelog-rules-contradictions-plan.md:1104`), done the way S194 did P10: measure
+`bin/status` and `bin/sync --dry-run` read-only on `model_project_constructor`, run each option for its two decisions in a
+`--no-local` scratch clone, put them to the operator in a picker, write the launch prompt as a committed file under
+`docs/planning/`, then record P11 here once the operator relays that project's report. **Chosen by the operator after
+Phase 0 (picker)**, over BL-53, P10's record correction alone and BL-73. The same picker approved one side action, with
+its own entry: correct P10's records here, which still say `nprcgenekeepr` is not pushed (`origin/master` = `4565c39d`,
+read with `git rev-parse`), adding its CI result once R-CMD-check on `4565c39d` finishes.
+
+**Phase 0:** `CHANGELOG.md` frontier `f921596` = HEAD, no gap; `HANDOFFS.md` frontier `4be5f0d` (S194's close-out), four
+commits behind, all S194's post-close-out work with their own entries, no receipt by design. Nothing backfilled. The gate
+in a `--no-local` clone of `f921596` reads `10/10 pass · 0 fail · 0 unmeasured · results a5197f8a439f · manifest
+61cd292c36bd`, S194's citation exactly; `bin/tests.sh` 331 passed, 0 failed, 6 skipped at two receipts (Test 34's six).
+Dashboard 76/100, one medium risk; `context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set
+total, all known. `upstream/main` still `6b29d3d`; PR #84 open at `77afc12`, mergeable, no reviews or comments; PR #83
+open; no open upstream issues. Two receipts, so no `HANDOFFS.md` trim is owed. `CHANGELOG.md` is 243,951 B, under the
+operator's standing no-trim decision (18,193 B below 262,144 B). `model_project_constructor` last committed `a18706f`
+(2026-09-18 17:22), clean. Phase 0's two tracked rows ride here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S194 — fork `main` pushed to `origin`, `f566905..9484c5a` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 9484c5a:refs/heads/main`, a fast-forward of one commit: the BL-53 provenance record
+  `9484c5a`. Guarded: `origin/main` re-fetched and still `f566905`, an ancestor; clean tree. Read back: `git ls-remote
+  origin refs/heads/main` = `9484c5a06ad3…`. The go-ahead was the operator's *"push fork main to origin"*. Nothing sent
+  upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-53] S194, after close-out — provenance of "no new learning row until BL-53": a session's inference, not an operator decision
+
+- **Recorded in BL-53's row** in `docs/planning/BACKLOG.md`, at the operator's request after asking what the item meant.
+  The practice starts at S188's close-out (`6e94f3b`); S189 cited it (`5217d1d`) and S190–S194 followed. The
+  operator's S159 note in `.context-budget.json` says answer BL-53 when the warning fires, not stop writing rows.
+  Nothing refuses a row: `bin/check-learnings` caps rows (`:106`), not the file, and no hook runs `context_budget.py`.
+  S194's handoff repeated the practice as a rule (next step (6)); the row now says where it came from.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S194 — fork `main` pushed to `origin`, `04b2e9f..6434065` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 6434065:refs/heads/main`, a fast-forward of 8 commits, all S194's: the claim `6822b8f`,
+  the trim `d1647ce` and fold `42b7d5d`, the P9 correction `c20d6ab`, the P10 decision and prompt `ce14b3f`, the P10
+  recording `be63205`, the close-out `4be5f0d`, and the after-close-out backlog record `6434065`. Guarded: `origin/main`
+  re-fetched and still `04b2e9f`, an ancestor; clean tree. Read back: `git ls-remote origin refs/heads/main` =
+  `6434065ec523…`. The go-ahead was the operator's *"push fork main to origin"*. Nothing sent upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-57] S194, after close-out — `nprcgenekeepr`'s push of P10 relayed; its record owed here, backlogged
+
+- **Relayed by the operator after S194's close-out report**, so recorded as backlog, not executed: `nprcgenekeepr`
+  pushed `4cfe2dad..4565c39d` (read back here: `git ls-remote origin refs/heads/master` = `4565c39db952`). On `4565c39d`
+  lint and test-coverage had passed; pkgdown and R-CMD-check were still running. The BL-57 row in
+  `docs/planning/BACKLOG.md` now carries the owed correction (P10's *"not pushed"*, plan `:458` and `:1103`, plus the CI
+  result), which is S194's handoff next step (2).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-57] S194 close-out — P10 decided, run in `nprcgenekeepr` from this session's prompt, and recorded; P11 next
+
+- **Receipt** in `HANDOFFS.md` (self 8, predecessor S193 9). P10's route was decided by the operator from four options
+  run first in a scratch clone (`ce14b3f`, with the launch prompt), run in `nprcgenekeepr`'s Session 719, and recorded and
+  re-verified here (`be63205`). Side actions: the `HANDOFFS.md` trim and fold (`d1647ce`, `42b7d5d`), P9's *"not
+  pushed"* corrected (`c20d6ab`). Close-out gate, `--no-local` clone of `be63205`: `10/10 pass · 0 fail · 0 unmeasured ·
+  results a5197f8a439f`, 331 passed and 6 skipped at 2 receipts, exactly on the floor. Learnings withheld (BL-53);
+  candidates are below the receipt.
+- **Correction:** `ce14b3f`'s entry, the plan and the prompt credited the move of `nprcgenekeepr`'s rules block to
+  *"S700's and S710's trims"*. The shard holding it was written by S702's trim (`6bac092f`, 2026-09-17). The plan's
+  P10 row and item (30) now say so; the prompt carries a note and is otherwise left as sent.
+- **Answered at close-out, no action here:** push `nprcgenekeepr` now (recommended; a fast-forward from `4cfe2dad`, no
+  package files among the 16 commits). That is that project's go-ahead; once it pushes, P10's *"not pushed"* here is
+  corrected as P9's was. Fork `main` (7 commits) needs a push go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-57] S194 — P10 (`nprcgenekeepr`) recorded: done in that repository's Session 719, re-verified from here; items (30)–(31)
+
+- **Recorded** in `docs/planning/changelog-rules-contradictions-plan.md`: the status line, a P10 block with items (30) and
+  (31), and the P10 row marked DONE; the BL-57 row in `docs/planning/BACKLOG.md`, next P11. P10 ran in `nprcgenekeepr`'s
+  own Session 719 from S194's launch prompt, `74243f04`..`4565c39d` on its `master`, not pushed there. The operator
+  relayed its report here.
+- **Re-verified read-only**, in a `--no-local` clone of `nprcgenekeepr` at `4565c39d` with `bin/status` and `bin/sync`
+  from fork `main` `ce14b3f`: both ledgers `present`, 22 tracked files current, the trimmer *locally modified* by design
+  (the dry run exits 2 on it alone). The synced trimmer equals fork `main`'s blob, and the re-applied extension adds
+  exactly the original 49 lines. §9.8 `62 117 HANDOFFS.md` on `47364f51` prints *only the block changed*, and the new
+  section equals the seed's. `ba1f0135` is 13/0 with all 540 old lines in order. `### ` 37 → 46 and the anchored audit
+  24 → 33 (nine `[ad hoc]`). Trimmer `L1_OK`–`L3_OK` on all three ledgers. The six item-(25) files are excluded from the
+  build, and both tool outputs are ignored. The project's tests rest on its report.
+- **Two of the report's differences explained:** its trimmer counts (43, 11, 20) are those at `2f451d1d`, and its
+  `bin/_manifest.py:50` is fork `main`'s line where the prompt cited `upstream/main`'s `:45`. **Items:** (30) a phase
+  row's block can leave the live file before the phase runs (trimmed into a frozen shard); (31) a locally extended synced
+  tool costs every later sync a refusal until BL-32, and the 1.1.2 → 1.5.0 sync changes an adopter's trim cadence.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-57] S194 — P10 (`nprcgenekeepr`) decided and its launch prompt written, from facts measured read-only there
+
+- **Decided by the operator (picker), from four options each run first in a `--no-local` scratch clone of
+  `nprcgenekeepr` at `312996b0`:** `--force` the sync, then re-apply the project's 49-line `SESSION_NOTES.md` extension
+  to `methodology_trim.py` in its own commit. Measured: the forced dry run lists 15 files; after the sync the trimmer
+  answers `NO_CONFIG` (exit 3) on `SESSION_NOTES.md`; the patch passes `git apply --check` onto 1.5.0 and the extended
+  trimmer's `SESSION_NOTES.md` dry run matches the old 1.1.2 copy's (`L1_OK`–`L3_OK`, 18 of 19 records, 70,138 → 3,979
+  B). 1.5.0 fires at 196,608 B, not 65,536; `--budget-bytes 65536` restores the old verdict. Not taken: seed only (the
+  new header's link would dangle), force and drop (breaks its `SESSION_NOTES.md` archive), settle BL-32 first.
+- **Written:** [`docs/planning/bl57-p10-nprcgenekeepr-launch-prompt.md`](../../docs/planning/bl57-p10-nprcgenekeepr-launch-prompt.md),
+  nine measured facts and ten steps. The P10 row in `docs/planning/changelog-rules-contradictions-plan.md` records the
+  decision and links it; the BL-57 row in `docs/planning/BACKLOG.md` too.
+- **Found, re-measured since 2026-09-14:** the rules block the P10 row named (`:3946`–`:4065`) has left the live
+  `CHANGELOG.md` (37,090 B now). S700's and S710's trims moved it into the frozen shard
+  `docs/archive/CHANGELOG-through-2026-09-17.md` (`:4171`), so the ledger step becomes a pure insertion. `HANDOFFS.md`
+  holds an older `## Size, and when to archive` at `:62`–`:117`, to be replaced; §9.8 can fail on that commit. Six root files match no
+  `.Rbuildignore` pattern (item (25)); both tool outputs show untracked (item (29)); 13 of 35 live entries use a bare
+  `[BL]` tag; `CLAUDE.md:277` still says the trimmer isn't distributed (`upstream/main`'s `bin/_manifest.py:45` ships it).
+  BL-32's detail says `bin/sync` *"silently discards"* a local edit to the trimmer; the dry run refuses it (exit 2).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-57] S194 — P9's records corrected: `mts-system` pushed `710a0f7..b8a20ce` after S193's close-out
+
+- **Corrected** in `docs/planning/changelog-rules-contradictions-plan.md`: the P9 block's *"not pushed"* (struck, with the
+  push beside it) and the P9 row. The push is recorded there at `27c77ec`, which is local; `git ls-remote origin
+  refs/heads/master` in `mts-system` reads `b8a20ce01f9f`. S193's receipt stays as written.
+- **Drift Sentinel, read from here:** on `b8a20ce`, Lint passed and Drift Sentinel failed, as its scheduled runs at
+  `710a0f7` already had (none of its last 100 runs succeeded). The failed run's annotation gives the cause: production's
+  `/health` reports `e2041b0`, not `origin/master`. `e2041b0..b8a20ce` changes no application code (19 root files, five
+  under `docs/`). It clears at the next `scripts/deploy_vps.sh`, which refuses unless HEAD equals `origin/master` (:94), so
+  `27c77ec` is pushed first. Both are `mts-system`'s go-ahead. Approved by the operator's picker after Phase 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S194 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- The pointer block `d1647ce` wrote into `HANDOFFS.md`'s front matter is now one row of
+  [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../../docs/HANDOFFS_ARCHIVE_INDEX.md) (2 records, 2026-09-18 → 2026-09-18,
+  `HANDOFFS-through-2026-09-18-2.md`, v1.5.0). The block is deleted, taking the file from 17,052 to 16,596 B
+  (`wc -c`), in its own commit per the index's fold rule. The shard's `.verify.sh` prints `OK` for L1, L2/front-matter
+  and L3 after the fold, `check-handoff --all --allow-pending` passes on 2 receipts, and `bin/check-links` exits 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-18-2.md` (2 record(s), 39,126 B → 17,052 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-18 → 2026-09-18) out of [`HANDOFFS.md`](../../HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-18-2.md`](../../docs/archive/HANDOFFS-through-2026-09-18-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-18-2.md.verify.sh`](../../docs/archive/HANDOFFS-through-2026-09-18-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,126 B → 17,052 B (−56.4%).
+
+### 2026-09-19 · [BL-57] S194 claim — P10 (`nprcgenekeepr`): its launch prompt from facts measured read-only there; this session records P10 when the operator relays its report (in progress)
+
+**Deliverable:** the launch prompt for P10 (`docs/planning/changelog-rules-contradictions-plan.md:1056`), written from
+`bin/status` and `bin/sync --dry-run` run read-only on `nprcgenekeepr`, then the recording of P10 here once the operator
+relays that project's report, as S193 did for P9. **Chosen by the operator after Phase 0 (picker)**, over P9's remainder,
+BL-53 and BL-73. `nprcgenekeepr`'s own S718 was claimed at 02:03 today, so the launch waits for it to close. The same
+picker approved one side action, with its own entry: correct this repo's P9 records, which still say `mts-system` is not
+pushed (`b8a20ce` is on its `origin/master`, checked here with `git rev-parse`).
+
+**Phase 0:** `CHANGELOG.md` frontier `04b2e9f` = HEAD, no gap; `HANDOFFS.md` frontier `bbcb0af` (S193's close-out), one
+commit behind, the push record `04b2e9f` with its own entry, no receipt by design. Nothing backfilled. The gate in a
+`--no-local` clone of `04b2e9f` reads `10/10 pass · 0 fail · 0 unmeasured · results 6d2ca2197aa7 · manifest
+61cd292c36bd`, S193's citation; `bin/tests.sh` 337 passed, 0 failed, 0 skipped at three receipts. Dashboard 76/100, one
+medium risk; `context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set total, all known.
+`upstream/main` still `6b29d3d`; PR #84 open at `77afc12`, no reviews or comments; PR #83 open; no open upstream issues.
+Three receipts, so the `HANDOFFS.md` trim is owed after this claim. `CHANGELOG.md` is 230,970 B, under the operator's
+standing no-trim decision. **Asked after Phase 0:** what `mts-system`'s push report meant. Its Drift Sentinel failure is
+production (`/health` at `e2041b0`) behind `origin/master`; the failed run's annotation says so, and the scheduled runs at
+`710a0f7` were already failing. Phase 0's two tracked rows ride here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [ad hoc] S193 — fork `main` pushed to `origin`, `037335d..bbcb0af` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin bbcb0af:refs/heads/main`, a fast-forward of 6 commits, all this session's: the claim
+  `94c3fd5`, the floor `e9b7962`, the PR #84 draft `8db82c2` and its post record `99fb6bf`, the P9 recording `676ca33`
+  and the close-out `bbcb0af`. Guarded: `origin/main` re-fetched and still `037335d`, an ancestor; clean tree. Read back:
+  `git ls-remote origin refs/heads/main` = `bbcb0af78175…`. The go-ahead was the operator's picker after the close-out
+  report. The close-out's last content commit `676ca33` gated `10/10 pass · results 6d2ca2197aa7`. Nothing sent upstream.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-57] S193 close-out — P9 done in `mts-system` and recorded here; three side actions done; P10 next
+
+- **Receipt** in `HANDOFFS.md` (self 8, predecessor S192 9). P9 ran in `mts-system`'s Session 139 from this session's
+  launch prompt, and was recorded and re-verified here (`676ca33`). One remainder stays there: the superseded rules block,
+  item (28). The side actions were the push of `037335d`, the floor 305 → 331 (`e9b7962`), and PR #84's description,
+  drafted (`8db82c2`) and posted (`99fb6bf`). Close-out gate, `--no-local` clone of `676ca33`: `10/10 pass · 0 fail · 0
+  unmeasured · results 6d2ca2197aa7`, 337 passed at 3 receipts. Learnings withheld (BL-53); candidates are below the
+  receipt. Next: P10 (`nprcgenekeepr`, which starts with a decision); P9's remainder in `mts-system`; the push of fork
+  `main` (6 commits) needs a go-ahead. 3 receipts: the `HANDOFFS.md` trim is owed after the next claim.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-19 · [BL-57] S193 — P9 (`mts-system`) recorded: done in that repository's Session 139, re-verified from here; one remainder there, items (28)–(29)
+
+- **Recorded** in `docs/planning/changelog-rules-contradictions-plan.md`: the status line, a P9 block with items (28) and
+  (29), and the P9 row marked DONE; the BL-57 row in `docs/planning/BACKLOG.md` (BL-72's and P9's status, next P10). P9
+  ran in `mts-system`'s own Session 139, `a48f543`..`b8a20ce` on its `master`, not pushed there. The operator said
+  *continue*, and its report was read from that session's receipt.
+- **Re-verified read-only**, in a `--no-local` clone of `mts-system` at `b8a20ce` with `bin/status` and `bin/sync` from a
+  clone of fork `main` `99fb6bf` (the version it synced from): both ledgers `present`, every tracked file current, and the
+  sync dry run exits 0 with nothing to write. Across the phase both ledgers only gained lines (+61/−0 and +78/−0), and
+  every old line is kept in order. `### ` went 266 → 267 and the anchored audit 265 → 266 at `f70358c`. The trimmer's dry
+  run printed `L1_OK`–`L3_OK` on both. §9.8 cannot fail on a pure insertion, and its control prints the same. The
+  project's tests rest on its receipt.
+- **BL-72's fix, seen on a real ledger:** after P9 the unfixed checker (`20db3f0` = `upstream/main`) reads S138 as the newest
+  receipt, skipping S139, and the fixed one (`77afc12`, `99fb6bf`) reads S139. `--all` finds the same 33 issues before and
+  after. BL-73's three are now at :294, :397 and :749.
+- **Items:** (28) a superseded 48-line rules block sits partway down `mts-system`'s `CHANGELOG.md` (from `28e9bb3`). By
+  step 3's rule it is P9's remainder there (its CLEANUP-006), with predicted counts, and P9's recorded counts stand. P10
+  and P11 list the ledger's `## ` headings at the claim. (29) The synced tools write files a strict deploy gate refuses;
+  `.context-budget-history.jsonl` is not yet ignored there.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-57] S193 — PR #84's description updated on GitHub to the `8db82c2` draft (non-commit action, operator go-ahead)
+
+- **Action:** `gh api -X PATCH repos/KJ5HST/methodology/pulls/84 -F body=@…`, with the body below the rule in
+  `docs/planning/changelog-rules-pr-body.md` at `8db82c2`. Guarded: the live body was re-fetched first and was
+  byte-identical to the one the draft was diffed against, so no one had edited it in between. GitHub's `updated_at` was
+  `2026-09-19T04:21:50Z`. Read back: the live body equals the draft apart from the one trailing newline `jq` adds. PR #84
+  is OPEN at head `77afc12`, with no reviews or comments. The go-ahead was the operator's second picker, after reading
+  the draft; the first picker had approved only the draft. The draft file's front matter now says it is posted (this
+  commit).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-57] S193 — PR #84's description drafted for its head `77afc12`: the fence fix named, the figures re-measured (not posted)
+
+- `docs/planning/changelog-rules-pr-body.md`: a bullet under *What this changes* naming the `bin/check-handoff` fence
+  fix, in the PR's outward terms (no session, backlog or plan codes). It says why the fix belongs in this PR: the seed
+  section the PR's migration route brings into adopters holds the `sh` block the checker misread. `main`'s checker is
+  identical to the branch's before the fix, and `main`'s seed has carried the block since `56997af`. The header line
+  moves to head `77afc12`, 26 commits plus three merges, 20 files +770 / −296, `CHANGELOG.md` +494 / −7. The previous
+  figures were reproduced first on `20db3f0` as a control (they exclude `CHANGELOG.md`). *Verified* now reads 163 passed:
+  in a `--no-local` clone of `77afc12`, `quality_ratchet.py --run` read `10/10 pass · results 93ea168d093e`, S192's digest.
+  `bin/check-links` still read 111 links across 23 files, and `context_budget.py --status` still read nothing over budget.
+  `git merge-tree` against `upstream/main` exits 0.
+- **Not posted.** Editing the live description is its own go-ahead, asked after the operator reads this draft.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S193 — `tests-sh-passed` floor tightened 305 → 331, the count measured at two receipts
+
+- `.quality-gates.json` `tests-sh-passed` 305 → 331: `quality_ratchet.py --run` in a `--no-local` clone of `037335d`
+  (HEAD asserted), with `HANDOFFS.md` holding two receipts, the state the floor is defined at (`.quality-gates.json`
+  `_fork_tightening`), and Test 9 green (`tests-sh-failed` 0): `10/10 pass · 0 fail · 0 unmeasured · results
+  d56e26f10caf`, the digest S192 measured on `ea1a057`. 305 was S179's; the rows since, the last ten BL-72's, bring it to
+  331. With three receipts Test 34's six rows run and the count is higher, never lower. A tightening needs no approval;
+  the operator approved this one in the Phase 0 picker, as S192's handoff offered it. The other gates are unchanged.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-57] S193 claim — P9 (`mts-system`) runs in that project's own session; this session records it here when the operator relays its report (in progress)
+
+**Deliverable:** the recording of P9 in `docs/planning/changelog-rules-contradictions-plan.md` (a P9 block, the P9 row and
+the status line), once the operator relays the report of `mts-system`'s own session, as S191 recorded P8. **Chosen by the
+operator after Phase 0 (picker)**, over BL-73, BL-53 and BL-54's PR, as S192's handoff ranked it. The same picker approved
+three separate actions, each with its own entry: push `037335d` to `origin` (done, the entry below), draft one paragraph
+for PR #84's description naming the `bin/check-handoff` fence fix its head now carries (editing the live PR stays its own
+go-ahead), and raise the fork's `tests-sh-passed` floor 305 → 331. The P9 option said this session would claim nothing
+until the relay; it claims now because two of the approved actions commit.
+
+**Phase 0:** `CHANGELOG.md` frontier `037335d` = HEAD, no gap; `HANDOFFS.md` frontier `f6d1c0b` (S192's close-out), three
+commits behind, all post-close-out records with their own entries (`6d62e1b`, `730331c`, `037335d`), no receipt by
+design. Nothing backfilled. The gate in a `--no-local` clone of `037335d` reads `10/10 pass · 0 fail · 0 unmeasured ·
+results d56e26f10caf · manifest 58d766958ae1`, S192's citation, `tests-sh-passed` 331 at two receipts. Dashboard 76/100,
+one medium risk; `context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set total, all known.
+`upstream/main` still `6b29d3d`; PR #84 open at `77afc12`, no reviews or comments; PR #83 open; no open upstream issues.
+Two receipts, so no `HANDOFFS.md` trim is owed. `CHANGELOG.md` is 221,415 B, past its trigger, under the operator's
+standing no-trim decision. `mts-system` is clean at `710a0f7`, the tree the P9 row was read at. Phase 0's two tracked
+rows ride here.
+
+### 2026-09-18 · [ad hoc] S193 — fork `main` pushed to `origin`, `730331c..037335d` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin 037335d:refs/heads/main`, a fast-forward of one commit: S192's after-close-out correction
+  to P11's plan row. Guarded: `origin/main` re-fetched and still `730331c`, an ancestor of `037335d`. Read back:
+  `git ls-remote origin refs/heads/main` = `037335db2336…`. The go-ahead was the operator's picker after Phase 0; the
+  standing push-record grant did not cover it, since the commit records no push. This claim commit is not pushed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-57] S192, after close-out — P11's row corrected: `model_project_constructor`'s runner carries three local edits, not one
+
+- The operator asked why `../model_project_constructor` has no `HANDOFFS.md`. Answered read-only, at its `a18706f`:
+  `bin/sync --dry-run --source=local` exits 2 before writing anything, refusing its `SESSION_RUNNER.md` and
+  `SAFEGUARDS.md` as locally modified, so no seed has reached it since the receipt shipped (`4f0bea7`, 2026-07-08), and
+  its runner never mentions `HANDOFFS.md`. The plan's P11 row named one customization (step 5). Classified line by line
+  against every canonical version, there are three: step 5, the task-to-workstream table and a *Wiki sync* paragraph,
+  10 of the 29 lines that differ from `7073dec`; the other 19 are later canonical text. Recorded in the P11 row; P11 is
+  not started. Committed locally, not pushed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S192 — fork `main` pushed to `origin`, `fa0e36e..6d62e1b` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, a fast-forward of 8 commits, all this session's: the claim `96de3ee`, the trim
+  `b27236e`, the fold `1c7e3c2`, the branch fix `77afc12` with its merge `ea1a057`, the record `4c96234`, the close-out
+  `f6d1c0b` and the push-and-gate record `6d62e1b`. Guarded: clean tree, `origin/main` still `fa0e36e`, ancestor checked.
+  Read back: `git ls-remote origin refs/heads/main` = `6d62e1bfb993…`, equal to local. The go-ahead was the operator's
+  picker after Phase 0, conditional on the gate: the close-out read `10/10 pass · results d56e26f10caf`. Nothing sent
+  upstream by this push.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S192 — `bl57/changelog-rules` pushed to `origin`, `20db3f0..77afc12`: PR #84's head is now the fence fix (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin bl57/changelog-rules`, a fast-forward of one commit, `77afc12`. Guarded: `origin`'s branch
+  still `20db3f0`, ancestor checked, worktree clean. Read back: `git ls-remote` = `77afc127790f…`, and `gh pr view 84`
+  reads OPEN, head `77afc12`, 29 commits. The go-ahead was the operator's picker after Phase 0, for after close-out
+  and only once the gate passed: `77afc12` read `10/10 pass · results 93ea168d093e`. PR #84's description was not
+  edited; that is its own go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S192 — the gate re-run on the close-out `f6d1c0b`: 10/10 pass, results d56e26f10caf
+
+- In a `--no-local` clone with HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  d56e26f10caf · manifest 58d766958ae1`, `tests-sh-passed` 331, the same digest as the merge `ea1a057`'s run. The record
+  commit's one unnamed failure (`4c96234`, 9/10) did not recur. The close-out's edits change no measured value (BL-64).
+
+### 2026-09-18 · [BL-72] S192 close-out — the fence fix done (`77afc12` on the branch, `ea1a057` in fork `main`); BL-73 raised; P9 next
+
+- **Receipt** in `HANDOFFS.md` (S192, `status: complete`, self 8, predecessor S191 9). Learnings withheld from
+  `docs/FORK_LEARNINGS.md` (81,721 of 81,920 B) pending BL-53; three candidates under the receipt.
+- **The gate on the docs-only record `4c96234`** read `quality_ratchet: 9/10 pass · 1 fail · 0 unmeasured · results
+  9091857edc91 · manifest 58d766958ae1` (`tests-sh-failed` 1, `tests-sh-passed` 330). The ratchet keeps no suite output,
+  so the failing test is unnamed; a diagnostic `bash bin/tests.sh` in a fresh clone of the same commit read 331 passed,
+  0 failed, 6 skipped. Treated as intermittent (BL-43 the known candidate, unconfirmed); the receipt cites the merge's
+  10/10 and this run both. This close-out is re-measured after it lands, and fork `main` is pushed only if that passes.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-73] Raised — `bin/check-handoff` reads a second `handoff` opener inside an open receipt as content
+
+- Found while verifying BL-72 on `mts-system` (read-only, at `710a0f7`): a receipt begun twice, an opener and a
+  `session:` line and then a second opener with the whole receipt, reads as one block. Three instances, at `:216`, `:320`
+  and `:671`; `--all` reports `:216` and `:671` only, through the key-order rule, and `:320` passes. BL-57's P9 row named
+  only `:216`, and now names all three. Row in `docs/planning/BACKLOG.md`, detail in `BACKLOG-DETAIL.md` §BL-73: fix
+  shape, not built. Searched the backlog first: no existing item covers it.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-72] S192 — the fence fix on `bl57/changelog-rules` (`77afc12`, for PR #84), merged into fork `main` as `ea1a057`; BL-72 closed
+
+- **Fix `77afc12`** on the branch (worktree `../methodology-bl57`): `scan()` skips a fence with an info string (the seed's
+  `sh` block) to a bare closer at least as long, as it already skipped a wrapper, instead of reading it as prose and
+  letting its closing fence swallow the newest receipt. An info string may not contain a backtick (CommonMark), so a
+  prose line starting with inline code that quotes a fence opens nothing. The block's lines stay visible to the orphan
+  check, so a receipt under a misspelled tag is still reported; an unclosed one is a finding. A `handoff` fence takes the
+  old paths unchanged. The branch's own ledger entry is written for the PR's reader: no session numbers.
+- **Tests, RED first:** ten assertions in `bin/tests.sh` Test 22, after block isolation. On the unfixed checker six
+  failed: the five §BL-72 predicted, plus the misspelled-tag case, where the unfixed read swallowed the valid receipt
+  below and reported *"no receipt block found"*. Six mutants of the fix (backticks allowed in the info string; a
+  shorter closer; the orphan lines dropped; the old bare-only arm; the orphan line off by one; an unclosed info fence
+  not reported) each fail one or more.
+- **Merge `ea1a057`** (parents `1c7e3c2`, `77afc12`): `CHANGELOG.md` and `bin/tests.sh` conflicted, exactly as `git
+  merge-tree` predicted. The ledger resolves ours; `bin/tests.sh` resolves ours plus the branch's 69-line block after
+  this repo's block-isolation case. Both code files' changed lines equal the branch patch `20db3f0..77afc12`.
+- **Adopters re-read, read-only**, with the checker at `1c7e3c2` and at `ea1a057` back to back, HEADs recorded before and
+  after (`airqino` `da040da`, `nprcgenekeepr` `d5008091`, `vscode_quarto_ext` `e075a9ca`, `mts-system` `710a0f7`): the first
+  block `scan()` returns moves S18 → S19, S714 → S715 (that project has moved on since S191) and S263 → S264;
+  `mts-system` is unchanged (S138, 70 blocks).
+- **Gates**, `--no-local` clones, HEAD asserted. Branch at `77afc12`: `quality_ratchet: 10/10 pass · 0 fail · 0
+  unmeasured · results 93ea168d093e · manifest 97a7aab85b9a`, `tests-sh-passed` 163. Fork `main` at `ea1a057`:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results d56e26f10caf · manifest 58d766958ae1`,
+  `tests-sh-passed` 331 at 2 receipts (S190 measured 321 at 2; the fix adds 10).
+- **This commit:** BL-72 moved to Completed items with its closing note in `BACKLOG-DETAIL.md`; the plan's status line
+  (BL-72 done, P9 next) and its P9 row (BL-73). **Not done here:** pushing the branch to PR #84 and fork `main` to
+  `origin`, both approved for close-out after the gate; PR #84's description does not mention the fix.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S192 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- The pointer block `b27236e` wrote into `HANDOFFS.md`'s front matter is now one row of
+  [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../../docs/HANDOFFS_ARCHIVE_INDEX.md) (2 records, 2026-09-17 → 2026-09-18,
+  `HANDOFFS-through-2026-09-18.md`, v1.5.0). The block is deleted, taking the file from 18,023 to 17,575 B
+  (`wc -c`), in its own commit per the index's fold rule. `docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh`
+  exits 0 after the fold, `check-handoff --all --allow-pending` passes on 2 receipts, and `bin/check-links` exits 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-18.md` (2 record(s), 38,813 B → 18,023 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-17 → 2026-09-18) out of [`HANDOFFS.md`](../../HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-18.md`](../../docs/archive/HANDOFFS-through-2026-09-18.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh`](../../docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,813 B → 18,023 B (−53.6%).
+
+### 2026-09-18 · [BL-72] S192 claim — fix `bin/check-handoff`'s fence scanner on `bl57/changelog-rules`, riding PR #84, then merge into fork `main` (in progress)
+
+**Deliverable:** BL-72's fix. `scan()` (`bin/check-handoff:227` here, `:104` on the branch, byte-identical) reads a
+fence with an info string other than `handoff` as prose, so the seed's `sh` block's closing fence opens a wrapper and
+the newest receipt is skipped while the checker reports OK. The fix skips such a block to its closer (CommonMark), with
+failing tests first on the fixtures in `docs/planning/BACKLOG-DETAIL.md` §BL-72. **Chosen by the operator after Phase 0
+(picker)**, over P9, BL-54's PR and BL-53, as S191's handoff and the operator's S191 decision ordered. The same picker
+chose the route, building on `bl57/changelog-rules` so the fix rides PR #84 (over its own PR, or fork `main` only), and
+approved two close-out pushes, each only after the gate passes and read back: fork `main` to `origin`, and the branch
+to PR #84.
+
+**Phase 0:** `CHANGELOG.md` frontier `fa0e36e` = HEAD, no gap; `HANDOFFS.md` frontier `6cdec69` (S191's close-out), two
+commits behind, both post-close-out records (`1760f96` the gate run, `fa0e36e` the push) with their own entries and no
+receipt by design. Nothing backfilled. The gate in a `--no-local` clone of `fa0e36e` reads `10/10 pass · 0 fail · 0
+unmeasured · results 511119b3196e · manifest 58d766958ae1`, S191's citation. Dashboard 76/100, one medium risk;
+`context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set total, all known. `upstream/main`
+still `6b29d3d`; PR #84 open at `20db3f0`, no reviews or comments; PR #83 open; no open upstream issues. Three receipts,
+so the `HANDOFFS.md` trim is owed after this claim. `CHANGELOG.md` is 210,395 B, past its trigger, under the operator's
+standing no-trim decision. Phase 0's two tracked rows ride here.
+
+### 2026-09-18 · [ad hoc] S191 — fork `main` pushed to `origin`, `0ab3881..1760f96` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, a fast-forward of 5 commits, all this session's: the claim `793fa84`, the P8
+  recording `10f931a`, its fix `0b7e672`, the close-out `6cdec69` and the gate record `1760f96`. Guarded: clean tree,
+  `origin/main` still `0ab3881`, ancestor checked. Read back: `git ls-remote origin refs/heads/main` = `1760f961…`,
+  equal to local. The go-ahead was the operator's instruction after the close-out report, *"push fork main to
+  origin"*. Nothing sent upstream by this push.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S191 — the gate re-run on the close-out `6cdec69`: 10/10 pass, results 511119b3196e
+
+- In a `--no-local` clone with HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  511119b3196e · manifest 58d766958ae1`, `tests-sh-passed` 327, the same digest as the receipt's citation on `0b7e672`.
+  The close-out's `CHANGELOG.md` and `HANDOFFS.md` edits change no measured value (BL-64).
+
+### 2026-09-18 · [BL-57] S191 close-out — P8 recorded (`10f931a`, fixed at `0b7e672`); BL-72 next, before P9
+
+- **Receipt:** `HANDOFFS.md` S191, `status: complete`, self 7, predecessor (S190) 9. Gate on `0b7e672`:
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 511119b3196e · manifest 58d766958ae1`, 327 passed at
+  3 receipts; on `10f931a` it read `9/10 · tests-sh-failed 3`, the defect `0b7e672` fixed.
+- **Next:** BL-72 (`bin/check-handoff`'s fence scanner), its own session, with the operator deciding whether it rides
+  PR #84; then P9 (`mts-system`) from that project. A `HANDOFFS.md` trim is owed at the next Phase 0 (3 receipts).
+  Fork `main` is 4 commits ahead of `origin`, unpushed. Learnings withheld again (BL-53); no reduction this session.
+
+### 2026-09-18 · [BL-57] S191 — fix: three lines `10f931a` wrote began with inline backticks, which line-based parsers read as a code fence
+
+- **The defect, found by the close-out gate** (clone of `10f931a`: `9/10 pass · 1 fail`, `tests-sh-failed` 3). A reflowed
+  line of the BL-72 entry below began, after its indent, with inline code quoting an `sh` fence; `bin/model-report` toggles its fence
+  state on any stripped line starting with three backticks, so it read the rest of this ledger as one code block. Tests
+  30, 31 and 40 failed. The plan's item (27) and `BACKLOG-DETAIL.md` §BL-72 had one such line each.
+- **The fix:** the three lines reworded so no line starts with a backtick run; nothing else changed. BL-72's own subject,
+  a scanner that misreads fences, is the same family.
+
+### 2026-09-18 · [BL-72] Raised — `bin/check-handoff` skips the newest receipt in any `HANDOFFS.md` that carries the seed's size section, and reports OK
+
+- **The item.** Reported by `vscode_quarto_ext`'s Session 264 (BL-57's P8) and reproduced here: the seed section's `sh`
+  code block ends in a bare fence that `scan()` (`bin/check-handoff:254`–`:290`) reads as a wrapper opener, so
+  the first receipt is skipped and the second validated as the newest. On the real files it already hides `airqino`'s
+  S19, `nprcgenekeepr`'s S714 and `vscode_quarto_ext`'s S264; `methodology_trim.py` is unaffected; this repo's own
+  gates are unaffected (no such block in its `HANDOFFS.md`). Detail: `docs/planning/BACKLOG-DETAIL.md` §BL-72.
+- **Operator, S191 (picker):** fixed before P9, in its own session; its upstream route is decided then, its own go-ahead.
+
+### 2026-09-18 · [BL-57] S191 — P8 (`vscode_quarto_ext`) recorded, its DONE re-run read-only from here; three operator decisions
+
+- **Recorded:** the plan's status line, a P8 block with items (25)–(27), the P8 row DONE and the D7 row
+  (`docs/planning/changelog-rules-contradictions-plan.md`), and the BL-57 backlog row. P8 is `vscode_quarto_ext`'s
+  Session 264, `48d1790c`..`57750bb2` on its `master`, not pushed.
+- **Re-run from here,** in a `--no-local` clone at `57750bb2` with `bin/status` and `bin/sync` from a clone of `0ab3881`:
+  both ledgers `present`, every tracked file current, `bin/sync --dry-run` exit 0 with 23 unchanged; §9.8 *only the
+  block changed* on `acb43e0b` (1–8; the 1–7 control fails) and on `69f0dd43` (a pure 61-line insertion); headings
+  25 → 26 and audit 20 → 21, the migration's own entry; trimmer `L1_OK`–`L3_OK` on both ledgers. The build item rests on
+  S264's receipt.
+- **Found (items (25)–(27)):** the sync's new root files broke `vscode_quarto_ext`'s package allowlist, fixed there one
+  commit ahead, and `nprcgenekeepr`'s `.Rbuildignore` covers none of them (P10); the phase finished two of the project's
+  backlog items, first left open; `bin/check-handoff`'s fence defect, raised as BL-72.
+- **Operator, S191 (picker):** `vscode_quarto_ext` keeps `HANDOFFS.md` budgeted (D7, for that project); BL-72 before P9;
+  P9–P11 keep the plan. Measured before the last: from fork `main`, 8 of the 11 local projects with a runner sync
+  cleanly, 3 refused for genuine edits; from a simulated `upstream/main` + PR #84, 9 are refused, 6 only for fork-only
+  versions.
+
+### 2026-09-18 · [BL-57] S191 claim — record P8 (`vscode_quarto_ext`) here, re-verified first; file the `bin/check-handoff` fence defect it reported (in progress)
+
+**Deliverable:** the recording of BL-57's P8 in this repository, as S180 recorded P6 and S185 P7: P8's DONE checks
+re-run read-only against `vscode_quarto_ext` at `57750bb2` (its Session 264, 11 commits from `48d1790c`, not pushed),
+then the plan's status line, a P8 block carrying what the phase found for P9–P11, the P8 row, and the BL-57 backlog row.
+The same deliverable files, as a new backlog item, the `bin/check-handoff` defect P8 reported. **Chosen by the operator
+after Phase 0 (picker)**, over a lighter recording that trusts the report. The same picker decided three things this
+session records in the plan: `vscode_quarto_ext` keeps `HANDOFFS.md` in its budget (D7, left open at §8); the checker is
+fixed before P9, in its own session; P9–P11 keep the plan rather than a generic `bin/status` → `bin/sync` route.
+
+**Phase 0:** `CHANGELOG.md` frontier `0ab3881` = HEAD, no gap; `HANDOFFS.md` frontier `61b2fc2` (S190's close-out),
+two commits behind, both post-close-out records (`18dead3` the gate run, `0ab3881` the push) that carry their own entries
+and no receipt by design. Nothing backfilled. Two receipts, no trim owed. The gate in a `--no-local` clone of `0ab3881`
+reads `10/10 pass · 0 fail · 0 unmeasured · results 91c29bff06ce · manifest 58d766958ae1`, S190's citation. Dashboard
+76/100, one medium risk; `context_budget.py --status` exits 2 on the runner, `SAFEGUARDS.md` and the read-set total, all
+known. `upstream/main` still `6b29d3d`; PR #84 open, no reviews or comments; PR #83 open; no open upstream issues.
+`CHANGELOG.md` is 203,162 B, past its trigger, under the operator's standing no-trim decision. Phase 0's two tracked
+rows ride here, regenerated after the first pair was discarded while the operator ran P8 in its own project.
+
+### 2026-09-18 · [ad hoc] S190 — fork `main` pushed to `origin`, `e4db0cc..18dead3` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main`, a fast-forward of 16 commits: on `main`, `bce805c` (BL-69–71, left unpushed by
+  S189) and this session's claim, trim, fold, merge `2410657`, record, close-out and gate record; through the merge,
+  the branch's eight (`f572068`..`20db3f0`, already on `origin` as `bl57/changelog-rules`). Guarded: clean tree,
+  `origin/main` still `e4db0cc`, ancestor checked. Read back: `git ls-remote origin refs/heads/main` = `18dead32…`,
+  equal to local. The go-ahead was the operator's Phase 0 picker answer, *"Push main after close-out"*. Nothing sent
+  upstream by this push.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-64] S190 — the close-out commit re-measured in a clone of itself
+
+- `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `61b2fc2` (the S190 close-out):
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 91c29bff06ce · manifest 58d766958ae1`, `tests-sh-passed`
+  321 at 2 receipts, 516 s — identical to the receipt's citation on the merge `2410657`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-57] S190 close-out — item (24) (a) done (merge `2410657`), the receipt, learnings withheld pending BL-53
+
+- **`HANDOFFS.md`:** S190's receipt completed (`self_score` 8, `predecessor_score` 9 for S189), citing the gate on the
+  merge `2410657`: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 91c29bff06ce · manifest
+  58d766958ae1`. Next step (1) is P8, `vscode_quarto_ext`, from that project. `bin/check-handoff` passes on 2 receipts,
+  so no trim is owed at the next Phase 0.
+- **Learnings:** withheld from `docs/FORK_LEARNINGS.md` (81,721 of 81,920 B, BL-53 unanswered); two candidates are
+  below the receipt. **Reduction:** the `HANDOFFS.md` trim, 40,364 → 17,521 B. **Not done:** this ledger is past its
+  196,608 B trigger, and by the operator's decision this session it stays untrimmed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-57] S190 — `bl57/changelog-rules` (`20db3f0`, PR #84's head) merged into fork `main` as `2410657` (plan item (24) (a))
+
+- **Merge `2410657`** (parents `1f5dcae`, `20db3f0`): the branch's last eight commits reach fork `main` before P8 syncs
+  from it: `f4e974c` keys the `HANDOFFS.md` seed on `handoffs-format: 2`, `7813652` keeps the trimmer's lines in the
+  `CHANGELOG.md` route, plus `adaa4a3`, `036d840`, `f7d3b8c`, `91f7646`, `20db3f0`. Two merge bases (`0d63410`, `6b29d3d`):
+  `upstream/main`'s side of `f572068` was already here. `CHANGELOG.md` and `.context-budget.json` conflicted, as
+  `git merge-tree` predicted at Phase 0, and resolve ours; `adaa4a3`'s densities are for upstream's `CLAUDE.md` and
+  runner blobs, which this repo's config does not budget by measured density, so no note needed a hand fix. The other
+  eight files' 66 changed lines equal the branch patch `f572068..20db3f0` (compared in bash); four are blob-identical
+  to the branch.
+- **`bin/status` on the six adopters, read-only**, from a `--no-local` clone of `1f5dcae` and from `2410657`, with each
+  adopter's HEAD and porcelain digest unchanged between the two readings: 15 rows move, all the merge's. `airqino` and
+  `nprcgenekeepr` `HANDOFFS.md` flip to `present (stale format)` (7 → 9 stale seeds, as plan item (24) (c) predicted);
+  every present copy of `BOOTSTRAP.md`, `ITERATIVE_METHODOLOGY.md` and `FRAMEWORK_APPARATUS.md` reads one version further
+  behind; none newly *locally modified*. My first before/after pair was confounded: `airqino` (`9995f62`) and
+  `nprcgenekeepr` (`cd63250c`) committed between its readings; the controlled re-read matched it row for row.
+- **Gate**, `--no-local` clone of `2410657`, HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured ·
+  results 91c29bff06ce · manifest 58d766958ae1`, 343 s; `tests-sh-passed` 321 at 2 receipts: Phase 0 measured 323 at 3,
+  the trim turned Test 34's six rows into stated skips, and the diff adds 6 assertions and removes 2, all in Test 20. A second `bash bin/tests.sh` in the same clone read 320 / 1: Test 38 (5), the
+  `echo | grep -q` race BL-43 already names (`BACKLOG-DETAIL.md:1059`); the merge touches only Test 20's hunks.
+- **This commit:** plan item (24) (a) DONE block and the status line; the BL-57 row.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S190 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- The pointer block `69ad9c9` wrote into `HANDOFFS.md`'s front matter is now one row of
+  [`docs/HANDOFFS_ARCHIVE_INDEX.md`](../../docs/HANDOFFS_ARCHIVE_INDEX.md) (2 records, 2026-09-17 → 2026-09-17,
+  `HANDOFFS-through-2026-09-17-5.md`, v1.5.0). The block is deleted, taking the file from 17,977 to 17,521 B
+  (`wc -c`), in its own commit per the index's fold rule. `docs/archive/HANDOFFS-through-2026-09-17-5.md.verify.sh`
+  exits 0 after the fold, `check-handoff --all --allow-pending` passes on 2 receipts, and `bin/check-links` exits 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-17-5.md` (2 record(s), 40,364 B → 17,977 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-17 → 2026-09-17) out of [`HANDOFFS.md`](../../HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-17-5.md`](../../docs/archive/HANDOFFS-through-2026-09-17-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-17-5.md.verify.sh`](../../docs/archive/HANDOFFS-through-2026-09-17-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,364 B → 17,977 B (−55.5%).
+
+### 2026-09-18 · [BL-57] S190 claim — plan item (24): merge `bl57/changelog-rules` into fork `main` (in progress)
+
+**Deliverable:** merge the branch's last eight commits (`f572068`..`20db3f0`, PR #84's head) into fork `main` before
+P8 syncs from it, as at `5f5a400`. **Chosen by the operator after Phase 0 (picker)**, over BL-54's PR, BL-53 and P8.
+The same picker approved pushing fork `main` to `origin` after close-out. It also approved a trim of this ledger at
+its trigger, but my option had not cited the operator's standing 2026-09-14 decision not to trim this file there
+(`BACKLOG-DETAIL.md`, BL-57; plan K5); asked again with it, **the operator kept the standing decision.** This entry
+takes the file past 196,608 B, so `--check` fires; that is reported, not acted on.
+
+- **Phase 0:** `CHANGELOG.md` frontier `bce805c` = HEAD, no gap; `HANDOFFS.md` frontier `5217d1d` (S189's close-out),
+  four behind, each a post-close-out record with its own entry and no receipt by design. Nothing backfilled. Gate
+  re-run in a `--no-local` clone of `bce805c`, HEAD asserted: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured ·
+  results 949e9e0b4269 · manifest 58d766958ae1`, identical to S189's citation; `tests-sh-passed` 323, 157 s.
+  Dashboard 76/100, medium risk, no high-or-above flags; budget `over` in the same three rows. 3 receipts, so the
+  `HANDOFFS.md` trim is owed. This ledger 195,371 of 196,608 B before this entry. PR #84 open, mergeable, no reviews;
+  PR #83 open, no reviews; no upstream issues. `git merge-tree --write-tree --name-only main bl57/changelog-rules`:
+  `CHANGELOG.md` and `.context-budget.json`. Phase 0's two tracked rows ride here.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] Raised BL-69, BL-70 and BL-71 — the branch-count question, recorded rather than worked (after S189's close-out)
+
+- **Why:** the operator asked, after close-out, whether this repository should still have *"Multiple branches
+  (31)"*. I answered with a read-only branch-by-branch audit, then took the picker's answers as a go-ahead to act in
+  this session. The operator corrected that: it was a backlog request. **Nothing was deleted or changed**
+  (13 local branches, 13 on `origin`, before and after); the decisions are recorded in the items instead.
+- **BL-69:** delete 10 local and 11 `origin` branches whose work is merged or settled (operator's picker), with the
+  refs and shas as measured. **BL-70:** upstream's runner lacks issue #75's plan-surface rule; the maintainer closed #75
+  silently and the prepared PR was never sent; the branch is kept. **BL-71:** the dashboard's branch count reads
+  `git branch -a`, so a fork can never clear it.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S189 — fork `main` pushed to `origin`, `c5af062..a96eae4` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin main:refs/heads/main`, a fast-forward of 9 commits (`7df4328`..`a96eae4`: the claim, the
+  draft, BL-68, the body rewrite, the branch-push record, the PR record, the close-out, its gate record, BL-68's
+  widening). Guarded: clean tree, `origin/main` still `c5af062`, ancestor checked. Read back: `git ls-remote origin
+  refs/heads/main` = `a96eae4b…`, equal to local. The go-ahead was the operator's Phase 0 picker answer, *"Push main
+  after close-out"*. Nothing sent upstream by this push.
+- **This recording commit is pushed too**, under the standing push-record grant, so it records its own push.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-68] Widened — the large-file penalty question covers every `methodology_*.py`, not only the dashboard
+
+- **Why:** the operator's second request, after close-out: investigate the penalty when the large file(s) are
+  `methodology_*.py`. BL-68 already held the dashboard case, so it is widened rather than duplicated.
+- **Added to the item:** every `methodology_*.py` here and both test files are over the 2,000-line threshold
+  (`tools/test_methodology_dashboard.py` 5,867, the dashboard 4,729 per copy, `tools/test_methodology_trim.py` 2,291,
+  `starter-kit/methodology_trim.py` 2,181). The adopter exemption recognizes the trimmer by its version line alone
+  (`starter-kit/methodology_dashboard.py:764`–`:773`), so a copy without it would be penalized; item 2 now checks both
+  tools. Recorded only; nothing investigated or changed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-64] S189 — the close-out commit re-measured in a clone of itself
+
+- `starter-kit/quality_ratchet.py --run` in a `--no-local` clone with HEAD asserted at `5217d1d` (the S189 close-out):
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 949e9e0b4269 · manifest 58d766958ae1`, `tests-sh-passed`
+  323 at 3 receipts, 165 s — identical to the receipt's citation on `c64cbd8`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-57] S189 close-out — P12 done (PR #84 open), the receipt, learnings withheld pending BL-53
+
+- **Deliverable:** plan P12. [PR #84](https://github.com/KJ5HST/methodology/pull/84) is OPEN and MERGEABLE at `20db3f0`, after
+  the merge of `upstream/main`, the density re-measure, and five fixes from an independent review. **Owed next:** merge
+  the branch into fork `main` before P8 (plan item (24)).
+- **Receipt:** `HANDOFFS.md` S189, `status: complete`, self-score 7, S188 scored 8. Minus: five claims in the frozen
+  draft were wrong or overstated, all found by the reviewer; the marker defect was in text I had read; zsh traps recurred.
+- **Learnings:** no row. `docs/FORK_LEARNINGS.md` is 81,721 of 81,920 B, and S188 asked that BL-53 be answered before
+  the next row. Three candidates are written under the receipt; one is already a gate (Test 20 (g)'s old-section fixture).
+- **Gate citation** (the receipt's): clone of `c64cbd8`, `10/10 pass · results 949e9e0b4269`, `tests-sh-passed` 323 at
+  3 receipts. This commit is re-measured in a clone of itself after it lands (BL-64).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [BL-57] S189 — P12 recorded: the plan's status, item (24), step 3's `HANDOFFS.md` bullet, the BL-57 row
+
+- **Plan** `docs/planning/changelog-rules-contradictions-plan.md`: status line (P12 done), P12's *Done at S189* line, and
+  item (24): the review's five fixes, D9 revised (`HANDOFFS.md` keys on `handoffs-format: 2`), and what that means
+  for P8–P11. Fork `main` lacks the branch's last eight commits (`f572068`..`20db3f0`), so the branch merges into
+  fork `main` before P8 syncs from it; `airqino` and `nprcgenekeepr` now read `HANDOFFS.md` stale.
+- **Backlog:** the BL-57 row says P12 is done and names the merge as next.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-18 · [ad hoc] S189 — upstream [PR #84](https://github.com/KJ5HST/methodology/pull/84) opened (non-commit action, operator go-ahead)
+
+- **Action:** `gh pr create -R KJ5HST/methodology --base main --head rmsharp:bl57/changelog-rules`, title *"Put the
+  CHANGELOG.md rules in one synced home: the seed becomes a pointer, and the rules stop contradicting each other"*,
+  body from `docs/planning/changelog-rules-pr-body.md` (`f452f30`) below its rule. Before: `git ls-remote` confirmed the
+  remote head equals local `20db3f0`. Read back: `state=OPEN`, `mergeable=MERGEABLE`, head `20db3f0`, base `main`,
+  cross-repository, 20 files, +1,156 / −299, created 2026-09-18T05:06:46Z; the posted body equals the file (17,325 B;
+  the read-back adds one trailing newline). The go-ahead was the operator's answer to the step-6 picker, *"Open it
+  now"*. Nothing else upstream: no comment, no change to PR #83.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
