@@ -5,9 +5,9 @@ into `KJ5HST/methodology:main`. Everything below the rule is the body as it woul
 [`context-budget-status-plan.md`](context-budget-status-plan.md) §5 P3′ (S214) on the branch tip `c1167ae`,
 recomposed rather than patched from the draft the operator reviewed at S212 and did not approve, which it
 replaces here; that draft stays readable as `git show e4ad63d:docs/planning/context-budget-status-pr-body.md`.
-**APPROVED AS WRITTEN by the operator, 2026-09-21 (S214), at `fb324d6`. Not posted.** Opening the PR, and pushing
-the branch to fork `origin` first, is P4's go-ahead on the exact text below. Every figure in it was measured at S214 on the heads named in its first line; re-measure if either head
-moves before posting.
+**APPROVED AS WRITTEN by the operator, 2026-09-21 (S214), at `fb324d6`. POSTED UNCHANGED 2026-09-21 (S215) as
+[#86](https://github.com/KJ5HST/methodology/pull/86):** title `:12` without its label, body `:16` onward, both read back equal. Its figures are S214's,
+on the heads its first line names, and neither had moved. Change the posted body with `gh api -X PATCH`, never `gh pr edit`.
 
 **Title:** `context_budget.py`: `--status` becomes a real run that writes nothing, a refused argument is told what it most likely meant, and the headline and advisory stop contradicting the table
 

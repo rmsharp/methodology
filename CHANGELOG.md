@@ -219,6 +219,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S215 — P4's outcome recorded: the plan, the body file's status, BL-75 and BL-80
+
+[`context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md): the status block says P4 is done,
+with a *P4 outcome* under §5 P4. [`context-budget-status-pr-body.md`](docs/planning/context-budget-status-pr-body.md):
+the fork-only preamble now says the text was posted unchanged as #86. It stays three lines, so the title stays at
+`:12` and the body at `:16`, and the body still `cmp`-equals what was posted. The BL-75 and BL-80 index rows and
+detail each gained an S215 paragraph (nothing above them edited). Both items stay open until the PR merges.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-21 · [BL-75] S215 — P4: upstream PR [#86](https://github.com/KJ5HST/methodology/pull/86) opened with the approved text (non-commit action, operator go-ahead)
+
+`gh pr create -R KJ5HST/methodology --base main --head rmsharp:fix/context-budget-status`, with the title from
+`docs/planning/context-budget-status-pr-body.md:12` (label dropped) and the body from `:16`, both passed from files.
+Both are the text the operator approved at S214, and the body is byte-identical to `fb324d6`'s. Go-ahead at S215's
+Phase 0 picker. **Checked before:** `upstream/main` `6b29d3d` and the branch `c1167ae`, both unchanged since S214,
+so the figures stand as measured; #83/#84/#85 unchanged, 0 reviews. **Read back after:** open, not a draft, head
+`c1167ae`, base `main`, 6 commits, 5 files, +631 / −11. The body equals the file apart from the trailing newline,
+and the title is identical. `mergeable_state: clean`. The maintainer now has four open PRs from this fork (#83,
+#84, #85, #86), none reviewed.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-21 · [BL-75] S215 — P4: `fix/context-budget-status` pushed to fork `origin` (non-commit action, operator go-ahead)
+
+`git push -u origin fix/context-budget-status`, a new branch on `rmsharp/methodology` at `c1167ae` (six commits on
+`upstream/main` `6b29d3d`). Go-ahead at S215's Phase 0 picker. Read back after: `git ls-remote origin
+refs/heads/fix/context-budget-status` = `c1167ae`. The branch is now tracked; it is the head of #86.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S215 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-21-4.md` became one row at

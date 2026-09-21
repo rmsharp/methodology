@@ -14,8 +14,10 @@ on the same branch** (see *P2b outcome* under §5 P2b). **P2c and P3′ run in O
 after S213's close-out (the block just above §5 P2c). P2c DONE 2026-09-21 (S214): `2f73733` on the same branch** (see
 *P2c outcome* under §5 P2c); its fresh-clone verification is green, so P3′ followed in the same session. **P3′
 DONE 2026-09-21 (S214) on `c1167ae`:** new floors, trial merges green, the body rewritten (see *P3′ outcome* under
-§5 P3′). **The operator approved the body as written** at S214's review picker. **Then P4** (its own session
-and go-ahead). Every other phase is one session.
+§5 P3′). **The operator approved the body as written** at S214's review picker. **P4 DONE 2026-09-21 (S215): the
+branch pushed to fork `origin` and the PR opened as [#86](https://github.com/KJ5HST/methodology/pull/86)**, the
+approved text unchanged (see *P4 outcome* under §5 P4). **Next: the maintainer's review; P5 after the merge.** Every
+other phase is one session.
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
 `upstream/main`), so the fix reaches adopters only through **one upstream pull request**. Opening it is
@@ -725,6 +727,21 @@ Approving the text is not P4's go-ahead: pushing the branch and opening the PR s
   is sequencing, not a blocker.**
 - **After:** `gh pr view <n> --json body,headRefOid` read back against the file; the ledger entry is a
   non-commit action.
+
+**P4 outcome (S215, 2026-09-21).** **Opened: [#86](https://github.com/KJ5HST/methodology/pull/86), head
+`rmsharp:fix/context-budget-status` at `c1167ae`, base `main` at `6b29d3d`.** The operator gave the go-ahead at
+S215's Phase 0 picker, on the body approved at S214.
+- **Before, twice** (at Phase 0, and again right before the push): `upstream/main` `6b29d3d` and the branch
+  `c1167ae`, both unchanged since S214, so the body's figures were posted as S214 measured them. #83, #84, #85 at
+  `219fb9d`, `77afc12`, `e2501c5`, 0 reviews, only our comments. The body file from `:16` was byte-identical to
+  `fb324d6`'s (`cmp`).
+- **Push:** `git push -u origin fix/context-budget-status`, a new branch; `git ls-remote origin` read back `c1167ae`.
+- **Open:** `gh pr create -R KJ5HST/methodology --base main --head rmsharp:fix/context-budget-status`, the title
+  (the body file's `:12` without its label) and the body (`:16` onward) passed from files.
+- **Read back:** open, not a draft, head `c1167ae`, 6 commits, 5 files, +631 / −11, as the body's first line says.
+  The body equals the file apart from the trailing newline, and the title is identical. The REST API reports
+  `mergeable: true`, `mergeable_state: clean`, `maintainer_can_modify: true`.
+- **Still open:** BL-75 and BL-80, until the PR merges; then P5.
 
 ### P5: fork-side adoption. After the upstream merge, or earlier by the operator's separate decision.
 

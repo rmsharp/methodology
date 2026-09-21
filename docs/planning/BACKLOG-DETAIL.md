@@ -2723,6 +2723,13 @@ posted. Details: the plan's *P2c outcome* and *P3′ outcome* (§5). **Next: P4,
 open the PR with the approved text, its own session and go-ahead.** This item stays open until the PR merges.
 Nothing above is edited.
 
+**P4 DONE 2026-09-21 (S215): opened as [#86](https://github.com/KJ5HST/methodology/pull/86).** The branch was pushed
+to fork `origin`, and the approved title and body were posted unchanged. Both heads were unchanged since S214
+(`upstream/main` `6b29d3d`, branch `c1167ae`), checked at Phase 0 and again right before the push. Read back: head
+`c1167ae`, 6 commits, +631 / −11, body and title equal to the file, `mergeable_state: clean`. Details: the plan's
+*P4 outcome* (§5). **Next: the maintainer's review; then P5 (fork-side adoption).** This item stays open until the
+PR merges. Nothing above is edited.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it
@@ -3122,6 +3129,10 @@ the code does not have. **Next: the plan's P2c, after P2b.** Nothing above is ed
 now says what the code does. Four tests, two red on the old tool and two controls; four mutants killed. Verified
 in a fresh clone: 140 unit tests, `bin/tests.sh` 142 / 0. It is in the PR body the operator approved at the same
 session's end. **Next: P4 (BL-75).** This item stays open until the PR merges. Nothing above is edited.
+
+**In the PR since 2026-09-21 (S215): [#86](https://github.com/KJ5HST/methodology/pull/86)**, opened under BL-75's
+P4 at `c1167ae`. **Next: the maintainer's review; then P5.** This item stays open until the PR merges. Nothing above
+is edited.
 
 
 <a id="bl-81"></a>
