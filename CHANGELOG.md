@@ -219,6 +219,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [ad hoc] S209 — fork `main` pushed to `origin`, `73b9536..e1795a0` (non-commit action, operator go-ahead)
+
+Seven commits, this session's claim through its close-out. Fork remote only — **nothing upstream-facing.**
+Approved at this session's Phase 0 picker. Checked before: tree clean, `origin/main` = `73b9536`, a fast-forward.
+Read back after: `git ls-remote origin refs/heads/main` = `e1795a0`, equal to local `main`, ahead/behind 0/0. This
+record is pushed after it under the standing push-record grant.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S209 close-out — one upstream PR for `context_budget.py` planned and ratified; nothing built
 
 **Deliverable:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md), the plan for
