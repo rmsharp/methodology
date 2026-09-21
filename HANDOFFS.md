@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S205
+date: 2026-09-20
+status: pending
+active_task: **BL-78 phase P2, option β** — convert `.context-budget.json` `files[5]` (`starter-kit/SAFEGUARDS.md`) from a **no-growth pin** to a **reported series**, on BL-53 option C's precedent (`docs/planning/BACKLOG-DETAIL.md` §BL-78 *RECOMMENDATION* P2). **Exactly one key path changes: `/files[5]/_`.** `max_bytes` 15,386 and `max_tokens` 6,777 are **NOT** touched — the two per-file ceilings partition the read cap (41,364 + 15,386 = 56,750 = 25,000 tok × 2.27), so re-pinning one re-partitions both; that is option α, which the operator did not take. Settled by the operator at S204's Phase 0 picker and recorded in the row's own `_` note; chosen as this session's deliverable at this session's picker over BL-81's costing, BL-80's and BL-79's. **Owed at this claim, its own action:** the `HANDOFFS.md` retention trim — this receipt makes **three**, one above the policy depth of two (`--cut 2 --force`). **Nothing upstream-facing approved**; a write-up of PR #83's twelve operator decisions was asked for and is **opened as a backlog item**, not executed, because it is a second deliverable.
+commit: pending
+```
+
+```handoff
 session: S204
 date: 2026-09-20
 status: complete

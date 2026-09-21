@@ -215,6 +215,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-78] S205 claim — P2: `SAFEGUARDS.md`'s row becomes a reported series (in progress)
+
+**Deliverable:** **BL-78 phase P2, option β**, settled by the operator at S204's Phase 0 picker and
+recorded in `.context-budget.json` `files[5]._` itself — convert the `starter-kit/SAFEGUARDS.md`
+read-set row from a no-growth **pin** to a **reported series**, on BL-53 option C's precedent
+([`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) §BL-78, *RECOMMENDATION* P2).
+Chosen by the operator after this session's Phase 0 (picker) over BL-81's costing, BL-80's and BL-79's.
+
+**Scope, stated so the close-out can be checked against it.** Exactly one key path: `/files[5]/_`.
+**`max_bytes` 15,386 and `max_tokens` 6,777 are not touched** — the two per-file ceilings partition
+the read cap (41,364 + 15,386 = 56,750 = 25,000 tok × 2.27), so re-pinning one re-partitions both.
+That is option α, which the operator did not take.
+
+**Also owed at this claim, its own action:** the `HANDOFFS.md` retention trim — this claim's receipt
+makes **three**, one above the policy's depth of two (`--cut 2 --force`), exactly as S204's handoff
+predicted.
+
+**Nothing upstream-facing is approved.** #85, #84 and #83 are untouched. A write-up of PR #83's
+twelve operator decisions was asked for in the same picker and is **opened as a backlog item**, not
+executed here — it is a second deliverable, and S204's #85/#83 comment drafts were never persisted
+to any tracked file, so there is nothing to re-show.
+
 ### 2026-09-20 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-19.md` (79 record(s), 233,183 B → 130,149 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
