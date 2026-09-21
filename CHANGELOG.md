@@ -219,6 +219,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S215 close-out — P4 of the `context_budget.py` plan done: the branch pushed, the upstream PR opened as #86 with the approved text
+
+**Deliverable:** P4 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+(*P4 outcome* `:731`). `fix/context-budget-status` pushed to fork `origin` at `c1167ae`, and
+[#86](https://github.com/KJ5HST/methodology/pull/86) opened into `KJ5HST/methodology:main` with the title and body
+the operator approved at S214, posted unchanged and read back equal. Recorded `34011a7`. Supporting: `0b3e355` the
+claim; `fc1f05a` + `b4d22c4` the `HANDOFFS.md` trim and fold. **The plan and the body were input, not output.** **Next:
+the maintainer's review; P5 after the merge. Failing a reply, BL-78's closing edits (fork-local).**
+
+**Phase 3A — S214's handoff scored 9/10.**
+- *What helped:* step (1) was an exact recipe and every value held: P4 at `:719`, the pre-checks, the conditional *"if
+  either moved, re-measure"* (neither had), the `gh pr create` form with `--head rmsharp:…`, and the read-back against
+  `c1167ae`. Step (2)'s heads and comment ids held. Step (3) predicted the `-4` shard name. Gotcha (3) (a fork-only
+  preamble; post from `:16`, the title from `:12` without its label; backticks, so pass from a file) shaped the
+  extraction script.
+- *What was missing:* where P4's outcome is recorded: the plan's status block, and the body file's preamble, which has
+  to stay three lines so `:12` and `:16` stay true. Derived here.
+- *What was wrong:* nothing false. The `CHANGELOG.md` estimate (~155 KB) was labelled as one; it measured 152,720 B.
+- *ROI:* clearly positive. Phase 0 to the go-ahead needed no discovery.
+
+**Phase 3B — self-assessment 9/10.**
+- *Right:* Phase 0 in full, with the gate citation re-run in a clone. One picker for all three go-aheads, quoting the
+  title and proving the body's identity with `cmp` instead of re-pasting 14 KB of approved text. The queue and both heads
+  re-checked immediately before the outward action. The title and body extracted by a script that asserted their anchors,
+  and posted from files. The PR read back through two APIs and compared by script. The trim's `.verify.sh` ran before the
+  fold, and the suite after it. A Test 9 failure diagnosed from its output as a network timeout and re-run alone
+  (343 / 0 / 6), neither accepted nor ignored. The preamble edit kept to three lines, and the posted text re-proved
+  with `cmp`.
+- *Wrong:* `bash bin/check-links` (the checker is Python; one wasted call). An unquoted `echo ====` in zsh, a known trap
+  that recurred. An `&&` chain stopped silently after a timed-out `upstream` fetch; caught because the expected lines
+  were missing, then retried. None affected a result.
+- *Stakeholder corrections:* none.
+
+**Phase 3C:** no fork-learnings row, so D3's retirement obligation does not arise. The zsh recurrence and the
+`check-links` note went to agent memory. **Phase 3E:** the PR was read back; fork `main` at `34011a7`:
+`quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, identical to
+Phase 0.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S215 — P4's outcome recorded: the plan, the body file's status, BL-75 and BL-80
 
 [`context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md): the status block says P4 is done,
