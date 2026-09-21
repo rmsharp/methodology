@@ -215,6 +215,57 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S206 close-out — the twelve decisions were the maintainer's, and union fuses receipts
+
+**Deliverable: BL-82 drafted** (`15be6ec`) — [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md),
+a collaborator's positions on upstream PR #83's twelve §8 decisions, with a proposed comment in its §6. **Nothing
+posted.** BL-82 stays open on that one outward step. Supporting commit: `c3a096b`, a re-runnable repro built from
+upstream's own history.
+
+**Phase 3A — S205's handoff scored 8/10.**
+- *What helped, concretely:*
+  - Next-step (2) named the source and the fetch command (`git fetch upstream refs/pull/83/head`) and said *"read
+    BL-82's four settle-first questions before drafting"*. Those four questions became the review's §1, and
+    question (a) is what overturned the item's premise.
+  - Next-step (1) framed BL-78 P3 as a yes/no with its evidence attached. It went into the picker unchanged and
+    was answered in one line.
+  - The retention-trim prediction held for the **sixth** consecutive session.
+  - Gotchas (5) and (6) (`--cut N` retains N; a dry run needs `--force`) were both used and both right.
+- *What was missing:* the hypothesis S204 recorded — *"the operator there may be him"* — was not carried into
+  BL-82 or the handoff, so the item's headline asserted the opposite.
+- *What was wrong:* BL-82's headline *"waiting on TWELVE OPERATOR DECISIONS, not on a review"* was half wrong.
+  The decisions are the maintainer's, and a review is what the fork can give. Everything else checked out: the
+  PR states, the byte figures and the key-file lines.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 8/10.**
+- *Right:*
+  - Settled whose decisions they were from the maintainer's own receipts before taking a single position.
+  - Measured D4 rather than reviewing its prose.
+  - Made the measurement re-runnable from upstream history alone, so the maintainer can run it without fork
+    commits.
+  - Caught an unfair fixture of my own (two copies of one receipt) and re-ran with two different receipts before
+    believing the result.
+  - Surfaced integration facts the maintainer cannot see from his side: #84 leaves `SAFEGUARDS.md` 17 tokens of
+    headroom, #85 moves the hook lines the plan cites, and PR #80's 11 commits are the fork's and already recorded
+    here.
+- *Wrong:*
+  - Hit the zsh `$r:` modifier trap again, despite the memory warning (one failed command, no harm).
+  - Wrote one temporary file to `/tmp` rather than the scratchpad, and removed it.
+  - My first wholeness check for `CHANGELOG.md` was byte-strict and briefly read "not whole" for what was one lost
+    blank line. It was refined before any claim was written.
+  - Two pieces of the review's evidence (S44, S115) live only in agent memory; the review says so.
+- *Stakeholder corrections:* 0.
+
+**Reduction (FM #28 close-out term):** a `HANDOFFS.md` receipt was archived (trim + fold). No fork-learnings row
+was retired: D3 was refused explicitly, with five rows named.
+
+**Phase 3E — the build-equivalent, in a `--no-local` clone of `5c6e642` with HEAD asserted by sha:** `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, with `tests-sh-passed` 343 at two receipts. Not exercised: this close-out commit (BL-64), GitHub's handling of `merge=union`, and the JSONL histories under union.
+
+**Fork push:** approved at the Phase 0 picker for this close-out, `main` → `origin`. It is recorded in its own
+push-record entry once read back.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S206 — Phase 3C: fork Learning #90, and the D3 retirement obligation discharged by refusal
 
 - **What:** [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) row **#90**, 1,142 B — *a line-level merge driver
