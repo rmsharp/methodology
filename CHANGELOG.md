@@ -215,6 +215,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S208 claim — post §6 of the PR #83 review to #83 (in progress)
+
+**Deliverable:** the comment in §6 of [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md),
+posted to upstream PR [#83](https://github.com/KJ5HST/methodology/pull/83) as one comment and read back. Chosen at
+this session's Phase 0 picker. The operator approved the text after S207's close-out; the picker adds **one
+sentence** first, after the third bullet of *"What this changes in the plan"*: the trim-against-new-entry case was
+run on `HANDOFFS.md` only, so a `CHANGELOG.md` trim against a new entry is stated as untested. The final text is
+shown to the operator before posting.
+
+**Side actions approved at the same picker, each its own commit or record:** the `HANDOFFS.md` retention trim this
+claim makes owed; a scoped `CHANGELOG.md` trim (20,008 B under the 196,608 B trigger at Phase 0), dry run first;
+correcting §4.1 of the review, which says S44's review-agent incident is *"recorded only in the operator's agent
+memory, not in a tracked file"* — S44's own receipt records it, `docs/archive/HANDOFFS-through-2026-08-09.md:411`,
+gotcha (1); and pushing fork `main` to `origin`.
+
+**Phase 0, for the record:** both ledger frontiers = HEAD `5bb10c5`, gaps empty, no pending stub, 2 receipts before
+this one. Gate citation re-run in a `--no-local` clone with HEAD asserted by sha: `11/11 pass · results
+10575dac7361 · manifest 01a4ae7aa511`, S207's citation exactly. Dashboard 76/100, medium, 0 high+. Upstream 0 open
+issues; #83 head `219fb9d`, 0 comments, 0 reviews; #84 one comment (the fork's own); #85 unchanged. Local `main` 7
+ahead of `origin/main` (`0dcc291`), 0 behind `upstream/main` (`6b29d3d`).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S207 — operator review after close-out: the rewritten §6 approved
 
 The operator, on the §6 text shown in S207's close-out report: *"Those look fine."* Recorded as **approval of

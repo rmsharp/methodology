@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S208
+date: 2026-09-20
+status: pending
+active_task: **BL-82 — post §6 of `docs/planning/pr83-decisions-review.md` to upstream PR #83 as one comment, and read it back.** Chosen at this session's Phase 0 picker, with one sentence added first (the trim case was run on `HANDOFFS.md` only) and the final text shown to the operator before posting. **Side actions approved at the same picker, each its own commit:** the `HANDOFFS.md` retention trim this receipt makes owed (three receipts, `--cut 2 --force`); a scoped `CHANGELOG.md` trim, dry run first; correcting §4.1's false *"only in agent memory"* (`docs/planning/pr83-decisions-review.md:180`; S44's receipt records it at `docs/archive/HANDOFFS-through-2026-08-09.md:411`); and pushing fork `main` to `origin`.
+commit: pending
+```
+
+```handoff
 session: S207
 date: 2026-09-20
 status: complete
