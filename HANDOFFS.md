@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S204
+date: 2026-09-20
+status: pending
+active_task: **BL-78 phase P1** — re-measure both read-set `measured_bytes` keys in `.context-budget.json` (`starter-kit/SAFEGUARDS.md` 17,129 B, `starter-kit/SESSION_RUNNER.md` 55,406 B, `measured_on` 2026-09-20) and state in each `_` note that `measured_bytes` is a **record, not a ceiling** — its only consumer is the density-drift warning at `starter-kit/context_budget.py:398`, gated on `status == "ok"`, which neither file ever is. **`max_bytes` and `max_tokens` are NOT touched**: they are the partition (41,364 + 15,386 = 56,750) and re-partitioning is P2. Chosen by the operator at this session's Phase 0 picker over BL-78 P2, BL-77's costing and BL-80's. **P2 was settled in the same picker as option β (reported series)** and is not executed here. Side actions approved: the scoped `CHANGELOG.md` trim (`--cut 2026-09-19`) with its fold, the owed `HANDOFFS.md` retention trim (`--cut 2`) with its fold, and the fork `origin` push. **Nothing upstream-facing approved** — the operator asked to see the proposed #85/#83 comment text first.
+commit: pending
+```
+
+```handoff
 session: S203
 date: 2026-09-20
 status: complete

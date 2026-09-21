@@ -211,6 +211,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-78] S204 claim — P1: re-measure both `measured_bytes`, and say what that key is (in progress)
+
+**Deliverable:** **BL-78 phase P1**, as recommended by S203's costing block
+([`docs/planning/BACKLOG-DETAIL.md:2866`](docs/planning/BACKLOG-DETAIL.md)) — re-measure both read-set
+`measured_bytes` keys in `.context-budget.json` and state in each `_` note that `measured_bytes` is a
+**record, not a ceiling** (its only consumer is the density-drift warning at
+`starter-kit/context_budget.py:398`, gated on `status == "ok"`). Chosen by the operator after Phase 0
+(picker) over BL-78 P2, BL-77's costing and BL-80's.
+
+**Scope, stated so the close-out can be checked against it.** Two `measured_bytes` values, their two
+`measured_on` dates, and the record-vs-ceiling clause in their two `_` notes. **`max_bytes` and
+`max_tokens` are not touched** — they are the partition (41,364 + 15,386 = 56,750), and re-partitioning
+is P2, which the operator has settled as **β (reported series)** but which is a separate session.
+
+**Operator decision recorded in the same picker:** BL-78 **P2 = option β** — convert
+`starter-kit/SAFEGUARDS.md`'s row to a reported series on BL-53 option C's precedent, rather than α's
+re-pin-and-re-partition. Not executed here.
+
+**Also approved in the picker, each its own action:** the scoped `CHANGELOG.md` trim
+(`--cut 2026-09-19`), the owed `HANDOFFS.md` retention trim (`--cut 2`), and the fork `origin` push.
+**Nothing upstream-facing was approved** — the operator asked to see the proposed #85/#83 comment text
+before deciding.
+
 ### 2026-09-20 · [BL-78] S203 close-out — the read-set pins costed, and the question they were asking turned out to be the wrong one
 
 **Deliverable:** the BL-78 costing at [`docs/planning/BACKLOG-DETAIL.md:2866`](docs/planning/BACKLOG-DETAIL.md)
