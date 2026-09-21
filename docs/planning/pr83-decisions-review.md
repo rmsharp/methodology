@@ -1,9 +1,10 @@
 # PR #83's twelve decisions — a collaborator's positions, with the fork's evidence
 
 **Date:** 2026-09-20 (fork session S206)
-**Status:** DRAFT, internal. **Nothing here has been posted.** A comment, review or edit on PR #83 is an
-outward action and needs its own explicit go-ahead; §6 carries a proposed text so that go-ahead can be
-given on exact words.
+**Status:** internal. **§6 was POSTED to PR #83 on 2026-09-20 (fork session S208), with the operator's
+go-ahead on the exact text**, as one comment:
+[#issuecomment-5755256040](https://github.com/KJ5HST/methodology/pull/83#issuecomment-5755256040), read back
+byte-identical to §6 at `f7fc621`. Nothing else here was posted.
 **Backlog:** BL-82 ([`BACKLOG-DETAIL.md` §BL-82](BACKLOG-DETAIL.md#bl-82)). This document answers BL-82's four
 settle-first questions in §1 before taking any position.
 **Subject:** upstream PR [#83](https://github.com/KJ5HST/methodology/pull/83), head `219fb9d`, the
@@ -277,7 +278,7 @@ plan's own rule (cite at the base sha) covers the mechanism; this is the list.
 
 ---
 
-## 6. Proposed comment for #83 — NOT POSTED
+## 6. Proposed comment for #83 — POSTED 2026-09-20 (S208), [#issuecomment-5755256040](https://github.com/KJ5HST/methodology/pull/83#issuecomment-5755256040)
 
 *For the operator's go-ahead, verbatim or edited; paste it without the `>` markers. It uses only terms a
 reader of the plan already has: no fork session numbers, no backlog codes, and no bare decision codes
@@ -374,7 +375,7 @@ to commit `c3a096b`, which is on the fork's `main`.*
 
 ## 7. What this document does not do
 
-- It posts nothing and answers nothing on the maintainer's behalf.
+- It answers nothing on the maintainer's behalf. §6 was posted as a comment at S208; nothing else was.
 - It edits no framework file; the plan is untouched.
 - It does not test GitHub's handling of `merge=union` (outward: a scratch PR), the two `.jsonl` files,
   whether `methodology_trim.py` and a future `check-ledger` accept union's missing blank line, or a

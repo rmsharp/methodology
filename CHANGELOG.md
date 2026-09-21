@@ -219,6 +219,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S208 — §6 of the PR #83 review POSTED to #83 (non-commit action, operator go-ahead); BL-82 closed
+
+**Posted as one comment on upstream PR [#83](https://github.com/KJ5HST/methodology/pull/83):
+[#issuecomment-5755256040](https://github.com/KJ5HST/methodology/pull/83#issuecomment-5755256040)**, author
+`rmsharp`, 2026-09-21T04:08:24Z, on the operator's go-ahead at S208's second picker, given on the exact text
+shown. **Pre-checks, run immediately before:** #83 still `OPEN` at head `219fb9d`, 0 comments, 0 reviews; the
+repro link (`c3a096b` on `rmsharp/methodology`) returned HTTP 200; the body, extracted from §6 of
+[`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md) at `f7fc621`, `cmp`-equal to
+the text shown. **Read back** with `gh pr view 83 --json comments`: byte-identical to the posted body, apart from
+the one trailing newline `jq` adds. **Rendered** (`gh api …/issues/comments/5755256040`, `body_html`): one table of
+5 rows, both triple-backtick code spans intact, 11 list items, no stray code block — the rendering S207 could not
+exercise.
+
+**BL-82 closed:** its row moved to §Completed items in [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md), the
+open list updated, a closing update at the end of its detail block, and the review's status line, §6 heading and
+§7 now say what was posted. `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK. A reply on #83 is the maintainer's to make;
+answering one would be new work and its own go-ahead.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S208 — the PR #83 review's final text, and two false "agent memory" claims corrected
 
 In [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md), before posting (operator,

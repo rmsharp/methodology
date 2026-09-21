@@ -3155,3 +3155,19 @@ text,** after the operator's review. The pre-posting checks in S206's receipt st
 It is **not** a go-ahead to post; posting stays its own outward go-ahead. Whether *"those"* also covered the two
 pre-posting considerations S207 raised (the untested `CHANGELOG.md` trim-against-prepend case under union; item
 10's example resting on agent memory only) is not settled by those words, so the posting picker asks.
+
+**UPDATE 2026-09-20 (S208) — POSTED; BL-82 CLOSES.** At S208's Phase 0 picker the operator chose posting as
+the deliverable, with one sentence added first: the comment's third *"What this changes in the plan"* bullet
+now says the trim-against-new-entry case was run on `HANDOFFS.md` only, so a `CHANGELOG.md` trim against a new
+entry is untested. The final text was shown, and the operator gave the go-ahead to post it. Before posting:
+#83's head was still `219fb9d`, with 0 comments and 0 reviews; the repro link returned 200. The body, extracted
+from [`pr83-decisions-review.md`](pr83-decisions-review.md) §6 at `f7fc621`, differs from the approved text by
+that sentence alone. **Posted as one comment,
+[#issuecomment-5755256040](https://github.com/KJ5HST/methodology/pull/83#issuecomment-5755256040)** (`rmsharp`,
+2026-09-21T04:08:24Z), and read back byte-identical apart from a trailing newline. GitHub's own rendering was
+checked through the API: one table of 5 rows, both triple-backtick code spans intact, 11 list items, no stray
+code block. **S207's second consideration was a false premise:** item 10's example does not rest on agent
+memory alone. S44's receipt records it (`docs/archive/HANDOFFS-through-2026-08-09.md:411`, gotcha (1)), and the
+Test 9 details in §4.7 are in S178's receipt (`docs/archive/HANDOFFS-through-2026-09-17.md:62`, gotcha (3)).
+The review's §4.1 and §4.7 now cite both (`f7fc621`). **Nothing further is owed here.** A reply on #83 is the
+maintainer's; answering it would be new work and its own go-ahead.
