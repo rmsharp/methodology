@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S213
+date: 2026-09-21
+status: pending
+active_task: **BL-75 — P2b of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) §5 (`:513`): D6, the argument messages and `--check`.** On the LOCAL branch `fix/context-budget-status` from `d4dbc26`, in a `--no-local` clone with `core.hooksPath` set: `--check` accepted as a second name for `--status`; each refused argument's line names the likely intent (D6's table, `:282`); 7 tests RED first against blob `dd4803bf`; 5 mutants; fetched back as a fast-forward. Nothing pushed, nothing upstream-facing. Chosen at this session's Phase 0 picker. **Side actions approved at the same picker:** the `HANDOFFS.md` retention trim this receipt makes owed (three receipts, `--cut 2 --force`) and its fold; pushing fork `main` to `origin` at close-out.
+commit: pending
+```
+
+```handoff
 session: S212
 date: 2026-09-21
 status: complete

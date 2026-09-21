@@ -219,6 +219,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S213 claim — P2b of the `context_budget.py` plan: D6, the argument messages and `--check` (in progress)
+
+**Deliverable:** P2b of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+§5 (`:513`), on the **local** branch `fix/context-budget-status` from `d4dbc26`, built in a `--no-local` clone and
+fetched back as a fast-forward. `--check` becomes a second name for `--status`; every other refused argument's line
+names what the user most likely meant (D6's table, `:282`). Seven tests written to fail first against blob
+`dd4803bf`, five mutants run. **Nothing pushed, nothing upstream-facing.** Chosen at this session's Phase 0 picker
+over BL-78's closing edits.
+
+**Side actions approved at the same picker, each its own commit or record:** the `HANDOFFS.md` retention trim this
+claim makes owed (three receipts, `--cut 2 --force`) and its fold; pushing fork `main` to `origin` at close-out.
+
+**Phase 0, for the record:** `CHANGELOG.md` frontier = HEAD `00b8685`, gap empty; `HANDOFFS.md` frontier `b3b1f3a`,
+the one commit after it (`00b8685`) is S212's announced push record. No pending stub, 2 receipts before this one;
+nothing backfilled. Gate citation re-run in a `--no-local` clone at `00b8685`: `11/11 pass · results 10575dac7361 ·
+manifest 01a4ae7aa511`, S212's citation exactly. Dashboard 76/100, medium, 0 high+, run in that clone (so no
+`dashboard_history.jsonl` row here). Upstream 0 open issues; #83 (`219fb9d`), #84 (`77afc12`), #85 (`e2501c5`) open,
+0 reviews, only our comments. `main` = `origin/main` = `00b8685`; `upstream/main` still `6b29d3d`;
+`fix/context-budget-status` = `d4dbc26`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S212 — fork `main` pushed to `origin`, `304084d..b3b1f3a` (non-commit action, operator go-ahead)
 
 Six commits, this session's claim through its close-out. Fork remote only — **nothing upstream-facing**, and the
