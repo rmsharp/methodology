@@ -211,6 +211,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-78] S203 claim — which number is right now for the two read-set pins (in progress)
+
+**Deliverable:** **one costed decision for BL-78**, written into
+[`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) — the item's own words for what is open are
+*"the open question is not what happened but which number is right now"*, asked once for
+`starter-kit/SAFEGUARDS.md` and, since S201's second instance, again for `starter-kit/SESSION_RUNNER.md`. Chosen by
+the operator after Phase 0 (picker) over BL-79's costing and BL-77's. This is a **planning session**: the plan is
+the deliverable and `.context-budget.json` is not edited (`starter-kit/SESSION_RUNNER.md` §Planning Sessions).
+
+**Scope, stated so the close-out can be checked against it.** Cost the three shapes the item already names —
+(1) re-pin, (2) wire a gate, (3) treat the rows as a reported series — against **both** files, and settle which
+number each pin should carry. It does **not** change `max_bytes` or `measured_bytes` for either file, does not add
+a gate to `.quality-gates.json`, does not build the per-file growth check shape (2) would need, and touches no
+upstream-facing artifact. Any of those is a separate session with its own go-ahead.
+
+**What makes this costable now rather than open-ended.** The blob comparison is already done in the item (ours
+`ed49b977`, upstream's `933816b4`, the cited `f0964195` stale on both sides, the divergence exactly `0d63410`), and
+S201 established that `measured_bytes` feeds only a density-drift warning gated on `status == "ok"` — so the
+tool has **no** per-file growth refusal for a file that is `over` by design. Both halves of the costing are
+therefore re-verification of stated numbers, not new investigation.
+
+**Phase 0 found nothing to backfill.** `CHANGELOG.md` frontier = HEAD `6a56261`, gap empty; `HANDOFFS.md` frontier
+`629c39a` with S202's three post-close-out commits above it, all three ledgered. No `status: pending` stub,
+**2** receipts. The newest receipt's gate citation was **re-run, not read** — the local
+`.quality-gates-results.json` is still S195's (head `431279b`, ten gates) — giving `11/11 · results 10575dac7361 ·
+manifest 01a4ae7aa511` in a `--no-local` clone with HEAD asserted by sha, **S202's citation exactly**.
+
+**Side actions approved in the same picker:** the owed `HANDOFFS.md` retention trim with its fold (this claim makes
+the third receipt, so it falls due now), and a **scoping only** of the approaching `CHANGELOG.md` trim — measured
+and costed, not performed. The operator's multi-select also carried *"nothing beyond the deliverable"*, which
+cannot hold with the other two; read as approval of the two named actions and flagged back in the same turn.
+Nothing goes to `upstream`.
+
+**Ledger:** `CHANGELOG: pending` — this entry is the claim's *(in progress)* line; Phase 3F records the rest.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S202 — fork `main` pushed to `origin`, `e63dbe3..cb40af4` (non-commit action, operator go-ahead)
 
 - **Action:** `git push origin HEAD:main`, a fast-forward of the one post-close-out commit `cb40af4` (BL-79

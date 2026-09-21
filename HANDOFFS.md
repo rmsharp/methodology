@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S203
+date: 2026-09-20
+status: pending
+active_task: **BL-78 costing** — settle *"which number is right now"* for the two read-set pins, `starter-kit/SAFEGUARDS.md` (17,129 B against a declared 15,386 B) and `starter-kit/SESSION_RUNNER.md` (55,406 B against a declared 54,363 B), by costing the item's three named shapes: re-pin, wire a gate, or treat the rows as a reported series. **Planning session — the costed decision in [`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) is the deliverable; `.context-budget.json` is not edited.** Chosen by the operator at this session's Phase 0 picker over BL-79's costing and BL-77's. Side actions approved in the same picker: the owed retention trim of this file with its fold, and a scoping-only costing of the approaching `CHANGELOG.md` trim.
+commit: pending
+```
+
+```handoff
 session: S202
 date: 2026-09-20
 status: complete
