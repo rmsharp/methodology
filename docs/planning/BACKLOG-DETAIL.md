@@ -3127,3 +3127,15 @@ of the twelve and is not asked anywhere in §8. **(d) What re-verification the a
 lists the commands that produced its evidence and says they are re-runnable by the executor, so an answer that
 accepts a measured premise should say whether it re-ran it or took it (fork Learning #23's rule, applied to
 someone else's plan).
+
+**UPDATE 2026-09-20 (S206) — drafted, and the headline above was half wrong.**
+[`pr83-decisions-review.md`](pr83-decisions-review.md) settles the four questions in its §1. **(a)** All twelve
+are the maintainer's. His S24 receipt's next step (a) reads *"OPERATOR: answer the twelve §8 decisions on PR
+#83"*, and the plan's adopter evidence lives in his agent memory. So the fork offers a collaborator's review —
+what S24 opened the PR for — not rulings, and *"not on a review"* was the wrong half. **(b)** The document is the
+deliverable; a comment is a separate action, drafted in its §6. **(c)** Answering commits the fork to nothing,
+but the fork has a stake in D4 and D5. **(d)** Its §1(d) table separates re-run premises from taken ones.
+**The finding:** D4's `merge=union` keeps `CHANGELOG.md` entries whole (one blank separator lost) but **fuses two
+`HANDOFFS.md` receipts into one block**. This was measured on upstream's own S23/S24 history with
+[`pr83-union-repro.py`](pr83-union-repro.py) (`c3a096b`). **Remaining: posting §6 to #83 — outward, its own
+go-ahead.**

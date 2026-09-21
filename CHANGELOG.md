@@ -215,6 +215,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S206 — PR #83's twelve decisions drafted: a collaborator's positions, and one finding that changes D4
+
+- **What:** [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md), the BL-82 deliverable.
+  It is internal: **nothing is posted to #83**, and its §6 carries a proposed comment text for a separate go-ahead.
+- **BL-82's four questions, settled first (§1).** **(a)** The twelve are the **maintainer's** decisions, not
+  this fork's. His S24 receipt's next step (a) is *"OPERATOR: answer the twelve §8 decisions on PR #83"*, the
+  plan's field evidence is in his agent memory, and S22 names `rmsharp` beside "the operator". So BL-82's
+  *"not on a review"* was the wrong half, and the document offers review positions, not rulings. **(b)** The
+  document first, the comment separately. **(c)** No commitment, but a stake in D4 and D5. **(d)** A
+  re-run-vs-taken table. The plan's budget figures reproduce exactly at `6b29d3d` (runner 18,865/18,900,
+  `SAFEGUARDS.md` 6,029/6,100).
+- **Positions:** agree with eight of the twelve as recommended; reword item 12 (the plan does edit Principle 9 and
+  flight-manual Phase 1 step 4); clarify D5 for a fork's own trunk; leave D12 to the maintainer; D11 not now.
+  **Change D4:** per `c3a096b`, keep `merge=union` for `CHANGELOG.md` and the JSONL histories, and leave
+  `HANDOFFS.md` unattributed. Evidence added: PR #80's 11 commits are the fork's and all are in the fork's
+  ledger; `SAFEGUARDS.md` headroom falls 71 → 17 tokens at #84's head; #85 moves the hook lines the plan cites.
+- **BL-82 stays open on one outward step only:** posting §6. Its index row is rewritten, since the old one
+  carried the half-wrong framing, and its detail block gains an S206 update.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S206 — a re-runnable test of PR #83's `merge=union` premise, from upstream's own history
 
 - **What:** [`docs/planning/pr83-union-repro.py`](docs/planning/pr83-union-repro.py), stdlib Python, scratch
