@@ -12,8 +12,9 @@ user meant; `--check` becomes a second name for `--status`) and **D7** (a byte c
 overwritten by a failed structure pattern). See *P3 outcome* under §5 P3. **P2b DONE 2026-09-21 (S213): `612570b`
 on the same branch** (see *P2b outcome* under §5 P2b). **P2c and P3′ run in ONE session, by the operator's decision
 after S213's close-out (the block just above §5 P2c). P2c DONE 2026-09-21 (S214): `2f73733` on the same branch** (see
-*P2c outcome* under §5 P2c); its fresh-clone verification is green, so P3′ follows in the same session. **Then P4.**
-Every other phase is one session.
+*P2c outcome* under §5 P2c); its fresh-clone verification is green, so P3′ followed in the same session. **P3′
+DONE 2026-09-21 (S214) on `c1167ae`:** new floors, trial merges green, the body rewritten (see *P3′ outcome* under
+§5 P3′); it awaits the operator's review. **Then P4.** Every other phase is one session.
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
 `upstream/main`), so the fix reaches adopters only through **one upstream pull request**. Opening it is
@@ -677,6 +678,42 @@ deletions.
   - Jargon scan; `bin/check-links`.
 - **DONE:** as P3, with the rewritten body **reviewed by the operator**.
 
+**P3′ outcome (S214, 2026-09-21).** **Vetted and re-packaged on `c1167ae`; the body is rewritten and awaits the
+operator's review.**
+- **Re-checked first,** at Phase 0 and again right before the trial merges: `upstream/main` still `6b29d3d`; #83, #84,
+  #85 at `219fb9d`, `77afc12`, `e2501c5`, 0 reviews, only our comments; no new merges.
+- **Measured** on P2c's tip `2f73733` in a fresh clone (the P2c verification): only the two floors' gates had risen,
+  `tests-sh-passed` 142 and `context-budget-unit-tests` 140; every other gate measured exactly its threshold.
+- **The new floors commit = `c1167ae`**, on the local branch, fetched back as a fast-forward `2f73733..c1167ae`, not
+  pushed: `.quality-gates.json:10` 141 → 142 and `:34` 129 → 140, plus one upstream `CHANGELOG.md` entry (the new
+  top, `:38`; jargon scan 0 hits). `d4dbc26` stays. The pre-commit ratchet accepted the tightening.
+- **Tip `c1167ae` verified** in a fresh clone, HEAD asserted: `--selftest` 52 PASS, the `--force` grep empty, the
+  ratchet `10/10 · results 8a465ec9a35d · manifest ca680a8b0c9f`, the new floors met exactly.
+- **Overlap, computed from `c1167ae`** (PR refs re-fetched as `refs/remotes/upstream/pr8x`): #84 clean, tree
+  `5099b93`; #85 and #83 conflict in `CHANGELOG.md` only. **Merged for real** in scratch clones by `merges.py`
+  (union for `CHANGELOG.md`, markers asserted absent, entry counts asserted): #84 87 = 61 + 81 − 55, its tree equal
+  to `merge-tree`'s; #85 62 = 61 + 56 − 55; #83 62 = 61 + 56 − 55. The ratchet on each merge result, serially:
+  - #84: `10/10 · results e1b3029504e8 · manifest ca680a8b0c9f`, `bin/tests.sh` 166 / 0 (142 + #84's 24), budget
+    units 144 (140 + 4);
+  - #85: `11/11 · results 91e29f97f572 · manifest 6c0d2150a0c3`, with its `pre-commit-selftest`; 142 / 0; our
+    floors survive the manifest merge (its new gate goes in after `:78`, below both);
+  - #83: `10/10 · results 8a465ec9a35d · manifest ca680a8b0c9f` (the tip's own figures); 142 / 0.
+- **Behaviour, re-measured** by `behaviour.py` in clean clones of `6b29d3d` and `c1167ae` (tree restored between
+  runs): on `main` every argument (bare, `--status`, `--check`, `--force`, `--dry-run`, `--stauts`, `--zzz`, and the
+  `--json` forms) exits 0 and leaves `?? .context-budget-history.jsonl`; on the tip only bare writes, `--status`/
+  `--check` (and `--json`) exit 0 with the tree unchanged, and each refused argument exits 3 with its hint. And by
+  `cases.py`, in `mktemp` projects: a class total over → `main` OVER + *"Nothing is over"*, tip OVER + the over
+  sentence; a row over + failed pattern → `main` INSTRUMENT-FAILED / `instrument-failed`, tip OVER / `over`. Exit 2
+  in all four.
+- **Other figures re-measured:** `upstream/main`'s `--status` citations 12 (5 + 7); #84's body line; the #82 point-6
+  quote; the flag inventory at today's heads (seven adopters: only `--status`, `mts-system` 1, and `--check`, `wsfct`
+  4); `wsfct`'s instruction still verbatim at `SESSION_NOTES.md:954` (`948dd6eb`); the trimmer's `--check` and the
+  ratchet's `--status` help lines; the installed hook's `--precommit` (`:988` on the tip); `bin/status`'s blob
+  comparison. Diff `6b29d3d..c1167ae`: six commits, 5 files, +631 / −11.
+- **The body** is rewritten, not patched, in
+  [`context-budget-status-pr-body.md`](context-budget-status-pr-body.md); the draft the operator reviewed at S212
+  is `git show e4ad63d:docs/planning/context-budget-status-pr-body.md`. Jargon scan 0 hits; `bin/check-links` OK.
+
 ### P4: open the PR. One session, outward.
 
 - Needs the operator's go-ahead on **the exact body** and on **pushing the branch to fork `origin`**. The
@@ -697,7 +734,8 @@ deletions.
 - **Not edited:** fork Learnings #73 and #88 (rows are append-only), the ledgers, the archives, or the
   historical plans in §2.4.
 - **Adopters:** each by `bin/status` → `bin/sync`, each its own decision. `wsfct`'s sync session must be
-  told that `--check` now exits 3 (§6).
+  told that `--check` now measures and reports without appending a history row (§6; under D6 it is the
+  `--status` run). *(Until S214 this line said "`--check` now exits 3", true only before D6.)*
 - **Surface:** this repo and each adopter clone. **It cannot show** adopters that are not cloned here.
 
 ---

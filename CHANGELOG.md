@@ -219,6 +219,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S214 — P3′: the PR body rewritten, the plan's P3′ outcome recorded, and P5's stale `--check` line corrected
+
+- **What:** [`docs/planning/context-budget-status-pr-body.md`](docs/planning/context-budget-status-pr-body.md)
+  rewritten on the tip `c1167ae`, recomposed from the draft reviewed at S212 rather than patched (that draft stays
+  readable as `git show e4ad63d:docs/planning/context-budget-status-pr-body.md`). It now covers three defects (the
+  missing `--status` and ignored arguments, the advisory, and status precedence). Every figure in it was re-measured
+  this session: the before/after behaviour in clean clones of `6b29d3d` and `c1167ae`, the two contradictions in
+  `mktemp` projects, the trial merges and the ratchet on each merge result, the citation counts, the adopter flag
+  inventory, and the diff. Jargon scan 0 hits; `bin/check-links` OK. **Not posted; nothing pushed.**
+- **Also:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) status line
+  (`:12-17`) and a *P3′ outcome* block under §5 P3′; and P5's *"`wsfct` … must be told that `--check` now exits 3"*,
+  false since D6, now says `--check` measures and reports without a history row (approved at this session's Phase 0
+  picker).
+- **Trial merges from `c1167ae`, each merged for real in a scratch clone:** #84 clean (tree equal to `merge-tree`'s),
+  `10/10 · results e1b3029504e8`, `bin/tests.sh` 166 / 0; #85 `CHANGELOG.md` only, `11/11 · results 91e29f97f572`;
+  #83 `CHANGELOG.md` only, `10/10 · results 8a465ec9a35d`. Every `CHANGELOG.md` entry kept and counted.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-21 · [BL-75] S214 — P3′: upstream's two floors tightened again, `c1167ae` on the LOCAL branch (commit + fast-forward; not pushed)
+
+- **What:** `.quality-gates.json:10` `tests-sh-passed` 141 → 142 and `:34` `context-budget-unit-tests` 129 → 140, the
+  values measured on `2f73733` in a fresh clone, plus one upstream `CHANGELOG.md` entry (the branch's new top, `:38`;
+  jargon scan 0 hits). A new commit: `d4dbc26` stays, so the two floor commits drop together. Built in the same
+  `--no-local` clone with `core.hooksPath` set; the pre-commit ratchet accepted the tightening. Fetched back as a
+  fast-forward `2f73733..c1167ae`.
+- **Evidence:** a fresh clone at `c1167ae`, HEAD asserted: `--selftest` 52 PASS, the `--force` grep empty, upstream's
+  ratchet `10/10 · results 8a465ec9a35d · manifest ca680a8b0c9f`, the new floors met exactly.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-80] S214 — the plan's P2c outcome recorded
 
 - **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) status line
