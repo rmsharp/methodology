@@ -241,6 +241,14 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,553 B → 14,602 B (−38.0%).
 
+### 2026-09-20 · [ad hoc] S204 — fork `main` pushed to `origin`, `6a56261..7ca7b94` (non-commit action, operator go-ahead)
+
+Sixteen commits: S203's eight, unpushed since that session's picker did not include the push, plus this
+session's eight. Fork remote only — **nothing upstream-facing.** Approved at this session's Phase 0 picker.
+Read back after the push: `origin/main` = `7ca7b94` = local `main`, 0 commits behind.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-78] S204 close-out — a key that decides nothing, said so in the one place it is read
 
 **Deliverable: BL-78 P1, done** (`6ddfdb7`). `.context-budget.json` `files[4].measured_bytes` 54,363 →
