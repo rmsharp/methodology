@@ -487,6 +487,134 @@ class TestToolInvariants(unittest.TestCase):
         self.assertNotIn('"--force" in args', src)
 
 
+# ---------------------------------------------------------------------------------
+# The command line. `--status` was cited as a command — in session receipts and as a
+# proposed gate — while the tool had no such flag and ignored every argument it did not
+# know, so each of those runs was the default measurement, history append included. A
+# status read now measures and writes nothing, and an argument the tool does not know is
+# refused before the tree is read.
+# ---------------------------------------------------------------------------------
+
+# Frozen here on purpose: a set derived from the code cannot be asserted to cover the code.
+ACCEPTED_ARGUMENTS = frozenset({"install-hook", "--precommit", "--calibrate", "--selftest",
+                                "--json", "--status"})
+
+
+class TestCommandLine(unittest.TestCase):
+
+    def _project(self, d):
+        """A committed project the tool can measure, with no history file yet. Proved clean
+        before use; test_the_default_run_still_writes_its_row proves the same fixture
+        writes, so an empty status after a run is a non-write, not a run that never got
+        far enough to write."""
+        new_repo(d)
+        Path(d, ".context-budget.json").write_text(json.dumps({
+            "classes": {"resident": {"total_bytes": 34000}},
+            "files": [{"path": "CLAUDE.md", "class": "resident", "max_bytes": 100000}]}))
+        Path(d, "CLAUDE.md").write_text("x" * 999 + "\n")
+        git(d, "add", "-A")
+        git(d, "commit", "-q", "-m", "baseline")
+        self.assertEqual(self._dirt(d), "", "fixture: the project must start clean")
+
+    def _run(self, d, *args):
+        return subprocess.run([sys.executable, str(CB_PY), *args], cwd=d,
+                              capture_output=True, text=True)
+
+    def _dirt(self, d):
+        """--ignored as well: upstream leaves the history file untracked, and an adopter
+        may ignore it, so a write must show whichever way the project treats the file."""
+        return git(d, "status", "--porcelain", "--ignored")
+
+    def _rows(self, d):
+        p = Path(d, cb.HISTORY_NAME)
+        return len(p.read_text().splitlines()) if p.exists() else 0
+
+    def test_status_prints_what_the_default_run_prints_and_only_the_default_run_appends(self):
+        """--status runs FIRST: an append advances the growth-run counter, so the reverse
+        order would compare two different counts rather than two different writes."""
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d)
+            self._run(d)
+            Path(d, "CLAUDE.md").write_text("x" * 1999 + "\n")
+            self.assertEqual(self._rows(d), 1, "fixture: one history row before")
+            status = self._run(d, "--status")
+            rows_after_status = self._rows(d)
+            bare = self._run(d)
+            self.assertEqual(rows_after_status, 1, "--status appended a history row")
+            self.assertEqual(self._rows(d), 2,
+                             "fixture: the size change is real, so the default run appends")
+            self.assertEqual(status.stdout, bare.stdout)
+            self.assertEqual(status.returncode, bare.returncode)
+
+    def test_status_writes_nothing_with_or_without_json(self):
+        for argv in (["--status"], ["--status", "--json"]):
+            with self.subTest(argv=argv), tempfile.TemporaryDirectory() as d:
+                self._project(d)
+                p = self._run(d, *argv)
+                self.assertNotIn("Traceback", p.stderr)
+                self.assertEqual(self._dirt(d), "", f"{' '.join(argv)} wrote to the project")
+                if "--json" in argv:
+                    self.assertIn("files", json.loads(p.stdout))
+
+    def test_the_default_run_still_writes_its_row(self):
+        """PRESENCE CONTROL for the two above, on the same fixture."""
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d)
+            self._run(d)
+            self.assertEqual(self._rows(d), 1)
+            self.assertIn(cb.HISTORY_NAME, self._dirt(d))
+
+    def _assert_refused(self, arg):
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d)
+            p = self._run(d, arg)
+            out = re.sub(r"\x1b\[[0-9;]*m", "", p.stdout)
+            self.assertEqual(p.returncode, cb.USAGE)
+            self.assertIn(f"unknown argument: {arg}", out)
+            self.assertIn("Usage:", out)
+            self.assertEqual(self._dirt(d), "", f"a refused {arg} touched the project")
+            # The config loads, so the 3 above came from the argument and not from a
+            # missing or unreadable .context-budget.json, which exits 3 too.
+            self.assertNotEqual(self._run(d).returncode, cb.USAGE)
+
+    def test_an_unknown_argument_is_refused_and_touches_nothing(self):
+        self._assert_refused("--zzz")
+
+    def test_force_is_refused_like_any_other_unknown_argument(self):
+        """The usage text says there is deliberately no --force. Until arguments were
+        checked, passing it ran the default measurement, so nothing could observe that."""
+        self._assert_refused("--force")
+
+    def test_the_accepted_arguments_are_exactly_the_frozen_set_and_all_documented(self):
+        self.assertEqual(set(cb.ACCEPTED_ARGUMENTS), ACCEPTED_ARGUMENTS)
+        usage = subprocess.run([sys.executable, str(CB_PY), "--help"],
+                               capture_output=True, text=True).stdout
+        for a in sorted(ACCEPTED_ARGUMENTS | {"-h", "--help"}):
+            # Bounded, so "-h" is not found inside "--help" nor "--json" inside a longer flag.
+            self.assertRegex(usage, rf"(?<![\w-]){re.escape(a)}(?![\w-])",
+                             f"{a} is accepted but not in the usage text")
+
+    def test_the_selftest_escape_hatch_check_still_reads_the_accepted_list(self):
+        """The selftest refuses "--force" anywhere in the source before `def selftest`, and
+        that is the one existing guard able to see the accepted list, which is why the list
+        sits above it. It splits on the FIRST mention, so a second one earlier in the file --
+        a comment is enough -- silently narrows the check to whatever lies above it. That
+        happened while this list was being written, and --force added to it then passed the
+        selftest."""
+        src = CB_PY.read_text()
+        self.assertEqual(src.index("def selftest"), src.index("\ndef selftest(") + 1,
+                         "the check's split point is no longer the function itself")
+        self.assertIn("ACCEPTED_ARGUMENTS = (", src.split("def selftest")[0])
+
+    def test_help_still_wins_over_an_unknown_argument(self):
+        """Run where there is no config at all: help reads nothing, so it needs none."""
+        with tempfile.TemporaryDirectory() as d:
+            p = self._run(d, "--help", "--zzz")
+            self.assertEqual(p.returncode, cb.CLEAN)
+            self.assertIn("Usage:", p.stdout)
+            self.assertNotIn("unknown argument", p.stdout)
+
+
 class TestTokenCeiling(unittest.TestCase):
     """The ceiling is denominated in TOKENS, the unit the read cap is actually in.
 

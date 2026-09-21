@@ -38,7 +38,7 @@ import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 CONFIG_NAME = ".context-budget.json"
 HISTORY_NAME = ".context-budget-history.jsonl"
 
@@ -47,6 +47,16 @@ RED = "\033[31m"; YEL = "\033[33m"; GRN = "\033[32m"; CYN = "\033[36m"
 W = 74
 
 CLEAN, WARN, BREACH, USAGE = 0, 1, 2, 3
+
+# Every argument main() acts on, besides -h/--help. Anything else exits USAGE before the
+# tree is read: an unknown argument used to fall through to the default measurement, so a
+# typo, or a flag borrowed from another tool, ran the real thing -- history append
+# included -- while looking like something else. Declared here rather than in main()
+# because the selftest's escape-hatch check reads only the source above the selftest
+# function, and main() is below it. (Name that function's definition in a comment up here
+# and the check stops there instead: it splits the source on the first mention.)
+ACCEPTED_ARGUMENTS = ("install-hook", "--precommit", "--calibrate", "--selftest", "--json",
+                      "--status")
 
 # === THE READ CAP, AND WHY THE CEILING IS DENOMINATED IN TOKENS ===
 #
@@ -1293,8 +1303,11 @@ def print_usage():
     print("Usage: python3 context_budget.py [command] [options]")
     print("")
     print("Commands:")
-    print("  (default)      Measure every budgeted file, append one history line, print")
-    print("                 the ledger. Exit 2 if anything is over a hard ceiling.")
+    print("  (default)      Measure every budgeted file, append one history line when a")
+    print("                 size changed, print the ledger. Exit 2 if anything is over")
+    print("                 a hard ceiling.")
+    print("  --status       The default run without its write: the same ledger and exit")
+    print("                 code, and no history line.")
     print("  install-hook   Install a git pre-commit hook that refuses a commit growing")
     print("                 a budgeted file past its ceiling. Opt-in.")
     print("  --precommit    What the hook runs. Refuses only when the staged file is over")
@@ -1315,6 +1328,12 @@ def main():
     args = sys.argv[1:]
     if "-h" in args or "--help" in args:
         print_usage(); return CLEAN
+    unknown = [a for a in args if a not in ACCEPTED_ARGUMENTS]
+    if unknown:
+        print(f"{RED}unknown argument: {' '.join(unknown)}{R}")
+        print("")
+        print_usage()
+        return USAGE
     root = find_root()
     cfg, cfg_path = load_config(root)
     if cfg is None:
@@ -1372,7 +1391,10 @@ def main():
 
     hist = load_history(root)
     run_len, run_hit = growth_run(hist, snapshot, cfg.get("growth_run", 10))
-    append_history(root, snapshot, hist)
+    # --status is this run with its one write removed, so reading the state cannot change
+    # it: the ledger and the exit code are the default run's, and no history row lands.
+    if "--status" not in args:
+        append_history(root, snapshot, hist)
 
     if "--json" in args:
         print(json.dumps({"resident_bytes": resident, "growth_run": run_len,

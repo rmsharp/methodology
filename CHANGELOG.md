@@ -35,6 +35,41 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `context_budget.py --status` now exists and writes nothing; an unknown argument is refused
+
+- **Action:** `starter-kit/context_budget.py` had no `--status` command and ignored any argument it did
+  not recognise, so `--status`, `--check`, `--force` and a typo each ran the default measurement. That run
+  appends a row to `.context-budget-history.jsonl` whenever a size changed. `--status` is nonetheless
+  cited as a verification step in this repository's own ledgers, and the PR #82 review thread named its
+  write as what stands in the way of a `context-budget` gate. Now:
+  - `--status`, with or without `--json`, is the default run without its one write: the same ledger, the
+    same exit code, and no history row.
+  - An argument outside a fixed list (`install-hook`, `--precommit`, `--calibrate`, `--selftest`, `--json`,
+    `--status`; `-h`/`--help` still win) exits **3**, the tool's documented usage code. It prints
+    `unknown argument: …` and the usage text, and reads and writes nothing. The usage text's *"There is
+    deliberately no --force"* is now observable: `--force` is refused rather than silently measured.
+  - `VERSION` 1.2.0 → 1.3.0. The usage text gains a `--status` line, and the default's *"append one
+    history line"* now says *"when a size changed"*, which is what `append_history` does.
+- **Where the list lives, and a guard that narrowed on the way.** The list sits above `def selftest`
+  because the selftest's escape-hatch check (the string `--force` must not appear in the source above
+  that function) is the only existing guard that can read it; `main()` is below it. While the list was
+  being written, a comment above it named that function's definition. The check splits the source on the
+  first mention, so it moved up, and `--force` added to the list then passed the selftest. A new test
+  pins the split point to the function itself.
+- **Tests, RED first against the unchanged tool** (blob `b1111d92`): 8 in a new `TestCommandLine` class in
+  `tools/test_context_budget.py`. Six fail on the old tool. Two are controls that pass on it by design: the
+  default run still writes, and `--help` still wins over an unknown argument. Two rows in `bin/tests.sh`'s
+  budget block, in a `mktemp` project with the seed config: `--status` leaves `git status --porcelain
+  --ignored` empty, and `--zzz` exits 3 and changes nothing. The same project's default run comes last, as
+  the presence control: the fixture does get written to. Both rows fail on the old tool.
+- **Mutants, run rather than predicted:** the append made unconditional again (3 unit tests and 1 row
+  fail); the rejection removed (2 and 1); `--force` added to the list (3 unit tests, and the selftest,
+  which now sees it); a comment naming the selftest's definition above the list, plus `--force` (3 unit
+  tests; the selftest does not see it). The two `"--force" in args` greps, in `bin/tests.sh` and
+  `tools/test_context_budget.py`, catch neither `--force` mutant, since they match that expression only.
+- **Counts:** `tools/test_context_budget.py` 118 → 126 tests, `--selftest` 52 checks unchanged, `bin/tests.sh`
+  139 → 141 passed, 0 failed. No gate threshold changes in this commit.
+
 ### 2026-09-16 · [ad hoc] PR #82 merged — post-merge verification on main and the first tightening
 
 - **Action:** the operator merged [PR #82](https://github.com/KJ5HST/methodology/pull/82) (quality ratchet,
