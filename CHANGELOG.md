@@ -219,6 +219,45 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S212 — P3: the PR body drafted and frozen for the operator's review (not posted)
+
+- **What:** [`docs/planning/context-budget-status-pr-body.md`](docs/planning/context-budget-status-pr-body.md), new,
+  fork-only: a header (fork notes, **not posted**) and the title and body as they would be posted, 10.8 KB. It opens on
+  the two defects, answers the maintainer's point 6 on #82 by link (comment `5701463025`, verified by `gh api`: author
+  `KJ5HST`, the quoted sentence at its line 17), and states what it does not change, the status-precedence edge
+  included, pending the operator's decision. **Every figure in it was measured this session**, none carried from the
+  plan: the 12 upstream citations (`git grep` on `6b29d3d`: 5 `CHANGELOG.md`, 7 `HANDOFFS.md`); #84's body citation
+  (`gh pr view`, line 143); the before/after table (each command run in a clean clone of `6b29d3d` and of `d4dbc26`);
+  the one adopter with a live `--check` instruction (seven local adopter clones grepped at their current heads); the
+  ranking-comment contradiction (`:1417-1419` against `render()`'s `order`). A first draft said `--status --json` on
+  `main` was *"same as bare"*; run, it is the `--json` run and writes, and the cell was corrected before freezing.
+  **Jargon scan of the outward text** (session numbers, backlog codes, plan decision and phase codes, *fork*,
+  *operator*, *plan*): 0 hits. `bin/check-links` OK.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-21 · [BL-75] S212 — P3: upstream's two floors tightened, `d4dbc26` on the LOCAL branch `fix/context-budget-status` (commit + fast-forward; not pushed); trial merges against #83, #84, #85 all green
+
+- **Measured first**, in a fresh `--no-local` clone of the branch at `c299c30`, HEAD asserted: upstream's ratchet
+  `10/10 pass · results 43e25ddcd120 · manifest 97a7aab85b9a`, S211's figure exactly. Only the two gates this PR moves
+  had risen: `tests-sh-passed` 141 (floor 139), `context-budget-unit-tests` 129 (floor 118); every other gate
+  measured exactly its threshold.
+- **The commit:** `d4dbc26`, `.quality-gates.json:10` 139 → 141 and `:34` 118 → 129, plus one upstream-format
+  `CHANGELOG.md` entry (`[ad hoc]`, jargon scan 0 hits), built in that clone with `core.hooksPath` set, then fetched
+  back here as a fast-forward `c299c30..d4dbc26`, still with no remote tracking.
+- **Overlap, computed:** `git merge-tree --write-tree --name-only` from `d4dbc26`: #84 (`77afc12`) clean,
+  `CHANGELOG.md` included; #85 (`e2501c5`) and #83 (`219fb9d`) conflict in `CHANGELOG.md` only, and
+  `.quality-gates.json` auto-merges with #85's new gate. **Then each merged for real** in its own scratch clone,
+  `CHANGELOG.md` resolved by `git merge-file --union` with a marker grep before `git add`, entry counts checked
+  (59 = 58 + 56 − 55 on both), and #84's merge tree equal to `merge-tree`'s (`7c0fae9`). **The ratchet on each merge
+  result, serially:** #84 `10/10 · results 03f9f21f348d · manifest ba1ef0894ed2` (`bin/tests.sh` 165 / 0, budget
+  units 133); #85 `11/11 · results 2bfa474023b7 · manifest 39ec63ebe022` (its `pre-commit-selftest` included, 141 /
+  0); #83 `10/10 · results 02f2b08c7697 · manifest ba1ef0894ed2` (141 / 0).
+- **Verified in a fresh `--no-local` clone at `d4dbc26`, HEAD asserted:** `--selftest` 52 PASS, exit 0; the
+  `"--force" in args` grep empty; upstream's ratchet `10/10 pass · results 02f2b08c7697 · manifest ba1ef0894ed2`,
+  with the new floors met exactly (141, 129). **Nothing upstream-facing:** pushing the branch and opening the PR are
+  P4's go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S212 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-21.md` became one row at
