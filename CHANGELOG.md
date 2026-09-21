@@ -211,6 +211,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-78] S203 — the two read-set pins costed: they are a partition, and the byte half of it has no guard
+
+**Deliverable.** A costed decision for BL-78, appended to its entry in
+[`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) (FM #17 — appended, nothing above it
+edited). Planning session: the costing is the deliverable and **no key in `.context-budget.json` was touched.**
+
+**What the re-measurement changed about the question.**
+
+- **Only one of the two files is in breach.** `SAFEGUARDS.md` is 1,743 B over a real pin. `SESSION_RUNNER.md`
+  is over a *reduction target it was never expected to meet* and 1,043 B past its `measured_bytes`, which is a
+  **record, not a ceiling** — one consumer, the drift warning at `starter-kit/context_budget.py:398`, gated on
+  `status == "ok"`, which that file never is. The item's *"second instance"* is a stale record.
+- **The ceilings partition the read cap** — `41,364 + 15,386 = 56,750` = 25,000 tok × 2.27 exactly — so a
+  re-pin is a re-partition. **Measured in a `--no-local` clone, three variants:** baseline 122 tests OK;
+  `max_bytes` → 17,129 alone **122 OK, and the tool reports the row `ok` with no config defect** — the byte
+  partition has **no guard**; `max_bytes` + `max_tokens` → 17,129 / 7,545 **FAILS** `TestThisRepoReadSetPartition`
+  at 25,767 > 25,000. Keeping the partition green costs the sibling the same 1,743 B (39,621 B, 15,785 B over).
+- **Shape (2) is a remedy for one file and a no-op for the other.** `SAFEGUARDS.md` grew in 4 commits, **0 of
+  them merges** — a pre-commit budget gate would have refused all four. `SESSION_RUNNER.md` grew in 3, **3 of
+  them merges**, which `SAFEGUARDS.md`'s own table says skip the hook — it would have refused none.
+- **The sibling's blobs, recorded for the first time:** fork `9a24b9e` 55,406 B vs upstream `2a3e410`
+  **53,252 B**; **+1,977 B of the 2,154 B gap is `b1b7eaf`**, issue #75's plan-SURFACE rule, `grep -c SURFACE`
+  **1** on the fork and **0** upstream — BL-70 restated in bytes.
+
+**Recommendation put to the operator, not taken:** P1 re-measure both `measured_bytes` and say what that key
+is; P2 decide `SAFEGUARDS.md`'s row — re-pin **and** re-partition (α) or convert to a reported series on
+BL-53's option C precedent (**β, recommended**, both halves of the pin's stated warrant being falsified); P3
+cost the growth check only if enforcement is wanted.
+
+**Side finding, opened not fixed:** the tool prints *"Nothing is over a ceiling yet"* while four rows read
+`over` — `starter-kit/context_budget.py:652-653`, hardcoded under `if run_hit:` — which is shape (3)'s
+prerequisite, since a reported series is worth what its report is worth. **BL-80.**
+
+**Verified:** `docs/planning/BACKLOG-DETAIL.md.verify.sh` C1–C5 OK; `bin/check-links` 111 links / 23 files.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S203 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-4.md` became one row at

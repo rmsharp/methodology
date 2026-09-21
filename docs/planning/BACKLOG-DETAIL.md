@@ -2863,6 +2863,107 @@ two levels: **no gate runs the tool, and for these files the tool has no growth 
 (2) is therefore larger than *"add a gate"* — it has to build the check first, which is a point in favour
 of shape (3) for exactly the reason BL-53's option C was ratified.
 
+**COSTED 2026-09-20 (S203). Every number below was re-measured on this tree at `6a56261`; none is carried
+from the text above, and two of the item's own framings did not survive the re-measurement.** The item
+asked *"which number is right now"* for both read-set pins. The answer has a prerequisite the item does
+not state: **the two ceilings are a partition, so neither number can be chosen alone.**
+
+**(0) The two files are not in the same configuration, and only one of them is in breach.**
+`starter-kit/SAFEGUARDS.md` declares `max_bytes` **15,386** = its `measured_bytes` — a pin, and it is
+**1,743 B over** it. `starter-kit/SESSION_RUNNER.md` declares `max_bytes` **41,364** against a
+`measured_bytes` of 54,363: its ceiling is a *reduction target it was never expected to meet*
+(*"being over on arrival is the POINT"*), and at 55,406 B it is 14,042 B over that ceiling and 1,043 B
+past its recorded measurement. **`measured_bytes` is not a ceiling** — its only consumer is the
+density-drift warning at `starter-kit/context_budget.py:398`, gated on `status == "ok"`, which this file
+never is. So the **"SECOND INSTANCE" ABOVE IS A STALE RECORD, NOT A SECOND BREACH**; shape (1)'s question
+is owed once strictly and once only in the weak sense of *re-measure the record*.
+
+**(1) The ceilings PARTITION the read cap, so a re-pin is a re-partition — and the byte half of that
+partition has no guard. Measured, not predicted.** `41,364 + 15,386 = 56,750` = `read_cap_tokens` 25,000
+× `MIN_BYTES_PER_TOKEN` 2.27 (`starter-kit/context_budget.py:68`, `:75`), exactly. The config's own
+convention is `max_tokens = int(max_bytes / 2.27)` (both `_` notes say so), which makes a re-pin at
+today's size `int(17,129 / 2.27)` = **7,545**, and `18,222 + 7,545 = 25,767 > 25,000`. Run in a
+`--no-local` clone with HEAD asserted by sha, three variants, `python3 tools/test_context_budget.py`:
+
+| variant of `files[5]` | suite | what it establishes |
+|---|---|---|
+| baseline | exit 0 — **122 tests, OK** | control |
+| `max_bytes` → 17,129, `max_tokens` left 6,777 | **exit 0 — 122 tests, OK** | **the BYTE partition has NO guard** |
+| `max_bytes` → 17,129, `max_tokens` → 7,545 | exit 1 — **FAILED (failures=1)** | `TestThisRepoReadSetPartition` fails naming both members and the 25,767 sum |
+
+The middle row is the one that matters: **the natural re-pin — move the number that is wrong — passes
+every gate**, and `python3 starter-kit/context_budget.py` under it prints `starter-kit/SAFEGUARDS.md
+17,129 B / 17,129 B ok` with **no config defect**, while `41,364 + 17,129 = 58,493` no longer partitions
+anything. The invariant is held only in **tokens**, by a **canonical-only** test
+(`tools/test_context_budget.py:1258`, gate `context-budget-unit-tests`); the byte identity *"lived in
+prose"* by that test's own docstring, and still does. **Keeping the partition green costs the sibling the
+same 1,743 B:** `max_bytes` 56,750 − 17,129 = **39,621**, taking `SESSION_RUNNER.md` from 14,042 B over to
+**15,785 B over**. Shape (1) does not retire the breach — it moves it onto the file the plan already wants
+to shrink.
+
+**(2) The warrant's second half re-verified by blob, and the sibling's numbers recorded for the first
+time.** `SAFEGUARDS.md`: fork `ed49b977` 17,129 B, upstream `933816b4` 17,024 B, the cited `f0964195` a
+real blob of **15,386 B** — the pin's source, now stale on both sides; divergence 1 insertion / 1 deletion
+(`0d63410`, BL-63), as recorded above. **`SESSION_RUNNER.md`, which the item never measured:** fork
+`9a24b9e` **55,406 B**, upstream `2a3e410` **53,252 B**, `git diff upstream/main HEAD` reading 12
+insertions / 6 deletions. **Upstream's copy is 1,111 B BELOW the fork's declared `measured_bytes`**, and
+**+1,977 B of the 2,154 B gap is one fork-only commit** — `b1b7eaf`, issue #75's plan-SURFACE rule, which
+took the file 52,386 → 54,363 B and so *created* the declared measurement. `grep -c SURFACE` is **1** on
+the fork's blob and **0** on upstream's. That is **BL-70 restated in bytes**: the fork's runner is not a
+bloated copy of upstream's, it is upstream's plus one rule upstream dropped.
+
+**(3) WHERE THE GROWTH CAME FROM DECIDES WHETHER SHAPE (2) COULD EVER HAVE WORKED. Measured per commit.**
+
+| file | commits that grew it | merge? | a budget gate in `.githooks/pre-commit` would have |
+|---|---|---|---|
+| `SAFEGUARDS.md` | `ad7bd37`, `628d218`, `df926b6`, `0d63410` | **0 of 4** are merges | refused **all four** |
+| `SESSION_RUNNER.md`, since `measured_on` | `421ebf9`, `7245f79`, `22ce71b` | **3 of 3** are merges | refused **none** |
+
+`starter-kit/SAFEGUARDS.md`'s own blast-radius table says it: *"Merge and rebase commits skip the hook."*
+So **shape (2) is not one remedy — it is a remedy for one file and a no-op for the other**, and the file
+it cannot protect carries the whole 12,999 B debt. Against that, its cost is the one already found above:
+the tool has no per-file growth comparison to wire, so the shape has to build the check, wire it into a
+**distributed** hook, and still miss 3 of the last 3 growths of the larger file.
+
+**(4) SHAPE (3) HAS A PREREQUISITE THE ITEM DOES NOT NAME: THE REPORT CURRENTLY CONTRADICTS ITS OWN
+TABLE.** A reported series is worth what its report is worth. With four rows reading `over`, this tree's
+`python3 starter-kit/context_budget.py` prints *"growth run: 163 consecutive non-shrinking measurements.
+**Nothing is over a ceiling yet** — that is the point. Ceilings fire late."* The sentence is hardcoded at
+`starter-kit/context_budget.py:652-653` under `if run_hit:` and reads no row's status. **Opened as BL-80
+rather than fixed here** (FM #17); it is a distributed file, so it is an upstream change.
+
+**RECOMMENDATION — a blended (3) + (1), in this order. None of it is done here; each step is its own
+session, and the two that touch `.context-budget.json` need the operator's ratification first, exactly as
+BL-53's option C did.**
+
+- **P1 — re-measure both `measured_bytes` and say what that key is.** 17,129 and 55,406, with
+  `measured_on` 2026-09-20 and a clause stating that `measured_bytes` is a **record, not a ceiling**
+  (its one consumer is the drift warning at `:398`). No partition consequence: `measured_bytes` is not
+  in the partition. **This alone retires the "second instance."**
+  *DONE:* both keys updated, both notes state the record/ceiling distinction.
+  *Verify:* `python3 tools/test_context_budget.py` (expect 122 OK) and `python3 starter-kit/context_budget.py`
+  (expect the same four `over` rows and exit 2 — this step changes no verdict).
+  *Surface:* this repository's working tree plus a `--no-local` clone at the commit; it cannot show what an
+  adopter sees, because `.context-budget.json` here is this repo's own config and not the distributed seed.
+- **P2 — decide `SAFEGUARDS.md`'s row, operator's call, both halves of its pin's warrant now false.**
+  Option **α**: re-pin at 17,129 **and** re-partition the sibling to 39,621 / 17,455 tok — internally
+  consistent, and it moves 1,743 B of debt onto `SESSION_RUNNER.md`. Option **β**: convert the row to a
+  reported series on BL-53's option C precedent — the row keeps its number, the `_` note says the number
+  is a series and not a limit, and the partition identity is left stated in the class note where it
+  already lives. **β is recommended**, because the pin's two stated reasons — *"byte-identical on
+  upstream/main"* and *"the smaller, stabler half"* — are both falsified above (it diverges, and it is the
+  half that grew four times in four days while the sibling grew only by merge).
+  *DONE:* one `_` note rewritten, `max_bytes`/`max_tokens` unchanged under β.
+  *Verify:* the same two commands, plus `git diff` showing exactly one changed key path.
+  *Surface:* as P1.
+- **P3 — only if the operator wants enforcement: cost the check itself, do not build it inside P2.**
+  It is a new comparison in a distributed tool plus a hook change in a distributed hook, and §(3) above is
+  the evidence that it would have caught 4 of 7 recent growths, none of them on the file that matters.
+
+**NOT DONE HERE, deliberately:** no key in `.context-budget.json` was edited, no gate was added, no growth
+check was built, and nothing upstream-facing was touched. The three variants in §(1) were run in a scratch
+clone and reverted; `git status` in this repository was clean of config changes throughout.
+
 
 <a id="bl-79"></a>
 
