@@ -233,6 +233,48 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,314 B → 14,956 B (−35.8%).
 
+### 2026-09-20 · [BL-78] S205 close-out — a pin demoted to a report, and the note that dated it to the wrong session
+
+**Deliverable: BL-78 P2, done** (`fac748f`). `.context-budget.json` `files[5]` (`starter-kit/SAFEGUARDS.md`) —
+the `_` note now states that `max_bytes` **15,386 B is a reported series, not a no-growth pin** (option β, BL-53
+option C's precedent). Exactly **one** changed key path, `/files[5]/_`, walked object-to-object; no number moved.
+**BL-78 stays open** on P3 alone, which is an operator yes/no, not a measurement.
+
+**Phase 3A — S204's handoff scored 8/10.** *What helped, concretely:* next-step (1) named P2 as *"ratified and
+unexecuted — the next unit"* with its DONE criterion and both verify commands, so Phase 1 was a one-line
+decision. The retention-trim prediction held for the **fourth** consecutive session. Gotcha (1) (*`CHANGELOG.md`
+has no fold*) saved a repeat of S204's own amend; (3) and (4) (`--cut N` retains N; a dry run needs `--force`)
+were both used and both right; (6) (`check-learnings` needs `--file`) and (7) (measure the row before appending)
+meant #89 passed the 1,500 B budget first time at 1,258 B. Next-step (2) — **#84's split offer is ours; #83 is the
+maintainer's own PR waiting on twelve answers** — was re-checked with `gh pr view` and held, and it is what BL-82
+is built on. *What was missing:* next-step (3) said the #85/#83 drafts *"were put in the 3G report and posted
+nowhere"* but not that they were therefore **gone** — the operator asked this session to re-show them, and the
+honest answer was that no file holds them. *What was wrong:* nothing in the handoff. Every number re-derived at
+Phase 0 matched. *ROI:* strongly positive.
+
+**Phase 3B — self-assessment 8/10.** *Went well:* every enforcement claim in the new note was read from the
+source, not inherited — `.githooks/pre-commit:131-133`, `precommit_check` at `context_budget.py:1037`, the gate
+list in `.quality-gates.json`. **The rewrite caught a provenance error its two predecessors read past:** the
+replaced note dated the byte pin to S177; `git blame` and `git log -S` put it at **`beffbd0` (S129, 2026-08-30)**,
+17 days earlier, where it was the file's measured size, stable 53 days — which also inverts the old note's
+*"not a measurement dressed as a budget"*. Now fork Learning #89. The operator's picker asked for the #83
+write-up **alongside** the deliverable; it was opened as BL-82 rather than done, and that was stated before
+acting, not after. *Went badly:* one `git blame -L "${n},${n}"` ran with an empty `$n` and blamed the whole file
+instead of failing — harmless here, recorded as a gotcha. *Not done:* `files[4]._` still claims *"every commit
+that grows it is refused"*, which is false in this clone; it was out of P2's one-key scope, and BL-78's own detail
+block (`BACKLOG-DETAIL.md:2814`) already records it, so it was left and flagged rather than fixed.
+
+**Verified:** `quality_ratchet.py --run` in a `--no-local` clone of `29d07c5` with HEAD asserted by sha —
+`11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`; `bash bin/tests.sh`
+**343 / 0 / 6 skipped** after the trim; the shard's `.verify.sh` **L1/L2/L3 OK**; `tools/test_context_budget.py`
+**122 OK**; `context_budget.py` exit 2, same four `over` rows; `BACKLOG-DETAIL.md.verify.sh` **C1–C5 OK**;
+`bin/check-links` **111/23**; `bin/check-learnings` **75 rows, 0 over**; `bin/check-handoff` **OK**.
+
+**Nothing upstream-facing was taken.** The operator authorized no outward action this session. Fresh #85/#83
+comment drafts go into the close-out report only.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S205 — Phase 3C: fork Learning #89, and the D3 retirement obligation discharged by refusal
 
 - **What:** [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) row **#89**, 1,258 B — *a config row is one object
