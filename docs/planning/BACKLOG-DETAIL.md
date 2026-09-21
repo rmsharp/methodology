@@ -3001,3 +3001,41 @@ written; the operator asked that it be opened, not solved. Two things a costing 
 whether the shape is *required* (and therefore checkable, like the receipt) or *recommended* (a template in
 `FRAMEWORK_APPARATUS.md`), and whether a report is even the right place for a commit sha, given that
 `HANDOFFS.md`'s `commit:` field already carries one and a second copy is a second thing to get wrong.
+
+
+<a id="bl-80"></a>
+
+**BL-80 — `context_budget.py` prints *"Nothing is over a ceiling yet"* in the same run that reports four rows
+`over`, so the growth-run advisory contradicts its own table. Raised 2026-09-20 (S203), while costing BL-78.
+Not fixed.**
+
+**What.** On this tree `python3 starter-kit/context_budget.py` prints, under a table whose
+`docs/FORK_LEARNINGS.md`, `starter-kit/SESSION_RUNNER.md`, `starter-kit/SAFEGUARDS.md` and `(read-set total)`
+rows all read `over`:
+
+```
+growth run: 163 consecutive non-shrinking measurements. Nothing is
+over a ceiling yet — that is the point. Ceilings fire late.
+```
+
+**Where.** `starter-kit/context_budget.py:652-653`, inside `if run_hit:`. The sentence is a **literal** — it
+reads no row's status, so it cannot stop being printed once something is over. The growth run itself is
+correct and correctly scoped: it is a series over `resident_bytes` (`:622` says so, and `:625-626` deliberately
+prints it only on the resident row, *"Printing it beside a class it was not computed over would put a true
+number in a place that makes it false"*). **The defect is the second sentence, not the counter** — the file
+already articulates the exact rule the advisory breaks, one screen above it.
+
+**Why it matters.** This is the tool's own summary line, and it is the advisory a session sees *after* the
+table, which is the position a reader trusts for the verdict. It is also **shape (3)'s prerequisite in
+BL-78**: BL-53's option C made a ceiling into *a reported series*, and BL-78 §(4) recommends the same for
+`SAFEGUARDS.md` — a series is worth what its report is worth, and this report currently states the opposite of
+its own data.
+
+**Route: distributed.** `bin/_manifest.py:54` ships `starter-kit/context_budget.py` to adopter roots, so the
+fix lands at every adopter and reaches them only through an upstream pull request — **its own go-ahead.**
+
+**UNCOSTED, and deliberately not shaped.** Written from what the BL-78 costing already measured; nothing was
+measured for this item and nothing was changed. A costing session should settle whether the line is suppressed
+when any finding is over, reworded to be true in both states, or moved above the table where a summary of the
+run alone is unambiguous — and whether `tools/test_context_budget.py` gains an assertion that the advisory and
+the table cannot disagree, which is the check that would have caught it.

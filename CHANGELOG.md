@@ -211,6 +211,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-80] S203 — opened: the budget tool's growth-run advisory contradicts its own table
+
+- **What:** `python3 starter-kit/context_budget.py` prints *"Nothing is over a ceiling yet — that is the point"*
+  in the same run whose table shows **four** rows reading `over`. The sentence is a literal at
+  `starter-kit/context_budget.py:652-653`, inside `if run_hit:`, and reads no row's status.
+- **The counter is not the defect.** The growth run is a series over `resident_bytes` and is printed only on
+  the resident row, deliberately — `:625-626` says *"Printing it beside a class it was not computed over would
+  put a true number in a place that makes it false."* The advisory one screen below breaks that same rule.
+- **Why it was opened now:** it is BL-78 shape (3)'s prerequisite. A *reported series* is worth what its report
+  is worth, and BL-78 §(4) recommends converting a ceiling to one.
+- **Route:** distributed (`bin/_manifest.py:54`), so the fix is an upstream PR and its own go-ahead.
+  **Uncosted and unshaped** — written from what the BL-78 costing already measured, nothing measured for it.
+- **Where:** [`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) §BL-80, index row and the
+  hand-maintained `Open:` enumeration in [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md) both updated.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-78] S203 — the two read-set pins costed: they are a partition, and the byte half of it has no guard
 
 **Deliverable.** A costed decision for BL-78, appended to its entry in
