@@ -191,8 +191,9 @@ there. **Budget note:** the 71 tokens of headroom reproduce at `6b29d3d`. At our
 **17** left (6,083 / 6,100), so if #84 merges first the ~70–90-token row must be paid almost entirely by
 reduction. The plan already allows that (*"paid by reduction if it does not fit"*); this sizes it. For the
 read-only-lens clause: this fork found that `git status --porcelain` cannot show an ignored path. A
-`__pycache__` appeared mid-review and only `--ignored` shows it (fork S115, again recorded only in agent
-memory). Police lenses with `git status --porcelain --ignored`.
+`__pycache__` appeared mid-review and only `--ignored` shows it (fork S115, recorded in S115's own receipt,
+gotchas ([`docs/archive/HANDOFFS-through-2026-08-29.md:285`](../archive/HANDOFFS-through-2026-08-29.md))).
+Police lenses with `git status --porcelain --ignored`.
 
 **4.3 — D4's ordering (item 3). Agree:** leave union-merged order as merged. Case 2 confirms ours lands above
 theirs, and identity is date + tag + sha. **D4's file set: change it, per §3.**

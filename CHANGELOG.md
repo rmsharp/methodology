@@ -219,6 +219,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S209 — the PR #83 review's third false "agent memory" claim corrected (§4.2)
+
+- **What:** §4.2 of [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md) said S115's
+  `git status --porcelain` / `--ignored` finding was *"again recorded only in agent memory"*. S115's own receipt
+  records it, in its gotchas, at `docs/archive/HANDOFFS-through-2026-08-29.md:285` (*"A GITIGNORED ARTIFACT IS
+  INVISIBLE TO `git status --porcelain`"* … *"Use `--ignored` when policing agents"*). The sentence now cites that
+  receipt, as S208 did for §4.1 (S44) and §4.7 (S178). Raised by S208's handoff; approved at this session's Phase 0
+  picker as its own sentence.
+- **Not outward:** §4.2 is not part of §6, so the comment posted to #83 (`#issuecomment-5755256040`) does not
+  contain this text and nothing upstream changes. The review's status line (*"byte-identical to §6 at `f7fc621`"*)
+  stays true: §6 is untouched. BL-82 stays closed.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S209 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-10.md` became one row at
