@@ -10,8 +10,9 @@ upstream-facing. **P3 DONE 2026-09-21 (S212) on `d4dbc26`, and AMENDED by its re
 drafted body and decided two more changes for the same PR, **D6** (an unknown argument's message answers what the
 user meant; `--check` becomes a second name for `--status`) and **D7** (a byte ceiling's `over` is no longer
 overwritten by a failed structure pattern). See *P3 outcome* under §5 P3. **P2b DONE 2026-09-21 (S213): `612570b`
-on the same branch** (see *P2b outcome* under §5 P2b). **Next: P2c (D7), then P3′ (re-vet and re-package on the new
-tip), then P4.** Each is one session.
+on the same branch** (see *P2b outcome* under §5 P2b). **Next: P2c (D7) and P3′ (re-vet and re-package on the new
+tip) in ONE session, by the operator's decision after S213's close-out (the block just above §5 P2c), then P4.**
+Every other phase is one session.
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
 `upstream/main`), so the fix reaches adopters only through **one upstream pull request**. Opening it is
@@ -342,7 +343,7 @@ byte-identity witness for everything else.
 
 ---
 
-## 5. Phases: one per session
+## 5. Phases: one per session, except P2c + P3′ (one session, by the operator's decision)
 
 **Where the work happens:** branch `fix/context-budget-status`, cut from `upstream/main` (`6b29d3d`; re-check
 it has not moved). Work in a `git clone --no-local` of this repo, not a worktree, since a worktree shares the
@@ -596,7 +597,22 @@ fast-forward `d4dbc26..612570b`, not pushed. Tool blob `dd4803bf` → `f75482c2`
 - **Branch `CHANGELOG.md`:** P2b's entry is the top one (`:38`), and `c299c30`'s, whose *Not changed here* names the
   edge, is two below it.
 
-### P2c: D7, status precedence in `measure_file()`. One session, same branch, after P2b.
+**P2c and P3′ are ONE session.** The operator decided this on 2026-09-21, after S213's close-out: *"add combining P2c
+and P3' into one session"*. The reason is cost. Most of each session goes on re-orienting and re-verifying the same
+tree, and P3′'s first step is to re-measure the tip that P2c has just verified. The two phases keep their content;
+only the session boundary moves. The combined session keeps that boundary as a gate inside itself:
+- **Order:** P2c completely first: RED tests, the fix, mutants, its commit and upstream entry, fetched back as a
+  fast-forward, verified in a fresh clone of the new tip. Then P3′ on that tip.
+- **The gate between them:** P3′ starts only if P2c's fresh-clone verification is green. If it is not, the session
+  closes out at P2c's last clean commit, and P3′ becomes the next session.
+- **Separate commits:** P2c's fix and P3′'s floors stay separate commits (≤ 5 files each). Each can be reverted
+  alone, and the body's *What can be dropped* stays true.
+- **Re-check `upstream/main` and the PR queue** at Phase 0, and again right before the trial merges.
+- **The session ends on the operator's review of the rewritten body**, pasted inline. P4 (outward) stays its own
+  session and its own go-ahead.
+- **Records:** a *P2c outcome* and a *P3′ outcome* block, and one receipt covering both.
+
+### P2c: D7, status precedence in `measure_file()`. Same branch, after P2b; the first half of one session with P3′.
 
 - **Files:** `starter-kit/context_budget.py` (the `:427` guard; the `:1417-1419` comment rewritten to say what the
   code does); `tools/test_context_budget.py` (a new class after `TestGrowthRunAdvisory`); `CHANGELOG.md`.
@@ -613,7 +629,7 @@ fast-forward `d4dbc26..612570b`, not pushed. Tool blob `dd4803bf` → `f75482c2`
   named there is fixed here.
 - **DONE, Verify and Surface:** as P2b. `test_a_declared_ceiling_still_renders_exactly_as_before` still holds.
 
-### P3′: re-vet and re-package on the new tip. One session.
+### P3′: re-vet and re-package on the new tip. The second half of P2c's session.
 
 - **As P3**, on P2c's tip:
   - measure;

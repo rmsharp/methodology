@@ -2710,6 +2710,11 @@ a misspelling is offered the nearest accepted argument (`difflib`, 0.75); anythi
 142 / 0 and upstream's ratchet 10/10. The details are in the plan's *P2b outcome* (§5). **Next: P2c (D7, BL-80),
 then P3′, then P4.** This item stays open until the PR merges. Nothing above is edited.
 
+**After S213's close-out, the operator combined P2c and P3′ into one session** (*"add combining P2c and P3' into one
+session"*). The plan's block just above §5 P2c sets the rules. P2c comes completely first. P3′ starts only if P2c's
+fresh-clone verification is green, and the two keep separate commits. The session ends on the operator's review of
+the rewritten body, and P4 stays its own session. **Next: P2c + P3′, one session.** Nothing above is edited.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it

@@ -219,6 +219,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S213 — operator decision after close-out: P2c and P3′ of the `context_budget.py` plan combined into one session
+
+The operator, after S213's close-out: *"add combining P2c and P3' into one session"*. S213 proposed it when asked
+what the work is for, on cost grounds: most of each session goes on re-orienting and re-verifying the same tree, and
+P3′'s first step is to re-measure the tip P2c has just verified. **Scheduled, not started.** Recorded in:
+- [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md): the status line
+  (`:12-15`), §5's heading, the P2c and P3′ headings, and a new block just above §5 P2c (`:600`) that keeps the
+  boundary as a gate inside the session. P2c comes completely first. P3′ starts only if P2c's fresh-clone
+  verification is green; otherwise the session closes out at P2c. The two keep separate commits, and the session
+  ends on the operator's review of the rewritten body. P4 stays its own session and its own go-ahead.
+- S213's `HANDOFFS.md` receipt: `active_task`, `next_steps` (1)–(2), and the plan line numbers in `key_files` and
+  `next_steps`, which the status line's extra line moved by one. Each was grepped on the tree.
+- BL-75's detail (a paragraph appended) and the BL-75/BL-80 index rows (`docs/planning/BACKLOG.md:164`, `:168`).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S213 — fork `main` pushed to `origin`, `00b8685..6010083` (non-commit action, operator go-ahead)
 
 Five commits, this session's claim through its close-out. Fork remote only — **nothing upstream-facing**, and the
