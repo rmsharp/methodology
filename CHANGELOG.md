@@ -241,6 +241,36 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,553 B → 14,602 B (−38.0%).
 
+### 2026-09-20 · [BL-78] S204 — P1 done: both read-set `measured_bytes` re-measured, and the key now says what it is
+
+- **What:** `.context-budget.json` `files[4]` (`starter-kit/SESSION_RUNNER.md`) and `files[5]`
+  (`starter-kit/SAFEGUARDS.md`) carried `measured_bytes` 54,363 and 15,386 with `measured_on` 2026-08-30.
+  Both are now **55,406** and **17,129**, `measured_on` **2026-09-20**, and both `_` notes state in terms
+  that cannot be misread that **`measured_bytes` is a RECORD, NOT A CEILING** — its only consumer is the
+  density-drift warning at `starter-kit/context_budget.py:398`, gated on `status == "ok"`, which neither
+  file is. This is P1 of the recommendation in [BL-78's costing block](docs/planning/BACKLOG-DETAIL.md),
+  ratified by the operator at this session's Phase 0 picker.
+- **Why it was worth a session:** three successive sessions read `SESSION_RUNNER.md` 55,406 / 54,363 as a
+  **second breach**. It never was one. The ceiling that refuses anything is `max_bytes` **41,364**, and
+  the file is 14,042 B over it **by design** (*"being over on arrival is the POINT"* — a ratchet, not a
+  wall). The stale record was manufacturing a breach out of a note to self.
+- **Measured two ways, not once:** `wc -c` and `git cat-file -s` on the blobs at HEAD — `9a24b9e`
+  55,406 B, `ed49b977` 17,129 B. Agreement of the two is what the entry records, not either alone.
+- **THE CLAIM WAS TESTED, NOT ASSERTED.** A `--no-local` clone at `bce7790` (old config) was run against
+  the working tree (new config) on an otherwise identical tree: `diff` of the two `--status` outputs is
+  **empty** once the growth-run counter is held at the same sequence number by a control run. Every row,
+  every status, every advisory, exit 2 both sides. Changing `measured_bytes` by 1,043 B and 1,743 B
+  changed **nothing the tool decides** — which is the note's claim, demonstrated rather than argued.
+- **Deliberately NOT done:** `max_bytes` and `max_tokens` are untouched on both rows. They **partition**
+  the read cap (41,364 + 15,386 = 56,750 = 25,000 tok x 2.27), so re-pinning one re-partitions both; that
+  is **P2**, settled by the operator in the same picker as **option β (reported series)** and left for its
+  own session. `git diff` shows exactly six changed key paths: `/files[4]/_`, `/files[4]/measured_bytes`,
+  `/files[4]/measured_on` and the three matching `files[5]` paths — walked object-to-object, not eyeballed.
+- **Verified:** `python3 tools/test_context_budget.py` **Ran 122 tests, OK**; `python3
+  starter-kit/context_budget.py` exit **2** with the same four `over` rows — the verdict is unchanged,
+  which is what P1 predicted it would be.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-78] S204 claim — P1: re-measure both `measured_bytes`, and say what that key is (in progress)
 
 **Deliverable:** **BL-78 phase P1**, as recommended by S203's costing block
