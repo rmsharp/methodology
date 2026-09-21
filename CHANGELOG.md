@@ -211,6 +211,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S202 — fork `main` pushed to `origin`, `e63dbe3..cb40af4` (non-commit action, operator go-ahead)
+
+- **Action:** `git push origin HEAD:main`, a fast-forward of the one post-close-out commit `cb40af4` (BL-79
+  opened). Read back after a fetch: `refs/heads/main` = `cb40af4ddd57a074a7404f8c040a96619eac64a0`, equal to
+  local `HEAD`; ahead/behind **0/0**.
+- **Its own go-ahead, asked for and given** — the earlier push in this session covered the close-out, and that
+  approval was not treated as extending past it. Nothing went to `upstream`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S202 — BL-79 opened: §3G specifies the close-out report's content, not its shape
 
 - **Raised by the operator after this session's own close-out**, on seeing S202's 3G report and contrasting it
