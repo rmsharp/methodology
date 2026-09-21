@@ -14,7 +14,8 @@ on the same branch** (see *P2b outcome* under §5 P2b). **P2c and P3′ run in O
 after S213's close-out (the block just above §5 P2c). P2c DONE 2026-09-21 (S214): `2f73733` on the same branch** (see
 *P2c outcome* under §5 P2c); its fresh-clone verification is green, so P3′ followed in the same session. **P3′
 DONE 2026-09-21 (S214) on `c1167ae`:** new floors, trial merges green, the body rewritten (see *P3′ outcome* under
-§5 P3′); it awaits the operator's review. **Then P4.** Every other phase is one session.
+§5 P3′). **The operator approved the body as written** at S214's review picker. **Then P4** (its own session
+and go-ahead). Every other phase is one session.
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
 `upstream/main`), so the fix reaches adopters only through **one upstream pull request**. Opening it is
@@ -678,8 +679,9 @@ deletions.
   - Jargon scan; `bin/check-links`.
 - **DONE:** as P3, with the rewritten body **reviewed by the operator**.
 
-**P3′ outcome (S214, 2026-09-21).** **Vetted and re-packaged on `c1167ae`; the body is rewritten and awaits the
-operator's review.**
+**P3′ outcome (S214, 2026-09-21).** **Vetted and re-packaged on `c1167ae`; the body is rewritten, and the operator
+approved it as written** (S214's review picker: *"Approve as written"*), pasted inline in full before the question.
+Approving the text is not P4's go-ahead: pushing the branch and opening the PR still need their own.
 - **Re-checked first,** at Phase 0 and again right before the trial merges: `upstream/main` still `6b29d3d`; #83, #84,
   #85 at `219fb9d`, `77afc12`, `e2501c5`, 0 reviews, only our comments; no new merges.
 - **Measured** on P2c's tip `2f73733` in a fresh clone (the P2c verification): only the two floors' gates had risen,

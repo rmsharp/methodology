@@ -219,6 +219,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S214 — the operator's review of the P3′ body: approved as written (decision; recorded)
+
+- **What:** the rewritten body (`docs/planning/context-budget-status-pr-body.md` at `fb324d6`) was pasted inline in
+  full, then put to the operator at a review picker. **Answer: "Approve as written."** Recorded in the plan (status
+  line and *P3′ outcome*), the body file's preamble, BL-75's and BL-80's index rows and detail paragraphs. **Not a
+  go-ahead for P4:** pushing `fix/context-budget-status` to fork `origin` and opening the PR remain their own
+  session and their own go-ahead. Nothing posted, nothing pushed. `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK;
+  `bin/check-links` OK.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S214 — P3′: the PR body rewritten, the plan's P3′ outcome recorded, and P5's stale `--check` line corrected
 
 - **What:** [`docs/planning/context-budget-status-pr-body.md`](docs/planning/context-budget-status-pr-body.md)

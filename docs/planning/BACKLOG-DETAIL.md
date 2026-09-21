@@ -2715,6 +2715,14 @@ session"*). The plan's block just above §5 P2c sets the rules. P2c comes comple
 fresh-clone verification is green, and the two keep separate commits. The session ends on the operator's review of
 the rewritten body, and P4 stays its own session. **Next: P2c + P3′, one session.** Nothing above is edited.
 
+**P2c + P3′ DONE 2026-09-21 (S214), not upstream:** P2c is `2f73733` on the local branch (a check may raise a row's
+status, never lower it; BL-80's edge). P3′ tightened upstream's two floors again in `c1167ae` (142 and 140), merged
+the tip for real with #84, #85 and #83 (every merge result green under the ratchet), and rewrote the PR body from
+the reviewed draft, every figure re-measured. **The operator approved the body as written.** Nothing is pushed or
+posted. Details: the plan's *P2c outcome* and *P3′ outcome* (§5). **Next: P4, push the branch to fork `origin` and
+open the PR with the approved text, its own session and go-ahead.** This item stays open until the PR merges.
+Nothing above is edited.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it
@@ -3108,6 +3116,12 @@ over listing it or opening its own item. In `measure_file()`, a later check may 
 it, so a byte ceiling's `over` survives a failed structure pattern. Of the status writes, only `:427` on `d4dbc26`
 can lower a status (D7 has the inventory), so the fix is one guard, plus the `main()` comment that claims an ordering
 the code does not have. **Next: the plan's P2c, after P2b.** Nothing above is edited.
+
+**P2c BUILT 2026-09-21 (S214), not upstream:** `2f73733` on the local branch, fetched back from `612570b`. In
+`measure_file()` the pattern write leaves an `over` row as it is (`:434` on `2f73733`), and `main()`'s comment
+now says what the code does. Four tests, two red on the old tool and two controls; four mutants killed. Verified
+in a fresh clone: 140 unit tests, `bin/tests.sh` 142 / 0. It is in the PR body the operator approved at the same
+session's end. **Next: P4 (BL-75).** This item stays open until the PR merges. Nothing above is edited.
 
 
 <a id="bl-81"></a>
