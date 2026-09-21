@@ -219,6 +219,56 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S210 close-out — P1 of the `context_budget.py` plan built and verified on a local branch; nothing upstream-facing
+
+**Deliverable:** P1 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md),
+one commit, `e859196`, on the **local** branch `fix/context-budget-status` (from `upstream/main` `6b29d3d`, not pushed):
+a write-free `--status`, unknown arguments refused with exit 3, and `VERSION` 1.3.0. It is verified in a fresh clone:
+126 unit tests, `bin/tests.sh` 141 / 0, upstream's ratchet 10/10. **Next: P2.** Supporting commits: `e4d7c84` claim,
+`19d9e42` + `f1fa0a4` the `HANDOFFS.md` trim and fold, and `c8e5cae` the plan's P1 outcome and the backlog. **The plan
+was input, not output**, and its P1 text was departed from in three recorded ways (see the P1 entry below).
+
+**Phase 3A — S209's handoff scored 8/10.**
+- *What helped:*
+  - Next step (1) was an exact recipe: re-check the branch base, use a `--no-local` clone, set `core.hooksPath`
+    before the first commit, go RED against `b1111d92`. Every code line it cited was right in the blob.
+  - Gotcha (1), *run `--status` FIRST*, became test 1's ordering.
+  - Gotcha (3), the dashboard fingerprint, kept the docstring and constants untouched.
+  - Step (3)'s PR state was right on all three. Step (4)'s three-receipts prediction held a tenth time, and step
+    (5)'s `CHANGELOG.md` estimate (about 92 KB) read 92,462 B.
+- *What was wrong:* the plan's P1 said a `--force` added to the accepted list *"must be caught by the three
+  existing guards"*, and §4.1 put that list *"in `main()`"*. `main()` is below `def selftest`, so none of the three
+  could see it. This was computable at planning time, not a prediction. Trusted, it would have left one test
+  standing where four guards were believed to stand. Gotcha (2)'s *"guarded three times"* carried the same
+  overstatement.
+- *What was missing:* where the branch lives between sessions. P1–P3 span sessions, and a scratch clone does not
+  survive one. This session fetched it back as a local branch.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 8/10.**
+- *Right:*
+  - Phase 0 in full, with the gate citation re-run.
+  - RED recorded for both unit and shell before the fix.
+  - Mutants run rather than predicted, which found both the plan's false guard claim and my own defect.
+  - The fixed baseline run through the same harness, which exposed a false-premise test.
+  - The outward entry scanned for fork jargon.
+  - Final verification from a fresh clone of the fetched-back branch, not the working clone.
+  - Zero stakeholder corrections.
+- *Wrong:*
+  - I introduced the defect mutant 3 found: a comment naming `def selftest` above the list narrowed the selftest's
+    check to lines 1–55.
+  - My first pinning test asserted `count == 1`, which is false on the fixed tool, and the first mutant table I
+    printed carried spurious kills.
+  - Two receipt citations were written from memory (`:1302`, `:675-697`). A re-check before commit corrected them
+    to `:1293` and `:675-696`.
+  - The three departures from the plan were decided in-session, not put to the operator first. They are recorded in
+    the plan with reasons.
+
+**Phase 3C:** no `docs/FORK_LEARNINGS.md` row. The lesson is enforced by the eighth test, so it is a gate and not a
+row; the rest went to agent memory. D3's retirement obligation does not arise.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S210 — the plan's P1 outcome recorded; BL-75 and BL-80 index rows and BL-75's detail updated
 
 - **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md): status line
