@@ -219,6 +219,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S208 — the PR #83 review's final text, and two false "agent memory" claims corrected
+
+In [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md), before posting (operator,
+S208 pickers):
+
+- **§6, the comment:** one sentence added after the third bullet of *"What this changes in the plan"* — *"I ran
+  that case on `HANDOFFS.md` only; a `CHANGELOG.md` trim against a new entry is untested."* The comment extracted
+  from this commit differs from the text the operator approved after S207 by that sentence alone (`diff` of the
+  two extractions); 1,091 words; renders under `pandoc -f gfm` with one table of 5 rows. **§7** lists the same
+  untested case beside the others.
+- **§4.1:** said S44's review-agent incident was *"recorded only in the operator's agent memory, not in a tracked
+  file"*. False: S44's own receipt records it, [`docs/archive/HANDOFFS-through-2026-08-09.md:411`](docs/archive/HANDOFFS-through-2026-08-09.md),
+  gotcha (1). Now cited, and it says the session reverted the edit.
+- **§4.7:** said the Test 9 rate-limit details *"are in agent memory"*. Also false: S178's receipt records them,
+  [`docs/archive/HANDOFFS-through-2026-09-17.md:62`](docs/archive/HANDOFFS-through-2026-09-17.md), gotcha (3).
+  Now cited. S206's gotcha (4) and S207's gotcha (3) carried the first claim; their receipts are left as written.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-20.md` (54 record(s), 179,924 B → 73,573 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

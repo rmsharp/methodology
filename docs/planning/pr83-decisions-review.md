@@ -177,8 +177,9 @@ is one. It would have failed RED-first against the plan as written.
 
 **4.1 — Framing (D1). Agree.** "Many hands, one closer per tree" matches what this fork has learned
 independently. **Two observations beyond the plan's S163:** a delegated *review* agent appended a sentence to
-the distributed seed `starter-kit/CHANGELOG.md` in the shared tree and never reverted it. That was fork S44,
-2026-08-04, and it is recorded only in the operator's agent memory, not in a tracked file. Separately, two
+the distributed seed `starter-kit/CHANGELOG.md` in the shared tree and never reverted it; the session caught
+and reverted it. That was fork S44, 2026-08-04, recorded in S44's own receipt, gotcha (1)
+([`docs/archive/HANDOFFS-through-2026-08-09.md:411`](../archive/HANDOFFS-through-2026-08-09.md)). Separately, two
 `bin/tests.sh` runs in parallel each failed Test 9 on GitHub's rate limit, and a floor measured then read one
 low (fork S178, [`docs/archive/CHANGELOG-through-2026-09-17.md:1098-1109`](../archive/CHANGELOG-through-2026-09-17.md)).
 **One gap in §8 itself:** item 1 ratifies D1, but D3 (the three new contract gates (e)–(g), the plan's
@@ -225,9 +226,10 @@ the reason workers should write nothing at all.
 which `SAFEGUARDS.md`'s ratchet row refuses. **A ceiling to state:** manifest-at-ref makes Test 9 *correct*
 on every branch but not *safe under concurrency*. Test 9 makes about 29 `gh api` calls per run, one per
 manifest row. In S178 two concurrent runs both failed Test 9 on GitHub's API rate limit; the tracked ledger
-records the failure. The details are in agent memory: `gh api rate_limit` read 5000/5000 throughout, and the
-limit lasted about 15 minutes. Shape B's Phase 5 runs concurrent sessions by design, so it should run suites
-serially or record this.
+records the failure, and S178's receipt, gotcha (3), the details
+([`docs/archive/HANDOFFS-through-2026-09-17.md:62`](../archive/HANDOFFS-through-2026-09-17.md)):
+`gh api rate_limit` did not show the limit, and it cleared in about 15 minutes. Shape B's Phase 5 runs
+concurrent sessions by design, so it should run suites serially or record this.
 
 **4.8 — D12, v3.8 first. The maintainer's call.** For the record: the latest release is still `v3.7`
 (2026-08-12), and §5 lists the cited lines our open PRs move.
@@ -326,7 +328,8 @@ to commit `c3a096b`, which is on the fork's `main`.*
 >   *"union covers both files at once"*. That no longer holds, so it is the option to revisit if receipt
 >   conflicts turn out to be frequent.
 > - **"Every legitimate concurrent edit is an insertion"** stops being true once the distributed
->   `methodology_trim.py` archives old records (last row).
+>   `methodology_trim.py` archives old records (last row). I ran that case on `HANDOFFS.md` only; a
+>   `CHANGELOG.md` trim against a new entry is untested.
 > - **The proposed `bin/check-ledger`** should accept a `###` heading directly under the previous entry,
 >   since `union` drops the blank line between them. Not tested: whether `methodology_trim.py` accepts
 >   that, and the two `.jsonl` files, where one record per line should make `union` safe.
@@ -373,7 +376,8 @@ to commit `c3a096b`, which is on the fork's `main`.*
 
 - It posts nothing and answers nothing on the maintainer's behalf.
 - It edits no framework file; the plan is untouched.
-- It does not test GitHub's handling of `merge=union` (outward: a scratch PR), the two `.jsonl` files, or
-  whether `methodology_trim.py` and a future `check-ledger` accept union's missing blank line.
+- It does not test GitHub's handling of `merge=union` (outward: a scratch PR), the two `.jsonl` files,
+  whether `methodology_trim.py` and a future `check-ledger` accept union's missing blank line, or a
+  `CHANGELOG.md` trim merged against a new entry (the repro's trim case is `HANDOFFS.md`-shaped).
 - It does not re-derive the plan's §9 commands that bear on no position here: the dashboard's ledger-lag
   lines, `context_budget.py:867`, and `quality_ratchet.py`'s `find_root`.
