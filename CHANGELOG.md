@@ -215,6 +215,59 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S207 close-out — §6 recomposed for the operator's review; nothing posted
+
+**Deliverable: BL-82's §6 rewritten** (`1259287`). The proposed comment for upstream PR #83 in
+[`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md) was recomposed against the three
+defects the operator named: too dense, undefined terms, poor structure. **Nothing posted.** BL-82 stays open on
+that one outward step, after the operator's review. Supporting commits: `555bbce` claim, `003a243` + `7f77925`
+the owed `HANDOFFS.md` trim and its fold.
+
+**Phase 3A — S206's handoff scored 8/10.**
+- *What helped, concretely:*
+  - Next step (0) quoted the operator's words and said *"recompose … rather than appending"*. It also said to ask
+    what "clarification" should cover, which became the picker's second question. The answer (three defects)
+    turned a vague brief into three checkable targets.
+  - `key_files` put §6 at `:278`, which was exact, and pointed to the plan's §8 at `:414`.
+  - Gotchas (6) and (7) (`--cut N` retains N; a dry run needs `--force`) were used and right. The
+    three-receipts prediction held a seventh time.
+- *What was missing:* nothing flagged that §6 used ten of the plan's own codes ("D4", "Shape B", …) against the
+  operator's recognized-terms rule. Its preface certified only part of that rule, so it read as compliant.
+- *What was wrong:* nothing material. *"#85, #84, #83 open, 0 reviews each"* was true; #84's one comment is the
+  fork's own check-in, posted and recorded at S201.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 8/10.**
+- *Right:*
+  - Asked what "hard to read" meant before drafting, so the rewrite answers named defects rather than a guess.
+  - Recomposed §6 whole; §0–§5 needed no change.
+  - Re-ran the repro and read the fused block before describing it.
+  - Checked the one new claim (*"GitHub's merge button runs no checker"*) against upstream's tree.
+  - Rendered the extracted comment with `pandoc -f gfm`, so the code spans and the table are checked, not assumed.
+  - Drafted in the scratchpad while the suite ran on the live tree.
+  - Stated the length cost instead of hiding it.
+- *Wrong:*
+  - The first pass ran to 1,269 words and needed a cut; the result is still twice the original's length, which
+    may not be what "too dense" asked for.
+  - Hit the zsh `echo =====` trap at Phase 0 despite the memory warning, and called the trimmer with a
+    positional path once (both harmless).
+  - The comment's carried figures (17/71 tokens, ~29 API calls, `56997af`) were taken from S206, not re-run.
+  - The untested `CHANGELOG.md` trim-against-prepend case was found, not measured; it is flagged for the
+    posting decision.
+- *Stakeholder corrections:* 0.
+
+**Reduction (FM #28 close-out term):** a `HANDOFFS.md` receipt was archived (trim + fold). No fork-learnings row was
+appended, so no retirement is owed; the session's lesson is an operator preference for outward text and went to
+agent memory.
+
+**Phase 3E — the build-equivalent, in a `--no-local` clone of `1259287` with HEAD asserted by sha:** `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`,
+with `tests-sh-passed` 343 at two receipts. `bash bin/tests.sh` after the trim: 343 / 0 / 6 skipped.
+Not exercised: this close-out commit (BL-64), GitHub's rendering of the comment (only pandoc's), GitHub's handling of
+`merge=union`, and a `CHANGELOG.md` trim merged against a prepend under union.
+
+**Fork push:** not taken. Local `main` is 6 ahead of `origin/main`, and no go-ahead was given this session.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S207 — §6 of the PR #83 review recomposed for readability (not posted)
 
 - **What:** §6 of [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md), the proposed
