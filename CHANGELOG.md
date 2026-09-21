@@ -219,6 +219,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-75] S209 — plan drafted: one upstream PR for `context_budget.py`'s `--status` and advisory (decisions pending)
+
+- **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md), frozen as
+  a draft before its five decisions go to the operator. Recommends a **write-free `--status`** (D1 b), **refusing
+  unknown arguments with exit 3** (D2 a), and **choosing the growth-run advisory's second sentence by the
+  headline's own `worst`** (D3 a), with `VERSION` 1.3.0 (D4) and upstream's two floors tightened in the PR (D5).
+  Five phases, one session each; P4 (open the PR) is outward and its own go-ahead.
+- **Evidence gathered:** the tool is one blob (`b1111d92`) on fork `main`, `upstream/main` and all three open PR
+  heads. `context_budget.py --status` is cited 122 times here (34 live, 88 archived), 12 times in upstream's
+  ledgers (receipts S19–S23, the maintainer's sessions), once in open PR #84's body, and in the maintainer's
+  own PR #82 reply ([#issuecomment-5701463025](https://github.com/KJ5HST/methodology/pull/82#issuecomment-5701463025),
+  point 6), which names the history write as what blocks a context-budget gate. `wsfct` cites a second
+  non-existent flag, `--check`, including one live instruction (`SESSION_NOTES.md:797`). The sibling
+  `quality_ratchet.py` has a real, read-only `--status` (`starter-kit/quality_ratchet.py:543`).
+- **Premise tested, not committed:** a throwaway three-edit patch in a scratch clone kept `--selftest` (exit 0),
+  the 122 unit tests and the `bin/tests.sh` `--force` source-grep green. `--status` wrote nothing and printed
+  output byte-identical to the bare run after it; `--zzz`, `--force` and `--check` exited 3 and wrote nothing.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S209 — the PR #83 review's third false "agent memory" claim corrected (§4.2)
 
 - **What:** §4.2 of [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md) said S115's
