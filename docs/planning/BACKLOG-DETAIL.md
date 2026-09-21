@@ -3039,3 +3039,40 @@ measured for this item and nothing was changed. A costing session should settle 
 when any finding is over, reworded to be true in both states, or moved above the table where a summary of the
 run alone is unambiguous — and whether `tools/test_context_budget.py` gains an assertion that the advisory and
 the table cannot disagree, which is the check that would have caught it.
+
+
+<a id="bl-81"></a>
+
+**BL-81 — `.context-budget.json` records the same two file sizes in THREE places, and BL-78 P1 could only
+refresh one of them, so the config now states 55,406/17,129 in `files[]` and 54,363/15,386 fifteen lines
+below. Raised 2026-09-20 (S204), while doing BL-78 P1. Not fixed.**
+
+**What is there.** P1 updated `files[4].measured_bytes` → 55,406 and `files[5].measured_bytes` → 17,129 with
+`measured_on` 2026-09-20. The same measurement, with the same `(wc -c, 2026-08-30)` stamp, also sits in two
+sibling keys that P1's declared scope did not cover:
+
+- `_synced` — *"Sizes today: SESSION_RUNNER.md 54,363 B, SAFEGUARDS.md 15,386 B (wc -c, 2026-08-30)"*.
+- `_deliberate_exclusions` — *"It also carried starter-kit/SESSION_RUNNER.md at 52,386 B, which was 1,977 B
+  STALE -- the file is 54,363 B (wc -c, 2026-08-30). Never derive a ceiling from a size written in prose."*
+
+**Why it is worth an item rather than a shrug.** The second one is the finding. That note exists *because* a
+prose size went stale, it closes with the rule *"never derive a ceiling from a size written in prose"* — and
+the size in that very sentence is now 1,043 B stale, by the identical mechanism, in the identical file. The
+note records the lesson and reproduces the defect in the same breath. The first one is the one that actually
+costs sessions: `grep 54,363` is how three successive sessions arrived at *"SESSION_RUNNER.md is over its
+declared size"*, and after P1 that grep still hits, now in a key nothing re-measures.
+
+**Not a behaviour defect, and that is the argument for leaving it open rather than urgent.** Both are `_`
+comment keys. `context_budget.py` reads neither: `check_synced()` is drift-only by its own docstring and
+`_deliberate_exclusions` is inert prose. Nothing computes anything from them, so no verdict, gate or exit code
+depends on the staleness. What depends on it is the next session that greps.
+
+**Route: fork-only.** This repository's `.context-budget.json` is its own config, not the distributed seed
+(`starter-kit/context-budget.json`), so nothing here reaches an adopter and no upstream PR is involved.
+
+**UNCOSTED, and deliberately not shaped.** Two things a costing session should settle first. Whether the
+right fix is to refresh the two prose copies (cheap, and stale again within a week — this is the third time
+these figures have gone stale) or to **delete the sizes from both notes and cite `files[]`**, which is the
+only version that cannot diverge. And whether the general form is worth a check: a guard that fails when a
+number appearing in a `_` note contradicts the structured key beside it would have caught all three
+instances, and is the same shape as BL-80's *"the advisory and the table cannot disagree"*.

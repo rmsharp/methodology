@@ -241,6 +241,27 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,553 B → 14,602 B (−38.0%).
 
+### 2026-09-20 · [ad hoc] S204 — BL-81 opened: the config states the same two sizes three times, and P1 could refresh one
+
+- **What:** `.context-budget.json` records `starter-kit/SESSION_RUNNER.md` and `starter-kit/SAFEGUARDS.md`
+  sizes in `files[]` **and** in the `_synced` and `_deliberate_exclusions` notes. BL-78 P1's declared scope
+  covered the first only, so the file now reads 55,406/17,129 in one place and 54,363/15,386 *(wc -c,
+  2026-08-30)* fifteen lines below. Opened rather than fixed, on S203's BL-80 precedent (FM #17).
+- **The finding, not the tidying:** `_deliberate_exclusions` exists **because** a prose size went stale, and
+  closes with *"Never derive a ceiling from a size written in prose."* The size in that sentence is now
+  1,043 B stale, by the identical mechanism, in the identical file. The note carries the lesson and
+  reproduces the defect in one breath.
+- **No behaviour depends on it** — both are `_` comment keys; `check_synced()` is drift-only by its own
+  docstring and `_deliberate_exclusions` is inert prose. What depends on it is the next session that greps:
+  `grep 54,363` is how three sessions reached *"over its declared size"*, and after P1 it still hits.
+- **Fork-only** — this repository's `.context-budget.json` is its own config, not the distributed seed, so
+  nothing reaches an adopter and no upstream PR is involved.
+- **Uncosted and unshaped.** A costing session settles whether to refresh the copies (stale again within a
+  week — this is the third time) or delete the sizes and cite `files[]`, and whether a guard against a `_`
+  note contradicting the key beside it is worth building — the same shape as BL-80's.
+- **Verified:** `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK; `bin/check-links` green.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-78] S204 — P1 done: both read-set `measured_bytes` re-measured, and the key now says what it is
 
 - **What:** `.context-budget.json` `files[4]` (`starter-kit/SESSION_RUNNER.md`) and `files[5]`
