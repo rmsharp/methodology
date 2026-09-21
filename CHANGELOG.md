@@ -219,6 +219,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S208 — fork `main` pushed to `origin`, `0dcc291..1c56948` (non-commit action, operator go-ahead)
+
+Fourteen commits: S206's post-close-out direction and S207's six, unpushed since S207 had no go-ahead, plus this
+session's seven. Fork remote only — **nothing upstream-facing.** Approved at this session's Phase 0 picker. Checked
+before: tree clean, `origin/main` = `0dcc291`, a fast-forward. Read back after: `git ls-remote origin refs/heads/main` =
+`1c56948`, equal to local `main`, ahead/behind 0/0. This record is pushed after it under the standing push-record grant.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S208 close-out — the review posted to #83, and BL-82 closed
 
 **Deliverable: §6 of [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md) posted to
