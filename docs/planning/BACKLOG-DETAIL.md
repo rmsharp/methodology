@@ -2685,6 +2685,14 @@ reshaped it:
 A second non-existent flag is in use: `wsfct` cites `--check`, once as a live instruction. **Next: the plan's P1,
 one session.** Nothing above is edited.
 
+**P1 BUILT 2026-09-21 (S210), not upstream:** commit `e859196` on the **local** branch `fix/context-budget-status`
+(from `upstream/main` `6b29d3d`; not pushed). `--status` is the default run without its history append,
+an unknown argument exits 3 before the tree is read, and `VERSION` is 1.3.0. Verified in a fresh `--no-local` clone:
+126 unit tests OK, `bin/tests.sh` 141 / 0, and upstream's ratchet 10/10. The plan's claim that the three existing
+`--force` guards would catch `--force` in the accepted list was false for a list in `main()`, so the list is now
+module-level, under the selftest's check. The details are in the plan's *P1 outcome* (§5). **This item stays open
+until the PR merges.** Next: P2 (BL-80), then P3 to vet, then P4 to open. Nothing above is edited.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it

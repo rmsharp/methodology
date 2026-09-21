@@ -219,6 +219,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S210 — the plan's P1 outcome recorded; BL-75 and BL-80 index rows and BL-75's detail updated
+
+- **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md): status line
+  (P1 done, P2 next), §4.1's contract sentence (the accepted list is module-level, not in `main()`), and a *P1
+  outcome* block under §5 P1 recording the verification, the RED record, three departures from the plan's text,
+  and P2's line numbers on the branch. `docs/planning/BACKLOG-DETAIL.md` BL-75 gains an S210 paragraph (nothing above
+  it edited); the BL-75 and BL-80 index rows in `docs/planning/BACKLOG.md` now say P1 is done. BL-75 stays open
+  until the PR merges. `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK, exit 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-21 · [BL-75] S210 — P1 built: `e859196` on the LOCAL branch `fix/context-budget-status` (branch op + commit; not pushed)
+
+- **What:** the local branch `fix/context-budget-status` was created, cut from `upstream/main` `6b29d3d` and
+  fetched back from a `--no-local` scratch clone, with no remote tracking. It holds one commit, `e859196`: `--status`
+  becomes the default run without its history append, an argument outside `ACCEPTED_ARGUMENTS` exits 3 before
+  the tree is read (`-h`/`--help` still win), and `VERSION` goes 1.2.0 → 1.3.0. The commit adds 8 tests
+  (`TestCommandLine`), 2 `bin/tests.sh` rows and one upstream-format `CHANGELOG.md` entry (`[ad hoc]`, no fork
+  jargon). Tool blob `b1111d92` → `131158cb`.
+- **RED first on `b1111d92`:** 6 of 8 tests fail, and 2 are controls that pass by design. The suite gave 138
+  passed, 3 failed: both new rows, plus the unit-test row. **Mutants, run:** unconditional append, rejection
+  removed, `--force` accepted, and a comment moving the selftest check's split point plus `--force`. All four
+  were killed. Neither `"--force" in args` grep catches either `--force` mutant.
+- **Found while building:** the plan's claim that the three existing guards catch `--force` in the list was
+  false for a list in `main()` (below `def selftest`). A comment written above the new list first named the
+  selftest's definition, which narrowed the selftest's check to lines 1–55. It was caught by running mutant 3,
+  fixed, and pinned by the eighth test.
+- **Verified in a fresh `--no-local` clone at `e859196`, HEAD asserted:** 126 unit tests OK; `--selftest` 52 PASS,
+  exit 0; `bin/tests.sh` **141 passed, 0 failed**; upstream's ratchet `10/10 pass · results 37bbefc55e64 · manifest
+  97a7aab85b9a`. **Nothing upstream-facing:** pushing the branch and opening the PR are P4's go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S210 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-11.md` became one row at

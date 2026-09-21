@@ -2,8 +2,9 @@
 
 **Date:** 2026-09-20 (fork session S209)
 **Status:** RATIFIED — all five decisions in §3 were decided 2026-09-21 by the operator at S209's
-decision picker, each as recommended: D1 (b), D2 (a), D3 (a), D4 yes, D5 yes. Nothing here is
-implemented, and nothing is upstream-facing. Implementation is §5, one phase per session; **P1 is next.**
+decision picker, each as recommended: D1 (b), D2 (a), D3 (a), D4 yes, D5 yes. Implementation is §5,
+one phase per session. **P1 DONE 2026-09-21 (S210): `e859196` on the LOCAL branch `fix/context-budget-status`**
+(not pushed; see *P1 outcome* under §5 P1). Nothing is upstream-facing. **P2 is next.**
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
 `upstream/main`), so the fix reaches adopters only through **one upstream pull request**. Opening it is
@@ -270,8 +271,9 @@ maintainer is the alternative. It costs him a follow-up commit.
 | **anything else** | **no** | **no** | `unknown argument: <args>` + usage | **3** |
 
 **Error contract:** the unknown-argument check runs before `find_root()` / `load_config()`, so a bad
-argument never reads or writes the tree. The accepted list is a literal in `main()`. It must not contain
-the string `--force` (guards in §2.2). **Usage text:** one new line for `--status`. The default's
+argument never reads or writes the tree. The accepted list is a literal, **`ACCEPTED_ARGUMENTS`, at module
+scope above `def selftest`** (S210; this sentence said *"in `main()`"*, where no existing guard could see it).
+It must not contain the string `--force` (guards in §2.2). **Usage text:** one new line for `--status`. The default's
 *"append one history line"* becomes *"… when a size changed"*, which is what `:511` does.
 
 ### 4.2 The advisory
@@ -322,6 +324,35 @@ receipt). **≤ 5 files per commit** (`SAFEGUARDS.md`).
 - **Surface:** a clone of the branch, and the suite's `mktemp` adopter projects. **It cannot show** a real
   adopter's hook or history file. Nor can it show upstream's own clones (P3 runs the suite there; adopters
   are P5).
+
+**P1 outcome (S210, 2026-09-21).** One commit, **`e859196`**, on `fix/context-budget-status` from
+`upstream/main` `6b29d3d`. It is a **local branch in this repository**, fetched back from the scratch clone;
+nothing was pushed. Tool blob `b1111d92` → **`131158cb`**. **Verified in a fresh `--no-local` clone at
+`e859196`:** 126 unit tests OK (118 + 8, 2 skipped); `--selftest` 52 PASS, exit 0; the `"--force" in args`
+grep empty; `bin/tests.sh` **141 passed, 0 failed**; upstream's ratchet `10/10 pass · results 37bbefc55e64 ·
+manifest 97a7aab85b9a`. **RED first on `b1111d92`:** 6 of 8 tests failed; the other 2 are controls that pass by
+design (tests 3 and 7). Both shell rows failed, and so did the suite's unit-test row (138 / 3). **Three
+departures from the text above:**
+1. **The mutant sentence was wrong: none of the three existing guards could see a `--force` in a list inside
+   `main()`.** `main()` and `print_usage()` sit below `def selftest`, and the selftest check reads only the
+   source above it. The other two guards match `"--force" in args` and nothing else. So the list is
+   module-level (§4.1 amended), which makes the selftest the one existing guard that catches it. The two greps
+   still catch neither `--force` mutant.
+2. **An eighth test.** While the list was being written, a comment above it named the selftest's definition.
+   The check splits on the first mention, so the check narrowed to lines 1–55, and `--force` in the list
+   passed the selftest. `test_the_selftest_escape_hatch_check_still_reads_the_accepted_list` pins the split
+   point. `def selftest` legitimately appears twice (the definition and the check's own literal), so the
+   invariant is *"the first mention is the definition"*, not a count of 1.
+3. **Four mutants, not three**, all killed: unconditional append (3 unit tests + shell row 1); rejection
+   removed (2 + shell row 2); `--force` accepted (tests 5 and 6, and the selftest, via
+   `test_the_tool_and_its_selftest_agree_the_gates_all_fire`); a comment above the list naming the selftest's
+   definition, plus `--force` (tests 5, 6 and 8, while the selftest misses it). Shell row 2 compares the tree
+   with its state after `--status`, not with empty, so a `--status` write is attributed to row 1 alone.
+
+**P2's lines on the branch (`e859196`):** the advisory is `starter-kit/context_budget.py:661-663` (it was
+`:651-653` in `b1111d92`), `worst` is `:594-605`, and `render()` is `:591`. The byte-identity witness is
+`tools/test_context_budget.py:1063`, and the new region is `:490-615` (`TestCommandLine` at `:503`); put
+P2's tests after `:615`, before `TestTokenCeiling` (`:618`).
 
 ### P2: BL-80, the advisory (D3). One session, same branch.
 
