@@ -219,6 +219,63 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S208 close-out — the review posted to #83, and BL-82 closed
+
+**Deliverable: §6 of [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md) posted to
+upstream PR #83** as [#issuecomment-5755256040](https://github.com/KJ5HST/methodology/pull/83#issuecomment-5755256040),
+the approved text plus one sentence, read back and checked as rendered. BL-82 closed (`18fc1c2`). Supporting commits:
+`d43ec14` claim, `c9853b8` + `b613ecc` the `HANDOFFS.md` trim and fold, `b6a7133` the `CHANGELOG.md` trim, `f7fc621`
+the final text with §4.1 and §4.7 corrected.
+
+**Phase 3A — S207's handoff scored 8/10.**
+- *What helped, concretely:*
+  - Next step (2) gave the pre-checks and the exact extraction command
+    (`awk '/^> Thanks/,/^> above theirs/' … | sed -E 's/^> ?//'`). It worked verbatim and made the approved-vs-final
+    `diff` a one-liner.
+  - It named both open considerations for the posting picker instead of deciding them. One of them became the
+    picker's second question.
+  - Gotcha (1), that the `pr83` ref gets pruned, was true (the ref was gone, the object present). Gotcha (5),
+    `--file`, and "a dry run needs `--force`" were used and right. The three-receipts prediction held an eighth time.
+- *What was wrong:*
+  - Gotcha (3), that item 10's example *"rests on evidence found only in agent memory"*, was false. S44's receipt
+    records it (`docs/archive/HANDOFFS-through-2026-08-09.md:411`). The review made the same false claim twice
+    more (§4.2, §4.7), and S206 carried it too.
+  - Next step (4)'s *"S203's recipe, `--cut <date>`"* could not be used, because every live record carried one
+    date. That was computable at S207.
+- *What was missing:* nothing material.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 8/10.**
+- *Right:*
+  - Tested the second consideration's premise at Phase 0 instead of carrying it. It fell in one `git grep`, and
+    the search turned up two more instances.
+  - Showed the operator the exact delta and confirmed the rest was byte-identical by `diff`, not by eye.
+  - Re-ran the pre-checks immediately before posting.
+  - Read the comment back by `cmp` and checked GitHub's own rendering through `body_html`, the case S207 could not
+    exercise.
+  - Dry-ran the `CHANGELOG.md` trim four ways before writing it, and verified both new proofs in clones.
+  - Kept tracked-file edits out of the working tree while the suite ran.
+- *Wrong:*
+  - Chose the `CHANGELOG.md` trim depth (retain 35) myself, with rationale but without offering the four options.
+  - Found the third false claim (§4.2) only at close-out, after the approved scope was fixed, so it is owed rather
+    than done.
+  - Hit two zsh traps again (`echo =====`, an unquoted `--include=*.md`).
+  - First wrote the receipt's shell pipe as `\|` and had to fix it.
+- *Stakeholder corrections:* 0.
+
+**Reduction (FM #28 close-out term):** one `HANDOFFS.md` receipt archived (trim + fold) and 54 `CHANGELOG.md` records
+archived. No fork-learnings row was appended, so no retirement is owed. The lesson (an absence claim needs a search
+of the archive shards) is failure mode #28's harder form and went to agent memory.
+
+**Phase 3E — the build-equivalent, in a `--no-local` clone of `18fc1c2` with HEAD asserted by sha:**
+`quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, with
+`tests-sh-passed` 343 at two receipts. `bash bin/tests.sh` after the `HANDOFFS.md` trim: 343 / 0 / 6 skipped.
+`bin/check-handoff` and `--all` OK after the receipt. Not exercised: this close-out commit (BL-64), GitHub's handling
+of `merge=union`, and a `CHANGELOG.md` trim merged against a new entry under union.
+
+**Fork push:** approved at the Phase 0 picker; taken after this commit, and recorded in its own push-record entry.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S208 — §6 of the PR #83 review POSTED to #83 (non-commit action, operator go-ahead); BL-82 closed
 
 **Posted as one comment on upstream PR [#83](https://github.com/KJ5HST/methodology/pull/83):
