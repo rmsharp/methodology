@@ -35,6 +35,16 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `.quality-gates.json`: the same two floors tightened again, to what this branch now measures
+
+- **Action:** `tests-sh-passed` 141 → 142 and `context-budget-unit-tests` 129 → 140. These are the values
+  `python3 starter-kit/quality_ratchet.py --run` measures after the two `context_budget.py` changes recorded
+  between this entry and the first tightening below, which add 11 unit tests and 1 `bin/tests.sh` row. No other
+  floor moves: every other gate measures exactly its threshold. This is a separate commit from the first
+  tightening, so either can be dropped alone.
+- **Measured** in a fresh clone of the branch before this commit: `10/10 pass · 0 fail · 0 unmeasured`, with
+  `tests-sh-passed` 142 and `context-budget-unit-tests` 140.
+
 ### 2026-09-21 · [ad hoc] `context_budget.py`: a row over a ceiling stays `over` when a structure pattern also fails
 
 - **Action:** `measure_file()` in `starter-kit/context_budget.py` gave a row the status of whichever check wrote
