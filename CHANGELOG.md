@@ -211,6 +211,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S203 — Phase 3C: fork Learning #87, and the D3 retirement obligation discharged by refusal
+
+- **The row:** *"When a ceiling is one half of an identity, fixing the number silently breaks the identity — and
+  the guard may be denominated in a DIFFERENT UNIT than the edit, so the natural fix passes every gate."*
+  [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) row **#87**, 1,271 B. 73 rows, contiguous 15..87,
+  0 over the 1,500 B per-row budget.
+- **D3 (`CLAUDE.md:38`) — no row is retired, and here is the basis.** The criterion's three limbs cannot have
+  newly fired since S200 adjudicated all 69: **(a)** no gate was added or moved — this session's ratchet run is
+  `11/11 · results 10575dac7361 · manifest 01a4ae7aa511`, the same manifest digest as S199–S202, so no row's
+  lesson became mechanized; **(b)** row #87 is *narrower* than its nearest neighbours, not a generalization of
+  any of them; **(c)** no artifact, tool or defect was removed this session.
+- **Rows actually considered, and why each stays.** **#45** (*sum the set*) is the nearest neighbour and the one
+  #87 refines — S200 already marked it RETAIN-partly because its **order** half is unmechanized, and #87 does
+  not state #45's lesson at all, let alone more generally; **#85** (a note describing an enforcement the tool
+  lacks) and **#86** (a re-pointed note inverting its old clauses) are both about *prose vs mechanism*, while
+  #87 is about *two numbers and one unit*; **#62** (an already-red checker cannot report a new breach) was
+  re-applied this session — it is what hid BL-80 — and no gate enforces it.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S203 — the `CHANGELOG.md` trim SCOPED: the trigger is already firing, and the refusal is under two sessions away
 
 **Scoping only — approved as a side action, measured and costed, nothing written.** Every dry run below was run
