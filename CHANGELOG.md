@@ -35,6 +35,35 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `context_budget.py`: the growth-run advisory no longer says nothing is over a ceiling when something is
+
+- **Action:** when the growth run fires, `render()` in `starter-kit/context_budget.py` prints an advisory
+  whose second sentence was a literal: *"Nothing is over a ceiling yet — that is the point. Ceilings fire
+  late."* It printed in every such run, including runs whose headline read `context budget OVER` above
+  a table with rows marked `over`. The sentence is now chosen by `worst`, the variable the headline
+  prints, so the two cannot disagree. When nothing is over, the sentence is unchanged, word for word.
+  When something is, it reads *"A ceiling has fired as well — see the rows marked over."* No other output
+  changes.
+- **Tests, RED first against the unchanged tool** (blob `131158cb`): 3 in a new `TestGrowthRunAdvisory`
+  class in `tools/test_context_budget.py`. (1) A matrix over every status `render()` ranks (`ok`,
+  `unmeasured`, `warn`, `instrument-failed`, `over`), with and without the growth run. It calls
+  `render()` in process, checks each cell's headline and advisory first, and asserts the advisory never
+  says *"Nothing is over a ceiling"* when the headline says `OVER`. (2) The presence control: every
+  status below `over` still prints the original sentence, so deleting it would not pass (1). (3) The
+  real `main()` → `render()` path on a project over its resident total, with a growth-run limit of 2 and a
+  seeded history. Tests (1) and (3) fail on the old tool, and (2) passes on it by design.
+- **Mutants, run rather than predicted,** after the fixed tool passed the same harness: the literal
+  restored (tests 1 and 3 fail); the sentence deleted in both states (all 3); the condition inverted (all
+  3); the condition widened to `instrument-failed` (test 2). `--selftest` catches none of them, since it
+  does not cover the advisory.
+- **Not changed here:** a row can be over a ceiling and still read `instrument-failed`. `measure_file()`
+  gives a row the status of whichever check wrote last, so a failed structure pattern overwrites a byte
+  ceiling's `over`. The headline then reads `INSTRUMENT-FAILED`, and the advisory keeps the original
+  sentence above a finding that says the ceiling was exceeded. That is a status-precedence question in
+  `measure_file()`, not in the advisory.
+- **Counts:** `tools/test_context_budget.py` 126 → 129 tests, `--selftest` 52 checks unchanged, `bin/tests.sh`
+  141 passed, 0 failed (unchanged: no shell row added). No gate threshold changes in this commit.
+
 ### 2026-09-21 · [ad hoc] `context_budget.py --status` now exists and writes nothing; an unknown argument is refused
 
 - **Action:** `starter-kit/context_budget.py` had no `--status` command and ignored any argument it did

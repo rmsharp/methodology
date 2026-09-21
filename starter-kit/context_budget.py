@@ -659,8 +659,14 @@ def render(root, results, synced, run_len, run_hit, cfg, snapshot, totals=None,
         return
     print(f"{D}{'─'*W}{R}")
     if run_hit:
+        # The second sentence is chosen by `worst`, the variable the headline prints, so the
+        # two cannot disagree. It was a literal, and said nothing was over a ceiling in runs
+        # whose headline read OVER beside four rows marked over.
+        second = ("Nothing is\n  over a ceiling yet — that is the point. Ceilings fire late."
+                  if worst != "over" else
+                  "A ceiling\n  has fired as well — see the rows marked over.")
         print(f"  {YEL}{B}growth run{R}: {run_len} consecutive non-shrinking measurements. "
-              f"Nothing is\n  over a ceiling yet — that is the point. Ceilings fire late.")
+              f"{second}")
     for r, f in findings:
         print(f"\n  {status_colour(r['status'])}{B}{r['path']}{R} — {f['msg']}")
         for i, (name, how) in enumerate(REMEDIES.get(f["kind"], []), 1):

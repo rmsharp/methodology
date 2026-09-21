@@ -615,6 +615,94 @@ class TestCommandLine(unittest.TestCase):
             self.assertNotIn("unknown argument", p.stdout)
 
 
+# ---------------------------------------------------------------------------------
+# The growth-run advisory. Its second sentence was a literal -- "Nothing is over a
+# ceiling yet" -- printed whenever the run fired, so a run whose headline read OVER, with
+# four rows marked over, said nothing was. The sentence is now chosen by `worst`, the
+# variable the headline prints, so the two cannot disagree.
+# ---------------------------------------------------------------------------------
+
+NOT_OVER_YET = "Nothing is over a ceiling yet — that is the point. Ceilings fire late."
+FIRED_AS_WELL = "A ceiling has fired as well — see the rows marked over."
+
+
+def _plain(text):
+    """ANSI stripped and whitespace collapsed: the advisory wraps mid-sentence."""
+    return " ".join(re.sub(r"\x1b\[[0-9;]*m", "", text).split())
+
+
+class TestGrowthRunAdvisory(unittest.TestCase):
+
+    # Every status render() ranks, lowest first. Frozen, not read from the tool.
+    STATUSES = ("ok", "unmeasured", "warn", "instrument-failed", "over")
+
+    def _row(self, status):
+        row = {"path": "A.md", "class": "resident", "bytes": 1500, "lines": 1,
+               "max_bytes": 1000, "status": status, "findings": []}
+        if status == "unmeasured":
+            row["reason"] = "file does not exist"
+        if status == "over":
+            row["findings"] = [{"kind": "bytes", "msg": "1,500 B exceeds the 1,000 B ceiling"}]
+        return row
+
+    def _render(self, status, run_hit):
+        import contextlib, io
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            cb.render("/nonexistent", [self._row(status)], [], 12, run_hit, {},
+                      {"resident_bytes": 1500}, totals=[])
+        return _plain(buf.getvalue())
+
+    def test_the_advisory_never_says_nothing_is_over_when_the_headline_says_over(self):
+        """The matrix: every status render() can rank worst, with and without the run."""
+        for status in self.STATUSES:
+            for run_hit in (True, False):
+                with self.subTest(worst=status, run_hit=run_hit):
+                    out = self._render(status, run_hit)
+                    # Prove the fixture: the headline reads the status this cell is about,
+                    # and the advisory is printed exactly when the run fired.
+                    self.assertIn(f"context budget {status.upper()} ", out)
+                    self.assertEqual("growth run: 12 consecutive" in out, run_hit)
+                    if status == "over":
+                        self.assertNotIn("Nothing is over a ceiling", out)
+                    if status == "over" and run_hit:
+                        self.assertIn(FIRED_AS_WELL, out)
+
+    def test_the_not_over_advisory_still_prints_the_original_sentence(self):
+        """PRESENCE CONTROL for the matrix: without it, deleting the sentence outright
+        would pass the assertion above. Every status below `over` keeps it word for word,
+        instrument-failed included: the sentence follows the headline, and no row's status
+        is over."""
+        for status in self.STATUSES[:-1]:
+            with self.subTest(worst=status):
+                out = self._render(status, True)
+                self.assertIn(NOT_OVER_YET, out)
+                self.assertNotIn(FIRED_AS_WELL, out)
+
+    def test_an_over_project_with_a_fired_growth_run_says_so_end_to_end(self):
+        """The real main() -> render() path: a resident class over its total, a growth-run
+        limit of 2, and a seeded history the current size extends to a run of 2."""
+        with tempfile.TemporaryDirectory() as d:
+            new_repo(d)
+            Path(d, ".context-budget.json").write_text(json.dumps({
+                "growth_run": 2,
+                "classes": {"resident": {"total_bytes": 1000}},
+                "files": [{"path": "CLAUDE.md", "class": "resident"}]}))
+            Path(d, "CLAUDE.md").write_text("x" * 1500)
+            Path(d, cb.HISTORY_NAME).write_text("".join(
+                json.dumps({"resident_bytes": n, "files": {"CLAUDE.md": n}}) + "\n"
+                for n in (1300, 1400)))
+            p = subprocess.run([sys.executable, str(CB_PY)], cwd=d,
+                               capture_output=True, text=True)
+            out = _plain(p.stdout)
+            self.assertNotIn("Traceback", p.stderr)
+            self.assertIn("context budget OVER ", out, "fixture: the project must be over")
+            self.assertIn("(resident total)", out, "fixture: the over row must exist")
+            self.assertIn("growth run: 2 consecutive", out, "fixture: the run must fire")
+            self.assertNotIn("Nothing is over a ceiling", out)
+            self.assertIn(FIRED_AS_WELL, out)
+
+
 class TestTokenCeiling(unittest.TestCase):
     """The ceiling is denominated in TOKENS, the unit the read cap is actually in.
 
