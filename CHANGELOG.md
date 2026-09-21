@@ -219,6 +219,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S214 claim — P2c and P3′ of the `context_budget.py` plan, one session: D7, then re-vet and re-package (in progress)
+
+**Deliverable:** P2c then P3′ of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+§5, under the one-session rules at `:600` (the operator's decision, `2c711ab`). **P2c** (`:615`): D7 on the **local**
+branch `fix/context-budget-status` from `612570b`, built in a `--no-local` clone and fetched back as a fast-forward:
+a check may raise a row's status, never lower it, so a byte ceiling's `over` survives a failed structure pattern.
+Four tests written to fail first against tool blob `f75482c2`, two mutants. **P3′** (`:632`), only if P2c's
+fresh-clone verification is green: re-measure, a new floors commit, trial merges against #83/#84/#85 with the ratchet
+on each merge result, and the PR body rewritten from the frozen draft. The session ends on the operator's review of
+that body, pasted inline. **Nothing pushed to upstream, nothing opened.** Chosen at this session's Phase 0 picker
+over P2c alone and BL-78's closing edits.
+
+**Side actions approved at the same picker, each its own commit or record:** the `HANDOFFS.md` retention trim this
+claim makes owed (three receipts, `--cut 2 --force`) and its fold; correcting the plan's stale P5 sentence (`:668`,
+*"`--check` now exits 3"*, false since D6) in P3′'s records commit; pushing fork `main` to `origin` at close-out
+(including `2c711ab`, not yet pushed).
+
+**Phase 0, for the record:** `CHANGELOG.md` and `HANDOFFS.md` frontiers both = HEAD `2c711ab`, gap empty. No pending
+stub, 2 receipts before this one; nothing backfilled. Gate citation re-run in a `--no-local` clone at `2c711ab`:
+`11/11 pass · results 10575dac7361 · manifest 01a4ae7aa511`, S213's citation exactly. Dashboard 76/100, medium,
+0 high+, run in that clone. Upstream 0 open issues; #83 (`219fb9d`), #84 (`77afc12`), #85 (`e2501c5`) open,
+0 reviews, only our comments. `main` 1 ahead of `origin/main` (`8089df7`); `upstream/main` still `6b29d3d`;
+`fix/context-budget-status` = `612570b`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S213 — operator decision after close-out: P2c and P3′ of the `context_budget.py` plan combined into one session
 
 The operator, after S213's close-out: *"add combining P2c and P3' into one session"*. S213 proposed it when asked

@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S214
+date: 2026-09-21
+status: pending
+active_task: **BL-75/BL-80 — P2c then P3′ of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) §5, ONE session under the rules at `:600`.** P2c (`:615`, D7): on the LOCAL branch `fix/context-budget-status` from `612570b`, in a `--no-local` clone with `core.hooksPath` set, a check may raise a row's status, never lower it; 4 tests RED first against tool blob `f75482c2`; 2 mutants; fetched back as a fast-forward and verified in a fresh clone. P3′ (`:632`) only if that is green: re-measure, a new floors commit, trial merges against #83/#84/#85 with the ratchet on each, the PR body rewritten; the session ends on the operator's review of the body, pasted inline. Nothing pushed to upstream, nothing opened. Chosen at this session's Phase 0 picker. **Side actions approved at the same picker:** the `HANDOFFS.md` retention trim this receipt makes owed and its fold; the plan's stale `:668` sentence fixed in P3′'s records; pushing fork `main` to `origin` at close-out.
+commit: pending
+```
+
+```handoff
 session: S213
 date: 2026-09-21
 status: complete
