@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S206
+date: 2026-09-20
+status: pending
+active_task: **BL-82 — draft answers to the twelve operator decisions in upstream PR #83's §8** (*"Open decisions for the operator (answer before Phase 1)"*, `docs/planning/parallel-sessions-plan.md` on `refs/pull/83/head`), as one document under `docs/planning/`. **Internal only: nothing is posted to #83** — a comment, review or edit there is outward and its own go-ahead. The document settles BL-82's four questions first (who owns which; one document or twelve answers; whether answering commits this fork to executing the plan; what re-verification each answer rests on) and separates *ratify the author's recommendation* from *decide fresh*. Chosen by the operator at this session's Phase 0 picker over a `CHANGELOG.md` trim, BL-80 and BL-79. **Also decided at that picker, recorded not executed:** BL-78 P3 = **no enforcement**, so BL-78 closes; the closing edits (index row, archive move, the `files[4]._` note that still claims a refusal) are their own later session. **Owed at this claim, its own action:** the `HANDOFFS.md` retention trim — this receipt makes **three** (`--cut 2 --force`). **Fork push approved for close-out.**
+commit: pending
+```
+
+```handoff
 session: S205
 date: 2026-09-20
 status: complete

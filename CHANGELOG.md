@@ -215,6 +215,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S206 claim — draft answers to PR #83's twelve operator decisions (in progress)
+
+**Deliverable:** a document under `docs/planning/` drafting answers to the twelve items in §8 of upstream
+PR [#83](https://github.com/KJ5HST/methodology/pull/83)'s `docs/planning/parallel-sessions-plan.md`
+(*"Open decisions for the operator (answer before Phase 1)"*), per
+[`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) §BL-82. Chosen by the operator at
+this session's Phase 0 picker over a scoped `CHANGELOG.md` trim, BL-80's fix and BL-79's plan.
+
+**Scope, stated so the close-out can be checked against it.** The draft settles BL-82's four questions
+before answering anything, and marks each of the twelve as *ratify the author's recommendation* or *decide
+fresh*. **It is internal.** Nothing is posted to #83 — a comment, review or edit there is an outward
+action and needs its own go-ahead. No framework file is edited.
+
+**Phase 0, for the record:** both ledger frontiers = HEAD `c77aa65`, gaps empty, no pending stub,
+2 receipts before this one. Gate citation re-run in a `--no-local` clone with HEAD asserted by sha:
+`11/11 pass · results 10575dac7361 · manifest 01a4ae7aa511`, S205's citation exactly. Dashboard 76/100,
+medium, 0 high+. Upstream 0 open issues; #85, #84, #83 open, 0 reviews each, nothing moved since S205.
+
+**Also owed at this claim, its own action:** the `HANDOFFS.md` retention trim — this claim's receipt
+makes **three**, one above the policy's depth of two (`--cut 2 --force`). **Fork push:** approved at
+the picker for close-out, `main` → `origin` (S205's seven commits and this session's).
+
+### 2026-09-20 · [BL-78] S206 — P3 decided by the operator: no enforcement, so BL-78 closes
+
+At this session's Phase 0 picker the operator answered BL-78 P3 (*"only if the operator wants
+enforcement: cost the check itself"*) **no**. The evidence offered with the question was BL-78 §(3): a
+pre-commit byte check would have caught 4 of 7 recent growths and none of `SESSION_RUNNER.md`'s, which
+all arrived by merge. P1 (`6ddfdb7`) and P2 (`fac748f`) are done, so **nothing is left to execute and
+BL-78 closes.** **The closing edits are not made here** and are their own short session: the index row
+at `docs/planning/BACKLOG.md:166` (still the pre-P1 description), the move per the archive convention,
+and `.context-budget.json` `files[4]._`, whose *"every commit that grows it is refused"* describes a
+refusal nothing in this clone calls (S205 gotcha (1)). Recorded in BL-78's detail block too.
+
 ### 2026-09-20 · [ad hoc] S205 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-6.md` became one row at

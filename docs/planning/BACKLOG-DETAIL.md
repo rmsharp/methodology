@@ -2959,6 +2959,11 @@ BL-53's option C did.**
 - **P3 — only if the operator wants enforcement: cost the check itself, do not build it inside P2.**
   It is a new comparison in a distributed tool plus a hook change in a distributed hook, and §(3) above is
   the evidence that it would have caught 4 of 7 recent growths, none of them on the file that matters.
+  *DECIDED 2026-09-20 (S206), by the operator at Phase 0: **no enforcement.** P1 (`6ddfdb7`) and P2
+  (`fac748f`) are done, so BL-78 has nothing left to execute and closes. The closing edits are their own
+  session, not yet made: this item's index row (`BACKLOG.md`, still the pre-P1 text), the archive move,
+  and `.context-budget.json` `files[4]._`, whose "every commit that grows it is refused" describes a
+  refusal nothing in this clone calls.*
 
 **NOT DONE HERE, deliberately:** no key in `.context-budget.json` was edited, no gate was added, no growth
 check was built, and nothing upstream-facing was touched. The three variants in §(1) were run in a scratch
