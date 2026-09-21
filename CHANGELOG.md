@@ -219,6 +219,53 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-80] S211 close-out — P2 of the `context_budget.py` plan built and verified on the local branch; nothing upstream-facing
+
+**Deliverable:** P2 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md),
+one commit, `c299c30`, on the **local** branch `fix/context-budget-status` after P1's `e859196` (not pushed). The
+growth-run advisory's second sentence is now chosen by `worst`, so it no longer says nothing is over a ceiling beside
+rows marked over. It is verified in a fresh clone: 129 unit tests, `bin/tests.sh` 141 / 0, upstream's ratchet
+10/10. **Next: P3**, which also owes the operator one decision on the status-precedence edge found here (plan
+`:388`). Supporting commits: `520f972` claim, `03194df` + `4542465` the `HANDOFFS.md` trim and fold, and `8a0455c`
+the plan's P2 outcome and the backlog. **The plan was input, not output.**
+
+**Phase 3A — S210's handoff scored 9/10.**
+- *What helped:*
+  - Next step (1) was an exact recipe: clone from the local branch, assert `e859196`, set `core.hooksPath`. Every line
+    it cited on the branch was right: the advisory `:661-663`, `worst` `:594-605`, the insertion point `:615`/`:618`,
+    the witness `:1063`, and `CHANGELOG.md:38`.
+  - Gotcha (3), *run the fixed baseline through the mutant harness first*, was followed and showed a clean baseline.
+  - Gotcha (1) said where the branch lives, which the S209 handoff had been missing.
+  - Steps (3)–(5) were right: the PR state on all three, the three-receipts prediction (an eleventh time), and the
+    `CHANGELOG.md` figure (102,035 B plus the push record read 102,737 B).
+- *What was wrong:* *"`bin/tests.sh` 141 + k"* assumed the shell count moves with the unit tests. The unit suite is
+  one row there, so P2 gave unit +3 and shell +0. The error was computable, and minor.
+- *What was missing:* nothing S210 could have known. The edge sits in `measure_file()`, which neither the plan nor
+  P1 read.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 8/10.**
+- *Right:*
+  - Phase 0 in full, with the gate citation re-run.
+  - Read the producers (`measure_file()`'s status writes), not only the reducer. That found the edge, and it was run
+    on the fixed tool rather than predicted.
+  - RED with fixture proofs in every cell; the failures landed at the assertion under test.
+  - The baseline was run through the mutant harness before the four mutants.
+  - The ratified contract was kept rather than widened. The edge is recorded for P3 and named in the upstream entry.
+  - Final verification from a fresh clone of the fetched-back branch; the outward entry scanned for jargon.
+  - Zero stakeholder corrections.
+- *Wrong:*
+  - My first mutant table garbled its per-test verdicts under subtests and had to be re-run test by test.
+  - A test docstring claimed the original sentence is *"true of the table"* under `instrument-failed`. It was
+    written before the edge was run and corrected before commit.
+  - One plan citation came from diff arithmetic (`:1418`); a grep before commit corrected it to `:1417`.
+  - One pointless no-op monitor call.
+
+**Phase 3C:** no `docs/FORK_LEARNINGS.md` row. The lesson is code-specific, and its defect is P3's decision. It
+went to agent memory as a second instance of an existing entry. D3's retirement obligation does not arise.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-80] S211 — the plan's P2 outcome recorded; BL-75 and BL-80 index rows and BL-80's detail updated
 
 - **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md): status line
