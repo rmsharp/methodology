@@ -211,6 +211,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S202 — BL-79 opened: §3G specifies the close-out report's content, not its shape
+
+- **Raised by the operator after this session's own close-out**, on seeing S202's 3G report and contrasting it
+  with `nprcgenekeepr` Session 739's, which opens `Session N — Close-Out Report` and closes `Session over —
+  stopping here.`
+- **Checked before writing the item, not asserted:** §3G lists four content items and *"Then STOP"* and nothing
+  about shape; `grep` for `Close-Out Report` and `Session over` returns **0 hits** in this repository and **0**
+  in `nprcgenekeepr`; and the two repositories' §3G sections are **byte-identical** (`diff` clean). The shape in
+  the comparison is a project convention, not a framework rule.
+- **Why it is not cosmetic:** the 3G report is the only close-out artifact addressed to a human in real time and
+  the only place the *"1 and done"* boundary is announced, yet `HANDOFFS.md` has a 13-key schema and a checker
+  while the report announcing it has neither.
+- **Written from what is known and left there.** No option was measured, enumerated or costed — the operator
+  asked that it be opened, not solved. The item records two questions a costing session should settle first
+  (required-and-checkable vs recommended template; whether a commit sha belongs in the report at all when
+  `HANDOFFS.md`'s `commit:` already carries one). Distributed, so the fix is an upstream PR and its own go-ahead.
+- **Verified:** `bash docs/planning/BACKLOG-DETAIL.md.verify.sh` **C1–C5 OK**; `bin/check-links` **111 links
+  across 23 files**. Open enumeration, index row and detail section updated together.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S202 — the budget measurement row from this session's verify runs, committed not reverted
 
 - **What:** one row appended to the tracked `.context-budget-history.jsonl` (now **163**) by P5's own verify

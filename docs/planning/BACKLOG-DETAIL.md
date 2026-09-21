@@ -2862,3 +2862,41 @@ is why the run counter read 159 while both read-set files were quietly growing. 
 two levels: **no gate runs the tool, and for these files the tool has no growth refusal to run.** Shape
 (2) is therefore larger than *"add a gate"* — it has to build the check first, which is a point in favour
 of shape (3) for exactly the reason BL-53's option C was ratified.
+
+
+<a id="bl-79"></a>
+
+**BL-79 — `SESSION_RUNNER.md` §3G specifies the close-out report's CONTENT but not its SHAPE, so the same
+protocol produces a scannable receipt in one project and an unlabelled wall of prose in another. Raised
+2026-09-20 (S202), by the operator, after that session's own close-out.**
+
+**What §3G says, in full** (`starter-kit/SESSION_RUNNER.md`, *3G: Report and STOP*): *"Tell the user: Summary of
+the deliverable · Self-assessment highlights (what went well, what didn't) · Previous session's handoff score and
+key findings · What the next session should do"*, then *"Then STOP. The session is over."* Four content items and
+a stop instruction. **No header, no labels, no required identifiers, no closing line.** A report can satisfy every
+word of it and still not be recognizable as a close-out report.
+
+**The observation that raised it.** S202's 3G report carried all four items and the operator asked whether a
+format was specified at all, contrasting it with `nprcgenekeepr`'s Session 739, whose report opens
+`Session 739 — Close-Out Report`, then `Deliverable: … — DONE (commit <sha>)`, `Verification: …`,
+`Next session: …`, and closes `Session over — stopping here.` **That shape is a project convention, not a
+specified one:** `grep` for `Close-Out Report` and for `Session over` returns **0 hits** in this repository and
+**0** in `nprcgenekeepr`, and the two repositories' §3G sections are **byte-identical** (`diff` clean, checked
+S202) — so the difference in legibility comes from nothing the framework writes down.
+
+**Why it matters more than presentation.** The 3G report is the only part of close-out addressed to a human in
+real time; the durable artifacts (`HANDOFFS.md`, `CHANGELOG.md`) are addressed to the next session. An
+unrecognizable report costs the operator the one moment they can catch a bad close-out before it is committed —
+and the missing closing line is the only signal that the *"1 and done"* boundary was actually observed. Note the
+asymmetry the framework already accepts elsewhere: `HANDOFFS.md` has a 13-key schema and a checker, while the
+report that announces it has neither.
+
+**Route: distributed.** §3G lives in `starter-kit/SESSION_RUNNER.md`, so any change lands at every adopter and
+reaches them only through an upstream pull request — **its own go-ahead**, and one that has to respect FM #17's
+anti-erosion clause (a shape requirement may add a step; it may not license dropping one).
+
+**UNCOSTED, and deliberately not shaped here.** No option was measured, enumerated or costed when this item was
+written; the operator asked that it be opened, not solved. Two things a costing session should settle first:
+whether the shape is *required* (and therefore checkable, like the receipt) or *recommended* (a template in
+`FRAMEWORK_APPARATUS.md`), and whether a report is even the right place for a commit sha, given that
+`HANDOFFS.md`'s `commit:` field already carries one and a second copy is a second thing to get wrong.
