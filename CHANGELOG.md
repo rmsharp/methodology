@@ -215,6 +215,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S207 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+- **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-8.md` became one row at
+  the bottom of [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md) and was deleted from the ledger's
+  front matter. `HANDOFFS.md` 15,670 B → 15,214 B.
+- **Its own commit by design:** inside the trim commit the shipped `.verify.sh` fails L2 (fork Learning #58). The
+  verifier was run against the trim commit `003a243`, in a `--no-local` clone, **before** the fold — L1,
+  L2/front-matter, L3 all OK, exit 0, 3 records = 2 retained + 1 archived, 0 added by the trim commit.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-20-8.md` (1 record(s), 24,443 B → 15,670 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
