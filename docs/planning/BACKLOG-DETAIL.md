@@ -2673,6 +2673,18 @@ equals the previous row's, precisely so a tracked file does not put a diff in ev
 enlarging it: a Phase 0 run on an unchanged tree writes nothing at all, so the read-only concern above applies
 to the first run after a change, not to every run.
 
+**PLANNED AND DECIDED 2026-09-21 (S209), together with BL-80, as ONE upstream PR:**
+[`context-budget-status-plan.md`](context-budget-status-plan.md). The operator chose, at S209's decision picker, a
+**write-free `--status`** (the default run minus the history append: same ledger, same exit code; a fourth shape,
+not among the three above) and **refusing unknown arguments with exit 3**, plus `VERSION` 1.3.0. Two findings
+reshaped it:
+- The maintainer's own sessions cite `--status` (upstream receipts S19–S23).
+- His PR #82 reply names the history write as what blocks a context-budget gate
+  ([#issuecomment-5701463025](https://github.com/KJ5HST/methodology/pull/82#issuecomment-5701463025), point 6).
+
+A second non-existent flag is in use: `wsfct` cites `--check`, once as a live instruction. **Next: the plan's P1,
+one session.** Nothing above is edited.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it
@@ -3044,6 +3056,12 @@ measured for this item and nothing was changed. A costing session should settle 
 when any finding is over, reworded to be true in both states, or moved above the table where a summary of the
 run alone is unambiguous — and whether `tools/test_context_budget.py` gains an assertion that the advisory and
 the table cannot disagree, which is the check that would have caught it.
+
+**PLANNED AND DECIDED 2026-09-21 (S209), together with BL-75, as ONE upstream PR:**
+[`context-budget-status-plan.md`](context-budget-status-plan.md) §3 D3. The operator chose **choosing the second
+sentence by `worst`**, the headline's own variable (`starter-kit/context_budget.py:584-596`), so the two cannot
+disagree. The check this item asked for is the plan's P2 test matrix (row state × growth-run state). **Next: the
+plan's P2, after P1.** Nothing above is edited.
 
 
 <a id="bl-81"></a>

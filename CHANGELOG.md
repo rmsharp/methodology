@@ -219,6 +219,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S209 — the plan's five decisions taken by the operator; the plan is RATIFIED
+
+- **Decided at S209's decision picker, each as recommended:** D1 (b) a **write-free `--status`**; D2 (a) **unknown
+  arguments refused, exit 3**; D3 (a) the advisory's second sentence **chosen by the headline's `worst`**; D4
+  `VERSION` **1.3.0**; D5 upstream's `context-budget-unit-tests` and `tests-sh-passed` floors **tightened in the
+  PR**. Recorded in [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+  (status line and §3), and as dated S209 updates under BL-75 and BL-80 in `docs/planning/BACKLOG-DETAIL.md` and
+  their index rows in `docs/planning/BACKLOG.md`. Both items stay **open** until the fix lands (the plan's P5).
+  `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK, exit 0.
+- **Next:** the plan's P1 (BL-75, the CLI), one session, on a branch cut from `upstream/main`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-75] S209 — plan drafted: one upstream PR for `context_budget.py`'s `--status` and advisory (decisions pending)
 
 - **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md), frozen as

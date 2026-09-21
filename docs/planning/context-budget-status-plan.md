@@ -1,8 +1,9 @@
 # `context_budget.py`: a real `--status`, refused unknown arguments, and an advisory that agrees with its table
 
 **Date:** 2026-09-20 (fork session S209)
-**Status:** DRAFT — the decisions in §3 are the operator's. Nothing here is implemented, and nothing is
-upstream-facing. Implementation is §5, one phase per session.
+**Status:** RATIFIED — all five decisions in §3 were decided 2026-09-21 by the operator at S209's
+decision picker, each as recommended: D1 (b), D2 (a), D3 (a), D4 yes, D5 yes. Nothing here is
+implemented, and nothing is upstream-facing. Implementation is §5, one phase per session; **P1 is next.**
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
 `upstream/main`), so the fix reaches adopters only through **one upstream pull request**. Opening it is
@@ -24,7 +25,7 @@ times in this fork, **12** times in upstream's own ledgers, and **once** in the 
 The maintainer's reply on PR #82 also cites it, naming its write as what blocks a context-budget gate.
 Separately, whenever the growth run fires, the tool prints *"Nothing is over a ceiling yet"*. It does so
 even in the same run whose headline reads `OVER` and whose table shows four rows `over`.
-**Recommended:**
+**Decided (§3):**
 - make `--status` a real, **write-free** form of the default run;
 - refuse unknown arguments with the tool's documented usage exit, 3;
 - print the second half of the advisory only when it is true.
@@ -205,7 +206,7 @@ those.
 | **(b) The default run, writing nothing** (measure, render, same exit code) | Every citation still prints the same ledger and exit code. It matches `quality_ratchet.py --status`, clears the maintainer's stated blocker, and makes a Phase 0 read read-only | The history is fed only by bare and `--json` runs. The two repos whose sessions type `--status` stop feeding it. Upstream's file is untracked, so its series already restarts in every clone (§1.1), and the fork's has fired continuously at 168/10. **No adopter types `--status`** (§2.3) |
 | **(c) No `--status`**, fix the citations instead | No new surface | With D2(a), the maintainer's receipts, PR #84's body and our #82 review all name a command that now errors. It needs outward corrections, three of them in text we authored |
 
-**Recommended: (b).** It keeps every existing use valid and removes the one side effect anyone has
+**DECIDED 2026-09-21 by the operator at S209's decision picker: (b).** It keeps every existing use valid and removes the one side effect anyone has
 objected to. Its cost falls only on the two repos that chose the name.
 
 ### D2: an argument the tool does not recognise
@@ -216,7 +217,7 @@ objected to. Its cost falls only on the two repos that chose the name.
 | (b) Warn on stderr and run as today | Nobody breaks | The run still writes. Exit codes, the only thing scripts read, stay silent. `--force` still appears to work |
 | (c) Keep ignoring | — | The defect |
 
-**Recommended: (a).** Two sub-rules: `-h` / `--help` still wins over everything, so `--help --zzz` prints
+**DECIDED 2026-09-21 by the operator at S209's decision picker: (a).** Two sub-rules: `-h` / `--help` still wins over everything, so `--help --zzz` prints
 help and exits 0. The existing precedence between known commands is unchanged: rejecting *combinations* of
 known commands is out of scope (§7).
 
@@ -229,14 +230,14 @@ known commands is out of scope (§7).
 | (c) Delete the second sentence | Smallest | Same loss as (b) |
 | (d) Move the advisory above the table (BL-80's third idea) | — | Does not make the sentence true |
 
-**Recommended: (a).** The test that would have caught the defect is the invariant itself: across a matrix
+**DECIDED 2026-09-21 by the operator at S209's decision picker: (a).** The test that would have caught the defect is the invariant itself: across a matrix
 of row states × growth-run states, the advisory never says *"Nothing is over a ceiling"* when `worst` is
 `over`. It also asserts the not-over, run-hit case still prints the original sentence. That second check
 proves the first one does not pass merely because the sentence was deleted.
 
 ### D4: `VERSION`
 
-`1.2.0` → **`1.3.0`** recommended. The CLI contract changes: one argument is added and input previously
+`1.2.0` → **`1.3.0`**, DECIDED 2026-09-21 by the operator at S209's decision picker. The CLI contract changes: one argument is added and input previously
 accepted is refused. Nothing depends on the number (`bin/status:38` compares blobs; the dashboard's
 fingerprint accepts any version), so this is for a human reading the usage banner. Precedent is mixed. The
 maintainer bumped `1.0.0` → `1.2.0` when the tool grew (`8df8faa`), and did not bump for the install-hook fix
@@ -244,14 +245,14 @@ maintainer bumped `1.0.0` → `1.2.0` when the tool grew (`8df8faa`), and did no
 
 ### D5: upstream's gate floors
 
-**Tighten in the PR** (recommended): `context-budget-unit-tests` 118 → the new count, and `tests-sh-passed`
+**Tighten in the PR**, DECIDED 2026-09-21 by the operator at S209's decision picker: `context-budget-unit-tests` 118 → the new count, and `tests-sh-passed`
 139 → the count measured on the branch. Upstream's own manifest says the tightening is owed whenever a
 measured value rises (`upstream:.quality-gates.json:3`), and tightening needs no approval. Leaving it to the
 maintainer is the alternative. It costs him a follow-up commit.
 
 ---
 
-## 4. The design (recommended options)
+## 4. The design (the decided options)
 
 ### 4.1 Interface contract
 
@@ -288,7 +289,7 @@ clone runs no hooks otherwise, and upstream's hook is what requires `CHANGELOG.m
 Each commit carries one upstream `CHANGELOG.md` entry, on #85's precedent (code + manifest + one entry, no
 receipt). **≤ 5 files per commit** (`SAFEGUARDS.md`).
 
-### P1: BL-75, the CLI (D1 + D2, and D4 if chosen). One session.
+### P1: BL-75, the CLI (D1 + D2 + D4). One session.
 
 - **Files:** `starter-kit/context_budget.py` (`:1290-1311`, `:1314-1333`, `:1375`, and `:41` for D4);
   `tools/test_context_budget.py` (a new class directly after `TestToolInvariants`, `upstream:…:476-489`);
