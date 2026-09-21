@@ -219,6 +219,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-20-11.md` (1 record(s), 24,049 B → 15,859 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-20-11.md`](docs/archive/HANDOFFS-through-2026-09-20-11.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-11.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-11.md.verify.sh)
+rather than trusting a digest printed here. Live file 24,049 B → 15,859 B (−34.1%).
+
 ### 2026-09-21 · [BL-75] S210 claim — P1 of the `context_budget.py` plan: a write-free `--status`, unknown arguments refused (in progress)
 
 **Deliverable:** P1 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
