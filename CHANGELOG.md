@@ -219,6 +219,55 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S213 close-out — P2b of the `context_budget.py` plan built on `612570b` (D6: `--check` = `--status`, a hint per refused argument); nothing upstream-facing
+
+**Deliverable:** P2b of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+(`:514`), built as specified on the local branch `fix/context-budget-status`: `612570b`, fetched back as a
+fast-forward from `d4dbc26`, not pushed. Verified in a fresh clone. Recorded in `0ab32fe` (the plan's *P2b outcome*
+at `:554`, P2c's lines on `612570b` at `:586`). Supporting commits: `cd34113` claim; `aec024f` + `b0aeaee` the
+`HANDOFFS.md` trim and fold. **The plan and D6 were input, not output;** this session built them, added one test the
+plan's list missed (one line per unknown argument), and added the optional shell row. **Next: P2c (D7).**
+
+**Phase 3A — S212's handoff scored 9/10.**
+- *What helped:*
+  - Next step (1) was an exact recipe, and every value in it held: the clone command, HEAD `d4dbc26`, blob
+    `dd4803bf`, the entry position `CHANGELOG.md:38`.
+  - Every branch line citation this session used held on `d4dbc26`, and those in the tool and the test file that
+    moved did so by exactly this session's insertions. `.quality-gates.json:10`/`:34` were not used and not checked.
+  - Gotcha (3) (the hint table below `def selftest`, keyed lookups, no `def selftest` in a comment above the list)
+    is what mutant M5 now proves: moved above, `--selftest` exits 2.
+  - Gotcha (4) (0.75, measured) held when re-measured with `--check` in the candidate list.
+  - Steps (3) and (4) (the PR checks, and the trim at three receipts) were right.
+- *What was missing:* the plan's seven tests did not cover the one-line-per-argument change the same phase specifies.
+  An eighth test was added, and it went red on the old tool. It said nothing about `VERSION` (it stays 1.3.0, P1's bump).
+- *What was wrong:* nothing false. Gotcha (5) (*"update `:580` and `:583` for the new format"*) was unneeded rather than
+  wrong: a single refusal still contains `unknown argument: <arg>`, so neither changed. The `CHANGELOG.md` estimate
+  (~130 KB) was labelled an estimate; 127,234 B was measured at Phase 0.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 8/10.**
+- *Right:*
+  - Phase 0 in full, with the gate citation re-run in a clone.
+  - One picker for the deliverable and both side actions.
+  - The trim's `.verify.sh` run before the fold, and `bin/tests.sh` after it.
+  - RED first, with each failure read at the assertion under test.
+  - The fixed baseline through the mutant harness before the five mutants, each test run by name; M5 run, not reasoned.
+  - The `difflib` table and the flag inventory re-measured at today's heads before either went into outward text.
+    Checking it tightened one sentence of the upstream entry to say where it was measured.
+  - Every line cited on `612570b` grepped on that tree; the verification done in a fresh clone.
+- *Wrong:* a throwaway runner for the shell row, built by filtering `bin/tests.sh` through a nested BSD `sed`
+  expression, came out with an empty header. `$P` was empty, and `(cd "$P" && git add -A && git commit …)` ran in the
+  work clone. The ledger hook refused the commit. The three intended files were left staged and were unstaged
+  before going on. A second `sed` attempt failed on its own delimiter and ran nothing. The rebuild used Python with a
+  guard on `$P`. That cost two round trips and was contained by a hook, not by care.
+- *Operator corrections:* none.
+
+**Phase 3C:** no fork-learnings row, so D3's retirement obligation does not arise. The lesson is shell-specific:
+guard a scratch path before any mutating command that `cd`s into it, and never build a harness by `sed`-filtering a
+script. It went to agent memory.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S213 — the plan's P2b outcome recorded; BL-75's and BL-80's rows moved on
 
 - **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) status line
