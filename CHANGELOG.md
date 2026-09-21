@@ -211,6 +211,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-78] S203 close-out — the read-set pins costed, and the question they were asking turned out to be the wrong one
+
+**Deliverable:** the BL-78 costing at [`docs/planning/BACKLOG-DETAIL.md:2866`](docs/planning/BACKLOG-DETAIL.md)
+(`a9e0952`). **Planning session — no key in `.context-budget.json` was edited**, no gate was added, no growth
+check was built, nothing upstream-facing was touched.
+
+**3A — predecessor (S202, 2026-09-20): 8/10.** *What helped:* its trim prediction held **exactly** ("no trim
+owed at Phase 0, but your claim makes three, so it falls due right after the report, at `--cut 2`"), its ranking
+of BL-78 over BL-77 was right and re-verified, and `key_files`' pointer to `context_budget.py:398` was the one
+line this session's central finding turned on. *What was wrong:* the `CHANGELOG.md` projection was off by
+roughly **2×** and aimed at the wrong threshold — it tracked the 262,144 B refusal at 12,736 B/session and never
+mentioned the **196,608 B archive trigger**, which was already within a session of firing; measured now, the
+rate is **≈22.5 KB/session** and the trigger **fires today**. *What was missing:* it carried forward the
+item's conflation of a **ceiling** with a **measurement record**, and never mentioned that the two ceilings
+**partition** the read cap — the single most important fact about the item it ranked first. Reading the handoff
+alone, `SESSION_RUNNER.md`'s ceiling looks like 54,363 B; it is **41,364**.
+
+**3B — self: 8/10.** The central claim was **run, not argued** — three config variants in a scratch clone, with
+the middle one (`max_bytes` alone → 122 tests OK, row `ok`, no config defect) the finding that matters; the
+merge-vs-commit analysis of how each file actually grew is what turned shape (2) from *"add a gate"* into
+*"a remedy for one file and a no-op for the other"*; and BL-80 was opened, not fixed. Against that: an unquoted
+`${arg}` in a zsh loop made five dry runs report `exit 2`, and only a direct re-run caught it — the operator's
+own memory file already warns that `$var` does not word-split, and it landed anyway.
+
+**3C:** fork Learning **#87** (`c0d1d65`), with **D3 discharged by a derived refusal** — no gate was added or
+moved this session (`manifest 01a4ae7aa511`, unchanged since S199), so no row's lesson can have become
+mechanized since S200 adjudicated all 69; rows **#45**, **#85**, **#86** and **#62** were considered by name.
+
+**3E:** `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`,
+clone of `c0d1d65`, HEAD asserted by sha, bare exit 0; `bin/tests.sh` **343 / 0 / 6 skipped** after the trim.
+
+**Side actions, both approved at the Phase 0 picker:** the owed retention trim (`4a0914c`) with its fold
+(`caa2e0f`), and the `CHANGELOG.md` trim **scoped and not performed** (`bfa4140`). The operator's multi-select
+also carried *"nothing beyond the deliverable"*, which cannot hold with the other two; it was read as approval
+of the two named actions and flagged back in the same turn.
+
+**Next session:** the `CHANGELOG.md` trim is the most urgent item — the trigger already fires and the refusal is
+under two sessions out — then BL-78 P1/P2, which need an operator decision rather than more measurement.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S203 — Phase 3C: fork Learning #87, and the D3 retirement obligation discharged by refusal
 
 - **The row:** *"When a ceiling is one half of an identity, fixing the number silently breaks the identity — and
