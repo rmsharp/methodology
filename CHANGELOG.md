@@ -233,6 +233,25 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,314 B → 14,956 B (−35.8%).
 
+### 2026-09-20 · [ad hoc] S205 — BL-82 opened: PR #83 is waiting on twelve operator decisions, not on a review
+
+- **What:** [`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) §BL-82, with its index row in
+  [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md) and the `Open:` enumeration extended. Opened at the
+  operator's request in this session's Phase 0 picker, where a write-up of the twelve was also asked for —
+  **that write-up is a second deliverable and was NOT executed**, which is what the item is for.
+- **The correction it records:** [#83](https://github.com/KJ5HST/methodology/pull/83) is the **maintainer's own**
+  pull request (author `KJ5HST`, opened 2026-09-16, branch `docs/parallel-sessions-plan`), it has **0 reviews and
+  0 comments**, and its §8 — *"Open decisions for the operator (answer before Phase 1)"* — puts **twelve** items to
+  the operator, eleven of them with the author's own recommendation and a twelfth that is a scope boundary to
+  confirm. Recent handoffs carried it as *"unreviewed and unchased"*, framing the blocker as ours to clear by
+  reviewing. It is not; the plan names answering §8 as its own Phase 0.
+- **Route:** drafting the answers is fork-side and internal; **posting them to #83 is outward and its own
+  go-ahead.** Nothing was posted, commented, reviewed or edited upstream in this session.
+- **Checked, not relayed:** `gh pr view 83 --repo KJ5HST/methodology` for the author, review and comment counts;
+  the §8 list read from `refs/pull/83/head`, not from a summary.
+- **Verified:** `docs/planning/BACKLOG-DETAIL.md.verify.sh` C1–C5 OK; `bin/check-links` 111 links / 23 files.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-78] S205 — P2 done: `SAFEGUARDS.md`'s pin becomes a reported series, and no number moved
 
 - **What:** `.context-budget.json` `files[5]` (`starter-kit/SAFEGUARDS.md`) — the `_` note rewritten so the row's

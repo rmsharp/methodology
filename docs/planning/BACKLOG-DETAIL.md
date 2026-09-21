@@ -3076,3 +3076,49 @@ these figures have gone stale) or to **delete the sizes from both notes and cite
 only version that cannot diverge. And whether the general form is worth a check: a guard that fails when a
 number appearing in a `_` note contradicts the structured key beside it would have caught all three
 instances, and is the same shape as BL-80's *"the advisory and the table cannot disagree"*.
+
+<a id="bl-82"></a>
+
+**BL-82 — upstream PR [#83](https://github.com/KJ5HST/methodology/pull/83) is waiting on TWELVE OPERATOR
+DECISIONS, not on a review, and every recent handoff has recorded it the other way round. Raised 2026-09-20
+(S205), on the operator's request at Phase 0. Nothing drafted, nothing answered, nothing posted.**
+
+**What is actually there.** #83 is the **maintainer's own** pull request (author `KJ5HST`, opened 2026-09-16,
+branch `docs/parallel-sessions-plan`, three files: `CHANGELOG.md`, `HANDOFFS.md` and the new
+`docs/planning/parallel-sessions-plan.md`). Its **§8, *"Open decisions for the operator (answer before Phase
+1)"***, is a numbered list of **twelve** items: D1's framing (one closer per tree; the session stays the unit
+of accountability; workers are layers, not sessions), D2's route (a `SAFEGUARDS.md` hard rule or a sentence in
+the runner's §Vertical Slice), D4 ordering, D5 identity form (`S<N>-<seq>` and what stays bare `S<N>`), D6 (one
+merge, one receipt — and whether the 11-receipt instruction is dropped by ruling), D7 commit ownership, D8
+(manifest-at-ref vs a `--ref` flag vs declaring `tests-sh-failed max 1` on branches), D12 release sequencing
+against v3.8, D13 who scores a merged sequence's last receipt, D14 (an FM #29 or a Degradation row), D11 the
+dashboard advisory, and a twelfth item that is not a decision but a **scope boundary to confirm** — that the
+plan touches none of the vertical-slice gates (a)–(d), the 6 phases, the 12 quality gates, the 9 principles or
+any workstream's phase adaptations. **Eleven of the twelve carry the author's own recommendation**, so the
+cheapest possible answer is a ratification pass, not twelve fresh rulings.
+
+**Why it is worth an item rather than a line in a handoff.** #83 has **0 reviews and 0 comments** and has not
+moved since the day it opened; it was checked with `gh pr view`, not relayed, at S204 and again at S205.
+Successive handoffs carried it as *"unreviewed and unchased"*, which framed the blocker as ours to clear by
+reviewing. It is not: the plan names answering §8 as its own Phase 0, so the PR cannot proceed until the
+twelve are answered, and **no amount of reviewing substitutes for that**. This is the [FRONTIER-BLINDNESS
+shape](../FORK_LEARNINGS.md) applied to a PR — a state repeated from one handoff to the next until someone
+re-derives it from the source.
+
+**Route: the draft is fork-side, the posting is outward.** Writing the answers is an ordinary internal
+deliverable (a document under `docs/planning/`). **Posting them to #83 — as a comment, a review or an edit —
+is an outward-facing action and its own explicit go-ahead**, like every other upstream action in this
+repository.
+
+**UNCOSTED, and deliberately not shaped.** Four things a costing or drafting session should settle first.
+**(a) Who owns which.** All twelve are addressed to *"the operator"*, but several are re-derivable from
+decisions this repository has already ratified rather than needing a fresh ruling — D8's third option
+(*"declare `tests-sh-failed max 1` on branches"*) is a **standing loosening**, which `starter-kit/SAFEGUARDS.md`
+§Blast Radius Limits already refuses on the ratchet's terms, and the plan itself marks it *not recommended*.
+Separating *ratify the recommendation* from *decide fresh* is most of the work. **(b) One document or twelve
+answers in a comment** — and whether the document is the deliverable with the comment a later, separate
+action. **(c) Whether answering commits this fork to executing the plan**, which is a larger question than any
+of the twelve and is not asked anywhere in §8. **(d) What re-verification the answers rest on:** §9 of the plan
+lists the commands that produced its evidence and says they are re-runnable by the executor, so an answer that
+accepts a measured premise should say whether it re-ran it or took it (fork Learning #23's rule, applied to
+someone else's plan).
