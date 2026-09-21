@@ -215,6 +215,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S206 — a re-runnable test of PR #83's `merge=union` premise, from upstream's own history
+
+- **What:** [`docs/planning/pr83-union-repro.py`](docs/planning/pr83-union-repro.py), stdlib Python, scratch
+  repositories only. It rebuilds the plan's Shape B case from upstream commits alone — S23 and S24 both
+  claiming from `64f23bf` (base `64f23bf`, ours `6b29d3d`, theirs `219fb9d` minus S23's block, each a checked
+  pure insertion at one anchor) — and merges each ledger without and with `merge=union`.
+- **Result, git 2.50.1:** `CHANGELOG.md` — union exit 0, both entries whole except **one blank separator line**
+  (1,592 of 1,593 lines). `HANDOFFS.md` — union exit 0 and the two receipts **fuse into one block** (two
+  `session:` lines); `bin/check-handoff --all` exit 1. Two receipts that share no line but their fences fuse
+  too, and a synthetic retention-trim case brings an archived receipt back into the live file. The plan's D4
+  says union *"keeps both whole"*; for receipts it does not.
+- **Its own commit** so the review document can cite it by sha. Nothing outward.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S206 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-7.md` became one row at
