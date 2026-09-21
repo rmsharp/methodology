@@ -241,6 +241,29 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,553 B → 14,602 B (−38.0%).
 
+### 2026-09-20 · [ad hoc] S204 — Phase 3C: fork Learning #88, and the D3 retirement obligation discharged by refusal
+
+- **Appended:** fork Learning **#88** to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) — *an instrument
+  that records every run changes its own output, so a before/after diff of it carries the instrument's delta
+  as well as yours; re-run the UNCHANGED side to tell them apart.* 1,497 B after two trims; the first draft
+  was 1,636 B and the second 1,509 B, **both refused by the per-row budget and shortened rather than waived**.
+  74 rows, contiguous 15..88.
+- **Why this row and not the obvious one:** the session's own near-miss was that P1's central A/B diff came
+  back **non-empty** — a growth-run counter reading 166 against 167 — which read once says *the edit changed
+  the output*, the exact opposite of what P1 was there to establish. The control run is what settled it.
+- **D3 DISCHARGED BY EXPLICIT REFUSAL — no row qualifies, and here are the ones considered**
+  ([`CLAUDE.md:38`](CLAUDE.md)). **#82** (a hook fails open) is the only live candidate under criterion (a):
+  its lesson *is* mechanized, by `pre-commit-selftest` and `commit-msg-selftest` in `.quality-gates.json` and
+  `bin/tests.sh` Test 43. It still does not qualify, on **S200's own adjudicated reasoning** — *"a gate pins
+  the instance a lesson came from; the row exists for the next, which has no gate yet"* — and BL-77 is open
+  precisely because nothing yet checks a hook is **armed** in a given clone, which is #82's unmechanized
+  residual. **#85** (a note describing an enforcement that does not exist) was re-examined directly, since
+  BL-78 P1 rewrote the very note it is about: P1 wrote **prose**, not a gate, and the *"a ratchet, not a
+  wall"* clause it indicts is still in `files[4]._` — criterion (a) unmet, (c) unmet. **#86** and **#87** are
+  one and two sessions old with no gate; **#83** and **#84** are inventory and adjudication lessons no gate
+  can hold. Age and file size are not grounds and were not used.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S204 — BL-81 opened: the config states the same two sizes three times, and P1 could refresh one
 
 - **What:** `.context-budget.json` records `starter-kit/SESSION_RUNNER.md` and `starter-kit/SAFEGUARDS.md`
