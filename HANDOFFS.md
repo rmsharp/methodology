@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S212
+date: 2026-09-21
+status: pending
+active_task: **BL-75/BL-80 — P3 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) §5 (`:407`): vet and package.** Measure the branch tip `c299c30` in a fresh clone; tighten upstream's `tests-sh-passed` and `context-budget-unit-tests` floors (D5) in their own commit on the LOCAL branch `fix/context-budget-status`; trial-merge against #83/#84/#85 and run the suites on each clean merge result; draft the PR body to `docs/planning/context-budget-status-pr-body.md`; put the body and the status-precedence edge (plan `:388`) to the operator in one picker. Nothing pushed, nothing upstream-facing (P4's go-ahead). Chosen at this session's Phase 0 picker. **Side actions approved at the same picker:** the `HANDOFFS.md` retention trim this receipt makes owed (three receipts, `--cut 2 --force`) and its fold; pushing fork `main` to `origin` at close-out.
+commit: pending
+```
+
+```handoff
 session: S211
 date: 2026-09-21
 status: complete

@@ -219,6 +219,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S212 claim — P3 of the `context_budget.py` plan: vet and package (in progress)
+
+**Deliverable:** P3 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+§5 (`:407`). Measure the branch tip `c299c30` in a fresh clone; tighten upstream's two floors (D5) in their own
+commit on the **local** branch `fix/context-budget-status`; trial-merge the branch against #83, #84 and #85 and run
+the suites on each clean merge result; draft the PR body to `docs/planning/context-budget-status-pr-body.md`. It
+ends on the operator's review of that body and the status-precedence decision (plan `:388`). **Nothing pushed,
+nothing upstream-facing**: pushing the branch and opening the PR are P4's go-ahead. Chosen at this session's Phase 0
+picker over BL-78's closing edits and the undecided items.
+
+**Side actions approved at the same picker, each its own commit or record:** the `HANDOFFS.md` retention trim this
+claim makes owed (three receipts, `--cut 2 --force`) and its fold; pushing fork `main` to `origin` at close-out.
+
+**Phase 0, for the record:** `CHANGELOG.md` frontier = HEAD `304084d`, gap empty; `HANDOFFS.md` frontier `68fd86d`,
+the one commit after it (`304084d`) is S211's announced push record. No pending stub, 2 receipts before this one;
+nothing backfilled. Gate citation re-run in a `--no-local` clone with HEAD asserted by sha: `11/11 pass · results
+10575dac7361 · manifest 01a4ae7aa511`, S211's citation exactly. Dashboard 76/100, medium, 0 high+. Upstream 0 open
+issues; #83 (`219fb9d`), #84 (`77afc12`), #85 (`e2501c5`) open, 0 reviews, only our comments. `main` =
+`origin/main` = `304084d`; `upstream/main` still `6b29d3d`; `fix/context-budget-status` = `c299c30`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S211 — fork `main` pushed to `origin`, `36044bb..68fd86d` (non-commit action, operator go-ahead)
 
 Five commits, this session's claim through its close-out. Fork remote only — **nothing upstream-facing**, and the
