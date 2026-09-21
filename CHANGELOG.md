@@ -219,6 +219,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-80] S211 claim — P2 of the `context_budget.py` plan: the growth-run advisory agrees with its table (in progress)
+
+**Deliverable:** P2 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+§5, decision D3: the advisory's second sentence is chosen by `worst`, the variable the headline already reads, so
+a run whose table shows a row `over` no longer prints *"Nothing is over a ceiling yet"*. Three tests written RED
+first against `e859196`, and the "restore the literal" mutant run. One commit on the **local** branch
+`fix/context-budget-status`, built in a `--no-local` clone of that branch and fetched back here. **Nothing pushed,
+nothing upstream-facing**: pushing the branch and opening the PR are P4's go-ahead. Chosen at this session's Phase 0
+picker over BL-78's closing edits.
+
+**Side actions approved at the same picker, each its own commit or record:** the `HANDOFFS.md` retention trim this
+claim makes owed (three receipts, `--cut 2 --force`) and its fold; pushing fork `main` to `origin` at close-out.
+
+**Phase 0, for the record:** `CHANGELOG.md` frontier = HEAD `36044bb`, gap empty; `HANDOFFS.md` frontier `1e1cd18`,
+the one commit after it (`36044bb`) is S210's announced push record. No pending stub, 2 receipts before this one;
+nothing backfilled. Gate citation re-run in a `--no-local` clone with HEAD asserted by sha: `11/11 pass · results
+10575dac7361 · manifest 01a4ae7aa511`, S210's citation exactly. Dashboard 76/100, medium, 0 high+. Upstream 0 open
+issues; #83 (`219fb9d`), #84 (`77afc12`), #85 (`e2501c5`) open, 0 reviews, no maintainer comment. `main` =
+`origin/main` = `36044bb`; `upstream/main` still `6b29d3d`; `fix/context-budget-status` = `e859196`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S210 — fork `main` pushed to `origin`, `cadd8a0..1e1cd18` (non-commit action, operator go-ahead)
 
 Five commits, this session's claim through its close-out. Fork remote only — **nothing upstream-facing**, and the

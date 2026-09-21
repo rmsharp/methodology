@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S211
+date: 2026-09-21
+status: pending
+active_task: **BL-80 — P2 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) §5 (D3): the growth-run advisory's second sentence is chosen by `worst`, the headline's own variable, so it never says "Nothing is over a ceiling" beside a table with a row `over`.** Three tests RED first against `e859196`, the "restore the literal" mutant run. One commit on the LOCAL branch `fix/context-budget-status`, built in a `--no-local` clone of that branch and fetched back here; nothing pushed, nothing upstream-facing (P4's go-ahead). Chosen at this session's Phase 0 picker over BL-78's closing edits. **Side actions approved at the same picker:** the `HANDOFFS.md` retention trim this receipt makes owed (three receipts, `--cut 2 --force`) and its fold; pushing fork `main` to `origin` at close-out.
+commit: pending
+```
+
+```handoff
 session: S210
 date: 2026-09-21
 status: complete
