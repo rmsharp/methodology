@@ -219,6 +219,61 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S209 close-out — one upstream PR for `context_budget.py` planned and ratified; nothing built
+
+**Deliverable:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md), the plan for
+**one** upstream PR fixing BL-75 and BL-80 in the distributed `starter-kit/context_budget.py`. The operator decided all
+five decisions at this session's picker, each as recommended (`a39cf1c`):
+- a write-free `--status`;
+- unknown arguments refused with exit 3;
+- the advisory chosen by `worst`;
+- `VERSION` 1.3.0;
+- upstream's floors tightened in the PR.
+
+Five phases, one session each. **Next: P1.** Supporting commits: `366dfc4` claim, `adb9d8f` + `d473719` the
+`HANDOFFS.md` trim and fold, `84c75e0` the PR #83 review's §4.2 fix, `87857ba` the draft. **Plan was output, not
+input.** Close-out also names the tree beside the plan's `wsfct` citations: a parallel `wsfct` session committed
+`ef3eade3` mid-session and moved the cited line.
+
+**Phase 3A — S208's handoff scored 9/10.**
+- *What helped:*
+  - Next step (1)'s exact PR-check commands and expected state were right on all three PRs, so "nothing owed
+    upstream" was a two-minute confirmation.
+  - Step (2) named the third false claim with both line citations, and both held (`pr83-decisions-review.md:194`,
+    `HANDOFFS-through-2026-08-29.md:285`), which made the fix a single approved sentence.
+  - Step (4)'s three-receipts prediction held a ninth time.
+  - `key_files` located BL-78's owed edits exactly (`BACKLOG.md:166`; `.context-budget.json:101` is `files[4]._`).
+- *What was wrong:* step (5)'s "about 77 KB after this close-out" read 81,106 B at Phase 0. It was labelled an
+  estimate.
+- *What was missing:* nothing for this session's task; BL-75's and BL-80's detail blocks carried what it needed.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 8/10.**
+- *Right:*
+  - Read the implementation before shaping anything.
+  - Tested the premise on a throwaway patch before offering the options, so the picker offered measured
+    behaviour, not predictions.
+  - Found the three facts that reshaped the design:
+    - the sibling tool's read-only `--status`;
+    - the maintainer's own #82 objection, verified on GitHub rather than trusted from the fork copy;
+    - `wsfct`'s second phantom flag.
+  - Counted citations across fork, upstream, adopters and posted PR bodies.
+  - Froze the draft before the decisions picker, and kept every suite run in clones.
+  - Zero stakeholder corrections.
+- *Wrong:*
+  - The first draft carried four citation errors, caught by re-verification before commit: a test line; the
+    `.gitignore` claim; #84's hunk ranges, taken from the PR side; and "documented only in `print_usage`".
+  - An archive count was stated in lines, where the rest of the inventory counts occurrences.
+  - The receipt was first written with multi-line fields, which `bin/check-handoff` refused.
+  - The zsh `"$r:path"` trap recurred.
+  - The plan is long, 425 lines. Its §0 summary is what makes it usable.
+
+**Phase 3C:** no fork-learnings row, so D3's retirement obligation does not arise. The lesson (a cited-but-missing
+flag usually comes from a sibling tool, so match the sibling's meaning) went to agent memory. **Phase 3E:**
+`quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, in a clone of
+`a39cf1c`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S209 — the plan's five decisions taken by the operator; the plan is RATIFIED
 
 - **Decided at S209's decision picker, each as recommended:** D1 (b) a **write-free `--status`**; D2 (a) **unknown

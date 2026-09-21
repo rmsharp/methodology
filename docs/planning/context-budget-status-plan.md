@@ -94,9 +94,12 @@ first settling tracked-or-ignored. **Declaring that gate stays his decision and 
 ## 2. Evidence-based inventory
 
 Searches were run on 2026-09-20 against fork `main` at `84c75e0` and `upstream/main` at `6b29d3d`, and
-against the seven local adopter clones at the heads named in §2.4. **A regex is a sample.** The citation
-regex is `context_budget(\.py)?`? +--status`, and it misses prose mentions that do not put the flag right
-after the name. Those were found separately by `git grep -e '--status'` and are listed by hand in §2.4.
+against the seven local adopter clones at these heads: `airqino` `998cd51`, `chat_verification` `107cbed`
+(the only one on an older tool, `VERSION` 1.0.0), `model_project_constructor` `62da800`, `mts-system` `99f4e2a`,
+`nprcgenekeepr` `589cf73c`, `vscode_quarto_ext` `5cc2717a`, `wsfct` `445b60fa`. The other six carry blob `b1111d92`.
+**Adopter repos move under you:** a parallel `wsfct` session committed `ef3eade3` during this session.
+**A regex is a sample.** The citation regex is `context_budget(\.py)?`? +--status`, and it misses prose
+mentions that do not put the flag right after the name. Those were found separately by `git grep -e '--status'` and are listed by hand in §2.4.
 
 ### 2.1 Code sites (`starter-kit/context_budget.py`, blob `b1111d92`, every tree)
 
@@ -136,7 +139,7 @@ after the name. Those were found separately by `git grep -e '--status'` and are 
 | `--json` | `wsfct` (35 citations); `tools/test_context_budget.py` `TestClassSpec` | unchanged (still records) |
 | `--calibrate` | seed config text; every adopter (1 each), `wsfct` 4 | unchanged |
 | `--status` | fork (122), `upstream` ledgers (12), `mts-system` (1), PR #84's body (1), PR #82's review thread | **valid, and writes nothing** |
-| `--check` | `wsfct` (4), **including a live instruction**: `wsfct/SESSION_NOTES.md:797`, *"Re-measure (`python3 context_budget.py --check`) before writing more"* | **exit 3, usage printed**: loud where it was silent (§6) |
+| `--check` | `wsfct` (4), **including a live instruction**: `wsfct/SESSION_NOTES.md:797` at `445b60fa` (`:847` at `ef3eade3`; that file is overwritten every session), *"Re-measure (`python3 context_budget.py --check`) before writing more"* | **exit 3, usage printed**: loud where it was silent (§6) |
 | `--zzz-nonsense` | BL-75's own demonstration | exit 3 |
 | `--force` | nowhere as a caller; the tool says *"There is deliberately no --force"* (`:1310`) | **exit 3**: the absence becomes observable |
 
@@ -380,7 +383,7 @@ receipt). **≤ 5 files per commit** (`SAFEGUARDS.md`).
 
 | Who | What changes | Severity | Mitigation |
 |---|---|---|---|
-| `wsfct` | `python3 context_budget.py --check` exits 3 with usage instead of measuring; one live instruction (`SESSION_NOTES.md:797`) and three ledger citations | low: loud, and the fix is to drop the flag | name it in `wsfct`'s sync session (P5) |
+| `wsfct` | `python3 context_budget.py --check` exits 3 with usage instead of measuring; one live instruction (`SESSION_NOTES.md`, §2.3) and three ledger citations | low: loud, and the fix is to drop the flag | name it in `wsfct`'s sync session (P5) |
 | fork and upstream sessions typing `--status` | same ledger and exit code; no history row | low | intended (§3 D1) |
 | the fork's growth series | fed only by bare / `--json` runs | low: already firing at 168/10 | P5 may make Phase 0 run the bare form where the series matters |
 | a script reading exit 3 as "no config" | 3 now also means a bad argument, which the usage line already documents (`:1308`) | negligible | none found (§2.3) |
