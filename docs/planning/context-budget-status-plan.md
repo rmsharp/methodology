@@ -4,7 +4,9 @@
 **Status:** RATIFIED — all five decisions in §3 were decided 2026-09-21 by the operator at S209's
 decision picker, each as recommended: D1 (b), D2 (a), D3 (a), D4 yes, D5 yes. Implementation is §5,
 one phase per session. **P1 DONE 2026-09-21 (S210): `e859196` on the LOCAL branch `fix/context-budget-status`**
-(not pushed; see *P1 outcome* under §5 P1). Nothing is upstream-facing. **P2 is next.**
+(not pushed; see *P1 outcome* under §5 P1). **P2 DONE 2026-09-21 (S211): `c299c30` on the same branch** (see
+*P2 outcome* under §5 P2, which also records a status-precedence edge P3 must decide on). Nothing is
+upstream-facing. **P3 is next.**
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
 `upstream/main`), so the fix reaches adopters only through **one upstream pull request**. Opening it is
@@ -366,6 +368,41 @@ P2's tests after `:615`, before `TestTokenCeiling` (`:618`).
 - **Mutant:** restore the literal. (1) must fail.
 - **DONE / Verify / Surface:** as P1, plus `test_a_declared_ceiling_still_renders_exactly_as_before` still
   green. **It cannot show** how a reader takes the new sentence. The operator reads it at P3.
+
+**P2 outcome (S211, 2026-09-21).** One commit, **`c299c30`**, on `fix/context-budget-status` after `e859196`,
+built in a `--no-local` clone of the local branch and fetched back as a fast-forward; nothing was pushed. Tool
+blob `131158cb` → **`dd4803bf`**. The over-state sentence is the one §3 D3 gave as its example: *"A ceiling has
+fired as well — see the rows marked over."* The not-over sentence is unchanged, word for word. **Verified in a
+fresh `--no-local` clone at `c299c30`:** 129 unit tests OK (126 + 3, 2 skipped), the byte-identity witness among
+them; `--selftest` 52 PASS, exit 0; the `"--force" in args` grep empty; `bin/tests.sh` **141 passed, 0 failed**
+(no shell row added); upstream's ratchet `10/10 pass · results 43e25ddcd120 · manifest 97a7aab85b9a`. The tool
+was also run on an over project and on a not-over one, each with the growth run fired. Each printed its
+sentence, and `git status --porcelain --ignored` showed no write from `--status`. **RED first on `131158cb`:**
+tests 1 and 3 failed, each at the assertion under test and not at a fixture check (only the `over` × run-hit
+cell of the matrix). Test 2 passes on the old tool by design. **Mutants,** after the fixed tool passed the same
+harness: the literal restored (tests 1 and 3); the sentence deleted in both states (all three); the condition
+inverted (all three); the condition widened to `instrument-failed` (test 2). `--selftest` catches none of them.
+**One extension, no departure:** the matrix covers all five statuses `render()` ranks, adding
+`instrument-failed` to the four listed above.
+
+**Found while building P2, and NOT fixed: a row can be over a ceiling and read `instrument-failed`.**
+`measure_file()` gives a row the status of whichever check wrote last: a byte ceiling sets `over`
+(`starter-kit/context_budget.py:366` on `c299c30`), and a structure pattern below its `expect_min` then
+overwrites it with `instrument-failed` (`:427`). A protected-fence finding sets `over` again (`:441`, `:448`).
+**Run, not predicted:** a file 1,500 B against a 1,000 B `max_bytes`, a failing `^## ` pattern, and the growth
+run fired. Under `--status` on the fixed tool, the headline reads `INSTRUMENT-FAILED`, the row reads
+`instrument-failed`, and the advisory keeps *"Nothing is over a ceiling yet"* directly above the finding
+*"1,500 B exceeds the 1,000 B ceiling by 500"*. D3 follows `worst` exactly, so the advisory agrees with the
+headline, which is what D3 promised. The contradiction left is with a finding. Its cause is status precedence
+in `measure_file()`, and the comment at `:1417-1419` says an instrument failure ranks **above** `over`, while
+`render()`'s `order` (`:595`) ranks it **below**. **Not in the backlog** (`instrument-failed` returns 0 hits in
+`BACKLOG.md` and `BACKLOG-DETAIL.md`). **P3 decides**, as part of the operator's reading of the new sentence:
+list it under the PR's *"not changed"* (the upstream entry already does), or make it its own backlog item. It
+does not belong inside this PR's two defects.
+
+**P3's lines on the branch (`c299c30`):** upstream's floors are `.quality-gates.json:10` (`tests-sh-passed`,
+139; measured 141) and `:34` (`context-budget-unit-tests`, 118; measured 129). The two upstream entries are
+`CHANGELOG.md:38` (P2) and `:67` (P1). `upstream:` still has no `.github/`.
 
 ### P3: vet and package. One session.
 

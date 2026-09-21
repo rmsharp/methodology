@@ -3071,6 +3071,16 @@ sentence by `worst`**, the headline's own variable (`starter-kit/context_budget.
 disagree. The check this item asked for is the plan's P2 test matrix (row state × growth-run state). **Next: the
 plan's P2, after P1.** Nothing above is edited.
 
+**P2 BUILT 2026-09-21 (S211), not upstream:** commit `c299c30` on the **local** branch `fix/context-budget-status`,
+after P1's `e859196`; nothing pushed. When something is over, the second sentence now reads *"A ceiling has fired
+as well — see the rows marked over."* Otherwise it is unchanged. Three tests, RED first (2 of 3 fail on the old
+tool; the third is the presence control), four mutants killed. Verified in a fresh clone: 129 unit tests,
+`bin/tests.sh` 141 / 0. **Found and not fixed:** `measure_file()` lets a failed structure pattern overwrite a
+byte ceiling's `over`, so such a row reads `instrument-failed`, and the advisory still says *"Nothing is over a
+ceiling yet"* above a finding that the ceiling was exceeded. It was run, not predicted. The plan's *P2 outcome*
+records it, and P3 decides whether it becomes its own item. This item stays open until the PR merges. **Next: the
+plan's P3.** Nothing above is edited.
+
 
 <a id="bl-81"></a>
 

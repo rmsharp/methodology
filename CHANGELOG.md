@@ -219,6 +219,38 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-80] S211 — the plan's P2 outcome recorded; BL-75 and BL-80 index rows and BL-80's detail updated
+
+- **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md): status line
+  (P2 done, P3 next) and a *P2 outcome* block under §5 P2. It records the verification, the RED record, the mutants,
+  one extension (the matrix covers `instrument-failed` too), the status-precedence edge found and not fixed, and
+  P3's line numbers on the branch. `docs/planning/BACKLOG-DETAIL.md` BL-80 gains an S211 paragraph (nothing above
+  it edited). The BL-75 and BL-80 index rows in `docs/planning/BACKLOG.md` now say P2 is done. Both items stay open
+  until the PR merges. `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK, exit 0.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-21 · [BL-80] S211 — P2 built: `c299c30` on the LOCAL branch `fix/context-budget-status` (commit + fast-forward; not pushed)
+
+- **What:** one commit, `c299c30`, after P1's `e859196`, built in a `--no-local` clone of the local branch with
+  `core.hooksPath` set, then fetched back here as a fast-forward (`e859196..c299c30`), still with no remote tracking.
+  The growth-run advisory's second sentence is chosen by `worst`, the headline's variable. When nothing is over it is
+  unchanged. When something is, it reads *"A ceiling has fired as well — see the rows marked over."* The commit adds
+  3 tests (`TestGrowthRunAdvisory`) and one upstream-format `CHANGELOG.md` entry (`[ad hoc]`, scanned for fork
+  jargon: 0 hits). Tool blob `131158cb` → `dd4803bf`.
+- **RED first on `131158cb`:** 2 of 3 tests fail, each at the assertion under test (only the `over` × run-hit cell
+  of the matrix); the third is the presence control and passes by design. **Mutants, run after the fixed tool
+  passed the same harness:** literal restored (tests 1 and 3), sentence deleted (all three), condition inverted
+  (all three), condition widened to `instrument-failed` (test 2). All killed; `--selftest` catches none.
+- **Found while building, NOT fixed:** a row over its byte ceiling that also fails a structure pattern reads
+  `instrument-failed` (`measure_file()`'s last writer wins, `:366` then `:427`). Run on the fixed tool, the advisory
+  keeps *"Nothing is over a ceiling yet"* above *"1,500 B exceeds the 1,000 B ceiling by 500"*. It is outside D3 and
+  is recorded for P3. The upstream entry names it under *"Not changed here"*.
+- **Verified in a fresh `--no-local` clone at `c299c30`, HEAD asserted:** 129 unit tests OK; `--selftest` 52 PASS,
+  exit 0; the `"--force" in args` grep empty; `bin/tests.sh` **141 passed, 0 failed**; upstream's ratchet `10/10
+  pass · results 43e25ddcd120 · manifest 97a7aab85b9a`. The tool was also run on an over and a not-over project with
+  the run fired. **Nothing upstream-facing:** pushing the branch and opening the PR are P4's go-ahead.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S211 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-12.md` became one row at
