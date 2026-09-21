@@ -219,6 +219,48 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S214 close-out — P2c and P3′ of the `context_budget.py` plan done in one session; the PR body approved as written; nothing upstream-facing
+
+**Deliverable:** P2c then P3′ of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md),
+one session under the operator's rules at `:603`. **P2c** = `2f73733` on the local branch `fix/context-budget-status`
+(a check may raise a row's status, never lower it), verified in a fresh clone before fetch-back; recorded `afb5be7`
+(*P2c outcome* `:635`). **P3′** = `c1167ae` (floors 142/140), trial merges with #84/#85/#83 green, the body rewritten
+(`fb324d6`, *P3′ outcome* `:682`), **approved as written** at the review picker, recorded `e12cf47`. Supporting:
+`949d952` claim; `3740ec2` + `bc2a85b` the `HANDOFFS.md` trim and fold. **The plan and D7 were input, not output;**
+this session built them, and added two mutants beyond the plan's two. **Next: P4 (push the branch, open the PR), its
+own session and go-ahead.**
+
+**Phase 3A — S213's handoff scored 9/10.**
+- *What helped:* step (1) was an exact recipe and every value held: the clone command, HEAD `612570b`, blob
+  `f75482c2`, the guard at `:430` (not `:427`), `order` `:598`, the ranking comment `:1452-1454`, the two test classes.
+  Step (2)'s *"141/129 against measured 142/136 plus P2c's"* was right (142/140). Step (4) predicted the `-3` shard
+  name. Gotcha (4) (guard a scratch path; build runners in Python) shaped every runner this session.
+- *What was missing:* the plan's P5 line still said `--check` *"now exits 3"*, though S212 had corrected the §6 row
+  beside it; caught at Phase 0. Gotcha (7) had dropped S212's zsh `:r` warning, and this session hit it once. The
+  plan's test 1 did not anticipate that a resident fixture also trips its derived token ceiling.
+- *What was wrong:* nothing false. The ~138 KB `CHANGELOG.md` estimate was labelled as one.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 9/10.**
+- *Right:* Phase 0 in full, with the gate citation re-run in a clone. One picker for the deliverable and all side actions.
+  The trim's `.verify.sh` ran before the fold, and `bin/tests.sh` after it. RED first, each failure read at the assertion
+  under test after the fixture assertions passed. A fixed baseline before four mutants, with two added so each control is
+  shown load-bearing alone. P2c verified in a fresh clone **before** fetch-back, so a wrong upstream count could still be
+  amended. P3′'s gate honoured. Every figure in the body re-measured, the merge-result ratchets run serially. The body
+  pasted inline before the picker, and the approval recorded as approval of the text, not as P4's go-ahead. Every line
+  the records cite was grepped on its own tree.
+- *Wrong:* `pr$n:refs` in zsh fetched nothing (the `:r` modifier). It was caught at once because `rev-parse` printed empty,
+  and redone braced; no result depended on it. Two self-caught record errors before commit: a status-line citation
+  (`:12-15` → `:12-16`) and an ambiguous *"above the first tightening"* in the floors entry. The first receipt draft was
+  368 B over the per-record budget; cut to 12,200 B by pointing at the plan instead of repeating it.
+- *Stakeholder corrections:* none; the body was approved as written on first review.
+
+**Phase 3C:** no fork-learnings row, so D3's retirement obligation does not arise. The zsh recurrence went to agent memory.
+**Phase 3E:** the tool was run (`behaviour.py`, `cases.py`); citations are in the receipt: branch `10/10 · 8a465ec9a35d`,
+fork `main` at `e12cf47` `11/11 · 10575dac7361`, identical to Phase 0.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S214 — the operator's review of the P3′ body: approved as written (decision; recorded)
 
 - **What:** the rewritten body (`docs/planning/context-budget-status-pr-body.md` at `fb324d6`) was pasted inline in
