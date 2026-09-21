@@ -29,6 +29,7 @@ interrupt, and a machine-written ledger is easier to over-trust than a prose one
 
 Python 3 stdlib only, cross-platform. Conventions follow methodology_dashboard.py.
 """
+import difflib
 import hashlib
 import json
 import os
@@ -55,8 +56,10 @@ CLEAN, WARN, BREACH, USAGE = 0, 1, 2, 3
 # because the selftest's escape-hatch check reads only the source above the selftest
 # function, and main() is below it. (Name that function's definition in a comment up here
 # and the check stops there instead: it splits the source on the first mention.)
+# --check is a second name for --status: it is what the ledger trimmer calls its own
+# report-only run, and what at least one adopter's instructions already type.
 ACCEPTED_ARGUMENTS = ("install-hook", "--precommit", "--calibrate", "--selftest", "--json",
-                      "--status")
+                      "--status", "--check")
 
 # === THE READ CAP, AND WHY THE CEILING IS DENOMINATED IN TOKENS ===
 #
@@ -1303,6 +1306,33 @@ def selftest(root, cfg):
 
 # === MAIN ===
 
+# What a refused argument most likely meant, from what the sibling tools use the same flag
+# for. Looked up by key, never by a membership test on the argument list: bin/tests.sh and
+# the unit tests grep this file for that form to prove --force is never honoured. It sits
+# below the selftest because it names --force, which the selftest refuses anywhere above
+# its own definition.
+REFUSED_ARGUMENT_HINTS = {
+    "--force": ("there is deliberately no --force: to permit growth, raise that file's "
+                f"ceiling in {CONFIG_NAME}"),
+    "--dry-run": "did you mean --status? It measures and writes nothing",
+    "--run": "run with no argument to measure and record",
+    "--write": "run with no argument to measure and record",
+}
+
+# Measured, not chosen: at difflib's default of 0.6, --version is offered --json.
+SUGGESTION_CUTOFF = 0.75
+
+
+def refusal_hint(arg):
+    """What to tell someone who typed `arg`, or None when nothing useful can be said."""
+    hint = REFUSED_ARGUMENT_HINTS.get(arg)
+    if hint is None:
+        near = difflib.get_close_matches(arg, ACCEPTED_ARGUMENTS + ("-h", "--help"),
+                                         n=1, cutoff=SUGGESTION_CUTOFF)
+        hint = f"did you mean {near[0]}?" if near else None
+    return hint
+
+
 def print_usage():
     print(f"context_budget.py v{VERSION} — size budgets for session-resident documents")
     print("")
@@ -1314,6 +1344,7 @@ def print_usage():
     print("                 a hard ceiling.")
     print("  --status       The default run without its write: the same ledger and exit")
     print("                 code, and no history line.")
+    print("  --check        The same as --status.")
     print("  install-hook   Install a git pre-commit hook that refuses a commit growing")
     print("                 a budgeted file past its ceiling. Opt-in.")
     print("  --precommit    What the hook runs. Refuses only when the staged file is over")
@@ -1336,7 +1367,10 @@ def main():
         print_usage(); return CLEAN
     unknown = [a for a in args if a not in ACCEPTED_ARGUMENTS]
     if unknown:
-        print(f"{RED}unknown argument: {' '.join(unknown)}{R}")
+        # One line each, so each can say what that argument most likely meant.
+        for a in unknown:
+            hint = refusal_hint(a)
+            print(f"{RED}unknown argument: {a}{R}" + (f" — {hint}" if hint else ""))
         print("")
         print_usage()
         return USAGE
@@ -1399,7 +1433,8 @@ def main():
     run_len, run_hit = growth_run(hist, snapshot, cfg.get("growth_run", 10))
     # --status is this run with its one write removed, so reading the state cannot change
     # it: the ledger and the exit code are the default run's, and no history row lands.
-    if "--status" not in args:
+    # --check is the same run under a second name.
+    if "--status" not in args and "--check" not in args:
         append_history(root, snapshot, hist)
 
     if "--json" in args:

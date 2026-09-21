@@ -492,12 +492,14 @@ class TestToolInvariants(unittest.TestCase):
 # proposed gate — while the tool had no such flag and ignored every argument it did not
 # know, so each of those runs was the default measurement, history append included. A
 # status read now measures and writes nothing, and an argument the tool does not know is
-# refused before the tree is read.
+# refused before the tree is read. `--check` -- what an adopter's instructions type, and
+# what the ledger trimmer calls its own report-only run -- is a second name for `--status`.
+# Every other refusal names what the user most likely meant, where anything can be said.
 # ---------------------------------------------------------------------------------
 
 # Frozen here on purpose: a set derived from the code cannot be asserted to cover the code.
 ACCEPTED_ARGUMENTS = frozenset({"install-hook", "--precommit", "--calibrate", "--selftest",
-                                "--json", "--status"})
+                                "--json", "--status", "--check"})
 
 
 class TestCommandLine(unittest.TestCase):
@@ -564,7 +566,24 @@ class TestCommandLine(unittest.TestCase):
             self.assertEqual(self._rows(d), 1)
             self.assertIn(cb.HISTORY_NAME, self._dirt(d))
 
+    def test_check_is_status_under_a_second_name(self):
+        """An adopter's session notes say "Re-measure (`python3 context_budget.py --check`)
+        before writing more", and the ledger trimmer's --check means "report, never write".
+        So --check is the status run: the same output and exit code, and no write. The
+        fixture is the one the default run is shown writing to above."""
+        for check, status in ((["--check"], ["--status"]),
+                              (["--check", "--json"], ["--status", "--json"])):
+            with self.subTest(argv=check), tempfile.TemporaryDirectory() as d:
+                self._project(d)
+                s = self._run(d, *status)
+                c = self._run(d, *check)
+                self.assertNotEqual(c.returncode, cb.USAGE, f"{' '.join(check)} was refused")
+                self.assertEqual(c.stdout, s.stdout)
+                self.assertEqual(c.returncode, s.returncode)
+                self.assertEqual(self._dirt(d), "", f"{' '.join(check)} wrote to the project")
+
     def _assert_refused(self, arg):
+        """Returns the refusal's own line, ANSI stripped, for the hint tests below."""
         with tempfile.TemporaryDirectory() as d:
             self._project(d)
             p = self._run(d, arg)
@@ -576,6 +595,9 @@ class TestCommandLine(unittest.TestCase):
             # The config loads, so the 3 above came from the argument and not from a
             # missing or unreadable .context-budget.json, which exits 3 too.
             self.assertNotEqual(self._run(d).returncode, cb.USAGE)
+        lines = [l for l in out.splitlines() if l.startswith("unknown argument:")]
+        self.assertEqual(len(lines), 1, out)
+        return lines[0]
 
     def test_an_unknown_argument_is_refused_and_touches_nothing(self):
         self._assert_refused("--zzz")
@@ -584,6 +606,45 @@ class TestCommandLine(unittest.TestCase):
         """The usage text says there is deliberately no --force. Until arguments were
         checked, passing it ran the default measurement, so nothing could observe that."""
         self._assert_refused("--force")
+
+    def test_force_is_told_the_one_way_to_permit_growth(self):
+        """Refused, and told where the decision it wanted is made."""
+        self.assertIn(cb.CONFIG_NAME, self._assert_refused("--force"))
+
+    def test_a_preview_or_a_do_it_flag_is_told_the_command_it_meant(self):
+        """What the sibling tools use each for: --dry-run previews without writing (the
+        dashboard), --run and --write do the real thing (the ratchet, the trimmer)."""
+        self.assertIn("did you mean --status?", self._assert_refused("--dry-run"))
+        for arg in ("--run", "--write"):
+            with self.subTest(arg=arg):
+                self.assertIn("run with no argument", self._assert_refused(arg))
+
+    def test_a_misspelling_is_offered_the_command_it_is_closest_to(self):
+        self.assertIn("did you mean --status?", self._assert_refused("--stauts"))
+
+    def test_an_argument_like_nothing_accepted_is_offered_nothing(self):
+        """CONTROL for the two above: the suggestion is not unconditional."""
+        line = self._assert_refused("--zzz")
+        self.assertEqual(line, "unknown argument: --zzz")
+
+    def test_the_suggestion_cutoff_offers_version_nothing(self):
+        """Pins the cutoff, measured rather than chosen: at difflib's default of 0.6,
+        --version is offered --json, which is not what anyone typing it meant."""
+        self.assertEqual(self._assert_refused("--version"), "unknown argument: --version")
+
+    def test_each_unknown_argument_gets_its_own_line_and_its_own_hint(self):
+        """They used to share one line, which has no room for a hint apiece."""
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d)
+            p = self._run(d, "--force", "--zzz")
+            out = re.sub(r"\x1b\[[0-9;]*m", "", p.stdout)
+            self.assertEqual(p.returncode, cb.USAGE)
+            lines = [l for l in out.splitlines() if l.startswith("unknown argument:")]
+            self.assertEqual(len(lines), 2, out)
+            self.assertTrue(lines[0].startswith("unknown argument: --force "), lines[0])
+            self.assertIn(cb.CONFIG_NAME, lines[0])
+            self.assertEqual(lines[1], "unknown argument: --zzz")
+            self.assertEqual(self._dirt(d), "")
 
     def test_the_accepted_arguments_are_exactly_the_frozen_set_and_all_documented(self):
         self.assertEqual(set(cb.ACCEPTED_ARGUMENTS), ACCEPTED_ARGUMENTS)

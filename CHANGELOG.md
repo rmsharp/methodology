@@ -35,6 +35,50 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `context_budget.py`: `--check` is a second name for `--status`, and a refused argument is told what it most likely meant
+
+- **Action:** the refusal added below (exit 3 and the usage text) said what was wrong and not what to do instead.
+  Searched in this repository and seven adopter projects, the arguments typed after this tool's name that it
+  did not define were two: `--status`, which now exists, and `--check`. `--check` is the ledger trimmer's name for its report-only run
+  (`methodology_trim.py --check`: *"evaluate the trigger and report; never writes"*), and one adopter project's
+  session notes tell the next session to *"Re-measure (`python3 context_budget.py --check`) before writing
+  more"*. Now:
+  - `--check`, with or without `--json`, is accepted and is the same run as `--status`: the same ledger, the
+    same exit code, and no history row. The usage text gains a `--check` line.
+  - Every other refused argument gets a line of its own, `unknown argument: <arg>`, followed by what it most
+    likely meant, taken from what the sibling tools use the same flag for:
+    - `--force` (the trimmer's and the dashboard's override): *"there is deliberately no --force: to permit
+      growth, raise that file's ceiling in .context-budget.json"*;
+    - `--dry-run` (the dashboard's preview): *"did you mean --status? It measures and writes nothing"*;
+    - `--run` and `--write` (the ratchet's and the trimmer's real run): *"run with no argument to measure and
+      record"*;
+    - a misspelling of an accepted argument: *"did you mean <nearest>?"*, from `difflib.get_close_matches`
+      with a cutoff of 0.75;
+    - anything else: nothing more.
+  - Unchanged: exit 3, nothing read or written, and the usage text after the refusal.
+- **The cutoff was measured, not chosen.** At `difflib`'s default of 0.6, `--version` is offered `--json`, which
+  is not what anyone typing it meant; at 0.75 it is offered nothing. Both cutoffs send `--stauts`, `status`,
+  `--jsn`, `--selftset`, `--calibrat`, `--precomit`, `--chek` and `--hlep` to the intended argument, and neither
+  offers anything for `--zzz`, `--verbose` or `-v`. The one loss at 0.75: `install` is no longer offered
+  `install-hook`.
+- **Where the hint table lives.** It names `--force`, so it sits below the selftest, which refuses that string
+  anywhere above its own definition, and hints are looked up by key rather than by testing the argument list for
+  a flag, the form `bin/tests.sh` and the unit tests grep for.
+- **Tests, RED first against the unchanged tool** (blob `dd4803bf`): 7 new in `TestCommandLine` in
+  `tools/test_context_budget.py`, and its frozen accepted set gains `--check`. Six fail on the old tool: the
+  `--check` test, the `--force`, preview, misspelling and one-line-each hint tests, and the frozen set. Two pass on
+  it by design, because the old tool never suggested anything: `--zzz` and `--version` are offered nothing. The
+  mutants below are what those two catch. One row in `bin/tests.sh`: `--check` on the seed config exits as
+  `--status` does and writes nothing. It fails on the old tool (exit 3 against 1).
+- **Mutants, run rather than predicted,** after the fixed tool passed the same harness: `--check` dropped from
+  the write guard (the `--check` test and the shell row); the hint table emptied (the `--force`, preview and
+  one-line-each tests); the cutoff at 0.6 (the `--version` test); the suggestion printed unconditionally (the
+  `--zzz`, `--version` and one-line-each tests); the hint table moved above the selftest (`--selftest` exits 2 on
+  *"--force is not offered"*). `--selftest` catches only the last.
+- **Counts:** `tools/test_context_budget.py` 129 → 136 tests, `--selftest` 52 checks unchanged, `bin/tests.sh`
+  141 → 142 passed, 0 failed. `VERSION` stays 1.3.0, which this pull request already sets. No gate threshold
+  changes in this commit.
+
 ### 2026-09-21 · [ad hoc] `.quality-gates.json`: two floors tightened to what this branch measures
 
 - **Action:** `tests-sh-passed` 139 → 141 and `context-budget-unit-tests` 118 → 129. These are the values
