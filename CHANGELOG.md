@@ -241,6 +241,46 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-5.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,553 B → 14,602 B (−38.0%).
 
+### 2026-09-20 · [BL-78] S204 close-out — a key that decides nothing, said so in the one place it is read
+
+**Deliverable: BL-78 P1, done** (`6ddfdb7`). `.context-budget.json` `files[4].measured_bytes` 54,363 →
+**55,406**, `files[5].measured_bytes` 15,386 → **17,129**, both `measured_on` **2026-09-20**, and both `_`
+notes state that `measured_bytes` is a **record, not a ceiling**. `max_bytes` / `max_tokens` untouched;
+exactly six changed key paths, walked object-to-object.
+
+**Phase 3A — S203's handoff scored 8/10.** *What helped, concretely:* the costing block at
+`BACKLOG-DETAIL.md:2866` was directly executable — P1's DONE criterion, its two verify commands and its
+surface were all stated, and no part of the deliverable needed re-deriving. Gotcha (4) (*`measured_bytes` is
+not a ceiling*) **is** the deliverable's premise. Gotcha (2) (the results file is stale, re-run in a clone)
+stopped a false citation. Gotchas (3) and (6) — `--cut N` retains N, a dry run needs `--force` — were both
+used, both correct. The prediction that the retention trim would fall due right after the Phase 0 report
+held exactly, for the third consecutive session, and the *"fixed 15,992 B proof"* came in at **15,992 B**.
+*What was wrong:* the `CHANGELOG.md` trim instruction ended *"then its fold, in its own commit."* **There is
+no fold for this ledger** — the fold rule is `HANDOFFS.md`'s, created by a fixed 7,168 B header reserve this
+file does not have; `ls docs/ | grep -i index` returns one file. The instruction was followed into a commit
+message that promised a fold no session can perform, and had to be amended. *What was missing:* nothing in
+the handoff or the costing block noted that `.context-budget.json` records the same two sizes in **three**
+places, which P1 hit immediately — now BL-81. *ROI:* strongly positive; the block saved most of a session.
+
+**Phase 3B — self-assessment 8/10.** *Went well:* the central claim was **tested and the first test said the
+opposite** — the A/B diff came back non-empty on a run counter, and a control run of the unchanged side is
+what established byte-identity. Both trims were dry-run before writing and both proofs re-run after the
+amend. The out-of-scope finding was **opened as BL-81, not fixed**, on S203's own BL-80 precedent. *Went
+badly:* the fold error above was mine to catch before writing, not after — the handoff said it, but
+`ls docs/` is one command and I ran it only when the commit was already made. *Not done:* P2 is ratified and
+unexecuted; BL-81 leaves the config disagreeing with itself in two `_` notes, which is stated in the receipt
+rather than hidden.
+
+**Verified:** `quality_ratchet.py --run` in a `--no-local` clone of `43bed33` with HEAD asserted by sha —
+`11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`; `bash bin/tests.sh`
+**343 / 0 / 6 skipped**; both shard `.verify.sh` **L1/L2/L3 OK**; `tools/test_context_budget.py` **122 OK**;
+`BACKLOG-DETAIL.md.verify.sh` **C1–C5 OK**; `bin/check-links` **111/23**; `bin/check-handoff` **OK**.
+
+**Nothing upstream-facing was taken.** The operator asked to see the proposed comment text for the two
+unreviewed pull requests before deciding; drafts went into the close-out report and nowhere else.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S204 — Phase 3C: fork Learning #88, and the D3 retirement obligation discharged by refusal
 
 - **Appended:** fork Learning **#88** to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) — *an instrument
