@@ -215,6 +215,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S206 — fork `main` pushed to `origin`, `2a8a76a..dec85c6` (non-commit action, operator go-ahead)
+
+Fourteen commits: S205's seven, unpushed since that session requested no push, plus this session's seven. Fork
+remote only — **nothing upstream-facing.** Approved at this session's Phase 0 picker for the close-out. Read back after
+the push: `origin/main` = `dec85c6` = local `main`, ahead/behind 0/0. The review's pinned repro link now resolves
+(`gh api` on `c3a096b`'s `docs/planning/pr83-union-repro.py`: blob `092314853d29`, equal to the local blob). This
+record is pushed after it under the standing push-record grant.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S206 close-out — the twelve decisions were the maintainer's, and union fuses receipts
 
 **Deliverable: BL-82 drafted** (`15be6ec`) — [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md),
