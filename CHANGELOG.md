@@ -233,6 +233,26 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,314 B → 14,956 B (−35.8%).
 
+### 2026-09-20 · [ad hoc] S205 — Phase 3C: fork Learning #89, and the D3 retirement obligation discharged by refusal
+
+- **What:** [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) row **#89**, 1,258 B — *a config row is one object
+  but many lines in git, and a note that opens by dating one key carries that date onto its neighbours.* Drawn
+  from this session's own near-miss: the note P2 replaced dated the **byte** pin to S177, which set only the
+  `max_tokens` beside it. `git blame` splits the two adjacent lines by **17 days** (`0e8c6ac8` 2026-09-16 vs
+  `beffbd0` 2026-08-30), and the misdating inverted the note's own characterization of the figure.
+- **D3 discharged by explicit refusal — no row retired, and the rows considered are named** (`CLAUDE.md`
+  §*Where this fork's learnings go*): **#86** (re-pointing a note inverts its clauses), **#87** (a ceiling that is
+  half of an identity), **#88** (a self-recording instrument diffs against itself), **#54** (`git blame` before
+  scrubbing a site a review calls residue) and **#56** (settle a rule from its written provenance). None meets
+  criterion (a) — no `.quality-gates.json` gate, `bin/tests.sh` test or numbered failure mode enforces any of
+  their lessons, and the byte half of the read-set partition is still unguarded (BL-78 shape (2), uncosted).
+  None meets (b): #89 **narrows** #54's and #56's provenance lesson to config keys rather than restating it more
+  generally, and it does not state #86's subject-change lesson at all. None meets (c): `.context-budget.json`,
+  `starter-kit/context_budget.py` and the archive shards all still exist. Age and file size are never grounds.
+- **Verified:** `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` → **75 rows,
+  contiguous 15..89, 0 over 1,500 B**.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S205 — BL-82 opened: PR #83 is waiting on twelve operator decisions, not on a review
 
 - **What:** [`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) §BL-82, with its index row in
