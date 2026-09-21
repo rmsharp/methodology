@@ -3137,5 +3137,6 @@ deliverable; a comment is a separate action, drafted in its §6. **(c)** Answeri
 but the fork has a stake in D4 and D5. **(d)** Its §1(d) table separates re-run premises from taken ones.
 **The finding:** D4's `merge=union` keeps `CHANGELOG.md` entries whole (one blank separator lost) but **fuses two
 `HANDOFFS.md` receipts into one block**. This was measured on upstream's own S23/S24 history with
-[`pr83-union-repro.py`](pr83-union-repro.py) (`c3a096b`). **Remaining: posting §6 to #83 — outward, its own
-go-ahead.**
+[`pr83-union-repro.py`](pr83-union-repro.py) (`c3a096b`). **Remaining, in order: (1) rewrite §6 for
+readability** — the operator, after S206's close-out: *"I find the section 6 comment hard to read. Add clarification of the comment prior to review in the next session."* — then present it for review; **(2) posting it to #83 —
+outward, its own go-ahead.**

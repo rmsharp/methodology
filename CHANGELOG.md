@@ -215,6 +215,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S206 — operator direction after close-out: rewrite §6 for readability before its review
+
+The operator, after S206's close-out report: *"I find the section 6 comment hard to read. Add clarification of the comment prior to review in the next session."* **Scheduled, not started** (one deliverable per
+session). The next session's deliverable is a clearer §6 of
+[`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md), presented for review. It
+precedes any decision to post, which stays a separate outward go-ahead. Recorded in S206's receipt as next step
+(0), in BL-82's detail block, and in its index row. Nothing in §6 was changed here.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S206 — fork `main` pushed to `origin`, `2a8a76a..dec85c6` (non-commit action, operator go-ahead)
 
 Fourteen commits: S205's seven, unpushed since that session requested no push, plus this session's seven. Fork
