@@ -211,6 +211,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S203 — the `CHANGELOG.md` trim SCOPED: the trigger is already firing, and the refusal is under two sessions away
+
+**Scoping only — approved as a side action, measured and costed, nothing written.** Every dry run below was run
+with `--force` and without `--write`; `git status` showed no change from any of them.
+
+**The state is worse than the prediction it replaces.** S202's handoff put the refusal *"roughly four sessions
+away"* from 204,924 B at a 12,736 B/session rate. Re-measured now: the file is **222,192 B**, the
+`methodology_trim.py --check` trigger **FIRES** (exit 1, 222,192 B against the 196,608 B Class A archive
+threshold), and the 262,144 B hard refusal is **39,952 B away**. The last trim `0dfca7e` (2026-09-19) left the
+file at **87,463 B**; it has regrown **+134,729 B across 69 ledger commits** (≈1,953 B/commit) and six sessions
+— **≈22.5 KB per session, not 12.7** — which puts the refusal **under two sessions out**, not four.
+
+**Options, each dry-run on this tree (`--cut N` RETAINS N; a date cut retains everything newer):**
+
+| cut | archives | live after | seam |
+|---|---|---|---|
+| `--cut 2026-09-18` | 36 of 130 | 185,708 B | clean day |
+| **`--cut 2026-09-19`** | **79 of 130** | **119,158 B** | **clean day** |
+| `--cut 60` | 70 of 130 | 138,051 B | `CUT_STRADDLES_DAY` |
+| `--cut 40` | 90 of 130 | 95,134 B | `CUT_STRADDLES_DAY` |
+| `--cut 25` | 105 of 130 | 63,633 B | `CUT_STRADDLES_DAY` |
+
+**Cost, measured not estimated:** the proof is **fixed at 15,992 B** — the three existing `CHANGELOG-through-*.
+md.verify.sh` shards are 15,992 B each, byte for byte, which is BL-60's *"every trim pays a FIXED ~16 KB
+proof"* confirmed on this file rather than assumed. `SRF` reads **0.7870** against the most recent archive
+`0dfca7e` (0.6710 against H3's largest-drop boundary `db4f629`), so **`SRF_RED` will refuse and `--force` is
+required** — warranted, not an override, exactly as for the retention trims.
+
+**RECOMMENDED: `--cut 2026-09-19 --force --write`.** It is the only clean calendar seam that buys real
+headroom: 119,158 B leaves **77,450 B under the trigger** — three to four sessions at the measured rate — for
+one 15,992 B proof. `--cut 2026-09-18` is too shallow to be worth a proof (185,708 B is 10,900 B under the
+trigger, under one session). The deeper count-based cuts buy more but straddle the day and archive records only
+hours old. **Note what no depth fixes:** at 119,158 B the file is still past the 56,750 B one-read cap — which
+the tool itself labels *"FOR REFERENCE AND NOT AS A FAULT"*, since the ledger is newest-on-top and what a
+truncated read drops is the oldest records.
+
+**NOT PERFORMED.** The trim is the next session's action, at its Phase 0 picker, and it is its own commit plus
+its own fold — it does not ride a close-out.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-80] S203 — opened: the budget tool's growth-run advisory contradicts its own table
 
 - **What:** `python3 starter-kit/context_budget.py` prints *"Nothing is over a ceiling yet — that is the point"*
