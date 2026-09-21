@@ -219,6 +219,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S212 — the operator's review of the P3 body: two changes added to the PR (D6, D7); the plan amended with P2b, P2c and P3′
+
+- **The decision (non-commit action, the operator's):** the frozen body (`e4ad63d`) was **not approved**, because it
+  named problems without fixes: for three of the four ignored arguments people typed, the only remedy was exit 3 and
+  the usage text. Asked for fixes derived from what those arguments were meant to do, the session inventoried every
+  flag typed after the tool's name in fork `main`, `upstream/main` and seven adopter clones. Only `--status` and
+  `--check` are undefined arguments anyone typed; the three `-v` hits are `test_context_budget.py -v`. It then read
+  each flag's meaning in the sibling tools' `--help` and ran `difflib` at two cutoffs over 20 inputs. At the picker
+  the operator chose, each as recommended:
+  - **D6, "answer the intent":** `--check` is accepted as a second name for `--status`, which is
+    `methodology_trim.py --check`'s meaning. Every other refused argument keeps exit 3, with a message naming what
+    the user most likely meant: `--force` → raise the ceiling in `.context-budget.json`; `--dry-run` → `--status`;
+    `--run`/`--write` → no argument; a misspelling → the nearest match at cutoff 0.75, where the default 0.6 offers
+    `--json` for `--version`.
+  - **D7, "fix it in this PR":** the status-precedence edge. In `measure_file()` a check may raise a status but
+    never lower it. Of the status writes, only `:427` can lower one, so the fix is one guard there.
+- **What (`docs/planning/context-budget-status-plan.md`):** the status line; D6 and D7 in §3 with their evidence;
+  §4.1's table (a `--check` row, the hint on refusal); the *P3 outcome* block, with the line numbers on `d4dbc26` for
+  the next two phases; **three new phases**, P2b (D6), P2c (D7) and P3′ (re-vet, and the body rewritten from the
+  frozen draft rather than patched), each with its files, guards, tests RED first, mutants, DONE, verification and
+  surface; §6's `wsfct` row, since under D6 its `--check` works. **The draft body** gains a *superseded — do not
+  post* notice above its rule. **Backlog:** S212 paragraphs on BL-75 and BL-80 (nothing above them edited) and both
+  index rows. `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK, exit 0; `bin/check-links` exit 0.
+- **Gotcha carried into P2b:** the hint table names `--force`, so it must sit below `def selftest`. It must be read
+  by key, never by `"--force" in args`, which `bin/tests.sh:622` and `tools/test_context_budget.py:487` grep for.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S212 — P3: the PR body drafted and frozen for the operator's review (not posted)
 
 - **What:** [`docs/planning/context-budget-status-pr-body.md`](docs/planning/context-budget-status-pr-body.md), new,

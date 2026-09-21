@@ -2693,6 +2693,15 @@ an unknown argument exits 3 before the tree is read, and `VERSION` is 1.3.0. Ver
 module-level, under the selftest's check. The details are in the plan's *P1 outcome* (§5). **This item stays open
 until the PR merges.** Next: P2 (BL-80), then P3 to vet, then P4 to open. Nothing above is edited.
 
+**P3 DONE 2026-09-21 (S212), and AMENDED by its review, not upstream:** `d4dbc26` on the local branch tightens
+upstream's two floors (141, 129; not pushed). On `d4dbc26`, trial merges against #83, #84 and #85 were each run
+through upstream's ratchet on the merge result, and all passed. The PR body was drafted and frozen (`e4ad63d`). **The
+operator did not approve the body: it named problems without fixes.** The review decided plan §3 **D6**: each
+refused argument's message answers what its user most likely meant. That is inferred from the flags actually typed
+(only `--status` and `--check`) and from what the sibling tools mean by the same flags. `--check` is accepted as a
+second name for `--status`, which makes one adopter's live instruction work as written. **Next: the plan's P2b (D6),
+then P2c (D7, BL-80), then P3′, then P4.** This item stays open until the PR merges. Nothing above is edited.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it
@@ -3080,6 +3089,12 @@ byte ceiling's `over`, so such a row reads `instrument-failed`, and the advisory
 ceiling yet"* above a finding that the ceiling was exceeded. It was run, not predicted. The plan's *P2 outcome*
 records it, and P3 decides whether it becomes its own item. This item stays open until the PR merges. **Next: the
 plan's P3.** Nothing above is edited.
+
+**S212: the status-precedence edge goes IN this PR (plan §3 D7),** decided at the operator's review of the P3 body,
+over listing it or opening its own item. In `measure_file()`, a later check may raise a row's status but never lower
+it, so a byte ceiling's `over` survives a failed structure pattern. Of the status writes, only `:427` on `d4dbc26`
+can lower a status (D7 has the inventory), so the fix is one guard, plus the `main()` comment that claims an ordering
+the code does not have. **Next: the plan's P2c, after P2b.** Nothing above is edited.
 
 
 <a id="bl-81"></a>

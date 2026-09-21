@@ -6,6 +6,13 @@ into `KJ5HST/methodology:main`. Everything below the rule is the body as it woul
 and pushing the branch to fork `origin` first, is P4's go-ahead on the exact text below. Every figure in it was
 measured at S212 on the heads named in its first line; re-measure if either head moves before posting.
 
+> **⚠ SUPERSEDED DRAFT — DO NOT POST THIS TEXT.** The operator reviewed it at S212 and did not approve it: it
+> named problems without fixes. The review decided two more changes for the same PR instead: plan §3 **D6** (each
+> refused argument's message answers what the user meant, and `--check` becomes a second name for `--status`) and
+> **D7** (a byte ceiling's `over` survives a failed structure pattern). This text is kept, frozen, as the record of
+> what was reviewed. The plan's **P3′** rewrites the body on P2c's tip. It recomposes, it does not patch, and every
+> figure is re-measured.
+
 **Title:** `context_budget.py`: `--status` becomes a real run that writes nothing, unknown arguments are refused, and the growth-run advisory stops contradicting the table
 
 ---
