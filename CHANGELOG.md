@@ -215,6 +215,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S207 — §6 of the PR #83 review recomposed for readability (not posted)
+
+- **What:** §6 of [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md), the proposed
+  comment for upstream PR #83, rewritten against the three defects the operator named at this session's picker:
+  **too dense, undefined terms, poor structure.** It now leads with the one suggested change (leave
+  `HANDOFFS.md` out of `merge=union`). *What goes wrong*, *why* and *how it was checked* are separate short
+  paragraphs, with the repro's four cases as a table. Each smaller note is named by its §8 item and subject
+  instead of a bare plan code such as "D5". Recomposed, not appended to; §0–§5 needed no change.
+- **Evidence behind the wording:** `docs/planning/pr83-union-repro.py` re-run, exit 0, output identical to
+  S206's. The fused `HANDOFFS.md` block was read to describe it: two `session:` lines, the shared fields once,
+  then both receipts' other fields. Upstream has no `.github/` workflows at `6b29d3d` or `219fb9d`, so
+  *"GitHub's merge button runs no checker"* holds. The comment, extracted with its `>` markers stripped,
+  renders under `pandoc -f gfm`: one table of 5 rows, both triple-backtick code spans intact.
+- **Cost, stated:** about 1,075 words when pasted, against 523 before. The definitions cost words.
+- **BL-82:** index row (`docs/planning/BACKLOG.md:170`) and an S207 update at the end of its detail block.
+  `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK. **Open on one step: posting, after the operator's review — outward.**
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S207 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-20-8.md` became one row at

@@ -277,46 +277,95 @@ plan's own rule (cite at the base sha) covers the mechanism; this is the list.
 
 ## 6. Proposed comment for #83 — NOT POSTED
 
-*For the operator's go-ahead, verbatim or edited. Written without fork session numbers or backlog codes.
-The repro link is pinned to commit `c3a096b` and resolves once the fork is pushed.*
+*For the operator's go-ahead, verbatim or edited; paste it without the `>` markers. It uses only terms a
+reader of the plan already has: no fork session numbers, no backlog codes, and no bare decision codes
+such as "D4". Each note names the §8 item it answers and what that item is about. The repro link is pinned
+to commit `c3a096b`, which is on the fork's `main`.*
 
-> Thanks for writing this up. I read §8 as your decisions, so these are a collaborator's notes, not answers.
+> Thanks for writing this up. I read the twelve items in §8 as your decisions to make, so this is a
+> collaborator's review, not a set of answers. In short: one change to how the ledgers merge, short notes
+> on seven items, and agreement with the rest.
 >
-> **One finding changes a recommendation: D4's `merge=union` fuses receipts in `HANDOFFS.md`.** I rebuilt
-> your Shape B case from this repository's own history. I took the receipt and ledger entry that
-> `64f23bf..6b29d3d` adds and the ones `6b29d3d..219fb9d` adds, as if both sessions had claimed from
-> `64f23bf`. Then I merged with and without the attribute, on git 2.50.1. For `CHANGELOG.md` union does what the plan says: exit 0, both
-> entries whole, ours above theirs, one blank separator line lost. For `HANDOFFS.md` the merge also exits 0,
-> but the two receipts become **one block with two `session:` lines**, and `check-handoff --all` fails on it.
-> It happens because receipts open and close with identical fence lines. Git factors shared lines out of a
-> conflict before union concatenates the rest, so even two receipts that share nothing but their fences
-> fuse. A retention trim merged against a prepend also brings the trimmed receipt back into the live file.
-> The script is stdlib Python and runs in this repository: https://github.com/rmsharp/methodology/blob/c3a096bdc8b4eeb4be4539e4ac458c652a26bc03/docs/planning/pr83-union-repro.py.
+> **1. The one change: leave `HANDOFFS.md` out of `merge=union`**
 >
-> So I'd suggest `merge=union` for `CHANGELOG.md` and the two `.jsonl` histories, and leaving `HANDOFFS.md`
-> unattributed (small, marked conflicts, checked by `check-handoff --all`). Phase 1's merge test as written
-> (*exit 0 … `check-handoff --all` green*) would go red with real receipts. If receipt conflicts turn out
-> frequent, the per-session-files alternative is the one to revisit.
+> The plan gives git's built-in `union` merge driver to four append-only files (§4, *"The append-only
+> files merge by union"*). I'd keep it for `CHANGELOG.md` and the two `.jsonl` histories, and leave
+> `HANDOFFS.md` without it. Its conflicts are then small and marked, and the plan's own fallback covers
+> them: resolve by hand, then run `check-handoff --all`.
 >
-> Smaller notes:
-> - **D5:** a fork's `main` is a trunk too. The seed already says a fork and its upstream each run their own
->   bare `S<N>`. I'd word it as "each repository's `main` is bare; `-<seq>` is for other branches".
-> - **D6:** agreed, and dropping the 11 receipts is right. Those were my commits, and each is already
->   recorded in my fork's ledger. I'd add a per-merged-PR ledger check, because a merged commit with no
->   ledger line disappears below the frontier once a later commit touches the ledger (it happened to
->   `56997af`).
-> - **D8:** agreed. Worth stating that Test 9's ~29 API calls per run trip GitHub's secondary limit when two
->   suites run at once (seen here, while `rate_limit` read 5000/5000). That is relevant to the concurrent run
->   in Phase 5.
-> - **D14:** agreed on a new FM. I've seen the tendency twice more here — a review agent that wrote into a
->   distributed seed, and two concurrent suites tripping that limit — so the wording could cover shared
->   state, not only a shared tree.
-> - **Item 12:** D1 adds a paragraph to Principle 9, and Phase 2 edits flight-manual Phase 1 step 4. "Adds
->   none, removes none" would be accurate where "does not touch" isn't.
-> - **Budget:** my open PR on the changelog rules leaves `SAFEGUARDS.md` 17 tokens of headroom rather than 71,
->   so D2's row would be almost all reduction if that lands first.
+> *What goes wrong.* Say two branches each add a receipt to the top of `HANDOFFS.md`. A union merge does
+> not keep two receipts. It produces one block that starts with two `session:` lines, then the fields the
+> two receipts had in common, then both receipts' other fields one after the other. The merge reports
+> success. `bin/check-handoff --all` fails on the result, but only if someone runs it, and GitHub's merge
+> button runs no checker.
 >
-> I agree with the rest as recommended. D11 I'd leave until Phase 5.
+> *Why.* When both sides insert text at the same place, git first sets aside the lines the two insertions
+> have in common, and only then does `union` stack the lines that differ. Every receipt opens with the same
+> ` ```handoff ` line and closes with the same ` ``` ` line, so both receipts land inside one pair of
+> fences. `CHANGELOG.md` entries each start with their own `###` heading, so they stay whole; the only loss
+> is the blank line between them.
+>
+> *How I checked.* I replayed your two most recent sessions as if both had started from `64f23bf`: one
+> side adds the receipt and ledger entry from `64f23bf..6b29d3d`, the other those from `6b29d3d..219fb9d`.
+> I merged each file with and without the attribute, on git 2.50.1, using only this repository's history
+> and the Python standard library:
+> https://github.com/rmsharp/methodology/blob/c3a096bdc8b4eeb4be4539e4ac458c652a26bc03/docs/planning/pr83-union-repro.py
+>
+> | What is merged | Without `union` | With `union` |
+> |---|---|---|
+> | `CHANGELOG.md`: the two real ledger entries | marked conflict | both entries kept, ours above theirs; one blank line lost |
+> | `HANDOFFS.md`: the two real receipts | marked conflict | **one block with two `session:` lines**; merge reports success |
+> | `HANDOFFS.md`: two made-up receipts that share nothing but their fence lines | not run | **still one block** |
+> | `HANDOFFS.md` (made-up receipts): one branch archives old receipts, as `methodology_trim.py` does, and adds its own; the other adds one | marked conflict | **an archived receipt is back in the live file**, and the two new ones are fused |
+>
+> *What this changes in the plan.*
+>
+> - **Phase 1's merge test** expects the merge to succeed with `check-handoff --all` green. It will fail,
+>   even with minimal receipts, because the fence lines alone are enough (third row).
+> - **The rejected alternative.** The alternatives table turns down per-session receipt files because
+>   *"union covers both files at once"*. That no longer holds, so it is the option to revisit if receipt
+>   conflicts turn out to be frequent.
+> - **"Every legitimate concurrent edit is an insertion"** stops being true once the distributed
+>   `methodology_trim.py` archives old records (last row).
+> - **The proposed `bin/check-ledger`** should accept a `###` heading directly under the previous entry,
+>   since `union` drops the blank line between them. Not tested: whether `methodology_trim.py` accepts
+>   that, and the two `.jsonl` files, where one record per line should make `union` safe.
+>
+> **2. Smaller notes, by §8 item**
+>
+> - **Item 2, "one writer per tree" as a `SAFEGUARDS.md` hard rule.** Agree. Sizing note: if my open
+>   PR #84 lands first, `SAFEGUARDS.md` has 17 tokens of headroom rather than 71, so the new row would be
+>   paid for almost entirely by cutting other text, as the plan already allows.
+> - **Item 4, session identity.** Agree with `S<N>-<seq>`. But *"bare `S<N>` is reserved for the trunk
+>   sequence (`main`)"* reads as if there were one trunk. A fork's `main` is a trunk too: mine has used
+>   bare `S<N>` for over 200 sessions, and `starter-kit/HANDOFFS.md` already says a fork and its upstream
+>   keep separate numbering. Suggested wording: *each repository's `main` uses bare `S<N>`; `S<N>-<seq>`
+>   is for other branches in the same repository.*
+> - **Item 5, a merge is one action with one receipt.** Agree, and dropping the 11 reconciled receipts is
+>   right: they are my commits from PR #80, each already recorded in my fork's ledger. One addition: after
+>   a merge, check that each merged PR has a ledger entry. Phase 0 only looks at commits made since the
+>   ledger last changed, so a merged commit with no entry drops out of view once any later commit edits the
+>   ledger. That happened to `56997af` from PR #77.
+> - **Item 7, reading the manifest at the same ref as the content.** Agree. One limit to record: Test 9 in
+>   `bin/tests.sh` makes about 29 GitHub API calls per run. When I ran two suites at once, both failed
+>   Test 9 on GitHub's secondary rate limit, while `gh api rate_limit` showed 5000 of 5000 remaining.
+>   Phase 5 runs sessions concurrently, so it should run suites one at a time or expect this.
+> - **Item 10, a new failure mode.** Agree on adding failure mode #29, "Shared-tree mutation". I've seen
+>   the tendency twice more: a review agent that wrote into the distributed template
+>   `starter-kit/CHANGELOG.md` in the shared tree, and the two concurrent suites above, which shared no
+>   tree, only GitHub's rate limit. So the wording could say shared *state*, for example: *concurrent
+>   actors that edit, build, test or call a rate-limited service against shared state read each other's
+>   side effects as defects.* The name is yours.
+> - **Item 11, the dashboard advisory.** The plan makes no recommendation. Mine is to wait until after
+>   Phase 5: a permanent low-priority advisory on every project with one session sequence would be a report
+>   nothing acts on.
+> - **Item 12, the scope guard.** Agree with the boundary, but it says the plan does not touch the 9
+>   principles or the 6 phases, and the plan adds a paragraph to Principle 9 and a clause to step 4 of the
+>   flight manual's Phase 1. More accurate: *adds none, removes none, renumbers none; amends Principle 9 by
+>   one paragraph and Phase 1 step 4 by one clause.*
+>
+> On items 1, 3, 6 and 9 I agree as recommended; for item 3, the merge above confirms `union` puts ours
+> above theirs. Item 8, releasing v3.8 first, is your call.
 
 ---
 

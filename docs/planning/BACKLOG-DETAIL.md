@@ -3140,3 +3140,13 @@ but the fork has a stake in D4 and D5. **(d)** Its §1(d) table separates re-run
 [`pr83-union-repro.py`](pr83-union-repro.py) (`c3a096b`). **Remaining, in order: (1) rewrite §6 for
 readability** — the operator, after S206's close-out: *"I find the section 6 comment hard to read. Add clarification of the comment prior to review in the next session."* — then present it for review; **(2) posting it to #83 —
 outward, its own go-ahead.**
+
+**UPDATE 2026-09-20 (S207) — §6 rewritten; step (1) done, awaiting the operator's review.** The operator named
+three defects at S207's picker: too dense, undefined terms, poor structure. §6 was recomposed, not appended to:
+it leads with the one suggested change (leave `HANDOFFS.md` out of `merge=union`), explains *what goes wrong*,
+*why* and *how it was checked* in separate short paragraphs with the repro's four cases as a table, then gives
+one note per §8 item named by its subject. No bare plan decision codes ("D4") remain in the comment text.
+Its claims are the review's own, not re-derived, except that the repro was re-run (identical output) and the
+fused block was read to word *what goes wrong*. It is longer than before (about 1,075 words pasted, against
+523): the definitions cost words. **Remaining: (2) posting it to #83 — outward, its own go-ahead on the exact
+text,** after the operator's review. The pre-posting checks in S206's receipt still apply.
