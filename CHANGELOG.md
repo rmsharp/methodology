@@ -219,6 +219,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S210 claim — P1 of the `context_budget.py` plan: a write-free `--status`, unknown arguments refused (in progress)
+
+**Deliverable:** P1 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+§5, decisions D1 + D2 + D4: `--status` becomes the default measurement with no history append, an unrecognised
+argument exits 3 with usage and touches nothing, and `VERSION` goes 1.2.0 → 1.3.0. Seven tests written RED first
+against the unchanged blob `b1111d92`, two `bin/tests.sh` rows, three named mutants run. Built on a branch
+`fix/context-budget-status` cut from `upstream/main` `6b29d3d` in a `--no-local` clone, then fetched back into this
+repository as a **local** branch so it outlives the scratch clone. **Nothing pushed, nothing upstream-facing**:
+pushing the branch and opening the PR are P4's go-ahead. Chosen at this session's Phase 0 picker over BL-78's
+closing edits.
+
+**Side actions approved at the same picker, each its own commit or record:** the `HANDOFFS.md` retention trim this
+claim makes owed (three receipts, `--cut 2 --force`) and its fold; pushing fork `main` to `origin` at close-out.
+
+**Phase 0, for the record:** `CHANGELOG.md` frontier = HEAD `cadd8a0`, gap empty; `HANDOFFS.md` frontier `e1795a0`,
+the one commit after it (`cadd8a0`) is S209's announced push record. No pending stub, 2 receipts before this one;
+nothing backfilled. Gate citation re-run in a `--no-local` clone with HEAD asserted by sha: `11/11 pass · results
+10575dac7361 · manifest 01a4ae7aa511`, S209's citation exactly. Dashboard 76/100, medium, 0 high+. Upstream 0 open
+issues; #83 (`219fb9d`), #84 (`77afc12`), #85 (`e2501c5`) open, 0 reviews, no maintainer comment. `main` =
+`origin/main` = `cadd8a0`; `upstream/main` still `6b29d3d`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S209 — fork `main` pushed to `origin`, `73b9536..e1795a0` (non-commit action, operator go-ahead)
 
 Seven commits, this session's claim through its close-out. Fork remote only — **nothing upstream-facing.**
