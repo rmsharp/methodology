@@ -219,6 +219,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S215 claim — P4 of the `context_budget.py` plan: push the branch to fork `origin` and open the upstream PR with the approved text (in progress)
+
+**Deliverable:** P4 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+§5 (`:719`): push the local branch `fix/context-budget-status` (`c1167ae`) to fork `origin`, then open the pull
+request into `KJ5HST/methodology:main` with the title at
+[`context-budget-status-pr-body.md`](docs/planning/context-budget-status-pr-body.md)`:12` (label dropped) and the
+body from `:16`, approved as written at S214. Read back after: body equal to the file, head `c1167ae`. **Both are
+outward actions; the operator gave the go-ahead at this session's Phase 0 picker.** Neither head moved since S214
+(`upstream/main` `6b29d3d`, branch `c1167ae`), so the body's figures stand unre-measured; its text from `:16` is
+byte-identical to `fb324d6`'s (`cmp`).
+
+**Side actions approved at the same picker:** the `HANDOFFS.md` retention trim this claim makes owed (three
+receipts, `--cut 2 --force`, dry run first) and its fold; pushing fork `main` to `origin` at close-out.
+
+**Phase 0, for the record:** `CHANGELOG.md` frontier = HEAD `58f5d34`, gap empty; `HANDOFFS.md` frontier `1b5365e`,
+the one commit after it being S214's announced push record. No pending stub, 2 receipts before this one; nothing
+backfilled. Gate citation re-run in a `--no-local` clone at `58f5d34`: `11/11 pass · results 10575dac7361 ·
+manifest 01a4ae7aa511`, S214's citation exactly. Dashboard 76/100, medium, 0 high+, run in that clone. Upstream 0
+open issues; #83 (`219fb9d`), #84 (`77afc12`), #85 (`e2501c5`) open, 0 reviews, only our comments (`5755256040`,
+`5753335477`). `main` = `origin/main` = `58f5d34`; `fix/context-budget-status` not on `origin`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S214 — fork `main` pushed to `origin`, `8089df7..1b5365e` (non-commit action, operator go-ahead)
 
 Eight commits: S213's post-close-out decision record `2c711ab`, then this session's claim through its close-out. Fork
