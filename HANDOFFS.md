@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S209
+date: 2026-09-20
+status: pending
+active_task: **BL-75 + BL-80 — plan ONE upstream-bound pull request fixing `starter-kit/context_budget.py`**: BL-75 (there is no `--status` command and an unknown argument is silently ignored, so every cited *"`--status`"* run was the default measurement) and BL-80 (*"Nothing is over a ceiling yet"* printed in the same run whose table shows rows `over`). **A planning session: the plan in `docs/planning/` is the deliverable, with the grep inventory of every citation and per-phase criteria; no code.** Chosen at this session's Phase 0 picker. **Side actions approved at the same picker, each its own commit or record:** the `HANDOFFS.md` retention trim this receipt makes owed (three receipts, `--cut 2 --force`); the one-sentence fix of §4.2's false *"again recorded only in agent memory"* (`docs/planning/pr83-decisions-review.md:194`; S115's receipt records it at `docs/archive/HANDOFFS-through-2026-08-29.md:285`); and pushing fork `main` to `origin` at close-out.
+commit: pending
+```
+
+```handoff
 session: S208
 date: 2026-09-20
 status: complete

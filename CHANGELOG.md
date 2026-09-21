@@ -219,6 +219,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-75] S209 claim — plan one upstream PR fixing `context_budget.py` (BL-75 + BL-80) (in progress)
+
+**Deliverable:** a plan in `docs/planning/` for **one** upstream-bound pull request fixing two defects in the
+distributed `starter-kit/context_budget.py`: BL-75 (no `--status` command exists and an unknown argument is silently
+ignored, so every cited *"`--status`"* run was the default measurement — including a gate command proposed to the
+maintainer in a PR comment) and BL-80 (*"Nothing is over a ceiling yet"* printed in the same run whose table shows
+rows `over`). Planning session: grep inventory of every citation, shapes presented for the operator's choice,
+per-phase criteria; **no code, nothing upstream-facing.** Chosen at this session's Phase 0 picker over BL-78's
+closing edits, BL-79 and BL-74.
+
+**Side actions approved at the same picker, each its own commit or record:** the `HANDOFFS.md` retention trim this
+claim makes owed (three receipts, `--cut 2 --force`); the one-sentence fix of §4.2 of the PR #83 review, whose
+*"again recorded only in agent memory"* (`docs/planning/pr83-decisions-review.md:194`) is refuted by S115's receipt
+(`docs/archive/HANDOFFS-through-2026-08-29.md:285`) — fork copy only, not in the posted comment; and pushing fork
+`main` to `origin` at close-out.
+
+**Phase 0, for the record:** `CHANGELOG.md` frontier = HEAD `73b9536`, gap empty; `HANDOFFS.md` frontier `1c56948`,
+the one commit after it (`73b9536`) is S208's announced push record. No pending stub, 2 receipts before this one;
+nothing backfilled. Gate citation re-run in a `--no-local` clone with HEAD asserted by sha: `11/11 pass · results
+10575dac7361 · manifest 01a4ae7aa511`, S208's citation exactly. Dashboard 76/100, medium, 0 high+. Upstream 0 open
+issues; #83 (`219fb9d`), #84 (`77afc12`), #85 (`e2501c5`) open, 0 reviews, no maintainer comment. `main` =
+`origin/main`; `upstream/main` still `6b29d3d`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [ad hoc] S208 — fork `main` pushed to `origin`, `0dcc291..1c56948` (non-commit action, operator go-ahead)
 
 Fourteen commits: S206's post-close-out direction and S207's six, unpushed since S207 had no go-ahead, plus this
