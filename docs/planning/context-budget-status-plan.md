@@ -9,8 +9,9 @@ one phase per session. **P1 DONE 2026-09-21 (S210): `e859196` on the LOCAL branc
 upstream-facing. **P3 DONE 2026-09-21 (S212) on `d4dbc26`, and AMENDED by its review:** the operator read the
 drafted body and decided two more changes for the same PR, **D6** (an unknown argument's message answers what the
 user meant; `--check` becomes a second name for `--status`) and **D7** (a byte ceiling's `over` is no longer
-overwritten by a failed structure pattern). See *P3 outcome* under §5 P3. **Next: P2b (D6), then P2c (D7), then
-P3′ (re-vet and re-package on the new tip), then P4.** Each is one session.
+overwritten by a failed structure pattern). See *P3 outcome* under §5 P3. **P2b DONE 2026-09-21 (S213): `612570b`
+on the same branch** (see *P2b outcome* under §5 P2b). **Next: P2c (D7), then P3′ (re-vet and re-package on the new
+tip), then P4.** Each is one session.
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
 `upstream/main`), so the fix reaches adopters only through **one upstream pull request**. Opening it is
@@ -549,6 +550,51 @@ does not belong inside this PR's two defects.
   (141 + 0 or 1 / 0), and upstream's ratchet. The floors are minimums, so they still pass.
 - **Surface:** the clone and the suite's `mktemp` projects. **It cannot show** `wsfct`'s live `--check` instruction
   running (P5), or how a reader takes the messages (the operator, at P3′).
+
+**P2b outcome (S213, 2026-09-21).** **Built as specified: `612570b` on the local branch**, fetched back as a
+fast-forward `d4dbc26..612570b`, not pushed. Tool blob `dd4803bf` → `f75482c2`.
+- **The change:** `--check` in `ACCEPTED_ARGUMENTS` and in the write guard; a `--check` line in the usage text;
+  `REFUSED_ARGUMENT_HINTS`, `SUGGESTION_CUTOFF` (0.75) and `refusal_hint()` just above `print_usage`; one refusal
+  line per unknown argument. The hints' wording is in the upstream `CHANGELOG.md` entry on the branch (`:38`).
+  `VERSION` stays 1.3.0 (P1's bump; the PR is one release).
+- **Re-measured before building:** the `difflib` table with `--check` in the candidate list (unchanged from D6), and
+  the flag inventory at today's heads (fork, `upstream/main`, seven adopters): still only `--status` and `--check`,
+  and `wsfct`'s quoted instruction is still in its `SESSION_NOTES.md` at `918dcef6`.
+- **Tests, RED first against `dd4803bf`:** 7 new in `TestCommandLine`, plus `--check` in the frozen set (`:501`).
+  6 fail on the old tool, each at the assertion under test. The `--zzz` and `--version` controls pass on it by
+  design. One more than the plan's seven: *each unknown argument gets its own line and its own hint*, which covers
+  the one-line-per-argument change the plan names but did not test. `:580`/`:583` (now `:602`/`:605`) needed no
+  change: a single refusal still contains `unknown argument: <arg>`. `_assert_refused` now also returns the line.
+  **`bin/tests.sh` gains the optional row** (`:680-699`): `--check` on the seed config exits as `--status` does and
+  writes nothing. It fails on `dd4803bf` (exit 3 against 1), run standalone.
+- **Mutants,** after the fixed baseline passed the same harness (`M0`), each test run by its own name:
+  - `--check` dropped from the write guard: T1, and the shell row.
+  - The table emptied: the `--force`, preview and one-line-each tests.
+  - Cutoff 0.6: the `--version` test.
+  - Unconditional suggestion: the `--zzz`, `--version` and one-line-each tests.
+  - The table moved above `def selftest`: `--selftest` exits 2 (`FAIL --force is not offered`), and so does
+    `test_the_tool_and_its_selftest_agree_the_gates_all_fire`.
+  - `--selftest` catches only the last.
+- **Verified** in a fresh `--no-local` clone at `612570b`, HEAD asserted:
+  - 136 unit tests OK (2 skipped);
+  - `--selftest` 52 PASS, exit 0;
+  - both `--force` greps empty;
+  - `bin/tests.sh` 142 / 0;
+  - upstream's ratchet `10/10 · results c52d62cd50a4 · manifest ba1ef0894ed2`, with `tests-sh-passed` 142 (floor 141)
+    and `context-budget-unit-tests` 136 (floor 129). P3′ tightens both.
+
+**P2b's lines on the branch (`612570b`), for P2c.** Re-derive them anyway, since a line number is a claim about one tree.
+- **`starter-kit/context_budget.py`:**
+  - `measure_file` `:342-453`; its status writes: `:369` over (the `over()` helper), `:377` warn, `:419` warn,
+    **`:430` instrument-failed (D7's guard)**, `:444`, `:451` over;
+  - `render`'s `order` `:598`;
+  - `def selftest` `:1125`;
+  - the write guard `:1437`;
+  - the ranking comment `:1452-1454`, BREACH `:1455-1456`.
+- **`tools/test_context_budget.py`:** `TestGrowthRunAdvisory` `:695`; `TestTokenCeiling` `:767` (P2c's class goes
+  between them).
+- **Branch `CHANGELOG.md`:** P2b's entry is the top one (`:38`), and `c299c30`'s, whose *Not changed here* names the
+  edge, is two below it.
 
 ### P2c: D7, status precedence in `measure_file()`. One session, same branch, after P2b.
 

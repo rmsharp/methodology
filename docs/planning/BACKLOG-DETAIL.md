@@ -2702,6 +2702,14 @@ refused argument's message answers what its user most likely meant. That is infe
 second name for `--status`, which makes one adopter's live instruction work as written. **Next: the plan's P2b (D6),
 then P2c (D7, BL-80), then P3′, then P4.** This item stays open until the PR merges. Nothing above is edited.
 
+**P2b BUILT 2026-09-21 (S213), not upstream:** `612570b` on the local branch (not pushed). `--check` is accepted
+and is the `--status` run. Every other refused argument gets its own line with a hint: `--force` is pointed at
+`.context-budget.json`; `--dry-run` is offered `--status`; `--run` and `--write` are told to run with no argument;
+a misspelling is offered the nearest accepted argument (`difflib`, 0.75); anything else gets nothing. 7 new tests,
+6 of them red on the old tool; 5 mutants killed. A fresh clone at `612570b` gives 136 unit tests OK, `bin/tests.sh`
+142 / 0 and upstream's ratchet 10/10. The details are in the plan's *P2b outcome* (§5). **Next: P2c (D7, BL-80),
+then P3′, then P4.** This item stays open until the PR merges. Nothing above is edited.
+
 <a id="bl-76"></a>
 
 **BL-76 — `.git/REBASE_HEAD` disarms `.githooks/pre-commit` for the life of a clone, so both gates it

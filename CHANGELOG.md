@@ -219,6 +219,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S213 — the plan's P2b outcome recorded; BL-75's and BL-80's rows moved on
+
+- **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) status line
+  (`:12-14`) and a *P2b outcome* block under §5 P2b. It gives what was built, the re-measurements, the RED record, the
+  mutant table, the fresh-clone verification, and **P2c's line numbers on `612570b`**. Also BL-75's S213 paragraph
+  (`docs/planning/BACKLOG-DETAIL.md`, end of the BL-75 section) and the BL-75 and BL-80 index rows
+  (`docs/planning/BACKLOG.md:164`, `:168`). Every line cited on `612570b` was grepped on that tree before commit.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-21 · [BL-75] S213 — P2b built: `612570b` on the LOCAL branch `fix/context-budget-status` (commit + fast-forward; not pushed)
+
+- **What:** the plan's D6 in `starter-kit/context_budget.py`, built in a `--no-local` clone of the local branch (HEAD
+  asserted `d4dbc26`, `core.hooksPath` set, both hooks passing on the commit), then fetched back as a fast-forward
+  `d4dbc26..612570b`, with no remote tracking. `--check` is accepted as the `--status` run. Each refused argument gets
+  its own line and a hint (`--force` → `.context-budget.json`; `--dry-run` → `--status`; `--run`/`--write` → run with no
+  argument; a misspelling → the nearest accepted argument at `difflib` cutoff 0.75; anything else → nothing). Tool
+  blob `dd4803bf` → `f75482c2`. Four files: the tool, `tools/test_context_budget.py`, `bin/tests.sh` (one row) and the
+  branch's `CHANGELOG.md` (one upstream entry at `:38`, jargon scan 0 hits).
+- **Evidence:** 6 of 7 new tests plus the frozen set are red on `dd4803bf`; the two controls pass there by design. The
+  new shell row is red there too (exit 3 against 1), run standalone. Five mutants were killed after the fixed baseline
+  passed the harness. In a fresh clone at `612570b`: 136 unit tests OK, `--selftest` 52 PASS, both `--force` greps
+  empty, `bin/tests.sh` 142 / 0, upstream's ratchet `10/10 · results c52d62cd50a4 · manifest ba1ef0894ed2`.
+- **One mistake, contained:** a first standalone runner for the shell row was built with a BSD `sed` filter that
+  produced an empty header. So `$P` was empty, and `(cd "$P" && git add -A && git commit …)` ran inside the work clone. The
+  ledger hook refused the commit. The only effect was staging the three intended files there, and they were
+  unstaged (`git reset -q`) and checked before going on. The runner was rebuilt in Python with a guard on `$P`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S213 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-21-2.md` became one row at
