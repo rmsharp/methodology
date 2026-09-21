@@ -219,6 +219,59 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-75] S212 close-out — P3 of the `context_budget.py` plan done on `d4dbc26` and amended by the operator's review (D6, D7); nothing upstream-facing
+
+**Deliverable:** P3 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
+(vet and package).
+- **Vetting:** the branch was measured, upstream's floors tightened (`d4dbc26`, local branch, not pushed), and trial
+  merges against #83, #84 and #85 run through the ratchet on each merge result, all green.
+- **Packaging:** the PR body was drafted and frozen (`e4ad63d`). **The operator's review did not approve it and
+  amended the design:** D6 (refused arguments' messages answer the intent; `--check` = `--status`) and D7 (status
+  precedence), both in the same PR. `b6814a2` writes them into the plan as P2b, P2c and P3′.
+- **Next: P2b.** Supporting commits: `3268e87` claim, `d899bd0` + `351c847` the `HANDOFFS.md` trim and fold.
+- **The plan was input, not output;** D6 and D7 are the operator's decisions on options this session developed.
+  This commit also fixes an unbalanced `**` that `b6814a2` introduced in BL-80's index row (`docs/planning/BACKLOG.md:168`).
+
+**Phase 3A — S211's handoff scored 9/10.**
+- *What helped:*
+  - Next step (1) was an exact recipe, and every value in it was right: the clone command, HEAD `c299c30`, the
+    measured 141/129, `.quality-gates.json:10`/`:34`, `CHANGELOG.md:38`, and the PR-ref refspec.
+  - Gotcha (3) (take the floors from the measured table) was followed.
+  - Gotcha (6) (the ranking comment against `render()`'s `order`) became D7's evidence.
+  - Gotcha (9) (the trim's notice set varies) was borne out: CUT_STRADDLES_DAY came back.
+  - Steps (3)–(5) were right: the PR state on all three, three receipts a twelfth time, and the `CHANGELOG.md`
+    estimate (~115 KB; 113,139 B measured).
+- *What was missing:* nothing S211 could have computed. Its recommendation (list the edge, don't fix it) was a
+  recommendation, and the operator chose otherwise. The refusal-only argument design the operator objected to is the
+  plan's (S209), not the handoff's.
+- *What was wrong:* nothing found.
+- *ROI:* clearly positive.
+
+**Phase 3B — self-assessment 7/10.**
+- *Right:*
+  - Phase 0 in full, with the gate citation re-run.
+  - The trim verified in a clone, and the suite run after the fold.
+  - Measured before tightening; `merge-tree` first, then real merges with the ratchet on each merge result, run
+    serially.
+  - The union resolution sanity-checked (entry counts; the tree equal to `merge-tree`'s).
+  - Every figure in the body measured this session; one wrong cell found by running it.
+  - When asked for fixes: an inventory, sibling meanings and a measured `difflib` cutoff, not opinions.
+  - The design change planned as three sessions, not built inside P3.
+- *Wrong:*
+  - **The drafted body named problems without fixes.** The operator had to ask for solutions derived from the
+    arguments' purposes, which is work the plan and this session should have offered unprompted.
+  - **The approval picker named a file path instead of showing the text**, and the operator had to ask where to read
+    it.
+  - Two zsh traps my memory warns about (`$n:refs`, an unquoted `======`), one exit code read through a pipe (caught
+    and re-run), and an unbalanced `**` in a backlog row (caught before close-out).
+  - Two stakeholder corrections.
+
+**Phase 3C:** no `docs/FORK_LEARNINGS.md` row, so D3's retirement obligation does not arise. Both lessons are about
+this agent's conduct, and they went to agent memory: *a refusal is not a fix* (a second instance on the
+sibling-flag entry) and *show the text before asking for its review* (new).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S212 — the operator's review of the P3 body: two changes added to the PR (D6, D7); the plan amended with P2b, P2c and P3′
 
 - **The decision (non-commit action, the operator's):** the frozen body (`e4ad63d`) was **not approved**, because it
