@@ -35,6 +35,16 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `.quality-gates.json`: two floors tightened to what this branch measures
+
+- **Action:** `tests-sh-passed` 139 → 141 and `context-budget-unit-tests` 118 → 129. These are the values
+  `python3 starter-kit/quality_ratchet.py --run` measures after the two `context_budget.py` changes below,
+  which add 11 unit tests and 2 `bin/tests.sh` rows. The manifest says the next tightening is owed whenever a
+  measured value rises, and a tightening passes the pre-commit ratchet without approval. No other floor
+  moves: every other gate measures exactly its threshold.
+- **Measured** in a fresh clone of the branch before this commit: `10/10 pass · 0 fail · 0 unmeasured`, with
+  `tests-sh-passed` 141 and `context-budget-unit-tests` 129.
+
 ### 2026-09-21 · [ad hoc] `context_budget.py`: the growth-run advisory no longer says nothing is over a ceiling when something is
 
 - **Action:** when the growth run fires, `render()` in `starter-kit/context_budget.py` prints an advisory
