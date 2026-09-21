@@ -10,8 +10,9 @@ upstream-facing. **P3 DONE 2026-09-21 (S212) on `d4dbc26`, and AMENDED by its re
 drafted body and decided two more changes for the same PR, **D6** (an unknown argument's message answers what the
 user meant; `--check` becomes a second name for `--status`) and **D7** (a byte ceiling's `over` is no longer
 overwritten by a failed structure pattern). See *P3 outcome* under §5 P3. **P2b DONE 2026-09-21 (S213): `612570b`
-on the same branch** (see *P2b outcome* under §5 P2b). **Next: P2c (D7) and P3′ (re-vet and re-package on the new
-tip) in ONE session, by the operator's decision after S213's close-out (the block just above §5 P2c), then P4.**
+on the same branch** (see *P2b outcome* under §5 P2b). **P2c and P3′ run in ONE session, by the operator's decision
+after S213's close-out (the block just above §5 P2c). P2c DONE 2026-09-21 (S214): `2f73733` on the same branch** (see
+*P2c outcome* under §5 P2c); its fresh-clone verification is green, so P3′ follows in the same session. **Then P4.**
 Every other phase is one session.
 **Backlog:** BL-75 ([detail](BACKLOG-DETAIL.md#bl-75)) and BL-80 ([detail](BACKLOG-DETAIL.md#bl-80)), fork-only.
 **Route:** `starter-kit/context_budget.py` is distributed (`bin/_manifest.py:54` on fork `main`, `:46` on
@@ -628,6 +629,37 @@ only the session boundary moves. The combined session keeps that boundary as a g
 - **Do not edit `c299c30`'s upstream entry**, whose *Not changed here* names this edge. The new entry says the edge
   named there is fixed here.
 - **DONE, Verify and Surface:** as P2b. `test_a_declared_ceiling_still_renders_exactly_as_before` still holds.
+
+**P2c outcome (S214, 2026-09-21).** **Built as specified: `2f73733` on the local branch**, fetched back as a
+fast-forward `612570b..2f73733`, not pushed. Tool blob `f75482c2` → `ea68573e`. Three files, 126 insertions and 4
+deletions.
+- **The change:** the guard at `:434` on `2f73733` (`if out["status"] != "over":`), with a comment saying a check may
+  raise a row's status and never lower it. The comment above `main()`'s exit (`:1457-1460`) now says what the code
+  does: a config defect exits BREACH as `over` does, and `order` (`:603`) ranks `instrument-failed` just below `over`,
+  which decides only the headline. **Noticed, not changed:** `measure_file`'s docstring (`:343`) still lists
+  `status ∈ ok | warn | over | unmeasured`, without `instrument-failed`; outside D7.
+- **Tests, RED first against `f75482c2`:** 4 in a new `TestStatusPrecedence` (`tools/test_context_budget.py:779`,
+  between `TestGrowthRunAdvisory` and `TestTokenCeiling`), with one module global `FAILING_PATTERN` (`:776`, grepped
+  first: no other use in the tool, the tests or `bin/tests.sh`). This phase's tests 1 and 4 (the end-to-end run under
+  `--status` and the `--json` row) fail on the old tool at the assertion under test, the headline reading
+  `INSTRUMENT-FAILED` and the row `instrument-failed`, after every fixture assertion passed. Tests 2 and 3 pass there
+  by design. The end-to-end row is resident, so it also trips its derived token ceiling (≈660 tokens against 440 at
+  the floor density). The two unit controls use class `on-demand`, so only the byte and structure checks can write.
+- **Mutants** (harness `p2c-mutants.py` in the session scratchpad; fixed baseline M0 first; each test run by name):
+  M1, the guard removed, kills tests 1 and 4. M2, the guard never setting the status, kills tests 2 and 3. Two more
+  than the plan's two, to show each control is load-bearing alone: M3, raising from `warn` blocked, kills test 3
+  only; M4, raising from `ok` blocked, kills test 2 only. `--selftest` catches M2 and M4 (*"a pattern matching
+  nothing is instrument-failed, not ok"*), not M1 or M3.
+- **The upstream entry** is the branch's new top one (`CHANGELOG.md:38`), jargon scan 0 hits. It names the case in
+  `c299c30`'s *Not changed here* (now `:120`) as fixed, and that entry is not edited (0 lines removed from
+  `CHANGELOG.md` between `612570b` and `2f73733`).
+- **Verified** in a fresh `--no-local` clone at `2f73733`, HEAD asserted:
+  - 140 unit tests OK (2 skipped), `test_a_declared_ceiling_still_renders_exactly_as_before` among them, run by name too;
+  - `--selftest` 52 PASS, exit 0, and the tool's `--force` grep empty;
+  - `bin/tests.sh` 142 / 0;
+  - upstream's ratchet `10/10 · results 43c4abce5653 · manifest ba1ef0894ed2`, with `context-budget-unit-tests` 140
+    (floor 129) and `tests-sh-passed` 142 (floor 141). Only git-ignored files were written.
+  **The gate to P3′ is open.**
 
 ### P3′: re-vet and re-package on the new tip. The second half of P2c's session.
 

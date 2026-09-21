@@ -219,6 +219,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-80] S214 — the plan's P2c outcome recorded
+
+- **What:** [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md) status line
+  (`:12-16`) and a *P2c outcome* block (`:633`) under §5 P2c: the change, the RED record, the four mutants, the upstream entry,
+  and the fresh-clone verification. Every line it cites on `2f73733` was grepped on that tree. BL-75's and BL-80's
+  backlog rows move with P3′'s records, at the end of this session.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
+### 2026-09-21 · [BL-80] S214 — P2c built: `2f73733` on the LOCAL branch `fix/context-budget-status` (commit + fast-forward; not pushed)
+
+- **What:** the plan's D7 in `starter-kit/context_budget.py`, built in a `--no-local` clone of the local branch (HEAD
+  asserted `612570b`, tool blob asserted `f75482c2`, `core.hooksPath` set, both hooks passing on the commit), then
+  fetched back as a fast-forward `612570b..2f73733`, with no remote tracking. In `measure_file()`, a structure pattern
+  below its `expect_min` no longer overwrites a ceiling's `over` with `instrument-failed` (the guard at `:434` on
+  `2f73733`), so a check can raise a row's status and never lower it. The comment above `main()`'s exit, which said
+  the ordering ranks an instrument failure above `over`, now says what the code does. Tool blob `f75482c2` →
+  `ea68573e`. Three files: the tool, `tools/test_context_budget.py` (a new `TestStatusPrecedence`, 4 tests) and the
+  branch's `CHANGELOG.md` (one upstream entry at `:38`, jargon scan 0 hits).
+- **Evidence:** the end-to-end and `--json` tests are red on `f75482c2` at the assertion under test; the two controls
+  pass there by design. Four mutants were killed after the fixed baseline passed the harness, each test killing one
+  the others miss. In a fresh clone at `2f73733`: 140 unit tests OK, `--selftest` 52 PASS, the `--force` grep empty,
+  `bin/tests.sh` 142 / 0, upstream's ratchet `10/10 · results 43c4abce5653 · manifest ba1ef0894ed2`.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S214 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-21-3.md` became one row at
