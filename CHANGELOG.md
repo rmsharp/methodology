@@ -215,6 +215,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [ad hoc] S206 — Phase 3C: fork Learning #90, and the D3 retirement obligation discharged by refusal
+
+- **What:** [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) row **#90**, 1,142 B — *a line-level merge driver
+  keeps lines, not records, so a claim that a merge keeps records "whole" must be tested on the records' real
+  format.* It comes from this session's D4 measurement. Real ledger entries survived `merge=union`, but two
+  real receipts fused into one block with two `session:` lines, and the merge exited 0. The receipts' shared
+  fence lines are enough to cause it.
+- **D3 discharged by explicit refusal. No row is retired; the rows considered are named** (`CLAUDE.md`
+  §*Where this fork's learnings go*): **#31** (fixture anchors from a live artifact couple a test to its size),
+  **#33** (a failure count undercounts coverage loss), **#41** (a live-repository fixture is green as a function
+  of size), **#58** (build both shapes to break a scope tie) and **#82** (a hook fails open, silently).
+  - **(a) fails for all five.** Test 34's named `SKIP` rows mechanize #33's shape for one test only, and
+    `pre-commit-selftest` tests the hook's logic, not whether it is armed (BL-77, open). No gate, test or
+    numbered failure mode enforces the general lesson of any of them.
+  - **(b) fails.** #90 is a merge-semantics lesson and restates none of theirs.
+  - **(c) fails.** Test 34, the trimmer and `.githooks/pre-commit` all still exist.
+  - Age and file size are never grounds.
+- **Verified:** `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` → **76 rows,
+  contiguous 15..90, 0 over 1,500 B**. The file is 94,774 B, against the 81,920 B reported series (not a limit).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S206 — PR #83's twelve decisions drafted: a collaborator's positions, and one finding that changes D4
 
 - **What:** [`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md), the BL-82 deliverable.
