@@ -219,6 +219,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [ad hoc] S215 — fork `main` pushed to `origin`, `58f5d34..78cb080` (non-commit action, operator go-ahead)
+
+Five commits: this session's claim `0b3e355`, the `HANDOFFS.md` trim `fc1f05a` and fold `b4d22c4`, the P4 records
+`34011a7`, and the close-out `78cb080`. Fork remote only. The PR branch `fix/context-budget-status` was pushed
+separately under P4 and is #86's head. Approved at this session's Phase 0 picker. Checked before: `origin/main` =
+`58f5d34`, an ancestor of HEAD, so a fast-forward. Read back after: `git ls-remote origin refs/heads/main` =
+`78cb080`, equal to local `main`. This record is pushed after it under the standing push-record grant.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-75] S215 close-out — P4 of the `context_budget.py` plan done: the branch pushed, the upstream PR opened as #86 with the approved text
 
 **Deliverable:** P4 of [`docs/planning/context-budget-status-plan.md`](docs/planning/context-budget-status-plan.md)
