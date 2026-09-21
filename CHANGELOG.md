@@ -233,6 +233,31 @@ Moved the oldest **1** record(s) (2026-09-20 → 2026-09-20) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-20-6.md.verify.sh)
 rather than trusting a digest printed here. Live file 23,314 B → 14,956 B (−35.8%).
 
+### 2026-09-20 · [BL-78] S205 — P2 done: `SAFEGUARDS.md`'s pin becomes a reported series, and no number moved
+
+- **What:** `.context-budget.json` `files[5]` (`starter-kit/SAFEGUARDS.md`) — the `_` note rewritten so the row's
+  `max_bytes` **15,386 B** is stated as a **reported series, not a no-growth pin**, on the precedent BL-53 option C
+  set for the 81,920 B `docs/FORK_LEARNINGS.md` figure. **Option β**, settled by the operator at S204's Phase 0
+  picker; option α (re-pin at 17,129 and re-partition the sibling to 39,621 B / 17,455 tok) was declined.
+- **Exactly one key path changed: `/files[5]/_`** — proved by walking the before/after objects path-by-path rather
+  than by eyeballing the diff; the key **set** is identical and every other value is byte-equal. `max_bytes`,
+  `max_tokens`, `measured_bytes` and `measured_on` are untouched, so the read-cap partition
+  (41,364 + 15,386 = 56,750 B; 18,222 + 6,777 = 24,999 tok) is unchanged.
+- **Why the demotion is cheap, measured rather than argued:** the partition's **token** half is asserted
+  (`tools/test_context_budget.py:1258`, which S203 showed fails at 25,767 > 25,000 when both keys move) and its
+  **byte** half is asserted **nowhere** — S203 moved `max_bytes` alone and the suite stayed 122 OK with the row
+  printing `ok`. Demoting the byte figure to a report costs no assertion; editing it would have cost one.
+- **A provenance error corrected in the same note.** The text replaced said the ceiling is *"this file's size as it
+  stood at S177"*. It is not: `git log -S '"max_bytes": 15386' -- .context-budget.json` returns exactly one commit,
+  `beffbd0` (2026-08-30, S129), where 15,386 B was the size of blob `f0964195` — a size `SAFEGUARDS.md` had carried
+  unchanged since `719a41d` (2026-07-08), 53 days. S177 added only `max_tokens` 6,777 and re-measured nothing.
+- **Verification:** `python3 tools/test_context_budget.py` → **Ran 122 tests, OK**; `python3 starter-kit/context_budget.py`
+  → exit **2** with the same four `over` rows (`docs/FORK_LEARNINGS.md`, `starter-kit/SESSION_RUNNER.md`,
+  `starter-kit/SAFEGUARDS.md`, read-set total) — this step changes no verdict, which is the point.
+- **Surface:** this repository's working tree. It cannot show what an adopter sees: `.context-budget.json` here is
+  this repo's own config, not the distributed seed `starter-kit/context-budget.json`, which budgets different files.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-78] S205 claim — P2: `SAFEGUARDS.md`'s row becomes a reported series (in progress)
 
 **Deliverable:** **BL-78 phase P2, option β**, settled by the operator at S204's Phase 0 picker and
