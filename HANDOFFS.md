@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S207
+date: 2026-09-20
+status: pending
+active_task: **BL-82 — rewrite §6 of `docs/planning/pr83-decisions-review.md` (the proposed PR #83 comment) for readability, and present it to the operator for review.** Chosen at this session's Phase 0 picker, per S206's next step (0). The operator's three named defects: **too dense, undefined terms, poor structure.** Only §6 changes, plus anything in §0–§5 that cites its wording. **Nothing is posted to #83** — posting is a separate outward go-ahead on the exact text. **Owed at this claim, its own action:** the `HANDOFFS.md` retention trim — this receipt makes **three** (`--cut 2 --force`).
+commit: pending
+```
+
+```handoff
 session: S206
 date: 2026-09-20
 status: complete

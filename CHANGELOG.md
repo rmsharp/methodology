@@ -215,6 +215,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-20 · [BL-82] S207 claim — rewrite §6 of the PR #83 review for readability (in progress)
+
+**Deliverable:** a recomposed §6 (*"Proposed comment for #83"*) of
+[`docs/planning/pr83-decisions-review.md`](docs/planning/pr83-decisions-review.md), presented to the operator
+for review. Chosen at this session's Phase 0 picker, per S206's next step (0). The operator named three
+defects at that picker: **too dense, undefined terms, poor structure.** So the rewrite leads with the one
+suggestion, defines or drops every term a reader of the plan might not share, and gives the comment
+labelled parts that name each note by the plan's own item title.
+
+**Scope, stated so the close-out can be checked against it.** Only §6 changes, plus whatever in §0–§5 cites
+§6's wording. **Nothing is posted to #83**; posting stays a separate outward go-ahead on the exact text. No
+framework file is edited. The comment's findings are not re-derived unless the rewrite changes a claim.
+
+**Phase 0, for the record:** both ledger frontiers = HEAD `8f5bbb7`, gaps empty, no pending stub,
+2 receipts before this one. Gate citation re-run in a `--no-local` clone with HEAD asserted by sha:
+`11/11 pass · results 10575dac7361 · manifest 01a4ae7aa511`, S206's citation exactly. Dashboard 76/100,
+medium, 0 high+. Upstream 0 open issues; #83 head `219fb9d`, 0 comments, 0 reviews; #84's one comment is
+the fork's own check-in (already recorded); #85 unchanged. Local `main` 1 ahead of `origin/main`.
+
+**Also owed at this claim, its own action:** the `HANDOFFS.md` retention trim — this claim's receipt
+makes **three** (`--cut 2 --force`).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-20 · [BL-82] S206 — operator direction after close-out: rewrite §6 for readability before its review
 
 The operator, after S206's close-out report: *"I find the section 6 comment hard to read. Add clarification of the comment prior to review in the next session."* **Scheduled, not started** (one deliverable per
