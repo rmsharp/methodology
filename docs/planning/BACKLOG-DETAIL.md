@@ -3376,3 +3376,38 @@ instead of shipping fixed numbers. (d) Raise the seed's warn line by the fence f
 nobody's measurement. The seed and the tool are distributed, so a fix is an upstream pull request and its own
 go-ahead. Which other adopters sit within 850 B of the line is not surveyed. Checked first, for the fence keys and
 `warn_bytes`: `BACKLOG.md`, this file, `CHANGELOG.md` and its archive shards, and `docs/planning/` — no prior report.
+
+<a id="bl-85"></a>
+
+**BL-85 — the fix for UAT F2 is fork-only: the three rules that stop an agent's prose update from overwriting an
+adopter's ledgers are in no upstream tree and no open pull request. Raised 2026-09-21 (S218), from S217's handoff and
+[`sync-github-route-plan.md`](sync-github-route-plan.md) §7. Upstream-facing; not fixed, not costed.**
+
+**What each tree says.** On `upstream/main` (`6b29d3d`), `starter-kit/BOOTSTRAP.md` §Without `bin/sync` (`:358-360`)
+is one instruction: *"Tell your agent: 'Update methodology using https://github.com/KJ5HST/methodology'. It will fetch
+the latest starter-kit files and overlay them."* It names no exception. On fork `main`, S41's `12463dd` (2026-08-04)
+replaced it (`:362-400`) with three numbered rules: **(1)** overlay the tracked files and never overwrite the
+adopter-owned ones (`CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`, `ROADMAP.md`, `.context-budget.json`,
+`.quality-gates.json`), **(2)** reconcile the adopter-owned front matter by hand against the seeds, **(3)** verify
+afterwards with `bin/status`. A closing note describes `--source=github` (`:396-400`). Measured at S218:
+`grep -c 'never overwrite'` on `starter-kit/BOOTSTRAP.md` gives 2 on fork `main` and 0 on `upstream/main` and on each
+open PR head (#83 `219fb9d`, #84 `77afc12`, #85 `e2501c5`, #86 `c1167ae`).
+
+**Why it matters.** The six-adopter UAT's F2 (CRITICAL, `uat-2026-08-04-six-adopters.md:133`) found that an agent
+following upstream's sentence literally overlays `CHANGELOG.md` and `HANDOFFS.md` with empty seeds, that S41's fix had
+reached 0 of 6 adopters, and (its §6) that F2 closes only by merging upstream. BL-25's re-run (S53) found F2 unchanged.
+Nothing in the backlog tracked the upstream half until now: checked `BACKLOG.md`, this file,
+`BACKLOG-archive-2026-08-15.md` and the BL-66 plan, which scopes it out on purpose (§7: independent of the mechanism,
+so it does not ride in that pull request).
+
+**Before it goes up.** Rule 1's table was written against fork `main`'s manifest; re-derive it against
+`upstream/main`'s `bin/_manifest.py`, which differs from the fork's. The closing `--source=github` note describes the
+route BL-66 changes, so its wording depends on whether BL-66's pull request lands first. #84 also rewrites
+`BOOTSTRAP.md`'s *Updating an existing project…* paragraph (`:85` upstream), in a different section; measure any conflict with
+`git merge-tree --write-tree --name-only` rather than predicting it.
+
+**Shapes, none costed.** (a) A small separate upstream pull request carrying the three rules. It would be a fifth
+while four sit unreviewed, which `CLAUDE.md` §Contributing upstream says to ask about first. (b) Fold it into BL-66's
+pull request at its docs phase (P3). That reverses the plan's §7 scoping, so it needs the operator's decision.
+(c) Offer it to the maintainer as a comment on #84, which touches the same section. (d) Leave it fork-only and tell
+adopters directly. Outward-facing in every shape but (d): its own go-ahead. **Decision first.**

@@ -219,6 +219,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-85] S218 — BL-85 raised: the fix for UAT F2 (the prose update route's never-overwrite rules) is fork-only
+
+- **What:** a new open item — index row in [`BACKLOG.md`](docs/planning/BACKLOG.md), `Open:` list, detail block
+  [`BACKLOG-DETAIL.md#bl-85`](docs/planning/BACKLOG-DETAIL.md#bl-85). S41's three rules in `starter-kit/BOOTSTRAP.md`
+  §Without `bin/sync` (fork `main` `:362-400`, `12463dd`) that stop an agent's prose update from overlaying an
+  adopter's `CHANGELOG.md` and `HANDOFFS.md` with empty seeds are on no upstream tree: `grep -c 'never overwrite'` is 2
+  on fork `main` and 0 on `upstream/main` `6b29d3d` and on #83–#86's heads. The six-adopter UAT's F2 (CRITICAL) says it
+  closes only upstream; the BL-66 plan §7 scopes it out of that pull request. Four shapes, none costed; decision first.
+- **Checked first:** `BACKLOG.md`, `BACKLOG-DETAIL.md`, `BACKLOG-archive-2026-08-15.md` — no item tracked the upstream
+  half. **Side action** approved at the Phase 0 picker; `BACKLOG.md` 57,611 → 58,077 B, further past its one-read
+  budget (a whole read measured untruncated at 57,603 B). `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK; `./bin/check-links` OK.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-66] S218 — the BL-66 plan ratified: D1–D8 all option (a) (operator decision)
 
 - **Decision:** at this session's Phase 0 picker the operator ruled the eight decisions of
