@@ -17,17 +17,19 @@ N versions behind / missing.
 Contract: methodology v2.2 plan §4E; B1 plan Phase 4.
 """
 import argparse
-import base64
 import hashlib
-import json
+import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _manifest import DISTRIBUTION, TRACKED, SEED_FORMAT_MARKERS  # noqa: E402  (bin/ on sys.path)
 
 REPO = "KJ5HST/methodology"
+# --source=github clones this URL; the variable overrides it, as for bin/sync.
+SOURCE_URL_ENV = "METHODOLOGY_SOURCE_URL"
 HEADERS = ("Project", "File", "Disposition", "Status")
 
 
@@ -113,18 +115,38 @@ def versions_behind(walk: list, project_sha: str):
     return None
 
 
-def github_canonical(src: str):
+def source_url() -> str:
+    return os.environ.get(SOURCE_URL_ENV) or f"https://github.com/{REPO}.git"
+
+
+def clone_source(url: str, parent: Path) -> Path:
+    """A full, non-bare clone of url's default branch under parent, for --source=github: the
+    history is what lets a file that is merely behind read "N versions behind". The caller
+    owns parent and removes it when the run ends."""
+    clone = parent / "methodology"
     try:
-        result = subprocess.run(
-            ["gh", "api", f"repos/{REPO}/contents/{src}"],
-            capture_output=True, text=True, check=True,
-        )
+        subprocess.run(["git", "clone", "--quiet", url, str(clone)],
+                       capture_output=True, text=True, check=True)
     except FileNotFoundError:
-        sys.exit("error: gh CLI not found; install GitHub CLI or use --source=local")
+        sys.exit("error: git not found; --source=github clones the methodology repository with git")
     except subprocess.CalledProcessError as e:
-        sys.exit(f"error: gh api failed for {src}: {e.stderr.strip() or e.stdout.strip()}")
-    payload = json.loads(result.stdout)
-    return payload["sha"], base64.b64decode(payload["content"])
+        sys.exit(f"error: could not clone {url}: {e.stderr.strip()}\n"
+                 f"hint: check the network, or compare against a full local checkout with --source=local")
+    return clone
+
+
+def absent_sources(methodology_root: Path, url: str) -> None:
+    """Exit, naming every distributed file the cloned source lacks: with no canonical copy there
+    is nothing to compare against. bin/sync prints the same list, with its own hint."""
+    srcs = [src for src, _dest, _disp in DISTRIBUTION]
+    absent = [src for src in srcs if not (methodology_root / src).is_file()]
+    if absent:
+        listed = "\n".join(f"    {src}" for src in absent)
+        sys.exit(f"error: {len(absent)} of {len(srcs)} distributed file(s) do not exist in {url} yet:\n"
+                 f"{listed}\n"
+                 f"       That repository is behind this distribution manifest, so those files "
+                 f"cannot be compared.\n"
+                 f"hint: compare against a full local checkout instead — `--source=local`.")
 
 
 def file_status(project: Path, dest: str, canonical_sha: str, history: dict) -> str:
@@ -191,6 +213,19 @@ def main() -> int:
     if source == "local" and not (methodology_root / "starter-kit").is_dir():
         sys.exit(f"error: --source=local but no starter-kit/ at {methodology_root}")
 
+    if source == "local":
+        return report(args.paths, methodology_root, source, str(methodology_root))
+    # github: a fresh clone, then exactly the local comparison over it, removed when the run ends.
+    url = source_url()
+    with tempfile.TemporaryDirectory(prefix="methodology-status-") as parent:
+        clone = clone_source(url, Path(parent))
+        absent_sources(clone, url)
+        return report(args.paths, clone, source, url)
+
+
+def report(paths: list, methodology_root: Path, source: str, origin: str) -> int:
+    """The drift table for paths against the methodology checkout at methodology_root: the
+    repository this script lives in (--source=local) or a fresh clone (--source=github)."""
     # Canonical SHA + history are only meaningful for TRACKED files; SEED files are
     # adopter-owned and never compared against canonical.
     canonical = {}
@@ -198,16 +233,11 @@ def main() -> int:
     for src, _dest, disp in DISTRIBUTION:
         if disp != TRACKED:
             continue
-        if source == "local":
-            canonical[src] = local_canonical_sha(methodology_root, src)
-            history[src] = local_history(methodology_root, src)
-        else:
-            sha, _ = github_canonical(src)
-            canonical[src] = sha
-            history[src] = {}  # history-walk not implemented for github source
+        canonical[src] = local_canonical_sha(methodology_root, src)
+        history[src] = local_history(methodology_root, src)
 
     rows = []
-    for raw in args.paths:
+    for raw in paths:
         project = Path(raw).resolve()
         if not project.is_dir():
             rows.append((raw, "-", "-", "missing-dir"))
@@ -219,7 +249,7 @@ def main() -> int:
                 state = seed_status(project, dest)
             rows.append((project.name, dest, disp, state))
 
-    print(f"source: {source}" + (f" ({methodology_root})" if source == "local" else ""))
+    print(f"source: {source} ({origin})")
     print(render_table(HEADERS, rows))
 
     stale_rows = [dest for _proj, dest, _disp, state in rows if state == STALE_SEED]

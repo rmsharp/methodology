@@ -35,6 +35,43 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `bin/sync` and `bin/status`: `--source=github` clones the repository, so a file that is merely behind is recognized
+
+- **The defect:** `--source=github` read each distributed file's contents through the GitHub API and nothing else,
+  then classified the project's copy against an empty history. A file that was merely behind matched no known
+  version, so `bin/sync` refused it as a *local modification* (exit 2) and `bin/status` read it as *locally
+  modified*: the one case an update exists for. On a project installed from `008d656` and never edited, updated
+  toward `6b29d3d`, `bin/sync --source=github --dry-run` refused 9 files, exit 2, in 12.3 s (one run). The history
+  walk for this source was deferred when the full distribution was added (issue #32), with `--source=local` kept as
+  the supported update path.
+- **The fix:** `--source=github` makes a full clone of `https://github.com/KJ5HST/methodology.git` into a temporary
+  directory, or of `METHODOLOGY_SOURCE_URL` when it is set (anything `git clone` accepts), and runs exactly the
+  `--source=local` code over the clone: the same reads, the same full-history walk, the same `git describe`. The
+  directory is removed when the run ends, dry run or not. Both scripts, one mechanism. The `gh` calls are gone, so a
+  public repository needs neither the GitHub CLI nor authentication; a private mirror uses git's own credentials.
+- **What a user sees change:** the source line names the URL cloned (`source:  github (https://…)`), and `version:`
+  is the clone's `git describe` (`v3.7-68-g6b29d3d`) rather than `github:<sha>`. A distributed file the source lacks
+  (this checkout's manifest is ahead of it) is listed with every other such file before anything is written, exit 1,
+  in both scripts; `bin/sync` used to stop at the first one with a `gh auth login` hint.
+- **Tests, written red first:** Test 27 serves Test 26's fixture (both merge-hiding shapes) as a `file://` bare
+  repository through `METHODOLOGY_SOURCE_URL`, and checks every version the way Test 26 does, through
+  `--source=github`: 6 status rows and 5 sync outcomes, a real local edit still refused, plus the source and
+  version lines, a dry run that writes nothing, and no temporary clone left behind. Test 28 removes one distributed
+  file from the fixture: both scripts name it, exit 1, and nothing is written. On the unfixed scripts the two tests
+  fail 16 of their 20 checks; the 4 that pass are the controls. Test 26's fixture moved into a function the two
+  share, with its assertions unchanged. Test 9's guard is now the URL's reachability (`git ls-remote`, 30 s timeout)
+  instead of `gh auth status`.
+- **Mutants, run:** nine — a `--depth 1` clone in each script, the inventory skipped in each, the URL override
+  ignored, the temporary clone left behind by each, and the github route given no history in each. Tests 26–28
+  fail on all nine and pass unmutated (31 / 0). The two `--depth 1` mutants passed until the fixture was served as
+  `file://` rather than a plain path: git ignores `--depth` when it clones a plain path.
+- **Live, against this repository (one run):** the same project from `008d656`: `bin/sync --source=github --dry-run`
+  exit 0, 10 files would be written, `version: v3.7-68-g6b29d3d`, 1.6 s; `bin/status --source=github` 9 rows
+  *N versions behind*, 0 *locally modified*, 1.9 s.
+- **Not changed here:** the refusal text for a source that has no history of its own (a shallow clone, a downloaded
+  tarball), the *"To inspect the drift first:"* header this route prints over no lines, the `--help` text, and the
+  documents that describe the route.
+
 ### 2026-09-21 · [ad hoc] `bin/status` and `bin/sync`: the history walks look up blobs in one batched call
 
 - **Why:** the full-history walk the entry below adds visits more than twice the commits the default walk did, and
