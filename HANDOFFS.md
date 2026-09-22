@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S218
+date: 2026-09-21
+status: pending
+active_task: **P1 OF THE BL-66 PLAN, ONE SESSION.** `docs/planning/sync-github-route-plan.md` §5 P1 on a new branch `fix/sync-github-history` from `upstream/main` `6b29d3d`: cherry-pick BL-54's `2c4f801` + `865119f`; `bin/sync --source=github` and `bin/status --source=github` clone the repository into a temp dir and run the local path; the `gh api` fetchers go; `METHODOLOGY_SOURCE_URL` overrides the source; S41's absent-source inventory over the clone; two red-first tests; Test 9's guard becomes `git ls-remote`. The plan's D1–D8 ruled all (a) at the Phase 0 picker. Nothing upstream-facing.
+commit: pending
+```
+
+```handoff
 session: S217
 date: 2026-09-21
 status: complete

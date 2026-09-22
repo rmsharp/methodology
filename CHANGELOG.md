@@ -219,6 +219,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-66] S218 claim — P1 of the BL-66 plan: `--source=github` becomes a fresh clone plus the local path, in `bin/sync` and `bin/status`, with red-first tests (in progress)
+
+**Deliverable, chosen at this session's Phase 0 picker:** phase P1 of
+[`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5, on a new branch
+`fix/sync-github-history` from `upstream/main` `6b29d3d`: BL-54's `2c4f801` and `865119f` cherry-picked, the GitHub
+route cloning and then running the local code in both scripts, the `gh api` fetchers removed, `METHODOLOGY_SOURCE_URL`
+honoured, S41's absent-source inventory re-expressed over the clone, two new tests written red first, Test 9's guard
+changed. Nothing opens upstream (P5 is its own go-ahead).
+
+**Ruling at the same picker:** the plan's eight decisions (§3), all option (a) as recommended — recorded in the plan by
+its own commit. **Side actions approved:** the `HANDOFFS.md` retention trim this claim makes owed (three receipts) and
+its fold; raising the backlog item for the fork-only prose-route rules (`starter-kit/BOOTSTRAP.md:364-400`); the fork
+push at close-out.
+
+**Phase 0 finding, reported, not acted on:** the dashboard (run in a clone at `63de9e0`) reads 76/100 with risk
+**high** — `docs/planning/BACKLOG.md` at 57,603 B is past the 56,750 B one-read budget, crossed at `2e0fd02`
+(56,502 → 57,383 B). A whole-file Read of it, measured in a subagent, returned all 228 lines untruncated, so the byte
+figure is a floor for this file, not its cliff. No backlog item covers it; the operator chose P1 over archiving its
+§Completed items (25,576 B).
+
 ### 2026-09-21 · [ad hoc] S217 — fork `main` pushed to `origin`, `f853edd..fbf269b` (non-commit action, operator go-ahead)
 
 Six commits: this session's claim `90f4eca`, the `HANDOFFS.md` trim `e67c75b` and fold `f7a6c99`, BL-84 raised
