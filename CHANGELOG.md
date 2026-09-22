@@ -223,6 +223,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [ad hoc] S219 — fork `main` pushed to `origin`, `0c33421..0af89a4`, and `fix/sync-github-history` `252a4b6..443b02f` (non-commit action, operator go-ahead)
+
+Eight commits on `main`: S218's two post-close-out commits, which its own push had left behind (`2f51cc9` the
+self-score correction, `6a8fe87` BL-79's second occurrence), then this session's claim `e7e80c6`, the `HANDOFFS.md`
+trim `61c043b` and fold `dd304e6`, the `CHANGELOG.md` trim `4e73d20`, the P2 record `7dea9d8` and the close-out
+`0af89a4`. One commit on the branch: `443b02f`, P2. Both were fast-forwards from the shas `origin` held
+(`0c33421` and `252a4b6`), checked before the push and read back after with `git ls-remote`. **Nothing was pushed to
+`KJ5HST/methodology`**; the branch goes upstream only at the plan's P5, its own go-ahead. This recording commit is
+pushed with it under the standing grant for push records (2026-09-16), so no further record is owed.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [BL-66] S219 close-out — P2 of the BL-66 plan done on the branch; two ledgers trimmed; nothing upstream-facing
 
 - **Deliverable:** P2 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) on
