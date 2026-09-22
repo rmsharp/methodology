@@ -66,18 +66,24 @@ def local_history_blobs(methodology_root: Path, src: str) -> set:
         ).stdout.strip().splitlines()
     except (FileNotFoundError, subprocess.CalledProcessError):
         return set()
+    if not log:
+        return set()
+    # One batched lookup rather than a git ls-tree per commit: the full walk visits over twice
+    # the commits the default walk did, and a subprocess each more than doubled the run time.
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(methodology_root), "cat-file", "--batch-check=%(objectname) %(objecttype)"],
+            input="".join(f"{commit}:{path}\n" for commit in log),
+            capture_output=True, text=True, check=True,
+        ).stdout.splitlines()
+    except subprocess.CalledProcessError:
+        return set()
     blobs = set()
-    for commit in log:
-        try:
-            tree = subprocess.run(
-                ["git", "-C", str(methodology_root), "ls-tree", commit, "--", path],
-                capture_output=True, text=True, check=True,
-            ).stdout.strip()
-        except subprocess.CalledProcessError:
-            continue
-        parts = tree.split()
-        if len(parts) >= 3 and parts[1] == "blob":
-            blobs.add(parts[2])
+    for line in out:
+        # "<sha> blob", or "<commit>:<path> missing"
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == "blob":
+            blobs.add(parts[0])
     return blobs
 
 

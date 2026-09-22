@@ -35,6 +35,18 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `bin/status` and `bin/sync`: the history walks look up blobs in one batched call
+
+- **Why:** the full-history walk the entry below adds visits more than twice the commits the default walk did, and
+  both tools ran one `git ls-tree` subprocess per commit. Against six adopter projects, `bin/status` went from 3.0 s
+  to 10.1 s and one project's `bin/sync --dry-run` from 2.9 s to 7.5 s.
+- **The change:** one `git cat-file --batch-check` per walk, fed `<commit>:<path>` lines: `bin/status`'s new
+  `blobs_at()`, used by `history_walk()`, and `bin/sync`'s `local_history_blobs()`. A separate commit from the fix, so
+  it can be judged, or dropped, on its own.
+- **Behaviour-neutral:** on the fork where it was first measured, `bin/status` output over the six projects was
+  byte-identical to the fix's (174 rows), and `bin/sync --dry-run` output identical apart from the `version:` line,
+  with the same exit codes. Run time after: `bin/status` 4.0 s, that `bin/sync --dry-run` 2.3 s. Test 26 unchanged.
+
 ### 2026-09-21 · [ad hoc] `bin/status` and `bin/sync`: a version a merge hid from git's default walk is recognized again
 
 - **The defect:** both tools listed a file's past versions with a plain `git log -- <path>`, which follows only a
