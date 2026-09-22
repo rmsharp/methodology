@@ -35,6 +35,41 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-22 · [ad hoc] `bin/sync`: a source without its history is named as the refusal's cause, not the project's files
+
+- **The defect:** `bin/sync` refuses a tracked file that matches neither the canonical version nor any version in
+  the source's history, and says it has *local modifications*. That is earned only when the history is complete. From
+  a shallow clone or a downloaded tree it said the same of files that were merely behind: a project installed from
+  `008d656` and never edited had 9 files refused as local modifications, exit 2, by `bin/sync --source=local
+  --dry-run` from a depth-1 clone of this branch and from a `git archive` of it. `starter-kit/BOOTSTRAP.md` already
+  says a shallow clone or a tarball loses that history; the refusal did not.
+- **The fix:** before refusing, `bin/sync` asks its source what history it has. No `.git`: the refusal says the source
+  has no git history and prints the `git clone` command. `git rev-parse --is-shallow-repository` true: it says the
+  checkout is shallow and how many commits it holds, and prints `git -C <source> fetch --unshallow`. In both, the
+  header says the files *differ from the canonical version*, the `CLAUDE.md` paragraph (which presumes an edit) is
+  left out, and the exit stays 2. A source with its full history prints exactly the text it did.
+- **The `--source=github` hint:** it printed *"To inspect the drift first:"* over no lines, because its commands would
+  have named the clone, which is removed when the run ends. It now prints a clone of the source pinned to the commit
+  the run read (`git clone <url> methodology-<sha> && git -C methodology-<sha> checkout -q <sha>`) and one `diff` per
+  file against it.
+- **Tests, written red first:** Test 29 takes Test 26's fixture three ways — a depth-1 and a depth-2 clone over
+  `file://`, and a `git archive` of it — with a project holding the fixture's oldest version, merely behind. Each
+  source exits 2, names its cause (with the commit count, 1 and 3), writes nothing, and never says *local
+  modifications*; the shallow refusal prints the `fetch --unshallow` command and the tarball's the clone command. For
+  `--source=github` the test runs the printed hint after the run, from an empty directory: the clone succeeds and
+  `diff` exits 1 on the edit. The control: a full-history source upgrades the same file. Test 7 now also asserts
+  that a full-history source still says *local modifications*. On the unfixed script 9 of the 55 checks in Tests 7
+  and 26–29 fail, all of them new; the controls pass.
+- **Mutants, run:** thirteen — each cause's detection disabled, the cause ignored, each header's wording swapped, the
+  github hint's diff aimed at the removed clone, its pin wrong, the hint given the local form or dropped, the
+  `fetch --unshallow` path dropped, the commit count hard-coded, its plural forced, and the clone command dropped.
+  All thirteen fail at least one check; unmutated, 55 / 0.
+- **Live (one run each):** from the `008d656` project, the depth-1 clone and the tarball each refused its 9 files
+  with its own cause, exit 2. Against `https://github.com/KJ5HST/methodology.git`, a project with one edited file:
+  exit 2 with the full-history text, and the printed hint, run by hand, cloned `6b29d3d` and `diff` showed the edit.
+- **Not changed here:** `bin/status` from a history-less source still reads a merely-behind file as *locally
+  modified*; the `--help` text and the documents.
+
 ### 2026-09-21 · [ad hoc] `bin/sync` and `bin/status`: `--source=github` clones the repository, so a file that is merely behind is recognized
 
 - **The defect:** `--source=github` read each distributed file's contents through the GitHub API and nothing else,

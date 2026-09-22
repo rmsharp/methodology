@@ -97,6 +97,7 @@ OUTPUT="$("$BIN/sync" "$P" 2>&1)"; RC=$?
 [ "$RC" != "0" ] && pass "sync exits non-zero when local drift present" || fail "sync exited 0 despite local drift"
 echo "$OUTPUT" | grep -q "ERROR" && pass "sync prints ERROR on local drift" || fail "no ERROR printed"
 echo "$OUTPUT" | grep -q -- "--force" && pass "ERROR mentions --force" || fail "ERROR missing --force hint"
+echo "$OUTPUT" | grep -q "local modifications" && pass "a full-history source blames local modifications" || fail "ERROR no longer names local modifications"
 [ "$(cat "$P/SESSION_RUNNER.md")" = "$BEFORE" ] && pass "file unchanged when blocked" || fail "file modified despite block"
 
 # --force proceeds
@@ -967,6 +968,59 @@ OUT="$(METHODOLOGY_SOURCE_URL="$U" "$BIN/status" --source=github "$P" 2>&1)"; RC
 [ "$RC" = "1" ] && printf '%s\n' "$OUT" | grep -qxF "    $GONE" \
     && pass "github status: the same inventory, exit 1" || fail "github status: exit $RC, output: $OUT"
 rm -rf "$M" "$(dirname "$S")" "$P"
+
+echo "== Test 29: a source without its history is named as the cause, not the project's files (RED-first) =="
+# A file that matches no version in the source's history is a local edit only if that history is all
+# there. A shallow clone holds its last commits and a downloaded tree holds none, so an unmodified older
+# copy was refused as "local modifications". The refusal now says what the source lacks. v1 is the
+# fixture's root version, merely behind: a full-history source upgrades it (the control, last).
+mh_fixture
+P="$(mktemp_project)"
+"$M/bin/sync" "$P" --mode=commit --source=local >/dev/null
+printf 'v1\n' > "$P/$D"
+H="$(cd "$(mktemp -d)" && pwd -P)"  # resolved, as bin/sync prints its own root (/var is /private/var on macOS)
+git clone -q --depth 1 "file://$M" "$H/shallow"  # file://, or git copies the repository and ignores --depth
+mkdir "$H/tarball"; git -C "$M" archive HEAD | tar -x -C "$H/tarball"
+[ "$(git -C "$H/shallow" rev-parse --is-shallow-repository)" = "true" ] && [ ! -e "$H/tarball/.git" ] \
+    && cmp -s "$H/shallow/bin/sync" "$BIN/sync" && cmp -s "$H/tarball/bin/sync" "$BIN/sync" \
+    && pass "fixture: a shallow clone and a tree with no .git, each carrying the sync under test" \
+    || fail "fixture: the clone is not shallow, the tree has a .git, or a copy of bin/sync differs"
+hs_refuse() {  # hs_refuse <source tree> <sentence naming the cause> <what>
+    local out rc
+    out="$("$1/bin/sync" "$P" --source=local 2>&1)"; rc=$?
+    [ "$rc" = "2" ] && pass "$3: exit 2" || fail "$3: exit $rc, not 2"
+    grep -qF "$2" <<<"$out" && pass "$3: the refusal says '$2'" || fail "$3: no '$2' in the refusal: $out"
+    ! grep -q "local modifications" <<<"$out" && pass "$3: no claim of local modifications" \
+        || fail "$3: the refusal still blames local modifications"
+    [ "$(cat "$P/$D")" = "v1" ] && pass "$3: nothing written" || fail "$3: $P/$D was rewritten"
+}
+hs_refuse "$H/shallow" "is shallow (1 commit)" "shallow source"
+git clone -q --depth 2 "file://$M" "$H/shallow2"  # depth 2 reaches both of the merge's parents
+N2="$(git -C "$H/shallow2" rev-list --count HEAD)"
+hs_refuse "$H/shallow2" "is shallow ($N2 commits)" "a deeper shallow source"
+hs_refuse "$H/tarball" "has no git history" "source with no .git"
+OUT="$("$H/shallow/bin/sync" "$P" --source=local 2>&1)"
+grep -qF "git -C $H/shallow fetch --unshallow" <<<"$OUT" \
+    && pass "shallow source: the refusal gives the command that deepens it" || fail "shallow source: no fetch --unshallow command for $H/shallow"
+OUT="$("$H/tarball/bin/sync" "$P" --source=local 2>&1)"
+grep -qxF "    git clone ${METHODOLOGY_SOURCE_URL:-https://github.com/KJ5HST/methodology.git}" <<<"$OUT" \
+    && pass "source with no .git: the refusal gives the clone command" || fail "source with no .git: no clone command in the refusal"
+# --source=github: its clone is gone when the run ends, so the hint must work without it. Run the hint
+# as printed, from an empty directory: diff exits 1 only if both files exist and differ (2 = missing).
+git clone -q --bare "$M" "$H/methodology.git"
+printf 'v2-local\n' > "$P/$D"
+OUT="$(METHODOLOGY_SOURCE_URL="file://$H/methodology.git" "$BIN/sync" "$P" --source=github 2>&1)"
+HINT="$(grep -A3 "To inspect the drift first" <<<"$OUT")"
+mkdir "$H/inspect"
+( cd "$H/inspect" && eval "$(grep '^    git clone ' <<<"$HINT")" ) >/dev/null 2>&1; RC_CLONE=$?
+( cd "$H/inspect" && eval "$(grep '^    diff ' <<<"$HINT")" ) >/dev/null 2>&1; RC_DIFF=$?
+grep -qF "git clone file://$H/methodology.git " <<<"$HINT" && [ "$RC_CLONE/$RC_DIFF" = "0/1" ] \
+    && pass "github refusal: the inspect hint, run after the run, clones the source and diffs the edit" \
+    || fail "github refusal: the inspect hint does not work once the run is over (clone $RC_CLONE, diff $RC_DIFF): $HINT"
+printf 'v1\n' > "$P/$D"
+"$M/bin/sync" "$P" --source=local >/dev/null 2>&1 && [ "$(cat "$P/$D")" = "v5" ] \
+    && pass "control: the full-history source upgrades the same file" || fail "control: the full-history source did not upgrade v1"
+rm -rf "$M" "$H" "$P"
 
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
