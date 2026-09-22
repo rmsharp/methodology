@@ -223,6 +223,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [BL-66] S220 close-out — P3 of the BL-66 plan done on the branch; one ledger trimmed; nothing upstream-facing
+
+- **Deliverable:** P3 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) on
+  `fix/sync-github-history` (`9f42c0f`) — the documents say what the update route now does, and four of them stop
+  requiring the `gh` CLI. Recorded on `main` at `a92cff4`. **P4 (vet and package) is next; P5 opens the pull request,
+  its own go-ahead.**
+- **Side actions, both approved at the Phase 0 picker:** the `HANDOFFS.md` retention trim the claim made owed
+  (`75a650f`, 3 receipts → 2, S218's to shard `-9`, 23,710 → 14,896 B) and its fold (`6656e07`, → 14,440 B). The
+  shard's `.verify.sh` re-derives L1/L2/L3 from git in a clone: OK.
+- **Phase 3C, D3:** fork Learning **#93** appended, so a retirement was owed. **It is refused, with the rows named:**
+  #55, #64, #68 and #78 were each considered against the criterion; each keeps exactly the basis the 2026-09-20
+  adjudication recorded, and nothing this session changed moves any of their lessons into a gate, a test or a numbered
+  failure mode.
+- **Gate:** `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511` in a
+  `--no-local` clone of `a92cff4` — identical to Phase 0's at `f07abe4`. On the branch, in a clone of `9f42c0f`:
+  `10/10 · results 96015fdc2d45 · manifest 97a7aab85b9a`, suite 188 passed, 0 failed — identical to P2's.
+- **Two Phase 0 findings, both carried into the receipt:** the ratchet's first run measured 342/1 because other
+  commands were running against the repository, and it keeps no suite output, so a red run cannot be diagnosed without
+  re-running it; and S219's next-step named `T8_keeping_current.md` where the plan's P3 names `T1_setup.md` — §2.2 and
+  D6 (a) resolve it, and the resolution turned out to be that **both** needed changing, for different reasons.
+- **Nothing was pushed to `KJ5HST/methodology`.** The fork push of `main` and the branch to `origin` follows this
+  commit under the go-ahead given at Phase 0.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [BL-66] S220 — P3 of the BL-66 plan done on the branch: the documents say what the update route now does
 
 - **Deliverable:** phase P3 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5, on
