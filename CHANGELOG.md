@@ -219,6 +219,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-21-5.md` (1 record(s), 25,815 B → 14,071 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-21 → 2026-09-21) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-21-5.md`](docs/archive/HANDOFFS-through-2026-09-21-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-21-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-21-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 25,815 B → 14,071 B (−45.5%).
+
 ### 2026-09-21 · [BL-78] S216 claim — BL-78's closing edits: the stale index row, the move to Completed items, and `.context-budget.json`'s unwired "refused" sentence (in progress)
 
 **Deliverable, chosen at this session's Phase 0 picker:** the closing edits BL-78's S206 decision left owed
