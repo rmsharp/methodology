@@ -219,6 +219,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-21-6.md` (1 record(s), 22,247 B → 14,084 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-21 → 2026-09-21) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-21-6.md`](docs/archive/HANDOFFS-through-2026-09-21-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-21-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-21-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 22,247 B → 14,084 B (−36.7%).
+
 ### 2026-09-21 · [BL-66] S217 claim — plan BL-66: `README.md`'s update advice (the GitHub URL route cannot update a file that is merely behind) against `starter-kit/BOOTSTRAP.md`'s opposite advice (in progress)
 
 **Deliverable, chosen at this session's Phase 0 picker:** a plan in `docs/planning/` for BL-66 (its row in
