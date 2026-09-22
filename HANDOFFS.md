@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S217
+date: 2026-09-21
+status: pending
+active_task: **PLAN BL-66, ONE SESSION; THE PLAN IS THE DELIVERABLE.** `README.md:61` tells adopters to update from the GitHub URL, which `bin/sync --source=github` cannot do for a file that is merely behind (no history to match against), while `starter-kit/BOOTSTRAP.md` says to prefer `--source=local`; the plan goes to `docs/planning/`, fixes nothing and opens nothing upstream. Chosen at this session's Phase 0 picker, where no maintainer reply was found on #83–#86. **Side actions approved at the same picker:** the `HANDOFFS.md` retention trim this receipt makes owed and its fold; raising BL-84 (the seed's fixed `CLAUDE.md` warn line vs its mandatory purpose fence, relayed from `mts-system` S143); pushing fork `main` to `origin` at close-out.
+commit: pending
+```
+
+```handoff
 session: S216
 date: 2026-09-21
 status: complete
