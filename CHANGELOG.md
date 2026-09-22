@@ -219,6 +219,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-83] S216 — BL-83 raised: fork Learning #85 teaches a false example (the ratchet it says does not exist is `context_budget.py --precommit`)
+
+- **What:** a new open item — index row after BL-81 and `BL-83` added to the `Open:` list in
+  [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md); detail block at the end of
+  [`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md#bl-83). Written from what was already measured while closing
+  BL-78 (the `--precommit` runs: growth refused, exit 2; shrink passed, exit 0), and nothing further measured.
+- **Why an item and not a fix:** `docs/FORK_LEARNINGS.md:19-20` permits only compaction as an edit to an existing
+  row, and D1 (`CLAUDE.md:45`) names no false-row case. Three shapes are recorded, none costed; the decision is the
+  operator's.
+- **Operator, at this session's picker:** *"Raise a backlog item"*, over noting it in BL-78's closing alone.
+- **Verified:** `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK; `./bin/check-links` OK; the new anchor and its index link
+  each appear once.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-78] S216 — BL-78 closed: the closing edits S206 left owed, and the record corrected where it said the ratchet does not exist
 
 - **What:** BL-78's index row moved from the open table to §Completed items in

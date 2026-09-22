@@ -3285,3 +3285,35 @@ memory alone. S44's receipt records it (`docs/archive/HANDOFFS-through-2026-08-0
 Test 9 details in §4.7 are in S178's receipt (`docs/archive/HANDOFFS-through-2026-09-17.md:62`, gotcha (3)).
 The review's §4.1 and §4.7 now cite both (`f7fc621`). **Nothing further is owed here.** A reply on #83 is the
 maintainer's; answering it would be new work and its own go-ahead.
+
+<a id="bl-83"></a>
+
+**BL-83 — fork Learning #85 teaches a false example: the ratchet it says "does not exist" is
+`context_budget.py --precommit`. Raised 2026-09-21 (S216), while closing BL-78, on the operator's choice at a
+picker. Not fixed, not costed.**
+
+**What.** Row #85 of [`docs/FORK_LEARNINGS.md`](../FORK_LEARNINGS.md) (`:97`, S201) is headed *"A config's note
+can describe an enforcement the tool does not implement"*, and its example is `.context-budget.json`'s *"every
+commit that grows it is refused while every commit that shrinks it passes: a ratchet, not a wall"*: *"It is not
+wired **and it does not exist**"*, because *"the field that sentence rests on, `measured_bytes`, appears once in
+the tool"*. The sentence does not rest on `measured_bytes`. It rests on `max_bytes` and HEAD's size, in
+`def precommit` (`starter-kit/context_budget.py:1000`; byte test `:1037`, token arm `:1044-1051`), which
+`--precommit` runs and `install-hook` installs. **Measured at S216** in a `--no-local` clone at `2701247`: a
+staged one-line growth of `starter-kit/SESSION_RUNNER.md` gave *"context-budget: REFUSED"* and exit 2; a staged
+one-line shrink, exit 0; nothing staged, exit 0. The truth was *exists, unwired* — what S200 wrote in BL-78's
+reason 1, and what S205's `files[5]._` note says (`fac748f`).
+
+**Why it matters.** The row's repair — grep the tool for every field the note names — is sound, but its example
+commits the error the row warns against: the note named no field, S201 supplied one, and grepped that. A session
+that reads #85 learns the opposite of what the tool does. BL-78's S201 paragraph and S203's costing (*"has to
+build the check"*) carried the same claim; both are corrected in BL-78's S216 update, and #85 is the one place it
+still stands.
+
+**Why it is not simply fixed.** `docs/FORK_LEARNINGS.md:19-20`: *"append only, never renumber; compacting a row
+is the one edit an existing row permits"* — and correcting a claim is not compacting. D1 (`CLAUDE.md:45`) retires
+a row that is mechanized, superseded or spent, and says nothing of a false one, though a corrected later row could
+supersede #85 under (b). Any appended row also carries D3's retire-or-refuse obligation. **Shapes, none costed:**
+(1) append a corrected row and retire #85 under (b), its text moving verbatim to
+`docs/archive/FORK_LEARNINGS-retired.md` (D2; the file does not exist yet, as no row has ever retired);
+(2) an operator exception to append-only for a factual error, written where the rule lives; (3) leave #85 as it
+is, with the correction recorded only in BL-78 — the state after S216. **Decision first.**
