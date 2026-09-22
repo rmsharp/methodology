@@ -223,6 +223,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [BL-66] S219 close-out — P2 of the BL-66 plan done on the branch; two ledgers trimmed; nothing upstream-facing
+
+- **Deliverable:** P2 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) on
+  `fix/sync-github-history` (`443b02f`), recorded at `7dea9d8`. Nothing was opened, commented on or pushed upstream;
+  #83–#86 are untouched and still unreviewed.
+- **Also done, each approved at the Phase 0 picker:** the owed `HANDOFFS.md` retention trim (`61c043b`) and its fold
+  (`dd304e6`); the `CHANGELOG.md` archive trim its trigger called for (`4e73d20`, 48 records, +18,140 B net to the
+  repository — the trim's own cost, measured).
+- **Self 8, predecessor (S218) 9.** S218's pointers all held, including its warning that P2's verification commands
+  might share P1's fault — the second one does. Against it: an exit code was read through a pipe and stated before
+  being corrected in the same message, and the first draft of the github-hint test would have accepted a hint aimed at
+  the removed clone; it was replaced with one that runs the printed commands.
+- **Phase 3C: no learning row appended** — both candidates are already stated as fork Learnings #55 and #36/#92, so
+  D3's retirement obligation does not fire. Receipt in [`HANDOFFS.md`](HANDOFFS.md); the fork push follows this commit.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [BL-66] S219 — P2 of the BL-66 plan done on `fix/sync-github-history` (`443b02f`): `bin/sync`'s refusal names a source without its history
 
 - **What:** on the branch, `443b02f` (three files: `bin/sync`, `bin/tests.sh`, the branch's `CHANGELOG.md`). Before
