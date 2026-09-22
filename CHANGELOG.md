@@ -223,6 +223,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [BL-66] S220 claim — P3 of the BL-66 plan: the documents say what the update route now does (in progress)
+
+**Deliverable, chosen at this session's Phase 0 picker:** phase P3 of
+[`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5, on `fix/sync-github-history`
+from `443b02f`: decision D6 (a), ratified at S218 — every row of §2.2 marked for change is reconciled with the route as
+P1 and P2 left it, written on **upstream's** text. `README.md:61` gains the clause saying where to run `bin/sync` from
+and that either source now recognizes a file that is merely behind; `:72` and `BOOTSTRAP.md:69` and `T1_setup.md:58`
+drop *needs gh CLI* for *needs git and network*; `BOOTSTRAP.md:85`'s *"Prefer `--source=local`"* becomes a statement
+that either source carries the history, keeping the shallow/tarball sentence and pointing it at the refusal that now
+names it; `:431` gains the second cause; both `--help` strings say what `github` does. `T8_keeping_current.md` is
+**unchanged under D6 (a)** — its instruction becomes correct, and P2's residual (e) is about `bin/status` from a
+history-less source, not about T8's line. No code changes and no other prose. Nothing opens upstream (P5 is its own
+go-ahead). **Side actions approved:** the `HANDOFFS.md` trim this claim makes owed and its fold; pushing fork `main`
+and the branch to `origin` at close-out.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [ad hoc] S219 — fork `main` pushed to `origin`, `0c33421..0af89a4`, and `fix/sync-github-history` `252a4b6..443b02f` (non-commit action, operator go-ahead)
 
 Eight commits on `main`: S218's two post-close-out commits, which its own push had left behind (`2f51cc9` the

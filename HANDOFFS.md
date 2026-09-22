@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S220
+date: 2026-09-22
+status: pending
+active_task: **P3 OF THE BL-66 PLAN, ONE SESSION.** `docs/planning/sync-github-route-plan.md` §5 P3 on `fix/sync-github-history` (from `443b02f`): D6 (a) — every row of §2.2 marked for change is reconciled with the route as P1 and P2 left it, written on **upstream's** text. `README.md:61` gains the clause saying where to run `bin/sync` from and that either source now recognizes a merely-behind file; `:72`, `BOOTSTRAP.md:69` and `T1_setup.md:58` drop *needs gh CLI* for *needs git and network*; `BOOTSTRAP.md:85`'s *"Prefer `--source=local`"* becomes a statement that either source carries the history, keeping the two phrases #84's tests pin (*Size, and when to archive*, *keeping any archive-pointer block*); `:431` gains the second cause; both `--help` strings say what `github` does. `T8_keeping_current.md` is unchanged under D6 (a). No code, no other prose. `./bin/check-links` OK. Nothing upstream-facing.
+commit: pending
+```
+
+```handoff
 session: S219
 date: 2026-09-22
 status: complete
