@@ -219,6 +219,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-78] S216 close-out — BL-78 closed with its record corrected (the ratchet exists, unwired); BL-83 raised; nothing upstream-facing
+
+**Deliverable:** BL-78's closing edits, decided at S206 and chosen at this session's Phase 0 picker: `2674c95`
+(row to §Completed items, closing update at [`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md)`:3029`,
+`.context-budget.json:101` rewritten). Found on the way and recorded on the operator's choice: `38e4e11` (BL-83, fork
+Learning #85's false example). Supporting: `461e38b` the claim; `1c1c4e3` + `2701247` the `HANDOFFS.md` trim and fold.
+**The S206 decision was input, not output.** **Next: the maintainer's review of #83–#86 (P5 of the `context_budget.py`
+plan after #86 merges); failing a reply, planning BL-66, upstream-bound, which opens nothing.**
+
+**Phase 3A — S215's handoff scored 9/10.**
+- *What helped:* every Phase 0 value held: the four heads, both comment ids, the `-5` shard name, the `CHANGELOG.md`
+  estimate (~162 KB; 162,364 B). Step (2) named all three closing edits with exact lines (`BACKLOG.md:166`,
+  `BACKLOG-DETAIL.md:3019-3023`, `.context-budget.json:101`), each true when opened, and its wording (*"a refusal
+  nothing calls"*) was precise. Gotcha (4) (`./bin/check-links`) saved the call it cost S215.
+- *What was missing:* that BL-78's own detail block contradicts that wording (S201: *"does not exist"*) and that
+  S205's `files[5]._` already records the refusal. I rediscovered it from the tool, and the missing context cost one
+  overstated claim to the operator.
+- *What was wrong:* nothing false.
+- *ROI:* clearly positive; Phase 0 to the claim needed no discovery.
+
+**Phase 3B — self-assessment 8/10.**
+- *Right:* Phase 0 in full, gate citation re-run in a clone. Before rewriting a sentence about a refusal, grepped the
+  tool for the refusal rather than the field, and ran it (growth, shrink, control) instead of predicting it. The config
+  edit was script-asserted to one key path, and the verdict was shown unchanged by running the tool at both commits.
+  The trim's `.verify.sh` ran before the fold, and the suite after it. The two findings went into separate commits.
+- *Wrong:* my second picker told the operator their S206 decision *"was costed as 'build a new check'"* before I read
+  what S206 was shown. It was not. I read S205's receipt and S206's ledger entry and corrected it to the operator before
+  any edit. Their answers held, but the claim should have been checked first.
+- *Stakeholder corrections:* none. One self-correction, above.
+
+**Phase 3C:** no fork-learnings row, so D3's retirement obligation does not arise. The past-decision lesson went to
+agent memory. **Phase 3E:** the tool that reads the edited config ran at both commits (identical verdicts), and
+`--precommit` was exercised; fork `main` clone of `38e4e11`: `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured ·
+results 10575dac7361 · manifest 01a4ae7aa511`, identical to Phase 0.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-83] S216 — BL-83 raised: fork Learning #85 teaches a false example (the ratchet it says does not exist is `context_budget.py --precommit`)
 
 - **What:** a new open item — index row after BL-81 and `BL-83` added to the `Open:` list in
