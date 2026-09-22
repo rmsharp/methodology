@@ -219,6 +219,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [BL-66] S219 claim — P2 of the BL-66 plan: `bin/sync`'s refusal names a history-less source instead of *local modifications* (in progress)
+
+**Deliverable, chosen at this session's Phase 0 picker:** phase P2 of
+[`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5, on `fix/sync-github-history`
+from `252a4b6`: decision D5 (a), ratified at S218 — a shallow source and a source with no `.git` each get their own
+refusal sentence; the empty *"To inspect the drift first:"* header goes; the `github` hint is decided; two tests written
+red first. Nothing opens upstream (P5 is its own go-ahead). **Side actions approved:** the `HANDOFFS.md` trim this claim
+makes owed and its fold; a `CHANGELOG.md` trim if its `--check` fires this session (1,538 B of headroom at Phase 0);
+pushing fork `main` (with S218's unpushed `2f51cc9` and `6a8fe87`) and the branch to `origin` at close-out.
+
+**Phase 0:** ledger frontier = HEAD `6a8fe87`, gap empty; nothing backfilled. Gate re-run in a `--no-local` clone at
+`6a8fe87`: `11/11 pass · results 10575dac7361 · manifest 01a4ae7aa511`, S218's citation exactly. Dashboard 76/100, risk
+**high** (`docs/planning/BACKLOG.md` 58,077 B past its one-read budget); its history row rides this commit. Upstream: 0
+issues; #83–#86 at unchanged heads, 0 reviews, no maintainer comment.
+
 ### 2026-09-22 · [BL-79] S218 — BL-79's second occurrence recorded: this session's close-out report lacked the shape, with the item in its own context
 
 - **What:** a dated paragraph at the end of BL-79's block in

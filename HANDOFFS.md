@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S219
+date: 2026-09-22
+status: pending
+active_task: **P2 OF THE BL-66 PLAN, ONE SESSION.** `docs/planning/sync-github-route-plan.md` §5 P2 on `fix/sync-github-history` (from `252a4b6`): D5 (a) — `bin/sync`'s blocked branch names a shallow source (`git rev-parse --is-shallow-repository`) or one with no `.git` instead of *local modifications*; the *"To inspect the drift first:"* header no longer printed over an empty list; the `github` hint decided and written; two red-first tests (a `--depth 1` clone of the fixture over `file://`, a `git archive` of it). Full-history text unchanged, still asserted by Test 7. Nothing upstream-facing.
+commit: pending
+```
+
+```handoff
 session: S218
 date: 2026-09-21
 status: complete
