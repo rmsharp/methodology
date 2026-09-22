@@ -1719,6 +1719,11 @@ change state, all *locally modified* → *N versions behind*, including `vscode_
 misread before `22ce71b`. The fork-side commits changed `bin/status`'s run time from 3.0 s to 4.0 s over the six, and
 `bin/sync --dry-run`'s on `wsfct` from 2.9 s to 2.3 s. **Still open: the upstream PR, its own go-ahead.**
 
+**S217 (2026-09-21): the upstream PR is now D3 of [`sync-github-route-plan.md`](sync-github-route-plan.md).** The
+GitHub-route fix planned there reuses `local_history_blobs()` and `local_history()`, so it depends on these two
+commits; the plan recommends one pull request carrying both (its §1.4), superseding the *"separate, small PR to
+follow"* that PR #84's body promises. Undecided until the operator rules on D3.
+
 <a id="bl-55"></a>
 
 **BL-55 — nothing enforces removing a completed `BACKLOG.md` item; the one detector only reports, and
@@ -2333,6 +2338,8 @@ the clone run never sees it. Canonical-only: `tools/test_context_budget.py` is n
 
 ---
 
+<a id="bl-66"></a>
+
 **BL-66 — `README.md`'s Quick Start tells every adopter to update from the GitHub URL, a route that cannot update
 any file that is behind, and reports the refusal as "local modifications" on projects that have none. Raised
 2026-09-17 (S182) from an operator question. Upstream-facing; not fixed.**
@@ -2382,6 +2389,15 @@ asserting local modification. (a) and (c) are small and independent; (b) is the 
 and this affects every adopter following the documented instruction, not only this fork's projects. An upstream pull
 request is its own go-ahead. Not recorded anywhere before this: checked `BACKLOG.md`, this file, the archive,
 `CHANGELOG.md`, and upstream issues in all states.
+
+**Plan written 2026-09-21 (S217): [`sync-github-route-plan.md`](sync-github-route-plan.md), DRAFT, eight decisions
+for the operator.** Re-measured at today's heads (§1.1): an adopter installed from `008d656` and never edited, updated
+toward `6b29d3d`, gets exit 0 / 10 files from a full clone and exit 2 / 9 refused from `--source=github`, in 2.2 s and
+12.3 s; `bin/status --source=github` reads the same 9 as *locally modified* (`bin/status:227`). The defect is a ratified
+deferral — B1 plan Decision 3, *"Defer + document"* (`b1-sync-coverage-expansion-plan.md:161`, issue #32) — whose
+`--help` half never landed. The recommended fix (D1) makes the route a fresh clone plus the local path: measured at
+3.8 s and 2.2 MB for the clone, 4.9 s end to end, exit 0 (§2.7). It reuses the history walk BL-54 fixed fork-side, so
+D3 proposes one pull request for both. Nothing implemented; nothing upstream-facing before the plan's P5.
 
 ---
 

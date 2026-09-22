@@ -219,6 +219,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-66] S217 — plan written: `bin/sync --source=github` becomes a fresh clone plus the local path; the refusal names a history-less source; four documents reconciled
+
+- **What:** [`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) (37 KB, DRAFT), the
+  session's one deliverable. Eight decisions for the operator (§3), six phases one session each (§5), the pull
+  request at P5 as its own go-ahead. BL-66's index row and detail block point at it; BL-54's do too, because D3 proposes
+  one pull request for both (the fix reuses the history walk BL-54 fixed fork-side). `BACKLOG-DETAIL.md` also gains the
+  `<a id="bl-66">` anchor its index row already linked to.
+- **Measured, not inferred (§1.1, §2.7):** on an adopter installed from `008d656`, never edited, updated toward
+  `6b29d3d` — full clone: exit 0, 10 files, 2.2 s; shallow clone and tarball: exit 2, 9 refused; `--source=github`:
+  exit 2, 9 refused, 12.3 s, an *"inspect the drift"* header with nothing under it; `bin/status --source=github`: 9
+  *locally modified*, 0 behind. A full clone of upstream is 3.8 s / 2.2 MB; the route rebuilt over it runs in 4.9 s,
+  exit 0. A blobless clone was tried and rejected: `cat-file --batch-check` fetched 43 blobs in 16 s for one file.
+- **Provenance found (§1.2):** the gap is B1 plan Decision 3, *"Defer + document"* (issue #32), ratified by the
+  maintainer; BOOTSTRAP got the sentence, `--help` never did; `README.md:61` is the maintainer's own line (`ce1ec629`).
+- **Verified:** `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK; `./bin/check-links` OK; every relative link and cited path in
+  the plan resolves (one planned path, the P4 body file, does not exist yet by design).
+- **Model:** Claude Fable 5.1 (claude-fable-5-1) — the session's claim and side actions were Claude Opus 5; the
+  operator switched models before the plan.
+
 ### 2026-09-21 · [BL-84] S217 — BL-84 raised: the seed's fixed `CLAUDE.md` warn line against its mandatory purpose fence
 
 - **What:** index row in [`BACKLOG.md`](docs/planning/BACKLOG.md) (after BL-83), BL-84 added to its `Open:` list, and a
