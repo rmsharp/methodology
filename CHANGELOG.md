@@ -219,6 +219,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [ad hoc] S218 — correction: the Phase 3G report was not given as one until the operator asked for it; self-assessment 8 → 7
+
+- **What happened:** after the push, the session's closing message carried §3G's four items (the deliverable, both
+  scores, the next steps) but not as a recognizable close-out report: no heading, no labels, no closing stop line. The
+  operator had to ask for "phase 3 close-out report". The report then given had that shape, but was presented as
+  routine: its *went wrong* list left out the lapse the request had just exposed, until the operator asked why.
+- **Why:** covering §3G's content was taken as doing §3G, without checking that the message read as a report; the
+  request was then answered literally (failure mode #13) rather than read as evidence of a lapse, when Phase 3 is
+  *"AUTOMATIC … execute ALL of these steps without being asked"*; and the self-assessment, drafted before the request,
+  was not revisited.
+- **Corrected:** the S218 receipt in [`HANDOFFS.md`](HANDOFFS.md), `self_score` 8 → 7, with the reason appended to its
+  `what_was_done`. The close-out entry below still says *Self 8*; it stands as written and is corrected here.
+- **The same gap as BL-79**, raised at S202 and read by this session at its own Phase 0; its second occurrence is
+  recorded in BL-79's detail block by the next commit.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [ad hoc] S218 — fork `main` pushed to `origin`, `63de9e0..2cba226`, and the new branch `fix/sync-github-history` at `252a4b6` (non-commit action, operator go-ahead)
 
 Seven commits on `main`: the claim `52c7101`, the `HANDOFFS.md` trim `187374e` and fold `aea908e`, the ratification
