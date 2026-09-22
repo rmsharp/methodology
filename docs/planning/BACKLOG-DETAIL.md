@@ -3026,6 +3026,31 @@ BL-53's option C did.**
 check was built, and nothing upstream-facing was touched. The three variants in §(1) were run in a scratch
 clone and reverted; `git status` in this repository was clean of config changes throughout.
 
+**UPDATE 2026-09-21 (S216) — THE CLOSING EDITS ARE MADE; BL-78 CLOSES.** At S216's Phase 0 picker the operator
+chose the closing edits S206 left owed. Made: this item's index row moved to §Completed items, replacing the
+pre-P1 text it still carried, and `.context-budget.json` `files[4]._` rewritten in two sentences, the one key
+path changed (asserted by script). **The note's *"every commit that grows it is refused … a ratchet, not a wall"*
+was true of the tool and false only of this clone**, which is what S206's wording said. Run at S216 in a
+`--no-local` clone at `2701247`: with a one-line growth of `starter-kit/SESSION_RUNNER.md` staged,
+`python3 starter-kit/context_budget.py --precommit` printed *"context-budget: REFUSED … 55,406 -> 55,408 B
+ceiling 41,364 B"* and exited **2**; with a one-line shrink staged it exited **0**; with nothing staged, **0**.
+The refusal is `def precommit` (`starter-kit/context_budget.py:1000`): the byte test at `:1037` compares the
+staged size with the ceiling **and with HEAD's size**, and the token arm is `:1044-1051`. Nothing calls it:
+`.githooks/pre-commit`'s one gate call is `quality_ratchet.py --precommit` (`:133`), and no
+`.quality-gates.json` gate runs the budget tool. The note now says both.
+
+**Two claims above are therefore false. They are corrected here, not edited in place.** The S201 paragraph's
+headline, *"THE RATCHET IS NOT MERELY UNWIRED — IT DOES NOT EXIST"*, and its *"Nothing in the tool compares a
+file to its own previous size"*: `precommit` compares every budgeted file's staged size with its HEAD size.
+And §(3)'s *"the tool has no per-file growth comparison to wire, so the shape has to build the check"*
+(S203): shape (2) needed wiring, not building. S200's reason 1 (*"not wired in this clone"*) was right, and
+S205 had already re-established it: its `files[5]._` note says so (`fac748f`, calling the function
+`precommit_check`; it is `precommit`), and its receipt's gotcha (1) cites `:1037`. **So the S206 decision
+was not made on the false premise.** The evidence put to the operator was §(3)'s merge finding, which S216
+re-verified: `421ebf9`, `7245f79` and `22ce71b` each have two parents, and `ad7bd37`, `628d218`, `df926b6`
+and `0d63410` each have one. The same false claim still stands in fork Learning #85, raised as BL-83.
+**Nothing further is owed here.**
+
 
 <a id="bl-79"></a>
 

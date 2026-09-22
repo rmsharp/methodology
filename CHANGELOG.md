@@ -219,6 +219,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-78] S216 — BL-78 closed: the closing edits S206 left owed, and the record corrected where it said the ratchet does not exist
+
+- **What:** BL-78's index row moved from the open table to §Completed items in
+  [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md), out of the `Open:` list and into the section heading's; a
+  closing update at the end of its detail block ([`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md), before
+  `#bl-79`); and `.context-budget.json` `files[4]._` (`starter-kit/SESSION_RUNNER.md`) rewritten in two sentences,
+  the only key path changed (asserted by script, 35,090 → 35,745 B). No `max_bytes`, `max_tokens` or other key
+  touched.
+- **The note described the tool correctly and this clone wrongly**, as S206 said. Run in a `--no-local` clone at
+  `2701247`: a staged one-line growth of `starter-kit/SESSION_RUNNER.md` made
+  `python3 starter-kit/context_budget.py --precommit` print *"context-budget: REFUSED"* and exit 2; a staged shrink,
+  exit 0; nothing staged, exit 0. The refusal is `def precommit` (`starter-kit/context_budget.py:1000`, byte test
+  `:1037`, token arm `:1044-1051`); `.githooks/pre-commit` never calls it (its one gate call is
+  `quality_ratchet.py --precommit`, `:133`), and no `.quality-gates.json` gate does. The note now says so, and
+  that wiring was declined at S206 because merges skip the hook.
+- **Corrected in the closing update, not in place:** BL-78's S201 paragraph (*"IT DOES NOT EXIST"*) and S203's
+  *"has to build the check"* were false. S205 had already re-established that the refusal exists (`fac748f`'s
+  `files[5]._`), so the S206 decision rested on §(3)'s merge finding, re-verified here by parent count. Fork
+  Learning #85 carries the same false claim; raised as BL-83 in its own commit.
+- **Operator, at this session's pickers:** the closing edits as the deliverable; then, told the check exists,
+  *"Close, record the fix"*. The first picker framed S206's decision as made on the false premise; re-reading
+  S205's receipt and S206's ledger entry showed it was not, and the operator was told before these edits.
+- **Verified:** `BACKLOG-DETAIL.md.verify.sh` C1–C5 OK; `./bin/check-links` OK (111 links);
+  `python3 tools/test_context_budget.py` 122 OK.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S216 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-21-5.md` became one row at
