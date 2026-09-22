@@ -2,8 +2,8 @@
 
 **Date:** 2026-09-21 (fork session S217)
 **Status:** RATIFIED 2026-09-21 — the operator ruled all eight decisions in §3 option (a), as recommended, at fork
-session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; P1 began the
-same session. Nothing is upstream-facing until P5, its own go-ahead.
+session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1 is done**
+(S218, its outcome under §5 P1); P2 is next. Nothing is upstream-facing until P5, its own go-ahead.
 **Backlog:** BL-66 ([detail](BACKLOG-DETAIL.md#bl-66)); under D3 (a) the same pull request closes BL-54's
 open upstream half ([detail](BACKLOG-DETAIL.md#bl-54)).
 **Route:** `bin/sync` and `bin/status` are canonical-only — `bin/` has no row in `bin/_manifest.py` — so the code
@@ -354,6 +354,23 @@ grep -c 'gh", "api' bin/sync bin/status                                         
 the tests. What it cannot enforce: the maintainer's environment (his `git` version — partial-clone flags are not used,
 so any `git` that clones works), and rate limits on the live route, which the hermetic tests never hit.
 **Session boundary:** one session; close out at the checkpoint commit.
+
+**P1 outcome (S218, 2026-09-21): DONE on `fix/sync-github-history`; nothing is upstream.** `0277396` and `5f4c3f9` carry
+BL-54's `2c4f801` and `865119f` with their logic unchanged: the ledger entries are rewritten in recognized terms, three
+comments lose `BL-54`/`S179`, and Test 41 becomes **Test 26** (the numbered tests end at 25 on `upstream/main` and on all
+four PR heads). `252a4b6` is the mechanism (D1, D2, D4, D8) with **Tests 27 and 28** and Test 9's new guard; Test 26's
+fixture became the shared function `mh_fixture`. Deliberate departures from this section: **(a)** the tests serve the
+fixture as `file://`, not a bare path — git ignores `--depth` when it clones a plain path, so a shallow-clone mutant
+survived until the switch; **(b)** the inventory drops *"This is NOT an authentication problem"* (no authentication
+remains) and names the URL rather than `REPO`; **(c)** `bin/status` prints an inventory too and exits 1 where upstream's
+exited on the first failed `gh api` call; **(d)** the `tests-sh-passed` floor (139; measured 170) is **not** tightened
+here, because #86 moves the same line (to 142) and P2/P3 add tests, so it belongs to P4 after the rebase; **(e)** the first
+verification command above greps `'^(PASS|FAIL)'`, which matches nothing: the suite prints `  PASS:`, indented.
+**Evidence:** suite 170 passed, 0 failed, 0 skipped in a `--no-local` clone of `252a4b6` (1 m 20 s);
+`quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 6d2c2313ab22 · manifest 97a7aab85b9a`; red first, Tests
+26–28 on the unfixed scripts 15 passed, 16 failed (the 15 are Test 26 and four controls); nine mutants, all killed
+(31 / 0 unmutated); live, one run, from `008d656` against GitHub: sync exit 0, 10 would write, `v3.7-68-g6b29d3d`, 1.6 s;
+status 9 behind, 0 locally modified, 1.9 s.
 
 ### P2: the refusal (D5) and the hint text. One session, same branch.
 

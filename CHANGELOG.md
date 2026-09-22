@@ -219,6 +219,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-66] S218 — P1 of the BL-66 plan done on `fix/sync-github-history`: `--source=github` clones its source and runs the local path; fork Learning #92
+
+- **Branch** `fix/sync-github-history` from `upstream/main` `6b29d3d`, three commits, each co-staging its own entry in
+  the branch's `CHANGELOG.md` (upstream's, in recognized terms): **`0277396`** and **`5f4c3f9`** carry BL-54's
+  `2c4f801` and `865119f` (logic unchanged; three comments lose `BL-54`/`S179`; fork Test 41 is branch **Test 26**);
+  **`252a4b6`** is the mechanism — both scripts clone `https://github.com/KJ5HST/methodology.git` (or
+  `METHODOLOGY_SOURCE_URL`) into a temporary directory and run the local code over it, the `gh` calls are gone, a
+  source missing a distributed file is listed before anything is written (exit 1), Test 9's guard is `git ls-remote`.
+- **Evidence:** red first — Tests 26–28 on the unfixed scripts 15 passed, 16 failed; nine mutants, all killed; suite
+  **170 passed, 0 failed, 0 skipped** in a `--no-local` clone of `252a4b6`; `quality_ratchet: 10/10 pass · 0 fail ·
+  0 unmeasured · results 6d2c2313ab22 · manifest 97a7aab85b9a`; live against GitHub from an adopter installed at
+  `008d656`: sync exit 0 / 10 would write / `v3.7-68-g6b29d3d`, status 9 behind / 0 locally modified.
+- **Recorded:** the plan's §5 P1 outcome, with five deliberate departures — the `file://` fixture, the inventory's
+  wording, `bin/status`'s inventory, the floor tightening left to P4 (#86 moves the same line), and the plan's own
+  `'^(PASS|FAIL)'` grep that matches nothing; its status line; BL-66's detail block. The branch is local until the
+  close-out push (fork `origin` only).
+- **Phase 3C:** fork Learning #92 (`docs/FORK_LEARNINGS.md`, 1,118 B; checker OK, 78 rows, 0 over budget): a local
+  stand-in for a remote source must travel the remote's transport — git ignores `--depth` for a plain-path clone.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-85] S218 — BL-85 raised: the fix for UAT F2 (the prose update route's never-overwrite rules) is fork-only
 
 - **What:** a new open item — index row in [`BACKLOG.md`](docs/planning/BACKLOG.md), `Open:` list, detail block

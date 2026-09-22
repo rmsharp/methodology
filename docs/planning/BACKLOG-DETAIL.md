@@ -2403,7 +2403,8 @@ closed on it) — whose `--help` half never landed. The recommended fix (D1) mak
 D3 proposes one pull request for both. Nothing implemented; nothing upstream-facing before the plan's P5.
 
 **Ratified 2026-09-21 (S218, Phase 0 picker): D1–D8 all option (a).** P1 began the same session on
-`fix/sync-github-history`, branched from `upstream/main` `6b29d3d`.
+`fix/sync-github-history`, branched from `upstream/main` `6b29d3d`. **P1 done at S218** (`0277396`, `5f4c3f9`, `252a4b6`):
+the route clones and runs the local path in both scripts; the plan's P1 outcome has the evidence. P2 is next.
 
 ---
 
