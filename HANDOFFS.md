@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S216
+date: 2026-09-21
+status: pending
+active_task: **BL-78's CLOSING EDITS, ONE SESSION, FORK-LOCAL** (decided S206: P3 = no enforcement, so the item closes; `docs/planning/BACKLOG-DETAIL.md:3019-3023`). Rewrite the stale index row `docs/planning/BACKLOG.md:166`, move BL-78 to Completed items per the backlog's convention, and correct `.context-budget.json:101` (`files[4]._`), whose *"every commit that grows it is refused"* describes a refusal nothing calls — a comment edit, no threshold changed. Chosen at this session's Phase 0 picker, where no maintainer reply was found on #83–#86. **Side actions approved at the same picker:** the `HANDOFFS.md` retention trim this receipt makes owed and its fold; pushing fork `main` to `origin` at close-out.
+commit: pending
+```
+
+```handoff
 session: S215
 date: 2026-09-21
 status: complete

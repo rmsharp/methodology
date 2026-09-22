@@ -219,6 +219,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-78] S216 claim — BL-78's closing edits: the stale index row, the move to Completed items, and `.context-budget.json`'s unwired "refused" sentence (in progress)
+
+**Deliverable, chosen at this session's Phase 0 picker:** the closing edits BL-78's S206 decision left owed
+([`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md)`:3019-3023`, P3 = no enforcement, so the item closes). Rewrite
+BL-78's index row ([`BACKLOG.md`](docs/planning/BACKLOG.md)`:166`, still the pre-P1 text), move it to Completed items
+by the backlog's own convention, and correct `.context-budget.json:101` (`files[4]._`, `starter-kit/SESSION_RUNNER.md`),
+whose *"every commit that grows it is refused"* describes a refusal nothing calls. A comment edit: no threshold
+changes, and the pre-commit ratchet runs on it. Fork-local; nothing upstream-facing.
+
+**Side actions approved at the same picker:** the `HANDOFFS.md` retention trim this claim makes owed (three receipts,
+`--cut 2 --force`, dry run first) and its fold; pushing fork `main` to `origin` at close-out.
+
+**Phase 0, for the record:** `CHANGELOG.md` frontier = HEAD `68160ba`, gap empty; `HANDOFFS.md` frontier `78cb080`,
+the one commit after it being S215's announced push record. No pending stub, 2 receipts before this one; nothing
+backfilled. Gate citation re-run in a `--no-local` clone at `68160ba`: `11/11 pass · results 10575dac7361 ·
+manifest 01a4ae7aa511`, S215's citation exactly (`tests-sh-passed` 343). Dashboard 76/100, medium, 0 high+, run in
+that clone. Upstream 0 open issues; #83 (`219fb9d`), #84 (`77afc12`), #85 (`e2501c5`), #86 (`c1167ae`) open, 0
+reviews, only our comments (`5755256040`, `5753335477`). `main` = `origin/main` = `68160ba`; `upstream/main` `6b29d3d`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S215 — fork `main` pushed to `origin`, `58f5d34..78cb080` (non-commit action, operator go-ahead)
 
 Five commits: this session's claim `0b3e355`, the `HANDOFFS.md` trim `fc1f05a` and fold `b4d22c4`, the P4 records
