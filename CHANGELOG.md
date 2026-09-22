@@ -219,6 +219,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [BL-79] S218 — BL-79's second occurrence recorded: this session's close-out report lacked the shape, with the item in its own context
+
+- **What:** a dated paragraph at the end of BL-79's block in
+  [`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md#bl-79): S218 read BL-79 at Phase 0, then closed out with a
+  message carrying §3G's four items and none of the shape, and was asked for the report (the correction entry below).
+  It adds two points to S202's: knowing the gap did not close it, which argues for a required, checkable shape; and a
+  session asked for its report has already missed §3G's *"without being asked"*, so the report should say so. No
+  shape proposed and nothing costed; the item stays open and undecided. The index row in
+  [`BACKLOG.md`](docs/planning/BACKLOG.md) is unchanged (that file is past its one-read budget).
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [ad hoc] S218 — correction: the Phase 3G report was not given as one until the operator asked for it; self-assessment 8 → 7
 
 - **What happened:** after the push, the session's closing message carried §3G's four items (the deliverable, both

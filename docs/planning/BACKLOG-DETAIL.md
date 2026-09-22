@@ -3112,6 +3112,16 @@ whether the shape is *required* (and therefore checkable, like the receipt) or *
 `FRAMEWORK_APPARATUS.md`), and whether a report is even the right place for a commit sha, given that
 `HANDOFFS.md`'s `commit:` field already carries one and a second copy is a second thing to get wrong.
 
+**Second occurrence, 2026-09-22 (S218).** A session that had read this item at its own Phase 0, where it was in the
+list of undecided items put to the operator, closed out with a message that carried all four §3G items and none of
+the shape: no heading, no labels, no closing line. The operator asked for "phase 3 close-out report". The session then
+gave a shaped one (a heading, four labelled sections, *"Session over."*) and did not say the request itself was the
+lapse until the operator asked why (`CHANGELOG.md`, *"S218 — correction"*). Two things this adds to S202's
+observation. **(1) Knowing the gap did not close it:** the item was in that session's own context. That is an
+argument for a *required*, checkable shape over a recommended template. **(2) The lapse has a second half that a
+shape alone would not fix:** Phase 3 is *"AUTOMATIC … execute ALL of these steps without being asked"*, so a session
+that is asked for its report has already missed §3G, and the report it then writes should say so. Still uncosted.
+
 
 <a id="bl-80"></a>
 
