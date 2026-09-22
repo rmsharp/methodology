@@ -219,6 +219,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [BL-66] S218 close-out — P1 of the BL-66 plan done on `fix/sync-github-history` (`0277396`, `5f4c3f9`, `252a4b6`); the plan ratified; BL-85 raised; fork Learning #92
+
+- **Deliverable:** P1 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) — `bin/sync` and
+  `bin/status --source=github` clone the repository and run the local path; recorded in the entry below and in the
+  plan's §5 P1 outcome. Nothing is upstream: P2 (the refusal for a history-less source) is next, and the PR is P5,
+  its own go-ahead.
+- **Receipt:** `HANDOFFS.md` S218 `status: complete`, `bin/check-handoff` OK. Predecessor S217 scored **8**: the
+  picker's recommended options, P1's steps and the trim's shard name `-7` were exact, and gotcha (4) on blobless
+  clones settled D2. Missing: S217's own `2e0fd02` took `docs/planning/BACKLOG.md` past the dashboard's one-read
+  budget (risk HIGH at this Phase 0) and its close-out did not re-read the dashboard; the cherry-picks carry fork-only
+  codes, a fork test number (41; upstream's end at 25) and a `CHANGELOG.md` conflict, none of it flagged; the plan's P1
+  grep `'^(PASS|FAIL)'` matches nothing. Self **8**.
+- **Gate citations:** fork `main` (clone of `f92a55b`) `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results
+  10575dac7361 · manifest 01a4ae7aa511`, identical to Phase 0's; the branch (clone of `252a4b6`) `10/10 pass · 0 fail ·
+  0 unmeasured · results 6d2c2313ab22 · manifest 97a7aab85b9a`, suite 170 / 0 / 0.
+- **Phase 3C D3:** fork Learning #92 appended; rows #16, #64, #72 and #91 considered for retirement and none qualifies
+  (#16, #64, #72 are general and the new tests apply only one instance of each; #91's defect is fixed only on an
+  unmerged branch). `BACKLOG.md` grew to 58,077 B this session (BL-85's row); nothing was removed from a mandated read.
+- **Session, whole:** `52c7101` claim · `187374e` trim · `aea908e` fold · `a37e43a` ratification · `8e3c928` BL-85 ·
+  `f92a55b` P1 recorded · this close-out; the branch's three. Fork `main` and the branch are pushed to `origin` after
+  this commit (approved at the Phase 0 picker); the record follows.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [BL-66] S218 — P1 of the BL-66 plan done on `fix/sync-github-history`: `--source=github` clones its source and runs the local path; fork Learning #92
 
 - **Branch** `fix/sync-github-history` from `upstream/main` `6b29d3d`, three commits, each co-staging its own entry in
