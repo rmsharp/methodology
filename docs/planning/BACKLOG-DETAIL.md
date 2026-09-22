@@ -2410,7 +2410,19 @@ the route clones and runs the local path in both scripts; the plan's P1 outcome 
 `.git` instead of *local modifications*, and the `--source=github` hint is a pinned clone plus one `diff` per file, so
 it works after the run; Test 29 red first, thirteen mutants killed, suite 188/0. The plan's P2 outcome has the evidence
 and five departures. **Open, found by P2 and not in any phase:** `bin/status` from the same history-less sources still
-reads a merely-behind file as *locally modified* (D5 names `bin/sync` only). P3 (the documents) is next.
+reads a merely-behind file as *locally modified* (D5 names `bin/sync` only).
+
+**P3 done at S220 (2026-09-22)** (`9f42c0f`, same branch): the documents say what the route now does. Four documents
+that required the `gh` CLI no longer do (`README.md`, `starter-kit/BOOTSTRAP.md`, `T1_setup.md`, `T8_keeping_current.md`);
+`BOOTSTRAP.md`'s *Updating an existing project* paragraph stops preferring `--source=local` and points its
+shallow/tarball sentence at the refusal that now names it; its troubleshooting section gains that second cause; both
+`--source` help strings say `github` clones. Prose and two help strings only — suite and ratchet unchanged from P2
+(188/0, `10/10 · results 96015fdc2d45`), which is the evidence that nothing behavioural moved. The plan's P3 outcome
+has the evidence and four departures, of which two matter downstream: **T8 was changed although the plan's row list
+and its verification grep both omit it** (§2.2 quoted the line without its trailing `(needs gh CLI)`), and **the two
+phrases the plan tells P3 to preserve are not on this branch at all** — they are #84's, so the obligation belongs to
+the rebase. #84 rewrites the tail of the same one-line paragraph whose head this phase rewrites, so the predicted
+conflict resolves mechanically: #84's tail, this branch's head. **P4 (vet and package) is next.**
 
 ---
 

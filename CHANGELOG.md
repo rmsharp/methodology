@@ -223,6 +223,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [BL-66] S220 — P3 of the BL-66 plan done on the branch: the documents say what the update route now does
+
+- **Deliverable:** phase P3 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5, on
+  `fix/sync-github-history` (`9f42c0f`, from `443b02f`). Seven prose sites and two `--help` strings, on **upstream's**
+  text. Prose only — no behaviour changed.
+- **What changed:** four documents that required the `gh` CLI no longer do (`README.md:72`, `BOOTSTRAP.md:68`,
+  `T1_setup.md:57`, `T8_keeping_current.md:163` → *needs git and network*); `README.md:61` keeps its agent-prompt
+  framing (D6 (a), not (b)) and gains one clause; `BOOTSTRAP.md:85` stops preferring `--source=local` and points its
+  shallow/tarball sentence at the refusal that now names it; `BOOTSTRAP.md:434` gains that second cause, keyed on the
+  tool's own words; both `--source` help strings say `github` clones the repository for the run.
+- **Four departures from the phase as written**, two of which matter downstream. **(a) `T8_keeping_current.md` was
+  changed although the plan's row list and its verification `grep` both omit it** — §2.2's row quoted the line without
+  its trailing `(needs gh CLI)`, a requirement D8 removed, so plan and check would both have passed while leaving it in
+  place. **(b)** the phase's second verification expects *"both present"* for two phrases that are **not on this
+  branch**: they are PR #84's, and the branch is from `upstream/main` (fork `main` 2, #84's head 1, this branch 0). The
+  obligation is real but belongs to the rebase. **(c)** #84 rewrites the **tail** of the same one-line paragraph whose
+  **head** this phase rewrites, so the conflict §2.5 predicts resolves mechanically: #84's tail, this branch's head.
+  **(d)** no test was added and none was owed.
+- **Evidence:** suite **188 passed, 0 failed** and `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  96015fdc2d45 · manifest 97a7aab85b9a` in a `--no-local` clone of `9f42c0f` — both identical to P2's, which is what
+  shows nothing behavioural moved. `./bin/check-links` OK (107 links); 0 `gh CLI` hits across the route's documents;
+  `git diff --stat upstream/main` over the three files the phase names shows exactly those three. Live, one run each,
+  from a project installed at `6b29d3d` with `BOOTSTRAP.md` merely behind: a depth-1 clone refused it naming *"its
+  checkout is shallow (1 commit)"* with the `fetch --unshallow` command, exit 2; a `git archive` refused it naming
+  *"it has no git history"* with the `git clone` command, exit 2; neither said *local modifications*; the full-history
+  control exited 0 and would write the file. The new troubleshooting entry is written from that run.
+- **Phase 3C:** fork Learning **#93** appended — an inventory row that quotes its target quotes a fragment, and the
+  verification written from it inherits the truncation. **No row retired:** #55, #64, #68 and #78 were each considered
+  and each keeps the basis S200's adjudication recorded; nothing this session changed enforces any of their lessons.
+- **Nothing is upstream-facing.** P4 (vet and package) is next; P5 opens the pull request, its own go-ahead.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [ad hoc] S220 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 The `-9` shard's three-line pointer block written by `methodology_trim.py` into `HANDOFFS.md`'s front matter becomes

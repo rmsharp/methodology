@@ -2,9 +2,9 @@
 
 **Date:** 2026-09-21 (fork session S217)
 **Status:** RATIFIED 2026-09-21 — the operator ruled all eight decisions in §3 option (a), as recommended, at fork
-session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1 and P2
-are done** (S218 and S219, each outcome under its phase in §5); P3 is next. Nothing is upstream-facing until P5, its own
-go-ahead.
+session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1, P2 and P3
+are done** (S218, S219 and S220, each outcome under its phase in §5); P4 is next. Nothing is upstream-facing until P5,
+its own go-ahead.
 **Backlog:** BL-66 ([detail](BACKLOG-DETAIL.md#bl-66)); under D3 (a) the same pull request closes BL-54's
 open upstream half ([detail](BACKLOG-DETAIL.md#bl-54)).
 **Route:** `bin/sync` and `bin/status` are canonical-only — `bin/` has no row in `bin/_manifest.py` — so the code
@@ -427,6 +427,34 @@ git diff --stat upstream/main -- README.md starter-kit/BOOTSTRAP.md docs/tutoria
 **Surface:** the branch's working tree and `check-links`'s simulated adopter tree. What it cannot enforce: that the
 maintainer keeps `README.md:61`'s framing; the body flags the clause as his to reword.
 **Session boundary:** one session.
+
+**P3 outcome (S220, 2026-09-22): DONE on `fix/sync-github-history` (`9f42c0f`); nothing is upstream.** Seven prose
+sites and two help strings, on upstream's text. `README.md:61` keeps its agent-prompt framing (D6 (a), not (b)) and
+gains one clause — run `bin/sync` from a full clone, or `--source=github` which clones one for the run; either carries
+the history that recognizes an unedited file as merely behind. `README.md:72`, `BOOTSTRAP.md:68` and
+`T1_setup.md:57` say *needs git and network*. `BOOTSTRAP.md:85`'s head becomes *"Either source carries the git history
+that recognizes a file as merely behind"*, keeps the shallow/tarball sentence and points it at the refusal that now
+names it. `BOOTSTRAP.md:434` gains the second cause, keyed on the tool's own words. Both `--source` help strings say
+`github` clones the repository for the run. **Departures from this section:** **(a)** `docs/tutorials/T8_keeping_current.md:163`
+**was changed, and this section does not list it.** §2.2's T8 row is right that the *instruction* becomes correct, but
+it quoted the line without its trailing `(needs gh CLI)` — a requirement D8 removed. This section's first verification
+command does not name T8 either, so plan and check would both have passed while leaving a false requirement in the
+tutorial. **(b)** the second verification command counts **0, not "both present"**: the two phrases it pins are #84's,
+and this branch is from `upstream/main`, which does not have them (fork `main` 2, #84's head 1, this branch 0). The
+obligation is real but belongs to the rebase, not here — see **(c)**. **(c)** #84 rewrites the **tail** of the same
+one-line paragraph (from *"So when the seed's format moves on"*) and leaves its **head** byte-identical; this phase
+rewrites the head. The predicted §2.5 conflict is therefore one line with two disjoint edits, and its resolution at P4
+is mechanical: #84's tail, this branch's head. **(d)** no test was added and none was needed — the phase changes prose
+and two `--help` strings; the suite is unchanged at **188 passed, 0 failed** and the ratchet at `10/10 · results
+96015fdc2d45 · manifest 97a7aab85b9a`, both identical to P2's, which is the evidence that nothing behavioural moved.
+**Evidence:** `./bin/check-links` OK (107 links); `grep -n 'gh CLI'` over the route's documents 0 hits (the two
+remaining hits in the tree are `methodology_dashboard.py:1623`, a different feature, and a `bin/tests.sh:120` comment
+that says the guard is *not* `gh auth`); `git diff --stat upstream/main` over the three files this section names shows
+exactly those three. Live, one run each, from a project installed at `6b29d3d` with `BOOTSTRAP.md` merely behind: a
+depth-1 clone refused it naming *"its checkout is shallow (1 commit)"* with the `fetch --unshallow` command, exit 2; a
+`git archive` refused it naming *"it has no git history"* with the `git clone` command, exit 2; neither said *local
+modifications*; the full-history control exited 0 and would write the file. That run is what the new troubleshooting
+entry is written from.
 
 ### P4: vet and package. One session.
 
