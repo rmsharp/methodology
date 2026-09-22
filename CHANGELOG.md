@@ -35,6 +35,23 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-21 · [ad hoc] `bin/status` and `bin/sync`: a version a merge hid from git's default walk is recognized again
+
+- **The defect:** both tools listed a file's past versions with a plain `git log -- <path>`, which follows only a
+  merge's TREESAME parent. A version on the side a merge did not keep was never visited, so an unmodified copy of it
+  read *locally modified* and `bin/sync` refused it (exit 2).
+- **The fix:** `bin/sync`'s `local_history_blobs()` walks with `--full-history`; it only asks whether a version is
+  known. `bin/status` walks twice, sharing a commit → blob cache: the first-parent line (`--first-parent`) and the
+  full history. *N versions behind* counts the distinct versions newer than the project's along the first-parent
+  line, and falls back to the full walk for a version that only ever existed on a merged branch.
+- **Test 26, written red first:** a methodology repository with both hiding shapes on one tracked file (a merge that
+  takes a side branch's content, and one that keeps main's), at fixed commit dates. It proves the shapes (the walks
+  visit 4 / 8 / 4 commits), then pins 6 status rows and 3 sync outcomes, including a real local edit that must still
+  be refused.
+- **Provenance:** made and measured first on a fork of this repository, where running the fixed tools against six
+  adopter projects turned 8 misread files from *locally modified* into *N versions behind* and left the 3 genuine
+  local edits refused. Carried here with the test renumbered and three comments reworded; the logic is unchanged.
+
 ### 2026-09-16 · [ad hoc] PR #82 merged — post-merge verification on main and the first tightening
 
 - **Action:** the operator merged [PR #82](https://github.com/KJ5HST/methodology/pull/82) (quality ratchet,

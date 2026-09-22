@@ -815,6 +815,78 @@ sed -i.bak 's|runtime_smoke: n/a — docs-only|runtime_smoke: quality_ratchet: 1
     || fail "check-handoff rejected a receipt that cites its gate run"
 rm -rf "$P"
 
+echo "== Test 26: status and sync recognise a version a merge hid from the default walk (RED-first) =="
+# Git's default history walk follows only a merge's TREESAME parent, so a version on the side a merge
+# did not keep is never visited: bin/status read it as "locally modified" and bin/sync refused it.
+# The fixture is a methodology repo with both shapes, on one tracked file:
+#   B: main's own v2, then a merge that takes a side branch's v3a -> v3, hiding v2;
+#   A: a side branch's v4side, then a merge that keeps main's v5, hiding v4side.
+# Dates are fixed, because the full walk orders by commit date and ties would make it unstable.
+# N counts the versions that landed on the checkout's first-parent line, so v1 is 3
+# behind (v2, v3, v5), not 5 (every distinct version) or 7 (its position in the full walk).
+M="$(mktemp -d)"
+git -C "$M" init -q -b main
+mkdir -p "$M/bin"
+cp "$BIN/sync" "$BIN/status" "$BIN/_manifest.py" "$M/bin/"
+python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; print('\n'.join(s for s, _d, _x in _manifest.DISTRIBUTION))" \
+    | while read -r src; do mkdir -p "$M/$(dirname "$src")"; cp "$METHODOLOGY/$src" "$M/$src"; done
+F=starter-kit/SAFEGUARDS.md
+D=SAFEGUARDS.md
+T0=1700000000
+mh_git() {  # mh_git <seconds after T0> <git args...>
+    local t=$((T0 + $1)); shift
+    GIT_AUTHOR_DATE="@$t +0000" GIT_COMMITTER_DATE="@$t +0000" \
+        git -C "$M" -c user.email=t@t -c user.name=t -c commit.gpgsign=false "$@"
+}
+printf 'v1\n' > "$M/$F"; git -C "$M" add -A; mh_git 1 commit -qm c1
+git -C "$M" checkout -qb side1
+printf 'v3a\n' > "$M/$F"; mh_git 3 commit -qam s1
+printf 'v3\n' > "$M/$F"; mh_git 4 commit -qam s2
+git -C "$M" checkout -q main
+printf 'v2\n' > "$M/$F"; mh_git 2 commit -qam c2
+mh_git 5 merge -q -X theirs side1 -m mB >/dev/null
+git -C "$M" checkout -qb side2
+printf 'v4side\n' > "$M/$F"; mh_git 6 commit -qam t1
+git -C "$M" checkout -q main
+printf 'v5\n' > "$M/$F"; mh_git 7 commit -qam c3
+mh_git 8 merge -q -s ours side2 -m mA >/dev/null
+# Prove the fixture before trusting it: v5 is canonical, and the default walk misses exactly c2 and t1.
+N_DEFAULT="$(git -C "$M" log --format=%H -- "$F" | wc -l | tr -d ' ')"
+N_FULL="$(git -C "$M" log --full-history --format=%H -- "$F" | wc -l | tr -d ' ')"
+N_FP="$(git -C "$M" log --first-parent --format=%H -- "$F" | wc -l | tr -d ' ')"
+[ "$(cat "$M/$F")" = "v5" ] && pass "fixture: canonical is v5 after both merges" || fail "fixture: canonical is '$(cat "$M/$F")', not v5"
+[ "$N_DEFAULT/$N_FULL/$N_FP" = "4/8/4" ] \
+    && pass "fixture: the walks visit 4 (default) / 8 (full history) / 4 (first parent) commits" \
+    || fail "fixture: the walks visit $N_DEFAULT/$N_FULL/$N_FP commits, not 4/8/4 -- the merges lack the hiding shape"
+P="$(mktemp_project)"
+"$M/bin/sync" "$P" --mode=commit --source=local >/dev/null
+mh_status() {
+    "$M/bin/status" --source=local "$P" \
+        | awk -v d="$D" '$2 == d { $1 = $2 = $3 = ""; sub(/^ +/, ""); sub(/ +$/, ""); print }'
+}
+mh_expect() {  # mh_expect <content> <expected status> <what>
+    printf '%s\n' "$1" > "$P/$D"
+    local got; got="$(mh_status)"
+    [ "$got" = "$2" ] && pass "status: $1 ($3) reads '$2'" || fail "status: $1 ($3) reads '$got', not '$2'"
+}
+mh_expect v5 "current" "canonical"
+mh_expect v2 "2 versions behind" "main's own version, hidden by merge B"
+mh_expect v4side "1 version behind" "a side version merge A discarded; no main-line position, so the full walk counts"
+mh_expect v3 "1 version behind" "landed by merge B; the side branch's two commits are one main-line version"
+mh_expect v1 "3 versions behind" "the root; merged branches' own commits are not main-line versions"
+mh_expect v2-local "locally modified" "never in history"
+mh_sync() {  # mh_sync <content> <expected rc> <expected content after> <what>
+    printf '%s\n' "$1" > "$P/$D"
+    "$M/bin/sync" "$P" --source=local >/dev/null 2>&1; local rc=$?
+    local after; after="$(cat "$P/$D")"
+    [ "$rc/$after" = "$2/$3" ] && pass "sync: $1 ($4) exits $2 and leaves $3" \
+        || fail "sync: $1 ($4) exits $rc and leaves $after, not $2 and $3"
+}
+mh_sync v2 0 v5 "hidden by merge B, upgraded without --force"
+mh_sync v4side 0 v5 "hidden by merge A, upgraded without --force"
+mh_sync v2-local 2 v2-local "a real local edit is still refused"
+rm -rf "$M" "$P"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed =="
 [ "$FAIL" = "0" ]
