@@ -2406,6 +2406,12 @@ D3 proposes one pull request for both. Nothing implemented; nothing upstream-fac
 `fix/sync-github-history`, branched from `upstream/main` `6b29d3d`. **P1 done at S218** (`0277396`, `5f4c3f9`, `252a4b6`):
 the route clones and runs the local path in both scripts; the plan's P1 outcome has the evidence. P2 is next.
 
+**P2 done at S219 (2026-09-22)** (`443b02f`, same branch): `bin/sync`'s refusal names a shallow source or one with no
+`.git` instead of *local modifications*, and the `--source=github` hint is a pinned clone plus one `diff` per file, so
+it works after the run; Test 29 red first, thirteen mutants killed, suite 188/0. The plan's P2 outcome has the evidence
+and five departures. **Open, found by P2 and not in any phase:** `bin/status` from the same history-less sources still
+reads a merely-behind file as *locally modified* (D5 names `bin/sync` only). P3 (the documents) is next.
+
 ---
 
 **BL-67 — `wsfct`'s report that BL-57's P7 is done and merged is owed a recording here, and the recording that was

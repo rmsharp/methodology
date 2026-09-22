@@ -223,6 +223,24 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [BL-66] S219 — P2 of the BL-66 plan done on `fix/sync-github-history` (`443b02f`): `bin/sync`'s refusal names a source without its history
+
+- **What:** on the branch, `443b02f` (three files: `bin/sync`, `bin/tests.sh`, the branch's `CHANGELOG.md`). Before
+  refusing, `bin/sync` asks its source what history it has: no `.git` → *"it has no git history"* plus the `git clone`
+  command; shallow → *"its checkout is shallow (N commits)"* plus `git -C <source> fetch --unshallow`; either way the
+  header says *"differ from the canonical version"*, not *local modifications*, and exit stays 2. The full-history text
+  is unchanged. The `--source=github` hint, left to P2 by the plan: a clone pinned to the commit read plus a `diff` per
+  file, so the header no longer sits over nothing.
+- **Evidence:** Test 29 red first (Tests 7 and 26–29 on the unfixed script 46 passed, 9 failed, the 9 all new);
+  thirteen mutants, all killed; suite 188/0 and `quality_ratchet: 10/10 pass · results 96015fdc2d45 · manifest
+  97a7aab85b9a` in a `--no-local` clone of `443b02f`; live from an `008d656` project and against GitHub, one run each.
+- **Recorded here:** the plan's status line and a P2 outcome under §5 P2, with five departures
+  ([`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md)), among them that the plan's second
+  verification command counts 12 rather than 1 (fork Learning #55's case) and that `bin/status` still reads a
+  history-less source's merely-behind file as *locally modified* — noted in BL-66's detail block
+  ([`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md#bl-66)), in no phase yet. The `BACKLOG.md` row is unchanged.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-21.md` (48 record(s), 197,984 B → 125,906 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.

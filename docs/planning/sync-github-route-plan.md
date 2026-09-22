@@ -2,8 +2,9 @@
 
 **Date:** 2026-09-21 (fork session S217)
 **Status:** RATIFIED 2026-09-21 — the operator ruled all eight decisions in §3 option (a), as recommended, at fork
-session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1 is done**
-(S218, its outcome under §5 P1); P2 is next. Nothing is upstream-facing until P5, its own go-ahead.
+session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1 and P2
+are done** (S218 and S219, each outcome under its phase in §5); P3 is next. Nothing is upstream-facing until P5, its own
+go-ahead.
 **Backlog:** BL-66 ([detail](BACKLOG-DETAIL.md#bl-66)); under D3 (a) the same pull request closes BL-54's
 open upstream half ([detail](BACKLOG-DETAIL.md#bl-54)).
 **Route:** `bin/sync` and `bin/status` are canonical-only — `bin/` has no row in `bin/_manifest.py` — so the code
@@ -386,6 +387,30 @@ git -C <full clone> archive HEAD | tar -x -C tarball; tarball/bin/sync <p> --sou
 bin/sync <p> --source=github --dry-run 2>&1 | grep -A1 'inspect' | sed -n 2p | grep -c .       # 1 — the header has a line under it, or 0 hits for the header
 ```
 **Surface:** as P1. **Session boundary:** one session.
+
+**P2 outcome (S219, 2026-09-22): DONE on `fix/sync-github-history` (`443b02f`); nothing is upstream.** Before refusing,
+`bin/sync` asks its source what history it has (`history_gap`, branch `bin/sync:154`; the blocked branch `:309-344`):
+no `.git` → *"it has no git history (no .git in <root>)"* plus the `git clone` command; shallow → *"its checkout is
+shallow (N commits)"* plus `git -C <root> fetch --unshallow` (for `--source=github`, *"Sync from a full clone of it
+instead"*). Either cause changes the header to *"differ from the canonical version"* and leaves out the `CLAUDE.md`
+paragraph; the exit stays 2; the full-history text is unchanged. **The `github` hint, decided:** a clone of the source
+pinned to the commit the run read (`git clone <url> methodology-<sha> && git -C methodology-<sha> checkout -q <sha>`)
+and one `diff` per file against it, so the header always has lines under it. **Departures from this section:** **(a)**
+three sources, not two — a depth-2 clone as well, so a hard-coded commit count or a forced plural cannot pass; **(b)**
+Test 7 did *not* assert the full-history text (only `ERROR` and `--force`); it does now, one line (branch
+`bin/tests.sh:100`); **(c)** the `github` hint is checked by running the printed commands after the run, from an empty
+directory (clone exit 0, `diff` exit 1), not by matching text — a pattern would accept a `diff` aimed at the removed
+clone; **(d)** the second verification command above counts **12**, not 1: its clone directory is named `shallow`, so
+the source line, the `fetch --unshallow` command and the nine `diff` lines match as well; the cause sentence appears
+once; **(e)** `bin/status` from a history-less source still reads a merely-behind file as *locally modified* — D5
+covers `bin/sync` only, so it is not changed here. **Evidence:** suite 188 passed, 0 failed, no SKIP, in a `--no-local`
+clone of `443b02f` (1 m 26 s); `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 96015fdc2d45 · manifest
+97a7aab85b9a`; red first, Tests 7 and 26–29 (Test 29 at branch `bin/tests.sh:972`) on the unfixed script 46 passed, 9
+failed, the 9 all new; thirteen mutants, all killed (55 / 0 unmutated); verification commands 1, 3, 4 → 0, 1, 1. Live,
+one run each: from a project installed at `008d656`, a depth-1 clone and a `git archive` of the branch each refused
+its 9 files naming its own cause, exit 2 (the unfixed script: the same 9, exit 2, *local modifications*); against
+GitHub, a project with one edited file got the full-history text, and the printed hint, run by hand, cloned `6b29d3d`
+and `diff` exited 1 on the edit.
 
 ### P3: the documents (D6). One session, same branch.
 
