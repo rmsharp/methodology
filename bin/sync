@@ -251,7 +251,9 @@ def main() -> int:
     p = argparse.ArgumentParser(description="Sync methodology starter-kit files into a project.")
     p.add_argument("project_path", help="Target project directory")
     p.add_argument("--mode", choices=("commit", "ignore"), help="commit (default) or ignore")
-    p.add_argument("--source", choices=("local", "github"), help="local (default if sibling methodology/ exists) or github")
+    p.add_argument("--source", choices=("local", "github"), help="local (default if sibling methodology/ exists), or github, "
+                                                                 "which clones the repository for this run "
+                                                                 "(needs git and network)")
     p.add_argument("--dry-run", action="store_true", help="Print intent without writing")
     p.add_argument("--force", action="store_true",
                    help="Overwrite files that show local modifications (not matching canonical or any historical version)")

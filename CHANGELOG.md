@@ -35,6 +35,26 @@ Reverse-chronological, newest on top; prepend-only. Promote to `## YYYY-MM` sect
 
 ---
 
+### 2026-09-22 · [ad hoc] The documents say what the update route now does, and stop requiring the `gh` CLI
+
+- **Why:** two earlier changes on this branch made `--source=github` clone the repository and made `bin/sync`'s
+  refusal name a source that has no history to compare against. The prose still described the route as it behaved
+  before: it required the `gh` CLI, and it told readers to *prefer* `--source=local` because only a local checkout
+  carried the history that recognizes a file as merely behind. Both statements are now false.
+- **The `gh` CLI is no longer required, and four documents said it was:** `README.md`'s Option A, the sync block in
+  `starter-kit/BOOTSTRAP.md`, and the `--source=github` lines in `docs/tutorials/T1_setup.md` and
+  `docs/tutorials/T8_keeping_current.md` now say *needs git and network*. Both `--source` help strings say what
+  `github` does — it clones the repository for the run.
+- **Either source now carries the history:** `BOOTSTRAP.md`'s *Updating an existing project* paragraph no longer
+  prefers `--source=local`. It says both sources carry the history that recognizes a file as merely behind, keeps the
+  sentence about a shallow clone or a downloaded tarball, and points that sentence at the refusal that now names it
+  rather than reporting it against the reader's files.
+- **`README.md`'s Quick Start note** keeps its wording and gains one clause: where to run `bin/sync` from, and that
+  either source recognizes an unedited file that is merely behind, so it is updated rather than refused.
+- **`BOOTSTRAP.md` troubleshooting** gains the second cause a reader can now meet — a shallow or history-less source —
+  beside the *locally modified* entry that was the only one there.
+- **Scope:** prose and two help strings only; no behaviour changes. `bin/check-links` OK, 107 links.
+
 ### 2026-09-22 · [ad hoc] `bin/sync`: a source without its history is named as the refusal's cause, not the project's files
 
 - **The defect:** `bin/sync` refuses a tracked file that matches neither the canonical version nor any version in

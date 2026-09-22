@@ -205,7 +205,9 @@ def render_table(headers: tuple, rows: list) -> str:
 def main() -> int:
     p = argparse.ArgumentParser(description="Report drift of methodology files across projects.")
     p.add_argument("paths", nargs="*", default=["."], help="Project directory (shell-expand globs)")
-    p.add_argument("--source", choices=("local", "github"), help="local (default if sibling methodology/ exists) or github")
+    p.add_argument("--source", choices=("local", "github"), help="local (default if sibling methodology/ exists), or github, "
+                                                                 "which clones the repository for this run "
+                                                                 "(needs git and network)")
     args = p.parse_args()
 
     methodology_root = script_methodology_root()
