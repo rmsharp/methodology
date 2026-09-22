@@ -219,6 +219,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-22 · [ad hoc] S218 — fork `main` pushed to `origin`, `63de9e0..2cba226`, and the new branch `fix/sync-github-history` at `252a4b6` (non-commit action, operator go-ahead)
+
+Seven commits on `main`: the claim `52c7101`, the `HANDOFFS.md` trim `187374e` and fold `aea908e`, the ratification
+`a37e43a`, BL-85 `8e3c928`, the P1 record `f92a55b`, and the close-out `2cba226`. The branch carries P1's three
+commits on `upstream/main` `6b29d3d` and is pushed with upstream tracking. Guards before the push: on `main`, clean
+tree, `origin/main` an ancestor of `HEAD`, no `.git/REBASE_HEAD`. Read back after a fetch: `origin/main` = `2cba226`,
+`origin/fix/sync-github-history` = `252a4b6`. **Nothing reached `KJ5HST/methodology`.** This record is pushed under
+the standing grant of 2026-09-16. `CHANGELOG.md` was 191,750 B before this entry, about 4.9 KB under the 196,608 B trim
+trigger: the next Phase 0's `--check` will likely fire.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [BL-66] S218 close-out — P1 of the BL-66 plan done on `fix/sync-github-history` (`0277396`, `5f4c3f9`, `252a4b6`); the plan ratified; BL-85 raised; fork Learning #92
 
 - **Deliverable:** P1 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) — `bin/sync` and
