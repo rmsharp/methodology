@@ -1724,6 +1724,9 @@ GitHub-route fix planned there reuses `local_history_blobs()` and `local_history
 commits; the plan recommends one pull request carrying both (its §1.4), superseding the *"separate, small PR to
 follow"* that PR #84's body promises. Undecided until the operator rules on D3.
 
+**S218 (2026-09-21): D3 (a) taken** — one pull request carries both commits and the GitHub-route fix; the two
+commits are cherry-picked onto `fix/sync-github-history` as P1's first step.
+
 <a id="bl-55"></a>
 
 **BL-55 — nothing enforces removing a completed `BACKLOG.md` item; the one detector only reports, and
@@ -2398,6 +2401,9 @@ deferral — B1 plan Decision 3, *"Defer + document"* (`b1-sync-coverage-expansi
 closed on it) — whose `--help` half never landed. The recommended fix (D1) makes the route a fresh clone plus the local path: measured at
 3.8 s and 2.2 MB for the clone, 4.9 s end to end, exit 0 (§2.7). It reuses the history walk BL-54 fixed fork-side, so
 D3 proposes one pull request for both. Nothing implemented; nothing upstream-facing before the plan's P5.
+
+**Ratified 2026-09-21 (S218, Phase 0 picker): D1–D8 all option (a).** P1 began the same session on
+`fix/sync-github-history`, branched from `upstream/main` `6b29d3d`.
 
 ---
 

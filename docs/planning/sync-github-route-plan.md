@@ -1,8 +1,9 @@
 # `bin/sync --source=github`: an update route that can update, and a refusal that says what it knows
 
 **Date:** 2026-09-21 (fork session S217)
-**Status:** DRAFT — the eight decisions in §3 are for the operator; nothing is implemented. Implementation is §5,
-one phase per session. Nothing is upstream-facing until P5, its own go-ahead.
+**Status:** RATIFIED 2026-09-21 — the operator ruled all eight decisions in §3 option (a), as recommended, at fork
+session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; P1 began the
+same session. Nothing is upstream-facing until P5, its own go-ahead.
 **Backlog:** BL-66 ([detail](BACKLOG-DETAIL.md#bl-66)); under D3 (a) the same pull request closes BL-54's
 open upstream half ([detail](BACKLOG-DETAIL.md#bl-54)).
 **Route:** `bin/sync` and `bin/status` are canonical-only — `bin/` has no row in `bin/_manifest.py` — so the code

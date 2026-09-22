@@ -219,6 +219,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-66] S218 — the BL-66 plan ratified: D1–D8 all option (a) (operator decision)
+
+- **Decision:** at this session's Phase 0 picker the operator ruled the eight decisions of
+  [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §3 all option (a), as recommended: the GitHub
+  route becomes a fresh full clone plus the local path (D1, D2); one pull request with BL-54's two commits (D3); the same
+  fix in `bin/status` (D4); a refusal that names a shallow or history-less source (D5); minimal document edits (D6); a
+  branch from `upstream/main`, the PR opened after #84 merges (D7); `gh` dropped from both scripts (D8).
+- **Recorded:** the plan's status line (DRAFT → RATIFIED); the BL-66 and BL-54 index rows in
+  [`BACKLOG.md`](docs/planning/BACKLOG.md) (kept short, since that file is past its one-read budget: 57,603 → 57,611 B); one closing
+  sentence each in their [`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) blocks. `BACKLOG-DETAIL.md.verify.sh`
+  C1–C5 OK; `./bin/check-links` OK.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S218 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-21-7.md` became one row at
