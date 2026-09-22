@@ -3317,3 +3317,40 @@ supersede #85 under (b). Any appended row also carries D3's retire-or-refuse obl
 `docs/archive/FORK_LEARNINGS-retired.md` (D2; the file does not exist yet, as no row has ever retired);
 (2) an operator exception to append-only for a factual error, written where the rule lives; (3) leave #85 as it
 is, with the correction recorded only in BL-78 — the state after S216. **Decision first.**
+
+<a id="bl-84"></a>
+
+**BL-84 — the seed gives every adopter's `CLAUDE.md` a fixed warn line and a mandatory purpose fence, and for a
+file near the line the two cannot both be satisfied. Raised 2026-09-21 (S217), relayed by the operator from
+`mts-system` S143. Upstream-facing; not fixed, not costed.**
+
+**What.** The seed's `CLAUDE.md` entry (`starter-kit/context-budget.json`; the same four values on `upstream/main`
+`6b29d3d`) declares `max_bytes` 28,000, `warn_bytes` 24,000, `protected_fence` `budget:protected` and
+`protected_min_bytes` 800. `bin/_manifest.py:61` (`:53` on `upstream/main`) installs it as a SEED: once, after which it is the adopter's own
+config. In `starter-kit/context_budget.py`, a file past `warn_bytes` is `warn` (`:361-364`, exit 1); a missing fence,
+or a fence body under the minimum, is `over` (`:422-438`, exit 2). The minimum is compared with `len(body.strip())`
+(`:435`), characters rather than bytes despite the key's name. So an adopter that has the seed's entry and no fence
+is already red, and the smallest compliant fence costs about 850 B (800 characters plus the 51 B of the two tags):
+every `CLAUDE.md` within that distance of 24,000 B goes from `over` to `warn` by complying, never to `ok`.
+
+**Observed, not predicted.** In `mts-system` — its `context_budget.py` byte-identical to fork `main`'s, its
+`CLAUDE.md` entry identical to the seed's — S143's task was the fence (claim `d1fd9ee`). `CLAUDE.md` was 23,557 B at
+that commit, 443 B under the line; with a 1,046 B fence body it is 24,603 B, `warn`. That session then proposed
+deleting a 495 B `### Session Continuity Protocol` subsection from `CLAUDE.md` to get back to `ok`, which leaves
+24,108 B, still `warn`, and the harness's self-modification guard held the deletion for the operator. Measured
+read-only from this repo at S217 (uncommitted working tree there); what that session does is the operator's call.
+
+**Why it matters.** The seed's own note says the fence exists so a later compaction cannot remove the statement of
+purpose. A fixed warn line turns adding it into pressure to compact something else, and the nearest candidate is
+rules text in the file that governs the project. FM #28's countermeasure is *"Measure what your sessions actually
+read and set the ceiling just above it"* (`starter-kit/SESSION_RUNNER.md:339`); a seed number is nobody's
+measurement of a particular adopter's file.
+
+**Shapes, none costed.** (a) Keep the numbers; say in the seed's `_` note and in `starter-kit/BOOTSTRAP.md` that
+adding the fence may cross the warn line, and that re-setting the line for it is a threshold change of its own, in
+its own commit. (b) Compare the warn line with the bytes outside the fence, so the fence is never what trips it.
+(c) Set `CLAUDE.md`'s warn line and ceiling from the adopter's file plus a fence allowance at install or first run,
+instead of shipping fixed numbers. (d) Raise the seed's warn line by the fence floor: the smallest change, and still
+nobody's measurement. The seed and the tool are distributed, so a fix is an upstream pull request and its own
+go-ahead. Which other adopters sit within 850 B of the line is not surveyed. Checked first, for the fence keys and
+`warn_bytes`: `BACKLOG.md`, this file, `CHANGELOG.md` and its archive shards, and `docs/planning/` — no prior report.

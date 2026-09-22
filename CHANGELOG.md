@@ -219,6 +219,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-84] S217 — BL-84 raised: the seed's fixed `CLAUDE.md` warn line against its mandatory purpose fence
+
+- **What:** index row in [`BACKLOG.md`](docs/planning/BACKLOG.md) (after BL-83), BL-84 added to its `Open:` list, and a
+  detail block at the end of [`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md#bl-84). The distributed seed
+  `starter-kit/context-budget.json` gives every adopter's `CLAUDE.md` a fixed 24,000 B warn line and a fence of at least
+  800 characters whose absence is `over`; a `CLAUDE.md` within about 850 B of the line cannot comply and stay `ok`.
+- **Source:** relayed by the operator from `mts-system` S143 (a screenshot of that session's picker), measured
+  read-only from here: 23,557 B → 24,603 B with the fence; the 495 B deletion offered there leaves 24,108 B, still
+  `warn`. Four shapes, none costed; upstream-facing, its PR its own go-ahead. Approved as a side action at the Phase 0
+  picker.
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-21 · [ad hoc] S217 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 - **What:** the trimmer's 3-line pointer block for `docs/archive/HANDOFFS-through-2026-09-21-6.md` became one row at
