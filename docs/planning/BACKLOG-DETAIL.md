@@ -2393,9 +2393,9 @@ request is its own go-ahead. Not recorded anywhere before this: checked `BACKLOG
 **Plan written 2026-09-21 (S217): [`sync-github-route-plan.md`](sync-github-route-plan.md), DRAFT, eight decisions
 for the operator.** Re-measured at today's heads (§1.1): an adopter installed from `008d656` and never edited, updated
 toward `6b29d3d`, gets exit 0 / 10 files from a full clone and exit 2 / 9 refused from `--source=github`, in 2.2 s and
-12.3 s; `bin/status --source=github` reads the same 9 as *locally modified* (`bin/status:227`). The defect is a ratified
-deferral — B1 plan Decision 3, *"Defer + document"* (`b1-sync-coverage-expansion-plan.md:161`, issue #32) — whose
-`--help` half never landed. The recommended fix (D1) makes the route a fresh clone plus the local path: measured at
+12.3 s; `bin/status --source=github` reads the same 9 as *locally modified* (`bin/status:227`). The defect is a chosen
+deferral — B1 plan Decision 3, *"Defer + document"* (`b1-sync-coverage-expansion-plan.md:161`; shipped so in v2.8, issue #32
+closed on it) — whose `--help` half never landed. The recommended fix (D1) makes the route a fresh clone plus the local path: measured at
 3.8 s and 2.2 MB for the clone, 4.9 s end to end, exit 0 (§2.7). It reuses the history walk BL-54 fixed fork-side, so
 D3 proposes one pull request for both. Nothing implemented; nothing upstream-facing before the plan's P5.
 

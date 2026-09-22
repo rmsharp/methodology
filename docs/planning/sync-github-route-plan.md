@@ -25,7 +25,7 @@ in `git diff upstream/main main -- README.md`, and #84's README hunks are at `:9
 *byte-identical* or *matches a version in the source's history* (`:209-218`), so with no history every file that is
 merely behind is refused as *"local modifications"* — the one case an update exists for. `bin/status --source=github`
 has the same gap (`bin/status:227`, `upstream:165`) and reads the same files as *locally modified*. Both were
-**deferred on purpose** at the B1 plan (`b1-sync-coverage-expansion-plan.md:161`, Decision 3: *"Defer + document …
+**deferred on purpose** by the B1 plan (`b1-sync-coverage-expansion-plan.md:161`, Decision 3: *"Defer + document …
 Document the limitation in `--help` / BOOTSTRAP"*); the BOOTSTRAP half was done, the `--help` half was not, and the
 front page (`README.md:61`) still tells an adopter to update by pointing an agent at the GitHub URL, whose only
 mechanical form is this route. Measured today on an adopter installed from `008d656` and never edited, against
@@ -62,12 +62,13 @@ tarball loses that git history"* (`starter-kit/BOOTSTRAP.md:88`, `upstream:85`) 
 refusal text is wrong for them too: the files have no local modifications, the source has no history. Row (i) is
 what BL-66 measured at S182 (exit 0 / 10 written); row (iii) is its *"exit 2 / nine files"*, unchanged since.
 
-### 1.2 Provenance: a ratified deferral whose second half never landed
+### 1.2 Provenance: a chosen deferral whose second half never landed
 
 - `bin/status`'s *"history-walk not implemented for github source"* (`upstream:165`) was written by the maintainer in
   `22d1da7` (2026-04-20, v2.2 Phase 1). `bin/sync`'s `else set()` (`upstream:224`) came with the fork's B1 expansion,
   `662cdaf` (2026-06-20).
-- The B1 plan put it to the maintainer as a decision and he ratified it (issue #32, closed): **Decision 3, *"`--source=github`
+- The B1 plan (2026-06-19) recommended it, the implementation shipped that way in v2.8 (PRs #33–#37), and the maintainer closed
+  issue #32 on 2026-06-21 with it in place; the plan's own status line was never updated from *"Not yet ratified"*: **Decision 3, *"`--source=github`
   incremental safety — Defer + document. History walk is unimplemented for github source … so any changed file
   misclassifies as 'locally modified' and blocks → `--force`. Keep local source the supported update path to keep B1
   small. Document the limitation in `--help` / BOOTSTRAP."*** (`b1-sync-coverage-expansion-plan.md:161`).

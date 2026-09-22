@@ -219,6 +219,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [BL-66] S217 close-out — BL-66 planned (`d40f0e2`), the plan's deferral wording corrected, fork Learning #91, BL-84 raised as a side action
+
+- **Deliverable:** [`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md), DRAFT — eight
+  decisions for the operator, six phases; nothing implemented, nothing upstream-facing. This commit corrects its §1.2:
+  B1 plan Decision 3 was *recommended and shipped that way in v2.8, and issue #32 closed on it* — not "ratified", which
+  the `d40f0e2` entry above says and the B1 plan's own status line contradicts. `BACKLOG-DETAIL.md`'s BL-66 paragraph
+  corrected the same way.
+- **Phase 3C:** fork Learning #91 appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) (1,120 B; checker OK,
+  77 rows, 0 over budget): a deferral that chooses "document the limitation" is costed on one side — time the fix on a
+  throwaway before choosing, and give the deferral a reopen condition. **D3:** rows #48, #71, #78, #79 considered; none
+  retires (#71/#78/#79 are applied by the plan's P2/P3; #48 unrelated); S200's adjudication stands.
+- **Receipt:** `HANDOFFS.md` S217 `status: complete`, `bin/check-handoff` OK; predecessor S216 scored 9 (exact on the
+  trim's shard name, the ledger sizes and every gotcha; "both files are in #84's diff" was right about the files and
+  not about `README.md:61`, which no open PR touches); self 8.
+- **Gate citation** in the receipt: run in a `--no-local` clone at `d40f0e2`, identical to Phase 0's.
+- **Session, whole:** `90f4eca` claim · `e67c75b` trim · `f7a6c99` fold · `2e0fd02` BL-84 · `d40f0e2` plan · this
+  close-out. Fork `main` is pushed to `origin` after this commit (approved at the Phase 0 picker); its record follows.
+- **Model:** Claude Fable 5.1 (claude-fable-5-1) from the plan on; Claude Opus 5 (claude-opus-5) for the claim and side actions.
+
 ### 2026-09-21 · [BL-66] S217 — plan written: `bin/sync --source=github` becomes a fresh clone plus the local path; the refusal names a history-less source; four documents reconciled
 
 - **What:** [`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) (37 KB, DRAFT), the
