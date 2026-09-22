@@ -219,6 +219,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-21 · [ad hoc] S217 — fork `main` pushed to `origin`, `f853edd..fbf269b` (non-commit action, operator go-ahead)
+
+Six commits: this session's claim `90f4eca`, the `HANDOFFS.md` trim `e67c75b` and fold `f7a6c99`, BL-84 raised
+`2e0fd02`, the BL-66 plan `d40f0e2`, and the close-out `fbf269b`. Guards before the push: on `main`, clean tree,
+`origin/main` an ancestor of `HEAD`, no `.git/REBASE_HEAD`. Read back after a fetch: `origin/main` = `fbf269b` =
+local `main`. **Nothing reached `KJ5HST/methodology`.** This record is pushed under the standing grant of
+2026-09-16 (a `CHANGELOG.md`-only push record goes to fork `origin` unasked).
+
+- **Model:** Claude Fable 5.1 (claude-fable-5-1)
+
 ### 2026-09-21 · [BL-66] S217 close-out — BL-66 planned (`d40f0e2`), the plan's deferral wording corrected, fork Learning #91, BL-84 raised as a side action
 
 - **Deliverable:** [`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md), DRAFT — eight
