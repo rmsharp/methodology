@@ -231,6 +231,33 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-27 · [ad hoc] S224 — fork `main` pushed to `origin`, `c5e311d..1c521e0` (non-commit action, operator go-ahead)
+
+**Eleven commits, a clean fast-forward, read back after the push.** `git merge-base --is-ancestor origin/main main`
+confirmed the fast-forward and `git rev-list --count main..origin/main` was **0** (nothing to rebase onto) before
+anything was sent; `git ls-remote --heads origin main` reads back **`1c521e0`** after it, and a re-fetch puts
+`origin/main` level with local `main`.
+
+**The count in the report that prompted this was wrong — eleven, not the thirteen stated.** The figure was never
+measured; it was carried forward from an earlier *"9 ahead"* that was correct when taken and then guessed upward.
+**That is the third unmeasured figure this session** (after the archive-index row count and the body's *"four"* of
+six), and the third to be caught only by measuring at the point of use. The operator's instruction was unambiguous
+as to intent, so the push proceeded at the measured count.
+
+The commits: the S224 claim, the owed `HANDOFFS.md` trim and its fold, the row-count correction, the BL-85
+deliverable and its body recompose, the close-out, two receipt re-measurements, the *Delivery routes* rename, and
+the record of #88.
+
+**This entry does not sit above the pushed tip; it is pushed with the tip, under the operator's standing grant.**
+S219–S224 each left the recording commit unpushed, so fork `origin` was permanently one commit behind and the next
+push needed a fresh ask for a ledger-only commit — the regress the grant (2026-09-16, after S177) exists to end:
+*a commit whose only change is the `CHANGELOG.md` entry recording an authorized push is pushed to `origin` without
+asking, and records its own push in the same entry.* S225 rewrote this paragraph to do that. Guards measured before
+anything was sent: tree clean but for the Phase 0 dashboard row (unstaged, not in this commit), `origin/main` **0**
+ahead of local `main`, local **1** ahead, `git diff --name-only origin/main main` = `CHANGELOG.md` alone, and the
+push a fast-forward. **The `git ls-remote` read-back is recorded in S225's close-out receipt**, where every other
+outward action of this session's is; nothing further is owed for either push.
+
 ### 2026-09-27 · [BL-85] S224 — delivery route (a) taken: branch pushed to fork `origin`, upstream pull request #88 opened (two non-commit actions, operator go-ahead)
 
 **The operator chose route (a), standalone, after the session had already closed out.** Both actions are
