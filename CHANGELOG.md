@@ -223,6 +223,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26.md` (1 record(s), 29,054 B → 17,565 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-26.md`](docs/archive/HANDOFFS-through-2026-09-26.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh)
+rather than trusting a digest printed here. Live file 29,054 B → 17,565 B (−39.5%).
+
 ### 2026-09-26 · [ad hoc] S223 claim — archive `docs/planning/BACKLOG.md`'s §Completed items to clear the one-read breach (in progress)
 
 Phase 1B claim. Deliverable chosen at the Phase 0 task picker over three alternatives (BL-85 upstream prep,
