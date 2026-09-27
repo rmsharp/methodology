@@ -223,6 +223,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S226 — Phase 3C: fork Learning #99, and D3 discharged by an explicit refusal
+
+**#99: a defect's recorded "shapes, none costed" list is one session's imagination, not a survey of the option
+space — and where the failing artifact has a sibling of its own class, the answer is often already ratified there.**
+1,427 B against the 1,500 B per-row budget; `check-learnings --file docs/FORK_LEARNINGS.md --first 15
+--no-citations` reads **84 rows, contiguous 15..99**. The citations-enabled form is red before and after with an
+identical error set (only its *"83 row(s)"* parenthetical moves to 84) — the standing condition from running the
+fork's table, which starts at #15, against corpus citations aimed at the distributed one.
+
+**D3 is discharged by refusal, not by retirement: no row qualifies, and these are the ones considered.** **#37**
+(model the permitted transform; *"losses fail, growth is reported"*) and **#96** (a prior reduction's proof
+constrains the next change to the same file) both **state the lesson #99 builds on and neither is superseded by
+it** — #99 is about where to look for a remedy, not how to build a proof. **#78** (grep every document that
+already states a procedure) is the nearest relative and its object is different: a procedure being written, not a
+defect's remedy being chosen. **#22** (a closed item's text is load-bearing) is adjacent to this session's rule
+change and is **not** mechanized by it: D1(a) wants a gate in `.quality-gates.json`, a test in `bin/tests.sh` or a
+numbered failure mode, and C6 is in a proof `bin/tests.sh` does not schedule. D1(c) reaches none of them — every
+artifact they are about still exists.
+
 ### 2026-09-27 · [BL-86] S226 — closing an item by the book is possible again: losses fail, growth is reported
 
 **BL-86 and BL-83 are both CLOSED, and their pointer rows are the first two written under the fixed rule.** The
