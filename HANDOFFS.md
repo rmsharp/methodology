@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S224
+date: 2026-09-26
+status: pending
+active_task: **BL-85 — port the three ledger-overwrite rules to an upstream-facing branch.** `starter-kit/BOOTSTRAP.md` §Without `bin/sync` on fork `main` (`:362-400`, S41's `12463dd`) carries three numbered rules that stop an agent's prose update from overwriting an adopter's `CHANGELOG.md` and `HANDOFFS.md`; `upstream/main` (`6b29d3d`) has one sentence with no exception. Deliverable: the re-derived patch on a branch based on `upstream/main`, verified, plus a drafted pull-request body. **Opening the pull request is NOT in scope — it is its own go-ahead.** Chosen at this session's Phase 0 task picker over BL-83, BL-84 and BL-81.
+```
+
+```handoff
 session: S223
 date: 2026-09-26
 status: complete

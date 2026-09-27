@@ -223,6 +223,57 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S224 claim — BL-85: port the three ledger-overwrite rules upstream (in progress)
+
+**Phase 1B claim.** This entry plus a `status: pending` receipt in `HANDOFFS.md`, and Phase 0's
+`dashboard_history.jsonl` row. Deliverable chosen at the Phase 0 task picker over BL-83 (correct fork
+Learning #85's false example), BL-84 (the seed's warn line versus its mandatory fence) and BL-81
+(`.context-budget.json`'s three-places stale sizes). P6 of the BL-66 plan is that plan's next phase and is
+still blocked on #87's merge, so it was stated as blocked rather than offered.
+
+**Scope, stated explicitly.** One branch based on `upstream/main`, carrying the re-derived §Without `bin/sync`
+rules, plus a drafted pull-request body under `docs/planning/`. **Opening the pull request is not in scope and
+is its own go-ahead** — BL-85's own record says *"Outward-facing in every shape but (d): its own go-ahead.
+Decision first."* Five pull requests already sit unreviewed with 0 reviews, and `CLAUDE.md` §Contributing
+upstream prefers one substantial batched pull request over several small ones, so this session builds the
+branch and stops.
+
+**Measured before claiming, not predicted.**
+
+- `grep -c 'never overwrite' starter-kit/BOOTSTRAP.md` — **2** on fork `main` and on `origin/main`; **0** on
+  `upstream/main` (`6b29d3d`) and on all five open pull-request heads (`219fb9d`, `77afc12`, `e2501c5`,
+  `c1167ae`, `67feb9f`). BL-85's S218 measurement re-confirmed, now including #87's head, which did not exist
+  when it was taken.
+- **BL-85 warns that rule 1's table must be re-derived because the manifests differ. They differ, but not
+  there.** `diff` of `bin/_manifest.py` between the two trees: the `DISTRIBUTION` list is **identical** —
+  the same 11 tracked `starter-kit/` entries, the same 6 seeds (`SESSION_NOTES.md`, `CHANGELOG.md`,
+  `HANDOFFS.md`, `ROADMAP.md`, `.context-budget.json`, `.quality-gates.json`), the same `docs/methodology/`
+  set, in the same order. Every difference is in comments or in `STALE_FORMAT_MARKERS`. **So rule 1's table
+  ports unchanged**, and the re-derivation's finding is that no change is needed.
+- **Rule 2 is the half that cannot port verbatim.** It cites `ledger-format: 2` and the seed's pointer to
+  `FRAMEWORK_APPARATUS.md` §The Action Ledger. On `upstream/main` the markers are `Authoritative Action
+  Ledger` / `Handoff Receipts`, and `FRAMEWORK_APPARATUS.md` contains **0** occurrences of *Action Ledger* —
+  the section does not exist there. Both arrive with **#84** (`77afc12` adds `## The Action Ledger` at `:338`
+  and both `-format: 2` markers), so rule 2's fork wording becomes portable only after #84 merges.
+- **Rule 3 ports unchanged.** `upstream/main`'s `bin/status` emits exactly the five strings the rule names:
+  `missing` (`:95`), `current` (`:98`), `N versions behind` / `1 version behind` (`:102`), `locally modified`
+  (`:103`), and `STALE_SEED = "present (stale format)"` (`:106`).
+- **#84 does not touch §Without `bin/sync`.** Its `starter-kit/BOOTSTRAP.md` hunks are the tree diagram, the
+  `bin/sync` commit note (`:73`), the *Updating an existing project* paragraph (`:84`) and two file tables —
+  a different region of the same file. Conflict to be measured with `git merge-tree`, not predicted.
+
+**Phase 0.** `CHANGELOG.md` frontier = `HANDOFFS.md` frontier = HEAD `c5e311d`; both gaps **empty**. 2 receipts
+before this one, none pending; nothing backfilled. Gate re-run in a `--no-local` clone at `c5e311d`:
+`11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511` — S223's citation exactly,
+one commit later; `tests-sh-passed` 343, `tests-sh-failed` 0. `context_budget.py --precommit` exit 0. Dashboard
+**76/100, risk MEDIUM, High+ 0** — S223's backlog extraction held. Upstream **0 open issues; #83–#87 all open at
+unchanged heads, all `MERGEABLE`/`CLEAN`, 0 reviews, and the only comments are our own two** (#83, #84) — nothing
+owed there. `main` level with `origin/main`; `.git/REBASE_HEAD` absent and `core.hooksPath` is `.githooks`, so the
+hooks are armed.
+
+**Side action owed by the retention policy, not a picker item:** this claim makes three receipts, so the
+`HANDOFFS.md` trim and its fold follow the Phase 0 report.
+
 ### 2026-09-26 · [ad hoc] S223 — correction: this session stated an unmeasured byte figure as a measurement
 
 **The defect.** Two entries above — the `27b1c33` extraction entry and this session's `HANDOFFS.md` receipt,
