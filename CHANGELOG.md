@@ -223,6 +223,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S227 — Phase 3C: fork Learning #100, and D3 discharged by an explicit refusal
+
+**Row #100** (1,484 B, inside the 1,500 B `ROW_BUDGET_BYTES`; recomposed twice from 1,617 B rather than trimmed
+at the edges): two artifacts can answer the same question by **opposite mechanisms** — one deriving, one
+declaring — and only the test comparing them holds them equal; ship one without the test and the coupling
+exists nowhere it matters. `bin/check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` →
+**OK, 85 rows, contiguous 15..100, 0 over budget.**
+
+**D3 discharged by an explicit REFUSAL: no row qualifies for retirement, and these are the ones considered.**
+**#96** — *a prior reduction's losslessness proof becomes a constraint on the next reduction; fix the reduction,
+not the proof* — is the row this session's F7 would have restated **less** generally, so F7 was **not written as
+a row at all**; #96 is the general statement and retiring it would lose the lesson it states. **#43** — a
+derived set's coverage is uncheckable against itself — is #100's sibling *inside one module* and is cited by it;
+#100 is the cross-artifact form, so neither subsumes the other. **#24** is qualified by #96 rather than
+superseded (#96 says its remedy is wrong in the reachability case). **#28** and **#61** are about records going
+stale, adjacent to BL-32's falsified sentence but not about it. None meets D1(a) — no gate in
+`.quality-gates.json`, test in `bin/tests.sh` or numbered failure mode now enforces any of their lessons; none
+meets D1(b); none meets D1(c) — every artifact they name still exists. Per
+[`fork-learnings-adjudication-2026-09-20.md`](docs/planning/fork-learnings-adjudication-2026-09-20.md) §5, the
+whole table was tested against the criterion at S200 and **none** retired; this refusal does not re-adjudicate
+it, and re-adjudication remains its own deliverable.
+
 ### 2026-09-27 · [BL-88] S227 — DECIDED: the dashboard's row will assert only what it has checked; BL-88 raised
 
 **The relayed drift is real and it is the symptom.** `methodology_trim.py` **derives** a file's read-cap
