@@ -223,6 +223,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-86] S226 close-out — the closure rule is executable again; predecessor scored 8
+
+**Deliverable complete and verified.** BL-86 fixed and closed, BL-83 closed with it and its owed pointer row
+written, BL-87 raised, fork Learning **#99** appended with D3 discharged by explicit refusal. `7e48608` (claim),
+`6a85d20` (retention trim), `1201b12` (fold), `9cf85f2` (deliverable), `86713df` (#99), and this close-out.
+**Fork-only; nothing was pushed and nothing on `KJ5HST/methodology` was touched.**
+
+**Gate and suite in a `--no-local` clone at `86713df`, exit codes read outside a pipe:** `bash bin/tests.sh`
+**343 passed / 0 failed / 6 skipped**, exit 0 — the `tests-sh-passed >= 343` floor exactly; `quality_ratchet:
+11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, exit 0 — the same hashes as
+Phase 0's at `31e16e4` and S225's at `2f17170`, right for doc-only edits. All three `docs/planning/` proofs exit 0,
+and **six negative controls fire on the shipped proof** with the control green after every revert.
+
+**Phase 3A — S225's handoff scored 8/10.** Its trim forecast was exact and its gotchas were measurements, not
+impressions: the shard name and missing `-N` came true, `unexpected in shard: [83]` reproduced with the error text
+it quoted, and gotcha (4) on `bin/check-learnings --file` saved a false defect report. Its next-step (3) told the
+next session to **re-derive** the `CHANGELOG.md` rate rather than quote it, which is the instruction that caught
+its own estimate being 4 sessions where the measurement says 2.5. Against that, one substantive miss: **it framed
+BL-86 as a choice among four recorded shapes, and the answer was in neither the item nor the four** — the rule was
+already in the sibling proof's C1 and in fork Learnings #37 and #96, and a session that followed the handoff
+literally would have implemented one of four worse shapes. That is what #99 records. Not a defect of honesty —
+every shape was labelled uncosted — but a shape list presented as the decision space.
+
+**Phase 3B — self-assessed 8/10.** Five shapes built and measured before the operator was asked, negative controls
+on the shipped artifact rather than the harness, and the ratified answer found before implementing. Against that:
+**I published a false claim inside the session and had to withdraw it** — that the rule's *"removing it from here"*
+clause had cost two dangling links — because I grepped for an anchor string in the file I had just written that
+string into. It never reached a commit (my own link checker caught it by missing `bl-59` while flagging `bl-67`),
+the population was re-measured from `git show HEAD:`, the passages were recomposed rather than patched, and the
+self-matching literal was removed so the next such grep is not fooled. A measurement I trusted for one step too
+long is the cost; catching it before the commit is the reason the score is not lower.
+
+**What the next session inherits, stated plainly:** `CHANGELOG.md` is the first item and no longer a forecast —
+**230,783 B** immediately before this entry, **31,361 B** from the 262,144 B read refusal, two sessions having
+added 13,581 B each. **Raise the trim at the Phase 0 report, on the refusal and not on `--check`.**
+
 ### 2026-09-27 · [ad hoc] S226 — Phase 3C: fork Learning #99, and D3 discharged by an explicit refusal
 
 **#99: a defect's recorded "shapes, none costed" list is one session's imagination, not a survey of the option
