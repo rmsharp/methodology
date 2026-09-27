@@ -223,6 +223,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [BL-66] S222 claim — P5 of the BL-66 plan: open the pull request (in progress)
+
+**Deliverable, chosen at this session's Phase 0 picker:** phase P5 of
+[`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5 — the one outward phase of
+this plan. `fix/sync-github-history` (`67feb9f`) is pushed to fork `origin` and a pull request is opened against
+`KJ5HST/methodology` with [`sync-github-route-pr-body.md`](docs/planning/sync-github-route-pr-body.md) sent
+**unchanged** from below its first standalone `---`, then read back with `gh pr view --json body,headRefOid`, diffed
+against the file, and its `mergeable` state checked. No rebase is pending: `upstream/main` is unmoved at `6b29d3d`
+and is an ancestor of the branch, so the merge is a fast-forward.
+
+**D7's sequencing was decided at the same picker — open now, body unchanged.** This is a stated departure from D7's
+*"P5 opens the PR after #84 merges and the branch is rebased"*, taken on three grounds: #84 has had **0 reviews for
+six days**, so waiting has no date; the merge is a fast-forward today; and the approved body already discloses both
+cross-PR collisions and their built-and-run resolutions (`starter-kit/BOOTSTRAP.md` with #84, 212/0 including #84's
+two phrase pins; `.quality-gates.json` with #86, 191/0). D7's other fallback — pre-resolving the `BOOTSTRAP.md`
+paragraph toward #84's text — was declined at the picker because it would import wording from an unmerged pull
+request into this branch and falsify that section of the approved body, breaking P5's *"sends that text unchanged"*.
+
+**Three outward go-aheads, each given separately:** the branch push to fork `origin`; the pull-request open upstream;
+and a push of fork `main` (`43cf345..22bbbc3`, five fork-only doc commits, nothing upstream sees).
+**Side action, owed by the retention policy rather than chosen:** this claim makes three receipts, so the
+`HANDOFFS.md` trim and its fold follow the Phase 0 report.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [BL-66] S221 close-out — P4 of the BL-66 plan done, the PR body approved; one ledger trimmed; nothing upstream-facing
 
 - **Deliverable:** P4 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) on

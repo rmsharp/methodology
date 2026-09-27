@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S222
+date: 2026-09-26
+status: pending
+active_task: **P5 OF THE BL-66 PLAN, ONE SESSION — OPEN THE PULL REQUEST FOR `fix/sync-github-history` (`67feb9f`) AGAINST `KJ5HST/methodology`.** `docs/planning/sync-github-route-plan.md` §5 P5 (`:533`): no rebase is needed (`upstream/main` unmoved at `6b29d3d`, and `git merge-base --is-ancestor` confirms the branch is a fast-forward over it), the suite re-run on the tip, the branch pushed to fork `origin` (`9f42c0f..67feb9f`), the pull request opened with [`sync-github-route-pr-body.md`](docs/planning/sync-github-route-pr-body.md) sent **unchanged** from below its first standalone `---` — everything above that line is fork scaffolding and must not reach GitHub — then read back with `gh pr view --json body,headRefOid` and diffed against the file, `mergeable` checked, and the ledger entry for the open written. **D7's sequencing was decided at this session's Phase 0 picker: OPEN NOW, BODY UNCHANGED** — a stated departure from D7's *"after #84 merges and the branch is rebased"*, taken on three grounds the picker named: #84 has had **0 reviews for six days**, so waiting has no date; the merge is a **fast-forward today**; and the approved body **already discloses** both cross-PR collisions with their built-and-run resolutions (`BOOTSTRAP.md` with #84, 212/0 including #84's two phrase pins; `.quality-gates.json` with #86, 191/0, floor 191 for whoever merges second). D7's other fallback — pre-resolving the `BOOTSTRAP.md` paragraph — was declined because it would import wording from an unmerged pull request and falsify that section of the approved body, breaking P5's *"sends that text unchanged"*. **Three outward go-aheads given at the picker, each separately:** push the branch to fork `origin`; open the pull request upstream with the approved body; push fork `main` (`43cf345..22bbbc3`, five fork-only doc commits). **Side action, owed by the retention policy, not a picker item:** this claim makes three receipts, so the `HANDOFFS.md` trim and its fold follow the Phase 0 report.
+commit: pending
+```
+
+```handoff
 session: S221
 date: 2026-09-26
 status: complete
