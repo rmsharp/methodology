@@ -231,6 +231,16 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-27 · [ad hoc] S224 — the receipt's `CHANGELOG.md` figure re-measured after close-out, not before
+
+The S224 receipt's gotcha (9) said **193,218 B**, *3,390 B away* from the 196,608 B trim trigger. That was true when
+it was written and false when it was committed: the close-out entry itself added 3,110 B, and the file is
+**196,328 B** — **280 B** from the trigger. `methodology_trim.py --file CHANGELOG.md --check` still prints *trigger
+does not fire*, and `SRF 0.9770` against the most recent archive `4e73d20`, so the refusal is structural as expected.
+**This is fork Learning #61 landing on the session that wrote the figure** — a document keeps measuring the tree it
+was written against, and a close-out's own commit is exactly such a change. Corrected in the receipt, because that is
+the live artifact the next session reads and *3,390 B away* would let it defer a trim that one entry will now trigger.
+
 ### 2026-09-27 · [BL-85] S224 close-out — the port is built and unsent; fork Learning #97; D3 refused a fourth time
 
 **Deliverable complete and nothing outward happened.** Branch `fix/bootstrap-never-overwrite-rules` (`a88fce7`,
