@@ -223,6 +223,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S227 correction — the close-out left the Phase 1B stub in place beside its own receipt
+
+**Phase 3D says the claim stub is OVERWRITTEN by the close-out receipt; mine was PRECEDED by it,** so `HANDOFFS.md`
+carried **two `session: S227` blocks** — the complete receipt at `:53` and the stale `status: pending` stub at `:69`.
+Cause: the close-out did `git checkout -- HANDOFFS.md` to undo an over-budget draft, which restored the committed
+stub, and then prepended the finished receipt instead of replacing it. The stub is removed here (1,500 B), leaving
+**2 receipts**.
+
+**`bin/check-handoff` reported OK, exit 0, on both trees** — it validates the newest receipt's schema and that older
+ones name a sha, and **nothing checks that a session number appears once.** A duplicate is invisible to it. This is
+the same blind spot family as **BL-73** (a receipt begun twice reads as one block); recorded here, not fixed, and it
+is now the second `check-handoff` gap this session found.
+
+**Caught before it could be frozen:** the next retention trim archives the oldest receipt, which would have written
+the duplicate into a shard and into that shard's losslessness proof.
+
 ### 2026-09-27 · [ad hoc] S227 close-out — the read-cap class decision is recorded; predecessor scored 9
 
 **Deliverable:** the decision on BL-88, `cd7d422`, with fork Learning #100 at `a2885d5`. **Self 8, predecessor 9.**

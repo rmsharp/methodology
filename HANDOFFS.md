@@ -67,13 +67,6 @@ commit: e4c0007 (claim) + 525c9aa (HANDOFFS retention trim) + 760f1d0 (fold) + c
 ```
 
 ```handoff
-session: S227
-date: 2026-09-27
-status: pending
-active_task: **A DESIGN DECISION RELAYED FROM `nprcgenekeepr`: the dashboard's DECLARED read-cap Class A/B partition versus an adopter's deliberately unsynced `LEDGERS` patch.** `tools/methodology_dashboard.py` declares `READ_CAP_CLASS_A`/`READ_CAP_CLASS_B` instead of deriving them from `methodology_trim.py`'s `LEDGERS`, so a widened `LEDGERS` cannot silently reassign a class ([`docs/planning/read-cap-phase-c-plan.md`](docs/planning/read-cap-phase-c-plan.md) §10 dragon 6). The two canonical tests that pin it **both load this repo's own trimmer**, so an adopter's copy is outside every suite: `nprcgenekeepr` runs a byte-identical dashboard over a trimmer carrying a documented `LedgerSpec` for `SESSION_NOTES.md`, and the dashboard emits a HIGH flag asserting `NO_CONFIG` for a file whose trimmer answers with a full Class-A reading. **The deliverable is ONE decision document** — the investigation, every shape costed against measurements, and the decision — **not an implementation**; nothing is built without a go-ahead at the Present gate. Five shapes arrived with the relay, none costed, and a sixth is explicitly invited. **The adopter's report is a claim to verify, not a measurement.** `tools/methodology_dashboard.py` and its tests are canonical-only; `starter-kit/methodology_dashboard.py` and `methodology_trim.py` are **DISTRIBUTED**, so any shape touching those is upstream-facing and its PR is its own go-ahead.
-```
-
-```handoff
 session: S226
 date: 2026-09-27
 status: complete
