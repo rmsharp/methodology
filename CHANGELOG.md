@@ -231,6 +231,41 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-27 · [BL-85] S224 close-out — the port is built and unsent; fork Learning #97; D3 refused a fourth time
+
+**Deliverable complete and nothing outward happened.** Branch `fix/bootstrap-never-overwrite-rules` (`a88fce7`,
+**local only**), body drafted, BL-85's four shapes still open and still the operator's.
+
+**Phase 3A — predecessor S223 scored 9/10.** Its shard-name prediction was exactly right (`-2`, via
+`SHARD_NAME_DISAMBIGUATED`) *and* it still said to read the dry run; gotcha (5) *draft the learning short* landed
+row #97 at 1,492 B first try; gotcha (3) *run all three `docs/planning/` proofs* caught nothing but was cheap and
+correct; gotcha (7) kept the gate citation off the stale results file. **The one inaccuracy cost this session a
+commit:** its *"index 28 rows"* is wrong — the table holds **61** — and this session incremented it to 29 and
+published that before measuring. Not 10 because of that; not lower because everything else it predicted held.
+
+**Phase 3B — self 8/10.** The deliverable is complete and every claim in it was measured on a tree that was
+actually built: three suites (branch 139/0, merged-with-#84 163/0, merged-with-#87 188/0), the counterparty's
+gate run on the merge rather than a grep. Against that: **two accuracy defects in one session**, both
+self-inflicted and both caught here rather than downstream — the inherited row count published as a measurement,
+and a body paragraph that said *"four"* of six and inferred a claim the acceptance test does not make. One
+reached a commit; one was caught while showing the draft. A session that logs its predecessor's unmeasured figure
+and then produces two of its own does not score above 8.
+
+**Phase 3C — fork Learning #97 appended** (1,492 B): *an item's own "before it goes up" warnings are a sample of
+what will not port, never a partition of it.* **D3's retirement is owed and is REFUSED — the FOURTH CONSECUTIVE
+REFUSAL, which is now a standing signal about the rule rather than an incident.** Rows tested, not asserted:
+**#22** is the nearest miss — the two `.verify.sh` C4 reachability checks *do* mechanize its lesson for the
+backlog, but criterion (a) names a `.quality-gates.json` gate, a `bin/tests.sh` test or a numbered failure mode,
+and `grep -c 'verify.sh' bin/tests.sh` is **0**; #22 was also observed in two adopter repos that have no such
+proof. **#55** — cited by #97, which does not state it as generally (values versus population). **#94** — obeyed
+by this session, enforced by nothing. **#61, #58, #24** — no gate, artifacts live. **#85** — known false (BL-83);
+wrongness is not a ground. The eleven declared gates are all suite and checker counts; none reaches these rows.
+
+**Verification.** Branch and both merged trees green (see the receipt for the four gate citations). Fork `main`:
+all three `docs/planning/` proofs, `check-links` 111, `check-learnings` both forms, `context_budget --precommit`
+exit 0, `check-handoff` and `--all` OK with the receipt 0 over its 12,288 B budget. **Not exercised:** anything on
+GitHub; the merged trees with #83, #85, #86.
+
 ### 2026-09-27 · [BL-85] S224 — the pull-request body's §The defect recomposed against the acceptance-test record
 
 The drafted body said *"four of the files ... plus"* two more, which is six, and claimed *"every one of the six
