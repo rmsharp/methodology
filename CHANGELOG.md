@@ -223,6 +223,65 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S223 — `BACKLOG.md`'s §Completed items moved to a read-on-demand sibling; the one-read breach is closed
+
+**What:** the 33 closed-item pointer rows that stood in [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md)
+§Completed items — **25,187 B in two tables** — moved **verbatim** to
+[`docs/planning/BACKLOG-COMPLETED.md`](docs/planning/BACKLOG-COMPLETED.md), and the section became a pointer block.
+`58,727 B → 35,296 B`, so the file is **21,454 B under** the 56,750 B one-read budget it was 1,977 B over.
+**The dashboard's only HIGH risk factor is gone: risk `HIGH` → `MEDIUM`, High+ count 1 → 0**, health 76/100
+unchanged. The three remaining factors are all pre-existing MEDIUMs — no CI/CD, the historical `368b29c`
+threshold loosening, and `tools/test_methodology_dashboard.py`'s 5,867 lines (BL-68).
+
+**Same shape and same argument as the two extractions before it** — `BACKLOG.md` → `BACKLOG-DETAIL.md` (S99)
+and `CLAUDE.md` → `docs/RELEASE_HISTORY.md` (v3.7): the always-read file stays scannable, the accumulated
+record moves to a sibling read on demand. The closed rows were the half no session needs in order to run.
+
+**The proof is hand-authored and its shape was CHOSEN, not assumed — the claim's stated open question.**
+[`BACKLOG-COMPLETED.md.verify.sh`](docs/planning/BACKLOG-COMPLETED.md.verify.sh), 5 checks, exit 0: C1 identity
+set (33 ids, enumerated as a frozen literal rather than derived from the shard), C2 rows byte-identical to
+`a32f520` (25,187 B), C3 no moved row left in the live file, C4 every id still findable there, C5 the region's
+retained note verbatim. **Every check was proved killable** by mutation in a throwaway copy against a green
+control — delete a row (C1), flip one byte (C2), copy a row back (C3), drop one id (C4), delete the note (C5).
+C4's first mutation run was **discarded as invalid**: a cleanup step had reverted the live file, so C4 fired on
+its *shard-not-named* branch instead of the branch under test; it was redone from a clean copy and the intended
+branch fired by name. **BL-60 and BL-36 were checked and neither applies to this population:** their ~16 KB,
+97.9%-identical, four-of-six-failing proofs are all `methodology_trim.py`-GENERATED shard proofs, whereas the
+two hand-written `docs/planning/` proofs are 6,947 B and 8,181 B and **both pass today** — re-run this session.
+This one is 8,946 B and sits in a directory no phase mandates reading, so it costs no per-session context.
+
+**A fixture hazard found by checking rather than assuming, and it improved the design.** Moving the rows as-is
+would have **broken C4 of [`BACKLOG-archive-2026-08-15.md.verify.sh`](docs/planning/BACKLOG-archive-2026-08-15.md.verify.sh)**,
+which asserts each of *its* eleven items keeps a `**BL-N**` mention in `BACKLOG.md` — and eleven of those
+mentions were rows being moved. So the pointer block carries **all 33 ids in the `**BL-N**` form**, which
+satisfies that check's stated purpose rather than its regex: its own comment names the case, *"BL-27 is the
+named case: S88 needed it and could not find it even while it was in the live file."* Both sibling proofs were
+re-run after the change and are green.
+
+**Two findings recorded, neither fixed (FM #17).** (1) The heading this block replaces, `## Completed items
+(BL-1 – BL-7, …)`, named **19 of the 33** rows present — BL-8, BL-15, BL-20, BL-24, BL-25, BL-27, BL-28,
+BL-29, BL-33, BL-34, BL-35, BL-38, BL-40 and BL-41 were in the table and absent from its own list. That is this
+file's *"do not trust a number in this file without re-deriving it"* warning landing on its own section
+headings; the replacement count and id list are derived. (2) `.context-budget.json`'s `structure.why` for this
+file claims its pattern *"matches the 19 open-item rows and NOT the §Completed items pointer table beside
+them"* — measured today it matched **53** open rows and **10** completed ones, because the newer closures kept
+their `[detail]` links. The check passed for a different reason than its rationale gives, and it still passes
+(53 ≥ `expect_min` 5), confirmed by `context_budget.py --precommit` exit 0 and the table's
+`docs/planning/BACKLOG.md 35,296 B / 65,536 B ok`.
+
+**Durability, not a one-shot reduction.** The editing rule moved with the rows: closing an item now appends its
+pointer row to `BACKLOG-COMPLETED.md`, not to `BACKLOG.md`
+([`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md)`:16-19`, rewritten), so the file Phase 0 reads no longer
+grows by a narrative row per closure. Without that, the next 33 closures rebuild the breach.
+
+**Verified:** `bin/tests.sh` **343 passed / 0 failed / 6 skipped**, identical to this session's Phase 0 run, so
+no assertion was disarmed by the shrink; `./bin/check-links` OK (111 links); all **140** relative links in the
+three touched planning files resolve; both sibling `.verify.sh` proofs green; `context_budget.py --precommit`
+exit 0. **Not exercised:** this commit itself (BL-64), and the `git grep` for `BACKLOG.md#` anchors returned
+nothing, so no anchor link depended on the renamed heading.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] S223 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 The `2026-09-26` shard's four-line pointer block written by `methodology_trim.py` into `HANDOFFS.md`'s front matter

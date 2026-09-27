@@ -15,8 +15,10 @@ its own `BL-N` identity and compares bytes. Run it rather than trusting this par
 
 **Editing rule: this file is the one place an open item's text lives.** Edit the body here and
 the one-line summary in `BACKLOG.md`'s index only if the item's *subject* changed. Closing an
-item still means removing it from here, adding its pointer row to `BACKLOG.md`'s
-§Completed items, and logging the action in [`CHANGELOG.md`](../../CHANGELOG.md).
+item still means removing it from here, removing its index row from `BACKLOG.md`'s §Open items,
+adding its pointer row to [`BACKLOG-COMPLETED.md`](BACKLOG-COMPLETED.md) — **not** to `BACKLOG.md`,
+which since S223 keeps only the id in its §Completed items pointer block — and logging the action in
+[`CHANGELOG.md`](../../CHANGELOG.md).
 
 **The `<a id="bl-N">` anchors are the record separators** the proof splits on, and the targets
 `BACKLOG.md`'s index links to. They are scaffolding added by the move; every byte below one,
