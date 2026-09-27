@@ -223,6 +223,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S227 claim — the dashboard's declared read-cap Class A/B vs an adopter's locally patched trimmer (in progress)
+
+**Relayed by the operator from `nprcgenekeepr`, and assigned as a design decision, not a prescribed fix.**
+`tools/methodology_dashboard.py` declares `READ_CAP_CLASS_A` and `READ_CAP_CLASS_B` rather than deriving them
+from `methodology_trim.py`'s `LEDGERS` — deliberately, so a widened `LEDGERS` cannot silently reassign a file's
+class (module comment; `docs/planning/read-cap-phase-c-plan.md` §10 dragon 6). Two canonical tests pin the
+invariant from both sides, and **both load this repo's own trimmer**, so they pin consistency *here* and say
+nothing about an adopter's copy. `nprcgenekeepr` carries a documented, deliberately unsynced `LedgerSpec` for
+`SESSION_NOTES.md` while running a byte-identical dashboard, so the dashboard asserts `NO_CONFIG` for a file
+whose trimmer now answers with a full Class-A reading — the failure mode the Class B test's own docstring names,
+in a tree no test suite reaches.
+
+**The deliverable is ONE decision document, not an implementation:** the investigation, every shape costed
+against measurements, and the decision. Five candidate shapes arrived with the relay; none is costed, and the
+relay explicitly invites a sixth. Nothing is implemented without a go-ahead at the Present gate. The adopter's
+report is treated as a **claim to verify**, not as a measurement.
+
 ### 2026-09-27 · [ad hoc] S226 — this file re-measured AFTER its own close-out entries: 235,768 B, ~1.6 sessions
 
 **The figure in S226's receipt is correctly scoped and its conclusion is now stale, which is the whole point of
