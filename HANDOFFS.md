@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S228
+date: 2026-09-27
+status: pending
+active_task: **Archive `CHANGELOG.md` at the clean 2026-09-22 calendar seam — the operator's choice among three cuts costed by forced dry runs at S227's Phase 0.** Re-derived at claim time, not quoted (fork Learning #61): **248,167 B, 137 records**, so the cut archives **85 of 137** (2026-09-21 → 2026-09-22) into `docs/archive/CHANGELOG-through-2026-09-22.md` and leaves the live file at **129,628 B** — S227's figures were 236,905 B / 130 records / 118,366 B, and the retained side grew because all seven of its entries are dated 2026-09-27. **Orientation carried from S227's Phase 0, measured minutes ago and not re-run:** gate `11/11 · results 10575dac7361 · manifest 01a4ae7aa511`; `bin/tests.sh` 343/0/6; upstream 0 issues, #83–#88 open, 0 reviews, nothing owed; the only tree changes since are S227's own commits plus `3815b83`, which removed the duplicate S227 stub its close-out left. **`SRF_RED` refuses this trim by construction, so `--force` is warranted; there is NO fold for this file.** Receipts are 2, so this claim makes three and owes the retention trim after the report. Fork-only; **nothing on `KJ5HST/methodology`.**
+```
+
+```handoff
 session: S227
 date: 2026-09-27
 status: complete

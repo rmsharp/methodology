@@ -223,6 +223,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S228 claim — archive this file at the clean 2026-09-22 calendar seam (in progress)
+
+**The operator chose the cut: `--cut 2026-09-22`, the clean calendar seam** — one of three options costed by forced
+dry runs at S227's Phase 0 and raised there on the refusal, not on `--check`, per this file's own rule since S196.
+
+**Re-derived at claim time rather than quoted** (fork Learning #61): the file is **248,167 B** and holds **137**
+records, not the 236,905 B / 130 the options were costed against — S227 added seven entries, all dated 2026-09-27
+and therefore all on the RETAINED side. The cut still archives **85 of 137** (2026-09-21 → 2026-09-22) into
+`docs/archive/CHANGELOG-through-2026-09-22.md`, a name no shard has taken, and leaves the live file at
+**129,628 B** — not the 118,366 B quoted at S227, because the retained side grew.
+
+**`SRF_RED` refuses this trim by construction and `--force` is warranted, not an override.** There is **no fold**
+for this file, and the trim pays the same fixed ~16 KB losslessness proof, read from a clone of its own commit.
+
 ### 2026-09-27 · [ad hoc] S227 correction — the close-out left the Phase 1B stub in place beside its own receipt
 
 **Phase 3D says the claim stub is OVERWRITTEN by the close-out receipt; mine was PRECEDED by it,** so `HANDOFFS.md`
