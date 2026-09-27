@@ -231,6 +231,52 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-27 · [BL-85] S224 — the upstream port of the ledger-overwrite rules is built and measured, not sent
+
+**The deliverable.** Branch **`fix/bootstrap-never-overwrite-rules`**, tip **`a88fce7`**, based on `upstream/main`
+`6b29d3d`, carrying the three rules of `starter-kit/BOOTSTRAP.md` §Without `bin/sync` **re-derived against upstream
+rather than cherry-picked from `12463dd`** — plus upstream's own ledger entry, the convention every open fork
+pull request follows. The body is [`bootstrap-never-overwrite-rules-pr-body.md`](docs/planning/bootstrap-never-overwrite-rules-pr-body.md),
+3,529 B below its rule, recognized-terms check **0 hits**. **Nothing outward was done: no push, no pull request, no
+comment.** BL-85's four shapes are still open and still the operator's, and the branch serves (a) and (c) equally.
+
+**Two of BL-85's own three "before it goes up" warnings came back different from what it predicted.**
+
+- **Rule 1's table needs no re-derivation.** BL-85 says the manifests differ, so re-derive it. They do differ — in
+  comments and in `STALE_FORMAT_MARKERS` — but `bin/_manifest.py`'s `DISTRIBUTION` list is **identical** on the two
+  trees: the same 11 tracked `starter-kit/` entries, the same 6 seeds, the same `docs/methodology/` set, in the same
+  order. The table ports unchanged, and the finding is that no change was needed.
+- **The half that could not port is rule 2, which BL-85 does not flag.** It cites `ledger-format: 2` and
+  `FRAMEWORK_APPARATUS.md` §The Action Ledger; `upstream/main` has neither (**0** occurrences of *Action Ledger* in
+  that file). Both arrive with #84 (`77afc12` adds the heading at `:338`). Rewritten to **point at** the existing
+  *Updating an existing project from an earlier methodology version* paragraph in §Setup with `bin/sync` instead of
+  restating the migration — which is also what makes it survive #84 untouched.
+- **Rule 3 ports verbatim, checked against the source:** `upstream/main`'s `bin/status` prints exactly the five
+  verdicts the rule names — `missing` `:95`, `current` `:98`, `N versions behind` `:102`, `locally modified` `:103`,
+  `STALE_SEED = "present (stale format)"` `:106`.
+- **The `--source=github` note was excluded**, as BL-85 says: it describes the route #87 changes.
+
+**Conflicts measured, not predicted** (`git merge-tree --write-tree`, then the suite on the merged tree):
+**#84 `77afc12` merges CLEAN, `BOOTSTRAP.md` included** — merged tree **163 passed / 0 failed**, gates 10/10
+`results 93ea168d093e`. #83, #85, #86 and #87 collide in **`CHANGELOG.md` only** — the prepend-only ledger's
+ordinary collision, resolved by keeping both entries; #87's `BOOTSTRAP.md` auto-merges, and its merged tree runs
+**188 passed / 0 failed** with its own raised floor of 188 met exactly, gates 10/10 `results 2162213f5332` — the
+hashes #87 itself cites. **This branch adds no tests, so it moves no floor.**
+
+**On the branch:** `bin/tests.sh` **139 passed, 0 failed**, identical to the base commit's own measured count;
+`bin/check-links` OK 107 links; `context_budget.py --precommit` exit 0; `quality_ratchet.py --run` **10/10 pass**,
+`results 6542e640a956 · manifest 97a7aab85b9a` — the hashes `6b29d3d`'s receipt cites.
+
+**Recorded and NOT fixed (FM #17).** §Setup with `bin/sync`'s prose at `:74` lists the installed operating files but
+omits `methodology_trim.py`, `context_budget.py` and `quality_ratchet.py`, and its seed list omits
+`.context-budget.json` and `.quality-gates.json` — both stale against the manifest this branch's table is derived
+from. Named in the body's *Deliberately not in this pull request*; fixing it here would put a second, larger edit in
+a pull request whose point is one section.
+
+**Fork-side bookkeeping:** BL-85's detail gains an S224 status paragraph and its index row a pointer; all three
+`docs/planning/` proofs re-run green (`BACKLOG-COMPLETED`, `BACKLOG-archive-2026-08-15`, `BACKLOG-DETAIL`), and
+`check-links` is OK at 111 on this tree.
+
 ### 2026-09-26 · [ad hoc] S224 — correction: the fold entry's index row count was predicted, not measured
 
 **The defect.** The entry below says *"the index's table is 29 rows"*. It is **61**. The figure was never

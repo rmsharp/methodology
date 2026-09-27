@@ -3475,3 +3475,23 @@ while four sit unreviewed, which `CLAUDE.md` §Contributing upstream says to ask
 pull request at its docs phase (P3). That reverses the plan's §7 scoping, so it needs the operator's decision.
 (c) Offer it to the maintainer as a comment on #84, which touches the same section. (d) Leave it fork-only and tell
 adopters directly. Outward-facing in every shape but (d): its own go-ahead. **Decision first.**
+
+**S224 (2026-09-27): BUILT AND MEASURED, NOT SENT. The branch is `fix/bootstrap-never-overwrite-rules`, tip
+`a88fce7`, based on `upstream/main` `6b29d3d`; the body is
+[`bootstrap-never-overwrite-rules-pr-body.md`](bootstrap-never-overwrite-rules-pr-body.md) (3,529 B below its
+rule, recognized-terms check 0 hits). The shape decision above is still open and still the operator's** — the
+branch serves (a) and (c) equally, and nothing outward was done. **Three of this item's own "before it goes up"
+warnings were tested and two came back different from what it predicted.** (1) Rule 1's table does **not** need
+re-deriving: `bin/_manifest.py`'s `DISTRIBUTION` list is *identical* across the two trees — the manifests differ
+only in comments and `STALE_FORMAT_MARKERS` — so the table ports unchanged. (2) The half that could not port is
+**rule 2**, unflagged here: it cites `ledger-format: 2` and `FRAMEWORK_APPARATUS.md` §The Action Ledger, and
+`upstream/main` has neither (0 occurrences of *Action Ledger* in that file; both arrive with #84, `77afc12:338`).
+Rewritten to point at the existing *Updating an existing project…* paragraph instead of restating it, which is
+what makes it survive #84. (3) The conflict was measured, not predicted: **#84 merges CLEAN, `BOOTSTRAP.md`
+included** (merged tree 163/0, gates 10/10); #83, #85, #86 and #87 collide in `CHANGELOG.md` only, the
+prepend-only ledger's ordinary collision, and #87's merged tree runs **188/0** with its own raised floor met
+exactly. Branch itself: **139/0**, unchanged from base; `check-links` 107; `--precommit` exit 0; ratchet 10/10
+`results 6542e640a956`. The `--source=github` note was excluded as this item says. **Recorded and not fixed
+(FM #17):** §Setup with `bin/sync`'s prose at `:74` omits `methodology_trim.py`, `context_budget.py` and
+`quality_ratchet.py` from the installed operating files, and `.context-budget.json` / `.quality-gates.json` from
+the seeds — stale against the manifest, named in the body's *Deliberately not in this pull request*.
