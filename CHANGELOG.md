@@ -223,6 +223,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [BL-66] S221 claim — P4 of the BL-66 plan: vet and package the branch (in progress)
+
+**Deliverable, chosen at this session's Phase 0 picker:** phase P4 of
+[`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5, on `fix/sync-github-history`
+at `9f42c0f` — the last phase before the pull request, which is P5 and its own go-ahead. Four things: the suite green in
+a `--no-local` clone of the branch tip **and** of its trial merge into `upstream/main`; `git merge-tree --write-tree
+--name-only` against each of the four open PR heads with the conflicting paths **measured** and recorded in the plan,
+against §2.5's prediction of `starter-kit/BOOTSTRAP.md` + `CHANGELOG.md` with #84 and `CHANGELOG.md` with the other
+three; a `--source=github --dry-run` of the branch's `bin/sync` against each of the six adopters, recorded as
+before/after row counts against fork `main`'s copy; and the pull-request body drafted in
+`docs/planning/sync-github-route-pr-body.md` in recognized terms, shown to the operator inline before any review picker.
+`tests-sh-passed` is tightened on the branch in this phase and not before — its floor is 139 and it measures 188, and
+PR #86 moves the same line to 142, so the tightening follows the trial merges. Nothing opens or is pushed upstream.
+**Side actions approved:** the `HANDOFFS.md` retention trim this claim makes owed, and its fold.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-22 · [ad hoc] S220 — fork `main` pushed to `origin`, `f07abe4..498e32a`, and `fix/sync-github-history` `443b02f..9f42c0f` (non-commit action, operator go-ahead)
 
 Five commits on `main`: the claim `ec16bd9`, the `HANDOFFS.md` trim `75a650f` and fold `6656e07`, the P3 record

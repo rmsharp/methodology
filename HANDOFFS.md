@@ -51,6 +51,14 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S221
+date: 2026-09-26
+status: pending
+active_task: **P4 OF THE BL-66 PLAN, ONE SESSION — VET AND PACKAGE `fix/sync-github-history` (`9f42c0f`); NOTHING OUTWARD-FACING.** `docs/planning/sync-github-route-plan.md` §5 P4 (`:459`): the suite green in a `--no-local` clone of the branch tip **and** of its trial merge into `upstream/main`; `git merge-tree --write-tree --name-only fix/sync-github-history <head>` against each of the four open PR heads (`219fb9d`, `77afc12`, `e2501c5`, `c1167ae`) with the conflicting paths recorded in the plan — §2.5 predicts `BOOTSTRAP.md` + `CHANGELOG.md` with #84 and `CHANGELOG.md` with the rest, and P4 **measures** rather than predicts; a `bin/sync --source=github --dry-run` of the branch against each of the six adopters (`airqino`, `church_growth`, `dalia_martinez_funeral`, `mts-system`, `vscode_quarto_ext`, `wsfct`, all six present) recorded as before/after row counts against fork `main`'s `bin/sync`; `tests-sh-passed` tightened on the branch (floor 139, measures 188) **after** the trial merges, since #86 moves the same line to 142; and the PR body drafted in `docs/planning/sync-github-route-pr-body.md` in recognized terms — no session numbers, no `BL-`/`S`/`D` codes, no fork plan names — shown inline before any review picker. The phase ends at the operator's review of the body; P5 opens the PR and is its own go-ahead. **Inherited from P3, both already recorded there:** #84 rewrites the *tail* of `BOOTSTRAP.md`'s one-line *Updating…* paragraph and this branch rewrote its *head*, so the predicted conflict resolves mechanically (#84's tail, this branch's head); and the two phrases the plan told P3 to preserve live only in #84's text (fork `main` 2, #84's head 1, this branch 0), so that obligation is the rebase's. **Side actions approved at the picker:** the `HANDOFFS.md` retention trim this claim makes owed, and its fold.
+commit: pending
+```
+
+```handoff
 session: S220
 date: 2026-09-22
 status: complete
