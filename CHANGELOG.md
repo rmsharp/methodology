@@ -223,6 +223,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S223 — fork `main` pushed to `origin`, `73157d0..61081e1` (non-commit action, operator go-ahead)
+
+Five commits, all fork-only documentation: the claim `109ba7b`, the `HANDOFFS.md` retention trim `36060f0` and
+its fold `a32f520`, the §Completed items extraction `27b1c33`, and the close-out `61081e1`. A fast-forward from
+the sha `origin` held (`73157d0`), checked with `git merge-base --is-ancestor` **before** the push and read back
+with `git ls-remote` **after** — `refs/heads/main` = `61081e1`, equal to local HEAD.
+
+**Nothing on `KJ5HST/methodology` was touched.** No branch was pushed, no pull request opened or edited, no
+comment posted; `#83`–`#87` remain open at the heads Phase 0 recorded (`219fb9d`, `77afc12`, `e2501c5`,
+`c1167ae`, `67feb9f`) with 0 reviews. The go-ahead was given at this session's close-out picker; the standing
+grant covers only a CHANGELOG-only push record, which this was not.
+
+Pushed with the push it records, under the standing grant for push records.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] S223 close-out — the backlog breach is closed; fork Learning #96; D3 refused, rows named
 
 **Deliverable complete and verified.** `docs/planning/BACKLOG.md` 58,727 → 35,296 B; dashboard risk `HIGH` →
