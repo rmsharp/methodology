@@ -231,6 +231,16 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-26 · [ad hoc] S224 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+The `82c3148` trim left `methodology_trim.py`'s ~448 B pointer block in `HANDOFFS.md`'s front matter.
+Folded to one row at the bottom of [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md) —
+`n` 1, span 2026-09-26 → 2026-09-26, shard `HANDOFFS-through-2026-09-26-2.md`, `by` v1.5.0 — and the block
+deleted, **in its own commit** as the index's fold rule and [fork Learning #58](docs/FORK_LEARNINGS.md)
+require: inside the trim commit the shipped `.verify.sh` fails L2. The `.verify.sh` link is dropped per that
+rule, since the proof sits beside its shard. `HANDOFFS.md` 17,642 B → 17,186 B; the index's table is 29 rows.
+`./bin/check-links` OK, 111 links.
+
 ### 2026-09-26 · [ad hoc] S224 claim — BL-85: port the three ledger-overwrite rules upstream (in progress)
 
 **Phase 1B claim.** This entry plus a `status: pending` receipt in `HANDOFFS.md`, and Phase 0's
