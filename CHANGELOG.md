@@ -223,6 +223,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-83] S225 close-out — BL-83 fixed, #85 retired, BL-86 raised; predecessor scored 7
+
+**Deliverable complete and verified.** Fork Learning **#98** corrects #85 and **#85 is retired under D1(b)** —
+the **first row ever retired** and the first use of D2's reserved-gap mechanism (`18d4034`). **D3 is satisfied by
+the retirement itself**, so the four consecutive refusals of S221–S224 end here and #98 is both the deliverable
+and this session's Phase 3C row. **BL-83 is not closed in the backlog and that is BL-86**, not an omission.
+
+**Gate and suite in a `--no-local` clone at `2f17170`, exit codes read outside a pipe:** `bash bin/tests.sh`
+**343 passed / 0 failed / 6 skipped**, exit 0 — exactly the `tests-sh-passed >= 343` floor, the six skips being
+Test 34's named SKIPs at two receipts; `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results
+10575dac7361 · manifest 01a4ae7aa511`, exit 0 — the same hashes as Phase 0's at `9e56f0a` and S224's at
+`c5e311d`, which is the right answer for doc-only edits.
+
+**Phase 3A — S224's handoff scored 7/10.** Its trim forecast was exact and saved real time (`--cut 2 --force`,
+positional cut, S223's receipt, the `-3` suffix, *read the dry run*). Against that: **its top two next steps
+asked for an action a standing rule forbids** — the `CHANGELOG.md` trim, recommended on `--check` firing, where
+the rule recorded in that very file since S196 makes the 262,144 B read refusal the trigger and `--check`
+explicitly not a reason. Following the handoff would have spent the session on it. Two further inaccuracies:
+`.quality-gates-results.json` is **untracked**, not *"stale at `431279b`"*; and the `bin/check-learnings`
+invocation both S223 and S224 cite omits `--file docs/FORK_LEARNINGS.md`, so it reads the distributed file and
+fails — carried forward twice, and I ran it that way at Phase 0 before correcting it. ROI still clearly positive.
+
+**Phase 3B — self 8.** Right: catching the forbidden trim at Phase 0 rather than executing it; re-measuring the
+ratchet claim in a clone instead of inheriting S216's; running D2's mechanism **and its negative control** on a
+throwaway copy *before* offering the shape, so the picker's numbers were measured; recomposing #98 from 1,614 B
+to 1,473 B rather than shaving it; finding the #86 coupling by grepping #85's citers; and finding BL-86 by
+**running** the documented closure rule instead of assuming it works — then not editing the proof to make it
+pass. Wrong: the `check-learnings` misinvocation at Phase 0, the same class of error the session was fixing; and
+five of sixteen line numbers in the first draft of this receipt were wrong, caught by resolving every one.
+
+**Measured, and not a reduction:** `docs/FORK_LEARNINGS.md` **104,339 → 104,875 B, +536 B**. **`CHANGELOG.md` is
+215,241 B before this entry** — 46,903 B from the read refusal, and this session added 11,620 B, so the trim is
+roughly four sessions out **on the refusal**, which is the ground the rule names.
+
 ### 2026-09-27 · [BL-86] S225 — BL-86 raised: the documented way to close a backlog item turns `BACKLOG-COMPLETED.md.verify.sh` RED
 
 **Found by trying to close BL-83 by the book, and stopped there rather than fixed.** The editing rule at

@@ -3426,7 +3426,7 @@ BL-86 is decided.
 **BL-86 — the documented rule for closing a backlog item turns `BACKLOG-COMPLETED.md.verify.sh` RED, so no item
 can be closed by the book. Raised 2026-09-27 (S225), while closing BL-83. Not fixed, not costed.**
 
-**What.** The editing rule this file states at `:15-21` (rewritten at S223) says closing an item means removing
+**What.** The editing rule this file states at `:16-21` (rewritten at S223) says closing an item means removing
 its body here, removing its index row from [`BACKLOG.md`](BACKLOG.md) §Open items, **adding its pointer row to
 [`BACKLOG-COMPLETED.md`](BACKLOG-COMPLETED.md)**, putting the bare id in that file's pointer block, and logging
 the action. That third step is refused by the shard's own losslessness proof.
