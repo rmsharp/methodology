@@ -3470,11 +3470,20 @@ route BL-66 changes, so its wording depends on whether BL-66's pull request land
 `BOOTSTRAP.md`'s *Updating an existing project…* paragraph (`:85` upstream), in a different section; measure any conflict with
 `git merge-tree --write-tree --name-only` rather than predicting it.
 
-**Shapes, none costed.** (a) A small separate upstream pull request carrying the three rules. It would be a fifth
-while four sit unreviewed, which `CLAUDE.md` §Contributing upstream says to ask about first. (b) Fold it into BL-66's
-pull request at its docs phase (P3). That reverses the plan's §7 scoping, so it needs the operator's decision.
-(c) Offer it to the maintainer as a comment on #84, which touches the same section. (d) Leave it fork-only and tell
-adopters directly. Outward-facing in every shape but (d): its own go-ahead. **Decision first.**
+**Delivery routes, none costed** — *how* the fix reaches upstream, not what it says. Renamed from *"Shapes"* at
+S224 on the operator's instruction: the word carried no meaning outside this file. **(a)** A small separate upstream
+pull request carrying the three rules. **(b)** Fold it into the BL-66 pull request. **(c)** Offer it to the
+maintainer as a comment on #84, which touches the same section. **(d)** Leave it fork-only and tell adopters
+directly. Outward-facing in every route but (d): its own go-ahead. **Decision first.**
+
+**Two of those were written at S218 and went stale; corrected at S224 on the operator's instruction** (so this
+paragraph is an exception to this file's *items are deliberately NOT edited* convention, which S224's ledger entry
+records). **(a) would now be the SIXTH open pull request while FIVE sit unreviewed**, not *"a fifth while four"* —
+#87 opened 2026-09-26, after this item was raised. `CLAUDE.md` §Contributing upstream still says to ask first, and
+still carries the carve-out that decides it: *independent work may go separately.* **(b) no longer means what it
+says.** It read *"fold it into BL-66's pull request at its docs phase (P3)"*; that pull request is **#87 and is
+already open**, so (b) now means pushing a further commit onto an open pull request's branch, not adding to
+unshipped work.
 
 **S224 (2026-09-27): BUILT AND MEASURED, NOT SENT. The branch is `fix/bootstrap-never-overwrite-rules`, tip
 `a88fce7`, based on `upstream/main` `6b29d3d`; the body is

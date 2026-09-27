@@ -231,6 +231,27 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-27 · [BL-85] S224 — BL-85's *"Shapes"* become *"Delivery routes"*, and two of them are un-staled
+
+**On the operator's instruction, who reported the phrase carried no meaning for them.** *"Shape"* is this backlog's
+house word (≈60 uses: *fix shape*, *three shapes*, *deliberately not shaped*) and is **left alone everywhere else** —
+renaming it repo-wide would be a second, larger deliverable. Only the place where it labelled a **decision the
+operator has to make** is renamed: BL-85's paragraph, and the S224 receipt's two references. The routes are
+unchanged; they are now called what they are — *how the fix reaches upstream, not what it says*.
+
+**Two routes were written at S218 and had gone stale, corrected in the same pass.** **(a)** said it *"would be a
+fifth while four sit unreviewed"*; #87 opened 2026-09-26, so it would be the **sixth while five sit unreviewed**.
+**(b)** said *"fold it into BL-66's pull request at its docs phase (P3)"*; that pull request **is #87 and is already
+open**, so (b) now means pushing a further commit onto an open pull request's branch — a materially different act
+from adding a phase to unshipped work.
+
+**This paragraph is a deliberate exception to `BACKLOG.md`'s *"the items themselves are deliberately NOT edited
+(FM #17)"* convention**, taken on instruction and recorded here, which is where that convention says corrections
+belong. The exception is one paragraph of one item; the convention stands.
+
+**Re-run after the edit:** all three `docs/planning/` proofs green, `./bin/check-links` OK, `check-handoff` and
+`--all` OK with the receipt 0 over its 12,288 B budget.
+
 ### 2026-09-27 · [ad hoc] S224 — the trim trigger now FIRES, and the receipt stops quoting a figure that moves
 
 **The correcting entry below pushed the file past the threshold it was correcting for.** `CHANGELOG.md` went
