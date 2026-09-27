@@ -2443,6 +2443,20 @@ twelve (exit 1, 52 s); the clone route ran 1.7–2.7 s. The PR body is drafted i
 since the whole-file form matches its own scaffolding), quotations verified verbatim against issue #32 and #84, and it
 names no adopter project. **P5 — open the PR — is next and is its own go-ahead.**
 
+**P5 done at S222 (2026-09-26): the pull request is OPEN —
+[KJ5HST/methodology#87](https://github.com/KJ5HST/methodology/pull/87)**, head `67feb9f`, base `main`, `MERGEABLE` /
+`CLEAN`. No rebase was pending: `upstream/main` is still `6b29d3d` and an ancestor of the branch, re-checked after a
+fresh fetch. The suite was re-run on the tip in a `--no-local` clone — **188 passed, 0 failed**, `10/10 · results
+2162213f5332 · manifest 24be12b693f1`, the same hashes P4 cited. The branch went to fork `origin` first
+(`9f42c0f..67feb9f`, fast-forward checked before and `ls-remote` read back after), then the PR was opened with the
+approved body sent **unchanged** from below its first standalone rule (7,306 B; the scoped recognized-terms grep
+returns 0), and the read-back is byte-identical to that text once the attribution line every prior fork PR carries is
+removed. **The operator decided D7's sequencing at this session's picker: open now rather than wait for #84** — 0
+reviews on #84 for six days, a fast-forward merge today, and a body that already discloses both collisions with their
+built-and-run resolutions. Pre-resolving was declined: it would import unmerged wording and falsify that section of
+the approved body. **The stated cost:** if #84 merges first, #87 shows as conflicting until P4's 212/0 resolution is
+pushed. **P6 — fork-side adoption — remains, and it waits on the merge; nothing further is owed upstream.**
+
 ---
 
 **BL-67 — `wsfct`'s report that BL-57's P7 is done and merged is owed a recording here, and the recording that was

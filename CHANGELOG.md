@@ -223,6 +223,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S222 — `fix/sync-github-history` pushed to fork `origin`, and pull request #87 opened upstream (non-commit actions, operator go-ahead)
+
+Two outward actions, each authorized separately at this session's Phase 0 picker, each read back before the next.
+**The push:** `9f42c0f..67feb9f` on fork `origin`, one commit (the ratchet tightening), a fast-forward checked with
+`git merge-base --is-ancestor` before and `git ls-remote` after. **The open:**
+[KJ5HST/methodology#87](https://github.com/KJ5HST/methodology/pull/87), base `main`, head `rmsharp:67feb9f`, title
+and body from [`sync-github-route-pr-body.md`](docs/planning/sync-github-route-pr-body.md) — the body being
+everything after that file's first standalone rule, sent unchanged, plus the attribution line every pull request from
+this fork carries. `gh pr view 87 --json body,headRefOid,mergeable,mergeStateStatus` reads back head `67feb9f`,
+`MERGEABLE`, `CLEAN`, and a body byte-identical to the file modulo that line. **This is the first thing this fork has
+opened on `KJ5HST/methodology` since 2026-09-21**; #83–#86 are untouched and still sit at `219fb9d`, `77afc12`,
+`e2501c5`, `c1167ae` with 0 reviews. Nothing else upstream moved: `upstream/main` is still `6b29d3d`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] S222 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 The `2026-09-22-2` shard's three-line pointer block written by `methodology_trim.py` into `HANDOFFS.md`'s front matter

@@ -2,11 +2,12 @@
 
 **Date:** 2026-09-21 (fork session S217)
 **Status:** RATIFIED 2026-09-21 — the operator ruled all eight decisions in §3 option (a), as recommended, at fork
-session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1–P4 are
-done** (S218, S219, S220 and S221, each outcome under its phase in §5); the branch tip is `67feb9f`, and **P5 — open
-the pull request — is next and is its own go-ahead.** The body P5 sends is drafted in
-[`sync-github-route-pr-body.md`](sync-github-route-pr-body.md), shown to the operator inline at S221 and **APPROVED
-as drafted** — P5 sends that text unchanged. Nothing is upstream-facing until P5.
+session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1–P5 are
+done** (S218, S219, S220, S221 and S222, each outcome under its phase in §5). **The pull request is OPEN:
+[KJ5HST/methodology#87](https://github.com/KJ5HST/methodology/pull/87)**, head `67feb9f`, base `main`, `MERGEABLE` /
+`CLEAN`, carrying [`sync-github-route-pr-body.md`](sync-github-route-pr-body.md) unchanged below its first rule —
+the text the operator approved as drafted at S221. **P6 — fork-side adoption — is what remains, and it waits on the
+merge.** Nothing further is owed upstream; the next outward action is the maintainer's.
 **Backlog:** BL-66 ([detail](BACKLOG-DETAIL.md#bl-66)); under D3 (a) the same pull request closes BL-54's
 open upstream half ([detail](BACKLOG-DETAIL.md#bl-54)).
 **Route:** `bin/sync` and `bin/status` are canonical-only — `bin/` has no row in `bin/_manifest.py` — so the code
@@ -538,6 +539,39 @@ with the approved body unchanged, read back with `gh pr view --json body,headRef
 ledger entry for the open written.
 **Verification:** the read-back diff is empty; `gh pr view <n> --json mergeable` is `MERGEABLE`.
 **Surface:** GitHub. **Session boundary:** one session; nothing else that session.
+
+**P5 outcome (S222, 2026-09-26): DONE — the pull request is open at
+[KJ5HST/methodology#87](https://github.com/KJ5HST/methodology/pull/87)**, head `67feb9f`, base `main`, state `OPEN`,
+`mergeable: MERGEABLE`, `mergeStateStatus: CLEAN`. Both of the phase's verification clauses pass.
+
+- **No rebase was pending, and that was measured rather than assumed.** `git fetch upstream` twice during the
+  session left `upstream/main` at **`6b29d3d`**, and `git merge-base --is-ancestor upstream/main
+  fix/sync-github-history` exits 0 — the branch is a fast-forward over the base it will merge into, exactly as P4
+  measured. The tip is unchanged at `67feb9f`; this phase added no commit to the branch.
+- **The suite was re-run on the tip, in a `--no-local` clone:** **188 passed, 0 failed**, exit 0;
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 2162213f5332 · manifest 24be12b693f1` — the same
+  results and manifest hashes P4 cited, from an independent clone.
+- **The branch was pushed to fork `origin` first and read back before anything was opened:** `9f42c0f..67feb9f`,
+  a fast-forward checked with `git merge-base --is-ancestor` beforehand, and `git ls-remote origin
+  refs/heads/fix/sync-github-history` afterwards returns `67feb9f`.
+- **The body went out unchanged.** It was extracted as everything after the file's **first standalone `---`** (line
+  17), 7,306 B / 106 lines; the scoped recognized-terms grep returns **0**. The read-back
+  (`gh pr view 87 --json body`) is byte-identical to that text once the trailing attribution line is removed.
+- **One addition to the approved text, and it is the house standard, not an edit:** the PR ends with the
+  `🤖 Generated with [Claude Code]` attribution line that **every prior pull request from this fork carries**
+  (checked on #84 and #86 before sending). Nothing else was added, removed or reflowed.
+- **Departure from D7, decided by the operator at this session's Phase 0 picker: the PR was opened NOW, not after
+  #84 merges.** D7's sentence offers two paths — wait for #84, or pre-resolve the `BOOTSTRAP.md` paragraph toward
+  #84's text — and the operator took a third, on three grounds put to them in the picker: #84 has had **0 reviews
+  for six days**, so "after #84 merges" has no date; the merge is a **fast-forward today**, so the PR opens `CLEAN`;
+  and the approved body **already discloses** both cross-PR collisions with their built-and-run resolutions, which
+  is the disclosure D7's own fallback asks for. Pre-resolving was declined because it would import wording from an
+  unmerged pull request into this branch and falsify that section of the approved body, breaking this phase's
+  *"sends that text unchanged"*. **The cost is stated, not hidden:** if #84 merges first, GitHub will mark #87
+  conflicting until the head+tail resolution P4 built and ran (212/0) is pushed.
+- **Not exercised:** the maintainer's review, merge order and environment; the merge itself, and therefore the
+  191 floor whoever merges second inherits from #86; P6's fork-side adoption; `bin/status` from a history-less
+  source, still the recorded open point.
 
 ### P6: fork-side adoption. After the merge, or earlier by the operator's separate decision.
 

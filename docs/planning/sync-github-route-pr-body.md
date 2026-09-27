@@ -1,7 +1,10 @@
 # Pull-request body — the `--source=github` update route
 
-**Status:** drafted for the operator's review. Nothing has been pushed or opened. The text below the rule is the
-body verbatim; everything above it is fork-side scaffolding and is not part of the pull request.
+**Status:** SENT. This text went out unchanged as [KJ5HST/methodology#87](https://github.com/KJ5HST/methodology/pull/87)
+at fork session S222 (2026-09-26); the read-back is byte-identical to everything below the rule, once the attribution
+line every pull request from this fork carries is removed. Keep this file in step with the pull request: an edit here
+is not an edit there. The text below the rule is the body verbatim; everything above it is fork-side scaffolding and
+was not sent.
 
 **Suggested title:** `bin/sync --source=github`: an update route that can recognize a file as merely behind, and a
 refusal that names its own cause
