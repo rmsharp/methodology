@@ -223,6 +223,52 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [BL-66] S221 close-out — P4 of the BL-66 plan done, the PR body approved; one ledger trimmed; nothing upstream-facing
+
+- **Deliverable:** P4 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) on
+  `fix/sync-github-history` (`67feb9f`) — the branch vetted and packaged, and
+  [`sync-github-route-pr-body.md`](docs/planning/sync-github-route-pr-body.md) **approved as drafted** by the operator
+  after being shown inline. Recorded on `main` at `f79960e`. **P5 — open the pull request — is next and is its own
+  go-ahead.**
+- **What P4 measured rather than predicted:** the trial merge into `upstream/main` is a **fast-forward** (merge base =
+  `upstream/main` = `6b29d3d`; `merge-tree --write-tree` returns the tip's own tree `dee697f`), so the phase's two
+  suite clauses are one measurement. Both cross-PR conflicts were **built and run**: with #84 only
+  `starter-kit/BOOTSTRAP.md` conflicts and the head+tail resolution runs **212/0 with both of #84's phrase pins
+  passing**; with #86 it is `.quality-gates.json` (188 vs 142) plus `CHANGELOG.md`, and that merge measures **191/0**.
+  Six adopters, twelve `--dry-run` runs: two flip refused → clean (10 → 15 written, 8 → 16), four refuse the
+  **identical file sets** (7, 8, 8, 7) member for member.
+- **One commit on the branch:** `tests-sh-passed` floored at the measured **188**. `upstream/main` measures **139/0**,
+  so the old floor was exact and the branch adds **49 assertions, removing none**. The ratchet was exercised both
+  ways — `--precommit` exit 0 at 188, exit 2 at 138.
+- **Side actions, both approved at the Phase 0 picker:** the `HANDOFFS.md` retention trim the claim made owed
+  (`9103089`, 3 receipts → 2, S219's to `docs/archive/HANDOFFS-through-2026-09-22.md` — a new shard date, so no `-N`
+  suffix, exactly as the predecessor handoff predicted; 25,140 → 16,345 B) and its fold (`6424f37`, → 15,897 B). The
+  shard's `.verify.sh` re-derives L1/L2/L3 from git in a clone of the trim commit: exit 0.
+- **Phase 3A — the predecessor handoff scores 9/10.** Every checkable claim in it held: the four PR heads, the 139/188
+  floor pair, #86's 142, the *"new date, so expect no `-N` suffix"* shard prediction, and above all its two inherited
+  items — #84's tail against this branch's head, and the two pinned phrases living only in #84's text (verified: fork
+  `main` 2, #84's head 1, this branch 0). Those two are what made the #84 conflict cheap to settle. The one deduction:
+  *"tighten in P4, not before … only after the rebase"* is internally ambiguous, since the rebase belongs to P5; it
+  cost one measurement to resolve, and the answer was that no rebase is pending.
+- **Phase 3C, D3:** fork Learning **#94** appended — a predicted *mechanical* conflict resolution is a claim about
+  three trees, and the counterparty's own tests are its only oracle. A retirement is therefore owed and **is refused,
+  with the rows named:** #55, #64, #69, #78 and #90 were each considered. Each keeps exactly the basis the 2026-09-20
+  adjudication recorded; the only mechanical change this session made was a **threshold**, which enforces a count and
+  not a lesson; no later row states any of theirs at least as generally; and every one's artifact still exists.
+- **Gate:** `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511` in a
+  `--no-local` clone of `f79960e` — identical to Phase 0's at `43cf345`; suite 343/0. On the branch, in a clone of
+  `67feb9f`: `10/10 · results 2162213f5332 · manifest 24be12b693f1`, suite **188 passed, 0 failed, 0 SKIP**.
+- **Three Phase 0 findings, all carried into the receipt:** the tracked `.quality-gates-results.json` is stale (head
+  `431279b`, 2026-09-19), which is why the dashboard reads *10 pass … (stale)* and why the citation was confirmed from
+  a clone; the dashboard's *"1 loosened"* is historical and single, `tests-sh-passed` 327 → 294 at `368b29cd`, the
+  operator-approved BL-57 D10 change and the only loosening in the manifest's whole history; and the hooks are armed
+  in this clone (`core.hooksPath=.githooks`, no stale rebase marker).
+- **Nothing was pushed anywhere.** `KJ5HST/methodology` is untouched, and fork `origin` has not been pushed this
+  session — `main` is ahead of `origin/main` by this session's commits, and the branch is ahead of
+  `origin/fix/sync-github-history` by `67feb9f`.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [BL-66] S221 — P4 of the BL-66 plan done: the branch is vetted and the PR body is approved
 
 **Phase P4 of [`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5 is DONE on
