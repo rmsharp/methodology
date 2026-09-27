@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S225
+date: 2026-09-27
+status: pending
+active_task: **BL-83 — correct fork Learning #85's false example.** Row #85 (`docs/FORK_LEARNINGS.md:97`, S201) says the `.context-budget.json` ratchet *"does not exist"*; `context_budget.py --precommit` implements it (`starter-kit/context_budget.py:1000`, byte test `:1037`), measured at S216 in a clone. Fork-only; no upstream action in scope. **Decision first among three shapes:** (1) append a corrected row and retire #85 under D1(b), its text moving verbatim to a `docs/archive/FORK_LEARNINGS-retired.md` that does not yet exist — the first retirement ever, and the first exercise of D2's reserved-gap mechanism; (2) an operator exception to append-only for a factual error, written where the rule lives; (3) leave #85, the correction living only in BL-83/BL-78. Chosen at the Phase 0 task picker over BL-84, the two FM #17 findings, and a decision pass on BL-81/79/77/74.
+```
+
+```handoff
 session: S224
 date: 2026-09-27
 status: complete

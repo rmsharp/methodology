@@ -223,6 +223,42 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-83] S225 claim — correct fork Learning #85's false example (in progress)
+
+**Phase 1B claim.** This entry plus a `status: pending` receipt in `HANDOFFS.md`, and Phase 0's
+`dashboard_history.jsonl` row. Deliverable chosen at the Phase 0 task picker over BL-84 (the seed's fixed warn
+line versus its mandatory purpose fence), the two carried findings recorded under FM #17, and a decision pass on
+BL-81/BL-79/BL-77/BL-74. P6 of the BL-66 plan is that plan's next phase and is **still blocked on #87's merge**,
+so it was stated as blocked rather than offered.
+
+**Scope, stated explicitly.** One decision among BL-83's three shapes, then that shape carried out in
+[`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) and — if shape (1) is chosen — in a
+`docs/archive/FORK_LEARNINGS-retired.md` that does not yet exist. Fork-only: the file is not distributed
+(`bin/_manifest.py` ships `starter-kit/FRAMEWORK_LEARNINGS.md`, not this one), so **no upstream action is in
+scope and none is owed.** Six pull requests already sit open with 0 reviews.
+
+**Measured before claiming, not predicted.**
+
+- **The trim trigger fires on `CHANGELOG.md` and the standing rule says that is not a reason to trim.**
+  `methodology_trim.py --file CHANGELOG.md --check` reports `[CHECK] trigger FIRES` at **203,621 B** against
+  196,608 B. The rule that replaced the 2026-09-14 no-trim decision when it ran out at S196 is recorded above
+  in this file: *"`--check` firing is not by itself a reason to trim, and a trim is raised with the operator as
+  this file approaches the refusal"* — the 262,144 B `READ_REFUSE_BYTES`, which is **58,523 B away**. S224's
+  next steps (0) and (9) called the trim *"deliverable-sized, pick it soon"* on the trigger alone; that is the
+  reasoning fork Learning #39 was written against. Not taken, and reported at Phase 0 rather than acted on.
+  **BL-57's index row is stale in the same area** — it still records *"no `CHANGELOG.md` trim at its trigger
+  (2026-09-14, reaffirmed S177)"* with no mention of the S196 end. Recorded, not edited (FM #17).
+- **Two of S224's gotchas are wrong as written, and both were re-run rather than read.**
+  `.quality-gates-results.json` is **untracked** — `git log -1 -- .quality-gates-results.json` is empty and
+  `git ls-files --error-unmatch` errors — not *"stale at `431279b`"*; its mtime is 2026-09-26 23:55, so *cite
+  from a clone* still holds for a different reason. And `bin/check-learnings` needs `--file
+  docs/FORK_LEARNINGS.md`: the bare `--no-citations --first 15` form both receipts cite reads the **distributed**
+  file and fails it on contiguity. With the path, **83 rows, contiguous 15..97, 0 over the 1,500 B budget.**
+- **Gate at Phase 0, in a `--no-local` clone at `9e56f0a`:** `11/11 pass · 0 fail · 0 unmeasured · results
+  10575dac7361 · manifest 01a4ae7aa511` — byte-identical to S224's citation at `c5e311d`, five commits later.
+  Dashboard 76/100, risk MEDIUM, High+ **0**. Upstream **0 issues**; #83–#88 all open at unchanged heads,
+  `MERGEABLE`/`CLEAN`, **0 reviews**, comments only our own two — nothing owed, so nothing outranked the picker.
+
 ### 2026-09-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26-2.md` (1 record(s), 28,071 B → 17,642 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
