@@ -223,6 +223,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S226 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+**One row in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md), and the 448 B block deleted from
+the live ledger's front matter** — `| 1 | 2026-09-27 → 2026-09-27 | HANDOFFS-through-2026-09-27.md | v1.5.0 |`,
+the 64th row. **In its own commit, as the index's fold rule requires:** inside the trim commit the shipped
+`.verify.sh` fails L2 (fork Learning #58). `HANDOFFS.md` 17,673 B → **17,225 B**, the exact 448 B the block
+occupied, so a trim-and-fold leaves this front matter no larger than it was.
+
+The block's `.verify.sh` link is dropped by the rule, since the proof sits beside its shard; the shard's own
+proof was run from a `--no-local` clone of the trim commit `6a85d20` before this fold — **exit 0, read bare**,
+*"3 before = 2 retained + 1 archived; added by the trim commit: 0"*. Writing the row from the generator itself
+is an upstream change, since `methodology_trim.py` is distributed.
+
 ### 2026-09-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-27.md` (1 record(s), 29,439 B → 17,673 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
