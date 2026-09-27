@@ -51,6 +51,15 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S223
+date: 2026-09-26
+status: pending
+active_task: **ARCHIVE `docs/planning/BACKLOG.md`'s §COMPLETED ITEMS SO THE FILE COMES BACK UNDER THE ONE-READ CAP.** Chosen at this session's Phase 0 task picker over three alternatives (BL-85 and BL-84 upstream prep, and a decision pass on BL-83/81/79/77/74). **Measured before the claim:** the file is **58,727 B / 229 lines**, the derived one-read budget is **56,750 B** (25,000-token agent read cap × 2.27 B/token, the densest content measured), so it is **1,977 B over**; §Completed items is **lines 173–214 = 25,576 B, 43.5% of the file**, and removing it leaves **33,151 B** — 23,599 B of headroom, a real remedy rather than a marginal one. The breach is the dashboard's ONLY risk factor and what holds it at 76/100 / HIGH. **Note the two ceilings are different numbers and only one is red:** `.context-budget.json` classes this file `read-mandated` with `max_bytes: 65536`, which it is under, so `context_budget.py --precommit` is green and the dashboard's 56,750 B derived figure is the one breached. **Precedent governs the shape:** eleven earlier closed items already live verbatim in [`BACKLOG-archive-2026-08-15.md`](docs/planning/BACKLOG-archive-2026-08-15.md) with a one-line pointer row each in §Completed items and losslessness proved by a sibling `.verify.sh`. **The open design question this session must decide and state, not assume:** what proves this extraction lossless. BL-60 measures every shipped `.verify.sh` at ~16 KB and 97.9% identical to the last — 31 of them hold 453,689 B, 5.4% of the tracked repo — and BL-36 (folded into BL-60's unheld design session) found four of the six shipped proofs do not hold, so minting a seventh would add to a known-defective population and could make the remedy net-additive — the relief is not the remedy's net cost. BL-60's own named alternatives include publishing the command instead. Decide from the existing proof's actual cost and correctness, measured this session.
+commit: pending
+```
+
+
+```handoff
 session: S222
 date: 2026-09-26
 status: complete

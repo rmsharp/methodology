@@ -223,6 +223,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S223 claim — archive `docs/planning/BACKLOG.md`'s §Completed items to clear the one-read breach (in progress)
+
+Phase 1B claim. Deliverable chosen at the Phase 0 task picker over three alternatives (BL-85 upstream prep,
+BL-84 upstream prep, a decision pass on BL-83/81/79/77/74). `[ad hoc]` rather than `[BL-N]`: the breach is
+a standing dashboard risk factor carried in the last several handoffs' `next_steps`, not a numbered backlog
+item. Searched before claiming — all 62 items parsed out of `BACKLOG-DETAIL.md` and their bodies matched for
+this file's own size and both ceilings; the three near-58 KB figures the sweep returned are unrelated
+(a `358,377 B` adopter ledger, a regression intercept, a partition sum). **One item is adjacent and neither
+owns nor blocks this work: BL-37.** Its half two — the DISTRIBUTED seed `starter-kit/context-budget.json`
+carries no `BACKLOG.md` ceiling entry — is still open and is a distributed change, not this reduction. Its
+half one is done: this repo now has a root `.context-budget.json` and it classes the file `read-mandated`.
+**BL-37 also carries a claim this session contradicts, and it is stale rather than wrong:** *"its excess
+cannot be archived away — after moving every closed item out, the open items alone are 68,195 B."* True on
+2026-08-15 (S89), when item bodies still lived in this file; the S99 split moved them to
+`BACKLOG-DETAIL.md`, and the open-items section measures **25,971 B** today. Not edited (FM #17).
+
+Measured before the claim, at HEAD `73157d0`: `docs/planning/BACKLOG.md` is **58,727 B / 229 lines** against
+the dashboard's derived **56,750 B** one-read budget (25,000-token read cap × 2.27 B/token) — **1,977 B over**,
+and the single risk factor behind 76/100 / HIGH. §Completed items is lines 173–214, **25,576 B, 43.5% of the
+file**; removing it leaves **33,151 B**. The two ceilings differ and only one is red: `.context-budget.json`
+classes the file `read-mandated` at `max_bytes: 65536`, which it is under.
+
+Phase 0: `CHANGELOG.md` frontier = HEAD `73157d0`, gap empty; `HANDOFFS.md` frontier `7026512`, the one later
+commit `73157d0` the push record, which carries its own entry — the shape S219–S222 each recorded. 2 receipts
+before this one, none pending; nothing backfilled. Gate citation re-run in a `--no-local` clone at `73157d0`:
+`11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, S222's citation exactly,
+four commits later; suite 343 passed / 0 failed. The tracked `.quality-gates-results.json` is still stale
+(head `431279b`, 2026-09-19), which is why the citation came from the clone. Upstream **0 open issues**;
+**#83–#87 all open at unchanged heads** (`219fb9d`, `77afc12`, `e2501c5`, `c1167ae`, `67feb9f`), **0 reviews and
+no maintainer comment on any** — so nothing upstream outranked the picker, and P6 of the BL-66 plan stays
+blocked on #87's merge. `main` in sync with `origin/main`; `.git/REBASE_HEAD` absent and `core.hooksPath` is
+`.githooks`, so the hooks are armed.
+
+Open at claim time, to be decided and stated rather than assumed: what proves the extraction lossless. The
+precedent is a sibling `.verify.sh` (eleven earlier closed items, `BACKLOG-archive-2026-08-15.md`), but BL-60
+measures those proofs at ~16 KB each, 97.9% identical, 31 of them holding 5.4% of the tracked repo, and BL-36
+found four of six do not hold.
+
+Side action owed by the retention policy, not a picker item: this claim makes three receipts, so the
+`HANDOFFS.md` trim and its fold follow the Phase 0 report.
+
 ### 2026-09-26 · [ad hoc] S222 — fork `main` pushed to `origin`, `43cf345..7026512` (non-commit action, operator go-ahead)
 
 Ten commits: S221's five, which had not been pushed, and this session's five — the claim `e25211c`, the
