@@ -223,6 +223,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S223 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+The `2026-09-26` shard's four-line pointer block written by `methodology_trim.py` into `HANDOFFS.md`'s front matter
+becomes one row at the bottom of [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md)'s table — now 28
+rows — and is deleted from the ledger, the `.verify.sh` link dropped since the proof sits beside its shard. **Its own
+commit, as the index's fold rule requires:** inside the trim commit the shipped `.verify.sh` fails L2 (fork Learning
+#58), and that proof was run from a `--no-local` clone of the trim commit `36060f0` and exits **0** on L1,
+L2/front-matter and L3. `HANDOFFS.md` 17,565 B → 17,117 B. This shard name carries **no** `-N` suffix — read from the
+dry run, not predicted — because no shard of that date existed; the tool did print `CUT_STRADDLES_DAY`, since all
+three receipts share the date `2026-09-26`, so the name is a span label rather than a day seam. `./bin/check-links` OK
+(111 links); `bin/check-handoff` reports the newest receipt still pending, which is this session's own claim stub.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26.md` (1 record(s), 29,054 B → 17,565 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
