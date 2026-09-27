@@ -231,6 +231,17 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-27 · [BL-85] S224 — the pull-request body's §The defect recomposed against the acceptance-test record
+
+The drafted body said *"four of the files ... plus"* two more, which is six, and claimed *"every one of the six
+had received the one-sentence instruction"* — an inference, not something the acceptance test records. Recomposed
+(not appended to) against `uat-2026-08-04-six-adopters.md:133-157`, which states the protection **reached 0 of 6**
+and gives three inspected adopters' ledger pairs: 42 KB / 70 KB, 150 KB / 112 KB, 474 KB / 1.1 MB. It also carries
+the finding's own strongest point, which the draft had dropped: for an adopter with no sibling checkout the prose
+route is the **only** route, so the fix is delivered by the instruction that is broken. Body 3,529 B → 3,851 B;
+recognized-terms check still **0 hits**. Caught while showing the draft for approval, before any approval was
+given and before anything was sent.
+
 ### 2026-09-27 · [BL-85] S224 — the upstream port of the ledger-overwrite rules is built and measured, not sent
 
 **The deliverable.** Branch **`fix/bootstrap-never-overwrite-rules`**, tip **`a88fce7`**, based on `upstream/main`

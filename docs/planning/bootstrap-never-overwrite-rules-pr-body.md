@@ -57,15 +57,20 @@ put a second, larger edit in a pull request whose point is one section.
 > Tell your agent: *"Update methodology using https://github.com/KJ5HST/methodology"*. It will fetch the latest
 > starter-kit files and overlay them.
 
-It names no exception, and four of the files it tells the agent to overlay are seeds — `CHANGELOG.md`,
-`HANDOFFS.md`, `SESSION_NOTES.md` and `ROADMAP.md`, plus `.context-budget.json` and `.quality-gates.json`. An
-agent that follows the sentence literally replaces the adopter's action ledger and every close-out receipt with
-empty templates.
+It names no exception, and six of the files it tells the agent to overlay are seeds: `CHANGELOG.md`,
+`HANDOFFS.md`, `SESSION_NOTES.md`, `ROADMAP.md`, `.context-budget.json` and `.quality-gates.json`. An agent that
+follows the sentence literally replaces the adopter's action ledger and every close-out receipt with empty
+templates.
 
 `bin/sync` has never had this defect. `bin/_manifest.py` classes those six as seeds and installs them once, and
 `bin/sync` refuses to overwrite them by construction. **The gap is only in the prose route — which is the route
-this very section tells people to use.** An acceptance test across six adopter projects found it and rated it
-critical: every one of the six had received the one-sentence instruction, and none had the protection.
+this very section tells people to use**, and for an adopter with no sibling checkout it is the only route there
+is. The fix is delivered by the instruction that is broken: following it to get the corrected text overwrites the
+ledgers first.
+
+An acceptance test across six adopter projects rated this critical and measured the exposure. Three of them were
+inspected directly and held identical text; their `CHANGELOG.md` / `HANDOFFS.md` pairs were 42 KB / 70 KB,
+150 KB / 112 KB and 474 KB / 1.1 MB. The protection had reached **none of the six**.
 
 ## What this changes
 
