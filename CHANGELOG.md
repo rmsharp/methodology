@@ -223,6 +223,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S226 — this file re-measured AFTER its own close-out entries: 235,768 B, ~1.6 sessions
+
+**The figure in S226's receipt is correctly scoped and its conclusion is now stale, which is the whole point of
+re-measuring.** The receipt says **230,783 B** *"immediately before this close-out's entries"* and tells the reader
+to re-measure rather than quote it (fork Learning #61). Measured after them, and after the push record: **235,768 B**
+(`wc -c`), leaving **26,376 B** to the 262,144 B `READ_REFUSE_BYTES`.
+
+**The rate, re-derived over two whole sessions rather than one partial span:** 203,621 → 235,768 = **32,147 B across
+S225 and S226**, or **16,074 B per session**, which puts the refusal **about 1.6 sessions away** — not the ~2 the
+receipt derived and not the ~4 S225's did. Each estimate was honest about its own basis; only the span changed.
+**The next session raises the trim at its Phase 0 report** — on the refusal, which is this file's own rule since
+S196, and not on `--check`, which fires and will keep firing. There is no fold for this file and its trim pays the
+same fixed ~16 KB proof.
+
 ### 2026-09-27 · [ad hoc] S226 — fork `main` pushed to `origin`, `31e16e4..849ae4a` (non-commit action, operator go-ahead)
 
 **Six commits, a clean fast-forward, every guard measured immediately before the push and the result read back
