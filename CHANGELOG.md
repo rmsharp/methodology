@@ -223,6 +223,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [BL-66] S221 — P4 of the BL-66 plan done: the branch is vetted and the PR body is approved
+
+**Phase P4 of [`docs/planning/sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) §5 is DONE on
+`fix/sync-github-history`, tip `67feb9f`; nothing is upstream.** The branch gained one commit — `tests-sh-passed`
+139 → **188** — and the rest of the phase is measurement plus an approved pull-request body. **P5, which opens the
+PR, is next and is its own go-ahead.**
+
+- **The trial merge into `upstream/main` is a fast-forward, so P4's two suite clauses are one measurement.** Merge base
+  = `upstream/main` = `6b29d3d`, and `git merge-tree --write-tree upstream/main fix/sync-github-history` exits 0
+  returning tree `dee697f`, which is also `fix/sync-github-history^{tree}` — measured, not inferred. Suite in a
+  `--no-local` clone of `67feb9f`: **188 passed, 0 failed, 0 SKIP**; `quality_ratchet: 10/10 pass · 0 fail ·
+  0 unmeasured · results 2162213f5332 · manifest 24be12b693f1`.
+- **Four `merge-tree` probes, re-run at `67feb9f` after the tightening moved the tip:** #83 → `CHANGELOG.md`; #84 →
+  `starter-kit/BOOTSTRAP.md` **only** (§2.5 also predicted `CHANGELOG.md`, which auto-merges — a departure);
+  #85 → `CHANGELOG.md`; #86 → `.quality-gates.json` **and** `CHANGELOG.md`, the first of those new this phase and the
+  tightening's own cost.
+- **Both conflicts were resolved, BUILT and RUN, not predicted.** #84: each side's untouched half is byte-identical to
+  the merge base, so the head+tail resolution is a fact rather than a reading of one very long line; the merged tree
+  runs **212 passed, 0 failed** and **both of #84's phrase pins** (`bin/tests.sh:360`, `:361`) pass — which discharges
+  the obligation P3's departure (b) handed to the rebase. #86: one line, 188 vs 142, a minimum resolving upward; the
+  merged tree measures **191 passed, 0 failed**, the floor for whoever merges second.
+- **The tightening is the measured value, and the guard was exercised.** `upstream/main` measures **139 passed, 0
+  failed**, so the old floor was exact rather than slack, and the branch adds **49 assertions and removes none**
+  (`comm` over both runs' sorted `PASS:` lines). `--precommit` accepts 188 (exit 0) and, as a control, refuses the
+  same line at 138 (exit 2). Done now rather than at P5 because there is no rebase pending — the branch's base *is*
+  `upstream/main` — and a `min` gate cannot be invalidated by a merge that only adds tests.
+- **Six adopters, twelve `--dry-run` runs, fork `main` `6424f37` versus the branch:** two flip from refused to a clean
+  update (10 refused → **15 would write**; 8 → **16**), with every refused file inside the branch's would-write set,
+  checked per file; four refuse the **identical file sets** (7, 8, 8, 7) member for member, because those edits are
+  real. Measured incidentally: the old route issues 29 HTTPS calls per run at 12–15 s and had **4 of 29 time out** in
+  one of the twelve (exit 1, 52 s, nothing read); the clone route ran 1.7–2.7 s.
+- **The body is [`docs/planning/sync-github-route-pr-body.md`](docs/planning/sync-github-route-pr-body.md), APPROVED
+  AS DRAFTED** by the operator at this session's picker, shown inline first; the two editorial trims offered were both
+  declined, so P5 sends the text unchanged. Both quotations verified verbatim (issue #32's Scope list and #84's body);
+  the `--source` help string verbatim at `upstream:191`/`upstream:144`; 0 hits on the recognized-terms grep, which the
+  file now scopes to the body because the whole-file form matches its own scaffolding — a departure from the phase's
+  third verification command. The body names **no adopter project**, by choice: they are private repositories and the
+  evidence needs only their counts.
+- **Not exercised:** anything on GitHub; the maintainer's merge order or environment; `bin/status` from a history-less
+  source, still the recorded open point.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] S221 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 The `2026-09-22` shard's three-line pointer block written by `methodology_trim.py` into `HANDOFFS.md`'s front matter

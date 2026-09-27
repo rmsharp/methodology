@@ -2,9 +2,11 @@
 
 **Date:** 2026-09-21 (fork session S217)
 **Status:** RATIFIED 2026-09-21 — the operator ruled all eight decisions in §3 option (a), as recommended, at fork
-session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1, P2 and P3
-are done** (S218, S219 and S220, each outcome under its phase in §5); P4 is next. Nothing is upstream-facing until P5,
-its own go-ahead.
+session S218's Phase 0 picker; §4 is therefore the design. Implementation is §5, one phase per session; **P1–P4 are
+done** (S218, S219, S220 and S221, each outcome under its phase in §5); the branch tip is `67feb9f`, and **P5 — open
+the pull request — is next and is its own go-ahead.** The body P5 sends is drafted in
+[`sync-github-route-pr-body.md`](sync-github-route-pr-body.md), shown to the operator inline at S221 and **APPROVED
+as drafted** — P5 sends that text unchanged. Nothing is upstream-facing until P5.
 **Backlog:** BL-66 ([detail](BACKLOG-DETAIL.md#bl-66)); under D3 (a) the same pull request closes BL-54's
 open upstream half ([detail](BACKLOG-DETAIL.md#bl-54)).
 **Route:** `bin/sync` and `bin/status` are canonical-only — `bin/` has no row in `bin/_manifest.py` — so the code
@@ -475,6 +477,58 @@ grep -n -E 'S[0-9]{2,3}\b|BL-[0-9]+|\bD[0-9]\b' docs/planning/sync-github-route-
 **Surface:** clones on this machine; the trial merge is a local merge commit, never pushed. What it cannot enforce: the
 maintainer's merge order, which is why the body states the one expected conflict and its resolution.
 **Session boundary:** one session; ends at the operator's review of the body.
+
+**P4 outcome (S221, 2026-09-26): DONE on `fix/sync-github-history` (`67feb9f`); nothing is upstream.** The branch
+gained one commit — `67feb9f`, `tests-sh-passed` 139 → **188** — and everything else this phase produced is
+measurement plus [`sync-github-route-pr-body.md`](sync-github-route-pr-body.md), awaiting the operator's review.
+
+- **The trial merge into `upstream/main` is a FAST-FORWARD, so P4's two suite clauses are one measurement.**
+  `git merge-base fix/sync-github-history upstream/main` = `6b29d3d` = `upstream/main`, and
+  `git merge-tree --write-tree upstream/main fix/sync-github-history` exits 0 returning tree **`dee697f`**, which
+  `git rev-parse 'fix/sync-github-history^{tree}'` also returns. Suite in a `--no-local` clone of `67feb9f`:
+  **188 passed, 0 failed, 0 SKIP**, exit 0; `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  2162213f5332 · manifest 24be12b693f1`.
+- **The four `merge-tree` probes, measured at `67feb9f` (not at `9f42c0f` — the tightening moved the tip, so the
+  first set was re-run):** #83 `219fb9d` → `CHANGELOG.md`; #84 `77afc12` → **`starter-kit/BOOTSTRAP.md` only**;
+  #85 `e2501c5` → `CHANGELOG.md` (`.quality-gates.json` auto-merges); #86 `c1167ae` → **`.quality-gates.json` and
+  `CHANGELOG.md`**. **Departure from §2.5:** it predicted `BOOTSTRAP.md` *and* `CHANGELOG.md` with #84;
+  `CHANGELOG.md` auto-merges there. The `.quality-gates.json` conflict with #86 is new this phase and is the
+  tightening's own cost.
+- **Both conflicts were RESOLVED, BUILT AND RUN, not predicted.** #84: the merge base is `upstream/main`, and
+  §2.5's mechanical resolution is proved rather than asserted — #84's head is byte-identical to the base and this
+  branch's tail is byte-identical to the base, so the seam is the sentence ending *"including their `*format*`."*,
+  head from this branch, tail from #84. The built line is 2,204 chars; the merged tree runs **212 passed, 0 failed**,
+  and both of #84's phrase pins (`bin/tests.sh:360`, `:361`) **PASS** — the obligation P3's departure (b) handed to
+  the rebase is discharged by the resolution itself. #86: one line, 188 vs 142; a minimum resolves upward, and the
+  merged tree measures **191 passed, 0 failed**, so whoever merges second floors it at 191.
+- **The tightening is the measured value and the guard was exercised.** `upstream/main` measures **139 passed, 0
+  failed** — the old floor was exact, not slack — and the branch **188**, so the branch adds **49 assertions and
+  removes none** (`comm` over the two runs' sorted `PASS:` lines: 49 branch-only, 0 base-only).
+  `quality_ratchet.py --precommit` accepts 188 (exit 0) and, as a control, refuses the same line at 138 (exit 2,
+  *"gate 'tests-sh-passed': floor lowered 139 -> 138"*). **Why now and not at P5's rebase** (P1's departure (d)
+  deferred it to *"P4 after the rebase"*): there is no rebase pending — the branch's base *is* `upstream/main`
+  today, measured above — and a `min` gate cannot be invalidated by a later merge that only adds tests.
+- **Six adopters, `--dry-run`, both trees (fork `main` `6424f37` vs the branch), twelve runs:** `church_growth`
+  10 refused → **exit 0, 15 would write**; `dalia_martinez_funeral` 8 refused → **exit 0, 16 would write**;
+  `airqino` 7 → 7, `mts-system` 8 → 8, `vscode_quarto_ext` 8 → 8, `wsfct` 7 → 7, each an **identical file set**,
+  member for member, not merely an equal count. On the two that flip, every refused file is in the branch's
+  would-write set (proper subset, checked per file). **Timing and fragility, measured incidentally:** the old route
+  issues one HTTPS call per distributed file — 29 per run, 12–15 s — and one of the twelve runs had **4 of 29 time
+  out** (*"net/http: TLS handshake timeout"*), exit 1, 52 s, reading nothing; the retry gave the row above. The
+  branch's clone route ran 1.7–2.7 s.
+- **The body is drafted, clean, and APPROVED AS DRAFTED** (operator, S221 picker, shown inline first; the two
+  editorial trims offered — the speed/fragility paragraph, and the post-merge floor guidance — were both declined, so
+  P5 sends the text unchanged). `docs/planning/sync-github-route-pr-body.md` — no line count is written here, since
+  it would be stale by the next edit. It cites issue #32's
+  deferral by the words in the issue's own Scope list (*"`--source=github` incremental history walk (defer +
+  document)"* — verified verbatim against `gh issue view 32`) and #84's promised follow-up by its body's own words
+  (*"a separate, small PR to follow"*, verified verbatim), and the `--source` help string it quotes is verbatim at
+  `upstream:191`/`upstream:144`. **Departure:** the phase's third verification command greps the **whole file**,
+  which matches the scaffolding's own copy of the pattern; the file now carries a `sed -n '/^---$/,$p'`-scoped form
+  that reads only the body, and that returns **0**. The body also names **no adopter project**, by choice — the six
+  are private repositories and the evidence needs only their counts.
+- **Not exercised:** anything on GitHub (P5); the maintainer's merge order and environment; `bin/status` from a
+  history-less source, still the recorded open point; this close-out commit itself.
 
 ### P5: open the pull request. One session, outward — its own go-ahead.
 

@@ -2424,6 +2424,25 @@ phrases the plan tells P3 to preserve are not on this branch at all** — they a
 the rebase. #84 rewrites the tail of the same one-line paragraph whose head this phase rewrites, so the predicted
 conflict resolves mechanically: #84's tail, this branch's head. **P4 (vet and package) is next.**
 
+**P4 done at S221 (2026-09-26)** (`67feb9f`, same branch — one commit, `tests-sh-passed` 139 → **188**): vetted and
+packaged. **The trial merge into `upstream/main` is a fast-forward** — merge base = `upstream/main` = `6b29d3d`, and
+`merge-tree --write-tree` returns the branch tip's own tree `dee697f` — so P4's two suite clauses are one measurement:
+**188 passed, 0 failed, 0 SKIP** in a `--no-local` clone of `67feb9f`, `10/10 · results 2162213f5332 · manifest
+24be12b693f1`. **Both cross-PR conflicts were resolved, built and run rather than predicted:** with #84, only
+`starter-kit/BOOTSTRAP.md` conflicts (§2.5 also predicted `CHANGELOG.md`, which auto-merges), #84's head and this
+branch's tail are each byte-identical to the shared base so the head+tail resolution is proved, and the merged tree runs
+**212/0** with **both of #84's phrase pins passing** — which discharges the obligation P3's departure (b) handed to the
+rebase; with #86, `.quality-gates.json` (188 vs 142, a minimum resolving upward) and `CHANGELOG.md`, and the merged tree
+measures **191/0**, the floor for whoever merges second. **`upstream/main` measures 139/0**, so the old floor was exact
+and the branch adds **49 assertions and removes none**; `--precommit` accepts 188 and refuses 138 as a control.
+**Six adopters, twelve `--dry-run` runs:** two flip from refused to a clean update (10 → 15 written, 8 → 16 written,
+every refused file in the written set), four refuse the **identical file sets** (7, 8, 8, 7) because their edits are
+real. Incidentally, the old route makes 29 HTTPS calls per run at 12–15 s and had **4 of 29 time out** in one of the
+twelve (exit 1, 52 s); the clone route ran 1.7–2.7 s. The PR body is drafted in
+[`sync-github-route-pr-body.md`](sync-github-route-pr-body.md), 0 hits on the recognized-terms grep (scoped to the body,
+since the whole-file form matches its own scaffolding), quotations verified verbatim against issue #32 and #84, and it
+names no adopter project. **P5 — open the PR — is next and is its own go-ahead.**
+
 ---
 
 **BL-67 — `wsfct`'s report that BL-57's P7 is done and merged is owed a recording here, and the recording that was
