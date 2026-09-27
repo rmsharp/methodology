@@ -223,6 +223,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S225 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+**One row, and the block deleted — in its own commit, because inside the trim commit the shipped
+`.verify.sh` fails L2** (fork Learning #58, and the rule stated at the foot of
+[`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md)). The index goes **61 → 62 rows**,
+counted with `grep -cE '^\| [0-9]+ \| 2026'` on both sides rather than carried from a receipt — S224's own
+fold entry had to be corrected for stating a predicted count, and its gotcha (10) records the 28 that was
+wrong. `HANDOFFS.md` 17,814 B → **17,358 B**; the front matter no longer grows per trim, which is what the
+fold is for. `check-handoff --allow-pending` OK, `bin/check-links` OK 111 links.
+
 ### 2026-09-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26-3.md` (1 record(s), 29,641 B → 17,814 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
