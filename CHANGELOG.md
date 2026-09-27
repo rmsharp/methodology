@@ -231,6 +231,20 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-27 · [ad hoc] S224 — the trim trigger now FIRES, and the receipt stops quoting a figure that moves
+
+**The correcting entry below pushed the file past the threshold it was correcting for.** `CHANGELOG.md` went
+193,218 → 196,328 → past **196,608 B**, each step caused by an entry written to restate the previous one. Chasing
+the number is the defect, so the receipt's gotcha (9) now states the **derivation** — run
+`methodology_trim.py --file CHANGELOG.md --check` — and no figure. A third numeric correction would have moved it a
+third time.
+
+**The trim is owed and is deliberately NOT taken here.** It is not the `HANDOFFS.md` shape: this ledger has never
+been trimmed in this repo, it has **no fold**, and the archive-plus-proof is deliverable-sized work. Taking it at
+close-out would be a second deliverable (FM #17). Recorded as next_steps item (0) with the command, so the next
+session picks it deliberately rather than discovering it mid-Phase-0. `--force` will be needed: `SRF` is structural
+on this file (0.9770 against the most recent archive `4e73d20`).
+
 ### 2026-09-27 · [ad hoc] S224 — the receipt's `CHANGELOG.md` figure re-measured after close-out, not before
 
 The S224 receipt's gotcha (9) said **193,218 B**, *3,390 B away* from the 196,608 B trim trigger. That was true when
