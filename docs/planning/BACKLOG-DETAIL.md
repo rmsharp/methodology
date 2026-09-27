@@ -3638,3 +3638,58 @@ resolve; it also changes where the proof splits, so it is run against C2 before 
 is the obvious C7 and was **deliberately not written at S226**: red on arrival, and a proof that ships red is a
 proof nobody runs. (c) Drop the dead cells instead, leaving the bodies findable only by grep. Fork-only; neither
 file is in `bin/_manifest.py`.
+
+<a id="bl-88"></a>
+
+**BL-88 — Two shipped tools decide a file's read-cap class by two different mechanisms, and the only
+thing coupling them is a canonical-only test. Raised 2026-09-27 (S227), DECIDED, not implemented.**
+
+*Relayed by the operator from a live `nprcgenekeepr` discrepancy, with the decision delegated to this
+session. Every claim in the relay was independently re-verified here before being recorded.*
+
+**The mechanism mismatch.** `methodology_trim.py` **derives** Class A — `is_root_class_a()`
+(`starter-kit/methodology_trim.py:947`, assigned at `:971`) returns true when a file has a `LEDGERS`
+spec *and* sits at the repository root. `methodology_dashboard.py` **declares** it — `READ_CAP_CLASS_A`
+and `READ_CAP_CLASS_B` are frozen literals (`tools/methodology_dashboard.py:423-424`), deliberately not
+derived, because deriving would let a widened `LEDGERS` silently reassign a class
+([`read-cap-phase-c-plan.md`](read-cap-phase-c-plan.md) §10 dragon 6, `:381`). The trimmer's own comment
+at `:956` claims to *"mirror"* the dashboard's `read_cap_class()`; it does not. The two pins that hold
+them together (`tools/test_methodology_dashboard.py:5464`, `:5485`) both load **this** repo's trimmer via
+`_load_trimmer()` (`:4314`), and that suite is **absent from `bin/_manifest.py`** — so no adopter has any
+assertion coupling the two. Dragon 6 is satisfied only where a test runs.
+
+**The live consequence, verified.** `nprcgenekeepr` carries a documented, deliberately unsynced
+`LedgerSpec` for `SESSION_NOTES.md` (labelled `LOCAL ADDITION … S518, 2026-08-11`; a 51-line diff against
+`starter-kit/methodology_trim.py`) while running a dashboard whose class constants are **byte-identical**
+to canonical. Its trimmer answers with a full Class-A reading and *"trigger does not fire"* (57,871 B
+against a 196,608 B arm); the dashboard emits **HIGH** asserting *"the trimmer answers `NO_CONFIG` for
+it"* — false there. **The flag came from the PORTFOLIO copy** `~/Development/methodology_dashboard.py`,
+which differs from canonical in `EXCLUDE_DIRS` alone, so **one declared partition is applied across N
+projects each carrying its own trimmer** — the gap is structural, not incidental.
+
+**The larger defect is canonical and owes nothing to that patch.** The same row asserts the
+**backlog-specific** justification — *"a backlog's bottom items are as live as its top ones"* — for all
+four Class B names including `SESSION_NOTES.md`, while the module comment eleven lines above the constant
+(`:381-396`) **already records that over-generalisation as a caught defect** and states the true weaker
+form. The row never received the correction, so it contradicts its own module's comment in every adopter
+tree. Measured across the fleet: every `SESSION_NOTES.md` that has an `## ACTIVE TASK` heading has it at
+byte **132–9,490**, inside the 56,750 B cap, and the one file without it (`mts-system`) is the case that
+comment already names.
+
+**Population, measured not asserted:** `nprcgenekeepr` is the **only** one of 8 trimmer-carrying fleet
+projects that has ever widened `LEDGERS`, so exactly **one** emitted flag is affected, 1,121 B over its
+cap. The urgency is therefore carried by the canonical prose defect, not by the reported one.
+
+**DECIDED at S227, awaiting ratification** —
+[`dashboard-read-cap-class-adopter-drift-plan.md`](dashboard-read-cap-class-adopter-drift-plan.md).
+Two parts, Part 1 standing alone if only one is approved: **(1)** the row asserts only what it has
+checked — drop the `NO_CONFIG` clause, confine the backlog clause to backlog names, state the ordering
+caveat in the comment's own weaker form; no new mechanism, no derivation, both pins untouched. **(2)**
+optionally, a per-project trimmer probe that may only *add* a remedy and lower a severity, never select a
+class — measured feasible at **3.6 ms per project** across 12 projects. Distributing the pins and
+adopter-side-only documentation were **rejected** with reasons; an adopter class-override config is
+**superseded** by the portfolio-copy finding. `starter-kit/methodology_dashboard.py` is DISTRIBUTED, so
+**Part 1 is upstream-facing and its PR is its own go-ahead**; nothing was implemented and no adopter was
+edited. **Adjacent to BL-32** (whose open question this does not answer) **and BL-30**.
+
+**BL-32's scope paragraph is stale, and it is corrected HERE rather than there — on purpose.** It says *"No project in the local portfolio … has ever extended `LEDGERS` — as reported by the adopter session, not independently re-verified"*. Independently verified at S227 across all **8** trimmer-carrying fleet projects: `nprcgenekeepr` **has**, since **2026-08-11 — the day BL-32 was raised** — and it is the only one. **The in-place correction was written, run against the proof, and reverted:** BL-32's body is among [`BACKLOG-DETAIL.md.verify.sh`](BACKLOG-DETAIL.md.verify.sh) C2's **frozen 18**, so editing it turns the losslessness proof RED — measured, `FAIL C2 BL-32: body differs — 5820 B at 384b17c, 6391 B in detail`, then reverted and the proof re-run green. Editing the proof to admit the edit would be a loosening (`SAFEGUARDS.md`). **So a frozen body cannot receive a factual correction in place; the correction belongs to the item that found it.** That is the same append-only discipline BL-83 exists to protect, arriving from the proof side rather than the prose side.

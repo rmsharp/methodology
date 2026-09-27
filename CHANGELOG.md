@@ -223,6 +223,51 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S227 — DECIDED: the dashboard's row will assert only what it has checked; BL-88 raised
+
+**The relayed drift is real and it is the symptom.** `methodology_trim.py` **derives** a file's read-cap
+class (`is_root_class_a()`, `starter-kit/methodology_trim.py:947`, assigned `:971`) from its own `LEDGERS`
+table plus root position; `methodology_dashboard.py` **declares** it (`tools/methodology_dashboard.py:423-424`),
+deliberately, because deriving would let a widened `LEDGERS` silently reassign a class
+(`docs/planning/read-cap-phase-c-plan.md:381`, dragon 6). The two pins that couple them
+(`tools/test_methodology_dashboard.py:5464`, `:5485`) both load **this** repo's trimmer, and that suite is
+**absent from `bin/_manifest.py`** — so dragon 6 holds only where a test runs, and `nprcgenekeepr`'s widening
+was invisible rather than caught.
+
+**But the false clause is one sentence of prose, and the larger defect is canonical.** The Class B row asserts
+*"the trimmer answers `NO_CONFIG` for it"* — a claim about another tool's config in a tree it never inspects,
+false in `nprcgenekeepr` — and it imports the **backlog-specific** justification onto all four Class B names
+including `SESSION_NOTES.md`, which the module comment at `:381-396` **already records as a caught
+over-generalisation** and states in a weaker form the row never received. That second defect is in every
+adopter tree and owes nothing to any local patch; it is what justifies changing anything.
+
+**Decision, awaiting ratification** ([`dashboard-read-cap-class-adopter-drift-plan.md`](docs/planning/dashboard-read-cap-class-adopter-drift-plan.md)):
+**Part 1** — the row asserts only what it has checked; no new mechanism, no derivation, both pins untouched.
+**Part 2, optional** — a per-project trimmer probe that may only *add* a remedy and lower a severity, never
+select a class, so dragon 6 is not engaged; measured feasible at **3.6 ms per project** across 12. Distributing
+the pins and adopter-side-only documentation **rejected** with reasons; an adopter class-override config
+**superseded** by the finding that the flag came from the **portfolio** copy, one declared partition over N
+projects with N trimmers. `starter-kit/methodology_dashboard.py` is DISTRIBUTED, so **Part 1 is upstream-facing
+and its PR is its own go-ahead**. Nothing implemented; no adopter edited.
+
+**Verified, not taken on trust:** the adopter's dashboard is byte-identical to both canonical copies (v2.18.0);
+its trimmer carries a documented 51-line local `SESSION_NOTES.md` `LedgerSpec` since 2026-08-11; its `--check`
+returns a Class-A reading and *"trigger does not fire"*; the relay's 56,752 B is now **57,871 B**, 1,121 B over
+the cap. `nprcgenekeepr` is the **only** one of 8 trimmer-carrying fleet projects ever to widen `LEDGERS`, so
+exactly one flag is affected — which **falsifies BL-32's** *"No project … has ever extended `LEDGERS`"*, on the
+day BL-32 was raised.
+
+**That correction could not be written where the false sentence is, and the checker said so.** BL-32's body is
+among `BACKLOG-DETAIL.md.verify.sh` C2's frozen 18: the in-place edit was written, run — `FAIL C2 BL-32: body
+differs — 5820 B at 384b17c, 6391 B in detail` — and **reverted**, the proof re-run green. Editing the proof to
+admit the edit would be a loosening (`SAFEGUARDS.md`). The correction lives in **BL-88's** body instead. **A
+frozen body cannot receive a factual correction in place.**
+
+**One repair rides this commit and is disclosed rather than bundled quietly:** the stray blank line S226's
+`9cf85f2` left above BL-87's index row is removed. It orphaned the row into a headerless table fragment, and
+BL-88's own row lands directly beneath it, so the index could not render correctly without it. No go-ahead was
+given for it; it is a prerequisite of this commit's own edit, not an extra.
+
 ### 2026-09-27 · [ad hoc] S227 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 **The trim's own 452 B pointer block removed from `HANDOFFS.md`'s front matter and rewritten as one 122 B row
