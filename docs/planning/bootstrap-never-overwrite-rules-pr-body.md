@@ -1,10 +1,11 @@
 # Pull-request body — the prose update route's ledger-protection rules
 
-**Status:** DRAFTED, NOT SENT. Built at fork session S224 (2026-09-26/27) on branch
-`fix/bootstrap-never-overwrite-rules`, tip `a88fce7`, based on `upstream/main` `6b29d3d`. Opening the pull
-request is a separate operator go-ahead and is deliberately not part of the session that wrote this. The text
-below the rule is the body; everything above it is fork-side scaffolding and must not be sent. An edit to this
-file is not an edit to a pull request.
+**Status:** SENT. This text went out as [KJ5HST/methodology#88](https://github.com/KJ5HST/methodology/pull/88)
+at fork session S224 (2026-09-27), on the operator's go-ahead for **delivery route (a), standalone**, after the
+session had already closed out. Head `a88fce7`, base `main`, `MERGEABLE`/`CLEAN`; the read-back is byte-identical
+to everything below the rule once the attribution line every pull request from this fork carries is removed
+(3,849 B each side). **Keep this file in step with the pull request: an edit here is not an edit there.** The text
+below the rule is the body verbatim; everything above it is fork-side scaffolding and was not sent.
 
 **This closes the upstream half of UAT F2 (CRITICAL)** — the fork-only fix from `12463dd` (2026-08-04),
 re-derived against `upstream/main` rather than cherry-picked. It is the fork item BL-85.

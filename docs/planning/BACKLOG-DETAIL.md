@@ -3485,7 +3485,11 @@ says.** It read *"fold it into BL-66's pull request at its docs phase (P3)"*; th
 already open**, so (b) now means pushing a further commit onto an open pull request's branch, not adding to
 unshipped work.
 
-**S224 (2026-09-27): BUILT AND MEASURED, NOT SENT. The branch is `fix/bootstrap-never-overwrite-rules`, tip
+**S224 (2026-09-27): BUILT, MEASURED AND SENT — [#88](https://github.com/KJ5HST/methodology/pull/88) IS OPEN.**
+The operator chose **delivery route (a), standalone**, after the session closed out; the branch is on fork
+`origin` and the pull request's read-back is byte-identical to the approved body modulo the attribution line.
+**The item is discharged by #88's existence; its merge is the maintainer's.** What follows is how it was built.
+**S224:** The branch is `fix/bootstrap-never-overwrite-rules`, tip
 `a88fce7`, based on `upstream/main` `6b29d3d`; the body is
 [`bootstrap-never-overwrite-rules-pr-body.md`](bootstrap-never-overwrite-rules-pr-body.md) (3,529 B below its
 rule, recognized-terms check 0 hits). The shape decision above is still open and still the operator's** — the

@@ -231,6 +231,33 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-27 · [BL-85] S224 — delivery route (a) taken: branch pushed to fork `origin`, upstream pull request #88 opened (two non-commit actions, operator go-ahead)
+
+**The operator chose route (a), standalone, after the session had already closed out.** Both actions are
+outward-facing and both were explicitly authorized; each was read back before the next was taken.
+
+- **Re-verified first, nothing assumed.** `upstream/main` re-fetched and **unmoved at `6b29d3d`**; `git merge-base
+  --is-ancestor` confirms it is still the branch's base; all five previously open heads unchanged. The branch
+  re-run in a `--no-local` clone **at the exact commit being sent**: `bin/tests.sh` **139 passed / 0 failed**,
+  `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results 6542e640a956 · manifest 97a7aab85b9a`.
+- **Action 1 — branch pushed** to fork `origin` as a new ref, `fix/bootstrap-never-overwrite-rules`, and read back
+  with `git ls-remote`: **`a88fce7`**.
+- **Action 2 — [KJ5HST/methodology#88](https://github.com/KJ5HST/methodology/pull/88) opened** against
+  `KJ5HST/methodology` `main` from `rmsharp:fix/bootstrap-never-overwrite-rules`. Read back with `gh pr view`:
+  state `OPEN`, head **`a88fce7`**, base `main`, cross-repository, **`MERGEABLE` / `CLEAN`** on the first check.
+- **The body test that can actually fail.** The channel appends an attribution line the approved file does not
+  contain (fork Learning #95), so *sent unchanged* and *byte-identical read-back* are different tests. Both prior
+  bodies (#86, #87) were read first to confirm the convention rather than recall it; the line was appended on
+  purpose; and the read-back **minus exactly that line** compares **equal** to the approved text — 3,849 B each
+  side, 3,918 B as published.
+- **Title sent:** *The prose update route can wipe an adopter's ledgers: give the instruction the three rules that
+  stop it.*
+
+**BL-85 is discharged by #88's existence; the merge is the maintainer's.** Six pull requests are now open
+(#83–#88) with **0 reviews between them**. The S224 receipt, the body file's status line, BL-85's detail and its
+index row are all corrected in this commit — the receipt had said *nothing outward happened*, which stopped being
+true.
+
 ### 2026-09-27 · [BL-85] S224 — BL-85's *"Shapes"* become *"Delivery routes"*, and two of them are un-staled
 
 **On the operator's instruction, who reported the phrase carried no meaning for them.** *"Shape"* is this backlog's
