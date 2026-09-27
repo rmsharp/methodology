@@ -223,6 +223,49 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [BL-66] S222 close-out — P5 of the BL-66 plan done: the pull request is open; one ledger trimmed
+
+- **Deliverable:** P5 of [`sync-github-route-plan.md`](docs/planning/sync-github-route-plan.md) — **the pull request
+  is open, [KJ5HST/methodology#87](https://github.com/KJ5HST/methodology/pull/87)**, head `67feb9f`, base `main`,
+  `MERGEABLE` / `CLEAN`. The plan's outward phase is finished; **P6 (fork-side adoption) remains and waits on the
+  merge**, and nothing further is owed upstream.
+- **Every step was read back before the next one, which is what this phase is for.** `upstream/main` re-fetched and
+  still `6b29d3d`, `git merge-base --is-ancestor` exit 0 — no rebase pending. Suite re-run on the tip in a
+  `--no-local` clone: **188 passed, 0 failed**; `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results
+  2162213f5332 · manifest 24be12b693f1`, the hashes P4 cited, from an independent clone. Branch pushed to fork
+  `origin` `9f42c0f..67feb9f` and `git ls-remote` read back `67feb9f`. Body extracted as everything after the file's
+  first standalone rule (7,306 B), scoped recognized-terms grep **0 hits**. Read-back diffed in Python: byte-identical
+  to that text once the attribution line is removed. `mergeable` `MERGEABLE`, `mergeStateStatus` `CLEAN`.
+- **The one departure, decided by the operator at this session's Phase 0 picker: the PR was opened NOW.** D7 offers
+  waiting for #84 or pre-resolving the `starter-kit/BOOTSTRAP.md` paragraph; the third path was taken on three
+  grounds — #84 has had 0 reviews for six days, the merge is a fast-forward today, and the approved body already
+  discloses both collisions with their built-and-run resolutions. Pre-resolving was declined because it would import
+  unmerged wording and falsify that section of the approved body. **The cost is stated:** if #84 merges first, #87
+  shows conflicting until P4's measured head+tail resolution (212/0) is pushed.
+- **One addition to the approved text, and it is the house standard:** the attribution line every prior pull request
+  from this fork carries, checked on #84 and #86 before sending. Nothing else added, removed or reflowed.
+- **Side action, owed by the retention policy:** the `HANDOFFS.md` trim the claim made owed (`4b36803`, 3 receipts →
+  2, 27,996 → 18,688 B) and its fold (`d280e04`, → 18,232 B). The shard is
+  [`docs/archive/HANDOFFS-through-2026-09-22-2.md`](docs/archive/HANDOFFS-through-2026-09-22-2.md) — **the `-N`
+  suffix the predecessor handoff predicted would not be needed.** The cut is positional and oldest-first, so the
+  record that left was S220's, dated `2026-09-22`, and that shard name was already taken. The tool said so itself,
+  in the dry run, before anything was written. `.verify.sh` exit 0 from a clone of the trim commit.
+- **Phase 3A — the predecessor handoff scores 8/10.** Everything actionable in it held and was used: the four PR
+  heads, `upstream/main` at `6b29d3d`, the fast-forward, the 188/0 and `2162213f5332` citation, the body-scaffolding
+  boundary, the stale `.quality-gates-results.json`, and the `check-learnings --no-citations` form. Its item (2) —
+  *"the D7 choice is the first thing P5 needs"* — was exactly right and shaped the picker. The deduction is one
+  falsifiable prediction that was wrong in both halves: *"it archives **this** receipt, dated 2026-09-26 — a new
+  date, so again expect no `-N` suffix."* The trim is positional and oldest-first, which the file it was predicting
+  about states in its own front matter. It cost nothing only because the same handoff prescribed the dry run.
+- **Phase 3C, D3:** fork Learning **#95** appended — *"send it unchanged"* and *"the read-back is byte-identical"*
+  are different tests once the channel adds a line of its own, and what the channel adds is discoverable only from
+  what it has already published. A retirement is therefore owed and **is refused, with the rows named:** #55, #64,
+  #78 and #94 were each considered and each keeps its basis. This session added no gate, no test and no failure
+  mode — the only mechanical artifact it produced is a pull request — so nothing moved any of those lessons into
+  enforcement; no later row states any of them at least as generally; every row's artifact still exists.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] S222 — `fix/sync-github-history` pushed to fork `origin`, and pull request #87 opened upstream (non-commit actions, operator go-ahead)
 
 Two outward actions, each authorized separately at this session's Phase 0 picker, each read back before the next.
