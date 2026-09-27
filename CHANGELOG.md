@@ -223,6 +223,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S223 — correction: this session stated an unmeasured byte figure as a measurement
+
+**The defect.** Two entries above — the `27b1c33` extraction entry and this session's `HANDOFFS.md` receipt,
+gotcha (4) — gave the new losslessness proof's size as **8,946 B**. It is **9,752 B**, and always was:
+`git cat-file -s 27b1c33:docs/planning/BACKLOG-COMPLETED.md.verify.sh` returns 9,752 and the file is byte-identical
+at HEAD. **The figure was never measured.** Its two neighbours in the same sentence, 6,947 B and 8,181 B for the
+sibling proofs, *were* measured and are correct — which is what made the third read as one of them. 806 B, 9% low.
+
+**What is corrected and what is not.** The receipt's gotcha (4) is corrected in place: it is the live artifact the
+next session reads, and its whole purpose is to stop a successor carrying BL-60's ~16 KB complaint onto this
+population, which a wrong size undercuts. **The `27b1c33` entry above is left exactly as written** — this ledger is
+append-only, and rewriting an entry would erase the record that the claim was made. The same precedent the
+`.context-budget.json` note sets for a drifted citation (*"deliberately NOT corrected in the `CHANGELOG.md`
+entry's copy of it"*).
+
+**Found by re-measuring at the close-out report rather than restating.** The rule that caught it is this repo's
+own: re-read the file that confirms a claim before repeating it. It had two chances to be caught earlier and was
+not — the figure went into a commit message and a receipt field between them.
+
+**One related imprecision, stated rather than corrected.** `BACKLOG.md:175`'s pointer block says the moved rows
+were **25,276 B** where the ledger and receipt say **25,187 B**. Both are right for what they measure: 25,276 B is
+the whole §Completed items slice including its blank lines and the second table's header, 25,187 B is the 33 rows
+alone, which is what C2 byte-compares. Neither is wrong; the two are not distinguished where they are used.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] S223 — fork `main` pushed to `origin`, `73157d0..61081e1` (non-commit action, operator go-ahead)
 
 Five commits, all fork-only documentation: the claim `109ba7b`, the `HANDOFFS.md` retention trim `36060f0` and
