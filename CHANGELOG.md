@@ -231,6 +231,22 @@ Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 28,071 B → 17,642 B (−37.2%).
 
+### 2026-09-26 · [ad hoc] S224 — correction: the fold entry's index row count was predicted, not measured
+
+**The defect.** The entry below says *"the index's table is 29 rows"*. It is **61**. The figure was never
+measured: it was carried from S223's receipt (*"index 28 rows"*) and incremented by one for this fold. That
+predecessor number is wrong too, and inheriting it is how a wrong figure survives a session boundary.
+
+**Measured.** `awk '/^\| *[0-9]+ *\|/ {c++}' docs/HANDOFFS_ARCHIVE_INDEX.md` → **61** data rows.
+Cross-checked against the shards themselves: `git ls-files 'docs/archive/HANDOFFS-*.md'` → **62** files, and
+the index's own front matter says one shard predates the trimmer and deliberately has no row
+(`HANDOFFS-archive.md`). 61 + 1 = 62, so the two agree. 240 receipts are archived across them.
+
+**What is corrected and what is not.** This entry corrects the number; the entry below is **left as written**,
+the same append-only treatment `c5e311d` gave the 8,946 B figure one session ago — for the same reason, that
+rewriting it would erase the record that the claim was made. Nothing else in the fold is affected: the row,
+the byte figures and `check-links` were all measured.
+
 ### 2026-09-26 · [ad hoc] S224 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 The `82c3148` trim left `methodology_trim.py`'s ~448 B pointer block in `HANDOFFS.md`'s front matter.
