@@ -223,6 +223,37 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-86] S226 claim — the closure rule and the shard's move proof, decided before either is edited (in progress)
+
+**Phase 1B claim.** This entry, a `status: pending` receipt in `HANDOFFS.md`, and Phase 0's
+`dashboard_history.jsonl` row (single-project mode: **76/100, MEDIUM, High+ 0, 0 vulns, 1,469 commits**).
+Deliverable chosen at the Phase 0 task picker over the `CHANGELOG.md` trim, BL-84 (the seed's fixed warn line
+versus its mandatory purpose fence) and the FM #17 recorded-not-fixed list. **P6 of the BL-66 plan is still
+blocked on #87's merge**, so it was stated as blocked rather than offered.
+
+**Three things measured at Phase 0 rather than carried from the receipts:**
+
+- **The `CHANGELOG.md` trim ground is ~2.5 sessions away, not four.** The file is **220,220 B**; the rule's
+  trigger is the **262,144 B** read refusal, **41,924 B** off. S225 moved it **203,621 → 220,220 = 16,599 B**
+  end to end (`git cat-file -s` at each ledger commit). Its receipt's *"roughly four sessions"* came from an
+  11,620 B **partial** span measured before its own close-out and push-record entries landed — its own next-step
+  said to re-derive rather than quote it, and re-derived it is 2.5. `--check` **fires** and is still not the reason.
+- **`context_budget.py --status` wrote one row into the tracked `.context-budget-history.jsonl` during a
+  read-only phase; it was reverted** (`git checkout --`, diff kept in the session scratchpad, tree re-read clean).
+  That is **BL-75's documented behaviour** — the first run after a measured change appends, an identical re-run
+  appends nothing, which is what the second run did — and the defect open PR
+  [#86](https://github.com/KJ5HST/methodology/pull/86) fixes. Not a new finding.
+- **The gate at `31e16e4`, in a `--no-local` clone, exit codes read outside a pipe:** `bash bin/tests.sh`
+  **343 passed / 0 failed / 6 skipped**, exit 0; `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results
+  10575dac7361 · manifest 01a4ae7aa511`, exit 0 — the same hashes S225 cited at `2f17170`, right for a doc-only
+  tip. The untracked `.quality-gates-results.json` records **`head 6b29d3d`** (an *upstream* tree), so it is not
+  the evidence for this one either way.
+
+**Reconcile:** `CHANGELOG.md` frontier = HEAD, gap **0**; `HANDOFFS.md` frontier `fdb273a`, its one gap commit
+the CHANGELOG-only push record `31e16e4` — the shape S219–S225 each recorded, nothing backfilled. Upstream: **0
+issues**, #83–#88 open at unchanged heads, `MERGEABLE`, **0 reviews between them**, only our own two comments.
+**Receipts go 2 → 3, so the retention trim is owed as its own next action.**
+
 ### 2026-09-27 · [ad hoc] S225 — fork `main` pushed to `origin`, `d7b3be8..fdb273a` (non-commit action, operator go-ahead)
 
 **Six commits, a clean fast-forward, every guard measured before anything was sent and the result read back after.**

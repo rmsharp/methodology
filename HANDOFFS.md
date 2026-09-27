@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S226
+date: 2026-09-27
+status: pending
+active_task: **BL-86 — the documented rule for closing a backlog item turns [`docs/planning/BACKLOG-COMPLETED.md.verify.sh`](docs/planning/BACKLOG-COMPLETED.md.verify.sh) RED, so no item can be closed by the book.** Decision first: shapes (a)/(b)/(c) are recorded and **uncosted**, (d) declined on sight at S225. Each will be built and measured on a throwaway copy **before** a picker, and none is implemented without a go-ahead — **editing a proof so a change passes is a loosening** (`SAFEGUARDS.md`, blast-radius table). BL-83's owed pointer row into `BACKLOG-COMPLETED.md` follows the chosen shape and is the same deliverable, not a second one. Fork-only: neither file nor proof is in `bin/_manifest.py`; **no outward action on `KJ5HST/methodology`.**
+```
+
+```handoff
 session: S225
 date: 2026-09-27
 status: complete
