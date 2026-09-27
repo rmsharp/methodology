@@ -223,6 +223,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S226 — fork `main` pushed to `origin`, `31e16e4..849ae4a` (non-commit action, operator go-ahead)
+
+**Six commits, a clean fast-forward, every guard measured immediately before the push and the result read back
+after.** `origin/main` was at the expected **`31e16e4`**, `git rev-list --count main..origin/main` **0** (nothing to
+rebase onto), `git rev-list --count origin/main..main` **6**, `git merge-base --is-ancestor origin/main main`
+**YES**, tree clean with 0 uncommitted files. After: `git ls-remote --heads origin main` reads **`849ae4a`**, and a
+re-fetch puts `origin/main` level with local `main` (0 ahead, 0 behind). **`upstream/main` was re-read and is
+unchanged at `6b29d3d`** — nothing was sent to `KJ5HST/methodology`, and no branch was pushed.
+
+**The count was measured, not carried.** `git log --oneline --no-merges origin/main..main` enumerated the six: the
+S226 claim (`7e48608`), the owed `HANDOFFS.md` retention trim (`6a85d20`) and its fold (`1201b12`), BL-86's fix with
+BL-83 closed and BL-87 raised (`9cf85f2`), fork Learning #99 (`86713df`), and the close-out (`849ae4a`). Eleven
+files across them, listed by `git diff --name-only origin/main main`.
+
+**This entry is pushed with the tip it records, under the operator's standing grant of 2026-09-16** — *a commit
+whose only change is the `CHANGELOG.md` entry recording an authorized push is pushed to `origin` without asking,
+and records its own push in the same entry.* Its guards are re-measured and the result read back with
+`git ls-remote` immediately after. S219–S224 each left the recording commit behind; `d7b3be8` ended that regress
+and keeping it ended is what this paragraph is for.
+
 ### 2026-09-27 · [BL-86] S226 close-out — the closure rule is executable again; predecessor scored 8
 
 **Deliverable complete and verified.** BL-86 fixed and closed, BL-83 closed with it and its owed pointer row
