@@ -223,6 +223,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-83] S225 — fork Learning #85 corrected by #98, and #85 retired: the FIRST retirement under D1(b)
+
+**Row #85 said the `.context-budget.json` ratchet *"does not exist"*. It does.** `def precommit`
+(`starter-kit/context_budget.py:1000`, byte arm `:1037`) implements it; it is merely unwired in this clone —
+neither `.githooks/pre-commit` nor any `.quality-gates.json` gate calls it. **Re-measured rather than inherited
+from S216**, in a `--no-local` clone at `28c24d3`: nothing staged → **exit 0**; a staged growth of
+`starter-kit/SESSION_RUNNER.md` → `context-budget: REFUSED`, **exit 2**; a staged shrink → **exit 0**.
+
+**Shape (1) of BL-83's three, chosen by the operator at a picker after all three were costed against
+measurements.** Row **#98** appended (1,473 B, 27 B inside the 1,500 B per-row budget, after one recomposition
+from 1,614 B), stating the lesson at least as generally: *grep for the BEHAVIOUR a note asserts, not the fields
+it happens to name, and separate absent from present-but-unwired.* That is the correction #85 needed and the
+generalization D1(b) requires — #85's own *Repair* says to grep every field the note names, and S201 did, and
+still got the opposite answer, because the claim rests on `max_bytes`, which the note never names.
+
+**This is the first row ever retired, and the first exercise of D2's reserved-gap mechanism.**
+[`docs/archive/FORK_LEARNINGS-retired.md`](docs/archive/FORK_LEARNINGS-retired.md) did not exist before this
+commit — `git log --all` on it was empty and the live file carried 0 reserved lines. S200 adjudicated all 69
+then-existing rows and retired none; S221–S224 each appended and refused under D3. **D3 is satisfied here by
+the retirement itself**, and #98 is both the deliverable and this session's Phase 3C learning — one row, one
+retirement, no fifth consecutive refusal.
+
+**A coupling found by grepping #85's citers, which is itself half of what #98 teaches: row #86 asserts #85's
+false premise in its own text** — *"Distinct from fork Learning #85, where the prose described a mechanism that
+never existed"* — written the day after #85. **#86 stays live:** its own lesson is sound and it matches none of
+D1's three criteria. #98 names the inheritance instead, so the record is corrected without a second retirement.
+
+**Measured, and it is not a reduction.** `docs/FORK_LEARNINGS.md` **104,339 → 104,875 B, net +536 B**: #98 in
+(1,474 B), #85 out (1,470 B), the reserved-gap block in (~532 B). The mechanism recovers 1,401 B when it retires
+without appending — measured on a throwaway copy before the shape was offered — but this application appends
+too, so it buys correctness, not headroom. Stated rather than presented as relief.
+
+**Proof, every check run bare and its exit code read outside a pipe.** #85 **byte-identical** across the move
+(`git show HEAD:docs/FORK_LEARNINGS.md | grep '^| 85 |'` vs the archive, `cmp` clean, 1,470 B). Every retained
+row unchanged: the pre-change row set minus #85 diffs **empty** against the post-change set minus #98.
+`check-learnings --file docs/FORK_LEARNINGS.md --first 15 --no-citations` **OK, 83 rows, contiguous 15..98** —
+the declared gap is tolerated by `RESERVED_RE` (`bin/check-learnings:76`), with **no checker change**, and the
+**negative control fires**: removing #85 without the reserved line fails with `missing #85`. The bare gate form
+is green on the distributed file (15 rows, 1..16). `bin/check-links` OK, 111 links; the new file's three
+relative links and the gap block's two were resolved by hand, since `check-links` reads distributed files only.
+
 ### 2026-09-27 · [ad hoc] S225 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 **One row, and the block deleted — in its own commit, because inside the trim commit the shipped
