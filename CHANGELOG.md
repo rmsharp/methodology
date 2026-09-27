@@ -223,6 +223,69 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S223 close-out — the backlog breach is closed; fork Learning #96; D3 refused, rows named
+
+**Deliverable complete and verified.** `docs/planning/BACKLOG.md` 58,727 → 35,296 B; dashboard risk `HIGH` →
+`MEDIUM`, High+ count 1 → 0. Commits: `109ba7b` claim, `36060f0` the owed `HANDOFFS.md` trim, `a32f520` its fold,
+`27b1c33` the extraction, and this close-out. **No outward action was taken and none was asked for** — nothing
+was pushed, no branch touched, and `#83`–`#87` are exactly as Phase 0 found them.
+
+**Phase 3A — S222's handoff scored 9/10.** *What helped, specifically:* its item (7) named the owed trim with the
+exact invocation and the instruction *"read the dry run's shard name rather than predicting it"* — which is the
+trap S221 had fallen into, and following it produced the right answer plus a diagnostic
+(`CUT_STRADDLES_DAY`) nobody had seen before. Its item (1) listed all five pull-request heads, so the upstream
+check was one command. Gotchas (4) and (5) — the stale `.quality-gates-results.json`, and *"the 1 loosened is
+historical, do not re-investigate"* — each saved a wrong turn. Its item (6) carried the byte figure
+(58,727 B, 1,977 B over) that became this session's deliverable **and** its acceptance criterion; both
+re-measured exactly. *What was missing:* nothing about the **fixture coupling** — that §Completed items' rows are
+load-bearing for an older proof's C4. That was this session's largest hazard and it was found by grep, not by
+the handoff; item (6) was one line in a list of options rather than a scoped task, which makes it a mild miss
+rather than a defect. *What was wrong:* one figure — *"`CHANGELOG.md` IS ~155 KB"* against 161,678 B measured at
+Phase 0, ~7 KB low. Hedged with a tilde and it misled nothing (the conclusion, that the trigger does not fire,
+held), but it is the kind of number this repo's own rule says to re-derive rather than carry. *ROI:* strongly
+positive — the trim, the upstream check and the deliverable's premise all came straight from it.
+
+**Phase 3B — self-assessed 9/10.** Went right: the proof shape was **decided from measurement**, not from the
+worry the claim recorded — and that worry's premise turned out false, which is stated rather than quietly
+dropped; every referrer was enumerated before editing, which is what found the C4 coupling and improved the
+design; all five checks were proved killable, including catching and redoing an invalid mutation of my own; the
+reduction was made **durable** by moving the editing rule, so it is not a one-shot. Went wrong, all self-caught
+and none reaching the artifacts: a memory-file `[[wiki]]` link written into the receipt stub and removed; a
+`grep -c '^PASS:'` that returned 0 against indented rows, caught by reading the Summary line; a `git checkout --`
+cleanup that invalidated one mutation run; and the claim's unverified premise about BL-36's population. Operator
+corrections to the work: **0**. One instruction added — provide a task picker at Phase 0 — applied in the same
+session it was given.
+
+**Phase 3C — fork Learning #96 appended** (`docs/FORK_LEARNINGS.md:108`, 1,497 B; 82 rows, contiguous 15..96):
+*a prior reduction's losslessness proof becomes a constraint on the next reduction of the same file, and where
+its check is a reachability assertion, "fix the check" inverts what it exists to assert.* **D3's retirement is
+owed and is REFUSED, with the rows named and the criterion actually tested against them — and this is the THIRD
+CONSECUTIVE REFUSAL (S221, S222, S223), which is itself the pattern D3 was written against and is flagged here
+rather than left to be noticed.** #24 — criterion (a) tested rather than assumed: `bin/tests.sh` Test 29 **was**
+rewired to read live + archives at S87, but that mechanizes one instance, not the rule *enumerate consumers
+before archiving*; this session enumerated by hand and found a consumer no test covers, which is what #96
+records. #26 — its worked example is now falsified for this very file, but a stale example is never a ground and
+its method (*sum what you may not remove before agreeing a target is reachable*) is ungated. #31 and #41 — Test
+34's named SKIPs make one instance loud; the tool that shrinks a file still cannot see the coupling. #15 —
+implemented BY this session's proof, which is not the same as enforced by a gate. #78 — heeded again here,
+ungated. #58 — held by prose in the shard index. #85 — known FALSE (BL-83), and wrongness is not a retirement
+ground; retiring it would hide the defect rather than fix it. No later row states any of these at least as
+generally; every row's artifact still exists.
+
+**Phase 3E — gate citation, `--no-local` clone of `27b1c33`:** `quality_ratchet: 11/11 pass · 0 fail · 0
+unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, exit 0, identical to Phase 0's at `73157d0`.
+`bin/tests.sh` **343 passed / 0 failed / 6 skipped** three times — Phase 0, post-extraction, and with row #96
+present. `bin/check-handoff` and `--all` both OK; the receipt was refused **four times** on the 12,288 B
+per-record budget before it fit, and row #96 three times on the 1,500 B row budget — both cut shorter rather than
+raised.
+
+**Two findings recorded, neither fixed (FM #17):** the `## Completed items (…)` heading this session replaced
+named **19 of the 33** rows present; and `.context-budget.json:73`'s `structure.why` claims its pattern matches
+*"the 19 open-item rows and NOT the §Completed items pointer table"* where today it matched **53** and **10** —
+it passes for a different reason than its rationale gives, and still passes.
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] S223 — `BACKLOG.md`'s §Completed items moved to a read-on-demand sibling; the one-read breach is closed
 
 **What:** the 33 closed-item pointer rows that stood in [`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md)
