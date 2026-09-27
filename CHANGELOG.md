@@ -223,6 +223,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-26 · [ad hoc] S222 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
+
+The `2026-09-22-2` shard's three-line pointer block written by `methodology_trim.py` into `HANDOFFS.md`'s front matter
+becomes one row at the bottom of [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md)'s table and is
+deleted from the ledger — the `.verify.sh` link dropped, since the proof sits beside its shard. **Its own commit, as the
+index's fold rule requires:** inside the trim commit the shipped `.verify.sh` fails L2 (fork Learning #58), and that
+proof was run from a `--no-local` clone of the trim commit `4b36803` and exits **0** on L1, L2/front-matter and L3.
+`HANDOFFS.md` 18,688 B → 18,232 B; the front matter does not grow with this trim. Unlike the previous shard, this
+name **does** carry an `-N` suffix: the record that left is the oldest of the three, dated `2026-09-22`, and that
+shard name was already taken — the opposite of what the predecessor handoff predicted. `./bin/check-links` OK
+(111 links).
+
+- **Model:** Claude Opus 5 (claude-opus-5)
+
 ### 2026-09-26 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-22-2.md` (1 record(s), 27,996 B → 18,688 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
