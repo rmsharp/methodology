@@ -223,6 +223,35 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-86] S225 — BL-86 raised: the documented way to close a backlog item turns `BACKLOG-COMPLETED.md.verify.sh` RED
+
+**Found by trying to close BL-83 by the book, and stopped there rather than fixed.** The editing rule at
+[`docs/planning/BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md)`:15-21`, rewritten at S223, says closing an
+item means adding its pointer row to [`docs/planning/BACKLOG-COMPLETED.md`](docs/planning/BACKLOG-COMPLETED.md).
+That file's own losslessness proof refuses it: `BACKLOG-COMPLETED.md.verify.sh` pins the **33 ids that moved** as
+a frozen literal (`:31`, deliberately not derived) and C1 computes `extra_shard = set(rows(shard)) - set(items)`,
+where `rows()` matches **every** `| **BL-N** |` row in the whole file (`:103-104`). **Any id beyond the 33 fails.**
+
+**Measured, not predicted, and the file restored afterwards.** Control: **exit 0**, *"C1 identity set: 33 item(s),
+exactly the expected set, present on both sides"*. With BL-83's pointer row appended: **exit 1**, `FAIL C1
+identity set: … unexpected in shard: [83]`. Control re-run green after restoring.
+
+**Why it could not surface earlier.** The proof is a **move** proof — the shard is *exactly* what left
+`BACKLOG.md` at `a32f520` — which is right for an extraction and wrong for a destination. S223 gave the file a
+second job in the same session that froze its contents. The `docs/planning/` proofs run **by hand**;
+`bin/tests.sh` does not schedule them and `bin/check-links` reads distributed files only. So the first closure
+after S223 was always going to be the detector, and this is it.
+
+**Not fixed, and deliberately: editing a proof so a change passes is a loosening** (`SAFEGUARDS.md`'s
+blast-radius table), so it is a decision, not a session's judgment. Four shapes recorded, **(d) retire the proof
+declined on sight** — C2–C5 still guard real couplings and C4 is what stops the 33 ids in `BACKLOG.md` being
+tidied away. **BL-83 therefore stays in §Open items for its pointer row alone**, its fix delivered at `18d4034`
+and its outcome recorded in both the index row and the detail block. Fork-only: neither file nor proof is in
+`bin/_manifest.py`.
+
+**All three `docs/planning/` proofs re-run green after these edits** (`BACKLOG-COMPLETED` C1–C5,
+`BACKLOG-DETAIL` C1–C5, `BACKLOG-archive-2026-08-15` C1–C4), and `bin/check-links` OK 111.
+
 ### 2026-09-27 · [BL-83] S225 — fork Learning #85 corrected by #98, and #85 retired: the FIRST retirement under D1(b)
 
 **Row #85 said the `.context-budget.json` ratchet *"does not exist"*. It does.** `def precommit`

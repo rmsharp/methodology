@@ -3404,6 +3404,59 @@ supersede #85 under (b). Any appended row also carries D3's retire-or-refuse obl
 (2) an operator exception to append-only for a factual error, written where the rule lives; (3) leave #85 as it
 is, with the correction recorded only in BL-78 — the state after S216. **Decision first.**
 
+**S225 — FIXED, AND THE CLOSURE BOOKKEEPING IS BLOCKED BY BL-86, NOT BY THIS ITEM.** Shape **(1)**, the
+operator's choice at a picker after all three were costed against measurements: fork Learning **#98** appended
+(1,473 B, recomposed from 1,614 B to fit the 1,500 B per-row budget) and **#85 retired under D1(b)** — the
+**first row ever retired** and the first use of D2's reserved-gap mechanism. `18d4034`. Its 1,469 B moved
+verbatim to [`../archive/FORK_LEARNINGS-retired.md`](../archive/FORK_LEARNINGS-retired.md), a file that did not
+previously exist; the live file carries the reserved-gap line and `check-learnings` reports **83 rows, contiguous
+15..98** with no checker change, the negative control failing with `missing #85`. The claim was **re-measured,
+not inherited from S216**, in a `--no-local` clone at `28c24d3`: a staged growth of `starter-kit/SESSION_RUNNER.md`
+gave `context-budget: REFUSED` and **exit 2**, a staged shrink **exit 0**, nothing staged **exit 0**. **Net +536 B,
+so this was a correction and not a reduction** — the mechanism recovers 1,401 B only when it retires without
+appending. **D3 is satisfied by the retirement itself**, ending four consecutive refusals; #98 is both the
+deliverable and the Phase 3C row. **A coupling found by grepping #85's citers, which is half of what #98 teaches:
+row #86 asserts #85's false premise in its own text** (*"a mechanism that never existed"*), written the day after
+it; **#86 stays live** — its own lesson is sound and it matches none of D1's criteria, so #98 names the
+inheritance instead. **This item stays in §Open items only for its pointer row**, which cannot be written until
+BL-86 is decided.
+
+<a id="bl-86"></a>
+
+**BL-86 — the documented rule for closing a backlog item turns `BACKLOG-COMPLETED.md.verify.sh` RED, so no item
+can be closed by the book. Raised 2026-09-27 (S225), while closing BL-83. Not fixed, not costed.**
+
+**What.** The editing rule this file states at `:15-21` (rewritten at S223) says closing an item means removing
+its body here, removing its index row from [`BACKLOG.md`](BACKLOG.md) §Open items, **adding its pointer row to
+[`BACKLOG-COMPLETED.md`](BACKLOG-COMPLETED.md)**, putting the bare id in that file's pointer block, and logging
+the action. That third step is refused by the shard's own losslessness proof.
+[`BACKLOG-COMPLETED.md.verify.sh`](BACKLOG-COMPLETED.md.verify.sh) pins the **33 ids that moved** as a frozen
+literal (`:31`, deliberately not derived — a derived set cannot assert it covers its own parts) and C1 computes
+`extra_shard = sorted(set(now) - set(items))`, where `now = rows(shard)` reads **every** `| **BL-N** |` row in the
+whole file (`:103-104`). **Any id beyond the 33 is a finding.**
+
+**Measured, not predicted.** Control: `bash docs/planning/BACKLOG-COMPLETED.md.verify.sh` → **exit 0**, *"C1
+identity set: 33 item(s), exactly the expected set"*. With BL-83's pointer row appended: **exit 1**, `FAIL C1
+identity set: … unexpected in shard: [83]`. The file was restored and the control re-run.
+
+**Why it happened.** The proof is a **move proof** — it asserts the shard is *exactly* the rows that left
+`BACKLOG.md` at `a32f520`, which is the right assertion for an extraction and the wrong one for a destination.
+S223 gave the file a second job (the standing home for future closures) in the same session that froze its
+contents, and nothing connected the two: the proofs under `docs/planning/` run **by hand**, `bin/tests.sh` does
+not schedule them, and `bin/check-links` reads distributed files only. So the collision could not surface until
+the first closure after S223 — this one.
+
+**Shapes, none costed.** (a) Split the populations: keep the 33 moved rows in a region the proof reads to a
+`stop=` marker and put post-move closures below it, so the move proof keeps its exact assertion and the registry
+grows freely. (b) Narrow C1 to flag only ids in neither the frozen 33 nor a declared *added-after-the-move* list —
+smaller, but it makes the frozen literal partly maintained by hand, which is what `:31`'s comment argues against.
+(c) Re-point the rule at a third file, leaving `BACKLOG-COMPLETED.md` frozen as the S223 extraction's artifact.
+(d) Retire the proof once the move is old enough — **declined on sight and recorded as such**: C2/C3/C4/C5 still
+guard real couplings, and C4 is what keeps the 33 ids in `BACKLOG.md` from being tidied away.
+**Editing a proof so a change passes is a loosening** (`SAFEGUARDS.md`, blast-radius table), so **decision
+first** — no shape was implemented, and BL-83's pointer row is the one owed thing left undone.
+Fork-only: neither file nor proof is in `bin/_manifest.py`.
+
 <a id="bl-84"></a>
 
 **BL-84 — the seed gives every adopter's `CLAUDE.md` a fixed warn line and a mandatory purpose fence, and for a
