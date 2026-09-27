@@ -13,12 +13,17 @@ edited: no rewording, no compaction, no dropped items. That is machine-checkable
 [`BACKLOG-DETAIL.md.verify.sh`](BACKLOG-DETAIL.md.verify.sh) re-extracts each item from git by
 its own `BL-N` identity and compares bytes. Run it rather than trusting this paragraph.
 
-**Editing rule: this file is the one place an open item's text lives.** Edit the body here and
+**Editing rule: this file is the one place an item's text lives — open or closed.** Edit the body here and
 the one-line summary in `BACKLOG.md`'s index only if the item's *subject* changed. Closing an
-item still means removing it from here, removing its index row from `BACKLOG.md`'s §Open items,
+item means removing its index row from `BACKLOG.md`'s §Open items,
 adding its pointer row to [`BACKLOG-COMPLETED.md`](BACKLOG-COMPLETED.md) — **not** to `BACKLOG.md`,
 which since S223 keeps only the id in its §Completed items pointer block — and logging the action in
-[`CHANGELOG.md`](../../CHANGELOG.md).
+[`CHANGELOG.md`](../../CHANGELOG.md). **The body STAYS here when that pointer row links to it** — the `[detail]` cell resolves to this body, and it
+is the only path from a pointer row to the record. **The earlier wording of this paragraph said closing an item
+meant "removing it from here", which all ten closures that carry that cell ignored**, and any that had obeyed it
+would have broken its own link. Corrected at S226 with BL-86, whose other half was that the destination's own
+proof refused the pointer row. (Nine `[detail]` links do dangle, for an unrelated reason — a missing anchor
+separator, not a removed body — and that is BL-87.)
 
 **The `<a id="bl-N">` anchors are the record separators** the proof splits on, and the targets
 `BACKLOG.md`'s index links to. They are scaffolding added by the move; every byte below one,
@@ -3421,6 +3426,12 @@ it; **#86 stays live** — its own lesson is sound and it matches none of D1's c
 inheritance instead. **This item stays in §Open items only for its pointer row**, which cannot be written until
 BL-86 is decided.
 
+**S226 — CLOSED.** The pointer row is written. BL-86 was decided and fixed first, in the same session: the
+shard's proof now pins the 33 rows that moved and **reports** the rows closed since, so the row that turned it
+RED at S225 is accepted with `1 closed since the move (not a finding): BL-83` on C1's OK line and asserted
+reachable by the new C6. Nothing about the S225 fix changed — #98 and #85's retirement stand at `18d4034`; this
+is the bookkeeping that was owed, run after the blocker it was waiting on.
+
 <a id="bl-86"></a>
 
 **BL-86 — the documented rule for closing a backlog item turns `BACKLOG-COMPLETED.md.verify.sh` RED, so no item
@@ -3456,6 +3467,44 @@ guard real couplings, and C4 is what keeps the 33 ids in `BACKLOG.md` from being
 **Editing a proof so a change passes is a loosening** (`SAFEGUARDS.md`, blast-radius table), so **decision
 first** — no shape was implemented, and BL-83's pointer row is the one owed thing left undone.
 Fork-only: neither file nor proof is in `bin/_manifest.py`.
+
+**S226 — CLOSED, by a FIFTH shape none of the four above proposed, and it was already ratified in this
+repository.** The sibling proof [`BACKLOG-DETAIL.md.verify.sh`](BACKLOG-DETAIL.md.verify.sh) — written at S99 for
+the same kind of file — makes added ids a reported line and never a failure, and its C1 comment gives the reason
+in as many words: *"a backlog that can never gain an item would be a proof that fails on correct use, which is
+precisely the false-positive class BL-36 is about. Losses fail; growth is reported."* Applying that rule here is
+a **six-line change to C1** plus a new **C6**; the two proofs now agree instead of contradicting each other.
+
+**It is not the loosening it looks like, and the distinction is the whole decision.** `:31`'s comment defends the
+frozen 33 as the *loss* detector — *"if a row vanished, a derived list would simply be shorter and C1 would
+pass"* — which is an argument about `missing_shard`, kept here byte for byte. Only the *"and nothing else"*
+clause relaxes, and what it was catching is still caught: **five negative controls, each measured on a throwaway
+clone** — a dropped row (C1 `missing from shard: [45]`), one altered byte (C2), a copy left in the live file
+(C3), the same id listed twice (**exit 2**, through the DUP check the proof already had) and a closure whose id
+never reached `BACKLOG.md` (C6). A junk row can only pass by performing the whole closure ritual in the live
+file.
+
+**All five shapes were built and measured before the operator was asked**, on clones at `1201b12`: (e)+C6 proof
++1,765 B / +24 lines and shard +339 B; (a) boundary marker + C6/C7 +2,665 B / +46 lines and +1,344 B; (a) without
+the two extra checks +961 B / +16 lines but **it passes a duplicate pointer row at exit 0**; (b) a declared
+`ADDED` list +296 B / +5 lines, and every future closure must edit the proof or C1 goes red (measured with a
+second closure: `unexpected in shard: [87]`); (c) a third file, proof +0 B, a new 1,531 B file **that no proof
+reads at all**. (d) stayed declined.
+
+**A SECOND DEFECT IN THE SAME RULE, found by measurement while fixing this one.** The rule also said closing an
+item means *"removing it from here"* — this file — while the pointer row it tells you to write links straight back
+to it. **Ten of the 33 pointer rows carry that `[detail]` cell and all ten still have their body here**, so the
+clause was followed by nobody and would have broken the link of anyone who had. Both halves of the rule are
+corrected, here and in the shard.
+
+**A claim made and withdrawn in this session, recorded because the withdrawal is the finding.** I first reported
+that the clause had already cost two dangling links (BL-59, BL-67). It has not: **both bodies are present**; what
+is missing is their `<a id>` separator line, which is also missing for seven OPEN items — nine of the 63 `[detail]`
+links in all. The first measurement was `grep -c` for the anchor string **in a file into which I had just written
+that same string**, so the guard matched my own prose. Re-measured against `HEAD`, where
+nothing written this session can match itself, and the literal was then removed from the prose so the next such
+grep is not fooled the same way. The nine are **BL-87**, recorded and not fixed (FM #17):
+mechanizing the property would have shipped a proof RED on arrival.
 
 <a id="bl-84"></a>
 
@@ -3561,3 +3610,31 @@ exactly. Branch itself: **139/0**, unchanged from base; `check-links` 107; `--pr
 (FM #17):** §Setup with `bin/sync`'s prose at `:74` omits `methodology_trim.py`, `context_budget.py` and
 `quality_ratchet.py` from the installed operating files, and `.context-budget.json` / `.quality-gates.json` from
 the seeds — stale against the manifest, named in the body's *Deliberately not in this pull request*.
+
+<a id="bl-87"></a>
+
+**BL-87 — nine `[detail]` links across `BACKLOG.md` and `BACKLOG-COMPLETED.md` resolve to nothing, because nine
+item bodies here were appended without their `<a id>` separator line. Raised 2026-09-27 (S226), while fixing
+BL-86. Recorded, not fixed; not costed.**
+
+**What, measured at `HEAD` before this session's edits** (a grep for the anchor string run against a file that
+already contains that string in prose answers about the prose — the first measurement here did exactly that, and
+this one is taken from `git show HEAD:` for that reason): **63 item bodies, 54 anchors.** The nine bodies with no
+anchor are **BL-47, BL-48, BL-49, BL-59, BL-60, BL-64, BL-65, BL-67 and BL-73** — seven of them OPEN items linked
+from `BACKLOG.md` §Open items, two CLOSED items linked from `BACKLOG-COMPLETED.md` pointer rows. Every one of the
+nine bodies **is present**; only the separator is absent, so the link has no target and the body reads as part of
+the record above it.
+
+**Why it matters more than a dead link.** This file's front matter says the `<a id="bl-N">` anchors **are the
+record separators the proof splits on**. An anchorless body is therefore inside its predecessor's span, and
+[`BACKLOG-DETAIL.md.verify.sh`](BACKLOG-DETAIL.md.verify.sh)'s C2 compares those spans byte for byte against
+`384b17c`. C2 is green today only because all nine sit after bodies that are not among its frozen 18; append one
+directly after a frozen body and the proof goes red for a reason that has nothing to do with the body that
+changed.
+
+**Shapes, none costed.** (a) Add the nine missing separator lines — smallest, and it makes every `[detail]` link
+resolve; it also changes where the proof splits, so it is run against C2 before and after, not after alone.
+(b) Add them and mechanize the property (every `[detail]` link resolves to an anchor here) as a new check, which
+is the obvious C7 and was **deliberately not written at S226**: red on arrival, and a proof that ships red is a
+proof nobody runs. (c) Drop the dead cells instead, leaving the bodies findable only by grep. Fork-only; neither
+file is in `bin/_manifest.py`.

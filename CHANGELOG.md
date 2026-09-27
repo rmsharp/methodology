@@ -223,6 +223,54 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-86] S226 — closing an item by the book is possible again: losses fail, growth is reported
+
+**BL-86 and BL-83 are both CLOSED, and their pointer rows are the first two written under the fixed rule.** The
+shard's losslessness proof was a **move** proof given a **destination**'s job: C1 pinned the 33 ids that moved and
+flagged anything else, so appending BL-83's row turned it RED (`unexpected in shard: [83]`, measured at S225) and
+**no item could be closed by the book at all.** It now pins the 33 as the loss detector — a missing row still fails
+C1, an altered byte still fails C2 — and **reports** the rows closed since: `33 moved item(s), exactly the expected
+set, present on both sides; 2 closed since the move (not a finding): BL-83, BL-86`.
+
+**The shape chosen was a FIFTH one, and this repository had already ratified it twice.**
+[`BACKLOG-DETAIL.md.verify.sh`](docs/planning/BACKLOG-DETAIL.md.verify.sh)'s C1 — written at S99 for the same kind
+of file — has always reported added ids and never failed them, *"because a backlog that can never gain an item
+would be a proof that fails on correct use, which is precisely the false-positive class BL-36 is about."* Fork
+Learning **#37** states it in the table and calls it *"sibling of losses FAIL, growth is REPORTED"*; **#96** states
+the constraint BL-86 ran into. None of the four shapes recorded when BL-86 was raised proposed it, and the item
+cites neither row — which is this session's Phase 3C row **#99**.
+
+**It is not the loosening it resembles, and that distinction was the decision.** `:31`'s comment defends the frozen
+33 as the *loss* detector (*"if a row vanished, a derived list would simply be shorter and C1 would pass"*) — an
+argument about `missing_shard`, kept byte for byte. Only *"and nothing else"* relaxes, and new **C6** replaces it
+with something the old reading never had: every id closed since the move must still be findable in `BACKLOG.md`,
+so the closure rule's third step is checked instead of assumed.
+
+**Five shapes built and measured on throwaway clones at `1201b12` before the operator was asked** — none costed
+when the item was raised: the chosen one, proof **+1,765 B / +24 lines**, shard +339 B; a boundary marker with two
+extra checks, +2,665 B / +46 lines and +1,344 B; the marker alone, +961 B, **but it passes a duplicate pointer row
+at exit 0**; a hand-maintained `ADDED` list, +296 B, where every future closure must edit the proof or C1 reddens
+(measured with a second closure: `unexpected in shard: [87]`); a third file, proof +0 B and **read by no proof at
+all**. (d) stayed declined. **Five negative controls fire on the shipped proof:** a dropped row (C1), one altered
+byte (C2), a copy left in the live file (C3), the same id twice (**exit 2**, via the DUP check already there) and a
+closure whose id never reached `BACKLOG.md` (C6).
+
+**A second defect in the same rule, fixed with it.** The rule also said closing an item means *"removing it from
+`BACKLOG-DETAIL.md`"* while the pointer row it prescribes links straight back there. **Ten of the 33 rows carry
+that `[detail]` cell and all ten still have their body**, so nobody followed the clause and anyone who had would
+have broken their own link. Both statements of the rule — in the shard and in `BACKLOG-DETAIL.md` — now say the
+body stays. The hand-maintained count also left the shard's `## Completed items (33)` heading, which the first
+closure after the extraction would have falsified in the same commit that added the row.
+
+**A claim made and withdrawn inside this session, recorded because the withdrawal is the finding.** I first
+reported that the *"removing it from here"* clause had already cost two dangling links (BL-59, BL-67). It had not:
+both bodies are present. The first measurement was `grep -c` for an anchor string **in a file into which I had just
+written that same string**, so it matched my own prose. Re-measured from `git show HEAD:`, the real population is
+**nine of 63 `[detail]` links** — BL-47, 48, 49, 59, 60, 64, 65, 67, 73, seven open and two closed — all missing
+only the `<a id>` separator line. Raised as **BL-87** and **recorded, not fixed** (FM #17): the obvious check for it
+is red on arrival, and a proof that ships red is a proof nobody runs. The self-matching literal was then removed
+from the prose so the next such grep is not fooled the same way.
+
 ### 2026-09-27 · [ad hoc] S226 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 **One row in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md), and the 448 B block deleted from

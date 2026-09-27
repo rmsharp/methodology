@@ -12,6 +12,13 @@
 # which the parent file says in as many words and which the move deliberately did not touch (FM #17).
 # Byte-identity is the whole claim.
 #
+# THE FILE HAS TWO POPULATIONS, and since S226 this proof treats them differently. The 33 rows that moved
+# are pinned: a missing one fails C1, an altered byte fails C2. Rows closed AFTER the move — this file is
+# also the standing home for them, by its own editing rule and BACKLOG-DETAIL.md's — are REPORTED by C1 and
+# never failed, with C6 asserting each one is still reachable from BACKLOG.md. That is the rule the sibling
+# proof BACKLOG-DETAIL.md.verify.sh's C1 already states for the same kind of file. Until S226 the frozen
+# reading refused the first closure after the extraction (BL-83's row, measured at S225): BL-86.
+#
 # Run from the repository root:  bash docs/planning/BACKLOG-COMPLETED.md.verify.sh
 # Exit 0 = proved. Exit 1 = a finding. Exit 2 = the proof could not be established (worse than a
 # finding: it means this script cannot see what it is for).
@@ -108,18 +115,25 @@ for label, r in (("pre-change file", was), ("shard", now)):
               "comparison per identity is meaningless." % (r[1], label))
         sys.exit(2)
 
-# C1 — identity set. Every expected id was there before and is in the shard, and the shard holds
-# nothing else. Checked before any byte comparison, so a missing row is a named finding rather than
-# a silently shorter loop.
+# C1 — identity set. Every expected id was there before and is in the shard. Checked before any byte
+# comparison, so a missing row is a named finding rather than a silently shorter loop.
+#
+# IDS CLOSED SINCE THE MOVE ARE REPORTED, NEVER FAILED. This proof asks whether anything was LOST in the
+# move, and a registry that can never gain a row would be a proof that FAILS ON CORRECT USE — the
+# false-positive class BL-36 is about, and the rule the sibling proof BACKLOG-DETAIL.md.verify.sh's C1
+# already applies to the same kind of file. The frozen literal above stays frozen and stays the loss
+# detector: it is `missing_shard` that needs a literal nobody derived, never the growth line.
 missing_before = [n for n in items if n not in was]
 missing_shard  = [n for n in items if n not in now]
-extra_shard    = sorted(set(now) - set(items))
-if missing_before or missing_shard or extra_shard:
-    fails.append("C1 identity set: missing from %s at %s: %s; missing from shard: %s; unexpected "
-                 "in shard: %s" % (os.environ["LIVE"], base, missing_before, missing_shard, extra_shard))
+since_move     = sorted(set(now) - set(items))
+if missing_before or missing_shard:
+    fails.append("C1 identity set: missing from %s at %s: %s; missing from shard: %s"
+                 % (os.environ["LIVE"], base, missing_before, missing_shard))
 else:
-    checks.append("C1 identity set: %d item(s), exactly the expected set, present on both sides"
-                  % len(items))
+    checks.append("C1 identity set: %d moved item(s), exactly the expected set, present on both sides%s"
+                  % (len(items),
+                     "" if not since_move else "; %d closed since the move (not a finding): BL-%s"
+                     % (len(since_move), ", BL-".join(str(n) for n in since_move))))
 
 # C2 — byte-exact rows, per identity.
 bad, total = [], 0
@@ -186,15 +200,30 @@ else:
     checks.append("C5 retained note: the %d B '%s' note is verbatim in %s"
                   % (len(note_text.encode()), NOTE, os.environ["LIVE"]))
 
+# C6 — reachability for the rows closed SINCE the move, the same property C4 asserts for the 33. The
+# editing rule's third step puts the bare id in BACKLOG.md's §Completed items pointer block, so a closed
+# item stays findable from the file Phase 0 reads. Without this, that step is the one step nothing checks,
+# and C1's growth line would report an unfindable row as health. A row here with no id there is an item
+# that was closed by deleting it.
+if since_move:
+    unref_since = [n for n in since_move if not re.search(r"\*\*BL-%d\*\*" % n, live)]
+    if unref_since:
+        fails.append("C6 reachability since the move: no id in %s for BL-%s — closed, and no longer "
+                     "findable from the file Phase 0 reads"
+                     % (os.environ["LIVE"], ", BL-".join(str(n) for n in unref_since)))
+    else:
+        checks.append("C6 reachability since the move: all %d later closure(s) findable in %s"
+                      % (len(since_move), os.environ["LIVE"]))
+
 for c in checks:
     print("  OK   " + c)
 for f in fails:
     print("  FAIL " + f)
 print()
 print("source : the commit before the extraction, %s" % base)
-print("rows   : %d moved; live file %d B, shard %d B"
-      % (len(items), len(live.encode()), len(shard.encode())))
-print("checked: C1, C2, C3, C4, C5")
+print("rows   : %d moved, %d closed since; live file %d B, shard %d B"
+      % (len(items), len(since_move), len(live.encode()), len(shard.encode())))
+print("checked: C1, C2, C3, C4, C5" + (", C6" if since_move else " (C6: no closures since the move)"))
 if fails:
     print("verify: FAIL — %d finding(s). The move is NOT proved lossless." % len(fails))
     sys.exit(1)

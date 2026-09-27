@@ -16,7 +16,11 @@ original order and their own column shapes. That is machine-checkable —
 [`BACKLOG-COMPLETED.md.verify.sh`](BACKLOG-COMPLETED.md.verify.sh) re-extracts every row from git by
 its own `BL-N` identity and compares bytes. Run it rather than trusting this paragraph.
 
-**⚠ THE COUNT AND THE ID LIST BELOW ARE DERIVED, and the heading they replace was wrong.**
+**⚠ THE HEADING CARRIES NO COUNT, and the id list below is derived.** The count stood in the heading until
+S226, when the first closure after the extraction made it wrong in the same commit that added the row — which is
+this file's own warning landing on this file, one layer down. The list below and the one in `BACKLOG.md` are both
+maintained by hand and both had BL-83 and BL-86 added at S226; re-derive rather than trust either.
+**The heading this one replaced was wrong too, and by a wider margin.**
 `BACKLOG.md`'s `## Completed items (…)` heading carried a hand-maintained id list that named 19 of
 the **33** rows actually present — BL-8, BL-15, BL-20, BL-24, BL-25, BL-27, BL-28, BL-29, BL-33,
 BL-34, BL-35, BL-38, BL-40 and BL-41 were all in the table and absent from the heading. That is the
@@ -27,21 +31,35 @@ the parent file. Re-derive rather than trust this one too:
 grep -cE '^\| \*\*BL-[0-9]+\*\* \|' docs/planning/BACKLOG-COMPLETED.md
 ```
 
-**Editing rule: closing an item adds its pointer row HERE, not to `BACKLOG.md`.** Remove the body
-from [`BACKLOG-DETAIL.md`](BACKLOG-DETAIL.md), remove the index row from `BACKLOG.md`'s §Open items,
-append the pointer row to the first table below, and log the action in
-[`CHANGELOG.md`](../../CHANGELOG.md). `BACKLOG.md` keeps only the id in its §Completed items pointer
-block, which is what makes a closed item still findable from the file Phase 0 reads — the property
-[`BACKLOG-archive-2026-08-15.md.verify.sh`](BACKLOG-archive-2026-08-15.md.verify.sh)'s C4 asserts.
+**Editing rule: closing an item adds its pointer row HERE, not to `BACKLOG.md`.** Remove the index row
+from `BACKLOG.md`'s §Open items, append the pointer row to the first table below, put the bare id in that
+file's §Completed items pointer block, and log the action in [`CHANGELOG.md`](../../CHANGELOG.md). The id is
+what makes a closed item still findable from the file Phase 0 reads — the property
+[`BACKLOG-archive-2026-08-15.md.verify.sh`](BACKLOG-archive-2026-08-15.md.verify.sh)'s C4 asserts for the eleven
+it archived, and which **C6** of this file's proof now asserts for every closure since the move.
+
+**Leave the item's body in [`BACKLOG-DETAIL.md`](BACKLOG-DETAIL.md) whenever the pointer row links to it** —
+the `[detail]` cell resolves to that body, and it is the only path from a pointer row to the record. **All ten
+rows carrying that cell kept their body**, so the rule's former *"removing it from here"* clause was followed by
+none of them and would have broken the link of any closure that did; corrected at S226 with BL-86. Nine of the 63
+`[detail]` links across this file and `BACKLOG.md` do dangle, for an unrelated reason — their bodies were appended
+without the `<a id="bl-N">` separator line — and that is **BL-87**, recorded and not fixed.
+
+**This file has TWO populations and the proof treats them differently — BL-86's fix (S226).** The 33 rows that
+moved at `a32f520` are pinned: C1 fails on a missing one, C2 on an altered byte. Rows closed since are
+**reported by C1, never failed**, the rule [`BACKLOG-DETAIL.md.verify.sh`](BACKLOG-DETAIL.md.verify.sh)'s C1
+already applies to the same kind of file — a registry that can never gain a row is a proof that fails on
+correct use. Under the frozen reading, appending BL-83's row turned the proof RED (`unexpected in shard: [83]`,
+measured at S225), so **no item could be closed by the book at all**.
 
 **Two tables, because the rows were written in two eras and neither was rewritten.** The first uses
 `BACKLOG.md`'s three-column index shape with a `[detail]` link into `BACKLOG-DETAIL.md`; the second
 carries its own `| Item | Scope | Outcome |` header and predates that split, so eleven of its rows
 link into [`BACKLOG-archive-2026-08-15.md`](BACKLOG-archive-2026-08-15.md) instead.
 
-## Completed items (33)
+## Completed items
 
-**BL-1**, **BL-2**, **BL-3**, **BL-4**, **BL-5**, **BL-6**, **BL-7**, **BL-8**, **BL-9**, **BL-10**, **BL-15**, **BL-20**, **BL-24**, **BL-25**, **BL-27**, **BL-28**, **BL-29**, **BL-33**, **BL-34**, **BL-35**, **BL-38**, **BL-40**, **BL-41**, **BL-43**, **BL-45**, **BL-53**, **BL-56**, **BL-59**, **BL-67**, **BL-72**, **BL-76**, **BL-78**, **BL-82**
+**BL-1**, **BL-2**, **BL-3**, **BL-4**, **BL-5**, **BL-6**, **BL-7**, **BL-8**, **BL-9**, **BL-10**, **BL-15**, **BL-20**, **BL-24**, **BL-25**, **BL-27**, **BL-28**, **BL-29**, **BL-33**, **BL-34**, **BL-35**, **BL-38**, **BL-40**, **BL-41**, **BL-43**, **BL-45**, **BL-53**, **BL-56**, **BL-59**, **BL-67**, **BL-72**, **BL-76**, **BL-78**, **BL-82**, **BL-83**, **BL-86**
 
 | **BL-43** | Six `bin/tests.sh` assertions flake under `pipefail` — **CLOSED 2026-09-19 (S197)**, and the enumerated six were the wrong population. Re-derived by pattern and by measurement rather than re-read: the pipe capacity pinned on this machine at **65,536 B** (65,519 B survives, 65,582 B does not), all **107** variable-producer pipelines instrumented and measured at runtime (every one executed, so the set is measured and not sampled), and the criterion moved from *is it big today* to **is its producer read from the real repository, which grows**. That gives **nine** sites, not six; `:3083` was the seventh, found by accident at S196, and this item's own six line numbers no longer pointed at assertions. All nine now read a here-string, each with its own RED-first proof extracted from the shipped line itself — 9 RED before, 0 after, and each still takes its `fail` arm when it should. **The item's severity claim was false:** 23 of the 125 candidate pipelines sit on `&& fail || pass`, where a matched pipeline scored failed makes a real defect read GREEN, and two of the nine were there — including Test 40's M3 mutant guard, which could not fail, and M2's `if`, whose else arm passed without the conservation check ever running. **Test 42 re-derives the population on every run** (a stale list is what made this item wrong), with the scanner proven to fire on a reverted site; it reported its own control literal as a site on its first run, which is why that literal is built by concatenation | [detail](BACKLOG-DETAIL.md#bl-43) |
 | **BL-45** | `FRAMEWORK_LEARNINGS.md` 16 B from its ceiling — **CLOSED 2026-08-26 (S114)** by raising it to a re-derived 73,728 B and writing the four owed rows; the other three options stay costed in the detail file | [detail](BACKLOG-DETAIL.md#bl-45) |
@@ -53,6 +71,8 @@ link into [`BACKLOG-archive-2026-08-15.md`](BACKLOG-archive-2026-08-15.md) inste
 | **BL-76** | A stale `.git/REBASE_HEAD` disarmed `.githooks/pre-commit` for the life of a clone — **CLOSED 2026-09-20 (S198)** by shape (1), chosen from a measurement rather than by size: every operation in the marker list was run to completion on git 2.50.1, and `REBASE_HEAD` is both the **only** marker that survives its operation and **redundant** — a rebase in progress always carries `rebase-merge` or `rebase-apply` too, so dropping it costs no coverage. A **clean** rebase leaks nothing, which is why only a *stopped* rebase arms the trap and it went five weeks unseen. Shipped: the marker dropped, a `--selftest` (10 checks) on the `commit-msg` precedent, the `pre-commit-selftest` gate, and Test 43 (10 assertions) reading the `for marker in` line rather than the file, since the fix's own comment names `REBASE_HEAD` a dozen times. RED-first (1 red of 10 before, 0 after), 10 mutants 10 killed, and end-to-end against a real completed rebase: refused without a ledger line, passed with one, still skipped mid-rebase. **S199: the upstream half is SENT — [PR #85](https://github.com/KJ5HST/methodology/pull/85), OPEN, MERGEABLE, re-derived against `upstream/main` (which has no suite coverage for a hook selftest, so the gate is the precedent); 139/0 unchanged, gates 10/10 → 11/11. Open until reviewed** | [detail](BACKLOG-DETAIL.md#bl-76) |
 | **BL-78** | `starter-kit/SAFEGUARDS.md` over its no-growth pin, and nothing in the commit path measuring it — **CLOSED 2026-09-21 (S216)**. P1 (`6ddfdb7`, S204) re-measured both read-set `measured_bytes` and made each note say the key is a record, not a ceiling; P2 (`fac748f`, S205, option β) made `SAFEGUARDS.md`'s row a reported series; P3, enforcement, was declined by the operator at S206, because merge commits skip the hook and all three growths of `SESSION_RUNNER.md` since 2026-08-30 were merges. The closing edits rewrote `.context-budget.json` `files[4]._`, which described a live refusal: the ratchet exists as `context_budget.py --precommit` (run at S216 in a clone: a staged growth refused, exit 2; a staged shrink passed, exit 0), and nothing in this clone calls it. **The item's own S201 claim that the ratchet *does not exist* was false**, as was S203's *has to build the check*; the same claim stands in fork Learning #85 (BL-83) | [detail](BACKLOG-DETAIL.md#bl-78) |
 | **BL-82** | Upstream PR [#83](https://github.com/KJ5HST/methodology/pull/83)'s twelve §8 decisions are the **maintainer's own**, so the fork gave the review the PR was opened for — **CLOSED 2026-09-20 (S208), POSTED** as one comment, [#issuecomment-5755256040](https://github.com/KJ5HST/methodology/pull/83#issuecomment-5755256040), on the operator's go-ahead on the exact text, read back byte-identical and checked as GitHub renders it. The review is [`pr83-decisions-review.md`](pr83-decisions-review.md) (S206; §6 recomposed at S207; one sentence added at S208, `f7fc621`): agree with eight of the twelve as recommended, and one measured change — leave `HANDOFFS.md` out of `merge=union`, which fuses two receipts into one block ([`pr83-union-repro.py`](pr83-union-repro.py), `c3a096b`). A reply is the maintainer's; answering it is new work | [detail](BACKLOG-DETAIL.md#bl-82) |
+| **BL-83** | Fork Learning #85 taught a false example — the `.context-budget.json` ratchet it said *"does not exist"* is `context_budget.py --precommit` — **CLOSED 2026-09-27 (S225)**, shape (1) at the operator's picker: fork Learning **#98** appended and **#85 retired under D1(b)** (`18d4034`), the first row ever retired and the first use of D2's reserved-gap mechanism, which created [`FORK_LEARNINGS-retired.md`](../archive/FORK_LEARNINGS-retired.md). Net **+536 B** — a correction, not a reduction; the mechanism recovers 1,401 B only when it retires without appending. Row **#86** inherits #85's false premise and stays live by D1; #98 names the inheritance. **This pointer row could not be written at S225** — the shard's own move proof refused it, which is BL-86, closed beside it at S226 | [detail](BACKLOG-DETAIL.md#bl-83) |
+| **BL-86** | The documented rule for closing an item adds a pointer row here, and this file's own move proof refused it, so no item could be closed by the book — **CLOSED 2026-09-27 (S226)** by the rule the sibling proof [`BACKLOG-DETAIL.md.verify.sh`](BACKLOG-DETAIL.md.verify.sh)'s C1 already states for the same kind of file: **losses fail, growth is reported.** C1 keeps the frozen 33 and still fails a missing row; ids closed since the move are reported on its OK line; new **C6** asserts each of them is still findable in `BACKLOG.md`, so the rule's third step is checked instead of assumed. **Five shapes were built and measured on throwaway clones before the operator chose** — the four recorded at S225 plus this one, which none of them proposed, and (d) stayed declined; the chosen shape is the smallest that leaves no blind spot (marker-only passes a duplicate row at exit 0; the third file is read by nothing). Five negative controls fire: a dropped row (C1), an altered byte (C2), a copy instead of a move (C3), a duplicate id (**exit 2**, through the DUP check already in the proof) and a closure whose id never reached `BACKLOG.md` (C6). **A second defect in the same rule, found by measurement and fixed with it:** *"removing it from here"* dangles the pointer row's `[detail]` link — eight of ten closures had already kept the body, and the two that did not are BL-87 | [detail](BACKLOG-DETAIL.md#bl-86) |
 
 | Item | Scope | Outcome |
 |------|-------|---------|
