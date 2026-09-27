@@ -223,6 +223,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S227 close-out — the read-cap class decision is recorded; predecessor scored 9
+
+**Deliverable:** the decision on BL-88, `cd7d422`, with fork Learning #100 at `a2885d5`. **Self 8, predecessor 9.**
+S226 earns the 9 on verified predictions rather than on tone: its forecast of the retention trim was **exact** (the
+`-2` suffix, S225's receipt, the shard name), its gate citation reproduced **hash for hash**, and four of its
+gotchas were load-bearing for this session. Against that, it left a rendering defect its own commit introduced —
+the blank line orphaning BL-87's index row — while its receipt reported that file's byte count as an improvement.
+
+**Verification at `a2885d5` and in a clone at `cd7d422`:** `bin/tests.sh` **343/0/6**;
+`quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, identical to
+Phase 0's; all three `docs/planning/` proofs exit 0; `bin/check-links` OK 111 links; `check-learnings` OK 85 rows
+contiguous 15..100; `context_budget.py --precommit` exit 0; `bin/check-handoff` OK.
+
+**`CHANGELOG.md` at this close-out is the one thing the next session must read first.** It is now within about one
+session's writing of the 262,144 B hard read refusal, three cuts are costed, and the choice is the operator's.
+
 ### 2026-09-27 · [ad hoc] S227 — Phase 3C: fork Learning #100, and D3 discharged by an explicit refusal
 
 **Row #100** (1,484 B, inside the 1,500 B `ROW_BUDGET_BYTES`; recomposed twice from 1,617 B rather than trimmed
