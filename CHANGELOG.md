@@ -223,6 +223,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-26-3.md` (1 record(s), 29,641 B → 17,814 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-26 → 2026-09-26) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-26-3.md`](docs/archive/HANDOFFS-through-2026-09-26-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 29,641 B → 17,814 B (−39.9%).
+
 ### 2026-09-27 · [BL-83] S225 claim — correct fork Learning #85's false example (in progress)
 
 **Phase 1B claim.** This entry plus a `status: pending` receipt in `HANDOFFS.md`, and Phase 0's
