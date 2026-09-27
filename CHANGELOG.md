@@ -223,6 +223,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S225 — fork `main` pushed to `origin`, `d7b3be8..fdb273a` (non-commit action, operator go-ahead)
+
+**Six commits, a clean fast-forward, every guard measured before anything was sent and the result read back after.**
+`origin/main` was at the expected **`d7b3be8`**, `git rev-list --count main..origin/main` **0** (nothing to rebase
+onto), `git rev-list --count origin/main..main` **6**, `git merge-base --is-ancestor origin/main main` **YES**, tree
+clean. After: `git ls-remote --heads origin main` reads **`fdb273a`**, and a re-fetch puts `origin/main` level with
+local `main` (0 ahead, 0 behind). **`upstream/main` was re-read and is unchanged at `6b29d3d`** — nothing was sent
+to `KJ5HST/methodology`, and no branch was pushed.
+
+**The count was measured, not carried.** `git log --oneline --no-merges origin/main..main` enumerated the six: the
+S225 claim (`095d20d`), the owed `HANDOFFS.md` retention trim (`0b68b04`) and its fold (`28c24d3`), BL-83's fix —
+fork Learning #98 and #85's retirement (`18d4034`), BL-83's outcome with BL-86 raised (`2f17170`), and the close-out
+(`fdb273a`). Ten files across them, listed by `git diff --name-only origin/main main`. S224's own push record had to
+note that its stated count was never measured; this one was, at the point of use.
+
+**This entry is pushed with the tip it records, not left above it, under the operator's standing grant of
+2026-09-16** — *a commit whose only change is the `CHANGELOG.md` entry recording an authorized push is pushed to
+`origin` without asking, and records its own push in the same entry.* Its guards are re-measured and the result read
+back with `git ls-remote` immediately after; a mismatch would be recorded below as a correction, not left implicit.
+**S219–S224 each left the recording commit behind**, which is the regress the grant exists to end and which
+`d7b3be8` closed earlier today; keeping it closed is what this paragraph is for.
+
 ### 2026-09-27 · [BL-83] S225 close-out — BL-83 fixed, #85 retired, BL-86 raised; predecessor scored 7
 
 **Deliverable complete and verified.** Fork Learning **#98** corrects #85 and **#85 is retired under D1(b)** —
