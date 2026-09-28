@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-27-5.md` (1 record(s), 26,017 B → 16,689 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-27 → 2026-09-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-27-5.md`](docs/archive/HANDOFFS-through-2026-09-27-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-27-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-27-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 26,017 B → 16,689 B (−35.9%).
+
 ### 2026-09-27 · [BL-88] S230 claim — P2: the read-cap row reads each project's trimmer source before it names a remedy (in progress)
 
 **The operator chose this at S230's Phase 0 task picker** — the plan's next phase,
