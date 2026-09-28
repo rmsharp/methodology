@@ -227,6 +227,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S233 — the unpushed-commit count was stale in its own commit; both records now name the command
+
+**Third instance of one defect, and the generalisation is now applied to a second quantity.** The close-out
+receipt said *"`origin/main` IS THREE COMMITS BEHIND"* and named three of five; the ledger entry beside it said
+*"four commits behind"*. Both were written before the commits that carried them, so both were false the moment
+they landed — `git rev-list --count origin/main..HEAD` reads **5**. Each now names that command plus
+`origin/main`'s fixed sha `016b3ae`, which cannot rot, exactly as S232 replaced its `CHANGELOG.md` size with
+`wc -c` (`016b3ae`) and its plan line count (`674c6a8`). **The rule has now cost three quantities: a file size,
+a line count, and a commit count.** Any figure describing the session's own output is measured on a draft;
+write the command, or measure after the last commit — which, for a figure inside that commit, is impossible by
+construction.
+
 ### 2026-09-28 · [BL-91] S233 close-out — the printer shipped, the gate refused, three receipts left standing
 
 **Close-out receipt in [`HANDOFFS.md`](HANDOFFS.md): `status: complete`, self 8, predecessor 9.** The session's
@@ -238,8 +250,9 @@ not, which is the signature of a session that added tests and no gate.**
 
 **Two states the next session inherits, both deliberate.** (1) **Three receipts stand against a settled
 retention depth of two**, so a `--cut 2 --force` trim is owed at its Phase 0, after the count is reported;
-shards run through `-7`. (2) **Nothing was pushed** — `origin/main` is four commits behind local `main`, and no
-push go-ahead was asked for at this session's picker. The only standing grant is a `CHANGELOG.md`-only push
+shards run through `-7`. (2) **Nothing was pushed** — `origin/main` stands at `016b3ae`, where this session started; count with
+`git rev-list --count origin/main..HEAD`, since a number written here is measured before the commits that
+follow it. No push go-ahead was asked for at this session's picker. The only standing grant is a `CHANGELOG.md`-only push
 record, which does not cover a session's work.
 
 **The open question this session surfaced is a decision, not a phase:** shape A asks for *"report better … and
