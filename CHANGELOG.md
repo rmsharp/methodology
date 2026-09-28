@@ -227,6 +227,27 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-91] S232 close-out — the handoff receipt
+
+Phase 3A–3F. `status: complete`, **self 8, predecessor 8**. S231's receipt scored 8: its
+*"re-run them, do not quote this paragraph"* instruction is what made this plan's evidence base sound,
+and its gotcha about the stale `.quality-gates-results.json` meant the citation was re-run rather than
+compared. Against that, one forecast contradicted itself inside the same paragraph (*"expect `-7`"* then
+*"expect `-6`"*; the truth was `-7`), and **neither the receipt nor BL-91 engaged BL-78 or BL-83** — the
+items recording that the overhead instrument *exists but is unwired* and that two earlier sessions had
+already claimed it did not exist. An executor trusting the item's framing would have proposed building
+what already ships, for the third time. One grep of `BACKLOG-DETAIL.md` found it.
+
+Self 8: the backlog grep, the instrument audit that caught a 4x error in a headline ratio before it was
+published, fifteen cited source lines opened and three tightened, and every number re-derived rather
+than quoted. Docked for a Phase 1B stub written with placeholder scores that `check-handoff` rejected —
+the precedent stub three receipts above showed the right shape — and for publishing a line count that
+this session's own later edits invalidated.
+
+**Verified in a `--no-local` clone at `674c6a8`:** `bin/tests.sh` **343 passed / 0 failed / 6 skipped**
+and `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 2f8fe36c7a92 · manifest 01a4ae7aa511`,
+both exit 0, both hashes unmoved — correct, since only documents changed.
+
 ### 2026-09-28 · [ad hoc] S232 Phase 3C — fork Learning #103, and no retirement
 
 **Appended:** `git log -- <path>` simplifies history and drops commits from the walk, so a per-commit
