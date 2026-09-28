@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-27-6.md` (1 record(s), 35,783 B → 25,287 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-27 → 2026-09-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-27-6.md`](docs/archive/HANDOFFS-through-2026-09-27-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-27-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-27-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 35,783 B → 25,287 B (−29.3%).
+
 ### 2026-09-27 · [ad hoc] S231 correction — `--cut N` means KEEP N, so the close-out's "wrong flag" finding was itself wrong
 
 **The pushed close-out entry below says S229's and S230's `--cut 2 --force` forecast used the wrong flag, citing
