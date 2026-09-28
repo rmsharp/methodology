@@ -227,6 +227,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-91] S233 close-out — the printer shipped, the gate refused, three receipts left standing
+
+**Close-out receipt in [`HANDOFFS.md`](HANDOFFS.md): `status: complete`, self 8, predecessor 9.** The session's
+four actions are each logged above: the claim `22c74da`, the D1 ratification `5372608`, the deliverable
+`d1f1a7d`, and fork Learning #104 `9769572`. Verified in a `--no-local` clone at `d1f1a7d` with HEAD asserted
+by sha: `bash bin/tests.sh` **361 passed / 0 failed / 0 skipped**; `quality_ratchet: 11/11 pass · 0 fail · 0
+unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511` — **the results hash moved and the manifest hash did
+not, which is the signature of a session that added tests and no gate.**
+
+**Two states the next session inherits, both deliberate.** (1) **Three receipts stand against a settled
+retention depth of two**, so a `--cut 2 --force` trim is owed at its Phase 0, after the count is reported;
+shards run through `-7`. (2) **Nothing was pushed** — `origin/main` is four commits behind local `main`, and no
+push go-ahead was asked for at this session's picker. The only standing grant is a `CHANGELOG.md`-only push
+record, which does not cover a session's work.
+
+**The open question this session surfaced is a decision, not a phase:** shape A asks for *"report better … and
+publish the version series somewhere a release must look"*, and only the first half exists. A printer nobody
+runs reports nothing. Where the number gets published is D3, unratified; P3 implements one of its options and
+must not be built until it is taken.
+
 ### 2026-09-28 · [ad hoc] S233 Phase 3C — fork Learning #104, and no retirement
 
 **Row #104:** a decision taken *against* a plan's recommendation neither makes the plan moot nor leaves its
