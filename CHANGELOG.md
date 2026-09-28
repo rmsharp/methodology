@@ -227,6 +227,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S230 claim — P2: the read-cap row reads each project's trimmer source before it names a remedy (in progress)
+
+**The operator chose this at S230's Phase 0 task picker** — the plan's next phase,
+[`dashboard-read-cap-class-adopter-drift-plan.md`](docs/planning/dashboard-read-cap-class-adopter-drift-plan.md) §8 P2.
+**Its one sub-decision was taken at S228's report: a SOURCE-TEXT read, never an execution** — no adopter code runs
+inside the scanner. P1 (`cb9b0ed`) is on fork `main`, which under the operator's fork-only choice is the "merged"
+the phase's precondition asks for.
+
+**This session:** the Class B over-cap row (`tools/methodology_dashboard.py:3510-3556`) gains a remedy sentence and
+drops to the Class A severity **only** where the scanned project's own `methodology_trim.py` source declares a
+`LEDGERS` entry for that file. **The failure path is the criterion:** no trimmer, no entry, or a source that cannot
+be read or parsed leaves the row **byte-identical** to P1's. The class stays declared — `READ_CAP_CLASS_A`/`_B`
+(`:423-428`) and both pins (`tools/test_methodology_dashboard.py:5464`, `:5485`) untouched, so dragon 6 is not
+engaged. RED-first tests for all three outcomes, the load-failure arm on a deliberately broken fixture trimmer;
+`starter-kit/` twin mirrored **last**; the plan's P3 fleet diff re-run read-only. Fork-only — **no PR granted,
+nothing on `KJ5HST/methodology`.**
+
 ### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `ab73d31..c82431d` — and this record with it
 
 **The operator's explicit go-ahead, asked for and given at S229's close-out** — **21** commits, well beyond the standing

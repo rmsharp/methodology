@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S230
+date: 2026-09-27
+status: pending
+active_task: **P2 of the BL-88 plan: the read-cap row reads each scanned project's trimmer SOURCE before it names a remedy.** Chosen at S230's Phase 0 picker; the plan's one sub-decision was taken at S228's report — **a source-text read, never an execution**, so no adopter code runs in the scanner. **This session:** the Class B over-cap row (`tools/methodology_dashboard.py:3510-3556`) gains a remedy sentence and drops to the Class A severity **only** where that project's `methodology_trim.py` declares a `LEDGERS` entry for the file; **no trimmer, no entry, or an unreadable/unparsable source leaves the row byte-identical to P1's** — the failure path is the criterion. **The class stays declared:** `READ_CAP_CLASS_A`/`_B` (`:423-428`) and both pins (`tools/test_methodology_dashboard.py:5464`, `:5485`) untouched; dragon 6 not engaged. RED first, all three outcomes; `starter-kit/` twin mirrored **LAST**; P3 fleet diff re-run read-only. Fork-only; **nothing on `KJ5HST/methodology`, and no PR was granted.**
+```
+
+```handoff
 session: S229
 date: 2026-09-27
 status: complete
