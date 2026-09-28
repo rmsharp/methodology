@@ -227,6 +227,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `ce0ea45..c51c858` — and this record with it
+
+**The operator's explicit go-ahead, asked for and given after S231's close-out** — **6** commits: D1's
+ratification, the `--cut` correction, the `HANDOFFS.md` retention trim to `-6`, its fold into the shard index,
+and BL-60's re-measurement. **Pushed because a trim had advanced the frontier locally:** until this push the
+frozen shard `docs/archive/HANDOFFS-through-2026-09-27-6.md` and the receipt it holds existed on one machine
+only. Read back with `git ls-remote origin refs/heads/main` → `c51c858`. **Fork `origin` only; nothing was sent
+to `KJ5HST/methodology`**, where six pull requests remain open with 0 reviews and nothing is owed. **This entry
+rides the push it describes** under the standing push-record grant.
+
 ### 2026-09-27 · [BL-60] S231 — the overhead question, measured: the read side is flat, the archive is 76% of the growth
 
 **Asked by the operator mid-session** (*"I am concerned that the overhead associated with using methodology is
