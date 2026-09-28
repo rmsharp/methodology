@@ -244,11 +244,29 @@ the files.** F4.
 
 ---
 
-## §6 Decisions — none of these is ratified; D1 governs
+## §6 Decisions — D1 is RATIFIED (shape A); D2–D6 are not
+
+> **RATIFIED 2026-09-28 (S233): D1 = (a), shape A — *report better, gate nothing*.** The operator took it
+> at S233's Phase 0 picker, declining (b), (c) and (d). **Three consequences bind any later session.**
+> **(i) No `.quality-gates.json` entry** — §7's **P2 is out of scope**, not deferred; proposing it again is
+> re-proposing a decided question. **(ii) Standing decision S3 stays closed** — (c) was declined a second
+> time, and §1's rule still holds: it may not be re-proposed without the operator reopening it himself.
+> **(iii) §7's P1 survives the change of shape and is S233's deliverable**, because a printer is what shape A
+> needs — a truthful, write-free, one-line report of the number. Under (b) it would have been a gate's
+> measuring stick; under (a) it is the report itself. **D2–D6 remain unratified**, though P1 answers D2's
+> unit question in passing by printing bytes *and* tokens rather than choosing between them.
 
 **D1 — the shape. Governing; everything below can be deferred without blocking it.**
-- **(a)** Shape A — reporting only. Inherits a dependency on PR #86 (0 reviews).
-- **(b)** Shape B — one `max` gate on the read-set class total at 72,535 B, canonical-only. **RECOMMENDED.**
+- **(a)** Shape A — reporting only. Inherits a dependency on PR #86 (0 reviews). **← RATIFIED, operator,
+  2026-09-28 (S233).** The PR #86 dependency is discharged *for the number* by §7 P1's canonical-only
+  printer — §5's *"or its fork-side equivalent"* — but **not** for the distributed tool's own headline,
+  which still contradicts its table (§8 dragon 5, BL-80, PR #86). A printer beside a wrong sentence does
+  not correct the sentence.
+- **(b)** Shape B — one `max` gate on the read-set class total at 72,535 B, canonical-only. **RECOMMENDED by
+  this plan and NOT TAKEN.** The recommendation is left standing rather than rewritten: what the plan argued
+  is part of the record the decision was made against (§5 *"Why B and not A"*, and §4 F5 — a truthful report
+  was necessary and not sufficient for five months). Shape A catches nothing, by construction, and the
+  operator chose it knowing that.
 - **(c)** Shape C — distributed enforcement. **Requires the operator to reopen S3 himself.**
 - **(d)** Nothing yet. Live and defensible: six pull requests sit upstream with 0 reviews, and this
   repository's purpose is reaching adopters through merged pull requests.
@@ -279,7 +297,11 @@ summary line.
 
 ---
 
-## §7 Phases — if D1(b) is ratified
+## §7 Phases — written for D1(b), which was NOT taken; read §6's ratification note first
+
+**Under the ratified shape A: P1 stands as S233's deliverable. P2 is out of scope — there is no gate.**
+P3 is untouched by D1 and still waits on D3, which is unratified. The phase text below is the text the
+decision was taken against and is deliberately not rewritten.
 
 Each phase is ONE session and closes out when done (`SESSION_RUNNER.md` §Planning Sessions). Every
 phase names the **surface** its DONE criterion is demonstrated on and what that surface cannot show.

@@ -3855,9 +3855,15 @@ question about the written record rather than the read one.
 operator questions, and are unbudgeted by any session's plan — which is itself an instance of the thing this
 item is about.
 
-**PLANNED 2026-09-28 (S232) — [`overhead-ratchet-plan.md`](overhead-ratchet-plan.md), 376 lines. Nothing is
-ratified.** §6 D1 governs, four options, recommending **(b)**: one entry in this repository's own
-`.quality-gates.json`, `direction: max` on the read-set class total, declared at the measured value.
+**PLANNED 2026-09-28 (S232) — [`overhead-ratchet-plan.md`](overhead-ratchet-plan.md). D1 RATIFIED
+2026-09-28 (S233): (a), shape A — *report better, gate nothing*.** The plan recommended **(b)**, one
+`direction: max` entry in this repository's own `.quality-gates.json` on the read-set class total; the
+operator declined it, along with (c) and (d). **So nothing here will ever refuse a growth:** §7's P2 is
+out of scope rather than deferred, and shape C — distributed enforcement, standing decision S3, his S206
+declination — was declined a second time and stays closed. What survives is **P1, the printer** (S233's
+deliverable): a canonical-only `bin/check-overhead` reporting the read-set total in bytes and tokens,
+write-free. Shape A *catches nothing* by construction — §4 F5 measures a truthful report as necessary and
+not sufficient for five months — and the decision was taken against that finding, not in ignorance of it.
 **Two of this item's framings did not survive re-derivation and the plan says so.**
 
 **(1) "No gate watches it" understates what is there.** `context_budget.py --precommit` already refuses a

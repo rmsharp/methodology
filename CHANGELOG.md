@@ -227,6 +227,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-91] S233 — D1 ratified: shape A, *report better, gate nothing*
+
+**The operator took D1 as (a) at S233's Phase 0 picker, declining the plan's own recommendation.** Shape B —
+one `direction: max` entry in this repository's `.quality-gates.json` on the read-set class total — is **not
+taken**, so [`docs/planning/overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md) §7's **P2 is out
+of scope rather than deferred**, and **nothing in this repository will refuse a growth of the mandated read
+set.** Shape C, distributed enforcement, was declined a second time: standing decision **S3** — his S206
+declination of the hook shape (BL-78 P3) — stays closed, and §1's rule that it may not be re-proposed without
+him reopening it stands.
+
+**What the decision was taken against, recorded because it was not taken in ignorance of it.** §4 F5 measures
+that a truthful report was *necessary and not sufficient* for five months, and §5 says shape A **catches
+nothing** by construction. The plan's recommendation and its *"Why B and not A"* are left standing in the
+document rather than rewritten, because they are part of the record the choice was made against.
+
+**What survives, and one dependency it half-discharges.** §7's **P1, the printer**, is S233's deliverable: a
+canonical-only `bin/check-overhead` reporting the read-set class total in bytes and tokens, write-free. It is
+§5's *"or its fork-side equivalent"* for shape A's number, so the dependency on unreviewed PR #86 is
+discharged **for the number only** — the distributed tool's headline still contradicts its own table
+(§8 dragon 5, BL-80, [PR #86](https://github.com/KJ5HST/methodology/pull/86)). A printer beside a wrong
+sentence does not correct the sentence. Recorded in the plan §6, and in BL-91's index row and detail body.
+**D2–D6 remain unratified**, though P1 answers D2's unit question in passing by printing both units.
+
 ### 2026-09-28 · [BL-91] S233 claim — the read-set overhead printer, under shape A (in progress)
 
 **The governing decision is taken: the operator ratified D1 = shape A, *report better, gate nothing*,**
