@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-27-4.md` (1 record(s), 27,548 B → 15,732 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-27 → 2026-09-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-27-4.md`](docs/archive/HANDOFFS-through-2026-09-27-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-27-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-27-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 27,548 B → 15,732 B (−42.9%).
+
 ### 2026-09-27 · [BL-88] S229 — the read-cap row asserts only what it evaluated: the trimmer claim is gone, the backlog reason is per-name
 
 **P1 of [`dashboard-read-cap-class-adopter-drift-plan.md`](docs/planning/dashboard-read-cap-class-adopter-drift-plan.md)
