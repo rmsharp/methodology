@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S231 — the receipt re-pointed at BL-91 after the operator changed what comes next
+
+`next_steps` (0) said BL-60's planning session was next, which the operator superseded the same day. The receipt now
+carries **(0b)**: the next session is the **BL-91 planning session**, with the version series, the dollar floor, what
+was *not* measurable, and the pointer to the three committed scripts — so the next session's Phase 0 finds the task
+and its evidence in the file it already reads, not in a conversation it cannot see. A new **(6b)** records that all of
+this work happened after close-out under no claim.
+
 ### 2026-09-28 · [BL-91] Raised, and the operator commissions a planning session as the NEXT SESSION
 
 **BL-91 — the framework's own overhead has risen 4.6x across 27 releases with nothing watching it.**
