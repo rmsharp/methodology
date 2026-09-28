@@ -227,6 +227,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] The close-out fork push, `e5bfca4..37774a5` — and its own record
+
+Seven commits to fork `origin` on the go-ahead granted in advance at this session's Phase 0 picker: the
+claim, the retention trim and its fold, the depth ratification, the deliverable, fork Learning #103 with
+the line-count correction, and the close-out receipt. Read back with `git ls-remote` and `git rev-list
+--count --left-right`: `origin/main` = local `main` = `37774a5`, **0/0**, working tree clean.
+`upstream/main` untouched at `6b29d3d`; **nothing reached `KJ5HST/methodology`.** This entry records its
+own commit, which goes up under the standing CHANGELOG-only push-record grant.
+
 ### 2026-09-28 · [BL-91] S232 close-out — the handoff receipt
 
 Phase 3A–3F. `status: complete`, **self 8, predecessor 8**. S231's receipt scored 8: its
