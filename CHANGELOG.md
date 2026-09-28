@@ -227,6 +227,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S231 correction — `--cut N` means KEEP N, so the close-out's "wrong flag" finding was itself wrong
+
+**The pushed close-out entry below says S229's and S230's `--cut 2 --force` forecast used the wrong flag, citing
+the front matter's `--cut 1 --force` and S230's one-record trim. That reasoning is false.** `--cut N` is a cut
+*point*, not a count of records to archive: measured on this tree at three receipts, `--cut 1` reports *would
+archive **2** of 3* and `--cut 2` reports *would archive **1** of 3*. S230 moved one record **because** it passed
+`--cut 2`. Both predecessors' forecasts were correct and the accusation is withdrawn; the S231 receipt is
+corrected in place and the pushed entry stands as written, corrected by this one.
+
+**What the measurement DID surface is a real, unsettled disagreement about DEPTH.** The `HANDOFFS.md` front matter
+states *"keep ONE receipt, trim above TWO"* and prints `--cut 1 --force`; S229, S230 and S231 have each kept
+**two**. One receipt or two is an operator question — the S172 decision that set N=1 is quoted in that front
+matter — and no session has put it. **This session trimmed at `--cut 2`, the depth its own go-ahead described,
+and raises the discrepancy rather than resolving it unasked.**
+
 ### 2026-09-27 · [BL-88] S231 — the operator ratifies D1 as Option C: the small pull request first, the stack held
 
 Taken at S231's close-out picker, after the routing plan was written and read back.
