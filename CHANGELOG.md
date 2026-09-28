@@ -227,6 +227,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S229 close-out — P1 shipped; Phase 3C appended nothing, deliberately; predecessor scored 9
+
+**Deliverable:** `cb9b0ed` — the read-cap row asserts only what it evaluated. **Fork-side only; no upstream pull
+request was granted and none was opened.** **Self 8, predecessor 9:** S228's `-4` shard forecast was exact, its
+numbers were re-derived rather than quoted at three separate readings, and **the `grep -c '^session: '` check it
+wrote into its gotchas caught this session's own duplicated receipt before it committed** — twice, counting S228's.
+A handoff that prevents its successor's error is doing the job the scoring exists to reward.
+
+**Verification, RED first.** Two new tests failed **5 times** across the four Class B names before the edit; after
+it, `tools/test_methodology_dashboard.py` is **338 tests OK**, with both class pins unchanged. In a `--no-local`
+clone at the final tree `d34bd5b`: `bin/tests.sh` **343 passed / 0 failed / 6 skipped** — the `>= 343` floor exactly
+— and `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 22227e3813bb · manifest 01a4ae7aa511`.
+**Fleet diff, read-only, both module versions, real sizes: 3 rows changed, 29 identical, 32 watched files, no
+severity moved anywhere.**
+
+**PHASE 3C APPENDED NO ROW AND THAT IS THE RESULT, NOT AN OMISSION.** The candidate lesson — *a ratchet floor
+measured mid-session can be tightened to a number the next close-out refuses* — **is already stated more generally,
+with this exact mechanism, by fork Learning #70**, which names `bin/tests.sh` Test 34, its six stated skips and the
+two-versus-three receipt population. It earned its keep here: `tests-sh-passed` read **349** at the fix and **343**
+at the final tree, and tightening to 349 would have gone red at the next trim. Appending would have restated #70
+less generally, so nothing was appended and **no retirement is owed** — D3 is keyed to appending. Rows considered:
+**#70** (the match), **#41**, **#32**, **#30**.
+
 ### 2026-09-27 · [ad hoc] S229 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 **452 B of front matter becomes a 122 B row** in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md); rows **65 → 66**.
