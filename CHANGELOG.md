@@ -227,6 +227,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S233 — two operator decisions at close-out: the push declined, the publishing question deferred
+
+**Both are recorded because a declined go-ahead and a deferred decision are actions, and the difference between
+*asked and declined* and *never asked* is the whole value of the record.** (1) **The push was offered and
+declined:** the session's commits stay on this machine; `origin/main` remains at `016b3ae`. The receipt's
+`next_steps` (2) now says so, replacing a line that read as though the go-ahead had simply not been sought.
+(2) **D3 — where the reported number gets published — was put to him and deferred to the next session**, so
+[`overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md) §7's P3 stays blocked by an explicit
+deferral rather than by an open question, and the next session's Phase 0 picker is where it belongs.
+
+**Nothing reached any remote.** `upstream/main` untouched at `6b29d3d`; nothing on `KJ5HST/methodology`.
+
 ### 2026-09-28 · [ad hoc] S233 — the unpushed-commit count was stale in its own commit; both records now name the command
 
 **Third instance of one defect, and the generalisation is now applied to a second quantity.** The close-out
