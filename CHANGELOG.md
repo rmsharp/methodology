@@ -227,6 +227,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `ab73d31..c82431d` — and this record with it
+
+**The operator's explicit go-ahead, asked for and given at S229's close-out** — **21** commits, well beyond the standing
+CHANGELOG-only push grant, which is why it was asked rather than assumed. **Fork `origin` only; nothing was sent to
+`KJ5HST/methodology`, where six pull requests still sit open with 0 reviews and nothing is owed.**
+
+**What the range carries:** S227's decision on BL-88 and fork Learning #100; S228's `CHANGELOG.md` archive at the
+2026-09-22 seam (85 records, 249,268 → 130,729 B) and fork Learning #101; S229's shipped fix to the read-cap row and
+BL-89; three `HANDOFFS.md` retention trims with their folds (`-2`, `-3`, `-4`); and the repair of the duplicated
+S227 receipt.
+
+**This entry rides the push it describes**, so the record and the state it records land together — the one-behind
+regress S219–S224 carried, ended at S225 and kept ended here. Read back with `git ls-remote` rather than trusting
+this sentence.
+
 ### 2026-09-27 · [BL-89] S229 — BL-89 raised: `bin/check-handoff` passed three differently-broken ledgers in three sessions
 
 **Raised at the operator's request after S229's close-out report, written from what is already known and NOT
