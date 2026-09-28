@@ -227,6 +227,30 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S231 — the dashboard's upstream route, planned: one dependency stack plus four detachable pieces
+
+**Deliverable:** [`docs/planning/dashboard-upstream-routing-plan.md`](docs/planning/dashboard-upstream-routing-plan.md)
+(376 lines), the routing document S230's next_steps (1) said the operator would have to commission. **Fork-side;
+nothing was opened, no branch was cut, and every pull request it names is its own go-ahead.** Ratification pending:
+§6 carries six decisions, D1 (campaign shape) governing.
+
+**The inventory** (`SESSION_RUNNER.md` §Planning Sessions' mandatory step) was taken symbol-by-symbol from the two
+trees — `upstream/main` `6b29d3d` against fork `main` `0aeeec1` — not from the commit list: **42 fork-only top-level
+names, 1 upstream-only, 15 shared-but-different, 5 fork-only risk rows, 10 fork-only test classes (123 tests)**.
+Upstream's suite is **226 tests, OK, exit 0** in a `--no-local` clone, against the fork's 350.
+
+**What the inventory changed about the answer.** The read-cap work and the trim-trigger row are **one dependency
+stack, not two features** — `collect_trim_metrics` reads `read_cap_watch` and calls `read_cap_class()`
+(`tools/methodology_dashboard.py:2319`, `:2320`) while BL-88's own P2 calls `find_trim_tool()` — so they cannot be
+sent separately. Four pieces detach; one of them **exists only inside merge commits** (`8b87086`, `421ebf9`) and so
+can never be cherry-picked; one is a **live defect in the maintainer's shipped tool** (`first_commit_date` reads the
+NEWEST commit, 13 lines, 5 tests) and depends on nothing; two are policy changes rather than fixes. Three things
+that looked divergent are not — `LANG_MAP`, `detect_doc_only` and `FRAMEWORK_ITEMS` differ **in comments only**.
+
+**No open pull request touches either scanner copy or its test file** (`gh api …/pulls/<N>/files`, all six); the
+shared paths are `CHANGELOG.md`, `.quality-gates.json` (#85–#87), `bin/tests.sh` (#84, #86, #87) and
+`bin/_manifest.py` (#84). BL-88's index row and detail now point at this plan instead of at a P4 with no target.
+
 ### 2026-09-27 · [BL-88] S231 claim — the upstream routing plan for the fork's dashboard divergence (in progress)
 
 **The operator chose this at S231's Phase 0 task picker**, from S230's next_steps (1): BL-88's P4 was measured to
