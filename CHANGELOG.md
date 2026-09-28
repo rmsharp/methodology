@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-90] S230 — raised after close-out: `--sync` overwrites a copy's local `EXCLUDE_DIRS`; the S230 receipt corrected
+
+Found while dry-running, before offering it, the command 2.19.0's stale-copy warning now prints to the portfolio
+copy: `--sync ~/Development --dry-run` reports `update methodology_dashboard.py`, 1 of 1 target, with no word about
+that copy's local 9-name `EXCLUDE_DIRS` — the edit point the module's own CUSTOMIZATION section invites. **Recorded
+as [BL-90](docs/planning/BACKLOG-DETAIL.md#bl-90), not fixed (FM #17), and nothing was synced.** The S230 receipt's
+next_steps (2) had called that command *"the remedy"*; it now says what running it would destroy.
+
 ### 2026-09-27 · [BL-88] S230 close-out — P2 shipped, 2.19.0; P4 has no upstream target; Phase 3C appended nothing, deliberately; predecessor scored 9
 
 **Deliverable:** `161181c` — the Class B read-cap row names a remedy only where the project's own trimmer source

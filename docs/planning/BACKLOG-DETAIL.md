@@ -3741,3 +3741,29 @@ either. **Nothing costed; no shapes proposed.** The obvious candidates — asser
 uniqueness, assert the block count against `grep -c '^```handoff$'`, or refuse a front matter whose
 fence count disagrees with its own documented command — are **named here as starting points, not as a
 decision.**
+
+<a id="bl-90"></a>
+
+**BL-90 — `methodology_dashboard.py --sync` overwrites a copy's local `EXCLUDE_DIRS` with no warning, and
+2.19.0's stale-copy warning now sends every older copy's operator to that `--sync`. Raised 2026-09-27 (S230)
+after its close-out; recorded from what is known, not investigated.**
+
+**What was measured.** The module's own CUSTOMIZATION section (`tools/methodology_dashboard.py`, the docstring)
+says *"EXCLUDE_DIRS: Add directory names to skip during project discovery."* The portfolio copy at
+`~/Development/methodology_dashboard.py` does exactly that: `diff` against the 2.18.0 canonical shows a 9-name
+local `EXCLUDE_DIRS` (`chat_verification`, `church_growth`, `claims-model-starter.wiki`, `claude_work`,
+`feedback-loop-comparison`, `methodology-bl57`, `dalia_martinez_funeral` among them) and **nothing else** except
+P1's row, which it never received. `python3 starter-kit/methodology_dashboard.py --sync ~/Development --dry-run`
+reports `update methodology_dashboard.py` — **1 of 1 target, no mention of a local edit** — so following it
+replaces the list with the canonical six names and the portfolio scanner starts scanning the excluded projects.
+
+**Why it matters now and not before.** Nothing pointed anyone at that `--sync` while every copy read 2.18.0. S230
+bumped `DASHBOARD_VERSION` to **2.19.0** (the operator's choice), so `check_stale_version()` now prints the
+scoped `--sync` to every older copy — the portfolio copy first, which is also the copy that emitted BL-88's
+original false flag and still carries it.
+
+**Not costed; no shape proposed.** Starting points only: `--sync` could refuse or warn when the target differs
+from the canonical version it replaces in more than its version line; `EXCLUDE_DIRS` could move to a side file
+the copy reads; or the CUSTOMIZATION section could stop inviting an edit the update route destroys. **Adjacent to
+BL-32** (a supported adopter-extension mechanism with a sync-survival story) — the same question for a different
+file.
