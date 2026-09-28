@@ -227,6 +227,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] The `HANDOFFS.md` retention depth is settled at TWO — operator decision, S232 Phase 0
+
+S231's receipt left one thing explicitly open and called it the operator's: the front matter said
+*"keep ONE receipt"* and printed `--cut 1 --force`, while **S229, S230 and S231 each ran `--cut 2`
+and kept two.** Three sessions' practice and the written policy disagreed by one receipt and nobody
+had settled which was meant. **Ratified at this session's Phase 0 picker: N=2**, replacing the N=1
+the operator set at S172 (2026-09-16), which had itself replaced S127's N=4. Both prior decisions
+keep their attribution — this is a supersession, not a rewrite.
+
+**It settles a contradiction rather than changing behaviour, and the arithmetic is unaffected.**
+BL-59's measurement still stands (the handoff is done by the newest receipt alone), so the second
+receipt is a spare rather than a working set; depth and trigger stay separate, and the trigger is
+still *above 2* because it sits one above the depth (BL-60). **`RETENTION_FLOOR = 3` in
+`bin/check-handoff` is that TRIGGER, not this depth** — it is untouched, and its A1 fit
+(3 x 12 KiB + 7,168 <= 65,536 B) still holds. The front matter now says so explicitly, along with
+why `tests-sh-passed` measures **343 at rest and 349 mid-claim**: the steady state is two receipts
+between claims and three during one, so Test 34's six whole-ledger assertions run only inside the
+claim window. Front matter 4,198 -> 4,837 B against the fixed 7,168 B reserve (Test 39 A2), 2,331 B
+of headroom left.
+
 ### 2026-09-28 · [ad hoc] S232 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 The trimmer's ~448 B pointer block for `HANDOFFS-through-2026-09-27-7.md` became one row at the

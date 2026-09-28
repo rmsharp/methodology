@@ -5,18 +5,21 @@ This repository dogfoods its own methodology: every session records a durable, m
 [`starter-kit/HANDOFFS.md`](starter-kit/HANDOFFS.md) for the block format and the write points, and
 `bin/check-handoff` for the checker. Newest on top; prepend-only.
 
-**Retention policy — keep ONE receipt, trim above TWO.** Everything older is archived under
-`docs/archive/` and indexed in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md). **N=1 is an operator decision (2026-09-16, S172)
-replacing S127's N=4**, taken against BL-59's measurement of what actually reads this file: the
-handoff is done by the newest receipt alone. **Depth and trigger are separate on purpose:**
+**Retention policy — keep TWO receipts, trim above TWO.** Everything older is archived under
+`docs/archive/` and indexed in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md). **N=2 is an operator decision (2026-09-28, S232)**
+replacing **his N=1 of S172 (2026-09-16)**, which had replaced S127's N=4. It settles a
+contradiction rather than changing practice: this paragraph said *keep ONE* and printed `--cut 1`
+while S229, S230 and S231 each ran `--cut 2` and kept two — flagged in S231's receipt as the
+operator's to settle. BL-59's measurement of what actually reads this file still stands — the
+handoff is done by the newest receipt alone — so the second receipt is a spare, not a working set. **Depth and trigger are separate on purpose:**
 every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **`methodology_trim.py` fires on BYTES (196,608 B),
 never on a record count**, so the policy is applied by the session that notices: Phase 0 runs
 `grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
 that report, never inside Phase 0, which is read-only apart from the reconcile backfill
-(`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 1 --force`. The force is
+(`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 2 --force`. The force is
 warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
 (BL-59). `bin/check-handoff` validates the 13-key schema on the **newest** receipt; `--all` checks
-every receipt and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent.
+every receipt and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent. **`RETENTION_FLOOR = 3` in `bin/check-handoff` is that TRIGGER, not this depth**, so N=2 leaves it and its A1 fit (3 x 12 KiB + 7,168 <= 65,536 B) untouched; the steady state is two receipts between claims and three during one, which is why `tests-sh-passed` measures 343 at rest and 349 mid-claim.
 
 **Two session sequences share this ledger and their numbers collide.** This fork and
 `upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
