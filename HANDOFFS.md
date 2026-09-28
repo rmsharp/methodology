@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S231
+date: 2026-09-27
+status: pending
+active_task: **A PLANNING SESSION — which fork-only rows of `methodology_dashboard.py` go upstream, in what order.** Chosen at S231's Phase 0 picker from S230's next_steps (1), which measured BL-88's P4 to have **no target**: `upstream/main`'s dashboard is **2.11.1** and carries none of the read-cap class code P1 (`cb9b0ed`) and P2 (`161181c`) changed, so BL-88 can reach an adopter only inside a pull request that first upstreams the rows underneath it. **The deliverable is the plan document in `docs/planning/`, and nothing else** — no dashboard code changes, no branch, no pull request, nothing on `KJ5HST/methodology`. Per `SESSION_RUNNER.md` §Planning Sessions it carries a **grep-based inventory** of the fork↔upstream divergence (mandatory for a migration plan — the "files to change" list comes from search results, not from architectural knowledge), a batching into PR-sized units with an order and its rationale, and per-phase DONE criteria naming the **surface** each is demonstrated on. Implementation and any pull request are later sessions, each its own go-ahead.
+```
+
+```handoff
 session: S230
 date: 2026-09-27
 status: complete

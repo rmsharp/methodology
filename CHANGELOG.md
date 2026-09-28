@@ -227,6 +227,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S231 claim — the upstream routing plan for the fork's dashboard divergence (in progress)
+
+**The operator chose this at S231's Phase 0 task picker**, from S230's next_steps (1): BL-88's P4 was measured to
+have **no target** — `upstream/main`'s dashboard is **2.11.1** and none of `READ_CAP_CLASS_A`, `READ_CAP_CLASS_B`,
+`read_cap_class`, `find_trim_tool` or `collect_trim_metrics` exists there — so the fork's shipped P1 (`cb9b0ed`)
+and P2 (`161181c`) can reach an adopter only inside a pull request that first upstreams the rows they sit on.
+That routing decision is the operator's to commission, and this session produces the plan for it.
+
+**This session:** one planning document under `docs/planning/`, following `SESSION_RUNNER.md` §Planning Sessions —
+a grep-based inventory of what the two copies of `methodology_dashboard.py` actually differ by (the mandatory step
+for a migration plan; the change list comes from the searches, not from recollection), a batching of those
+differences into pull-request-sized units with a defended order, each phase's DONE criterion, verification command
+and **surface**, and a session boundary per phase. **The plan is the deliverable: no dashboard code is changed, no
+branch is cut, no pull request is opened, and nothing is sent to `KJ5HST/methodology`,** where six pull requests
+sit open with 0 reviews and nothing is owed.
+
 ### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `cf60984..4093485` — and this record with it
 
 **The operator's explicit go-ahead, asked for after S230's close-out report**, for the one commit carrying the §3G
