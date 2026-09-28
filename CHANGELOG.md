@@ -227,6 +227,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-90] S230 — the portfolio dashboard copy synced to 2.19.0, its local `EXCLUDE_DIRS` re-applied; BL-90's "9-name" corrected
+
+**The operator's go-ahead, given at S230's close-out.** `~/Development/methodology_dashboard.py` — outside every
+repository, so a scratch backup was taken first — went 2.18.0 → **2.19.0** by `--sync ~/Development`, which
+overwrote its `EXCLUDE_DIRS` exactly as [BL-90](docs/planning/BACKLOG-DETAIL.md#bl-90) says; the seven local
+names were then re-applied, and `diff` against `starter-kit/methodology_dashboard.py` shows that line alone. That
+copy had been pre-P1 — the scanner that emitted BL-88's original false flag. **Per-project copies untouched.**
+
+**Correction:** BL-90's ledger entry below and its commit `e8ea062` call the local list *"9-name"*. It is **13
+names, the canonical six plus seven local additions**, measured by a set difference against the canonical module.
+Corrected in place in BL-90's body, its index row and the S230 receipt; the pushed entry and commit keep the wrong
+figure, and this entry is the record of it.
+
 ### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `cfe542a..e8ea062` — and this record with it
 
 **The operator's explicit go-ahead, asked for and given at S230's close-out** — **6** commits, beyond the standing
