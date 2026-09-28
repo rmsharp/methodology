@@ -227,6 +227,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S231 close-out — the route is planned and unratified; the owed `HANDOFFS.md` trim was BLOCKED, not skipped; predecessor scored 9
+
+**Deliverable:** [`docs/planning/dashboard-upstream-routing-plan.md`](docs/planning/dashboard-upstream-routing-plan.md)
+(`3aa95f7`), **awaiting the operator's ratification.** Fork-side throughout — no branch, no pull request, nothing on
+`KJ5HST/methodology`, where six pull requests still sit open with 0 reviews and nothing is owed.
+
+**Two things this close-out records that are not the deliverable.**
+
+1. **The owed `HANDOFFS.md` retention trim did not run.** The claim made three receipts, so the trim was owed the
+   moment it landed; `methodology_trim.py --file HANDOFFS.md --cut 1 --force` was **denied by the harness's
+   permission classifier as a dry run**, and no route around it was attempted. The ledger therefore closes at
+   **three receipts**, `tests-sh-passed` reads **349** rather than 343, and the trim is the next session's first
+   housekeeping act — with `--cut 1`, not the `--cut 2` that S229's and S230's receipts both forecast (the front
+   matter and S230's own trim `440183b`, one record, are the authorities). Expect shard `-6`.
+2. **Phase 3C appended fork Learning #102 and retired nothing**, naming in the receipt the five rows considered
+   (#68, #83, #94, #51, #100) and why none meets the retirement criteria — the D3 obligation discharged by an
+   explicit refusal.
+
+**Self 8, predecessor 9.** S230's next_steps (1) was a measured negative result — *P4 has no target*, with the
+greps that showed it — and re-running them confirmed every figure, which is what made this session's task
+well-formed rather than exploratory. Its one defect is the `--cut 2` forecast above, inherited from S229. Against
+this session: an AST set-difference reported **3** fork-only risk rows where reading all 63 appends shows **5**,
+and a cited line pair (`:2287`/`:2298`) was wrong and was corrected to `:2319`/`:2320` before the plan was
+committed — both caught before publication, neither by the instrument that produced them.
+
+**Gates at `16ffb0f`, in a `--no-local` clone:** `bin/tests.sh` **349 passed / 0 failed / 0 skipped**, exit 0;
+`quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results cb3637962fde · manifest 01a4ae7aa511`, exit 0.
+
 ### 2026-09-27 · [ad hoc] S231 Phase 3C — fork Learning #102: a `-S` inventory cannot see a merge commit
 
 Appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) (rows **15..102**, 87 rows, 0 over the 1,500 B
