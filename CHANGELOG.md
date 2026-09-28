@@ -227,6 +227,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-91] S233 claim — the read-set overhead printer, under shape A (in progress)
+
+**The governing decision is taken: the operator ratified D1 = shape A, *report better, gate nothing*,**
+at this session's Phase 0 picker, and chose P1 — the printer — as the deliverable
+([`docs/planning/overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md) §6 D1, §7 P1 at `:287`).
+He declined (b) the canonical-only `max` gate the plan recommended, (c) distributed enforcement — standing
+decision **S3**, his S206 declination of the hook shape, stays closed — and (d) nothing-yet. **P2's
+`.quality-gates.json` entry is therefore out of scope**; the plan's §7 phases were written *"if D1(b) is
+ratified"*, and under A the printer reports rather than gates.
+
+Deliverable: a canonical-only `bin/check-overhead` printing one line with the read-set class total in bytes
+and tokens, exit 0, **writing nothing**, plus a RED-first test in `bin/tests.sh`. Fork-side throughout — no
+branch, no pull request, nothing on `KJ5HST/methodology`, and nothing in `starter-kit/context_budget.py` or
+`.githooks/` (§8 dragon 6). Close-out records the rest.
+
 ### 2026-09-28 · [ad hoc] S232 — the receipt stops writing a `CHANGELOG.md` size and names the command instead
 
 **Second instance of the same defect in one session, and the fix generalises rather than patching.** The

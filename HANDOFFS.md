@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S233
+date: 2026-09-28
+status: pending
+active_task: **BUILD THE READ-SET OVERHEAD PRINTER — P1 of [`docs/planning/overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md) (`:287`), under D1 = SHAPE A.** The operator ratified **D1 = shape A, *report better, gate nothing*** at this session's Phase 0 picker (2026-09-28), declining (b) the canonical-only `max` gate, (c) distributed enforcement (standing decision S3, his S206 declination, stays closed) and (d) nothing-yet. **So P2's `.quality-gates.json` entry is OUT OF SCOPE and must not be written** — the plan's §7 phases were drafted *"if D1(b) is ratified"*, and under A the printer is the REPORTING instrument rather than a gate's measuring stick. The deliverable is a canonical-only `bin/check-overhead` that prints one line carrying the read-set class total in bytes and its token equivalent, exits 0, and **writes nothing** — no `.context-budget-history.jsonl` append, no `dashboard.html` — plus a RED-first test in `bin/tests.sh`. **Fork-side throughout: no branch, no pull request, nothing on `KJ5HST/methodology`, and nothing in `starter-kit/context_budget.py` or `.githooks/`** (plan §8 dragon 6: touching a distributed file turns this into shape C). Shape A's other half — the contradicting headline (PR #86 or a fork-side equivalent) and publishing the version series where a release must look — is **not** this session's deliverable.
+```
+
+```handoff
 session: S232
 date: 2026-09-28
 status: complete
