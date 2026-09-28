@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S231 — the post-close-out tree verified and cited in the receipt
+
+`bin/tests.sh` **343 passed / 0 failed / 6 skipped** and `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured ·
+results 2f8fe36c7a92 · manifest 01a4ae7aa511`, both exit 0, in a `--no-local` clone at `03b1234` — the tree carrying
+BL-91's three preparation commits. Both hashes are unmoved from the earlier run at `16ffb0f`, which is correct: only
+documents changed. The receipt's `runtime_smoke` now cites this run rather than leaving the preparation commits
+unverified, and BL-64's exception narrows to the commit writing that line.
+
 ### 2026-09-28 · [ad hoc] S231 — the receipt re-pointed at BL-91 after the operator changed what comes next
 
 `next_steps` (0) said BL-60's planning session was next, which the operator superseded the same day. The receipt now
