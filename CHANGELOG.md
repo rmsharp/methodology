@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S231 — the receipt updated for the post-close-out actions it would otherwise misreport
+
+The S231 receipt was written before the close-out picker was answered, so it said the trim was *owed and blocked*
+and four commits were *unpushed* — both false within the hour. Its `next_steps` now open with what actually
+happened, in order: D1 ratified as Option C, the trim run and folded, both pushes read back, the overhead
+measurement, and **BL-60's planning session as the operator's choice for the next session**. The receipt's own
+history of the `--cut` correction is kept rather than smoothed away.
+
 ### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `ce0ea45..c51c858` — and this record with it
 
 **The operator's explicit go-ahead, asked for and given after S231's close-out** — **6** commits: D1's
