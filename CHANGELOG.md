@@ -227,6 +227,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S233 Phase 3C — fork Learning #104, and no retirement
+
+**Row #104:** a decision taken *against* a plan's recommendation neither makes the plan moot nor leaves its
+phases intact — classify every phase at ratification time, in the plan, and leave the losing recommendation
+standing as the record the decision was made against. Source: this session, where §7 of a plan written *"if
+D1(b) is ratified"* met a ratification of D1(a) and its three phases went three different ways (P1 survived
+unchanged, P2 became out of scope rather than deferred, P3 was untouched because it hangs off an unratified
+decision). 1,358 B, inside the 1,500 B row budget; the table is contiguous **15..104**, 89 rows.
+
+**A row was appended, so a retirement is owed and NONE QUALIFIES** — the close-out obligation of
+[`fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md) §6 D3, which
+requires naming the rows considered. **#87** (a ceiling that is one half of an identity — this session's own
+subject, and the closest candidate) fails criterion (a) because **a printer is not a gate**: `bin/check-overhead`
+asserts agreement with an instrument and refuses nothing, so the byte half BL-78 §(1) measured as unguarded is
+still unguarded — now by decision rather than by oversight. **#100** (two artifacts answering one question by
+opposite mechanisms, held equal only by the test between them) is the row this session's design *followed*;
+Test 44 is one instance of that lesson, not a general enforcement of it. No row's artifact ceased to exist, and
+no later row states either lesson at least as generally, so (b) and (c) are unmet as well.
+
 ### 2026-09-28 · [BL-91] S233 — `bin/check-overhead`: the mandated read reported in one line, gating nothing
 
 **P1 of [`docs/planning/overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md) (`:300`), built under
