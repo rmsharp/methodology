@@ -227,6 +227,32 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S228 close-out — `CHANGELOG.md` archived at the 2026-09-22 seam; predecessor scored 8
+
+**Deliverable:** `d23c811` — 85 of 137 records to `docs/archive/CHANGELOG-through-2026-09-22.md`, live
+**249,268 → 130,729 B**, headroom against the 262,144 B refusal from about **13,000 B to 131,415 B**. **Self 8,
+predecessor 8.** S227 earns the 8 on two forecasts that proved exact — the `-3` shard name and its contents — and on
+a decision document that made this session's choice mechanical; against that, **its close-out left a duplicated
+`session: S227` receipt** that this session had to repair before claiming (`3815b83`), and `bin/check-handoff`
+passed it.
+
+**And the same defect recurred here, caught by the gotcha S227's repair produced.** The S228 close-out receipt was
+prepended over its own pending stub, giving two `session: S228` blocks; the `grep -c '^session: '` check written into
+gotcha (1) found it immediately and the stub was removed before this commit. **A checker that validates the newest
+record's schema does not validate the file's record structure** — two differently-broken trees have now passed
+`bin/check-handoff` in two sessions.
+
+**Verification at `c72ad24` in a `--no-local` clone:** `bin/tests.sh` **343/0/6** — the floor exactly, which matters
+because Test 34 mutates `HANDOFFS.md` and this session trimmed it; `quality_ratchet: 11/11 pass · 0 fail · 0
+unmeasured · results 10575dac7361 · manifest 01a4ae7aa511`, identical to S227's. **Both shard proofs exit 0, each
+read from a clone of its own trim commit.**
+
+**On the adopter question the operator asked:** answered from that project's own contract, which **overturned this
+session's first reading** — `nprcgenekeepr/CLAUDE.md:256` ratifies `--budget-bytes 65536` on every run, and its
+`SESSION_NOTES.md` fell 57,871 → 19,719 B mid-session when a live session there archived it with the local patch
+under investigation. **Nothing is owed in that project**; the canonical prose defect BL-88 decided is untouched and
+recurs when that file re-crosses the cap. Fork Learning **#101** carries the method lesson.
+
 ### 2026-09-27 · [ad hoc] S228 — Phase 3C: fork Learning #101, and D3 discharged by an explicit refusal
 
 **Row #101** (1,419 B, inside the 1,500 B `ROW_BUDGET_BYTES`): running another project's tool with **your** default
