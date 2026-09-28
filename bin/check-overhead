@@ -1,0 +1,210 @@
+#!/usr/bin/env python3
+"""check-overhead — one line, one number: what every session is MANDATED to read.
+
+The framework's per-session mandated read has risen 4.6x across 27 releases —
+17,615 B at v1.0.0 to 80,526 B at v3.7, never once falling — and no instrument in
+this repository's gate chain was ever pointed at it. BL-91 asked whether that
+number should become gated. The operator answered on 2026-09-28 (S233) by
+ratifying **shape A of `docs/planning/overhead-ratchet-plan.md`: report better,
+gate nothing.** This tool is that report.
+
+SO READ THE EXIT CODE CORRECTLY: **0 means "measured", never "within budget".**
+It prints the number and stops. There is deliberately no threshold behind it —
+the plan's §7 P2 (`.quality-gates.json`, `direction: max`) is OUT OF SCOPE by the
+same decision that authorised this file, and §8 dragon 6 says what happens if a
+later session reaches for enforcement instead: the moment it touches
+`starter-kit/context_budget.py` or `.githooks/`, it becomes shape C, which
+standing decision S3 (the operator's S206 declination of the hook shape, BL-78
+P3) has now declined twice. A non-zero exit here means the instrument FAILED, or
+that an argument was refused — never that a budget was exceeded.
+
+CANONICAL-ONLY. It is not in `bin/_manifest.py`, so no adopter receives it, and
+it reads THIS repository's `.context-budget.json` — which is this repo's own
+config, not the distributed seed `starter-kit/context-budget.json`. Its behaviour
+under a seed config is therefore untested by construction; the plan's P1 says so
+rather than leaving it to be discovered.
+
+WHY A PRINTER AND NOT `context_budget.py --json`, which already knows all of
+this: that tool emits `class_totals` as a LIST, so anything extracting the
+read-set row would depend on key order to avoid picking up `resident` — an
+operand that can silently start matching the wrong row. It also APPENDS to the
+tracked `.context-budget-history.jsonl` when a measurement moves. This file
+therefore reimplements the arithmetic (it is three lines of it) and imports
+nothing from that tool, which is what keeps "writes nothing" true by
+construction rather than by care. The cost of duplicating it is drift, and the
+guard against drift is `bin/tests.sh` Test 44, which asserts this tool's two
+figures against that tool's own output on every run.
+
+BOTH UNITS, ON PURPOSE. Bytes are what every existing instrument measures;
+tokens are what the read cap is actually denominated in. Which one a gate should
+have used is decision D2 of the plan and is unratified — so this prints both
+rather than choosing, and names the density it used and where that density came
+from, because a token figure without its density is not a measurement.
+
+WHAT IT DOES NOT DO, deliberately: it does not compare tokens to the declared
+token ceilings. Those are derived at the 2.27 B/token FLOOR while the measurement
+uses each file's own resolved density, so a token-to-token line would compare two
+numbers denominated differently and read as though someone had measured
+something. The byte comparison is bound-to-bound and is the one printed.
+"""
+
+import json
+import os
+import sys
+
+# The class this tool reports on. `bin/tests.sh` Test 44's kill control flips this
+# single literal on a COPY of this file to prove its equality assertions can fail,
+# so keep it one literal with this name.
+CLASS = "read-set"
+
+CONFIG_NAME = ".context-budget.json"
+
+# Mirrors starter-kit/context_budget.py:68 — the FLOOR of a measured 2.2705-3.0300
+# B/token band, used ONLY when neither the file nor the config declares a density.
+# Dividing by the floor maximises the token estimate, so falling back to it can
+# never under-report. Direction is easy to invert here: a LOWER B/token yields a
+# HIGHER token count.
+MIN_BYTES_PER_TOKEN = 2.27
+
+EXIT_OK = 0
+EXIT_INSTRUMENT = 2
+EXIT_USAGE = 3
+
+USAGE = """usage: bin/check-overhead [-h|--help]
+
+Prints one line: the {cls} class total in bytes and tokens, what the config
+declares for it, and the difference. Exit 0 means MEASURED, not within budget —
+this is a report, not a gate (docs/planning/overhead-ratchet-plan.md §6, D1 = A).
+
+Exit codes:  0  measured and printed
+             2  instrument failed (no config, no {cls} class, a named file missing)
+             3  an argument was refused
+
+It takes no options. Arguments are REFUSED rather than ignored: BL-75 is the
+reason — starter-kit/context_budget.py ignored unknown arguments, so every cited
+"--status" run in this repository's records was in fact the default measurement,
+and that misreading reached a pull-request comment to the maintainer.
+
+The tree it measures is found by walking up from the current directory for
+{conf}, then up from this file's own directory — so it works from a subdirectory,
+from outside the repository by absolute path, and from a copy of itself.
+""".format(cls=CLASS, conf=CONFIG_NAME)
+
+
+def die(code, msg):
+    sys.stderr.write("check-overhead: %s\n" % msg)
+    raise SystemExit(code)
+
+
+def walk_up(start):
+    """The nearest ancestor of `start` (inclusive) holding CONFIG_NAME, or None."""
+    d = os.path.abspath(start)
+    while True:
+        if os.path.isfile(os.path.join(d, CONFIG_NAME)):
+            return d
+        parent = os.path.dirname(d)
+        if parent == d:
+            return None
+        d = parent
+
+
+def find_root():
+    """Current directory first, this file's directory second — see USAGE."""
+    for start in (os.getcwd(), os.path.dirname(os.path.abspath(__file__))):
+        root = walk_up(start)
+        if root:
+            return root
+    return None
+
+
+def density(cfg, spec):
+    """(bytes_per_token, source). Mirrors context_budget.py:99 file_density —
+    per-file measured beats the config global beats the floor. The source is
+    returned so the output can say which, instead of presenting a derived number
+    and a measured one in the same voice."""
+    d = spec.get("bytes_per_token")
+    if d:
+        return float(d), "measured"
+    g = cfg.get("bytes_per_token")
+    if g:
+        return float(g), "config"
+    return MIN_BYTES_PER_TOKEN, "floor"
+
+
+def main(argv):
+    if argv:
+        if argv[0] in ("-h", "--help"):
+            sys.stdout.write(USAGE)
+            return EXIT_OK
+        die(EXIT_USAGE,
+            "refused %r — this tool takes no options. It prints one line and exits 0; "
+            "there is no gate behind it to configure (D1 = shape A). See --help."
+            % argv[0])
+
+    root = find_root()
+    if root is None:
+        die(EXIT_INSTRUMENT,
+            "INSTRUMENT FAILED — no %s found above %s or above this file. Nothing was "
+            "measured." % (CONFIG_NAME, os.getcwd()))
+
+    path = os.path.join(root, CONFIG_NAME)
+    try:
+        with open(path, encoding="utf-8") as fh:
+            cfg = json.load(fh)
+    except (OSError, ValueError) as exc:
+        die(EXIT_INSTRUMENT, "INSTRUMENT FAILED — cannot read %s: %s" % (path, exc))
+
+    specs = [f for f in cfg.get("files", []) if f.get("class") == CLASS]
+    if not specs:
+        die(EXIT_INSTRUMENT,
+            "INSTRUMENT FAILED — %s declares no file in class %r, so there is no total "
+            "to report. A class that lost its members reads as 0 B, which is why this "
+            "is an error and not a zero." % (path, CLASS))
+
+    total = 0
+    tokens = 0
+    seen = set()
+    for spec in specs:
+        rel = spec["path"]
+        full = os.path.join(root, rel)
+        if not os.path.isfile(full):
+            die(EXIT_INSTRUMENT,
+                "INSTRUMENT FAILED — %s is in class %r and does not exist. Summing the "
+                "rest would under-report the mandated read." % (rel, CLASS))
+        size = os.path.getsize(full)
+        bpt, src = density(cfg, spec)
+        total += size
+        # int(), matching context_budget.py:386 exactly, so the two tools' token
+        # figures are equal and Test 44's assertion is an equality rather than a
+        # tolerance.
+        tokens += int(size / bpt)
+        seen.add((round(bpt, 4), src))
+
+    if len(seen) == 1:
+        bpt, src = seen.pop()
+        rate = "at %.4f B/token (%s)" % (bpt, src)
+    else:
+        rate = "at %d per-file densities" % len(seen)
+
+    declared = (cfg.get("classes", {}).get(CLASS, {}) or {}).get("total_bytes")
+    if not declared:
+        verdict = "declared none"
+    else:
+        delta = total - int(declared)
+        pct = 100.0 * delta / float(declared)
+        if delta > 0:
+            verdict = "declared {:,} B, over by {:,} B ({:+.1f}%)".format(
+                int(declared), delta, pct)
+        elif delta < 0:
+            verdict = "declared {:,} B, under by {:,} B ({:+.1f}%)".format(
+                int(declared), -delta, pct)
+        else:
+            verdict = "at the declared {:,} B exactly".format(int(declared))
+
+    print("{cls}: {b:,} B ~= {t:,} tok ({n} files) {rate} | {verdict}".format(
+        cls=CLASS, b=total, t=tokens, n=len(specs), rate=rate, verdict=verdict))
+    return EXIT_OK
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

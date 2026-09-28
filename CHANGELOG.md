@@ -227,6 +227,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-91] S233 — `bin/check-overhead`: the mandated read reported in one line, gating nothing
+
+**P1 of [`docs/planning/overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md) (`:300`), built under
+the shape A ratified earlier today.** A canonical-only printer — not in `bin/_manifest.py`, so no adopter
+receives it — reporting the `read-set` class total in both units on one line, exit 0, writing nothing:
+
+```
+read-set: 72,535 B ~= 25,904 tok (2 files) at 2.8000 B/token (config) | declared 56,750 B, over by 15,785 B (+27.8%)
+```
+
+**Exit 0 means MEASURED, not within budget**, and the tool's own docstring says so: there is no threshold
+behind it, because D1 = A declined one. It prints both units because D2 (the unit) is unratified, and names the
+density and its source, since a token figure without its density is not a measurement. It deliberately does
+**not** compare tokens to the declared token ceilings — those are derived at the 2.27 B/token floor while the
+measurement uses each file's resolved density (2.8, config), so that line would compare two differently
+denominated numbers. The byte comparison is bound-to-bound and is the one printed.
+
+**It reimplements three lines of arithmetic rather than importing `starter-kit/context_budget.py`**, for the
+two reasons P1 gives: that tool emits `class_totals` as a *list*, so an extractor would depend on key order to
+avoid reading the `resident` row, and it appends to the tracked `.context-budget-history.jsonl` when a
+measurement moves. Writing nothing is therefore true by construction. The price is drift, and the guard against
+drift is **`bin/tests.sh` Test 44**, added RED-first: 12 assertions — one line, exit 0, determinism, no tracked
+change and no history append across two runs, both figures equal to `context_budget.py --json`'s own output,
+an unknown argument refused rather than ignored (BL-75's defect class), and a **kill control** that flips the
+class constant on a copy and confirms the equality can fail. RED before the tool existed: **349 passed, 1
+failed**, the failure being the missing tool; GREEN after: **361 passed, 0 failed, 0 skipped** (361 rather than
+355 because a claim is open, so Test 34's six whole-ledger assertions run — fork Learning #70: do not tighten
+`tests-sh-passed`).
+
+**Nothing distributed, nothing upstream, no `.quality-gates.json` entry** (§7 P2 is out of scope), and nothing
+in `starter-kit/context_budget.py` or `.githooks/` (§8 dragon 6). **Where the number gets published is still
+open** — shape A's second half, *"publish the version series somewhere a release must look"*, is D3 and
+unratified; a printer nobody runs reports nothing.
+
 ### 2026-09-28 · [BL-91] S233 — D1 ratified: shape A, *report better, gate nothing*
 
 **The operator took D1 as (a) at S233's Phase 0 picker, declining the plan's own recommendation.** Shape B —

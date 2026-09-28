@@ -3575,6 +3575,125 @@ else
 fi
 rm -f "$M43F"
 
+echo "== Test 44: check-overhead — one line, both units, write-free (BL-91 P1, shape A, RED-first) =="
+# D1 was ratified as SHAPE A -- report better, GATE NOTHING (docs/planning/overhead-ratchet-plan.md
+# §6, operator, 2026-09-28). So bin/check-overhead is a PRINTER, and three things follow that this
+# test encodes rather than assumes: exit 0 NEVER means "within budget" (it means "measured"); there
+# is no .quality-gates.json entry behind it (§7 P2 is out of scope, not deferred); and the tool must
+# WRITE NOTHING -- §8 F6 is why that is asserted here instead of trusted, since the instrument it
+# agrees with, starter-kit/context_budget.py, appends to a TRACKED history file when the measurement
+# moves. The control run below is fenced by a snapshot/restore for exactly that reason.
+CO="$METHODOLOGY/bin/check-overhead"
+HIST44="$METHODOLOGY/.context-budget-history.jsonl"
+if [ ! -x "$CO" ]; then
+    fail "bin/check-overhead exists and is executable (RED-first: this is the assertion that was red before the tool existed)"
+else
+    pass "bin/check-overhead exists and is executable"
+
+    # (1) THE NO-WRITE ASSERTION, measured around the PRINTER ONLY and taken as a before/after
+    # rather than as "the tree is clean": the suite runs mid-session, when the tree usually is not.
+    PORCH44A="$(cd "$METHODOLOGY" && git status --porcelain)"
+    HSUM44A="$(shasum "$HIST44" 2>/dev/null | awk '{print $1}')"
+    OUT44A="$("$CO" 2>/dev/null)"; RC44A=$?
+    OUT44B="$("$CO" 2>/dev/null)"; RC44B=$?
+    PORCH44B="$(cd "$METHODOLOGY" && git status --porcelain)"
+    HSUM44B="$(shasum "$HIST44" 2>/dev/null | awk '{print $1}')"
+
+    [ "$RC44A" = "0" ] && [ "$RC44B" = "0" ] \
+        && pass "check-overhead exits 0 on a measurable tree (both runs)" \
+        || fail "check-overhead exit codes: first=$RC44A second=$RC44B (expected 0, 0)"
+    [ "$PORCH44A" = "$PORCH44B" ] \
+        && pass "two runs change no tracked file (git status --porcelain identical)" \
+        || fail "check-overhead changed the tree: before=[$PORCH44A] after=[$PORCH44B]"
+    [ "$HSUM44A" = "$HSUM44B" ] \
+        && pass "two runs append nothing to .context-budget-history.jsonl" \
+        || fail "check-overhead touched the history file: $HSUM44A -> $HSUM44B"
+    [ "$OUT44A" = "$OUT44B" ] \
+        && pass "two runs on a still tree print byte-identical output" \
+        || fail "check-overhead is not deterministic: [$OUT44A] vs [$OUT44B]"
+
+    # (2) EXACTLY ONE LINE. wc -l counts terminators, so a single terminated line reads 1 and an
+    # unterminated one reads 0; both are accepted, two lines are not.
+    NL44="$(printf '%s' "$OUT44A" | grep -c '' 2>/dev/null || true)"
+    [ "$NL44" = "1" ] \
+        && pass "check-overhead prints exactly one line" \
+        || fail "check-overhead printed $NL44 lines, expected 1: [$OUT44A]"
+
+    # (3) AGREEMENT WITH THE INSTRUMENT, both units. The control is starter-kit/context_budget.py
+    # --json: bytes from its read-set class total, tokens as the SUM of its per-file token figures
+    # for that class -- summed, not derived from the total, because density is per file
+    # (context_budget.py:99 file_density) and a single division would silently invent a number the
+    # tool never reports. The control is the writer, so snapshot and restore around it.
+    HSNAP44="$(mktemp)"
+    [ -f "$HIST44" ] && cp "$HIST44" "$HSNAP44"
+    CTL44="$(cd "$METHODOLOGY" && python3 starter-kit/context_budget.py --json 2>/dev/null | python3 -c '
+import json, sys
+d = json.load(sys.stdin)
+tot = [c for c in d.get("class_totals", []) if c.get("class") == "read-set"]
+fs  = [f for f in d.get("files", []) if f.get("class") == "read-set" and "tokens" in f]
+print("%d %d" % (tot[0]["bytes"], sum(f["tokens"] for f in fs)) if tot and fs else "NONE NONE")
+' 2>/dev/null)"
+    [ -f "$HSNAP44" ] && cp "$HSNAP44" "$HIST44"
+    rm -f "$HSNAP44"
+    CTLB44="${CTL44%% *}"; CTLT44="${CTL44##* }"
+
+    # The parse is in python so the assertion does not depend on grep's unicode handling or on a
+    # locale's thousands separator.
+    GOT44="$(printf '%s' "$OUT44A" | python3 -c '
+import re, sys
+line = sys.stdin.read()
+b = re.search(r"([0-9][0-9,]*) B", line)
+t = re.search(r"([0-9][0-9,]*) tok", line)
+print("%s %s" % (b.group(1).replace(",", "") if b else "NONE",
+                 t.group(1).replace(",", "") if t else "NONE"))
+' 2>/dev/null)"
+    GOTB44="${GOT44%% *}"; GOTT44="${GOT44##* }"
+
+    [ "$CTLB44" != "NONE" ] && [ "$CTLB44" != "" ] \
+        && pass "the control produced a read-set byte total ($CTLB44 B)" \
+        || fail "the control produced no read-set byte total -- the equality assertions below would be vacuous"
+    [ "$GOTB44" = "$CTLB44" ] \
+        && pass "the printed byte figure equals context_budget.py's read-set class total ($CTLB44 B)" \
+        || fail "byte figure disagrees with the instrument: printed=$GOTB44 control=$CTLB44"
+    [ "$GOTT44" = "$CTLT44" ] \
+        && pass "the printed token figure equals the sum of its per-file token figures ($CTLT44 tok)" \
+        || fail "token figure disagrees with the instrument: printed=$GOTT44 control=$CTLT44"
+
+    # (4) UNKNOWN ARGUMENTS ARE REFUSED, not ignored. BL-75: context_budget.py ignored them, so
+    # every cited "--status" run was the default measurement -- and that misreading reached a PR
+    # comment to the maintainer. A printer that silently accepts --gate would be the same defect.
+    BAD44="$("$CO" --gate 2>&1)"; BADRC44=$?
+    [ "$BADRC44" != "0" ] \
+        && pass "an unknown argument is refused with a non-zero exit ($BADRC44)" \
+        || fail "check-overhead ignored --gate and exited 0: [$BAD44]"
+    grep -qF -- "--gate" <<< "$BAD44" \
+        && pass "the refusal names the argument it refused" \
+        || fail "the refusal does not name --gate: [$BAD44]"
+
+    # (5) THE KILL CONTROL. An equality assertion whose operands come from the same place cannot
+    # fail, so prove this one can: flip the class the printer measures on a COPY, never the live
+    # tool, and the byte figure must stop matching the control while the tool still prints its one
+    # line and exits 0 (it is a different, valid measurement -- the assertion, not the tool, is
+    # what the mutant is meant to break).
+    M44F="$(mktemp)"
+    if mutate "$CO" "$M44F" 's.replace("CLASS = \"read-set\"", "CLASS = \"resident\"", 1)'; then
+        chmod +x "$M44F"
+        MUT44="$(python3 "$M44F" 2>/dev/null)"; MUTRC44=$?
+        MUTB44="$(printf '%s' "$MUT44" | python3 -c '
+import re, sys
+m = re.search(r"([0-9][0-9,]*) B", sys.stdin.read())
+print(m.group(1).replace(",", "") if m else "NONE")
+' 2>/dev/null)"
+        [ "$MUTRC44" = "0" ] && [ "$MUTB44" != "NONE" ] && [ "$MUTB44" != "$CTLB44" ] \
+            && pass "measuring a different class breaks the equality, so the equality can fail" \
+            || fail "kill control: mutant rc=$MUTRC44 bytes=$MUTB44 vs control=$CTLB44 -- the assertion may be unkillable"
+    else
+        fail "kill control mutation DID NOT APPLY -- the class constant is no longer a single literal named CLASS"
+    fi
+    rm -f "$M44F"
+fi
+
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
