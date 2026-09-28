@@ -227,6 +227,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S231 — the operator ratifies D1 as Option C: the small pull request first, the stack held
+
+Taken at S231's close-out picker, after the routing plan was written and read back.
+[`dashboard-upstream-routing-plan.md`](docs/planning/dashboard-upstream-routing-plan.md)'s status now records it:
+**P1 — the root-commit-date correctness pull request — is the next upstream-facing step**, re-derived on a branch
+off `upstream/main` (a fork-side fix is not an upstream patch); the read-cap/trim stack that BL-88 rides is built
+and vetted fork-side and **held until P1 merges**; F2's signature structure, F3's scoped `--sync` and F4's
+self-scan stay out of both. **D2–D6 remain open and none blocks P1. Ratifying the shape is not authorising an
+open** — P1's pull request is still its own go-ahead, and so is P3's.
+
 ### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `0aeeec1..c3c52a3` — and this record with it
 
 **The operator's explicit go-ahead, asked for in S231's close-out picker and granted there** — **4** commits

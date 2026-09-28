@@ -1,8 +1,11 @@
 # Which of the fork's dashboard rows go upstream, and in what order
 
-**Status:** PLANNED by the session, **awaiting the operator's ratification** · **S231, 2026-09-27** ·
-Fork-side routing document. **Nothing here is implemented, no branch is cut, and every pull request
-named below is its own go-ahead.**
+**Status:** **D1 RATIFIED — Option C** (the operator, 2026-09-27, S231's close-out picker): the small
+correctness pull request goes first, the read-cap/trim stack is prepared fork-side and **held** until it
+merges, and the three policy pieces stay out of both. **D2–D6 remain open** and none of them blocks P1.
+**S231, 2026-09-27** · Fork-side routing document. **Nothing here is implemented, no branch is cut, and
+every pull request named below is still its own go-ahead — ratifying the shape is not authorising an
+open.**
 
 Commissioned at S231's Phase 0 picker from S230's next_steps (1), which measured
 [the read-cap class plan](dashboard-read-cap-class-adopter-drift-plan.md)'s **P4 to have no target**:
