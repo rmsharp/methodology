@@ -227,6 +227,36 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S230 close-out — P2 shipped, 2.19.0; P4 has no upstream target; Phase 3C appended nothing, deliberately; predecessor scored 9
+
+**Deliverable:** `161181c` — the Class B read-cap row names a remedy only where the project's own trimmer source
+declares the file. **Fork-side only; no upstream pull request was granted and none was opened.**
+**Predecessor 9:** S229's handoff said P2 had no decisions left, and it had none; its `-5` shard forecast and
+`--cut 2 --force` were exact; its *mirror last, read the failures as a checklist* gotcha fired twice here (the twin
+test, then the version test); its 343/349 floor note told me in advance why `tests-sh-passed` would read 343. **What
+it missed:** P1 had left `DASHBOARD_VERSION` unbumped against the file's own rule, which cost a mid-session question,
+and P4's premise was carried from the plan unverified. **Self 8:** RED first, P1's rows frozen from the unchanged
+module as the independent operand, 26 mutants, 9/9 real trimmers, a real adopter tree including the named remedy
+run, and P4's premise measured. Against it: a count written from recollection into code and a test (caught before
+commit), a first fleet diff taken across a live session, and a status guard that could not name its failing repo.
+
+**P4 HAS NO TARGET, MEASURED.** `upstream/main`'s dashboard is 2.11.1 and carries none of the read-cap class code P1
+and P2 change (`READ_CAP_CLASS_A`, `READ_CAP_CLASS_B`, `read_cap_class`, `find_trim_tool`, `collect_trim_metrics`:
+0 each), and none of the six open PRs touches either dashboard copy. Recorded in BL-88's
+[detail](docs/planning/BACKLOG-DETAIL.md#bl-88), its index row, and a note under the
+[plan](docs/planning/dashboard-read-cap-class-adopter-drift-plan.md)'s P4; not costed. All three `docs/planning/`
+proofs exit 0 after the edit.
+
+**Verification at the deliverable commit**, in a `--no-local` clone at `161181c`: `quality_ratchet: 11/11 pass · 0 fail ·
+0 unmeasured · results 2f8fe36c7a92 · manifest 01a4ae7aa511`, exit 0 — `tests-sh-passed` 343, dashboard 350.
+
+**PHASE 3C APPENDED NO ROW AND THAT IS THE RESULT, NOT AN OMISSION.** The candidates — a plan phase that presupposes
+code the other tree lacks, a fleet before/after taken across a live session, a count written from recollection —
+are stated at least as generally by fork Learnings **#57** (an option nobody has executed is a proposal), **#79**
+(read each text on the tree that ships it), **#74** (another repository's state is a reading with a time on it) and
+**#18** (run the artifact; name the command). Appending would restate them less generally, so nothing was appended
+and **no retirement is owed** — D3 is keyed to appending. Rows considered: #57, #79, #74, #18, #59.
+
 ### 2026-09-27 · [BL-88] S230 — P2: the Class B read-cap row names a remedy only where the project's own trimmer source declares the file; `DASHBOARD_VERSION` 2.19.0
 
 **What changed** (`tools/methodology_dashboard.py`; the `starter-kit/` twin mirrored last, `cmp` identical):

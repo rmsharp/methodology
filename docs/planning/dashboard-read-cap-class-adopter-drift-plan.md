@@ -350,6 +350,12 @@ only changes are the intended ones and that no project's row count moves unexpec
 - **Verify:** trial-merge into `upstream/main`; run the suite on the merge result, not on the branch.
 - **Surface:** GitHub. **What it cannot enforce:** the merge, which is the maintainer's.
 
+> **S230, measured: P4 as written has no target.** `upstream/main`'s dashboard is **2.11.1** and carries none of
+> the code P1 and P2 change — `READ_CAP_CLASS_A`, `READ_CAP_CLASS_B`, `read_cap_class`, `find_trim_tool` and
+> `collect_trim_metrics` each count **0** in `git show upstream/main:tools/methodology_dashboard.py` — so there is
+> nothing to re-derive the change *onto*. BL-88 can reach upstream only inside a PR that first upstreams the
+> fork's read-cap class rows. P1 (`cb9b0ed`) and P2 (`161181c`) are shipped fork-side; see BL-88's detail.
+
 ---
 
 ## 9. Here be dragons
