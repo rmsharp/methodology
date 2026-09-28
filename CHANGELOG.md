@@ -227,6 +227,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-91] S232 claim — plan the gate on the framework's own overhead (in progress)
+
+Phase 1B. This entry and a `status: pending` receipt in [`HANDOFFS.md`](HANDOFFS.md) are the crash
+breadcrumbs. **Deliverable:** one planning document settling what BL-91 leaves open — whether the
+per-session mandated read becomes a gated metric with a declared ceiling or stays a reported series,
+in what unit, canonical-only or distributed, which reduction levers to cost, and how **BL-60** folds
+in. The plan is the deliverable; nothing is implemented (FM #18). Phase 0 found `main` clean at
+`e5bfca4`, both ledger frontiers at HEAD with **no gap**, 0 upstream issues, #83–#88 open with **0
+reviews** and no comments but our own two, the dashboard at **76/100** with 0 high+ risks, and the
+newest receipt's gate citation reproduced exactly in a `--no-local` clone — `quality_ratchet: 11/11
+pass · 0 fail · 0 unmeasured · results 2f8fe36c7a92 · manifest 01a4ae7aa511`. `context_budget.py
+--status` independently corroborates the item's central figure: read-set **72,535 B** against a
+56,750 B ceiling, on a **172-measurement non-shrinking growth run**.
+
+### 2026-09-28 · [ad hoc] The fork push, `c11dbb8..e5bfca4` — and the two decisions settled at the same Phase 0
+
+Pushed to fork `origin` on the operator's go-ahead: S231's four post-close-out commits — BL-91's
+three measurement scripts (`f94a507`), the BL-91 backlog item (`3c8f498`), and the two receipt edits
+(`03b1234`, `e5bfca4`). None is a CHANGELOG-only push record, so the standing grant did not cover
+them and each needed the ask. Read back with `git ls-remote`: `origin/main` = local `main` =
+`e5bfca4`, 0/0. `upstream/main` untouched at `6b29d3d`; nothing reached `KJ5HST/methodology`.
+**Two decisions were settled at that same Phase 0 picker.** The `HANDOFFS.md` retention depth is
+**TWO receipts**, resolving the contradiction S231 left open between the front matter's *"keep ONE
+receipt"* and what S229, S230 and S231 each actually did — the front matter is corrected in the trim
+that follows, so the written policy and the practice stop disagreeing. And a close-out push is
+granted in advance rather than asked again at the end. This entry records its own commit.
+
 ### 2026-09-28 · [ad hoc] S231 — the post-close-out tree verified and cited in the receipt
 
 `bin/tests.sh` **343 passed / 0 failed / 6 skipped** and `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured ·

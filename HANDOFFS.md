@@ -51,6 +51,16 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S232
+date: 2026-09-28
+status: pending
+active_task: **IN PROGRESS — a planning session on [BL-91](docs/planning/BACKLOG-DETAIL.md#bl-91): the gate on the framework's own overhead.** Commissioned by the operator on 2026-09-28 and re-confirmed at this session's Phase 0 picker. The deliverable is ONE plan document; nothing is implemented (FM #18). What it must settle, from BL-91's own list: whether the per-session mandated read becomes a **gated metric with a declared ceiling** (the overhead mirror of `quality_ratchet.py`) or stays a reported series; what a release that raises it must state about what it bought; whether the unit is bytes, tokens, or dollars-at-a-reference-session-shape; whether the gate is canonical-only or **distributed** (its PR would then be its own go-ahead); which reduction levers to cost; and how **BL-60** folds in.
+what_was_done: Phase 1B stub — this block plus the `(in progress)` `CHANGELOG.md` entry are the crash breadcrumbs. Phase 0: clean at `e5bfca4`; both ledger frontiers ARE HEAD, so no gap and no backfill; 0 upstream issues; #83–#88 open with **0 reviews** and no comments but our own two; 2 receipts; dashboard **76/100**, 0 high+ risks; the gate citation re-run in a `--no-local` clone reproduced S231's exactly (`results 2f8fe36c7a92 · manifest 01a4ae7aa511`, 11/11 pass). Four go-aheads/decisions taken at the Phase 0 picker: the push of S231's post-close-out commits (**done**, `c11dbb8..e5bfca4`, read back), the owed retention trim once this claim makes three receipts, a close-out push granted in advance, and the retention depth settled at **TWO**.
+changelog_ref: CHANGELOG.md "2026-09-28 · [BL-91] S232 claim", "2026-09-28 · [ad hoc] The fork push, `c11dbb8..e5bfca4`"
+commit: this claim commit
+```
+
+```handoff
 session: S231
 date: 2026-09-27
 status: complete
