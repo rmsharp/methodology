@@ -227,6 +227,20 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S232 — the receipt stops writing a `CHANGELOG.md` size and names the command instead
+
+**Second instance of the same defect in one session, and the fix generalises rather than patching.** The
+receipt's `next_steps` (7) said *"`CHANGELOG.md` is ~181 KB"*; the committed file reads **191,753 B**. A
+size written into a receipt is measured **before** the close-out and push-record commits that follow it,
+so it is stale **by construction** — S231's was 18 KB out by the time the next session read it, and this
+one was 10 KB out before its own session ended. The line now carries `wc -c CHANGELOG.md` and the 262,144 B
+refusal instead of a number. This is the rule the ledger's own header already states about itself
+(*"No population figure is written here, deliberately… Run the tool"*), applied to the receipt.
+
+The first instance was the plan's line count, corrected in `674c6a8` — measured before three citation
+edits added two lines. Both are logged rather than quietly fixed, and the receipt's gotcha (3) names the
+pattern: **measure last, or you have measured a draft.**
+
 ### 2026-09-28 · [ad hoc] The close-out fork push, `e5bfca4..37774a5` — and its own record
 
 Seven commits to fork `origin` on the go-ahead granted in advance at this session's Phase 0 picker: the
