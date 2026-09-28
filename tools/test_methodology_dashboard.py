@@ -5798,14 +5798,74 @@ class TestPhaseC2PerClassRiskRows(unittest.TestCase):
                       "how far away it is")
 
     def test_a_class_B_file_over_the_cap_is_still_HIGH_and_says_why(self):
-        """Class B rows STAY. The trimmer answers NO_CONFIG for them, nothing guarantees the part
-        you need is in the delivered prefix, and a backlog's bottom items are as live as its top
-        ones. This is plan §7's "make the rows DIFFERENT, not delete one"."""
+        """Class B rows STAY, and still say why. This is plan §7's "make the rows DIFFERENT, not
+        delete one" — the severity and the row's existence are what this test is for.
+
+        ⚠ THE "WHY" IT PINS CHANGED AT BL-88, DELIBERATELY, AND THE ASSERTION WAS REPLACED RATHER
+        THAN REMOVED. It used to assert `"NO_CONFIG"` was present — i.e. that the row told the
+        reader the trimmer had no config for this file. That claim was never evaluated by this
+        module and is false in a tree that widened `LEDGERS`, so the row stopped making it; see
+        `test_the_class_B_row_makes_NO_CLAIM_about_any_trimmer_config` below, which now forbids it.
+        What survives unchanged is everything this test was really protecting: the row exists, it
+        is HIGH, and it names the class. Deleting the assertion would have left the "says why" in
+        the test's own name unbacked, so it is re-pointed at the access-path reason instead."""
         rows = self._rows_for("SESSION_NOTES.md", md.READ_CAP_BYTES + 1)
         self.assertEqual(len(rows), 1, "%r" % rows)
         self.assertEqual(rows[0]["severity"], "high")
         self.assertIn("CLASS B", rows[0]["description"])
-        self.assertIn("NO_CONFIG", rows[0]["description"])
+        self.assertIn("the instructed access path IS the file", rows[0]["description"],
+                      "the row must still say WHY being over the cap matters for this class — "
+                      "that the protocol sends the reader at the file itself")
+
+    def test_the_class_B_row_makes_NO_CLAIM_about_any_trimmer_config(self):
+        """The row may assert only what the emitter EVALUATED, and it evaluates no trimmer.
+
+        It used to print *"the trimmer answers NO_CONFIG for it"* — a fact about a NEIGHBOURING
+        TOOL's configuration, read from nothing, in a module whose class sets are frozen literals.
+        That sentence is true here only because `LEDGERS` and the declared classes happen to
+        coincide, and a canonical test pins that coincidence. **It is not true in a tree that
+        widened `LEDGERS`**, and this module is DISTRIBUTED to exactly such trees, where no test
+        pins anything (`tools/test_methodology_dashboard.py` is absent from `bin/_manifest.py`).
+
+        This does NOT relax the declared/derived split — see the two class pins above, unchanged.
+        The class stays declared; the PROSE stops claiming the trimmer's answer. BL-88.
+
+        KILLS: re-introducing any mention of the trimmer or its config into this row."""
+        for name in sorted(md.READ_CAP_CLASS_B):
+            with self.subTest(name=name):
+                rows = self._rows_for(name, md.READ_CAP_BYTES + 1)
+                self.assertEqual(len(rows), 1, "%r" % rows)
+                d = rows[0]["description"]
+                self.assertNotIn("NO_CONFIG", d,
+                                 "the row asserts a fact about the trimmer's config that this "
+                                 "module never reads")
+                self.assertNotIn("the trimmer", d,
+                                 "no claim about the trimmer belongs in a row that never asks it")
+
+    def test_the_backlog_justification_is_printed_ONLY_for_the_backlogs(self):
+        """*"A backlog's bottom items are as live as its top ones"* is a reason about BACKLOGS.
+
+        The module comment above `READ_CAP_CLASS_B` already records that carrying it to every
+        Class B name is false of `SESSION_NOTES.md` — whose instructed read target is the ACTIVE
+        TASK section at the TOP — and states the true weaker form: nothing ENFORCES it. That
+        correction reached the comment and never reached the row. This is that, closed.
+
+        Measured across 12 fleet repos at S227: every `SESSION_NOTES.md` carrying an
+        `## ACTIVE TASK` heading has it at byte 132-9,490, inside READ_CAP_BYTES in all of them;
+        `mts-system` has no such heading at all, which is the case the weaker form is for.
+
+        KILLS: printing the backlog clause for SESSION_NOTES.md; dropping it from the backlogs."""
+        clause = "bottom items are as live as its top ones"
+        for name in sorted(md.READ_CAP_CLASS_B):
+            with self.subTest(name=name):
+                d = self._rows_for(name, md.READ_CAP_BYTES + 1)[0]["description"]
+                if name in md._BACKLOG_LOCATIONS:
+                    self.assertIn(clause, d, "a backlog's row loses the reason that IS true of it")
+                else:
+                    self.assertNotIn(clause, d,
+                                     "%s is not a backlog; its bottom is its OLDEST record" % name)
+                    self.assertIn("ENFORCES", d,
+                                  "the weaker form the module comment settled must reach the row")
 
     def test_THE_DISCRIMINATOR_same_size_opposite_severity(self):
         """The pair above proves little separately — a rule that returned `low` for everything

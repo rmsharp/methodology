@@ -227,6 +227,39 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S229 — the read-cap row asserts only what it evaluated: the trimmer claim is gone, the backlog reason is per-name
+
+**P1 of [`dashboard-read-cap-class-adopter-drift-plan.md`](docs/planning/dashboard-read-cap-class-adopter-drift-plan.md)
+§8, the operator's decision at S228's report. Fork-side only — no upstream pull request was granted.**
+
+**Two false things left the Class B over-cap row** (`tools/methodology_dashboard.py:3511`, now `:3511-3556`):
+
+1. ***"the trimmer answers `NO_CONFIG` for it"*** — a fact about a **neighbouring tool's config table**, read from
+   nothing. True in this repository only because `LEDGERS` and the declared classes coincide, and **false in any tree
+   that widened `LEDGERS`** — which is where this module is *distributed* and its suite is not.
+2. ***"a backlog's bottom items are as live as its top ones"*** printed for `SESSION_NOTES.md`. **The comment eleven
+   lines above `READ_CAP_CLASS_B` already recorded that as a caught over-generalisation and stated the weaker true
+   form; the correction reached the comment and never the row.** The reason is now selected per name: backlogs keep
+   theirs, and a session-notes file gets *"nothing ENFORCES that the part you need is inside that prefix"*.
+
+**Nothing about the classification changed.** `READ_CAP_CLASS_A`/`_B` are still declared literals, `READ_CAP_WATCHED`
+is still derived from them, no name moved class, and **both pinning tests at `:5464` and `:5485` pass unchanged** —
+§10 dragon 6 is not engaged, because the row now asserts *less*, not differently.
+
+**RED first, and the one test that pinned the false claim was RE-POINTED, not deleted.**
+`test_a_class_B_file_over_the_cap_is_still_HIGH_and_says_why` asserted `"NO_CONFIG"` was present; its purpose — the
+row exists, is HIGH, and says why — survives, so it now pins *"the instructed access path IS the file"* and its
+docstring records the change and why. Two new tests were written first and **both failed before the edit** (5
+failures across the four Class B names): `test_the_class_B_row_makes_NO_CLAIM_about_any_trimmer_config` forbids any
+mention of the trimmer, and `test_the_backlog_justification_is_printed_ONLY_for_the_backlogs` pins the split both
+ways. The `starter-kit/` twin was mirrored **last** and `cmp`s identical.
+
+**FLEET DIFF, read-only, against the real portfolio: 3 rows changed, 29 identical, 32 watched files.** No severity
+moved anywhere. `model_project_constructor/BACKLOG.md` (98,284 B) and `wsfct/BACKLOG.md` (157,351 B) lose only the
+trimmer claim; `model_project_constructor/SESSION_NOTES.md` (91,593 B) gets the weaker form.
+**`nprcgenekeepr/SESSION_NOTES.md` no longer appears at all** — it fell to 19,719 B when a live session there
+archived it, so the flag that prompted BL-88 is currently dormant, and this fix is why it will not come back false.
+
 ### 2026-09-27 · [BL-88] S229 claim — the read-cap row stops asserting what it never checked (in progress)
 
 **The operator's decision, taken at S228's report:** fix the warning text, **fork-side only — no upstream pull

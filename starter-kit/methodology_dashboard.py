@@ -3508,6 +3508,33 @@ def assess_risks(metrics):
                                        f"{CLASS_A_FIRE_BYTES - wb:,} B away. If you need the "
                                        "whole file, read it with an explicit offset/limit"})
                 else:
+                    # BL-88 — THIS ROW MAY ASSERT ONLY WHAT THIS MODULE EVALUATED, AND IT EVALUATES
+                    # NO TRIMMER. It used to print "the trimmer answers NO_CONFIG for it": a fact
+                    # about a NEIGHBOURING TOOL's config table, read from nothing. That was true
+                    # here only because LEDGERS and the declared classes coincide -- which a
+                    # canonical test pins -- and FALSE in any tree that widened LEDGERS. This
+                    # module is DISTRIBUTED to exactly such trees while its suite is not (absent
+                    # from bin/_manifest.py), so the claim was being evaluated where nothing could
+                    # check it: one adopter's trimmer gained a SESSION_NOTES.md spec and this row
+                    # went on denying it. The class stays DECLARED (READ_CAP_CLASS_A/B above, and
+                    # section 10 dragon 6 with it); only the prose stops speaking for the trimmer.
+                    #
+                    # AND THE REASON IS NOW PER-NAME. The comment above READ_CAP_CLASS_B already
+                    # records that carrying the backlog justification to every Class B name is
+                    # FALSE of SESSION_NOTES.md, and states the true weaker form -- but that
+                    # correction reached the comment and never reached this row, so the row
+                    # contradicted its own module. Measured across 12 fleet repos: every
+                    # SESSION_NOTES.md with an `## ACTIVE TASK` heading has it at byte 132-9,490,
+                    # inside READ_CAP_BYTES in all of them; one repo has no such heading at all,
+                    # which is the case the weaker form exists for.
+                    if w["path"] in _BACKLOG_LOCATIONS:
+                        why = ("a backlog's bottom items are as live as its top ones, so what "
+                               "truncates may be open work")
+                    else:
+                        why = ("nothing ENFORCES that the part you need is inside that prefix — "
+                               "the protocol says to focus on the ACTIVE TASK section at the top "
+                               "and the seed puts it there, but no check holds it there, and a "
+                               "file carrying no such heading has no ordering to rely on")
                     risks.append({
                         "severity": "high",
                         "description": f"{w['path']} is {wb:,} B ({w['lines']:,} lines) — past the "
@@ -3519,12 +3546,9 @@ def assess_risks(metrics):
                                        "token cap, and it SAYS SO in a banner naming the true "
                                        "length, so the failure is loud rather than silent; an "
                                        "explicit line range spanning the excess errors outright, "
-                                       "returning nothing. This is a CLASS B file: the trimmer "
-                                       "answers NO_CONFIG for it, and nothing guarantees the part "
-                                       "you need is in the delivered prefix — a backlog's bottom "
-                                       "items are as live as its top ones, so what truncates may "
-                                       "be open work, and you are told THAT something was cut, "
-                                       "never WHAT"})
+                                       "returning nothing. This is a CLASS B file and the "
+                                       f"instructed access path IS the file: {why}, and you are "
+                                       "told THAT something was cut, never WHAT"})
 
     # S38: the trim-trigger rows, re-emitted VERBATIM from the collector -- the same arrangement
     # the Component C signals above use. The collector owns the gate, the population and the
