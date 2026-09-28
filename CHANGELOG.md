@@ -227,9 +227,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S232 Phase 3C — fork Learning #103, and no retirement
+
+**Appended:** `git log -- <path>` simplifies history and drops commits from the walk, so a per-commit
+classification of a file's past is computed on a denominator that silently excluded them, and what comes
+out wrong is the **ratio**. The default walk saw 68 commits and put the merge share of read-set growth
+bytes at 2.6%; `--full-history` saw 124 and put it at 9.9%. Sibling of #102 with a different mechanism —
+#102 is `-S` not *diffing* a merge, #103 is the walk not *containing* it — so the remedy is
+`--full-history`, not `--diff-merges=first-parent`. 1,431 B against the 1,500 B row budget; table
+contiguous 15..103, 88 rows.
+
+**PHASE 3C RETIRED NOTHING, DELIBERATELY, AND THE ROWS CONSIDERED ARE NAMED** (the D3 obligation, which is
+discharged by a reasoned refusal exactly as by a retirement). **#87** — a ceiling that is one half of an
+identity — is the closest, and it is the session's own subject: its token half *is* now enforced, by
+`TestThisRepoReadSetPartition` (`tools/test_context_budget.py:1258`) under gate
+`context-budget-unit-tests`, but BL-78 §(1) measured that the **byte** half has no guard at all, so
+criterion (a) is half satisfied and no more. **#88** (an instrument that records every run changes its own
+output) is confirmed again by this session's `growth_run` finding, not superseded, and no gate enforces it.
+**#99** (a defect's "shapes, none costed" list is one session's imagination) was confirmed the same way —
+BL-78 listed three shapes and this plan's recommended option is a fourth none of them named. **#86** and
+**#102** are each adjacent with no gate behind them. **#85 was already retired** at S225 under D1(b) and
+is a reserved gap. None satisfies (a) a gate now enforces it, (b) a later row states it at least as
+generally, or (c) the artifact is gone.
+
+### 2026-09-28 · [ad hoc] S232 — the plan's published line count corrected, 374 -> 376
+
+Two records said **374 lines** because the count was taken before three citation edits added two lines to
+the same file — a number published and then invalidated by its own author, in a repository whose ledger
+header carries three separate warnings about exactly this. Corrected in `CHANGELOG.md` and
+`docs/planning/BACKLOG-DETAIL.md`; `wc -l` re-run against the committed file. Recorded rather than quietly
+fixed, because the interesting part is the ordering: measure last, or the measurement is of a draft.
+
 ### 2026-09-28 · [BL-91] S232 — the overhead ratchet, planned
 
-[`docs/planning/overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md), 374 lines, the
+[`docs/planning/overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md), 376 lines, the
 session's one deliverable. **Nothing is ratified and nothing is implemented** — §6 carries six
 decisions, D1 governing with four options, and the plan recommends **(b)**: one entry in this
 repository's own `.quality-gates.json`, `direction: max` on the read-set class total, declared at the

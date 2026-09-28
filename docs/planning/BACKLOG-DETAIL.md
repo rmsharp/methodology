@@ -3855,7 +3855,7 @@ question about the written record rather than the read one.
 operator questions, and are unbudgeted by any session's plan — which is itself an instance of the thing this
 item is about.
 
-**PLANNED 2026-09-28 (S232) — [`overhead-ratchet-plan.md`](overhead-ratchet-plan.md), 374 lines. Nothing is
+**PLANNED 2026-09-28 (S232) — [`overhead-ratchet-plan.md`](overhead-ratchet-plan.md), 376 lines. Nothing is
 ratified.** §6 D1 governs, four options, recommending **(b)**: one entry in this repository's own
 `.quality-gates.json`, `direction: max` on the read-set class total, declared at the measured value.
 **Two of this item's framings did not survive re-derivation and the plan says so.**
