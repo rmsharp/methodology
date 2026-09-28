@@ -227,6 +227,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S231 Phase 3C — fork Learning #102: a `-S` inventory cannot see a merge commit
+
+Appended to [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) (rows **15..102**, 87 rows, 0 over the 1,500 B
+per-row budget). The lesson is this session's own near-miss: a symbol-by-symbol `git log -S` sweep attributed 40 of
+42 fork-only scanner names to ordinary commits and returned *nothing in range* for two, both of which are real and
+shipped — written **inside** the resync merges `8b87086` and `421ebf9` as the conflict resolutions themselves, and
+findable only with `--diff-merges=first-parent`. A route planned around cherry-picks would have carried neither and
+would have looked complete by its own method.
+
+**No row was retired, and the rows considered are named in the S231 receipt's `what_was_done`** — the D3 obligation
+in [`fork-learnings-retirement-rule-plan.md`](docs/planning/fork-learnings-retirement-rule-plan.md) §6 is discharged
+by the explicit refusal, not by silence.
+
 ### 2026-09-27 · [BL-88] S231 — the dashboard's upstream route, planned: one dependency stack plus four detachable pieces
 
 **Deliverable:** [`docs/planning/dashboard-upstream-routing-plan.md`](docs/planning/dashboard-upstream-routing-plan.md)
