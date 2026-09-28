@@ -227,6 +227,40 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S230 — P2: the Class B read-cap row names a remedy only where the project's own trimmer source declares the file; `DASHBOARD_VERSION` 2.19.0
+
+**What changed** (`tools/methodology_dashboard.py`; the `starter-kit/` twin mirrored last, `cmp` identical):
+`_parse_trim_ledgers()` reads the basenames a trimmer's `LEDGERS` table declares **from its source**, with
+`ast.parse` — a parse that runs nothing, per the operator's *source-text read, never an execution* — and returns
+`None` whenever the source alone cannot vouch for the table (no single module-level dict display, a computed or
+non-string key, `**` unpacking, any other binding of the name, a subscript store or delete, a non-reading method).
+`find_trim_tool()` carries it as `ledgers`, `collect_trim_metrics()` as `tool_ledgers`. Where that reading lists a
+Class B file's **basename** — the key the trimmer itself looks up — the over-cap row appends *"BUT THIS PROJECT HAS
+A REMEDY: … run `python3 <tool> --file <path> --check` …"* and drops HIGH → **LOW**, Class A's severity (plan §8 P2).
+Anything else leaves P1's row **byte for byte**. **The class does not move:** `READ_CAP_CLASS_A`/`_B`,
+`read_cap_class()`, both pins and the trim row's Class A population are untouched — dragon 6 not engaged.
+
+**A judgment inside the decided option, stated:** a parse rather than a grep, because a grep cannot tell an entry
+from a mention — `nprcgenekeepr`'s trimmer spells `SESSION_NOTES.md` on three lines and one is a key.
+**`DASHBOARD_VERSION` 2.18.0 → 2.19.0 is the operator's choice this session**, per the file's own *"bump on any
+change"*; it covers P1 too, which shipped without one, and it is what makes older fleet copies say they are stale.
+
+**Verified:** RED first — the 12 new tests, as first written, failed **5 times and errored 22** before the edit,
+each for the expected reason; the abstention cases added after the fix are proved by mutation instead. After, `python3 tools/test_methodology_dashboard.py` **350 tests OK (skipped=4)**. **Mutation: 26 mutants,
+25 killed; the survivor is equivalent** (`getattr(t, "id", None)` for an `isinstance` check only `ast.Name`
+satisfies), and dropping that check outright is killed. **Faithfulness on real trimmers:** the source reading
+equals the keys each trimmer defines when imported — in a verification subprocess, never the scanner — on
+**9 of 9** (the 8 fleet trimmers and canonical), `nprcgenekeepr`'s widened one included. **On a real adopter
+tree:** a `--no-local` clone of `nprcgenekeepr` with `SESSION_NOTES.md` padded to 94,669 B — P1 **HIGH**, P2 **LOW**
+with the remedy, and the named `--check` runs there, exit 0, a full report and no `NO_CONFIG`. **Fleet diff,
+back to back per project:** **0 of 49 rows changed** across 8 projects and 31 watched files — the right answer
+today, since no declared Class B file is over the cap (`nprcgenekeepr/SESSION_NOTES.md` is ~33 KB); the reading
+itself lists `SESSION_NOTES.md` for `nprcgenekeepr` alone. Scanned in-process, so nothing was written to
+`~/Development/dashboard.html`. One repo's `git status` differed after the scan; the script did not name it, and
+the only files modified in that window were `nprcgenekeepr`'s R sources and man pages (a live session there) and
+this repo's own edits — so it is attributed, by that reconstruction, to `nprcgenekeepr`.
+Fork-only; **no PR granted, nothing on `KJ5HST/methodology`.**
+
 ### 2026-09-27 · [ad hoc] S230 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 **456 B of front matter becomes a 124 B row** in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md); rows **66 → 67**.

@@ -2388,13 +2388,15 @@ class TestFmtRatioAndTwins(unittest.TestCase):
 
     def test_dashboard_version(self):
         """⚠ PINNED TWICE ON PURPOSE — the module attribute AND the starter-kit source text. Bump
-        BOTH or this goes red; S115 lost a run to changing one. 2.18.0 is the resync's merge of
-        upstream's 2.11.0 and 2.11.1 (the gates panel and its history walk) into this line at 2.17.0:
-        changed output on a distributed tool, so MINOR (resync plan D3)."""
-        self.assertEqual(md.DASHBOARD_VERSION, "2.18.0")
+        BOTH or this goes red; S115 lost a run to changing one. 2.19.0 is BL-88: the Class B
+        read-cap row asserts only what it evaluated (P1) and names a remedy it has read from the
+        project's own trimmer source (P2) -- changed output on a distributed tool, so MINOR. P1
+        shipped without a bump; this one carries both. (2.18.0, the resync's merge of upstream's
+        2.11.x line, is described in git: `git log -S'2.18.0'` on this file.)"""
+        self.assertEqual(md.DASHBOARD_VERSION, "2.19.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.18\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.18.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.19\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.19.0")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general
@@ -5830,7 +5832,10 @@ class TestPhaseC2PerClassRiskRows(unittest.TestCase):
         This does NOT relax the declared/derived split — see the two class pins above, unchanged.
         The class stays declared; the PROSE stops claiming the trimmer's answer. BL-88.
 
-        KILLS: re-introducing any mention of the trimmer or its config into this row."""
+        KILLS: re-introducing any mention of the trimmer or its config into this row on a tree
+        where nothing was read -- this fixture carries no trimmer. BL-88 P2 appends a remedy ONLY
+        where the scanned project's own trimmer SOURCE declares the file;
+        `TestBL88P2TrimmerSourceProbe` pins that arm, and pins this one byte-identical to P1."""
         for name in sorted(md.READ_CAP_CLASS_B):
             with self.subTest(name=name):
                 rows = self._rows_for(name, md.READ_CAP_BYTES + 1)
@@ -5921,6 +5926,373 @@ class TestPhaseC2PerClassRiskRows(unittest.TestCase):
                                  % ("{:,}".format(size), expected,
                                     "{:,}".format(md.CLASS_A_FIRE_BYTES),
                                     "{:,}".format(md.READ_CAP_BYTES)))
+
+
+# BL-88 P2 -- P1's Class B over-cap row, FROZEN. Captured from the module at `cb9b0ed` (P1, before
+# P2 existed) for a watched file of READ_CAP_BYTES + 1 bytes and 100 lines, with nothing evaluated
+# about any trimmer. A LITERAL on purpose: plan §8 P2's criterion -- "a probe that finds nothing or
+# fails must leave the row byte-identical to P1's" -- is a claim about P1's OUTPUT, and a reference
+# computed by the code under test would only compare the new code with itself (fork Learning #16).
+# If a ratified constant these rows print moves (READ_CAP_BYTES, READ_CAP_TOKENS,
+# MIN_BYTES_PER_TOKEN), regenerate them from the module as it stood before that change.
+_P1_CLASS_B_ROWS = {
+    'BACKLOG.md': (
+        'BACKLOG.md is 56,751 B (100 lines) — past the 56,750 B one-read budget for the agent'
+        ' read cap, which is denominated in tokens (25,000) and converted here at the densest'
+        ' content measured (2.27 B/token). A session reading it whole gets a PARTIAL view — '
+        'truncated to the prefix that fits the token cap, and it SAYS SO in a banner naming '
+        'the true length, so the failure is loud rather than silent; an explicit line range '
+        'spanning the excess errors outright, returning nothing. This is a CLASS B file and '
+        "the instructed access path IS the file: a backlog's bottom items are as live as its "
+        'top ones, so what truncates may be open work, and you are told THAT something was '
+        'cut, never WHAT'
+    ),
+    'SESSION_NOTES.md': (
+        'SESSION_NOTES.md is 56,751 B (100 lines) — past the 56,750 B one-read budget for the'
+        ' agent read cap, which is denominated in tokens (25,000) and converted here at the '
+        'densest content measured (2.27 B/token). A session reading it whole gets a PARTIAL '
+        'view — truncated to the prefix that fits the token cap, and it SAYS SO in a banner '
+        'naming the true length, so the failure is loud rather than silent; an explicit line '
+        'range spanning the excess errors outright, returning nothing. This is a CLASS B file'
+        ' and the instructed access path IS the file: nothing ENFORCES that the part you need'
+        ' is inside that prefix — the protocol says to focus on the ACTIVE TASK section at '
+        'the top and the seed puts it there, but no check holds it there, and a file carrying'
+        ' no such heading has no ordering to rely on, and you are told THAT something was '
+        'cut, never WHAT'
+    ),
+    'docs/BACKLOG.md': (
+        'docs/BACKLOG.md is 56,751 B (100 lines) — past the 56,750 B one-read budget for the '
+        'agent read cap, which is denominated in tokens (25,000) and converted here at the '
+        'densest content measured (2.27 B/token). A session reading it whole gets a PARTIAL '
+        'view — truncated to the prefix that fits the token cap, and it SAYS SO in a banner '
+        'naming the true length, so the failure is loud rather than silent; an explicit line '
+        'range spanning the excess errors outright, returning nothing. This is a CLASS B file'
+        " and the instructed access path IS the file: a backlog's bottom items are as live as"
+        ' its top ones, so what truncates may be open work, and you are told THAT something '
+        'was cut, never WHAT'
+    ),
+    'docs/planning/BACKLOG.md': (
+        'docs/planning/BACKLOG.md is 56,751 B (100 lines) — past the 56,750 B one-read budget'
+        ' for the agent read cap, which is denominated in tokens (25,000) and converted here '
+        'at the densest content measured (2.27 B/token). A session reading it whole gets a '
+        'PARTIAL view — truncated to the prefix that fits the token cap, and it SAYS SO in a '
+        'banner naming the true length, so the failure is loud rather than silent; an '
+        'explicit line range spanning the excess errors outright, returning nothing. This is '
+        "a CLASS B file and the instructed access path IS the file: a backlog's bottom items "
+        'are as live as its top ones, so what truncates may be open work, and you are told '
+        'THAT something was cut, never WHAT'
+    ),
+}
+
+# The sentence P2 appends when -- and only when -- the scanned project's own trimmer SOURCE declares
+# a LEDGERS entry for the file's basename. Spelled here independently of the module's own format
+# string, for the same reason as the literal above.
+_P2_REMEDY = (". BUT THIS PROJECT HAS A REMEDY: its own `{tool}` declares a `LEDGERS` entry for "
+              "`{base}` (read from its source, never run), so run `python3 {tool} --file {path} "
+              "--check` for the full report and whether a trim is the right move")
+
+
+class TestBL88P2TrimmerSourceProbe(unittest.TestCase):
+    """BL-88 P2 -- the Class B row may name a remedy it has CHECKED, and only then lower itself.
+
+    Plan: `docs/planning/dashboard-read-cap-class-adopter-drift-plan.md` §8 P2. The operator's
+    sub-decision (S228's report): the probe is a SOURCE-TEXT read of the scanned project's own
+    `methodology_trim.py`, never an execution -- no adopter code runs inside the scanner, which is
+    the §7.1 precedent `find_trim_tool` already follows for the version and the budget.
+
+    THE FAILURE PATH IS THE CRITERION. Four trees are scanned through `collect_all` -- the surface
+    an adopter's copy actually runs -- one per outcome: the trimmer declares the file (CONFIG), it
+    does not (NO CONFIG), it cannot be read (LOAD FAILURE, a deliberately broken fixture trimmer,
+    never a wait for a real one), and there is none (ABSENT). Only CONFIG may differ from P1, and
+    the other three are compared to P1's row as a FROZEN LITERAL rather than to each other.
+
+    DRAGON 6 IS NOT ENGAGED, AND ONE TEST SAYS SO. The probe changes prose and severity only: the
+    file's CLASS stays declared, and the trim row's population stays Class A even in a tree whose
+    trimmer declares a Class B name."""
+
+    NOTES = "SESSION_NOTES.md"
+
+    @classmethod
+    def setUpClass(cls):
+        cls.trim = _load_trimmer()
+        cls.canonical = Path(TRIM_PY).read_text(encoding="utf-8")
+        cls.patched = cls._splice(cls.canonical)
+        cls.broken = cls.canonical + "\n\ndef deliberately_broken(:\n    pass\n"
+        cls.scans = {
+            "config": cls._scan(cls.patched),
+            "no config": cls._scan(cls.canonical),
+            "load failure": cls._scan(cls.broken),
+            "absent": cls._scan(None),
+        }
+
+    @staticmethod
+    def _splice(text):
+        """The canonical trimmer widened the way `nprcgenekeepr` widened its own: one more entry
+        in the LEDGERS literal, keyed by basename. Importable, so it can also serve as the
+        independent operand for what such a file DEFINES."""
+        anchor = "LEDGERS = {\n"
+        assert text.count(anchor) == 1, "the canonical LEDGERS literal moved: %d" % text.count(anchor)
+        entry = ('    "SESSION_NOTES.md": LedgerSpec(\n'
+                 '        basename="SESSION_NOTES.md",\n'
+                 '        record_kind="heading",\n'
+                 '        footer_mode="none",\n'
+                 '        date_of_record=_handoff_date,\n'
+                 '        record_start=re.compile(r"^### What Session \\d+ Did\\b"),\n'
+                 '    ),\n')
+        return text.replace(anchor, anchor + entry, 1)
+
+    @staticmethod
+    def _notes_text():
+        """Exactly READ_CAP_BYTES + 1 bytes over exactly 100 lines -- the shape of the literal."""
+        size = md.READ_CAP_BYTES + 1
+        width = size // 100
+        lines = ["x" * (width - 1) + "\n"] * 99
+        last = size - sum(len(l) for l in lines)
+        return "".join(lines) + "y" * (last - 1) + "\n"
+
+    @classmethod
+    def _scan(cls, trimmer_text):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp)
+            subprocess.run(["git", "init", "-q", str(p)], check=True)
+            (p / "SESSION_RUNNER.md").write_text("# r\n")
+            (p / "README.md").write_text("# fx\n")
+            (p / cls.NOTES).write_text(cls._notes_text())
+            if trimmer_text is not None:
+                (p / md.TRIM_TOOL_NAME).write_text(trimmer_text, encoding="utf-8")
+            subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+            subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t",
+                            "commit", "-q", "-m", "init"], check=True)
+            return md.collect_all(p)
+
+    @staticmethod
+    def _rows(metrics, path):
+        return [r for r in metrics["scores"]["risks"]
+                if path in r["description"] and "read cap" in r["description"]]
+
+    @staticmethod
+    def _defines(text):
+        """What a trimmer source DEFINES, by executing it -- in the TEST, as the independent
+        operand the scanner must never become."""
+        with tempfile.TemporaryDirectory() as tmp:
+            f = Path(tmp) / "trim_fixture.py"
+            f.write_text(text, encoding="utf-8")
+            spec = importlib.util.spec_from_file_location("trim_fixture_under_test", f)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return sorted(mod.LEDGERS)
+
+    # --- the fixtures prove themselves first ----------------------------------------------------
+
+    def test_FIXTURE_every_scan_holds_the_literals_file_and_finds_its_trimmer(self):
+        """Without this, a wrong byte count or a trimmer `find_trim_tool` skipped would make every
+        comparison below pass or fail for the wrong reason -- the LOAD FAILURE arm in particular is
+        only exercised if the broken file is FOUND and then fails to parse."""
+        for label, m in self.scans.items():
+            with self.subTest(scan=label):
+                w = [w for w in m["files"]["read_cap_watch"] if w["path"] == self.NOTES]
+                self.assertEqual(w, [{"path": self.NOTES, "lines": 100,
+                                      "bytes": md.READ_CAP_BYTES + 1}])
+                self.assertEqual(m["trim"]["tool_present"], label != "absent")
+        with self.assertRaises(SyntaxError):
+            compile(self.broken, "broken_fixture", "exec")
+        self.assertEqual(self._defines(self.patched),
+                         sorted(list(self.trim.LEDGERS) + [self.NOTES]),
+                         "the widened fixture must DEFINE exactly one more entry than canonical")
+
+    # --- the reading ------------------------------------------------------------------------------
+
+    def test_the_source_reading_matches_what_the_trimmer_DEFINES(self):
+        """Independent operands, as `_parse_trim_budget`'s pin already does: the scanner's reading
+        of the source against the keys the module defines when it IS executed -- here, in a test."""
+        self.assertEqual(md._parse_trim_ledgers(self.canonical), sorted(self.trim.LEDGERS))
+        self.assertEqual(md._parse_trim_ledgers(self.patched), self._defines(self.patched))
+        self.assertIn(self.NOTES, md._parse_trim_ledgers(self.patched))
+
+    def test_a_name_the_source_only_MENTIONS_is_not_a_config(self):
+        """Why the reading is a PARSE and not a grep. `nprcgenekeepr`'s widened trimmer spells
+        SESSION_NOTES.md on three lines -- a comment, the key, and a `basename=` argument -- and a
+        grep counts all three. A false positive is the harmful direction: it names a remedy that
+        does not work."""
+        mention = '    "SESSION_NOTES.md": LedgerSpec(\n'
+        text = (self.canonical
+                + "\n# " + mention
+                + '\n_EXAMPLE = """\n' + mention + '"""\n')
+        self.assertIn('"SESSION_NOTES.md": LedgerSpec(', text,
+                      "control: a grep for the entry's own spelling WOULD match this source")
+        self.assertEqual(md._parse_trim_ledgers(text), sorted(self.trim.LEDGERS))
+
+    def test_the_reading_ABSTAINS_rather_than_guesses(self):
+        """None -- not an empty list, and not a best effort -- whenever the source alone cannot
+        say what LEDGERS holds. An abstention costs nothing (the row stays P1's); a guess could
+        name a remedy that does not work."""
+        cases = {
+            "syntax error": 'LEDGERS = {"SESSION_NOTES.md": None}\ndef f(:\n',
+            "null byte": 'LEDGERS = {"SESSION_NOTES.md": None}\x00\n',
+            "no LEDGERS": "X = 1\n",
+            "not a dict display": 'LEDGERS = dict(SESSION_NOTES=None)\n',
+            "computed key": 'K = "SESSION_NOTES.md"\nLEDGERS = {K: None}\n',
+            "a non-string key": 'LEDGERS = {"SESSION_NOTES.md": None, 1: None}\n',
+            "dict unpacking": 'LEDGERS = {"SESSION_NOTES.md": None, **OTHER}\n',
+            "only inside a function": 'def f():\n    LEDGERS = {"SESSION_NOTES.md": None}\n',
+            "subscript store after": ('LEDGERS = {"CHANGELOG.md": None}\n'
+                                      'LEDGERS["SESSION_NOTES.md"] = None\n'),
+            "subscript delete after": ('LEDGERS = {"SESSION_NOTES.md": None}\n'
+                                       'del LEDGERS["SESSION_NOTES.md"]\n'),
+            "mutating method": ('LEDGERS = {"SESSION_NOTES.md": None}\n'
+                                'LEDGERS.pop("SESSION_NOTES.md")\n'),
+            "rebound": 'LEDGERS = {"SESSION_NOTES.md": None}\nLEDGERS = {}\n',
+            "rebound in a function": ('LEDGERS = {"SESSION_NOTES.md": None}\n'
+                                      'def f():\n    global LEDGERS\n    LEDGERS = {}\n'),
+            "imported": 'from elsewhere import LEDGERS\n',
+            "imported after": 'LEDGERS = {"SESSION_NOTES.md": None}\nfrom elsewhere import LEDGERS\n',
+            "imported under the name": ('LEDGERS = {"SESSION_NOTES.md": None}\n'
+                                        'from elsewhere import OTHER as LEDGERS\n'),
+            "imported as a package": 'LEDGERS = {"SESSION_NOTES.md": None}\nimport LEDGERS.sub\n',
+            "a def of the name": 'LEDGERS = {"SESSION_NOTES.md": None}\ndef LEDGERS():\n    pass\n',
+            "a class of the name": 'LEDGERS = {"SESSION_NOTES.md": None}\nclass LEDGERS:\n    pass\n',
+            "except-as the name": ('LEDGERS = {"SESSION_NOTES.md": None}\ntry:\n    pass\n'
+                                   'except Exception as LEDGERS:\n    pass\n'),
+            "an alias by chained assignment": ('LEDGERS = ALIAS = {"SESSION_NOTES.md": None}\n'
+                                               'ALIAS.pop("SESSION_NOTES.md")\n'),
+            "pathologically deep": 'LEDGERS = {"SESSION_NOTES.md": None}\nX = ' + "not " * 100000 + "1\n",
+        }
+        for label, text in cases.items():
+            with self.subTest(case=label):
+                self.assertIsNone(md._parse_trim_ledgers(text))
+        # CONTROLS: the same shapes read when nothing disturbs them, including the read-only use
+        # the trimmer itself makes of the table -- so the abstentions above are not "always None".
+        self.assertEqual(md._parse_trim_ledgers('LEDGERS = {"SESSION_NOTES.md": None}\n'),
+                         ["SESSION_NOTES.md"])
+        self.assertEqual(md._parse_trim_ledgers('X, Y = 1, 2\nLEDGERS = {"B.md": 1, "A.md": 2}\n'
+                                                'spec = LEDGERS.get("A.md")\n'
+                                                'other = LEDGERS["B.md"]\n'
+                                                'for k, v in LEDGERS.items():\n    pass\n'
+                                                'n = (LEDGERS.keys(), LEDGERS.values(), LEDGERS.copy())\n'),
+                         ["A.md", "B.md"])
+        self.assertEqual(md._parse_trim_ledgers("LEDGERS = {}\n"), [])
+
+    def test_the_reading_NEVER_RUNS_the_source(self):
+        """The operator's decision, pinned: a source whose top level would write a file and exit
+        is read, and neither happens."""
+        with tempfile.TemporaryDirectory() as tmp:
+            sentinel = Path(tmp) / "ran"
+            text = ("open(%r, 'w').write('ran')\n"
+                    'LEDGERS = {"SESSION_NOTES.md": None}\n'
+                    "raise SystemExit(3)\n" % str(sentinel))
+            self.assertEqual(md._parse_trim_ledgers(text), ["SESSION_NOTES.md"])
+            self.assertFalse(sentinel.exists(), "the scanner executed the trimmer it was reading")
+
+    def test_the_scan_carries_the_reading_for_each_outcome(self):
+        expected = {"config": sorted(list(self.trim.LEDGERS) + [self.NOTES]),
+                    "no config": sorted(self.trim.LEDGERS),
+                    "load failure": None,
+                    "absent": None}
+        for label, m in self.scans.items():
+            with self.subTest(scan=label):
+                self.assertEqual(m["trim"]["tool_ledgers"], expected[label])
+
+    # --- the row ----------------------------------------------------------------------------------
+
+    def test_CONFIG_the_row_gains_the_remedy_and_takes_class_A_severity(self):
+        rows = self._rows(self.scans["config"], self.NOTES)
+        self.assertEqual(len(rows), 1, "%r" % rows)
+        self.assertEqual(rows[0]["severity"], "low",
+                         "a Class B file whose project CAN act on it drops to the Class A "
+                         "severity (plan §8 P2)")
+        self.assertEqual(rows[0]["description"],
+                         _P1_CLASS_B_ROWS[self.NOTES]
+                         + _P2_REMEDY.format(tool="methodology_trim.py", base=self.NOTES,
+                                             path=self.NOTES),
+                         "P2 APPENDS a sentence to P1's row; it rewrites nothing P1 said")
+
+    def test_NO_CONFIG_LOAD_FAILURE_and_ABSENT_leave_the_row_byte_identical_to_P1(self):
+        """THE CRITERION. Compared to the frozen literal, never to each other: three arms that
+        drifted together would agree with one another and all be wrong."""
+        for label in ("no config", "load failure", "absent"):
+            with self.subTest(scan=label):
+                rows = self._rows(self.scans[label], self.NOTES)
+                self.assertEqual(len(rows), 1, "%r" % rows)
+                self.assertEqual(rows[0]["severity"], "high")
+                self.assertEqual(rows[0]["description"], _P1_CLASS_B_ROWS[self.NOTES])
+
+    def test_the_probe_selects_NO_CLASS(self):
+        """Dragon 6. In the one tree whose trimmer declares SESSION_NOTES.md, the file is still
+        Class B and the trim row's population is still Class A only -- the probe reached the
+        prose and nothing else."""
+        m = self.scans["config"]
+        self.assertEqual(md.read_cap_class(self.NOTES), "B")
+        self.assertEqual([l["path"] for l in m["trim"]["ledgers"]], [],
+                         "the trim-row population admitted a Class B file because its trimmer "
+                         "declares it -- that is class membership following LEDGERS")
+        self.assertFalse([s for s in m["trim"]["signals"] if self.NOTES in s[1]])
+
+    def test_every_class_B_name_resolves_by_BASENAME_as_the_trimmer_does(self):
+        """The trimmer looks a file up by `LEDGERS.get(path.name)` at any depth, so a nested
+        `docs/planning/BACKLOG.md` is answered by a `BACKLOG.md` entry -- and the remedy must
+        still name the path the reader has, not the basename."""
+        base = copy.deepcopy(self.scans["absent"])
+        for name in sorted(md.READ_CAP_CLASS_B):
+            with self.subTest(name=name):
+                m = copy.deepcopy(base)
+                m["files"]["read_cap_watch"] = [{"path": name, "bytes": md.READ_CAP_BYTES + 1,
+                                                 "lines": 100}]
+                m["trim"] = {"signals": [], "tool_present": True,
+                             "tool_path": "methodology_trim.py",
+                             "tool_ledgers": ["BACKLOG.md", "CHANGELOG.md", "HANDOFFS.md",
+                                              "SESSION_NOTES.md"]}
+                rows = self._rows({"scores": {"risks": md.assess_risks(m)}}, name)
+                self.assertEqual(len(rows), 1, "%r" % rows)
+                self.assertEqual(rows[0]["severity"], "low")
+                self.assertEqual(rows[0]["description"],
+                                 _P1_CLASS_B_ROWS[name]
+                                 + _P2_REMEDY.format(tool="methodology_trim.py",
+                                                     base=name.rsplit("/", 1)[-1], path=name))
+
+    def test_a_reading_the_scan_cannot_vouch_for_is_not_trusted(self):
+        """The remedy needs all three: a tool that was FOUND, a path to name, and a reading that
+        lists the basename. Each missing one leaves P1's row."""
+        base = copy.deepcopy(self.scans["absent"])
+        bad = {
+            "tool not present": {"tool_present": False, "tool_path": "methodology_trim.py",
+                                 "tool_ledgers": ["SESSION_NOTES.md"]},
+            "no tool path": {"tool_present": True, "tool_path": None,
+                             "tool_ledgers": ["SESSION_NOTES.md"]},
+            "reading abstained": {"tool_present": True, "tool_path": "methodology_trim.py",
+                                  "tool_ledgers": None},
+            "name not declared": {"tool_present": True, "tool_path": "methodology_trim.py",
+                                  "tool_ledgers": ["CHANGELOG.md", "HANDOFFS.md"]},
+            "an older metrics dict": {},
+        }
+        for label, trim in bad.items():
+            with self.subTest(case=label):
+                m = copy.deepcopy(base)
+                m["trim"] = dict(trim, signals=[])
+                rows = [r for r in md.assess_risks(m)
+                        if self.NOTES in r["description"] and "read cap" in r["description"]]
+                self.assertEqual([(r["severity"], r["description"]) for r in rows],
+                                 [("high", _P1_CLASS_B_ROWS[self.NOTES])])
+
+    def test_the_probe_touches_neither_the_class_A_row_nor_the_hard_refusal_row(self):
+        """P2 is confined to the Class B arm between the cap and the refusal. A Class A ledger is
+        already LOW and already remedied by the trim row; past the refusal nothing arrives at all,
+        and a remedy sentence must not soften that row's severity."""
+        base = copy.deepcopy(self.scans["absent"])
+        declared = {"signals": [], "tool_present": True, "tool_path": "methodology_trim.py",
+                    "tool_ledgers": ["CHANGELOG.md", "HANDOFFS.md", "SESSION_NOTES.md"]}
+        for path, size in (("HANDOFFS.md", md.READ_CAP_BYTES + 1),
+                           (self.NOTES, md.READ_REFUSE_BYTES + 1)):
+            with self.subTest(path=path):
+                rows_by = {}
+                for label, trim in (("declared", declared), ("none", {"signals": []})):
+                    m = copy.deepcopy(base)
+                    m["files"]["read_cap_watch"] = [{"path": path, "bytes": size, "lines": 100}]
+                    m["trim"] = copy.deepcopy(trim)
+                    rows_by[label] = [(r["severity"], r["description"])
+                                      for r in md.assess_risks(m) if path in r["description"]]
+                self.assertTrue(rows_by["none"], "control: the row exists at this size")
+                self.assertEqual(rows_by["declared"], rows_by["none"])
+                self.assertFalse(any("HAS A REMEDY" in d for _, d in rows_by["declared"]))
 
 
 if __name__ == "__main__":
