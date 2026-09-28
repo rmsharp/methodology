@@ -3180,6 +3180,14 @@ argument for a *required*, checkable shape over a recommended template. **(2) Th
 shape alone would not fix:** Phase 3 is *"AUTOMATIC … execute ALL of these steps without being asked"*, so a session
 that is asked for its report has already missed §3G, and the report it then writes should say so. Still uncosted.
 
+**Third occurrence, 2026-09-27 (S230).** The session's own memory index carried the S218 rule verbatim — *3G is a
+labelled report given unasked* — and the operator still had to ask for "phase 3 close-out report". **What this adds:
+the report was displaced by the close-out's own go-aheads.** The session gave a closing summary (unshaped) and put
+a go-ahead picker (push, sync) in the same message; the approved actions then produced a new finding (BL-90) and a
+count correction, and changed the state the summary described, so **no message ever reported the final state in
+report shape**. A required shape would need a rule for *where* it sits: after the last post-close-out action, not
+before the picker that unlocks them. Still uncosted.
+
 
 <a id="bl-80"></a>
 

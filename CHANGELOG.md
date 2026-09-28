@@ -227,6 +227,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S230 correction — the Phase 3G report was not given as one until the operator asked; self_score 8 → 7
+
+The closing messages carried §3G's content — the deliverable, the self-assessment, the predecessor's score and the
+next session — but never its shape: no `Close-out report: S230` heading, no labelled sections, no `Session over.`
+line. The operator asked for "phase 3 close-out report", which §3G's *"without being asked"* already counts as the
+miss. The S230 receipt's `self_score` goes **8 → 7** with the reason in `what_was_done`; the close-out entry stands
+as written and is corrected by this one. **BL-79's third occurrence** is recorded in its
+[detail](docs/planning/BACKLOG-DETAIL.md#bl-79): the report was displaced by the close-out's own go-aheads, whose
+actions changed the state it described.
+
 ### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `dc791ae..3582cc6` — and this record with it
 
 **The operator's explicit go-ahead, asked for after S230's close-out**, for the one commit recording the portfolio
