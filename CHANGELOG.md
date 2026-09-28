@@ -227,6 +227,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `cfe542a..e8ea062` — and this record with it
+
+**The operator's explicit go-ahead, asked for and given at S230's close-out** — **6** commits, beyond the standing
+CHANGELOG-only push grant, which is why it was asked rather than assumed. **Fork `origin` only; nothing was sent to
+`KJ5HST/methodology`**, where six pull requests still sit open with 0 reviews and nothing is owed.
+
+**What the range carries:** S230's claim; the `HANDOFFS.md` retention trim to `-5` and its fold; the BL-88 P2
+deliverable `161181c` (`DASHBOARD_VERSION` 2.19.0); the close-out; and BL-90 with the receipt correction.
+
+**This entry rides the push it describes**, so the record and the state it records land together. Read back with
+`git ls-remote` rather than trusting this sentence.
+
 ### 2026-09-27 · [BL-90] S230 — raised after close-out: `--sync` overwrites a copy's local `EXCLUDE_DIRS`; the S230 receipt corrected
 
 Found while dry-running, before offering it, the command 2.19.0's stale-copy warning now prints to the portfolio
