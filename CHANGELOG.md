@@ -227,6 +227,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S231 post-close-out — the overhead measurements, and the three scripts that reproduce them
+
+Taken after S231's close-out, answering the operator's questions about Claude API cost against productive
+results. **Committed as scripts, not as numbers**, under
+[`docs/planning/bl91-overhead-measurement/`](docs/planning/bl91-overhead-measurement/), each with its limits in
+its own docstring — the precedent is `pr80-f2-mutants.py` and `pr83-union-repro.py`:
+
+- **`cost-per-project.py`** — prices the 2.7 GB of local Claude Code transcripts (they carry per-request
+  `usage` and the model id) at published list rates: **$20,258 across all projects**, this repository the
+  largest single consumer at **$7,205 (36%)**, $218/day against $52–176/day for the six code repos; median
+  **$55 per methodology session**, 364 requests, ~198,000 tokens of average context. **57% of spend is
+  re-sent context, 18% output** — cost tracks turns × context, not bytes written.
+- **`process-vs-work-per-session.py`** — process share of lines written: **69% here, 30–62% in the code
+  repos**; $195 per 1,000 product lines here against $39–132 there.
+- **`mandated-load-per-version.py`** — the series that answers the operator's question, and the only one
+  recoverable at every version: **17,615 B at v1.0.0 → 80,526 B at v3.7, 4.6x, never once falling across 27
+  releases**; HEAD is 72,535 B, 9.9% below v3.7 after the apparatus extraction.
+
+**What could NOT be measured, stated because the operator suspected it:** observed dollars per methodology
+version. The transcripts begin 2026-08-16 and v3.7 shipped 2026-08-12, so all cost data sits inside one
+version, on one model, across different work. No slicing of it yields a version comparison, and the mandated-load
+series above is a driver, not an observation of spend.
+
 ### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `f467176..2feeb5d` — and this record with it
 
 **The operator's go-ahead, asked for because the commit touches `HANDOFFS.md` and so falls outside the standing
