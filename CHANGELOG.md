@@ -227,6 +227,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-88] S229 claim — the read-cap row stops asserting what it never checked (in progress)
+
+**The operator's decision, taken at S228's report:** fix the warning text, **fork-side only — no upstream pull
+request**, and add the trimmer probe as a **source-text read**, not an execution. The probe is the plan's P2 and is
+**not this session** ([`dashboard-read-cap-class-adopter-drift-plan.md`](docs/planning/dashboard-read-cap-class-adopter-drift-plan.md) §8);
+it now carries zero open decisions.
+
+**This session is P1 only:** the Class B over-cap row at `tools/methodology_dashboard.py:3511-3528` drops
+*"the trimmer answers `NO_CONFIG` for it"* — a claim about another tool's configuration that the dashboard never
+reads — and stops printing the **backlog-specific** *"a backlog's bottom items are as live as its top ones"* for
+`SESSION_NOTES.md`, which the module comment at `:381-396` already corrected in prose and never in the row.
+
+**RED first, and one existing test must change deliberately rather than be deleted:**
+`tools/test_methodology_dashboard.py:5800` asserts `"NO_CONFIG" in rows[0]["description"]`. Its purpose — *Class B
+rows STAY and say why* — survives; only the *why* changes. The two class pins at `:5464` and `:5485` are **untouched**:
+no name moves between classes and nothing becomes derived. The `starter-kit/` twin is mirrored **last**.
+
 ### 2026-09-27 · [ad hoc] S228 close-out — `CHANGELOG.md` archived at the 2026-09-22 seam; predecessor scored 8
 
 **Deliverable:** `d23c811` — 85 of 137 records to `docs/archive/CHANGELOG-through-2026-09-22.md`, live

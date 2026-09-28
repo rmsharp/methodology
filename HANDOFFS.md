@@ -51,6 +51,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S229
+date: 2026-09-27
+status: pending
+active_task: **P1 of the BL-88 plan: the read-cap row stops asserting what it never checked.** The operator decided both changes at S228's report — **fix the message, fork-side only, NO upstream pull request**, and add the trimmer probe as a **source-text read** rather than an execution. **The probe is P2 and is NOT this session**; it now carries zero open decisions. **This session:** the Class B over-cap row (`tools/methodology_dashboard.py:3511-3528`) drops *"the trimmer answers `NO_CONFIG` for it"* — a claim about another tool's config the dashboard never reads — and confines the backlog-specific *"a backlog's bottom items are as live as its top ones"* to the three backlog names, stating `SESSION_NOTES.md`'s caveat in the weaker form the module comment at `:381-396` already settled. **RED first.** `tools/test_methodology_dashboard.py:5800` asserts `"NO_CONFIG"` is present and **must change deliberately, not be deleted** — its purpose survives, only the *why* changes. **The two class pins at `:5464`/`:5485` are untouched**: no name moves class, nothing becomes derived, dragon 6 is not engaged. `starter-kit/` twin mirrored **LAST**. Fork-only; **nothing on `KJ5HST/methodology`, and no PR was granted.**
+```
+
+```handoff
 session: S228
 date: 2026-09-27
 status: complete
