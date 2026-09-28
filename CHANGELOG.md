@@ -227,6 +227,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `cf60984..4093485` — and this record with it
+
+**The operator's explicit go-ahead, asked for after S230's close-out report**, for the one commit carrying the §3G
+correction (S230's `self_score` 8 → 7, BL-79's third occurrence). **This entry is pushed under the standing push-record
+grant** — its only change is this `CHANGELOG.md` entry — so it records its own push. Fork `origin` only; nothing to
+`KJ5HST/methodology`.
+
 ### 2026-09-27 · [ad hoc] S230 correction — the Phase 3G report was not given as one until the operator asked; self_score 8 → 7
 
 The closing messages carried §3G's content — the deliverable, the self-assessment, the predecessor's score and the
