@@ -227,6 +227,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-91] Raised, and the operator commissions a planning session as the NEXT SESSION
+
+**BL-91 — the framework's own overhead has risen 4.6x across 27 releases with nothing watching it.**
+[Detail](docs/planning/BACKLOG-DETAIL.md#bl-91) carries the per-version table, the dollar conversion
+($1.41/session at v1.0.0 → $6.46 at v3.7, the READ floor only), and the wider cost context.
+
+**The structural finding it exists for:** this repository ships a **quality ratchet that can only tighten**
+and has **no ratchet at all on its own overhead**. `.context-budget.json` measures the read set, but by the
+S202 decision its ceiling is a **reported series, not a limit** — so five months of monotone growth passed
+every gate the framework has, because none of them was looking. Whether a given enhancement bought more than
+it cost cannot be answered retroactively; it can only be made answerable going forward, which is what the
+plan is for.
+
+**The operator's decision, taken 2026-09-28 in conversation: the next session is a PLANNING session on this
+item.** It **displaces BL-60's planning session**, chosen earlier the same day — and folds it in as a
+question rather than dropping it, since the trim-proof pile (11.1% of the tracked repository) is the same
+question asked of the written record instead of the read one. Nothing about BL-91 is decided: the plan's own
+§6 will carry the decisions, and any distributed gate it proposes is an upstream pull request and its own
+go-ahead.
+
 ### 2026-09-28 · [ad hoc] S231 post-close-out — the overhead measurements, and the three scripts that reproduce them
 
 Taken after S231's close-out, answering the operator's questions about Claude API cost against productive

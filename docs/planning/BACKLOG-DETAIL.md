@@ -3790,3 +3790,68 @@ file.
 `--sync ~/Development`, the seven local names re-applied; the result is 2.19.0 and `diff` against canonical
 shows the `EXCLUDE_DIRS` line alone. The defect is unchanged — the next sync of that copy destroys the list
 again — and the per-project copies were not examined for local edits.
+<a id="bl-91"></a>
+
+**BL-91 — the framework's own overhead has risen 4.6x across 27 releases with nothing watching it, and
+whether an enhancement pays for itself is not a question any gate asks. Raised 2026-09-28 (S231, after
+close-out, on the operator's question: *"is the overhead cost of using methodology going up with version
+number?"*). THE OPERATOR HAS COMMISSIONED A PLANNING SESSION AS THE NEXT SESSION.**
+
+**The measurement, and it is the answer to the question as asked.** Phase 0 requires reading
+`SESSION_RUNNER.md` and `SAFEGUARDS.md` **in full, every session**, so their combined size at a release tag
+is what that version costs every adopter before any work happens. Measured at all 27 tags by
+[`mandated-load-per-version.py`](bl91-overhead-measurement/mandated-load-per-version.py):
+
+| version | date | per-session mandated read | named files a session may read | MANDATORY directives |
+|---|---|---|---|---|
+| v1.0.0 | 2026-03-09 | 17,615 B | 8 | 3 |
+| v2.0 | 2026-03-27 | 27,873 B | 8 | 8 |
+| v2.7 | 2026-06-12 | 50,552 B | 15 | 10 |
+| v3.0 | 2026-06-25 | 52,435 B | 15 | 10 |
+| v3.7 | 2026-08-12 | **80,526 B** | 18 | 13 |
+| HEAD (unreleased) | 2026-09-27 | 72,535 B | 18 | 12 |
+
+**4.6x from v1.0.0 to v3.7, and it did not fall once across any of the 27 releases.** The count of framework
+files a session may have to read went 8 -> 18. HEAD is **9.9% below v3.7** because the S130 apparatus
+extraction moved ~12 KB out of the runner into a read-on-demand sibling — so the mechanism for reducing this
+exists and has been exercised exactly once.
+
+**What it costs in money, and what that figure rests on.** Priced with this repository's own calibration
+(2.27 B/token) at the measured cache-read rate ($0.50/MTok for Claude Opus 5) over a median 364-request
+session: **$1.41/session at v1.0.0 -> $6.46/session at v3.7**. That is the READ floor only. The larger term
+is **turns** — 57% of measured spend is re-sent context and close-out turns land at maximum context — and
+turns are **not** measured per version. Mandated artifacts going 8 -> 18 is a plausible turn multiplier and
+is not evidence of one.
+
+**The wider cost context, measured the same day** by
+[`cost-per-project.py`](bl91-overhead-measurement/cost-per-project.py) over the 2.7 GB of local Claude Code
+transcripts (they carry per-request `usage`), at published list rates: **$20,258 across all projects; this
+repository is the largest single consumer at $7,205 (36%), $218/day against $52–176/day for the six code
+repos.** Median **$55 per methodology session**, 364 requests, ~198,000 tokens of average context (up 21%
+in a month). Process share of lines written, by
+[`process-vs-work-per-session.py`](bl91-overhead-measurement/process-vs-work-per-session.py): **69% here,
+30–62% in the code repos** — this repository is the worst case by construction, since its product *is*
+process, which is why the code repos are the fair test bed ($39–132 per 1,000 product lines against $195
+here).
+
+**The structural finding, and the reason this is a plan and not a fix.** This repository ships a **quality
+ratchet that can only tighten** and has **no ratchet at all on its own overhead**. `.context-budget.json`
+measures the read set, but by the S202 decision (option C) its ceiling is a **reported series, not a
+limit** — so 4.6x growth over five months passed every gate the framework has, because none of them was
+looking. Whether each enhancement bought more than it cost is therefore unanswerable retroactively; it can
+only be made answerable going forward.
+
+**What the planning session has to settle** (uncosted; these are the questions, not the answers): whether
+the per-session mandated load becomes a **gated metric with a declared ceiling** (the overhead mirror of
+`quality_ratchet.py`) or stays a reported series; what a release that raises it must state about what it
+bought; whether the unit is bytes, tokens, or dollars-at-a-reference-session-shape; whether the gate is
+canonical-only or **distributed** (it is about what adopters pay, so its PR is its own go-ahead); which
+levers to cost (extraction to read-on-demand siblings, as S130 did; fewer mandated artifacts; batching
+close-out writes into fewer turns; cheaper models for mechanical steps); and how **BL-60** — the trim proof
+pile, 11.1% of the tracked repository and the largest single growth term — folds in, since it is the same
+question about the written record rather than the read one.
+
+**Recorded, not fixed (FM #17):** the measurements above were taken **after S231's close-out**, in answer to
+operator questions, and are unbudgeted by any session's plan — which is itself an instance of the thing this
+item is about.
+
