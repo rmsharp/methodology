@@ -227,6 +227,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-60] S231 — the overhead question, measured: the read side is flat, the archive is 76% of the growth
+
+**Asked by the operator mid-session** (*"I am concerned that the overhead associated with using methodology is
+growing. Estimate overhead growth."*). Measured over the **32 claim commits S201..S231** (2026-09-20 → 2026-09-27),
+bucketing every commit into the session whose claim precedes it:
+
+- **What a session must READ is FLAT, slightly down:** the Phase 0 corpus (`SESSION_RUNNER.md` + `SAFEGUARDS.md` +
+  `CLAUDE.md` + `BACKLOG.md` + `HANDOFFS.md`) went **161,197 B → 150,492 B**, slope **−438 B per session**. The
+  runner and `SAFEGUARDS.md` did not change by a byte; `BACKLOG.md` fell 13,601 B at the S223 split.
+- **What a session LEAVES BEHIND is growing:** tracked bytes **10,017,304 → 11,711,011**, **+55,318 B per session**
+  (~215 KB/day at ~3.9 sessions/day). **+23,900 B/session is frozen shards and +17,952 B/session is losslessness
+  proofs — together 76% of it.**
+- **Per session, median:** 7 commits, ~600 lines into ledgers, **20–45 lines of deliverable**; ledger share of lines
+  written 97% (S201–S211) and 92% (S221–S231) — high, roughly flat, not accelerating.
+- **The repository at `3c793bf` is 72% process record** — shards 39.4%, plans 14.4%, proofs 11.3%, backlog 3.6%,
+  live ledgers 2.5%, learnings 1.1% — against 14.7% tools and tests and 5.6% framework prose.
+- **Not instrumented at all:** wall-clock and token cost per session. The byte series above are proxies and are
+  labelled as such; building a real instrument is its own costed decision.
+
+**[BL-60](docs/planning/BACKLOG-DETAIL.md#bl-60)'s own figure re-measured and recorded in the item: 31 proofs /
+453,689 B / 5.4% when raised, **84 / 1,302,320 B / 11.1%** today.** **The operator chose BL-60's planning session
+as the next overhead step** (S231 picker) — the three shapes costed, BL-36 folded in. Method limits stated with the
+numbers: the series starts at S201 because `S<N> claim` is a recent commit-subject convention, and one bogus
+559-commit bucket between S124 and S201 was discarded rather than reported.
+
 ### 2026-09-27 · [ad hoc] S231 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 The `-6` trim's three-line pointer block moved out of `HANDOFFS.md`'s front matter and into

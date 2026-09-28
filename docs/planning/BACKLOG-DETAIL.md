@@ -1909,6 +1909,15 @@ branch `bl57/changelog-rules` created from `b82dcff`. BL-56 folds into the plan'
 now hold 453,689 B, 5.4% of the tracked repository. Raised 2026-09-16 (S172, on the operator's
 request, after the retention change made trim frequency a live cost).**
 
+> **RE-MEASURED AT S231 (2026-09-27, `3c793bf`), on the operator's overhead question: the figure in this
+> item's heading has roughly DOUBLED in share and nearly TRIPLED in bytes.** **84** trim proofs under
+> `docs/archive/` now hold **1,302,320 B = 11.1%** of an 11,773,515 B tracked repository, against the 31 /
+> 453,689 B / 5.4% recorded when this item was raised eleven days earlier. Growth over the 32 claim commits
+> S201..S231: **+17,952 B per session in proofs and +23,900 B in shards**, together **76% of the repository's
+> +55,318 B per session**. The read side did not move — the Phase 0 corpus went 161,197 B → 150,492 B over the
+> same window (**−438 B per session**), so this is the growing cost, and it is the one this item owns.
+> **The operator chose this item's planning session as the next overhead step (S231 picker).**
+
 **The measurement.** `methodology_trim.py` emits one `<shard>.verify.sh` per trim, re-deriving L1/L2/L3
 from git. It is a **fixed cost per trim** — the same harness whatever the shard holds:
 
