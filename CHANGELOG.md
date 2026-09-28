@@ -227,6 +227,15 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `0aeeec1..c3c52a3` — and this record with it
+
+**The operator's explicit go-ahead, asked for in S231's close-out picker and granted there** — **4** commits
+(the claim, the routing plan, fork Learning #102, the close-out), beyond the standing CHANGELOG-only grant, which
+is why it was asked. Read back with `git ls-remote origin refs/heads/main` → `c3c52a3`, and `origin/main...main`
+is 0/0. **Fork `origin` only; nothing was sent to `KJ5HST/methodology`.** **Pushed BEFORE the owed `HANDOFFS.md`
+trim, deliberately:** a trim rewrites the file a later reader reconstructs from, so the record of what exists goes
+out before the frontier advances. **This entry rides the push it describes** under the standing push-record grant.
+
 ### 2026-09-27 · [BL-88] S231 close-out — the route is planned and unratified; the owed `HANDOFFS.md` trim was BLOCKED, not skipped; predecessor scored 9
 
 **Deliverable:** [`docs/planning/dashboard-upstream-routing-plan.md`](docs/planning/dashboard-upstream-routing-plan.md)
