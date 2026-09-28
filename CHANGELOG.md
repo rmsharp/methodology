@@ -227,6 +227,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `f467176..2feeb5d` — and this record with it
+
+**The operator's go-ahead, asked for because the commit touches `HANDOFFS.md` and so falls outside the standing
+CHANGELOG-only grant.** One commit: the S231 receipt corrected for the post-close-out actions it would otherwise
+misreport. Read back with `git ls-remote origin refs/heads/main`. **Fork `origin` only; nothing on
+`KJ5HST/methodology`.** **This entry rides the push it describes** under the standing push-record grant.
+
 ### 2026-09-27 · [ad hoc] S231 — the receipt updated for the post-close-out actions it would otherwise misreport
 
 The S231 receipt was written before the close-out picker was answered, so it said the trim was *owed and blocked*
