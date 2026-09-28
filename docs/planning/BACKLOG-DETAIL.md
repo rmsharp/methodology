@@ -3695,3 +3695,45 @@ edited. **Adjacent to BL-32** (whose open question this does not answer) **and B
 **P1 SHIPPED AT S229** (`cb9b0ed`), the operator's decision at S228's report: **fix the message, fork-side only — no upstream pull request was granted.** The row no longer mentions any trimmer, and the backlog justification is now selected per name, so `SESSION_NOTES.md` gets the weaker form the module comment had already settled. RED-first with two new tests; the test that pinned `"NO_CONFIG"` was **re-pointed, not deleted**; both class pins at `:5464`/`:5485` pass unchanged; the `starter-kit/` twin mirrored last. **Fleet diff, read-only: 3 rows changed, 29 identical, 32 watched files, no severity moved.** **P2 (the per-project probe) is DECIDED as a SOURCE-TEXT READ, not an execution, and is not yet built** — it carries no open decisions. **Still open:** P2, and whether any of this goes upstream, which needs its own go-ahead.
 
 **BL-32's scope paragraph is stale, and it is corrected HERE rather than there — on purpose.** It says *"No project in the local portfolio … has ever extended `LEDGERS` — as reported by the adopter session, not independently re-verified"*. Independently verified at S227 across all **8** trimmer-carrying fleet projects: `nprcgenekeepr` **has**, since **2026-08-11 — the day BL-32 was raised** — and it is the only one. **The in-place correction was written, run against the proof, and reverted:** BL-32's body is among [`BACKLOG-DETAIL.md.verify.sh`](BACKLOG-DETAIL.md.verify.sh) C2's **frozen 18**, so editing it turns the losslessness proof RED — measured, `FAIL C2 BL-32: body differs — 5820 B at 384b17c, 6391 B in detail`, then reverted and the proof re-run green. Editing the proof to admit the edit would be a loosening (`SAFEGUARDS.md`). **So a frozen body cannot receive a factual correction in place; the correction belongs to the item that found it.** That is the same append-only discipline BL-83 exists to protect, arriving from the proof side rather than the prose side.
+
+<a id="bl-89"></a>
+
+**BL-89 — `bin/check-handoff` validates the newest receipt's SCHEMA, not the ledger's RECORD
+STRUCTURE, so it passed three differently-broken `HANDOFFS.md` trees in three consecutive sessions.
+Raised 2026-09-27 (S229) at the operator's request; recorded from what is known, not investigated.**
+
+**Two distinct shapes, both observed, both exit 0.**
+
+**(a) A receipt spliced into the front matter's own code example (S227).** `HANDOFFS.md` quotes its
+own opening fence in prose — `` `grep -c '^```handoff' HANDOFFS.md` `` at `:14` — and a claim receipt
+inserted at the *first textual* occurrence rather than the first *line-start* one landed inside that
+code span, splitting the front matter. `bin/check-handoff --allow-pending` reported **OK, exit 0**,
+and its own summary line read *"all **0** older receipt(s) name a commit sha"* — it had found exactly
+one block, the newly inserted one, and treated the rest of the file as preamble. **The count in its
+own output contradicted the file it had just validated, and nothing compared the two.**
+
+**(b) A duplicated session number (S227, and again at S228 and S229).** Phase 3D says the Phase 1B
+stub is *overwritten* by the close-out receipt. A `git checkout -- HANDOFFS.md` that discards an
+over-budget draft restores the committed stub, and prepending the finished receipt after that yields
+two blocks with the same `session:` value — one `complete`, one `pending`. `bin/check-handoff`
+reported **OK, exit 0** on that tree too: it validates the newest block's 13 keys and asserts that
+older blocks name a sha, and **nothing asserts that a session number appears once.** S227 shipped it
+and it was repaired the next session (`3815b83`); S228 and S229 each reproduced it and caught it
+before committing, with a hand grep the S227 repair had written into its gotchas.
+
+**Why it matters more than a tidy file.** The retention trim archives the oldest receipt into a
+frozen shard with a losslessness proof. A duplicate that survives one more session is archived, and
+the proof then certifies the duplicate as faithfully moved — which it is. **The checker is the only
+gate between a malformed ledger and a permanent record of it**, and `bin/tests.sh` Test 34's
+whole-ledger assertions need three receipts to run at all, which is one more than the retention
+policy leaves.
+
+**Adjacent to BL-73**, which is the same organ and a neighbouring blindness: a receipt begun twice
+reads as one block, and `--all` reports it only when the key order breaks. Whether BL-89 is a
+distinct item or BL-73's second and third shapes is itself open. **Canonical-only** —
+`bin/check-handoff` is not in `bin/_manifest.py`, so no adopter runs it; the `HANDOFFS.md` discipline
+they do receive is the Phase 3D write step and Phase 0 reconcile, neither of which checks uniqueness
+either. **Nothing costed; no shapes proposed.** The obvious candidates — assert `session:`
+uniqueness, assert the block count against `grep -c '^```handoff$'`, or refuse a front matter whose
+fence count disagrees with its own documented command — are **named here as starting points, not as a
+decision.**

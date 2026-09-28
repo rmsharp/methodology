@@ -227,6 +227,23 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [BL-89] S229 — BL-89 raised: `bin/check-handoff` passed three differently-broken ledgers in three sessions
+
+**Raised at the operator's request after S229's close-out report, written from what is already known and NOT
+investigated** — the post-close-out discipline for new information (fork Learning #17's family).
+
+`bin/check-handoff` validates the **newest receipt's 13-key schema** and that older blocks name a sha. **Nothing
+asserts the ledger's record structure**, so two shapes passed at **exit 0**: (a) a receipt spliced into the front
+matter's own `` `grep -c '^```handoff' HANDOFFS.md` `` example, where the checker found one block and reported
+*"all **0** older receipt(s)"* — its own count contradicting the file it had just validated; and (b) a duplicated
+`session:` number, once shipped (S227, repaired at `3815b83`) and twice caught by hand before committing (S228,
+S229).
+
+**The stake is the archive:** the retention trim freezes the oldest receipt into a shard with a losslessness proof,
+so a duplicate that survives one more session becomes a permanent record that the proof correctly certifies.
+Adjacent to **BL-73** — whether this is a distinct item or BL-73's second and third shapes is itself open.
+Canonical-only. **Nothing costed; the three obvious checks are named as starting points, not as a decision.**
+
 ### 2026-09-27 · [BL-88] S229 close-out — P1 shipped; Phase 3C appended nothing, deliberately; predecessor scored 9
 
 **Deliverable:** `cb9b0ed` — the read-cap row asserts only what it evaluated. **Fork-side only; no upstream pull
