@@ -227,6 +227,13 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] Fork `main` pushed to `origin`, `dc791ae..3582cc6` — and this record with it
+
+**The operator's explicit go-ahead, asked for after S230's close-out**, for the one commit recording the portfolio
+dashboard sync and BL-90's count correction. **This entry is pushed under the standing push-record grant** — its only
+change is this `CHANGELOG.md` entry — so it records its own push and no further record is owed. Fork `origin` only;
+nothing to `KJ5HST/methodology`.
+
 ### 2026-09-27 · [BL-90] S230 — the portfolio dashboard copy synced to 2.19.0, its local `EXCLUDE_DIRS` re-applied; BL-90's "9-name" corrected
 
 **The operator's go-ahead, given at S230's close-out.** `~/Development/methodology_dashboard.py` — outside every
