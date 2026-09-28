@@ -227,6 +227,43 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-91] S232 — the overhead ratchet, planned
+
+[`docs/planning/overhead-ratchet-plan.md`](docs/planning/overhead-ratchet-plan.md), 374 lines, the
+session's one deliverable. **Nothing is ratified and nothing is implemented** — §6 carries six
+decisions, D1 governing with four options, and the plan recommends **(b)**: one entry in this
+repository's own `.quality-gates.json`, `direction: max` on the read-set class total, declared at the
+measured value so it can only ever come down. **Fork-side throughout: no branch, no pull request,
+nothing on `KJ5HST/methodology`.**
+
+**The finding that reshaped the answer: the overhead gate is not missing.** `context_budget.py
+--precommit` already refuses a staged growth and passes a shrink (`starter-kit/context_budget.py:1000`,
+byte refusal `:1038`), has no `--force`, and exits **2** on this tree every run — and nothing in this
+repository's gate chain calls it. That was already found and closed as **BL-78**, whose hook-enforcement
+phase the **operator declined at S206**. The plan does not re-propose it: option (b) touches no
+distributed file, because `.quality-gates.json` is a SEED (`bin/_manifest.py:62`) whose shipped `gates`
+array is empty, and `quality_ratchet.py --run` measures the **resulting tree** once per session rather
+than each commit, so it is indifferent to how bytes arrived — the precise objection that killed the hook
+shape. §1 tabulates all four binding decisions with their scopes, because S206 is the one a reader will
+misremember as wider than it is.
+
+**Two of BL-91's own framings did not survive re-derivation, and the instrument audit is why.**
+*"A hook would have caught none of it"* is true of a 3-event window and false of the population: across
+the read-set pair's whole history the merge share of growth bytes is **2.6%** by the default walk and
+**9.9%** by `--full-history`, which walks **124** commits where the default walks **68** — `git log --
+<path>` prunes merges, the hazard BL-78 itself warned of. **90–97% of the growth arrived in ordinary
+commits a hook would have refused.** And *"nothing was looking"* is not quite it: the tool's headline is
+hardcoded to print *"Nothing is over a ceiling yet"* (`:652-653`) while four rows read `over` — BL-80,
+PR #86's subject — so the instrument was reporting and being read past.
+
+**Also measured:** the read-set ceiling is a partition (`41,364 + 15,386 = 56,750` = 25,000 tok x 2.27
+exactly), which is the argument for gating the total and leaves the S201/S205/S202 reported-series
+decisions untouched; the series re-run at all 27 tags is monotone non-decreasing, 17,615 B -> 80,526 B;
+and the S130 extraction, the one lever that has ever worked, **has never been aimed at
+`SAFEGUARDS.md`** — since v3.7 the runner is −9,734 B while `SAFEGUARDS.md` is +1,743 B, the only
+read-set file above its v3.7 size. BL-60 stays separate: it is the written record, not the read one.
+BL-91's index row and detail body now point at the plan and carry both corrections.
+
 ### 2026-09-28 · [ad hoc] The `HANDOFFS.md` retention depth is settled at TWO — operator decision, S232 Phase 0
 
 S231's receipt left one thing explicitly open and called it the operator's: the front matter said

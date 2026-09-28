@@ -3855,3 +3855,39 @@ question about the written record rather than the read one.
 operator questions, and are unbudgeted by any session's plan — which is itself an instance of the thing this
 item is about.
 
+**PLANNED 2026-09-28 (S232) — [`overhead-ratchet-plan.md`](overhead-ratchet-plan.md), 374 lines. Nothing is
+ratified.** §6 D1 governs, four options, recommending **(b)**: one entry in this repository's own
+`.quality-gates.json`, `direction: max` on the read-set class total, declared at the measured value.
+**Two of this item's framings did not survive re-derivation and the plan says so.**
+
+**(1) "No gate watches it" understates what is there.** `context_budget.py --precommit` already refuses a
+staged growth of a budgeted file and passes a shrink (`starter-kit/context_budget.py:1000`, the byte refusal
+`:1038` — `new > ceil and new > old`), it has no `--force`, and it exits **2** on this tree every run.
+**Nothing in this repository's gate chain calls it:** the eleven `.quality-gates.json` gates are test counts
+and exit codes, `context-budget-unit-tests` runs the tool's unit tests rather than this repo's budget,
+`.githooks/pre-commit`'s one gate call is `quality_ratchet.py --precommit` (`:133`), and `bin/tests.sh`
+Test 35 exercises the tool only against scratch trees. **This was already found and closed as BL-78**, whose
+P3 — hook enforcement — the **operator declined at S206**, on the merge evidence plus the cost of changing a
+distributed tool and a distributed hook. The plan does not re-propose it; option (b) touches no distributed
+file, because `.quality-gates.json` is a **SEED** (`bin/_manifest.py:62`) whose shipped `gates` array is
+empty, so editing this repo's copy is canonical-only.
+
+**(2) "A hook would have caught none of it" is true of a 3-event window and false of the population** — the
+plan's F1, and the correction most likely to be carried forward wrongly. BL-78 §(3) measured
+`SESSION_RUNNER.md` since `measured_on` and found 3 of 3 growths were merges (re-verified: `421ebf9`,
+`7245f79`, `22ce71b` have two parents; `ad7bd37`, `628d218`, `df926b6`, `0d63410` have one). Measured across
+the pair's whole history the merge share of growth **bytes** is **2.6%** by the default walk and **9.9%** by
+`--full-history` — which walks **124** commits where the default walks **68**, because `git log -- <path>`
+prunes merges. **Between 90% and 97% of the growth arrived in ordinary commits a hook would have refused**,
+and any re-measurement must use `--full-history` and say which walk produced its number.
+
+**Two further findings.** The read-set ceiling is a **partition** — `41,364 + 15,386 = 56,750` = 25,000
+tokens x 2.27 exactly — so re-pinning either member forces re-partitioning the other, which is the argument
+for gating the **total** instead and leaves the S201/S205/S202 reported-series decisions untouched. And the
+one reduction lever that has ever worked, the S130 extraction, **has never been aimed at `SAFEGUARDS.md`**:
+since v3.7 the runner is −9,734 B while `SAFEGUARDS.md` is +1,743 B, making it the only read-set file above
+its v3.7 size. That is the plan's D4, a finding rather than a proposal.
+
+**BL-60 stays separate (plan D5):** the trim-proof pile is the **written** record, not the read one — one
+plan, one axis.
+
