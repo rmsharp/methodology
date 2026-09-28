@@ -227,6 +227,25 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-27 · [ad hoc] S228 — Phase 3C: fork Learning #101, and D3 discharged by an explicit refusal
+
+**Row #101** (1,419 B, inside the 1,500 B `ROW_BUDGET_BYTES`): running another project's tool with **your** default
+invocation measures the **tool**, not that project — and its tree can move under you while you reason about it. Both
+halves were earned this session: `nprcgenekeepr`'s `CLAUDE.md` ratifies `--budget-bytes 65536` **on every run,
+`--check` included**, and my bare `--check` read the 196,608 B default instead; then the file I had measured at
+57,871 B read **19,719 B** forty minutes later, because a live session there archived it with the very local patch
+under investigation. `check-learnings` → **OK, 86 rows, contiguous 15..101, 0 over budget.**
+
+**D3 discharged by an explicit REFUSAL; the rows considered were #100, #61, #23 and #12.** **#100** (this session's
+predecessor row) is the cross-artifact *declared vs derived* lesson and is not about invocation or staleness.
+**#61** — *a document waiting for approval keeps measuring the tree it was written against* — is the closest
+neighbour and is what #101 leans on, but it is about **your own** tree at publish time; #101 is about **someone
+else's** tree and their documented invocation, which #61 does not reach. **#23** (an item's defect claim is frozen
+at filing time) and **#12** (a hand-maintained count is stale by the next close-out) are the same staleness family
+one step further out. None meets D1(a) — no gate, test or numbered failure mode enforces their lessons; none meets
+D1(b); none meets D1(c). Per `fork-learnings-adjudication-2026-09-20.md` §5 the table was tested at S200 and none
+retired; this refusal does not re-adjudicate it.
+
 ### 2026-09-27 · [ad hoc] S228 — `HANDOFFS.md`: the trim's pointer block folded into the shard index
 
 **452 B of front matter becomes a 122 B row** in [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md);
