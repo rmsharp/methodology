@@ -2716,3 +2716,19 @@ message across records, so a test for that was added and the mutant then died. *
 files:** T1 is a keyword heuristic; the installer applies each tag's BOOTSTRAP mechanically and skips
 README.md and customisation steps; `--no-session-persistence` leaves no on-disk transcript, so P2 must pick.
 Not run: any replay session. `bin/tests.sh` 355 passed / 0 failed / 6 skipped; ratchet 11/11.
+
+### 2026-09-29 · [ad hoc] S236 close-out — the handoff receipt
+
+Phase 3A–3G. `status: complete`, **self 8, predecessor 9.** S235's receipt scored 9: its key-file line numbers
+(`:134` P1, `:116` §5, `:227` §7) all resolved, its unverified-first-step warning was exactly the thing that
+decided the session, and its done-when (b) was executable as written. What it lacked was any hint that `--bare`
+needs an API key — unknowable from the repository, so not held against it. Self 8: the four done-when
+conditions run green, a mutant survived and was killed, and the limits are written into the files; docked because
+the 1B claim was a `CHANGELOG.md` entry only — no `status: pending` receipt stub was opened, which the runner
+requires — and because the driver, the part P2 depends on, is still unbuilt.
+**Phase 3C: no fork Learnings row appended, so the retirement rule (D3) does not fire.** Rows considered and why
+none qualified: the surviving-mutant lesson is fork Learnings #77 and the "prove the fixture" family already;
+"a flag promising isolation may be unusable under the operator's auth" is a fact about one CLI version, recorded
+in the harness README and the receipt, not a framework learning. Gate: `quality_ratchet: 11/11 pass · 0 fail ·
+0 unmeasured · results c0f56991910c · manifest 01a4ae7aa511`; `bin/tests.sh` 355 / 0 / 6 skipped.
+Owed at the next claim: the `HANDOFFS.md` trim (3 receipts). Nothing pushed; nothing on `KJ5HST/methodology`.
