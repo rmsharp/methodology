@@ -3937,3 +3937,43 @@ fixture to maintain. (c) Teach the ratchet to keep a failing gate's output (dist
 and its own go-ahead — and the wrapper method that captured it here works without changing any shipped file:
 a separate wrapper file named in the gate's `command`, never a wrapper *over* `bin/tests.sh`, which contaminates
 the suite's self-referential tests and produced three spurious failures when tried).
+
+<a id="bl-93"></a>
+
+**BL-93 — The `Open:` list at `BACKLOG.md:8` omits five open items. Raised 2026-09-29 (S234), while
+removing BL-69 from it. Not fixed; nothing costed.**
+
+**Measured, not eyeballed.** The index table carries **57** `| **BL-N** |` rows; the prose list names **52**.
+The difference is **BL-63, BL-88, BL-89, BL-90, BL-91** — all five with live index rows, four of them raised
+in the last eight sessions. Nothing in the prose list is absent from the index, so the list only
+under-reports. `BL-20` appears in both the index and `BACKLOG-COMPLETED.md`; that is its documented
+*RESIDUAL only, defect FIXED* split and is not part of this finding.
+
+```sh
+python3 - <<'EOF'
+import re
+bl=open('docs/planning/BACKLOG.md',encoding='utf-8').read()
+idx=set(re.findall(r'^\| \*\*(BL-\d+)\*\* \|', bl, re.M))
+prose=set(re.findall(r'BL-\d+', re.search(r'\*\*Open: (.+?)\.\*\*', bl, re.S).group(1)))
+print(len(idx), len(prose), sorted(idx-prose, key=lambda x:int(x[3:])))
+EOF
+```
+
+**Why it matters more than a stale sentence usually would.** This file is in the Phase 0 read set, and the
+`Open:` list is the first thing in it that looks like an answer to *what is open?* — so an item missing from
+it is missing at exactly the moment a session is choosing work. BL-88 through BL-91 are the four most recent
+items on the fork, and BL-91 is the one the last three sessions were executing.
+
+**It is a textbook instance of [fork Learning #81](../FORK_LEARNINGS.md)** — *a population recorded as a LIST
+decays into a wrong answer; record the DERIVATION that recomputes it* — inside the file that already prints
+that warning and the grep beside the list. The warning did not prevent the decay, which is the part worth
+deciding about.
+
+**Options, uncosted:** (a) repair the list and leave the class alive; (b) replace the list with the grep's
+output at read time — the prose already tells the reader to run it, so deleting the list loses nothing it is
+trusted for; (c) make it a gate: a `bin/tests.sh` assertion that the two populations agree, which is #81's
+own remedy (*"Ship the derivation as an assertion that runs every time"*) and the form §3C calls a mechanical
+learning. Fork-only: `docs/planning/` is not distributed, so no adopter is affected and nothing here is
+upstream-facing.
+
+---

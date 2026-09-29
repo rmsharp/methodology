@@ -227,6 +227,46 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-29 · [ad hoc] S234 Phase 3C — fork Learning #105, and a refusal to retire, with the rows named
+
+[`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) row **#105**: *a decided-but-unexecuted destructive
+action rots in what was CREATED after the decision, not in the targets it named — so re-verify the list,
+then re-derive the exclusion set.* 90 rows, contiguous 15..105, 0 over the 1,500 B row budget.
+
+**No row is retired, and this is the refusal D3 requires rather than silence** — the rows considered against
+the three criteria, and why each stays:
+
+- **#77** (*a remote-tracking ref is the last fetch's answer*) — the nearest neighbour, and the row this
+  session actually ran on: `git ls-remote` was the authority for both read-backs, and `refs/pull/<N>/head`
+  is what §3.1 checked. **No gate enforces it**; nothing in `bin/tests.sh` or `.quality-gates.json` refuses
+  a claim sourced from a cached ref, and #105 does not state it — #105 is about the exclusion set, not about
+  which ref answers.
+- **#81** (*a population recorded as a LIST decays*) — **falsified as retired by this very session**, which
+  found a live instance and raised it as BL-93. A row still producing defects fails criterion (a) by
+  demonstration.
+- **#22** (*a completed item's text can be load-bearing; no test catches it*) — the closest thing to a gate,
+  because `BACKLOG-COMPLETED.md.verify.sh`'s C6 did catch a closure this session got wrong. But C6 asserts
+  the **id's** reachability, not that prose referring to a removed item still resolves, and #22's own repair
+  (*remove a mutually-referencing cluster only whole*) is untested by it. **Partial coverage is not (a).**
+- **#55** (*a plan's expected values are predictions too*) and **#74** (*another repository's state is a
+  reading with a time on it*) — both adjacent to #105's forecast half; neither is stated by #105 at least as
+  generally, because #105 is deliberately narrower.
+
+### 2026-09-29 · [BL-93] S234 — raised: the `Open:` list omits five open items, inside the file that warns about lists
+
+[`docs/planning/BACKLOG.md`](docs/planning/BACKLOG.md)'s hand-maintained **Open:** list at `:8` names **52**
+items while the index table below it carries **57** rows. The five missing are **BL-63, BL-88, BL-89, BL-90,
+BL-91** — four of them raised in the last eight sessions, and BL-91 is the item the last three sessions were
+executing. Found while removing BL-69 from that list; derived, not eyeballed, with the script quoted in the
+[detail body](docs/planning/BACKLOG-DETAIL.md#bl-93). Nothing in the prose list is absent from the index, so
+it only under-reports; `BL-20` sitting in both the index and `BACKLOG-COMPLETED.md` is its documented
+*residual only* split and is not part of the finding.
+
+**It is [fork Learning #81](docs/FORK_LEARNINGS.md) happening inside the file that prints #81's warning and
+the grep beside the list** — which is why it is raised as a decision (repair the list, delete it in favour of
+the grep, or gate the two populations against each other) rather than quietly fixed. **Not fixed: BL-69 was
+this session's one deliverable.** Fork-only; no adopter is affected.
+
 ### 2026-09-29 · [BL-69] S234 — BL-69 closed in the records, and the move proof caught the closure I got wrong
 
 BL-69 removed from [`BACKLOG.md`](docs/planning/BACKLOG.md)'s index table and its hand-maintained open
