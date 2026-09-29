@@ -227,6 +227,28 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] The Phase 0 fork push, `016b3ae..4c5905b` — eight commits, on a go-ahead asked for here
+
+Eight commits to fork `origin` on the go-ahead given at S234's Phase 0 picker: S233's claim, the D1
+ratification, the printer and its test, fork Learning #104, S233's close-out receipt, the two record
+corrections, and BL-92. **The push was offered and DECLINED at S233's close-out, so this is a new
+go-ahead, not a carried-over one** — the only standing grant remains a `CHANGELOG.md`-only push record.
+Read back with `git ls-remote` and `git rev-list --count --left-right`: `origin/main` = local `main` =
+`4c5905b`, **0/0**. `upstream/main` untouched at `6b29d3d`; **nothing reached `KJ5HST/methodology`.**
+
+### 2026-09-28 · [ad hoc] S234 Phase 0 — the gate citation re-verified against a run, not against a stale file
+
+`SESSION_RUNNER.md` Phase 0 step 6 checks the newest receipt's `quality_ratchet:` citation against
+`.quality-gates-results.json`, and that file is **`.gitignore`d** (`:16`), so what sat on disk was a local
+artifact of an older run — head `0aeeec1`, results `2f8fe36c7a92` — which would have read as a
+contradiction of S233's citation had it been believed. Took the step's own alternative and re-ran
+`quality_ratchet.py --run`: **11/11 pass · 0 fail · results `95b5ea74bd7c` · manifest `01a4ae7aa511`**,
+identical to the receipt, unmoved manifest hash included. `tests-sh-passed` measured **361** against the
+343 floor (three receipts, so Test 34's six whole-ledger assertions ran rather than printing as SKIPs).
+**BL-92's red did not recur — 1 red in 6 runs at this tree.** The run appends one tracked row to
+`.context-budget-history.jsonl` (BL-75: the default measurement writes), which is the tracked change this
+commit carries; the row is kept rather than reverted, as its three predecessors were.
+
 ### 2026-09-28 · [ad hoc] S233 — BL-92 raised: one red suite run in five, and the failing assertion is unrecoverable
 
 **Found while verifying this session's own final tree, which is the only reason it was found at all.** At
