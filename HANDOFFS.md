@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S237
+date: 2026-09-29
+status: pending
+active_task: P2 of the cross-version overhead measurement (pilot run, spend cap $10 set by the operator) - IN PROGRESS. Plan: docs/planning/cross-version-overhead-measurement-plan.md section 5.
+```
+
+```handoff
 session: S236
 date: 2026-09-29
 status: complete

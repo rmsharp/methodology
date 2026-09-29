@@ -2732,3 +2732,11 @@ none qualified: the surviving-mutant lesson (a synthetic input that never exerci
 in the harness README and the receipt, not a framework learning. Gate: `quality_ratchet: 11/11 pass · 0 fail ·
 0 unmeasured · results c0f56991910c · manifest 01a4ae7aa511`; `bin/tests.sh` 355 / 0 / 6 skipped.
 Owed at the next claim: the `HANDOFFS.md` trim (3 receipts). Nothing pushed; nothing on `KJ5HST/methodology`.
+
+### 2026-09-29 · [ad hoc] S237 claim — P2 of the cross-version overhead measurement (pilot run)
+
+Phase 1B. Deliverable: P2 of `docs/planning/cross-version-overhead-measurement-plan.md` (the pilot: baseline,
+v1.0.0, HEAD, HEAD again; a pilot report). Ledger: `CHANGELOG: pending` — this entry says (in progress); Phase 3F
+records the rest. Chosen from the Phase 0 picker (S236's item 1). **Operator decision D2 taken this session: the
+pilot's spend cap is $10**, chosen from a picker; nothing above it is spent, and P3 stays unauthorised until the
+pilot report names its cost. Owed and not yet done: the `HANDOFFS.md` retention trim (3 receipts).
