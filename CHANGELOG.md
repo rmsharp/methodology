@@ -227,6 +227,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-69] S234 claim — delete the branches whose work is finished (in progress)
+
+Chosen by the operator at this session's Phase 0 picker, from a decision he took at S189 that was never
+executed. **The claim's first obligation is to distrust its own item:** BL-69's branch list, shas and
+merged-ness were measured on 2026-09-18 and the item says in its own *How, when it runs* paragraph to
+re-derive them, because branches move. **Four of the six open upstream pull requests did not exist when
+that list was written**, so a branch-by-branch mapping to open-pull-request heads comes before any
+deletion. The local half needs no outward action; **the `origin` half is outward-facing and takes its own
+go-ahead at the moment it happens.** Ledger: `CHANGELOG: pending` — this entry says (in progress) and
+Phase 3F records the rest.
+
 ### 2026-09-28 · [ad hoc] The trim's pointer block folded into the archive index — rows 69 → 70
 
 The fold that every trim owes, in its own commit for the documented reason: inside the trim commit the

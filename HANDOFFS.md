@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S234
+date: 2026-09-28
+status: pending
+active_task: **DELETE THE BRANCHES WHOSE WORK IS FINISHED — [BL-69](docs/planning/BACKLOG-DETAIL.md#bl-69), chosen by the operator at this session's Phase 0 picker (2026-09-28).** Decided by the operator at S189 (picker) and never done. **THE ITEM'S MEASUREMENTS ARE 45 SESSIONS OLD AND THE ITEM ITSELF SAYS TO RE-DERIVE THEM: *"Re-derive every claim above first; branches move."*** Six pull requests are open upstream (#83–#88) and **their heads must not be deleted** — the S189 list predates four of them, so the first work of this session is a per-branch mapping of every local and `origin` branch to its open-pull-request head, its ancestry in `upstream/main`, and its recorded sha. `docs/issue75-plan-surface-upstream` is KEPT by the S189 decision (BL-70). **The `origin` half is an outward-facing action and needs its own go-ahead at the moment it happens**, separately from the local deletions; deletion on `origin` runs only at the recorded sha with `--force-with-lease`. **`fix/context-budget-status` is #86's head and must never be rebased or force-pushed.** After this runs `git branch -a` still reads about 10 and the dashboard's *"Multiple branches"* signal still fires — that is BL-71, not a failure of this work.
+```
+
+```handoff
 session: S233
 date: 2026-09-28
 status: complete
