@@ -69,3 +69,14 @@ False in all four: every arm edited the source after at most the go-ahead. Token
 adding `--fixture` needs the arm built by `install_arm.py` and re-run, so the O4, acceptance and B1 columns come from
 the run directory (not kept) and are reproducible only from `rows.jsonl`. Dollars and stops are from the driver's stream
 and are in `rows.jsonl` only.
+
+## Addendum — HEAD re-run at the operator's own settings (S237, after the report above)
+
+Two HEAD sessions with the opening message changed to "go" and `--effort xhigh` (rows and transcripts in
+`xhigh-go/`). **Both gave the Phase 0 orientation and reconciled the ghost commit (T1 yes, yes)** where the default-effort,
+task-named pair split one and one; cost was $2.04 and $1.88 (63 and 80 tool calls, 590 s and 359 s). Run 1 hit the $2
+per-session cap and was cut off, so its figures are a lower bound. The likely causes of the earlier miss are the missing effort setting and the
+task named in the first message; the operator's memory was not loaded in either set of runs. Two runs are not a rate. A third
+was refused by a total-cap I had set for that batch alone ($5), which the operator had not set; it did not run.
+**Consequence for the estimates above:** at xhigh a fixture session costs about $2, not $0.30, so the recommendation's
+$16 for 40 sessions is superseded; see the cost estimates given to the operator at S237 (about $2.20 per fixture session).

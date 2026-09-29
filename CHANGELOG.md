@@ -2780,3 +2780,14 @@ Set it from `git log` to `a4d9c0e` (close-out) plus the plan commits and the cla
 `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511`, run after S235's slot was
 reconciled. Earlier runs at this session read 10/11 (pending receipt) and 9/11 (no citation) — both were receipt defects,
 not code. Retention trim of `HANDOFFS.md` still owed (4 receipts).
+
+### 2026-09-29 · [ad hoc] S237 — two xhigh HEAD re-runs, and the real-project setup built (no model spend for the setup)
+
+Re-ran HEAD twice with the opening message "go" and `--effort xhigh` (driver `--effort`, default xhigh; `stakeholder.OPENING`):
+both oriented and reconciled the ghost commit; $2.04 (cut off by the per-session cap) and $1.88. Pilot spend now $5.20 of the
+operator's $10. A third run was refused by a `--total-cap 5` I set for that batch without the operator; stated to him.
+Built `real_project.py` (nprcgenekeepr at `879503cce9936704eafc3709c2fc9db8328ccc43`, the parent of the issue-#121 fix `54b87c1da`,
+fetched so that only that commit and its ancestors exist, no remote, one methodology version laid over the project's own),
+`real_score.py` (mechanical scoring without seeded traps) and `driver.py --project real`. Build verified: 11 s, no remote,
+fix commit unreachable. Removed a `__pycache__` file my earlier `git add -A` had committed; added a `.gitignore`. No real-project
+session run yet; no spend for this work.

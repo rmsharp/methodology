@@ -18,13 +18,13 @@ That is the same tool set for every arm; the fixture has no remote, so nothing h
 Dollar figures are the CLI's own `total_cost_usd`, i.e. list price for this session, not a bill.
 """
 import argparse, glob, json, os, subprocess, sys, time
-import extract, install_arm, stakeholder
+import extract, install_arm, real_project, real_score, replaylib, stakeholder
 
 TOOLS = "Bash,Read,Edit,Write,Glob,Grep"
 
 
-def cmd(model, session_cap):
-    return ["claude", "-p", "--model", model, "--max-budget-usd", str(session_cap),
+def cmd(model, session_cap, effort="xhigh"):
+    return ["claude", "-p", "--model", model, "--effort", effort, "--max-budget-usd", str(session_cap),
             "--setting-sources", "", "--strict-mcp-config", "--disable-slash-commands",
             "--allowedTools", TOOLS, "--permission-mode", "acceptEdits",
             "--input-format", "stream-json", "--output-format", "stream-json", "--verbose"]
@@ -95,26 +95,31 @@ def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=1500):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("arm"); ap.add_argument("rep", type=int)
-    ap.add_argument("--model", default="sonnet"); ap.add_argument("--session-cap", type=float, default=2.0)
+    ap.add_argument("--model", default="sonnet"); ap.add_argument("--effort", default="xhigh"); ap.add_argument("--session-cap", type=float, default=2.0)
     ap.add_argument("--total-cap", type=float, default=10.0); ap.add_argument("--out", default="/tmp/overhead-pilot")
-    ap.add_argument("--max-stops", type=int, default=stakeholder.MAX_STOPS)
+    ap.add_argument("--project", default="fixture", choices=["fixture", "real"]); ap.add_argument("--max-stops", type=int, default=stakeholder.MAX_STOPS)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     before = spent(a.out)
     if before + a.session_cap > a.total_cap:
         raise SystemExit(f"refused: spent ${before:.2f} + session cap ${a.session_cap:.2f} > total cap ${a.total_cap:.2f}")
     dest = os.path.join(a.out, f"{a.arm}-r{a.rep}")
-    info = install_arm.install(a.arm, dest)
-    res = drive(cmd(a.model, a.session_cap), dest, a.max_stops)
+    info = real_project.install(a.arm, dest) if a.project == "real" else install_arm.install(a.arm, dest)
+    res = drive(cmd(a.model, a.session_cap, a.effort), dest, a.max_stops)
     with open(os.path.join(a.out, "spend.jsonl"), "a") as f:
         f.write(json.dumps({"arm": a.arm, "rep": a.rep, "cost_usd": res["cost_usd"]}) + "\n")
     with open(dest + ".stream.jsonl", "w") as f:
         f.writelines(res["log"])
     tp = transcript_path(res["session_id"]) if res["session_id"] else None
-    r = extract.row(tp, dest, info["base"], info["ghost"], a.arm, a.rep) if tp else None
+    if tp and a.project == "real":
+        r = extract.row(tp, arm=a.arm, rep=a.rep)
+        r["real"] = real_score.score(replaylib.events(replaylib.load_records(tp)), dest, info["base"])
+        r["project"] = "nprcgenekeepr@" + info["start_commit"][:9]
+    else:
+        r = extract.row(tp, dest, info["base"], info["ghost"], a.arm, a.rep) if tp else None
     if r is not None:
         r.update({"cost_usd": res["cost_usd"], "stops": res["stops"], "end": res["end"], "transcript": tp,
-                  "model_requested": a.model, "init": res["init"],
+                  "model_requested": a.model, "effort": a.effort, "init": res["init"],
                   "unscripted_replies": sum(1 for x in res["replies"] if not x["scripted"])})
         with open(os.path.join(a.out, "rows.jsonl"), "a") as f:
             f.write(json.dumps(r) + "\n")
