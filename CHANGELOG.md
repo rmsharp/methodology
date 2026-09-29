@@ -227,6 +227,26 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-69] S234 — ten finished local branches deleted; local count 18 → 8
+
+The half of BL-69 that needs no outward action, executed against
+[`docs/planning/bl69-branch-deletion-inventory.md`](docs/planning/bl69-branch-deletion-inventory.md) §2 at
+the shas it records. `git branch -d` took the three ancestors —
+`pr80/f1-learnings-1-13` `d4e1570`, `pr80/f2-installed-source-guard` `3774076`,
+`pr80/f3-read-set-token-ceilings` `aa36fd8` — and `-D` the seven settled non-ancestors:
+`fix/bl31-context-budget-dashboard-exclusion` `9845b4d`, `fix/caveman-length-citation-upstream` `f1dd996`,
+`fix/dashboard-r-quarto-rmarkdown-extensions` `6380139`, `fix/doc-only-thresholds-upstream` `b52c1a9`,
+`fix/handoffs-receipt-spec-upstream` `311c554`, `docs/bl-10-dangling-learning-citations` `268f1e5`,
+`port/framework-learnings-extraction` `7d5b186`.
+
+**Local branches 18 → 8; `git branch -a` 40 → 30.** Every branch left is accounted for: five are open
+pull-request heads (#84, #85, #86, #87, #88), `docs/issue75-plan-surface-upstream` is BL-70's keep, `main`
+is `main`, and `pr83` is a local copy of upstream's own #83 head at `219fb9d` — **not a BL-69 candidate,
+because the S189 decision named a list and this is not on it.**
+
+**BL-69 is not yet complete:** its 11 `origin` refs are untouched and deleting them is outward-facing.
+As the dashboard's *"Multiple branches"* signal counts `git branch -a`, it still fires at 30 — [BL-71](docs/planning/BACKLOG-DETAIL.md#bl-71), by design, not a shortfall here.
+
 ### 2026-09-28 · [BL-69] S234 — the branch inventory re-derived, written before a single branch was deleted
 
 [`docs/planning/bl69-branch-deletion-inventory.md`](docs/planning/bl69-branch-deletion-inventory.md) —
