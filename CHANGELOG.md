@@ -2769,3 +2769,8 @@ driver did not exist and needed the spend cap first was right; nothing in it was
 appended, so no retirement is owed** — the two lessons (a scorer that watches tool names misses a Bash edit; `base_sha`
 reads the current HEAD, not the install commit) are recorded in the receipt's gotchas and the report, not as framework
 learnings. Owed at the next claim: the `HANDOFFS.md` retention trim (4 receipts). Nothing pushed; nothing on `KJ5HST/methodology`.
+
+### 2026-09-29 · [ad hoc] S237 — S235's `commit:` answer slot reconciled
+
+S235's receipt still read `commit: pending`, which `bin/check-handoff --all` (Test 34 L1) refuses once a newer receipt exists.
+Set it from `git log` to `a4d9c0e` (close-out) plus the plan commits and the claim. No other receipt touched.
