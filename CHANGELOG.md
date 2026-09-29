@@ -235,6 +235,10 @@ promised and not held; the earlier answer pointing at `bl91-overhead-measurement
 request. Ledger: `CHANGELOG: pending` — this entry says (in progress); Phase 3F records the rest. The
 owed `HANDOFFS.md` retention trim (receipts now 4) is deferred to close-out, by the operator's ordering.
 
+**Draft written:** `docs/planning/cross-version-overhead-measurement-plan.md` — primary design is a
+controlled replay of one fixed task under each historic version's own framework files (operator's
+direction: no detailed historic data exists to pull). Awaiting his approval; no model session launched.
+
 ### 2026-09-29 · [BL-69] S234 close-out — the handoff receipt
 
 Phase 3A–3F. `status: complete`, **self 8, predecessor 9**.
