@@ -227,7 +227,29 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
-### 2026-09-29 · [ad hoc] S235 claim — plan the cross-version overhead measurement (in progress)
+### 2026-09-29 · [ad hoc] S235 close-out — the handoff receipt
+
+Phase 3A–3F. `status: complete`, **self 8, predecessor 9 → 8**.
+
+**Deliverable, approved by the operator:** `docs/planning/cross-version-overhead-measurement-plan.md` —
+a controlled replay of one fixed task under each historic version's own framework files, plus a
+no-framework baseline, scored on cost and on seeded traps caught. Four phases (harness, pilot, full run,
+analysis), one session each; P1 spends no model tokens. Nothing was run. D2 (spend), D3 (publication)
+and D5 (manual fallback) stay the operator's.
+
+**Predecessor score 8, not 9.** S234's next-steps were accurate to the byte where I checked them
+(`CHANGELOG.md` 224,134 B, the receipt count of 3, the ten unpushed commits, BL-93's counts). The gap is
+that (3) recorded the operator's question *"where is the plan to measure overhead?"* as **answered** by
+pointing at the BL-91 scripts, when he meant a planning session he had been promised. It cost a Phase 0
+picker round here. Memory `feedback_a_where_is_the_plan_question_may_mean_it_was_never_made`.
+
+**No fork Learning row appended** — so D3 of `fork-learnings-retirement-rule-plan.md` is not triggered and no
+row is retired; the lesson went to memory instead. **Found:** `overhead-ratchet-plan.md` §2.4's
+"transcripts begin 2026-08-16" is true of this repository only; correction is in the handoff, not yet made.
+**Owed and deferred by the operator's ordering:** the `HANDOFFS.md` retention trim.
+**Model:** Claude Sonnet 5.5.
+
+### 2026-09-29 · [ad hoc] S235 claim — plan the cross-version overhead measurement
 
 Phase 1B. Deliverable: one planning document under `docs/planning/` for measuring methodology overhead
 across versions. Chosen by the operator at Phase 0 after he noted that a session for this plan had been
