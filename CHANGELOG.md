@@ -2761,3 +2761,11 @@ held as far as checked. Recommends k=5 x 8 arms, budget $16, and ending each ses
 `replaylib.is_source_edit` (Bash-heredoc source edits were invisible; a first fix matched file names in written text,
 caught by hand-reading HEAD run 1); tests 11 OK. T1 verdicts hand-read: 4 of 4 agree with the heuristic.
 Nothing pushed; nothing on `KJ5HST/methodology`.
+
+### 2026-09-29 · [ad hoc] S237 close-out — the handoff receipt
+
+`HANDOFFS.md` receipt S237 complete (self 8, predecessor S236 scored 9: its next-steps were exact and its warning that the
+driver did not exist and needed the spend cap first was right; nothing in it was wrong). Phase 3C: **no fork learning row
+appended, so no retirement is owed** — the two lessons (a scorer that watches tool names misses a Bash edit; `base_sha`
+reads the current HEAD, not the install commit) are recorded in the receipt's gotchas and the report, not as framework
+learnings. Owed at the next claim: the `HANDOFFS.md` retention trim (4 receipts). Nothing pushed; nothing on `KJ5HST/methodology`.
