@@ -235,6 +235,13 @@ Moved the oldest **2** record(s) (2026-09-28 → 2026-09-28) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-28.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-28.md.verify.sh)
 rather than trusting a digest printed here. Live file 62,788 B → 25,567 B (−59.3%).
 
+### 2026-09-29 · [ad hoc] S235 — the trim's pointer block folded into the archive index
+
+`HANDOFFS.md` receipts 4 → 2 (`32b13ca`, shard `HANDOFFS-through-2026-09-28.md`, `.verify.sh` OK: L1, L2, L3).
+Its 3-line pointer block is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md`, in its own commit (fork Learning
+#58). The forecast in S234's handoff said the shard would be `-9`; the trimmer named it by date
+(`2026-09-28`, no suffix) — the forecast came from shard names, not a measurement.
+
 ### 2026-09-29 · [ad hoc] S235 close-out — the handoff receipt
 
 Phase 3A–3F. `status: complete`, **self 8, predecessor 9 → 8**.
