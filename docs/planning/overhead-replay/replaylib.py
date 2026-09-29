@@ -6,7 +6,7 @@ Facts about the format this relies on (checked against real local transcripts, C
   * a human turn is a 'user' record whose content is a string, or a list holding a text block
     and no tool_result block; tool results also arrive as 'user' records.
 """
-import json
+import json, re
 from datetime import datetime
 
 SOURCE_EDIT_TOOLS = {"Edit", "Write", "NotebookEdit", "MultiEdit"}
@@ -76,7 +76,23 @@ def usage_total(records):
     return tot
 
 
+BASH_WRITE = [re.compile(p) for p in (
+    r"sed\s+-i[^\n;&|]*textkit\.py",                 # sed -i ... textkit.py
+    r">>?\s*\S*textkit\.py",                          # redirect into it
+    r"\btee\b[^\n]*textkit\.py",
+)]
+PY_PATH_VAR = re.compile(r"(\w+)\s*=\s*['\"][^'\"]*textkit\.py['\"]")  # p='textkit.py'
+PY_WRITE = r"open\(\s*(%s|['\"][^'\"]*textkit\.py['\"])\s*,\s*['\"][wa]"
+
+
 def is_source_edit(e, source_names=("textkit.py",)):
+    if e["kind"] == "tool_use" and e["name"] == "Bash":
+        # Found at the P2 pilot: a session may edit the source with a Bash heredoc, which the tool-name test misses.
+        cmd = e["input"].get("command", "")
+        if any(p.search(cmd) for p in BASH_WRITE):
+            return True
+        v = PY_PATH_VAR.search(cmd)  # python that names the file in a variable and later opens that variable to write
+        return bool(v and re.search(PY_WRITE % re.escape(v.group(1)), cmd))
     if e["kind"] != "tool_use" or e["name"] not in SOURCE_EDIT_TOOLS:
         return False
     path = e["input"].get("file_path") or e["input"].get("path") or ""

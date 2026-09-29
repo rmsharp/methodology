@@ -163,5 +163,16 @@ class DriverAgainstFakeClaude(unittest.TestCase):
         self.assertEqual([x["scripted"] for x in r["replies"]], [True] * 4 + [False] * 2)
 
 
+class BashSourceEdit(unittest.TestCase):
+    def test_bash_writes_count_reads_do_not(self):
+        b = lambda c: {"kind": "tool_use", "name": "Bash", "input": {"command": c}}
+        self.assertTrue(L.is_source_edit(b("python3 - <<'E'\np='textkit.py'\ns=open(p).read()\nopen(p,'w').write(s)\nE")))
+        self.assertTrue(L.is_source_edit(b("sed -i '' 's/a/b/' textkit.py")))
+        self.assertFalse(L.is_source_edit(b("python3 - <<'E'\np='CHANGELOG.md'\nopen(p,'w').write('key_files: textkit.py:20')\nE")))
+        self.assertFalse(L.is_source_edit(b("cat textkit.py; git diff")))
+        self.assertFalse(L.is_source_edit(b("python3 -c 'import textkit; print(textkit.truncate(\"ab\", 1))'")))
+        self.assertFalse(L.is_source_edit(b("git add textkit.py && git commit -m x")))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

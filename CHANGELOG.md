@@ -2749,3 +2749,15 @@ flags, session persistence on so `extract.py` can read the on-disk transcript), 
 `spend.jsonl` and `rows.jsonl`. New test `DriverAgainstFakeClaude` in `tests.py` (10 tests OK). The first attempt to
 write the file was denied by the auto-mode classifier ("Create Unsafe Agents": pre-approved Bash for headless
 sessions); the operator added an allow rule and the file was then written. No real session run yet; no spend.
+
+### 2026-09-29 · [ad hoc] S237 — P2 pilot run: four sessions, $1.28, report and rows committed
+
+Baseline (`none`), v1.0.0, HEAD, HEAD again; model `claude-sonnet-5-5`; $0.23 / 0.30 / 0.52 / 0.23 against the
+operator's $10 cap (nothing above it authorised; P3 stays unauthorised). Report `docs/planning/overhead-replay/pilot/REPORT.md`,
+rows `pilot/rows.jsonl`, four transcripts (home path redacted). Findings: the two HEAD runs differ 2.3x in cost and
+only one followed the protocol (run-to-run spread is as large as any version gap); process bytes are the clear cost
+signal (30,000 B vs under 4,600 B); sessions never end and start unrequested work once the script runs out; isolation
+held as far as checked. Recommends k=5 x 8 arms, budget $16, and ending each session after stop 4. Scorer fixed in
+`replaylib.is_source_edit` (Bash-heredoc source edits were invisible; a first fix matched file names in written text,
+caught by hand-reading HEAD run 1); tests 11 OK. T1 verdicts hand-read: 4 of 4 agree with the heuristic.
+Nothing pushed; nothing on `KJ5HST/methodology`.

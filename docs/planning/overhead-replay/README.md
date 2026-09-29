@@ -1,8 +1,8 @@
-# Overhead replay harness (P1)
+# Overhead replay harness (P1 built, P2 piloted)
 
 The test harness for [`../cross-version-overhead-measurement-plan.md`](../cross-version-overhead-measurement-plan.md).
-Built at P1; **no model session has been run and no money spent beyond three ~$0.02 probes** (see the plan's
-§5 P1 and this repository's `CHANGELOG.md`, entry "S236 claim").
+Built at P1 (S236); **P2 pilot run at S237: four sessions, $1.28 — see [`pilot/REPORT.md`](pilot/REPORT.md).**
+Run one session: `python3 driver.py ARM REP [--session-cap 2] [--total-cap 10] [--out DIR]` (refuses to start past the total cap).
 
 | File | What it is |
 |---|---|
@@ -12,6 +12,8 @@ Built at P1; **no model session has been run and no money spent beyond three ~$0
 | `scorers.py` | Trap scorers T1–T3. T2/T3 are mechanical; **T1 is a keyword heuristic** and is hand-read on the pilot. |
 | `stakeholder.py` | The scripted replies, identical for every arm; unscripted stops are counted (O6). |
 | `replaylib.py`, `extract.py` | Transcript → events and usage (once per API message id) → one row of O2–O6 and B1. |
+| `driver.py` | Builds an arm, drives `claude -p` with the scripted stakeholder, writes a spend line and a row. Loop tested against a fake `claude` in `tests.py`. |
+| `pilot/` | The P2 pilot: `REPORT.md`, `rows.jsonl`, four transcripts. |
 | `tests.py` | Executable form of the plan's P1 done-when (a)–(d). `python3 docs/planning/overhead-replay/tests.py` |
 
 ## How a session is driven (probed in P1, built in P2)
