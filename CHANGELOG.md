@@ -227,6 +227,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-69] S234 — every affected pull-request head is retained upstream; one sha is not, and was adjudicated
+
+Added §3.1 to [`docs/planning/bl69-branch-deletion-inventory.md`](docs/planning/bl69-branch-deletion-inventory.md)
+before asking for the `origin` go-ahead. `git ls-remote upstream` shows **all eleven**
+`refs/pull/<N>/head` refs present (#63, #64, #68–#72, #76–#79), so ten of the eleven `origin` branches are
+the same sha upstream already keeps forever.
+
+**The exception is #69:** upstream retains `dc3b405` while `origin` carries `dc75cf6`, making that the only
+deletion in this item that would put a commit beyond every reach. Measured rather than assumed: the tip
+commits are **patch-identical** (`git patch-id --stable` → `e4d76b99…` for both), and their parents'
+differing patch-ids are **hunk offsets, not content** — the added and removed lines in
+`starter-kit/HANDOFFS.md`, the distributed file the pair exists to fix, diff to nothing. This confirms
+S189's *"the changed lines were compared: identical"* and extends it from local-vs-`origin` to
+`origin`-vs-upstream's retained head.
+
 ### 2026-09-28 · [BL-69] S234 — ten finished local branches deleted; local count 18 → 8
 
 The half of BL-69 that needs no outward action, executed against

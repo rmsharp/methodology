@@ -58,13 +58,33 @@ was run with `git log --all --grep`, which matched each branch against itself an
 | 2 | `fix/caveman-length-citation-upstream` | `b4ceb73` | yes | yes | #68 merged |
 | 3 | `fix/dashboard-r-quarto-rmarkdown-extensions` | `c4fd879` | yes | yes | #72 merged |
 | 4 | `fix/doc-only-thresholds-upstream` | `86adc6c` | yes | yes | #70 merged |
-| 5 | `fix/handoffs-receipt-spec-upstream` | `dc75cf6` | yes | **no** | #69 merged — rebased, so not an ancestor; `dc3b405`+`33d8c64` carry it |
+| 5 | `fix/handoffs-receipt-spec-upstream` | `dc75cf6` | yes | **no** | #69 merged — rebased, so not an ancestor; see §3.1 |
 | 6 | `pr1/framework-learnings-extraction` | `5b92b2f` | yes | yes | #76 merged |
 | 7 | `pr2/ledger-trimmer` | `56997af` | yes | yes | #77 merged |
 | 8 | `pr3/apparatus-extraction` | `2c30d0f` | yes | yes | #78 merged |
 | 9 | `pr4/context-budget-gate` | `cf15489` | yes | yes | #79 merged |
 | 10 | `docs/learning-13-handoff-predictions` | `73b72c0` | yes | yes | #63 merged |
 | 11 | `docs/bl-10-dangling-learning-citations` | `268f1e5` | yes | **no** | #64 **closed unmerged** — retained as upstream `refs/pull/64/head` |
+
+### 3.1 The one `origin` sha that no pull ref retains, and why it still loses nothing
+
+**Every affected pull request's head is retained on upstream as `refs/pull/<N>/head`** — checked with
+`git ls-remote upstream` for #63, #64, #68–#72 and #76–#79, all eleven present. **Ten of them are the same
+sha as our `origin` copy. #69 is not:** upstream retains `dc3b405`, while `origin` carries `dc75cf6`.
+So deleting that one branch is the only deletion in this whole item that makes a commit unreachable
+everywhere.
+
+It still loses nothing, and this is measured rather than assumed:
+
+- **The tip commits are patch-identical** — `git patch-id --stable` gives `e4d76b99…` for both `dc75cf6`
+  and `dc3b405`.
+- **Their parents' patch-ids differ** (`6f543e0` `8ccfffbc…` vs `33d8c64` `077fee14…`) **and that
+  difference is hunk offsets, not content**: diffing the two commits' added and removed lines in
+  `starter-kit/HANDOFFS.md` — the distributed file the pair exists to fix — returns nothing. The
+  `CHANGELOG.md` halves differ because the two commits sit on two different ledgers.
+
+This confirms S189's claim for this branch (*"the changed lines were compared: identical"*) and extends it
+from the local-vs-`origin` pair to `origin`-vs-upstream's retained head.
 
 Deletion on `origin` runs only at the recorded sha:
 `git push --force-with-lease=refs/heads/<b>:<sha> origin :refs/heads/<b>`, then `git fetch --prune origin`.
