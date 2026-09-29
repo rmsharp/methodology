@@ -2683,3 +2683,20 @@ PR #86 moves the same line to 142, so the tightening follows the trial merges. N
 
 - **Model:** Claude Opus 5 (claude-opus-5)
 
+
+### 2026-09-29 · [ad hoc] S236 claim — P1 of the cross-version overhead measurement, step 1 answered
+
+Phase 1B. Deliverable: P1 of `docs/planning/cross-version-overhead-measurement-plan.md` (the test harness;
+no replay session is run). Ledger: `CHANGELOG: pending` — this entry says (in progress); Phase 3F records the rest.
+Chosen because S235's handoff names P1 as the next deliverable; the operator said "go".
+
+**Step 1 — can a script drive Claude Code cleanly? YES, in subscription-login mode.** Installed CLI 2.1.285.
+`--bare` (which would strip hooks, memory and CLAUDE.md discovery) **refuses the claude.ai login** and needs
+`ANTHROPIC_API_KEY`, which is not set here. The operator approved a small probe of the alternative
+(`--setting-sources "" --strict-mcp-config --disable-slash-commands`), run in an empty scratch directory with
+`--model haiku`: the init message listed 0 MCP servers, 0 skills, 0 slash commands; asked to quote any
+CLAUDE.md, user instructions or memory index it could see, the model answered NONE (no `~/.claude/CLAUDE.md`
+exists; the auto-memory path is per-directory and empty). A two-turn `--input-format stream-json` session
+with a scripted second message kept context (word recalled). Spend for all three probes: about $0.05, cap $0.10 each.
+**Not proven:** that `~/.claude/settings.json` hooks and the memory of a fixture path never leak (no such hook fired
+in the probe, but the probe's directory had none to fire); the pilot re-checks it with the fixture.
