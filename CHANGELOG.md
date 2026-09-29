@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-27-8.md` (1 record(s), 57,889 B → 42,962 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-09-27 → 2026-09-27) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-27-8.md`](docs/archive/HANDOFFS-through-2026-09-27-8.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-27-8.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-27-8.md.verify.sh)
+rather than trusting a digest printed here. Live file 57,889 B → 42,962 B (−25.8%).
+
 ### 2026-09-28 · [ad hoc] The Phase 0 fork push, `016b3ae..4c5905b` — eight commits, on a go-ahead asked for here
 
 Eight commits to fork `origin` on the go-ahead given at S234's Phase 0 picker: S233's claim, the D1
