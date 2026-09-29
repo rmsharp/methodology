@@ -14,16 +14,19 @@ import json, re, subprocess, sys
 import replaylib as L
 
 PROCESS = ("CHANGELOG.md", "HANDOFFS.md", "SESSION_NOTES.md", "BACKLOG.md", "PROJECT_LEARNINGS.md")
-WRITE = re.compile(r"sed\s+-i|(?<![0-9&])>>?\s*(?!/dev/null|&)[^\s&|;]+|\btee\b|\.write\(|open\([^)]*['\"][wa]['\"]|git\s+commit")
+WRITE = re.compile(r"sed\s+-i|(?<![0-9&])>>?\s*(?!/dev/null|&)[^\s&|;]+|\btee\b|\.write\(|open\([^)]*['\"][wa]['\"]")
 TESTRUN = re.compile(r"testthat|test_local|test_file|test_dir|devtools::test|R CMD check")
 
 
 def is_edit(e):
     if e["kind"] != "tool_use":
         return False
+    # Edits to the process files (ledger backfill, claim stub, receipt) are not the deliverable: Phase 0 itself
+    # permits the ledger backfill, and the claim is written before work. Found at the first real run.
     if e["name"] in L.SOURCE_EDIT_TOOLS:
-        return True
-    return e["name"] == "Bash" and bool(WRITE.search(e["input"].get("command", "")))
+        return not any((e["input"].get("file_path") or "").endswith(p) for p in PROCESS)
+    cmd = e["input"].get("command", "")
+    return e["name"] == "Bash" and bool(WRITE.search(cmd)) and not any(p in cmd for p in PROCESS)
 
 
 def score(events, run_dir, base):

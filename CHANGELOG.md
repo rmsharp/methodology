@@ -2791,3 +2791,13 @@ fetched so that only that commit and its ancestors exist, no remote, one methodo
 `real_score.py` (mechanical scoring without seeded traps) and `driver.py --project real`. Build verified: 11 s, no remote,
 fix commit unreachable. Removed a `__pycache__` file my earlier `git add -A` had committed; added a `.gitignore`. No real-project
 session run yet; no spend for this work.
+
+### 2026-09-29 · [ad hoc] S237 — first real-project session (v3.7 over nprcgenekeepr at 879503cce): $2.33, INCOMPLETE at close-out
+
+`driver.py v3.7 1 --project real --session-cap 10 --max-stops 4` (operator set the $10 per-session cap): 54 requests, 82 tool calls,
+546 s, $2.33 list price. The session gave the Phase 0 report and waited, backfilled the ledger, claimed the session, wrote RED then
+GREEN (`getPedMaxAge()` returns `NA_real_`, the same approach as the real fix `54b87c1da`; the four affected test files read 0 warnings on re-run
+by me) and committed. **It ended mid-close-out**: after "close the session out" it ended its turn to wait for a 5-10 minute background test suite,
+and my stop limit of 4 ended the run there, so the receipt still reads `pending` and the notes are uncommitted. This is the partial run the operator
+asked not to have; the cause is my stop limit, not the session. Scorer fixed at the same time: `real_score.is_edit` counted Phase 0's permitted
+ledger backfill as the first edit (process files excluded now). Row and transcript: `pilot/real-3.7/`. Not re-run; no further spend.

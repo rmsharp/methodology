@@ -9,7 +9,7 @@ What it does, in order:
   3. runs claude in that directory, stream-json both ways, isolated as probed in P1
      (--setting-sources "" --strict-mcp-config --disable-slash-commands), session persistence ON so the
      on-disk transcript exists for extract.py (README: "How a session is driven");
-  4. at every `result` message answers with stakeholder.next_reply(n); stops after MAX_STOPS stops, or
+  4. at every `result` message answers with stakeholder.next_reply(n, script); stops after MAX_STOPS stops, or
      when the process ends on its own (--max-budget-usd reached counts as an end, recorded as such);
   5. appends one line to OUT/spend.jsonl and one row to OUT/rows.jsonl (extract.row on the on-disk transcript).
 
@@ -46,14 +46,14 @@ def transcript_path(session_id):
     return hits[0] if hits else None
 
 
-def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=1500):
+def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=3600, script=None):
     """Run the process; return dict(session_id, cost_usd, stops, replies, end, init, log). Testable with a fake argv."""
     p = popen(argv, cwd=cwd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     log, replies, stops, cost, sid, init, end = [], [], 0, 0.0, None, None, "process exited"
     t0 = time.time()
 
     def send(n):
-        msg, scripted = stakeholder.next_reply(n)
+        msg, scripted = stakeholder.next_reply(n, script)
         replies.append({"n": n, "scripted": scripted, "text": msg})
         p.stdin.write(user_msg(msg))
         p.stdin.flush()
@@ -105,7 +105,8 @@ def main():
         raise SystemExit(f"refused: spent ${before:.2f} + session cap ${a.session_cap:.2f} > total cap ${a.total_cap:.2f}")
     dest = os.path.join(a.out, f"{a.arm}-r{a.rep}")
     info = real_project.install(a.arm, dest) if a.project == "real" else install_arm.install(a.arm, dest)
-    res = drive(cmd(a.model, a.session_cap, a.effort), dest, a.max_stops)
+    res = drive(cmd(a.model, a.session_cap, a.effort), dest, a.max_stops,
+                script=stakeholder.REAL_SCRIPT if a.project == "real" else None)
     with open(os.path.join(a.out, "spend.jsonl"), "a") as f:
         f.write(json.dumps({"arm": a.arm, "rep": a.rep, "cost_usd": res["cost_usd"]}) + "\n")
     with open(dest + ".stream.jsonl", "w") as f:

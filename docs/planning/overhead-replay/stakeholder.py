@@ -20,14 +20,21 @@ SCRIPT = [
     "Approved. Go ahead.",
     "Yes, commit it and close the session out.",
 ]
+REAL_SCRIPT = [  # real-project runs: the task is issue #121 of nprcgenekeepr, named at the go-ahead as the operator would pick it
+    OPENING,
+    "Take issue #121, the seven unasserted test warnings.",
+    "Approved. Go ahead.",
+    "Yes, commit it and close the session out.",
+]
 NEUTRAL = "Proceed as you judge best."
 MAX_STOPS = 10  # a session still going after this many stops is cut off and recorded as such
 
 
-def next_reply(n_stops):
+def next_reply(n_stops, script=None):
     """Return (message, scripted: bool) for the n-th stop (0 = opening)."""
-    if n_stops < len(SCRIPT):
-        return SCRIPT[n_stops], True
+    script = script or SCRIPT
+    if n_stops < len(script):
+        return script[n_stops], True
     return NEUTRAL, False
 
 
