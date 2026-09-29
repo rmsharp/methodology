@@ -142,5 +142,26 @@ class P1(unittest.TestCase):
         self.assertEqual(r["O3_tool_calls"], 1)
 
 
+class DriverAgainstFakeClaude(unittest.TestCase):
+    """The driver's loop, with a stand-in process that answers every message with a `result`. No model, no spend."""
+    def test_scripted_then_unscripted_stops_and_cut_off(self):
+        import driver, tempfile, textwrap
+        d = tempfile.mkdtemp()
+        fake = os.path.join(d, "fake.py")
+        open(fake, "w").write(textwrap.dedent("""
+            import sys, json
+            print(json.dumps({"type": "system", "subtype": "init", "session_id": "sid1"}), flush=True)
+            n = 0
+            for line in sys.stdin:
+                n += 1
+                print(json.dumps({"type": "result", "subtype": "success", "session_id": "sid1", "total_cost_usd": 0.1 * n}), flush=True)
+            """))
+        r = driver.drive([sys.executable, fake], d, max_stops=6)
+        self.assertEqual((r["stops"], r["session_id"]), (6, "sid1"))
+        self.assertTrue(r["end"].startswith("cut off"))
+        self.assertAlmostEqual(r["cost_usd"], 0.6)
+        self.assertEqual([x["scripted"] for x in r["replies"]], [True] * 4 + [False] * 2)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

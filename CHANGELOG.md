@@ -2740,3 +2740,12 @@ v1.0.0, HEAD, HEAD again; a pilot report). Ledger: `CHANGELOG: pending` — this
 records the rest. Chosen from the Phase 0 picker (S236's item 1). **Operator decision D2 taken this session: the
 pilot's spend cap is $10**, chosen from a picker; nothing above it is spent, and P3 stays unauthorised until the
 pilot report names its cost. Owed and not yet done: the `HANDOFFS.md` retention trim (3 receipts).
+
+### 2026-09-29 · [ad hoc] S237 — P2 driver built and tested against a fake `claude`
+
+`docs/planning/overhead-replay/driver.py`: builds one arm, runs `claude -p` (stream-json both ways, P1's isolation
+flags, session persistence on so `extract.py` can read the on-disk transcript), answers each stop from
+`stakeholder.next_reply`, refuses to start past the operator's $10 total cap (per-session cap $2), appends
+`spend.jsonl` and `rows.jsonl`. New test `DriverAgainstFakeClaude` in `tests.py` (10 tests OK). The first attempt to
+write the file was denied by the auto-mode classifier ("Create Unsafe Agents": pre-approved Bash for headless
+sessions); the operator added an allow rule and the file was then written. No real session run yet; no spend.
