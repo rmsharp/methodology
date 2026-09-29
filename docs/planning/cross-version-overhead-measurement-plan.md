@@ -27,9 +27,13 @@ its static arm and as a cross-check.
 | `starter-kit/context_budget.py` | the same read-set, in bytes and tokens | now | history |
 | `self_score` in `HANDOFFS.md` + archives | 252 self-graded scores across 253 receipts (one is this session's pending claim) (`grep -c` over the live file and `docs/archive/HANDOFFS-*.md`) | S1 onward | quality: the scorer is the session being scored |
 
-**The gap is the middle column of nothing.** For every version before the transcripts begin, the only
-number that exists is a byte count. Turns, which `overhead-ratchet-plan.md` §2.4 names as *"the larger cost
-term"*, are measured for no version.
+**The gap.** For most versions, the only overhead figure that exists is how many bytes the runner and
+safeguards files add up to. That is the size of what a session must read, not what the session then does.
+How many turns a session takes, how many tokens and tool calls it uses, and how much process paperwork it
+writes have never been measured for any version under controlled conditions. `overhead-ratchet-plan.md` §2.4
+calls the turn count *"the larger cost term"*. The only turn counts that exist come from real sessions
+recorded on this machine since 2026-07-24, and they are not comparable across versions, because the tasks,
+session lengths and models all differ (§4, arm C).
 
 **A correction to carry into that plan, found while surveying this session.** §2.4 says local transcripts
 begin 2026-08-16. Surveying `~/.claude/projects/` (first timestamp per project directory): `vscode-quarto-ext`
