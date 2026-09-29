@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-29 · [ad hoc] S235 claim — plan the cross-version overhead measurement (in progress)
+
+Phase 1B. Deliverable: one planning document under `docs/planning/` for measuring methodology overhead
+across versions. Chosen by the operator at Phase 0 after he noted that a session for this plan had been
+promised and not held; the earlier answer pointing at `bl91-overhead-measurement/` did not satisfy the
+request. Ledger: `CHANGELOG: pending` — this entry says (in progress); Phase 3F records the rest. The
+owed `HANDOFFS.md` retention trim (receipts now 4) is deferred to close-out, by the operator's ordering.
+
 ### 2026-09-29 · [BL-69] S234 close-out — the handoff receipt
 
 Phase 3A–3F. `status: complete`, **self 8, predecessor 9**.

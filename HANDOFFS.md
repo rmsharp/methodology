@@ -54,6 +54,20 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S235
+date: 2026-09-29
+status: pending
+active_task: **IN PROGRESS: write the plan for measuring overhead across the versions of the methodology** (operator's choice at Phase 0, after he pointed out that a session was promised for this plan and had not happened). One planning document under `docs/planning/`; Phase 1B claim. The existing BL-91 material (`overhead-ratchet-plan.md` §2, `bl91-overhead-measurement/`) measures the mandated read-set in bytes per release and stops at v3.7 pricing; this plan is about what a measurement of overhead per version must cover and how.
+what_was_done: pending
+next_steps: pending
+key_files: pending
+gotchas: pending
+runtime_smoke: pending
+changelog_ref: CHANGELOG.md "S235 claim"
+commit: pending
+```
+
+```handoff
 session: S234
 date: 2026-09-29
 status: complete
