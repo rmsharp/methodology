@@ -227,6 +227,47 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-29 · [BL-69] S234 — BL-69 closed in the records, and the move proof caught the closure I got wrong
+
+BL-69 removed from [`BACKLOG.md`](docs/planning/BACKLOG.md)'s index table and its hand-maintained open
+list, an outcome row appended to [`BACKLOG-COMPLETED.md`](docs/planning/BACKLOG-COMPLETED.md), and its
+[`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md) body headed with a DONE note that leaves the S189
+measurement below it unedited.
+
+**`BACKLOG-COMPLETED.md.verify.sh` went red on that edit and was right to.** Its **C6** — added at S226 for
+BL-86, so the proof *reports* later closures instead of refusing them — asserts that every item closed since
+the move still has its id in the file Phase 0 reads: *"no id in `docs/planning/BACKLOG.md` for BL-69 —
+closed, and no longer findable from the file Phase 0 reads."* **Removing the index row is only half of
+closing an item here; the id has to stay** in the block at `BACKLOG.md:197`, which exists for exactly this,
+and whose own comment names the case it was written for (*"BL-27 … S88 needed it and could not find it even
+while it was in the live file"*). Added `**BL-69**` between `**BL-67**` and `**BL-72**`; all three
+`docs/planning/*.verify.sh` proofs then exit 0, and the block's 36 ids match
+`grep -cE '^\| \*\*BL-[0-9]+\*\* \|' docs/planning/BACKLOG-COMPLETED.md` = 36.
+
+### 2026-09-29 · [BL-69] S234 — eleven finished branches deleted on fork `origin`; BL-69 complete
+
+On the go-ahead asked for and given at the moment it happened, after the exact eleven commands were shown
+in full. Each was pinned with `--force-with-lease=refs/heads/<b>:<sha>` at the sha
+[`docs/planning/bl69-branch-deletion-inventory.md`](docs/planning/bl69-branch-deletion-inventory.md) §3
+records, so a branch that had moved would have been refused rather than clobbered; **all eleven reported
+`[deleted]`, none was refused.** Deleted: `fix/bl31-context-budget-dashboard-exclusion` `b2ef20a`,
+`fix/caveman-length-citation-upstream` `b4ceb73`, `fix/dashboard-r-quarto-rmarkdown-extensions` `c4fd879`,
+`fix/doc-only-thresholds-upstream` `86adc6c`, `fix/handoffs-receipt-spec-upstream` `dc75cf6`,
+`pr1/framework-learnings-extraction` `5b92b2f`, `pr2/ledger-trimmer` `56997af`, `pr3/apparatus-extraction`
+`2c30d0f`, `pr4/context-budget-gate` `cf15489`, `docs/learning-13-handoff-predictions` `73b72c0`,
+`docs/bl-10-dangling-learning-citations` `268f1e5`.
+
+**Read back with `git ls-remote --heads origin`, which is the authority rather than a pruned cache:**
+`origin` now holds **six** refs — `main` `4c5905b` and the five open pull-request heads, each at its exact
+sha (#84 `77afc12`, #85 `e2501c5`, #86 `c1167ae`, #87 `67feb9f`, #88 `a88fce7`). All six pull requests
+remain **OPEN**, and upstream's `refs/pull/64|69|76/head` still resolve. **`upstream/main` untouched at
+`6b29d3d`; nothing reached `KJ5HST/methodology`.**
+
+**`git branch -a` 40 → 19, not the ~10 BL-69 forecast** — that forecast was written at S189, before four of
+the five fork-side pull requests existed, and each contributes a local and a remote-tracking ref. The
+forecast was stale, not wrong in method. The dashboard's *"Multiple branches"* signal still fires, which is
+[BL-71](docs/planning/BACKLOG-DETAIL.md#bl-71) by construction.
+
 ### 2026-09-28 · [BL-69] S234 — every affected pull-request head is retained upstream; one sha is not, and was adjudicated
 
 Added §3.1 to [`docs/planning/bl69-branch-deletion-inventory.md`](docs/planning/bl69-branch-deletion-inventory.md)

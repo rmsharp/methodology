@@ -2577,7 +2577,11 @@ one for 15+ sessions, which is the Degradation table's *"same finding for severa
 
 **BL-69 — Delete the branches whose work is finished: 10 local and 11 on `origin`. Raised 2026-09-18 (S189), after
 close-out, from the operator's question about the dashboard's *"Multiple branches (31)"*. Decided by the operator
-(picker); not done.**
+(picker). ✅ DONE 2026-09-29 (S234) — see [`bl69-branch-deletion-inventory.md`](bl69-branch-deletion-inventory.md)
+for the re-derivation this body's own *How, when it runs* paragraph required, and
+[`BACKLOG-COMPLETED.md`](BACKLOG-COMPLETED.md) for the outcome row. Everything below is the S189 measurement,
+left unedited: all 21 shas were still exact 45 sessions later, and the only thing that had gone stale was the
+`git branch -a` forecast, because four fork-side pull requests opened in between.**
 
 **What the 31 are.** `methodology_dashboard.py` counts `git branch -a`: 13 local branches plus 18 remote-tracking refs,
 none stale (`git remote prune --dry-run` lists nothing). Five are `main`, `origin/main`, `upstream/main` and the two
