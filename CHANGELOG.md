@@ -227,6 +227,16 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] The trim's pointer block folded into the archive index — rows 69 → 70
+
+The fold that every trim owes, in its own commit for the documented reason: inside the trim commit the
+shipped `.verify.sh` fails L2 (fork Learning #58). The trimmer's three-line block left
+[`HANDOFFS.md`](HANDOFFS.md)'s front matter (42,962 B → 42,506 B) and became one row at the bottom of
+[`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md), per that file's own §Adding a row —
+`n`, the span, the bare shard name linked as `archive/<name>`, the trimmer version, and the `.verify.sh`
+link dropped because the proof sits beside its shard. Teaching the generator to write the row itself is an
+upstream change, since the generator is distributed.
+
 ### 2026-09-28 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-27-8.md` (1 record(s), 57,889 B → 42,962 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
