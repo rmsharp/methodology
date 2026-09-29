@@ -235,6 +235,12 @@ Moved the oldest **2** record(s) (2026-09-28 → 2026-09-28) out of [`HANDOFFS.m
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-28.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-28.md.verify.sh)
 rather than trusting a digest printed here. Live file 62,788 B → 25,567 B (−59.3%).
 
+### 2026-09-29 · [ad hoc] S235 — fork push: `origin/main` `4c5905b` → `481f948`
+
+Operator go-ahead, given in reply to the close-out report's question. 17 commits, fast-forward
+(`merge-base --is-ancestor` asserted first), to the fork `origin` (`rmsharp/methodology`) only. Nothing went to
+`upstream`; pull requests #83–#88 untouched; no branch other than `main` pushed.
+
 ### 2026-09-29 · [ad hoc] S235 — the trim's pointer block folded into the archive index
 
 `HANDOFFS.md` receipts 4 → 2 (`32b13ca`, shard `HANDOFFS-through-2026-09-28.md`, `.verify.sh` OK: L1, L2, L3).
