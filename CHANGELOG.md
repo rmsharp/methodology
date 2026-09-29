@@ -227,6 +227,33 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-29 · [BL-69] S234 close-out — the handoff receipt
+
+Phase 3A–3F. `status: complete`, **self 8, predecessor 9**.
+
+**S233's receipt scored 9, and the score is mostly about how much of it was checkable and checked out.**
+Its next_steps (1) gave the trim command, the depth and the forecast shard `-8` — **`-8` is exactly what the
+trimmer named**. (5) predicted `tests-sh-passed` 355 at rest and **361 inside a claim**; 361 measured, twice,
+on two trees. (5)'s hash shapes — *results moves, manifest does not* — held exactly. (2) recorded the push as
+a **declined decision rather than an omission** and told me to run `git rev-list --count origin/main..HEAD`
+instead of trusting a number, which was right. (4b) told me how to treat a red gate before believing it.
+**The two gaps:** (9) pointed at the **262,144 B hard refusal** and told me to measure, but said nothing about
+the **196,608 B archive trigger** — which was already firing when I measured, and is the threshold that
+actually wanted a decision this session. And S231's gotcha that `.quality-gates-results.json` is gitignored
+and describes whatever tree last ran the ratchet did not get carried forward into S233's, so the Phase 0
+citation check met it fresh.
+
+**Self 8.** For it: the one deliverable was finished end to end including its outward half; the evidence was
+**written and committed before the destructive action**, which is the only ordering that survives it; the
+broken `--all` instrument was caught by its own odd row and re-run **with controls**, and the discard is on
+the record rather than quietly replaced; the C6 red was produced by **running the checker, not predicting
+it**; and BL-93 was raised with its derivation rather than fixed, keeping one deliverable one deliverable.
+Against it: **the control should have come before the first measurement, not after** — I published a
+uniform *survives* across seven branches and only doubted it because `docs/bl-10` looked wrong, which is
+luck standing in for method; the Phase 0 ratchet run dirtied a tracked file before I had decided what to do
+with it; and the receipt was missing its gate citation until `bin/check-handoff` said so, which is the
+checker doing my job.
+
 ### 2026-09-29 · [ad hoc] S234 Phase 3C — fork Learning #105, and a refusal to retire, with the rows named
 
 [`docs/FORK_LEARNINGS.md`](docs/FORK_LEARNINGS.md) row **#105**: *a decided-but-unexecuted destructive
