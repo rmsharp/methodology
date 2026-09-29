@@ -227,6 +227,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [BL-69] S234 — the branch inventory re-derived, written before a single branch was deleted
+
+[`docs/planning/bl69-branch-deletion-inventory.md`](docs/planning/bl69-branch-deletion-inventory.md) —
+every one of BL-69's 21 candidate refs re-measured at `main` = `bcd990a`, recorded **before** the
+destructive half, so the shas survive the action that makes some of them unreachable. Fork-only;
+`docs/planning/` is not in `bin/_manifest.py`.
+
+**All 21 shas are exactly what S189 recorded 45 sessions ago — nothing moved.** What moved is the
+surrounding state, and it is what made the S189 list unsafe to apply verbatim: **six pull requests are open
+upstream and five have their head on this fork's `origin`** (#84 `bl57/changelog-rules`, #85
+`fix/pre-commit-stale-rebase-marker`, #86 `fix/context-budget-status`, #87 `fix/sync-github-history`, #88
+`fix/bootstrap-never-overwrite-rules`); four of them postdate S189. None is a candidate, and §1's table is
+how that is established rather than assumed. `bl57/changelog-rules` is additionally checked out in the
+`methodology-bl57` worktree.
+
+**One measurement had to be thrown away and re-taken.** Survival of the seven non-ancestor branches was
+first tested with `git log --all --grep <subject>`, which searches every ref and so matched each branch
+against itself, returning a uniform *survives*. The tell was `docs/bl-10-dangling-learning-citations`,
+whose pull request #64 **closed unmerged**, coming back green. Re-run against `upstream/main` alone, with a
+negative and a positive control, five of the `fix/*` branches survive as named rebased commits,
+`docs/bl-10` survives as upstream `refs/pull/64/head` (verified by `git ls-remote`), and
+`port/framework-learnings-extraction`'s tip does not survive at all — adjudicated in §4 rather than waved
+through: it is a `CHANGELOG.md` bullet counting referents in the **port** tree, which is not a correction of
+`main`'s count of the **fork** tree, because the bullet's subject is *"this tree"*.
+
+**Nothing is deleted by this commit.** The local half follows; the `origin` half is outward-facing and takes
+its own go-ahead.
+
 ### 2026-09-28 · [BL-69] S234 claim — delete the branches whose work is finished (in progress)
 
 Chosen by the operator at this session's Phase 0 picker, from a decision he took at S189 that was never
