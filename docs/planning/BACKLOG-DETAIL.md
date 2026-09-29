@@ -3897,3 +3897,39 @@ its v3.7 size. That is the plan's D4, a finding rather than a proposal.
 **BL-60 stays separate (plan D5):** the trim-proof pile is the **written** record, not the read one — one
 plan, one axis.
 
+
+<a id="bl-92"></a>
+
+**BL-92 — `bin/tests.sh` went red once in five runs at the same commit, and the failing assertion is
+unrecoverable because `quality_ratchet.py` discards the suite's output. Raised 2026-09-28 (S233) from its own
+close-out verification; recorded, not fixed (FM #17).**
+
+**The observation.** At `5d6fbe4`, in a `--no-local` clone, `bash bin/tests.sh` read **361 passed / 0 failed**
+and `python3 starter-kit/quality_ratchet.py --run` then read **10/11 pass · 1 fail**, its `tests-sh-passed`
+measuring **360** and `tests-sh-failed` measuring **1**. Four further runs at the same commit — a fresh clone
+under the ratchet's own `subprocess(capture_output=True)` invocation, two consecutive runs in one clone, the
+clone-then-ratchet sequence repeated, and a full ratchet run with the suite's output captured — all read
+**361 / 0** and **11/11**. So the rate is 1 in 5 and the failure is transient.
+
+**Why the identity is gone.** The ratchet runs each gate with `capture_output=True` and keeps only the
+`extract`ed number, so a suite failure inside a ratchet run leaves the count and nothing else — no FAIL line, no
+test name. This is the second edge of an already-recorded lesson (*capture the suite's output when the count
+matters*): without capture, a transient failure is not merely inconvenient to diagnose, it is **unattributable
+forever**.
+
+**The suspect, named as a suspect.** `bin/tests.sh:3595`-`3606` (Test 44, added the same session) snapshots
+`git status --porcelain` over the **whole live repository** before and after two `bin/check-overhead` runs and
+asserts the two snapshots are equal. Grep says it is the only whole-tree assertion in the suite — the one other
+`git status --porcelain` (`:2267`) reads a scratch fixture repo. So it is the only assertion that unrelated
+churn anywhere in the tree can turn red, and its failure message prints the two snapshots without naming the
+differing paths. **It is a suspect, not a diagnosis:** the four re-runs include the exact invocation that
+failed, and none reproduced it.
+
+**Shapes, none costed.** (a) Make the assertion self-diagnosing — print the set difference of the two
+snapshots, so the next occurrence names its paths; it does not prevent the flake. (b) Give the printer a
+fixture: run it from a temp directory holding a copy of `.context-budget.json` and the files it names, and
+assert *that* tree is unchanged — a true no-write assertion, immune to repository churn, at the cost of a
+fixture to maintain. (c) Teach the ratchet to keep a failing gate's output (distributed tool, so upstream-facing
+and its own go-ahead — and the wrapper method that captured it here works without changing any shipped file:
+a separate wrapper file named in the gate's `command`, never a wrapper *over* `bin/tests.sh`, which contaminates
+the suite's self-referential tests and produced three spurious failures when tried).

@@ -227,6 +227,34 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-28 · [ad hoc] S233 — BL-92 raised: one red suite run in five, and the failing assertion is unrecoverable
+
+**Found while verifying this session's own final tree, which is the only reason it was found at all.** At
+`5d6fbe4`, `bash bin/tests.sh` read **361 passed / 0 failed** and `quality_ratchet.py --run` then read
+**10/11 pass · 1 fail** in the same clone — `tests-sh-passed` 360, `tests-sh-failed` 1. **Four re-runs at that
+same commit all read 361 / 0 and 11/11:** a fresh clone under the ratchet's own
+`subprocess(capture_output=True)` invocation, two consecutive runs in one clone, the clone-then-ratchet sequence
+repeated, and a full ratchet run with the suite's output captured. **1 red in 5, and the identity of the failing
+assertion is gone** — the ratchet keeps each gate's extracted number and discards its output, so a suite
+failure inside a ratchet run leaves a count and no test name. That is the second edge of *capture the suite's
+output when the count matters*: uncaptured, a transient failure is not inconvenient to diagnose, it is
+**unattributable forever**.
+
+**The suspect is named as a suspect, in this session's own new test.** `bin/tests.sh:3595`-`3606` (Test 44)
+compares `git status --porcelain` over the **whole live repository** before and after two `bin/check-overhead`
+runs; grep says it is the suite's only assertion over the live tree's entire state — the one other
+`git status --porcelain` reads a scratch fixture — so it is the only one unrelated churn can red, and its
+message prints both snapshots without naming the differing paths. **Not a diagnosis:** the four re-runs include
+the exact invocation that failed, and none reproduced it.
+
+**One method finding, recorded because it cost a run and produced false failures.** Wrapping `bin/tests.sh`
+itself to capture its output is not a neutral instrument: the suite greps and re-invokes its own source, so the
+wrapped run reported **three** failures, all artifacts of the wrapper. A **separate** wrapper file named in the
+gate's `command` captures the same output and leaves the source untouched.
+
+**Recorded, not fixed (FM #17)** — three shapes in [`BACKLOG-DETAIL.md`](docs/planning/BACKLOG-DETAIL.md#bl-92),
+none costed, and the receipt tells the next session to re-run a red citation before believing it.
+
 ### 2026-09-28 · [ad hoc] S233 — two operator decisions at close-out: the push declined, the publishing question deferred
 
 **Both are recorded because a declined go-ahead and a deferred decision are actions, and the difference between
