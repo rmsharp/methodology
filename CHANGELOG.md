@@ -2774,3 +2774,9 @@ learnings. Owed at the next claim: the `HANDOFFS.md` retention trim (4 receipts)
 
 S235's receipt still read `commit: pending`, which `bin/check-handoff --all` (Test 34 L1) refuses once a newer receipt exists.
 Set it from `git log` to `a4d9c0e` (close-out) plus the plan commits and the claim. No other receipt touched.
+
+### 2026-09-29 · [ad hoc] S237 — gate citation added to the close-out receipt
+
+`quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511`, run after S235's slot was
+reconciled. Earlier runs at this session read 10/11 (pending receipt) and 9/11 (no citation) — both were receipt defects,
+not code. Retention trim of `HANDOFFS.md` still owed (4 receipts).
