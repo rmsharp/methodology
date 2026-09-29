@@ -2700,3 +2700,19 @@ exists; the auto-memory path is per-directory and empty). A two-turn `--input-fo
 with a scripted second message kept context (word recalled). Spend for all three probes: about $0.05, cap $0.10 each.
 **Not proven:** that `~/.claude/settings.json` hooks and the memory of a fixture path never leak (no such hook fired
 in the probe, but the probe's directory had none to fire); the pilot re-checks it with the fixture.
+
+### 2026-09-29 · [ad hoc] S236 — P1 harness built: `docs/planning/overhead-replay/`
+
+Steps 2–5 of P1. New files, all fork-only under `docs/planning/`: `fixture.py` (deterministic fixture repo with a
+ghost commit, a stale handoff, an uncommitted stub), `acceptance_test.py` (held out of the fixture),
+`install_arm.py` (eight arms from `git archive <tag>`), `scorers.py` (T1–T3), `stakeholder.py`, `replaylib.py`,
+`extract.py`, `tests.py`, `README.md`. **Done-when, run:** (a) all eight arms build, each leaving only the stub
+uncommitted; (b) runner+safeguards bytes in each built arm equal `mandated-load-per-version.py` for all seven
+tags; (c) each scorer False on an untouched fixture and on an implement-first session, True on a hand-made
+avoiding session; (d) the extractor produced a row from a real local transcript. `tests.py`: 9 tests OK.
+**Mutation check:** five mutants (installer drops SAFEGUARDS, T3 threshold, T2 always true, T1 ignores the sha,
+usage counted per record) — four died at once; the fifth (per-record usage) SURVIVED because no test split one API
+message across records, so a test for that was added and the mutant then died. **Known limits, stated in the
+files:** T1 is a keyword heuristic; the installer applies each tag's BOOTSTRAP mechanically and skips
+README.md and customisation steps; `--no-session-persistence` leaves no on-disk transcript, so P2 must pick.
+Not run: any replay session. `bin/tests.sh` 355 passed / 0 failed / 6 skipped; ratchet 11/11.
