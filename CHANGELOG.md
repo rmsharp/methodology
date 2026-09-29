@@ -238,7 +238,7 @@ owed `HANDOFFS.md` retention trim (receipts now 4) is deferred to close-out, by 
 **Draft written:** `docs/planning/cross-version-overhead-measurement-plan.md` — primary design is a
 controlled replay of one fixed task under each historic version's own framework files (operator's
 direction: no detailed historic data exists to pull). Awaiting his approval; no model session launched.
-Operator review fixed one unclear sentence in the plan's §1 (the "gap" paragraph).
+Operator review fixed one unclear sentence in the plan's §1 (the "gap" paragraph) and rewrote §5 (the phases) in plain language.
 
 ### 2026-09-29 · [BL-69] S234 close-out — the handoff receipt
 

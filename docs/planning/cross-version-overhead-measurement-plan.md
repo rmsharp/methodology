@@ -115,52 +115,103 @@ and not preserved as a script; if arm C is built it is rebuilt with a committed 
 
 ## §5 Phases
 
-Every phase is **one session**. Close out when it is done; the next phase does not start in the same
-session (failure mode #18). Every phase names its surface, because a phase whose criterion was checked
-somewhere it cannot fail is the failure issue #75 recorded.
+Every phase is **one session**. When it is done, close out; the next phase starts in a later session, never
+the same one (failure mode #18). Each phase uses the same six labelled lines:
 
-### P1 — Build the harness without spending a model token
+- **Goal** — what the phase produces.
+- **Steps** — what the session does.
+- **Done when** — the concrete result that ends the phase.
+- **How to check** — the commands or comparisons that show it is done.
+- **Where it runs, and what that cannot show** — the "surface" the runner asks every plan to name. A check
+  run somewhere it cannot fail proves nothing (issue #75), so each phase says where its check runs and what
+  that place cannot tell you.
+- **Approval needed** — whether the operator must say yes before the phase starts.
 
-**Do:** the fixture; the seeded-trap scorers; the acceptance test; a per-tag installer that builds each arm's
-tree from `git archive <tag>` and that version's `BOOTSTRAP.md`; the scripted-stakeholder driver; the
-transcript extractor.
-**Driver feasibility comes first and is not assumed.** Whether Claude Code can be driven headlessly through
-a multi-turn session with scripted replies, with a fixed model and no ambient hooks, skills or memory leaking
-into the arm, is **unverified**. P1's first act is to establish it from the installed CLI's own `--help` and a
-zero-cost dry run; if it cannot, the plan returns to the operator with the manual alternative (§6, D5).
-**DONE:** (a) the installer builds all eight trees; (b) for the seven versioned arms the mandated-read
-bytes in the built tree equal `mandated-load-per-version.py`'s figure for that tag — exact match, printed
-per arm; (c) the trap scorers each return *not caught* on an untouched fixture and *caught* on a hand-made
-positive; (d) the extractor runs on an existing local transcript and emits a row.
-**Verify:** run (b), (c), (d) and paste their output. **Surface:** the local machine, no model. It **cannot**
-show that the driver behaves under a real model, which is why P2 exists.
-**STOP** after commit.
+Terms used below: an **arm** is one version of the framework (or the no-framework baseline) that gets run;
+**k** is how many times each arm is run; a **trap scorer** is a small script that reads a finished session and
+says whether it caught one of the defects planted in the fixture (§3).
 
-### P2 — Pilot, with a spend cap
+### P1 — Build the test harness (spends no model tokens)
 
-**Do:** one session each of `none`, `v1.0.0`, `HEAD`, then a second of `HEAD`, to estimate cost per session
-and run-to-run variance, and to find where the scripted stakeholder is inadequate.
-**DONE:** a pilot report giving requests, tokens and list-price dollars per session, the `HEAD`-vs-`HEAD`
-spread, the unscripted stops, and a **recommended k and total budget for P3** — a number, from the pilot,
-not from this plan.
-**Verify:** the extractor's rows are in the report and each figure re-derives from the named transcript.
-**Surface:** the real model on the fixture. It **cannot** show behaviour on a large or aged real project.
-**Requires the operator's spend go-ahead before it starts (D2).** **STOP** after commit.
+**Goal.** Everything needed to run and read a replay session, without running one.
 
-### P3 — The full run
+**Steps**
+1. Find out whether Claude Code can be driven from a script through a multi-turn session, with scripted
+   replies, a fixed model, and none of the operator's own settings, hooks, skills or memory leaking in. This
+   is **not known yet**. Check the installed CLI's `--help` and try a run that costs nothing. If it cannot be
+   done, stop and return to the operator with the manual alternative (D5).
+2. Build the fixture repository, its acceptance test, and the trap scorers.
+3. Build an installer that produces each arm's directory from that version's git tag (`git archive <tag>`),
+   following that version's own `BOOTSTRAP.md`.
+4. Build the scripted stakeholder: the fixed list of replies given at each point where a session waits for a
+   person.
+5. Build the extractor that turns a session transcript into one row of measurements (O2–O6 and B1, §2).
 
-**Do:** all arms × the k that P2 recommended, in an order that interleaves arms (so a model or service change
-mid-run does not line up with one version). May span sessions; each session harvests what it ran and stops.
-**DONE:** every planned (arm, rep) has a row or a recorded, explained absence. **Verify:** row count equals
-arms × k; no arm's reps fall outside a re-run window that would confound it. **Surface:** as P2.
-**Requires the operator's go-ahead against the budget P2 recommended.**
+**Done when**
+- (a) The installer builds all eight arm directories.
+- (b) For each of the seven versioned arms, the combined size of the runner and safeguards files in the built
+  directory equals what `mandated-load-per-version.py` reports for that tag, byte for byte.
+- (c) Each trap scorer says "not caught" on an untouched fixture and "caught" on a hand-made example where
+  the trap was avoided.
+- (d) The extractor turns an existing local transcript into a row.
+
+**How to check.** Run (b), (c) and (d) and paste their output into the handoff.
+
+**Where it runs, and what that cannot show.** On this machine, with no model. It cannot show how the scripted
+driver behaves against a real model; that is what P2 is for.
+
+**Approval needed.** None. No spend.
+
+### P2 — Pilot run, with a spend cap
+
+**Goal.** Learn what a session costs and how much two identical runs differ, before committing to the full run.
+
+**Steps.** Run four sessions: one each of the no-framework baseline, v1.0.0 and HEAD, then a second HEAD
+session. Note every point where the scripted stakeholder had no answer.
+
+**Done when.** A pilot report gives, per session: requests, tokens and list-price dollars. It also gives the
+difference between the two HEAD runs, the unscripted stops, and a recommended k and total budget for P3. The
+budget figure comes from the pilot, not from this plan.
+
+**How to check.** Every figure in the report can be re-derived from the transcript it names, using the P1
+extractor.
+
+**Where it runs, and what that cannot show.** The real model on the small fixture. It cannot show behaviour
+on a large project with a long-accumulated ledger.
+
+**Approval needed.** **Yes.** The operator sets the spend cap before P2 starts (D2).
+
+### P3 — Full run
+
+**Goal.** The complete data set.
+
+**Steps.** Run every arm k times, with k as P2 recommended. Interleave the arms (v1.0.0, HEAD, v2.7, and so
+on, repeating) so that a change in the model or the service midway does not line up with a single version.
+This may take more than one session; each session records what it ran and stops.
+
+**Done when.** Every planned (arm, repetition) pair has a row, or a written reason why not.
+
+**How to check.** The number of rows equals arms × k, and the model id in every row is the same.
+
+**Where it runs, and what that cannot show.** As P2.
+
+**Approval needed.** **Yes.** The operator approves against the budget P2 recommended.
 
 ### P4 — Analysis and publication
 
-**Do:** one table, O1–O6 and B1 by version with the spread, `none` subtracted, the §3 sentence attached, and
-the arm-S cross-check shown. **DONE:** the report, and the extraction and analysis scripts committed so the
-table re-runs. **Verify:** re-run reproduces every figure from the stored rows. **Surface:** the stored
-data; it makes no claim about any real project. Where the report is published is decision D3 below.
+**Goal.** One report that says what each version costs and what it buys.
+
+**Steps.** Build one table: O1–O6 and B1 for each version, showing the spread across repetitions, with the
+no-framework baseline subtracted. Attach the sentence from §3 about what the replay does and does not measure.
+Show the static byte-count cross-check beside it. Commit the extraction and analysis scripts.
+
+**Done when.** The report and the scripts that regenerate it are committed.
+
+**How to check.** Re-running the scripts on the stored rows reproduces every figure in the report.
+
+**Where it runs, and what that cannot show.** On the stored data only. It says nothing about any real project.
+
+**Approval needed.** Where the report is published is the operator's decision (D3).
 
 ## §6 Risks, each with its counter
 
