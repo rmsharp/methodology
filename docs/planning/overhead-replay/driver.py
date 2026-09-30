@@ -52,7 +52,10 @@ def closeout_done(cwd):
         text = open(os.path.join(cwd, "HANDOFFS.md")).read()
     except OSError:
         return False
-    blocks = re.findall(r"```handoff\n(.*?)```", text, re.S)
+    # HANDOFFS.md carries a template block in its front matter (`session: S<N>`, `status: <pending | complete>`);
+    # it is not a receipt. Found at the second real-project run, where reading it as the newest receipt meant a
+    # finished close-out was never recognised and the session ran on into unrelated work for about $6.
+    blocks = [b for b in re.findall(r"```handoff\n(.*?)```", text, re.S) if not re.search(r"^session:\s*S<", b, re.M)]
     if not blocks or not re.search(r"^status:\s*complete\s*$", blocks[0], re.M):
         return False
     dirty = subprocess.run(["git", "-C", cwd, "status", "--porcelain", "--untracked-files=no"], capture_output=True, text=True).stdout

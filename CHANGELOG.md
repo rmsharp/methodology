@@ -2809,3 +2809,13 @@ limits, is not close to them, and said later runs may have to wait if one is rea
 re-runs $3.92, first real-project session $2.33). `driver.closeout_done`: after the script is exhausted, keep answering stops (neutral reply) until the
 newest `HANDOFFS.md` receipt reads `status: complete` and no tracked file is uncommitted; `--max-stops` (12) and the per-session cap remain the backstops.
 Test `CloseoutDone` (12 tests OK). Prompted by the first real-project run ending while the session waited for a background suite.
+
+### 2026-09-29 · [ad hoc] S237 — second real-project run (v3.7): $9.50 spent, $3.05 of it valid; the close-out check had a bug, fixed
+
+`driver.closeout_done` read the first ` ```handoff ` block in `HANDOFFS.md`, which is the format template in its front matter (`status: <pending | complete>`),
+so the finished close-out of issue #121 (commit `7b9bd618` in the run copy) was never recognised; my neutral "Proceed as you judge best." replies then let the session
+start unrelated work (issue #120 citation audit, 17 commits) until the 12-stop backstop: **$9.50 total, 144 requests, 37 minutes**. Fixed (template blocks skipped) and the
+test now includes a template block, which is what hid it. **The valid run is the first five stops: $3.05, 68 requests, 89 tool calls, 19 minutes, close-out complete,
+`getPedMaxAge()` fixed, 0 warnings in the affected tests**; row and truncated transcript in `pilot/real-3.7/` (the row says it was cut by hand). A v3.0 run that had
+just started with the same bug was killed after 6 requests (a few tenths of a dollar, not recorded by the driver). Running total about $17 of the operator's $150.
+Cost of my bug: about $6.50, unrequested and unusable.

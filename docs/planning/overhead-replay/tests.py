@@ -181,10 +181,10 @@ class CloseoutDone(unittest.TestCase):
         g = lambda *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True, check=True)
         g("init", "-q"); g("config", "user.email", "a@b.c"); g("config", "user.name", "x")
         h = os.path.join(d, "HANDOFFS.md")
-        open(h, "w").write("```handoff\nsession: S1\nstatus: pending\n```\n```handoff\nsession: S0\nstatus: complete\n```\n")
+        open(h, "w").write("````\n```handoff\nsession: S<N>\nstatus: <pending | complete>\n```\n````\n```handoff\nsession: S1\nstatus: pending\n```\n```handoff\nsession: S0\nstatus: complete\n```\n")
         g("add", "."); g("commit", "-qm", "a")
         self.assertFalse(driver.closeout_done(d))          # newest is pending; an older complete one must not count
-        open(h, "w").write("```handoff\nsession: S1\nstatus: complete\n```\n")
+        open(h, "w").write("````\n```handoff\nsession: S<N>\nstatus: <pending | complete>\n```\n````\n```handoff\nsession: S1\nstatus: complete\n```\n")
         self.assertFalse(driver.closeout_done(d))          # complete but uncommitted
         g("commit", "-qam", "b")
         self.assertTrue(driver.closeout_done(d))
