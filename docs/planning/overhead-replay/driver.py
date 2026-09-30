@@ -76,7 +76,7 @@ def closeout_done(cwd):
     return dirty.strip() == ""
 
 
-def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=3600, script=None, done=None):
+def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=3600, script=None, done=None, pace=0):
     """Run the process; return dict(session_id, cost_usd, stops, replies, end, init, log). Testable with a fake argv."""
     p = popen(argv, cwd=cwd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     log, replies, stops, cost, sid, init, end = [], [], 0, 0.0, None, None, "process exited"
@@ -84,6 +84,8 @@ def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=3600, script=Non
 
     def send(n):
         msg, scripted = stakeholder.next_reply(n, script)
+        if not scripted and pace:
+            time.sleep(pace)  # a person returns after a while; an instant reply burns the stop limit while a background job runs
         replies.append({"n": n, "scripted": scripted, "text": msg})
         p.stdin.write(user_msg(msg))
         p.stdin.flush()
@@ -130,7 +132,7 @@ def main():
     ap.add_argument("arm"); ap.add_argument("rep", type=int)
     ap.add_argument("--model", default="sonnet"); ap.add_argument("--effort", default="xhigh"); ap.add_argument("--session-cap", type=float, default=2.0)
     ap.add_argument("--total-cap", type=float, default=10.0); ap.add_argument("--out", default="/tmp/overhead-pilot")
-    ap.add_argument("--project", default="fixture", choices=["fixture", "real"]); ap.add_argument("--max-stops", type=int, default=stakeholder.MAX_STOPS)
+    ap.add_argument("--project", default="fixture", choices=["fixture", "real"]); ap.add_argument("--pace", type=float, default=90.0); ap.add_argument("--max-stops", type=int, default=stakeholder.MAX_STOPS)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     before = spent(a.out)
@@ -140,7 +142,7 @@ def main():
     info = real_project.install(a.arm, dest) if a.project == "real" else install_arm.install(a.arm, dest)
     res = drive(cmd(a.model, a.session_cap, a.effort), dest, a.max_stops,
                 script=stakeholder.REAL_SCRIPT if a.project == "real" else None,
-                done=closeout_done if a.project == "real" else None)
+                done=closeout_done if a.project == "real" else None, pace=a.pace if a.project == "real" else 0)
     with open(os.path.join(a.out, "spend.jsonl"), "a") as f:
         f.write(json.dumps({"arm": a.arm, "rep": a.rep, "cost_usd": res["cost_usd"]}) + "\n")
     with open(dest + ".stream.jsonl", "w") as f:
