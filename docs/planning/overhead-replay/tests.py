@@ -174,5 +174,22 @@ class BashSourceEdit(unittest.TestCase):
         self.assertFalse(L.is_source_edit(b("git add textkit.py && git commit -m x")))
 
 
+class CloseoutDone(unittest.TestCase):
+    def test_needs_complete_newest_receipt_and_clean_tracked_tree(self):
+        import driver, tempfile
+        d = tempfile.mkdtemp()
+        g = lambda *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True, check=True)
+        g("init", "-q"); g("config", "user.email", "a@b.c"); g("config", "user.name", "x")
+        h = os.path.join(d, "HANDOFFS.md")
+        open(h, "w").write("```handoff\nsession: S1\nstatus: pending\n```\n```handoff\nsession: S0\nstatus: complete\n```\n")
+        g("add", "."); g("commit", "-qm", "a")
+        self.assertFalse(driver.closeout_done(d))          # newest is pending; an older complete one must not count
+        open(h, "w").write("```handoff\nsession: S1\nstatus: complete\n```\n")
+        self.assertFalse(driver.closeout_done(d))          # complete but uncommitted
+        g("commit", "-qam", "b")
+        self.assertTrue(driver.closeout_done(d))
+        self.assertFalse(driver.closeout_done(tempfile.mkdtemp()))  # no HANDOFFS.md at all
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

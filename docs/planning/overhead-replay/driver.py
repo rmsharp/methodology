@@ -17,7 +17,7 @@ Permissions: headless has no one to approve a tool call, so the standard file an
 That is the same tool set for every arm; the fixture has no remote, so nothing here reaches outside OUT/.
 Dollar figures are the CLI's own `total_cost_usd`, i.e. list price for this session, not a bill.
 """
-import argparse, glob, json, os, subprocess, sys, time
+import argparse, glob, json, os, re, subprocess, sys, time
 import extract, install_arm, real_project, real_score, replaylib, stakeholder
 
 TOOLS = "Bash,Read,Edit,Write,Glob,Grep"
@@ -46,7 +46,20 @@ def transcript_path(session_id):
     return hits[0] if hits else None
 
 
-def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=3600, script=None):
+def closeout_done(cwd):
+    """True when the newest receipt in HANDOFFS.md reads `status: complete` and no tracked file is uncommitted."""
+    try:
+        text = open(os.path.join(cwd, "HANDOFFS.md")).read()
+    except OSError:
+        return False
+    blocks = re.findall(r"```handoff\n(.*?)```", text, re.S)
+    if not blocks or not re.search(r"^status:\s*complete\s*$", blocks[0], re.M):
+        return False
+    dirty = subprocess.run(["git", "-C", cwd, "status", "--porcelain", "--untracked-files=no"], capture_output=True, text=True).stdout
+    return dirty.strip() == ""
+
+
+def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=3600, script=None, done=None):
     """Run the process; return dict(session_id, cost_usd, stops, replies, end, init, log). Testable with a fake argv."""
     p = popen(argv, cwd=cwd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     log, replies, stops, cost, sid, init, end = [], [], 0, 0.0, None, None, "process exited"
@@ -77,6 +90,9 @@ def drive(argv, cwd, max_stops, popen=subprocess.Popen, timeout=3600, script=Non
             if stops >= max_stops:
                 end = f"cut off after {max_stops} stops"
                 break
+            if done and stops >= len(script or stakeholder.SCRIPT) and done(cwd):
+                end = "close-out complete"
+                break
             send(stops)
         if time.time() - t0 > timeout:
             end = f"timeout {timeout}s"
@@ -106,7 +122,8 @@ def main():
     dest = os.path.join(a.out, f"{a.arm}-r{a.rep}")
     info = real_project.install(a.arm, dest) if a.project == "real" else install_arm.install(a.arm, dest)
     res = drive(cmd(a.model, a.session_cap, a.effort), dest, a.max_stops,
-                script=stakeholder.REAL_SCRIPT if a.project == "real" else None)
+                script=stakeholder.REAL_SCRIPT if a.project == "real" else None,
+                done=closeout_done if a.project == "real" else None)
     with open(os.path.join(a.out, "spend.jsonl"), "a") as f:
         f.write(json.dumps({"arm": a.arm, "rep": a.rep, "cost_usd": res["cost_usd"]}) + "\n")
     with open(dest + ".stream.jsonl", "w") as f:

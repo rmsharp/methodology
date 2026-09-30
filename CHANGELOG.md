@@ -2801,3 +2801,11 @@ by me) and committed. **It ended mid-close-out**: after "close the session out" 
 and my stop limit of 4 ended the run there, so the receipt still reads `pending` and the notes are uncommitted. This is the partial run the operator
 asked not to have; the cause is my stop limit, not the session. Scorer fixed at the same time: `real_score.is_edit` counted Phase 0's permitted
 ledger backfill as the first edit (process files excluded now). Row and transcript: `pilot/real-3.7/`. Not re-run; no further spend.
+
+### 2026-09-29 · [ad hoc] S237 — real-project runs now end at a completed close-out; operator authorises $150 total spend
+
+**Operator decision (spend, replacing the pilot's $10 for what follows):** a total of **$150** for the experiment, $10 per session; he has daily usage
+limits, is not close to them, and said later runs may have to wait if one is reached. Spent to date about $7.53 list price (pilot $1.28, two xhigh
+re-runs $3.92, first real-project session $2.33). `driver.closeout_done`: after the script is exhausted, keep answering stops (neutral reply) until the
+newest `HANDOFFS.md` receipt reads `status: complete` and no tracked file is uncommitted; `--max-stops` (12) and the per-session cap remain the backstops.
+Test `CloseoutDone` (12 tests OK). Prompted by the first real-project run ending while the session waited for a background suite.
