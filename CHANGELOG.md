@@ -2852,3 +2852,14 @@ All six ended at a recognised close-out with no runaway; spend for the six about
 excluded from cost statistics, kept as a recorded behaviour. **Valid runs: v3.7 n=4 (reps 2, 3, 4, 6), v3.0 n=5 (reps 1, 3, 4, 5, 6).** Cost: v3.7 mean $3.15 (sd 0.16, range 3.00-3.35);
 v3.0 mean $2.69 (sd 0.31, range 2.27-3.01); a Welch t of about 2.9 on roughly 6 degrees of freedom (about p 0.03, uncorrected, small n). Requests 70 vs 60, tool calls 95 vs 85, process bytes 21.5 KB vs 17.7 KB,
 commits 5.75 vs 3.4. Rows and transcripts in `pilot/real-3.7/`.
+
+### 2026-09-30 · [ad hoc] S237 — v3.7 rep 7 ($3.41, valid); independent checks on all final trees: held-out real-fix tests and reverse-fix
+
+**Five valid runs each now:** v3.7 reps 2, 3, 4, 6, 7; v3.0 reps 1, 3, 4, 5, 6 (plus the recorded-but-excluded v3.7 rep 5, closed out partial). Cost v3.7 $3.20 (sd 0.18, 3.00-3.41) vs v3.0 $2.69 (sd 0.31, 2.27-3.01),
++19%, Welch t 3.2 on about 6.4 df (p about 0.02, uncorrected); requests +17%, tool calls +13% (p about 0.09), output tokens +11%, process bytes +21% (t 3.8), commits 5.6 vs 3.4; wall time +24% (t 1.4, not distinguishable).
+`rigor_score.py` (transcript indicators: full suite, package check, lint, red seen, predecessor handoff graded, learning written) is at ceiling in both versions, so it does not separate them.
+**`held_out.py`, no model spend:** the real fix's test files (`54b87c1da`, unseen by any session) plus the start commit's `test_modPyramid.R`, run against each run's source: **all 9 source-fixing valid runs pass
+with 0 failures and 0 warnings; 3.0 rep 4 (fixture-only repair, no production change) and 3.7 rep 5 (partial) fail 4 expectations in `test_getPedMaxAge.R` and leave the 5 pyramid warnings.**
+Reverse check (each run's own tests against the ORIGINAL source): every source-fixing run's own tests fail on the original (3-8 failures), i.e. its tests can see the bug. Results `pilot/real-3.7/held_out_results.json`.
+**The ratchet (`quality_ratchet.py`, added 2026-09-15) is in no release tag; neither v3.0 nor v3.7 contains it and no transcript mentions a gate, so this design cannot show whether it helps.**
+Total spend about $44.5 of the operator's $150.
