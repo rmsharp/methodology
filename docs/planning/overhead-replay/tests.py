@@ -191,5 +191,21 @@ class CloseoutDone(unittest.TestCase):
         self.assertFalse(driver.closeout_done(tempfile.mkdtemp()))  # no HANDOFFS.md at all
 
 
+class CloseoutDoneWithoutReceipt(unittest.TestCase):
+    def test_close_out_commit_after_install_only(self):
+        import driver, tempfile
+        d = tempfile.mkdtemp()
+        g = lambda *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True, check=True)
+        g("init", "-q"); g("config", "user.email", "a@b.c"); g("config", "user.name", "x")
+        f = os.path.join(d, "n.txt")
+        for i, msg in enumerate(["docs: S1 close-out", "Install methodology arm v3.0"]):  # an OLD close-out must not count
+            open(f, "w").write(str(i)); g("add", "."); g("commit", "-qm", msg)
+        self.assertFalse(driver.closeout_done(d))
+        open(f, "w").write("x"); g("add", "."); g("commit", "-qm", "docs: #121 S314 -- close-out: handoff")
+        self.assertTrue(driver.closeout_done(d))
+        open(f, "w").write("dirty")
+        self.assertFalse(driver.closeout_done(d))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -46,12 +46,26 @@ def transcript_path(session_id):
     return hits[0] if hits else None
 
 
+def _closeout_commit_done(cwd):
+    """No receipt file: done = tracked tree clean and a commit made AFTER the arm's install commit mentions close-out."""
+    log = subprocess.run(["git", "-C", cwd, "log", "--format=%s"], capture_output=True, text=True).stdout.splitlines()
+    since = []
+    for s in log:
+        if s.startswith("Install methodology arm"):
+            break
+        since.append(s)
+    else:
+        return False
+    dirty = subprocess.run(["git", "-C", cwd, "status", "--porcelain", "--untracked-files=no"], capture_output=True, text=True).stdout
+    return dirty.strip() == "" and any(re.search(r"close.?out", s, re.I) for s in since)
+
+
 def closeout_done(cwd):
     """True when the newest receipt in HANDOFFS.md reads `status: complete` and no tracked file is uncommitted."""
     try:
         text = open(os.path.join(cwd, "HANDOFFS.md")).read()
     except OSError:
-        return False
+        return _closeout_commit_done(cwd)  # arms older than the receipt (v3.0) have no HANDOFFS.md to read
     # HANDOFFS.md carries a template block in its front matter (`session: S<N>`, `status: <pending | complete>`);
     # it is not a receipt. Found at the second real-project run, where reading it as the newest receipt meant a
     # finished close-out was never recognised and the session ran on into unrelated work for about $6.

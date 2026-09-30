@@ -2819,3 +2819,12 @@ test now includes a template block, which is what hid it. **The valid run is the
 `getPedMaxAge()` fixed, 0 warnings in the affected tests**; row and truncated transcript in `pilot/real-3.7/` (the row says it was cut by hand). A v3.0 run that had
 just started with the same bug was killed after 6 requests (a few tenths of a dollar, not recorded by the driver). Running total about $17 of the operator's $150.
 Cost of my bug: about $6.50, unrequested and unusable.
+
+### 2026-09-30 · [ad hoc] S237 — first v3.0 real-project run recorded ($2.79 valid of $2.83), close-out check extended to arms without a receipt
+
+v3.0 over nprcgenekeepr at `879503cce`, xhigh, "go": **complete** — Phase 0 report and stop, claim, RED/GREEN (`getPedMaxAge()` returns `NA_real_`, 0 warnings),
+close-out committed (`801f5fc1` in the run copy) at stop 7; the driver ran one more stop (stop 8) because v3.0 has no `HANDOFFS.md` for `closeout_done` to read, and the
+session declined further work. Valid part: $2.79, 67 requests, 89 tool calls, 10 min, 15.7 KB added to process files (no receipt: that mechanism does not exist in v3.0).
+Row and truncated transcript in `pilot/real-3.7/`. **I reported this run as still in progress for over two hours after it had ended:** the only notification I received
+was the launcher's own, and I did not check the run directory until the operator said the run looked stuck. `driver.closeout_done` now falls back to "tracked tree clean and a
+close-out commit after the install commit" when no `HANDOFFS.md` exists; test added (13 tests OK). Running total about $20 of the operator's $150.
