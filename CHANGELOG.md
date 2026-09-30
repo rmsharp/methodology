@@ -2844,3 +2844,11 @@ lacks the words the driver looked for, so the driver did not stop the run and my
 (66 requests, 86 tool calls, 10 min). `closeout_done` now also accepts a structural close-out (tracked tree clean, code or tests changed since the install, latest commit touches
 `SESSION_NOTES.md`); 14 tests OK; checked on the real trees (true at the close-out, false on the killed run). **Valid runs so far, both at xhigh, "go", real project at 879503cce:**
 v3.7 = $3.05 and $3.21; v3.0 = $2.79 and $2.90. Two of each; the operator's minimum is three. Running total about $30 of the $150 (wasted on driver bugs: about $6.5 + $1.9 + $2.3).
+
+### 2026-09-30 · [ad hoc] S237 — six more runs (v3.7 and v3.0, reps 4-6 each), all ended by the close-out check; statistics over the valid runs
+
+All six ended at a recognised close-out with no runaway; spend for the six about $15.1, running total $41.13 of the operator's $150. v3.0 rep 4 fixed the warnings by repairing test fixtures
+(no production change) — valid. **v3.7 rep 5 closed out as partial** (read "commit it and close the session out" at the RED gate as a reason to stop; 5 of 7 warnings unfixed; $2.02) and is
+excluded from cost statistics, kept as a recorded behaviour. **Valid runs: v3.7 n=4 (reps 2, 3, 4, 6), v3.0 n=5 (reps 1, 3, 4, 5, 6).** Cost: v3.7 mean $3.15 (sd 0.16, range 3.00-3.35);
+v3.0 mean $2.69 (sd 0.31, range 2.27-3.01); a Welch t of about 2.9 on roughly 6 degrees of freedom (about p 0.03, uncorrected, small n). Requests 70 vs 60, tool calls 95 vs 85, process bytes 21.5 KB vs 17.7 KB,
+commits 5.75 vs 3.4. Rows and transcripts in `pilot/real-3.7/`.
