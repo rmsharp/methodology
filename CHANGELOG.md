@@ -2863,3 +2863,11 @@ with 0 failures and 0 warnings; 3.0 rep 4 (fixture-only repair, no production ch
 Reverse check (each run's own tests against the ORIGINAL source): every source-fixing run's own tests fail on the original (3-8 failures), i.e. its tests can see the bug. Results `pilot/real-3.7/held_out_results.json`.
 **The ratchet (`quality_ratchet.py`, added 2026-09-15) is in no release tag; neither v3.0 nor v3.7 contains it and no transcript mentions a gate, so this design cannot show whether it helps.**
 Total spend about $44.5 of the operator's $150.
+
+### 2026-09-30 · [ad hoc] S237 close-out 2 — the handoff receipt rewritten for the real-project experiment; RESULTS.md written
+
+`HANDOFFS.md` receipt S237 rewritten (it described only the fixture pilot): self 6 (20 sessions and a clear answer, but about $10.70 of the $44.55 lost to my driver defects, a spend cap set without the
+operator, and a misreport of a finished run as in progress), predecessor S236 9. `docs/planning/overhead-replay/pilot/real-3.7/RESULTS.md` written. **The ratchet finding:** PR #82 merged upstream 2026-09-16, in no release tag,
+absent from v3.0 and v3.7 (verified: `git ls-tree` of the tag and `merge-base --is-ancestor`); testing it needs the main-branch arm, a declared gate, applied hooks and an erosion-tempting task. **Next deliverable: a plan
+(mechanism ablation and session chain), its own session, operator approval before any spend.** Phase 3C: no fork learning row appended, so no retirement is owed. Gate: `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511`.
+Owed at the next claim: the `HANDOFFS.md` retention trim (4 receipts). Nothing pushed; nothing on `KJ5HST/methodology`.
