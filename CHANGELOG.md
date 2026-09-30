@@ -227,6 +227,12 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-30 · [ad hoc] Tagged v3.8 on upstream and published its GitHub Release (operator-directed)
+
+**Non-commit action** (failure mode #27). At the operator's explicit direction, after a picker that named the alternatives (hold; tag upstream `6b29d3d`; tag the fork only), created annotated tag `v3.8` on `upstream/main` at **`6b29d3d`** and pushed it to `KJ5HST/methodology`, then published the GitHub Release from it (marked latest; previous latest `v3.7`). Both read back: `git ls-remote --tags upstream` shows `v3.8^{}` = `6b29d3d`; `gh release view v3.8` shows the tag, not a draft, not a prerelease.
+
+Contents follow the maintainer's own v3.8 list (`upstream/main:HANDOFFS.md:18`): `quality_ratchet.py`, `context_budget.py`, `methodology_trim.py`, manifest 24 to 29 rows, dashboard 2.10.6 to 2.11.1. **Not done, and stated in the release notes:** the README "What's New" and `CLAUDE.md` §Versioning v3.8 entries the maintainer's procedure calls for, so the tagged commit's docs still say v3.7. The tag was cut at `upstream/main`, not this fork's `main`. PRs #83-#88 are not in it.
+
 ### 2026-09-29 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-28.md` (2 record(s), 62,788 B → 25,567 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
