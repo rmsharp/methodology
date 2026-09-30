@@ -206,6 +206,20 @@ class CloseoutDoneWithoutReceipt(unittest.TestCase):
         open(f, "w").write("dirty")
         self.assertFalse(driver.closeout_done(d))
 
+    def test_structural_close_out_without_the_words(self):
+        import driver, tempfile
+        d = tempfile.mkdtemp()
+        g = lambda *a: subprocess.run(["git", "-C", d, *a], capture_output=True, text=True, check=True)
+        g("init", "-q"); g("config", "user.email", "a@b.c"); g("config", "user.name", "x")
+        os.makedirs(os.path.join(d, "R")); w = lambda p, s: open(os.path.join(d, p), "w").write(s)
+        w("SESSION_NOTES.md", "0"); g("add", "."); g("commit", "-qm", "Install methodology arm v3.0")
+        w("SESSION_NOTES.md", "claim"); g("add", "."); g("commit", "-qm", "docs: claim")
+        self.assertFalse(driver.closeout_done(d))   # notes touched but no code yet
+        w("R/a.R", "x"); g("add", "."); g("commit", "-qm", "fix: the change")
+        self.assertFalse(driver.closeout_done(d))   # code changed, latest commit is not the notes
+        w("SESSION_NOTES.md", "done"); g("add", "."); g("commit", "-qm", "docs: NEWS bullet, CHANGELOG, handoff")
+        self.assertTrue(driver.closeout_done(d))
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

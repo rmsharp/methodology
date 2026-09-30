@@ -2836,3 +2836,11 @@ close-out commit after the install commit" when no `HANDOFFS.md` exists; test ad
 neutral replies arrived instantly and the 8-stop backstop was gone in about a minute, before any commit. Cause is the driver, not the version. Fix: `--pace`
 (default 90 s before each unscripted reply, real-project runs only), stop limit unchanged in meaning. 3.7 reps 1-3 and 3.0 rep 1 ran with instant replies;
 this changes when a reply arrives, not what it says. Rows and transcripts in `pilot/real-3.7/`. Running total about $25 of the operator's $150. Re-running 3.0.
+
+### 2026-09-30 · [ad hoc] S237 — v3.0 run 3 recorded (valid $2.90 of $5.20); two valid runs each of v3.7 and v3.0; close-out check made structural
+
+v3.0 rep 3 (paced replies): the #121 close-out was committed (`b15ae1c5` in the run copy) at stop 5, but its subject ("NEWS bullet, CHANGELOG, Learning 292, Session 314 handoff")
+lacks the words the driver looked for, so the driver did not stop the run and my neutral reply started unrelated work (issue #120 audit, a second close-out): **$5.20 full, $2.90 valid**
+(66 requests, 86 tool calls, 10 min). `closeout_done` now also accepts a structural close-out (tracked tree clean, code or tests changed since the install, latest commit touches
+`SESSION_NOTES.md`); 14 tests OK; checked on the real trees (true at the close-out, false on the killed run). **Valid runs so far, both at xhigh, "go", real project at 879503cce:**
+v3.7 = $3.05 and $3.21; v3.0 = $2.79 and $2.90. Two of each; the operator's minimum is three. Running total about $30 of the $150 (wasted on driver bugs: about $6.5 + $1.9 + $2.3).

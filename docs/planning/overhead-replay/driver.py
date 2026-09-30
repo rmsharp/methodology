@@ -57,7 +57,19 @@ def _closeout_commit_done(cwd):
     else:
         return False
     dirty = subprocess.run(["git", "-C", cwd, "status", "--porcelain", "--untracked-files=no"], capture_output=True, text=True).stdout
-    return dirty.strip() == "" and any(re.search(r"close.?out", s, re.I) for s in since)
+    if dirty.strip() != "":
+        return False
+    if any(re.search(r"close.?out", s, re.I) for s in since):
+        return True
+    # A close-out need not say so in its subject (v3.0 run 3: "NEWS bullet, CHANGELOG, Learning 292, Session 314 handoff").
+    # Structural rule: code or tests changed since the install, and the latest commit touches the session notes.
+    files = lambda *a: subprocess.run(["git", "-C", cwd, *a], capture_output=True, text=True).stdout.split()
+    base = subprocess.run(["git", "-C", cwd, "log", "--format=%H %s"], capture_output=True, text=True).stdout.splitlines()
+    base = next((l.split()[0] for l in base if "Install methodology arm" in l), None)
+    if not base:
+        return False
+    code = any(f.startswith(("R/", "tests/")) for f in files("diff", "--name-only", f"{base}..HEAD"))
+    return code and "SESSION_NOTES.md" in files("show", "--name-only", "--format=", "HEAD")
 
 
 def closeout_done(cwd):
