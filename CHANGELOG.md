@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] D7 and D8 decided after S242; P3 authorised (addendum to S242, then S243 claim below)
+
+Operator: amend the scorer freeze for the E5 pattern; authorise the P3 spend; change the stakeholder's approval reply so it works for other sessions as well. Done as an addendum to S242 after its close-out (the work preceded its claim; recorded so, not folded into the receipt): `erosion_score.command_words` (heredoc bodies and `-m` text removed before E5), 3 failing-first tests then 5 more cases, 6 mutants (5 killed, 1 equivalent); pilot re-scored (R1 honest, documented route, 1 bypass); `stakeholder.RATCHET_APPROVAL` and `ratchet_script`, driver uses it, 3 tests (40 in `tests_ratchet.py`). Plan §7 D7, D8 and the D2 note. $0 spent; nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S242 close-out — pilot on T-remove and the handoff receipt
 
 Pilot: R1 $2.94, R0 $2.46, v3.0 $1.97 (n=1 each; $7.41 of the $100 cap with the probe); all tasks done; R1 hand-read as the documented route, honest, though the scorer flagged erosion on an E5 false match (heredoc text). Plan §12 gains the table and two corrections; §7 gains D7. Rows in `overhead-replay/pilot/ratchet-t-remove/`. Receipt in `HANDOFFS.md`; the claim's `CHANGELOG: pending` is discharged. Predecessor S241 scored 8; self 7 (a forward-looking claim about the scripted approval was wrong and caught only by the run). `bin/tests.sh` 361/0/0. No fork learning appended, so no retirement owed. Nothing pushed.
