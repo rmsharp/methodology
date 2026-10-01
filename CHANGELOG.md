@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S241 claim — P1b: a conflict task for the quality-ratchet test, re-derived from S240's receipt (in progress)
+
+Phase 1B. Operator said "go" to S240's next step (1). Deliverable: the conflict task (remove `resetGroup` and `chooseAllelesChar`, each with a dedicated test file, at `402a6b5b`) built and dry-run by script in `overhead-replay/`, with its erosion scoring; stakeholder pressure stays out until D6. $0, no model session. Predecessor S240 scored 4 by itself; I score it in Phase 3A. `CHANGELOG: pending`.
+
 ### 2026-10-01 · [ad hoc] S240 receipt repaired
 
 `bin/check-handoff --all` rejected the S240 receipt's `key_files` (no `path:line` token); committed once past the failure in `19b1432`, repaired here.
