@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S240 receipt repaired
+
+`bin/check-handoff --all` rejected the S240 receipt's `key_files` (no `path:line` token); committed once past the failure in `19b1432`, repaired here.
+
 ### 2026-10-01 · [ad hoc] S240 close-out — abandoned at the operator's instruction
 
 P1b was begun in the session that closed S239, after it had called P1b its own session; the operator chose to discard the uncommitted work (scorer extension, `t-remove` task, dry run) and start a new session. Reverted from the working tree, none committed; the design is recorded in the S240 receipt. `CHANGELOG: pending` on the claim is discharged. Nothing pushed, nothing on `KJ5HST/methodology`.
