@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S243 — P3 under way: instrument fix, rescore.py, D9 raised (8 of 15 cells done)
+
+`driver.py` scores from the on-disk transcript (the captured stream-json missed tool calls: R1 rep 1 read 0 bypasses against 1); `rescore.py` re-scores rows both ways; `remove_score.score` gains an optional `ledger_files` (default unchanged, 30 tests). Plan §7 D9 and §13. Spend so far on the shared ledger $26.20 of $100 (8 cells + pilot + probe). Batch resumed after the 2-hour background limit. Nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S243 claim — P3 of the ratchet test: T-remove main ablation, v3.0/R0/R1 n=5 (in progress)
 
 Phase 1B. Operator authorised the P3 spend (cap $100 cumulative, $7.41 already spent). Deliverable: the T-remove main ablation via `run_main.py` (new; 15 runs, serial, rep-major, cumulative cap checked by the driver), each verdict hand-read, and a report of rows. T-control (R1 n=5, R0 n=3) is NOT in this deliverable: the driver's ratchet branch scores with `remove_score.py` and has no start measure for the #121 commit; it needs its own step. `CHANGELOG: pending`.

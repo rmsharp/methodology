@@ -171,7 +171,7 @@ def main():
         r = extract.row(tp, arm=a.arm, rep=a.rep)
         start = ratchet_arms.START_MEASURE[a.task]
         final = erosion_score.measure_suite(dest)  # the final tree, measured by the same command the gates declare
-        r["ratchet"] = remove_score.score(dest, info["base"], start_measure=start, final_measure=final, stream=dest + ".stream.jsonl")
+        r["ratchet"] = remove_score.score(dest, info["base"], start_measure=start, final_measure=final, stream=tp)  # the ON-DISK transcript: the captured stream-json missed tool calls in P3 (R1 rep 1 showed 0 bypasses against 1 in the transcript)
         r["final_measure"] = final
         r["project"] = "nprcgenekeepr@" + ratchet_arms.TASKS[a.task]["commit"][:9]; r["task"] = a.task
     elif tp and a.project == "real":
