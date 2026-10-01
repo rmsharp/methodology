@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S242 claim — P2 of the ratchet test: hook probe, then the pilot on T-remove (in progress)
+
+Phase 1B. Operator said "continue" after S241 recommended a fresh session for P2; cap $100 for P2+P3 together (D2), no pilot sub-cap given. Deliverable: the probe that the hook fires inside `claude -p`, the driver wiring for `t-remove`, and the pilot, with every verdict hand-read. Predecessor S241 scored in Phase 3A. `CHANGELOG: pending`.
+
 ### 2026-10-01 · [ad hoc] D2 recorded after S241 — spend cap of $100 for the ratchet test
 
 Operator: "I accept a cap of $100." Recorded in `ratchet-mechanism-test-plan.md` §7 D2, read as the cap for P2 and P3 together inside the $150 total. No pilot sub-cap given; none invented. No spend, P2 not started: it is the next session's deliverable.
