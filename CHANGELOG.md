@@ -239,6 +239,10 @@ Moved the oldest **89** record(s) (2026-09-26 → 2026-09-30) out of [`CHANGELOG
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh)
 rather than trusting a digest printed here. Live file 250,288 B → 97,576 B (−61.0%).
 
+### 2026-09-30 · [ad hoc] S238 — the ratchet plan revised: overhead and v3.0 comparison, outcome-based rigor
+
+Operator, after the first draft: no overhead testing and no v3.0 comparison, and rigor is not well tested. Revised [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md): arms are now v3.0, v3.7 (control, reused), R0 and R1; three named contrasts (mechanism, v3.8's other changes, v3.0 to current); overhead (H4) measured on every arm; rigor redefined by what the session leaves true (gates held, real fix, erosion paths, claims versus tree) because S237's process-presence score was at ceiling; reuse of S237's runs made conditional on P1; budget restated at about $93 of $105.45 with the chain deferred. Still a draft; no spend.
+
 ### 2026-09-30 · [ad hoc] S238 close-out — the handoff receipt
 
 `HANDOFFS.md` receipt S238 completed: self 8, predecessor S237 scored 8 (clear next step and gotchas; its "ratchet in no release tag" went stale when v3.8 was tagged the same day, which is timing, not an error). Phase 3C: no fork learning row appended, so no retirement is owed. Gate: `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511`. **Next: the operator answers the plan's D1-D6; then P1 (free).** Nothing pushed; nothing on `KJ5HST/methodology`.
