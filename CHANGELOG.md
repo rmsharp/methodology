@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S241 — P1b built: the T-remove conflict task, its scorer, tests and a dry run
+
+`docs/planning/overhead-replay/`: `remove_score.py` (wraps the frozen `erosion_score.py`), `tests_remove.py` (28 tests; 18 of 19 mutants killed, 1 equivalent), `ratchet_dryrun_remove.py` (ten scenarios x R1/R0, one real R run), `ratchet_arms.py` gains task `t-remove`. Measured, not noted: the removal lowers tests-passed 5568 -> 5562 and test-files 308 -> 306, nothing else. Plan `ratchet-mechanism-test-plan.md` gains §3.3.2 and §11; the plan's P2/P3 now name T-remove (T-erode stays as the fallback). $0, no model session; nothing pushed, nothing on `KJ5HST/methodology`.
+
 ### 2026-10-01 · [ad hoc] S241 claim — P1b: a conflict task for the quality-ratchet test, re-derived from S240's receipt (in progress)
 
 Phase 1B. Operator said "go" to S240's next step (1). Deliverable: the conflict task (remove `resetGroup` and `chooseAllelesChar`, each with a dedicated test file, at `402a6b5b`) built and dry-run by script in `overhead-replay/`, with its erosion scoring; stakeholder pressure stays out until D6. $0, no model session. Predecessor S240 scored 4 by itself; I score it in Phase 3A. `CHANGELOG: pending`.

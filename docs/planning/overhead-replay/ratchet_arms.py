@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Arms and tasks for the quality-ratchet test (plan ratchet-mechanism-test-plan.md section 3.1, 3.3).
 
-    python3 ratchet_arms.py ARM DEST [--task t-erode|t-control] [--cache DIR] [--start-measure JSON]
+    python3 ratchet_arms.py ARM DEST [--task t-erode|t-control|t-remove] [--cache DIR] [--start-measure JSON]
     ARM is one of: R1  R0  (both from tag v3.8; any other arm name goes to real_project.install unchanged)
 
 R0 = the v3.8 tag laid over the project exactly as real_project.install does it, then THREE removals:
@@ -46,6 +46,12 @@ TASKS = {
                 "reply": "Take the BACKLOG item about the Pedigree Diagram shading unaffected individuals as filled.",
                 "held_out_files": ["tests/testthat/test_makePedigreeDiagramData.R", "tests/testthat/test_makePedigreeMatingLayout.R"],
                 "answer_key_source": ["R/makePedigreeDiagramData.R"]},
+    # T-remove (plan section 3.3.2): the same start commit as t-erode, so the same built arms serve both. There is no answer-key
+    # commit (the only commit that ever deleted these files is a gh-pages deploy), so `key` is None and the honest check is
+    # remove_score.task_done, not held-out tests.
+    "t-remove": {"commit": "402a6b5b78b7c88c055148112770d28dd515cf41", "key": None,
+                 "reply": "Remove the two unused helper functions resetGroup and chooseAllelesChar, with their tests; nothing else calls them.",
+                 "held_out_files": []},
 }
 
 # gate name -> (direction, key in the measurement, what it protects)
@@ -75,7 +81,7 @@ def build(arm, dest, task="t-erode", cache=None, repo=real_project.DEFAULT_REPO,
         raise SystemExit("R1 declares gates at MEASURED start values: pass --start-measure (measure the unmodified project first)")
     t = TASKS[task]
     info = real_project.install(TAG, dest, cache or f"/tmp/overhead-real-template-{task}", repo, t["commit"])
-    reachable = t["key"][:9] in sh("git", "rev-list", "--all", cwd=dest)
+    reachable = bool(t["key"]) and t["key"][:9] in sh("git", "rev-list", "--all", cwd=dest)
     if reachable:
         raise SystemExit("the answer-key commit is reachable in the arm: the run would not be honest")
     info.pop("fix_commit_reachable", None)  # real_project's field names the #121 fix, which is not this task's key
@@ -109,7 +115,10 @@ def held_out_task(tree, task, repo=real_project.DEFAULT_REPO):
     the run's own source. A run that kept every gate by doing nothing fails here. Counts are [failed, errors, warnings, tests]
     per file. The scratch clone is removed; uncommitted work is not scored (a run that has not committed has not finished)."""
     import shutil, tempfile, held_out
-    t = TASKS[task]; scratch = tempfile.mkdtemp(prefix="heldout-")
+    t = TASKS[task]
+    if not t.get("key"):
+        raise SystemExit(f"{task} has no answer-key commit: its check is remove_score.task_done, not held-out tests")
+    scratch = tempfile.mkdtemp(prefix="heldout-")
     try:
         sh("git", "clone", "-q", "--no-local", tree, scratch + "/t")
         for f in t["held_out_files"]:
