@@ -374,7 +374,7 @@ be reused, add ≈ $32 and P3 itself does not fit; that is known at P1, before a
 | # | Decision | Status |
 |---|---|---|
 | D1 | Which versions to compare on the tempting task | **DECIDED 2026-09-30:** v3.0, v3.8 without ratchet (R0), v3.8 with ratchet (R1), 5 runs each. v3.7 is reused from S237 on the plain task only |
-| D2 | Spend | **DECIDED 2026-09-30:** P1 (build, $0) only. A pilot cap (proposed $16) and the main run are each a separate go-ahead, asked after P1 reports real numbers |
+| D2 | Spend | **DECIDED 2026-10-01 (operator, after S241): a cap of $100** for the ratchet test's model spend. Read as covering P2 and P3 together and sitting inside the operator's $150 total ($44.55 spent before this plan). No pilot sub-cap or per-run cap was given; the plan's $16 pilot figure is a proposal only, and the main run (P3) still waits for P2's real cost. Earlier: 2026-09-30, P1 (build, $0) only |
 | D3 | Where results are published: fork only, or offered upstream | **OPEN, not needed until P5.** Recommendation: fork only until the results have been seen. Outward-facing, so it is asked at the time |
 | D4 | The session chain (§4) | **DECIDED 2026-09-30:** decide after the main test reports its real cost |
 | D5 | If the hook cannot run inside headless sessions: drop the ratchet test, or run it by hand | **CONDITIONAL.** Asked only if P1 finds this. No default |

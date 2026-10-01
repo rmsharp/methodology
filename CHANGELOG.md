@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] D2 recorded after S241 — spend cap of $100 for the ratchet test
+
+Operator: "I accept a cap of $100." Recorded in `ratchet-mechanism-test-plan.md` §7 D2, read as the cap for P2 and P3 together inside the $150 total. No pilot sub-cap given; none invented. No spend, P2 not started: it is the next session's deliverable.
+
 ### 2026-10-01 · [ad hoc] S241 close-out — the handoff receipt
 
 Receipt in `HANDOFFS.md`; the claim's `CHANGELOG: pending` is discharged. Predecessor S240 scored 8 (its design survived in the receipt and every figure checked out; it named no scenarios); self 8. `bin/tests.sh` 361/0/0; `quality_ratchet.py --run` 11/11. Phase 3C: no fork learning appended, so no retirement owed. Next is P2, which spends money and needs the operator's cap (D2). Nothing pushed.
