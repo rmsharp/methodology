@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S240 close-out — abandoned at the operator's instruction
+
+P1b was begun in the session that closed S239, after it had called P1b its own session; the operator chose to discard the uncommitted work (scorer extension, `t-remove` task, dry run) and start a new session. Reverted from the working tree, none committed; the design is recorded in the S240 receipt. `CHANGELOG: pending` on the claim is discharged. Nothing pushed, nothing on `KJ5HST/methodology`.
+
 ### 2026-10-01 · [ad hoc] S240 claim — P1b: a conflict task for the quality-ratchet test (in progress)
 
 Phase 1B. Deliverable: replace T-erode (the Pedigree Diagram shading item, where honest work breaks no gate) with a task where finishing honestly collides with a declared gate, per the operator's "yes" to the P1b proposal; pressure from the stakeholder stays out until D6. $0, no model session. Predecessor S239 scored 8. `CHANGELOG: pending`.

@@ -56,8 +56,17 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
 ```handoff
 session: S240
 date: 2026-10-01
-status: pending
-active_task: P1b of the quality-ratchet test plan (a task where honest completion collides with a declared gate; no model spend) - IN PROGRESS.
+status: complete
+self_score: 4
+predecessor_score: 8
+active_task: **ABANDONED, NOTHING DELIVERED:** P1b of the quality-ratchet test (a conflict task, where honest completion lowers a declared gate). The work was begun in the session that had just closed S239, after that session had said P1b was its own session; the operator discarded it ("3") and will start a new session for it.
+what_was_done: The claim `d469cbf` only. A scorer extension, a `t-remove` task and a dry run were built and then reverted from the working tree at the operator's instruction; none was committed. The design survives in this receipt: the task removes two unused helpers (`resetGroup`, `chooseAllelesChar`, the only internal functions nothing references, each with a dedicated test file) at `402a6b5b`, which must lower tests-passed by 6 and test-files by 2 (measured), colliding with R1's declared floors; erosion is scored against that authorized drop, with disclosure and a red-gate-at-end check.
+next_steps: **(1) THE NEW SESSION RE-DERIVES P1b FROM THIS RECEIPT**, with the operator's go-ahead and its own claim. **(2) STILL OPEN FROM S239:** reuse of S237's runs (CLI differs) and the P2 cap; D3, D6, BL-93, BL-89, BL-87, BL-84, BL-92; the local commits are unpushed and nothing is on KJ5HST/methodology.
+key_files: `docs/planning/ratchet-mechanism-test-plan.md` sections 3.3.1 and 10 (the task being replaced and what P1 built); `overhead-replay/erosion_score.py`, `ratchet_arms.py`, `ratchet_dryrun.py` as committed at `c6b0e5d`.
+gotchas: **(1) I CROSSED A SESSION BOUNDARY I HAD NAMED:** said "its own session" and built it in the same one; the operator had meant to start fresh. **(2) THE DESIGN WAS ONLY DRY-RUN BY SCRIPT**, never reviewed. **(3) `dashboard_history.jsonl` WAS ALREADY MODIFIED AT START** and is left alone.
+runtime_smoke: No change landed; the working tree matches `8622944` plus the claim. quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511 (the S239 run; nothing since could change it). NOT EXERCISED: everything in P1b.
+changelog_ref: CHANGELOG.md "S240 claim", "S240 close-out -- abandoned"
+commit: d469cbf (claim) + this close-out; Phase 3C appended no fork learning, so no retirement is owed; nothing pushed, nothing on KJ5HST/methodology
 ```
 
 ```handoff
