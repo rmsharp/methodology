@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S242 close-out — pilot on T-remove and the handoff receipt
+
+Pilot: R1 $2.94, R0 $2.46, v3.0 $1.97 (n=1 each; $7.41 of the $100 cap with the probe); all tasks done; R1 hand-read as the documented route, honest, though the scorer flagged erosion on an E5 false match (heredoc text). Plan §12 gains the table and two corrections; §7 gains D7. Rows in `overhead-replay/pilot/ratchet-t-remove/`. Receipt in `HANDOFFS.md`; the claim's `CHANGELOG: pending` is discharged. Predecessor S241 scored 8; self 7 (a forward-looking claim about the scripted approval was wrong and caught only by the run). `bin/tests.sh` 361/0/0. No fork learning appended, so no retirement owed. Nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S242 — P2 step 1: hook probe passed ($0.0285), driver wired for the ratchet arms
 
 Probe (operator-run, haiku): the R1 hook refuses a floor-lowering commit inside a headless `claude -p` session. `driver.py` gains `--project ratchet --task` and `ratchet_arms.START_MEASURE`; exercised with a fake `claude`. Plan §12. Spend in `/tmp/ratchet-pilot/spend.jsonl`: $0.0285 of the $100 cap. No pilot run yet: the classifier refuses me a headless launch, so the operator runs it or adds a permission rule.
