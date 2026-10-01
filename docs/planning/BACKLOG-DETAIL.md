@@ -3977,3 +3977,44 @@ learning. Fork-only: `docs/planning/` is not distributed, so no adopter is affec
 upstream-facing.
 
 ---
+
+**BL-94 — A planning session is owed for an experiment on documentation quality and management, v3.8 against v3.0.
+Raised 2026-10-01 (S244) at the operator's request; nothing built, nothing run, nothing costed.**
+
+The operator asked, after the ratchet study's T-remove results: *is there evidence that self documentation and documentation
+management is better in 3.8 than in 3.0?* The answer given was **no direct evidence either way**, and the operator then asked for an
+experiment to be planned **in another session**. This item exists so that session starts from what is known and does not
+re-derive it. It is a request for a plan (runner §Planning Sessions), not for a run.
+
+**What is known (S244, from files, not from this item's author's memory):**
+- `docs/planning/overhead-replay/pilot/real-3.7/RESULTS.md` and `rigor_score.py`: S237's process-rigor indicators (`handoff_graded`,
+  `learning`, `receipt_done`, ...) test whether a step *appeared* in the transcript, were **at ceiling in both versions** and do not
+  separate them. They say nothing about quality.
+- The ratchet study (`ratchet-mechanism-test-plan.md`, §13.1) scored what sessions leave true about the code's quality gates, not
+  documentation. Its 15 T-remove trees (v3.0, R0, R1, n=5 each) hold documentation outputs. A **crude, descriptive tally at S244**
+  found every session touched `CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md` and `PROJECT_LEARNINGS.md`, wrote one learning (one R0 run
+  two), and left the same 3 tracked documents naming the removed functions; at least one `status: pending` receipt stayed pending in
+  most trees (which one was not read). No pattern by arm. The tally's "ghost reconcile" check was too loose to use.
+- **Validity caveat that shapes any design:** the project at the start commit already carries its own methodology artifacts
+  (receipts, ledger, notes, hooks). `real_project.install` overlays only the runner, manual and the Session Protocol block, so the
+  documentation machinery is largely **the same in every arm**. A null on these trees says little about the framework versions.
+
+**What a plan must decide (not decided here):**
+1. **What "documentation quality" and "management" mean as measurements** — written before any scorer, as the ratchet plan did for
+   erosion. Candidates the framework itself supplies: the Phase 3A handoff score (a next session grades its predecessor's handoff);
+   whether a *cold* session can resume from the handoff alone (cost, time and mistakes to resume); whether the ledger and receipts match
+   `git log` (reconcile); whether stale references to changed code are found and fixed.
+2. **Who or what scores.** A model grading prose is a measurement with its own bias; blind scoring (the grader not told the arm) and
+   a fixed rubric were the options named; none is chosen.
+3. **Which design.** Options named at S244, uncosted: (a) the session chain (P4 of the ratchet plan, §4), where each session reads the
+   previous one's handoff; (b) a cold-start resume test, giving a fresh session each arm's end state and measuring what it costs to
+   continue; (c) blind rating of the existing 15 trees' receipts by a fresh session, which spends no new runs.
+4. **What the arms must differ in.** Because the project carries its own artifacts, the arms would need a start state where v3.8's
+   documentation features (ledger reconcile, `HANDOFFS.md` receipts, `bin/check-handoff`, the trim tools) and v3.0's absence of them
+   actually bear on what a session does, or the experiment cannot see a difference.
+5. **Spend.** The operator's $100 cap for the ratchet test (plan §7 D2) is that study's; a new experiment needs its own figure.
+   Ledger at S244: $58.01 of the $100 before the T-control batch finishes.
+
+**Next action:** a planning session, no spend, producing a plan document in `docs/planning/` with measures defined first, per runner
+§Planning Sessions. Reuse the harness in `overhead-replay/` where it fits; do not extend the frozen ratchet scorer.
+

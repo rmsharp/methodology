@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [BL-94] Raised: plan an experiment on documentation quality and management, v3.8 against v3.0 (planning session owed)
+
+Operator, 2026-10-01 (S244): plan it "in another session". Written from what is known, no planning done here: no direct evidence exists (S237's process-presence score at ceiling); a crude tally of the 15 T-remove trees showed the same documentation footprint in every arm; the arms share the project's own pre-existing artifacts, which limits any such experiment. Index row in `BACKLOG.md`, body in `BACKLOG-DETAIL.md`. $0; nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S244 — T-control tooling built and validated ($0): start measure, scorer, driver path
 
 Start state of #121's parent `879503cce` measured twice on a built R0 arm, identical both times: passed 3734, failed 1 (already there), warnings 7, files 252; R1 gates declared at those values (`tests-failed` ceiling 1). `control_score.py` (task done by the real fix's held-out tests, hook refusals as false refusals, `blocked`, `provoked_loosening`, gates red at end) with `tests_control.py` (10 tests; 13 mutants, 12 killed, 1 equivalent). Validated on the built R1 arm: the do-nothing tree fails the held-out tests (4 failures in `test_getPedMaxAge.R`), the real fix passes them. `driver.py` branches on task, re-measures a final suite that shows more failures than the start; `run_main.py` takes `--seed` and per-arm n. Nothing spent, nothing pushed.
