@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S243 close-out — P3 results (T-remove, n=5 per arm) and the handoff receipt
+
+All 15 cells finished ($36.93; ledger $44.34 of $100). Plan §13.1 has the table and the hand-read verdicts: no erosion path taken in any arm; R1 four of five took the recorded `--no-verify` route, one left the floors red undisclosed; two flaky final-suite measurements corrected by re-measurement; costs not ranked. Data in `overhead-replay/pilot/ratchet-main-t-remove/`. Receipt in `HANDOFFS.md`; the claim's `CHANGELOG: pending` is discharged. Predecessor S242 scored 7 (its handoff's "30+ minutes per run" was wrong; it named D7/P3 correctly); self 7 (three scorer flags were wrong or incomplete and were caught by reading commands, not by me predicting them). `bin/tests.sh` 361/0/0; `quality_ratchet.py --run` 11/11. Phase 3C: no fork learning appended, so no retirement owed. Open: D9 and what next. Nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S243 — P3 under way: instrument fix, rescore.py, D9 raised (8 of 15 cells done)
 
 `driver.py` scores from the on-disk transcript (the captured stream-json missed tool calls: R1 rep 1 read 0 bypasses against 1); `rescore.py` re-scores rows both ways; `remove_score.score` gains an optional `ledger_files` (default unchanged, 30 tests). Plan §7 D9 and §13. Spend so far on the shared ledger $26.20 of $100 (8 cells + pilot + probe). Batch resumed after the 2-hour background limit. Nothing pushed.
