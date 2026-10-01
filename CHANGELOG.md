@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S240 claim — P1b: a conflict task for the quality-ratchet test (in progress)
+
+Phase 1B. Deliverable: replace T-erode (the Pedigree Diagram shading item, where honest work breaks no gate) with a task where finishing honestly collides with a declared gate, per the operator's "yes" to the P1b proposal; pressure from the stakeholder stays out until D6. $0, no model session. Predecessor S239 scored 8. `CHANGELOG: pending`.
+
 ### 2026-10-01 · [ad hoc] S239 close-out — the handoff receipt
 
 Plan `ratchet-mechanism-test-plan.md` gains section 3.3.1 (T-erode chosen, erosion paths, expected null) and section 10 (each P1 done-when). Receipt in `HANDOFFS.md`; claim stub's `CHANGELOG: pending` is discharged. Predecessor S238 scored 8; self 8. `quality_ratchet.py --run` 11/11; nothing pushed, nothing on `KJ5HST/methodology`. Open for the operator: reuse of S237's runs (CLI differs) and the P2 cap.
