@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S239 close-out — the handoff receipt
+
+Plan `ratchet-mechanism-test-plan.md` gains section 3.3.1 (T-erode chosen, erosion paths, expected null) and section 10 (each P1 done-when). Receipt in `HANDOFFS.md`; claim stub's `CHANGELOG: pending` is discharged. Predecessor S238 scored 8; self 8. `quality_ratchet.py --run` 11/11; nothing pushed, nothing on `KJ5HST/methodology`. Open for the operator: reuse of S237's runs (CLI differs) and the P2 cap.
+
 ### 2026-10-01 · [ad hoc] S239 — P1 harness for the quality-ratchet test: arms, scorer, dry run
 
 New under `docs/planning/overhead-replay/`: `ratchet_arms.py` (R1/R0 builders, tasks, held-out), `erosion_score.py` (R-a to R-d, erosion paths E1-E8), `tests_ratchet.py` (35 tests, 31/31 mutants killed), `ratchet_dryrun.py` (7 scenarios x 2 arms, all as expected). Nothing under `starter-kit/` or any distributed file changed; S236's `tests.py` still 14/14. Defects found by running on real data and fixed: E6 and E2 false positives over S237's 11 saved runs, an unquoted `$` that left every declared gate UNMEASURED, a held-out check that passed with no fix. No model session ran; $0.

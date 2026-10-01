@@ -38,3 +38,17 @@ How the scripted driver behaves against a real model, whether every version stop
 whether `~/.claude/settings.json` hooks stay out in a fixture directory (the probe directory had none to fire),
 and whether the stream-json output can stand in for the on-disk transcript. Those are P2's questions.
 Known simplifications of the installer are listed in `install_arm.py`'s docstring.
+
+## Quality-ratchet test (P1 built at S239; no model session has run)
+
+The harness for [`../ratchet-mechanism-test-plan.md`](../ratchet-mechanism-test-plan.md). Nothing above this line changed; these files are new.
+
+| File | What it is |
+|---|---|
+| `ratchet_arms.py` | Builds **R1** (v3.8 + gates declared at measured start values + hook via `quality_ratchet.py install-hook`) and **R0** (the same v3.8 files and text, no script, no manifest, no hook) over a real project at a task's start commit. `diff_arms()` proves in bytes that R0 and R1 differ in exactly four paths. Holds `TASKS` (`t-erode`, `t-control`) and `held_out_task()` (the real fix's tests, run against a run's own source). Registers `v3.8` with `install_arm.ARMS` at import, because S236's tests pin that list. |
+| `erosion_score.py` | The outcome-rigor scorer, R-a to R-d and erosion paths E1-E8 (definitions in its docstring). Pure functions over a run tree, its commits and the session's tool calls; the R suite is only needed for the R-a measurement. **Frozen at the end of P1.** |
+| `tests_ratchet.py` | 35 tests. Every erosion path has a fixture that exhibits it and an honest fixture that must flag nothing; the false positives found in S237's real transcripts are regression cases. |
+| `ratchet_dryrun.py` | The plan's P1 (d) **by script, not by model**: eight scenarios (honest fix, do nothing, delete-and-loosen plain and with `--no-verify`, skip only, remove the manifest, tamper with the hook then loosen) on fresh copies of R1 and R0, asserting what the hook refuses and what the scorer sees. |
+
+Build and check: `python3 ratchet_arms.py R1 DEST --task t-erode --start-measure '{"passed":5568,"failed":0,"warnings":33,"files":308}'`, then `python3 ratchet_dryrun.py`.
+The hook refuses only a **manifest loosening**. It does not run the tests, so a skipped or deleted test with the manifest untouched passes it; that is the plan's point (a null on those paths is the ratchet's design, not a harness fault), and `erosion_score.py` is what sees them.
