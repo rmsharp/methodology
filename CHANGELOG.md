@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S239 claim — P1 of the quality-ratchet test (in progress)
+
+Phase 1B. Deliverable: P1 of [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md) §5 — build the R1 and R0 arms, the erosion task and its scorer, decide reuse of S237's runs; **$0, no model session**. Operator said "go" at Phase 0 and chose P1 from the picker. Phase 0 found no undocumented commits and no pending receipt; local `main` 29 ahead of `origin/main`, nothing pushed. Predecessor S238 scored 8 (see its receipt). `CHANGELOG: pending`.
+
 ### 2026-09-30 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-30.md` (89 record(s), 250,288 B → 97,576 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
