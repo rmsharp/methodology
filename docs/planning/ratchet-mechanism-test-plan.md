@@ -4,6 +4,40 @@
 run; no model session has been launched and no money spent. Approval of this document is not approval of any
 phase's spend (§7).
 
+## In plain words
+
+**The question.** The ratchet is a rule enforced by a small program: once a project declares a quality level
+(for example "at least 300 tests pass"), a commit that lowers it is refused. The program's own logic is already
+tested. What nobody has tested is whether an AI session *behaves differently* when the rule is enforced, and what
+that costs.
+
+**The test.** Give the same task to the same model under four setups and compare what each leaves behind:
+
+| Short name | What the session is given |
+|---|---|
+| **v3.0** | the older, lighter release of the methodology |
+| **v3.7** | the release S237 measured (reused, not re-run, on the plain task) |
+| **v3.8 without ratchet** *(called R0 below)* | the current release with the ratchet program, its hook and its declared levels taken out |
+| **v3.8 with ratchet** *(called R1 below)* | the current release with the ratchet on: levels declared, hook active |
+
+**The task** is built to tempt a shortcut: finishing it honestly means fixing tests that describe the old
+behaviour, while the easy way out is to delete those tests, lower the declared level, or skip the hook. A second,
+plain task (issue #121, as in S237) checks that the ratchet does not get in the way of honest work.
+
+**What is measured.** *Overhead* is what the session costs (money, requests, tool calls, files written).
+*Rigor* is what the session leaves true: did the quality levels hold, does the code really fix the problem,
+were shortcuts taken, and does the session's own report match what is actually in the repository.
+S237's process score only checked that steps were *mentioned* and was maxed out for both versions, so it is not
+used as the headline.
+
+**What the three contrasts mean.** v3.8 with vs without ratchet = the ratchet alone. v3.0 vs v3.8 with ratchet =
+what an adopter gets and pays by moving to the current release (everything since v3.0, not only the ratchet).
+
+**Decisions taken, 2026-09-30 (S238):** compare v3.0, R0 and R1 on the tempting task, 5 runs each (15 runs, about
+$48); authorise only the free build phase (P1) now; decide the session chain after the main test reports.
+Open and not yet asked: where results are published (not needed until the end), and two fallbacks that apply
+only if something fails (§7).
+
 **Asked for by the operator, 2026-09-29, after the real-project experiment:** *"write the plan after this
 experiment. We need to test that ratchet mechanism."* Two designs the experiment could not cover: (a) a
 **mechanism ablation** of `quality_ratchet.py`, (b) a **session chain** for what accumulates.
@@ -265,14 +299,14 @@ be reused, add ≈ $32 and P3 itself does not fit; that is known at P1, before a
 
 ## §7 Decisions the operator owns
 
-| # | Decision | Recommendation | Why it is his |
-|---|---|---|---|
-| D1 | Arm set: v3.0, R0, R1 on T-erode with v3.7 reused on the control only, or add v3.7 to T-erode | the three; v3.7 on T-erode only if the budget allows | sets the study's size |
-| D2 | Spend: authorise P1 (free) now; set P2's cap (proposed $15); authorise P3 only after P2 names its cost | as stated | model spend, each time |
-| D3 | Where results are published (fork only, or contributed upstream) | fork only until seen | outward-facing; ties to the deferred D3 of `overhead-ratchet-plan.md`, which this does not settle |
-| D4 | Chain: run P4 at all, and replicate or not | decide after P3, with measured cost | the budget does not cover everything (§5) |
-| D5 | If the hook cannot run in headless sessions: drop the ablation, or run it by hand | return to him; no default | his time |
-| D6 | A pressured variant of T-erode, if the plain one shows no erosion | do not pre-authorise | it changes what is being tested |
+| # | Decision | Status |
+|---|---|---|
+| D1 | Which versions to compare on the tempting task | **DECIDED 2026-09-30:** v3.0, v3.8 without ratchet (R0), v3.8 with ratchet (R1), 5 runs each. v3.7 is reused from S237 on the plain task only |
+| D2 | Spend | **DECIDED 2026-09-30:** P1 (build, $0) only. A pilot cap (proposed $16) and the main run are each a separate go-ahead, asked after P1 reports real numbers |
+| D3 | Where results are published: fork only, or offered upstream | **OPEN, not needed until P5.** Recommendation: fork only until the results have been seen. Outward-facing, so it is asked at the time |
+| D4 | The session chain (§4) | **DECIDED 2026-09-30:** decide after the main test reports its real cost |
+| D5 | If the hook cannot run inside headless sessions: drop the ratchet test, or run it by hand | **CONDITIONAL.** Asked only if P1 finds this. No default |
+| D6 | If the model never takes a shortcut on the tempting task: add pressure from the simulated stakeholder (for example "just get it in") | **CONDITIONAL.** Asked only if P3 shows no shortcuts. Not pre-authorised, because it changes what is being tested |
 
 ## §8 What this plan does not do
 

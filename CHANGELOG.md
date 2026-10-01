@@ -239,6 +239,10 @@ Moved the oldest **89** record(s) (2026-09-26 → 2026-09-30) out of [`CHANGELOG
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh)
 rather than trusting a digest printed here. Live file 250,288 B → 97,576 B (−61.0%).
 
+### 2026-09-30 · [ad hoc] S238 — decisions D1, D2 and D4 taken; plan text made plain
+
+Operator, from a picker: **D1** v3.0, v3.8 without ratchet and v3.8 with ratchet on the tempting task, 5 runs each (about $48; v3.7 reused on the plain task only); **D2** authorise P1 (build, $0) only; **D4** decide the session chain after the main test reports. D3 (publication) left open and not needed until P5; D5 and D6 conditional. [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md) gained an "In plain words" section and a §7 that states each decision's status. The `HANDOFFS.md` S238 receipt's next step (1) is superseded by this entry: P1 is authorised and is the next deliverable.
+
 ### 2026-09-30 · [ad hoc] S238 — the ratchet plan revised: overhead and v3.0 comparison, outcome-based rigor
 
 Operator, after the first draft: no overhead testing and no v3.0 comparison, and rigor is not well tested. Revised [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md): arms are now v3.0, v3.7 (control, reused), R0 and R1; three named contrasts (mechanism, v3.8's other changes, v3.0 to current); overhead (H4) measured on every arm; rigor redefined by what the session leaves true (gates held, real fix, erosion paths, claims versus tree) because S237's process-presence score was at ceiling; reuse of S237's runs made conditional on P1; budget restated at about $93 of $105.45 with the chain deferred. Still a draft; no spend.
