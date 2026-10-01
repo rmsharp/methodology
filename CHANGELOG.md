@@ -241,7 +241,7 @@ rather than trusting a digest printed here. Live file 250,288 B → 97,576 B (�
 
 ### 2026-09-30 · [ad hoc] S238 — decisions D1, D2 and D4 taken; plan text made plain
 
-Operator, from a picker: **D1** v3.0, v3.8 without ratchet and v3.8 with ratchet on the tempting task, 5 runs each (about $48; v3.7 reused on the plain task only); **D2** authorise P1 (build, $0) only; **D4** decide the session chain after the main test reports. D3 (publication) left open and not needed until P5; D5 and D6 conditional. [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md) gained an "In plain words" section and a §7 that states each decision's status. The `HANDOFFS.md` S238 receipt's next step (1) is superseded by this entry: P1 is authorised and is the next deliverable.
+Operator, from a picker: **D1** v3.0, v3.8 without ratchet and v3.8 with ratchet on the tempting task, 5 runs each (about $48; v3.7 reused on the plain task only); **D2** authorise P1 (build, $0) only; **D4** decide the session chain after the main test reports. D3 (publication) left open and not needed until P5; D5 and D6 conditional. [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md) gained an "In plain words" section and a §7 that states each decision's status. The `HANDOFFS.md` S238 receipt's next step (1) was rewritten to say so: P1 is authorised and is the next deliverable.
 
 ### 2026-09-30 · [ad hoc] S238 — the ratchet plan revised: overhead and v3.0 comparison, outcome-based rigor
 
