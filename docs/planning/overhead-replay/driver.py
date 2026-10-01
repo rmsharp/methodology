@@ -144,23 +144,37 @@ def main():
     ap.add_argument("arm"); ap.add_argument("rep", type=int)
     ap.add_argument("--model", default="sonnet"); ap.add_argument("--effort", default="xhigh"); ap.add_argument("--session-cap", type=float, default=2.0)
     ap.add_argument("--total-cap", type=float, default=10.0); ap.add_argument("--out", default="/tmp/overhead-pilot")
-    ap.add_argument("--project", default="fixture", choices=["fixture", "real"]); ap.add_argument("--pace", type=float, default=90.0); ap.add_argument("--max-stops", type=int, default=stakeholder.MAX_STOPS)
+    ap.add_argument("--project", default="fixture", choices=["fixture", "real", "ratchet"]); ap.add_argument("--task", default="t-remove", help="with --project ratchet: a key of ratchet_arms.TASKS"); ap.add_argument("--pace", type=float, default=90.0); ap.add_argument("--max-stops", type=int, default=stakeholder.MAX_STOPS)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     before = spent(a.out)
     if before + a.session_cap > a.total_cap:
         raise SystemExit(f"refused: spent ${before:.2f} + session cap ${a.session_cap:.2f} > total cap ${a.total_cap:.2f}")
     dest = os.path.join(a.out, f"{a.arm}-r{a.rep}")
-    info = real_project.install(a.arm, dest) if a.project == "real" else install_arm.install(a.arm, dest)
-    res = drive(cmd(a.model, a.session_cap, a.effort), dest, a.max_stops,
-                script=stakeholder.REAL_SCRIPT if a.project == "real" else None,
-                done=closeout_done if a.project == "real" else None, pace=a.pace if a.project == "real" else 0)
+    ratchet = a.project == "ratchet"
+    if ratchet:
+        import ratchet_arms  # R0/R1 declare gates at the measured start values; any other arm name goes to real_project.install
+        info = ratchet_arms.build(a.arm, dest, a.task, measure=ratchet_arms.START_MEASURE[a.task])
+        script = [stakeholder.OPENING, ratchet_arms.TASKS[a.task]["reply"]] + stakeholder.REAL_SCRIPT[2:]
+    else:
+        info = real_project.install(a.arm, dest) if a.project == "real" else install_arm.install(a.arm, dest)
+        script = stakeholder.REAL_SCRIPT if a.project == "real" else None
+    res = drive(cmd(a.model, a.session_cap, a.effort), dest, a.max_stops, script=script,
+                done=closeout_done if a.project != "fixture" else None, pace=a.pace if a.project != "fixture" else 0)
     with open(os.path.join(a.out, "spend.jsonl"), "a") as f:
         f.write(json.dumps({"arm": a.arm, "rep": a.rep, "cost_usd": res["cost_usd"]}) + "\n")
     with open(dest + ".stream.jsonl", "w") as f:
         f.writelines(res["log"])
     tp = transcript_path(res["session_id"]) if res["session_id"] else None
-    if tp and a.project == "real":
+    if tp and ratchet:
+        import erosion_score, remove_score
+        r = extract.row(tp, arm=a.arm, rep=a.rep)
+        start = ratchet_arms.START_MEASURE[a.task]
+        final = erosion_score.measure_suite(dest)  # the final tree, measured by the same command the gates declare
+        r["ratchet"] = remove_score.score(dest, info["base"], start_measure=start, final_measure=final, stream=dest + ".stream.jsonl")
+        r["final_measure"] = final
+        r["project"] = "nprcgenekeepr@" + ratchet_arms.TASKS[a.task]["commit"][:9]; r["task"] = a.task
+    elif tp and a.project == "real":
         r = extract.row(tp, arm=a.arm, rep=a.rep)
         r["real"] = real_score.score(replaylib.events(replaylib.load_records(tp)), dest, info["base"])
         r["project"] = "nprcgenekeepr@" + info["start_commit"][:9]

@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S242 — P2 step 1: hook probe passed ($0.0285), driver wired for the ratchet arms
+
+Probe (operator-run, haiku): the R1 hook refuses a floor-lowering commit inside a headless `claude -p` session. `driver.py` gains `--project ratchet --task` and `ratchet_arms.START_MEASURE`; exercised with a fake `claude`. Plan §12. Spend in `/tmp/ratchet-pilot/spend.jsonl`: $0.0285 of the $100 cap. No pilot run yet: the classifier refuses me a headless launch, so the operator runs it or adds a permission rule.
+
 ### 2026-10-01 · [ad hoc] S242 claim — P2 of the ratchet test: hook probe, then the pilot on T-remove (in progress)
 
 Phase 1B. Operator said "continue" after S241 recommended a fresh session for P2; cap $100 for P2+P3 together (D2), no pilot sub-cap given. Deliverable: the probe that the hook fires inside `claude -p`, the driver wiring for `t-remove`, and the pilot, with every verdict hand-read. Predecessor S241 scored in Phase 3A. `CHANGELOG: pending`.
