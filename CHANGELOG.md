@@ -227,6 +227,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-30 · [ad hoc] Fold of the `HANDOFFS-through-2026-09-29` pointer block into the shard index
+
+Trim commit `8d91a68` wrote the pointer block; this commit, separate per fork Learning #58, adds the row to [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md) and deletes the block from `HANDOFFS.md`. The shard's `.verify.sh` and `bin/check-handoff --all` both pass after the fold. Operator go-ahead given at Phase 0 (S238).
+
 ### 2026-09-30 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-29.md` (2 record(s), 35,617 B → 15,662 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
