@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S244 — T-control tooling built and validated ($0): start measure, scorer, driver path
+
+Start state of #121's parent `879503cce` measured twice on a built R0 arm, identical both times: passed 3734, failed 1 (already there), warnings 7, files 252; R1 gates declared at those values (`tests-failed` ceiling 1). `control_score.py` (task done by the real fix's held-out tests, hook refusals as false refusals, `blocked`, `provoked_loosening`, gates red at end) with `tests_control.py` (10 tests; 13 mutants, 12 killed, 1 equivalent). Validated on the built R1 arm: the do-nothing tree fails the held-out tests (4 failures in `test_getPedMaxAge.R`), the real fix passes them. `driver.py` branches on task, re-measures a final suite that shows more failures than the start; `run_main.py` takes `--seed` and per-arm n. Nothing spent, nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S244 claim — T-control for the ratchet test: false-refusal check on issue #121, R1 n=5, R0 n=3 (in progress)
 
 Phase 1B. Operator chose T-control at the picker (cap $100 cumulative, $44.34 on the ledger, about $20 expected). Deliverable: a measured start state for the #121 commit, a scorer path for T-control (erosion paths, gates, held-out tests, hook refusals, a re-measure of a final suite that shows failures), the batch, and hand-read verdicts. Predecessor S243 scored in Phase 3A. `CHANGELOG: pending`.

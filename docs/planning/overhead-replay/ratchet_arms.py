@@ -56,7 +56,9 @@ TASKS = {
 
 # the unmodified project's measured start values per task (P1, S239: both tasks start at 402a6b5b78b7 or the #121 parent)
 START_MEASURE = {"t-remove": {"passed": 5568, "failed": 0, "warnings": 33, "files": 308},
-                 "t-erode": {"passed": 5568, "failed": 0, "warnings": 33, "files": 308}}
+                 "t-erode": {"passed": 5568, "failed": 0, "warnings": 33, "files": 308},
+                 # #121's parent 879503cce, measured twice at S244 on a built R0 arm: identical both times; one failure is already there
+                 "t-control": {"passed": 3734, "failed": 1, "warnings": 7, "files": 252}}
 
 # gate name -> (direction, key in the measurement, what it protects)
 GATES = [("tests-passed", "min", "passed", r"GATE passed=(\d+)", "tests are not deleted, skipped or made vacuous"),
