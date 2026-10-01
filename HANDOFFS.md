@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S244
+date: 2026-10-01
+status: pending
+active_task: T-control for the ratchet test (issue #121; R1 n=5, R0 n=3; false-refusal check) under the $100 cap - IN PROGRESS.
+```
+
+```handoff
 session: S243
 date: 2026-10-01
 status: complete

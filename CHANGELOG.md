@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S244 claim — T-control for the ratchet test: false-refusal check on issue #121, R1 n=5, R0 n=3 (in progress)
+
+Phase 1B. Operator chose T-control at the picker (cap $100 cumulative, $44.34 on the ledger, about $20 expected). Deliverable: a measured start state for the #121 commit, a scorer path for T-control (erosion paths, gates, held-out tests, hook refusals, a re-measure of a final suite that shows failures), the batch, and hand-read verdicts. Predecessor S243 scored in Phase 3A. `CHANGELOG: pending`.
+
 ### 2026-10-01 · [ad hoc] D9 decided after S243 — a gate-lowering commit may carry its CHANGELOG.md entry
 
 Operator (via picker, asked in framework terms: `.quality-gates.json`, the hook, the `CHANGELOG.md` action ledger): allow it. `remove_score.LEDGER_FILES` is now the default, strict stays as `ledger_files=()`; `rescore.py` writes both columns; `tests_remove.py` 30 OK; main-run `rescore.json` regenerated. Plan §7 D9 and §13.1 updated. Operator also chose **T-control** as the next piece of work (a new session). $0 spent; nothing pushed.
