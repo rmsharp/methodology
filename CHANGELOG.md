@@ -239,6 +239,14 @@ Moved the oldest **89** record(s) (2026-09-26 → 2026-09-30) out of [`CHANGELOG
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh)
 rather than trusting a digest printed here. Live file 250,288 B → 97,576 B (−61.0%).
 
+### 2026-09-30 · [ad hoc] S238 close-out — the handoff receipt
+
+`HANDOFFS.md` receipt S238 completed: self 8, predecessor S237 scored 8 (clear next step and gotchas; its "ratchet in no release tag" went stale when v3.8 was tagged the same day, which is timing, not an error). Phase 3C: no fork learning row appended, so no retirement is owed. Gate: `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511`. **Next: the operator answers the plan's D1-D6; then P1 (free).** Nothing pushed; nothing on `KJ5HST/methodology`.
+
+### 2026-09-30 · [ad hoc] S238 — the plan for testing the quality ratchet
+
+Wrote [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md) (DRAFT, no spend): a mechanism ablation (v3.8 with hook and declared gates against the same files with none), a control task, and a k=4 session chain. **Finding:** the v3.8 tag contains `quality_ratchet.py` (`git ls-tree -r --name-only v3.8`; tag `555fb9c` peels to `6b29d3d`, an ancestor of `main`), so S237's "in no release tag" is stale and the arm is a tag, not main; a correction line was added to `docs/planning/overhead-replay/pilot/real-3.7/RESULTS.md`. Budget estimate about $114 against $105.45 remaining: P2 and P3 fit, P4 depends on P3's real cost.
+
 ### 2026-09-30 · [ad hoc] S238 claim — the plan for testing the quality ratchet (in progress)
 
 Phase 1B. Deliverable: a plan document under `docs/planning/` for (a) a mechanism ablation of `quality_ratchet.py` and (b) a session chain, as S237's handoff item 1 and the operator's "write the plan after this experiment" ask. No model spend is authorised or incurred. Owed items done first at the operator's Phase 0 go-ahead: the `HANDOFFS.md` retention trim (`8d91a68`, fold `ab5ed59`) and the `CHANGELOG.md` archive trim (`07af992`, 250,288 B to 97,576 B, forced past SRF-RED; `bash bin/tests.sh` 355 passed / 0 failed / 6 skipped afterwards). Predecessor S237 scored 8 (see its receipt). `CHANGELOG: pending`.
