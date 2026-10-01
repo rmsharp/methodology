@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S243 claim — P3 of the ratchet test: T-remove main ablation, v3.0/R0/R1 n=5 (in progress)
+
+Phase 1B. Operator authorised the P3 spend (cap $100 cumulative, $7.41 already spent). Deliverable: the T-remove main ablation via `run_main.py` (new; 15 runs, serial, rep-major, cumulative cap checked by the driver), each verdict hand-read, and a report of rows. T-control (R1 n=5, R0 n=3) is NOT in this deliverable: the driver's ratchet branch scores with `remove_score.py` and has no start measure for the #121 commit; it needs its own step. `CHANGELOG: pending`.
+
 ### 2026-10-01 · [ad hoc] D7 and D8 decided after S242; P3 authorised (addendum to S242, then S243 claim below)
 
 Operator: amend the scorer freeze for the E5 pattern; authorise the P3 spend; change the stakeholder's approval reply so it works for other sessions as well. Done as an addendum to S242 after its close-out (the work preceded its claim; recorded so, not folded into the receipt): `erosion_score.command_words` (heredoc bodies and `-m` text removed before E5), 3 failing-first tests then 5 more cases, 6 mutants (5 killed, 1 equivalent); pilot re-scored (R1 honest, documented route, 1 bypass); `stakeholder.RATCHET_APPROVAL` and `ratchet_script`, driver uses it, 3 tests (40 in `tests_ratchet.py`). Plan §7 D7, D8 and the D2 note. $0 spent; nothing pushed.

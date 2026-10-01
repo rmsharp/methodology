@@ -155,7 +155,7 @@ def main():
     if ratchet:
         import ratchet_arms  # R0/R1 declare gates at the measured start values; any other arm name goes to real_project.install
         info = ratchet_arms.build(a.arm, dest, a.task, measure=ratchet_arms.START_MEASURE[a.task])
-        script = [stakeholder.OPENING, ratchet_arms.TASKS[a.task]["reply"]] + stakeholder.REAL_SCRIPT[2:]
+        script = stakeholder.ratchet_script(ratchet_arms.TASKS[a.task]["reply"])
     else:
         info = real_project.install(a.arm, dest) if a.project == "real" else install_arm.install(a.arm, dest)
         script = stakeholder.REAL_SCRIPT if a.project == "real" else None
