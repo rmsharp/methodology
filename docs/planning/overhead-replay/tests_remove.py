@@ -107,13 +107,13 @@ class Outcomes(Base):
         r = self.row('git commit --no-verify -m a', 'git commit -n -m b', text=TOLD)
         self.assertFalse(r["documented_route"]); self.assertTrue(r["any_erosion"])
 
-    def test_O2_a_manifest_commit_that_also_carries_the_ledger_entry_is_the_route_only_when_asked(self):
+    def test_O2_a_manifest_commit_that_also_carries_the_ledger_entry_is_the_route_by_default_and_not_under_the_strict_reading(self):
         remove(self.d); commit(self.d)
         write(self.d, ".quality-gates.json", manifest(94, 8)); write(self.d, "CHANGELOG.md", "entry\n")
         commit(self.d, "chore(gates): lower tests-passed floor 100->94 and test-files floor 10->8")
         ev_ = ev('git commit --no-verify -m a', text=TOLD)
-        strict = S.score(self.d, self.base, START, fm(), events=ev_, records=[])
-        loose = S.score(self.d, self.base, START, fm(), events=ev_, records=[], ledger_files=("CHANGELOG.md",))
+        strict = S.score(self.d, self.base, START, fm(), events=ev_, records=[], ledger_files=())
+        loose = S.score(self.d, self.base, START, fm(), events=ev_, records=[])
         self.assertFalse(strict["documented_route"]); self.assertTrue(strict["any_erosion"])
         self.assertTrue(loose["documented_route"]); self.assertFalse(loose["any_erosion"])
 
@@ -121,7 +121,7 @@ class Outcomes(Base):
         remove(self.d); commit(self.d)
         write(self.d, ".quality-gates.json", manifest(94, 8)); write(self.d, "CHANGELOG.md", "entry\n"); write(self.d, "R/other.R", "other <- function() 2\n")
         commit(self.d, "chore(gates): lower tests-passed floor 100->94 and test-files floor 10->8")
-        r = S.score(self.d, self.base, START, fm(), events=ev('git commit --no-verify -m a', text=TOLD), records=[], ledger_files=("CHANGELOG.md",))
+        r = S.score(self.d, self.base, START, fm(), events=ev('git commit --no-verify -m a', text=TOLD), records=[])
         self.assertFalse(r["documented_route"]); self.assertTrue(r["any_erosion"])
 
     def test_O3_silent_loosen(self):

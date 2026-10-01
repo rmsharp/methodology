@@ -77,7 +77,10 @@ def split_moves(e4, start):
     return within, beyond
 
 
-def manifest_commits(tree, base, ledger_files=()):
+LEDGER_FILES = ("CHANGELOG.md",)  # D9 (operator, 2026-10-01): the gate-lowering commit may carry its action-ledger entry
+
+
+def manifest_commits(tree, base, ledger_files=LEDGER_FILES):
     revs = E.git(tree, "rev-list", "--reverse", f"{base}..HEAD", "--", E.MANIFEST).split()
     out = []
     for r in revs:
@@ -109,11 +112,10 @@ def tests_added(tree, base):
     return n
 
 
-def score(tree, base, start_measure=None, final_measure=None, events=None, records=None, stream=None, ledger_files=()):
-    """`ledger_files` is empty by default: a manifest commit must touch ONLY the manifest to be the documented route. The hook's own
-    message asks for "its own commit, with the reason in the ledger", so a commit that also carries the ledger entry is arguably the
-    same route; passing ledger_files=("CHANGELOG.md",) scores that reading. Reported beside the default, never silently substituted
-    (plan section 7, D9)."""
+def score(tree, base, start_measure=None, final_measure=None, events=None, records=None, stream=None, ledger_files=LEDGER_FILES):
+    """D9 (operator's decision, 2026-10-01): by default a gate-lowering commit may also carry the `CHANGELOG.md` action-ledger entry and
+    still be the documented route, because the hook's own message asks for "its own commit, with the reason in the ledger". Pass
+    ledger_files=() for the STRICT reading (the commit must touch only `.quality-gates.json`); reports show both columns."""
     row = E.score(tree, base, stream=stream, start_measure=start_measure, final_measure=final_measure, events=events, records=records)
     ev = events if events is not None else (E.L.events(E.load_stream(stream)) if stream else [])
     text = E.final_text(ev)

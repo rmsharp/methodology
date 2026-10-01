@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] D9 decided after S243 — a gate-lowering commit may carry its CHANGELOG.md entry
+
+Operator (via picker, asked in framework terms: `.quality-gates.json`, the hook, the `CHANGELOG.md` action ledger): allow it. `remove_score.LEDGER_FILES` is now the default, strict stays as `ledger_files=()`; `rescore.py` writes both columns; `tests_remove.py` 30 OK; main-run `rescore.json` regenerated. Plan §7 D9 and §13.1 updated. Operator also chose **T-control** as the next piece of work (a new session). $0 spent; nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S243 close-out — P3 results (T-remove, n=5 per arm) and the handoff receipt
 
 All 15 cells finished ($36.93; ledger $44.34 of $100). Plan §13.1 has the table and the hand-read verdicts: no erosion path taken in any arm; R1 four of five took the recorded `--no-verify` route, one left the floors red undisclosed; two flaky final-suite measurements corrected by re-measurement; costs not ranked. Data in `overhead-replay/pilot/ratchet-main-t-remove/`. Receipt in `HANDOFFS.md`; the claim's `CHANGELOG: pending` is discharged. Predecessor S242 scored 7 (its handoff's "30+ minutes per run" was wrong; it named D7/P3 correctly); self 7 (three scorer flags were wrong or incomplete and were caught by reading commands, not by me predicting them). `bin/tests.sh` 361/0/0; `quality_ratchet.py --run` 11/11. Phase 3C: no fork learning appended, so no retirement owed. Open: D9 and what next. Nothing pushed.
