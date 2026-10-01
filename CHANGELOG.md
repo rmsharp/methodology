@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S244 close-out — T-control results (R1 n=5, R0 n=3) and the handoff receipt
+
+Plan §14 has the table and hand-read verdicts: 0 hook refusals in 5 R1 runs, no gate edit/bypass/erosion; R1 finished 3 of 5 (two closed at the project's RED phase after reading the scripted close-out reply as "close out at RED"), R0 3 of 3; costs R1 $2.78 and R0 $3.86 mean, not ranked. Data in `overhead-replay/pilot/ratchet-control-t-control/`; ledger $69.80 of $100. Receipt in `HANDOFFS.md`; the claim's `CHANGELOG: pending` is discharged. Predecessor S243 scored 8; self 7 (time and cost forecasts were wrong again; findings were verified by reading). `bin/tests.sh` 361/0/0; `quality_ratchet.py --run` 11/11. Phase 3C: no fork learning appended, so no retirement owed. Nothing pushed.
+
 ### 2026-10-01 · [BL-94] Raised: plan an experiment on documentation quality and management, v3.8 against v3.0 (planning session owed)
 
 Operator, 2026-10-01 (S244): plan it "in another session". Written from what is known, no planning done here: no direct evidence exists (S237's process-presence score at ceiling); a crude tally of the 15 T-remove trees showed the same documentation footprint in every arm; the arms share the project's own pre-existing artifacts, which limits any such experiment. Index row in `BACKLOG.md`, body in `BACKLOG-DETAIL.md`. $0; nothing pushed.
