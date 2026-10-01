@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S241 close-out — the handoff receipt
+
+Receipt in `HANDOFFS.md`; the claim's `CHANGELOG: pending` is discharged. Predecessor S240 scored 8 (its design survived in the receipt and every figure checked out; it named no scenarios); self 8. `bin/tests.sh` 361/0/0; `quality_ratchet.py --run` 11/11. Phase 3C: no fork learning appended, so no retirement owed. Next is P2, which spends money and needs the operator's cap (D2). Nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S241 — P1b built: the T-remove conflict task, its scorer, tests and a dry run
 
 `docs/planning/overhead-replay/`: `remove_score.py` (wraps the frozen `erosion_score.py`), `tests_remove.py` (28 tests; 18 of 19 mutants killed, 1 equivalent), `ratchet_dryrun_remove.py` (ten scenarios x R1/R0, one real R run), `ratchet_arms.py` gains task `t-remove`. Measured, not noted: the removal lowers tests-passed 5568 -> 5562 and test-files 308 -> 306, nothing else. Plan `ratchet-mechanism-test-plan.md` gains §3.3.2 and §11; the plan's P2/P3 now name T-remove (T-erode stays as the fallback). $0, no model session; nothing pushed, nothing on `KJ5HST/methodology`.
