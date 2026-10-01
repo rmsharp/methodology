@@ -227,6 +227,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-09-30 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-09-29.md` (2 record(s), 35,617 B → 15,662 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-09-29 → 2026-09-29) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-09-29.md`](docs/archive/HANDOFFS-through-2026-09-29.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-09-29.md.verify.sh`](docs/archive/HANDOFFS-through-2026-09-29.md.verify.sh)
+rather than trusting a digest printed here. Live file 35,617 B → 15,662 B (−56.0%).
+
 ### 2026-09-30 · [ad hoc] Tagged v3.8 on upstream and published its GitHub Release (operator-directed)
 
 **Non-commit action** (failure mode #27). At the operator's explicit direction, after a picker that named the alternatives (hold; tag upstream `6b29d3d`; tag the fork only), created annotated tag `v3.8` on `upstream/main` at **`6b29d3d`** and pushed it to `KJ5HST/methodology`, then published the GitHub Release from it (marked latest; previous latest `v3.7`). Both read back: `git ls-remote --tags upstream` shows `v3.8^{}` = `6b29d3d`; `gh release view v3.8` shows the tag, not a draft, not a prerelease.
