@@ -239,6 +239,10 @@ Moved the oldest **89** record(s) (2026-09-26 → 2026-09-30) out of [`CHANGELOG
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh)
 rather than trusting a digest printed here. Live file 250,288 B → 97,576 B (−61.0%).
 
+### 2026-09-30 · [ad hoc] S238 claim — the plan for testing the quality ratchet (in progress)
+
+Phase 1B. Deliverable: a plan document under `docs/planning/` for (a) a mechanism ablation of `quality_ratchet.py` and (b) a session chain, as S237's handoff item 1 and the operator's "write the plan after this experiment" ask. No model spend is authorised or incurred. Owed items done first at the operator's Phase 0 go-ahead: the `HANDOFFS.md` retention trim (`8d91a68`, fold `ab5ed59`) and the `CHANGELOG.md` archive trim (`07af992`, 250,288 B to 97,576 B, forced past SRF-RED; `bash bin/tests.sh` 355 passed / 0 failed / 6 skipped afterwards). Predecessor S237 scored 8 (see its receipt). `CHANGELOG: pending`.
+
 ### 2026-09-30 · [ad hoc] Fold of the `HANDOFFS-through-2026-09-29` pointer block into the shard index
 
 Trim commit `8d91a68` wrote the pointer block; this commit, separate per fork Learning #58, adds the row to [`docs/HANDOFFS_ARCHIVE_INDEX.md`](docs/HANDOFFS_ARCHIVE_INDEX.md) and deletes the block from `HANDOFFS.md`. The shard's `.verify.sh` and `bin/check-handoff --all` both pass after the fold. Operator go-ahead given at Phase 0 (S238).
