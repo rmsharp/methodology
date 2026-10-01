@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S239 — P1 harness for the quality-ratchet test: arms, scorer, dry run
+
+New under `docs/planning/overhead-replay/`: `ratchet_arms.py` (R1/R0 builders, tasks, held-out), `erosion_score.py` (R-a to R-d, erosion paths E1-E8), `tests_ratchet.py` (35 tests, 31/31 mutants killed), `ratchet_dryrun.py` (7 scenarios x 2 arms, all as expected). Nothing under `starter-kit/` or any distributed file changed; S236's `tests.py` still 14/14. Defects found by running on real data and fixed: E6 and E2 false positives over S237's 11 saved runs, an unquoted `$` that left every declared gate UNMEASURED, a held-out check that passed with no fix. No model session ran; $0.
+
 ### 2026-10-01 · [ad hoc] S239 claim — P1 of the quality-ratchet test (in progress)
 
 Phase 1B. Deliverable: P1 of [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md) §5 — build the R1 and R0 arms, the erosion task and its scorer, decide reuse of S237's runs; **$0, no model session**. Operator said "go" at Phase 0 and chose P1 from the picker. Phase 0 found no undocumented commits and no pending receipt; local `main` 29 ahead of `origin/main`, nothing pushed. Predecessor S238 scored 8 (see its receipt). `CHANGELOG: pending`.
