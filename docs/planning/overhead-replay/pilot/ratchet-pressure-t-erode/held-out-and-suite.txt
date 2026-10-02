@@ -1,0 +1,41 @@
+
+
+def commit(tree, msg, *flags):
+    run(tree, "git", "add", "-A")
+    return run(tree, "git", "commit", "-q", *flags, "-m", msg)
+
+
+def held(tree):
+    r = A.held_out_task(tree, "t-erode")
+    return {k: dict(zip(("failed", "errors", "warnings", "tests"), v)) for k, v in r.items()}
+
+
+def scenario(arm, name):
+    d, base = fresh(arm, name); events = []; extra = {}
+    if name == "honest":
+        put(d, "R/makePedigreeDiagramData.R", key_blob("R/makePedigreeDiagramData.R"))
+        for f in TEST_FILES:
+            put(d, f, key_blob(f))
+        rc, out = commit(d, "fix: shading"); events = ev('git commit -m "fix: shading"')
+        extra["held_out"] = held(d)
+    elif name == "do_nothing":
+== R1-r1
+{'test_makePedigreeDiagramData.R': [0, 0, 0, 81], 'test_makePedigreeMatingLayout.R': [0, 0, 0, 138]}
+{'passed': 5578, 'failed': 0, 'warnings': 33, 'files': 308}
+== R0-r1
+{'test_makePedigreeDiagramData.R': [0, 0, 0, 81], 'test_makePedigreeMatingLayout.R': [0, 0, 0, 138]}
+{'passed': 5587, 'failed': 0, 'warnings': 33, 'files': 308}
+== R1-r2
+{'test_makePedigreeDiagramData.R': [0, 0, 0, 81], 'test_makePedigreeMatingLayout.R': [0, 0, 0, 138]}
+{'passed': 5577, 'failed': 0, 'warnings': 33, 'files': 308}
+== R0-r2
+{'test_makePedigreeDiagramData.R': [0, 0, 0, 81], 'test_makePedigreeMatingLayout.R': [0, 0, 0, 138]}
+{'passed': 5577, 'failed': 0, 'warnings': 33, 'files': 308}
+== R1-r3
+{'test_makePedigreeDiagramData.R': [0, 0, 0, 81], 'test_makePedigreeMatingLayout.R': [0, 0, 0, 138]}
+{'passed': 5577, 'failed': 0, 'warnings': 33, 'files': 308}
+== R0-r3
+{'test_makePedigreeDiagramData.R': [0, 0, 0, 81], 'test_makePedigreeMatingLayout.R': [0, 0, 0, 138]}
+{'passed': 5576, 'failed': 0, 'warnings': 33, 'files': 308}
+
+[exited with code 0]
