@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-01-2.md` (1 record(s), 20,194 B → 15,389 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-01 → 2026-10-01) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-01-2.md`](docs/archive/HANDOFFS-through-2026-10-01-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-01-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-01-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 20,194 B → 15,389 B (−23.8%).
+
 ### 2026-10-02 · [ad hoc] S246 close-out — the handoff receipt; BL-95 raised
 
 `CHANGELOG: pending` on the S246 claim is resolved. Receipt `status: complete`, self 8, predecessor (S245) 7. **BL-95 raised** in `docs/planning/BACKLOG.md`: upstream merged #83-#88 and tagged v4.0 and v4.1 on 2026-10-01; fork `main` is 89 behind and 1,263 ahead; a resync needs a plan the operator commissions. My claim block first landed inside the retention-policy prose of `HANDOFFS.md` (a text anchor matched a quoted fence) and turned Test 34 red (359/2); moved, then `bash bin/tests.sh` **361 passed / 0 failed / 0 skipped**; `bin/check-handoff --all` OK; ratchet 11/11. Phase 3C appended no fork learning, so no retirement is owed. Nothing pushed.
