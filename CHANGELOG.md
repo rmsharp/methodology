@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] S247 — P5, the ratchet test report written (`docs/planning/ratchet-mechanism-test-report.md`)
+
+`CHANGELOG: pending` on the S247 claim is resolved. Fork-only report from plan sections 12-14.2: no harmful erosion path in 34 scored runs (ratchet on, off, pressured); T-remove R1: 4 of 5 documented-route bypasses, 1 silent red-floor run; 0 hook refusals in 10 R1 runs on the plain task; no cost ranking supported (v3.0 vs R1 t about 1.4, a t-table reading). Plan status line points at it. D3 (publication beyond the fork) stays open. `bash bin/tests.sh` 361/0/0; `python3 bin/check-links` OK; ratchet 11/11. Receipt `status: complete`, self 7, predecessor (S246) 8. Phase 3C appended no fork learning, so no retirement is owed. Nothing pushed.
+
 ### 2026-10-02 · [ad hoc] S247 claim — P5, the report on the ratchet mechanism test (in progress)
 
 `CHANGELOG: pending`. Phase 0: no ghosts; upstream #84-#89 MERGED, #90 closed, **#91 (`feat/sync-manifest-at-ref`) OPEN**, not yet inspected. Operator chose P5 (no spend) at the picker. HANDOFFS trimmed first (`881b656`, 1 receipt) and folded (`5f2c40f`).

@@ -1,6 +1,6 @@
 # Plan: testing the quality ratchet mechanism, and what accumulates across sessions
 
-**Status: DRAFT for operator approval; P1 DONE at S239 (§10); P1b (the conflict task, §3.3.2) DONE at S241 (§11).** Written at S238 as the session's one deliverable. Nothing here has been
+**Status: DRAFT for operator approval; P1 DONE at S239 (§10); P1b (the conflict task, §3.3.2) DONE at S241 (§11); P2-P3 and the pressured variant DONE (§12-§14.2); P5 report written at S247: [`ratchet-mechanism-test-report.md`](ratchet-mechanism-test-report.md).** Written at S238 as the session's one deliverable. Nothing here has been
 run; no model session has been launched and no money spent. Approval of this document is not approval of any
 phase's spend (§7).
 
