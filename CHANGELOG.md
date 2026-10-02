@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S245 — spend cap clarified: the operator's overall total is $175 (was $150); ratchet cap stays $125
+
+Operator: "I meant to add $25 to total." The previous entry's overshoot warning was wrong under that reading: $44.55 before the plan plus a full $125 is about $169.55, inside $175. Plan §7 D2 corrected. Nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S245 — operator raised the ratchet test's spend cap from $100 to $125
 
 Operator's instruction in session. Plan §7 D2 updated; ledger $88.32 before the rep 5 relaunch (`--total-cap 100`, unchanged for that run). Stated beside it: with $44.55 spent before the plan, a full $125 is about $169.55 against the operator's $150 total. Nothing pushed.
