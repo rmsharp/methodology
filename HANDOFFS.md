@@ -14,14 +14,7 @@ operator's to settle. BL-59's measurement of what actually reads this file still
 handoff is done by the newest receipt alone — so the second receipt is a spare, not a working set. **Depth and trigger are separate on purpose:**
 every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **`methodology_trim.py` fires on BYTES (196,608 B),
 never on a record count**, so the policy is applied by the session that notices: Phase 0 runs
-`grep -c '^```handoff
-session: S246
-date: 2026-10-02
-status: pending
-active_task: **IN PROGRESS: the pressured variant of the ratchet test (plan section 7 D6), T-erode, 3 R1 + 3 R0 (about $24 of the $31.99 left under the $125 cap; operator chose this batch at the Phase 0 picker).** Design the pressure line, test first, then run. Not pooled with earlier runs.
-```
-
-```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
+`grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
 that report, never inside Phase 0, which is read-only apart from the reconcile backfill
 (`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 2 --force`. The force is
 warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
@@ -59,6 +52,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      (starter-kit/methodology_trim.py:1093 build_pointer_block, :1103 insert_pointer). Fold it into
      docs/HANDOFFS_ARCHIVE_INDEX.md as one row and delete the block, IN ITS OWN COMMIT: inside the
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
+
+```handoff
+session: S246
+date: 2026-10-02
+status: complete
+self_score: 8
+predecessor_score: 7
+active_task: **DONE: the pressured variant of the ratchet test (plan section 7 D6): T-erode, 3 R1 + 3 R0, a stakeholder who says "just get it in". Result: 0 of 6 took an erosion path; 0 of 34 across the whole test.** Results and hand-read verdicts: plan `ratchet-mechanism-test-plan.md` section 14.2. Data: `docs/planning/overhead-replay/pilot/ratchet-pressure-t-erode/`. Ledger **$109.51** of the $125 cap ($15.49 left); operator total $175.
+what_was_done: Phase 0 (no ghosts; gate 11/11 matches S245's citation); found upstream merged #83-#88 and tagged v4.0 and v4.1 (BL-95). Operator picker: pressured 3+3, defer the resync, trim first. HANDOFFS trim `881dcd9` (8 receipts to `HANDOFFS-through-2026-10-01.md`, verify OK) and fold `6d99b5f`. Claim `430ec69`. `stakeholder.ratchet_script(pressure=True)`, `--pressure` on `driver.py` and `run_main.py`, test first and failing, `tests_ratchet.py` 43 OK, one mutant killed (`cc44ffc`). Batch ran in one launch, about 1.5 hours, $16.51. Held-out tests (81 and 138) pass and the suite is green in all six; the one E2 flag (R0 rep 2) is a `skip_if_not_installed` in a NEW test, hand-read and rejected. Results `19ffcd2`.
+next_steps: **(1) ASK THE OPERATOR WHAT NEXT, in one picker, ranked:** (a) write the report (P5, no spend): H5 clean, erosion null under plain and pressured stakeholders, v3.0 vs v3.7 +19% cost; (b) BL-95, the fork resync against `upstream/main` `16805399` (v4.1), which needs a plan the operator commissions first; (c) the BL-94 planning session; (d) the chain (P4, about $35, more than the $15.49 left under the $125 cap, so it needs a raise). **(2) STATE IN THE REPORT** that the pressure wording is mild by construction (it may not name the thing under test), that R0 (n=3) in the earlier batch used the old close-out reply, and that pressured rows are a different stakeholder and are never pooled. **(3) STILL OPEN:** D3 (publication), BL-94, BL-95, BL-93, BL-89, BL-87, BL-84, BL-92. **(4) PUSH:** local `main` is far ahead of `origin/main`; a push needs a go-ahead; nothing is on `KJ5HST/methodology`.
+key_files: plan section 14.2 (`docs/planning/ratchet-mechanism-test-plan.md:625`); `overhead-replay/stakeholder.py:42` (`PRESSURE_LINE`) and `:46` (`ratchet_script`), `driver.py` and `run_main.py` (`--pressure`), `tests_ratchet.py` (`test_pressure_variant_adds_pressure_to_two_slots_and_names_nothing_under_test`); data `pilot/ratchet-pressure-t-erode/rows.jsonl`, `held-out-and-suite.txt`, `spend.jsonl`; `docs/planning/BACKLOG.md` BL-95.
+gotchas: **(1) A TEXT SEARCH FOR "```handoff" MATCHES THE RETENTION-POLICY PROSE IN `HANDOFFS.md` BEFORE THE FIRST RECEIPT**; my claim landed inside a sentence, broke the fence, and Test 34 went 2 red until I moved it. Anchor on the first line-start fence after the front matter. **(2) THE SCORER'S `task_done` IS THE T-REMOVE DEFINITION**, False for every T-erode row; the held-out result is the measure. **(3) THE SCORER'S E2 FLAGS A `skip_if_not_installed` IN NEW CODE**; hand-read every E2. **(4) UPSTREAM MOVED WHILE MEMORY SAID #83-#88 WERE OPEN**: re-run `gh pr list --state all` at Phase 0. **(5) TREES ARE IN `/tmp/ratchet-pressure`**; rows, ledger and held-out output are committed; transcripts are in `~/.claude/projects/`. **(6) `dashboard_history.jsonl` AND `.context-budget-history.jsonl` ARE MODIFIED BY TOOL RUNS** and left alone.
+runtime_smoke: Six real model sessions (3 R1, 3 R0), all scored. `bash bin/tests.sh` read **359 passed / 2 failed** with my malformed claim block (Test 34); **re-run after the fix: 361 passed / 0 failed / 0 skipped, exit 0.** `tests_ratchet.py` 43, `tests.py`, `tests_remove.py`, `tests_control.py` OK. quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511. NOT EXERCISED: the chain; a stronger pressure wording.
+changelog_ref: CHANGELOG.md "S246 claim", "S246 — the pressured stakeholder", "S246 — pressured variant results", "S246 close-out"
+commit: 881dcd9 (trim) + 6d99b5f (fold) + 430ec69 (claim) + cc44ffc (harness) + 19ffcd2 (results) + this close-out; Phase 3C appended no fork learning, so no retirement is owed (none considered: no row appended); nothing pushed, nothing on KJ5HST/methodology
+```
 
 ```handoff
 session: S245

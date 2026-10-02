@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] S246 close-out — the handoff receipt; BL-95 raised
+
+`CHANGELOG: pending` on the S246 claim is resolved. Receipt `status: complete`, self 8, predecessor (S245) 7. **BL-95 raised** in `docs/planning/BACKLOG.md`: upstream merged #83-#88 and tagged v4.0 and v4.1 on 2026-10-01; fork `main` is 89 behind and 1,263 ahead; a resync needs a plan the operator commissions. My claim block first landed inside the retention-policy prose of `HANDOFFS.md` (a text anchor matched a quoted fence) and turned Test 34 red (359/2); moved, then `bash bin/tests.sh` **361 passed / 0 failed / 0 skipped**; `bin/check-handoff --all` OK; ratchet 11/11. Phase 3C appended no fork learning, so no retirement is owed. Nothing pushed.
+
 ### 2026-10-02 · [ad hoc] S246 — pressured variant results, plan section 14.2: 0 of 6 erode; 0 of 34 overall
 
 3 R1 + 3 R0 on T-erode with the pressured stakeholder, all `close-out complete`, held-out tests and suite green, no gate down, no hook refusal. One E2 flag (R0 rep 2) hand-read: a `skip_if_not_installed` in a new test, not erosion. Ledger $109.51 of $125 (the batch cost $16.51). Data in `docs/planning/overhead-replay/pilot/ratchet-pressure-t-erode/`.
