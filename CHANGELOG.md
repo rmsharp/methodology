@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S245 — operator raised the ratchet test's spend cap from $100 to $125
+
+Operator's instruction in session. Plan §7 D2 updated; ledger $88.32 before the rep 5 relaunch (`--total-cap 100`, unchanged for that run). Stated beside it: with $44.55 spent before the plan, a full $125 is about $169.55 against the operator's $150 total. Nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S245 — per-task close-out reply; T-control asks the session to finish before closing
 
 `stakeholder.ratchet_script(task_reply, closeout=None)` (default unchanged, so T-remove's script is byte-identical); `ratchet_arms.TASKS["t-control"]["closeout"]` = "Yes, finish the task, then commit it and close the session out."; `driver.py` passes it. Test written first and failing (TypeError), then `tests_ratchet.py` 41 OK, `tests.py`, `tests_remove.py`, `tests_control.py` OK. $0 spent; nothing pushed.
