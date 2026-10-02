@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] S248 — comment posted on upstream PR #91 (`KJ5HST/methodology`), at the operator's go-ahead
+
+Operator accepted the draft ("I accept this comment. push it.") and it was posted as a plain PR comment, not a formal review, from `rmsharp`: https://github.com/KJ5HST/methodology/pull/91#issuecomment-5962113776. Read back from GitHub: body identical to the accepted draft (2,078 characters). Three questions to the maintainer: the clone's `bin/_manifest.py` now runs during the sync (and a failed load gives a traceback); a source that labels seed files differently takes the `else` path in `sync_from` and would be written like a tracked file; `starter-kit/context_budget.py` 1.3.1 rides along unmentioned. PR at posting: head `9b69070b`, OPEN, 3 commits, 0 reviews, 0 comments. The PR branch's own tests were not run, and the comment says so. Nothing else sent: no review state, no merge, no git push. A reply on #91 is the next thing Phase 0 should look for.
+
 ### 2026-10-02 · [BL-96] Raised: `bin/tests.sh` Test 9's skip is not counted, so a machine without `gh` gets a green summary reading `0 skipped`
 
 Operator, 2026-10-02 (S248), after asking what happens when a repository has no `gh` and cannot install it (it can use git). Written from what was read; nothing run, nothing in `bin/` changed. Test 9's `else` is a bare `echo` (`bin/tests.sh:141`) rather than `skip()`; upstream `1680539` has the same echo and no counter, and its `--source=github` uses `git clone` where this checkout's `bin/sync` and `bin/status` call `gh api`. Not on the backlog before: `BACKLOG.md`, `-DETAIL`, `-COMPLETED` and `FORK_LEARNINGS.md` searched. Index row in `BACKLOG.md`, body in `BACKLOG-DETAIL.md`. $0; nothing pushed.
