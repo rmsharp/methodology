@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] S246 claim — the pressured variant of the ratchet test, T-erode, 3 R1 + 3 R0 (in progress)
+
+`CHANGELOG: pending`. Phase 0 found: **upstream merged #83-#88 on 2026-10-01 and tagged v4.0 and v4.1**; `upstream/main` is `16805399`, 89 commits not in fork `main`, which is 1,263 ahead; #91 open, 0 reviews. Operator decided at the Phase 0 picker: run the pressured batch (3 R1 + 3 R0, about $24), defer the resync (record only), trim HANDOFFS first (done, `881dcd9`, `6d99b5f`). Ratchet gate 11/11, matching the S245 citation.
+
 ### 2026-10-02 · [ad hoc] S246 — fold the 2026-10-01 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`881dcd9`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (8 receipts, 2026-09-29 → 2026-10-01), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts; the shard's `.verify.sh` is OK; `bin/check-links` OK.
