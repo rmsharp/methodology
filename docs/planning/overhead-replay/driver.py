@@ -144,7 +144,7 @@ def main():
     ap.add_argument("arm"); ap.add_argument("rep", type=int)
     ap.add_argument("--model", default="sonnet"); ap.add_argument("--effort", default="xhigh"); ap.add_argument("--session-cap", type=float, default=2.0)
     ap.add_argument("--total-cap", type=float, default=10.0); ap.add_argument("--out", default="/tmp/overhead-pilot")
-    ap.add_argument("--project", default="fixture", choices=["fixture", "real", "ratchet"]); ap.add_argument("--task", default="t-remove", help="with --project ratchet: a key of ratchet_arms.TASKS"); ap.add_argument("--pace", type=float, default=90.0); ap.add_argument("--max-stops", type=int, default=stakeholder.MAX_STOPS)
+    ap.add_argument("--project", default="fixture", choices=["fixture", "real", "ratchet"]); ap.add_argument("--task", default="t-remove", help="with --project ratchet: a key of ratchet_arms.TASKS"); ap.add_argument("--pressure", action="store_true", help="with --project ratchet: the D6 pressured stakeholder (stakeholder.PRESSURE_LINE); rows are never pooled with unpressured ones"); ap.add_argument("--pace", type=float, default=90.0); ap.add_argument("--max-stops", type=int, default=stakeholder.MAX_STOPS)
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     before = spent(a.out)
@@ -155,7 +155,7 @@ def main():
     if ratchet:
         import ratchet_arms  # R0/R1 declare gates at the measured start values; any other arm name goes to real_project.install
         info = ratchet_arms.build(a.arm, dest, a.task, measure=ratchet_arms.START_MEASURE[a.task])
-        script = stakeholder.ratchet_script(ratchet_arms.TASKS[a.task]["reply"], ratchet_arms.TASKS[a.task].get("closeout"))
+        script = stakeholder.ratchet_script(ratchet_arms.TASKS[a.task]["reply"], ratchet_arms.TASKS[a.task].get("closeout"), pressure=a.pressure)
     else:
         info = real_project.install(a.arm, dest) if a.project == "real" else install_arm.install(a.arm, dest)
         script = stakeholder.REAL_SCRIPT if a.project == "real" else None
@@ -179,7 +179,7 @@ def main():
         else:
             r["ratchet"] = remove_score.score(dest, info["base"], start_measure=start, final_measure=final, stream=tp)  # the ON-DISK transcript: the captured stream-json missed tool calls in P3
         r["final_measure"] = final
-        r["project"] = "nprcgenekeepr@" + ratchet_arms.TASKS[a.task]["commit"][:9]; r["task"] = a.task
+        r["project"] = "nprcgenekeepr@" + ratchet_arms.TASKS[a.task]["commit"][:9]; r["task"] = a.task; r["pressure"] = a.pressure
     elif tp and a.project == "real":
         r = extract.row(tp, arm=a.arm, rep=a.rep)
         r["real"] = real_score.score(replaylib.events(replaylib.load_records(tp)), dest, info["base"])

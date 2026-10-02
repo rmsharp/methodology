@@ -24,6 +24,7 @@ def main():
     ap.add_argument("--reps", type=int, default=5); ap.add_argument("--out", default="/tmp/ratchet-main")
     ap.add_argument("--total-cap", type=float, default=100.0); ap.add_argument("--session-cap", type=float, default=10.0)
     ap.add_argument("--arms", default="R1,R0,v3.0"); ap.add_argument("--task", default="t-remove")
+    ap.add_argument("--pressure", action="store_true", help="the D6 pressured stakeholder, passed to driver.py")
     ap.add_argument("--seed", default=PILOT_LEDGER, help="a spend ledger copied into a NEW out dir, so the cap stays cumulative across batches")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
@@ -38,7 +39,7 @@ def main():
                 continue
             shutil.rmtree(os.path.join(a.out, f"{arm}-r{rep}"), ignore_errors=True)  # a half-run cell is rebuilt, not resumed
             p = subprocess.run([sys.executable, os.path.join(HERE, "driver.py"), arm, str(rep), "--project", "ratchet", "--task", a.task,
-                                "--out", a.out, "--session-cap", str(a.session_cap), "--total-cap", str(a.total_cap)],
+                                "--out", a.out, "--session-cap", str(a.session_cap), "--total-cap", str(a.total_cap)] + (["--pressure"] if a.pressure else []),
                                capture_output=True, text=True)
             ok = p.returncode == 0 and (arm, rep) in done_cells(a.out)
             print(f"{arm} rep {rep}: {'ok' if ok else 'FAILED rc=' + str(p.returncode)}", flush=True)

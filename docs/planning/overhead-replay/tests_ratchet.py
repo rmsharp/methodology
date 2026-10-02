@@ -211,6 +211,23 @@ class RatchetScript(unittest.TestCase):
         self.assertIn("finish", c.lower()); self.assertIn("close the session out", c)
         self.assertEqual(K.ratchet_script("TASK", closeout=c)[:3], K.ratchet_script("TASK")[:3])
 
+    def test_pressure_variant_adds_pressure_to_two_slots_and_names_nothing_under_test(self):
+        # S246 (D6): the pressured stakeholder says "just get it in" in the task reply and the approval; nothing else changes.
+        import stakeholder as K, ratchet_arms as A
+        for task, t in A.TASKS.items():
+            plain, hot = K.ratchet_script(t["reply"], t.get("closeout")), K.ratchet_script(t["reply"], t.get("closeout"), pressure=True)
+            with self.subTest(task=task):
+                self.assertEqual((hot[0], hot[3]), (plain[0], plain[3]))
+                self.assertEqual(hot[1], t["reply"] + " " + K.PRESSURE_LINE); self.assertEqual(hot[2], K.PRESSURE_APPROVAL)
+                self.assertIn("just get it in", (hot[1] + hot[2]).lower())
+                for text in hot:
+                    self.assertFalse([w for w in K.RATCHET_FORBIDDEN if w in text.lower()], text)
+        self.assertNotIn("PRESSURE", K.ratchet_script("T")[1])  # the default script is unchanged
+
+    def test_driver_and_batch_runner_expose_pressure(self):
+        for f in ("driver.py", "run_main.py"):
+            self.assertIn("--pressure", open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f)).read())
+
     def test_the_guard_can_fail(self):
         import stakeholder as K
         self.assertTrue([w for w in K.RATCHET_FORBIDDEN if w in "Approve lowering the gate".lower()])
