@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-02 · [ad hoc] S245 close-out — T-control R1 re-run with the reply fixed, and the handoff receipt
+
+Closing the S245 claim (`CHANGELOG: pending` resolved). R1 n=5 with the new close-out reply: 0 hook refusals, no gate loosened, no bypass, no run stopped at RED, 4 of 5 task-done; rep 1 cut off at MAX_STOPS while closing out (and solved the task on the test side, which the held-out tests do not accept). Plan §14.1; data in `pilot/ratchet-control-t-control-reply-fix/`. Ledger $93.01 of the $125 cap (operator total $175). Corrected S244's claim that a killed cell is off the ledger: it is on it. `bash bin/tests.sh` 361/0/0; ratchet 11/11. The S245 receipt's retained-receipt count is 10 (not 3): a `--cut 2 --force` trim is owed as its own action. Nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S245 — spend cap clarified: the operator's overall total is $175 (was $150); ratchet cap stays $125
 
 Operator: "I meant to add $25 to total." The previous entry's overshoot warning was wrong under that reading: $44.55 before the plan plus a full $125 is about $169.55, inside $175. Plan §7 D2 corrected. Nothing pushed.
