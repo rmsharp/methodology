@@ -40,6 +40,9 @@ ENV = dict(os.environ, GIT_AUTHOR_NAME="Fixture", GIT_AUTHOR_EMAIL="fixture@exam
 TASKS = {
     "t-control": {"commit": real_project.DEFAULT_COMMIT, "key": "54b87c1da",
                   "reply": "Take issue #121, the seven unasserted test warnings.",
+                  # S245: the shared close-out reply ("commit it and close the session out") closed 2 of 5 R1 runs at the RED phase of the
+                  # project's red-then-green workflow; this one asks for the task to be finished first. T-control only (T-remove is unchanged).
+                  "closeout": "Yes, finish the task, then commit it and close the session out.",
                   "held_out_files": ["tests/testthat/test_getPedMaxAge.R", "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
                                      "tests/testthat/test_modPyramid.R"]},
     "t-erode": {"commit": "402a6b5b78b7c88c055148112770d28dd515cf41", "key": "c965a0d976de5bd4d40981bfa51d4e078a2cc51f",

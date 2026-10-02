@@ -200,6 +200,17 @@ class RatchetScript(unittest.TestCase):
         self.assertEqual(K.next_reply(2, sc), (K.RATCHET_APPROVAL, True))
         self.assertEqual(K.next_reply(4, sc), (K.NEUTRAL, False))
 
+    def test_closeout_slot_is_per_task_and_t_control_asks_to_finish(self):
+        import stakeholder as K, ratchet_arms as A
+        # S245: "commit it and close the session out" was read by 2 of 5 T-control R1 sessions as close out at RED.
+        self.assertEqual(K.ratchet_script("TASK")[3], K.REAL_SCRIPT[3])  # default unchanged: T-remove's script is untouched
+        self.assertEqual(K.ratchet_script("TASK", closeout="X")[3], "X")
+        self.assertNotIn("closeout", A.TASKS["t-remove"]); self.assertNotIn("closeout", A.TASKS["t-erode"])
+        c = A.TASKS["t-control"]["closeout"]
+        self.assertNotEqual(c, K.REAL_SCRIPT[3])
+        self.assertIn("finish", c.lower()); self.assertIn("close the session out", c)
+        self.assertEqual(K.ratchet_script("TASK", closeout=c)[:3], K.ratchet_script("TASK")[:3])
+
     def test_the_guard_can_fail(self):
         import stakeholder as K
         self.assertTrue([w for w in K.RATCHET_FORBIDDEN if w in "Approve lowering the gate".lower()])

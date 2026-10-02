@@ -231,6 +231,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-09
 
+### 2026-10-01 · [ad hoc] S245 — per-task close-out reply; T-control asks the session to finish before closing
+
+`stakeholder.ratchet_script(task_reply, closeout=None)` (default unchanged, so T-remove's script is byte-identical); `ratchet_arms.TASKS["t-control"]["closeout"]` = "Yes, finish the task, then commit it and close the session out."; `driver.py` passes it. Test written first and failing (TypeError), then `tests_ratchet.py` 41 OK, `tests.py`, `tests_remove.py`, `tests_control.py` OK. $0 spent; nothing pushed.
+
 ### 2026-10-01 · [ad hoc] S245 claim — fix the stakeholder close-out reply and re-run T-control's R1 arm (in progress)
 
 Phase 1B. Operator chose (c) at the S244 picker after asking why (a) was ranked first: the scripted reply "Yes, commit it and close the session out." made 2 of 5 R1 runs close at the RED phase, so H5 rests on a confounded instrument. Deliverable: an unambiguous close-out reply for T-control only (T-remove's script untouched), a test pinning it, R1 re-run (cap $100 cumulative, $69.80 on the ledger, about $13 expected), hand-read verdicts in plan §14. `CHANGELOG: pending`.
