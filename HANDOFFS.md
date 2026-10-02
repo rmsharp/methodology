@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S249
+date: 2026-10-02
+status: pending
+active_task: **IN PROGRESS: run upstream PR #91's own `bin/tests.sh` in a scratch clone (hooksPath set first, one suite), so S248's comment "not run" becomes a measurement. Nothing posted without the operator's go-ahead.** Trim `894f90c` and fold `90f13ba` done first.
+```
+
+```handoff
 session: S248
 date: 2026-10-02
 status: complete

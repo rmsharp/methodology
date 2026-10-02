@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] S249 claim — run PR #91's own test suite (in progress)
+
+`CHANGELOG: pending`. Phase 0: no ghosts; ratchet 11/11 matches S248's citation; #91 OPEN, our comment the only one. Operator chose the #91 test run at the picker. HANDOFFS trimmed first (`894f90c`, 2 receipts) and folded (`90f13ba`).
+
 ### 2026-10-02 · [ad hoc] S249 — fold the 2026-10-02 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`894f90c`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (2 receipts, 2026-10-02), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts; the shard's `.verify.sh` is OK.
