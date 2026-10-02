@@ -4018,3 +4018,41 @@ re-derive it. It is a request for a plan (runner §Planning Sessions), not for a
 **Next action:** a planning session, no spend, producing a plan document in `docs/planning/` with measures defined first, per runner
 §Planning Sessions. Reuse the harness in `overhead-replay/` where it fits; do not extend the frozen ratchet scorer.
 
+---
+
+**BL-96 — `bin/tests.sh` Test 9's skip never reaches the suite's skip count, so a machine without `gh` gets a green summary that
+reads `0 skipped`. Raised 2026-10-02 (S248) from the operator's question *what happens if the repository has no `gh` and cannot
+install it? It can use git*; recorded, not fixed.**
+
+**The observation** (fork `main` at `595f96c`; read, not run):
+- `bin/tests.sh:135-142` is `if gh auth status >/dev/null 2>&1; then <dry-run sync --source=github> else echo "  SKIP: gh unauthenticated"; fi`.
+  The `else` is a bare `echo`. `skip()` (`:20`) is that same `echo` plus `SKIP=$((SKIP+1))`, the count the last line prints
+  (`== Summary: $PASS passed, $FAIL failed, $SKIP skipped ==`); its comment (`:16-19`) says an assertion that could not be built "is counted
+  and named in the summary, never folded into PASS" (BL-40). The other 17 skips call it. This is the one that does not.
+- Effect: with no `gh` the suite exits 0 and prints `0 skipped`; `sync --source=github --dry-run` never ran, and Test 9's one assertion is
+  neither a pass nor a skip as far as the Summary shows.
+- No gate reads the skip count: `.quality-gates.json` extracts only `passed` and `failed` from the Summary (`tests-sh-passed`, `tests-sh-failed`).
+- Not the known flake: `BACKLOG-DETAIL.md:636,653,703` record Test 9 *failing* when `gh` is present and the call fails. This is the branch
+  where it does not fail. Searched `BACKLOG.md`, `-DETAIL`, `-COMPLETED` and `docs/FORK_LEARNINGS.md` for "Test 9", "unauthenticated" and
+  `skip()` at S248: the flake is recorded, the uncounted skip is not.
+
+**What each copy does without `gh`** (read, not run):
+- This checkout: `bin/sync:103-107` and `bin/status:119-125` call `gh api` for `--source=github` and stop with `error: gh CLI not found;
+  install GitHub CLI or use --source=local`. `--source=local` needs only files (a sibling `methodology/` checkout), no `gh`, no network.
+- Upstream `1680539`: `--source=github` runs `git clone` (`bin/sync:105`, `bin/status:128`; message `git not found` if git is missing), and no
+  `bin/` tool calls `gh`. Its Test 9 guards on `git ls-remote --exit-code -h $URL` with a 30 s timeout (`bin/tests.sh:120-129`), prints a
+  bare `SKIP: $URL unreachable`, and there is no `skip()` or skip count in that file at all.
+- Other `gh` uses here: the dashboard's open-issue and open-PR counts (`tools/methodology_dashboard.py:2613,2625`) are dropped silently when
+  `gh` is missing; the runner's `gh issue list` step says to fall back to `BACKLOG.md`.
+
+**Shapes** (none costed, none run):
+- **(a) Count it.** `skip "gh unauthenticated"` at `bin/tests.sh:141`. One line; the Summary then reads `1 skipped`; no gate moves.
+  Visible, not enforced.
+- **(b) Gate it.** (a) plus a `tests-sh-skipped` gate at `max 0`. Red on any machine without `gh`, while the guard's own heading says
+  "skipped if unauthenticated" is meant to stay green. A decision for the operator, not a default.
+- **(c) Leave it,** and say where the suite is described that a green run without `gh` does not cover the GitHub route.
+- Whichever is chosen: BL-95's resync brings upstream's Test 9 (the `git ls-remote` guard) in place of this one, so settle the shape with
+  that in view. Upstream has no skip counter, so a counted skip is a fork-side difference, or a proposal upstream, which needs a go-ahead each time.
+
+**Next action:** none owed. When BL-95's resync plan is written, decide (a), (b) or (c) there; until then no change.
+

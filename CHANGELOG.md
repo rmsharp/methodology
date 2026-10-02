@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [BL-96] Raised: `bin/tests.sh` Test 9's skip is not counted, so a machine without `gh` gets a green summary reading `0 skipped`
+
+Operator, 2026-10-02 (S248), after asking what happens when a repository has no `gh` and cannot install it (it can use git). Written from what was read; nothing run, nothing in `bin/` changed. Test 9's `else` is a bare `echo` (`bin/tests.sh:141`) rather than `skip()`; upstream `1680539` has the same echo and no counter, and its `--source=github` uses `git clone` where this checkout's `bin/sync` and `bin/status` call `gh api`. Not on the backlog before: `BACKLOG.md`, `-DETAIL`, `-COMPLETED` and `FORK_LEARNINGS.md` searched. Index row in `BACKLOG.md`, body in `BACKLOG-DETAIL.md`. $0; nothing pushed.
+
 ### 2026-10-02 · [ad hoc] S247 — P5, the ratchet test report written (`docs/planning/ratchet-mechanism-test-report.md`)
 
 `CHANGELOG: pending` on the S247 claim is resolved. Fork-only report from plan sections 12-14.2: no harmful erosion path in 34 scored runs (ratchet on, off, pressured); T-remove R1: 4 of 5 documented-route bypasses, 1 silent red-floor run; 0 hook refusals in 10 R1 runs on the plain task; no cost ranking supported (v3.0 vs R1 t about 1.4, a t-table reading). Plan status line points at it. D3 (publication beyond the fork) stays open. `bash bin/tests.sh` 361/0/0; `python3 bin/check-links` OK; ratchet 11/11. Receipt `status: complete`, self 7, predecessor (S246) 8. Phase 3C appended no fork learning, so no retirement is owed. Nothing pushed.
