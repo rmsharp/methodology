@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-02.md` (2 record(s), 25,483 B → 15,835 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-02 → 2026-10-02) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-02.md`](docs/archive/HANDOFFS-through-2026-10-02.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-02.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-02.md.verify.sh)
+rather than trusting a digest printed here. Live file 25,483 B → 15,835 B (−37.9%).
+
 ### 2026-10-02 · [ad hoc] S248 close-out — the handoff receipt; the #91 comment is the product
 
 No Phase 1B claim was written (mandatory; skipped), so there was no `CHANGELOG: pending` to resolve and this receipt is the session's only one. Receipt `status: complete`, self 6, predecessor (S247) 8. **Product:** the plain PR comment with three questions on upstream PR #91, posted at the operator's go-ahead and read back identical (the entry below). **Smoke:** `bash bin/tests.sh` **361 passed / 0 failed / 0 skipped** (213 s; no SKIP line, so Test 9 ran), `bin/check-handoff --all` OK, ratchet 11/11 (results `95b5ea74bd7c`, manifest `01a4ae7aa511`); re-run with this receipt in place (4 receipts): **361 / 0 / 0** again, 204 s, so Test 34 holds. **Lapses, stated:** partial Phase 0 (no runner or SAFEGUARDS read, no dashboard, no stated report, the policy trim at 3 receipts not done); no 1B claim; two wrong statements to the operator before posting (offering to merge locally; "Test 9 needs `gh`", true of fork `main` only) and one unverified claim (differently labelled manifest rows), all corrected before the comment went out; #91's own tests never run. Phase 3C appended no fork learning, so no retirement is owed. Memory (outside the repo): the S234 "all OPEN" upstream state corrected; the index compacted from 21.7 KB to 14.6 KB with no link lost. Nothing git-pushed.
