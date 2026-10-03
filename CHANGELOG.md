@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-94] S255 — fill the receipt's commit slot with the close-out sha
+
+The S255 receipt's `commit:` slot, `pending` in the close-out commit, now reads `3b1b0bbdf27f` (12 characters, with hex letters, so `bin/check-handoff` accepts it as a sha; S253's all-decimal slot is the lapse this avoids). `bin/check-handoff --all` run after the fill. Receipt-only change; no new action.
+
 ### 2026-10-03 · [BL-94] S255 close-out — the BL-94 plan is written (DRAFT); P1a is the operator's first decision
 
 Deliverable: one plan document, no build, no run. The session's commits: the owed trim `154ff41` and its fold `5cf5f22` (first, as their own actions after the Phase 0 report), the claim `30a4d15`, the plan with its ledger entry and the BL-94 status `ca019ac`, and this close-out (the next commit fills its `commit:` slot). Receipt S255 complete in `HANDOFFS.md`; handoff 3A of S254 scored 9/10, self 7/10. **Phase 3C:** one fork learning appended (#106: whether an arm contrast can show a construct is a property of each saved set's start commit, not of the project); **no row retired, none qualifies (rows considered: #25, #65, #105; none states the lesson and none meets criteria (a) to (c))**. **Reviews:** two read-only reviewer subagents (about 230K and 220K tokens) found four errors in the first draft and three in the second; each was re-verified by me and the plan recomposed; the final revision is not independently reviewed (plan §9). **Not done, by design:** nothing built or run, no model session, no spend beyond reviewer tokens, no `.claude` file edited, nothing git-pushed (27 commits ahead of `origin/main` before this close-out), nothing sent to KJ5HST/methodology. **Gate run:** quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 3f5791d93dac · manifest fd435a4f8fab (the suite inside it: 362 passed, 0 failed; the first run, 10/12 with `check-handoff-all` and the suite's receipt test red, was taken while the receipt held a placeholder where this line goes).
