@@ -3177,11 +3177,12 @@ report that announces it has neither.
 reaches them only through an upstream pull request — **its own go-ahead**, and one that has to respect FM #17's
 anti-erosion clause (a shape requirement may add a step; it may not license dropping one).
 
-**UNCOSTED, and deliberately not shaped here.** No option was measured, enumerated or costed when this item was
-written; the operator asked that it be opened, not solved. Two things a costing session should settle first:
-whether the shape is *required* (and therefore checkable, like the receipt) or *recommended* (a template in
-`FRAMEWORK_APPARATUS.md`), and whether a report is even the right place for a commit sha, given that
-`HANDOFFS.md`'s `commit:` field already carries one and a second copy is a second thing to get wrong.
+**Costed at S252 (2026-10-03):** [`close-out-report-actuator-plan.md`](close-out-report-actuator-plan.md). This item
+was uncosted when written (the operator asked that it be opened, not solved); the plan settles the two questions
+it left open. The shape is **required and checkable**, not a recommended template, because S218 had this item in
+its own context and still lapsed. The report's commit sha is **computed from git at render time**, never copied
+from the receipt, so there is no second copy to get wrong. The proposal is one tool that renders and lints the
+report plus a `Stop` hook, in three phases; decisions D1-D3 are the operator's and nothing is applied.
 
 **Second occurrence, 2026-09-22 (S218).** A session that had read this item at its own Phase 0, where it was in the
 list of undecided items put to the operator, closed out with a message that carried all four §3G items and none of
