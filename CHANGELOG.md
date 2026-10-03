@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-94] S255 claim (in progress) — plan the documentation-quality experiment, v3.8 against v3.0
+
+Operator said `go` and chose BL-94 from the Phase 0 picker (the option offered as recommended; the others were the BL-95 resync plan and the BL-97 flake fix). Deliverable: one plan document in `docs/planning/`; nothing built or run, no spend, nothing upstream. Phase 0: 0 undocumented commits at both frontiers, ratchet citation matches `.quality-gates-results.json` (results `3f5791d93dac`, manifest `fd435a4f8fab`), `bin/check-handoff --all` OK, #92 open with no reply, dashboard 72/100, 23 ahead of `origin/main` and 102 behind `upstream/main`, the BL-79 hook not installed. The owed trim ran first as its own action (`154ff41`, fold `5cf5f22`, shard proof exit 0 from a clone). `CHANGELOG: pending` until Phase 3F.
+
 ### 2026-10-03 · [ad hoc] S255 — fold the second 2026-10-03 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`154ff41`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-03), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S254, S253); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's pick of BL-94, as its own action, before the S255 claim.
