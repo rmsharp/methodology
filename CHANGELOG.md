@@ -233,6 +233,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [ad hoc] S251 close-out
+
+Receipt written (`HANDOFFS.md`, S251; now 5 receipts, so the trim to 2 is still owed as its own action). No Phase 1B claim was opened and Phase 0 was partial (SAFEGUARDS not read, no dashboard refresh); both stated in the receipt. S250's `commit:` slot reconciled to `bfbe8bc` (the checker refuses a non-newest receipt without a sha). Fork gates with the receipt in place: quality_ratchet 11/11 pass (one intermediate run read 10/11 with `tests-sh-failed` 1 while the standalone suite was 361/0; a rerun read 11/11; cause not found); `bash bin/tests.sh` 361 / 0 / 0; `check-handoff --all` OK on 5. Nothing pushed to fork `origin`. The tag move is NOT done: it waits for the maintainer to merge PR #92.
+
+### 2026-10-03 · [ad hoc] S251 — upstream PR #92 opened: v4.2 version documentation
+
+At the operator's `post` (exact text shown first), branch `docs/release-v4.2` (one commit, `fa2bb5d4`, on upstream `main` `f34769f3`) was pushed to the fork `rmsharp/methodology` and opened as https://github.com/KJ5HST/methodology/pull/92. It bumps `CLAUDE.md` *Current version* to v4.2, adds the v4.2 §Versioning entry and README "What's New in v4.2", and one ledger entry. Read back: OPEN, base `main`, title and body identical to the draft. In a scratch clone of the branch: `bash bin/tests.sh` 261 passed / 0 failed, `check-links` OK, `check-ledger` OK, `CLAUDE.md` 51,405 B under its 59,168 B ceiling. The operator chose "PR, then move tag": the `v4.2` tag and release stay at `f34769f` until the merge, then move to the merge commit on his say-so.
+
+### 2026-10-03 · [ad hoc] S251 — tag v4.2 and GitHub Release created on KJ5HST/methodology
+
+At the operator's `post` (exact text shown first, numbers measured): `gh release create v4.2 --target f34769f31ca351a520c2da4fa5f9e65b5153bffa --latest`, https://github.com/KJ5HST/methodology/releases/tag/v4.2. Read back: the tag resolves to `f34769f3` (type `commit`, so a lightweight tag), not a draft or prerelease, Latest, body identical to the draft. Measured first in a scratch clone at that commit: `bash bin/tests.sh` 261 passed / 0 failed, exit 0; `quality_ratchet --run` 12/12 pass, results `10df8059439f`, manifest `5986cf638fb1`. The release is PR #91's (merged 2026-10-03 01:30Z as `e1073568`) plus the S39 tighten and dashboard 2.11.3.
+
+### 2026-10-03 · [ad hoc] S251 — Phase 0: PR #91 had moved past our Approve and was then merged
+
+Our Approve (01:05Z) was on `befa7553`; the maintainer pushed `9ac2d4b3` at 01:23Z (the `.git`, `.` and NUL path refusals, our three non-blocking points) and merged at 01:30Z. His 2026-10-02 23:59Z comment answered our three questions and asked for another look. Nothing was posted in reply.
+
 ### 2026-10-03 · [ad hoc] S250 close-out
 
 Receipt written (`HANDOFFS.md`, S250; now 4 receipts, so the trim to 2 is next session's Phase 0 action). No Phase 1B claim was opened before the work, and Phase 0 was partial (SAFEGUARDS not read, no dashboard refresh); both stated in the receipt. Nothing pushed to fork `origin`. Fork gates with the receipt in place: quality_ratchet 11/11 pass; `check-handoff --all` OK on 4. GitHub's flag on #91 is stale: its test-merge ref `refs/pull/91/merge` is built on old base `16805399`, not `main` `58458db`, while `git merge-tree --write-tree` of `main` and `befa7553` is clean; only the maintainer can refresh it.
