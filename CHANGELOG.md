@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-02-2.md` (3 record(s), 28,946 B → 14,486 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **3** record(s) (2026-10-02 → 2026-10-02) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-02-2.md`](docs/archive/HANDOFFS-through-2026-10-02-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-02-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-02-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 28,946 B → 14,486 B (−50.0%).
+
 ### 2026-10-03 · [ad hoc] S251 close-out
 
 Receipt written (`HANDOFFS.md`, S251; now 5 receipts, so the trim to 2 is still owed as its own action). No Phase 1B claim was opened and Phase 0 was partial (SAFEGUARDS not read, no dashboard refresh); both stated in the receipt. S250's `commit:` slot reconciled to `bfbe8bc` (the checker refuses a non-newest receipt without a sha). Fork gates with the receipt in place: quality_ratchet 11/11 pass (one intermediate run read 10/11 with `tests-sh-failed` 1 while the standalone suite was 361/0; a rerun read 11/11; cause not found); `bash bin/tests.sh` 361 / 0 / 0; `check-handoff --all` OK on 5. Nothing pushed to fork `origin`. The tag move is NOT done: it waits for the maintainer to merge PR #92.
