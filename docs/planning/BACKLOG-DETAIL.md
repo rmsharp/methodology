@@ -3184,6 +3184,14 @@ its own context and still lapsed. The report's commit sha is **computed from git
 from the receipt, so there is no second copy to get wrong. The proposal is one tool that renders and lints the
 report plus a `Stop` hook, in three phases. The operator ratified D1-D3 as recommended on 2026-10-03; nothing is applied and P1 has not started.
 
+**Status (S254, 2026-10-03; the sentence above is as written at S252 and is not edited).** **P1 built at S253** (`b34a841`: the
+generator and lint, 31 tests). **P2 built at S254** (`816834c`): `starter-kit/close_out_report.py --hook`, 68 tests, and four
+scenarios run on the real harness (claude 2.1.288, haiku, $0.113): a pending receipt left alone; a completed close-out answered
+"Done." blocked once and then reported cleanly; a later chat turn allowed with no second report; a commit after the report blocked
+again and gave a fresh report with the new HEAD. **Outstanding for P2:** the operator installs the snippet (plan section 4 P2) in his own
+gitignored `.claude/settings.local.json`, and one real close-out is watched, which can only be the next session's (a hook installed
+mid-session has no baseline and stays quiet). **P3** (the distributed change; an upstream pull request) is its own go-ahead.
+
 **Second occurrence, 2026-09-22 (S218).** A session that had read this item at its own Phase 0, where it was in the
 list of undecided items put to the operator, closed out with a message that carried all four §3G items and none of
 the shape: no heading, no labels, no closing line. The operator asked for "phase 3 close-out report". The session then
@@ -4056,4 +4064,31 @@ install it? It can use git*; recorded, not fixed.**
   that in view. Upstream has no skip counter, so a counted skip is a fork-side difference, or a proposal upstream, which needs a go-ahead each time.
 
 **Next action:** none owed. When BL-95's resync plan is written, decide (a), (b) or (c) there; until then no change.
+
+**BL-97 — `echo "$(…)" | grep -q` under `pipefail` flakes at a payload far below the pipe capacity BL-43 measured. Raised 2026-10-03
+(S254), found by a red Test 38 in the full suite; recorded, not fixed.**
+
+**The observation** (fork `main` at `816834c` plus a pending receipt; one full-suite run, then a measurement):
+- The suite printed `FAIL: grown committed record not caught: <output>` for the assertion at `bin/tests.sh:2574-2576`
+  (`echo "$(ch38)" | grep -q 'per-record budget by' && pass ... || fail "... $(ch38)"`). The text the `fail` arm printed, from a second run of
+  `ch38`, contains `per-record budget by`, so the assertion's condition held when it was shown to the reader and had read false once.
+  Summary `360 passed, 2 failed`; the other failure was a real receipt defect (S253's all-decimal `commit:` slot), fixed in S254.
+- The measurement: a 1,540 B string with the match on its second line, 3,000 runs each under `set -uo pipefail`: `echo "$(cat f)" | grep -q PAT`
+  failed **10** times, `grep -q PAT <<<"$(cat f)"` **0** times.
+- Why this is not BL-43: BL-43 (closed S197, `BACKLOG-COMPLETED.md`) pinned the pipe capacity at 65,536 B and moved its criterion to *is the
+  producer read from the real repository, which grows*, giving nine sites, all converted, with Test 42 re-deriving the population on every run.
+  A 1.5 KB payload from a fixture is outside that criterion by both measures, and fails anyway.
+- Population: `grep -cE 'echo [^|]*\| *grep -q' bin/tests.sh` is **82** lines at S254. Which of them sit on the `&& fail || pass` arm, where a
+  flake makes a real defect read green, was not re-derived; BL-43 found 23 of 125 candidate pipelines there.
+
+**Not established:** the mechanism (SIGPIPE to `echo` when `grep -q` exits at its first match before `echo` has finished writing is the
+explanation `bin/tests.sh:1513-1516` gives for the large case; whether it is the whole story at 1.5 KB was not tested), and the rate on Test 38's own
+output, which was not measured; 0.3% is the synthetic string's.
+
+**Shapes** (none costed, none run): **(a)** convert the 82 to here-strings and widen Test 42's scanner to flag the form whatever the producer;
+**(b)** convert only the `&& fail || pass` sites, where the flake hides a defect, and leave the `&& pass || fail` ones, whose flake is a visible
+false red; **(c)** leave it, and treat a single red Test 38 as a rerun, which the 0.3% rate makes cheap and the 10-minute suite makes slow.
+
+**Next action:** none owed. If a future full suite shows another red on an assertion whose own `fail` message contains its pattern, take that as a
+second data point and decide (a), (b) or (c).
 

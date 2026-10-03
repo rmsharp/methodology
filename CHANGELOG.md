@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-97] S254 — raise BL-97 (an `echo | grep -q` flake below BL-43's size criterion); BL-79 status
+
+Test 38's `bin/tests.sh:2574` assertion read FAIL in the full suite with its own pattern in the output it printed. Measured on a synthetic 1,540 B string: `echo "$(…)" | grep -q` under `pipefail` failed 10 of 3,000 runs, the here-string form 0 of 3,000. BL-43 (closed S197) set its criterion at the 65,536 B pipe capacity and at producers that read the real repository; neither covers this. Raised as **BL-97, recorded and not fixed** (`docs/planning/BACKLOG.md` index row and `BACKLOG-DETAIL.md` §BL-97, with the mechanism stated as not established). Same commit: BL-79's index row and detail now say P1 (S253) and P2 (S254) are built and what is outstanding; the S252 sentence "P1 has not started" is left as written and a dated status paragraph follows it.
+
 ### 2026-10-03 · [ad hoc] S254 — reconcile S253's `commit:` slot (the full suite went red on it)
 
 S253's receipt named its close-out as `6200587`, which is all decimal digits, and `bin/check-handoff` accepts a sha only if it has a hex letter (`bin/check-handoff:216`). The newest receipt is exempt from that rule, so S253's own suite run stayed green; S254's claim stub became the newest and Test 39 L1 read `360 passed, 2 failed`. The slot now reads `62005872ea5c`, the 12-character form of the same commit, with the reason in the receipt. `bin/check-handoff --all --allow-pending` is OK on 3. The second failure in that run is `docs/planning/BACKLOG-DETAIL.md` §BL-97.
