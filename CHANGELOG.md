@@ -235,7 +235,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ### 2026-10-03 · [BL-79] S252 claim (in progress) — plan for a generated 3G close-out report plus a Stop hook
 
-Operator asked for a way to ensure the Phase 3 close-out report is run and formatted cleanly; chose "generated report + Stop hook" from a picker. Deliverable: the plan in `docs/planning/` (costed, evidence-based). Before the claim: the owed `HANDOFFS.md` trim (`4cdade2`, shard proof exit 0 from a clone of that commit) and its fold (`4d98ccb`); suite 355 passed / 0 failed / 6 skipped. `CHANGELOG: pending` until Phase 3F.
+Operator asked for a way to ensure the Phase 3 close-out report is run and formatted cleanly; chose "generated report + Stop hook" from a picker. Deliverable: the plan in `docs/planning/` (costed, evidence-based). Before the claim: the owed `HANDOFFS.md` trim (`4cdade2`, shard proof exit 0 from a clone of that commit) and its fold (`4d98ccb`); suite 355 passed / 0 failed / 6 skipped. `CHANGELOG: pending` until Phase 3F. **Checkpoint:** the prototype and its evidence are committed under `docs/planning/close-out-report-prototype/` (`checks.py`: 10/10 table rows, 10/10 lint mutants, 6/6 hook mutants; measured on the real harness, claude 2.1.288); the plan follows in its own commit.
 
 ### 2026-10-03 · [ad hoc] S252 — fold the 2026-10-02-2 HANDOFFS shard pointer into the archive index
 
