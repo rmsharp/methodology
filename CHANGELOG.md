@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-03.md` (2 record(s), 28,146 B → 19,376 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **2** record(s) (2026-10-03 → 2026-10-03) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-03.md`](docs/archive/HANDOFFS-through-2026-10-03.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-03.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-03.md.verify.sh)
+rather than trusting a digest printed here. Live file 28,146 B → 19,376 B (−31.2%).
+
 ### 2026-10-03 · [BL-79] S253 close-out — P1 done; the hook (P2) is next
 
 P1 is commit `b34a841`, the claim `ea9ea6d`. The close-out is `6200587`, with its `commit:` slot filled in the next commit. Receipt S253 complete in `HANDOFFS.md`; handoff 3A of S252 scored 9/10, self 8/10. Phase 3C appended no fork learning, so no retirement is owed (none considered: no row appended).
