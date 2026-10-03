@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] S249 — comment posted on upstream PR #91, answering the maintainer's reply
+
+The maintainer replied (new head `befa7553`, asked for another look). At the operator's go-ahead, a plain comment was posted, read back identical (1,579 chars): https://github.com/KJ5HST/methodology/pull/91#issuecomment-5963809970. Content: the branch's own `bin/tests.sh` at `befa7553` gives 254 passed / 0 failed; the manifest reader runs no code and refuses relabelled dispositions and escaping paths; three small non-blocking points. Fork `origin` also pushed (`f297d51..c8215af`). No review state, no merge.
+
 ### 2026-10-02 · [ad hoc] S249 close-out
 
 Receipt completed (`HANDOFFS.md`, S249). Fork suite 361 passed / 0 failed / 0 skipped; `check-handoff --all` OK on 3. Nothing pushed, nothing posted on KJ5HST/methodology.
