@@ -4027,6 +4027,17 @@ re-derive it. It is a request for a plan (runner §Planning Sessions), not for a
 **Next action:** a planning session, no spend, producing a plan document in `docs/planning/` with measures defined first, per runner
 §Planning Sessions. Reuse the harness in `overhead-replay/` where it fits; do not extend the frozen ratchet scorer.
 
+**Status (S255, 2026-10-03; the paragraphs above are as written at S244 and are not edited).** **The plan is written:**
+[`documentation-quality-experiment-plan.md`](documentation-quality-experiment-plan.md), DRAFT for the operator, after two read-only
+adversarial reviews (its §11). It answers the five decisions this item listed: measures §2, scorers §4, design §3, what the arms must
+differ in §3.2-§3.3, spend §7 D4 (the operator's). **What it changed about what is known (re-derived, §10):** the saved runs split
+into three sets by start commit; the S237 real-project runs and the ratchet study's T-control runs sit on `879503cce`, which carries no
+documentation rules, so **v3.0, v3.7 and v3.8-text can be scored for documentation at $0 before any spend** (P1a, P1b); the ratchet
+study's T-remove trees start at `402a6b5b`, whose project rules explain why every arm looked alike; "pending in most trees" is 2 of 15;
+`inst/_pkgdown.yml` is a dead file, so no staleness target exists yet. **Nothing is built, run or spent.** The first decision is whether
+to start P1a; the money decisions (D4) come after P1b's free result. The cost and cap figures in the plan are proposals; no cap exists
+for this study.
+
 ---
 
 **BL-96 — `bin/tests.sh` Test 9's skip never reaches the suite's skip count, so a machine without `gh` gets a green summary that
