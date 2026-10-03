@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [ad hoc] S254 — reconcile S253's `commit:` slot (the full suite went red on it)
+
+S253's receipt named its close-out as `6200587`, which is all decimal digits, and `bin/check-handoff` accepts a sha only if it has a hex letter (`bin/check-handoff:216`). The newest receipt is exempt from that rule, so S253's own suite run stayed green; S254's claim stub became the newest and Test 39 L1 read `360 passed, 2 failed`. The slot now reads `62005872ea5c`, the 12-character form of the same commit, with the reason in the receipt. `bin/check-handoff --all --allow-pending` is OK on 3. The second failure in that run is `docs/planning/BACKLOG-DETAIL.md` §BL-97.
+
 ### 2026-10-03 · [BL-79] S254 — P2 checkpoint: `close_out_report.py --hook` and its tests (version 1.1.0)
 
 `starter-kit/close_out_report.py` gains `--hook` (a Stop / SessionStart decision; state under `.git/` keyed by `session_id`; fail-quiet, exit 0 always) per `docs/planning/close-out-report-actuator-plan.md` §2.2. Three things the plan implied but did not specify: a one-line trace log under `.git/` for each block, unclean retry and accepted report (§2.3 relies on "the log line"); a Stop payload with no `last_assistant_message` allows; the ledger is found through the git toplevel, so a session started in a subdirectory still works. `tools/test_close_out_report.py` goes 31 → 68 tests: the ten decision-table rows and eight added, four CLI-wiring tests, and 15 mutants each of which must turn its named row red (13 on an assertion, 2 on an exception). `.quality-gates.json` `close-out-report-unit-tests` tightens 31 → 68. Not yet run on the real harness, not installed anywhere, nothing upstream.
