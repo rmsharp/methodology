@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S254
+date: 2026-10-03
+status: pending
+active_task: IMPLEMENT BL-79 P2: the --hook mode of starter-kit/close_out_report.py (Stop and SessionStart decisions, state under .git/ keyed by session_id, fail-quiet), its unit tests from the prototype's ten-row table and six hook mutants, a tightened .quality-gates.json gate, CHANGELOG entry. The operator installs the hook snippet in his own gitignored settings; no .claude file is edited by a session; nothing sent upstream.
+```
+
+```handoff
 session: S253
 date: 2026-10-03
 status: complete
