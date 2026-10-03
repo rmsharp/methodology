@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-02 · [ad hoc] S249 — operator decision: formal review on PR #91 is S250's deliverable, event Approve
+
+Recorded in the S249 receipt's `next_steps` (0). Nothing posted for it yet.
+
 ### 2026-10-02 · [ad hoc] S249 — comment posted on upstream PR #91, answering the maintainer's reply
 
 The maintainer replied (new head `befa7553`, asked for another look). At the operator's go-ahead, a plain comment was posted, read back identical (1,579 chars): https://github.com/KJ5HST/methodology/pull/91#issuecomment-5963809970. Content: the branch's own `bin/tests.sh` at `befa7553` gives 254 passed / 0 failed; the manifest reader runs no code and refuses relabelled dispositions and escaping paths; three small non-blocking points. Fork `origin` also pushed (`f297d51..c8215af`). No review state, no merge.
