@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-79] S252 claim (in progress) — plan for a generated 3G close-out report plus a Stop hook
+
+Operator asked for a way to ensure the Phase 3 close-out report is run and formatted cleanly; chose "generated report + Stop hook" from a picker. Deliverable: the plan in `docs/planning/` (costed, evidence-based). Before the claim: the owed `HANDOFFS.md` trim (`4cdade2`, shard proof exit 0 from a clone of that commit) and its fold (`4d98ccb`); suite 355 passed / 0 failed / 6 skipped. `CHANGELOG: pending` until Phase 3F.
+
 ### 2026-10-03 · [ad hoc] S252 — fold the 2026-10-02-2 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`4cdade2`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (3 receipts, 2026-10-02), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts; the shard's `.verify.sh` is run from a clone of the trim commit (below).
