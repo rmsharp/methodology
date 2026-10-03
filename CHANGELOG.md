@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-03-2.md` (1 record(s), 26,507 B → 19,032 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-03 → 2026-10-03) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-03-2.md`](docs/archive/HANDOFFS-through-2026-10-03-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-03-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-03-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 26,507 B → 19,032 B (−28.2%).
+
 ### 2026-10-03 · [BL-79] S254 close-out — P2 built and run on the real harness; the operator's install and one watched close-out are next
 
 P2 is the checkpoint `816834c` (the claim is `734a04a`). Phase 0 and the owed trim (`f7b23ed`, fold `499727a`) came first. The other commits of the session: `d45afa4` (S253's `commit:` slot), `6e84d80` (BL-97, BL-79 status), `d30b105` (the live-scenario script and evidence); the close-out is `3b34208`, and the next commit fills its `commit:` slot. Receipt S254 complete in `HANDOFFS.md`; handoff 3A of S253 scored 8/10, self 8/10. Phase 3C appended no fork learning, so no retirement is owed (none considered: no row appended). This entry replaces the claim's `CHANGELOG: pending`. Nothing installed, no `.claude` file edited, nothing git-pushed, nothing sent to KJ5HST/methodology; the one spend was $0.113 of haiku in scratch repos, within the estimate shown at the picker.
