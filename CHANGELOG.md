@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-79] S254 — P2 checkpoint: `close_out_report.py --hook` and its tests (version 1.1.0)
+
+`starter-kit/close_out_report.py` gains `--hook` (a Stop / SessionStart decision; state under `.git/` keyed by `session_id`; fail-quiet, exit 0 always) per `docs/planning/close-out-report-actuator-plan.md` §2.2. Three things the plan implied but did not specify: a one-line trace log under `.git/` for each block, unclean retry and accepted report (§2.3 relies on "the log line"); a Stop payload with no `last_assistant_message` allows; the ledger is found through the git toplevel, so a session started in a subdirectory still works. `tools/test_close_out_report.py` goes 31 → 68 tests: the ten decision-table rows and eight added, four CLI-wiring tests, and 15 mutants each of which must turn its named row red (13 on an assertion, 2 on an exception). `.quality-gates.json` `close-out-report-unit-tests` tightens 31 → 68. Not yet run on the real harness, not installed anywhere, nothing upstream.
+
 ### 2026-10-03 · [BL-79] S254 claim (in progress) — P2: the hook mode of the close-out report tool
 
 Operator said `go` and chose BL-79 P2 from the Phase 0 picker (D1-D3 ratified in S252). Deliverable: `--hook` mode in `starter-kit/close_out_report.py`, its unit tests and a tightened ratchet gate; the operator installs the snippet in his own gitignored settings, no session edits a `.claude` file, nothing upstream. Phase 0: 0 undocumented commits at both frontiers, ratchet 12/12 (results `472fdef97623`), #92 open with no reply, dashboard 72/100; the owed trim ran first as its own action (`f7b23ed`, fold `499727a`). `CHANGELOG: pending` until Phase 3F.

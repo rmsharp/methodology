@@ -49,10 +49,10 @@
     {
       "name": "close-out-report-unit-tests",
       "direction": "min",
-      "threshold": 31,
+      "threshold": 68,
       "command": "python3 tools/test_close_out_report.py",
       "extract": "Ran (\\d+) tests",
-      "why": "BL-79 P1 (S253): the Phase 3G report generator and lint. Count never drops; green/red is carried by tests-sh-passed. 31 is measured (python3 tools/test_close_out_report.py: Ran 31 tests, OK), including the property test over every scored complete receipt in the ledger and its shards"
+      "why": "BL-79 P1 (S253) and P2 (S254): the Phase 3G report generator and lint, and its Stop / SessionStart hook. Count never drops; green/red is carried by tests-sh-passed. 68 is measured (python3 tools/test_close_out_report.py: Ran 68 tests, OK): 31 from P1 (including the property test over every scored complete receipt in the ledger and its shards) plus 37 for the hook -- the plan's decision-table rows, the CLI wiring, and 15 mutants each of which must turn its named row red"
     },
     {
       "name": "ratchet-unit-tests",

@@ -7,18 +7,27 @@ hand-formats the last thing the operator reads.
   python3 close_out_report.py --deliverable T --outcome done --well W --badly B \\
           --predecessor P --next N          print the report
   python3 close_out_report.py --check FILE  lint a message ('-' reads stdin); exit 1 on any breach
+  python3 close_out_report.py --hook        Claude Code Stop / SessionStart hook: payload on stdin; exit 0 always
 
 The mechanical facts (session, date, both scores, HEAD, uncommitted count, the gate-run citation)
 come from the newest receipt in HANDOFFS.md and from git, never from the caller. The five texts the
 caller supplies are judgment, each at most FIELD_MAX characters; longer input is refused, not cut.
-Python 3 stdlib only.
+
+The hook only ever adds a message: every uncertainty resolves to allow, and an internal error is
+swallowed (exit 0, never 2), so it cannot trap a session. It keeps its state under the clone's .git/
+(never tracked). Python 3 stdlib only.
 """
 import argparse
+import hashlib
+import json
+import os
 import re
+import shlex
 import subprocess
 import sys
+from datetime import datetime, timezone
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 HEAD_RE = re.compile(r"^## Close-out report: (S\S+) · (\d{4}-\d{2}-\d{2})$")
 LABELS = ("Deliverable", "Record", "Self-assessment", "Predecessor handoff", "Next session")
@@ -135,14 +144,98 @@ def lint(text, m):
     return errs
 
 
+def _state_path(gitdir, kind, sid):
+    """A per-session state file under .git/. The id is the harness's; keep it a file name, never a path."""
+    return os.path.join(gitdir, f"close-out-{kind}-{re.sub(r'[^A-Za-z0-9._-]', '_', str(sid))[:100]}")
+
+
+def _log(gitdir, sid, what):
+    """One line per block, unclean retry or accepted report: the trace the plan's section 2.3 relies on."""
+    try:
+        with open(os.path.join(gitdir, "close-out-report.log"), "a", encoding="utf-8") as f:
+            f.write(f"{datetime.now(timezone.utc).isoformat(timespec='seconds')} {sid} {what}\n")
+    except OSError:
+        pass
+
+
+def _ident(receipt):
+    return [receipt.get("session", "?"), receipt.get("date", "?"), receipt.get("status", "?")]
+
+
+def decide(payload):
+    """The Stop / SessionStart decision (plan section 2.2): the block dict, or None to allow.
+
+    SessionStart records the newest receipt once per session_id (resume and compact never overwrite it).
+    A close-out is OWED when the newest receipt is complete and is not the one the session began with, or
+    that one was not yet complete. Owed, a final message that lints clean is stamped with [HEAD, commits
+    ahead of upstream, receipt hash]; anything else is blocked unless the harness is already on its one
+    forced retry or the stamp shows nothing changed since the last report. May raise: the CLI swallows it.
+    """
+    event, sid, cwd = payload.get("hook_event_name"), payload["session_id"], payload["cwd"]
+    top, gitdir = _git("rev-parse", "--show-toplevel", cwd=cwd), _git("rev-parse", "--absolute-git-dir", cwd=cwd)
+    if not (top and gitdir) or event not in ("SessionStart", "Stop"):
+        return None
+    ledger = os.path.join(top, "HANDOFFS.md")
+    with open(ledger, encoding="utf-8") as f:
+        newest = parse_receipts(f.read())[0]
+    base, stamp = _state_path(gitdir, "baseline", sid), _state_path(gitdir, "stamp", sid)
+    if event == "SessionStart":
+        try:
+            with open(base, "x", encoding="utf-8") as f:
+                json.dump(_ident(newest), f)
+        except FileExistsError:
+            pass
+        return None
+    if not os.path.exists(base) or "last_assistant_message" not in payload:
+        return None  # hook installed mid-session, or a harness that does not send the message: fail quiet
+    with open(base, encoding="utf-8") as f:
+        began = json.load(f)
+    if newest.get("status") != "complete" or (began[:2] == _ident(newest)[:2] and began[2] == "complete"):
+        return None  # no close-out has happened in this session
+    m = live_facts(ledger, top)
+    state = [m["head"], _git("rev-list", "--count", "@{upstream}..HEAD", cwd=top) or "0",
+             hashlib.sha256(json.dumps(newest, sort_keys=True).encode()).hexdigest()[:12]]
+    errs = lint(payload["last_assistant_message"], m)
+    if not errs:
+        with open(stamp, "w", encoding="utf-8") as f:
+            json.dump(state, f)
+        _log(gitdir, sid, "reported")
+        return None
+    codes = ",".join(dict.fromkeys(e.split()[0] for e in errs))
+    if payload.get("stop_hook_active"):
+        _log(gitdir, sid, f"retry-unclean {codes}")
+        return None  # the harness allows ONE forced retry per Stop chain
+    if os.path.exists(stamp):
+        with open(stamp, encoding="utf-8") as f:
+            if json.load(f) == state:
+                return None  # a report was issued at this state and nothing has changed since
+    _log(gitdir, sid, f"blocked {codes}")
+    cmd = " ".join(["python3", shlex.quote(os.path.abspath(__file__)), "--ledger", shlex.quote(ledger),
+                    "--cwd", shlex.quote(top)]) + (" --deliverable '...' --outcome done|partial|blocked "
+                                                  "--well '...' --badly '...' --predecessor '...' --next '...'")
+    return {"decision": "block", "reason":
+            f"Close-out is complete but your final message is not the Phase 3G report ({'; '.join(errs[:3])}). "
+            f"Run: {cmd} (each text at most {FIELD_MAX} characters, no '|'; the outcome is one word) and print "
+            "its output verbatim as your entire final message, with nothing before or after it."}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--ledger", default="HANDOFFS.md", help="the receipt ledger (default HANDOFFS.md)")
     ap.add_argument("--cwd", default=".", help="the repository whose HEAD the report names")
     ap.add_argument("--check", metavar="FILE", help="lint FILE ('-' = stdin) instead of printing a report")
+    ap.add_argument("--hook", action="store_true", help="act as a Claude Code Stop / SessionStart hook (stdin payload)")
     for f in FIELDS:
         ap.add_argument("--" + f)
     a = ap.parse_args(argv)
+    if a.hook:
+        try:
+            out = decide(json.load(sys.stdin))
+        except Exception:  # fail quiet: an error must never block a session, and exit 2 would
+            out = None
+        if out:
+            print(json.dumps(out))
+        return 0
     try:
         m = live_facts(a.ledger, a.cwd)
     except (OSError, ValueError) as e:
