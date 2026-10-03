@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S253
+date: 2026-10-03
+status: pending
+active_task: IMPLEMENT BL-79 P1: starter-kit/close_out_report.py (render + lint), tools/test_close_out_report.py, bin/tests.sh wiring, a .quality-gates.json gate, CHANGELOG entry. No hook installed, nothing sent upstream.
+```
+
+```handoff
 session: S252
 date: 2026-10-03
 status: complete

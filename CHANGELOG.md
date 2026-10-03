@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-79] S253 claim (in progress) — P1: the close-out report generator and lint
+
+Operator said `go` and chose BL-79 P1 from the Phase 0 picker (D1-D3 ratified in S252). Deliverable: `starter-kit/close_out_report.py` with its tests, suite wiring and a ratchet gate; no hook installed, nothing upstream. Phase 0: 0 undocumented commits, ratchet 11/11, `check-handoff --all` OK on 3, #91 merged, #92 open with no reply. `CHANGELOG: pending` until Phase 3F.
+
 ### 2026-10-03 · [BL-79] S252 — D1-D3 ratified by the operator after the close-out
 
 The operator answered one picker: **D1** the tool lives at `starter-kit/close_out_report.py`; **D2** the hook is installed in his gitignored `.claude/settings.local.json` (a session does not edit it); **D3** the shape is required and checkable; all as recommended. A push of local `main` to the fork `origin` was offered and declined ("not now"). Recorded in the plan's status and section 5, the BL-79 row and detail, and the receipt's next steps. No code written; P1 has not started.
