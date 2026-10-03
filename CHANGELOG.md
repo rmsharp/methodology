@@ -233,9 +233,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-79] S253 close-out — P1 done; the hook (P2) is next
+
+Receipt S253 complete in `HANDOFFS.md`; handoff 3A of S252 scored 9/10, self 8/10. Phase 3C appended no fork learning, so no retirement is owed (none considered: no row appended).
+
+### 2026-10-03 · [BL-79] S253 — P1: the close-out report generator and lint
+
+Built `starter-kit/close_out_report.py` (render + `--check` lint, rules R1-R7 of the plan) and `tools/test_close_out_report.py` (31 tests: each rule refused by a corruption, the CLI round trip, a staleness case, and a property test that renders a report for every scored complete receipt in `HANDOFFS.md` and every archived shard and requires each to lint clean). `bin/tests.sh` runs the suite; `.quality-gates.json` gains `close-out-report-unit-tests` (min 31, a tightening). The property test found two things the plan had not: the outcome word needed its own 20-character cap (six 300-character texts overflowed the 2,000 B cap by 111 B), and the very first receipt (S1, 2026-07-08) has no `predecessor_score`, so the claim "all 250 have numeric scores" was 249 of 250; that one receipt is pinned as the single exception. No hook, no settings file, nothing distributed (no manifest row), nothing upstream. Also reconciled S252's `commit:` slot to `f6085ab`, which `bin/tests.sh` Test 39 (L1) had turned red. BL-79's row now says P1 built.
+
 ### 2026-10-03 · [BL-79] S253 claim (in progress) — P1: the close-out report generator and lint
 
-Operator said `go` and chose BL-79 P1 from the Phase 0 picker (D1-D3 ratified in S252). Deliverable: `starter-kit/close_out_report.py` with its tests, suite wiring and a ratchet gate; no hook installed, nothing upstream. Phase 0: 0 undocumented commits, ratchet 11/11, `check-handoff --all` OK on 3, #91 merged, #92 open with no reply. `CHANGELOG: pending` until Phase 3F.
+Operator said `go` and chose BL-79 P1 from the Phase 0 picker (D1-D3 ratified in S252). Deliverable: `starter-kit/close_out_report.py` with its tests, suite wiring and a ratchet gate; no hook installed, nothing upstream. Phase 0: 0 undocumented commits, ratchet 11/11, `check-handoff --all` OK on 3, #91 merged, #92 open with no reply. (Closed by the S253 entries above.)
 
 ### 2026-10-03 · [BL-79] S252 — D1-D3 ratified by the operator after the close-out
 

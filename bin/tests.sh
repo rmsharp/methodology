@@ -276,6 +276,13 @@ if python3 "$METHODOLOGY/tools/test_quality_ratchet.py" >/dev/null 2>&1; then
 else
     fail "quality ratchet unit tests failed"
 fi
+# The close-out report generator (BL-79 P1). Canonical-only until P3 gives it a manifest row; its
+# property test renders a report for every complete receipt in the ledger and its shards.
+if python3 "$METHODOLOGY/tools/test_close_out_report.py" >/dev/null 2>&1; then
+    pass "close-out report generator unit tests green"
+else
+    fail "close-out report generator unit tests failed"
+fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
 diff -q "$METHODOLOGY/tools/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null \

@@ -47,6 +47,14 @@
       "extract": "Ran (\\d+) tests"
     },
     {
+      "name": "close-out-report-unit-tests",
+      "direction": "min",
+      "threshold": 31,
+      "command": "python3 tools/test_close_out_report.py",
+      "extract": "Ran (\\d+) tests",
+      "why": "BL-79 P1 (S253): the Phase 3G report generator and lint. Count never drops; green/red is carried by tests-sh-passed. 31 is measured (python3 tools/test_close_out_report.py: Ran 31 tests, OK), including the property test over every scored complete receipt in the ledger and its shards"
+    },
+    {
       "name": "ratchet-unit-tests",
       "direction": "min",
       "threshold": 45,
