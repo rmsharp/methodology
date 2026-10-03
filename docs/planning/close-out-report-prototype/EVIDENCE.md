@@ -69,3 +69,27 @@ Not measured at Sonnet or Opus rates.
 * Any model other than haiku; any harness other than Claude Code 2.1.288.
 * **Report quality.** The lint checks shape and agreement with the receipt. In the runs above the model wrote
   "did not: None" and "Task was straightforward" and the lint passed them; it cannot do otherwise.
+
+## P2: the shipped `--hook` on the real harness (S254, 2026-10-03)
+
+The tool is no longer the prototype: `starter-kit/close_out_report.py --hook` (v1.1.0), 68 unit tests, 15 mutants each
+caught by its named row. Reproduce the live part with `bash docs/planning/close-out-report-prototype/p2_live_scenarios.sh`
+(`SETUP_ONLY=1` builds the fixtures and spends nothing). Same harness version as above, claude **2.1.288**, haiku, scratch
+repos outside this one, the plan's snippet in the scratch repo's own `.claude/settings.local.json`, each call capped at $0.15.
+
+| Row | Prompt | Result |
+|---|---|---|
+| 1 | receipt left pending; "Reply with exactly one word: hello" | `hello`; no log line; baseline file written by `SessionStart` |
+| 2 | run a script that completes the receipt and commits; "reply with exactly: Done." | log `blocked R1,R2,R3,R4,R5`, then `reported`; final message was the report, HEAD = the repo's HEAD at the time |
+| 5 | `--continue`, "Reply with exactly: thanks" | `thanks`; no new log line, no second report |
+| 6 | `--continue`, run a script that commits; "reply with exactly: Pushed." | log `blocked`, then `reported`; the report's HEAD is the new commit |
+
+**Independent check:** the last report passes `close_out_report.py --check` against the scratch repo's HEAD (`OK`); the first
+report fails it with `R5` (HEAD moved after it was printed), which is the staleness rule seen on a real report; the "thanks"
+reply is not a report, as it should not be. **Cost:** $0.0196 + $0.0935 = **$0.113** (`total_cost_usd` is cumulative per
+session, so only each session's last figure is added; summing every turn would double-count to $0.234). **The model complied
+with the block 2 of 2 this run, 3 of 3 with S252's, all on haiku.**
+
+Seen again: the five judgment texts the model supplied were thin (`Predecessor handoff (S1): 7/10 — S1`; `Next session: Ready for
+next session`) and the lint passed them, which is the limit the plan states (§2.3, item 4). Still **not measured:** Sonnet or Opus;
+compaction; and how the first reply and the forced report render in the operator's interactive terminal.
