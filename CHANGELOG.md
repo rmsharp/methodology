@@ -233,13 +233,17 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-79] S254 close-out — P2 built and run on the real harness; the operator's install and one watched close-out are next
+
+P2 is the checkpoint `816834c` (the claim is `734a04a`). Phase 0 and the owed trim (`f7b23ed`, fold `499727a`) came first. The other commits of the session: `d45afa4` (S253's `commit:` slot), `6e84d80` (BL-97, BL-79 status), `d30b105` (the live-scenario script and evidence); the close-out commit and the fill of its `commit:` slot follow. Receipt S254 complete in `HANDOFFS.md`; handoff 3A of S253 scored 8/10, self 8/10. Phase 3C appended no fork learning, so no retirement is owed (none considered: no row appended). This entry replaces the claim's `CHANGELOG: pending`. Nothing installed, no `.claude` file edited, nothing git-pushed, nothing sent to KJ5HST/methodology; the one spend was $0.113 of haiku in scratch repos, within the estimate shown at the picker.
+
 ### 2026-10-03 · [BL-79] S254 — P2 on the real harness: four `claude -p` scenarios, $0.113 on haiku; script and evidence committed
 
 Rows 1, 2, 5 and 6 of the plan's decision table, run against `close_out_report.py --hook` (as committed at `816834c`) on claude 2.1.288 in scratch repos outside this one, each call capped at $0.15, within the $0.2-0.3 estimate the operator saw when he chose P2. Row 1 left alone; row 2 blocked once and the model then printed a report that passed the lint; row 5 allowed with no second report; row 6 blocked again and gave a fresh report with the new HEAD. The model complied with the block 2 of 2 (3 of 3 with S252's). No setting file of this repository was touched. Same commit: `docs/planning/close-out-report-prototype/p2_live_scenarios.sh` (reproduces the run; `SETUP_ONLY=1` spends nothing) and an addendum to `EVIDENCE.md`. Still unmeasured: Sonnet or Opus, compaction, and how the two messages render in the operator's terminal.
 
 ### 2026-10-03 · [BL-97] S254 — raise BL-97 (an `echo | grep -q` flake below BL-43's size criterion); BL-79 status
 
-Test 38's `bin/tests.sh:2574` assertion read FAIL in the full suite with its own pattern in the output it printed. Measured on a synthetic 1,540 B string: `echo "$(…)" | grep -q` under `pipefail` failed 10 of 3,000 runs, the here-string form 0 of 3,000. BL-43 (closed S197) set its criterion at the 65,536 B pipe capacity and at producers that read the real repository; neither covers this. Raised as **BL-97, recorded and not fixed** (`docs/planning/BACKLOG.md` index row and `BACKLOG-DETAIL.md` §BL-97, with the mechanism stated as not established). Same commit: BL-79's index row and detail now say P1 (S253) and P2 (S254) are built and what is outstanding; the S252 sentence "P1 has not started" is left as written and a dated status paragraph follows it.
+Test 38's `bin/tests.sh:2573` assertion read FAIL in the full suite with its own pattern in the output it printed. Measured on a synthetic 1,540 B string: `echo "$(…)" | grep -q` under `pipefail` failed 10 of 3,000 runs, the here-string form 0 of 3,000. BL-43 (closed S197) set its criterion at the 65,536 B pipe capacity and at producers that read the real repository; neither covers this. Raised as **BL-97, recorded and not fixed** (`docs/planning/BACKLOG.md` index row and `BACKLOG-DETAIL.md` §BL-97, with the mechanism stated as not established). Same commit: BL-79's index row and detail now say P1 (S253) and P2 (S254) are built and what is outstanding; the S252 sentence "P1 has not started" is left as written and a dated status paragraph follows it.
 
 ### 2026-10-03 · [ad hoc] S254 — reconcile S253's `commit:` slot (the full suite went red on it)
 

@@ -4069,7 +4069,7 @@ install it? It can use git*; recorded, not fixed.**
 (S254), found by a red Test 38 in the full suite; recorded, not fixed.**
 
 **The observation** (fork `main` at `816834c` plus a pending receipt; one full-suite run, then a measurement):
-- The suite printed `FAIL: grown committed record not caught: <output>` for the assertion at `bin/tests.sh:2574-2576`
+- The suite printed `FAIL: grown committed record not caught: <output>` for the assertion at `bin/tests.sh:2573-2575`
   (`echo "$(ch38)" | grep -q 'per-record budget by' && pass ... || fail "... $(ch38)"`). The text the `fail` arm printed, from a second run of
   `ch38`, contains `per-record budget by`, so the assertion's condition held when it was shown to the reader and had read false once.
   Summary `360 passed, 2 failed`; the other failure was a real receipt defect (S253's all-decimal `commit:` slot), fixed in S254.
