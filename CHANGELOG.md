@@ -235,7 +235,7 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ### 2026-10-03 · [BL-79] S253 close-out — P1 done; the hook (P2) is next
 
-P1 is commit `b34a841`, the claim `ea9ea6d`. Receipt S253 complete in `HANDOFFS.md`; handoff 3A of S252 scored 9/10, self 8/10. Phase 3C appended no fork learning, so no retirement is owed (none considered: no row appended).
+P1 is commit `b34a841`, the claim `ea9ea6d`. The close-out is `6200587`, with its `commit:` slot filled in the next commit. Receipt S253 complete in `HANDOFFS.md`; handoff 3A of S252 scored 9/10, self 8/10. Phase 3C appended no fork learning, so no retirement is owed (none considered: no row appended).
 
 ### 2026-10-03 · [BL-79] S253 — P1: the close-out report generator and lint
 
