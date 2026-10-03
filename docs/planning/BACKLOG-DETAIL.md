@@ -3182,7 +3182,7 @@ was uncosted when written (the operator asked that it be opened, not solved); th
 it left open. The shape is **required and checkable**, not a recommended template, because S218 had this item in
 its own context and still lapsed. The report's commit sha is **computed from git at render time**, never copied
 from the receipt, so there is no second copy to get wrong. The proposal is one tool that renders and lints the
-report plus a `Stop` hook, in three phases; decisions D1-D3 are the operator's and nothing is applied.
+report plus a `Stop` hook, in three phases. The operator ratified D1-D3 as recommended on 2026-10-03; nothing is applied and P1 has not started.
 
 **Second occurrence, 2026-09-22 (S218).** A session that had read this item at its own Phase 0, where it was in the
 list of undecided items put to the operator, closed out with a message that carried all four §3G items and none of

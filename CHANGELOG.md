@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-79] S252 — D1-D3 ratified by the operator after the close-out
+
+The operator answered one picker: **D1** the tool lives at `starter-kit/close_out_report.py`; **D2** the hook is installed in his gitignored `.claude/settings.local.json` (a session does not edit it); **D3** the shape is required and checkable; all as recommended. A push of local `main` to the fork `origin` was offered and declined ("not now"). Recorded in the plan's status and section 5, the BL-79 row and detail, and the receipt's next steps. No code written; P1 has not started.
+
 ### 2026-10-03 · [BL-79] S252 close-out — plan for a generated 3G close-out report plus a Stop hook
 
 **Product:** [`docs/planning/close-out-report-actuator-plan.md`](docs/planning/close-out-report-actuator-plan.md), which costs BL-79: one tool that renders and lints the Phase 3G report, plus a Stop and a SessionStart hook; phases P1-P3; decisions D1-D3 open for the operator. **A plan only: nothing implemented, installed or sent upstream.** The operator asked for a way to ensure the report is run and formatted cleanly and chose *generated report + Stop hook* from a picker. Receipt `status: complete`, self 8, predecessor (S251) 8.

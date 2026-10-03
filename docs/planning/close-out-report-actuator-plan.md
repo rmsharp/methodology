@@ -1,6 +1,6 @@
 # Making the Phase 3G close-out report run, and read cleanly — BL-79, costed with a prototype
 
-**Status: DRAFT — decisions D1–D3 are open and belong to the operator.** Written at S252 (2026-10-03) as
+**Status: DRAFT, with D1–D3 RATIFIED by the operator on 2026-10-03 (all as recommended); P1–P3 are not started.** Written at S252 (2026-10-03) as
 that session's single deliverable. **The plan is the deliverable; nothing here is applied** — no tool is
 installed, no settings file is edited, nothing goes upstream (`starter-kit/SESSION_RUNNER.md` §Planning
 Sessions, failure mode #18). Every number below was produced by running something; the commands and the
@@ -226,6 +226,8 @@ appears at their root; **no hook is installed for anyone** — that stays their 
 | **D1** | Where the tool lives: `starter-kit/close_out_report.py` from P1, or `bin/` (canonical-only, like `check-handoff`) | **`starter-kit/`.** Adopters carry the same §3G (BL-79: `nprcgenekeepr`'s is byte-identical), so it will move there; renaming later touches tests and gates. It reaches no adopter until P3 adds the manifest row. |
 | **D2** | How the hook is installed: your gitignored `.claude/settings.local.json`, or a tracked `.claude/settings.json` | **`settings.local.json`.** A tracked file would also apply to anyone else who works in this clone or a fork of it; making it shared is a separate go-ahead. |
 | **D3** | Required and checkable, or a recommended template | **Required.** The recommended-template route is the one S218 and S230 failed on with the rule in context. |
+
+**Ratified 2026-10-03, in the S252 picker:** D1 `starter-kit/close_out_report.py`; D2 the operator's gitignored `.claude/settings.local.json`; D3 required and checkable. Asked in the same picker and declined for now: pushing local `main` to the fork `origin`.
 
 Plan parameters adjustable at the P1 review without a decision: the 300-character and 2,000 B caps, the label
 wording, and whether the Record line carries the uncommitted count (it is informational and not part of the
