@@ -54,6 +54,22 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S250
+date: 2026-10-03
+status: complete
+self_score: 6
+predecessor_score: 9
+active_task: **DONE: the formal review on upstream PR #91 (`KJ5HST/methodology`, the maintainer's `feat/sync-manifest-at-ref`) posted as APPROVE at head `befa7553`, read back identical (state APPROVED, same commit, same body). It was S249's operator decision; the operator said `post` after seeing the exact text. No merge, no push to his branch, no spend.**
+what_was_done: Phase 0 PARTIAL and no Phase 1B claim (no pending receipt opened; SAFEGUARDS not read; no dashboard refresh; no policy trim, so HANDOFFS.md now holds 4 receipts). Confirmed #91 OPEN, head unchanged, no maintainer reply after our last comment. At the operator's request ("you need to address the merge conflict") measured it: GitHub says CONFLICTING/DIRTY, but a scratch-clone merge of `befa7553` into upstream `main` `58458db` is clean and its suite is 254 passed / 0 failed, exit 0. The review text carries that finding. Two approval pickers were rejected because the operator could not see the draft; the third attempt (text in its own turn, no picker) worked.
+next_steps: **(0) TRIM FIRST, after the Phase 0 report:** HANDOFFS.md holds 4 receipts; policy is `--cut 2 --force` as its own action. **(1) CHECK #91:** `gh pr view 91 --repo KJ5HST/methodology --json state,headRefOid,mergeable,mergeStateStatus,comments,reviews`; a maintainer reply ranks above everything; re-check whether GitHub's `CONFLICTING` cleared. **(2) ASK THE OPERATOR, one picker, text drafted in an earlier turn:** BL-95 the resync against `upstream/main` (needs a plan he commissions); D3; BL-94 planning; BL-96; the P4 chain (about $35 against $15.49 left, needs a cap raise). **(3) PUSH:** fork `origin` is behind local `main`; a push needs his go-ahead. **(4) STILL OPEN:** D3, BL-94, BL-95, BL-96, BL-93, BL-89, BL-87, BL-84, BL-92.
+key_files: the review, https://github.com/KJ5HST/methodology/pull/91 (state APPROVED on `befa7553f262377273b9f4dc5a3408a7d3d05522`); scratch draft `.../scratchpad/pr91-review-body.md` and merged-suite output `.../scratchpad/pr91c-tests.out` (session-scoped, not committed); PR-branch files at `befa7553` (not this checkout): `bin/tests.sh:1281` (Test 32), `bin/sync:116` (`source_distribution`), `bin/status:139` (`use_source_manifest`), `bin/_manifest_reader.py`.
+gotchas: **(1) GITHUB'S MERGE FLAG AND A LOCAL MERGE DISAGREED:** `CONFLICTING`/`DIRTY` against a clean `git merge` into `58458db`; GitHub's test-merge ref `refs/pull/91/merge` (`204b091`) is built on the OLD base `16805399`, not on `main` `58458db`, so the flag was never recomputed; `git merge-tree --write-tree origin/main befa7553` exits 0 (clean). Only the maintainer can refresh it (push, or close and reopen). The operator confirmed GitHub still showed the conflict after the review. Re-query before repeating either claim. **(2) PROSE IN THE SAME TURN AS AN `AskUserQuestion` WAS NOT SEEN, EVEN IN `preview`:** end the turn with the draft, ask in the next. **(3) SESSION_NOTES.md DOES NOT EXIST IN THIS REPO;** the receipt in HANDOFFS.md is the handoff. **(4) `dashboard_history.jsonl` AND `.context-budget-history.jsonl` ARE MODIFIED BY TOOL RUNS** and left alone.
+runtime_smoke: No runtime behavior changed (a PR review and docs). Scratch clone, #91 head merged into upstream `main`: 254 passed / 0 failed, exit 0. Fork `main` with this receipt: quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 95b5ea74bd7c · manifest 01a4ae7aa511 (the first run, before the receipt cited a gate run, read 9/11 with tests-sh-failed and check-handoff-all red, both from the receipt itself; `bash bin/tests.sh` with the final receipt: 361 passed, 0 failed, exit 0 on the rerun inside the ratchet; `check-handoff --all` OK on 4).
+changelog_ref: CHANGELOG.md "S250 close-out", "S250 — merge-state check", "S250 — formal review posted"
+commit: this close-out; Phase 3C appended no fork learning, so no retirement is owed (none considered: no row appended; the picker lesson extends memory `feedback_show_the_artifact_before_asking_for_its_review`); nothing git-pushed; one APPROVE review is on KJ5HST/methodology#91 at the operator's `post`
+```
+
+```handoff
 session: S249
 date: 2026-10-02
 status: complete

@@ -233,6 +233,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [ad hoc] S250 close-out
+
+Receipt written (`HANDOFFS.md`, S250; now 4 receipts, so the trim to 2 is next session's Phase 0 action). No Phase 1B claim was opened before the work, and Phase 0 was partial (SAFEGUARDS not read, no dashboard refresh); both stated in the receipt. Nothing pushed to fork `origin`. Fork gates with the receipt in place: quality_ratchet 11/11 pass; `check-handoff --all` OK on 4. GitHub's flag on #91 is stale: its test-merge ref `refs/pull/91/merge` is built on old base `16805399`, not `main` `58458db`, while `git merge-tree --write-tree` of `main` and `befa7553` is clean; only the maintainer can refresh it.
+
+### 2026-10-03 · [ad hoc] S250 — merge-state check on PR #91: clean locally, 254 passed / 0 failed
+
+GitHub reports #91 `CONFLICTING`/`DIRTY`. In a scratch clone of `KJ5HST/methodology` (`core.hooksPath` unset), merging head `befa7553` into upstream `main` `58458db` was clean (only `CHANGELOG.md` and `HANDOFFS.md` auto-merged), and `bash bin/tests.sh` on the merge gave `== Summary: 254 passed, 0 failed ==`, exit 0. Nothing pushed to the maintainer's branch.
+
+### 2026-10-03 · [ad hoc] S250 — formal review posted on upstream PR #91, event Approve
+
+At the operator's `post` (after he twice could not see the draft in a picker turn), `gh pr review 91 --repo KJ5HST/methodology --approve --body-file` was run with the head unchanged at `befa7553`; read back from GitHub: state APPROVED, commit `befa7553`, body identical to the draft. Body: 254 passed / 0 failed, manifest read not imported, unsafe paths refused, the three non-blocking points (`.git` dest, NUL byte, `+=`), and the merge-state finding. No merge.
+
 ### 2026-10-02 · [ad hoc] S249 — operator decision: formal review on PR #91 is S250's deliverable, event Approve
 
 Recorded in the S249 receipt's `next_steps` (0). Nothing posted for it yet.
