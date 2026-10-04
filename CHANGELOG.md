@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] S261 — cite the close-out commit in the receipt's `commit:` slot
+
+`HANDOFFS.md`'s S261 receipt now starts its `commit:` slot with `4d3a34f`, the close-out commit, so the next session's claim does not turn Test 34 L1 red the way S260's slot did. One line in `HANDOFFS.md`.
+
 ### 2026-10-04 · [BL-94] S261 close-out — the rater re-run is done: `missing` and `vague` MISSED again, `wrong` caught ($1.6146); fork learning #108
 
 The `HANDOFFS.md` receipt is `status: complete`. Commits: trim `37f0ad6` and fold `8f5a15f` (both before the claim), claim `e2905b7`, the run and report `e18d5a1`, the S260 `commit:` slot reconcile `9cb4ec4`, status in the plan, backlog row and detail `348a23a`, plus this close-out. Result: 12 of 12 calls on the rebuilt `missing` and `vague` answered yes (their evidence survives in a status line and in names no finder counts), `wrong` caught on all 3 records in both orders, honest records 8 of 8, arm guess unchanged; the rater is not shown to be blind to a vague record. Spend $1.6146 (the study's ledger $4.0927 of $100). **Phase 3C appended fork learning #108** (docs/FORK_LEARNINGS.md); D3's retire-or-refuse: none retired, the nearest rows #16, #83 and #107 named in the receipt as not meeting (a), (b) or (c). `bin/tests.sh` 362 passed, 0 failed. No harness file changed; nothing pushed; nothing sent upstream. Next, all his: rebuild the two defects, his own blind rating, D6 and D7, P3; the owed HANDOFFS trim (3 receipts).
