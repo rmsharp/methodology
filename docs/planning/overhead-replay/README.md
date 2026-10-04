@@ -55,3 +55,17 @@ The harness for [`../ratchet-mechanism-test-plan.md`](../ratchet-mechanism-test-
 
 Build and check: `python3 ratchet_arms.py R1 DEST --task t-erode --start-measure '{"passed":5568,"failed":0,"warnings":33,"files":308}'`, then `python3 ratchet_dryrun.py`.
 The hook refuses only a **manifest loosening**. It does not run the tests, so a skipped or deleted test with the manifest untouched passes it; that is the plan's point (a null on those paths is the ratchet's design, not a harness fault), and `erosion_score.py` is what sees them.
+
+## Documentation-quality study (BL-94)
+
+The harness for [`../documentation-quality-experiment-plan.md`](../documentation-quality-experiment-plan.md). P1a and P1b are described in
+[`pilot/doc-evidence/README.md`](pilot/doc-evidence/README.md) and `P1B_REPORT.md`; the P2a files, built at S258 ($0, no model run), are:
+
+| File | What it is |
+|---|---|
+| `probe.py` | The cold-start probe: rebuilds a saved end state from the evidence bundle (the pinned commit and its ancestors only), optionally applies the **git-only control**, runs one `claude -p` turn with `go`, writes a spend line and a row. Both caps are required; `--no-launch` spends nothing; `--verify-all` is the $0 pre-flight over the bundle. |
+| `tests_probe.py`, `mutants_p2a.py` | 43 tests against a fake `claude`; `mutants_p2a.py probe` applies 35 one-line mutants to a copy and requires every one killed (`rater` does the same for `rater.py`). |
+| `probe_budget.py` | What a probe should cost, from the saved runs' first stop (cost, turns, files read). Writes `pilot/doc-evidence/p2a-probe-budget.json`. |
+| `m3_search.py` | The M3 task search over the project's history, plus the constructed-task scan at the start state. Writes `p2a-m3-search.json`. |
+| `rater.py`, `tests_rater.py` | M5: the fixed question list, the blind model rater (no tools, own cap), the four planted defects, the dry run (paid, P2), and the packet for the operator's own rating (`pilot/doc-probe/rating/`). |
+| `pilot/doc-evidence/P2A_REPORT.md` | The report: the answer, items (a) to (f), what differs from the plan. |

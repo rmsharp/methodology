@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S258 — backlog row, detail status and the harness README follow the P2a close
+
+`BACKLOG.md` (the BL-94 row) and `BACKLOG-DETAIL.md` (a P2a status paragraph that supersedes the S257 "next: P2a") record P2a done and his three answers; `overhead-replay/README.md` gains a section listing the P2a files.
+
 ### 2026-10-04 · [BL-94] S258 — the rater's strata, its tests, the plan and the report follow the decisions
 
 `rater.py` `STRATA` 3 / 3 / 4 to 2 / 2 / 2 and the packet's opening line counts its records; `tests_rater.py` expects two per arm, six unique records, labels R01-R06 and a seven-row sheet; the plan (§4 item 4, D4, D5, the P2a status) and `P2A_REPORT.md` record the three answers. The previous commit holds the rebuilt packet, sheet and key.
