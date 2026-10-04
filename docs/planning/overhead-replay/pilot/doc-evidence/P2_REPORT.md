@@ -74,6 +74,8 @@ record scores 8 of 8, which is P1b's null again; this rater would not separate t
 
 ## 4. Defects found in my own harness (not fixed this session)
 
+**Fixed at S260 ($0, no model call):** items 1 to 3 below, and the rater's two misses in §3 (`missing` and `vague` were built from too narrow a definition of their question's evidence; the builders and a $0 check that each defect removed its evidence are in `rater.py`, described in `../../README.md`). Item 4 is not a harness defect and is unchanged.
+
 1. **`probe.py` `reads` records the Read tool only.** The v3.0 session read `SESSION_NOTES.md` through Bash `head -150` and `reads`
    lists three files without it. P3 must take reads from the stream log's Bash commands too.
 2. **`rater.call_rater` discards the raw reply when parsing fails.** One call (`t-control-fix/R1-r2/wrong/A`, "Unterminated string
