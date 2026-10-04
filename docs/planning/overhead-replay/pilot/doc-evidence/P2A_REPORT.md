@@ -132,7 +132,7 @@ naming a later-removed function is history and stays true.
 Every launch passes both caps; the driver and the rater refuse before a call when `spent + cap > total`, read from the study's own
 ledger. The figures are proposals; the P2 cap is his (D4).
 
-## 7. Where this differs from the plan, and what is asked
+## 7. Where this differs from the plan, and what he decided
 
 * Tests in `tests_probe.py`, not `tests.py` (reason in §1). A `cap_hit` rule and `--verify-all` were added; neither is in the plan.
 * A probe is cheaper than the plan's guess by about a factor of three; the packet is far heavier than "about ten records" implied.
