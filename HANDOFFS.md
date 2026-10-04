@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S260
+date: 2026-10-04
+status: pending
+active_task: BL-94 harness fixes at $0, the four defects in `docs/planning/overhead-replay/pilot/doc-evidence/P2_REPORT.md` section 4: (a) `probe.py` `phase0_reads` takes the Read tool only; (b) `rater.py` `call_rater` keeps no raw reply on a failed parse; (c) `probe.py` `--no-launch` leaves a clone the real launch refuses; (d) rebuild the `missing` and `vague` planted defects so each provably flips its own question. Done when each fix has a test or a mutant that fails without it, the study's suites and `bin/tests.sh` are green, and no model call was made or dollar spent. P3 is its own go-ahead.
+```
+
+```handoff
 session: S259
 date: 2026-10-04
 status: complete

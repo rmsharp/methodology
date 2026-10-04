@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S260 claim (in progress) — the four P2 harness fixes, $0
+
+CHANGELOG: pending. Operator said `go` as the first message; the Phase 0 picker he declined to answer in order to ask about an mts-system report (a RED/GREEN commit-policy question for that adopter, answered in discussion, nothing changed there), then chose "BL-94 harness fixes, $0". Deliverable: the four harness defects `P2_REPORT.md` section 4 names, each fixed with a test or a mutant, no model call and no spend: (a) `probe.py` `phase0_reads` counts the Read tool only; (b) `rater.py` `call_rater` drops the raw reply on a failed parse; (c) `probe.py` `--no-launch` leaves a clone the real launch then refuses; (d) the `missing` and `vague` planted defects do not provably flip their own question. P3 is its own go-ahead and not part of this session. Phase 0: 0 undocumented commits at both frontiers, the ratchet citation matches `.quality-gates-results.json` (results `3f5791d93dac`, manifest `fd435a4f8fab`), PR #92 open with no comments or reviews and no other open PR or issue, 81 ahead of `origin/main` and 102 behind `upstream/main`, dashboard 72/100, the BL-79 hook still not installed. The owed HANDOFFS trim (`d98c464`) and fold (`51edca6`) ran first as their own actions, the shard's `.verify.sh` exit 0 from a `--no-local` clone. Nothing pushed, nothing sent upstream, nothing spent.
+
 ### 2026-10-04 · [ad hoc] S260 — fold the 2026-10-04 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`d98c464`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-04), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S259, S258); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0. Ran after the Phase 0 report and the operator's choice of BL-94 harness fixes, before the session claim.
