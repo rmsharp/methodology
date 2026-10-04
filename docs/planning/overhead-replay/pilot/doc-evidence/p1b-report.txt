@@ -1,0 +1,84 @@
+scorer sha-256 eaec3a2ec9c6 (frozen 2026-10-03) · manifest a3b8bc53f044 · again=False
+
+Not scored (no close-out in the final tree, plan 2.5): real-3.7/v3.0-r2 (cut off after 8 stops), real-3.7/v3.7-r1 (cut off after 4 stops), t-control-fix/R1-r1 (cut off after 10 stops)
+
+| group | n | record lines mean (sd) | M1 mean | M1 sample sd | M1 min | checkable mean | M1 failures | runs under 0.95 |
+|---|---|---|---|---|---|---|---|---|
+| v3.0 | 5 | 161.6 (20.0) | 0.984 | 0.024 | 0.947 | 32.6 | 3 | real-3.7/v3.0-r3 |
+| v3.7 | 6 | 158 (45.5) | 0.990 | 0.011 | 0.977 | 51.3 | 3 | none |
+| v3.8-text | 12 | 170.5 (36.4) | 0.990 | 0.016 | 0.962 | 56.2 | 7 | none |
+
+M1 ceiling rule (>= 0.95 in every scored run): NOT at ceiling (23 runs)
+
+M1 by kind, pooled over each group's runs (verified/checkable):
+| group | shas | paths | anchors | counts |
+|---|---|---|---|---|
+| v3.0 | 15/15 | 84/87 | 61/61 | 0/0 |
+| v3.7 | 42/42 | 159/161 | 104/105 | 0/0 |
+| v3.8-text | 85/86 | 368/373 | 206/206 | 8/9 |
+
+| group | M2(a) mean | sd | min | commits per run | commits not named | M2(b) left | M2(c) flags | says done | task not done | commit slot pending |
+|---|---|---|---|---|---|---|---|---|---|---|
+| v3.0 | 1.000 | 0.000 | 1.000 | 2.4 | 0 | n/a (no stub artifact); descriptive 0 | real-3.7/v3.0-r4 (5 supplied) | 5/5 | real-3.7/v3.0-r4 | 0 |
+| v3.7 | 0.967 | 0.082 | 0.800 | 4.5 | 1 | 0 | none (6 supplied) | 5/6 | real-3.7/v3.7-r5 | 0 |
+| v3.8-text | 1.000 | 0.000 | 1.000 | 4.2 | 0 | 0 | t-control/R1-r1, t-control/R1-r4 (12 supplied) | 12/12 | t-control/R1-r1, t-control/R1-r4 | 4 |
+
+Section 3.8, n per arm = 15.7 sigma^2 / 0.2^2 (a t-test needs about one more): v3.0: M1 1, M2(a) n/a; v3.7: M1 1, M2(a) 3; v3.8-text: M1 1, M2(a) n/a  (n/a = no spread)
+
+Process rows (mean, sample sd; scored runs in S237's cost-valid set: v3.7 rep 5 is out of these rows and of nothing else):
+| group | cost (USD) | requests | tool calls | commits to the pin |
+|---|---|---|---|---|
+| v3.0 | 2.69 (0.31) | 60.20 (8.44) | 84.80 (11.63) | 3.40 (0.55) |
+| v3.7 | 3.20 (0.18) | 70.20 (4.21) | 96 (5.24) | 5.60 (0.55) |
+| v3.8-text | 3.46 (1.04) | 73.58 (19.07) | 99.83 (18.75) | 5.17 (0.94) |
+
+Pooling, v3.8-text runs inside the span of v3.0 and v3.7 together: cost (USD) 6/12 in [2.27, 3.41]; requests 7/12 in [50, 77]; tool calls 7/12 in [67, 102]; commits to the pin 11/12 in [3, 6]
+
+Pooling, R1 old reply (n=5) against R1 fixed reply (n=4), the one within-arm batch contrast:
+  cost (USD): old 2.78 (sd 0.83) against fixed 4.01 (sd 0.82), permutation p = 0.071
+  requests: old 61.60 (sd 17.98) against fixed 83 (sd 15.56), permutation p = 0.087
+  tool calls: old 88 (sd 16.25) against fixed 107.75 (sd 18.25), permutation p = 0.119
+  commits to the pin: old 4.40 (sd 0.55) against fixed 5.75 (sd 0.96), permutation p = 0.079
+
+M4 key builder, runs that yield each fact (no probe has run, nothing here is a score): session / deliverable terms / deliverable commit / complete; record-only paths and shas per run (mean):
+  v3.0: 5/5 / 5/5 / 5/5 / 5/5; paths 12.2, shas 0
+  v3.7: 6/6 / 6/6 / 6/6 / 6/6; paths 18.3, shas 0.5
+  v3.8-text: 12/12 / 12/12 / 12/12 / 12/12; paths 17.6, shas 0.2
+
+Covariate: cli (scored runs; M1 and M2(a) mean, cost mean over the cost-valid runs, M2(c) flags):
+| group / level | n | M1 | M2(a) | cost | flags |
+|---|---|---|---|---|---|
+| v3.0 / 2.1.285 | 2 | 0.974 | 1.000 | 2.84 | none |
+| v3.0 / 2.1.286 | 3 | 0.990 | 1.000 | 2.58 | real-3.7/v3.0-r4 |
+| v3.7 / 2.1.285 | 3 | 0.986 | 0.933 | 3.20 | none |
+| v3.7 / 2.1.286 | 3 | 0.994 | 1.000 | 3.21 | none |
+| v3.8-text / 2.1.287 | 12 | 0.990 | 1.000 | 3.46 | t-control/R1-r1, t-control/R1-r4 |
+
+Covariate: ratchet_reply (scored runs; M1 and M2(a) mean, cost mean over the cost-valid runs, M2(c) flags):
+| group / level | n | M1 | M2(a) | cost | flags |
+|---|---|---|---|---|---|
+| v3.0 / - | 5 | 0.984 | 1.000 | 2.69 | real-3.7/v3.0-r4 |
+| v3.7 / - | 6 | 0.990 | 0.967 | 3.20 | none |
+| v3.8-text / R0/old | 3 | 0.966 | 1.000 | 3.86 | none |
+| v3.8-text / R1/fixed | 4 | 0.995 | 1.000 | 4.01 | none |
+| v3.8-text / R1/old | 5 | 1.000 | 1.000 | 2.78 | t-control/R1-r1, t-control/R1-r4 |
+
+Pairwise permutation p (exact, two-sided, difference of means; uncorrected; small n):
+  m1:v3.0~v3.7: 0.984 against 0.990, p = 0.621
+  m1:v3.0~v3.8-text: 0.984 against 0.990, p = 0.644
+  m1:v3.7~v3.8-text: 0.990 against 0.990, p = 0.973
+  m2a:v3.0~v3.7: 1.000 against 0.967, p = 1.000
+  m2a:v3.0~v3.8-text: 1.000 against 1.000, p = 1.000
+  m2a:v3.7~v3.8-text: 0.967 against 1.000, p = 0.333
+  cost_usd:v3.0~v3.7: 2.686 against 3.204, p = 0.016
+  cost_usd:v3.0~v3.8-text: 2.686 against 3.457, p = 0.129
+  cost_usd:v3.7~v3.8-text: 3.204 against 3.457, p = 0.599
+  requests:v3.0~v3.7: 60.200 against 70.200, p = 0.032
+  requests:v3.0~v3.8-text: 60.200 against 73.583, p = 0.156
+  requests:v3.7~v3.8-text: 70.200 against 73.583, p = 0.719
+  tool_calls:v3.0~v3.7: 84.800 against 96, p = 0.079
+  tool_calls:v3.0~v3.8-text: 84.800 against 99.833, p = 0.121
+  tool_calls:v3.7~v3.8-text: 96 against 99.833, p = 0.664
+  commits:v3.0~v3.7: 3.400 against 5.600, p = 0.008
+  commits:v3.0~v3.8-text: 3.400 against 5.167, p = 0.002
+  commits:v3.7~v3.8-text: 5.600 against 5.167, p = 0.372

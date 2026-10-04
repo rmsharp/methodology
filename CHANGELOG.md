@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S257 — P1b checkpoint 2: the driver's tests, its report, and the saved report text
+
+`tests_p1b.py` (new, 20 tests: the inputs and the freeze and overwrite refusals, the summaries, the committed scores' shape) with 10 mutants of `p1b_score.py` each run on an unbroken copy first, all killed after two tests were added for the two that survived (the power constant, the pooling span's use of cost-invalid runs). `p1b_score.py` now reports the process rows on S237's cost-valid set and commits to the pin, a covariate table (CLI version; ratchet hook and close-out reply inside v3.8-text) and what the M4 key builder found; `pilot/doc-evidence/p1b-report.txt` is its output over the saved scores. No score was re-run: the scores are those of `598319d`.
+
 ### 2026-10-04 · [BL-94] S257 — P1b checkpoint: the saved runs scored once with the frozen scorer
 
 `docs/planning/overhead-replay/p1b_score.py` (new) gathered inputs for the 26 runs of the three contrast sets (`real-3.7`, `t-control`, `t-control-fix`), applied the plan 2.5 inclusion rule (`reached_closeout`: 23 scored, the same three left out that P1a named: `real-3.7/v3.0-r2`, `real-3.7/v3.7-r1`, `t-control-fix/R1-r1`) and ran `doc_score.py` once, refusing to start unless its sha-256 matched `doc_score.frozen` (`eaec3a2ec9c6`, unchanged). The output is `pilot/doc-evidence/p1b-scores.json` (every score, every failed reference, every final message, every key). The two S237 runs that ran on past their pin were read before scoring: the chosen final message is the first close-out's own, and the saved cost, request and tool-call rows are cut at that close-out. The driver's "commits" column was first taken from the manifest's count to HEAD and corrected to commits to the pin (v3.7 rep 2 holds 13 commits past it) before any figure was used; no score was re-run. Hand-reads, the report and the stop follow.

@@ -41,6 +41,21 @@ PROCESS = (("cost_usd", "cost (USD)"), ("requests", "requests"), ("tool_calls", 
 POWER_D = 0.20                     # plan 3.8: the difference worth detecting; n = 15.7 sigma^2 / d^2
 
 
+def cost_valid(runs):
+    """S237's cost-valid set: its table drops v3.7 rep 5, the one honest partial that closed out at the RED gate (plan 2.5). The ratchet
+    study's rows carry no such flag, so every v3.8-text run is kept. Documentation measures never use this: no run is dropped for cost."""
+    return [r for r in runs if r["cost_valid"] is not False]
+
+
+def key_facts(runs):
+    """What the M4 key builder found, per group: how many runs yield each git-derivable fact (no probe has run, so nothing is scored)."""
+    g = [r["key"]["git_derivable"] for r in runs]
+    ro = [r["key"]["record_only"] for r in runs]
+    return {"n": len(runs), "session": sum(bool(x["session"]) for x in g), "deliverable_terms": sum(bool(x["deliverable_terms"]) for x in g),
+            "deliverable_commit": sum(bool(x["deliverable_commit"]) for x in g), "complete": sum(bool(x["complete"]) for x in g),
+            "record_only_paths": spread([len(x["paths"]) for x in ro]), "record_only_shas": spread([len(x["shas"]) for x in ro])}
+
+
 def process_of(r):
     """The process measures of a scored run. Cost, requests and tool calls are the saved row's (S237's rows for the two runs that ran on
     were cut at the close-out by hand); commits are those in BASE..PIN, from the scorer's own range, because the manifest's
@@ -234,7 +249,7 @@ def summarize(data):
             "says_done": [r["id"] for r in rs if r["score"]["m2"]["says_done"]],
             "task_done_false": [r["id"] for r in rs if r["task_done"] is False],
             "commit_slot_pending": sum(1 for r in rs if str(r["score"]["m2"]["commit_slot"] or "").strip().lower().startswith("pending")),
-            "process": {k: spread([process_of(r)[k] for r in rs]) for k, _ in PROCESS},
+            "process": {k: spread([process_of(r)[k] for r in cost_valid(rs)]) for k, _ in PROCESS}, "key": key_facts(rs),
             "n_for_m1": n_per_arm(sd([x for x in m1 if x is not None])), "n_for_m2a": n_per_arm(sd([x for x in m2a if x is not None])),
         }
     out["m1_at_ceiling"] = m1_at_ceiling([r["score"]["m1"] for r in scored])
@@ -245,15 +260,16 @@ def summarize(data):
     for label, getter in (("m1", lambda r: r["score"]["m1"]["accuracy"]), ("m2a", lambda r: r["score"]["m2"]["a"]["coverage"]),
                           *((k, (lambda k: lambda r: process_of(r)[k])(k)) for k, _ in PROCESS)):
         for ga, gb in pairs:
-            xa = [getter(r) for r in by_group[ga] if getter(r) is not None]
-            xb = [getter(r) for r in by_group[gb] if getter(r) is not None]
+            pool = (lambda g: cost_valid(by_group[g])) if label in dict(PROCESS) else (lambda g: by_group[g])
+            xa = [getter(r) for r in pool(ga) if getter(r) is not None]
+            xb = [getter(r) for r in pool(gb) if getter(r) is not None]
             tests[f"{label}:{ga}~{gb}"] = {"mean_a": statistics.mean(xa) if xa else None, "mean_b": statistics.mean(xb) if xb else None,
                                            "p": perm_p(xa, xb)}
     out["tests"] = tests
     # pooling: v3.8-text runs inside the span of v3.0 and v3.7 together; R1 old reply against R1 fixed reply
     span = {}
     for k, _ in PROCESS:
-        both = [process_of(r)[k] for r in by_group["v3.0"] + by_group["v3.7"]]
+        both = [process_of(r)[k] for r in cost_valid(by_group["v3.0"] + by_group["v3.7"])]
         lo, hi = min(both), max(both)
         span[k] = {"lo": lo, "hi": hi, "inside": sum(lo <= process_of(r)[k] <= hi for r in by_group["v3.8-text"]), "of": len(by_group["v3.8-text"])}
     out["pooling_span"] = span
@@ -268,7 +284,7 @@ def summarize(data):
         for r in scored:
             rows.setdefault((r["group"], key(r)), []).append(r)
         return {f"{g} / {k}": {"n": len(rs), "m1": spread([r["score"]["m1"]["accuracy"] for r in rs]), "m2a": spread([r["score"]["m2"]["a"]["coverage"] for r in rs]),
-                               "flags": [r["id"] for r in rs if (r["score"]["m2"]["c"] or {}).get("flag")], "cost": spread([r["cost_usd"] for r in rs])}
+                               "flags": [r["id"] for r in rs if (r["score"]["m2"]["c"] or {}).get("flag")], "cost": spread([r["cost_usd"] for r in cost_valid(rs)])}
                 for (g, k), rs in sorted(rows.items())}
     out["covariates"] = {"cli": cov("cli", lambda r: ",".join(r["cli"])),
                          "ratchet_reply": cov("ratchet_reply", lambda r: (("R1" if r["ratchet"] else "R0") + "/" + str(r["reply"])) if r["group"] == "v3.8-text" else "-")}
@@ -304,7 +320,7 @@ def report(data):
           f"{', '.join(x['m2c_flags']) or 'none'} ({x['m2c_supplied']} supplied) | {len(x['says_done'])}/{x['n']} | {', '.join(x['task_done_false']) or 'none'} | {x['commit_slot_pending']} |")
     P(f"\nSection 3.8, n per arm = 15.7 sigma^2 / {POWER_D}^2 (a t-test needs about one more): " +
       "; ".join(f"{g}: M1 {fmt(x['n_for_m1'])}, M2(a) {fmt(x['n_for_m2a'])}" for g, x in s["groups"].items()) + "  (n/a = no spread)")
-    P("\nProcess rows (mean, sample sd; scored runs only):")
+    P("\nProcess rows (mean, sample sd; scored runs in S237's cost-valid set: v3.7 rep 5 is out of these rows and of nothing else):")
     P("| group | " + " | ".join(lbl for _, lbl in PROCESS) + " |")
     P("|---|" + "---|" * len(PROCESS))
     for g, x in s["groups"].items():
@@ -315,8 +331,12 @@ def report(data):
     P(f"\nPooling, R1 old reply (n={b['n_old']}) against R1 fixed reply (n={b['n_fixed']}), the one within-arm batch contrast:")
     for k, lbl in PROCESS:
         P(f"  {lbl}: old {fmt(b[k]['old']['mean'], 2)} (sd {fmt(b[k]['old']['sd'], 2)}) against fixed {fmt(b[k]['fixed']['mean'], 2)} (sd {fmt(b[k]['fixed']['sd'], 2)}), permutation p = {fmt(b[k]['p'])}")
+    P("\nM4 key builder, runs that yield each fact (no probe has run, nothing here is a score): session / deliverable terms / deliverable commit / complete; record-only paths and shas per run (mean):")
+    for g, x in s["groups"].items():
+        k = x["key"]
+        P(f"  {g}: {k['session']}/{k['n']} / {k['deliverable_terms']}/{k['n']} / {k['deliverable_commit']}/{k['n']} / {k['complete']}/{k['n']}; paths {fmt(k['record_only_paths']['mean'], 1)}, shas {fmt(k['record_only_shas']['mean'], 1)}")
     for label, tbl in s["covariates"].items():
-        P(f"\nCovariate: {label} (scored runs; M1 and M2(a) mean, cost mean, M2(c) flags):")
+        P(f"\nCovariate: {label} (scored runs; M1 and M2(a) mean, cost mean over the cost-valid runs, M2(c) flags):")
         P("| group / level | n | M1 | M2(a) | cost | flags |")
         P("|---|---|---|---|---|---|")
         for k, v in tbl.items():
