@@ -1,0 +1,3163 @@
+{
+ "about": "BL-94 P1b: the frozen doc_score.py over the saved v3.0, v3.7 and v3.8-text runs (p1b_score.py). Scored once.",
+ "again": false,
+ "manifest_sha256": "a3b8bc53f044c2856c3768d339a6332f031a9be3914c124a9dfac81cb5a06717",
+ "runs": {
+  "real-3.7/v3.0-r1": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 4,
+   "cost_usd": 2.79,
+   "cost_valid": true,
+   "final_message": "I cleared all 7 warnings and committed the work, but issue #121 is still open. This checkout has no git remote, so I couldn't close it or push. The full suite now emits 0 warnings, down from 7. It has 1 failure, in `test_getVersion.R`, which I traced to this environment. Nothing was pushed.\n\n## What changed\n- **Pyramid warnings (5):** `getPedMaxAge()` used `max(ped$age, na.rm = TRUE)`, which warned and returned `-Inf` when no age was usable.\n  - **Reachable in the app:** QC requires a `birth` column but accepts an all-NA one, which produces an all-NA `age`.\n  - **Fix:** it now returns `NA_real_` silently, and `getPyramidPlot()` already handled that. `@return`, the `.Rd` file and `NEWS.Rmd` are updated, and `NEWS.md` is re-rendered.\n- **gvaConvergence warnings (2):** they come from the documented `checkKinshipOverrides()` warning on the deliberately invalid 0.9-override path. The test now asserts that warning instead of leaking it, and this fix is test-only.\n\n## Commits\n- `6d5fd852`: RED checkpoint. The new tests failed with `-Inf` and the warning, and never errored.\n- `76481667`: the GREEN fix.\n- `801f5fc1`: close-out docs (session notes, CHANGELOG, Learning 292 in `PROJECT_LEARNINGS.md`).\n\n## Verification\n- **Full suite:** 252 files, 3754 expectations passing, 0 errors, 0 warnings.\n- **The 1 failure:** `test_getVersion.R`. `getVersion()` reads the install date, and `nprcgenekeepr` isn't installed in this checkout, so the date is `NA`. My diff doesn't touch it, but I didn't re-run it at baseline.\n- **`R CMD check`:** `R CMD check --no-tests --no-manual` reports Status OK.\n- **Lint, spelling and runtime probe:**\n  - `lintr` reports 0 lints on `R/getPedMaxAge.R`, though its `cyclocomp` check couldn't run because that package isn't installed.\n  - Spelling is clean.\n  - A real all-NA-birth pedigree run through `modPyramidServer` with warnings as errors raised nothing.\n\n## Things you should know\n- **REFACTOR gate:** `AskUserQuestion` wasn't available, so I asked the gates in prose. I never asked the GREEN\u2192REFACTOR gate. I treated REFACTOR as a no-op and took your \"close the session out\" as covering it. That deviates from `CLAUDE.md`.\n- **NEWS formatting churn:** rendering `NEWS.md` also changed 3 unrelated spots, from pandoc-version differences. There is no content change.\n- **Duplicate warning (not fixed):** `prepareKinshipOverrides()` and `applyKinshipOverrides()` both validate, so a user with an override above 0.5 sees the same warning twice. This is a product question.\n- **Cosmetic nits (not fixed):** `getPyramidPlot.R:49` has a mis-indented line, and `modPyramid.R:46` has the CSS color `darblue`.\n- **Untracked file:** `dashboard_history.jsonl` is left uncommitted. Decide whether to commit it or add it to `.gitignore`.\n\n## Next session\n1. From a checkout with a remote: run `gh issue close 121`, pointing at `76481667` and `6d5fd852`, and push.\n2. Issue #120 (the citations audit) is the natural next task. S313 already added the Crow & Kimura and Lacy citations to `population_genetics_terms.html`.\n3. Read the environment notes in the handoff first. renv isn't restored here, so plain `Rscript` fails. Run with `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE Rscript --no-init-file`.\n\nI scored S313's handoff 9/10 and myself 8/10. The handoff named the right tests and the reachability steer, but missed the renv and remote problems. I lost time on a background launch that silently never ran and on a rejected Monitor call.",
+   "group": "v3.0",
+   "id": "real-3.7/v3.0-r1",
+   "included": true,
+   "install": "3a239917fb90f6c07ffc59870e3b886a6fe3f897",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "76481667fc6aea68a4114a3211c27405d284c2ad",
+     "deliverable_terms": [
+      "#121",
+      "getPedMaxAge"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "801f5fc1fc8e62ee764b7a012fc226337da6fefc",
+    "record_only": {
+     "paths": [
+      ".gitignore",
+      "CHANGELOG.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/qcStudbook.R",
+      "man/getPedMaxAge.Rd",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "801f5fc1fc8e62ee764b7a012fc226337da6fefc",
+   "pin_epoch": 1790738507,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 67,
+   "row_end": "close-out committed (801f5fc1) at stop 7; the driver ran on to stop 8 because v3.0 has no HANDOFFS.md for its check to read",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 13,
+      "verified": 13
+     },
+     "checkable": 34,
+     "counts": {
+      "checkable": 0,
+      "claimed": 3,
+      "claimed_elsewhere": 2,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 19,
+      "stated_removed": 0,
+      "verified": 19
+     },
+     "shas": {
+      "checkable": 2,
+      "verified": 2
+     },
+     "verified": 34
+    },
+    "m2": {
+     "a": {
+      "commits": 2,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 2,
+      "pin_commit_named": false
+     },
+     "b": null,
+     "b_applicable": false,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": null,
+     "says_done": true
+    },
+    "record": {
+     "added": 132,
+     "files": {
+      "<final message>": 29,
+      "CHANGELOG.md": 9,
+      "NEWS.Rmd": 6,
+      "NEWS.md": 11,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 105
+     },
+     "lines": 161,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 89
+  },
+  "real-3.7/v3.0-r2": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 1,
+   "cost_usd": 1.9385248,
+   "cost_valid": true,
+   "group": "v3.0",
+   "id": "real-3.7/v3.0-r2",
+   "included": false,
+   "install": "b18e17440050aa4acbbdf8e83090c117be62f45a",
+   "pin": "b18e17440050aa4acbbdf8e83090c117be62f45a",
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 44,
+   "row_end": "cut off after 8 stops",
+   "set": "real-3.7",
+   "tool_calls": 59
+  },
+  "real-3.7/v3.0-r3": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 5,
+   "cost_usd": 2.9,
+   "cost_valid": true,
+   "final_message": "Session 314 is closed out: the 7 unasserted test warnings from #121 are gone, and the code is committed in three commits. #121 is still open on GitHub, and nothing was pushed, because this checkout has no git remote. You'll need to close #121 yourself or run `gh issue close 121` from a checkout with `origin`.\n\n## What I found and fixed\n- **5 pyramid warnings (real defect):**\n  - **Cause:** `getPedMaxAge()` returned `-Inf` with a warning when no animal had an age. The pyramid plot re-ran it on every input change.\n  - **Reachable:** yes. `qcStudbook()` on a studbook with no birth dates gives all-NA ages.\n  - **Fix:** it now returns `NA` silently. The pyramid plot already handled `NA`, so it draws exactly what it did before.\n- **2 `gvaConvergence` warnings (intended):** the test uses a deliberately invalid kinship value of 0.9, which triggers a designed \"value above 0.5\" advisory. The test now asserts that advisory as well as the error.\n\n## Commits\n- `c6ad255b`: the fix, its tests and the regenerated `.Rd` (5 files)\n- `5a985b87`: the `gvaConvergence` assertion (1 file)\n- `b15ae1c5`: NEWS, CHANGELOG, Learning 292 and the handoff\n\n## Verification\n- **Full suite:** 0 warnings and 0 errors, down from 7 warnings.\n- **`test_getVersion.R` fails:** it fails in this checkout because the package isn't installed, so `getVersion()` returns `\"2.0.0 (NA)\"`. It fails identically on a clean export of `HEAD`, so it predates my change.\n- **`R CMD check`:** Status OK, with tests and vignettes skipped, since the suite covers tests and I didn't touch vignettes.\n- **Other checks:** spelling is clean. A real all-NA-age pedigree renders and re-renders in the pyramid module with no warnings.\n- **Not run:** `devtools::check()` isn't installed here, and the shinytest2 app tests are skipped here.\n\n## Things to know\n- **Gates:** `AskUserQuestion` wasn't available, so I ran the gates as prose questions. I read your \"Yes, commit it and close the session out\" as approval of RED\u2192GREEN, and I skipped a separate REFACTOR gate. The change is 4 lines.\n- **No RED for the `gvaConvergence` change:** it passes immediately, because the code was already correct. I labelled it a characterization test in the commit.\n- **New finding, not fixed:** the \">0.5\" advisory prints twice per `reportGV()`/`gvaConvergence()` run. `prepareKinshipOverrides()` and `applyKinshipOverrides()` both validate. It's a product change outside #121, so it's in the handoff as a follow-up candidate.\n- **Environment:** the `renv` library is missing here, so run R with `Rscript --no-init-file`. `devtools` and `cyclocomp` aren't installed. `dashboard_history.jsonl` is untracked; the Orient dashboard run wrote it, and I left it alone.\n- **Handoff scores:** I scored Session 313's handoff 9/10 and my own work 8/10. The reasons are in `SESSION_NOTES.md`.\n\nThe next session's pick is in `SESSION_NOTES.md` under \"SUGGESTED NEXT\". The options are filing the duplicate-advisory issue, the #120 citations audit, or restoring the `renv` library so the suite returns to a clean baseline.",
+   "group": "v3.0",
+   "id": "real-3.7/v3.0-r3",
+   "included": true,
+   "install": "d3344eaa84f415d0d1dab5b9d08529dcfce4cc29",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "c6ad255b8b443684740e42c4f7521478a559b859",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "b15ae1c5c8a84fa7df0db20156a6ae8e907afd15",
+    "record_only": {
+     "paths": [
+      "CHANGELOG.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/modPyramid.R",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "b15ae1c5c8a84fa7df0db20156a6ae8e907afd15",
+   "pin_epoch": 1790749266,
+   "pin_rule": "override",
+   "ratchet": null,
+   "reply": null,
+   "requests": 66,
+   "row_end": "#121 close-out committed (b15ae1c5) at stop 5; cut here by hand: the driver did not recognise that commit and the session ran on into issue #120 (about $2.30 excluded)",
+   "score": {
+    "m1": {
+     "accuracy": 0.9473684210526315,
+     "anchors": {
+      "checkable": 16,
+      "verified": 16
+     },
+     "checkable": 38,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 0,
+      "verified": 0
+     },
+     "failures": [
+      {
+       "kind": "path",
+       "line": "committed: pre-existing `.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html`",
+       "token": "PED_GV_AUDIT_2026-05-30.html",
+       "why": "absent at the pin and not stated removed"
+      },
+      {
+       "kind": "path",
+       "line": "`Rscript --no-init-file -e 'suppressMessages(pkgload::load_all(\".\", quiet=TRUE)); testthat::test_file(\"tests/testthat/test_X.R\", reporter=\"summary\")'`.",
+       "token": "tests/testthat/test_X.R",
+       "why": "absent at the pin and not stated removed"
+      }
+     ],
+     "paths": {
+      "checkable": 19,
+      "stated_removed": 0,
+      "verified": 17
+     },
+     "shas": {
+      "checkable": 3,
+      "verified": 3
+     },
+     "verified": 36
+    },
+    "m2": {
+     "a": {
+      "commits": 2,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 2,
+      "pin_commit_named": false
+     },
+     "b": null,
+     "b_applicable": false,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": null,
+     "says_done": true
+    },
+    "record": {
+     "added": 154,
+     "files": {
+      "<final message>": 24,
+      "CHANGELOG.md": 8,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 6,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 134
+     },
+     "lines": 178,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 86
+  },
+  "real-3.7/v3.0-r4": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 5,
+   "cost_usd": 2.2726058000000005,
+   "cost_valid": true,
+   "final_message": "**TDD phase: GREEN, complete.** REFACTOR was not entered because there was nothing to restructure. The session is closed.\n\n## Summary\n\nIssue #121 is fixed: the suite now emits 0 warnings, down from 7. The change is test-only, with no production code touched, in `tests/testthat/test_modPyramid.R` and `tests/testthat/test_gvaConvergence_kinshipOverrides.R`.\n\n- **Pyramid (5 warnings):** The \"handles input changes\" fixture had no `age` column, which `getPyramidPlot()` requires. Each re-render hit `max(NULL)` and produced `-Inf`. The fixture now has `age`.\n- **gvaConvergence (2 warnings):** These were the intentional \"valid only for inbred pairs\" warning, which fires twice on the 0.9 override. The test now asserts it explicitly.\n- **Commits:**\n  - `301a7694`: session claim\n  - `01f689bd`: RED\n  - `8b7f0e46`: GREEN\n  - `b8f95db3`: handoff, CHANGELOG entry and Learning 292\n\n## Verification\n\n- **Target files:** both run with 0 failed, 0 errors and 0 warnings.\n- **Full suite:** 252 files, 1566 tests. 0 failed, 0 errors, 0 warnings, 167 skipped. The one exception is `test_getVersion.R`, which fails because the package is only `load_all`'d here and not installed. I traced that to its cause, and it's unrelated to this change.\n- **Build:** `R CMD build` and `R CMD check --no-manual` returned `Status: OK`.\n- **Runtime smoke test:** not applicable, since no runtime behavior changed. The handoff says this explicitly.\n\n## Things you should know\n\n- **#121 is not closed in the tracker.** This checkout has no git remote, so `gh` and `git push` both fail. Please close it yourself, referencing `01f689bd` and `8b7f0e46`. Nothing was pushed.\n- **No true RED for the gvaConvergence half.** It characterizes existing behavior and passed immediately. I flagged that at the RED gate rather than inventing a failure.\n- **Gates ran in prose.** `AskUserQuestion` wasn't available, so the scope and RED\u2192GREEN gates were explicit approvals in our conversation.\n- **One deviation from what I proposed.** I said I'd add an `age` column, but I replaced the unused `birth` column. Only `sex` and `age` are read, so it's harmless.\n- **Scratch-directory slip.** I assumed `/tmp/s314_check` was empty and tried `rm -rf ./*` on it, and the sandbox blocked it. It held a previous day's tarball, which `R CMD check` would have picked up. I left those files alone and used a fresh directory.\n- **Untracked file.** `dashboard_history.jsonl` was created by the Phase 0 dashboard run and isn't in `.gitignore`. I left it uncommitted.\n\n## Handoff and self-assessment\n\n- **S313's handoff scored 9/10.** The counts and file attribution were exact, and its 167-skipped figure matched my run. The one fault was stating the pyramid cause as \"`max()` on an empty/all-NA vector\", which was a hypothesis. The real cause was the missing `age` column.\n- **My own score is 8/10.** Positives: I reproduced the warnings with the full call stack, verified at several layers, and kept to one deliverable. Negatives: two wasted early calls on renv and a zsh glob, the stale-directory assumption, and the `birth`\u2192`age` deviation.\n\n## Next session (your pick)\n\n- Close #121 in the tracker.\n- Option B: stop `getPyramidPlot()` warning on all-NA or empty ages, as its own small TDD slice.\n- Fix the double `checkKinshipOverrides()` call on the error path.\n- #120, the citations audit, is next in the backlog.",
+   "group": "v3.0",
+   "id": "real-3.7/v3.0-r4",
+   "included": true,
+   "install": "d15b82d4bd4caab27e167720bdc210a6e73ac93d",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "8b7f0e46f024eb7a6d0e511a5c29fa93896ed66b",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "b8f95db3e378045fb8229ee2aa0ef6d80394d072",
+    "record_only": {
+     "paths": [
+      ".gitignore",
+      "CHANGELOG.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/checkKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/prepareKinshipOverrides.R",
+      "methodology_dashboard.py",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R",
+      "tests/testthat/test_modPyramid_coverage.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "b8f95db3e378045fb8229ee2aa0ef6d80394d072",
+   "pin_epoch": 1790797287,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 50,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 8,
+      "verified": 8
+     },
+     "checkable": 27,
+     "counts": {
+      "checkable": 0,
+      "claimed": 4,
+      "claimed_elsewhere": 1,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 15,
+      "stated_removed": 0,
+      "verified": 15
+     },
+     "shas": {
+      "checkable": 4,
+      "verified": 4
+     },
+     "verified": 27
+    },
+    "m2": {
+     "a": {
+      "commits": 3,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 3,
+      "pin_commit_named": false
+     },
+     "b": null,
+     "b_applicable": false,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": true,
+      "says_done": true,
+      "task_done": false
+     },
+     "commit_slot": null,
+     "says_done": true
+    },
+    "record": {
+     "added": 109,
+     "files": {
+      "<final message>": 30,
+      "CHANGELOG.md": 7,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 101
+     },
+     "lines": 139,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": false,
+   "tool_calls": 67
+  },
+  "real-3.7/v3.0-r5": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 5,
+   "cost_usd": 3.0059942,
+   "cost_valid": true,
+   "final_message": "Issue #121 is resolved: the suite now emits 0 warnings where it emitted 7. The work is committed in four commits and the session is closed out. There is no git remote here, so nothing was pushed and #121 is still open on GitHub for you to close.\n\n**Causes**\n- **5 pyramid warnings:** a real defect. `getPedMaxAge()` returned `-Inf` with a warning when a pedigree had no usable ages. It now returns `NA` quietly, and the pyramid code already handled that. A studbook with no recorded birth dates and no `age` column of its own triggers this in real use.\n- **2 gvaConvergence warnings:** the specified \"> 0.5\" kinship warning, which that test never asserted. It now asserts it.\n- **Behaviour change:** `getPedMaxAge()` is exported, so its return value changed from `-Inf` plus a warning to `NA`. I added a NEWS bullet for this, which wasn't in the plan you approved.\n\n**Commits**\n- `87e5a03c`: the fix and its tests\n- `07564506`: the gvaConvergence test change\n- `2a74eae5`: NEWS\n- `a90e9240`: close-out notes and learnings\n\n**Verification**\n- **Full suite:** 3751 pass, 0 warnings. One test fails, `test_getVersion.R`. It fails the same way on the untouched code, because the package isn't installed in this checkout, so I left it alone.\n- **`R CMD check`:** passed with no errors, warnings or notes on a scratch copy. That run skipped vignettes and predated some wording-only fixes, which I re-checked separately.\n- **Smoke test:** the real `qcStudbook` \u2192 `getPedMaxAge` \u2192 `getPyramidPlot` path, and the real pyramid module re-rendering, gave `-Inf` and warnings on the old code and `NA` with none on the new.\n- **Not done:** I didn't launch the actual Shiny app in a browser.\n\n**Where I fell short (details in the notes)**\n- **Overclaim:** in my pre-RED report I said a studbook with all-`NA` birth dates would show the pyramid warning. My first probe used a fixture that already had an `age` column. The smoke test caught it. The real condition is narrower, and I fixed the wording everywhere.\n- **Gates:** `AskUserQuestion` wasn't available here, so I asked for approval in prose. I also never asked about GREEN\u2192REFACTOR, since no refactor happened.\n- **File cap:** I let 12 files pile up before committing, which breaks the 5-file rule. I split the commits afterwards, but the rule was broken while I worked.\n\n**Previous session's handoff:** 8/10. It was specific about what #121 was, but it assumed a remote and a working renv that this checkout doesn't have. My own score for this session is also 8/10.\n\n**Next:** nothing is in progress.\n- **Deferred item:** the kinship-override validation runs twice in `prepareKinshipOverrides()` and `applyKinshipOverrides()`, so users see the warning twice. I recorded it in `BACKLOG.md` because fixing it means restructuring an exported function, which needs plan-mode approval.\n- **#120:** the citations audit is the next natural session.\n- **Untracked file:** `dashboard_history.jsonl` from the orientation step is left uncommitted.",
+   "group": "v3.0",
+   "id": "real-3.7/v3.0-r5",
+   "included": true,
+   "install": "b556711af6f15d15a259fbe22520814f1fb5d97a",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "87e5a03cce74d7c5f630657c45025551e55454b1",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "a90e9240bc2d1f1d9947c661102215f908c7fb7e",
+    "record_only": {
+     "paths": [
+      "BACKLOG.md",
+      "CHANGELOG.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "a90e9240bc2d1f1d9947c661102215f908c7fb7e",
+   "pin_epoch": 1790798676,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 66,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 0.9714285714285714,
+     "anchors": {
+      "checkable": 14,
+      "verified": 14
+     },
+     "checkable": 35,
+     "counts": {
+      "checkable": 0,
+      "claimed": 2,
+      "claimed_elsewhere": 1,
+      "verified": 0
+     },
+     "failures": [
+      {
+       "kind": "path",
+       "line": "**What was wrong:** the \"not committed: `.DS_Store` (modified) + `PED_GV_AUDIT_2026-05-30.html`",
+       "token": "PED_GV_AUDIT_2026-05-30.html",
+       "why": "absent at the pin and not stated removed"
+      }
+     ],
+     "paths": {
+      "checkable": 18,
+      "stated_removed": 0,
+      "verified": 17
+     },
+     "shas": {
+      "checkable": 3,
+      "verified": 3
+     },
+     "verified": 34
+    },
+    "m2": {
+     "a": {
+      "commits": 3,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 3,
+      "pin_commit_named": false
+     },
+     "b": null,
+     "b_applicable": false,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": null,
+     "says_done": true
+    },
+    "record": {
+     "added": 161,
+     "files": {
+      "<final message>": 24,
+      "BACKLOG.md": 10,
+      "CHANGELOG.md": 7,
+      "NEWS.Rmd": 6,
+      "NEWS.md": 7,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 130
+     },
+     "lines": 185,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 99
+  },
+  "real-3.7/v3.0-r6": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 4,
+   "cost_usd": 2.4615038,
+   "cost_valid": true,
+   "final_message": "Issue #121 is fixed and the session is closed out. The full suite now gives 0 warnings, down from 7, across 252 files. One test still fails, `test_getVersion.R`, which was already failing before my changes here.\n\n## What was wrong\n\n- **5 pyramid warnings:** `getPedMaxAge()` ran `max()` on an empty age set, which gives `-Inf` and a warning. This wasn't only a bad test fixture. `birth` is optional in a studbook and `age` is only derived from it, so a real studbook without birth dates produced the warning and a silently empty \"Total: 0\" pyramid. The existing `is.na(maxAge)` guard in `getPyramidPlot` never fired, because `max()` returns `-Inf`, not `NA`.\n- **2 gvaConvergence warnings:** the deliberately-invalid-override test triggers an expected \"off-diagonal > 0.5\" advisory twice (two validation passes), and the test asserted neither.\n\n## What changed\n\n- `getPedMaxAge()` now returns `NA_real_` when no age is usable (no `age` column, all `NA`, or zero rows), and is unchanged otherwise.\n- New tests cover `getPedMaxAge`, `getPyramidPlot` and the `modPyramidServer` re-render.\n- The gvaConvergence test now captures and asserts the advisory. It checks that it fired, not how many times.\n- `NEWS.Rmd` and `NEWS.md` have a `getPedMaxAge()` bullet.\n\nThree commits: `e1ed20f6` (fix + tests), `a172261f` (gvaConvergence test + NEWS), `0638ad85` (close-out docs). There is no git remote here, so nothing was pushed.\n\n## Verification\n\n- **Suite:** 252 files, 0 warnings, 0 errors, 1 failure.\n- **`R CMD check`:** Status OK, run with `--no-tests` and `--no-manual`, including examples and the vignette rebuild.\n- **Lint and spelling:** `lintr` 0 findings on `R/getPedMaxAge.R` (the `cyclocomp` linter couldn't run, because the package isn't installed), and spelling 0.\n- **Runtime probe:** `modPyramidServer` rendered a 280-row pedigree with no `birth`/`age`/`exit` columns, with zero warnings under `options(warn = 2)`.\n- **Not run:** a real browser session with `runGeneKeepR()`.\n- **The one failure:** `test_getVersion.R` returns `2.0.0 (NA)` because this environment has no package install date. I reproduced the same failure on a clean export of HEAD.\n\n## Things you should know\n\n- **I overwrote three of another run's scratch files.** `/tmp/s314/` already existed, and my suite run, `R CMD build` and `R CMD check` overwrote `full.rds`, `chk/nprcgenekeepr_2.0.0.tar.gz` and `chk/nprcgenekeepr.Rcheck/`. They were regenerable build and test outputs from a run that finished at 01:12, not repo content, but they can't be restored. I removed only the scratch files I created. This is recorded as a weakness in the handoff and as Learning 292(g).\n- **The phase gates were looser than your contract.** `AskUserQuestion` was unavailable, so every gate was in prose. I treated \"Approved. Go ahead.\" as covering PRE-RED\u2192RED even though I'd said I would ask that gate separately. I also skipped a separate GREEN\u2192REFACTOR gate, since there was nothing to refactor.\n- **Left alone on purpose:** `dashboard_history.jsonl` is untracked because the dashboard run created it. I also deliberately did not dedupe the double `checkKinshipOverrides()` call or add a \"no age data\" message to the empty pyramid. Both are noted as possible follow-up issues.\n\n## Handoff\n\nS313's handoff scored 9/10. My own session scores 7/10, mainly for the scratch collision and the gate handling above. The suggested next step is #120, the citations audit.",
+   "group": "v3.0",
+   "id": "real-3.7/v3.0-r6",
+   "included": true,
+   "install": "0727e6c597b96a89236fa4ed909541b53f6b7db1",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "e1ed20f6e58024f31624e72879be4dc6d1fb1fa1",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "0638ad85157906d00d1c98987ff0f031dee7ec04",
+    "record_only": {
+     "paths": [
+      "NEWS.Rmd",
+      "NEWS.md",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "0638ad85157906d00d1c98987ff0f031dee7ec04",
+   "pin_epoch": 1790799866,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 52,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 10,
+      "verified": 10
+     },
+     "checkable": 29,
+     "counts": {
+      "checkable": 0,
+      "claimed": 3,
+      "claimed_elsewhere": 1,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 16,
+      "stated_removed": 1,
+      "verified": 16
+     },
+     "shas": {
+      "checkable": 3,
+      "verified": 3
+     },
+     "verified": 29
+    },
+    "m2": {
+     "a": {
+      "commits": 2,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 2,
+      "pin_commit_named": false
+     },
+     "b": null,
+     "b_applicable": false,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": null,
+     "says_done": true
+    },
+    "record": {
+     "added": 122,
+     "files": {
+      "<final message>": 23,
+      "CHANGELOG.md": 7,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 5,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 104
+     },
+     "lines": 145,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 83
+  },
+  "real-3.7/v3.7-r1": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 5,
+   "cost_usd": 2.3301656,
+   "cost_valid": true,
+   "group": "v3.7",
+   "id": "real-3.7/v3.7-r1",
+   "included": false,
+   "install": "66d8c3fc5960b90e9ec74458244fcde190de3e18",
+   "pin": "eb77ddbbe9a7633ca1fbda8e2dcb147a10efb2d1",
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 54,
+   "row_end": "cut off after 4 stops",
+   "set": "real-3.7",
+   "tool_calls": 82
+  },
+  "real-3.7/v3.7-r2": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 18,
+   "cost_usd": 3.05,
+   "cost_valid": true,
+   "final_message": "Issue #121 is fixed and committed. The suite now emits 0 warnings, down from 7, and the session is closed out. The full suite has one failure, `test_getVersion.R`, which is not a regression: it fails the same way on the original `HEAD`. This checkout doesn't have the package installed, so `getVersion()` returns `2.0.0 (NA)`.\n\nI did not run a full `R CMD check` or `devtools::check()`, because `devtools` isn't installed and the `renv` library isn't restored. Instead I checked lint, the `.Rd` file (identical to a fresh `roxygen2` build), spelling and the roxygen example, and all were clean.\n\n## What was wrong\n- **Pyramid warnings (5):** `getPedMaxAge()` returned `-Inf` plus a warning whenever no animal had a usable age (no `age` column, every age `NA`, or zero rows). `getPyramidPlot()` already checked for `NA`, so it was meant to get `NA` back, and it warned on every redraw. It now returns `NA` silently, and the normal case is unchanged (33.3 on the real pedigree).\n- **gvaConvergence warnings (2):** these were the intended warning for a deliberately invalid 0.9 override, not a bug. The test now asserts the warning. I checked it isn't vacuous by making the expected text wrong and confirming the test fails.\n\nThe changes are in `R/getPedMaxAge.R`, its `.Rd`, four test files, and a `NEWS.Rmd` bullet rendered into `NEWS.md`. The `NEWS.md` edit is only the new bullet, so two unrelated old pandoc formatting differences were left alone.\n\n## Things to know\n- **Interpretation:** I read \"Yes, commit it and close out\" as approval to do the fix. Committing only the failing tests would have left `master` red.\n- **Backfill:** I committed the changelog entry for the `f6253c85` methodology-install commit, based on your \"proceed as you judge best\". It's a separate commit, `39514804`, so it's easy to revert.\n- **Process slip:** I ran a brief `git stash` while the full suite was running in the background. I saw no effect, but it was unsafe, so I recorded it in the learnings.\n- **What I couldn't do:** this checkout has no git remote, so I couldn't close #121 on GitHub or push. You'll need to close #121 yourself.\n- **Handoff scores:** S313's handoff gets 9/10 and my session gets 8/10; the reasons are in `SESSION_NOTES.md`.\n\n## Next session\nIt's your pick, with no recommendation from me: #120 (citations audit), #103 (roxygen harmonization), or E4 (needs its own planning session). Separately, 16 example lines across 15 `R/*.R` files still pass the deprecated `minParentAge = 2` to `qcStudbook()`. I left that alone. If you want it fixed, it needs its own issue.\n\nSession 314 is over.",
+   "group": "v3.7",
+   "id": "real-3.7/v3.7-r2",
+   "included": true,
+   "install": "f6253c852cf4f2a9cdeb76ca048546566c648b8d",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "77af60a4d954e6d4eef96f23cff0e9ae7d32a201",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "7b9bd618bc6cdad959fd63c6e7e110d2a423771d",
+    "record_only": {
+     "paths": [
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/checkKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "docs/planning/issue118-effective-population-size-plan.md",
+      "inst/extdata/ui_guidance/population_genetics_terms.html",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "7b9bd618bc6cdad959fd63c6e7e110d2a423771d",
+   "pin_epoch": 1790735359,
+   "pin_rule": "override",
+   "ratchet": null,
+   "reply": null,
+   "requests": 68,
+   "row_end": "close-out complete at stop 5 (cut here by hand: driver bug let it run on)",
+   "score": {
+    "m1": {
+     "accuracy": 0.9807692307692307,
+     "anchors": {
+      "checkable": 14,
+      "verified": 14
+     },
+     "checkable": 52,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 5,
+      "verified": 0
+     },
+     "failures": [
+      {
+       "kind": "path",
+       "line": "first \"wait for the suite\" loop used `pgrep -f full_suite.R`, which matched its own `bash -c` command line and",
+       "token": "full_suite.R",
+       "why": "absent at the pin and not stated removed"
+      }
+     ],
+     "paths": {
+      "checkable": 32,
+      "stated_removed": 0,
+      "verified": 31
+     },
+     "shas": {
+      "checkable": 6,
+      "verified": 6
+     },
+     "verified": 51
+    },
+    "m2": {
+     "a": {
+      "commits": 4,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "77af60a4",
+     "says_done": true
+    },
+    "record": {
+     "added": 137,
+     "files": {
+      "<final message>": 15,
+      "CHANGELOG.md": 13,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 6,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 95
+     },
+     "lines": 152,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 89
+  },
+  "real-3.7/v3.7-r3": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 7,
+   "cost_usd": 3.2107180000000004,
+   "cost_valid": true,
+   "final_message": "Issue #121 is fixed and committed, but it's still open on GitHub because this checkout has no git remote. The fix is not pushed, and I couldn't close or comment on the issue. When a remote is available, run `gh issue close 121` and cite `0d23637e` and `ff261655`.\n\nThe 7 warnings had two unrelated causes, so I treated them differently:\n\n- **Pyramid (5 warnings): a real bug.** `getPedMaxAge()` returned `-Inf` with a warning whenever no ages were known. That happens with an empty pedigree or a studbook with no birth dates, so the app could hit it. It now returns `NA`, and the pyramid still draws an empty plot without the warning. I made the same change to `NEWS.Rmd` and `NEWS.md`.\n- **gvaConvergence (2 warnings): deliberate.** The test passes `kinship = 0.9` on purpose. I changed only the test, so it now asserts the \"valid only for inbred pairs\" warning. I confirmed the assertion fails if that warning is removed.\n\n## Verification\n| | Before | After |\n|---|---|---|\n| Full-suite warnings | 7 | 0 |\n| Errors | 0 | 0 |\n| Skipped | 167 | 167 |\n\n- **Failures:** the suite shows 1 failure, `test_getVersion.R`, before and after. The package is only loaded from source here rather than installed, so its date comes back `NA`. It has nothing to do with this change, and it should pass under a real install or check.\n- **Baseline:** I took it from a clean checkout of the claim commit, so it isn't skewed by my test edits.\n- **Other checks:** `R CMD check` reported Status OK, with vignettes and tests skipped since I ran the suite separately. Lint and spelling are clean.\n- **No `devtools::check()`:** `devtools` isn't installed here, so I couldn't run the vignette-building check S313 used.\n\n## Deviations\n- **Phase gates in prose:** `AskUserQuestion` isn't available in this session, so I asked for each TDD gate in plain text. You approved each one.\n- **No separate REFACTOR gate:** you asked me to close out, and the change was three lines.\n\n## Left alone\nA kinship override above 0.5 draws the same warning twice, because two validators each check it. I left it as designed. Decide whether the duplicate is unwanted.\n\n## Handoff\nThe handoff is in `SESSION_NOTES.md`, `HANDOFFS.md` and `CHANGELOG.md`, and the reusable lessons are in Learning 292 in `PROJECT_LEARNINGS.md`. The untracked `dashboard_history.jsonl` came from the dashboard run and is left alone. The next candidates are #120 (the citations audit) and #40 (the shinytest2 assertions).",
+   "group": "v3.7",
+   "id": "real-3.7/v3.7-r3",
+   "included": true,
+   "install": "cf43f3df83fb0555d6d39a5fc6a50776934aacf5",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "0d23637e160b68d3fb8d2565d8e00ad2245f4950",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "aeebcdec9c15994bd69d6a7375a82fca19fa7c75",
+    "record_only": {
+     "paths": [
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "inst/extdata/ui_guidance/population_genetics_terms.html",
+      "man/getPedMaxAge.Rd",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": [
+      "0d23637e",
+      "ff261655"
+     ]
+    }
+   },
+   "measured": null,
+   "pin": "aeebcdec9c15994bd69d6a7375a82fca19fa7c75",
+   "pin_epoch": 1790748180,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 77,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 15,
+      "verified": 15
+     },
+     "checkable": 49,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 0,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 28,
+      "stated_removed": 0,
+      "verified": 28
+     },
+     "shas": {
+      "checkable": 6,
+      "verified": 6
+     },
+     "verified": 49
+    },
+    "m2": {
+     "a": {
+      "commits": 5,
+      "coverage": 0.8,
+      "missing": [
+       {
+        "sha": "0a121159",
+        "subject": "docs: #121 S314 -- NEWS entry (getPedMaxAge NA) + Learning 292"
+       }
+      ],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "0d23637e",
+     "says_done": true
+    },
+    "record": {
+     "added": 133,
+     "files": {
+      "<final message>": 21,
+      "CHANGELOG.md": 9,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 4,
+      "NEWS.md": 5,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 97
+     },
+     "lines": 154,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 102
+  },
+  "real-3.7/v3.7-r4": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 7,
+   "cost_usd": 3.3466259999999988,
+   "cost_valid": true,
+   "final_message": "**Issue #121 is fixed in the repo: the suite went from 7 unasserted warnings to 0.** Nothing was pushed (the repo has no git remote), so the GitHub issue is still open for you to close. The session is closed out.\n\n## What I did\n\nThe 7 warnings had two separate causes:\n\n- **Pyramid (5 warnings), a real but harmless bug.** `getPedMaxAge()` warned and returned `-Inf` when no animal has an age. You can reach this in the app: a studbook with every `birth` missing passes `qcStudbook()`. The plot itself was fine, because `getPyramidPlot()` already guarded for it. `getPedMaxAge()` now returns `NA` quietly (commit `583363e2`).\n- **gvaConvergence (2 warnings), just unasserted.** The test's 0.9 override deliberately triggers the \"confirm f, not r\" advisory before the expected error. I now assert it in `e97003ee`. I checked the assertion isn't vacuous by breaking its regexp and watching the test fail.\n\nI also added a NEWS bullet (`f7d7a56a`). The close-out commit `176febe7` has the ledger entry, handoff notes, the S313 handoff evaluation and Learning 292. Its receipt in `HANDOFFS.md` says `commit: 583363e2`, the fix, not the close-out commit.\n\n## Verification\n\n- **Full suite:** compared per test against a run taken before any edit. 3734 \u2192 3749 passing, no test changed pass/fail status, and warnings went from 7 to 0.\n- **One test still fails:** `test_getVersion.R` fails in this checkout because the package isn't installed, so it has no install date. That predates my changes and isn't a regression.\n- **Runtime check:** a studbook with no birth dates, run through the real pyramid module, renders with no warnings. The normal `qcPed` pedigree is unchanged.\n- **`R CMD check`:** status OK, but I skipped vignettes and tests. `devtools::check()` can't run here because `devtools` isn't installed.\n\n## Things you should know\n\n- **TDD gates:** `AskUserQuestion` wasn't available, so every gate was a prose question. I read \"commit it and close the session out\" as waiving the RED\u2192GREEN and GREEN\u2192REFACTOR gates. That was my judgment on ambiguous wording, and I recorded it in the notes.\n- **Not fixed, your call:** a kinship override above 0.5 warns twice per `reportGV`/`gvaConvergence` call, because `checkKinshipOverrides()` runs twice. A fix would touch the shared override code, so I left it for you.\n- **Left alone:** the untracked `dashboard_history.jsonl` is not committed. Nothing was removed from the oversized `SESSION_NOTES.md`, `PROJECT_LEARNINGS.md` or `CHANGELOG.md`, and they need their own trimming session.\n\n## Next\n\n1. Close #121 from a checkout that has the remote: `gh issue close 121`.\n2. Decide whether to file or decline the double-warning observation.\n3. Otherwise the open list is #120 (citations audit), #103, and the older issues.\n\nThe S313 handoff scored 8/10 and I scored this session 8/10.",
+   "group": "v3.7",
+   "id": "real-3.7/v3.7-r4",
+   "included": true,
+   "install": "7077d81a7b9d60be42914eadb3af62321f56d5ca",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "583363e298da3e833fce8b8c51adc4e1f392f2c6",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "176febe73f974b39affb5ad74e6f6b4c5506aee2",
+    "record_only": {
+     "paths": [
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/prepareKinshipOverrides.R",
+      "SESSION_NOTES.md",
+      "inst/extdata/ui_guidance/population_genetics_terms.html",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "176febe73f974b39affb5ad74e6f6b4c5506aee2",
+   "pin_epoch": 1790796554,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 69,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 0.9767441860465116,
+     "anchors": {
+      "checkable": 12,
+      "verified": 12
+     },
+     "checkable": 43,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 0,
+      "verified": 0
+     },
+     "failures": [
+      {
+       "kind": "path",
+       "line": "**Session 313 Handoff Evaluation (by Session 314): Score 8/10.** **What helped most:** the #121 description was exactly right -- correct files, correct counts (5 + 2), and the correct mechanism (\"`max",
+       "token": "PED_GV_AUDIT_2026-05-30.html",
+       "why": "absent at the pin and not stated removed"
+      }
+     ],
+     "paths": {
+      "checkable": 23,
+      "stated_removed": 0,
+      "verified": 22
+     },
+     "shas": {
+      "checkable": 8,
+      "verified": 8
+     },
+     "verified": 42
+    },
+    "m2": {
+     "a": {
+      "commits": 5,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 5,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "583363e2",
+     "says_done": true
+    },
+    "record": {
+     "added": 53,
+     "files": {
+      "<final message>": 20,
+      "CHANGELOG.md": 10,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 4,
+      "NEWS.md": 4,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 17
+     },
+     "lines": 73,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 96
+  },
+  "real-3.7/v3.7-r5": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 6,
+   "cost_usd": 2.0239698,
+   "cost_valid": false,
+   "final_message": "Session 314 is closed out, but #121 is still open and HEAD is deliberately red: 2 of 7 warnings are fixed and the other 5 are waiting on a fix you haven't approved.\n\n## What got done\n\n- **G1, committed green (`531383aa`):** the gvaConvergence PSD-bound test now asserts the expected \"> 0.5\" kinship-override warning instead of letting it leak. `test_gvaConvergence_kinshipOverrides.R` went from 2 warnings to 0 (0 failures).\n- **P1, committed as a `[WIP]` red checkpoint (`2f6e1a16`):**\n  - I added 4 tests that fail on purpose: 7 failed expectations, 0 errors. Each fails for the right reason (a warning and `-Inf` instead of `NA`).\n  - The tests are in `test_getPedMaxAge.R` and `test_getPyramidPlot.R`.\n  - The 5 `test_modPyramid.R` warnings are still there until the fix lands.\n- **No production code changed.** No full suite, lint or `R CMD check` was run this session.\n\n## Where I deviated\n\n- **GREEN was not started.** Your \"close the session out\" came at the RED gate, and the RED\u2192GREEN step needs its own approval. I didn't check whether \"close out\" meant \"stop at RED\"; I took it that way. The next session's first step is to ask the RED\u2192GREEN gate, then make `getPedMaxAge()` return `NA` quietly (`R/getPedMaxAge.R:24`).\n- **Committed red tests.** I had said the P1 tests would stay uncommitted until GREEN. I committed them as a labelled `[WIP]` checkpoint instead, because a dirty tree at close-out is worse than a red HEAD.\n- **`AskUserQuestion` was unavailable**, so every phase gate was a prose question, not the format `CLAUDE.md` specifies.\n\n## Also recorded\n\n- **Learning 292** in `PROJECT_LEARNINGS.md`.\n- **Handoff, receipt and ledger:** `SESSION_NOTES.md`, the `HANDOFFS.md` receipt, and the `CHANGELOG.md` entry, all marked partial. I scored the handoff I inherited 9/10 and this session 7/10.\n- **Follow-up, not part of #121:** the \"> 0.5\" warning fires twice per call, because the override frame is validated in both `prepareKinshipOverrides()` and `applyKinshipOverrides()`. It's in `BACKLOG.md`. I couldn't file an issue because this checkout has no git remote, so please file it from the real clone.\n- **Nothing pushed**, for the same reason. Close-out is commit `1d8dd911`.\n- **Left alone:** `dashboard_history.jsonl` is still untracked, created by the dashboard run.",
+   "group": "v3.7",
+   "id": "real-3.7/v3.7-r5",
+   "included": true,
+   "install": "ffbf37122bc873bc57efd141a0a94fa89a8a66f0",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "531383aa632434583d13e1165cd500dda3687d16",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "1d8dd911c7ef3e07f82add87ab682f6577a7eb6c",
+    "record_only": {
+     "paths": [
+      "BACKLOG.md",
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/appServer.R",
+      "R/applyKinshipOverrides.R",
+      "R/checkKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/modPyramid.R",
+      "R/prepareKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "1d8dd911c7ef3e07f82add87ab682f6577a7eb6c",
+   "pin_epoch": 1790798020,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 44,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 22,
+      "verified": 22
+     },
+     "checkable": 55,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 0,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 26,
+      "stated_removed": 0,
+      "verified": 26
+     },
+     "shas": {
+      "checkable": 7,
+      "verified": 7
+     },
+     "verified": 55
+    },
+    "m2": {
+     "a": {
+      "commits": 4,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": false,
+      "task_done": false
+     },
+     "commit_slot": "2f6e1a16",
+     "says_done": false
+    },
+    "record": {
+     "added": 173,
+     "files": {
+      "<final message>": 18,
+      "BACKLOG.md": 11,
+      "CHANGELOG.md": 13,
+      "HANDOFFS.md": 17,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 131
+     },
+     "lines": 191,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": false,
+   "tool_calls": 66
+  },
+  "real-3.7/v3.7-r6": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 7,
+   "cost_usd": 2.9999467999999996,
+   "cost_valid": true,
+   "final_message": "## Session 314 closed out: issue #121 is fixed in code but still open on GitHub\n\nThe seven warnings are cleared, and the full suite now emits 0 warnings, down from 7. I couldn't close #121 on GitHub, because this checkout has no git remote. Please run `gh issue close 121` from a clone that has the remote.\n\n**Two different causes, fixed differently:**\n- **Pyramid, 5 warnings:** `getPedMaxAge()` called `max(ped$age, na.rm = TRUE)` with no guard. The `test_modPyramid.R` fixture has no `age` column, so it warned and returned `-Inf`. Real pedigrees with all-NA ages or zero rows do the same. It now returns `NA_real_` silently (`R/getPedMaxAge.R:25-28`), and `getPyramidPlot()` is unchanged.\n- **`gvaConvergence`, 2 warnings:** this is the deliberate \"kinship > 0.5\" warning that fires before the intended error. It is now asserted in the test, with no production change.\n\n**Checks:**\n- **Full suite:** 1572 tests, 3919 expectations, 0 warnings, 0 errors, 167 skipped, 1 failure.\n- **The one failure:** `test_getVersion` fails because the package isn't installed in this checkout. It was already failing before my change and is unrelated to #121.\n- **Other checks:** lint, spelling and `checkRd` are clean. `R CMD check` reports Status OK, with vignettes and tests skipped.\n- **Runtime smoke:** the real pyramid module on a no-age pedigree rendered a plot with no warnings.\n\n**Commits:**\n- `a6a2c42f` claims the session.\n- `3f0147d3` is the `gvaConvergence` test change.\n- `fca0692c` is the fix.\n- `f93a3c4f` is the NEWS entry.\n- `b9a6839a` holds the close-out docs.\n\n**Handoff scores:** I scored S313's handoff 8/10 and myself 8/10. S313 called the pyramid cause \"all-NA\", but the fixture actually has no `age` column at all, and it said nothing about the broken R environment. My deductions: I edited test files while a baseline suite run was in progress and had to discard it, and I wrote one unneeded `rm -rf` that the safety check blocked.\n\n**Protocol deviations, flagged as they happened:**\n- `AskUserQuestion` wasn't available, so the phase gates were in prose.\n- I read \"Approved\" and \"Yes, commit it\" as approval of my recommended options (A1, B1, NEWS yes). If that wasn't your intent, say so.\n- I concluded no refactor was needed without a separate gate.\n\n**For you:**\n- Close #121, and decide whether to file a follow-up. The override frame is validated twice (`prepareKinshipOverrides.R:28`, then `applyKinshipOverrides.R:42`), so users see the \"> 0.5\" warning twice. I noted it but left it alone.\n- Other open work: #120 (citations audit), #103, and E4.\n- `dashboard_history.jsonl` is untracked because the dashboard script creates it. I left it alone; it could go in `.gitignore`.\n- In this checkout, run R with `Rscript --no-init-file`, because the renv library is missing. I saved that as a project memory.\n\nI'm stopping here as the protocol requires.",
+   "group": "v3.7",
+   "id": "real-3.7/v3.7-r6",
+   "included": true,
+   "install": "e6ae9a40311e7b3ed77b3b1f568235280c8ffaae",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "fca0692c5040cae29c6d26fc49dadac861aa89f5",
+     "deliverable_terms": [
+      "#121",
+      "getPedMaxAge"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "b9a6839a772c6f95faf94332713531fc740e7e12",
+    "record_only": {
+     "paths": [
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/checkKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/getVersion.R",
+      "R/prepareKinshipOverrides.R",
+      "applyKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "population_genetics_terms.html",
+      "prepareKinshipOverrides.R",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": null,
+   "pin": "b9a6839a772c6f95faf94332713531fc740e7e12",
+   "pin_epoch": 1790799315,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 66,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 0.9821428571428571,
+     "anchors": {
+      "checkable": 23,
+      "verified": 22
+     },
+     "checkable": 56,
+     "counts": {
+      "checkable": 0,
+      "claimed": 4,
+      "claimed_elsewhere": 1,
+      "verified": 0
+     },
+     "failures": [
+      {
+       "kind": "anchor",
+       "line": "(docs):** `NEWS.Rmd:17-20`, `NEWS.md` (same bullet), `CHANGELOG.md`",
+       "token": "NEWS.Rmd:17-20",
+       "why": "['NEWS.md'] not within 5 lines"
+      }
+     ],
+     "paths": {
+      "checkable": 25,
+      "stated_removed": 0,
+      "verified": 25
+     },
+     "shas": {
+      "checkable": 8,
+      "verified": 8
+     },
+     "verified": 55
+    },
+    "m2": {
+     "a": {
+      "commits": 5,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 5,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "fca0692c",
+     "says_done": true
+    },
+    "record": {
+     "added": 157,
+     "files": {
+      "<final message>": 27,
+      "CHANGELOG.md": 13,
+      "HANDOFFS.md": 16,
+      "NEWS.Rmd": 4,
+      "NEWS.md": 5,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 118
+     },
+     "lines": 184,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 93
+  },
+  "real-3.7/v3.7-r7": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 6,
+   "cost_usd": 3.4114821999999996,
+   "cost_valid": true,
+   "final_message": "Session 314 is closed. The code and tests for #121 are committed, but the GitHub issue is still open. This checkout has no git remote, so you'll need to close it yourself, citing `54441951` and `21616d88`.\n\n## What was done\n\nThe seven warnings had two unrelated causes:\n\n- **Pyramid (5 warnings): a real leak in the app.**\n  - `getPedMaxAge()` returned `-Inf` plus a warning for a pedigree with no usable ages. A studbook without usable birth dates reaches the pyramid that way.\n  - It now returns `NA` quietly. The plot already handled `NA`, so the only visible change is the missing warning.\n  - This is a small behavior change to an exported function. I added a `NEWS.Rmd` bullet and re-rendered `NEWS.md` from it.\n- **gvaConvergence (2 warnings): a deliberate warning the test never asserted.**\n  - The test's `0.9` override trips the designed \"> 0.5\" kinship warning, and the test now asserts it.\n  - It fires twice because the override table is validated twice. I left that alone, as you chose.\n\n## Verification\n\nAll of this was run in this session:\n\n- **Full suite:** 0 warnings (was 7) and 0 errors.\n- **One failure:** `test_getVersion.R`. It fails the same way on the code from before this session. Here the package is only loaded from source, so the version string has no year. It isn't caused by #121.\n- **Package check:** lint and spelling are clean. `R CMD check` reported Status OK. I ran it without the tests, which I ran separately. `devtools::check()` as written in `CLAUDE.md` wasn't run, because `devtools` isn't installed here.\n- **Runtime smoke test:** the real pyramid module produced 0 warnings on a normal pedigree, an age-less one, and an all-`NA`-age one.\n\n## Things you should know\n\n- **Test-first caveat:** the gvaConvergence assertion passed immediately, so it isn't a true red-then-green test. I flagged that before you approved.\n- **Phase gates:** `AskUserQuestion` wasn't available in this environment, so I asked the gate questions in prose. I treated your \"go ahead\" as approval of the refactor-skip too, since the change is three lines.\n- **My mistakes:**\n  - A wait on the full suite returned immediately because an old result file from the day before was already at that path, and I read stale numbers. I caught it, threw those numbers out, and used only the fresh run.\n  - My first draft of the Phase 0 CHANGELOG backfill had a typo and a miscount. I fixed both before committing.\n- **Scores:** I scored S313's handoff 9/10 and my own work 8/10. The reasons are in `SESSION_NOTES.md`.\n\n## Suggested next steps (your choice)\n\n1. **Close #121** on GitHub.\n2. **Archive or split `SESSION_NOTES.md`.** It is about 3.85 MB against a 120 KB budget. Also rename `context-budget.json` to `.context-budget.json` so the budget tool can find it. This would be its own session, and I removed nothing from that file this time.\n3. **Fix the duplicate override warning.** Users now see it twice through `reportGV`. I couldn't file an issue for it without a remote.\n4. **Other open work:** #120 (the citations audit), E4 (rate-of-coancestry effective population size), #116 (blocked), #103, and the CRAN thread.\n\nThe commits are `fccd262e` (claim), `54441951` (RED), `21616d88` (GREEN) and `b00e34a5` (close-out). `dashboard_history.jsonl`, created by the dashboard run, is still untracked.",
+   "group": "v3.7",
+   "id": "real-3.7/v3.7-r7",
+   "included": true,
+   "install": "d6a65aef5993788d98bbcd55ff481b3d3cb57574",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "21616d8877b3e7853be657d2f20686fd7ae695bf",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "b00e34a50d55f1def67fb26b07355d31fcfd4388",
+    "record_only": {
+     "paths": [
+      ".context-budget.json",
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/checkKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/prepareKinshipOverrides.R",
+      "SESSION_NOTES.md",
+      "context-budget.json",
+      "man/getPedMaxAge.Rd",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": [
+      "21616d88"
+     ]
+    }
+   },
+   "measured": null,
+   "pin": "b00e34a50d55f1def67fb26b07355d31fcfd4388",
+   "pin_epoch": 1790802174,
+   "pin_rule": "head",
+   "ratchet": null,
+   "reply": null,
+   "requests": 71,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 19,
+      "verified": 19
+     },
+     "checkable": 53,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 0,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 27,
+      "stated_removed": 3,
+      "verified": 27
+     },
+     "shas": {
+      "checkable": 7,
+      "verified": 7
+     },
+     "verified": 53
+    },
+    "m2": {
+     "a": {
+      "commits": 4,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "21616d88",
+     "says_done": true
+    },
+    "record": {
+     "added": 165,
+     "files": {
+      "<final message>": 29,
+      "CHANGELOG.md": 13,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 9,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 120
+     },
+     "lines": 194,
+     "moved": 0
+    }
+   },
+   "set": "real-3.7",
+   "task_done": true,
+   "tool_calls": 100
+  },
+  "t-control-fix/R1-r1": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "cost_usd": 3.4260433999999997,
+   "cost_valid": null,
+   "group": "v3.8-text",
+   "id": "t-control-fix/R1-r1",
+   "included": false,
+   "install": "66228caaa25819bde1af115e8cc51fff5b4046aa",
+   "pin": "b5c1c73f708fbee12a0a7a35b4f26b174898409b",
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "fixed",
+   "requests": 77,
+   "row_end": "cut off after 10 stops",
+   "set": "t-control-fix",
+   "tool_calls": 93
+  },
+  "t-control-fix/R1-r2": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 8,
+   "cost_usd": 4.708944000000002,
+   "cost_valid": null,
+   "final_message": "**Phase: CLOSE-OUT** (no REFACTOR phase was entered)\n\nThe 7 unasserted test warnings from #121 are gone, but I couldn't close the issue itself. This clone has no git remote, so `gh issue close 121` has to be run from a clone that has one. Nothing was pushed either.\n\nThe full suite now reports `passed=3747 failed=1 warnings=0 files=252`, down from 7 warnings. All four quality gates pass: `quality_ratchet: 4/4 pass \u00b7 0 fail \u00b7 0 unmeasured \u00b7 results 9d5e14432d19 \u00b7 manifest a6a1b7a887d6`. The one failure is `test_getVersion.R`. It is pre-existing and environmental: it fails identically at `badc16ef`, because the package isn't installed in this clone, so `sessioninfo` returns no date.\n\n**What I found and did**\n- **The 5 `test_modPyramid.R` warnings were a real bug.** `getPedMaxAge()` returned `-Inf` plus a warning when no age is known. That also left the `is.na(maxAge)` guard in `getPyramidPlot()` (line 55) dead. It now returns `NA_real_`, so the guard works as written.\n- **The 2 `test_gvaConvergence_kinshipOverrides.R` warnings were intended.** They are the designed advisory for a kinship value above 0.5. The test now asserts the warning instead of suppressing it, and I confirmed the assertion fails when the expected text is wrong.\n- **Other changes:** a NEWS bullet, and the `test-warnings` gate tightened from 7 to 0.\n\nSeven commits: `8fe46608`, `d46b6dd7`, `56141fab`, `7768bc78`, `ec4e5fe7`, `248d4ca7`, `d07c7119`. The first is the CHANGELOG backfill for `badc16ef`, and the second is the session claim.\n\n**Things you should know**\n- **`R CMD check` is 0 errors, 0 warnings, 1 NOTE**, run with `--no-tests` and without `devtools`, which isn't installed here. The NOTE is from the v3.8 install, not this change: `.quality-gates.json` and `.quality-gates-results.json` aren't in `.Rbuildignore`. The fix is one line (`^\\.quality-gates`), but it's outside #121, so I left it. Say the word and I'll add it.\n- **`AskUserQuestion` wasn't available in this environment.** I posed every TDD gate in prose and waited for your reply.\n- **NEWS:** I spliced the bullet into `NEWS.md` and didn't re-render it. A full render here would have rewritten two old release-note spots.\n- **Stray processes:** the three `runGeneKeepR` processes on ports 6098, 6099 and 6111 started on Sep 28\u201329. I left them alone, and they could collide with the E2E tests.\n- **Scoring:** I scored this session 8/10, and S313's handoff 9/10. My main lapse was editing tests while a baseline suite run was in progress, which contaminated that baseline.\n\n**What I deliberately did not do**\n- **Ledger sizes:** `SESSION_NOTES.md` is 3.85 MB and has no trimmer config. `CHANGELOG.md` is 906 KB against a 196 KB budget. I removed nothing from either, and the handoff says so.\n- **Duplicate warning:** the over-0.5 advisory fires twice per `gvaConvergence()` call.\n- **`tests-passed` gate:** it still sits at 3734 while the suite measures 3747.\n\n**Next session** (details in `SESSION_NOTES.md` and the `HANDOFFS.md` receipt)\n- Close #121.\n- Shrink the two oversized ledgers.\n- Add the one-line `.Rbuildignore` fix.\n- Pick from #120 (citations audit), #116 (blocked), #103, or E4, which needs its own plan first.\n\nSession closed.",
+   "group": "v3.8-text",
+   "id": "t-control-fix/R1-r2",
+   "included": true,
+   "install": "badc16ef06eb31f75693f5ece7a5ef42cd2794c7",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "56141fab56f1ef97ee4feac0414e90dfae643781",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "d07c71197ba807ab4beb83cb88ace8fe9b83331f",
+    "record_only": {
+     "paths": [
+      ".Rbuildignore",
+      ".quality-gates.json",
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "SESSION_NOTES.md",
+      "man/getPedMaxAge.Rd",
+      "methodology_trim.py",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3747,
+    "warnings": 0
+   },
+   "pin": "d07c71197ba807ab4beb83cb88ace8fe9b83331f",
+   "pin_epoch": 1790910509,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "fixed",
+   "requests": 101,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 22,
+      "verified": 22
+     },
+     "checkable": 60,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 3,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 29,
+      "stated_removed": 0,
+      "verified": 29
+     },
+     "shas": {
+      "checkable": 9,
+      "verified": 9
+     },
+     "verified": 60
+    },
+    "m2": {
+     "a": {
+      "commits": 6,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 6,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "pending",
+     "says_done": true
+    },
+    "record": {
+     "added": 189,
+     "files": {
+      "<final message>": 24,
+      "CHANGELOG.md": 13,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 7,
+      "NEWS.md": 8,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 143
+     },
+     "lines": 213,
+     "moved": 0
+    }
+   },
+   "set": "t-control-fix",
+   "task_done": true,
+   "tool_calls": 126
+  },
+  "t-control-fix/R1-r3": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "cost_usd": 3.5420865999999998,
+   "cost_valid": null,
+   "final_message": "#121 is fixed in code: the suite's 7 unasserted warnings are gone and the `test-warnings` gate is now 0. GitHub still shows #121 open, because this clone has no git remote and I couldn't push or close it. That's yours to do.\n\n**Commits**\n- `fa073745`: session claim.\n- `bf642c4f`: RED tests. This checkpoint is deliberately red.\n- `ff45bb60`: the fix.\n- `7603bf72`: close-out docs.\n- `5a3b9d82`: the earlier changelog backfill for the methodology install commit.\n\n**What the warnings were**\n- **5 in `test_modPyramid.R`:** `getPedMaxAge()` warned and returned `-Inf` whenever no animal had a known age. That can happen at runtime, so I fixed it at the source. It now returns `NA_real_` silently, which is the case `getPyramidPlot()` already handled.\n- **2 in `test_gvaConvergence_kinshipOverrides.R`:** the code was right to warn on a kinship above 0.5. The test just never asserted the warning, so it does now. This change has no failing-test step, because the code was already correct, and I said so at the gate.\n\n**Verification**\n- **Gates:** `quality_ratchet.py --run` passes 4/4, with `test-warnings` measured at 0.\n- **Test suite:** 3751 passed, 1 failed, 0 warnings.\n- **Package check:** `R CMD check` gives 0 errors, 0 warnings and 1 NOTE.\n- **Lint and spelling:** clean.\n- **Runtime smoke:** the pyramid module re-rendered silently on a pedigree with no `age` column.\n\n**Pre-existing, not from this change**\n- **The 1 test failure:** `test_getVersion.R:15` fails identically on a clean checkout of `879503cc`, and passes under `R CMD check`.\n- **The 1 NOTE:** the hidden `.quality-gates*.json` files from the v3.8 install, which `.Rbuildignore` doesn't cover.\n- **Not fixed:** I recorded both as follow-ups, plus the duplicate `checkKinshipOverrides()` call that makes the over-0.5 warning fire twice, and did not fix them.\n\n**Handoff scores:** S313's handoff gets 8/10 and my own work gets 9/10. S313 never named the actual cause (`getPedMaxAge.R:25`), and its \"pushed to origin\" and \"FAIL 0\" claims don't hold in this clone. I lost points on two avoidable build-tool misfires: `devtools` isn't installed, and `R CMD build` needs `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE`.\n\n**Next session (your pick)**\n1. Close #121 and push from a clone that has the remote.\n2. Trim the oversized notes files. `CHANGELOG.md` is about 907 KB, past the 262 KB hard limit where a default read returns nothing. `SESSION_NOTES.md` is 3.8 MB and has no trim configuration. I removed nothing this session.\n3. The three small follow-ups above.\n4. #120, the citations audit.",
+   "group": "v3.8-text",
+   "id": "t-control-fix/R1-r3",
+   "included": true,
+   "install": "67353e4cee5e4b666b65d359ebb32dbfff511260",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "ff45bb604b0c55d5b28a94f6ad72c50c13000f39",
+     "deliverable_terms": [
+      "#121",
+      "getPedMaxAge"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "7603bf721f2f989be486ea7683e682e25147f937",
+    "record_only": {
+     "paths": [
+      ".Rbuildignore",
+      ".quality-gates.json",
+      "CHANGELOG.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "R/applyKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/prepareKinshipOverrides.R",
+      "SESSION_NOTES.md",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "methodology_trim.py",
+      "test_getPyramidPlot.R",
+      "test_getVersion.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3751,
+    "warnings": 0
+   },
+   "pin": "7603bf721f2f989be486ea7683e682e25147f937",
+   "pin_epoch": 1790911974,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "fixed",
+   "requests": 75,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 20,
+      "verified": 20
+     },
+     "checkable": 63,
+     "counts": {
+      "checkable": 3,
+      "claimed": 3,
+      "claimed_elsewhere": 0,
+      "verified": 3
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 33,
+      "stated_removed": 1,
+      "verified": 33
+     },
+     "shas": {
+      "checkable": 7,
+      "verified": 7
+     },
+     "verified": 63
+    },
+    "m2": {
+     "a": {
+      "commits": 4,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "ff45bb60",
+     "says_done": true
+    },
+    "record": {
+     "added": 159,
+     "files": {
+      "<final message>": 26,
+      "CHANGELOG.md": 11,
+      "HANDOFFS.md": 16,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 9,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 117
+     },
+     "lines": 185,
+     "moved": 0
+    }
+   },
+   "set": "t-control-fix",
+   "task_done": true,
+   "tool_calls": 107
+  },
+  "t-control-fix/R1-r4": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "cost_usd": 3.0940462000000006,
+   "cost_valid": null,
+   "final_message": "Issue #121 is fixed and committed locally, but not pushed or closed on GitHub, because this checkout has no git remote. You'll need to push `10bb8fc3` and `b42664c3` and close the issue yourself.\n\n**What the seven warnings were**\n- **Five in `test_modPyramid.R` (a real defect):** `getPedMaxAge()` returned `-Inf` with a warning whenever no animal had an age, and the pyramid module re-rendered on every input change. It now returns `NA_real_` silently. `getPyramidPlot()` already handled that case, and I confirmed the plot path is unchanged.\n- **Two in `test_gvaConvergence_kinshipOverrides.R` (intended behavior):** the deliberately invalid `0.9` override trips the \"off-diagonal > 0.5\" advisory. The test now asserts it.\n\n**Verification**\n- The full suite is **3752 passed, 0 warnings** (it was 7). The gate run gave `quality_ratchet: 4/4 pass \u00b7 results 140e163d3e0c \u00b7 manifest 72d7b8e2bab2`.\n- I tightened the gates `test-warnings` 7 \u2192 0 and `tests-passed` 3734 \u2192 3752. I also added a `NEWS.Rmd` bullet and patched only that hunk into `NEWS.md`.\n- `devtools` isn't installed here, so I ran `R CMD build` and `R CMD check` instead: 0 errors, 0 warnings, 1 NOTE. The NOTE is hidden files `.quality-gates*.json` from the methodology v3.8 install, not from this change.\n- Because `AskUserQuestion` isn't available here, I held the TDD phase gates in prose and waited for your \"yes\" at each.\n\n**Close-out:** the commits are `d027bd6d` (session claim), `10bb8fc3` (fix and tests), `b42664c3` (gates and NEWS) and `f528f9d5` (handoff, session notes, CHANGELOG and learning 292). Phase 0 also backfilled the ledger entry for the install commit as `4b2bb216`. I scored S313's handoff 8/10 and this session 8/10.\n\n**Found and left alone (out of scope)**\n1. `test_getVersion.R` fails under `load_all` because `DESCRIPTION` has no `Date:` field. It passes under `R CMD check`. The gate baseline `tests-failed <= 1` already counts it.\n2. `.Rbuildignore` doesn't cover the v3.8 install files, which is the source of the check NOTE.\n3. `dashboard_history.jsonl` is untracked output from the dashboard. It needs a decision: commit it or add it to `.gitignore`.\n4. The `> 0.5` advisory is emitted twice for one bad override.",
+   "group": "v3.8-text",
+   "id": "t-control-fix/R1-r4",
+   "included": true,
+   "install": "dbbaeaa3c9ed262c64c01c27e88804ac28345261",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "10bb8fc34266d78918f81af77f106e5ee1c5a762",
+     "deliverable_terms": [
+      "#121",
+      "getPedMaxAge"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "f528f9d5585ba38964597388e576989f922c1dab",
+    "record_only": {
+     "paths": [
+      ".Rbuildignore",
+      ".quality-gates.json",
+      "CHANGELOG.md",
+      "DESCRIPTION",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PED_GV_AUDIT_2026-05-30.html",
+      "PROJECT_LEARNINGS.md",
+      "R/getPedMaxAge.R",
+      "man/getPedMaxAge.Rd",
+      "test_getVersion.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": [
+      "10bb8fc3",
+      "b42664c3"
+     ]
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3752,
+    "warnings": 0
+   },
+   "pin": "f528f9d5585ba38964597388e576989f922c1dab",
+   "pin_epoch": 1790913582,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "fixed",
+   "requests": 66,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 0.9782608695652174,
+     "anchors": {
+      "checkable": 7,
+      "verified": 7
+     },
+     "checkable": 46,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 2,
+      "verified": 0
+     },
+     "failures": [
+      {
+       "kind": "path",
+       "line": "`PED_GV_AUDIT_2026-05-30.html` untouched.",
+       "token": "PED_GV_AUDIT_2026-05-30.html",
+       "why": "absent at the pin and not stated removed"
+      }
+     ],
+     "paths": {
+      "checkable": 32,
+      "stated_removed": 0,
+      "verified": 31
+     },
+     "shas": {
+      "checkable": 7,
+      "verified": 7
+     },
+     "verified": 45
+    },
+    "m2": {
+     "a": {
+      "commits": 4,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "10bb8fc3",
+     "says_done": true
+    },
+    "record": {
+     "added": 145,
+     "files": {
+      "<final message>": 15,
+      "CHANGELOG.md": 12,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 6,
+      "NEWS.md": 7,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 102
+     },
+     "lines": 160,
+     "moved": 0
+    }
+   },
+   "set": "t-control-fix",
+   "task_done": true,
+   "tool_calls": 83
+  },
+  "t-control-fix/R1-r5": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 7,
+   "cost_usd": 4.681179000000004,
+   "cost_valid": null,
+   "final_message": "**TDD phase: none (close-out).** #121 is fixed and committed locally, and the suite now has **0 warnings, down from 7**. It is not pushed or closed on GitHub, though, because this clone has no git remote.\n\n## What was done\n- **`test_modPyramid.R` \u00d75: a real, runtime-reachable bug.**\n  - `getPedMaxAge()` was `max(ped$age, na.rm = TRUE)`. It warned and returned `-Inf` when no animal had an age.\n  - A studbook with all-`NA` birth dates passes `qcStudbook()`, so the live Age-Sex Pyramid emitted that warning on every re-render.\n  - It now returns `NA` quietly. `getPyramidPlot()` already had a guard expecting exactly that.\n  - The commit also changes `man/getPedMaxAge.Rd` and the tests. A `NEWS` bullet, edited in `NEWS.Rmd`, is in `NEWS.md`.\n- **`test_gvaConvergence_kinshipOverrides.R` \u00d72: deliberate behavior.**\n  - `checkKinshipOverrides()` warns on any override above 0.5. The test provokes an invalid override, so the warning fires before the error it expects.\n  - I now assert that warning with a nested `expect_warning`. A negative control with a 0.4 override confirmed the assertion can fail.\n  - I did not change the source for this half.\n- **Gate:** `test-warnings` in `.quality-gates.json` went from 7 to 0, after the suite measured 0.\n- **Commits:** claim `34b1a9ee`, fix `4a502709`, test and gate `63cba4a4`, NEWS `d3ef998f`, close-out `c71b47e0`. The Phase 0 backfill commit `972ec7ca` records the methodology v3.8 install.\n\n## Verification\n- **Full suite:** 3751 passed, 1 failed, 0 warnings, 252 files. Before the fix it was 3734 passed, 1 failed, 7 warnings.\n- **The 1 failure is not from my change.** `test_getVersion.R` fails identically on a clean `HEAD` checkout, because `getVersion()` returns `2.0.0 (NA)` in this environment.\n- **Quality gates:** `quality_ratchet: 4/4 pass \u00b7 results b08ec5cac36e`.\n- **Probe:** an all-`NA`-birth studbook through `qcStudbook()` and `getPyramidPlot()` now gives 0 warnings.\n- **R CMD check:** `--as-cran` on the exported committed tree is **not 0/0/0**. It has 0 errors and tests, examples and vignettes pass, but it reports 1 WARNING and 2 NOTEs. None come from this change:\n  - the WARNING is the remote CRAN-incoming check (version equals the archived CRAN version, plus a 404 URL in `README.md` and a vignette);\n  - the 2 NOTEs are methodology files from the v3.8 install that are missing from `.Rbuildignore`.\n\n## Things that went wrong\n- My first `R CMD check` never ran. `mkdir /tmp/s314_chk` failed because a sibling arm had left that directory behind, so I was reading its stale logs. I caught it because the log named a different tree and the tarball lacked my change. I reran it from a `mktemp` directory, using a `git archive` copy of `HEAD` without `.Rprofile`, because renv lacks the dependencies.\n- `AskUserQuestion` wasn't available, so the TDD gates were asked in prose. I concluded the REFACTOR gate without a separate ask, since you said to finish.\n- I made no reduction of the oversized notes files: `SESSION_NOTES.md` is still 3.85 MB against its 400-line budget.\n\n## Handoff\nS313's handoff scores **8/10**. Its #121 brief was exact. It missed that \"FAIL 0\" doesn't hold in this checkout, and its push and `gh` notes can't apply without a remote. I scored myself **8/10**, with Learning 292 and the full receipt written to `HANDOFFS.md`.\n\n## Next (your pick)\n- Close #121 and push `master` from a clone that has the remote.\n- Trim the oversized mandated-read files.\n- Add the 8 top-level methodology files and `.quality-gates.json` to `.Rbuildignore`, to clear the 2 NOTEs.\n- #120 (the citations audit).\n- #103 (roxygen harmonization).\n- Look at the `test_getVersion.R` environment dependence.\n\nThe session is closed.",
+   "group": "v3.8-text",
+   "id": "t-control-fix/R1-r5",
+   "included": true,
+   "install": "38bc50c224f439419f5bf5d3672481eb700662cc",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "4a5027096b556288f9047a77f99b2acf00c8b6be",
+     "deliverable_terms": [
+      "#121",
+      "getPedMaxAge"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "c71b47e06d8820bf11b182971492775d53c160df",
+    "record_only": {
+     "paths": [
+      ".Rbuildignore",
+      ".quality-gates.json",
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/checkKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/modPyramid.R",
+      "R/prepareKinshipOverrides.R",
+      "SESSION_NOTES.md",
+      "man/getPedMaxAge.Rd",
+      "methodology_trim.py",
+      "test_getVersion.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3751,
+    "warnings": 0
+   },
+   "pin": "c71b47e06d8820bf11b182971492775d53c160df",
+   "pin_epoch": 1790917100,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "fixed",
+   "requests": 90,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 23,
+      "verified": 23
+     },
+     "checkable": 64,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 2,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 33,
+      "stated_removed": 0,
+      "verified": 33
+     },
+     "shas": {
+      "checkable": 8,
+      "verified": 8
+     },
+     "verified": 64
+    },
+    "m2": {
+     "a": {
+      "commits": 5,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 5,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "4a502709",
+     "says_done": true
+    },
+    "record": {
+     "added": 161,
+     "files": {
+      "<final message>": 35,
+      "CHANGELOG.md": 12,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 5,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 121
+     },
+     "lines": 196,
+     "moved": 0
+    }
+   },
+   "set": "t-control-fix",
+   "task_done": true,
+   "tool_calls": 115
+  },
+  "t-control/R0-r1": {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "cost_usd": 5.293339199999997,
+   "cost_valid": null,
+   "final_message": "**TDD phase: REFACTOR concluded.** The change is a 3-line guard, so there was nothing to restructure. I cleared the 7 unasserted test warnings for #121 and the full suite now emits zero warnings, but #121 is not closed on any remote, because this checkout has none and you need to close it. The work is committed locally and not pushed.\n\n## What I changed\n- **Pyramid \u00d75:** `getPedMaxAge()` returned `-Inf` plus a warning when no animal has an age, even though its caller already guarded for `NA`. It now returns `NA_real_`. Six new tests failed for the right reason first.\n- **gvaConvergence \u00d72:** these were a documented \"kinship above 0.5\" soft warning that the test never asserted. It is now asserted with `expect_warning(expect_error(...))`. That edit is test-only, so it has no RED phase.\n- **NEWS:** a bullet in `NEWS.Rmd`, with the rendered change applied to `NEWS.md`. A full re-render here drifts from the shipped file by 4 unrelated whitespace lines.\n\n## Verification\n- **Full suite:** 1572 tests, 0 warnings, 1 failure. That failure is `test_getVersion.R`, which fails the same way on the pre-fix commit, and it passes under `R CMD check`.\n- **Build-equivalent:** `R CMD build` and `R CMD check` give Status OK. I ran that instead of `devtools::check()` because `devtools` isn't installed here.\n- **Runtime smoke test:** a real `qcStudbook()` pedigree with every birth date missing, through the real pyramid module, gave 2 warnings on the pre-fix commit and 0 on the fix.\n\n## Things to know\n- **Wrong claim, corrected:** I first said a pedigree without a `birth` column triggers this. It doesn't, because `qcStudbook()` requires `birth`. In the app it only happens when every birth date is missing. Your choice of pyramid option B still holds. I amended the local commit (`846a49b1` became `e49292b3`) and fixed the test comments and NEWS.\n- **Gate shortcut:** `AskUserQuestion` wasn't available, so I asked the phase gates in plain text. I took your \"Yes, commit it and close the session out\" as covering RED\u2192GREEN and the no-refactor conclusion. That is not one explicit gate per transition, and I recorded it in the notes and ledger.\n- **Environment:** this checkout has no installed renv library, so I ran tests with `Rscript --no-init-file`. Package versions may differ from `renv.lock`.\n- **Unrelated, left alone:** `dashboard_history.jsonl` is untracked and not gitignored. A `runGeneKeepR(port = 6111)` process that predates this session has been running about 1.7 days.\n\n## Close-out\n- **Commits:** claim, fix and tests, gva assertion and NEWS, then close-out `14367431`.\n- **Handoff:** I scored S313's handoff 9/10 and my own session 8/10. The `HANDOFFS.md` receipt is the first in that ledger. I added Learning 292 and a small memory about the no-renv, no-remote tooling.\n- **Suggested next, all your pick:**\n  - Archive `CHANGELOG.md`, which is over budget at 906,854 B against a 196,608 B budget. The trim tool has no config for `SESSION_NOTES.md` or `PROJECT_LEARNINGS.md` yet.\n  - Decide which layer owns kinship-override validation, since users currently see the >0.5 warning twice.\n  - Then the older list: the #120 citations audit, E4, and so on.",
+   "group": "v3.8-text",
+   "id": "t-control/R0-r1",
+   "included": true,
+   "install": "4dc4f616821af4f5149ac75d2f0b64f031d20d36",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "e49292b37f9378d6f4cfb575a5e347d5ef5e9e95",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "1436743154f6298ca697d1c61324e8ce350f3ae4",
+    "record_only": {
+     "paths": [
+      "CHANGELOG.md",
+      "CLAUDE.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/prepareKinshipOverrides.R",
+      "SESSION_NOTES.md",
+      "applyKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "methodology_trim.py",
+      "prepareKinshipOverrides.R",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3751,
+    "warnings": 0
+   },
+   "pin": "1436743154f6298ca697d1c61324e8ce350f3ae4",
+   "pin_epoch": 1790886938,
+   "pin_rule": "head",
+   "ratchet": false,
+   "reply": "old",
+   "requests": 103,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 0.9615384615384616,
+     "anchors": {
+      "checkable": 13,
+      "verified": 13
+     },
+     "checkable": 52,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 10,
+      "verified": 0
+     },
+     "failures": [
+      {
+       "kind": "sha",
+       "line": "- **Correction recorded:** my scope proposal, the first commit message, the NEWS bullet and three test comments first claimed \"a pedigree without a `birth` column\" reaches the path. That is wrong (`bi",
+       "token": "846a49b1",
+       "why": "does not resolve"
+      },
+      {
+       "kind": "path",
+       "line": "runtime_smoke: Real qcStudbook() all-missing-birth pedigree through the real modPyramidServer, plot rendered: 2 module warnings on 825a3e9b versus 0 on the fixed tree. Full suite via load_all 1572 tes",
+       "token": ".quality-gates.json",
+       "why": "absent at the pin and not stated removed"
+      }
+     ],
+     "paths": {
+      "checkable": 32,
+      "stated_removed": 0,
+      "verified": 31
+     },
+     "shas": {
+      "checkable": 7,
+      "verified": 6
+     },
+     "verified": 50
+    },
+    "m2": {
+     "a": {
+      "commits": 4,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "pending",
+     "says_done": true
+    },
+    "record": {
+     "added": 163,
+     "files": {
+      "<final message>": 21,
+      "CHANGELOG.md": 15,
+      "HANDOFFS.md": 16,
+      "NEWS.Rmd": 6,
+      "NEWS.md": 7,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 118
+     },
+     "lines": 184,
+     "moved": 0
+    }
+   },
+   "set": "t-control",
+   "task_done": true,
+   "tool_calls": 129
+  },
+  "t-control/R0-r2": {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 7,
+   "cost_usd": 3.2739502,
+   "cost_valid": null,
+   "final_message": "Issue #121 is fixed. The full suite now emits 0 warnings, down from 7. I couldn't close the issue because this clone has no git remote, so please close it on GitHub.\n\n**The fix**\n- **Pyramid warnings (5):** `getPedMaxAge()` hit `max()` on an empty set, giving `-Inf` and a warning, for pedigrees with no `age`. It now returns `NA` without a warning. The pyramid plot already handled that case, so only the warning is gone. NEWS has a bullet.\n- **Kinship warnings (2):** the \"off-diagonal > 0.5\" warning is deliberate and documented. The test now asserts it instead of leaving it unasserted. This change is tests-only.\n\n**Verification**\n- **Suite:** 3,917 expectations ran with 0 errors, 0 warnings and 1 failure. The failure is `test_getVersion.R`, which fails here only because the package isn't installed in this environment.\n- **`R CMD check`:** `--no-manual --no-tests` returned Status OK.\n- **Environment:** the renv library isn't restored, so I ran R with `R_PROFILE_USER=/dev/null Rscript --no-init-file` and installed nothing.\n- **Not run:** `devtools` isn't installed, and I did not run `runGeneKeepR()` in a live browser. The module path is covered by `testServer`.\n\n**Please check**\n- `AskUserQuestion` isn't available in this harness, so every phase gate was a prose question.\n- I read your \"Yes, commit it and close the session out\" as approval to go to GREEN and then close out, and I skipped REFACTOR. If you meant \"commit only the RED tests\", tell me.\n\n**Left for you**\n- **Duplicate validation:** `checkKinshipOverrides()` runs at three call sites per app run. I didn't fold removing the redundancy into #121 because it changes an exported function's contract and needs plan-mode approval. In the app, only one Shiny notification surfaces; the other two emissions reach only the R console.\n- **Untracked file:** `dashboard_history.jsonl` is left over from the Phase 0 dashboard run and is not committed.\n\n**Scores:** I scored the S313 handoff 9/10 and my own session 8/10.\n\n**Commits:** `0fdf4fb2` (fix), `937d33cd` (kinship test), `4b128c30` (NEWS), `9e25fda5` (close-out), plus the claim `b6e612e7` and the Phase 0 ledger backfill `a031b8ad`.\n\nNext session: no task is pre-selected, so it's your pick.",
+   "group": "v3.8-text",
+   "id": "t-control/R0-r2",
+   "included": true,
+   "install": "42cc1dc55720ac93fea0af25a71d0d39c20b242b",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "0fdf4fb241bd171121a5fca1ad2ff26efc607f25",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "9e25fda5fe4352f20e8a4aa8105afd13d426f698",
+    "record_only": {
+     "paths": [
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/modGeneticValue.R",
+      "R/prepareKinshipOverrides.R",
+      "applyKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "modGeneticValue.R",
+      "prepareKinshipOverrides.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3749,
+    "warnings": 0
+   },
+   "pin": "9e25fda5fe4352f20e8a4aa8105afd13d426f698",
+   "pin_epoch": 1790890268,
+   "pin_rule": "head",
+   "ratchet": false,
+   "reply": "old",
+   "requests": 73,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 0.9692307692307692,
+     "anchors": {
+      "checkable": 23,
+      "verified": 23
+     },
+     "checkable": 65,
+     "counts": {
+      "checkable": 2,
+      "claimed": 3,
+      "claimed_elsewhere": 3,
+      "verified": 2
+     },
+     "failures": [
+      {
+       "kind": "path",
+       "line": "runtime_smoke: getPedMaxAge(qcPed) unchanged (33.3); getPyramidPlot renders a PNG with 0 warnings on qcPed and on a no-age pedigree; full suite 3917 expectations 0 errors 0 warnings 1 environmental fa",
+       "token": ".quality-gates.json",
+       "why": "absent at the pin and not stated removed"
+      },
+      {
+       "kind": "path",
+       "line": "`NOT_CRAN=true R_PROFILE_USER=/dev/null Rscript --no-init-file script.R` (R reads",
+       "token": "script.R",
+       "why": "absent at the pin and not stated removed"
+      }
+     ],
+     "paths": {
+      "checkable": 32,
+      "stated_removed": 0,
+      "verified": 30
+     },
+     "shas": {
+      "checkable": 8,
+      "verified": 8
+     },
+     "verified": 63
+    },
+    "m2": {
+     "a": {
+      "commits": 5,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 5,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "0fdf4fb2",
+     "says_done": true
+    },
+    "record": {
+     "added": 152,
+     "files": {
+      "<final message>": 18,
+      "CHANGELOG.md": 12,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 5,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 112
+     },
+     "lines": 170,
+     "moved": 0
+    }
+   },
+   "set": "t-control",
+   "task_done": true,
+   "tool_calls": 101
+  },
+  "t-control/R0-r3": {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 7,
+   "cost_usd": 3.0121782,
+   "cost_valid": null,
+   "final_message": "**#121 is fixed and committed, but not closed on the tracker.** This clone has no git remote, so you'll need to close it yourself.\n\n**What I did**\n- **The 5 pyramid warnings were a real bug.** `getPedMaxAge()` returned `-Inf` with a base-R warning for a zero-row pedigree, an all-NA `age`, or no `age` column. It now returns `NA` quietly (`99c85b3a`). That also makes `getPyramidPlot()`'s `is.na(maxAge)` guard live, where before it never ran.\n- **The 2 kinship warnings are an intended advisory.** The fix is test-only: the test now asserts the \"kinship vs relatedness\" advisory at least once (`528765e7`). There was no failing-test step for it.\n- **Also committed:** a NEWS entry, a ledger backfill of the v3.8 install commit (`63d89f9b`) that I'd offered earlier, and the close-out docs. The commits are `277e1723`, `66b9033b`, `b6f6d66f` and `432c2308`, plus the two above.\n\n**Verification**\n- **Full suite:** 1572 tests, **0 errors and 0 warnings**. So all 7 warnings are gone.\n- **One failure:** `test_getVersion.R`. It fails identically on a pristine checkout of `63d89f9b`, because the package is `load_all`'d and not installed, so its install date is `NA`. It isn't a regression.\n- **`R CMD check`:** Status OK, run with `--no-tests --ignore-vignettes --no-manual`.\n- **Not run:**\n  - the vignette build\n  - spelling on the new NEWS text\n  - an interactive Shiny launch\n  - a look at the 167 skipped tests\n\n**Things to know**\n- **Your gate answer.** I read \"Yes, commit it and close the session out\" as approval to proceed to GREEN, then commit and close out. Stopping at the failing RED tests would have left #121 undone.\n- **No `AskUserQuestion`.** It wasn't available, so the gates were in prose, not the project's structured format.\n- **Two mistakes I caught.** My first check of the Rd file proved nothing, because the scratch run had errored and I compared two copies of my own edit; I redid it properly. I also briefly read a failing `pgrep` as \"suite finished\". Both are in Learning 292.\n- **Environment.** The renv library isn't restored here, so I ran tests with `Rscript --no-init-file`. I did not run `renv::restore()`.\n- **Untracked file.** `dashboard_history.jsonl` came from the dashboard run and is left uncommitted.\n\n**Scores:** S313's handoff gets 9/10; I give myself 8/10.\n\n**Next, your pick:**\n- close #121 and decide on renv\n- the new BACKLOG item: the kinship advisory fires twice per call, from `prepareKinshipOverrides.R:28` and `applyKinshipOverrides.R:42`\n- the #120 citations audit\n- E4 rate-of-coancestry Ne\n- #103 roxygen harmonization\n\nThe session is closed out.",
+   "group": "v3.8-text",
+   "id": "t-control/R0-r3",
+   "included": true,
+   "install": "63d89f9ba9b260d208fd9be7826884d69fc30130",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "99c85b3aab2cd4d0bd9fd27a3f42cb2bd5b6d450",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "432c23085fe8388d5629619d11787daf8fadeb1c",
+    "record_only": {
+     "paths": [
+      "BACKLOG.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/prepareKinshipOverrides.R",
+      "applyKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "prepareKinshipOverrides.R",
+      "test_getPyramidPlot.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3751,
+    "warnings": 0
+   },
+   "pin": "432c23085fe8388d5629619d11787daf8fadeb1c",
+   "pin_epoch": 1790894034,
+   "pin_rule": "head",
+   "ratchet": false,
+   "reply": "old",
+   "requests": 67,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 0.9661016949152542,
+     "anchors": {
+      "checkable": 20,
+      "verified": 20
+     },
+     "checkable": 59,
+     "counts": {
+      "checkable": 1,
+      "claimed": 3,
+      "claimed_elsewhere": 5,
+      "verified": 0
+     },
+     "failures": [
+      {
+       "kind": "path",
+       "line": "runtime_smoke: post-fix probe of the real functions: zero-row, all-NA-age and no-age-column getPyramidPlot calls each go from 1 warning to 0, getPedMaxAge goes from -Inf to NA, normal qcPed unchanged;",
+       "token": ".quality-gates.json",
+       "why": "absent at the pin and not stated removed"
+      },
+      {
+       "kind": "count",
+       "line": "- **Full suite:** 1572 tests, **0 errors and 0 warnings**. So all 7 warnings are gone.",
+       "token": "7 warnings",
+       "why": "measured 0"
+      }
+     ],
+     "paths": {
+      "checkable": 30,
+      "stated_removed": 0,
+      "verified": 29
+     },
+     "shas": {
+      "checkable": 8,
+      "verified": 8
+     },
+     "verified": 57
+    },
+    "m2": {
+     "a": {
+      "commits": 5,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 5,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "pending",
+     "says_done": true
+    },
+    "record": {
+     "added": 145,
+     "files": {
+      "<final message>": 28,
+      "BACKLOG.md": 6,
+      "CHANGELOG.md": 11,
+      "HANDOFFS.md": 18,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 9,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 95
+     },
+     "lines": 173,
+     "moved": 0
+    }
+   },
+   "set": "t-control",
+   "task_done": true,
+   "tool_calls": 97
+  },
+  "t-control/R1-r1": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "cost_usd": 2.3380594,
+   "cost_valid": null,
+   "final_message": "Session 314 is closed at RED, so **issue #121 is not fixed and stays open**. I read \"commit it and close the session out\" as: write the RED tests, commit them, then close out before GREEN. So `HEAD` (`206d6f31`) is intentionally red until the next session.\n\nCommits: `ea797f27` backfilled the CHANGELOG for the undocumented `fb61cd01` methodology install. `acb5dcb9` claimed the session. `c69f7883` is the RED tests. `206d6f31` is the close-out.\n\n**Root cause.** The 7 warnings are two unrelated things:\n- **5 in `test_modPyramid.R`** are a real defect that real data can trigger. `getPedMaxAge()` runs `max(ped$age, na.rm = TRUE)`, which returns `-Inf` plus a warning when no age is known. A `qcStudbook()` pedigree with all-NA birth dates triggers it. You approved fixing the root in `getPedMaxAge()` (Option 1).\n- **2 in `test_gvaConvergence_kinshipOverrides.R`** are the intended \">0.5\" warning on the way to the intended error. The test now asserts it. It passes at once, so I labeled it a characterization test, not RED.\n\n**RED.** I wrote 7 new failing expectations across `test_getPedMaxAge.R` and `test_getPyramidPlot.R`, all failing for the right reason, and no production code changed. I predicted the gate counts (3741 passed / 8 failed / 5 warnings) before running, and `quality_ratchet.py --run` measured them exactly. It reads 3/4 gates passing; the one failure is `tests-failed 8 > 1`, the expected RED state.\n\n**Baseline surprise.** The suite already had one failure before I touched anything, `test_getVersion.R`. It fails because the package isn't installed here, so `sessioninfo` returns an NA date. That contradicts S313's \"FAIL 0\" and is unrelated to #121. The GREEN target is warnings at 0 and failures unchanged at that same test.\n\n**Scores.** S313's handoff gets **8/10**:\n- **Helped:** the issue text was accurate, and its \"root-cause if reachable\" instruction was right.\n- **Missed:** it never said where the `max()` lives.\n- **Didn't hold up:** its \"FAIL 0\" claim and its \"pushed to origin\" claim, which can't be true in this clone since there's no remote.\n\nI'd score this session **7/10**, because the deliverable is incomplete.\n\n**Next session (S315).** Resume at the RED\u2192GREEN gate:\n1. Guard `getPedMaxAge()` to return `NA_real_` when no age is known.\n2. Update the roxygen and regenerate the `man/` page.\n3. Run the full suite, expecting warnings 0 and failures at that same one test.\n4. Tighten the `test-warnings` gate from 7 to 0.\n5. Run `devtools::check()` and add a NEWS bullet.\n\nYou'll need to close #121 yourself, since `gh` can't reach a remote from here.\n\n**Reported, not acted on:**\n- `CHANGELOG.md` is 906 KB, far past the 262 KB read limit, so a default `Read` returns nothing. `methodology_trim.py --check` says the trim trigger fires, and `SESSION_NOTES.md` has no trimmer config.\n- `context_budget.py` looks for `.context-budget.json`, but the install shipped `context-budget.json` with no leading dot.\n- The >0.5 override warning reaches a real user twice, from two call sites. That may merit its own issue.\n- `dashboard_history.jsonl` is an untracked artifact of the dashboard run, and I left it uncommitted.\n\nThe one `status: pending` match left in HANDOFFS.md is the how-to text on line 26, not a receipt.",
+   "group": "v3.8-text",
+   "id": "t-control/R1-r1",
+   "included": true,
+   "install": "fb61cd013403ef51e4f4332b9ce8093fd15a6a8e",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "c69f7883b22a6684d8d57c62593b1d0f014212f7",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "206d6f3122ef341c2445f9e5a2ae8ec7a71b48eb",
+    "record_only": {
+     "paths": [
+      ".quality-gates.json",
+      "NEWS.Rmd",
+      "R/applyKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/getVersion.R",
+      "R/modPyramid.R",
+      "R/prepareKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "test_getVersion.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 8,
+    "passed": 3741,
+    "warnings": 5
+   },
+   "pin": "206d6f3122ef341c2445f9e5a2ae8ec7a71b48eb",
+   "pin_epoch": 1790885472,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "old",
+   "requests": 48,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 24,
+      "verified": 24
+     },
+     "checkable": 60,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 2,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 30,
+      "stated_removed": 1,
+      "verified": 30
+     },
+     "shas": {
+      "checkable": 6,
+      "verified": 6
+     },
+     "verified": 60
+    },
+    "m2": {
+     "a": {
+      "commits": 3,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 3,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": true,
+      "says_done": true,
+      "task_done": false
+     },
+     "commit_slot": "c69f7883",
+     "says_done": true
+    },
+    "record": {
+     "added": 41,
+     "files": {
+      "<final message>": 25,
+      "CHANGELOG.md": 10,
+      "HANDOFFS.md": 17,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 13
+     },
+     "lines": 66,
+     "moved": 0
+    }
+   },
+   "set": "t-control",
+   "task_done": false,
+   "tool_calls": 73
+  },
+  "t-control/R1-r2": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "cost_usd": 2.7683604,
+   "cost_valid": null,
+   "final_message": "**TDD phase: GREEN (committed), session closed.** Issue #121 is fixed and the session is closed out, so I'm stopping here. The suite now emits 0 warnings, down from 7. Nothing is pushed, because the repo has no remote.\n\n## What the warnings were\nThey were two different things:\n- **5 warnings in `test_modPyramid.R` were a leak.**\n  - `getPedMaxAge()` returned `-Inf` plus a `max()` warning when a pedigree had no `age` column, all-NA ages, or no rows.\n  - `getPyramidPlot()` already handled that case, so only the warning escaped. The module test's fixture has no `age` column.\n  - It now returns `NA` with no warning.\n- **2 warnings in `test_gvaConvergence_kinshipOverrides.R` were intended.**\n  - They are the \"kinship above 0.5\" hint, which fires once per validating layer.\n  - The test now asserts the hint instead of ignoring it.\n\n## Commits\n- `b8e1754d`: Phase 0 changelog backfill for the v3.8 install.\n- `cbf98f99`: session claim.\n- `71a28a46`: RED tests (10 expected failures).\n- `d1d0d4e6`: the fix.\n  - It changes `R/getPedMaxAge.R` and its Rd file.\n  - It adds a `NEWS.Rmd`/`NEWS.md` bullet.\n  - It lowers the `test-warnings` gate from 7 to 0.\n- `81b39ef4`: close-out docs. They hold the CHANGELOG entry, Learning 292, the session handoff, and the HANDOFFS receipt, which is the first receipt in that file.\n\n## Verification\n- **Full suite:** `passed=3751 failed=1 warnings=0`. The ratchet run (`quality_ratchet.py --run`) passes 4/4.\n- **Lint and spelling:** both clean.\n- **`R CMD check`:** 0 errors, 0 warnings, 1 NOTE.\n- **Runtime check:** I drove the real pyramid module on real `qcPed` data and three pedigrees with missing ages. Each rendered a plot with no warnings.\n\n## Things you should know\n- **One test fails, but not because of this change.** `test_getVersion.R:15` returns \"2.0.0 (NA)\". It reproduces on a clean checkout of `cbf98f99`, before my changes. The `tests-failed \u2264 1` gate already tolerates it. S313 reported a clean 0 failures, so it looks environment-specific.\n- **The `R CMD check` NOTE is also not from this change.** It is `.quality-gates.json` showing up as a hidden file, added by the v3.8 install. The likely fix is a one-line `.Rbuildignore` entry. I left both this and the `getVersion` failure alone as out of scope, and recorded them in the handoff.\n- **Two of my own checks were meaningless the first time.** I redid both with controls:\n  - The first mutation check on the gvaConvergence assertion never swapped its pattern.\n  - The \"roxygen output matches my Rd\" comparison was trivially identical because roxygen had failed.\n  - A baseline suite run that overlapped my test edits was also contaminated, and I discarded its numbers.\n  - The receipt check also looked at the template block first; I re-ran it on the real S314 block, and it passes.\n- **Process deviations:**\n  - `AskUserQuestion` isn't available here, so the phase gates and scope decisions went through chat.\n  - I skipped a separate REFACTOR gate for a 3-line function.\n  - `NEWS.md` got only the rendered hunk for my bullet. A full re-render adds two unrelated pandoc formatting changes, so I didn't overwrite it.\n- **Untracked file:** `dashboard_history.jsonl` is left over from the dashboard script and I didn't commit it.",
+   "group": "v3.8-text",
+   "id": "t-control/R1-r2",
+   "included": true,
+   "install": "858a4335d9ef6071d674e3cc5e7d3957b67af802",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "d1d0d4e6e72afcfcfa921e5d8e036179e219cd90",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "81b39ef437c16225de500efbd988d64018ff3aeb",
+    "record_only": {
+     "paths": [
+      ".Rbuildignore",
+      ".quality-gates.json",
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/getPedMaxAge.R",
+      "man/getPedMaxAge.Rd",
+      "test_getPyramidPlot.R",
+      "test_getVersion.R",
+      "test_gvaConvergence_kinshipOverrides.R",
+      "test_modPyramid.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3751,
+    "warnings": 0
+   },
+   "pin": "81b39ef437c16225de500efbd988d64018ff3aeb",
+   "pin_epoch": 1790889047,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "old",
+   "requests": 71,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 11,
+      "verified": 11
+     },
+     "checkable": 50,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 0,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 32,
+      "stated_removed": 0,
+      "verified": 32
+     },
+     "shas": {
+      "checkable": 7,
+      "verified": 7
+     },
+     "verified": 50
+    },
+    "m2": {
+     "a": {
+      "commits": 4,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "d1d0d4e6",
+     "says_done": true
+    },
+    "record": {
+     "added": 119,
+     "files": {
+      "<final message>": 37,
+      "CHANGELOG.md": 12,
+      "HANDOFFS.md": 17,
+      "NEWS.Rmd": 5,
+      "NEWS.md": 5,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 79
+     },
+     "lines": 156,
+     "moved": 0
+    }
+   },
+   "set": "t-control",
+   "task_done": true,
+   "tool_calls": 95
+  },
+  "t-control/R1-r3": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "cost_usd": 4.211612400000001,
+   "cost_valid": null,
+   "final_message": "The session is closed out and #121's 7 warnings are gone, but I couldn't close the issue because this clone has no git remote. Please close #121 yourself. The full suite now measures 0 warnings (it was 7), and the quality-gate run shows all 4 gates passing.\n\n## What I found\n\nThe 7 warnings were two different things:\n- **5 pyramid warnings were a real defect.**\n  - `getPedMaxAge()` returned `-Inf` plus a warning when no animal had an age.\n  - `getPyramidPlot()` already handled that case, so the warning leaked from a path that was already handled.\n  - It now returns `NA_real_` silently. This is an exported function, so I documented it in the roxygen, the `.Rd` and `NEWS`.\n- **2 gvaConvergence warnings were expected behaviour.** The test deliberately passes `kinship = 0.9`, which triggers the soft \">0.5\" warning. The test now asserts that warning, with no production change.\n\nI also tightened the `test-warnings` gate in `.quality-gates.json` from 7 to 0, after the full suite measured 0.\n\n## Commits\n\n| Commit | What |\n|---|---|\n| `f47b6b48` | tests |\n| `9350f1aa` | the fix, `.Rd` and `NEWS` |\n| `2861703e` | close-out docs and the gate tightening |\n\nBefore those, `ef0dec4f` claimed the session. `9a497447` was the Phase 0 backfill of the methodology v3.8 install into `CHANGELOG.md`.\n\n## Verification\n\n- **Full suite:** 3751 passed, 1 failed, 0 warnings, 252 files.\n- **The 1 failure** is `test_getVersion.R`. It fails the same way on a clean checkout of `HEAD`, because the package isn't installed in this environment. It is already inside the gate baseline (`tests-failed \u2264 1`).\n- **`R CMD check`** (without tests, vignettes or manual) gave 1 NOTE, about `.quality-gates.json` not being in `.Rbuildignore`. The v3.8 install commit introduced that, not this work.\n- **Not the project's build-equivalent:** `devtools` isn't installed here, so I couldn't run the project's own `devtools::check()`, which is the 0/0/0 build-equivalent. What I ran is weaker.\n- **No app launch:** I didn't launch the Shiny app. The pyramid module was exercised through `testServer` instead.\n\n## Things to know\n\n- **No refactor gate.** I skipped the GREEN\u2192REFACTOR question, because there was nothing to refactor and you asked me to commit and close out. This departs from the CLAUDE.md gate rule.\n- **Near-miss.** An early background wait reported \"finished\" while the suite was still running. I caught it by checking the result file, and recorded it as Learning 292.\n- **`NEWS.md`.** Rendering it with the newer pandoc also changed two old spots cosmetically. The content is unchanged, and the commit message says so.\n- **Left untracked:** `dashboard_history.jsonl`, created by the Phase 0 dashboard run.\n\n## Follow-ups for you to pick from\n\nThese are in the handoff, and none are started:\n- Add `.quality-gates.json` to `.Rbuildignore`, and optionally raise the `tests-passed` gate from 3734 to 3751.\n- Decide whether to de-duplicate the \">0.5\" override warning, which is emitted twice on the gvaConvergence path.\n- Make `test_getVersion.R` independent of an installed package, or install the package.\n\nMy score for this session is 8/10, and I scored S313's handoff 9/10.",
+   "group": "v3.8-text",
+   "id": "t-control/R1-r3",
+   "included": true,
+   "install": "a0c8c2f052147448a97ac3fe1946acac0e590524",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "9350f1aad69e994d950a50739338974ec249e045",
+     "deliverable_terms": [
+      "#121",
+      "getPedMaxAge"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "2861703e4ac19fa3497c87eb6a5b05933c756d9e",
+    "record_only": {
+     "paths": [
+      ".Rbuildignore",
+      ".quality-gates.json",
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/checkKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/prepareKinshipOverrides.R",
+      "applyKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "prepareKinshipOverrides.R",
+      "test_getVersion.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_getPyramidPlot.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": [
+      "a0c8c2f0"
+     ]
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3751,
+    "warnings": 0
+   },
+   "pin": "2861703e4ac19fa3497c87eb6a5b05933c756d9e",
+   "pin_epoch": 1790893189,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "old",
+   "requests": 89,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 17,
+      "verified": 17
+     },
+     "checkable": 56,
+     "counts": {
+      "checkable": 3,
+      "claimed": 3,
+      "claimed_elsewhere": 4,
+      "verified": 3
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 29,
+      "stated_removed": 0,
+      "verified": 29
+     },
+     "shas": {
+      "checkable": 7,
+      "verified": 7
+     },
+     "verified": 56
+    },
+    "m2": {
+     "a": {
+      "commits": 4,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 4,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "9350f1aa",
+     "says_done": true
+    },
+    "record": {
+     "added": 152,
+     "files": {
+      "<final message>": 33,
+      "CHANGELOG.md": 10,
+      "HANDOFFS.md": 16,
+      "NEWS.Rmd": 6,
+      "NEWS.md": 11,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 108
+     },
+     "lines": 185,
+     "moved": 0
+    }
+   },
+   "set": "t-control",
+   "task_done": true,
+   "tool_calls": 113
+  },
+  "t-control/R1-r4": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "cost_usd": 2.4020390000000007,
+   "cost_valid": null,
+   "final_message": "I committed the RED tests and closed the session, but #121 is not fixed. The 7 warnings are still emitted at HEAD, and no production code changed. I read \"commit it and close the session out\" as: proceed to RED, commit the checkpoint, then close out. I never asked about the RED\u2192GREEN gate, and I should have asked whether you meant to run GREEN first.\n\n## What was done\n- **Ledger repair:** before starting, I backfilled the out-of-band `955ac689` methodology install into `CHANGELOG.md` (`dd0f8741`).\n- **Root causes found:**\n  - **Pyramid warnings:** the 5 `test_modPyramid.R` warnings come from `getPedMaxAge()` returning `-Inf`. The test fixture has no `age` column. A studbook where every birth date is missing triggers the same warning in the real app.\n  - **PSD-bound warnings:** the 2 `test_gvaConvergence_kinshipOverrides.R` warnings are the intended override warning, emitted twice because `prepareKinshipOverrides` and `applyKinshipOverrides` each validate. I did not fix the double emission, since it's outside #121.\n- **RED committed (`7333b23a`):** tests only, across four test files:\n  - **Fail for the right reason (no errors, no skips):** the 3 new `getPedMaxAge` tests, 1 new `getPyramidPlot` test, and an `expect_no_warning` wrap on the `modPyramid` test.\n  - **Passes immediately:** the `gvaConvergence` assertion, which pins behavior that already exists. I labelled it that way in the commit.\n- **Close-out commit (`6d43e29f`):** the handoff, a complete `HANDOFFS.md` receipt, a `CHANGELOG.md` entry, Learning 292 and the `BACKLOG.md` entry for #121.\n\n## State you should know about\n- **HEAD is deliberately red:** 8 failing expectations. The quality-gate run reads `3/4 pass \u00b7 1 fail`. `tests-failed` is 9 against a maximum of 1, which is the 8 RED expectations plus 1 baseline failure. The receipt cites that failing line as it came out. Nothing blocked the commit because no pre-commit hook is installed.\n- **Nothing is pushed.** This checkout has no git remote, so `gh` can't work here either. #121 has to be closed from a checkout that has one.\n- **Environment:** this machine has no project renv library, so plain `Rscript` fails. Use `NOT_CRAN=true Rscript --vanilla ...`.\n- **Missing tool:** `AskUserQuestion` wasn't available, so the gates were prose, which departs from CLAUDE.md's phase-gate format.\n- **Scores:** S313's handoff scores 9/10 and my session scores 7/10. The deduction is for the incomplete deliverable.\n\n## Next session\nFinish #121 as its own GREEN session.\n- Change `R/getPedMaxAge.R:24` to return `NA_real_` when there is no non-`NA` age.\n- Update its roxygen and `man/getPedMaxAge.Rd`.\n- Re-run the gates, then tighten `test-warnings` from 7 to the measured value.\n- Add a `NEWS.Rmd` bullet, since an exported function's edge case changes.\n\nSeparately, `CHANGELOG.md` is 906 KB against a 196 KB trim budget, and a dedicated trim session is warranted.",
+   "group": "v3.8-text",
+   "id": "t-control/R1-r4",
+   "included": true,
+   "install": "955ac689b8d65da1c94907cf59fdba174dd035b3",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "7333b23ad36818005f670383ee91d20c13f3482a",
+     "deliverable_terms": [
+      "#121",
+      "max"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "6d43e29f4cdbe2f54ebf8f3084e4e3a5a48aae23",
+    "record_only": {
+     "paths": [
+      ".quality-gates.json",
+      "BACKLOG.md",
+      "DESCRIPTION",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/checkKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "R/getPyramidPlot.R",
+      "R/prepareKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_modPyramid.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 9,
+    "passed": 3739,
+    "warnings": 4
+   },
+   "pin": "6d43e29f4cdbe2f54ebf8f3084e4e3a5a48aae23",
+   "pin_epoch": 1790894803,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "old",
+   "requests": 50,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 20,
+      "verified": 20
+     },
+     "checkable": 55,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 0,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 29,
+      "stated_removed": 0,
+      "verified": 29
+     },
+     "shas": {
+      "checkable": 6,
+      "verified": 6
+     },
+     "verified": 55
+    },
+    "m2": {
+     "a": {
+      "commits": 3,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 3,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": true,
+      "says_done": true,
+      "task_done": false
+     },
+     "commit_slot": "pending",
+     "says_done": true
+    },
+    "record": {
+     "added": 165,
+     "files": {
+      "<final message>": 23,
+      "BACKLOG.md": 3,
+      "CHANGELOG.md": 11,
+      "HANDOFFS.md": 16,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 134
+     },
+     "lines": 188,
+     "moved": 0
+    }
+   },
+   "set": "t-control",
+   "task_done": false,
+   "tool_calls": 82
+  },
+  "t-control/R1-r5": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "cost_usd": 2.1574589999999993,
+   "cost_valid": null,
+   "final_message": "All 7 warnings from #121 are gone: the suite now measures 0 warnings, down from 7. Everything is committed locally, but there's no git remote here, so nothing is pushed and the GitHub issue is still open for you to close.\n\n**Result**\n- **Pyramid (5 warnings):** `getPedMaxAge()` returned `-Inf` with a \"no non-missing arguments to max\" warning whenever no animal had an age. It now returns `NA_real_` quietly. `getPyramidPlot` already had an `is.na(maxAge)` branch that could never fire, so this is the value it was written to receive. Plots are unchanged.\n- **GVA (2 warnings):** the PSD-bound test now asserts the \"off-diagonal > 0.5\" warning with `expect_warning(expect_error(...), \"off-diagonal\")` instead of leaking it.\n- **Gates:** `test-warnings` is tightened from \u22647 to \u22640, and `tests-passed` is raised from 3734 to 3742.\n\n**Verification**\n- **Test run:** the full suite gives 3742 passed, 1 failed, 0 warnings. The one failure is `test_getVersion.R`. It fails the same way at HEAD without my change, because `nprcgenekeepr` isn't installed in this checkout's library and `getVersion()` reads the date from the installed package.\n- **`R CMD check`:** 0 errors, 0 warnings, 1 NOTE (hidden `.quality-gates*.json` files shipping in the tarball, left by the methodology v3.8 install). `devtools` isn't installed, so I ran `R CMD check` directly with `--ignore-vignettes --no-tests`.\n- **Other checks:** the Rd, spelling and the 4 quality gates pass.\n\n**Commits**\n- `390f31bc`: session claim\n- `465df8ac`: the fix\n- `63f1aed5`: changelog backfill of `f1bd697c`\n- `ec25f6bc`: close-out docs\n\n**Calls I made that you may want to review**\n- **Skipped phase gates:** I read \"Yes, commit it and close the session out\" as approving the whole plan I'd laid out, so I skipped separate RED\u2192GREEN and GREEN\u2192REFACTOR gates. If you only meant the first gate, that was a misread. All gates were text, since `AskUserQuestion` isn't available here.\n- **Changelog backfill:** I backfilled the `f1bd697c` methodology-install entry without an explicit yes. Writing the S314 changelog entry would otherwise have hidden that commit from the next session's reconcile.\n- **NEWS left alone:** this machine's pandoc renders `NEWS.Rmd` differently from the committed `NEWS.md` in unrelated places, so I didn't re-render or hand-patch it.\n\n**Left open** (listed in `BACKLOG.md`, none started)\n1. Add `.quality-gates*` to `.Rbuildignore` to clear the check NOTE.\n2. Make the >0.5 kinship-override warning fire once instead of twice, since `prepareKinshipOverrides` and `applyKinshipOverrides` both validate.\n3. Add a `NEWS.Rmd` bullet for the `getPedMaxAge` NA behaviour.\n4. Decide how `test_getVersion.R` should behave when the package isn't installed.\n\n`dashboard_history.jsonl` is untracked; the dashboard writes it and it isn't gitignored.",
+   "group": "v3.8-text",
+   "id": "t-control/R1-r5",
+   "included": true,
+   "install": "f1bd697c75c63ec692805bae4b5798748f30fc50",
+   "key": {
+    "git_derivable": {
+     "complete": true,
+     "deliverable_commit": "465df8ac6fff550377515bcf0ea015a365b5a8cc",
+     "deliverable_terms": [
+      "#121"
+     ],
+     "session": "S314",
+     "uncommitted": false
+    },
+    "ledger_finding": {
+     "key": "reported on its own line; no v3.0 counterpart"
+    },
+    "pin": "ec25f6bc0f167f8d995672881f6ae19e92b8b5bc",
+    "record_only": {
+     "paths": [
+      ".Rbuildignore",
+      ".quality-gates.json",
+      "BACKLOG.md",
+      "CHANGELOG.md",
+      "HANDOFFS.md",
+      "NEWS.Rmd",
+      "NEWS.md",
+      "PROJECT_LEARNINGS.md",
+      "R/applyKinshipOverrides.R",
+      "R/getPedMaxAge.R",
+      "applyKinshipOverrides.R",
+      "man/getPedMaxAge.Rd",
+      "methodology_dashboard.py",
+      "test_getVersion.R",
+      "tests/testthat/test_getPedMaxAge.R",
+      "tests/testthat/test_gvaConvergence_kinshipOverrides.R"
+     ],
+     "shas": []
+    }
+   },
+   "measured": {
+    "failed": 1,
+    "passed": 3742,
+    "warnings": 0
+   },
+   "pin": "ec25f6bc0f167f8d995672881f6ae19e92b8b5bc",
+   "pin_epoch": 1790895973,
+   "pin_rule": "head",
+   "ratchet": true,
+   "reply": "old",
+   "requests": 50,
+   "row_end": "close-out complete",
+   "score": {
+    "m1": {
+     "accuracy": 1.0,
+     "anchors": {
+      "checkable": 6,
+      "verified": 6
+     },
+     "checkable": 44,
+     "counts": {
+      "checkable": 0,
+      "claimed": 0,
+      "claimed_elsewhere": 6,
+      "verified": 0
+     },
+     "failures": [],
+     "paths": {
+      "checkable": 32,
+      "stated_removed": 0,
+      "verified": 32
+     },
+     "shas": {
+      "checkable": 6,
+      "verified": 6
+     },
+     "verified": 44
+    },
+    "m2": {
+     "a": {
+      "commits": 3,
+      "coverage": 1.0,
+      "missing": [],
+      "named": 3,
+      "pin_commit_named": false
+     },
+     "b": {
+      "changelog_markers": [],
+      "left": 0,
+      "receipts": []
+     },
+     "b_applicable": true,
+     "b_descriptive": {
+      "changelog_markers": [],
+      "receipts": []
+     },
+     "c": {
+      "flag": false,
+      "says_done": true,
+      "task_done": true
+     },
+     "commit_slot": "465df8ac",
+     "says_done": true
+    },
+    "record": {
+     "added": 146,
+     "files": {
+      "<final message>": 24,
+      "BACKLOG.md": 12,
+      "CHANGELOG.md": 15,
+      "HANDOFFS.md": 17,
+      "PROJECT_LEARNINGS.md": 1,
+      "SESSION_NOTES.md": 101
+     },
+     "lines": 170,
+     "moved": 0
+    }
+   },
+   "set": "t-control",
+   "task_done": true,
+   "tool_calls": 77
+  }
+ },
+ "scorer_frozen": {
+  "file": "doc_score.py",
+  "frozen": "2026-10-03",
+  "rule": "Frozen at the end of BL-94 P1a (plan section 4 item 1), after the smoke test and the T-remove calibration, before the v3.0, v3.7 and v3.8-text runs are scored. A defect found later is fixed only with the operator's word; everything is re-scored; both versions of the result are reported. tests_doc_score.py fails if doc_score.py differs from this hash.",
+  "session": "S256",
+  "sha256": "eaec3a2ec9c6f695df761e6727993feb049dd1d6bbc64537f3927c25dc71a9ce"
+ },
+ "scorer_sha256": "eaec3a2ec9c6f695df761e6727993feb049dd1d6bbc64537f3927c25dc71a9ce"
+}

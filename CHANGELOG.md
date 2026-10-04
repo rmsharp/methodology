@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S257 — P1b checkpoint: the saved runs scored once with the frozen scorer
+
+`docs/planning/overhead-replay/p1b_score.py` (new) gathered inputs for the 26 runs of the three contrast sets (`real-3.7`, `t-control`, `t-control-fix`), applied the plan 2.5 inclusion rule (`reached_closeout`: 23 scored, the same three left out that P1a named: `real-3.7/v3.0-r2`, `real-3.7/v3.7-r1`, `t-control-fix/R1-r1`) and ran `doc_score.py` once, refusing to start unless its sha-256 matched `doc_score.frozen` (`eaec3a2ec9c6`, unchanged). The output is `pilot/doc-evidence/p1b-scores.json` (every score, every failed reference, every final message, every key). The two S237 runs that ran on past their pin were read before scoring: the chosen final message is the first close-out's own, and the saved cost, request and tool-call rows are cut at that close-out. The driver's "commits" column was first taken from the manifest's count to HEAD and corrected to commits to the pin (v3.7 rep 2 holds 13 commits past it) before any figure was used; no score was re-run. Hand-reads, the report and the stop follow.
+
 ### 2026-10-04 · [BL-94] S257 claim (in progress) — P1b: score the saved runs once with the frozen scorer
 
 Operator said `go` and chose BL-94 P1b from the Phase 0 picker (the option offered as recommended; the others were the BL-95 resync plan and the BL-97 Test 38 flake). Deliverable: P1b of `docs/planning/documentation-quality-experiment-plan.md` section 5, which costs $0 and runs no model; it ends in a stop with D3 and D4 reconsidered, and P2a is its own session. Phase 0: 0 undocumented commits at both frontiers, the ratchet citation matches `.quality-gates-results.json` (results `3f5791d93dac`, manifest `fd435a4f8fab`), `FreezeTests` green (4 of 4), PR #92 open with no reply, 43 ahead of `origin/main` and 102 behind `upstream/main`, dashboard 72/100. The owed HANDOFFS trim and fold ran first as their own actions (`f512578`, `e768491`). `CHANGELOG: pending` until Phase 3F.
