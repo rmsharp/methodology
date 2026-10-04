@@ -4122,3 +4122,10 @@ false red; **(c)** leave it, and treat a single red Test 38 as a rerun, which th
 **Next action:** none owed. If a future full suite shows another red on an assertion whose own `fail` message contains its pattern, take that as a
 second data point and decide (a), (b) or (c).
 
+**Second data point (S257, 2026-10-04): `bin/tests.sh` Test 4, line 76, `echo "$OUTPUT" | grep -q "mode:    ignore" && pass || fail`.** One full-suite run printed
+`FAIL: mode auto-detect wrong: <output>` and the printed `$OUTPUT` (the same variable the grep read, not a second run) contains `mode:    ignore`; summary `361 passed, 1 failed`, no
+other red. Three things differ from the first point: the payload is about 250 B, not 1.5 KB; the assertion is the `&& pass || fail` form, so the flake was a visible false red and hid no defect; and the
+suite ran while a subagent was working on the same machine. **Measured, idle machine:** a 251 B string of the same shape, 3,000 runs each under `set -uo pipefail`, `echo "$OUTPUT" | grep -q` failed
+**0** times and the here-string form **0** times, so the idle rate is not what produced it and the load is a suspect, not a finding. The mechanism is still not established. The decision between (a), (b) and (c) above is still open. Two reds on different assertions (S254 Test 38, S257 Test 4) across the full-suite
+runs since S254, whose other recorded runs (S254's rerun, S256's close-out gate run) were green, is a count, not a rate: the number of runs in between was not tallied.
+
