@@ -1,0 +1,1553 @@
+{
+ "t-remove/R0-r1": {
+  "final_message_chars": 2252,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "db8036468acb041974a4b201326038d32469954a",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "28c69ecf520e618234e97f36dfb508832c8b73fe",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CHANGELOG.md",
+     "CLAUDE.md",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "methodology_trim.py"
+    ],
+    "shas": []
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 5,
+    "verified": 5
+   },
+   "checkable": 39,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 27,
+    "stated_removed": 6,
+    "verified": 27
+   },
+   "shas": {
+    "checkable": 7,
+    "verified": 7
+   },
+   "verified": 39
+  },
+  "m2": {
+   "a": {
+    "commits": 3,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 3,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "pending",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 226,
+   "files": {
+    "<final message>": 16,
+    "BACKLOG.md": 11,
+    "CHANGELOG.md": 51,
+    "HANDOFFS.md": 89,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 73
+   },
+   "lines": 241,
+   "moved": 1
+  },
+  "task_done": true
+ },
+ "t-remove/R0-r2": {
+  "final_message_chars": 3243,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "e0e6776f79f08727a2f59e9fdbd3ef1ed63bfa9a",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S554",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "97d577d48d6306cc1ab5be666062b93c4b0e03ca",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "PROJECT_LEARNINGS.md",
+     "R/assignAlleles.R",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "TECH_DEBT_AUDIT_2026-05-30.md",
+     "docs/planning/phase8e-assertion-strengthening-subplan.md",
+     "methodology_trim.py",
+     "test_results_summary.md"
+    ],
+    "shas": []
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 11,
+    "verified": 11
+   },
+   "checkable": 46,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 27,
+    "stated_removed": 4,
+    "verified": 27
+   },
+   "shas": {
+    "checkable": 8,
+    "verified": 8
+   },
+   "verified": 46
+  },
+  "m2": {
+   "a": {
+    "commits": 3,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 3,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "pending",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 214,
+   "files": {
+    "<final message>": 28,
+    "CHANGELOG.md": 49,
+    "HANDOFFS.md": 87,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 76
+   },
+   "lines": 241,
+   "moved": 1
+  },
+  "task_done": true
+ },
+ "t-remove/R0-r3": {
+  "final_message_chars": 2417,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "761b32905ca3ee9d15724c8acc66909bbd2cd39a",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S554",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "c52ad6df9baf11368320625f0205ae4a35638bee",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CHANGELOG.md",
+     "CLAUDE.md",
+     "R/assignAlleles.R",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "docs/planning/phase8e-assertion-strengthening-subplan.md",
+     "methodology_trim.py",
+     "tests/testthat/test_makePedigreeDiagramData.R"
+    ],
+    "shas": [
+     "d0061e94"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 6,
+    "verified": 6
+   },
+   "checkable": 45,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 1,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 32,
+    "stated_removed": 7,
+    "verified": 32
+   },
+   "shas": {
+    "checkable": 7,
+    "verified": 7
+   },
+   "verified": 45
+  },
+  "m2": {
+   "a": {
+    "commits": 3,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 3,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "761b3290",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 201,
+   "files": {
+    "<final message>": 21,
+    "CHANGELOG.md": 56,
+    "HANDOFFS.md": 75,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 69
+   },
+   "lines": 222,
+   "moved": 0
+  },
+  "task_done": true
+ },
+ "t-remove/R0-r4": {
+  "final_message_chars": 2850,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "f0dca1968e8e415f9e8f0f6bb141a987a3846626",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "9fc2e7398f311f2b75abd16151ff8bd64ed991b9",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CHANGELOG.md",
+     "HANDOFFS.md",
+     "PROJECT_LEARNINGS.md",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "methodology_trim.py",
+     "test_markerKinship.R",
+     "test_markerParentageLikelihood.R",
+     "tests/testthat/test_markerKinship.R",
+     "tests/testthat/test_markerParentageLikelihood.R"
+    ],
+    "shas": [
+     "9bfc8bb4",
+     "c20dfa9a",
+     "c75bb9da"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 5,
+    "verified": 5
+   },
+   "checkable": 47,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 33,
+    "stated_removed": 4,
+    "verified": 33
+   },
+   "shas": {
+    "checkable": 9,
+    "verified": 9
+   },
+   "verified": 47
+  },
+  "m2": {
+   "a": {
+    "commits": 3,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 3,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "f0dca196 (deliverable; the close-out docs commit is a self-reference reconciled by the next\nPhase 0 if needed)",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 1,
+   "passed": 5561,
+   "warnings": 33
+  },
+  "record": {
+   "added": 198,
+   "files": {
+    "<final message>": 24,
+    "CHANGELOG.md": 53,
+    "HANDOFFS.md": 80,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 64
+   },
+   "lines": 222,
+   "moved": 0
+  },
+  "task_done": true
+ },
+ "t-remove/R0-r5": {
+  "final_message_chars": 2546,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "88691742e015e22398dcd7509d619a426ef433ab",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S554",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "3aa6c2b9561d6829b9d08be07efc03a5078777b2",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CHANGELOG.md",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "methodology_trim.py"
+    ],
+    "shas": [
+     "c75bb9da"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 4,
+    "verified": 4
+   },
+   "checkable": 41,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 29,
+    "stated_removed": 8,
+    "verified": 29
+   },
+   "shas": {
+    "checkable": 8,
+    "verified": 8
+   },
+   "verified": 41
+  },
+  "m2": {
+   "a": {
+    "commits": 3,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 3,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "pending",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 200,
+   "files": {
+    "<final message>": 19,
+    "BACKLOG.md": 11,
+    "CHANGELOG.md": 51,
+    "HANDOFFS.md": 81,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 55
+   },
+   "lines": 218,
+   "moved": 1
+  },
+  "task_done": true
+ },
+ "t-remove/R1-r1": {
+  "final_message_chars": 1954,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "08e92dd669c483125f0a0c8544fd2a7cb1ed8f42",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "47ab154b88bc355c5efa064821fb845faba929a6",
+   "record_only": {
+    "paths": [
+     ".quality-gates.json",
+     "BACKLOG.md",
+     "PROJECT_LEARNINGS.md",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "methodology_trim.py"
+    ],
+    "shas": [
+     "c75bb9da"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 0.9791666666666666,
+   "anchors": {
+    "checkable": 7,
+    "verified": 6
+   },
+   "checkable": 48,
+   "counts": {
+    "checkable": 1,
+    "claimed": 1,
+    "claimed_elsewhere": 19,
+    "verified": 1
+   },
+   "failures": [
+    {
+     "kind": "anchor",
+     "line": "commit `c75bb9da`). Check whether the new tool version still mis-fences `SESSION_NOTES.md:23229`'s",
+     "token": "SESSION_NOTES.md:23229",
+     "why": "line outside the file (2011 lines)"
+    }
+   ],
+   "paths": {
+    "checkable": 32,
+    "stated_removed": 6,
+    "verified": 32
+   },
+   "shas": {
+    "checkable": 8,
+    "verified": 8
+   },
+   "verified": 47
+  },
+  "m2": {
+   "a": {
+    "commits": 4,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 4,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "pending",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 233,
+   "files": {
+    "<final message>": 16,
+    "BACKLOG.md": 8,
+    "CHANGELOG.md": 76,
+    "HANDOFFS.md": 75,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 72
+   },
+   "lines": 248,
+   "moved": 1
+  },
+  "task_done": true
+ },
+ "t-remove/R1-r2": {
+  "final_message_chars": 2567,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "f93e810caf661fd1af2228330e2cf4dae3fb99e8",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "8c3804651b75e3b05a5fa11b0815290c8c75b980",
+   "record_only": {
+    "paths": [
+     ".Rbuildignore",
+     ".quality-gates.json",
+     "BACKLOG.md",
+     "CHANGELOG.md",
+     "PROJECT_LEARNINGS.md",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "methodology_trim.py"
+    ],
+    "shas": [
+     "c91f7c49"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 9,
+    "verified": 9
+   },
+   "checkable": 48,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 13,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 31,
+    "stated_removed": 6,
+    "verified": 31
+   },
+   "shas": {
+    "checkable": 8,
+    "verified": 8
+   },
+   "verified": 48
+  },
+  "m2": {
+   "a": {
+    "commits": 4,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 4,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "pending",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 216,
+   "files": {
+    "<final message>": 24,
+    "BACKLOG.md": 18,
+    "CHANGELOG.md": 80,
+    "HANDOFFS.md": 30,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 86
+   },
+   "lines": 239,
+   "moved": 1
+  },
+  "task_done": true
+ },
+ "t-remove/R1-r3": {
+  "final_message_chars": 2521,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "4c3ddad381e8cf00e289b19fd934d1d1e3246cbd",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "cc8b2c84510273535037f0037cdcad313c71d3ee",
+   "record_only": {
+    "paths": [
+     ".Rbuildignore",
+     ".quality-gates.json",
+     "BACKLOG.md",
+     "CHANGELOG.md",
+     "CLAUDE.md",
+     "PROJECT_LEARNINGS.md",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "SESSION_RUNNER.md",
+     "docs/planning/issue133-affected-status-pedigree-diagram-plan.md",
+     "methodology_trim.py"
+    ],
+    "shas": [
+     "9bfc8bb4",
+     "c75bb9da",
+     "dc0f0730"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 11,
+    "verified": 11
+   },
+   "checkable": 61,
+   "counts": {
+    "checkable": 3,
+    "claimed": 3,
+    "claimed_elsewhere": 4,
+    "verified": 3
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 36,
+    "stated_removed": 6,
+    "verified": 36
+   },
+   "shas": {
+    "checkable": 11,
+    "verified": 11
+   },
+   "verified": 61
+  },
+  "m2": {
+   "a": {
+    "commits": 4,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 4,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "4c3ddad3 (deliverable) and dea58b3f (gate floors); the close-out commit that carries this\nreceipt is a self-reference and cannot name its own sha",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 278,
+   "files": {
+    "<final message>": 21,
+    "BACKLOG.md": 18,
+    "CHANGELOG.md": 78,
+    "HANDOFFS.md": 125,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 56
+   },
+   "lines": 299,
+   "moved": 0
+  },
+  "task_done": true
+ },
+ "t-remove/R1-r4": {
+  "final_message_chars": 2765,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "a31b69f23bed11781bd70cd4431d0facda5564fe",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "59f563ee3858a7213b19fb901d0d821473aa155d",
+   "record_only": {
+    "paths": [
+     ".Rbuildignore",
+     ".quality-gates.json",
+     "BACKLOG.md",
+     "PROJECT_LEARNINGS.md",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md",
+     "context-budget.json",
+     "context_budget.py",
+     "quality_ratchet.py"
+    ],
+    "shas": [
+     "9bfc8bb4",
+     "c75bb9da"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 0.9387755102040817,
+   "anchors": {
+    "checkable": 8,
+    "verified": 8
+   },
+   "checkable": 49,
+   "counts": {
+    "checkable": 2,
+    "claimed": 2,
+    "claimed_elsewhere": 2,
+    "verified": 0
+   },
+   "failures": [
+    {
+     "kind": "sha",
+     "line": "commit, before the deletion. Supersedes an earlier, unpushed bundled commit (`fb30bc57`) that was",
+     "token": "fb30bc57",
+     "why": "does not resolve"
+    },
+    {
+     "kind": "count",
+     "line": "Both helpers and their tests are deleted, and the session is closed out with everything committed. The full test suite passes at the new floors (5,562 passed, 0 failed), but I couldn't run `devtools::",
+     "token": "5562 passed",
+     "why": "measured 5560"
+    },
+    {
+     "kind": "count",
+     "line": "Both helpers and their tests are deleted, and the session is closed out with everything committed. The full test suite passes at the new floors (5,562 passed, 0 failed), but I couldn't run `devtools::",
+     "token": "0 failed",
+     "why": "measured 2"
+    }
+   ],
+   "paths": {
+    "checkable": 28,
+    "stated_removed": 6,
+    "verified": 28
+   },
+   "shas": {
+    "checkable": 11,
+    "verified": 10
+   },
+   "verified": 46
+  },
+  "m2": {
+   "a": {
+    "commits": 4,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 4,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "a31b69f2 (deliverable); floors cd037955; claim 20dd203c; close-out commit pending reconcile",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 2,
+   "passed": 5560,
+   "warnings": 33
+  },
+  "record": {
+   "added": 197,
+   "files": {
+    "<final message>": 15,
+    "BACKLOG.md": 20,
+    "CHANGELOG.md": 61,
+    "HANDOFFS.md": 35,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 80
+   },
+   "lines": 212,
+   "moved": 0
+  },
+  "task_done": true
+ },
+ "t-remove/R1-r5": {
+  "final_message_chars": 2273,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "9e4019ab4665519f248ae2cbe33eadbe0b3951e7",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "2fdb0f14ccc46e53da29576b3db260bf8338750d",
+   "record_only": {
+    "paths": [
+     ".Rbuildignore",
+     ".quality-gates.json",
+     "BACKLOG.md",
+     "CHANGELOG.md",
+     "CLAUDE.md",
+     "PROJECT_LEARNINGS.md",
+     "R/assignAlleles.R",
+     "R/makePedigreeDiagramData.R"
+    ],
+    "shas": [
+     "0d2bbc8b",
+     "402a6b5b"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 5,
+    "verified": 5
+   },
+   "checkable": 27,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 17,
+    "stated_removed": 4,
+    "verified": 17
+   },
+   "shas": {
+    "checkable": 5,
+    "verified": 5
+   },
+   "verified": 27
+  },
+  "m2": {
+   "a": {
+    "commits": 2,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 2,
+    "pin_commit_named": false
+   },
+   "b": {
+    "changelog_markers": [],
+    "left": 0,
+    "receipts": []
+   },
+   "b_applicable": true,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "9e4019ab",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 130,
+   "files": {
+    "<final message>": 16,
+    "CHANGELOG.md": 38,
+    "HANDOFFS.md": 57,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 34
+   },
+   "lines": 146,
+   "moved": 0
+  },
+  "task_done": true
+ },
+ "t-remove/v3.0-r1": {
+  "final_message_chars": 2222,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "c9c391d2e992f01645313d385eb837feea73e846",
+    "deliverable_terms": null,
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "faa1899f2e917b24ba50a846953848441a1828fb",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CLAUDE.md",
+     "HANDOFFS.md",
+     "R/assignAlleles.R",
+     "R/makePedigreeDiagramData.R",
+     "TECH_DEBT_AUDIT_2026-05-30.md",
+     "chooseAllelesChar.R",
+     "docs/planning/phase8e-assertion-strengthening-subplan.md",
+     "test_results_summary.md"
+    ],
+    "shas": [
+     "4760ba95",
+     "c91f7c49"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 11,
+    "verified": 11
+   },
+   "checkable": 37,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 21,
+    "stated_removed": 6,
+    "verified": 21
+   },
+   "shas": {
+    "checkable": 5,
+    "verified": 5
+   },
+   "verified": 37
+  },
+  "m2": {
+   "a": {
+    "commits": 2,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 2,
+    "pin_commit_named": false
+   },
+   "b": null,
+   "b_applicable": false,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "c9c391d2",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 165,
+   "files": {
+    "<final message>": 19,
+    "CHANGELOG.md": 20,
+    "HANDOFFS.md": 49,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 95
+   },
+   "lines": 184,
+   "moved": 0
+  },
+  "task_done": true
+ },
+ "t-remove/v3.0-r2": {
+  "final_message_chars": 2721,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "fb4e43de9140340044e853e5ea2fb8823b42d2ef",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "6c2d74fd1f10e080a9fad5f9e1b5a745e69a0538",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CLAUDE.md",
+     "HANDOFFS.md",
+     "PROJECT_LEARNINGS.md",
+     "R/assignAlleles.R",
+     "R/makePedigreeDiagramData.R",
+     "SESSION_NOTES.md"
+    ],
+    "shas": []
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 4,
+    "verified": 4
+   },
+   "checkable": 28,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 18,
+    "stated_removed": 4,
+    "verified": 18
+   },
+   "shas": {
+    "checkable": 6,
+    "verified": 6
+   },
+   "verified": 28
+  },
+  "m2": {
+   "a": {
+    "commits": 3,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 3,
+    "pin_commit_named": false
+   },
+   "b": null,
+   "b_applicable": false,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "fb4e43de",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 169,
+   "files": {
+    "<final message>": 19,
+    "CHANGELOG.md": 38,
+    "HANDOFFS.md": 76,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 54
+   },
+   "lines": 188,
+   "moved": 0
+  },
+  "task_done": true
+ },
+ "t-remove/v3.0-r3": {
+  "final_message_chars": 2718,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "0748abd85964f51946fde6ec2080a894dc26c43a",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "548805a5dd1f005118d9cc6698d65d9f20b28673",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CLAUDE.md",
+     "PROJECT_LEARNINGS.md",
+     "R/makePedigreeDiagramData.R"
+    ],
+    "shas": []
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 3,
+    "verified": 3
+   },
+   "checkable": 34,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 24,
+    "stated_removed": 4,
+    "verified": 24
+   },
+   "shas": {
+    "checkable": 7,
+    "verified": 7
+   },
+   "verified": 34
+  },
+  "m2": {
+   "a": {
+    "commits": 3,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 3,
+    "pin_commit_named": false
+   },
+   "b": null,
+   "b_applicable": false,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "pending",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 178,
+   "files": {
+    "<final message>": 17,
+    "CHANGELOG.md": 43,
+    "HANDOFFS.md": 62,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 71
+   },
+   "lines": 194,
+   "moved": 1
+  },
+  "task_done": true
+ },
+ "t-remove/v3.0-r4": {
+  "final_message_chars": 2417,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "bb7555d72ba3c215fca4a70c695e1040afae5352",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "b6a1112661b1deae8a6a4853b8a6c30231619735",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CLAUDE.md",
+     "HANDOFFS.md",
+     "PROJECT_LEARNINGS.md",
+     "R/makePedigreeDiagramData.R",
+     "TECH_DEBT_AUDIT_2026-05-30.md",
+     "methodology_trim.py"
+    ],
+    "shas": []
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 10,
+    "verified": 10
+   },
+   "checkable": 39,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 23,
+    "stated_removed": 4,
+    "verified": 23
+   },
+   "shas": {
+    "checkable": 6,
+    "verified": 6
+   },
+   "verified": 39
+  },
+  "m2": {
+   "a": {
+    "commits": 2,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 2,
+    "pin_commit_named": false
+   },
+   "b": null,
+   "b_applicable": false,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "bb7555d7 (deliverable); the close-out commit is pending",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 156,
+   "files": {
+    "<final message>": 11,
+    "CHANGELOG.md": 24,
+    "HANDOFFS.md": 74,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 57
+   },
+   "lines": 167,
+   "moved": 0
+  },
+  "task_done": true
+ },
+ "t-remove/v3.0-r5": {
+  "final_message_chars": 3107,
+  "key": {
+   "git_derivable": {
+    "complete": true,
+    "deliverable_commit": "a5ef8c896e5ec05b0e3811254b0ea9ceda77c7d9",
+    "deliverable_terms": [
+     "chooseAllelesChar",
+     "resetGroup"
+    ],
+    "session": "S555",
+    "uncommitted": false
+   },
+   "ledger_finding": {
+    "key": "reported on its own line; no v3.0 counterpart"
+   },
+   "pin": "be84a96579e83aa32397bea419f6a5c402cb9093",
+   "record_only": {
+    "paths": [
+     "BACKLOG.md",
+     "CHANGELOG.md",
+     "CLAUDE.md",
+     "HANDOFFS.md",
+     "R/makePedigreeDiagramData.R",
+     "SAFEGUARDS.md",
+     "SESSION_RUNNER.md",
+     "methodology_dashboard.py",
+     "test_chooseAllelesChar.R",
+     "test_results_summary.md",
+     "tests/testthat/test_wordlist_coverage.R"
+    ],
+    "shas": [
+     "35cb7677"
+    ]
+   }
+  },
+  "m1": {
+   "accuracy": 1.0,
+   "anchors": {
+    "checkable": 7,
+    "verified": 7
+   },
+   "checkable": 37,
+   "counts": {
+    "checkable": 0,
+    "claimed": 0,
+    "claimed_elsewhere": 0,
+    "verified": 0
+   },
+   "failures": [],
+   "paths": {
+    "checkable": 25,
+    "stated_removed": 5,
+    "verified": 25
+   },
+   "shas": {
+    "checkable": 5,
+    "verified": 5
+   },
+   "verified": 37
+  },
+  "m2": {
+   "a": {
+    "commits": 2,
+    "coverage": 1.0,
+    "missing": [],
+    "named": 2,
+    "pin_commit_named": false
+   },
+   "b": null,
+   "b_applicable": false,
+   "b_descriptive": {
+    "changelog_markers": [],
+    "receipts": []
+   },
+   "c": {
+    "flag": false,
+    "says_done": true,
+    "task_done": true
+   },
+   "commit_slot": "pending",
+   "says_done": true
+  },
+  "measured": {
+   "failed": 0,
+   "passed": 5562,
+   "warnings": 33
+  },
+  "record": {
+   "added": 230,
+   "files": {
+    "<final message>": 24,
+    "CHANGELOG.md": 46,
+    "HANDOFFS.md": 78,
+    "PROJECT_LEARNINGS.md": 1,
+    "SESSION_NOTES.md": 104
+   },
+   "lines": 253,
+   "moved": 1
+  },
+  "task_done": true
+ }
+}
