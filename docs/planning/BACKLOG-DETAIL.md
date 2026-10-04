@@ -4041,6 +4041,15 @@ cap); D5 I will do blind rating"):** D1 Q2, D2 `879503cce`, D3 v3.0 + v3.7 + v3.
 ledger from $0, earlier caps ignored for it**; D5 he rates a blind sample himself (read as beside the model rater; the plan says what drops
 out if he meant instead of it). D6 and D7 stay open. P1a ($0) starts when he says go.
 
+**Status (S256, 2026-10-03): P1a is DONE; $0, no model run, no distributed file touched. The next phase is P1b.** Built under `docs/planning/overhead-replay/`:
+`pilot/doc-evidence/` (one 851 KB bundle with all 41 saved runs, a manifest, `CALIBRATION.md`), `doc_evidence.py` (14 tests), `doc_score.py` (130 tests, 41 of them
+mutants; **frozen**, `doc_score.frozen`), `DOC_SCORE.md` (the definitions). What it found: the harness's install commit is not in the project repository, so the
+bundle's range starts at the project's own start commit; the CLI version differs inside a set (2.1.285 x7, 2.1.286 x14, 2.1.287 x20); applying the inclusion rule leaves out exactly three
+runs, so **v3.0 n=5, v3.7 n=6, v3.8-text n=12 (not 13), T-remove n=15**; and the scorers, calibrated on T-remove, verify 622 of 626 references (the 4 failures are real) but are
+**at a ceiling there** (M1 0.939 to 1.000, M2(a) 1.000), because the project's own rules are in every arm, so T-remove cannot show detection power. **Next: P1b**, which scores the saved
+v3.0, v3.7 and v3.8-text runs once with the frozen scorer and ends in a stop for the operator (D3, D4 reconsidered with the free result). P1b needs his go; `python3 doc_score.py` and
+`doc_evidence.py verify` reproduce what P1a did. Plan status and its deviations: §5 P1a; §10 row 34.
+
 ---
 
 **BL-96 — `bin/tests.sh` Test 9's skip never reaches the suite's skip count, so a machine without `gh` gets a green summary that

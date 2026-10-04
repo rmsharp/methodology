@@ -4,8 +4,8 @@
 session (§11).** Written as the session's one deliverable. Nothing here has been run: no model session was launched, no money was
 spent, no distributed file changed, nothing was sent upstream. **After the S255 close-out the operator ratified D1 to D3 as recommended,
 set $100 as this study's spend cap and said he will do the blind rating himself (D4, D5; his words in §7).** A phase still starts only
-when he says go in a session, one phase per session. **The first phase is P1a: it costs nothing and its end result is a first answer
-from runs that already exist.**
+when he says go in a session, one phase per session. **S256 (2026-10-03) did P1a** (evidence kept, scorer built and frozen; status under §5 P1a); the next phase is **P1b**, which scores the saved runs once and ends in a stop for his decision. It costs nothing and its end result is a first answer
+from runs that already exist.
 
 ## In plain words
 
@@ -345,6 +345,18 @@ model's* new record behaves like the saved ones, that blinding holds. **Cost: $0
 **STOP:** a tree missing or a base sha not found; a bundle that does not rebuild the pinned sha; or a noise floor on M1 and M2 so
 wide that no plausible difference could show. Return to the operator.
 
+**Status (S256, 2026-10-03): DONE, $0, no model run, no distributed file touched.** (a) [`pilot/doc-evidence/`](overhead-replay/pilot/doc-evidence/README.md): one
+851 KB git bundle holding all 41 saved runs, a manifest, `doc_evidence.py` and 14 tests; `verify` passes against the project repository and from a fresh clone. (b) The definitions are
+[`DOC_SCORE.md`](overhead-replay/DOC_SCORE.md). (c) [`doc_score.py`](overhead-replay/doc_score.py) with 130 tests, 41 of them mutants each run first on an unbroken copy. (d) The parse-only smoke test
+parsed all 41 runs and printed no score. (e) The scorer was calibrated on the 15 T-remove trees (record in
+[`CALIBRATION.md`](overhead-replay/pilot/doc-evidence/CALIBRATION.md)): 622 of 626 checkable references verify, the 4 that do not are real, and M1 (0.939 to 1.000), M2(a) (1.000) and M2(b) (zero left) are at a ceiling there; it
+was then **frozen** ([`doc_score.frozen`](overhead-replay/doc_score.frozen)). No STOP condition fired. **Where this differs from the text above, and what P1b should use:**
+* **The bundle is one file whose range starts at the project's own commit** (`879503cce` or `402a6b5b7`), not at the install base: the install commit is made by the harness and is not in the project repository, so a bundle starting there could not be verified or unbundled. Final documentation files are not copied out; they are in the bundle.
+* **CLI versions are per run and differ inside a set**: 2.1.285 on 7 runs, 2.1.286 on 14, 2.1.287 on 20. S237's 13 straddle 2.1.285 and 2.1.286 (6 on 2.1.286), so §3.7's "S237 on 2.1.285" holds for 7 of them. A covariate.
+* **Inclusion (§2.5), applied mechanically** (`reached_closeout`): v3.0 n=5, v3.7 n=6, **v3.8-text n=12, not 13** (`t-control-fix/R1-r1` stopped at a claim and two work commits, with a pending receipt), T-remove n=15; left out are exactly `real-3.7/v3.0-r2`, `real-3.7/v3.7-r1` and that one. 26 of 41 trees have an untracked `dashboard_history.jsonl`; only those three have tracked uncommitted edits.
+* **Amendments the calibration made to §2.3**, all before the freeze: test counts (M1 d) are read from the final message only, the last of each kind; an identifier beside an anchor also verifies when it names the function enclosing that line; the pin commit is not owed a name in its own record (M2 a); a path stated removed is looked for in the two lines before and one after; tool output nobody commits (`dashboard.html`...) and the ratchet's `results x · manifest y` digests are not references. Sixteen changes in all, each with a test, in `CALIBRATION.md`.
+* **T-remove cannot show that the scorers detect defects at realistic rates** (it is at a ceiling because the project's own rules are in every arm); detection rests on the fixtures, the mutants and the four real failures. Whether M1 and M2(a) have spread on the rule-free start state is P1b's question.
+
 ### P1b: Score what exists, once ($0)
 
 **Done when:** the frozen scorers have been run once over the v3.0 (five), v3.7 (six) and v3.8-text (up to 13) runs by the §2.5 rule;
@@ -522,6 +534,8 @@ reopen S3 or D1 of `overhead-ratchet-plan.md`, does not extend the frozen erosio
 | 31 | the installer's simplifications | `install_arm.py` docstring | "README.md is not installed; customisation steps (Task Mapping table, hooks, dashboard setup) are not applied" |
 | 32 | a v3.8 arm builds | the first reviewer's scratch `ratchet_arms.build('v3.8', …, task='t-control')` | succeeded, 53,252 B runner; seeds land without their leading dot, so `context_budget.py --status` refuses (not re-run by me) |
 | 33 | **crude** look at the saved trees (a scratch script, not committed; regex only) | per tree, base = the "Install methodology arm" commit; deleted lines in `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`; distinct 7 to 40 hex tokens with a letter and backticked paths with a doc or code extension in the added lines, resolved with `git cat-file` and `git ls-files` | 26 trees (real-3.7 13, T-control 13): **92** deleted lines (includes the receipt file, whose stub overwrite deletes lines); cited shas 152 distinct, **134 resolve**; backticked paths 560, **545 exist**. Not a measure: regex noise is unread |
+
+| 34 | **S256 re-run before P1a** (two `bash` scripts in the session scratchpad; the commands are those of the rows named) | **re-run and reproduced:** rows 1-4, 9-15, 17-24, 26-29 (and row 31's docstring read). **Re-run, with drift:** row 16 now reads `predecessor_score` 9:103 and `self_score` 7:60 (S255's own receipt, 272 and 273 values); row 25: `claude --version` is **2.1.289**. **Not re-run:** rows 5-8 (scratch tallies of the T-remove trees, replaced by the tested scorer; its calibration found `status: pending` left by the session in none of the ten R0 and R1 trees, consistent with row 6), row 30 (Monte Carlo), row 32 (the reviewer's scratch build), row 33 (a crude regex, replaced by M1, which P1b measures). **New facts P1a produced:** the 41 trees all still existed (machine up 12 days); CLI per run 2.1.285 x7, 2.1.286 x14, 2.1.287 x20; 38 of 41 reach a close-out; 38 of 41 have no tracked uncommitted file |
 
 **Corrections to BL-94's "what is known" (S244), not edited there:** "a `status: pending` receipt stayed pending in most trees" reads
 2 of 15 by row 6, and in both it is the start-state's stub. "The same 3 tracked documents naming the removed functions" is
