@@ -4054,8 +4054,7 @@ v3.0, v3.7 and v3.8-text runs once with the frozen scorer and ends in a stop for
 10 mutants) ran the frozen `doc_score.py` once over the 26 runs of the three contrast sets (23 scored: v3.0 n=5, v3.7 n=6, v3.8-text n=12). **Result: a null at the ceiling on the two mechanical measures.** M1 0.984 / 0.990 / 0.990
 (p 0.62 to 0.97), M2(a) 1.000 / 0.967 / 1.000, no stubs left in v3.7 or v3.8-text; on hand-read 11 of the 13 M1 failures and 2 of the 3 M2(c) flags are scorer false positives and one run (`v3.0-r4`) truly claims done on a
 failing task. The versions differ in what a record holds (51 and 56 checkable references per run against 33) and in commits to the pin (3.4, 5.6, 5.2), not in accuracy. Pooling: v3.8-text compares on M1 and M2 as a screen, not on
-process rows (R1 old reply against fixed reply is +44% cost). **Open for his word:** whether to amend the scorer (recommendation: no; the what-if is 1.000, 1.000, 0.997) and D3/D4: whether to continue to P2a and a P2 pilot given the
-free result. Files: `overhead-replay/p1b_score.py`, `tests_p1b.py`, `pilot/doc-evidence/p1b-scores.json`, `P1B_REPORT.md`, `p1b-report.txt`; plan §5 P1b status.
+process rows (R1 old reply against fixed reply is +44% cost). **Decided by him at the S257 close-out picker:** **take P2a next** (the next session starts on it; $0), **no scorer amendment**, BL-97 left as it is. The P2 pilot's spend is still open and is decided at P2a's end. Files: `overhead-replay/p1b_score.py`, `tests_p1b.py`, `pilot/doc-evidence/p1b-scores.json`, `P1B_REPORT.md`, `p1b-report.txt`; plan §5 P1b status.
 
 ---
 
@@ -4128,4 +4127,6 @@ other red. Three things differ from the first point: the payload is about 250 B,
 suite ran while a subagent was working on the same machine. **Measured, idle machine:** a 251 B string of the same shape, 3,000 runs each under `set -uo pipefail`, `echo "$OUTPUT" | grep -q` failed
 **0** times and the here-string form **0** times, so the idle rate is not what produced it and the load is a suspect, not a finding. The mechanism is still not established. The decision between (a), (b) and (c) above is still open. Two reds on different assertions (S254 Test 38, S257 Test 4) across the full-suite
 runs since S254, whose other recorded runs (S254's rerun, S256's close-out gate run) were green, is a count, not a rate: the number of runs in between was not tallied.
+
+**Decision (S257 close-out, the operator, from a picker): shape (c), leave it and rerun on a lone red whose own `fail` message contains its pattern.** Nothing is converted; reopen if a red hides a real defect (an `&& fail || pass` site) or the count of such reds grows.
 

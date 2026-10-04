@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S257 — the operator's decisions at the P1b stop, from the close-out picker
+
+He chose **P2a next** (the next session starts on it; $0, no model tokens), **no scorer amendment** (the frozen `doc_score.py` stays frozen), and **BL-97 left as it is** (shape (c): rerun on a lone red). The P2 pilot's spend is not decided by this and stays his at P2a's end. Recorded in the plan's section 7 D3 row, the `BACKLOG.md` BL-94 row, the `BACKLOG-DETAIL.md` BL-94 and BL-97 entries and the S257 receipt's `next_steps`. No work on P2a was started: the answer schedules it.
+
 ### 2026-10-04 · [ad hoc] S257 — the gate run confirmed: 12/12 pass, results `3f5791d93dac`
 
 `quality_ratchet.py --run` on the committed tree `4d651f9`: 12/12 pass, 0 fail, 0 unmeasured, results `3f5791d93dac`, manifest `fd435a4f8fab` (the suite inside it: 362 passed, 0 failed). The receipt's `quality_ratchet:` field now says so in place of the provisional wording. The first gate run, on `f5d6d4f` before a citation was entered, read 10/12; one of its two reds was `check-handoff-all` on the missing citation, the other `tests-sh-failed` 1 was not attributed to a named test (the suite output of a gate run is not kept) and did not recur.
