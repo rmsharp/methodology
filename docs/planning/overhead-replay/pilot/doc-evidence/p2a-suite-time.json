@@ -1,0 +1,25 @@
+{
+ "tree": "/private/tmp/claude-501/-Users-rmsharp-Development-methodology/d0a46352-df4e-4d34-9ed9-848d87f94d4c/scratchpad/r-suite",
+ "head": "879503cce9936704eafc3709c2fc9db8328ccc43",
+ "wall_seconds": 120.8,
+ "loadavg_start": [
+  8.0,
+  10.84,
+  11.19
+ ],
+ "loadavg_end": [
+  5.62,
+  9.07,
+  10.44
+ ],
+ "returncode": 0,
+ "measure": {
+  "passed": 3734,
+  "failed": 1,
+  "warnings": 7,
+  "files": 252
+ },
+ "stdout_tail": "15 15 \n15 15 \n10 10 \n5 5 \n5 5 \n5 5 \n5 5 \n5 5 \nGATE passed=3734 failed=1 warnings=7 files=252\n",
+ "stderr_tail": "",
+ "cpus": 12
+}

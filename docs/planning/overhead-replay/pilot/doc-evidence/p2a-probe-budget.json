@@ -1,0 +1,2938 @@
+{
+ "about": "What a cold-start probe costs, from the saved runs (BL-94 P2a (c); plan section 5 P2a).",
+ "estimate": {
+  "basis": "mean first-stop cost over the scored runs that have a stream log; a measurement of the ORIGINAL sessions' first turn, not of a probe",
+  "main_27_probes": 9.44,
+  "main_27_probes_with_margin": 11.8,
+  "margin": 0.25,
+  "max_any": 0.511,
+  "mean_all": 0.35,
+  "per_group_mean": {
+   "v3.0": 0.24,
+   "v3.7": 0.377,
+   "v3.8-text": 0.384
+  },
+  "pilot_four_probes": 1.38,
+  "plan_guess_per_probe": 1.0
+ },
+ "groups": {
+  "v3.0": {
+   "bash_returned": {
+    "max": 19832,
+    "mean": 15461.6,
+    "min": 6630,
+    "n": 5,
+    "sd": 5117.663
+   },
+   "cost_usd": {
+    "max": 0.264,
+    "mean": 0.24,
+    "min": 0.222,
+    "n": 5,
+    "sd": 0.017
+   },
+   "duration_s": {
+    "max": 31.5,
+    "mean": 26.98,
+    "min": 21.7,
+    "n": 5,
+    "sd": 3.665
+   },
+   "framework_reads": {
+    "max": 3,
+    "mean": 3,
+    "min": 3,
+    "n": 5,
+    "sd": 0.0
+   },
+   "framework_returned": {
+    "max": 64009,
+    "mean": 64009,
+    "min": 64009,
+    "n": 5,
+    "sd": 0.0
+   },
+   "record_reads": {
+    "max": 3,
+    "mean": 2,
+    "min": 1,
+    "n": 5,
+    "sd": 0.707
+   },
+   "record_returned": {
+    "max": 21584,
+    "mean": 11360.6,
+    "min": 5738,
+    "n": 5,
+    "sd": 5983.045
+   },
+   "runs": 5,
+   "tool_calls": {
+    "max": 13,
+    "mean": 11.2,
+    "min": 10,
+    "n": 5,
+    "sd": 1.095
+   },
+   "tool_result_chars": {
+    "max": 94875,
+    "mean": 91482.2,
+    "min": 90011,
+    "n": 5,
+    "sd": 1988.353
+   },
+   "turns": {
+    "max": 14,
+    "mean": 12.2,
+    "min": 11,
+    "n": 5,
+    "sd": 1.095
+   }
+  },
+  "v3.7": {
+   "bash_returned": {
+    "max": 27558,
+    "mean": 13774.333,
+    "min": 7424,
+    "n": 6,
+    "sd": 8665.694
+   },
+   "cost_usd": {
+    "max": 0.511,
+    "mean": 0.377,
+    "min": 0.308,
+    "n": 5,
+    "sd": 0.078
+   },
+   "duration_s": {
+    "max": 67.5,
+    "mean": 52.78,
+    "min": 40.1,
+    "n": 5,
+    "sd": 9.742
+   },
+   "framework_reads": {
+    "max": 4,
+    "mean": 4,
+    "min": 4,
+    "n": 6,
+    "sd": 0.0
+   },
+   "framework_returned": {
+    "max": 97661,
+    "mean": 71432,
+    "min": 55352,
+    "n": 6,
+    "sd": 20311.363
+   },
+   "record_reads": {
+    "max": 4,
+    "mean": 2.667,
+    "min": 2,
+    "n": 6,
+    "sd": 0.816
+   },
+   "record_returned": {
+    "max": 28084,
+    "mean": 18759,
+    "min": 7114,
+    "n": 6,
+    "sd": 7249.164
+   },
+   "runs": 6,
+   "tool_calls": {
+    "max": 20,
+    "mean": 15.5,
+    "min": 11,
+    "n": 6,
+    "sd": 3.017
+   },
+   "tool_result_chars": {
+    "max": 143633,
+    "mean": 104286.167,
+    "min": 77968,
+    "n": 6,
+    "sd": 25682.503
+   },
+   "turns": {
+    "max": 21,
+    "mean": 17.4,
+    "min": 15,
+    "n": 5,
+    "sd": 2.302
+   }
+  },
+  "v3.8-text": {
+   "bash_returned": {
+    "max": 47948,
+    "mean": 17506.917,
+    "min": 8057,
+    "n": 12,
+    "sd": 10965.66
+   },
+   "cost_usd": {
+    "max": 0.509,
+    "mean": 0.384,
+    "min": 0.265,
+    "n": 12,
+    "sd": 0.067
+   },
+   "duration_s": {
+    "max": 149.9,
+    "mean": 62.208,
+    "min": 38.9,
+    "n": 12,
+    "sd": 29.098
+   },
+   "framework_reads": {
+    "max": 5,
+    "mean": 4,
+    "min": 3,
+    "n": 12,
+    "sd": 0.426
+   },
+   "framework_returned": {
+    "max": 95036,
+    "mean": 81048.917,
+    "min": 52152,
+    "n": 12,
+    "sd": 16158.133
+   },
+   "record_reads": {
+    "max": 4,
+    "mean": 2.667,
+    "min": 0,
+    "n": 12,
+    "sd": 0.985
+   },
+   "record_returned": {
+    "max": 34775,
+    "mean": 17050.167,
+    "min": 0,
+    "n": 12,
+    "sd": 9702.871
+   },
+   "runs": 12,
+   "tool_calls": {
+    "max": 18,
+    "mean": 15.583,
+    "min": 12,
+    "n": 12,
+    "sd": 1.881
+   },
+   "tool_result_chars": {
+    "max": 139786,
+    "mean": 116515.833,
+    "min": 82185,
+    "n": 12,
+    "sd": 19340.786
+   },
+   "turns": {
+    "max": 19,
+    "mean": 16.583,
+    "min": 13,
+    "n": 12,
+    "sd": 1.881
+   }
+  }
+ },
+ "missing_inputs": [
+  {
+   "id": "real-3.7/v3.7-r2",
+   "stream": false,
+   "transcript": true
+  }
+ ],
+ "runs": {
+  "real-3.7/v3.0-r1": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.285"
+   ],
+   "first_stop": {
+    "cache_read": 151206,
+    "cache_write": 40204,
+    "cost_usd": 0.22191719999999998,
+    "duration_s": 25.5,
+    "input": 10,
+    "is_error": false,
+    "output": 3084,
+    "report_chars": 2763,
+    "subtype": "success",
+    "turns": 12
+   },
+   "framework_files": 17,
+   "group": "v3.0",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git show --stat HEAD | head -40",
+      "returned": 5215
+     },
+     {
+      "command": "wc -l SESSION_NOTES.md && grep -n '^## ' SESSION_NOTES.md | head -5 && grep -n '^## ' SESS",
+      "returned": 56
+     },
+     {
+      "command": "pwd && sed -n 1,140p SESSION_NOTES.md",
+      "returned": 10461
+     },
+     {
+      "command": "git status && git log --oneline -5 && git diff --stat && (gh issue list --limit 30 2>&1 | ",
+      "returned": 561
+     },
+     {
+      "command": "timeout 120 python3 methodology_dashboard.py 2>&1 | tail -40; git status --short",
+      "returned": 811
+     }
+    ],
+    "bash_returned": 17104,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 3954,
+      "kind": "record",
+      "partial": false,
+      "path": "ROADMAP.md",
+      "returned": 4089
+     },
+     {
+      "bytes_pin": 40474,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 41664
+     },
+     {
+      "bytes_pin": 11961,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 12696
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 3,
+      "returned": 64009
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 2,
+      "returned": 9827
+     }
+    },
+    "tool_calls": 11,
+    "tool_result_chars": 90970
+   }
+  },
+  "real-3.7/v3.0-r3": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.285"
+   ],
+   "first_stop": {
+    "cache_read": 150162,
+    "cache_write": 41348,
+    "cost_usd": 0.22659439999999997,
+    "duration_s": 28.7,
+    "input": 10,
+    "is_error": false,
+    "output": 3115,
+    "report_chars": 2669,
+    "subtype": "success",
+    "turns": 11
+   },
+   "framework_files": 17,
+   "group": "v3.0",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log -3 --stat | head -40",
+      "returned": 5764
+     },
+     {
+      "command": "pwd && head -c 9000 SESSION_NOTES.md",
+      "returned": 9030
+     },
+     {
+      "command": "git status && git log --oneline -5 && git diff --stat && git remote -v && (gh issue list -",
+      "returned": 561
+     },
+     {
+      "command": "timeout 120 python3 methodology_dashboard.py 2>&1 | tail -40; git status --short",
+      "returned": 811
+     }
+    ],
+    "bash_returned": 16166,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 3954,
+      "kind": "record",
+      "partial": false,
+      "path": "ROADMAP.md",
+      "returned": 4089
+     },
+     {
+      "bytes_pin": 40474,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 41664
+     },
+     {
+      "bytes_pin": 11961,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 12696
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 3,
+      "returned": 64009
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 2,
+      "returned": 9827
+     }
+    },
+    "tool_calls": 10,
+    "tool_result_chars": 90011
+   }
+  },
+  "real-3.7/v3.0-r4": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "first_stop": {
+    "cache_read": 205709,
+    "cache_write": 42151,
+    "cost_usd": 0.24321979999999999,
+    "duration_s": 31.5,
+    "input": 12,
+    "is_error": false,
+    "output": 3345,
+    "report_chars": 2528,
+    "subtype": "success",
+    "turns": 12
+   },
+   "framework_files": 17,
+   "group": "v3.0",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log -3 --stat | head -50",
+      "returned": 6419
+     },
+     {
+      "command": "pwd && head -c 9000 SESSION_NOTES.md",
+      "returned": 9030
+     },
+     {
+      "command": "git status && git log --oneline -5 && git diff --stat && echo '--- gh ---' && (gh issue li",
+      "returned": 572
+     },
+     {
+      "command": "grep -n '^## \\|^# ' SESSION_NOTES.md | head -20; grep -n 'Session 31[0-9]\\|Session 32[0-9]",
+      "returned": 875
+     },
+     {
+      "command": "timeout 300 python3 methodology_dashboard.py 2>&1 | tail -40; echo '--- status after ---';",
+      "returned": 832
+     },
+     {
+      "command": "sed -n '100,125p' SESSION_NOTES.md",
+      "returned": 2104
+     }
+    ],
+    "bash_returned": 19832,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 40474,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 41664
+     },
+     {
+      "bytes_pin": 11961,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 12696
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 3,
+      "returned": 64009
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 1,
+      "returned": 5738
+     }
+    },
+    "tool_calls": 11,
+    "tool_result_chars": 90113
+   }
+  },
+  "real-3.7/v3.0-r5": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "first_stop": {
+    "cache_read": 214513,
+    "cache_write": 43890,
+    "cost_usd": 0.24586660000000002,
+    "duration_s": 21.7,
+    "input": 12,
+    "is_error": false,
+    "output": 2738,
+    "report_chars": 2707,
+    "subtype": "success",
+    "turns": 12
+   },
+   "framework_files": 17,
+   "group": "v3.0",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log --stat -1 | head -40",
+      "returned": 5215
+     },
+     {
+      "command": "pwd && git status && git log --oneline -5 && git diff --stat && git branch -a",
+      "returned": 584
+     },
+     {
+      "command": "(gh issue list 2>&1 | head -40)",
+      "returned": 20
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -60; git status --short",
+      "returned": 811
+     }
+    ],
+    "bash_returned": 6630,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 6592,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 3954,
+      "kind": "record",
+      "partial": false,
+      "path": "ROADMAP.md",
+      "returned": 4089
+     },
+     {
+      "bytes_pin": 40474,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 41664
+     },
+     {
+      "bytes_pin": 11961,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 12696
+     },
+     {
+      "bytes_pin": 3862136,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 11757
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 3,
+      "returned": 64009
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 21584
+     }
+    },
+    "tool_calls": 11,
+    "tool_result_chars": 94875
+   }
+  },
+  "real-3.7/v3.0-r6": {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "first_stop": {
+    "cache_read": 267403,
+    "cache_write": 43218,
+    "cost_usd": 0.2639106,
+    "duration_s": 27.5,
+    "input": 14,
+    "is_error": false,
+    "output": 3753,
+    "report_chars": 2801,
+    "subtype": "success",
+    "turns": 14
+   },
+   "framework_files": 17,
+   "group": "v3.0",
+   "phase0": {
+    "bash": [
+     {
+      "command": "git show --stat HEAD | head -40 && ls -la",
+      "returned": 5215
+     },
+     {
+      "command": "pwd && wc -l SESSION_NOTES.md && head -c 9000 SESSION_NOTES.md",
+      "returned": 9053
+     },
+     {
+      "command": "git status && git log --oneline -5 && git diff --stat && git branch -a",
+      "returned": 549
+     },
+     {
+      "command": "timeout 60 gh issue list --limit 30 2>&1 | head -40",
+      "returned": 20
+     },
+     {
+      "command": "timeout 300 python3 methodology_dashboard.py 2>&1 | tail -60; git status --short",
+      "returned": 811
+     },
+     {
+      "command": "git log --oneline -12 && grep -n \"^### What Session\" SESSION_NOTES.md | head -5",
+      "returned": 1403
+     },
+     {
+      "command": "grep -n \"2\\.6\\.1\" methodology_dashboard.py | head -5; grep -n -i \"v3\\.0\\|version\" BOOTSTRA",
+      "returned": 525
+     }
+    ],
+    "bash_returned": 17576,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 3954,
+      "kind": "record",
+      "partial": false,
+      "path": "ROADMAP.md",
+      "returned": 4089
+     },
+     {
+      "bytes_pin": 40474,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 41664
+     },
+     {
+      "bytes_pin": 11961,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 12696
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 3,
+      "returned": 64009
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 2,
+      "returned": 9827
+     }
+    },
+    "tool_calls": 13,
+    "tool_result_chars": 91442
+   }
+  },
+  "real-3.7/v3.7-r2": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "first_stop": null,
+   "framework_files": 21,
+   "group": "v3.7",
+   "phase0": {
+    "bash": [
+     {
+      "command": "git show --stat HEAD | head -40 && ls -la",
+      "returned": 5663
+     },
+     {
+      "command": "pwd && git status --short | head; echo '--- log'; git log --oneline -5; echo '--- diff'; g",
+      "returned": 929
+     },
+     {
+      "command": "timeout 60 gh issue list --limit 30 2>&1 | head -40",
+      "returned": 20
+     },
+     {
+      "command": "timeout 120 python3 methodology_dashboard.py 2>&1 | tail -40; git status --short | head",
+      "returned": 812
+     }
+    ],
+    "bash_returned": 7424,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 9059,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 5528
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 65140,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 23998
+     },
+     {
+      "bytes_pin": 15386,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 16177
+     },
+     {
+      "bytes_pin": 3860670,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 55352
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 2,
+      "returned": 15171
+     }
+    },
+    "tool_calls": 11,
+    "tool_result_chars": 77968
+   }
+  },
+  "real-3.7/v3.7-r3": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "first_stop": {
+    "cache_read": 404362,
+    "cache_write": 49829,
+    "cost_usd": 0.3505444,
+    "duration_s": 52.8,
+    "input": 18,
+    "is_error": false,
+    "output": 7032,
+    "report_chars": 2762,
+    "subtype": "success",
+    "turns": 18
+   },
+   "framework_files": 21,
+   "group": "v3.7",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git show --stat HEAD | head -40",
+      "returned": 5663
+     },
+     {
+      "command": "pwd && git status --short && git log --oneline -5 && git diff --stat && echo '--- ledger f",
+      "returned": 830
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -60",
+      "returned": 784
+     },
+     {
+      "command": "gh issue list --limit 30 2>&1 | head -40",
+      "returned": 20
+     },
+     {
+      "command": "git config core.hooksPath; ls -a .githooks 2>&1 | head; git branch -a; git remote -v; git ",
+      "returned": 80
+     },
+     {
+      "command": "git status --short && git show --stat --format='%h %an %ad %s' cf43f3df | head -3 && git s",
+      "returned": 1486
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 263
+     }
+    ],
+    "bash_returned": 9126,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 8385,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 5528
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 65140,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 28008
+     },
+     {
+      "bytes_pin": 15386,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 16177
+     },
+     {
+      "bytes_pin": 3859885,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     },
+     {
+      "bytes_pin": 910794,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 9791
+     },
+     {
+      "bytes_pin": 3859885,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 3122
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 59362
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 4,
+      "returned": 28084
+     }
+    },
+    "tool_calls": 17,
+    "tool_result_chars": 96689
+   }
+  },
+  "real-3.7/v3.7-r4": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "first_stop": {
+    "cache_read": 386392,
+    "cache_write": 58524,
+    "cost_usd": 0.37186640000000004,
+    "duration_s": 51.6,
+    "input": 16,
+    "is_error": false,
+    "output": 6046,
+    "report_chars": 2559,
+    "subtype": "success",
+    "turns": 15
+   },
+   "framework_files": 21,
+   "group": "v3.7",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log -3 --stat | head -40",
+      "returned": 6086
+     },
+     {
+      "command": "pwd && echo \"--- status\" && git status --short | head -20 && echo \"--- log\" && git log --o",
+      "returned": 942
+     },
+     {
+      "command": "(gh issue list --limit 15 2>&1 | head -20); echo \"--- dashboard\"; timeout 120 python3 meth",
+      "returned": 848
+     },
+     {
+      "command": "git check-ignore -v dashboard.html dashboard_history.jsonl; git config core.hooksPath; ls ",
+      "returned": 119
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 159
+     }
+    ],
+    "bash_returned": 8154,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 8885,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 5528
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 65140,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 66139
+     },
+     {
+      "bytes_pin": 15386,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 16177
+     },
+     {
+      "bytes_pin": 3858887,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     },
+     {
+      "bytes_pin": 910148,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 7174
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 97493
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 22345
+     }
+    },
+    "tool_calls": 14,
+    "tool_result_chars": 128121
+   }
+  },
+  "real-3.7/v3.7-r5": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "first_stop": {
+    "cache_read": 438630,
+    "cache_write": 46422,
+    "cost_usd": 0.345284,
+    "duration_s": 51.9,
+    "input": 20,
+    "is_error": false,
+    "output": 7183,
+    "report_chars": 2224,
+    "subtype": "success",
+    "turns": 17
+   },
+   "framework_files": 21,
+   "group": "v3.7",
+   "phase0": {
+    "bash": [
+     {
+      "command": "git show --stat HEAD | head -40 && ls -la",
+      "returned": 5663
+     },
+     {
+      "command": "pwd && head -c 9000 SESSION_NOTES.md",
+      "returned": 9030
+     },
+     {
+      "command": "git status && git log --oneline -5 && git diff --stat && echo \"--- CHANGELOG frontier:\" &&",
+      "returned": 803
+     },
+     {
+      "command": "(gh issue list --limit 30 2>&1 | head -40)",
+      "returned": 20
+     },
+     {
+      "command": "head -c 3500 CHANGELOG.md && echo && echo ===== HANDOFFS && cat HANDOFFS.md | head -90 && ",
+      "returned": 3484
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -40; git status --short",
+      "returned": 812
+     },
+     {
+      "command": "git show HEAD -- CLAUDE.md | head -30; git check-ignore -v dashboard.html dashboard_histor",
+      "returned": 1695
+     },
+     {
+      "command": "git show HEAD --numstat -- CLAUDE.md | tail -2 && grep -nE '\\[(issue #|BL-|ad hoc)' CHANGE",
+      "returned": 316
+     }
+    ],
+    "bash_returned": 21823,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 6615,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 65140,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 28008
+     },
+     {
+      "bytes_pin": 15386,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 16177
+     },
+     {
+      "bytes_pin": 8027,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 5528
+     },
+     {
+      "bytes_pin": 909915,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 1376
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 59362
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 2,
+      "returned": 7114
+     }
+    },
+    "tool_calls": 16,
+    "tool_result_chars": 88416
+   }
+  },
+  "real-3.7/v3.7-r6": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "first_stop": {
+    "cache_read": 335897,
+    "cache_write": 46026,
+    "cost_usd": 0.3081654,
+    "duration_s": 40.1,
+    "input": 16,
+    "is_error": false,
+    "output": 5685,
+    "report_chars": 2536,
+    "subtype": "success",
+    "turns": 16
+   },
+   "framework_files": 21,
+   "group": "v3.7",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log -3 --stat | head -40",
+      "returned": 6086
+     },
+     {
+      "command": "pwd && echo \"--- status\" && git status --short && echo \"--- log\" && git log --oneline -5 &",
+      "returned": 917
+     },
+     {
+      "command": "(gh issue list --limit 30 2>&1 | head -40); echo \"--- notes head session\"; grep -n -m3 'Se",
+      "returned": 253
+     },
+     {
+      "command": "timeout 300 python3 methodology_dashboard.py 2>&1 | tail -60; echo \"--- post-dashboard sta",
+      "returned": 838
+     },
+     {
+      "command": "git config core.hooksPath; ls .githooks 2>&1 | head; git check-ignore -v dashboard.html da",
+      "returned": 204
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 263
+     }
+    ],
+    "bash_returned": 8561,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 8108,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 5528
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 65140,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 28008
+     },
+     {
+      "bytes_pin": 15386,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 16177
+     },
+     {
+      "bytes_pin": 3860650,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     },
+     {
+      "bytes_pin": 910685,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 7174
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 59362
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 22345
+     }
+    },
+    "tool_calls": 15,
+    "tool_result_chars": 90890
+   }
+  },
+  "real-3.7/v3.7-r7": {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "first_stop": {
+    "cache_read": 732619,
+    "cache_write": 68499,
+    "cost_usd": 0.5110378000000001,
+    "duration_s": 67.5,
+    "input": 24,
+    "is_error": false,
+    "output": 9047,
+    "report_chars": 2781,
+    "subtype": "success",
+    "turns": 21
+   },
+   "framework_files": 21,
+   "group": "v3.7",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls && git log -3 --stat | head -50",
+      "returned": 3272
+     },
+     {
+      "command": "pwd && wc -l SESSION_NOTES.md HANDOFFS.md CHANGELOG.md BACKLOG.md && git status && git log",
+      "returned": 683
+     },
+     {
+      "command": "echo \"CHANGELOG frontier:\" && git log -1 --format='%H %ad %s' -- CHANGELOG.md && echo \"gap",
+      "returned": 1076
+     },
+     {
+      "command": "(gh issue list --limit 30 2>&1 | head -40); echo \"--- dashboard\"; python3 methodology_dash",
+      "returned": 820
+     },
+     {
+      "command": "git status --short && echo \"--- methodology install/sync entries in CHANGELOG:\" && grep -n",
+      "returned": 13119
+     },
+     {
+      "command": "git show --stat --format='%H%n%an%n%s%n%b' d6a65aef | head -8; git show d6a65aef -- CLAUDE",
+      "returned": 1584
+     },
+     {
+      "command": "cat context-budget.json && python3 context_budget.py --help 2>&1 | head -30; echo \"--- hoo",
+      "returned": 5698
+     },
+     {
+      "command": "echo \"ADDED:\" && git show --diff-filter=A --name-only --format= d6a65aef && echo \"MODIFIED",
+      "returned": 809
+     },
+     {
+      "command": "grep -n \"context-budget\" context_budget.py | head -12",
+      "returned": 234
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 263
+     }
+    ],
+    "bash_returned": 27558,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 65140,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 66307
+     },
+     {
+      "bytes_pin": 15386,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 16177
+     },
+     {
+      "bytes_pin": 3860981,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 11757
+     },
+     {
+      "bytes_pin": 8286,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 5528
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 97661
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 2,
+      "returned": 17495
+     }
+    },
+    "tool_calls": 20,
+    "tool_result_chars": 143633
+   }
+  },
+  "t-control-fix/R1-r2": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 520466,
+    "cache_write": 59687,
+    "cost_usd": 0.4087112,
+    "duration_s": 59.7,
+    "input": 20,
+    "is_error": false,
+    "output": 6583,
+    "report_chars": 2582,
+    "subtype": "success",
+    "turns": 18
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls && git log -3 --stat | head -40",
+      "returned": 3052
+     },
+     {
+      "command": "pwd && wc -lc SESSION_NOTES.md CHANGELOG.md HANDOFFS.md BACKLOG.md && git status --short |",
+      "returned": 994
+     },
+     {
+      "command": "(gh issue list --limit 15 2>&1 | head -20); echo \"--- gates\"; cat .quality-gates.json | he",
+      "returned": 2691
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -60; echo \"--- status after\"; git status --sh",
+      "returned": 874
+     },
+     {
+      "command": "git config core.hooksPath; ls .githooks .git/hooks 2>/dev/null | grep -v sample; git show ",
+      "returned": 333
+     },
+     {
+      "command": "cat .git/hooks/pre-commit | head -60",
+      "returned": 262
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 263
+     }
+    ],
+    "bash_returned": 8469,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 16932,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 13129
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 54433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 3863018,
+      "kind": "record",
+      "partial": false,
+      "path": "SESSION_NOTES.md",
+      "returned": 195
+     },
+     {
+      "bytes_pin": 3863018,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     },
+     {
+      "bytes_pin": 910153,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 9791
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 95036
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 4,
+      "returned": 25157
+     }
+    },
+    "tool_calls": 17,
+    "tool_result_chars": 128810
+   }
+  },
+  "t-control-fix/R1-r3": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 437975,
+    "cache_write": 57890,
+    "cost_usd": 0.392401,
+    "duration_s": 67.7,
+    "input": 18,
+    "is_error": false,
+    "output": 7321,
+    "report_chars": 2546,
+    "subtype": "success",
+    "turns": 16
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls && git log -3 --stat | head -40 && ls -a | head -50",
+      "returned": 3768
+     },
+     {
+      "command": "pwd && wc -l SESSION_NOTES.md CHANGELOG.md HANDOFFS.md BACKLOG.md && git status && git log",
+      "returned": 987
+     },
+     {
+      "command": "(gh issue list --limit 15 2>&1 | head -20); echo \"--- dashboard:\"; python3 methodology_das",
+      "returned": 822
+     },
+     {
+      "command": "git status --short && echo \"--- changelog head:\" && sed -n 1,40p CHANGELOG.md | cut -c1-22",
+      "returned": 7422
+     },
+     {
+      "command": "git diff 879503cc..HEAD -- CLAUDE.md .gitignore | head -40 && git rev-list --count --no-me",
+      "returned": 1405
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 273
+     }
+    ],
+    "bash_returned": 14677,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 15871,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 13129
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 54433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 3860851,
+      "kind": "record",
+      "partial": false,
+      "path": "SESSION_NOTES.md",
+      "returned": 195
+     },
+     {
+      "bytes_pin": 3860851,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     },
+     {
+      "bytes_pin": 910785,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 2719
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 95036
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 12347
+     }
+    },
+    "tool_calls": 15,
+    "tool_result_chars": 122171
+   }
+  },
+  "t-control-fix/R1-r4": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 414874,
+    "cache_write": 55798,
+    "cost_usd": 0.3591728,
+    "duration_s": 38.9,
+    "input": 18,
+    "is_error": false,
+    "output": 5297,
+    "report_chars": 2207,
+    "subtype": "success",
+    "turns": 16
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log --oneline -5 && ls /Users/rmsharp/.claude/projects/-private-tmp-ratchet-",
+      "returned": 4889
+     },
+     {
+      "command": "pwd && git status && git diff --stat && git branch -a | head && (gh issue list --limit 30 ",
+      "returned": 122
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -40; echo ---; git status --short | head; ech",
+      "returned": 2934
+     },
+     {
+      "command": "git config core.hooksPath; ls .githooks 2>&1 | head; git check-ignore -v dashboard.html da",
+      "returned": 3627
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 259
+     }
+    ],
+    "bash_returned": 11831,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 16099,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 13129
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 28232
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": true,
+      "path": "SAFEGUARDS.md",
+      "returned": 8653
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": true,
+      "path": "SAFEGUARDS.md",
+      "returned": 9241
+     },
+     {
+      "bytes_pin": 3859805,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 11757
+     },
+     {
+      "bytes_pin": 910912,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 17280
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 5,
+      "returned": 68904
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 34775
+     }
+    },
+    "tool_calls": 15,
+    "tool_result_chars": 115621
+   }
+  },
+  "t-control-fix/R1-r5": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 720561,
+    "cache_write": 67274,
+    "cost_usd": 0.5088662,
+    "duration_s": 69.0,
+    "input": 24,
+    "is_error": false,
+    "output": 9561,
+    "report_chars": 2751,
+    "subtype": "success",
+    "turns": 19
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log --oneline | head -5 && git show --stat HEAD | head -40",
+      "returned": 6827
+     },
+     {
+      "command": "pwd && wc -l SESSION_NOTES.md CHANGELOG.md HANDOFFS.md && head -c 9000 SESSION_NOTES.md",
+      "returned": 9113
+     },
+     {
+      "command": "git status && git log --oneline -5 && git diff --stat && git remote -v && git branch -a",
+      "returned": 549
+     },
+     {
+      "command": "timeout 60 gh issue list --limit 30 2>&1 | head -40",
+      "returned": 20
+     },
+     {
+      "command": "timeout 300 python3 methodology_dashboard.py 2>&1 | tail -60",
+      "returned": 785
+     },
+     {
+      "command": "echo \"CHANGELOG frontier:\" && git log -1 --format='%H %s' -- CHANGELOG.md && echo \"gap cou",
+      "returned": 3302
+     },
+     {
+      "command": "cat .quality-gates.json | head -60; ls .quality-gates-results.json 2>&1; head -60 CHANGELO",
+      "returned": 19758
+     },
+     {
+      "command": "git show 38bc50c2 -- CLAUDE.md .gitignore | head -60; echo \"--- hooksPath:\"; git config co",
+      "returned": 2676
+     },
+     {
+      "command": "wc -c SESSION_NOTES.md CHANGELOG.md PROJECT_LEARNINGS.md CLAUDE.md SAFEGUARDS.md SESSION_R",
+      "returned": 3694
+     },
+     {
+      "command": "git show --name-status --format= 38bc50c2 | sort",
+      "returned": 959
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -F - <<'EOF'\ndocs(changelog): backfill undocumented ",
+      "returned": 265
+     }
+    ],
+    "bash_returned": 47948,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 54433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 910225,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 1376
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 3,
+      "returned": 81907
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 2,
+      "returned": 7114
+     }
+    },
+    "tool_calls": 18,
+    "tool_result_chars": 139786
+   }
+  },
+  "t-control/R0-r1": {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 554333,
+    "cache_write": 63777,
+    "cost_usd": 0.4384546,
+    "duration_s": 52.8,
+    "input": 20,
+    "is_error": false,
+    "output": 7244,
+    "report_chars": 2561,
+    "subtype": "success",
+    "turns": 17
+   },
+   "framework_files": 24,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log --oneline | head -5 && ls /Users/rmsharp/.claude/projects/-private-tmp-r",
+      "returned": 4750
+     },
+     {
+      "command": "pwd && git status && git log --oneline -5 && git diff --stat && echo \"--- frontier CHANGEL",
+      "returned": 902
+     },
+     {
+      "command": "gh issue list --limit 30 2>&1 | head -40",
+      "returned": 20
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -60",
+      "returned": 782
+     },
+     {
+      "command": "git status --short && git show --stat --format='%H%n%an%n%ad%n%s%n%b' 4dc4f616 | head -40 ",
+      "returned": 6685
+     },
+     {
+      "command": "grep -nE '^### .*\\[(issue #|BL-|ad hoc)' CHANGELOG.md | head -5 | cut -c1-200; echo \"--- h",
+      "returned": 2861
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill reconcil",
+      "returned": 271
+     }
+    ],
+    "bash_returned": 16271,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 16882,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 13129
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 54433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 3861156,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 15854
+     },
+     {
+      "bytes_pin": 912114,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 1376
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 95036
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 22968
+     }
+    },
+    "tool_calls": 16,
+    "tool_result_chars": 134392
+   }
+  },
+  "t-control/R0-r2": {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 442970,
+    "cache_write": 54374,
+    "cost_usd": 0.371676,
+    "duration_s": 49.8,
+    "input": 18,
+    "is_error": false,
+    "output": 6555,
+    "report_chars": 2161,
+    "subtype": "success",
+    "turns": 18
+   },
+   "framework_files": 24,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls && git log -3 --stat | head -40",
+      "returned": 2924
+     },
+     {
+      "command": "ls /Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R0-r2/memory/ 2>/dev/null ",
+      "returned": 11
+     },
+     {
+      "command": "pwd && wc -l SESSION_NOTES.md CHANGELOG.md HANDOFFS.md BACKLOG.md && git status && git log",
+      "returned": 674
+     },
+     {
+      "command": "gh issue list --limit 30 2>&1 | head -40",
+      "returned": 20
+     },
+     {
+      "command": "head -20 CHANGELOG.md | cut -c1-300; echo ---; git log -1 --format='%H %ad %s' -- CHANGELO",
+      "returned": 1965
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -60",
+      "returned": 782
+     },
+     {
+      "command": "git status --short && ls -a | grep -E '^\\.(githooks|quality|gitignore)' ; git show 42cc1dc",
+      "returned": 1408
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 273
+     }
+    ],
+    "bash_returned": 8057,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 54433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 3860436,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 11757
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 15572,
+      "kind": "framework",
+      "partial": true,
+      "path": "HANDOFFS.md",
+      "returned": 5618
+     },
+     {
+      "bytes_pin": 909719,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 1376
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 87525
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 18871
+     }
+    },
+    "tool_calls": 17,
+    "tool_result_chars": 115098
+   }
+  },
+  "t-control/R0-r3": {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 260886,
+    "cache_write": 43842,
+    "cost_usd": 0.2885732,
+    "duration_s": 48.0,
+    "input": 14,
+    "is_error": false,
+    "output": 6100,
+    "report_chars": 2341,
+    "subtype": "success",
+    "turns": 13
+   },
+   "framework_files": 24,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log -3 --stat | head -40",
+      "returned": 6319
+     },
+     {
+      "command": "pwd && head -c 9000 SESSION_NOTES.md",
+      "returned": 9030
+     },
+     {
+      "command": "git status && git log --oneline -5 && git diff --stat && echo '--- changelog frontier' && ",
+      "returned": 946
+     },
+     {
+      "command": "(gh issue list --limit 20 2>&1 | head -30); echo '--- backlog'; head -60 BACKLOG.md",
+      "returned": 4804
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -60; echo '--- status after dashboard'; git s",
+      "returned": 837
+     },
+     {
+      "command": "head -c 2500 CHANGELOG.md; echo; echo '--- prior methodology installs in changelog'; grep ",
+      "returned": 2711
+     },
+     {
+      "command": "git log --format='%h %ad %s' --date=short -i --grep='methodology' -12 | cut -c1-160; echo ",
+      "returned": 1365
+     }
+    ],
+    "bash_returned": 26012,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 16561,
+      "kind": "framework",
+      "partial": true,
+      "path": "HANDOFFS.md",
+      "returned": 9102
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 23921
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 60497
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 0,
+      "returned": 0
+     }
+    },
+    "tool_calls": 12,
+    "tool_result_chars": 87067
+   }
+  },
+  "t-control/R1-r1": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 456608,
+    "cache_write": 61068,
+    "cost_usd": 0.40757960000000004,
+    "duration_s": 52.6,
+    "input": 18,
+    "is_error": false,
+    "output": 7195,
+    "report_chars": 2660,
+    "subtype": "success",
+    "turns": 18
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls && git log --oneline -5 && ls ~/.claude/projects/-private-tmp-ratchet-control-R1-r1/mem",
+      "returned": 1374
+     },
+     {
+      "command": "pwd && wc -l SESSION_NOTES.md HANDOFFS.md CHANGELOG.md BACKLOG.md && git status && git log",
+      "returned": 683
+     },
+     {
+      "command": "echo \"CHANGELOG frontier:\" && git log -1 --format='%h %s' -- CHANGELOG.md && echo \"gap cou",
+      "returned": 359
+     },
+     {
+      "command": "gh issue list --limit 30 2>&1 | head -40",
+      "returned": 20
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -60; git status --short",
+      "returned": 810
+     },
+     {
+      "command": "git show --stat --format='%H%n%an <%ae>%n%ad%n%s%n%n%b' fb61cd01 | head -60; ls -a | grep ",
+      "returned": 1986
+     },
+     {
+      "command": "git show fb61cd01 -- CLAUDE.md .gitignore | head -50; echo ----; cat .quality-gates.json; ",
+      "returned": 4260
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 263
+     }
+    ],
+    "bash_returned": 9755,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 54433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 3861852,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 10878
+     },
+     {
+      "bytes_pin": 15567,
+      "kind": "framework",
+      "partial": true,
+      "path": "HANDOFFS.md",
+      "returned": 4018
+     },
+     {
+      "bytes_pin": 909774,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 12360
+     },
+     {
+      "bytes_pin": 5584,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 85925
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 28976
+     }
+    },
+    "tool_calls": 17,
+    "tool_result_chars": 127470
+   }
+  },
+  "t-control/R1-r2": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 475426,
+    "cache_write": 44922,
+    "cost_usd": 0.3269772,
+    "duration_s": 41.7,
+    "input": 22,
+    "is_error": false,
+    "output": 5216,
+    "report_chars": 2433,
+    "subtype": "success",
+    "turns": 17
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls && git log --oneline -5 && git status --short | head",
+      "returned": 1374
+     },
+     {
+      "command": "pwd && git status && git diff --stat && python3 methodology_dashboard.py 2>&1 | tail -40",
+      "returned": 873
+     },
+     {
+      "command": "gh issue list --limit 20 2>&1 | head -30",
+      "returned": 20
+     },
+     {
+      "command": "git status --short; echo \"--- changelog frontier\"; F=$(git log -1 --format=%H -- CHANGELOG",
+      "returned": 2163
+     },
+     {
+      "command": "sed -n 1,60p CHANGELOG.md | cut -c1-260; echo ----; grep -n -iE 'methodology (arm|update|s",
+      "returned": 13149
+     },
+     {
+      "command": "git log -1 --format='%h %an %ad' --date=short 858a4335 && git config core.hooksPath; git s",
+      "returned": 1344
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 263
+     }
+    ],
+    "bash_returned": 19186,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 15891,
+      "kind": "framework",
+      "partial": true,
+      "path": "HANDOFFS.md",
+      "returned": 9102
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 23921
+     },
+     {
+      "bytes_pin": 3857589,
+      "kind": "record",
+      "partial": false,
+      "path": "SESSION_NOTES.md",
+      "returned": 195
+     },
+     {
+      "bytes_pin": 3857589,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 910575,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 1376
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 60497
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 11004
+     }
+    },
+    "tool_calls": 16,
+    "tool_result_chars": 90816
+   }
+  },
+  "t-control/R1-r3": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 526074,
+    "cache_write": 59296,
+    "cost_usd": 0.4198688,
+    "duration_s": 56.1,
+    "input": 20,
+    "is_error": false,
+    "output": 7743,
+    "report_chars": 2910,
+    "subtype": "success",
+    "turns": 17
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls && git log -3 --stat | head -40",
+      "returned": 3052
+     },
+     {
+      "command": "pwd && wc -lc SESSION_NOTES.md CHANGELOG.md HANDOFFS.md BACKLOG.md PROJECT_LEARNINGS.md &&",
+      "returned": 751
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -40",
+      "returned": 782
+     },
+     {
+      "command": "(gh issue list --limit 15 2>&1 | head -20); git log -1 --format='%H %ad' -- CHANGELOG.md; ",
+      "returned": 7256
+     },
+     {
+      "command": "git status --short && echo '--- hooks:' && git config core.hooksPath; ls -a .githooks 2>&1",
+      "returned": 8417
+     },
+     {
+      "command": "grep -nE '^### .*\\[(issue #|BL-|ad hoc)' CHANGELOG.md | head -5; grep -c 'ad hoc' CHANGELO",
+      "returned": 273
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill methodol",
+      "returned": 417
+     }
+    ],
+    "bash_returned": 20948,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 16151,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 13129
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": false,
+      "path": "SESSION_RUNNER.md",
+      "returned": 54433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 3861375,
+      "kind": "record",
+      "partial": false,
+      "path": "SESSION_NOTES.md",
+      "returned": 195
+     },
+     {
+      "bytes_pin": 3861375,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     },
+     {
+      "bytes_pin": 909929,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 2719
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 95036
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 12347
+     }
+    },
+    "tool_calls": 16,
+    "tool_result_chars": 128976
+   }
+  },
+  "t-control/R1-r4": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 458168,
+    "cache_write": 60918,
+    "cost_usd": 0.41685160000000004,
+    "duration_s": 60.3,
+    "input": 18,
+    "is_error": false,
+    "output": 8151,
+    "report_chars": 2770,
+    "subtype": "success",
+    "turns": 17
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log --oneline -5 && ls /Users/rmsharp/.claude/projects/-private-tmp-ratchet-",
+      "returned": 4889
+     },
+     {
+      "command": "pwd && wc -c -l SESSION_NOTES.md CHANGELOG.md HANDOFFS.md PROJECT_LEARNINGS.md && git stat",
+      "returned": 498
+     },
+     {
+      "command": "gh issue list --limit 30 2>&1 | head -40",
+      "returned": 20
+     },
+     {
+      "command": "git show --stat --format='%H%n%an%n%ad%n%s%n%b' 955ac689 | head -60 && echo '--- gap count",
+      "returned": 6674
+     },
+     {
+      "command": "python3 methodology_dashboard.py 2>&1 | tail -60; echo '--- git status after'; git status ",
+      "returned": 831
+     },
+     {
+      "command": "git show 955ac689 -- CLAUDE.md .gitignore | cut -c1-260 && echo '--- touched under R/ test",
+      "returned": 1619
+     },
+     {
+      "command": "git add CHANGELOG.md && git commit -q -m \"$(cat <<'EOF'\ndocs(changelog): backfill undocume",
+      "returned": 263
+     }
+    ],
+    "bash_returned": 14794,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 5863,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 15978,
+      "kind": "framework",
+      "partial": false,
+      "path": "HANDOFFS.md",
+      "returned": 13129
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 54433
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": false,
+      "path": "SAFEGUARDS.md",
+      "returned": 17825
+     },
+     {
+      "bytes_pin": 3861875,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     },
+     {
+      "bytes_pin": 909330,
+      "kind": "record",
+      "partial": true,
+      "path": "CHANGELOG.md",
+      "returned": 701
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 95036
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 3,
+      "returned": 15872
+     }
+    },
+    "tool_calls": 16,
+    "tool_result_chars": 125798
+   }
+  },
+  "t-control/R1-r5": {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "first_stop": {
+    "cache_read": 263874,
+    "cache_write": 41500,
+    "cost_usd": 0.2650028,
+    "duration_s": 149.9,
+    "input": 14,
+    "is_error": false,
+    "output": 4620,
+    "report_chars": 2746,
+    "subtype": "success",
+    "turns": 13
+   },
+   "framework_files": 27,
+   "group": "v3.8-text",
+   "phase0": {
+    "bash": [
+     {
+      "command": "ls -la && git log --oneline | head -5 && ls .claude 2>/dev/null",
+      "returned": 4901
+     },
+     {
+      "command": "pwd && git status --short && git diff --stat && git log --oneline -8 && echo \"--- changelo",
+      "returned": 1123
+     },
+     {
+      "command": "(gh issue list --limit 30 2>&1 | head -40); echo \"--- dashboard\"; (python3 methodology_das",
+      "returned": 818
+     },
+     {
+      "command": "git show --stat --format='%h %an %ad%n%s%n%n%b' f1bd697c | head -40; echo \"--- precedent i",
+      "returned": 2534
+     },
+     {
+      "command": "cat .quality-gates.json | head -60; ls -la .quality-gates-results.json 2>&1; git check-ign",
+      "returned": 2759
+     }
+    ],
+    "bash_returned": 12135,
+    "reads": [
+     {
+      "bytes_pin": 9117,
+      "kind": "framework",
+      "partial": false,
+      "path": "CLAUDE.md",
+      "returned": 9649
+     },
+     {
+      "bytes_pin": 6771,
+      "kind": "record",
+      "partial": false,
+      "path": "BACKLOG.md",
+      "returned": 5738
+     },
+     {
+      "bytes_pin": 15825,
+      "kind": "framework",
+      "partial": true,
+      "path": "HANDOFFS.md",
+      "returned": 5618
+     },
+     {
+      "bytes_pin": 53252,
+      "kind": "framework",
+      "partial": true,
+      "path": "SESSION_RUNNER.md",
+      "returned": 28232
+     },
+     {
+      "bytes_pin": 17024,
+      "kind": "framework",
+      "partial": true,
+      "path": "SAFEGUARDS.md",
+      "returned": 8653
+     },
+     {
+      "bytes_pin": 3859761,
+      "kind": "record",
+      "partial": true,
+      "path": "SESSION_NOTES.md",
+      "returned": 9433
+     }
+    ],
+    "reads_by_kind": {
+     "framework": {
+      "n": 4,
+      "returned": 52152
+     },
+     "other": {
+      "n": 0,
+      "returned": 0
+     },
+     "outside": {
+      "n": 0,
+      "returned": 0
+     },
+     "record": {
+      "n": 2,
+      "returned": 15171
+     }
+    },
+    "tool_calls": 12,
+    "tool_result_chars": 82185
+   }
+  }
+ },
+ "scored_runs": 23
+}
