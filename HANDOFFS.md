@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S257
+date: 2026-10-04
+status: pending
+active_task: BL-94 P1b: score what exists, once ($0, no model tokens), per `docs/planning/documentation-quality-experiment-plan.md` section 5 P1b. Run the frozen scorer over the v3.0 (n=5), v3.7 (n=6) and v3.8-text (n=12) runs that `doc_score.reached_closeout` accepts; report each measure by arm with its spread, the covariates, the M1 ceiling check, the section 2.4 expectations met or not, and the pooling check; hand-read every M2(c) flag and every `says_done` that decides one; save the scorer output beside the evidence. Stops with D3 and D4 reconsidered; P2a is not started.
+```
+
+```handoff
 session: S256
 date: 2026-10-03
 status: complete

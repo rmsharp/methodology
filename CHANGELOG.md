@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S257 claim (in progress) — P1b: score the saved runs once with the frozen scorer
+
+Operator said `go` and chose BL-94 P1b from the Phase 0 picker (the option offered as recommended; the others were the BL-95 resync plan and the BL-97 Test 38 flake). Deliverable: P1b of `docs/planning/documentation-quality-experiment-plan.md` section 5, which costs $0 and runs no model; it ends in a stop with D3 and D4 reconsidered, and P2a is its own session. Phase 0: 0 undocumented commits at both frontiers, the ratchet citation matches `.quality-gates-results.json` (results `3f5791d93dac`, manifest `fd435a4f8fab`), `FreezeTests` green (4 of 4), PR #92 open with no reply, 43 ahead of `origin/main` and 102 behind `upstream/main`, dashboard 72/100. The owed HANDOFFS trim and fold ran first as their own actions (`f512578`, `e768491`). `CHANGELOG: pending` until Phase 3F.
+
 ### 2026-10-04 · [ad hoc] S257 — fold the fourth 2026-10-03 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`f512578`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-03), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S256, S255); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0. Ran after the Phase 0 report and the operator's choice of BL-94 P1b, before the claim.
