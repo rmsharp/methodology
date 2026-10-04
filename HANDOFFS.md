@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S259
+date: 2026-10-04
+status: pending
+active_task: BL-94 P2 (pilot, with a cap): cold probes on four saved end states (v3.0 `real-3.7/v3.0-r1`, v3.7 `real-3.7/v3.7-r3`, v3.8-text `t-control-fix/R1-r2`, and a git-only control on one of them) and the rater dry run, at the operator's $10 cap (`probe.py --session-cap 1.00 --total-cap 10`, `rater.py dry-run --call-cap 0.50 --total-cap 10`), per `docs/planning/documentation-quality-experiment-plan.md` section 5 P2. Done when each verdict is hand-read and a short report states the real cost per probe and per rating and whether the probe is cheap enough for P3.
+```
+
+```handoff
 session: S258
 date: 2026-10-04
 status: complete

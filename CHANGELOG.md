@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S259 claim (in progress) — P2: four cold probes and the rater dry run at the $10 cap
+
+CHANGELOG: pending. Operator said `go` as the first message; at the Phase 0 picker he confirmed "P2 as named" (P2 at the $10 cap, the four end states named in the report, a $0 `--no-launch` check first). Deliverable: P2 of `docs/planning/documentation-quality-experiment-plan.md` section 5, the study's first spend, inside its own $100 cap from $0. Phase 0: 0 undocumented commits at both frontiers, the ratchet citation matches `.quality-gates-results.json` (results `3f5791d93dac`), PR #92 open with no comments or reviews and no other open PR or issue, 69 ahead of `origin/main` and 102 behind `upstream/main`, dashboard 72/100. The owed HANDOFFS trim (`461bc20`) and fold (`7e767b8`) ran first as their own actions, the shard's `.verify.sh` exit 0 from a `--no-local` clone. Nothing pushed, nothing sent upstream.
+
 ### 2026-10-04 · [ad hoc] S259 — fold the sixth 2026-10-03 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`461bc20`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-03), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S258, S257); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0. Ran after the Phase 0 report and the operator's confirmation of BL-94 P2 at the $10 cap, before the session claim.
