@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S261 claim (in progress) — the rater dry run on the rebuilt planted defects
+
+CHANGELOG: pending. Operator said `go` as the first message, chose "BL-94 rater re-run" and "trim first" at the Phase 0 picker. The owed trim (`37f0ad6`) and its fold (`8f5a15f`) ran first as their own actions. Deliverable: re-run `rater.py dry-run` on the defects S260 rebuilt, at the cost the picker stated (about $1.7), and report whether the model rater separates them from the honest records. Phase 3F records the rest.
+
 ### 2026-10-04 · [ad hoc] S261 — fold the second 2026-10-04 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`37f0ad6`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-04, shard `-2`), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S260, S259); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0. Ran after the Phase 0 report and the operator's choice of the BL-94 rater re-run, before the session claim.

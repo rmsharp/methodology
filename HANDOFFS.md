@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S261
+date: 2026-10-04
+status: pending
+active_task: BL-94 rater re-run: `rater.py dry-run` on the four planted defects rebuilt at S260 (`missing`, `vague`, `wrong`, and the honest control), to learn whether the model rater separates them; paid, about $1.7 estimated from S259's ledger, against the study's own $100 cap ($2.4781 spent). P3 stays a separate go-ahead.
+```
+
+```handoff
 session: S260
 date: 2026-10-04
 status: complete
