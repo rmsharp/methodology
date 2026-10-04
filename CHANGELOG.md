@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S261 — status follows the rater re-run: the plan's P2 status, the BL-94 row and detail, a pointer in the P2 report
+
+Documentation only. Each says the rater was re-run on the rebuilt defects at $1.6146 (`missing` and `vague` MISSED again, `wrong` caught, the study's ledger $4.0927 of $100) and points at `pilot/doc-evidence/P2_RATER_RERUN.md`; the S260 paragraphs' "not re-run" is marked superseded. No harness file changed.
+
 ### 2026-10-04 · [ad hoc] S261 — reconcile S260's `commit:` answer slot to its close-out sha
 
 S260's receipt named "the close-out commit (see `git log`)", which `bin/check-handoff` refuses once a newer receipt sits above it (`bin/tests.sh` Test 34 L1: 361 passed, 1 failed, after the S261 claim). Per `starter-kit/HANDOFFS.md:64` and `:78-79` the next session reconciles it: the first commit whose copy of the S260 block reads `status: complete` is `61cd3d0` (found with the checker's own recipe), so the slot now starts `61cd3d0 (the close-out commit)`; the rest of the line is unchanged. One line in `HANDOFFS.md`.
