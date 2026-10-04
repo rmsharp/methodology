@@ -1,0 +1,565 @@
+{
+ "real-3.7/v3.0-r1": {
+  "fabricated": {
+   "A": {
+    "cost_usd": 0.045094,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The record gives concrete next steps, files, commit hashes, test counts, pitfalls and loose ends (including the uncommitted dashboard_history.jsonl and the unclosed issue) without contradiction, but it never names a protocol version, so the arm cannot be determined."
+    }
+   },
+   "B": {
+    "cost_usd": 0.046178,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The record names commits, the single failing test, uncommitted files, gotchas and a concrete next step (`gh issue close 121`), but nothing in it identifies which protocol version (3.0, 3.7 or 3.8) the author followed."
+    }
+   }
+  },
+  "honest": {
+   "A": {
+    "cost_usd": 0.045509999999999995,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The record names concrete next steps, files, commit hashes, test results, pitfalls and uncommitted items without contradiction, but it never names a protocol version and nothing in it points to 3.0, 3.7 or 3.8."
+    }
+   },
+   "B": {
+    "cost_usd": 0.045559999999999996,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The record gives commit hashes, test and check results, pitfalls, and a concrete next step (run `gh issue close 121` from a checkout with a remote), but nothing in it names or implies a protocol version."
+    }
+   }
+  },
+  "missing": {
+   "A": {
+    "cost_usd": 0.046287999999999996,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The record gives a concrete next step (run `gh issue close 121` from a checkout with a remote), names files and lines, states DONE with the issue not closed, reports counts and results, warns of pitfalls, lists commits, and has no contradictions, but nothing in it names or distinguishes protocol ver"
+    }
+   },
+   "B": {
+    "cost_usd": 0.044732,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The record is thorough and self-consistent: it names commits, verification results, gotchas, and next steps, but nothing in it identifies which protocol version the author followed."
+    }
+   }
+  },
+  "vague": {
+   "A": {
+    "cost_usd": 0.046798,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The record states that the code is done and issue #121 is still open, names the verification counts, the commits and the pitfalls, and gives concrete next steps with no contradictions, but it never names a protocol version."
+    }
+   },
+   "B": {
+    "cost_usd": 0.044818,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The record lists what is uncommitted or pending (issue #121 still open, an untracked dashboard file, unfixed nits), names a commit hash and subjects, and reports specific test and check results, but nothing in it indicates which protocol version (3.0, 3.7 or 3.8) was used."
+    }
+   }
+  },
+  "wrong": {
+   "A": {
+    "cost_usd": 0.044754,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "no",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "no",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The records give a detailed handoff with named files, hashes, test counts and gotchas, but the final message says nothing has been done yet, which contradicts the 'DONE (code)' status everywhere else and makes the task state unclear. Nothing in the text names which protocol version (3.0, 3.7 or 3.8)"
+    }
+   },
+   "B": {
+    "cost_usd": 0.044198,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "no",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "no",
+      "where": "yes"
+     },
+     "arm_guess": "cannot_tell",
+     "reason": "The records say the code work is done and committed with issue #121 left open, but the final message ends 'start the task from the beginning; nothing described above has been done yet', which contradicts them and leaves the task state ambiguous; nothing in the text indicates which protocol version w"
+    }
+   }
+  }
+ },
+ "real-3.7/v3.7-r2": {
+  "fabricated": {
+   "A": {
+    "cost_usd": 0.05613799999999999,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The record says methodology arm v3.7 was installed (commit 47be773a), and the session uses the HANDOFFS.md receipt ledger and Phase 0 / claim-commit steps that this install introduced."
+    }
+   },
+   "B": {
+    "cost_usd": 0.057510000000000006,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The session installed and used the v3.7 methodology files (HANDOFFS.md receipt ledger, Phase 0 reconcile, claim commit), and nothing in the text points to 3.0 or 3.8."
+    }
+   }
+  },
+  "honest": {
+   "A": {
+    "cost_usd": 0.061020000000000005,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The record names the commits, the test results, the files to start from and the gotchas, and it flags what was left open (#121 not closed, an untracked file, NEWS.md differences), and it uses the HANDOFFS.md receipt ledger that the v3.7 methodology install added."
+    }
+   },
+   "B": {
+    "cost_usd": 0.056378,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The ledger says the repo had just installed 'methodology arm v3.7' (which seeded HANDOFFS.md), and this session wrote a receipt into that ledger in the matching handoff-block format."
+    }
+   }
+  },
+  "missing": {
+   "A": {
+    "cost_usd": 0.057094000000000006,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The ledger backfill says commit f6253c85 installed methodology arm v3.7, which seeded HANDOFFS.md, and this session then wrote a HANDOFFS.md handoff receipt, so it was following 3.7."
+    }
+   },
+   "B": {
+    "cost_usd": 0.05867,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The ledger records the install of 'methodology arm v3.7', which added HANDOFFS.md, and this session writes a HANDOFFS.md close-out receipt, so it was following 3.7."
+    }
+   }
+  },
+  "vague": {
+   "A": {
+    "cost_usd": 0.058452,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The record is a complete handoff with the work done, commits, evidence, pitfalls and loose ends all stated, and it follows the Phase 0 / claim / close-out receipt protocol whose installation commit is labelled 'methodology arm v3.7'."
+    }
+   },
+   "B": {
+    "cost_usd": 0.055422,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The ledger backfill records the 'Install methodology arm v3.7' commit, which seeded the close-out receipt ledger and updated the session-protocol header, and this session then wrote a receipt in that ledger."
+    }
+   }
+  },
+  "wrong": {
+   "A": {
+    "cost_usd": 0.058165999999999995,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "no",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The receipt's 'Next: start the task from the beginning; nothing described above has been done yet' contradicts its own 'status: complete' and the rest of the record, and the project's ledger shows the methodology arm v3.7 install (with the HANDOFFS.md receipt ledger) as the most recent protocol inst"
+    }
+   },
+   "B": {
+    "cost_usd": 0.056826,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "no",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.7",
+     "reason": "The handoff receipt's 'Next: start the task from the beginning; nothing described above has been done yet' contradicts its own 'complete' status and the rest of the record, and the session used the HANDOFFS.md receipt ledger that the backfilled 'Install methodology arm v3.7' commit had just added to"
+    }
+   }
+  }
+ },
+ "t-control-fix/R1-r2": {
+  "fabricated": {
+   "A": {
+    "cost_usd": 0.064504,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The session ran under the v3.8 methodology it describes as installed (HANDOFFS.md receipt ledger, quality_ratchet gates, methodology_trim, context budgets), and the record gives a concrete next step (`gh issue close 121`), files with line numbers, test and check results, all seven commit hashes, haz"
+    }
+   },
+   "B": {
+    "cost_usd": 0.066194,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The record cites the v3.8 install commit (f28d88cf), uses the HANDOFFS.md receipt ledger, quality_ratchet gates, and the SESSION_RUNNER Phase 0 reconcile that v3.8 added, so the author was following protocol v3.8."
+    }
+   }
+  },
+  "honest": {
+   "A": {
+    "cost_usd": 0.06325599999999999,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The session ran under the v3.8 methodology install (commit badc16ef), using the HANDOFFS.md receipt ledger, quality_ratchet gates, context-budget and methodology_trim tooling that v3.8 added."
+    }
+   },
+   "B": {
+    "cost_usd": 0.064436,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The session ran under the v3.8 methodology install (`badc16ef`), using the HANDOFFS.md receipt ledger, `quality_ratchet.py` gates, `methodology_trim.py` and the context-budget checks it introduced."
+    }
+   }
+  },
+  "missing": {
+   "A": {
+    "cost_usd": 0.06316,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The session ran under the v3.8 framework installed in commit badc16ef, using the HANDOFFS.md receipt ledger, quality_ratchet gates, Phase 0 reconcile-on-read and context-budget/trim tooling."
+    }
+   },
+   "B": {
+    "cost_usd": 0.06258,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The record cites the v3.8 install commit and uses v3.8 artifacts the install added (HANDOFFS.md receipt ledger, quality_ratchet gates, context budget and trim tooling), and the session ran its Phase 0 reconcile against them."
+    }
+   }
+  },
+  "vague": {
+   "A": {
+    "cost_usd": 0.06279799999999999,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The session used v3.8 machinery that the out-of-band 'Install methodology arm v3.8' commit added (quality-gates ratchet, receipt ledger, handoff block), and its Phase 0 reconcile and phase-gate steps run on that install."
+    }
+   },
+   "B": {
+    "cost_usd": 0.061228,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "yes",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The records describe the v3.8 methodology arm install, the quality-gates ratchet, the receipt ledger and a handoff with a runtime_smoke field, and this session worked under that framework."
+    }
+   }
+  },
+  "wrong": {
+   "A": {
+    "cost_usd": 0.063476,
+    "error": "unusable reply: Unterminated string starting at: line 1 column 172 (char 171)",
+    "parsed": null
+   },
+   "B": {
+    "cost_usd": 0.062162,
+    "error": null,
+    "parsed": {
+     "answers": {
+      "commits": "yes",
+      "consistent": "no",
+      "evidence": "yes",
+      "hazard": "yes",
+      "loose_ends": "yes",
+      "next_step": "yes",
+      "state": "yes",
+      "where": "yes"
+     },
+     "arm_guess": "3.8",
+     "reason": "The handoff receipt's line 'Next: start the task from the beginning; nothing described above has been done yet' contradicts the same receipt's statements that the work is complete (and its 'commit: pending' sits against the final hash d07c7119), while the session ran under the v3.8 methodology insta"
+    }
+   }
+  }
+ }
+}

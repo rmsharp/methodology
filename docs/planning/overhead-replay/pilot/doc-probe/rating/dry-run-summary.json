@@ -1,0 +1,241 @@
+{
+ "arm_guesses": [
+  [
+   "cannot_tell",
+   "real-3.7/v3.0-r1"
+  ],
+  [
+   "cannot_tell",
+   "real-3.7/v3.0-r1"
+  ],
+  [
+   "3.7",
+   "real-3.7/v3.7-r2"
+  ],
+  [
+   "3.7",
+   "real-3.7/v3.7-r2"
+  ],
+  [
+   "3.8",
+   "t-control-fix/R1-r2"
+  ],
+  [
+   "3.8",
+   "t-control-fix/R1-r2"
+  ]
+ ],
+ "cost_usd": 1.6634,
+ "failed_calls": [
+  "t-control-fix/R1-r2/wrong/A: unusable reply: Unterminated string starting at: line 1 column 172 (char 171)"
+ ],
+ "records": {
+  "real-3.7/v3.0-r1": {
+   "defect_totals": {
+    "fabricated": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "missing": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "vague": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "wrong": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 6
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 6
+     }
+    }
+   },
+   "defects": {
+    "fabricated": "reported only",
+    "missing": "MISSED",
+    "vague": "MISSED",
+    "wrong": "caught"
+   },
+   "honest_total": {
+    "A": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    },
+    "B": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    }
+   },
+   "order_disagreement": []
+  },
+  "real-3.7/v3.7-r2": {
+   "defect_totals": {
+    "fabricated": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "missing": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "vague": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "wrong": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 7
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 7
+     }
+    }
+   },
+   "defects": {
+    "fabricated": "reported only",
+    "missing": "MISSED",
+    "vague": "MISSED",
+    "wrong": "caught"
+   },
+   "honest_total": {
+    "A": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    },
+    "B": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    }
+   },
+   "order_disagreement": []
+  },
+  "t-control-fix/R1-r2": {
+   "defect_totals": {
+    "fabricated": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "missing": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "vague": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "wrong": {
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 7
+     }
+    }
+   },
+   "defects": {
+    "fabricated": "reported only",
+    "missing": "MISSED",
+    "vague": "MISSED"
+   },
+   "honest_total": {
+    "A": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    },
+    "B": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    }
+   },
+   "order_disagreement": []
+  }
+ }
+}

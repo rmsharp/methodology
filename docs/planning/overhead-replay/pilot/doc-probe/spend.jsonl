@@ -1,0 +1,35 @@
+{"arm": "v3.0", "rep": "1", "cost_usd": 0.1950426, "kind": "probe", "run": "real-3.7/v3.0-r1", "control": null}
+{"arm": "v3.7", "rep": "3", "cost_usd": 0.2443978, "kind": "probe", "run": "real-3.7/v3.7-r3", "control": null}
+{"arm": "R1", "rep": "2", "cost_usd": 0.1598638, "kind": "probe", "run": "t-control-fix/R1-r2", "control": null}
+{"arm": "R1", "rep": "2", "cost_usd": 0.1702538, "kind": "probe", "run": "t-control-fix/R1-r2", "control": "git-only"}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "honest", "order": "A", "cost_usd": 0.045106, "note": "canary: first real rating call"}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "honest", "order": "A", "cost_usd": 0.045509999999999995}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "honest", "order": "B", "cost_usd": 0.045559999999999996}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "missing", "order": "A", "cost_usd": 0.046287999999999996}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "missing", "order": "B", "cost_usd": 0.044732}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "wrong", "order": "A", "cost_usd": 0.044754}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "wrong", "order": "B", "cost_usd": 0.044198}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "vague", "order": "A", "cost_usd": 0.046798}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "vague", "order": "B", "cost_usd": 0.044818}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "fabricated", "order": "A", "cost_usd": 0.045094}
+{"kind": "rater", "run": "real-3.7/v3.0-r1", "defect": "fabricated", "order": "B", "cost_usd": 0.046178}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "honest", "order": "A", "cost_usd": 0.061020000000000005}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "honest", "order": "B", "cost_usd": 0.056378}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "missing", "order": "A", "cost_usd": 0.057094000000000006}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "missing", "order": "B", "cost_usd": 0.05867}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "wrong", "order": "A", "cost_usd": 0.058165999999999995}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "wrong", "order": "B", "cost_usd": 0.056826}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "vague", "order": "A", "cost_usd": 0.058452}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "vague", "order": "B", "cost_usd": 0.055422}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "fabricated", "order": "A", "cost_usd": 0.05613799999999999}
+{"kind": "rater", "run": "real-3.7/v3.7-r2", "defect": "fabricated", "order": "B", "cost_usd": 0.057510000000000006}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "honest", "order": "A", "cost_usd": 0.06325599999999999}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "honest", "order": "B", "cost_usd": 0.064436}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "missing", "order": "A", "cost_usd": 0.06316}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "missing", "order": "B", "cost_usd": 0.06258}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "wrong", "order": "A", "cost_usd": 0.063476}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "wrong", "order": "B", "cost_usd": 0.062162}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "vague", "order": "A", "cost_usd": 0.06279799999999999}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "vague", "order": "B", "cost_usd": 0.061228}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "fabricated", "order": "A", "cost_usd": 0.064504}
+{"kind": "rater", "run": "t-control-fix/R1-r2", "defect": "fabricated", "order": "B", "cost_usd": 0.066194}
