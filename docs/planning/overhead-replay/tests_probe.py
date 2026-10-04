@@ -215,6 +215,86 @@ class TheClone(Base):
         os.makedirs(os.path.join(self.work, P.slug(RID)))
         self.assertIn("exists", self.refused(launch=False))
 
+    def test_a_pristine_clone_left_by_no_launch_is_replaced_by_the_real_launch(self):
+        left, _ = self.go(launch=False)                                        # the $0 check leaves its clone, for inspection
+        self.assertTrue(os.path.isdir(left["clone_dir"]))
+        self.assertFalse(left["leftover_replaced"])
+        row, d = self.go()                                                     # S259: this refused ("exists; refusing to overwrite") after 3 s
+        self.assertEqual((row["launched"], row["probe_ok"], row["leftover_replaced"]), (True, True, True))
+        self.assertEqual(os.path.realpath(seen(d)[0]["cwd"]), os.path.realpath(row["clone_dir"]))
+        self.assertEqual((row["clone"]["head"], row["clone"]["tracked_clean"]), (self.s2, True))
+
+    def test_a_pristine_control_clone_is_replaced_too_and_a_second_no_launch_is_allowed(self):
+        self.go(control="git-only", launch=False)
+        again, _ = self.go(control="git-only", launch=False)
+        self.assertTrue(again["leftover_replaced"])
+        row, _ = self.go(control="git-only")
+        self.assertEqual((row["launched"], row["control"], row["leftover_replaced"]), (True, "git-only", True))
+        self.assertTrue(row["control_detail"]["parent_is_pin"])
+
+    def leftover(self, spoil, control=None):
+        left, _ = self.go(control=control, launch=False)
+        spoil(left["clone_dir"])
+        return left["clone_dir"]
+
+    def test_a_clone_that_is_not_pristine_is_refused_and_left_as_it_was(self):
+        def ignored(d):
+            write(d, ".git/info/exclude", "ignored.txt\n")
+            write(d, "ignored.txt", "kept\n")
+        cases = [("an untracked file", lambda d: write(d, "notes.txt", "mine\n"), "notes.txt"),
+                 ("an ignored file", ignored, "ignored.txt"),
+                 ("an edited tracked file", lambda d: write(d, "SESSION_NOTES.md", "edited\n"), "SESSION_NOTES.md"),
+                 ("a remote", lambda d: sh(d, "remote", "add", "origin", self.project), ".git/config"),
+                 ("another commit", lambda d: sh(d, "checkout", "-q", self.s1), "R/x.R")]
+        for name, spoil, kept in cases:
+            with self.subTest(name):
+                shutil.rmtree(os.path.join(self.work, P.slug(RID)), ignore_errors=True)
+                dest = self.leftover(spoil)
+                head = sh(dest, "rev-parse", "HEAD")
+                msg = self.refused(launch=False)
+                self.assertIn("exists", msg)
+                self.assertIn("refusing to overwrite", msg)
+                self.assertTrue(os.path.exists(os.path.join(dest, kept)), name)       # nothing was deleted
+                self.assertEqual(sh(dest, "rev-parse", "HEAD"), head)
+
+    def test_an_end_state_clone_under_the_controls_name_is_not_a_pristine_control(self):
+        shutil.copytree(self.leftover(lambda d: None), os.path.join(self.work, P.slug(RID, "git-only")), symlinks=True)
+        self.assertIn("HEAD is not what this launch would build", self.refused(control="git-only", launch=False))
+
+    def test_a_control_clone_needs_both_the_pin_as_parent_and_the_control_subject(self):
+        dest = self.leftover(lambda d: sh(d, "commit", "-q", "--amend", "--no-verify", "-m", "something else"), control="git-only")
+        self.assertIn("HEAD is not what this launch would build", self.refused(control="git-only", launch=False))        # right parent, wrong subject
+        shutil.rmtree(dest)
+        dest = self.leftover(lambda d: (sh(d, "reset", "-q", "--hard", self.s1),
+                                        sh(d, "commit", "-q", "--allow-empty", "--no-verify", "-m", P.CONTROL_SUBJECT)), control="git-only")
+        self.assertIn("HEAD is not what this launch would build", self.refused(control="git-only", launch=False))        # right subject, wrong parent
+
+    def test_build_clone_itself_still_refuses_an_existing_destination(self):
+        scratch, manifest = D.rebuild(self.evidence, self.project)
+        self.addCleanup(shutil.rmtree, scratch, ignore_errors=True)
+        dest = os.path.join(self.work, "y")
+        os.makedirs(dest)
+        with self.assertRaises(P.Refused) as c:
+            P.build_clone(scratch, manifest["runs"][0], dest)
+        self.assertIn("exists; refusing to overwrite", str(c.exception))
+
+    def test_a_directory_that_is_not_a_repository_of_its_own_is_never_removed(self):
+        dest = os.path.join(self.work, P.slug(RID))
+        os.makedirs(dest)
+        write(dest, "keep.txt", "x\n")
+        self.assertIn("not a git repository of its own", self.refused(launch=False))      # an empty or plain directory
+        shutil.rmtree(dest)
+        sh(self.work, "init", "-q")                                                        # a directory inside someone else's repository
+        os.makedirs(dest)
+        self.assertIn("not a git repository of its own", self.refused(launch=False))
+        shutil.rmtree(os.path.join(self.work, ".git"))
+        shutil.rmtree(dest)
+        elsewhere = tempfile.mkdtemp(prefix="elsewhere-")
+        self.addCleanup(shutil.rmtree, elsewhere, ignore_errors=True)
+        os.symlink(elsewhere, dest)                                                        # a link is never followed
+        self.assertIn("not a directory of its own", self.refused(launch=False))
+        self.assertTrue(os.path.isdir(elsewhere))
+
     def test_the_scratch_repository_is_removed_after_the_clone_is_built(self):
         made = []
         real = D.rebuild
@@ -390,6 +470,106 @@ class Pieces(unittest.TestCase):
 
     def test_the_probe_script_is_the_operators_go_and_nothing_else(self):
         self.assertEqual(P.PROBE_SCRIPT, ["go"])
+
+
+class OtherReads(unittest.TestCase):
+    """S260 (a): `reads` is the Read tool only, so the v3.0 probe's `head -150 SESSION_NOTES.md` was not in it. The commands below are the
+    real ones from the four saved P2 probes (pilot/doc-probe/*/stream.jsonl), with what a reader of the row should see for each."""
+    REAL = [
+        ("ls && git log -1 --stat | head -20", []),                                               # head at the end of a pipe reads its input, not a file
+        ("head -150 SESSION_NOTES.md", ["SESSION_NOTES.md"]),                                     # the one `reads` missed
+        ("pwd && git status --short && git log --oneline -5 && git diff --stat && git remote -v && echo \"--- dashboard ---\" && "
+         "python3 methodology_dashboard.py 2>&1 | tail -40; git status --short", []),
+        ("gh issue list 2>&1 | head -5; grep -n \"^### What Session\" SESSION_NOTES.md | head -5; git log --oneline -15 | cat", ["SESSION_NOTES.md"]),
+        ("ls | head -50 && git log --oneline | head -5 && ls memory 2>/dev/null; ls /Users/x/.claude/projects/p/memory/ 2>/dev/null", []),
+        ("wc -l CLAUDE.md BOOTSTRAP.md && head -80 CLAUDE.md", ["CLAUDE.md"]),                    # wc returns counts, not content
+        ("wc -c SESSION_RUNNER.md SAFEGUARDS.md SESSION_NOTES.md 2>&1; git status --short | head; git remote -v; git branch --show-current", []),
+        ("git log --oneline -10 && git diff --stat && git stash list && (gh issue list --limit 10 2>&1 | head -12); head -40 BACKLOG.md", ["BACKLOG.md"]),
+        ("git status --short && git diff --stat && grep -n 'quality-gates' .Rbuildignore; echo \"rc=$?\"; python3 methodology_trim.py --file CHANGELOG.md --check 2>&1 | tail -5",
+         [".Rbuildignore"]),
+    ]
+
+    def test_the_commands_the_four_saved_probes_ran(self):
+        for cmd, want in self.REAL:
+            with self.subTest(cmd[:50]):
+                self.assertEqual(P.shell_reads(cmd), (want, True))
+
+    def test_each_reader_takes_the_files_after_its_options_and_its_pattern(self):
+        for cmd, want in [("cat a.md b.md", ["a.md", "b.md"]), ("cat 'a b.md' \"c d.md\"", ["a b.md", "c d.md"]), ("cat < SESSION_NOTES.md", ["SESSION_NOTES.md"]),
+                          ("tac a.md", ["a.md"]), ("nl -ba a.md", ["a.md"]), ("tail -n 20 a.md", ["a.md"]), ("tail -n20 a.md", ["a.md"]), ("head -c 100 a.md", ["a.md"]),
+                          ("head -n 5 -- -odd.md", ["-odd.md"]),
+                          ("sed -n '1,50p' a.md", ["a.md"]), ("sed -ne 1,5p a.md", ["a.md"]), ("sed -n -e 1,5p -e 9p a.md b.md", ["a.md", "b.md"]),
+                          ("sed -f script.sed a.md", ["a.md"]),
+                          ("awk 'NR<20' a.md", ["a.md"]), ("awk -F: '{print $1}' a.md b.md", ["a.md", "b.md"]), ("awk -F ':' '{print $1}' a.md", ["a.md"]),
+                          ("grep -n foo a.md", ["a.md"]), ("grep -e foo -e bar a.md", ["a.md"]), ("grep -A 3 foo a.md", ["a.md"]), ("grep -nA 3 foo a.md", ["a.md"]), ("grep -m1 foo a.md", ["a.md"]),
+                          ("grep -rn foo .", ["."]), ("egrep -i 'a|b' a.md", ["a.md"]), ("rg -n foo src/", ["src/"]), ("rg --glob '*.md' foo docs", ["docs"]), ("rg --glob='*.md' foo docs", ["docs"]),
+                          ("LC_ALL=C grep foo a.md", ["a.md"]), ("/usr/bin/head -5 a.md", ["a.md"]), ("cat a.md | grep foo | head -3", ["a.md"]),
+                          ("cat a.md a.md", ["a.md"]), ("cat -", []), ("cat a.md > out.txt", ["a.md"]), ("head -5 a.md 2>/dev/null", ["a.md"])]:
+            with self.subTest(cmd):
+                self.assertEqual(P.shell_reads(cmd), (want, True))
+
+    def test_programs_that_return_metadata_or_write_are_not_reads(self):
+        for cmd in ("ls a.md", "wc -l a.md", "stat a.md", "file a.md", "du -sh a.md", "git show HEAD:a.md", "sed -i s/a/b/ a.md", "sed -i.bak s/a/b/ a.md",
+                    "python3 -c \"open('a.md').read()\"", "echo a.md", "cp a.md b.md", "diff a.md b.md"):
+            with self.subTest(cmd):
+                self.assertEqual(P.shell_reads(cmd), ([], True))
+
+    def test_a_command_that_cannot_be_parsed_is_reported_unparsed_and_never_guessed_at(self):
+        for cmd in ("cat <<'EOF' > x.md\nhead the list\nEOF", "cat 'unbalanced a.md"):
+            with self.subTest(cmd[:20]):
+                self.assertEqual(P.shell_reads(cmd), ([], False))
+
+    def test_the_other_reads_of_a_session_resolve_against_the_clone_and_list_what_was_not_parsed(self):
+        ev = [{"kind": "tool_use", "name": "Read", "input": {"file_path": "/c/SAFEGUARDS.md"}},
+              {"kind": "tool_use", "name": "Bash", "input": {"command": "head -150 SESSION_NOTES.md && cat /abs/x.md ~/y.md \"$F\" '`pwd`' *.md"}},
+              {"kind": "tool_use", "name": "Bash", "input": {"command": "cat <<'EOF'\nbody\nEOF"}},
+              {"kind": "tool_use", "name": "Bash", "input": {"command": "wc -l CLAUDE.md"}},
+              {"kind": "tool_use", "name": "Grep", "input": {"pattern": "next", "path": "/c", "glob": "SESSION_NOTES*"}},
+              {"kind": "tool_use", "name": "Grep", "input": {"pattern": "next", "path": "/c/HANDOFFS.md"}},
+              {"kind": "tool_use", "name": "Grep", "input": {"pattern": "next"}},
+              {"kind": "tool_use", "name": "Glob", "input": {"pattern": "**/*HANDOFF*", "path": "/c/docs"}},          # names only: not a read
+              {"kind": "text", "text": "cat nothing.md"},
+              {"kind": "tool_use", "name": "Bash", "input": {"command": "head -150 SESSION_NOTES.md"}}]
+        files, unparsed = P.phase0_other_reads(ev, "/c")
+        self.assertEqual(files, ["/c/SESSION_NOTES.md", "/abs/x.md", "~/y.md", "$F", "`pwd`", "/c/*.md", "/c/SESSION_NOTES*", "/c/HANDOFFS.md", "/c"])     # once each, in order
+        self.assertEqual(unparsed, ["cat <<'EOF'\nbody\nEOF"])
+        self.assertEqual(P.phase0_other_reads([], "/c"), ([], []))
+
+    def test_an_unparsed_command_is_kept_whole_up_to_a_bound(self):
+        long = "cat <<'EOF'\n" + "x" * 1000 + "\nEOF"
+        _, unparsed = P.phase0_other_reads([{"kind": "tool_use", "name": "Bash", "input": {"command": long}}], "/c")
+        self.assertEqual(len(unparsed[0]), P.UNPARSED_KEEP)
+        self.assertTrue(long.startswith(unparsed[0]))
+
+
+class TranscriptRow(Base):
+    """The row's `reads*` fields come from the session's own transcript, which the fake `claude` does not leave: write one and point the
+    driver at it, so the `if tp:` block of run_probe runs in a test for the first time."""
+    def test_the_row_carries_the_read_tool_paths_and_the_other_reads_against_the_real_clone_path(self):
+        tdir = tempfile.mkdtemp(prefix="transcript-")
+        self.addCleanup(shutil.rmtree, tdir, ignore_errors=True)
+        tp = os.path.join(tdir, "sidP.jsonl")
+        def asst(i, name, inp):
+            return {"type": "assistant", "uuid": f"u{i}", "timestamp": f"2026-10-04T10:00:0{i}Z", "version": "2.1.289", "message": {
+                "id": f"m{i}", "model": "sonnet", "usage": {"input_tokens": 3, "output_tokens": 5}, "content": [{"type": "tool_use", "id": f"t{i}", "name": name, "input": inp}]}}
+        recs = [{"type": "user", "timestamp": "2026-10-04T10:00:00Z", "version": "2.1.289", "message": {"role": "user", "content": "go"}},
+                asst(1, "Read", {"file_path": "/clone/SAFEGUARDS.md"}), asst(2, "Bash", {"command": "head -150 SESSION_NOTES.md; wc -l CLAUDE.md"}),
+                asst(3, "Bash", {"command": "cat <<'EOF'\nx\nEOF"}), asst(4, "Grep", {"pattern": "next", "glob": "HANDOFFS*"})]
+        with open(tp, "w") as f:
+            f.write("\n".join(json.dumps(r) for r in recs) + "\n")
+        real = driver.transcript_path
+        driver.transcript_path = lambda sid: tp
+        self.addCleanup(setattr, driver, "transcript_path", real)
+        row, _ = self.go()
+        clone = os.path.realpath(row["clone_dir"])              # the CLI reports its cwd with symlinks resolved (/tmp is /private/tmp on macOS)
+        self.assertEqual(row["reads"], ["/clone/SAFEGUARDS.md"])
+        self.assertEqual(row["reads_other"], [f"{clone}/SESSION_NOTES.md", f"{clone}/HANDOFFS*"])
+        self.assertEqual(row["reads_unparsed"], ["cat <<'EOF'\nx\nEOF"])
+        self.assertEqual(row["cli"], ["2.1.289"])
+
+    def test_a_probe_with_no_transcript_leaves_every_reads_field_empty_not_absent(self):
+        row, _ = self.go()
+        self.assertEqual((row["reads"], row["reads_other"], row["reads_unparsed"]), (None, None, None))
 
 
 class VerifyAll(Base):

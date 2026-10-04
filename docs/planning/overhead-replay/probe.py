@@ -19,11 +19,13 @@ What it does, in order (a refusal at any step ends the run before the next one; 
   4. runs `claude -p` in the clone through driver.drive, one stop (--max-stops 1), the same isolation and tool set as every other run;
   5. appends one line to OUT/spend.jsonl, saves the stream log and the report text, and appends one row to OUT/rows.jsonl.
 
---no-launch stops after step 3 and spends nothing: it is the $0 check that a bundle can rebuild its sha.
+--no-launch stops after step 3 and spends nothing: it is the $0 check that a bundle can rebuild its sha. It leaves its clone for inspection;
+a later launch (or another --no-launch) replaces that clone ONLY while it is a pristine copy of what the launch would build (see
+`not_replaceable`), and refuses, naming why, when anything in it changed or it is not what the build makes.
 What a probe cannot carry (named in every row): uncommitted work and untracked files, the arm's git hook (.git/hooks is not in a bundle),
 and the original session's `.git/config`. M1-M3 and M5 read the ORIGINAL record at the pin; M4 reads this report (doc_score.score_report).
 """
-import argparse, json, os, shutil, subprocess, sys, time
+import argparse, json, os, re, shlex, shutil, subprocess, sys, time
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -114,6 +116,40 @@ def build_clone(scratch, run, dest):
     return clone_facts(dest, run)
 
 
+def not_replaceable(dest, run, control):
+    """Why `dest`, which exists, may NOT be replaced by the clone this launch is about to build; None when it is a pristine copy of exactly
+    that. `--no-launch` leaves its clone for inspection and the real launch that follows used to refuse it ("exists; refusing to overwrite",
+    $0 spent, S259), but nothing is deleted on a guess: a replaceable clone is the build's own output, a repository of its own with no
+    remote and nothing changed (tracked, untracked or ignored), at the pin (or, for the control, on the one control commit above the pin).
+    A copy a session has used and changed fails this, so does anything that merely shares the name."""
+    if os.path.islink(dest) or not os.path.isdir(dest):
+        return "not a directory of its own"
+    top = git(dest, "rev-parse", "--show-toplevel", check=False)
+    if not top or os.path.realpath(top) != os.path.realpath(dest):
+        return "not a git repository of its own"
+    if git(dest, "status", "--porcelain", "--ignored", "--untracked-files=all", check=False):
+        return "a file differs from the commit or is not tracked"
+    if git(dest, "remote", check=False):
+        return "it has a remote"
+    if control:
+        pristine = git(dest, "rev-parse", "HEAD^", check=False) == run["pin"] and git(dest, "log", "-1", "--format=%s", check=False) == CONTROL_SUBJECT
+    else:
+        pristine = git(dest, "rev-parse", "HEAD", check=False) == run["pin"]
+    return None if pristine else "HEAD is not what this launch would build"
+
+
+def clear_leftover(dest, run, control):
+    """Remove a pristine copy of this run's clone so the launch can rebuild it; refuse, naming the reason, for anything else.
+    Returns whether a copy was removed (the row records it, so a deletion is never silent)."""
+    if not os.path.lexists(dest):
+        return False
+    why = not_replaceable(dest, run, control)
+    if why:
+        raise Refused(f"{dest} exists and is not a pristine copy of what this launch would build ({why}); refusing to overwrite it")
+    shutil.rmtree(dest)
+    return True
+
+
 def clone_facts(dest, run):
     """What makes the clone the end state and nothing else. Any False here is a refusal in `verify_clone`."""
     head = git(dest, "rev-parse", "HEAD")
@@ -173,8 +209,122 @@ def report_text(log):
 
 
 def phase0_reads(events):
-    """Paths the session read with the Read tool before its first stop, in order (a Bash `cat` is not counted: the row says so)."""
+    """Paths the session read with the Read tool before its first stop, in order. Files a session reads any other way (a shell `head`, the Grep
+    tool) are `phase0_other_reads`: until S260 they were not recorded anywhere, and this docstring said "the row says so" when it did not."""
     return [e["input"].get("file_path", "") for e in events if e["kind"] == "tool_use" and e["name"] == "Read"]
+
+
+# What a shell command line reads, for `phase0_other_reads`. The programs below return a file's CONTENT to the model, whole or in part; `wc`, `ls`,
+# `stat`, `file` and `du` return facts about a file and are left out on purpose, and a program that opens files itself (`python3 -c`, a dashboard
+# run) is not interpreted. The stream log keeps every command whole, so anything outside this list can still be found there.
+CONTENT_READERS = {"cat", "tac", "head", "tail", "nl", "less", "more", "bat", "sed", "awk", "grep", "egrep", "fgrep", "rg"}
+PATTERN_FIRST = {"sed", "awk", "grep", "egrep", "fgrep", "rg"}               # the first operand is a script or a pattern, unless an option gave it
+_GREP_VALUE = {"-m", "-A", "-B", "-C", "--max-count", "--after-context", "--before-context", "--context", "--include", "--exclude"}
+VALUE_OPTS = {"head": {"-n", "-c", "--lines", "--bytes"}, "tail": {"-n", "-c", "--lines", "--bytes"}, "sed": {"-l"}, "awk": {"-F", "-v"},
+              "grep": _GREP_VALUE, "egrep": _GREP_VALUE, "fgrep": _GREP_VALUE, "rg": _GREP_VALUE | {"-g", "--glob", "-t", "--type", "-T", "--type-not"}}
+GIVES_PATTERN = {"sed": {"-e", "-f", "--expression", "--file"}, "awk": {"-f", "--file"},
+                 "grep": {"-e", "-f", "--regexp", "--file"}, "egrep": {"-e", "-f", "--regexp", "--file"}, "fgrep": {"-e", "-f", "--regexp", "--file"},
+                 "rg": {"-e", "-f", "--regexp", "--file"}}
+UNPARSED_KEEP = 300                                                         # characters of a command kept in the row when it could not be read
+
+
+def _option(token):
+    """(name, takes_next) for an option token: `--glob=x` carries its value, `--glob` waits for the next token, `-n5`, `-F:` and `-150` carry
+    theirs, and a run of letters (`-n`, `-ne`, `-rn`) can only have its LAST letter waiting for a value."""
+    if token.startswith("--"):
+        return token.split("=", 1)[0], "=" not in token
+    if re.fullmatch(r"-[A-Za-z]+", token):
+        return "-" + token[-1], True
+    return token, False
+
+
+def shell_reads(command):
+    """(the files a shell command line names to a content reader, whether it could be parsed). Operands are returned as written: a pipe's
+    standard input is not a file, an option's value is not one, and a glob or `$VAR` is not expanded. A command that cannot be tokenised, or that
+    holds a here-document (its body would be read as commands), is `([], False)`, never a guess: the caller lists it."""
+    if "<<" in command:
+        return [], False
+    try:
+        lex = shlex.shlex(command, posix=True, punctuation_chars=True)
+        lex.whitespace_split = True
+        toks = list(lex)
+    except ValueError:
+        return [], False
+    punct = set("();<>|&")
+    cmds, cur, redirect = [], [], None
+    for t in toks:
+        if redirect is not None:                              # the target of a redirection: `< f` feeds the command, `> f` and `>&1` write
+            if redirect == "<":
+                cur.append(("in", t))
+            redirect = None
+        elif t and set(t) <= punct:
+            if "<" in t or ">" in t:
+                if cur and cur[-1][0] == "arg" and cur[-1][1].isdigit():
+                    cur.pop()                                 # the `2` of `2>&1`
+                redirect = t
+            else:
+                cmds.append(cur)                              # | || && ; & ( ) end a simple command
+                cur = []
+        else:
+            cur.append(("arg", t))
+    cmds.append(cur)
+    files = []
+    for cmd in cmds:
+        args = [a for k, a in cmd if k == "arg"]
+        while args and re.match(r"[A-Za-z_]\w*=", args[0]):
+            args.pop(0)                                       # LC_ALL=C grep ...
+        if not args or os.path.basename(args[0]) not in CONTENT_READERS:
+            continue
+        prog, args = os.path.basename(args[0]), args[1:]
+        if prog == "sed" and any(a.startswith("--in-place") or re.fullmatch(r"-[A-Za-z]*i.*", a) for a in args if a.startswith("-")):
+            continue                                          # sed -i edits the file; it does not read it out to the model
+        ops, given, skip, bare = [], False, False, False
+        for a in args:
+            if skip:
+                skip = False
+            elif bare or a == "-" or not a.startswith("-"):
+                if a != "-":
+                    ops.append(a)
+            elif a == "--":
+                bare = True
+            else:
+                name, takes_next = _option(a)
+                if name in GIVES_PATTERN.get(prog, ()):
+                    given, skip = True, takes_next
+                elif name in VALUE_OPTS.get(prog, ()):
+                    skip = takes_next
+        if prog in PATTERN_FIRST and not given and ops:
+            ops = ops[1:]
+        files += ops + [a for k, a in cmd if k == "in"]
+    return list(dict.fromkeys(files)), True
+
+
+def _resolve(path, cwd):
+    """A relative operand against the session's working directory, so it can be set beside the Read tool's absolute paths. A name that holds a
+    variable or a command substitution, or starts with `~`, is left as written."""
+    if not cwd or os.path.isabs(path) or path.startswith("~") or "$" in path or "`" in path:
+        return path
+    return os.path.normpath(os.path.join(cwd, path))
+
+
+def phase0_other_reads(events, cwd):
+    """(files, unparsed): the targets of every tool call before the first stop that returns file content other than the Read tool: shell content
+    readers (`shell_reads`) and the Grep tool (its `path`, with its `glob` appended; the working directory when it names neither). Targets are as
+    named, resolved against `cwd` (the session's directory as the CLI reports it, symlinks resolved), once each, in order; a directory or a glob
+    is not expanded. `unparsed` is every Bash command `shell_reads` could not read, cut to UNPARSED_KEEP characters, so a gap is listed."""
+    files, unparsed = [], []
+    for e in events:
+        if e["kind"] != "tool_use":
+            continue
+        if e["name"] == "Bash":
+            got, ok = shell_reads(e["input"].get("command", ""))
+            files += [_resolve(p, cwd) for p in got]
+            if not ok:
+                unparsed.append(e["input"].get("command", "")[:UNPARSED_KEEP])
+        elif e["name"] == "Grep":
+            base = e["input"].get("path") or "."                       # the Grep tool searches the working directory when it is given no path
+            files.append(_resolve(os.path.join(base, e["input"]["glob"]) if e["input"].get("glob") else base, cwd))
+    return list(dict.fromkeys(files)), unparsed
 
 
 def run_probe(run_id, session_cap, total_cap, control=None, evidence=EVIDENCE, project=doc_evidence.DEFAULT_PROJECT, out=OUT, work=WORK,
@@ -196,13 +346,14 @@ def run_probe(run_id, session_cap, total_cap, control=None, evidence=EVIDENCE, p
         run = find_run(manifest, run_id)
         refuse_unprobable(run)
         dest = os.path.join(work, slug(run_id, control))
+        replaced = clear_leftover(dest, run, control)
         facts = build_clone(scratch, run, dest)
     finally:
         shutil.rmtree(scratch, ignore_errors=True)     # holds every run of the bundle; the clone has what it needs
     verify_clone(facts)
     ctl = apply_git_only(dest, run) if control else None
     row = {"kind": "probe", "run": run_id, "control": control, "arm": run["arm"], "rep": run["rep"], "pin": run["pin"], "install": run["install"],
-           "start": run["start"], "clone": facts, "control_detail": ctl, "clone_dir": dest, "not_carried": NOT_CARRIED,
+           "start": run["start"], "clone": facts, "control_detail": ctl, "clone_dir": dest, "leftover_replaced": replaced, "not_carried": NOT_CARRIED,
            "original_cli": run.get("cli"), "session_cap": session_cap, "total_cap": total_cap, "model_requested": model, "effort": effort}
     if not launch:
         row["launched"] = False
@@ -229,13 +380,15 @@ def run_probe(run_id, session_cap, total_cap, control=None, evidence=EVIDENCE, p
                 "cap_hit": res["cost_usd"] >= CAP_HIT * session_cap,
                 "probe_ok": res["stops"] == 1 and report is not None and res["cost_usd"] < CAP_HIT * session_cap, "report_chars": len(report) if report is not None else None,
                 "report": os.path.relpath(os.path.join(base, "report.md"), out) if report is not None else None,
-                "wall_seconds": round(time.time() - t0, 1), "transcript": tp, "init": res["init"], "cli": None, "usage": None, "reads": None})
+                "wall_seconds": round(time.time() - t0, 1), "transcript": tp, "init": res["init"], "cli": None, "usage": None, "reads": None, "reads_other": None, "reads_unparsed": None})
     if tp:
         import replaylib
         recs = replaylib.load_records(tp)
         row["usage"] = extract.row(tp, arm=run["arm"], rep=run["rep"])
         row["cli"] = doc_evidence.cli_versions(tp)
-        row["reads"] = phase0_reads(replaylib.events(recs))
+        evs = replaylib.events(recs)
+        row["reads"] = phase0_reads(evs)
+        row["reads_other"], row["reads_unparsed"] = phase0_other_reads(evs, os.path.realpath(dest))     # the CLI reports its cwd resolved (/tmp is /private/tmp)
     with open(rows, "a") as f:
         f.write(json.dumps(row) + "\n")
     return row
@@ -291,7 +444,7 @@ def main(argv=None):
         ap.error("--session-cap and --total-cap are both required to launch: a total is only usable beside its per-session cap")
     row = run_probe(a.run, a.session_cap or 0.0, a.total_cap or 0.0, a.control, a.evidence, a.project, a.out, a.work, a.model, a.effort,
                     launch=not a.no_launch, again=a.again)
-    print(json.dumps({k: row[k] for k in row if k not in ("init", "usage", "reads")}, indent=1))
+    print(json.dumps({k: row[k] for k in row if k not in ("init", "usage", "reads", "reads_other", "reads_unparsed")}, indent=1))
 
 
 if __name__ == "__main__":
