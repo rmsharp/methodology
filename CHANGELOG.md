@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-94] S256 claim (in progress) — P1a: keep the saved runs, build and freeze the documentation scorers
+
+Operator said `go` and chose BL-94 P1a from the Phase 0 picker (the option offered as recommended; the others were P1a's evidence half alone and the BL-95 resync plan). Deliverable: P1a of `docs/planning/documentation-quality-experiment-plan.md` section 5, which costs $0 and runs no model; it stops at the scorer freeze, and P1b (score the saved runs once) is its own session. Phase 0: 0 undocumented commits at both frontiers, ratchet citation matches `.quality-gates-results.json` (results `3f5791d93dac`, manifest `fd435a4f8fab`), `bin/check-handoff --all` OK, #92 open with no reply, dashboard 72/100, 30 ahead of `origin/main` and 102 behind `upstream/main`, the saved `/tmp` trees all still present (up 12 days). The owed trim ran first as its own action (`2ff221a`, fold `2407e98`, shard proof exit 0 from a `--no-local` clone). `CHANGELOG: pending` until Phase 3F.
+
 ### 2026-10-03 · [ad hoc] S256 — fold the third 2026-10-03 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`2ff221a`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-03), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S255, S254); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's pick of BL-94 P1a, as its own action, before the S256 claim.

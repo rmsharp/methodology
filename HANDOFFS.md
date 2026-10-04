@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S256
+date: 2026-10-03
+status: pending
+active_task: BL-94 P1a: keep, define, build, calibrate and freeze the documentation-quality scorers ($0, no model tokens), per `docs/planning/documentation-quality-experiment-plan.md` section 5. Re-run the plan's section 10 rows first; `git bundle` every saved run tree (they die at reboot); build and test `doc_score.py` (M1, M2) and the M4 key builder; parse-only smoke test over every saved set; calibrate on the 15 T-remove trees; freeze. Stops at the freeze; P1b (score once) is the next session. Nothing run on a live model, nothing spent, nothing sent upstream.
+```
+
+```handoff
 session: S255
 date: 2026-10-03
 status: complete
