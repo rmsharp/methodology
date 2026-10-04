@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S261 close-out — the rater re-run is done: `missing` and `vague` MISSED again, `wrong` caught ($1.6146); fork learning #108
+
+The `HANDOFFS.md` receipt is `status: complete`. Commits: trim `37f0ad6` and fold `8f5a15f` (both before the claim), claim `e2905b7`, the run and report `e18d5a1`, the S260 `commit:` slot reconcile `9cb4ec4`, status in the plan, backlog row and detail `348a23a`, plus this close-out. Result: 12 of 12 calls on the rebuilt `missing` and `vague` answered yes (their evidence survives in a status line and in names no finder counts), `wrong` caught on all 3 records in both orders, honest records 8 of 8, arm guess unchanged; the rater is not shown to be blind to a vague record. Spend $1.6146 (the study's ledger $4.0927 of $100). **Phase 3C appended fork learning #108** (docs/FORK_LEARNINGS.md); D3's retire-or-refuse: none retired, the nearest rows #16, #83 and #107 named in the receipt as not meeting (a), (b) or (c). `bin/tests.sh` 362 passed, 0 failed. No harness file changed; nothing pushed; nothing sent upstream. Next, all his: rebuild the two defects, his own blind rating, D6 and D7, P3; the owed HANDOFFS trim (3 receipts).
+
 ### 2026-10-04 · [BL-94] S261 — status follows the rater re-run: the plan's P2 status, the BL-94 row and detail, a pointer in the P2 report
 
 Documentation only. Each says the rater was re-run on the rebuilt defects at $1.6146 (`missing` and `vague` MISSED again, `wrong` caught, the study's ledger $4.0927 of $100) and points at `pilot/doc-evidence/P2_RATER_RERUN.md`; the S260 paragraphs' "not re-run" is marked superseded. No harness file changed.
