@@ -158,8 +158,9 @@ def build(outdir, project, run_list=None):
     return manifest
 
 
-def verify(outdir, project):
-    """Exit non-zero (raise SystemExit) on any mismatch; return the list of run ids rebuilt."""
+def rebuild(outdir, project):
+    """Check the bundle and fetch every run into a scratch repository (which borrows the project's objects). Returns (scratch, manifest);
+    exits on any mismatch. The scratch repository has refs/runs/<id> and refs/pins/<id>, so any scorer can read a run from it."""
     outdir = os.path.abspath(outdir)
     manifest = json.load(open(os.path.join(outdir, "manifest.json")))
     bundle = os.path.join(outdir, manifest["bundle"]["file"])
@@ -173,7 +174,6 @@ def verify(outdir, project):
     with open(os.path.join(scratch, ".git", "objects", "info", "alternates"), "w") as f:
         f.write(os.path.join(git(project, "rev-parse", "--absolute-git-dir"), "objects") + "\n")
     git(scratch, "fetch", "-q", "--no-tags", bundle, "refs/runs/*:refs/runs/*", "refs/pins/*:refs/pins/*")
-    rebuilt = []
     for r in manifest["runs"]:
         head = git(scratch, "rev-parse", f"refs/runs/{r['id']}")
         if head != r["head"]:
@@ -182,8 +182,13 @@ def verify(outdir, project):
             raise SystemExit(f"{r['id']}: pin {r['pin']} was not rebuilt")
         if not is_ancestor(scratch, r["pin"], head):
             raise SystemExit(f"{r['id']}: pin is not an ancestor of the rebuilt head")
-        rebuilt.append(r["id"])
-    return rebuilt
+    return scratch, manifest
+
+
+def verify(outdir, project):
+    """Exit non-zero (raise SystemExit) on any mismatch; return the list of run ids rebuilt."""
+    _, manifest = rebuild(outdir, project)
+    return [r["id"] for r in manifest["runs"]]
 
 
 def main(argv=None):
