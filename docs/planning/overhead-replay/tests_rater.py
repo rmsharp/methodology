@@ -282,13 +282,13 @@ class DryRun(unittest.TestCase):
 
 
 class Packet(unittest.TestCase):
-    def test_the_sample_is_three_three_four_by_group_fixed_by_the_seed_and_shuffled(self):
+    def test_the_sample_is_two_two_two_by_group_fixed_by_the_seed_and_shuffled(self):
         recs = sample_records()
         s = R.draw_sample(recs)
-        self.assertEqual(sorted(recs[r][0] for r in s), ["v3.0"] * 3 + ["v3.7"] * 3 + ["v3.8-text"] * 4)
+        self.assertEqual(sorted(recs[r][0] for r in s), ["v3.0"] * 2 + ["v3.7"] * 2 + ["v3.8-text"] * 2)
         self.assertEqual(s, R.draw_sample(recs))
         self.assertNotEqual(s, R.draw_sample(recs, seed=1))
-        self.assertEqual(len(set(s)), 10)
+        self.assertEqual(len(set(s)), 6)
 
     def test_the_packet_names_no_run_and_no_arm_and_the_key_is_a_separate_object(self):
         recs = sample_records()
@@ -298,13 +298,14 @@ class Packet(unittest.TestCase):
             self.assertNotIn(rid, md)
         for word in ("set/", "v3.0-r", "HANDOFFS", "SESSION_NOTES"):
             self.assertNotIn(word, md)
-        self.assertEqual(sorted(key), [f"R{i:02d}" for i in range(1, 11)])
+        self.assertEqual(sorted(key), [f"R{i:02d}" for i in range(1, 7)])
         self.assertEqual({v["run"] for v in key.values()}, set(sample))
         self.assertEqual(sheet[0], ["record", *R.KEYS, "arm_guess", "notes"])
-        self.assertEqual(len(sheet), 11)
-        self.assertEqual(size["records"], 10)
+        self.assertEqual(len(sheet), 7)
+        self.assertEqual(size["records"], 6)
         self.assertGreater(size["words"], 0)
-        self.assertEqual(md.count("# Record R"), 10)
+        self.assertEqual(md.count("# Record R"), 6)
+        self.assertIn("6 records, each the text", md)
         self.assertIn("**next_step**", md)
 
     def test_his_sheet_is_scored_against_the_key_by_group_with_the_arm_guess_checked(self):

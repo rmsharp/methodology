@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S258 — the rater's strata, its tests, the plan and the report follow the decisions
+
+`rater.py` `STRATA` 3 / 3 / 4 to 2 / 2 / 2 and the packet's opening line counts its records; `tests_rater.py` expects two per arm, six unique records, labels R01-R06 and a seven-row sheet; the plan (§4 item 4, D4, D5, the P2a status) and `P2A_REPORT.md` record the three answers. The previous commit holds the rebuilt packet, sheet and key.
+
 ### 2026-10-04 · [BL-94] S258 — the operator's decisions at the P2a stop, from the close-out picker; the packet rebuilt at six records
 
 His three answers, from one picker after the report was in and before the close-out: **P2 at the $10 cap** (the recommended option; the others were probes only at $3 and no P2 yet), starting only when he says go in that session, with a proposed probe session cap of $1.00 and rater call cap of $0.50 (D4 at the plan's figure; the study cap stays $100 and $0 is spent); **a six-record blind packet**, two per arm (the recommended option; ten and three were the others), so `rater.py`'s strata are now 2 / 2 / 2 and `pilot/doc-probe/rating/` holds the rebuilt packet, sheet and key: 20,410 words, 2,832 to 4,135 per record, about 102 minutes at 200 words a minute (an estimate; the ten-record build was 33,592 words); **M3 deferred until after P2** (the recommended option; drop and plan-the-rename-task were the others). Recorded in the plan (§4 item 4, D4, D5 and the P2a status), the P2a report and `tests_rater.py` (36 tests, 32 of 32 mutants killed on the six-record code).

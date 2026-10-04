@@ -2,7 +2,7 @@
 
 **Cost: $0. No model session was launched, no rating call was made, nothing outside `docs/planning/` changed, nothing was sent upstream.**
 The plan is [`documentation-quality-experiment-plan.md`](../../../documentation-quality-experiment-plan.md) §5 P2a; the harness is in
-[`overhead-replay/`](../..). P2a ends in a stop for the operator, because the P2 spend is his (D4); §7 below lists what he is asked.
+[`overhead-replay/`](../..). P2a ends in a stop for the operator, because the P2 spend is his (D4); §7 below records what he decided.
 
 ## The answer
 
@@ -20,8 +20,9 @@ The plan is [`documentation-quality-experiment-plan.md`](../../../documentation-
 4. **There is no M3 task in the project's history.** 56 commits remove a function; none makes two parsed-or-agent live documents false
    in a way the commit also fixed. **One constructed task exists on the start state the study already uses** (rename `getEmptyErrorLst`),
    which is a design and a cost, not a search result.
-5. **The operator's blind packet is large: 33,592 words in ten records, about 2.8 hours of reading at 200 words a minute.** The plan said
-   this was untimed. He chose at the Phase 1 picker to have the model rater built as well as his own rating.
+5. **The operator's blind packet was large: ten records were 33,592 words, about 2.8 hours of reading at 200 words a minute** (the plan had
+   not timed it). **At this stop he chose six records, two per arm: 20,410 words, about 102 minutes.** He also chose, at the Phase 1 picker,
+   to have the model rater built as well as his own rating.
 
 ## 1. Item (a): the driver mode, tested before any real launch
 
@@ -98,9 +99,10 @@ transcript's first turn (tool calls, files read, characters returned). 22 of 23 
 * **Not run:** the paid dry run (`dry-run`, 30 calls on three honest records: one per arm, first in sorted order, so the choice is made
   before any rating) and the call itself. The command line is checked against `claude --help`; whether the model answers in the JSON form
   asked for is first seen in P2, and the parser refuses anything else and lists the failed calls.
-* **The packet:** `pilot/doc-probe/rating/packet.md`, `sheet.csv` and, apart, `KEY-do-not-open-before-rating.json`. Ten records, seed
-  20261004, 3 / 3 / 4 by arm. **33,592 words, 2,832 to 3,600 per record (19-25 KB), about 168 minutes at 200 words a minute: reading
-  only, an estimate.** `rater.py score-human sheet.csv KEY.json` scores his sheet and checks his arm guesses.
+* **The packet:** `pilot/doc-probe/rating/packet.md`, `sheet.csv` and, apart, `KEY-do-not-open-before-rating.json`. **Six records**, seed
+  20261004, two per arm (his choice at this stop; the first build was ten, 3 / 3 / 4, 33,592 words, 2,832 to 3,600 per record). **20,410 words,
+  2,832 to 4,135 per record, about 102 minutes at 200 words a minute: reading only, an estimate.** `rater.py score-human sheet.csv KEY.json`
+  scores his sheet and checks his arm guesses.
 
 ## 5. Item (e): the M3 task search
 
@@ -135,5 +137,5 @@ ledger. The figures are proposals; the P2 cap is his (D4).
 * Tests in `tests_probe.py`, not `tests.py` (reason in §1). A `cap_hit` rule and `--verify-all` were added; neither is in the plan.
 * A probe is cheaper than the plan's guess by about a factor of three; the packet is far heavier than "about ten records" implied.
 * All probes run on one CLI, as §3.7 requires: the CLI is now 2.1.289, the saved runs used 2.1.285-2.1.287.
-* **Asked of the operator at this stop (S258 close-out picker):** the P2 spend and go; how many records he will read; whether M3 is
-  dropped or run as the constructed rename task.
+* **Decided by the operator at this stop (his picker answers):** **P2 at the $10 cap**, starting when he says go in that session (probe
+  session cap $1.00, rater call cap $0.50); **six records** in his packet; **M3 deferred until after P2**.

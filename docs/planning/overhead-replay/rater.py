@@ -17,8 +17,8 @@ parts, `wrong` replaces them with a statement that contradicts the rest, `vague`
 to break. `fabricated` is the exception: a sha cannot be checked from the text alone (M1 does that against git), so it is reported and
 not required. A rater that cannot rank a record with no next step below one with a next step is not measuring usefulness.
 
-The packet is the same rendering the model sees, so the two sets of ratings are comparable. His ten records are drawn with a fixed seed,
-stratified 3 / 3 / 4 across v3.0, v3.7 and v3.8-text; the key that says which record is which is a SEPARATE file.
+The packet is the same rendering the model sees, so the two sets of ratings are comparable. His six records are drawn with a fixed seed,
+stratified 2 / 2 / 2 across v3.0, v3.7 and v3.8-text; the key that says which record is which is a SEPARATE file.
 """
 import argparse, csv, hashlib, json, os, random, re, shutil, subprocess, sys, tempfile
 sys.dont_write_bytecode = True
@@ -44,7 +44,7 @@ KEYS = [k for k, _ in QUESTIONS]
 ANSWERS = ("yes", "no", "cannot_tell")
 ARM_CHOICES = ("3.0", "3.7", "3.8", "cannot_tell")
 GROUP_LABEL = {"v3.0": "3.0", "v3.7": "3.7", "v3.8-text": "3.8"}
-STRATA = {"v3.0": 3, "v3.7": 3, "v3.8-text": 4}            # about ten (plan 4 item 4)
+STRATA = {"v3.0": 2, "v3.7": 2, "v3.8-text": 2}            # six: his choice at the S258 picker (the plan said about ten; ten was 168 minutes of reading)
 SEED = 20261004
 NEXT_LABEL = re.compile(r"(?i)^\W*(next[ _]steps?|what.s next|next session|next up)\b")
 SYSTEM = ("You are a careful reader. You are shown one document: the text that one working session added to a software project's own "
@@ -294,7 +294,7 @@ def draw_sample(records, seed=SEED, strata=STRATA):
 def build_packet(records, sample):
     labels = {rid: f"R{i:02d}" for i, rid in enumerate(sample, 1)}
     md = ["# Blind rating packet", "",
-          "Ten records, each the text one working session added to its project's records plus the message it ended on. Nothing here says which",
+          f"{len(sample)} records, each the text one working session added to its project's records plus the message it ended on. Nothing here says which",
           "version of the protocol wrote it or which run it came from. For each record answer the eight questions from the text alone",
           "(yes / no / ?), then guess which of three versions, 3.0, 3.7 or 3.8, was being followed (or ?). Record your answers in `sheet.csv`.",
           "Do not open `KEY-do-not-open-before-rating.json`.", "", "## The questions", ""]
