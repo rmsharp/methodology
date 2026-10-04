@@ -1,0 +1,369 @@
+{
+ "all": [
+  {
+   "commit": "3db018d1d370d265b2a372165fa115cdb5fadc94",
+   "date": "2026-06-06",
+   "docs": [
+    {
+     "changed_by_commit": false,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.Rmd"
+    },
+    {
+     "changed_by_commit": false,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.md"
+    }
+   ],
+   "name": "getMinParentAge",
+   "parent": "2db9cc8fbbfa8218667cc16703d87436fb4c089b",
+   "strong_docs": 0,
+   "subject": "refactor!: Phase 9 \u2014 deprecate runGeneKeepR to a modular-app alias; remove orphans"
+  },
+  {
+   "commit": "3db018d1d370d265b2a372165fa115cdb5fadc94",
+   "date": "2026-06-06",
+   "docs": [
+    {
+     "changed_by_commit": false,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.Rmd"
+    },
+    {
+     "changed_by_commit": false,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.md"
+    }
+   ],
+   "name": "shouldShowErrorTab",
+   "parent": "2db9cc8fbbfa8218667cc16703d87436fb4c089b",
+   "strong_docs": 0,
+   "subject": "refactor!: Phase 9 \u2014 deprecate runGeneKeepR to a modular-app alias; remove orphans"
+  },
+  {
+   "commit": "164343a2a3872fa4241ad49ce0a3d765be1a213d",
+   "date": "2020-04-13",
+   "docs": [
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "README.md"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/ColonyManagerTutorial.Rmd"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/manual.R"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/manual.html"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/manual.md"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/manual_components/_running_shiny_application.Rmd"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/shiny_app_use.html"
+    }
+   ],
+   "name": "runGenekeepr",
+   "parent": "224785067e3c40903a8cfcd82777b98b127c3cbd",
+   "strong_docs": 0,
+   "subject": "Minor modifications to Tutorial titles."
+  },
+  {
+   "commit": "8b637004d69caa953b58eac99a7d3f0f77ff042f",
+   "date": "2020-03-19",
+   "docs": [
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.md"
+    }
+   ],
+   "name": "makeGeneticDiversityDashboard",
+   "parent": "450a88d924c7fcd69cbbb7e2e32846cbf86d29d4",
+   "strong_docs": 0,
+   "subject": "just prior to submission - all examples complete"
+  },
+  {
+   "commit": "ebd28e5417720d30c71e3e1e2f9a3ff665dd38f0",
+   "date": "2020-01-07",
+   "docs": [
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "README.md"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/manual_components/_running_shiny_application.Rmd"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/shiny_app_use.Rmd"
+    }
+   ],
+   "name": "runManager",
+   "parent": "15650154f0416c55acd796153bd653d1965ce14e",
+   "strong_docs": 0,
+   "subject": "change package name from nprcmanager to nprcgenekeepr"
+  },
+  {
+   "commit": "ebd28e5417720d30c71e3e1e2f9a3ff665dd38f0",
+   "date": "2020-01-07",
+   "docs": [
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.Rmd"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.md"
+    }
+   ],
+   "name": "summary.nprcmanagGV",
+   "parent": "15650154f0416c55acd796153bd653d1965ce14e",
+   "strong_docs": 0,
+   "subject": "change package name from nprcmanager to nprcgenekeepr"
+  },
+  {
+   "commit": "b484f136cfaf32b947e11a2a29e50b5ee7cef641",
+   "date": "2019-11-13",
+   "docs": [
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.Rmd"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "news"
+     ],
+     "path": "NEWS.md"
+    }
+   ],
+   "name": "getBreederPed",
+   "parent": "4e441ec0c2396c061af2f161ea164738f87f4d30",
+   "strong_docs": 0,
+   "subject": "changed breeder to focalAnimal; changed getBreederPed() to getFocalAnimalPed(); updated version; changed installation decription to indicate developer version installation from github."
+  },
+  {
+   "commit": "77db0f76ebf5b85fb8921eea8343dcb8a99877ee",
+   "date": "2017-10-02",
+   "docs": [
+    {
+     "changed_by_commit": false,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/testingScript.R"
+    }
+   ],
+   "name": "groupAddAssign",
+   "parent": "25dfdce22c873497d8094e31cd5e58e66ab38ade",
+   "strong_docs": 0,
+   "subject": "Removed a temporarily saved file."
+  },
+  {
+   "commit": "0f4f0bc0c1e0b63c7ab491614de9af75e12b5621",
+   "date": "2017-10-01",
+   "docs": [
+    {
+     "changed_by_commit": false,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/testingScript.R"
+    }
+   ],
+   "name": "groupAddition",
+   "parent": "1d5a6d57465d05df0beb1acb57ecde06fbb3a4f0",
+   "strong_docs": 0,
+   "subject": "Depricated groupAssign.R and groupAddition.R"
+  },
+  {
+   "commit": "0f4f0bc0c1e0b63c7ab491614de9af75e12b5621",
+   "date": "2017-10-01",
+   "docs": [
+    {
+     "changed_by_commit": false,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/testingScript.R"
+    }
+   ],
+   "name": "groupAssign",
+   "parent": "1d5a6d57465d05df0beb1acb57ecde06fbb3a4f0",
+   "strong_docs": 0,
+   "subject": "Depricated groupAssign.R and groupAddition.R"
+  },
+  {
+   "commit": "53b169b63cc9d2d4b496c7becfbc3e00177496c7",
+   "date": "2017-09-18",
+   "docs": [
+    {
+     "changed_by_commit": false,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/Notebook.Rmd"
+    }
+   ],
+   "name": "entire",
+   "parent": "b88e6e6e00e03849509d3c65acef58be56db3a25",
+   "strong_docs": 0,
+   "subject": "extracted functions from Relations.R"
+  },
+  {
+   "commit": "b73ff257bf5406b3ee8b24c6c68347c355602299",
+   "date": "2017-09-16",
+   "docs": [
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/testingScript.R"
+    }
+   ],
+   "name": "calc.gu",
+   "parent": "9f7428f4f454372badb8409625820c5f7ef8ec86",
+   "strong_docs": 0,
+   "subject": "Extracted getIncludeColumns(), reportGV(), kinship(), filterKinMatrix(), avgKinship(), and calcGU() as separate files."
+  },
+  {
+   "commit": "33caa592134d77f2ab465c856c38331770377330",
+   "date": "2017-09-07",
+   "docs": [
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/Development_Plans.Rmd"
+    },
+    {
+     "changed_by_commit": true,
+     "kinds": [
+      "prose"
+     ],
+     "path": "vignettes/testingScript.R"
+    }
+   ],
+   "name": "qc.Studbook",
+   "parent": "e538e05b8640c1248a2803f32bc8a951e401ee38",
+   "strong_docs": 0,
+   "subject": "Convert qc.Stubook to camelCase"
+  }
+ ],
+ "blind_spots": [
+  "removed arguments, renamed files, options and config keys are not searched",
+  "a function removed across several commits appears at each",
+  "a mention in a code chunk is not shown to be executed (eval = FALSE is not parsed)",
+  "NEWS mentions are counted apart: history stays true"
+ ],
+ "candidates_with_one_strong_doc": [],
+ "commits_with_a_removed_function": 56,
+ "constructed_task_scan": {
+  "exports": 182,
+  "named_in_two_or_more": [
+   {
+    "docs": [
+     {
+      "kinds": [
+       "chunk"
+      ],
+      "path": "vignettes/ColonyManagerTutorial.Rmd"
+     },
+     {
+      "kinds": [
+       "chunk"
+      ],
+      "path": "vignettes/a2interactive.Rmd"
+     }
+    ],
+    "name": "getEmptyErrorLst"
+   },
+   {
+    "docs": [
+     {
+      "kinds": [
+       "agent"
+      ],
+      "path": "CLAUDE.md"
+     },
+     {
+      "kinds": [
+       "chunk"
+      ],
+      "path": "vignettes/a2interactive.Rmd"
+     }
+    ],
+    "name": "kinship"
+   }
+  ],
+  "rev": "879503cce"
+ },
+ "head": "c68ceffc2fc86b4262cb315dacbd616e0fedfc02",
+ "names_in_a_live_doc": 13,
+ "project": "/Users/rmsharp/Development/nprcgenekeepr",
+ "removed_function_names": 101,
+ "strong_candidates": []
+}
