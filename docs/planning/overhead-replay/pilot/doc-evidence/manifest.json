@@ -1,0 +1,941 @@
+{
+ "about": "BL-94 P1a (a): the saved runs of the documentation study. Rebuild with `doc_evidence.py verify`.",
+ "bundle": {
+  "bytes": 851479,
+  "file": "runs.bundle",
+  "prerequisites": [
+   "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "879503cce9936704eafc3709c2fc9db8328ccc43"
+  ],
+  "refs": "refs/runs/<id> (HEAD of the run), refs/pins/<id> (only where the pin is not HEAD)",
+  "sha256": "215a39b10575fa79464304e1c063012e05ef664952843bbb7ded6fc54be2ff45"
+ },
+ "project": "nprcgenekeepr",
+ "runs": [
+  {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 5,
+   "head": "eb77ddbbe9a7633ca1fbda8e2dcb147a10efb2d1",
+   "id": "real-3.7/v3.7-r1",
+   "install": "66d8c3fc5960b90e9ec74458244fcde190de3e18",
+   "pin": "eb77ddbbe9a7633ca1fbda8e2dcb147a10efb2d1",
+   "pin_rule": "head",
+   "rep": "1",
+   "row_complete": false,
+   "row_end": "cut off after 4 stops",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.7-r1.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.7-r1",
+   "uncommitted_tracked": [
+    "BACKLOG.md",
+    "NEWS.Rmd",
+    "NEWS.md",
+    "PROJECT_LEARNINGS.md"
+   ],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 18,
+   "head": "b7e1acf497237ec19e8e243254cb35b014b498e7",
+   "id": "real-3.7/v3.7-r2",
+   "install": "f6253c852cf4f2a9cdeb76ca048546566c648b8d",
+   "pin": "7b9bd618bc6cdad959fd63c6e7e110d2a423771d",
+   "pin_rule": "override",
+   "rep": "2",
+   "row_complete": true,
+   "row_end": "close-out complete at stop 5 (cut here by hand: driver bug let it run on)",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.7-r2.through-121-closeout.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.7-r2",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 4,
+   "head": "801f5fc1fc8e62ee764b7a012fc226337da6fefc",
+   "id": "real-3.7/v3.0-r1",
+   "install": "3a239917fb90f6c07ffc59870e3b886a6fe3f897",
+   "pin": "801f5fc1fc8e62ee764b7a012fc226337da6fefc",
+   "pin_rule": "head",
+   "rep": "1",
+   "row_complete": true,
+   "row_end": "close-out committed (801f5fc1) at stop 7; the driver ran on to stop 8 because v3.0 has no HANDOFFS.md for its check to read",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.0-r1.through-closeout.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.0-r1",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 7,
+   "head": "aeebcdec9c15994bd69d6a7375a82fca19fa7c75",
+   "id": "real-3.7/v3.7-r3",
+   "install": "cf43f3df83fb0555d6d39a5fc6a50776934aacf5",
+   "pin": "aeebcdec9c15994bd69d6a7375a82fca19fa7c75",
+   "pin_rule": "head",
+   "rep": "3",
+   "row_complete": true,
+   "row_end": "close-out complete",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.7-r3.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.7-r3",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 1,
+   "head": "b18e17440050aa4acbbdf8e83090c117be62f45a",
+   "id": "real-3.7/v3.0-r2",
+   "install": "b18e17440050aa4acbbdf8e83090c117be62f45a",
+   "pin": "b18e17440050aa4acbbdf8e83090c117be62f45a",
+   "pin_rule": "head",
+   "rep": "2",
+   "row_complete": false,
+   "row_end": "cut off after 8 stops",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.0-r2.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.0-r2",
+   "uncommitted_tracked": [
+    "SESSION_NOTES.md",
+    "tests/testthat/test_gvaConvergence_kinshipOverrides.R",
+    "tests/testthat/test_modPyramid.R"
+   ],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 5,
+   "head": "2a6ea69595c2ab0b55884871c681b499492fb790",
+   "id": "real-3.7/v3.0-r3",
+   "install": "d3344eaa84f415d0d1dab5b9d08529dcfce4cc29",
+   "pin": "b15ae1c5c8a84fa7df0db20156a6ae8e907afd15",
+   "pin_rule": "override",
+   "rep": "3",
+   "row_complete": true,
+   "row_end": "#121 close-out committed (b15ae1c5) at stop 5; cut here by hand: the driver did not recognise that commit and the session ran on into issue #120 (about $2.30 excluded)",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.0-r3.through-121-closeout.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.0-r3",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.285"
+   ],
+   "commits_after_start": 7,
+   "head": "176febe73f974b39affb5ad74e6f6b4c5506aee2",
+   "id": "real-3.7/v3.7-r4",
+   "install": "7077d81a7b9d60be42914eadb3af62321f56d5ca",
+   "pin": "176febe73f974b39affb5ad74e6f6b4c5506aee2",
+   "pin_rule": "head",
+   "rep": "4",
+   "row_complete": true,
+   "row_end": "close-out complete",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.7-r4.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.7-r4",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 5,
+   "head": "b8f95db3e378045fb8229ee2aa0ef6d80394d072",
+   "id": "real-3.7/v3.0-r4",
+   "install": "d15b82d4bd4caab27e167720bdc210a6e73ac93d",
+   "pin": "b8f95db3e378045fb8229ee2aa0ef6d80394d072",
+   "pin_rule": "head",
+   "rep": "4",
+   "row_complete": true,
+   "row_end": "close-out complete",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.0-r4.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.0-r4",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 6,
+   "head": "1d8dd911c7ef3e07f82add87ab682f6577a7eb6c",
+   "id": "real-3.7/v3.7-r5",
+   "install": "ffbf37122bc873bc57efd141a0a94fa89a8a66f0",
+   "pin": "1d8dd911c7ef3e07f82add87ab682f6577a7eb6c",
+   "pin_rule": "head",
+   "rep": "5",
+   "row_complete": true,
+   "row_end": "close-out complete",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.7-r5.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.7-r5",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 5,
+   "head": "a90e9240bc2d1f1d9947c661102215f908c7fb7e",
+   "id": "real-3.7/v3.0-r5",
+   "install": "b556711af6f15d15a259fbe22520814f1fb5d97a",
+   "pin": "a90e9240bc2d1f1d9947c661102215f908c7fb7e",
+   "pin_rule": "head",
+   "rep": "5",
+   "row_complete": true,
+   "row_end": "close-out complete",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.0-r5.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.0-r5",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 7,
+   "head": "b9a6839a772c6f95faf94332713531fc740e7e12",
+   "id": "real-3.7/v3.7-r6",
+   "install": "e6ae9a40311e7b3ed77b3b1f568235280c8ffaae",
+   "pin": "b9a6839a772c6f95faf94332713531fc740e7e12",
+   "pin_rule": "head",
+   "rep": "6",
+   "row_complete": true,
+   "row_end": "close-out complete",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.7-r6.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.7-r6",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 4,
+   "head": "0638ad85157906d00d1c98987ff0f031dee7ec04",
+   "id": "real-3.7/v3.0-r6",
+   "install": "0727e6c597b96a89236fa4ed909541b53f6b7db1",
+   "pin": "0638ad85157906d00d1c98987ff0f031dee7ec04",
+   "pin_rule": "head",
+   "rep": "6",
+   "row_complete": true,
+   "row_end": "close-out complete",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.0-r6.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.0-r6",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "v3.7",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 6,
+   "head": "b00e34a50d55f1def67fb26b07355d31fcfd4388",
+   "id": "real-3.7/v3.7-r7",
+   "install": "d6a65aef5993788d98bbcd55ff481b3d3cb57574",
+   "pin": "b00e34a50d55f1def67fb26b07355d31fcfd4388",
+   "pin_rule": "head",
+   "rep": "7",
+   "row_complete": true,
+   "row_end": "close-out complete",
+   "set": "real-3.7",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/Development/methodology/docs/planning/overhead-replay/pilot/real-3.7/v3.7-r7.transcript.jsonl",
+   "tree_was": "/tmp/overhead-real/v3.7-r7",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "head": "206d6f3122ef341c2445f9e5a2ae8ec7a71b48eb",
+   "id": "t-control/R1-r1",
+   "install": "fb61cd013403ef51e4f4332b9ce8093fd15a6a8e",
+   "pin": "206d6f3122ef341c2445f9e5a2ae8ec7a71b48eb",
+   "pin_rule": "head",
+   "rep": "1",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R1-r1/612a9958-0bc6-429b-8e13-e5fcfa90e987.jsonl",
+   "tree_was": "/tmp/ratchet-control/R1-r1",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "head": "1436743154f6298ca697d1c61324e8ce350f3ae4",
+   "id": "t-control/R0-r1",
+   "install": "4dc4f616821af4f5149ac75d2f0b64f031d20d36",
+   "pin": "1436743154f6298ca697d1c61324e8ce350f3ae4",
+   "pin_rule": "head",
+   "rep": "1",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R0-r1/81c604b4-0a99-4591-a9a1-ff4b61f2e4c2.jsonl",
+   "tree_was": "/tmp/ratchet-control/R0-r1",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "head": "81b39ef437c16225de500efbd988d64018ff3aeb",
+   "id": "t-control/R1-r2",
+   "install": "858a4335d9ef6071d674e3cc5e7d3957b67af802",
+   "pin": "81b39ef437c16225de500efbd988d64018ff3aeb",
+   "pin_rule": "head",
+   "rep": "2",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R1-r2/19d8bb27-72b4-4bd6-9420-085e0c23e68d.jsonl",
+   "tree_was": "/tmp/ratchet-control/R1-r2",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 7,
+   "head": "9e25fda5fe4352f20e8a4aa8105afd13d426f698",
+   "id": "t-control/R0-r2",
+   "install": "42cc1dc55720ac93fea0af25a71d0d39c20b242b",
+   "pin": "9e25fda5fe4352f20e8a4aa8105afd13d426f698",
+   "pin_rule": "head",
+   "rep": "2",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R0-r2/28045e89-5af6-4465-9faa-09743e9ff891.jsonl",
+   "tree_was": "/tmp/ratchet-control/R0-r2",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "head": "2861703e4ac19fa3497c87eb6a5b05933c756d9e",
+   "id": "t-control/R1-r3",
+   "install": "a0c8c2f052147448a97ac3fe1946acac0e590524",
+   "pin": "2861703e4ac19fa3497c87eb6a5b05933c756d9e",
+   "pin_rule": "head",
+   "rep": "3",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R1-r3/69a89b65-04d6-4f0b-b0bd-f10a4f27abd1.jsonl",
+   "tree_was": "/tmp/ratchet-control/R1-r3",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 7,
+   "head": "432c23085fe8388d5629619d11787daf8fadeb1c",
+   "id": "t-control/R0-r3",
+   "install": "63d89f9ba9b260d208fd9be7826884d69fc30130",
+   "pin": "432c23085fe8388d5629619d11787daf8fadeb1c",
+   "pin_rule": "head",
+   "rep": "3",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R0-r3/7ac08e25-51d7-408e-8727-4bb9b0142131.jsonl",
+   "tree_was": "/tmp/ratchet-control/R0-r3",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "head": "6d43e29f4cdbe2f54ebf8f3084e4e3a5a48aae23",
+   "id": "t-control/R1-r4",
+   "install": "955ac689b8d65da1c94907cf59fdba174dd035b3",
+   "pin": "6d43e29f4cdbe2f54ebf8f3084e4e3a5a48aae23",
+   "pin_rule": "head",
+   "rep": "4",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R1-r4/6c7c96e9-b042-4e12-a76d-07d3342277fb.jsonl",
+   "tree_was": "/tmp/ratchet-control/R1-r4",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "head": "ec25f6bc0f167f8d995672881f6ae19e92b8b5bc",
+   "id": "t-control/R1-r5",
+   "install": "f1bd697c75c63ec692805bae4b5798748f30fc50",
+   "pin": "ec25f6bc0f167f8d995672881f6ae19e92b8b5bc",
+   "pin_rule": "head",
+   "rep": "5",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-R1-r5/2b88e32e-9858-41b3-9927-4e8081bbc775.jsonl",
+   "tree_was": "/tmp/ratchet-control/R1-r5",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "head": "b5c1c73f708fbee12a0a7a35b4f26b174898409b",
+   "id": "t-control-fix/R1-r1",
+   "install": "66228caaa25819bde1af115e8cc51fff5b4046aa",
+   "pin": "b5c1c73f708fbee12a0a7a35b4f26b174898409b",
+   "pin_rule": "head",
+   "rep": "1",
+   "row_complete": null,
+   "row_end": "cut off after 10 stops",
+   "set": "t-control-fix",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-v2-R1-r1/285b6fcc-9741-4e79-80d1-b47ba5e6cc9c.jsonl",
+   "tree_was": "/tmp/ratchet-control-v2/R1-r1",
+   "uncommitted_tracked": [
+    "CHANGELOG.md",
+    "PROJECT_LEARNINGS.md"
+   ],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 8,
+   "head": "d07c71197ba807ab4beb83cb88ace8fe9b83331f",
+   "id": "t-control-fix/R1-r2",
+   "install": "badc16ef06eb31f75693f5ece7a5ef42cd2794c7",
+   "pin": "d07c71197ba807ab4beb83cb88ace8fe9b83331f",
+   "pin_rule": "head",
+   "rep": "2",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control-fix",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-v2-R1-r2/6b958042-77cc-4cd1-8b24-2864f28eff5b.jsonl",
+   "tree_was": "/tmp/ratchet-control-v2/R1-r2",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "head": "7603bf721f2f989be486ea7683e682e25147f937",
+   "id": "t-control-fix/R1-r3",
+   "install": "67353e4cee5e4b666b65d359ebb32dbfff511260",
+   "pin": "7603bf721f2f989be486ea7683e682e25147f937",
+   "pin_rule": "head",
+   "rep": "3",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control-fix",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-v2-R1-r3/a0d46d21-0883-4661-9f68-470784d8828c.jsonl",
+   "tree_was": "/tmp/ratchet-control-v2/R1-r3",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "head": "f528f9d5585ba38964597388e576989f922c1dab",
+   "id": "t-control-fix/R1-r4",
+   "install": "dbbaeaa3c9ed262c64c01c27e88804ac28345261",
+   "pin": "f528f9d5585ba38964597388e576989f922c1dab",
+   "pin_rule": "head",
+   "rep": "4",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control-fix",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-v2-R1-r4/22227945-d04a-42f2-b5d1-e7b137628517.jsonl",
+   "tree_was": "/tmp/ratchet-control-v2/R1-r4",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 7,
+   "head": "c71b47e06d8820bf11b182971492775d53c160df",
+   "id": "t-control-fix/R1-r5",
+   "install": "38bc50c224f439419f5bf5d3672481eb700662cc",
+   "pin": "c71b47e06d8820bf11b182971492775d53c160df",
+   "pin_rule": "head",
+   "rep": "5",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-control-fix",
+   "start": "879503cce9936704eafc3709c2fc9db8328ccc43",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-control-v2-R1-r5/4dcf7dfe-4c6c-41d9-9105-fdecc49732d0.jsonl",
+   "tree_was": "/tmp/ratchet-control-v2/R1-r5",
+   "uncommitted_tracked": [],
+   "untracked": [
+    "dashboard_history.jsonl"
+   ]
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 6,
+   "head": "47ab154b88bc355c5efa064821fb845faba929a6",
+   "id": "t-remove/R1-r1",
+   "install": "818b44c4b778bfe29daf27d2f21b5eb287beff7d",
+   "pin": "47ab154b88bc355c5efa064821fb845faba929a6",
+   "pin_rule": "head",
+   "rep": "1",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R1-r1/f8b373fd-940e-4565-a16b-3ab0b36684a0.jsonl",
+   "tree_was": "/tmp/ratchet-main/R1-r1",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 5,
+   "head": "28c69ecf520e618234e97f36dfb508832c8b73fe",
+   "id": "t-remove/R0-r1",
+   "install": "c122b8763979e3309b78738ca5f8085db04fcfac",
+   "pin": "28c69ecf520e618234e97f36dfb508832c8b73fe",
+   "pin_rule": "head",
+   "rep": "1",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R0-r1/981099da-f2d0-419e-909c-86afaf2eaf5a.jsonl",
+   "tree_was": "/tmp/ratchet-main/R0-r1",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 4,
+   "head": "faa1899f2e917b24ba50a846953848441a1828fb",
+   "id": "t-remove/v3.0-r1",
+   "install": "4760ba95e331210718aa47fc537e54a946296139",
+   "pin": "faa1899f2e917b24ba50a846953848441a1828fb",
+   "pin_rule": "head",
+   "rep": "1",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-v3-0-r1/6ba365d0-77d7-436e-9451-26fc608c5021.jsonl",
+   "tree_was": "/tmp/ratchet-main/v3.0-r1",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 6,
+   "head": "8c3804651b75e3b05a5fa11b0815290c8c75b980",
+   "id": "t-remove/R1-r2",
+   "install": "f94b1574f70aa881a0c4c521e9e0025968f006b7",
+   "pin": "8c3804651b75e3b05a5fa11b0815290c8c75b980",
+   "pin_rule": "head",
+   "rep": "2",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R1-r2/eed0332e-d312-4112-adcb-9df592155369.jsonl",
+   "tree_was": "/tmp/ratchet-main/R1-r2",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 5,
+   "head": "97d577d48d6306cc1ab5be666062b93c4b0e03ca",
+   "id": "t-remove/R0-r2",
+   "install": "67905bdf070a76590f7bd0d43d6885ef6b0d7139",
+   "pin": "97d577d48d6306cc1ab5be666062b93c4b0e03ca",
+   "pin_rule": "head",
+   "rep": "2",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R0-r2/fc54ac9b-cb1b-4957-8b6f-83af4d28dd6a.jsonl",
+   "tree_was": "/tmp/ratchet-main/R0-r2",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 5,
+   "head": "6c2d74fd1f10e080a9fad5f9e1b5a745e69a0538",
+   "id": "t-remove/v3.0-r2",
+   "install": "f9896403afcb3b613d9f924db39315bcb2b3394e",
+   "pin": "6c2d74fd1f10e080a9fad5f9e1b5a745e69a0538",
+   "pin_rule": "head",
+   "rep": "2",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-v3-0-r2/c7f7ace2-cec8-4977-b8cb-4de80a11007e.jsonl",
+   "tree_was": "/tmp/ratchet-main/v3.0-r2",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 6,
+   "head": "cc8b2c84510273535037f0037cdcad313c71d3ee",
+   "id": "t-remove/R1-r3",
+   "install": "dc0f0730626003125cd2ba055bb131b6fb096103",
+   "pin": "cc8b2c84510273535037f0037cdcad313c71d3ee",
+   "pin_rule": "head",
+   "rep": "3",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R1-r3/e2a6fc3d-8137-4d5c-a9f0-a5bf809fce21.jsonl",
+   "tree_was": "/tmp/ratchet-main/R1-r3",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R0",
+   "cli": [
+    "2.1.286"
+   ],
+   "commits_after_start": 5,
+   "head": "c52ad6df9baf11368320625f0205ae4a35638bee",
+   "id": "t-remove/R0-r3",
+   "install": "d0061e94c0b3db00cc7e02b78179ede73a038231",
+   "pin": "c52ad6df9baf11368320625f0205ae4a35638bee",
+   "pin_rule": "head",
+   "rep": "3",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R0-r3/17502960-ebdd-4083-b88a-74453dd21854.jsonl",
+   "tree_was": "/tmp/ratchet-main/R0-r3",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "head": "548805a5dd1f005118d9cc6698d65d9f20b28673",
+   "id": "t-remove/v3.0-r3",
+   "install": "bcd02124120b8a12e96dfa8d4f5ddccc434bc305",
+   "pin": "548805a5dd1f005118d9cc6698d65d9f20b28673",
+   "pin_rule": "head",
+   "rep": "3",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-v3-0-r3/ee422b64-f6c9-4868-bb5e-38b778ab2939.jsonl",
+   "tree_was": "/tmp/ratchet-main/v3.0-r3",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 6,
+   "head": "59f563ee3858a7213b19fb901d0d821473aa155d",
+   "id": "t-remove/R1-r4",
+   "install": "5b3d0e0173a8fbdf0733e2c912b1462403e59c1e",
+   "pin": "59f563ee3858a7213b19fb901d0d821473aa155d",
+   "pin_rule": "head",
+   "rep": "4",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R1-r4/f6f1219d-f99a-42c8-96cc-34e694fa5bd5.jsonl",
+   "tree_was": "/tmp/ratchet-main/R1-r4",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 5,
+   "head": "9fc2e7398f311f2b75abd16151ff8bd64ed991b9",
+   "id": "t-remove/R0-r4",
+   "install": "c20dfa9a40afc35244d6891f21ad88ca133b7b1e",
+   "pin": "9fc2e7398f311f2b75abd16151ff8bd64ed991b9",
+   "pin_rule": "head",
+   "rep": "4",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R0-r4/ea1bf49c-b6ad-4711-94a9-4611b4d71f84.jsonl",
+   "tree_was": "/tmp/ratchet-main/R0-r4",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 4,
+   "head": "b6a1112661b1deae8a6a4853b8a6c30231619735",
+   "id": "t-remove/v3.0-r4",
+   "install": "c4b1c1ad124844569e7226d90b16e5e1bbc4a71e",
+   "pin": "b6a1112661b1deae8a6a4853b8a6c30231619735",
+   "pin_rule": "head",
+   "rep": "4",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-v3-0-r4/d2838400-bb5d-4d4b-a3af-72314eeeca5e.jsonl",
+   "tree_was": "/tmp/ratchet-main/v3.0-r4",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R1",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 4,
+   "head": "2fdb0f14ccc46e53da29576b3db260bf8338750d",
+   "id": "t-remove/R1-r5",
+   "install": "0d2bbc8b35bb8e9da7eae647f3401d375c4cdfc9",
+   "pin": "2fdb0f14ccc46e53da29576b3db260bf8338750d",
+   "pin_rule": "head",
+   "rep": "5",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R1-r5/6b2c62fb-f661-460f-90bc-a73c869143dd.jsonl",
+   "tree_was": "/tmp/ratchet-main/R1-r5",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "R0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 9,
+   "head": "5ccafa0a3e746880de8949a415501d70ed826339",
+   "id": "t-remove/R0-r5",
+   "install": "508dfa69a8794b1ec214e8ad5c2982418061bb9c",
+   "pin": "3aa6c2b9561d6829b9d08be07efc03a5078777b2",
+   "pin_rule": "override",
+   "rep": "5",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-R0-r5/3dd0bbc1-306d-4357-ae60-50b5edcc5099.jsonl",
+   "tree_was": "/tmp/ratchet-main/R0-r5",
+   "uncommitted_tracked": [],
+   "untracked": []
+  },
+  {
+   "arm": "v3.0",
+   "cli": [
+    "2.1.287"
+   ],
+   "commits_after_start": 4,
+   "head": "be84a96579e83aa32397bea419f6a5c402cb9093",
+   "id": "t-remove/v3.0-r5",
+   "install": "35cb76778b9bdd52a32359dba2940d0f0bcbcf9d",
+   "pin": "be84a96579e83aa32397bea419f6a5c402cb9093",
+   "pin_rule": "head",
+   "rep": "5",
+   "row_complete": null,
+   "row_end": "close-out complete",
+   "set": "t-remove",
+   "start": "402a6b5b78b7c88c055148112770d28dd515cf41",
+   "transcript": "/Users/rmsharp/.claude/projects/-private-tmp-ratchet-main-v3-0-r5/62777cda-97c3-44af-997b-87a1cad322b5.jsonl",
+   "tree_was": "/tmp/ratchet-main/v3.0-r5",
+   "uncommitted_tracked": [],
+   "untracked": []
+  }
+ ]
+}

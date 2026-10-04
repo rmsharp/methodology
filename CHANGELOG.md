@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-94] S256 — P1a (a) checkpoint 3: the saved runs kept as one verified bundle
+
+P1a (a), checkpoint 3 of 3 (evidence kept): `docs/planning/overhead-replay/pilot/doc-evidence/` holds `runs.bundle` (851,479 B, sha256 `215a39b1…ff45`, all 41 saved runs as refs, prerequisites the project's own start commits `879503cce` and `402a6b5b7`), `manifest.json` and `README.md`. Size was measured first: 851 KB against the plan's 5 MB limit, so it is kept in git, not outside it. `doc_evidence.py verify` passes against `~/Development/nprcgenekeepr` (bundle verifies; 41 heads and 41 pins rebuilt) and, below, from a `--no-local` clone of this commit. CLI versions read from the transcripts: 2.1.285 on 7 runs, 2.1.286 on 14, 2.1.287 on 20, so S237's runs straddle two versions and the T-remove runs two (a covariate; the plan's §3.7 had said only that versions changed). The saved trees are all still present; P1a (a) is done.
+
 ### 2026-10-03 · [BL-94] S256 — P1a (a) checkpoint 2: uncommitted state in the manifest; relative output path fixed
 
 P1a (a), checkpoint 2 of 3: `doc_evidence.py` records each tree's uncommitted state in the manifest (`uncommitted_tracked`, `untracked`) because a bundle holds commits only; `build` and `verify` now resolve a relative output directory against the caller's directory (found by running `build` into the repository path: git ran in the scratch repository and could not create the bundle there; regression test added and seen failing on a copy without the fix). 14 tests. The check found that 38 of 41 trees have no tracked file modified, and the 3 that do (`real-3.7/v3.7-r1`, `real-3.7/v3.0-r2`, `t-control-fix/R1-r1`) are the runs cut off before any close-out. Evidence files are the next checkpoint.
