@@ -69,3 +69,4 @@ The harness for [`../documentation-quality-experiment-plan.md`](../documentation
 | `m3_search.py` | The M3 task search over the project's history, plus the constructed-task scan at the start state. Writes `p2a-m3-search.json`. |
 | `rater.py`, `tests_rater.py` | M5: the fixed question list, the blind model rater (no tools, own cap), the four planted defects, the dry run (paid, P2), and the packet for the operator's own rating (`pilot/doc-probe/rating/`). |
 | `pilot/doc-evidence/P2A_REPORT.md` | The report: the answer, items (a) to (f), what differs from the plan. |
+| `pilot/doc-evidence/P2_REPORT.md`, `pilot/doc-probe/` | P2 (S259, $2.4781): the report, the spend ledger (`spend.jsonl`), the four probe rows (`rows.jsonl`), each probe's `report.md` and `stream.jsonl`, and the rater dry run (`rating/dry-run.json`, `dry-run-summary.json`). |

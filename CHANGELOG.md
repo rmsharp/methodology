@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S259 — P2 checkpoint 5: the plan, the backlog row and detail, and the harness README follow the P2 report
+
+`docs/planning/documentation-quality-experiment-plan.md` (a status line under §P2), `docs/planning/BACKLOG.md` (the BL-94 row: P2 done, next phase P3 on its own go), `docs/planning/BACKLOG-DETAIL.md` (a status paragraph that supersedes S258's "P2 starts only when he says go") and `docs/planning/overhead-replay/README.md` (the P2 files). Figures are the report's; nothing new is claimed here.
+
 ### 2026-10-04 · [BL-94] S259 — P2 checkpoint 4: the P2 report
 
 `docs/planning/overhead-replay/pilot/doc-evidence/P2_REPORT.md`. **Spend $2.4781 of the $10 cap (of the study's $100): a probe $0.16 to $0.24, mean $0.19 (the plan said $1, S258's estimate from the saved runs was $0.35); a rating call $0.044 to $0.066, mean $0.055.** 36 claims checked in the four cold reports, none wrong; the control's session named the restore commit and recommended investigating it first (the confound observed). **The model rater scored all three honest records 8 of 8 in both orders and missed `vague` on all three (every path and anchor removed, `where` still yes 8 of 8); `missing` is inconclusive because the builder leaves a next step in place; `wrong` was caught.** Three defects in the harness, found by running it: `reads` records the Read tool only (the v3.0 session read `SESSION_NOTES.md` by Bash `head -150`); a failed rating parse keeps no raw reply; `--no-launch` leaves a clone that makes the real launch refuse. P3 restated at about $9 to $11 against the plan's $38; the report says why that is not the open question. The checkpoint 2 and 3 entries below now give exact claim counts (8, 12, 9, 7) in place of "about 14".

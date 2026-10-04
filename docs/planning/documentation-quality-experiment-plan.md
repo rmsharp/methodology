@@ -403,6 +403,8 @@ machine; `overhead-replay/` only. **Cannot enforce:** that a real model behaves 
 
 ### P2: Pilot, with a cap
 
+**Status (S259, 2026-10-04): DONE at the operator's $10 cap; spent $2.4781 (4 probes $0.7696, 31 rating calls $1.7085); no cap hit. Report: [`P2_REPORT.md`](overhead-replay/pilot/doc-evidence/P2_REPORT.md); rows in [`pilot/doc-probe/`](overhead-replay/pilot/doc-probe/).** A probe cost $0.16 to $0.24 (mean $0.19, not the $1 above); a rating call $0.044 to $0.066; 36 claims checked in the four cold reports, none wrong; the model rater scored every honest record 8 of 8 and missed the `vague` defect on all three records. P3 restated at about $9 to $11 (report §5); D6/D7 and three harness defects (report §4) are open before it.
+
 **Done when:** cold probes on **four** saved end states (one v3.0, one v3.7, one v3.8-text, and a git-only control on one of them), and
 the rater run once on the planted-defect set and once on the pilot records with its arm-guess accuracy reported; every verdict
 hand-read; a short report with the **real cost per probe and per rating** and whether the probe is cheap enough for P3.
