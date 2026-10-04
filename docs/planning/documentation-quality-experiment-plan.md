@@ -369,6 +369,16 @@ is saved beside the evidence.
 **Surface:** as P1a. **Cannot enforce:** M3 and M4 (no saved run has a cold probe or a live target). **Cost: $0.**
 **STOP:** at the end, return to the operator with the first answer and the decisions it informs (D3, D4); do not start P2a.
 
+**Status (S257, 2026-10-04): DONE, $0, no model run, no distributed file touched, the frozen scorer unchanged.** `doc_score.py` (sha-256 `eaec3a2ec9c6`) was run **once** over the 26 saved runs of the three contrast sets by
+[`p1b_score.py`](overhead-replay/p1b_score.py) (20 tests, 10 mutants all killed); 23 were scored (v3.0 n=5, v3.7 n=6, v3.8-text n=12). Scores: [`p1b-scores.json`](overhead-replay/pilot/doc-evidence/p1b-scores.json); the report,
+hand-reads and the stop: [`P1B_REPORT.md`](overhead-replay/pilot/doc-evidence/P1B_REPORT.md); every table reproduces from `python3 docs/planning/overhead-replay/p1b_score.py report .../p1b-scores.json`.
+**First answer:** M1 0.984 / 0.990 / 0.990 and M2(a) 1.000 / 0.967 / 1.000, no difference and at or near the ceiling (**H1 met; H2 not met on M2(a)**: v3.0 names all its commits); on hand-read 11 of the 13 M1 failures and 2 of the 3 M2(c) flags are scorer false positives, and one run (`v3.0-r4`) truly says done on a task the answer key fails. The versions differ in what the record
+holds (51 and 56 checkable references per run against 33) and in commits to the pin (3.4, 5.6, 5.2), not in accuracy. **Where this differs from the text above:**
+* **The pooling check can only be a screen.** No arm appears in two batches except R1, so arm and batch are confounded; the one within-arm contrast (R1, old reply against fixed reply) is +44% cost (p = 0.07), larger than any between-arm cost difference. v3.8-text may be compared on M1 and M2 as a screen and **not on process rows**; new v3.8 task runs are not forced.
+* **"Commits" in the process rows are commits to the pin, from the scorer's range**, not the manifest's count to HEAD (`v3.7-r2` has 13 commits past its pin); the cost rows use S237's cost-valid set (v3.7 rep 5 out).
+* **The two S237 override runs' final messages were read** (S256 gotcha 6): each is the first close-out's own report.
+* **No amendment was made.** Five false-positive families are listed in the report for the operator's word; the recommendation is not to amend (the hand-read what-if is 1.000, 1.000, 0.997, so no conclusion moves).
+
 ### P2a: Build the probe ($0, no model tokens)
 
 **Done when:** (a) the **driver mode** that rebuilds a clone of an end state from its bundle at the pinned sha, checks the shas, runs

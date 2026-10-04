@@ -4050,6 +4050,13 @@ runs, so **v3.0 n=5, v3.7 n=6, v3.8-text n=12 (not 13), T-remove n=15**; and the
 v3.0, v3.7 and v3.8-text runs once with the frozen scorer and ends in a stop for the operator (D3, D4 reconsidered with the free result). P1b needs his go; `python3 doc_score.py` and
 `doc_evidence.py verify` reproduce what P1a did. Plan status and its deviations: §5 P1a; §10 row 34.
 
+**Status (S257, 2026-10-04): P1b is DONE; $0, no model run, the frozen scorer unchanged. It supersedes the S256 paragraph's "next: P1b"; the next phase is P2a ($0, builds the probe) and needs his go.** `p1b_score.py` (20 tests,
+10 mutants) ran the frozen `doc_score.py` once over the 26 runs of the three contrast sets (23 scored: v3.0 n=5, v3.7 n=6, v3.8-text n=12). **Result: a null at the ceiling on the two mechanical measures.** M1 0.984 / 0.990 / 0.990
+(p 0.62 to 0.97), M2(a) 1.000 / 0.967 / 1.000, no stubs left in v3.7 or v3.8-text; on hand-read 11 of the 13 M1 failures and 2 of the 3 M2(c) flags are scorer false positives and one run (`v3.0-r4`) truly claims done on a
+failing task. The versions differ in what a record holds (51 and 56 checkable references per run against 33) and in commits to the pin (3.4, 5.6, 5.2), not in accuracy. Pooling: v3.8-text compares on M1 and M2 as a screen, not on
+process rows (R1 old reply against fixed reply is +44% cost). **Open for his word:** whether to amend the scorer (recommendation: no; the what-if is 1.000, 1.000, 0.997) and D3/D4: whether to continue to P2a and a P2 pilot given the
+free result. Files: `overhead-replay/p1b_score.py`, `tests_p1b.py`, `pilot/doc-evidence/p1b-scores.json`, `P1B_REPORT.md`, `p1b-report.txt`; plan §5 P1b status.
+
 ---
 
 **BL-96 — `bin/tests.sh` Test 9's skip never reaches the suite's skip count, so a machine without `gh` gets a green summary that

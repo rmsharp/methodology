@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S257 — P1b report: the saved runs scored once, a null at the ceiling on M1 and M2(a); plan, backlog and BL-94 detail updated
+
+`pilot/doc-evidence/P1B_REPORT.md` (new) is the plan's P1b report: each measure by arm with its spread, the covariates, the M1 ceiling check, the section 2.4 expectations marked (H1 met, H2 not met on M2(a), H3 to H5 not run), the pooling check (v3.8-text compares on M1 and M2 as a screen and not on process rows), the section 3.8 sigma and n, and the hand-reads of all 13 M1 failures, the one unnamed commit and every M2(c) flag (11 of the 13 failures and 2 of the 3 flags are scorer false positives; one run, `v3.0-r4`, truly claims done on a failing task). No amendment to the frozen scorer was made; five false-positive families are listed for the operator's word with the recommendation not to amend. The plan's section 5 P1b status, the `BACKLOG.md` row and the `BACKLOG-DETAIL.md` BL-94 status now say P1b is done and P2a is next. Cost $0; nothing sent upstream.
+
 ### 2026-10-04 · [BL-94] S257 — P1b checkpoint 2: the driver's tests, its report, and the saved report text
 
 `tests_p1b.py` (new, 20 tests: the inputs and the freeze and overwrite refusals, the summaries, the committed scores' shape) with 10 mutants of `p1b_score.py` each run on an unbroken copy first, all killed after two tests were added for the two that survived (the power constant, the pooling span's use of cost-invalid runs). `p1b_score.py` now reports the process rows on S237's cost-valid set and commits to the pin, a covariate table (CLI version; ratchet hook and close-out reply inside v3.8-text) and what the M4 key builder found; `pilot/doc-evidence/p1b-report.txt` is its output over the saved scores. No score was re-run: the scores are those of `598319d`.
