@@ -1,0 +1,7 @@
+{
+ "file": "doc_score.py",
+ "frozen": "2026-10-03",
+ "rule": "Frozen at the end of BL-94 P1a (plan section 4 item 1), after the smoke test and the T-remove calibration, before the v3.0, v3.7 and v3.8-text runs are scored. A defect found later is fixed only with the operator's word; everything is re-scored; both versions of the result are reported. tests_doc_score.py fails if doc_score.py differs from this hash.",
+ "session": "S256",
+ "sha256": "eaec3a2ec9c6f695df761e6727993feb049dd1d6bbc64537f3927c25dc71a9ce"
+}

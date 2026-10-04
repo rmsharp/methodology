@@ -674,6 +674,61 @@ class M4Tests(unittest.TestCase):
         self.assertEqual((plain["ledger_finding_reported"], with_ledger["ledger_finding_reported"]), (False, True))
 
 
+FROZEN = os.path.join(HERE, "doc_score.frozen")
+START_SHA = "542ae00"        # this repository's HEAD when S256 began, before any P1a work
+
+
+def frozen_sha():
+    import json
+    with open(FROZEN) as f:
+        return json.load(f)["sha256"]
+
+
+def sha256_of(path):
+    import hashlib
+    with open(path, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+
+class FreezeTests(unittest.TestCase):
+    """Plan section 4, item 1: the scorer is frozen at the end of P1a. An edit after the freeze needs the operator's word, and then
+    everything is re-scored and both versions reported, so this test failing is the signal to stop and ask, not to update the hash."""
+
+    def test_the_scorer_is_the_frozen_one(self):
+        self.assertEqual(sha256_of(SCORER), frozen_sha(), "doc_score.py differs from doc_score.frozen: stop and ask the operator (plan section 4, item 1)")
+
+    def test_a_changed_copy_is_not_the_frozen_one(self):
+        d = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, d, ignore_errors=True)
+        copy = os.path.join(d, "doc_score.py")
+        shutil.copy(SCORER, copy)
+        self.assertEqual(sha256_of(copy), frozen_sha())
+        with open(copy, "a") as f:
+            f.write("\n")
+        self.assertNotEqual(sha256_of(copy), frozen_sha())          # the comparison can refuse
+
+    def test_the_earlier_frozen_scorers_are_untouched(self):
+        have = subprocess.run(["git", "-C", REPO_ROOT, "cat-file", "-e", START_SHA + "^{commit}"], capture_output=True).returncode == 0
+        if not have:
+            self.skipTest(f"{START_SHA} is not in this clone")
+        out = subprocess.run(["git", "-C", REPO_ROOT, "diff", "--stat", f"{START_SHA}..HEAD", "--",
+                              "docs/planning/overhead-replay/erosion_score.py", "docs/planning/overhead-replay/remove_score.py"],
+                             capture_output=True, text=True).stdout
+        self.assertEqual(out.strip(), "")
+
+    def test_no_distributed_file_changed_since_the_session_began(self):
+        have = subprocess.run(["git", "-C", REPO_ROOT, "cat-file", "-e", START_SHA + "^{commit}"], capture_output=True).returncode == 0
+        if not have:
+            self.skipTest(f"{START_SHA} is not in this clone")
+        sys.path.insert(0, os.path.join(REPO_ROOT, "bin"))
+        import _manifest
+        distributed = {src for src, _dest, _disposition in _manifest.DISTRIBUTION}
+        names = subprocess.run(["git", "-C", REPO_ROOT, "diff", "--name-only", f"{START_SHA}..HEAD"], capture_output=True, text=True).stdout.split()
+        self.assertTrue(names)                                     # the session did change files, so an empty list would mean the check read nothing
+        self.assertTrue(distributed)
+        self.assertEqual([n for n in names if n in distributed], [])
+
+
 class CliTests(unittest.TestCase):
     """P1b's rule is that every figure reproduces from one command, so the commands are tested as commands."""
 
