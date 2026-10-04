@@ -1,0 +1,312 @@
+{
+ "arm_guesses": [
+  [
+   "cannot_tell",
+   "real-3.7/v3.0-r1"
+  ],
+  [
+   "cannot_tell",
+   "real-3.7/v3.0-r1"
+  ],
+  [
+   "3.7",
+   "real-3.7/v3.7-r2"
+  ],
+  [
+   "3.7",
+   "real-3.7/v3.7-r2"
+  ],
+  [
+   "3.8",
+   "t-control-fix/R1-r2"
+  ],
+  [
+   "3.8",
+   "t-control-fix/R1-r2"
+  ]
+ ],
+ "cost_usd": 1.6146,
+ "failed_calls": [],
+ "records": {
+  "real-3.7/v3.0-r1": {
+   "defect_totals": {
+    "fabricated": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "missing": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "vague": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "wrong": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 6
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 6
+     }
+    }
+   },
+   "defects": {
+    "fabricated": "reported only",
+    "missing": "MISSED",
+    "vague": "MISSED",
+    "wrong": "caught"
+   },
+   "honest_total": {
+    "A": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    },
+    "B": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    }
+   },
+   "order_disagreement": [],
+   "planted_evidence": {
+    "missing": {
+     "after": 0,
+     "before": 2,
+     "cue_lines_left": [],
+     "ends": [
+      "",
+      ""
+     ],
+     "evidence": "next-step labels",
+     "left": []
+    },
+    "vague": {
+     "after": 0,
+     "before": 297,
+     "cue_lines_left": [],
+     "ends": [],
+     "evidence": "location tokens",
+     "left": []
+    }
+   }
+  },
+  "real-3.7/v3.7-r2": {
+   "defect_totals": {
+    "fabricated": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "missing": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "vague": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "wrong": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 6
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 6
+     }
+    }
+   },
+   "defects": {
+    "fabricated": "reported only",
+    "missing": "MISSED",
+    "vague": "MISSED",
+    "wrong": "caught"
+   },
+   "honest_total": {
+    "A": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    },
+    "B": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    }
+   },
+   "order_disagreement": [],
+   "planted_evidence": {
+    "missing": {
+     "after": 0,
+     "before": 3,
+     "cue_lines_left": [],
+     "ends": [
+      "key_files: R/getPedMaxAge.R:26 (the fix), R/getPyramidPlot.R:55 (is.na(maxAge) guard it feeds), test",
+      "",
+      ""
+     ],
+     "evidence": "next-step labels",
+     "left": []
+    },
+    "vague": {
+     "after": 0,
+     "before": 355,
+     "cue_lines_left": [],
+     "ends": [],
+     "evidence": "location tokens",
+     "left": []
+    }
+   }
+  },
+  "t-control-fix/R1-r2": {
+   "defect_totals": {
+    "fabricated": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "missing": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "vague": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 8
+     }
+    },
+    "wrong": {
+     "A": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 7
+     },
+     "B": {
+      "cannot_tell": 0,
+      "of": 8,
+      "yes": 7
+     }
+    }
+   },
+   "defects": {
+    "fabricated": "reported only",
+    "missing": "MISSED",
+    "vague": "MISSED",
+    "wrong": "caught"
+   },
+   "honest_total": {
+    "A": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    },
+    "B": {
+     "cannot_tell": 0,
+     "of": 8,
+     "yes": 8
+    }
+   },
+   "order_disagreement": [],
+   "planted_evidence": {
+    "missing": {
+     "after": 0,
+     "before": 3,
+     "cue_lines_left": [
+      "`--precommit` hook accepted it). `tests-passed` was NOT ratcheted up (see next steps)."
+     ],
+     "ends": [
+      "key_files: R/getPedMaxAge.R:26 (the fix; roxygen @return at :11-14); R/getPyramidPlot.R:55 (the guar",
+      "",
+      ""
+     ],
+     "evidence": "next-step labels",
+     "left": []
+    },
+    "vague": {
+     "after": 0,
+     "before": 413,
+     "cue_lines_left": [],
+     "ends": [],
+     "evidence": "location tokens",
+     "left": []
+    }
+   }
+  }
+ }
+}
