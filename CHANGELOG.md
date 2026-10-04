@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] S257 — fill the receipt's commit slot with the close-out sha
+
+`f5d6d4fc65f2` entered in the S257 receipt's `commit:` slot (12 characters, with hex letters, per the S253 slot defect). The `quality_ratchet:` field carries S256's figures as a placeholder so `check-handoff` reads a citation; the first gate run on the close-out tree read 10/12 (`check-handoff-all` red on the missing citation, and a second red, `tests-sh-failed` 1, not yet attributed), and the confirming run follows in the next entry or commit.
+
 ### 2026-10-04 · [BL-94] S257 close-out — P1b done, the frozen scorer run once over the saved runs, a null at the ceiling on M1 and M2(a), $0
 
 The S257 claim above is complete. The deliverable was P1b of the documentation-quality plan: `doc_score.py` (unchanged, `eaec3a2ec9c6`) over the 26 saved runs of `real-3.7`, `t-control` and `t-control-fix`, 23 scored (v3.0 n=5, v3.7 n=6, v3.8-text n=12), by `p1b_score.py`; report `pilot/doc-evidence/P1B_REPORT.md`. **Result:** M1 0.984 / 0.990 / 0.990 and M2(a) 1.000 / 0.967 / 1.000, no difference and at or near the ceiling (H1 met, H2 not met on M2(a)); 11 of the 13 M1 failures and 2 of the 3 M2(c) flags are scorer false positives and `v3.0-r4` truly says done on a failing task; the arms differ in what the record holds (51 and 56 checkable references per run against 33) and in commits to the pin (3.4, 5.6, 5.2), not in accuracy; v3.8-text compares on M1 and M2 as a screen but not on process rows. No scorer amendment was made (the report recommends none). Ran before the claim, as their own actions: the HANDOFFS trim (`f512578`) and its fold (`e768491`). The receipt (`HANDOFFS.md`) carries 8/10 for this session and 9/10 for S256's handoff. Phase 3C appended no fork learning, so no retirement is owed. Cost $0; nothing git-pushed, nothing sent to KJ5HST/methodology, no distributed file changed. Next: his decisions (P2a or stop; the scorer amendment; BL-97's open choice), then P2a only on his go.
