@@ -56,8 +56,26 @@ class RoundTrip(unittest.TestCase):
         self.assertNotIn("tree", r)                      # the perishable path is kept only as tree_was
         self.assertEqual(self.m["bundle"]["prerequisites"], [self.start])
 
+    def test_manifest_names_what_a_bundle_cannot_carry(self):
+        self.assertEqual((self.m["runs"][0]["uncommitted_tracked"], self.m["runs"][0]["untracked"]), ([], []))
+        write(self.tree, "f0.txt", "edited and not committed")
+        write(self.tree, "scratch.log", "untracked")
+        m = D.build(self.out, self.project, [run_for(self.tree, self.start)])
+        self.assertEqual((m["runs"][0]["uncommitted_tracked"], m["runs"][0]["untracked"]), (["f0.txt"], ["scratch.log"]))
+
     def test_verify_passes_on_the_untouched_bundle(self):
         self.assertEqual(D.verify(self.out, self.project), ["t/x-r1"])
+
+    def test_a_relative_output_directory_is_resolved_against_the_callers_directory(self):
+        here = os.getcwd()
+        parent = tempfile.mkdtemp(prefix="evrel-")
+        os.chdir(parent)
+        try:
+            D.build("rel/out", self.project, [run_for(self.tree, self.start)])
+            self.assertTrue(os.path.isfile(os.path.join(parent, "rel", "out", "runs.bundle")))
+            self.assertEqual(D.verify("rel/out", self.project), ["t/x-r1"])
+        finally:
+            os.chdir(here)
 
     def test_verify_refuses_a_changed_bundle(self):
         with open(os.path.join(self.out, "runs.bundle"), "ab") as f:

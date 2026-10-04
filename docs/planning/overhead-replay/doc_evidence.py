@@ -74,6 +74,16 @@ def cli_versions(path):
     return seen
 
 
+def worktree_state(tree):
+    """(tracked files modified or deleted but uncommitted, untracked files). A bundle holds commits only, so this is the part of a
+    tree it cannot carry; the manifest says so rather than leave it unstated."""
+    out = subprocess.run(["git", "-C", tree, "status", "--porcelain"], capture_output=True, text=True, check=True).stdout
+    modified, untracked = [], []
+    for line in out.splitlines():
+        (untracked if line.startswith("??") else modified).append(line[3:])
+    return sorted(modified), sorted(untracked)
+
+
 def install_commit(tree, start):
     """The harness's own commit: first by author `Fixture` with the install subject, after the project's start commit."""
     for line in git(tree, "log", "--reverse", "--format=%H%x1f%an%x1f%s", f"{start}..HEAD").splitlines():
@@ -112,13 +122,16 @@ def describe(r, project):
     pin = git(tree, "rev-parse", PIN_OVERRIDES[r["id"]]) if r["id"] in PIN_OVERRIDES else head
     if not is_ancestor(tree, pin, head):
         raise SystemExit(f"{r['id']}: pin {pin} is not an ancestor of HEAD")
+    modified, untracked = worktree_state(tree)
     return {**r, "start": start, "head": head, "pin": pin, "pin_rule": "override" if r["id"] in PIN_OVERRIDES else "head",
+            "uncommitted_tracked": modified, "untracked": untracked,
             "install": install_commit(tree, start),
             "commits_after_start": int(git(tree, "rev-list", "--count", f"{start}..{head}")),
             "cli": cli_versions(r["transcript"])}
 
 
 def build(outdir, project, run_list=None):
+    outdir = os.path.abspath(outdir)             # git runs in a scratch repository, so a relative path would resolve there
     os.makedirs(outdir, exist_ok=True)
     described = [describe(r, project) for r in (runs() if run_list is None else run_list)]
     scratch = tempfile.mkdtemp(prefix="doc-evidence-")
@@ -147,6 +160,7 @@ def build(outdir, project, run_list=None):
 
 def verify(outdir, project):
     """Exit non-zero (raise SystemExit) on any mismatch; return the list of run ids rebuilt."""
+    outdir = os.path.abspath(outdir)
     manifest = json.load(open(os.path.join(outdir, "manifest.json")))
     bundle = os.path.join(outdir, manifest["bundle"]["file"])
     if sha256(bundle) != manifest["bundle"]["sha256"]:

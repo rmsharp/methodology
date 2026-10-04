@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-94] S256 — P1a (a) checkpoint 2: uncommitted state in the manifest; relative output path fixed
+
+P1a (a), checkpoint 2 of 3: `doc_evidence.py` records each tree's uncommitted state in the manifest (`uncommitted_tracked`, `untracked`) because a bundle holds commits only; `build` and `verify` now resolve a relative output directory against the caller's directory (found by running `build` into the repository path: git ran in the scratch repository and could not create the bundle there; regression test added and seen failing on a copy without the fix). 14 tests. The check found that 38 of 41 trees have no tracked file modified, and the 3 that do (`real-3.7/v3.7-r1`, `real-3.7/v3.0-r2`, `t-control-fix/R1-r1`) are the runs cut off before any close-out. Evidence files are the next checkpoint.
+
 ### 2026-10-03 · [BL-94] S256 — P1a (a) checkpoint 1: the evidence tool and its tests
 
 P1a (a), checkpoint 1 of 2: `docs/planning/overhead-replay/doc_evidence.py` and `tests_doc_evidence.py` (12 tests). The tool fetches every saved run's HEAD from its tree into a scratch repository, adds a pin ref where a run went on past its first close-out, and writes one git bundle plus a manifest; `verify` proves the bundle against the project repository and rebuilds each run's head and pin. The range cannot start at the harness's install commit, which is not in `nprcgenekeepr`, so the bundle's prerequisites are the project's own start commits (`879503cce`, `402a6b5b7`). Pins: HEAD for every run except `real-3.7/v3.7-r2` (`7b9bd618`), `real-3.7/v3.0-r3` (`b15ae1c5`) and `t-remove/R0-r5` (`3aa6c2b9`, S555's close-out). Tests use synthetic repositories only; the first run of the "project lacks the prerequisite" test passed for the wrong reason (the harness pins author and date, so the "other" project had the identical start commit) and a second test passed on a missing sha rather than a non-ancestor; both were rewritten to fail for the stated cause. The evidence itself is the next checkpoint. No model run, no spend, no distributed file touched.
