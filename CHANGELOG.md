@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] S257 — the gate run confirmed: 12/12 pass, results `3f5791d93dac`
+
+`quality_ratchet.py --run` on the committed tree `4d651f9`: 12/12 pass, 0 fail, 0 unmeasured, results `3f5791d93dac`, manifest `fd435a4f8fab` (the suite inside it: 362 passed, 0 failed). The receipt's `quality_ratchet:` field now says so in place of the provisional wording. The first gate run, on `f5d6d4f` before a citation was entered, read 10/12; one of its two reds was `check-handoff-all` on the missing citation, the other `tests-sh-failed` 1 was not attributed to a named test (the suite output of a gate run is not kept) and did not recur.
+
 ### 2026-10-04 · [ad hoc] S257 — fill the receipt's commit slot with the close-out sha
 
 `f5d6d4fc65f2` entered in the S257 receipt's `commit:` slot (12 characters, with hex letters, per the S253 slot defect). The `quality_ratchet:` field carries S256's figures as a placeholder so `check-handoff` reads a citation; the first gate run on the close-out tree read 10/12 (`check-handoff-all` red on the missing citation, and a second red, `tests-sh-failed` 1, not yet attributed), and the confirming run follows in the next entry or commit.
