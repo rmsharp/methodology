@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S258 — the gate run confirmed 12/12, results `3f5791d93dac`; the receipt cites it and its commit
+
+`quality_ratchet.py --run` on the committed close-out tree `e25cf19`: 12 of 12 pass, `tests-sh-passed` 362 (floor 343, not tightened), results `3f5791d93dac`, manifest `fd435a4f8fab` (the results hash is a function of the gate values, so it equals S257's). The receipt's placeholder citation and its `commit:` slot now carry the real values. The auto-memory notes (BL-94 state, the absence-claim and zsh traps) were updated outside the repository.
+
 ### 2026-10-04 · [BL-94] S258 close-out — P2a done: the cold-start probe is built and tested at $0 (the claim above lists the commits)
 
 Deliverable: P2a of `docs/planning/documentation-quality-experiment-plan.md` §5, report `docs/planning/overhead-replay/pilot/doc-evidence/P2A_REPORT.md`. **State:** `probe.py` (43 tests, 35 of 35 mutants killed) rebuilt all 38 rebuildable saved runs as end state and git-only control with HEAD equal to the pinned sha (3 refused by design); the R suite at `879503cce` takes 120.8 s; a probe should cost about $0.35 against the plan's $1 (a floor, from the saved runs' first stop); the rater, four planted defects and a six-record packet for him are built (36 tests, 32 of 32 mutants); no M3 task exists in the project's history, one can be constructed; nothing was run against a model and nothing was spent. **His decisions at the stop:** P2 at the $10 cap (starts when he says go in that session), a six-record packet, M3 deferred until after P2. Three claims of mine were wrong when first written and are corrected in this ledger and the report (see "a correction to my own checkpoint 1 and 3 entries"). Previous handoff scored 9/10, self 7/10. Phase 3C appended no fork learning, so no retirement is owed. Nothing pushed, nothing sent to `KJ5HST/methodology`; PR #92 open with no reply. Next: P2, on his go.
