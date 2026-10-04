@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S259 — P2 checkpoint 3: the v3.8-text probe and its git-only control, reports and stream logs
+
+`pilot/doc-probe/t-control-fix--R1-r2/` and `t-control-fix--R1-r2+git-only/`, each `report.md` and `stream.jsonl`. Hand-read, every checkable claim verified against the rebuilt state (about 14 more: `CHANGELOG.md` 910,153 B, `SESSION_NOTES.md` 3,863,018 B, `passed=3747 failed=1 warnings=0 files=252`, no `quality-gates` line in `.Rbuildignore`, the "hidden files" NOTE, the 196,608 B figure in `methodology_trim.py`; for the control the restore commit `602a8b5c`, `SESSION_NOTES.md` back at S313, the only `handoff` block in `HANDOFFS.md` being the format example, the `test-warnings` gate threshold 0 after the commit "tighten test-warnings gate from 7 to 0"). No wrong claim in either. **The control's cold session saw the extra restore commit in `git log`, named it, and made it its first recommendation ("confirm what the HEAD revert was meant to do")**; the documented arm's session recommended a concrete small task from the handoff. That is the named confound (S258 gotcha 5) observed, not only predicted.
+
 ### 2026-10-04 · [BL-94] S259 — P2 checkpoint 2: the v3.0 and v3.7 probes' reports and stream logs
 
 `pilot/doc-probe/real-3.7--v3.0-r1/` and `real-3.7--v3.7-r3/`, each `report.md` (the cold session's Phase 0 report, 2,414 and 2,368 characters) and `stream.jsonl` (the only per-stop record). Both reports were hand-read and their claims checked against the rebuilt end state: every commit hash named exists, the install commit and both ledger frontiers (`aeebcdec` on v3.7) are as stated, 1,805 commits, the untracked `dashboard_history.jsonl` and S314's note to decide on it, `test_getVersion.R` as an environment failure, and the newest `HANDOFFS.md` receipt `status: complete` (the first `status:` match in that file is the format example). No wrong claim found in about 14 checked. Each ended with no task started and a question, one stop, as scripted.
