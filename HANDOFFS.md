@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S258
+date: 2026-10-04
+status: pending
+active_task: BL-94 P2a: build the cold-start probe ($0, no model tokens), per `docs/planning/documentation-quality-experiment-plan.md` section 5 P2a (items a to f): the driver mode tested against the fake `claude` before any real launch, the R suite at `879503cce` timed once, the probe's budget from a saved transcript, the rater protocol and planted-defect set (ask him before building the rater: D5 may mean he rates), the M3 task search, and per-session caps stated. Ends in a stop for his P2 spend decision; P2 is its own session and its own go.
+```
+
+```handoff
 session: S257
 date: 2026-10-04
 status: complete

@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S258 claim (in progress) — P2a: build the cold-start probe
+
+Operator said `go` and chose BL-94 P2a from the Phase 0 picker (the option offered as recommended; the other was the BL-95 resync plan). Deliverable: P2a of `docs/planning/documentation-quality-experiment-plan.md` section 5, which costs $0 and runs no model; it ends in a stop, and the P2 spend is his to decide at its end. Phase 0: 0 undocumented commits at both frontiers, the ratchet citation matches `.quality-gates-results.json` (results `3f5791d93dac`), PR #92 open with no reply and no other open PR or issue, 55 ahead of `origin/main` and 102 behind `upstream/main`, dashboard 72/100, the BL-79 hook still not installed. The owed HANDOFFS trim (`cdc14ee`) and fold (`2f5828e`) ran first as their own actions. `CHANGELOG: pending` until Phase 3F.
+
 ### 2026-10-04 · [ad hoc] S258 — fold the fifth 2026-10-03 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`cdc14ee`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-03), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S257, S256); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0. Ran after the Phase 0 report and the operator's choice of BL-94 P2a, before the claim.
