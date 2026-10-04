@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-03-6.md` (1 record(s), 40,235 B → 28,671 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-03 → 2026-10-03) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-03-6.md`](docs/archive/HANDOFFS-through-2026-10-03-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-03-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-03-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,235 B → 28,671 B (−28.7%).
+
 ### 2026-10-04 · [BL-94] S258 — the gate run confirmed 12/12, results `3f5791d93dac`; the receipt cites it and its commit
 
 `quality_ratchet.py --run` on the committed close-out tree `e25cf19`: 12 of 12 pass, `tests-sh-passed` 362 (floor 343, not tightened), results `3f5791d93dac`, manifest `fd435a4f8fab` (the results hash is a function of the gate values, so it equals S257's). The receipt's placeholder citation and its `commit:` slot now carry the real values. The auto-memory notes (BL-94 state, the absence-claim and zsh traps) were updated outside the repository.
