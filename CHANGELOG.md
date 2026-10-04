@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S260 — the mutant runner rejects a mutant that does not compile
+
+`mutants_p2a.py`: `run_one` compiles each mutated source and reports a SyntaxError as BAD MUTANT (not killed), because every test "kills" it and it proves nothing; the S258 mutant "the record is not between markers" was exactly that (found at S260 by compiling all 153 mutants, repaired in `f067add`). Shown on a deliberate syntax error and on a good mutant; `mutants_p2a.py rater` still reads 72 of 72 killed. This is the mechanical form of the lesson, so no fork-learning row is appended for it. $0.
+
 ### 2026-10-04 · [BL-94] S260 — backlog row and detail status follow the four harness fixes
 
 `BACKLOG.md`'s BL-94 row no longer says three harness defects come before P3 (D6 and D7 do; S260 fixed the four at $0); `BACKLOG-DETAIL.md` gets an S260 status paragraph that supersedes S259's "three harness defects, not fixed" and says what was not done (the rater is not re-run on the rebuilt defects; P3 is its own go-ahead). BL-94 stays open.

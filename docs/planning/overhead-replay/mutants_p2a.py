@@ -5,8 +5,8 @@
 
 Each mutant is one text replacement in a COPY of this directory's modules (the real files are never touched). A mutant is KILLED when
 the target's test file (tests_probe.py, tests_rater.py) exits non-zero against it. The unmutated copy must pass first, or nothing here
-means anything. A mutant whose pattern does not occur exactly once is reported BAD MUTANT and counts as not killed. Exit 0 only if every
-mutant is killed.
+means anything. A mutant whose pattern does not occur exactly once, or whose mutated source does not compile (a syntax error is "killed" by
+every test and proves nothing: S260 found one from S258), is reported BAD MUTANT and counts as not killed. Exit 0 only if every mutant is killed.
 """
 import argparse, concurrent.futures, glob, os, shutil, subprocess, sys, tempfile
 sys.dont_write_bytecode = True
@@ -185,7 +185,12 @@ def run_one(args):
     text = open(path).read()
     if text.count(old) != 1:
         return name, "BAD MUTANT", f"pattern occurs {text.count(old)} times"
-    open(path, "w").write(text.replace(old, new))
+    mutated = text.replace(old, new)
+    try:
+        compile(mutated, module, "exec")
+    except SyntaxError as e:
+        return name, "BAD MUTANT", f"does not compile ({e.msg}): every test would kill it, so it proves nothing"
+    open(path, "w").write(mutated)
     p = subprocess.run([sys.executable, tests], cwd=src_dir, capture_output=True, text=True, env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"))
     tail = [l for l in p.stderr.splitlines() if l.startswith(("FAIL:", "ERROR:"))][:2]
     return name, "killed" if p.returncode != 0 else "SURVIVED", "; ".join(tail)
