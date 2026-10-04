@@ -74,6 +74,7 @@ RUNNER_PENDING = "# Session Runner\nWrite a receipt with `status: pending`; mark
 RUNNER_PLAIN = "# Session Runner\nWrite a stub to SESSION_NOTES.md first.\n"
 EXAMPLE = "```handoff\nsession: S<N>\ndate: YYYY-MM-DD\nstatus: <pending | complete>\n```\n"
 ORPHAN = "```handoff\nsession: S0\ndate: 2026-01-01\nstatus: pending\nactive_task: a start-state stub nobody finished\n```\n"
+HISTORIC = "```handoff\nsession: S-1\ndate: 2025-12-31\nstatus: complete\nactive_task: an earlier session closed out\n```\n"
 
 
 def fixture(pending_runner=True, notes=None):
@@ -86,7 +87,7 @@ def fixture(pending_runner=True, notes=None):
     fx.commit("start state")
     fx.write("SESSION_RUNNER.md", RUNNER_PENDING if pending_runner else RUNNER_PLAIN)
     if pending_runner:
-        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n" + ORPHAN)
+        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n" + ORPHAN + HISTORIC)
     base = fx.commit("Install methodology arm v9", author="Fixture")
     return fx, base
 
@@ -231,10 +232,10 @@ class ReceiptTests(unittest.TestCase):
 
 
 class M1Tests(unittest.TestCase):
-    def run_m1(self, fx, base, lines, measured=None):
+    def run_m1(self, fx, base, lines, measured=None, final=""):
         fx.write("SESSION_NOTES.md", "".join(l + "\n" for l in lines))
         fx.commit("docs: notes")
-        rec = S().record(fx.d, base, fx.head())
+        rec = S().record(fx.d, base, fx.head(), "\n".join(final) if isinstance(final, list) else final)
         return S().score_m1(fx.d, base, fx.head(), rec, measured)
 
     def test_a_cited_sha_that_exists_and_is_reachable_verifies(self):
@@ -284,8 +285,32 @@ class M1Tests(unittest.TestCase):
 
     def test_absent_path_stated_removed_verifies(self):
         fx, base = fixture()
-        m = self.run_m1(fx, base, ["Removed `R/gone.R` and its test.", "Also `R/never.R` is the helper."])
+        m = self.run_m1(fx, base, ["Removed `R/helper.R` and its test.", "an unrelated line", "another unrelated line", "Also `R/never.R` is the helper."])
         self.assertEqual((m["paths"]["checkable"], m["paths"]["verified"], m["paths"]["stated_removed"]), (2, 1, 1))
+
+    def test_a_wrapped_list_inherits_the_removal_from_its_neighbours(self):
+        fx, base = fixture()
+        m = self.run_m1(fx, base, ["The helpers are removed together with their tests:", "`R/helperA.R`, `R/helperB.R`,", "`tests/test_helper.R`", "an unrelated line",
+                                   "another unrelated line", "yet another", "`R/never.R` stands alone"])
+        self.assertEqual((m["paths"]["checkable"], m["paths"]["verified"], m["paths"]["stated_removed"]), (4, 3, 3))
+
+    def test_git_rm_and_stale_are_statements_that_a_path_is_gone(self):
+        fx, base = fixture()
+        m = self.run_m1(fx, base, ["`git rm` of `R/helper.R`", "pad one", "pad two", "`R/old.R:21` -- stale, the function never had a guard"])
+        self.assertEqual((m["paths"]["verified"], m["anchors"]["verified"]), (1, 1))
+
+    def test_a_slash_between_two_files_is_two_paths(self):
+        refs = S().extract_refs([("x", "stubs in SESSION_NOTES.md/HANDOFFS.md and docs/archive/old.md")])
+        self.assertEqual(sorted(refs["paths"]), ["HANDOFFS.md", "SESSION_NOTES.md", "docs/archive/old.md"])
+
+    def test_tool_output_files_are_not_checkable(self):
+        refs = S().extract_refs([("x", "Dashboard run: `dashboard.html`, dashboard_history.jsonl and .quality-gates-results.json were written; see `dashboard.html:3`.")])
+        self.assertEqual((refs["paths"], refs["anchors"]), ({}, {}))
+
+    def test_a_digest_is_not_a_sha(self):
+        refs = S().extract_refs([("x", "4/4 gates pass (results `2bd8b5b3aaee`, manifest `a06715fc6a9b`) and quality_ratchet: results 4f6ddd376778"),
+                                 ("x", "committed as `2bd8b5b3aaee`")])
+        self.assertEqual(sorted(refs["shas"]), ["2bd8b5b3aaee"])             # only the one that is cited as a commit
 
     def test_bare_filename_resolves_by_basename(self):
         fx, base = fixture()
@@ -327,19 +352,55 @@ class M1Tests(unittest.TestCase):
 
     def test_anchor_to_a_missing_file(self):
         fx, base = fixture()
-        m = self.run_m1(fx, base, ["See `R/nope.R:3`.", "Deleted `R/old.R:3` in this change."])
+        m = self.run_m1(fx, base, ["See `R/nope.R:3`.", "pad one", "pad two", "Deleted `R/old.R:3` in this change."])
         self.assertEqual((m["anchors"]["checkable"], m["anchors"]["verified"]), (2, 1))
 
     def test_a_stated_count_equals_the_measurement_or_is_defective(self):
         fx, base = fixture()
-        m = self.run_m1(fx, base, ["Full suite: 3751 pass / 1 fail / 0 warn", "Later: 12 failed."],
-                        {"passed": 3751, "failed": 1, "warnings": 0})
-        self.assertEqual((m["counts"]["checkable"], m["counts"]["verified"]), (4, 3))
+        m = self.run_m1(fx, base, ["a note"], {"passed": 3751, "failed": 1, "warnings": 0},
+                        final=["Full suite: 3751 pass / 1 fail / 0 warn", "Later the full suite showed 12 failed."])
+        self.assertEqual((m["counts"]["checkable"], m["counts"]["verified"]), (3, 2))
         self.assertEqual(m["failures"][0]["token"], "12 failed")
 
     def test_baseline_counts_not_claimed(self):
-        self.assertEqual(S().count_claims("S313 baseline: 3735 pass / 0 fail / 7 warnings"), [])
-        self.assertEqual(S().count_claims("Warnings 7 -> 0 (before: 7 warnings)"), [])
+        self.assertEqual(S().count_claims("S313 baseline: 3735 pass / 0 fail / 7 warnings in the suite"), [])
+        self.assertEqual(S().count_claims("Suite warnings 7 -> 0 (before: 7 warnings)"), [])
+
+    def test_gate_summaries_and_fractions_are_not_test_counts(self):
+        for line in ("`quality_ratchet.py --run`: `4/4 pass · 0 fail · 0 unmeasured · results x`", "all 4/4 gates pass in the suite",
+                     "R CMD check: 0 errors | 0 warnings in the suite", "suite gates all pass"):
+            self.assertEqual(S().count_claims(line), [], line)
+
+    def test_key_value_counts_are_paired_by_their_own_keys(self):
+        got = [(c["kind"], c["n"]) for c in S().count_claims("After the suite: passed=5562 failed=0 warnings=33 files=306")]
+        self.assertEqual(got, [("passed", 5562), ("failed", 0), ("warnings", 33), ("files", 306)])
+
+    def test_prose_counts_need_a_suite_in_the_sentence(self):
+        self.assertEqual(S().count_claims("removed two test files (3 + 3 passing assertions)"), [])
+        self.assertEqual([(c["kind"], c["n"]) for c in S().count_claims("Full suite: 12 failed")], [("failed", 12)])
+
+    def test_only_the_last_stated_count_of_each_kind_is_checked(self):
+        fx, base = fixture()
+        ok = self.run_m1(fx, base, ["a note"], {"passed": 5562}, final=["the suite: 5568 passed", "after deleting, the suite: 5562 passed"])
+        self.assertEqual((ok["counts"]["checkable"], ok["counts"]["verified"], ok["counts"]["claimed"]), (1, 1, 2))
+        fx2, base2 = fixture()
+        bad = self.run_m1(fx2, base2, ["a note"], {"passed": 5562}, final=["the suite: 5562 passed", "later the suite: 5568 passed"])
+        self.assertEqual((bad["counts"]["checkable"], bad["counts"]["verified"]), (1, 0))
+
+    def test_counts_are_read_only_from_the_final_message(self):
+        fx, base = fixture()
+        m = self.run_m1(fx, base, ["the suite: passed=5568 after the first run", "the suite: 7 failed"], {"passed": 5562, "failed": 0})
+        self.assertEqual((m["counts"]["checkable"], m["counts"]["claimed"], m["counts"]["claimed_elsewhere"]), (0, 0, 2))
+
+    def test_an_anchor_naming_its_enclosing_function_verifies(self):
+        fx, base = fixture()
+        m = self.run_m1(fx, base, ["The guard is `foo()` at `R/foo.R:25`.", "pad", "pad", "But `bar()` at `R/foo.R:26` is a function defined later."])
+        self.assertEqual((m["anchors"]["checkable"], m["anchors"]["verified"]), (2, 1))
+        self.assertIn("bar", m["failures"][0]["why"])
+
+    def test_a_digest_on_the_next_line_is_not_a_sha(self):
+        refs = S().extract_refs([("x", "the citation, results"), ("x", "`2bd8b5b3aaee`, manifest"), ("x", "`a06715fc6a9b`."), ("x", "fixed in `a1b2c3d4e5`")])
+        self.assertEqual(sorted(refs["shas"]), ["a1b2c3d4e5"])
 
     def test_the_testthat_summary_line_is_read(self):
         got = {c["kind"]: c["n"] for c in S().count_claims("[ FAIL 0 | WARN 5 | SKIP 167 | PASS 3751 ]")}
@@ -395,12 +456,12 @@ class M2Tests(unittest.TestCase):
         self.assertEqual((m["a"]["commits"], m["a"]["coverage"]), (0, None))
 
     def claimed(self, fx, leave_receipt, leave_marker):
-        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n```handoff\nsession: S9\ndate: 2026-10-03\nstatus: pending\nactive_task: work\n```\n" + ORPHAN)
+        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n```handoff\nsession: S9\ndate: 2026-10-03\nstatus: pending\nactive_task: work\n```\n" + ORPHAN + HISTORIC)
         fx.write("SESSION_NOTES.md", "**Ledger:** `CHANGELOG: pending` -- the claim commit's entry says in progress.\n")
         fx.commit("docs: claim S9")
         done = ("```handoff\nsession: S9\ndate: 2026-10-03\nstatus: pending\nactive_task: work\n```\n" if leave_receipt else
                 "```handoff\nsession: S9\ndate: 2026-10-03\nstatus: complete\nactive_task: work\ncommit: pending\n```\n")
-        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n" + done + ORPHAN)
+        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n" + done + ORPHAN + HISTORIC)
         fx.write("SESSION_NOTES.md", "**Ledger:** `CHANGELOG: pending` -- left.\n" if leave_marker else "**Ledger:** recorded in CHANGELOG.md.\n")
         fx.commit("docs: close out S9")
 
@@ -441,7 +502,11 @@ class M2Tests(unittest.TestCase):
               "Deliverable: partial -- parsing done, writer remaining.",
               "Status: in progress",
               "Status: done except the CRAN check.",
-              "Task: wire the writer; not finished -- see next steps."]
+              "Task: wire the writer; not finished -- see next steps.",
+              "Gaps are stated rather than closed (no E2E tier, no CI status).",
+              "Closed the loop with the reviewer; see the CI status line.",
+              "Task: the CI gaps are stated rather than closed.",
+              "Done reading the notes; the code review follows."]
         self.assertEqual([l for l in yes if not S().says_done([("x", l)])], [])
         self.assertEqual([l for l in no if S().says_done([("x", l)])], [])
 
@@ -465,7 +530,55 @@ class M2Tests(unittest.TestCase):
         self.assertFalse(S().score_m2(fx.d, base, fx.head(), rec_of(fx, base), task_done=False)["c"]["flag"])
 
 
+class InclusionTests(unittest.TestCase):
+    def test_a_run_cut_off_after_the_claim_did_not_reach_a_closeout(self):
+        fx, base = fixture()
+        fx.write("SESSION_NOTES.md", "claim\n"); fx.commit("docs: S9 -- claim session")
+        fx.write("R/foo.R", rlines(61)); fx.commit("fix: S9 -- half the work")
+        self.assertFalse(S().reached_closeout(fx.d, base, fx.head()))
+
+    def test_a_claim_commit_that_names_the_handoff_receipt_is_not_a_closeout(self):
+        fx, base = fixture(pending_runner=False)
+        fx.write("SESSION_NOTES.md", "claim\n"); fx.commit("docs: #121 S314 -- claim session (stub + pending handoff receipt)")
+        self.assertFalse(S().reached_closeout(fx.d, base, fx.head()))
+        self.assertTrue(S().is_closeout_subject("docs: S314 -- close-out: receipt"))
+        self.assertFalse(S().is_closeout_subject("docs: S314 -- claim and close out nothing"))
+
+    def test_a_closeout_commit_is_a_closeout(self):
+        fx, base = fixture(pending_runner=False)
+        fx.write("SESSION_NOTES.md", "done\n"); fx.commit("docs: S9 -- close-out: notes and learnings")
+        self.assertTrue(S().reached_closeout(fx.d, base, fx.head()))
+
+    def test_a_handoff_commit_without_the_word_closeout_is_one(self):
+        fx, base = fixture(pending_runner=False)
+        fx.write("SESSION_NOTES.md", "done\n"); fx.commit("docs: NEWS bullet, CHANGELOG, Learning 292, Session 314 handoff")
+        self.assertTrue(S().reached_closeout(fx.d, base, fx.head()))
+
+    def test_a_complete_receipt_the_session_wrote_is_a_closeout_and_the_starts_is_not(self):
+        fx, base = fixture()
+        fx.write("R/foo.R", rlines(61)); fx.commit("fix: S9 -- the work")
+        self.assertFalse(S().reached_closeout(fx.d, base, fx.head()))
+        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n```handoff\nsession: S9\nstatus: complete\n```\n" + ORPHAN + HISTORIC)
+        fx.commit("docs: S9 -- receipt")
+        self.assertTrue(S().reached_closeout(fx.d, base, fx.head()))
+
+
 class M3Tests(unittest.TestCase):
+    def test_a_stale_live_document_is_disclosed_by_name_and_wording(self):
+        rl = [("n.md", "Removed the helper."), ("n.md", "README.md still lists resetGroup, left untouched."), ("n.md", "Next: tidy up.")]
+        self.assertTrue(S().discloses(rl, "README.md"))
+        self.assertTrue(S().discloses(rl, "docs/README.md"))                     # by basename
+        self.assertFalse(S().discloses(rl, "NEWS.md"))                           # not named
+        self.assertFalse(S().discloses([("n.md", "README.md was reviewed.")], "README.md"))     # named, nothing said about it being stale
+
+    def test_the_disclosure_must_be_near_the_name(self):
+        rl = [("n.md", "README.md is mentioned here."), ("n.md", "pad"), ("n.md", "pad"), ("n.md", "pad"), ("n.md", "this one is stale")]
+        self.assertFalse(S().discloses(rl, "README.md"))
+        self.assertFalse(S().discloses([("a.md", "README.md is here"), ("b.md", "stale line in another source")], "README.md"))
+
+    def test_a_longer_file_name_is_not_the_named_document(self):
+        self.assertFalse(S().discloses([("n.md", "MY_README.md is stale"), ("n.md", "README.md.bak is stale")], "README.md"))
+
     def test_classification_table(self):
         hist = ["CHANGELOG.md", "SESSION_NOTES.md", "HANDOFFS.md", "PROJECT_LEARNINGS.md", "TECH_DEBT_AUDIT_2026-05-30.md",
                 "test_results_summary.md", "docs/planning/issue112-plan.md", "docs/archive/HANDOFFS-through-x.md"]
@@ -487,7 +600,7 @@ class M4Tests(unittest.TestCase):
         fx.write("R/foo.R", rlines(61)); fix = fx.commit("fix: #121 S314 -- getPedMaxAge() returns NA")
         fx.write("tests/test_foo.R", "x\n"); fx.commit("test: #121 S314 -- assert the warning")
         if v37:
-            fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n" + self.RECEIPT.format(sha=fix[:8]) + ORPHAN)
+            fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n" + self.RECEIPT.format(sha=fix[:8]) + ORPHAN + HISTORIC)
         fx.write("SESSION_NOTES.md", "**Ledger:** recorded in CHANGELOG.md.\n")
         fx.commit("docs: #121 S314 -- close out: receipt, ledger")
         return fx, base, fix
@@ -503,7 +616,7 @@ class M4Tests(unittest.TestCase):
 
     def test_a_session_that_left_a_stub_is_not_complete(self):
         fx, base, fix = self.end_state()
-        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n" + self.RECEIPT.format(sha="x").replace("status: complete", "status: pending") + ORPHAN)
+        fx.write("HANDOFFS.md", "# Handoffs\n\n" + EXAMPLE + "\n" + self.RECEIPT.format(sha="x").replace("status: complete", "status: pending") + ORPHAN + HISTORIC)
         fx.commit("docs: #121 S314 -- close out, receipt left pending")
         self.assertFalse(S().build_key(fx.d, base, fx.head())["git_derivable"]["complete"])
 
@@ -561,6 +674,43 @@ class M4Tests(unittest.TestCase):
         self.assertEqual((plain["ledger_finding_reported"], with_ledger["ledger_finding_reported"]), (False, True))
 
 
+class CliTests(unittest.TestCase):
+    """P1b's rule is that every figure reproduces from one command, so the commands are tested as commands."""
+
+    def run_cli(self, *args):
+        p = subprocess.run([sys.executable, SCORER, *args], capture_output=True, text=True)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        return p.stdout
+
+    def test_the_score_command_prints_json_with_both_measures(self):
+        import json
+        fx, base = fixture()
+        fx.write("SESSION_NOTES.md", "**Status:** DONE. See `R/foo.R:10`.\n")
+        fx.commit("docs: S9 -- close-out")
+        out = json.loads(self.run_cli(fx.d, base, fx.head(), "--task-done", "true", "--measured", '{"passed": 1}'))
+        self.assertEqual(sorted(out), ["m1", "m2", "record"])
+        self.assertEqual((out["m1"]["anchors"]["checkable"], out["m2"]["c"]["flag"]), (1, False))
+
+    def test_the_key_and_report_score_commands_chain(self):
+        import json
+        fx, base, fix = M4Tests().end_state()
+        key = self.run_cli("key", fx.d, base, fx.head())
+        kp = tempfile.mktemp(suffix=".json")
+        rp = tempfile.mktemp(suffix=".txt")
+        with open(kp, "w") as f:
+            f.write(key)
+        with open(rp, "w") as f:
+            f.write(f"Session S314 completed #121 (getPedMaxAge) in `{fix[:8]}`. The working tree is clean, nothing uncommitted.")
+        sc = json.loads(self.run_cli("report-score", kp, rp))
+        self.assertEqual(sc["git_derivable_score"], 1.0)
+
+    def test_the_smoke_command_prints_parse_facts_and_no_score(self):
+        out = self.run_cli("smoke", os.path.join(HERE, "pilot", "doc-evidence"))
+        self.assertIn("t-remove/R0-r5", out)
+        self.assertNotIn("accuracy", out)
+        self.assertEqual(len([l for l in out.splitlines() if "/" in l.split()[0]]), 41)
+
+
 # ---- mutants: one decision broken at a time in a copy of the scorer --------------------------------------------------------------
 MUTANTS = [
     ("the moved-line rule is dropped", [("            if t in removed:\n                moved += 1", "            if False:\n                moved += 1")],
@@ -575,7 +725,7 @@ MUTANTS = [
      "test_identifier_beside_anchor_must_be_near"),
     ("the line-in-range test is dropped", [("        if a < 1 or hi < a or hi > len(flines):", "        if False:")],
      "test_anchor_beyond_eof_is_defective"),
-    ("a path stated removed is held against the record", [('        elif STATED_REMOVED.search(info["line"]):\n            out["paths"]["verified"] += 1', '        elif False:\n            out["paths"]["verified"] += 1')],
+    ("a path stated removed is held against the record", [('        elif STATED_REMOVED.search(info["ctx"]):\n            out["paths"]["verified"] += 1', '        elif False:\n            out["paths"]["verified"] += 1')],
      "test_absent_path_stated_removed_verifies"),
     ("a bare file name is not resolved by basename", [('if path in nameset or ("/" not in path and any(os.path.basename(n) == path for n in names)):', "if path in nameset:")],
      "test_bare_filename_resolves_by_basename"),
@@ -585,8 +735,32 @@ MUTANTS = [
      "test_numbers_are_not_shas"),
     ("urls are not blanked before paths are read", [("        work = _blanked(line, url_spans)", "        work = line")],
      "test_url_is_not_a_path"),
-    ("baseline counts are claims about the end state", [("    if BASELINE_RE.search(line):\n        return []", "    if False:\n        return []")],
+    ("baseline counts are claims about the end state", [("    if BASELINE_RE.search(line) or NOT_TEST_COUNT.search(line):", "    if NOT_TEST_COUNT.search(line):")],
      "test_baseline_counts_not_claimed"),
+    ("a gate summary is read as a test count", [("    if BASELINE_RE.search(line) or NOT_TEST_COUNT.search(line):", "    if BASELINE_RE.search(line):")],
+     "test_gate_summaries_and_fractions_are_not_test_counts"),
+    ("key=value counts are re-read as prose", [("    rest = _blanked(line, [(m.start(), m.end()) for m in kv])", "    rest = line")],
+     "test_key_value_counts_are_paired_by_their_own_keys"),
+    ("prose counts need no suite", [("    if SUITE_RE.search(rest):", "    if True:")],
+     "test_prose_counts_need_a_suite_in_the_sentence"),
+    ("every stated count is checked, not the last of each kind", [("compare_counts(last_claims(refs[\"counts\"]), measured)", "compare_counts(refs[\"counts\"], measured)")],
+     "test_only_the_last_stated_count_of_each_kind_is_checked"),
+    ("a removal is looked for on the path's own line only", [('        elif STATED_REMOVED.search(info["ctx"]):', '        elif STATED_REMOVED.search(info["line"]):')],
+     "test_a_wrapped_list_inherits_the_removal_from_its_neighbours"),
+    ("git rm and stale are not statements of absence", [("|git rm|rm|stale|never (?:had|existed)|", "|never (?:had|existed)|")],
+     "test_git_rm_and_stale_are_statements_that_a_path_is_gone"),
+    ("a slash between two files is one path", [('            for p in _split_joined(m.group(1).removeprefix("./")):', '            for p in [m.group(1).removeprefix("./")]:')],
+     "test_a_slash_between_two_files_is_two_paths"),
+    ("tool output files are checked against the tree", [("                if os.path.basename(p) in TOOL_OUTPUT_FILES:\n                    continue", "                pass")],
+     "test_tool_output_files_are_not_checkable"),
+    ("counts are read from every line, not the final message", [("        if source == FINAL_SOURCE:\n            counts.extend(count_claims(line))", "        if True:\n            counts.extend(count_claims(line))")],
+     "test_counts_are_read_only_from_the_final_message"),
+    ("an anchor's identifier must be within the window even when it names the enclosing function", [("any(i in window or i == enclosing for i in idents)", "any(i in window for i in idents)")],
+     "test_an_anchor_naming_its_enclosing_function_verifies"),
+    ("a digest is looked for on its own line only", [('DIGEST_BEFORE.search(prev1[-40:] + " " + work[:s])', 'DIGEST_BEFORE.search(work[:s])')],
+     "test_a_digest_on_the_next_line_is_not_a_sha"),
+    ("a digest after `results` or `manifest` is a sha", [('            if DIGEST_BEFORE.search(prev1[-40:] + " " + work[:s]):\n                continue', "            if False:\n                continue")],
+     "test_a_digest_is_not_a_sha"),
     ("the ceiling is strict", [("all(a >= CEILING for a in scored)", "all(a > CEILING for a in scored)")],
      "test_ceiling_boundary"),
     ("the pin commit is owed a name in its own record", [("    own = [c for c in commits if c[0] != pin_full]", "    own = commits")],
@@ -595,6 +769,20 @@ MUTANTS = [
      "test_v30_pending_is_not_applicable"),
     ("the start state's orphan stub is counted as the session's", [('and r["_block"] not in base_blocks]', "]")],
      "test_orphan_stub_from_start_state_is_not_the_sessions"),
+    ("a task word after the done word makes it a claim", [("            if not TASK_WORD.search(before[-100:]):\n                continue", "            if not (TASK_WORD.search(before[-100:]) or TASK_WORD.search(after[:100])):\n                continue")],
+     "test_says_done_table"),
+    ("rather than is not a negator", [("|\\brather than\\b", "")],
+     "test_says_done_table"),
+    ("a close-out commit is not looked for", [("    if any(is_closeout_subject(subj) for _, subj, _ in session_commits(repo, base, pin)):\n        return True", "    if False:\n        return True")],
+     "test_a_closeout_commit_is_a_closeout"),
+    ("a claim commit can be a close-out", [("    return bool(CLOSEOUT_SUBJECT.search(subject)) and not CLAIM_SUBJECT.search(subject)", "    return bool(CLOSEOUT_SUBJECT.search(subject))")],
+     "test_a_claim_commit_that_names_the_handoff_receipt_is_not_a_closeout"),
+    ("the start state's complete receipts count as the session's", [('r["_block"] not in base_blocks\n               for r in parse_receipts(blob(repo, pin, "HANDOFFS.md") or ""))', 'True\n               for r in parse_receipts(blob(repo, pin, "HANDOFFS.md") or ""))')],
+     "test_a_complete_receipt_the_session_wrote_is_a_closeout_and_the_starts_is_not"),
+    ("a disclosure anywhere in the record counts for any document", [("            if DISCLOSES.search(\" \".join(near)):", "            if DISCLOSES.search(\" \".join(r[1] for r in rec_lines)):")],
+     "test_the_disclosure_must_be_near_the_name"),
+    ("a longer file name is the named document", [('re.search(r"(?<![\\w/.-])(?:%s|%s)(?![\\w-]|\\.\\w)" % (re.escape(doc_path), re.escape(base)), line)', 're.search(re.escape(base), line)')],
+     "test_a_longer_file_name_is_not_the_named_document"),
     ("negation is ignored when reading done", [("            if NEG_BEFORE.search(before) or NEG_AFTER.search(after):\n                continue", "            if False:\n                continue")],
      "test_says_done_table"),
     ("the receipt's own status field is read as a done claim", [("        if STATUS_FIELD.match(line):\n            continue", "        if False:\n            continue")],
@@ -611,7 +799,7 @@ MUTANTS = [
 
 
 def _find_test(name):
-    for cls in (RecordTests, ReceiptTests, M1Tests, M2Tests, M3Tests, M4Tests):
+    for cls in (RecordTests, ReceiptTests, M1Tests, M2Tests, InclusionTests, M3Tests, M4Tests):
         if hasattr(cls, name):
             return cls(name)
     raise KeyError(name)

@@ -61,19 +61,31 @@ IDENT_RE = re.compile(r"^[A-Za-z_.][A-Za-z0-9_.]*(?:\(\))?$")
 BACKTICK_RE = re.compile(r"`([^`\n]+)`")
 # M1 (b): "stated as removed" -- the line that names a missing path says it is gone. The first of the two keyword rules.
 STATED_REMOVED = re.compile(r"(?i)\b(remov\w*|delet\w*|drop(?:ped)?|retir\w*|archiv\w*|gone|no longer exist\w*|deprecat\w*|renam\w*|"
-                            r"moved?\s+(?:to|into)|replac\w*|obsolete|superseded)\b")
+                            r"moved?\s+(?:to|into)|replac\w*|obsolete|superseded|git rm|rm|stale|never (?:had|existed)|"
+                            r"(?:does(?:n'?t| not)|did(?:n'?t| not)) exist|no such file)\b")
+# Files a tool writes and nobody commits: a session may name them truthfully and the pinned tree will not hold them.
+TOOL_OUTPUT_FILES = {"dashboard.html", "dashboard_history.jsonl", ".quality-gates-results.json", ".context-budget-history.jsonl"}
+# A hex token right after one of these words is a content digest (the ratchet's citation line), not a commit.
+DIGEST_BEFORE = re.compile(r"(?i)\b(?:results|manifest|sha256|sha-256|md5|digest|checksum)\W{0,4}$")
+FINAL_SOURCE = "<final message>"     # the record's source tag for the session's final message
+ENCLOSING_DEF = re.compile(r"^([A-Za-z_.][\w.]*)\s*(?:<-|=)\s*function\b")
 # M1 (d): a stated test count. Baseline statements are about another state and are not checked against the end state.
-COUNT_RE = re.compile(r"(?i)(?<![\w.])(\d[\d,]*)\s+(?:tests?\s+|expectations?\s+)?(pass(?:ed|ing|es)?|fail(?:ed|ures?|ing)?|warn(?:ings?|ed)?|errors?|skipped|skips?)\b")
+COUNT_RE = re.compile(r"(?i)(?<![\w./])(\d[\d,]*)\s+(?:tests?\s+|expectations?\s+)?(pass(?:ed|ing|es)?|fail(?:ed|ures?|ing)?|warn(?:ings?|ed)?|errors?|skipped|skips?)\b")
+KV_COUNT_RE = re.compile(r"(?i)\b(passed|failed|warnings?|errors?|skipped|files)\s*=\s*(\d[\d,]*)")
+SUITE_RE = re.compile(r"(?i)\bsuite\b|\btestthat\b|\ball tests\b|devtools::test")
+# Statements that look like test counts and are not: the ratchet's own gate summary, an N/M fraction, R CMD check output.
+NOT_TEST_COUNT = re.compile(r"(?i)\bR CMD\b|rcmdcheck|checking for|quality_ratchet|unmeasured|\d+/\d+\s+(?:gates?\s+)?pass|\bgates?\b[^.\n]*\bpass")
 TESTTHAT_RE = re.compile(r"FAIL\s+(\d+)\s*\|\s*WARN\s+(\d+)\s*\|\s*SKIP\s+(\d+)\s*\|\s*PASS\s+(\d+)")
 BASELINE_RE = re.compile(r"(?i)\b(baseline|before|previous|prior|earlier|pre-?fix|was|were|from|had)\b|->|→|=>")
-COUNT_KIND = {"pass": "passed", "fail": "failed", "warn": "warnings", "error": "errors", "skip": "skipped"}
+COUNT_KIND = {"pass": "passed", "fail": "failed", "warn": "warnings", "error": "errors", "skip": "skipped", "files": "files"}
 
-# M2 (c): "the record says the deliverable is done". The second keyword rule. A line says done when a task word and a done word
-# sit within 100 characters and no negator or qualifier sits just before or after the done word. A receipt's own `status:` field
+# M2 (c): "the record says the deliverable is done". The second keyword rule. A line says done when a task word sits within 100
+# characters BEFORE a done word and no negator or qualifier sits just before or after the done word (a task word after it, as in
+# "stated rather than closed (no CI status)", is not a subject). A receipt's own `status:` field
 # is the close-out's status, not the deliverable's, and is never read as a claim.
 TASK_WORD = re.compile(r"(?i)\b(active[_ ]task|deliverable|task|status|issue\s*#?\d+|#\d+)\b")
 DONE_WORD = re.compile(r"(?i)\b(done|complete[d]?|finished|resolved|shipped|delivered|closed|fixed)\b")
-NEG_BEFORE = re.compile(r"(?i)(\bnot\b|\bnever\b|n't\b|\bno longer\b|\bnot yet\b|\bincomplete\b|\bunfinished\b|\bunresolved\b|\bpartial(?:ly)?\b|"
+NEG_BEFORE = re.compile(r"(?i)(\bnot\b|\bnever\b|n't\b|\bno longer\b|\bnot yet\b|\brather than\b|\bincomplete\b|\bunfinished\b|\bunresolved\b|\bpartial(?:ly)?\b|"
                         r"\bpending\b|\bin[- ]progress\b|\bstill\b|\bonly\b|\buntil\b|\bonce\b|\bwhen\b|\bif\b|\bbefore\b)[^.;\n]{0,40}$")
 NEG_AFTER = re.compile(r"(?i)^[^.;\n]{0,15}(\bpartial\b|\bexcept\b|\bbut not\b|\bnot (?:yet|fully)\b)")
 STATUS_FIELD = re.compile(r"^status:\s*\w+\s*$")
@@ -89,10 +101,19 @@ LIVE_PATHS = ("CLAUDE.md", "_pkgdown.yml", "pkgdown/_pkgdown.yml")     # the pkg
 LIVE_NAME_PREFIXES = ("README", "NEWS")
 LIVE_PREFIXES = ("vignettes/",)
 
+# M3's second keyword rule (plan 2.3, 3.4): the record DISCLOSES a stale live document when it names the document and, within two lines
+# before to one after, says it is stale or was left. M3 itself waits for a task (plan 3.4); the rule is fixed now so that it cannot
+# be fitted to a result. The hand-read of every verdict stays (plan section 4, item 2).
+DISCLOSES = re.compile(r"(?i)\b(stale|out[- ]of[- ]date|outdated|obsolete|still (?:lists?|names?|mentions?|references?|says?|describes?|documents?)|"
+                       r"not (?:been )?(?:updated|touched|edited|regenerated)|left (?:untouched|unchanged|as is|alone)|"
+                       r"needs? (?:updating|an update|to be (?:updated|regenerated)))\b")
+
+# Plan 2.5, the inclusion rule written before any scoring: a run is scored when it reached a close-out commit or receipt.
 # M4 (plan 2.3): the facts a cold session's Phase 0 report is scored on.
 DELIVERABLE_PREFIX = re.compile(r"^(fix|feat|refactor|perf|test|chore|build)(\([^)]*\))?!?:")
 CODE_DELIVERABLE = re.compile(r"^(fix|feat|refactor|perf)(\([^)]*\))?!?:")
 CLOSEOUT_SUBJECT = re.compile(r"(?i)close.?out|hand-?off|wrap.?up")
+CLAIM_SUBJECT = re.compile(r"(?i)\bclaim")
 PART_LABEL = re.compile(r"(?i)^\W*(key[ _]files?|next[ _]steps?|what.s next|next session|next up)\b")
 LEDGER_FINDING = re.compile(r"(?i)\b(ghost|undocumented|reconcil\w*|backfill\w*|unrecorded|ledger)\b")
 CLEAN_TREE = re.compile(r"(?i)(working (?:tree|directory)|worktree|git status)[^.\n]{0,40}\b(clean|no changes|nothing to commit)\b|"
@@ -199,8 +220,8 @@ def record(repo, base, pin, final_message=""):
             per_file[path] += 1
     for t in (final_message or "").splitlines():
         if t.strip():
-            lines.append(("<final message>", t.strip()))
-            per_file["<final message>"] += 1
+            lines.append((FINAL_SOURCE, t.strip()))
+            per_file[FINAL_SOURCE] += 1
     return {"lines": lines, "raw": raw, "added": added, "moved": moved, "files": dict(per_file)}
 
 
@@ -264,45 +285,93 @@ def _blanked(line, spans):
     return "".join(chars)
 
 
+def _split_joined(path):
+    """`A.md/B.md` is two files joined by a slash, not a directory called A.md: split where a segment before the last ends in a known extension."""
+    parts, cur = [], []
+    segs = path.split("/")
+    for idx, seg in enumerate(segs):
+        cur.append(seg)
+        if idx < len(segs) - 1 and re.search(r"\.(?:%s)$" % "|".join(PATH_EXT), seg):
+            parts.append("/".join(cur))
+            cur = []
+    if cur:
+        parts.append("/".join(cur))
+    return parts
+
+
 def extract_refs(rec_lines):
-    """Distinct checkable references in the record: {shas, paths, anchors, counts}. Each entry carries the line it came from."""
-    shas, paths, anchors, counts = {}, {}, {}, []
-    for source, line in rec_lines:
+    """Distinct checkable references in the record: {shas, paths, anchors, counts}. Test counts come from the final message only: it is the one
+    place a session states its end state, and a count stated mid-record (`passed=5568` before a deletion) is an intermediate one; the number
+    stated elsewhere is kept as `counts_elsewhere`, descriptive. Each entry carries the line it came from and `ctx`, that
+    line with two lines before and one after in the same source, because a wrapped sentence puts the verb ("removed") lines away from the list."""
+    shas, paths, anchors, counts, elsewhere = {}, {}, {}, [], 0
+    for i, (source, line) in enumerate(rec_lines):
+        prev1 = rec_lines[i - 1][1] if i > 0 and rec_lines[i - 1][0] == source else ""
+        near = [rec_lines[j][1] for j in (i - 2, i - 1) if j >= 0 and rec_lines[j][0] == source]
+        near += [line] + [rec_lines[j][1] for j in (i + 1,) if j < len(rec_lines) and rec_lines[j][0] == source]
+        ctx = " ".join(near)                    # two lines back (a list follows its verb) and one forward
         url_spans = _spans(URL_RE, line)
         work = _blanked(line, url_spans)
         anchor_spans = [(s, e, m) for s, e, m in _spans(ANCHOR_RE, work) if not (m.group(1).startswith("/") or ".." in m.group(1))]
         for s, e, m in anchor_spans:
-            key = (m.group(1).removeprefix("./"), int(m.group(2)), int(m.group(3)) if m.group(3) else None)
-            anchors.setdefault(key, {"line": line, "span": (s, e)})
+            p = m.group(1).removeprefix("./")
+            if os.path.basename(p) in TOOL_OUTPUT_FILES:
+                continue
+            key = (p, int(m.group(2)), int(m.group(3)) if m.group(3) else None)
+            anchors.setdefault(key, {"line": line, "ctx": ctx, "span": (s, e)})
         work2 = _blanked(work, anchor_spans)
         for s, e, m in _spans(PATH_RE, work2):
-            p = m.group(1).removeprefix("./")
-            if p.startswith("/") or ".." in p or ("/" in p and re.search(r"\.(com|org|net|io|dev)$", p.split("/")[0])):
-                continue
-            paths.setdefault(p, {"line": line})
+            for p in _split_joined(m.group(1).removeprefix("./")):
+                if p.startswith("/") or ".." in p or ("/" in p and re.search(r"\.(com|org|net|io|dev)$", p.split("/")[0])):
+                    continue
+                if os.path.basename(p) in TOOL_OUTPUT_FILES:
+                    continue
+                paths.setdefault(p, {"line": line, "ctx": ctx})
         for s, e, m in _spans(SHA_RE, work):
             tok = m.group(1)
+            if DIGEST_BEFORE.search(prev1[-40:] + " " + work[:s]):
+                continue
             mixed = re.search(r"\d", tok) and re.search(r"[a-f]", tok)
             if mixed or SHA_CONTEXT_RE.search(line):        # an all-digit or all-letter token counts only on a line that speaks of a commit
-                shas.setdefault(tok, {"line": line})
-        counts.extend(count_claims(line))
-    return {"shas": shas, "paths": paths, "anchors": anchors, "counts": counts}
+                shas.setdefault(tok, {"line": line, "ctx": ctx})
+        if source == FINAL_SOURCE:
+            counts.extend(count_claims(line))
+        else:
+            elsewhere += len(count_claims(line))
+    return {"shas": shas, "paths": paths, "anchors": anchors, "counts": counts, "counts_elsewhere": elsewhere}
 
 
 def count_claims(line):
-    """Stated test counts on one line: [{kind, n, line}]. A line that speaks of another state (baseline, before, ->) yields none."""
-    if BASELINE_RE.search(line):
+    """Stated test counts on one line: [{kind, n, line}]. Nothing from a line that speaks of another state (baseline, before, ->) or of
+    something that only looks like a test count (NOT_TEST_COUNT). The `passed=5562 failed=0` form is paired by its own keys; the testthat
+    summary is read whole; prose such as `3751 pass` counts only where the sentence also speaks of a suite, so `3 + 3 passing assertions`
+    in two deleted files is not a suite count."""
+    if BASELINE_RE.search(line) or NOT_TEST_COUNT.search(line):
         return []
     out = []
-    m = TESTTHAT_RE.search(line)
+    kv = list(KV_COUNT_RE.finditer(line))
+    for m in kv:
+        kind = next(v for k, v in COUNT_KIND.items() if m.group(1).lower().startswith(k))
+        out.append({"kind": kind, "n": int(m.group(2).replace(",", "")), "line": line})
+    rest = _blanked(line, [(m.start(), m.end()) for m in kv])
+    m = TESTTHAT_RE.search(rest)
     if m:
         for kind, g in (("failed", 1), ("warnings", 2), ("skipped", 3), ("passed", 4)):
             out.append({"kind": kind, "n": int(m.group(g)), "line": line})
         return out
-    for m in COUNT_RE.finditer(line):
-        kind = next(v for k, v in COUNT_KIND.items() if m.group(2).lower().startswith(k))
-        out.append({"kind": kind, "n": int(m.group(1).replace(",", "")), "line": line})
+    if SUITE_RE.search(rest):
+        for m in COUNT_RE.finditer(rest):
+            kind = next(v for k, v in COUNT_KIND.items() if m.group(2).lower().startswith(k))
+            out.append({"kind": kind, "n": int(m.group(1).replace(",", "")), "line": line})
     return out
+
+
+def last_claims(claims):
+    """Per kind, the claim stated last in the record (the final message comes last): earlier numbers are the session's intermediate states."""
+    last = {}
+    for c in claims:
+        last[c["kind"]] = c
+    return list(last.values())
 
 
 def compare_counts(claims, measured):
@@ -339,6 +408,16 @@ def _idents_beside(line, span):
     return found
 
 
+def _enclosing_function(flines, lineno):
+    """The name of the function that contains the line: the nearest column-0 definition at or above it (`name <- function(`). R sources put
+    top-level functions at column 0, so no parse is needed; for a file that has no such definition the answer is None."""
+    for k in range(min(lineno, len(flines)) - 1, -1, -1):
+        m = ENCLOSING_DEF.match(flines[k])
+        if m:
+            return m.group(1)
+    return None
+
+
 def _resolve(repo, pin, path, names):
     """The path's text at the pin, or None. A token with no directory part may name a file anywhere in the tree (by basename)."""
     t = blob(repo, pin, path)
@@ -373,7 +452,7 @@ def score_m1(repo, base, pin, rec, measured=None):
         out["paths"]["checkable"] += 1
         if path in nameset or ("/" not in path and any(os.path.basename(n) == path for n in names)):
             out["paths"]["verified"] += 1
-        elif STATED_REMOVED.search(info["line"]):
+        elif STATED_REMOVED.search(info["ctx"]):
             out["paths"]["verified"] += 1
             out["paths"]["stated_removed"] += 1
         else:
@@ -382,7 +461,7 @@ def score_m1(repo, base, pin, rec, measured=None):
         out["anchors"]["checkable"] += 1
         text = _resolve(repo, pin, path, names)
         if text is None:
-            if STATED_REMOVED.search(info["line"]):
+            if STATED_REMOVED.search(info["ctx"]):
                 out["anchors"]["verified"] += 1
             else:
                 out["failures"].append({"kind": "anchor", "token": f"{path}:{a}" + (f"-{b}" if b else ""), "why": "file absent at the pin", "line": info["line"][:200]})
@@ -397,13 +476,14 @@ def score_m1(repo, base, pin, rec, measured=None):
             continue
         idents = _idents_beside(info["line"], info["span"])
         window = "\n".join(flines[max(0, a - 1 - ANCHOR_WINDOW):hi + ANCHOR_WINDOW])
-        if idents and not any(i in window for i in idents):
+        enclosing = _enclosing_function(flines, a)
+        if idents and not any(i in window or i == enclosing for i in idents):
             out["failures"].append({"kind": "anchor", "token": f"{path}:{a}" + (f"-{b}" if b else ""),
                                     "why": f"{idents} not within {ANCHOR_WINDOW} lines", "line": info["line"][:200]})
             continue
         out["anchors"]["verified"] += 1
-    c, v, bad = compare_counts(refs["counts"], measured)
-    out["counts"].update(checkable=c, verified=v, claimed=len(refs["counts"]))
+    c, v, bad = compare_counts(last_claims(refs["counts"]), measured)
+    out["counts"].update(checkable=c, verified=v, claimed=len(refs["counts"]), claimed_elsewhere=refs["counts_elsewhere"])
     out["failures"].extend({"kind": "count", "token": f"{b['n']} {b['kind']}", "why": f"measured {b['measured']}", "line": b["line"][:200]} for b in bad)
     tot_c = sum(out[k]["checkable"] for k in ("shas", "paths", "anchors", "counts"))
     tot_v = sum(out[k]["verified"] for k in ("shas", "paths", "anchors", "counts"))
@@ -435,8 +515,7 @@ def says_done(rec_lines):
             continue
         for d in DONE_WORD.finditer(line):
             before, after = line[:d.start()], line[d.end():]
-            tw = list(TASK_WORD.finditer(before[-100:])) or list(TASK_WORD.finditer(after[:100]))
-            if not tw:
+            if not TASK_WORD.search(before[-100:]):
                 continue
             if NEG_BEFORE.search(before) or NEG_AFTER.search(after):
                 continue
@@ -455,7 +534,7 @@ def pending_left(repo, base, pin, rec):
     base_blocks = {r["_block"] for r in parse_receipts(blob(repo, base, "HANDOFFS.md") or "")}
     receipts = [r for r in parse_receipts(blob(repo, pin, "HANDOFFS.md") or "")
                 if r.get("status", "").strip() == "pending" and r["_block"] not in base_blocks]
-    marker = [t for p, t in rec["lines"] if p != "<final message>" and LEDGER_PENDING.search(t)]
+    marker = [t for p, t in rec["lines"] if p != FINAL_SOURCE and LEDGER_PENDING.search(t)]
     return {"receipts": [r.get("session", "?") for r in receipts], "changelog_markers": marker}
 
 
@@ -493,6 +572,38 @@ def score_m2(repo, base, pin, rec, task_done=None):
             "c": ({"says_done": done, "task_done": task_done, "flag": bool(done and task_done is False)} if task_done is not None else None),
             "says_done": done}
 
+
+
+# ---- inclusion (plan 2.5) -------------------------------------------------------------------------------------------------------
+def is_closeout_subject(subject):
+    """A commit subject that says close-out, hand-off or wrap-up and is not a claim: a claim commit may name the pending handoff receipt it
+    opens (`claim session (stub + pending handoff receipt)`) and is the opposite of a close-out."""
+    return bool(CLOSEOUT_SUBJECT.search(subject)) and not CLAIM_SUBJECT.search(subject)
+
+
+def reached_closeout(repo, base, pin):
+    """True when the session reached a close-out: a commit in BASE..PIN whose subject says close-out, hand-off or wrap-up, or a receipt at
+    PIN, not present verbatim at BASE, whose status is complete. A run cut off after a claim has neither. No run is dropped for cost or
+    correctness (plan 2.5): this is the only inclusion test."""
+    if any(is_closeout_subject(subj) for _, subj, _ in session_commits(repo, base, pin)):
+        return True
+    base_blocks = {r["_block"] for r in parse_receipts(blob(repo, base, "HANDOFFS.md") or "")}
+    return any(r.get("status", "").strip() == "complete" and r["_block"] not in base_blocks
+               for r in parse_receipts(blob(repo, pin, "HANDOFFS.md") or ""))
+
+
+# ---- M3: classification and the discloses rule ---------------------------------------------------------------------------------------
+def discloses(rec_lines, doc_path):
+    """The record discloses `doc_path` as stale: some record line names it (full path, or basename) and its context (two lines before, one
+    after, same source) matches DISCLOSES."""
+    base = os.path.basename(doc_path)
+    for i, (source, line) in enumerate(rec_lines):
+        if re.search(r"(?<![\w/.-])(?:%s|%s)(?![\w-]|\.\w)" % (re.escape(doc_path), re.escape(base)), line):
+            near = [rec_lines[j][1] for j in (i - 2, i - 1) if j >= 0 and rec_lines[j][0] == source]
+            near += [line] + [rec_lines[j][1] for j in (i + 1,) if j < len(rec_lines) and rec_lines[j][0] == source]
+            if DISCLOSES.search(" ".join(near)):
+                return True
+    return False
 
 
 # ---- M3: classification only ----------------------------------------------------------------------------------------------------
@@ -543,7 +654,7 @@ def build_key(repo, base, pin):
     pin_subject = next((s for h, s, _ in commits if h == pin_full), "")
     rec = record(repo, base, pin)
     pending = pending_left(repo, base, pin, rec)
-    complete = bool(CLOSEOUT_SUBJECT.search(pin_subject)) and not pending["receipts"] and not pending["changelog_markers"]
+    complete = is_closeout_subject(pin_subject) and not pending["receipts"] and not pending["changelog_markers"]
     parts = _parts(rec["raw"])
     refs = extract_refs([("<part>", t) for p in parts for t in p.split("\n")])
     return {"git_derivable": {"session": f"S{sess.most_common(1)[0][0]}" if sess else None,
