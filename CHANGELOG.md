@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-03-4.md` (1 record(s), 34,104 B → 27,105 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-03 → 2026-10-03) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-03-4.md`](docs/archive/HANDOFFS-through-2026-10-03-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-03-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-03-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 34,104 B → 27,105 B (−20.5%).
+
 ### 2026-10-04 · [BL-94] S256 — fill the receipt's commit slot with the close-out sha
 
 Filled the S256 receipt's `commit:` slot with the close-out sha `4645f87aa445` (12 characters, which `bin/check-handoff` accepts; the first token of the slot is what Test 39 L1 reads). The close-out commit could not name its own sha; this is the reconcile. `bin/check-handoff --all` run after the fill.
