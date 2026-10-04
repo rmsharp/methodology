@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-03-5.md` (1 record(s), 38,863 B → 29,527 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-03 → 2026-10-03) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-03-5.md`](docs/archive/HANDOFFS-through-2026-10-03-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-03-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-03-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,863 B → 29,527 B (−24.0%).
+
 ### 2026-10-04 · [BL-94] S257 — the operator's decisions at the P1b stop, from the close-out picker
 
 He chose **P2a next** (the next session starts on it; $0, no model tokens), **no scorer amendment** (the frozen `doc_score.py` stays frozen), and **BL-97 left as it is** (shape (c): rerun on a lone red). The P2 pilot's spend is not decided by this and stays his at P2a's end. Recorded in the plan's section 7 D3 row, the `BACKLOG.md` BL-94 row, the `BACKLOG-DETAIL.md` BL-94 and BL-97 entries and the S257 receipt's `next_steps`. No work on P2a was started: the answer schedules it.
