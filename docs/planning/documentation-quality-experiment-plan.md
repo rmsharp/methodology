@@ -4,8 +4,7 @@
 session (§11).** Written as the session's one deliverable. Nothing here has been run: no model session was launched, no money was
 spent, no distributed file changed, nothing was sent upstream. **After the S255 close-out the operator ratified D1 to D3 as recommended,
 set $100 as this study's spend cap and said he will do the blind rating himself (D4, D5; his words in §7).** A phase still starts only
-when he says go in a session, one phase per session. **S256 (2026-10-03) did P1a** (evidence kept, scorer built and frozen; status under §5 P1a); the next phase is **P1b**, which scores the saved runs once and ends in a stop for his decision. It costs nothing and its end result is a first answer
-from runs that already exist.
+when he says go in a session, one phase per session. **S256 (2026-10-03) did P1a** (evidence kept, scorer built and frozen; status under §5 P1a), **S257 (2026-10-04) did P1b** (the saved runs scored once: a null at the ceiling), and **S258 (2026-10-04) did P2a** (the probe built and tested at $0; status under §5 P2a). The next phase is **P2**, the first spend, which is his decision (D4) and its own session.
 
 ## In plain words
 
@@ -391,6 +390,15 @@ so a total is only usable beside its per-session caps, and the rater's calls get
 **Verification:** the driver tests green; a rebuilt clone's `git rev-parse HEAD` equals the pinned sha. **Surface:** the local
 machine; `overhead-replay/` only. **Cannot enforce:** that a real model behaves like the fake `claude`. **Cost: $0.**
 **STOP:** a bundle that cannot rebuild its sha, or a driver behaviour the fake cannot reproduce. Return to the operator.
+
+**Status (S258, 2026-10-04): DONE, $0, no model run, no rating call, no distributed file touched. Report: [`P2A_REPORT.md`](overhead-replay/pilot/doc-evidence/P2A_REPORT.md).**
+(a) [`probe.py`](overhead-replay/probe.py) with [`tests_probe.py`](overhead-replay/tests_probe.py) (43 tests, mutants all killed); **a pre-flight on the real bundle rebuilt all 38 rebuildable runs as end state and as git-only control with HEAD equal to the pinned sha** (3 refused by design: uncommitted tracked files), [`p2a-preflight.txt`](overhead-replay/pilot/doc-evidence/p2a-preflight.txt).
+(b) the R suite at `879503cce`: **120.8 s**, `passed=3734 failed=1 warnings=7 files=252`, so M1 (d) re-runs on every scored end state (no sample).
+(c) **a probe should cost about $0.35, not $1:** the saved runs' first stop (the same `go` turn, on the start state) cost $0.24 (v3.0), $0.38 (v3.7), $0.38 (v3.8-text), highest $0.51. That is the original sessions' first turn, not a probe.
+(d) [`rater.py`](overhead-replay/rater.py) (36 tests, mutants all killed): the eight fixed questions, both orders, the four planted defects (`fabricated` reported, not required), the packet builder; **his packet is ten records of 2,832-3,600 words, 33,592 in all, about 168 minutes of reading at 200 words a minute**, in `pilot/doc-probe/rating/`. Built both (his rating and the model rater), his answer at the S258 picker.
+(e) **no M3 task in the project's history** (56 function-removal commits, none leaves two parsed-or-agent live documents false that the commit also fixed); **one constructed task exists on the study's start state**: rename `getEmptyErrorLst`.
+(f) caps: study $100; proposed probe session cap **$1.00**, rater call cap **$0.50**, P2 total cap **$10** (the plan's proposal stands); both caps are required arguments, and the CLI overshoots a cap slightly (one saved stop: $2.0389 on a $2.00 cap).
+**Where this differs from the text above:** the tests are in `tests_probe.py`, not `tests.py`; a probe that costs at 98% of its session cap is recorded as failed (`cap_hit`); `--verify-all` is the pre-flight. **P2 is its own session and its own go; the P2 spend is the operator's (D4).**
 
 ### P2: Pilot, with a cap
 

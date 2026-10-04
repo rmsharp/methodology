@@ -37,8 +37,9 @@ CONTROLS = (None, "git-only")
 CONTROL_SUBJECT = "Restore tracked documentation to its text at the install commit"
 ENV = dict(os.environ, GIT_AUTHOR_NAME="Fixture", GIT_AUTHOR_EMAIL="fixture@example.invalid",
            GIT_COMMITTER_NAME="Fixture", GIT_COMMITTER_EMAIL="fixture@example.invalid")
-# No saved run ever ended on the budget cap, so the shape the CLI reports it in has never been seen. If it came back as an ordinary
-# success the report would be cut short and look whole; a cost at the cap is therefore a failed probe whatever the result message says.
+# A session that reaches --max-budget-usd ends as `result error_max_budget_usd` (seen once, pilot/xhigh-go HEAD rep 1: $2.0389 on a $2.00
+# cap, so the CLI overshoots a little and a cap is approximate). Should a cap stop ever come back as an ordinary success, the report would
+# be cut short and look whole; a cost at 98% of the session cap is therefore a failed probe whatever the result message says.
 CAP_HIT = 0.98
 NOT_CARRIED = ["uncommitted work and untracked files", "the arm's git hook (.git/hooks is not in a bundle)", "the original .git/config"]
 
