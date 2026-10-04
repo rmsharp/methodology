@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] S261 — reconcile S260's `commit:` answer slot to its close-out sha
+
+S260's receipt named "the close-out commit (see `git log`)", which `bin/check-handoff` refuses once a newer receipt sits above it (`bin/tests.sh` Test 34 L1: 361 passed, 1 failed, after the S261 claim). Per `starter-kit/HANDOFFS.md:64` and `:78-79` the next session reconciles it: the first commit whose copy of the S260 block reads `status: complete` is `61cd3d0` (found with the checker's own recipe), so the slot now starts `61cd3d0 (the close-out commit)`; the rest of the line is unchanged. One line in `HANDOFFS.md`.
+
 ### 2026-10-04 · [BL-94] S261 — the rater dry run on the planted defects rebuilt at S260: `missing` and `vague` MISSED again, `wrong` caught ($1.6146)
 
 Ran `rater.py dry-run --call-cap 0.50 --total-cap 10 --out pilot/doc-probe/rating-s261` (30 calls, the code's default model and effort; results in `pilot/doc-probe/rating-s261/`, S259's `rating/` left as it was). **`missing` and `vague` were MISSED on all 3 records in both orders (12 of 12 calls, 8/8 yes)** although the $0 removal check passed both before the first call: the status lines still state a pending action (`gh issue close 121`) and names such as `NEWS` and `AUDIT_WORKSTREAM` remain, which the finders do not count. `wrong` was caught on all 3 in both orders; the honest records scored 8 of 8 again; the arm guess is unchanged from S259; all 30 calls parsed, so the S260 repair (b) was not exercised. Spend: 30 ledger rows, $1.6146 (mean $0.0538, max $0.0652); the study's ledger is $4.0927 of its own $100. Report: `pilot/doc-evidence/P2_RATER_RERUN.md`. Decisions left to the operator: rebuild the two defects again, take his own blind rating as the measure, D6 and D7. Nothing pushed, nothing sent upstream.
