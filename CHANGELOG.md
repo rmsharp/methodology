@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-04-2.md` (1 record(s), 39,475 B → 28,767 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-04 → 2026-10-04) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-04-2.md`](docs/archive/HANDOFFS-through-2026-10-04-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-04-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-04-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,475 B → 28,767 B (−27.1%).
+
 ### 2026-10-04 · [BL-94] S260 close-out — the four P2 harness defects are fixed at $0
 
 Close-out of the S260 claim (`c2eacbd`). Deliverable: BL-94's four harness defects from `P2_REPORT.md` §4, no model call and nothing spent (the study's ledger stays $2.4781 of $100). Commits: trim `d98c464` and fold `51edca6`, claim `c2eacbd`, probe fixes (a) and (c) `37c5f0f`, rater fixes (b) and (d) `f067add`, documents `8bedda1` and `6804c60`, mutant runner `770c855`, then this close-out. Verification run in the session: `bin/tests.sh` 362 passed, 0 failed; `tests_probe.py` 58, `tests_rater.py` 58, `tests_doc_evidence.py` 14, `tests_p1b.py` 20, `FreezeTests` 4, all OK; mutants 81 of 81 and 72 of 72 killed and none a syntax error; `doc_score.py` diff 0 lines; the fixes run on the real bundle, the four saved probes' stream logs and the three honest records. **What it found:** both of S259's rater misses were the planted-defect builders', not the rater's (`missing` used the scorer's label set, which lacks `SUGGESTED NEXT`; `vague` left 273 to 338 backticked spans and 19 to 24 function names per record under a question that accepts a function or a location); and reading the rebuilt output found a boundary defect the new check had passed (`#28/#12/...` taken for a heading), so the check now also reports where each removal stopped. The frozen scorer has the same loose heading rule; measured, 0 of 23 scored runs differ. Phase 3A scored S259's handoff 9/10 (all seven anchors exact; the `-7` shard name was wrong); 3B self 8/10; 3C appended no fork learning and retired no row (the vacuous-mutant lesson is now a runner check, `770c855`). Not done by design: the rater is not re-run on the rebuilt defects (paid, his decision), P3, D6 and D7. Receipt in `HANDOFFS.md`. Nothing pushed, nothing sent to `KJ5HST/methodology`, nothing spent. `CHANGELOG: pending` from the claim is resolved by this entry.
