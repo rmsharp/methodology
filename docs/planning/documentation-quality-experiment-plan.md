@@ -2,8 +2,10 @@
 
 **Status: DRAFT for operator approval (BL-94, S255, 2026-10-03), recomposed twice after two independent read-only reviews the same
 session (§11).** Written as the session's one deliverable. Nothing here has been run: no model session was launched, no money was
-spent, no distributed file changed, nothing was sent upstream. Approval of this document is not approval of any phase's spend (§7, D4).
-**The first thing it asks for is approval of P1 only: it costs nothing and produces a first answer from runs that already exist.**
+spent, no distributed file changed, nothing was sent upstream. **After the S255 close-out the operator ratified D1 to D3 as recommended,
+set $100 as this study's spend cap and said he will do the blind rating himself (D4, D5; his words in §7).** A phase still starts only
+when he says go in a session, one phase per session. **The first phase is P1a: it costs nothing and its end result is a first answer
+from runs that already exist.**
 
 ## In plain words
 
@@ -57,8 +59,9 @@ the first answer, and the plan stops there for the operator's decision before an
 run a **cold-start probe** on saved end states, because only a new session can show whether the record *works for a successor* and
 what it adds beyond what git already says, plus a blind model rater for what no script reaches. New *task* runs are needed only if
 P1 shows the saved v3.8-text runs cannot be pooled. Estimated model spend: a cap of $10 for the pilot (about $6 expected) and about
-$38 for the main probes, plus about $28 only if new v3.8 runs prove necessary (§5), against **$20.94** left under the operator's
-$175 total if only the two ledgers count against it, or about **$15.39** if the other recorded runs do too (§7, D4).
+$38 for the main probes, plus about $28 only if new v3.8 runs prove necessary (§5): **about $76 at most, against the $100 the
+operator set for this study on 2026-10-03** (§7, D4; he said to ignore the earlier caps, so the $20.94 and $15.39 headroom figures
+of the earlier drafts no longer apply to it).
 
 **What it will not tell us** (§2.4): anything about long-run growth of the record (that needs the session chain, §3.6), another
 model, another project, which v3.8 feature produced a difference, or anything about live-document staleness until a task for it
@@ -301,8 +304,10 @@ plus probes, a cost line the operator approves (D4). The study ranks nothing fin
    record with a deliberately wrong next step, a missing next step, a fabricated sha) that it must rank below the honest ones, and the
    **arm-guess question** reported: if the rater names the arm correctly most of the time, blinding failed and M5 is reported as
    unblinded. It is the same model family as the writers; that bias is stated beside every M5 figure.
-4. **Operator's own rating (optional, D5):** a blind sample of about ten records as a human anchor for the rater. His time, so his
-   call; I have not timed how long one record takes to read.
+4. **Operator's own rating (D5, decided: he does it himself):** a blind sample of about ten records as a human anchor for the model
+   rater. How many records he rates is his call; I have not timed how long one record takes to read. **If he meant this to replace
+   the model rater rather than anchor it, the model rater and its $2 dry run drop out and M5 becomes his ratings alone; P2a asks
+   before building the rater.**
 
 ---
 
@@ -404,8 +409,9 @@ fork is a separate outward action and needs the operator's go-ahead at the time 
 is re-derived by a command it names, as this plan's §10 does. **Surface:** documents in the fork only.
 
 **Budget summary (estimates, not measurements):** P1a, P1b, P2a $0; P2 about $6 expected, cap proposed $10; P3a about $38; P3b about
-$28 only if needed. Total through P3a about **$48** (the P2 cap plus P3a), through P3b about $76, against **$20.94 left under the
-operator's $175 total** (or about $15.39; §7 D4), so P2 fits and P3 does not without his raising the total.
+$28 only if needed. Total through P3a about **$48** (the P2 cap plus P3a), through P3b about $76, against **the $100 cap the operator
+set for this study** (§7 D4), which leaves about $24: roughly five more task-plus-probe units at the measured $3.45 plus about $1 each,
+before margin. A larger n for v3.0 or v3.7 (§3.8) draws on that $24 and needs his word before it is spent.
 
 ---
 
@@ -439,16 +445,16 @@ operator's $175 total** (or about $15.39; §7 D4), so P2 fits and P3 does not wi
 
 | # | Decision | Status and recommendation |
 |---|---|---|
-| D1 | Which question: Q1 or Q2 (§3.1) | **OPEN. Recommend Q2.** Q1 is partly answered by the T-remove trees |
-| D2 | Start state | **OPEN. Recommend `879503cce`**, the one S237 and the T-control batches used (§3.2): saved runs, measured cost, a working task and answer key. S323 offers nothing more. Other alternatives: strip the methodology from a later start state (heavy surgery, not a real adopter); or the S236 fixture (cheap, seeded ghost commit and stale handoff, a mechanism probe, but the operator redirected the overhead study away from it) |
-| D3 | Arms | **OPEN. Recommend v3.0, v3.7 and v3.8-text, all saved.** New v3.8 task runs only if P1b rejects pooling. Revisit after P1b's free result: if v3.0 against v3.7 and v3.8 shows nothing at all on M1 and M2, the case for spending on probes is weaker |
-| D4 | Spend | **OPEN and entirely his.** No cap exists for this study. His ratchet-test cap is $125 with $109.51 on its ledger (re-summed from `pilot/ratchet-pressure-t-erode/spend.jsonl`; the five ledgers are cumulative, so adding them double-counts) and his total is $175 with $44.55 spent before that study: **$20.94 left if the total covers only those two ledgers.** Other recorded runs are on neither: the first pilot rows ($1.27), the xhigh-go rows ($3.92), and the BL-79 haiku runs ($0.25 in S252, $0.113 in S254): **$5.55**, which would leave about **$15.39**. Whether those count against his $175 is his to say. Proposals only: P1a, P1b, P2a $0 now; P2 capped at $10 with a per-probe cap of $2; P3a only after P2 prices it, about $38; P3b only if needed, about $28, with a per-session cap of $6 |
-| D5 | Rater: model only, or also his own blind rating of about ten records | **OPEN. Recommend adding his sample** if he has the time; without it M5 has no human anchor |
+| D1 | Which question: Q1 or Q2 (§3.1) | **RATIFIED 2026-10-03, as recommended: Q2.** Q1 is partly answered by the T-remove trees |
+| D2 | Start state | **RATIFIED 2026-10-03, as recommended: `879503cce`**, the one S237 and the T-control batches used (§3.2): saved runs, measured cost, a working task and answer key. S323 offers nothing more. Alternatives not taken: strip the methodology from a later start state (heavy surgery, not a real adopter); or the S236 fixture (cheap, seeded ghost commit and stale handoff, a mechanism probe, but the operator redirected the overhead study away from it) |
+| D3 | Arms | **RATIFIED 2026-10-03, as recommended: v3.0, v3.7 and v3.8-text, all saved.** New v3.8 task runs only if P1b rejects pooling. P1b ends in a stop at which the case for spending on probes is reconsidered with the free result in hand: if v3.0 against v3.7 and v3.8 shows nothing at all on M1 and M2, that case is weaker |
+| D4 | Spend | **DECIDED 2026-10-03: $100 for this study, and the earlier caps are ignored for it.** His words: "D4: spend $100 for this experiment (ignore prior cap)". It is a cap on the study's own ledger, which starts at $0: every launch of this study passes the driver `--total-cap 100`, read from the study's own `spend.jsonl`, not the ratchet study's. The earlier figures no longer constrain it: the $125 ratchet-test cap with $109.51 on its ledger, the $175 total with $44.55 before that study, and the $20.94 and $15.39 headroom the earlier drafts computed (§10 row 18 keeps them as history). **What that sentence does not decide, left as the plan's proposals inside the $100:** the per-phase and per-session caps (P2 $10 with $2 per probe; P3a about $38; P3b about $28 with $6 per session). Each phase still starts only when he says go in a session, and P3 is still authorised only after P2 has named its real cost |
+| D5 | Rater: model only, or also his own blind rating of about ten records | **DECIDED 2026-10-03: he does the blind rating himself.** His words: "D5 I will do blind rating". I read it as the plan's recommended option, his own rating of about ten records as the human anchor beside the model rater; if he meant it *instead of* the model rater, §4 item 4 says what drops out, and P2a asks before building the rater |
 | D6 | The session chain, and building it once for both studies | **OPEN, after P3.** Changes the ratchet plan's D4 |
 | D7 | Publication beyond the fork | **OPEN, not needed until P5.** Recommend fork only until the results have been seen. Outward-facing, so asked at the time |
 
-**The one to answer first is whether to start P1a.** It is free, and P1b ends in a stop at which D3 and D4 are asked again with a
-result in hand.
+**D1 to D5 are decided; D6 (after P3) and D7 (at P5) stay open.** His message, verbatim, after the S255 close-out: *"D1-D3 accept recommendations; D4: spend $100 for this experiment (ignore prior cap); D5 I will do blind rating"*. P1a can start in any session he says go;
+P1b ends in a stop at which D3 and the spend are reconsidered with the free result in hand.
 
 ---
 

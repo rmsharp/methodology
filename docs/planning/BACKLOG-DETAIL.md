@@ -4035,8 +4035,11 @@ into three sets by start commit; the S237 real-project runs and the ratchet stud
 documentation rules, so **v3.0, v3.7 and v3.8-text can be scored for documentation at $0 before any spend** (P1a, P1b); the ratchet
 study's T-remove trees start at `402a6b5b`, whose project rules explain why every arm looked alike; "pending in most trees" is 2 of 15;
 `inst/_pkgdown.yml` is a dead file, so no staleness target exists yet. **Nothing is built, run or spent.** The first decision is whether
-to start P1a; the money decisions (D4) come after P1b's free result. The cost and cap figures in the plan are proposals; no cap exists
-for this study.
+to start P1a; the money decisions (D4) come after P1b's free result. The cost and cap figures in the plan are proposals.
+**Ratified after the S255 close-out (2026-10-03, his words: "D1-D3 accept recommendations; D4: spend $100 for this experiment (ignore prior
+cap); D5 I will do blind rating"):** D1 Q2, D2 `879503cce`, D3 v3.0 + v3.7 + v3.8-text (all saved); **D4 a $100 cap for this study on its own
+ledger from $0, earlier caps ignored for it**; D5 he rates a blind sample himself (read as beside the model rater; the plan says what drops
+out if he meant instead of it). D6 and D7 stay open. P1a ($0) starts when he says go.
 
 ---
 

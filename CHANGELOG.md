@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-03 · [BL-94] S255 — the operator ratifies D1-D5 after the close-out; $100 cap for this study
+
+His message, verbatim: *"D1-D3 accept recommendations; D4: spend $100 for this experiment (ignore prior cap); D5 I will do blind rating"*. Recorded in `docs/planning/documentation-quality-experiment-plan.md` (status paragraph, plain words, §4 item 4, §5 budget summary, §7 D1-D5 and the paragraph under it), the BL-94 row of `BACKLOG.md`, the BL-94 status of `BACKLOG-DETAIL.md`, and the S255 receipt (`active_task`, `next_steps` (1), gotcha (8)). **D1-D3:** Q2, start state `879503cce`, arms v3.0 + v3.7 + v3.8-text. **D4:** $100 for this study on its own ledger from $0; the earlier $125 and $175 figures and the $20.94 and $15.39 headroom no longer constrain it. **Not decided by his sentence and left as proposals inside the $100:** the per-phase and per-session caps, and that P3 follows P2's priced result. **D5:** read as the plan's "also his own rating" option, with the plan stating what drops out if he meant it to replace the model rater and P2a asking before the rater is built. D6 and D7 stay open. **Nothing run, built or spent; nothing sent upstream.** This is an operator decision recorded after the close-out; the 3G report was re-rendered after this commit.
+
 ### 2026-10-03 · [BL-94] S255 — fill the receipt's commit slot with the close-out sha
 
 The S255 receipt's `commit:` slot, `pending` in the close-out commit, now reads `3b1b0bbdf27f` (12 characters, with hex letters, so `bin/check-handoff` accepts it as a sha; S253's all-decimal slot is the lapse this avoids). `bin/check-handoff --all` run after the fill. Receipt-only change; no new action.
