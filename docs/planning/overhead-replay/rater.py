@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """M5, the blind rater, and the packet for the operator's own blind rating (BL-94 P2a (d); plan section 2.3 M5, section 4 items 3 and 4, D5).
 
-    python3 rater.py defects  [--out DIR]                        # $0: write the planted-defect set for inspection
+    python3 rater.py defects  [--out DIR]                        # $0: write the planted-defect set, and check each defect removed its evidence
     python3 rater.py packet   [--out DIR] [--seed N]             # $0: the operator's blind packet, score sheet and (separate) key
     python3 rater.py dry-run  --call-cap 0.75 --total-cap 100    # PAID: the rater on the planted-defect set; P2, not P2a
     python3 rater.py score-human SHEET.csv KEY.json              # $0: his sheet scored against the key
@@ -46,7 +46,12 @@ ARM_CHOICES = ("3.0", "3.7", "3.8", "cannot_tell")
 GROUP_LABEL = {"v3.0": "3.0", "v3.7": "3.7", "v3.8-text": "3.8"}
 STRATA = {"v3.0": 2, "v3.7": 2, "v3.8-text": 2}            # six: his choice at the S258 picker (the plan said about ten; ten was 168 minutes of reading)
 SEED = 20261004
-NEXT_LABEL = re.compile(r"(?i)^\W*(next[ _]steps?|what.s next|next session|next up)\b")
+# A next-step paragraph starts with one of these. This is wider than the scorer's PART_LABEL on purpose: S259 found `**=> SUGGESTED NEXT.**` in
+# all three real records and the scorer's set (which this copied) does not name it. "Gotchas for next session" and a mid-sentence "next steps"
+# are not labels. A body separated from its label by a blank line is not removed (none of the real records has one; see `defect_check`).
+NEXT_LABEL = re.compile(r"(?i)^\W*(?:(?:suggested|recommended|natural)\s+next\b|next[ _]steps?\b|what.s next\b|next session\b|next up\b|next task\b|next action\b)")
+# What `check` reports beside a `missing` defect: any other line that still says "next steps" and the like. Informational, never a refusal.
+NEXT_CUE = re.compile(r"(?i)\b(?:suggested|recommended|natural) next\b|\bnext[ _]steps?\b|\bwhat.s next\b|\bnext up\b|\bnext task\b|\bnext action\b")
 SYSTEM = ("You are a careful reader. You are shown one document: the text that one working session added to a software project's own "
           "records. You have no tools and no access to the project. Judge only from the text. Reply with one JSON object and nothing else.")
 NEW_NEXT = "Next: start the task from the beginning; nothing described above has been done yet."
@@ -73,10 +78,15 @@ def render(rd):
 
 
 # ---- planted defects (mechanical, no model) ----------------------------------------------------------------------------------------
-def drop_parts(lines, replacement=None):
-    """Remove every paragraph whose first line is a next-step label, with the same ending rules doc_score._parts uses: a paragraph runs
-    from its label to a blank line, a heading, a fence or the next receipt field. A one-line field (`next_steps: ...`) is its own
-    paragraph. `replacement` (a line) is put where the first one was."""
+HEADING = re.compile(r"^#{1,6}\s")      # a markdown heading: `#28/#12` (an issue list) is not one, though doc_score._parts treats any leading `#` as one
+
+
+def drop_parts(lines, replacement=None, ends=None):
+    """Remove every paragraph whose first line is a next-step label. Like doc_score._parts a paragraph runs from its label to a blank line, a
+    heading, a fence or the next receipt field, and a one-line field (`next_steps: ...`) is its own paragraph; unlike it, only `#` followed by a
+    space is a heading (S260: a line that opens with `#28/#12/...` ended a block early and left half of it in the record). `replacement` (a line)
+    is put where the first one was. `ends`, if given, collects the first line KEPT after each removed block (None at the end of the text), so the
+    boundary every removal stopped at can be read."""
     out, skipping, placed = [], False, False
     for line in lines:
         if NEXT_LABEL.match(line):
@@ -86,11 +96,15 @@ def drop_parts(lines, replacement=None):
                 placed = True
             continue
         if skipping:
-            if not line.strip() or line.startswith("#") or line.startswith("```") or doc_score.RECEIPT_FIELD_LINE.match(line):
+            if not line.strip() or HEADING.match(line) or line.startswith("```") or doc_score.RECEIPT_FIELD_LINE.match(line):
                 skipping = False
+                if ends is not None:
+                    ends.append(line)
             else:
                 continue
         out.append(line)
+    if skipping and ends is not None:
+        ends.append(None)
     return out, placed
 
 
@@ -121,12 +135,52 @@ def _sub_sha(text, fn):
     return doc_score.SHA_RE.sub(lambda m: fn(m.group(1)) if _shaish(m.group(1)) else m.group(0), text)
 
 
+# What the `where` question accepts: "naming at least one file, function or location". These are the ways the records name a place in the code,
+# one finder per way; `location_tokens` finds them and `defect_vague` removes exactly them, so what the rater is shown has none (S259: the old
+# builder removed paths and anchors only, and 273 to 338 backticked spans and 19 to 24 function names per record were left standing).
+CODE_SPAN = re.compile(r"`[^`\n]+`")                                       # the records quote code, names, commands and files in backticks
+CALL = re.compile(r"\b[A-Za-z_][\w.]*\(\)")                                  # getPedMaxAge(), obj.method()
+QUALIFIED = re.compile(r"\b\w+::\w+")                                       # pkg::fn
+CAMEL = re.compile(r"\b[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)+\b")                # getPedMaxAge, qcStudbook
+SNAKE = re.compile(r"\b[a-z][a-z0-9]*(?:_[a-z0-9]+)+\b")                    # spell_check_package (a receipt's own field names are labels, see `_body`)
+LINE_REF = re.compile(r"(?:[Ll]ines?\s+|L)\d+(?:\s?[-\u2013/]\s?L?\d+)*\b|\u00a7\s?\d+(?:\.\d+)*")     # line 24, L512/L763-765, section sign 11
+LOCATION_FINDERS = (CODE_SPAN, doc_score.ANCHOR_RE, doc_score.PATH_RE, CALL, QUALIFIED, CAMEL, SNAKE, LINE_REF)
+GENERIC = ("the relevant place", "the relevant file", "the relevant code", "the relevant name")
+
+
+def _body(line):
+    """(label, rest): a receipt field's name (`key_files: `) is a label and not a place, so it is set apart before anything is found or replaced."""
+    m = doc_score.RECEIPT_FIELD_LINE.match(line)
+    return (line[:m.end()], line[m.end():]) if m else ("", line)
+
+
+def location_tokens(lines):
+    """Every place-in-the-code token in `lines`, each character counted once: the finders run in the order above and a match that overlaps an
+    earlier one is skipped, so a function name inside a backticked span is one token and not three."""
+    found = []
+    for line in lines:
+        taken = []
+        for rx in LOCATION_FINDERS:
+            for m in rx.finditer(_body(line)[1]):
+                if not any(m.start() < e and s < m.end() for s, e in taken):
+                    taken.append((m.start(), m.end()))
+                    found.append(m.group(0))
+    return found
+
+
+def _vague_line(line):
+    label, line = _body(line)
+    line = doc_score.ANCHOR_RE.sub("the relevant place", line)
+    line = doc_score.PATH_RE.sub("the relevant file", line)
+    line = CODE_SPAN.sub(lambda m: m.group(0)[1:-1] if m.group(0)[1:-1] in GENERIC else "the relevant code", line)    # a span that was only a path is unwrapped
+    for rx in (CALL, QUALIFIED, CAMEL, SNAKE):
+        line = rx.sub("the relevant name", line)
+    line = LINE_REF.sub("the relevant place", line)
+    return label + _sub_sha(line, lambda s: "the commit")
+
+
 def defect_vague(rd):
-    def one(line):
-        line = doc_score.ANCHOR_RE.sub("the relevant place", line)
-        line = doc_score.PATH_RE.sub("the relevant file", line)
-        return _sub_sha(line, lambda s: "the commit")
-    return _map(rd, lambda lines: [one(l) for l in lines])
+    return _map(rd, lambda lines: [_vague_line(l) for l in lines])
 
 
 def defect_fabricated(rd):
@@ -142,6 +196,79 @@ DEFECTS = {"missing": (defect_missing, ["next_step"]), "wrong": (defect_wrong, [
 
 def changed(rd, other):
     return render(rd) != render(other)
+
+
+# ---- the evidence check: did a defect remove what its question rests on? ----------------------------------------------------------------
+def _all_lines(rd):
+    return [l for lines in rd["docs"] for l in lines] + list(rd["final"])
+
+
+def next_step_labels(rd):
+    return [l.strip()[:120] for l in _all_lines(rd) if NEXT_LABEL.match(l)]
+
+
+def next_step_cues(rd):
+    return [l.strip()[:160] for l in _all_lines(rd) if NEXT_CUE.search(l)]
+
+
+def location_evidence(rd):
+    return location_tokens(_all_lines(rd))
+
+
+def next_step_ends(rd):
+    """The first line kept after each next-step block removed from the honest record: where each removal stopped, to be read. A finder of labels
+    cannot see a body that survives a wrong boundary (S260: it reported `3 -> 0` over a record that still held half of a block)."""
+    ends = []
+    for lines in rd["docs"] + [rd["final"]]:
+        drop_parts(lines, ends=ends)
+    return ["<end of the text>" if e is None else e.strip()[:100] for e in ends]
+
+
+ENDS = {"missing": next_step_ends}
+# defect -> (what its finder counts, the finder, informational cues or None)
+CHECKS = {"missing": ("next-step labels", next_step_labels, next_step_cues), "vague": ("location tokens", location_evidence, None)}
+
+
+def defect_check(rd, defects=None):
+    """For each defect that has a finder: how much of the evidence its target question rests on the honest record holds (`before`), how much the
+    defective one still holds (`after`; the first few are `left`), and, for `missing`, the other lines that still say "next steps" and the like
+    (`cue_lines_left`, informational). A defect with after > 0 did not remove what it was built to remove, so a rater that answers yes to its target
+    question may be right (S259: both misses were this); `problems_from` turns that into a refusal before any call is paid for. What this proves is
+    relative to the finders: a place named in words no finder knows, or a next step implied by a status line, is not counted, and the report says so.
+    `wrong` and `fabricated` have no finder: the first adds a sentence, the second changes shas that only git can check."""
+    out = {}
+    for name, (fn, targets) in (defects or DEFECTS).items():
+        if name not in CHECKS:
+            continue
+        what, finder, cues = CHECKS[name]
+        made = fn(rd)
+        left = finder(made)
+        out[name] = {"targets": targets, "evidence": what, "before": len(finder(rd)), "after": len(left), "left": left[:5],
+                     "cue_lines_left": cues(made)[:5] if cues else [], "ends": ENDS[name](rd) if name in ENDS else []}
+    return out
+
+
+def problems_from(checks):
+    """One string per (record, defect) whose evidence was not removed, from {record id: defect_check(...)}."""
+    return [f"{rid}: {name} leaves {c['after']} of {c['before']} {c['evidence']} (first: {c['left'][:3]})"
+            for rid, per in checks.items() for name, c in per.items() if c["after"]]
+
+
+def check_defects(records, defects=None):
+    """The problems over the honest set (the records a dry run rates): [] when every defect removed what it was built to remove."""
+    return problems_from({rid: defect_check(records[rid][1], defects) for rid in honest_set(records)})
+
+
+def defects_report(records, defects=None):
+    """(lines to print, problems): one line per honest record and defect, its evidence before -> after, LEAVES where that did not reach zero."""
+    lines, checks = [], {}
+    for rid in honest_set(records):
+        checks[rid] = defect_check(records[rid][1], defects)
+        for name, c in checks[rid].items():
+            lines.append(f"{rid:24} {name:8} {c['evidence']:16} {c['before']} -> {c['after']}" + (f"   LEAVES {c['left'][:3]}" if c["after"] else "")
+                         + (f"   ({len(c['cue_lines_left'])} line(s) still mention next steps)" if c["cue_lines_left"] else ""))
+            lines += [f"{'':24} {'':8} removal ended at: {e!r}" for e in c["ends"]]
+    return lines, problems_from(checks)
 
 
 # ---- the rating call ----------------------------------------------------------------------------------------------------------------
@@ -179,21 +306,33 @@ def rater_cmd(model, effort, call_cap):
             "--system-prompt", SYSTEM]
 
 
+RAW_KEEP = 20000        # characters of a failed call's text kept: a rating reply is a few hundred, and the results file is committed
+
+
+def keep(text):
+    """A failed call's text, bounded. The cause of a failure is in the text, and the first characters show it."""
+    text = "" if text is None else (text if isinstance(text, str) else json.dumps(text))
+    return text if len(text) <= RAW_KEEP else text[:RAW_KEEP] + f"\n[cut: {len(text)} characters in all]"
+
+
 def call_rater(user_prompt, argv, run=subprocess.run):
-    """One rating call: the prompt on stdin, an EMPTY working directory, no tools. Returns (parsed or None, cost, error or None)."""
+    """One rating call: the prompt on stdin, an EMPTY working directory, no tools. Returns (parsed or None, cost, error or None, raw or None).
+    `raw` is the text that failed, so a failure can be diagnosed afterwards (S259: one of 31 calls cost $0.0635 and left only a parse error's
+    position): the CLI's stdout and stderr when it gave no JSON, its envelope on a CLI error, the reply itself when it could not be used. It is
+    bounded (`keep`) and is None when the reply was usable."""
     with tempfile.TemporaryDirectory(prefix="rater-") as cwd:
         p = run(argv, input=user_prompt, capture_output=True, text=True, cwd=cwd)
     try:
         env = json.loads(p.stdout)
     except ValueError:
-        return None, 0.0, f"no JSON from the CLI (exit {p.returncode}): {(p.stderr or p.stdout)[:200]}"
+        return None, 0.0, f"no JSON from the CLI (exit {p.returncode}): {(p.stderr or p.stdout)[:200]}", keep((p.stdout or "") + (f"\n[stderr]\n{p.stderr}" if p.stderr else ""))
     cost = float(env.get("total_cost_usd") or 0.0)
     if env.get("is_error") or env.get("subtype", "success") != "success":
-        return None, cost, f"CLI error {env.get('subtype')}"
+        return None, cost, f"CLI error {env.get('subtype')}", keep(p.stdout)
     try:
-        return parse_reply(env.get("result")), cost, None
+        return parse_reply(env.get("result")), cost, None, None
     except ValueError as e:
-        return None, cost, f"unusable reply: {e}"
+        return None, cost, f"unusable reply: {e}", keep(env.get("result"))
 
 
 def total(parsed):
@@ -244,7 +383,12 @@ def summarize_dry_run(results):
         per = {}
         for o in "AB":
             per[o] = planted_check(h[o], {k: ok(k, o)["answers"] for k in DEFECTS if ok(k, o)})
-        rows[rid] = {"honest_total": {o: total(ok("honest", o)) for o in "AB"},
+        evidence = {}
+        for k in DEFECTS:
+            c = next((c for c in ((kinds.get(k, {}).get(o) or {}).get("check") for o in "AB") if c), None)
+            if c:
+                evidence[k] = {f: c[f] for f in ("evidence", "before", "after", "left", "cue_lines_left", "ends")}
+        rows[rid] = {"honest_total": {o: total(ok("honest", o)) for o in "AB"}, "planted_evidence": evidence,
                      "order_disagreement": [q for q in KEYS if h["A"][q] != h["B"][q]],
                      "defects": combine_orders(per["A"], per["B"]) if per["A"] and per["B"] else {},
                      "defect_totals": {k: {o: total(ok(k, o)) for o in "AB" if ok(k, o)} for k in DEFECTS if ok(k, "A") or ok(k, "B")}}
@@ -331,6 +475,11 @@ def score_human(sheet_path, key):
 def dry_run(records, call_cap, total_cap, out=OUT, model="sonnet", effort="high", run=subprocess.run):
     """Rate the honest set and its planted defects, each record in both question orders, one call each. Every call is checked against
     the study's own spend ledger first and written to it after; a refused call ends the run with what it has."""
+    checks = {rid: defect_check(records[rid][1]) for rid in honest_set(records)}
+    problems = problems_from(checks)
+    if problems:                      # S259 paid $1.66 to learn two defects were not defects; this is the same finding at $0
+        raise probe.Refused("a planted defect leaves the evidence it was built to remove, so a rating of it would not mean what it says; nothing was sent:\n  "
+                            + "\n  ".join(problems))
     os.makedirs(out, exist_ok=True)
     argv = rater_cmd(model, effort, call_cap)
     results = {}
@@ -349,10 +498,10 @@ def dry_run(records, call_cap, total_cap, out=OUT, model="sonnet", effort="high"
             except SystemExit as e:
                 results.setdefault(rid, {}).setdefault(kind, {})[order] = {"refused": str(e)}
                 return results
-            parsed, cost, err = call_rater(prompt(render(rd), order), argv, run)
+            parsed, cost, err, raw = call_rater(prompt(render(rd), order), argv, run)
             with open(os.path.join(out, "spend.jsonl"), "a") as f:
                 f.write(json.dumps({"kind": "rater", "run": rid, "defect": kind, "order": order, "cost_usd": cost}) + "\n")
-            results.setdefault(rid, {}).setdefault(kind, {})[order] = {"parsed": parsed, "cost_usd": cost, "error": err}
+            results.setdefault(rid, {}).setdefault(kind, {})[order] = {"parsed": parsed, "cost_usd": cost, "error": err, "raw": raw, "check": checks[rid].get(kind)}
     return results
 
 
@@ -382,6 +531,10 @@ def main(argv=None):
                 with open(os.path.join(a.out, f"{probe.slug(rid)}.{name}.txt"), "w") as f:
                     f.write(render(made))
                 print(f"{rid:24} {name:11} changed={changed(rd, made)}")
+        lines, problems = defects_report(records)
+        print("\n".join(lines))
+        if problems:
+            raise SystemExit("a planted defect leaves the evidence it was built to remove:\n  " + "\n  ".join(problems))
     elif a.mode == "packet":
         sample = draw_sample(records, a.seed)
         md, sheet, key, size = build_packet(records, sample)

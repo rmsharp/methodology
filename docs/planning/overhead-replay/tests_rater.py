@@ -5,6 +5,7 @@ call is a stand-in function. Synthetic records only, apart from one check that t
     python3 docs/planning/overhead-replay/tests_rater.py
 """
 import csv, json, os, shutil, subprocess, sys, tempfile, unittest
+from unittest import mock
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -55,6 +56,37 @@ class Defects(unittest.TestCase):
         self.assertEqual(R.drop_parts(["Next up", "x", "```", "keep"])[0], ["```", "keep"])
         self.assertEqual(R.drop_parts(["keep", "no label here"])[0], ["keep", "no label here"])
 
+    def test_the_label_set_covers_the_forms_the_real_records_use_and_not_a_mention(self):
+        """S259: all three real records carry a `**=> SUGGESTED NEXT.**` paragraph, which the scorer's label set (and so this builder's) did not
+        name, so `missing` left the next step in and the rater's yes was right."""
+        for line in ("**=> SUGGESTED NEXT.** Owner's pick. (1) **From a checkout", "**=> SUGGESTED NEXT (recommendations, not predictions).** **#121 is fixed",
+                     "next_steps: run the tests", "## Next session", "**Next session** (details in the receipt)", "Next up: the audit", "What's next",
+                     "Recommended next step: close it", "natural next task is #120", "Next task: the audit", "Next action: merge", "- **Next steps:** 1. do x"):
+            self.assertTrue(R.NEXT_LABEL.match(line), line)
+        for line in ("**Gotchas for next session.** (1) the cache", "The next steps were done", "Nextcloud is down", "Key files (this session). `R/x.R`",
+                     "so the next session starts", "(see next steps)", "Suggested reading: the plan"):
+            self.assertFalse(R.NEXT_LABEL.match(line), line)
+
+    def test_a_suggested_next_paragraph_goes_whole_and_its_neighbours_stay(self):
+        lines = ["**Learnings:** one.", "", "**=> SUGGESTED NEXT.** Owner's pick. (1) **Close it:** `gh issue close 121`", "with a pointer. (2) Issue #120 (the audit).",
+                 "(3) Decide the ticket.", "", "**Key files.** `R/x.R:26-32`", "", "**Gotchas for next session.** (1) renv is not restored."]
+        out, _ = R.drop_parts(lines)
+        self.assertEqual(out, ["**Learnings:** one.", "", "", "**Key files.** `R/x.R:26-32`", "", "**Gotchas for next session.** (1) renv is not restored."])
+
+    def test_a_line_that_starts_with_an_issue_number_does_not_end_a_next_step_paragraph(self):
+        """S260, found by reading the v3.8 record after the rebuild: `#28/#12/#11/#10/#5; the CRAN thread` is not a heading, and treating it as
+        one left the rest of the SUGGESTED NEXT block (its follow-ups) in a record whose next step was supposed to be gone."""
+        lines = ["**=> SUGGESTED NEXT.** (1) close it; (2) issue #120 (the audit); #116", "(BLOCKED); #103 roxygen;", "#28/#12/#11/#10/#5; the CRAN thread.",
+                 "**3. Small follow-ups I did NOT do:**", "(a) the advisory fires twice", "", "**Key files.** x"]
+        self.assertEqual(R.drop_parts(lines)[0], ["", "**Key files.** x"])
+        self.assertEqual(R.drop_parts(["Next up", "#1 first", "#### a heading", "keep"])[0], ["#### a heading", "keep"])      # a real heading still ends it
+        self.assertEqual(R.drop_parts(["Next up", "x", "#nospace is not one"])[0], [])
+
+    def test_the_line_each_removal_stopped_at_is_reported(self):
+        ends = []
+        R.drop_parts(["keep", "next_steps: a", "key_files: b", "Next up", "x", "", "keep", "Next session", "y"], ends=ends)
+        self.assertEqual(ends, ["key_files: b", "", None])                      # a receipt field, a blank line, the end of the text
+
     def test_missing_removes_every_next_step_part_and_nothing_else(self):
         out = R.defect_missing(RECORD)
         text = R.render(out)
@@ -75,6 +107,34 @@ class Defects(unittest.TestCase):
     def test_wrong_appends_the_contradiction_to_a_record_that_has_no_next_step(self):
         rd = {"docs": [["just a note"]], "final": ["Done."]}
         self.assertEqual(R.defect_wrong(rd)["final"][-1], R.NEW_NEXT)
+
+    def test_vague_removes_every_way_the_records_name_a_place_in_the_code(self):
+        """S259: no path or anchor survived `vague`, but 273 to 338 backticked spans and 19 to 24 function names did per real record, and the
+        question asks for a file, a function OR a location, so the rater's yes was right."""
+        line = ("Fixed `getPedMaxAge()` in `R/getPedMaxAge.R:26-32` (see `NA_real_`); then qcStudbook() and pkg::fn, via getPyramidPlot and spell_check_package, "
+                "at L512/L763-765, line 24 and §11. Run `RENV_CONFIG_AUTOLOADER_ENABLED=FALSE Rscript x`, not `gh issue close 121`.")
+        out = R.defect_vague({"docs": [[line, "active_task: kept as a label", "key_files: `R/y.R:9`"]], "final": []})["docs"][0]
+        for gone in ("getPedMaxAge", "R/", "NA_real_", "qcStudbook", "pkg::fn", "getPyramidPlot", "spell_check_package", "L512", "line 24", "§11", "RENV_CONFIG", "gh issue close", "`"):
+            self.assertNotIn(gone, out[0], gone)
+        self.assertEqual(out[1], "active_task: kept as a label")               # a receipt's field name is a label, not a place
+        self.assertNotIn("R/y.R", out[2])
+        self.assertTrue(out[2].startswith("key_files: "))
+        self.assertEqual(R.location_tokens(out), [])
+        self.assertIn("Fixed", out[0])                                          # ordinary words stay
+
+    def test_each_character_is_one_token_and_a_name_inside_a_span_is_not_counted_again(self):
+        self.assertEqual(R.location_tokens(["Fixed `getPedMaxAge()` here"]), ["`getPedMaxAge()`"])
+        self.assertEqual(R.location_tokens(["see R/x.R:24 and qcStudbook() at line 7"]), ["R/x.R:24", "qcStudbook()", "line 7"])
+        self.assertEqual(R.location_tokens(["key_files: R/x.R", "active_task: fix it"]), ["R/x.R"])           # a field's name is a label
+        self.assertEqual(R.location_tokens(["ordinary words, 3754 and deadbeef"]), [])
+
+    def test_vague_names_anchors_before_paths(self):
+        out = R.defect_vague({"docs": [["see R/x.R:24"]], "final": []})["docs"][0][0]
+        self.assertEqual(out, "see the relevant place")
+
+    def test_vague_unwraps_a_span_that_was_only_a_path_and_names_the_rest_generically(self):
+        out = R.defect_vague({"docs": [["See `R/x.R:24`, `tests/test_x.R` and `foo bar baz`."]], "final": []})["docs"][0][0]
+        self.assertEqual(out, "See the relevant place, the relevant file and the relevant code.")
 
     def test_vague_replaces_paths_anchors_and_shas_and_leaves_ordinary_words_and_numbers(self):
         rd = {"docs": [["See `R/x.R:24` and tests/test_x.R; commit %s. deadbeef is a word, 1790738507 a number, 3754 a count." % SHA]], "final": []}
@@ -109,6 +169,82 @@ class Defects(unittest.TestCase):
         for name, (_, targets) in R.DEFECTS.items():
             self.assertTrue(set(targets) <= set(R.KEYS), name)
         self.assertEqual(R.DEFECTS["fabricated"][1], [])
+
+
+class Evidence(unittest.TestCase):
+    """S260 (d): a planted defect is only a test of the rater if it provably removed the evidence its question rests on. Each defect that has a
+    finder (missing: next-step labels; vague: place-in-the-code tokens) is counted before and after, at $0, before any call is paid for."""
+    def test_each_defect_with_a_finder_removes_its_evidence_from_a_record_that_has_some(self):
+        c = R.defect_check(RECORD)
+        self.assertEqual(sorted(c), ["missing", "vague"])                        # wrong and fabricated remove nothing a finder could count
+        self.assertEqual((c["missing"]["targets"], c["vague"]["targets"]), (["next_step"], ["where"]))
+        self.assertEqual((c["missing"]["before"], c["missing"]["after"]), (3, 0))          # next_steps:, "Next session", "## Next steps"
+        self.assertGreater(c["vague"]["before"], 5)
+        self.assertEqual((c["vague"]["after"], c["vague"]["left"]), (0, []))
+
+    def test_the_boundary_each_next_step_removal_stopped_at_is_part_of_the_check(self):
+        self.assertEqual(R.defect_check(RECORD)["missing"]["ends"], ["gotchas: the cache is stale", "", ""])     # a receipt field, then a blank line twice
+        self.assertEqual(R.defect_check({"docs": [["Next up", "x"]], "final": []})["missing"]["ends"], ["<end of the text>"])
+        self.assertEqual(R.defect_check(RECORD)["vague"].get("ends"), [])
+
+    def test_a_surviving_cue_is_reported_beside_the_verdict_and_is_not_a_failure(self):
+        rd = {"docs": [["Next steps: do x", "", "The gate stayed put (see next steps).", "**Gotchas for next session.** (1) the cache"]], "final": []}
+        c = R.defect_check(rd)["missing"]
+        self.assertEqual((c["before"], c["after"]), (1, 0))
+        self.assertEqual(c["cue_lines_left"], ["The gate stayed put (see next steps)."])           # "for next session" is an addressee, not a next step
+        self.assertEqual(R.problems_from({"r": {"missing": c}}), [])
+
+    def test_a_defect_that_leaves_its_evidence_is_a_problem_naming_the_record_the_defect_and_what_is_left(self):
+        broken = {"missing": (lambda rd: rd, ["next_step"]), "vague": (R.defect_vague, ["where"])}
+        probs = R.check_defects({"set/v3.0-r1": ("v3.0", RECORD)}, broken)
+        self.assertEqual(len(probs), 1)
+        for word in ("set/v3.0-r1", "missing", "3 of 3", "next-step labels", "next_steps:"):
+            self.assertIn(word, probs[0])
+        self.assertEqual(R.check_defects({"set/v3.0-r1": ("v3.0", RECORD)}), [])
+
+    def test_only_the_honest_set_is_checked(self):
+        recs = sample_records()
+        self.assertEqual(R.check_defects(recs, {"missing": (lambda rd: rd, ["next_step"])}).__len__(), 3)       # one per group, not one per run
+
+    def test_a_record_with_none_of_the_evidence_is_not_a_failure_but_is_reported(self):
+        c = R.defect_check({"docs": [["just a note"]], "final": ["Done."]})
+        self.assertEqual((c["missing"]["before"], c["missing"]["after"], c["vague"]["before"], c["vague"]["after"]), (0, 0, 0, 0))
+        self.assertEqual(R.problems_from({"r": c}), [])
+
+    def test_the_report_lists_each_defect_before_and_after_and_says_which_failed(self):
+        lines, problems = R.defects_report({"set/v3.0-r1": ("v3.0", RECORD)})
+        self.assertEqual(problems, [])
+        joined = "\n".join(lines)
+        for word in ("set/v3.0-r1", "missing", "vague", "3 -> 0", "next-step labels", "location tokens", "removal ended at: 'gotchas: the cache is stale'"):
+            self.assertIn(word, joined)
+        lines, problems = R.defects_report({"set/v3.0-r1": ("v3.0", RECORD)}, {"missing": (lambda rd: rd, ["next_step"])})
+        self.assertEqual(len(problems), 1)
+        self.assertIn("LEAVES", "\n".join(lines))
+
+
+class DefectsCommand(unittest.TestCase):
+    def run_main(self, defects=None):
+        import io
+        from contextlib import redirect_stdout
+        out = tempfile.mkdtemp(prefix="defects-")
+        self.addCleanup(shutil.rmtree, out, ignore_errors=True)
+        buf = io.StringIO()
+        with mock.patch.object(R, "load_records", return_value=sample_records()), mock.patch.dict(R.DEFECTS, defects or {}):
+            with redirect_stdout(buf):
+                R.main(["defects", "--out", out])
+        return buf.getvalue(), out
+
+    def test_the_defects_command_writes_each_defective_record_and_prints_the_evidence_before_and_after(self):
+        text, out = self.run_main()
+        self.assertEqual(len([n for n in os.listdir(out) if n.endswith(".txt")]), 3 * len(R.DEFECTS))
+        for word in ("missing", "vague", "3 -> 0", "location tokens", "removal ended at"):
+            self.assertIn(word, text)
+
+    def test_the_defects_command_fails_when_a_defect_leaves_its_evidence(self):
+        with self.assertRaises(SystemExit) as c:
+            self.run_main({"missing": (lambda rd: rd, ["next_step"])})
+        self.assertIn("leaves the evidence", str(c.exception))
+        self.assertIn("missing", str(c.exception))
 
 
 class Prompt(unittest.TestCase):
@@ -164,21 +300,46 @@ class Calling(unittest.TestCase):
         def run(argv, input=None, cwd=None, **kw):
             seen.update(input=input, listing=os.listdir(cwd), argv=argv)
             return reply()
-        parsed, cost, err = R.call_rater("THE PROMPT", ["claude"], run)
+        parsed, cost, err, raw = R.call_rater("THE PROMPT", ["claude"], run)
         self.assertEqual((seen["input"], seen["listing"]), ("THE PROMPT", []))
-        self.assertEqual((parsed["arm_guess"], cost, err), ("3.7", 0.1, None))
+        self.assertEqual((parsed["arm_guess"], cost, err, raw), ("3.7", 0.1, None, None))               # a usable reply keeps no raw text
 
     def test_a_cli_error_an_unparseable_envelope_and_a_bad_reply_are_failures_that_still_report_their_cost(self):
         err = subprocess.CompletedProcess([], 1, json.dumps({"type": "result", "subtype": "error_max_budget_usd", "is_error": True, "total_cost_usd": 0.75}), "")
-        self.assertEqual(R.call_rater("p", ["c"], lambda *a, **k: err)[1:], (0.75, "CLI error error_max_budget_usd"))
+        self.assertEqual(R.call_rater("p", ["c"], lambda *a, **k: err)[1:3], (0.75, "CLI error error_max_budget_usd"))
         junk = subprocess.CompletedProcess([], 2, "not json", "boom")
-        p, cost, e = R.call_rater("p", ["c"], lambda *a, **k: junk)
+        p, cost, e, _ = R.call_rater("p", ["c"], lambda *a, **k: junk)
         self.assertEqual((p, cost), (None, 0.0))
         self.assertIn("exit 2", e)
         bad = subprocess.CompletedProcess([], 0, json.dumps({"subtype": "success", "result": "I think so", "total_cost_usd": 0.2}), "")
-        p, cost, e = R.call_rater("p", ["c"], lambda *a, **k: bad)
+        p, cost, e, _ = R.call_rater("p", ["c"], lambda *a, **k: bad)
         self.assertEqual((p, cost), (None, 0.2))
         self.assertIn("unusable reply", e)
+
+    def test_a_failed_call_keeps_the_text_that_failed_so_its_cause_can_be_read(self):
+        """S259: one of 31 real calls ("Unterminated string starting at ... char 171", $0.0635) left only that message; the reply was gone."""
+        cut = '{"answers": {"next_step": "yes", "where": "ye'                       # a reply cut inside a string, as that one was
+        unusable = subprocess.CompletedProcess([], 0, json.dumps({"subtype": "success", "result": cut, "total_cost_usd": 0.0635}), "")
+        p, cost, e, raw = R.call_rater("p", ["c"], lambda *a, **k: unusable)
+        self.assertEqual((p, cost, raw), (None, 0.0635, cut))
+        self.assertIn("unusable reply", e)
+        envelope = json.dumps({"type": "result", "subtype": "error_max_budget_usd", "is_error": True, "total_cost_usd": 0.75, "errors": ["over"]})
+        self.assertEqual(R.call_rater("p", ["c"], lambda *a, **k: subprocess.CompletedProcess([], 1, envelope, ""))[3], envelope)
+        out = R.call_rater("p", ["c"], lambda *a, **k: subprocess.CompletedProcess([], 2, "half a line", "boom"))[3]
+        self.assertIn("half a line", out)
+        self.assertIn("boom", out)
+        notext = subprocess.CompletedProcess([], 0, json.dumps({"subtype": "success", "result": None, "total_cost_usd": 0.2}), "")
+        self.assertEqual(R.call_rater("p", ["c"], lambda *a, **k: notext)[3], "")             # a reply with no text at all keeps an empty string, not None
+
+    def test_the_text_kept_is_bounded_and_says_how_much_was_cut(self):
+        big = "x" * (R.RAW_KEEP + 5000)
+        r = subprocess.CompletedProcess([], 0, json.dumps({"subtype": "success", "result": big, "total_cost_usd": 0.1}), "")
+        raw = R.call_rater("p", ["c"], lambda *a, **k: r)[3]
+        self.assertTrue(raw.startswith("x" * R.RAW_KEEP))
+        self.assertIn(str(len(big)), raw[R.RAW_KEEP:])
+        self.assertLess(len(raw), R.RAW_KEEP + 100)
+        exact = subprocess.CompletedProcess([], 0, json.dumps({"subtype": "success", "result": "y" * R.RAW_KEEP, "total_cost_usd": 0.1}), "")
+        self.assertEqual(R.call_rater("p", ["c"], lambda *a, **k: exact)[3], "y" * R.RAW_KEEP)  # exactly at the bound is not cut
 
 
 class Verdicts(unittest.TestCase):
@@ -266,6 +427,35 @@ class DryRun(unittest.TestCase):
         self.assertEqual(len(s["arm_guesses"]), 2)
         self.assertAlmostEqual(s["cost_usd"], 0.1 * 10)
         self.assertEqual(s["failed_calls"], [])
+
+    def test_each_result_carries_the_text_of_a_failed_call_and_none_for_a_good_one(self):
+        recs = {k: v for k, v in sample_records().items() if k == "set/v3.0-r1"}
+        bad = subprocess.CompletedProcess([], 0, json.dumps({"subtype": "success", "result": '{"answers": {"next', "total_cost_usd": 0.3}), "")
+        res = R.dry_run(recs, 0.75, 100.0, self.out, run=lambda *a, **k: bad)
+        self.assertEqual(res["set/v3.0-r1"]["honest"]["A"]["raw"], '{"answers": {"next')
+        good = R.dry_run(recs, 0.75, 100.0, tempfile.mkdtemp(prefix="raterout-"), run=self.run_fn())
+        self.assertIsNone(good["set/v3.0-r1"]["honest"]["B"]["raw"])
+
+    def test_a_defect_that_leaves_its_evidence_stops_the_dry_run_before_any_call(self):
+        with mock.patch.dict(R.DEFECTS, {"missing": (lambda rd: rd, ["next_step"])}):
+            with self.assertRaises(probe.Refused) as c:
+                R.dry_run(sample_records(), 0.75, 100.0, self.out, run=self.run_fn())
+        self.assertEqual(self.calls, [])                                          # nothing was sent, so nothing was spent
+        self.assertFalse(os.path.exists(os.path.join(self.out, "spend.jsonl")))
+        self.assertIn("missing", str(c.exception))
+        self.assertIn("nothing was sent", str(c.exception))
+
+    def test_each_result_and_the_summary_carry_the_evidence_check_of_the_defect_rated(self):
+        recs = {k: v for k, v in sample_records().items() if k == "set/v3.0-r1"}
+        res = R.dry_run(recs, 0.75, 100.0, self.out, run=self.run_fn())
+        chk = res["set/v3.0-r1"]["missing"]["A"]["check"]
+        self.assertEqual((chk["before"] > 0, chk["after"]), (True, 0))
+        self.assertEqual(res["set/v3.0-r1"]["missing"]["B"]["check"], chk)
+        for kind in ("honest", "wrong", "fabricated"):
+            self.assertIsNone(res["set/v3.0-r1"][kind]["A"]["check"], kind)
+        ev = R.summarize_dry_run(res)["records"]["set/v3.0-r1"]["planted_evidence"]
+        self.assertEqual(sorted(ev), ["missing", "vague"])
+        self.assertEqual((ev["vague"]["after"], ev["missing"]["after"]), (0, 0))
 
     def test_a_failed_call_is_listed_and_costs_what_it_cost(self):
         recs = {k: v for k, v in sample_records().items() if k == "set/v3.0-r1"}
