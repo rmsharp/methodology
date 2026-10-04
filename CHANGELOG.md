@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-04.md` (1 record(s), 39,622 B → 27,856 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-04 → 2026-10-04) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-04.md`](docs/archive/HANDOFFS-through-2026-10-04.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-04.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-04.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,622 B → 27,856 B (−29.7%).
+
 ### 2026-10-04 · [BL-94] S259 close-out — P2 done: four cold probes and the rater dry run at the $10 cap (the claim below lists the commits)
 
 Deliverable: P2 of `docs/planning/documentation-quality-experiment-plan.md` §5, report `docs/planning/overhead-replay/pilot/doc-evidence/P2_REPORT.md`. **State:** $2.4781 spent of the $10 cap and of the study's $100, no cap hit, 35 ledger rows re-summed. A probe costs $0.16 to $0.24 (mean $0.19, not the plan's $1); a rating call $0.044 to $0.066; 36 claims in the four cold reports checked, none wrong; the git-only control's session named the extra restore commit and recommended it first; the model rater scored every honest record 8 of 8 and missed `vague` on all three records (`missing` is inconclusive: its builder leaves a next step in place); three harness defects found by running it (`reads` is the Read tool only, a failed rating parse keeps no raw reply, `--no-launch` leaves a clone the real launch refuses), none fixed. **His decision at the stop:** fix the harness first, at $0, before any P3 decision. **Wrong when first written and corrected the same session:** "about 14" claims checked (8, 12, 9, 7), the dry run's wall time, and "`wrong` caught on all 3". The owed `HANDOFFS.md` trim (`461bc20`) and fold (`7e767b8`) ran first as their own actions. Nothing pushed, nothing sent upstream. Phase 3C appended no fork learning and retired no row (the three lessons are mechanical and belong in the next session's tests). **Gate run:** 12/12 pass, results `3f5791d93dac`, `tests-sh-passed` 362, 0 failed (on `d9b3cad` plus the receipt's citation); the first run on `d9b3cad` alone was 10/12 because the receipt cited no gate run, which `check-handoff-all` and one suite test caught.
