@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S260 — backlog row and detail status follow the four harness fixes
+
+`BACKLOG.md`'s BL-94 row no longer says three harness defects come before P3 (D6 and D7 do; S260 fixed the four at $0); `BACKLOG-DETAIL.md` gets an S260 status paragraph that supersedes S259's "three harness defects, not fixed" and says what was not done (the rater is not re-run on the rebuilt defects; P3 is its own go-ahead). BL-94 stays open.
+
 ### 2026-10-04 · [BL-94] S260 — the harness README, the P2 report and the plan's P2 status follow the four harness fixes
 
 `overhead-replay/README.md` describes the new probe row fields, the leftover-clone rule, the rater's evidence check and its raw text (58 and 58 tests, 81 and 72 mutants); `P2_REPORT.md` §4 gets a one-line pointer saying items 1 to 3 and the rater's two misses were fixed at S260 (its S259 text is left as written, so the record of what S259 found stays whole); the plan's P2 section gets an S260 status paragraph that says what was and was not done. $0.
