@@ -4142,7 +4142,7 @@ runs since S254, whose other recorded runs (S254's rerun, S256's close-out gate 
 
 
 **BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
-operator's own upstream issue; planned at S263, P1 DONE at S264, P2 and P3 not started.**
+operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 not started.**
 
 **Where it lives.** The plan is [`issue93-trimmer-proof-false-red-plan.md`](issue93-trimmer-proof-false-red-plan.md); the two scripts that
 re-derive its numbers are in [`issue93-evidence/`](issue93-evidence/); the issue is <https://github.com/KJ5HST/methodology/issues/93>. Read the
@@ -4168,6 +4168,18 @@ the adopter (`nprcgenekeepr` at `3a59ed844`, read through a clone) 54 proofs, 10
 the plan's two L2 shards; this repo 104 proofs, 5 to 3, 0 newly red. What P1 cannot do, as the plan says: the red scripts already written stay
 red (that is P3), and no adopter receives anything until the P4 pull request. This fork's trimmer is no longer byte-identical to upstream's.
 
-**Next action:** P2, a session of its own: a recognised stub finalize is labelled and prevented at write time (plan §4.1 and §5, `TRIM_VERSION`
-1.6.0, exit status 4, a RED-first test beside `:1152`). **Still open:** the adopter's local `SESSION_NOTES.md` spec, which the `bin/sync`
+**P2 DONE (S265, `45d32d6` `ba8f883` `1214511`, `TRIM_VERSION` 1.6.0).** The generated proof names a pending-stub finalize and exits 4 (a
+labelled FAIL in place of the generic L1/L3 pair, D2(i)); the writer warns before the bad state is committed with two advisory findings,
+`FRONTIER_PENDING_STUB` and `FRONTIER_FINALIZE_UNCOMMITTED`; `FRAMEWORK_APPARATUS.md` and the proof's note now state the timing rule in the same
+words (trim while record 0 is complete: before the claim, or after the finalize is committed, never in the commit that finalizes it). 25 tests
+(`TestVerifyShNamesAStubFinalize`, `TestWriteTimeGuardForAStubFinalize`, `TestTheTimingRuleIsStatedTheSameEverywhere`), 154 in the file, the
+`trimmer-unit-tests` floor 154 (`7a18512`); 37 mutants all killed; `bin/tests.sh` 362 passed at each checkpoint. Measured on the real trees: the
+adopter 54 proofs, 46 green, 1 at exit 4, 7 at exit 1, 0 newly red; this repo 105, 102 green, 1 at exit 4, 2 at exit 1, 0 newly red. **Deviations
+from the plan, in its §5 P2:** `CHANGELOG.md` declares NO stub marker (a committed entry there is never edited, so a claim reading `(in progress)` is a
+final record); the label needs the replacing record to no longer be a stub and the other records in order; the guard has one code per commit order.
+Only 1 of the adopter's 8 stub shards reaches exit 4 with canonical specs; the 7 `SESSION_NOTES.md` ones need the adopter's local spec to declare a marker.
+**P3 inherits:** a frozen proof before 1.6.0 has no `STUB_PATTERN` line, so `--reverify` supplies it from `LEDGERS` by the LIVE basename (plan §5 P2 DONE).
+
+**Next action:** P3, a session of its own: a read-only `--reverify <shard>` (plan §4.3 and §5 P3, `TRIM_VERSION` 1.7.0), with the stub marker supplied
+from the ledger table as above and its predictions for the adopter and this repo updated to the measured ones. **Still open:** the adopter's local `SESSION_NOTES.md` spec, which the `bin/sync`
 overlay drops, has no backlog item of its own.

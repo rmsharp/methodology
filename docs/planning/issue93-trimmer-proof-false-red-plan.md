@@ -1,7 +1,8 @@
 # The trimmer's generated `.verify.sh` ends red on lossless trims — a plan for upstream issue #93
 
-**Status (S264, 2026-10-05): P1 DONE, `5270be8` (`TRIM_VERSION` 1.5.1; measured result in §5 P1 and
-`BACKLOG-DETAIL.md` §BL-98). P2 and P3 are NOT built; P4 is its own go-ahead.** The paragraph below is
+**Status (S265, 2026-10-05): P1 DONE, `5270be8` (`TRIM_VERSION` 1.5.1), and P2 DONE, `45d32d6` `ba8f883`
+`1214511` (`TRIM_VERSION` 1.6.0); measured results in §5 P1, §5 P2 and `BACKLOG-DETAIL.md` §BL-98. P3 is NOT
+built; P4 is its own go-ahead.** The paragraph below is
 the plan as written at S263 and is left as written, so its "nothing is built" and "no line changed" are
 true of S263 and no longer of the tree. Approved to implement P1 first (D1–D4 decided by the operator,
 2026-10-05, at the S263 plan-review picker; D5 in part; §9 records each). Written at S263
@@ -226,7 +227,8 @@ Three layers, in the order they act:
    repo green is a timing one: **trim while record 0 is complete — before the claim, or after the
    finalize — never between.** The writer can see the bad state: at `--write`, record 0 of the live ledger
    still carries the ledger's stub marker (HANDOFFS `status: pending`; CHANGELOG a heading ending
-   `(in progress)`; a local spec's own). Add a finding `FRONTIER_PENDING_STUB`, exit 0, stating the
+   `(in progress)`; a local spec's own). **[S265: corrected. Only `HANDOFFS.md` declares a marker; the
+   `CHANGELOG.md` one is withdrawn, with the evidence, in §5 P2 DONE.]** Add a finding `FRONTIER_PENDING_STUB`, exit 0, stating the
    consequence and the two ways out. It needs one optional `LedgerSpec` field, `stub_marker`; a spec
    without it (the adopter's local `SESSION_NOTES.md`) gets no guard and says so.
    *The guard also has to cover the other order* — finalize, then trim, one commit — where record 0 is
@@ -328,6 +330,53 @@ Radius), and RED first.
 - **Surface.** Unit fixtures with a real `git commit`. **Cannot enforce:** that an adopter's *local* spec
   carries a marker; that the guard fires at the moment a session actually runs the trimmer (a session that
   trims by hand-editing never reaches it); which commit order the adopter used (§4.1).
+- **DONE at S265 (`45d32d6` the proof's label and exit 4, `ba8f883` the write-time guard, `1214511` the prose;
+  `TRIM_VERSION` 1.6.0), each criterion as measured.** Tests first: 8 for the label, 12 for the guard, 5 for the
+  shared wording; each class RED for the right reasons before its change (exit 1 with the generic pair, no
+  `STUB_PATTERN`, no guard code, the prose and the note lacking the rule) with its controls green. The unit file
+  reads 154 tests OK (skipped=2), up from 129, and the `trimmer-unit-tests` floor is 154 (`7a18512`).
+  `bin/tests.sh` read 362 passed, 0 failed, 0 skipped at each of the three checkpoints (the first run at the
+  first checkpoint read 360 and 2 failed, two `echo | grep -q` assertions, while I was cloning repositories in
+  parallel; the quiet re-run read 362 and 0). **Mutation check:** 18 mutants of the label, 14 of the guard and 5
+  of the wording, every one killed by its intended test, after the first run left 2, 1 and 0 alive and the tests
+  were tightened (a marker not anchored at the line start; the note unasserted; the missing-HEAD branch that the
+  stub-at-record-0 test never reached). The plan's "delete the stub test in the proof and the complete-record-0
+  control must go red" is covered as two mutants: the label never fires (the stub test goes red) and the label
+  ignores the pre-trim marker (the complete-record-0 control goes red).
+  **Two real surfaces, and where they differ from the plan's prediction.** Re-deriving every frozen proof under
+  the new template, the stub marker supplied from the ledger table by the LIVE basename: the adopter
+  (`nprcgenekeepr` at `1cfee7215`, read through a clone) 54 proofs, 46 green, **1 at exit 4**
+  (`HANDOFFS-through-2026-09-26-3`, a 606 B stub, 5 other records, the size §3.5 recorded), 7 at exit 1, 0 newly
+  red; this repo 105 proofs, 102 green, 1 at exit 4 (`HANDOFFS-through-2026-08-02`, a 750 B stub), 2 at exit 1
+  (Class B, and `HANDOFFS-through-2026-08-09`, where an L2 front-matter failure also holds, so the label is
+  withheld by design and whether its record 0 was a stub is not read), 0 newly red. §0's "8 stay red but
+  named" is therefore 1 of 8 with canonical specs: the 7 `SESSION_NOTES.md` shards go to exit 4 only if the
+  adopter's local spec (the one the `bin/sync` overlay drops, D5, not asked) declares a marker. The guard, the
+  new trimmer's dry run at real commits with `--force` (the stub trim's parent is `SRF_RED` without it): the
+  adopter at the parent of its stub trim fires `FRONTIER_PENDING_STUB`; this repo at `8e3d568` (record 0
+  complete) is silent; this repo at `994eee5`, S265's own claim, fires. The adopter's parent of
+  `HANDOFFS-through-2026-09-26`, a trim whose proof passes, also fires: the warning is about the wrong time to
+  trim, not a certainty of a red proof, and its message is conditional.
+  **Deviations from the plan's text, each decided on evidence.** (1) **`CHANGELOG.md` declares no stub marker.**
+  §4.1 and §5 P2 named one, "a heading ending `(in progress)`". The heading's shape is NOT the reason: of the 27
+  `(in progress)` headings in this ledger at S265, 14 end there and the 13 newer ones carry ` — <description>`
+  after it (I first wrote that none ends there, from the first five rows of a truncated listing; the committed
+  S265 layer-1 entry says so and the correcting entry is in `CHANGELOG.md`). The reason is the ledger's own
+  lifecycle, "a committed entry is never edited", with close-out adding its own entry (`FRAMEWORK_APPARATUS.md`,
+  The Action Ledger): a claim entry that still reads `(in progress)` is a FINAL record, so a marker there would
+  warn on every mid-session `CHANGELOG.md` trim and label an edit of a committed entry "a stub finalize". A
+  ledger with no marker is
+  silent in the guard and its proof note says it declares none. (2) **The label has two more conditions than
+  §4.1 lists:** the record that replaced the stub no longer matches the marker (an edit made while still pending
+  was not a finalize) and the other records are also in order, not only present. (3) **The guard has two codes,
+  one per commit order** (`FRONTIER_PENDING_STUB`, `FRONTIER_FINALIZE_UNCOMMITTED`), because §4.1 required both
+  orders and tests assert on codes; order B asks whether HEAD's stub is absent from the working ledger, the
+  proof's own test, not whether the ledger is dirty, which would warn on a pure addition.
+  **What P3 inherits.** A frozen proof written before 1.6.0 carries no `STUB_PATTERN` line, so §4.3's "the grammar
+  comes from the frozen script, never from the ledger table" holds for the five lines that exist there and not
+  for this one: the re-derive above supplied it from `LEDGERS` by the LIVE basename, and `--reverify` must do
+  the same (empty when the ledger has no entry or no marker). §0's and §5 P3's prediction for the adopter, "2
+  green + 8 exit-4", is superseded by 2 green + 1 exit-4 + 7 exit-1.
 
 ### P3 — `--reverify` (minor, 1.7.0)
 
