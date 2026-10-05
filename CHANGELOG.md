@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [BL-98] S266 — the P3 sweep and mutation scripts join `issue93-evidence/`
+
+`docs/planning/issue93-evidence/reverify_p3.py` sweeps every frozen proof in a repository through the shipped `--reverify`, one process per shard, and checks the tree is identical afterwards (every file by size and mtime, every directory outside `.git`, `git status --porcelain`, HEAD, the refs, the stash list); `mutants_p3.py` is the 54-mutant check of the new code (`--validate` checks the list in a second, `--only=<name substring>` reruns some). Both write nothing under the repository.
+
 ### 2026-10-05 · [issue #93] S266 — tighten `trimmer-unit-tests` 154 → 181 in `.quality-gates.json`
 
 The 27 tests P3 added (`3616b5f`: `TestReverify`, covering the lift, every refusal, the two payload attacks with their controls, the writes-nothing snapshot, the frozen-red-to-green and pre-stub-label cases, and the prose pin) are now a floor: `python3 tools/test_methodology_trim.py` reads `Ran 181 tests`, OK (skipped=2), the gate's own command and extract. A tightening, so no approval is owed (`SAFEGUARDS.md` Blast Radius); the precedent is `7a18512` (129 → 154). The mechanical half of Phase 3C: the tests that pin `--reverify`'s refusals cannot silently drop.
