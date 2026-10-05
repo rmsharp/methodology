@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] S266 close-out — P3 of the trimmer false-red fix is committed: a read-only `--reverify <shard>` re-derives a frozen proof under today's template (`TRIM_VERSION` 1.7.0)
+
+Deliverable: P3 of `docs/planning/issue93-trimmer-proof-false-red-plan.md`: the implementation `3616b5f`, the floor `3e94b28`, the evidence scripts `f8281d4` and the status `862156f`; the owed trim (`2e5ed83`) and its fold (`b50cd24`) ran first, the claim is `48462e1`. 27 tests written first and RED (181 in the file), 54 mutants killed on the final tree (a first run of 56 left three survivors, each traced: two guards no input could fail, deleted, and one missing test, added), `bin/tests.sh` 362 passed, 0 failed. Both real trees re-derived through the shipped CLI and agreeing with S265's in-memory re-derive on every shard (this repo 103 green, 2 at exit 1, 1 at exit 4 of 106; the adopter 46, 7, 1 of 54; 0 newly red; nothing written), and an end-to-end smoke from a `--no-local` clone. Deviations from the plan, on evidence: the lift is strict (the plan's regexes would have made a read-only inspection a code-execution path), `--reverify` refuses every flag that writes or selects a ledger, and one sentence in `FRAMEWORK_APPARATUS.md` names the flag. The `HANDOFFS.md` receipt is complete (`self_score` 8, S265 scored 9). Phase 3C appended no fork learning row, so D3's retirement duty does not arise. Nothing pushed; nothing sent to `KJ5HST/methodology`.
+
 ### 2026-10-05 · [BL-98] S266 — status follows P3 in the #93 plan, the BL-98 row and its detail
 
 `docs/planning/issue93-trimmer-proof-false-red-plan.md` gets a measured P3 DONE paragraph in §5 and a new status line (the S263 paragraph is left as written); the BL-98 row in `docs/planning/BACKLOG.md` and its section in `docs/planning/BACKLOG-DETAIL.md` now read P3 DONE and name P4 as the next action. The differences from the plan's prediction are in the plan, not edited into it: the adopter reads 2 green + 1 exit-4 + 7 exit-1 (as P2 measured), this repo 103 + 1 + 2 of 106.
