@@ -4166,7 +4166,7 @@ does was not read). The S257 reopen condition and the S265 "leave it" paragraph 
 
 
 **BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
-operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 DONE at S266, P4 inward DONE at S267 (sending not done).**
+operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 DONE at S266, P4 DONE at S267 (built inward, then sent as upstream PR #94).**
 
 **Where it lives.** The plan is [`issue93-trimmer-proof-false-red-plan.md`](issue93-trimmer-proof-false-red-plan.md); the two scripts that
 re-derive its numbers are in [`issue93-evidence/`](issue93-evidence/); the issue is <https://github.com/KJ5HST/methodology/issues/93>. Read the
@@ -4213,13 +4213,14 @@ tree; `bin/tests.sh` 362 passed. Measured on the real trees through the shipped 
 1 at exit 4; the adopter 54 (10 frozen red) re-derive 46 green, 7 at exit 1, 1 at exit 4; 0 newly red in either, 2 newly green in each; the tree is
 identical afterwards. Plan §5 P3 DONE has the differences from its prediction, the deviations and the commands.
 
-**P4 INWARD DONE (S267; nothing pushed or sent).** A local branch `fix/trim-verify-false-red-issue93`: three commits on `upstream/main` `f34769f`, one per cause, built in a
+**P4 INWARD DONE (S267), then SENT as PR #94.** A local branch `fix/trim-verify-false-red-issue93`: three commits on `upstream/main` `f34769f`, one per cause, built in a
 scratch clone under upstream's own hooks. Six fork-only citations (the plan's D2, fork Learning #58, P1/P2) were reworded in the branch only, one of them inside
 `VERIFY_TEMPLATE`. Measured: 129, 154, 181 tests at the three commits; 12/12 gates on `2922236`; the adopter's 54 proofs 46 / 7 / 1 by exit code, 0 newly red;
 upstream's own `HANDOFFS.md` trimmed in a throwaway clone, proof exit 0; `bin/sync` byte-identical. The plan's §5 P4 has the deviations, the evidence and what
 was not verified; the body is drafted in [`issue93-evidence/upstream-pr-body.md`](issue93-evidence/upstream-pr-body.md).
 
-**Next action:** SENDING the pull request: push the branch to `origin`, then open it against `KJ5HST/methodology`; his go-ahead for each, never implied. Its
-description must state that P1 and P2 change only newly written proofs and that P3 adds a flag and re-derives, never rewrites (the draft does). Before it, BL-95's resync
+**Sent (S267, his go-ahead at the 3G picker):** the branch pushed to `origin` (tip `972eb2c` read back), then PR #94 opened (3 commits, 5 files, +1641/-23, mergeable); no comment on #92 or #93.
+
+**Next action:** watch PR #94, #92 and #93; a maintainer reply ranks above everything, and any comment, body edit or push to the branch is his go-ahead each time. BL-95's resync
 must carry the fork's trimmer changes (now P1, P2 and P3) and the one `FRAMEWORK_APPARATUS.md` paragraph (the timing rule, now with the `--reverify` sentence). **Still open:** the adopter's local `SESSION_NOTES.md`
 spec, which the `bin/sync` overlay drops, has no backlog item of its own.
