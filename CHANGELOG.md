@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] S263 claim (in progress) — plan the fix for the trimmer's false-red generated proofs
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "Plan the #93 trimmer fix" at the Phase 0 picker. Upstream issue #93 (opened 2026-10-05 02:21Z under the operator's login, from `nprcgenekeepr`) reports that the trimmer's generated `.verify.sh` ends red on lossless trims, in three causes. The owed trim (`cf9de43`) and its fold (`92aaabc`) ran first as their own actions; `bin/tests.sh` on the fold's tree: 356 passed, 0 failed, 6 skipped, after a first run read 355 passed, 1 failed (Test 9, `net/http: TLS handshake timeout` reaching api.github.com, transient: the rerun passed it). Deliverable: one plan document in `docs/planning/`; no change to `starter-kit/methodology_trim.py`, nothing sent upstream. Phase 3F records the rest.
+
 ### 2026-10-05 · [ad hoc] S263 — fold the fourth 2026-10-04 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`cf9de43`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-04, shard `-4`), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S262, S261); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of the #93 trimmer-fix plan, before the session claim.

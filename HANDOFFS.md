@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S263
+date: 2026-10-05
+status: pending
+active_task: PLAN the fix for upstream issue #93 (the trimmer's generated `.verify.sh` reports FAIL on lossless trims: 10 of 54 proofs in `nprcgenekeepr`, three causes) as one planning-session document in `docs/planning/`, per `starter-kit/SESSION_RUNNER.md` §Planning Sessions: each cause verified against the generator and on real data, the prior art that binds it (BL-27, BL-28, BL-36, BL-60, the operator's 2026-08-16 frozen-proof decision) read first, a grep inventory, decisions for the operator, and per-phase DONE criteria with the surface named. The plan is the deliverable; nothing in `starter-kit/methodology_trim.py` changes this session, nothing is sent upstream.
+```
+
+```handoff
 session: S262
 date: 2026-10-04
 status: complete
