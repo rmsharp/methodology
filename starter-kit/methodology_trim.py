@@ -27,6 +27,11 @@ WHY THREE ASSERTIONS AND NOT ONE
     None of the three is the whole-file check, and that is deliberate: the unscoped whole-file form
     is unsatisfiable on any run that regenerates the pointer (design §4.2).
 
+RE-DERIVING AN OLD PROOF
+    A generated `.verify.sh` is frozen, so a later fix to the template never reaches it. `--reverify
+    <shard>` runs TODAY'S template over the grammar lifted out of the shard's frozen proof and prints
+    that verdict, read-only and under a banner saying it is not the artifact that was shipped.
+
 DEFAULTS THAT ARE INVERTED ON PURPOSE
     Dry run is the default; `--write` is required to touch anything. The tool never commits, and
     it never runs `git mv` (design P2): a trim writes a new shard and edits the live ledger in
@@ -38,6 +43,7 @@ Python 3 stdlib only, cross-platform — this file is destined for adopter roots
 from __future__ import annotations
 
 import argparse
+import ast
 import datetime
 import os
 import re
@@ -46,7 +52,25 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.6.0"   # 1.6.0: issue #93, cause 1 — a commit that FINALIZES a session's pending claim
+TRIM_VERSION = "1.7.0"   # 1.7.0: issue #93, cause 3 — a proof is a FROZEN artifact, so a fix to the
+                         # template (1.5.1's whole-line `leaked`, 1.6.0's stub label) never reaches a
+                         # proof already written, and an adopter holds red proofs of lossless trims
+                         # with no way to ask what today's template says. `--reverify <shard>` lifts
+                         # LIVE, SHARD and the record grammar out of the shard's frozen `.verify.sh`,
+                         # fills THIS tool's template with them, runs it, and prints the verdict under
+                         # a banner that says it is a claim about today's logic and not the artifact
+                         # that was shipped. It writes nothing and leaves the frozen proof alone. Its
+                         # exit status is the proof's own (0 holds, 1 a FAIL, 4 a recognised stub
+                         # finalize) or 3 for a shard it will not re-derive. A line that is not in the
+                         # exact form the template writes is REFUSED by name: the lifted text is spliced
+                         # into a shell assignment and into Python the proof then executes, so the
+                         # flag is safe to point at a tree you do not trust. A frozen proof that
+                         # predates a line gets today's value (the stub marker from the ledger table
+                         # by live basename; no regenerated fields), and the banner says so. Minor,
+                         # not patch: a new flag, new finding codes, a new exit-3 path. What the tool
+                         # WRITES is unchanged (`build_verify` is `render_verify` over a spec).
+                         #
+                         # 1.6.0: issue #93, cause 1 — a commit that FINALIZES a session's pending claim
                          # stub and trims in the same breath made the proof read record 0 as EDITED
                          # and end red with nothing lost (BL-27 refused to excuse it: a real loss can
                          # have that shape). The proof can now tell the stub shape from the loss
@@ -1675,7 +1699,13 @@ PYEOF_VERIFY
 """
 
 
-def build_verify(spec, live_rel, shard_rel):
+def render_verify(live_rel, shard_rel, kind, record_start, fence_info, footer_mode, regen_patterns,
+                  stub_pattern):
+    """The proof for one shard, from the plain values that fill VERIFY_TEMPLATE.
+
+    `build_verify` calls this with a ledger spec's values and `--reverify` calls it with the values
+    lifted out of a frozen proof, so the two cannot drift: one template, one filler.
+    """
     # REGEN travels as a repr()'d list of plain (non-raw) pattern strings, not a wrapped r-string
     # like @@START@@ — spec.regenerated is 0-or-more patterns, and an r-string wrapper only ever
     # holds one. repr() doubles each backslash; the generated script parses that back as a normal
@@ -1684,16 +1714,210 @@ def build_verify(spec, live_rel, shard_rel):
     # (true of both entries in LEDGERS today); a pattern that did would need a different encoding.
     # The stub marker travels the same way, as one repr()'d string ('' when the spec declares none),
     # under the same caveat.
-    regen_patterns = repr([rx.pattern for _name, rx, _fn in spec.regenerated])
     out = VERIFY_TEMPLATE
     for key, val in (("@@SHARD@@", shard_rel), ("@@LIVE@@", live_rel), ("@@VER@@", TRIM_VERSION),
-                     ("@@KIND@@", spec.record_kind),
-                     ("@@START@@", spec.record_start.pattern if spec.record_start else ""),
-                     ("@@INFO@@", spec.fence_info or ""), ("@@FOOTER@@", spec.footer_mode),
-                     ("@@REGEN@@", regen_patterns),
-                     ("@@STUB@@", repr(spec.stub_marker.pattern if spec.stub_marker else ""))):
+                     ("@@KIND@@", kind), ("@@START@@", record_start), ("@@INFO@@", fence_info),
+                     ("@@FOOTER@@", footer_mode), ("@@REGEN@@", repr(list(regen_patterns))),
+                     ("@@STUB@@", repr(stub_pattern))):
         out = out.replace(key, val)
     return out
+
+
+def build_verify(spec, live_rel, shard_rel):
+    return render_verify(live_rel, shard_rel, spec.record_kind,
+                         spec.record_start.pattern if spec.record_start else "",
+                         spec.fence_info or "", spec.footer_mode,
+                         [rx.pattern for _name, rx, _fn in spec.regenerated],
+                         spec.stub_marker.pattern if spec.stub_marker else "")
+
+
+# =============================================================================================
+# `--reverify` — what does TODAY'S template say about a shard whose proof was written long ago?
+#
+# A proof is frozen on purpose: it embeds the grammar it was written against, so a later change to
+# the trimmer cannot silently change what an old shard's proof means. The cost is that a fix to the
+# template never reaches an old proof (issue #93: ten of one adopter's 54 proofs read red on trims
+# that lost nothing, and no fix to this file could turn them green). This produces a SECOND verdict
+# and leaves the artifact alone: it lifts the grammar out of the frozen script, fills the current
+# template, runs it, and writes nothing. The verdict is a claim about today's logic against that
+# shard, NOT the artifact that was shipped, and the banner says so.
+#
+# WHY THE LIFT IS STRICT. The values are spliced into a shell assignment (`LIVE=...`, unquoted) and
+# into Python source the proof then EXECUTES. So each line must match, whole, the form VERIFY_TEMPLATE
+# writes and anything else is refused by name; a looser lift would make a read-only inspection tool a
+# way to run whatever a hostile frozen script says. REGEN and STUB are parsed as literals, never
+# evaluated, and re-emitted through repr(), so they cannot carry code.
+# =============================================================================================
+
+class ReverifyRefusal(Exception):
+    """A frozen proof this tool will not splice into today's template. `code` is the finding."""
+
+    def __init__(self, code, message):
+        Exception.__init__(self, message)
+        self.code = code
+
+
+_PATH_TEXT = r"[A-Za-z0-9._/+-]+"
+_LIFT_REQUIRED = (
+    ("LIVE", "live", r"LIVE=(%s)" % _PATH_TEXT),
+    ("SHARD", "shard", r"SHARD=(%s)" % _PATH_TEXT),
+    ("RECORD_KIND", "kind", r'RECORD_KIND = "(heading|fence)"'),
+    ("RECORD_START", "start", r'RECORD_START = r"([^"\n]*)"'),
+    ("FENCE_INFO", "info", r'FENCE_INFO = "([A-Za-z0-9_-]*)"'),
+    ("FOOTER_MODE", "footer", r'FOOTER_MODE = "(separator|none)"'),
+)
+
+
+def _lift_line(text, key):
+    """The one line that begins `KEY=` or `KEY = `, or None when there is none. Two is a refusal:
+    a proof that says two different things is not one this tool can claim to have read."""
+    hits = re.findall(r"^%s(?:=| = ).*$" % key, text, re.M)
+    if len(hits) > 1:
+        raise ReverifyRefusal("REVERIFY_NOT_LIFTABLE",
+                              "%s appears %d times in the frozen proof; refusing to guess which one "
+                              "it ran under" % (key, len(hits)))
+    return hits[0] if hits else None
+
+
+def _lift_pattern(key, value):
+    """A pattern text that will be spliced into the template: it must compile and must not collide
+    with the template's own placeholders (the filler substitutes them one after another, so a
+    placeholder inside a value would be rewritten by a later pass). Two things need no check of
+    their own: a newline (START's form excludes it; REGEN and STUB go through repr(), which escapes
+    it) and a trailing unpaired backslash, which would end START's raw string early but does not
+    compile either."""
+    if "@@" in value:
+        raise ReverifyRefusal("REVERIFY_NOT_LIFTABLE", "%s carries a template placeholder" % key)
+    try:
+        re.compile(value)
+    except re.error as e:
+        raise ReverifyRefusal("REVERIFY_NOT_LIFTABLE", "%s is not a valid regular expression: %s" % (key, e))
+
+
+def lift_grammar(text):
+    """Read a frozen proof's grammar back out. Returns a dict with `version` (the trimmer that wrote
+    it, or None), `live`, `shard`, `kind`, `start`, `info`, `footer`, `regen` (a list), `stub` (a
+    string, or None when the proof predates the line) and `absent` (the soft lines it did not
+    carry). Raises ReverifyRefusal, naming the line, for anything it will not splice."""
+    m = re.search(r"methodology_trim\.py v([0-9][0-9.]*[0-9])", text)
+    out = {"version": m.group(1) if m else None, "absent": []}
+    for key, field, shape in _LIFT_REQUIRED:
+        line = _lift_line(text, key)
+        if line is None:
+            raise ReverifyRefusal("REVERIFY_NOT_LIFTABLE",
+                                  "%s is not in the frozen proof: it predates the grammar lines this "
+                                  "tool lifts, or it is not a proof" % key)
+        mm = re.fullmatch(shape, line)
+        if mm is None:
+            raise ReverifyRefusal("REVERIFY_NOT_LIFTABLE",
+                                  "%s is not in the form methodology_trim.py writes it: %s"
+                                  % (key, line[:70]))
+        out[field] = mm.group(1)
+    for key, field in (("LIVE", "live"), ("SHARD", "shard")):
+        if out[field].startswith("/") or ".." in out[field].split("/"):
+            raise ReverifyRefusal("REVERIFY_NOT_LIFTABLE",
+                                  "%s is not a path inside the repository: %s" % (key, out[field]))
+    _lift_pattern("RECORD_START", out["start"])
+    for key, field in (("REGEN_PATTERNS", "regen"), ("STUB_PATTERN", "stub")):
+        line = _lift_line(text, key)
+        if line is None:
+            out["absent"].append(key)
+            out[field] = [] if field == "regen" else None
+            continue
+        rhs = line[len(key) + 3:] if line.startswith(key + " = ") else None
+        try:
+            val = ast.literal_eval(rhs) if rhs is not None else None
+        except (ValueError, SyntaxError, TypeError, MemoryError, RecursionError):
+            val = None
+        shaped = (isinstance(val, list) and all(isinstance(x, str) for x in val) if field == "regen"
+                  else isinstance(val, str))
+        if not shaped:
+            raise ReverifyRefusal("REVERIFY_NOT_LIFTABLE",
+                                  "%s is not a plain %s literal: %s"
+                                  % (key, "list of strings" if field == "regen" else "string", line[:70]))
+        for pat in (val if field == "regen" else [val]):
+            if pat:
+                _lift_pattern(key, pat)
+        out[field] = val
+    return out
+
+
+def stub_pattern_for(live_rel):
+    """The stub marker the ledger table declares for a ledger, keyed by basename as the table is;
+    '' when it has no entry (a project's own local ledger) or declares none (CHANGELOG.md)."""
+    spec = LEDGERS.get(Path(live_rel).name)
+    return spec.stub_marker.pattern if spec is not None and spec.stub_marker else ""
+
+
+def reverify(arg, result):
+    path = Path(arg)
+    if path.name.endswith(".verify.sh"):
+        path = path.with_name(path.name[:-len(".verify.sh")])
+    if not path.is_file():
+        result.add("FILE_ABSENT", "%s does not exist" % path, exit_code=3)
+        return result
+    path = path.resolve()
+    repo = repo_root(path)
+    if repo is None:
+        result.add("NOT_A_REPO", "%s is not inside a git work tree" % path, exit_code=3)
+        return result
+    shard_rel = os.path.relpath(str(path), str(repo.resolve())).replace(os.sep, "/")
+    proof = path.with_name(path.name + ".verify.sh")
+    if not proof.is_file():
+        result.add("REVERIFY_NO_PROOF",
+                   "%s has no proof beside it (%s): there is no frozen grammar to lift"
+                   % (shard_rel, proof.name), exit_code=3)
+        return result
+    try:
+        g = lift_grammar(read_text(proof))
+    except ReverifyRefusal as e:
+        result.add(e.code, "%s: %s" % (proof.name, e), exit_code=3)
+        return result
+    if g["shard"] != shard_rel:
+        result.add("REVERIFY_SHARD_MISMATCH",
+                   "%s names the shard %s, not %s: its grammar was written for a different file, so "
+                   "re-deriving this one from it would be a verdict about neither"
+                   % (proof.name, g["shard"], shard_rel), exit_code=3)
+        return result
+
+    stub = g["stub"]
+    result.add("REVERIFY_BANNER",
+               "%s: re-derived by methodology_trim.py v%s from the grammar lifted out of its frozen "
+               "proof (written by v%s): ledger %s, record kind %s, footer %s. This is a claim about "
+               "today's logic against this shard, NOT the artifact that was shipped; the frozen "
+               "proof is untouched. Nothing was written."
+               % (shard_rel, TRIM_VERSION, g["version"] or "?", g["live"], g["kind"], g["footer"]))
+    if "REGEN_PATTERNS" in g["absent"]:
+        result.add("REVERIFY_SUBSTITUTED",
+                   "REGEN_PATTERNS is not in the frozen proof (it predates the declared regenerated "
+                   "fields): re-derived with none.")
+    if stub is None:
+        stub = stub_pattern_for(g["live"])
+        result.add("REVERIFY_SUBSTITUTED",
+                   "STUB_PATTERN is not in the frozen proof (it predates the stub label): %s"
+                   % ("supplied from this tool's ledger table by the live basename %s: %r"
+                      % (Path(g["live"]).name, stub) if stub else
+                      "the ledger table declares none for the live basename %s, so no stub finalize "
+                      "is recognised" % Path(g["live"]).name))
+    script = render_verify(g["live"], g["shard"], g["kind"], g["start"], g["info"], g["footer"],
+                           g["regen"], stub)
+    try:
+        run = subprocess.run(["bash", "-c", script], cwd=str(repo), stdout=subprocess.PIPE,
+                             stderr=subprocess.STDOUT, encoding="utf-8", errors="replace")
+    except OSError as e:
+        result.add("REVERIFY_CANNOT_RUN",
+                   "bash is needed to run a proof and could not be started: %s" % e, exit_code=3)
+        return result
+    # A child killed by a signal reports a NEGATIVE status, which `Result.add` would read as "no
+    # worse than 0" and let through as a pass. A verdict tool must never turn "did not finish" into
+    # "holds", so anything below zero is exit 3 (the proof could not be run to a verdict).
+    rc = run.returncode if run.returncode >= 0 else 3
+    result.add("REVERIFY_VERDICT",
+               "exit %d (0: every assertion holds; 1: a FAIL; 4: a recognised stub finalize, still a "
+               "FAIL; 3: the proof did not finish). The proof's own output:\n%s"
+               % (rc, _indent(run.stdout.rstrip("\n"))),
+               exit_code=rc or None)
+    return result
 
 
 # =============================================================================================
@@ -2319,9 +2543,28 @@ def main(argv=None):
     p.add_argument("--force", action="store_true", help="proceed despite the SRF-RED refusal")
     p.add_argument("--check", action="store_true",
                    help="evaluate the trigger and report; never writes, even with --write")
+    p.add_argument("--reverify", metavar="SHARD",
+                   help="re-derive a frozen shard's proof under THIS tool's template and print the "
+                        "verdict. Read-only: writes nothing. Takes the shard (or its .verify.sh) "
+                        "and no other mode flag. Exit is the proof's own (0 holds, 1 a FAIL, 4 a "
+                        "recognised stub finalize), or 3 when the shard cannot be re-derived.")
     p.add_argument("--today", help=argparse.SUPPRESS)   # test seam: deterministic dates
     p.add_argument("--version", action="version", version="methodology_trim.py v" + TRIM_VERSION)
     opts = p.parse_args(argv)
+
+    if opts.reverify is not None:
+        clash = [flag for flag, on in (("--file", opts.file), ("--write", opts.write),
+                                       ("--check", opts.check), ("--cut", opts.cut),
+                                       ("--budget-bytes", opts.budget_bytes is not None),
+                                       ("--force", opts.force)) if on]
+        if clash:
+            print("methodology_trim.py: --reverify is read-only and takes its own shard; it cannot "
+                  "be combined with %s." % ", ".join(clash), file=sys.stderr)
+            return 3
+        result = Result(Path(opts.reverify))
+        reverify(opts.reverify, result)
+        report(result, opts)
+        return result.exit
 
     if not opts.file:
         p.print_usage(sys.stderr)

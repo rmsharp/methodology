@@ -44,6 +44,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] `methodology_trim.py --reverify <shard>` re-derives a frozen proof under today's template, read-only (`TRIM_VERSION` 1.7.0)
+
+- **Action:** answers the third of the three causes in [issue #93](https://github.com/KJ5HST/methodology/issues/93): a
+  generated `.verify.sh` is a frozen artifact, so a fix to the template never reaches a proof already written, and an
+  adopter holds red proofs of lossless trims with no way to ask what today's template says. `starter-kit/methodology_trim.py`
+  gains `--reverify <shard>` (the shard or its `.verify.sh`): it lifts `LIVE`, `SHARD` and the record grammar out of the
+  frozen proof, fills the CURRENT `VERIFY_TEMPLATE` through the new `render_verify` (`build_verify` is now a spec-to-values
+  wrapper over it, so there is one filler), runs it, and prints the verdict under a banner saying it is a claim about
+  today's logic and not about the artifact that was shipped. It writes nothing and leaves the frozen proof alone. The exit
+  status is the proof's own (0 holds, 1 a FAIL, 4 a recognised stub finalize) or 3 for a shard it will not re-derive; a
+  signal death reads as 3, never as a pass. **The lift is strict**, because the text is spliced into an unquoted shell
+  assignment and into Python the proof executes: each of the six required lines (`LIVE`, `SHARD`, `RECORD_KIND`,
+  `RECORD_START`, `FENCE_INFO`, `FOOTER_MODE`) must match, whole, the form the template writes; `REGEN_PATTERNS` and
+  `STUB_PATTERN` are parsed as literals and never evaluated; paths may not be absolute or contain `..`; anything else is
+  refused by name (`REVERIFY_NOT_LIFTABLE`, `REVERIFY_NO_PROOF`, `REVERIFY_SHARD_MISMATCH`, `REVERIFY_CANNOT_RUN`). A proof
+  that predates a line gets today's value and the banner says so (`REVERIFY_SUBSTITUTED`): no regenerated fields before
+  1.1.2, the stub marker from the ledger table by the live file's basename before 1.6.0. `--reverify` refuses to be
+  combined with any flag that writes or selects a ledger. `FRAMEWORK_APPARATUS.md` names the flag in the timing-rule
+  paragraph. `tools/test_methodology_trim.py`: `TestReverify`, 27 tests, including four payload tests (a shell payload
+  in `LIVE`, a Python payload in `RECORD_START`, an expression in `REGEN_PATTERNS` or `STUB_PATTERN`, a shard file name carrying
+  a shell payload), each with a control showing the payload is live when spliced naively, a writes-nothing snapshot, and a
+  round trip pinning that what the tool writes is unchanged; 181 tests (2 skipped), up from 154; the `trimmer-unit-tests` gate 154 → 181, a
+  tightening. A minor release: a new flag. What it cannot do: it produces a second verdict and changes no frozen proof, so a
+  red proof stays a red artifact.
+
 ### 2026-10-05 · [issue #93] A bundled stub finalize is named in the proof (exit 4), warned about before the write, and the timing rule is stated once (`TRIM_VERSION` 1.6.0)
 
 - **Action:** fixes the first of the three causes in [issue #93](https://github.com/KJ5HST/methodology/issues/93): a
