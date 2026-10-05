@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S266
+date: 2026-10-05
+status: pending
+active_task: IMPLEMENT P3 of `docs/planning/issue93-trimmer-proof-false-red-plan.md` (section 4.3 and section 5 P3; approved at S263): a read-only `--reverify <shard>` on `starter-kit/methodology_trim.py`, `TRIM_VERSION` 1.7.0, that lifts `LIVE`, `SHARD` and the five grammar lines from the shard's frozen `.verify.sh`, supplies the stub marker from `LEDGERS` by the LIVE basename (what P2's re-derive did), runs today's template and prints the verdict under a banner naming the version that re-derived it, and writes nothing. Tests first. Verify on both real trees; every difference from the plan's predictions is reported, not edited in.
+```
+
+```handoff
 session: S265
 date: 2026-10-05
 status: complete

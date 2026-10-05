@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] S266 claim (in progress) — P3 of the trimmer false-red fix: a read-only `--reverify <shard>`
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "P3 --reverify" at the Phase 0 picker. The owed trim (`2e5ed83`, S263's receipt to shard `HANDOFFS-through-2026-10-05.md`, its `.verify.sh` exit 0 from a `--no-local` clone) and its fold (`b50cd24`) ran first as their own actions; `bin/tests.sh` on the fold tree read 356 passed, 0 failed, 6 skipped. Deliverable: tests first, then `--reverify <shard>` in `starter-kit/methodology_trim.py` (`TRIM_VERSION` 1.7.0), per the plan approved at S263. Phase 3F records the rest.
+
 ### 2026-10-05 · [ad hoc] S266 — fold the 2026-10-05 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`2e5ed83`, S263's receipt to `HANDOFFS-through-2026-10-05.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-05, trimmer v1.6.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S265, S264); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of P3 (`--reverify`) of the #93 trimmer fix, before the session claim.
