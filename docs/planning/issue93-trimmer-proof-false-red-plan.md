@@ -1,8 +1,8 @@
 # The trimmer's generated `.verify.sh` ends red on lossless trims — a plan for upstream issue #93
 
-**Status (S265, 2026-10-05): P1 DONE, `5270be8` (`TRIM_VERSION` 1.5.1), and P2 DONE, `45d32d6` `ba8f883`
-`1214511` (`TRIM_VERSION` 1.6.0); measured results in §5 P1, §5 P2 and `BACKLOG-DETAIL.md` §BL-98. P3 is NOT
-built; P4 is its own go-ahead.** The paragraph below is
+**Status (S266, 2026-10-05): P1 DONE, `5270be8` (`TRIM_VERSION` 1.5.1); P2 DONE, `45d32d6` `ba8f883`
+`1214511` (`TRIM_VERSION` 1.6.0); and P3 DONE, `3616b5f` (`TRIM_VERSION` 1.7.0); measured results in §5 P1, §5 P2,
+§5 P3 and `BACKLOG-DETAIL.md` §BL-98. P4 is its own go-ahead.** The paragraph below is
 the plan as written at S263 and is left as written, so its "nothing is built" and "no line changed" are
 true of S263 and no longer of the tree. Approved to implement P1 first (D1–D4 decided by the operator,
 2026-10-05, at the S263 plan-review picker; D5 in part; §9 records each). Written at S263
@@ -391,6 +391,44 @@ Radius), and RED first.
   edited into it.
 - **Surface.** Both real trees, which is the point. **Cannot enforce:** that a re-derived verdict equals
   the one a *new* trim would have produced for an old record grammar.
+- **DONE at S266 (`3616b5f`, `TRIM_VERSION` 1.7.0; floor `3e94b28`).** `--reverify <shard>` (the shard or its `.verify.sh`) lifts
+  `LIVE`, `SHARD` and the record grammar from the frozen proof, fills TODAY'S template through the new `render_verify` (`build_verify`
+  is now a wrapper over it, so there is one filler), runs it and prints the verdict under a banner (`REVERIFY_BANNER`) saying it is a
+  claim about today's logic and not the artifact that was shipped. It writes nothing and leaves the frozen proof alone. Exit is the
+  proof's own (0, 1, 4) or 3 for a shard it will not re-derive; a signal death reads as 3. 27 tests (`TestReverify`), written first and
+  run RED against the missing flag, 181 in the file, the `trimmer-unit-tests` floor 181; **54 mutants of the new code, all killed on the
+  final tree** (a first run of 56 found three survivors: two guards no input could fail, removed, and one missing test, added);
+  `bin/tests.sh` 362 passed, 0 failed, 0 skipped at `3616b5f`.
+  **Measured on the real trees** (`python3 docs/planning/issue93-evidence/reverify_p3.py <repo> <trimmer.py> <out.tsv>`, one process
+  per shard through the shipped CLI): **this repo, 106 proofs: 5 frozen red; 103 re-derive green, 2 at exit 1, 1 at exit 4; 2 newly
+  green, 0 newly red. The adopter (`nprcgenekeepr`, read through a clone), 54 proofs: 10 frozen red; 46 green, 7 at exit 1, 1 at exit 4;
+  2 newly green, 0 newly red.** Both agree with `reverify_p2.py`'s in-memory re-derive on every shard (0 differing pairs, 106 and 54).
+  **Writes nothing:** the whole tree (every file by size and mtime, every directory outside `.git`, `git status --porcelain
+  --untracked-files=all`, HEAD, the refs, the stash list) was identical after each sweep; this repo's tree carried tracked modifications
+  during it, so the porcelain was not empty.
+  **Differences from the prediction** (§0's and §5 P3's "adopter 2 green + 8 exit-4, fork 2 green + 2 labelled + the Class B shard still
+  red", already superseded by §5 P2's DONE above): the adopter reads 2 green + 1 exit-4 + 7 exit-1 as P2 measured, the 7 being its
+  `SESSION_NOTES.md` shards, which need its local spec to declare a marker; this repo reads 103 green (the P2 count of 102 plus the
+  `HANDOFFS-through-2026-10-05` shard this session's trim wrote), 1 at exit 4 (`HANDOFFS-through-2026-08-02`, a 750 B stub) and 2 at exit
+  1 (`HANDOFFS-through-2026-08-25`, Class B, and `HANDOFFS-through-2026-08-09`, where an L2 front-matter failure also holds so the label
+  withholds). The plan's "2 labelled" for this repo was wrong: one proof is a stub finalize.
+  **Deviations from the plan's text, each decided on evidence.** (1) **The lift is strict, not a regex over five lines.** §4.3 and the
+  prototype took `(\S+)` and `(.*)`; the values reach an unquoted shell assignment (`LIVE=...`) and Python the proof then executes, so a
+  hostile frozen script would have made a read-only inspection a code-execution path. Each of the six required lines must match the form
+  the template writes, whole; `REGEN_PATTERNS` and `STUB_PATTERN` are parsed as literals (never evaluated) and re-emitted through
+  `repr()`; paths may not be absolute or contain `..`; the two payload tests drive the attack and carry a control showing the naive
+  splice runs it. The shard FILE NAME is the other splice (`SHARD=...`): a name equal to what its proof says passes the "is this the
+  shard I was asked about" check, so the path-character class is what stops it (a mutant that loosened it survived the first draft of
+  the tests). (2) **Six required lines, two soft ones.** A proof without `REGEN_PATTERNS` (v1.1.1: 4 of this repo's 106) lifts with none
+  and one without `STUB_PATTERN` (105 of 106 here, all 54 of the adopter's) gets the marker from `LEDGERS` by the live basename, each
+  stated in the banner as `REVERIFY_SUBSTITUTED`. (3) **`--reverify` refuses every flag that writes or selects a ledger** rather than
+  ignoring it. (4) **One sentence in `FRAMEWORK_APPARATUS.md` names the flag** (the plan's impact table lists only the trimmer and its
+  tests); it is additive and a test pins it.
+  **What P3 cannot do, stated:** it produces a second verdict and changes no frozen proof, so a red proof stays a red artifact; the
+  verdict is a claim about today's logic, not about the artifact that was shipped; and no adopter receives the flag until P4.
+  **Reproduce:** the `reverify_p3.py` command above over this repo and a clone of the adopter, and
+  `python3 docs/planning/issue93-evidence/mutants_p3.py` (54 mutants, about a quarter of an hour, writes nothing under the repository;
+  `--validate` checks the list in a second, `--only=<name substring>` reruns some).
 
 ### P4 — distribution (outward; its own go-ahead, never implied by P1–P3)
 

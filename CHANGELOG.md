@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [BL-98] S266 — status follows P3 in the #93 plan, the BL-98 row and its detail
+
+`docs/planning/issue93-trimmer-proof-false-red-plan.md` gets a measured P3 DONE paragraph in §5 and a new status line (the S263 paragraph is left as written); the BL-98 row in `docs/planning/BACKLOG.md` and its section in `docs/planning/BACKLOG-DETAIL.md` now read P3 DONE and name P4 as the next action. The differences from the plan's prediction are in the plan, not edited into it: the adopter reads 2 green + 1 exit-4 + 7 exit-1 (as P2 measured), this repo 103 + 1 + 2 of 106.
+
 ### 2026-10-05 · [BL-98] S266 — the P3 sweep and mutation scripts join `issue93-evidence/`
 
 `docs/planning/issue93-evidence/reverify_p3.py` sweeps every frozen proof in a repository through the shipped `--reverify`, one process per shard, and checks the tree is identical afterwards (every file by size and mtime, every directory outside `.git`, `git status --porcelain`, HEAD, the refs, the stash list); `mutants_p3.py` is the 54-mutant check of the new code (`--validate` checks the list in a second, `--only=<name substring>` reruns some). Both write nothing under the repository.

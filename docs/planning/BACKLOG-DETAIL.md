@@ -4166,7 +4166,7 @@ does was not read). The S257 reopen condition and the S265 "leave it" paragraph 
 
 
 **BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
-operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 not started.**
+operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 DONE at S266, P4 not started.**
 
 **Where it lives.** The plan is [`issue93-trimmer-proof-false-red-plan.md`](issue93-trimmer-proof-false-red-plan.md); the two scripts that
 re-derive its numbers are in [`issue93-evidence/`](issue93-evidence/); the issue is <https://github.com/KJ5HST/methodology/issues/93>. Read the
@@ -4204,6 +4204,16 @@ final record); the label needs the replacing record to no longer be a stub and t
 Only 1 of the adopter's 8 stub shards reaches exit 4 with canonical specs; the 7 `SESSION_NOTES.md` ones need the adopter's local spec to declare a marker.
 **P3 inherits:** a frozen proof before 1.6.0 has no `STUB_PATTERN` line, so `--reverify` supplies it from `LEDGERS` by the LIVE basename (plan §5 P2 DONE).
 
-**Next action:** P3, a session of its own: a read-only `--reverify <shard>` (plan §4.3 and §5 P3, `TRIM_VERSION` 1.7.0), with the stub marker supplied
-from the ledger table as above and its predictions for the adopter and this repo updated to the measured ones. **Still open:** the adopter's local `SESSION_NOTES.md` spec, which the `bin/sync`
-overlay drops, has no backlog item of its own.
+**P3 DONE (S266, `3616b5f`, `TRIM_VERSION` 1.7.0; floor `3e94b28`).** A read-only `--reverify <shard>` (the shard or its `.verify.sh`): it lifts `LIVE`,
+`SHARD` and the record grammar from the frozen proof, fills today's template through `render_verify`, runs it, and prints the verdict under a banner
+saying it is a claim about today's logic and not the artifact that was shipped; it writes nothing. Exit is the proof's own (0, 1, 4) or 3 for a shard it
+will not re-derive. The lift is strict (each required line in the exact form the template writes, literals parsed never evaluated, no absolute or `..`
+paths) because the text reaches an unquoted shell assignment and Python the proof executes. 27 tests, 181 in the file; 54 mutants all killed on the final
+tree; `bin/tests.sh` 362 passed. Measured on the real trees through the shipped CLI: this repo 106 proofs (5 frozen red) re-derive 103 green, 2 at exit 1,
+1 at exit 4; the adopter 54 (10 frozen red) re-derive 46 green, 7 at exit 1, 1 at exit 4; 0 newly red in either, 2 newly green in each; the tree is
+identical afterwards. Plan §5 P3 DONE has the differences from its prediction, the deviations and the commands.
+
+**Next action:** P4, the one upstream pull request carrying P1-P3 (they share a template), vetted here first; its own go-ahead, never implied, and its
+description must state that P1 and P2 change only newly written proofs and that P3 adds a flag and re-derives, never rewrites. Before it, BL-95's resync
+must carry the fork's trimmer changes (now P1, P2 and P3) and the one `FRAMEWORK_APPARATUS.md` paragraph (the timing rule, now with the `--reverify` sentence). **Still open:** the adopter's local `SESSION_NOTES.md`
+spec, which the `bin/sync` overlay drops, has no backlog item of its own.
