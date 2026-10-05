@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-04-5.md` (1 record(s), 39,542 B → 29,317 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-04 → 2026-10-04) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-04-5.md`](docs/archive/HANDOFFS-through-2026-10-04-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-04-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-04-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,542 B → 29,317 B (−25.9%).
+
 ### 2026-10-05 · [issue #93] S263 close-out — the plan for the trimmer's false-red proofs is committed and approved to implement P1; nothing built
 
 The `HANDOFFS.md` receipt for S263 is `status: complete` (self 8, predecessor S262 scored 9). Deliverable: `docs/planning/issue93-trimmer-proof-false-red-plan.md` and `docs/planning/issue93-evidence/` (commit `5309834`), BL-98 and the operator's decisions D1–D4 and part of D5 (`0290a16`); the owed trim (`cf9de43`) and fold (`92aaabc`) ran first and the claim is `3d7c5c8`. One outward action, the comment on upstream issue #93 (id `5998724931`), has its own entry. `starter-kit/methodology_trim.py` is unchanged and nothing is pushed. Phase 3C appended no fork learning row, so D3's retirement duty does not arise. Not done, by design: P1 (the next session's ranked first candidate), P2, P3, any pull request, the BL-94 decisions.
