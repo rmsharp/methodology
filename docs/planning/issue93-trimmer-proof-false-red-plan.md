@@ -1,6 +1,7 @@
 # The trimmer's generated `.verify.sh` ends red on lossless trims — a plan for upstream issue #93
 
-**Status: DRAFT — decisions D1–D5 (§9) are open and belong to the operator.** Written at S263
+**Status: APPROVED to implement P1 first (D1–D4 decided by the operator, 2026-10-05, at the S263
+plan-review picker; D5 in part; §9 records each). Nothing is built.** Written at S263
 (2026-10-05) as that session's single deliverable. **The plan is the deliverable; nothing here is
 applied** (`starter-kit/SESSION_RUNNER.md` §Planning Sessions, failure mode #18): no line of
 `starter-kit/methodology_trim.py` changed, nothing was sent to `KJ5HST/methodology`. Every number below
@@ -367,24 +368,27 @@ document in `docs/planning/`, and was set aside for the overhead plan the day it
 chosen** (`CHANGELOG.md`: "It displaces BL-60's planning session"); if it lands, `VERIFY_TEMPLATE` moves and P2/P3's template edits move with it, but the *behaviour*
 they specify does not, and nothing here is wasted: the tests carry over. Recommendation: do not wait for it.
 
-## 9. Decisions (all open, all the operator's)
+## 9. Decisions (the operator's; the S263 plan-review picker, 2026-10-05)
 
-**D1 — cause 2's shape.** Whole-line membership, 1.5.1 patch (§4.2). *Recommended.* Alternative: do not fix
-it (the two adopter shards stay red).
+**D1 — cause 2's shape.** Whole-line membership, 1.5.1 patch (§4.2). **DECIDED: yes, P1 now.**
+Alternative not taken: do not fix it (the two adopter shards stay red).
 
 **D2 — cause 1's verdict for a recognised stub finalize.** (i) keep it a FAIL with its own label and
 exit 4, BL-27 intact; or (ii) exit 0 with the label, which **reverses BL-27 for this one shape** and
-means the proof certifies a replaced stub, including the one that carried prose (§3.5). *Recommended: (i).*
-It costs nothing to move to (ii) later; the reverse is not true.
+means the proof certifies a replaced stub, including the one that carried prose (§3.5).
+**DECIDED: (i), FAIL, labelled, exit 4.** Moving to (ii) later costs nothing; the reverse does not.
 
-**D3 — cause 3.** `--reverify`, read-only, grammar from the frozen script (§4.3). *Recommended.* Alternative:
-leave frozen proofs frozen and document it.
+**D3 — cause 3.** `--reverify`, read-only, grammar from the frozen script (§4.3). **DECIDED: yes.**
+Alternative not taken: leave frozen proofs frozen and document it.
 
-**D4 — order against BL-60.** Proceed now (§8). *Recommended.*
+**D4 — order against BL-60.** **DECIDED: proceed now, do not wait for BL-60** (§8).
 
-**D5 — what leaves this machine.** Whether P1–P3 go upstream as one pull request; whether #93 gets a
-comment correcting its split (§0) — the operator's own issue, so his words; and whether the adopter's
-local `SESSION_NOTES.md` spec, which the overlay drops, is its own backlog item. **None is done or implied.**
+**D5 — what leaves this machine, and what is bookkeeping.** **DECIDED, in part:** (a) a fork-side backlog
+row for this plan, **BL-98**, opened the same session (not outward); (b) a comment on #93 correcting its
+split (§0): **go-ahead given, but the exact text is shown to the operator first and nothing is posted until
+he approves that text**; (c) P1–P3 are to be treated as one future upstream pull request, vetted here first
+(P4): **nothing is sent now, and the pull request is its own go-ahead.** *Not asked, still open:* whether the
+adopter's local `SESSION_NOTES.md` spec, which the `bin/sync` overlay drops, is its own backlog item.
 
 ## 10. Reproduce, and what I did not verify
 

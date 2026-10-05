@@ -4140,3 +4140,25 @@ runs since S254, whose other recorded runs (S254's rerun, S256's close-out gate 
 
 **Decision (S257 close-out, the operator, from a picker): shape (c), leave it and rerun on a lone red whose own `fail` message contains its pattern.** Nothing is converted; reopen if a red hides a real defect (an `&& fail || pass` site) or the count of such reds grows.
 
+
+**BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
+operator's own upstream issue; planned, P1 approved, nothing built.**
+
+**Where it lives.** The plan is [`issue93-trimmer-proof-false-red-plan.md`](issue93-trimmer-proof-false-red-plan.md); the two scripts that
+re-derive its numbers are in [`issue93-evidence/`](issue93-evidence/); the issue is <https://github.com/KJ5HST/methodology/issues/93>. Read the
+plan's §0 for the answer and §3 for the commands; this entry only says what is decided and what is next.
+
+**What was measured (S263, against `nprcgenekeepr` at `2563a6ee0` and this repo's 103 proofs).** #93's count reproduces (10 of 54 red, none a
+loss) and its split does not: the ten are **two** classes. 2 are the L2 `leaked` substring test (`starter-kit/methodology_trim.py:1508`); 8
+are a close-out commit that also trims, where record 0 was a Phase 1B claim stub before the trim. #93's cause 3 (a frozen v1.1.2 script) is
+not independent: re-derived under the current template it lands in the stub class. Seven of the ten are `SESSION_NOTES.md` shards from a
+local ledger spec the canonical trimmer lacks. None of this repo's 87 v1.5.0 proofs is red.
+
+**Decided by the operator at S263 (plan-review picker, 2026-10-05):** D1+D4 P1 now, without waiting for BL-60; D2 a recognised stub finalize
+stays a FAIL, labelled, with its own exit status 4 (BL-27 intact); D3 a read-only `--reverify <shard>` that lifts the grammar from the frozen
+script; D5 this row, a comment on #93 (text shown to him first, nothing posted without his approval of that text), and P1–P3 as one future
+upstream pull request (its own go-ahead; nothing sent).
+
+**Next action:** a P1 session — RED-first tests beside `TestVerifyShAppendTamperEvadesSubstringCheck` (`tools/test_methodology_trim.py:1215`),
+then the one-line change at `starter-kit/methodology_trim.py:1508`, `TRIM_VERSION` 1.5.1; DONE criteria in the plan's §5. **Still open:** the
+adopter's local `SESSION_NOTES.md` spec, which the `bin/sync` overlay drops, has no backlog item of its own.
