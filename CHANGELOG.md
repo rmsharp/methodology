@@ -44,6 +44,31 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] A bundled stub finalize is named in the proof (exit 4), warned about before the write, and the timing rule is stated once (`TRIM_VERSION` 1.6.0)
+
+- **Action:** fixes the first of the three causes in [issue #93](https://github.com/KJ5HST/methodology/issues/93): a
+  close-out commit that also trims always read red, because the session's own newest record goes from a `status: pending`
+  claim stub to the full record in the same commit, so its pre-trim bytes exist nowhere afterwards. Three parts, one commit.
+  **The proof** (`starter-kit/methodology_trim.py`): `LedgerSpec` gains an optional `stub_marker`; `HANDOFFS.md` declares
+  `^status: pending\s*$` (a line, `re.M`) and `CHANGELOG.md` declares none, deliberately — its lifecycle is "a committed
+  entry is never edited", so a claim's `(in progress)` entry stays as written when close-out adds its own and is a final
+  record, not a stub. The marker travels in the generated proof as `STUB_PATTERN` beside `REGEN_PATTERNS`. A frontier edit
+  whose pre-trim record 0 matches it, whose replacement no longer does, with no other failure and every other record
+  byte-identical and in order, prints one labelled `FAIL:` (the stub's size, the count of other records) instead of the
+  generic L1/L3 pair, a `NOTE:` stating the timing rule, and exits 4; every near-miss keeps exit 1 and the existing BL-27
+  note. It is still a FAIL, because BL-27's reason stands: a real loss can have this exact shape. A minor release: a new exit
+  status and a new `LedgerSpec` field. **The writer:** `check_stub_frontier` adds two advisory findings (no exit code, the
+  write proceeds): `FRONTIER_PENDING_STUB` when record 0 of the live ledger still matches the marker, and
+  `FRONTIER_FINALIZE_UNCOMMITTED` when HEAD's record 0 was a stub and the working tree no longer holds it. Both state the
+  consequence and the two ways out from one constant, `TRIM_TIMING_RULE`: trim while record 0 is complete, before the claim or
+  after the finalize is committed, never in the commit that finalizes it. **The prose:** `FRAMEWORK_APPARATUS.md` (The
+  Action Ledger, after the paragraph saying a trim earns its own commit) states the same rule, and the note a bundled
+  frontier edit prints no longer calls bundling "this repo's own established practice", which contradicted that prose.
+  `tools/test_methodology_trim.py`: `TestVerifyShNamesAStubFinalize` (8), `TestWriteTimeGuardForAStubFinalize` (12) and
+  `TestTheTimingRuleIsStatedTheSameEverywhere` (5, one anchor phrase pinned in the constant, the prose, both notes, and the
+  retired claim pinned gone); 154 tests (2 skipped), up from 129; the `trimmer-unit-tests` gate 129 → 154, a tightening. A
+  proof already written is frozen and does not change.
+
 ### 2026-10-05 · [issue #93] The generated `.verify.sh`'s L2 `leaked` clause tests whole lines, not substrings (`TRIM_VERSION` 1.5.1)
 
 - **Action:** fixes the second of the three causes in [issue #93](https://github.com/KJ5HST/methodology/issues/93).
