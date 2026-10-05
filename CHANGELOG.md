@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [BL-97] S265 — decision: leave the `echo | grep -q` flake; the S257 decision (c) stands
+
+After the close-out report the operator was asked, in a picker, whether BL-97's reopen condition ("the count of such reds grows") was met by this session's two reds in one full run (Test 15, Test 38; four reds across three runs) and chose to LEAVE it over (b) converting only the `&& fail || pass` sites and (a) converting all 82. `docs/planning/BACKLOG-DETAIL.md` BL-97 records the decision under its third data point; `HANDOFFS.md`'s S265 receipt, whose `next_steps` item (4) said the call was his, now says it was made. Nothing in `bin/tests.sh` changed. No outward action.
+
 ### 2026-10-05 · [issue #93] S265 close-out — P2 of the trimmer false-red fix is committed: the proof names a stub finalize (exit 4), the writer warns, the rule is stated once
 
 Deliverable: P2 of `docs/planning/issue93-trimmer-proof-false-red-plan.md`, `TRIM_VERSION` 1.6.0, in three checkpoint commits (`45d32d6`, `ba8f883`, `1214511`), the floor `7a18512`, the status `0ceb71c` and the evidence scripts `aa8eab0`; the owed trim (`0d77a8b`) and its fold (`891b55a`) ran first. 25 tests (154 in the file), 37 mutants killed, `bin/tests.sh` 362 passed, 0 failed at each checkpoint; the real trees re-derived (the adopter 1 of 54 proofs at exit 4, this repo 1 of 105, 0 newly red); an end-to-end smoke on this repo's real ledger. Three deviations from the plan, on evidence, and one of my own claims corrected (the heading shape, in `0ceb71c`'s entry). The `HANDOFFS.md` receipt is complete (`self_score` 8, S264 scored 9). `docs/planning/BACKLOG-DETAIL.md` BL-97 gains a third data point (two `grep -q` reds in one run that overlapped parallel clones; the quiet re-run read 362 and 0) and notes that the S257 reopen condition reads as arguably met, which is the operator's call. Phase 3C appended no fork learning row, so D3's retirement duty does not arise. Nothing pushed; nothing sent to `KJ5HST/methodology`.

@@ -4150,6 +4150,8 @@ decision's own reopen condition ("reopen if a red hides a real defect ... or the
 three runs, the first run's two on different assertions, one of them repeating the S254 assertion) **and is the operator's to call; nothing was converted or
 reopened.** The practice that follows from the decision stands: run nothing beside the suite.
 
+**Decision (S265 close-out, the operator, from a picker): leave it; (c) stands.** Rerun on a lone red whose own `fail` message contains its pattern; nothing is converted. He was offered (b) and (a) beside it and declined both with four reds across three runs on the table, all visible false reds that hid no defect. The reopen condition in the S257 decision stays as written (a red that hides a real defect, an `&& fail || pass` site, or a count that grows) and is now measured against this baseline.
+
 
 **BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
 operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 not started.**
