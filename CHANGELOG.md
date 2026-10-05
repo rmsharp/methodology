@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] S264 close-out — P1 of the trimmer false-red fix is committed: the generated proof's `leaked` clause tests whole lines (`TRIM_VERSION` 1.5.1)
+
+The `HANDOFFS.md` receipt for S264 is `status: complete` (self 8, predecessor S263 scored 9). Deliverable: P1 of `docs/planning/issue93-trimmer-proof-false-red-plan.md`, commit `5270be8` (`starter-kit/methodology_trim.py`, `tools/test_methodology_trim.py`, 5 new tests, the clause's first coverage), the gate floor `trimmer-unit-tests` 124 to 129 (`9b59af6`) and the status documents (`5b5c0cc`); the owed trim (`039dde0`) and fold (`bd8cb8c`) ran first and the claim is `2392337`. Measured: 129 unit tests OK, 9 mutants (7 non-equivalent, all killed), the patched trimmer re-deriving every frozen proof with 0 newly red (the adopter 54 proofs, 10 red to 8; this repo 104 proofs, 5 to 3), `bin/tests.sh` 362 passed, 0 failed, 0 skipped, and a smoke trim of this repo's real `HANDOFFS.md` in a scratch clone whose generated proof (v1.5.1) exits 0. Nothing was sent to `KJ5HST/methodology` and nothing is pushed; this fork's trimmer is no longer byte-identical to upstream's. Phase 3C appended no fork learning row, so D3's retirement duty does not arise. Not done, by design: P2 (the next session's ranked first candidate), P3, P4 and its pull request, a comment on #93, the BL-94 decisions.
+
 ### 2026-10-05 · [BL-98] S264 — status follows P1 in the plan, the BL-98 row and its detail
 
 `docs/planning/issue93-trimmer-proof-false-red-plan.md` (the status paragraph, which keeps S263's text and says which of its claims are now historical, and §5 P1's measured DONE), `docs/planning/BACKLOG.md` (the BL-98 row: P1 done, P2 next) and `docs/planning/BACKLOG-DETAIL.md` (§BL-98: what P1 measured and left, the next action). BL-98 stays open: P2 and P3 are not built. Two figures differ from the plan's text and are stated there: the adopter checkout has moved to `3a59ed844` with the same 54 proofs and 10 red, and this repo has 104 proofs, not 103. `bin/check-links` OK (111 links).
