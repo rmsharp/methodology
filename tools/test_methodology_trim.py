@@ -1255,6 +1255,144 @@ class TestVerifyShAppendTamperEvadesSubstringCheck(unittest.TestCase):
 
 
 # =============================================================================================
+# Issue #93, cause 2 -- the GENERATED .verify.sh's L2 "leaked" clause is a SUBSTRING test.
+#
+#     leaked = [ln for ln in bfront.splitlines()
+#               if ln.strip() and len(ln.strip()) > 24 and (ln in sfront or ln in "".join(sr))]
+#
+# `ln in sfront` and `ln in "".join(sr)` are `str in str`: they ask whether the front-matter line
+# occurs ANYWHERE in the shard's text, so an archived record that merely QUOTES a front-matter line
+# mid-line (a receipt that cites `python3 methodology_trim.py --file HANDOFFS.md ...` in backticks)
+# reads as that line having travelled into the shard. Nothing was lost; the proof goes red. Two of
+# the ten false reds in the adopter issue #93 reports are this shape.
+#
+# A migration moves WHOLE lines, so whole-line membership is the right test for it. This class is
+# the clause's first coverage -- before it, no test in this file named `leaked` at all. The fix is
+# a PATCH (1.5.1): a correctness fix to what the tool writes, no new finding code, no new exit
+# status -- the class of 1.1.2 and 1.1.3.
+#
+# THE CONTROLS ARE AS LOAD-BEARING AS THE FIX. Every one is built INSIDE the trim commit: the proof
+# reads the shard as the commit that ADDED it wrote it (`TRIM_SHA` is
+# `git log --diff-filter=A -1 -- $SHARD`), so a tamper committed afterwards is invisible to it by
+# design and a control built that way passes for the wrong reason (fork Learning #58).
+# =============================================================================================
+
+# > 24 characters, the length filter's threshold, so the clause is live for it.
+LEAK_FM_LINE = "Newest on top; prepend-only. Archive when above N receipts."
+
+
+class TestVerifyShLeakedTestsWholeLines(unittest.TestCase):
+
+    def _trim_with_front_matter_line(self, tmp, quote=None, record_line=None, shard_front_line=None):
+        """HANDOFFS.md whose front matter carries LEAK_FM_LINE; trim at --cut 2 and commit.
+
+        `quote`            -- text spliced into an ARCHIVED record's commentary (S5 is archived at --cut 2).
+        `record_line`      -- a line added as its OWN line in that record, so it is a whole record line.
+        `shard_front_line` -- a line added to the shard's own front matter, inside the trim commit:
+                              LEAK_FM_LINE whole is the defect the clause exists to catch.
+        Returns (repo, shard). The proof is run by the caller."""
+        p = make_handoff_repo(tmp)
+        hf = p / "HANDOFFS.md"
+        t = hf.read_text(encoding="utf-8")
+        t = t.replace("This file currently holds **0**.\n",
+                      "This file currently holds **0**.\n\n" + LEAK_FM_LINE + "\n", 1)
+        self.assertIn(LEAK_FM_LINE + "\n", t, "control: the front matter must carry the line")
+        if quote is not None:
+            before = t
+            t = t.replace("commentary about session 5.", "commentary about session 5, see " + quote, 1)
+            self.assertNotEqual(t, before, "control: the quote must land in the record")
+        if record_line is not None:
+            before = t
+            t = t.replace("commentary about session 5.", "commentary about session 5.\n" + record_line, 1)
+            self.assertNotEqual(t, before, "control: the line must land in the record")
+        hf.write_text(t, encoding="utf-8")
+        sh(p, "git", "commit", "-qa", "--amend", "-m", "seed")
+        r = run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+        self.assertIn("[WROTE]", r.stdout, r.stdout)
+        shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+        if shard_front_line is not None:
+            st = shard.read_text(encoding="utf-8")
+            first, rest = st.split("\n", 1)
+            shard.write_text(first + "\n\n" + shard_front_line + "\n" + rest, encoding="utf-8")
+        sh(p, "git", "add", "-A")
+        sh(p, "git", "commit", "-qm", "trim")
+        return p, shard
+
+    def _proof(self, p, shard):
+        return sh(p, "bash", str(shard) + ".verify.sh")
+
+    def test_an_archived_record_quoting_a_front_matter_line_mid_line_is_not_a_leak(self):
+        """The false red itself. The archived record contains the front-matter line, in backticks,
+        inside a longer line -- as the substring but never as a line of its own. Nothing moved."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p, shard = self._trim_with_front_matter_line(tmp, quote="`%s` in the front matter." % LEAK_FM_LINE)
+            st = shard.read_text(encoding="utf-8")
+            self.assertIn(LEAK_FM_LINE, st, "control: the archived record must contain the line's text")
+            self.assertNotIn(LEAK_FM_LINE, st.splitlines(),
+                             "control: ...but never as a whole line, which is what 'leaked' means")
+            v = self._proof(p, shard)
+            self.assertNotIn("L2 FRONT MATTER leaked", v.stdout, v.stdout)
+            self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
+            self.assertEqual(v.returncode, 0, v.stdout)
+
+    def test_a_front_matter_line_copied_whole_into_the_shards_front_matter_still_fails_L2(self):
+        """NARROWED control -- the fix must not become 'never report a leak'. A whole front-matter
+        line landing in the shard's own front matter is the defect the clause exists for."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p, shard = self._trim_with_front_matter_line(tmp, shard_front_line=LEAK_FM_LINE)
+            self.assertIn(LEAK_FM_LINE, shard.read_text(encoding="utf-8").splitlines(),
+                          "control: the shard's own front matter must hold the whole line")
+            v = self._proof(p, shard)
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+            self.assertIn("L2 FRONT MATTER leaked 1 line(s)", v.stdout, v.stdout)
+            self.assertNotEqual(v.returncode, 0)
+
+    def test_a_front_matter_line_that_is_a_whole_line_of_an_archived_record_still_fails_L2(self):
+        """NARROWED control -- the record half of the clause. Dropping `ln in <record lines>` while
+        keeping the shard-front-matter half would pass the two tests above; this is the one that
+        notices. It pins what the fix KEEPS: a record that repeats a front-matter line WHOLE still
+        reads as a leak, a stated over-report narrower than the substring test it replaces."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p, shard = self._trim_with_front_matter_line(tmp, record_line=LEAK_FM_LINE)
+            self.assertIn(LEAK_FM_LINE, shard.read_text(encoding="utf-8").splitlines(),
+                          "control: the archived record must hold the line as a line of its own")
+            v = self._proof(p, shard)
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+            self.assertIn("L2 FRONT MATTER leaked 1 line(s)", v.stdout, v.stdout)
+            self.assertNotEqual(v.returncode, 0)
+
+    def test_a_front_matter_line_quoted_mid_line_in_the_shards_own_front_matter_is_not_a_leak(self):
+        """NARROWED control for the OTHER half of the clause: the shard's front matter is also tested
+        by whole line. Making only the record half whole-line, and leaving `ln in sfront` a substring
+        test, passes every test above; this is the one that notices."""
+        with tempfile.TemporaryDirectory() as tmp:
+            quoted = "see `%s` in the live file" % LEAK_FM_LINE
+            p, shard = self._trim_with_front_matter_line(tmp, shard_front_line=quoted)
+            st = shard.read_text(encoding="utf-8")
+            self.assertIn(quoted, st.splitlines(), "control: the shard's front matter must hold the quote")
+            self.assertNotIn(LEAK_FM_LINE, st.splitlines(),
+                             "control: ...but never the line as a whole line")
+            v = self._proof(p, shard)
+            self.assertNotIn("L2 FRONT MATTER leaked", v.stdout, v.stdout)
+            self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
+            self.assertEqual(v.returncode, 0, v.stdout)
+
+    def test_a_short_front_matter_line_repeated_whole_in_a_record_is_not_a_leak(self):
+        """NARROWED control for the length filter: the fix keeps `> 24`. `# Handoff Receipts` is 18
+        characters, a front-matter line that any record can repeat without it meaning anything."""
+        short = "# Handoff Receipts"
+        self.assertLessEqual(len(short), 24, "control: the line must sit under the filter")
+        with tempfile.TemporaryDirectory() as tmp:
+            p, shard = self._trim_with_front_matter_line(tmp, record_line=short)
+            self.assertIn(short, shard.read_text(encoding="utf-8").splitlines(),
+                          "control: the archived record must hold the short line whole")
+            v = self._proof(p, shard)
+            self.assertNotIn("L2 FRONT MATTER leaked", v.stdout, v.stdout)
+            self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
+            self.assertEqual(v.returncode, 0, v.stdout)
+
+
+# =============================================================================================
 # BL-36 — the generated proof's INJECTED constant is a 0/1 FLAG, not a count of what the trim
 # commit actually added, so `ar_cmp = ar[INJ:]` skips the wrong number of records and the whole
 # positional comparison shifts. Any trim commit bundled with a second entry to the same ledger
