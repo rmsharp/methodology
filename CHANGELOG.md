@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] S263 close-out — the plan for the trimmer's false-red proofs is committed and approved to implement P1; nothing built
+
+The `HANDOFFS.md` receipt for S263 is `status: complete` (self 8, predecessor S262 scored 9). Deliverable: `docs/planning/issue93-trimmer-proof-false-red-plan.md` and `docs/planning/issue93-evidence/` (commit `5309834`), BL-98 and the operator's decisions D1–D4 and part of D5 (`0290a16`); the owed trim (`cf9de43`) and fold (`92aaabc`) ran first and the claim is `3d7c5c8`. One outward action, the comment on upstream issue #93 (id `5998724931`), has its own entry. `starter-kit/methodology_trim.py` is unchanged and nothing is pushed. Phase 3C appended no fork learning row, so D3's retirement duty does not arise. Not done, by design: P1 (the next session's ranked first candidate), P2, P3, any pull request, the BL-94 decisions.
+
 ### 2026-10-05 · [issue #93] S263 — comment posted on upstream issue #93: the corrected split of the ten red proofs
 
 **Outward action, no commit.** One comment on <https://github.com/KJ5HST/methodology/issues/93> (comment id `5998724931`, 2026-10-05T16:32:51Z, from the operator's `rmsharp` account via `gh issue comment`), posted only after the operator chose "Post exactly as shown" at a picker that printed the full text; nothing in it carries a session number, backlog code or plan term (grepped). It says: the 54-proof count reproduces; cause 2 is real and a whole-line test fixes it with no newly red proof in 157; cause 3 is not independent of cause 1; in all 8 cause-1 shards record 0 before the trim is a Phase 1B claim stub with no other record absent; a re-derive mode must lift its grammar from the frozen script because 7 of the 10 are a ledger the canonical trimmer has no spec for. Read back with `gh api repos/KJ5HST/methodology/issues/93/comments`: identical to the draft after trailing whitespace; the issue is OPEN with that one comment. No pull request, no patch, nothing else sent.
