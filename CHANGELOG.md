@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-05-3.md` (1 record(s), 40,363 B → 28,794 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-05 → 2026-10-05) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-05-3.md`](docs/archive/HANDOFFS-through-2026-10-05-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-05-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-05-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,363 B → 28,794 B (−28.7%).
+
 ### 2026-10-05 · [issue #93] S267 — P4 sent: the branch is on origin and PR #94 is open against KJ5HST/methodology
 
 Non-commit actions, after the S267 close-out report, each with his go-ahead (a two-item picker: "Push branch to origin", "Open the PR upstream"; he selected both). Pre-flight: `git fetch upstream` read `f34769f` (unchanged, and the branch's merge base), PR #92 had no comments or reviews, issue #93 still carried only our comment, no branch of that name on `origin`. **Push:** `fix/trim-verify-false-red-issue93` to `origin`, remote tip `972eb2cd6263` read back with `git ls-remote --heads origin` and equal to the local tip. **Pull request:** <https://github.com/KJ5HST/methodology/pull/94>, from `rmsharp:fix/trim-verify-false-red-issue93` to `main`, title "fix(trim): generated proofs stop reading red on lossless trims, and --reverify re-derives a frozen one (refs #93)", body `docs/planning/issue93-evidence/upstream-pr-body.md` minus its leading HTML comment (read back through `gh pr view`: identical but for a trailing newline). GitHub reads it OPEN, not a draft, MERGEABLE, 3 commits, 5 files, +1641/-23, head `972eb2c`, no check runs reported. **Not sent:** any comment on #92, #93 or #94. This entry corrects the S267 close-out entry and receipt, which said nothing was pushed or sent: that was true when they were written and the receipt's `active_task`, `next_steps`, `gotchas` and `commit` now say what happened. `main` itself is not pushed (0 behind, 143 ahead of `origin/main` after this commit).
