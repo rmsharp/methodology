@@ -1618,6 +1618,218 @@ class TestVerifyShNamesAStubFinalize(unittest.TestCase):
 
 
 # =============================================================================================
+# Issue #93, cause 1, the PREVENT half -- a write-time guard. The proof can only NAME a stub
+# finalize after the fact; the writer can see the bad state coming. Two orders reach it:
+#
+#   A. the claim is committed and record 0 is still `status: pending` when the trimmer runs
+#      (the session then finalizes it and commits both): FRONTIER_PENDING_STUB.
+#   B. the session finalized record 0 FIRST, uncommitted, then ran the trimmer: record 0 is
+#      complete at write time, but HEAD's record 0 was a stub and the working tree no longer
+#      holds it: FRONTIER_FINALIZE_UNCOMMITTED.
+#
+# Both are ADVISORY (exit 0, the write proceeds): the tool names the consequence and the two ways
+# out, and refuses nothing, because a trim that bundles a finalize is lossless and is still the
+# operator's call. The guard keys on the ledger's declared stub_marker, so a ledger that declares
+# none is silent. It is silent on a clean tree, on a stub that is not the frontier, and on a
+# dirty ledger whose HEAD record 0 was never a stub (that edit is the proof's real-loss shape,
+# not this guard's).
+# =============================================================================================
+
+TIMING_RULE = "before the claim, or after the finalize is committed"
+
+
+class TestWriteTimeGuardForAStubFinalize(unittest.TestCase):
+
+    def _repo(self, tmp, pending=(0,)):
+        """make_handoff_repo with the named records committed as `status: pending`."""
+        p = make_handoff_repo(tmp)
+        hf = p / "HANDOFFS.md"
+        t = hf.read_text(encoding="utf-8")
+        for i in pending:
+            t, n = re.subn(r"(session: S%d\ndate: [^\n]+\n)status: complete\n" % i,
+                           r"\1status: pending\n", t, count=1)
+            self.assertEqual(n, 1, "control: S%d must be seeded pending" % i)
+        hf.write_text(t, encoding="utf-8")
+        sh(p, "git", "commit", "-qa", "--amend", "-m", "seed")
+        return p
+
+    def _codes(self, p, **kw):
+        return ev(p, "HANDOFFS.md", cut="2", **kw)
+
+    def _touch_ledger(self, p):
+        """A commit that touches HANDOFFS.md must also record itself in CHANGELOG.md, or the trimmer's
+        own P1 check refuses to run (the undocumented set is non-empty) and the guard is never reached."""
+        cl = p / "CHANGELOG.md"
+        t = cl.read_text(encoding="utf-8")
+        at = t.index("### ")
+        cl.write_text(t[:at] + "### 2026-01-31 · [ad hoc] a documented commit\n\nbody\n\n" + t[at:],
+                      encoding="utf-8")
+
+    def test_a_pending_stub_at_record_0_fires_the_guard_and_names_both_ways_out(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._repo(tmp)
+            r = run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--today", "2026-02-01")
+            self.assertIn("[FRONTIER_PENDING_STUB]", r.stdout, r.stdout)
+            self.assertIn("[DRY_RUN]", r.stdout, "the guard is advisory: the dry run still completes")
+            self.assertEqual(r.returncode, 0, "advisory, so exit 0: " + r.stdout)
+            self.assertIn(TIMING_RULE, r.stdout, "the message names the rule")
+            self.assertIn("finalize record 0 and commit that first", r.stdout, "way out 1")
+            self.assertIn("or trim before the claim", r.stdout, "way out 2")
+            self.assertEqual(sh(p, "git", "status", "--porcelain").stdout.strip(), "",
+                             "a dry run writes nothing")
+
+    def test_the_guard_does_not_refuse_the_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._repo(tmp)
+            r = run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+            self.assertIn("[FRONTIER_PENDING_STUB]", r.stdout, r.stdout)
+            self.assertIn("[WROTE]", r.stdout, "advisory, never a refusal: " + r.stdout)
+            self.assertEqual(r.returncode, 0, r.stdout)
+
+    def test_a_stub_finalized_in_the_tree_but_not_committed_fires_the_other_order(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._repo(tmp)
+            hf = p / "HANDOFFS.md"
+            t = hf.read_text(encoding="utf-8")
+            t2 = t.replace("status: pending\n", "status: complete\n", 1)
+            self.assertNotEqual(t2, t, "control: record 0 must be finalized in the working tree")
+            hf.write_text(t2, encoding="utf-8")
+            self.assertEqual(sh(p, "git", "status", "--porcelain", "HANDOFFS.md").stdout.split()[0], "M",
+                             "control: the finalize is uncommitted")
+            r = self._codes(p)
+            self.assertIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes,
+                             "record 0 is complete at write time, so order A does not apply")
+            self.assertEqual(r.exit, 0, "advisory")
+            msg = next(f.message for f in r.findings if f.code == "FRONTIER_FINALIZE_UNCOMMITTED")
+            self.assertIn("commit the finalize first", msg, "the way out")
+            self.assertIn(TIMING_RULE, msg)
+
+    def test_the_advised_order_gives_a_passing_proof(self):
+        """The message's way out must WORK: finalize and commit, then trim in its own commit."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._repo(tmp)
+            hf = p / "HANDOFFS.md"
+            hf.write_text(hf.read_text(encoding="utf-8").replace("status: pending\n", "status: complete\n", 1),
+                          encoding="utf-8")
+            self._touch_ledger(p)
+            sh(p, "git", "commit", "-qam", "finalize record 0")
+            r = ev(p, "HANDOFFS.md", cut="2", write=True)
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes, r.codes)
+            self.assertNotIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+            self.assertIn("WROTE", r.codes, r.codes)
+            sh(p, "git", "add", "-A")
+            sh(p, "git", "commit", "-qm", "trim")
+            shard = sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+            v = sh(p, "bash", str(shard) + ".verify.sh")
+            self.assertEqual(v.returncode, 0, v.stdout)
+            self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
+
+    def test_a_clean_ledger_with_a_complete_record_0_is_silent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            r = ev(make_handoff_repo(tmp), "HANDOFFS.md", cut="2")
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes, r.codes)
+            self.assertNotIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+
+    def test_a_stub_that_is_not_the_frontier_is_silent(self):
+        """A pending record BELOW record 0 is not what a trim commit would finalize."""
+        with tempfile.TemporaryDirectory() as tmp:
+            r = self._codes(self._repo(tmp, pending=(1,)))
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes, r.codes)
+            self.assertNotIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+
+    def test_an_edit_to_a_record_that_was_never_a_stub_is_not_this_guards_business(self):
+        """A COMPLETE record 0 edited in the tree is the real-loss shape; the proof handles it and
+        the guard, which is about stubs, stays out."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_handoff_repo(tmp)
+            hf = p / "HANDOFFS.md"
+            t = hf.read_text(encoding="utf-8")
+            t2 = t.replace("active_task: x", "active_task: x (edited)", 1)
+            self.assertNotEqual(t2, t, "control: record 0 must change")
+            hf.write_text(t2, encoding="utf-8")
+            r = ev(p, "HANDOFFS.md", cut="2")
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes, r.codes)
+            self.assertNotIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+
+    def test_a_record_prepended_above_a_committed_stub_does_not_fire_the_other_order(self):
+        """NARROWED control for order B. HEAD's stub is still in the ledger, one position down, so
+        nothing finalized it: the guard asks whether HEAD's stub is ABSENT, not whether record 0
+        moved."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._repo(tmp)
+            hf = p / "HANDOFFS.md"
+            t = hf.read_text(encoding="utf-8")
+            at = t.index("```handoff\n")
+            new = "```handoff\nsession: S99\ndate: 2026-02-02\nstatus: complete\nactive_task: y\n```\n\n---\n\n"
+            hf.write_text(t[:at] + new + t[at:], encoding="utf-8")
+            r = ev(p, "HANDOFFS.md", cut="2")
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes, "the new record 0 is complete: " + str(r.codes))
+            self.assertNotIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+
+    def test_a_checkout_that_converts_line_endings_is_not_read_as_a_finalize(self):
+        """NARROWED control for the CRLF fold. HEAD's stub is still in the ledger below a new record,
+        but the working copy was checked out with CRLF endings, so its text differs byte for byte.
+        Line-ending conversion is not an edit, and reading it as one would cry wolf on Windows."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._repo(tmp)
+            hf = p / "HANDOFFS.md"
+            t = hf.read_text(encoding="utf-8")
+            at = t.index("```handoff\n")
+            new = "```handoff\nsession: S99\ndate: 2026-02-02\nstatus: complete\nactive_task: y\n```\n\n---\n\n"
+            t = t[:at] + new + t[at:]
+            hf.write_bytes(t.replace("\n", "\r\n").encode("utf-8"))
+            self.assertIn(b"\r\n", hf.read_bytes(), "control: the working copy must be CRLF")
+            r = ev(p, "HANDOFFS.md", cut="2")
+            self.assertIn("DRY_RUN", r.codes, "control: the guard's neighbours must still run: " + str(r.codes))
+            self.assertNotIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes, r.codes)
+
+    def test_a_ledger_that_declares_no_stub_marker_is_silent(self):
+        """CHANGELOG.md declares no marker: a claim entry reading (in progress) at record 0 is a FINAL
+        record there, and warning about it on every trim would teach everyone to ignore the guard."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            cl = p / "CHANGELOG.md"
+            t = cl.read_text(encoding="utf-8")
+            t2 = t.replace("[ad hoc] entry 0\n", "[ad hoc] entry 0 claim (in progress)\n", 1)
+            self.assertNotEqual(t2, t, "control: record 0 must be claim-shaped")
+            cl.write_text(t2, encoding="utf-8")
+            sh(p, "git", "commit", "-qa", "--amend", "-m", "seed")
+            r = ev(p, "CHANGELOG.md", cut="2")
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes, r.codes)
+            self.assertNotIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+            self.assertEqual(r.exit, 0)
+
+    def _untrack_receipts(self, p):
+        sh(p, "git", "rm", "-q", "--cached", "HANDOFFS.md")
+        self._touch_ledger(p)
+        sh(p, "git", "commit", "-qam", "untrack the receipt ledger")
+        self.assertNotEqual(sh(p, "git", "show", "HEAD:HANDOFFS.md").returncode, 0,
+                            "control: HEAD must hold no HANDOFFS.md")
+        self.assertTrue((p / "HANDOFFS.md").is_file(), "control: the working file must remain")
+
+    def test_an_untracked_ledger_still_fires_order_A(self):
+        """No HEAD version of the ledger: order B cannot be judged, but order A needs only the working
+        file and still fires."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._repo(tmp)
+            self._untrack_receipts(p)
+            self.assertIn("FRONTIER_PENDING_STUB", self._codes(p).codes)
+
+    def test_an_untracked_ledger_with_a_complete_record_0_skips_order_B_without_crashing(self):
+        """NARROWED control for the missing-HEAD branch. With a COMPLETE record 0 order A does not
+        fire, so this is the only test that reaches the `git show HEAD:` lookup and sees it fail."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._repo(tmp, pending=())
+            self._untrack_receipts(p)
+            r = self._codes(p)
+            self.assertIn("DRY_RUN", r.codes, "control: the run must complete: " + str(r.codes))
+            self.assertNotIn("FRONTIER_PENDING_STUB", r.codes, r.codes)
+            self.assertNotIn("FRONTIER_FINALIZE_UNCOMMITTED", r.codes, r.codes)
+
+
+# =============================================================================================
 # BL-36 — the generated proof's INJECTED constant is a 0/1 FLAG, not a count of what the trim
 # commit actually added, so `ar_cmp = ar[INJ:]` skips the wrong number of records and the whole
 # positional comparison shifts. Any trim commit bundled with a second entry to the same ledger

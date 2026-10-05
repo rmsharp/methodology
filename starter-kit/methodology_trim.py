@@ -57,8 +57,15 @@ TRIM_VERSION = "1.6.0"   # 1.6.0: issue #93, cause 1 — a commit that FINALIZES
                          # it, whose replacement no longer does, with L2 holding and every other
                          # record byte-identical and in order, prints a labelled FAIL INSTEAD of the
                          # generic L1/L3 pair and exits 4. Still a FAIL by design; every near-miss
-                         # keeps exit 1. Minor, not patch: a new exit status and a new LedgerSpec
-                         # field. Proofs already written are frozen artifacts and do not change.
+                         # keeps exit 1. The writer also WARNS before the bad state is committed:
+                         # two advisory findings (no exit code, nothing refused),
+                         # FRONTIER_PENDING_STUB (record 0 still carries the marker when the trimmer
+                         # runs) and FRONTIER_FINALIZE_UNCOMMITTED (HEAD's record 0 was a stub that
+                         # the working tree no longer holds), each stating the timing rule: trim
+                         # while record 0 is complete, before the claim or after the finalize is
+                         # committed, never in the same commit. Minor, not patch: a new exit status,
+                         # two new finding codes and a new LedgerSpec field. Proofs already written
+                         # are frozen artifacts and do not change.
                          #
                          # 1.5.1: issue #93 — the GENERATED .verify.sh's L2 "leaked" clause compared by
                          # substring (`ln in sfront or ln in "".join(sr)`), so an archived record that
@@ -1776,6 +1783,66 @@ def check_P1a(ledger_path, spec_for_ledger, expected_after_partition, result):
     return True
 
 
+
+# =============================================================================================
+# Issue #93, cause 1 -- the PREVENT half. The generated proof can only NAME a stub finalize after
+# the fact (the VERIFY_TEMPLATE's `stub_finalized`); the writer can see the bad state coming. A
+# session's claim leaves record 0 as a pending stub, and Phase 3D overwrites it in place, so a trim
+# that lands in the finalize's commit makes the proof read record 0 as EDITED. Two orders get there:
+#
+#   A. the claim is committed and record 0 still carries the stub marker when the trimmer runs;
+#   B. the session finalized record 0 FIRST and has not committed it, so record 0 is complete here
+#      but HEAD's record 0 was a stub that the working tree no longer holds.
+#
+# Both are ADVISORY (no exit code, the write proceeds): the finding names the consequence and the
+# two ways out and refuses nothing, because a trim that bundles a finalize loses nothing and is
+# still the operator's call. It keys on the ledger's declared stub_marker, so a ledger that
+# declares none is silent, and it asks whether HEAD's stub is ABSENT from the working ledger (the
+# proof's own test), not whether record 0 moved, so a record prepended above an intact stub is quiet.
+# What it cannot see: a session that trims by hand-editing never reaches it, and which commit order
+# an adopter used is not recoverable from git (the proof sees only a stub in the parent).
+# =============================================================================================
+
+# The same words as the proof's notes (VERIFY_TEMPLATE) and FRAMEWORK_APPARATUS.md, pinned together
+# by a test: this rule used to live only in the repo's habits, and its verifier contradicted it.
+TRIM_TIMING_RULE = ("trim while record 0 is complete -- before the claim, or after the finalize is "
+                    "committed -- never in the same commit")
+
+
+def check_stub_frontier(repo, path, spec, records, result):
+    marker = spec.stub_marker
+    if marker is None or not records:
+        return
+    live_rel = path.relative_to(repo).as_posix()
+    if marker.search(records[0]):
+        result.add(
+            "FRONTIER_PENDING_STUB",
+            "record 0 of %s is a pending stub (it matches this ledger's stub marker): a session has "
+            "claimed it and not finalized it. A trim that lands in the same commit as that finalize "
+            "makes the generated .verify.sh read record 0 as EDITED, and the proof ends red (exit 4: "
+            "named, because nothing else went missing, but still a FAIL). %s: either finalize "
+            "record 0 and commit that first, then trim in its own commit, or trim before the claim. "
+            "Advisory: nothing is refused." % (live_rel, TRIM_TIMING_RULE.capitalize()))
+        return
+    head = git_bytes(repo, "show", "HEAD:%s" % live_rel)
+    if head is None:
+        return                      # no committed version to compare: order B cannot be judged
+    hz = classify_zones(head.decode("utf-8", "replace"), spec, Result(path))
+    if hz is None or not hz.starts:
+        return
+    h0 = hz.records()[0]
+    # \r\n folded on both sides: a checkout that converts line endings must not read as an edit.
+    now = {r.replace("\r\n", "\n") for r in records}
+    if marker.search(h0) and h0.replace("\r\n", "\n") not in now:
+        result.add(
+            "FRONTIER_FINALIZE_UNCOMMITTED",
+            "HEAD's record 0 of %s is a pending stub and the working tree no longer holds it: it "
+            "was finalized or replaced and the change is uncommitted. If that edit and this trim "
+            "land in one commit, the generated .verify.sh reads record 0 as EDITED and ends red "
+            "(exit 4: named, but still a FAIL). %s: commit the finalize first, then trim in its "
+            "own commit. Advisory: nothing is refused." % (live_rel, TRIM_TIMING_RULE.capitalize()))
+
+
 # =============================================================================================
 # Zero records — "I found nothing" and "I could not read this" are different answers.
 #
@@ -2010,6 +2077,8 @@ def evaluate(path, opts, result):
 
     if not check_invertible(archived, result):
         return result
+
+    check_stub_frontier(repo, path, spec, records, result)
 
     dates = [spec.date_of_record(r) for r in archived]
     dates = [d for d in dates if d]
