@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] S264 claim (in progress) — P1 of the trimmer false-red fix: the L2 `leaked` clause tests whole lines
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "P1 of the #93 fix" and "trim first" at the Phase 0 picker. The owed trim (`039dde0`, S261's receipt to shard `-5`, its `.verify.sh` exit 0 from a `--no-local` clone) and its fold (`bd8cb8c`) ran first as their own actions; `bin/tests.sh` on the fold tree read 356 passed, 0 failed, 6 skipped. Deliverable: RED-first tests, then the one change at `starter-kit/methodology_trim.py:1508-1509` and `TRIM_VERSION` 1.5.1, per the plan approved at S263. Phase 3F records the rest.
+
 ### 2026-10-05 · [ad hoc] S264 — fold the fifth 2026-10-04 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`039dde0`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-04, shard `-5`), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S263, S262); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of P1 of the #93 trimmer fix, before the session claim.

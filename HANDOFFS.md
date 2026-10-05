@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S264
+date: 2026-10-05
+status: pending
+active_task: IMPLEMENT P1 of `docs/planning/issue93-trimmer-proof-false-red-plan.md` (approved at S263): the generated `.verify.sh`'s L2 `leaked` clause tests whole lines, not substrings (`starter-kit/methodology_trim.py:1508-1509`), `TRIM_VERSION` 1.5.1, RED-first tests beside `TestVerifyShAppendTamperEvadesSubstringCheck`. One deliverable; nothing sent upstream, nothing pushed, P2 and P3 not started. (IN PROGRESS)
+```
+
+```handoff
 session: S263
 date: 2026-10-05
 status: complete
