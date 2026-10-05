@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] S267 claim (in progress) — P4 inward: vet the one upstream pull request for the trimmer false-red fix (P1–P3), send nothing
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "P4 inward vetting" at the Phase 0 picker. The owed trim (`33c9d0e`, S264's receipt to shard `HANDOFFS-through-2026-10-05-2.md`, its `.verify.sh` exit 0 by name from a `--no-local` clone) and its fold (`3fe4fab`) ran first as their own actions; `bin/tests.sh` on the fold tree read 356 passed, 0 failed, 6 skipped. Deliverable: P1–P3 applied as one patch to a scratch clone of `upstream/main`, the suite run there, the `FRAMEWORK_APPARATUS.md` paragraph re-derived against upstream's copy, adopter impact stated, the pull request body drafted and shown inline. Nothing is pushed, opened or commented; sending is the operator's separate go-ahead. Phase 3F records the rest.
+
 ### 2026-10-05 · [ad hoc] S267 — fold the second 2026-10-05 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`33c9d0e`, S264's receipt to `HANDOFFS-through-2026-10-05-2.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-05, trimmer v1.7.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S266, S265); the shard's `.verify.sh` was run by name from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of P4 (the inward half of the one upstream pull request for the #93 trimmer fix), before the session claim.

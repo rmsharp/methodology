@@ -14,7 +14,14 @@ operator's to settle. BL-59's measurement of what actually reads this file still
 handoff is done by the newest receipt alone — so the second receipt is a spare, not a working set. **Depth and trigger are separate on purpose:**
 every trim pays a FIXED ~16 KB proof, so the trigger sits one above the depth (BL-60). **`methodology_trim.py` fires on BYTES (196,608 B),
 never on a record count**, so the policy is applied by the session that notices: Phase 0 runs
-`grep -c '^```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
+`grep -c '^```handoff
+session: S267
+date: 2026-10-05
+status: pending
+active_task: P4 INWARD of `docs/planning/issue93-trimmer-proof-false-red-plan.md` (section 5 P4): vet the ONE upstream pull request carrying P1-P3 of the #93 trimmer fix. Apply them as a single patch to a scratch clone of `upstream/main`, re-derive the `FRAMEWORK_APPARATUS.md` paragraph against upstream's copy, run the suite there, state adopter impact, and show the pull request body inline. SENDING (push, PR, comment) is the operator's separate go-ahead and is NOT part of this session.
+```
+
+```handoff' HANDOFFS.md` and reports the count; **above 2**, the trim is its own action after
 that report, never inside Phase 0, which is read-only apart from the reconcile backfill
 (`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 2 --force`. The force is
 warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
