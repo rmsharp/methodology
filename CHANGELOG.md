@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S262 claim (in progress) — rebuild the planted defects `missing` and `vague`
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "BL-94: rebuild missing and vague" at the Phase 0 picker. The owed trim (`c5f6057`) and its fold (`2924283`) ran first as their own actions; `bin/tests.sh` after them: 356 passed, 0 failed, 6 skipped (Test 34's named rows below three receipts). Deliverable: rebuild the two defects in `rater.py` at $0 so the evidence S261 found standing is removed, and say plainly what only a paid run can show. Phase 3F records the rest.
+
 ### 2026-10-04 · [ad hoc] S262 — fold the third 2026-10-04 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`c5f6057`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-04, shard `-3`), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S261, S260); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of the BL-94 missing/vague rebuild, before the session claim.

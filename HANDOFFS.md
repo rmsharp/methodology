@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S262
+date: 2026-10-04
+status: pending
+active_task: BL-94 rebuild of the planted defects `missing` and `vague` in `docs/planning/overhead-replay/rater.py`, at $0 and with no rating call: widen what each removes to the evidence S261 found standing (a sentence that states a pending action; issue and ticket references, document and file names, and a backtick span that wraps across lines), keep the builder and its finder as one definition, and print what no finder counts beside the check. A third paid run stays his separate go-ahead (about $1.6 by estimate); P3 and D6/D7 stay open.
+```
+
+```handoff
 session: S261
 date: 2026-10-04
 status: complete
