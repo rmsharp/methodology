@@ -4152,6 +4152,18 @@ reopened.** The practice that follows from the decision stands: run nothing besi
 
 **Decision (S265 close-out, the operator, from a picker): leave it; (c) stands.** Rerun on a lone red whose own `fail` message contains its pattern; nothing is converted. He was offered (b) and (a) beside it and declined both with four reds across three runs on the table, all visible false reds that hid no defect. The reopen condition in the S257 decision stays as written (a red that hides a real defect, an `&& fail || pass` site, or a count that grows) and is now measured against this baseline.
 
+**Decision (S265, after the close-out report, the operator, from a second picker): REOPENED; shape (b). This SUPERSEDES the "leave it" paragraph above.** I had
+recommended leaving it and argued that no red had hidden a defect. That was survivorship: a flake on an `&& fail || pass` site turns "pattern found, so fail"
+into "pipeline failed, so pass", which is silent, so the four reds counted (all from the `&& pass || fail` form) say nothing about the form that cannot show as
+a red. Re-derived over whole logical lines (backslash continuations joined, each line classified by the order of its `&& pass` / `|| fail` text; S254's 82
+was a per-line count that missed four wrapped assertions): **86 sites, 62 `&& pass || fail`, 16 `&& fail || pass`, 8 `if` forms.** The 16 are at `bin/tests.sh`
+lines 303, 313, 357, 365, 636, 1506, 1569, 1935, 2308, 2364, 2374, 2586, 2812, 2822, 2832 and 2844 (the tree at `34916f9`; they are "this must not appear"
+assertions, e.g. `:303` no stale-format note on a fresh tree, `:2586` the skip does not read as a pass); the 8 `if` forms at 225, 235, 330, 876, 1647, 1730,
+2117 and 3509. **Next action: a session of its own** converts the 16 to `grep -q PAT <<<"$X"` (0 failures in 3,000 on the BL-97 measurement), tests first: a
+scanner that flags the hidden form whatever the producer, RED on today's tree with these 16 and GREEN after, in the shape of Test 42; the payload size of each of
+the 16 was not measured. The 62 stay under the rerun rule, and the 8 `if` forms are not decided here (a flake there takes the `else` branch; what the `else`
+does was not read). The S257 reopen condition and the S265 "leave it" paragraph stay as history.
+
 
 **BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
 operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 not started.**

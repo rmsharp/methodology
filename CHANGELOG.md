@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [BL-97] S265 — decision reversed: BL-97 is REOPENED, shape (b), the 16 `&& fail || pass` sites
+
+Asked to re-explain the "leave it" decision recorded earlier this session, I re-derived the population over whole logical lines: 86 `echo | grep -q` sites, 62 `&& pass || fail`, 16 `&& fail || pass`, 8 `if` forms (S254's 82 was a per-line count). The rationale I had given for leaving it, that no red had hidden a defect, was survivorship: the hidden form cannot show as a red. The operator, from a second picker, chose to REOPEN and convert the 16 (a flake there reads a defect as green). Recorded, not done: `docs/planning/BACKLOG.md` row BL-97 and `docs/planning/BACKLOG-DETAIL.md` §BL-97 (a paragraph that supersedes the "leave it" one, with the 16 line numbers and the next action), and the S265 receipt's `next_steps` item (4). The earlier ledger entry ("decision: leave the flake") is committed and is not edited; this entry corrects it. No change to `bin/tests.sh`; the conversion is a future session's own deliverable. No outward action.
+
 ### 2026-10-05 · [BL-97] S265 — decision: leave the `echo | grep -q` flake; the S257 decision (c) stands
 
 After the close-out report the operator was asked, in a picker, whether BL-97's reopen condition ("the count of such reds grows") was met by this session's two reds in one full run (Test 15, Test 38; four reds across three runs) and chose to LEAVE it over (b) converting only the `&& fail || pass` sites and (a) converting all 82. `docs/planning/BACKLOG-DETAIL.md` BL-97 records the decision under its third data point; `HANDOFFS.md`'s S265 receipt, whose `next_steps` item (4) said the call was his, now says it was made. Nothing in `bin/tests.sh` changed. No outward action.
