@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [BL-98] S264 — status follows P1 in the plan, the BL-98 row and its detail
+
+`docs/planning/issue93-trimmer-proof-false-red-plan.md` (the status paragraph, which keeps S263's text and says which of its claims are now historical, and §5 P1's measured DONE), `docs/planning/BACKLOG.md` (the BL-98 row: P1 done, P2 next) and `docs/planning/BACKLOG-DETAIL.md` (§BL-98: what P1 measured and left, the next action). BL-98 stays open: P2 and P3 are not built. Two figures differ from the plan's text and are stated there: the adopter checkout has moved to `3a59ed844` with the same 54 proofs and 10 red, and this repo has 104 proofs, not 103. `bin/check-links` OK (111 links).
+
 ### 2026-10-05 · [issue #93] S264 — tighten `trimmer-unit-tests` 124 → 129 in `.quality-gates.json`
 
 The 5 tests P1 added (`5270be8`) are now a floor: `python3 tools/test_methodology_trim.py` reads `Ran 129 tests`, OK (skipped=2), the gate's own command and extract. A tightening, so no approval is owed (`SAFEGUARDS.md` Blast Radius); the precedent is `d10f9af` (123 → 124). It is the mechanical half of Phase 3C: the count of tests that cover the `leaked` clause cannot silently drop.

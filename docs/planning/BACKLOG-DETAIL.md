@@ -4142,7 +4142,7 @@ runs since S254, whose other recorded runs (S254's rerun, S256's close-out gate 
 
 
 **BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
-operator's own upstream issue; planned, P1 approved, nothing built.**
+operator's own upstream issue; planned at S263, P1 DONE at S264, P2 and P3 not started.**
 
 **Where it lives.** The plan is [`issue93-trimmer-proof-false-red-plan.md`](issue93-trimmer-proof-false-red-plan.md); the two scripts that
 re-derive its numbers are in [`issue93-evidence/`](issue93-evidence/); the issue is <https://github.com/KJ5HST/methodology/issues/93>. Read the
@@ -4159,6 +4159,15 @@ stays a FAIL, labelled, with its own exit status 4 (BL-27 intact); D3 a read-onl
 script; D5 this row, a comment on #93 (text shown to him first, nothing posted without his approval of that text), and P1–P3 as one future
 upstream pull request (its own go-ahead; nothing sent).
 
-**Next action:** a P1 session — RED-first tests beside `TestVerifyShAppendTamperEvadesSubstringCheck` (`tools/test_methodology_trim.py:1215`),
-then the one-line change at `starter-kit/methodology_trim.py:1508`, `TRIM_VERSION` 1.5.1; DONE criteria in the plan's §5. **Still open:** the
-adopter's local `SESSION_NOTES.md` spec, which the `bin/sync` overlay drops, has no backlog item of its own.
+**P1 DONE (S264, `5270be8`).** `TestVerifyShLeakedTestsWholeLines` (5 tests, the `leaked` clause's first coverage: before it no test in
+`tools/test_methodology_trim.py` named it) sits beside `TestVerifyShAppendTamperEvadesSubstringCheck`; the two tests that quote a line mid-line
+were RED on 1.5.0, the three controls green on both. The change is in `VERIFY_TEMPLATE` (`starter-kit/methodology_trim.py`, the `sfront_lines`
+and `sr_lines` sets and the `leaked` list that follows them), `TRIM_VERSION` 1.5.1. The unit file reads 129 tests OK (skipped=2) and the
+`trimmer-unit-tests` gate floor is 129 (`9b59af6`). Measured with the patched trimmer re-deriving every frozen proof, no `--exact-leak` patch:
+the adopter (`nprcgenekeepr` at `3a59ed844`, read through a clone) 54 proofs, 10 red frozen to 8 re-derived, 0 newly red, the 2 newly green
+the plan's two L2 shards; this repo 104 proofs, 5 to 3, 0 newly red. What P1 cannot do, as the plan says: the red scripts already written stay
+red (that is P3), and no adopter receives anything until the P4 pull request. This fork's trimmer is no longer byte-identical to upstream's.
+
+**Next action:** P2, a session of its own: a recognised stub finalize is labelled and prevented at write time (plan §4.1 and §5, `TRIM_VERSION`
+1.6.0, exit status 4, a RED-first test beside `:1152`). **Still open:** the adopter's local `SESSION_NOTES.md` spec, which the `bin/sync`
+overlay drops, has no backlog item of its own.

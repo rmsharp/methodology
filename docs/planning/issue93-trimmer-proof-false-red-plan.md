@@ -1,7 +1,10 @@
 # The trimmer's generated `.verify.sh` ends red on lossless trims — a plan for upstream issue #93
 
-**Status: APPROVED to implement P1 first (D1–D4 decided by the operator, 2026-10-05, at the S263
-plan-review picker; D5 in part; §9 records each). Nothing is built.** Written at S263
+**Status (S264, 2026-10-05): P1 DONE, `5270be8` (`TRIM_VERSION` 1.5.1; measured result in §5 P1 and
+`BACKLOG-DETAIL.md` §BL-98). P2 and P3 are NOT built; P4 is its own go-ahead.** The paragraph below is
+the plan as written at S263 and is left as written, so its "nothing is built" and "no line changed" are
+true of S263 and no longer of the tree. Approved to implement P1 first (D1–D4 decided by the operator,
+2026-10-05, at the S263 plan-review picker; D5 in part; §9 records each). Written at S263
 (2026-10-05) as that session's single deliverable. **The plan is the deliverable; nothing here is
 applied** (`starter-kit/SESSION_RUNNER.md` §Planning Sessions, failure mode #18): no line of
 `starter-kit/methodology_trim.py` changed, nothing was sent to `KJ5HST/methodology`. Every number below
@@ -301,6 +304,15 @@ Radius), and RED first.
   surface holding real false reds. (c) This repo's 103 frozen proofs: the green-must-stay-green surface,
   reached only through the prototype because P1 does not touch a frozen script. **Cannot enforce:** that
   the red scripts in the adopter turn green (that is P3), or that any adopter receives the change.
+- **DONE at S264 (`5270be8`), each criterion as measured:** the two quote-mid-line tests RED on 1.5.0
+  and the three controls green on both; the unit file 129 OK (skipped=2), k = 5; `bin/tests.sh` 362
+  passed, 0 failed, 0 skipped; `reverify_prototype.py` with the patched trimmer and no `--exact-leak`:
+  adopter 54 proofs **8 red** (from 10), fork 104 proofs **3 red** (from 5, none newly), **0 newly red**
+  in either, the adopter's 2 newly green being exactly §3.3's two L2 shards. Two differences from the
+  plan's text: the adopter checkout had moved to `3a59ed844` (the plan read `2563a6ee0`) with the same 54
+  proofs and 10 red, and the fork has 104 proofs, not 103, because the S264 trim added shard `-5`. The
+  patch is two set definitions and the changed `leaked` list inside `VERIFY_TEMPLATE`; the shard's
+  front-matter half and the record half are each pinned by a test that fails without it.
 
 ### P2 — a bundled stub-finalize is recognised and prevented (minor, 1.6.0)
 
