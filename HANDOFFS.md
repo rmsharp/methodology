@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S268
+date: 2026-10-05
+status: pending
+active_task: BL-97 CONVERSION (BACKLOG-DETAIL.md:4107): the silent form of the `echo "$X" | grep -q` pipeline flake under `pipefail` in `bin/tests.sh`, where a flake turns a real defect into a pass. Tests first: a scanner in the shape of Test 42 that flags the hidden form (an early-exiting consumer on a `&& fail || pass` chain or an `if ... then fail ... else pass`) whatever the producer, RED on today's tree and GREEN after the conversion. SCOPE the operator ratified at the S268 Phase 0 picker: ALL 25 sites (the 16 recorded at S265, plus 3 `&& fail || pass` chains at :302, :312, :334 that S265's echo/printf head count missed, plus 6 `if ... then fail ... else pass` at :225, :235, :330, :876, :984, :1014). Cures: a here-string where the producer heads the pipeline; the early-exiting consumer dropped where a chain makes a here-string insufficient. The other 62 `&& pass || fail` sites stay under the rerun rule. Also his go-ahead: push fork `main` to `origin` (a fast-forward, nothing to upstream). Nothing is sent to KJ5HST/methodology.
+```
+
+```handoff
 session: S267
 date: 2026-10-05
 status: complete

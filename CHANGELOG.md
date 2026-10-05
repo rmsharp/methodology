@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [BL-97] S268 claim (in progress) — convert the silent `echo | grep -q` sites in `bin/tests.sh`, scanner first
+
+CHANGELOG: pending. Operator said `go` as the first message, chose "BL-97: convert the 16 sites" at the Phase 0 picker, then, shown that a whole-logical-line, every-producer re-derivation finds 25 hidden-form sites (19 `&& fail || pass` chains and 6 `if ... then fail ... else pass`), chose all 25. He also approved pushing fork `main` to `origin`. The owed trim (`bf42d66`, S265's receipt to shard `HANDOFFS-through-2026-10-05-3.md`, its `.verify.sh` exit 0 by name from a `--no-local` clone) and its fold (`55454ff`) ran first as their own actions; `bin/tests.sh` on the fold tree read 356 passed, 0 failed, 6 skipped. Phase 3F records the rest.
+
 ### 2026-10-05 · [ad hoc] S268 — fold the third 2026-10-05 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`bf42d66`, S265's receipt to `HANDOFFS-through-2026-10-05-3.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-05, trimmer v1.7.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S267, S266); the shard's `.verify.sh` was run by name from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of BL-97's conversion, before the session claim.
