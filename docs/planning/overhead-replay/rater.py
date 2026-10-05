@@ -20,7 +20,7 @@ not required. A rater that cannot rank a record with no next step below one with
 The packet is the same rendering the model sees, so the two sets of ratings are comparable. His six records are drawn with a fixed seed,
 stratified 2 / 2 / 2 across v3.0, v3.7 and v3.8-text; the key that says which record is which is a SEPARATE file.
 """
-import argparse, csv, hashlib, json, os, random, re, shutil, subprocess, sys, tempfile
+import argparse, collections, csv, hashlib, json, os, random, re, shutil, subprocess, sys, tempfile
 sys.dont_write_bytecode = True
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -112,8 +112,90 @@ def _map(rd, fn_lines):
     return {"docs": [fn_lines(l) for l in rd["docs"]], "final": fn_lines(rd["final"])}
 
 
+# ---- units: a hard-wrapped paragraph is one thing -----------------------------------------------------------------------------------
+UNIT_START = re.compile(r"^\s*(?:[-*+]\s|\d+[.)]\s|#{1,6}\s|```)")     # a list item, a heading or a fence line opens a unit
+
+
+def units(lines):
+    """`lines` grouped into units: a paragraph, a list item, a heading or a receipt field together with the hard-wrapped lines that continue it.
+    A blank line and a fence line are each a unit of their own. S262: the builders worked one line at a time, so a backtick span or a sentence
+    that wrapped onto the next line was cut in two, and the odd backtick paired every later span on its line the wrong way (the R1-r2 `vague`
+    variant read `codeis.nathe`, with `is.na` left standing)."""
+    out, cur = [], []
+    for line in lines:
+        opens = (not line.strip() or UNIT_START.match(line) or doc_score.RECEIPT_FIELD_LINE.match(line)
+                 or (cur and (not cur[0].strip() or cur[0].lstrip().startswith("```"))))
+        if cur and opens:
+            out.append(cur)
+            cur = []
+        cur.append(line)
+    return out + [cur] if cur else out
+
+
+def _body(line):
+    """(label, rest): a receipt field's name (`key_files: `) is a label and not a place, so it is set apart before anything is found or replaced."""
+    m = doc_score.RECEIPT_FIELD_LINE.match(line)
+    return (line[:m.end()], line[m.end():]) if m else ("", line)
+
+
+def unit_text(unit):
+    """(label, text): a unit's receipt-field label, and its lines joined by newlines with the label taken off the first."""
+    label, first = _body(unit[0])
+    return label, "\n".join([first] + unit[1:])
+
+
+def per_unit(lines, fn):
+    """`fn(text) -> text` applied to every unit of `lines`; the label stays and is never seen by `fn`. A unit `fn` empties is dropped, label and
+    all; a blank line stays as it is."""
+    out = []
+    for unit in units(lines):
+        if not unit[0].strip():
+            out.extend(unit)
+            continue
+        label, text = unit_text(unit)
+        text = fn(text)
+        if text.strip():
+            out.extend((label + text).split("\n"))
+    return out
+
+
+# ---- a sentence that states a pending action ----------------------------------------------------------------------------------------
+SENT_END = re.compile(r"[.!?][)\]\"'*_]*(?=\s|$)\s*")                         # a stop before a space; `x.R:24`, `0.5` and `R/y.R` do not end one
+# What the records say when something is left to do. S261: the rater answered yes to `next_step` on every `missing` variant because a pending
+# action stood as status, in every record ("#121 is NOT closed; run `gh issue close 121`", "still needs closing", "left alone", "Deferred").
+# These cues were fitted to the sentences of the three honest-set records read at S262; a fourth record may say it another way, which is what
+# `residue_pending` is for. A bare "decide", "must", "should" or "leave ... alone" is guidance or a hazard, not a pending action, and is not here.
+PENDING = re.compile(r"(?i)\b(?:not (?:yet )?(?:closed|fixed|done|do|acted on|ratcheted|addressed|resolved|attempted)|still (?:open|needs?|to be|remains?)"
+                     r"|left (?:\w+ ){0,2}alone|deferred|(?:you|they|we)(?:['’]ll| will)? need to|(?:must|has to|have to|needs? to) be (?:run|closed|done|fixed|decided)"
+                     r"|must run|needs? (?:its own|closing|a follow)|decide (?:whether|if)|should decide|owner action|could(?:n['’]t| not) (?:be )?(?:close|push)\w*"
+                     r"|nothing could be pushed|impossible here|I left (?:it|that|them)|say the word|if you want|TODO)\b")
+
+
+def sentences(text):
+    """`text` cut after every sentence stop, each piece keeping its trailing space, so that the pieces join back to `text` exactly."""
+    out, pos = [], 0
+    for m in SENT_END.finditer(text):
+        out.append(text[pos:m.end()])
+        pos = m.end()
+    return out + [text[pos:]] if pos < len(text) else out
+
+
+def _drop_pending(text):
+    """`text` without its pending-action sentences. A removed sentence takes its trailing space, so only the end needs trimming."""
+    return "".join(p for p in sentences(text) if not PENDING.search(p)).rstrip()
+
+
+def drop_pending(lines):
+    return per_unit(lines, _drop_pending)
+
+
+def pending_sentences(lines):
+    """Every sentence of `lines` that states a pending action, as the builder sees them."""
+    return [s.strip()[:160] for u in units(lines) for s in sentences(unit_text(u)[1]) if PENDING.search(s)]
+
+
 def defect_missing(rd):
-    return _map(rd, lambda lines: drop_parts(lines)[0])
+    return _map(rd, lambda lines: drop_pending(drop_parts(lines)[0]))
 
 
 def defect_wrong(rd):
@@ -137,50 +219,55 @@ def _sub_sha(text, fn):
 
 # What the `where` question accepts: "naming at least one file, function or location". These are the ways the records name a place in the code,
 # one finder per way; `location_tokens` finds them and `defect_vague` removes exactly them, so what the rater is shown has none (S259: the old
-# builder removed paths and anchors only, and 273 to 338 backticked spans and 19 to 24 function names per record were left standing).
-CODE_SPAN = re.compile(r"`[^`\n]+`")                                       # the records quote code, names, commands and files in backticks
+# builder removed paths and anchors only, and 273 to 338 backticked spans and 19 to 24 function names per record were left standing; S262: it
+# left the issue and ticket references the next steps point at, the document names, "Age-Sex Pyramid", and any span that wrapped onto a second line).
+CODE_SPAN = re.compile(r"`[^`]+`")                                         # the records quote code, names, commands and files in backticks; a span may wrap, a unit holds no blank line
 CALL = re.compile(r"\b[A-Za-z_][\w.]*\(\)")                                  # getPedMaxAge(), obj.method()
 QUALIFIED = re.compile(r"\b\w+::\w+")                                       # pkg::fn
 CAMEL = re.compile(r"\b[a-z][a-z0-9]*(?:[A-Z][a-z0-9]*)+\b")                # getPedMaxAge, qcStudbook
 SNAKE = re.compile(r"\b[a-z][a-z0-9]*(?:_[a-z0-9]+)+\b")                    # spell_check_package (a receipt's own field names are labels, see `_body`)
 LINE_REF = re.compile(r"(?:[Ll]ines?\s+|L)\d+(?:\s?[-\u2013/]\s?L?\d+)*\b|\u00a7\s?\d+(?:\.\d+)*")     # line 24, L512/L763-765, section sign 11
-LOCATION_FINDERS = (CODE_SPAN, doc_score.ANCHOR_RE, doc_score.PATH_RE, CALL, QUALIFIED, CAMEL, SNAKE, LINE_REF)
+DOTTED = re.compile(r"\b[a-z]{2,}(?:\.[a-z]{2,})+\b")                         # is.na, data.frame (a number has no letters; "e.g" has one)
+DOC_NAMES = ("NEWS", "CHANGELOG", "README", "ROADMAP", "BACKLOG", "HANDOFFS", "SAFEGUARDS", "CLAUDE", "LICENSE")
+UPPER_NAME = re.compile(r"\b(?:[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+|%s)\b" % "|".join(DOC_NAMES))   # SESSION_RUNNER, NOT_CRAN, NEWS; RED, DONE, NOT and TDD are emphasis
+HYPHEN_TITLE = re.compile(r"\b[A-Z][a-z]+(?:-[A-Z][a-z]+)+(?:\s+[A-Z][a-z]+)*\b")  # Age-Sex Pyramid: a screen or tab named in title case
+ISSUE_REF = re.compile(r"(?<![\w&])#\d+\b")                                   # #121: where the next work begins, to anyone who reads the tracker
+TICKET = re.compile(r"\b[A-Z]\d{1,2}\b")                                      # E4, D6; S313 (a session number) has three digits and stays
+LOCATION_FINDERS = (CODE_SPAN, doc_score.ANCHOR_RE, doc_score.PATH_RE, CALL, QUALIFIED, CAMEL, SNAKE, DOTTED, UPPER_NAME, HYPHEN_TITLE, LINE_REF, ISSUE_REF, TICKET)
 GENERIC = ("the relevant place", "the relevant file", "the relevant code", "the relevant name")
-
-
-def _body(line):
-    """(label, rest): a receipt field's name (`key_files: `) is a label and not a place, so it is set apart before anything is found or replaced."""
-    m = doc_score.RECEIPT_FIELD_LINE.match(line)
-    return (line[:m.end()], line[m.end():]) if m else ("", line)
 
 
 def location_tokens(lines):
     """Every place-in-the-code token in `lines`, each character counted once: the finders run in the order above and a match that overlaps an
-    earlier one is skipped, so a function name inside a backticked span is one token and not three."""
+    earlier one is skipped, so a function name inside a backticked span is one token and not three. One unit at a time, so a token that wraps
+    onto the next line is one token."""
     found = []
-    for line in lines:
+    for unit in units(lines):
+        text = unit_text(unit)[1]
         taken = []
         for rx in LOCATION_FINDERS:
-            for m in rx.finditer(_body(line)[1]):
+            for m in rx.finditer(text):
                 if not any(m.start() < e and s < m.end() for s, e in taken):
                     taken.append((m.start(), m.end()))
                     found.append(m.group(0))
     return found
 
 
-def _vague_line(line):
-    label, line = _body(line)
-    line = doc_score.ANCHOR_RE.sub("the relevant place", line)
-    line = doc_score.PATH_RE.sub("the relevant file", line)
-    line = CODE_SPAN.sub(lambda m: m.group(0)[1:-1] if m.group(0)[1:-1] in GENERIC else "the relevant code", line)    # a span that was only a path is unwrapped
-    for rx in (CALL, QUALIFIED, CAMEL, SNAKE):
-        line = rx.sub("the relevant name", line)
-    line = LINE_REF.sub("the relevant place", line)
-    return label + _sub_sha(line, lambda s: "the commit")
+def _vague_text(text):
+    text = doc_score.ANCHOR_RE.sub("the relevant place", text)
+    text = doc_score.PATH_RE.sub("the relevant file", text)
+    text = CODE_SPAN.sub(lambda m: m.group(0)[1:-1] if m.group(0)[1:-1] in GENERIC else "the relevant code", text)    # a span that was only a path is unwrapped
+    for rx in (CALL, QUALIFIED, CAMEL, SNAKE, DOTTED, UPPER_NAME):
+        text = rx.sub("the relevant name", text)
+    text = HYPHEN_TITLE.sub("the relevant place", text)
+    text = LINE_REF.sub("the relevant place", text)
+    for rx in (ISSUE_REF, TICKET):
+        text = rx.sub("the relevant issue", text)
+    return _sub_sha(text, lambda s: "the commit")
 
 
 def defect_vague(rd):
-    return _map(rd, lambda lines: [_vague_line(l) for l in lines])
+    return _map(rd, lambda lines: per_unit(lines, _vague_text))
 
 
 def defect_fabricated(rd):
@@ -199,20 +286,50 @@ def changed(rd, other):
 
 
 # ---- the evidence check: did a defect remove what its question rests on? ----------------------------------------------------------------
-def _all_lines(rd):
+def record_lines(rd):
     return [l for lines in rd["docs"] for l in lines] + list(rd["final"])
 
 
 def next_step_labels(rd):
-    return [l.strip()[:120] for l in _all_lines(rd) if NEXT_LABEL.match(l)]
+    return [l.strip()[:120] for l in record_lines(rd) if NEXT_LABEL.match(l)]
+
+
+def next_step_evidence(rd):
+    """What the `next_step` question rests on: a labelled next-step paragraph, or a sentence that states a pending action (S262)."""
+    return next_step_labels(rd) + pending_sentences(record_lines(rd))
 
 
 def next_step_cues(rd):
-    return [l.strip()[:160] for l in _all_lines(rd) if NEXT_CUE.search(l)]
+    return [l.strip()[:160] for l in record_lines(rd) if NEXT_CUE.search(l)]
 
 
 def location_evidence(rd):
-    return location_tokens(_all_lines(rd))
+    return location_tokens(record_lines(rd))
+
+
+# What no finder counts, printed beside the check so a pass is not read as a proof (S261: the check passed, the rater still found what it needed).
+# Informational, never a refusal: these classes are broader than any builder uses, so they flag ordinary words too, to be read and not obeyed.
+PENDING_BROAD = re.compile(r"(?i)\b(?:needs?|must|should|will|remain(?:s|ed)?|pending|follow-?ups?|decide|until|outstanding|unresolved|owner|next)\b")
+NAME_CLASSES = (("ALL-CAPS words", re.compile(r"\b[A-Z]{3,}\b")), ("Title-case words inside a sentence", re.compile(r"(?<=[a-z,;:)] )[A-Z][a-z]{2,}\b")),
+                ("dotted or slashed names", re.compile(r"\b[a-z]\w*(?:[./][\w-]+)+\b")), ("letter-and-digit ids", re.compile(r"\b[A-Za-z]+\d+[A-Za-z]*\b")))
+
+
+def residue_pending(rd):
+    found = [s.strip()[:120] for u in units(record_lines(rd)) for s in sentences(unit_text(u)[1]) if PENDING_BROAD.search(s)]
+    what = "sentences with a broad cue (need, must, should, will, remain, pending, follow-up, decide, until, owner, next)"
+    return [{"what": what, "count": len(found), "first": found[:5]}] if found else []
+
+
+def residue_names(rd):
+    text, out = "\n".join(record_lines(rd)), []
+    for what, rx in NAME_CLASSES:
+        tally = collections.Counter(rx.findall(text))
+        if tally:
+            out.append({"what": what, "count": len(tally), "first": [f"{t}×{n}" for t, n in tally.most_common(8)]})
+    return out
+
+
+RESIDUE = {"missing": residue_pending, "vague": residue_names}
 
 
 def next_step_ends(rd):
@@ -226,7 +343,7 @@ def next_step_ends(rd):
 
 ENDS = {"missing": next_step_ends}
 # defect -> (what its finder counts, the finder, informational cues or None)
-CHECKS = {"missing": ("next-step labels", next_step_labels, next_step_cues), "vague": ("location tokens", location_evidence, None)}
+CHECKS = {"missing": ("next-step labels and pending-action sentences", next_step_evidence, next_step_cues), "vague": ("location tokens", location_evidence, None)}
 
 
 def defect_check(rd, defects=None):
@@ -234,7 +351,9 @@ def defect_check(rd, defects=None):
     defective one still holds (`after`; the first few are `left`), and, for `missing`, the other lines that still say "next steps" and the like
     (`cue_lines_left`, informational). A defect with after > 0 did not remove what it was built to remove, so a rater that answers yes to its target
     question may be right (S259: both misses were this); `problems_from` turns that into a refusal before any call is paid for. What this proves is
-    relative to the finders: a place named in words no finder knows, or a next step implied by a status line, is not counted, and the report says so.
+    relative to the finders: a place named in words no finder knows, or a next step implied by a status line, is not counted. S262: `residue` lists
+    what the defective record still holds in classes no builder uses, so the report shows that gap instead of only describing it (S261's check passed
+    over a `missing` variant that still said "#121 is NOT closed" and a `vague` one that still named `#120`).
     `wrong` and `fabricated` have no finder: the first adds a sentence, the second changes shas that only git can check."""
     out = {}
     for name, (fn, targets) in (defects or DEFECTS).items():
@@ -244,7 +363,8 @@ def defect_check(rd, defects=None):
         made = fn(rd)
         left = finder(made)
         out[name] = {"targets": targets, "evidence": what, "before": len(finder(rd)), "after": len(left), "left": left[:5],
-                     "cue_lines_left": cues(made)[:5] if cues else [], "ends": ENDS[name](rd) if name in ENDS else []}
+                     "cue_lines_left": cues(made)[:5] if cues else [], "ends": ENDS[name](rd) if name in ENDS else [],
+                     "residue": RESIDUE[name](made) if name in RESIDUE else []}
     return out
 
 
@@ -268,6 +388,7 @@ def defects_report(records, defects=None):
             lines.append(f"{rid:24} {name:8} {c['evidence']:16} {c['before']} -> {c['after']}" + (f"   LEAVES {c['left'][:3]}" if c["after"] else "")
                          + (f"   ({len(c['cue_lines_left'])} line(s) still mention next steps)" if c["cue_lines_left"] else ""))
             lines += [f"{'':24} {'':8} removal ended at: {e!r}" for e in c["ends"]]
+            lines += [f"{'':24} {'':8} still standing, counted by no finder: {r['what']}: {r['count']} (first: {r['first'][:5]})" for r in c["residue"]]
     return lines, problems_from(checks)
 
 
@@ -387,7 +508,7 @@ def summarize_dry_run(results):
         for k in DEFECTS:
             c = next((c for c in ((kinds.get(k, {}).get(o) or {}).get("check") for o in "AB") if c), None)
             if c:
-                evidence[k] = {f: c[f] for f in ("evidence", "before", "after", "left", "cue_lines_left", "ends")}
+                evidence[k] = {f: c[f] for f in ("evidence", "before", "after", "left", "cue_lines_left", "ends", "residue")}
         rows[rid] = {"honest_total": {o: total(ok("honest", o)) for o in "AB"}, "planted_evidence": evidence,
                      "order_disagreement": [q for q in KEYS if h["A"][q] != h["B"][q]],
                      "defects": combine_orders(per["A"], per["B"]) if per["A"] and per["B"] else {},

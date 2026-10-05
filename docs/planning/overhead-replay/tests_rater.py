@@ -171,6 +171,145 @@ class Defects(unittest.TestCase):
         self.assertEqual(R.DEFECTS["fabricated"][1], [])
 
 
+PENDING_YES = ("Local only: #121 is NOT closed; run `gh issue close 121` from a checkout with one.", "Recorded, not acted on: the advisory fires twice.",
+               "Decide whether to commit it or add it to .gitignore.", "#121 still needs closing on GitHub by the owner.", "You'll need to close #121 yourself.",
+               "The owner must run `gh issue close 121`.", "It has to be run from a clone that has one.", "Cosmetic nits left alone: x.",
+               "NEWS.md still differs; left that alone on purpose.", "Deferred, not done (outside #121): add the ignore.", "The issue is still OPEN on GitHub.",
+               "tests-passed was NOT ratcheted up.", "Small follow-ups I did NOT do: a, b.", "If you want it fixed, it needs its own issue.", "TODO: tidy up.",
+               "Closing #121 is an owner action.", "**Could NOT close #121 or push:** this checkout has no git remote.", "Nothing could be pushed.",
+               "Closing #121 and pushing were impossible here (no remote).", "This checkout has no git remote, so I couldn't close #121 on GitHub or push.",
+               "The fix is one line, but it's outside #121, so I left it.", "Say the word and I'll add it.", "If you want the ignore added, I will do it next.",
+               "Deferred to a later issue: the ignore.")
+PENDING_NO = ("Learning 292: decide which by proving reachability in the running app.", "Run it with `X=1 Rscript` and leave the config alone.",
+              "`applyKinshipOverrides` is exported and must self-validate.",
+              "I did not re-run it at baseline.", "The test runner needs renv restored.", "Checked: 3754 expectations pass.", "commit: pending",
+              "The fix is committed and the suite is green.", "It is unrelated to the change, not from this change.",
+              "The cyclocomp linter could not run because the package is not installed.", "The scope choice was the owner's.", "It could not be reproduced twice.",
+              "It couldn't be reproduced, and I left the file open for review.")
+
+
+class Rebuilt(unittest.TestCase):
+    """S262: what S261 found standing in the `missing` and `vague` variants after the rater said yes to `next_step` and `where` on all of them.
+    A hard-wrapped paragraph is one unit; `missing` also removes a sentence that states a pending action; `vague` also removes issue and ticket
+    references, document names, hyphenated place names and dotted function names. Synthetic text only."""
+    def test_a_wrapped_paragraph_is_one_unit_and_a_list_item_a_heading_a_field_and_a_fence_each_open_one(self):
+        lines = ["# H", "- a", "  wrapped", "- b", "", "para one", "para two", "key_files: x", "continued", "```", "code `x", "```", "1. one", "2) two", "tail", "## Head"]
+        self.assertEqual(R.units(lines), [["# H"], ["- a", "  wrapped"], ["- b"], [""], ["para one", "para two"], ["key_files: x", "continued"],
+                                          ["```"], ["code `x"], ["```"], ["1. one"], ["2) two", "tail"], ["## Head"]])
+        self.assertEqual(R.units([]), [])
+        self.assertEqual(R.units(["", ""]), [[""], [""]])                       # each blank line is its own unit
+
+    def test_a_unit_the_function_empties_is_dropped_with_its_label_and_a_blank_line_stays(self):
+        out = R.per_unit(["active_task: gone", "", "key_files: kept", "more"], lambda t: "" if "gone" in t else t.upper())
+        self.assertEqual(out, ["", "key_files: KEPT", "MORE"])                  # the label is set apart, so the function never sees it
+
+    def test_sentences_end_at_a_stop_before_a_space_and_rejoin_to_the_text_exactly(self):
+        text = "One. Two! **Three.** Four? A 0.5 gain in x.R:24 and R/y.R. Five"
+        parts = R.sentences(text)
+        self.assertEqual("".join(parts), text)
+        self.assertEqual(parts, ["One. ", "Two! ", "**Three.** ", "Four? ", "A 0.5 gain in x.R:24 and R/y.R. ", "Five"])
+        self.assertEqual(R.sentences("Wait (really.) Yes."), ["Wait (really.) ", "Yes."])
+        self.assertEqual(R.sentences(""), [])
+
+    def test_a_sentence_that_states_a_pending_action_is_found_and_ordinary_sentences_are_not(self):
+        for s in PENDING_YES:
+            self.assertTrue(R.PENDING.search(s), s)
+        for s in PENDING_NO:
+            self.assertFalse(R.PENDING.search(s), s)
+
+    def test_missing_also_removes_a_sentence_that_states_a_pending_action_wherever_it_stands(self):
+        rd = {"docs": [["- **Deliverable:** fixed it. **Local only -- #121 is NOT closed; run `gh issue close 121`", "from a checkout with one.** The suite is green.",
+                        "- **Recorded, not acted on:** the advisory fires twice.", "- **Verification:** 3754 pass.", "",
+                        "active_task: still OPEN on GitHub.", "key_files: a.R"]],
+              "final": ["Done. You'll need to close #121 yourself. Thanks."]}
+        out = R.defect_missing(rd)
+        self.assertEqual(out["docs"][0], ["- **Deliverable:** fixed it. The suite is green.", "- **Verification:** 3754 pass.", "", "key_files: a.R"])
+        self.assertEqual(out["final"], ["Done. Thanks."])
+        self.assertEqual(R.pending_sentences(out["docs"][0] + out["final"]), [])
+
+    def test_missing_removes_the_labelled_paragraphs_first_and_keeps_the_rest_of_the_record(self):
+        out = R.render(R.defect_missing(RECORD))
+        for kept in ("key_files:", "gotchas: the cache is stale", "Other paragraph.", "Thanks.", "Checked: 3754 expectations pass."):
+            self.assertIn(kept, out)
+        self.assertEqual(R.pending_sentences(R.record_lines(R.defect_missing(RECORD))), [])
+
+    def test_vague_pairs_a_backtick_span_that_wraps_onto_the_next_line(self):
+        """S262: R1-r2's `vague` variant read `codeis.nathe`. A span opened on one line and closed on the next left an odd backtick that
+        paired every later span on its line the wrong way, and `is.na` stood bare."""
+        lines = ["The guard `is.na(maxAge)", "|| maxAge == 0` (`R/p.R:55`) was dead in its `is.na` half. Now `getPedMaxAge()` returns NA."]
+        out = R.defect_vague({"docs": [lines], "final": []})["docs"][0]
+        joined = "\n".join(out)
+        for gone in ("is.na", "maxAge", "getPedMaxAge", "R/p.R", "`"):
+            self.assertNotIn(gone, joined, gone)
+        for kept in ("The guard", "was dead in its", "returns NA."):
+            self.assertIn(kept, joined)
+        self.assertEqual(R.location_tokens(out), [])
+        self.assertEqual(R.location_tokens(lines)[0], "`is.na(maxAge)\n|| maxAge == 0`")      # one token, across the line break
+
+    def test_vague_removes_issue_and_ticket_references_but_not_a_session_number(self):
+        out = R.defect_vague({"docs": [["Next: #120 (the audit), #103 or E4; D6 was ruled on; S313's handoff said so."]], "final": []})["docs"][0][0]
+        for gone in ("#120", "#103", "E4", "D6"):
+            self.assertNotIn(gone, out, gone)
+        self.assertIn("S313's handoff", out)                                    # a ticket is a letter and one or two digits
+        self.assertEqual(out.count("the relevant issue"), 4)
+
+    def test_vague_removes_document_environment_hyphenated_place_and_dotted_function_names(self):
+        line = ("Update the NEWS bullet, CHANGELOG, SESSION_RUNNER and NOT_CRAN; the Age-Sex Pyramid tab and is.na handling; "
+                "RED then GREEN, DONE, NOT closed, TDD; 3754 expectations, 0.5 and 33.3.")
+        out = R.defect_vague({"docs": [[line]], "final": []})["docs"][0][0]
+        for gone in ("NEWS", "CHANGELOG", "SESSION_RUNNER", "NOT_CRAN", "Age-Sex", "Pyramid", "is.na"):
+            self.assertNotIn(gone, out, gone)
+        self.assertIn("RED then GREEN, DONE, NOT closed, TDD; 3754 expectations, 0.5 and 33.3.", out)      # emphasis and numbers are not names
+        keep = "Keep &#39; and page#12 and version 12.25 and 1.10.100 as they are."
+        self.assertEqual(R.defect_vague({"docs": [[keep]], "final": []})["docs"][0], [keep])             # a hash after a word or an ampersand, a number with a point
+        self.assertEqual(sorted(R.location_tokens([line])), sorted(["NEWS", "CHANGELOG", "SESSION_RUNNER", "NOT_CRAN", "Age-Sex Pyramid", "is.na"]))
+
+    def test_the_builder_and_its_finder_agree_on_a_line_with_every_kind_of_name(self):
+        line = ("Fixed `getPedMaxAge()` in R/x.R:24 and tests/t.R; see #120, E4, NEWS, Age-Sex Pyramid, is.na, qcStudbook(), pkg::fn, spell_check_package, "
+                "L512 and line 24 (commit a1b2c3d4e5f6).")
+        rd = {"docs": [[line, "key_files: `R/y.R:9` and #7"]], "final": ["Done: #5."]}
+        tokens = R.location_tokens(R.record_lines(rd))
+        self.assertGreater(len(tokens), 14)
+        for found in ("#120", "#7", "#5", "E4", "NEWS", "Age-Sex Pyramid", "is.na"):                # the classes S262 added
+            self.assertIn(found, tokens)
+        self.assertEqual(R.location_tokens(R.record_lines(R.defect_vague(rd))), [])
+
+    def test_a_label_with_nothing_left_after_missing_is_dropped_and_a_sentence_with_a_stop_in_a_name_is_not_cut(self):
+        out = R.defect_missing({"docs": [["gotchas: see R/x.R:24 and 0.5 gain. It is still open.", "key_files: R/x.R:24."]], "final": []})["docs"][0]
+        self.assertEqual(out, ["gotchas: see R/x.R:24 and 0.5 gain.", "key_files: R/x.R:24."])
+        out = R.defect_missing({"docs": [["It is still open here. The rest stays. And more."]], "final": []})["docs"][0]
+        self.assertEqual(out, ["The rest stays. And more."])                      # the first sentence goes with its space
+
+
+RESIDUE_RECORD = {"docs": [["The owner will weigh in later. All done.", "Open the UPLOAD form on the Age tab; call data.frame later."]], "final": []}
+
+
+class Residue(unittest.TestCase):
+    """S262: the check can only count what its own finders know (S261 passed it over variants that still said "#121 is NOT closed" and still
+    named `#120`). So the report also lists what the defective record still holds in classes no builder uses: informational, never a refusal."""
+    def test_the_check_lists_what_the_defective_record_still_holds_in_classes_no_builder_uses(self):
+        c = R.defect_check(RESIDUE_RECORD)
+        self.assertEqual([(r["count"], r["first"]) for r in c["missing"]["residue"]], [(1, ["The owner will weigh in later."])])
+        self.assertEqual({r["what"]: (r["count"], r["first"]) for r in c["vague"]["residue"]},
+                         {"ALL-CAPS words": (1, ["UPLOAD×1"]), "Title-case words inside a sentence": (1, ["Age×1"])})
+        self.assertEqual(R.problems_from({"r": c}), [])                           # a residue is read, not obeyed
+
+    def test_a_record_with_nothing_standing_has_no_residue(self):
+        c = R.defect_check({"docs": [["just a note"]], "final": ["Done."]})
+        self.assertEqual((c["missing"]["residue"], c["vague"]["residue"]), ([], []))
+
+    def test_the_report_prints_the_residue_beside_the_before_and_after(self):
+        lines, problems = R.defects_report({"set/v3.0-r1": ("v3.0", RESIDUE_RECORD)})
+        self.assertEqual(problems, [])
+        joined = "\n".join(lines)
+        for word in ("still standing, counted by no finder", "sentences with a broad cue", "ALL-CAPS words: 1", "UPLOAD×1"):
+            self.assertIn(word, joined)
+
+    def test_the_names_class_counts_each_distinct_token_once_and_orders_them_by_how_often_they_stand(self):
+        r = R.residue_names({"docs": [["see the RED and RED and GREEN, then the Age tab"]], "final": []})
+        self.assertEqual(r[0], {"what": "ALL-CAPS words", "count": 2, "first": ["RED×2", "GREEN×1"]})
+
+
 class Evidence(unittest.TestCase):
     """S260 (d): a planted defect is only a test of the rater if it provably removed the evidence its question rests on. Each defect that has a
     finder (missing: next-step labels; vague: place-in-the-code tokens) is counted before and after, at $0, before any call is paid for."""
@@ -181,6 +320,15 @@ class Evidence(unittest.TestCase):
         self.assertEqual((c["missing"]["before"], c["missing"]["after"]), (3, 0))          # next_steps:, "Next session", "## Next steps"
         self.assertGreater(c["vague"]["before"], 5)
         self.assertEqual((c["vague"]["after"], c["vague"]["left"]), (0, []))
+
+    def test_the_missing_check_counts_a_pending_action_sentence_as_well_as_a_label(self):
+        rd = {"docs": [["Next steps: do x", "", "#121 is NOT closed; run it later. Fine."]], "final": []}
+        c = R.defect_check(rd)["missing"]
+        self.assertEqual((c["before"], c["after"]), (2, 0))
+        self.assertIn("pending-action sentences", c["evidence"])
+        labels_only = {"missing": (lambda r: {"docs": [R.drop_parts(l)[0] for l in r["docs"]], "final": r["final"]}, ["next_step"])}
+        left = R.defect_check(rd, labels_only)["missing"]                         # labels gone, the pending sentence still there: a problem
+        self.assertEqual((left["before"], left["after"]), (2, 1))
 
     def test_the_boundary_each_next_step_removal_stopped_at_is_part_of_the_check(self):
         self.assertEqual(R.defect_check(RECORD)["missing"]["ends"], ["gotchas: the cache is stale", "", ""])     # a receipt field, then a blank line twice
@@ -456,6 +604,7 @@ class DryRun(unittest.TestCase):
         ev = R.summarize_dry_run(res)["records"]["set/v3.0-r1"]["planted_evidence"]
         self.assertEqual(sorted(ev), ["missing", "vague"])
         self.assertEqual((ev["vague"]["after"], ev["missing"]["after"]), (0, 0))
+        self.assertEqual(sorted(ev["vague"]["residue"][0]), ["count", "first", "what"])      # S262: the residue rides along into the summary
 
     def test_a_failed_call_is_listed_and_costs_what_it_cost(self):
         recs = {k: v for k, v in sample_records().items() if k == "set/v3.0-r1"}
