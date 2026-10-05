@@ -528,7 +528,9 @@ makes the generated `.verify.sh` read the receipt as *edited*, because its pre-t
 stub: the proof ends red (exit 4, named as a stub finalize since nothing else went missing, but
 still a FAIL) with nothing lost. `methodology_trim.py` warns when it sees the state coming
 (`FRONTIER_PENDING_STUB`, `FRONTIER_FINALIZE_UNCOMMITTED`); the warning is advisory and refuses
-nothing.
+nothing. A `.verify.sh` already written is frozen and never changes; to ask what today's template
+says about an old shard, run `methodology_trim.py --reverify <shard>` — read-only, it prints a verdict
+that is a claim about today's logic, not about the artifact that was shipped.
 
 **Not everything that grows can be archived this way.** Archiving moves *history*. A file that grows
 because someone keeps adding *procedure* has no past to move — extract a section to a sibling file
