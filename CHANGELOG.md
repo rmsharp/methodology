@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S262 — status follows the rebuild: the plan, the BL-94 row and detail
+
+A status paragraph in `docs/planning/documentation-quality-experiment-plan.md` and in `BACKLOG-DETAIL.md`, and one clause in the BL-94 row of `BACKLOG.md`: the two planted defects are rebuilt at $0, the check passes at zero, nothing here shows a flip, and what is still his (a third paid run of about $1.6 by estimate, his own blind rating, D6 and D7, P3). BL-94 stays open; no id leaves the backlog.
+
 ### 2026-10-04 · [BL-94] S262 — report on the rebuilt planted defects: `P2_DEFECTS_S262.md`
 
 New `docs/planning/overhead-replay/pilot/doc-evidence/P2_DEFECTS_S262.md`, a pointer in `P2_RATER_RERUN.md` and one sentence in the harness `README.md`. It records what S261's variants still held, counted with the new finders (pending sentences 12, 10, 16; `vague` tokens 32, 49, 68, mostly issue references and document names), what changed and where, the before-and-after table, and what I read in the six rebuilt variants (hazards, caveats and observations remain; no stated next step, no named file, function, issue or document; the next work survives in prose). The claims in it were checked against the saved variants before it was committed (four were corrected: the "roxygen harmonization" count, the two cited works, `origin/master` in two of three, and which tests were written first). It states that nothing here shows the rater's answers flip, and that a third paid run (about $1.6, an estimate) is his go-ahead. Nothing spent.
