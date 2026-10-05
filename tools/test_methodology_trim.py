@@ -1830,6 +1830,57 @@ class TestWriteTimeGuardForAStubFinalize(unittest.TestCase):
 
 
 # =============================================================================================
+# Issue #93, the third layer -- SAY THE SAME THING EVERYWHERE. The rule that makes a trim lossless-
+# and-green is a timing one (trim while record 0 is complete: before the claim, or after the
+# finalize is committed, never in the commit that finalizes it). It lived only in the repo's habits
+# while the proof's own note told the reader that bundling was "this repository's own established
+# practice": a file's instructions and its verifier disagreeing, where only the verifier is
+# mechanical. These tests pin the same words in every place a reader meets the rule -- the writer's
+# two warnings, the proof's two notes and the distributed prose -- and pin the retired claim gone.
+# =============================================================================================
+
+class TestTheTimingRuleIsStatedTheSameEverywhere(unittest.TestCase):
+
+    def test_the_constant_the_writer_uses_carries_the_rule(self):
+        self.assertIn(TIMING_RULE, mod.TRIM_TIMING_RULE)
+
+    def test_the_distributed_prose_carries_the_rule(self):
+        prose = " ".join((REPO / "FRAMEWORK_APPARATUS.md").read_text(encoding="utf-8").split())
+        self.assertIn(TIMING_RULE, prose,
+                      "FRAMEWORK_APPARATUS.md, The Action Ledger, must state the timing rule in the same words")
+        self.assertIn("never in the commit that finalizes it", prose)
+
+    def test_the_proofs_generic_frontier_note_carries_the_rule_and_not_the_retired_claim(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            helper = TestVerifyShNamesAStubFinalize()
+            p = make_handoff_repo(tmp)
+            shard = helper._trim(p)
+            helper._edit_live(p, "status: complete\nactive_task: x",
+                              "status: complete\nactive_task: x (finalized)", "record 0 must change")
+            helper._commit(p)
+            v = helper._proof(p, shard)
+            self.assertEqual(v.returncode, 1, v.stdout)
+            self.assertIn(TIMING_RULE, v.stdout, v.stdout)
+            self.assertNotIn("established practice", v.stdout, v.stdout)
+            self.assertNotIn("own practice bundles", v.stdout, v.stdout)
+
+    def test_the_proofs_stub_note_carries_the_rule(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            helper = TestVerifyShNamesAStubFinalize()
+            p = helper._stub_repo(tmp)
+            shard = helper._trim(p)
+            helper._edit_live(p, "status: pending\n", "status: complete\n", "record 0 must be finalized")
+            helper._commit(p)
+            v = helper._proof(p, shard)
+            self.assertEqual(v.returncode, 4, v.stdout)
+            self.assertIn(TIMING_RULE, v.stdout, v.stdout)
+
+    def test_the_template_no_longer_asserts_bundling_is_this_repositorys_practice(self):
+        self.assertNotIn("established practice", mod.VERIFY_TEMPLATE)
+        self.assertNotIn("own practice bundles", mod.VERIFY_TEMPLATE)
+
+
+# =============================================================================================
 # BL-36 — the generated proof's INJECTED constant is a 0/1 FLAG, not a count of what the trim
 # commit actually added, so `ar_cmp = ar[INJ:]` skips the wrong number of records and the whole
 # positional comparison shifts. Any trim commit bundled with a second entry to the same ledger

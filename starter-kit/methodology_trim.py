@@ -64,8 +64,11 @@ TRIM_VERSION = "1.6.0"   # 1.6.0: issue #93, cause 1 — a commit that FINALIZES
                          # the working tree no longer holds), each stating the timing rule: trim
                          # while record 0 is complete, before the claim or after the finalize is
                          # committed, never in the same commit. Minor, not patch: a new exit status,
-                         # two new finding codes and a new LedgerSpec field. Proofs already written
-                         # are frozen artifacts and do not change.
+                         # two new finding codes and a new LedgerSpec field. The note a bundled
+                         # frontier edit prints no longer calls bundling "this repository's own
+                         # practice" (a trim earns its own commit) and states the timing rule, which
+                         # FRAMEWORK_APPARATUS.md now states in the same words. Proofs already
+                         # written are frozen artifacts and do not change.
                          #
                          # 1.5.1: issue #93 — the GENERATED .verify.sh's L2 "leaked" clause compared by
                          # substring (`ln in sfront or ln in "".join(sr)`), so an archived record that
@@ -1589,12 +1592,14 @@ else:
     if bad:
         fails.append("L3 record(s) out of order across the move: %s" % bad)
 
-# BL-27 fix 2: a same-commit close-out bundling (this repo's own established practice — a
-# session's own frontier receipt going status: pending -> complete, committed together with the
-# archive write) makes position 0 (newest) legitimately differ between this commit's parent and
-# itself. NOT an exemption — this stays a FAIL, loud, because a real loss can have this exact
-# shape too — only a NOTE naming the known pattern, so a reader does not mistake it for an
-# unqualified loss. Narrow on purpose: any OTHER record differing (bad != [0]) gets no such note.
+# BL-27 fix 2: a same-commit close-out bundling (a session's own frontier receipt going
+# status: pending -> complete, committed together with the archive write) makes position 0 (newest)
+# differ between this commit's parent and itself. That bundling is NOT this framework's practice --
+# FRAMEWORK_APPARATUS.md says a trim earns its own commit, and issue #93 measured what it costs --
+# but sessions have done it, so the proof must still judge it. NOT an exemption: this stays a FAIL,
+# loud, because a real loss can have this exact shape too -- only a NOTE naming the pattern, so a
+# reader does not mistake it for an unqualified loss. Narrow on purpose: any OTHER record differing
+# (bad != [0]) gets no such note.
 #
 # BL-36 re-expressed the gate in the new vocabulary. It was `bad == [0]` — the record-ALTERED
 # shape under the old positional comparison — which is why it never fired for the busier ledger,
@@ -1639,11 +1644,12 @@ if stub_finalized:
 elif fails and frontier_edit:
     notes.append(
         "the only missing record is the frontier one (position 0, newest), and an added record "
-        "carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's "
-        "own practice bundles a session's close-out finalize edit into the same commit as an "
-        "archive write, so the frontier record can legitimately differ between this commit's "
-        "parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand "
-        "to be sure it is a receipt finalize, not real data loss."
+        "carries the same anchor -- the shape (BL-27) a bundled finalize leaves: record 0 was "
+        "edited in the same commit as the archive write, so it differs between this commit's "
+        "parent and itself. That bundling is not this framework's practice: trim while record 0 "
+        "is complete -- before the claim, or after the finalize is committed -- never in the "
+        "same commit. This does NOT confirm losslessness -- a real loss can have this exact "
+        "shape -- so diff record 0 by hand to be sure it is a finalize and not data loss."
         + ("" if STUB is not None else
            " This ledger declares no stub marker, so a pending-stub finalize cannot be told from "
            "any other edit of record 0."))

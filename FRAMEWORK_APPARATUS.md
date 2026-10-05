@@ -521,6 +521,15 @@ An archive is a **shard** — a new frozen file, same format, same newest-on-top
 here — one ledger, one shard, one commit, one revert. It does **not** belong in Phase 0, which is
 read-only apart from the reconcile backfill.
 
+**Trim while record 0 is complete — before the claim, or after the finalize is committed — never in
+the commit that finalizes it.** A session's claim leaves record 0 of `HANDOFFS.md` as a
+`status: pending` stub that close-out overwrites in place. A trim that lands in that same commit
+makes the generated `.verify.sh` read the receipt as *edited*, because its pre-trim bytes are the
+stub: the proof ends red (exit 4, named as a stub finalize since nothing else went missing, but
+still a FAIL) with nothing lost. `methodology_trim.py` warns when it sees the state coming
+(`FRONTIER_PENDING_STUB`, `FRONTIER_FINALIZE_UNCOMMITTED`); the warning is advisory and refuses
+nothing.
+
 **Not everything that grows can be archived this way.** Archiving moves *history*. A file that grows
 because someone keeps adding *procedure* has no past to move — extract a section to a sibling file
 and leave a pointer instead. A backlog of open items is live state rather than history: that is a
