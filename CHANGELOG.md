@@ -44,6 +44,19 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] The generated `.verify.sh`'s L2 `leaked` clause tests whole lines, not substrings (`TRIM_VERSION` 1.5.1)
+
+- **Action:** fixes the second of the three causes in [issue #93](https://github.com/KJ5HST/methodology/issues/93).
+  `starter-kit/methodology_trim.py`: `leaked` in `VERIFY_TEMPLATE` tested `ln in sfront or ln in "".join(sr)`, a substring
+  test, so an archived record that merely quoted a front-matter line mid-line read as that line having travelled into the
+  shard — a false red on a lossless trim. It now tests membership in the sets of whole lines of the shard's front matter and
+  of its records, the `> 24` length filter kept. A patch release (1.5.0 → 1.5.1): no new finding code and no exit-status
+  change. `tools/test_methodology_trim.py`: `TestVerifyShLeakedTestsWholeLines`, 5 tests, the clause's first coverage (no
+  test named `leaked` existed): the two that quote a line mid-line fail on 1.5.0 and pass now, and the three controls (a
+  whole line in the shard's front matter, a whole line in an archived record, a line under the length filter) pass on both.
+  129 tests (2 skipped), up from 124; the `trimmer-unit-tests` gate 124 → 129, a tightening. A proof already written is
+  frozen and does not change.
+
 ### 2026-10-03 · [ad hoc] PR #91: comment to rmsharp that his three approval points were fixed before the merge
 
 - **Action (non-commit):** S39, after its close-out, with the operator's OK on the full text:

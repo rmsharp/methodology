@@ -46,7 +46,18 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.5.0"   # 1.5.0: Phase C2 — the Class A archive threshold, and the byte budget
+TRIM_VERSION = "1.5.1"   # 1.5.1: issue #93 — the GENERATED .verify.sh's L2 "leaked" clause compared by
+                         # substring (`ln in sfront or ln in "".join(sr)`), so an archived record that
+                         # merely QUOTED a front-matter line mid-line (in backticks, inside a longer
+                         # line) read as that line having travelled into the shard: a false red on a
+                         # lossless trim. It now tests membership in the sets of WHOLE lines, which is
+                         # what a migration moves; the `> 24` length filter is kept, and a whole-line
+                         # copy into the shard (its front matter or a record) still fails. No new
+                         # finding code and no exit-status change: patch, not minor — a correctness
+                         # fix to what the tool WRITES, the class of 1.1.2 and 1.1.3. Proofs already
+                         # written are frozen artifacts and do not change.
+                         #
+                         # 1.5.0: Phase C2 — the Class A archive threshold, and the byte budget
                          # raised to meet it. An adopter's ROOT CHANGELOG.md/HANDOFFS.md now fires
                          # at 196,608 B instead of 65,536 and cuts back to 98,304 instead of
                          # 32,768, so a ledger that reported FIRES yesterday can report
@@ -1505,8 +1516,16 @@ missing = [ln for ln in bfront.splitlines()
            if ln.strip() and ln not in afront_lines and not field_reversible(ln)]
 if missing:
     fails.append("L2 FRONT MATTER lost %d line(s), first: %r" % (len(missing), missing[0][:70]))
+# Issue #93 fix: whole-line membership, not substring containment. `ln in sfront` and
+# `ln in "".join(sr)` asked whether the front-matter line occurs ANYWHERE in the shard's text,
+# so an archived record that merely QUOTED it mid-line (in backticks, in a longer line) read as
+# the line having travelled into the shard. A migration moves WHOLE lines, so the test is
+# membership in the sets of whole lines of the shard's front matter and of its records; the
+# `> 24` length filter is kept. Same class of fix as BL-28 just above, on the other clause.
+sfront_lines = set(sfront.splitlines())
+sr_lines = set("".join(sr).splitlines())
 leaked = [ln for ln in bfront.splitlines()
-          if ln.strip() and len(ln.strip()) > 24 and (ln in sfront or ln in "".join(sr))]
+          if ln.strip() and len(ln.strip()) > 24 and (ln in sfront_lines or ln in sr_lines)]
 if leaked:
     fails.append("L2 FRONT MATTER leaked %d line(s) into the shard, first: %r"
                  % (len(leaked), leaked[0][:70]))
