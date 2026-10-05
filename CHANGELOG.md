@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [BL-94] S262 close-out — the planted defects `missing` and `vague` are rebuilt at $0; a flip is not shown
+
+The `HANDOFFS.md` receipt is complete (self-score 8, S261's handoff scored 9). Deliverable: the rebuild in `7bbc0f1` with its report `c01637c` and status `eca6456`, after the owed trim `c5f6057` and fold `2924283` and the claim `f1485fc`; the operator approved the implementation plan as written before any code. Nothing spent (the study's ledger stays $4.0927 of its own $100), nothing pushed, nothing sent to `KJ5HST/methodology`. No fork learning row was appended, so D3's retirement duty does not arise; the lesson that a finder-relative check passes while evidence stands is #108's, and this session's residue list, tests and mutants are its mechanical form. What remains is his: a third paid run (about $1.6 by estimate), his own blind rating, D6 and D7, P3.
+
 ### 2026-10-04 · [BL-94] S262 — status follows the rebuild: the plan, the BL-94 row and detail
 
 A status paragraph in `docs/planning/documentation-quality-experiment-plan.md` and in `BACKLOG-DETAIL.md`, and one clause in the BL-94 row of `BACKLOG.md`: the two planted defects are rebuilt at $0, the check passes at zero, nothing here shows a flip, and what is still his (a third paid run of about $1.6 by estimate, his own blind rating, D6 and D7, P3). BL-94 stays open; no id leaves the backlog.
