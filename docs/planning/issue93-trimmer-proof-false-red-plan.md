@@ -357,6 +357,9 @@ Radius), and RED first.
   complete) is silent; this repo at `994eee5`, S265's own claim, fires. The adopter's parent of
   `HANDOFFS-through-2026-09-26`, a trim whose proof passes, also fires: the warning is about the wrong time to
   trim, not a certainty of a red proof, and its message is conditional.
+  **Reproduce:** `python3 docs/planning/issue93-evidence/mutants_p2.py all` (the 37 mutants, about two minutes, writes
+  nothing under the repository) and `python3 docs/planning/issue93-evidence/reverify_p2.py <repo> <trimmer.py> <out.tsv>`
+  over a clone of the adopter and a `--no-local` clone of this repo (the stub marker supplied from the ledger table).
   **Deviations from the plan's text, each decided on evidence.** (1) **`CHANGELOG.md` declares no stub marker.**
   §4.1 and §5 P2 named one, "a heading ending `(in progress)`". The heading's shape is NOT the reason: of the 27
   `(in progress)` headings in this ledger at S265, 14 end there and the 13 newer ones carry ` — <description>`

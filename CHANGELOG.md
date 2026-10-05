@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [BL-98] S265 — the P2 re-derive script and the mutation runner join `issue93-evidence/`
+
+`docs/planning/issue93-evidence/reverify_p2.py` (re-derives every frozen proof in a repo under the current template with the ledger's stub marker supplied by the LIVE basename, writes nothing under the repo, tabulates frozen against re-derived exit codes; it produced the adopter and fork figures in the plan's section 5 P2 DONE paragraph) and `docs/planning/issue93-evidence/mutants_p2.py` (the 37 mutants of P2 in three layers, run one at a time against a temp copy of the trimmer; run from this location, `all` reads 18, 14 and 5 killed, 0 survived, 0 invalid, in about two minutes). Both were scratch scripts in the session until now, which left the plan's "re-derive rather than trust" promise unmet for these numbers; the plan's DONE paragraph now says how to reproduce them. No outward action.
+
 ### 2026-10-05 · [BL-98] S265 — status follows P2 in the #93 plan, the BL-98 row and its detail
 
 `docs/planning/issue93-trimmer-proof-false-red-plan.md`: the status line (P1 and P2 DONE, P3 not built), a correction pointer in section 4.1, and a measured "DONE at S265" paragraph in section 5 P2 with each criterion as measured, the real-surface results against the plan's prediction (1 of the adopter's 8 stub shards reaches exit 4 with canonical specs, not 8), the three deviations (no `CHANGELOG.md` marker, two more label conditions, one guard code per commit order) and what P3 inherits (a pre-1.6.0 frozen proof has no `STUB_PATTERN`, so `--reverify` supplies it from the ledger table by the live basename). `docs/planning/BACKLOG.md` row BL-98 and `docs/planning/BACKLOG-DETAIL.md` §BL-98 follow; the next action is P3. No outward action: nothing was sent to `KJ5HST/methodology` and nothing was pushed.
