@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-04 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-04-3.md` (1 record(s), 38,986 B → 28,035 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-04 → 2026-10-04) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-04-3.md`](docs/archive/HANDOFFS-through-2026-10-04-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-04-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-04-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,986 B → 28,035 B (−28.1%).
+
 ### 2026-10-04 · [ad hoc] S261 — cite the close-out commit in the receipt's `commit:` slot
 
 `HANDOFFS.md`'s S261 receipt now starts its `commit:` slot with `4d3a34f`, the close-out commit, so the next session's claim does not turn Test 34 L1 red the way S260's slot did. One line in `HANDOFFS.md`.
