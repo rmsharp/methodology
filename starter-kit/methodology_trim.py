@@ -46,7 +46,21 @@ import sys
 import tempfile
 from pathlib import Path
 
-TRIM_VERSION = "1.5.1"   # 1.5.1: issue #93 — the GENERATED .verify.sh's L2 "leaked" clause compared by
+TRIM_VERSION = "1.6.0"   # 1.6.0: issue #93, cause 1 — a commit that FINALIZES a session's pending claim
+                         # stub and trims in the same breath made the proof read record 0 as EDITED
+                         # and end red with nothing lost (BL-27 refused to excuse it: a real loss can
+                         # have that shape). The proof can now tell the stub shape from the loss
+                         # shape. A ledger spec may declare `stub_marker` (HANDOFFS.md: a line
+                         # `status: pending`; CHANGELOG.md declares none, because a committed entry
+                         # there is never edited in place), it travels in the proof as STUB_PATTERN
+                         # beside REGEN_PATTERNS, and a frontier edit whose pre-trim record 0 matches
+                         # it, whose replacement no longer does, with L2 holding and every other
+                         # record byte-identical and in order, prints a labelled FAIL INSTEAD of the
+                         # generic L1/L3 pair and exits 4. Still a FAIL by design; every near-miss
+                         # keeps exit 1. Minor, not patch: a new exit status and a new LedgerSpec
+                         # field. Proofs already written are frozen artifacts and do not change.
+                         #
+                         # 1.5.1: issue #93 — the GENERATED .verify.sh's L2 "leaked" clause compared by
                          # substring (`ln in sfront or ln in "".join(sr)`), so an archived record that
                          # merely QUOTED a front-matter line mid-line (in backticks, inside a longer
                          # line) read as that line having travelled into the shard: a false red on a
@@ -286,7 +300,7 @@ class Result:
 class LedgerSpec:
     def __init__(self, basename, record_kind, footer_mode, date_of_record,
                  record_start=None, fence_info=None, regenerated=(), budget_bytes=DEFAULT_BUDGET_BYTES,
-                 content_probe=None, seed_negation=None):
+                 content_probe=None, seed_negation=None, stub_marker=None):
         self.basename = basename
         self.record_kind = record_kind        # "heading" | "fence"
         self.record_start = record_start      # compiled regex, for record_kind == "heading"
@@ -297,6 +311,13 @@ class LedgerSpec:
         self.budget_bytes = budget_bytes
         self.content_probe = content_probe    # loose "this LOOKS like a record" regex, or None
         self.seed_negation = seed_negation    # the seed comment's own "and there are no X below"
+        # What a PENDING STUB looks like (compiled with re.M, matched against one record's text), or
+        # None. A stub is a record a session commits at its claim and OVERWRITES IN PLACE at
+        # close-out. Declare one only for a ledger whose records are finalized by editing: a
+        # ledger that never edits a committed record has no stub in this sense, and a marker there
+        # would label a final record "pending" (see the HANDOFFS.md and CHANGELOG.md entries below).
+        # It travels in the generated proof as STUB_PATTERN, so a frozen script can still use it.
+        self.stub_marker = stub_marker
 
 
 def _changelog_date(text):
@@ -360,6 +381,15 @@ LEDGERS = {
         # is present AND there are no `session:` blocks below" — so the negation is `session:`,
         # not a dated heading. Fence-aware, so the seed's wrapped example does not count itself.
         seed_negation=re.compile(r"^session:\s"),
+        # Phase 1B commits this ledger's record 0 as `status: pending` and Phase 3D overwrites it to
+        # `status: complete` IN PLACE, so a pending record 0 is a stub by the runner's own design.
+        # One whole line (`status:` is a single-line key), so a receipt that merely QUOTES the
+        # marker mid-line in a long field is not one. CHANGELOG.md declares none, deliberately: its
+        # lifecycle is "a committed entry is never edited" and a claim's `(in progress)` entry
+        # stays as written when close-out adds its own (FRAMEWORK_APPARATUS.md, The Action
+        # Ledger), so such an entry is a FINAL record: every claim in this repo's own ledger still
+        # reads (in progress).
+        stub_marker=re.compile(r"^status: pending\s*$", re.M),
     ),
 }
 
@@ -1260,6 +1290,12 @@ PREFIX = "../../"
 REGEN_PATTERNS = @@REGEN@@
 REGEN = [re.compile(p) for p in REGEN_PATTERNS]
 
+# Issue #93: what a PENDING STUB looks like in this ledger, or '' when it declares none. A frozen
+# script cannot consult the trimmer's ledger table, so the marker travels here, beside REGEN. It
+# decides only how a failing frontier edit is LABELLED (below); it never turns a failure into a pass.
+STUB_PATTERN = @@STUB@@
+STUB = re.compile(STUB_PATTERN, re.M) if STUB_PATTERN else None
+
 FENCE = re.compile(r"^(`{3,}|~{3,})(.*)$")
 LINK = re.compile(r"\]\(([^)\s]*)\)")
 SCHEME = re.compile(r"^[A-Za-z][A-Za-z0-9+.\-]*:")
@@ -1564,14 +1600,46 @@ notes = []
 frontier_edit = (len(absent_records) == 1 and br and absent_records[0] == br[0]
                  and anchor(absent_records[0]) != ""
                  and any(anchor(a) == anchor(absent_records[0]) for a in added_records))
-if fails and frontier_edit:
+
+# Issue #93, cause 1: ONE shape of frontier edit can be NAMED rather than merely noted -- a pending
+# stub that this commit finalized. The discriminator is not a guess: it is every one of (a) the
+# frontier edit above, (b) the pre-trim record 0 matches the ledger's declared stub marker, (c) the
+# record that replaced it no longer does (an edit made while still pending was not a finalize),
+# (d) nothing else failed, and (e) the OTHER records are byte-identical and still in order. A stub
+# is a claim placeholder meant to be replaced, so what its replacement removed was never data. Any
+# one missing and the edit keeps the generic note and exit 1, which is what BL-27 protected: a
+# record 0 that was COMPLETE before the trim and differs after it is a real-loss shape.
+stub_finalized = False
+if fails and frontier_edit and STUB is not None and STUB.search(absent_records[0]):
+    successor = next(a for a in added_records if anchor(a) == anchor(absent_records[0]))
+    other_fails = [f for f in fails if not (f.startswith("L1 ") or f.startswith("L3 "))]
+    stub_finalized = (not STUB.search(successor) and not other_fails and rebuilt == br[1:])
+
+if stub_finalized:
+    # The generic L1/L3 pair is this edit's own symptom (record 0's pre-trim bytes are the stub, and
+    # they exist nowhere afterwards), and (d) and (e) established nothing else is wrong, so the label
+    # REPLACES the pair instead of sitting beside it. Still a FAIL: exit 4, never 0 (the plan's D2).
+    fails[:] = [f for f in fails if not (f.startswith("L1 ") or f.startswith("L3 "))]
+    fails.append("record 0 was a pending stub (%d B) and was finalized in the trim commit; the "
+                 "other %d record(s) are byte-identical across the move, in order, and L2 holds"
+                 % (len(absent_records[0].encode("utf-8")), len(br) - 1))
+    notes.append(
+        "exit 4, not 1: a recognised stub finalize is NAMED, but it is still a FAIL, because a "
+        "real loss can have this exact shape too. The proof certifies that nothing but record 0 "
+        "changed and that record 0 was a stub; it cannot certify that the finalized text is right. "
+        "To avoid it, trim while record 0 is complete -- before the claim, or after the finalize "
+        "is committed -- never in the same commit.")
+elif fails and frontier_edit:
     notes.append(
         "the only missing record is the frontier one (position 0, newest), and an added record "
         "carries the same anchor -- matches a known, accepted pattern (BL-27): this repository's "
         "own practice bundles a session's close-out finalize edit into the same commit as an "
         "archive write, so the frontier record can legitimately differ between this commit's "
         "parent and itself. This does NOT confirm losslessness -- manually diff record 0 by hand "
-        "to be sure it is a receipt finalize, not real data loss.")
+        "to be sure it is a receipt finalize, not real data loss."
+        + ("" if STUB is not None else
+           " This ledger declares no stub marker, so a pending-stub finalize cannot be told from "
+           "any other edit of record 0."))
 
 print("source : %s" % origin)
 print("records: %d before = %d retained + %d archived; added by the trim commit: %d"
@@ -1586,7 +1654,7 @@ for f in fails:
 for n in notes:
     print("NOTE:", n)
 if fails:
-    sys.exit(1)
+    sys.exit(4 if stub_finalized else 1)
 # State what actually ran, never a blanket claim: on a ledger with no footer the footer clause is
 # genuinely inapplicable, and saying "L2 holds" would be asserting something nothing tested.
 print("OK: %s hold for %s" % (", ".join(ran), SHARD))
@@ -1601,13 +1669,16 @@ def build_verify(spec, live_rel, shard_rel):
     # (non-raw) Python string literal, which un-doubles it — the round trip restores the exact
     # pattern .compile() would see. Safe only because no config pattern contains a quote character
     # (true of both entries in LEDGERS today); a pattern that did would need a different encoding.
+    # The stub marker travels the same way, as one repr()'d string ('' when the spec declares none),
+    # under the same caveat.
     regen_patterns = repr([rx.pattern for _name, rx, _fn in spec.regenerated])
     out = VERIFY_TEMPLATE
     for key, val in (("@@SHARD@@", shard_rel), ("@@LIVE@@", live_rel), ("@@VER@@", TRIM_VERSION),
                      ("@@KIND@@", spec.record_kind),
                      ("@@START@@", spec.record_start.pattern if spec.record_start else ""),
                      ("@@INFO@@", spec.fence_info or ""), ("@@FOOTER@@", spec.footer_mode),
-                     ("@@REGEN@@", regen_patterns)):
+                     ("@@REGEN@@", regen_patterns),
+                     ("@@STUB@@", repr(spec.stub_marker.pattern if spec.stub_marker else ""))):
         out = out.replace(key, val)
     return out
 

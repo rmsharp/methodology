@@ -22,6 +22,7 @@ TWO FIXTURES ARE REAL HISTORY, NOT INVENTED — both events happened in this rep
       same commit, making "the move was verbatim" unfalsifiable.
 """
 
+import ast
 import hashlib
 import importlib.util
 import os
@@ -1390,6 +1391,230 @@ class TestVerifyShLeakedTestsWholeLines(unittest.TestCase):
             self.assertNotIn("L2 FRONT MATTER leaked", v.stdout, v.stdout)
             self.assertIn("OK: L1, L2/front-matter, L3 hold", v.stdout, v.stdout)
             self.assertEqual(v.returncode, 0, v.stdout)
+
+
+# =============================================================================================
+# Issue #93, cause 1 -- a commit that FINALIZES a session's pending claim stub and trims in the
+# same breath. Phase 1B commits record 0 of HANDOFFS.md as `status: pending`; Phase 3D overwrites
+# it to `status: complete`; if the trim lands in that finalize's commit the proof reads record 0 as
+# EDITED (its pre-trim bytes are the stub, which exist nowhere afterwards) and ends red, 8 times in
+# the adopter issue #93 reports, with nothing lost.
+#
+# BL-27 refused to excuse a bundled frontier edit ("a real loss can have this exact shape"), and
+# the plan's D2 keeps that: the verdict stays a FAIL. What changes is that the proof can now tell
+# the stub shape from the loss shape, because the discriminator is not a guess -- the pre-trim
+# record 0 matches the ledger's own declared stub marker (`LedgerSpec.stub_marker`, carried in the
+# proof as `STUB_PATTERN`), the record that replaced it no longer does, nothing else is absent,
+# the others are in order, and L2 holds. Then it is LABELLED, with its own exit status (4), in
+# place of the generic L1/L3 pair. Anything short of all of that stays exactly as it was: exit 1.
+#
+# THE CONTROLS ARE AS LOAD-BEARING AS THE LABEL. A marker that was too loose would stamp a real
+# edit "stub", so every near-miss below must stay exit 1 with no label -- a complete record 0
+# edited, a stub that is still a stub, a stub finalized beside another record's edit, a stub
+# finalized beside a front-matter edit, and a ledger that declares no marker at all. Every
+# tamper is made BEFORE the one commit: the proof reads the trim commit's own contents (fork
+# Learning #58).
+# =============================================================================================
+
+class TestVerifyShNamesAStubFinalize(unittest.TestCase):
+
+    def _stub_repo(self, tmp):
+        """make_handoff_repo with record 0 (S0, the frontier) committed as `status: pending`."""
+        p = make_handoff_repo(tmp)
+        hf = p / "HANDOFFS.md"
+        t = hf.read_text(encoding="utf-8")
+        t2, n = re.subn(r"(session: S0\ndate: [^\n]+\n)status: complete\n",
+                        r"\1status: pending\n", t, count=1)
+        self.assertEqual(n, 1, "control: record 0 must be seeded as a pending stub")
+        hf.write_text(t2, encoding="utf-8")
+        sh(p, "git", "commit", "-qa", "--amend", "-m", "seed")
+        return p
+
+    def _trim(self, p):
+        r = run_trim(p, "--file", "HANDOFFS.md", "--cut", "2", "--write", "--today", "2026-02-01")
+        self.assertIn("[WROTE]", r.stdout, r.stdout)
+        return sorted((p / "docs" / "archive").glob("HANDOFFS-through-*.md"))[0]
+
+    def _edit_live(self, p, old, new, why):
+        live = p / "HANDOFFS.md"
+        t = live.read_text(encoding="utf-8")
+        t2 = t.replace(old, new, 1)
+        self.assertNotEqual(t2, t, "control: %s" % why)
+        live.write_text(t2, encoding="utf-8")
+
+    def _commit(self, p, msg="trim + edit, bundled"):
+        sh(p, "git", "add", "-A")
+        sh(p, "git", "commit", "-qm", msg)
+
+    def _proof(self, p, shard):
+        return sh(p, "bash", str(shard) + ".verify.sh")
+
+    def _stub_size(self, p):
+        before = sh(p, "git", "show", "HEAD^:HANDOFFS.md").stdout
+        z = mod.classify_zones(before, mod.LEDGERS["HANDOFFS.md"], mod.Result(Path("HANDOFFS.md")))
+        return len(z.records()[0].encode("utf-8"))
+
+    def test_a_pending_stub_finalized_in_the_trim_commit_is_labelled_and_exits_4(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._stub_repo(tmp)
+            shard = self._trim(p)
+            self._edit_live(p, "status: pending\n", "status: complete\n",
+                            "record 0 must be finalized in the live ledger")
+            self._commit(p, "trim + stub finalize, bundled")
+            v = self._proof(p, shard)
+            self.assertEqual(v.returncode, 4, v.stdout)
+            self.assertIn("FAIL:", v.stdout, "labelled, but still a FAIL (D2(i)): " + v.stdout)
+            self.assertIn("was a pending stub (%d B)" % self._stub_size(p), v.stdout, v.stdout)
+            self.assertIn("was finalized in the trim commit", v.stdout, v.stdout)
+            self.assertIn("the other 5 record(s) are byte-identical", v.stdout, v.stdout)
+            self.assertNotIn("L1 records-zone concatenation is not byte-identical", v.stdout,
+                             "the label REPLACES the generic L1/L3 pair, it does not sit beside it")
+            self.assertNotIn("MISSING from live+shard", v.stdout, v.stdout)
+            self.assertNotIn("OK:", v.stdout, "a labelled stub finalize must never read as a pass")
+            self.assertIn("NOTE: exit 4, not 1:", v.stdout, "the label explains its own exit status")
+            self.assertIn("never in the same commit", v.stdout, "...and states the timing rule")
+
+    def test_a_stub_that_is_still_pending_after_the_trim_is_not_called_finalized(self):
+        """NARROWED control. The label says FINALIZED, so it must not stamp a stub that was merely
+        edited while pending: the replacing record still matches the marker."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._stub_repo(tmp)
+            shard = self._trim(p)
+            self._edit_live(p, "status: pending\nactive_task: x\n",
+                            "status: pending\nactive_task: x (still claiming)\n",
+                            "record 0 must change while staying pending")
+            self._commit(p)
+            v = self._proof(p, shard)
+            self.assertEqual(v.returncode, 1, v.stdout)
+            self.assertNotIn("pending stub", v.stdout, v.stdout)
+            self.assertIn("NOTE:", v.stdout, "the generic frontier note still applies: " + v.stdout)
+
+    def test_a_complete_record_0_edited_in_the_trim_commit_still_exits_1_with_no_stub_label(self):
+        """NARROWED control -- the real-loss shape BL-27 protected: record 0 was a COMPLETE
+        receipt before the trim and differs after it. Exit 1, the BL-27 note, never relabelled."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_handoff_repo(tmp)
+            shard = self._trim(p)
+            self._edit_live(p, "status: complete\nactive_task: x",
+                            "status: complete\nactive_task: x (finalized)",
+                            "record 0 must change")
+            self._commit(p)
+            v = self._proof(p, shard)
+            self.assertEqual(v.returncode, 1, v.stdout)
+            self.assertNotIn("pending stub", v.stdout, v.stdout)
+            self.assertIn("NOTE:", v.stdout, v.stdout)
+            self.assertIn("BL-27", v.stdout, v.stdout)
+
+    def test_a_stub_finalize_beside_an_edit_to_another_record_is_not_labelled(self):
+        """NARROWED control -- 'the other N records are byte-identical' must be TRUE for the label
+        to print. A real loss riding in the same commit as a stub finalize keeps exit 1."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._stub_repo(tmp)
+            shard = self._trim(p)
+            self._edit_live(p, "status: pending\n", "status: complete\n",
+                            "record 0 must be finalized")
+            self._edit_live(p, "session: S1\n", "session: S1-TAMPERED\n",
+                            "record 1 must be edited too")
+            self._commit(p)
+            v = self._proof(p, shard)
+            self.assertEqual(v.returncode, 1, v.stdout)
+            self.assertNotIn("pending stub", v.stdout, v.stdout)
+            self.assertIn("L3 2 record(s) present before the trim are MISSING", v.stdout, v.stdout)
+
+    def test_a_stub_finalize_beside_a_reorder_of_other_records_is_not_labelled(self):
+        """NARROWED control for the ORDER half of 'the other records are byte-identical'. Once the
+        stub is the only absent record, the others are equal as a SET by construction; a reorder is
+        the one way they can still differ, and the label must not cover it."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._stub_repo(tmp)
+            shard = self._trim(p)
+            self._edit_live(p, "status: pending\n", "status: complete\n",
+                            "record 0 must be finalized")
+            marker = "```handoff\n"
+            parts = shard.read_text(encoding="utf-8").split(marker)
+            self.assertGreaterEqual(len(parts), 4, "control: the shard must hold at least 3 records")
+            parts[1], parts[2] = parts[2], parts[1]
+            shard.write_text(marker.join(parts), encoding="utf-8")
+            self._commit(p)
+            v = self._proof(p, shard)
+            self.assertEqual(v.returncode, 1, v.stdout)
+            self.assertNotIn("pending stub", v.stdout, v.stdout)
+            self.assertIn("FAIL:", v.stdout, v.stdout)
+
+    def test_a_stub_finalize_beside_a_front_matter_edit_is_not_labelled(self):
+        """NARROWED control -- the label also needs L2 to hold. A front-matter line lost in the
+        same commit is a failure the label must not hide."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._stub_repo(tmp)
+            shard = self._trim(p)
+            self._edit_live(p, "status: pending\n", "status: complete\n",
+                            "record 0 must be finalized")
+            self._edit_live(p, "# Handoff Receipts", "# TAMPERED", "a front-matter line must be replaced")
+            self._commit(p)
+            v = self._proof(p, shard)
+            self.assertEqual(v.returncode, 1, v.stdout)
+            self.assertIn("L2 FRONT MATTER", v.stdout, v.stdout)
+            self.assertNotIn("pending stub", v.stdout, v.stdout)
+
+    def test_the_proofs_grammar_carries_the_ledgers_stub_pattern(self):
+        """The marker must travel IN the proof (a frozen script cannot consult a ledger table), on
+        the same footing as REGEN_PATTERNS: HANDOFFS.md declares one, CHANGELOG.md declares none."""
+        def pattern_of(proof_text):
+            m = re.search(r"^STUB_PATTERN = (.*)$", proof_text, re.M)
+            self.assertIsNotNone(m, "the proof must carry a STUB_PATTERN line")
+            return ast.literal_eval(m.group(1))
+
+        with tempfile.TemporaryDirectory() as tmp:
+            p = self._stub_repo(tmp)
+            shard = self._trim(p)
+            pat = pattern_of((shard.parent / (shard.name + ".verify.sh")).read_text(encoding="utf-8"))
+            self.assertTrue(re.search(pat, "x\nstatus: pending\ny\n", re.M),
+                            "the HANDOFFS marker must match a pending line")
+            self.assertFalse(re.search(pat, "x\nstatus: complete\ny\n", re.M),
+                             "...and must not match a complete one")
+            self.assertFalse(re.search(pat, "x\nnext_steps: grep `status: pending` here\n", re.M),
+                             "...nor a line that merely quotes the marker")
+            self.assertFalse(re.search(pat, "x\nnext_steps: the stub reads status: pending\n", re.M),
+                             "...nor one that ENDS with it, so the marker is anchored at the line's start")
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            r = run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+            self.assertIn("[WROTE]", r.stdout, r.stdout)
+            shard = sorted((p / "docs" / "archive").glob("CHANGELOG-through-*.md"))[0]
+            self.assertEqual(
+                pattern_of((shard.parent / (shard.name + ".verify.sh")).read_text(encoding="utf-8")), "",
+                "CHANGELOG.md declares no stub marker: its committed entries are never edited in place "
+                "(FRAMEWORK_APPARATUS.md, The Action Ledger, Lifecycle), so a claim entry that still "
+                "reads (in progress) is a FINAL record, not a stub awaiting its finalize")
+        self.assertIsNone(mod.LEDGERS["CHANGELOG.md"].stub_marker)
+        self.assertIsNotNone(mod.LEDGERS["HANDOFFS.md"].stub_marker)
+
+    def test_a_ledger_that_declares_no_stub_marker_labels_nothing_and_says_so(self):
+        """NARROWED control. CHANGELOG.md's record 0 is seeded as a claim-shaped `(in progress)`
+        entry and its body is edited in the trim commit: with no marker declared the proof cannot
+        tell this from any other frontier edit, stays exit 1, and its note SAYS that."""
+        with tempfile.TemporaryDirectory() as tmp:
+            p = make_repo(tmp)
+            cl = p / "CHANGELOG.md"
+            t = cl.read_text(encoding="utf-8")
+            t2 = t.replace("[ad hoc] entry 0\n", "[ad hoc] entry 0 claim (in progress)\n", 1)
+            self.assertNotEqual(t2, t, "control: record 0 must be seeded claim-shaped")
+            cl.write_text(t2, encoding="utf-8")
+            sh(p, "git", "commit", "-qa", "--amend", "-m", "seed")
+            r = run_trim(p, "--file", "CHANGELOG.md", "--write", "--today", "2026-02-01")
+            self.assertIn("[WROTE]", r.stdout, r.stdout)
+            shard = sorted((p / "docs" / "archive").glob("CHANGELOG-through-*.md"))[0]
+            live = cl.read_text(encoding="utf-8")
+            live2 = live.replace("see [the runner](SESSION_RUNNER.md)",
+                                 "TAMPERED see [the runner](SESSION_RUNNER.md)", 1)
+            self.assertNotEqual(live2, live, "control: record 0's body must change")
+            cl.write_text(live2, encoding="utf-8")
+            self._commit(p)
+            v = self._proof(p, shard)
+            self.assertEqual(v.returncode, 1, v.stdout)
+            self.assertNotIn("pending stub", v.stdout, v.stdout)
+            self.assertIn("NOTE:", v.stdout, v.stdout)
+            self.assertIn("declares no stub marker", v.stdout, v.stdout)
 
 
 # =============================================================================================
