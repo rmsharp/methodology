@@ -4,6 +4,8 @@
 [`documentation-quality-experiment-plan.md`](../../../documentation-quality-experiment-plan.md) §5 P2; the first run and the defects it
 found are in [`P2_REPORT.md`](P2_REPORT.md) §3 and §4; the harness is in [`overhead-replay/`](../..); the results are in
 [`../doc-probe/rating-s261/`](../doc-probe/rating-s261/) (`dry-run.json`, `dry-run-summary.json`). **P3 is still its own go (D4).**
+**S262 rebuilt the two defects this report found standing, at $0: [`P2_DEFECTS_S262.md`](P2_DEFECTS_S262.md).** The run and its numbers below are
+unchanged and describe the S260 builders.
 
 ## The answer
 
