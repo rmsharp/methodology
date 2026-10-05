@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-05-2.md` (1 record(s), 40,124 B → 29,473 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-05 → 2026-10-05) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-05-2.md`](docs/archive/HANDOFFS-through-2026-10-05-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-05-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-05-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,124 B → 29,473 B (−26.5%).
+
 ### 2026-10-05 · [issue #93] S266 close-out — P3 of the trimmer false-red fix is committed: a read-only `--reverify <shard>` re-derives a frozen proof under today's template (`TRIM_VERSION` 1.7.0)
 
 Deliverable: P3 of `docs/planning/issue93-trimmer-proof-false-red-plan.md`: the implementation `3616b5f`, the floor `3e94b28`, the evidence scripts `f8281d4` and the status `862156f`; the owed trim (`2e5ed83`) and its fold (`b50cd24`) ran first, the claim is `48462e1`. 27 tests written first and RED (181 in the file), 54 mutants killed on the final tree (a first run of 56 left three survivors, each traced: two guards no input could fail, deleted, and one missing test, added), `bin/tests.sh` 362 passed, 0 failed. Both real trees re-derived through the shipped CLI and agreeing with S265's in-memory re-derive on every shard (this repo 103 green, 2 at exit 1, 1 at exit 4 of 106; the adopter 46, 7, 1 of 54; 0 newly red; nothing written), and an end-to-end smoke from a `--no-local` clone. Deviations from the plan, on evidence: the lift is strict (the plan's regexes would have made a read-only inspection a code-execution path), `--reverify` refuses every flag that writes or selects a ledger, and one sentence in `FRAMEWORK_APPARATUS.md` names the flag. The `HANDOFFS.md` receipt is complete (`self_score` 8, S265 scored 9). Phase 3C appended no fork learning row, so D3's retirement duty does not arise. Nothing pushed; nothing sent to `KJ5HST/methodology`.
