@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S265
+date: 2026-10-05
+status: pending
+active_task: IMPLEMENT P2 of `docs/planning/issue93-trimmer-proof-false-red-plan.md` (section 5 P2, design section 4.1; approved at S263, D2 decided: a recognised stub finalize stays a FAIL, labelled, exit 4): a bundled stub-finalize is recognised by the generated `.verify.sh` and prevented at write time, `starter-kit/methodology_trim.py` `TRIM_VERSION` 1.6.0. Three checkpoint commits (layer 1 spec marker + proof label + exit 4; layer 2 the write-time guard, both commit orders; layer 3 the distributed prose and the note), RED-first tests in `tools/test_methodology_trim.py`. IN PROGRESS: nothing is built yet.
+```
+
+```handoff
 session: S264
 date: 2026-10-05
 status: complete

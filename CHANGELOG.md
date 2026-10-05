@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [issue #93] S265 claim (in progress) — P2 of the trimmer false-red fix: a bundled stub-finalize is labelled (exit 4) and prevented at write time
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "P2 of the #93 fix" at the Phase 0 picker. The owed trim (`0d77a8b`, S262's receipt to shard `-6`, its `.verify.sh` exit 0 from a `--no-local` clone) and its fold (`891b55a`) ran first as their own actions; `bin/tests.sh` on the fold tree read 356 passed, 0 failed, 6 skipped. Deliverable: RED-first tests, then the proof's stub label and exit 4, the write-time guard and the prose, `TRIM_VERSION` 1.6.0, per the plan approved at S263. Phase 3F records the rest.
+
 ### 2026-10-05 · [ad hoc] S265 — fold the sixth 2026-10-04 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`0d77a8b`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-04, shard `-6`, trimmer v1.5.1), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S264, S263); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of P2 of the #93 trimmer fix, before the session claim.
