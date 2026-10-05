@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [ad hoc] S263 — fold the fourth 2026-10-04 HANDOFFS shard pointer into the archive index
+
+The pointer block the trim (`cf9de43`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-04, shard `-4`), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S262, S261); the shard's `.verify.sh` was run from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of the #93 trimmer-fix plan, before the session claim.
+
 ### 2026-10-05 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-04-4.md` (1 record(s), 39,450 B → 27,845 B)
 
 **Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
