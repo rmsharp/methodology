@@ -4140,6 +4140,16 @@ runs since S254, whose other recorded runs (S254's rerun, S256's close-out gate 
 
 **Decision (S257 close-out, the operator, from a picker): shape (c), leave it and rerun on a lone red whose own `fail` message contains its pattern.** Nothing is converted; reopen if a red hides a real defect (an `&& fail || pass` site) or the count of such reds grows.
 
+**Third data point (S265, 2026-10-05): two reds in ONE full-suite run, both `echo "$X" | grep -q ... && pass || fail`.** Test 15, `bin/tests.sh:218`
+(`echo "$OUT" | grep -q "seed"`, `FAIL: status: no seed rows`; its `fail` arm prints no output, so only the form and the quiet re-run say it was the flake) and
+Test 38, `bin/tests.sh:2575`, the same assertion as the first data point (`FAIL: grown committed record not caught`; the output its `fail` arm printed, a
+second run of `ch38`, contains `per-record budget by`). Summary `360 passed, 2 failed`; a re-run of the same tree with nothing else running read
+`362 passed, 0 failed`. The run overlapped two `git clone`s and a re-derivation of about 160 proofs that I started while it ran, the same load suspicion as
+the second point; no idle rate was re-measured. Both are the `&& pass || fail` form, so both were visible false reds and hid no defect. **The S257
+decision's own reopen condition ("reopen if a red hides a real defect ... or the count of such reds grows") reads as arguably met** (four reds across
+three runs, the first run's two on different assertions, one of them repeating the S254 assertion) **and is the operator's to call; nothing was converted or
+reopened.** The practice that follows from the decision stands: run nothing beside the suite.
+
 
 **BL-98 — the trimmer's generated `.verify.sh` ends red on lossless trims (upstream issue #93). Raised 2026-10-05 (S263) from the
 operator's own upstream issue; planned at S263, P1 DONE at S264, P2 DONE at S265, P3 not started.**
