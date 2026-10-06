@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-05-4.md` (1 record(s), 38,618 B → 26,919 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-05 → 2026-10-05) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-05-4.md`](docs/archive/HANDOFFS-through-2026-10-05-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-05-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-05-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,618 B → 26,919 B (−30.3%).
+
 ### 2026-10-05 · [ad hoc] S268 -- fork main pushed: `origin/main` `c8215af` to `0044313` (149 commits)
 
 Pushed with his go-ahead at the S268 Phase 0 picker ("Push fork main to origin"). Guards run first: branch `main`, remote `https://github.com/rmsharp/methodology.git` (the fork, not `KJ5HST/methodology`), 0 behind and 149 ahead, `origin/main` an ancestor of `main` (a fast-forward). Read back after: `git ls-remote origin refs/heads/main` and local `main` both `0044313`, and `git rev-list --left-right --count origin/main...main` read `0 0`. `main` is still 102 behind `upstream/main`. Nothing went to `KJ5HST/methodology`: no comment, issue, PR edit or push to PR #94's branch.
