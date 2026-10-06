@@ -237,6 +237,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-06.md` (1 record(s), 35,187 B → 25,659 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-06 → 2026-10-06) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-06.md`](docs/archive/HANDOFFS-through-2026-10-06.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-06.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-06.md.verify.sh)
+rather than trusting a digest printed here. Live file 35,187 B → 25,659 B (−27.1%).
+
 ### 2026-10-06 · [BL-99] S272 — fork `main` pushed to `origin`: 7 commits, the first-parent dashboard fix reaches the adopters' source
 
 On his go-ahead at the close-out picker ("Push main now", the recommended option), `git push origin main` took `rmsharp/methodology` `main` from `fcdfa4d` to `4e53675`: a plain fast-forward (`origin/main` an ancestor of `main` and 0 behind after a fresh fetch, a clean tree), no force, no other ref, the local backup ref `pre-resync-2026-10` not pushed (`git ls-remote origin 'refs/heads/pre-resync*'` finds none). **Read back, not inferred:** `git rev-list --left-right --count origin/main...main` reads `0 0`; `git ls-remote origin refs/heads/main` and the GitHub API's `branches/main` both read `4e53675`; `upstream` is untouched at `f34769f`. The 7 commits are the `HANDOFFS.md` trim and its fold, the S272 claim, the BL-99 fix (dashboard 2.21.0), the raised `dashboard-unit-tests` floor, BL-99's closure and the close-out; the S272 close-out entry's "nothing outward" was true when written and this is the one action after it. The adopters sync from this branch (`bin/status` then `bin/sync`), and none was synced. This entry is the push's own record and goes out under his standing grant for a ledger-only push record.
