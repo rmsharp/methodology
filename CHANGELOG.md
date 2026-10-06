@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-99] S272 — BL-99 closed (index row out, id kept, completed row in)
+
+BL-99's index row is out of `docs/planning/BACKLOG.md`, its id is in the closed-ids list there (between BL-97 and BL-100), and its closure row is the last row of `docs/planning/BACKLOG-COMPLETED.md`; `bash docs/planning/BACKLOG-COMPLETED.md.verify.sh` exits 0 (C1-C6). The fork-side fix is `75f665e` and the floor `2d0a78a`. **What stays open, as a decision of his and not a backlog item of mine:** `upstream/main` has the same plain walk (2.11.3, a separate lineage), so an upstream patch is re-derived against that file; per the contribution rule it waits to be batched into one vetted pull request and needs his go-ahead each time. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [BL-99] S272 — the floor re-measured after the fix: `dashboard-unit-tests` 353 → 356
 
 A tightening in `.quality-gates.json` (the hook accepts it; only a loosening needs plan mode), with a note key `_s272_tightening_bl99` in the S271 convention. **356 is measured, not derived from the +3:** `quality_ratchet.py --run` in a `--no-local` clone of `75f665e` read 13/13 pass, results `fa1343d019ab`, manifest `387dea198c3f`, `dashboard-unit-tests` 356 and `tests-sh-passed` 452 (at three receipts, the state mid-claim; the floor 446 is the at-rest value and is unchanged). Without it the three new tests could be deleted with the gate still green. Model: Claude Sonnet 5.5.
