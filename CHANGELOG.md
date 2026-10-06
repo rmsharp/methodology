@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S273 — evidence for the `methodology/` move, 3 of 4: the hook and the resync after a move
+
+Added `docs/planning/methodology-subdirectory-evidence/hook-after-move.sh` and `resync-after-move.sh` with recorded outputs, both on throwaway clones. The hook script: with hooks on, an unmoved ledger refuses a ledger-less commit (exit 1), but after `git mv CHANGELOG.md methodology/CHANGELOG.md` the move commit passes (exit 0) and so does a later content commit with no ledger entry (exit 0): the co-staging gate fails open. The resync script: against the merge base `f34769f` git pairs only `.gitattributes` with its moved copy; one synthetic upstream edit merged into the fork gives 4 modify/delete conflicts and a file-location conflict when the instance files and archive have moved, 3 text conflicts when they have not. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [BL-101] S273 — evidence for the `methodology/` move, 2 of 4: the adopter survey and the git behaviours
 
 Added `docs/planning/methodology-subdirectory-evidence/adopter-survey.sh` and `git-behaviour.sh` with recorded outputs. The survey reads the 12 sibling projects (all in committed mode; 18 methodology files at the root and up to 12 under `docs/methodology/`; the zsh run of the first draft counted 0 root files because zsh does not word-split, so the script is bash with arrays). The git script measures a nested `methodology/.gitattributes` (clean union merge, exit 0, against a conflict, exit 1, without it) and what a `git mv` does to `git log` by path (stops at the move; `--follow` reaches the earlier commits). Throwaway repositories only. Model: Claude Sonnet 5.5.
