@@ -233,6 +233,22 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S269 — the resync plan written: `docs/planning/upstream-resync-2026-10-plan.md` (DRAFT; D1–D7 are the operator's)
+
+**The deliverable of S269**, a planning session resumed after its first conversation stopped at the claim. Fork
+`main` is 102 commits behind `upstream/main` `f34769f` (tag `v4.2`) from merge base `77afc12`; 17 files conflict, 6
+auto-merge, 22 arrive untouched, and the fork's trimmer work (PR #94) merges clean. A scratch trial merge reached
+**451 passed / 1 failed** on `bin/tests.sh` (365 / 0 today) and 11 of 13 gates; the one red is `check-ledger --all`
+reading a frozen shard. It found four traps the diff does not show: the order of the fork's Tests 42–45 inside the
+hunk that holds the tail of the test being replaced; upstream's same-named shard (kept out, its entries folded);
+the `../../` links in shard-sourced entries (the trimmer refuses them); and a hook that refuses a practice fork
+sessions used. Recommended: one merge, two executor sessions; seven decisions. **An independent read-only review
+re-derived about 215 claims and found 14 wrong, 10 imprecise and 6 omissions, one of them high** (the first fold
+script folded nothing amid a real merge's conflict markers); each substantive one was re-run and the plan and the
+script corrected (plan §8). Also in this commit: the `BL-95` row rewritten (it still said 89 behind and "#91
+open"), `BL-96`'s pointer now names D7, and the two history lines Phase 0 appended
+(`dashboard_history.jsonl`, `.context-budget-history.jsonl`). Nothing merged, rebased, pushed or sent.
+
 ### 2026-10-06 · [BL-95] S269 — evidence for the resync plan: the ledger-fold script, the stage table, the trial's suite and gate logs
 
 Four files under `docs/planning/upstream-resync-2026-10-evidence/`, committed ahead of the plan that cites them.
