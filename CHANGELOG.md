@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S273 — fork `main` pushed to `origin`: 9 commits, the `methodology/` directory plan reaches the fork
+
+On his go-ahead at the close-out picker ("Push main to origin now"), `git push origin main` took `rmsharp/methodology` `main` from `9d5f22c` to `026122d`: a plain fast-forward (`origin/main` an ancestor of `main`, 0 behind after a fresh fetch, a clean tree), no force, no other ref; nothing went to `KJ5HST/methodology`. **Read back** after a fresh fetch: `git rev-list --left-right --count origin/main...main` = `0 0`, `git ls-remote origin refs/heads/main` = `026122d`. The nine commits: the `HANDOFFS.md` trim and its fold, the claim, four evidence commits, the plan with BL-101, the close-out. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [BL-101] S273 close-out — the `methodology/` directory plan, with syncing
 
 `CHANGELOG: pending` on the S273 claim entry is cleared (by this statement: the never-edit gate forbids editing a committed entry). **Deliverable:** the plan for moving the methodology files into one `methodology/` directory, with syncing (BL-101): [`methodology-subdirectory-plan.md`](docs/planning/methodology-subdirectory-plan.md), DRAFT, plus `docs/planning/methodology-subdirectory-evidence/`. Nothing implemented, nothing sent, no adopter touched. **Gate:** `quality_ratchet.py --run` on `a47232b`: 13/13, `tests-sh-passed` 452, results `2343fdc5ea84`, manifest `910259fb65a6`. **Receipt:** `HANDOFFS.md` S273 complete (self 8, predecessor 9). **Commits this session:** the owed trim `d8a3024` and its fold `ef766f7`, the claim `c8b9ddd`, evidence `6127202` `143f05f` `049a4c8` `5b6ebed`, the plan with BL-101 `a47232b`. **Waiting on the operator:** D1, D2, D6 and D8 (plan §9); the push of this session's commits. No fork learning row appended (D3's retirement duty does not arise; considered #19, #71, #81, #103, #108). Model: Claude Sonnet 5.5.
