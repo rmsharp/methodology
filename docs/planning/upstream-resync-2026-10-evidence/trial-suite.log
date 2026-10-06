@@ -1,0 +1,516 @@
+# Trial merge, final suite run (S269) -- scratch clone of fork main f203159 + upstream/main f34769f, WITH BOTH LEDGERS FOLDED
+# (fold-ledger.py changelog + handoffs; upstream Tests 27-34 NOT renumbered). Crude resolutions: plan section 6. NOT a resolved merge.
+# Result: 451 passed, 1 failed, 0 skipped. The one red row is the check-ledger --all finding in a frozen shard (plan D3).
+# An earlier run with the fork's own ledgers (ours) read the same 451 / 1.
+#
+== Test 1: commit mode + local source (baseline) ==
+  PASS: SESSION_RUNNER matches canonical
+  PASS: SAFEGUARDS matches canonical
+  PASS: dashboard matches canonical
+  PASS: manifest declares at least one executable dest
+  PASS: methodology_dashboard.py is executable
+  PASS: methodology_trim.py is executable
+  PASS: context_budget.py is executable
+  PASS: quality_ratchet.py is executable
+  PASS: commit mode leaves .gitignore alone
+== Test 2: dry-run doesn't modify ==
+  PASS: dry-run skipped SESSION_RUNNER
+  PASS: dry-run skipped .gitignore
+== Test 3: ignore mode adds .gitignore + warns on tracked files ==
+  PASS: gitignore has SESSION_RUNNER
+  PASS: gitignore has SAFEGUARDS
+  PASS: gitignore has dashboard
+  PASS: ignore mode warns on tracked files
+  PASS: warning includes rm --cached command
+  PASS: idempotent gitignore
+== Test 4: auto-detect mode from .gitignore ==
+  PASS: auto-detected ignore mode
+== Test 5: auto-detect source prefers local sibling ==
+  PASS: auto-detected local source
+== Test 6: status reports current / modified / N-behind / missing ==
+  PASS: status: current
+  PASS: status: locally modified
+  PASS: status: N versions behind detected
+  PASS: status: missing
+== Test 7: sync refuses to overwrite locally-modified files without --force ==
+  PASS: sync exits non-zero when local drift present
+  PASS: sync prints ERROR on local drift
+  PASS: ERROR mentions --force
+  PASS: a full-history source blames local modifications
+  PASS: file unchanged when blocked
+  PASS: --force overrides block
+  PASS: --force restores canonical
+== Test 8: sync upgrades N-versions-behind without --force ==
+  PASS: upgrade from older version proceeds without --force
+  PASS: upgraded to canonical
+== Test 9: github source (needs the network; skipped if the repository is unreachable) ==
+  PASS: github source dry-run works
+== Test 10: distributed-file links resolve in the simulated adopter tree ==
+  PASS: check-links: all relative links resolve in adopter layout
+== Test 11: sync produces the full manifest tree (faithful, per-file) ==
+  PASS: all 30 manifest files present; tracked files match canonical
+  PASS: framework doc landed under docs/methodology/
+  PASS: workstream landed under docs/methodology/workstreams/
+== Test 12: seed files created once, never clobbered (even --force) ==
+  PASS: seed SESSION_NOTES created when absent
+  PASS: seed not overwritten on normal sync
+  PASS: seed not overwritten even with --force
+== Test 13: adopter-owned instances are never sync targets ==
+  PASS: sync did not create instance CONTEXT.md
+  PASS: sync did not create instance CLAUDE.md
+  PASS: template CONTEXT_TEMPLATE.md is present
+== Test 14: check-links validates the sync-produced tree without mutating it (issue #36) ==
+  PASS: check-links --tree: links resolve in the sync-produced tree
+  PASS: check-links --tree: left the validated tree unmodified (issue #36)
+== Test 15: status emits per-file rows with a disposition column (Phase 4) ==
+  PASS: status: Disposition column present
+  PASS: status: tracked disposition shown
+  PASS: status: seed disposition shown
+  PASS: status: one row per manifest file (30 == 30)
+  PASS: status: fresh tree shows current
+  PASS: status: fresh tree shows no drift
+== Test 16: an absent seed file is reported, never flagged as drift (Phase 4 DONE) ==
+  PASS: status: CHANGELOG shown with seed disposition
+  PASS: status: absent seed shown as 'absent'
+  PASS: status: absent seed NOT flagged as drift
+== Test 17: a partially-stale tree flags only the stale file (Phase 4) ==
+  PASS: status: exactly one file locally modified
+  PASS: status: the stale file is SESSION_RUNNER
+== Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) ==
+  PASS: dashboard scoring unit tests green
+  PASS: ledger trimmer unit tests green
+  PASS: context budget gate unit tests green
+  PASS: quality ratchet unit tests green
+  PASS: close-out report generator unit tests green
+== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION ==
+  PASS: dashboard twins byte-identical
+  PASS: dashboard twins carry the same DASHBOARD_VERSION
+== Test 20: a seed whose format predates canonical is flagged advisory-only (BL-6 item 2) ==
+  PASS: status: current-format (fresh) seed not flagged
+  PASS: status: no stale-format note on fresh tree
+  PASS: test: in-use fixture is current-format with the sentinel deleted
+  PASS: status: in-use current-format ledger not flagged
+  PASS: status: no note on in-use current-format ledger
+  PASS: test: the frozen pre-ledger-format-2 seed carries the current title
+  PASS: status: the pre-ledger-format-2 seed flagged 'present (stale format)'
+  PASS: status: stale seed keeps its seed disposition
+  PASS: status: pre-v3.1 seed flagged 'present (stale format)'
+  PASS: status: stale seed NOT treated as drift
+  PASS: status: emits the migration note beneath the table
+  PASS: status: markerless seed never flagged stale
+  PASS: sync: stale seed left untouched (still adopter-owned)
+  PASS: status: still flags stale after a re-sync
+  PASS: status: two stale rows across two projects
+  PASS: status: note count matches flagged rows (2), not deduped file types
+  PASS: status: a stale CHANGELOG.md gets the replace-the-header route
+  PASS: status: the CHANGELOG.md route keeps what the trimmer wrote
+  PASS: status: no HANDOFFS.md route when only CHANGELOG.md is stale
+  PASS: status: a HANDOFFS.md without the size section flagged 'present (stale format)'
+  PASS: test: HANDOFFS.md is the only stale seed in P2
+  PASS: status: a stale HANDOFFS.md gets the bring-across-the-section route
+  PASS: status: no replace route for a stale HANDOFFS.md
+  PASS: test: the shipped HANDOFFS.md seed carries its format marker
+  PASS: status: a HANDOFFS.md with the old size section but no format marker flagged stale
+  PASS: status: two stale seeds in one project get both routes
+  PASS: BOOTSTRAP.md: the paragraph the note cites gives HANDOFFS.md's route too
+  PASS: BOOTSTRAP.md: the paragraph the note cites keeps the trimmer's lines in CHANGELOG.md's route too
+== Test 21: check-handoff — well-formed receipt passes; field/value defects are caught ==
+  PASS: well-formed complete receipt passes
+  PASS: missing required key (gotchas) caught
+  PASS: empty required field (next_steps) caught
+  PASS: self_score out of 1..10 caught
+  PASS: key_files missing path:line token caught
+  PASS: key_files incidental colon-digit (no path) caught
+  PASS: what_was_done decimal-only (no hex letter) caught
+== Test 22: check-handoff — anti-pattern lints, modes (--allow-pending), fresh-seed, block isolation ==
+  PASS: 'pick next from backlog' caught
+  PASS: 'need to verify' placeholder caught
+  PASS: commit: pending is accepted
+  PASS: Session-1 fixture without predecessor_score passes
+  PASS: status: pending fails by default
+  PASS: status: pending passes with --allow-pending
+  PASS: status: reconciled (Phase 0 backfill) is accepted
+  PASS: fresh-seed fixture (sentinel, no blocks) passes
+  PASS: prose outside the fenced block does not trigger the lint (block isolation)
+  PASS: control: a newest receipt missing gotchas is caught
+  PASS: a ```sh block above the receipts does not hide the newest
+  PASS: the seed's front matter does not hide the newest receipt
+  PASS: --all reads both receipts below the seed's front matter
+  PASS: a ```sh block in a receipt's prose does not hide the receipt below it
+  PASS: a ```sh block inside a 4-backtick wrapper stays inert
+  PASS: a prose line quoting a fence in inline code opens no fence
+  PASS: a ````sh fence is closed only by a run of four
+  PASS: an unclosed ```sh fence caught by --all
+  PASS: a receipt under a misspelled fence tag is reported as orphaned, at its own line
+== Test 23: model-report — three sources stay visually/structurally separate (RED-first, Learning #12) ==
+  PASS: PRIMARY section header precedes SECONDARY section header
+  PASS: CHANGELOG Model value falls structurally within the PRIMARY section
+  PASS: HANDOFFS free-text mention falls structurally within the SECONDARY section
+  PASS: entry without a Model bullet correctly omitted from PRIMARY
+  PASS: corroboration/non-authoritative disclaimer present in output
+  PASS: CORROBORATION-ONLY section header follows the SECONDARY section header
+  PASS: a real git Co-Authored-By trailer value falls structurally within the CORROBORATION-ONLY section
+  PASS: no real trailer data leaked into the PRIMARY/SECONDARY sections
+== Test 24: check-handoff — a Phase 1B stub validates against the stub schema (RED-first, Learning #12) ==
+  PASS: C1 unmutated control: floor-dialect stub passes --allow-pending cleanly
+  PASS: C1 unmutated control: fork-dialect stub passes --allow-pending cleanly
+  PASS: C1 unmutated control: sentinel-dialect stub passes --allow-pending cleanly
+  PASS: N1 status-dispatch: --allow-pending does not relax a status:complete receipt
+  PASS: N2 blank optional key is a finding (key_files) — omit the line instead
+  PASS: N2 blank optional key is a finding (gotchas) — omit the line instead
+  PASS: N3 score sentinel is stub-scoped, not close-out-scoped
+  PASS: N4 score sentinel does not reach key_files
+  PASS: N5 a non-sentinel score value still gets the 1..10 range check
+  PASS: N6 anti-pattern lints still fire inside a stub
+  PASS: N6b what_was_done still needs a sha or the literal pending inside a stub
+  PASS: N6c bare-placeholder lint still fires inside a stub
+  PASS: N7 floor key active_task rejects the pending sentinel (knowable at claim time)
+  PASS: N7 floor key date rejects the pending sentinel (knowable at claim time)
+  PASS: N7b status: pending is exempt from B5 — it is the schema selector
+  PASS: N8 a stub still fails by default (the flag gates one finding, not the schema)
+  PASS: N8 default mode yields exactly ONE finding, naming the real problem
+  PASS: C2 presence control: --help renders and documents --allow-pending
+  PASS: R4 --help no longer claims the flag checks a Phase 1B stub
+  PASS: R5 STUB_REQUIRED_KEYS is a strict subset of the 13 REQUIRED_KEYS
+== Test 25: check-handoff — the `commit:` answer-slot rule (BL-14, RED-first per Learning #12) ==
+  PASS: C1 unmutated control: older receipt naming a sha passes
+  PASS: N1 older receipt with commit: pending is caught
+  PASS: N2 older receipt with 'this commit' (no sha) is caught
+  PASS: N3 newest receipt is exempt by construction (never failed for commit: pending)
+  PASS: N4 older receipt missing commit: entirely is caught
+  PASS: N5 --archived checks block 0 too (no unearned exemption)
+  PASS: N5b without --archived the same file's block 0 stays exempt
+  PASS: N6 schema validation stays on blocks[0]; only the answer slot spans the ledger
+  PASS: N7 a sha in trailing prose does not satisfy the answer slot
+  PASS: N8 an all-decimal token is not accepted as a sha
+  PASS: N9 a token CONTAINING a sha does not satisfy the slot (fullmatch, not search)
+  PASS: N10 an unfinished stub below the newest is not reported for its answer slot
+  PASS: L1 live ledger: every receipt below the newest names a commit sha
+  PASS: L1b archived ledger shard: every receipt names a commit sha
+  PASS: R6 --help documents --archived
+
+== Test 26: check-handoff — the `changelog_ref` locator-form rule (BL-15, RED-first) ==
+  PASS: C0 unmutated control: a quoted-heading changelog_ref passes
+  PASS: C1 the seed's own 'PR #N' form is not a finding
+  PASS: C2 a starter-kit/ template line cite is not a finding
+  PASS: C3 a frozen archive shard line cite is not a finding
+  PASS: N1 a root CHANGELOG.md:<N> anchor is caught on the NEWEST receipt
+  PASS: N2 an anchor in trailing prose is caught (not a leading-token rule)
+  PASS: N3 a root HANDOFFS.md:<N> anchor is caught, not only CHANGELOG
+  PASS: N4 two anchors in one value yield two findings (per anchor, not per receipt)
+  PASS: N5 a filename with no :<N> is legal (the repaired form converges)
+  PASS: N6 an older receipt's anchor is caught (the rule spans the ledger)
+  PASS: N7 a status: pending stub is skipped whole
+  PASS: N8 an empty changelog_ref is not double-reported here
+  PASS: N9 a time, a ratio and a URL are not ledger anchors
+  PASS: L2 live ledger: no changelog_ref addresses a live ledger by line number
+  PASS: L2b archived ledger shard: no positional ledger address
+
+== Test 28: BOOTSTRAP's never-overwrite list is pinned to the manifest (RED-first, Learning #12) ==
+  PASS: bootstrap: a 'never overwrite' rule exists in the update path
+  PASS: bootstrap: every adopter-owned seed is named in the never-overwrite row
+  PASS: bootstrap: no tracked file is mislabelled adopter-owned
+== Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the compact norm (RED-first, S46) ==
+  PASS: reconcile-on-read: all 43 entries (live + archives) stay within their body budget
+  PASS: reconcile-on-read: the front-matter norm paragraph is present
+  PASS: reconcile-on-read: a synthetic 20-line discharge entry on a scratch copy is caught (RED observed)
+== Test 30: model-report — Source 1 parses BOTH `**Model:**` dialects (BL-20, RED-first, Learning #12) ==
+  PASS: list-form (`- **Model:**`) bullet still parsed
+  PASS: bare-form (`**Model:**`, this repo's live dialect) bullet now parsed
+  PASS: control entry without a Model bullet correctly omitted
+  PASS: Source 1 reports a non-empty population against this repo's own live CHANGELOG.md
+== Test 31: model-report -- Source 1 parses a multi-tag `### ` header and reports (not folds) any header it still can't parse (BL-33, RED-first, Learning #12) ==
+  PASS: multi-tag `### ` header (`[BL-9][BL-10]`) parsed as its own entry
+  PASS: malformed header's Model bullet correctly dropped, not fabricated
+  PASS: an unparsed `### ` header is reported as a loud warning, not silently folded
+  PASS: the warning names the exact unparsed line
+  PASS: entry before the multi-tag header kept its own Model value (not overwritten by the multi-tag entry's)
+  PASS: the valid entry AFTER the malformed header still parsed (parser not wedged)
+  PASS: Source 1's entry count (1) matches the raw anchored **Model:** grep (1) against this repo's own live CHANGELOG.md
+  PASS: no false-positive WARNING against this repo's own live CHANGELOG.md
+== Test 32: check-learnings — Learnings table shape (issue #65 Evidence A) ==
+  PASS: canonical Learnings table has no malformed rows (presence control)
+  PASS: canonical table + distributed-corpus citations: fully clean
+  PASS: malformed 3-column row caught
+  PASS: duplicate row number caught
+  PASS: deleted row (numbering gap) caught
+  PASS: row split across two physical lines caught
+  PASS: fork Learnings table (#15 on) is clean
+  PASS: fork Learnings table without --first reports #1 missing (the flag is read)
+  PASS: deleted fork row (numbering gap from #15) caught
+== Test 33: check-learnings — citations into the distributed corpus resolve ==
+  PASS: dangling Learning citation in a distributed file caught
+  PASS: corpus restored after the citation mutation (fully clean)
+== Test 34: check-handoff --all — whole-ledger invariants (issue #65 Evidence B) ==
+  PASS: live receipt ledger passes --all (presence control)
+  PASS: default mode still green on a destroyed older receipt (documents the gap)
+  PASS: orphaned receipt body caught by --all
+  PASS: duplicate session+date caught
+  PASS: repeated session id on different dates is accepted (two merged sequences)
+  PASS: session/date must lead every block
+  PASS: older pending receipt caught; --allow-pending exempts only the newest
+  PASS: unclosed fence caught
+  PASS: population guard: 0 receipts routes to EMPTY (corruption, not rotation)
+  PASS: population guard: 1 receipt routes to SHORT
+  PASS: population guard: 2 receipts routes to SHORT (the cut that broke this test)
+  PASS: population guard: 3 receipts routes to ANCHORED (the guard is not always-on)
+  PASS: population guard: a non-numeric count is MALFORMED, never the permissive default
+  PASS: below the floor the second anchor is empty, not a stale value
+  PASS: at the floor both anchors are non-empty (S3A=S2 S3B=S3)
+  PASS: SHORT arm states all six unbuildable assertions as skips
+  PASS: SHORT arm routes no unbuildable assertion to pass()
+  PASS: summary line reports the skip count
+  PASS: live ledger receipt-id population is non-empty (18)
+  PASS: handoff_anchors agrees with an independent grep on the live ledger (18)
+== Test 35: context_budget.py — install-hook, sync distribution, selftest gates ==
+  PASS: context_budget.py is executable
+  PASS: context_budget --selftest: all gates observed failing and passing
+  PASS: seed .context-budget.json parses as JSON
+  PASS: context_budget.py has no --force escape hatch (usage text may name it)
+  PASS: over-ceiling resident file exits 2
+  PASS: shrinking below the ceiling clears the breach
+  PASS: removing the budget:protected block is refused
+  PASS: install-hook honors core.hooksPath
+  PASS: install-hook writes no dead hook under .git/hooks when redirected
+  PASS: install-hook never clobbers a foreign hook in the redirected dir
+  PASS: install-hook falls back to .git/hooks when core.hooksPath is unset
+  PASS: context_budget --status writes nothing to the project
+  PASS: context_budget --check is --status: the same exit code, writing nothing
+  PASS: context_budget refuses an unknown argument with exit 3, writing nothing
+  PASS: sync distributes context_budget.py
+  PASS: sync seeds .context-budget.json
+  PASS: re-sync does not clobber an adopter-owned config
+== Test 36: the plan-time surface requirement stays coupled to slice gate (d) (issue #75, RED-first) ==
+  PASS: canonical SESSION_RUNNER: surface requirement present, gate (d) anchor resolves (POP crit=2112 items=7 slice=4609)
+  PASS: deleted checklist SURFACE item caught
+  PASS: deleted Per-Phase surface requirement caught (checklist line left orphaned)
+  PASS: renamed gate (d) caught by the Per-Phase citation (coupling, not presence)
+  PASS: stripped gate (d) anchor caught
+  PASS: renamed checklist heading trips the population guard (not a silent green)
+== Test 37: check-learnings — the per-row byte budget, over EVERY row ==
+  PASS: fixture control: committed baseline is clean
+  PASS: fixture control: the budget ran over a NON-EMPTY row population
+  PASS: fixture control: the appended row got a derived number (#18)
+  PASS: new over-budget row caught, with its own number and overage
+  PASS: edge: a row of exactly 1,500 B is within budget
+  PASS: edge: a row of 1,501 B is over budget
+  PASS: scope control: the over-budget row is COMMITTED, so it is genuinely frozen
+  PASS: scope: a FROZEN over-budget row IS reported (exempt before S119)
+  PASS: a frozen row grown past the budget is caught
+  PASS: no git history needed: an untracked file is not skipped
+  PASS: untracked file: the budget names a non-empty checked population
+18
+  PASS: untracked file: an over-budget row is still CAUGHT (was unreachable before S119)
+  PASS: mutant killed: > widened to >= rejects an at-budget row
+  PASS: M2 control: unmutated checker sees a violation that is not the last row
+  PASS: mutant killed: narrowing the budget's domain misses a non-newest violation
+  PASS: mutant killed: raising the budget stops catching the row it was set for
+== Test 38: check-handoff — the per-RECORD byte budget, scoped to the record being written ==
+  PASS: fixture control: committed baseline is clean
+  PASS: fixture control: HEAD is readable, so the budget REALLY ran (not the skip arm)
+  PASS: fixture control: the prepended record got a derived id (S9002)
+  PASS: new over-budget record caught, with its own id and overage
+  PASS: edge: a record of exactly 12,288 B is within budget
+  PASS: edge: a record of 12,289 B is over budget
+  PASS: unit: trailing prose below the closing fence counts toward the record
+  PASS: scope control: the frozen population really does hold 1 record(s) over budget
+  PASS: scope: those 1 committed over-budget record(s) are exempt as frozen
+  PASS: a COMMITTED record grown past the budget is caught (changed, not merely new)
+  PASS: no frozen counterpart: the skip is STATED
+  PASS: the skip does NOT print a checked-population figure
+  PASS: drift guard: the frozen fixture carries every field the live ledger's newest receipt uses
+  PASS: drift guard: a prose line below the closing fence is NOT read as a receipt field
+  PASS: drift guard: mutant killed -- a genuine new field INSIDE the fence is still named
+  PASS: drift guard: a record quoting the planted name still lets a prose plant read as prose
+  PASS: drift guard: mutant killed beside a quoted name -- an in-fence field is still named
+  PASS: --all stays green on an over-budget record (Test 34's exit-code control is insulated)
+  PASS: mutant killed: > widened to >= rejects an at-budget record
+  PASS: mutant killed: a presence test misses a grown committed record
+  PASS: mutant killed: a skip disguised as a completed check loses its SKIPPED marker
+  PASS: mutant killed: raising the budget stops catching the record it was set for
+  PASS: mutant killed: a fence-only extent misses prose-carried overage
+== Test 39: check-handoff — the header reserve and the fit assertion (S109, Phase 2) ==
+  PASS: parse control: all four budget constants are named and readable (3 x 12288 + 7168 vs 65536)
+  PASS: A1 fit: 3 x 12288 + 7168 = 44032 B <= 65536 B ceiling (67%)
+  PASS: split control: front matter is 4837 B, a proper prefix of the 114995 B ledger
+  PASS: A2 truth: live front matter 4837 B <= 7168 B reserve (67% used)
+  PASS: mutant killed: a reserve of 30000 B breaks the fit assertion
+  PASS: mutant killed by A2 alone: reserve 2048 B is under the 4837 B front matter yet still fits the ceiling
+  PASS: mutant killed: a per-record budget of 20000 B breaks the fit assertion
+== Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) ==
+  PASS: default run sees MORE than the live file alone (666 > 1; 665 archived bullets exist)
+  PASS: discovering run equals the sum of per-file runs (666 = 666)
+  PASS: the tool's archived count agrees with an INDEPENDENT anchored grep (665 = 665)
+  PASS: Source 2 also reads the archives (50 > 0 matched lines)
+  PASS: every archive shard on disk (both ledgers) is named in the report, and none that is not (0 missing, 0 extra)
+  PASS: no docs/archive/: exits 0 rather than crashing
+  PASS: no docs/archive/: population states live-only explicitly (1 file, archived 0)
+  PASS: a discovered shard in a scratch repo is read and counted (live 1 + archived 1)
+  PASS: an unreadable shard is named UNREADABLE, not silently dropped
+  PASS: the population line states the unreadable file rather than deflating silently
+  PASS: zero readable items + an unreadable file still prints the UNREADABLE row
+  PASS: the found-nothing sentinel is correctly WITHHELD when the file could not be read
+  PASS: control: a readable ledger with no bullets DOES print the found-nothing sentinel
+  PASS: mutant killed: with discovery disabled the default run collapses to live-only (1)
+  PASS: mutant killed: a live-only total under-reports the population (1 < 666)
+  PASS: mutant killed: a -through- glob drops HANDOFFS-archive.md and (3) sees it
+== Test: quality_ratchet.py ==
+  PASS: quality_ratchet.py is executable
+  PASS: quality_ratchet --selftest: every gate observed failing and passing
+  PASS: seed .quality-gates.json parses as JSON and starts empty (plan §8.4)
+  PASS: quality_ratchet.py has no --force escape hatch (it refuses the flag by name)
+  PASS: sync distributes quality_ratchet.py
+  PASS: sync seeds .quality-gates.json
+  PASS: a loosened threshold cannot be committed without --no-verify
+  PASS: --no-verify bypasses the ratchet (recorded in history, not exempt)
+  PASS: a tightened threshold commits without --no-verify
+  PASS: removing a declared gate is refused like a loosening
+  PASS: removing .quality-gates.json is refused as the loosest loosening
+  PASS: a repo that removed its manifest with --no-verify is not locked
+  PASS: re-adding the manifest lower than the removed one is refused
+  PASS: re-adding the manifest at the removed thresholds passes
+  PASS: re-sync does not clobber an adopter-owned gate manifest
+  PASS: this repo's .quality-gates.json declares gates with no defects
+  PASS: .githooks/pre-commit chains the quality ratchet before the ledger gate
+  PASS: check-handoff: no manifest, no citation demanded
+  PASS: check-handoff: the empty seed demands no citation
+  PASS: check-handoff: a declared gate with no citation in the newest receipt is a finding
+  PASS: check-handoff --all: the same finding, on the newest receipt only
+  PASS: check-handoff: a cited gate run satisfies the lint
+== Test 26: status and sync recognise a version a merge hid from the default walk (RED-first) ==
+  PASS: fixture: canonical is v5 after both merges
+  PASS: fixture: the walks visit 4 (default) / 8 (full history) / 4 (first parent) commits
+  PASS: status: v5 (canonical) reads 'current'
+  PASS: status: v2 (main's own version, hidden by merge B) reads '2 versions behind'
+  PASS: status: v4side (a side version merge A discarded; no main-line position, so the full walk counts) reads '1 version behind'
+  PASS: status: v3 (landed by merge B; the side branch's two commits are one main-line version) reads '1 version behind'
+  PASS: status: v1 (the root; merged branches' own commits are not main-line versions) reads '3 versions behind'
+  PASS: status: v2-local (never in history) reads 'locally modified'
+  PASS: sync: v2 (hidden by merge B, upgraded without --force) exits 0 and leaves v5
+  PASS: sync: v4side (hidden by merge A, upgraded without --force) exits 0 and leaves v5
+  PASS: sync: v2-local (a real local edit is still refused) exits 2 and leaves v2-local
+== Test 42: no producer that reads the real repo is piped into an early-exiting consumer (BL-43, RED-first) ==
+  PASS: no real-repo producer is piped into an early-exiting consumer
+  PASS: the scanner fires on a reverted site, and names it (3268)
+== Test 43: the ledger hook's own selftest, and the marker list it gates on (BL-76, RED-first) ==
+  PASS: .githooks/pre-commit --selftest passes
+  PASS: the selftest reports its own check count
+  PASS: the marker loop does not gate on REBASE_HEAD (BL-76)
+  PASS: the marker loop still skips a genuine MERGE_HEAD
+  PASS: the marker loop still skips a genuine CHERRY_PICK_HEAD
+  PASS: the marker loop still skips a genuine rebase-merge
+  PASS: the marker loop still skips a genuine rebase-apply
+  PASS: restoring REBASE_HEAD turns the selftest red, on exactly one assertion
+  PASS: the red assertion is the BL-76 one, named
+  PASS: a genuinely in-progress rebase is still skipped under the mutant
+== Test 44: check-overhead — one line, both units, write-free (BL-91 P1, shape A, RED-first) ==
+  PASS: bin/check-overhead exists and is executable
+  PASS: check-overhead exits 0 on a measurable tree (both runs)
+  PASS: two runs change no tracked file (git status --porcelain identical)
+  PASS: two runs append nothing to .context-budget-history.jsonl
+  PASS: two runs on a still tree print byte-identical output
+  PASS: check-overhead prints exactly one line
+  PASS: the control produced a read-set byte total (71981 B)
+  PASS: the printed byte figure equals context_budget.py's read-set class total (71981 B)
+  PASS: the printed token figure equals the sum of its per-file token figures (25706 tok)
+  PASS: an unknown argument is refused with a non-zero exit (3)
+  PASS: the refusal names the argument it refused
+  PASS: measuring a different class breaks the equality, so the equality can fail
+== Test 45: no early-exiting consumer decides a fail arm, so a flake cannot read a defect as a pass (BL-97, RED-first) ==
+  PASS: no early-exiting consumer decides a fail arm in bin/tests.sh
+  PASS: the scanner flags exactly the marked hidden-form lines (1 2 3 4 5 6 7 )
+  PASS: the scanner fires on a reverted site in the real file, and names it (307)
+== Test 27: --source=github clones its source, so it recognises every version Test 26 does (RED-first) ==
+  PASS: github status: v5 (canonical) reads 'current'
+  PASS: github status: v2 (hidden by merge B) reads '2 versions behind'
+  PASS: github status: v4side (discarded by merge A; counted along the full walk) reads '1 version behind'
+  PASS: github status: v3 (landed by merge B) reads '1 version behind'
+  PASS: github status: v1 (the root) reads '3 versions behind'
+  PASS: github status: v2-local (never in history) reads 'locally modified'
+  PASS: github sync: v2 (hidden by merge B, upgraded without --force) exits 0 and leaves v5
+  PASS: github sync: v4side (hidden by merge A, upgraded without --force) exits 0 and leaves v5
+  PASS: github sync: v3 (landed by merge B, upgraded) exits 0 and leaves v5
+  PASS: github sync: v1 (the root, upgraded) exits 0 and leaves v5
+  PASS: github sync: v2-local (a real local edit is still refused) exits 2 and leaves v2-local
+  PASS: github sync --dry-run: exit 0 on a file that is merely behind
+  PASS: github sync names the URL it cloned
+  PASS: github sync reports the clone's own version (4bce94b)
+  PASS: github sync --dry-run wrote nothing
+  PASS: every run removed its temporary clone
+== Test 28: --source=github names every distributed file its source lacks, before writing anything (RED-first) ==
+  PASS: github sync: a source missing a distributed file exits 1
+  PASS: github sync: the inventory names the missing file and its source
+  PASS: github sync: nothing written before the inventory
+  PASS: github status: the same inventory, exit 1
+== Test 29: a source without its history is named as the cause, not the project's files (RED-first) ==
+  PASS: fixture: a shallow clone and a tree with no .git, each carrying the sync under test
+  PASS: shallow source: exit 2
+  PASS: shallow source: the refusal says 'is shallow (1 commit)'
+  PASS: shallow source: no claim of local modifications
+  PASS: shallow source: nothing written
+  PASS: a deeper shallow source: exit 2
+  PASS: a deeper shallow source: the refusal says 'is shallow (3 commits)'
+  PASS: a deeper shallow source: no claim of local modifications
+  PASS: a deeper shallow source: nothing written
+  PASS: source with no .git: exit 2
+  PASS: source with no .git: the refusal says 'has no git history'
+  PASS: source with no .git: no claim of local modifications
+  PASS: source with no .git: nothing written
+  PASS: shallow source: the refusal gives the command that deepens it
+  PASS: source with no .git: the refusal gives the clone command
+  PASS: github refusal: the inspect hint, run after the run, clones the source and diffs the edit
+  PASS: control: the full-history source upgrades the same file
+== Test 30: the .gitattributes seed merges CHANGELOG.md by union and keeps HANDOFFS.md visible (RED-first) ==
+  PASS: seed: a two-branch merge conflicts in HANDOFFS.md only
+  PASS: seed: CHANGELOG.md auto-merged by union, both new entries whole
+  PASS: seed recipe: keep-both resolves HANDOFFS.md with all three receipts whole (check-handoff --all)
+  PASS: RED control: HANDOFFS.md under union merges at exit 0 into ONE block holding two receipts
+  PASS: check-handoff --all rejects the fused block (a key repeated in one block)
+  PASS: trim vs prepend under union: clean merge, the new entry kept, no archived record back in the live file
+  PASS: sync installs the .gitattributes seed
+  PASS: sync never overwrites an adopter's .gitattributes, even with --force
+== Test 31: check-ledger reads what a union merge leaves behind (RED-first against fixtures) ==
+  PASS: check-ledger: a clean ledger passes
+  PASS: check-ledger: a heading directly under the last body (union's lost blank line) passes
+  PASS: check-ledger: dates out of order across a merge pass (not checked)
+  PASS: check-ledger: a tag quoted in inline code is not a second tag
+  PASS: check-ledger: a footer after a closing --- rule passes
+  PASS: check-ledger: the sentinel mentioned in prose is not the sentinel
+  PASS: check-ledger: a duplicated entry heading fails
+  PASS: check-ledger: a heading with no source tag fails
+  PASS: check-ledger: a heading with two source tags fails
+  PASS: check-ledger: a heading without the date prefix fails
+  PASS: check-ledger: orphaned text under a month heading fails
+  PASS: check-ledger: a surviving conflict marker fails
+  PASS: check-ledger: the seed sentinel left in a ledger with entries fails
+  FAIL: check-ledger --all: this repository's own ledger has findings
+== Test 32: --source=github installs the SOURCE's manifest, so a checkout ahead of it is not refused (RED-first) ==
+  PASS: github sync from a source behind this checkout installs the source's files and exits 0
+  PASS: github sync names the row this checkout has and the source does not
+  PASS: github status compares against the source's manifest and names the skipped row
+== Test 33: check-handoff accepts one live pending receipt per line of sessions, and only one (RED-first) ==
+  PASS: check-handoff: another line's newest pending receipt is its live claim (--allow-pending)
+  PASS: check-handoff: ...and close-out's --all accepts it too
+  PASS: check-handoff: two lines, each with a live claim below the other's receipts
+  PASS: check-handoff: a pending receipt superseded within its OWN line is still refused
+  PASS: check-handoff: a branch line's stale stub under its own newer receipt is still refused
+  PASS: check-handoff: the newest receipt pending without --allow-pending is still refused
+== Test 34: --source=github reads the source's manifest as data, and refuses rows it cannot install safely (RED-first) ==
+  PASS: github sync: an unreadable source manifest is a one-line error naming the source; nothing written
+  PASS: github status: an unreadable source manifest is a one-line error naming the source
+  PASS: github sync reads the source's manifest without running any of it
+  PASS: github status reads the source's manifest without running any of it
+  PASS: github sync refuses a source whose disposition labels differ, naming the rows; the adopter's seed is untouched
+  PASS: github status refuses the same source rather than mis-reporting it
+  PASS: github sync refuses a source row whose dest leaves the project
+  PASS: github sync refuses a source row whose src is outside the source
+  PASS: github sync refuses a dest inside .git, naming it; nothing written
+  PASS: github sync refuses a dest that names nothing ('.'), naming it; nothing written
+  PASS: github sync refuses a NUL byte in a path, naming it; nothing written
+  PASS: github sync refuses DISTRIBUTION += after its assignment, naming it; nothing written
+  PASS: github status refuses the same source, naming DISTRIBUTION
+  PASS: github sync refuses DISTRIBUTION.append(...) after its assignment, naming it; nothing written
+  PASS: github sync refuses a second DISTRIBUTION assignment, naming it; nothing written
+
+== Summary: 451 passed, 1 failed, 0 skipped ==
+SUITE_EXIT=1

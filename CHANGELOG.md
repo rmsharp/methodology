@@ -233,6 +233,21 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S269 — evidence for the resync plan: the ledger-fold script, the stage table, the trial's suite and gate logs
+
+Four files under `docs/planning/upstream-resync-2026-10-evidence/`, committed ahead of the plan that cites them.
+**`fold-ledger.py`** (`changelog` and `handoffs` modes) performs the two non-mechanical ledger resolutions of the
+resync merge: it folds the 118 upstream `CHANGELOG.md` entries the fork lacks into the live ledger by date (386
+entries, 415,398 B), undoing the `../../` link rebase on entries that came from upstream's shard, and appends the 17
+upstream receipts the fork holds in no shard to `HANDOFFS.md` (20 receipts, 114,995 B). It reads the fork's side
+from git, not the working tree, because the first version read the working tree and folded nothing amid a real
+merge's conflict markers; the final form was run in a real conflicted `git merge --no-commit` and reproduced the
+trial's two ledgers byte for byte. **`stages.tsv`** is the 69-row run of `git merge-tree` over each first-parent
+upstream commit. **`trial-suite.log`**: `bin/tests.sh` on a scratch merge with both ledgers folded, 451 passed,
+1 failed, 0 skipped (the one red row is `check-ledger --all` reading a frozen shard). **`trial-gates.log`**:
+`quality_ratchet.py --run` on the same merge, 11 of 13 gates (the same finding, twice). Nothing was merged,
+rebased or pushed; the trial ran in scratch clones outside the repository.
+
 ### 2026-10-05 · [BL-95] S269 claim (in progress) — the resync plan: catching fork `main` up with `upstream/main`
 
 CHANGELOG: pending. Operator said `go` as the first message and chose "BL-95 resync plan" at the Phase 0 picker. The deliverable is a plan document in `docs/planning/`, not a resync: nothing is merged, rebased or pushed, and nothing goes to `KJ5HST/methodology`. The owed trim (`d0bb866`, S266's receipt to shard `HANDOFFS-through-2026-10-05-4.md`, its `.verify.sh` exit 0 by name from a `--no-local` clone) and its fold (`0316eb6`) ran first as their own actions; `bin/tests.sh` on the fold tree read 359 passed, 0 failed, 6 skipped. Phase 3F records the rest.

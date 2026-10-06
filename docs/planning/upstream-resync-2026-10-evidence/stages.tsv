@@ -1,0 +1,69 @@
+1befe64	2	CHANGELOG.md HANDOFFS.md 	docs(handoffs): claim S26 — merge the open PRs and release v4.0
+19f8d4f	3	.quality-gates.json 	Merge pull request #89 from KJ5HST/fix/context-budget-fit-skip
+19566b6	4	starter-kit/BOOTSTRAP.md 	Merge pull request #88 from rmsharp/fix/bootstrap-never-overwrite-rule
+af8a693	7	bin/status bin/sync bin/tests.sh 	Merge pull request #87 from rmsharp/fix/sync-github-history
+a4eeef3	7		Merge pull request #86 from rmsharp/fix/context-budget-status
+a9946c6	8	.githooks/pre-commit 	Merge pull request #85 from rmsharp/fix/pre-commit-stale-rebase-marker
+99377b3	8		Merge pull request #84 from rmsharp/bl57/changelog-rules
+d7768cb	8		Merge pull request #83 from KJ5HST/docs/parallel-sessions-plan
+746c17a	8		chore(ratchet): tighten three floors to the merged tree's measured val
+d1c1154	9	CLAUDE.md 	docs(claude): archive the v1.0–v2.9 §Versioning entries verbatim to
+2f911c9	9		docs(release): v4.0 — CLAUDE.md §Versioning and README What's New f
+a6e3357	9		docs(handoffs): complete the S26 receipt — seven PRs merged, v4.0 ta
+934975a	9		docs(handoffs): claim S27 — the parallel-sessions plan's §8 decisio
+5bab033	9		docs(planning): ratify the parallel-sessions plan with amendments — 
+7be5c1f	9		docs(handoffs): complete the S27 receipt — §8 answered at 5bab033 (
+eb3c2dc	9		docs(handoffs): claim S28 — housekeeping of the items S26 and S27 le
+42f6529	9		docs(changelog): backfill PR #77 (56997af, merged 2026-09-03) — the 
+e010fdf	10	docs/archive/CHANGELOG-through-2026-09-30.md 	chore(ledger): trim CHANGELOG.md at the September/October seam — 96 
+3e857aa	12	.context-budget-history.jsonl .context-budget.json 	chore(budget): re-measure CLAUDE.md at 2.5687 B/token; track .context-
+50e7e46	12		docs(handoffs): complete the S28 receipt — housekeeping: backfill, t
+1e96e6d	12		docs(handoffs): claim S29 — the ledger gate refuses an edit to a com
+106f22b	12		feat(hooks): the ledger gate refuses an edit to a committed CHANGELOG.
+7533631	12		docs(handoffs): complete the S29 receipt — the never-edited ledger g
+be5dfa3	12		docs(handoffs): claim S30 — parallel-sessions plan Phase 1, ledger m
+0ae52b1	12		feat(ledger): Phase 1 Layer A — a .gitattributes seed: CHANGELOG.md 
+3d1b25c	15	starter-kit/methodology_dashboard.py tools/methodology_dashboard.py tools/test_methodology_dashboard.py 	fix(dashboard): account for the .gitattributes seed — installed-file
+6b8673e	15		docs(ledger): the .gitattributes seed says GitHub's merge button ignor
+e4aa45f	15		feat(ledger): Phase 1 Layer B — bin/check-ledger and its gate; check
+5ea14d1	15		chore(ratchet): tighten tests-sh-passed 215 -> 237 after Phase 1 (Test
+acfbe48	15		docs(handoffs): complete the S30 receipt — Phase 1 done: the .gitatt
+5a1b4b0	15		docs(handoffs): claim S31 — parallel-sessions plan Phase 2, the pros
+7180454	15		docs(framework): Phase 2 checkpoint 1 — §Parallel Actors, FM #29 "S
+6ac5af6	15		docs(framework): Phase 2 checkpoint 2 — sequence tags and the merge 
+241c242	15		docs(tutorials): Phase 2 checkpoint 3 — the failure-mode count is 29
+428c452	16	bin/check-learnings 	fix(check-learnings): the OK line names the highest Learning number, n
+9b0e988	16		docs(handoffs): complete the S31 receipt — Phase 2 done: Parallel Ac
+8a70f5f	16		docs(handoffs): claim S32 — parallel-sessions plan Phase 3 (worktree
+5ff62ea	16		fix(budget): --calibrate finds the project's transcripts from a linked
+9565c45	16		chore(ratchet): tighten context-budget-unit-tests 145 -> 148 after D9;
+4afb1dd	16		docs(handoffs): complete the S32 receipt — Phase 3: worktree-aware c
+11398a3	16		docs(handoffs): claim S33 — parallel-sessions plan Phase 4, the docs
+5158d39	17	README.md 	docs: Phase 4 U5 — README tree and CLAUDE.md tables name the .gitatt
+f5de52b	17		docs(bootstrap): Phase 4 U4 — Step 10 gives existing-.gitattributes 
+465a675	17		docs(skills): Phase 4 U3 — the illustrative Claude Code mechanism fo
+bfde1ae	17		docs(campaigns): Phase 4 U2 — both campaign templates cite the one-w
+9dc97f4	17		docs(how-to-use): Phase 4 U1 — Multi-Agent Teams names the two shape
+9b0a760	17		docs(workstreams): Phase 4 sweep — the third campaign template cites
+2a7d187	17		docs(handoffs): complete the S33 receipt — Phase 4 done as a Shape A
+92f773e	17		docs(handoffs): claim S34 — parallel-sessions plan Phase 5, the Shap
+93a9e0e	17		Merge branch 's35-alpha' (S35-alpha, Shape B dogfood)
+ed38798	17		Merge branch 's35-beta' (S35-beta, Shape B dogfood)
+3c9513a	17		fix(check-handoff): one live pending receipt per line of sessions (the
+40747c1	17		chore(ratchet): tighten tests-sh-passed 237 -> 243 after Test 33
+c242b96	17		docs(handoffs): complete the S34 receipt — Phase 5 done: Shape B mea
+20332c0	17		docs(handoffs): claim S36 — release v4.1 (parallel-sessions plan Pha
+1e018d1	17		docs(release): v4.1 — CLAUDE.md §Versioning and README What's New
+9233302	17		docs(handoffs): complete the S36 receipt — v4.1 tagged at 1e018d1 an
+d88f195	17		docs(handoffs): claim S37 — dashboard dotfile config categorization 
+569024b	17		fix(dashboard): dotfile names listed in CONFIG_EXTS are categorized as
+dbde928	17		chore(ratchet): tighten dashboard-unit-tests 226 -> 229; refresh the o
+1680539	17		docs(handoffs): complete the S37 receipt — dashboard 2.11.3 (dotfile
+66b48b6	17		docs(handoffs): claim S38 — answer rmsharp's review of PR #91 (D8)
+58458db	17		docs(handoffs): complete the S38 receipt — PR #91 answered (branch f
+41f15cf	17		docs(handoffs): claim S39 — PR #91: rmsharp's three non-blocking poi
+e107356	17		Merge branch 'feat/sync-manifest-at-ref' — PR #91 (D8), approved by 
+d432865	17		chore(ratchet): tighten tests-sh-passed 243 -> 261 after PR #91 (Tests
+dd1bba2	17		docs(manifest): state the constraint PR #91 puts on bin/_manifest.py �
+b6904b7	17		docs(handoffs): complete the S39 receipt — PR #91 merged with rmshar
+f34769f	17		docs(changelog): record the PR #91 comment to rmsharp; S39 receipt nex

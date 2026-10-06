@@ -1,0 +1,25 @@
+# Trial gate run (S269): python3 starter-kit/quality_ratchet.py --run in the same scratch clone.
+# 11/13 pass; both fails are the same check-ledger finding (tests-sh-failed counts the red Test 31 row).
+#
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  11/13 pass · 2 fail · 0 unmeasured · results 07deaefe7f86 · manifest 7a4a86985f5c
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  tests-sh-passed                       >= 343         451  pass
+  tests-sh-failed                         <= 0           1  fail
+  dashboard-unit-tests                  >= 336         353  pass
+  context-budget-unit-tests             >= 148         148  pass
+  trimmer-unit-tests                    >= 181         181  pass
+  close-out-report-unit-tests            >= 68          68  pass
+  ratchet-unit-tests                     >= 45          45  pass
+  check-links                             <= 0           0  pass
+  check-learnings                         <= 0           0  pass
+  check-handoff-all                       <= 0           0  pass
+  check-ledger                            <= 0           1  fail
+  commit-msg-selftest                     <= 0           0  pass
+  pre-commit-selftest                     <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 11/13 pass · 2 fail · 0 unmeasured · results 07deaefe7f86 · manifest 7a4a86985f5c
+
+RATCHET_EXIT=2
