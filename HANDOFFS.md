@@ -19,7 +19,7 @@ that report, never inside Phase 0, which is read-only apart from the reconcile b
 (`starter-kit/SESSION_RUNNER.md` Phase 0): `--cut 2 --force`. The force is
 warranted, not an override — `SRF_RED` refuses every on-schedule retention trim by construction
 (BL-59). `bin/check-handoff` validates the 13-key schema on the **newest** receipt; `--all` checks
-every receipt and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent. **`RETENTION_FLOOR = 3` in `bin/check-handoff` is that TRIGGER, not this depth**, so N=2 leaves it and its A1 fit (3 x 12 KiB + 7,168 <= 65,536 B) untouched; the steady state is two receipts between claims and three during one, which is why `tests-sh-passed` measures 343 at rest and 349 mid-claim.
+every receipt and `--archived` a frozen shard. Below three receipts Test 34 prints six named `SKIP` rows — stated, never silent. **`RETENTION_FLOOR = 3` in `bin/check-handoff` is that TRIGGER, not this depth**, so N=2 leaves it and its A1 fit (3 x 12 KiB + 7,168 <= 65,536 B) untouched; the steady state is two receipts between claims and three during one, which is why `tests-sh-passed` reads six lower at rest than mid-claim, and its floor is set at rest.
 
 **Two session sequences share this ledger and their numbers collide.** This fork and
 `upstream/main` each run their own `S<N>` counter, so a receipt is identified by **session + date**,
