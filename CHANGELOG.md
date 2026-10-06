@@ -233,6 +233,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S269 -- D1–D7 recorded: the operator took every recommendation at the close-out picker
+
+He answered the seven decisions of `docs/planning/upstream-resync-2026-10-plan.md` §3 after the close-out report, **each as
+recommended**: D1 one merge and two executor sessions; D2 fold upstream's 118 unseen `CHANGELOG.md` entries into the
+live ledger (`fold-ledger.py`) and keep the fork's shard byte-identical; D3 scope the `check-ledger` gate and the one
+real-ledger assertion to the live ledger; D4 adopt the never-edit hook gate; D5 `DASHBOARD_VERSION` 2.20.0; D6 state v4.1
+and lift v3.8, v4.0 and v4.1 into `docs/RELEASE_HISTORY.md` (no fork release or tag); D7 count BL-96's skip. This commit
+records them in the plan (status line and a "Decided" paragraph at §3), in the `BL-95` row (`docs/planning/BACKLOG.md:180`)
+and in the receipt's `next_steps` (1) and (5), which the close-out commit had written before the answers. He also approved
+the push; it ran, see the entry below. **The executor sessions R1 and R2 are not started and need his commission.**
+Local only: this commit is not pushed, and the next push is his go-ahead.
+
 ### 2026-10-06 · [ad hoc] S269 -- fork main pushed to origin, on his go-ahead at the close-out picker
 
 `git push origin 5f302c0:refs/heads/main` took `ab171c3..5f302c0`, exactly the six commits he named at the picker

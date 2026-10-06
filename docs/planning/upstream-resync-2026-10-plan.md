@@ -1,9 +1,9 @@
 # Resync plan 2 — merge `upstream/main` `f34769f` into fork `main` (BL-95)
 
-**Status: DRAFT — written at S269, a planning session. Nothing is merged, rebased, pushed or sent.** Evidence
+**Status: DECISIONS TAKEN — D1–D7 were answered by the operator at S269's close-out picker (2026-10-06), every one as recommended (§3); the executor sessions R1 and R2 are not started and need his commission.** Written at S269, a planning session: nothing is merged or rebased by it. Evidence
 taken at fork `main` `f203159` and `upstream/main` `f34769f` (tag `v4.2`; fetched 2026-10-06, unchanged since
-S268). The decisions in §3 are the operator's; each carries a recommendation, and §5's phases assume the
-recommended ones. Precedent: [`upstream-resync-2026-09-plan.md`](upstream-resync-2026-09-plan.md) (S175,
+S268). §3's decisions were the operator's; each carries the recommendation he accepted, and §5's phases assume
+those answers. Precedent: [`upstream-resync-2026-09-plan.md`](upstream-resync-2026-09-plan.md) (S175,
 carried out S176–S177). S269 ran in two conversations: the first claimed the session and stopped after the
 claim (`f203159`), leaving no plan; the second resumed that claim on the operator's choice at the Phase 0
 picker (2026-10-06) and wrote this document.
@@ -250,6 +250,13 @@ The six adopters sync from fork `main` (`bin/status` → `bin/sync`). Comparing 
 this against the real merge result.
 
 ## 3. Decisions for the operator
+
+**Decided (operator, picker at S269's close-out, 2026-10-06) — every recommendation:** D1 (A) one merge, R1 + R2; D2 (A) fold the
+118 entries into the live ledger and keep the fork's shard byte-identical; D3 (A) scope the gate and the one real-ledger
+assertion to the live ledger; D4 (A) adopt the never-edit gate; D5 (A) `DASHBOARD_VERSION` 2.20.0; D6 (A) state v4.1 and
+lift v3.8, v4.0 and v4.1 into `docs/RELEASE_HISTORY.md`; D7 (A) count BL-96's skip. He also approved the push of fork `main`
+(six commits, done: `ab171c3..5f302c0`, then the CHANGELOG-only push record `a4c5587`). The options below stay as the
+record of what was weighed.
 
 ### D1 — Merge shape, and the session split
 
