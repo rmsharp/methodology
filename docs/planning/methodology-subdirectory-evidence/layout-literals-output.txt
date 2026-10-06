@@ -1,0 +1,199 @@
+# bin/check-layout-literals at 2ea5d68 (S274, BL-101 P1), recorded output.
+# Re-run: python3 -B bin/check-layout-literals          (exit 1 while any site remains; --all adds prose and acknowledged lines)
+# The list is the to-do list of phases P2-P6; P6 wires the scanner into .quality-gates.json at zero. A later HEAD gives later numbers.
+#
+.githooks/pre-commit: 21 sites
+  .githooks/pre-commit:40 [path bare] [ "${1:-}" = noledger ] || printf '# Changelog\n' > CHANGELOG.md  -> CHANGELOG.md
+  .githooks/pre-commit:44 [path bare] [ "${1:-}" = noledger ] || printf '# Changelog\n\n### entry\n' > CHANGELOG.md  -> CHANGELOG.md
+  .githooks/pre-commit:67 [path bare] build; ( cd "$d" && git add CHANGELOG.md >/dev/null 2>&1 )  -> CHANGELOG.md
+  .githooks/pre-commit:111 [path bare] printf "$F$B$A$Z" > CHANGELOG.md  -> CHANGELOG.md
+  .githooks/pre-commit:116 [path bare] printf "$1" > CHANGELOG.md  -> CHANGELOG.md
+  .githooks/pre-commit:117 [text layout-path] if [ "${2:-}" = archive ]; then mkdir -p docs/archive && printf "$A" > docs/archive/shard.md; fi  -> 
+  .githooks/pre-commit:136 [text layout-path] expect "ledger: entries dropped with a docs/archive/ shard staged (a trim) -> pass" 0  -> 
+  .githooks/pre-commit:175 [path bare] [ -f "$top/.quality-gates.json" ] || git cat-file -e HEAD:.quality-gates.json 2>/dev/null; }; then  -> .quality-gates.json, .quality-gates.json
+  .githooks/pre-commit:194 [path bare] git cat-file -e HEAD:CHANGELOG.md 2>/dev/null || return 0  -> CHANGELOG.md
+  .githooks/pre-commit:196 [text layout-path] printf '%s\n' "$staged" | grep -q '^docs/archive/' && archive=1  -> 
+  .githooks/pre-commit:222 [text bare] head, staged = entries(show("HEAD:CHANGELOG.md")), entries(show(":CHANGELOG.md"))  -> CHANGELOG.md, CHANGELOG.md
+  .githooks/pre-commit:229 [text bare] sys.stderr.write("✗ CHANGELOG.md: a committed entry was changed — %d entr%s:\n"  -> CHANGELOG.md
+  .githooks/pre-commit:236 [path bare] A committed entry is never edited (FRAMEWORK_APPARATUS.md §The Action Ledger, Lifecycle).  -> FRAMEWORK_APPARATUS.md
+  .githooks/pre-commit:239 [text bare] * Removing records? That is methodology_trim.py's job: its commit stages a  -> methodology_trim.py
+  .githooks/pre-commit:240 [text layout-path] docs/archive/ shard, and this check lets it through.  -> 
+  .githooks/pre-commit:256 [text bare] if printf '%s\n' "$staged" | grep -qxF 'CHANGELOG.md'; then  -> CHANGELOG.md
+  .githooks/pre-commit:265 [path bare] if ! git ls-files --error-unmatch CHANGELOG.md >/dev/null 2>&1; then  -> CHANGELOG.md
+  .githooks/pre-commit:271 [path bare] ✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).  -> CHANGELOG.md
+  .githooks/pre-commit:274 [path bare] ledger. Prepend one dated, source-tagged entry to CHANGELOG.md — exactly one of  -> CHANGELOG.md
+  .githooks/pre-commit:281 [path bare] * Opt out for good:  delete CHANGELOG.md and record the decision in CLAUDE.md.  -> CHANGELOG.md
+  .githooks/pre-commit:283 [path bare] "Too small to log" is the failure mode, not an exception (SESSION_RUNNER.md FM #27).  -> SESSION_RUNNER.md
+bin/check-handoff: 8 sites
+  bin/check-handoff:227 [path bare] GATES_MANIFEST = ".quality-gates.json"  -> .quality-gates.json
+  bin/check-handoff:432 [text bare] "(a union merge of HANDOFFS.md does this; resolve keep-both with "  -> HANDOFFS.md
+  bin/check-handoff:821 [text bare] "`quality_ratchet: N/M pass …` summary line of `quality_ratchet.py --run` into "  -> quality_ratchet.py
+  bin/check-handoff:841 [path bare] root_file = root / "HANDOFFS.md"  -> HANDOFFS.md
+  bin/check-handoff:849 [text bare] description="Validate the newest `handoff` receipt block in a HANDOFFS.md ledger."  -> HANDOFFS.md
+  bin/check-handoff:851 [text bare] p.add_argument("--file", help="explicit HANDOFFS.md path to check (what bin/tests.sh uses)")  -> HANDOFFS.md
+  bin/check-handoff:950 [text bare] print('        CHANGELOG.md "<its ### heading>". A prefixed path (starter-kit/…,')  -> CHANGELOG.md
+  bin/check-handoff:951 [text layout-path] print("        docs/archive/…) is stable and stays legal.")  -> 
+bin/check-ledger: 4 sites
+  bin/check-ledger:98 [text bare] ap = argparse.ArgumentParser(description="Structural checks on a CHANGELOG.md action ledger.")  -> CHANGELOG.md
+  bin/check-ledger:99 [text bare] ap.add_argument("--file", help="ledger to check (default: CHANGELOG.md at the repository root)")  -> CHANGELOG.md
+  bin/check-ledger:101 [text layout-path] help="also check the archived shards, docs/archive/CHANGELOG-*.md, beside the ledger")  -> 
+  bin/check-ledger:103 [path bare] path = Path(args.file) if args.file else repo_root() / "CHANGELOG.md"  -> CHANGELOG.md
+bin/check-links: 1 site
+  bin/check-links:50 [path layout-path] "docs/methodology/workstreams/PARENT_WORKSTREAM.md",  -> 
+bin/check-overhead: 1 site
+  bin/check-overhead:60 [path bare] CONFIG_NAME = ".context-budget.json"  -> .context-budget.json
+bin/model-report: 13 sites
+  bin/model-report:83 [path layout-path] ARCHIVE_DIR = "docs/archive"  -> 
+  bin/model-report:103 [text bare] "the content. This fork's own S1 receipt (HANDOFFS.md) says \"Sonnet 5 built\n"  -> HANDOFFS.md
+  bin/model-report:123 [path bare] root_file = root / "CHANGELOG.md"  -> CHANGELOG.md
+  bin/model-report:128 [path bare] root_file = root / "HANDOFFS.md"  -> HANDOFFS.md
+  bin/model-report:509 [text bare] lines.append("=== SOURCE 1 -- PRIMARY (self-reported, structured): CHANGELOG.md **Model:** bullets ===")  -> CHANGELOG.md
+  bin/model-report:537 [text bare] lines.append("(no CHANGELOG.md entries carry a **Model:** bullet)")  -> CHANGELOG.md
+  bin/model-report:550 [text bare] 'HANDOFFS.md free-text "model" mentions ===')  -> HANDOFFS.md
+  bin/model-report:600 [text bare] description="Report self-reported model/tier attribution across CHANGELOG.md, "  -> CHANGELOG.md
+  bin/model-report:601 [text bare] "HANDOFFS.md, and git trailers -- kept visually separate, never merged."  -> HANDOFFS.md
+  bin/model-report:603 [text bare] p.add_argument("--changelog", help="explicit CHANGELOG.md path (default: this repo's root, "  -> CHANGELOG.md
+  bin/model-report:605 [text bare] p.add_argument("--handoffs", help="explicit HANDOFFS.md path (default: this repo's root, "  -> HANDOFFS.md
+  bin/model-report:616 [text bare] print("error: CHANGELOG.md not found: %s" % changelog_path)  -> CHANGELOG.md
+  bin/model-report:619 [text bare] print("error: HANDOFFS.md not found: %s" % handoffs_path)  -> HANDOFFS.md
+bin/status: 3 sites
+  bin/status:208 [path bare] "CHANGELOG.md": (  -> CHANGELOG.md
+  bin/status:212 [path bare] "HANDOFFS.md": (  -> HANDOFFS.md
+  bin/status:315 [text bare] f"to reseed only if it holds no history (see BOOTSTRAP.md \"Updating an existing project "  -> BOOTSTRAP.md
+starter-kit/close_out_report.py: 3 sites
+  starter-kit/close_out_report.py:71 [path bare] def live_facts(ledger="HANDOFFS.md", cwd="."):  -> HANDOFFS.md
+  starter-kit/close_out_report.py:178 [path bare] ledger = os.path.join(top, "HANDOFFS.md")  -> HANDOFFS.md
+  starter-kit/close_out_report.py:224 [path bare] ap.add_argument("--ledger", default="HANDOFFS.md", help="the receipt ledger (default HANDOFFS.md)")  -> HANDOFFS.md
+starter-kit/context_budget.py: 8 sites
+  starter-kit/context_budget.py:43 [path bare] CONFIG_NAME = ".context-budget.json"  -> .context-budget.json
+  starter-kit/context_budget.py:44 [path bare] HISTORY_NAME = ".context-budget-history.jsonl"  -> .context-budget-history.jsonl
+  starter-kit/context_budget.py:563 [text bare] ("Raise the ceiling", "Edit .context-budget.json. This is last for a reason — see "  -> .context-budget.json
+  starter-kit/context_budget.py:1010 [text bare] # installed by context_budget.py — refuses a commit that GROWS a budgeted file past  -> context_budget.py
+  starter-kit/context_budget.py:1012 [text bare] exec python3 "$(git rev-parse --show-toplevel)/context_budget.py" --precommit  -> context_budget.py
+  starter-kit/context_budget.py:1036 [path bare] if os.path.exists(p) and "context_budget.py" not in open(p, errors="ignore").read():  -> context_budget.py
+  starter-kit/context_budget.py:1366 [text bare] print(f"context_budget.py v{VERSION} — size budgets for session-resident documents")  -> context_budget.py
+  starter-kit/context_budget.py:1368 [text bare] print("Usage: python3 context_budget.py [command] [options]")  -> context_budget.py
+starter-kit/methodology_dashboard.py: 79 sites
+  starter-kit/methodology_dashboard.py:135 [path bare] ".gitattributes",  -> .gitattributes
+  starter-kit/methodology_dashboard.py:164 [path bare] ("SESSION_RUNNER.md", 25, "file"),  -> SESSION_RUNNER.md
+  starter-kit/methodology_dashboard.py:165 [path bare] ("SAFEGUARDS.md", 20, "file"),  -> SAFEGUARDS.md
+  starter-kit/methodology_dashboard.py:166 [path bare] ("SESSION_NOTES.md", 20, "file"),  -> SESSION_NOTES.md
+  starter-kit/methodology_dashboard.py:168 [path bare] ("CHANGELOG.md", 5, "file"),  -> CHANGELOG.md
+  starter-kit/methodology_dashboard.py:169 [path bare] ("HANDOFFS.md", 5, "file"),  -> HANDOFFS.md
+  starter-kit/methodology_dashboard.py:170 [path bare] ("ROADMAP.md", 5, "file"),  -> ROADMAP.md
+  starter-kit/methodology_dashboard.py:171 [path layout-path] ("docs/methodology", 10, "dir"),  -> 
+  starter-kit/methodology_dashboard.py:172 [path layout-path] ("docs/methodology/workstreams", 10, "dir"),  -> 
+  starter-kit/methodology_dashboard.py:215 [path bare] ("ITERATIVE_METHODOLOGY.md", 15, "file"),      # the theory layer the runner cross-references  -> ITERATIVE_METHODOLOGY.md
+  starter-kit/methodology_dashboard.py:220 [path bare] ("CHANGELOG.md", 10, "file"),                  # its OWN action ledger (FM #27)  -> CHANGELOG.md
+  starter-kit/methodology_dashboard.py:221 [path bare] ("HANDOFFS.md", 10, "file"),                   # its OWN close-out receipts (v3.3)  -> HANDOFFS.md
+  starter-kit/methodology_dashboard.py:223 [path bare] ("HOW_TO_USE.md", 5, "file"),                  # onboarding prose  -> HOW_TO_USE.md
+  starter-kit/methodology_dashboard.py:443 [path bare] READ_CAP_CLASS_A = frozenset(("CHANGELOG.md", "HANDOFFS.md"))  -> CHANGELOG.md, HANDOFFS.md
+  starter-kit/methodology_dashboard.py:444 [path bare] READ_CAP_CLASS_B = frozenset(("SESSION_NOTES.md",) + _BACKLOG_LOCATIONS)  -> SESSION_NOTES.md
+  starter-kit/methodology_dashboard.py:489 [path bare] TRIM_TOOL_NAME = "methodology_trim.py"  -> methodology_trim.py
+  starter-kit/methodology_dashboard.py:526 [path layout-path] TRIM_ARCHIVE_DIR = "docs/archive"  -> 
+  starter-kit/methodology_dashboard.py:547 [path bare] "CHANGELOG.md": ("heading",  -> CHANGELOG.md
+  starter-kit/methodology_dashboard.py:549 [path bare] "HANDOFFS.md": ("fence", "handoff"),  -> HANDOFFS.md
+  starter-kit/methodology_dashboard.py:746 [text bare] "context_budget.py — size budgets",  -> context_budget.py
+  starter-kit/methodology_dashboard.py:772 [text bare] "quality_ratchet.py — declared quality thresholds",  -> quality_ratchet.py
+  starter-kit/methodology_dashboard.py:784 [path bare] "quality_ratchet.py",  -> quality_ratchet.py
+  starter-kit/methodology_dashboard.py:793 [text bare] "CHANGELOG.md merge=union",  -> CHANGELOG.md
+  starter-kit/methodology_dashboard.py:794 [text bare] "HANDOFFS.md is deliberately NOT listed",  -> HANDOFFS.md
+  starter-kit/methodology_dashboard.py:798 [path bare] "methodology_dashboard.py": (_VERSION_RE, _FRAMEWORK_SIGNATURES),  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:803 [path bare] "context_budget.py":       (_CONTEXT_BUDGET_VERSION_RE, _CONTEXT_BUDGET_SIGNATURES),  -> context_budget.py
+  starter-kit/methodology_dashboard.py:804 [path bare] "quality_ratchet.py":      (_QUALITY_RATCHET_VERSION_RE, _QUALITY_RATCHET_SIGNATURES),  -> quality_ratchet.py
+  starter-kit/methodology_dashboard.py:805 [path bare] ".context-budget.json":    (None, _CONTEXT_BUDGET_JSON_SIGNATURES),  -> .context-budget.json
+  starter-kit/methodology_dashboard.py:806 [path bare] ".quality-gates.json":     (None, _QUALITY_GATES_JSON_SIGNATURES),  -> .quality-gates.json
+  starter-kit/methodology_dashboard.py:807 [path bare] ".gitattributes":          (None, _GITATTRIBUTES_SIGNATURES),  -> .gitattributes
+  starter-kit/methodology_dashboard.py:853 [path layout-path] "docs/methodology/ITERATIVE_METHODOLOGY.md",  -> ITERATIVE_METHODOLOGY.md
+  starter-kit/methodology_dashboard.py:854 [path layout-path] "docs/methodology/FRAMEWORK_APPARATUS.md",  -> FRAMEWORK_APPARATUS.md
+  starter-kit/methodology_dashboard.py:855 [path layout-path] "docs/methodology/HOW_TO_USE.md",  -> HOW_TO_USE.md
+  starter-kit/methodology_dashboard.py:856 [path layout-path] "docs/methodology/workstreams/DESIGN_WORKSTREAM.md",  -> 
+  starter-kit/methodology_dashboard.py:857 [path layout-path] "docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md",  -> 
+  starter-kit/methodology_dashboard.py:858 [path layout-path] "docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md",  -> 
+  starter-kit/methodology_dashboard.py:859 [path layout-path] "docs/methodology/workstreams/AUDIT_WORKSTREAM.md",  -> 
+  starter-kit/methodology_dashboard.py:860 [path layout-path] "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",  -> 
+  starter-kit/methodology_dashboard.py:861 [path layout-path] "docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md",  -> 
+  starter-kit/methodology_dashboard.py:862 [path layout-path] "docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md",  -> 
+  starter-kit/methodology_dashboard.py:863 [path layout-path] "docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md",  -> 
+  starter-kit/methodology_dashboard.py:864 [path layout-path] "docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md",  -> 
+  starter-kit/methodology_dashboard.py:871 [path bare] "SESSION_RUNNER.md",  -> SESSION_RUNNER.md
+  starter-kit/methodology_dashboard.py:872 [path bare] "FRAMEWORK_LEARNINGS.md",  -> FRAMEWORK_LEARNINGS.md
+  starter-kit/methodology_dashboard.py:873 [path bare] "SAFEGUARDS.md",  -> SAFEGUARDS.md
+  starter-kit/methodology_dashboard.py:874 [path bare] "RECOMMENDED_SKILLS.md",  -> RECOMMENDED_SKILLS.md
+  starter-kit/methodology_dashboard.py:875 [path bare] "CONTEXT_TEMPLATE.md",  -> CONTEXT_TEMPLATE.md
+  starter-kit/methodology_dashboard.py:876 [path bare] "CLAUDE_TEMPLATE.md",  -> CLAUDE_TEMPLATE.md
+  starter-kit/methodology_dashboard.py:877 [path bare] "BOOTSTRAP.md",  -> BOOTSTRAP.md
+  starter-kit/methodology_dashboard.py:902 [path bare] "SESSION_NOTES.md",  -> SESSION_NOTES.md
+  starter-kit/methodology_dashboard.py:903 [path bare] "CHANGELOG.md",  -> CHANGELOG.md
+  starter-kit/methodology_dashboard.py:904 [path bare] "HANDOFFS.md",  -> HANDOFFS.md
+  starter-kit/methodology_dashboard.py:905 [path bare] "ROADMAP.md",  -> ROADMAP.md
+  starter-kit/methodology_dashboard.py:978 [text bare] _GENERATED_PROOF_BANNER = "generated by methodology_trim.py"  -> methodology_trim.py
+  starter-kit/methodology_dashboard.py:1050 [text bare] f"  ⚠ methodology_dashboard.py is stale: this copy is v{DASHBOARD_VERSION}, "  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:1353 [text bare] "methodology_dashboard.py — nothing synced.\n")  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:1372 [path bare] if target_dir == canon_repo or (target_dir / "methodology_dashboard.py") == canonical:  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:1375 [path bare] targets = [target_dir / "methodology_dashboard.py"]  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:1385 [path bare] targets = [portfolio_root / "methodology_dashboard.py"]  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:1389 [path bare] targets.append(proj / "methodology_dashboard.py")  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:1439 [text bare] print(f"methodology_dashboard.py v{DASHBOARD_VERSION} — portfolio/project health scanner")  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:1441 [text bare] print("Usage: python3 methodology_dashboard.py [options]")  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:1444 [text bare] print("  --no-open          Do not open the generated dashboard.html in a browser.")  -> dashboard.html
+  starter-kit/methodology_dashboard.py:1954 [path bare] ledger = path / "CHANGELOG.md"  -> CHANGELOG.md
+  starter-kit/methodology_dashboard.py:2160 [path bare] adopter = (path / "SESSION_RUNNER.md").is_file()  -> SESSION_RUNNER.md
+  starter-kit/methodology_dashboard.py:2315 [path bare] owes_ledger = (path / "SESSION_RUNNER.md").is_file() or role == "framework"  -> SESSION_RUNNER.md
+  starter-kit/methodology_dashboard.py:2895 [path layout-path] "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",  -> 
+  starter-kit/methodology_dashboard.py:2897 [path bare] "RESEARCH_DOCUMENTATION_WORKSTREAM.md",  -> RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  starter-kit/methodology_dashboard.py:2918 [path bare] GATES_MANIFEST = ".quality-gates.json"  -> .quality-gates.json
+  starter-kit/methodology_dashboard.py:2919 [path bare] GATES_RESULTS_DEFAULT = ".quality-gates-results.json"  -> .quality-gates-results.json
+  starter-kit/methodology_dashboard.py:3181 [path bare] installed = (path / "SESSION_RUNNER.md").is_file()  -> SESSION_RUNNER.md
+  starter-kit/methodology_dashboard.py:3416 [text bare] f"(`quality_ratchet.py --run`)"})  -> quality_ratchet.py
+  starter-kit/methodology_dashboard.py:3546 [path bare] owes_ledger = (metrics["methodology"]["items"].get("SESSION_RUNNER.md", False)  -> SESSION_RUNNER.md
+  starter-kit/methodology_dashboard.py:3554 [text bare] "CHANGELOG.md action ledger (Component C)"})  -> CHANGELOG.md
+  starter-kit/methodology_dashboard.py:3939 [text bare] 'these columns. The two overlap only at CHANGELOG.md and HANDOFFS.md. See the '  -> CHANGELOG.md, HANDOFFS.md
+  starter-kit/methodology_dashboard.py:4038 [text bare] "no root SESSION_RUNNER.md")  -> SESSION_RUNNER.md
+  starter-kit/methodology_dashboard.py:4655 [path bare] HISTORY_FILE = "dashboard_history.jsonl"  -> dashboard_history.jsonl
+  starter-kit/methodology_dashboard.py:4797 [text bare] "  Usage: python3 methodology_dashboard.py --sync [DIR] --dry-run\n"  -> methodology_dashboard.py
+  starter-kit/methodology_dashboard.py:4840 [path bare] output_path = root / "dashboard.html"  -> dashboard.html
+starter-kit/methodology_trim.py: 20 sites
+  starter-kit/methodology_trim.py:262 [path layout-path] ARCHIVE_DIR = "docs/archive"  -> 
+  starter-kit/methodology_trim.py:368 [path bare] "CHANGELOG.md": LedgerSpec(  -> CHANGELOG.md
+  starter-kit/methodology_trim.py:369 [path bare] basename="CHANGELOG.md",  -> CHANGELOG.md
+  starter-kit/methodology_trim.py:393 [path bare] "HANDOFFS.md": LedgerSpec(  -> HANDOFFS.md
+  starter-kit/methodology_trim.py:394 [path bare] basename="HANDOFFS.md",  -> HANDOFFS.md
+  starter-kit/methodology_trim.py:1173 [text bare] "than trusting this sentence. Written by `methodology_trim.py` v%s.\n\n"  -> methodology_trim.py
+  starter-kit/methodology_trim.py:1243 [text bare] "**Written by:** `methodology_trim.py` v%(ver)s — a tool action, not a session's judgment.\n"  -> methodology_trim.py
+  starter-kit/methodology_trim.py:1294 [text bare] # Losslessness proof for @@SHARD@@ — generated by methodology_trim.py v@@VER@@.  -> methodology_trim.py
+  starter-kit/methodology_trim.py:1622 [text bare] # FRAMEWORK_APPARATUS.md says a trim earns its own commit, and issue #93 measured what it costs --  -> FRAMEWORK_APPARATUS.md
+  starter-kit/methodology_trim.py:1802 [text bare] m = re.search(r"methodology_trim\.py v([0-9][0-9.]*[0-9])", text)  -> methodology_trim.py
+  starter-kit/methodology_trim.py:1813 [text bare] "%s is not in the form methodology_trim.py writes it: %s"  -> methodology_trim.py
+  starter-kit/methodology_trim.py:1885 [text bare] "%s: re-derived by methodology_trim.py v%s from the grammar lifted out of its frozen "  -> methodology_trim.py
+  starter-kit/methodology_trim.py:2208 [text layout-path] "the flat docs/archive/<BASENAME>-through-<CUTKEY>.md shape mandatory precisely "  -> 
+  starter-kit/methodology_trim.py:2326 [text layout-path] "flat docs/archive/<BASENAME>-through-<CUTKEY>.md shape mandatory precisely "  -> 
+  starter-kit/methodology_trim.py:2514 [path bare] return "CHANGELOG.md"  -> CHANGELOG.md
+  starter-kit/methodology_trim.py:2535 [path bare] prog="methodology_trim.py",  -> methodology_trim.py
+  starter-kit/methodology_trim.py:2552 [text bare] p.add_argument("--version", action="version", version="methodology_trim.py v" + TRIM_VERSION)  -> methodology_trim.py
+  starter-kit/methodology_trim.py:2561 [text bare] print("methodology_trim.py: --reverify is read-only and takes its own shard; it cannot "  -> methodology_trim.py
+  starter-kit/methodology_trim.py:2571 [text bare] print("methodology_trim.py: --file is required", file=sys.stderr)  -> methodology_trim.py
+  starter-kit/methodology_trim.py:2574 [text bare] print("methodology_trim.py: one --file per --write. A batched trim has a rollback that "  -> methodology_trim.py
+starter-kit/quality_ratchet.py: 16 sites
+  starter-kit/quality_ratchet.py:51 [path bare] CONFIG_NAME = ".quality-gates.json"  -> .quality-gates.json
+  starter-kit/quality_ratchet.py:52 [path bare] DEFAULT_RESULTS = ".quality-gates-results.json"  -> .quality-gates-results.json
+  starter-kit/quality_ratchet.py:212 [text bare] (SAFEGUARDS.md, Blast Radius Limits). Tightening never needs approval.  -> SAFEGUARDS.md
+  starter-kit/quality_ratchet.py:369 [text bare] msg = f"{n} gate(s) declared, never run here — `quality_ratchet.py --run` measures them"  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:390 [text bare] # installed by quality_ratchet.py — refuses a commit that LOOSENS a declared quality  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:391 [text bare] # threshold in .quality-gates.json, or removes the manifest. Tightening and adding pass.  -> .quality-gates.json
+  starter-kit/quality_ratchet.py:421 [path bare] if "quality_ratchet.py" in existing:  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:473 [path bare] import shutil; shutil.copy(here, os.path.join(d, "quality_ratchet.py"))  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:477 [path bare] rc, out, _ = run([py, "quality_ratchet.py", "--run"], cwd=d)  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:481 [path bare] rc, out, _ = run([py, "quality_ratchet.py", "--status"], cwd=d)  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:486 [path bare] rc, out, _ = run([py, "quality_ratchet.py", "--run"], cwd=d)  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:491 [path bare] rc, out, _ = run([py, "quality_ratchet.py", "--run"], cwd=d)  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:495 [path bare] run([py, "quality_ratchet.py", "install-hook"], cwd=d)  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:536 [text bare] print(f"quality_ratchet.py v{VERSION} — declared quality thresholds that only tighten")  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:538 [text bare] print("Usage: python3 quality_ratchet.py <command> [--json]")  -> quality_ratchet.py
+  starter-kit/quality_ratchet.py:544 [text bare] print("  --precommit    What the hook runs: refuse a staged .quality-gates.json whose")  -> .quality-gates.json
+not scanned: bin/_manifest.py (the manifest is the table of paths itself)
+not scanned: bin/tests.sh (the suite encodes the layout and is parameterised over both (plan C13))
+not scanned: tools/methodology_dashboard.py (byte-identical twin of starter-kit/methodology_dashboard.py, scanned once)
+check-layout-literals: scanned 17 files; 177 sites (109 path, 68 text); 1 acknowledged; 202 prose not counted
+
+# exit status of the run above, read bare and not through a pipe: 1 (sites listed)

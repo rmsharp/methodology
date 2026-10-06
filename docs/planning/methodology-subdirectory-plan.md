@@ -2,8 +2,8 @@
 
 **Status: DRAFT, DECIDED. The plan is this session's (S273) deliverable; nothing in it is implemented.**
 **Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended:** D1 (a), D6
-(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). P0 is done;
-P1 is next.
+(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 and P1 are
+done (P1 at S274, §7.1); P2 is next.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). Decisions
 D1-D3 in §9 gate Phase 1; D4-D9 gate the phase that uses them. §5A (syncing) was added at the
 operator's instruction during the session. **Declared budget: 60,000 B**, one agent
@@ -170,7 +170,7 @@ owns it. File:line are at `c8b9ddd`.
 | C5 | `.githooks/pre-commit` names `CHANGELOG.md` at the root five times (`:194`, `:222` twice, `:256`, `:265`). The adopters' ledger hooks are older copies of the same logic (`chat_verification`, `church_growth`) | **Measured** (`hook-after-move.sh`): with hooks on, the unmoved control is refused (exit 1); the move commit **passes** (exit 0); a later commit that changes tracked content with no ledger entry **passes** (exit 0). After the ledger leaves the root, `git ls-files --error-unmatch CHANGELOG.md` fails and the hook takes its *"no ledger exists, never block"* branch (`:265`): **the gate that enforces failure mode #27 fails open, silently**, which is BL-77's failure mode, caused by the move itself. `.githooks/` must also **not** move: `core.hooksPath` is per clone and one adopter's is an absolute path | Layout-aware hook ships **before** any move, with the later-commit case (X2) as a permanent test; `.githooks/` stays at the root (D4) | P2 |
 | C6 | The **never-edit gate** (`pre-commit:192-222`) refuses a change to any committed ledger entry | Entries hold relative links written when the ledger sat at the root: this repo's `CHANGELOG.md` has 79 (64 root-relative), `nprcgenekeepr`'s `HANDOFFS.md` 33. After a move they are dead **and cannot be rewritten**. No gate or test validates links inside a ledger (searched `check-ledger`, `check-handoff`, `bin/tests.sh`) | Do not rewrite. Convention, stated once in the runner: a ledger link is relative to the ledger's location *when written*. New entries use `../`-relative links | P8 |
 | C7 | The **trimmer**: `ARCHIVE_DIR = "docs/archive"`, `REBASE_PREFIX = "../../"` (`methodology_trim.py:262-263`), links outside `../` and `/` are rebased by that prefix (`_in_domain :623-634`, `build_shard :1218`) | After a move, a shard link written for a root ledger is wrong by one level (`../../methodology/` is the right prefix). **Not** the proofs: each shipped `.verify.sh` pins its own commits (`git show <trim>^:HANDOFFS.md`) and its own `PREFIX`, and **117 of 117 give the same exit code** with the ledgers moved, and with the archive moved too (`frozen-proofs.sh`: 112 exit 0, 5 exit 1 in all three trees; the 5 are the August shards, BL-36's class, not a result of a move) | `ARCHIVE_DIR` and the prefix derived from the ledger's directory; new shards' proofs carry the new paths; old proofs are never touched | P3 |
-| C8 | The **dashboard** scores a project by path: the methodology checklist (`tools/methodology_dashboard.py:163-173`: `SESSION_RUNNER.md` 25, `SAFEGUARDS.md` 20, `SESSION_NOTES.md` 20, `BACKLOG.md` 15, three ledgers 5 each, `docs/methodology` 10 and `/workstreams` 10, sum 115), the adoption test `(path / "SESSION_RUNNER.md").is_file()` (`:2160`, `:2315`, `:3181`), the installed-source fingerprint (`:813`, `:840-884`) | A migrated adopter scores **0 of 115** on that dimension, reads as "not adopted", and owes no ledger until the scanner learns the layout. 51 lines in the file name a root path | Resolver; the checklist items become names resolved through it; `.methodology-profile` stays the override | P5 |
+| C8 | The **dashboard** scores a project by path: the methodology checklist (`tools/methodology_dashboard.py:163-173`: `SESSION_RUNNER.md` 25, `SAFEGUARDS.md` 20, `SESSION_NOTES.md` 20, `BACKLOG.md` 15, three ledgers 5 each, `docs/methodology` 10 and `/workstreams` 10, sum 115), the adoption test `(path / "SESSION_RUNNER.md").is_file()` (`:2160`, `:2315`, `:3181`), the installed-source fingerprint (`:813`, `:840-884`) | A migrated adopter scores **0 of 115** on that dimension, reads as "not adopted", and owes no ledger until the scanner learns the layout. 79 string constants in the file name a root path (`bin/check-layout-literals`, S274; this plan's first count, 51, came from one grep that could not be reproduced) | Resolver; the checklist items become names resolved through it; `.methodology-profile` stays the override | P5 |
 | C9 | `context_budget.py` (`CONFIG_NAME` `:43`, `HISTORY_NAME :44`, `find_root :320`) and the ratchet read their config by a fixed name under the root; the config's own `files[]` and `command` strings hold root paths (6-28 lines per adopter in `.context-budget.json`, 2-4 in `.quality-gates.json`) | Seeds are adopter-owned and `bin/sync` never rewrites them, so every adopter's config needs a migration the tool must perform | `bin/migrate-layout` rewrites paths inside the two JSON files, shows the diff first | P4, P7 |
 | C10 | `close_out_report.py` defaults `HANDOFFS.md` (`:71`, `:178`, `:224`); its Stop-hook command bakes `os.path.abspath(__file__)` (`:213`) | A move silently stops the hook. **Not installed anywhere today** (searched `~/.claude` and seven adopters' `.claude/`) | Write the install snippet layout-aware before anyone installs it | P3 |
 | C11 | Adopter-owned references: `CLAUDE.md` (4-42 lines each, including the SESSION PROTOCOL block that names `SESSION_RUNNER.md`: `CLAUDE_TEMPLATE.md:9`), CI `paths-ignore` (`nprcgenekeepr`), `.claude/` permission rules, `.gitignore` | Agents are pointed at a file that is no longer there; CI starts running on doc-only commits; one R test fails | The migration tool lists every hit, rewrites `CLAUDE.md` paths from a printed diff, reports the rest. A benefit: ~20 `paths-ignore` lines become `methodology/**` | P7, adopters |
@@ -195,8 +195,13 @@ report tests), 29, 31, 38, 40 and 50; tree B's eleven are in 18, 29, 38, 40 and 
 measured"*: they read as green and measure nothing, which is the failure this repository has already met
 (Test 31's vacuous 0 = 0 after a trim). Passes fall by 34 and 38 while only 12 and 11 assertions
 fail: the rest are assertions a crashed or skipped section never reached. **So the criterion for every
-phase is passed ≥ 452, failed 0, skipped 0** (the baseline's counts at `c8b9ddd`, to be re-measured at
-each phase's own start), never "the suite is green".
+phase is the unmoved tree's own triple, compared in the same state: failed 0, and passed and skipped
+exactly as the unmoved tree reads them**, never "the suite is green". The triple depends on how many
+receipts `HANDOFFS.md` holds, because Test 34 prints six stated SKIPs below three (fork Learning #70): the
+452 / 0 / 0 above is the **three-receipt** baseline at `c8b9ddd`, and after P1 wired one suite the unmoved
+tree reads **453 / 0 / 0 at three receipts and 447 / 0 / 6 at two** (S274, measured). A phase that starts
+just after a trim measures its baseline at two and compares its moved tree at two: those six skips are
+not a move's silent skips. Re-measure the baseline at each phase's own start.
 
 ---
 
@@ -249,10 +254,17 @@ holds them:
 | absent | absent | the framework repo (`starter-kit/SESSION_RUNNER.md`) or not an adopter |
 
 The shipped tools are single stdlib files that adopters receive one by one, so there is no shared module
-to import; each carries the same ~20 lines, and a canonical test asserts the copies are byte-identical
-(the dashboard's twin test is the precedent). The shell hook cannot call it; it tests the same two
-paths. **Every tool resolves the layout once and derives every other path from the result**, so a path
-is written in one place.
+to import; each carries the same marked block (`tools/layout_resolver.py`, 15 lines), and a canonical test
+asserts the copies are byte-identical (`embedded_block`; the dashboard's twin test is the precedent). The
+shell hook cannot call it; it tests the same two paths.
+
+**The table is keyed on an anchor file the caller names (refined at P1, S274).** `SESSION_RUNNER.md` is the
+default, for the framework's files; a tool that reads a state file (a ledger, a JSON config) resolves with
+`CHANGELOG.md`. One directory is not enough: §4.6 makes a tier-1-only adopter (framework files moved,
+ledgers still at the root) a coherent end state, and a tool that found the ledger through the runner's
+directory would look for a file that is not there, which is C5's silent fail-open again.
+**Every tool resolves once per anchor and derives every other path from the result**, so a path is
+written in one place.
 
 ### 4.4 One documentation convention, not 2,400 edits
 
@@ -431,8 +443,9 @@ potential conflict with the fork's resolver edits for as long as upstream does n
 ## 7. The phases
 
 One phase is one session unless stated. Every phase closes out in full (`SESSION_RUNNER.md` Phase 3).
-**Every phase's suite criterion is §3.1's: passed ≥ 452, failed 0, skipped 0, re-measured at the phase's
-own start.**
+**Every phase's suite criterion is §3.1's: failed 0, and passed and skipped equal to the unmoved tree's,
+measured at the phase's own start in the same receipt state (after P1: 453 / 0 / 0 at three receipts,
+447 / 0 / 6 at two).**
 
 | Phase | Deliverable | Sessions | Needs |
 |---|---|---:|---|
@@ -459,9 +472,9 @@ one-deliverable rule is the default.
 - **DONE:** the resolver in one canonical-only module with the four-row table of §4.3 as its unit tests;
   a `tools/test_layout_resolver.py` suite wired into `bin/tests.sh`; **fixture trees in both layouts**
   that every later phase reuses; the **literal scanner**, run RED against `c8b9ddd` and listing every
-  line that names a root path of a methodology file in a shipped tool (51 lines in the dashboard, 13 in
-  the trimmer, 6 in the hook, 7 in `check-handoff`, 3 in `close_out_report.py`, one grep's count, not
-  yet tidied of comments);
+  line that names a root path of a methodology file in a shipped tool (S274 measured 79 sites in the
+  dashboard, 20 in the trimmer, 21 in the hook, 8 in `check-handoff`, 3 in `close_out_report.py`, 177 in all
+  over 12 files; the plan's first figures, 51, 13, 6, 7 and 3, came from one grep that could not be reproduced);
   a ratchet gate for each new suite, floor set from its measured count.
 - **Verify:** `bash bin/tests.sh > /tmp/o.txt` (capture it; the ratchet keeps none), the §3.1 criterion;
   `python3 starter-kit/quality_ratchet.py --run`; the scanner exits non-zero with the list.
@@ -521,7 +534,7 @@ go-ahead**. G-B is §5's decision and, if taken, its own plan.
 
 | Check | Why it can fail the way production fails |
 |---|---|
-| Suite counts: passed ≥ 452, failed 0, **skipped 0**, re-measured at each phase's start | A move turns tests into silent skips (§3.1) |
+| Suite counts: failed 0; passed and skipped equal to the unmoved tree's in the same receipt state (**skipped 0 at three receipts, 6 at two**), re-measured at each phase's start | A move turns tests into silent skips (§3.1) |
 | A later content commit with **no ledger entry is refused** in the new layout (X2) | C5: otherwise the ledger gate fails open, silently |
 | A scratch portfolio of a legacy, a migrated and an empty project: `bin/sync` and the dashboard `--sync` write exactly the expected files | C1, C15 |
 | The resync simulation (§5A.4) re-run against the then-current `upstream/main` before any real move of this repo's files | C17 |
@@ -563,7 +576,7 @@ D4, D5, D7 and D9 as written.
   covers the 12 sibling projects); whether the maintainer will adopt the layout (D8) and so how often
   the fork's resolver edits will conflict with his; Claude Code behaviour beyond "`CLAUDE.md` is read from the project
   root", which this plan relies on and did not re-test; the real cost of P5, since the dashboard is
-  4,900 lines of which 51 lines naming a root path are only the visible part.
+  4,900 lines, of which the 79 sites naming a root path (S274's scanner) are only the visible part.
 
 ## 11. Evidence, and how to re-run it
 
@@ -581,6 +594,7 @@ beside the scripts. Counts are of tracked files at `c8b9ddd`.
 | `frozen-proofs.sh` | `bash .../frozen-proofs.sh` (minutes) | §3 C7: 117 proofs, 3 trees |
 | `suite-blast-radius.txt` | `bash bin/tests.sh` in a `--no-local` clone with the files moved (the outputs are the recorded ones) | §3.1 |
 | `adopter-survey-output.txt`, `*-output.txt` | the recorded outputs of the scripts above | §2.2 and the rest |
+| `layout-literals-output.txt` | `python3 -B bin/check-layout-literals` (the scanner is the script) | §7.1: the RED list at P1, 177 sites in 12 files, exit 1 |
 
 Greps behind the other claims: `git grep -n 'CHANGELOG.md' .githooks/pre-commit`;
 `git grep -n 'ARCHIVE_DIR\|REBASE_PREFIX' starter-kit/methodology_trim.py`;
