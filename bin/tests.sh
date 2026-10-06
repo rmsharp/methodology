@@ -287,6 +287,14 @@ if python3 "$METHODOLOGY/tools/test_close_out_report.py" >/dev/null 2>&1; then
 else
     fail "close-out report generator unit tests failed"
 fi
+# The methodology/ directory move (BL-101 P1): the layout resolver, the fixture trees in both layouts and the
+# literal scanner's own behaviour, on scratch trees. Canonical-only. It tests the scanner; it does NOT run the
+# scanner over this repository, which is RED on purpose until P6 and is not a gate before then.
+if python3 "$METHODOLOGY/tools/test_layout_resolver.py" >/dev/null 2>&1; then
+    pass "layout resolver, fixture trees and literal scanner unit tests green"
+else
+    fail "layout resolver, fixture trees and literal scanner unit tests failed"
+fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
 diff -q "$METHODOLOGY/tools/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null \

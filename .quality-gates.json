@@ -8,13 +8,14 @@
   "_fork_d3_check_ledger_scope_bl95": "FORK-ONLY SCOPE, not a threshold (S270, 2026-10-06, BL-95 R1 fix-up F2, D3 of docs/planning/upstream-resync-2026-10-plan.md, operator-approved 2026-10-06): the check-ledger gate runs `bin/check-ledger` on the LIVE ledger, not `--all` as upstream declares it. `--all` also reads this fork's frozen archive shards, one of which holds a finding that cannot be repaired: docs/archive/CHANGELOG-through-2026-08-11.md:609, a 2026-08-10 heading carrying two source tags, and the shard is proof-locked, so editing the line breaks its .verify.sh (L3). Threshold stays 0 and the direction stays max; the live ledger is still held to it. Later shards are not shape-checked by this gate: the trimmer's proof covers their losslessness and their entries were checked while live. bin/tests.sh Test 50's last assertion reads the live ledger for the same reason.",
   "_s271_tightening_bl95_r2": "FORK-ONLY TIGHTENING (S271, 2026-10-06, BL-95 R2, docs/planning/upstream-resync-2026-10-plan.md section 5): tests-sh-passed 343 -> 446 and dashboard-unit-tests 336 -> 353, the values MEASURED after the resync merge brought upstream's tests in. tests-sh-passed was read in a --no-local clone of 4ae8b5d with HANDOFFS.md reduced to the TWO receipts this gate is measured in (the pending S271 stub removed), output captured to a file: `446 passed, 0 failed, 6 skipped` (Test 34's six stated SKIPs). An earlier read of a clone of 79506ca gave 445 passed, 1 failed: Test 30's real-ledger row read the live CHANGELOG.md alone and went red when the R2 trim moved the last **Model:** bullet into the shard; fixed at 4ae8b5d, so 446 is measured AFTER that fix. dashboard-unit-tests is `python3 tools/test_methodology_dashboard.py` at the same tip: `Ran 353 tests`, OK (4 skipped; skips count in Ran). The other count gates already sit at their measured values (trimmer 181, context budget 148, close-out report 68, ratchet 45). Tightening needs no approval and the hook accepts it. Like every value here it is the ONLINE value: a machine that cannot reach GitHub counts Test 9 as a skip and reads fewer passes.",
   "_s272_tightening_bl99": "FORK-ONLY TIGHTENING (S272, 2026-10-06, BL-99): dashboard-unit-tests 353 -> 356, the count `python3 tools/test_methodology_dashboard.py` printed (Ran 356 tests, OK, skipped=4 as before) in a --no-local clone of 75f665e, whose three new TestQualityGateSignals tests cover the first-parent manifest walk; quality_ratchet.py --run there read 13/13, results fa1343d019ab. A tightening: the hook accepts it.",
+  "_s274_tightening_bl101_p1": "FORK-ONLY TIGHTENING (S274, 2026-10-06, BL-101 P1): tests-sh-passed 446 -> 447 and the gate layout-unit-tests added at 62 (adding a gate is a tightening; the hook accepts it). 447 is MEASURED, not derived: `bash bin/tests.sh` in a --no-local clone of 078a6cc (the commit after the S274 trim and fold, HANDOFFS.md at the TWO receipts this gate is measured in) with this session's five code files overlaid, output captured to a file: `447 passed, 0 failed, 6 skipped` (Test 34's six stated SKIPs); the one new pass is the wired suite, and Test 31 still compared 666 with 666. layout-unit-tests is `python3 tools/test_layout_resolver.py`: `Ran 62 tests`, OK. The scanner that suite tests, bin/check-layout-literals, is deliberately NOT a gate: it is RED on this tree (177 sites) until P6 wires it at zero (docs/planning/methodology-subdirectory-plan.md section 7.1).",
   "version": 1,
   "results_file": ".quality-gates-results.json",
   "gates": [
     {
       "name": "tests-sh-passed",
       "direction": "min",
-      "threshold": 446,
+      "threshold": 447,
       "command": "bash bin/tests.sh",
       "extract": "== Summary: (\\d+) passed",
       "why": "the framework's build equivalent; the passed count is a ratchet — every suite it wires in (dashboard, trim, budget, ratchet units) reports through it"
@@ -63,6 +64,14 @@
       "threshold": 45,
       "command": "python3 tools/test_quality_ratchet.py",
       "extract": "Ran (\\d+) tests"
+    },
+    {
+      "name": "layout-unit-tests",
+      "direction": "min",
+      "threshold": 62,
+      "command": "python3 tools/test_layout_resolver.py",
+      "extract": "Ran (\\d+) tests",
+      "why": "BL-101 P1 (S274): the layout resolver, the fixture trees in both layouts and the literal scanner's own behaviour on scratch trees. Count never drops; green/red is carried by tests-sh-passed. 62 is measured (Ran 62 tests, OK)."
     },
     {
       "name": "check-links",
