@@ -222,7 +222,7 @@ GOT="$(echo "$OUT" | grep -c "$(basename "$P")")"
 [ "$GOT" = "$EXPECTED" ] && pass "status: one row per manifest file ($GOT == $EXPECTED)" || fail "status: row count $GOT != manifest $EXPECTED"
 # Freshly-synced tree: every tracked file current, nothing flagged as drift
 echo "$OUT" | grep -q "current" && pass "status: fresh tree shows current" || fail "status: fresh tree missing current"
-if echo "$OUT" | grep -Eq "locally modified|versions? behind"; then fail "status: fresh tree shows spurious drift"; else pass "status: fresh tree shows no drift"; fi
+if grep -Eq "locally modified|versions? behind" <<< "$OUT"; then fail "status: fresh tree shows spurious drift"; else pass "status: fresh tree shows no drift"; fi
 rm -rf "$P"
 
 echo "== Test 16: an absent seed file is reported, never flagged as drift (Phase 4 DONE) =="
@@ -232,7 +232,7 @@ rm -f "$P/CHANGELOG.md"   # CHANGELOG.md is a SEED file (adopter-owned)
 SEEDLINE="$("$BIN/status" "$P" | grep "CHANGELOG.md")"
 echo "$SEEDLINE" | grep -q "seed" && pass "status: CHANGELOG shown with seed disposition" || fail "status: CHANGELOG not marked seed"
 echo "$SEEDLINE" | grep -q "absent" && pass "status: absent seed shown as 'absent'" || fail "status: absent seed not 'absent'"
-if echo "$SEEDLINE" | grep -q "missing"; then fail "status: absent seed mislabeled as drift (missing)"; else pass "status: absent seed NOT flagged as drift"; fi
+if grep -q "missing" <<< "$SEEDLINE"; then fail "status: absent seed mislabeled as drift (missing)"; else pass "status: absent seed NOT flagged as drift"; fi
 rm -rf "$P"
 
 echo "== Test 17: a partially-stale tree flags only the stale file (Phase 4) =="
@@ -299,8 +299,8 @@ P="$(mktemp_project)"
 # or it is vacuous — it would pass on the prose note regardless of the table row (adversarial-review fix).
 # (a) Freshly-seeded CHANGELOG carries the current action-ledger format → plain 'present', no note.
 OUT="$("$BIN/status" "$P")"
-echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && fail "status: current-format (fresh) seed mis-flagged stale" || pass "status: current-format (fresh) seed not flagged"
-echo "$OUT" | grep -q "^note:" && fail "status: spurious stale-format note on fresh tree" || pass "status: no stale-format note on fresh tree"
+grep "CHANGELOG.md" <<< "$OUT" | grep -v '^note:' | grep "stale format" >/dev/null && fail "status: current-format (fresh) seed mis-flagged stale" || pass "status: current-format (fresh) seed not flagged"
+grep -q "^note:" <<< "$OUT" && fail "status: spurious stale-format note on fresh tree" || pass "status: no stale-format note on fresh tree"
 # (b) In-use current-format ledger: the METHODOLOGY-SEED-SENTINEL is deleted (as the adopter does on its
 # first real entry) and a dated entry appended, but the seed's marker line is retained. This is the exact
 # case the marker choice is engineered around (key on a lifetime-stable line the seed tells adopters to
@@ -309,8 +309,8 @@ echo "$OUT" | grep -q "^note:" && fail "status: spurious stale-format note on fr
 printf '# Changelog — Authoritative Action Ledger\n\nThe action ledger. ledger-format: 2 — keep this marker.\n\n---\n\n### 2026-01-01 · [ad hoc] a real entry\n- Change: something real.\n' > "$P/CHANGELOG.md"
 grep -q "METHODOLOGY-SEED-SENTINEL" "$P/CHANGELOG.md" && fail "test-bug: in-use fixture still carries the sentinel" || pass "test: in-use fixture is current-format with the sentinel deleted"
 OUT="$("$BIN/status" "$P")"
-echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:' | grep -q "stale format" && fail "status: in-use current-format ledger mis-flagged stale (constraint #2)" || pass "status: in-use current-format ledger not flagged"
-echo "$OUT" | grep -q "^note:" && fail "status: spurious note on in-use current-format ledger" || pass "status: no note on in-use current-format ledger"
+grep "CHANGELOG.md" <<< "$OUT" | grep -v '^note:' | grep "stale format" >/dev/null && fail "status: in-use current-format ledger mis-flagged stale (constraint #2)" || pass "status: in-use current-format ledger not flagged"
+grep -q "^note:" <<< "$OUT" && fail "status: spurious note on in-use current-format ledger" || pass "status: no note on in-use current-format ledger"
 # (b2) The seed as shipped before ledger-format 2, frozen in tools/fixtures/: it carries the current TITLE
 # and the full rules text, and must still read stale. BOOTSTRAP.md ("Updating an existing project…") promises status "flags any seed
 # whose format predates the current methodology"; a marker present in any earlier format can never keep
@@ -327,11 +327,11 @@ ROW="$(echo "$OUT" | grep "CHANGELOG.md" | grep -v '^note:')"   # table row only
 echo "$ROW" | grep -q "seed" && pass "status: stale seed keeps its seed disposition" || fail "status: stale seed lost seed disposition"
 echo "$ROW" | grep -q "stale format" && pass "status: pre-v3.1 seed flagged 'present (stale format)'" || fail "status: stale seed not flagged"
 # Advisory only — never reclassified as drift.
-if echo "$ROW" | grep -Eq "missing|locally modified|versions? behind"; then fail "status: stale seed mislabeled as drift"; else pass "status: stale seed NOT treated as drift"; fi
+if grep -Eq "missing|locally modified|versions? behind" <<< "$ROW"; then fail "status: stale seed mislabeled as drift"; else pass "status: stale seed NOT treated as drift"; fi
 echo "$OUT" | grep -q "^note:" && pass "status: emits the migration note beneath the table" || fail "status: no migration note for stale seed"
 # (d) A seed without a format marker (SESSION_NOTES.md) is never format-checked → never stale.
 echo "arbitrary adopter content" > "$P/SESSION_NOTES.md"
-"$BIN/status" "$P" | grep "SESSION_NOTES.md" | grep -v '^note:' | grep -q "stale format" && fail "status: markerless seed mis-flagged" || pass "status: markerless seed never flagged stale"
+grep "SESSION_NOTES.md" <<< "$("$BIN/status" "$P")" | grep -v '^note:' | grep "stale format" >/dev/null && fail "status: markerless seed mis-flagged" || pass "status: markerless seed never flagged stale"
 # (e) The flag never triggers an overwrite: sync leaves the adopter-owned stale seed untouched.
 "$BIN/sync" "$P" >/dev/null
 grep -q "\[Unreleased\]" "$P/CHANGELOG.md" && pass "sync: stale seed left untouched (still adopter-owned)" || fail "sync: stale seed was overwritten"
@@ -354,7 +354,7 @@ echo "$NOTE" | grep -q "for CHANGELOG.md, replace the rules text or old header a
 # The trimmer writes an archive-pointer block and a month heading above the first entry; a route that
 # replaced everything there would delete them (an adopter's migration hit exactly this).
 echo "$NOTE" | grep -q "keeping any archive-pointer block and month heading" && pass "status: the CHANGELOG.md route keeps what the trimmer wrote" || fail "status: the CHANGELOG.md route would delete the trimmer's pointer block"
-echo "$NOTE" | grep -q "Size, and when to archive" && fail "status: the note gives HANDOFFS.md's route when only CHANGELOG.md is stale" || pass "status: no HANDOFFS.md route when only CHANGELOG.md is stale"
+grep -q "Size, and when to archive" <<< "$NOTE" && fail "status: the note gives HANDOFFS.md's route when only CHANGELOG.md is stale" || pass "status: no HANDOFFS.md route when only CHANGELOG.md is stale"
 cp "$STARTER/CHANGELOG.md" "$P2/CHANGELOG.md"   # P2's CHANGELOG.md was stale from (f): current seed again
 printf '# Handoff Receipts\n\nNewest on top; prepend-only.\n\n```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n' > "$P2/HANDOFFS.md"
 OUT="$("$BIN/status" "$P2")"
@@ -362,7 +362,7 @@ echo "$OUT" | grep "HANDOFFS.md" | grep -v '^note:' | grep -q "stale format" && 
 NOTE="$(echo "$OUT" | grep '^note:')"
 echo "$NOTE" | grep -q "1 seed predates the current format (HANDOFFS.md," && pass "test: HANDOFFS.md is the only stale seed in P2" || fail "test-bug: P2 is not stale in HANDOFFS.md alone"
 echo "$NOTE" | grep -q "for HANDOFFS.md, bring across the current starter-kit seed's '## Size, and when to archive' section" && pass "status: a stale HANDOFFS.md gets the bring-across-the-section route" || fail "status: the note lacks HANDOFFS.md's own route"
-echo "$NOTE" | grep -qi "replace" && fail "status: the note tells a stale HANDOFFS.md to replace its front matter" || pass "status: no replace route for a stale HANDOFFS.md"
+grep -qi "replace" <<< "$NOTE" && fail "status: the note tells a stale HANDOFFS.md to replace its front matter" || pass "status: no replace route for a stale HANDOFFS.md"
 # The HANDOFFS.md seed as shipped before handoffs-format 2 already had the size section's heading, but
 # with the old premise in it (a 65,536 B byte row priced as a "context tax"). Keyed on that heading, it read
 # current in two of six real adopters that carry exactly that text. Keyed on the versioned marker, it is stale.
@@ -633,7 +633,7 @@ else
     fail "HANDOFFS free-text mention leaked before/out of the SECONDARY section (HYBRID_LN=$HYBRID_LN)"
 fi
 
-echo "$OUT" | grep -q "S41" && fail "entry with no Model bullet was fabricated into the PRIMARY section" || pass "entry without a Model bullet correctly omitted from PRIMARY"
+grep -q "S41" <<< "$OUT" && fail "entry with no Model bullet was fabricated into the PRIMARY section" || pass "entry without a Model bullet correctly omitted from PRIMARY"
 
 echo "$OUT" | grep -qi "never authoritative\|non-authoritative\|corroboration" && pass "corroboration/non-authoritative disclaimer present in output" || fail "no corroboration/non-authoritative disclaimer in output"
 
@@ -873,7 +873,7 @@ case "$HELP" in
     *--allow-pending*) pass "C2 presence control: --help renders and documents --allow-pending" ;;
     *)                 fail "C2 presence control: --help did not mention --allow-pending" ;;
 esac
-if printf '%s' "$HELP" | grep -qiE '1B|stub'; then
+if grep -qiE '1B|stub' <<< "$HELP"; then
     fail "R4 --help still advertises the flag as a Phase 1B/stub checker"
 else
     pass "R4 --help no longer claims the flag checks a Phase 1B stub"
@@ -981,7 +981,7 @@ rm -f "$F"
 # also pins bin/tests.sh:366's long-standing "commit: pending is accepted" assertion
 # at ledger scope rather than single-block scope.
 F="$(mktemp)"; two_block_ledger 'a1b2c3d' > "$F"
-if "$BIN/check-handoff" --file "$F" 2>&1 | grep -q 'S13'; then
+if grep -q 'S13' <<< "$("$BIN/check-handoff" --file "$F" 2>&1)"; then
     fail "N3 the NEWEST receipt was failed for commit: pending — chicken-egg re-created"
 else
     pass "N3 newest receipt is exempt by construction (never failed for commit: pending)"
@@ -1011,7 +1011,7 @@ rm -f "$F"
 # separate `--all` mode over different ground; this is not that and must not become
 # it by accident.
 F="$(mktemp)"; two_block_ledger 'a1b2c3d' | sed '20,$ s/^gotchas: none$//' > "$F"
-if "$BIN/check-handoff" --file "$F" 2>&1 | grep -q 'missing required key'; then
+if grep -q 'missing required key' <<< "$("$BIN/check-handoff" --file "$F" 2>&1)"; then
     fail "N6 the 13-key schema leaked onto an older receipt (issue #65 scope boundary crossed)"
 else
     pass "N6 schema validation stays on blocks[0]; only the answer slot spans the ledger"
@@ -1503,7 +1503,7 @@ rm -f "$CL30" "$HO30"
 
 echo "$OUT30" | grep -q "Claude Opus 5" && pass "list-form (\`- **Model:**\`) bullet still parsed" || fail "list-form bullet regressed"
 echo "$OUT30" | grep -q "Claude Sonnet 5" && pass "bare-form (\`**Model:**\`, this repo's live dialect) bullet now parsed" || fail "bare-form bullet NOT parsed -- BL-20 unfixed"
-echo "$OUT30" | grep -q "S12" && fail "control entry with no Model bullet was fabricated into Source 1" || pass "control entry without a Model bullet correctly omitted"
+grep -q "S12" <<< "$OUT30" && fail "control entry with no Model bullet was fabricated into Source 1" || pass "control entry without a Model bullet correctly omitted"
 
 # Real-file proof, not just a synthetic fixture: BL-20's actual population lives in this repo's own
 # live CHANGELOG.md. Before the fix, this invocation prints the empty-population sentinel string
@@ -1566,7 +1566,7 @@ OUT31="$("$BIN/model-report" --changelog "$CL31" --handoffs "$HO31" --no-git 2>&
 rm -f "$CL31" "$HO31"
 
 echo "$OUT31" | grep -q '\[BL-9\]\[BL-10\]' && pass "multi-tag \`### \` header (\`[BL-9][BL-10]\`) parsed as its own entry" || fail "multi-tag header still not parsed -- BL-33 unfixed"
-echo "$OUT31" | grep -q "Claude Haiku 4.5" && fail "malformed header's Model bullet was fabricated into some other entry" || pass "malformed header's Model bullet correctly dropped, not fabricated"
+grep -q "Claude Haiku 4.5" <<< "$OUT31" && fail "malformed header's Model bullet was fabricated into some other entry" || pass "malformed header's Model bullet correctly dropped, not fabricated"
 echo "$OUT31" | grep -qi "WARNING.*BL-33" && pass "an unparsed \`### \` header is reported as a loud warning, not silently folded" || fail "no loud warning for the unparsed \`### \` header"
 echo "$OUT31" | grep -q "2026-01-03 \[BL-11\] malformed header" && pass "the warning names the exact unparsed line" || fail "warning did not identify the offending line"
 OPUS5_LN="$(echo "$OUT31" | grep -n "Claude Opus 5$" | head -1 | cut -d: -f1)"
@@ -1932,7 +1932,7 @@ EOF_S3
     [ "$SHORT_SKIPS" = "6" ] \
         && pass "SHORT arm states all six unbuildable assertions as skips" \
         || fail "SHORT arm emits $SHORT_SKIPS skip row(s), expected 6 (renamed arm reads as 0)"
-    printf '%s\n' "$SHORT_ARM" | grep -q '^        pass "' \
+    grep -q '^        pass "' <<< "$SHORT_ARM" \
         && fail "SHORT arm routes an unbuildable assertion to pass() -- a green no-op" \
         || pass "SHORT arm routes no unbuildable assertion to pass()"
     # ...and the count must reach the reader. A summary that names only passes and failures hides
@@ -2305,7 +2305,7 @@ restore37
 UNTRACKED37="$(mktemp)"
 cp "$STARTER/FRAMEWORK_LEARNINGS.md" "$UNTRACKED37"
 OUT37="$("$BIN/check-learnings" --file "$UNTRACKED37" --no-citations 2>&1)"
-echo "$OUT37" | grep -q 'SKIPPED' \
+grep -q 'SKIPPED' <<< "$OUT37" \
     && fail "an untracked file was SKIPPED — the budget still depends on git: $OUT37" \
     || pass "no git history needed: an untracked file is not skipped"
 echo "$OUT37" | grep -qE 'row budget: [1-9][0-9]* row\(s\)' \
@@ -2361,7 +2361,7 @@ echo "$OUT37" | grep -q "row #$N37 is 1,900 B" \
     || fail "M2 control: fixture wrong, violation not seen unmutated: $OUT37"
 if mutate "$BIN/check-learnings" "$M37" 's.replace("for n, _c, _l, raw in rows", "for n, _c, _l, raw in rows[-1:]", 1)'; then
     OUT37="$(cl37m "$M37")"
-    echo "$OUT37" | grep -q "row #$N37 is 1,900 B" \
+    grep -q "row #$N37 is 1,900 B" <<< "$OUT37" \
         && fail "MUTANT SURVIVED: a last-row-only budget still caught an earlier row: $OUT37" \
         || pass "mutant killed: narrowing the budget's domain misses a non-newest violation"
 else fail "M2 mutation DID NOT APPLY"; fi
@@ -2371,7 +2371,7 @@ restore37
 N37="$(add_row37 1700)"
 if mutate "$BIN/check-learnings" "$M37" 's.replace("ROW_BUDGET_BYTES = 1500", "ROW_BUDGET_BYTES = 5000", 1)'; then
     OUT37="$(cl37m "$M37")"
-    echo "$OUT37" | grep -q "row #$N37 is" \
+    grep -q "row #$N37 is" <<< "$OUT37" \
         && fail "MUTANT SURVIVED: a 1,700 B row still caught at a 5,000 B budget" \
         || pass "mutant killed: raising the budget stops catching the row it was set for"
 else fail "M3 mutation DID NOT APPLY"; fi
@@ -2583,7 +2583,7 @@ OUT38="$("$BIN/check-handoff" --file "$UNTRACKED38" --allow-pending 2>&1)"
 echo "$OUT38" | grep -q 'record budget SKIPPED' \
     && pass "no frozen counterpart: the skip is STATED" \
     || fail "no frozen counterpart: skip not stated: $OUT38"
-echo "$OUT38" | grep -q 'unwritten record(s)' \
+grep -q 'unwritten record(s)' <<< "$OUT38" \
     && fail "the skip printed a checked-population figure, so it reads as a pass: $OUT38" \
     || pass "the skip does NOT print a checked-population figure"
 rm -f "$UNTRACKED38"
@@ -2809,7 +2809,7 @@ open(p, "w", encoding="utf-8").write(new)
 PY38E
 if mutate "$BIN/check-handoff" "$M38" 's.replace("if working == frozen:", "if frozen:", 1)'; then
     OUT38="$(ch38m "$M38")"
-    echo "$OUT38" | grep -q 'per-record budget by' \
+    grep -q 'per-record budget by' <<< "$OUT38" \
         && fail "MUTANT SURVIVED: a presence test still caught a grown committed record" \
         || pass "mutant killed: a presence test misses a grown committed record"
 else fail "M2 mutation DID NOT APPLY"; fi
@@ -2819,7 +2819,7 @@ restore38
 if mutate "$BIN/check-handoff" "$M38" 's.replace("return [], \"record budget SKIPPED (%s) — nothing checked\" % why", "return [], \"record budget: 0 unwritten record(s), 0 over 12,288 B\"", 1)'; then
     UNTRACKED38="$(mktemp)"; cp "$FIXFILE38" "$UNTRACKED38"
     OUT38="$(python3 "$M38" --file "$UNTRACKED38" --allow-pending 2>&1)"
-    echo "$OUT38" | grep -q 'record budget SKIPPED' \
+    grep -q 'record budget SKIPPED' <<< "$OUT38" \
         && fail "MUTANT SURVIVED: the skip arm still announced itself" \
         || pass "mutant killed: a skip disguised as a completed check loses its SKIPPED marker"
     rm -f "$UNTRACKED38"
@@ -2829,7 +2829,7 @@ else fail "M3 mutation DID NOT APPLY"; fi
 S38="$(add_record38 20000 field)"
 if mutate "$BIN/check-handoff" "$M38" 's.replace("RECORD_BUDGET_BYTES = 12288", "RECORD_BUDGET_BYTES = 50000", 1)'; then
     OUT38="$(ch38m "$M38")"
-    echo "$OUT38" | grep -q "record $S38 is" \
+    grep -q "record $S38 is" <<< "$OUT38" \
         && fail "MUTANT SURVIVED: a 20,000 B record still caught at a 50,000 B budget" \
         || pass "mutant killed: raising the budget stops catching the record it was set for"
 else fail "M4 mutation DID NOT APPLY"; fi
@@ -2841,7 +2841,7 @@ restore38
 S38="$(add_record38 20000 prose)"
 if mutate "$BIN/check-handoff" "$M38" 's.replace("end = (blocks[i + 1][\"line\"] - 1) if i + 1 < len(blocks) else len(lines)", "end = start + b[\"content\"].count(chr(10)) + 3", 1)'; then
     OUT38="$(ch38m "$M38")"
-    echo "$OUT38" | grep -q "record $S38 is 20,000 B" \
+    grep -q "record $S38 is 20,000 B" <<< "$OUT38" \
         && fail "MUTANT SURVIVED: fence-only extent still counted the trailing prose" \
         || pass "mutant killed: a fence-only extent misses prose-carried overage"
 else fail "M5 mutation DID NOT APPLY"; fi
@@ -3699,6 +3699,171 @@ print(m.group(1).replace(",", "") if m else "NONE")
     fi
     rm -f "$M44F"
 fi
+
+echo "== Test 45: no early-exiting consumer decides a fail arm, so a flake cannot read a defect as a pass (BL-97, RED-first) =="
+# `:5` sets `pipefail`. A consumer that exits at its first match (`grep -q`, `grep -m`, `head`,
+# `sed q`) can leave its producer with bytes still to write; the producer takes SIGPIPE and the
+# MATCHED pipeline is scored FAILED. Measured at 1.5 KB: `echo "$(cat f)" | grep -q PAT` failed
+# 10 of 3,000 runs, `grep -q PAT <<< "$(cat f)"` 0 of 3,000 (BL-97). Which way the flake points is
+# decided by the ARM the pipeline guards: on `&& pass || fail` it is a loud false red, but on
+# `&& fail || pass` (or an `if` whose THEN arm fails) it turns "pattern found, so fail" into
+# "pipeline failed, so pass" -- a real defect reads green and nothing anywhere goes red. Test 42
+# (BL-43) derives only the producers read from the real repo; this derives the ARM, whatever the
+# producer. Rule A: an early-exiting consumer ahead of `&& fail`. Rule B: one in the condition of
+# an `if` whose then-arm calls `fail`.
+#
+# A SECOND, DETERMINISTIC form of the same hole needs no flake: when the producer is a COMMAND
+# that exits non-zero exactly when its output names the pattern (`check-handoff ... | grep -q
+# S13`), `pipefail` makes the pipeline's status the producer's, the `if` reads false, and the
+# then-arm is unreachable. N3 and N6 above were both that. The cure is to CAPTURE the output and
+# read the capture (`OUT="$(cmd 2>&1)"; grep -q PAT <<< "$OUT"`), which is also what a producer
+# at the head of a pipeline wants. A longer chain (`... | grep -v X | grep -q Y`) is not cured
+# by a here-string, because the middle stage can still be signalled: its consumer must stop
+# exiting early (`grep Y >/dev/null`). Not covered, and none exists today (measured): a NEGATED
+# pipeline (`! ... | grep -q P && pass || fail`), whose flake also reads as a pass.
+#
+# The scanner reads whole logical lines (backslash continuations joined), skips comments and
+# heredoc bodies (so its own fixtures and this very source are not scanned), and ignores a
+# pipe inside quotes or `$( )` -- a capture uses stdout, which SIGPIPE cannot corrupt.
+SCAN45="$(mktemp)"
+cat > "$SCAN45" <<'PY45'
+import re, sys
+EARLY = re.compile(r'(?<!\|)\|\s*(?:grep\b[^|]*?-[A-Za-z]*q[A-Za-z]*(?=\s|$)|grep\b[^|]*?-m\s*\d|head\b|sed\b[^|]*\bq\b)')
+HEREDOC = re.compile(r"(?<!<)<<(?!<)-?\s*(['\"]?)([A-Za-z_][A-Za-z0-9_]*)\1")
+FAILCALL = re.compile(r'(?:^|[\s;{(&|])fail\s+["\']')
+def outside(s):
+    mask, stack, i, n = [False] * len(s), ['top'], 0, len(s)
+    while i < n:
+        c, ctx = s[i], stack[-1]
+        if ctx == 'sq':
+            if c == "'": stack.pop()
+        elif c == '\\' and i + 1 < n:
+            i += 2; continue
+        elif c == "'" and ctx != 'dq': stack.append('sq')
+        elif c == '"':
+            if ctx == 'dq': stack.pop()
+            else: stack.append('dq')
+        elif c == '$' and s.startswith('$(', i):
+            stack.append('subst'); i += 2; continue
+        elif c == ')' and ctx == 'subst': stack.pop()
+        elif ctx == 'top': mask[i] = True
+        i += 1
+    return mask
+def early_before(s, mask, end):
+    return any(mask[m.start()] for m in EARLY.finditer(s, 0, end))
+lines = open(sys.argv[1], encoding="utf-8").read().split("\n")
+logical, i = [], 0
+while i < len(lines):
+    start, buf = i + 1, lines[i]
+    while buf.endswith("\\") and i + 1 < len(lines):
+        i += 1; buf = buf[:-1] + " " + lines[i].lstrip()
+    logical.append((start, buf)); i += 1
+    m = HEREDOC.search(buf)
+    if m:
+        while i < len(lines) and lines[i].strip() != m.group(2): i += 1
+        i += 1
+found = []
+for k, (n, s) in enumerate(logical):
+    st = s.strip()
+    if st.startswith("#") or re.match(r'(elif|while|until)\b', st): continue
+    mask = outside(s)
+    if re.match(r'if\b', st):
+        t = next((m for m in re.finditer(r';\s*then\b', s) if mask[m.start()]), None)
+        if t is None: t = re.search(r'\bthen\b', s)
+        cond_end = t.start() if t else len(s)
+        if not early_before(s, mask, cond_end): continue
+        first = s[t.end():] if t else ""
+        block, depth = [first], 1
+        if re.search(r';\s*fi\b', first): depth = 0
+        for _, nxt in (logical[k + 1:] if depth else []):
+            ns = nxt.strip()
+            if re.match(r'if\b', ns): depth += 1
+            if re.search(r'(^|;\s*)fi\b', ns):
+                depth -= 1
+                if depth == 0: break
+            block.append(nxt)
+        arms = "\n".join(block)
+        e = re.search(r'(?:^|[;\s])else\b', arms)
+        then_arm = arms[:e.start()] if e else arms
+        if FAILCALL.search(then_arm): found.append((n, "if-then-fail"))
+        continue
+    for m in re.finditer(r'&&\s*fail\b', s):
+        if mask[m.start()] and early_before(s, mask, m.start()):
+            found.append((n, "and-fail")); break
+for n, why in found: print("BL97-SITE %d %s" % (n, why))
+print("BL97-TOTAL %d" % len(found))
+PY45
+
+# (1) the live suite: the derived population must be EMPTY.
+SITES45="$(python3 "$SCAN45" "$BIN/tests.sh")"
+TOTAL45="$(grep -oE 'BL97-TOTAL [0-9]+' <<< "$SITES45" | awk '{print $2}')"
+[ "$TOTAL45" = "0" ] && pass "no early-exiting consumer decides a fail arm in bin/tests.sh" \
+    || fail "BL-97 site(s) present: $SITES45"
+
+# (2) THE SCANNER, PROVEN TO FIRE AND TO HOLD ITS FIRE. A detector no input can trip is a comment,
+# and one that trips on everything is noise. Each fixture line that must be flagged ends in the
+# marker HIDDEN; the scanner must name exactly those lines, the visible forms, the converted
+# forms, a capture, a quoted pipe and a comment all passing unflagged.
+FIX45="$(mktemp)"
+cat > "$FIX45" <<'FIX45'
+echo "$A" | grep -q "x" && fail "m" || pass "m"                    # HIDDEN
+printf '%s\n' "$A" | grep -qiE 'x|y' && fail "m" || pass "m"       # HIDDEN
+"$B" "$P" | grep "a" | grep -v '^n' | grep -q "b" && fail "m"      # HIDDEN
+echo "$A" | head -1 | grep -qx "x" && fail "m" || pass "m"          # HIDDEN
+echo "$A" | sed '/x/q' >/dev/null && fail "m" || pass "m"           # HIDDEN
+if echo "$A" | grep -q "x"; then fail "m"; else pass "m"; fi        # HIDDEN
+if "$B" --file "$F" 2>&1 | grep -q 'S13'; then                      # HIDDEN
+    fail "m"
+else
+    pass "m"
+fi
+grep -q "x" <<< "$A" && fail "m" || pass "m"
+OUTC="$("$B" --file "$F" 2>&1)"; grep -q "x" <<< "$OUTC" && fail "m" || pass "m"
+echo "$A" | grep "x" >/dev/null && fail "m" || pass "m"
+echo "$A" | grep -q "x" && pass "m" || fail "m"
+if echo "$A" | grep -q "x"; then pass "m"; else fail "m"; fi
+if grep -q "x" <<< "$A"; then fail "m"; else pass "m"; fi
+[ "$(echo "$A" | head -1)" = "x" ] && fail "m" || pass "m"
+echo "grep -q x | grep -q y && fail" >/dev/null
+# echo "$A" | grep -q "x" && fail "m" || pass "m"
+FIX45
+EXP45="$(grep -n 'HIDDEN$' "$FIX45" | cut -d: -f1 | tr '\n' ' ')"
+GOT45="$(python3 "$SCAN45" "$FIX45" | grep -oE 'BL97-SITE [0-9]+' | awk '{print $2}' | tr '\n' ' ')"
+[ -n "$EXP45" ] && [ "$GOT45" = "$EXP45" ] \
+    && pass "the scanner flags exactly the marked hidden-form lines ($EXP45)" \
+    || fail "scanner fixture: expected lines '$EXP45', got '$GOT45'"
+
+# (3) THE SAME ON THE REAL FILE. Revert one converted site on a COPY -- never the live file -- and
+# the scanner must name that line and no other. The reverting script lives in a heredoc so that
+# its replacement text is not itself a line of this file the scanner reads.
+M45="$(mktemp)"
+LINE45="$(python3 - "$BIN/tests.sh" "$M45" <<'PYM45'
+import re, sys
+src, dst = sys.argv[1], sys.argv[2]
+lines = open(src, encoding="utf-8").read().split("\n")
+pat = re.compile(r'^(?P<ind>\s*)grep (?P<fl>-[A-Za-z]+) (?P<pat>"[^"]*"|\'[^\']*\') <<< "(?P<var>\$[A-Za-z_][A-Za-z0-9_]*)"(?P<tail> && fail .*)$')
+hit = "NONE"
+for i, ln in enumerate(lines):
+    m = pat.match(ln)
+    if m:
+        lines[i] = '%secho "%s" | grep %s %s%s' % (m["ind"], m["var"], m["fl"], m["pat"], m["tail"])
+        hit = str(i + 1)
+        break
+open(dst, "w", encoding="utf-8").write("\n".join(lines))
+print(hit)
+PYM45
+)"
+if [ "$LINE45" != "NONE" ] && [ -n "$LINE45" ]; then
+    MUT45="$(python3 "$SCAN45" "$M45")"
+    MUTTOTAL45="$(grep -oE 'BL97-TOTAL [0-9]+' <<< "$MUT45" | awk '{print $2}')"
+    MUTLINE45="$(grep -oE 'BL97-SITE [0-9]+' <<< "$MUT45" | awk '{print $2}' | tr '\n' ' ')"
+    [ "$MUTTOTAL45" = "1" ] && [ "$MUTLINE45" = "$LINE45 " ] \
+        && pass "the scanner fires on a reverted site in the real file, and names it ($LINE45)" \
+        || fail "scanner control: expected 1 site at line $LINE45, got: $MUT45"
+else
+    fail "scanner control mutation DID NOT APPLY -- no converted \`grep -q PAT <<< \"\$VAR\" && fail\` site left to revert"
+fi
+rm -f "$SCAN45" "$FIX45" "$M45"
 
 
 echo ""
