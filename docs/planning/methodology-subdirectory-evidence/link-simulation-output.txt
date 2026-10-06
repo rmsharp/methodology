@@ -1,0 +1,17 @@
+distributed markdown files with links: 20 of 23; relative links: 118
+links that must change under a flat methodology/ layout: 40  (distributed->distributed 35; distributed->project-owned 5); unchanged: 78
+
+    14 of   22  (dd  14, dp   0)  RECOMMENDED_SKILLS.md
+     8 of   23  (dd   8, dp   0)  docs/methodology/ITERATIVE_METHODOLOGY.md
+     3 of    6  (dd   1, dp   2)  docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md
+     2 of    8  (dd   2, dp   0)  SESSION_RUNNER.md
+     2 of    9  (dd   1, dp   1)  BOOTSTRAP.md
+     2 of    3  (dd   2, dp   0)  docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+     2 of    6  (dd   0, dp   2)  docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+     1 of    1  (dd   1, dp   0)  CHANGELOG.md
+     1 of    1  (dd   1, dp   0)  HANDOFFS.md
+     1 of    2  (dd   1, dp   0)  docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+     1 of    2  (dd   1, dp   0)  docs/methodology/workstreams/AUDIT_WORKSTREAM.md
+     1 of    2  (dd   1, dp   0)  docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md
+     1 of   12  (dd   1, dp   0)  docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+     1 of    9  (dd   1, dp   0)  docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md

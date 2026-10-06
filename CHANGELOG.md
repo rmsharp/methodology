@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S273 — evidence for the `methodology/` move, 1 of 4: the reference inventory and the link simulation
+
+Added `docs/planning/methodology-subdirectory-evidence/inventory.py` and `link-simulation.py` with their recorded outputs (tracked files at `c8b9ddd`): 31 code and config files, 23 distributed docs and 3 canonical-only docs name a methodology file, plus 420 history files that are never rewritten; 118 relative links in the distributed docs, 40 of which change under a flat `methodology/`. Read-only scripts; nothing in the tree they measure changed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [ad hoc] S273 claim (in progress) — plan the `methodology/` subdirectory move
 
 CHANGELOG: pending. Operator said `go` as the first message; at the Phase 0 picker he asked instead for a plain statement of the backlog (given in the Phase 0 follow-up: 60 open index rows, only BL-98 waiting on an open upstream PR, seven rows stale after the 2026-10-01 merges) and set this session's deliverable: analyze, and if possible write a detailed implementation plan for, moving the methodology files from a repository's root into one `methodology/` directory one level below root, for adopters and perhaps for this repository. The deliverable is the plan document in `docs/planning/`; implementing it is a separate session, and nothing outward-facing is done (no push, no PR, no comment, no change in any adopter). The owed `HANDOFFS.md` trim (`d8a3024`, one receipt, S270, to `HANDOFFS-through-2026-10-06.md`, proof exit 0 by name from a `--no-local` clone) and its fold (`ef766f7`) ran first as their own actions. Phase 3F records the rest.

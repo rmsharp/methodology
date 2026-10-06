@@ -1,0 +1,97 @@
+tracked files read: 538 of 542
+name                         group              code+config   distributed   canonical-o   history/pla
+(each cell: files/lines mentioning the name)
+SESSION_RUNNER.md            root-tracked        16/140        15/50          3/38        182/1337   
+FRAMEWORK_LEARNINGS.md       root-tracked         9/22          6/14          3/12         96/748    
+SAFEGUARDS.md                root-tracked        13/57         12/39          3/21        152/924    
+RECOMMENDED_SKILLS.md        root-tracked         5/6           9/22          2/20         53/213    
+CONTEXT_TEMPLATE.md          root-tracked         6/7           3/4           2/8          36/94     
+CLAUDE_TEMPLATE.md           root-tracked         5/5           2/6           2/8          27/57     
+BOOTSTRAP.md                 root-tracked        10/40          7/14          3/24        126/724    
+methodology_dashboard.py     root-tracked         8/142         4/16          2/17        131/963    
+methodology_trim.py          root-tracked        16/115         3/7           3/19        272/1207   
+context_budget.py            root-tracked        14/82          2/2           3/20        143/1122   
+quality_ratchet.py           root-tracked        15/71          8/15          2/7         142/604    
+SESSION_NOTES.md             root-seed           10/93         12/42          2/15        132/1188   
+CHANGELOG.md                 root-seed           19/687        14/81          3/50        271/4087   
+HANDOFFS.md                  root-seed           18/386        12/57          3/36        339/4858   
+ROADMAP.md                   root-seed            5/29          3/14          2/13         46/170    
+.context-budget.json         root-seed           15/62          1/2           3/14        140/670    
+.quality-gates.json          root-seed           13/90          9/20          3/10        111/498    
+.gitattributes               root-seed            5/23          3/4           2/4          13/64     
+ITERATIVE_METHODOLOGY.md     docs/methodology     7/12         16/64          2/22         96/413    
+HOW_TO_USE.md                docs/methodology     4/10          3/7           1/8          77/225    
+FRAMEWORK_APPARATUS.md       docs/methodology     7/19          6/23          2/9          67/220    
+workstreams/                 docs/methodology     6/50         11/63          3/54         74/320    
+docs/methodology (path)      layout-path          6/63          7/38          1/7          61/277    
+starter-kit/ (path)          layout-path         24/200         3/9           3/53        215/2568   
+(sum of per-name cells; a file naming several names is counted once per name)
+SUM                                             256/2411      171/613        58/489      3002/23551  
+
+code+config: 31 distinct files
+distributed docs: 23 distinct files
+canonical-only docs: 3 distinct files
+history/planning (frozen or fork-only record): 420 distinct files
+
+== code+config: files (name-mentions, distinct names) ==
+     66 15 .context-budget.json
+      6  3 .gitattributes
+     32  8 .githooks/pre-commit
+      5  5 .gitignore
+     25  9 .quality-gates.json
+     84 24 bin/_manifest.py
+     60  8 bin/check-handoff
+     10  5 bin/check-learnings
+      7  1 bin/check-ledger
+      8  6 bin/check-links
+     14  4 bin/check-overhead
+     57  4 bin/model-report
+      8  5 bin/status
+      1  1 bin/sync
+    427 21 bin/tests.sh
+      5  2 starter-kit/close_out_report.py
+      9  6 starter-kit/context-budget.json
+     22  9 starter-kit/context_budget.py
+      6  3 starter-kit/gitattributes
+    264 24 starter-kit/methodology_dashboard.py
+     54  8 starter-kit/methodology_trim.py
+      5  5 starter-kit/quality-gates.json
+     25  7 starter-kit/quality_ratchet.py
+      3  2 tools/fixtures/handoff-ledger-2-records.md
+     15  5 tools/fixtures/seed-CHANGELOG-ledger-format-1.md
+    264 24 tools/methodology_dashboard.py
+     14  3 tools/test_close_out_report.py
+     38  7 tools/test_context_budget.py
+    570 23 tools/test_methodology_dashboard.py
+    298  7 tools/test_methodology_trim.py
+      9  2 tools/test_quality_ratchet.py
+
+== distributed docs: files (name-mentions, distinct names) ==
+     33  5 FRAMEWORK_APPARATUS.md
+     31 12 HOW_TO_USE.md
+     75 15 ITERATIVE_METHODOLOGY.md
+    155 24 starter-kit/BOOTSTRAP.md
+      3  3 starter-kit/CHANGELOG.md
+     11  6 starter-kit/CLAUDE_TEMPLATE.md
+      1  1 starter-kit/CONTEXT_TEMPLATE.md
+     17 13 starter-kit/FRAMEWORK_LEARNINGS.md
+     31 11 starter-kit/HANDOFFS.md
+     54 11 starter-kit/RECOMMENDED_SKILLS.md
+      1  1 starter-kit/ROADMAP.md
+     20 12 starter-kit/SAFEGUARDS.md
+      1  1 starter-kit/SESSION_NOTES.md
+     87 16 starter-kit/SESSION_RUNNER.md
+      4  3 workstreams/ARCHITECTURE_WORKSTREAM.md
+      7  5 workstreams/AUDIT_WORKSTREAM.md
+      4  3 workstreams/DESIGN_WORKSTREAM.md
+      8  5 workstreams/DEVELOPMENT_WORKSTREAM.md
+     15  5 workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+     13  6 workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+     26  6 workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+     13  5 workstreams/TEMPLATE_CAMPAIGN.md
+      3  2 workstreams/TEMPLATE_WORKSTREAM.md
+
+== canonical-only docs: files (name-mentions, distinct names) ==
+     76 22 CLAUDE.md
+    347 24 README.md
+     66 12 docs/FORK_LEARNINGS.md
