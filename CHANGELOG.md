@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S273 — evidence for the `methodology/` move, 4 of 4: the frozen proofs and the suite's blast radius
+
+Added `docs/planning/methodology-subdirectory-evidence/frozen-proofs.sh` with its recorded output and `suite-blast-radius.txt`. All 117 tracked `.verify.sh` proofs give the same exit codes in three clones: nothing moved, the two ledgers moved, the ledgers and `docs/archive` moved (112 exit 0 and 5 exit 1 in each; the 5 are the August shards, BL-36's class). `bin/tests.sh` in the same three clones, serial: 452 passed / 0 failed / 0 skipped, 418 / 12 / 3, 414 / 11 / 5; the failing assertions and the skipped checks are listed in the text file. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [BL-101] S273 — evidence for the `methodology/` move, 3 of 4: the hook and the resync after a move
 
 Added `docs/planning/methodology-subdirectory-evidence/hook-after-move.sh` and `resync-after-move.sh` with recorded outputs, both on throwaway clones. The hook script: with hooks on, an unmoved ledger refuses a ledger-less commit (exit 1), but after `git mv CHANGELOG.md methodology/CHANGELOG.md` the move commit passes (exit 0) and so does a later content commit with no ledger entry (exit 0): the co-staging gate fails open. The resync script: against the merge base `f34769f` git pairs only `.gitattributes` with its moved copy; one synthetic upstream edit merged into the fork gives 4 modify/delete conflicts and a file-location conflict when the instance files and archive have moved, 3 text conflicts when they have not. Model: Claude Sonnet 5.5.

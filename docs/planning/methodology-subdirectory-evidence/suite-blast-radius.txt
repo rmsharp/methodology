@@ -1,0 +1,46 @@
+bin/tests.sh in three scratch clones of c8b9ddd (serial, nothing else running; hooks off; --no-local clones)
+
+base: == Summary: 452 passed, 0 failed, 0 skipped ==
+A: == Summary: 418 passed, 12 failed, 3 skipped ==
+B: == Summary: 414 passed, 11 failed, 5 skipped ==
+
+base = nothing moved. A = CHANGELOG.md and HANDOFFS.md moved into methodology/. B = A plus docs/archive moved to methodology/archive.
+
+== failing assertions, tree A (test heading || assertion) ==
+Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) == ||   FAIL: dashboard scoring unit tests failed
+Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) == ||   FAIL: close-out report generator unit tests failed
+Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the compact norm (RED-first, S46) == ||   FAIL: reconcile-on-read: budget violated -- 
+Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the compact norm (RED-first, S46) == ||   FAIL: reconcile-on-read: the front-matter norm paragraph is missing
+Test 31: model-report -- Source 1 parses a multi-tag `### ` header and reports (not folds) any header it still can't parse (BL-33, RED-first, Learning #12) == ||   FAIL: Source 1's entry count (0) still disagre
+Test 38: check-handoff — the per-RECORD byte budget, scoped to the record being written == ||   FAIL: drift guard: fixture is stale against the live format, missing: Traceback (most recent call last):
+Test 38: check-handoff — the per-RECORD byte budget, scoped to the record being written == ||   FAIL: drift guard: could not plant the prose control: Traceback (most recent call last):
+Test 38: check-handoff — the per-RECORD byte budget, scoped to the record being written == ||   FAIL: drift guard: could not plant the in-fence mutant: Traceback (most recent call last):
+Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) == ||   FAIL: discovering run 666 != sum of per-file runs 0 -- a file's contribution is lost or double-counted
+Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) == ||   FAIL: zero-population unreadable file vanished -- 'could not read' rendered as 'found nothing'
+Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) == ||   FAIL: the found-nothing sentinel is gone -- Test 30's real-file guard is now vacuous
+Test 50: check-ledger reads what a union merge leaves behind (RED-first against fixtures) == ||   FAIL: check-ledger: this repository's own live ledger has findings
+
+== failing assertions, tree B (test heading || assertion) ==
+Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) == ||   FAIL: dashboard scoring unit tests failed
+Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) == ||   FAIL: close-out report generator unit tests failed
+Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the compact norm (RED-first, S46) == ||   FAIL: reconcile-on-read: budget violated -- 
+Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the compact norm (RED-first, S46) == ||   FAIL: reconcile-on-read: the front-matter norm paragraph is missing
+Test 38: check-handoff — the per-RECORD byte budget, scoped to the record being written == ||   FAIL: drift guard: fixture is stale against the live format, missing: Traceback (most recent call last):
+Test 38: check-handoff — the per-RECORD byte budget, scoped to the record being written == ||   FAIL: drift guard: could not plant the prose control: Traceback (most recent call last):
+Test 38: check-handoff — the per-RECORD byte budget, scoped to the record being written == ||   FAIL: drift guard: could not plant the in-fence mutant: Traceback (most recent call last):
+Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) == ||   FAIL: zero-population unreadable file vanished -- 'could not read' rendered as 'found nothing'
+Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) == ||   FAIL: the found-nothing sentinel is gone -- Test 30's real-file guard is now vacuous
+Test 40: model-report — the population is the WHOLE ledger, live + archived (RED-first, S133) == ||   FAIL: MUTANT SURVIVED: discovery disabled still reported 0 vs live-only 0
+Test 50: check-ledger reads what a union merge leaves behind (RED-first against fixtures) == ||   FAIL: check-ledger: this repository's own live ledger has findings
+
+== skipped checks, tree A ==
+  SKIP: A2 truth: no root HANDOFFS.md (adopter tree or fresh clone), so the reserve was not measured against a live file
+  SKIP: split control: no root HANDOFFS.md to split
+  SKIP: M2: no root HANDOFFS.md to measure the shrunken reserve against
+
+== skipped checks, tree B ==
+  SKIP: A2 truth: no root HANDOFFS.md (adopter tree or fresh clone), so the reserve was not measured against a live file
+  SKIP: split control: no root HANDOFFS.md to split
+  SKIP: M2: no root HANDOFFS.md to measure the shrunken reserve against
+  SKIP: no archived **Model:** bullets on disk -- (1) coverage and (2) conservation cannot be built
+  SKIP: no pre-`through` shard on disk -- the -through- narrowing cannot be exercised
