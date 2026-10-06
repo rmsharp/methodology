@@ -1510,15 +1510,22 @@ echo "$OUT30" | grep -q "Claude Sonnet 5" && pass "bare-form (\`**Model:**\`, th
 grep -q "S12" <<< "$OUT30" && fail "control entry with no Model bullet was fabricated into Source 1" || pass "control entry without a Model bullet correctly omitted"
 
 # Real-file proof, not just a synthetic fixture: BL-20's actual population lives in this repo's own
-# live CHANGELOG.md. Before the fix, this invocation prints the empty-population sentinel string
+# ledger. Before the fix, this invocation prints the empty-population sentinel string
 # against a file that in fact carries multiple bullets -- the exact silent failure BL-20 describes.
-OUT30_REAL="$("$BIN/model-report" --changelog "$METHODOLOGY/CHANGELOG.md" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
+# The ledger is the live file PLUS its frozen shards (fork, BL-95 R2): a trim moves the entries that
+# carry the **Model:** bullets out of the live file, and at R2 the last of them left, so a live-only
+# read went red on a correct trim. The union is the idiom the source-tag audit in CHANGELOG.md uses,
+# and a shard is frozen, so this proof cannot decay under a later trim.
+CL30_REAL="$(mktemp)"
+( cd "$METHODOLOGY" && cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') ) > "$CL30_REAL"
+OUT30_REAL="$("$BIN/model-report" --changelog "$CL30_REAL" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
+rm -f "$CL30_REAL"
 # A HERE-STRING, NOT A PIPE -- BL-43. The producer is the report over this repo's own LIVE
 # ledgers, so it grows with them (11,488 B measured today, against a 65,536 B pipe capacity).
 # `grep -q` exits at its first match while `echo` may still have bytes to write; SIGPIPE kills
 # `echo`, and `set -uo pipefail` (:5) scores the MATCHED pipeline as FAILED. The failing arm
 # here is `|| pass`, so the race would make a real BL-20 regression read as green.
-grep -q "no CHANGELOG.md entries carry a" <<< "$OUT30_REAL" && fail "Source 1 still reports empty against this repo's own live CHANGELOG.md" || pass "Source 1 reports a non-empty population against this repo's own live CHANGELOG.md"
+grep -q "no CHANGELOG.md entries carry a" <<< "$OUT30_REAL" && fail "Source 1 still reports empty against this repo's own ledger (live file and shards)" || pass "Source 1 reports a non-empty population against this repo's own ledger (live file and shards)"
 
 echo "== Test 31: model-report -- Source 1 parses a multi-tag \`### \` header and reports (not folds) any header it still can't parse (BL-33, RED-first, Learning #12) =="
 # BL-33: CHANGELOG_ENTRY_RE required exactly one bracketed tag, so a real header carrying two

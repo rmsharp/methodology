@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S271 — Test 30's real-ledger row reads the ledger and its shards, not the live file alone
+
+R2's `CHANGELOG.md` trim (`79506ca`) took the last `**Model:**` bullet out of the live file (1 at `dc019b6`, 0 after; the shard holds it), so `bin/tests.sh` Test 30's real-file row — "Source 1 reports a non-empty population against this repo's own live CHANGELOG.md" — went red on a correct trim: **445 passed, 1 failed, 6 skipped** in a two-receipt `--no-local` clone of `79506ca`, the one failure that row. `bin/model-report` over the live file alone prints its empty-population sentinel; over the live file plus the shards (`cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md')`, the source-tag audit's own idiom) it reads 666 entries. The row now builds that union in a temp file (`bin/tests.sh:1515`-`:1520`) and its two labels say "ledger (live file and shards)"; a shard is frozen, so a later trim cannot empty the proof again. The BL-20 regression it guards is still caught: a parser that prints the sentinel against a file carrying bullets still fails it. Upstream's `bin/tests.sh` has no such row, so this is fork-only.
+
 ### 2026-10-06 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-04.md` (336 record(s), 433,654 B → 91,688 B)
 
 **Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
