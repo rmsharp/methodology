@@ -1,6 +1,9 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
-**Status: DRAFT. The plan is this session's (S273) deliverable; nothing in it is implemented.**
+**Status: DRAFT, DECIDED. The plan is this session's (S273) deliverable; nothing in it is implemented.**
+**Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended:** D1 (a), D6
+(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). P0 is done;
+P1 is next.
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). Decisions
 D1-D3 in §9 gate Phase 1; D4-D9 gate the phase that uses them. §5A (syncing) was added at the
 operator's instruction during the session. **Declared budget: 60,000 B**, one agent
@@ -433,7 +436,7 @@ own start.**
 
 | Phase | Deliverable | Sessions | Needs |
 |---|---|---:|---|
-| **P0** | D1-D3 answered | 0 | the operator |
+| **P0** | D1-D3 answered: **done, 2026-10-06** | 0 | the operator (done) |
 | **P1** | The resolver, the layout fixtures, the **literal scanner** (RED, listing every site) | 1 | P0 |
 | **P2** | Gate layer: `.githooks/pre-commit` and `quality_ratchet.py` (C4, C5) | 1 | P1 |
 | **P3** | `methodology_trim.py` and `close_out_report.py` (C7, C10) | 1 | P1 |
@@ -530,6 +533,10 @@ go-ahead**. G-B is §5's decision and, if taken, its own plan.
 | The following session's Phase 0 passes unmodified | The only fully faithful check of a layout change |
 
 ## 9. Decisions
+
+**Ratified 2026-10-06 (S273 close-out picker): every recommendation below stands as the decision.** D1 (a) all, tier 1
+first; D6 rehearse only; D8 fork first, then one pull request, each outward step his go-ahead at the time; D2, D3,
+D4, D5, D7 and D9 as written.
 
 | # | Decision | Options | Recommendation |
 |---|---|---|---|

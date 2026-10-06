@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S273 — the operator's close-out decisions recorded: every recommendation of the plan's §9
+
+At the close-out picker he took every recommendation: **D1** all the methodology files, in two tiers, the framework's own files first; **D6** this repository's real files stay put and the move is rehearsed in a scratch clone; **D8** the layout is built and proved on the fork and the adopters first, then offered upstream as one vetted pull request, each outward step his go-ahead at the time; **D2, D3, D4, D5, D7, D9** as the plan wrote them (flat `methodology/` with `workstreams/` below it; every filename kept; `.githooks/` and `CLAUDE.md` at the root and `.gitattributes` nested; the ledger archive last; expand then contract with `--layout auto` and sync before migrate; one adopter per session). He also gave the go-ahead to push `main` (recorded in its own entry above). Recorded in [`methodology-subdirectory-plan.md`](docs/planning/methodology-subdirectory-plan.md) (status line, §7 P0, §9), BL-101's index row and body, and the S273 receipt's next steps. **Next: P1.** Local, not pushed: its push is his go-ahead. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [BL-101] S273 — fork `main` pushed to `origin`: 9 commits, the `methodology/` directory plan reaches the fork
 
 On his go-ahead at the close-out picker ("Push main to origin now"), `git push origin main` took `rmsharp/methodology` `main` from `9d5f22c` to `026122d`: a plain fast-forward (`origin/main` an ancestor of `main`, 0 behind after a fresh fetch, a clean tree), no force, no other ref; nothing went to `KJ5HST/methodology`. **Read back** after a fresh fetch: `git rev-list --left-right --count origin/main...main` = `0 0`, `git ls-remote origin refs/heads/main` = `026122d`. The nine commits: the `HANDOFFS.md` trim and its fold, the claim, four evidence commits, the plan with BL-101, the close-out. Model: Claude Sonnet 5.5.
