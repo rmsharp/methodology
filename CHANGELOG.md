@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S273 — the plan for moving the methodology files into `methodology/`, with syncing, and its backlog item
+
+Added [`methodology-subdirectory-plan.md`](docs/planning/methodology-subdirectory-plan.md) (DRAFT, 54 KB, nothing implemented) and recorded BL-101 (an index row in `docs/planning/BACKLOG.md`, a body in `BACKLOG-DETAIL.md`). The plan: feasible, 22 to 29 sessions, 17 couplings with file and line, an expand/migrate/contract route with a layout resolver, a `--layout auto` sync and a sync-before-migrate rule, and nine decisions (§9). Its two sharpest findings were measured on clones, not argued: after the ledger moves the pre-commit ledger gate passes a ledger-less commit (it fails open), and moving this repository's own instance files turns the next resync from `upstream` into modify/delete conflicts because git pairs none of them. The operator's mid-session instruction to account for syncing the adopters and this repository is §5A. Local only: nothing pushed, no pull request, no comment on `KJ5HST/methodology`, no adopter touched. The first four decisions wait on the operator. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [BL-101] S273 — evidence for the `methodology/` move, 4 of 4: the frozen proofs and the suite's blast radius
 
 Added `docs/planning/methodology-subdirectory-evidence/frozen-proofs.sh` with its recorded output and `suite-blast-radius.txt`. All 117 tracked `.verify.sh` proofs give the same exit codes in three clones: nothing moved, the two ledgers moved, the ledgers and `docs/archive` moved (112 exit 0 and 5 exit 1 in each; the 5 are the August shards, BL-36's class). `bin/tests.sh` in the same three clones, serial: 452 passed / 0 failed / 0 skipped, 418 / 12 / 3, 414 / 11 / 5; the failing assertions and the skipped checks are listed in the text file. Model: Claude Sonnet 5.5.

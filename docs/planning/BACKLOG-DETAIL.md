@@ -4228,3 +4228,17 @@ was not verified; the body is drafted in [`issue93-evidence/upstream-pr-body.md`
 **Next action:** watch PR #94, #92 and #93; a maintainer reply ranks above everything, and any comment, body edit or push to the branch is his go-ahead each time. BL-95's resync
 must carry the fork's trimmer changes (now P1, P2 and P3) and the one `FRAMEWORK_APPARATUS.md` paragraph (the timing rule, now with the `--reverify` sentence). **Still open:** the adopter's local `SESSION_NOTES.md`
 spec, which the `bin/sync` overlay drops, has no backlog item of its own.
+
+
+<a id="bl-101"></a>
+**BL-101 — move the methodology files out of a project's root into one `methodology/` directory, and keep the adopters and this repository in sync through the move. Raised 2026-10-06 (S273) at the operator's request; the plan is written, nothing is built.**
+
+**The request (his words):** *"a movement of methodology files from the repos' root to a 'methodology' subdirectory that houses all of the methodology files 1 layer lower in the new directory. It would clean up the base directory and would clearly identify which files are part of the methodology infrastructure. Perhaps this structure could also be used by methodology's own repository."* Mid-session he added: *"This plan needs to account for syncing adopter repositories as well as this one."*
+
+**The plan:** [`methodology-subdirectory-plan.md`](methodology-subdirectory-plan.md) (DRAFT, 54 KB; evidence and re-runnable scripts in [`methodology-subdirectory-evidence/`](methodology-subdirectory-evidence/)). Today an adopter keeps 18 methodology files at its root and 12 under `docs/methodology/` (`bin/_manifest.py:41-93`); the target is one `methodology/` directory, `workstreams/` its only subdirectory. The plan is *expand, migrate, contract*: a layout resolver in every shipped tool, `bin/sync --layout auto`, `bin/migrate-layout`, one adopter per session, each synced first.
+
+**Measured, not argued:** (1) in clones, `bin/tests.sh` reads 452 / 0 / 0 at baseline, 418 / 12 / 3 with only `CHANGELOG.md` and `HANDOFFS.md` moved, 414 / 11 / 5 with the archive moved too; (2) after the ledger moves, a commit with no ledger entry is **passed** by `.githooks/pre-commit` (the unmoved control is refused): the gate fails open; (3) all 117 frozen `.verify.sh` proofs keep their exit codes (112 / 5) in both moved trees; (4) a nested `methodology/.gitattributes` keeps `merge=union`; (5) `methodology_dashboard.py --sync` writes `methodology_dashboard.py` at each project's root by a literal, outside the manifest; (6) git pairs none of this repo's moved ledgers or JSON files with upstream's root copies (a delete and an add even at 30%), so one synthetic upstream edit gives 4 modify/delete conflicts and a file-location conflict where the unmoved fork gives 3 text conflicts, and the maintainer edits those files (142 of 234 root-ledger commits).
+
+**Decisions waiting (plan §9):** D1 scope (the framework's files, or also the ledgers and configs a project owns), D2 shape (flat, `workstreams/` only), D6 this repository's own files (the plan recommends: not moved for real until D8), D8 the upstream route. D3-D5, D7 and D9 have recommendations the operator may take as written.
+
+**Next action:** his answers to D1, D2, D6 and D8; then P1 (the layout resolver, the fixtures and the literal scanner). Not started: any tool change, any migration, any outward action.
