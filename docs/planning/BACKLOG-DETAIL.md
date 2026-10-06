@@ -4104,6 +4104,8 @@ install it? It can use git*; recorded, not fixed.**
 
 **Next action:** none owed. When BL-95's resync plan is written, decide (a), (b) or (c) there; until then no change.
 
+**DONE (S270, 2026-10-06; D7 of the BL-95 plan, (A) at the operator's S269 close-out picker): shape (a).** The premise moved with the merge, as the last bullet above predicted: Test 9's guard is upstream's `git ls-remote` reachability test and `bin/sync` and `bin/status` clone with git, so `gh` is no longer in the path (`grep` for `gh api`, `gh CLI` and `"gh"` in both: none). The uncounted skip survived the merge, a bare `echo "  SKIP: $URL unreachable"`; fix-up F4 is `skip "$URL unreachable"` at `bin/tests.sh:145`. **Measured:** the Test 9 block extracted with `skip()` and run alone against `METHODOLOGY_SOURCE_URL=file:///nonexistent/never` printed `SKIP: file:///nonexistent/never unreachable` and left `SKIP=1`; the full suite's Summary at the R1 tip is in the S270 receipt. **Not done, by decision:** no `tests-sh-skipped` gate (shape (b)). **For the next resync:** this is one line fork-side; upstream's Test 9 has no counter.
+
 **BL-97 — `echo "$(…)" | grep -q` under `pipefail` flakes at a payload far below the pipe capacity BL-43 measured. Raised 2026-10-03
 (S254), found by a red Test 38 in the full suite; recorded, not fixed.**
 

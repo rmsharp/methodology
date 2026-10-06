@@ -142,7 +142,7 @@ if python3 -c 'import subprocess, sys; sys.exit(subprocess.run(["git", "ls-remot
     "$BIN/sync" "$P" --source=github --dry-run >/dev/null && pass "github source dry-run works" || fail "github source dry-run failed"
     rm -rf "$P"
 else
-    echo "  SKIP: $URL unreachable"
+    skip "$URL unreachable"
 fi
 
 echo "== Test 10: distributed-file links resolve in the simulated adopter tree =="

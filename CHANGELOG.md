@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-96] S270 — R1 fix-up F4: Test 9's skip is counted, and BL-96 is closed (D7)
+
+`bin/tests.sh:145` is now `skip "$URL unreachable"` where it was a bare `echo "  SKIP: …"` that the Summary's skip count never saw. D7 (A, the operator's, 2026-10-06): count it, no gate (shape (b) not chosen). Measured: the Test 9 block run alone against `file:///nonexistent/never` printed `SKIP: … unreachable` with `SKIP=1`; `grep` finds no `gh api`, `gh CLI` or `"gh"` in `bin/sync` or `bin/status` (the merge replaced the `gh` route with a git clone). BL-96 left the `BACKLOG.md` index (its id stays on the closed list), gained a `BACKLOG-COMPLETED.md` row and a DONE paragraph in `BACKLOG-DETAIL.md`. One line now differs from upstream, whose Test 9 has no counter. The full suite on the R1 tip is not yet run.
+
 ### 2026-10-06 · [BL-95] S270 — R1 fix-up F3: `CLAUDE.md` says 29 failure modes and v4.1, and `docs/RELEASE_HISTORY.md` gains v3.8, v4.0 and v4.1 (D6)
 
 `CLAUDE.md`: "documents 28 failure modes" → 29 (the runner's table now ends at `| 29 |`); a Starter Kit row for the `starter-kit/gitattributes` seed and a Tools row for the three structural checkers (the second says this fork's `check-ledger` gate reads the live ledger, F2); the pointer's "from v1.0 to v3.7" → "to v4.1". The "Current version" line needed no edit: it auto-merged to upstream's v4.1, which is D6's target (v4.2 is tagged but its release docs are PR #92, still open). `docs/RELEASE_HISTORY.md`: the v3.8, v4.0 and v4.1 bullets lifted verbatim from `upstream/main:CLAUDE.md` lines 118, 120 and 122 (checked line for line; none carries a relative link). This is a documentation correction, not a fork release or tag. `CLAUDE.md` is 15,029 B (resident ceiling 18,600 B); `bin/check-links` OK (116 links).
