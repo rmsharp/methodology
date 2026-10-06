@@ -233,6 +233,18 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S269 close-out — the resync plan is written and reviewed; the receipt is complete; D1–D7 await his answers
+
+`CHANGELOG: pending` on the S269 claim entry is cleared. **Deliverable:** `docs/planning/upstream-resync-2026-10-plan.md`
+(commit `aa8ae69`, evidence `352b544`), a DRAFT with seven decisions of his and two executor phases; nothing was
+merged, rebased, pushed or sent. The `HANDOFFS.md` receipt (self-score 7; predecessor S268 scored 9, every line
+citation exact) replaces the pending claim stub; `bin/check-handoff` and `--all` pass at three receipts, so the
+retention trim (`--cut 2 --force`) is owed after the next Phase 0 report. **Gate run on this close-out's tree
+(started in the background, head `aa8ae69`): 12/12 pass, results `e30853a7b148`**, identical to S268's citation.
+Phase 3C appended no fork learning row (considered: #67, #69, #90, #102, #103). The project memory notes were
+updated outside the repository. No push: `origin/main` is 0 behind and 6 ahead with this commit, and each push is
+his go-ahead.
+
 ### 2026-10-06 · [BL-95] S269 — the resync plan written: `docs/planning/upstream-resync-2026-10-plan.md` (DRAFT; D1–D7 are the operator's)
 
 **The deliverable of S269**, a planning session resumed after its first conversation stopped at the claim. Fork
