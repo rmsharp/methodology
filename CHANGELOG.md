@@ -237,6 +237,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-06-2.md` (1 record(s), 34,869 B → 25,643 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-06 → 2026-10-06) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-06-2.md`](docs/archive/HANDOFFS-through-2026-10-06-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-06-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-06-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 34,869 B → 25,643 B (−26.5%).
+
 ### 2026-10-06 · [BL-101] S274 — fork `main` pushed to `origin`: the S273 decisions record `b162866`
 
 On his go-ahead at the S274 Phase 0 picker ("Push main to origin"), `git push origin main` took `rmsharp/methodology` `main` from `b9f27f9` to `b162866`: a plain fast-forward (`origin/main` an ancestor of `main`, exactly one commit ahead, a clean tree), no force, no other ref; nothing went to `KJ5HST/methodology`. The one commit is S273's record of his close-out decisions (every recommendation of the BL-101 plan's §9). **Read back** after a fresh fetch: `git rev-list --left-right --count origin/main...main` = `0 0`, `git ls-remote origin refs/heads/main` = `b162866`. This recording commit, a `CHANGELOG.md`-only change, is pushed too under the standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
