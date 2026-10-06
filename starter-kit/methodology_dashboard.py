@@ -92,13 +92,17 @@ from collections import defaultdict
 # A's severity there (P2). Changed output on a distributed tool: MINOR. Fork-only -- upstream's line
 # continues from 2.11.1, so the two stay apart until a dashboard PR reconciles them. (2.18.0, the
 # resync's merge of upstream's 2.11.x line, is described in git: `git log -S'2.18.0'` on this file.)
+# 2.21.0: BL-99. The manifest-history walk reads the FIRST-PARENT line (`_gate_manifest_history`):
+# a repo that had merged a lineage with a different manifest printed "floor lowered" / "gate
+# removed" rows nobody caused (9 of the 10 on this fork after the 2026-10 resync) and could miss a
+# real loosening a merge resolved to. Changed output on a distributed tool: MINOR.
 # 2.20.0: BL-95 R1, the 2026-10 resync (docs/planning/upstream-resync-2026-10-plan.md, D5). The
 # `.gitattributes` seed (starter-kit/gitattributes, arriving from upstream's v4.1) is installed
 # content: dotfiles are categorized as config by name (CONFIG_FILES), and the seed has its own row
 # and signature set in _FRAMEWORK_INSTALLED_CONTENT. Changed output on a distributed tool: MINOR.
 # Fork-only -- upstream's line continues from 2.11.3, so the two stay apart until a dashboard PR
 # reconciles them.
-DASHBOARD_VERSION = "2.20.0"
+DASHBOARD_VERSION = "2.21.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -2979,9 +2983,21 @@ def _gate_manifest_history(path):
     `_deleted` / `_unreadable` — never skipped. Skipping it dropped the deletion AND both pairs
     around it from the comparison (PR #82 review, 2a): an empty gate set is exactly the input
     that makes "every gate is missing" true, and that is the one case _gate_loosenings already
-    handles."""
-    log = git_cmd(path, "log", f"--max-count={GATES_HISTORY_MAX}", "--format=%h|%ad",
-                  "--date=short", "--", GATES_MANIFEST)
+    handles.
+
+    FIRST-PARENT ON PURPOSE (BL-99). Each version is later compared with the next older ROW, so
+    the rows must be one line of ancestry. A plain `git log -- <path>` follows both parents of a
+    merge whose manifest matches neither, and lists the two lineages interleaved by commit date:
+    the newer of two sibling commits is then compared with a commit that is not its ancestor and
+    reports a floor "lowered" that nobody lowered. It also follows only ONE parent of a merge that
+    matches the other, so a merge that resolves to the lower of two floors is never compared with
+    the line it merged into, and a real loosening reads as nothing. `--first-parent` compares every
+    version, a merge included, with the line it landed on -- the base `quality_ratchet.py
+    --precommit` uses (staged against HEAD), and what SAFEGUARDS' "a loosening resolved into a
+    merge is caught by the dashboard" needs. The price: a loosening made on a side branch is
+    reported at the merge that carried it in, not at the side commit (`git diff <sha>^1 <sha>`)."""
+    log = git_cmd(path, "log", "--first-parent", f"--max-count={GATES_HISTORY_MAX}",
+                  "--format=%h|%ad", "--date=short", "--", GATES_MANIFEST)
     hist = []
     for line in log.splitlines():
         sha, _, date = line.partition("|")
@@ -3057,7 +3073,9 @@ def collect_gate_metrics(path):
 
 
 def _manifest_has_history(path):
-    return bool(git_cmd(path, "log", "--max-count=1", "--format=%h", "--", GATES_MANIFEST))
+    # The same line of ancestry the walk reads, so "has a history" and "was walked" cannot differ.
+    return bool(git_cmd(path, "log", "--first-parent", "--max-count=1", "--format=%h", "--",
+                        GATES_MANIFEST))
 
 
 def _fold_history(m, hist):

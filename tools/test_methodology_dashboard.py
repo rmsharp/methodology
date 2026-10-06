@@ -2327,6 +2327,92 @@ class TestQualityGateSignals(unittest.TestCase):
         kinds = [(l["name"], l["kind"], l["from"], l["to"]) for l in m["gates"]["loosened"]]
         self.assertEqual(kinds, [("cov", "floor lowered", 80.0, 1.0), ("cov", "removed", 80.0, None)])
 
+    def _git_at(self, p, when, *args, check=True):
+        # The plain `git log` orders by COMMITTER date, so a test about how two lineages interleave
+        # has to set it: commits made in the same second tie, and a tie is not a topology.
+        env = {**os.environ, "GIT_AUTHOR_DATE": when, "GIT_COMMITTER_DATE": when}
+        return subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t", *args],
+                              check=check, capture_output=True, text=True, env=env).stdout.strip()
+
+    def _two_lineages(self, base, side, mainline, merged, side_date, main_date):
+        """A repo whose manifest forks into two lineages and is joined by a --no-ff merge whose
+        resolution is `merged`. Returns (path, merge sha). `side` and `mainline` each change the
+        manifest relative to `base`; the dates say which of the two the plain `git log` lists first."""
+        p = self._repo({**self.CODE, ".quality-gates.json": base})
+        trunk = self._git(p, "symbolic-ref", "--short", "HEAD")
+        self._git(p, "checkout", "-q", "-b", "side")
+        (p / ".quality-gates.json").write_text(side)
+        self._git_at(p, side_date, "add", "-A"); self._git_at(p, side_date, "commit", "-q", "-m", "side")
+        self._git(p, "checkout", "-q", trunk)
+        (p / ".quality-gates.json").write_text(mainline)
+        self._git_at(p, main_date, "add", "-A"); self._git_at(p, main_date, "commit", "-q", "-m", "mainline")
+        # Both lineages changed the manifest, so the merge conflicts: resolve it to `merged`.
+        self._git_at(p, "2030-03-01T12:00:00", "merge", "--no-ff", "--no-commit", "side", check=False)
+        (p / ".quality-gates.json").write_text(merged)
+        self._git_at(p, "2030-03-01T12:00:00", "add", "-A")
+        self._git_at(p, "2030-03-01T12:00:00", "commit", "-q", "-m", "merge side")
+        return p, self._git(p, "rev-parse", "--short", "HEAD")
+
+    def test_a_merged_lineage_is_not_read_as_one_line(self):
+        # BL-99. `git log -- <manifest>` without --first-parent follows BOTH parents of a merge whose
+        # manifest matches neither, so it lists the two lineages interleaved by commit date, and the
+        # fold compares each row with the next older ROW: the newer of two sibling commits was
+        # compared with a commit that is not its ancestor. Here the mainline (120, tightened from
+        # 100) is listed above the side branch (148 plus a gate), and the scan printed "cov floor
+        # lowered 148 -> 120" and "ledger removed" -- changes nobody made: every version below is a
+        # tightening against its own parent, and the merge keeps the better of both and adds a gate.
+        # (A merge that matched ONE parent would hide this: git follows only that parent.)
+        base = self._manifest(self._gate("cov", "min", 100))
+        side = self._manifest(self._gate("cov", "min", 148), self._gate("ledger", "max", 0))
+        mainline = self._manifest(self._gate("cov", "min", 120))
+        merged = self._manifest(self._gate("cov", "min", 148), self._gate("ledger", "max", 0),
+                                self._gate("lint", "max", 0))
+        p, _merge = self._two_lineages(base, side, mainline, merged=merged,
+                                       side_date="2030-01-01T12:00:00", main_date="2030-02-01T12:00:00")
+        m = md.collect_all(p)
+        self.assertEqual(m["gates"]["loosened"], [])
+        self.assertEqual(m["gates"]["commands_changed"], [])
+        self.assertFalse([r for r in m["scores"]["risks"] if "thresholds only tighten" in r["description"]])
+
+    def test_a_loosening_a_merge_resolves_to_is_reported_at_the_merge(self):
+        # The other direction, and the one SAFEGUARDS depends on: merge commits skip the pre-commit
+        # hook, so "a loosening resolved into a merge is caught by the dashboard's read of the
+        # manifest's history". Both lineages tighten against `base` (120 and 110), and the merge
+        # resolves to the LOWER of the two -- a loosening of the line it merged into (120 -> 110).
+        # The merge matches the side branch, so the plain log follows only that parent: the
+        # mainline's 120 was never compared with anything, and the scan reported nothing.
+        base = self._manifest(self._gate("cov", "min", 100))
+        side = self._manifest(self._gate("cov", "min", 110))
+        mainline = self._manifest(self._gate("cov", "min", 120))
+        p, merge = self._two_lineages(base, side, mainline, merged=side,
+                                      side_date="2030-01-01T12:00:00", main_date="2030-02-01T12:00:00")
+        m = md.collect_all(p)
+        self.assertEqual([(l["name"], l["kind"], l["from"], l["to"], l["sha"])
+                          for l in m["gates"]["loosened"]],
+                         [("cov", "floor lowered", 120.0, 110.0, merge)])
+
+    def test_a_loosening_a_side_branch_carried_in_is_attributed_to_the_merge(self):
+        # A loosening made on a side branch reaches the line the repo is on only through the merge,
+        # so the merge is where it is reported -- compared with the line it merged INTO, which is the
+        # comparison the pre-commit ratchet makes against HEAD. Trace it with
+        # `git diff <sha>^1 <sha> -- .quality-gates.json`: a clean merge shows no combined diff.
+        base = self._manifest(self._gate("cov", "min", 100))
+        side = self._manifest(self._gate("cov", "min", 50))
+        p = self._repo({**self.CODE, ".quality-gates.json": base})
+        trunk = self._git(p, "symbolic-ref", "--short", "HEAD")
+        self._git(p, "checkout", "-q", "-b", "side")
+        (p / ".quality-gates.json").write_text(side)
+        self._git(p, "add", "-A"); self._git(p, "commit", "-q", "-m", "lower the floor")
+        self._git(p, "checkout", "-q", trunk)
+        (p / "README.md").write_text("# App\n\nChanged on the trunk.\n")
+        self._git(p, "add", "-A"); self._git(p, "commit", "-q", "-m", "unrelated trunk change")
+        self._git(p, "merge", "--no-ff", "-q", "-m", "merge side", "side")      # clean: no conflict
+        merge = self._git(p, "rev-parse", "--short", "HEAD")
+        m = md.collect_all(p)
+        self.assertEqual([(l["name"], l["kind"], l["from"], l["to"], l["sha"])
+                          for l in m["gates"]["loosened"]],
+                         [("cov", "floor lowered", 100.0, 50.0, merge)])
+
     def test_a_direction_flip_is_a_loosening(self):
         cfg1 = self._manifest(self._gate("cov", "min", 80))
         cfg2 = self._manifest(self._gate("cov", "max", 80))
@@ -2419,11 +2505,12 @@ class TestFmtRatioAndTwins(unittest.TestCase):
         shipped without a bump; this one carries both. (2.18.0, the resync's merge of upstream's
         2.11.x line, is described in git: `git log -S'2.18.0'` on this file.) 2.20.0 is the 2026-10
         resync (BL-95, D5): the `.gitattributes` seed becomes installed content -- changed output
-        on a distributed tool, so MINOR."""
-        self.assertEqual(md.DASHBOARD_VERSION, "2.20.0")
+        on a distributed tool, so MINOR. 2.21.0 is BL-99: the manifest-history walk is first-parent,
+        so a merged lineage no longer prints loosenings nobody caused -- changed output, so MINOR."""
+        self.assertEqual(md.DASHBOARD_VERSION, "2.21.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.20\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.20.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.21\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.21.0")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general
