@@ -1,6 +1,6 @@
 # Resync plan 2 — merge `upstream/main` `f34769f` into fork `main` (BL-95)
 
-**Status: DECISIONS TAKEN — D1–D7 were answered by the operator at S269's close-out picker (2026-10-06), every one as recommended (§3); R1 is DONE (S270, 2026-10-06: merge `2ed9262`, fix-ups `b7ded00`, `c333475`, `3b67019`, `d7c44ea`; local, nothing pushed) and R2 is not started and needs his commission.** Written at S269, a planning session: nothing is merged or rebased by it. Evidence
+**Status: DECISIONS TAKEN — D1–D7 were answered by the operator at S269's close-out picker (2026-10-06), every one as recommended (§3); R1 is DONE (S270, 2026-10-06: merge `2ed9262`, fix-ups `b7ded00`, `c333475`, `3b67019`, `d7c44ea`; local, nothing pushed) and R2 is DONE (S271, 2026-10-06: `HANDOFFS.md` trim `2ee009c` and its fold `12ec2d1`, `CHANGELOG.md` trim `79506ca`, Test 30 and Test 31 fixed after the trim emptied their real-ledger premise `4ae8b5d` and `f0d4ccb`, floors 446 and 353 `603de86`, BL-95 closed `0e598b8`; local, nothing pushed).** Written at S269, a planning session: nothing is merged or rebased by it. Evidence
 taken at fork `main` `f203159` and `upstream/main` `f34769f` (tag `v4.2`; fetched 2026-10-06, unchanged since
 S268). §3's decisions were the operator's; each carries the recommendation he accepted, and §5's phases assume
 those answers. Precedent: [`upstream-resync-2026-09-plan.md`](upstream-resync-2026-09-plan.md) (S175,
