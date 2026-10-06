@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S274
+date: 2026-10-06
+status: pending
+active_task: BUILD BL-101 P1 (a build session: the plan's phase 1, `docs/planning/methodology-subdirectory-plan.md` §7.1, is the contract, ratified at the S273 close-out): the layout resolver in one canonical-only module with the four-row table of §4.3 as its unit tests, a `tools/test_layout_resolver.py` suite wired into `bin/tests.sh`, fixture trees in BOTH layouts for every later phase, and the literal scanner run RED against the shipped tools; a ratchet gate for each new suite. No tool changes behaviour; the scanner is not wired into the gate until P6. Nothing outward.
+```
+
+```handoff
 session: S273
 date: 2026-10-06
 status: complete
