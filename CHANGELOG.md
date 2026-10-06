@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S273 — evidence for the `methodology/` move, 2 of 4: the adopter survey and the git behaviours
+
+Added `docs/planning/methodology-subdirectory-evidence/adopter-survey.sh` and `git-behaviour.sh` with recorded outputs. The survey reads the 12 sibling projects (all in committed mode; 18 methodology files at the root and up to 12 under `docs/methodology/`; the zsh run of the first draft counted 0 root files because zsh does not word-split, so the script is bash with arrays). The git script measures a nested `methodology/.gitattributes` (clean union merge, exit 0, against a conflict, exit 1, without it) and what a `git mv` does to `git log` by path (stops at the move; `--follow` reaches the earlier commits). Throwaway repositories only. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [BL-101] S273 — evidence for the `methodology/` move, 1 of 4: the reference inventory and the link simulation
 
 Added `docs/planning/methodology-subdirectory-evidence/inventory.py` and `link-simulation.py` with their recorded outputs (tracked files at `c8b9ddd`): 31 code and config files, 23 distributed docs and 3 canonical-only docs name a methodology file, plus 420 history files that are never rewritten; 118 relative links in the distributed docs, 40 of which change under a flat `methodology/`. Read-only scripts; nothing in the tree they measure changed. Model: Claude Sonnet 5.5.

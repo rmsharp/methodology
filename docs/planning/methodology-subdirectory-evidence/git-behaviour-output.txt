@@ -1,0 +1,6 @@
+E1 nested attributes: merge exit=0 (0 = clean union)
+E1 control, no attributes: merge exit=1 (1 = conflict)
+E2 plain log, new path : c3 move 
+E2 --follow, new path  : c3 move c2 c1 
+E2 plain log, old path : move c2 c1 
+E2 frontier (git log -1 -- new path): c3
