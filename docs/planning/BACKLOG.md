@@ -198,7 +198,7 @@ C4 asserts, and its comment names the case it was written for: *"BL-27 is the na
 it and could not find it even while it was in the live file."* Re-derive the list rather than trust
 it — `grep -cE '^\| \*\*BL-[0-9]+\*\* \|' docs/planning/BACKLOG-COMPLETED.md`:
 
-**BL-1**, **BL-2**, **BL-3**, **BL-4**, **BL-5**, **BL-6**, **BL-7**, **BL-8**, **BL-9**, **BL-10**, **BL-15**, **BL-20**, **BL-24**, **BL-25**, **BL-27**, **BL-28**, **BL-29**, **BL-33**, **BL-34**, **BL-35**, **BL-38**, **BL-40**, **BL-41**, **BL-43**, **BL-45**, **BL-53**, **BL-56**, **BL-59**, **BL-67**, **BL-69**, **BL-72**, **BL-76**, **BL-78**, **BL-82**, **BL-83**, **BL-86**, **BL-95**, **BL-96**, **BL-97**
+**BL-1**, **BL-2**, **BL-3**, **BL-4**, **BL-5**, **BL-6**, **BL-7**, **BL-8**, **BL-9**, **BL-10**, **BL-15**, **BL-20**, **BL-24**, **BL-25**, **BL-27**, **BL-28**, **BL-29**, **BL-33**, **BL-34**, **BL-35**, **BL-38**, **BL-40**, **BL-41**, **BL-43**, **BL-45**, **BL-53**, **BL-56**, **BL-59**, **BL-67**, **BL-69**, **BL-72**, **BL-76**, **BL-78**, **BL-82**, **BL-83**, **BL-86**, **BL-95**, **BL-96**, **BL-97**, **BL-100**
 
 **The heading this block replaces named 19 of the 33.** BL-8, BL-15, BL-20, BL-24, BL-25, BL-27,
 BL-28, BL-29, BL-33, BL-34, BL-35, BL-38, BL-40 and BL-41 were in the table and missing from its
