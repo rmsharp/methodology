@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S270
+date: 2026-10-06
+status: pending
+active_task: R1 -- THE BL-95 RESYNC, EXECUTOR SESSION 1 (`docs/planning/upstream-resync-2026-10-plan.md` section 5; D1-D7 taken by the operator at S269's picker, every one as recommended). Deliverable: merge `upstream/main` `f34769f` into fork `main` as one `--no-ff` merge, resolve the 17 conflicting files per section 2.3, fold both ledgers with `fold-ledger.py`, then the fix-ups F1-F4 in <=5-file commits and the verification in a `--no-local` clone. Local only: no push, no PR, no comment on `KJ5HST/methodology`; R2 (the trims, floors, adopter measurement) is a separate session. The owed HANDOFFS trim (`2291af5`, S267's receipt to `HANDOFFS-through-2026-10-05-5.md`, proof exit 0 by name from a `--no-local` clone) and its fold (`3d83923`) ran first.
+```
+
+```handoff
 session: S269
 date: 2026-10-05
 status: complete

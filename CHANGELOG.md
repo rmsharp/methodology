@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S270 claim (in progress) — R1: the resync merge of `upstream/main` into fork `main`
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "R1: BL-95 resync" at the Phase 0 picker; he also declined the push of `c31d478` for now. The deliverable is plan section 5's R1 (pre-flight, one `--no-ff` merge, the 17 resolutions, both ledgers folded, fix-ups F1-F4, verification in a `--no-local` clone), local only: nothing is pushed or sent. The owed trim (`2291af5`, S267's receipt to shard `HANDOFFS-through-2026-10-05-5.md`, its `.verify.sh` exit 0 by name from a `--no-local` clone) and its fold (`3d83923`) ran first as their own actions; `bin/tests.sh` on the fold tree read 359 passed, 0 failed, 6 skipped. Phase 3F records the rest.
+
 ### 2026-10-06 · [ad hoc] S270 — fold the fifth 2026-10-05 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`2291af5`, S267's receipt to `HANDOFFS-through-2026-10-05-5.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-05, trimmer v1.7.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S269, S268); the shard's `.verify.sh` was run by name from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of R1 (the BL-95 resync, executor session 1), before the session claim.
