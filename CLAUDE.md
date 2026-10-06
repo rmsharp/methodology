@@ -112,6 +112,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 | `tools/test_methodology_trim.py` | Behaviour tests for the ledger trimmer (stdlib `unittest`, 66 tests). **Canonical-only.** Wired into `bin/tests.sh` as of S39' — before that the trimmer's own tests ran in nothing, which stopped being tolerable once `bin/sync` began installing the tool at adopter roots. Sets `sys.dont_write_bytecode` (`:34`) for the same reason its sibling does. |
 | `tools/test_context_budget.py`, `tools/test_quality_ratchet.py` | Unit suites for the context-budget gate and the quality ratchet (stdlib `unittest`). **Canonical-only**; wired into `bin/tests.sh`. |
 | `bin/check-handoff`, `bin/check-ledger`, `bin/check-learnings` | Structural checkers for `HANDOFFS.md`, `CHANGELOG.md` and the Learnings table; **canonical-only**; each a declared quality gate. This fork's `check-ledger` gate and Test 50 read the live ledger, not `--all` (`.quality-gates.json`, `_fork_d3_check_ledger_scope_bl95`). |
+| `tools/layout_resolver.py`, `tools/layout_fixtures.py`, `bin/check-layout-literals`, `tools/test_layout_resolver.py` | The `methodology/` directory move (BL-101, [plan](docs/planning/methodology-subdirectory-plan.md), P1): the layout resolver (a marked block every shipped tool will embed), fixture trees in both layouts, the literal scanner and the one suite for all three (gate `layout-unit-tests`). **Canonical-only.** The scanner is **RED on purpose** (177 sites) and **not a gate** until P6 wires it at zero. |
 
 ### Workstreams (domain-specific adaptations)
 
