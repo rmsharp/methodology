@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S271 claim (in progress) — R2: the ledger trims, the floors and the adopter measurement
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "R2: ledger trims + floors" at the Phase 0 picker. The deliverable is plan section 5's R2 (`docs/planning/upstream-resync-2026-10-plan.md:379`): the `CHANGELOG.md` trim, the floors re-measured at two receipts and tightened, the adopter measurement by `bin/sync --source=local` into a scratch project, and BL-95's closure, local only: nothing is pushed or sent, and the report asks for the push go-ahead. The owed `HANDOFFS.md` trim (`2ee009c`, 18 receipts to `HANDOFFS-through-2026-10-05-6.md`, its `.verify.sh` exit 0 by name from a `--no-local` clone) and its fold (`12ec2d1`) ran first as their own actions, which is R2 step 2. Phase 3F records the rest.
+
 ### 2026-10-06 · [ad hoc] S271 — fold the sixth 2026-10-05 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`2ee009c`, 18 receipts, 2026-09-16 → 2026-10-05, to `HANDOFFS-through-2026-10-05-6.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (18 receipts, trimmer v1.7.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S270, S269), both the fork's, so its front matter's "every receipt retained here is the fork's" is true again. The shard's `.verify.sh` was run by name from a `--no-local` clone of `2ee009c`: exit 0, `records: 20 before = 2 retained + 18 archived`, L1, L2/front-matter and L3 hold. This is R2 step 2 of `docs/planning/upstream-resync-2026-10-plan.md` §5, taken before the session's claim because the trim was owed after the Phase 0 report.

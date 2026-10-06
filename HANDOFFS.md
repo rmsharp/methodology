@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S271
+date: 2026-10-06
+status: pending
+active_task: R2 -- THE BL-95 RESYNC, EXECUTOR SESSION 2 (`docs/planning/upstream-resync-2026-10-plan.md` section 5, `:379`). Deliverable: trim `CHANGELOG.md` (re-derive K; its own commit; the new shard's proof by name from a `--no-local` clone), re-measure the floors at two receipts after `bash bin/tests.sh > file` and tighten `tests-sh-passed` and `dashboard-unit-tests` in their own commit (never loosen), measure the adopter file set by `bin/sync --source=local` into a scratch project, close BL-95 (two edits), then ask for the push go-ahead. Local only: no push, no PR, no comment on `KJ5HST/methodology`. The owed `HANDOFFS.md` trim (`2ee009c`) and its fold (`12ec2d1`) ran first, before this claim.
+```
+
+```handoff
 session: S270
 date: 2026-10-06
 status: complete
