@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S269
+date: 2026-10-05
+status: pending
+active_task: BL-95 RESYNC PLAN (a planning session, `SESSION_RUNNER.md` Planning Sessions; the deliverable is one plan document in `docs/planning/`, written from measured evidence, with per-phase criteria and the decisions it needs from him; nothing is merged, rebased or pushed by this session). BL-95 (`docs/planning/BACKLOG.md:180`): fork `main` is 102 commits behind `upstream/main` (fetched this session; was 89 at S246) and ahead of it by 1,430; the fork carries `methodology_trim.py` changes upstream lacks (P1-P3, `TRIM_VERSION` 1.7.0, offered as upstream PR #94) and one `FRAMEWORK_APPARATUS.md` paragraph, which the resync must carry or consciously drop. He chose this at the S269 Phase 0 picker (go-ahead given as `go`, then the picker). The owed trim ran first as its own action: `d0bb866` (S266 receipt to shard `HANDOFFS-through-2026-10-05-4.md`, proof exit 0 by name from a `--no-local` clone), fold `0316eb6`, `bin/tests.sh` on the fold tree 359 passed, 0 failed, 6 skipped.
+```
+
+```handoff
 session: S268
 date: 2026-10-05
 status: complete

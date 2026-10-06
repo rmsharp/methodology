@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-05 · [BL-95] S269 claim (in progress) — the resync plan: catching fork `main` up with `upstream/main`
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "BL-95 resync plan" at the Phase 0 picker. The deliverable is a plan document in `docs/planning/`, not a resync: nothing is merged, rebased or pushed, and nothing goes to `KJ5HST/methodology`. The owed trim (`d0bb866`, S266's receipt to shard `HANDOFFS-through-2026-10-05-4.md`, its `.verify.sh` exit 0 by name from a `--no-local` clone) and its fold (`0316eb6`) ran first as their own actions; `bin/tests.sh` on the fold tree read 359 passed, 0 failed, 6 skipped. Phase 3F records the rest.
+
 ### 2026-10-05 · [ad hoc] S269 — fold the fourth 2026-10-05 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`d0bb866`, S266's receipt to `HANDOFFS-through-2026-10-05-4.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, 2026-10-05, trimmer v1.7.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S268, S267); the shard's `.verify.sh` was run by name from a `--no-local` clone of the trim commit and exited 0 (L1, L2/front-matter, L3). Ran after the Phase 0 report and the operator's choice of the BL-95 resync plan, before the session claim.
