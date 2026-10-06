@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [ad hoc] S269 -- fork main pushed to origin, on his go-ahead at the close-out picker
+
+`git push origin 5f302c0:refs/heads/main` took `ab171c3..5f302c0`, exactly the six commits he named at the picker
+(`d0bb866`, `0316eb6`, `f203159`, `352b544`, `aa8ae69`, `5f302c0`). Guards checked first: on `main`, tree clean, no
+`.git/REBASE_HEAD`, `origin/main` an ancestor of `main` (a fast-forward). **Read back:** `git ls-remote origin
+refs/heads/main` = `5f302c0d18e46a242f9aa1e72f10ef883502e5b9` = local `main`, and `git rev-list --left-right --count
+origin/main...main` read `0 0` after a re-fetch. Nothing went to `KJ5HST/methodology`.
+
 ### 2026-10-06 · [BL-95] S269 close-out — the resync plan is written and reviewed; the receipt is complete; D1–D7 await his answers
 
 `CHANGELOG: pending` on the S269 claim entry is cleared. **Deliverable:** `docs/planning/upstream-resync-2026-10-plan.md`
