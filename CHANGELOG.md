@@ -237,6 +237,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-05-7.md` (1 record(s), 33,594 B → 24,981 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-05 → 2026-10-05) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-05-7.md`](docs/archive/HANDOFFS-through-2026-10-05-7.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-05-7.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-05-7.md.verify.sh)
+rather than trusting a digest printed here. Live file 33,594 B → 24,981 B (−25.6%).
+
 ### 2026-10-06 · [BL-95] S271 — fork `main` pushed to `origin`: 124 commits, the resync reaches the adopters' source
 
 On his go-ahead at the close-out picker ("Push main now"), `git push origin main` took `rmsharp/methodology` `main` from `a4c5587` to `e9afd73`: a plain fast-forward (`origin/main` an ancestor of `main`, 0 behind after a fresh fetch), no force, no other ref, the local backup ref `pre-resync-2026-10` not pushed. **Read back, not inferred:** `git rev-list --left-right --count origin/main...main` reads `0 0`; `origin/main`, `git ls-remote origin refs/heads/main` and the GitHub API's `branches/main` all read `e9afd73`; `upstream` is untouched at `f34769f`. The 124 commits are the merge of `upstream/main` (v4.2) with its fix-ups, both ledger trims and this session's records; the adopters sync from this branch (`bin/status` then `bin/sync`), and none was synced here. This entry is the push's own record and goes out under his standing grant for a ledger-only push record.
