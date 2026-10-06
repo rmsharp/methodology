@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S273
+date: 2026-10-06
+status: pending
+active_task: PLAN THE `methodology/` SUBDIRECTORY MOVE (planning session; the plan is the deliverable, no implementation). He asked for an analysis and, if possible, a detailed implementation plan for moving the methodology files out of a repository's root into one `methodology/` directory, one level below root, in adopters and perhaps in this canonical repository too, so the root is cleaner and the methodology infrastructure is identifiable at a glance. Output: one plan document in `docs/planning/` with a grep-based inventory of every reference, per-phase DONE criteria with the surface named, and the decisions only he can take. Local only: no push, no PR, no comment on `KJ5HST/methodology`, no change to any adopter. The owed `HANDOFFS.md` trim (`d8a3024`, S270 to shard `HANDOFFS-through-2026-10-06.md`, its `.verify.sh` exit 0 by name from a `--no-local` clone) and its fold (`ef766f7`) ran first, before this claim.
+```
+
+```handoff
 session: S272
 date: 2026-10-06
 status: complete
