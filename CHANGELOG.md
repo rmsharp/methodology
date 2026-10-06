@@ -233,6 +233,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-05-6.md` (18 record(s), 121,640 B → 24,339 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **18** record(s) (2026-09-16 → 2026-10-05) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-05-6.md`](docs/archive/HANDOFFS-through-2026-10-05-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-05-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-05-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 121,640 B → 24,339 B (−80.0%).
+
 ### 2026-10-06 · [BL-95] S270 — the operator's push decision: fork `main` stays local until R2
 
 Asked at the S270 close-out picker whether to push fork `main` (112 commits: the merge `2ed9262`, fixes F1-F4 and this session's records) to `origin/main`, he chose **"Not yet, after R2"** (the recommended option): the adopters sync from fork `main`, R2 measures the adopter impact first (plan §5 R2 step 4), and R2's report asks again (step 5). Nothing was pushed; `origin/main...main` reads `0 112` before this entry's commit. The decision is recorded in the S270 receipt's next steps (3) and the BL-95 row already says R2 is next. No other action.
