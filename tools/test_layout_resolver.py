@@ -30,8 +30,17 @@ def _load(name, path):
     return mod
 
 
+def _load_script(name, path):
+    import importlib.machinery
+    loader = importlib.machinery.SourceFileLoader(name, str(path))
+    mod = importlib.util.module_from_spec(importlib.util.spec_from_loader(name, loader))
+    loader.exec_module(mod)
+    return mod
+
+
 lr = _load("layout_resolver", HERE / "layout_resolver.py")
 lf = _load("layout_fixtures", HERE / "layout_fixtures.py")
+cll = _load_script("check_layout_literals", REPO / "bin" / "check-layout-literals")
 
 
 def touch(root, *rel):
@@ -275,6 +284,282 @@ class TestFixtureTrees(Scratch):
                 for rel in lf.build_tree(td, layout, archive=True):
                     self.assertFalse(rel.startswith(("/", "..")) or ".." in Path(rel).parts, rel)
                     self.assertTrue((Path(td) / rel).is_file(), rel)
+
+
+PY_TOOL = '''"""A docstring that names CHANGELOG.md is prose, not a read."""
+# a comment naming HANDOFFS.md is prose too
+from pathlib import Path
+LEDGER = Path(".") / "CHANGELOG.md"
+MSG = "error: HANDOFFS.md is missing"
+ACKED = "SESSION_NOTES.md"  # layout: ok -- a label printed in a report, never opened
+UNREASONED = "ROADMAP.md"  # layout: ok
+SRC = "starter-kit/SESSION_RUNNER.md"
+DOC = "docs/methodology/HOW_TO_USE.md"
+DIR = "docs/methodology"
+NEW = "methodology/CHANGELOG.md"
+URL = "https://github.com/KJ5HST/methodology/blob/main/README.md"
+RX = r"CHANGELOG\.md"
+F = f"{Path('.')}/HANDOFFS.md"
+CFG = ".quality-gates.json"
+# --- layout resolver: BEGIN ---
+BLOCK = ("SESSION_RUNNER.md", "methodology")
+# --- layout resolver: END ---
+'''
+
+SH_TOOL = '''#!/bin/bash
+# CHANGELOG.md in a comment is prose
+git ls-files --error-unmatch CHANGELOG.md   # trailing comment naming HANDOFFS.md
+echo "see $top/HANDOFFS.md"
+cp starter-kit/CHANGELOG.md /dev/null
+msg='a # inside quotes is not a comment, CHANGELOG.md'
+'''
+
+
+def site_lines(sites):
+    return sorted(s.line for s in sites)
+
+
+class TestTheScannerReadsCode(unittest.TestCase):
+    """Section 7.1: list every line that names a methodology file's root path in a shipped tool."""
+
+    def setUp(self):
+        self.sites, self.acked, self.prose, self.problems = cll.scan_text("starter-kit/t.py", PY_TOOL)
+        self.by_line = {s.line: s for s in self.sites}
+        self.src = PY_TOOL.split("\n")
+
+    def line_of(self, needle):
+        hits = [i + 1 for i, l in enumerate(self.src) if l.startswith(needle)]
+        self.assertEqual(len(hits), 1, needle)
+        return hits[0]
+
+    def test_a_path_literal_is_a_site(self):
+        s = self.by_line[self.line_of("LEDGER")]
+        self.assertEqual((s.shape, s.names), ("path", ("CHANGELOG.md",)))
+        self.assertIn("bare", s.kinds)
+
+    def test_a_message_that_names_a_file_is_a_site_marked_text(self):
+        self.assertEqual(self.by_line[self.line_of("MSG")].shape, "text")
+
+    def test_docstrings_and_comments_are_prose_not_sites(self):
+        for needle in ("PY_TOOL", '"""A docstring'):
+            self.assertNotIn(1, self.by_line)
+        self.assertNotIn(2, self.by_line)
+        self.assertEqual({p.line for p in self.prose}, {1, 2})
+
+    def test_the_canonical_source_path_is_not_a_root_literal(self):
+        self.assertNotIn(self.line_of("SRC"), self.by_line)
+
+    def test_a_layout_path_is_a_site(self):
+        self.assertIn("layout-path", self.by_line[self.line_of("DOC")].kinds)
+        self.assertEqual(self.by_line[self.line_of("DIR")].kinds, ("layout-path",))
+
+    def test_a_hardcoded_new_layout_path_is_a_site(self):
+        self.assertIn("new-path", self.by_line[self.line_of("NEW")].kinds)
+
+    def test_a_url_that_contains_methodology_is_not_a_site(self):
+        self.assertNotIn(self.line_of("URL"), self.by_line)
+
+    def test_the_regex_form_and_the_fstring_form_are_sites(self):
+        self.assertIn(self.line_of("RX"), self.by_line)
+        self.assertIn(self.line_of("F ="), self.by_line)
+
+    def test_a_dotfile_name_is_found(self):
+        self.assertEqual(self.by_line[self.line_of("CFG")].names, (".quality-gates.json",))
+
+    def test_a_marker_with_a_reason_acknowledges_the_site(self):
+        n = self.line_of("ACKED")
+        self.assertNotIn(n, self.by_line)
+        self.assertEqual([a.line for a in self.acked], [n])
+
+    def test_a_marker_without_a_reason_acknowledges_nothing(self):
+        s = self.by_line[self.line_of("UNREASONED")]
+        self.assertIn("reason", s.note)
+
+    def test_the_resolver_block_is_exempt(self):
+        n = self.line_of("BLOCK")
+        self.assertNotIn(n, self.by_line)
+        self.assertNotIn(n, {p.line for p in self.prose})
+
+    def test_exactly_the_expected_sites_are_reported(self):
+        want = [self.line_of(k) for k in ("LEDGER", "MSG", "UNREASONED", "DOC", "DIR", "NEW", "RX", "F =", "CFG")]
+        self.assertEqual(site_lines(self.sites), sorted(want))
+        self.assertEqual(self.problems, [])
+
+    def test_a_python_file_that_does_not_parse_is_a_problem_never_a_silent_skip(self):
+        sites, acked, prose, problems = cll.scan_text("starter-kit/bad.py", "def (:\n")
+        self.assertEqual(sites, [])
+        self.assertEqual(len(problems), 1)
+        self.assertIn("starter-kit/bad.py", problems[0])
+
+    def test_unbalanced_resolver_markers_are_a_problem(self):
+        text = "# --- layout resolver: " + "BEGIN ---\nx = 1\n"
+        self.assertEqual(len(cll.scan_text("starter-kit/t.py", text)[3]), 1)
+
+
+class TestWhatIsNotAMethodologyFileName(unittest.TestCase):
+    """A URL to a methodology file, and a different file whose name merely contains one, are not sites.
+    Added because two scanner mutants (URLs not excluded, the name's left boundary loosened) survived
+    a suite that had no such case."""
+
+    NOT_SITES = (
+        'U = "https://github.com/KJ5HST/methodology/blob/main/CHANGELOG.md"\n'
+        'V = "https://raw.githubusercontent.com/o/r/main/HANDOFFS.md"\n'
+        'W = "BACKUP-CHANGELOG.md"\n'
+        'X = "old.HANDOFFS.md"\n'
+        'Y = "test_methodology_dashboard.py"\n'
+        'Z = "README.md"\n'
+    )
+
+    def test_none_of_these_is_a_site(self):
+        self.assertEqual(cll.scan_text("starter-kit/t.py", self.NOT_SITES)[0], [])
+
+    def test_the_same_names_standing_alone_are_sites(self):
+        text = 'A = "CHANGELOG.md"\nB = "HANDOFFS.md"\nC = "methodology_dashboard.py"\n'
+        self.assertEqual(site_lines(cll.scan_text("starter-kit/t.py", text)[0]), [1, 2, 3])
+
+
+class TestTheCanonicalDirectoryMayBeASeparateConstant(unittest.TestCase):
+    """`root / "starter-kit" / "NAME"` and os.path.join(root, "tools", "NAME") name the canonical repository's own
+    layout exactly as "starter-kit/NAME" does, but the directory is its own constant. Found by reading the first
+    real run, which flagged bin/check-learnings:125."""
+
+    JOINED = (
+        'A = ROOT / "starter-kit" / "SESSION_RUNNER.md"\n'
+        'B = os.path.join(root, "tools", "methodology_dashboard.py")\n'
+        'C = Path("starter-kit") / "BOOTSTRAP.md"\n'
+        'D = ROOT / "CHANGELOG.md"\n'
+    )
+
+    def test_only_the_root_relative_join_is_a_site(self):
+        sites = cll.scan_text("bin/x", "#!/usr/bin/env python3\n" + self.JOINED)[0]
+        self.assertEqual(site_lines(sites), [5])
+
+    def test_the_archive_directory_is_a_layout_path_because_trims_write_shards_there(self):
+        sites = cll.scan_text("starter-kit/t.py", 'ARCHIVE_DIR = "docs/archive"\nSRC = "starter-kit/SAFEGUARDS.md"\n')[0]
+        self.assertEqual([(x.line, x.kinds) for x in sites], [(1, ("layout-path",))])
+
+
+class TestTheScannerReadsShell(unittest.TestCase):
+    def setUp(self):
+        self.sites, self.acked, self.prose, self.problems = cll.scan_text(".githooks/pre-commit", SH_TOOL)
+
+    def test_a_command_that_names_a_ledger_is_a_site(self):
+        self.assertIn(3, site_lines(self.sites))
+
+    def test_a_variable_prefixed_path_is_a_root_literal(self):
+        self.assertIn(4, site_lines(self.sites))
+
+    def test_comments_are_prose_and_a_hash_inside_quotes_is_not_a_comment(self):
+        self.assertEqual(site_lines(self.sites), [3, 4, 6])
+        self.assertEqual({p.line for p in self.prose}, {2, 3})
+
+    def test_the_canonical_source_prefix_is_not_a_root_literal(self):
+        self.assertNotIn(5, site_lines(self.sites))
+
+    def test_a_name_standing_alone_is_a_path_and_a_name_in_a_sentence_is_text(self):
+        text = ("#!/bin/bash\n"
+                "git ls-files --error-unmatch CHANGELOG.md\n"
+                "git cat-file -e HEAD:CHANGELOG.md\n"
+                'cat > "$top/HANDOFFS.md"\n'
+                "echo That is methodology_trim.py's job\n"
+                "echo Prepend an entry to CHANGELOG.md.\n")
+        sites = cll.scan_text(".githooks/h", text)[0]
+        self.assertEqual({s.line: s.shape for s in sites}, {2: "path", 3: "path", 4: "path", 5: "text", 6: "text"})
+
+
+class TestTheScanSet(Scratch):
+    def write(self, rel, text):
+        p = self.root / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+
+    def test_the_shipped_tools_are_scanned_and_the_table_and_the_suite_are_not(self):
+        self.write("starter-kit/a.py", 'X = "CHANGELOG.md"\n')
+        self.write("bin/tool", '#!/usr/bin/env python3\nX = "HANDOFFS.md"\n')
+        self.write("bin/tests.sh", '#!/bin/bash\necho CHANGELOG.md\n')
+        self.write("bin/_manifest.py", 'X = "CHANGELOG.md"\n')
+        self.write(".githooks/pre-commit", '#!/bin/bash\necho CHANGELOG.md\n')
+        self.write("tools/test_x.py", 'X = "CHANGELOG.md"\n')
+        self.write("starter-kit/notes.md", 'CHANGELOG.md\n')
+        report = cll.scan_root(self.root)
+        self.assertEqual(sorted(report["files"]), [".githooks/pre-commit", "bin/tool", "starter-kit/a.py"])
+        self.assertEqual(sorted({s.file for s in report["sites"]}), [".githooks/pre-commit", "bin/tool", "starter-kit/a.py"])
+        self.assertIn("bin/tests.sh", report["not_scanned"])
+        self.assertIn("bin/_manifest.py", report["not_scanned"])
+
+    def test_a_byte_identical_dashboard_twin_is_scanned_once(self):
+        self.write("starter-kit/methodology_dashboard.py", 'X = "CHANGELOG.md"\n')
+        self.write("tools/methodology_dashboard.py", 'X = "CHANGELOG.md"\n')
+        report = cll.scan_root(self.root)
+        self.assertEqual(report["files"], ["starter-kit/methodology_dashboard.py"])
+        self.assertTrue(any("tools/methodology_dashboard.py" in n for n in report["not_scanned"]))
+
+    def test_a_dashboard_twin_that_differs_is_scanned_too(self):
+        self.write("starter-kit/methodology_dashboard.py", 'X = "CHANGELOG.md"\n')
+        self.write("tools/methodology_dashboard.py", 'X = "HANDOFFS.md"\n')
+        self.assertEqual(sorted(cll.scan_root(self.root)["files"]),
+                         ["starter-kit/methodology_dashboard.py", "tools/methodology_dashboard.py"])
+
+    def test_this_repository_scans_the_five_tools_the_plan_names_and_parses_cleanly(self):
+        report = cll.scan_root(REPO)
+        for name in ("starter-kit/methodology_dashboard.py", "starter-kit/methodology_trim.py",
+                     ".githooks/pre-commit", "bin/check-handoff", "starter-kit/close_out_report.py"):
+            self.assertIn(name, report["files"])
+        self.assertEqual(report["problems"], [])
+
+
+class TestTheScannerCommand(Scratch):
+    CMD = [sys.executable, "-B", str(REPO / "bin" / "check-layout-literals")]
+
+    def run_cmd(self, *args):
+        import subprocess
+        return subprocess.run(self.CMD + list(args), capture_output=True, text=True)
+
+    def write(self, rel, text):
+        p = self.root / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+
+    def test_exit_1_and_the_list_when_a_tool_holds_a_root_literal(self):
+        self.write("starter-kit/a.py", 'X = "CHANGELOG.md"\n')
+        r = self.run_cmd("--root", str(self.root))
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertIn("starter-kit/a.py:1", r.stdout)
+        self.assertIn("CHANGELOG.md", r.stdout)
+
+    def test_exit_0_when_every_site_is_resolved_or_acknowledged(self):
+        self.write("starter-kit/a.py", 'X = "CHANGELOG.md"  # layout: ok -- a label, never opened\n')
+        r = self.run_cmd("--root", str(self.root))
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("1 acknowledged", r.stdout)
+
+    def test_exit_2_when_nothing_was_scanned_so_a_wrong_root_cannot_read_green(self):
+        r = self.run_cmd("--root", str(self.root))
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+        self.assertIn("0 files", r.stdout + r.stderr)
+
+    def test_exit_2_and_the_file_named_when_a_tool_does_not_parse(self):
+        self.write("starter-kit/a.py", 'X = "CHANGELOG.md"\n')
+        self.write("starter-kit/bad.py", "def (:\n")
+        r = self.run_cmd("--root", str(self.root))
+        self.assertEqual(r.returncode, 2, r.stdout + r.stderr)
+        self.assertIn("starter-kit/bad.py", r.stdout + r.stderr)
+
+    def test_all_adds_the_prose_and_the_acknowledged_lines(self):
+        self.write("starter-kit/a.py", '"""CHANGELOG.md in a docstring."""\nX = "HANDOFFS.md"  # layout: ok -- a label\nY = "ROADMAP.md"\n')
+        plain = self.run_cmd("--root", str(self.root)).stdout
+        full = self.run_cmd("--root", str(self.root), "--all").stdout
+        self.assertNotIn("docstring", plain)
+        self.assertIn("docstring", full)
+        self.assertIn("a label", full)
+
+    def test_the_summary_line_counts_sites_files_acknowledged_and_prose(self):
+        self.write("starter-kit/a.py", '"""CHANGELOG.md"""\nX = "HANDOFFS.md"\nY = "ROADMAP.md"  # layout: ok -- label\n')
+        out = self.run_cmd("--root", str(self.root)).stdout
+        self.assertIn("1 file", out)
+        self.assertIn("1 site", out)
+        self.assertIn("1 acknowledged", out)
+        self.assertIn("1 prose", out)
 
 
 class TestCanonicalOnly(unittest.TestCase):
