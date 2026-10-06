@@ -2417,11 +2417,13 @@ class TestFmtRatioAndTwins(unittest.TestCase):
         read-cap row asserts only what it evaluated (P1) and names a remedy it has read from the
         project's own trimmer source (P2) -- changed output on a distributed tool, so MINOR. P1
         shipped without a bump; this one carries both. (2.18.0, the resync's merge of upstream's
-        2.11.x line, is described in git: `git log -S'2.18.0'` on this file.)"""
-        self.assertEqual(md.DASHBOARD_VERSION, "2.19.0")
+        2.11.x line, is described in git: `git log -S'2.18.0'` on this file.) 2.20.0 is the 2026-10
+        resync (BL-95, D5): the `.gitattributes` seed becomes installed content -- changed output
+        on a distributed tool, so MINOR."""
+        self.assertEqual(md.DASHBOARD_VERSION, "2.20.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.19\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.19.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.20\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.20.0")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general
@@ -2809,7 +2811,8 @@ class TestFrameworkInstalledExclusion(unittest.TestCase):
         src_for = {dest: src for src, dest, _d in self._manifest().DISTRIBUTION}
         # 6 since the resync's stage M2 (S177): upstream's quality ratchet ships quality_ratchet.py
         # and its .quality-gates.json seed, and the loop below checks both against their real files.
-        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 6,
+        # 7 since the 2026-10 resync (BL-95 R1): upstream's v4.1 `.gitattributes` seed.
+        self.assertEqual(len(md.FRAMEWORK_INSTALLED_SOURCE), 7,
                          "population guard: update this test's expectations deliberately when a "
                          "further executable ships, rather than letting the loop silently cover less")
         for dest in md.FRAMEWORK_INSTALLED_SOURCE:

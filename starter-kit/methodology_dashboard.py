@@ -92,7 +92,13 @@ from collections import defaultdict
 # A's severity there (P2). Changed output on a distributed tool: MINOR. Fork-only -- upstream's line
 # continues from 2.11.1, so the two stay apart until a dashboard PR reconciles them. (2.18.0, the
 # resync's merge of upstream's 2.11.x line, is described in git: `git log -S'2.18.0'` on this file.)
-DASHBOARD_VERSION = "2.19.0"
+# 2.20.0: BL-95 R1, the 2026-10 resync (docs/planning/upstream-resync-2026-10-plan.md, D5). The
+# `.gitattributes` seed (starter-kit/gitattributes, arriving from upstream's v4.1) is installed
+# content: dotfiles are categorized as config by name (CONFIG_FILES), and the seed has its own row
+# and signature set in _FRAMEWORK_INSTALLED_CONTENT. Changed output on a distributed tool: MINOR.
+# Fork-only -- upstream's line continues from 2.11.3, so the two stay apart until a dashboard PR
+# reconciles them.
+DASHBOARD_VERSION = "2.20.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -774,6 +780,16 @@ _QUALITY_GATES_JSON_SIGNATURES = (
     "quality_ratchet.py",
 )
 
+# The ledger merge-driver seed (starter-kit/gitattributes, installed once as `.gitattributes`): no
+# version constant, and like the two JSON seeds above it can never reach source-LOC (a dotfile is
+# categorized as config by name), so its signatures exist for the completeness test. They are lines
+# of the shipped seed's own comments and rules.
+_GITATTRIBUTES_SIGNATURES = (
+    "Methodology ledgers",
+    "CHANGELOG.md merge=union",
+    "HANDOFFS.md is deliberately NOT listed",
+)
+
 _FRAMEWORK_INSTALLED_CONTENT = {
     "methodology_dashboard.py": (_VERSION_RE, _FRAMEWORK_SIGNATURES),
     # The trimmer has no pre-constant releases in the wild — v1.0.0 is its first shipped version and
@@ -784,6 +800,7 @@ _FRAMEWORK_INSTALLED_CONTENT = {
     "quality_ratchet.py":      (_QUALITY_RATCHET_VERSION_RE, _QUALITY_RATCHET_SIGNATURES),
     ".context-budget.json":    (None, _CONTEXT_BUDGET_JSON_SIGNATURES),
     ".quality-gates.json":     (None, _QUALITY_GATES_JSON_SIGNATURES),
+    ".gitattributes":          (None, _GITATTRIBUTES_SIGNATURES),
 }
 
 # Derived, never hand-written — see the paragraph above. Order follows the dict, which follows
