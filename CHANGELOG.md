@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S274 — fork `main` pushed to `origin`: the S273 decisions record `b162866`
+
+On his go-ahead at the S274 Phase 0 picker ("Push main to origin"), `git push origin main` took `rmsharp/methodology` `main` from `b9f27f9` to `b162866`: a plain fast-forward (`origin/main` an ancestor of `main`, exactly one commit ahead, a clean tree), no force, no other ref; nothing went to `KJ5HST/methodology`. The one commit is S273's record of his close-out decisions (every recommendation of the BL-101 plan's §9). **Read back** after a fresh fetch: `git rev-list --left-right --count origin/main...main` = `0 0`, `git ls-remote origin refs/heads/main` = `b162866`. This recording commit, a `CHANGELOG.md`-only change, is pushed too under the standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [BL-101] S273 — the operator's close-out decisions recorded: every recommendation of the plan's §9
 
 At the close-out picker he took every recommendation: **D1** all the methodology files, in two tiers, the framework's own files first; **D6** this repository's real files stay put and the move is rehearsed in a scratch clone; **D8** the layout is built and proved on the fork and the adopters first, then offered upstream as one vetted pull request, each outward step his go-ahead at the time; **D2, D3, D4, D5, D7, D9** as the plan wrote them (flat `methodology/` with `workstreams/` below it; every filename kept; `.githooks/` and `CLAUDE.md` at the root and `.gitattributes` nested; the ledger archive last; expand then contract with `--layout auto` and sync before migrate; one adopter per session). He also gave the go-ahead to push `main` (recorded in its own entry above). Recorded in [`methodology-subdirectory-plan.md`](docs/planning/methodology-subdirectory-plan.md) (status line, §7 P0, §9), BL-101's index row and body, and the S273 receipt's next steps. **Next: P1.** Local, not pushed: its push is his go-ahead. Model: Claude Sonnet 5.5.
