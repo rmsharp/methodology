@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S270 — R1 fix-up F2: the `check-ledger` gate and Test 50's real-ledger assertion read the live ledger (D3)
+
+Upstream's gate runs `bin/check-ledger --all`; on this fork's tree that reports one finding, `docs/archive/CHANGELOG-through-2026-08-11.md:609` (a 2026-08-10 heading carrying two source tags), in a proof-locked shard that cannot be edited without breaking its `.verify.sh`. Per D3 (A, the operator's, 2026-10-06) the gate's command is now `bin/check-ledger` (threshold 0 and direction `max` unchanged), `bin/tests.sh` Test 50's last assertion (upstream's Test 31, renumbered) reads the live ledger the same way, and a `_fork_d3_check_ledger_scope_bl95` note in `.quality-gates.json` says why. Measured: `bin/check-ledger --all` exit 1 with that one finding; `bin/check-ledger` exit 0 (OK, 1 file). `quality_ratchet.py --precommit` exits 0. Not yet run: the suite and the gates on this tip (the R1 verification in a `--no-local` clone).
+
 ### 2026-10-06 · [BL-95] S270 — R1 fix-up F1: dashboard 2.20.0 and the `.gitattributes` seed as installed content (D5)
 
 `DASHBOARD_VERSION` 2.19.0 → 2.20.0 in both twins (a changed output on a distributed tool is MINOR; the fork's line stays apart from upstream's 2.11.3), and the `.gitattributes` seed gets its row and a three-string signature set in `_FRAMEWORK_INSTALLED_CONTENT`, after `.quality-gates.json` (the manifest's order). `tools/test_methodology_dashboard.py`: the two version pins follow and the population guard goes 6 → 7, deliberately, as S177 raised 4 → 6. `python3 tools/test_methodology_dashboard.py`: 353 tests OK in 52.8 s (the plan's trial read 353 with one red before the guard was raised); the twins are `cmp`-identical.

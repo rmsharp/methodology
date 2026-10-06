@@ -4140,8 +4140,12 @@ l31 "orphaned text under a month heading fails"              1 "## 2026-10\n\nst
 l31 "a surviving conflict marker fails"                      1 "<<<<<<< HEAD\n$E2=======\n$E1>>>>>>> beta\n"
 l31 "the seed sentinel left in a ledger with entries fails"  1 "<!-- METHODOLOGY-SEED-SENTINEL: fresh ledger -->\n\n$E2$E1"
 rm -rf "$L"
-"$BIN/check-ledger" --all >/dev/null 2>&1 && pass "check-ledger --all: this repository's ledger and its archive shard are clean" \
-    || fail "check-ledger --all: this repository's own ledger has findings"
+# The LIVE ledger, not --all (fork, BL-95 D3): --all also reads the frozen archive shards, and one
+# holds a finding that cannot be repaired -- docs/archive/CHANGELOG-through-2026-08-11.md:609, a
+# heading with two source tags, in a proof-locked shard. Same scope as the check-ledger gate in
+# .quality-gates.json.
+"$BIN/check-ledger" >/dev/null 2>&1 && pass "check-ledger: this repository's live ledger is clean" \
+    || fail "check-ledger: this repository's own live ledger has findings"
 
 echo "== Test 51: --source=github installs the SOURCE's manifest, so a checkout ahead of it is not refused (RED-first) =="
 # D8 (parallel-sessions plan): sync iterated THIS checkout's manifest against a clone of the source, so a branch
