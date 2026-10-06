@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-99] S272 claim (in progress) — the dashboard's manifest-history walk
+
+CHANGELOG: pending. Operator said `go` as the first message and chose "BL-99: first-parent manifest walk" at the Phase 0 picker (and "keep" for the local backup ref `pre-resync-2026-10`). The deliverable is BL-99: settle with evidence whether `_gate_manifest_history` should walk the manifest `--first-parent`, and if so fix it and its twin with tests so a merged lineage stops printing "floor lowered" and "gate removed" rows nobody caused; the eight older rows S271 did not examine are examined too. Local only: nothing is pushed or sent; an upstream PR for a distributed change is a separate go-ahead. The owed `HANDOFFS.md` trim (`c53a4e0`, one receipt to `HANDOFFS-through-2026-10-05-7.md`, proof exit 0 by name from a `--no-local` clone) and its fold (`ff89230`) ran first as their own actions. Phase 3F records the rest.
+
 ### 2026-10-06 · [ad hoc] S272 — fold the seventh 2026-10-05 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`c53a4e0`, 1 receipt, S269, 2026-10-05, to `HANDOFFS-through-2026-10-05-7.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.7.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S271, S270), both the fork's. The shard's `.verify.sh` was run by name from a `--no-local` clone of `c53a4e0`: exit 0, `records: 3 before = 2 retained + 1 archived`, L1, L2/front-matter and L3 hold. This is the trim S271's receipt named as owed after the S272 Phase 0 report, taken before the session's claim. Model: Claude Sonnet 5.5.

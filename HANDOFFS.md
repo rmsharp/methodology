@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S272
+date: 2026-10-06
+status: pending
+active_task: BL-99 -- THE DASHBOARD'S MANIFEST-HISTORY WALK (`tools/methodology_dashboard.py:2976` `_gate_manifest_history`, `:3063` `_fold_history`; twin `starter-kit/methodology_dashboard.py`). Deliverable: settle with evidence whether the walk should be `--first-parent` (a merge commit compared with the line it merged INTO), and if so fix it in both twins with tests in `tools/test_methodology_dashboard.py`, so a merged lineage stops reporting "floor lowered" and "gate removed" rows that nobody caused; the eight older rows S271 did not examine are examined too. Local only: no push, no PR, no comment on `KJ5HST/methodology` (an upstream PR for this distributed change is a separate go-ahead of his). The owed `HANDOFFS.md` trim (`c53a4e0`, S269 to shard `-7`, its `.verify.sh` exit 0 by name from a `--no-local` clone) and its fold (`ff89230`) ran first, before this claim.
+```
+
+```handoff
 session: S271
 date: 2026-10-06
 status: complete
