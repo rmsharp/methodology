@@ -233,6 +233,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.5.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-95] S270 — R1 fix-up F3: `CLAUDE.md` says 29 failure modes and v4.1, and `docs/RELEASE_HISTORY.md` gains v3.8, v4.0 and v4.1 (D6)
+
+`CLAUDE.md`: "documents 28 failure modes" → 29 (the runner's table now ends at `| 29 |`); a Starter Kit row for the `starter-kit/gitattributes` seed and a Tools row for the three structural checkers (the second says this fork's `check-ledger` gate reads the live ledger, F2); the pointer's "from v1.0 to v3.7" → "to v4.1". The "Current version" line needed no edit: it auto-merged to upstream's v4.1, which is D6's target (v4.2 is tagged but its release docs are PR #92, still open). `docs/RELEASE_HISTORY.md`: the v3.8, v4.0 and v4.1 bullets lifted verbatim from `upstream/main:CLAUDE.md` lines 118, 120 and 122 (checked line for line; none carries a relative link). This is a documentation correction, not a fork release or tag. `CLAUDE.md` is 15,029 B (resident ceiling 18,600 B); `bin/check-links` OK (116 links).
+
 ### 2026-10-06 · [BL-95] S270 — R1 fix-up F2: the `check-ledger` gate and Test 50's real-ledger assertion read the live ledger (D3)
 
 Upstream's gate runs `bin/check-ledger --all`; on this fork's tree that reports one finding, `docs/archive/CHANGELOG-through-2026-08-11.md:609` (a 2026-08-10 heading carrying two source tags), in a proof-locked shard that cannot be edited without breaking its `.verify.sh`. Per D3 (A, the operator's, 2026-10-06) the gate's command is now `bin/check-ledger` (threshold 0 and direction `max` unchanged), `bin/tests.sh` Test 50's last assertion (upstream's Test 31, renumbered) reads the live ledger the same way, and a `_fork_d3_check_ledger_scope_bl95` note in `.quality-gates.json` says why. Measured: `bin/check-ledger --all` exit 1 with that one finding; `bin/check-ledger` exit 0 (OK, 1 file). `quality_ratchet.py --precommit` exits 0. Not yet run: the suite and the gates on this tip (the R1 verification in a `--no-local` clone).

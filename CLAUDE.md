@@ -101,6 +101,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 | `starter-kit/methodology_trim.py` | Ledger trimmer — archives the oldest records of a grow-and-must-be-read ledger (`CHANGELOG.md`, `HANDOFFS.md`) into a frozen shard, and refuses to write unless the reconstruction is provably lossless. Dry-run by default; `--check` reports the trigger without writing. **Distributed since S39'** (`bin/_manifest.py`), so it lands at every adopter root beside the dashboard |
 | `starter-kit/context_budget.py` | Context-budget gate (FM #28) — byte and token ceilings on the files a session must read, reported by `--status`. **Distributed**, with its seed `starter-kit/context-budget.json` → `.context-budget.json`. This repo's root config is its own, not the seed |
 | `starter-kit/quality_ratchet.py` | Quality ratchet (upstream PR #82) — thresholds declared in the root `.quality-gates.json` that only tighten: `--precommit`, chained into `.githooks/pre-commit`, refuses a loosened or removed gate; `--run` measures every gate. **Distributed**, with an empty seed `starter-kit/quality-gates.json` → `.quality-gates.json` |
+| `starter-kit/gitattributes` | Ledger merge-driver seed (upstream v4.1; the parallel-sessions plan) — installed once as `.gitattributes` and never overwritten: `merge=union` for `CHANGELOG.md` and the two `.jsonl` histories, deliberately **not** `HANDOFFS.md`, whose conflicts must stay visible |
 
 ### Tools
 
@@ -110,6 +111,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 | `tools/test_methodology_dashboard.py` | Functional scoring tests for the health scanner (stdlib `unittest`). **Canonical-only** — not in `bin/_manifest.py`, so adopters do not receive it. Wired into `bin/tests.sh`; it imports only the `tools/` module and byte-compares the `starter-kit/` twin. Since S38 it also *loads* `starter-kit/methodology_trim.py` for the trim-row couplings, and still generates no `starter-kit/__pycache__` — `sys.dont_write_bytecode = True` is set before the imports (`:25`), which is what keeps that true rather than the import list. |
 | `tools/test_methodology_trim.py` | Behaviour tests for the ledger trimmer (stdlib `unittest`, 66 tests). **Canonical-only.** Wired into `bin/tests.sh` as of S39' — before that the trimmer's own tests ran in nothing, which stopped being tolerable once `bin/sync` began installing the tool at adopter roots. Sets `sys.dont_write_bytecode` (`:34`) for the same reason its sibling does. |
 | `tools/test_context_budget.py`, `tools/test_quality_ratchet.py` | Unit suites for the context-budget gate and the quality ratchet (stdlib `unittest`). **Canonical-only**; wired into `bin/tests.sh`. |
+| `bin/check-handoff`, `bin/check-ledger`, `bin/check-learnings` | Structural checkers for `HANDOFFS.md`, `CHANGELOG.md` and the Learnings table; **canonical-only**; each a declared quality gate. This fork's `check-ledger` gate and Test 50 read the live ledger, not `--all` (`.quality-gates.json`, `_fork_d3_check_ledger_scope_bl95`). |
 
 ### Workstreams (domain-specific adaptations)
 
@@ -132,7 +134,7 @@ Each phase is hard-gated — you cannot skip ahead. The most critical gate is be
 
 ## Key Concepts to Preserve When Editing
 
-- **SESSION_RUNNER.md documents 28 failure modes** with specific countermeasures. These are empirically derived from 1100+ sessions — do not remove or weaken them without strong justification. FMs 1–26 must not be renumbered; new FMs append at the end (e.g., FM #24 was appended in v2.3, FM #25 in v2.6, and FM #26 in v2.7; FM #27 was appended after these, not inserted).
+- **SESSION_RUNNER.md documents 29 failure modes** with specific countermeasures. These are empirically derived from 1100+ sessions — do not remove or weaken them without strong justification. FMs 1–26 must not be renumbered; new FMs append at the end (e.g., FM #24 was appended in v2.3, FM #25 in v2.6, and FM #26 in v2.7; FM #27 was appended after these, not inserted).
 - **Phase 0 (Orient) must remain mandatory and blocking** — the most common failure mode is agents skipping orientation and starting work immediately.
 - **"1 and done" rule** — one deliverable per session, then close out. This is structural, not advisory. Since v2.7 the one deliverable MAY be a pre-declared verified vertical slice (issues #20/#21; `SESSION_RUNNER.md` §Vertical Slice Sessions) — the allowance adds a gate and removes no step; one capability never means a second capability.
 - **Ghost session detection and ledger reconciliation** (Phase 0, step 6) exist because crashed sessions that leave no trace — or commits that never reached the `CHANGELOG.md` ledger — cause the next session to work from stale state.
@@ -146,6 +148,6 @@ Changes are tracked via git commits and the README's "What's New" section. Curre
 
 This section owns **released-version semantics** — one narrated entry per shipped version. The repo's **per-action operational timeline** (including non-release work: housekeeping, doc-only PRs, adopter coordination, backlog grooming) lives in the root [`CHANGELOG.md`](CHANGELOG.md) action ledger; where the two overlap — a release — `CHANGELOG.md` carries a one-line pointer here rather than re-narrating, so the two ledgers cannot diverge.
 
-The **narrated per-version history** — one entry for every release from v1.0 to v3.7 — lives in [`docs/RELEASE_HISTORY.md`](docs/RELEASE_HISTORY.md). **Read it when you need the semantics of a specific version**: what changed, why, and what it deliberately did not change. New releases append their entry there; this section keeps only the current-version line and the boundary rule above.
+The **narrated per-version history** — one entry for every release from v1.0 to v4.1 — lives in [`docs/RELEASE_HISTORY.md`](docs/RELEASE_HISTORY.md). **Read it when you need the semantics of a specific version**: what changed, why, and what it deliberately did not change. New releases append their entry there; this section keeps only the current-version line and the boundary rule above.
 
 That pointer is a plain Markdown link and **must never become an `@`-import**, which is expanded into context every session (`starter-kit/BOOTSTRAP.md` Step 5) and would restore exactly the recurring cost the extraction removed — this file is auto-loaded, and the history was 86% of it. This is that step's own rule applied here: the always-loaded file stays scannable, the accumulated record moves to a sibling read on demand. The `## Versioning` heading stays put, so existing `CLAUDE.md#versioning` links still resolve.
