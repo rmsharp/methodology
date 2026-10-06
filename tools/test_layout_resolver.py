@@ -31,6 +31,7 @@ def _load(name, path):
 
 
 lr = _load("layout_resolver", HERE / "layout_resolver.py")
+lf = _load("layout_fixtures", HERE / "layout_fixtures.py")
 
 
 def touch(root, *rel):
@@ -165,6 +166,115 @@ class TestTheBlockIsEmbeddable(Scratch):
             lr.embedded_block(lr.BEGIN + "\nx = 1\n")
         with self.assertRaises(ValueError):
             lr.embedded_block(self.block + "\n" + self.block)
+
+
+# The plan's section 4.1, typed out: the one place the target layout is written as literals, so a change to
+# the manifest cannot quietly reshape what "the new layout" means. 34 files, none of them at the root.
+S41_FRAMEWORK = ["SESSION_RUNNER.md", "SAFEGUARDS.md", "FRAMEWORK_LEARNINGS.md", "RECOMMENDED_SKILLS.md",
+                 "BOOTSTRAP.md", "CONTEXT_TEMPLATE.md", "CLAUDE_TEMPLATE.md",
+                 "ITERATIVE_METHODOLOGY.md", "FRAMEWORK_APPARATUS.md", "HOW_TO_USE.md",
+                 "methodology_dashboard.py", "methodology_trim.py", "context_budget.py", "quality_ratchet.py"]
+S41_WORKSTREAMS = ["DESIGN_WORKSTREAM.md", "ARCHITECTURE_WORKSTREAM.md", "DEVELOPMENT_WORKSTREAM.md",
+                   "AUDIT_WORKSTREAM.md", "RESEARCH_DOCUMENTATION_WORKSTREAM.md", "TEMPLATE_WORKSTREAM.md",
+                   "RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md",
+                   "INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md", "TEMPLATE_CAMPAIGN.md"]
+S41_STATE = ["SESSION_NOTES.md", "CHANGELOG.md", "HANDOFFS.md", "ROADMAP.md",
+             ".context-budget.json", ".quality-gates.json", ".gitattributes"]
+S41_GENERATED = ["dashboard.html", "dashboard_history.jsonl", ".context-budget-history.jsonl",
+                 ".quality-gates-results.json"]
+
+
+class TestFixtureTrees(Scratch):
+    """Trees in both layouts, built from the manifest, for every later phase to reuse."""
+
+    def build(self, layout, **kw):
+        return set(lf.build_tree(self.root, layout, **kw))
+
+    def test_the_new_tree_is_exactly_section_4_1(self):
+        want = {"methodology/" + n for n in S41_FRAMEWORK + S41_STATE + S41_GENERATED}
+        want |= {"methodology/workstreams/" + n for n in S41_WORKSTREAMS}
+        self.assertEqual(self.build("new"), want)
+        self.assertEqual(len(want), 34)
+
+    def test_the_legacy_tree_is_the_manifest_plus_the_generated_files(self):
+        manifest = _load("_manifest", REPO / "bin" / "_manifest.py")
+        want = {dest for _, dest, _ in manifest.DISTRIBUTION} | set(S41_GENERATED)
+        self.assertEqual(self.build("legacy"), want)
+
+    def test_the_legacy_tree_is_what_bin_sync_writes_into_a_project(self):
+        # Faithfulness (gate d): a fixture that no real adopter looks like proves nothing about adopters.
+        import subprocess
+        project = self.root / "real"
+        project.mkdir()
+        subprocess.run(["git", "init", "-q", str(project)], check=True)
+        r = subprocess.run([sys.executable, "-B", str(REPO / "bin" / "sync"), "--source=local", str(project)],
+                           capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        synced = {p.relative_to(project).as_posix() for p in project.rglob("*")
+                  if p.is_file() and ".git" not in p.relative_to(project).parts}
+        fixture_root = self.root / "fixture"
+        fixture_root.mkdir()
+        built = set(lf.build_tree(fixture_root, "legacy", generated=False))
+        self.assertEqual(built, synced)
+
+    def test_the_tier_1_tree_moves_only_what_the_manifest_tracks(self):
+        built = self.build("tier1")
+        want = {"methodology/" + n for n in S41_FRAMEWORK} | \
+               {"methodology/workstreams/" + n for n in S41_WORKSTREAMS} | set(S41_STATE) | set(S41_GENERATED)
+        self.assertEqual(built, want)
+        self.assertEqual(lr.resolve_layout(self.root)[0], "new")
+        self.assertEqual(lr.resolve_layout(self.root, "CHANGELOG.md")[:2], ("legacy", self.root))
+
+    def test_the_half_tree_has_the_runner_in_both_places(self):
+        built = self.build("half")
+        self.assertIn("SESSION_RUNNER.md", built)
+        self.assertIn("methodology/SESSION_RUNNER.md", built)
+        self.assertEqual(lr.resolve_layout(self.root)[0], "half")
+
+    def test_the_empty_tree_has_no_files(self):
+        self.assertEqual(self.build("empty"), set())
+        self.assertEqual(lr.resolve_layout(self.root)[0], "none")
+
+    def test_both_anchors_agree_on_the_two_pure_layouts(self):
+        for layout, kind in (("legacy", "legacy"), ("new", "new")):
+            with tempfile.TemporaryDirectory() as td:
+                lf.build_tree(td, layout)
+                for anchor in ("SESSION_RUNNER.md", "CHANGELOG.md", ".quality-gates.json"):
+                    self.assertEqual(lr.resolve_layout(td, anchor)[0], kind, (layout, anchor))
+
+    def test_the_archive_follows_its_tier(self):
+        self.assertTrue(any(p.startswith("docs/archive/") for p in self.build("legacy", archive=True)))
+        with tempfile.TemporaryDirectory() as td:
+            self.assertTrue(any(p.startswith("methodology/archive/") for p in lf.build_tree(td, "new", archive=True)))
+        with tempfile.TemporaryDirectory() as td:
+            # tier 2 moves the archive, so a tier-1 tree keeps it where it was
+            self.assertTrue(any(p.startswith("docs/archive/") for p in lf.build_tree(td, "tier1", archive=True)))
+
+    def test_new_path_maps_the_three_kinds_of_destination(self):
+        self.assertEqual(lf.new_path("CHANGELOG.md"), "methodology/CHANGELOG.md")
+        self.assertEqual(lf.new_path("docs/methodology/HOW_TO_USE.md"), "methodology/HOW_TO_USE.md")
+        self.assertEqual(lf.new_path("docs/methodology/workstreams/DESIGN_WORKSTREAM.md"),
+                         "methodology/workstreams/DESIGN_WORKSTREAM.md")
+
+    def test_contents_override_by_file_name(self):
+        lf.build_tree(self.root, "new", contents={"CHANGELOG.md": "# my ledger\n"})
+        self.assertEqual((self.root / "methodology" / "CHANGELOG.md").read_text(encoding="utf-8"), "# my ledger\n")
+        self.assertNotEqual((self.root / "methodology" / "HANDOFFS.md").read_text(encoding="utf-8"), "# my ledger\n")
+
+    def test_it_refuses_to_build_into_a_non_empty_directory_or_an_unknown_layout(self):
+        touch(self.root, "keep.txt")
+        with self.assertRaises(ValueError):
+            lf.build_tree(self.root, "new")
+        with tempfile.TemporaryDirectory() as td:
+            with self.assertRaises(ValueError):
+                lf.build_tree(td, "sideways")
+
+    def test_every_path_stays_inside_the_root(self):
+        for layout in lf.LAYOUTS:
+            with tempfile.TemporaryDirectory() as td:
+                for rel in lf.build_tree(td, layout, archive=True):
+                    self.assertFalse(rel.startswith(("/", "..")) or ".." in Path(rel).parts, rel)
+                    self.assertTrue((Path(td) / rel).is_file(), rel)
 
 
 class TestCanonicalOnly(unittest.TestCase):
