@@ -433,6 +433,11 @@ CHECKLIST_EXEMPT = {
     ".quality-gates.json": "SEED manifest for the ratchet above — starts empty by decision "
                            "(plan §8.4), so its presence proves only that sync ran; a declared "
                            "gate count and its outcomes are reported as risks/points instead",
+    ".gitattributes": "SEED merge-driver config (parallel-sessions plan, Phase 1): it makes concurrent "
+                      "ledger merges clean, which says nothing about whether sessions follow the "
+                      "runner; sync installs it, so its presence measures sync. A dashboard advisory "
+                      "for a missing merge driver was considered and deferred until Phase 5 "
+                      "measures concurrent sessions (plan §8A, item 11)",
 }
 
 
@@ -2373,6 +2378,26 @@ class TestQualityGateSignals(unittest.TestCase):
         m = md.collect_all(self._repo(docs))
         self.assertTrue(m["doc_only"]["is_doc_only"])
         self.assertEqual(m["scores"]["health"]["testing"], m["render"]["score"])
+
+
+class TestDotfileConfigCategory(unittest.TestCase):
+    """CONFIG_EXTS lists dotfile names (.gitignore, .editorconfig, …), but categorize_file is called
+    with Path.suffix, which is "" for a dotfile — so none of them ever matched and every one read as
+    "other" (found in S30 while categorizing the .gitattributes seed). Display only: no score reads it."""
+
+    def cat(self, name):
+        return md.categorize_file(Path(name), Path(name).suffix.lower(), name)
+
+    def test_dotfiles_listed_as_config_are_config(self):
+        for name in (".gitignore", ".editorconfig", ".eslintrc", ".prettierrc"):
+            self.assertEqual(self.cat(name), "config", name)
+
+    def test_a_dotfile_not_listed_is_still_other(self):
+        self.assertEqual(self.cat(".mailmap"), "other")
+
+    def test_suffix_matching_is_unchanged(self):
+        self.assertEqual(self.cat("settings.json"), "config")
+        self.assertEqual(self.cat("notes.xyz"), "other")
 
 
 class TestFmtRatioAndTwins(unittest.TestCase):

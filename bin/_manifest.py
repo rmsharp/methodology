@@ -27,6 +27,12 @@ TRACKED), and the instance simply never appears as a dest, so it can never be a
 sync target — no special-case guard needed (B1 plan Decision 2).
 
 Python 3 stdlib only; data-only module (no imports, no side effects).
+
+Keep it that way: --source=github reads THIS file from a clone with bin/_manifest_reader.py, as
+data, never by running it. So rows stay literals, and every name it binds (DISTRIBUTION,
+SEED_FORMAT_MARKERS, TRACKED, SEED) gets one plain assignment that nothing changes afterwards --
+no +=, no .append(...), no second assignment. A checkout syncing from a manifest that does any of
+those refuses it (bin/tests.sh Test 53 builds its source from this file, so it fails first).
 """
 
 TRACKED = "tracked"
@@ -60,6 +66,7 @@ DISTRIBUTION = [
     ("starter-kit/ROADMAP.md", "ROADMAP.md", SEED),
     ("starter-kit/context-budget.json", ".context-budget.json", SEED),
     ("starter-kit/quality-gates.json", ".quality-gates.json", SEED),
+    ("starter-kit/gitattributes", ".gitattributes", SEED),
     # framework docs -> docs/methodology/
     ("ITERATIVE_METHODOLOGY.md", "docs/methodology/ITERATIVE_METHODOLOGY.md", TRACKED),
     ("HOW_TO_USE.md", "docs/methodology/HOW_TO_USE.md", TRACKED),

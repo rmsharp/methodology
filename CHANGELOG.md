@@ -991,6 +991,12 @@ GitHub reports #91 `CONFLICTING`/`DIRTY`. In a scratch clone of `KJ5HST/methodol
 
 At the operator's `post` (after he twice could not see the draft in a picker turn), `gh pr review 91 --repo KJ5HST/methodology --approve --body-file` was run with the head unchanged at `befa7553`; read back from GitHub: state APPROVED, commit `befa7553`, body identical to the draft. Body: 254 passed / 0 failed, manifest read not imported, unsafe paths refused, the three non-blocking points (`.git` dest, NUL byte, `+=`), and the merge-state finding. No merge.
 
+### 2026-10-03 · [ad hoc] PR #91: comment to rmsharp that his three approval points were fixed before the merge
+
+- **Action (non-commit):** S39, after its close-out, with the operator's OK on the full text:
+  [comment](https://github.com/KJ5HST/methodology/pull/91#issuecomment-5964172772), read back from the API. The S39
+  receipt's next step (a) is updated to say so.
+
 ### 2026-10-02 · [ad hoc] S249 — operator decision: formal review on PR #91 is S250's deliverable, event Approve
 
 Recorded in the S249 receipt's `next_steps` (0). Nothing posted for it yet.
@@ -1086,6 +1092,81 @@ Operator's instruction, with the condition that the data captured so far is reta
 ### 2026-10-02 · [ad hoc] S245 close-out — T-control R1 re-run with the reply fixed, and the handoff receipt
 
 Closing the S245 claim (`CHANGELOG: pending` resolved). R1 n=5 with the new close-out reply: 0 hook refusals, no gate loosened, no bypass, no run stopped at RED, 4 of 5 task-done; rep 1 cut off at MAX_STOPS while closing out (and solved the task on the test side, which the held-out tests do not accept). Plan §14.1; data in `pilot/ratchet-control-t-control-reply-fix/`. Ledger $93.01 of the $125 cap (operator total $175). Corrected S244's claim that a killed cell is off the ledger: it is on it. `bash bin/tests.sh` 361/0/0; ratchet 11/11. The S245 receipt's retained-receipt count is 10 (not 3): a `--cut 2 --force` trim is owed as its own action. Nothing pushed.
+
+### 2026-10-02 · [ad hoc] S39 close-out — PR #91 merged with rmsharp's three points fixed; gate 243 → 261
+
+- **Action:** closes the S39 claim entry (*PR #91: rmsharp's three non-blocking points, then merge (in progress)*).
+  `9ac2d4b` on the branch fixed the three (entry above, carried by the merge). **Merge of PR #91** (`e107356`, range
+  `1680539..9ac2d4b`): merged locally, `CHANGELOG.md` by union and nothing else touched by both sides, as `git
+  merge-tree` predicted; `bin/tests.sh` 261/0 on the merged tree. Every merged commit already has its ledger entry (D8,
+  the S38 review fixes, the README line, the approval follow-ups). **Non-commit actions:** the branch pushed to
+  `9ac2d4b`; `main` pushed; GitHub reads PR #91 MERGED at `e107356` (2026-10-03T01:30:45Z). No PR comment posted. Gate
+  run at `d432865`: `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 10df8059439f · manifest 5986cf638fb1`.
+
+### 2026-10-02 · [ad hoc] `bin/_manifest.py` states the constraint PR #91 put on it
+
+- **Action:** S39. Its docstring now says why it must stay literal data with one plain assignment per name: every
+  checkout from `e107356` on reads it with `bin/_manifest_reader.py` and refuses a manifest that changes a name after
+  assigning it. Already enforced by Test 34, whose source is built from this file; the note tells the next editor why.
+
+### 2026-10-02 · [ad hoc] Ratchet: `tests-sh-passed` 243 → 261 after PR #91 (Tests 32 and 34)
+
+- **Action:** S39. Measured on the merged `main` at `e107356`: `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured ·
+  results cb0ac4297fb4 · manifest ae81b96658ec` — `bin/tests.sh` 261/0. Tightening only.
+
+### 2026-10-02 · [ad hoc] PR #91: rmsharp's three non-blocking points, then merge (in progress)
+
+- **Action:** session S39 claimed on `main`. rmsharp approved PR #91 at `befa755` with three non-blocking points;
+  each reproduces: a `.` or `.git/hooks/pre-commit` dest passes the path check, a NUL byte in a path passes it, and
+  `DISTRIBUTION += …` or `.append(…)` drops rows silently (and a second assignment wins, not the first). Fix on the
+  branch, RED first, then merge locally.
+
+### 2026-10-02 · [ad hoc] S38 close-out — PR #91 answered: branch fixed and pushed, description replaced, reply posted
+
+- **Action:** closes the S38 claim entry (*PR #91: answer rmsharp's review (in progress)*). On branch
+  `feat/sync-manifest-at-ref`, with their own ledger entries there: `46dec34` merges `main` in, `fa44be6` reads the
+  source's manifest as data and refuses rows it cannot install safely (Test 34, 8 checks RED first; 254/0), `befa755`
+  names the new helper in the README tree. **Non-commit actions:** the branch pushed to `befa755`; the PR #91
+  description replaced; the reply posted ([comment](https://github.com/KJ5HST/methodology/pull/91#issuecomment-5963355104)),
+  after the operator read it. Read back: MERGEABLE, CLEAN, 6 files. Gate run on the branch at `befa755`:
+  `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 45f064152691 · manifest ae81b96658ec`.
+
+### 2026-10-02 · [ad hoc] PR #91: answer rmsharp's review (in progress)
+
+- **Action:** session S38 claimed on `main`. rmsharp's three questions on PR #91 (2026-10-02T21:56Z) all reproduce:
+  the sync executes the clone's `bin/_manifest.py` (a broken one prints a traceback); a source whose seed label differs
+  has its seeds overwritten — an adopter's own `CHANGELOG.md` replaced, exit 0, no `--force`; and the PR shows the
+  `context_budget.py` change, now on `main`. Fix on the branch, RED first; the reply is shown to the operator before it
+  is posted.
+
+### 2026-10-02 · [ad hoc] PR #91 approval follow-ups: `.git`, `.` and NUL paths refused; a manifest that changes a name it binds is refused
+
+- **Action:** S39, on branch `feat/sync-manifest-at-ref`, fixing the three non-blocking points in rmsharp's approval.
+  A src or dest inside `.git` (any case), naming no file (`.`), or holding a NUL byte is refused with the other unsafe
+  paths; before, `.git/hooks/pre-commit` would have been written into the adopter's repository, and a NUL byte failed at
+  write time with a traceback. Every name the reader uses (`DISTRIBUTION`, `SEED_FORMAT_MARKERS`, the label strings
+  rows resolve) must be bound once by one plain assignment and never changed: `+=`, `.append(...)`, `del`, a second
+  assignment or a rebound `SEED` is refused, naming the lines, where it used to be skipped silently (rows lost, or the
+  last assignment read). Refused rows print as `repr`, so a NUL never reaches the terminal raw. Test 34 grows 8 → 15
+  checks, the 7 new ones RED first. `bin/tests.sh` 261/0.
+
+### 2026-10-02 · [ad hoc] README repo tree names `bin/_manifest_reader.py`
+
+- **Action:** S38, on branch `feat/sync-manifest-at-ref`. One line under `bin/` for the helper the PR #91 fix added.
+  Swept every page that describes `--source=github` (README, BOOTSTRAP, T1, T8): none says the source's manifest is
+  executed, so nothing else went stale.
+
+### 2026-10-02 · [ad hoc] PR #91 review: the source's manifest is read as data, and rows it cannot install safely are refused
+
+- **Action:** S38, on branch `feat/sync-manifest-at-ref`, answering rmsharp's review. New `bin/_manifest_reader.py`
+  parses the clone's `bin/_manifest.py` with `ast` instead of executing it, so nothing from the clone runs during a
+  sync or a status run, and an unreadable manifest is a one-line `error:` naming the source rather than a traceback.
+  Every row is checked before anything is written: a disposition other than this checkout's `tracked`/`seed`, or a
+  src/dest that is absolute or climbs with `..`, refuses the run and names the rows. Before this, a source with a
+  different seed label had its seeds written like tracked files: an adopter's own `CHANGELOG.md` was overwritten,
+  exit 0, no `--force`. `bin/status` had the mirror case, reading an unknown label as a seed and hiding drift. New Test
+  34 (8 checks, all RED against the branch's previous scripts). The Test 26 fixture copies the new helper with the
+  scripts. `bin/tests.sh` 254/0 after merging `main` (246 before this fix); live `--source=github` sync and status exit 0.
 
 ### 2026-10-01 · [ad hoc] S245 — spend cap clarified: the operator's overall total is $175 (was $150); ratchet cap stays $125
 
@@ -1190,6 +1271,552 @@ New under `docs/planning/overhead-replay/`: `ratchet_arms.py` (R1/R0 builders, t
 ### 2026-10-01 · [ad hoc] S239 claim — P1 of the quality-ratchet test (in progress)
 
 Phase 1B. Deliverable: P1 of [`docs/planning/ratchet-mechanism-test-plan.md`](docs/planning/ratchet-mechanism-test-plan.md) §5 — build the R1 and R0 arms, the erosion task and its scorer, decide reuse of S237's runs; **$0, no model session**. Operator said "go" at Phase 0 and chose P1 from the picker. Phase 0 found no undocumented commits and no pending receipt; local `main` 29 ahead of `origin/main`, nothing pushed. Predecessor S238 scored 8 (see its receipt). `CHANGELOG: pending`.
+
+### 2026-10-01 · [ad hoc] Phase 3 D8 — `bin/sync`/`bin/status --source=github` use the source's own manifest (PR, for review)
+
+- **Action:** S32, on branch `feat/sync-manifest-at-ref` (not `main`: it changes #87's premise, so rmsharp reviews it
+  first, as asked on PR #83). In github mode both scripts load the clone's `bin/_manifest.py` and iterate it, so the
+  file list and contents come from one ref; rows only this checkout's manifest has are named in a note and skipped,
+  where the scripts used to refuse the whole run. `absent_sources` now checks the source against its own manifest
+  (Test 28's case — the source lacks a file it lists — still refuses, same wording). New Test 32 (3 checks), RED
+  against `main`'s scripts (all 3 fail, exit 1). `bin/tests.sh` 240/0 on the branch.
+
+### 2026-10-01 · [ad hoc] S37 close-out — dashboard 2.11.3
+
+- **Action:** closes the S37 claim entry. Gate run at `dbde928` (the tightened manifest): `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 53f8c99b071f · manifest ae81b96658ec`.
+
+### 2026-10-01 · [ad hoc] Ratchet: `dashboard-unit-tests` 226 → 229; the oversight scanner copy refreshed to 2.11.3
+
+- **Action:** S37. Measured at `569024b`: `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 8301a4d20729 ·
+  manifest 586e28794faa`; tightened. **Non-repo action:** the oversight root's `methodology_dashboard.py` (refreshed to
+  2.11.1 in S28, stale again after 2.11.2/2.11.3) replaced by a one-file copy of the 2.11.3 twin; recorded in the
+  oversight `CHANGELOG.md`.
+
+### 2026-10-01 · [ad hoc] Dashboard 2.11.3 — dotfile names in `CONFIG_EXTS` are matched by name
+
+- **Action:** S37. `categorize_file` now also matches a file's whole lowercased name against `CONFIG_EXTS`, so
+  `.gitignore`, `.editorconfig`, `.eslintrc` and `.prettierrc` read as config, not other; an unlisted dotfile is still
+  other and suffix matching is unchanged. New `TestDotfileConfigCategory` (3 tests; the listed-dotfiles one RED before
+  the fix). Both twins byte-identical, `DASHBOARD_VERSION` 2.11.2 → 2.11.3, unit suite 226 → 229. Display only.
+
+### 2026-10-01 · [ad hoc] Dashboard: dotfile config names are categorized as config (in progress)
+
+- **Action:** session S37 claimed on `main`. The S30 finding: `CONFIG_EXTS` lists `.gitignore`, `.editorconfig`,
+  `.eslintrc`, `.prettierrc`, but `Path.suffix` is empty for a dotfile, so none of them ever matched and every such
+  file read as `other`. Display-only (the Config row's counts); no score or risk reads the category. RED first.
+
+### 2026-10-01 · [ad hoc] S36 close-out — v4.1 released
+
+- **Action:** closes the S36 claim entry (*Release v4.1 … (in progress)*).
+
+### 2026-10-01 · [ad hoc] v4.1 tagged and released
+
+- **Action (non-commit):** annotated tag `v4.1` at `1e018d1`, pushed with `main`; [GitHub Release
+  v4.1](https://github.com/KJ5HST/methodology/releases/tag/v4.1) published 2026-10-02T00:19Z, read back as Latest. Gate
+  run at the tagged commit: `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 124cd2ec8786 · manifest
+  586e28794faa`. The release: [`CLAUDE.md` §Versioning](CLAUDE.md#versioning) v4.1.
+
+### 2026-10-01 · [ad hoc] v4.1 release documentation — `CLAUDE.md` §Versioning and README What's New
+
+- **Action:** S36. `CLAUDE.md` *Current version* v4.0 → v4.1 and the v4.1 §Versioning entry; `README.md` What's New in
+  v4.1, with the adopter note (an existing `.gitattributes` is left alone — Step 10 gives the lines) and D8 named as
+  not yet released. `CLAUDE.md` 46,280 → 49,722 B under its 59,168 B ceiling; `check-links` OK. The release itself:
+  [`CLAUDE.md` §Versioning](CLAUDE.md#versioning) v4.1 (pointer, not re-narrated).
+
+### 2026-10-01 · [ad hoc] Release v4.1 — the parallel-sessions plan shipped (in progress)
+
+- **Action:** session S36 claimed on `main` (trunk; the concurrent lines used 35). Phase 6 of the parallel-sessions
+  plan: README What's New and `CLAUDE.md` §Versioning for v4.1, tag, GitHub Release. D8 (PR #91) is not in it —
+  still awaiting rmsharp's review.
+
+### 2026-10-01 · [ad hoc] S34 close-out — Phase 5 done: Shape B measured, its one defect fixed
+
+- **Action:** closes the S34 claim entry (*Parallel-sessions plan Phase 5 … (in progress)*). **Shape B, measured:** two
+  concurrent sessions (S35-alpha, S35-beta) in linked worktrees, each claimed, delivered and closed out (3 commits
+  each), all hooks passed first try, no `--no-verify`; the suite lock serialised their gate runs (alpha waited 2m11s;
+  ~2m10s per run). Merge 1 (`93a9e0e`): exit 0 — `main` had not moved. Merge 2 (`ed38798`): exit 1, **only
+  `HANDOFFS.md`** conflicted; `CHANGELOG.md` union-merged with 0 markers; the `--diff3` recipe gave three whole
+  receipts; `check-ledger --all` OK. Receipts owed for the merge: one (this one); none per merged commit. GitHub's
+  merge was not used (PR #90 measured it ignores the driver). **The one defect** (both lines red on
+  `check-handoff-all`, the merging session's early claim) is fixed in `3c9513a`. Gate run at `40747c1`:
+  `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results 124cd2ec8786 · manifest 586e28794faa`.
+
+### 2026-10-01 · [ad hoc] Ratchet: `tests-sh-passed` 237 → 243 after Test 33
+
+- **Action:** S34. Measured on the merged `main` at `3c9513a`: `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured ·
+  results 1b440dfb3fd4 · manifest 01be7a18f6cb` — `bin/tests.sh` 243/0. Tightening only.
+
+### 2026-10-01 · [ad hoc] Phase 5 finding fixed — `check-handoff` accepts one live pending receipt per line of sessions
+
+- **Action:** S34. The Shape B dogfood's one real defect, found independently by both concurrent sessions: the
+  merging session's pending claim (S34, committed before the lines were cut) sat below each line's newer receipt, and
+  `--allow-pending` excused only the newest block, so both branches' gate runs read 9/12 (`check-handoff-all` + Test
+  25) through no fault of their content. Neither session edited S34's record. Fix: a pending receipt is accepted when
+  it is the newest of its OWN line (bare `S<N>` = trunk, `S<N>-<seq>` = line `<seq>`); a stub superseded within its own
+  line, and the newest receipt overall without `--allow-pending`, are still refused. RED: the old checker failed the
+  merged ledger (10 findings on S34) and 3 of Test 33's 6 fixtures; GREEN 6/6; an accept-all-pending mutant fails
+  the 3 guards. The procedural alternative (claim only after the lines are cut) was rejected: real concurrent sessions
+  start in any order. `starter-kit/HANDOFFS.md` states the rule in one sentence.
+
+### 2026-10-01 · [ad hoc] S35-alpha close-out — T5 FM #29 corollary done; gate 9/12, every fail traced to S34's inherited pending receipt
+
+- **Action:** closes the S35-alpha claim entry (*Shape B dogfood (alpha) — T5 gains a failure mode #29 example (in
+  progress)*); the deliverable is `86a1bd5`. Gate run at `86a1bd5`, under the shared suite lock (waited 20:00:20 →
+  20:02:31 behind S35-beta; ran 2m11s): `quality_ratchet: 9/12 pass · 3 fail · 0 unmeasured · results bec96d9f8290 ·
+  manifest 01be7a18f6cb`. **All three fails have one cause, and it is a Shape B finding, not a defect in this
+  branch's content:** S34's `status: pending` receipt was committed on `main` (`92f773e`) *before* both branches were
+  cut, so once this branch prepends its own receipt, S34's is no longer the newest block — and `--allow-pending`
+  exempts only block 0 (`bin/check-handoff:228`). That fails `check-handoff-all` (1) and two `bin/tests.sh` Test 25
+  assertions (presence control; the merged-sequence negative), giving 235/237 passed, 2 failed — each reproduced by
+  hand against this file, all 10 checker findings on S34's block. The base file passes `--all --allow-pending`. S34's
+  receipt is another session's record and was not edited; the merging session's own close-out clears it.
+
+### 2026-10-01 · [ad hoc] Shape B dogfood (alpha) — T5 Step 4 gains a failure mode #29 corollary: many agents in one working tree
+
+- **Action:** S35-alpha. `docs/tutorials/T5_cautionary.md` Step 4 gains one corollary after the capability-tiered
+  one: who touches a deliverable is FM #26's question, *where* they write is FM #29's. The worked case is an
+  unnamed adopter's six adversarial-verify lenses in one tree, one mutating source while another's test run was in
+  flight, and the follow-up ruling (read-only lenses; every discriminating mutation made serially by one writer).
+  Links to the runner's FM table, `SAFEGUARDS.md` §Blast Radius Limits and `ITERATIVE_METHODOLOGY.md` §Parallel
+  Actors; all verified to resolve
+  (T5 is canonical-only, outside `bin/check-links`' distributed set — checked separately).
+
+### 2026-10-01 · [ad hoc] Shape B dogfood (alpha) — T5 gains a failure mode #29 example (in progress)
+
+- **Action:** session S35-alpha claimed on branch `s35-alpha` (parallel-sessions plan Phase 5, concurrent with S35-beta): one T5 corollary for failure mode #29.
+
+### 2026-10-01 · [ad hoc] S35-beta close-out — the session-notes bullet landed; the merging session's early claim reddens every line
+
+- **Action:** closes the S35-beta claim entry (*Shape B dogfood (beta) — §Parallel Actors says where session notes go
+  under Shape B (in progress)*): claim `c5df4c6`, deliverable `be36fbd`. Gate, run once under the shared suite lock:
+  `quality_ratchet: 9/12 pass · 3 fail · 0 unmeasured · results bec96d9f8290 · manifest 01be7a18f6cb`. **All three
+  fails have one cause, not this line's:** S34 committed its pending claim on `main` (`92f773e`) *before* the lines
+  were cut, so each line inherits that stub, and the moment a line prepends its own claim, S34's block becomes an
+  *older* pending receipt, which `--all --allow-pending` rejects (the exemption is newest-only,
+  `bin/check-handoff:228`). That is `check-handoff-all` (1) plus `bin/tests.sh` Test 25's two live-ledger assertions
+  (`:669`, `:697`: 235/237). Proven by counterfactual: the same ledger minus S34's block passes. No concurrent line
+  can be ratchet-green until the merging session's receipt is complete, and `check-handoff --all` at close-out fails
+  on S34's block alone (10 errors, none this line's). Left for the merging session and the operator; S34's receipt is
+  not this line's to edit.
+
+### 2026-10-01 · [ad hoc] Shape B dogfood (beta) — §Parallel Actors: session notes are rewritten, not merged
+
+- **Action:** `ITERATIVE_METHODOLOGY.md` §Parallel Actors gains the Shape B bullet **Session notes are rewritten, not
+  merged** (after **The ledgers merge.**, which already carries D15's `.quality-gates.json` half): `SESSION_NOTES.md` is
+  branch-local transient state, each line keeps its own, and the integrating session rewrites it at its Phase 3D
+  close-out. D15 cited `starter-kit/SESSION_NOTES.md`; the bullet cites the seed by role instead, because the flight
+  manual ships to adopters at `docs/methodology/` (`bin/_manifest.py:57`), where no `starter-kit/` exists, and the file
+  has no `starter-kit/` reference anywhere. +295 B; still one Read (637 lines); `bin/check-links` OK (116).
+
+### 2026-10-01 · [ad hoc] Shape B dogfood (beta) — §Parallel Actors says where session notes go under Shape B (in progress)
+
+- **Action:** session S35-beta claimed on branch `s35-beta` (parallel-sessions plan Phase 5, concurrent with S35-alpha): D15's session-notes sentence in §Parallel Actors.
+
+### 2026-10-01 · [ad hoc] Parallel-sessions plan Phase 5 — the Shape B dogfood: two concurrent sessions and one merge (in progress)
+
+- **Action:** session S34 claimed on `main` as the merging session. Two concurrent sessions, `S35-alpha` and
+  `S35-beta`, run in linked worktrees on branches `s35-alpha` / `s35-beta`, each with one doc-only deliverable and a
+  full close-out; S34 merges both locally and measures the result. Also: S33's receipt cited `README.md:211`; the rows
+  are at `:209` and `:221` — corrected there.
+
+### 2026-10-01 · [ad hoc] S33 close-out — Phase 4 done; the Shape A dogfood measured
+
+- **Action:** closes the S33 claim entry (*Parallel-sessions plan Phase 4 … (in progress)*). **Shape A, measured
+  (the plan's Phase 5 asks for these counts):** 4 worker units, each a read-only agent (no Edit/Write tool) returning
+  exact edits + the claims it relied on, dispatched in parallel; 1 lead unit (the shared README/CLAUDE.md, gate f);
+  2 sweep finds the plan's file list missed. Worker claims re-derived by the lead: all load-bearing ones; found
+  wrong: **0**; pre-existing defects a worker surfaced: **1** (BOOTSTRAP's "only hook" vs the ratchet). Integration:
+  one unit per checkpoint commit, `check-links` after each; no worker wrote a byte. Workers spent ~47–52k tokens each
+  in their own contexts; each report cost the lead ~2–3k. Gate run at `9b0a760`: `quality_ratchet: 12/12 pass · 0
+  fail · 0 unmeasured · results df965ece841e · manifest 01be7a18f6cb`.
+
+### 2026-10-01 · [ad hoc] Phase 4 sweep — the third campaign template and the research workstream's race example
+
+- **Action:** S33, the plan's Learning #10 whole-corpus sweep for *sub-agent / worktree / parallel*. Two sites the plan's
+  file list missed: `workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md` has the same Sub-Agent Dispatch
+  section as the two U2 updated — it gets the same one-writer sentence (lead-written, in that file's link style);
+  `RESEARCH_DOCUMENTATION_WORKSTREAM.md:121`'s parallel-download race is named as failure mode #29. The rest of the
+  hits (read-only research fan-out, the permission-asymmetry pattern) already agree with the rule.
+
+### 2026-10-01 · [ad hoc] Phase 4 U1 — HOW_TO_USE §Multi-Agent Teams names the two shapes and the one-writer rule
+
+- **Action:** S33. Worker-drafted, lead-integrated: the section states Shape A and Shape B, that each concurrent
+  session runs on its own branch or worktree, that a working tree has one writer, and points to §Parallel Actors for
+  the contract; every existing true line kept. Claims re-derived: 0 wrong.
+
+### 2026-10-01 · [ad hoc] Phase 4 U2 — both campaign templates cite the one-writer rule in their sub-agent dispatch
+
+- **Action:** S33. Worker-drafted, lead-integrated: `workstreams/TEMPLATE_CAMPAIGN.md` gains a **One writer** paragraph
+  OUTSIDE its bracketed placeholder (an adopter's fill-in would erase it inside); `RESEARCH_EXHAUSTIVE_VERIFICATION_
+  CAMPAIGN.md` closes *When to fan out* with it. Each cites failure mode #29 and §Parallel Actors in that file's own
+  link style. Claims re-derived: 0 wrong.
+
+### 2026-10-01 · [ad hoc] Phase 4 U3 — RECOMMENDED_SKILLS names the illustrative Claude Code mechanism for worker isolation
+
+- **Action:** S33. Worker-drafted, lead-integrated: after the capability-tiered paragraph, *Shape A fan-out — worker
+  isolation* — `Agent` `isolation: "worktree"`; read-only agent types make return-content mechanical (a shell tool
+  stays an instruction — the worker's own caveat, kept: the read-only type used in this very fan-out has Bash);
+  the return-content fallback when worktree isolation is refused. Brand names stay confined to this file. Harness
+  claims re-derived by the lead from this session's own tool definitions: 0 wrong.
+
+### 2026-10-01 · [ad hoc] Phase 4 U4 — BOOTSTRAP Step 10 gives existing-`.gitattributes` adopters the three union lines
+
+- **Action:** S33. Worker-drafted (read-only, returned content), lead-reviewed and integrated: a *Ledger merge driver*
+  paragraph — sync never overwrites a SEED, so a project that already had `.gitattributes` appends the three lines
+  itself; `HANDOFFS.md` excluded; GitHub's merge ignores the driver, merge locally. Worker claims re-derived by the lead
+  (`bin/sync:234` never-overwrite, the seed on `origin/main`, anchor uniqueness): 0 wrong. The worker flagged a
+  pre-existing contradiction, fixed here by the lead: `:325` "the one hook" and `:345` "the only hook it ships" vs
+  `:327` "the second hook" (the ratchet, since v3.8).
+
+### 2026-10-01 · [ad hoc] Phase 4, lead's unit (U5) — `README.md` tree and `CLAUDE.md` tables name the new seed and checker
+
+- **Action:** S33. The shared files a worker may not touch (contract gate f), written by the lead: `README.md`'s
+  repository tree gains `starter-kit/gitattributes` and `bin/check-ledger`; `CLAUDE.md`'s starter-kit table gains the
+  seed row and its Tools table a row for the three canonical-only checkers (`check-handoff`, `check-ledger`,
+  `check-learnings`) — Learning #10's sweep for the Phase 1 artifacts. `CLAUDE.md` 45,842 → 46,280 B.
+
+### 2026-10-01 · [ad hoc] Parallel-sessions plan Phase 4 — the docs sweep, run as a Shape A fan-out (in progress)
+
+- **Action:** session S33 claimed on `main`: Phase 4 of `docs/planning/parallel-sessions-plan.md` per §8A, executed as
+  the Shape A dogfood — read-only workers each draft one unit and return content; the lead integrates one unit per
+  checkpoint and owns the shared files (`README.md`, `CLAUDE.md`). Measured: units, worker claims re-derived, claims
+  found wrong. D11 is not in this phase (deferred).
+
+### 2026-10-01 · [ad hoc] S32 close-out — Phase 3: D9 on `main`, D8 in PR #91
+
+- **Action:** closes the S32 claim entry (*Parallel-sessions plan Phase 3 … (in progress)*). Gate run at `9565c45`:
+  `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results df965ece841e · manifest 01be7a18f6cb`.
+
+### 2026-10-01 · [ad hoc] Ratchet: `context-budget-unit-tests` 145 → 148 after D9; PR #91 opened for D8
+
+- **Action:** S32. Measured at `5ff62ea`: `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results fd8305354596 ·
+  manifest 312cd7c405c8`; the three worktree tests raise the budget suite to 148 — tightened. **PR opened (non-commit
+  action):** [PR #91](https://github.com/KJ5HST/methodology/pull/91), `feat/sync-manifest-at-ref` → `main`, D8 for
+  rmsharp's review; not merged.
+
+### 2026-10-01 · [ad hoc] Phase 3 D9 — `context_budget.py --calibrate` works from a linked worktree (1.3.1)
+
+- **Action:** S32. New `transcript_dir(root)` keys the transcript directory on the MAIN checkout (the parent of git's
+  common directory; `--path-format=absolute`, with a relative fallback for git < 2.31; the root itself outside a repo
+  or for a submodule's common dir), and `calibrate()` uses it — it had derived the slug from the worktree's own path,
+  so a linked worktree, the isolation unit the plan recommends, reported `no transcripts at …`. RED first, by
+  behaviour: a fixture repo + worktree + temporary `HOME` with one transcript under the main slug; the old tool said
+  "no transcripts". `TestFitGateEndToEnd.setUp` now asks the tool for the directory. `VERSION` 1.3.0 → 1.3.1; unit
+  suite 145 → 148; `--selftest` OK.
+
+### 2026-10-01 · [ad hoc] Parallel-sessions plan Phase 3 — worktree-aware `--calibrate`; manifest-at-ref as a PR (in progress)
+
+- **Action:** session S32 claimed on `main`. D9: `context_budget.py --calibrate` finds the main checkout's transcripts
+  from a linked worktree, RED first. D8 (`bin/sync --source=github` iterates the clone's manifest) changes rmsharp's
+  Test 28, so it goes up as a PR for his review, not onto `main`. Also: S31's receipt cited `.context-budget.json:51`
+  for a note at `:52` — corrected there.
+
+### 2026-10-01 · [ad hoc] S31 close-out — Phase 2 of the parallel-sessions plan done
+
+- **Action:** closes the S31 claim entry (*Parallel-sessions plan Phase 2 — the prose … (in progress)*). Gate run at
+  `428c452`: `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results f5b44d3e26a1 · manifest 312cd7c405c8`.
+
+### 2026-10-01 · [ad hoc] `bin/check-learnings` reports the highest Learning number, not the row count
+
+- **Action:** S31. Its OK line printed `contiguous 1..<row count>`, which reads "1..16" for a table that runs to #17
+  (16 rows, #14 reserved) — noticed when Learning #17 landed. Now `max(valid)`. Output only; no check changed.
+
+### 2026-10-01 · [ad hoc] Phase 2, checkpoint 3 — the tutorials say 29 failure modes
+
+- **Action:** S31. `docs/tutorials/README.md`, `T2_first_session.md`, `T5_cautionary.md` (three places) and
+  `TUTORIAL_TEMPLATE.md`: "28 failure modes" → 29, following FM #29's append. Canonical-only files.
+
+### 2026-10-01 · [ad hoc] Phase 2, checkpoint 2 — sequence tags and the merge rule in the `HANDOFFS.md` seed; Learning #17; the count is 29
+
+- **Action:** S31. `starter-kit/HANDOFFS.md`: a *Concurrent sequences* paragraph — each repository's `main` keeps bare
+  `S<N>`, other branches tag `S<N>-<seq>` (rmsharp's wording); the keep-both `git merge-file --union --diff3` recipe;
+  a merge is one action with one receipt that scores the merged line's last receipt and owes no per-commit
+  `reconciled` receipt. `starter-kit/FRAMEWORK_LEARNINGS.md`: Learning #17 (*many hands, one closer; one writer per
+  tree*) — `bin/check-learnings` OK, 16 rows (#14 reserved). Live failure-mode counts 28 → 29: `CLAUDE.md` (the
+  count and *#29 in v4.1*), `README.md` (the feature list). Release narration and Learning #15's historical "26 of 28"
+  left as written. The tutorials' four claims follow in the next commit (the 5-file cap).
+
+### 2026-10-01 · [ad hoc] Phase 2, checkpoint 1 — §Parallel Actors, FM #29 *Shared-state interference*, the one-writer rule
+
+- **Action:** S31. `ITERATIVE_METHODOLOGY.md`: new `## Parallel Actors` (Shape A's contract = slice gates a–d + (e) one
+  closer, (f) disjoint write scopes, (g) serial integration; Shape B's identity, ledger merge, one-receipt merge and
+  cross-line scoring; the capability-tier elaboration moved from the runner; an honest ceiling), a Principle 9
+  paragraph (*many hands, one closer*), a Phase 1 step-4 `--merges` clause, a Mechanical Gates pointer.
+  `starter-kit/SESSION_RUNNER.md`: FM #29 appended (1–28 byte-unchanged) + its Degradation row, the step-6 `--merges`
+  line, the merge-is-one-action sentence, the one-writer pointer, a task-map row — paid by reduction (capability-tiered
+  paragraph compressed to its gate statement, reconcile and session-notes paragraphs tightened): 53,229 → 52,839 B.
+  `starter-kit/SAFEGUARDS.md`: the one-writer Blast Radius row, paid by reduction: 17,129 → 16,965 B. **Measured, not
+  estimated:** an intermediate draft the density estimate called in-ceiling read 25,034.5 tokens as a pair — over the
+  25,000 read cap; the shipped pair reads 24,844.5 (HEAD's was 24,942.5), runner 18,799.5 / 18,900 and SAFEGUARDS
+  6,046.4 / 6,100 by doubled reads, densities recorded in `.context-budget.json`. Flight manual 20,533.5 → 22,772.5
+  tokens (one read).
+
+### 2026-10-01 · [ad hoc] Parallel-sessions plan Phase 2 — the prose: Parallel Actors, one writer per tree, FM #29 (in progress)
+
+- **Action:** session S31 claimed on `main`: Phase 2 of `docs/planning/parallel-sessions-plan.md` per §8A — the flight
+  manual's `## Parallel Actors` (the a–g contract) and Principle 9 paragraph, the runner's pointers, D6 and FM #29
+  *Shared-state interference* (paid by reduction), the SAFEGUARDS one-writer row, the `HANDOFFS.md` identity and
+  merge paragraphs, Learning #17, and every live count claim. Budgets measured before writing: flight manual 20,534
+  tokens (one-read cap 25,000), runner 42 tokens of headroom, SAFEGUARDS 17.
+
+### 2026-10-01 · [ad hoc] S30 close-out — Phase 1 of the parallel-sessions plan done
+
+- **Action:** closes the S30 claim entry (*Parallel-sessions plan Phase 1 — ledger merge mechanics (in progress)*).
+  Gate run at `5ea14d1` (the tightened manifest): `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results
+  f5b44d3e26a1 · manifest 312cd7c405c8`.
+
+### 2026-10-01 · [ad hoc] Ratchet: `tests-sh-passed` 215 → 237 after Phase 1
+
+- **Action:** S30. Measured at `e4aa45f`: `quality_ratchet: 12/12 pass · 0 fail · 0 unmeasured · results b1e984497caa ·
+  manifest 12c131faffed` — `bin/tests.sh` 237/0 (Tests 30 and 31 add 22). Tightening only.
+
+### 2026-10-01 · [ad hoc] Phase 1 Layer B — `bin/check-ledger`, and `check-handoff` stops passing a fused receipt
+
+- **Action:** S30. New canonical-only `bin/check-ledger` (CHANGELOG.md counterpart of `check-handoff`): no conflict
+  marker, every `###` heading `YYYY-MM-DD · ` + exactly one source tag right after the date (tags in inline code
+  ignored), no duplicate heading, no orphaned text, no seed sentinel once entries exist; date order and union's lost
+  blank line deliberately accepted. Declared as a gate, `check-ledger --all` max 0 (an addition). **`bin/check-handoff`
+  fix:** `parse_block` kept the last value of a repeated key, so two receipts fused by a union merge passed `--all` as
+  one clean receipt — found by Layer A's RED control, contradicting the assumption in rmsharp's #83 review that the
+  checker would catch it; a repeated key is now a finding. `bin/tests.sh`: Test 30 gains that assertion (RED against
+  the old checker), Test 31 has 14 fixtures; three `check-ledger` mutants each killed, a fourth exposed a footer branch
+  that could never change an outcome — removed. Both checkers clean on this repo (28 receipts; live ledger + shard).
+
+### 2026-10-01 · [ad hoc] Measured: GitHub's merge does not apply `merge=union` — probe PR #90, closed unmerged
+
+- **Action (non-commit, then this commit):** S30, the plan's Phase 1 verification item. Two scratch branches off `main`
+  (`scratch/union-base`, `scratch/union-head`), each prepending one `CHANGELOG.md` entry at the same anchor, merge
+  clean locally under the new `.gitattributes`; [PR #90](https://github.com/KJ5HST/methodology/pull/90) between them
+  read **CONFLICTING** (`mergeStateStatus` DIRTY). So GitHub's server-side merge ignores the driver; the documented
+  path is the plan's fallback — merge locally, where the driver applies, then push. PR #90 closed unmerged, both
+  branches deleted (local and remote). The seed and this repo's `.gitattributes` now say so in their comment.
+
+### 2026-10-01 · [ad hoc] Phase 1 Layer A, checkpoint 2 — the dashboard accounts for the new `.gitattributes` seed (2.11.2)
+
+- **Action:** S30. Adding a distributed file tripped three of the dashboard's structural tests, as Learning #12
+  intends: every adopter-root dest must be scored or exempt, and the installed-file tuple must match the manifest.
+  `.gitattributes` joins `FRAMEWORK_INSTALLED_SOURCE` with its own signature set, `CONFIG_FILES` (name-matched — a
+  dotfile's `Path.suffix` is empty), and the test's `CHECKLIST_EXEMPT` with its reason (merge configuration says
+  nothing about session discipline; the advisory is deferred, plan §8A item 11). `DASHBOARD_VERSION` 2.11.1 → 2.11.2,
+  both twins byte-identical; unit suite 226 OK. **Found, not changed:** `.gitignore` / `.editorconfig` / `.eslintrc`
+  / `.prettierrc` in `CONFIG_EXTS` can never match for the same reason — fixing it would re-categorize every
+  scanned repo's dotfiles, a separate change.
+
+### 2026-10-01 · [ad hoc] Phase 1 Layer A — the `.gitattributes` seed merges `CHANGELOG.md` by union; `HANDOFFS.md` stays visible
+
+- **Action:** S30. New `starter-kit/gitattributes` (SEED → `.gitattributes`; `bin/_manifest.py` 29 → 30) and this
+  repo's own `.gitattributes`: `merge=union` for `CHANGELOG.md`, `dashboard_history.jsonl`,
+  `.context-budget-history.jsonl` — not `HANDOFFS.md`, whose keep-both recipe the seed carries in a comment.
+  `bin/tests.sh` Test 30 (7 checks): a two-branch merge conflicts in `HANDOFFS.md` only, `CHANGELOG.md` auto-merges
+  whole, the recipe yields three whole receipts; a RED control shows union fusing two receipts into one block at
+  exit 0; the real trimmer against a prepend merges clean with nothing archived returning; sync installs the seed and
+  never overwrites an adopter's copy. RED: with no seed in the starter-kit, 5 of the 7 fail. **Found:** the fused
+  block passes `bin/check-handoff --all` (`parse_block` keeps the last of a repeated key) — fixed in Layer B.
+
+### 2026-10-01 · [ad hoc] Parallel-sessions plan Phase 1 — ledger merge mechanics (in progress)
+
+- **Action:** session S30 claimed on `main`: Phase 1 of `docs/planning/parallel-sessions-plan.md` as §8A amends it.
+  Layer A: `.gitattributes` + `starter-kit/gitattributes` seed (three `merge=union` lines, not `HANDOFFS.md`),
+  `bin/_manifest.py` 29 → 30, two-branch merge and trim-against-prepend tests, RED first. Layer B: `bin/check-ledger`
+  and its gate. In-phase: whether GitHub's merge honours `merge=union`, measured on a scratch PR.
+
+### 2026-10-01 · [ad hoc] S29 close-out — the never-edited gate receipt completed
+
+- **Action:** closes the S29 claim entry (*The ledger gate refuses an edit to a committed entry (in progress)*). Gate
+  run at `106f22b`: `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results 30d2a763be2b · manifest
+  58b9c63d75da` (`pre-commit-selftest` now runs 17 checks).
+
+### 2026-10-01 · [ad hoc] `.githooks/pre-commit` refuses an edit to a committed `CHANGELOG.md` entry
+
+- **Action:** S29. With the ledger co-staged, the hook now compares the staged ledger with HEAD's entry by entry (a
+  `###` heading to the next `#`/`##`/`###` heading or `---` rule, outside fences, trailing blanks ignored) and refuses
+  a committed entry whose heading or body changed, or one that disappeared — unless the commit stages a
+  `docs/archive/` shard (a trim). Needs python3; skipped without it. `--selftest` 10 → 17 checks, two mutants of
+  the check each killed by it. **RED first by replay** of real commits on their parents: under the old hook S26's
+  `746c17a` and `d1c1154` passed; under the new one both are refused and the trim `e010fdf`, the release docs, the
+  backfill and every S26–S29 claim and close-out pass. Sweep of all 119 ledger-touching commits since v3.7: 71 pass
+  (every rmsharp #84–#88 commit among them), 48 refused — each an append to an existing entry under the pre-#84
+  practice, three spot-checked by diff. `FRAMEWORK_APPARATUS.md` *Lifecycle* names the hook.
+
+### 2026-10-01 · [ad hoc] The ledger gate refuses an edit to a committed entry (in progress)
+
+- **Action:** session S29 claimed on `main`. `FRAMEWORK_APPARATUS.md` §The Action Ledger, *Lifecycle*, says a committed
+  entry is never edited, and nothing enforces it: S26 broke it twice (`746c17a`, `d1c1154`) with every gate green.
+  Deliverable: `.githooks/pre-commit` refuses a staged `CHANGELOG.md` that changes or drops a committed entry, except
+  a drop that stages an archive shard (the trimmer's commit); RED first by replaying those two commits; selftest cases.
+  Also in this commit: S28's receipt cited the archive pointer at `CHANGELOG.md:36`; it is at `:39` — corrected there.
+
+### 2026-10-01 · [ad hoc] S28 close-out — housekeeping done; branches deleted, PR #83 notified, oversight scanner refreshed
+
+- **Action:** closes the S28 claim entry (*Housekeeping … (in progress)*). Non-commit actions this session: merged
+  branches `fix/context-budget-fit-skip` and `docs/parallel-sessions-plan` deleted locally and on GitHub, and the stale
+  remote `read-set-budgets` (PR #80, merged) deleted — each verified an ancestor of `main` first; a notice of the
+  §8A decisions posted on [PR #83](https://github.com/KJ5HST/methodology/pull/83#issuecomment-5942319472), asking
+  rmsharp's view on D8 before Phase 3 changes his Test 28; the oversight root's `methodology_dashboard.py` copied
+  2.6.1 → 2.11.1 (recorded in the oversight `CHANGELOG.md`). Left for the operator, untouched: two local-only
+  unmerged branches, `docs/operator-gated-review-plan` (a 2026-07-31 DRAFT plan awaiting ratification) and
+  `experimental/pocock-audit` (17 commits, May). Gate run at `3e857aa`: `quality_ratchet: 11/11 pass · 0 fail ·
+  0 unmeasured · results 30d2a763be2b · manifest 58b9c63d75da`.
+
+### 2026-10-01 · [ad hoc] `CLAUDE.md` density re-measured; `.context-budget-history.jsonl` ruled tracked
+
+- **Action:** S28. `.context-budget.json`: `CLAUDE.md` `bytes_per_token` 2.5182 → **2.5687** and `measured_bytes`
+  59,119 → 45,842 — the doubled-file read reports 35,693 tokens, so 17,846.5 for the file (the S26 archive moved it
+  31% off the old measurement); `max_tokens` 23,483 unchanged (a pin). The tracked-or-ignored ruling open since S23 is
+  settled as **tracked**, matching the fork and the reason `.gitignore` already gives (the growth-run trigger reads the
+  series, which survives a clone only if committed); its first row is committed here.
+
+### 2026-10-01 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-30.md` (96 record(s), 229,112 B → 17,036 B)
+
+**Written by:** `methodology_trim.py` v1.5.0 — a tool action, not a session's judgment.
+Moved the oldest **96** record(s) (2026-06-25 → 2026-09-26) out of [`CHANGELOG.md`](CHANGELOG.md) into
+[`docs/archive/CHANGELOG-through-2026-09-30.md`](docs/archive/CHANGELOG-through-2026-09-30.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh`](docs/archive/CHANGELOG-through-2026-09-30.md.verify.sh)
+rather than trusting a digest printed here. Live file 229,112 B → 17,036 B (−92.6%).
+
+### 2026-10-01 · [ad hoc] Backfilled: PR #77 merged 2026-09-03 — the ledger trimmer shipped (`56997af`, merge `907a696`)
+
+- **Action (backfill, not S28's):** [PR #77](https://github.com/KJ5HST/methodology/pull/77) (rmsharp, *Ship the ledger
+  trimmer, with tests that run outside this fork* — read-set budgets, 2 of 4) merged at `907a696` on
+  2026-09-03T01:38Z: one commit, `56997af` — `starter-kit/methodology_trim.py` and `tools/test_methodology_trim.py`,
+  the `bin/_manifest.py` row, the trimmer's seed sections in `starter-kit/CHANGELOG.md` and `starter-kit/HANDOFFS.md`,
+  dashboard twins and tests (9 files, +4,691/−6). Neither commit touched this root ledger, so the reconcile gap
+  lost sight of it once a later commit edited the ledger (failure mode #27). Found by rmsharp's PR #83 review;
+  verified in S27 (`docs/planning/parallel-sessions-plan.md` §8A, row 5). The release that carried it is v3.8.
+
+### 2026-10-01 · [ad hoc] Housekeeping: the items S26 and S27 left open (in progress)
+
+- **Action:** session S28 claimed on `main`. Operator: "Do not leave anything unfinished." This session covers the
+  small open items: the PR #77 backfill, the due `CHANGELOG.md` trim, the `CLAUDE.md` density re-measure, the
+  `.context-budget-history.jsonl` ruling, merged-branch cleanup, the PR #83 notice, and the oversight dashboard
+  refresh. The larger items follow as their own sessions.
+
+### 2026-10-01 · [ad hoc] S27 close-out — the decision receipt completed
+
+- **Action:** S27's `HANDOFFS.md` receipt goes `status: pending` → `complete`; this entry closes the S27 claim entry
+  (*Parallel-sessions plan: the twelve §8 decisions (in progress)*). Gate run at `5bab033`: `quality_ratchet: 11/11
+  pass · 0 fail · 0 unmeasured · results 30d2a763be2b · manifest 58b9c63d75da`. Not done here, recorded as next
+  steps: the PR #77 backfill and the due `CHANGELOG.md` trim found while deciding.
+
+### 2026-10-01 · [ad hoc] Parallel-sessions plan ratified with amendments — §8A records the twelve decisions
+
+- **Action:** S27, under the operator's delegation. `docs/planning/parallel-sessions-plan.md` gains §8A (decision
+  table, phase amendments, §9A commands) and its Status moves from DRAFT to ratified-with-amendments. Main
+  amendment, measured: `HANDOFFS.md` leaves `merge=union` (rmsharp's objection reproduced — two receipts fuse
+  under the default and `zdiff3` styles, merge exit 0; whole only under `diff3`); `CHANGELOG.md` keeps it (trim
+  against prepend merges clean at `--cut 1`/`--cut 3`, and the trimmer accepts the result). Also: D5 and FM #29
+  wording per rmsharp (FM #29 named *Shared-state interference*); D6 gains a merged-PR ledger check (PR #77's
+  `56997af` has no entry here — verified); D8 kept as a requirement and adapted to #87's clone; D11 deferred past
+  Phase 5; D12 superseded — the plan ships as v4.1. Nothing implemented.
+
+### 2026-10-01 · [ad hoc] Parallel-sessions plan: the twelve §8 decisions (in progress)
+
+- **Action:** session S27 claimed on `main`. The operator delegated the plan's open decisions ("you do it", answering
+  S26's next step (a)). Deliverable: the twelve §8 answers recorded in `docs/planning/parallel-sessions-plan.md`, each
+  against rmsharp's PR #83 review and against what has changed since 2026-09-16 (v3.8 and v4.0 shipped; #87 rewrote
+  `--source=github`); the claims that can be computed are measured, not assumed. Nothing in the plan is implemented.
+
+### 2026-10-01 · [ad hoc] S26 close-out — the v4.0 receipt completed
+
+- **Action:** S26's `HANDOFFS.md` receipt goes `status: pending` → `complete`. This entry closes the S26 claim entry
+  below (*v4.0 — the open pull requests merged and released*), whose `CHANGELOG: pending` line it supersedes; that
+  entry is not edited again (see the correction entry below). Gate run cited in the receipt: the one at the tag.
+
+### 2026-10-01 · [ad hoc] v4.0 tagged and released
+
+- **Action (non-commit):** annotated tag `v4.0` at `2f911c9` (tag object `64e5811`), pushed with `main`
+  (`746c17a..2f911c9`); [GitHub Release v4.0](https://github.com/KJ5HST/methodology/releases/tag/v4.0) published
+  2026-10-01T20:55:11Z, read back as Latest. Gate run at the tagged commit: `quality_ratchet: 11/11 pass · 0 fail ·
+  0 unmeasured · results 30d2a763be2b · manifest 58b9c63d75da`. The release: [`CLAUDE.md` §Versioning](CLAUDE.md#versioning)
+  v4.0 (pointer, not re-narrated).
+
+### 2026-10-01 · [ad hoc] Correction: the S26 claim entry was edited by two later commits
+
+- **What was wrong:** after PR #84's merge (`99377b3`) made *a committed entry is never edited* a rule of this ledger
+  (`FRAMEWORK_APPARATUS.md` §The Action Ledger, *Lifecycle*), S26 kept the older one-entry-per-session habit and
+  appended bullets to its own claim entry in `746c17a` (the merges and the tightening) and `d1c1154` (the §Versioning
+  archive). Those bullets are accurate and stay; editing them back out would be a third edit. From `2f911c9` on, each
+  commit and non-commit action has its own entry.
+
+### 2026-10-01 · [ad hoc] Recorded: v3.8 tagged and released by rmsharp on 2026-09-30
+
+- **Action (non-commit, not S26's):** rmsharp tagged `v3.8` at `6b29d3d` and published its GitHub Release
+  (2026-09-30T23:01:13Z) with the README and §Versioning entries deferred; no ledger held it (failure mode #27 —
+  reconcile-on-read cannot see a non-commit action). Found at S25's Orient; the deferred docs landed in `2f911c9`.
+
+### 2026-10-01 · [ad hoc] v4.0 release documentation — `CLAUDE.md` §Versioning and `README.md` What's New for v3.8 and v4.0
+
+- **Action:** S26. `CLAUDE.md` *Current version* v3.7 → v4.0; §Versioning gains the v3.8 entry (rmsharp tagged and
+  released v3.8 on 2026-09-30 with its docs deferred) and the v4.0 entry; `README.md` What's New gains both, and its
+  repository tree a `docs/versioning-archive.md` row. `CLAUDE.md` 40,771 → 45,842 B under its unchanged 59,168 B
+  ceiling; `bin/check-links` OK; a sweep for `Current version`, `v3.7`/`v3.8`/`v4.0` and the old gate and test counts
+  outside the ledgers found no other stale claim. The release itself: [`CLAUDE.md` §Versioning](CLAUDE.md#versioning)
+  v4.0 (pointer, not re-narrated). This opens the ledger's first month heading, per *Placement*; the September entries
+  below are not retrofitted.
+
+### 2026-10-01 · [ad hoc] v4.0 — the open pull requests merged and released
+
+- **Action:** session S26 on `main`. Operator: "Merge them and release 4.0." Merge #89 → #88 → #87 → #86 → #85 →
+  #84 → #83 onto `main` locally, newest ledger entries first (the order S25's corrected receipt records), each
+  `CHANGELOG.md` conflict resolved keep-both with `main`'s side on top; full suite and gate run on the merged tree;
+  push; then the v4.0 release docs (README What's New, `CLAUDE.md` §Versioning — which also owes the undocumented
+  v3.8), tag and GitHub Release. `CHANGELOG: pending` — results appended at close-out.
+- **Seven merges** (claim `1befe64`), first-parent: [#89](https://github.com/KJ5HST/methodology/pull/89) `19f8d4f` →
+  [#88](https://github.com/KJ5HST/methodology/pull/88) `19566b6` → [#87](https://github.com/KJ5HST/methodology/pull/87)
+  `af8a693` → [#86](https://github.com/KJ5HST/methodology/pull/86) `a4eeef3` →
+  [#85](https://github.com/KJ5HST/methodology/pull/85) `a9946c6` → [#84](https://github.com/KJ5HST/methodology/pull/84)
+  `99377b3` → [#83](https://github.com/KJ5HST/methodology/pull/83) `d7768cb`. Ledgers merged keep-both with
+  `git merge-file --union --diff3` — diff3 keeps git from refining the shared fence lines out of two prepended
+  `HANDOFFS.md` receipts, the fusion rmsharp's #83 review demonstrated; `bin/check-handoff --all` after every merge
+  (receipts S26 → S25 → S24 → S23). Two non-ledger conflicts: `.quality-gates.json` at #86 (two `min` floors →
+  the larger of each) and `starter-kit/BOOTSTRAP.md` at #84 (#87's head + #84's tail, the resolution #87's body
+  documents). #84's own entries keep their branch order below, per its new *Placement* rule.
+- **Gate run on the merged tree (`d7768cb`):** `quality_ratchet: 11/11 pass · 0 fail · 0 unmeasured · results
+  219197070a3b · manifest 21dd9f1c1d67` — `bin/tests.sh` 215/0. **Tightening owed and taken:** `tests-sh-passed`
+  188 → 215, `context-budget-unit-tests` 140 → 145, `trimmer-unit-tests` 123 → 124 — `746c17a`; pushed
+  `6b29d3d..746c17a`, and GitHub read back all seven PRs as MERGED.
+- **Room for the release entries (operator's choice of three):** `CLAUDE.md` stood at 59,119 B under its pinned
+  59,168 B resident ceiling. The v1.0–v2.9 §Versioning entries (17 entries, 18,537 B) moved **verbatim** to new
+  `docs/versioning-archive.md` (canonical-only, not distributed), with a one-line pointer in their place — the
+  archive body compared byte-equal to the span at `746c17a`. `CLAUDE.md` → 40,771 B; the ceiling is unchanged.
+
+### 2026-10-01 · [ad hoc] Fit-gate end-to-end test skips, never fails, when the data refuse the fit
+
+- **Action:** session S25 on branch `fix/context-budget-fit-skip` (from `main` at `6b29d3d`). S24's
+  next step (a0): `tools/test_context_budget.py` `TestFitGateEndToEnd.setUp` skips only on calibrate()'s
+  "not enough" refusal, but calibrate() has further refusals that depend on the machine's transcripts, not
+  on the floor under test — a non-positive slope or an undefined R² (refused at every floor), and no
+  variation in the regressor ("cannot fit") — so on such a machine the two tests FAIL instead of skipping
+  (S24 measured it: 4 transcripts, slope −3.57, `bin/tests.sh` 138/1, `--run` 8/10). One file, RED first.
+  Claimed at `1a36282`; results below.
+- **The fix (one file, `tools/test_context_budget.py`):** `setUp` now skips on both stops calibrate() names
+  ("not enough", "cannot fit"), then probes the admitting floor 0.0 and skips when the refusal there does not
+  cite the floor — the data decided it, not the gate under test. A refusal that *does* cite the floor at 0.0 is
+  not skipped: no defined R² is below 0.0, so it would mean calibrate() applied the wrong floor. New unit test
+  `test_only_the_floor_refusal_names_the_floor` pins that word as the discriminator (118 → 119 tests).
+  **RED first** — the natural failure no longer reproduces here (a 5th transcript turned the slope positive),
+  so it was reproduced with a fixture `HOME` whose synthetic transcripts give each shape, tool and test
+  unmodified: negative slope and flat response FAILED the presence control, no regressor variation FAILED
+  both tests; after the fix all three skip, naming the cause, while a positive and a low-R² fixture still run
+  and pass. Three mutant `calibrate()`s (ignores its floor, prints nothing, always refuses) are still caught —
+  failed, never skipped — on both admitting fixtures and on this machine's real transcripts.
+- **Gate run at `229f08d`:** `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results a3b034f8cabf ·
+  manifest 97a7aab85b9a` — `bin/tests.sh` 139/0 again on this machine. **Tightening owed and taken:**
+  `context-budget-unit-tests` 118 → 119 (the new pin test), per the manifest's standing rule — `02677ea`;
+  re-run at the tightened manifest: `quality_ratchet: 10/10 pass · 0 fail · 0 unmeasured · results f5d8c427f056 ·
+  manifest b2e7f7752273`.
+- **PR opened (non-commit action):** [PR #89](https://github.com/KJ5HST/methodology/pull/89) from
+  `fix/context-budget-fit-skip` at `02677ea`, read back from the API (OPEN, +60/−4, 4 files). **Not merged.**
+- **Observed, not acted on:** every open PR (#83–#88) and this branch share base `6b29d3d`; `git merge-tree`
+  shows each pair conflicting on the `CHANGELOG.md` top anchor except #84 (clean against all but #87, on
+  `starter-kit/BOOTSTRAP.md`), plus #86×#87 on `.quality-gates.json` and this branch×#83 on `HANDOFFS.md`.
+  The v3.8 tag and GitHub Release (rmsharp, 2026-09-30, at `6b29d3d`) are not yet in this ledger — the
+  release-docs session records them. The operator's "clean everything up so we can merge and version" is
+  sequenced in the S25 receipt's next steps, not started here.
+- **Correction — merge order:** the receipt's first draft put #84 first; the operator proposed 88 → 87 → 84
+  and a scratch-clone simulation of both orders backed it — same final tree except `CHANGELOG.md` order, where
+  only newest-entries-first keeps a keep-both resolution newest-on-top (84-first put #88's 09-26 entry below
+  #87's 09-21 ones); `bin/tests.sh` on the 88 → 87 → 84 tree 212/0. Receipt `next_steps` (b) corrected in place.
 
 ### 2026-09-30 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-09-30.md` (89 record(s), 250,288 B → 97,576 B)
 
@@ -2150,4 +2777,1015 @@ copy: `--sync ~/Development --dry-run` reports `update methodology_dashboard.py`
 that copy's local 9-name `EXCLUDE_DIRS` — the edit point the module's own CUSTOMIZATION section invites. **Recorded
 as [BL-90](docs/planning/BACKLOG-DETAIL.md#bl-90), not fixed (FM #17), and nothing was synced.** The S230 receipt's
 next_steps (2) had called that command *"the remedy"*; it now says what running it would destroy.
+
+### 2026-09-26 · [ad hoc] The prose update route gets the three rules that stop it overwriting an adopter's ledgers
+
+- **Why:** `starter-kit/BOOTSTRAP.md` §Without `bin/sync` was one sentence — *"It will fetch the latest
+  starter-kit files and overlay them"* — and it named no exception. An agent following it literally overlays
+  `CHANGELOG.md` and `HANDOFFS.md`, which are seeds: the adopter's action ledger and every close-out receipt
+  are replaced with empty templates. A six-adopter acceptance test found this and rated it critical. The
+  `bin/sync` route has never had the defect; only the prose route does, and the prose route is the one the
+  instruction in that section tells people to use.
+- **What is added:** three numbered rules given with the instruction. **(1)** a two-row table splitting the
+  distribution into tracked files that are overlaid and adopter-owned files that are never overwritten, with
+  the consequence of getting it wrong stated in the sentence after it. **(2)** the hand reconcile the seeds
+  need afterwards, pointing at the *Updating an existing project from an earlier methodology version*
+  paragraph in §Setup with `bin/sync` rather than restating it, so the two cannot drift apart. **(3)** verify
+  with `bin/status` and what its five verdicts mean.
+- **The table is derived from `bin/_manifest.py`, not written from memory:** its `DISTRIBUTION` list is what
+  classes six files as seeds — `CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`, `ROADMAP.md`,
+  `.context-budget.json`, `.quality-gates.json` — and every other entry as tracked.
+- **Rule 3's five verdicts are the ones `bin/status` actually prints:** `missing`, `current`,
+  `N versions behind`, `locally modified`, and `present (stale format)` — read from the source, not inferred
+  from the documentation.
+- **Measured:** `bash bin/tests.sh` reports **139 passed, 0 failed** on this branch, unchanged from the commit
+  it starts from; `bin/check-links` resolves 107 links; `quality_ratchet.py --run` reports **10/10 pass**. The
+  change is prose in one file and no gate moves.
+
+### 2026-09-26 · [ad hoc] The suite's ratchet floor rises to what this branch measures
+
+- **Why:** this branch adds 49 assertions to `bin/tests.sh`, and `.quality-gates.json` still floored
+  `tests-sh-passed` at the count from before them. The ratchet therefore protected none of the new tests — a later
+  change that silently removed all 49 would still have passed the gate.
+- **Measured, not assumed:** `bash bin/tests.sh` reports **139 passed, 0 failed** in a clone of the commit this
+  branch starts from and **188 passed, 0 failed** in a clone of its tip. Diffing the two runs' `PASS:` lines names
+  49 assertions present only on the branch and **none** of the base's missing from it. The floor becomes 188.
+- **Tightening only, and the guard is live:** `quality_ratchet.py --precommit` accepts the change (exit 0) and
+  refuses the same line lowered by one (exit 2, *"gate 'tests-sh-passed': floor lowered 139 -> 138"*), so the check
+  was exercised on this tree rather than assumed to work. `--run` reports 10/10 pass with the new floor met exactly.
+- **A later merge cannot invalidate it:** the gate is a minimum, and every other change in flight adds tests rather
+  than removing them. Where another one raises this same line to a lower number, a minimum resolves to the larger.
+
+### 2026-09-22 · [ad hoc] The documents say what the update route now does, and stop requiring the `gh` CLI
+
+- **Why:** two earlier changes on this branch made `--source=github` clone the repository and made `bin/sync`'s
+  refusal name a source that has no history to compare against. The prose still described the route as it behaved
+  before: it required the `gh` CLI, and it told readers to *prefer* `--source=local` because only a local checkout
+  carried the history that recognizes a file as merely behind. Both statements are now false.
+- **The `gh` CLI is no longer required, and four documents said it was:** `README.md`'s Option A, the sync block in
+  `starter-kit/BOOTSTRAP.md`, and the `--source=github` lines in `docs/tutorials/T1_setup.md` and
+  `docs/tutorials/T8_keeping_current.md` now say *needs git and network*. Both `--source` help strings say what
+  `github` does — it clones the repository for the run.
+- **Either source now carries the history:** `BOOTSTRAP.md`'s *Updating an existing project* paragraph no longer
+  prefers `--source=local`. It says both sources carry the history that recognizes a file as merely behind, keeps the
+  sentence about a shallow clone or a downloaded tarball, and points that sentence at the refusal that now names it
+  rather than reporting it against the reader's files.
+- **`README.md`'s Quick Start note** keeps its wording and gains one clause: where to run `bin/sync` from, and that
+  either source recognizes an unedited file that is merely behind, so it is updated rather than refused.
+- **`BOOTSTRAP.md` troubleshooting** gains the second cause a reader can now meet — a shallow or history-less source —
+  beside the *locally modified* entry that was the only one there.
+- **Scope:** prose and two help strings only; no behaviour changes. `bin/check-links` OK, 107 links.
+
+### 2026-09-22 · [ad hoc] `bin/sync`: a source without its history is named as the refusal's cause, not the project's files
+
+- **The defect:** `bin/sync` refuses a tracked file that matches neither the canonical version nor any version in
+  the source's history, and says it has *local modifications*. That is earned only when the history is complete. From
+  a shallow clone or a downloaded tree it said the same of files that were merely behind: a project installed from
+  `008d656` and never edited had 9 files refused as local modifications, exit 2, by `bin/sync --source=local
+  --dry-run` from a depth-1 clone of this branch and from a `git archive` of it. `starter-kit/BOOTSTRAP.md` already
+  says a shallow clone or a tarball loses that history; the refusal did not.
+- **The fix:** before refusing, `bin/sync` asks its source what history it has. No `.git`: the refusal says the source
+  has no git history and prints the `git clone` command. `git rev-parse --is-shallow-repository` true: it says the
+  checkout is shallow and how many commits it holds, and prints `git -C <source> fetch --unshallow`. In both, the
+  header says the files *differ from the canonical version*, the `CLAUDE.md` paragraph (which presumes an edit) is
+  left out, and the exit stays 2. A source with its full history prints exactly the text it did.
+- **The `--source=github` hint:** it printed *"To inspect the drift first:"* over no lines, because its commands would
+  have named the clone, which is removed when the run ends. It now prints a clone of the source pinned to the commit
+  the run read (`git clone <url> methodology-<sha> && git -C methodology-<sha> checkout -q <sha>`) and one `diff` per
+  file against it.
+- **Tests, written red first:** Test 29 takes Test 26's fixture three ways — a depth-1 and a depth-2 clone over
+  `file://`, and a `git archive` of it — with a project holding the fixture's oldest version, merely behind. Each
+  source exits 2, names its cause (with the commit count, 1 and 3), writes nothing, and never says *local
+  modifications*; the shallow refusal prints the `fetch --unshallow` command and the tarball's the clone command. For
+  `--source=github` the test runs the printed hint after the run, from an empty directory: the clone succeeds and
+  `diff` exits 1 on the edit. The control: a full-history source upgrades the same file. Test 7 now also asserts
+  that a full-history source still says *local modifications*. On the unfixed script 9 of the 55 checks in Tests 7
+  and 26–29 fail, all of them new; the controls pass.
+- **Mutants, run:** thirteen — each cause's detection disabled, the cause ignored, each header's wording swapped, the
+  github hint's diff aimed at the removed clone, its pin wrong, the hint given the local form or dropped, the
+  `fetch --unshallow` path dropped, the commit count hard-coded, its plural forced, and the clone command dropped.
+  All thirteen fail at least one check; unmutated, 55 / 0.
+- **Live (one run each):** from the `008d656` project, the depth-1 clone and the tarball each refused its 9 files
+  with its own cause, exit 2. Against `https://github.com/KJ5HST/methodology.git`, a project with one edited file:
+  exit 2 with the full-history text, and the printed hint, run by hand, cloned `6b29d3d` and `diff` showed the edit.
+- **Not changed here:** `bin/status` from a history-less source still reads a merely-behind file as *locally
+  modified*; the `--help` text and the documents.
+
+### 2026-09-21 · [ad hoc] `bin/sync` and `bin/status`: `--source=github` clones the repository, so a file that is merely behind is recognized
+
+- **The defect:** `--source=github` read each distributed file's contents through the GitHub API and nothing else,
+  then classified the project's copy against an empty history. A file that was merely behind matched no known
+  version, so `bin/sync` refused it as a *local modification* (exit 2) and `bin/status` read it as *locally
+  modified*: the one case an update exists for. On a project installed from `008d656` and never edited, updated
+  toward `6b29d3d`, `bin/sync --source=github --dry-run` refused 9 files, exit 2, in 12.3 s (one run). The history
+  walk for this source was deferred when the full distribution was added (issue #32), with `--source=local` kept as
+  the supported update path.
+- **The fix:** `--source=github` makes a full clone of `https://github.com/KJ5HST/methodology.git` into a temporary
+  directory, or of `METHODOLOGY_SOURCE_URL` when it is set (anything `git clone` accepts), and runs exactly the
+  `--source=local` code over the clone: the same reads, the same full-history walk, the same `git describe`. The
+  directory is removed when the run ends, dry run or not. Both scripts, one mechanism. The `gh` calls are gone, so a
+  public repository needs neither the GitHub CLI nor authentication; a private mirror uses git's own credentials.
+- **What a user sees change:** the source line names the URL cloned (`source:  github (https://…)`), and `version:`
+  is the clone's `git describe` (`v3.7-68-g6b29d3d`) rather than `github:<sha>`. A distributed file the source lacks
+  (this checkout's manifest is ahead of it) is listed with every other such file before anything is written, exit 1,
+  in both scripts; `bin/sync` used to stop at the first one with a `gh auth login` hint.
+- **Tests, written red first:** Test 27 serves Test 26's fixture (both merge-hiding shapes) as a `file://` bare
+  repository through `METHODOLOGY_SOURCE_URL`, and checks every version the way Test 26 does, through
+  `--source=github`: 6 status rows and 5 sync outcomes, a real local edit still refused, plus the source and
+  version lines, a dry run that writes nothing, and no temporary clone left behind. Test 28 removes one distributed
+  file from the fixture: both scripts name it, exit 1, and nothing is written. On the unfixed scripts the two tests
+  fail 16 of their 20 checks; the 4 that pass are the controls. Test 26's fixture moved into a function the two
+  share, with its assertions unchanged. Test 9's guard is now the URL's reachability (`git ls-remote`, 30 s timeout)
+  instead of `gh auth status`.
+- **Mutants, run:** nine — a `--depth 1` clone in each script, the inventory skipped in each, the URL override
+  ignored, the temporary clone left behind by each, and the github route given no history in each. Tests 26–28
+  fail on all nine and pass unmutated (31 / 0). The two `--depth 1` mutants passed until the fixture was served as
+  `file://` rather than a plain path: git ignores `--depth` when it clones a plain path.
+- **Live, against this repository (one run):** the same project from `008d656`: `bin/sync --source=github --dry-run`
+  exit 0, 10 files would be written, `version: v3.7-68-g6b29d3d`, 1.6 s; `bin/status --source=github` 9 rows
+  *N versions behind*, 0 *locally modified*, 1.9 s.
+- **Not changed here:** the refusal text for a source that has no history of its own (a shallow clone, a downloaded
+  tarball), the *"To inspect the drift first:"* header this route prints over no lines, the `--help` text, and the
+  documents that describe the route.
+
+### 2026-09-21 · [ad hoc] `bin/status` and `bin/sync`: the history walks look up blobs in one batched call
+
+- **Why:** the full-history walk the entry below adds visits more than twice the commits the default walk did, and
+  both tools ran one `git ls-tree` subprocess per commit. Against six adopter projects, `bin/status` went from 3.0 s
+  to 10.1 s and one project's `bin/sync --dry-run` from 2.9 s to 7.5 s.
+- **The change:** one `git cat-file --batch-check` per walk, fed `<commit>:<path>` lines: `bin/status`'s new
+  `blobs_at()`, used by `history_walk()`, and `bin/sync`'s `local_history_blobs()`. A separate commit from the fix, so
+  it can be judged, or dropped, on its own.
+- **Behaviour-neutral:** on the fork where it was first measured, `bin/status` output over the six projects was
+  byte-identical to the fix's (174 rows), and `bin/sync --dry-run` output identical apart from the `version:` line,
+  with the same exit codes. Run time after: `bin/status` 4.0 s, that `bin/sync --dry-run` 2.3 s. Test 26 unchanged.
+
+### 2026-09-21 · [ad hoc] `bin/status` and `bin/sync`: a version a merge hid from git's default walk is recognized again
+
+- **The defect:** both tools listed a file's past versions with a plain `git log -- <path>`, which follows only a
+  merge's TREESAME parent. A version on the side a merge did not keep was never visited, so an unmodified copy of it
+  read *locally modified* and `bin/sync` refused it (exit 2).
+- **The fix:** `bin/sync`'s `local_history_blobs()` walks with `--full-history`; it only asks whether a version is
+  known. `bin/status` walks twice, sharing a commit → blob cache: the first-parent line (`--first-parent`) and the
+  full history. *N versions behind* counts the distinct versions newer than the project's along the first-parent
+  line, and falls back to the full walk for a version that only ever existed on a merged branch.
+- **Test 26, written red first:** a methodology repository with both hiding shapes on one tracked file (a merge that
+  takes a side branch's content, and one that keeps main's), at fixed commit dates. It proves the shapes (the walks
+  visit 4 / 8 / 4 commits), then pins 6 status rows and 3 sync outcomes, including a real local edit that must still
+  be refused.
+- **Provenance:** made and measured first on a fork of this repository, where running the fixed tools against six
+  adopter projects turned 8 misread files from *locally modified* into *N versions behind* and left the 3 genuine
+  local edits refused. Carried here with the test renumbered and three comments reworded; the logic is unchanged.
+
+### 2026-09-21 · [ad hoc] `.quality-gates.json`: the same two floors tightened again, to what this branch now measures
+
+- **Action:** `tests-sh-passed` 141 → 142 and `context-budget-unit-tests` 129 → 140. These are the values
+  `python3 starter-kit/quality_ratchet.py --run` measures after the two `context_budget.py` changes recorded
+  between this entry and the first tightening below, which add 11 unit tests and 1 `bin/tests.sh` row. No other
+  floor moves: every other gate measures exactly its threshold. This is a separate commit from the first
+  tightening, so either can be dropped alone.
+- **Measured** in a fresh clone of the branch before this commit: `10/10 pass · 0 fail · 0 unmeasured`, with
+  `tests-sh-passed` 142 and `context-budget-unit-tests` 140.
+
+### 2026-09-21 · [ad hoc] `context_budget.py`: a row over a ceiling stays `over` when a structure pattern also fails
+
+- **Action:** `measure_file()` in `starter-kit/context_budget.py` gave a row the status of whichever check wrote
+  last. A ceiling check (bytes, lines, line length, tokens) sets `over`; a structure pattern that matched fewer
+  records than its `expect_min` then set `instrument-failed` unconditionally, overwriting it. `render()` ranks
+  `instrument-failed` just below `over`, so the headline read `INSTRUMENT-FAILED`, the row read
+  `instrument-failed`, and when the growth run fired the advisory said *"Nothing is over a ceiling yet"* directly
+  above the finding that said the ceiling was exceeded. That write was the only one in `measure_file()` that could
+  lower a status. It now leaves an `over` row as it is, so a check can raise a row's status and never lower it.
+  Both findings still print, and the exit code is 2 either way. This is the case the growth-run entry two below
+  lists under *Not changed here*.
+- **A comment corrected:** the comment above `main()`'s exit said the tool's ordering *"already ranks"* an
+  instrument failure *"above `over`"*; `render()`'s ranking puts it just below. The comment now says what the code
+  does: a config defect exits 2 exactly as `over` does.
+- **Tests, RED first against the unchanged tool** (blob `f75482c2`): 4 in a new `TestStatusPrecedence` class in
+  `tools/test_context_budget.py`. (1) The real `main()` → `render()` path under `--status`, on a file over its byte
+  ceiling that also fails a pattern, with the growth run fired: the headline reads `OVER`, both findings print,
+  the advisory gives the over-state sentence, and the exit is 2. (2) `--status --json` reports that row as `over`.
+  (3) A control: a row that only fails its pattern still reads `instrument-failed`. (4) Raising still works: a
+  row past its warn line that fails its pattern reads `instrument-failed`. Tests (1) and (2) fail on the old tool;
+  (3) and (4) pass on it by design, and the mutants below are what they catch.
+- **Mutants, run rather than predicted,** after the fixed tool passed the same harness: the guard removed, so the
+  last writer wins again (tests 1 and 2); the guard made to never set the status (tests 3 and 4); raising from
+  `warn` blocked (test 4 alone); raising from `ok` blocked (test 3 alone). `--selftest` catches the two that stop
+  a pattern-only row reading `instrument-failed`, and neither of the others.
+- **Counts:** `tools/test_context_budget.py` 136 → 140 tests, `--selftest` 52 checks unchanged, `bin/tests.sh`
+  142 passed, 0 failed (unchanged: no shell row added). No gate threshold changes in this commit.
+
+### 2026-09-21 · [ad hoc] `context_budget.py`: `--check` is a second name for `--status`, and a refused argument is told what it most likely meant
+
+- **Action:** the refusal added below (exit 3 and the usage text) said what was wrong and not what to do instead.
+  Searched in this repository and seven adopter projects, the arguments typed after this tool's name that it
+  did not define were two: `--status`, which now exists, and `--check`. `--check` is the ledger trimmer's name for its report-only run
+  (`methodology_trim.py --check`: *"evaluate the trigger and report; never writes"*), and one adopter project's
+  session notes tell the next session to *"Re-measure (`python3 context_budget.py --check`) before writing
+  more"*. Now:
+  - `--check`, with or without `--json`, is accepted and is the same run as `--status`: the same ledger, the
+    same exit code, and no history row. The usage text gains a `--check` line.
+  - Every other refused argument gets a line of its own, `unknown argument: <arg>`, followed by what it most
+    likely meant, taken from what the sibling tools use the same flag for:
+    - `--force` (the trimmer's and the dashboard's override): *"there is deliberately no --force: to permit
+      growth, raise that file's ceiling in .context-budget.json"*;
+    - `--dry-run` (the dashboard's preview): *"did you mean --status? It measures and writes nothing"*;
+    - `--run` and `--write` (the ratchet's and the trimmer's real run): *"run with no argument to measure and
+      record"*;
+    - a misspelling of an accepted argument: *"did you mean <nearest>?"*, from `difflib.get_close_matches`
+      with a cutoff of 0.75;
+    - anything else: nothing more.
+  - Unchanged: exit 3, nothing read or written, and the usage text after the refusal.
+- **The cutoff was measured, not chosen.** At `difflib`'s default of 0.6, `--version` is offered `--json`, which
+  is not what anyone typing it meant; at 0.75 it is offered nothing. Both cutoffs send `--stauts`, `status`,
+  `--jsn`, `--selftset`, `--calibrat`, `--precomit`, `--chek` and `--hlep` to the intended argument, and neither
+  offers anything for `--zzz`, `--verbose` or `-v`. The one loss at 0.75: `install` is no longer offered
+  `install-hook`.
+- **Where the hint table lives.** It names `--force`, so it sits below the selftest, which refuses that string
+  anywhere above its own definition, and hints are looked up by key rather than by testing the argument list for
+  a flag, the form `bin/tests.sh` and the unit tests grep for.
+- **Tests, RED first against the unchanged tool** (blob `dd4803bf`): 7 new in `TestCommandLine` in
+  `tools/test_context_budget.py`, and its frozen accepted set gains `--check`. Six fail on the old tool: the
+  `--check` test, the `--force`, preview, misspelling and one-line-each hint tests, and the frozen set. Two pass on
+  it by design, because the old tool never suggested anything: `--zzz` and `--version` are offered nothing. The
+  mutants below are what those two catch. One row in `bin/tests.sh`: `--check` on the seed config exits as
+  `--status` does and writes nothing. It fails on the old tool (exit 3 against 1).
+- **Mutants, run rather than predicted,** after the fixed tool passed the same harness: `--check` dropped from
+  the write guard (the `--check` test and the shell row); the hint table emptied (the `--force`, preview and
+  one-line-each tests); the cutoff at 0.6 (the `--version` test); the suggestion printed unconditionally (the
+  `--zzz`, `--version` and one-line-each tests); the hint table moved above the selftest (`--selftest` exits 2 on
+  *"--force is not offered"*). `--selftest` catches only the last.
+- **Counts:** `tools/test_context_budget.py` 129 → 136 tests, `--selftest` 52 checks unchanged, `bin/tests.sh`
+  141 → 142 passed, 0 failed. `VERSION` stays 1.3.0, which this pull request already sets. No gate threshold
+  changes in this commit.
+
+### 2026-09-21 · [ad hoc] `.quality-gates.json`: two floors tightened to what this branch measures
+
+- **Action:** `tests-sh-passed` 139 → 141 and `context-budget-unit-tests` 118 → 129. These are the values
+  `python3 starter-kit/quality_ratchet.py --run` measures after the two `context_budget.py` changes below,
+  which add 11 unit tests and 2 `bin/tests.sh` rows. The manifest says the next tightening is owed whenever a
+  measured value rises, and a tightening passes the pre-commit ratchet without approval. No other floor
+  moves: every other gate measures exactly its threshold.
+- **Measured** in a fresh clone of the branch before this commit: `10/10 pass · 0 fail · 0 unmeasured`, with
+  `tests-sh-passed` 141 and `context-budget-unit-tests` 129.
+
+### 2026-09-21 · [ad hoc] `context_budget.py`: the growth-run advisory no longer says nothing is over a ceiling when something is
+
+- **Action:** when the growth run fires, `render()` in `starter-kit/context_budget.py` prints an advisory
+  whose second sentence was a literal: *"Nothing is over a ceiling yet — that is the point. Ceilings fire
+  late."* It printed in every such run, including runs whose headline read `context budget OVER` above
+  a table with rows marked `over`. The sentence is now chosen by `worst`, the variable the headline
+  prints, so the two cannot disagree. When nothing is over, the sentence is unchanged, word for word.
+  When something is, it reads *"A ceiling has fired as well — see the rows marked over."* No other output
+  changes.
+- **Tests, RED first against the unchanged tool** (blob `131158cb`): 3 in a new `TestGrowthRunAdvisory`
+  class in `tools/test_context_budget.py`. (1) A matrix over every status `render()` ranks (`ok`,
+  `unmeasured`, `warn`, `instrument-failed`, `over`), with and without the growth run. It calls
+  `render()` in process, checks each cell's headline and advisory first, and asserts the advisory never
+  says *"Nothing is over a ceiling"* when the headline says `OVER`. (2) The presence control: every
+  status below `over` still prints the original sentence, so deleting it would not pass (1). (3) The
+  real `main()` → `render()` path on a project over its resident total, with a growth-run limit of 2 and a
+  seeded history. Tests (1) and (3) fail on the old tool, and (2) passes on it by design.
+- **Mutants, run rather than predicted,** after the fixed tool passed the same harness: the literal
+  restored (tests 1 and 3 fail); the sentence deleted in both states (all 3); the condition inverted (all
+  3); the condition widened to `instrument-failed` (test 2). `--selftest` catches none of them, since it
+  does not cover the advisory.
+- **Not changed here:** a row can be over a ceiling and still read `instrument-failed`. `measure_file()`
+  gives a row the status of whichever check wrote last, so a failed structure pattern overwrites a byte
+  ceiling's `over`. The headline then reads `INSTRUMENT-FAILED`, and the advisory keeps the original
+  sentence above a finding that says the ceiling was exceeded. That is a status-precedence question in
+  `measure_file()`, not in the advisory.
+- **Counts:** `tools/test_context_budget.py` 126 → 129 tests, `--selftest` 52 checks unchanged, `bin/tests.sh`
+  141 passed, 0 failed (unchanged: no shell row added). No gate threshold changes in this commit.
+
+### 2026-09-21 · [ad hoc] `context_budget.py --status` now exists and writes nothing; an unknown argument is refused
+
+- **Action:** `starter-kit/context_budget.py` had no `--status` command and ignored any argument it did
+  not recognise, so `--status`, `--check`, `--force` and a typo each ran the default measurement. That run
+  appends a row to `.context-budget-history.jsonl` whenever a size changed. `--status` is nonetheless
+  cited as a verification step in this repository's own ledgers, and the PR #82 review thread named its
+  write as what stands in the way of a `context-budget` gate. Now:
+  - `--status`, with or without `--json`, is the default run without its one write: the same ledger, the
+    same exit code, and no history row.
+  - An argument outside a fixed list (`install-hook`, `--precommit`, `--calibrate`, `--selftest`, `--json`,
+    `--status`; `-h`/`--help` still win) exits **3**, the tool's documented usage code. It prints
+    `unknown argument: …` and the usage text, and reads and writes nothing. The usage text's *"There is
+    deliberately no --force"* is now observable: `--force` is refused rather than silently measured.
+  - `VERSION` 1.2.0 → 1.3.0. The usage text gains a `--status` line, and the default's *"append one
+    history line"* now says *"when a size changed"*, which is what `append_history` does.
+- **Where the list lives, and a guard that narrowed on the way.** The list sits above `def selftest`
+  because the selftest's escape-hatch check (the string `--force` must not appear in the source above
+  that function) is the only existing guard that can read it; `main()` is below it. While the list was
+  being written, a comment above it named that function's definition. The check splits the source on the
+  first mention, so it moved up, and `--force` added to the list then passed the selftest. A new test
+  pins the split point to the function itself.
+- **Tests, RED first against the unchanged tool** (blob `b1111d92`): 8 in a new `TestCommandLine` class in
+  `tools/test_context_budget.py`. Six fail on the old tool. Two are controls that pass on it by design: the
+  default run still writes, and `--help` still wins over an unknown argument. Two rows in `bin/tests.sh`'s
+  budget block, in a `mktemp` project with the seed config: `--status` leaves `git status --porcelain
+  --ignored` empty, and `--zzz` exits 3 and changes nothing. The same project's default run comes last, as
+  the presence control: the fixture does get written to. Both rows fail on the old tool.
+- **Mutants, run rather than predicted:** the append made unconditional again (3 unit tests and 1 row
+  fail); the rejection removed (2 and 1); `--force` added to the list (3 unit tests, and the selftest,
+  which now sees it); a comment naming the selftest's definition above the list, plus `--force` (3 unit
+  tests; the selftest does not see it). The two `"--force" in args` greps, in `bin/tests.sh` and
+  `tools/test_context_budget.py`, catch neither `--force` mutant, since they match that expression only.
+- **Counts:** `tools/test_context_budget.py` 118 → 126 tests, `--selftest` 52 checks unchanged, `bin/tests.sh`
+  139 → 141 passed, 0 failed. No gate threshold changes in this commit.
+
+### 2026-09-20 · [ad hoc] The ledger gate stopped running after any stopped rebase — the marker git leaves behind, dropped
+
+- **Action:** `.githooks/pre-commit` skipped replayed commits by testing five markers under the git
+  dir. One of them, `REBASE_HEAD`, is **left behind by git** when a rebase that *stopped* — a
+  conflict, or `-i` parked at `edit` — runs to completion. From that moment the hook exited 0 on
+  every commit in that clone. The marker loop runs **before** both gates the hook chains, so the
+  casualty was not only the failure-mode-#27 ledger gate but `quality_ratchet.py --precommit`,
+  whose whole job is refusing a loosened threshold. Both then read green because neither ran.
+- **The shape was chosen from a measurement, not from plausibility.** Every operation in the marker
+  list was run to completion on git 2.50.1 and its markers observed at each stage. Two facts decided
+  it: `REBASE_HEAD` is the **only** marker that survives its operation (the other four are removed
+  when the operation ends or is aborted, so none needs the same treatment), and it is **redundant** —
+  every rebase in progress carries `rebase-merge` or `rebase-apply` alongside it, so dropping it
+  costs no in-progress coverage. A third measured fact explains how it goes unnoticed: a **clean**
+  rebase leaks nothing, so only a stopped rebase arms the trap.
+- **A hook is the one gate nothing else watches, and it fails open** — its failure mode is silence,
+  not red. So the fix ships with `.githooks/pre-commit --selftest` (10 checks, on the
+  `.githooks/commit-msg --selftest` precedent) and a `pre-commit-selftest` gate in
+  `.quality-gates.json`, modelled on the existing `commit-msg-selftest` entry. Adding a gate always
+  passes the ratchet; no threshold moved.
+- **Evidence:** RED-first — the same ten checks against the unfixed marker list go red on exactly
+  one, green on the other nine, so the test isolates the defect rather than being vacuously red;
+  0 red after the fix. The selftest builds each probe repo with `git init --template=`, so a user's
+  `init.templateDir` cannot install *its* hooks into the probe and answer for the hook under test,
+  and it asserts each fixture actually built (a probe against a repo that failed to build answers
+  about nothing, in green). `bin/tests.sh` unchanged at 139 passed / 0 failed;
+  `quality_ratchet.py --run` 11/11 with the new gate.
+
+### 2026-09-18 · [BL-72] `bin/check-handoff` skips a fenced block with an info string, instead of the newest receipt behind it
+
+- **Defect:** `scan()` recognised two fence openers, a bare backtick run (a wrapper) and a `handoff` fence. A fence
+  with any other info string, such as the `sh` block in the seed's *Size, and when to archive* section, was read as
+  prose, so its closing fence opened a wrapper that ran to the next bare fence: the closing fence of the newest
+  receipt. That receipt was never parsed. The checker validated the one below it and exited 0, and `--all` counted
+  one receipt fewer. Every adopter ledger that keeps the seed's section above its receipts was affected.
+- **Fix:** such a fence is now skipped whole, to a bare closer at least as long (CommonMark), as a wrapper already
+  was. An info string may not contain a backtick, so a prose line that starts with inline code quoting a fence
+  opens nothing. Unlike a wrapper's, the block's lines stay visible to the orphan check, so a receipt under a
+  misspelled tag is reported field by field, at its own lines. An unclosed one is reported like an unclosed
+  wrapper. A `handoff` fence is read as before.
+- **Tests:** ten assertions in `bin/tests.sh` Test 22, after block isolation. Six fail on the previous checker, and
+  each of six mutants of the fix fails at least one. The seed fixtures read the seed itself, and fail loudly if it
+  loses its sentinel comment or its info-string fence, rather than passing on a fixture that tests nothing.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] Four wording fixes: the thin seed, the flight manual's index row, a moved note, two test references
+
+- **Change:**
+  - `starter-kit/CHANGELOG.md` — *"Old entries are archived"* becomes *may be archived* (archiving is optional), and
+    *"size and archiving"* becomes *reading and archiving* (the rules name no size).
+  - `ITERATIVE_METHODOLOGY.md:575` — the §Reference Apparatus row, the same *reading and archiving*.
+  - `FRAMEWORK_APPARATUS.md` — the note under the entry format kept a clause about the seed's freshness check, which
+    no longer applies where the note now lives; it says only that the tokens are illustrative.
+  - `bin/tests.sh` Test 20 (b2) — two references to `BOOTSTRAP.md:85`, which this branch moved to `:87`, cite the
+    paragraph by name instead.
+- **Why:** each was found by the same independent review. No rule changes; no marker changes, so no seed reads stale
+  because of this.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] *Placement* covers the trimmer's first month heading and a merged branch's entries
+
+- **Change:** two sentences in `FRAMEWORK_APPARATUS.md` §The Action Ledger, *Placement*. A ledger with no month
+  headings starts them at its next new month **or at its first trim**, whose entry `methodology_trim.py` files under
+  the current month's heading (`insert_ledger_entry`). A merged branch's entries keep their branch order as one block
+  rather than being re-sorted by date.
+- **Why:** the rule as written contradicted the trimmer, which adds the current month's heading on its first trim;
+  and it said nothing about a merged branch, whose newer entries sit below older-dated ones on `main` today (PR #80's
+  did, and this branch's will). Found by the same independent review.
+- **Placed** above the previous entry, below `upstream/main`'s — the case the second sentence describes.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] The `HANDOFFS.md` seed says its archive rule is its own, not the ledger's optional one
+
+- **Change:** `starter-kit/HANDOFFS.md`'s pointer to *Reading and archiving* adds one sentence: that subsection makes
+  archiving optional for `CHANGELOG.md`, and this file keeps its own rule — archive when the trimmer's trigger fires.
+- **Why:** the seed states that rule and then sends the reader to a subsection that concludes *"Archiving is
+  optional"*, which read as a contradiction. The two rules differ on purpose; this branch changes the ledger's and
+  leaves `HANDOFFS.md`'s as it was. Found by the same independent review.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] The `CHANGELOG.md` migration route keeps the lines a trimmer wrote above the first entry
+
+- **Change:** `bin/status`'s route for a stale `CHANGELOG.md`, and `starter-kit/BOOTSTRAP.md`'s *Updating an existing
+  project* paragraph, said to replace **everything** above the first entry with the seed's header. They now say to
+  replace the rules text or old header, keeping any archive-pointer block and month heading a trimmer wrote there.
+  The `HANDOFFS.md` route in both says to replace any older copy of the size section, and the paragraph names the
+  `handoffs-format: 2` line as what makes a copy current (the previous entry's marker).
+- **Why:** `methodology_trim.py` writes its shard pointer block and the topmost `## YYYY-MM` heading into that
+  zone (`:310`, `:1191`), so the old route, followed literally, deleted them; one adopter's migration nearly did. The
+  `HANDOFFS.md` route already kept them; the `CHANGELOG.md` one did not. Found by the same independent review.
+- **Test:** Test 20 (g) — the route assertion follows the new wording, and two new assertions require the keep
+  clause in the note and in the paragraph it cites. Neither text carried it at the previous commit.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] The `HANDOFFS.md` seed gets a versioned format marker; its section heading could not tell an old seed from a new one
+
+- **Change:** `starter-kit/HANDOFFS.md` opens its *Size, and when to archive* section with `handoffs-format: 2`, a line
+  the seed asks adopters to keep; `bin/_manifest.py` keys `HANDOFFS.md` on it, as `CHANGELOG.md` keys on
+  `ledger-format: 2`; `bin/status`'s route names the section, which carries the marker, and says to replace any older
+  copy of it.
+- **Why:** the heading arrived in the seed that shipped with the trimmer (`56997af`), over the size premise this
+  branch removes (a 65,536 B byte row priced as a *context tax*). Keyed on the heading, that seed read current: a
+  marker present in the earlier format can never flag it. Two of six real adopters carry exactly that text and read
+  current. Found by an independent review of this branch before the pull request.
+- **Test:** `bin/tests.sh` Test 20 (g) gains the shipped-marker check and a fixture with the heading, the old premise
+  and no marker. Run against the heading key, that fixture read `present`; against the marker, `present (stale format)`.
+  A freshly synced project reads `present` for both seeds, with no note.
+- **Placed** above the previous entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] Two code comments stop citing a plan item that exists only in the contributor's fork
+
+- **Change:** `bin/status:112` and `bin/tests.sh:323` each ended a sentence with *"(BL-57 item (22))"*, a pointer into
+  a planning document on `rmsharp/methodology` that this repository does not have. Both sentences already state the
+  reason in full, so the citation is dropped and nothing replaces it. Comments only; no behaviour changes.
+- **Placed** above the density entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] The three read-set densities re-measured on the blobs this branch ships
+
+- **Change:** `.context-budget.json` — `bytes_per_token` and `measured_bytes` for `CLAUDE.md`,
+  `starter-kit/SESSION_RUNNER.md` and `starter-kit/SAFEGUARDS.md`, and each entry's note: which blob was measured,
+  and which blob id to watch for the next re-measure. The config's own rule is to re-measure when a file's blob
+  changes; this branch changed all three, and the densities still named `1244e95b`, `2a3e410d` and `933816b4`.
+- **Measured** by the doubled-file method (seven copies for `SAFEGUARDS.md`), each run reproducing the previous
+  measurement exactly as a control: `CLAUDE.md` `dd416ea` 46,953 doubled → 23,476.5 tokens, 2.5182 B/token (control
+  46,965); the runner `4811f02` 37,717 → 18,858.5, 2.8225 (control 37,731); `SAFEGUARDS.md` `ed49b97` 42,586 over seven
+  → 6,083.7, 2.8155 (control 42,208).
+- **Every ceiling holds:** 6.5 tokens under `CLAUDE.md`'s 23,483, 41.5 under the runner's 18,900, 16.3 under
+  `SAFEGUARDS.md`'s 6,100; the pair is 24,942.2 of the 25,000-token read cap (99.77%). No ceiling changed.
+- **Correction:** the `[BL-63]` entry below gave `SAFEGUARDS.md` as *"about 6,067 tokens"*, an estimate at the old
+  density. It measures 6,083.7. Left at 2.8234, the tool counted 6,066, 18 tokens under.
+- **Placed** above the `[BL-63]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-63] `BOOTSTRAP.md` says how to commit a `bin/sync` run, and `SAFEGUARDS.md`'s five-file cap names it
+
+- **Change:**
+  - `starter-kit/BOOTSTRAP.md`, *Setup with `bin/sync`* — a new *Committing a sync* paragraph after *Drift safety*:
+    in committed mode, one `bin/sync` run is one commit, holding exactly the files it wrote (which `--dry-run` lists
+    first) plus that commit's `CHANGELOG.md` entry; the adopter's own edits afterwards go in their own commits under
+    the cap. It gives the reasons: every file is a byte-for-byte copy of a canonical one, one `git revert` undoes the
+    run, and a split can leave operating files citing tools that have not arrived yet.
+  - `starter-kit/SAFEGUARDS.md`, the five-file cap row — one sentence, *"A committed-mode `bin/sync` run is one
+    commit, whatever its file count"*, linking `BOOTSTRAP.md`. Without it the new paragraph would contradict a file
+    that says it wins over other guidance and lists the cap under *No Exceptions*.
+- **Why:** `bin/sync` copies the whole distributed corpus and does not commit, and no distributed document said how
+  its result is committed, so every committed-mode sync that updates more than five files broke the cap or left the
+  adopter to invent a split. Measured in one adopter's syncs: 15 and 21 files; dry runs in three others: 14–16.
+- **Size:** `SAFEGUARDS.md` 17,024 → 17,129 B, about 6,067 tokens at its recorded 2.8234 B/token against its 6,100
+  `max_tokens`; the read-set pair's partition (18,900 + 6,100) is unchanged. `BOOTSTRAP.md` +584 B; it has no budget.
+- **Separable:** this commit touches nothing else, so it can be dropped from the pull request on its own.
+- **Placed** above the previous `[BL-62]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-62] The read-cap partition test sums only the files read together, not every whole-read class
+
+- **Change:**
+  - `tools/test_context_budget.py` — `TestThisRepoReadSetPartition` summed the `max_tokens` of every class in
+    `WHOLE_READ_CLASSES` (resident, read-mandated, read-set) against the one 25,000-token Read. Only the read-set
+    pair, the Phase 0 mandatory read, is read in one Read; a read-mandated or resident file is read whole but on its
+    own. So a config declaring two read-mandated ledgers at 25,000 tokens each, two full Reads, failed the test as
+    50,000 > 25,000. The check moves into `token_partition(cfg)`, which sums only `READ_TOGETHER_CLASSES`
+    (`("read-set",)`); the repo test and its presence control run on it unchanged in meaning, and the renamed
+    `test_the_read_set_token_ceilings_partition_the_read_cap` replaces
+    `test_whole_read_class_token_ceilings_partition_the_read_cap`. New `TestTokenPartitionRule`, four tests on
+    fixture configs: separately-read files do not share the cap; a read-set pair past the cap is still refused;
+    one within it passes; one at exactly the cap fits.
+  - `.context-budget.json` — the read-set note said the test fails any edit whose ceilings *"in a whole-read
+    class"* exceed the cap. It now says *"in the read-set class"*.
+- **Why:** the fork hit it with its own config (two read-mandated ledgers at 25,000 each) and had to drop the two
+  declarations to pass. Canonical-only: the test file is not distributed, so no adopter runs it.
+- **Checked:** test-first. With the check extracted but the old every-class rule kept, two of the new tests failed
+  (50,000 > 25,000); with the rule restricted, the file runs 122 tests, 0 failures, 2 skipped (118 and the same
+  2 skips before). Five mutants each fail it: the old every-class rule (2 failures), no class summed (4), `>`
+  becoming `>=` at the cap (2), a pair skipped (4), `checked` never counted (4).
+- **Placed** above the previous `[BL-57]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] `methodology_trim.py` links its design doc's public copy, and stops citing a hook flag no hook has
+
+- **Change:** `starter-kit/methodology_trim.py`, comments only.
+  - The module docstring said the design doc (`docs/planning/ledger-trimmer-design.md`) *"has not been published
+    to a public remote"*, so it gave no URL. The doc is public in the `rmsharp/methodology` fork, so the docstring
+    now links it at the commit that last changed it (`979dc73`), where the link cannot drift. The file's section
+    citations (*design §2*, *§4*, *§5*, *P2* and the rest) now resolve through that link.
+  - The *defaults* paragraph said the tool never runs `git mv` because *"`--no-renames` in the FM #27 pre-commit
+    hook"* would let a rename-shaped trim pass. This repository's hook has no `--no-renames`, and never did. The
+    paragraph now keeps the rule and says what the tool does instead: it writes a new shard and edits the live
+    ledger in place, so the ledger keeps its path and its history.
+- **Why:** item F5 of the PR #80 review, open since #80 merged. A distributed comment that cites a missing document
+  and a flag that does not exist sends the next maintainer of the tool looking for both.
+- **Checked:** the module still parses; `grep -c 'no-renames\|not been published'` on the file reads 0; the link
+  resolves on GitHub (74,109 B, blob `09c99c14`, the blob the fork's `main` holds). No test reads the docstring.
+- **Placed** above the previous `[BL-57]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-17 · [BL-57] `bin/status`'s stale-seed note gives each seed its own migration route, and the `BOOTSTRAP.md` paragraph it cites gives the `HANDOFFS.md` one too
+
+- **Change:**
+  - `bin/status` — the note beneath the table told an adopter holding either stale seed to *"replace the text
+    above the first entry (or receipt) with the current starter-kit seed's"*. It now gives each flagged file
+    its own route: for `CHANGELOG.md`, replace the text above the first entry with the seed's header; for
+    `HANDOFFS.md`, bring across the seed's `## Size, and when to archive` section, above the first receipt,
+    and keep the rest of the front matter. The routes sit in `MIGRATION_ROUTES`, beside `STALE_SEED`; the
+    `HANDOFFS.md` one names the section from `bin/_manifest.py`'s marker, and a file with no route gets the
+    general rule.
+  - `starter-kit/BOOTSTRAP.md:85` — the paragraph the note cites named only the `CHANGELOG.md` formats and
+    route. It now also names a `HANDOFFS.md` without the size section, and gives that file's route.
+  - `bin/tests.sh` Test 20 (g) — eight assertions: a route appears only for a flagged file; a stale
+    `HANDOFFS.md` is flagged and gets its own route and no *replace*; two stale seeds get both routes; the
+    cited paragraph gives the `HANDOFFS.md` route.
+- **Why:** BL-57 item (22). The `HANDOFFS.md` seed differs from an older copy by one section, the one the
+  marker keys on. Replacing the front matter instead deletes whatever an adopter's trimmer wrote there, an
+  archive pointer and a count sentence among them.
+- **Checked:** Test 20 was run alone before the fix: 5 failures, among them *"the note tells a stale
+  HANDOFFS.md to replace its front matter"*; 24 passed, 0 failed after. Two mutants fail it: routes printed
+  for files that are not flagged (2 failures), and no `HANDOFFS.md` route (1).
+- **Placed** above the previous `[BL-57]` entry, below `upstream/main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-16 · [ad hoc] Parallel-sessions plan — making fan-out to concurrent writing sessions clean, not just safe
+
+- **Action:** planning session S24 on branch `docs/parallel-sessions-plan`. The operator asked whether the
+  quality-ratchet work (PR #82) made multi-agent fan-out workable; the Phase 0 answer was *safe but not
+  clean* — `ITERATIVE_METHODOLOGY.md` §Mechanical Gates binds every actor's output, but two writing
+  sessions still collide on `CHANGELOG.md`/`HANDOFFS.md` (prepend-only, one anchor, co-staging hook forces
+  every commit onto them — S21 hit it with two sequences), on serial `S<N>` identity, on the absent
+  merge-session receipt (the open "11 reconciled receipts" ruling), and on Test 9's `--source=github`
+  coupling to `main`. Deliverable: `docs/planning/parallel-sessions-plan.md` + a PR for review, nothing
+  implemented (S13's shape). Results appended at close-out.
+- **The plan, committed:** `docs/planning/parallel-sessions-plan.md` — 468 lines; §1 decomposes the operator's
+  own records into six mechanisms (two-writers-in-one-tree, the return-content fan-out that worked, the S21
+  double-ledger conflict, the undischargeable "11 receipts", Test 9's `main` coupling, the worktree-blind
+  calibrate); §3 the finding (*one closer per tree*; two shapes by who closes out); §4 fifteen decisions D1–D15
+  plus an alternatives table (changelog fragments considered and deferred); §6 six phases, one per session;
+  §7 six honest ceilings; §8 twelve operator decisions; §9 the evidence commands, all re-run before commit.
+- **PR opened (non-commit action):** [PR #83](https://github.com/KJ5HST/methodology/pull/83) from
+  `docs/parallel-sessions-plan` at `903d724`, read back from the API (OPEN, +492/−0, 3 files); its body carries
+  the summary and asks the operator to answer §8 there — that answer is the plan's Phase 0. **Not merged.**
+- **Gate run at `903d724`:** `quality_ratchet: 8/10 pass · 2 fail · 0 unmeasured · results bcbd7f39383a ·
+  manifest 97a7aab85b9a`. The two fails are one **environmental** failure — `tests-sh-passed` 138 /
+  `tests-sh-failed` 1 from `tools/test_context_budget.py` `TestFitGateEndToEnd::test_an_admitting_floor_prints_the_constant`:
+  this machine now holds exactly 4 transcripts for this path (calibrate()'s fit minimum; this session's is the
+  4th), so the fit runs on 4 points and is refused for a negative slope (R² 0.049), a refusal the test's `setUp`
+  does not skip on (it skips only on "not enough" — S16's fix for the sibling case S19 reported). Tool and test
+  are byte-identical to `main @ 6b29d3d`; not loosened; the one-file fix is the next session's first small task.
+- Session S24: claim `3c244aa` + plan `903d724` + the close-out commit (receipt complete, cites the run). Every
+  commit ran the ledger co-staging hook clean — no `--no-verify`.
+
+### 2026-09-16 · [BL-57] This ledger's front matter points to §The Action Ledger for its rules, its audit and its month headings
+
+- **Change, in this file's front matter only** (the maintainer's own file — the PR body will say it can
+  be dropped, and that dropping it leaves the pointer false):
+  - `:11`–`:13` — the rules *"live in [`FRAMEWORK_APPARATUS.md` §The Action Ledger]"*; the seed *"points
+    there"*. It said the rules and the seed both *"live in `starter-kit/CHANGELOG.md`"*, which P1 made
+    false when it moved the rules out of the seed.
+  - `:15`–`:17` — the source-tag paragraph cites *"the audit in §The Action Ledger — anchored to the entry
+    heading, and reading any archived shards"*, where it published the unanchored one-file
+    `grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md`. On this commit that form matches **94** lines
+    against **68** entries: it also counts the tag definitions and every in-prose mention of a tag.
+  - `:22`, `:24` — `[BL-<N>]` becomes `[BL-<id>]` in the tag definitions, the item P3 recorded as left
+    for P4. What `[BL-<N>]` remains on this tree is history: entry bodies here, `CLAUDE.md:123` (v3.1)
+    and `README.md:365` (*What's New*).
+  - `:36`–`:37` — *"Promote to `## YYYY-MM` sections as it grows"* becomes *"Month headings start at this
+    ledger's next new month, and nothing below is retrofitted"*. This ledger has none today, so the
+    first one opens at the first entry dated in October.
+- **Why:** BL-57 D8 (i), in one commit as the plan requires; C10, C13 and P3's finding (4).
+- **Checked:** the audit gives **68** in `zsh` and in `bash` on this commit, equal to the file's `^### `
+  count — this tree has no shards. `FRAMEWORK_APPARATUS.md:338` is `## The Action Ledger`, the link's
+  target.
+- **Placed** above the previous `[BL-57]` entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-16 · [BL-57] `CHANGELOG.md` is described as the action ledger, not as completed-work history — and `CLAUDE.md` is back under its token ceiling
+
+- **Change:** *"Completed work history"* becomes the action ledger at `starter-kit/BOOTSTRAP.md:23`, `:107`,
+  `:131`, `README.md:96`, `:114`, `:200` and `CLAUDE.md:51`. Two instructions that framed an entry as
+  something written when work *completes* now say to record each action, and to remove a finished
+  backlog item from `BACKLOG.md`: `starter-kit/BOOTSTRAP.md:139` and the matching sentence in
+  `README.md:96`. The migration step at `starter-kit/BOOTSTRAP.md:145` moves completed items in *as
+  entries, newest on top*, where it said *"into reverse-chronological sections"*.
+- **Also:** `CLAUDE.md:21`, the *Reference apparatus* row, now reads *"its tables, tests, scoring scales
+  and ledger rules; distributed"*. It pays back the 4 tokens the merge `52ad407` carried over
+  `CLAUDE.md`'s `max_tokens` 23,483 — P1's *"and the `CHANGELOG.md` rules"* was 9 B shorter and 4
+  tokens longer than the wording it replaced.
+- **Why:** BL-57 C11. The seed's ledger records every action, including releases, PRs and declines, and
+  an instruction keyed to *completing work* misses all three.
+- **What *"completed work"* still says, and why it stays:** `README.md:530` is the v2.1 *What's New* entry
+  (history); `CLAUDE.md:128` is the v3.6 release narrative quoting a dashboard label; `starter-kit/BOOTSTRAP.md:134`
+  says that open work, completed work and plans belong in separate files, which is the backlog split
+  and still true. `grep -ni 'completed work history'` over the three files finds only `README.md:530`.
+- **Size, in tokens:** `CLAUDE.md` reads **46,953** doubled (23,476.5 tokens) against **≤ 46,965**
+  (`upstream/main`'s blob `1244e95b`, whose recorded figure reproduced in the same run): 6 under
+  `upstream/main`, 10 under the merge. Bytes: `CLAUDE.md` −25, `README.md` +13, `BOOTSTRAP.md` +81; the
+  last two carry no budget row. The runner is untouched by this commit.
+- **Placed** above the previous `[BL-57]` entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-16 · [BL-57] A newest-on-top ledger is prepended to, not appended to; the claim commit's entry says *(in progress)*
+
+- **Change:** seven instructions that said *"append … newest on top"* now say *prepend*: the runner's
+  Phase 3F (`starter-kit/SESSION_RUNNER.md:281`), failure mode #27's countermeasure (`:332`) and its
+  Degradation row (`:360`); `ITERATIVE_METHODOLOGY.md:294`, Phase 6 step 8; `HOW_TO_USE.md:767` and
+  `:804`; and the ledger hook's refusal text (`.githooks/pre-commit:70`). The runner's Phase 1B stub
+  (`:88`) and the flight manual's Phase 1B step 1 (`ITERATIVE_METHODOLOGY.md:169`) now say the claim
+  commit's ledger entry reads *(in progress)* and close-out records the rest, where they said the
+  session's actions are recorded at Phase 3F — which a claim commit's own entry contradicts.
+- **Why:** BL-57 C3 and C7. §The Action Ledger already said *prepend*; these seven sites were the other
+  side of that disagreement. *Append-only*, meaning never edited, is a different claim and stays.
+- **Size, in tokens, against the criterion restated before this phase's first edit:** the runner reads
+  **37,717** doubled (18,858.5 tokens) against **≤ 37,731** (`upstream/main`'s blob `2a3e410d`) — 7 tokens
+  more than P4's start at the merge, 7 under the criterion; the 36,955 control reproduced in the same
+  run. Bytes: runner +9, `ITERATIVE_METHODOLOGY.md` +45, `HOW_TO_USE.md` +2, the hook +1. The flight
+  manual's +45 misses the plan's *"byte-neutral wording"*; it has no budget row — `.context-budget.json`
+  lists it under `_deliberate_exclusions`.
+- **Checked:** `grep -nE '[Aa]ppends? (a|one) dated|Append the owed entry'` over the runner,
+  `ITERATIVE_METHODOLOGY.md`, `HOW_TO_USE.md` and the hook exits 1 — no matches. No test or tool pins
+  the changed text (`git grep` over `bin`, `tools` and the starter-kit scripts).
+- **Placed** above the previous `[BL-57]` entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-16 · [BL-57] §The Action Ledger states when an entry is written and where it goes: one per commit, never edited, under the topmost month
+
+- **Change:** `FRAMEWORK_APPARATUS.md` §The Action Ledger replaces its closing paragraph — *"Work
+  committed but not finished … Promote to `## YYYY-MM` sections as the list grows"* — with two rules,
+  and its opening sentence stops saying entries are written *"At close-out"*, which a claim commit's
+  entry contradicts. Each rule, as it now reads on this commit:
+  - `:439` — *"**Lifecycle — one entry per commit, never edited.** The commit is the unit the ledger
+    co-staging hook checks, so each commit carries its own entry, and each non-commit action gets one
+    of its own."*
+  - `:442` — *"A claim commit carries an *(in progress)* entry, and close-out adds its own entry rather
+    than rewriting the claim's."* Work committed but unfinished is marked the same way.
+  - `:446` — *"A committed entry is never edited. A correction is a new entry that names what was
+    wrong. The one exception is removing content that must not be published … and that removal is
+    recorded by an entry of its own."*
+  - `:449` — *"A Phase 0 backfill is the one entry that may span several commits."*
+  - `:451` — *"The Phase 1B `CHANGELOG: pending` marker lives in `SESSION_NOTES.md`. A project that
+    keeps no `SESSION_NOTES.md` relies on its `status: pending` `HANDOFFS.md` receipt instead."*
+  - `:454` — *"**Placement — prepend under the topmost `## YYYY-MM`.** … When the month changes, open
+    the new month's heading above the last one: group by month, not by release. A ledger that has no
+    month headings starts them at its next new month, and nothing already written is retrofitted.
+    Entries stay at `###`, the level the tools key on."* — `_DATED_ENTRY_RE`
+    (`starter-kit/methodology_dashboard.py:211`) and the trimmer's `record_start`
+    (`starter-kit/methodology_trim.py:307`) both anchor on `^###`.
+- **Also:** `HOW_TO_USE.md:748` gives the apparatus as *"~535 lines"* — 534 after this change; it said
+  515, which P2 had already made stale at 501.
+- **Why:** BL-57 C7, C8 and C13, as the operator decided at Q4 A (one entry per commit, never edited).
+  The rules had one sentence on a claim's entry (*"mark it `(in progress)`"*) and none on editing,
+  and the month rule said *"promote … as the list grows"*, which names no point at which to start —
+  this ledger holds 65 entries and no month heading.
+- **Placed** above the previous `[BL-57]` entry, below `upstream/main`'s block, after the merge `52ad407`.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-16 · [BL-57] Correction: §The Action Ledger attributed a measurement to a ledger that does not record it
+
+- **What was wrong:** the entry above, and the text it describes, said the unanchored audit *"returned
+  78 against 64 actions"* **"on this framework's own ledger."** The measurement is real, but it was
+  taken on the project whose ledger was split at v3.6, not on this repository's — whose root
+  `CHANGELOG.md` carries no such record. A reader of this tree could not check the claim, and merged
+  upstream it would attribute the count to a ledger where the comparison was never run.
+- **Change:** the sentence now states the failure first and the number as what it is —
+  *"an unanchored pattern … can report more actions than the ledger holds; the project this was
+  measured on counted 78 where 64 had happened."* The mechanism is checkable anywhere; the figure no
+  longer claims a home it does not have.
+- **Why:** an unverifiable number in a distributed file is the thing §The Action Ledger's own advice
+  warns against — it is right when written and unfalsifiable afterwards. Caught by grepping this
+  tree for the figure's provenance before close-out, not by any gate.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-16 · [BL-57] The `HANDOFFS.md` seed enumerates its shards with `git ls-files`, not a bare glob
+
+- **Change:** `starter-kit/HANDOFFS.md`'s rule that anything counting receipts must span the live
+  file and its shards published that span as the bare glob `HANDOFFS.md docs/archive/HANDOFFS-*.md`.
+  It now reads `HANDOFFS.md $(git ls-files 'docs/archive/HANDOFFS-*.md')`, with the reason stated:
+  zsh aborts a command whose glob matches nothing, so before the first split the bare form counts
+  nothing at all — the same reason the ledger's audit is written that way. 10,417 → 10,676 B.
+- **Why:** C10. The bullet was outside P2's lines and was carried to P3 with the audit it matches.
+- **Reproduced in a throwaway repository with one entry and no shard:** the bare form prints `0`
+  under zsh (with `no matches found` on stderr, exit 1) and `1` under bash (with a `cat` error on
+  stderr, exit 0); the `git ls-files` form prints `1` and exits 0 under both. The failure the fix
+  removes is not an error the caller sees — it is **two shells returning two different counts**.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-16 · [BL-57] The runner cites the ledger rules instead of restating their audit; three files adopt `[BL-<id>]`
+
+- **Change:** `starter-kit/SESSION_RUNNER.md:39` (Phase 0, the backfill step) drops the inline
+  `grep -E '\[(issue #|BL-|ad hoc)' CHANGELOG.md` for a link to
+  [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger), so the audit is
+  published in exactly one place. `:278` (Phase 3F) and `:329` (failure mode #27) change
+  `[BL-<N>]` to `[BL-<id>]`, as do `ITERATIVE_METHODOLOGY.md:294` and `.githooks/pre-commit:57`.
+  After this commit `grep -F '[BL-<N>]'` over the runner, the flight manual, `HOW_TO_USE.md`, the
+  hook, §The Action Ledger and both seeds finds nothing.
+- **Why:** C6 and C10, the distributed half of BL-57's P3. One rule, one home, one audit.
+- **Two duplicate clauses paid for the link.** The step already showed `[ad hoc]` in its own entry
+  template, so *"default `[ad hoc]`"* was removed; and the note's closing paragraph already says the
+  backfill *"does not become this session's deliverable"*, so the step's weaker *"separate from this
+  session's later deliverable"* was removed. **The runner ends smaller than it started: 52,195 →
+  52,163 B, and 18,477.5 → 18,463.5 tokens.**
+- **The two units disagreed about the link, which is why the size rule is now stated in tokens.**
+  Adding the cross-reference and the two id changes alone measured **+36 B but only +9 tokens** — a
+  path tokenizes at about 4 B/token where this file averages 2.8248 — so a byte rule overstates what
+  a cross-reference costs and understates what cut prose saves. Tokens are the unit the read cap and
+  the file's own ceiling are written in.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-16 · [BL-57] §The Action Ledger: a source tag admits any backlog id, and the audit reads the archived shards
+
+- **Change:** `FRAMEWORK_APPARATUS.md` §The Action Ledger states the vocabulary as `[issue #<N>]`,
+  `[BL-<id>]` and `[ad hoc]` — `<id>` being whatever id the project's backlog gives the item, not a
+  number. The audit moves out of the vocabulary sentence into its own paragraph and becomes
+  `cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') | grep -cE '^### …'`. Three
+  properties of that command are stated in place, because each fixes a way the old one-line form
+  gave a wrong number rather than an error: **`git ls-files`, not a bare glob** — zsh aborts a
+  command whose glob matches nothing, so in a project that has never trimmed the bare form returns
+  no count at all; **anchored to the entry heading** — unanchored it also matches the vocabulary's
+  own definitions and every mention of a tag in prose, which on this repository's ledger returned
+  78 against 64 actions; and **`BL-[^]]+`, not `BL-[0-9]+`** — it counts whatever id the backlog
+  uses. A closing sentence says entries written before a project adopted the vocabulary stay as
+  written and are not counted, so the shortfall is expected rather than a defect to repair.
+- **Why:** C6 and C10, the source-tag half of BL-57's P3. The rules live in one place now, so the
+  audit published beside them is the one every project runs.
+- **Measured, not asserted.** The two shells disagree on the bare-glob form in a repository with no
+  shard: zsh prints `0`, bash prints `1`. Across the six adopter repositories, widening
+  `BL-[0-9]+` to `BL-[^]]+` moves the count 96 → 262, 599 → 784 and 236 → 247 in three of them —
+  **362 logged actions the numeric-only pattern could not see** — and leaves the other three
+  unchanged. One of those adopters tags with `BL-OPS-ADMIN-PW-RECOVERY-001`.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-15 · [BL-57] The `HANDOFFS.md` seed names no size — archive when the trimmer's trigger fires; the trimmer's budget comment drops *"context-tax"*
+
+- **Change:** `starter-kit/HANDOFFS.md` §Size, and when to archive keeps its heading, which `bin/status`
+  keys on (D9), and replaces what follows it: the premise that Phase 0 reads the file every session, and
+  the two-cap table with its 65,536 B default and its citations of BL-52 and a fork-only plan, give way
+  to the reads the protocol makes and one rule — *"Archive it when the trimmer's trigger fires. The tool
+  states the trigger, and this file names no size of its own."* The pointer to §The Action Ledger names
+  *Reading and archiving* and what it holds, and the *three files* list says receipts move *"when the
+  file is archived"*, not *"once the file outgrows a session's read"*. `starter-kit/methodology_trim.py:186`:
+  *"the per-file context-tax budget"* → *"the per-file byte budget"* — a comment; the module's AST is
+  identical to `b82dcff`'s. 11,505 → 10,417 B.
+- **Why:** steps 2 and 3 of BL-57's P2 (C1, C2, C12, C14). This file's own archive rule otherwise stands
+  (D7); whether *optional* extends to it is the operator's call.
+- **Placed** above the previous entry.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-15 · [BL-57] §The Action Ledger: the ledger is never read whole, and archiving is optional — the two-cap size rule goes
+
+- **Change:** `FRAMEWORK_APPARATUS.md`'s *Size, and when to archive* becomes *Reading and archiving*,
+  on the operator's Q2 A. Each rule, at its line in this commit: `:428` *"The protocol never asks a
+  session to read this file whole"*, then its three partial reads — Phase 0 reconcile from `git log`
+  (`:430`), close-out at the top (`:432`), a lookup by `grep` or `git log --grep` (`:433`); `:436`–`:438`,
+  past the trimmer's `READ_REFUSE_BYTES`, read the top with an offset and a limit; `:440` *"Archiving is
+  optional"*; `:442` *"The tool's trigger is the only statement of when — these rules name no size"*;
+  `:476` conservation, *"the live file and its shards together never lose an entry"*, so a count spans
+  both and never the live file alone, or a count ratchet refuses every trim (C9); `:486`, kept, a trim
+  *"does not belong in Phase 0"*. The two-cap table goes — its 65,536 B default (C2), its *"every session
+  pays"* premise (C1), its citations of BL-52 and a planning document this repository does not hold
+  (C12) — with the rate-versus-level argument, which describes a line cap the trimmer no longer has. The
+  shard convention stays; its enumeration becomes `cat CHANGELOG.md $(git ls-files
+  'docs/archive/CHANGELOG-*.md')`, equal in bash, zsh and a Python count with no shard (55) and with
+  eleven (526). The *three files* paragraph (`:498`) no longer says the ledger splits *"once it outgrows
+  a session's read"*, and the file's intro (`:13`) and the section's opening (`:342`) no longer call the
+  moved text verbatim. 28,022 → 25,983 B.
+- **Why:** step 1 of BL-57's P2 (C1, C2, C9, C12, and C4's half in this file). The protocol reads only
+  parts of the ledger, so its size costs no session a read; the trimmer stays, for a project that wants
+  a smaller live file.
+- **Placed** above BL-57's P1 entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-15 · [BL-57] The documents that describe `FRAMEWORK_APPARATUS.md` name its seventh section
+
+- **Change:** `HOW_TO_USE.md`'s layer table (the apparatus row gains *write a ledger entry*; ~330 → ~515
+  lines), `CLAUDE.md`'s Document Hierarchy row, and `ITERATIVE_METHODOLOGY.md` §Reference Apparatus, whose
+  table listed the six sections that moved there and now lists §The Action Ledger as well. Wording only.
+  The `CLAUDE.md` row is 9 B shorter than before: `.context-budget.json` pins that file's ceiling at its
+  size (59,168 B), so it names the rules and drops *"Extracted so the manual fits one read"*, which the
+  apparatus's own intro already says.
+- **Why:** step 4 of BL-57's P1 — the file gained a section in step 2, and three documents that describe
+  it did not know. The plan named the first two; the third is the same kind of index, found by grepping
+  for the set-size claim (*"Six sections moved there"*).
+- **Placed** above #80's entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-15 · [BL-57] `bin/status` keys the `CHANGELOG.md` seed on `ledger-format: 2`, and its migration advice stops rewriting entries
+
+- **Change:** `bin/_manifest.py`'s `SEED_FORMAT_MARKERS` key `CHANGELOG.md` on `ledger-format: 2`, the
+  seed's pointer line, instead of its title, and `HANDOFFS.md` on its `Size, and when to archive` heading
+  instead of its title; the comment states why a title can never fire. `bin/status`'s migration note and
+  `BOOTSTRAP.md`'s *Updating an existing project* paragraph now say: replace the text above the first
+  entry with the current seed's, leave every entry as written, and reseed only a file with no history.
+  `bin/tests.sh` Test 20: the in-use fixture carries the marker line, and a new case (b2) holds the frozen
+  pre-ledger-format-2 seed, which must read *present (stale format)*.
+- **Why:** step 3 of BL-57's P1. A title never changed across formats, so keying on it reported every old
+  seed as current; and the old advice — *"reconcile its header and per-entry format"* — told adopters to
+  rewrite committed entries.
+- **Verified:** (b2) fails against the title-keyed marker (116 passed / 2 failed) and passes with this
+  commit (117 / 1; the other failure is Test 9 throughout). On copies of six adopters, `bin/status` reads
+  every `CHANGELOG.md` *present (stale format)*, with the new advice beneath, and its six `HANDOFFS.md`
+  verdicts equal fork `main`'s, which already keys on that heading.
+- **Placed** above #80's entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-15 · [BL-57] The `CHANGELOG.md` rules move to `FRAMEWORK_APPARATUS.md` §The Action Ledger; the seed becomes a pointer with a format marker
+
+- **Change:** the seed's three rule sections — *How to add an entry*, *Size, and when to archive* and
+  *CHANGELOG.md vs SESSION_NOTES.md* — move verbatim, one heading level down, into a seventh section of
+  `FRAMEWORK_APPARATUS.md` (15,493 → 28,022 B), whose intro now says so. `starter-kit/CHANGELOG.md` keeps
+  its title, purpose paragraph, sentinel and footer, and gains a linked pointer carrying
+  `ledger-format: 2` (12,893 → 1,335 B). `starter-kit/HANDOFFS.md`'s cross-reference points at the new
+  home, and `methodology_trim.py`'s fence-tracking comment says where the fenced examples live now
+  (comment only: its AST is unchanged). No rule changes.
+- **Why:** step 2 of BL-57's P1. `bin/sync` writes a seed once and never again, so rules kept in a seed
+  froze at each project's seeding; in a synced file a correction reaches every project.
+- **Verified:** each moved section occurs byte for byte in the home (the plan's §9.3 check); the trimmer
+  reports `NO_RECORDS` on the new seed; `bin/sync` into an empty directory seeds it; `bin/check-links`
+  resolves the two new links (105 → 107).
+- **Placed** above #80's entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-09-15 · [BL-57] The trimmer's fence-awareness controls read a frozen copy of today's seed, so they survive the seed shrinking
+
+- **Change:** `tools/test_methodology_trim.py` and a new `tools/fixtures/seed-CHANGELOG-ledger-format-1.md`,
+  both canonical-only; nothing distributed changes. Three controls asserted that the live
+  `starter-kit/CHANGELOG.md` holds record-shaped example lines inside fences. They now read the fixture —
+  the seed exactly as it ships today, git blob `47bc8485`, which a new test asserts — while the live seed
+  must still hold no records. The dated-prose test's `.replace()` anchor, `## How to add an entry`,
+  becomes the `---` line, asserted to occur exactly once before the replace; a docstring cites the
+  sentinel by its token, not by line number. Green with either seed.
+- **Why:** step 1 of BL-57's P1. The seed's rules text moves to `FRAMEWORK_APPARATUS.md` next, and every
+  adopter seeded before then keeps the fenced examples, so the controls stay meaningful on the copy.
+- **Placed** above #80's entries, below `main`'s.
+- **Commit:** this commit, on `bl57/changelog-rules`
+
+### 2026-08-11 · [BL-31] Dashboard's framework-installed exclusion never learned about the context-budget gate PR #66 itself shipped
+
+- **Origin:** fork backlog item BL-31 (`docs/planning/BACKLOG.md`, fork `main` only — not yet pushed
+  to `origin` as of this entry, so no link is given rather than cite one that would not resolve),
+  found re-verifying PR #66's own review-comment fixes after merge. `bin/_manifest.py` gained two
+  new non-markdown dests in this PR (`context_budget.py`, TRACKED; `.context-budget.json`, SEED),
+  but `tools/methodology_dashboard.py`'s `FRAMEWORK_INSTALLED_SOURCE` tuple and
+  `tools/test_methodology_dashboard.py`'s `CHECKLIST_EXEMPT` test fixture — both purpose-built to
+  stay in sync with this manifest — were never extended to match. Reproduced before the fix, not
+  inferred: a `git worktree` at the merge commit (`a2a7275`) run against
+  `python3 -m unittest tools/test_methodology_dashboard.py` gave 2 failures, both in tests that
+  predate this PR (last touched at `bec4095`) and exist specifically to catch this class of drift.
+- **Effect the drift had:** any adopter running `bin/sync` post-merge would have `context_budget.py`
+  misattributed to their own source LOC — the exact miscount `FRAMEWORK_INSTALLED_SOURCE` exists to
+  prevent for `methodology_dashboard.py` itself — and both new root files would read as neither
+  scored nor exempt on the compliance checklist.
+- **First fix (listing the names) did not actually work — found on review, not shipped as-is.**
+  Adding `context_budget.py` and `.context-budget.json` to `FRAMEWORK_INSTALLED_SOURCE` satisfies
+  the name-list agreement test, but `is_framework_installed()` then verified EVERY listed name
+  against `methodology_dashboard.py`'s own content signatures (`DASHBOARD_VERSION`,
+  `METHODOLOGY_ITEMS`, etc.) — which `context_budget.py` never carries — so the content check
+  silently rejected it and the exclusion never fired. Reproduced directly:
+  `is_framework_installed(Path("context_budget.py"), ...)` returned `False` even with the name
+  listed; a real bin/sync-shaped synced doc repo still flipped `doc_only` `True -> False`.
+- **Real fix:** content verification is now PER FILE. `_FRAMEWORK_FILE_SIGNATURES` gives each name
+  in `FRAMEWORK_INSTALLED_SOURCE` its own version pattern and signature set —
+  `context_budget.py`'s own `VERSION`/`CONFIG_NAME`/`HISTORY_NAME` markers, `.context-budget.json`'s
+  own distinctive keys (though that entry is structurally unreachable today: `is_framework_installed`
+  is only called for `category == "source"`, and a `.json` extension is always `"config"` — given a
+  signature anyway so the completeness test below needs no special case). A new canonical test
+  asserts every `FRAMEWORK_INSTALLED_SOURCE` name has a matching signature entry, so a future
+  addition to the tuple cannot repeat this exact gap silently. A new behavior test reproduces the
+  bug end-to-end with the REAL shipped `context_budget.py` content (not a synthetic stand-in) and
+  asserts a synced doc-only repo stays `doc_only` — RED-confirmed against the name-only fix before
+  landing this one. `CHECKLIST_EXEMPT` (a `tools/test_methodology_dashboard.py` test fixture, not
+  scanner source) gains both names, with the same reasoning already on record for
+  `methodology_dashboard.py` — their presence proves a pre-commit hook was installed, not that the
+  session-operating discipline the checklist measures was followed. `DASHBOARD_VERSION` 2.10.2 →
+  2.10.3.
+- **Verified:** `python3 -m unittest tools/test_methodology_dashboard.py` 200/200 (197 prior + 3
+  new; RED-confirmed against the pre-per-file-signature code first); `bash bin/tests.sh` 114/114;
+  `python3 bin/check-links` OK (83 links / 21 files); twins confirmed
+  byte-identical.
+
+### 2026-08-10 · [ad hoc] Two defects in the HANDOFFS.md receipt spec: an unassigned reconcile promise, an unoffered locator form
+
+- **Change:** `starter-kit/HANDOFFS.md`'s fenced receipt-format spec, two independent fixes in one
+  pass since both sit in the same few lines.
+- **(1) The spec promised a reconcile no procedure ever assigns.** It said `commit: pending` and
+  `what_was_done: pending` are legal at write time because "the next session reconciles them to
+  real shas" — but `SESSION_RUNNER.md` Phase 0 step 6 only reconciles a *missing or still-
+  `status: pending`* receipt, never a `status: complete` receipt whose `commit:` field alone is
+  `pending`. No procedure anywhere performs the promise as written. Reworded to state `pending` as
+  a legitimate resting value for both fields, not a duty nobody is assigned to discharge.
+- **(2) `changelog_ref`'s spec offered two locator forms neither of which receipts actually use.**
+  The placeholder named `PR #N` or a short-sha; in practice, entries locate a `CHANGELOG.md`
+  action by its quoted `### ` heading instead — all 8 live receipts in this repo's own
+  `HANDOFFS.md` already use that form, and none use `PR #N` or a bare sha, without the spec ever
+  blessing it. Added the quoted-heading form as a third explicit option and noted that a bare line
+  number is not a durable locator once a ledger is ever trimmed or archived.
+- **Distribution:** `HANDOFFS.md` is `bin/_manifest.py`-SEED (copied once, then adopter-owned), so
+  new adopters receive the corrected spec; existing adopters' own copies are unaffected until they
+  choose to re-seed.
+
+### 2026-08-10 · [ad hoc] Documented and pinned the doc-only detection thresholds
+
+- **Change:** `tools/methodology_dashboard.py` (+ `starter-kit/` twin, kept byte-identical) and
+  `tools/test_methodology_dashboard.py`.
+- **The defect:** `DOC_ONLY_SOURCE_LOC_MAX`, `DOC_ONLY_DOC_LOC_MIN` and `DOC_ONLY_DOC_FILES_MIN`
+  are round numbers with no recorded derivation, and nothing asserted their values directly —
+  `test_source_cap_boundary` exercises `DOC_ONLY_SOURCE_LOC_MAX` only indirectly, via hardcoded
+  200/201 boundary literals, so that coverage would silently vanish if that fixture were ever
+  rewritten to derive its boundary from the constant instead. `DOC_ONLY_SOURCE_LOC_MAX` in
+  particular decides which of two scoring regimes a repo gets (a real 148-LOC repo the cap alone
+  misclassified is documented near `FRAMEWORK_INSTALLED_DOCS`, ~100 lines below), so an accidental
+  drift here is a user-visible verdict change, not cosmetic.
+- **Fix:** added a comment recording that all three are deliberate, stated heuristics — not
+  derived from a measured corpus of adopter repos — and a direct regression test
+  (`test_doc_only_thresholds_are_pinned_not_left_to_drift`) asserting all three current values, so
+  a future edit to any of them is a visible, deliberate decision.
+- **Verified:** `python3 tools/test_methodology_dashboard.py` 198/198 (197 prior + this one).
+  `DASHBOARD_VERSION` 2.10.2 → 2.10.4 in both twins (2.10.3 was skipped: #71 claimed it
+  independently for an unrelated fix, and the constant's own "bump on any change" rule means two
+  distinct changes cannot ship under one version); `test_dashboard_version` and
+  `test_twins_byte_identical` updated/re-confirmed.
+- **Distribution:** `starter-kit/methodology_dashboard.py` is `bin/_manifest.py`-TRACKED, so
+  adopters receive the documented, pinned thresholds via `bin/sync`; `tools/` and
+  `tools/test_methodology_dashboard.py` are canonical-only.
+
+### 2026-08-10 · [ad hoc] Re-grounded the /caveman row's remaining unsupported claim
+
+- **Change:** `starter-kit/RECOMMENDED_SKILLS.md`'s `/caveman` row.
+- **The defect:** `15ccb38` (the "Discharged the three documentation follow-ons" entry below)
+  removed a dangling `Learning #34` citation from this row but kept the claim it was
+  attributing — "the methodology's own handoff length discipline" — which has no referent
+  anywhere in this distributed corpus, and runs opposite to `SESSION_RUNNER.md`'s own failure
+  mode #15 (the *thin* handoff is the failure, not the long one) and its Minimum Handoff
+  Requirements, which gate on content, not length.
+- **Fix:** re-grounded the row on those two verified, reachable sources instead — no length rule
+  is stated because none exists to state.
+- **Distribution:** `RECOMMENDED_SKILLS.md` is `bin/_manifest.py`-TRACKED, so adopters receive the
+  fix via `bin/sync`.
+
+### 2026-08-10 · [ad hoc] Resolved both review findings on [PR #66](https://github.com/KJ5HST/methodology/pull/66) — in the PR, not a follow-up
+
+- **Origin:** rmsharp reviewed PR #66 and filed two findings, each reproduced against real repo
+  state rather than theorised, with inline suggestions and an offer to take them to a follow-up PR.
+  Fixed here instead, because finding 1 is a defect in code *this PR introduces* — shipping it
+  would mean the failure-mode-#28 release note describes a gate that silently does nothing on the
+  adopters most likely to want it. The v3.6 precedent is explicit: Layer 7 ran before Layer 6 so no
+  release shipped with a known live defect in its own subsystem.
+- **Finding 1 — `install_hook()` ignored `core.hooksPath`** (`starter-kit/context_budget.py`).
+  It always wrote `<git-dir>/hooks/pre-commit` and printed "installed". `core.hooksPath` redirects
+  git away from that directory entirely, and **this methodology's own `BOOTSTRAP.md` Step 10 tells
+  adopters to set it** (`.githooks`) to enable the v3.1 ledger co-staging gate — so the population
+  following our own setup instructions got a silent no-op with a success message. Reproduced end to
+  end before the fix: a commit growing `CLAUDE.md` to 40,000 B against a 28,000 B ceiling was
+  *created* rather than refused; after, the same commit is refused and `git rev-list --count`
+  confirms none was created. A relative value now resolves against the worktree top level (what git
+  itself does when running the hook), an absolute value is used as given, and the pre-existing
+  "a hook is already here and is not ours" branch now fires correctly on a repo whose `.githooks/`
+  already holds the ledger hook — reporting and refusing to clobber instead of shadowing it.
+- **Finding 2 — receipt identity is `session` + `date`, not `session` alone** (`bin/check-handoff`).
+  `validate_ledger()` asserted an invariant the format in `starter-kit/HANDOFFS.md` never states.
+  `S<N>` is a per-sequence counter and one ledger may merge more than one sequence — a fork and its
+  upstream each running their own — so two distinct sessions share an `S<N>` by construction;
+  rmsharp reproduced four false positives on a real ledger. **The argument is not the false positive
+  itself but what one does to a gate:** this very PR's thesis is that the dashboard printed
+  `Large files detected` at every Phase 0 and 15+ sessions read past it. A checker that fires on a
+  structurally valid file trains that same blindness on the checker we most need believed. Coverage
+  lost is narrow — a block copied and not edited duplicates *both* keys and is still caught — and
+  the cross-branch collision it appeared to guard was never guarded, since the checker sees one tree
+  and could only ever fire after the merge landed. Code and spec now agree rather than the code
+  being stricter: `starter-kit/HANDOFFS.md` states the rule, including that keeping `S<N>` unique
+  within a sequence must never mean renumbering an already-written receipt.
+- **Verification:** suite **107 → 112**. Both fixes were driven **RED first and observed failing**
+  (Learning #12): 2 of the 4 new `install-hook` assertions fail against the unpatched tool (the
+  other 2 are deliberate presence controls that must pass either way), and finding 2's new negative
+  assertion fails with exactly the reported error, `duplicate session id 'S8'`, before passing. The
+  duplicate-identity mutation was also strengthened to copy the S8 header wholesale, so it cannot
+  quietly degrade into a session-only collision if a date later changes. The 2 remaining suite
+  failures are pre-existing and reproduce on `main` with this branch's changes stashed
+  (`tools/test_methodology_dashboard.py`, untouched here; and the GitHub-source dry-run, which needs
+  network). `bin/check-links` OK (83 links / 21 files); live ledger green under `--all`.
+- **Learning #10 caught one thing the diff could not:** `README.md`'s unreleased #65 bullet still
+  claimed "unique session ids". Dated `CHANGELOG.md` entries describing what #65 shipped are left
+  verbatim per the v2.7.1 frozen-record precedent; the unreleased What's New bullet describes
+  current behaviour and was corrected.
+- **Not recorded as a Learning row by design.** The candidate — *a checker's invariant must not be
+  stricter than the format it validates; the adopter who trips it is the one who finds out* — is
+  real, but `#14` is reserved by `docs/operator-gated-review-plan`'s decision D3. Appending it here
+  would create exactly the collision D3 exists to prevent. It is carried in the S10 receipt instead,
+  to be appended at the first free number after that branch merges.
+- **Commits:** `eacb516` (1B claim) · `14bd88a` (finding 1) · `63e1dcf` (finding 2).
 

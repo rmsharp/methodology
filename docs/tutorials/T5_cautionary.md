@@ -1,6 +1,6 @@
 # Tutorial 5: Cautionary Use
 
-> **Objective:** Read the methodology's guardrails the way they're meant to be read — the gates, the 28 failure modes, "1 and done," the vertical-slice gates, and the Plan-Mode exit trap as a reference the procedure enforces *for* you — and judge the one case where the right move is not to use the methodology at all.
+> **Objective:** Read the methodology's guardrails the way they're meant to be read — the gates, the 29 failure modes, "1 and done," the vertical-slice gates, and the Plan-Mode exit trap as a reference the procedure enforces *for* you — and judge the one case where the right move is not to use the methodology at all.
 > **Prerequisites:** [Tutorial 2: Your First Session, End-to-End](T2_first_session.md) — you need a session you've actually run, because its near-misses are this tutorial's raw material. New here? Start at the [series index](README.md).
 > **Time:** ~20 minutes
 > **What you'll produce:** A near-miss you catch on purpose — you deliberately push a session toward a gate, watch the gate hold, and record the catch — plus a written "use it / don't use it" verdict for one real task.
@@ -16,7 +16,7 @@ The earlier tutorials had you *avoid* the near-misses. This one has you *provoke
 - [When to Use This Methodology](../../ITERATIVE_METHODOLOGY.md#when-to-use-this-methodology) — the explicit *do-not-use* list, so you don't burn the overhead on a one-off.
 - [Evidence](../../README.md#evidence) — what holding the line actually changed.
 
-This tutorial does not restate the gates, the 28 failure modes, or the vertical-slice gates — those live in the [cockpit checklist](../../starter-kit/SESSION_RUNNER.md) and the [flight manual](../../ITERATIVE_METHODOLOGY.md), one source of truth. It makes you *use* them as a reference and *test* that they hold.
+This tutorial does not restate the gates, the 29 failure modes, or the vertical-slice gates — those live in the [cockpit checklist](../../starter-kit/SESSION_RUNNER.md) and the [flight manual](../../ITERATIVE_METHODOLOGY.md), one source of truth. It makes you *use* them as a reference and *test* that they hold.
 
 ## Before you start
 
@@ -67,6 +67,8 @@ Some gates you won't trip in a tutorial, but you must recognize them on sight:
 
 **Corollary — capability-tiered review is not the masquerade.** A slice's layers can legitimately be built by agents of different capability tiers, with the strongest tier reviewing each delegated layer's output before its checkpoint commit lands ([§Vertical Slice Sessions](../../starter-kit/SESSION_RUNNER.md#vertical-slice-sessions), capability-tiered review — an elective refinement of the same four gates). That is not FM #26: the slice test is about how many *capabilities* a pre-declared contract enumerates, not about how many agents or tiers touched the layers. This framework repository's own close-out-receipt slice (root [`CHANGELOG.md`](../../CHANGELOG.md) and [`HANDOFFS.md`](../../HANDOFFS.md) session S1 — not the sample project's) is a real instance: one capability, six checkpoint commits, split across two capability tiers, every lighter-tier layer reviewed before its commit landed.
 
+**Corollary — many agents in one working tree is a different trap.** How many agents touch a deliverable is not the FM #26 question, but *where* they write is the **[FM #29](../../starter-kit/SESSION_RUNNER.md#known-failure-modes)** question (shared-state interference). In one adopter project, six adversarial-verify agents ran in a single working tree: one lens mutated production source to prove a test discriminating while another lens's test run was in flight, and the victim lens saw a failure and came one step from filing a HIGH finding against clean code. The fix that followed: the lenses stay read-only, and *"do every discriminating mutation yourself, serially."* That is the [one-writer-per-working-tree rule](../../starter-kit/SAFEGUARDS.md#blast-radius-limits); the two fan-out shapes it governs are in [§Parallel Actors](../../ITERATIVE_METHODOLOGY.md#parallel-actors).
+
 ### 5. Make the "don't use it" call
 
 Take one real task you actually have and run it through the [When to Use](../../ITERATIVE_METHODOLOGY.md#when-to-use-this-methodology) test. Is it repeated work where quality compounds and a stakeholder approves the output — or a genuine one-off where the overhead exceeds the work? Write a one-line verdict.
@@ -79,7 +81,7 @@ Take one real task you actually have and run it through the [When to Use](../../
 Cite the failure mode by number; link the list, don't paste it.
 (Full list: [Known Failure Modes](../../starter-kit/SESSION_RUNNER.md#known-failure-modes).)
 
-- **Trying to memorize the 28 failure modes.** They are a reference you consult at the moment of temptation, not a quiz. Operating from a half-remembered gist is itself **FM #3 (skim documents)** — the countermeasure is to open the table and read the row, the way you did in Step 1.
+- **Trying to memorize the 29 failure modes.** They are a reference you consult at the moment of temptation, not a quiz. Operating from a half-remembered gist is itself **FM #3 (skim documents)** — the countermeasure is to open the table and read the row, the way you did in Step 1.
 - **"This step doesn't apply to my session."** The single most important cautionary line in the framework: that thought *is* the erosion. This is **FM #17 (protocol erosion)** — every step exists because a session failed without it, and the vertical-slice allowance *adds* a gate, it never removes one. When you catch yourself shaving a step, see [Degradation Detection](../../starter-kit/SESSION_RUNNER.md#degradation-detection).
 - **Calling a two-capability bundle "a vertical slice."** Pre-declaring a contract for *one* capability's layers is the slice; reaching for the slice vocabulary to ship F2 and B1 together is **FM #26 (mega-session masquerading as a vertical slice)**. One capability, one prior contract, exactly that layer set — or split it.
 

@@ -114,6 +114,7 @@ OUTPUT="$("$BIN/sync" "$P" 2>&1)"; RC=$?
 [ "$RC" != "0" ] && pass "sync exits non-zero when local drift present" || fail "sync exited 0 despite local drift"
 echo "$OUTPUT" | grep -q "ERROR" && pass "sync prints ERROR on local drift" || fail "no ERROR printed"
 echo "$OUTPUT" | grep -q -- "--force" && pass "ERROR mentions --force" || fail "ERROR missing --force hint"
+echo "$OUTPUT" | grep -q "local modifications" && pass "a full-history source blames local modifications" || fail "ERROR no longer names local modifications"
 [ "$(cat "$P/SESSION_RUNNER.md")" = "$BEFORE" ] && pass "file unchanged when blocked" || fail "file modified despite block"
 
 # --force proceeds
@@ -132,13 +133,16 @@ if [ -n "$OLDER_COMMIT" ]; then
 fi
 rm -rf "$P"
 
-echo "== Test 9: github source (requires gh auth; skipped if unauthenticated) =="
-if gh auth status >/dev/null 2>&1; then
+echo "== Test 9: github source (needs the network; skipped if the repository is unreachable) =="
+# --source=github clones the repository over HTTPS, so the guard is reachability, not gh auth. The
+# timeout keeps a machine with no route to GitHub from hanging the suite.
+URL="${METHODOLOGY_SOURCE_URL:-https://github.com/KJ5HST/methodology.git}"
+if python3 -c 'import subprocess, sys; sys.exit(subprocess.run(["git", "ls-remote", "--exit-code", "-h", sys.argv[1]], capture_output=True, timeout=30).returncode)' "$URL" >/dev/null 2>&1; then
     P="$(mktemp_project)"
     "$BIN/sync" "$P" --source=github --dry-run >/dev/null && pass "github source dry-run works" || fail "github source dry-run failed"
     rm -rf "$P"
 else
-    echo "  SKIP: gh unauthenticated"
+    echo "  SKIP: $URL unreachable"
 fi
 
 echo "== Test 10: distributed-file links resolve in the simulated adopter tree =="
@@ -2028,6 +2032,36 @@ cp "$CB" "$P/context_budget.py"
     || fail "install-hook did not write the default .git/hooks/pre-commit"
 rm -rf "$P"
 
+# --status measures and writes nothing; an argument the tool does not know is refused
+# before the tree is read. Both used to run the default measurement, history append
+# included. --ignored, because a project may leave the history file untracked or ignore
+# it. The default run last is the presence control: this project DOES get written to, so
+# an empty status after the others is a non-write rather than a run that stopped early.
+# --check is --status under a second name: the same exit code, and no write.
+P="$(mktemp_project)"
+cp "$STARTER/context-budget.json" "$P/.context-budget.json"
+cp "$CB" "$P/context_budget.py"
+(cd "$P" && git add -A && git -c user.email=t@t -c user.name=t commit -q -m baseline)
+(cd "$P" && python3 context_budget.py --status >/dev/null 2>&1); RC_STATUS=$?
+AFTER_STATUS="$(git -C "$P" status --porcelain --ignored)"
+(cd "$P" && python3 context_budget.py --check >/dev/null 2>&1); RC_CHECK=$?
+AFTER_CHECK="$(git -C "$P" status --porcelain --ignored)"
+(cd "$P" && python3 context_budget.py --zzz >/dev/null 2>&1); RC=$?
+AFTER_UNKNOWN="$(git -C "$P" status --porcelain --ignored)"
+(cd "$P" && python3 context_budget.py >/dev/null 2>&1)
+[ -f "$P/.context-budget-history.jsonl" ] && WROTE=1 || WROTE=0
+[ -z "$AFTER_STATUS" ] && [ "$WROTE" = "1" ] \
+    && pass "context_budget --status writes nothing to the project" \
+    || fail "context_budget --status wrote [$AFTER_STATUS] (default run wrote: $WROTE)"
+[ -z "$AFTER_CHECK" ] && [ "$RC_CHECK" = "$RC_STATUS" ] && [ "$RC_CHECK" != "3" ] \
+    && [ "$WROTE" = "1" ] \
+    && pass "context_budget --check is --status: the same exit code, writing nothing" \
+    || fail "context_budget --check exited $RC_CHECK (--status $RC_STATUS); left [$AFTER_CHECK]"
+[ "$RC" = "3" ] && [ "$AFTER_UNKNOWN" = "$AFTER_STATUS" ] && [ "$WROTE" = "1" ] \
+    && pass "context_budget refuses an unknown argument with exit 3, writing nothing" \
+    || fail "context_budget --zzz exited $RC; left [$AFTER_UNKNOWN] after [$AFTER_STATUS]"
+rm -rf "$P"
+
 # sync must distribute the tool (TRACKED) and seed the config (SEED).
 P="$(mktemp_project)"
 "$BIN/sync" "$P" --mode=commit --source=local >/dev/null 2>&1
@@ -3368,41 +3402,44 @@ sed -i.bak 's|runtime_smoke: n/a — docs-only|runtime_smoke: quality_ratchet: 1
     || fail "check-handoff rejected a receipt that cites its gate run"
 rm -rf "$P"
 
-echo "== Test 41: status and sync recognise a version a merge hid from the default walk (BL-54, RED-first) =="
+echo "== Test 41: status and sync recognise a version a merge hid from the default walk (RED-first) =="
 # Git's default history walk follows only a merge's TREESAME parent, so a version on the side a merge
 # did not keep is never visited: bin/status read it as "locally modified" and bin/sync refused it.
 # The fixture is a methodology repo with both shapes, on one tracked file:
-#   B (22ce71b's): main's own v2, then a merge that takes a side branch's v3a -> v3, hiding v2;
-#   A (213f841's): a side branch's v4side, then a merge that keeps main's v5, hiding v4side.
+#   B: main's own v2, then a merge that takes a side branch's v3a -> v3, hiding v2;
+#   A: a side branch's v4side, then a merge that keeps main's v5, hiding v4side.
 # Dates are fixed, because the full walk orders by commit date and ties would make it unstable.
-# N counts the versions that landed on the checkout's first-parent line (operator, S179), so v1 is 3
+# N counts the versions that landed on the checkout's first-parent line, so v1 is 3
 # behind (v2, v3, v5), not 5 (every distinct version) or 7 (its position in the full walk).
-M="$(mktemp -d)"
-git -C "$M" init -q -b main
-mkdir -p "$M/bin"
-cp "$BIN/sync" "$BIN/status" "$BIN/_manifest.py" "$M/bin/"
-python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; print('\n'.join(s for s, _d, _x in _manifest.DISTRIBUTION))" \
-    | while read -r src; do mkdir -p "$M/$(dirname "$src")"; cp "$METHODOLOGY/$src" "$M/$src"; done
 F=starter-kit/SAFEGUARDS.md
 D=SAFEGUARDS.md
 T0=1700000000
-bl54_git() {  # bl54_git <seconds after T0> <git args...>
+mh_git() {  # mh_git <seconds after T0> <git args...>
     local t=$((T0 + $1)); shift
     GIT_AUTHOR_DATE="@$t +0000" GIT_COMMITTER_DATE="@$t +0000" \
         git -C "$M" -c user.email=t@t -c user.name=t -c commit.gpgsign=false "$@"
 }
-printf 'v1\n' > "$M/$F"; git -C "$M" add -A; bl54_git 1 commit -qm c1
-git -C "$M" checkout -qb side1
-printf 'v3a\n' > "$M/$F"; bl54_git 3 commit -qam s1
-printf 'v3\n' > "$M/$F"; bl54_git 4 commit -qam s2
-git -C "$M" checkout -q main
-printf 'v2\n' > "$M/$F"; bl54_git 2 commit -qam c2
-bl54_git 5 merge -q -X theirs side1 -m mB >/dev/null
-git -C "$M" checkout -qb side2
-printf 'v4side\n' > "$M/$F"; bl54_git 6 commit -qam t1
-git -C "$M" checkout -q main
-printf 'v5\n' > "$M/$F"; bl54_git 7 commit -qam c3
-bl54_git 8 merge -q -s ours side2 -m mA >/dev/null
+mh_fixture() {  # build the fixture in a fresh $M; Test 46 serves the same repo as its source
+    M="$(mktemp -d)"
+    git -C "$M" init -q -b main
+    mkdir -p "$M/bin"
+    cp "$BIN/sync" "$BIN/status" "$BIN/_manifest.py" "$BIN/_manifest_reader.py" "$M/bin/"
+    python3 -c "import sys; sys.path.insert(0, '$BIN'); import _manifest; print('\n'.join(s for s, _d, _x in _manifest.DISTRIBUTION))" \
+        | while read -r src; do mkdir -p "$M/$(dirname "$src")"; cp "$METHODOLOGY/$src" "$M/$src"; done
+    printf 'v1\n' > "$M/$F"; git -C "$M" add -A; mh_git 1 commit -qm c1
+    git -C "$M" checkout -qb side1
+    printf 'v3a\n' > "$M/$F"; mh_git 3 commit -qam s1
+    printf 'v3\n' > "$M/$F"; mh_git 4 commit -qam s2
+    git -C "$M" checkout -q main
+    printf 'v2\n' > "$M/$F"; mh_git 2 commit -qam c2
+    mh_git 5 merge -q -X theirs side1 -m mB >/dev/null
+    git -C "$M" checkout -qb side2
+    printf 'v4side\n' > "$M/$F"; mh_git 6 commit -qam t1
+    git -C "$M" checkout -q main
+    printf 'v5\n' > "$M/$F"; mh_git 7 commit -qam c3
+    mh_git 8 merge -q -s ours side2 -m mA >/dev/null
+}
+mh_fixture
 # Prove the fixture before trusting it: v5 is canonical, and the default walk misses exactly c2 and t1.
 N_DEFAULT="$(git -C "$M" log --format=%H -- "$F" | wc -l | tr -d ' ')"
 N_FULL="$(git -C "$M" log --full-history --format=%H -- "$F" | wc -l | tr -d ' ')"
@@ -3413,31 +3450,31 @@ N_FP="$(git -C "$M" log --first-parent --format=%H -- "$F" | wc -l | tr -d ' ')"
     || fail "fixture: the walks visit $N_DEFAULT/$N_FULL/$N_FP commits, not 4/8/4 -- the merges lack the hiding shape"
 P="$(mktemp_project)"
 "$M/bin/sync" "$P" --mode=commit --source=local >/dev/null
-bl54_status() {
+mh_status() {
     "$M/bin/status" --source=local "$P" \
         | awk -v d="$D" '$2 == d { $1 = $2 = $3 = ""; sub(/^ +/, ""); sub(/ +$/, ""); print }'
 }
-bl54_expect() {  # bl54_expect <content> <expected status> <what>
+mh_expect() {  # mh_expect <content> <expected status> <what>
     printf '%s\n' "$1" > "$P/$D"
-    local got; got="$(bl54_status)"
+    local got; got="$(mh_status)"
     [ "$got" = "$2" ] && pass "status: $1 ($3) reads '$2'" || fail "status: $1 ($3) reads '$got', not '$2'"
 }
-bl54_expect v5 "current" "canonical"
-bl54_expect v2 "2 versions behind" "main's own version, hidden by merge B"
-bl54_expect v4side "1 version behind" "a side version merge A discarded; no main-line position, so the full walk counts"
-bl54_expect v3 "1 version behind" "landed by merge B; the side branch's two commits are one main-line version"
-bl54_expect v1 "3 versions behind" "the root; merged branches' own commits are not main-line versions"
-bl54_expect v2-local "locally modified" "never in history"
-bl54_sync() {  # bl54_sync <content> <expected rc> <expected content after> <what>
+mh_expect v5 "current" "canonical"
+mh_expect v2 "2 versions behind" "main's own version, hidden by merge B"
+mh_expect v4side "1 version behind" "a side version merge A discarded; no main-line position, so the full walk counts"
+mh_expect v3 "1 version behind" "landed by merge B; the side branch's two commits are one main-line version"
+mh_expect v1 "3 versions behind" "the root; merged branches' own commits are not main-line versions"
+mh_expect v2-local "locally modified" "never in history"
+mh_sync() {  # mh_sync <content> <expected rc> <expected content after> <what>
     printf '%s\n' "$1" > "$P/$D"
     "$M/bin/sync" "$P" --source=local >/dev/null 2>&1; local rc=$?
     local after; after="$(cat "$P/$D")"
     [ "$rc/$after" = "$2/$3" ] && pass "sync: $1 ($4) exits $2 and leaves $3" \
         || fail "sync: $1 ($4) exits $rc and leaves $after, not $2 and $3"
 }
-bl54_sync v2 0 v5 "hidden by merge B, upgraded without --force"
-bl54_sync v4side 0 v5 "hidden by merge A, upgraded without --force"
-bl54_sync v2-local 2 v2-local "a real local edit is still refused"
+mh_sync v2 0 v5 "hidden by merge B, upgraded without --force"
+mh_sync v4side 0 v5 "hidden by merge A, upgraded without --force"
+mh_sync v2-local 2 v2-local "a real local edit is still refused"
 rm -rf "$M" "$P"
 
 echo "== Test 42: no producer that reads the real repo is piped into an early-exiting consumer (BL-43, RED-first) =="
@@ -3865,6 +3902,386 @@ else
 fi
 rm -f "$SCAN45" "$FIX45" "$M45"
 
+# upstream's Tests 27-34 = Tests 46-53 here; its Test 26 = Test 41
+echo "== Test 46: --source=github clones its source, so it recognises every version Test 41 does (RED-first) =="
+# --source=github read each file's contents alone, through the GitHub API, and classified the project's copy
+# against an EMPTY history, so a file that was merely behind read "locally modified" and sync refused it:
+# the one case an update exists for. It now clones the source into a temporary directory and runs the
+# --source=local code over that clone. METHODOLOGY_SOURCE_URL points it at a bare clone of Test 41's
+# fixture, so this test needs neither the network nor gh; TMPDIR is fresh so the clone's removal can be seen.
+# The URL is file://, not a bare path: git clones a plain path by copying the repository and ignores
+# --depth, so a shallow clone -- which would lose the history this route exists for -- would pass unseen.
+mh_fixture
+S="$(mktemp -d)/methodology.git"
+git clone -q --bare "$M" "$S"
+U="file://$S"
+SHORT="$(git -C "$S" rev-parse --short=7 HEAD)"
+TMPD="$(mktemp -d)"
+P="$(mktemp_project)"
+"$M/bin/sync" "$P" --mode=commit --source=local >/dev/null
+gs_status() {
+    TMPDIR="$TMPD" METHODOLOGY_SOURCE_URL="$U" "$BIN/status" --source=github "$P" 2>&1 \
+        | awk -v d="$D" '$2 == d { $1 = $2 = $3 = ""; sub(/^ +/, ""); sub(/ +$/, ""); print }'
+}
+gs_expect() {  # gs_expect <content> <expected status> <what>
+    printf '%s\n' "$1" > "$P/$D"
+    local got; got="$(gs_status)"
+    [ "$got" = "$2" ] && pass "github status: $1 ($3) reads '$2'" || fail "github status: $1 ($3) reads '$got', not '$2'"
+}
+gs_expect v5 "current" "canonical"
+gs_expect v2 "2 versions behind" "hidden by merge B"
+gs_expect v4side "1 version behind" "discarded by merge A; counted along the full walk"
+gs_expect v3 "1 version behind" "landed by merge B"
+gs_expect v1 "3 versions behind" "the root"
+gs_expect v2-local "locally modified" "never in history"
+gs_sync() {  # gs_sync <content> <expected rc> <expected content after> <what>
+    printf '%s\n' "$1" > "$P/$D"
+    TMPDIR="$TMPD" METHODOLOGY_SOURCE_URL="$U" "$BIN/sync" "$P" --source=github >/dev/null 2>&1; local rc=$?
+    local after; after="$(cat "$P/$D")"
+    [ "$rc/$after" = "$2/$3" ] && pass "github sync: $1 ($4) exits $2 and leaves $3" \
+        || fail "github sync: $1 ($4) exits $rc and leaves $after, not $2 and $3"
+}
+gs_sync v2 0 v5 "hidden by merge B, upgraded without --force"
+gs_sync v4side 0 v5 "hidden by merge A, upgraded without --force"
+gs_sync v3 0 v5 "landed by merge B, upgraded"
+gs_sync v1 0 v5 "the root, upgraded"
+gs_sync v2-local 2 v2-local "a real local edit is still refused"
+printf 'v2\n' > "$P/$D"
+OUT="$(TMPDIR="$TMPD" METHODOLOGY_SOURCE_URL="$U" "$BIN/sync" "$P" --source=github --dry-run 2>&1)"; RC=$?
+[ "$RC" = "0" ] && pass "github sync --dry-run: exit 0 on a file that is merely behind" || fail "github sync --dry-run: exit $RC"
+printf '%s\n' "$OUT" | grep -qxF "  source:  github ($U)" \
+    && pass "github sync names the URL it cloned" || fail "github sync's source line does not name $U"
+printf '%s\n' "$OUT" | grep -q "^  version: .*$SHORT" && ! printf '%s\n' "$OUT" | grep -q '^  version: github:' \
+    && pass "github sync reports the clone's own version ($SHORT)" || fail "github sync's version line is not the clone's"
+[ "$(cat "$P/$D")" = "v2" ] && pass "github sync --dry-run wrote nothing" || fail "github sync --dry-run wrote $P/$D"
+[ -z "$(ls -A "$TMPD")" ] && pass "every run removed its temporary clone" || fail "a temporary clone was left in $TMPD: $(ls -A "$TMPD")"
+rm -rf "$M" "$(dirname "$S")" "$TMPD" "$P"
+
+echo "== Test 47: --source=github names every distributed file its source lacks, before writing anything (RED-first) =="
+# A source behind this checkout's manifest -- a file added here and not merged there -- is a version
+# statement about the source, not a local fault: say so, list every missing file, and write nothing.
+mh_fixture
+GONE=starter-kit/RECOMMENDED_SKILLS.md
+git -C "$M" rm -q "$GONE"; mh_git 9 commit -qm "drop one distributed file"
+S="$(mktemp -d)/methodology.git"
+git clone -q --bare "$M" "$S"
+U="file://$S"
+P="$(mktemp_project)"
+OUT="$(METHODOLOGY_SOURCE_URL="$U" "$BIN/sync" "$P" --source=github 2>&1)"; RC=$?
+[ "$RC" = "1" ] && pass "github sync: a source missing a distributed file exits 1" || fail "github sync: exit $RC, not 1"
+printf '%s\n' "$OUT" | grep -qxF "    $GONE" && printf '%s\n' "$OUT" | grep -q "1 of [0-9]* distributed file(s) do not exist in $U" \
+    && pass "github sync: the inventory names the missing file and its source" || fail "github sync: no inventory naming $GONE -- got: $OUT"
+[ -z "$(ls -A "$P" | grep -vx .git)" ] && pass "github sync: nothing written before the inventory" \
+    || fail "github sync wrote into the project before refusing: $(ls -A "$P" | tr '\n' ' ')"
+OUT="$(METHODOLOGY_SOURCE_URL="$U" "$BIN/status" --source=github "$P" 2>&1)"; RC=$?
+[ "$RC" = "1" ] && printf '%s\n' "$OUT" | grep -qxF "    $GONE" \
+    && pass "github status: the same inventory, exit 1" || fail "github status: exit $RC, output: $OUT"
+rm -rf "$M" "$(dirname "$S")" "$P"
+
+echo "== Test 48: a source without its history is named as the cause, not the project's files (RED-first) =="
+# A file that matches no version in the source's history is a local edit only if that history is all
+# there. A shallow clone holds its last commits and a downloaded tree holds none, so an unmodified older
+# copy was refused as "local modifications". The refusal now says what the source lacks. v1 is the
+# fixture's root version, merely behind: a full-history source upgrades it (the control, last).
+mh_fixture
+P="$(mktemp_project)"
+"$M/bin/sync" "$P" --mode=commit --source=local >/dev/null
+printf 'v1\n' > "$P/$D"
+H="$(cd "$(mktemp -d)" && pwd -P)"  # resolved, as bin/sync prints its own root (/var is /private/var on macOS)
+git clone -q --depth 1 "file://$M" "$H/shallow"  # file://, or git copies the repository and ignores --depth
+mkdir "$H/tarball"; git -C "$M" archive HEAD | tar -x -C "$H/tarball"
+[ "$(git -C "$H/shallow" rev-parse --is-shallow-repository)" = "true" ] && [ ! -e "$H/tarball/.git" ] \
+    && cmp -s "$H/shallow/bin/sync" "$BIN/sync" && cmp -s "$H/tarball/bin/sync" "$BIN/sync" \
+    && pass "fixture: a shallow clone and a tree with no .git, each carrying the sync under test" \
+    || fail "fixture: the clone is not shallow, the tree has a .git, or a copy of bin/sync differs"
+hs_refuse() {  # hs_refuse <source tree> <sentence naming the cause> <what>
+    local out rc
+    out="$("$1/bin/sync" "$P" --source=local 2>&1)"; rc=$?
+    [ "$rc" = "2" ] && pass "$3: exit 2" || fail "$3: exit $rc, not 2"
+    grep -qF "$2" <<<"$out" && pass "$3: the refusal says '$2'" || fail "$3: no '$2' in the refusal: $out"
+    ! grep -q "local modifications" <<<"$out" && pass "$3: no claim of local modifications" \
+        || fail "$3: the refusal still blames local modifications"
+    [ "$(cat "$P/$D")" = "v1" ] && pass "$3: nothing written" || fail "$3: $P/$D was rewritten"
+}
+hs_refuse "$H/shallow" "is shallow (1 commit)" "shallow source"
+git clone -q --depth 2 "file://$M" "$H/shallow2"  # depth 2 reaches both of the merge's parents
+N2="$(git -C "$H/shallow2" rev-list --count HEAD)"
+hs_refuse "$H/shallow2" "is shallow ($N2 commits)" "a deeper shallow source"
+hs_refuse "$H/tarball" "has no git history" "source with no .git"
+OUT="$("$H/shallow/bin/sync" "$P" --source=local 2>&1)"
+grep -qF "git -C $H/shallow fetch --unshallow" <<<"$OUT" \
+    && pass "shallow source: the refusal gives the command that deepens it" || fail "shallow source: no fetch --unshallow command for $H/shallow"
+OUT="$("$H/tarball/bin/sync" "$P" --source=local 2>&1)"
+grep -qxF "    git clone ${METHODOLOGY_SOURCE_URL:-https://github.com/KJ5HST/methodology.git}" <<<"$OUT" \
+    && pass "source with no .git: the refusal gives the clone command" || fail "source with no .git: no clone command in the refusal"
+# --source=github: its clone is gone when the run ends, so the hint must work without it. Run the hint
+# as printed, from an empty directory: diff exits 1 only if both files exist and differ (2 = missing).
+git clone -q --bare "$M" "$H/methodology.git"
+printf 'v2-local\n' > "$P/$D"
+OUT="$(METHODOLOGY_SOURCE_URL="file://$H/methodology.git" "$BIN/sync" "$P" --source=github 2>&1)"
+HINT="$(grep -A3 "To inspect the drift first" <<<"$OUT")"
+mkdir "$H/inspect"
+( cd "$H/inspect" && eval "$(grep '^    git clone ' <<<"$HINT")" ) >/dev/null 2>&1; RC_CLONE=$?
+( cd "$H/inspect" && eval "$(grep '^    diff ' <<<"$HINT")" ) >/dev/null 2>&1; RC_DIFF=$?
+grep -qF "git clone file://$H/methodology.git " <<<"$HINT" && [ "$RC_CLONE/$RC_DIFF" = "0/1" ] \
+    && pass "github refusal: the inspect hint, run after the run, clones the source and diffs the edit" \
+    || fail "github refusal: the inspect hint does not work once the run is over (clone $RC_CLONE, diff $RC_DIFF): $HINT"
+printf 'v1\n' > "$P/$D"
+"$M/bin/sync" "$P" --source=local >/dev/null 2>&1 && [ "$(cat "$P/$D")" = "v5" ] \
+    && pass "control: the full-history source upgrades the same file" || fail "control: the full-history source did not upgrade v1"
+rm -rf "$M" "$H" "$P"
+
+echo "== Test 49: the .gitattributes seed merges CHANGELOG.md by union and keeps HANDOFFS.md visible (RED-first) =="
+# Two sessions prepend at one anchor from one base -- the S21 conflict. Under the seed, CHANGELOG.md merges
+# clean with both entries whole. HANDOFFS.md is deliberately NOT under union: union fuses two prepended
+# receipts into one block at exit 0 (the RED control shows it), so it conflicts visibly and the seed's
+# keep-both recipe resolves it with every receipt whole (parallel-sessions plan §8A, row 3').
+l30_entry() { printf '### 2026-10-0%s · [ad hoc] entry %s\n\n- body of entry %s\n\n' "$1" "$2" "$2"; }
+l30_rcpt() { # $1 session, $2 self_score, $3 predecessor_score
+    printf '```handoff\nsession: %s\ndate: 2026-10-01\nstatus: complete\nself_score: %s\npredecessor_score: %s\nactive_task: the task of %s\nwhat_was_done: did it (abc1234)\nnext_steps: the next thing after %s\nkey_files: a.py:%s\ngotchas: none for %s\nruntime_smoke: n/a — docs-only\nchangelog_ref: abc1234\ncommit: abc1234\n```\n\n' \
+        "$1" "$2" "$3" "$1" "$1" "$2" "$1"
+}
+l30_repo() { # a repo with the seed, a one-entry ledger and a one-receipt HANDOFFS.md, committed
+    local u; u="$(mktemp -d)"
+    git -C "$u" init -q -b main; git -C "$u" config user.email t@t; git -C "$u" config user.name t
+    git -C "$u" config core.hooksPath /dev/null
+    cp "$STARTER/gitattributes" "$u/.gitattributes"
+    { printf '# Changelog\n\n---\n\n'; l30_entry 1 base; } > "$u/CHANGELOG.md"
+    { printf '# Handoff Receipts\n\n---\n\n'; l30_rcpt S1 7 6; } > "$u/HANDOFFS.md"
+    git -C "$u" add -A; git -C "$u" commit -qm base
+    for side in alpha beta; do
+        local n=2 s=8; [ "$side" = beta ] && n=3 s=9
+        git -C "$u" checkout -q -b "$side" main
+        { printf '# Changelog\n\n---\n\n'; l30_entry "$n" "$side"; l30_entry 1 base; } > "$u/CHANGELOG.md"
+        { printf '# Handoff Receipts\n\n---\n\n'; l30_rcpt "S2-$side" "$s" 7; l30_rcpt S1 7 6; } > "$u/HANDOFFS.md"
+        git -C "$u" commit -qam "$side"
+    done
+    git -C "$u" checkout -q alpha
+    echo "$u"
+}
+U="$(l30_repo)"
+git -C "$U" merge -q --no-edit beta >/dev/null 2>&1; RC=$?
+CONFL="$(git -C "$U" diff --name-only --diff-filter=U | tr '\n' ' ')"
+[ "$RC" = 1 ] && [ "$CONFL" = "HANDOFFS.md " ] \
+    && pass "seed: a two-branch merge conflicts in HANDOFFS.md only" || fail "seed: merge exit $RC, conflicted: [$CONFL]"
+[ "$(grep -c '^### ' "$U/CHANGELOG.md")" = 3 ] && grep -q 'entry alpha' "$U/CHANGELOG.md" && grep -q 'entry beta' "$U/CHANGELOG.md" \
+    && ! grep -q '^<<<<<<<' "$U/CHANGELOG.md" \
+    && pass "seed: CHANGELOG.md auto-merged by union, both new entries whole" || fail "seed: CHANGELOG.md did not keep both entries"
+( cd "$U" && git show :1:HANDOFFS.md > base.tmp && git show :2:HANDOFFS.md > ours.tmp && git show :3:HANDOFFS.md > theirs.tmp \
+    && git merge-file -p --union --diff3 ours.tmp base.tmp theirs.tmp > HANDOFFS.md; rm -f base.tmp ours.tmp theirs.tmp )
+"$BIN/check-handoff" --all --file "$U/HANDOFFS.md" >/dev/null 2>&1 && [ "$(grep -c '^session:' "$U/HANDOFFS.md")" = 3 ] \
+    && [ "$(grep -c '^```handoff' "$U/HANDOFFS.md")" = 3 ] \
+    && pass "seed recipe: keep-both resolves HANDOFFS.md with all three receipts whole (check-handoff --all)" \
+    || fail "seed recipe: HANDOFFS.md not resolved into three whole receipts"
+rm -rf "$U"
+U="$(l30_repo)"
+printf 'HANDOFFS.md merge=union\n' >> "$U/.git/info/attributes"
+git -C "$U" merge -q --no-edit beta >/dev/null 2>&1; RC=$?
+[ "$RC" = 0 ] && [ "$(grep -c '^```handoff' "$U/HANDOFFS.md")" = 2 ] && [ "$(grep -c '^session:' "$U/HANDOFFS.md")" = 3 ] \
+    && pass "RED control: HANDOFFS.md under union merges at exit 0 into ONE block holding two receipts" \
+    || fail "RED control: union on HANDOFFS.md did not fuse (exit $RC) -- re-measure before keeping the exclusion"
+# ...and the checker the recipe relies on must see it: parse_block once kept the last of a repeated key,
+# so the fused block passed check-handoff --all as one clean receipt (found in S30; RED before the fix).
+OUT="$("$BIN/check-handoff" --all --file "$U/HANDOFFS.md" 2>&1)"; RC=$?
+[ "$RC" = 1 ] && grep -q 'appears more than once in one block' <<<"$OUT" \
+    && pass "check-handoff --all rejects the fused block (a key repeated in one block)" \
+    || fail "check-handoff --all accepted two receipts fused into one block"
+rm -rf "$U"
+# A trim on one branch against a new entry on the other, the real trimmer at a small cut: nothing archived returns.
+U="$(mktemp -d)"
+git -C "$U" init -q -b main; git -C "$U" config user.email t@t; git -C "$U" config user.name t
+git -C "$U" config core.hooksPath /dev/null
+cp "$STARTER/gitattributes" "$U/.gitattributes"
+{ printf '# Changelog\n\nfront matter\n\n---\n\n'; for d in 9 8 7 6 5 4 3 2 1; do l30_entry "$d" "$d"; done; } > "$U/CHANGELOG.md"
+git -C "$U" add -A; git -C "$U" commit -qm base
+git -C "$U" checkout -q -b trim
+( cd "$U" && python3 "$STARTER/methodology_trim.py" --file CHANGELOG.md --cut 2 --budget-bytes 100 --write ) >/dev/null 2>&1
+git -C "$U" add -A; git -C "$U" commit -qm trim >/dev/null 2>&1
+git -C "$U" checkout -q -b new main
+python3 -c "import sys; p=sys.argv[1]; s=open(p).read(); a='---\n\n'; open(p,'w').write(s.replace(a, a+'### 2026-10-10 · [ad hoc] entry new\n\n- body of entry new\n\n', 1))" "$U/CHANGELOG.md"
+git -C "$U" commit -qam new
+git -C "$U" checkout -q trim
+git -C "$U" merge -q --no-edit new >/dev/null 2>&1; RC=$?
+[ "$RC" = 0 ] && grep -q 'body of entry new' "$U/CHANGELOG.md" && ! grep -q 'body of entry 3$' "$U/CHANGELOG.md" \
+    && [ -f "$U"/docs/archive/CHANGELOG-through-*.md ] \
+    && pass "trim vs prepend under union: clean merge, the new entry kept, no archived record back in the live file" \
+    || fail "trim vs prepend under union: exit $RC, or an archived record returned"
+rm -rf "$U"
+P="$(mktemp_project)"
+"$BIN/sync" "$P" --source=local >/dev/null 2>&1
+cmp -s "$P/.gitattributes" "$STARTER/gitattributes" && pass "sync installs the .gitattributes seed" || fail "sync did not install .gitattributes"
+printf 'mine\n' > "$P/.gitattributes"
+"$BIN/sync" "$P" --source=local --force >/dev/null 2>&1
+[ "$(cat "$P/.gitattributes")" = mine ] && pass "sync never overwrites an adopter's .gitattributes, even with --force" \
+    || fail "sync clobbered an adopter's .gitattributes"
+rm -rf "$P"
+
+echo "== Test 50: check-ledger reads what a union merge leaves behind (RED-first against fixtures) =="
+# union never asks, so a CHANGELOG.md merge that went wrong is caught only by a checker that reads the result.
+L="$(mktemp -d)"
+l31() { # $1 label, $2 wanted exit, $3 ledger body (printf format) after the front matter
+    printf "# Changelog\n\nfront matter\n\n---\n\n$3" > "$L/CHANGELOG.md"
+    "$BIN/check-ledger" --file "$L/CHANGELOG.md" >/dev/null 2>&1; local got=$?
+    [ "$got" = "$2" ] && pass "check-ledger: $1" || fail "check-ledger: $1 (exit $got, wanted $2)"
+}
+E2='### 2026-10-02 · [ad hoc] two\n\n- body two\n\n'
+E1='### 2026-10-01 · [issue #7] one\n\n- body one\n'
+l31 "a clean ledger passes"                                  0 "## 2026-10\n\n$E2$E1"
+l31 "a heading directly under the last body (union's lost blank line) passes" 0 "### 2026-10-02 · [ad hoc] two\n\n- body two\n$E1"
+l31 "dates out of order across a merge pass (not checked)"   0 "$E1\n$E2"
+l31 "a tag quoted in inline code is not a second tag"        0 "### 2026-10-03 · [BL-9] adopt \`[BL-<id>]\` here\n\n- b\n\n$E1"
+l31 "a footer after a closing --- rule passes"               0 "$E2$E1\n---\n\nfooter text\n"
+l31 "the sentinel mentioned in prose is not the sentinel"    0 "$E2- not the METHODOLOGY-SEED-SENTINEL line\n\n$E1"
+l31 "a duplicated entry heading fails"                       1 "$E2$E2$E1"
+l31 "a heading with no source tag fails"                     1 "### 2026-10-02 · two\n\n- b\n\n$E1"
+l31 "a heading with two source tags fails"                   1 "### 2026-10-02 · [ad hoc] [issue #3] two\n\n- b\n\n$E1"
+l31 "a heading without the date prefix fails"                1 "### two [ad hoc]\n\n- b\n\n$E1"
+l31 "orphaned text under a month heading fails"              1 "## 2026-10\n\nstray line\n\n$E2$E1"
+l31 "a surviving conflict marker fails"                      1 "<<<<<<< HEAD\n$E2=======\n$E1>>>>>>> beta\n"
+l31 "the seed sentinel left in a ledger with entries fails"  1 "<!-- METHODOLOGY-SEED-SENTINEL: fresh ledger -->\n\n$E2$E1"
+rm -rf "$L"
+"$BIN/check-ledger" --all >/dev/null 2>&1 && pass "check-ledger --all: this repository's ledger and its archive shard are clean" \
+    || fail "check-ledger --all: this repository's own ledger has findings"
+
+echo "== Test 51: --source=github installs the SOURCE's manifest, so a checkout ahead of it is not refused (RED-first) =="
+# D8 (parallel-sessions plan): sync iterated THIS checkout's manifest against a clone of the source, so a branch
+# that adds a distributed file could not sync from github until it merged (Test 9 went red on such a branch in S30).
+# The source here is this checkout minus its newest row -- exactly main before that branch.
+S32="$(mktemp -d)"; git -C "$S32" init -q -b main
+mkdir -p "$S32/bin"; cp "$BIN/sync" "$BIN/status" "$S32/bin/"
+grep -v '"starter-kit/gitattributes"' "$BIN/_manifest.py" > "$S32/bin/_manifest.py"
+python3 -c "import sys; sys.path.insert(0, '$S32/bin'); import _manifest; print('\n'.join(s for s, _d, _x in _manifest.DISTRIBUTION))" \
+    | while read -r src; do mkdir -p "$S32/$(dirname "$src")"; cp "$METHODOLOGY/$src" "$S32/$src"; done
+git -C "$S32" add -A; git -C "$S32" -c user.email=t@t -c user.name=t commit -qm "source without the newest row"
+P="$(mktemp_project)"
+OUT="$(METHODOLOGY_SOURCE_URL="file://$S32" "$BIN/sync" "$P" --source=github 2>&1)"; RC=$?
+[ "$RC" = 0 ] && [ -f "$P/SESSION_RUNNER.md" ] && [ ! -e "$P/.gitattributes" ] \
+    && pass "github sync from a source behind this checkout installs the source's files and exits 0" \
+    || fail "github sync from a source behind this checkout: exit $RC (the old sync refused with 'do not exist in')"
+grep -q "not distributed by file://$S32 yet" <<<"$OUT" && grep -qF "    starter-kit/gitattributes" <<<"$OUT" \
+    && pass "github sync names the row this checkout has and the source does not" || fail "github sync: no note naming starter-kit/gitattributes"
+OUT="$(METHODOLOGY_SOURCE_URL="file://$S32" "$BIN/status" --source=github "$P" 2>&1)"; RC=$?
+[ "$RC" = 0 ] && grep -qF "    starter-kit/gitattributes" <<<"$OUT" \
+    && pass "github status compares against the source's manifest and names the skipped row" \
+    || fail "github status from a source behind this checkout: exit $RC"
+rm -rf "$S32" "$P"
+
+echo "== Test 52: check-handoff accepts one live pending receipt per line of sessions, and only one (RED-first) =="
+# Found by the Shape B dogfood (S34/S35): a line's newest pending receipt is its live claim, and a concurrent line's
+# receipts are prepended above it, so "--allow-pending excuses only the newest block" failed every concurrent branch.
+H33="$(mktemp -d)"
+l33_stub() { printf '```handoff\nsession: %s\ndate: 2026-10-01\nstatus: pending\nactive_task: in progress\n```\n\n' "$1"; }
+l33() { # $1 label, $2 flags, $3 wanted exit, $4.. blocks (newest first): "S6-alpha:c" complete, "S5:p" pending
+    local label="$1" flags="$2" want="$3"; shift 3
+    { printf '# Handoff Receipts\n\n---\n\n'; for b in "$@"; do
+        case "$b" in *:c) l30_rcpt "${b%:c}" 8 7 ;; *:p) l33_stub "${b%:p}" ;; esac; done; } > "$H33/HANDOFFS.md"
+    "$BIN/check-handoff" --all $flags --file "$H33/HANDOFFS.md" >/dev/null 2>&1; local got=$?
+    [ "$got" = "$want" ] && pass "check-handoff: $label" || fail "check-handoff: $label (exit $got, wanted $want)"
+}
+l33 "another line's newest pending receipt is its live claim (--allow-pending)" "--allow-pending" 0 "S6-alpha:c" "S5:p" "S4:c"
+l33 "...and close-out's --all accepts it too"                                     ""                0 "S6-alpha:c" "S5:p" "S4:c"
+l33 "two lines, each with a live claim below the other's receipts"                "--allow-pending" 0 "S6-beta:p" "S6-alpha:c" "S5:p" "S4:c"
+l33 "a pending receipt superseded within its OWN line is still refused"           "--allow-pending" 1 "S6:c" "S5:p" "S4:c"
+l33 "a branch line's stale stub under its own newer receipt is still refused"     "--allow-pending" 1 "S7-alpha:c" "S6-alpha:p" "S5:c"
+l33 "the newest receipt pending without --allow-pending is still refused"         ""                1 "S6:p" "S5:c"
+rm -rf "$H33"
+
+echo "== Test 53: --source=github reads the source's manifest as data, and refuses rows it cannot install safely (RED-first) =="
+# rmsharp's review of PR #91: D8 executed the clone's bin/_manifest.py, so a broken one printed a traceback and code in
+# it ran; and it took the rows from the source but the tracked/seed labels from this checkout, so a source whose seed
+# label differed had its seeds written like tracked files -- an adopter's own CHANGELOG.md overwritten, exit 0, no --force.
+T34="$(mktemp -d)"; B34="$T34/base"; git -C "$T34" init -q -b main base
+mkdir -p "$B34/bin"; cp "$BIN/_manifest.py" "$B34/bin/"
+python3 -c "import sys; sys.path.insert(0, '$B34/bin'); import _manifest; print('\n'.join(s for s, _d, _x in _manifest.DISTRIBUTION))" \
+    | while read -r src; do mkdir -p "$B34/$(dirname "$src")"; cp "$METHODOLOGY/$src" "$B34/$src"; done
+rm -rf "$B34/bin/__pycache__"
+git -C "$B34" add -A; git -C "$B34" -c user.email=t@t -c user.name=t commit -qm "a complete source"
+s34_case() { # $1 name, $2 text in the source's bin/_manifest.py, $3 its replacement -> echoes the case's source
+    local d="$T34/$1"; cp -R "$B34" "$d"
+    python3 - "$d/bin/_manifest.py" "$2" "$3" <<'PY'
+import sys
+path, old, new = sys.argv[1:4]
+text = open(path, encoding="utf-8").read()
+assert text.count(old) == 1, f"fixture anchor not unique: {old!r}"
+open(path, "w", encoding="utf-8").write(text.replace(old, new))
+PY
+    git -C "$d" -c user.email=t@t -c user.name=t commit -qam "$1"; echo "$d"
+}
+s34_project() { # a project one level down in its own directory, so a '..' dest lands where the test can see it
+    local d; d="$(mktemp -d "$T34/proj.XXXX")"; git -C "$d" init -q project
+    printf '# My project ledger\n\n### 2026-01-01 · [ad hoc] my own entry\n' > "$d/project/CHANGELOG.md"; echo "$d/project"
+}
+s34_sync() { METHODOLOGY_SOURCE_URL="file://$1" "$BIN/sync" "$2" --source=github 2>&1; }
+s34_status() { METHODOLOGY_SOURCE_URL="file://$1" "$BIN/status" --source=github "$2" 2>&1; }
+
+S="$(s34_case broken 'DISTRIBUTION = [' 'DISTRIBUTION = [[')"; P="$(s34_project)"
+OUT="$(s34_sync "$S" "$P")"; RC=$?
+[ "$RC" = 1 ] && grep -q "^error: the bin/_manifest.py in file://$S cannot be read: " <<<"$OUT" && ! grep -q Traceback <<<"$OUT" \
+    && [ ! -e "$P/SESSION_RUNNER.md" ] \
+    && pass "github sync: an unreadable source manifest is a one-line error naming the source; nothing written" \
+    || fail "github sync: unreadable source manifest (exit $RC; wanted 1, an 'error:' line naming the URL, no traceback)"
+OUT="$(s34_status "$S" "$P")"; RC=$?
+[ "$RC" = 1 ] && grep -q "^error: the bin/_manifest.py in file://$S cannot be read: " <<<"$OUT" && ! grep -q Traceback <<<"$OUT" \
+    && pass "github status: an unreadable source manifest is a one-line error naming the source" \
+    || fail "github status: unreadable source manifest (exit $RC; wanted 1, an 'error:' line, no traceback)"
+
+S="$(s34_case executes 'TRACKED = "tracked"' "import pathlib; pathlib.Path('$T34/EXECUTED').touch()
+TRACKED = \"tracked\"")"; P="$(s34_project)"
+OUT="$(s34_sync "$S" "$P")"; RC=$?
+[ "$RC" = 0 ] && [ ! -e "$T34/EXECUTED" ] && [ -f "$P/SESSION_RUNNER.md" ] \
+    && pass "github sync reads the source's manifest without running any of it" \
+    || fail "github sync: code in the source's manifest ran, or the sync failed (exit $RC)"
+rm -f "$T34/EXECUTED"; s34_status "$S" "$P" >/dev/null; [ ! -e "$T34/EXECUTED" ] \
+    && pass "github status reads the source's manifest without running any of it" || fail "github status ran code in the source's manifest"
+
+S="$(s34_case relabelled 'SEED = "seed"' 'SEED = "seed-once"')"; P="$(s34_project)"
+OUT="$(s34_sync "$S" "$P")"; RC=$?
+[ "$RC" = 1 ] && grep -q "starter-kit/CHANGELOG.md.*seed-once" <<<"$OUT" && grep -q "my own entry" "$P/CHANGELOG.md" \
+    && [ ! -e "$P/SESSION_RUNNER.md" ] \
+    && pass "github sync refuses a source whose disposition labels differ, naming the rows; the adopter's seed is untouched" \
+    || fail "github sync: a relabelled seed (exit $RC; wanted 1 and CHANGELOG.md kept — the old sync overwrote it, exit 0)"
+OUT="$(s34_status "$S" "$P")"; RC=$?
+[ "$RC" = 1 ] && grep -q "starter-kit/CHANGELOG.md.*seed-once" <<<"$OUT" \
+    && pass "github status refuses the same source rather than mis-reporting it" \
+    || fail "github status: a relabelled seed (exit $RC; wanted 1, naming the row)"
+
+S="$(s34_case escapes '"ROADMAP.md", SEED)' '"../ESCAPED.md", SEED)')"; P="$(s34_project)"
+OUT="$(s34_sync "$S" "$P")"; RC=$?
+[ "$RC" = 1 ] && [ ! -e "$(dirname "$P")/ESCAPED.md" ] && grep -qF "../ESCAPED.md" <<<"$OUT" && [ ! -e "$P/SESSION_RUNNER.md" ] \
+    && pass "github sync refuses a source row whose dest leaves the project" \
+    || fail "github sync: a '..' dest (exit $RC; wanted 1, nothing written outside the project)"
+echo "not for the project" > "$T34/secret.txt"
+S="$(s34_case absolute '("starter-kit/ROADMAP.md"' "(\"$T34/secret.txt\"")"; P="$(s34_project)"
+OUT="$(s34_sync "$S" "$P")"; RC=$?
+[ "$RC" = 1 ] && [ ! -e "$P/ROADMAP.md" ] && grep -qF "$T34/secret.txt" <<<"$OUT" \
+    && pass "github sync refuses a source row whose src is outside the source" \
+    || fail "github sync: an absolute src (exit $RC; wanted 1, and no file copied in from outside the source)"
+# rmsharp's approval of PR #91 named three more (S39): a dest of '.' or inside .git passed the path check, a NUL byte
+# passed it and failed at write time with a traceback, and a manifest that changed DISTRIBUTION after assigning it
+# (+=, .append, a second assignment) lost or swapped rows with no message. Each is refused before anything is written.
+s34_refused() { # $1 what, $2 case name, $3 text in the source's manifest, $4 its replacement, $5 text the error names
+    local P OUT RC; S34_SRC="$(s34_case "$2" "$3" "$4")"; P="$(s34_project)"
+    OUT="$(s34_sync "$S34_SRC" "$P")"; RC=$?
+    [ "$RC" = 1 ] && head -1 <<<"$OUT" | grep -q "^error: the bin/_manifest.py in file://$S34_SRC " \
+        && grep -qF -- "$5" <<<"$OUT" && ! grep -q Traceback <<<"$OUT" \
+        && [ ! -e "$P/SESSION_RUNNER.md" ] && [ ! -e "$P/.git/hooks/pre-commit" ] \
+        && pass "github sync refuses $1, naming it; nothing written" \
+        || fail "github sync: $1 (exit $RC; wanted 1, an 'error:' line naming '$5', no traceback, nothing written)"
+}
+s34_refused "a dest inside .git"            gitdest '"ROADMAP.md", SEED)' '".git/hooks/pre-commit", SEED)' ".git/hooks/pre-commit"
+s34_refused "a dest that names nothing ('.')" dotdest '"ROADMAP.md", SEED)' '".", SEED)'                     "dest '.'"
+s34_refused "a NUL byte in a path"          nuldest '"ROADMAP.md", SEED)' '"ROAD\x00MAP.md", SEED)'         "NUL"
+MORE='("starter-kit/BOOTSTRAP.md", "BOOTSTRAP-COPY.md", TRACKED)'
+s34_refused "DISTRIBUTION += after its assignment"      augmented 'SEED_FORMAT_MARKERS = {' "DISTRIBUTION += [$MORE]
+SEED_FORMAT_MARKERS = {" "DISTRIBUTION"
+OUT="$(s34_status "$S34_SRC" "$(s34_project)")"; RC=$?
+[ "$RC" = 1 ] && grep -q "DISTRIBUTION" <<<"$OUT" && ! grep -q Traceback <<<"$OUT" \
+    && pass "github status refuses the same source, naming DISTRIBUTION" || fail "github status: DISTRIBUTION += (exit $RC; wanted 1)"
+s34_refused "DISTRIBUTION.append(...) after its assignment" appended 'SEED_FORMAT_MARKERS = {' "DISTRIBUTION.append($MORE)
+SEED_FORMAT_MARKERS = {" "DISTRIBUTION"
+s34_refused "a second DISTRIBUTION assignment"          reassigned 'SEED_FORMAT_MARKERS = {' "DISTRIBUTION = [$MORE]
+SEED_FORMAT_MARKERS = {" "DISTRIBUTION"
+rm -rf "$T34"
 
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="

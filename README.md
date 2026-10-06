@@ -58,7 +58,7 @@ Pre-Flight → Research → Create → Present → Implement → Verify & Close
 Each phase is gated. You cannot enter the next phase until the current one is complete. The most valuable gate is between Present and Implement: no implementation begins without stakeholder approval.
 
 ## Quick Start
-*NOTE: The absolute fastest way to use this is to tell Claude (or other service), "Use this methodology: https://github.com/KJ5HST/methodology". Claude will pull it down and put it in place for you. To update an existing project to the latest version, use the same approach: "Update methodology using https://github.com/KJ5HST/methodology".*
+*NOTE: The absolute fastest way to use this is to tell Claude (or other service), "Use this methodology: https://github.com/KJ5HST/methodology". Claude will pull it down and put it in place for you. To update an existing project to the latest version, use the same approach: "Update methodology using https://github.com/KJ5HST/methodology" — have it run `bin/sync` from a full clone of the repository, or `bin/sync --source=github`, which clones one for the run; either carries the git history that recognizes a file you have not edited as merely behind, so it is updated rather than refused.*
 
 > **Important:** After setup completes, start a **new session** before giving Claude real work. Claude Code reads `CLAUDE.md` at session start — changes made during setup don't take effect until the next session. If you say "go" in the same session, Claude will work without the protocol.
 
@@ -69,7 +69,7 @@ Each phase is gated. You cannot enter the next phase until the current one is co
 ```bash
 ../methodology/bin/sync your-project/             # committed mode (default)
 ../methodology/bin/sync your-project/ --mode=ignore  # or: multi-project operator mode
-../methodology/bin/sync your-project/ --source=github  # or: pull from GitHub (needs gh CLI)
+../methodology/bin/sync your-project/ --source=github  # or: pull from GitHub (needs git and network)
 ```
 
 This copies the full methodology corpus into the target: the operating files (`SESSION_RUNNER.md`, `FRAMEWORK_LEARNINGS.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `CONTEXT_TEMPLATE.md`, `CLAUDE_TEMPLATE.md`, `BOOTSTRAP.md`, and the four tools `methodology_dashboard.py`, `methodology_trim.py`, `context_budget.py`, `quality_ratchet.py`) to the project root, and the framework (`ITERATIVE_METHODOLOGY.md`, `FRAMEWORK_APPARATUS.md`, `HOW_TO_USE.md`, `workstreams/`) to `docs/methodology/`. These are kept current on every run. `SESSION_NOTES.md`, `CHANGELOG.md`, `HANDOFFS.md`, `ROADMAP.md`, and the two gate configs `.context-budget.json` and `.quality-gates.json` are *seeded* at the root only when absent — once they exist they are yours and `bin/sync` never overwrites them. See [`starter-kit/BOOTSTRAP.md`](starter-kit/BOOTSTRAP.md) for the difference between committed and ignored modes.
@@ -206,9 +206,11 @@ New to the methodology? The **[tutorials](docs/tutorials/)** are a hands-on, pro
 │   ├── context_budget.py             ← Context-budget gate (ceilings on the files a session must read)
 │   ├── context-budget.json           ← Its seed config (→ .context-budget.json at the adopter root)
 │   ├── quality_ratchet.py            ← Quality ratchet (declared thresholds that only tighten)
-│   └── quality-gates.json            ← Its seed manifest (→ .quality-gates.json; starts empty)
+│   ├── quality-gates.json            ← Its seed manifest (→ .quality-gates.json; starts empty)
+│   └── gitattributes                 ← Ledger merge-driver seed (→ .gitattributes; union for CHANGELOG.md, not HANDOFFS.md)
 │
 ├── docs/                             ← Tutorials and supporting docs
+│   ├── versioning-archive.md         ← CLAUDE.md §Versioning entries v1.0–v2.9, archived verbatim
 │   └── tutorials/                    ← Hands-on learning track + sample todo-CLI project
 │
 ├── bin/                              ← Sync tools (v2.2+)
@@ -218,7 +220,9 @@ New to the methodology? The **[tutorials](docs/tutorials/)** are a hands-on, pro
 │   ├── check-handoff                 ← Validate close-out receipts — newest, or --all (canonical-only)
 │   ├── check-learnings               ← Validate the Learnings table + its citations (canonical-only)
 │   ├── model-report                  ← Report self-reported model/tier attribution (canonical-only)
+│   ├── check-ledger                  ← Validate CHANGELOG.md's structure + archive shards (canonical-only)
 │   ├── _manifest.py                  ← Shared (src, dest, disposition) manifest — single source of truth
+│   ├── _manifest_reader.py           ← Reads a source's manifest as data for `--source=github` (never runs it)
 │   └── tests.sh                      ← Test suite for the bin/ tooling
 │
 └── tools/                            ← Portfolio-level tooling
@@ -238,7 +242,7 @@ The methodology framework describes WHAT to do and WHY. In practice, it needs an
 - **Mandatory orientation** — prevents starting work without understanding current state
 - **"1 and done" rule** — prevents scope creep and quality degradation
 - **Automatic close-out** — prevents skipping the self-improvement loop
-- **28 known failure modes** — documents agent tendencies with specific countermeasures
+- **29 known failure modes** — documents agent tendencies with specific countermeasures
 - **Degradation detection** — 17 warning signs that predict protocol erosion
 - **Handoff accountability** — ensures each session sets up the next for success
 
@@ -443,6 +447,45 @@ The framework buys reliability with your attention at fixed points. If your work
 Developed by Terrell Deppe (KJ5HST) using Claude Code (Anthropic) during development of a commercial software product. The methodology emerged organically from an initial 11-session design series, was codified into a reusable framework, and subsequently validated across 1100+ sessions of varied work.
 
 The framework is agent-independent — it works with any AI coding agent that supports persistent files and session-based interaction. It also works for human developers, though the Session Runner and known failure modes are specifically tuned for AI agent tendencies.
+
+### What's New in v4.1
+
+**Fan-out to many agents is now a named session shape: many hands, one closer, one writer per working tree.** Fanning out used to be safe but messy — two writers in one tree read each other's half-finished changes as defects, and two sessions running at once collided in the ledgers. This release implements the parallel-sessions plan ([#83](https://github.com/KJ5HST/methodology/pull/83)).
+
+- **The contract** — `ITERATIVE_METHODOLOGY.md` §Parallel Actors names two shapes. *One session, many hands*: one lead closes out, workers return content, the lead integrates one unit per checkpoint. *Many sessions, many closers*: concurrent sessions on their own branches or worktrees, tagged `S<N>-<seq>`, joined by a merge that is one action with one receipt. New **failure mode #29, "Shared-state interference"** (the count moves 28 → 29), a SAFEGUARDS rule — *one writer per working tree* — and Learning #17.
+- **The ledgers merge** — a new `.gitattributes` seed merges `CHANGELOG.md` by union, so two sessions' entries both survive. `HANDOFFS.md` is deliberately left out (union fuses two receipts into one block, measured); its conflicts resolve keep-both with `git merge-file --union --diff3`. GitHub's merge button ignores the driver ([#90](https://github.com/KJ5HST/methodology/pull/90), measured): merge locally. A new `bin/check-ledger` reads the result; `bin/check-handoff` now catches a fused receipt and accepts one live claim per line of sessions.
+- **The ledger gate refuses an edit to a committed entry** — a correction is a new entry.
+- **`context_budget.py --calibrate` works from a linked worktree.**
+- **Both shapes dogfooded** — the docs sweep ran as a fan-out of four read-only workers; two concurrent sessions ran in worktrees and were merged locally. The one defect they found is fixed.
+
+**Updating.** Re-run `bin/sync`. If your project already has a `.gitattributes`, sync leaves it alone — add the three lines `BOOTSTRAP.md` Step 10 gives. **Not yet:** `--source=github` using the source's own manifest is in review ([#91](https://github.com/KJ5HST/methodology/pull/91)).
+
+**No phase, quality gate, or workstream change; failure modes 28 → 29.** `bin/tests.sh` 215 → 243; declared gates 11 → 12; `bin/_manifest.py` 30 rows.
+
+### What's New in v4.0
+
+**The ledger rules get one synced home, and the routes that update an adopter stop endangering its ledgers.** Seven pull requests, merged together on 2026-10-01. A major version: **if you adopted an earlier version, there is one manual step** — see *Updating* below.
+
+- **One home for the `CHANGELOG.md` rules** ([#84](https://github.com/KJ5HST/methodology/pull/84)) — the rules lived *inside* the seed, and `bin/sync` writes a seed once and never again, so every correction stranded the copies adopters already had; restated across fourteen files, they had also come to contradict each other fifteen ways. They now live in `FRAMEWORK_APPARATUS.md` §The Action Ledger, which is distributed and kept current by sync. The seed shrinks from 12,893 B to a 1,335 B pointer carrying a format marker, `ledger-format: 2`; the `HANDOFFS.md` seed's size section carries `handoffs-format: 2`.
+- **The prose update route no longer wipes ledgers** ([#88](https://github.com/KJ5HST/methodology/pull/88)) — `BOOTSTRAP.md` §Without `bin/sync`, the route `README.md` gives every adopter, said only to overlay the starter-kit, and six of those files are seeds that hold your history (`CHANGELOG.md`, `HANDOFFS.md`, `SESSION_NOTES.md`, `ROADMAP.md`, `.context-budget.json`, `.quality-gates.json`). An agent following it literally would replace them with empty templates. Three rules now follow the instruction: overlay tracked files only, reconcile seeds by hand, verify with `bin/status`.
+- **`bin/sync --source=github` works** ([#87](https://github.com/KJ5HST/methodology/pull/87)) — it clones the repository, so a file that is merely behind upgrades without `--force` while a genuine local edit is still refused; the `gh` CLI is no longer needed (just `git` and network); a shallow or tarball source is named as the cause of a refusal instead of your files.
+- **The ledger gate stops switching itself off** ([#85](https://github.com/KJ5HST/methodology/pull/85)) — a `REBASE_HEAD` left behind by any stopped rebase made `.githooks/pre-commit` skip every later commit. Fixed, and the hook's own `--selftest` is now a quality gate.
+- **`context_budget.py --status` writes nothing** ([#86](https://github.com/KJ5HST/methodology/pull/86)) — it fell through to the default run, which appends to `.context-budget-history.jsonl` whenever a size changed; now `--status`/`--check` only measure, an unknown argument exits 3 with a hint instead of silently running, and the headline stops contradicting the table.
+- **Canonical-only:** a machine-dependent test now skips instead of failing ([#89](https://github.com/KJ5HST/methodology/pull/89)); the parallel-sessions plan lands as a draft with its decisions open ([#83](https://github.com/KJ5HST/methodology/pull/83)); `CLAUDE.md`'s v1.0–v2.9 release entries move verbatim to `docs/versioning-archive.md`.
+
+**Updating.** Re-run `bin/sync`, then `bin/status`. Because sync never overwrites a seed, an existing `CHANGELOG.md` or `HANDOFFS.md` will read `present (stale format)`; migrate it once by hand along the route the note prints. No entry or receipt is rewritten.
+
+**No principle, phase, gate, or workstream change. Failure modes stay 28; no new Learning.** `bin/tests.sh` **139 → 215**; quality gates **10 → 11**.
+
+### What's New in v3.8
+
+**The quality ratchet, the ledger trimmer and the read-on-demand siblings ship as distributed tools** (tagged 2026-09-30; these notes were deferred to v4.0).
+
+- **`quality_ratchet.py`** + seed `quality-gates.json` ([#82](https://github.com/KJ5HST/methodology/pull/82), plan [#81](https://github.com/KJ5HST/methodology/pull/81)) — quality thresholds declared in `.quality-gates.json` that only tighten. `--precommit` refuses a loosened or removed gate; `--run` measures every gate and prints the line a close-out receipt cites. With it: a `SAFEGUARDS.md` rule (loosening needs plan-mode approval, tightening never does), the flight-manual section *Mechanical Gates Bind Every Actor*, Audit anti-pattern #10 *Findings that stay prose*, and Learnings #15 and #16.
+- **`methodology_trim.py`** ([#80](https://github.com/KJ5HST/methodology/pull/80)) — archives the oldest records of a grow-and-must-be-read ledger (`CHANGELOG.md`, `HANDOFFS.md`), and refuses to write unless the reconstruction is provably lossless.
+- **Read-on-demand siblings** ([#80](https://github.com/KJ5HST/methodology/pull/80)) — `FRAMEWORK_APPARATUS.md` takes the flight manual's tables, tests and scoring scales so `ITERATIVE_METHODOLOGY.md` fits one read; `FRAMEWORK_LEARNINGS.md` takes the runner's Learnings table, synced read-only. `context_budget.py` gains token ceilings for the Phase 0 read set.
+
+**No principle, phase, gate, or workstream change; failure modes stay 28.** `bin/_manifest.py` 24 → 29 rows; `DASHBOARD_VERSION` 2.10.6 → 2.11.1; `bin/tests.sh` 114 → 139.
 
 ### What's New in v3.7
 

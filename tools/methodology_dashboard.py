@@ -119,6 +119,10 @@ DOC_EXTS = {".md", ".txt", ".rst", ".adoc", ".org", ".qmd", ".rmd"}
 CONFIG_FILES = {
     "Dockerfile", "Makefile", "CMakeLists.txt", "Rakefile", "Gemfile",
     "Procfile", "fly.toml", "netlify.toml", "vercel.json",
+    # Name-matched, not extension-matched: Path(".gitattributes").suffix is "" (a dotfile has no
+    # suffix), so CONFIG_EXTS can never see it. Distributed as a SEED since the parallel-sessions
+    # plan's Phase 1 (bin/_manifest.py), and categorized here so the installed-file tests hold.
+    ".gitattributes",
 }
 CONFIG_EXTS = {
     ".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf",
@@ -639,7 +643,9 @@ def categorize_file(rel_path, ext, name):
         return "source"
     if ext in DOC_EXTS or "docs/" in rel_str:
         return "docs"
-    if ext in CONFIG_EXTS or name in CONFIG_FILES:
+    # A dotfile has no Path.suffix, so the dotfile names CONFIG_EXTS lists (.gitignore, .editorconfig,
+    # .eslintrc, .prettierrc) can only match on the whole name — they never matched before 2.11.3.
+    if ext in CONFIG_EXTS or name in CONFIG_FILES or name.lower() in CONFIG_EXTS:
         return "config"
     if ext in ASSET_EXTS:
         return "assets"
