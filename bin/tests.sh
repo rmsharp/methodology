@@ -1589,21 +1589,26 @@ else
 fi
 echo "$OUT31" | grep -q "Claude Opus 5.1" && pass "the valid entry AFTER the malformed header still parsed (parser not wedged)" || fail "entry after the malformed header failed to parse"
 
-# Real-file proof: this repo's own live CHANGELOG.md carries exactly the multi-tag header BL-33
+# Real-file proof: this repo's own ledger carries exactly the multi-tag header BL-33
 # describes (`[BL-14][BL-17]`, CHANGELOG.md:378 at raise time) and no other unparsed `### ` lines --
 # so Source 1's reported count must equal the raw anchored **Model:** bullet count exactly, and no
-# WARNING should fire against real, well-formed data.
-OUT31_REAL="$("$BIN/model-report" --changelog "$METHODOLOGY/CHANGELOG.md" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
+# WARNING should fire against real, well-formed data. The ledger is the live file PLUS its frozen
+# shards (fork, BL-95 R2, as Test 30 above): read from the live file alone, this row compared 0 with
+# 0 once a trim left no bullet in it -- a pass that proved nothing.
+CL31_REAL="$(mktemp)"
+( cd "$METHODOLOGY" && cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') ) > "$CL31_REAL"
+OUT31_REAL="$("$BIN/model-report" --changelog "$CL31_REAL" --handoffs "$METHODOLOGY/HANDOFFS.md" --no-git 2>&1)"
 TOOL_COUNT="$(echo "$OUT31_REAL" | grep -c '^2026-\|^20[0-9][0-9]-')"
-RAW_COUNT="$(grep -cE '^-?[[:space:]]*\*\*Model:\*\*' "$METHODOLOGY/CHANGELOG.md")"
+RAW_COUNT="$(grep -cE '^-?[[:space:]]*\*\*Model:\*\*' "$CL31_REAL")"
+rm -f "$CL31_REAL"
 if [ "$TOOL_COUNT" = "$RAW_COUNT" ]; then
-    pass "Source 1's entry count ($TOOL_COUNT) matches the raw anchored **Model:** grep ($RAW_COUNT) against this repo's own live CHANGELOG.md"
+    pass "Source 1's entry count ($TOOL_COUNT) matches the raw anchored **Model:** grep ($RAW_COUNT) against this repo's own ledger (live file and shards)"
 else
     fail "Source 1's entry count ($TOOL_COUNT) still disagrees with the raw anchored **Model:** grep ($RAW_COUNT) -- BL-33 population gap unfixed"
 fi
 # A HERE-STRING, NOT A PIPE -- BL-43, same producer and same silent direction as Test 30's
 # sentinel check above: a WARNING printed early in a grown report would be scored as no match.
-grep -qi "WARNING" <<< "$OUT31_REAL" && fail "Source 1 raised a WARNING against this repo's own live, well-formed CHANGELOG.md" || pass "no false-positive WARNING against this repo's own live CHANGELOG.md"
+grep -qi "WARNING" <<< "$OUT31_REAL" && fail "Source 1 raised a WARNING against this repo's own well-formed ledger (live file and shards)" || pass "no false-positive WARNING against this repo's own ledger (live file and shards)"
 
 # ---------------------------------------------------------------------------
 # Tests 32-34 — structural invariants for the repo's OWN numbered sets (issue #65).
