@@ -237,6 +237,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-06-3.md` (1 record(s), 36,151 B → 25,945 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-06 → 2026-10-06) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-06-3.md`](docs/archive/HANDOFFS-through-2026-10-06-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-06-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-06-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 36,151 B → 25,945 B (−28.2%).
+
 ### 2026-10-06 · [BL-101] S274 — fork `main` pushed to `origin`: the ten S274 commits
 
 On his go-ahead at the close-out picker ("Push main to origin now"), `git push origin main` took `rmsharp/methodology` `main` from `d0f2775` to `ad5fd82`: a plain fast-forward (`origin/main` an ancestor of `main`, 0 behind, exactly ten ahead, a clean tree, each re-measured immediately before sending), no force, no other ref; nothing went to `KJ5HST/methodology`. **Read back** after a fresh fetch: `git rev-list --left-right --count origin/main...main` = `0 0`, `git ls-remote origin refs/heads/main` = `ad5fd82`. The ten commits: the `HANDOFFS.md` trim and its fold, the claim, the four P1 layers (resolver, fixtures, scanner, wiring and gate), the plan with its evidence, the backlog and CLAUDE.md update, the close-out. The S274 receipt's next-step (3) predicted `0 10` before this push; it now reads `0 0`. This recording commit, a `CHANGELOG.md`-only change, is pushed too under the standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
