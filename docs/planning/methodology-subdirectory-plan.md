@@ -2,8 +2,8 @@
 
 **Status: DRAFT, DECIDED. The plan is this session's (S273) deliverable; nothing in it is implemented.**
 **Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended:** D1 (a), D6
-(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 and P1 are
-done (P1 at S274, §7.1); P2 is next.**
+(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0, P1 and P2 are
+done (P1 at S274, §7.1; P2 at S275, §7.2a); P3 is next.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). Decisions
 D1-D3 in §9 gate Phase 1; D4-D9 gate the phase that uses them. §5A (syncing) was added at the
 operator's instruction during the session. **Declared budget: 60,000 B**, one agent
@@ -492,6 +492,33 @@ one-deliverable rule is the default.
 | **P4** | `context_budget.py` finds its config in either place; the checkers resolve the ledger | their suites; `check-*` gates exit 0 in both fixtures | fixtures. Cannot show an adopter's custom `files[]` |
 | **P5** | Dashboard (both copies, byte-identical) scores a new-layout fixture the same as the legacy one (115 of 115) and a half-migrated tree as a defect; **`--sync` resolves each target's layout and writes no root copy into a migrated project (C15)** | `tools/test_methodology_dashboard.py`; old and new scanners compared over the repos here that carry a manifest, as S272 did; `--sync --dry-run` over a scratch portfolio | fixtures and the repos here. Cannot show external adopters |
 | **P6** | `bin/sync --layout auto` refuses a legacy tree under the new layout (**C1: no blank seed, no duplicate runner**), ignore-mode entries, `bin/status` names the layout, `check-links` simulates both, the layout table is a second literal (C16); the scanner is wired into the gate at **zero** | the §5A.3 scratch-portfolio proofs; `bin/sync --dry-run` over the 12 adopters writes nothing and says so; Test 53 green with the new table | clones. Cannot show a sync from GitHub against a real remote (S218's route) |
+
+### 7.2a P2 — what was built (S275), and what it settled and left open
+
+**DONE.** `.githooks/pre-commit` reads where the ledger is from the **index** with git (the four-row table anchored on the ledger; the
+hook is sh and cannot call the Python block): either location is the gate, both tracked is refused naming both, and
+the never-edit check crosses a move (HEAD's copy is read from wherever HEAD kept the ledger). A trim may stage its shard under
+`docs/archive/` or `methodology/archive/`, ahead of P3 and D5. `quality_ratchet.py` 1.2.0 embeds the block (the layout suite asserts
+every copy, and that no other shipped tool carries the markers unlisted), reads the manifest from the index and HEAD at either
+path, walks the history of **both** paths, refuses a tree that holds it in both, and installs a hook that execs the tool at its
+twin in the other layout and fails loudly when it is nowhere. **X2 is permanent**: the hook's selftest (17 → 34 checks) and Test 54
+(15 assertions through the real hook and real git, both layouts, 5 controls). The scanner reads both tools at **0** (140 in all, was 177).
+
+**Measured before the change** (the old hook against Test 54: 11 of 15 red): X2 passed in the new layout, a loosened floor
+passed there, a move that lowers a floor passed, a move that rewrites a ledger entry passed, a half-migrated tree passed. Counts:
+75 ratchet tests (was 45), 65 layout tests (was 62), `bin/tests.sh` **462 / 0 / 6** at two receipts (468 / 0 / 0 at three); 44 mutants (12 + 16 + 14 over the two tools, 2 on the scanner pin), all killed in the end;
+4 survived first and named 3 missing tests. **A defect I shipped and the measure caught:** the hook layer left one `bin/tests.sh`
+assertion red (it grepped the hook for one literal line); no commit hook runs the suite, the two-receipt clone's gate run did.
+
+**Settled in P2, for the operator to overrule:** (1) a tree with the ledger in both places is **refused**, as §4.3 says, in the
+hook and in the ratchet. (2) The hook accepts both archive directories now. **Open, and the next phase to touch it should decide:**
+§4.1 says a root `CHANGELOG.md` becomes free for a project's own product changelog, but the table anchored on `CHANGELOG.md`
+reads that project as half-migrated, so its hook refuses every commit until `--no-verify`. The fix is a tiebreak the P1 resolver
+does not have: a project whose `SESSION_RUNNER.md` is under `methodology/` keeps its ledger there whatever sits at the root.
+
+**Not shown:** a hook armed in another clone (`core.hooksPath` is per clone; a hook installed before 1.2.0 still names one path,
+which is P7's list); a real adopter; an external adopter with its own `methodology/` directory (none of the 15 repositories under
+`~/Development` has one; the survey does not reach outside it); Python other than 3.10.12.
 
 ### 7.3 P7-P8 — the tool, then the rehearsal
 
