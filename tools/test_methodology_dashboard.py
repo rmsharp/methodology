@@ -6410,5 +6410,134 @@ class TestBL88P2TrimmerSourceProbe(unittest.TestCase):
                 self.assertFalse(any("HAS A REMEDY" in d for _, d in rows_by["declared"]))
 
 
+# === BL-101 P5: the dashboard understands both layouts (plan section 7.2, row P5; C8, C15) ===========
+#
+# A project keeps its methodology files at its root (legacy) or one level down in methodology/ (new);
+# tools/layout_resolver.py answers which. Every test below builds a real tree with tools/layout_fixtures.py,
+# in every shape the plan names (legacy, new, tier1, half, empty), puts a real git history under it, and
+# asserts a VALUE the dashboard computed: a score, a path, a risk row. Written RED-first (each class was
+# run against the unpatched dashboard before any change to it, and the layers below name what failed).
+
+_LF_SPEC = importlib.util.spec_from_file_location("layout_fixtures_under_test", os.path.join(HERE, "layout_fixtures.py"))
+lf = importlib.util.module_from_spec(_LF_SPEC)
+_LF_SPEC.loader.exec_module(lf)
+
+
+def layout_project(case, layout, *, contents=None, extra_commits=0, remove=(), extra=None, backlog=True,
+                   name="proj", archive=False, generated=False):
+    """A git repository holding the ``layout`` shape of the methodology's files (plus the project's own
+    BACKLOG.md, which the manifest does not distribute and the checklist scores). ``remove`` deletes
+    files from the tree before the first commit, ``extra`` adds {relative path: text}."""
+    td = tempfile.TemporaryDirectory()
+    case.addCleanup(td.cleanup)
+    p = Path(td.name) / name
+    lf.build_tree(p, layout, contents=contents, archive=archive, generated=generated)
+    if backlog:
+        (p / "BACKLOG.md").write_text("# Backlog\n", encoding="utf-8")
+    for rel in remove:
+        (p / rel).unlink()
+    for rel, text in (extra or {}).items():
+        (p / rel).parent.mkdir(parents=True, exist_ok=True)
+        (p / rel).write_text(text, encoding="utf-8")
+    subprocess.run(["git", "init", "-q", str(p)], check=True)
+    git = ["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t"]
+    subprocess.run(git + ["add", "-A"], check=True)
+    subprocess.run(git + ["commit", "-q", "-m", "init"], check=True)
+    for i in range(extra_commits):
+        subprocess.run(git + ["commit", "-q", "--allow-empty", "-m", "filler %d" % i], check=True)
+    return p
+
+
+def risk_texts(project):
+    return [(r["severity"], r["description"]) for r in md.collect_all(project)["scores"]["risks"]]
+
+
+class TestBL101P5Checklist(unittest.TestCase):
+    """C8: the compliance checklist, the adoption test and the role test read the project through the
+    resolver, so a project that moved its files scores what it scored before it moved."""
+
+    def test_a_complete_adopter_scores_the_full_checklist_in_every_layout(self):
+        for layout in ("legacy", "new", "tier1"):
+            with self.subTest(layout=layout):
+                m = md.collect_methodology_metrics(layout_project(self, layout))
+                self.assertEqual(m["compliance_score"], md.METHODOLOGY_MAX)
+                self.assertEqual(m["missing_files"], [])
+                self.assertEqual(m["compliance_pct"], 100)
+
+    def test_the_item_labels_are_the_same_names_in_every_layout(self):
+        # Portfolio aggregation, the JSON export and the card's glyph row all key on these names.
+        want = [item for item, _w, _k in md.METHODOLOGY_ITEMS]
+        for layout in ("legacy", "new", "tier1"):
+            with self.subTest(layout=layout):
+                m = md.collect_methodology_metrics(layout_project(self, layout))
+                self.assertEqual(list(m["items"]), want)
+
+    def test_a_missing_file_is_missing_in_the_layout_it_would_have_lived_in(self):
+        # The probe must not be satisfied by a file of the same name in the OTHER place's namesake path.
+        for layout, gone in (("legacy", "SAFEGUARDS.md"), ("new", "methodology/SAFEGUARDS.md"),
+                             ("tier1", "methodology/SAFEGUARDS.md")):
+            with self.subTest(layout=layout):
+                m = md.collect_methodology_metrics(layout_project(self, layout, remove=(gone,)))
+                self.assertEqual(m["missing_files"], ["SAFEGUARDS.md"])
+                self.assertEqual(m["compliance_score"], md.METHODOLOGY_MAX - 20)
+
+    def test_the_metrics_name_the_layout_they_read(self):
+        want = {"legacy": ("legacy", "."), "new": ("new", "methodology"), "tier1": ("new", "methodology"),
+                "empty": ("none", None)}
+        for layout, (kind, directory) in want.items():
+            with self.subTest(layout=layout):
+                lay = md.collect_methodology_metrics(layout_project(self, layout))["layout"]
+                self.assertEqual((lay["kind"], lay["directory"]), (kind, directory))
+
+    def test_a_half_migrated_tree_is_a_high_risk_naming_both_runners(self):
+        p = layout_project(self, "half")
+        lay = md.collect_methodology_metrics(p)["layout"]
+        self.assertEqual(lay["kind"], "half")
+        self.assertEqual(sorted(lay["found"]), ["SESSION_RUNNER.md", "methodology/SESSION_RUNNER.md"])
+        rows = [(s, d) for s, d in risk_texts(p) if "half-migrated" in d.lower()]
+        self.assertEqual(len(rows), 1, rows)
+        severity, text = rows[0]
+        self.assertEqual(severity, "high")
+        self.assertIn("methodology/SESSION_RUNNER.md", text)
+        self.assertIn(" SESSION_RUNNER.md", text.replace("methodology/SESSION_RUNNER.md", ""))
+
+    def test_a_half_migrated_tree_is_scored_for_what_is_there_not_zeroed(self):
+        # Never guess which copy is live: a file present at either place counts, and the risk row carries the defect.
+        m = md.collect_methodology_metrics(layout_project(self, "half"))
+        self.assertEqual(m["compliance_score"], md.METHODOLOGY_MAX)
+
+    def test_no_other_shape_raises_the_half_migrated_row(self):
+        for layout in ("legacy", "new", "tier1", "empty"):
+            with self.subTest(layout=layout):
+                rows = [d for _s, d in risk_texts(layout_project(self, layout)) if "half-migrated" in d.lower()]
+                self.assertEqual(rows, [])
+
+    def test_a_ledger_held_in_both_places_with_the_runner_at_the_root_is_half_migrated(self):
+        # The runner cannot decide a tie about a state file when the runner itself is at the root (plan 4.3).
+        p = layout_project(self, "legacy", extra={"methodology/CHANGELOG.md": "# a second ledger\n"})
+        lay = md.collect_methodology_metrics(p)["layout"]
+        self.assertEqual(lay["kind"], "half")
+        self.assertIn("methodology/CHANGELOG.md", lay["found"])
+
+    def test_an_adopter_that_moved_is_still_owed_a_ledger(self):
+        # The gate that notices a missing action ledger keyed on the root runner: in the new layout it went quiet.
+        for layout, gone in (("legacy", "CHANGELOG.md"), ("new", "methodology/CHANGELOG.md")):
+            with self.subTest(layout=layout):
+                p = layout_project(self, layout, remove=(gone,), extra_commits=md.LEDGER_REAL_HISTORY_MIN + 2)
+                rows = [d for _s, d in risk_texts(p) if "action ledger" in d]
+                self.assertEqual(len(rows), 1, rows)
+
+    def test_a_vendored_framework_is_still_an_adopter_when_its_runner_is_under_methodology(self):
+        # bin/_manifest.py + starter-kit/SESSION_RUNNER.md and NO root runner is how the PUBLISHER is recognised;
+        # a project that vendors those and installs its own runner under methodology/ is not the publisher.
+        vendored = {"bin/_manifest.py": "DISTRIBUTION = []\n", "starter-kit/SESSION_RUNNER.md": "# runner\n"}
+        for layout, role in (("legacy", "adopter"), ("new", "adopter")):
+            with self.subTest(layout=layout):
+                p = layout_project(self, layout, extra=vendored)
+                self.assertEqual(md.detect_repo_role(p)["role"], role)
+        publisher = layout_project(self, "empty", extra=vendored)
+        self.assertEqual(md.detect_repo_role(publisher)["role"], "framework")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

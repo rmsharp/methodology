@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-07 · [BL-101] S278 checkpoint, RED on purpose — layer 1: the checklist, the adoption test and the role test read the project through the resolver
+
+Layer 1 of BL-101 P5, tests first and RED on purpose: `tools/test_methodology_dashboard.py` gains `layout_project` (a real git repository holding any shape of `tools/layout_fixtures.py`, plus the project's own `BACKLOG.md`) and `TestBL101P5Checklist`, 10 tests over the checklist, the adoption test and the role test. Measured against the unpatched dashboard (2.21.0 plus the unused block): 12 failing subtests of the 10 tests (6 failures, 6 errors), each for the reason it names: a `new` and a `tier1` tree score short of `METHODOLOGY_MAX` and list files as missing; `collect_methodology_metrics` has no `layout` key (4 errors, one per shape); a half-migrated tree raises no risk row; a ledgerless adopter that moved is told nothing (the gate keyed on the root runner went quiet); a project that vendors `bin/_manifest.py` and `starter-kit/SESSION_RUNNER.md` and keeps its runner under `methodology/` is read as the publisher. The item-label, scored-for-what-is-there and no-other-shape-raises-the-row tests pass already and are regression locks. The suite is red between this commit and the next. Model: Claude Sonnet 5.5.
+
 ### 2026-10-07 · [BL-101] S278 — layer 0: the dashboard and its twin carry the resolver block
 
 Layer 0 of BL-101 P5: `starter-kit/methodology_dashboard.py` and its byte-identical twin `tools/methodology_dashboard.py` now carry the marked resolver block of `tools/layout_resolver.py` (after the imports, before the constants), byte for byte. Nothing in the dashboard calls it yet, so no output changes and `DASHBOARD_VERSION` stays 2.21.0. Measured green: `tools/test_layout_resolver.py` Ran 75, OK (the three red tests of the checkpoint before are green), `tools/test_methodology_dashboard.py` Ran 356, OK, `cmp` of the two copies identical. Model: Claude Sonnet 5.5.
