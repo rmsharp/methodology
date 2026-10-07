@@ -3377,9 +3377,16 @@ qr = importlib.util.module_from_spec(spec); spec.loader.exec_module(qr)
 cfg = json.load(open(root + "/.quality-gates.json"))
 sys.exit(0 if cfg["gates"] and not qr.config_defects(cfg) else 1)
 PY
-grep -q 'quality_ratchet.py" --precommit' "$METHODOLOGY/.githooks/pre-commit" \
+# The chain names the tool through variables since BL-101 P2 (it is found under starter-kit/, under
+# methodology/ or at the root), so the old one-line grep for the literal path no longer matches. What
+# the assertion means is: the hook runs the ratchet, names the tool, and does it BEFORE the ledger gate
+# (the order the label always claimed and the grep never checked). Test 54 runs the chain for real.
+HK54="$METHODOLOGY/.githooks/pre-commit"
+CHAIN54="$(grep -nF 'python3 "$top/$ratchet" --precommit' "$HK54" | head -1 | cut -d: -f1)"
+GATE54="$(grep -n '^staged=\$(git diff --cached' "$HK54" | head -1 | cut -d: -f1)"
+[ -n "$CHAIN54" ] && [ -n "$GATE54" ] && [ "$CHAIN54" -lt "$GATE54" ] && grep -q '^rtool=quality_ratchet.py' "$HK54" \
     && pass ".githooks/pre-commit chains the quality ratchet before the ledger gate" \
-    || fail ".githooks/pre-commit does not run quality_ratchet.py --precommit"
+    || fail ".githooks/pre-commit does not run the ratchet before the ledger gate (chain line [$CHAIN54], gate line [$GATE54])"
 
 # D9: check-handoff's gate-run citation lint, observed silent / failing / passing.
 P="$(mktemp -d)"
