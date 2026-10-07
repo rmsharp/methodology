@@ -1841,5 +1841,160 @@ class TestReserveIdentity(unittest.TestCase):
             self.assertIn("config defect", re.sub(r"\x1b\[[0-9;]*m", "", p.stdout))
 
 
+
+NEW_DIR = "methodology"
+NEW_CONFIG = NEW_DIR + "/" + cb.CONFIG_NAME        # layout: the new layout's path of the config
+NEW_HISTORY = NEW_DIR + "/" + cb.HISTORY_NAME      # layout: the history file lives beside the config
+
+
+class TestTheConfigMayLiveInEitherLayout(unittest.TestCase):
+    """BL-101 P4 (plan 4.3, C9, 7.2b): a project keeps its budget config at its root (legacy) or under
+    methodology/ (new), and the tool reads the resolver's table with the config as the anchor. The
+    config's files[] paths stay relative to the PROJECT root in both layouts (bin/migrate-layout, P7,
+    rewrites them); only where the config and its history file sit moves. A root config beside a
+    methodology/ one is the project's own when the runner is tracked under methodology/ (S276's picker)."""
+
+    CFG = {"classes": {"resident": {"total_bytes": 34000}},
+           "files": [{"path": "CLAUDE.md", "class": "resident", "max_bytes": 100000}]}
+
+    def _project(self, d, config_at, cfg=None, runner=None):
+        new_repo(d)
+        Path(d, config_at).parent.mkdir(parents=True, exist_ok=True)
+        Path(d, config_at).write_text(json.dumps(cfg or self.CFG))
+        Path(d, "CLAUDE.md").write_text("x" * 999 + "\n")
+        if runner:
+            Path(d, runner).parent.mkdir(parents=True, exist_ok=True)
+            Path(d, runner).write_text("runner\n")
+        git(d, "add", "-A"); git(d, "commit", "-q", "-m", "baseline")
+
+    def _run(self, d, *args, cwd=None):
+        return subprocess.run([sys.executable, str(CB_PY), *args], cwd=cwd or d, capture_output=True, text=True)
+
+    def test_config_location_reads_the_four_rows_and_the_tie(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(cb.config_location(d), ("none", None))
+            Path(d, cb.CONFIG_NAME).write_text("{}")
+            self.assertEqual(cb.config_location(d), ("legacy", cb.CONFIG_NAME))
+            Path(d, cb.CONFIG_NAME).unlink()
+            Path(d, NEW_CONFIG).parent.mkdir(); Path(d, NEW_CONFIG).write_text("{}")
+            self.assertEqual(cb.config_location(d), ("new", NEW_CONFIG))
+            Path(d, cb.CONFIG_NAME).write_text("{}")
+            self.assertEqual(cb.config_location(d), ("half", None))              # no runner: refused
+            Path(d, NEW_DIR, "SESSION_RUNNER.md").write_text("runner\n")
+            self.assertEqual(cb.config_location(d), ("new", NEW_CONFIG))        # the runner decides
+            Path(d, "SESSION_RUNNER.md").write_text("runner\n")
+            self.assertEqual(cb.config_location(d), ("half", None))              # a runner in both decides nothing
+
+    def test_find_root_from_inside_methodology_is_the_project_and_not_that_directory(self):
+        with tempfile.TemporaryDirectory() as td:
+            d = os.path.realpath(td)
+            self._project(d, NEW_CONFIG)
+            sub = os.path.join(d, "src", "deep"); os.makedirs(sub)
+            self.assertEqual(os.path.realpath(cb.find_root(d)), d)
+            self.assertEqual(os.path.realpath(cb.find_root(sub)), d)
+            self.assertEqual(os.path.realpath(cb.find_root(os.path.join(d, NEW_DIR))), d,
+                             "run from methodology/ itself, the project is its parent, which git names")
+
+    def test_the_cli_measures_the_same_project_in_either_layout(self):
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            self._project(a, cb.CONFIG_NAME); self._project(b, NEW_CONFIG)
+            old = self._run(a, "--status", "--json"); new = self._run(b, "--status", "--json")
+            self.assertEqual(new.returncode, old.returncode, new.stdout + new.stderr)
+            self.assertEqual(json.loads(new.stdout)["files"], json.loads(old.stdout)["files"])
+            self.assertEqual(json.loads(old.stdout)["files"][0]["bytes"], 1000, "fixture: the file is measured")
+
+    def test_the_history_is_written_beside_the_config(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d, NEW_CONFIG)
+            self._run(d)
+            self.assertTrue(Path(d, NEW_HISTORY).exists(), "the growth run's history sits beside the config")
+            self.assertFalse(Path(d, cb.HISTORY_NAME).exists(), "nothing is written at the root")
+
+    def test_the_legacy_layout_still_writes_its_history_at_the_root(self):
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d, cb.CONFIG_NAME)
+            self._run(d)
+            self.assertTrue(Path(d, cb.HISTORY_NAME).exists())
+            self.assertFalse(Path(d, NEW_HISTORY).exists())
+
+    def test_a_tree_holding_both_configs_with_no_deciding_runner_is_refused_naming_both(self):
+        for runner in (None, "SESSION_RUNNER.md"):
+            with self.subTest(runner=runner), tempfile.TemporaryDirectory() as d:
+                self._project(d, cb.CONFIG_NAME, runner=runner)
+                Path(d, NEW_CONFIG).parent.mkdir(exist_ok=True); Path(d, NEW_CONFIG).write_text(json.dumps(self.CFG))
+                git(d, "add", "-A"); git(d, "commit", "-q", "-m", "both")
+                p = self._run(d)
+                out = re.sub(r"\x1b\[[0-9;]*m", "", p.stdout)
+                self.assertEqual(p.returncode, cb.USAGE, out)
+                self.assertIn(cb.CONFIG_NAME, out); self.assertIn(NEW_CONFIG, out)
+                self.assertFalse(Path(d, cb.HISTORY_NAME).exists() or Path(d, NEW_HISTORY).exists())
+
+    def test_a_tie_the_runner_decides_reads_the_methodology_config_and_leaves_the_root_one_alone(self):
+        tight = {"files": [{"path": "CLAUDE.md", "class": "resident", "max_bytes": 10}]}   # would BREACH if read
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d, NEW_CONFIG, runner=NEW_DIR + "/SESSION_RUNNER.md")
+            Path(d, cb.CONFIG_NAME).write_text(json.dumps(tight))
+            git(d, "add", "-A"); git(d, "commit", "-q", "-m", "the user's own config at the root")
+            p = self._run(d)
+            self.assertEqual(p.returncode, cb.CLEAN, p.stdout + p.stderr)
+            self.assertTrue(Path(d, NEW_HISTORY).exists())
+            self.assertFalse(Path(d, cb.HISTORY_NAME).exists())
+
+    def _pair_repo(self, d, config_at):
+        cfg = {"classes": {"pair": {"total_bytes": 1000}},
+               "files": [{"path": "A.md", "class": "pair"}, {"path": "B.md", "class": "pair"}]}
+        new_repo(d)
+        Path(d, config_at).parent.mkdir(parents=True, exist_ok=True)
+        Path(d, config_at).write_text(json.dumps(cfg))
+        Path(d, "A.md").write_text("a" * 600); Path(d, "B.md").write_text("b" * 600)
+        git(d, "add", "-A"); git(d, "commit", "-q", "-m", "base")      # the class is over its ceiling: 1,200 > 1,000
+        return cfg
+
+    def _reclass(self, cfg):
+        """B leaves the class; A grows to 1,100, still over the ceiling but smaller than HEAD's 1,200."""
+        out = json.loads(json.dumps(cfg)); out["files"][1]["class"] = "other"
+        return out
+
+    def test_precommit_takes_its_baseline_from_a_head_config_that_lives_under_methodology(self):
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._pair_repo(d, NEW_CONFIG)
+            new = self._reclass(cfg)
+            Path(d, NEW_CONFIG).write_text(json.dumps(new)); Path(d, "A.md").write_text("a" * 1100)
+            git(d, "add", "-A")
+            self.assertEqual(cb.precommit(d, new), cb.CLEAN,
+                             "HEAD's own declaration is the baseline, wherever HEAD kept it (a member that "
+                             "leaves the class must not read as growth)")
+
+    def test_precommit_takes_its_baseline_across_a_move_of_the_config(self):
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._pair_repo(d, cb.CONFIG_NAME)
+            os.makedirs(os.path.join(d, NEW_DIR)); git(d, "mv", cb.CONFIG_NAME, NEW_CONFIG)
+            new = self._reclass(cfg)
+            Path(d, NEW_CONFIG).write_text(json.dumps(new)); Path(d, "A.md").write_text("a" * 1100)
+            git(d, "add", "-A")
+            self.assertEqual(cb.precommit(d, new), cb.CLEAN)
+
+    def test_precommit_still_refuses_growth_in_the_new_layout(self):
+        with tempfile.TemporaryDirectory() as d:
+            cfg = self._pair_repo(d, NEW_CONFIG)
+            Path(d, "A.md").write_text("a" * 900); git(d, "add", "-A")           # 1,500 against HEAD's 1,200
+            self.assertEqual(cb.precommit(d, cfg), cb.BREACH)
+
+    def test_the_installed_hook_still_finds_the_tool_after_the_methodology_files_move(self):
+        import shutil
+        with tempfile.TemporaryDirectory() as d:
+            self._project(d, cb.CONFIG_NAME)
+            shutil.copy(CB_PY, os.path.join(d, "context_budget.py"))
+            p = subprocess.run([sys.executable, os.path.join(d, "context_budget.py"), "install-hook"],
+                               cwd=d, capture_output=True, text=True)
+            self.assertEqual(p.returncode, cb.CLEAN, p.stdout + p.stderr)
+            os.makedirs(os.path.join(d, NEW_DIR))
+            git(d, "mv", "context_budget.py", NEW_DIR + "/context_budget.py"); git(d, "mv", cb.CONFIG_NAME, NEW_CONFIG)
+            Path(d, "other.txt").write_text("y\n"); git(d, "add", "-A")
+            c = subprocess.run(["git", "-C", d, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "move"],
+                               capture_output=True, text=True)
+            self.assertEqual(c.returncode, 0, c.stdout + c.stderr)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=1)
