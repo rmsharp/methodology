@@ -1,0 +1,35 @@
+tool: methodology_trim.py v1.8.0
+scratch tree: ledgers under methodology/, shards expected under methodology/archive/
+
+== methodology/HANDOFFS.md (keep 1 records) ==
+[L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+[L2_OK] zones pinned; front-matter diff confined to declared changes
+[L3_OK] 3 record(s) partitioned; every one byte-identical across the move
+[DRY_RUN] would archive 2 of 3 record(s) (2026-10-06 → 2026-10-06) to methodology/archive/HANDOFFS-through-2026-10-06-5.md; live 27,815 B → 6,305 B. Nothing written �
+[L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+[L2_OK] zones pinned; front-matter diff confined to declared changes
+[L3_OK] 3 record(s) partitioned; every one byte-identical across the move
+[P1A_OK] ledger gained exactly one entry (130 → 131)
+[WROTE] archived 2 record(s) to methodology/archive/HANDOFFS-through-2026-10-06-5.md; live 27,815 B → 6,305 B
+shard: methodology/archive/HANDOFFS-through-2026-10-06-5.md (22534 B), rebased links in it: 1, back link: (../HANDOFFS.md)
+files written outside methodology/: 0
+proof exit: before the commit 0, after it 0, from a --no-local clone 0; --reverify 0
+OK: L1, L2/front-matter, L3 hold for methodology/archive/HANDOFFS-through-2026-10-06-5.md
+
+== methodology/CHANGELOG.md (keep 100 records) ==
+[L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+[L2_OK] zones pinned; front-matter diff confined to declared changes
+[L3_OK] 131 record(s) partitioned; every one byte-identical across the move
+[DRY_RUN] would archive 31 of 131 record(s) (2026-10-05 → 2026-10-05) to methodology/archive/CHANGELOG-through-2026-10-05.md; live 167,867 B → 136,500 B. Nothing writ
+[L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+[L2_OK] zones pinned; front-matter diff confined to declared changes
+[L3_OK] 131 record(s) partitioned; every one byte-identical across the move
+[P1A_OK] ledger gained exactly one entry (100 → 101)
+[WROTE] archived 31 record(s) to methodology/archive/CHANGELOG-through-2026-10-05.md; live 167,867 B → 136,500 B
+shard: methodology/archive/CHANGELOG-through-2026-10-05.md (33245 B), rebased links in it: 13, back link: (../CHANGELOG.md)
+files written outside methodology/: 0
+proof exit: before the commit 0, after it 0, from a --no-local clone 0; --reverify 0
+OK: L1, L2/front-matter, L3 hold for methodology/archive/CHANGELOG-through-2026-10-05.md
+
+ledger entries written into methodology/CHANGELOG.md by the two trims: 2
+a root CHANGELOG.md or HANDOFFS.md appeared: 0
