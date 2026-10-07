@@ -521,6 +521,227 @@ class TestTheManifestMayLiveInEitherLayout(unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join(self.d, "methodology", qr.DEFAULT_RESULTS)))
 
 
+class _Repo(unittest.TestCase):
+    """A throwaway repository holding a legacy manifest (cov >= 80) at its root, committed."""
+
+    def setUp(self):
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        self.d = os.path.realpath(td.name)
+        _git(self.d, "init", "-q")
+        _git(self.d, "config", "user.email", "t@t")
+        _git(self.d, "config", "user.name", "t")
+        _put(self.d, LEGACY_CONFIG, manifest(gate("cov", "min", 80)))
+        _git(self.d, "add", "-A"); _git(self.d, "commit", "-q", "-m", "base")
+
+    def _commit(self, msg="c"):
+        _git(self.d, "add", "-A"); _git(self.d, "commit", "-q", "--no-verify", "-m", msg)
+
+    def _move(self, cfg=None):
+        """git mv the manifest under methodology/, optionally rewriting it, all staged."""
+        os.makedirs(os.path.join(self.d, "methodology"), exist_ok=True)
+        _git(self.d, "mv", LEGACY_CONFIG, NEW_CONFIG)
+        if cfg is not None:
+            _put(self.d, NEW_CONFIG, cfg)
+            _git(self.d, "add", NEW_CONFIG)
+
+    def _precommit(self):
+        import contextlib, io
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = qr.precommit(self.d)
+        return rc, buf.getvalue()
+
+
+class TestPrecommitAcrossTheMove(_Repo):
+    """BL-101 P2, plan C4. A move that reads as 'manifest removed' is refused for the wrong reason,
+    a base search that stops at the move cannot see a loosening made inside it, and a manifest at
+    the new path that nothing looks for is a ratchet that fails OPEN."""
+
+    def test_a_pure_move_of_the_manifest_passes(self):
+        self._move()
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.CLEAN, out)
+
+    def test_a_move_that_lowers_a_floor_is_refused_and_names_the_change(self):
+        self._move(manifest(gate("cov", "min", 70)))
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("floor lowered 80 -> 70", out)
+
+    def test_a_move_that_tightens_passes(self):
+        self._move(manifest(gate("cov", "min", 90)))
+        self.assertEqual(self._precommit()[0], qr.CLEAN)
+
+    def test_a_move_that_adds_a_gate_passes(self):
+        self._move(manifest(gate("cov", "min", 80), gate("new", "max", 0)))
+        self.assertEqual(self._precommit()[0], qr.CLEAN)
+
+    def test_a_move_that_drops_a_gate_is_refused(self):
+        self._move(manifest(gate("other", "min", 1)))
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("gate 'cov' removed", out)   # the gate, not 'manifest removed': the file moved
+
+    def test_a_loosening_at_the_new_path_after_the_move_commit_is_refused(self):
+        # The fail-open C4 measured: once the manifest is under methodology/ a ratchet that looks
+        # only at the root finds nothing staged and nothing at HEAD, and passes every loosening.
+        self._move(); self._commit("move")
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 70))); _git(self.d, "add", NEW_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("floor lowered 80 -> 70", out)
+
+    def test_a_tightening_at_the_new_path_after_the_move_commit_passes(self):
+        self._move(); self._commit("move")
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 95))); _git(self.d, "add", NEW_CONFIG)
+        self.assertEqual(self._precommit()[0], qr.CLEAN)
+
+    def test_the_base_is_found_across_the_move_when_the_head_copy_is_unusable(self):
+        # The history walk must not stop at the move: A declared 90 at the root, the move commit
+        # (bypassed) emptied the gates at the new path, and re-adding 80 is a loosening against A.
+        _put(self.d, LEGACY_CONFIG, manifest(gate("cov", "min", 90))); self._commit("tighten to 90")
+        self._move(manifest()); self._commit("move and empty")
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 80))); _git(self.d, "add", NEW_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("floor lowered 90 -> 80", out)
+        self.assertIn("comparing against", out)   # the base came from further back than HEAD, and says so
+
+    def test_the_base_is_the_newest_declaration_at_either_path(self):
+        # After the move the history of the OLD path ends at the move. A walk that names only that
+        # path never sees the tightening made later at the new one, so a loosening back to a value
+        # between the two would pass.
+        self._move(); self._commit("move")
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 95))); self._commit("tighten at the new path")
+        _put(self.d, NEW_CONFIG, manifest()); self._commit("empty it (bypassed)")
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 92))); _git(self.d, "add", NEW_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("floor lowered 95 -> 92", out)
+
+    def test_a_commit_that_held_both_layouts_is_neither_a_base_nor_a_head_copy(self):
+        # A bypassed commit left the manifest in both places, the legacy copy lower than the truth.
+        # Reading either copy as "the" manifest would hand the ratchet a weaker base; the commit is
+        # skipped like an unparseable one, and HEAD's copy is not trusted either (the note says so).
+        _put(self.d, LEGACY_CONFIG, manifest(gate("cov", "min", 60)))
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 70))); self._commit("both, bypassed")
+        _git(self.d, "rm", "-q", LEGACY_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("floor lowered 80 -> 70", out)   # the base is the last unambiguous declaration
+        self.assertIn("comparing against", out)
+
+    def test_removing_the_manifest_at_the_new_path_is_refused(self):
+        self._move(); self._commit("move")
+        _git(self.d, "rm", "-q", NEW_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("manifest removed", out)
+
+    def test_both_locations_in_the_index_is_half_migrated_and_refused_naming_both(self):
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 80))); _git(self.d, "add", NEW_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("half-migrated", out)
+        self.assertIn(LEGACY_CONFIG, out); self.assertIn(NEW_CONFIG, out)
+
+    def test_a_manifest_first_committed_under_methodology_has_nothing_to_compare(self):
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        d = os.path.realpath(td.name)
+        _git(d, "init", "-q"); _git(d, "config", "user.email", "t@t"); _git(d, "config", "user.name", "t")
+        _put(d, NEW_CONFIG, manifest(gate("cov", "min", 80))); _git(d, "add", "-A")
+        import contextlib, io
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = qr.precommit(d)
+        self.assertEqual(rc, qr.CLEAN)
+        self.assertIn("first manifest commit", buf.getvalue())
+
+    def test_a_defective_manifest_at_the_new_path_is_refused(self):
+        self._move(); self._commit("move")
+        _put(self.d, NEW_CONFIG, '{"gates": "nope"}'); _git(self.d, "add", NEW_CONFIG)
+        self.assertEqual(self._precommit()[0], qr.REFUSED)
+
+    def test_the_cli_judges_a_move_from_a_subdirectory_by_the_index(self):
+        self._move(manifest(gate("cov", "min", 70)))
+        sub = os.path.join(self.d, "src"); os.makedirs(sub)
+        p = subprocess.run([PY, str(STARTER), "--precommit"], cwd=sub, capture_output=True, text=True)
+        self.assertEqual(p.returncode, qr.REFUSED, p.stdout + p.stderr)
+        self.assertIn("floor lowered 80 -> 70", p.stdout)
+
+
+class TestTheInstalledHookAcrossTheMove(_Repo):
+    """The hook install-hook writes execs the tool by path. After a move that path is wrong, which
+    refuses every commit loudly (C4); the hook now also looks for the tool in the other layout."""
+
+    def _install(self, tool_rel):
+        import shutil
+        dst = os.path.join(self.d, *tool_rel.split("/"))
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copy(STARTER, dst)
+        _git(self.d, "add", "-A"); _git(self.d, "commit", "-q", "--no-verify", "-m", "add the tool")
+        p = subprocess.run([PY, dst, "install-hook"], cwd=self.d, capture_output=True, text=True)
+        self.assertEqual(p.returncode, qr.CLEAN, p.stdout + p.stderr)
+        return open(os.path.join(self.d, ".git", "hooks", "pre-commit")).read()
+
+    def _commit_hooked(self, msg="c"):
+        _git(self.d, "add", "-A")
+        return subprocess.run(["git", "-C", self.d, "commit", "-q", "-m", msg], capture_output=True, text=True)
+
+    def test_install_from_the_new_layout_names_that_copy_and_its_twin(self):
+        self._move(); self._commit("move the manifest")
+        hook = self._install("methodology/quality_ratchet.py")
+        self.assertIn("methodology/quality_ratchet.py", hook)
+        self.assertIn('"quality_ratchet.py"', hook, "the twin in the other layout")
+
+    def test_a_canonical_style_path_has_no_twin(self):
+        loop = [l for l in qr.hook_text("starter-kit/quality_ratchet.py").splitlines() if l.startswith("for t in ")]
+        self.assertEqual(loop, ['for t in "starter-kit/quality_ratchet.py"; do'])
+
+    def test_each_layout_names_the_other_as_its_twin(self):
+        self.assertEqual(qr.layout_twin("quality_ratchet.py"), "methodology/quality_ratchet.py")
+        self.assertEqual(qr.layout_twin("methodology/quality_ratchet.py"), "quality_ratchet.py")
+        self.assertIsNone(qr.layout_twin("starter-kit/quality_ratchet.py"))
+        self.assertIsNone(qr.layout_twin("tools/methodology/quality_ratchet.py"))
+
+    def test_the_hook_from_the_new_layout_refuses_a_loosening_and_passes_a_tightening(self):
+        self._move(); self._commit("move the manifest")
+        self._install("methodology/quality_ratchet.py")
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 70)))
+        p = self._commit_hooked("loosen")
+        self.assertNotEqual(p.returncode, 0, p.stdout + p.stderr)
+        self.assertIn("floor lowered 80 -> 70", p.stdout + p.stderr)
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 85)))
+        self.assertEqual(self._commit_hooked("tighten").returncode, 0)
+
+    def test_the_hook_finds_the_tool_after_it_moves_to_the_other_layout(self):
+        self._install("quality_ratchet.py")
+        os.makedirs(os.path.join(self.d, "methodology"))
+        _git(self.d, "mv", LEGACY_CONFIG, NEW_CONFIG)
+        _git(self.d, "mv", "quality_ratchet.py", "methodology/quality_ratchet.py")
+        p = self._commit_hooked("the pure move")
+        self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+
+    def test_a_move_that_loosens_is_refused_end_to_end_by_the_moved_tool(self):
+        self._install("quality_ratchet.py")
+        os.makedirs(os.path.join(self.d, "methodology"))
+        _git(self.d, "mv", LEGACY_CONFIG, NEW_CONFIG)
+        _git(self.d, "mv", "quality_ratchet.py", "methodology/quality_ratchet.py")
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 70)))
+        p = self._commit_hooked("the move that loosens")
+        self.assertNotEqual(p.returncode, 0, p.stdout + p.stderr)
+        self.assertIn("floor lowered 80 -> 70", p.stdout + p.stderr)
+
+    def test_a_hook_whose_tool_is_nowhere_fails_loudly_and_says_what_to_do(self):
+        self._install("quality_ratchet.py")
+        os.remove(os.path.join(self.d, "quality_ratchet.py"))
+        _put(self.d, "unrelated.txt")
+        p = self._commit_hooked("no tool")
+        self.assertNotEqual(p.returncode, 0, "a missing tool must refuse, never pass silently")
+        self.assertIn("not found", p.stdout + p.stderr)
+        self.assertIn("install-hook", p.stdout + p.stderr)
+
+
 class TestToolInvariants(unittest.TestCase):
     def test_no_force_escape_hatch(self):
         src = STARTER.read_text(encoding="utf-8")

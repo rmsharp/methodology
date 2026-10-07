@@ -195,21 +195,39 @@ def blob_text(root, rev_path):
 HISTORY_MAX = 50   # manifest commits walked back from HEAD for the comparison base
 
 
+def manifest_blobs(root, ref):
+    """[(path, text)] of the manifest at every location it exists in ``ref`` -- a revision, or ""
+    for the index. One entry is the normal answer; two is a half-migrated tree (the caller refuses);
+    none is no manifest there. Read from git, never the worktree: a hook judges what is staged."""
+    out = []
+    for rel in (CONFIG_NAME, f"{NEW_DIR}/{CONFIG_NAME}"):
+        text = blob_text(root, f"{ref}:{rel}")
+        if text is not None:
+            out.append((rel, text))
+    return out
+
+
 def newest_committed(root):
     """(cfg, sha) of the newest PARSEABLE, defect-free manifest in HEAD's history of the file
     THAT DECLARES AT LEAST ONE GATE, or (None, None) if none was ever committed. A commit
-    that deleted the file, one whose copy does not parse, and one whose gate list is empty
-    (a bypassed emptying, or the seed adopters receive) are all skipped rather than read as
-    a fresh start: the base is what was last declared, and only a tightening moves it."""
-    rc, out, _ = run(["git", "log", "--format=%H", f"--max-count={HISTORY_MAX}", "--", CONFIG_NAME],
-                     cwd=root)
+    that deleted the file, one whose copy does not parse, one whose gate list is empty
+    (a bypassed emptying, or the seed adopters receive) and one that holds the manifest in BOTH
+    layouts are all skipped rather than read as a fresh start: the base is what was last
+    declared, and only a tightening moves it.
+
+    The walk names both paths, so it does not stop at the commit that moved the manifest: a
+    base read from the old path alone ends at the move, and a threshold lowered INSIDE the move
+    commit would be compared against nothing (plan C4)."""
+    rc, out, _ = run(["git", "log", "--format=%H", f"--max-count={HISTORY_MAX}", "--",
+                      CONFIG_NAME, f"{NEW_DIR}/{CONFIG_NAME}"], cwd=root)
     if rc != 0:
         return None, None
     for sha in out.split():
-        text = blob_text(root, f"{sha}:{CONFIG_NAME}")
-        if text is None:
+        blobs = manifest_blobs(root, sha)
+        if len(blobs) != 1:
             continue
-        cfg, defects = load_manifest_text(text, f"{sha[:7]} {CONFIG_NAME}")
+        rel, text = blobs[0]
+        cfg, defects = load_manifest_text(text, f"{sha[:7]} {rel}")
         if cfg is not None and not defects and gate_map(cfg):
             return cfg, sha[:7]
     return None, None
@@ -267,12 +285,24 @@ BYPASS_COST = """\
     history shows the loosening and the dashboard reports it as a risk."""
 
 
+HALF_COST = """\
+  · Bypass once: git commit --no-verify — recorded, not exempt: the manifest's git history
+    shows the commit and the dashboard reports it."""
+
+
 def precommit(root):
-    staged = blob_text(root, f":{CONFIG_NAME}")
+    staged_blobs = manifest_blobs(root, "")
+    if len(staged_blobs) > 1:
+        print(f"{RED}{B}quality-ratchet: REFUSED — half-migrated: this commit's index holds the manifest "
+              f"at {CONFIG_NAME} AND at {NEW_DIR}/{CONFIG_NAME}{R}")
+        print(f"  {RED}✗ the ratchet will not guess which one is the manifest — finish or revert the move{R}")
+        print(HALF_COST)
+        return REFUSED
+    staged = staged_blobs[0][1] if staged_blobs else None
     if staged is None:
         # Not in the index. Either it was never here / already removed at HEAD (nothing to
         # ratchet -- a branch that opted out must not be locked), or this commit REMOVES it.
-        if blob_text(root, f"HEAD:{CONFIG_NAME}") is None:
+        if not manifest_blobs(root, "HEAD"):
             return CLEAN
         old_cfg, sha = newest_committed(root)
         gone = gate_map(old_cfg) if old_cfg else {}
@@ -283,7 +313,7 @@ def precommit(root):
         print(f"  {RED}✗ removing the manifest is the loosest loosening there is{R}")
         print(BYPASS_COST)
         return REFUSED
-    new_cfg, defects = load_manifest_text(staged, "staged " + CONFIG_NAME)
+    new_cfg, defects = load_manifest_text(staged, "staged " + staged_blobs[0][0])
     if new_cfg is None or defects:
         for m in defects:
             print(f"{RED}quality-ratchet: config defect — {m}{R}")
@@ -294,7 +324,8 @@ def precommit(root):
         print(f"{D}quality-ratchet: first manifest commit ({len(new_cfg['gates'])} gate(s)) — "
               f"nothing to compare against{R}")
         return CLEAN
-    head_copy = blob_text(root, f"HEAD:{CONFIG_NAME}")
+    head_blobs = manifest_blobs(root, "HEAD")
+    head_copy = head_blobs[0][1] if len(head_blobs) == 1 else None   # absent, or ambiguous
     head_cfg = load_manifest_text(head_copy, "HEAD")[0] if head_copy is not None else None
     if head_copy is None or not gate_map(head_cfg or {}):
         print(f"{D}quality-ratchet: comparing against {sha}, the newest committed manifest that "
@@ -445,17 +476,38 @@ def do_status(root, cfg, as_json=False):
 # === HOOK ===
 
 HOOK = """#!/bin/sh
-# installed by quality_ratchet.py — refuses a commit that LOOSENS a declared quality
-# threshold in .quality-gates.json, or removes the manifest. Tightening and adding pass.
-exec python3 "$(git rev-parse --show-toplevel)/{tool}" --precommit
+# installed by this tool — refuses a commit that LOOSENS a declared quality threshold in the
+# manifest, or removes it. Tightening and adding pass. The tool is looked for where it was
+# installed and at its twin in the other layout (the root, or methodology/), so a project that
+# moves its methodology files does not leave a hook that cannot find it.
+top=$(git rev-parse --show-toplevel)
+for t in {tools}; do
+    if [ -f "$top/$t" ]; then
+        exec python3 "$top/$t" --precommit
+    fi
+done
+echo "quality-ratchet: {name} not found under $top (looked for: {tools}) -- refusing, not passing." >&2
+echo "  Re-run the tool's install-hook from where it now lives." >&2
+exit 2
 """
 
 
+def layout_twin(rel):
+    """The same file in the other layout (root <-> methodology/), or None for a path in neither:
+    the canonical repo keeps the tool under starter-kit/, which has no twin."""
+    head, _, base = rel.rpartition("/")
+    if head == "":
+        return f"{NEW_DIR}/{base}"
+    return base if head == NEW_DIR else None
+
+
 def hook_text(tool_relpath):
-    """The hook execs the copy that installed it. Adopters hold the tool at the root; the
-    canonical repo under starter-kit/ — a hook that assumed the root broke every commit
-    in a fresh clone of the latter (PR #82 review, section 4)."""
-    return HOOK.format(tool=tool_relpath.replace(os.sep, "/"))
+    """The hook execs the copy that installed it, then that copy's twin in the other layout.
+    Adopters hold the tool at the root; the canonical repo under starter-kit/ — a hook that assumed
+    the root broke every commit in a fresh clone of the latter (PR #82 review, section 4)."""
+    rel = tool_relpath.replace(os.sep, "/")
+    tools = " ".join(f'"{t}"' for t in (rel, layout_twin(rel)) if t)
+    return HOOK.format(tools=tools, name=rel.rpartition("/")[2])
 
 
 def install_hook(root):
@@ -581,6 +633,19 @@ def selftest():
         run(["git", "-C", d, "add", CONFIG_NAME])
         rc, _, _ = run(["git", "-C", d, "commit", "-q", "-m", "re-add as it was"])
         check("re-adding it at or above the removed thresholds passes", rc == 0)
+        # the manifest may live under methodology/: a move is judged on what it declares, in either place
+        newp = f"{NEW_DIR}/{CONFIG_NAME}"
+        os.makedirs(os.path.join(d, NEW_DIR))
+        run(["git", "-C", d, "mv", CONFIG_NAME, newp])
+        json.dump(loosened, open(os.path.join(d, newp), "w")); run(["git", "-C", d, "add", newp])
+        rc, out, err = run(["git", "-C", d, "commit", "-q", "-m", "move and loosen"])
+        check("a move that loosens a threshold is refused", rc != 0 and "floor lowered" in out + err)
+        json.dump(tightened, open(os.path.join(d, newp), "w")); run(["git", "-C", d, "add", newp])
+        rc, _, _ = run(["git", "-C", d, "commit", "-q", "-m", "pure move"])
+        check("a pure move of the manifest passes", rc == 0)
+        json.dump(loosened, open(os.path.join(d, newp), "w")); run(["git", "-C", d, "add", newp])
+        rc, out, err = run(["git", "-C", d, "commit", "-q", "-m", "loosen at the new path"])
+        check("a loosening at the new path is refused", rc != 0 and "REFUSED" in out + err)
     if fails:
         print(f"\n{RED}selftest: {len(fails)} of {len(fails) + passed[0]} checks FAILED{R}")
         return REFUSED
