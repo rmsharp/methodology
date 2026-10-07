@@ -114,11 +114,12 @@ for name in want:
         git(d, "config", "user.name", "t")
         git(d, "config", "commit.gpgsign", "false")
     n_moved = 0
-    for _src, dest, _disp in manifest.DISTRIBUTION:
+    for src_, dest, _disp in manifest.DISTRIBUTION:
         if (moved / dest).is_file():
-            target = moved / lf.new_path(dest)
+            new_dest = manifest.NEW_LAYOUT[src_]   # the manifest's table (P6); the helper this used to call is gone
+            target = moved / new_dest
             target.parent.mkdir(parents=True, exist_ok=True)
-            git(moved, "mv", dest, lf.new_path(dest))
+            git(moved, "mv", dest, new_dest)
             n_moved += 1
     git(moved, "-c", "core.hooksPath=/dev/null", "commit", "-q", "--allow-empty", "-m", "move the methodology files under methodology/")
     moved_dirs[name] = moved
