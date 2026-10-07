@@ -2506,11 +2506,13 @@ class TestFmtRatioAndTwins(unittest.TestCase):
         2.11.x line, is described in git: `git log -S'2.18.0'` on this file.) 2.20.0 is the 2026-10
         resync (BL-95, D5): the `.gitattributes` seed becomes installed content -- changed output
         on a distributed tool, so MINOR. 2.21.0 is BL-99: the manifest-history walk is first-parent,
-        so a merged lineage no longer prints loosenings nobody caused -- changed output, so MINOR."""
-        self.assertEqual(md.DASHBOARD_VERSION, "2.21.0")
+        so a merged lineage no longer prints loosenings nobody caused -- changed output, so MINOR.
+        2.22.0 is BL-101 P5: the dashboard reads a project that keeps its methodology files under
+        methodology/ as it reads one that keeps them at the root -- changed output, so MINOR."""
+        self.assertEqual(md.DASHBOARD_VERSION, "2.22.0")
         starter_src = Path(STARTER_PY).read_text(encoding="utf-8")
-        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.21\.0"', starter_src, re.MULTILINE),
-                        "starter-kit twin must also declare DASHBOARD_VERSION 2.21.0")
+        self.assertTrue(re.search(r'^DASHBOARD_VERSION\s*=\s*"2\.22\.0"', starter_src, re.MULTILINE),
+                        "starter-kit twin must also declare DASHBOARD_VERSION 2.22.0")
 
     # NOTE: upstream's `TestCliRemedyProportionality` (issue #67 / PR #73) is deliberately not
     # merged here -- this fork's own, earlier issue-#67 fix (S62) took a different, more general

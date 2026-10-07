@@ -115,6 +115,12 @@ def resolve_layout(root, anchor="SESSION_RUNNER.md"):
 # A's severity there (P2). Changed output on a distributed tool: MINOR. Fork-only -- upstream's line
 # continues from 2.11.1, so the two stay apart until a dashboard PR reconciles them. (2.18.0, the
 # resync's merge of upstream's 2.11.x line, is described in git: `git log -S'2.18.0'` on this file.)
+# 2.22.0: BL-101 P5 (docs/planning/methodology-subdirectory-plan.md, section 7.2). The dashboard reads a
+# project that keeps its methodology files under methodology/ exactly as it reads one that keeps them at
+# the root: the checklist items keep their names and are LOCATED through the layout resolver, a project
+# whose runner is under methodology/ is still an adopter, and a half-migrated tree (the runner at both
+# places, or a state file at both with nothing to decide) is a HIGH risk that names both paths. Changed
+# output on a distributed tool: MINOR.
 # 2.21.0: BL-99. The manifest-history walk reads the FIRST-PARENT line (`_gate_manifest_history`):
 # a repo that had merged a lineage with a different manifest printed "floor lowered" / "gate
 # removed" rows nobody caused (9 of the 10 on this fork after the 2026-10 resync) and could miss a
@@ -125,7 +131,7 @@ def resolve_layout(root, anchor="SESSION_RUNNER.md"):
 # and signature set in _FRAMEWORK_INSTALLED_CONTENT. Changed output on a distributed tool: MINOR.
 # Fork-only -- upstream's line continues from 2.11.3, so the two stay apart until a dashboard PR
 # reconciles them.
-DASHBOARD_VERSION = "2.21.0"
+DASHBOARD_VERSION = "2.22.0"
 
 ROOT = Path(__file__).parent
 # `"methodology"` was here and is deliberately gone (plan D4(c)): the scanner was structurally
@@ -927,6 +933,94 @@ FRAMEWORK_SEED_DOCS = (
     "HANDOFFS.md",
     "ROADMAP.md",
 )
+
+# === LAYOUT (BL-101 P5; docs/planning/methodology-subdirectory-plan.md sections 4.1 and 4.3) ===========
+#
+# A project keeps its methodology files at its root (legacy) or one level down in methodology/ (new), and
+# resolve_layout (the marked block near the top) answers which, from ONE anchor file the caller chooses:
+# the framework's own files resolve through the runner, and a state file (a ledger, the notes, a config)
+# through ITSELF, because the plan's tier 1 moves the first group and leaves the second at the root. Every
+# name in this scanner's tables stays the LEGACY name (SESSION_RUNNER.md, docs/methodology/...): the card,
+# the JSON export, the portfolio grid and the history all key on them. What changes is where a name is
+# LOOKED FOR, in layout_locations() below, and a name found in a layout it does not belong to (the
+# project's own root CHANGELOG.md, beside the framework's under methodology/) is the project's own and is
+# never read as the framework's: the resolver's tie rule, decided for every tool at S276.
+NEW_LAYOUT_DIR = "methodology"  # layout: ok -- the directory a migrated project keeps its methodology files in (plan 4.1)
+RUNNER_NAME = "SESSION_RUNNER.md"  # layout: ok -- the framework anchor the resolver reads: where it is tracked decides the layout
+
+# The state files, each its own anchor: the seeded ledgers and notes, and the three seeded configs.
+LAYOUT_STATE_NAMES = FRAMEWORK_SEED_DOCS + (".context-budget.json", ".quality-gates.json", ".gitattributes")
+
+# Every legacy-relative name the layout moves: the 30 destinations of bin/_manifest.py, derived from the
+# tables above (a canonical test compares them to the manifest) plus the two directories the checklist scores.
+LAYOUT_MOVED = (frozenset(FRAMEWORK_INSTALLED_DOCS) | frozenset(LAYOUT_STATE_NAMES)
+                | frozenset(FRAMEWORK_INSTALLED_SOURCE)
+                | frozenset(("docs/methodology", "docs/methodology/workstreams")))  # layout: ok -- the checklist's directory items, by their legacy names
+
+
+def new_layout_rel(rel):
+    """Where a legacy-relative methodology name lands in the new layout: flat under methodology/, with
+    workstreams/ the one subdirectory, and docs/methodology/ dropped (plan decision D2)."""
+    if rel == "docs/methodology":
+        return NEW_LAYOUT_DIR
+    if rel.startswith("docs/methodology/"):
+        rel = rel[len("docs/methodology/"):]
+    return NEW_LAYOUT_DIR + "/" + rel
+
+
+def layout_anchor(rel):
+    """The file whose location decides where `rel` lives: a state file is its own anchor, every other
+    methodology file follows the runner (plan 4.3)."""
+    return rel if rel in LAYOUT_STATE_NAMES else RUNNER_NAME
+
+
+def layout_locations(path, rel):
+    """Where the methodology file known by its legacy-relative name `rel` lives in the project at
+    `path`: one Path, or two in a half-migrated tree (a file at either place counts, and the risk row
+    carries the defect: never guess which copy is live). A name the layout does not move is read where it is."""
+    if rel not in LAYOUT_MOVED:
+        return [path / rel]
+    kind = resolve_layout(path, layout_anchor(rel))[0]
+    if kind == "new":
+        return [path / new_layout_rel(rel)]
+    if kind == "half":
+        return [path / rel, path / new_layout_rel(rel)]
+    return [path / rel]
+
+
+def has_runner(path):
+    """Whether the project holds a runner at either place: the adoption test, which used to ask the root alone."""
+    return bool(resolve_layout(path, RUNNER_NAME)[2])
+
+
+def _relative_names(path, found):
+    out = []
+    for f in found:
+        try:
+            out.append(Path(f).relative_to(path).as_posix())
+        except ValueError:
+            out.append(Path(f).name)
+    return out
+
+
+def project_layout(path):
+    """{"kind", "directory", "found"} for a project: kind is new | legacy | half | none, directory "." or
+    "methodology" (None for the last two), found the relative paths that settled it. The runner decides;
+    a state file held at both places with no runner under methodology/ to break the tie also makes the
+    project half-migrated, and that is named by the state file's own two paths."""
+    kind, directory, found = resolve_layout(path, RUNNER_NAME)
+    if kind != "half":
+        for name in LAYOUT_STATE_NAMES:
+            k, _d, f = resolve_layout(path, name)
+            if k == "half":
+                kind, directory, found = "half", None, f
+                break
+    where = None
+    if directory is not None:
+        where = "." if Path(directory) == Path(path) else NEW_LAYOUT_DIR
+    # Where the action ledger lives, or would: its own anchor decides (tier 1 leaves it at the root).
+    ledger = (NEW_LAYOUT_DIR + "/" if resolve_layout(path, "CHANGELOG.md")[0] == "new" else "") + "CHANGELOG.md"
+    return {"kind": kind, "directory": where, "found": _relative_names(path, found), "ledger": ledger}
 
 
 def is_framework_installed(rel_path, fpath):
@@ -2180,7 +2274,7 @@ def evaluate_changelog_freshness(path, git):
     # deliberately narrow — an EMPTY backlog reports a silent, correct 0 rather than abstaining,
     # because telling an adopter who is simply up to date that its "format was not recognized"
     # would itself be a signal that does not mean what it appears to mean.
-    adopter = (path / "SESSION_RUNNER.md").is_file()
+    adopter = has_runner(path)
     if adopter and result["backlog_done_unmigrated"] > 0:
         result["signals"].append((
             "low",
@@ -2335,7 +2429,7 @@ def collect_trim_metrics(path, files, role="adopter"):
     # Same gate as the D4(b) risk: a project that never adopted the methodology is not told its
     # CHANGELOG.md is too long. Bound here rather than at risk time so the collector's output is
     # already scoped when assess_risks re-emits it verbatim.
-    owes_ledger = (path / "SESSION_RUNNER.md").is_file() or role == "framework"
+    owes_ledger = has_runner(path) or role == "framework"
     if not owes_ledger:
         return result
 
@@ -2511,10 +2605,13 @@ def collect_methodology_metrics(path, role="adopter"):
     # One existence probe per item: the weighted score, the present/missing counts and the
     # per-item map are all derived from this single map (they were previously three separate
     # loops over the same paths, each re-hitting the filesystem).
+    #
+    # BL-101 P5: an ADOPTER's items are located through the layout (the names stay the legacy ones);
+    # the FRAMEWORK's items are the publisher's own tree, which is never in the new layout.
     items = {}
     for item_path, weight, kind in checklist:
-        full_path = path / item_path
-        items[item_path] = full_path.is_dir() if kind == "dir" else full_path.exists()
+        locations = [path / item_path] if role == "framework" else layout_locations(path, item_path)
+        items[item_path] = any(loc.is_dir() if kind == "dir" else loc.exists() for loc in locations)
 
     score = sum(weight for item_path, weight, _ in checklist if items[item_path])
 
@@ -2530,6 +2627,8 @@ def collect_methodology_metrics(path, role="adopter"):
         "compliance_pct": checklist_pct(score, maximum),
         "missing_files": [item_path for item_path, present in items.items() if not present],
         "items": items,
+        # BL-101 P5: which layout this project is in, and the paths that settled it (additive).
+        "layout": project_layout(path),
     }
 
 
@@ -3201,7 +3300,7 @@ def detect_repo_role(path):
 
     publishes = (path / "bin" / "_manifest.py").is_file()
     templates = (path / "starter-kit" / "SESSION_RUNNER.md").is_file()
-    installed = (path / "SESSION_RUNNER.md").is_file()
+    installed = has_runner(path)
     if publishes and templates and not installed:
         return {"role": "framework", "reason": reason or "structural"}
     return {"role": "adopter", "reason": reason or "default"}
@@ -3565,6 +3664,13 @@ def assess_risks(metrics):
     # for every framework repo — silently, with no test failing. That is the same
     # unreachable-signal defect this campaign was opened to close, and it would have landed on
     # the one repo that dogfoods the ledger rule it publishes.
+    lay = metrics["methodology"].get("layout") or {}
+    if lay.get("kind") == "half":
+        # Never guess which copy is live: the tools refuse a half-migrated tree and name both (plan 4.3).
+        risks.append({"severity": "high",
+                      "description": "Half-migrated methodology layout: " + " and ".join(lay["found"])
+                                     + " both exist and nothing says which is live, so the tools refuse "
+                                       "to guess (BL-101). Move or remove one copy"})
     cl = metrics.get("changelog", {})
     owes_ledger = (metrics["methodology"]["items"].get("SESSION_RUNNER.md", False)
                    or role == "framework")
@@ -3572,9 +3678,11 @@ def assess_risks(metrics):
         # The finding is identical; only the noun changes. Calling a publisher an "adopter" would
         # be the same category error this layer exists to remove from the score above.
         who = "Methodology framework repo" if role == "framework" else "Methodology adopter"
+        # Named where the ledger would live: a project that moved its state files keeps it under methodology/.
+        ledger = (metrics["methodology"].get("layout") or {}).get("ledger", "CHANGELOG.md")
+        lead = "root CHANGELOG.md" if ledger == "CHANGELOG.md" else ledger
         risks.append({"severity": "medium",
-                      "description": f"{who} has commit history but no root "
-                                     "CHANGELOG.md action ledger (Component C)"})
+                      "description": f"{who} has commit history but no {lead} action ledger (Component C)"})
     for sev, desc in cl.get("signals", []):
         risks.append({"severity": sev, "description": desc})
 
