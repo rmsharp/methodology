@@ -52,8 +52,7 @@ REPO = "KJ5HST/methodology"
 # repository in bin/tests.sh). Anything `git clone` accepts: a URL or a path.
 SOURCE_URL_ENV = "METHODOLOGY_SOURCE_URL"
 LAYOUTS = ("auto", "legacy", "new")
-# The tool that moves a project from the legacy layout to the new one is BL-101 phase P7 and does not exist
-# yet, so a refusal that names it says so. P7 deletes the clause with the test that pins it.
+# The tool that moves a project from the legacy layout to the new one (BL-101 phase P7): a dry run unless --apply.
 MIGRATE_TOOL = "bin/migrate-layout"
 
 
@@ -374,7 +373,7 @@ def choose_layout(project: Path, requested: str) -> tuple:
             return None, "", [f"  ERROR: this project keeps its methodology files at its root (found {where}); --layout new would write",
                               "  a second set under methodology/, with a second runner beside the one an agent reads.",
                               "",
-                              f"  Nothing was written. Move the project with {MIGRATE_TOOL} (not built yet: BL-101 phase P7),",
+                              f"  Nothing was written. Move the project with {MIGRATE_TOOL} (a dry run until --apply),",
                               "  or sync without --layout, which keeps a project in the layout it has."]
         return None, "", [f"  ERROR: this project keeps its methodology files under methodology/ (found {where}); --layout legacy would",
                           "  write a second set at its root, with a second runner beside the one an agent reads.",

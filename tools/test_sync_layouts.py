@@ -392,7 +392,8 @@ class TestSyncRefusesWhatWouldDamageAProject(Scratch):
         d = self.project("legacy")
         r = self.refused(d, "--layout", "new", names=("migrate-layout",))
         self.assertFalse((d / "methodology").exists())
-        self.assertIn("not built", r.out)  # the tool is P7's: a refusal must not send anyone to a command that does not exist yet
+        self.assertNotIn("not built", r.out)  # P7 built the tool: a refusal names a command that exists, without a caveat
+        self.assertTrue((REPO / "bin" / "migrate-layout").is_file())
         self.refused(d, "--layout", "new", "--dry-run")
 
     def test_a_migrated_project_asked_for_the_legacy_layout_is_refused_and_no_root_runner_appears(self):
