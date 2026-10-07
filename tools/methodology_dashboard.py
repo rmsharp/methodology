@@ -2709,12 +2709,14 @@ def collect_methodology_metrics(path, role="adopter"):
     # per-item map are all derived from this single map (they were previously three separate
     # loops over the same paths, each re-hitting the filesystem).
     #
-    # BL-101 P5: an ADOPTER's items are located through the layout (the names stay the legacy ones);
-    # the FRAMEWORK's items are the publisher's own tree, which is never in the new layout.
+    # BL-101 P5: items are located through the layout (the names stay the legacy ones). For the PUBLISHER
+    # that moves exactly its own CHANGELOG.md and HANDOFFS.md, the instance files it operates; its sources
+    # (ITERATIVE_METHODOLOGY.md, workstreams/, bin/, starter-kit/) are not in LAYOUT_MOVED under those
+    # names and are read where they are, so the same call serves both checklists.
     items = {}
     for item_path, weight, kind in checklist:
-        locations = [path / item_path] if role == "framework" else layout_locations(path, item_path)
-        items[item_path] = any(loc.is_dir() if kind == "dir" else loc.exists() for loc in locations)
+        items[item_path] = any(loc.is_dir() if kind == "dir" else loc.exists()
+                               for loc in layout_locations(path, item_path))
 
     score = sum(weight for item_path, weight, _ in checklist if items[item_path])
 

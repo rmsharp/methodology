@@ -6928,5 +6928,45 @@ class TestBL101P5Gates(unittest.TestCase):
         self.assertEqual([(l["name"], l["kind"]) for l in m["loosened"]], [("suite", "removed")])
 
 
+class TestBL101P5TheFrameworkRepoItself(unittest.TestCase):
+    """The PUBLISHER's checklist asks whether the repo OPERATES what it publishes: its own CHANGELOG.md and
+    HANDOFFS.md. When this repository's own instance files move (the plan's P8 rehearsal and G-B), those two
+    are under methodology/ while its sources (ITERATIVE_METHODOLOGY.md, workstreams/, bin/, starter-kit/)
+    stay where they are; the framework checklist must follow the first and not the second."""
+
+    def _framework(self, moved):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name) / "framework"
+        full_framework_tree(p)
+        if moved:
+            (p / "methodology").mkdir()
+            for name in ("CHANGELOG.md", "HANDOFFS.md"):
+                (p / name).rename(p / "methodology" / name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        git = ["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t"]
+        subprocess.run(git + ["add", "-A"], check=True)
+        subprocess.run(git + ["commit", "-q", "-m", "init"], check=True)
+        for i in range(md.LEDGER_REAL_HISTORY_MIN + 2):
+            subprocess.run(git + ["commit", "-q", "--allow-empty", "-m", "filler %d" % i], check=True)
+        return p
+
+    def test_the_framework_checklist_scores_the_same_with_its_ledgers_moved(self):
+        for moved in (False, True):
+            with self.subTest(moved=moved):
+                m = md.collect_methodology_metrics(self._framework(moved), role="framework")
+                self.assertEqual(m["compliance_score"], md.FRAMEWORK_MAX)
+                self.assertEqual(m["missing_files"], [])
+
+    def test_a_moved_framework_ledger_is_not_reported_missing_and_the_card_agrees(self):
+        for moved in (False, True):
+            with self.subTest(moved=moved):
+                p = self._framework(moved)
+                m = md.collect_all(p)
+                self.assertEqual(m["methodology"]["role"], "framework")
+                self.assertTrue(m["changelog"]["ledger_present"])
+                self.assertEqual([d for _s, d in risk_texts(p) if "action ledger" in d], [])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
