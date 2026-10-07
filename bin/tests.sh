@@ -4422,6 +4422,38 @@ printf 'two\n' > "$U/tracked.txt"; t54_entry "$U/methodology/CHANGELOG.md"; t54_
     || fail "tie with two runners: exit $RC54, wanted 1 naming both: $OUT54"
 rm -rf "$U"
 
+# A manifest tie (BL-101 P4, decided 2026-10-07 at the S276 picker, plan 7.2b): the tie rule is not
+# opt-in. A project whose runner is tracked under methodology/ keeps its ratchet manifest there; a
+# .quality-gates.json at the root is the project's own and the chain leaves it alone. A tie the runner
+# cannot decide (the runner at the root, or at both) is still refused by the ratchet, naming both.
+t54_mtie() { # $1 where the runner is tracked: methodology | root | both; a root manifest of someone else's
+    local u; u="$(t54_repo new "$HOOK54")"
+    t54_floor "$u/.quality-gates.json" 10
+    case "$1" in methodology|both) printf 'runner\n' > "$u/methodology/SESSION_RUNNER.md" ;; esac
+    case "$1" in root|both) printf 'runner\n' > "$u/SESSION_RUNNER.md" ;; esac
+    git -C "$u" add -A; git -C "$u" commit -q --no-verify -m mtie
+    echo "$u"
+}
+U="$(t54_mtie methodology)"
+t54_floor "$U/methodology/.quality-gates.json" 70; t54_entry "$U/methodology/CHANGELOG.md"; t54_try "$U"
+[ "$RC54" != 0 ] && grep -qF "floor lowered 80 -> 70" <<< "$OUT54" && ! grep -qF "half-migrated" <<< "$OUT54" \
+    && pass "a manifest tie the framework anchor decides: a loosened methodology/ floor is refused for the loosening, not as half-migrated" \
+    || fail "manifest tie decided by the anchor: exit $RC54, wanted a refusal naming 'floor lowered 80 -> 70' and not half-migrated; got: $OUT54"
+rm -rf "$U"
+U="$(t54_mtie methodology)"
+t54_floor "$U/.quality-gates.json" 5; t54_entry "$U/methodology/CHANGELOG.md"; t54_try "$U"
+[ "$RC54" = 0 ] && pass "a manifest tie the framework anchor decides: a change to the root manifest, which is someone else's, passes" \
+    || fail "manifest tie decided by the anchor: a root manifest edit was refused (exit $RC54): $OUT54"
+rm -rf "$U"
+for W54 in root both; do
+    U="$(t54_mtie "$W54")"
+    t54_floor "$U/methodology/.quality-gates.json" 85; t54_entry "$U/methodology/CHANGELOG.md"; t54_try "$U"
+    [ "$RC54" != 0 ] && grep -qF "half-migrated" <<< "$OUT54" && grep -qF "methodology/.quality-gates.json" <<< "$OUT54" \
+        && pass "a manifest tie the anchor cannot decide (runner tracked: $W54) is refused, naming both" \
+        || fail "manifest tie, runner tracked $W54: exit $RC54, wanted a half-migrated refusal naming both; got: $OUT54"
+    rm -rf "$U"
+done
+
 # CONTROLS: each assertion above must be able to fail. Mutate a COPY of the hook, never the live one.
 M54="$(mktemp)"; chmod +x "$M54"
 t54_mutant() { # $1 what, $2 python expression, $3 the selftest probe that must go red ('' = none, a git scenario instead)

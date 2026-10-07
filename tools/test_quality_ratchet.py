@@ -520,6 +520,26 @@ class TestTheManifestMayLiveInEitherLayout(unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join(self.d, qr.DEFAULT_RESULTS)))
         self.assertFalse(os.path.exists(os.path.join(self.d, "methodology", qr.DEFAULT_RESULTS)))
 
+    def test_manifest_location_decides_a_tie_by_the_framework_anchor(self):
+        # S276's picker (plan 7.2b): a project whose runner is under methodology/ keeps its manifest
+        # there, and a manifest at the root is the project's own, which the ratchet does not read.
+        _put(self.d, LEGACY_CONFIG, manifest()); _put(self.d, NEW_CONFIG, manifest())
+        self.assertEqual(qr.manifest_location(self.d), ("half", None))        # no runner: still refused
+        _put(self.d, "methodology/SESSION_RUNNER.md", "runner\n")
+        self.assertEqual(qr.manifest_location(self.d), ("new", NEW_CONFIG))
+        _put(self.d, "SESSION_RUNNER.md", "runner\n")
+        self.assertEqual(qr.manifest_location(self.d), ("half", None))        # a runner in both places decides nothing
+
+    def test_a_tie_the_anchor_decides_runs_the_methodology_manifest_and_leaves_the_root_one_alone(self):
+        _put(self.d, LEGACY_CONFIG, manifest(gate("users-own", "max", 0, command=f'"{PY}" -c "raise SystemExit(1)"')))
+        _put(self.d, NEW_CONFIG, manifest(gate("ok", "max", 0, command=f'"{PY}" -c "pass"')))
+        _put(self.d, "methodology/SESSION_RUNNER.md", "runner\n")
+        p = self._cli("--run")
+        self.assertEqual(p.returncode, qr.CLEAN, p.stdout + p.stderr)
+        self.assertNotIn("users-own", p.stdout)
+        self.assertTrue(os.path.exists(os.path.join(self.d, "methodology", qr.DEFAULT_RESULTS)))
+        self.assertFalse(os.path.exists(os.path.join(self.d, qr.DEFAULT_RESULTS)), "nothing is written beside the user's file")
+
 
 class _Repo(unittest.TestCase):
     """A throwaway repository holding a legacy manifest (cov >= 80) at its root, committed."""
@@ -644,6 +664,58 @@ class TestPrecommitAcrossTheMove(_Repo):
         self.assertEqual(rc, qr.REFUSED, out)
         self.assertIn("half-migrated", out)
         self.assertIn(LEGACY_CONFIG, out); self.assertIn(NEW_CONFIG, out)
+
+    def _tie(self, root_floor=10, new_floor=80, runner="methodology"):
+        """Commit a manifest at BOTH paths (the root one is lower: it is somebody else's) and a runner
+        tracked under methodology/, at the root, at both, or nowhere."""
+        _put(self.d, LEGACY_CONFIG, manifest(gate("cov", "min", root_floor)))
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", new_floor)))
+        if runner in ("methodology", "both"):
+            _put(self.d, "methodology/SESSION_RUNNER.md", "runner\n")
+        if runner in ("root", "both"):
+            _put(self.d, "SESSION_RUNNER.md", "runner\n")
+        self._commit("a manifest in both places")
+
+    def test_a_tie_the_runner_decides_judges_the_methodology_manifest_and_not_the_root_one(self):
+        # S276's picker: the ratchet works inside methodology/. A loosening there is refused for the
+        # loosening (not as "half-migrated"); a change to the root file, which is the user's, is not judged.
+        self._tie()
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 70))); _git(self.d, "add", NEW_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("floor lowered 80 -> 70", out)
+        self.assertNotIn("half-migrated", out)
+        _git(self.d, "reset", "-q", "--", NEW_CONFIG); _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 80)))
+        _put(self.d, LEGACY_CONFIG, manifest(gate("cov", "min", 1))); _git(self.d, "add", LEGACY_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.CLEAN, out)
+
+    def test_a_tie_the_runner_decides_takes_its_base_from_the_methodology_copy(self):
+        self._tie(root_floor=95, new_floor=90)
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 85))); _git(self.d, "add", NEW_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("floor lowered 90 -> 85", out)   # not against the root file's 95
+
+    def test_a_tie_the_runner_cannot_decide_is_still_refused_naming_both(self):
+        for runner in ("root", "both", None):
+            with self.subTest(runner=runner):
+                self.setUp()
+                self._tie(runner=runner)
+                _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 85))); _git(self.d, "add", NEW_CONFIG)
+                rc, out = self._precommit()
+                self.assertEqual(rc, qr.REFUSED, out)
+                self.assertIn("half-migrated", out)
+                self.assertIn(LEGACY_CONFIG, out); self.assertIn(NEW_CONFIG, out)
+
+    def test_a_runner_that_is_on_disk_but_not_tracked_decides_nothing(self):
+        # The hook reads the INDEX; so does this. A runner in the worktree that was never added is not an anchor.
+        self._tie(runner=None)
+        _put(self.d, "methodology/SESSION_RUNNER.md", "runner\n")
+        _put(self.d, NEW_CONFIG, manifest(gate("cov", "min", 85))); _git(self.d, "add", NEW_CONFIG)
+        rc, out = self._precommit()
+        self.assertEqual(rc, qr.REFUSED, out)
+        self.assertIn("half-migrated", out)
 
     def test_a_manifest_first_committed_under_methodology_has_nothing_to_compare(self):
         td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
