@@ -52,12 +52,40 @@ import json
 import os
 import sys
 
+# === LAYOUT ===
+# A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+# section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+
+# --- layout resolver: BEGIN ---
+import os as _os
+from pathlib import Path as _Path
+
+
+def resolve_layout(root, anchor="SESSION_RUNNER.md"):
+    """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
+    found the anchor paths that exist. A half-migrated tree has no directory, by design.
+    A file found in both places is the framework's under methodology/ when the runner is under
+    methodology/ and not at the root: the root copy is the project's own and is left alone, kind new,
+    and found still names both. Any other tie stays half, and the runner cannot decide a tie about itself."""
+    root = _Path(root)
+    new, old = root / "methodology" / anchor, root / anchor
+    found = tuple(p for p in (new, old) if _os.path.isfile(p))
+    if len(found) == 2:
+        if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md") and not _os.path.isfile(root / "SESSION_RUNNER.md"):
+            return "new", new.parent, found
+        return "half", None, found
+    if not found:
+        return "none", None, ()
+    return ("new", new.parent, found) if found[0] == new else ("legacy", root, found)
+# --- layout resolver: END ---
+
 # The class this tool reports on. `bin/tests.sh` Test 44's kill control flips this
 # single literal on a COPY of this file to prove its equality assertions can fail,
 # so keep it one literal with this name.
 CLASS = "read-set"
 
-CONFIG_NAME = ".context-budget.json"
+CONFIG_NAME = ".context-budget.json"  # layout: ok -- the config's own name; where it lives is resolved below
+NEW_DIR = "methodology"
 
 # Mirrors starter-kit/context_budget.py:68 — the FLOOR of a measured 2.2705-3.0300
 # B/token band, used ONLY when neither the file nor the config declares a density.
@@ -86,7 +114,7 @@ reason — starter-kit/context_budget.py ignored unknown arguments, so every cit
 and that misreading reached a pull-request comment to the maintainer.
 
 The tree it measures is found by walking up from the current directory for
-{conf}, then up from this file's own directory — so it works from a subdirectory,
+{conf} (at a project's root or under methodology/), then up from this file's own directory — so it works from a subdirectory,
 from outside the repository by absolute path, and from a copy of itself.
 """.format(cls=CLASS, conf=CONFIG_NAME)
 
@@ -96,11 +124,28 @@ def die(code, msg):
     raise SystemExit(code)
 
 
+def project_above(d):
+    """The project root for a directory that holds the config. Normally d itself. When d is the
+    methodology/ directory of a new-layout project the project is its parent. This tool runs no git, so a
+    repository's own root is told by its .git: a repository merely CALLED methodology (the authoring one) is
+    its own project, and the parent's methodology/ would be itself."""
+    if os.path.basename(d) != NEW_DIR or os.path.exists(os.path.join(d, ".git")):
+        return d
+    parent = os.path.dirname(d)
+    inner = os.path.join(parent, NEW_DIR, CONFIG_NAME)
+    if os.path.isfile(inner) and os.path.samefile(inner, os.path.join(d, CONFIG_NAME)):
+        return parent
+    return d
+
+
 def walk_up(start):
-    """The nearest ancestor of `start` (inclusive) holding CONFIG_NAME, or None."""
+    """The nearest ancestor of `start` (inclusive) holding CONFIG_NAME at its root or under methodology/,
+    as a project root, or None."""
     d = os.path.abspath(start)
     while True:
         if os.path.isfile(os.path.join(d, CONFIG_NAME)):
+            return project_above(d)
+        if os.path.isfile(os.path.join(d, NEW_DIR, CONFIG_NAME)):
             return d
         parent = os.path.dirname(d)
         if parent == d:
@@ -147,7 +192,13 @@ def main(argv):
             "INSTRUMENT FAILED — no %s found above %s or above this file. Nothing was "
             "measured." % (CONFIG_NAME, os.getcwd()))
 
-    path = os.path.join(root, CONFIG_NAME)
+    kind, directory, found = resolve_layout(root, CONFIG_NAME)
+    if kind == "half":
+        die(EXIT_INSTRUMENT,
+            "INSTRUMENT FAILED — half-migrated: %s exists at the root AND under %s/ and no runner under %s/ "
+            "decides between them (%s). Nothing was measured." % (CONFIG_NAME, NEW_DIR, NEW_DIR,
+                                                                   " and ".join(str(f) for f in found)))
+    path = os.path.join(str(directory if directory is not None else root), CONFIG_NAME)
     try:
         with open(path, encoding="utf-8") as fh:
             cfg = json.load(fh)
