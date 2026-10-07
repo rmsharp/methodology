@@ -1897,6 +1897,15 @@ class TestTheConfigMayLiveInEitherLayout(unittest.TestCase):
             self.assertEqual(os.path.realpath(cb.find_root(os.path.join(d, NEW_DIR))), d,
                              "run from methodology/ itself, the project is its parent, which git names")
 
+    def test_find_root_keeps_a_repository_that_is_merely_called_methodology(self):
+        """The authoring repository is a directory named methodology holding its config at its root. Git names
+        it as its own toplevel, so it is not the methodology/ directory of a project above it."""
+        with tempfile.TemporaryDirectory() as td:
+            proj = os.path.join(os.path.realpath(td), "methodology")
+            os.makedirs(proj)
+            self._project(proj, cb.CONFIG_NAME)
+            self.assertEqual(os.path.realpath(cb.find_root(proj)), proj)
+
     def test_the_cli_measures_the_same_project_in_either_layout(self):
         with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
             self._project(a, cb.CONFIG_NAME); self._project(b, NEW_CONFIG)

@@ -181,6 +181,21 @@ class TestCheckOverhead(Project):
         self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
         self.assertIn("read-set: 6 B ", p.stdout)
 
+    def test_a_repository_that_is_itself_called_methodology_stays_its_own_project(self):
+        """The authoring repository is a directory named methodology with its config at its root: taken for the
+        methodology/ directory of a project, it would send the walk one level up. Test 44 of bin/tests.sh found
+        this on the real repository; no fixture named methodology could."""
+        with tempfile.TemporaryDirectory() as td:
+            proj = os.path.join(os.path.realpath(td), "methodology")
+            os.makedirs(proj)
+            subprocess.run(["git", "init", "-q", proj], check=True)
+            touch(proj, ".context-budget.json", CONFIG % "doc.md")
+            touch(proj, "doc.md", "12345\n")
+            p = subprocess.run([sys.executable, "-B", str(BIN / "check-overhead")], cwd=proj,
+                               capture_output=True, text=True)
+            self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+            self.assertIn("read-set: 6 B ", p.stdout)
+
     def test_a_tree_the_runner_does_not_decide_is_refused_naming_both(self):
         for name in ("half", "half-two-runners"):
             with self.subTest(layout=name):
