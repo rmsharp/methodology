@@ -237,6 +237,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-07 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-06-7.md` (1 record(s), 41,109 B → 29,323 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-06 → 2026-10-06) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-06-7.md`](docs/archive/HANDOFFS-through-2026-10-06-7.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-06-7.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-06-7.md.verify.sh)
+rather than trusting a digest printed here. Live file 41,109 B → 29,323 B (−28.7%).
+
 ### 2026-10-07 · [BL-101] S278 — fork `main` pushed to `origin`: the 18 S278 commits and S277's push record (`4a7ce9f..26088f3`)
 
 At the S278 close-out picker he chose "Yes, push to origin". Before the push `origin/main...main` read `0 19` after a fresh fetch (the 18 S278 commits and `39f8689`, S277's CHANGELOG-only push record, which had stayed local on purpose), `origin/main` was an ancestor of `main` (a fast-forward), the tree was clean, and `origin` is the fork `https://github.com/rmsharp/methodology.git`. After the push (`4a7ce9f..26088f3`) another fetch read `0 0`, and `git ls-remote origin refs/heads/main` equalled local `HEAD` (`26088f3`). `upstream/main` is untouched at `f34769f`: nothing went to `KJ5HST/methodology`. This record is local on purpose, as the picker option said and as the S278 receipt's next_steps (3) predicts: `git rev-list --left-right --count origin/main...main` should read `0 1` at the next Phase 0. Model: Claude Sonnet 5.5.
