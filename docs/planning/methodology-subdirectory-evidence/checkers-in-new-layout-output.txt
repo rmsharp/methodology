@@ -1,0 +1,25 @@
+commit under test: 8326771
+new tree:  methodology/ holds 5 files; the root holds 0 of the five
+tie tree:  methodology/ holds the same five, and the root holds a file of someone else's at each: 5
+
+== bin/check-ledger --all ==
+   legacy: check-ledger: 1 finding(s) in 21 file(s)
+   new identical to legacy: yes   tie identical to legacy: yes   (output 2 lines)
+== bin/check-handoff --all --allow-pending ==
+   legacy: check-handoff --all: OK — 3 receipt(s) in <root>/HANDOFFS.md, all structurally complete, fences balanced, no duplicate session+date.
+   new identical to legacy: yes   tie identical to legacy: yes   (output 1 lines)
+== bin/check-overhead ==
+   legacy: read-set: 71,981 B ~= 25,706 tok (2 files) at 2.8000 B/token (config) | declared 56,750 B, over by 15,231 B (+26.8%)
+   new identical to legacy: yes   tie identical to legacy: yes   (output 1 lines)
+== bin/model-report --no-git ==
+   legacy: model-report -- self-reported model/tier attribution, read-only, non-gating.
+   new identical to legacy: yes   tie identical to legacy: yes   (output 1531 lines)
+== context_budget.py --status ==
+   legacy: ─────────────────────────────────────────────────────�
+   new identical to legacy: yes   tie identical to legacy: yes   (output 55 lines)
+
+new: loosened methodology/.quality-gates.json -> exit 2: floor lowered 474 -> 473
+tie: loosened methodology/.quality-gates.json -> exit 2: floor lowered 474 -> 473
+tie: the root manifest of someone else's lowered (1 -> 0) -> exit 0 (not judged)
+
+result: every comparison held
