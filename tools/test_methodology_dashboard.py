@@ -6589,11 +6589,26 @@ class TestBL101P5Walk(unittest.TestCase):
                 self.assertGreater(m["files"]["by_category"]["vendor"]["loc"], 5000)
 
     def test_the_card_projects_the_same_in_every_layout(self):
+        # Both trees get a docs/ of their own: see the next test for why that is part of the comparison.
+        own = dict(QUARTO_BOOK, **{"docs/index.md": "# Docs\n\nThe project's own documentation.\n"})
         projections = {layout: card_projection(layout_project(self, layout, contents=installed_tool_contents(),
-                                                              extra=QUARTO_BOOK, extra_commits=12))
+                                                              extra=own, extra_commits=12))
                        for layout in ("legacy", "new", "tier1")}
         self.assertEqual(projections["new"], projections["legacy"])
         self.assertEqual(projections["tier1"], projections["legacy"])
+
+    def test_the_docs_directory_point_belongs_to_the_projects_own_docs_not_to_the_methodologys(self):
+        # PINNED ON PURPOSE, not an accident. `has_docs_dir` is a bare presence check, and a legacy adopter
+        # satisfies it with docs/methodology/ alone, so every synced project has earned 4 documentation points
+        # for a directory the methodology put there. In the new layout nothing of ours is under docs/, so a
+        # project with no docs/ of its own loses them when it migrates. Recorded in the plan's section 7.2d:
+        # parity would mean rewarding methodology/ as documentation, or changing every legacy score.
+        want = {"legacy": True, "new": False, "tier1": False}
+        for layout, has in want.items():
+            with self.subTest(layout=layout):
+                self.assertIs(md.collect_all(layout_project(self, layout))["docs"]["has_docs_dir"], has)
+        own = layout_project(self, "new", extra={"docs/index.md": "# Docs\n"})
+        self.assertIs(md.collect_all(own)["docs"]["has_docs_dir"], True)
 
     def test_a_projects_own_root_changelog_is_not_the_frameworks_ledger(self):
         product = "# Release notes\n\n" + "- shipped a thing\n" * 300
