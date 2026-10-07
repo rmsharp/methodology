@@ -208,7 +208,8 @@ class TestEveryEmbeddedCopyIsByteIdentical(unittest.TestCase):
 
     COPIES = ("starter-kit/close_out_report.py", "starter-kit/context_budget.py", "starter-kit/methodology_trim.py",
               "starter-kit/quality_ratchet.py",
-              "bin/check-handoff", "bin/check-ledger", "bin/check-overhead", "bin/model-report")   # P4: the checkers
+              "bin/check-handoff", "bin/check-ledger", "bin/check-overhead", "bin/model-report",   # P4: the checkers
+              "starter-kit/methodology_dashboard.py")   # P5: the dashboard (its tools/ twin is asserted below)
 
     def test_each_copy_equals_the_modules_block_and_carries_exactly_one(self):
         block = lr.embedded_block((HERE / "layout_resolver.py").read_text(encoding="utf-8"))
@@ -216,6 +217,15 @@ class TestEveryEmbeddedCopyIsByteIdentical(unittest.TestCase):
             text = (REPO / rel).read_text(encoding="utf-8")
             self.assertEqual(text.count(lr.BEGIN), 1, rel + ": one BEGIN marker")
             self.assertEqual(lr.embedded_block(text), block, rel + ": the block differs from tools/layout_resolver.py")
+
+    def test_the_dashboards_canonical_only_twin_carries_the_same_block(self):
+        # tools/methodology_dashboard.py is scanned for the markers by no directory walk below (that one reads
+        # starter-kit/ and bin/), and the dashboard suite loads THIS copy, so a block that reached only the
+        # starter-kit/ copy would pass the list above and leave the tested file without a resolver.
+        block = lr.embedded_block((HERE / "layout_resolver.py").read_text(encoding="utf-8"))
+        text = (HERE / "methodology_dashboard.py").read_text(encoding="utf-8")
+        self.assertEqual(text.count(lr.BEGIN), 1, "tools/methodology_dashboard.py: one BEGIN marker")
+        self.assertEqual(lr.embedded_block(text), block, "tools/methodology_dashboard.py: the block differs")
 
     def test_every_tool_that_carries_the_markers_is_listed(self):
         def carries(p):
