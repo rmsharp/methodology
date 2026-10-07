@@ -1157,9 +1157,10 @@ class TestTheHitsItWillNotRewrite(Adopter):
     def test_each_category_counts_its_mentions_and_names_the_files_and_lines(self):
         nr = run_migrate(self.project).report["not_rewritten"]
         self.assertEqual({k: (v["mentions"], v["files"]) for k, v in nr.items() if k != "ledger"},
-                         {"ci": (2, 1), "harness": (2, 1), "hooks": (1, 1), "other": (2, 1)})
+                         {"ci": (3, 1), "harness": (2, 1), "hooks": (1, 1), "other": (2, 1)})
         self.assertEqual([(s["file"], s["line"]) for s in nr["ci"]["sites"]],
-                         [(".github/workflows/ci.yml", 4), (".github/workflows/ci.yml", 5)])
+                         [(".github/workflows/ci.yml", 4), (".github/workflows/ci.yml", 5), (".github/workflows/ci.yml", 6)])
+        self.assertEqual(nr["ci"]["sites"][2]["names"], ["docs/methodology/"], "a CI filter on the directory is a hit")
         self.assertEqual([(s["file"], s["line"]) for s in nr["hooks"]["sites"]], [(".githooks/pre-commit", 2)])
         site = nr["harness"]["sites"][0]
         self.assertEqual((site["file"], site["line"]), (".claude/settings.json", 1))
@@ -1178,7 +1179,7 @@ class TestTheHitsItWillNotRewrite(Adopter):
         self.assertEqual(r.returncode, 0, r.out)
         for rel, data in before.items():
             self.assertEqual((self.project / rel).read_bytes(), data, "%s was edited" % rel)
-        self.assertEqual(r.report["not_rewritten"]["ci"]["mentions"], 2)
+        self.assertEqual(r.report["not_rewritten"]["ci"]["mentions"], 3)
 
     def test_a_moved_file_a_rewritten_file_and_a_qualified_name_are_not_hits(self):
         nr = run_migrate(self.project).report["not_rewritten"]
@@ -1246,12 +1247,16 @@ class TestTheChecks(Adopter):
         self.assertEqual(again.returncode, 0, again.stdout + again.stderr)
 
     def test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back(self):
+        """The shard rehearsal catches a proof that reads its shard by the old path, so the proof here is one a rehearsal
+        cannot predict: it depends on the newest commit's subject, which the rehearsal's commit does not share with the
+        migration's. Whatever the cause, a check that differs after a commit is made is reported, not undone."""
         proof = self.project / "docs" / "archive" / "CHANGELOG-through-2026-08-01.md.verify.sh"
-        proof.write_text("#!/bin/sh\ntest -f docs/archive/CHANGELOG-through-2026-08-01.md\n", encoding="utf-8")
-        self.commit("a proof that reads its shard by the old path")
+        proof.write_text("#!/bin/sh\ngit log -1 --format=%s | grep -q '^chore(methodology)' && exit 1\nexit 0\n", encoding="utf-8")
+        self.commit("a proof that depends on the newest commit")
         r = run_migrate(self.project, "--apply", checks=True)
         self.assertEqual(r.returncode, 4, r.out)
         self.assertEqual(r.report["status"], "applied")
+        self.assertEqual(r.report["rehearsal"]["excluded"], [], "the rehearsal could not have seen this")
         self.assertEqual(git(self.project, "status", "--porcelain"), "", "the commit was made and must stand")
         checks = r.report["checks"]
         self.assertFalse(checks["ok"])

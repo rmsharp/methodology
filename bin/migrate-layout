@@ -27,8 +27,10 @@ import difflib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -438,37 +440,53 @@ def hit_category(path):
     return "other"
 
 
+DIR_RE = re.compile(r"(?<![\w./~-])docs/(?:methodology/?|archive/?)(?![\w.-])")  # layout: ok -- the two directories the move empties, searched for in prose
+
+
 def scan_hits(root, moves, rewrites, tier):
     """Every tracked file that still names a moved path and that the tool will not edit, by category: a person decides
     these (a CI filter, a harness rule, a hook copy, a link in the project's own docs). A ledger's links are counted and
     never listed, since a committed entry is never rewritten. The files the tool moves unedited (the framework's own
-    documents) and the files it rewrites are not hits."""
+    documents) are not hits; a file it rewrites is read as it will be once rewritten, so a directory it names in prose
+    (`docs/methodology/`, which a rewrite of the paths in it leaves) is a hit and a path it has rewritten is not. A hook
+    line that runs a moved tool is marked: that hook will refuse the migration commit."""
     root = Path(root)
     mapping = logical_map(moves, tier)
     out = {c: {"mentions": 0, "files": 0, "sites": []} for c in CATEGORIES}
+    out["hooks"]["runs_moved_tool"] = 0
     if not mapping:
         return out
     pattern = token_pattern(mapping)
-    skip = {m["src"] for m in moves if hit_category(m["src"]) != "ledger"} | {r.path for r in rewrites}
-    probe = ["-e" + n for n in sorted({k.rsplit("/", 1)[-1] for k in mapping})]
+    new_text = {r.path: r.new for r in rewrites}
+    skip = {m["src"] for m in moves if hit_category(m["src"]) != "ledger"} | {p for p in new_text if p.endswith(".json")}
+    probe = ["-e" + n for n in sorted({k.rsplit("/", 1)[-1] for k in mapping} | {"docs/methodology", "docs/archive"})]  # layout: ok -- same
     r = run(root, "grep", "-I", "-l", "-z", "-F", *probe)
     shown = {c: 0 for c in CATEGORIES}
     for path in sorted(p for p in r.stdout.split("\0") if p):
         if path in skip:
             continue
         cat = hit_category(path)
+        rewritten = path in new_text
         try:
-            lines = (root / path).read_text(encoding="utf-8", errors="replace").splitlines()
+            text = new_text[path] if rewritten else (root / path).read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
         mentions = 0
-        for number, line in enumerate(lines, 1):
-            names = [m.group(0) for m in pattern.finditer(line)]
+        for number, line in enumerate(text.splitlines(), 1):
+            spans = [(m.start(), m.end(), m.group(0)) for m in pattern.finditer(line)] if not rewritten else []
+            names = [s[2] for s in spans]
+            for m in DIR_RE.finditer(line):
+                if not any(s[0] < m.end() and m.start() < s[1] for s in spans):
+                    names.append(m.group(0))
             if not names:
                 continue
             mentions += len(names)
             if cat != "ledger" and shown[cat] < SITES_SHOWN:
-                out[cat]["sites"].append({"file": path, "line": number, "text": line.strip()[:200], "names": sorted(set(names))})
+                site = {"file": path, "line": number, "text": line.strip()[:200], "names": sorted(set(names))}
+                if cat == "hooks":
+                    site["runs_tool"] = any(n.endswith(".py") for n in names)
+                    out["hooks"]["runs_moved_tool"] += int(site["runs_tool"])
+                out[cat]["sites"].append(site)
                 shown[cat] += 1
         if mentions:
             out[cat]["mentions"] += mentions
@@ -476,11 +494,48 @@ def scan_hits(root, moves, rewrites, tier):
     return out
 
 
+def rehearse_shards(root, moves):
+    """Move the shards in a throwaway clone and run each proof there, before and after: an older-format proof reads its
+    shard by a working-tree path and exits 2 once the shard moves (vscode_quarto_ext), while the trimmer's current proofs
+    read git history and hold. A shard whose proof changes its exit code stays, with its proof. Returns (moves, left in
+    place, what the rehearsal did)."""
+    proofs = [m for m in moves if m["kind"] == "shard" and m["src"].endswith(".verify.sh")]
+    info = {"ran": False, "proofs": 0, "excluded": []}
+    if not proofs:
+        return moves, [], info
+    shards = [m for m in moves if m["kind"] == "shard"]
+    tmp = tempfile.mkdtemp(prefix="migrate-rehearsal-")
+    try:
+        clone = Path(tmp) / "clone"
+        r = subprocess.run(["git", "clone", "-q", "--no-local", str(root), str(clone)], capture_output=True, text=True)
+        if r.returncode != 0:
+            info["error"] = "the rehearsal clone failed: " + r.stderr.strip()[-200:]
+            return moves, [], info
+        before = {m["src"]: tool_run(["bash", m["src"]], clone, PROOF_TIMEOUT)[0] for m in proofs}
+        for m in shards:
+            (clone / m["dest"]).parent.mkdir(parents=True, exist_ok=True)
+            run(clone, "mv", m["src"], m["dest"])
+        run(clone, "-c", "user.name=rehearsal", "-c", "user.email=rehearsal@localhost", "-c", "commit.gpgsign=false",
+            "commit", "-q", "--no-verify", "-m", "rehearsal")
+        after = {m["src"]: tool_run(["bash", m["dest"]], clone, PROOF_TIMEOUT)[0] for m in proofs}
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    info.update(ran=True, proofs=len(proofs))
+    left, drop = [], set()
+    for src in sorted(s for s in before if before[s] != after[s]):
+        shard = src[:-len(".verify.sh")]
+        drop |= {src, shard}
+        info["excluded"].append(shard)
+        why = "its proof exits %s at the new place (%s here): the proof reads its shard by a path that moves; the shard and its proof stay" % (after[src], before[src])
+        left += [{"path": shard, "reason": why}, {"path": src, "reason": why}]
+    return [m for m in moves if m["src"] not in drop], left, info
+
+
 def build_report(project, tier, apply_mode):
     root = Path(project)
     report = {"project": str(root), "canonical": canonical_info(), "layout": None, "tier": tier,
               "mode": "apply" if apply_mode else "dry-run", "status": "ok", "refusals": [], "moves": [],
-              "left_in_place": [], "rewrites": [], "not_rewritten": {}, "ledger_entry": None, "commit": None,
+              "left_in_place": [], "rewrites": [], "not_rewritten": {}, "ledger_entry": None, "rehearsal": None, "commit": None,
               "checks": None}
     refusals = report["refusals"]
     top = run(root, "rev-parse", "--show-toplevel")
@@ -519,7 +574,11 @@ def build_report(project, tier, apply_mode):
             if bad:
                 refusals.append(refusal("not-current", "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): "
                                         + ", ".join(bad), [b.split(" (")[0] for b in bad]))
-    report["moves"], report["left_in_place"] = moves, left
+    report["rehearsal"] = {"ran": False, "proofs": 0, "excluded": []}
+    if moves and not refusals:
+        moves, more_left, report["rehearsal"] = rehearse_shards(root, moves)
+        left += more_left
+    report["moves"], report["left_in_place"] = moves, sorted(left, key=lambda x: x["path"])
     rewrites, ledger = [], None
     if moves and not refusals:
         try:
@@ -676,6 +735,7 @@ def apply_migration(report, trailers, skip_checks=False):
     proof_srcs = [m["src"] for m in moves if m["kind"] == "shard" and m["src"].endswith(".verify.sh")]
     proof_dests = [m["dest"] for m in moves if m["kind"] == "shard" and m["src"].endswith(".verify.sh")]
     before = None if skip_checks else run_checks(root, proof_srcs, ledger_src)
+    rewrites_by_final = {rw.final: rw for rw in rewrites}
     try:
         for m in moves:
             (root / m["dest"]).parent.mkdir(parents=True, exist_ok=True)
@@ -699,7 +759,11 @@ def apply_migration(report, trailers, skip_checks=False):
             if m["tracked"]:
                 score = renames.get((m["src"], m["dest"]))
                 if score is None or score < 90:
-                    weak.append("%s -> %s (%s)" % (m["src"], m["dest"], "not a rename" if score is None else "%d%%" % score))
+                    why = "not a rename" if score is None else "%d%%" % score
+                    if m["src"] == ledger_src and score is not None:
+                        size = len(rewrites_by_final[ledger_final].old.encode("utf-8")) if ledger_final in rewrites_by_final else 0
+                        why += ": the ledger is too small to take its entry and stay a rename at 90%% (it holds %d bytes); migrate after it has more entries" % size
+                    weak.append("%s -> %s (%s)" % (m["src"], m["dest"], why))
         if weak:
             raise RuntimeError("a moved file would fall below 90% similarity, so git log --follow could not reach its history: "
                                + ", ".join(weak))
@@ -768,6 +832,9 @@ def render_text(report):
             out.append("  %-9s%d mention(s) in %d file(s)%s" % (cat + ":", c["mentions"], c["files"], note))
             for s in c["sites"]:
                 out.append("    %s:%d  %s" % (s["file"], s["line"], s["text"][:120]))
+            if cat == "hooks" and c["runs_moved_tool"]:
+                out.append("    WARNING: %d hook line(s) run a moved tool: that hook will refuse the migration commit and the run will roll back;"
+                           " update the hook first (hooks are per clone and not part of this plan)" % c["runs_moved_tool"])
     ck = report["checks"]
     if ck and ck.get("ran"):
         out.append("")

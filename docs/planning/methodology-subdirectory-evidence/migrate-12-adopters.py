@@ -131,9 +131,14 @@ def run_one(name, work, out_dir):
             row["sync"] = "FAILED (exit %s): %s" % (c1, o1.strip()[-160:])
         else:
             git(clone, "add", "-A")
-            cc, co = git(clone, "commit", "-q", "-m", "sync the methodology files before the layout migration\n\n" + TRAILER)
-            n = git(clone, "diff", "--name-only", "HEAD~1", "HEAD")[1].split()
-            row["sync"] = "%s (%d files, %s)" % ("committed with --force" if forced else "committed", len(n), "hook refused: " + co.strip()[-100:] if cc != 0 else "ok")
+            msg = "sync the methodology files before the layout migration\n\n" + TRAILER
+            cc, co = git(clone, "commit", "-q", "-m", msg)
+            hook_note = "ok"
+            if cc != 0:  # the adopter's own armed hook refused the sync commit (a real session would write the entry it wants)
+                hook_note = "its own hook refused (%s); committed with --no-verify" % " ".join(co.split())[-90:]
+                cc, co = git(clone, "commit", "-q", "--no-verify", "-m", msg)
+            n = git(clone, "diff", "--name-only", "HEAD~1", "HEAD")[1].split() if cc == 0 else []
+            row["sync"] = "%s (%d files, %s)" % ("committed with --force" if forced else "committed", len(n), hook_note)
         tracked, bad, bad_rows = status_counts(clone)
     row["status_after_sync"] = "%s tracked, %s not current%s" % (tracked, bad, (": " + ", ".join(bad_rows[:4])) if bad else "")
     # the before tree: a copy, so the dashboard's and the ratchet's writes do not dirty the tree that is migrated
@@ -159,6 +164,19 @@ def run_one(name, work, out_dir):
         app = {"status": "unparseable", "raw": out[-300:]}
     row["apply_exit"] = code
     row["apply_status"] = app.get("status")
+    row["hook_rollback"] = "-"
+    if app.get("status") == "rolled-back" and row["hooks"] != "none":
+        # the adopter's own hook refused the commit: say what it said, then run the rest of the plan with this clone's hooks off
+        row["hook_rollback"] = " ".join(((app.get("commit") or {}).get("error") or "").split())[:200]
+        (out_dir / (name + ".apply-with-hooks.json")).write_text(json.dumps(app, indent=1), encoding="utf-8")
+        git(clone, "config", "--unset", "core.hooksPath")
+        code, out = sh([sys.executable, "-B", str(REPO / "bin" / "migrate-layout"), str(clone), "--apply", "--json", "--trailer", TRAILER], timeout=3600)
+        try:
+            app = json.loads(out)
+        except ValueError:
+            app = {"status": "unparseable", "raw": out[-300:]}
+        row["apply_exit"] = "%s (hooks on) then %s (hooks off)" % (row["apply_exit"], code)
+        row["apply_status"] = "rolled back by its hook; %s with hooks off" % app.get("status")
     (out_dir / (name + ".apply.json")).write_text(json.dumps(app, indent=1), encoding="utf-8")
     moves = app.get("moves") or dry.get("moves") or []
     row["moves"] = "%d (%d tracked, %d plain)" % (len(moves), sum(1 for m in moves if m["tracked"]), sum(1 for m in moves if not m["tracked"]))
@@ -172,6 +190,8 @@ def run_one(name, work, out_dir):
     row["ledger_entry"] = le["path"] if le else "no ledger"
     left = app.get("left_in_place") or dry.get("left_in_place") or []
     row["left_in_place"] = str(len(left))
+    reh = app.get("rehearsal") or dry.get("rehearsal") or {}
+    row["rehearsal"] = ("%d proof(s) run, kept in place: %s" % (reh.get("proofs", 0), ", ".join(reh.get("excluded") or ["none"]))) if reh.get("ran") else "no proofs to rehearse"
     ck = app.get("checks") or {}
     if ck.get("ran"):
         row["checks"] = "ok" if ck["ok"] else "DIFFER: " + ",".join(ck["differences"])
@@ -182,7 +202,7 @@ def run_one(name, work, out_dir):
     else:
         row["checks"] = "not run (%s)" % app.get("status")
         row["proofs"] = row["history"] = row["links"] = "-"
-    if app.get("status") == "applied":
+    if app.get("status") in ("applied",):
         row["tree_clean"] = "yes" if git(clone, "status", "--porcelain")[1].strip() == "" else "NO"
         row["health_after"] = dashboard_health(clone)
         git(clone, "checkout", "-q", "--", ".")
@@ -196,6 +216,7 @@ def run_one(name, work, out_dir):
 
 COLUMNS = [("adopter", "adopter"), ("hooks", "hooks"), ("status_before_sync", "status before sync"), ("sync", "sync"),
            ("dry_status", "dry run"), ("apply_status", "apply"), ("apply_exit", "exit"), ("refusals", "refusals"),
+           ("hook_rollback", "its hook refused the commit"), ("rehearsal", "shards kept (rehearsal)"),
            ("moves", "moves"), ("min_similarity", "min rename"), ("rewrites", "rewrites"), ("left_in_place", "left"),
            ("hits", "not rewritten (mentions)"), ("ledger_entry", "ledger entry"), ("checks", "checks"), ("proofs", "proofs"),
            ("history", "history"), ("links", "check-links"), ("tree_clean", "clean"), ("health_before", "health before"),
