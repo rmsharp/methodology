@@ -41,7 +41,7 @@ HANDOFFS_JUNK = "# Handoff Receipts\n\n```handoff\nsession: S1\n"        # an un
 HANDOFFS_MODEL = ("# Handoff Receipts\n\n```handoff\nsession: S1\ndate: 2026-01-01\nstatus: complete\n```\n\n"
                   "The model wrote it.\n")   # free text AFTER the block is what the secondary source reads
 CONFIG = '{"classes": {"read-set": {"total_bytes": 1000}}, "files": [{"path": "%s", "class": "read-set"}]}'
-SHARD = "# Changelog shard\n\n### 2025-12-01 · [ad hoc] an archived entry\n\n- body\n- **Model:** Claude Opus 4.8\n"
+SHARD = "# Changelog shard\n\n### 2025-12-01 · [ad hoc] an archived entry\n\n- body\n- **Model:** Claude Fixture Shard 7\n"
 
 
 def touch(root, rel, text="x\n"):
@@ -200,7 +200,7 @@ class TestModelReport(Project):
                 self.shape(name, "HANDOFFS.md", HANDOFFS_MODEL, HANDOFFS_JUNK)
                 rc, out, err = self.run_tool("model-report", "--no-git")
                 self.assertEqual(rc, 0, out + err)
-                self.assertRegex(out, r"(?m)^\S*%sCHANGELOG\.md" % re.escape(pre) if pre else r"CHANGELOG\.md")
+                self.assertIn("-- %sCHANGELOG.md (live)" % pre, out, "the header names the file it read")
                 self.assertIn("Claude Sonnet 5.5", out, "the entry was read")
                 self.assertIn("The model wrote it.", out, "the receipt was read")
                 if pre:
@@ -227,7 +227,7 @@ class TestModelReport(Project):
                 touch(self.root, shard, SHARD)
                 rc, out, err = self.run_tool("model-report", "--no-git")
                 self.assertEqual(rc, 0, out + err)
-                self.assertIn("Claude Opus 4.8", out, "the shard's entry was read")
+                self.assertIn("Claude Fixture Shard 7", out, "the shard's entry was read")
 
 
 if __name__ == "__main__":
