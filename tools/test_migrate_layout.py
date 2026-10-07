@@ -168,6 +168,9 @@ def base_project():
         project = Path(keep) / "adopter"
         project.mkdir()
         git(project, "init", "-q")
+        git(project, "config", "user.name", "Adopter")
+        git(project, "config", "user.email", "adopter@example.com")
+        git(project, "config", "commit.gpgsign", "false")
         r = subprocess.run([sys.executable, "-B", str(SYNC), str(project)], capture_output=True, text=True)
         assert r.returncode == 0, "the base project could not be synced:\n%s%s" % (r.stdout, r.stderr)
         customise(project)
@@ -390,6 +393,227 @@ class TestRefusals(Adopter):
         codes = [x["code"] for x in r.report["refusals"]]
         self.assertIn("dirty-tree", codes)
         self.assertIn("destination-exists", codes)
+
+
+def name_status(project, rev="HEAD"):
+    """{(src, dest): score} for the renames of one commit as git reports them (-M, so 50% and up are found)."""
+    out = git(project, "diff", "-M", "--name-status", "-z", rev + "~1", rev).split("\0")
+    renames, i = {}, 0
+    while i < len(out):
+        status = out[i]
+        if status.startswith("R"):
+            renames[(out[i + 1], out[i + 2])] = int(status[1:])
+            i += 3
+        else:
+            i += 2 if status else 1
+    return renames
+
+
+def configs_rewritten_by_layer_3(path):
+    return path in (".context-budget.json", ".quality-gates.json")
+
+
+class TestApply(Adopter):
+    """--apply writes the migration as ONE commit (plan 4.7.2): every tracked move a rename git can follow."""
+
+    def apply(self, *args):
+        before = git(self.project, "rev-parse", "HEAD").strip()
+        r = run_migrate(self.project, "--apply", *args)
+        return before, r
+
+    def test_it_makes_exactly_one_commit_on_top_of_head_and_leaves_the_tree_clean(self):
+        before, r = self.apply()
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(r.report["status"], "applied")
+        self.assertEqual(git(self.project, "rev-list", "--count", before + "..HEAD").strip(), "1")
+        self.assertEqual(git(self.project, "rev-parse", "HEAD~1").strip(), before)
+        self.assertEqual(git(self.project, "status", "--porcelain"), "")
+        self.assertEqual(r.report["commit"]["sha"], git(self.project, "rev-parse", "HEAD").strip())
+
+    def test_every_planned_move_happened_and_a_file_that_is_not_rewritten_keeps_its_bytes(self):
+        before = {rel: (self.project / rel).read_bytes() for rel in files_of(self.project)}
+        plan = run_migrate(self.project).report
+        moves = {m["src"]: m["dest"] for m in plan["moves"]}
+        self.assertGreaterEqual(len(moves), 30)
+        _, r = self.apply()
+        self.assertEqual(r.returncode, 0, r.out)
+        for src, dest in moves.items():
+            self.assertFalse((self.project / src).exists(), "%s was left behind" % src)
+            self.assertTrue((self.project / dest).is_file(), "%s did not arrive" % dest)
+            if not configs_rewritten_by_layer_3(src):
+                self.assertEqual((self.project / dest).read_bytes(), before[src], "%s changed in the move" % dest)
+
+    def test_git_sees_each_tracked_move_as_a_rename_at_90_percent_or_better(self):
+        plan = run_migrate(self.project).report
+        tracked = {m["src"]: m["dest"] for m in plan["moves"] if m["tracked"]}
+        _, r = self.apply()
+        seen = name_status(self.project)
+        for src, dest in tracked.items():
+            self.assertIn((src, dest), seen, "git does not see %s -> %s as a rename" % (src, dest))
+            self.assertGreaterEqual(seen[(src, dest)], 90, "%s -> %s fell below 90%%" % (src, dest))
+        reported = {(x["src"], x["dest"]): x["score"] for x in r.report["commit"]["renames"]}
+        self.assertEqual(reported, {k: seen[k] for k in tracked}, "the report and git disagree")
+
+    def test_an_ignored_generated_file_is_moved_without_git_and_stays_ignored(self):
+        _, r = self.apply()
+        self.assertEqual(r.returncode, 0, r.out)
+        for name in ("dashboard.html", ".quality-gates-results.json"):
+            self.assertFalse((self.project / name).exists())
+            self.assertTrue((self.project / "methodology" / name).is_file())
+            self.assertNotIn("methodology/" + name, git(self.project, "ls-files").splitlines())
+            ignored = subprocess.run(["git", "-C", str(self.project), "check-ignore", "-q", "methodology/" + name])
+            self.assertEqual(ignored.returncode, 0, "methodology/%s is not ignored after the move" % name)
+
+    def test_an_anchored_gitignore_entry_follows_its_file_and_an_unanchored_one_is_left(self):
+        _, r = self.apply()
+        text = (self.project / ".gitignore").read_text(encoding="utf-8")
+        self.assertIn("/methodology/dashboard.html\n", text)
+        self.assertNotIn("\n/dashboard.html\n", text)
+        self.assertIn("\n.quality-gates-results.json\n", text, "an unanchored entry still matches and must not change")
+        self.assertIn("# generated by the methodology tools", text, "a comment was disturbed")
+        rewrite = next(x for x in r.report["rewrites"] if x["path"] == ".gitignore")
+        self.assertEqual(rewrite["replacements"], 1)
+
+    def test_what_the_tool_leaves_stays_and_only_the_directories_it_emptied_go(self):
+        _, r = self.apply()
+        self.assertTrue((self.project / "docs" / "methodology" / "PROJECT_CONVENTIONS.md").is_file())
+        self.assertTrue((self.project / "docs" / "archive" / "project-notes.md").is_file())
+        self.assertFalse((self.project / "docs" / "methodology" / "workstreams").exists(), "an emptied directory was left")
+
+    def test_a_directory_the_moves_emptied_entirely_is_removed(self):
+        git(self.project, "rm", "-q", "-r", "docs/methodology/PROJECT_CONVENTIONS.md", "docs/archive/project-notes.md")
+        self.commit("remove the project's own files")
+        _, r = self.apply()
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertFalse((self.project / "docs" / "methodology").exists())
+        self.assertFalse((self.project / "docs" / "archive").exists())
+
+    def test_the_commit_message_names_the_tool_the_tier_and_carries_every_trailer(self):
+        _, r = self.apply("--trailer", "Co-Authored-By: A Tester <a@example.com>", "--trailer", "Reviewed-by: B <b@example.com>")
+        message = git(self.project, "log", "-1", "--format=%B")
+        subject = message.splitlines()[0]
+        self.assertIn("methodology/", subject)
+        self.assertIn("bin/migrate-layout", message)
+        self.assertIn("tier all", message)
+        self.assertIn(r.report["canonical"]["sha"], message)
+        self.assertTrue(message.rstrip().endswith("Reviewed-by: B <b@example.com>"), message)
+        self.assertIn("Co-Authored-By: A Tester <a@example.com>", message)
+
+    def test_bin_status_then_reads_every_tracked_file_current_at_its_new_place(self):
+        _, r = self.apply()
+        status = subprocess.run([sys.executable, "-B", str(STATUS), str(self.project)], capture_output=True, text=True)
+        self.assertEqual(status.returncode, 0, status.stderr)
+        self.assertRegex(status.stdout, r"layout: adopter\s+new")
+        rows = [line for line in status.stdout.splitlines() if " tracked " in line]
+        self.assertEqual(len(rows), len(TRACKED_DESTS))
+        for line in rows:
+            self.assertTrue(line.rstrip().endswith("current"), line)
+            self.assertIn(" methodology/", " " + line)
+
+    def test_a_second_run_finds_nothing_to_do_and_adds_no_commit(self):
+        self.apply()
+        head = git(self.project, "rev-parse", "HEAD").strip()
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(r.report["status"], "nothing-to-do")
+        self.assertEqual(git(self.project, "rev-parse", "HEAD").strip(), head)
+
+
+class TestTheTiers(Adopter):
+    """Plan 4.6: tier 1 is the framework's files, tier 2 the project's state; tier 1 alone is a stopping point."""
+
+    def test_tier_1_moves_the_tracked_files_and_nothing_of_the_projects_state(self):
+        r = run_migrate(self.project, "--apply", "--tier", "1")
+        self.assertEqual(r.returncode, 0, r.out)
+        for dest in TRACKED_DESTS:
+            self.assertTrue((self.project / NEW_OF[dest]).is_file(), dest)
+            self.assertFalse((self.project / dest).exists(), dest)
+        for dest in SEED_DESTS:
+            self.assertTrue((self.project / dest).is_file(), "%s moved in tier 1" % dest)
+            self.assertFalse((self.project / NEW_OF[dest]).exists(), dest)
+        for name in ("dashboard.html", "dashboard_history.jsonl"):
+            self.assertTrue((self.project / name).is_file(), "%s moved in tier 1" % name)
+        self.assertTrue((self.project / "docs" / "archive" / "CHANGELOG-through-2026-08-01.md").is_file())
+        self.assertEqual(git(self.project, "status", "--porcelain"), "")
+
+    def test_tier_2_alone_is_refused_before_tier_1(self):
+        before = tree_state(self.project)
+        r = run_migrate(self.project, "--apply", "--tier", "2")
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertEqual([x["code"] for x in r.report["refusals"]], ["tier-order"])
+        self.assertEqual(tree_state(self.project), before)
+
+    def test_tier_1_then_tier_2_reaches_the_same_tree_as_all_at_once(self):
+        a = self.project
+        b = Path(self._td.name) / "second"
+        shutil.copytree(a, b, symlinks=True)
+        self.assertEqual(run_migrate(a, "--apply", "--tier", "1").returncode, 0)
+        r = run_migrate(a, "--apply", "--tier", "2")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(run_migrate(b, "--apply").returncode, 0)
+        self.assertEqual(files_of(a), files_of(b))
+        for rel in sorted(files_of(a)):
+            if not configs_rewritten_by_layer_3(Path(rel).name):
+                self.assertEqual((a / rel).read_bytes(), (b / rel).read_bytes(), rel)
+
+    def test_all_after_tier_1_moves_only_what_tier_1_left(self):
+        run_migrate(self.project, "--apply", "--tier", "1")
+        plan = run_migrate(self.project)
+        self.assertEqual(plan.returncode, 0, plan.out)
+        srcs = {m["src"] for m in plan.report["moves"]}
+        self.assertTrue(srcs.isdisjoint(TRACKED_DESTS))
+        self.assertTrue(set(SEED_DESTS) <= srcs)
+
+    def test_a_second_tier_1_run_finds_nothing_to_do(self):
+        run_migrate(self.project, "--apply", "--tier", "1")
+        r = run_migrate(self.project, "--apply", "--tier", "1")
+        self.assertEqual(r.report["status"], "nothing-to-do")
+
+
+class TestTheGitattributesSeed(Adopter):
+    """The seed moves; a .gitattributes that holds rules of the project's own stays where it is."""
+
+    def test_the_seed_moves_with_the_rest(self):
+        r = run_migrate(self.project, "--apply")
+        self.assertTrue((self.project / "methodology" / ".gitattributes").is_file())
+        self.assertFalse((self.project / ".gitattributes").exists())
+
+    def test_a_file_with_a_rule_of_the_projects_own_stays_and_is_named(self):
+        ga = self.project / ".gitattributes"
+        ga.write_text(ga.read_text(encoding="utf-8") + "inst/extdata/example.txt text eol=lf\n", encoding="utf-8")
+        self.commit("a rule of the project's own")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertTrue(ga.is_file(), "the project's own .gitattributes was moved")
+        self.assertIn("inst/extdata/example.txt", ga.read_text(encoding="utf-8"))
+        self.assertFalse((self.project / "methodology" / ".gitattributes").exists())
+        self.assertIn(".gitattributes", [x["path"] for x in r.report["left_in_place"]])
+
+
+class TestARefusedCommitRollsBack(Adopter):
+    """A hook that refuses the migration commit must leave the project exactly as it was, files that git does not
+    track included: the tool started from a clean tree and gives one back."""
+
+    def test_a_refusing_hook_restores_the_tree_and_exits_3(self):
+        hook = self.project / ".git" / "hooks" / "pre-commit"
+        hook.write_text("#!/bin/sh\necho 'refused by the test hook' >&2\nexit 1\n", encoding="utf-8")
+        hook.chmod(0o755)
+        before = tree_state(self.project)
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 3, r.out)
+        self.assertEqual(r.report["status"], "rolled-back")
+        self.assertIn("refused by the test hook", r.report["commit"]["error"])
+        self.assertEqual(tree_state(self.project), before, "the rollback did not restore the project")
+        self.assertFalse((self.project / "methodology").exists(), "an empty methodology/ was left behind")
+
+    def test_the_hook_ran_because_the_tool_does_not_bypass_it(self):
+        marker = self.project / "hook-ran"
+        hook = self.project / ".git" / "hooks" / "pre-commit"
+        hook.write_text("#!/bin/sh\ntouch '%s'\nexit 0\n" % marker, encoding="utf-8")
+        hook.chmod(0o755)
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertTrue(marker.exists(), "the pre-commit hook did not run: the tool bypassed it")
 
 
 if __name__ == "__main__":
