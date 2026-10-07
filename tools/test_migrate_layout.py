@@ -57,12 +57,15 @@ def git(path, *args, check=True):
     return r.stdout
 
 
-def run_migrate(project, *args, json_out=True):
+def run_migrate(project, *args, json_out=True, checks=False):
     """bin/migrate-layout as a command. With json_out the report is read as data into .report (None when the
-    output is not JSON); .out is stdout and stderr joined."""
+    output is not JSON); .out is stdout and stderr joined. An --apply skips the before-and-after checks unless
+    `checks` is asked for: they take seconds, and TestTheChecks is where they are asserted."""
     cmd = [sys.executable, "-B", str(MIGRATE), str(project)]
     if json_out:
         cmd.append("--json")
+    if "--apply" in args and not checks and "--skip-checks" not in args:
+        cmd.append("--skip-checks")
     r = subprocess.run([*cmd, *args], capture_output=True, text=True)
     r.out = r.stdout + r.stderr
     try:
@@ -944,7 +947,7 @@ class TestTheChecks(Adopter):
         self.commit("trim the ledger")
 
     def test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank(self):
-        r = run_migrate(self.project, "--apply")
+        r = run_migrate(self.project, "--apply", checks=True)
         self.assertEqual(r.returncode, 0, r.out)
         checks = r.report["checks"]
         self.assertTrue(checks["ran"])
@@ -952,15 +955,15 @@ class TestTheChecks(Adopter):
             self.assertEqual(sorted(checks[side]), self.NAMES)
             for name in self.NAMES:
                 self.assertTrue(checks[side][name], "%s %s is blank" % (side, name))
-        self.assertEqual(checks["before"]["status"], {"exit": 0, "tracked": 11, "current": 11})
-        self.assertEqual(checks["after"]["status"], {"exit": 0, "tracked": 11, "current": 11})
+        self.assertEqual(checks["before"]["status"], {"exit": 0, "tracked": len(TRACKED_DESTS), "current": len(TRACKED_DESTS)})
+        self.assertEqual(checks["after"]["status"], {"exit": 0, "tracked": len(TRACKED_DESTS), "current": len(TRACKED_DESTS)})
         self.assertTrue(checks["clean"])
         self.assertTrue(checks["ok"])
         self.assertEqual(checks["differences"], [])
 
     def test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds(self):
         self.with_real_shard()
-        r = run_migrate(self.project, "--apply")
+        r = run_migrate(self.project, "--apply", checks=True)
         self.assertEqual(r.returncode, 0, r.out)
         checks = r.report["checks"]
         self.assertEqual(checks["before"]["proofs"], {"count": 3, "histogram": {"0": 3}})
@@ -973,7 +976,7 @@ class TestTheChecks(Adopter):
         proof = self.project / "docs" / "archive" / "CHANGELOG-through-2026-08-01.md.verify.sh"
         proof.write_text("#!/bin/sh\ntest -f docs/archive/CHANGELOG-through-2026-08-01.md\n", encoding="utf-8")
         self.commit("a proof that reads its shard by the old path")
-        r = run_migrate(self.project, "--apply")
+        r = run_migrate(self.project, "--apply", checks=True)
         self.assertEqual(r.returncode, 4, r.out)
         self.assertEqual(r.report["status"], "applied")
         self.assertEqual(git(self.project, "status", "--porcelain"), "", "the commit was made and must stand")
@@ -985,7 +988,7 @@ class TestTheChecks(Adopter):
         self.assertIn("git revert " + r.report["commit"]["sha"][:12], r.report["checks"]["way_back"])
 
     def test_the_ledgers_history_is_reached_across_the_move(self):
-        r = run_migrate(self.project, "--apply")
+        r = run_migrate(self.project, "--apply", checks=True)
         h = r.report["checks"]
         self.assertGreaterEqual(h["after"]["history"]["commits"], h["before"]["history"]["commits"] + 1)
         followed = git(self.project, "log", "--follow", "--format=%h", "--", "methodology/CHANGELOG.md").split()
@@ -995,7 +998,7 @@ class TestTheChecks(Adopter):
     def test_check_links_is_reported_and_a_difference_there_is_not_a_failure(self):
         """The distributed documents are authored for the old layout until P9 rewrites them, so a tree in the new
         layout is expected to read differently; the cell is filled and the difference is called informational."""
-        r = run_migrate(self.project, "--apply")
+        r = run_migrate(self.project, "--apply", checks=True)
         self.assertIn("links", r.report["checks"]["informational"])
         self.assertNotIn("links", r.report["checks"]["differences"])
         self.assertIn("exit", r.report["checks"]["after"]["links"])
@@ -1010,9 +1013,9 @@ class TestTheChecks(Adopter):
         self.assertIsNone(r.report["checks"])
 
     def test_the_text_a_person_reads_lists_each_check_before_and_after(self):
-        r = run_migrate(self.project, "--apply", json_out=False)
+        r = run_migrate(self.project, "--apply", json_out=False, checks=True)
         self.assertEqual(r.returncode, 0, r.out)
-        self.assertRegex(r.out, r"(?m)^checks:")
+        self.assertRegex(r.out, r"(?m)^checks \(before -> after\):")
         for name in self.NAMES:
             self.assertRegex(r.out, r"(?m)^\s+%s:" % name)
 

@@ -184,7 +184,7 @@ def plan_moves(project, tier, tracked, kind):
         new = NEW_LAYOUT[srcname]
         old_here, new_here = (root / legacy).is_file(), (root / new).is_file()
         if old_here and new_here:
-            if not (kind == "half" and legacy == "SESSION_RUNNER.md"):  # half-migrated is its own refusal
+            if not (kind == "half" and legacy == "SESSION_RUNNER.md"):  # layout: ok -- the runner of a half-migrated tree has its own refusal, so its collision is not listed twice
                 collisions.append(new)
             continue
         if not old_here:
@@ -403,8 +403,8 @@ def plan_rewrites(root, moves, tier, report):
             rewrites.append(Rewrite(path, moved.get(path, path), old, new, n))
     add(".gitignore", lambda s: rewrite_gitignore(s, mapping))
     add("CLAUDE.md", tokens)
-    add(".context-budget.json", lambda s: rewrite_json(s, mapping))
-    add(".quality-gates.json", lambda s: rewrite_json(s, mapping))
+    add(".context-budget.json", lambda s: rewrite_json(s, mapping))  # layout: ok -- a seed the tool edits the values of, read at its place before the move
+    add(".quality-gates.json", lambda s: rewrite_json(s, mapping))  # layout: ok -- same
     ledger = None
     src, final = ledger_location(root, moves)
     if src is not None:
@@ -499,7 +499,7 @@ def build_report(project, tier, apply_mode):
                                 + (" ..." if len(dirty) > 8 else ""), dirty))
     if kind == "half":
         where = " and ".join(p.relative_to(root).as_posix() for p in reversed(found))
-        refusals.append(refusal("half-migrated", "SESSION_RUNNER.md is at " + where
+        refusals.append(refusal("half-migrated", "SESSION_RUNNER.md is at " + where  # layout: ok -- a file named in a message, never opened
                                 + ": never guess which is the framework's; remove one", [p.relative_to(root).as_posix() for p in found]))
     if tier == "2" and kind != "new":
         refusals.append(refusal("tier-order", REFUSAL_HELP["tier-order"] + " (run tier 1 first, or --tier all)"))
@@ -604,12 +604,78 @@ def rollback(root, done_plain, methodology_existed):
             pass
 
 
-def apply_migration(report, trailers):
+INFORMATIONAL = ("links",)  # reported, not judged: the distributed documents are authored for the old layout until P9
+PROOF_TIMEOUT = 300
+
+
+def tool_run(args, cwd, timeout=300):
+    """(exit code, output). A tool that cannot run or does not finish is a cell with that word, never a crash."""
+    try:
+        r = subprocess.run(args, cwd=str(cwd), capture_output=True, text=True, timeout=timeout)
+        return r.returncode, r.stdout + r.stderr
+    except subprocess.TimeoutExpired:
+        return "timeout", ""
+    except OSError as e:
+        return "error", str(e)
+
+
+def last_line(text):
+    lines = [x.strip() for x in text.splitlines() if x.strip()]
+    return lines[-1][:200] if lines else ""
+
+
+def run_checks(root, proofs, ledger):
+    """The read-only checks of plan 4.7.4, as data: bin/status, the two ledger checkers, check-links, every shard proof
+    (the exit histogram), and how far `git log --follow` reaches back from the ledger. Run from the project's root."""
+    root = Path(root)
+    out = {}
+    rows, why = read_status(root)
+    if rows is None:
+        out["status"] = {"exit": 1, "tracked": 0, "current": 0, "line": (why or "")[:200]}
+    else:
+        tracked = [s for _f, d, s in rows if d == TRACKED]
+        out["status"] = {"exit": 0, "tracked": len(tracked), "current": sum(1 for s in tracked if s == "current")}
+    for name, tool in (("ledger", "check-ledger"), ("handoff", "check-handoff")):
+        code, text = tool_run([sys.executable, "-B", str(HERE / tool)], root)
+        out[name] = {"exit": code, "line": last_line(text)}
+    code, text = tool_run([sys.executable, "-B", str(HERE / "check-links"), "--tree", str(root)], root)
+    out["links"] = {"exit": code, "line": last_line(text)}
+    histogram = {}
+    for rel in proofs:
+        code, _text = tool_run(["bash", rel], root, PROOF_TIMEOUT)
+        histogram[str(code)] = histogram.get(str(code), 0) + 1
+    out["proofs"] = {"count": len(proofs), "histogram": histogram}
+    commits = run(root, "log", "--follow", "--format=%H", "--", ledger).stdout.split() if ledger else []
+    out["history"] = {"commits": len(commits)}
+    return out
+
+
+def check_differences(before, after):
+    """What a migration must not change: bin/status reading every TRACKED file current, the ledger checkers' exit codes,
+    the proofs' exit histogram, and the ledger's history staying reachable (every older commit plus the move)."""
+    diffs = []
+    if before["status"] != after["status"] or after["status"]["exit"] != 0 or after["status"]["current"] != after["status"]["tracked"]:
+        diffs.append("status")
+    for name in ("ledger", "handoff"):
+        if before[name]["exit"] != after[name]["exit"]:
+            diffs.append(name)
+    if before["proofs"] != after["proofs"]:
+        diffs.append("proofs")
+    if before["history"]["commits"] and after["history"]["commits"] < before["history"]["commits"] + 1:
+        diffs.append("history")
+    return diffs
+
+
+def apply_migration(report, trailers, skip_checks=False):
     """Do the plan: the moves, the edits, ONE commit. Any failure before or at the commit is rolled back."""
     root = Path(report["project"])
     moves, rewrites = report["moves"], report["_rewrites"]
     methodology_existed = (root / NEW_DIR).exists()
     done_plain = []
+    ledger_src, ledger_final = ledger_location(root, moves)
+    proof_srcs = [m["src"] for m in moves if m["kind"] == "shard" and m["src"].endswith(".verify.sh")]
+    proof_dests = [m["dest"] for m in moves if m["kind"] == "shard" and m["src"].endswith(".verify.sh")]
+    before = None if skip_checks else run_checks(root, proof_srcs, ledger_src)
     try:
         for m in moves:
             (root / m["dest"]).parent.mkdir(parents=True, exist_ok=True)
@@ -651,7 +717,17 @@ def apply_migration(report, trailers):
     report["commit"] = {"sha": run(root, "rev-parse", "HEAD").stdout.strip(), "parent": parent, "message": message,
                         "renames": [{"src": s, "dest": d, "score": sc} for (s, d), sc in sorted(renames.items())
                                     if any(m["src"] == s and m["dest"] == d for m in moves)]}
-    return 0
+    if skip_checks:
+        report["checks"] = {"ran": False}
+        return 0
+    after = run_checks(root, proof_dests, ledger_final)
+    differences = check_differences(before, after)
+    clean = run(root, "status", "--porcelain").stdout.strip() == ""
+    sha = report["commit"]["sha"]
+    report["checks"] = {"ran": True, "before": before, "after": after, "differences": differences,
+                        "informational": list(INFORMATIONAL), "clean": clean, "ok": not differences and clean,
+                        "way_back": "git revert %s" % sha[:12]}
+    return 0 if report["checks"]["ok"] else 4
 
 
 def render_text(report):
@@ -692,6 +768,26 @@ def render_text(report):
             out.append("  %-9s%d mention(s) in %d file(s)%s" % (cat + ":", c["mentions"], c["files"], note))
             for s in c["sites"]:
                 out.append("    %s:%d  %s" % (s["file"], s["line"], s["text"][:120]))
+    ck = report["checks"]
+    if ck and ck.get("ran"):
+        out.append("")
+        out.append("checks (before -> after):")
+
+        def show(name, side):
+            c = ck[side][name]
+            if name == "status":
+                return "%d/%d tracked current" % (c["current"], c["tracked"])
+            if name == "proofs":
+                return "%d proof(s), exit histogram %s" % (c["count"], json.dumps(c["histogram"], sort_keys=True))
+            if name == "history":
+                return "%d commit(s) reached by git log --follow" % c["commits"]
+            return "exit %s" % c["exit"]
+        for name in ("status", "ledger", "handoff", "links", "proofs", "history"):
+            note = "  (informational until P9: the distributed documents are authored for the old layout)" if name in ck["informational"] else ""
+            out.append("  %-8s %s -> %s%s" % (name + ":", show(name, "before"), show(name, "after"), note))
+        out.append("  clean tree: %s" % ("yes" if ck["clean"] else "NO"))
+        if not ck["ok"]:
+            out.append("CHECKS DIFFER (%s). The commit stands; to undo it: %s" % (", ".join(ck["differences"]) or "tree not clean", ck["way_back"]))
     if report["status"] == "applied":
         out.append("")
         out.append("APPLIED: one commit, %s" % report["commit"]["sha"][:12])
@@ -720,7 +816,7 @@ def main():
     if report["status"] == "refused":
         code = 1
     elif args.apply and report["status"] == "ok":
-        code = apply_migration(report, args.trailer)
+        code = apply_migration(report, args.trailer, args.skip_checks)
     report.pop("_rewrites", None)
     print(json.dumps(report, indent=2) if args.json else render_text(report), end="" if not args.json else "\n")
     return code
