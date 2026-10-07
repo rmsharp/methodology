@@ -11,6 +11,12 @@ down in methodology/ (new). The answer is read from one anchor file, by the four
     exists                   exists       half      None  -- stop, name both, never guess
     absent                   absent       none      None  -- the framework repo, or not an adopter
 
+A fifth row, opt-in (tiebreak=True, decided 2026-10-06, plan 7.2a): a file found in BOTH places is
+the framework's under methodology/ when the runner is under methodology/ and not at the root. It
+exists because a project's own product CHANGELOG.md may sit at the root beside the ledger. A tool
+that reads a ledger asks for it; a tool that reads a manifest does not (a second manifest is a
+stale copy, not the project's own), so for it a tie is still half.
+
 The anchor is the caller's choice, because a project can be part-way: the plan's tier 1 moves the
 framework files (SESSION_RUNNER.md and the rest) and leaves the state files (CHANGELOG.md,
 HANDOFFS.md, the two JSON configs) at the root until tier 2. A tool that reads a framework file
@@ -29,13 +35,19 @@ import os as _os
 from pathlib import Path as _Path
 
 
-def resolve_layout(root, anchor="SESSION_RUNNER.md"):
+def resolve_layout(root, anchor="SESSION_RUNNER.md", tiebreak=False):
     """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
-    found the anchor paths that exist. A half-migrated tree has no directory, by design."""
+    found the anchor paths that exist. A half-migrated tree has no directory, by design.
+    tiebreak=True is for a file a project may own a same-named copy of at its root (a ledger: the
+    product CHANGELOG.md). Found in both places, the framework anchor decides: the runner under
+    methodology/ and not at the root makes the methodology/ copy the framework's, kind new, and
+    found still names both. Any other tie stays half."""
     root = _Path(root)
     new, old = root / "methodology" / anchor, root / anchor
     found = tuple(p for p in (new, old) if _os.path.isfile(p))
     if len(found) == 2:
+        if tiebreak and resolve_layout(root)[0] == "new":
+            return "new", new.parent, found
         return "half", None, found
     if not found:
         return "none", None, ()

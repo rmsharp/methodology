@@ -69,13 +69,19 @@ import os as _os
 from pathlib import Path as _Path
 
 
-def resolve_layout(root, anchor="SESSION_RUNNER.md"):
+def resolve_layout(root, anchor="SESSION_RUNNER.md", tiebreak=False):
     """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
-    found the anchor paths that exist. A half-migrated tree has no directory, by design."""
+    found the anchor paths that exist. A half-migrated tree has no directory, by design.
+    tiebreak=True is for a file a project may own a same-named copy of at its root (a ledger: the
+    product CHANGELOG.md). Found in both places, the framework anchor decides: the runner under
+    methodology/ and not at the root makes the methodology/ copy the framework's, kind new, and
+    found still names both. Any other tie stays half."""
     root = _Path(root)
     new, old = root / "methodology" / anchor, root / anchor
     found = tuple(p for p in (new, old) if _os.path.isfile(p))
     if len(found) == 2:
+        if tiebreak and resolve_layout(root)[0] == "new":
+            return "new", new.parent, found
         return "half", None, found
     if not found:
         return "none", None, ()

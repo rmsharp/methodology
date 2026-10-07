@@ -118,6 +118,77 @@ class TestAnchors(Scratch):
         self.assertEqual(lr.resolve_layout(str(self.root))[0], "legacy")
 
 
+class TestTheFrameworkAnchorDecidesATie(Scratch):
+    """Decided 2026-10-06 (S275 close-out picker, plan 7.2a): a project whose SESSION_RUNNER.md is under
+    methodology/ keeps its ledger there whatever sits at the root. Section 4.1 frees the root CHANGELOG.md
+    for a project's own product changelog, and the four-row table anchored on the ledger reads that
+    project as half-migrated. The row is opt-in (`tiebreak=True`): a caller asks for it only for a file a
+    project may own a same-named copy of, which a ledger is and a quality manifest is not."""
+
+    def ledgers(self, runner="methodology"):
+        touch(self.root, "CHANGELOG.md")
+        touch(self.root, "methodology", "CHANGELOG.md")
+        if runner == "methodology":
+            touch(self.root, "methodology", "SESSION_RUNNER.md")
+        elif runner == "root":
+            touch(self.root, "SESSION_RUNNER.md")
+        elif runner == "both":
+            touch(self.root, "SESSION_RUNNER.md")
+            touch(self.root, "methodology", "SESSION_RUNNER.md")
+
+    def test_a_ledger_in_both_places_with_the_runner_under_methodology_is_the_new_layout(self):
+        self.ledgers("methodology")
+        kind, directory, found = lr.resolve_layout(self.root, "CHANGELOG.md", tiebreak=True)
+        self.assertEqual((kind, directory), ("new", self.root / "methodology"))
+        self.assertEqual(set(found), {self.root / "CHANGELOG.md", self.root / "methodology" / "CHANGELOG.md"},
+                         "found names both, so a caller can say which root file it is leaving alone")
+
+    def test_without_the_request_the_tie_is_still_half_migrated(self):
+        self.ledgers("methodology")
+        self.assertEqual(lr.resolve_layout(self.root, "CHANGELOG.md")[:2], ("half", None))
+        self.assertEqual(lr.resolve_layout(self.root, "CHANGELOG.md", tiebreak=False)[:2], ("half", None))
+
+    def test_a_ledger_in_both_places_with_no_runner_under_methodology_stays_refused(self):
+        for runner in (None, "root", "both"):
+            with self.subTest(runner=runner):
+                with tempfile.TemporaryDirectory() as td:
+                    self.root = Path(td)
+                    self.ledgers(runner)
+                    self.assertEqual(lr.resolve_layout(self.root, "CHANGELOG.md", tiebreak=True)[:2], ("half", None))
+
+    def test_the_framework_anchor_cannot_decide_against_itself(self):
+        touch(self.root, "SESSION_RUNNER.md")
+        touch(self.root, "methodology", "SESSION_RUNNER.md")
+        self.assertEqual(lr.resolve_layout(self.root, tiebreak=True)[:2], ("half", None))
+        self.assertEqual(lr.resolve_layout(self.root, "SESSION_RUNNER.md", tiebreak=True)[:2], ("half", None))
+
+    def test_every_other_shape_answers_as_it_did_with_or_without_the_request(self):
+        shapes = ([], [("SESSION_RUNNER.md",)], [("methodology", "SESSION_RUNNER.md")],
+                  [("methodology", "SESSION_RUNNER.md"), ("CHANGELOG.md",)],      # tier 1: the ledger stays at the root
+                  [("methodology", "SESSION_RUNNER.md"), ("methodology", "CHANGELOG.md")],
+                  [("SESSION_RUNNER.md",), ("CHANGELOG.md",)],
+                  [("SESSION_RUNNER.md",), ("methodology", "SESSION_RUNNER.md"), ("CHANGELOG.md",),
+                   ("methodology", "CHANGELOG.md")])
+        for shape in shapes:
+            with tempfile.TemporaryDirectory() as td:
+                for s in shape:
+                    touch(td, *s)
+                self.assertEqual(lr.resolve_layout(td, "CHANGELOG.md", tiebreak=True),
+                                 lr.resolve_layout(td, "CHANGELOG.md"), shape)
+
+    def test_the_tier_1_tree_still_reads_legacy_for_the_ledger_with_the_request(self):
+        # The runner moved and the ledger did not (plan 4.6): there is no tie, so the row is not reached.
+        touch(self.root, "methodology", "SESSION_RUNNER.md")
+        touch(self.root, "CHANGELOG.md")
+        self.assertEqual(lr.resolve_layout(self.root, "CHANGELOG.md", tiebreak=True)[:2], ("legacy", self.root))
+
+    def test_a_manifest_in_both_places_is_refused_because_the_ratchet_does_not_ask(self):
+        touch(self.root, "methodology", "SESSION_RUNNER.md")
+        touch(self.root, ".quality-gates.json")
+        touch(self.root, "methodology", ".quality-gates.json")
+        self.assertEqual(lr.resolve_layout(self.root, ".quality-gates.json")[:2], ("half", None))
+
+
 class TestEveryEmbeddedCopyIsByteIdentical(unittest.TestCase):
     """Each shipped tool that resolves the layout carries the module's block, byte for byte (plan 4.3).
     A copy that drifted is a second resolver with its own answers. P2 embeds it in the ratchet; each
@@ -169,12 +240,17 @@ class TestTheBlockIsEmbeddable(Scratch):
     def test_the_block_agrees_with_the_module_on_every_tree_shape(self):
         ns = {}
         exec(compile(self.block, "<block>", "exec"), ns)
+        tie = [("methodology", "SESSION_RUNNER.md"), ("CHANGELOG.md",), ("methodology", "CHANGELOG.md")]
         for shapes in ([], [("SESSION_RUNNER.md",)], [("methodology", "SESSION_RUNNER.md")],
-                       [("SESSION_RUNNER.md",), ("methodology", "SESSION_RUNNER.md")]):
+                       [("SESSION_RUNNER.md",), ("methodology", "SESSION_RUNNER.md")], tie,
+                       [("CHANGELOG.md",), ("methodology", "CHANGELOG.md")]):
             with tempfile.TemporaryDirectory() as td:
                 for s in shapes:
                     touch(td, *s)
                 self.assertEqual(ns["resolve_layout"](td), lr.resolve_layout(td))
+                for flag in (False, True):
+                    self.assertEqual(ns["resolve_layout"](td, "CHANGELOG.md", tiebreak=flag),
+                                     lr.resolve_layout(td, "CHANGELOG.md", tiebreak=flag), (shapes, flag))
 
     def test_the_block_imports_only_the_standard_library(self):
         import ast
