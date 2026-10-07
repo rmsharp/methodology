@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-07 · [BL-101] S277 — the floors raised after BL-101 P4: `tests-sh-passed` 468 → 474, budget 148 → 163, ratchet 75 → 81, layout 72 → 74, and a new gate `checker-layout-unit-tests` ≥ 13 (plan section 7.2c)
+
+Tightening only; `quality_ratchet.py --precommit` accepts it and `--run` measures it. **`tests-sh-passed` comes from the at-rest state, not from a sum:** a `--no-local` clone of `616db8a` with the S277 claim stub removed (HANDOFFS.md holds TWO receipts) read `474 passed, 0 failed, 6 skipped` (Test 34's six stated SKIPs), captured to a file; the working tree with three receipts reads six more passes and no skips (479 before the wiring commit, 480 after, 479 + 1). The four unit counts are each measured by running the suite: budget 163, ratchet 81, layout 74, the new checker suite 13. The note `_s277_tightening_bl101_p4` in the manifest carries the same account. Model: Claude Sonnet 5.5.
+
 ### 2026-10-07 · [BL-101] S277 — `tools/test_checker_layouts.py` is wired into `bin/tests.sh` (plan C9, layer 2 of P4, the wiring)
 
 One `pass`/`fail` line after the layout suite's, so the 13 tests report through `tests-sh-passed` and a red one fails the suite. The gate for its own count and the raised floors for the suites this phase grew are the next commit, after the at-rest measurement they have to come from. Model: Claude Sonnet 5.5.
