@@ -207,7 +207,8 @@ class TestEveryEmbeddedCopyIsByteIdentical(unittest.TestCase):
     later phase appends the tool it touches to COPIES (the dashboard, the trimmer, the budget gate)."""
 
     COPIES = ("starter-kit/close_out_report.py", "starter-kit/context_budget.py", "starter-kit/methodology_trim.py",
-              "starter-kit/quality_ratchet.py")
+              "starter-kit/quality_ratchet.py",
+              "bin/check-handoff", "bin/check-ledger", "bin/check-overhead", "bin/model-report")   # P4: the checkers
 
     def test_each_copy_equals_the_modules_block_and_carries_exactly_one(self):
         block = lr.embedded_block((HERE / "layout_resolver.py").read_text(encoding="utf-8"))
@@ -217,8 +218,13 @@ class TestEveryEmbeddedCopyIsByteIdentical(unittest.TestCase):
             self.assertEqual(lr.embedded_block(text), block, rel + ": the block differs from tools/layout_resolver.py")
 
     def test_every_tool_that_carries_the_markers_is_listed(self):
-        carriers = sorted(str(p.relative_to(REPO)) for p in (REPO / "starter-kit").glob("*.py")
-                          if lr.BEGIN in p.read_text(encoding="utf-8"))
+        def carries(p):
+            try:
+                return lr.BEGIN in p.read_text(encoding="utf-8")
+            except UnicodeDecodeError:
+                return False
+        carriers = sorted(str(p.relative_to(REPO)) for d in ("starter-kit", "bin")
+                          for p in (REPO / d).iterdir() if p.is_file() and carries(p))
         self.assertEqual(carriers, sorted(self.COPIES),
                          "a shipped tool embeds the block but its copy is not asserted here")
 
@@ -624,7 +630,8 @@ class TestToolsAlreadyResolvedStayAtZero(unittest.TestCase):
 
     RESOLVED = (".githooks/pre-commit", "starter-kit/quality_ratchet.py",   # P2
                 "starter-kit/methodology_trim.py", "starter-kit/close_out_report.py",   # P3
-                "starter-kit/context_budget.py")   # P4
+                "starter-kit/context_budget.py",   # P4
+                "bin/check-handoff", "bin/check-ledger", "bin/check-overhead", "bin/model-report")
 
     def test_each_resolved_tool_reports_no_site(self):
         for rel in self.RESOLVED:
