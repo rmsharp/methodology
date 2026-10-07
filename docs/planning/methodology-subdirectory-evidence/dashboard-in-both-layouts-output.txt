@@ -1,0 +1,43 @@
+commit under test: 631c87c   old dashboard: 4a7ce9f (DASHBOARD_VERSION="2.21.0")
+new dashboard: DASHBOARD_VERSION="2.22.0"
+
+warning: You appear to have cloned an empty repository.
+== A. a project that has not moved reads exactly as it read ==
+   Philippians                  health  51 ->  51  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   airqino                      health  60 ->  60  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   chat_verification            health  35 ->  35  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   church_growth                health  35 ->  35  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   claude_work                  health   0 ->   0  compliance   0 ->   0  layout none    full metrics equal: yes
+   dalia_martinez_funeral       health  32 ->  32  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   feedback-loop-comparison     health  38 ->  38  compliance 110 -> 110  layout legacy  full metrics equal: yes
+   model_project_constructor    health  96 ->  96  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   mts-system                   health  92 ->  92  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   nprcgenekeepr                health  96 ->  96  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   vscode_quarto_ext            health  76 ->  76  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   wsfct                        health  94 ->  94  compliance 115 -> 115  layout legacy  full metrics equal: yes
+   methodology                  health  72 ->  72  compliance 105 -> 105  layout none    full metrics equal: yes
+   13 of 13 identical
+
+== B. the same adopters, cloned and moved under methodology/ ==
+   model_project_constructor    at 0dc3051 moved 29 files  layout new     compliance 115 -> 115  health  96 ->  96 (+0)  differs in: nothing  OK
+   nprcgenekeepr                at 43dd1632 moved 30 files  layout new     compliance 115 -> 115  health  96 ->  96 (+0)  differs in: nothing  OK
+   mts-system                   at d1cf54f moved 29 files  layout new     compliance 115 -> 115  health  92 ->  92 (+0)  differs in: nothing  OK
+   vscode_quarto_ext            at 0c711ec moved 29 files  layout new     compliance 115 -> 115  health  76 ->  76 (+0)  differs in: nothing  OK
+   Philippians                  at 427e634 moved 29 files  layout new     compliance 115 -> 115  health  51 ->  51 (+0)  differs in: nothing  OK
+
+== C. --sync --dry-run over a scratch portfolio: legacy, migrated, half-migrated, empty ==
+   Canonical: /private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/tmp.KPtrvj6hVm/portfolio/methodology/starter-kit/methodology_dashboard.py (v2.22.0)
+   DRY RUN — no files written. Targets: portfolio root + 4 project(s)
+     skip      methodology_dashboard.py  [SKIPPED — new, ungitignored file; pass --force to create]
+     skip      empty/methodology_dashboard.py  [SKIPPED — new, ungitignored file; pass --force to create]
+     skip      legacy/methodology_dashboard.py  [SKIPPED — git-tracked; pass --force, then Phase 3 untrack]
+     skip      migrated/methodology/methodology_dashboard.py  [SKIPPED — git-tracked; pass --force, then Phase 3 untrack]
+     refuse    half  [half-migrated: methodology/SESSION_RUNNER.md and SESSION_RUNNER.md both exist; never guessed, so move or remove one copy]
+     Would change 0 of 4 target(s). (4 skipped — rerun with --force to include them) (1 half-migrated project(s) refused — --force does not apply)
+   migrated's copy is methodology/methodology_dashboard.py yes
+   migrated gets no root copy                              yes
+   legacy's copy is at its root                            yes
+   half is refused by name                                 yes
+   the dry run wrote nothing                               yes
+
+result: every comparison held
