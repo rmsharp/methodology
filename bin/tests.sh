@@ -4392,6 +4392,36 @@ printf '# Changelog\n' > "$U/CHANGELOG.md"; printf 'x\n' > "$U/tracked.txt"; t54
     || fail "half-migrated tree: exit $RC54, wanted 1 naming both: $OUT54"
 rm -rf "$U"
 
+# A tie the framework anchor decides (BL-101 P3, decided 2026-10-06, plan 7.2a): the project's own
+# product changelog sits at the root beside a ledger that moved, and the runner is tracked under
+# methodology/. The gate follows the ledger there and leaves the root file alone; a tie the anchor
+# does not decide (the runner at the root, or at both) is still refused naming both.
+t54_tie() { # $1 where the runner is tracked: methodology | both
+    local u; u="$(t54_repo new "$HOOK54")"
+    printf '# Product changelog\n\n## 1.0\n\n- shipped\n' > "$u/CHANGELOG.md"
+    printf 'runner\n' > "$u/methodology/SESSION_RUNNER.md"
+    [ "$1" = both ] && printf 'runner\n' > "$u/SESSION_RUNNER.md"
+    git -C "$u" add -A; git -C "$u" commit -q --no-verify -m tie
+    echo "$u"
+}
+U="$(t54_tie methodology)"
+printf 'two\n' > "$U/tracked.txt"; t54_entry "$U/methodology/CHANGELOG.md"; t54_try "$U"
+[ "$RC54" = 0 ] && pass "a tie the framework anchor decides (runner under methodology/): the ledger entry passes, the root product changelog is left alone" \
+    || fail "tie decided by the anchor: a commit with its ledger entry was refused (exit $RC54): $OUT54"
+rm -rf "$U"
+U="$(t54_tie methodology)"
+printf 'two\n' > "$U/tracked.txt"; printf '# Product changelog\n\n## 1.1\n\n- shipped again\n' > "$U/CHANGELOG.md"; t54_try "$U"
+[ "$RC54" = 1 ] && grep -qF "methodology/CHANGELOG.md not staged" <<< "$OUT54" \
+    && pass "a tie the anchor decides: a commit that touches only the root product changelog is refused, naming methodology/CHANGELOG.md" \
+    || fail "tie decided by the anchor: X2 -- exit $RC54, wanted 1 naming methodology/CHANGELOG.md; got: $OUT54"
+rm -rf "$U"
+U="$(t54_tie both)"
+printf 'two\n' > "$U/tracked.txt"; t54_entry "$U/methodology/CHANGELOG.md"; t54_try "$U"
+[ "$RC54" = 1 ] && grep -qF "Two ledgers are tracked" <<< "$OUT54" \
+    && pass "a tie the anchor cannot decide (runner at the root and under methodology/) is refused, naming both" \
+    || fail "tie with two runners: exit $RC54, wanted 1 naming both: $OUT54"
+rm -rf "$U"
+
 # CONTROLS: each assertion above must be able to fail. Mutate a COPY of the hook, never the live one.
 M54="$(mktemp)"; chmod +x "$M54"
 t54_mutant() { # $1 what, $2 python expression, $3 the selftest probe that must go red ('' = none, a git scenario instead)
@@ -4409,7 +4439,10 @@ t54_mutant() { # $1 what, $2 python expression, $3 the selftest probe that must 
     fi
 }
 t54_mutant "the new-layout ledger branch disabled" 's.replace("if indexed \"$new_ledger\"; then", "if false; then", 1)' "new layout: ledger not co-staged -> REFUSED (X2"
-t54_mutant "the half-migrated refusal disabled"    's.replace("\tif indexed \"$legacy_ledger\"; then\n\t\tcat >&2", "\tif false; then\n\t\tcat >&2", 1)' "a ledger in both places"
+t54_mutant "the half-migrated refusal disabled"    's.replace("\tif indexed \"$legacy_ledger\" && ! { indexed \"$new_runner\" && ! indexed \"$legacy_runner\"; }; then", "\tif false; then", 1)' "a ledger in both places"
+t54_mutant "the framework anchor never decides a tie" 's.replace("\tif indexed \"$legacy_ledger\" && ! { indexed \"$new_runner\" && ! indexed \"$legacy_runner\"; }; then", "\tif indexed \"$legacy_ledger\"; then", 1)' "a tie, the runner under methodology/: the methodology ledger co-staged with a new entry -> pass"
+t54_mutant "a root runner beside the methodology one still decides the tie" 's.replace("indexed \"$new_runner\" && ! indexed \"$legacy_runner\"", "indexed \"$new_runner\"", 1)' "a tie, runner tracked: both -> REFUSED"
+t54_mutant "the framework anchor read from the worktree" 's.replace("indexed \"$new_runner\" && ! indexed \"$legacy_runner\"", "[ -f \"$new_runner\" ] && [ ! -f \"$legacy_runner\" ]", 1)' "a tie, a runner under methodology/ that is on disk but NOT tracked"
 t54_mutant "HEAD read from the new path only (no crossing the move)" 's.replace("for p in \"$ledger\" \"$legacy_ledger\" \"$new_ledger\"; do", "for p in \"$ledger\"; do", 1)' "the move commit that drops an entry"
 t54_mutant "the archive under methodology/ not recognised" 's.replace("^($legacy_archive|$new_archive)/", "^($legacy_archive)/", 1)' "new layout, ledger: entries dropped with a shard under methodology/ staged"
 # The ratchet chain guard, as a git scenario (the selftest's repos carry no ratchet).

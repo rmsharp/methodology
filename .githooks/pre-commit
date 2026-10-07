@@ -26,6 +26,7 @@ if [ "${1:-}" = "--selftest" ]; then
 	LEGACY=CHANGELOG.md                 # layout: ok -- the selftest builds the legacy layout's fixtures
 	NEWPATH=methodology/CHANGELOG.md    # layout: ok -- and the new layout's
 	TIER1=methodology/SESSION_RUNNER.md # layout: ok -- a framework file under methodology/, for the tier-1 fixture
+	ROOTRUN=SESSION_RUNNER.md           # layout: ok -- the same framework anchor at the root, for the tie fixtures
 	OLDARCH=docs/archive                # layout: ok -- the legacy shard directory, for the trim fixtures
 	LP=$LEGACY
 
@@ -212,6 +213,53 @@ if [ "${1:-}" = "--selftest" ]; then
 	mbuild "$F### 2026-01-02 · [ad hoc] B\n\n- b body\n- a bullet appended later\n\n$A$Z"
 	                expect "the move commit that rewrites an entry -> REFUSED" 1
 
+
+	# BL-101 P3 (decided 2026-10-06, plan 7.2a): a ledger in BOTH places is a tie, and the framework anchor
+	# decides it. A project whose runner is tracked under methodology/, and not at the root, keeps its
+	# ledger there; the root file is the project's own product changelog and the gate leaves it alone.
+	# Any other tie is still half-migrated and refused. The init commit holds both ledgers, as a real
+	# project does, so the tie is in HEAD and the index and not made by the probe.
+	tbuild() { # $1 = where the runner is tracked: methodology | root | both | none
+		n=$((n + 1)); d=$t/r$n
+		mkdir -p "$d"
+		(
+			cd "$d" || exit 1
+			unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE
+			git init -q -b main --template= .
+			git config user.email selftest@example.invalid
+			git config user.name selftest
+			mkdir -p methodology
+			printf "$F$B$A$Z" > "$NEWPATH"
+			printf '# Product changelog\n\n## 1.0\n\n- shipped\n' > "$LEGACY"
+			case "$1" in methodology|both) printf 'runner\n' > "$TIER1" ;; esac
+			case "$1" in root|both) printf 'runner\n' > "$ROOTRUN" ;; esac
+			printf 'one\n' > tracked.txt
+			git add -A
+			git commit -q -m init
+			printf 'two\n' > tracked.txt
+			git add tracked.txt
+		) >/dev/null 2>&1
+		git -C "$d" rev-parse --verify -q HEAD >/dev/null 2>&1 \
+			|| { echo "  FAIL: fixture r$n did not build"; fails=$((fails + 1)); }
+	}
+	NEWENTRY="$F### 2026-01-03 · [ad hoc] C\n\n- c body\n\n$B$A$Z"
+	tbuild methodology; ( cd "$d" && printf "$NEWENTRY" > "$NEWPATH" && git add "$NEWPATH" >/dev/null 2>&1 )
+	                expect "a tie, the runner under methodology/: the methodology ledger co-staged with a new entry -> pass" 0
+	tbuild methodology
+	                expect "a tie, the runner under methodology/: no ledger staged -> REFUSED" 1
+	tbuild methodology; ( cd "$d" && printf '# Product changelog\n\n## 1.1\n\n- shipped again\n' > "$LEGACY" && git add "$LEGACY" >/dev/null 2>&1 )
+	                expect "a tie, the runner under methodology/: only the root product changelog staged -> REFUSED (it is not the ledger)" 1
+	tbuild methodology; ( cd "$d" && printf "$NEWENTRY" > "$NEWPATH" && printf '# Product changelog\n\n## 1.1\n\n- reworded\n' > "$LEGACY" && git add "$NEWPATH" "$LEGACY" >/dev/null 2>&1 )
+	                expect "a tie, the runner under methodology/: the root product changelog rewritten beside a ledger entry -> pass (the never-edit rule is the ledger's)" 0
+	tbuild methodology; ( cd "$d" && printf "$F### 2026-01-02 · [ad hoc] B\n\n- b body\n- a bullet appended later\n\n$A$Z" > "$NEWPATH" && git add "$NEWPATH" >/dev/null 2>&1 )
+	                expect "a tie, the runner under methodology/: a committed ledger entry edited -> REFUSED (the never-edit rule follows the ledger)" 1
+	tbuild none; ( cd "$d" && printf 'runner\n' > "$TIER1" && printf "$NEWENTRY" > "$NEWPATH" && git add "$NEWPATH" >/dev/null 2>&1 )
+	                expect "a tie, a runner under methodology/ that is on disk but NOT tracked -> REFUSED (the anchor is read from the index)" 1
+	for where in none root both; do
+		tbuild "$where"; ( cd "$d" && printf "$NEWENTRY" > "$NEWPATH" && git add "$NEWPATH" >/dev/null 2>&1 )
+	                expect "a tie, runner tracked: $where -> REFUSED, still half-migrated (a ledger entry does not make it pass)" 1
+	done
+
 	rm -rf "$t"
 	[ "$fails" -eq 0 ] && echo "pre-commit selftest: OK ($checks checks)" || { echo "pre-commit selftest: $fails FAILED"; exit 1; }
 	exit 0
@@ -275,6 +323,8 @@ staged=$(git diff --cached --name-only)
 # passed without a ledger entry -- the gate that enforces failure mode #27 failing open, silently.
 legacy_ledger=CHANGELOG.md                # layout: ok -- the legacy half of the table this hook resolves
 new_ledger=methodology/CHANGELOG.md       # layout: ok -- the new half
+legacy_runner=SESSION_RUNNER.md           # layout: ok -- the framework anchor, root half: it decides a tie (plan 7.2a)
+new_runner=methodology/SESSION_RUNNER.md  # layout: ok -- the framework anchor, new half
 legacy_archive=docs/archive               # layout: ok -- where a trim writes its shard today
 new_archive=methodology/archive           # layout: ok -- where it will write it once the archive moves (D5)
 indexed() { git ls-files --error-unmatch -- "$1" >/dev/null 2>&1; }
@@ -358,11 +408,14 @@ if [ -z "$staged" ]; then
 	exit 0
 fi
 
-# Which file is the ledger? Both tracked is a half-migrated tree: the table says stop, name both,
+# Which file is the ledger? Both tracked is a tie. The framework anchor decides it (decided
+# 2026-10-06, plan 7.2a): a project whose runner is tracked under methodology/, and not at the
+# root, keeps its ledger there, and the root file is the project's own product changelog, which
+# this gate leaves alone. Any other tie is a half-migrated tree: the table says stop, name both,
 # never guess (plan 4.3). Refused loudly, and bypassable like every gate here.
 ledger=
 if indexed "$new_ledger"; then
-	if indexed "$legacy_ledger"; then
+	if indexed "$legacy_ledger" && ! { indexed "$new_runner" && ! indexed "$legacy_runner"; }; then
 		cat >&2 <<MSG
 ✗ Two ledgers are tracked: $legacy_ledger and $new_ledger — a half-migrated tree.
 
@@ -370,9 +423,10 @@ The ledger gate will not guess which one is the authoritative action ledger
 (the layout table in the BL-101 plan: stop, name both). Finish the move (the
 older one is renamed onto the newer, or removed) or revert it, then re-commit.
 
-  * If one of them is the project's own product changelog, that is an open
-    question of the plan (BL-101), not a mistake of yours: bypass once with
-    git commit --no-verify and say so in the commit message.
+  * If the one at the root is the project's own product changelog, say so by
+    the framework anchor: track $new_runner and not $legacy_runner, and this
+    gate follows $new_ledger and leaves the root file alone. Otherwise bypass
+    once with git commit --no-verify and say so in the commit message.
 MSG
 		exit 1
 	fi
