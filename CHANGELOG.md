@@ -237,6 +237,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-07 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-06-6.md` (1 record(s), 39,879 B → 29,329 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-06 → 2026-10-06) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-06-6.md`](docs/archive/HANDOFFS-through-2026-10-06-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-06-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-06-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,879 B → 29,329 B (−26.5%).
+
 ### 2026-10-07 · [BL-101] S277 — fork `main` pushed to `origin`: the twenty S277 commits (`71e777f..4a7ce9f`)
 
 At the S277 close-out picker he chose "Yes, push after close-out". Before the push `origin/main...main` read `0 20` after a fresh fetch, the twenty being the S277 commits from the `HANDOFFS.md` trim `9e23ecd` to the close-out `4a7ce9f` (three of them are the test checkpoints committed red on purpose, named in the ledger; the pushed tree is green, 15 of 15 gates); after it, `0 0` read back after another fetch, `origin/main` at `4a7ce9f`. `upstream/main` is untouched at `f34769f`: nothing went to `KJ5HST/methodology`. This record is the CHANGELOG-only one his standing grant covers, and it stays local on purpose (the close-out receipt says `origin/main...main` should read `0 1`); its push is the next session's to make under the same grant or his. Model: Claude Sonnet 5.5.
