@@ -69,6 +69,45 @@ import sys
 from collections import OrderedDict
 from pathlib import Path
 
+# === LAYOUT ===
+# A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+# section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+
+# --- layout resolver: BEGIN ---
+import os as _os
+from pathlib import Path as _Path
+
+
+def resolve_layout(root, anchor="SESSION_RUNNER.md"):
+    """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
+    found the anchor paths that exist. A half-migrated tree has no directory, by design.
+    A file found in both places is the framework's under methodology/ when the runner is under
+    methodology/ and not at the root: the root copy is the project's own and is left alone, kind new,
+    and found still names both. Any other tie stays half, and the runner cannot decide a tie about itself."""
+    root = _Path(root)
+    new, old = root / "methodology" / anchor, root / anchor
+    found = tuple(p for p in (new, old) if _os.path.isfile(p))
+    if len(found) == 2:
+        if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md") and not _os.path.isfile(root / "SESSION_RUNNER.md"):
+            return "new", new.parent, found
+        return "half", None, found
+    if not found:
+        return "none", None, ()
+    return ("new", new.parent, found) if found[0] == new else ("legacy", root, found)
+# --- layout resolver: END ---
+
+CHANGELOG_NAME = "CHANGELOG.md"  # layout: ok -- the action ledger's own file name: the resolver's anchor
+HANDOFFS_NAME = "HANDOFFS.md"  # layout: ok -- the receipt ledger's own file name: the resolver's anchor
+NEW_DIR = "methodology"
+
+
+class HalfMigrated(Exception):
+    """A ledger exists at the root AND under methodology/ and no runner under methodology/ decides."""
+
+    def __init__(self, name, found):
+        super().__init__(name)
+        self.name, self.found = name, found
+
 CHANGELOG_ENTRY_RE = re.compile(r"^### (\d{4}-\d{2}-\d{2}) · ((?:\[[^\]]+\])+) (.+)$")
 CHANGELOG_HEADER_PREFIX_RE = re.compile(r"^### ")
 CHANGELOG_MODEL_RE = re.compile(r"^-?\s*\*\*Model:\*\*\s*(.+)$")
@@ -80,7 +119,7 @@ CHANGELOG_BULLET_RE = re.compile(r"^-\s")
 # (`ARCHIVE_DIR`, :204); duplicated here as a literal rather than imported, because that
 # module is 113 KB of trimming machinery and this is a read-only reporter -- see
 # archive_shards() for the discovery rule and why it globs.
-ARCHIVE_DIR = "docs/archive"
+ARCHIVE_DIR = "docs/archive"  # layout: ok -- where a trim has written shards so far; a ledger under methodology/ also has archive/ beside it
 
 # Record-header date anchors, used ONLY to order files against each other (see
 # newest_record_date). Anchored to the header, never a free scan of the file's prose.
@@ -100,7 +139,7 @@ CO_AUTHORED_BY_RE = re.compile(r"^Co-Authored-By:\s*(.+)$", re.MULTILINE)
 
 S1_DISCLAIMER = (
     "A git trailer records who ran `git commit`, not which capability tier authored\n"
-    "the content. This fork's own S1 receipt (HANDOFFS.md) says \"Sonnet 5 built\n"
+    "the content. This fork's own S1 receipt (HANDOFFS.md) says \"Sonnet 5 built\n"  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
     "P2/P4, Opus 4.8 did P3/P5/P6\" -- yet ALL SIX of S1's real checkpoint commits,\n"
     "INCLUDING THE TWO THE RECEIPT ATTRIBUTES TO SONNET, carry the identical trailer\n"
     "\"Claude Opus 4.8 (1M context)\". Do not treat this section as ground truth for\n"
@@ -119,14 +158,24 @@ def repo_root() -> Path:
         return Path.cwd()
 
 
+def default_ledger(root: Path, name: str) -> Path:
+    """The ledger `name`, at the root or under methodology/ (the resolver's table, the runner deciding a tie),
+    else the starter-kit seed. A tree holding it in both places with nothing to decide between them raises
+    HalfMigrated: never guessed."""
+    kind, directory, found = resolve_layout(root, name)
+    if kind == "half":
+        raise HalfMigrated(name, found)
+    if directory is not None:
+        return directory / name
+    return root / "starter-kit" / name
+
+
 def default_changelog(root: Path) -> Path:
-    root_file = root / "CHANGELOG.md"
-    return root_file if root_file.exists() else root / "starter-kit" / "CHANGELOG.md"
+    return default_ledger(root, CHANGELOG_NAME)
 
 
 def default_handoffs(root: Path) -> Path:
-    root_file = root / "HANDOFFS.md"
-    return root_file if root_file.exists() else root / "starter-kit" / "HANDOFFS.md"
+    return default_ledger(root, HANDOFFS_NAME)
 
 
 def archive_shards(root: Path, live: Path) -> list:
@@ -153,9 +202,11 @@ def archive_shards(root: Path, live: Path) -> list:
     an absent directory yields nothing. That case is reported as a file count,
     never as silence: see `render`.
     """
-    adir = root / ARCHIVE_DIR
     stem = live.name[:-3] if live.name.endswith(".md") else live.name
-    return sorted(adir.glob("%s-*.md" % stem))
+    dirs = [root / ARCHIVE_DIR]
+    if live.parent.name == NEW_DIR:
+        dirs.append(live.parent / "archive")     # the trimmer's directory for a ledger under methodology/
+    return sorted(f for adir in dirs for f in adir.glob("%s-*.md" % stem))
 
 
 def newest_record_date(text: str, date_re) -> str:
@@ -506,7 +557,7 @@ def render(source1_scans, source2_scans, trailers, root: Path) -> str:
     lines.append("See docs/planning/model-use-provenance-plan.md for the full design.")
     lines.append("")
 
-    lines.append("=== SOURCE 1 -- PRIMARY (self-reported, structured): CHANGELOG.md **Model:** bullets ===")
+    lines.append("=== SOURCE 1 -- PRIMARY (self-reported, structured): CHANGELOG.md **Model:** bullets ===")  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
     # Live and archived records are ONE source spanning several files, never two
     # sources. A trim is a storage move the trimmer refuses to make unless it is
     # provably lossless -- it changes where a `**Model:**` bullet sits, not how
@@ -534,7 +585,7 @@ def render(source1_scans, source2_scans, trailers, root: Path) -> str:
     else:
         # Sentinel preserved verbatim: bin/tests.sh Test 30 asserts this exact
         # string is ABSENT against the real ledger, so it stays load-bearing.
-        lines.append("(no CHANGELOG.md entries carry a **Model:** bullet)")
+        lines.append("(no CHANGELOG.md entries carry a **Model:** bullet)")  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
     unparsed_total = sum(len(s["extra"]) for s in source1_scans)
     if unparsed_total:
         lines.append("")
@@ -547,7 +598,7 @@ def render(source1_scans, source2_scans, trailers, root: Path) -> str:
     lines.append("")
 
     lines.append('=== SOURCE 2 -- SECONDARY (self-reported, best-effort/regex-fuzzy): '
-                  'HANDOFFS.md free-text "model" mentions ===')
+                  'HANDOFFS.md free-text "model" mentions ===')  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
     lines.append("(fuzzy match on the bare word \"model\" in each receipt's free-text prose;")
     lines.append(" false positives are expected by design -- NOT a structured field)")
     lines.append(" NOTE: receipts are NOT deduplicated across files -- a session id can appear")
@@ -597,26 +648,32 @@ def render(source1_scans, source2_scans, trailers, root: Path) -> str:
 
 def main() -> int:
     p = argparse.ArgumentParser(
-        description="Report self-reported model/tier attribution across CHANGELOG.md, "
-                     "HANDOFFS.md, and git trailers -- kept visually separate, never merged."
+        description="Report self-reported model/tier attribution across CHANGELOG.md, "  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
+                     "HANDOFFS.md, and git trailers -- kept visually separate, never merged."  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
     )
-    p.add_argument("--changelog", help="explicit CHANGELOG.md path (default: this repo's root, "
+    p.add_argument("--changelog", help="explicit CHANGELOG.md path (default: this repo's root, "  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
                                         "falling back to starter-kit/CHANGELOG.md)")
-    p.add_argument("--handoffs", help="explicit HANDOFFS.md path (default: this repo's root, "
+    p.add_argument("--handoffs", help="explicit HANDOFFS.md path (default: this repo's root, "  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
                                        "falling back to starter-kit/HANDOFFS.md)")
     p.add_argument("--no-git", action="store_true",
                     help="skip the git-trailer corroboration section entirely")
     args = p.parse_args()
 
     root = repo_root()
-    changelog_path = Path(args.changelog) if args.changelog else default_changelog(root)
-    handoffs_path = Path(args.handoffs) if args.handoffs else default_handoffs(root)
+    try:
+        changelog_path = Path(args.changelog) if args.changelog else default_changelog(root)
+        handoffs_path = Path(args.handoffs) if args.handoffs else default_handoffs(root)
+    except HalfMigrated as half:
+        print("error: %s exists at the root AND under %s/ and no runner under %s/ decides between them "
+              "(a half-migrated tree): %s. Finish or revert the move, or name the file explicitly."
+              % (half.name, NEW_DIR, NEW_DIR, " and ".join(str(f) for f in half.found)))
+        return 1
 
     if not changelog_path.exists():
-        print("error: CHANGELOG.md not found: %s" % changelog_path)
+        print("error: CHANGELOG.md not found: %s" % changelog_path)  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
         return 1
     if not handoffs_path.exists():
-        print("error: HANDOFFS.md not found: %s" % handoffs_path)
+        print("error: HANDOFFS.md not found: %s" % handoffs_path)  # layout: ok -- message text: the file is named by its conventional name; the tool finds the project's own copy through the resolver above
         return 1
 
     # An EXPLICIT path means exactly that file and discovers nothing. Explicit

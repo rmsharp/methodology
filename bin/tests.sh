@@ -3244,7 +3244,7 @@ rm -rf "$P40"
 # cannot score itself killed.
 M40="$(mktemp)"
 # M1: the glob stops discovering anything -- the exact pre-fix state. Assertion (1) must die.
-if mutate "$BIN/model-report" "$M40" 's.replace("return sorted(adir.glob(\"%s-*.md\" % stem))", "return []", 1)'; then
+if mutate "$BIN/model-report" "$M40" 's.replace("return sorted(f for adir in dirs for f in adir.glob(\"%s-*.md\" % stem))", "return []", 1)'; then
     chmod +x "$M40"
     NM40="$(s1_count "$( (cd "$METHODOLOGY" && "$M40" --no-git) 2>&1 )")"
     if [ "$ARCHIVED_BULLETS40" -gt 0 ] && [ "$NM40" -le "$N40_LIVEONLY" ]; then
