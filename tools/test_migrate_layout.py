@@ -1383,6 +1383,32 @@ class TestWhatTheHitsSayAboutHooksAndDirectories(Adopter):
         text = run_migrate(self.project, json_out=False).out
         self.assertIn("refuse the migration commit", text)
 
+    def test_a_hook_in_the_hooks_directory_that_git_does_not_track_is_found_and_flagged(self):
+        """Real data (wsfct): context_budget.py install-hook writes .git/hooks/pre-commit, which is per clone and not
+        tracked, and which runs $top/context_budget.py: the scan of tracked files could not see the hook that refused."""
+        hook = self.project / ".git" / "hooks" / "pre-commit"
+        hook.write_text('#!/bin/sh\n# installed by context_budget.py\nexec python3 "$(git rev-parse --show-toplevel)/context_budget.py" --precommit\n', encoding="utf-8")
+        hook.chmod(0o755)
+        (self.project / ".git" / "hooks" / "commit-msg.sample").write_text("#!/bin/sh\n# CHANGELOG.md in a sample\n", encoding="utf-8")
+        before = tree_state(self.project)
+        r = run_migrate(self.project)
+        self.assertEqual(tree_state(self.project), before)
+        sites = [s for s in r.report["not_rewritten"]["hooks"]["sites"] if s["file"] == ".git/hooks/pre-commit"]
+        self.assertEqual([(s["line"], s["runs_tool"], s["untracked"]) for s in sites], [(2, False, True), (3, True, True)],
+                         "line 2 is a comment naming the tool, and a comment runs nothing; line 3 execs it")
+        self.assertEqual(r.report["not_rewritten"]["hooks"]["runs_moved_tool"], 1)
+        self.assertFalse([s for s in r.report["not_rewritten"]["hooks"]["sites"] if "sample" in s["file"]], "a .sample hook is not a hook")
+        text = run_migrate(self.project, json_out=False).out
+        self.assertIn("not tracked", text)
+        self.assertIn("refuse the migration commit", text)
+
+    def test_a_hook_directory_the_project_tracks_is_not_counted_twice(self):
+        git(self.project, "config", "core.hooksPath", ".githooks")
+        r = run_migrate(self.project)
+        sites = [s for s in r.report["not_rewritten"]["hooks"]["sites"] if s["file"] == ".githooks/pre-commit"]
+        self.assertEqual(len(sites), 1)
+        self.assertEqual(r.report["not_rewritten"]["hooks"]["mentions"], 1)
+
     def test_a_hook_that_runs_a_moved_tool_refuses_the_commit_and_the_tool_rolls_back_and_says_so(self):
         hook = self.project / ".githooks" / "pre-commit"
         hook.write_text("#!/bin/sh\npython3 context_budget.py --status || exit 1\n", encoding="utf-8")

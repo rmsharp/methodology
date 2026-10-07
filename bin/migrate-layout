@@ -457,24 +457,22 @@ def scan_hits(root, moves, rewrites, tier):
     if not mapping:
         return out
     pattern = token_pattern(mapping)
+    # In a hook a name behind a command substitution or a variable ("$(git rev-parse --show-toplevel)/X", "$top/X") is the
+    # project root's: the standing-alone rule rejects it everywhere else, since a directory in front of a name is not the root.
+    rooted = re.compile(r"(?:\)|\}|\$\w+)/(%s)(?!\w|\.\w)" % "|".join(re.escape(n) for n in sorted(mapping, key=len, reverse=True)))
     new_text = {r.path: r.new for r in rewrites}
     skip = {m["src"] for m in moves if hit_category(m["src"]) != "ledger"} | {p for p in new_text if p.endswith(".json")}
     probe = ["-e" + n for n in sorted({k.rsplit("/", 1)[-1] for k in mapping} | {"docs/methodology", "docs/archive"})]  # layout: ok -- same
     r = run(root, "grep", "-I", "-l", "-z", "-F", *probe)
     shown = {c: 0 for c in CATEGORIES}
-    for path in sorted(p for p in r.stdout.split("\0") if p):
-        if path in skip:
-            continue
-        cat = hit_category(path)
-        rewritten = path in new_text
-        try:
-            text = new_text[path] if rewritten else (root / path).read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            continue
+
+    def visit(path, text, cat, rewritten=False, untracked=False):
         mentions = 0
         for number, line in enumerate(text.splitlines(), 1):
             spans = [(m.start(), m.end(), m.group(0)) for m in pattern.finditer(line)] if not rewritten else []
             names = [s[2] for s in spans]
+            if cat == "hooks":
+                names += [m.group(1) for m in rooted.finditer(line)]
             for m in DIR_RE.finditer(line):
                 if not any(s[0] < m.end() and m.start() < s[1] for s in spans):
                     names.append(m.group(0))
@@ -484,13 +482,44 @@ def scan_hits(root, moves, rewrites, tier):
             if cat != "ledger" and shown[cat] < SITES_SHOWN:
                 site = {"file": path, "line": number, "text": line.strip()[:200], "names": sorted(set(names))}
                 if cat == "hooks":
-                    site["runs_tool"] = any(n.endswith(".py") for n in names)
+                    site["runs_tool"] = any(n.endswith(".py") for n in names) and not line.lstrip().startswith("#")
+                    site["untracked"] = untracked
                     out["hooks"]["runs_moved_tool"] += int(site["runs_tool"])
                 out[cat]["sites"].append(site)
                 shown[cat] += 1
         if mentions:
             out[cat]["mentions"] += mentions
             out[cat]["files"] += 1
+
+    listed = sorted(p for p in r.stdout.split("\0") if p)
+    for path in listed:
+        if path in skip:
+            continue
+        rewritten = path in new_text
+        try:
+            text = new_text[path] if rewritten else (root / path).read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        visit(path, text, hit_category(path), rewritten)
+    # The hooks git runs are per clone and mostly not tracked (context_budget.py install-hook writes .git/hooks/pre-commit,
+    # which execs the tool by its root path): read the directory git uses, so the hook that will refuse the commit is seen.
+    hooks_rel = run(root, "rev-parse", "--git-path", "hooks").stdout.strip()
+    hooks_dir = Path(hooks_rel) if os.path.isabs(hooks_rel) else root / hooks_rel
+    if hooks_rel and hooks_dir.is_dir():
+        tracked = tracked_files(root)
+        for f in sorted(hooks_dir.iterdir()):
+            if not f.is_file() or f.name.endswith(".sample"):
+                continue
+            try:
+                rel = f.resolve().relative_to(root.resolve()).as_posix()
+            except ValueError:
+                rel = str(f)
+            if rel in tracked:
+                continue  # a tracked hook directory was read above
+            try:
+                visit(rel, f.read_text(encoding="utf-8", errors="replace"), "hooks", untracked=True)
+            except OSError:
+                continue
     return out
 
 
@@ -831,7 +860,7 @@ def render_text(report):
             note = "  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)" if cat == "ledger" else ""
             out.append("  %-9s%d mention(s) in %d file(s)%s" % (cat + ":", c["mentions"], c["files"], note))
             for s in c["sites"]:
-                out.append("    %s:%d  %s" % (s["file"], s["line"], s["text"][:120]))
+                out.append("    %s:%d  %s%s" % (s["file"], s["line"], s["text"][:120], "   [not tracked: per clone]" if s.get("untracked") else ""))
             if cat == "hooks" and c["runs_moved_tool"]:
                 out.append("    WARNING: %d hook line(s) run a moved tool: that hook will refuse the migration commit and the run will roll back;"
                            " update the hook first (hooks are per clone and not part of this plan)" % c["runs_moved_tool"])
