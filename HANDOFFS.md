@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S277
+date: 2026-10-07
+status: pending
+active_task: BUILD BL-101 P4 (a build session: the plan's phase 4, `docs/planning/methodology-subdirectory-plan.md` section 7.2 row P4, is the contract, ratified at the S273 close-out and chosen at the S277 Phase 0 picker). FIRST his S276 close-out decision, built: the framework-anchor tie rule is unconditional (the resolver's `tiebreak` on by default, the ratchet's embedded copy and manifest lookup, the hook's chain, the layout suite; in the new layout the tools read only `methodology/`). THEN `context_budget.py` finds its config in either place and `bin/check-handoff`, `check-ledger`, `check-learnings`, `check-overhead` and `bin/model-report` resolve the ledger. No other shipped tool changes; the scanner stays RED and is not a gate until P6. Before this claim: the push of `71e777f` on his go-ahead, the owed `HANDOFFS.md` trim (`9e23ecd`, S274 to `HANDOFFS-through-2026-10-06-5.md`, proof exit 0 by name from a `--no-local` clone) and its fold (`f0139cf`).
+```
+
+```handoff
 session: S276
 date: 2026-10-06
 status: complete
