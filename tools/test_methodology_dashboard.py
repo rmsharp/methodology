@@ -6682,5 +6682,162 @@ class TestBL101P5Walk(unittest.TestCase):
                 self.assertIn("CLASS B", rows[prefix + "SESSION_NOTES.md"][1])
 
 
+class TestBL101P5Sync(unittest.TestCase):
+    """C15: `--sync` is a second sync channel, outside the manifest. Each target's layout is resolved, so a
+    migrated project gets `methodology/methodology_dashboard.py` and never a second copy at its root, and a
+    copy that lives in methodology/ finds its project, writes beside itself and warns with the project's path."""
+
+    CANON_TEXT = None
+
+    def _portfolio(self, projects):
+        """A portfolio root holding the canonical authoring repo and one git project per {name: layout}.
+        Every project ignores methodology_dashboard.py, so a create is not gated by the --force rule."""
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        canon = root / "methodology" / "starter-kit" / "methodology_dashboard.py"
+        canon.parent.mkdir(parents=True)
+        canon.write_text(Path(TOOLS_PY).read_text(encoding="utf-8"), encoding="utf-8")
+        subprocess.run(["git", "init", "-q", str(root / "methodology")], check=True)
+        made = {}
+        for name, layout in projects.items():
+            p = root / name
+            lf.build_tree(p, layout, generated=False)
+            for rel in ("methodology_dashboard.py", "methodology/methodology_dashboard.py"):
+                if (p / rel).exists():
+                    (p / rel).write_text("# a stale copy\\n", encoding="utf-8")
+            (p / ".gitignore").write_text("methodology_dashboard.py\\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q", str(p)], check=True)
+            made[name] = p
+        return root, canon, made
+
+    def _run_sync(self, canon, **kw):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            written = md.sync_dashboards(canon, **kw)
+        return written, out.getvalue(), err.getvalue()
+
+    def test_a_portfolio_sync_writes_each_project_in_the_layout_it_is_in(self):
+        root, canon, p = self._portfolio({"legacy": "legacy", "migrated": "new", "half": "half", "empty": "empty"})
+        text = canon.read_text(encoding="utf-8")
+        written, out, err = self._run_sync(canon)
+        self.assertEqual((p["legacy"] / "methodology_dashboard.py").read_text(encoding="utf-8"), text)
+        self.assertEqual((p["migrated"] / "methodology" / "methodology_dashboard.py").read_text(encoding="utf-8"), text)
+        self.assertFalse((p["migrated"] / "methodology_dashboard.py").exists(),
+                         "a migrated project must never get a second dashboard at its root")
+        self.assertEqual((p["empty"] / "methodology_dashboard.py").read_text(encoding="utf-8"), text,
+                         "an empty project gets the default layout's place (the legacy root, until the contract stage)")
+        self.assertEqual((root / "methodology_dashboard.py").read_text(encoding="utf-8"), text)
+        self.assertEqual(written, 4, out)       # the portfolio root, legacy, migrated, empty: not the half one
+
+    def test_a_half_migrated_project_is_refused_by_name_and_left_untouched(self):
+        root, canon, p = self._portfolio({"half": "half"})
+        written, out, err = self._run_sync(canon)
+        self.assertEqual((p["half"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\\n")
+        self.assertFalse((p["half"] / "methodology" / "methodology_dashboard.py").exists())
+        self.assertTrue(any("half-migrated" in l for l in out.splitlines()), out)
+        self.assertIn("methodology/SESSION_RUNNER.md", out)
+
+    def test_a_dry_run_names_the_resolved_path_and_writes_nothing(self):
+        root, canon, p = self._portfolio({"migrated": "new"})
+        before = (p["migrated"] / "methodology" / "methodology_dashboard.py").read_text(encoding="utf-8")
+        written, out, err = self._run_sync(canon, dry_run=True)
+        self.assertEqual(written, 0)
+        self.assertEqual((p["migrated"] / "methodology" / "methodology_dashboard.py").read_text(encoding="utf-8"), before)
+        lines = [l for l in out.splitlines() if "migrated" in l]
+        self.assertEqual(len(lines), 1, out)
+        self.assertIn("migrated/methodology/methodology_dashboard.py", lines[0])
+
+    def test_a_single_target_resolves_its_layout_too(self):
+        root, canon, p = self._portfolio({"migrated": "new", "legacy": "legacy"})
+        written, out, err = self._run_sync(canon, target=str(p["migrated"]))
+        self.assertEqual(written, 1)
+        self.assertEqual((p["migrated"] / "methodology" / "methodology_dashboard.py").read_text(encoding="utf-8"),
+                         canon.read_text(encoding="utf-8"))
+        self.assertFalse((p["migrated"] / "methodology_dashboard.py").exists())
+        self.assertEqual((p["legacy"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\\n")
+
+    def test_a_single_half_migrated_target_is_refused_without_writing(self):
+        root, canon, p = self._portfolio({"half": "half"})
+        written, out, err = self._run_sync(canon, target=str(p["half"]))
+        self.assertEqual(written, 0)
+        self.assertIn("half-migrated", err)
+        self.assertEqual((p["half"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\\n")
+
+
+class TestBL101P5CopyInsideMethodology(unittest.TestCase):
+    """A dashboard that sits in <project>/methodology/ is one level below the project it scans. The two
+    names tried are an ordinary project and a project literally NAMED methodology (this repository is one:
+    S277's check-overhead and check-ledger --all each took such a directory for a subdirectory)."""
+
+    NAMES = ("proj", "methodology")
+
+    def _project(self, name, layout="new", **kw):
+        text = Path(TOOLS_PY).read_text(encoding="utf-8")
+        return layout_project(self, layout, name=name, contents={"methodology_dashboard.py": text}, **kw)
+
+    def test_the_project_root_is_found_from_the_copy_in_methodology(self):
+        for name in self.NAMES:
+            with self.subTest(name=name):
+                p = self._project(name)
+                self.assertEqual(md.resolve_single_project_root(p / "methodology"), p)
+
+    def test_it_is_not_found_when_nothing_beside_the_copy_says_it_is_a_methodology_directory(self):
+        p = self._project("proj")
+        (p / "methodology" / "SESSION_RUNNER.md").unlink()
+        self.assertEqual(md.resolve_single_project_root(p / "methodology"), p / "methodology")
+        loose = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, loose, True)
+        (loose / "methodology").mkdir()
+        (loose / "methodology" / "SESSION_RUNNER.md").write_text("# runner\\n", encoding="utf-8")
+        self.assertEqual(md.resolve_single_project_root(loose / "methodology"), loose / "methodology",
+                         "no .git above it: a directory named methodology is not a project's subdirectory")
+
+    def test_a_copy_at_the_project_root_is_unchanged(self):
+        for name in self.NAMES:
+            with self.subTest(name=name):
+                p = self._project(name, "legacy")
+                self.assertEqual(md.resolve_single_project_root(p), p)
+
+    def _run(self, p):
+        return subprocess.run([sys.executable, "-B", str(p / "methodology" / "methodology_dashboard.py"), "--no-open"],
+                              cwd=str(p.parent), capture_output=True, text=True, timeout=60)
+
+    def test_the_copy_scans_its_project_and_writes_beside_itself(self):
+        for name in self.NAMES:
+            with self.subTest(name=name):
+                p = self._project(name, extra_commits=3)
+                r = self._run(p)
+                self.assertNotIn("No projects found", r.stdout + r.stderr)
+                self.assertIn("1 projects", r.stdout)
+                self.assertTrue((p / "methodology" / "dashboard.html").is_file())
+                self.assertTrue((p / "methodology" / "dashboard_history.jsonl").is_file())
+                self.assertFalse((p / "dashboard.html").exists(), "the project root stays clean")
+                self.assertFalse((p / "dashboard_history.jsonl").exists())
+                again = self._run(p)
+                self.assertRegex(again.stdout, r"History:\\D*2\\D*snapshots")
+
+    def test_the_stale_copy_warning_names_the_project_not_its_methodology_directory(self):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        root = Path(td.name)
+        canon = root / "methodology" / "starter-kit" / "methodology_dashboard.py"
+        canon.parent.mkdir(parents=True)
+        canon.write_text(re.sub(r'DASHBOARD_VERSION = "[^"]+"', 'DASHBOARD_VERSION = "9.9.9"',
+                                Path(TOOLS_PY).read_text(encoding="utf-8"), count=1), encoding="utf-8")
+        adopter = root / "adopter"
+        lf.build_tree(adopter, "new", generated=False, contents={"methodology_dashboard.py": Path(TOOLS_PY).read_text(encoding="utf-8")})
+        subprocess.run(["git", "init", "-q", str(adopter)], check=True)
+        driver = ("import importlib.util, sys\\n"
+                  "spec = importlib.util.spec_from_file_location('m', sys.argv[1])\\n"
+                  "m = importlib.util.module_from_spec(spec)\\n"
+                  "spec.loader.exec_module(m)\\n"
+                  "m.check_stale_version()\\n")
+        r = subprocess.run([sys.executable, "-B", "-c", driver, str(adopter / "methodology" / "methodology_dashboard.py")],
+                           capture_output=True, text=True, timeout=30)
+        self.assertIn("--sync %s\\n" % adopter, r.stderr)
+        self.assertNotIn("--sync %s" % (adopter / "methodology"), r.stderr)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
