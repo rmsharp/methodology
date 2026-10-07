@@ -528,7 +528,7 @@ HOOK_MUTANTS = [
     ("the session id is used as a path", [("[:100]", "[:100] if 0 else str(sid)")],
      "test_row15_a_session_id_with_slashes_is_a_file_name_not_a_path"),
     ("the ledger is looked for in the payload's cwd, not the repository root",
-     [('ledger = os.path.join(top, "HANDOFFS.md")', 'ledger = os.path.join(cwd, "HANDOFFS.md")')],
+     [('ledger, _found = resolve_ledger(top)', 'ledger, _found = resolve_ledger(cwd)')],
      "test_row12_a_session_started_in_a_subdirectory_still_blocks"),
     ("a receipt that began pending is not owed", [('and began[2] == "complete"', "")],
      "test_row02_closed_out_but_not_reported_blocks"),
@@ -620,6 +620,180 @@ class Property(unittest.TestCase):
         # The first receipt ever written (S1, 2026-07-08) predates predecessor_score. It is the one
         # pinned exception; a second unscored receipt means the ledger stopped recording scores.
         self.assertEqual(unscored, [("HANDOFFS-archive.md", "S1", "2026-07-08")])
+
+
+# ---------------------------------------------------------------------------------------------------------
+# BL-101 P3 -- the receipt ledger is where the layout resolver finds it (plan sections 4.3, 7.2 row P3;
+# coupling C10). A project keeps HANDOFFS.md at its root (legacy) or under methodology/ (new). Decided
+# 2026-10-06 (plan 7.2a): a project whose runner is under methodology/ alone keeps its ledger there, so a
+# HANDOFFS.md at the root is the project's own and is never read as the ledger.
+# ---------------------------------------------------------------------------------------------------------
+
+def make_new_repo(status="complete", runner=True, product=False, root_runner=False):
+    t = tempfile.mkdtemp()
+    sh("git", "init", "-q", ".", cwd=t)
+    sh("git", "config", "user.email", "t@e.com", cwd=t)
+    sh("git", "config", "user.name", "T", cwd=t)
+    sh("git", "config", "commit.gpgsign", "false", cwd=t)
+    os.makedirs(os.path.join(t, "methodology"))
+    with open(os.path.join(t, "methodology", "HANDOFFS.md"), "w", encoding="utf-8") as f:
+        f.write(LEDGER.format(status=status))
+    for rel, on in ((os.path.join("methodology", "SESSION_RUNNER.md"), runner), ("SESSION_RUNNER.md", root_runner)):
+        if on:
+            with open(os.path.join(t, rel), "w", encoding="utf-8") as f:
+                f.write("the runner\n")
+    if product:
+        with open(os.path.join(t, "HANDOFFS.md"), "w", encoding="utf-8") as f:
+            f.write("# the project's own hand-off notes\n")
+    sh("git", "add", ".", cwd=t)
+    sh("git", "commit", "-qm", "c", cwd=t)
+    return t
+
+
+class TheLedgerFollowsTheLayout(unittest.TestCase):
+    ARGS = ["--deliverable", "demo", "--outcome", "done", "--well", "a", "--badly", "b", "--predecessor", "c", "--next", "d"]
+
+    def repo(self, **kw):
+        r = make_new_repo(**kw) if kw.pop("_new", True) else make_repo()
+        self.addCleanup(shutil.rmtree, r, ignore_errors=True)
+        return r
+
+    def test_the_resolver_names_each_layouts_ledger_and_refuses_a_half_migrated_tree(self):
+        legacy = make_repo()
+        self.addCleanup(shutil.rmtree, legacy, ignore_errors=True)
+        self.assertEqual(cor.resolve_ledger(legacy)[0], os.path.join(legacy, "HANDOFFS.md"))
+        new = self.repo()
+        self.assertEqual(cor.resolve_ledger(new)[0], os.path.join(new, "methodology", "HANDOFFS.md"))
+        tie = self.repo(product=True)
+        self.assertEqual(cor.resolve_ledger(tie)[0], os.path.join(tie, "methodology", "HANDOFFS.md"),
+                         "the runner under methodology/ alone decides the tie")
+        for kw in (dict(product=True, runner=False), dict(product=True, root_runner=True)):
+            half = self.repo(**kw)
+            path, found = cor.resolve_ledger(half)
+            self.assertIsNone(path, kw)
+            self.assertEqual(len(found), 2, "both copies are named")
+        empty = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, empty, ignore_errors=True)
+        self.assertEqual(cor.resolve_ledger(empty)[0], os.path.join(empty, "HANDOFFS.md"), "no ledger yet: the legacy default")
+
+    def test_the_cli_reads_the_moved_ledger_without_being_told_where_it_is(self):
+        new = self.repo()
+        p = run_cli(*self.ARGS, cwd=new)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertTrue(p.stdout.startswith("## Close-out report: S2 · 2026-10-03\n"), p.stdout)
+
+    def test_the_cli_still_reads_the_root_ledger_of_a_legacy_project(self):
+        legacy = make_repo()
+        self.addCleanup(shutil.rmtree, legacy, ignore_errors=True)
+        p = run_cli(*self.ARGS, cwd=legacy)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertTrue(p.stdout.startswith("## Close-out report: S2"), p.stdout)
+
+    def test_the_cli_resolves_from_the_named_repository_not_from_where_it_runs(self):
+        new = self.repo()
+        elsewhere = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, elsewhere, ignore_errors=True)
+        p = run_cli(*self.ARGS, "--cwd", new, cwd=elsewhere)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertIn("S2", p.stdout)
+
+    def test_the_cli_run_from_a_subdirectory_finds_the_ledger_at_the_top_of_the_repository(self):
+        new = self.repo()
+        sub = os.path.join(new, "src", "deep")
+        os.makedirs(sub)
+        p = run_cli(*self.ARGS, cwd=sub)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertIn("S2", p.stdout)
+
+    def test_a_tie_the_framework_anchor_decides_reads_the_moved_ledger_and_leaves_the_root_file(self):
+        tie = self.repo(product=True)
+        p = run_cli(*self.ARGS, cwd=tie)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertIn("S2", p.stdout, "the receipt came from the ledger under methodology/, not from the project's own file")
+
+    def test_a_half_migrated_tree_is_refused_naming_both_copies(self):
+        for kw in (dict(product=True, runner=False), dict(product=True, root_runner=True)):
+            half = self.repo(**kw)
+            p = run_cli(*self.ARGS, cwd=half)
+            self.assertEqual(p.returncode, 2, kw)
+            self.assertTrue(p.stderr.startswith("refused:"), p.stderr)
+            self.assertIn("HANDOFFS.md", p.stderr)
+            self.assertIn(os.path.join("methodology", "HANDOFFS.md"), p.stderr)
+            self.assertEqual(p.stdout, "", "a refusal prints no report")
+
+    def test_an_explicit_ledger_still_wins_over_the_resolver(self):
+        new = self.repo()
+        own = os.path.join(new, "elsewhere.md")
+        with open(own, "w", encoding="utf-8") as f:
+            f.write(LEDGER.format(status="complete").replace("session: S2", "session: S9"))
+        p = run_cli(*self.ARGS, "--ledger", own, cwd=new)
+        self.assertEqual(p.returncode, 0, p.stderr)
+        self.assertIn("S9", p.stdout)
+
+    def test_live_facts_with_no_ledger_given_resolves_from_the_repository_it_is_told(self):
+        new = self.repo()
+        self.assertEqual(cor.live_facts(cwd=new)["session"], "S2")
+        self.assertEqual(cor.live_facts(None, new)["session"], "S2")
+
+
+class HookInTheNewLayout(HookCase):
+    """The Stop / SessionStart hook reads the moved ledger, and its block message names that path."""
+
+    def setUp(self):
+        self.repo = make_new_repo("pending")
+        self.addCleanup(shutil.rmtree, self.repo, ignore_errors=True)
+        self.mod = load(self.TOOL_PATH, "hook_under_test")
+        self.sid = "sess-1"
+        self.gitdir = os.path.join(self.repo, ".git")
+        self.moved = os.path.join(self.repo, "methodology", "HANDOFFS.md")
+
+    def write_ledger(self, text, msg="ledger"):
+        with open(self.moved, "w", encoding="utf-8") as f:
+            f.write(text)
+        sh("git", "add", ".", cwd=self.repo)
+        sh("git", "commit", "-qm", msg, cwd=self.repo)
+
+    def report(self):
+        return self.mod.render(self.mod.live_facts(self.moved, self.repo), *TEXTS.values())
+
+    def test_a_closed_out_but_unreported_session_blocks_and_the_command_names_the_moved_ledger(self):
+        self.start()
+        self.close_out()
+        r = self.stop("Done.")
+        self.assertBlocked(r)
+        real = os.path.realpath(self.repo)   # the tool names the repository git reports, which resolves a /var symlink
+        self.assertIn("--ledger " + shlex.quote(os.path.join(real, "methodology", "HANDOFFS.md")), r["reason"])
+        self.assertNotIn("--ledger " + shlex.quote(os.path.join(real, "HANDOFFS.md")), r["reason"])
+
+    def test_a_clean_report_allows(self):
+        self.start()
+        self.close_out()
+        self.assertIsNone(self.stop(self.report()))
+
+    def test_a_receipt_still_pending_allows(self):
+        self.start()
+        self.assertIsNone(self.stop("hello"))
+
+    def test_a_half_migrated_tree_allows_quietly_through_the_cli(self):
+        with open(os.path.join(self.repo, "HANDOFFS.md"), "w", encoding="utf-8") as f:
+            f.write("# the project's own hand-off notes\n")
+        os.remove(os.path.join(self.repo, "methodology", "SESSION_RUNNER.md"))
+        sh("git", "add", "-A", cwd=self.repo)
+        sh("git", "commit", "-qm", "half", cwd=self.repo)
+        self.assertIsNone(self.start())
+        self.close_out()
+        self.assertIsNone(self.stop("Done."), "the hook cannot say which ledger to read, so it adds no message")
+        p = self.hook_cli(self.payload("Stop", "Done."))
+        self.assertEqual((p.returncode, p.stdout), (0, ""))
+
+
+class HookInTheLegacyLayoutStillNamesTheRootLedger(HookCase):
+    def test_the_command_names_the_root_ledger(self):
+        self.start()
+        self.close_out()
+        r = self.stop("Done.")
+        self.assertBlocked(r)
+        self.assertIn("--ledger " + shlex.quote(os.path.join(os.path.realpath(self.repo), "HANDOFFS.md")), r["reason"])
 
 
 if __name__ == "__main__":

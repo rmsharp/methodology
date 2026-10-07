@@ -27,7 +27,39 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"   # 1.2.0: BL-101 P3 -- the receipt ledger is where the layout resolver finds it
+
+LEDGER_NAME = "HANDOFFS.md"   # layout: ok -- the receipt ledger's own file name: the resolver's anchor
+
+# === LAYOUT ===
+# A project keeps its ledgers at its root (legacy) or under methodology/ (new): the plan's section 4.3. This
+# block is the resolver, embedded byte for byte; the canonical suite asserts that. The tiebreak is asked for
+# (decided 2026-10-06, plan 7.2a): a project's own HANDOFFS.md at the root never stands in for the ledger.
+
+# --- layout resolver: BEGIN ---
+import os as _os
+from pathlib import Path as _Path
+
+
+def resolve_layout(root, anchor="SESSION_RUNNER.md", tiebreak=False):
+    """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
+    found the anchor paths that exist. A half-migrated tree has no directory, by design.
+    tiebreak=True is for a file a project may own a same-named copy of at its root (a ledger: the
+    product CHANGELOG.md). Found in both places, the framework anchor decides: the runner under
+    methodology/ and not at the root makes the methodology/ copy the framework's, kind new, and
+    found still names both. Any other tie stays half."""
+    root = _Path(root)
+    new, old = root / "methodology" / anchor, root / anchor
+    found = tuple(p for p in (new, old) if _os.path.isfile(p))
+    if len(found) == 2:
+        if tiebreak and resolve_layout(root)[0] == "new":
+            return "new", new.parent, found
+        return "half", None, found
+    if not found:
+        return "none", None, ()
+    return ("new", new.parent, found) if found[0] == new else ("legacy", root, found)
+# --- layout resolver: END ---
+
 
 HEAD_RE = re.compile(r"^## Close-out report: (S\S+) · (\d{4}-\d{2}-\d{2})$")
 LABELS = ("Deliverable", "Record", "Self-assessment", "Predecessor handoff", "Next session")
@@ -68,8 +100,31 @@ def facts(new, prev, head, dirty):
             "gate": g.group(1) if g else "not cited"}
 
 
-def live_facts(ledger="HANDOFFS.md", cwd="."):
-    """Facts from the newest receipt in `ledger` and from git in `cwd`. Raises ValueError if unusable."""
+def resolve_ledger(top):
+    """(the receipt ledger's path under the repository `top`, the copies found). The path is None for a
+    half-migrated tree. A tree with no ledger yet gets the legacy default, so the caller's open() names it."""
+    kind, directory, found = resolve_layout(top, LEDGER_NAME, tiebreak=True)
+    if kind == "half":
+        return None, found
+    return os.path.join(str(directory if directory is not None else top), LEDGER_NAME), found
+
+
+def default_ledger(cwd):
+    """The receipt ledger of the repository `cwd` is in. ValueError, naming both copies, for a half-migrated tree."""
+    top = _git("rev-parse", "--show-toplevel", cwd=cwd) or os.path.abspath(cwd)
+    path, found = resolve_ledger(top)
+    if path is None:
+        raise ValueError("the receipt ledger is in both places (" + ", ".join(sorted(os.path.relpath(str(f), top) for f in found))
+                         + "), a half-migrated tree: finish the move or revert it. It is not a tie only when the "
+                         "runner is tracked under that directory alone")
+    return path
+
+
+def live_facts(ledger=None, cwd="."):
+    """Facts from the newest receipt in `ledger` (default: the repository's own, found by the layout resolver) and
+    from git in `cwd`. Raises ValueError if unusable."""
+    if ledger is None:
+        ledger = default_ledger(cwd)
     with open(ledger, encoding="utf-8") as f:
         r = parse_receipts(f.read())
     if not r:
@@ -175,7 +230,9 @@ def decide(payload):
     top, gitdir = _git("rev-parse", "--show-toplevel", cwd=cwd), _git("rev-parse", "--absolute-git-dir", cwd=cwd)
     if not (top and gitdir) or event not in ("SessionStart", "Stop"):
         return None
-    ledger = os.path.join(top, "HANDOFFS.md")
+    ledger, _found = resolve_ledger(top)
+    if ledger is None:
+        return None  # a half-migrated tree: the hook only ever adds a message, and cannot say which ledger to read
     with open(ledger, encoding="utf-8") as f:
         newest = parse_receipts(f.read())[0]
     base, stamp = _state_path(gitdir, "baseline", sid), _state_path(gitdir, "stamp", sid)
@@ -221,7 +278,7 @@ def decide(payload):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--ledger", default="HANDOFFS.md", help="the receipt ledger (default HANDOFFS.md)")
+    ap.add_argument("--ledger", default=None, help="the receipt ledger (default: the project's own, found by the layout resolver)")
     ap.add_argument("--cwd", default=".", help="the repository whose HEAD the report names")
     ap.add_argument("--check", metavar="FILE", help="lint FILE ('-' = stdin) instead of printing a report")
     ap.add_argument("--hook", action="store_true", help="act as a Claude Code Stop / SessionStart hook (stdin payload)")
