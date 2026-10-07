@@ -237,6 +237,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-07 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-06-5.md` (1 record(s), 39,079 B → 28,571 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-06 → 2026-10-06) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-06-5.md`](docs/archive/HANDOFFS-through-2026-10-06-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-06-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-06-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,079 B → 28,571 B (−26.9%).
+
 ### 2026-10-07 · [BL-101] S276 — his decision at the close-out picker, recorded: the tie rule is not opt-in (plan section 7.2b, BL-101, the receipt)
 
 I had built the framework-anchor tiebreak opt-in, so the ledger tools ask for it and the ratchet's `.quality-gates.json` does not, and put the choice to him as a picker. He asked what the ledger and the manifest are (the ledger is `CHANGELOG.md`, the diary of actions; the manifest is `.quality-gates.json`, the ratchet's list of thresholds that may only tighten), then decided: **the methodology tools use only the files in `methodology/`; a same-named file anywhere else is the user's own to name as they like, and the ratchet should work inside `methodology/`** (he did not know what "stays loud and refuses" meant, which was my jargon for stopping with an error). **Recorded, NOT built:** P4 starts by making the rule unconditional (the resolver's default, the ratchet's embedded copy, `manifest_location` and its P2 tests, the hook's chain, the layout and ratchet suites); a tree with no runner under `methodology/`, or a runner in both places, stays refused. The plan (59,789 B of its declared 60,000 B), `BACKLOG.md`, `BACKLOG-DETAIL.md` and the S276 receipt (12,240 B, trimmed to stay under the 12,288 B record budget) say so; the receipt's push item now reads done. The earlier close-out entry's phrase "opt-in by my choice ... which he may overrule" is left as written: this entry is the correction. Model: Claude Sonnet 5.5.
