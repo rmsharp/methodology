@@ -26,6 +26,12 @@ The dashboard auto-detects its context based on where it's placed:
        ~/projects/my-app/                <-- put methodology_dashboard.py here
        ~/projects/my-app/lib/submodule/  <-- scanned as separate entry
 
+  A project that keeps its methodology files under methodology/ (BL-101, the new layout) keeps this
+  file there too: it finds its own project one level up, scans it exactly as it scans a project
+  whose files are at the root, and writes dashboard.html and dashboard_history.jsonl beside itself,
+  so the project's root stays clean. `--sync` puts each project's copy where that project keeps its
+  methodology files, and refuses a half-migrated project (the runner at both places) by name.
+
 SETUP
 -----
 1. Copy this file to your desired location (see Modes above).
@@ -161,7 +167,7 @@ CONFIG_FILES = {
     # Name-matched, not extension-matched: Path(".gitattributes").suffix is "" (a dotfile has no
     # suffix), so CONFIG_EXTS can never see it. Distributed as a SEED since the parallel-sessions
     # plan's Phase 1 (bin/_manifest.py), and categorized here so the installed-file tests hold.
-    ".gitattributes",
+    ".gitattributes",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 }
 CONFIG_EXTS = {
     ".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf",
@@ -190,15 +196,15 @@ LANG_MAP = {
 }
 
 METHODOLOGY_ITEMS = [
-    ("SESSION_RUNNER.md", 25, "file"),
-    ("SAFEGUARDS.md", 20, "file"),
-    ("SESSION_NOTES.md", 20, "file"),
+    ("SESSION_RUNNER.md", 25, "file"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ("SAFEGUARDS.md", 20, "file"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ("SESSION_NOTES.md", 20, "file"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     ("BACKLOG.md", 15, "file"),
-    ("CHANGELOG.md", 5, "file"),
-    ("HANDOFFS.md", 5, "file"),
-    ("ROADMAP.md", 5, "file"),
-    ("docs/methodology", 10, "dir"),
-    ("docs/methodology/workstreams", 10, "dir"),
+    ("CHANGELOG.md", 5, "file"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ("HANDOFFS.md", 5, "file"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ("ROADMAP.md", 5, "file"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ("docs/methodology", 10, "dir"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ("docs/methodology/workstreams", 10, "dir"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 ]
 
 # The compliance DENOMINATOR — derived from the checklist itself, never written as a literal.
@@ -241,15 +247,15 @@ METHODOLOGY_MAX = sum(weight for _, weight, _ in METHODOLOGY_ITEMS)
 # second time its line citations went stale, and this one had already drifted 255 -> 275.)
 # The canonical test suite enforces that rule mechanically against bin/_manifest.py.
 FRAMEWORK_ITEMS = [
-    ("ITERATIVE_METHODOLOGY.md", 15, "file"),      # the theory layer the runner cross-references
+    ("ITERATIVE_METHODOLOGY.md", 15, "file"),      # the theory layer the runner cross-references  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     ("starter-kit/SAFEGUARDS.md", 15, "file"),     # the enforcement half of the runner
     ("workstreams", 15, "dir"),                    # 9 of the 24 distributed sources live here
     ("bin/sync", 15, "file"),                      # what separates HAVING a methodology from PUBLISHING one
     ("bin/tests.sh", 10, "file"),                  # the framework's build equivalent
-    ("CHANGELOG.md", 10, "file"),                  # its OWN action ledger (FM #27)
-    ("HANDOFFS.md", 10, "file"),                   # its OWN close-out receipts (v3.3)
+    ("CHANGELOG.md", 10, "file"),                  # its OWN action ledger (FM #27)  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ("HANDOFFS.md", 10, "file"),                   # its OWN close-out receipts (v3.3)  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     ("starter-kit/BOOTSTRAP.md", 5, "file"),       # the documented install path
-    ("HOW_TO_USE.md", 5, "file"),                  # onboarding prose
+    ("HOW_TO_USE.md", 5, "file"),                  # onboarding prose  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     ("bin/status", 5, "file"),                     # how an adopter learns its copy has drifted
 ]
 
@@ -469,8 +475,8 @@ CLASS_A_STOP_BYTES = 96 * 1024    # 98,304  — reported, never applied here; th
 # A canonical test pins the "no protocol basis" half of that reasoning, so the day a protocol
 # edit gives one of them a basis, this comment is forced to be revisited instead of quietly
 # becoming false -- which is the failure the paragraph above records.
-READ_CAP_CLASS_A = frozenset(("CHANGELOG.md", "HANDOFFS.md"))
-READ_CAP_CLASS_B = frozenset(("SESSION_NOTES.md",) + _BACKLOG_LOCATIONS)
+READ_CAP_CLASS_A = frozenset(("CHANGELOG.md", "HANDOFFS.md"))  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+READ_CAP_CLASS_B = frozenset(("SESSION_NOTES.md",) + _BACKLOG_LOCATIONS)  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 
 # DERIVED, never re-listed. Phase C1's whole claim is that it repartitions this set without
 # changing it, and a third literal spelling of the six names would make that claim unprovable.
@@ -515,7 +521,7 @@ def read_cap_class(rel_posix):
 # same way parse_version reads DASHBOARD_VERSION. No budget -> the byte half abstains out loud
 # (decision D4: a 0 from an unread source must not be reported as a clean state), and the line
 # half, whose formula is published in CHANGELOG.md's own front matter, still answers.
-TRIM_TOOL_NAME = "methodology_trim.py"
+TRIM_TOOL_NAME = "methodology_trim.py"  # layout: ok -- this tool's own file name, the key of _FRAMEWORK_INSTALLED_CONTENT; found through layout_locations
 
 # The framework repo authors the tool under starter-kit/ and does not install a copy at its own
 # root, exactly as it does for methodology_dashboard.py. So the root probe misses HERE, and the
@@ -552,7 +558,7 @@ _TRIM_BUDGET_RE = re.compile(
 # advertising a threshold the remedy no longer has. The read metric is now a LEVEL and needs no
 # rate constant on either side.
 
-TRIM_ARCHIVE_DIR = "docs/archive"
+TRIM_ARCHIVE_DIR = "docs/archive"  # layout: ok -- the legacy half of TRIM_ARCHIVE_DIRS: the shard directory beside a root ledger
 
 # U+00B7 MIDDLE DOT, spelled as an ESCAPE rather than pasted. Not for ASCII purity -- this file
 # already carries 136 em-dashes and a handful of other non-ASCII characters. The reason is that
@@ -573,9 +579,9 @@ _MIDDLE_DOT = "\u00b7"
 # which is the misdirection §7.3 exists to prevent. A canonical test asserts these keys against
 # the trimmer's own LEDGERS table rather than restating them here.
 TRIM_GRAMMARS = {
-    "CHANGELOG.md": ("heading",
+    "CHANGELOG.md": ("heading",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
                      re.compile(r"^### \d{4}-\d{2}-\d{2} " + _MIDDLE_DOT + r" \[")),
-    "HANDOFFS.md": ("fence", "handoff"),
+    "HANDOFFS.md": ("fence", "handoff"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 }
 # Applied per LINE by _trim_record_count, so `^` is a string anchor here and re.MULTILINE is
 # deliberately absent. Compiling it with MULTILINE and then calling .findall over the whole text
@@ -772,7 +778,7 @@ _FRAMEWORK_SIGNATURE_MIN = 2
 # copy new enough to carry one (mirrors _VERSION_RE's own shape).
 _CONTEXT_BUDGET_VERSION_RE = re.compile(r'''^VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE)
 _CONTEXT_BUDGET_SIGNATURES = (
-    "context_budget.py — size budgets",
+    "context_budget.py — size budgets",  # layout: ok -- a name printed in a message, never opened
     "CONFIG_NAME",
     "HISTORY_NAME",
     "growth_run",
@@ -798,7 +804,7 @@ _CONTEXT_BUDGET_JSON_SIGNATURES = (
 # is_framework_installed's docstring).
 _QUALITY_RATCHET_VERSION_RE = re.compile(r'''^VERSION\s*=\s*["']([^"']+)["']''', re.MULTILINE)
 _QUALITY_RATCHET_SIGNATURES = (
-    "quality_ratchet.py — declared quality thresholds",
+    "quality_ratchet.py — declared quality thresholds",  # layout: ok -- a name printed in a message, never opened
     "CONFIG_NAME",
     "def precommit",
     "def run_gates",
@@ -810,7 +816,7 @@ _QUALITY_GATES_JSON_SIGNATURES = (
     "results_file",
     "\"direction\"",
     "\"threshold\"",
-    "quality_ratchet.py",
+    "quality_ratchet.py",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 )
 
 # The ledger merge-driver seed (starter-kit/gitattributes, installed once as `.gitattributes`): no
@@ -819,21 +825,21 @@ _QUALITY_GATES_JSON_SIGNATURES = (
 # of the shipped seed's own comments and rules.
 _GITATTRIBUTES_SIGNATURES = (
     "Methodology ledgers",
-    "CHANGELOG.md merge=union",
-    "HANDOFFS.md is deliberately NOT listed",
+    "CHANGELOG.md merge=union",  # layout: ok -- a name printed in a message, never opened
+    "HANDOFFS.md is deliberately NOT listed",  # layout: ok -- a name printed in a message, never opened
 )
 
 _FRAMEWORK_INSTALLED_CONTENT = {
-    "methodology_dashboard.py": (_VERSION_RE, _FRAMEWORK_SIGNATURES),
+    "methodology_dashboard.py": (_VERSION_RE, _FRAMEWORK_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
     # The trimmer has no pre-constant releases in the wild — v1.0.0 is its first shipped version and
     # it has declared TRIM_VERSION since it was written — so it gets no structural fallback. See the
     # empty-tuple paragraph above for why that is a refusal and not a hole.
     TRIM_TOOL_NAME:            (_TRIM_VERSION_RE, ()),
-    "context_budget.py":       (_CONTEXT_BUDGET_VERSION_RE, _CONTEXT_BUDGET_SIGNATURES),
-    "quality_ratchet.py":      (_QUALITY_RATCHET_VERSION_RE, _QUALITY_RATCHET_SIGNATURES),
-    ".context-budget.json":    (None, _CONTEXT_BUDGET_JSON_SIGNATURES),
-    ".quality-gates.json":     (None, _QUALITY_GATES_JSON_SIGNATURES),
-    ".gitattributes":          (None, _GITATTRIBUTES_SIGNATURES),
+    "context_budget.py":       (_CONTEXT_BUDGET_VERSION_RE, _CONTEXT_BUDGET_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "quality_ratchet.py":      (_QUALITY_RATCHET_VERSION_RE, _QUALITY_RATCHET_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ".context-budget.json":    (None, _CONTEXT_BUDGET_JSON_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ".quality-gates.json":     (None, _QUALITY_GATES_JSON_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    ".gitattributes":          (None, _GITATTRIBUTES_SIGNATURES),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 }
 
 # Derived, never hand-written — see the paragraph above. Order follows the dict, which follows
@@ -879,31 +885,31 @@ FRAMEWORK_INSTALLED_SOURCE = tuple(_FRAMEWORK_INSTALLED_CONTENT)
 # CHANGELOG.md and ROADMAP.md were discounted too — one accident defeating the very gate Layer 7
 # added to protect those four. Found by the pre-PR review; reproduced under both scanners.
 FRAMEWORK_DISTINCTIVE_DOCS = (
-    "docs/methodology/ITERATIVE_METHODOLOGY.md",
-    "docs/methodology/FRAMEWORK_APPARATUS.md",
-    "docs/methodology/HOW_TO_USE.md",
-    "docs/methodology/workstreams/DESIGN_WORKSTREAM.md",
-    "docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md",
-    "docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md",
-    "docs/methodology/workstreams/AUDIT_WORKSTREAM.md",
-    "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",
-    "docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md",
-    "docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md",
-    "docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md",
-    "docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md",
+    "docs/methodology/ITERATIVE_METHODOLOGY.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/FRAMEWORK_APPARATUS.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/HOW_TO_USE.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/DESIGN_WORKSTREAM.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/AUDIT_WORKSTREAM.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 )
 
 # The seven TRACKED root dests. `bin/sync` installs every one of them, so a real install always
 # carries all seven — but any single one can also be a coincidence, so they are discounted only
 # behind the same evidence gate as the seeds (see _framework_docs_are_evidenced).
 FRAMEWORK_AMBIGUOUS_DOCS = (
-    "SESSION_RUNNER.md",
-    "FRAMEWORK_LEARNINGS.md",
-    "SAFEGUARDS.md",
-    "RECOMMENDED_SKILLS.md",
-    "CONTEXT_TEMPLATE.md",
-    "CLAUDE_TEMPLATE.md",
-    "BOOTSTRAP.md",
+    "SESSION_RUNNER.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "FRAMEWORK_LEARNINGS.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "SAFEGUARDS.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "RECOMMENDED_SKILLS.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "CONTEXT_TEMPLATE.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "CLAUDE_TEMPLATE.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "BOOTSTRAP.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 )
 
 # The full markdown dest set, kept as the union so the canonical drift test against
@@ -928,10 +934,10 @@ FRAMEWORK_AMBIGUOUS_EVIDENCE_MIN = 3
 # a manual-copy install, and three real fleet repos carry framework markdown with no root scanner,
 # so keying on the scanner would silently stop discounting for them.
 FRAMEWORK_SEED_DOCS = (
-    "SESSION_NOTES.md",
-    "CHANGELOG.md",
-    "HANDOFFS.md",
-    "ROADMAP.md",
+    "SESSION_NOTES.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "CHANGELOG.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "HANDOFFS.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
+    "ROADMAP.md",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 )
 
 # === LAYOUT (BL-101 P5; docs/planning/methodology-subdirectory-plan.md sections 4.1 and 4.3) ===========
@@ -949,7 +955,7 @@ NEW_LAYOUT_DIR = "methodology"  # layout: ok -- the directory a migrated project
 RUNNER_NAME = "SESSION_RUNNER.md"  # layout: ok -- the framework anchor the resolver reads: where it is tracked decides the layout
 
 # The state files, each its own anchor: the seeded ledgers and notes, and the three seeded configs.
-LAYOUT_STATE_NAMES = FRAMEWORK_SEED_DOCS + (".context-budget.json", ".quality-gates.json", ".gitattributes")
+LAYOUT_STATE_NAMES = FRAMEWORK_SEED_DOCS + (".context-budget.json", ".quality-gates.json", ".gitattributes")  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations
 
 # Every legacy-relative name the layout moves: the 30 destinations of bin/_manifest.py, derived from the
 # tables above (a canonical test compares them to the manifest) plus the two directories the checklist scores.
@@ -961,10 +967,10 @@ LAYOUT_MOVED = (frozenset(FRAMEWORK_INSTALLED_DOCS) | frozenset(LAYOUT_STATE_NAM
 def new_layout_rel(rel):
     """Where a legacy-relative methodology name lands in the new layout: flat under methodology/, with
     workstreams/ the one subdirectory, and docs/methodology/ dropped (plan decision D2)."""
-    if rel == "docs/methodology":
+    if rel == "docs/methodology":  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
         return NEW_LAYOUT_DIR
-    if rel.startswith("docs/methodology/"):
-        rel = rel[len("docs/methodology/"):]
+    if rel.startswith("docs/methodology/"):  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
+        rel = rel[len("docs/methodology/"):]  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)
     return NEW_LAYOUT_DIR + "/" + rel
 
 
@@ -1061,7 +1067,7 @@ def project_layout(path):
     if directory is not None:
         where = "." if Path(directory) == Path(path) else NEW_LAYOUT_DIR
     # Where the action ledger lives, or would: its own anchor decides (tier 1 leaves it at the root).
-    ledger = (NEW_LAYOUT_DIR + "/" if resolve_layout(path, "CHANGELOG.md")[0] == "new" else "") + "CHANGELOG.md"
+    ledger = (NEW_LAYOUT_DIR + "/" if resolve_layout(path, "CHANGELOG.md")[0] == "new" else "") + "CHANGELOG.md"  # layout: ok -- the ledger's own file name: the resolver's anchor
     return {"kind": kind, "directory": where, "found": _relative_names(path, found), "ledger": ledger}
 
 
@@ -1134,7 +1140,7 @@ def is_framework_installed(rel_path, fpath):
 # without putting it in that directory, under that name, with our banner in it — and the only thing
 # they would win is a wrong dashboard for themselves (the same threat model as above).
 _GENERATED_PROOF_SUFFIX = ".verify.sh"
-_GENERATED_PROOF_BANNER = "generated by methodology_trim.py"
+_GENERATED_PROOF_BANNER = "generated by methodology_trim.py"  # layout: ok -- the banner text a generated proof carries, matched in file content and never opened as a path
 
 
 def is_generated_proof(rel_path, fpath):
@@ -1206,7 +1212,7 @@ def check_stale_version():
         # staleness line rode ~28 consecutive handoffs unacted-on. The measurement was never the
         # missing part — the safe per-project action is one `cp`, and the message never printed it.
         sys.stderr.write(
-            f"  ⚠ methodology_dashboard.py is stale: this copy is v{DASHBOARD_VERSION}, "
+            f"  ⚠ methodology_dashboard.py is stale: this copy is v{DASHBOARD_VERSION}, "  # layout: ok -- a name printed in a message, never opened
             f"canonical is v{canon_ver}.\n"
             f"    Update just this copy:      python3 {canonical} --sync {resolve_single_project_root(self_path.parent)}\n"
             f"    Update the whole portfolio: python3 {canonical} --sync   "
@@ -1509,7 +1515,7 @@ def sync_dashboards(start, dry_run=False, target=None, force=False):
     canonical = find_canonical(start)
     if not canonical:
         sys.stderr.write("  Cannot locate canonical methodology/starter-kit/"
-                         "methodology_dashboard.py — nothing synced.\n")
+                         "methodology_dashboard.py — nothing synced.\n")  # layout: ok -- a name printed in a message, never opened
         return 0
     # .../starter-kit/methodology_dashboard.py -> starter-kit -> methodology -> portfolio root
     canon_repo = canonical.parent.parent.resolve()           # .../methodology
@@ -1528,7 +1534,7 @@ def sync_dashboards(start, dry_run=False, target=None, force=False):
         if not target_dir.is_dir():
             sys.stderr.write(f"  Target directory does not exist: {target_dir} — nothing synced.\n")
             return 0
-        if target_dir == canon_repo or (target_dir / "methodology_dashboard.py") == canonical:
+        if target_dir == canon_repo or (target_dir / "methodology_dashboard.py") == canonical:  # layout: ok -- this tool's own file name: refuses the canonical copy as a target
             sys.stderr.write("  Refusing to sync the canonical's own authoring repo as a target.\n")
             return 0
         copy, why = dashboard_copy_target(target_dir)
@@ -1614,18 +1620,21 @@ def sync_dashboards(start, dry_run=False, target=None, force=False):
 
 
 def print_usage():
-    print(f"methodology_dashboard.py v{DASHBOARD_VERSION} — portfolio/project health scanner")
+    print(f"methodology_dashboard.py v{DASHBOARD_VERSION} — portfolio/project health scanner")  # layout: ok -- a name printed in a message, never opened
     print("")
-    print("Usage: python3 methodology_dashboard.py [options]")
+    print("Usage: python3 methodology_dashboard.py [options]")  # layout: ok -- a name printed in a message, never opened
     print("")
     print("Options:")
-    print("  --no-open          Do not open the generated dashboard.html in a browser.")
+    print("  --no-open          Do not open the generated dashboard.html in a browser.")  # layout: ok -- a name printed in a message, never opened
     print("  --with-submodules  In single-project mode, also scan git submodules as")
     print("                     separate entries (default: scan the project only).")
     print("  --sync [DIR]       Copy the canonical dashboard to DIR (a single project) if")
     print("                     given, or to the portfolio root and every discovered")
     print("                     project if omitted. Combine with --dry-run to preview,")
     print("                     --force to also write tracked/brand-new targets.")
+    print("                     Each project's copy goes where it keeps its methodology")
+    print("                     files (its root, or methodology/); a half-migrated")
+    print("                     project is refused by name.")
     print("  --dry-run          With --sync, show planned changes without writing.")
     print("                     Alone, it is an error (nothing else in this tool writes")
     print("                     speculatively).")
@@ -2120,7 +2129,7 @@ def _find_changelog(path):
     _find_action_ledger. Keeping the two questions apart is ratified decision D3."""
     bases = []
     # BL-101 P5: the directory the ledger lives in comes first (a no-op in a legacy tree, where it is `path`).
-    for base in [loc.parent for loc in layout_locations(path, "CHANGELOG.md")] + [path, path / "docs"]:
+    for base in [loc.parent for loc in layout_locations(path, "CHANGELOG.md")] + [path, path / "docs"]:  # layout: ok -- the ledger's own file name: the resolver's anchor
         if base not in bases:
             bases.append(base)
     for base in bases:
@@ -2160,7 +2169,7 @@ def _find_action_ledger(path):
     `CHANGELOG.md` *directory* is not a ledger, so this requires a regular file, matching the same
     guard _find_changelog already applies. The cross-platform case divergence the two share is
     pre-existing and out of scope here (see the campaign plan §7 residual risk 6)."""
-    for ledger in layout_locations(path, "CHANGELOG.md"):
+    for ledger in layout_locations(path, "CHANGELOG.md"):  # layout: ok -- the ledger's own file name: the resolver's anchor
         if ledger.is_file():
             return ledger
     return None
@@ -3108,10 +3117,10 @@ def collect_render_metrics(path, files, ci, meth):
     if verif_artifact:
         score += 2
     ws_present = any(loc.is_file() for loc in layout_locations(
-        path, "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md")) or any(
+        path, "docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md")) or any(  # layout: ok -- a workstream's legacy name; the first is located through layout_locations
         (path / rel).is_file() for rel in (
             "workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",
-            "RESEARCH_DOCUMENTATION_WORKSTREAM.md",
+            "RESEARCH_DOCUMENTATION_WORKSTREAM.md",  # layout: ok -- a workstream's legacy name; the first is located through layout_locations
         ))
     if ws_present:
         score += 1
@@ -3132,9 +3141,18 @@ def collect_render_metrics(path, files, ci, meth):
 # An absent manifest is silent. So is a present-but-EMPTY one: bin/sync seeds it empty by decision
 # (plan §8.4), so its bare presence proves sync ran, not that anything was declared — flagging it
 # would fire on every synced adopter for a change they did not make (the CHECKLIST_EXEMPT rule).
-GATES_MANIFEST = ".quality-gates.json"
-GATES_RESULTS_DEFAULT = ".quality-gates-results.json"
+GATES_MANIFEST = ".quality-gates.json"  # layout: ok -- the manifest's own file name; where it lives is resolved by gate_manifest_rels
+GATES_RESULTS_DEFAULT = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it lives beside the manifest unless the manifest names one
 GATES_HISTORY_MAX = 50          # manifest commits scanned for loosenings, newest first
+
+
+def gate_manifest_rels(path):
+    """The two places the manifest may live, the one the project's layout names first (BL-101 P5). Both are
+    always read for HISTORY: a manifest that moved has its older versions at the other path, and a walk by one
+    name stops at the move, which hides a floor lowered inside the move commit and reads the move itself as a
+    removal (plan E2)."""
+    legacy, moved = GATES_MANIFEST, NEW_LAYOUT_DIR + "/" + GATES_MANIFEST
+    return [moved, legacy] if resolve_layout(path, GATES_MANIFEST)[0] == "new" else [legacy, moved]
 
 
 def _gate_map(cfg):
@@ -3213,15 +3231,20 @@ def _gate_manifest_history(path):
     --precommit` uses (staged against HEAD), and what SAFEGUARDS' "a loosening resolved into a
     merge is caught by the dashboard" needs. The price: a loosening made on a side branch is
     reported at the merge that carried it in, not at the side commit (`git diff <sha>^1 <sha>`)."""
+    rels = gate_manifest_rels(path)
     log = git_cmd(path, "log", "--first-parent", f"--max-count={GATES_HISTORY_MAX}",
-                  "--format=%h|%ad", "--date=short", "--", GATES_MANIFEST)
+                  "--format=%h|%ad", "--date=short", "--", *rels)
     hist = []
     for line in log.splitlines():
         sha, _, date = line.partition("|")
-        if not _blob_exists(path, sha):
+        raw = None
+        for rel in rels:                 # the layout's own place first; a version has the manifest at one of them
+            if _blob_exists(path, sha, rel):
+                raw = git_cmd(path, "show", f"{sha}:{rel}")
+                break
+        if raw is None:
             hist.append((sha, date, {"gates": [], "_deleted": True}))
             continue
-        raw = git_cmd(path, "show", f"{sha}:{GATES_MANIFEST}")
         try:
             cfg = json.loads(raw)
             if not isinstance(cfg, dict):
@@ -3232,11 +3255,11 @@ def _gate_manifest_history(path):
     return hist
 
 
-def _blob_exists(path, sha):
+def _blob_exists(path, sha, rel=GATES_MANIFEST):
     """Whether the manifest exists at `sha` — by exit code, which git_cmd discards. `git show`
     on a deleted path prints nothing to stdout, indistinguishable from an empty file."""
     try:
-        r = subprocess.run(["git", "-C", str(path), "cat-file", "-e", f"{sha}:{GATES_MANIFEST}"],
+        r = subprocess.run(["git", "-C", str(path), "cat-file", "-e", f"{sha}:{rel}"],
                            capture_output=True, timeout=5)
         return r.returncode == 0
     except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
@@ -3248,7 +3271,7 @@ def collect_gate_metrics(path):
          "results_present": False, "results_stale": False, "summary": None, "failing": [],
          "unmeasured": [], "loosened": [], "commands_changed": [], "ran_at": None,
          "convention": "quality-gates.json v1"}
-    mp = path / GATES_MANIFEST
+    mp = next((loc for loc in layout_locations(path, GATES_MANIFEST) if loc.is_file()), path / GATES_MANIFEST)
     # The history walk runs whenever the manifest HAS a history — including when the worktree
     # no longer has the file. Returning early on `not mp.is_file()` made the deleted-and-never-
     # re-added state, the largest loosening available, report nothing (PR #82 review, 2a).
@@ -3268,7 +3291,10 @@ def collect_gate_metrics(path):
     if not gates:
         return m
 
-    rp = path / (cfg.get("results_file") or GATES_RESULTS_DEFAULT) if isinstance(cfg, dict) else None
+    # A results file the manifest NAMES is project-relative, as before; the default sits beside the manifest.
+    rp = None
+    if isinstance(cfg, dict):
+        rp = path / cfg["results_file"] if cfg.get("results_file") else mp.parent / GATES_RESULTS_DEFAULT
     if rp is not None and rp.is_file():
         try:
             snap = json.loads(rp.read_text(encoding="utf-8", errors="ignore"))
@@ -3292,7 +3318,7 @@ def collect_gate_metrics(path):
 def _manifest_has_history(path):
     # The same line of ancestry the walk reads, so "has a history" and "was walked" cannot differ.
     return bool(git_cmd(path, "log", "--first-parent", "--max-count=1", "--format=%h", "--",
-                        GATES_MANIFEST))
+                        *gate_manifest_rels(path)))
 
 
 def _fold_history(m, hist):
@@ -3630,7 +3656,7 @@ def assess_risks(metrics):
         if not g.get("results_present"):
             risks.append({"severity": "medium",
                           "description": f"{n} declared quality gate(s), never run here "
-                                         f"(`quality_ratchet.py --run`)"})
+                                         f"(`quality_ratchet.py --run`)"})  # layout: ok -- a name printed in a message, never opened
         else:
             if g.get("results_stale"):
                 risks.append({"severity": "low",
@@ -3767,15 +3793,15 @@ def assess_risks(metrics):
                                      + " both exist and nothing says which is live, so the tools refuse "
                                        "to guess (BL-101). Move or remove one copy"})
     cl = metrics.get("changelog", {})
-    owes_ledger = (metrics["methodology"]["items"].get("SESSION_RUNNER.md", False)
+    owes_ledger = (metrics["methodology"]["items"].get("SESSION_RUNNER.md", False)  # layout: ok -- the checklist key of the runner; its location was resolved when the item was probed
                    or role == "framework")
     if not cl.get("ledger_present") and owes_ledger and metrics["git"]["total_commits"] >= LEDGER_REAL_HISTORY_MIN:
         # The finding is identical; only the noun changes. Calling a publisher an "adopter" would
         # be the same category error this layer exists to remove from the score above.
         who = "Methodology framework repo" if role == "framework" else "Methodology adopter"
         # Named where the ledger would live: a project that moved its state files keeps it under methodology/.
-        ledger = (metrics["methodology"].get("layout") or {}).get("ledger", "CHANGELOG.md")
-        lead = "root CHANGELOG.md" if ledger == "CHANGELOG.md" else ledger
+        ledger = (metrics["methodology"].get("layout") or {}).get("ledger", "CHANGELOG.md")  # layout: ok -- the ledger's legacy path, the default project_layout reports and an older metrics dict lacks
+        lead = "root CHANGELOG.md" if ledger == "CHANGELOG.md" else ledger  # layout: ok -- the ledger's legacy path: a root ledger is named as such, a moved one by its path
         risks.append({"severity": "medium",
                       "description": f"{who} has commit history but no {lead} action ledger (Component C)"})
     for sev, desc in cl.get("signals", []):
@@ -4162,7 +4188,7 @@ def render_methodology_grid(projects):
         # two of these columns (CHANGELOG.md, HANDOFFS.md) ARE on the framework checklist too.
         legend = ('<div class="meth-legend" style="font-size:0.8em;opacity:0.7;margin-top:6px">'
                   '&#8224; framework repo &mdash; scored against the framework checklist, not '
-                  'these columns. The two overlap only at CHANGELOG.md and HANDOFFS.md. See the '
+                  'these columns. The two overlap only at CHANGELOG.md and HANDOFFS.md. See the '  # layout: ok -- a name printed in a message, never opened
                   'project card for the checklist that ran.</div>')
     return f'''<table class="meth-table">
         <thead><tr>{header_row}</tr></thead>
@@ -4261,7 +4287,7 @@ def render_project_card(p):
             "marker-contradiction": (f"{PROFILE_MARKER} declared conflicting role tokens; "
                                      f"classified structurally"),
         }.get(reason, "structural: bin/_manifest.py + starter-kit/SESSION_RUNNER.md, "
-                     "no root SESSION_RUNNER.md")
+                     "no root SESSION_RUNNER.md")  # layout: ok -- a name printed in a message, never opened
         # Never print the role silently: the marker is a one-word grading opt-out, so how this
         # repo came to be graded as a publisher has to be visible to whoever reads the score.
         meth_note += f'<br>role: framework &mdash; {esc(provenance)}'
@@ -4878,7 +4904,7 @@ setInterval(() => {{
 
 # === HISTORICAL TRENDING ===
 
-HISTORY_FILE = "dashboard_history.jsonl"
+HISTORY_FILE = "dashboard_history.jsonl"  # layout: ok -- the generated file's own name; written beside the copy that ran (output_dir)
 
 
 def append_history(root, portfolio, projects):
@@ -5020,7 +5046,7 @@ def main():
         sys.stderr.write(
             "  --dry-run only means something together with --sync (nothing else in this\n"
             "  tool writes speculatively).\n"
-            "  Usage: python3 methodology_dashboard.py --sync [DIR] --dry-run\n"
+            "  Usage: python3 methodology_dashboard.py --sync [DIR] --dry-run\n"  # layout: ok -- a name printed in a message, never opened
         )
         sys.exit(2)
 
@@ -5064,7 +5090,7 @@ def main():
 
     html = render_html(portfolio, projects, title=title, trend_html=trend_html)
 
-    output_path = out_dir / "dashboard.html"
+    output_path = out_dir / "dashboard.html"  # layout: ok -- the generated file's own name; written beside the copy that ran (output_dir)
     output_path.write_text(html)
 
     # Open in browser (skip with --no-open or when piped)

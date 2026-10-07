@@ -641,7 +641,8 @@ class TestToolsAlreadyResolvedStayAtZero(unittest.TestCase):
     RESOLVED = (".githooks/pre-commit", "starter-kit/quality_ratchet.py",   # P2
                 "starter-kit/methodology_trim.py", "starter-kit/close_out_report.py",   # P3
                 "starter-kit/context_budget.py",   # P4
-                "bin/check-handoff", "bin/check-ledger", "bin/check-overhead", "bin/model-report")
+                "bin/check-handoff", "bin/check-ledger", "bin/check-overhead", "bin/model-report",
+                "starter-kit/methodology_dashboard.py")   # P5: its tools/ twin is the same bytes
 
     def test_each_resolved_tool_reports_no_site(self):
         for rel in self.RESOLVED:
