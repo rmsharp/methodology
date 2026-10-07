@@ -425,6 +425,102 @@ class TestFindRootAndHookPath(unittest.TestCase):
         self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
 
 
+def _git(d, *args, check=True):
+    return subprocess.run(["git", "-C", d, *args], check=check, capture_output=True, text=True)
+
+
+def _put(d, rel, text="x\n"):
+    p = os.path.join(d, *rel.split("/"))
+    os.makedirs(os.path.dirname(p), exist_ok=True)
+    with open(p, "w") as f:
+        f.write(text if isinstance(text, str) else json.dumps(text))
+    return p
+
+
+NEW_CONFIG = "methodology/" + qr.CONFIG_NAME   # layout: the new layout's path of the manifest
+LEGACY_CONFIG = qr.CONFIG_NAME
+
+
+class TestTheManifestMayLiveInEitherLayout(unittest.TestCase):
+    """BL-101 P2 (plan section 4.3): a project keeps its manifest at its root (legacy) or under
+    methodology/ (new). The ratchet reads the four-row table with the manifest as the anchor."""
+
+    def setUp(self):
+        td = tempfile.TemporaryDirectory(); self.addCleanup(td.cleanup)
+        self.d = os.path.realpath(td.name)
+
+    def _cli(self, *args, cwd=None):
+        return subprocess.run([PY, str(STARTER), *args], cwd=cwd or self.d, capture_output=True, text=True)
+
+    def test_manifest_location_reads_the_four_rows(self):
+        self.assertEqual(qr.manifest_location(self.d), ("none", None))
+        _put(self.d, LEGACY_CONFIG, manifest())
+        self.assertEqual(qr.manifest_location(self.d), ("legacy", LEGACY_CONFIG))
+        os.remove(os.path.join(self.d, LEGACY_CONFIG))
+        _put(self.d, NEW_CONFIG, manifest())
+        self.assertEqual(qr.manifest_location(self.d), ("new", NEW_CONFIG))
+        _put(self.d, LEGACY_CONFIG, manifest())
+        self.assertEqual(qr.manifest_location(self.d), ("half", None))
+
+    def test_find_root_finds_a_manifest_that_lives_under_methodology(self):
+        _put(self.d, NEW_CONFIG, manifest())
+        sub = os.path.join(self.d, "src", "deep"); os.makedirs(sub)
+        self.assertEqual(os.path.realpath(qr.find_root(self.d)), self.d)
+        self.assertEqual(os.path.realpath(qr.find_root(sub)), self.d)
+
+    def test_find_root_from_inside_methodology_is_the_project_not_that_directory(self):
+        _git(self.d, "init", "-q")
+        _put(self.d, NEW_CONFIG, manifest())
+        self.assertEqual(os.path.realpath(qr.find_root(os.path.join(self.d, "methodology"))), self.d)
+
+    def test_a_repository_that_is_itself_named_methodology_keeps_its_own_root(self):
+        # This very repository is a directory called methodology/ whose manifest sits at its root.
+        # Reading "a manifest in a directory named methodology" as the new layout would move its
+        # root one level up, to a directory that is not a project.
+        repo = os.path.join(self.d, "methodology")
+        os.makedirs(repo); _git(repo, "init", "-q")
+        _put(repo, LEGACY_CONFIG, manifest())
+        sub = os.path.join(repo, "tools"); os.makedirs(sub)
+        self.assertEqual(os.path.realpath(qr.find_root(repo)), os.path.realpath(repo))
+        self.assertEqual(os.path.realpath(qr.find_root(sub)), os.path.realpath(repo))
+
+    def test_run_in_the_new_layout_writes_its_results_beside_the_manifest(self):
+        _put(self.d, NEW_CONFIG, manifest(gate("marker", "max", 0, command=f'"{PY}" -c "import os,sys; sys.exit(0 if os.path.exists(\'marker.txt\') else 1)"')))
+        _put(self.d, "marker.txt")
+        p = self._cli("--run")
+        self.assertEqual(p.returncode, qr.CLEAN, p.stdout + p.stderr)
+        self.assertTrue(os.path.exists(os.path.join(self.d, "methodology", qr.DEFAULT_RESULTS)))
+        self.assertFalse(os.path.exists(os.path.join(self.d, qr.DEFAULT_RESULTS)), "no results file at the root")
+        # the gate's command ran from the project root, not from methodology/
+        self.assertIn("1/1 pass", p.stdout)
+        s = self._cli("--status")
+        self.assertEqual(s.returncode, qr.CLEAN, s.stdout + s.stderr)
+        self.assertIn("1/1 pass", s.stdout)
+
+    def test_run_in_the_legacy_layout_still_writes_its_results_at_the_root(self):
+        _put(self.d, LEGACY_CONFIG, manifest(gate("ok", "max", 0, command=f'"{PY}" -c "pass"')))
+        self.assertEqual(self._cli("--run").returncode, qr.CLEAN)
+        self.assertTrue(os.path.exists(os.path.join(self.d, qr.DEFAULT_RESULTS)))
+        self.assertFalse(os.path.exists(os.path.join(self.d, "methodology")))
+
+    def test_an_explicit_results_file_is_relative_to_the_root_in_either_layout(self):
+        cfg = manifest(gate("ok", "max", 0, command=f'"{PY}" -c "pass"')); cfg["results_file"] = "out/r.json"
+        _put(self.d, NEW_CONFIG, cfg)
+        os.makedirs(os.path.join(self.d, "out"))   # the tool writes the file, it does not make the directory
+        self.assertEqual(self._cli("--run").returncode, qr.CLEAN)
+        self.assertTrue(os.path.exists(os.path.join(self.d, "out", "r.json")))
+
+    def test_a_half_migrated_tree_is_a_usage_error_that_names_both_and_runs_nothing(self):
+        _put(self.d, LEGACY_CONFIG, manifest(gate("ok", "max", 0, command=f'"{PY}" -c "pass"')))
+        _put(self.d, NEW_CONFIG, manifest(gate("ok", "max", 0, command=f'"{PY}" -c "pass"')))
+        for args in (["--run"], ["--status"], ["install-hook"]):
+            p = self._cli(*args)
+            self.assertEqual(p.returncode, qr.USAGE, (args, p.stdout + p.stderr))
+            self.assertIn(LEGACY_CONFIG, p.stdout); self.assertIn(NEW_CONFIG, p.stdout)
+        self.assertFalse(os.path.exists(os.path.join(self.d, qr.DEFAULT_RESULTS)))
+        self.assertFalse(os.path.exists(os.path.join(self.d, "methodology", qr.DEFAULT_RESULTS)))
+
+
 class TestToolInvariants(unittest.TestCase):
     def test_no_force_escape_hatch(self):
         src = STARTER.read_text(encoding="utf-8")
@@ -445,7 +541,8 @@ class TestToolInvariants(unittest.TestCase):
         # sys.stdlib_module_names is 3.10+; pin the allowed set so the test runs on older
         # interpreters too, which is where a stray third-party import would bite first.
         allowed = {"hashlib", "json", "os", "re", "subprocess", "sys", "tempfile", "datetime",
-                   "shutil"}
+                   "shutil",
+                   "pathlib"}   # the embedded layout-resolver block (BL-101 P2) imports it
         self.assertTrue(names <= allowed, names - allowed)
 
     def test_selftest_is_green(self):

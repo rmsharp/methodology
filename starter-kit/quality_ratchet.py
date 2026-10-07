@@ -47,15 +47,40 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 
-VERSION = "1.1.0"
-CONFIG_NAME = ".quality-gates.json"
-DEFAULT_RESULTS = ".quality-gates-results.json"
+VERSION = "1.2.0"
+CONFIG_NAME = ".quality-gates.json"  # layout: ok -- the manifest's own name; where it lives is resolved below
+DEFAULT_RESULTS = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it sits beside the manifest
 DIRECTIONS = ("min", "max")
 
 R = "\033[0m"; B = "\033[1m"; D = "\033[2m"
 RED = "\033[31m"; YEL = "\033[33m"; GRN = "\033[32m"; CYN = "\033[36m"
 
 CLEAN, WARN, REFUSED, USAGE = 0, 1, 2, 3
+
+
+# === LAYOUT ===
+# A project keeps its methodology files at its root (legacy) or under methodology/ (new): the plan's
+# section 4.3. This block is the resolver, embedded byte for byte; the canonical suite asserts that.
+
+# --- layout resolver: BEGIN ---
+import os as _os
+from pathlib import Path as _Path
+
+
+def resolve_layout(root, anchor="SESSION_RUNNER.md"):
+    """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
+    found the anchor paths that exist. A half-migrated tree has no directory, by design."""
+    root = _Path(root)
+    new, old = root / "methodology" / anchor, root / anchor
+    found = tuple(p for p in (new, old) if _os.path.isfile(p))
+    if len(found) == 2:
+        return "half", None, found
+    if not found:
+        return "none", None, ()
+    return ("new", new.parent, found) if found[0] == new else ("legacy", root, found)
+# --- layout resolver: END ---
+
+NEW_DIR = "methodology"
 
 
 # === PLUMBING ===
@@ -69,16 +94,44 @@ def run(argv, cwd=None, timeout=None, shell=False):
     return p.returncode, p.stdout, p.stderr
 
 
+def manifest_location(root):
+    """(kind, relative path) of the manifest in the WORKTREE: the resolver's four-row table with the
+    manifest as the anchor. kind is new | legacy | half | none; the path is None unless the answer is
+    one place. A half-migrated tree has two manifests and the ratchet never guesses between them."""
+    kind, directory, _ = resolve_layout(root, CONFIG_NAME)
+    if kind == "new":
+        return kind, f"{NEW_DIR}/{CONFIG_NAME}"
+    if kind == "legacy":
+        return kind, CONFIG_NAME
+    return kind, None
+
+
+def _project_above(d):
+    """The project root for a directory that holds a manifest. Normally d itself. When d is the
+    methodology/ directory of a new-layout project the project is its parent, which git names: a
+    repository that is merely called methodology (this one) is its own toplevel and stays itself."""
+    if os.path.basename(d) != NEW_DIR:
+        return d
+    rc, out, _ = run(["git", "rev-parse", "--show-toplevel"], cwd=d)
+    top = os.path.abspath(out.strip()) if rc == 0 and out.strip() else None
+    inner = os.path.join(top, NEW_DIR, CONFIG_NAME) if top else None
+    if top and top != d and os.path.exists(inner) and os.path.samefile(inner, os.path.join(d, CONFIG_NAME)):
+        return top
+    return d
+
+
 def find_root(start=None):
-    """The project root: the nearest directory at or above `start` holding the manifest, else
-    the git toplevel. The fallback is what lets --precommit judge a commit that REMOVES the
-    manifest from the worktree (PR #82 review, 2a/4): a walk that only looks for the file
-    exited 3 there, before the removal was ever compared to anything -- and in the hook
-    install-hook writes, that exit refused every later commit in the repository."""
+    """The project root: the nearest directory at or above `start` holding the manifest (at its
+    root, or under methodology/), else the git toplevel. The fallback is what lets --precommit judge
+    a commit that REMOVES the manifest from the worktree (PR #82 review, 2a/4): a walk that only
+    looks for the file exited 3 there, before the removal was ever compared to anything -- and in
+    the hook install-hook writes, that exit refused every later commit in the repository."""
     start = os.path.abspath(start or os.getcwd())
     d = start
     while True:
         if os.path.exists(os.path.join(d, CONFIG_NAME)):
+            return _project_above(d)
+        if os.path.exists(os.path.join(d, NEW_DIR, CONFIG_NAME)):
             return d
         parent = os.path.dirname(d)
         if parent == d:
@@ -335,7 +388,12 @@ def render(snap, title):
 
 
 def results_path(root, cfg):
-    return os.path.join(root, cfg.get("results_file") or DEFAULT_RESULTS)
+    """An explicit `results_file` is relative to the project root, as it always was. The default
+    sits beside the manifest, wherever the layout put it."""
+    if cfg.get("results_file"):
+        return os.path.join(root, cfg["results_file"])
+    _, rel = manifest_location(root)
+    return os.path.join(root, os.path.dirname(rel) if rel else "", DEFAULT_RESULTS)
 
 
 def load_results(root, cfg):
@@ -569,11 +627,17 @@ def main():
         return USAGE
     if "--precommit" in args:
         return precommit(root)
-    if not os.path.exists(os.path.join(root, CONFIG_NAME)):
+    kind, rel = manifest_location(root)
+    if kind == "half":
+        print(f"{RED}half-migrated: {CONFIG_NAME} exists at the root AND under {NEW_DIR}/ — "
+              f"the ratchet will not guess which is the manifest{R}")
+        print(f"  {RED}{CONFIG_NAME}{R} and {RED}{NEW_DIR}/{CONFIG_NAME}{R}: finish or revert the move, then re-run.")
+        return USAGE
+    if rel is None:
         print(f"{RED}no {CONFIG_NAME} found at or above {os.getcwd()}{R}")
         print("  This tool refuses to invent thresholds for a project that has not declared them.")
         return USAGE
-    cfg, defects = load_manifest_text(open(os.path.join(root, CONFIG_NAME)).read(), CONFIG_NAME)
+    cfg, defects = load_manifest_text(open(os.path.join(root, rel)).read(), rel)
     if cfg is None or defects:
         for m in defects:
             print(f"{RED}quality-ratchet: config defect — {m}{R}")

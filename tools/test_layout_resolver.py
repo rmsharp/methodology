@@ -118,6 +118,27 @@ class TestAnchors(Scratch):
         self.assertEqual(lr.resolve_layout(str(self.root))[0], "legacy")
 
 
+class TestEveryEmbeddedCopyIsByteIdentical(unittest.TestCase):
+    """Each shipped tool that resolves the layout carries the module's block, byte for byte (plan 4.3).
+    A copy that drifted is a second resolver with its own answers. P2 embeds it in the ratchet; each
+    later phase appends the tool it touches to COPIES (the dashboard, the trimmer, the budget gate)."""
+
+    COPIES = ("starter-kit/quality_ratchet.py",)
+
+    def test_each_copy_equals_the_modules_block_and_carries_exactly_one(self):
+        block = lr.embedded_block((HERE / "layout_resolver.py").read_text(encoding="utf-8"))
+        for rel in self.COPIES:
+            text = (REPO / rel).read_text(encoding="utf-8")
+            self.assertEqual(text.count(lr.BEGIN), 1, rel + ": one BEGIN marker")
+            self.assertEqual(lr.embedded_block(text), block, rel + ": the block differs from tools/layout_resolver.py")
+
+    def test_every_tool_that_carries_the_markers_is_listed(self):
+        carriers = sorted(str(p.relative_to(REPO)) for p in (REPO / "starter-kit").glob("*.py")
+                          if lr.BEGIN in p.read_text(encoding="utf-8"))
+        self.assertEqual(carriers, sorted(self.COPIES),
+                         "a shipped tool embeds the block but its copy is not asserted here")
+
+
 class TestTheBlockIsEmbeddable(Scratch):
     """Shipped tools are single stdlib files, so each carries the same marked block (section 4.3)."""
 
