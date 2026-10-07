@@ -22,7 +22,9 @@ Exit: 0 a dry run or a migration done, or nothing to do · 1 refused · 2 usage 
 rolled back.
 """
 import argparse
+import difflib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -93,7 +95,10 @@ def run(project, *args, check=False):
 
 def canonical_info():
     r = subprocess.run(["git", "-C", str(CANONICAL), "rev-parse", "HEAD"], capture_output=True, text=True)
-    return {"path": str(CANONICAL), "sha": r.stdout.strip() if r.returncode == 0 else None}
+    sha = r.stdout.strip() if r.returncode == 0 else None
+    dirty = bool(subprocess.run(["git", "-C", str(CANONICAL), "status", "--porcelain", "--untracked-files=no"],
+                                capture_output=True, text=True).stdout.strip()) if sha else None
+    return {"path": str(CANONICAL), "sha": sha, "modified": dirty}
 
 
 def refusal(code, message, paths=()):
@@ -216,6 +221,51 @@ def plan_moves(project, tier, tracked, kind):
     return moves, left, sorted(set(collisions))
 
 
+class Rewrite:
+    """A text file the migration edits: `path` where it is now, `final` where it will be once the moves are done."""
+
+    def __init__(self, path, final, old, new, replacements):
+        self.path, self.final, self.old, self.new, self.replacements = path, final, old, new, replacements
+
+    def as_report(self):
+        diff = "".join(difflib.unified_diff(self.old.splitlines(keepends=True), self.new.splitlines(keepends=True),
+                                            fromfile=self.path, tofile=self.final))
+        return {"path": self.path, "final": self.final, "replacements": self.replacements, "diff": diff}
+
+
+def rewrite_gitignore(text, mapping):
+    """An anchored ignore entry that is exactly a moved file's path follows it; an unanchored entry (no slash) still
+    matches the file under methodology/ and is left alone, as is every comment. Returns (text, replacements)."""
+    out, n = [], 0
+    for line in text.splitlines(keepends=True):
+        body = line.rstrip("\r\n")
+        eol = line[len(body):]
+        s = body.strip()
+        neg = s.startswith("!")
+        s = s[1:] if neg else s
+        if s and not s.startswith("#"):
+            path = s[1:] if s.startswith("/") else s
+            if (s.startswith("/") or "/" in path.rstrip("/")) and path in mapping:
+                out.append(("!" if neg else "") + "/" + mapping[path] + eol)
+                n += 1
+                continue
+        out.append(line)
+    return "".join(out), n
+
+
+def plan_rewrites(root, moves):
+    """The edits that go with the moves: the .gitignore entries that name a moved file."""
+    mapping = {m["src"]: m["dest"] for m in moves}
+    rewrites = []
+    gi = Path(root) / ".gitignore"
+    if gi.is_file():
+        old = gi.read_text(encoding="utf-8")
+        new, n = rewrite_gitignore(old, mapping)
+        if n:
+            rewrites.append(Rewrite(".gitignore", ".gitignore", old, new, n))
+    return rewrites
+
+
 def build_report(project, tier, apply_mode):
     root = Path(project)
     report = {"project": str(root), "canonical": canonical_info(), "layout": None, "tier": tier,
@@ -260,6 +310,9 @@ def build_report(project, tier, apply_mode):
                 refusals.append(refusal("not-current", "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): "
                                         + ", ".join(bad), [b.split(" (")[0] for b in bad]))
     report["moves"], report["left_in_place"] = moves, left
+    rewrites = plan_rewrites(root, moves) if moves else []
+    report["rewrites"] = [r.as_report() for r in rewrites]
+    report["_rewrites"] = rewrites
     if not refusals and not present:
         report["status"] = "nothing-to-do"
         return report
@@ -273,6 +326,115 @@ def finish(report):
         report["status"] = "refused"
         report["moves"] = report["moves"] if report["moves"] else []
     return report
+
+
+def remove_empty_parents(root, rel):
+    """rmdir the directories a move emptied, from the file's old parent up, never the project root."""
+    d = Path(root) / rel
+    for parent in d.parents:
+        if parent == Path(root):
+            break
+        try:
+            parent.rmdir()
+        except OSError:
+            break
+
+
+def commit_message(report, moves):
+    tracked = [m for m in moves if m["tracked"]]
+    plain = [m for m in moves if not m["tracked"]]
+    sha = report["canonical"]["sha"] or "an unknown commit"
+    modified = " (plus uncommitted changes)" if report["canonical"].get("modified") else ""
+    lines = ["chore(methodology): move the methodology files under methodology/ (tier %s, %d files)" % (report["tier"], len(moves)),
+             "",
+             "Moved by bin/migrate-layout of the KJ5HST/methodology checkout at %s%s (BL-101 P7)." % (sha, modified),
+             "%d file(s) with git mv%s." % (len(tracked), (", %d without git (generated files that .gitignore keeps out of the repository)" % len(plain)) if plain else ""),
+             "Every tracked move is a rename at 90% similarity or better (git diff -M), so git log --follow reaches the history before the move.",
+             "No committed ledger entry and no ledger shard was edited."]
+    return "\n".join(lines)
+
+
+def renames_in_index(project):
+    """{(src, dest): score} for the renames git finds between HEAD and the index."""
+    out = run(project, "diff", "--cached", "-M", "--name-status", "-z").stdout.split("\0")
+    renames, i = {}, 0
+    while i < len(out):
+        status = out[i]
+        if status.startswith("R"):
+            renames[(out[i + 1], out[i + 2])] = int(status[1:])
+            i += 3
+        else:
+            i += 2 if status else 1
+    return renames
+
+
+def rollback(root, done_plain, methodology_existed):
+    """Give the tree back: the index and every tracked file from HEAD, the files git does not track moved home,
+    and the directories the run created removed. The run started from a clean tree, so nothing else is lost."""
+    run(root, "reset", "-q", "--hard", "HEAD")
+    for src, dest in reversed(done_plain):
+        if (root / dest).is_file() and not (root / src).exists():
+            os.rename(root / dest, root / src)
+    if not methodology_existed:
+        for d in sorted((p for p in (root / NEW_DIR).rglob("*") if p.is_dir()), key=lambda p: -len(p.parts)):
+            try:
+                d.rmdir()
+            except OSError:
+                pass
+        try:
+            (root / NEW_DIR).rmdir()
+        except OSError:
+            pass
+
+
+def apply_migration(report, trailers):
+    """Do the plan: the moves, the edits, ONE commit. Any failure before or at the commit is rolled back."""
+    root = Path(report["project"])
+    moves, rewrites = report["moves"], report["_rewrites"]
+    methodology_existed = (root / NEW_DIR).exists()
+    done_plain = []
+    try:
+        for m in moves:
+            (root / m["dest"]).parent.mkdir(parents=True, exist_ok=True)
+            if m["tracked"]:
+                r = run(root, "mv", m["src"], m["dest"])
+                if r.returncode != 0:
+                    raise RuntimeError("git mv %s %s failed: %s" % (m["src"], m["dest"], r.stderr.strip()))
+            else:
+                os.rename(root / m["src"], root / m["dest"])
+                done_plain.append((m["src"], m["dest"]))
+        for rw in rewrites:
+            (root / rw.final).write_text(rw.new, encoding="utf-8")
+            r = run(root, "add", "--", rw.final)
+            if r.returncode != 0:
+                raise RuntimeError("git add %s failed: %s" % (rw.final, r.stderr.strip()))
+        for m in moves:
+            remove_empty_parents(root, m["src"])
+        renames = renames_in_index(root)
+        weak = []
+        for m in moves:
+            if m["tracked"]:
+                score = renames.get((m["src"], m["dest"]))
+                if score is None or score < 90:
+                    weak.append("%s -> %s (%s)" % (m["src"], m["dest"], "not a rename" if score is None else "%d%%" % score))
+        if weak:
+            raise RuntimeError("a moved file would fall below 90%% similarity, so git log --follow could not reach its history: "
+                               + ", ".join(weak))
+        parent = run(root, "rev-parse", "HEAD").stdout.strip()
+        message = commit_message(report, moves) + (("\n\n" + "\n".join(trailers)) if trailers else "")
+        r = subprocess.run(["git", "-C", str(root), "commit", "-q", "-F", "-"], input=message + "\n", capture_output=True, text=True)
+        if r.returncode != 0:
+            raise RuntimeError("git commit was refused: " + (r.stdout + r.stderr).strip())
+    except Exception as e:  # noqa: BLE001 -- every failure rolls back, then is reported
+        rollback(root, done_plain, methodology_existed)
+        report["status"] = "rolled-back"
+        report["commit"] = {"error": str(e)}
+        return 3
+    report["status"] = "applied"
+    report["commit"] = {"sha": run(root, "rev-parse", "HEAD").stdout.strip(), "parent": parent, "message": message,
+                        "renames": [{"src": s, "dest": d, "score": sc} for (s, d), sc in sorted(renames.items())
+                                    if any(m["src"] == s and m["dest"] == d for m in moves)]}
+    return 0
 
 
 def render_text(report):
@@ -298,6 +460,19 @@ def render_text(report):
         out.append("left in place (%d):" % len(report["left_in_place"]))
         for x in report["left_in_place"]:
             out.append("  %s -- %s" % (x["path"], x["reason"]))
+    if report["rewrites"]:
+        out.append("")
+        out.append("rewrites (%d file(s)):" % len(report["rewrites"]))
+        for rw in report["rewrites"]:
+            out.append("  %s (%d replacement(s))" % (rw["path"], rw["replacements"]))
+            out.extend("    " + line for line in rw["diff"].splitlines())
+    if report["status"] == "applied":
+        out.append("")
+        out.append("APPLIED: one commit, %s" % report["commit"]["sha"][:12])
+    if report["status"] == "rolled-back":
+        out.append("")
+        out.append("ROLLED BACK: %s" % report["commit"]["error"])
+        out.append("the project is as it was before the run")
     return "\n".join(out) + "\n"
 
 
@@ -315,13 +490,14 @@ def main():
         print("error: %s is not a directory" % project, file=sys.stderr)
         return 2
     report = build_report(project, args.tier, args.apply)
-    print(json.dumps(report, indent=2) if args.json else render_text(report), end="" if not args.json else "\n")
+    code = 0
     if report["status"] == "refused":
-        return 1
-    if args.apply and report["status"] == "ok":
-        print("error: --apply is not built yet (BL-101 P7 layer 2)", file=sys.stderr)
-        return 2
-    return 0
+        code = 1
+    elif args.apply and report["status"] == "ok":
+        code = apply_migration(report, args.trailer)
+    report.pop("_rewrites", None)
+    print(json.dumps(report, indent=2) if args.json else render_text(report), end="" if not args.json else "\n")
+    return code
 
 
 if __name__ == "__main__":

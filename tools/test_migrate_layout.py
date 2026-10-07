@@ -452,7 +452,7 @@ class TestApply(Adopter):
             self.assertIn((src, dest), seen, "git does not see %s -> %s as a rename" % (src, dest))
             self.assertGreaterEqual(seen[(src, dest)], 90, "%s -> %s fell below 90%%" % (src, dest))
         reported = {(x["src"], x["dest"]): x["score"] for x in r.report["commit"]["renames"]}
-        self.assertEqual(reported, {k: seen[k] for k in tracked}, "the report and git disagree")
+        self.assertEqual(reported, {(s, d): seen[(s, d)] for s, d in tracked.items()}, "the report and git disagree")
 
     def test_an_ignored_generated_file_is_moved_without_git_and_stays_ignored(self):
         _, r = self.apply()
@@ -495,6 +495,7 @@ class TestApply(Adopter):
         self.assertIn("methodology/", subject)
         self.assertIn("bin/migrate-layout", message)
         self.assertIn("tier all", message)
+        self.assertIn("a rename at 90% similarity or better", message)
         self.assertIn(r.report["canonical"]["sha"], message)
         self.assertTrue(message.rstrip().endswith("Reviewed-by: B <b@example.com>"), message)
         self.assertIn("Co-Authored-By: A Tester <a@example.com>", message)
