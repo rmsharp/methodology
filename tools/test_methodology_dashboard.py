@@ -6978,5 +6978,27 @@ class TestBL101P5TheFrameworkRepoItself(unittest.TestCase):
                 self.assertEqual([d for _s, d in risk_texts(p) if "action ledger" in d], [])
 
 
+class TestBL101P5NameTables(unittest.TestCase):
+    """The dashboard is one distributed file and cannot import the manifest, so it carries its own tables of the
+    names the layout moves. This is the canonical-only test that holds them to bin/_manifest.py, which
+    LAYOUT_MOVED's own comment names as its guard."""
+
+    def test_the_names_the_layout_moves_are_the_manifests_destinations_and_the_two_directories(self):
+        m = lf._manifest()
+        dests = {dest for _s, dest, _d in m.DISTRIBUTION}
+        self.assertEqual(len(dests), 30)
+        self.assertEqual(md.LAYOUT_MOVED - {"docs/methodology", "docs/methodology/workstreams"}, dests)
+
+    def test_the_state_files_are_exactly_the_manifests_seeds(self):
+        m = lf._manifest()
+        seeds = {dest for _s, dest, disp in m.DISTRIBUTION if disp == m.SEED}
+        self.assertEqual(set(md.LAYOUT_STATE_NAMES), seeds)
+
+    def test_a_destination_lands_where_the_fixtures_and_the_plan_put_it(self):
+        for _s, dest, _d in lf._manifest().DISTRIBUTION:
+            with self.subTest(dest=dest):
+                self.assertEqual(md.new_layout_rel(dest), lf.new_path(dest))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
