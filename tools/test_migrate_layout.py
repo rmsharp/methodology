@@ -617,5 +617,240 @@ class TestARefusedCommitRollsBack(Adopter):
         self.assertTrue(marker.exists(), "the pre-commit hook did not run: the tool bypassed it")
 
 
+EXPECTED_CLAUDE_MD = """# Project
+
+<!-- SESSION PROTOCOL -->
+Read and follow `methodology/SESSION_RUNNER.md` step by step. Orient first: read methodology/SAFEGUARDS.md, then methodology/SESSION_NOTES.md,
+then run `methodology/methodology_dashboard.py`.
+
+This project follows `methodology/workstreams/DEVELOPMENT_WORKSTREAM.md` in standard mode, and the
+theory is in [the manual](methodology/ITERATIVE_METHODOLOGY.md).
+
+Kept qualified on purpose (a path with a directory in front is not a bare name):
+the canonical copy is `../methodology/starter-kit/SESSION_RUNNER.md`, and upstream is
+https://github.com/KJ5HST/methodology/blob/main/SESSION_RUNNER.md and `starter-kit/SAFEGUARDS.md`.
+
+Not a methodology file: SESSION_RUNNER.mdx, MY_CHANGELOG.md, NOTES-CHANGELOG.md.
+"""
+
+
+class TestTheRewriteOfClaudeMd(Adopter):
+    """CLAUDE.md is loaded from the project root, so a name in it is relative to the root: the paths of the files
+    that moved are rewritten (plan C11, 4.4) and a name with a directory in front of it, or inside a longer name,
+    is not a methodology file of the project's and is left."""
+
+    def test_a_moved_path_or_bare_name_is_rewritten_and_nothing_else_changes(self):
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual((self.project / "CLAUDE.md").read_text(encoding="utf-8"), EXPECTED_CLAUDE_MD)
+
+    def test_the_report_counts_the_replacements_and_shows_the_diff(self):
+        r = run_migrate(self.project)
+        rw = next(x for x in r.report["rewrites"] if x["path"] == "CLAUDE.md")
+        self.assertEqual(rw["replacements"], 8)
+        self.assertEqual(rw["final"], "CLAUDE.md")
+        self.assertIn("-Read and follow `SESSION_RUNNER.md` step by step.", rw["diff"])
+        self.assertIn("+Read and follow `methodology/SESSION_RUNNER.md` step by step.", rw["diff"])
+
+    def test_a_dry_run_does_not_write_it(self):
+        before = (self.project / "CLAUDE.md").read_text(encoding="utf-8")
+        run_migrate(self.project)
+        self.assertEqual((self.project / "CLAUDE.md").read_text(encoding="utf-8"), before)
+
+    def test_tier_1_rewrites_only_the_names_of_the_files_it_moved(self):
+        r = run_migrate(self.project, "--apply", "--tier", "1")
+        text = (self.project / "CLAUDE.md").read_text(encoding="utf-8")
+        self.assertIn("`methodology/SESSION_RUNNER.md`", text)
+        self.assertIn("methodology/SAFEGUARDS.md", text)
+        self.assertIn(", then SESSION_NOTES.md,", text, "a tier-2 file is still at the root and must keep its bare name")
+
+    def test_a_project_without_a_claude_md_is_migrated_all_the_same(self):
+        git(self.project, "rm", "-q", "CLAUDE.md")
+        self.commit("no CLAUDE.md")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertNotIn("CLAUDE.md", [x["path"] for x in r.report["rewrites"]])
+
+
+class TestTheRewriteOfTheConfigs(Adopter):
+    """The two JSON configs move with the project's state and name paths in their values (plan C9): the path a file
+    is read at, the results file, a gate's command. They are rewritten as text, so the rest of the file is the bytes
+    it was; a prose key (one that starts with an underscore) and the `canonical` path (the sibling checkout, which
+    does not move) are left."""
+
+    def budget(self):
+        return (self.project / ".context-budget.json").read_text(encoding="utf-8")
+
+    def test_the_budget_paths_follow_and_the_canonical_path_and_the_prose_do_not(self):
+        before = self.budget()
+        for old in ('"path": "SESSION_NOTES.md"', '"path": "SESSION_RUNNER.md"', '"path": "SAFEGUARDS.md"',
+                    '"canonical": "../methodology/starter-kit/SESSION_RUNNER.md"'):
+            self.assertEqual(before.count(old), 1, "the seed no longer has %s once" % old)
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        want = (before.replace('"path": "SESSION_NOTES.md"', '"path": "methodology/SESSION_NOTES.md"')
+                .replace('"path": "SESSION_RUNNER.md"', '"path": "methodology/SESSION_RUNNER.md"')
+                .replace('"path": "SAFEGUARDS.md"', '"path": "methodology/SAFEGUARDS.md"'))
+        self.assertEqual((self.project / "methodology" / ".context-budget.json").read_text(encoding="utf-8"), want)
+
+    def test_the_gates_results_file_and_command_follow_and_the_prose_does_not(self):
+        before = (self.project / ".quality-gates.json").read_text(encoding="utf-8")
+        r = run_migrate(self.project, "--apply")
+        want = (before.replace('"results_file": ".quality-gates-results.json"',
+                               '"results_file": "methodology/.quality-gates-results.json"')
+                .replace("-- CHANGELOG.md)..HEAD", "-- methodology/CHANGELOG.md)..HEAD"))
+        self.assertNotEqual(want, before)
+        got = (self.project / "methodology" / ".quality-gates.json").read_text(encoding="utf-8")
+        self.assertEqual(got, want)
+        self.assertIn("Commits after the newest commit that touched CHANGELOG.md", got, "a prose value was rewritten")
+        json.loads(got)
+
+    def test_the_rewritten_gate_command_still_counts_from_the_ledgers_newest_commit(self):
+        """Right after the move both the old and the new command read 0 (the move commit is the newest commit that
+        touched either path), so the discriminating case is later: a commit that touches the moved ledger, then one
+        that does not. Counted from the ledger's real place that is 1; counted from the old path it is 2."""
+        run_migrate(self.project, "--apply")
+        ledger = self.project / "methodology" / "CHANGELOG.md"
+        ledger.write_text(ledger.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+        self.commit("a commit that touches the ledger")
+        (self.project / "README.md").write_text("a later commit\n", encoding="utf-8")
+        self.commit("a commit that does not")
+        gates = json.loads((self.project / "methodology" / ".quality-gates.json").read_text(encoding="utf-8"))
+        out = subprocess.run(gates["gates"][0]["command"], shell=True, cwd=self.project, capture_output=True, text=True)
+        self.assertEqual(out.returncode, 0, out.stderr)
+        self.assertEqual(out.stdout.strip(), "1", "the command did not count from the ledger's newest commit")
+
+    def test_the_report_names_each_config_by_its_old_and_its_new_place(self):
+        r = run_migrate(self.project)
+        got = {x["path"]: x["final"] for x in r.report["rewrites"]}
+        self.assertEqual(got[".context-budget.json"], "methodology/.context-budget.json")
+        self.assertEqual(got[".quality-gates.json"], "methodology/.quality-gates.json")
+
+    def test_a_fresh_clone_with_no_generated_files_still_gets_the_results_file_and_the_ignore_entry_moved(self):
+        (self.project / "dashboard.html").unlink()
+        (self.project / ".quality-gates-results.json").unlink()
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        gates = json.loads((self.project / "methodology" / ".quality-gates.json").read_text(encoding="utf-8"))
+        self.assertEqual(gates["results_file"], "methodology/.quality-gates-results.json")
+        self.assertIn("/methodology/dashboard.html\n", (self.project / ".gitignore").read_text(encoding="utf-8"))
+
+    def test_tier_1_leaves_the_configs_at_the_root_and_rewrites_only_the_paths_of_files_it_moved(self):
+        r = run_migrate(self.project, "--apply", "--tier", "1")
+        self.assertEqual(r.returncode, 0, r.out)
+        text = self.budget()
+        self.assertIn('"path": "methodology/SESSION_RUNNER.md"', text)
+        self.assertIn('"path": "SESSION_NOTES.md"', text, "a tier-2 file is still at the root")
+        gates = json.loads((self.project / ".quality-gates.json").read_text(encoding="utf-8"))
+        self.assertEqual(gates["results_file"], ".quality-gates-results.json")
+        self.assertIn("-- CHANGELOG.md)", gates["gates"][0]["command"])
+
+    def test_a_config_that_is_not_json_is_moved_and_not_rewritten(self):
+        (self.project / ".quality-gates.json").write_text("{ this is not json\n", encoding="utf-8")
+        self.commit("a broken config")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual((self.project / "methodology" / ".quality-gates.json").read_text(encoding="utf-8"), "{ this is not json\n")
+        self.assertNotIn(".quality-gates.json", [x["path"] for x in r.report["rewrites"]])
+
+
+def entry_split(text):
+    """(entries, rest): the `### ` headings of a ledger in order."""
+    return re.findall(r"^### (\d{4}-\d{2}-\d{2} · .*)$", text, flags=re.M)
+
+
+class TestTheLedgerEntry(Adopter):
+    """Plan 4.7.2: the migration commit carries ONE new ledger entry, and 4.7.3: it never rewrites a committed one."""
+
+    def ledger(self, rel="methodology/CHANGELOG.md"):
+        return (self.project / rel).read_text(encoding="utf-8")
+
+    def test_one_entry_is_prepended_and_every_older_line_is_untouched(self):
+        before = self.ledger("CHANGELOG.md")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        after = self.ledger()
+        new = entry_split(after)
+        old = entry_split(before)
+        self.assertEqual(len(new), len(old) + 1)
+        self.assertEqual(new[1:], old)
+        self.assertRegex(new[0], r"^\d{4}-\d{2}-\d{2} · \[ad hoc\] Layout migration: ")
+        diff = git(self.project, "diff", "-M", "HEAD~1", "HEAD", "--", "methodology/CHANGELOG.md", "CHANGELOG.md")
+        removed = [l for l in diff.splitlines() if l.startswith("-") and not l.startswith("---")]
+        self.assertEqual(removed, [], "the migration removed or rewrote a line of the ledger")
+
+    def test_the_entry_sits_above_the_first_entry_and_the_ledger_still_passes_check_ledger(self):
+        run_migrate(self.project, "--apply")
+        after = self.ledger()
+        first = after.index("### ")
+        self.assertTrue(after[first:].startswith("### 20"), after[first:first + 40])
+        self.assertIn("Layout migration", after[first:after.index("### 2026-09-")])
+        check = subprocess.run([sys.executable, "-B", str(REPO / "bin" / "check-ledger"), "--file", "methodology/CHANGELOG.md"],
+                               cwd=self.project, capture_output=True, text=True)
+        self.assertEqual(check.returncode, 0, check.stdout + check.stderr)
+
+    def test_the_entry_says_what_moved_what_was_rewritten_and_by_which_tool(self):
+        r = run_migrate(self.project, "--apply")
+        text = r.report["ledger_entry"]["text"]
+        self.assertIn("`bin/migrate-layout`", text)
+        self.assertIn("tier all", text)
+        self.assertIn("38 files", text)
+        for path in ("CLAUDE.md", ".gitignore", "methodology/.context-budget.json", "methodology/.quality-gates.json"):
+            self.assertIn("`%s`" % path, text)
+        self.assertIn(text.strip(), self.ledger())
+
+    def test_a_dry_run_shows_the_entry_and_writes_nothing(self):
+        before = tree_state(self.project)
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["ledger_entry"]["path"], "methodology/CHANGELOG.md")
+        self.assertIn("Layout migration", r.report["ledger_entry"]["text"])
+        self.assertEqual(tree_state(self.project), before)
+
+    def test_a_ledger_that_does_not_move_in_tier_1_takes_the_entry_where_it_is(self):
+        r = run_migrate(self.project, "--apply", "--tier", "1")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertIn("Layout migration", self.ledger("CHANGELOG.md"))
+        self.assertFalse((self.project / "methodology" / "CHANGELOG.md").exists())
+        self.assertEqual(r.report["ledger_entry"]["path"], "CHANGELOG.md")
+
+    def test_a_project_with_no_ledger_gets_no_entry_and_is_migrated_all_the_same(self):
+        git(self.project, "rm", "-q", "CHANGELOG.md")
+        self.commit("no ledger")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertIsNone(r.report["ledger_entry"])
+
+    def test_the_entry_goes_under_a_heading_for_the_current_month_and_makes_one_when_the_month_has_turned(self):
+        import datetime
+        month = datetime.date.today().strftime("%Y-%m")
+        base = self.ledger("CHANGELOG.md")
+        first = base.index("### ")
+        for heading, expect_new_heading in (("## %s\n\n" % month, False), ("## 2001-01\n\n", True)):
+            project = Path(self._td.name) / ("m%d" % expect_new_heading)
+            shutil.copytree(self.project, project, symlinks=True)
+            (project / "CHANGELOG.md").write_text(base[:first] + heading + base[first:], encoding="utf-8")
+            commit_all(project, "a month heading")
+            self.assertEqual(run_migrate(project, "--apply").returncode, 0)
+            after = (project / "methodology" / "CHANGELOG.md").read_text(encoding="utf-8")
+            self.assertEqual(after.count("## %s\n" % month), 1, after[first - 50:first + 400])
+            i_entry = after.index("Layout migration")
+            self.assertGreater(i_entry, after.index("## %s\n" % month))
+            if expect_new_heading:
+                self.assertLess(after.index("## %s\n" % month), after.index("## 2001-01"))
+                self.assertLess(i_entry, after.index("## 2001-01"))
+
+    def test_a_ledger_too_small_to_take_an_entry_and_stay_a_rename_is_refused_and_rolled_back(self):
+        seed = (REPO / "starter-kit" / "CHANGELOG.md").read_text(encoding="utf-8")
+        (self.project / "CHANGELOG.md").write_text(seed, encoding="utf-8")
+        self.commit("a ledger with no entries yet")
+        before = tree_state(self.project)
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 3, r.out)
+        self.assertEqual(r.report["status"], "rolled-back")
+        self.assertIn("90%", r.report["commit"]["error"])
+        self.assertIn("CHANGELOG.md", r.report["commit"]["error"])
+        self.assertEqual(tree_state(self.project), before)
+
+
 if __name__ == "__main__":
     unittest.main()
