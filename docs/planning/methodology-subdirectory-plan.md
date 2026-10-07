@@ -514,8 +514,8 @@ ledger under `methodology/` writes `methodology/archive/` and climbs one level, 
 comes from the embedded resolver, a half-migrated tree is refused (`LAYOUT_HALF_MIGRATED`), the trigger reads both archive
 directories, and a shard name is never reused across them. `close_out_report.py` 1.2.0 finds its ledger the same way (CLI default,
 hook, the block message's command). **The tiebreak decided at the S275 close-out is built** in the resolver, the hook's sh form
-(selftest 43) and both tools. **My one choice, for him to overrule: it is opt-in** (`tiebreak=True`): the ledger tools ask, the
-ratchet's manifest does not, because §4.1 frees only the root changelog and a second manifest is a stale copy. **Measured:** 119 of
+(selftest 43) and both tools. **Built opt-in** (`tiebreak=True`; the ratchet's manifest does not ask). **Decided 2026-10-07 (S276 picker): it is not opt-in.** In the new
+layout the tools read only `methodology/`; a same-named file elsewhere is the user's own, the ratchet's manifest too. P4 starts by making it unconditional. **Measured:** 119 of
 119 shards give the same `--reverify` verdict under the old and the new tool; the 120 frozen proofs read 115 / 5 in all three trees
 (the same five August shards); this repository's real ledgers, moved in a scratch clone, trim and prove from a second clone. Trimmer
 tests 181 → 218, close-out 68 → 82, layout 65 → 72, `bin/tests.sh` 468 / 0 / 6 at two receipts; 44 mutants killed, four survivors

@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-07 · [BL-101] S276 — his decision at the close-out picker, recorded: the tie rule is not opt-in (plan section 7.2b, BL-101, the receipt)
+
+I had built the framework-anchor tiebreak opt-in, so the ledger tools ask for it and the ratchet's `.quality-gates.json` does not, and put the choice to him as a picker. He asked what the ledger and the manifest are (the ledger is `CHANGELOG.md`, the diary of actions; the manifest is `.quality-gates.json`, the ratchet's list of thresholds that may only tighten), then decided: **the methodology tools use only the files in `methodology/`; a same-named file anywhere else is the user's own to name as they like, and the ratchet should work inside `methodology/`** (he did not know what "stays loud and refuses" meant, which was my jargon for stopping with an error). **Recorded, NOT built:** P4 starts by making the rule unconditional (the resolver's default, the ratchet's embedded copy, `manifest_location` and its P2 tests, the hook's chain, the layout and ratchet suites); a tree with no runner under `methodology/`, or a runner in both places, stays refused. The plan (59,789 B of its declared 60,000 B), `BACKLOG.md`, `BACKLOG-DETAIL.md` and the S276 receipt (12,240 B, trimmed to stay under the 12,288 B record budget) say so; the receipt's push item now reads done. The earlier close-out entry's phrase "opt-in by my choice ... which he may overrule" is left as written: this entry is the correction. Model: Claude Sonnet 5.5.
+
 ### 2026-10-07 · [BL-101] S276 — fork `main` pushed to `origin`: the twelve S276 commits (`ecbde74..9f06e20`)
 
 At the S276 close-out picker he chose "Push now". Before the push `origin/main...main` read `0 12` after a fresh fetch, the twelve being the S276 commits from the `HANDOFFS.md` trim `83bb2a3` to the close-out `9f06e20`; after it, `0 0` read back after another fetch, `origin/main` at `9f06e20`. `upstream/main` is untouched at `f34769f`: nothing went to `KJ5HST/methodology`. This record is the CHANGELOG-only push record his standing grant covers. Model: Claude Sonnet 5.5.
