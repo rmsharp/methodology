@@ -6842,5 +6842,91 @@ class TestBL101P5CopyInsideMethodology(unittest.TestCase):
         self.assertNotIn("--sync %s" % (shown / "methodology"), r.stderr)
 
 
+class TestBL101P5Gates(unittest.TestCase):
+    """The quality-gate read (collect_gate_metrics) finds the manifest where it lives and follows its history
+    across the move that took it there. Without that a migrated project silently loses its gate signals, and a
+    floor lowered INSIDE the move commit is invisible: the plan's E2, the same class as 'a gate fails open when
+    its file moves' (S273)."""
+
+    G = TestQualityGateSignals
+
+    def _repo(self):
+        td = tempfile.TemporaryDirectory()
+        self.addCleanup(td.cleanup)
+        p = Path(td.name)
+        subprocess.run(["git", "init", "-q", str(p)], check=True)
+        return p
+
+    def _commit(self, p, msg):
+        subprocess.run(["git", "-C", str(p), "add", "-A"], check=True)
+        subprocess.run(["git", "-C", str(p), "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-q", "-m", msg], check=True)
+
+    def _manifest(self, floor, name="suite"):
+        return self.G._manifest(self.G._gate(name, "min", floor))
+
+    def _moved(self, before, after, then_delete=False):
+        """Commit 1 holds the manifest at the root, commit 2 moves it under methodology/ (and may change it)."""
+        p = self._repo()
+        (p / ".quality-gates.json").write_text(self._manifest(before), encoding="utf-8")
+        self._commit(p, "init")
+        (p / "methodology").mkdir()
+        subprocess.run(["git", "-C", str(p), "mv", ".quality-gates.json", "methodology/.quality-gates.json"], check=True)
+        (p / "methodology" / ".quality-gates.json").write_text(self._manifest(after), encoding="utf-8")
+        self._commit(p, "move")
+        if then_delete:
+            subprocess.run(["git", "-C", str(p), "rm", "-q", "methodology/.quality-gates.json"], check=True)
+            self._commit(p, "delete")
+        return p
+
+    def test_the_manifest_is_read_where_it_lives(self):
+        for rel in (".quality-gates.json", "methodology/.quality-gates.json"):
+            with self.subTest(rel=rel):
+                p = self._repo()
+                (p / rel).parent.mkdir(exist_ok=True)
+                (p / rel).write_text(self._manifest(5), encoding="utf-8")
+                self._commit(p, "init")
+                m = md.collect_gate_metrics(p)
+                self.assertTrue(m["manifest_present"])
+                self.assertEqual(m["declared"], 1)
+
+    def test_the_results_file_beside_the_manifest_is_read(self):
+        p = self._repo()
+        cfg = json.loads(self._manifest(5))
+        digest = hashlib.sha256(json.dumps(cfg["gates"], sort_keys=True).encode()).hexdigest()[:12]
+        (p / "methodology").mkdir()
+        (p / "methodology" / ".quality-gates.json").write_text(json.dumps(cfg), encoding="utf-8")
+        (p / "methodology" / ".quality-gates-results.json").write_text(
+            json.dumps({"ran_at": "2026-10-07T00:00:00", "manifest": digest,
+                        "gates": [{"name": "suite", "status": "pass"}]}), encoding="utf-8")
+        self._commit(p, "init")
+        m = md.collect_gate_metrics(p)
+        self.assertTrue(m["results_present"])
+        self.assertFalse(m["results_stale"])
+        self.assertEqual(m["summary"]["pass"], 1)
+
+    def test_a_floor_lowered_in_place_is_a_loosening_control(self):
+        p = self._repo()
+        (p / ".quality-gates.json").write_text(self._manifest(100), encoding="utf-8")
+        self._commit(p, "init")
+        (p / ".quality-gates.json").write_text(self._manifest(90), encoding="utf-8")
+        self._commit(p, "lower")
+        self.assertEqual([(l["kind"], l["from"], l["to"]) for l in md.collect_gate_metrics(p)["loosened"]],
+                         [("floor lowered", 100.0, 90.0)])
+
+    def test_a_floor_lowered_in_the_move_commit_is_still_seen(self):
+        m = md.collect_gate_metrics(self._moved(100, 90))
+        self.assertEqual([(l["name"], l["kind"], l["from"], l["to"]) for l in m["loosened"]],
+                         [("suite", "floor lowered", 100.0, 90.0)])
+
+    def test_a_pure_move_loosens_nothing(self):
+        m = md.collect_gate_metrics(self._moved(100, 100))
+        self.assertEqual((m["loosened"], m["commands_changed"]), ([], []))
+
+    def test_a_manifest_deleted_after_the_move_is_still_a_removal(self):
+        m = md.collect_gate_metrics(self._moved(100, 100, then_delete=True))
+        self.assertTrue(m["manifest_deleted"])
+        self.assertEqual([(l["name"], l["kind"]) for l in m["loosened"]], [("suite", "removed")])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
