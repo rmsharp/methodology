@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-07 · [BL-101] S278 — layer 0: the dashboard and its twin carry the resolver block
+
+Layer 0 of BL-101 P5: `starter-kit/methodology_dashboard.py` and its byte-identical twin `tools/methodology_dashboard.py` now carry the marked resolver block of `tools/layout_resolver.py` (after the imports, before the constants), byte for byte. Nothing in the dashboard calls it yet, so no output changes and `DASHBOARD_VERSION` stays 2.21.0. Measured green: `tools/test_layout_resolver.py` Ran 75, OK (the three red tests of the checkpoint before are green), `tools/test_methodology_dashboard.py` Ran 356, OK, `cmp` of the two copies identical. Model: Claude Sonnet 5.5.
+
 ### 2026-10-07 · [BL-101] S278 checkpoint, RED on purpose — layer 0: the dashboard and its twin must carry the resolver block
 
 Layer 0 of BL-101 P5, tests first and RED on purpose: `tools/test_layout_resolver.py` lists `starter-kit/methodology_dashboard.py` among the tools that carry the resolver block and adds a test that its canonical-only twin `tools/methodology_dashboard.py` carries the same block (the dashboard suite loads the twin, so a block in the other copy alone would pass the list and leave the tested file without a resolver). Measured red before any code: `python3 -B tools/test_layout_resolver.py` Ran 75, 3 failures (the copies test, the carrier-list test, the twin test). The suite is red between this commit and the next, as at S277; the five-file cap counts the ledger, so a block change and its tests are two commits. Model: Claude Sonnet 5.5.

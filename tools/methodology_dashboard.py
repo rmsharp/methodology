@@ -80,6 +80,29 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from collections import defaultdict
 
+# --- layout resolver: BEGIN ---
+import os as _os
+from pathlib import Path as _Path
+
+
+def resolve_layout(root, anchor="SESSION_RUNNER.md"):
+    """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
+    found the anchor paths that exist. A half-migrated tree has no directory, by design.
+    A file found in both places is the framework's under methodology/ when the runner is under
+    methodology/ and not at the root: the root copy is the project's own and is left alone, kind new,
+    and found still names both. Any other tie stays half, and the runner cannot decide a tie about itself."""
+    root = _Path(root)
+    new, old = root / "methodology" / anchor, root / anchor
+    found = tuple(p for p in (new, old) if _os.path.isfile(p))
+    if len(found) == 2:
+        if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md") and not _os.path.isfile(root / "SESSION_RUNNER.md"):
+            return "new", new.parent, found
+        return "half", None, found
+    if not found:
+        return "none", None, ()
+    return ("new", new.parent, found) if found[0] == new else ("legacy", root, found)
+# --- layout resolver: END ---
+
 # === CONSTANTS ===
 
 # Canonical dashboard version. Source of truth: methodology/starter-kit/methodology_dashboard.py.
