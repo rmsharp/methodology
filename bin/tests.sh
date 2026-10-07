@@ -4321,12 +4321,12 @@ echo "== Test 54: the ledger hook and the ratchet chain follow the files under m
 # the ratchet chain: its guard named the root manifest only, so a moved manifest was never ratcheted.
 # X2 is kept here as a permanent test, through the real hook and real git, in both layouts, with the
 # controls that prove each assertion can fail.
-t54_repo() { # $1 legacy|new, $2 the hook file to install -- setup commits bypass it
+t54_repo() { # $1 legacy|new, $2 the hook file to install, $3 the ratchet to install (default: the shipped one) -- setup commits bypass it
     local u pre=""; u="$(mktemp -d)"; [ "$1" = new ] && pre="methodology/"
     git -C "$u" init -q -b main; git -C "$u" config user.email t@t; git -C "$u" config user.name t
     mkdir -p "$u/.githooks" "$u/${pre}"
     cp "$2" "$u/.githooks/pre-commit"; chmod +x "$u/.githooks/pre-commit"
-    cp "$STARTER/quality_ratchet.py" "$u/${pre}quality_ratchet.py"
+    cp "${3:-$STARTER/quality_ratchet.py}" "$u/${pre}quality_ratchet.py"
     printf '{"version": 1, "gates": [{"name": "cov", "direction": "min", "threshold": 80}]}\n' > "$u/${pre}.quality-gates.json"
     printf '# Changelog\n\n### 2026-01-01 · [ad hoc] base\n\n- body\n\n' > "$u/${pre}CHANGELOG.md"
     printf 'one\n' > "$u/tracked.txt"
@@ -4426,8 +4426,11 @@ rm -rf "$U"
 # opt-in. A project whose runner is tracked under methodology/ keeps its ratchet manifest there; a
 # .quality-gates.json at the root is the project's own and the chain leaves it alone. A tie the runner
 # cannot decide (the runner at the root, or at both) is still refused by the ratchet, naming both.
-t54_mtie() { # $1 where the runner is tracked: methodology | root | both; a root manifest of someone else's
-    local u; u="$(t54_repo new "$HOOK54")"
+t54_mtie() { # $1 where the runner is tracked: methodology | root | both; $2 the ratchet to install; a root manifest of someone else's
+    local u; u="$(t54_repo new "$HOOK54" "${2:-}")"
+    # The suite runs under set -u: an unset "$2" aborts the substitution and leaves u empty, and then
+    # git -C "" acts on the CURRENT directory, which is this repository. A fixture that did not build stops here.
+    [ -n "$u" ] && [ -d "$u/.git" ] || { echo "t54_mtie: the fixture did not build" >&2; return 1; }
     t54_floor "$u/.quality-gates.json" 10
     case "$1" in methodology|both) printf 'runner\n' > "$u/methodology/SESSION_RUNNER.md" ;; esac
     case "$1" in root|both) printf 'runner\n' > "$u/SESSION_RUNNER.md" ;; esac
@@ -4489,7 +4492,20 @@ if mutate "$HOOK54" "$M54" 's.replace("[ -f \"$top/methodology/$mfile\" ]", "fal
 else
     fail "control mutation DID NOT APPLY: the chain guard"
 fi
-rm -f "$M54"
+# The manifest tie, as a git scenario: a ratchet that never lets the runner decide refuses the root-manifest
+# edit the shipped tool passes, so the assertion above can fail.
+MR54="$(mktemp)"
+if mutate "$STARTER/quality_ratchet.py" "$MR54" 's.replace("if len(out) == 2 and framework_under_methodology(root, ref):", "if False:", 1)'; then
+    U="$(t54_mtie methodology "$MR54")"
+    t54_floor "$U/.quality-gates.json" 5; t54_entry "$U/methodology/CHANGELOG.md"; t54_try "$U"
+    [ "$RC54" != 0 ] && grep -qF "half-migrated" <<< "$OUT54" \
+        && pass "control: a ratchet that never lets the runner decide refuses the root-manifest edit the shipped tool passes" \
+        || fail "control: the tie-blind ratchet still passed the root-manifest edit (exit $RC54): $OUT54"
+    rm -rf "$U"
+else
+    fail "control mutation DID NOT APPLY: the manifest tie"
+fi
+rm -f "$M54" "$MR54"
 
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
