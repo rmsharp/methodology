@@ -50,6 +50,8 @@ from datetime import datetime, timezone
 VERSION = "1.2.0"
 CONFIG_NAME = ".quality-gates.json"  # layout: ok -- the manifest's own name; where it lives is resolved below
 DEFAULT_RESULTS = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it sits beside the manifest
+TOOL = "quality_ratchet.py"  # layout: ok -- this tool's own file name, printed in messages and used as the selftest's copy name
+SAFEGUARDS = "SAFEGUARDS.md"  # layout: ok -- a document cited by bare name in a message; names are relative to the runner's directory (plan 4.4)
 DIRECTIONS = ("min", "max")
 
 R = "\033[0m"; B = "\033[1m"; D = "\033[2m"
@@ -277,10 +279,10 @@ def compare(old_cfg, new_cfg):
     return refusals, warnings
 
 
-BYPASS_COST = """\
+BYPASS_COST = f"""\
   · This commit makes a declared threshold weaker than HEAD's. Loosening requires
     plan-mode approval, in its own commit, with the reason in the ledger
-    (SAFEGUARDS.md, Blast Radius Limits). Tightening never needs approval.
+    ({SAFEGUARDS}, Blast Radius Limits). Tightening never needs approval.
   · Bypass once: git commit --no-verify — recorded, not exempt: the manifest's git
     history shows the loosening and the dashboard reports it as a risk."""
 
@@ -455,7 +457,7 @@ def do_status(root, cfg, as_json=False):
     snap = load_results(root, cfg)
     n = len(cfg.get("gates", []))
     if snap is None:
-        msg = f"{n} gate(s) declared, never run here — `quality_ratchet.py --run` measures them"
+        msg = f"{n} gate(s) declared, never run here — `{TOOL} --run` measures them"
         print(json.dumps({"gates": n, "results": None, "note": msg}) if as_json
               else f"{YEL}quality-ratchet: {msg}{R}")
         return WARN if n else CLEAN
@@ -528,7 +530,7 @@ def install_hook(root):
     p = os.path.join(hooks, "pre-commit")
     if os.path.exists(p):
         existing = open(p, errors="ignore").read()
-        if "quality_ratchet.py" in existing:
+        if TOOL in existing:
             print(f"  already installed at {p}"); return CLEAN
         print(f"{YEL}a pre-commit hook already exists at {p} and is not ours — chain it:{R}")
         print(f"  add this line before its final exit (after a ledger gate, if you run one):\n"
@@ -580,29 +582,29 @@ def selftest():
         run(["git", "init", "-q", d]); run(["git", "-C", d, "config", "user.email", "t@t"])
         run(["git", "-C", d, "config", "user.name", "t"])
         here = os.path.abspath(__file__)
-        import shutil; shutil.copy(here, os.path.join(d, "quality_ratchet.py"))
+        import shutil; shutil.copy(here, os.path.join(d, TOOL))
         json.dump(base, open(os.path.join(d, CONFIG_NAME), "w"))
         run(["git", "-C", d, "add", "-A"]); run(["git", "-C", d, "commit", "-q", "-m", "base"])
         # --run: both gates pass; a results file appears; the summary line is citable
-        rc, out, _ = run([py, "quality_ratchet.py", "--run"], cwd=d)
+        rc, out, _ = run([py, TOOL, "--run"], cwd=d)
         check("--run exits 0 when every gate passes", rc == CLEAN)
         check("--run writes the results file", os.path.exists(os.path.join(d, DEFAULT_RESULTS)))
         check("--run prints a citable summary line", "quality_ratchet: 2/2 pass" in out)
-        rc, out, _ = run([py, "quality_ratchet.py", "--status"], cwd=d)
+        rc, out, _ = run([py, TOOL, "--status"], cwd=d)
         check("--status reads the last run", rc == CLEAN and "2/2 pass" in out)
         # a failing gate: exit 2; an uncommanded gate: unmeasured, exit 1
         failing = json.loads(json.dumps(base)); failing["gates"][0]["threshold"] = 4
         json.dump(failing, open(os.path.join(d, CONFIG_NAME), "w"))
-        rc, out, _ = run([py, "quality_ratchet.py", "--run"], cwd=d)
+        rc, out, _ = run([py, TOOL, "--run"], cwd=d)
         check("--run exits 2 on a failed gate", rc == REFUSED and "1 fail" in out)
         unm = json.loads(json.dumps(base)); unm["gates"].append(
             {"name": "declared-only", "direction": "min", "threshold": 1})
         json.dump(unm, open(os.path.join(d, CONFIG_NAME), "w"))
-        rc, out, _ = run([py, "quality_ratchet.py", "--run"], cwd=d)
+        rc, out, _ = run([py, TOOL, "--run"], cwd=d)
         check("a gate with no command is UNMEASURED (exit 1), never pass",
               rc == WARN and "1 unmeasured" in out)
         # the ratchet through git: install the hook, stage a loosening, commit is refused
-        run([py, "quality_ratchet.py", "install-hook"], cwd=d)
+        run([py, TOOL, "install-hook"], cwd=d)
         json.dump(loosened, open(os.path.join(d, CONFIG_NAME), "w"))
         run(["git", "-C", d, "add", CONFIG_NAME])
         rc, _, err = run(["git", "-C", d, "commit", "-q", "-m", "loosen"])
@@ -656,15 +658,15 @@ def selftest():
 # === CLI ===
 
 def print_usage():
-    print(f"quality_ratchet.py v{VERSION} — declared quality thresholds that only tighten")
+    print(f"{TOOL} v{VERSION} — declared quality thresholds that only tighten")
     print("")
-    print("Usage: python3 quality_ratchet.py <command> [--json]")
+    print(f"Usage: python3 {TOOL} <command> [--json]")
     print("")
     print("Commands:")
     print("  --run          Run every declared gate, write the results file, print the table")
     print("                 and a citable summary line. Exit 2 on any fail, 1 on unmeasured.")
     print("  --status       Report the last run without running anything.")
-    print("  --precommit    What the hook runs: refuse a staged .quality-gates.json whose")
+    print(f"  --precommit    What the hook runs: refuse a staged {CONFIG_NAME} whose")
     print("                 thresholds are looser than HEAD's. Tightening/adding always pass.")
     print("  install-hook   Install (or explain how to chain) the pre-commit hook. Opt-in.")
     print("  --selftest     Observe every gate FAILING as well as passing.")

@@ -529,6 +529,20 @@ class TestTheScanSet(Scratch):
         self.assertEqual(report["problems"], [])
 
 
+class TestToolsAlreadyResolvedStayAtZero(unittest.TestCase):
+    """A tool that phase P2-P5 has worked scans at zero unacknowledged sites, and stays there: the
+    scanner is not a gate until P6, so this is what stops a later edit putting a root literal back.
+    Each phase appends the tools it resolved; P6 replaces the list with the gate."""
+
+    RESOLVED = (".githooks/pre-commit", "starter-kit/quality_ratchet.py")   # P2
+
+    def test_each_resolved_tool_reports_no_site(self):
+        for rel in self.RESOLVED:
+            sites, _acked, _prose, problems = cll.scan_text(rel, (REPO / rel).read_text(encoding="utf-8"))
+            self.assertEqual(problems, [], rel)
+            self.assertEqual([(s.line, s.text) for s in sites], [], rel + " names a root path again")
+
+
 class TestTheScannerCommand(Scratch):
     CMD = [sys.executable, "-B", str(REPO / "bin" / "check-layout-literals")]
 
