@@ -4307,6 +4307,118 @@ s34_refused "a second DISTRIBUTION assignment"          reassigned 'SEED_FORMAT_
 SEED_FORMAT_MARKERS = {" "DISTRIBUTION"
 rm -rf "$T34"
 
+echo "== Test 54: the ledger hook and the ratchet chain follow the files under methodology/ (BL-101 P2, X2, RED-first) =="
+# Plan C5 measured it: once the ledger moved under methodology/, a LATER commit that left the ledger
+# out PASSED, because the hook found no tracked CHANGELOG.md and took its "no ledger, never block"
+# branch -- the gate that enforces failure mode #27 failing open, silently. The same fail-open sat in
+# the ratchet chain: its guard named the root manifest only, so a moved manifest was never ratcheted.
+# X2 is kept here as a permanent test, through the real hook and real git, in both layouts, with the
+# controls that prove each assertion can fail.
+t54_repo() { # $1 legacy|new, $2 the hook file to install -- setup commits bypass it
+    local u pre=""; u="$(mktemp -d)"; [ "$1" = new ] && pre="methodology/"
+    git -C "$u" init -q -b main; git -C "$u" config user.email t@t; git -C "$u" config user.name t
+    mkdir -p "$u/.githooks" "$u/${pre}"
+    cp "$2" "$u/.githooks/pre-commit"; chmod +x "$u/.githooks/pre-commit"
+    cp "$STARTER/quality_ratchet.py" "$u/${pre}quality_ratchet.py"
+    printf '{"version": 1, "gates": [{"name": "cov", "direction": "min", "threshold": 80}]}\n' > "$u/${pre}.quality-gates.json"
+    printf '# Changelog\n\n### 2026-01-01 · [ad hoc] base\n\n- body\n\n' > "$u/${pre}CHANGELOG.md"
+    printf 'one\n' > "$u/tracked.txt"
+    git -C "$u" add -A; git -C "$u" commit -q --no-verify -m base
+    git -C "$u" config core.hooksPath .githooks
+    echo "$u"
+}
+t54_try() { git -C "$1" add -A; OUT54="$(git -C "$1" commit -q -m t 2>&1)"; RC54=$?; }
+t54_entry() { # $1 ledger file: prepend one entry
+    printf '# Changelog\n\n### 2026-02-01 · [ad hoc] new\n\n- body\n\n### 2026-01-01 · [ad hoc] base\n\n- body\n\n' > "$1"
+}
+t54_floor() { printf '{"version": 1, "gates": [{"name": "cov", "direction": "min", "threshold": %s}]}\n' "$2" > "$1"; }
+HOOK54="$METHODOLOGY/.githooks/pre-commit"
+
+for L54 in legacy new; do
+    PRE54=""; [ "$L54" = new ] && PRE54="methodology/"
+    U="$(t54_repo "$L54" "$HOOK54")"
+    printf 'two\n' > "$U/tracked.txt"; t54_try "$U"
+    [ "$RC54" = 1 ] && grep -qF "${PRE54}CHANGELOG.md not staged" <<< "$OUT54" \
+        && pass "$L54 layout: a later commit that leaves the ledger out is refused, naming ${PRE54}CHANGELOG.md (X2)" \
+        || fail "$L54 layout: X2 -- exit $RC54, wanted 1 naming ${PRE54}CHANGELOG.md; got: $OUT54"
+    rm -rf "$U"
+    U="$(t54_repo "$L54" "$HOOK54")"
+    printf 'two\n' > "$U/tracked.txt"; t54_entry "$U/${PRE54}CHANGELOG.md"; t54_try "$U"
+    [ "$RC54" = 0 ] && pass "$L54 layout: the same commit with a ledger entry passes" \
+        || fail "$L54 layout: a commit with its ledger entry was refused (exit $RC54): $OUT54"
+    rm -rf "$U"
+    U="$(t54_repo "$L54" "$HOOK54")"
+    t54_floor "$U/${PRE54}.quality-gates.json" 70; t54_entry "$U/${PRE54}CHANGELOG.md"; t54_try "$U"
+    [ "$RC54" != 0 ] && grep -qF "floor lowered 80 -> 70" <<< "$OUT54" \
+        && pass "$L54 layout: the ratchet chain refuses a loosened floor even with the ledger co-staged" \
+        || fail "$L54 layout: a loosened floor was not refused (exit $RC54): $OUT54"
+    rm -rf "$U"
+done
+
+# The MOVE commit, through the real hook: ledger, manifest and tool renamed under methodology/.
+U="$(t54_repo legacy "$HOOK54")"
+mkdir "$U/methodology"; git -C "$U" mv CHANGELOG.md .quality-gates.json quality_ratchet.py methodology/
+t54_try "$U"
+[ "$RC54" = 0 ] && pass "the move commit (a pure rename of ledger, manifest and tool) passes the hook" \
+    || fail "the move commit was refused (exit $RC54): $OUT54"
+rm -rf "$U"
+U="$(t54_repo legacy "$HOOK54")"
+mkdir "$U/methodology"; git -C "$U" mv CHANGELOG.md .quality-gates.json quality_ratchet.py methodology/
+t54_floor "$U/methodology/.quality-gates.json" 70; t54_try "$U"
+[ "$RC54" != 0 ] && grep -qF "floor lowered 80 -> 70" <<< "$OUT54" \
+    && pass "a move that lowers a floor is refused, for the lowering and not as 'manifest removed'" \
+    || fail "a move that lowers a floor was not refused as such (exit $RC54): $OUT54"
+rm -rf "$U"
+U="$(t54_repo legacy "$HOOK54")"
+mkdir "$U/methodology"; git -C "$U" mv CHANGELOG.md .quality-gates.json quality_ratchet.py methodology/
+printf '# Changelog\n\n### 2026-01-01 · [ad hoc] base\n\n- body, reworded in the move\n\n' > "$U/methodology/CHANGELOG.md"; t54_try "$U"
+[ "$RC54" != 0 ] && grep -qF "a committed entry was changed" <<< "$OUT54" \
+    && pass "a move that rewrites a committed ledger entry is refused (the never-edit gate crosses the move)" \
+    || fail "a move that rewrote a ledger entry was not refused (exit $RC54): $OUT54"
+rm -rf "$U"
+
+# Two ledgers tracked: a half-migrated tree. Refused, naming both.
+U="$(t54_repo new "$HOOK54")"
+printf '# Changelog\n' > "$U/CHANGELOG.md"; printf 'x\n' > "$U/tracked.txt"; t54_entry "$U/methodology/CHANGELOG.md"; t54_try "$U"
+[ "$RC54" = 1 ] && grep -qF "Two ledgers are tracked" <<< "$OUT54" && grep -qF "methodology/CHANGELOG.md" <<< "$OUT54" \
+    && pass "two tracked ledgers (half-migrated) are refused, naming both" \
+    || fail "half-migrated tree: exit $RC54, wanted 1 naming both: $OUT54"
+rm -rf "$U"
+
+# CONTROLS: each assertion above must be able to fail. Mutate a COPY of the hook, never the live one.
+M54="$(mktemp)"; chmod +x "$M54"
+t54_mutant() { # $1 what, $2 python expression, $3 the selftest probe that must go red ('' = none, a git scenario instead)
+    local OUTM RCM
+    if mutate "$HOOK54" "$M54" "$2"; then
+        chmod +x "$M54"
+        if [ -n "$3" ]; then
+            OUTM="$("$M54" --selftest 2>&1)"; RCM=$?
+            [ "$RCM" != 0 ] && grep -qF "FAIL: $3" <<< "$OUTM" \
+                && pass "control: $1 turns the selftest red on '$3'" \
+                || fail "control: $1 -- selftest rc=$RCM, expected FAIL: $3"
+        fi
+    else
+        fail "control mutation DID NOT APPLY: $1"
+    fi
+}
+t54_mutant "the new-layout ledger branch disabled" 's.replace("if indexed \"$new_ledger\"; then", "if false; then", 1)' "new layout: ledger not co-staged -> REFUSED (X2"
+t54_mutant "the half-migrated refusal disabled"    's.replace("\tif indexed \"$legacy_ledger\"; then\n\t\tcat >&2", "\tif false; then\n\t\tcat >&2", 1)' "a ledger in both places"
+t54_mutant "HEAD read from the new path only (no crossing the move)" 's.replace("for p in \"$ledger\" \"$legacy_ledger\" \"$new_ledger\"; do", "for p in \"$ledger\"; do", 1)' "the move commit that drops an entry"
+t54_mutant "the archive under methodology/ not recognised" 's.replace("^($legacy_archive|$new_archive)/", "^($legacy_archive)/", 1)' "new layout, ledger: entries dropped with a shard under methodology/ staged"
+# The ratchet chain guard, as a git scenario (the selftest's repos carry no ratchet).
+if mutate "$HOOK54" "$M54" 's.replace("[ -f \"$top/methodology/$mfile\" ]", "false", 1).replace("\"HEAD:methodology/$mfile\"", "\"HEAD:$mfile\"", 1)'; then
+    chmod +x "$M54"
+    U="$(t54_repo new "$M54")"
+    t54_floor "$U/methodology/.quality-gates.json" 70; t54_entry "$U/methodology/CHANGELOG.md"; t54_try "$U"
+    [ "$RC54" = 0 ] \
+        && pass "control: a chain guard that names the root manifest only PASSES a loosened floor in the new layout (the fail-open the real hook refuses)" \
+        || fail "control: the legacy-only chain guard still refused the loosening (exit $RC54): $OUT54"
+    rm -rf "$U"
+else
+    fail "control mutation DID NOT APPLY: the chain guard"
+fi
+rm -f "$M54"
+
 echo ""
 echo "== Summary: $PASS passed, $FAIL failed, $SKIP skipped =="
 [ "$FAIL" = "0" ]
