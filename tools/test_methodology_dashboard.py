@@ -6994,10 +6994,11 @@ class TestBL101P5NameTables(unittest.TestCase):
         seeds = {dest for _s, dest, disp in m.DISTRIBUTION if disp == m.SEED}
         self.assertEqual(set(md.LAYOUT_STATE_NAMES), seeds)
 
-    def test_a_destination_lands_where_the_fixtures_and_the_plan_put_it(self):
-        for _s, dest, _d in lf._manifest().DISTRIBUTION:
+    def test_a_destination_lands_where_the_manifests_table_puts_it(self):
+        m = lf._manifest()
+        for src, dest, _d in m.DISTRIBUTION:
             with self.subTest(dest=dest):
-                self.assertEqual(md.new_layout_rel(dest), lf.new_path(dest))
+                self.assertEqual(md.new_layout_rel(dest), m.NEW_LAYOUT[src])
 
 
 if __name__ == "__main__":

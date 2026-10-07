@@ -384,11 +384,12 @@ class TestFixtureTrees(Scratch):
             # tier 2 moves the archive, so a tier-1 tree keeps it where it was
             self.assertTrue(any(p.startswith("docs/archive/") for p in lf.build_tree(td, "tier1", archive=True)))
 
-    def test_new_path_maps_the_three_kinds_of_destination(self):
-        self.assertEqual(lf.new_path("CHANGELOG.md"), "methodology/CHANGELOG.md")
-        self.assertEqual(lf.new_path("docs/methodology/HOW_TO_USE.md"), "methodology/HOW_TO_USE.md")
-        self.assertEqual(lf.new_path("docs/methodology/workstreams/DESIGN_WORKSTREAM.md"),
-                         "methodology/workstreams/DESIGN_WORKSTREAM.md")
+    def test_the_manifests_table_maps_the_three_kinds_of_destination(self):
+        # was lf.new_path, a rule of this module's own; P6 made the manifest's NEW_LAYOUT the one table
+        table = _load("_manifest", REPO / "bin" / "_manifest.py").NEW_LAYOUT
+        self.assertEqual(table["starter-kit/CHANGELOG.md"], "methodology/CHANGELOG.md")
+        self.assertEqual(table["HOW_TO_USE.md"], "methodology/HOW_TO_USE.md")
+        self.assertEqual(table["workstreams/DESIGN_WORKSTREAM.md"], "methodology/workstreams/DESIGN_WORKSTREAM.md")
 
     def test_contents_override_by_file_name(self):
         lf.build_tree(self.root, "new", contents={"CHANGELOG.md": "# my ledger\n"})

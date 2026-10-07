@@ -14,10 +14,10 @@ The plan is docs/planning/methodology-subdirectory-plan.md: section 4.1 is the t
     empty   no files: a project that has not adopted the methodology
 
 The tree is derived from bin/_manifest.py, so a file the manifest gains appears in the legacy shape
-by itself. The new shape is derived from it by ``new_path``, and tools/test_layout_resolver.py holds
-section 4.1 typed out as literals, so that change cannot also quietly reshape the target. Phase P6
-makes the new destinations a second literal table inside the manifest (so ``--source=github`` can read
-them as data); this module then reads that table and ``new_path`` goes away.
+by itself. The new shape is derived from the manifest's second table, NEW_LAYOUT (phase P6: a literal
+table, so ``--source=github`` can read it as data), and tools/test_layout_resolver.py holds section 4.1
+typed out as literals, so a change to that table cannot also quietly reshape the target. Before P6 this
+module carried a mapping rule of its own (``new_path``); there is one table now, and it is the manifest's.
 
 A tree here is files only. A phase that needs a git repository, hooks or a real ledger builds them on
 top, passing ``contents`` for the files it cares about.
@@ -42,13 +42,6 @@ def _manifest():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
-
-
-def new_path(dest):
-    """Where a manifest destination lands in the new layout: flat under methodology/, with
-    workstreams/ the one subdirectory (plan decision D2). ``docs/methodology/`` is dropped."""
-    prefix = "docs/methodology/"
-    return "methodology/" + (dest[len(prefix):] if dest.startswith(prefix) else dest)
 
 
 def _stub(name):
@@ -77,9 +70,9 @@ def build_tree(root, layout, *, contents=None, generated=True, archive=False):
     m = _manifest()
     files = []  # (relative path, file name)
     if layout != "empty":
-        for _, dest, disposition in m.DISTRIBUTION:
+        for src, dest, disposition in m.DISTRIBUTION:
             moved = layout == "new" or (layout == "tier1" and disposition == m.TRACKED)
-            files.append((new_path(dest) if moved else dest, Path(dest).name))
+            files.append((m.NEW_LAYOUT[src] if moved else dest, Path(dest).name))
         if generated:
             files += [(("methodology/" + g) if layout == "new" else g, g) for g in GENERATED]
         if archive:
