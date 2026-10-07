@@ -309,6 +309,14 @@ class TestSyncChoosesTheLayout(Scratch):
         self.assertEqual(files_of(d), LEGACY)
         self.assertIn("  layout:  legacy", r.out)
 
+    def test_layout_legacy_on_an_empty_project_writes_the_legacy_tree_and_no_methodology_directory(self):
+        d = self.project()
+        r = run_sync(d, "--layout", "legacy")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(files_of(d), LEGACY)
+        self.assertFalse((d / "methodology").exists())
+        self.assertIn("  layout:  legacy (requested)", r.out)
+
     def test_layout_new_on_an_empty_project_writes_the_tables_destinations_and_no_root_copy(self):
         d = self.project()
         r = run_sync(d, "--layout", "new")
@@ -522,6 +530,16 @@ class TestSyncIgnoreModeFollowsTheLayout(Scratch):
         self.assertNotIn("/methodology/CHANGELOG.md", self.entries(d))   # a seed is committed, never ignored
         self.assertNotIn("/SESSION_RUNNER.md", self.entries(d))
 
+    def test_a_second_ignore_mode_run_adds_no_entry_and_says_so(self):
+        d = self.project()
+        first = run_sync(d, "--layout", "new", "--mode", "ignore")
+        self.assertEqual(first.returncode, 0, first.out)
+        written = (d / ".gitignore").read_bytes()
+        second = run_sync(d, "--mode", "ignore")
+        self.assertEqual(second.returncode, 0, second.out)
+        self.assertEqual((d / ".gitignore").read_bytes(), written, "the second run added entries that were already there")
+        self.assertIn(".gitignore: entries already present", second.out)
+
     def test_a_legacy_project_in_ignore_mode_is_unchanged(self):
         d = self.project()
         r = run_sync(d, "--mode", "ignore")
@@ -661,8 +679,7 @@ class TestStatusNamesAndReadsTheLayout(Scratch):
         fine = self.project("new")
         r = run_status(half, fine)
         self.assertEqual(r.returncode, 0, r.out)
-        self.assertTrue(r.layouts[half.name].startswith("half-migrated"), r.layouts)
-        self.assertIn("methodology/SESSION_RUNNER.md", r.layouts[half.name])
+        self.assertEqual(r.layouts[half.name], "half-migrated: SESSION_RUNNER.md and methodology/SESSION_RUNNER.md")
         self.assertEqual(self.states(r, half), {"-": ("-", "half-migrated")})
         self.assertEqual(set(self.states(r, fine)), NEW)
 
@@ -910,6 +927,31 @@ class TestCheckLinksTreeModeReadsTheTreesLayout(Scratch):
         r = run_check_links(CHECK_LINKS, "--tree", str(self.tree("new", IN_BOTH)), "--layout", "both")
         self.assertEqual(r.returncode, 2, r.out)
         self.assertIn("--layout both", r.out)   # says what was refused, not just the usage line
+
+    def test_an_explicit_layout_overrides_the_one_the_tree_has(self):
+        d = self.tree("legacy", IN_BOTH)
+        self.assertEqual(run_check_links(CHECK_LINKS, "--tree", str(d)).returncode, 0)        # read as legacy: it is
+        r = run_check_links(CHECK_LINKS, "--tree", str(d), "--layout", "new")                 # asked to read it as new: no files there
+        self.assertEqual(r.returncode, 1, r.out)
+        self.assertIn("distributed file missing", r.out)
+        self.assertIn("(new layout)", r.out)
+        n = self.tree("new", IN_BOTH)
+        self.assertEqual(run_check_links(CHECK_LINKS, "--tree", str(n), "--layout", "legacy").returncode, 1)
+
+    def test_help_exits_zero_and_lists_the_layout_option(self):
+        for flag in ("--help", "-h"):
+            r = run_check_links(CHECK_LINKS, flag)
+            self.assertEqual(r.returncode, 0, r.out)
+            self.assertIn("--layout", r.out)
+            self.assertIn("legacy|new|both", r.out)
+
+    def test_an_option_given_twice_is_a_usage_error_not_a_silent_last_wins(self):
+        a, b = self.tree("legacy", IN_BOTH), self.tree("new", IN_BOTH)
+        r = run_check_links(CHECK_LINKS, "--tree", str(a), "--tree", str(b))
+        self.assertEqual(r.returncode, 2, r.out)
+        self.assertIn("usage", r.out)
+        r = run_check_links(CHECK_LINKS, "--layout", "new", "--layout", "legacy")
+        self.assertEqual(r.returncode, 2, r.out)
 
     def test_an_unknown_layout_is_a_usage_error(self):
         r = run_check_links(CHECK_LINKS, "--layout", "sideways")
