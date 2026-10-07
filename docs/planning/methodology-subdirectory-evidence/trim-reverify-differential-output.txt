@@ -1,0 +1,10 @@
+previous tool: a9fef63c4189d197d4796a9c79e8c19ea2d0f921 (methodology_trim.py v1.7.0)
+current tool : methodology_trim.py v1.8.0
+shards compared: 119, identical verdict and output: 119
+histogram of (previous exit, current exit):
+  previous exit 0 -> current exit 0  x114
+  previous exit 1 -> current exit 1  x2
+  previous exit 3 -> current exit 3  x2
+  previous exit 4 -> current exit 4  x1
+differences:
+  none

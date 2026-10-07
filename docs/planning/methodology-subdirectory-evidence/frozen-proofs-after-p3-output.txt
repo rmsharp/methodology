@@ -1,0 +1,11 @@
+base  proofs=120  exit0 x115  exit1 x5  
+A     proofs=120  exit0 x115  exit1 x5  
+B     proofs=120  exit0 x115  exit1 x5  
+proofs whose exit code differs, base vs A: 0
+proofs whose exit code differs, base vs B: 0
+baseline exit-1 proofs (pre-existing; the BL-36 class):
+1	CHANGELOG-through-2026-08-02.md.verify.sh
+1	CHANGELOG-through-2026-08-09.md.verify.sh
+1	HANDOFFS-through-2026-08-02.md.verify.sh
+1	HANDOFFS-through-2026-08-09.md.verify.sh
+1	HANDOFFS-through-2026-08-25.md.verify.sh
