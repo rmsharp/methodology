@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S278
+date: 2026-10-07
+status: pending
+active_task: BUILD BL-101 P5 (a build session: the plan's phase 5, `docs/planning/methodology-subdirectory-plan.md` section 7.2 row P5, is the contract, ratified at the S273 close-out and chosen at the S278 Phase 0 picker). `starter-kit/methodology_dashboard.py` and its byte-identical twin `tools/methodology_dashboard.py` score a new-layout fixture the same as the legacy one (115 of 115), read a half-migrated tree as a defect, read shards in `methodology/archive/` as well as `docs/archive/`, and `--sync` resolves each target's layout and writes no root copy into a migrated project (C8, C15). Already done before this claim: the owed HANDOFFS trim (`a9e3d88`, S275 to `HANDOFFS-through-2026-10-06-6.md`, proof exit 0 from a `--no-local` clone) and its fold (`cc5d991`). Not this session: P6 on, BL-102, the closing check of seven stale rows, BL-94.
+```
+
+```handoff
 session: S277
 date: 2026-10-07
 status: complete
