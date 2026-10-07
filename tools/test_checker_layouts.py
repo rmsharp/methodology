@@ -127,6 +127,38 @@ class TestCheckLedger(Project):
                 self.assertIn("2 file(s)", out, "the ledger and its shard")
 
 
+class TestARepositoryCalledMethodology(unittest.TestCase):
+    """The authoring repository is a directory NAMED methodology with its ledger and docs/archive/ at its root.
+    A tool that takes a directory so named for a project's methodology/ subdirectory looks one level up and
+    finds nothing: check-ledger --all reported `OK -- 1 file(s)` over a repository holding 20 shards, which no
+    fixture named anything else could show. A repository root is told by its .git."""
+
+    def test_check_ledger_all_reads_the_shards_of_a_repository_that_is_itself_called_methodology(self):
+        with tempfile.TemporaryDirectory() as td:
+            proj = os.path.join(os.path.realpath(td), "methodology")
+            os.makedirs(proj)
+            subprocess.run(["git", "init", "-q", proj], check=True)
+            touch(proj, "CHANGELOG.md", LEDGER)
+            touch(proj, "docs/archive/CHANGELOG-through-2025-12-01.md", SHARD)
+            p = subprocess.run([sys.executable, "-B", str(BIN / "check-ledger"), "--all"], cwd=proj,
+                               capture_output=True, text=True)
+            self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+            self.assertIn("2 file(s)", p.stdout, "the ledger and its shard")
+
+    def test_the_same_directory_holding_a_projects_methodology_subdirectory_still_looks_there(self):
+        with tempfile.TemporaryDirectory() as td:
+            outer = os.path.realpath(td)
+            subprocess.run(["git", "init", "-q", outer], check=True)
+            touch(outer, "methodology/CHANGELOG.md", LEDGER)
+            touch(outer, "methodology/archive/CHANGELOG-through-2025-12-01.md", SHARD)
+            touch(outer, "docs/archive/CHANGELOG-through-2025-11-01.md", SHARD)
+            p = subprocess.run([sys.executable, "-B", str(BIN / "check-ledger"), "--file",
+                                os.path.join(outer, "methodology", "CHANGELOG.md"), "--all"], cwd=outer,
+                               capture_output=True, text=True)
+            self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+            self.assertIn("3 file(s)", p.stdout, "the ledger and a shard in each archive directory")
+
+
 class TestCheckHandoff(Project):
     def test_each_layout_reads_its_own_ledger(self):
         for name, ledger in (("legacy", "HANDOFFS.md"), ("new", "methodology/HANDOFFS.md"),

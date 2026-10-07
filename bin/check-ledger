@@ -139,9 +139,12 @@ def shard_dirs(path: Path) -> list:
     """The directories a ledger's archived shards may sit in: docs/archive/ at the project root (where a trim
     has written them so far) and, for a ledger under methodology/, the archive/ beside it (the archive moves last)."""
     base = path.parent
-    top = base.parent if base.name == NEW_DIR else base
+    # A directory called methodology is a project's methodology/ subdirectory unless it is itself a repository
+    # root: the authoring repository is named methodology and keeps its ledger and docs/archive/ at its root.
+    nested = base.name == NEW_DIR and not (base / ".git").exists()
+    top = base.parent if nested else base
     dirs = [top.joinpath(*ARCHIVE_PARTS)]
-    if base.name == NEW_DIR:
+    if nested:
         dirs.append(base / ARCHIVE_PARTS[-1])
     return dirs
 

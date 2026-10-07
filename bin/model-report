@@ -204,7 +204,7 @@ def archive_shards(root: Path, live: Path) -> list:
     """
     stem = live.name[:-3] if live.name.endswith(".md") else live.name
     dirs = [root / ARCHIVE_DIR]
-    if live.parent.name == NEW_DIR:
+    if live.parent.name == NEW_DIR and not (live.parent / ".git").exists():
         dirs.append(live.parent / "archive")     # the trimmer's directory for a ledger under methodology/
     return sorted(f for adir in dirs for f in adir.glob("%s-*.md" % stem))
 
