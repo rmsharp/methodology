@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S276 claim (in progress) — build the trimmer and the close-out report layer: both resolve their ledger in either layout (P3)
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose BL-101 P3 (the plan's recommendation, S275's next step 1). The deliverable is the plan's section 7.2 row P3, built in this session, after the tiebreak row he decided at the S275 close-out (the framework anchor decides: a project whose `SESSION_RUNNER.md` is under `methodology/` keeps its ledger there whatever sits at the root), which P3 starts by adding to the resolver, its tests, the P1 block and the P2 copies (the hook's sh form included). Then: `methodology_trim.py` derives `ARCHIVE_DIR` and the rebase prefix from the ledger's directory, a trim in the new layout writes a shard and a proof that pass, all 117 old proofs keep the histogram 112 green / 5 red; `close_out_report.py` resolves its ledger and its snippet names the resolved path. No other shipped tool changes; the scanner stays RED and is not a gate until P6. Already done before this claim, each recorded below: the push and the ref deletion (two go-aheads he gave at the picker), the owed `HANDOFFS.md` trim (`83bb2a3`, S273 to `HANDOFFS-through-2026-10-06-4.md`, proof exit 0 by name from a `--no-local` clone) and its fold (`837a254`). Phase 3F records the rest. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [ad hoc] S276 — fold the fourth 2026-10-06 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`83bb2a3`, 1 receipt, S273, 2026-10-06, to `HANDOFFS-through-2026-10-06-4.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.7.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S275, S274), both the fork's. The shard's `.verify.sh` was run by name from a `--no-local` clone of `83bb2a3`: exit 0, `records: 3 before = 2 retained + 1 archived`, L1, L2/front-matter and L3 hold. This is the trim S275's receipt named as owed after the S276 Phase 0 report, taken before the session's claim. Model: Claude Sonnet 5.5.
@@ -248,6 +252,10 @@ Moved the oldest **1** record(s) (2026-10-06 → 2026-10-06) out of [`HANDOFFS.m
 [`docs/archive/HANDOFFS-through-2026-10-06-4.md`](docs/archive/HANDOFFS-through-2026-10-06-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-06-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-06-4.md.verify.sh)
 rather than trusting a digest printed here. Live file 36,495 B → 27,293 B (−25.2%).
+
+### 2026-10-06 · [ad hoc] S276 — fork `main` pushed to `origin` (`ecbde74`) and the local backup ref `pre-resync-2026-10` deleted
+
+At the S276 Phase 0 picker he granted both, as two selections. **Push:** `git push origin main` sent exactly one commit, `58bb713..ecbde74` (the S275 decision record, five files); `origin/main...main` read `0 1` before and `0 0` after a fresh fetch. **Ref:** `git branch -d pre-resync-2026-10` (was `9904a0a`, the S270 claim of the BL-95 resync); that commit is an ancestor of both `main` and `origin/main`, so no commit was lost, and the safe form of the delete refuses an unmerged branch. Nothing went upstream. Model: Claude Sonnet 5.5.
 
 ### 2026-10-06 · [BL-101] S275 — the framework anchor decides: his decision at the close-out picker, recorded (plan section 7.2a, BL-101, the receipt)
 

@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S276
+date: 2026-10-06
+status: pending
+active_task: BUILD BL-101 P3, the trimmer and close-out report layer (a build session: the plan's phase 3, `docs/planning/methodology-subdirectory-plan.md` section 7.2 row P3, is the contract, ratified at the S273 close-out and read at the S276 Phase 0 picker). First the tiebreak row he decided at the S275 close-out (the framework anchor decides) in the resolver, its tests, the P1 block and the P2 copies, the hook's sh form included. Then `starter-kit/methodology_trim.py` derives `ARCHIVE_DIR` and the rebase prefix from the ledger's directory, a trim in the new layout writes a shard and a proof that pass from a `--no-local` clone, and all 117 old proofs keep the histogram 112 / 5; `starter-kit/close_out_report.py` resolves its ledger and its snippet names the resolved path. A mutant per behaviour killed. No other tool changes; the scanner stays RED and is not a gate until P6. Nothing is sent upstream.
+```
+
+```handoff
 session: S275
 date: 2026-10-06
 status: complete
