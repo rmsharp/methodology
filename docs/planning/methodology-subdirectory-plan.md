@@ -616,7 +616,7 @@ beside the scripts. Counts are of tracked files at `c8b9ddd`.
 | `link-simulation.py` | `python3 -I .../link-simulation.py` | §2.4: 118 links, 40 change |
 | `adopter-survey.sh` | `bash .../adopter-survey.sh` | §2.2 |
 | `git-behaviour.sh` | `bash .../git-behaviour.sh` | E1 and E2 (§4.2, §4.8) |
-| `hook-after-move.sh` | `bash .../hook-after-move.sh` | C5: control refused, move commit passes, later commit passes |
+| `hook-after-move.sh` | `bash .../hook-after-move.sh` | C5 at `c8b9ddd`: control refused, move commit passes, **later commit passes**; at P2 (`hook-after-move-after-p2-output.txt`) the later commit is **refused** |
 | `resync-after-move.sh` | `bash .../resync-after-move.sh` | §5A.4: rename pairing and the two merge-trees |
 | `frozen-proofs.sh` | `bash .../frozen-proofs.sh` (minutes) | §3 C7: 117 proofs, 3 trees |
 | `suite-blast-radius.txt` | `bash bin/tests.sh` in a `--no-local` clone with the files moved (the outputs are the recorded ones) | §3.1 |

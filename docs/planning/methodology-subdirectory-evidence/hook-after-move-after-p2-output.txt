@@ -1,0 +1,7 @@
+C  control, unmoved ledger, later commit: exit=1 (expect nonzero: refused)
+     ✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+     
+X1 the move commit itself, hook on: exit=0 (0 = passed, nonzero = refused)
+X2 later commit after the move, hook on: exit=1 (0 = PASSED: the ledger gate fails open)
+     ✗ methodology/CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+     
