@@ -41,6 +41,15 @@ def _load(name, path):
     return mod
 
 
+def _load_script(name, path):
+    import importlib.machinery
+    loader = importlib.machinery.SourceFileLoader(name, str(path))
+    spec = importlib.util.spec_from_loader(name, loader)
+    mod = importlib.util.module_from_spec(spec)
+    loader.exec_module(mod)
+    return mod
+
+
 manifest = _load("_manifest", REPO / "bin" / "_manifest.py")
 LEGACY = [(src, dest, disp) for src, dest, disp in manifest.DISTRIBUTION]
 TRACKED_DESTS = [dest for _s, dest, disp in LEGACY if disp == manifest.TRACKED]
@@ -205,6 +214,260 @@ def tearDownModule():
         shutil.rmtree(project.parent, ignore_errors=True)
 
 
+class TestThePureRules(unittest.TestCase):
+    """The rules the tool applies, called as functions: a command costs seconds, a rule costs nothing, and these are
+    the cases a whole-project test only reaches by accident."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.m = _load_script("migrate_layout", MIGRATE)
+
+    # --- .gitignore ---
+    def test_a_gitignore_entry_follows_only_when_it_is_anchored_and_exactly_a_moved_path(self):
+        mapping = {"dashboard.html": "methodology/dashboard.html", "docs/archive/CHANGELOG-through-2026-01-01.md":
+                   "methodology/archive/CHANGELOG-through-2026-01-01.md"}
+        text = ("# a comment naming /dashboard.html\n/dashboard.html\ndashboard.html\n!/dashboard.html\n"
+                "/dashboard.html.bak\ndocs/archive/CHANGELOG-through-2026-01-01.md\n/other.html\n\n")
+        got, n = self.m.rewrite_gitignore(text, mapping)
+        self.assertEqual(got, ("# a comment naming /dashboard.html\n/methodology/dashboard.html\ndashboard.html\n"
+                               "!/methodology/dashboard.html\n/dashboard.html.bak\n"
+                               "/methodology/archive/CHANGELOG-through-2026-01-01.md\n/other.html\n\n"))
+        self.assertEqual(n, 3)
+
+    def test_a_gitignore_keeps_its_line_endings(self):
+        got, n = self.m.rewrite_gitignore("a\r\n/dashboard.html\r\nb", {"dashboard.html": "methodology/dashboard.html"})
+        self.assertEqual(got, "a\r\n/methodology/dashboard.html\r\nb")
+
+    # --- the standing-alone rule ---
+    def rewrite(self, text, mapping=None):
+        mapping = mapping or {"SESSION_RUNNER.md": "methodology/SESSION_RUNNER.md"}
+        return self.m.token_rewriter(mapping)(text)
+
+    def test_a_name_is_rewritten_where_it_stands_alone(self):
+        for text in ("SESSION_RUNNER.md", "`SESSION_RUNNER.md`", "(SESSION_RUNNER.md)", "read SESSION_RUNNER.md.", '"SESSION_RUNNER.md"',
+                     "--file=SESSION_RUNNER.md", "SESSION_RUNNER.md:12", "[x](SESSION_RUNNER.md#top)", "SESSION_RUNNER.md, and"):
+            got, n = self.rewrite(text)
+            self.assertEqual(n, 1, text)
+            self.assertEqual(got, text.replace("SESSION_RUNNER.md", "methodology/SESSION_RUNNER.md"), text)
+
+    def test_a_name_inside_another_name_or_behind_a_directory_is_left(self):
+        for text in ("SESSION_RUNNER.mdx", "SESSION_RUNNER.md.bak", "SESSION_RUNNER.md2", "/SESSION_RUNNER.md", "./SESSION_RUNNER.md",
+                     "~/SESSION_RUNNER.md", "a/SESSION_RUNNER.md", "MY_SESSION_RUNNER.md", "my-SESSION_RUNNER.md",
+                     "xSESSION_RUNNER.md", ".SESSION_RUNNER.md", "https://example.org/SESSION_RUNNER.md"):
+            self.assertEqual(self.rewrite(text), (text, 0), text)
+
+    def test_the_longest_path_wins_and_each_occurrence_is_counted(self):
+        mapping = {"docs/x/a.md": "m/a.md", "a.md": "m/a.md"}
+        self.assertEqual(self.rewrite("docs/x/a.md and a.md and a.md", mapping), ("m/a.md and m/a.md and m/a.md", 3))
+
+    def test_an_empty_map_changes_nothing(self):
+        self.assertEqual(self.m.token_rewriter({})("SESSION_RUNNER.md"), ("SESSION_RUNNER.md", 0))
+
+    # --- a JSON config, rewritten as text ---
+    MAP = {"SESSION_RUNNER.md": "methodology/SESSION_RUNNER.md", "CHANGELOG.md": "methodology/CHANGELOG.md",
+           ".quality-gates-results.json": "methodology/.quality-gates-results.json"}
+
+    def rj(self, text):
+        return self.m.rewrite_json(text, self.MAP)
+
+    def test_a_value_that_is_exactly_a_moved_path_follows_and_the_layout_of_the_file_is_kept(self):
+        text = '{\n\t"files": [\n\t\t{"path": "SESSION_RUNNER.md", "n": 1},\n\t\t{ "path":"CHANGELOG.md" }\n\t],\n\t"results_file": ".quality-gates-results.json"\n}\n'
+        got, n = self.rj(text)
+        self.assertEqual(got, text.replace('"SESSION_RUNNER.md"', '"methodology/SESSION_RUNNER.md"')
+                         .replace('"CHANGELOG.md"', '"methodology/CHANGELOG.md"')
+                         .replace('".quality-gates-results.json"', '"methodology/.quality-gates-results.json"'))
+        self.assertEqual(n, 3)
+
+    def test_a_value_that_only_contains_a_moved_path_is_not_a_path(self):
+        text = '{"path": "docs/SESSION_RUNNER.md", "note": "see SESSION_RUNNER.md", "name": "CHANGELOG.md.bak"}'
+        self.assertEqual(self.rj(text), (text, 0))
+
+    def test_canonical_and_every_underscore_key_are_left(self):
+        text = '{"synced": [{"path": "SESSION_RUNNER.md", "canonical": "SESSION_RUNNER.md", "_": "SESSION_RUNNER.md"}], "_why": "CHANGELOG.md"}'
+        got, n = self.rj(text)
+        self.assertEqual(got, text.replace('"path": "SESSION_RUNNER.md"', '"path": "methodology/SESSION_RUNNER.md"'))
+        self.assertEqual(n, 1)
+
+    def test_a_path_bearing_key_inside_a_prose_subtree_makes_the_rewrite_unsafe(self):
+        """The text rewrite cannot tell scope; the structure check can. The file is not half-edited: it is refused."""
+        with self.assertRaises(self.m.Unsafe):
+            self.rj('{"_example": {"path": "SESSION_RUNNER.md"}, "files": [{"path": "SESSION_RUNNER.md"}]}')
+
+    def test_a_gate_command_is_rewritten_by_token_and_the_prose_beside_it_is_not(self):
+        text = '{"gates": [{"command": "git log -- CHANGELOG.md && cat SESSION_RUNNER.md.bak", "why": "see CHANGELOG.md"}]}'
+        got, n = self.rj(text)
+        self.assertEqual(got, text.replace("-- CHANGELOG.md", "-- methodology/CHANGELOG.md"))
+        self.assertEqual(n, 1)
+
+    def test_non_ascii_text_survives_byte_for_byte(self):
+        raw = '{"_": "a — dash é", "dash": "—", "path": "SESSION_RUNNER.md", "raw": "—"}'
+        got, n = self.rj(raw)
+        self.assertEqual(got, raw.replace('"SESSION_RUNNER.md"', '"methodology/SESSION_RUNNER.md"'))
+        self.assertEqual(n, 1)
+
+    def test_text_that_is_not_json_is_a_value_error(self):
+        with self.assertRaises(ValueError):
+            self.rj("{ not json")
+
+    def test_a_value_that_is_not_a_string_is_left(self):
+        text = '{"path": 3, "files": [1, null, true], "results_file": null}'
+        self.assertEqual(self.rj(text), (text, 0))
+
+    # --- the ledger entry ---
+    ENTRY = "### 2026-10-07 · [ad hoc] Layout migration: x\n\nbody\n"
+
+    def test_an_entry_goes_under_the_current_months_heading(self):
+        text = "front\n\n---\n\n## 2026-10\n\n### 2026-10-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, "front\n\n---\n\n## 2026-10\n\n" + self.ENTRY + "\n### 2026-10-01 · [ad hoc] old\n\nold body\n")
+
+    def test_an_entry_gets_a_new_month_heading_above_an_older_months(self):
+        text = "front\n\n## 2026-09\n\n### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, "front\n\n## 2026-10\n\n" + self.ENTRY + "\n## 2026-09\n\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_an_entry_goes_above_the_first_entry_when_there_is_no_month_heading(self):
+        text = "front\n\n### 2026-09-01 · [ad hoc] old\n\nold body\n"
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertEqual(got, "front\n\n" + self.ENTRY + "\n### 2026-09-01 · [ad hoc] old\n\nold body\n")
+
+    def test_an_entry_goes_at_the_end_of_a_ledger_with_no_entry_and_the_seed_sentinel_is_dropped(self):
+        text = ("front\n\n<!-- METHODOLOGY-SEED-SENTINEL: fresh ledger.\n     more. -->\n\n---\n\n<!-- Entries go below. -->\n")
+        got = self.m.insert_entry(text, self.ENTRY, "2026-10")
+        self.assertNotIn("SENTINEL", got)
+        self.assertTrue(got.endswith("<!-- Entries go below. -->\n\n" + self.ENTRY), got)
+
+    def test_the_entry_text_names_the_tool_the_tier_the_count_and_what_was_edited(self):
+        report = {"tier": "1", "canonical": {"sha": "abcdef0123456789", "modified": False}}
+        text = self.m.ledger_entry_text(report, [{}] * 5, ["CLAUDE.md", ".gitignore"], "2026-10-07")
+        self.assertTrue(text.startswith("### 2026-10-07 · [ad hoc] Layout migration: "))
+        for piece in ("tier 1", "5 files", "abcdef0", "`CLAUDE.md`, `.gitignore`", "`bin/migrate-layout`"):
+            self.assertIn(piece, text)
+        self.assertNotIn("abcdef01", text)
+        none = self.m.ledger_entry_text(report, [{}] * 5, [], "2026-10-07")
+        self.assertIn("no file (none named a moved path)", none)
+
+    # --- what a check difference is ---
+    def sides(self, **over):
+        side = {"status": {"exit": 0, "tracked": 23, "current": 23}, "ledger": {"exit": 0}, "handoff": {"exit": 1},
+                "links": {"exit": 0}, "proofs": {"count": 2, "histogram": {"0": 2}}, "history": {"commits": 4}}
+        before, after = dict(side), dict(side)
+        after["history"] = {"commits": 5}
+        for k, (b, a) in over.items():
+            before[k], after[k] = b, a
+        return before, after
+
+    def test_nothing_that_must_hold_changing_is_no_difference(self):
+        self.assertEqual(self.m.check_differences(*self.sides()), [])
+
+    def test_each_rule_names_itself(self):
+        s = lambda **kw: self.m.check_differences(*self.sides(**kw))
+        self.assertEqual(s(status=({"exit": 0, "tracked": 23, "current": 23}, {"exit": 0, "tracked": 23, "current": 22})), ["status"])
+        self.assertEqual(s(status=({"exit": 0, "tracked": 23, "current": 23}, {"exit": 1, "tracked": 0, "current": 0})), ["status"])
+        self.assertEqual(s(ledger=({"exit": 0}, {"exit": 1})), ["ledger"])
+        self.assertEqual(s(handoff=({"exit": 1}, {"exit": 0})), ["handoff"])
+        self.assertEqual(s(proofs=({"count": 2, "histogram": {"0": 2}}, {"count": 2, "histogram": {"0": 1, "1": 1}})), ["proofs"])
+        self.assertEqual(s(history=({"commits": 4}, {"commits": 4})), ["history"])
+
+    def test_links_is_never_a_difference_and_a_project_without_a_ledger_has_no_history_to_lose(self):
+        self.assertEqual(self.m.check_differences(*self.sides(links=({"exit": 0}, {"exit": 1}))), [])
+        self.assertEqual(self.m.check_differences(*self.sides(history=({"commits": 0}, {"commits": 0}))), [])
+
+    # --- which files are a ledger, a CI file and the rest ---
+    def test_a_path_is_sorted_into_its_category(self):
+        want = {".github/workflows/ci.yml": "ci", ".circleci/config.yml": "ci", ".gitlab-ci.yml": "ci", "Jenkinsfile": "ci",
+                ".claude/settings.json": "harness", ".githooks/pre-commit": "hooks", "CHANGELOG.md": "ledger",
+                "methodology/HANDOFFS.md": "ledger", "SESSION_NOTES.md": "ledger",
+                "docs/archive/CHANGELOG-through-2026-01-01.md": "ledger", "methodology/archive/HANDOFFS-through-2026-01-01-2.md": "ledger",
+                "docs/archive/notes.md": "other", "README.md": "other", "src/CHANGELOG.md": "other", "ROADMAP.md": "other"}
+        for path, cat in want.items():
+            self.assertEqual(self.m.hit_category(path), cat, path)
+
+    def test_only_the_files_the_trimmer_writes_are_shards(self):
+        yes = ("CHANGELOG-through-2026-08-01.md", "HANDOFFS-through-2026-08-02-3.md.verify.sh", "SESSION_NOTES-through-x.md")
+        no = ("CHANGELOG-archive.md", "CHANGELOG-through-x.md.bak", "ROADMAP-through-x.md", "a/CHANGELOG-through-x.md", "CHANGELOG-through-.txt")
+        for name in yes:
+            self.assertTrue(self.m.SHARD_RE.match(name), name)
+        for name in no:
+            self.assertFalse(self.m.SHARD_RE.match(name), name)
+
+    # --- the gitattributes rule ---
+    def test_a_gitattributes_that_holds_only_the_seeds_rules_is_the_seeds(self):
+        seed = "# comment\nCHANGELOG.md merge=union\n*.jsonl merge=union\n"
+        self.assertTrue(self.m.seed_rules_only("CHANGELOG.md merge=union\n\n# another comment\n", seed))
+        self.assertTrue(self.m.seed_rules_only(seed, seed))
+        self.assertTrue(self.m.seed_rules_only("", seed))
+        self.assertFalse(self.m.seed_rules_only(seed + "*.png binary\n", seed))
+
+    # --- ignore mode ---
+    def test_ignore_mode_is_a_gitignore_that_lists_a_tracked_destination_in_either_layout(self):
+        with tempfile.TemporaryDirectory() as d:
+            gi = Path(d) / ".gitignore"
+            self.assertFalse(self.m.is_ignore_mode(d))
+            for text, want in (("/SESSION_RUNNER.md\n", True), ("/methodology/SESSION_RUNNER.md\n", True),
+                               ("/docs/methodology/ITERATIVE_METHODOLOGY.md\n", True), ("SESSION_RUNNER.md\n", False),
+                               ("/CHANGELOG.md\n", False), ("/dashboard.html\n", False), ("# /SESSION_RUNNER.md\n", False)):
+                gi.write_text(text, encoding="utf-8")
+                self.assertEqual(self.m.is_ignore_mode(d), want, text)
+
+    # --- what the plan moves ---
+    def plan(self, files, tier="all", kind="legacy"):
+        with tempfile.TemporaryDirectory() as d:
+            for rel in files:
+                path = Path(d) / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("x\n", encoding="utf-8")
+            return self.m.plan_moves(d, tier, set(files), kind)
+
+    def test_a_session_notes_shard_moves_and_a_nested_or_lookalike_file_does_not(self):
+        files = ["docs/archive/SESSION_NOTES-through-2026-08-01.md", "docs/archive/SESSION_NOTES-through-2026-08-01.md.verify.sh",
+                 "docs/archive/sub/CHANGELOG-through-2026-08-01.md", "docs/archive/CHANGELOG-archive.md"]
+        moves, left, collisions = self.plan(files)
+        self.assertEqual({m["src"]: m["dest"] for m in moves},
+                         {"docs/archive/SESSION_NOTES-through-2026-08-01.md": "methodology/archive/SESSION_NOTES-through-2026-08-01.md",
+                          "docs/archive/SESSION_NOTES-through-2026-08-01.md.verify.sh": "methodology/archive/SESSION_NOTES-through-2026-08-01.md.verify.sh"})
+        self.assertEqual({x["path"] for x in left}, {"docs/archive/sub/CHANGELOG-through-2026-08-01.md", "docs/archive/CHANGELOG-archive.md"})
+        self.assertEqual(collisions, [])
+
+    def test_a_generated_file_and_a_shard_that_already_exist_at_their_destination_are_collisions(self):
+        files = ["dashboard.html", "methodology/dashboard.html", "docs/archive/CHANGELOG-through-2026-08-01.md",
+                 "methodology/archive/CHANGELOG-through-2026-08-01.md", "SESSION_NOTES.md", "methodology/SESSION_NOTES.md"]
+        moves, left, collisions = self.plan(files)
+        self.assertEqual(collisions, ["methodology/SESSION_NOTES.md", "methodology/archive/CHANGELOG-through-2026-08-01.md",
+                                      "methodology/dashboard.html"])
+        self.assertEqual(moves, [])
+
+    def test_tier_1_plans_only_the_tracked_rows_and_tier_2_only_the_rest(self):
+        files = ["SESSION_RUNNER.md", "CHANGELOG.md", "dashboard.html", "docs/archive/CHANGELOG-through-2026-08-01.md"]
+        self.assertEqual([m["src"] for m in self.plan(files, "1")[0]], ["SESSION_RUNNER.md"])
+        self.assertEqual(sorted(m["src"] for m in self.plan(files, "2")[0]),
+                         sorted(["CHANGELOG.md", "dashboard.html", "docs/archive/CHANGELOG-through-2026-08-01.md"]))
+
+    # --- directories a move empties ---
+    def test_only_the_directories_a_move_emptied_are_removed_and_never_the_root(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "a" / "b").mkdir(parents=True)
+            (root / "a" / "keep.txt").write_text("x", encoding="utf-8")
+            (root / "c" / "d" / "e").mkdir(parents=True)
+            self.m.remove_empty_parents(root, "a/b/gone.md")
+            self.assertFalse((root / "a" / "b").exists())
+            self.assertTrue((root / "a").is_dir(), "a directory that still holds a file was removed")
+            self.m.remove_empty_parents(root, "c/d/e/gone.md")
+            self.assertFalse((root / "c").exists())
+            self.assertTrue(root.is_dir())
+
+    # --- what git calls dirty ---
+    def test_a_staged_rename_is_one_dirty_path_and_not_two(self):
+        with tempfile.TemporaryDirectory() as d:
+            git(d, "init", "-q")
+            (Path(d) / "a.txt").write_text("hello world\n" * 20, encoding="utf-8")
+            commit_all(d, "a")
+            git(d, "mv", "a.txt", "b.txt")
+            (Path(d) / "new.txt").write_text("n\n", encoding="utf-8")
+            self.assertEqual(sorted(self.m.dirty_paths(d)), ["b.txt", "new.txt"])
+
+
 class Adopter(unittest.TestCase):
     """A scratch copy of the base project for each test."""
 
@@ -239,6 +502,16 @@ class TestUsageAndNothingToDo(unittest.TestCase):
         r = run_migrate(self.root / "plain")
         self.assertEqual(r.returncode, 1, r.out)
         self.assertEqual(r.report["status"], "refused")
+        self.assertEqual([x["code"] for x in r.report["refusals"]], ["not-a-repository"])
+
+    def test_a_subdirectory_of_a_repository_is_not_the_top_of_one(self):
+        outer = self.root / "outer"
+        (outer / "inner").mkdir(parents=True)
+        git(outer, "init", "-q")
+        (outer / "inner" / "SESSION_RUNNER.md").write_text("# runner\n", encoding="utf-8")
+        commit_all(outer, "a repository with a project inside it")
+        r = run_migrate(outer / "inner")
+        self.assertEqual(r.returncode, 1, r.out)
         self.assertEqual([x["code"] for x in r.report["refusals"]], ["not-a-repository"])
 
     def test_a_repository_with_no_methodology_files_has_nothing_to_migrate(self):
@@ -1018,6 +1291,141 @@ class TestTheChecks(Adopter):
         self.assertRegex(r.out, r"(?m)^checks \(before -> after\):")
         for name in self.NAMES:
             self.assertRegex(r.out, r"(?m)^\s+%s:" % name)
+
+
+WORKING_TREE_PROOF = """#!/bin/sh
+# an older-format proof: it reads its shard by the path it was written at, in the working tree
+cd "$(git rev-parse --show-toplevel)" || exit 3
+test -f docs/archive/HANDOFFS-through-2026-08-02.md || { echo "FAIL: docs/archive/HANDOFFS-through-2026-08-02.md not found" >&2; exit 2; }
+"""
+
+
+class TestTheShardRehearsal(Adopter):
+    """Real data (vscode_quarto_ext): an older-format proof reads its shard by its working-tree path, so it exits 2 once
+    the shard moves, while the trimmer's current proofs read git history and survive. The tool rehearses the shard moves
+    in a throwaway clone, before the plan is shown, and leaves a shard whose proof would regress where it is."""
+
+    def old_format_proof(self):
+        (self.project / "docs" / "archive" / "HANDOFFS-through-2026-08-02.md.verify.sh").write_text(WORKING_TREE_PROOF, encoding="utf-8")
+        self.commit("an older-format proof")
+
+    def test_a_shard_whose_proof_would_regress_stays_with_its_proof_and_the_plan_says_why(self):
+        self.old_format_proof()
+        r = run_migrate(self.project)
+        got = self.moves(r.report)
+        self.assertNotIn("docs/archive/HANDOFFS-through-2026-08-02.md", got)
+        self.assertNotIn("docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh", got)
+        self.assertIn("docs/archive/CHANGELOG-through-2026-08-01.md", got, "a shard whose proof holds must still move")
+        left = {x["path"]: x["reason"] for x in r.report["left_in_place"]}
+        for path in ("docs/archive/HANDOFFS-through-2026-08-02.md", "docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh"):
+            self.assertIn("proof", left[path])
+            self.assertIn("exits 2", left[path])
+        self.assertEqual(r.report["rehearsal"]["excluded"], ["docs/archive/HANDOFFS-through-2026-08-02.md"])
+
+    def test_the_apply_leaves_them_where_they_are_and_the_proofs_histogram_is_unchanged(self):
+        self.old_format_proof()
+        r = run_migrate(self.project, "--apply", checks=True)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertTrue((self.project / "docs" / "archive" / "HANDOFFS-through-2026-08-02.md").is_file())
+        self.assertTrue((self.project / "docs" / "archive" / "HANDOFFS-through-2026-08-02.md.verify.sh").is_file())
+        self.assertTrue((self.project / "methodology" / "archive" / "CHANGELOG-through-2026-08-01.md").is_file())
+        proofs = r.report["checks"]
+        self.assertEqual(proofs["before"]["proofs"]["histogram"], {"0": 1})
+        self.assertEqual(proofs["before"]["proofs"], proofs["after"]["proofs"])
+        again = subprocess.run(["bash", "docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh"], cwd=self.project, capture_output=True, text=True)
+        self.assertEqual(again.returncode, 0, again.stdout + again.stderr)
+
+    def test_a_proof_that_failed_before_and_fails_the_same_way_after_still_moves(self):
+        (self.project / "docs" / "archive" / "HANDOFFS-through-2026-08-02.md.verify.sh").write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+        self.commit("a proof that always fails")
+        r = run_migrate(self.project)
+        self.assertIn("docs/archive/HANDOFFS-through-2026-08-02.md.verify.sh", self.moves(r.report))
+        self.assertEqual(r.report["rehearsal"]["excluded"], [])
+
+    def test_the_rehearsal_leaves_no_trace_in_the_project_or_in_the_temporary_directory(self):
+        self.old_format_proof()
+        before = tree_state(self.project)
+        tmp = Path(tempfile.gettempdir())
+        clones_before = {p.name for p in tmp.glob("migrate-rehearsal-*")}
+        run_migrate(self.project)
+        self.assertEqual(tree_state(self.project), before)
+        self.assertEqual({p.name for p in tmp.glob("migrate-rehearsal-*")}, clones_before)
+
+    def test_a_project_with_no_proofs_is_not_rehearsed(self):
+        for name in ("CHANGELOG-through-2026-08-01.md.verify.sh", "HANDOFFS-through-2026-08-02.md.verify.sh"):
+            git(self.project, "rm", "-q", "docs/archive/" + name)
+        self.commit("no proofs")
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["rehearsal"], {"ran": False, "proofs": 0, "excluded": []})
+
+    def test_the_rehearsal_says_how_many_proofs_it_ran(self):
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["rehearsal"], {"ran": True, "proofs": 2, "excluded": []})
+
+
+class TestWhatTheHitsSayAboutHooksAndDirectories(Adopter):
+    """Real data: wsfct's pre-commit hook runs context_budget.py from the root, so it refuses the migration commit; and a
+    CLAUDE.md that says `docs/methodology/` as a directory still says it after the paths in it are rewritten."""
+
+    def test_a_hook_that_runs_a_moved_tool_is_flagged_and_one_that_only_names_a_file_is_not(self):
+        (self.project / ".githooks" / "pre-push").write_text("#!/bin/sh\npython3 context_budget.py --status || exit 1\n", encoding="utf-8")
+        self.commit("a hook that runs a methodology tool")
+        r = run_migrate(self.project)
+        sites = {s["file"]: s for s in r.report["not_rewritten"]["hooks"]["sites"]}
+        self.assertTrue(sites[".githooks/pre-push"]["runs_tool"])
+        self.assertFalse(sites[".githooks/pre-commit"]["runs_tool"])
+        self.assertEqual(r.report["not_rewritten"]["hooks"]["runs_moved_tool"], 1)
+        text = run_migrate(self.project, json_out=False).out
+        self.assertIn("refuse the migration commit", text)
+
+    def test_a_hook_that_runs_a_moved_tool_refuses_the_commit_and_the_tool_rolls_back_and_says_so(self):
+        hook = self.project / ".githooks" / "pre-commit"
+        hook.write_text("#!/bin/sh\npython3 context_budget.py --status || exit 1\n", encoding="utf-8")
+        hook.chmod(0o755)
+        git(self.project, "add", "-A")
+        git(self.project, "commit", "-q", "--no-verify", "-m", "a hook that runs a methodology tool")
+        git(self.project, "config", "core.hooksPath", ".githooks")
+        before = tree_state(self.project)
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 3, r.out)
+        self.assertEqual(r.report["status"], "rolled-back")
+        self.assertIn("context_budget.py", r.report["commit"]["error"])
+        self.assertEqual(tree_state(self.project), before)
+
+    def test_a_directory_named_in_a_rewritten_file_is_reported_after_its_paths_are_rewritten(self):
+        claude = self.project / "CLAUDE.md"
+        claude.write_text(claude.read_text(encoding="utf-8") + "\nThe 13 files under `docs/methodology/` and the shards in docs/archive are the framework's.\n",
+                          encoding="utf-8")
+        self.commit("a directory mentioned in prose")
+        r = run_migrate(self.project)
+        sites = [s for s in r.report["not_rewritten"]["other"]["sites"] if s["file"] == "CLAUDE.md"]
+        self.assertEqual(len(sites), 1)
+        self.assertEqual(sites[0]["names"], ["docs/archive", "docs/methodology/"])
+        self.assertIn("The 13 files under", sites[0]["text"])
+        rewritten = next(x for x in r.report["rewrites"] if x["path"] == "CLAUDE.md")
+        self.assertIn("+Read and follow `methodology/SESSION_RUNNER.md`", rewritten["diff"])
+
+    def test_a_directory_mentioned_in_a_file_the_tool_does_not_edit_is_reported_and_a_full_path_is_not_counted_twice(self):
+        (self.project / "README.md").write_text("Methodology lives in docs/methodology/ now.\nSee docs/methodology/HOW_TO_USE.md.\n", encoding="utf-8")
+        self.commit("a readme")
+        other = run_migrate(self.project).report["not_rewritten"]["other"]
+        by_line = {s["line"]: s for s in other["sites"] if s["file"] == "README.md"}
+        self.assertEqual(by_line[1]["names"], ["docs/methodology/"])
+        self.assertEqual(by_line[2]["names"], ["docs/methodology/HOW_TO_USE.md"])
+
+
+class TestASmallLedgerIsRefusedWithAReason(Adopter):
+    """Real data (claude_work): a ledger that is only the seed cannot take its entry and stay a rename at 90%."""
+
+    def test_the_rollback_says_the_ledger_is_too_small_and_how_big_it_is(self):
+        seed = (REPO / "starter-kit" / "CHANGELOG.md").read_text(encoding="utf-8")
+        (self.project / "CHANGELOG.md").write_text(seed, encoding="utf-8")
+        self.commit("a ledger with no entries yet")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 3, r.out)
+        error = r.report["commit"]["error"]
+        self.assertIn("too small to take its entry", error)
+        self.assertIn("%d bytes" % len(seed.encode("utf-8")), error)
 
 
 if __name__ == "__main__":
