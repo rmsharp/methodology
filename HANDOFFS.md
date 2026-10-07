@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S280
+date: 2026-10-07
+status: pending
+active_task: BUILD BL-101 P7 (a build session: the plan's phase 7, `docs/planning/methodology-subdirectory-plan.md` section 4.7 and section 7.3 row P7, is the contract, ratified at the S273 close-out and chosen at the S280 Phase 0 picker). `bin/migrate-layout`, canonical-only, dry run by default: refuses a dirty tree, a half-migrated tree, a destination that exists and a tree where `bin/status` does not read every TRACKED file `current`; prints every `git mv` from the manifest, every path rewrite in `.context-budget.json`, `.quality-gates.json`, `CLAUDE.md` and `.gitignore` as a diff, and every hit it will not rewrite (CI, `.claude/`, `.githooks/` copies, ledger links); the apply is ONE commit with every moved file at 90% similarity or better, never rewriting a committed ledger entry or a frozen shard; then a dry run and an apply in a `--no-local` clone of EACH of the 12 adopters, one report row each with no blank cell. It deletes the clause `bin/sync` prints ('not built yet') and the assertion that pins it. Before the claim, on his go-ahead at the Phase 0 picker: the CHANGELOG trim (`00f0807`, 279,349 to 131,647 B, the file had passed the 262,144 B hard refusal), the owed HANDOFFS trim (`8d327c6`) and its fold (`114ea92`); baseline 475 / 0 / 6 at two receipts. No PR, no comment upstream, no adopter touched in place.
+```
+
+```handoff
 session: S279
 date: 2026-10-07
 status: complete
