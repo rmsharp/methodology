@@ -2,8 +2,8 @@
 
 **Status: DRAFT, DECIDED. The plan is this session's (S273) deliverable; nothing in it is implemented.**
 **Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended:** D1 (a), D6
-(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P4 are
-done (P1 at S274, §7.1; P2 at S275, §7.2a; P3 at S276, §7.2b; P4 at S277, §7.2c); P5 is next.**
+(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P5 are
+done (P1 §7.1, S274; P2 §7.2a; P3 §7.2b; P4 §7.2c; P5 §7.2d, S278); P6 is next.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). Decisions
 D1-D3 in §9 gate Phase 1; D4-D9 gate the phase that uses them. §5A (syncing) was added at the
 operator's instruction during the session. **Declared budget: 60,000 B**, one agent
@@ -444,8 +444,7 @@ potential conflict with the fork's resolver edits for as long as upstream does n
 
 One phase is one session unless stated. Every phase closes out in full (`SESSION_RUNNER.md` Phase 3).
 **Every phase's suite criterion is §3.1's: failed 0, and passed and skipped equal to the unmoved tree's,
-measured at the phase's own start in the same receipt state (after P1: 453 / 0 / 0 at three receipts,
-447 / 0 / 6 at two).**
+measured at the phase's own start in the same receipt state.**
 
 | Phase | Deliverable | Sessions | Needs |
 |---|---|---:|---|
@@ -472,25 +471,22 @@ one-deliverable rule is the default.
 - **DONE:** the resolver in one canonical-only module with the four-row table of §4.3 as its unit tests;
   a `tools/test_layout_resolver.py` suite wired into `bin/tests.sh`; **fixture trees in both layouts**
   that every later phase reuses; the **literal scanner**, run RED against `c8b9ddd` and listing every
-  line that names a root path of a methodology file in a shipped tool (S274 measured 79 sites in the
-  dashboard, 20 in the trimmer, 21 in the hook, 8 in `check-handoff`, 3 in `close_out_report.py`, 177 in all
-  over 12 files; the plan's first figures, 51, 13, 6, 7 and 3, came from one grep that could not be reproduced);
-  a ratchet gate for each new suite, floor set from its measured count.
+  line that names a root path of a methodology file in a shipped tool (177 sites over 12 files at S274;
+  the plan's first figures came from one grep that could not be reproduced); a ratchet gate for each new
+  suite, floor set from its measured count.
 - **Verify:** `bash bin/tests.sh > /tmp/o.txt` (capture it; the ratchet keeps none), the §3.1 criterion;
   `python3 starter-kit/quality_ratchet.py --run`; the scanner exits non-zero with the list.
-- **Surface:** the canonical suite and scratch trees. It **cannot** show that a real adopter's tools
-  behave, or that a hook is armed in a clone.
-- **Boundary:** no tool changes behaviour. The scanner is RED on purpose and is **not** wired into the
-  gate until P6; its list is the executors' to-do.
+- **Surface:** the canonical suite and scratch trees; not a real adopter's tools or a hook armed in a clone.
+- **Boundary:** no tool changes behaviour. The scanner is RED on purpose, **not** a gate until P6.
 
 ### 7.2 P2-P6 — one layer each (all RED-first, both layouts green)
 
 | Phase | DONE (each tool) | Verify | Surface, and what it cannot enforce |
 |---|---|---|---|
-| **P2** | Hook and ratchet accept either layout; **a later content commit with no ledger entry is refused in the new layout (`hook-after-move.sh` X2, kept as a permanent test)**; a move commit that lowers a threshold is **refused**; a pure rename passes; the installer embeds the resolved path | a mutant per behaviour killed; `.githooks/pre-commit --selftest`; `pre-commit-selftest` and `commit-msg-selftest` gates | scratch repos with real hooks. Cannot show `core.hooksPath` in another clone |
-| **P3** | Trimmer derives `ARCHIVE_DIR` and the rebase prefix from the ledger's directory; a trim in the **new** layout writes a shard and a proof that pass; `close_out_report.py` resolves its ledger and its snippet names the resolved path | the trimmer's 181 tests and 54 mutants stay green; a new-layout trim proved from a `--no-local` clone; **all 117 old proofs: histogram unchanged** | clones. Cannot show a trim at an adopter's own history |
-| **P4** | `context_budget.py` finds its config in either place; the checkers resolve the ledger | their suites; `check-*` gates exit 0 in both fixtures | fixtures. Cannot show an adopter's custom `files[]` |
-| **P5** | Dashboard (both copies, byte-identical) scores a new-layout fixture the same as the legacy one (115 of 115) and a half-migrated tree as a defect; **`--sync` resolves each target's layout and writes no root copy into a migrated project (C15)** | `tools/test_methodology_dashboard.py`; old and new scanners compared over the repos here that carry a manifest, as S272 did; `--sync --dry-run` over a scratch portfolio | fixtures and the repos here. Cannot show external adopters |
+| **P2** | DONE (§7.2a): hook and ratchet accept either layout; **a later content commit with no ledger entry is refused in the new layout (X2, a permanent test)**; a move commit that lowers a threshold is refused | a mutant per behaviour; the two selftest gates | scratch repos with real hooks; not another clone's `core.hooksPath` |
+| **P3** | DONE (§7.2b): the trimmer and `close_out_report.py` resolve the ledger's directory; a new-layout trim proves from a `--no-local` clone; **all 117 old proofs: histogram unchanged** | the trimmer's tests and mutants; clones | clones; not a trim at an adopter's history |
+| **P4** | DONE (§7.2c): `context_budget.py` and the checkers resolve either place | their suites, both fixtures | fixtures; not an adopter's `files[]` |
+| **P5** | DONE (§7.2d): the dashboard (both copies) scores a new-layout fixture as the legacy one and a half-migrated tree as a defect; **`--sync` resolves each target's layout and writes no root copy into a migrated project (C15)** | `tools/test_methodology_dashboard.py`; the old and new dashboards over the real repos here; `--sync --dry-run` over a scratch portfolio | fixtures and the repos here; not external adopters |
 | **P6** | `bin/sync --layout auto` refuses a legacy tree under the new layout (**C1: no blank seed, no duplicate runner**), ignore-mode entries, `bin/status` names the layout, `check-links` simulates both, the layout table is a second literal (C16); the scanner is wired into the gate at **zero** | the §5A.3 scratch-portfolio proofs; `bin/sync --dry-run` over the 12 adopters writes nothing and says so; Test 53 green with the new table | clones. Cannot show a sync from GitHub against a real remote (S218's route) |
 
 ### 7.2a P2 — what was built (S275)
@@ -498,36 +494,20 @@ one-deliverable rule is the default.
 **DONE.** The hook reads the ledger's place from the index (sh cannot call the block), its never-edit check crosses a move, and a
 trim's shard may sit in either archive directory. `quality_ratchet.py` 1.2.0 embeds the block, reads its manifest at either path
 from the index, HEAD and history, and installs a hook that finds the tool at its twin. **X2 is permanent** (`bin/tests.sh` Test 54,
-the real hook and real git, both layouts): 11 of its 15 assertions were red against the old hook, which failed open four ways. 44
+real hook, real git, both layouts): 11 of its 15 assertions were red against the old hook, which failed open four ways. 44
 mutants killed. **Not shown:** a hook armed in another clone, a real adopter.
 
 ### 7.2b P3 — what was built (S276)
 
-**DONE.** `methodology_trim.py` 1.8.0 takes its shard directory and link prefix from the ledger's own directory (a root ledger
-writes what 1.7.0 wrote; one under `methodology/` writes `methodology/archive/` and climbs one level); `close_out_report.py` 1.2.0
-finds its ledger the same way; a half-migrated tree is refused (`LAYOUT_HALF_MIGRATED`) and a shard name is never reused across
-the two archive directories. The framework-anchor tie rule decided at the S275 close-out was built opt-in; the S276 picker made it
-unconditional (7.2c). **Measured:** 119 of 119 shards give the same `--reverify` verdict under both tools, the 120 frozen proofs
-read 115 / 5 in all three trees, and the real ledgers, moved in a scratch clone, trim and prove from a second clone; 44 mutants
-killed. **Left:** the dashboard still reads only `docs/archive/` (P5); the proof compares modulo the uniform prefix, so a link left
-un-rebased in a shard is invisible to it; a root ledger's links are dead after the move (C6). **Not shown:** a
-trim at a real adopter's own history.
+**DONE.** `methodology_trim.py` 1.8.0 takes its shard directory and link prefix from the ledger's own directory; `close_out_report.py` 1.2.0 finds its ledger the same way. A half-migrated tree is refused (`LAYOUT_HALF_MIGRATED`) and a shard name is never reused across the two archive directories. **Measured:** 119 of 119 shards give the same `--reverify` verdict under both tools, the 120 frozen proofs read 115 / 5 in all three trees, and the real ledgers, moved in a scratch clone, trim and prove from a second clone; 44 mutants killed. **Left:** a root ledger's links are dead after the move (C6); a link left un-rebased in a shard is invisible to the proof, which compares modulo the uniform prefix. **Not shown:** a trim at a real adopter.
 
 ### 7.2c P4 — what was built (S277)
 
-**DONE. The tie rule is unconditional** (his S276 decision): `resolve_layout(root, anchor)` takes no request, and a file found at
-the root AND under `methodology/` is the framework's under `methodology/` whenever the runner is tracked there and not at the
-root, for every anchor; the root copy is the project's own and is left alone. The ratchet decides it from git (index, HEAD,
-history; `quality_ratchet.py` 1.3.0). No runner under `methodology/`, or a runner at both, stays `half`, refused naming both.
-**Then the tools:** `context_budget.py` 1.4.0 finds its config, its history file (beside the config) and the tool its hook runs at
-either place; `check-ledger`, `check-handoff`, `check-overhead` and `model-report` resolve their ledger or config, shards of both
-archive directories included. `check-learnings` reads no ledger and is unchanged. The config's `files[]` stay project-root-relative
-(P7 rewrites them). **Measured:** this repository's own ledgers and configs, moved in scratch clones, read identically to the
-legacy tree, clean and in a tie (`checkers-in-new-layout.sh`); 43 mutants killed (five survivors became tests);
-`bin/tests.sh` 474 / 0 / 6 at two receipts; the scanner 117 → 83. **Two defects of mine, one cause: a directory NAMED methodology
-taken for a project's subdirectory (this repository is one):** `check-overhead` (Test 44) and `check-ledger --all`, which read 1
-file of 21 (the real-tree check). Derive a root from git or `.git`, never from a name.
-**Left:** the dashboard (P5), `bin/sync` and the manifest (P6). **Not shown:** another clone's hook, an adopter's `files[]`.
+**DONE. The tie rule is unconditional** (his S276 decision): `resolve_layout(root, anchor)` takes no request, and a file found at the root AND under `methodology/` is the framework's under `methodology/` whenever the runner is tracked there and not at the root, for every anchor; the root copy is the project's own and is left alone. No runner under `methodology/`, or a runner at both, stays `half`, refused naming both. `quality_ratchet.py` 1.3.0 decides a manifest tie from git (index, HEAD, history); `context_budget.py` 1.4.0 finds its config, history and hook tool at either place; `check-ledger`, `check-handoff`, `check-overhead` and `model-report` resolve their ledger or config, shards of both archive directories included (`check-learnings` reads no ledger). The config's `files[]` stay project-root-relative (P7 rewrites them). **Measured:** this repository's own ledgers and configs, moved in scratch clones, read identically to the legacy tree, clean and in a tie (`checkers-in-new-layout.sh`); 43 mutants killed; `bin/tests.sh` 474 / 0 / 6 at two receipts; the scanner 117 → 83. **Two defects, one cause:** a directory NAMED methodology taken for a project's subdirectory (this repository is one); derive a root from git, never a name. **Not shown:** another clone's hook, an adopter's `files[]`.
+
+### 7.2d P5 — what was built (S278)
+
+**DONE** (`DASHBOARD_VERSION` 2.22.0, both copies). The checklist keeps its legacy item names and locates each through the resolver (the framework checklist too, for its own ledgers); the adoption, role and trim-gate probes read the runner at either place; a half-migrated tree is a HIGH risk naming both paths. The walk classifies a file under `methodology/` by its legacy name, so the S39' installed-source and doc-only exclusions hold there, and a root namesake (the project's own changelog) is never read as ours. The ledger locator, trim and read-cap rows, generated proofs (`methodology/archive/`) and quality-gate read (manifest history over both paths: a floor lowered in the move commit is seen, a pure move is no longer a removal) follow the layout. `--sync` resolves each target (a migrated project's copy is `methodology/methodology_dashboard.py`, never also a root one; a half-migrated one is refused by name), and a copy in `<project>/methodology/` finds its project and writes beside itself. **Measured:** 38 tests, RED first; scanner 83 → 4 (`bin/status` 3, `bin/check-links` 1: P6's); `dashboard-in-both-layouts.sh`. **For him:** a project with no `docs/` of its own loses the 4-point `has_docs_dir` credit when it migrates (a legacy adopter earns it from `docs/methodology/`). **Not shown:** an adopter's CI.
 
 ### 7.3 P7-P8 — the tool, then the rehearsal
 

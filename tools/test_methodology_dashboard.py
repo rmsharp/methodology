@@ -6508,6 +6508,16 @@ class TestBL101P5Checklist(unittest.TestCase):
         m = md.collect_methodology_metrics(layout_project(self, "half"))
         self.assertEqual(m["compliance_score"], md.METHODOLOGY_MAX)
 
+    def test_a_half_migrated_tree_counts_a_file_held_only_under_methodology(self):
+        # The union cuts both ways: the half fixture holds everything at the root, so this one moves a single
+        # file to the OTHER place and removes it from the root. A mutant that dropped the methodology copy
+        # from the half answer survived every other test (found by the S278 mutation pass).
+        p = layout_project(self, "half", remove=("SAFEGUARDS.md",), extra={"methodology/SAFEGUARDS.md": "# safeguards\n"})
+        m = md.collect_methodology_metrics(p)
+        self.assertEqual(m["layout"]["kind"], "half")
+        self.assertTrue(m["items"]["SAFEGUARDS.md"])
+        self.assertEqual(m["compliance_score"], md.METHODOLOGY_MAX)
+
     def test_no_other_shape_raises_the_half_migrated_row(self):
         for layout in ("legacy", "new", "tier1", "empty"):
             with self.subTest(layout=layout):
