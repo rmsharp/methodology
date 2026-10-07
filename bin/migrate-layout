@@ -22,6 +22,7 @@ Exit: 0 a dry run or a migration done, or nothing to do · 1 refused · 2 usage 
 rolled back.
 """
 import argparse
+import datetime
 import difflib
 import json
 import os
@@ -253,17 +254,161 @@ def rewrite_gitignore(text, mapping):
     return "".join(out), n
 
 
-def plan_rewrites(root, moves):
-    """The edits that go with the moves: the .gitignore entries that name a moved file."""
+class Unsafe(Exception):
+    """A file the tool could not rewrite faithfully: the migration is refused rather than left half done."""
+
+
+def logical_map(moves, tier):
+    """Where a name goes: every file this run moves, and the files the tools generate whether or not they are on disk
+    (a fresh clone has none, and the tools will write them beside the moved configs next time)."""
     mapping = {m["src"]: m["dest"] for m in moves}
+    if tier in ("2", "all"):
+        for name in GENERATED:
+            mapping.setdefault(name, NEW_DIR + "/" + name)
+    return mapping
+
+
+def token_rewriter(mapping):
+    """A function (text) -> (text, replacements) that rewrites a methodology file's path where it stands alone: not
+    behind a directory, a dot, a hyphen, a tilde or a word character (so `starter-kit/X`, a URL, `MY_X` and `NOTES-X`
+    are not the project's file), and not before a word character or a dot and a word character (`X.mdx`, `X.bak`)."""
+    if not mapping:
+        return lambda text: (text, 0)
+    names = sorted(mapping, key=len, reverse=True)
+    pattern = re.compile(r"(?<![\w./~-])(?:%s)(?!\w|\.\w)" % "|".join(re.escape(n) for n in names))
+
+    def rewrite(text):
+        return pattern.subn(lambda m: mapping[m.group(0)], text)
+    return rewrite
+
+
+def rewrite_json(text, mapping):
+    """A config's path-bearing values, rewritten in the text so every other byte is what it was: a value that is
+    exactly a moved file's path, and the tokens of a gate's `command`. Prose (a key that starts with an underscore)
+    and `canonical`, the path to the sibling checkout, are left. Returns (text, replacements); raises ValueError when
+    the text is not JSON and Unsafe when the result is not the structure the rule predicts."""
+    data = json.loads(text)
+    tokens = token_rewriter(mapping)
+    keys = set()
+
+    def new_value(key, value):
+        if key == "command":
+            return tokens(value)[0]
+        return mapping.get(value, value)
+
+    def expected(o):
+        if isinstance(o, dict):
+            return {k: (o[k] if k.startswith("_") or k == "canonical"
+                        else (new_value(k, o[k]) if isinstance(o[k], str) else expected(o[k]))) for k in o}
+        if isinstance(o, list):
+            return [expected(x) for x in o]
+        return o
+
+    def collect(o):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k.startswith("_") or k == "canonical":
+                    continue
+                if isinstance(v, str):
+                    if new_value(k, v) != v:
+                        keys.add(k)
+                else:
+                    collect(v)
+        elif isinstance(o, list):
+            for x in o:
+                collect(x)
+    collect(data)
+    count = 0
+    for key in sorted(keys):
+        def sub(m, key=key):
+            nonlocal count
+            old = json.loads(m.group(2))
+            new = new_value(key, old)
+            if new == old:
+                return m.group(0)
+            count += 1
+            return m.group(1) + json.dumps(new, ensure_ascii=False)
+        text = re.sub(r'("%s"\s*:\s*)("(?:[^"\\]|\\.)*")' % re.escape(key), sub, text)
+    if json.loads(text) != expected(data):
+        raise Unsafe("the rewrite of this file does not give the structure the rule predicts (a path-bearing key inside a prose key?)")
+    return text, count
+
+
+def ledger_location(root, moves):
+    """(path now, path once the moves are done) of the action ledger, or (None, None) when the project has none."""
+    for m in moves:
+        if m["src"] == "CHANGELOG.md":  # layout: ok -- the ledger's own file name
+            return m["src"], m["dest"]
+    kind, directory, _found = resolve_layout(root, "CHANGELOG.md")  # layout: ok -- the resolver's anchor
+    if kind in ("legacy", "new"):
+        rel = Path(directory, "CHANGELOG.md").relative_to(root).as_posix()  # layout: ok -- the ledger's own file name
+        return rel, rel
+    return None, None
+
+
+SENTINEL_RE = re.compile(r"^[ \t]*<!--[ \t]*METHODOLOGY-SEED-SENTINEL.*?-->[ \t]*\n", re.S | re.M)
+
+
+def insert_entry(text, entry, month):
+    """The entry at the top of the records zone: under the current month's heading when the first heading is that
+    one, with a new month heading above the older one when the month has turned, above the first entry when the
+    ledger has no month headings, and at the end (the seed sentinel dropped) when it has no entry yet."""
+    block = entry.rstrip("\n") + "\n\n"
+    m = re.search(r"^(## \d{4}-\d{2})[ \t]*$|^### \d{4}-\d{2}-\d{2} · ", text, re.M)
+    if m is None:
+        return SENTINEL_RE.sub("", text).rstrip("\n") + "\n\n" + block.rstrip("\n") + "\n"
+    if m.group(1) is None:
+        return text[:m.start()] + block + text[m.start():]
+    if m.group(1) == "## " + month:
+        i = text.index("\n", m.start()) + 1
+        while i < len(text) and text[i] == "\n":
+            i += 1
+        return text[:i] + block + text[i:]
+    return text[:m.start()] + "## " + month + "\n\n" + block + text[m.start():]
+
+
+def ledger_entry_text(report, moves, rewritten, today):
+    sha = (report["canonical"]["sha"] or "an unknown commit")[:7]
+    edited = ", ".join("`%s`" % f for f in rewritten) if rewritten else "no file (none named a moved path)"
+    return ("### %s · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier %s, %d files)\n\n"
+            "`bin/migrate-layout` (KJ5HST/methodology @ %s) moved them in one commit with `git mv`; paths were rewritten in %s. "
+            "No older entry or shard was edited, so a link in an older entry is relative to the root, where the ledger sat "
+            "when it was written.\n" % (today, report["tier"], len(moves), sha, edited))
+
+
+def plan_rewrites(root, moves, tier, report):
+    """The edits that go with the moves: the .gitignore entries and CLAUDE.md and the two configs that name a moved
+    path, and the one ledger entry. Returns (the Rewrite records of those files, the ledger's Rewrite or None)."""
+    root = Path(root)
+    mapping = logical_map(moves, tier)
+    moved = {m["src"]: m["dest"] for m in moves}
+    tokens = token_rewriter(mapping)
     rewrites = []
-    gi = Path(root) / ".gitignore"
-    if gi.is_file():
-        old = gi.read_text(encoding="utf-8")
-        new, n = rewrite_gitignore(old, mapping)
+
+    def add(path, new_text_fn):
+        f = root / path
+        if not f.is_file():
+            return
+        old = f.read_text(encoding="utf-8")
+        try:
+            new, n = new_text_fn(old)
+        except ValueError:
+            return  # not JSON: moved if it is in the plan, never edited
         if n:
-            rewrites.append(Rewrite(".gitignore", ".gitignore", old, new, n))
-    return rewrites
+            rewrites.append(Rewrite(path, moved.get(path, path), old, new, n))
+    add(".gitignore", lambda s: rewrite_gitignore(s, mapping))
+    add("CLAUDE.md", tokens)
+    add(".context-budget.json", lambda s: rewrite_json(s, mapping))
+    add(".quality-gates.json", lambda s: rewrite_json(s, mapping))
+    ledger = None
+    src, final = ledger_location(root, moves)
+    if src is not None:
+        old = (root / src).read_text(encoding="utf-8")
+        today = datetime.date.today()
+        entry = ledger_entry_text(report, moves, [r.final for r in rewrites], today.isoformat())
+        ledger = Rewrite(src, final, old, insert_entry(old, entry, today.strftime("%Y-%m")), 1)
+        report["ledger_entry"] = {"path": final, "text": entry}
+    return rewrites, ledger
 
 
 def build_report(project, tier, apply_mode):
@@ -310,9 +455,14 @@ def build_report(project, tier, apply_mode):
                 refusals.append(refusal("not-current", "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): "
                                         + ", ".join(bad), [b.split(" (")[0] for b in bad]))
     report["moves"], report["left_in_place"] = moves, left
-    rewrites = plan_rewrites(root, moves) if moves else []
+    rewrites, ledger = [], None
+    if moves and not refusals:
+        try:
+            rewrites, ledger = plan_rewrites(root, moves, tier, report)
+        except Unsafe as e:
+            refusals.append(refusal("rewrite-unsafe", "a file that names a moved path cannot be rewritten faithfully: %s" % e))
     report["rewrites"] = [r.as_report() for r in rewrites]
-    report["_rewrites"] = rewrites
+    report["_rewrites"] = rewrites + ([ledger] if ledger else [])
     if not refusals and not present:
         report["status"] = "nothing-to-do"
         return report
@@ -418,7 +568,7 @@ def apply_migration(report, trailers):
                 if score is None or score < 90:
                     weak.append("%s -> %s (%s)" % (m["src"], m["dest"], "not a rename" if score is None else "%d%%" % score))
         if weak:
-            raise RuntimeError("a moved file would fall below 90%% similarity, so git log --follow could not reach its history: "
+            raise RuntimeError("a moved file would fall below 90% similarity, so git log --follow could not reach its history: "
                                + ", ".join(weak))
         parent = run(root, "rev-parse", "HEAD").stdout.strip()
         message = commit_message(report, moves) + (("\n\n" + "\n".join(trailers)) if trailers else "")
