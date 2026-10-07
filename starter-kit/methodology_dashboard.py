@@ -1013,6 +1013,23 @@ def layout_names(path):
     return names, own
 
 
+DASHBOARD_NAME = "methodology_dashboard.py"  # layout: ok -- this tool's own file name, written by --sync into the place its project keeps it
+
+
+def dashboard_copy_target(project_dir):
+    """(path, refusal) of the dashboard copy a project keeps. `--sync` is a second sync channel outside the
+    manifest (plan C15), so it resolves each target's layout itself: a migrated project's copy is
+    methodology/methodology_dashboard.py and never also a root one; a legacy or empty project's is the
+    root (the default until the contract stage); a half-migrated project has none to write, because
+    nothing says which of its two layouts is live, and the refusal names both runner paths."""
+    kind, _directory, found = resolve_layout(project_dir)
+    if kind == "half":
+        return None, "half-migrated: " + " and ".join(_relative_names(project_dir, found)) + " both exist"
+    if kind == "new":
+        return project_dir / NEW_LAYOUT_DIR / DASHBOARD_NAME, None
+    return project_dir / DASHBOARD_NAME, None
+
+
 def has_runner(path):
     """Whether the project holds a runner at either place: the adoption test, which used to ask the root alone."""
     return bool(resolve_layout(path, RUNNER_NAME)[2])
@@ -1191,7 +1208,7 @@ def check_stale_version():
         sys.stderr.write(
             f"  ⚠ methodology_dashboard.py is stale: this copy is v{DASHBOARD_VERSION}, "
             f"canonical is v{canon_ver}.\n"
-            f"    Update just this copy:      python3 {canonical} --sync {self_path.parent}\n"
+            f"    Update just this copy:      python3 {canonical} --sync {resolve_single_project_root(self_path.parent)}\n"
             f"    Update the whole portfolio: python3 {canonical} --sync   "
             f"(writes every discovered project — preview first with --dry-run)\n"
         )
@@ -1514,7 +1531,12 @@ def sync_dashboards(start, dry_run=False, target=None, force=False):
         if target_dir == canon_repo or (target_dir / "methodology_dashboard.py") == canonical:
             sys.stderr.write("  Refusing to sync the canonical's own authoring repo as a target.\n")
             return 0
-        targets = [target_dir / "methodology_dashboard.py"]
+        copy, why = dashboard_copy_target(target_dir)
+        if copy is None:
+            sys.stderr.write(f"  Target is {why}; nothing synced (never guessed).\n")
+            return 0
+        targets = [copy]
+        refused = []
         scope_label = f"1 target ({target_dir})"
     else:
         # discover_projects() has TWO consumers — the portfolio scan and this WRITE path — so
@@ -1524,12 +1546,17 @@ def sync_dashboards(start, dry_run=False, target=None, force=False):
         # `t == canonical` skip below does not catch that, because canonical is
         # .../starter-kit/<name> and the new target is .../<name>. Skip the authoring repo
         # explicitly.
-        targets = [portfolio_root / "methodology_dashboard.py"]
+        targets = [portfolio_root / DASHBOARD_NAME]
+        refused = []
         for proj in discover_projects(portfolio_root):
             if proj.resolve() == canon_repo:
                 continue
-            targets.append(proj / "methodology_dashboard.py")
-        scope_label = f"portfolio root + {len(targets) - 1} project(s)"
+            copy, why = dashboard_copy_target(proj)
+            if copy is None:
+                refused.append((proj, why))
+            else:
+                targets.append(copy)
+        scope_label = f"portfolio root + {len(targets) - 1 + len(refused)} project(s)"
 
     print(f"Canonical: {canonical} (v{canon_ver_display})")
     print(f"{'DRY RUN — no files written.' if dry_run else 'Syncing.'} Targets: {scope_label}\n")
@@ -1571,8 +1598,17 @@ def sync_dashboards(start, dry_run=False, target=None, force=False):
         shown = "skip" if (gated and not force) else action
         print(f"  {shown:<9s} {label}{note}")
 
+    for proj, why in refused:
+        try:
+            label = proj.relative_to(portfolio_root)
+        except ValueError:
+            label = proj
+        print(f"  {'refuse':<9s} {label}  [{why}; never guessed, so move or remove one copy]")
+
     verb = "Would change" if dry_run else "Changed"
     tail = f" ({skipped} skipped — rerun with --force to include them)" if skipped else ""
+    if refused:
+        tail += f" ({len(refused)} half-migrated project(s) refused — --force does not apply)"
     print(f"\n  {verb} {written} of {inspected} target(s).{tail}")
     return 0 if dry_run else written
 
@@ -1636,7 +1672,22 @@ def resolve_single_project_root(script_dir):
             and (parent / ".git").exists()
             and (parent / "bin" / "_manifest.py").is_file()):
         return parent
+    # BL-101 P5: an adopter's copy in the new layout sits in <project>/methodology/, one level below the
+    # project it scans. Three facts together, none of them the directory's NAME alone (a directory named
+    # methodology that is not a project's subdirectory, as this repository's own root is, has a .git of its
+    # own and returned above): the project above is a git repository, and the runner is beside the copy.
+    if (script_dir.name == NEW_LAYOUT_DIR and (parent / ".git").exists()
+            and (script_dir / RUNNER_NAME).is_file()):
+        return parent
     return script_dir
+
+
+def output_dir(script_dir, root):
+    """Where a run writes dashboard.html and dashboard_history.jsonl: beside the copy that ran, which is the
+    project root for every copy but one. A copy that lives in <project>/methodology/ writes there, so the
+    project root stays clean (plan 4.1 lists both files under methodology/) and its history is read back
+    from the same place."""
+    return script_dir if (root != script_dir and script_dir.name == NEW_LAYOUT_DIR) else root
 
 
 def discover_projects(root, with_submodules=False):
@@ -4977,6 +5028,7 @@ def main():
     check_stale_version()
 
     root = resolve_single_project_root(ROOT)
+    out_dir = output_dir(ROOT, root)
     with_submodules = "--with-submodules" in args
 
     project_paths = discover_projects(root, with_submodules=with_submodules)
@@ -5006,13 +5058,13 @@ def main():
     portfolio = aggregate_portfolio(projects)
 
     # Historical trending
-    append_history(root, portfolio, projects)
-    history = load_history(root)
+    append_history(out_dir, portfolio, projects)
+    history = load_history(out_dir)
     trend_html = render_trend_section(history)
 
     html = render_html(portfolio, projects, title=title, trend_html=trend_html)
 
-    output_path = root / "dashboard.html"
+    output_path = out_dir / "dashboard.html"
     output_path.write_text(html)
 
     # Open in browser (skip with --no-open or when piped)
@@ -5052,7 +5104,7 @@ def main():
           f"Commits: {B}{portfolio['total_commits']:,}{R}")
     print(f"  Issues: {B}{total_issues}{R}    "
           f"Vulns: {c_risk('high') if total_vulns else c_risk('healthy')}{B}{total_vulns}{R}    "
-          f"History: {B}{len(load_history(root))}{R} snapshots")
+          f"History: {B}{len(load_history(out_dir))}{R} snapshots")
     print(f"{D}{'─'*W}{R}")
 
     # Column headers

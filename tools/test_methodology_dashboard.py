@@ -6705,8 +6705,8 @@ class TestBL101P5Sync(unittest.TestCase):
             lf.build_tree(p, layout, generated=False)
             for rel in ("methodology_dashboard.py", "methodology/methodology_dashboard.py"):
                 if (p / rel).exists():
-                    (p / rel).write_text("# a stale copy\\n", encoding="utf-8")
-            (p / ".gitignore").write_text("methodology_dashboard.py\\n", encoding="utf-8")
+                    (p / rel).write_text("# a stale copy\n", encoding="utf-8")
+            (p / ".gitignore").write_text("methodology_dashboard.py\n", encoding="utf-8")
             subprocess.run(["git", "init", "-q", str(p)], check=True)
             made[name] = p
         return root, canon, made
@@ -6727,13 +6727,15 @@ class TestBL101P5Sync(unittest.TestCase):
                          "a migrated project must never get a second dashboard at its root")
         self.assertEqual((p["empty"] / "methodology_dashboard.py").read_text(encoding="utf-8"), text,
                          "an empty project gets the default layout's place (the legacy root, until the contract stage)")
-        self.assertEqual((root / "methodology_dashboard.py").read_text(encoding="utf-8"), text)
-        self.assertEqual(written, 4, out)       # the portfolio root, legacy, migrated, empty: not the half one
+        # The portfolio root is not a git repository, so a new copy there is gated without --force (issue #67):
+        # three writes, the half-migrated project refused, and nothing created at the portfolio root.
+        self.assertFalse((root / "methodology_dashboard.py").exists())
+        self.assertEqual(written, 3, out)       # legacy, migrated, empty
 
     def test_a_half_migrated_project_is_refused_by_name_and_left_untouched(self):
         root, canon, p = self._portfolio({"half": "half"})
         written, out, err = self._run_sync(canon)
-        self.assertEqual((p["half"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\\n")
+        self.assertEqual((p["half"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\n")
         self.assertFalse((p["half"] / "methodology" / "methodology_dashboard.py").exists())
         self.assertTrue(any("half-migrated" in l for l in out.splitlines()), out)
         self.assertIn("methodology/SESSION_RUNNER.md", out)
@@ -6755,14 +6757,14 @@ class TestBL101P5Sync(unittest.TestCase):
         self.assertEqual((p["migrated"] / "methodology" / "methodology_dashboard.py").read_text(encoding="utf-8"),
                          canon.read_text(encoding="utf-8"))
         self.assertFalse((p["migrated"] / "methodology_dashboard.py").exists())
-        self.assertEqual((p["legacy"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\\n")
+        self.assertEqual((p["legacy"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\n")
 
     def test_a_single_half_migrated_target_is_refused_without_writing(self):
         root, canon, p = self._portfolio({"half": "half"})
         written, out, err = self._run_sync(canon, target=str(p["half"]))
         self.assertEqual(written, 0)
         self.assertIn("half-migrated", err)
-        self.assertEqual((p["half"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\\n")
+        self.assertEqual((p["half"] / "methodology_dashboard.py").read_text(encoding="utf-8"), "# a stale copy\n")
 
 
 class TestBL101P5CopyInsideMethodology(unittest.TestCase):
@@ -6789,7 +6791,7 @@ class TestBL101P5CopyInsideMethodology(unittest.TestCase):
         loose = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, loose, True)
         (loose / "methodology").mkdir()
-        (loose / "methodology" / "SESSION_RUNNER.md").write_text("# runner\\n", encoding="utf-8")
+        (loose / "methodology" / "SESSION_RUNNER.md").write_text("# runner\n", encoding="utf-8")
         self.assertEqual(md.resolve_single_project_root(loose / "methodology"), loose / "methodology",
                          "no .git above it: a directory named methodology is not a project's subdirectory")
 
@@ -6815,7 +6817,7 @@ class TestBL101P5CopyInsideMethodology(unittest.TestCase):
                 self.assertFalse((p / "dashboard.html").exists(), "the project root stays clean")
                 self.assertFalse((p / "dashboard_history.jsonl").exists())
                 again = self._run(p)
-                self.assertRegex(again.stdout, r"History:\\D*2\\D*snapshots")
+                self.assertRegex(re.sub(r"\x1b\[[0-9;]*m", "", again.stdout), r"History: 2 snapshots")
 
     def test_the_stale_copy_warning_names_the_project_not_its_methodology_directory(self):
         td = tempfile.TemporaryDirectory()
@@ -6828,15 +6830,16 @@ class TestBL101P5CopyInsideMethodology(unittest.TestCase):
         adopter = root / "adopter"
         lf.build_tree(adopter, "new", generated=False, contents={"methodology_dashboard.py": Path(TOOLS_PY).read_text(encoding="utf-8")})
         subprocess.run(["git", "init", "-q", str(adopter)], check=True)
-        driver = ("import importlib.util, sys\\n"
-                  "spec = importlib.util.spec_from_file_location('m', sys.argv[1])\\n"
-                  "m = importlib.util.module_from_spec(spec)\\n"
-                  "spec.loader.exec_module(m)\\n"
-                  "m.check_stale_version()\\n")
+        driver = ("import importlib.util, sys\n"
+                  "spec = importlib.util.spec_from_file_location('m', sys.argv[1])\n"
+                  "m = importlib.util.module_from_spec(spec)\n"
+                  "spec.loader.exec_module(m)\n"
+                  "m.check_stale_version()\n")
         r = subprocess.run([sys.executable, "-B", "-c", driver, str(adopter / "methodology" / "methodology_dashboard.py")],
                            capture_output=True, text=True, timeout=30)
-        self.assertIn("--sync %s\\n" % adopter, r.stderr)
-        self.assertNotIn("--sync %s" % (adopter / "methodology"), r.stderr)
+        shown = adopter.resolve()      # the copy reports its own real path (macOS: /var is /private/var)
+        self.assertIn("--sync %s\n" % shown, r.stderr)
+        self.assertNotIn("--sync %s" % (shown / "methodology"), r.stderr)
 
 
 if __name__ == "__main__":
