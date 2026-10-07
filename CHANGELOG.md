@@ -237,6 +237,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-06-4.md` (1 record(s), 36,495 B → 27,293 B)
+
+**Written by:** `methodology_trim.py` v1.7.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-06 → 2026-10-06) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-06-4.md`](docs/archive/HANDOFFS-through-2026-10-06-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-06-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-06-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 36,495 B → 27,293 B (−25.2%).
+
 ### 2026-10-06 · [BL-101] S275 — the framework anchor decides: his decision at the close-out picker, recorded (plan section 7.2a, BL-101, the receipt)
 
 Asked at the close-out picker how the resolver should break the tie when a project's own product changelog sits at the root beside a moved ledger (the hook and the ratchet read that tree as half-migrated and refuse until `--no-verify`), he chose **the framework anchor decides** (the recommendation): a project whose `SESSION_RUNNER.md` is under `methodology/` keeps its ledger there whatever sits at the root; both ledgers tracked with no runner under `methodology/` stays refused. **Recorded, not built:** `docs/planning/methodology-subdirectory-plan.md` section 7.2a now reads *Decided* (59,561 B of 60,000 B), `BACKLOG.md` BL-101's row and `BACKLOG-DETAIL.md` read the same and name the build as P3's first step (the resolver's table, its tests, the P1 block, the P2 copies of it in the ratchet, and the hook's sh form), and the S275 receipt's next-steps (2) and (4) now say decided and pushed. The decision changes nothing that ships today: the hook and the ratchet still refuse both-tracked, which is the safe state until P3. This commit is local (the plan and backlog are outside the push-record grant), so `git rev-list --left-right --count origin/main...main` should read `0 1`; its push is his go-ahead. Model: Claude Sonnet 5.5.
