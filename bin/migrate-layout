@@ -3,9 +3,28 @@
 
 CANONICAL-ONLY, like bin/sync and bin/status: it is not in bin/_manifest.py, so adopters do not receive it.
 Contract: docs/planning/methodology-subdirectory-plan.md section 4.7 and section 7.3 row P7.
+
+A project keeps its methodology files at its root and under docs/methodology/ (the legacy layout, the manifest's
+`dest` column) or in one directory, methodology/ (the new layout, its NEW_LAYOUT table). This tool moves a
+legacy project to the new layout. It is a dry run unless --apply is given: the dry run reads the project and
+prints the plan, and writes nothing.
+
+It REFUSES, before writing anything, a project that is not a git repository with a commit, one with a dirty tree,
+a half-migrated one (a runner at the root and under methodology/), one where a destination already exists, one
+that keeps its methodology files out of git (ignore mode), and one where bin/status does not read every TRACKED
+file current: sync first (plan 5A.2), because a tool that cannot find the ledger fails open (plan C5). Every
+refusal is reported together.
+
+Tiers (plan 4.6): tier 1 moves the framework's own files (the manifest's TRACKED rows); tier 2 the project's state
+(the SEED rows, the files the tools generate, the ledger shards the trimmer wrote). The default, all, is both.
+
+Exit: 0 a dry run or a migration done, or nothing to do · 1 refused · 2 usage or a failure · 3 an apply that was
+rolled back.
 """
 import argparse
 import json
+import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -39,17 +58,270 @@ def resolve_layout(root, anchor="SESSION_RUNNER.md"):
 # --- layout resolver: END ---
 
 
+NEW_DIR = "methodology"
+# What the tools write beside the methodology files (plan section 2.1, "Generated beside them"). They are not in
+# the manifest, so the table is here; tools/layout_fixtures.GENERATED is the test suite's copy of it.
+GENERATED = ("dashboard.html", "dashboard_history.jsonl", ".context-budget-history.jsonl",  # layout: ok -- the files the tools generate; this tool moves them
+             ".quality-gates-results.json")  # layout: ok -- same
+ARCHIVE_OLD = "docs/archive"  # layout: ok -- where a trim has written shards so far; they move to methodology/archive
+ARCHIVE_NEW = NEW_DIR + "/archive"
+OLD_FRAMEWORK_DIR = "docs/methodology"  # layout: ok -- today's directory for the framework documents; the tool leaves what is not in the manifest
+# A shard the trimmer wrote: <ledger>-through-<date>[-N].md and its proof beside it. Anything else in the archive
+# directory is the project's own and stays.
+SHARD_RE = re.compile(r"^(?:CHANGELOG|HANDOFFS|SESSION_NOTES)-through-[^/]+\.md(?:\.verify\.sh)?$")  # layout: ok -- the shard names the trimmer writes
+GITATTRIBUTES = ".gitattributes"  # layout: ok -- the seed that moves, when it is only the seed's rules
+
+HERE = Path(__file__).resolve().parent
+CANONICAL = HERE.parent
+
+REFUSAL_HELP = {
+    "not-a-repository": "the project is not the top of a git repository",
+    "no-commits": "the repository has no commit yet: there is no history for a move to keep",
+    "dirty-tree": "the working tree is not clean",
+    "half-migrated": "the runner is at the root and under methodology/",
+    "destination-exists": "a file already sits where a move would land",
+    "not-current": "bin/status does not read every TRACKED file current",
+    "ignore-mode": "the project keeps its methodology files out of git",
+    "tier-order": "tier 2 needs the framework files already under methodology/",
+    "status-unavailable": "bin/status could not be run",
+}
+
+
+def run(project, *args, check=False):
+    return subprocess.run(["git", "-C", str(project), *args], capture_output=True, text=True, check=check)
+
+
+def canonical_info():
+    r = subprocess.run(["git", "-C", str(CANONICAL), "rev-parse", "HEAD"], capture_output=True, text=True)
+    return {"path": str(CANONICAL), "sha": r.stdout.strip() if r.returncode == 0 else None}
+
+
+def refusal(code, message, paths=()):
+    return {"code": code, "message": message, "paths": list(paths)}
+
+
+def tracked_files(project):
+    r = run(project, "ls-files", "-z")
+    return set(p for p in r.stdout.split("\0") if p)
+
+
+def dirty_paths(project):
+    """Every path `git status` reports, untracked files one by one: a dirty tree is any of them."""
+    r = run(project, "status", "--porcelain=v1", "-z", "--untracked-files=all")
+    out, entries = [], r.stdout.split("\0")
+    i = 0
+    while i < len(entries):
+        entry = entries[i]
+        i += 1
+        if not entry:
+            continue
+        out.append(entry[3:])
+        if entry[0] in "RC":
+            i += 1  # a rename or copy carries its source as the next field
+    return out
+
+
+def is_ignore_mode(project):
+    """bin/sync's rule: a .gitignore that lists a TRACKED destination, in either layout."""
+    gi = Path(project) / ".gitignore"
+    if not gi.is_file():
+        return False
+    lines = {line.strip() for line in gi.read_text(encoding="utf-8", errors="replace").splitlines()}
+    entries = set()
+    for src, dest, disp in DISTRIBUTION:
+        if disp == TRACKED:
+            entries.add("/" + dest)
+            entries.add("/" + NEW_LAYOUT[src])
+    return bool(entries & lines)
+
+
+def read_status(project):
+    """bin/status over the project, as rows (file, disposition, status). The columns are found from the header,
+    where render_table left-justified every cell, so a project name or a status with a space does not shift them."""
+    r = subprocess.run([sys.executable, "-B", str(HERE / "status"), str(project)], capture_output=True, text=True)
+    if r.returncode != 0:
+        return None, r.stderr.strip() or r.stdout.strip()
+    lines = r.stdout.splitlines()
+    head = next((i for i, line in enumerate(lines) if line.startswith("Project ")), None)
+    if head is None:
+        return None, "bin/status printed no table"
+    h = lines[head]
+    c1, c2, c3 = h.index("File"), h.index("Disposition"), h.index("Status")
+    rows = []
+    for line in lines[head + 1:]:
+        if not line.strip():
+            break
+        rows.append((line[c1:c2].strip(), line[c2:c3].strip(), line[c3:].strip()))
+    return rows, None
+
+
+def seed_rules_only(text, seed_text):
+    """True when every rule line of `text` is one of the seed's: the file holds nothing of the project's own."""
+    def rules(t):
+        return {line.strip() for line in t.splitlines() if line.strip() and not line.lstrip().startswith("#")}
+    return rules(text) <= rules(seed_text)
+
+
+def plan_moves(project, tier, tracked, kind):
+    """(moves, left_in_place, collisions): what the tier moves from where the project keeps it to where the new
+    layout puts it; what stays and why; and the destinations that already exist."""
+    root = Path(project)
+    moves, left, collisions = [], [], []
+
+    def add(src, dest, what):
+        moves.append({"src": src, "dest": dest, "kind": what, "tracked": src in tracked})
+
+    for srcname, legacy, disp in DISTRIBUTION:
+        in_tier = (disp == TRACKED and tier in ("1", "all")) or (disp == SEED and tier in ("2", "all"))
+        if not in_tier:
+            continue
+        new = NEW_LAYOUT[srcname]
+        old_here, new_here = (root / legacy).is_file(), (root / new).is_file()
+        if old_here and new_here:
+            if not (kind == "half" and legacy == "SESSION_RUNNER.md"):  # half-migrated is its own refusal
+                collisions.append(new)
+            continue
+        if not old_here:
+            continue  # absent, or already under methodology/
+        if legacy == GITATTRIBUTES:
+            seed_text = (CANONICAL / srcname).read_text(encoding="utf-8")
+            if not seed_rules_only((root / legacy).read_text(encoding="utf-8", errors="replace"), seed_text):
+                left.append({"path": legacy, "reason": "holds rules of the project's own; it stays at the root"})
+                continue
+        add(legacy, new, "manifest")
+    if tier in ("2", "all"):
+        for name in GENERATED:
+            new = NEW_DIR + "/" + name
+            old_here, new_here = (root / name).is_file(), (root / new).is_file()
+            if old_here and new_here:
+                collisions.append(new)
+            elif old_here:
+                add(name, new, "generated")
+        for path in sorted(p for p in tracked if p.startswith(ARCHIVE_OLD + "/")):
+            name = path[len(ARCHIVE_OLD) + 1:]
+            if "/" not in name and SHARD_RE.match(name):
+                new = ARCHIVE_NEW + "/" + name
+                if (root / new).is_file():
+                    collisions.append(new)
+                else:
+                    add(path, new, "shard")
+    moved = {m["src"] for m in moves}
+    for path in sorted(tracked):
+        if path in moved:
+            continue
+        if path.startswith(OLD_FRAMEWORK_DIR + "/"):
+            left.append({"path": path, "reason": "not a file of the manifest: the project's own, or an older copy; it stays"})
+        elif path.startswith(ARCHIVE_OLD + "/") and tier in ("2", "all"):
+            left.append({"path": path, "reason": "not a ledger shard the trimmer wrote: the project's own; it stays"})
+    return moves, left, sorted(set(collisions))
+
+
+def build_report(project, tier, apply_mode):
+    root = Path(project)
+    report = {"project": str(root), "canonical": canonical_info(), "layout": None, "tier": tier,
+              "mode": "apply" if apply_mode else "dry-run", "status": "ok", "refusals": [], "moves": [],
+              "left_in_place": [], "rewrites": [], "not_rewritten": {}, "ledger_entry": None, "commit": None,
+              "checks": None}
+    refusals = report["refusals"]
+    top = run(root, "rev-parse", "--show-toplevel")
+    if top.returncode != 0 or Path(top.stdout.strip()).resolve() != root.resolve():
+        refusals.append(refusal("not-a-repository", REFUSAL_HELP["not-a-repository"] + ": " + str(root)))
+        return finish(report)
+    if run(root, "rev-parse", "--verify", "-q", "HEAD").returncode != 0:
+        refusals.append(refusal("no-commits", REFUSAL_HELP["no-commits"]))
+        return finish(report)
+    kind, _directory, found = resolve_layout(root)
+    report["layout"] = {"new": "new", "legacy": "legacy", "half": "half-migrated", "none": "none"}[kind]
+    tracked = tracked_files(root)
+    dirty = dirty_paths(root)
+    if dirty:
+        refusals.append(refusal("dirty-tree", REFUSAL_HELP["dirty-tree"] + ": " + ", ".join(dirty[:8])
+                                + (" ..." if len(dirty) > 8 else ""), dirty))
+    if kind == "half":
+        where = " and ".join(p.relative_to(root).as_posix() for p in reversed(found))
+        refusals.append(refusal("half-migrated", "SESSION_RUNNER.md is at " + where
+                                + ": never guess which is the framework's; remove one", [p.relative_to(root).as_posix() for p in found]))
+    if tier == "2" and kind != "new":
+        refusals.append(refusal("tier-order", REFUSAL_HELP["tier-order"] + " (run tier 1 first, or --tier all)"))
+    moves, left, collisions = plan_moves(root, tier, tracked, kind)
+    if collisions:
+        refusals.append(refusal("destination-exists", REFUSAL_HELP["destination-exists"] + ": " + ", ".join(collisions), collisions))
+    if is_ignore_mode(root):
+        refusals.append(refusal("ignore-mode", REFUSAL_HELP["ignore-mode"] + " (.gitignore lists a methodology file): this tool moves files that git tracks"))
+    present = bool(moves) or any((root / d).is_file() for _s, d, _x in DISTRIBUTION) \
+        or any((root / NEW_LAYOUT[s]).is_file() for s, _d, _x in DISTRIBUTION)
+    if present:
+        rows, why = read_status(root)
+        if rows is None:
+            refusals.append(refusal("status-unavailable", REFUSAL_HELP["status-unavailable"] + ": " + why))
+        else:
+            bad = [f"{f} ({s})" for f, d, s in rows if d == TRACKED and s != "current" and s != "half-migrated"]
+            if bad:
+                refusals.append(refusal("not-current", "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): "
+                                        + ", ".join(bad), [b.split(" (")[0] for b in bad]))
+    report["moves"], report["left_in_place"] = moves, left
+    if not refusals and not present:
+        report["status"] = "nothing-to-do"
+        return report
+    if not refusals and not moves:
+        report["status"] = "nothing-to-do"
+    return finish(report)
+
+
+def finish(report):
+    if report["refusals"]:
+        report["status"] = "refused"
+        report["moves"] = report["moves"] if report["moves"] else []
+    return report
+
+
+def render_text(report):
+    out = ["migrate-layout: %s" % report["project"],
+           "canonical: %s @ %s" % (report["canonical"]["path"], (report["canonical"]["sha"] or "unknown")[:12]),
+           "layout: %s   tier: %s   mode: %s" % (report["layout"], report["tier"],
+                                                 "dry run (nothing written; add --apply to migrate)" if report["mode"] == "dry-run" else "apply")]
+    if report["refusals"]:
+        out.append("")
+        out.append("REFUSED:")
+        for r in report["refusals"]:
+            out.append("  - [%s] %s" % (r["code"], r["message"]))
+    if report["status"] == "nothing-to-do":
+        out.append("")
+        out.append("nothing to migrate: no methodology file is left to move")
+    if report["moves"]:
+        out.append("")
+        out.append("moves (%d):" % len(report["moves"]))
+        for m in report["moves"]:
+            out.append("  git mv %s %s%s" % (m["src"], m["dest"], "" if m["tracked"] else "   (not tracked: a plain move)"))
+    if report["left_in_place"]:
+        out.append("")
+        out.append("left in place (%d):" % len(report["left_in_place"]))
+        for x in report["left_in_place"]:
+            out.append("  %s -- %s" % (x["path"], x["reason"]))
+    return "\n".join(out) + "\n"
+
+
 def main():
-    p = argparse.ArgumentParser(description="Move a project's methodology files under methodology/.")
-    p.add_argument("project")
-    p.add_argument("--apply", action="store_true")
-    p.add_argument("--tier", choices=("1", "2", "all"), default="all")
-    p.add_argument("--trailer", action="append", default=[])
-    p.add_argument("--skip-checks", action="store_true")
-    p.add_argument("--json", action="store_true")
-    p.parse_args()
-    print(json.dumps({"status": "not-implemented"}))
-    return 2
+    p = argparse.ArgumentParser(description="Move a project's methodology files under methodology/ (a dry run unless --apply).")
+    p.add_argument("project", help="the project directory (the top of a git repository)")
+    p.add_argument("--apply", action="store_true", help="write the migration as one commit (the default is a dry run)")
+    p.add_argument("--tier", choices=("1", "2", "all"), default="all", help="1: the framework's files; 2: the project's state; all (default)")
+    p.add_argument("--trailer", action="append", default=[], metavar="TEXT", help="a trailer line for the commit message, e.g. a Co-Authored-By line (repeatable)")
+    p.add_argument("--skip-checks", action="store_true", help="do not run the before-and-after checks of an apply")
+    p.add_argument("--json", action="store_true", help="print the report as JSON")
+    args = p.parse_args()
+    project = Path(args.project)
+    if not project.is_dir():
+        print("error: %s is not a directory" % project, file=sys.stderr)
+        return 2
+    report = build_report(project, args.tier, args.apply)
+    print(json.dumps(report, indent=2) if args.json else render_text(report), end="" if not args.json else "\n")
+    if report["status"] == "refused":
+        return 1
+    if args.apply and report["status"] == "ok":
+        print("error: --apply is not built yet (BL-101 P7 layer 2)", file=sys.stderr)
+        return 2
+    return 0
 
 
 if __name__ == "__main__":
