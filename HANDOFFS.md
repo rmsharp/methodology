@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S275
+date: 2026-10-06
+status: pending
+active_task: BUILD BL-101 P2, the gate layer (a build session: the plan's phase 2, `docs/planning/methodology-subdirectory-plan.md` section 7.2 row P2, is the contract, ratified at the S273 close-out and read at the S275 Phase 0 picker): `.githooks/pre-commit` and `starter-kit/quality_ratchet.py` accept either layout through the embedded resolver block; a later content commit with no ledger entry is refused in the new layout (`methodology-subdirectory-evidence/hook-after-move.sh` X2, kept as a permanent test); a move commit that lowers a threshold is refused; a pure rename passes; a mutant per behaviour killed. No other tool changes; the scanner stays RED and is not a gate until P6. Nothing outward.
+```
+
+```handoff
 session: S274
 date: 2026-10-06
 status: complete

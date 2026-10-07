@@ -237,6 +237,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.7.0.
 
 ## 2026-10
 
+### 2026-10-06 · [BL-101] S275 claim (in progress) — build the gate layer: the hook and the ratchet accept either layout (P2)
+
+CHANGELOG: pending. Operator said `go` as the first message; at the Phase 0 picker he chose BL-101 P2 (the plan's recommendation, S274's next step 1). The deliverable is the plan's section 7.2 row P2, built in this session: the pre-commit hook and `quality_ratchet.py` resolve the layout through the embedded resolver block, a later content commit with no ledger entry is refused in the new layout (X2, a permanent test), a move commit that lowers a threshold is refused, a pure rename passes. No other shipped tool changes and the scanner is not wired into the gate (P6). Already done before this claim, each recorded above: the owed `HANDOFFS.md` trim (`d20af5d`, S272 to `HANDOFFS-through-2026-10-06-3.md`, proof exit 0 by name from a `--no-local` clone) and its fold (`6f85b46`). Phase 0: 0 undocumented commits at both frontiers, 0 merges; #94, #92 and #93 without a maintainer reply; `quality_ratchet.py --run` 14/14, results `b6257eb2d9a8`, manifest `f6fc74380013` (S274's citation exactly); dashboard health 72 (read through `collect_all`, nothing written); `origin/main` = `main` (`0 0`) before the trim. Phase 3F records the rest. Model: Claude Sonnet 5.5.
+
 ### 2026-10-06 · [ad hoc] S275 — fold the third 2026-10-06 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`d20af5d`, 1 receipt, S272, 2026-10-06, to `HANDOFFS-through-2026-10-06-3.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.7.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S274, S273), both the fork's. The shard's `.verify.sh` was run by name from a `--no-local` clone of `d20af5d`: exit 0, `records: 3 before = 2 retained + 1 archived`, L1, L2/front-matter and L3 hold. This is the trim S274's receipt named as owed after the S275 Phase 0 report, taken before the session's claim. Model: Claude Sonnet 5.5.
