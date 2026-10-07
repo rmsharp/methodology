@@ -62,7 +62,7 @@ TRIM_VERSION = "1.8.0"   # 1.8.0: BL-101 P3 (the methodology/ directory plan, se
                          # level, and a link target that already starts with ../ is ordinary there (the
                          # ledger is one level down and a project file is exactly such a link), so the
                          # rebase stays invertible. The action ledger is found by the embedded layout
-                         # resolver, with the framework-anchor tiebreak, and a half-migrated tree is refused
+                         # resolver, whose framework-anchor tie rule needs no request, and a half-migrated tree is refused
                          # by name (LAYOUT_HALF_MIGRATED). The trigger reads the shards of BOTH archive
                          # directories, since D5 moves the archive last, and a shard name is never reused
                          # across them. `--reverify` needs no new lift: the layout comes from the lifted
@@ -296,18 +296,17 @@ import os as _os
 from pathlib import Path as _Path
 
 
-def resolve_layout(root, anchor="SESSION_RUNNER.md", tiebreak=False):
+def resolve_layout(root, anchor="SESSION_RUNNER.md"):
     """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
     found the anchor paths that exist. A half-migrated tree has no directory, by design.
-    tiebreak=True is for a file a project may own a same-named copy of at its root (a ledger: the
-    product CHANGELOG.md). Found in both places, the framework anchor decides: the runner under
-    methodology/ and not at the root makes the methodology/ copy the framework's, kind new, and
-    found still names both. Any other tie stays half."""
+    A file found in both places is the framework's under methodology/ when the runner is under
+    methodology/ and not at the root: the root copy is the project's own and is left alone, kind new,
+    and found still names both. Any other tie stays half, and the runner cannot decide a tie about itself."""
     root = _Path(root)
     new, old = root / "methodology" / anchor, root / anchor
     found = tuple(p for p in (new, old) if _os.path.isfile(p))
     if len(found) == 2:
-        if tiebreak and resolve_layout(root)[0] == "new":
+        if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md") and not _os.path.isfile(root / "SESSION_RUNNER.md"):
             return "new", new.parent, found
         return "half", None, found
     if not found:
@@ -2635,10 +2634,10 @@ def evaluate(path, opts, result):
 
 def _ledger_resolution(repo):
     """(repository-relative path of the action ledger, the copies found). The path is None for a tree the
-    resolver calls half-migrated. The framework-anchor tiebreak is asked for (decided 2026-10-06, plan
-    7.2a): a project's own product changelog may sit at the root beside the ledger. A tree with no
+    resolver calls half-migrated. The framework anchor decides a tie without being asked (decided
+    2026-10-06 and 2026-10-07, plan 7.2a and 7.2b): a project's own product changelog may sit at the root beside the ledger. A tree with no
     ledger yet gets the legacy default, as it always did."""
-    kind, _directory, found = resolve_layout(repo, LEDGER_NAME, tiebreak=True)
+    kind, _directory, found = resolve_layout(repo, LEDGER_NAME)
     if kind == "half":
         return None, found
     if kind == "new":

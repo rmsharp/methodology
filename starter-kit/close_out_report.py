@@ -33,26 +33,26 @@ LEDGER_NAME = "HANDOFFS.md"   # layout: ok -- the receipt ledger's own file name
 
 # === LAYOUT ===
 # A project keeps its ledgers at its root (legacy) or under methodology/ (new): the plan's section 4.3. This
-# block is the resolver, embedded byte for byte; the canonical suite asserts that. The tiebreak is asked for
-# (decided 2026-10-06, plan 7.2a): a project's own HANDOFFS.md at the root never stands in for the ledger.
+# block is the resolver, embedded byte for byte; the canonical suite asserts that. The framework anchor decides a
+# tie without being asked (decided 2026-10-07, plan 7.2b): a project's own HANDOFFS.md at the root never stands in
+# for the ledger.
 
 # --- layout resolver: BEGIN ---
 import os as _os
 from pathlib import Path as _Path
 
 
-def resolve_layout(root, anchor="SESSION_RUNNER.md", tiebreak=False):
+def resolve_layout(root, anchor="SESSION_RUNNER.md"):
     """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
     found the anchor paths that exist. A half-migrated tree has no directory, by design.
-    tiebreak=True is for a file a project may own a same-named copy of at its root (a ledger: the
-    product CHANGELOG.md). Found in both places, the framework anchor decides: the runner under
-    methodology/ and not at the root makes the methodology/ copy the framework's, kind new, and
-    found still names both. Any other tie stays half."""
+    A file found in both places is the framework's under methodology/ when the runner is under
+    methodology/ and not at the root: the root copy is the project's own and is left alone, kind new,
+    and found still names both. Any other tie stays half, and the runner cannot decide a tie about itself."""
     root = _Path(root)
     new, old = root / "methodology" / anchor, root / anchor
     found = tuple(p for p in (new, old) if _os.path.isfile(p))
     if len(found) == 2:
-        if tiebreak and resolve_layout(root)[0] == "new":
+        if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md") and not _os.path.isfile(root / "SESSION_RUNNER.md"):
             return "new", new.parent, found
         return "half", None, found
     if not found:
@@ -103,7 +103,7 @@ def facts(new, prev, head, dirty):
 def resolve_ledger(top):
     """(the receipt ledger's path under the repository `top`, the copies found). The path is None for a
     half-migrated tree. A tree with no ledger yet gets the legacy default, so the caller's open() names it."""
-    kind, directory, found = resolve_layout(top, LEDGER_NAME, tiebreak=True)
+    kind, directory, found = resolve_layout(top, LEDGER_NAME)
     if kind == "half":
         return None, found
     return os.path.join(str(directory if directory is not None else top), LEDGER_NAME), found

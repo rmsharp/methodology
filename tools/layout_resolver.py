@@ -11,11 +11,13 @@ down in methodology/ (new). The answer is read from one anchor file, by the four
     exists                   exists       half      None  -- stop, name both, never guess
     absent                   absent       none      None  -- the framework repo, or not an adopter
 
-A fifth row, opt-in (tiebreak=True, decided 2026-10-06, plan 7.2a): a file found in BOTH places is
-the framework's under methodology/ when the runner is under methodology/ and not at the root. It
-exists because a project's own product CHANGELOG.md may sit at the root beside the ledger. A tool
-that reads a ledger asks for it; a tool that reads a manifest does not (a second manifest is a
-stale copy, not the project's own), so for it a tie is still half.
+A fifth row, no request needed (decided 2026-10-06 for the ledger, 2026-10-07 for every file, plan
+7.2a and 7.2b): a file found in BOTH places is the framework's under methodology/ when the runner is under
+methodology/ and not at the root. The root copy is the project's own (a product CHANGELOG.md, a manifest of
+its own) and the methodology tools leave it alone. The resolver takes no argument for the rule, so a tool
+cannot forget to ask: the S276 build made it a request, and that is what he overruled. A tie the runner does
+not decide (no runner under methodology/, a runner at the root, or at both) is still half, and the runner
+cannot decide a tie about itself.
 
 The anchor is the caller's choice, because a project can be part-way: the plan's tier 1 moves the
 framework files (SESSION_RUNNER.md and the rest) and leaves the state files (CHANGELOG.md,
@@ -35,18 +37,17 @@ import os as _os
 from pathlib import Path as _Path
 
 
-def resolve_layout(root, anchor="SESSION_RUNNER.md", tiebreak=False):
+def resolve_layout(root, anchor="SESSION_RUNNER.md"):
     """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
     found the anchor paths that exist. A half-migrated tree has no directory, by design.
-    tiebreak=True is for a file a project may own a same-named copy of at its root (a ledger: the
-    product CHANGELOG.md). Found in both places, the framework anchor decides: the runner under
-    methodology/ and not at the root makes the methodology/ copy the framework's, kind new, and
-    found still names both. Any other tie stays half."""
+    A file found in both places is the framework's under methodology/ when the runner is under
+    methodology/ and not at the root: the root copy is the project's own and is left alone, kind new,
+    and found still names both. Any other tie stays half, and the runner cannot decide a tie about itself."""
     root = _Path(root)
     new, old = root / "methodology" / anchor, root / anchor
     found = tuple(p for p in (new, old) if _os.path.isfile(p))
     if len(found) == 2:
-        if tiebreak and resolve_layout(root)[0] == "new":
+        if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md") and not _os.path.isfile(root / "SESSION_RUNNER.md"):
             return "new", new.parent, found
         return "half", None, found
     if not found:

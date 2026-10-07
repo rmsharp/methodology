@@ -47,7 +47,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 CONFIG_NAME = ".quality-gates.json"  # layout: ok -- the manifest's own name; where it lives is resolved below
 DEFAULT_RESULTS = ".quality-gates-results.json"  # layout: ok -- the results file's own name; it sits beside the manifest
 TOOL = "quality_ratchet.py"  # layout: ok -- this tool's own file name, printed in messages and used as the selftest's copy name
@@ -69,18 +69,17 @@ import os as _os
 from pathlib import Path as _Path
 
 
-def resolve_layout(root, anchor="SESSION_RUNNER.md", tiebreak=False):
+def resolve_layout(root, anchor="SESSION_RUNNER.md"):
     """Return (kind, directory, found): kind is new|legacy|half|none, directory a Path or None,
     found the anchor paths that exist. A half-migrated tree has no directory, by design.
-    tiebreak=True is for a file a project may own a same-named copy of at its root (a ledger: the
-    product CHANGELOG.md). Found in both places, the framework anchor decides: the runner under
-    methodology/ and not at the root makes the methodology/ copy the framework's, kind new, and
-    found still names both. Any other tie stays half."""
+    A file found in both places is the framework's under methodology/ when the runner is under
+    methodology/ and not at the root: the root copy is the project's own and is left alone, kind new,
+    and found still names both. Any other tie stays half, and the runner cannot decide a tie about itself."""
     root = _Path(root)
     new, old = root / "methodology" / anchor, root / anchor
     found = tuple(p for p in (new, old) if _os.path.isfile(p))
     if len(found) == 2:
-        if tiebreak and resolve_layout(root)[0] == "new":
+        if _os.path.isfile(root / "methodology" / "SESSION_RUNNER.md") and not _os.path.isfile(root / "SESSION_RUNNER.md"):
             return "new", new.parent, found
         return "half", None, found
     if not found:
@@ -89,6 +88,7 @@ def resolve_layout(root, anchor="SESSION_RUNNER.md", tiebreak=False):
 # --- layout resolver: END ---
 
 NEW_DIR = "methodology"
+RUNNER_NAME = "SESSION_RUNNER.md"  # layout: ok -- the framework anchor: where it is tracked decides a manifest held in both places
 
 
 # === PLUMBING ===
@@ -203,15 +203,27 @@ def blob_text(root, rev_path):
 HISTORY_MAX = 50   # manifest commits walked back from HEAD for the comparison base
 
 
+def framework_under_methodology(root, ref):
+    """True when ``ref`` (a revision, or "" for the index) tracks the runner under methodology/ and not
+    at the root: the framework anchor, read from git as the hook reads it from the index. A manifest held
+    at both paths is then the framework's under methodology/ (plan 7.2b); the root copy is the project's own."""
+    return (blob_text(root, f"{ref}:{NEW_DIR}/{RUNNER_NAME}") is not None
+            and blob_text(root, f"{ref}:{RUNNER_NAME}") is None)
+
+
 def manifest_blobs(root, ref):
     """[(path, text)] of the manifest at every location it exists in ``ref`` -- a revision, or ""
-    for the index. One entry is the normal answer; two is a half-migrated tree (the caller refuses);
-    none is no manifest there. Read from git, never the worktree: a hook judges what is staged."""
+    for the index. One entry is the normal answer; two is a half-migrated tree (the caller refuses)
+    unless the runner is tracked under methodology/ and not at the root, when the methodology copy is
+    the manifest and the root copy is left alone; none is no manifest there. Read from git, never the
+    worktree: a hook judges what is staged."""
     out = []
     for rel in (CONFIG_NAME, f"{NEW_DIR}/{CONFIG_NAME}"):
         text = blob_text(root, f"{ref}:{rel}")
         if text is not None:
             out.append((rel, text))
+    if len(out) == 2 and framework_under_methodology(root, ref):
+        return out[1:]
     return out
 
 
