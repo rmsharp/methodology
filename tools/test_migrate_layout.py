@@ -929,5 +929,93 @@ class TestTheHitsItWillNotRewrite(Adopter):
         self.assertRegex(r.out, r"(?m)^\s+ledger:\s+\d+ mention")
 
 
+class TestTheChecks(Adopter):
+    """Plan 4.7.4: an apply verifies itself, before and after, with the read-only checks: bin/status, the two ledger
+    checkers, check-links, every shard's proof (the exit histogram must not change) and the ledger's history across the
+    move. A difference does not undo a commit that is made; it is reported, with the way back, and the exit is 4."""
+
+    NAMES = ["handoff", "history", "ledger", "links", "proofs", "status"]
+
+    def with_real_shard(self):
+        """Trim the fixture's ledger with the project's own trimmer, so one shard has a real proof beside it."""
+        r = subprocess.run([sys.executable, "-B", "methodology_trim.py", "--file", "CHANGELOG.md", "--cut", "25",
+                            "--force", "--write"], cwd=self.project, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.commit("trim the ledger")
+
+    def test_an_apply_runs_every_check_before_and_after_with_no_cell_left_blank(self):
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        checks = r.report["checks"]
+        self.assertTrue(checks["ran"])
+        for side in ("before", "after"):
+            self.assertEqual(sorted(checks[side]), self.NAMES)
+            for name in self.NAMES:
+                self.assertTrue(checks[side][name], "%s %s is blank" % (side, name))
+        self.assertEqual(checks["before"]["status"], {"exit": 0, "tracked": 11, "current": 11})
+        self.assertEqual(checks["after"]["status"], {"exit": 0, "tracked": 11, "current": 11})
+        self.assertTrue(checks["clean"])
+        self.assertTrue(checks["ok"])
+        self.assertEqual(checks["differences"], [])
+
+    def test_the_proofs_of_the_moved_shards_give_the_same_histogram_and_the_real_one_still_holds(self):
+        self.with_real_shard()
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 0, r.out)
+        checks = r.report["checks"]
+        self.assertEqual(checks["before"]["proofs"], {"count": 3, "histogram": {"0": 3}})
+        self.assertEqual(checks["after"]["proofs"], {"count": 3, "histogram": {"0": 3}})
+        proof = self.project / "methodology" / "archive" / "CHANGELOG-through-2026-09-28.md.verify.sh"
+        again = subprocess.run(["bash", str(proof)], cwd=self.project, capture_output=True, text=True)
+        self.assertEqual(again.returncode, 0, again.stdout + again.stderr)
+
+    def test_a_proof_that_stops_holding_is_reported_exits_4_and_names_the_way_back(self):
+        proof = self.project / "docs" / "archive" / "CHANGELOG-through-2026-08-01.md.verify.sh"
+        proof.write_text("#!/bin/sh\ntest -f docs/archive/CHANGELOG-through-2026-08-01.md\n", encoding="utf-8")
+        self.commit("a proof that reads its shard by the old path")
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 4, r.out)
+        self.assertEqual(r.report["status"], "applied")
+        self.assertEqual(git(self.project, "status", "--porcelain"), "", "the commit was made and must stand")
+        checks = r.report["checks"]
+        self.assertFalse(checks["ok"])
+        self.assertEqual(checks["differences"], ["proofs"])
+        self.assertEqual(checks["before"]["proofs"]["histogram"], {"0": 2})
+        self.assertEqual(checks["after"]["proofs"]["histogram"], {"0": 1, "1": 1})
+        self.assertIn("git revert " + r.report["commit"]["sha"][:12], r.report["checks"]["way_back"])
+
+    def test_the_ledgers_history_is_reached_across_the_move(self):
+        r = run_migrate(self.project, "--apply")
+        h = r.report["checks"]
+        self.assertGreaterEqual(h["after"]["history"]["commits"], h["before"]["history"]["commits"] + 1)
+        followed = git(self.project, "log", "--follow", "--format=%h", "--", "methodology/CHANGELOG.md").split()
+        self.assertEqual(len(followed), h["after"]["history"]["commits"])
+        self.assertIn(git(self.project, "rev-parse", "--short=7", "HEAD~1").strip(), [c[:7] for c in followed])
+
+    def test_check_links_is_reported_and_a_difference_there_is_not_a_failure(self):
+        """The distributed documents are authored for the old layout until P9 rewrites them, so a tree in the new
+        layout is expected to read differently; the cell is filled and the difference is called informational."""
+        r = run_migrate(self.project, "--apply")
+        self.assertIn("links", r.report["checks"]["informational"])
+        self.assertNotIn("links", r.report["checks"]["differences"])
+        self.assertIn("exit", r.report["checks"]["after"]["links"])
+
+    def test_skip_checks_runs_none_and_says_so(self):
+        r = run_migrate(self.project, "--apply", "--skip-checks")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(r.report["checks"], {"ran": False})
+
+    def test_a_dry_run_runs_no_check(self):
+        r = run_migrate(self.project)
+        self.assertIsNone(r.report["checks"])
+
+    def test_the_text_a_person_reads_lists_each_check_before_and_after(self):
+        r = run_migrate(self.project, "--apply", json_out=False)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertRegex(r.out, r"(?m)^checks:")
+        for name in self.NAMES:
+            self.assertRegex(r.out, r"(?m)^\s+%s:" % name)
+
+
 if __name__ == "__main__":
     unittest.main()
