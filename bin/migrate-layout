@@ -268,14 +268,19 @@ def logical_map(moves, tier):
     return mapping
 
 
+def token_pattern(names):
+    """The regular expression for a methodology file's path where it stands alone: not behind a directory, a dot, a
+    hyphen, a tilde or a word character (so `starter-kit/X`, a URL, `MY_X` and `NOTES-X` are not the project's file),
+    and not before a word character or a dot and a word character (`X.mdx`, `X.bak`)."""
+    names = sorted(names, key=len, reverse=True)
+    return re.compile(r"(?<![\w./~-])(?:%s)(?!\w|\.\w)" % "|".join(re.escape(n) for n in names))
+
+
 def token_rewriter(mapping):
-    """A function (text) -> (text, replacements) that rewrites a methodology file's path where it stands alone: not
-    behind a directory, a dot, a hyphen, a tilde or a word character (so `starter-kit/X`, a URL, `MY_X` and `NOTES-X`
-    are not the project's file), and not before a word character or a dot and a word character (`X.mdx`, `X.bak`)."""
+    """A function (text) -> (text, replacements) that rewrites each standing-alone path of `mapping` to its value."""
     if not mapping:
         return lambda text: (text, 0)
-    names = sorted(mapping, key=len, reverse=True)
-    pattern = re.compile(r"(?<![\w./~-])(?:%s)(?!\w|\.\w)" % "|".join(re.escape(n) for n in names))
+    pattern = token_pattern(mapping)
 
     def rewrite(text):
         return pattern.subn(lambda m: mapping[m.group(0)], text)
@@ -411,6 +416,66 @@ def plan_rewrites(root, moves, tier, report):
     return rewrites, ledger
 
 
+LEDGER_FILES = ("CHANGELOG.md", "HANDOFFS.md", "SESSION_NOTES.md")  # layout: ok -- the ledgers whose links are counted
+CI_PREFIXES = (".github/", ".circleci/")
+CI_FILES = (".gitlab-ci.yml", ".travis.yml", "Jenkinsfile", "azure-pipelines.yml")
+SITES_SHOWN = 25
+CATEGORIES = ("ci", "harness", "hooks", "ledger", "other")
+
+
+def hit_category(path):
+    name = path.rsplit("/", 1)[-1]
+    if path.startswith(CI_PREFIXES) or path in CI_FILES:
+        return "ci"
+    if path.startswith(".claude/"):
+        return "harness"
+    if path.startswith(".githooks/"):
+        return "hooks"
+    if path in LEDGER_FILES or path in tuple(NEW_DIR + "/" + n for n in LEDGER_FILES):
+        return "ledger"
+    if path.startswith((ARCHIVE_OLD + "/", ARCHIVE_NEW + "/")) and SHARD_RE.match(name):
+        return "ledger"
+    return "other"
+
+
+def scan_hits(root, moves, rewrites, tier):
+    """Every tracked file that still names a moved path and that the tool will not edit, by category: a person decides
+    these (a CI filter, a harness rule, a hook copy, a link in the project's own docs). A ledger's links are counted and
+    never listed, since a committed entry is never rewritten. The files the tool moves unedited (the framework's own
+    documents) and the files it rewrites are not hits."""
+    root = Path(root)
+    mapping = logical_map(moves, tier)
+    out = {c: {"mentions": 0, "files": 0, "sites": []} for c in CATEGORIES}
+    if not mapping:
+        return out
+    pattern = token_pattern(mapping)
+    skip = {m["src"] for m in moves if hit_category(m["src"]) != "ledger"} | {r.path for r in rewrites}
+    probe = ["-e" + n for n in sorted({k.rsplit("/", 1)[-1] for k in mapping})]
+    r = run(root, "grep", "-I", "-l", "-z", "-F", *probe)
+    shown = {c: 0 for c in CATEGORIES}
+    for path in sorted(p for p in r.stdout.split("\0") if p):
+        if path in skip:
+            continue
+        cat = hit_category(path)
+        try:
+            lines = (root / path).read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        mentions = 0
+        for number, line in enumerate(lines, 1):
+            names = [m.group(0) for m in pattern.finditer(line)]
+            if not names:
+                continue
+            mentions += len(names)
+            if cat != "ledger" and shown[cat] < SITES_SHOWN:
+                out[cat]["sites"].append({"file": path, "line": number, "text": line.strip()[:200], "names": sorted(set(names))})
+                shown[cat] += 1
+        if mentions:
+            out[cat]["mentions"] += mentions
+            out[cat]["files"] += 1
+    return out
+
+
 def build_report(project, tier, apply_mode):
     root = Path(project)
     report = {"project": str(root), "canonical": canonical_info(), "layout": None, "tier": tier,
@@ -463,6 +528,8 @@ def build_report(project, tier, apply_mode):
             refusals.append(refusal("rewrite-unsafe", "a file that names a moved path cannot be rewritten faithfully: %s" % e))
     report["rewrites"] = [r.as_report() for r in rewrites]
     report["_rewrites"] = rewrites + ([ledger] if ledger else [])
+    if moves and not refusals:
+        report["not_rewritten"] = scan_hits(root, moves, rewrites, tier)
     if not refusals and not present:
         report["status"] = "nothing-to-do"
         return report
@@ -616,6 +683,15 @@ def render_text(report):
         for rw in report["rewrites"]:
             out.append("  %s (%d replacement(s))" % (rw["path"], rw["replacements"]))
             out.extend("    " + line for line in rw["diff"].splitlines())
+    if report["not_rewritten"]:
+        out.append("")
+        out.append("not rewritten (reported for a person to decide):")
+        for cat in CATEGORIES:
+            c = report["not_rewritten"][cat]
+            note = "  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)" if cat == "ledger" else ""
+            out.append("  %-9s%d mention(s) in %d file(s)%s" % (cat + ":", c["mentions"], c["files"], note))
+            for s in c["sites"]:
+                out.append("    %s:%d  %s" % (s["file"], s["line"], s["text"][:120]))
     if report["status"] == "applied":
         out.append("")
         out.append("APPLIED: one commit, %s" % report["commit"]["sha"][:12])
