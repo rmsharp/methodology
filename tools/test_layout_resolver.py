@@ -209,7 +209,8 @@ class TestEveryEmbeddedCopyIsByteIdentical(unittest.TestCase):
     COPIES = ("starter-kit/close_out_report.py", "starter-kit/context_budget.py", "starter-kit/methodology_trim.py",
               "starter-kit/quality_ratchet.py",
               "bin/check-handoff", "bin/check-ledger", "bin/check-overhead", "bin/model-report",   # P4: the checkers
-              "starter-kit/methodology_dashboard.py")   # P5: the dashboard (its tools/ twin is asserted below)
+              "starter-kit/methodology_dashboard.py",   # P5: the dashboard (its tools/ twin is asserted below)
+              "bin/sync")   # P6: the sync layer (bin/status and bin/check-links join as they are built)
 
     def test_each_copy_equals_the_modules_block_and_carries_exactly_one(self):
         block = lr.embedded_block((HERE / "layout_resolver.py").read_text(encoding="utf-8"))
