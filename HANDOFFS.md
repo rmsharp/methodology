@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S279
+date: 2026-10-07
+status: pending
+active_task: BUILD BL-101 P6 (a build session: the plan's phase 6, `docs/planning/methodology-subdirectory-plan.md` section 7.2 row P6, is the contract, ratified at the S273 close-out and chosen at the S279 Phase 0 picker). `bin/_manifest.py` gains the new-layout destinations as a SECOND LITERAL TABLE (data, read by `bin/_manifest_reader.py`, so `--source=github` and Test 53 keep working: C16); `bin/sync --layout auto` (a legacy tree stays legacy, a migrated one stays migrated, an empty directory gets the default; a legacy tree asked for the new layout is refused; a half-migrated one is refused naming both paths; no blank seed beside a real ledger and no second runner: C1; ignore-mode entries and the `git rm --cached` hint follow the layout: C2); `bin/status` names each project's layout and finds seeds and their format markers at the resolved place (C3); `bin/check-links` simulates both layouts (C3); `bin/check-layout-literals` is wired into the gate at ZERO; the section 5A.3 scratch-portfolio proofs. No other shipped tool changes. No PR, no comment upstream, no adopter touched. Already done before this claim: the owed HANDOFFS trim (`20eb444`, S276 to `HANDOFFS-through-2026-10-06-7.md`, proof exit 0 from a `--no-local` clone) and its fold (`149da89`).
+```
+
+```handoff
 session: S278
 date: 2026-10-07
 status: complete
