@@ -666,6 +666,16 @@ class TestStatusNamesAndReadsTheLayout(Scratch):
         self.assertEqual(self.states(r, half), {"-": ("-", "half-migrated")})
         self.assertEqual(set(self.states(r, fine)), NEW)
 
+    def test_a_layout_line_is_not_a_table_row_so_a_row_count_by_project_name_still_reads_one_per_file(self):
+        # bin/tests.sh Test 15 counts the rows that start with the project's name; the layout line names the project
+        # too, and counting every line that mentions it read 31 for 30 files (found by the shell suite, not by this one)
+        d = self.project("legacy")
+        r = run_status(d)
+        starts = [line for line in r.stdout.splitlines() if line.startswith(d.name + " ")]
+        self.assertEqual(len(starts), len(manifest.DISTRIBUTION))
+        self.assertEqual([line for line in r.stdout.splitlines() if d.name in line and not line.startswith(d.name + " ")],
+                         ["layout: %s  legacy" % d.name])
+
     def test_a_mixed_portfolio_names_every_projects_layout_in_the_order_given(self):
         legacy, new, empty = self.project("legacy"), self.project("new"), self.project()
         r = run_status(legacy, new, empty)
