@@ -13,6 +13,8 @@ command in a scratch project. Every rule is observed failing as well as passing 
 """
 import importlib.util
 import os
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -35,9 +37,60 @@ def _load(name, path):
 manifest = _load("_manifest", MANIFEST)
 reader = _load("_manifest_reader", REPO / "bin" / "_manifest_reader.py")
 lf = _load("layout_fixtures", HERE / "layout_fixtures.py")
+lr = _load("layout_resolver", HERE / "layout_resolver.py")
 tlr = _load("test_layout_resolver", HERE / "test_layout_resolver.py")  # section 4.1, typed out as literals
 
 DISPOSITIONS = (manifest.TRACKED, manifest.SEED)
+SYNC = REPO / "bin" / "sync"
+LEGACY = {dest for _s, dest, _d in manifest.DISTRIBUTION}
+NEW = set(manifest.NEW_LAYOUT.values())
+SEED_SRCS = [src for src, _dest, disp in manifest.DISTRIBUTION if disp == manifest.SEED]
+TRACKED_SRCS = [src for src, _dest, disp in manifest.DISTRIBUTION if disp == manifest.TRACKED]
+
+
+def git(path, *args):
+    subprocess.run(["git", "-C", str(path), "-c", "user.email=t@t", "-c", "user.name=t", "-c", "commit.gpgsign=false", *args],
+                   check=True, capture_output=True)
+
+
+def files_of(project):
+    """Every file in a project tree as a set of POSIX paths, .git left out."""
+    root = Path(project)
+    return {p.relative_to(root).as_posix() for p in root.rglob("*")
+            if p.is_file() and ".git" not in p.relative_to(root).parts}
+
+
+def run_sync(project, *args, source=None):
+    """bin/sync as a command; returns the CompletedProcess with stdout and stderr joined in .out."""
+    env = dict(os.environ)
+    env.pop("METHODOLOGY_SOURCE_URL", None)
+    if source is not None:
+        env["METHODOLOGY_SOURCE_URL"] = "file://" + str(source)
+    r = subprocess.run([sys.executable, "-B", str(SYNC), str(project), *args], capture_output=True, text=True, env=env)
+    r.out = r.stdout + r.stderr
+    return r
+
+
+_BASES = {}
+
+
+def base_tree(kind):
+    """A project synced once by the real bin/sync, built the first time it is asked for and copied afterwards
+    (a run is about a second): "legacy" is what sync writes today, "new" is --layout new on an empty project."""
+    if kind not in _BASES:
+        keep = tempfile.mkdtemp(prefix="sync-base-")
+        project = Path(keep) / kind
+        project.mkdir()
+        git(project, "init", "-q")
+        r = run_sync(project, *(("--layout", "new") if kind == "new" else ()))
+        assert r.returncode == 0, "the %s base tree could not be built:\n%s" % (kind, r.out)
+        _BASES[kind] = project
+    return _BASES[kind]
+
+
+def tearDownModule():
+    for project in _BASES.values():
+        shutil.rmtree(project.parent, ignore_errors=True)
 
 
 def section_4_1_destinations():
@@ -68,6 +121,16 @@ class Scratch(unittest.TestCase):
     def read(self, path):
         rows, _markers = reader.read_manifest(path, DISPOSITIONS)
         return reader.read_new_layout(path, rows)
+
+    def project(self, kind=None):
+        """A fresh project directory: empty (a git repository), or a copy of the legacy or new base tree."""
+        d = self.root / ("project%d" % len(list(self.root.iterdir())))
+        if kind is None:
+            d.mkdir()
+            git(d, "init", "-q")
+        else:
+            shutil.copytree(base_tree(kind), d)
+        return d
 
 
 class TestTheManifestsSecondTable(unittest.TestCase):
@@ -184,6 +247,325 @@ class TestTheReaderReadsTheTableAsData(Scratch):
                 with self.assertRaises(reader.ManifestError) as cm:
                     self.read(path)
                 self.assertIn("NEW_LAYOUT", str(cm.exception))
+
+
+class TestSyncChoosesTheLayout(Scratch):
+    """`--layout auto` (the default): a legacy tree stays legacy, a migrated one stays migrated, an empty
+    directory gets the default, which stays legacy until the contract release (plan 5A.2 rule 2, D7)."""
+
+    def test_an_empty_project_gets_the_legacy_layout_by_default(self):
+        d = self.project()
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(files_of(d), LEGACY)
+        self.assertIn("  layout:  legacy", r.out)
+
+    def test_layout_new_on_an_empty_project_writes_the_tables_destinations_and_no_root_copy(self):
+        d = self.project()
+        r = run_sync(d, "--layout", "new")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(files_of(d), NEW)
+        self.assertEqual(lr.resolve_layout(d)[0], "new")
+        self.assertIn("  layout:  new", r.out)
+        for dest in LEGACY - NEW:
+            self.assertFalse((d / dest).exists(), dest)
+
+    def test_the_new_tree_sync_writes_is_the_fixture_tree_of_the_plans_section_4_1(self):
+        with tempfile.TemporaryDirectory() as td:
+            fixture = set(lf.build_tree(td, "new", generated=False))
+        self.assertEqual(files_of(base_tree("new")), fixture)
+
+    def test_a_migrated_project_stays_migrated_under_auto_and_a_second_run_changes_nothing(self):
+        d = self.project("new")
+        before = {p: (d / p).read_bytes() for p in files_of(d)}
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertIn("  layout:  new", r.out)
+        self.assertEqual(files_of(d), NEW)
+        self.assertEqual({p: (d / p).read_bytes() for p in files_of(d)}, before)
+        self.assertNotRegex(r.out, r"(created|updated|would write)")
+
+    def test_a_legacy_project_stays_legacy_under_auto_and_grows_no_methodology_directory(self):
+        d = self.project("legacy")
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertIn("  layout:  legacy", r.out)
+        self.assertFalse((d / "methodology").exists())
+        self.assertEqual(files_of(d), LEGACY)
+
+    def test_the_layout_line_says_how_the_layout_was_chosen(self):
+        self.assertIn("found", run_sync(self.project("new"), "--dry-run").out.split("layout:")[1].splitlines()[0])
+        self.assertIn("requested", run_sync(self.project(), "--layout", "new", "--dry-run").out.split("layout:")[1].splitlines()[0])
+        self.assertIn("default", run_sync(self.project(), "--dry-run").out.split("layout:")[1].splitlines()[0])
+
+    def test_a_dry_run_writes_nothing_in_either_layout(self):
+        for kind in (None, "legacy", "new"):
+            for extra in ((), ("--layout", "new")) if kind is None else ((),):
+                with self.subTest(kind=kind, extra=extra):
+                    d = self.project(kind)
+                    before = files_of(d)
+                    r = run_sync(d, "--dry-run", *extra)
+                    self.assertEqual(r.returncode, 0, r.out)
+                    self.assertEqual(files_of(d), before)
+
+    def test_an_unknown_layout_is_a_usage_error_that_lists_the_choices(self):
+        d = self.project()
+        r = run_sync(d, "--layout", "sideways")
+        self.assertEqual(r.returncode, 2, r.out)
+        for choice in ("auto", "legacy", "new"):
+            self.assertIn(choice, r.out)
+        self.assertIn("invalid choice", r.out)   # not argparse's "unrecognized arguments": the option must exist
+        self.assertEqual(files_of(d), set())
+
+
+class TestSyncRefusesWhatWouldDamageAProject(Scratch):
+    """C1: a tool that writes the new layout into a legacy tree leaves a second, current runner beside the stale one
+    an agent still reads, and a blank ledger beside the real one. The guard runs before any write."""
+
+    def refused(self, d, *args, names=()):
+        before = {p: (d / p).read_bytes() for p in files_of(d)}
+        r = run_sync(d, *args)
+        self.assertEqual(r.returncode, 2, r.out)
+        self.assertEqual({p: (d / p).read_bytes() for p in files_of(d)}, before, "a refused run wrote something")
+        for n in names:
+            self.assertIn(n, r.out)
+        return r
+
+    def test_a_legacy_project_asked_for_the_new_layout_is_refused_and_the_migration_tool_is_named(self):
+        d = self.project("legacy")
+        r = self.refused(d, "--layout", "new", names=("migrate-layout",))
+        self.assertFalse((d / "methodology").exists())
+        self.assertIn("not built", r.out)  # the tool is P7's: a refusal must not send anyone to a command that does not exist yet
+        self.refused(d, "--layout", "new", "--dry-run")
+
+    def test_a_migrated_project_asked_for_the_legacy_layout_is_refused_and_no_root_runner_appears(self):
+        d = self.project("new")
+        self.refused(d, "--layout", "legacy")
+        self.assertFalse((d / "SESSION_RUNNER.md").exists())
+        self.refused(d, "--layout", "legacy", "--dry-run")
+
+    def test_a_half_migrated_project_is_refused_whatever_is_asked_and_both_paths_are_named(self):
+        d = self.project("legacy")
+        (d / "methodology").mkdir()
+        shutil.copyfile(d / "SESSION_RUNNER.md", d / "methodology" / "SESSION_RUNNER.md")
+        for args in ((), ("--layout", "auto"), ("--layout", "legacy"), ("--layout", "new")):
+            with self.subTest(args=args):
+                self.refused(d, *args, names=(str(d / "SESSION_RUNNER.md"), str(d / "methodology" / "SESSION_RUNNER.md")))
+
+    def test_a_refusal_prints_the_same_header_a_run_does_and_no_files_section(self):
+        r = self.refused(self.project("legacy"), "--layout", "new")
+        for line in ("sync: ", "  source:  local", "  mode:    commit"):
+            self.assertIn(line, r.out)
+        self.assertIn("ERROR", r.out)
+        self.assertNotIn("  files:", r.out)
+
+
+class TestSyncDoesNotShadowAProjectsOwnFiles(Scratch):
+    """C1, the seed half: a seed is the project's after its first creation, and a ledger that sits at the root
+    (tier 1, or the project's own product changelog) is not a reason to create a blank one beside it."""
+
+    def tier_1(self):
+        """A migrated project whose seeds still sit at the root, each holding text of its own."""
+        d = self.project("new")
+        for src in SEED_SRCS:
+            legacy = manifest.DISTRIBUTION[[r[0] for r in manifest.DISTRIBUTION].index(src)][1]
+            (d / manifest.NEW_LAYOUT[src]).unlink()
+            (d / legacy).parent.mkdir(parents=True, exist_ok=True)
+            (d / legacy).write_text("the project's own %s\n" % legacy, encoding="utf-8")
+        return d
+
+    def test_no_seed_is_created_under_methodology_beside_a_seed_at_the_root(self):
+        d = self.tier_1()
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 0, r.out)
+        for src in SEED_SRCS:
+            legacy = manifest.DISTRIBUTION[[r[0] for r in manifest.DISTRIBUTION].index(src)][1]
+            self.assertFalse((d / manifest.NEW_LAYOUT[src]).exists(), "a blank seed beside the real " + legacy)
+            self.assertEqual((d / legacy).read_text(encoding="utf-8"), "the project's own %s\n" % legacy)
+        self.assertIn("not created", r.out)
+
+    def test_the_tracked_files_are_still_kept_current_under_methodology_in_that_tree(self):
+        d = self.tier_1()
+        (d / "methodology" / "SAFEGUARDS.md").unlink()
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertTrue((d / "methodology" / "SAFEGUARDS.md").is_file())
+
+    def test_a_seed_absent_everywhere_is_created_where_the_layout_puts_it(self):
+        d = self.project("new")
+        (d / manifest.NEW_LAYOUT["starter-kit/ROADMAP.md"]).unlink()
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertTrue((d / "methodology" / "ROADMAP.md").is_file())
+        self.assertFalse((d / "ROADMAP.md").exists())
+
+    def test_a_product_changelog_at_the_root_beside_the_frameworks_under_methodology_is_left_alone(self):
+        d = self.project("new")
+        (d / "CHANGELOG.md").write_text("# the product's changelog\n", encoding="utf-8")
+        ledger = (d / "methodology" / "CHANGELOG.md").read_bytes()
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual((d / "CHANGELOG.md").read_text(encoding="utf-8"), "# the product's changelog\n")
+        self.assertEqual((d / "methodology" / "CHANGELOG.md").read_bytes(), ledger)
+
+    def test_a_seed_is_never_overwritten_under_methodology_even_with_force(self):
+        d = self.project("new")
+        (d / "methodology" / "HANDOFFS.md").write_text("my receipts\n", encoding="utf-8")
+        r = run_sync(d, "--force")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual((d / "methodology" / "HANDOFFS.md").read_text(encoding="utf-8"), "my receipts\n")
+
+
+class TestSyncKeepsTrackedFilesCurrentUnderMethodology(Scratch):
+    def test_a_locally_modified_file_blocks_the_run_without_force_and_is_named_by_its_new_path(self):
+        d = self.project("new")
+        (d / "methodology" / "SAFEGUARDS.md").write_text("edited here\n", encoding="utf-8")
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 2, r.out)
+        self.assertIn("methodology/SAFEGUARDS.md", r.out)
+        self.assertEqual((d / "methodology" / "SAFEGUARDS.md").read_text(encoding="utf-8"), "edited here\n")
+        forced = run_sync(d, "--force")
+        self.assertEqual(forced.returncode, 0, forced.out)
+        self.assertEqual((d / "methodology" / "SAFEGUARDS.md").read_bytes(),
+                         (REPO / "starter-kit" / "SAFEGUARDS.md").read_bytes())
+
+    def test_a_file_one_canonical_version_behind_is_upgraded_without_force(self):
+        # history is keyed by the SOURCE path, so a file recognised at the root is recognised under methodology/
+        src = "starter-kit/SAFEGUARDS.md"
+        shas = subprocess.run(["git", "-C", str(REPO), "log", "--format=%H", "-n", "40", "--", src],
+                              capture_output=True, text=True).stdout.split()
+        current = (REPO / src).read_bytes()
+        older = None
+        for sha in shas:
+            blob = subprocess.run(["git", "-C", str(REPO), "show", "%s:%s" % (sha, src)], capture_output=True).stdout
+            if blob and blob != current:
+                older = blob
+                break
+        if older is None:
+            self.skipTest("this checkout has no older version of %s to plant" % src)
+        d = self.project("new")
+        (d / "methodology" / "SAFEGUARDS.md").write_bytes(older)
+        r = run_sync(d)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual((d / "methodology" / "SAFEGUARDS.md").read_bytes(), current)
+        self.assertIn("methodology/SAFEGUARDS.md: updated", r.out)
+
+    def test_the_files_section_names_every_row_at_its_destination_in_the_layout(self):
+        r = run_sync(self.project(), "--layout", "new", "--dry-run")
+        listed = {line.split(":")[0].strip() for line in r.out.split("  files:")[1].splitlines() if ": " in line}
+        self.assertEqual(listed, NEW)
+
+
+class TestSyncIgnoreModeFollowsTheLayout(Scratch):
+    """C2: ignore mode lists the TRACKED destinations file by file, so the list, the detection of an ignored
+    project and the `git rm --cached` hint all have to follow the layout."""
+
+    def entries(self, d):
+        return {line.strip() for line in (d / ".gitignore").read_text(encoding="utf-8").splitlines()
+                if line.strip().startswith("/")}
+
+    def test_a_new_layout_project_in_ignore_mode_ignores_the_tracked_files_under_methodology_only(self):
+        d = self.project()
+        r = run_sync(d, "--layout", "new", "--mode", "ignore")
+        self.assertEqual(r.returncode, 0, r.out)
+        tracked = {"/" + manifest.NEW_LAYOUT[src] for src in TRACKED_SRCS}
+        self.assertEqual(self.entries(d), tracked)
+        self.assertNotIn("/methodology/CHANGELOG.md", self.entries(d))   # a seed is committed, never ignored
+        self.assertNotIn("/SESSION_RUNNER.md", self.entries(d))
+
+    def test_a_legacy_project_in_ignore_mode_is_unchanged(self):
+        d = self.project()
+        r = run_sync(d, "--mode", "ignore")
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(self.entries(d), {"/" + dest for src, dest, disp in manifest.DISTRIBUTION if disp == manifest.TRACKED})
+
+    def test_ignore_mode_is_detected_from_either_layouts_entries(self):
+        for layout, kind in (("new", "new"), ("legacy", "legacy")):
+            with self.subTest(layout):
+                d = self.project(kind)
+                first = "/" + (manifest.NEW_LAYOUT[TRACKED_SRCS[0]] if layout == "new" else
+                               [r[1] for r in manifest.DISTRIBUTION if r[0] == TRACKED_SRCS[0]][0])
+                (d / ".gitignore").write_text(first + "\n", encoding="utf-8")
+                r = run_sync(d, "--dry-run")
+                self.assertIn("mode:    ignore", r.out)
+
+    def test_the_hint_for_files_git_already_tracks_names_the_new_destinations(self):
+        d = self.project("new")
+        git(d, "add", "-A")
+        git(d, "commit", "-qm", "adopt")
+        r = run_sync(d, "--mode", "ignore")
+        self.assertEqual(r.returncode, 0, r.out)
+        hint = [line for line in r.out.splitlines() if "rm --cached" in line]
+        self.assertEqual(len(hint), 1, r.out)
+        self.assertIn("methodology/SESSION_RUNNER.md", hint[0])
+        self.assertNotIn(" SESSION_RUNNER.md", hint[0])
+
+
+class TestSyncFromGithubReadsTheTable(Scratch):
+    """C16: --source=github reads the clone's manifest as data, so the new table has to be readable the same way,
+    and a source that predates it has to leave a legacy project working and a new one refused."""
+
+    def source(self, old=None, new=None):
+        d = self.root / ("source%d" % len(list(self.root.glob("source*"))))
+        d.mkdir()
+        git(d, "init", "-q", "-b", "main")
+        for src, _dest, _disp in manifest.DISTRIBUTION:
+            (d / src).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(REPO / src, d / src)
+        (d / "bin").mkdir()
+        text = MANIFEST.read_text(encoding="utf-8")
+        if old is not None:
+            self.assertEqual(text.count(old), 1, old)
+            text = text.replace(old, new)
+        (d / "bin" / "_manifest.py").write_text(text, encoding="utf-8")
+        git(d, "add", "-A")
+        git(d, "commit", "-qm", "a source")
+        return d
+
+    def test_a_source_that_carries_the_table_installs_the_new_layout(self):
+        d = self.project()
+        r = run_sync(d, "--source=github", "--layout", "new", source=self.source())
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(files_of(d), NEW)
+
+    def test_a_source_that_carries_the_table_keeps_a_new_project_new_under_auto(self):
+        d = self.project("new")
+        r = run_sync(d, "--source=github", source=self.source())
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(files_of(d), NEW)
+
+    def test_a_source_without_the_table_still_serves_a_legacy_project(self):
+        src = self.source("NEW_LAYOUT = {", "NO_LAYOUT_HERE = {")
+        d = self.project()
+        r = run_sync(d, "--source=github", source=src)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual(files_of(d), LEGACY)
+
+    def test_a_source_without_the_table_cannot_serve_the_new_layout_and_says_why_in_one_line(self):
+        src = self.source("NEW_LAYOUT = {", "NO_LAYOUT_HERE = {")
+        for kind, args in ((None, ("--layout", "new")), ("new", ())):
+            with self.subTest(kind=kind):
+                d = self.project(kind)
+                before = files_of(d)
+                r = run_sync(d, "--source=github", *args, source=src)
+                self.assertEqual(r.returncode, 1, r.out)
+                self.assertIn("NEW_LAYOUT", r.out)
+                self.assertIn("file://" + str(src), r.out)
+                self.assertNotIn("Traceback", r.out)
+                self.assertEqual(files_of(d), before)
+
+    def test_a_source_with_a_defective_table_is_refused_for_every_project_naming_the_entry(self):
+        src = self.source('    "starter-kit/ROADMAP.md": "methodology/ROADMAP.md",\n', "")
+        for kind in (None, "legacy", "new"):
+            with self.subTest(kind=kind):
+                d = self.project(kind)
+                before = files_of(d)
+                r = run_sync(d, "--source=github", source=src)
+                self.assertEqual(r.returncode, 1, r.out)
+                self.assertIn("error: the bin/_manifest.py in file://" + str(src), r.out)
+                self.assertIn("starter-kit/ROADMAP.md", r.out)
+                self.assertNotIn("Traceback", r.out)
+                self.assertEqual(files_of(d), before)
 
 
 if __name__ == "__main__":
