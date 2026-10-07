@@ -1649,8 +1649,10 @@ class TestPrecommitClassArm(unittest.TestCase):
         """Pin the mechanism, not just the symptom."""
         src = CB_PY.read_text()
         pre = src.split("def precommit")[1].split("# === SELFTEST")[0]
-        self.assertIn('f"HEAD:{CONFIG_NAME}"', pre,
+        self.assertIn("head_config_text(root)", pre,
                       "the baseline must consult HEAD's own declaration of the class")
+        reader = src.split("def head_config_text")[1].split("\n\n\n")[0]
+        self.assertIn('f"HEAD:{rel}"', reader, "...read from HEAD, at either path, never from the worktree")
 
     def test_an_undeclared_class_total_gates_nothing(self):
         with tempfile.TemporaryDirectory() as d:
@@ -1900,7 +1902,10 @@ class TestTheConfigMayLiveInEitherLayout(unittest.TestCase):
             self._project(a, cb.CONFIG_NAME); self._project(b, NEW_CONFIG)
             old = self._run(a, "--status", "--json"); new = self._run(b, "--status", "--json")
             self.assertEqual(new.returncode, old.returncode, new.stdout + new.stderr)
-            self.assertEqual(json.loads(new.stdout)["files"], json.loads(old.stdout)["files"])
+            def measured(p, d):   # the project's own directory is the one thing that differs
+                return [{k: (v.replace(d, "<project>") if isinstance(v, str) else v) for k, v in f.items()}
+                        for f in json.loads(p.stdout)["files"]]
+            self.assertEqual(measured(new, b), measured(old, a))
             self.assertEqual(json.loads(old.stdout)["files"][0]["bytes"], 1000, "fixture: the file is measured")
 
     def test_the_history_is_written_beside_the_config(self):
@@ -1974,6 +1979,41 @@ class TestTheConfigMayLiveInEitherLayout(unittest.TestCase):
             git(d, "add", "-A")
             self.assertEqual(cb.precommit(d, new), cb.CLEAN)
 
+    def _head_with_both_configs(self, d, runners):
+        """HEAD holds the methodology config (class pair = A + B, 1,200 B over a 1,000 B ceiling) AND a root
+        config that is somebody else's and names only A. `runners` are the tracked runner paths."""
+        cfg = self._pair_repo(d, NEW_CONFIG)
+        Path(d, cb.CONFIG_NAME).write_text(json.dumps({"classes": {"pair": {"total_bytes": 1000}},
+                                                       "files": [{"path": "A.md", "class": "pair"}]}))
+        for r in runners:
+            Path(d, r).parent.mkdir(parents=True, exist_ok=True); Path(d, r).write_text("runner\n")
+        git(d, "add", "-A"); git(d, "commit", "-q", "-m", "both configs")
+        new = self._reclass(cfg)
+        Path(d, NEW_CONFIG).write_text(json.dumps(new)); Path(d, "A.md").write_text("a" * 1100)
+        git(d, "add", "-A")
+        return new
+
+    def test_a_head_holding_both_configs_takes_its_baseline_from_the_methodology_one_when_the_runner_decides(self):
+        with tempfile.TemporaryDirectory() as d:
+            new = self._head_with_both_configs(d, [NEW_DIR + "/SESSION_RUNNER.md"])
+            self.assertEqual(cb.precommit(d, new), cb.CLEAN,
+                             "a baseline read from the root config (A alone, 600 B) would call 1,100 B growth")
+
+    def test_a_head_holding_both_configs_and_two_runners_decides_nothing(self):
+        # The runner at the root as well: the tie is undecided, HEAD's declaration cannot be read, and the
+        # baseline falls back to the current list -- the conservative answer, a refusal.
+        with tempfile.TemporaryDirectory() as d:
+            new = self._head_with_both_configs(d, [NEW_DIR + "/SESSION_RUNNER.md", "SESSION_RUNNER.md"])
+            self.assertEqual(cb.precommit(d, new), cb.BREACH)
+
+    def test_find_root_prefers_a_project_whose_config_is_under_methodology_to_an_outer_repository(self):
+        with tempfile.TemporaryDirectory() as td:
+            outer = os.path.realpath(td)
+            new_repo(outer)
+            proj = os.path.join(outer, "proj", "sub"); os.makedirs(os.path.join(outer, "proj", NEW_DIR)); os.makedirs(proj)
+            Path(outer, "proj", NEW_CONFIG).write_text("{}")
+            self.assertEqual(os.path.realpath(cb.find_root(proj)), os.path.join(outer, "proj"))
+
     def test_precommit_still_refuses_growth_in_the_new_layout(self):
         with tempfile.TemporaryDirectory() as d:
             cfg = self._pair_repo(d, NEW_CONFIG)
@@ -1985,6 +2025,7 @@ class TestTheConfigMayLiveInEitherLayout(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             self._project(d, cb.CONFIG_NAME)
             shutil.copy(CB_PY, os.path.join(d, "context_budget.py"))
+            git(d, "add", "-A"); git(d, "commit", "-q", "-m", "the tool, at the root")
             p = subprocess.run([sys.executable, os.path.join(d, "context_budget.py"), "install-hook"],
                                cwd=d, capture_output=True, text=True)
             self.assertEqual(p.returncode, cb.CLEAN, p.stdout + p.stderr)
