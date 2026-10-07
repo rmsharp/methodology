@@ -295,6 +295,15 @@ if python3 "$METHODOLOGY/tools/test_layout_resolver.py" >/dev/null 2>&1; then
 else
     fail "layout resolver, fixture trees and literal scanner unit tests failed"
 fi
+# The canonical checkers in both layouts (BL-101 P4): check-ledger, check-handoff, check-overhead and
+# model-report, each run as a command in a scratch project with its file at the root, under methodology/, in a
+# tie the runner decides and in a half-migrated tree. Canonical-only, like the checkers. It drives the tools;
+# it does not run them over this repository (the real-tree check is the evidence script of the P4 session).
+if python3 "$METHODOLOGY/tools/test_checker_layouts.py" >/dev/null 2>&1; then
+    pass "canonical checkers (ledger, receipts, overhead, model report) in both layouts unit tests green"
+else
+    fail "canonical checkers in both layouts unit tests failed"
+fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
 diff -q "$METHODOLOGY/tools/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null \
