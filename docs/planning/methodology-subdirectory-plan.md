@@ -511,10 +511,11 @@ passed there, a move that lowers a floor passed, a move that rewrites a ledger e
 assertion red (it grepped the hook for one literal line); no commit hook runs the suite, the two-receipt clone's gate run did.
 
 **Settled in P2, for the operator to overrule:** (1) a tree with the ledger in both places is **refused**, as §4.3 says, in the
-hook and in the ratchet. (2) The hook accepts both archive directories now. **Open, and the next phase to touch it should decide:**
+hook and in the ratchet. (2) The hook accepts both archive directories now. **Decided 2026-10-06 (S275 close-out picker): the framework anchor decides.**
 §4.1 says a root `CHANGELOG.md` becomes free for a project's own product changelog, but the table anchored on `CHANGELOG.md`
-reads that project as half-migrated, so its hook refuses every commit until `--no-verify`. The fix is a tiebreak the P1 resolver
-does not have: a project whose `SESSION_RUNNER.md` is under `methodology/` keeps its ledger there whatever sits at the root.
+reads that project as half-migrated, so its hook refuses every commit until `--no-verify`. The resolver gains a row: a project whose
+`SESSION_RUNNER.md` is under `methodology/` keeps its ledger there whatever sits at the root; both ledgers with no runner there stays
+refused. **Not built:** P3 starts by extending the table, its tests, the P1 block and the P2 copies (the hook's sh form too).
 
 **Not shown:** a hook armed in another clone (`core.hooksPath` is per clone; a hook installed before 1.2.0 still names one path,
 which is P7's list); a real adopter; an external adopter with its own `methodology/` directory (none of the 15 repositories under
