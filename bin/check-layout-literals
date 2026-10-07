@@ -4,9 +4,10 @@
 BL-101 phase P1 (docs/planning/methodology-subdirectory-plan.md section 7.1). The move to a
 methodology/ directory is only safe if no shipped tool reads a methodology file by a literal root
 path: a green suite does not see a literal, and the plan's C5 measured the worst case, the ledger hook
-passing every commit after the ledger moved. This tool finds them. It is RED on purpose today and is
-NOT a declared quality gate: its list is the to-do list of phases P2-P6, and P6 wires it into
-.quality-gates.json at zero. Canonical-only (not in bin/_manifest.py), like the other bin/check-* tools.
+passing every commit after the ledger moved. This tool finds them. It was RED on purpose from P1 and its
+list was the to-do list of phases P2-P6; P6 (S279) took it to zero and declared it a quality gate,
+`layout-literals`, in .quality-gates.json, so a literal that comes back is a red gate and not a
+surprise after the move. Canonical-only (not in bin/_manifest.py), like the other bin/check-* tools.
 
 What counts as a SITE: a string constant in executable code (Python, read with ast) or a non-comment
 part of a shell line that holds

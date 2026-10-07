@@ -44,6 +44,7 @@ DISPOSITIONS = (manifest.TRACKED, manifest.SEED)
 SYNC = REPO / "bin" / "sync"
 STATUS = REPO / "bin" / "status"
 CHECK_LINKS = REPO / "bin" / "check-links"
+LITERALS = REPO / "bin" / "check-layout-literals"
 LEGACY = {dest for _s, dest, _d in manifest.DISTRIBUTION}
 NEW = set(manifest.NEW_LAYOUT.values())
 SEED_SRCS = [src for src, _dest, disp in manifest.DISTRIBUTION if disp == manifest.SEED]
@@ -906,6 +907,17 @@ class TestCheckLinksTreeModeReadsTheTreesLayout(Scratch):
         self.assertIn("usage", r.out)
         for choice in ("legacy", "new", "both"):
             self.assertIn(choice, r.out)
+
+
+class TestNoShippedToolNamesARootPath(unittest.TestCase):
+    """P6's last row: the literal scanner is wired in at zero. The declared gate (layout-literals) is measured at
+    close-out; this is the same check where a suite run sees it, so a new literal is caught the commit after it is
+    written and not the session after."""
+
+    def test_the_scanner_reads_no_site_in_this_repository(self):
+        r = subprocess.run([sys.executable, "-B", str(LITERALS)], capture_output=True, text=True, cwd=str(REPO))
+        self.assertEqual(r.returncode, 0, "a shipped tool names a methodology file by a root path:\n" + r.stdout + r.stderr)
+        self.assertIn(" 0 sites ", r.stdout)
 
 
 if __name__ == "__main__":
