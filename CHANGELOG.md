@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 claim (in progress) — P9, the documentation for the `methodology/` layout
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose BL-101 P9 and both ledger trims. Deliverable: the plan's section 7 row P9 and C14, done when `bin/check-links --layout both` exits 0 with the suite criterion held. Baseline at this claim: `--layout legacy` OK (116 links), `--layout new` 36 dangling in 13 files, `both` exit 1, 38 distributed lines name `docs/methodology`, suite 476 / 0 / 6 at two receipts (`40c3694`, Test 40 666 = 666). Done before this claim: the HANDOFFS trim `ae8d846` and fold `3efcd4f`, the CHANGELOG trim `40c3694`. Phase 0: 0 undocumented commits, 0 merges, gate citation matches, #94 #92 #93 without a reply. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-07.md` (66 record(s), 186,236 B → 78,034 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.

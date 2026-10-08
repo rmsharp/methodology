@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S282
+date: 2026-10-08
+status: pending
+active_task: BUILD BL-101 P9 (chosen at the S282 Phase 0 picker; contract: `docs/planning/methodology-subdirectory-plan.md` section 7 row P9 and section 3 row C14): the documentation for the `methodology/` layout, done when `bin/check-links --layout both` exits 0 and the suite criterion holds. Baseline measured at this claim: `--layout legacy` OK (116 links in 23 files), `--layout new` 36 dangling links in 13 files, `--layout both` exit 1; 38 lines in the distributed documents name `docs/methodology`; the suite at two receipts is 476 / 0 / 6 (`40c3694`, Test 40 666 = 666). A path change cannot fix a cross-group link (the runner and a framework document share a directory in one layout and not in the other), so the design is shown to him before any distributed file is edited. Before the claim, on his go-ahead at the Phase 0 picker: the HANDOFFS trim `ae8d846` and its fold `3efcd4f`, and the CHANGELOG trim `40c3694` (66 records to `CHANGELOG-through-2026-10-07.md`, 186,236 B to 78,034 B, both proofs exit 0 from `--no-local` clones). Nothing is sent outward.
+```
+
+```handoff
 session: S281
 date: 2026-10-07
 status: complete
