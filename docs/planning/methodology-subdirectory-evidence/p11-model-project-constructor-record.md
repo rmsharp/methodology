@@ -1,8 +1,8 @@
 # BL-101 P11 — the first adopter, `model_project_constructor` (S285, 2026-10-08)
 
 Plan: [`methodology-subdirectory-plan.md`](../methodology-subdirectory-plan.md) §4.6 (two tiers), §7.4 (the per-adopter DONE list), D1, D9.
-**Nothing was pushed, sent, tagged or commented, here or in the adopter.** Its three commits are local on `master` (ahead 3 of `origin/master`);
-its push is the operator's go-ahead, each time. Raw outputs: [`p11-adopter-runs/`](p11-adopter-runs/).
+**Nothing was sent upstream, tagged or commented.** At the close-out picker he approved two pushes, each its own go-ahead: this fork's `main` (`e0123f3..b3e0736`) and the adopter's three commits to its own `origin` (`0dc3051..ec23bc7`).
+**Its GitHub Actions run on `ec23bc7` (workflow `CI`, run 37859801764) passed all five jobs:** lint, type check, tests, ledger proofs (plain and `--self-test`), data-agent decoupling. This is the first CI run on a moved tree. Raw outputs: [`p11-adopter-runs/`](p11-adopter-runs/).
 
 ## 1. What was done in the adopter
 
@@ -54,7 +54,7 @@ entries say what they are.
 
 ## 5. Not shown
 
-An Actions run (nothing pushed); the adopter's wiki hook on a commit that touches `docs/wiki/` (none did); `.claude/settings.local.json` (untracked, ignored) holds permission entries naming
+The adopter's wiki hook on a commit that touches `docs/wiki/` (none did); `.claude/settings.local.json` (untracked, ignored) holds permission entries naming
 `methodology_dashboard.py`, `SESSION_RUNNER.md` and `SESSION_NOTES.md` at the old paths, which affects prompts only; tier 2 on this adopter (blocked, §6).
 
 ## 6. The operator's, and what the tool could do

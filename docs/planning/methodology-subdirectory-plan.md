@@ -534,13 +534,13 @@ filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqi
 - **DONE per adopter:** a clean tree; `bin/status` before; **`bin/sync` first if any TRACKED file is not
   `current`, as its own commit (§5A.2)**; `bin/migrate-layout` dry run read; the apply as one commit;
   `bin/status` after (all `current`, at the new destinations); the adopter's **own** proofs, test suite and CI
-  green (named in its receipt), rehearsed at each tier in clones first, a rise in skips a failure; one full Phase 0 in the new layout; the sha of the checkout it synced
+  green (named in its receipt), rehearsed at each tier in clones first, a rise in skips a failure; **tier 1 until it is surveyed (his, S285);** one full Phase 0 in the new layout; the sha of the checkout it synced
   from; the project's push is **its own go-ahead**.
 - **Surface:** the adopter's repository and CI. **Cannot enforce:** another clone's hook arming; say so.
 
 ### 7.4a P11 — `model_project_constructor` (S285)
 
-**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`; nothing pushed). **`--tier all` passed every check the tool runs and broke the adopter's own CI** (2 of its 13 proofs and 41 tests name the moved ledger), so by his choice it was reset and `--tier 1` applied: one test constant repaired, CI back to 3,942 passed and 9 skipped, `bin/status` 23 of 23 current, Phase 0 run in the new layout. **Confirms §4.6:** tier 1 alone is coherent; the default `all` is not safe on the tool's checks alone (its `proofs` cell runs only moved shards' proofs). **Not shown:** an Actions run, a push.
+**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`). **`--tier all` passed every check the tool runs and broke the adopter's own CI** (2 of its 13 proofs and 41 tests name the moved ledger), so by his choice it was reset and `--tier 1` applied: one test constant repaired, CI back to 3,942 passed and 9 skipped, Phase 0 run in the new layout. **Confirms §4.6:** tier 1 alone is coherent; the default `all` is not safe on the tool's checks alone (its `proofs` cell runs only moved shards' proofs). **Pushed;** Actions green, 5 of 5.
 
 ### 7.5 P23 and G-B
 
