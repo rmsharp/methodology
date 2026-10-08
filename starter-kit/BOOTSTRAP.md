@@ -129,7 +129,7 @@ From the methodology `starter-kit/` directory:
 | `ROADMAP.md` | Feature inventory and future plans — what's built, what's next |
 | `methodology_dashboard.py` | Health scanner — scores project health and methodology compliance |
 
-This table is the minimum manual set. The **authoritative, complete distribution list** — which also includes `RECOMMENDED_SKILLS.md` and the `CONTEXT_TEMPLATE.md`/`CLAUDE_TEMPLATE.md` templates at the project root, plus the framework under `docs/methodology/` — is defined once in `bin/_manifest.py` and applied by `bin/sync`. Copy those too for the full set; the templates are renamed to `CONTEXT.md`/`CLAUDE.md` (see Step 5).
+This table is the minimum manual set. The **authoritative, complete distribution list** — which also includes `RECOMMENDED_SKILLS.md` and the `CONTEXT_TEMPLATE.md`/`CLAUDE_TEMPLATE.md` templates at the project root, plus the framework under `docs/methodology/` (in the legacy layout; the `methodology/` layout has its own table) — is defined once in `bin/_manifest.py` and applied by `bin/sync`. Copy those too for the full set; the templates are renamed to `CONTEXT.md`/`CLAUDE.md` (see Step 5).
 
 Run the dashboard once to generate your first report:
 
@@ -278,7 +278,7 @@ Open `SESSION_RUNNER.md` and review the Phase 1 task-to-workstream mapping table
 ## Step 8: Create a Sessions Directory (Optional)
 
 ```bash
-mkdir -p docs/methodology/sessions
+mkdir -p docs/methodology/sessions    # methodology/sessions in the methodology/ layout
 ```
 
 This is where session output documents go if you use them. The methodology works without explicit session documents — `SESSION_NOTES.md` carries the essential continuity — but formal session documents are useful for design series and audits.

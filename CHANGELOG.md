@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 — P9 step 7: two `BOOTSTRAP.md` statements that read as universal now say they are about the legacy layout
+
+The manual-copy table's closing sentence ("the framework under `docs/methodology/`") now says "in the legacy layout; the `methodology/` layout has its own table", and Step 8's `mkdir -p docs/methodology/sessions` gains a comment naming `methodology/sessions` for the other layout. Found by re-listing what still names `docs/methodology/` after the conversions: 38 lines in the distributed documents at the claim, 10 now (the runner's convention paragraph, `HOW_TO_USE.md` once, `BOOTSTRAP.md` eight times, each saying which layout it describes).  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 — the backlog records P8 and P9: BL-101's index row and detail now name P10 as next
 
 `docs/planning/BACKLOG.md` (the BL-101 row) and `BACKLOG-DETAIL.md` (its detail) said "Next: P8". Both now record P8 (the rehearsal failed the section 3.1 criterion; BL-104) and P9 (36 links became bare names, `--layout both` exit 0, Test 10 holds it) and name P10 as next; the detail also keeps the one thing P9 left, the `bin/migrate-layout` links check that still prints "informational until P9" (`:695`, `:882`; test `tools/test_migrate_layout.py:1354`).  Model: Claude Sonnet 5.5.
