@@ -241,6 +241,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-07 · [BL-101] S281 claim (in progress) — P8, the rehearsal of this repository's own move in a scratch clone
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose BL-101 P8 and the owed HANDOFFS trim. Deliverable: the plan's section 7.3 row P8 and section 5A.4 (C17), in a scratch clone and shipping nothing: `bin/migrate-layout` on the instance files, the section 3.1 criterion at the measured baseline, the proofs' histogram, a real trim in the new layout, the X2 hook test, the resync simulation against `upstream/main`. Done before this claim: the trim `01b6947` and its fold `9d8baf0`. Phase 0: 0 undocumented commits, 0 merges, gate citation matches, #94 #92 #93 without a reply, `CHANGELOG.md` 176,567 B (the 196,608 B trigger does not fire). Model: Claude Sonnet 5.5.
+
 ### 2026-10-07 · [ad hoc] S281 — fold the second 2026-10-07 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`01b6947`, 1 receipt, S278, 2026-10-07, to `HANDOFFS-through-2026-10-07-2.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S280, S279). The shard proof was run by name from a `--no-local` clone of its own trim commit: `HANDOFFS-through-2026-10-07-2.md.verify.sh` at `01b6947`, exit 0. Model: Claude Sonnet 5.5.

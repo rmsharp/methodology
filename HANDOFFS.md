@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S281
+date: 2026-10-07
+status: pending
+active_task: REHEARSE BL-101 P8 (a rehearsal session; ships nothing: `docs/planning/methodology-subdirectory-plan.md` section 7.3 row P8 and section 5A.4 are the contract, chosen at the S281 Phase 0 picker). In a scratch clone of THIS repository: its instance files moved by `bin/migrate-layout` (dry run read, then `--apply`); the section 3.1 criterion (the unmoved tree's own triple, measured first, at two receipts, compared in the same state); the proofs' exit histogram unchanged; one real trim in the new layout proved; the X2 hook test green; the section 5A.4 resync simulation re-run against the then-current `upstream/main`. Deliverable: one evidence script with its recorded output and the plan's 7.3b record. Before the claim, on his go-ahead at the Phase 0 picker: the owed HANDOFFS trim (`01b6947`, S278 to `HANDOFFS-through-2026-10-07-2.md`) and its fold (`9d8baf0`). Nothing is sent or pushed.
+```
+
+```handoff
 session: S280
 date: 2026-10-07
 status: complete
