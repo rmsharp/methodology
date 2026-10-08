@@ -358,7 +358,8 @@ class TestThePureRules(unittest.TestCase):
     # --- what a check difference is ---
     def sides(self, **over):
         side = {"status": {"exit": 0, "tracked": 23, "current": 23}, "ledger": {"exit": 0}, "handoff": {"exit": 1},
-                "links": {"exit": 0}, "proofs": {"count": 2, "histogram": {"0": 2}}, "history": {"commits": 4}}
+                "links": {"exit": 0, "framework": 0, "project": 0}, "proofs": {"count": 2, "histogram": {"0": 2}},
+                "history": {"commits": 4}}
         before, after = dict(side), dict(side)
         after["history"] = {"commits": 5}
         for k, (b, a) in over.items():
@@ -385,9 +386,55 @@ class TestThePureRules(unittest.TestCase):
         failed = {"exit": 1, "tracked": 0, "current": 0}
         self.assertEqual(s(status=(failed, failed)), ["status"], "tracked == current == 0 but bin/status did not run")
 
-    def test_links_is_never_a_difference_and_a_project_without_a_ledger_has_no_history_to_lose(self):
-        self.assertEqual(self.m.check_differences(*self.sides(links=({"exit": 0}, {"exit": 1}))), [])
+    def test_a_project_without_a_ledger_has_no_history_to_lose(self):
         self.assertEqual(self.m.check_differences(*self.sides(history=({"commits": 0}, {"commits": 0}))), [])
+
+    # --- the links cell: the framework's documents are judged, the project's own files are reported ---
+    def cell(self, exit_code, framework, project):
+        return {"exit": exit_code, "framework": framework, "project": project}
+
+    def test_a_framework_link_that_newly_dangles_is_a_difference_and_the_rule_is_about_the_count(self):
+        s = lambda **kw: self.m.check_differences(*self.sides(**kw))
+        self.assertEqual(s(links=(self.cell(0, 0, 0), self.cell(1, 2, 0))), ["links"])
+        self.assertEqual(s(links=(self.cell(1, 2, 0), self.cell(1, 3, 0))), ["links"], "one more is a change")
+        self.assertEqual(s(links=(self.cell(1, 2, 0), self.cell(1, 2, 0))), [], "a count that did not change is not one")
+        self.assertEqual(s(links=(self.cell(1, 3, 0), self.cell(1, 2, 0))), ["links"], "nor is one fewer: like the other checks, the rule is that it did not change")
+
+    def test_links_in_the_projects_own_files_are_reported_and_never_a_difference(self):
+        """A committed ledger entry is never edited, so a link in one that was right where the ledger sat is not the move's defect."""
+        s = lambda **kw: self.m.check_differences(*self.sides(**kw))
+        self.assertEqual(s(links=(self.cell(0, 0, 0), self.cell(1, 0, 6))), [])
+
+    def test_a_links_check_that_could_not_be_read_after_the_move_is_a_difference_never_a_zero(self):
+        s = lambda **kw: self.m.check_differences(*self.sides(**kw))
+        self.assertEqual(s(links=(self.cell(0, 0, 0), self.cell(2, None, None))), ["links"])
+        self.assertEqual(s(links=(self.cell(0, 0, 0), self.cell("timeout", None, None))), ["links"])
+
+    def test_the_cell_counts_the_dangling_links_by_whether_the_file_they_sit_in_is_the_frameworks(self):
+        legacy, new = TRACKED_DESTS[0], NEW_OF[TRACKED_DESTS[0]]
+        owned = NEW_OF[SEED_DESTS[0]]
+        text = ("check-links: FAIL — 3 dangling link(s) in the tree at /x (new layout):\n"
+                "  %s:12  ->  gone.md\n  %s:7  ->  docs/methodology/HOW_TO_USE.md\n  %s:3  ->  also-gone.md\n\n"
+                "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.\n"
+                % (new, owned, legacy))
+        got = self.m.links_cell(1, text)
+        self.assertEqual((got["exit"], got["framework"], got["project"]), (1, 2, 1), "either layout's name for a framework file counts")
+        ok = self.m.links_cell(0, "check-links: OK — 80 relative link(s) across 23 distributed markdown files resolve in the tree at /x.\n")
+        self.assertEqual((ok["exit"], ok["framework"], ok["project"]), (0, 0, 0))
+
+    def test_a_framework_document_missing_from_the_tree_counts_as_a_framework_failure(self):
+        """check-links reports a distributed file it cannot find as line 0 with a placeholder target; that is a framework document too."""
+        text = ("check-links: FAIL — 1 dangling link(s) in the tree at /x (new layout):\n"
+                "  %s:0  ->  <distributed file missing from tree>\n" % NEW_OF[TRACKED_DESTS[0]])
+        got = self.m.links_cell(1, text)
+        self.assertEqual((got["framework"], got["project"]), (1, 0))
+
+    def test_a_failure_whose_lines_cannot_be_read_is_unknown_and_a_run_that_could_not_decide_has_no_counts(self):
+        """An exit 1 with no line in the known shape would otherwise read as zero dangling: a green made of a format change."""
+        shaped = "  %s:3  ->  x.md\n" % NEW_OF[TRACKED_DESTS[0]]  # a line in the known shape, from a run that did not decide
+        for code, text in ((1, "check-links: FAIL — the output changed shape\n"), (2, "usage: check-links\n"), (2, shaped), ("timeout", shaped)):
+            got = self.m.links_cell(code, text)
+            self.assertEqual((got["framework"], got["project"]), (None, None), (code, text))
 
     # --- which files are a ledger, a CI file and the rest ---
     def test_a_path_is_sorted_into_its_category(self):
@@ -1350,13 +1397,39 @@ class TestTheChecks(Adopter):
         self.assertEqual(len(followed), h["after"]["history"]["commits"])
         self.assertIn(git(self.project, "rev-parse", "--short=7", "HEAD~1").strip(), [c[:7] for c in followed])
 
-    def test_check_links_is_reported_and_a_difference_there_is_not_a_failure(self):
-        """The distributed documents are authored for the old layout until P9 rewrites them, so a tree in the new
-        layout is expected to read differently; the cell is filled and the difference is called informational."""
+    def test_a_link_in_the_projects_own_ledger_that_the_move_leaves_dangling_is_reported_and_not_a_failure(self):
+        """The fixture's ledger holds a committed entry that links docs/methodology/HOW_TO_USE.md, right where the ledger
+        sat. The move leaves the entry alone (a committed entry is never edited), so the link dangles: the project's own
+        file, counted beside the framework's, and no difference."""
         r = run_migrate(self.project, "--apply", checks=True)
-        self.assertIn("links", r.report["checks"]["informational"])
-        self.assertNotIn("links", r.report["checks"]["differences"])
-        self.assertIn("exit", r.report["checks"]["after"]["links"])
+        self.assertEqual(r.returncode, 0, r.out)
+        checks = r.report["checks"]
+        self.assertNotIn("informational", checks, "no check is exempt any more: P9 rewrote the documents")
+        self.assertEqual((checks["before"]["links"]["exit"], checks["before"]["links"]["framework"], checks["before"]["links"]["project"]), (0, 0, 0))
+        self.assertEqual((checks["after"]["links"]["exit"], checks["after"]["links"]["framework"], checks["after"]["links"]["project"]), (1, 0, 1))
+        self.assertEqual(checks["differences"], [])
+
+    def test_a_framework_document_that_dangles_after_the_move_is_a_difference_exits_4_and_the_commit_stands(self):
+        """The after-checks run on the working tree, so a post-commit hook that writes a legacy-style link into a framework
+        document stands in for a document authored for the old layout: the link resolved before, and does not now."""
+        how = NEW_OF["docs/methodology/HOW_TO_USE.md"]
+        hook = self.project / ".git" / "hooks" / "post-commit"
+        hook.write_text("#!/bin/sh\nprintf '\\n[x](docs/methodology/ITERATIVE_METHODOLOGY.md)\\n' >> %s\n" % how, encoding="utf-8")
+        hook.chmod(0o755)
+        r = run_migrate(self.project, "--apply", checks=True)
+        self.assertEqual(r.returncode, 4, r.out)
+        self.assertEqual(r.report["status"], "applied")
+        checks = r.report["checks"]
+        self.assertIn("links", checks["differences"])
+        self.assertEqual((checks["after"]["links"]["framework"], checks["after"]["links"]["project"]), (1, 1))
+        self.assertIn("git revert " + r.report["commit"]["sha"][:12], checks["way_back"])
+
+    def test_the_text_says_which_links_are_judged_and_which_only_reported(self):
+        r = run_migrate(self.project, "--apply", json_out=False, checks=True)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertRegex(r.out, r"(?m)^\s+links:\s+exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 1 project dangling")
+        self.assertNotIn("informational until P9", r.out)
+        self.assertIn("framework documents are judged", r.out)
 
     def test_skip_checks_runs_none_and_says_so(self):
         r = run_migrate(self.project, "--apply", "--skip-checks")

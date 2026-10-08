@@ -692,8 +692,12 @@ def rollback(root, done_plain, methodology_existed):
             pass
 
 
-INFORMATIONAL = ("links",)  # reported, not judged: the distributed documents are authored for the old layout until P9
 PROOF_TIMEOUT = 300
+# The links check judges the framework's documents (a TRACKED file, named in either layout) and only reports a link in a file the
+# project owns: a committed ledger entry is never edited, so a link in one that was right where the ledger sat dangles after the move.
+FRAMEWORK_FILES = ({dest for _s, dest, disp in DISTRIBUTION if disp == TRACKED}
+                   | {NEW_LAYOUT[src] for src, _d, disp in DISTRIBUTION if disp == TRACKED})
+DANGLING_LINE = re.compile(r"^\s+(\S+):\d+\s+->\s+")  # check-links' own line: "  <file>:<line>  ->  <target>"
 
 
 def tool_run(args, cwd, timeout=300):
@@ -712,6 +716,19 @@ def last_line(text):
     return lines[-1][:200] if lines else ""
 
 
+def links_cell(code, text):
+    """The links check as data: its exit, its last line, and the dangling links counted by whose file they sit in
+    (`framework`, judged; `project`, reported). A run that did not decide, or a failure whose lines are not in the shape
+    check-links prints, has no counts (None): an unreadable result must never read as zero."""
+    cell = {"exit": code, "line": last_line(text), "framework": None, "project": None}
+    if code in (0, 1):
+        files = [m.group(1) for m in map(DANGLING_LINE.match, text.splitlines()) if m]
+        if code == 0 or files:
+            cell["framework"] = sum(1 for f in files if f in FRAMEWORK_FILES)
+            cell["project"] = len(files) - cell["framework"]
+    return cell
+
+
 def run_checks(root, proofs, ledger):
     """The read-only checks of plan 4.7.4, as data: bin/status, the two ledger checkers, check-links, every shard proof
     (the exit histogram), and how far `git log --follow` reaches back from the ledger. Run from the project's root."""
@@ -727,7 +744,7 @@ def run_checks(root, proofs, ledger):
         code, text = tool_run([sys.executable, "-B", str(HERE / tool)], root)
         out[name] = {"exit": code, "line": last_line(text)}
     code, text = tool_run([sys.executable, "-B", str(HERE / "check-links"), "--tree", str(root)], root)
-    out["links"] = {"exit": code, "line": last_line(text)}
+    out["links"] = links_cell(code, text)
     histogram = {}
     for rel in proofs:
         code, _text = tool_run(["bash", rel], root, PROOF_TIMEOUT)
@@ -740,13 +757,16 @@ def run_checks(root, proofs, ledger):
 
 def check_differences(before, after):
     """What a migration must not change: bin/status reading every TRACKED file current, the ledger checkers' exit codes,
-    the proofs' exit histogram, and the ledger's history staying reachable (every older commit plus the move)."""
+    how many links dangle in the framework's documents, the proofs' exit histogram, and the ledger's history staying
+    reachable (every older commit plus the move). The project's own files are reported, not judged."""
     diffs = []
     if before["status"] != after["status"] or after["status"]["exit"] != 0 or after["status"]["current"] != after["status"]["tracked"]:
         diffs.append("status")
     for name in ("ledger", "handoff"):
         if before[name]["exit"] != after[name]["exit"]:
             diffs.append(name)
+    if before["links"]["framework"] != after["links"]["framework"]:
+        diffs.append("links")
     if before["proofs"] != after["proofs"]:
         diffs.append("proofs")
     if before["history"]["commits"] and after["history"]["commits"] < before["history"]["commits"] + 1:
@@ -818,8 +838,7 @@ def apply_migration(report, trailers, skip_checks=False):
     clean = run(root, "status", "--porcelain").stdout.strip() == ""
     sha = report["commit"]["sha"]
     report["checks"] = {"ran": True, "before": before, "after": after, "differences": differences,
-                        "informational": list(INFORMATIONAL), "clean": clean, "ok": not differences and clean,
-                        "way_back": "git revert %s" % sha[:12]}
+                        "clean": clean, "ok": not differences and clean, "way_back": "git revert %s" % sha[:12]}
     return 0 if report["checks"]["ok"] else 4
 
 
@@ -877,9 +896,12 @@ def render_text(report):
                 return "%d proof(s), exit histogram %s" % (c["count"], json.dumps(c["histogram"], sort_keys=True))
             if name == "history":
                 return "%d commit(s) reached by git log --follow" % c["commits"]
+            if name == "links":
+                n = lambda x: "?" if x is None else x
+                return "exit %s; %s framework, %s project dangling" % (c["exit"], n(c["framework"]), n(c["project"]))
             return "exit %s" % c["exit"]
         for name in ("status", "ledger", "handoff", "links", "proofs", "history"):
-            note = "  (informational until P9: the distributed documents are authored for the old layout)" if name in ck["informational"] else ""
+            note = "  (the framework documents are judged; the project's own files are reported)" if name == "links" else ""
             out.append("  %-8s %s -> %s%s" % (name + ":", show(name, "before"), show(name, "after"), note))
         out.append("  clean tree: %s" % ("yes" if ck["clean"] else "NO"))
         if not ck["ok"]:
