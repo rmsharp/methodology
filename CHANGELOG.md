@@ -241,6 +241,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-07 · [BL-101] S281 -- the P8 rehearsal script and its tool driver (checkpoint)
+
+`docs/planning/methodology-subdirectory-evidence/p8-rehearsal.sh` (eight stages, two `--no-local` clones of one commit, the real repository only cloned) and `p8-apply-tool.py` (loads the clone's `bin/migrate-layout` and runs its own `main()` with ONE suppression, `read_status`). **First finding, measured:** the tool as written REFUSES this repository, `--tier all` on `[not-current]` (23 distributed files read `missing`, since the canonical holds them under `starter-kit/` and `workstreams/`, not at adopter locations) and `--tier 2` also on `[tier-order]`. With that one precondition suppressed, the tool plans 255 moves (7 instance files, 248 shard files), leaves 2 files in `docs/archive/` in place, rewrites `CLAUDE.md` (18), `.context-budget.json` (1) and `.quality-gates.json` (1), rehearses 123 proofs (0 excluded), and its apply lands as one commit through the hooks: 255 renames, lowest similarity 99%, its checks agree, proof histogram 118 / 5 before and after, root 22 to 16 entries. The other seven stages are not run yet. Model: Claude Sonnet 5.5.
+
 ### 2026-10-07 · [BL-101] S281 claim (in progress) — P8, the rehearsal of this repository's own move in a scratch clone
 
 CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose BL-101 P8 and the owed HANDOFFS trim. Deliverable: the plan's section 7.3 row P8 and section 5A.4 (C17), in a scratch clone and shipping nothing: `bin/migrate-layout` on the instance files, the section 3.1 criterion at the measured baseline, the proofs' histogram, a real trim in the new layout, the X2 hook test, the resync simulation against `upstream/main`. Done before this claim: the trim `01b6947` and its fold `9d8baf0`. Phase 0: 0 undocumented commits, 0 merges, gate citation matches, #94 #92 #93 without a reply, `CHANGELOG.md` 176,567 B (the 196,608 B trigger does not fire). Model: Claude Sonnet 5.5.
