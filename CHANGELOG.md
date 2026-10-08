@@ -241,6 +241,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-07 · [BL-101] S280 — the floors after BL-101 P7: `tests-sh-passed` 475 to 476 and a new gate, `migrate-layout-unit-tests` at 128
+
+Both are measured. `bash bin/tests.sh` in a clean `--no-local` clone of `c159e59` (captured to a file, nothing else running): **482 passed, 0 failed, 0 skipped at three receipts, and 476 passed, 0 failed, 6 skipped at two** (the S280 stub removed in the clone; Test 40 still compares 666 with 666), against S279's 481 and 475: the one new pass is the wired migration-tool suite. The floor is stated at two receipts, the at-rest state after the next trim (fork Learning #70). `migrate-layout-unit-tests` is `python3 tools/test_migrate_layout.py`, `Ran 128 tests`, about 265 s. The shell suite is about 4.5 minutes slower for it. `.quality-gates.json` carries the note (`_s280_tightening_bl101_p7`). Adding a gate and raising a floor are tightenings; the pre-commit ratchet accepts them. Model: Claude Sonnet 5.5.
+
 ### 2026-10-07 · [BL-101] S280 — `bin/tests.sh` runs the migration tool's suite (128 tests, about 4.5 minutes of the shell suite)
 
 `bin/tests.sh` now runs `tools/test_migrate_layout.py` beside the other layout suites, after the sync layer, and passes or fails on its exit code (one new PASS row: "migration tool (bin/migrate-layout) unit tests green"). Canonical-only, like the tool. The floors for it (the shell suite's `tests-sh-passed` and a new gate `migrate-layout-unit-tests`) follow in the next commit, measured in a clean clone of this one. Model: Claude Sonnet 5.5.
