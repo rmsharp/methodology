@@ -21,8 +21,8 @@ bin/sync, plan Decision 5).
 A project keeps its methodology files at its root (the legacy layout, the manifest's `dest` column) or one
 level down in methodology/ (the new layout, its NEW_LAYOUT table): BL-101 phase P6. `--layout` chooses which
 adopter tree is simulated, `legacy` (the default, so the gate and the message are unchanged), `new` or `both`.
-The documents are authored for the legacy layout today, so `--layout new` reports the links that dangle
-there; rewriting them is phase P9, whose criterion is `--layout both` green.
+Since phase P9 the documents resolve in both: a reference that cannot be one relative link in both layouts is a
+bare name in a code span, not a link, and `--layout both` is green (bin/tests.sh holds it).
 
 Usage:  ./bin/check-links [--layout legacy|new|both] [--tree <adopter-project-dir>]
 Exit:   0 = all relative links resolve; 1 = one or more dangling links; 2 = usage, or a tree with no layout.

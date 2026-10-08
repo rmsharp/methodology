@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 — P9 step 6: Test 10 holds `--layout both` green, two stale statements are corrected, and the plan records P9
+
+`bin/tests.sh` Test 10 gains one assertion, `check-links --layout both` exit 0 (it read exit 1 with 36 dangling at this session's claim). `bin/check-links`'s docstring and this repository's `CLAUDE.md` no longer say `both` is P9's future criterion (`CLAUDE.md` 18,767 B to 18,737 B). The plan's new §7.3c records P9; to stay inside its 60,000 B declared budget (now exactly 60,000) §7.3a and §7.3b were recomposed, their per-adopter detail pointing at `p7-adopter-runs/summary.md` where it is kept, and the P6 sentence "For P9" removed as resolved. **Left, not done (a tool change, not documentation):** `bin/migrate-layout` (`:695`, `:882`) still prints its links check as informational "until P9".  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 — P9 step 5: `BOOTSTRAP.md` gains "Two layouts" and the README points at it; `bin/check-links --layout both` exits 0
 
 `starter-kit/BOOTSTRAP.md` (36,737 B to 39,555 B): a new section "Two layouts" (the table of where files sit, what `--layout auto|new` does, what `bin/migrate-layout` refuses and reports, the plan's C14 sentence that two things are called `methodology`, and that names are bare); the setup tree, the adoption-mode sentence, the `bin/sync` copy sentence, manual-copy step 1, the update route's table and the customization row each say which layout they describe; its two links that could not resolve in both layouts (`PROJECT_LEARNINGS.md`, `ITERATIVE_METHODOLOGY.md`) are bare names. `README.md`: one paragraph before Option B. **Measured:** `bin/check-links` legacy OK, `--layout new` OK, `--layout both` exit 0, 80 links in 23 files in each layout (36 dangling at the start of the session). `bin/sync --layout auto` on an empty repository chose legacy and `--layout new` wrote under `methodology/` (dry runs), which is what the section says.  Model: Claude Sonnet 5.5.
