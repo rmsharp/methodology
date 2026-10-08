@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 — P9 step 3a: four workstream documents name the operating files by bare name
+
+`ARCHITECTURE_WORKSTREAM.md` (2 links), `DEVELOPMENT_WORKSTREAM.md`, `AUDIT_WORKSTREAM.md` and `TEMPLATE_WORKSTREAM.md` (1 each) turn their `../../../` links to `SAFEGUARDS.md` and `RECOMMENDED_SKILLS.md` into their own text. `bin/check-links`: legacy OK (92 to 87 links), `--layout new` 12 to 7 dangling.  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 — P9 step 2: the three framework documents name files by bare name and know the second layout
 
 `ITERATIVE_METHODOLOGY.md` turns its 8 `../../` links to the operating files into their own text. `FRAMEWORK_APPARATUS.md` adds one sentence under its trim command giving the `methodology/` form (`python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --check`) and pointing at the runner's paragraph. `HOW_TO_USE.md` says in three places that the runner may sit in `methodology/` (the table row, step 1 of the integration list with its CLAUDE.md example, and the "known location" step). `bin/check-links`: legacy OK (100 to 92 links), `--layout new` 20 to 12 dangling.  Model: Claude Sonnet 5.5.
