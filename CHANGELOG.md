@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S284 — the backlog and the plan record the links check as judged, no longer carried
+
+`docs/planning/BACKLOG-DETAIL.md` BL-101 gains the S284 paragraph (the rule, the measurement, the acceptance run, the record) and drops the two statements that `bin/migrate-layout` still calls its links check informational (the P9 record's "Left" and the next-action "Carried"); the plan's 7.3c "Left" sentence now reads "closed S284" (59,990 of 60,000 B, one byte under where it stood). Next action stays P11. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S284 — the acceptance run of the changed tool and the record of the links rule
 
 `migrate-12-adopters.py` (P7's script, checks on, adopters' hooks armed as in the real clone) run from a clean `--no-local` clone of `7c377c2`, the commit holding the changed `bin/migrate-layout`: **11 of 12 migrate with `checks ok` and no difference**; the links cell reads 0 framework dangling before and after in all eleven, and the project-file counts of the design measurement (6, 23 from 4, 108, 15, 18, 2, 1, 12). `claude_work` rolls back for the too-small-ledger rename gate (1,305 bytes, 67%) as at P7; `wsfct`'s own hook refuses the commit until its `context_budget.py` path is updated, as at P7, and it applies with its hooks off. Kept in `s284-adopter-runs/`: `rows.json`, `summary.md` and `links-cells.json` (the cells and the rollback causes extracted from the run's 988 KB `reports.json`, which is not committed; P10 kept only its rows too). The record, `s284-links-judged-record.md`: the obvious rule and why it fails, the measurement, the rule, the tests and mutants, what is not verified. Model: Claude Sonnet 5.5.

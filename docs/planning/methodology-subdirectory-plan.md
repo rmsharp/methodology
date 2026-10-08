@@ -517,7 +517,7 @@ one-deliverable rule is the default.
 
 ### 7.3c P9 — what was done (S282)
 
-**DONE.** `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files per layout); `bin/tests.sh` Test 10 holds it. No one relative link between the runner and a framework document resolves in both layouts (`docs/methodology/X` against `X`), so those 36 became bare names in code spans; the 78 that resolve in both stayed links. The runner says once where files are; `BOOTSTRAP.md` gained §Two layouts with C14's sentence; the README names the second layout. **Left:** `bin/migrate-layout` still prints its links check as informational 'until P9'. **Not shown:** an adopter reading the new text.
+**DONE.** `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files per layout); `bin/tests.sh` Test 10 holds it. No one relative link between the runner and a framework document resolves in both layouts (`docs/methodology/X` against `X`), so those 36 became bare names in code spans; the 78 that resolve in both stayed links. The runner says once where files are; `BOOTSTRAP.md` gained §Two layouts with C14's sentence; the README names the second layout. **Left (closed S284):** the `bin/migrate-layout` links check, informational 'until P9'. **Not shown:** an adopter reading the new text.
 
 ### 7.3d P10 — the sha (S283)
 
