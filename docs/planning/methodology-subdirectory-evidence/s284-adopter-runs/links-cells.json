@@ -1,0 +1,187 @@
+{
+ "Philippians": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 1,
+   "framework": 0,
+   "project": 2
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "airqino": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 1,
+   "framework": 0,
+   "project": 1
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "chat_verification": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "church_growth": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "claude_work": {
+  "checks_ran": false,
+  "rolled_back_because": "a moved file would fall below 90% similarity, so git log --follow could not reach its history: CHANGELOG.md -> methodology/CHANGELOG.md (67%: the ledger is too small to take its entry and stay a rename at 90% (it holds 1305 bytes); migrate after it has more entries)",
+  "status": "rolled-back"
+ },
+ "dalia_martinez_funeral": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "feedback-loop-comparison": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 1,
+   "framework": 0,
+   "project": 23
+  },
+  "links_before": {
+   "exit": 1,
+   "framework": 0,
+   "project": 4
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "model_project_constructor": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 1,
+   "framework": 0,
+   "project": 6
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "mts-system": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 1,
+   "framework": 0,
+   "project": 15
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "nprcgenekeepr": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 1,
+   "framework": 0,
+   "project": 108
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "vscode_quarto_ext": {
+  "checks_ran": true,
+  "differences": [],
+  "links_after": {
+   "exit": 1,
+   "framework": 0,
+   "project": 18
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ },
+ "wsfct": {
+  "checks_ran": true,
+  "differences": [],
+  "first_attempt_with_its_own_hook": {
+   "error": "git commit was refused: python3: can't open file '/private/var/folders/dg/yk5mzc3n7jj8dfhdj7wspyy80000gn/T/p7-clones-mnh_1qk7/wsfct/context_budget.py': [Errno 2] No such file or directory",
+   "status": "rolled-back"
+  },
+  "links_after": {
+   "exit": 1,
+   "framework": 0,
+   "project": 12
+  },
+  "links_before": {
+   "exit": 0,
+   "framework": 0,
+   "project": 0
+  },
+  "ok": true,
+  "status": "applied"
+ }
+}
