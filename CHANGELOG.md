@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 — P9 step 3b: the three campaign templates and `SAFEGUARDS.md` name files by bare name
+
+The three `*_CAMPAIGN.md` files turn their one `../../../SESSION_RUNNER.md` link into its own text; `SAFEGUARDS.md` names `workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md` without the `docs/methodology/` prefix. `bin/check-links`: legacy OK (87 to 84 links), `--layout new` 7 to 4 dangling.  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 — P9 step 3a: four workstream documents name the operating files by bare name
 
 `ARCHITECTURE_WORKSTREAM.md` (2 links), `DEVELOPMENT_WORKSTREAM.md`, `AUDIT_WORKSTREAM.md` and `TEMPLATE_WORKSTREAM.md` (1 each) turn their `../../../` links to `SAFEGUARDS.md` and `RECOMMENDED_SKILLS.md` into their own text. `bin/check-links`: legacy OK (92 to 87 links), `--layout new` 12 to 7 dangling.  Model: Claude Sonnet 5.5.
