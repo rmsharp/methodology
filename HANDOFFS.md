@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S283
+date: 2026-10-08
+status: pending
+active_task: WRITE the BL-101 P10 readiness record (chosen at the S283 Phase 0 picker; contract: `docs/planning/methodology-subdirectory-plan.md` section 7 row P10 and section 5A.2 rule 5): the one fork sha adopters may sync from after the expand stage, with the evidence that it changes no adopter that does not run `bin/migrate-layout` (a sync of the 12 real adopters in `--no-local` clones at that sha: legacy stays legacy, `bin/status` reads `current`), and the measured contents of the D8 pull request (files, dependencies on non-BL-101 fork commits, #94 and #92). Nothing is sent, tagged or pushed upstream; D8, the release number and any tag stay his. Baseline at this claim: HEAD `05a42a0` after the owed HANDOFFS trim (`025bccf`, proof exit 0 from a `--no-local` clone) and its fold; `bash bin/tests.sh` in a clean clone of `05a42a0` 477 / 0 / 6 at two receipts (Test 40 666 = 666); `git rev-list --left-right --count upstream/main...main` reads `0 1632`; #94, #92, #93 without a maintainer reply; the plan is 60,000 of 60,000 B, so its record is a pointer to a file in the evidence directory.
+```
+
+```handoff
 session: S282
 date: 2026-10-08
 status: complete
