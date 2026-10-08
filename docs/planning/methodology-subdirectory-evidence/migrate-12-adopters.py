@@ -9,8 +9,8 @@ Plan: docs/planning/methodology-subdirectory-plan.md section 7.3 row P7. For eac
   3. copies the synced clone (the "before" tree), runs the project's own dashboard and ratchet there;
   4. runs bin/migrate-layout as a dry run, then with --apply (checks on), in the clone;
   5. runs the migrated project's own dashboard and ratchet, and records one row.
-The output is a table with one row per adopter and no blank cell (a step that does not apply says why), plus the raw JSON
-report of each dry run and apply. Run it from the repository root:
+The output is a table with one row per adopter and no blank cell (a step that does not apply says why), rows.json (the rows as
+data) and reports.json (the raw JSON report of each dry run and apply, by adopter). Run it from the repository root:
 
     python3 docs/planning/methodology-subdirectory-evidence/migrate-12-adopters.py [--only NAME ...] [--out DIR]
 
@@ -99,8 +99,9 @@ def ratchet_line(project):
     return (pick[-1] if pick else ("exit %s: %s" % (code, lines[-1] if lines else "no output")))[:160]
 
 
-def run_one(name, work, out_dir):
+def run_one(name, work, reports):
     row = {"adopter": name}
+    reports[name] = {}
     src = DEV / name
     clone = work / name
     t0 = time.time()
@@ -156,7 +157,7 @@ def run_one(name, work, out_dir):
     row["dry_exit"] = code
     row["dry_status"] = dry.get("status")
     row["refusals"] = "; ".join("%s: %s" % (r["code"], r["message"][:100]) for r in dry.get("refusals", [])) or "none"
-    (out_dir / (name + ".dry.json")).write_text(json.dumps(dry, indent=1), encoding="utf-8")
+    reports[name]["dry_run"] = dry
     code, out = sh([sys.executable, "-B", str(REPO / "bin" / "migrate-layout"), str(clone), "--apply", "--json", "--trailer", TRAILER], timeout=3600)
     try:
         app = json.loads(out)
@@ -168,7 +169,7 @@ def run_one(name, work, out_dir):
     if app.get("status") == "rolled-back" and row["hooks"] != "none":
         # the adopter's own hook refused the commit: say what it said, then run the rest of the plan with this clone's hooks off
         row["hook_rollback"] = " ".join(((app.get("commit") or {}).get("error") or "").split())[:200]
-        (out_dir / (name + ".apply-with-hooks.json")).write_text(json.dumps(app, indent=1), encoding="utf-8")
+        reports[name]["apply_with_its_hooks"] = app
         git(clone, "config", "--unset", "core.hooksPath")
         code, out = sh([sys.executable, "-B", str(REPO / "bin" / "migrate-layout"), str(clone), "--apply", "--json", "--trailer", TRAILER], timeout=3600)
         try:
@@ -177,7 +178,7 @@ def run_one(name, work, out_dir):
             app = {"status": "unparseable", "raw": out[-300:]}
         row["apply_exit"] = "%s (hooks on) then %s (hooks off)" % (row["apply_exit"], code)
         row["apply_status"] = "rolled back by its hook; %s with hooks off" % app.get("status")
-    (out_dir / (name + ".apply.json")).write_text(json.dumps(app, indent=1), encoding="utf-8")
+    reports[name]["apply"] = app
     moves = app.get("moves") or dry.get("moves") or []
     row["moves"] = "%d (%d tracked, %d plain)" % (len(moves), sum(1 for m in moves if m["tracked"]), sum(1 for m in moves if not m["tracked"]))
     scores = [x["score"] for x in (app.get("commit") or {}).get("renames", [])]
@@ -244,21 +245,23 @@ def main():
     work_ctx = tempfile.TemporaryDirectory(prefix="p7-clones-") if not args.work else None
     work = Path(args.work) if args.work else Path(work_ctx.name)
     work.mkdir(parents=True, exist_ok=True)
-    rows = []
+    rows, reports = [], {}
     if args.resume and (out_dir / "rows.json").is_file():
         rows = json.loads((out_dir / "rows.json").read_text(encoding="utf-8"))
+        reports = json.loads((out_dir / "reports.json").read_text(encoding="utf-8")) if (out_dir / "reports.json").is_file() else {}
     done = {r["adopter"] for r in rows}
     for name in names:
         if name in done:
             continue
         print("== %s" % name, flush=True)
         try:
-            row = run_one(name, work, out_dir)
+            row = run_one(name, work, reports)
         except Exception as e:  # noqa: BLE001 -- one adopter's failure is a row, not the end of the run
             row = {"adopter": name, "apply_status": "SCRIPT ERROR: %r" % (e,)}
         rows.append(row)
         print(json.dumps(row), flush=True)
         (out_dir / "rows.json").write_text(json.dumps(rows, indent=1), encoding="utf-8")
+        (out_dir / "reports.json").write_text(json.dumps(reports, indent=1, sort_keys=True), encoding="utf-8")
         shutil.rmtree(work / name, ignore_errors=True)
     order = {n: i for i, n in enumerate(ADOPTERS)}
     rows.sort(key=lambda r: order.get(r["adopter"], 99))
