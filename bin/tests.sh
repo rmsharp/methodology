@@ -315,14 +315,15 @@ if python3 "$METHODOLOGY/tools/test_sync_layouts.py" >/dev/null 2>&1; then
 else
     fail "sync layer in both layouts unit tests failed"
 fi
-# The migration tool (BL-101 P7): bin/migrate-layout run as a command in scratch git projects that the real bin/sync
-# wrote (its plan, its refusals, the one commit and its rollback, the rewrites, the one ledger entry, the hits it leaves,
-# the shard rehearsal, the checks before and after), and its rules as functions. Canonical-only, like the tool. The
-# evidence over the 12 adopters in clones is a script (docs/planning/methodology-subdirectory-evidence/), not this suite.
-if python3 "$METHODOLOGY/tools/test_migrate_layout.py" >/dev/null 2>&1; then
-    pass "migration tool (bin/migrate-layout) unit tests green"
+# The migration tool (BL-101 P7): only its FAST classes run here, the rules as functions and the usage shapes (about
+# 2 s). The command-level suite (bin/migrate-layout run in scratch git projects the real bin/sync wrote: about 265 s) is
+# the gate migrate-layout-unit-tests and is NOT wired in: with it this suite took 10.7 minutes, past the 600 s the gate
+# runner gives a gate, and a gate that times out reads "unmeasured (exit 127)", so tests-sh-passed and tests-sh-failed
+# silently measured nothing (found by the first full `quality_ratchet.py --run` at S280; this suite took 5.5 minutes before).
+if python3 "$METHODOLOGY/tools/test_migrate_layout.py" TestThePureRules TestUsageAndNothingToDo >/dev/null 2>&1; then
+    pass "migration tool (bin/migrate-layout) rules and usage unit tests green (the command-level suite is the gate migrate-layout-unit-tests)"
 else
-    fail "migration tool (bin/migrate-layout) unit tests failed"
+    fail "migration tool (bin/migrate-layout) rules and usage unit tests failed"
 fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
