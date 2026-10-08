@@ -1,0 +1,196 @@
+BL-101 P8 rehearsal. base commit ffe5512; upstream/main f34769f
+stages: tool proofs trim hook dash resync suites ratchet
+root entries (ls -A, without .git): unmoved 22
+
+== 1. the tool as written, on a scratch clone of this repository ==
+--tier all: exit 1, "layout:" line: layout: none   tier: all   mode: dry run (nothing written; add --apply to migrate)
+     - [not-current] bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): SESSION_RUNNER.md (missing), FRAMEWORK_LEARNING
+   (missing) rows in the [not-current] refusal: 23
+--tier 2: exit 1, "layout:" line: layout: none   tier: 2   mode: dry run (nothing written; add --apply to migrate)
+     - [tier-order] tier 2 needs the framework files already under methodology/ (run tier 1 first, or --tier all)
+     - [not-current] bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): SESSION_RUNNER.md (missing), FRAMEWORK_LEARNING
+   (missing) rows in the [not-current] refusal: 23
+
+== 1b. the tool with ONE precondition suppressed (p8-apply-tool.py: read_status reports no rows), dry run ==
+exit 0; p8-apply-tool: read_status suppressed (the not-current precondition is about an adopter); everything else is the tool as written
+status ok; refusals 0; layout read as none; tier all
+moves 255: generated 2, manifest 5, shard 248
+   the instance files: CHANGELOG.md, HANDOFFS.md, .context-budget.json, .quality-gates.json, .gitattributes, dashboard_history.jsonl, .context-budget-history.jsonl
+left in place (2):
+   docs/archive/FORK_LEARNINGS-retired.md -- not a ledger shard the trimmer wrote: the project's own; it stays
+   docs/archive/HANDOFFS-archive.md -- not a ledger shard the trimmer wrote: the project's own; it stays
+rewrites (path -> final, replacements):
+   CLAUDE.md -> CLAUDE.md, 18
+   .context-budget.json -> methodology/.context-budget.json, 1
+   .quality-gates.json -> methodology/.quality-gates.json, 1
+shard rehearsal: ran True, proofs 123, excluded 0
+hits left, by kind: ci 0 mentions in 0 files; harness 0 mentions in 0 files; hooks 10 mentions in 1 files; ledger 6668 mentions in 250 files; other 12223 mentions in 246 files
+hooks that run the moved tool: 0; hook files: ['.githooks/pre-commit']
+
+== 1c. the apply: ONE commit through the clone's hooks, then the tool's own before-and-after checks ==
+exit 0 (0 = applied and the checks agree; 3 = rolled back; 4 = applied, a check differs)
+status applied
+commit d8424b5 on parent ffe5512; 255 moves recorded as renames; lowest similarity 99%, median 100%
+checks ok: True; differences: []; clean tree after: True; informational: ['links']
+   status   before {"exit": 0, "tracked": 0, "current": 0} | after {"exit": 0, "tracked": 0, "current": 0}
+   ledger   before {"exit": 0, "line": "check-ledger: OK \u2014 1 file(s), no structural findings"} | after {"exit": 0, "line": "check-ledger: OK \u2014 1 file(s), no structural findings"}
+   handoff  before {"exit": 1, "line": "error: receipt still pending \u2014 close-out not completed"} | after {"exit": 1, "line": "error: receipt still pending \u2014 close-out not completed"}
+   links    before {"exit": 1, "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout."} | after {"exit": 1, "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout."}
+   proofs   before {"count": 123, "histogram": {"1": 5, "0": 118}} | after {"count": 123, "histogram": {"1": 5, "0": 118}}
+   history  before {"commits": 1645} | after {"commits": 1646}
+M after the apply: d8424b5; the migration commit is the only commit past the base: 1
+root entries (ls -A, without .git): moved 16
+a root CHANGELOG.md / HANDOFFS.md / .quality-gates.json remains in M: 0
+git log --follow reaches the ledger history from the new path: 1646 commits (the unmoved ledger, by path: 1645)
+
+== 2. every tracked *.verify.sh, run in the unmoved clone and in the moved one ==
+unmoved   proofs=126  exit0 x121  exit1 x5  
+moved     proofs=126  exit0 x121  exit1 x5  
+proofs whose exit code differs, unmoved vs moved: 0
+proofs present in only one of the two: 0
+the unmoved clone's exit-1 proofs (pre-existing, the BL-36 class):
+   CHANGELOG-through-2026-08-02.md.verify.sh
+   CHANGELOG-through-2026-08-09.md.verify.sh
+   HANDOFFS-through-2026-08-02.md.verify.sh
+   HANDOFFS-through-2026-08-09.md.verify.sh
+   HANDOFFS-through-2026-08-25.md.verify.sh
+
+== 3. one real trim of each ledger in the new layout, hooks ON ==
+tool: methodology_trim.py v1.8.0
+
+-- methodology/HANDOFFS.md (keep 2 records of 3) --
+[L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+[L2_OK] zones pinned; front-matter diff confined to declared changes
+[L3_OK] 3 record(s) partitioned; every one byte-identical across the move
+[DRY_RUN] would archive 1 of 3 record(s) (2026-10-07 → 2026-10-07) to methodology/archive/HANDOFFS-through-2026-10-07-3.md; live 29,616 B → 18,510 B. Nothing written 
+write exit 0
+[L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+[L2_OK] zones pinned; front-matter diff confined to declared changes
+[L3_OK] 3 record(s) partitioned; every one byte-identical across the move
+[P1A_OK] ledger gained exactly one entry (98 → 99)
+[WROTE] archived 1 record(s) to methodology/archive/HANDOFFS-through-2026-10-07-3.md; live 29,616 B → 18,510 B
+shard: methodology/archive/HANDOFFS-through-2026-10-07-3.md (12130 B)
+files written outside methodology/ (the trim): 0
+commit exit 0 (0 = the hooks passed it); proof exit: before the commit 0, after it 0, from a --no-local clone 0; --reverify 0
+OK: L1, L2/front-matter, L3 hold for methodology/archive/HANDOFFS-through-2026-10-07-3.md
+
+-- methodology/CHANGELOG.md (keep 49 records of 99) --
+[L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+[L2_OK] zones pinned; front-matter diff confined to declared changes
+[L3_OK] 99 record(s) partitioned; every one byte-identical across the move
+[DRY_RUN] would archive 50 of 99 record(s) (2026-10-07 → 2026-10-07) to methodology/archive/CHANGELOG-through-2026-10-07.md; live 182,643 B → 105,048 B. Nothing writt
+write exit 0
+[L1_OK] records-zone concatenation is byte-identical (asserted on the artifacts)
+[L2_OK] zones pinned; front-matter diff confined to declared changes
+[L3_OK] 99 record(s) partitioned; every one byte-identical across the move
+[P1A_OK] ledger gained exactly one entry (49 → 50)
+[WROTE] archived 50 record(s) to methodology/archive/CHANGELOG-through-2026-10-07.md; live 182,643 B → 105,048 B
+shard: methodology/archive/CHANGELOG-through-2026-10-07.md (79464 B)
+files written outside methodology/ (the trim): 0
+commit exit 0 (0 = the hooks passed it); proof exit: before the commit 0, after it 0, from a --no-local clone 0; --reverify 0
+OK: L1, L2/front-matter, L3 hold for methodology/archive/CHANGELOG-through-2026-10-07.md
+
+ledger entries the trims wrote into methodology/CHANGELOG.md: 2
+a root CHANGELOG.md or HANDOFFS.md appeared: 0
+check-ledger / check-handoff after the trims (exit codes): 0 / 1
+trim stage: every proof held and the hooks passed both commits
+
+== 4. X2: a later commit after the move that does not touch the ledger, hooks ON ==
+C  control, UNMOVED ledger, later commit: exit=1 (expect nonzero: refused)
+     ✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+     
+X2 MOVED by the tool, later commit without the ledger: exit=1 (expect nonzero: refused; 0 = the gate fails OPEN)
+     ✗ methodology/CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+     
+X2+ MOVED, the same change with methodology/CHANGELOG.md co-staged (a NEW entry): exit=0 (expect 0)
+N  MOVED, an EDIT to a committed ledger entry (the never-edit gate, C6): exit=1 (expect nonzero: refused)
+     ✗ methodology/CHANGELOG.md: a committed entry was changed — 1 entry:
+         removed  ### 2026-10-07 · [BL-101] S280 close-out — P7: `bin/migrate-layout`, run over the 12 adopters in clo
+
+== 5. the dashboard on the unmoved and the moved clone ==
+U: Health: 76/100    High+ Risk: 0    Commits: 2,067
+M: Health: 74/100    High+ Risk: 0    Commits: 2,068
+every dashboard metric that differs, unmoved | moved (paths, counts and the tool's own new entry left out):
+   /docs/doc_to_source_ratio          3.818 | 3.819
+   /docs/has_changelog                true | false
+   /methodology/layout/ledger         "CHANGELOG.md" | "methodology/CHANGELOG.md"
+   /scores/health/documentation       16 | 14
+   /scores/health/total               76 | 74
+
+== 6. plan 5A.4: the resync, with the tool's own move, against the current upstream/main ==
+upstream/main f34769f; merge base with the fork f34769f; fork unmoved ffe5512; fork moved d8424b5
+
+-- 1. rename detection, merge base -> the moved fork --
+   D	.context-budget-history.jsonl
+   D	.context-budget.json
+   D	.quality-gates.json
+   D	CHANGELOG.md
+   D	HANDOFFS.md
+   A	docs/HANDOFFS_ARCHIVE_INDEX.md
+   A	docs/planning/context-budget-status-plan.md
+   A	docs/planning/context-budget-status-pr-body.md
+   A	docs/planning/pr4-candidate.context-budget.json
+   A	methodology/.context-budget-history.jsonl
+   A	methodology/.context-budget.json
+   R100	.gitattributes	methodology/.gitattributes
+   A	methodology/.quality-gates.json
+   A	methodology/CHANGELOG.md
+   A	methodology/HANDOFFS.md
+   A	methodology/dashboard_history.jsonl
+   archive entries paired as renames (R*): 1; as a delete and an add (D, A): 1 and 249
+   ledgers at a 30% threshold: D	CHANGELOG.md D	HANDOFFS.md A	methodology/CHANGELOG.md A	methodology/HANDOFFS.md 
+
+-- 2a. fork UNMOVED vs the upstream-like edit (control) --
+   Auto-merging .context-budget.json
+   CONFLICT (content): Merge conflict in .context-budget.json
+   Auto-merging .quality-gates.json
+   CONFLICT (content): Merge conflict in .quality-gates.json
+   Auto-merging CHANGELOG.md
+   Auto-merging HANDOFFS.md
+   CONFLICT (content): Merge conflict in HANDOFFS.md
+   conflicts: 3; of them file-location: 0; the new upstream shard lands at: docs/archive/CHANGELOG-through-2099-01-01.md
+
+-- 2b. fork MOVED by the tool vs the same edit --
+   CONFLICT (modify/delete): .context-budget.json deleted in d8424b5b914366b3ee4b0e2a1648d06f03e8132a and modified in bbab1
+   CONFLICT (modify/delete): .quality-gates.json deleted in d8424b5b914366b3ee4b0e2a1648d06f03e8132a and modified in bbab1c
+   CONFLICT (modify/delete): CHANGELOG.md deleted in d8424b5b914366b3ee4b0e2a1648d06f03e8132a and modified in bbab1c3cfd4c6
+   CONFLICT (modify/delete): HANDOFFS.md deleted in d8424b5b914366b3ee4b0e2a1648d06f03e8132a and modified in bbab1c3cfd4c64
+   conflicts: 4; of them file-location: 0; the new upstream shard lands at: docs/archive/CHANGELOG-through-2099-01-01.md
+   (the tool leaves FORK_LEARNINGS-retired.md and HANDOFFS-archive.md in docs/archive/, so git sees no directory rename)
+
+== 7. plan 3.1: bash bin/tests.sh, the unmoved clone and the moved one, serially, from the same commit ==
+uncommitted files before the suites: unmoved 0, moved 0 (both must be 0)
+unmoved: exit 0; 482 passed, 0 failed, 0 skipped
+moved: exit 1; 445 passed, 11 failed, 4 skipped
+FAIL lines: unmoved 0, moved 11; SKIP lines: unmoved 0, moved 4
+the criterion FAILS: the triples differ
+every FAIL or SKIP line in the moved run that is not in the unmoved run, under the Test that printed it:
+   == Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) == ::   FAIL: close-out report generator unit tests failed
+   == Test 18: dashboard scoring unit tests (BL-5 doc-only reshape) == ::   FAIL: dashboard scoring unit tests failed
+   == Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the com ::   FAIL: reconcile-on-read: budget violated -- 
+   == Test 29: CHANGELOG.md Reconcile-on-read entries stay inside the com ::   FAIL: reconcile-on-read: the front-matter norm paragraph is missing
+   == Test 38: check-handoff — the per-RECORD byte budget, scoped to th ::   FAIL: drift guard: could not plant the in-fence mutant: Traceback (most recent call last):
+   == Test 38: check-handoff — the per-RECORD byte budget, scoped to th ::   FAIL: drift guard: could not plant the prose control: Traceback (most recent call last):
+   == Test 38: check-handoff — the per-RECORD byte budget, scoped to th ::   FAIL: drift guard: fixture is stale against the live format, missing: Traceback (most recent call last):
+   == Test 39: check-handoff — the header reserve and the fit assertion ::   SKIP: A2 truth: no root HANDOFFS.md (adopter tree or fresh clone), so the reserve was not measured against a live file
+   == Test 39: check-handoff — the header reserve and the fit assertion ::   SKIP: M2: no root HANDOFFS.md to measure the shrunken reserve against
+   == Test 39: check-handoff — the header reserve and the fit assertion ::   SKIP: split control: no root HANDOFFS.md to split
+   == Test 40: model-report — the population is the WHOLE ledger, live  ::   FAIL: MUTANT SURVIVED: discovery disabled still reported 0 vs live-only 0
+   == Test 40: model-report — the population is the WHOLE ledger, live  ::   FAIL: the found-nothing sentinel is gone -- Test 30's real-file guard is now vacuous
+   == Test 40: model-report — the population is the WHOLE ledger, live  ::   FAIL: zero-population unreadable file vanished -- 'could not read' rendered as 'found nothing'
+   == Test 40: model-report — the population is the WHOLE ledger, live  ::   SKIP: no archived **Model:** bullets on disk -- (1) coverage and (2) conservation cannot be built
+   == Test: quality_ratchet.py == ::   FAIL: this repo's .quality-gates.json is missing, empty, or defective
+the two unit suites bin/tests.sh wraps, run alone in the moved clone (FAIL and ERROR lines):
+   close-out: ERROR: test_every_complete_receipt_renders_and_lints_clean (__main__.Property)
+   dashboard: FAIL: test_every_framework_item_exists_in_this_repository (__main__.TestFrameworkChecklist) (item='CHANGELOG.md')
+   dashboard: FAIL: test_every_framework_item_exists_in_this_repository (__main__.TestFrameworkChecklist) (item='HANDOFFS.md')
+   dashboard: FAIL: test_the_trim_row_population_is_class_a_at_the_constants_and_at_the_output (__main__.TestPhaseC1ReadCapClasses)
+   dashboard: FAIL: test_record_counter_matches_the_trimmers_zoning_on_every_real_ledger (__main__.TestS38TrimTriggerRow)
+
+== 8. quality_ratchet.py --run, the unmoved clone and the moved one (the gates, with the commands the tool rewrote) ==
+unmoved: exit 0 (0 clean, 1 unmeasured, 2 a gate failed); cite in the receipt: quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results f6685334c4b6 · manifest 5115eb732421
+moved: exit 2 (0 clean, 1 unmeasured, 2 a gate failed); cite in the receipt: quality_ratchet: 16/18 pass · 2 fail · 0 unmeasured · results 9c0a7248ed42 · manifest 5115eb732421
+gate rows that are not a pass, moved clone (gate, rule, measured, status):
+     tests-sh-passed                       >= 476         445  fail
+     tests-sh-failed                         <= 0          11  fail
+gate rows that are not a pass, unmoved clone: 0

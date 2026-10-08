@@ -1,9 +1,9 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
-**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P7 are built, as §7 records.**
+**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P8 are built, as §7 records.**
 **Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended:** D1 (a), D6
-(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P7 are
-done (P1 §7.1, S274; P2 §7.2a; P3 §7.2b; P4 §7.2c; P5 §7.2d, S278; P6 §7.2e, S279; P7 §7.3a, S280); P8 is next.**
+(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P8 are
+done (P1 §7.1, S274; P2 §7.2a; P3 §7.2b; P4 §7.2c; P5 §7.2d, S278; P6 §7.2e, S279; P7 §7.3a, S280; P8 §7.3b, S281); P9 is next.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm. This file is in the population of that plan's retirement rule like every other planning file.
@@ -476,11 +476,11 @@ one-deliverable rule is the default.
 
 | Phase | DONE (each tool) | Verify | Surface, and what it cannot enforce |
 |---|---|---|---|
-| **P2** | DONE (§7.2a): hook and ratchet accept either layout; **a later content commit with no ledger entry is refused in the new layout (X2, a permanent test)**; a move commit that lowers a threshold is refused | a mutant per behaviour; the two selftest gates | scratch repos with real hooks; not another clone's `core.hooksPath` |
-| **P3** | DONE (§7.2b): the trimmer and `close_out_report.py` resolve the ledger's directory; a new-layout trim proves from a `--no-local` clone; **all 117 old proofs: histogram unchanged** | the trimmer's tests and mutants; clones | clones; not a trim at an adopter's history |
+| **P2** | DONE (§7.2a): hook and ratchet accept either layout; **X2, a later commit with no ledger entry, is refused (a permanent test)** | a mutant per behaviour; the two selftest gates | scratch repos with real hooks; not another clone's `core.hooksPath` |
+| **P3** | DONE (§7.2b): the trimmer and `close_out_report.py` follow the ledger's directory; **all old proofs: histogram unchanged** | the trimmer's tests and mutants; clones | clones; not a trim at an adopter's history |
 | **P4** | DONE (§7.2c): `context_budget.py` and the checkers resolve either place | their suites, both fixtures | fixtures; not an adopter's `files[]` |
-| **P5** | DONE (§7.2d): the dashboard (both copies) scores a new-layout fixture as the legacy one and a half-migrated tree as a defect; **`--sync` resolves each target's layout and writes no root copy into a migrated project (C15)** | `tools/test_methodology_dashboard.py`; the old and new dashboards over the real repos; `--sync --dry-run` over a scratch portfolio | fixtures and the repos here |
-| **P6** | DONE (§7.2e): the manifest's second table, read as data (C16); `bin/sync --layout auto` refuses what would put a second copy beside the first (**C1**), ignore mode follows the layout (C2); `bin/status` names the layout, `check-links` simulates both (C3); the scanner is the gate at **zero** | `tools/test_sync_layouts.py`; the old and new tools over the real adopters; the §5A.3 scratch portfolio | clones. Cannot show a sync from GitHub against a real remote (S218's route) |
+| **P5** | DONE (§7.2d): the dashboard scores a new-layout fixture as the legacy one; **`--sync` writes no root copy into a migrated project (C15)** | `tools/test_methodology_dashboard.py`; the old and new dashboards over the real repos | fixtures and the repos here |
+| **P6** | DONE (§7.2e): the manifest's second table, read as data (C16); `bin/sync --layout auto` never puts a second copy beside the first (**C1**); the scanner is the gate at **zero** | `tools/test_sync_layouts.py`; the old and new tools over the real adopters; the §5A.3 scratch portfolio | clones. Cannot show a sync from GitHub against a real remote (S218's route) |
 
 ### 7.2a P2 — what was built (S275)
 
@@ -504,19 +504,16 @@ one-deliverable rule is the default.
 
 ### 7.3a P7 — what was built (S280)
 
-**DONE.** `bin/migrate-layout` (canonical-only; `bin/sync`'s refusal now names it plainly) is a dry run unless `--apply`. It refuses, every reason at once: no repository or commit, a dirty tree, a half-migrated tree, a destination that exists, ignore mode, tier 2 first, a tree where `bin/status` does not read every TRACKED file current, a config it cannot rewrite faithfully. It plans from the manifest's two tables plus the generated files and the trimmer's shards, **rehearsing the shard moves in a throwaway clone first** (a shard whose proof would change its exit code stays); rewrites `CLAUDE.md`, anchored `.gitignore` entries and the configs' `path`, `results_file` and gate `command` as text (never `canonical`, never prose); adds one ledger entry; and reports every hit it leaves (CI, `.claude/`, hooks including those git does not track, ledger links, directories named in prose). The apply is ONE commit through the project's hooks, every tracked move a rename at 90% or better, rolled back on any failure, and checked before and after (exit 4 if a check differs). **Measured:** 128 tests RED first; 78 mutants (14 survived and became tests); `migrate-12-adopters.py` over the 12 adopters in `--no-local` clones, 12 rows, no blank cell: **11 migrate** (renames R92 to R97; proof histograms, `bin/status`, ledger checkers and health unchanged; `check-links` 0 to 1, as P9 expects; `chat_verification` 48 to 45 is the pinned `has_docs_dir`); **`claude_work` is refused** (a ledger that is only the seed falls to 68% with its entry); `vscode_quarto_ext` keeps one older-format shard whose proof reads its shard by working-tree path; `wsfct`'s untracked pre-commit hook (it execs `context_budget.py` from the root, now named in the dry run) rolls the commit back until that clone's hooks are off. **Corrects §3 C7:** equal proof exit codes held for this repository's proofs, not for every adopter's. **Not shown:** an adopter's CI or tests.
+**DONE.** `bin/migrate-layout` (canonical-only) is a dry run unless `--apply`. It refuses, every reason at once: no repository or commit, a dirty tree, a half-migrated tree, a destination that exists, ignore mode, tier 2 before tier 1, a tree where `bin/status` does not read every TRACKED file `current`, a config it cannot rewrite faithfully. It plans from the manifest's two tables plus the generated files and the trimmer's shards (rehearsing the shard moves in a throwaway clone first), rewrites `CLAUDE.md`, `.gitignore` and the configs' paths as text, adds one ledger entry, and reports every hit it leaves, hooks git does not track included. The apply is ONE commit through the project's hooks, every tracked move a rename at 90% or better, rolled back on failure, checked before and after (exit 4 if a check differs). **Measured:** 128 tests RED first, 78 mutants (14 survivors became tests); over the 12 adopters in `--no-local` clones (`migrate-12-adopters.py`): **11 migrate** (renames R92 to R97; proof histograms, `bin/status` and the ledger checkers unchanged; `check-links` 0 to 1, as P9 expects; `chat_verification` 48 to 45, the pinned `has_docs_dir`); **`claude_work` is refused** (a ledger that is only the seed falls to 68% with its entry); `vscode_quarto_ext` keeps one older-format shard whose proof reads its shard by working-tree path; `wsfct`'s untracked pre-commit hook rolls the commit back until that clone's hooks are off. **Corrects §3 C7:** equal proof exit codes held for this repository's proofs, not for every adopter's. **Not shown:** an adopter's CI or tests.
 
 ### 7.3 P7-P8 — the tool, then the rehearsal
 
-- **P7 DONE (§7.3a):** `bin/migrate-layout` per §4.7, and a dry run and an apply in a `--no-local` clone of each of
-  the 12 adopters (nothing in a real tree). **Verify:** the report table, 12 rows, no blank cell. **Surface:** clones of real
-  adopters; it **cannot** show that an adopter's own CI or test suite passes, which P11-P22 do in the real repository.
-- **P8 DONE (a rehearsal; ships nothing):** in a scratch clone of this repository, its instance files
-  moved by `bin/migrate-layout`; the §3.1 criterion at the then-current baseline; all 117 proofs'
-  histogram unchanged (112 / 5); one real trim in the new layout proved; the X2 hook test green; the
-  resync simulation of §5A.4 re-run against the then-current `upstream/main`. **Surface:** a clone. It
-  **cannot** show the next session's Phase 0 in the new layout; if D8 allows the real move, that move is
-  a single-commit phase of its own with that Phase 0 as its outstanding check.
+- **P7 DONE (§7.3a).** **Verify:** 12 rows, no blank cell. **Surface:** clones; it **cannot** show an adopter's own CI or tests, which P11-P22 do in the real repository.
+- **P8 DONE (§7.3b; a rehearsal, ships nothing).** **Surface:** a clone. It **cannot** show the next session's Phase 0 in the new layout; if D8 allows the real move, that move is a single-commit phase of its own with that Phase 0 as its outstanding check.
+
+### 7.3b P8 — what was measured (S281)
+
+**DONE** (§11; eight stages on two `--no-local` clones of one commit; shipped nothing). **The §3.1 criterion FAILS for this repository's own move:** unmoved **482 / 0 / 0**, moved by the tool **445 / 11 / 4**; gates 18/18 against **16/18**. The 11 FAILs and 4 SKIPs are canonical-only tests (29, 38, 39, 40, the ratchet test, two unit suites) reading this repo's root ledgers by path. **Also found:** (1) the tool **refuses this repository** (`[not-current]`: 23 distributed files read `missing`; `--tier 2` adds `[tier-order]`); with that one precondition suppressed it plans 255 moves, leaves two files in `docs/archive/`, applies as one commit through the hooks (255 renames, lowest 99%) and its own checks agree; (2) the dashboard reads the moved changelog as absent (health 76 to 74); (3) the §5A.4 re-run gives 4 modify/delete conflicts and **no** file-location one: two files stay behind, so an upstream shard lands silently in `docs/archive/`. **Held:** 126 tracked proofs, 121 / 5 in both trees, none differ; both ledgers trim and prove in `methodology/archive/` with the hooks on; X2 is refused in both trees. **Not shown:** Phase 0 in the new layout. B2's blockers are BL-104.
 
 ### 7.4 P11-P22 — an adopter per session (the BL-57 P6-P11 pattern)
 
@@ -549,7 +546,7 @@ go-ahead**. G-B is §5's decision and, if taken, its own plan.
 | A scratch portfolio of a legacy, a migrated and an empty project: `bin/sync` and the dashboard `--sync` write exactly the expected files | C1, C15 |
 | The resync simulation (§5A.4) re-run against the then-current `upstream/main` before any real move of this repo's files | C17 |
 | The literal scanner at zero | A literal is the one thing a green suite does not see |
-| All 117 old proofs: exit histogram 112/5 | They are the record that every past trim was lossless |
+| Every tracked proof: exit histogram unchanged (the 5 exit-1 proofs pre-exist) | They are the record that every past trim was lossless |
 | `git diff -M` similarity ≥ 90% on every moved file | A move that rewrites a ledger defeats `--follow` and the never-edit gate |
 | A move commit that lowers a threshold is refused (mutant) | C4's hidden loosening |
 | `bin/sync` over a legacy tree under the new layout writes nothing | C1's blank seed |
@@ -602,6 +599,7 @@ beside the scripts. Counts are of tracked files at `c8b9ddd`.
 | `hook-after-move.sh` | `bash .../hook-after-move.sh` | C5 at `c8b9ddd`: control refused, move commit passes, **later commit passes**; at P2 (`hook-after-move-after-p2-output.txt`) the later commit is **refused** |
 | `resync-after-move.sh` | `bash .../resync-after-move.sh` | §5A.4: rename pairing and the two merge-trees |
 | `frozen-proofs.sh` | `bash .../frozen-proofs.sh` (minutes) | §3 C7: 117 proofs, 3 trees |
+| `p8-rehearsal.sh`, `p8-apply-tool.py`, `p8-rehearsal-output.txt` | `bash .../p8-rehearsal.sh` (about 70 minutes) | §7.3b: the criterion, the proofs, the trim, X2, the resync |
 | `suite-blast-radius.txt` | `bash bin/tests.sh` in a `--no-local` clone with the files moved (the outputs are the recorded ones) | §3.1 |
 | `adopter-survey-output.txt`, `*-output.txt` | the recorded outputs of the scripts above | §2.2 and the rest |
 | `layout-literals-output.txt` | `python3 -B bin/check-layout-literals` (the scanner is the script) | §7.1: the RED list at P1, 177 sites in 12 files, exit 1 |
