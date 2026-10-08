@@ -1,0 +1,40 @@
+[
+ {
+  "adopter": "dalia_martinez_funeral",
+  "base_sync": "exit 0, 23 files",
+  "cand_sync": "exit 0, 23 files",
+  "files_differing": 0,
+  "added_removed_renamed": "0 / 0 / 0",
+  "under_methodology": 0,
+  "path_sets": "identical",
+  "lines": "no difference",
+  "changed": "",
+  "layout_after": "unreadable (exit 0)",
+  "status_after": "23 tracked, 0 not current",
+  "links_base_cand": "exit 0 / exit 0",
+  "health_base_cand": "48 / 48",
+  "ratchet_base": "cite in the receipt: quality_ratchet: 0/0 pass \u00b7 0 fail \u00b7 0 unmeasured \u00b7 results 4f53cda18c2b \u00b7 manifest 4f53cda18c2b",
+  "ratchet_cand": "cite in the receipt: quality_ratchet: 0/0 pass \u00b7 0 fail \u00b7 0 unmeasured \u00b7 results 4f53cda18c2b \u00b7 manifest 4f53cda18c2b",
+  "verdict": "CHECK ROW",
+  "seconds": 6
+ },
+ {
+  "adopter": "claude_work",
+  "base_sync": "exit 0, 27 files",
+  "cand_sync": "exit 0, 27 files",
+  "files_differing": 0,
+  "added_removed_renamed": "0 / 0 / 0",
+  "under_methodology": 0,
+  "path_sets": "identical",
+  "lines": "no difference",
+  "changed": "",
+  "layout_after": "unreadable (exit 0)",
+  "status_after": "23 tracked, 0 not current",
+  "links_base_cand": "exit 0 / exit 0",
+  "health_base_cand": "45 / 45",
+  "ratchet_base": "cite in the receipt: quality_ratchet: 0/0 pass \u00b7 0 fail \u00b7 0 unmeasured \u00b7 results 4f53cda18c2b \u00b7 manifest 4f53cda18c2b",
+  "ratchet_cand": "cite in the receipt: quality_ratchet: 0/0 pass \u00b7 0 fail \u00b7 0 unmeasured \u00b7 results 4f53cda18c2b \u00b7 manifest 4f53cda18c2b",
+  "verdict": "CHECK ROW",
+  "seconds": 6
+ }
+]

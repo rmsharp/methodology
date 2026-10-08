@@ -1,0 +1,21 @@
+[
+ {
+  "adopter": "dalia_martinez_funeral",
+  "base_sync": "exit 0, 23 files",
+  "cand_sync": "exit 0, 25 files",
+  "files_differing": 19,
+  "added_removed_renamed": "0 / 0 / 1",
+  "under_methodology": 1,
+  "path_sets": "DIFFER: +['methodology/SAFEGUARDS.md'] -['SAFEGUARDS.md']",
+  "lines": "19 files changed, 1016 insertions(+), 322 deletions(-)",
+  "changed": "BOOTSTRAP.md, CLAUDE_TEMPLATE.md, RECOMMENDED_SKILLS.md, SESSION_RUNNER.md, context_budget.py, docs/methodology/FRAMEWORK_APPARATUS.md, docs/methodology/HOW_TO_USE.md, docs/methodology/ITERATIVE_METHODOLOGY.md, docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md, docs/methodology/workstreams/AUDIT_WORKSTREAM.md, docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md, docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md, docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md, docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md, docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md, methodology/SAFEGUARDS.md, methodology_dashboard.py, methodology_trim.py, quality_ratchet.py",
+  "layout_after": "legacy",
+  "status_after": "23 tracked, 1 not current: SAFEGUARDS.md (missing)",
+  "links_base_cand": "exit 0 / exit 1",
+  "health_base_cand": "48 / 44",
+  "ratchet_base": "cite in the receipt: quality_ratchet: 0/0 pass \u00b7 0 fail \u00b7 0 unmeasured \u00b7 results 4f53cda18c2b \u00b7 manifest 4f53cda18c2b",
+  "ratchet_cand": "cite in the receipt: quality_ratchet: 0/0 pass \u00b7 0 fail \u00b7 0 unmeasured \u00b7 results 4f53cda18c2b \u00b7 manifest 4f53cda18c2b",
+  "verdict": "CHECK ROW",
+  "seconds": 7
+ }
+]

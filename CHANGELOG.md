@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S283 — two controls for the differential, and the hybrid script (P10)
+
+Candidate = base finds 0 differing files and still reads CHECK ROW (the base's `bin/status` prints no `layout:` line); `--tamper` moves a file under `methodology/` and reads one rename, paths DIFFER, CHECK ROW (`control-candidate-equals-base.json`, `control-tamper.json`). `p10-sync-hybrid.sh` builds the candidate's files with P6's tools on a side branch of a scratch clone and runs `sync-in-both-layouts.sh` there, so only the tools differ. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S283 — the 12-adopter sync differential, its script and its rows (P10)
 
 `p10-sync-12-adopters.py` clones each of the 12 adopters twice (`--no-local`), syncs one with the `bin/sync` of the base `078a6cc` and one with that of `add55f1`, and compares the two trees. Rows (`p10-adopter-runs/rows.json`, `summary.md`): paths identical in 12 of 12, nothing under `methodology/`, layout `legacy`, 23 of 23 tracked files `current`, 19 content files differ (20 and 21 where a ledger seed is written), health and `check-links` exits identical; `--force` was needed for two adopters in both trees. Model: Claude Sonnet 5.5.
