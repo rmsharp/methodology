@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [ad hoc] S284 claim (in progress) — `bin/migrate-layout` judges its check-links cell
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he ticked the HANDOFFS trim, P11, the links clause and the backlog close-check, and at the follow-up picker chose the links clause as this session's deliverable with P11 next (done before this claim: trim `d89e3e5`, fold `1630e1b`, suite 477 / 0 / 6). Deliverable: the `bin/migrate-layout` apply checks count a links difference, with the rule chosen from a measurement over the 12 adopters in clones; tests first. Nothing outward. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [ad hoc] S284 — fold the fifth 2026-10-07 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`d89e3e5`, 1 receipt, S281, 2026-10-07, to `HANDOFFS-through-2026-10-07-5.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S283, S282). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-07-5.md.verify.sh` at `d89e3e5`, exit 0. Model: Claude Sonnet 5.5.

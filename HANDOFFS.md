@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S284
+date: 2026-10-08
+status: pending
+active_task: MAKE `bin/migrate-layout` JUDGE ITS check-links CELL (chosen at the S284 Phase 0 picker; the carry of S282 and S283: `INFORMATIONAL` at `bin/migrate-layout:695` and its text at `:882`, test `tools/test_migrate_layout.py:1353`; plan 4.7.4 step 4 lists `bin/check-links` among the apply's verifications). Finding before the claim, from reading the fixture: `ledger_with_entries` puts `[the guide](docs/methodology/HOW_TO_USE.md)` in a committed ledger entry, which dangles once the ledger moves under `methodology/`, so a naive `!=` on the exit code would turn every apply test red and would flag a real adopter for the old links in its own ledger (which the tool never edits). So the design waits for a measurement: the 12 adopters in `--no-local` clones, synced from `add55f1`, `check-links --tree` before and after `--apply --skip-checks`, every dangling link sorted by the manifest disposition of its file (`tracked` framework document or `seed` project file). Tests first; the changed tool then run over the 12 clones. Nothing outward; P11 is the next session, the backlog close-check the one after. Baseline at this claim: HEAD `1630e1b` after the owed HANDOFFS trim (`d89e3e5`, proof exit 0 from a `--no-local` clone) and its fold; `bash bin/tests.sh` in a clean clone of `1630e1b` 477 / 0 / 6 at two receipts (Test 40 666 = 666).
+```
+
+```handoff
 session: S283
 date: 2026-10-08
 status: complete
