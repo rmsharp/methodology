@@ -1,9 +1,9 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
-**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P6 are built, as §7 records.**
+**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P7 are built, as §7 records.**
 **Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended:** D1 (a), D6
-(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P6 are
-done (P1 §7.1, S274; P2 §7.2a; P3 §7.2b; P4 §7.2c; P5 §7.2d, S278; P6 §7.2e, S279); P7 is next.**
+(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P7 are
+done (P1 §7.1, S274; P2 §7.2a; P3 §7.2b; P4 §7.2c; P5 §7.2d, S278; P6 §7.2e, S279; P7 §7.3a, S280); P8 is next.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm. This file is in the population of that plan's retirement rule like every other planning file.
@@ -484,36 +484,33 @@ one-deliverable rule is the default.
 
 ### 7.2a P2 — what was built (S275)
 
-**DONE.** The hook reads the ledger's place from the index (sh cannot call the block), its never-edit check crosses a move, and a
-trim's shard may sit in either archive directory. `quality_ratchet.py` 1.2.0 embeds the block, reads its manifest at either path
-from the index, HEAD and history, and installs a hook that finds the tool at its twin. **X2 is permanent** (`bin/tests.sh` Test 54,
-real hook, real git, both layouts): 11 of its 15 assertions were red against the old hook, which failed open four ways. 44
-mutants killed. **Not shown:** a hook armed in another clone, a real adopter.
+**DONE.** The ledger hook and `quality_ratchet.py` 1.2.0 read the ledger and the manifest at either place (from the index, HEAD and history); the never-edit check crosses a move; a trim's shard may sit in either archive directory. **X2 is permanent** (`bin/tests.sh` Test 54, real hook, real git, both layouts): 11 of its 15 assertions were red against the old hook, which failed open four ways. 44 mutants. **Not shown:** a hook armed in another clone.
 
 ### 7.2b P3 — what was built (S276)
 
-**DONE.** `methodology_trim.py` 1.8.0 takes its shard directory and link prefix from the ledger's own directory, and `close_out_report.py` 1.2.0 finds its ledger the same way; a half-migrated tree is refused and a shard name is never reused across the two archive directories. **Measured:** 119 of 119 shards give the same `--reverify` verdict under both tools, the 120 frozen proofs read 115 / 5 in all three trees, and the real ledgers, moved in a scratch clone, trim and prove from a second clone; 44 mutants killed. **Left:** a root ledger's links are dead after the move (C6); a link left un-rebased in a shard is invisible to the proof, which compares modulo the uniform prefix. **Not shown:** a trim at a real adopter.
+**DONE.** `methodology_trim.py` 1.8.0 takes its shard directory and link prefix from the ledger's own directory, and `close_out_report.py` 1.2.0 finds its ledger the same way; a half-migrated tree is refused. **Measured:** 119 of 119 shards give the same `--reverify` verdict under both tools; a real ledger, moved in a scratch clone, trims and proves. 44 mutants. **Left:** a root ledger's links are dead after the move (C6). **Not shown:** a trim at a real adopter.
 
 ### 7.2c P4 — what was built (S277)
 
-**DONE. The tie rule is unconditional** (his S276 decision): `resolve_layout(root, anchor)` takes no request; a file found at the root AND under `methodology/` is the framework's whenever the runner is tracked under `methodology/` and not at the root, and the root copy is the project's own. No runner under `methodology/`, or one at both, stays `half`, refused naming both. `quality_ratchet.py` 1.3.0 decides a manifest tie from git; `context_budget.py` 1.4.0, `check-ledger`, `check-handoff`, `check-overhead` and `model-report` resolve their config or ledger at either place, shards of both archive directories included; `files[]` stay project-root-relative (P7 rewrites them). **Measured:** this repository's ledgers and configs, moved in scratch clones, read as in the legacy tree, clean and in a tie; 43 mutants killed; scanner 117 → 83. **Lesson:** derive a root from git, never a directory name (this repository is named methodology). **Not shown:** another clone's hook, an adopter's `files[]`.
+**DONE. The tie rule is unconditional** (his S276 decision): a file at the root AND under `methodology/` is the framework's under `methodology/` when the runner is tracked there and not at the root; the root copy is the project's own; any other tie is `half`. `quality_ratchet.py` 1.3.0, `context_budget.py` 1.4.0, `check-ledger`, `check-handoff`, `check-overhead` and `model-report` resolve either place; `files[]` stay project-root-relative (P7 rewrites them). 43 mutants; scanner 117 to 83. **Lesson:** derive a root from git, never a directory name. **Not shown:** another clone's hook.
 
 ### 7.2d P5 — what was built (S278)
 
-**DONE** (`DASHBOARD_VERSION` 2.22.0, both copies). The checklist, the adoption, role and trim-gate probes, the file walk (a file under `methodology/` by its legacy name; a root namesake is the project's own), the ledger locator, trim and read-cap rows, generated proofs and the quality-gate read (a floor lowered in the move commit is seen; a pure move is no longer a removal) follow the layout; a half-migrated tree is a HIGH risk naming both paths. `--sync` resolves each target (never a second copy at a migrated project's root) and a copy in `<project>/methodology/` finds its project. **Measured:** 41 tests, RED first; scanner 83 → 4; `dashboard-in-both-layouts.sh`. **For him:** a project with no `docs/` of its own loses the 4-point `has_docs_dir` credit when it migrates. **Not shown:** an adopter's CI.
+**DONE** (`DASHBOARD_VERSION` 2.22.0, both copies). The checklist, adoption and role probes, file walk, ledger locator, trim and read-cap rows, generated proofs and quality-gate read follow the layout; a half-migrated tree is a HIGH risk; `--sync` resolves each target (never a second copy at a migrated root). 41 tests; scanner 83 to 4. **For him:** a project with no `docs/` of its own loses the 4-point `has_docs_dir` credit when it migrates (pinned). **Not shown:** an adopter's CI.
 
 ### 7.2e P6 — what was built (S279)
 
-**DONE.** `bin/_manifest.py` carries `NEW_LAYOUT`, a second literal table keyed by `src` (section 4.1; the fixtures read it), and `bin/_manifest_reader.py` reads it as data, refusing a missing, stray, duplicate, shared, unsafe or out-of-`methodology/` entry and any change after its assignment. `bin/sync --layout auto` (default) keeps a project's layout, an empty one gets the legacy default; a legacy project asked for the new layout, a migrated one asked for the legacy and a half-migrated one under any request are refused (exit 2) before a write, naming `bin/migrate-layout` as not built (C1); a seed at a migrated project's root is never shadowed by a blank one; ignore mode follows the layout (C2); `--source=github` reads the table (C16). `bin/status` prints a `layout:` line per project and reads files and seeds where it keeps them; `bin/check-links --layout legacy|new|both` simulates either tree. The scanner reads **0 sites** and is the gate `layout-literals`. **Measured:** 81 tests, RED first; 55 mutants killed; `bin/tests.sh` 475 / 0 / 6 at two receipts, where it found a defect the unit tests could not (Test 15 counted the `layout:` line as a row); `sync-in-both-layouts.sh`: 12 of 12 adopters read and sync as before, five moved ones agree row by row. **For P9:** `--layout new` reports 36 of 116 links dangling, so `--layout both` is red until the documents are rewritten. **Not shown:** a real remote, an adopter's CI.
+**DONE.** `bin/_manifest.py` carries `NEW_LAYOUT`, a second literal table read as data (C16); `bin/sync --layout auto` keeps a project's layout and refuses a second copy beside the first, a half-migrated tree and a legacy project asked for the new layout (C1); ignore mode follows the layout (C2); `bin/status` prints `layout:`, `bin/check-links --layout legacy|new|both` simulates either tree (C3). Scanner 4 to **0**, now a gate. 81 tests, 55 mutants; 12 of 12 adopters read and sync as before. **For P9:** `--layout new` reads 36 of 116 links dangling. **Not shown:** a real remote.
+
+### 7.3a P7 — what was built (S280)
+
+**DONE.** `bin/migrate-layout` (canonical-only; `bin/sync`'s refusal now names it plainly) is a dry run unless `--apply`. It refuses, every reason at once: no repository or commit, a dirty tree, a half-migrated tree, a destination that exists, ignore mode, tier 2 first, a tree where `bin/status` does not read every TRACKED file current, a config it cannot rewrite faithfully. It plans from the manifest's two tables plus the generated files and the trimmer's shards, **rehearsing the shard moves in a throwaway clone first** (a shard whose proof would change its exit code stays); rewrites `CLAUDE.md`, anchored `.gitignore` entries and the configs' `path`, `results_file` and gate `command` as text (never `canonical`, never prose); adds one ledger entry; and reports every hit it leaves (CI, `.claude/`, hooks including those git does not track, ledger links, directories named in prose). The apply is ONE commit through the project's hooks, every tracked move a rename at 90% or better, rolled back on any failure, and checked before and after (exit 4 if a check differs). **Measured:** 128 tests RED first; 78 mutants (14 survived and became tests); `migrate-12-adopters.py` over the 12 adopters in `--no-local` clones, 12 rows, no blank cell: **11 migrate** (renames R92 to R97; proof histograms, `bin/status`, ledger checkers and health unchanged; `check-links` 0 to 1, as P9 expects; `chat_verification` 48 to 45 is the pinned `has_docs_dir`); **`claude_work` is refused** (a ledger that is only the seed falls to 68% with its entry); `vscode_quarto_ext` keeps one older-format shard whose proof reads its shard by working-tree path; `wsfct`'s untracked pre-commit hook (it execs `context_budget.py` from the root, now named in the dry run) rolls the commit back until that clone's hooks are off. **Corrects §3 C7:** equal proof exit codes held for this repository's proofs, not for every adopter's. **Not shown:** an adopter's CI or tests.
 
 ### 7.3 P7-P8 — the tool, then the rehearsal
 
-- **P7 DONE:** `bin/migrate-layout` per §4.7; **a dry run and an apply, in a `--no-local` clone of each of
-  the 12 adopters** (nothing in a real tree), reporting per adopter: files moved, rename similarity,
-  config and `CLAUDE.md` diffs, CI and `.claude/` hits, and the post-move results of `bin/status`, the
-  checkers, `quality_ratchet.py --run`, the dashboard and the proof histogram. **Verify:** the report
-  table, 12 rows, no blank cell. **Surface:** clones of real adopters; it **cannot** show that an
-  adopter's own CI or test suite passes, which P11-P22 do in the real repository.
+- **P7 DONE (§7.3a):** `bin/migrate-layout` per §4.7, and a dry run and an apply in a `--no-local` clone of each of
+  the 12 adopters (nothing in a real tree). **Verify:** the report table, 12 rows, no blank cell. **Surface:** clones of real
+  adopters; it **cannot** show that an adopter's own CI or test suite passes, which P11-P22 do in the real repository.
 - **P8 DONE (a rehearsal; ships nothing):** in a scratch clone of this repository, its instance files
   moved by `bin/migrate-layout`; the §3.1 criterion at the then-current baseline; all 117 proofs'
   histogram unchanged (112 / 5); one real trim in the new layout proved; the X2 hook test green; the
