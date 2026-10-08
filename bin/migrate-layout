@@ -789,7 +789,7 @@ def apply_migration(report, trailers, skip_checks=False):
                 score = renames.get((m["src"], m["dest"]))
                 if score is None or score < 90:
                     why = "not a rename" if score is None else "%d%%" % score
-                    if m["src"] == ledger_src and score is not None:
+                    if m["src"] == ledger_src:
                         size = len(rewrites_by_final[ledger_final].old.encode("utf-8")) if ledger_final in rewrites_by_final else 0
                         why += ": the ledger is too small to take its entry and stay a rename at 90%% (it holds %d bytes); migrate after it has more entries" % size
                     weak.append("%s -> %s (%s)" % (m["src"], m["dest"], why))

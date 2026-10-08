@@ -252,7 +252,7 @@ class TestThePureRules(unittest.TestCase):
 
     def test_a_name_inside_another_name_or_behind_a_directory_is_left(self):
         for text in ("SESSION_RUNNER.mdx", "SESSION_RUNNER.md.bak", "SESSION_RUNNER.md2", "/SESSION_RUNNER.md", "./SESSION_RUNNER.md",
-                     "~/SESSION_RUNNER.md", "a/SESSION_RUNNER.md", "MY_SESSION_RUNNER.md", "my-SESSION_RUNNER.md",
+                     "~/SESSION_RUNNER.md", "~SESSION_RUNNER.md", "a/SESSION_RUNNER.md", "MY_SESSION_RUNNER.md", "my-SESSION_RUNNER.md",
                      "xSESSION_RUNNER.md", ".SESSION_RUNNER.md", "https://example.org/SESSION_RUNNER.md"):
             self.assertEqual(self.rewrite(text), (text, 0), text)
 
@@ -261,7 +261,9 @@ class TestThePureRules(unittest.TestCase):
         self.assertEqual(self.rewrite("docs/x/a.md and a.md and a.md", mapping), ("m/a.md and m/a.md and m/a.md", 3))
 
     def test_an_empty_map_changes_nothing(self):
-        self.assertEqual(self.m.token_rewriter({})("SESSION_RUNNER.md"), ("SESSION_RUNNER.md", 0))
+        """An empty alternation matches the empty string between two non-word characters, so the text must have some."""
+        for text in ("SESSION_RUNNER.md", "a  b , c", "", "(  )"):
+            self.assertEqual(self.m.token_rewriter({})(text), (text, 0), repr(text))
 
     # --- a JSON config, rewritten as text ---
     MAP = {"SESSION_RUNNER.md": "methodology/SESSION_RUNNER.md", "CHANGELOG.md": "methodology/CHANGELOG.md",
@@ -303,6 +305,12 @@ class TestThePureRules(unittest.TestCase):
         raw = '{"_": "a — dash é", "dash": "—", "path": "SESSION_RUNNER.md", "raw": "—"}'
         got, n = self.rj(raw)
         self.assertEqual(got, raw.replace('"SESSION_RUNNER.md"', '"methodology/SESSION_RUNNER.md"'))
+        self.assertEqual(n, 1)
+
+    def test_a_rewritten_command_keeps_its_non_ascii_characters_as_they_were_written(self):
+        text = '{"gates": [{"command": "echo — CHANGELOG.md é"}]}'
+        got, n = self.rj(text)
+        self.assertEqual(got, '{"gates": [{"command": "echo — methodology/CHANGELOG.md é"}]}')
         self.assertEqual(n, 1)
 
     def test_text_that_is_not_json_is_a_value_error(self):
@@ -368,6 +376,14 @@ class TestThePureRules(unittest.TestCase):
         self.assertEqual(s(handoff=({"exit": 1}, {"exit": 0})), ["handoff"])
         self.assertEqual(s(proofs=({"count": 2, "histogram": {"0": 2}}, {"count": 2, "histogram": {"0": 1, "1": 1}})), ["proofs"])
         self.assertEqual(s(history=({"commits": 4}, {"commits": 4})), ["history"])
+
+    def test_a_status_that_is_bad_on_both_sides_is_still_a_difference_because_the_rule_is_about_after(self):
+        """bin/status must read every TRACKED file current AFTER the move, whatever it read before."""
+        s = lambda **kw: self.m.check_differences(*self.sides(**kw))
+        short = {"exit": 0, "tracked": 23, "current": 22}
+        self.assertEqual(s(status=(short, short)), ["status"])
+        failed = {"exit": 1, "tracked": 0, "current": 0}
+        self.assertEqual(s(status=(failed, failed)), ["status"], "tracked == current == 0 but bin/status did not run")
 
     def test_links_is_never_a_difference_and_a_project_without_a_ledger_has_no_history_to_lose(self):
         self.assertEqual(self.m.check_differences(*self.sides(links=({"exit": 0}, {"exit": 1}))), [])
@@ -458,6 +474,14 @@ class TestThePureRules(unittest.TestCase):
             self.assertTrue(root.is_dir())
 
     # --- what git calls dirty ---
+    def test_the_cleanup_never_removes_the_project_root_even_when_it_empties_it(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d) / "project"
+            (root / "c" / "d").mkdir(parents=True)
+            self.m.remove_empty_parents(root, "c/d/gone.md")
+            self.assertFalse((root / "c").exists())
+            self.assertTrue(root.is_dir(), "the project root was removed")
+
     def test_a_staged_rename_is_one_dirty_path_and_not_two(self):
         with tempfile.TemporaryDirectory() as d:
             git(d, "init", "-q")
@@ -629,6 +653,9 @@ class TestRefusals(Adopter):
         (self.project / "methodology" / "SESSION_RUNNER.md").write_text("# a second runner\n", encoding="utf-8")
         self.commit("a second runner")
         report = self.refused("half-migrated")
+        self.assertEqual(report["layout"], "half-migrated")
+        self.assertEqual([x["code"] for x in report["refusals"]], ["half-migrated"],
+                         "the runner's collision is the half-migrated refusal and is not listed a second time")
         half = next(x for x in report["refusals"] if x["code"] == "half-migrated")
         self.assertIn("SESSION_RUNNER.md", half["message"])
         self.assertIn("methodology/SESSION_RUNNER.md", half["message"])
@@ -788,9 +815,16 @@ class TestApply(Adopter):
         self.assertIn("bin/migrate-layout", message)
         self.assertIn("tier all", message)
         self.assertIn("a rename at 90% similarity or better", message)
+        moves = r.report["moves"]
+        plain = sum(1 for m in moves if not m["tracked"])
+        self.assertEqual(plain, 2)
+        self.assertIn("%d file(s) with git mv, %d without git" % (len(moves) - plain, plain), message)
         self.assertIn(r.report["canonical"]["sha"], message)
         self.assertTrue(message.rstrip().endswith("Reviewed-by: B <b@example.com>"), message)
         self.assertIn("Co-Authored-By: A Tester <a@example.com>", message)
+        parsed = git(self.project, "log", "-1", "--format=%(trailers:only,unfold)")
+        self.assertIn("Co-Authored-By: A Tester <a@example.com>", parsed, "git does not read the trailers as trailers")
+        self.assertIn("Reviewed-by: B <b@example.com>", parsed)
 
     def test_bin_status_then_reads_every_tracked_file_current_at_its_new_place(self):
         _, r = self.apply()
@@ -828,6 +862,14 @@ class TestTheTiers(Adopter):
             self.assertTrue((self.project / name).is_file(), "%s moved in tier 1" % name)
         self.assertTrue((self.project / "docs" / "archive" / "CHANGELOG-through-2026-08-01.md").is_file())
         self.assertEqual(git(self.project, "status", "--porcelain"), "")
+
+    def test_tier_1_names_what_it_leaves_of_the_framework_directory_and_not_the_archive_it_does_not_touch(self):
+        r = run_migrate(self.project, "--tier", "1")
+        left = [x["path"] for x in r.report["left_in_place"]]
+        self.assertIn("docs/methodology/PROJECT_CONVENTIONS.md", left)
+        self.assertNotIn("docs/archive/project-notes.md", left, "the archive is tier 2's: a tier-1 run has no opinion about it")
+        both = [x["path"] for x in run_migrate(self.project).report["left_in_place"]]
+        self.assertIn("docs/archive/project-notes.md", both)
 
     def test_tier_2_alone_is_refused_before_tier_1(self):
         before = tree_state(self.project)
@@ -1167,6 +1209,19 @@ class TestTheHitsItWillNotRewrite(Adopter):
         self.assertEqual(sorted(site["names"]), ["SESSION_RUNNER.md", "methodology_dashboard.py"])
         self.assertIn("Read(SESSION_RUNNER.md)", site["text"])
 
+    def test_a_binary_file_that_contains_a_moved_name_is_not_a_hit(self):
+        (self.project / "data.bin").write_bytes(b"\x00\x01\x02 CHANGELOG.md \x00\xff")
+        self.commit("a binary file")
+        other = run_migrate(self.project).report["not_rewritten"]["other"]
+        self.assertEqual((other["mentions"], other["files"]), (2, 1), "only README.md names a moved file")
+        self.assertNotIn("data.bin", [s["file"] for s in other["sites"]])
+
+    def test_sites_are_capped_per_category_and_the_count_is_not(self):
+        (self.project / "README.md").write_text("see CHANGELOG.md\n" * 30, encoding="utf-8")
+        self.commit("a readme that names the ledger thirty times")
+        other = run_migrate(self.project).report["not_rewritten"]["other"]
+        self.assertEqual((other["mentions"], other["files"], len(other["sites"])), (30, 1, 25))
+
     def test_the_ledger_links_are_counted_and_not_listed(self):
         nr = run_migrate(self.project).report["not_rewritten"]
         self.assertGreaterEqual(nr["ledger"]["mentions"], 2)
@@ -1264,6 +1319,28 @@ class TestTheChecks(Adopter):
         self.assertEqual(checks["before"]["proofs"]["histogram"], {"0": 2})
         self.assertEqual(checks["after"]["proofs"]["histogram"], {"0": 1, "1": 1})
         self.assertIn("git revert " + r.report["commit"]["sha"][:12], r.report["checks"]["way_back"])
+
+    def test_a_tree_the_commit_leaves_dirty_is_reported_and_exits_4(self):
+        """A post-commit hook that writes a file: the commit stands, and the tree is not clean. Nothing else differs."""
+        hook = self.project / ".git" / "hooks" / "post-commit"
+        hook.write_text("#!/bin/sh\ntouch stray.txt\n", encoding="utf-8")
+        hook.chmod(0o755)
+        r = run_migrate(self.project, "--apply", checks=True)
+        self.assertEqual(r.returncode, 4, r.out)
+        checks = r.report["checks"]
+        self.assertFalse(checks["clean"])
+        self.assertFalse(checks["ok"])
+        self.assertEqual(checks["differences"], [], "only the tree differs")
+        self.assertEqual(r.report["status"], "applied")
+
+    def test_the_text_says_so_when_the_tree_is_not_clean(self):
+        hook = self.project / ".git" / "hooks" / "post-commit"
+        hook.write_text("#!/bin/sh\ntouch stray.txt\n", encoding="utf-8")
+        hook.chmod(0o755)
+        r = run_migrate(self.project, "--apply", json_out=False, checks=True)
+        self.assertEqual(r.returncode, 4, r.out)
+        self.assertIn("clean tree: NO", r.out)
+        self.assertIn("CHECKS DIFFER (tree not clean)", r.out)
 
     def test_the_ledgers_history_is_reached_across_the_move(self):
         r = run_migrate(self.project, "--apply", checks=True)
@@ -1443,6 +1520,21 @@ class TestWhatTheHitsSayAboutHooksAndDirectories(Adopter):
         by_line = {s["line"]: s for s in other["sites"] if s["file"] == "README.md"}
         self.assertEqual(by_line[1]["names"], ["docs/methodology/"])
         self.assertEqual(by_line[2]["names"], ["docs/methodology/HOW_TO_USE.md"])
+
+
+class TestALedgerSoSmallThatGitSeesNoRenameAtAll(Adopter):
+    """Below 50% similarity git reports a delete and an add: the guard must say that, not only "below 90%"."""
+
+    def test_the_rollback_says_it_is_not_a_rename_and_why(self):
+        (self.project / "CHANGELOG.md").write_text("# Changelog\n", encoding="utf-8")
+        self.commit("a ledger of one line")
+        before = tree_state(self.project)
+        r = run_migrate(self.project, "--apply")
+        self.assertEqual(r.returncode, 3, r.out)
+        error = r.report["commit"]["error"]
+        self.assertIn("CHANGELOG.md -> methodology/CHANGELOG.md (not a rename: the ledger is too small", error)
+        self.assertIn("it holds 12 bytes", error)
+        self.assertEqual(tree_state(self.project), before)
 
 
 class TestASmallLedgerIsRefusedWithAReason(Adopter):
