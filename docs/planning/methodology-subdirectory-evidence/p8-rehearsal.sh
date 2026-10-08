@@ -20,6 +20,7 @@
 set -u
 # The disclosure hook (.githooks/commit-msg) is not what is measured; the tool's apply passes a trailer anyway.
 export METHODOLOGY_REQUIRE_COAUTHOR=0
+export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=advice.detachedHead GIT_CONFIG_VALUE_0=false   # a clone of a detached HEAD prints advice
 SRC="$(git rev-parse --show-toplevel)" || exit 3
 EV="$SRC/docs/planning/methodology-subdirectory-evidence"
 BASE="$(git -C "$SRC" rev-parse HEAD)"
@@ -253,23 +254,32 @@ fi
 
 triple() { grep -m1 '^== Summary:' "$1" | sed 's/^== Summary: //; s/ ==$//'; }
 if want suites; then
-  h "7. plan 3.1: bash bin/tests.sh, the unmoved clone and the moved one, serially, same commit family"
+  h "7. plan 3.1: bash bin/tests.sh, the unmoved clone and the moved one, serially, from the same commit"
   printf 'uncommitted files before the suites: unmoved %s, moved %s (both must be 0)\n' "$(git -C "$T/U" status --short | wc -l | nospace)" "$(git -C "$T/M" status --short | wc -l | nospace)"
   for d in U M; do
-    ( cd "$T/$d" && bash bin/tests.sh > "$T/suite-$d.txt" 2>&1 ); printf '%s: exit %s; %s\n' "$([ $d = U ] && echo unmoved || echo moved)" "$?" "$(triple "$T/suite-$d.txt")"
+    ( cd "$T/$d" && bash bin/tests.sh > "$T/suite-$d.txt" 2>&1 ); rc=$?   # $? bare, before any command substitution
+    printf '%s: exit %s; %s\n' "$([ $d = U ] && echo unmoved || echo moved)" "$rc" "$(triple "$T/suite-$d.txt")"
   done
   printf 'FAIL lines: unmoved %s, moved %s; SKIP lines: unmoved %s, moved %s\n' \
     "$(grep -c '^  FAIL' "$T/suite-U.txt")" "$(grep -c '^  FAIL' "$T/suite-M.txt")" "$(grep -c '^  SKIP' "$T/suite-U.txt")" "$(grep -c '^  SKIP' "$T/suite-M.txt")"
   [ "$(triple "$T/suite-U.txt")" = "$(triple "$T/suite-M.txt")" ] && echo 'the criterion HOLDS: the moved tree reads exactly the unmoved tree'"'"'s triple' || echo 'the criterion FAILS: the triples differ'
-  printf 'assertions that FAIL or SKIP in the moved run and not in the unmoved one:\n'
-  diff <(grep -E '^  (FAIL|SKIP)' "$T/suite-U.txt" | sort -u) <(grep -E '^  (FAIL|SKIP)' "$T/suite-M.txt" | sort -u) | grep '^>' | cut -c1-200 | head -30
+  printf 'every FAIL or SKIP line in the moved run that is not in the unmoved run, under the Test that printed it:\n'
+  for d in U M; do awk '/^== /{h=substr($0,1,70)} /^  (FAIL|SKIP)/{print h " :: " substr($0,1,150)}' "$T/suite-$d.txt" | sort -u > "$T/fs-$d.txt"; done
+  comm -13 "$T/fs-U.txt" "$T/fs-M.txt" | sed 's/^/   /'
+  printf 'the two unit suites bin/tests.sh wraps, run alone in the moved clone (FAIL and ERROR lines):\n'
+  ( cd "$T/M" && python3 tools/test_close_out_report.py 2>&1 | grep -E '^(FAIL|ERROR):' | cut -c1-170 | sed 's/^/   close-out: /' )
+  ( cd "$T/M" && python3 tools/test_methodology_dashboard.py 2>&1 | grep -E '^(FAIL|ERROR):' | cut -c1-200 | sed 's/^/   dashboard: /' )
 fi
 
 if want ratchet; then
   h "8. quality_ratchet.py --run, the unmoved clone and the moved one (the gates, with the commands the tool rewrote)"
   for d in U M; do
-    ( cd "$T/$d" && python3 starter-kit/quality_ratchet.py --run > "$T/ratchet-$d.txt" 2>&1 ); printf '%s: exit %s; %s\n' "$([ $d = U ] && echo unmoved || echo moved)" "$?" "$(grep -E 'pass .* fail .* unmeasured' "$T/ratchet-$d.txt" | tail -1 | cut -c1-200)"
+    ( cd "$T/$d" && python3 starter-kit/quality_ratchet.py --run > "$T/ratchet-$d.txt" 2>&1 ); rc=$?
+    printf '%s: exit %s (0 clean, 1 unmeasured, 2 a gate failed); %s\n' "$([ $d = U ] && echo unmoved || echo moved)" "$rc" \
+      "$(sed 's/\x1b\[[0-9;]*m//g' "$T/ratchet-$d.txt" | grep -E 'cite in the receipt' | tail -1 | sed 's/^ *//')"
   done
-  printf 'gate rows that are not a pass, moved clone:\n'; grep -E 'FAIL|UNMEASURED|unmeasured|REFUSED' "$T/ratchet-M.txt" | grep -v 'pass ·' | cut -c1-200 | head -12
+  printf 'gate rows that are not a pass, moved clone (gate, rule, measured, status):\n'
+  sed 's/\x1b\[[0-9;]*m//g' "$T/ratchet-M.txt" | awk '$2 ~ /^(>=|<=)$/ && $NF != "pass" {print "   " $0}'
+  printf 'gate rows that are not a pass, unmoved clone: %s\n' "$(sed 's/\x1b\[[0-9;]*m//g' "$T/ratchet-U.txt" | awk '$2 ~ /^(>=|<=)$/ && $NF != "pass"' | wc -l | nospace)"
 fi
 exit 0
