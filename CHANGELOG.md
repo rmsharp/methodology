@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S283 — the 12-adopter sync differential, its script and its rows (P10)
+
+`p10-sync-12-adopters.py` clones each of the 12 adopters twice (`--no-local`), syncs one with the `bin/sync` of the base `078a6cc` and one with that of `add55f1`, and compares the two trees. Rows (`p10-adopter-runs/rows.json`, `summary.md`): paths identical in 12 of 12, nothing under `methodology/`, layout `legacy`, 23 of 23 tracked files `current`, 19 content files differ (20 and 21 where a ledger seed is written), health and `check-links` exits identical; `--force` was needed for two adopters in both trees. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S283 claim (in progress) — P10, the readiness record for the expand stage
 
 CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose P10 prep and the owed HANDOFFS trim (done before this claim: `025bccf`, fold `05a42a0`, suite 477 / 0 / 6). Deliverable: one record in the evidence directory naming the sha adopters may sync from, the clone evidence over the 12 adopters, and the measured contents of the D8 pull request. Nothing outward. Model: Claude Sonnet 5.5.
