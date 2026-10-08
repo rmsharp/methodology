@@ -1,0 +1,101 @@
+commit under test: aa1f1b4   old tools: 7f7f74f
+
+warning: You appear to have cloned an empty repository.
+== A. a project that has not moved is read and synced as it was ==
+        first difference:
+          old: snap-Philippians  SESSION_RUNNER.md                                                            tracked      1 version behind  
+          new: snap-Philippians  SESSION_RUNNER.md                                                            tracked      2 versions behind 
+        first difference:
+          old:     CLAUDE_TEMPLATE.md: unchanged
+          new:     CLAUDE_TEMPLATE.md: would write
+   Philippians                  status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-airqino  SESSION_RUNNER.md                                                            tracked      1 version behind      
+          new: snap-airqino  SESSION_RUNNER.md                                                            tracked      2 versions behind     
+        first difference:
+          old:     CLAUDE_TEMPLATE.md: unchanged
+          new:     CLAUDE_TEMPLATE.md: would write
+   airqino                      status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-chat_verification  SESSION_RUNNER.md                                                            tracked      5 versions behind     
+          new: snap-chat_verification  SESSION_RUNNER.md                                                            tracked      6 versions behind     
+        first difference:
+          old:     CLAUDE_TEMPLATE.md: unchanged
+          new:     CLAUDE_TEMPLATE.md: would write
+   chat_verification            status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-church_growth  SESSION_RUNNER.md                                                            tracked      11 versions behind    
+          new: snap-church_growth  SESSION_RUNNER.md                                                            tracked      12 versions behind    
+        first difference:
+          old:     docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: unchanged
+          new:     docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: would write
+   church_growth                status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+   claude_work                  status =; sync --dry-run =; check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-dalia_martinez_funeral  SESSION_RUNNER.md                                                            tracked      11 versions behind    
+          new: snap-dalia_martinez_funeral  SESSION_RUNNER.md                                                            tracked      12 versions behind    
+        first difference:
+          old:     docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: unchanged
+          new:     docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: would write
+   dalia_martinez_funeral       status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-feedback-loop-comparison  SAFEGUARDS.md                                                                tracked      9 versions behind     
+          new: snap-feedback-loop-comparison  SAFEGUARDS.md                                                                tracked      10 versions behind    
+   feedback-loop-comparison     status DIFFERS (exit 0 vs 0); sync --dry-run =; check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-model_project_constructor  SESSION_RUNNER.md                                                            tracked      1 version behind  
+          new: snap-model_project_constructor  SESSION_RUNNER.md                                                            tracked      2 versions behind 
+        first difference:
+          old:     CLAUDE_TEMPLATE.md: unchanged
+          new:     CLAUDE_TEMPLATE.md: would write
+   model_project_constructor    status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-mts-system  SESSION_RUNNER.md                                                            tracked      1 version behind 
+          new: snap-mts-system  SESSION_RUNNER.md                                                            tracked      2 versions behind
+        first difference:
+          old:     CLAUDE_TEMPLATE.md: unchanged
+          new:     CLAUDE_TEMPLATE.md: would write
+   mts-system                   status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-nprcgenekeepr  SESSION_RUNNER.md                                                            tracked      1 version behind 
+          new: snap-nprcgenekeepr  SESSION_RUNNER.md                                                            tracked      2 versions behind
+   nprcgenekeepr                status DIFFERS (exit 0 vs 0); sync --dry-run =; check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-vscode_quarto_ext  SESSION_RUNNER.md                                                            tracked      1 version behind  
+          new: snap-vscode_quarto_ext  SESSION_RUNNER.md                                                            tracked      2 versions behind 
+        first difference:
+          old:     CLAUDE_TEMPLATE.md: unchanged
+          new:     CLAUDE_TEMPLATE.md: would write
+   vscode_quarto_ext            status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+        first difference:
+          old: snap-wsfct  SESSION_RUNNER.md                                                            tracked      1 version behind      
+          new: snap-wsfct  SESSION_RUNNER.md                                                            tracked      2 versions behind     
+        first difference:
+          old:     CLAUDE_TEMPLATE.md: unchanged
+          new:     CLAUDE_TEMPLATE.md: would write
+   wsfct                        status DIFFERS (exit 0 vs 0); sync --dry-run DIFFERS (exit 0 vs 0); check-links --tree =   wrote nothing: yes
+   identical, of 12 adopters: status 1, sync --dry-run 3, check-links --tree 12
+
+== B. the same adopters, cloned and moved to the manifest's new destinations ==
+   model_project_constructor    status rows equal (30): NO   dry run actions equal (30): NO   real run (exit 0) created methodology/.gitattributes, none outside methodology/: yes
+   nprcgenekeepr                status rows equal (30): NO   dry run refused alike, same files (1): yes   real run (exit 2) created nothing, none outside methodology/: yes
+   mts-system                   status rows equal (30): NO   dry run actions equal (30): NO   real run (exit 0) created methodology/.gitattributes, none outside methodology/: yes
+   vscode_quarto_ext            status rows equal (30): NO   dry run actions equal (30): NO   real run (exit 0) created methodology/.gitattributes, none outside methodology/: yes
+   Philippians                  status rows equal (30): NO   dry run actions equal (30): NO   real run (exit 0) created methodology/.gitattributes, none outside methodology/: yes
+
+== C. a scratch portfolio: legacy, migrated, half-migrated, empty (plan 5A.3) ==
+   [ok] status over the portfolio names each layout: legacy  legacy; migrated  new; half  half-migrated: SESSION_RUNNER.md and methodology/SESSION_RUNNER.md; empty  none
+   [ok] dry run of legacy: exit 0, writes nothing
+   [ok] dry run of migrated: exit 0, writes nothing
+   [ok] dry run of half: exit 2, writes nothing, refused
+   [ok] dry run of empty: exit 0, writes nothing
+   [ok] real run on the empty project writes the legacy tree and no methodology/ directory
+   [ok] the migrated project holds exactly the table's destinations and no root runner
+   [ok] a second run on the migrated project changes nothing and stays new
+   [ok] the half-migrated project is refused, naming both paths, and nothing is written
+   [ok] a legacy project asked for the new layout is refused (no second runner)
+   [ok] --source=github against a local repository whose manifest carries the table: exit 0, the new tree
+
+   for P9: check-links --layout new reports ? dangling link(s) of 80 in the simulated new layout (exit 0)
+
+25 CHECK(S) FAILED

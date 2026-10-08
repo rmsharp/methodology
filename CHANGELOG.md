@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S283 — sync-in-both-layouts.sh at the candidate: red as it stands, green with the content held equal (P10)
+
+Run as it stands at the candidate it reads `25 CHECK(S) FAILED`, all in parts A and B, every one a 'versions behind' or 'would write' difference: P9 changed the documents its two sides read (`p10-sync-in-both-layouts-at-candidate.txt`). With P6's tools on the candidate's files it reads ALL CHECKS HELD: 12 of 12 identical in part A, five moved adopters equal in part B, 11 of 11 in part C (`p10-sync-in-both-layouts-hybrid-output.txt`). The script is a snapshot, not a gate; `sync-layout-unit-tests` is the gate. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S283 — two controls for the differential, and the hybrid script (P10)
 
 Candidate = base finds 0 differing files and still reads CHECK ROW (the base's `bin/status` prints no `layout:` line); `--tamper` moves a file under `methodology/` and reads one rename, paths DIFFER, CHECK ROW (`control-candidate-equals-base.json`, `control-tamper.json`). `p10-sync-hybrid.sh` builds the candidate's files with P6's tools on a side branch of a scratch clone and runs `sync-in-both-layouts.sh` there, so only the tools differ. Model: Claude Sonnet 5.5.
