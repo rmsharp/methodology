@@ -1,9 +1,9 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
-**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P10 are done, as §7 records.**
+**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P11 are done, as §7 records (P11 at tier 1).**
 **Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended:** D1 (a), D6
-(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P10 are
-done (P1 §7.1, S274; P2 §7.2a; P3 §7.2b; P4 §7.2c; P5 §7.2d, S278; P6 §7.2e, S279; P7 §7.3a, S280; P8 §7.3b, S281; P9 §7.3c, S282; P10 §7.3d, S283); P11 is next.**
+(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P11
+are done (§7.1 to §7.4a, S274 to S285); P12 is next, and tier 2 is open.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm. This file is in the population of that plan's retirement rule like every other planning file.
@@ -492,11 +492,11 @@ one-deliverable rule is the default.
 
 ### 7.2c P4 — what was built (S277)
 
-**DONE. The tie rule is unconditional** (his S276 decision): a file at the root AND under `methodology/` is the framework's under `methodology/` when the runner is tracked there and not at the root; the root copy is the project's own; any other tie is `half`. `quality_ratchet.py` 1.3.0, `context_budget.py` 1.4.0, `check-ledger`, `check-handoff`, `check-overhead` and `model-report` resolve either place; `files[]` stay project-root-relative (P7 rewrites them). 43 mutants; scanner 117 to 83. **Lesson:** derive a root from git, never a directory name. **Not shown:** another clone's hook.
+**DONE. The tie rule is unconditional** (his S276 decision): a file at the root AND under `methodology/` is the framework's under `methodology/` when the runner is tracked there and not at the root; the root copy is the project's own; any other tie is `half`. `quality_ratchet.py` 1.3.0, `context_budget.py` 1.4.0, `check-ledger`, `check-handoff`, `check-overhead` and `model-report` resolve either place; `files[]` stay project-root-relative (P7 rewrites them). 43 mutants. **Lesson:** derive a root from git, never a directory name. **Not shown:** another clone's hook.
 
 ### 7.2d P5 — what was built (S278)
 
-**DONE** (`DASHBOARD_VERSION` 2.22.0, both copies). The checklist, adoption and role probes, file walk, ledger locator, trim and read-cap rows, generated proofs and quality-gate read follow the layout; a half-migrated tree is a HIGH risk; `--sync` resolves each target (never a second copy at a migrated root). 41 tests; scanner 83 to 4. **For him:** a project with no `docs/` of its own loses the 4-point `has_docs_dir` credit when it migrates (pinned). **Not shown:** an adopter's CI.
+**DONE** (`DASHBOARD_VERSION` 2.22.0, both copies). The checklist, adoption and role probes, file walk, ledger locator, trim and read-cap rows, generated proofs and quality-gate read follow the layout; a half-migrated tree is a HIGH risk; `--sync` resolves each target (never a second copy at a migrated root). 41 tests. **For him:** a project with no `docs/` of its own loses the 4-point `has_docs_dir` credit when it migrates (pinned). **Not shown:** an adopter's CI.
 
 ### 7.2e P6 — what was built (S279)
 
@@ -504,7 +504,7 @@ one-deliverable rule is the default.
 
 ### 7.3a P7 — what was built (S280)
 
-**DONE.** `bin/migrate-layout` (canonical-only; a dry run unless `--apply`) refuses a tree that is not clean, current and unmigrated, naming every reason at once. It plans from the manifest's two tables plus the generated files and the trimmer's shards, rewrites `CLAUDE.md`, `.gitignore` and the configs' paths as text, adds one ledger entry, and reports every hit it leaves. The apply is ONE commit through the project's hooks, every tracked move a rename at 90% or better, rolled back on failure, checked before and after (exit 4 if a check differs). **Measured:** 128 tests RED first, 78 mutants; the 12 adopters in `--no-local` clones (`p7-adopter-runs/summary.md`): **11 migrate** (R92 to R97), **`claude_work` is refused** (a seed-only ledger falls to 68%); `vscode_quarto_ext` keeps one older-format shard; `wsfct`'s untracked pre-commit hook rolls the commit back. **Corrects §3 C7:** equal proof exit codes held for this repository's proofs, not every adopter's. **Not shown:** an adopter's CI or tests.
+**DONE.** `bin/migrate-layout` (canonical-only; a dry run unless `--apply`) refuses a tree that is not clean, current and unmigrated, naming every reason. Its apply is ONE commit through the project's hooks (every tracked move a rename at 90% or better, rolled back on failure, checked before and after; exit 4 if a check differs). **Measured:** 78 mutants; the 12 adopters in `--no-local` clones (`p7-adopter-runs/summary.md`): **11 migrate**, **`claude_work` is refused** (a seed-only ledger falls to 68%), `wsfct`'s untracked pre-commit hook rolls the commit back. **Corrects §3 C7:** equal proof exit codes held for this repository's proofs, not every adopter's. **Not shown:** an adopter's CI or tests (§7.4a).
 
 ### 7.3 P7-P8 — the tool, then the rehearsal
 
@@ -513,11 +513,11 @@ one-deliverable rule is the default.
 
 ### 7.3b P8 — what was measured (S281)
 
-**DONE** (§11; two `--no-local` clones). **The §3.1 criterion FAILS for this repository's own move:** unmoved **482 / 0 / 0**, moved **445 / 11 / 4**; gates 18/18 against **16/18**. The 11 FAILs and 4 SKIPs are canonical-only tests reading this repo's root ledgers by path. **Also found:** (1) the tool **refuses this repository** (`[not-current]`: 23 distributed files read `missing`); with that suppressed it plans 255 moves and applies as one commit (lowest rename 99%); (2) the dashboard reads the moved changelog as absent (76 to 74); (3) the §5A.4 re-run gives 4 modify/delete conflicts, and an upstream shard lands silently in `docs/archive/`. **Held:** 126 tracked proofs (121 / 5 in both trees); both ledgers trim and prove in `methodology/archive/`; X2 is refused. **Not shown:** Phase 0 in the new layout. B2's blockers are BL-104.
+**DONE** (§11; two `--no-local` clones). **The §3.1 criterion FAILS for this repository's own move:** unmoved **482 / 0 / 0**, moved **445 / 11 / 4**, gates 18/18 against **16/18**; the failures are canonical-only tests reading root ledgers by path. **Also:** the tool refuses this repository (`[not-current]`); the dashboard reads the moved changelog as absent (76 to 74); the §5A.4 re-run gives 4 modify/delete conflicts. **Held:** 126 tracked proofs (121 / 5 in both trees), both ledgers trim and prove in `methodology/archive/`, X2 is refused. **Not shown:** Phase 0 in the new layout. B2's blockers are BL-104.
 
 ### 7.3c P9 — what was done (S282)
 
-**DONE.** `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files per layout); `bin/tests.sh` Test 10 holds it. No one relative link between the runner and a framework document resolves in both layouts (`docs/methodology/X` against `X`), so those 36 became bare names in code spans; the 78 that resolve in both stayed links. The runner says once where files are; `BOOTSTRAP.md` gained §Two layouts with C14's sentence; the README names the second layout. **Left (closed S284):** the `bin/migrate-layout` links check, informational 'until P9'. **Not shown:** an adopter reading the new text.
+**DONE.** `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files per layout); Test 10 holds it. No relative link between the runner and a framework document resolves in both layouts (`docs/methodology/X` against `X`), so those 36 became bare names in code spans; the 78 that resolve in both stayed links. The runner, `BOOTSTRAP.md` §Two layouts (C14's sentence) and the README now name both layouts. **Left (closed S284):** the `bin/migrate-layout` links check. **Not shown:** an adopter reading the new text.
 
 ### 7.3d P10 — the sha (S283)
 
@@ -525,18 +525,22 @@ one-deliverable rule is the default.
 
 ### 7.4 P11-P22 — an adopter per session (the BL-57 P6-P11 pattern)
 
-Done **in that repository** and recorded here. Order, by risk: `model_project_constructor` (clean,
-default branch, `.claude/` 14 lines), `feedback-loop-comparison`, `nprcgenekeepr` (the four-workflow CI
+Done **in that repository** and recorded here. Order, by risk: `model_project_constructor` (P11, §7.4a),
+`feedback-loop-comparison`, `nprcgenekeepr` (the four-workflow CI
 filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqino` (nested copy),
 `chat_verification`, `church_growth`, `dalia_martinez_funeral`, `claude_work` (no history to move),
 `wsfct` **last and only on a clean default branch** (its branch is active).
 
 - **DONE per adopter:** a clean tree; `bin/status` before; **`bin/sync` first if any TRACKED file is not
   `current`, as its own commit (§5A.2)**; `bin/migrate-layout` dry run read; the apply as one commit;
-  `bin/status` after (all `current`, at the new destinations); the adopter's **own** test suite and CI
-  green (named in its receipt); one full Phase 0 in the new layout; the sha of the checkout it synced
+  `bin/status` after (all `current`, at the new destinations); the adopter's **own** proofs, test suite and CI
+  green (named in its receipt), rehearsed at each tier in clones first, a rise in skips a failure; one full Phase 0 in the new layout; the sha of the checkout it synced
   from; the project's push is **its own go-ahead**.
 - **Surface:** the adopter's repository and CI. **Cannot enforce:** another clone's hook arming; say so.
+
+### 7.4a P11 — `model_project_constructor` (S285)
+
+**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`; nothing pushed). **`--tier all` passed every check the tool runs and broke the adopter's own CI** (2 of its 13 proofs and 41 tests name the moved ledger), so by his choice it was reset and `--tier 1` applied: one test constant repaired, CI back to 3,942 passed and 9 skipped, `bin/status` 23 of 23 current, Phase 0 run in the new layout. **Confirms §4.6:** tier 1 alone is coherent; the default `all` is not safe on the tool's checks alone (its `proofs` cell counts only the trimmer's). **Not shown:** an Actions run, a push.
 
 ### 7.5 P23 and G-B
 

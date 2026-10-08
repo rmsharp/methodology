@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S285 — the plan and the backlog record P11 (tier 1 done; tier 2 and the tier for P12 are his)
+
+Plan: new §7.4a, the header and the §7.4 order and DONE list updated (an adopter's own proofs, tests and CI rehearsed at each tier in clones first, a rise in skips counted as a failure), §7.3a to §7.3c recomposed to make room (59,995 of 60,000 B; the displaced detail is in `p7-adopter-runs/summary.md` and `p8-rehearsal-output.txt`). Backlog: BL-101's paragraph and index row say P11 is done at tier 1, what `--tier all` broke, and that the next action is his call on tier 2. A follow-up for `bin/migrate-layout` (list project code that names a moved file) is recorded, not built. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S285 — P11: `model_project_constructor` synced and moved to tier 1, in its own repository (3 local commits there, 1 attempt reset)
 
 In `~/Development/model_project_constructor` (clean `master`, `0dc3051`), from this checkout at `ea82c0c` (the distributed files of `add55f1`): `bin/sync` gave `63cedc5` (21 files rewritten, `.gitattributes` created, no `--force`). `bin/migrate-layout --apply` at its default `--tier all` gave `972b84f`; the adopter's own CI was red on it (2 of its 13 proofs, 32 failed and 9 errors) although every check the tool runs held. At his choice (the mid-session picker) that unpushed commit was reset away (`git reset --hard 63cedc5`, after moving the three ignored generated files back to the root and saving a patch in scratch), and `--tier 1 --apply` gave `4399c60` (23 renames at 100%). One constant in its `tests/test_read_budget.py` gave `ec23bc7`. Its CI on the committed tree: ruff 0, mypy 0, 13 of 13 proofs plain and `--self-test`, pytest 3,942 passed, 9 skipped, 98.34%, as before the sync. `bin/status` reads layout `new`, 23 of 23 tracked files current. A Phase 0 ran there in the new layout. **Nothing was pushed**; its push is his go-ahead. Model: Claude Sonnet 5.5.
