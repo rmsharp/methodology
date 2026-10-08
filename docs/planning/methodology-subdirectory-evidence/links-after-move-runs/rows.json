@@ -1,0 +1,163 @@
+[
+ {
+  "adopter": "model_project_constructor",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 1,
+  "after": {
+   "seed": 6
+  },
+  "after_where": "methodology/CHANGELOG.md [seed] x2, methodology/HANDOFFS.md [seed] x1, methodology/SESSION_NOTES.md [seed] x3",
+  "after_targets": []
+ },
+ {
+  "adopter": "feedback-loop-comparison",
+  "sync": "committed with --force",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 1,
+  "before": {
+   "seed": 4
+  },
+  "after_exit": 1,
+  "after": {
+   "seed": 23
+  },
+  "after_where": "methodology/SESSION_NOTES.md [seed] x23",
+  "after_targets": []
+ },
+ {
+  "adopter": "nprcgenekeepr",
+  "sync": "committed with --force",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 1,
+  "after": {
+   "seed": 108
+  },
+  "after_where": "methodology/CHANGELOG.md [seed] x29, methodology/HANDOFFS.md [seed] x33, methodology/SESSION_NOTES.md [seed] x46",
+  "after_targets": []
+ },
+ {
+  "adopter": "mts-system",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 1,
+  "after": {
+   "seed": 15
+  },
+  "after_where": "methodology/CHANGELOG.md [seed] x9, methodology/HANDOFFS.md [seed] x5, methodology/SESSION_NOTES.md [seed] x1",
+  "after_targets": []
+ },
+ {
+  "adopter": "vscode_quarto_ext",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 1,
+  "after": {
+   "seed": 18
+  },
+  "after_where": "methodology/CHANGELOG.md [seed] x12, methodology/HANDOFFS.md [seed] x4, methodology/SESSION_NOTES.md [seed] x2",
+  "after_targets": []
+ },
+ {
+  "adopter": "Philippians",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 1,
+  "after": {
+   "seed": 2
+  },
+  "after_where": "methodology/CHANGELOG.md [seed] x1, methodology/HANDOFFS.md [seed] x1",
+  "after_targets": []
+ },
+ {
+  "adopter": "airqino",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 1,
+  "after": {
+   "seed": 1
+  },
+  "after_where": "methodology/CHANGELOG.md [seed] x1",
+  "after_targets": []
+ },
+ {
+  "adopter": "chat_verification",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 0,
+  "after": {},
+  "after_where": "none",
+  "after_targets": []
+ },
+ {
+  "adopter": "church_growth",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 0,
+  "after": {},
+  "after_where": "none",
+  "after_targets": []
+ },
+ {
+  "adopter": "dalia_martinez_funeral",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 0,
+  "after": {},
+  "after_where": "none",
+  "after_targets": []
+ },
+ {
+  "adopter": "claude_work",
+  "sync": "committed",
+  "apply": "rolled-back (exit 3)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": "-",
+  "after": {},
+  "after_where": "not migrated"
+ },
+ {
+  "adopter": "wsfct",
+  "sync": "committed",
+  "apply": "applied (exit 0)",
+  "refusals": "none",
+  "before_exit": 0,
+  "before": {},
+  "after_exit": 1,
+  "after": {
+   "seed": 12
+  },
+  "after_where": "methodology/CHANGELOG.md [seed] x9, methodology/HANDOFFS.md [seed] x2, methodology/SESSION_NOTES.md [seed] x1",
+  "after_targets": []
+ }
+]
