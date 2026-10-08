@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 — P9 step 2: the three framework documents name files by bare name and know the second layout
+
+`ITERATIVE_METHODOLOGY.md` turns its 8 `../../` links to the operating files into their own text. `FRAMEWORK_APPARATUS.md` adds one sentence under its trim command giving the `methodology/` form (`python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --check`) and pointing at the runner's paragraph. `HOW_TO_USE.md` says in three places that the runner may sit in `methodology/` (the table row, step 1 of the integration list with its CLAUDE.md example, and the "known location" step). `bin/check-links`: legacy OK (100 to 92 links), `--layout new` 20 to 12 dangling.  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 — P9 step 1: the runner says where the files are, and it and `RECOMMENDED_SKILLS.md` stop linking across layouts
 
 With his approval of the design at the picker (links that cannot resolve in both layouts become bare names in code spans; one convention paragraph in the runner). `starter-kit/SESSION_RUNNER.md` gains the paragraph "Where the files are" before Phase 0 and names the 6 workstream rows, 3 `ITERATIVE_METHODOLOGY.md` mentions and 2 anchored links by bare name: 55,016 B to 55,361 B (+345, under the 56,750 B one-read cap). The paragraph widens his approved draft in one place: a tool and any methodology file it takes get `methodology/` in front, because `methodology_trim.py --file` needs the path. `starter-kit/RECOMMENDED_SKILLS.md` turns its 14 `docs/methodology/` links into their own text (18,501 B to 17,762 B). `bin/check-links`: legacy OK (116 to 100 links), `--layout new` 36 dangling to 20.  Model: Claude Sonnet 5.5.
