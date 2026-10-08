@@ -1,0 +1,57 @@
+# bin/migrate-layout on model_project_constructor at 63cedc5 (canonical ea82c0c31371): dry-run heads and the apply's before/after checks
+
+## --tier all, dry run (moves omitted: 33)
+
+migrate-layout: /Users/rmsharp/Development/model_project_constructor
+canonical: /Users/rmsharp/Development/methodology @ ea82c0c31371
+layout: legacy   tier: all   mode: dry run (nothing written; add --apply to migrate)
+
+moves (33):
+
+left in place (2):
+  ci:      1 mention(s) in 1 file(s)
+  harness: 0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  ledger:  896 mention(s) in 3 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   2647 mention(s) in 73 file(s)
+
+## --tier all, apply (972b84f)
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 6 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 333 commit(s) reached by git log --follow -> 334 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 972b84f26ff4
+
+## --tier 1, dry run (moves omitted: 23)
+
+migrate-layout: /Users/rmsharp/Development/model_project_constructor
+canonical: /Users/rmsharp/Development/methodology @ ea82c0c31371
+layout: legacy   tier: 1   mode: dry run (nothing written; add --apply to migrate)
+
+moves (23):
+
+left in place (2):
+  ci:      1 mention(s) in 1 file(s)
+  harness: 0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  ledger:  263 mention(s) in 3 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   1008 mention(s) in 55 file(s)
+
+## --tier 1, apply (4399c60)
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 4 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 333 commit(s) reached by git log --follow -> 334 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 4399c600bbd9

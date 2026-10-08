@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S285 — P11: `model_project_constructor` synced and moved to tier 1, in its own repository (3 local commits there, 1 attempt reset)
+
+In `~/Development/model_project_constructor` (clean `master`, `0dc3051`), from this checkout at `ea82c0c` (the distributed files of `add55f1`): `bin/sync` gave `63cedc5` (21 files rewritten, `.gitattributes` created, no `--force`). `bin/migrate-layout --apply` at its default `--tier all` gave `972b84f`; the adopter's own CI was red on it (2 of its 13 proofs, 32 failed and 9 errors) although every check the tool runs held. At his choice (the mid-session picker) that unpushed commit was reset away (`git reset --hard 63cedc5`, after moving the three ignored generated files back to the root and saving a patch in scratch), and `--tier 1 --apply` gave `4399c60` (23 renames at 100%). One constant in its `tests/test_read_budget.py` gave `ec23bc7`. Its CI on the committed tree: ruff 0, mypy 0, 13 of 13 proofs plain and `--self-test`, pytest 3,942 passed, 9 skipped, 98.34%, as before the sync. `bin/status` reads layout `new`, 23 of 23 tracked files current. A Phase 0 ran there in the new layout. **Nothing was pushed**; its push is his go-ahead. Model: Claude Sonnet 5.5.
+
+### 2026-10-08 · [BL-101] S285 — the P11 record and its evidence
+
+`docs/planning/methodology-subdirectory-evidence/p11-model-project-constructor-record.md` and `p11-adopter-runs/` (three files: the adopter's CI runs S1 to S4, the scratch-clone rehearsal with the 41 failures, the `migrate-layout` dry-run heads and apply checks). It states the CI at each state, the 41 tests and 2 proofs that tier 2 breaks, why the tool's `proofs` cell reads 0 for them, the dashboard history that forks under tier 1 alone, and what is his. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S285 claim (in progress) — P11, the first adopter: `model_project_constructor`
 
 CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose P11 as the one deliverable and the owed HANDOFFS trim first (done before this claim: trim `9d59ad4`, fold `aa7bfdf`, shard proof exit 0 from a `--no-local` clone). Deliverable: the first real adopter moved to the `methodology/` layout by `bin/sync` then `bin/migrate-layout`, in that repository, each as its own commit there, with its own tests and CI green and one Phase 0 in the new layout. Nothing pushed, nothing sent upstream. Model: Claude Sonnet 5.5.

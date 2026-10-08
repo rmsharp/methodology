@@ -1,0 +1,97 @@
+# The adopter's own CI commands (ruff, mypy, each docs/architecture-history/*.verify.sh plain and --self-test, pytest -q), run from its root with its .venv
+
+## S1 -- after the sync, before its commit (63cedc5 content)
+
+ruff 0
+mypy 0
+proof SESSION_NOTES-pointer-collapse-S254.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-pointer-collapse.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S220-through-S217.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S224-through-S221.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S227-through-S225.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S231-through-S228.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S235-through-S232.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S238-through-S236.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S241-through-S239.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S248-through-S242.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S257-through-S249.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S269-through-S258.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-through-S216.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proofs found 13
+pytest 0
+
+TOTAL                                                                               3799     38    774     34    98%
+Required test coverage of 95% reached. Total coverage: 98.34%
+3942 passed, 9 skipped, 5 warnings in 123.89s (0:02:03)
+
+## S2 -- after --tier all (972b84f, since reset away)
+
+ruff 0
+mypy 0
+proof SESSION_NOTES-pointer-collapse-S254.verify.sh plain=1 selftest=2 printed_ok=no
+proof SESSION_NOTES-pointer-collapse.verify.sh plain=1 selftest=2 printed_ok=no
+proof SESSION_NOTES-S220-through-S217.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S224-through-S221.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S227-through-S225.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S231-through-S228.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S235-through-S232.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S238-through-S236.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S241-through-S239.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S248-through-S242.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S257-through-S249.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S269-through-S258.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-through-S216.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proofs found 13
+pytest 1
+
+TOTAL                                                                               3799     38    774     34    98%
+Required test coverage of 95% reached. Total coverage: 98.34%
+32 failed, 3875 passed, 35 skipped, 5 warnings, 9 errors in 109.63s (0:01:49)
+
+## S3 -- --tier 1 plus the constant with a 101-character comment (ruff E501; superseded by S4)
+
+ruff 1
+mypy 0
+proof SESSION_NOTES-pointer-collapse-S254.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-pointer-collapse.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S220-through-S217.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S224-through-S221.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S227-through-S225.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S231-through-S228.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S235-through-S232.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S238-through-S236.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S241-through-S239.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S248-through-S242.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S257-through-S249.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S269-through-S258.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-through-S216.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proofs found 13
+pytest 0
+
+TOTAL                                                                               3799     38    774     34    98%
+Required test coverage of 95% reached. Total coverage: 98.34%
+3942 passed, 9 skipped, 5 warnings in 114.58s (0:01:54)
+
+## S4 -- --tier 1 plus the constant, the tree committed as ec23bc7
+
+ruff 0
+mypy 0
+proof SESSION_NOTES-pointer-collapse-S254.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-pointer-collapse.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S220-through-S217.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S224-through-S221.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S227-through-S225.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S231-through-S228.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S235-through-S232.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S238-through-S236.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S241-through-S239.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S248-through-S242.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S257-through-S249.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-S269-through-S258.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proof SESSION_NOTES-through-S216.md.verify.sh plain=0 selftest=0 printed_ok=yes
+proofs found 13
+pytest 0
+
+TOTAL                                                                               3799     38    774     34    98%
+Required test coverage of 95% reached. Total coverage: 98.34%
+3942 passed, 9 skipped, 5 warnings in 116.83s (0:01:56)

@@ -1,0 +1,54 @@
+# Scratch-clone rehearsal at 63cedc5: control, --tier 1, --tier all (proofs, then pytest --no-cov with the adopter's .venv)
+
+[control] proofs ok=13 bad=0:
+[control] pytest exit 0 : 3942 passed, 9 skipped in 109.52s (0:01:49)
+[1] apply exit 0
+[1] proofs ok=13 bad=0:
+[1] pytest exit 1 : 1 failed, 3915 passed, 35 skipped in 109.06s (0:01:49)
+[all] apply exit 0
+[all] proofs ok=11 bad=2: SESSION_NOTES-pointer-collapse-S254.verify.sh SESSION_NOTES-pointer-collapse.verify.sh
+[all] pytest exit 1 : 32 failed, 3875 passed, 35 skipped, 9 errors in 100.25s (0:01:40)
+
+# The 41 failures and errors of S2 (--tier all): 7 in tests/test_read_budget.py, 34 in tests/test_session_notes_census.py
+
+ERROR tests/test_session_notes_census.py::test_shard_spans_tile_without_gap_or_overlap
+ERROR tests/test_session_notes_census.py::test_every_shard_has_its_proof_on_disk
+ERROR tests/test_session_notes_census.py::test_only_the_first_shard_banner_omits_its_trim_session
+ERROR tests/test_session_notes_census.py::test_composed_census_claims_are_present
+ERROR tests/test_session_notes_census.py::test_shard_filename_sets_match_disk
+ERROR tests/test_session_notes_census.py::test_every_number_near_shard_vocabulary_is_classified
+ERROR tests/test_session_notes_census.py::test_the_front_matters_standing_rules_are_present
+ERROR tests/test_session_notes_census.py::test_the_front_matter_table_has_one_row_per_shard
+ERROR tests/test_session_notes_census.py::test_frozen_entries_are_still_present
+FAILED tests/test_read_budget.py::test_live[ceiling]
+FAILED tests/test_read_budget.py::test_live[front_matter]
+FAILED tests/test_read_budget.py::test_live[k_bytes]
+FAILED tests/test_read_budget.py::test_live[k_lines]
+FAILED tests/test_read_budget.py::test_live[satisfiable]
+FAILED tests/test_read_budget.py::test_live[stub]
+FAILED tests/test_read_budget.py::test_live[declared]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M01]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M02]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M03]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M04]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M05]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M06]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M07]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M08]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M09]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M10]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M11]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M12]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M13]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M14]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M15]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M16]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M17]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M18]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M19]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M20]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M21]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M22]
+FAILED tests/test_session_notes_census.py::test_mutant_is_caught[M23]
+FAILED tests/test_session_notes_census.py::test_every_check_is_reached_by_some_mutant
+FAILED tests/test_session_notes_census.py::test_every_check_is_the_sole_catcher_of_some_mutant
