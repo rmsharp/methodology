@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 — P9 step 4: the two ledger seeds name the framework document by bare name, and the CLAUDE.md template says where the runner may sit
+
+`starter-kit/CHANGELOG.md` and `starter-kit/HANDOFFS.md` (seeds, written once into a new project) turn their `docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger` link into `` `FRAMEWORK_APPARATUS.md` §The Action Ledger ``. `starter-kit/CLAUDE_TEMPLATE.md` gains one HTML comment under the SESSION PROTOCOL line telling a `methodology/` project to write `methodology/SESSION_RUNNER.md` there, written as an HTML comment like the template's other "Customize" notes (whether a loaded `CLAUDE.md` drops it was not checked here). `bin/check-links`: legacy OK (84 to 82 links), `--layout new` 4 to 2 dangling (both in `BOOTSTRAP.md`).  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 — P9 step 3b: the three campaign templates and `SAFEGUARDS.md` name files by bare name
 
 The three `*_CAMPAIGN.md` files turn their one `../../../SESSION_RUNNER.md` link into its own text; `SAFEGUARDS.md` names `workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md` without the `docs/methodology/` prefix. `bin/check-links`: legacy OK (87 to 84 links), `--layout new` 7 to 4 dangling.  Model: Claude Sonnet 5.5.
