@@ -39,7 +39,7 @@ The scratch clones used the adopter's own `.venv` interpreter with `--no-cov`; t
 
 ## 3. Why the tool did not show it
 
-`bin/migrate-layout`'s `proofs` cell reads **0 proofs** for this adopter before and after: it counts the trimmer's shard proofs (`methodology_trim.py`'s), and this adopter's 13 are its own, in
+`bin/migrate-layout`'s `proofs` cell reads **0 proofs** for this adopter before and after: it runs only the proofs of the ledger shards it moves (`run_checks`, `bin/migrate-layout:732`), and this adopter moves none: its 13 proofs are its own, in
 `docs/architecture-history/`, run by its CI job `proofs`. Its `other` hits (2,647 mentions in 73 files at `--tier all`, 1,008 in 55 at tier 1) do not separate code and proofs that name a moved file from prose.
 P7's and S284's 12-adopter runs measured the tool's own checks; this is the first run of an adopter's own CI, which P7 listed as not shown.
 

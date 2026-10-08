@@ -540,7 +540,7 @@ filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqi
 
 ### 7.4a P11 — `model_project_constructor` (S285)
 
-**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`; nothing pushed). **`--tier all` passed every check the tool runs and broke the adopter's own CI** (2 of its 13 proofs and 41 tests name the moved ledger), so by his choice it was reset and `--tier 1` applied: one test constant repaired, CI back to 3,942 passed and 9 skipped, `bin/status` 23 of 23 current, Phase 0 run in the new layout. **Confirms §4.6:** tier 1 alone is coherent; the default `all` is not safe on the tool's checks alone (its `proofs` cell counts only the trimmer's). **Not shown:** an Actions run, a push.
+**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`; nothing pushed). **`--tier all` passed every check the tool runs and broke the adopter's own CI** (2 of its 13 proofs and 41 tests name the moved ledger), so by his choice it was reset and `--tier 1` applied: one test constant repaired, CI back to 3,942 passed and 9 skipped, `bin/status` 23 of 23 current, Phase 0 run in the new layout. **Confirms §4.6:** tier 1 alone is coherent; the default `all` is not safe on the tool's checks alone (its `proofs` cell runs only moved shards' proofs). **Not shown:** an Actions run, a push.
 
 ### 7.5 P23 and G-B
 
