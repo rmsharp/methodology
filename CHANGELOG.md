@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-07-5.md` (1 record(s), 39,236 B → 28,790 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-07 → 2026-10-07) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-07-5.md`](docs/archive/HANDOFFS-through-2026-10-07-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-07-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-07-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,236 B → 28,790 B (−26.6%).
+
 ### 2026-10-08 · [BL-101] S283 — fork `main` pushed to `origin`: the 10 commits `a9f8b01..e8e9868`
 
 At his go-ahead at the close-out picker, `git push origin main` (the fork, `https://github.com/rmsharp/methodology.git`) took `a9f8b01` to `e8e9868`: the S282 push record, the trim and its fold, the claim, the differential, the controls and hybrid script, the two run outputs, the P10 record, the correction and the close-out. A fast-forward (`origin/main` was an ancestor, 0 behind, 10 ahead). **Read back after:** `git fetch origin` then `git rev-list --left-right --count origin/main...main` reads `0 0`, and `upstream/main` is still `f34769f`. **Same picker, D8:** he chose to decide later; nothing is recorded as the route. Nothing went to `upstream`. This record is a CHANGELOG-only commit and stays local under the standing grant (the next read should be `0 1`). Model: Claude Sonnet 5.5.
