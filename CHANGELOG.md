@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 — the backlog records P8 and P9: BL-101's index row and detail now name P10 as next
+
+`docs/planning/BACKLOG.md` (the BL-101 row) and `BACKLOG-DETAIL.md` (its detail) said "Next: P8". Both now record P8 (the rehearsal failed the section 3.1 criterion; BL-104) and P9 (36 links became bare names, `--layout both` exit 0, Test 10 holds it) and name P10 as next; the detail also keeps the one thing P9 left, the `bin/migrate-layout` links check that still prints "informational until P9" (`:695`, `:882`; test `tools/test_migrate_layout.py:1354`).  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 — P9 step 6: Test 10 holds `--layout both` green, two stale statements are corrected, and the plan records P9
 
 `bin/tests.sh` Test 10 gains one assertion, `check-links --layout both` exit 0 (it read exit 1 with 36 dangling at this session's claim). `bin/check-links`'s docstring and this repository's `CLAUDE.md` no longer say `both` is P9's future criterion (`CLAUDE.md` 18,767 B to 18,737 B). The plan's new §7.3c records P9; to stay inside its 60,000 B declared budget (now exactly 60,000) §7.3a and §7.3b were recomposed, their per-adopter detail pointing at `p7-adopter-runs/summary.md` where it is kept, and the P6 sentence "For P9" removed as resolved. **Left, not done (a tool change, not documentation):** `bin/migrate-layout` (`:695`, `:882`) still prints its links check as informational "until P9".  Model: Claude Sonnet 5.5.
