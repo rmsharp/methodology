@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S285
+date: 2026-10-08
+status: pending
+active_task: P11 -- MIGRATE THE FIRST ADOPTER, `model_project_constructor` (BL-101, plan section 7.4; chosen at the S285 Phase 0 picker, with the owed HANDOFFS trim first). DONE per the plan: a clean tree; `bin/status` before; `bin/sync` first as its own commit if a tracked file is not current; `bin/migrate-layout` dry run read; the apply as ONE commit; `bin/status` after (all current, at the new destinations); the adopter's OWN test suite and CI green, named in the receipt; one full Phase 0 in the new layout; the sha it synced from. Its push is its own go-ahead. Read at Phase 0: `master`, clean, 0 0 with `origin`, hooks path `.githooks` holding only a `post-commit`; ledgers CHANGELOG.md 1,081,222 B, SESSION_NOTES.md 207,656 B, HANDOFFS.md 148,963 B, CLAUDE.md 39,551 B.
+```
+
+```handoff
 session: S284
 date: 2026-10-08
 status: complete

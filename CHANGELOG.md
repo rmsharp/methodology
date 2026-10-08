@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S285 claim (in progress) — P11, the first adopter: `model_project_constructor`
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose P11 as the one deliverable and the owed HANDOFFS trim first (done before this claim: trim `9d59ad4`, fold `aa7bfdf`, shard proof exit 0 from a `--no-local` clone). Deliverable: the first real adopter moved to the `methodology/` layout by `bin/sync` then `bin/migrate-layout`, in that repository, each as its own commit there, with its own tests and CI green and one Phase 0 in the new layout. Nothing pushed, nothing sent upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [ad hoc] S285 — fold the 2026-10-08 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`9d59ad4`, 1 receipt, S282, 2026-10-08, to `HANDOFFS-through-2026-10-08.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S284, S283). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-08.md.verify.sh` at `9d59ad4`, exit 0. Model: Claude Sonnet 5.5.
