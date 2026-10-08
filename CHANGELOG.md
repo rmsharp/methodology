@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 — P9 step 1: the runner says where the files are, and it and `RECOMMENDED_SKILLS.md` stop linking across layouts
+
+With his approval of the design at the picker (links that cannot resolve in both layouts become bare names in code spans; one convention paragraph in the runner). `starter-kit/SESSION_RUNNER.md` gains the paragraph "Where the files are" before Phase 0 and names the 6 workstream rows, 3 `ITERATIVE_METHODOLOGY.md` mentions and 2 anchored links by bare name: 55,016 B to 55,361 B (+345, under the 56,750 B one-read cap). The paragraph widens his approved draft in one place: a tool and any methodology file it takes get `methodology/` in front, because `methodology_trim.py --file` needs the path. `starter-kit/RECOMMENDED_SKILLS.md` turns its 14 `docs/methodology/` links into their own text (18,501 B to 17,762 B). `bin/check-links`: legacy OK (116 to 100 links), `--layout new` 36 dangling to 20.  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 claim (in progress) — P9, the documentation for the `methodology/` layout
 
 CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose BL-101 P9 and both ledger trims. Deliverable: the plan's section 7 row P9 and C14, done when `bin/check-links --layout both` exits 0 with the suite criterion held. Baseline at this claim: `--layout legacy` OK (116 links), `--layout new` 36 dangling in 13 files, `both` exit 1, 38 distributed lines name `docs/methodology`, suite 476 / 0 / 6 at two receipts (`40c3694`, Test 40 666 = 666). Done before this claim: the HANDOFFS trim `ae8d846` and fold `3efcd4f`, the CHANGELOG trim `40c3694`. Phase 0: 0 undocumented commits, 0 merges, gate citation matches, #94 #92 #93 without a reply. Model: Claude Sonnet 5.5.
