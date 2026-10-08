@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S283 — correction to the entry before it (the P10 record)
+
+That entry says the line numbers dropped from the plan's rows for P2 to P6 are held by `inventory-output.txt`. They are not (the file has none of them). They are in the plan's git history: `git show 724aeed:docs/planning/methodology-subdirectory-plan.md` (the last version before this session's edit) carries every one. The never-edit gate forbids editing the committed entry, so this entry is the correction. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S283 — the P10 record: the sha adopters may sync from, and what a pull request would carry
 
 `docs/planning/methodology-subdirectory-evidence/p10-expand-release-record.md`: adopters may sync from `add55f1` (the last commit to change a distributed file or anything under `bin/`, `tools/`, `starter-kit/`, `.githooks/`); the expand stage changes no path, layout or health of an adopter that only syncs (12 of 12 in clones); the D8 pull request is a port, measured at 51 files, +9,915 -661 for BL-101 alone, 34 of 81 code-touching commits replaying onto `upstream/main`, and D8 does not gate P11. The plan gains §7.3d and stays at 59,991 of 60,000 B by dropping line numbers from the rows of finished phases (P2 to P6; `inventory-output.txt` holds them) and a duplicate P7 bullet; the backlog index and detail name P11 as next. Nothing was sent, tagged or pushed; D8, the release number and any tag stay his. Model: Claude Sonnet 5.5.
