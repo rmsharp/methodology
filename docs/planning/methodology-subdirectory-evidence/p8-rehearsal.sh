@@ -27,8 +27,8 @@ UPSTREAM="$(git -C "$SRC" rev-parse upstream/main)" || { echo "needs the ref ups
 STAGES="${P8_STAGES:-tool proofs trim hook dash resync suites ratchet}"
 T="$(mktemp -d)"; [ -n "${P8_KEEP:-}" ] || trap 'rm -rf "$T"' EXIT
 want() { case " $STAGES " in *" $1 "*) return 0 ;; esac; return 1; }
-mk() {  # mk <dir> [<commit>]: a --no-local clone at a commit, hooks ON, a committer
-  rm -rf "$1"; git clone -q --no-local "$SRC" "$1" && git -C "$1" checkout -q "${2:-$BASE}" || return 1
+mk() {  # mk <dir> [<commit> [<source>]]: a --no-local clone at a commit, hooks ON, a committer
+  rm -rf "$1"; git clone -q --no-local "${3:-$SRC}" "$1" && git -C "$1" -c advice.detachedHead=false checkout -q "${2:-$BASE}" || return 1
   git -C "$1" config core.hooksPath .githooks; git -C "$1" config user.email t@t
   git -C "$1" config user.name t; git -C "$1" config commit.gpgsign false
 }
@@ -122,7 +122,7 @@ fi
 
 if want trim; then
   h "3. one real trim of each ledger in the new layout, hooks ON"
-  mk "$T/MT" "$MV" || exit 3
+  mk "$T/MT" "$MV" "$T/M" || exit 3
   TOOL="$T/MT/starter-kit/methodology_trim.py"
   printf 'tool: %s\n' "$(python3 "$TOOL" --version)"
   rc_all=0
@@ -165,8 +165,8 @@ if want hook; then
     git -C "$1" commit -q -m later > /dev/null 2> "$2"; echo $?
   }
   mk "$T/hc"; printf 'C  control, UNMOVED ledger, later commit: exit=%s (expect nonzero: refused)\n' "$(later "$T/hc" "$T/hc.err")"; head -2 "$T/hc.err" | cut -c1-200 | sed 's/^/     /'
-  mk "$T/hx" "$MV"; printf 'X2 MOVED by the tool, later commit without the ledger: exit=%s (expect nonzero: refused; 0 = the gate fails OPEN)\n' "$(later "$T/hx" "$T/hx.err")"; head -2 "$T/hx.err" | cut -c1-200 | sed 's/^/     /'
-  mk "$T/hp" "$MV"
+  mk "$T/hx" "$MV" "$T/M"; printf 'X2 MOVED by the tool, later commit without the ledger: exit=%s (expect nonzero: refused; 0 = the gate fails OPEN)\n' "$(later "$T/hx" "$T/hx.err")"; head -2 "$T/hx.err" | cut -c1-200 | sed 's/^/     /'
+  mk "$T/hp" "$MV" "$T/M"
   python3 -I - "$T/hp/methodology/CHANGELOG.md" <<'PYEOF'
 import sys
 p = sys.argv[1]; t = open(p, encoding="utf-8").read()
@@ -175,7 +175,7 @@ open(p, "w", encoding="utf-8").write(t[:i] + "### 2026-10-07 · [ad hoc] P8 prob
 PYEOF
   printf '\nx\n' >> "$T/hp/docs/planning/BACKLOG.md"; git -C "$T/hp" add docs/planning/BACKLOG.md methodology/CHANGELOG.md
   git -C "$T/hp" commit -q -m later-with-ledger > /dev/null 2> "$T/hp.err"; printf 'X2+ MOVED, the same change with methodology/CHANGELOG.md co-staged (a NEW entry): exit=%s (expect 0)\n' "$?"; head -2 "$T/hp.err" | cut -c1-200 | sed 's/^/     /'
-  mk "$T/he" "$MV"
+  mk "$T/he" "$MV" "$T/M"
   python3 -I - "$T/he/methodology/CHANGELOG.md" <<'PYEOF'
 import sys
 p = sys.argv[1]; t = open(p, encoding="utf-8").read()
@@ -187,9 +187,33 @@ fi
 
 if want dash; then
   h "5. the dashboard on the unmoved and the moved clone"
-  for d in U M; do
-    ( cd "$T/$d" && python3 tools/methodology_dashboard.py --no-open 2> /dev/null | sed 's/\x1b\[[0-9;]*m//g' | grep -E 'Health:|Project|methodology  ' | sed "s/^ */$d: /" )
+  for d in U M; do  # throwaway copies: the dashboard appends to a tracked history, and the suites run in U and M later
+    git clone -q --no-local "$T/$d" "$T/dash-$d"
+    ( cd "$T/dash-$d" && python3 tools/methodology_dashboard.py --no-open 2> /dev/null | sed 's/\x1b\[[0-9;]*m//g' | grep -E 'Health:' | sed "s/^ */$d: /" )
   done
+  python3 -I - "$T/dash-U" "$T/dash-M" <<'PYEOF'
+import importlib.util, json, sys
+from pathlib import Path
+sys.dont_write_bytecode = True
+def load(root):
+    root = Path(root)
+    spec = importlib.util.spec_from_file_location("dash", root / "tools" / "methodology_dashboard.py")
+    m = importlib.util.module_from_spec(spec); sys.modules["dash"] = m; spec.loader.exec_module(m)
+    return json.loads(json.dumps(m.collect_all(root), default=str))
+def flat(d, p=""):
+    out = {}
+    if isinstance(d, dict):
+        for k, v in d.items(): out.update(flat(v, p + "/" + str(k)))
+    else:
+        out[p] = json.dumps(d)[:90]
+    return out
+a, b = flat(load(sys.argv[1])), flat(load(sys.argv[2]))
+skip = ("/path", "/name", "/git/", "/files/", "/docs/doc_total_loc", "/changelog/dated_entry_count", "/trim/ledgers")
+print("every dashboard metric that differs, unmoved | moved (paths, counts and the tool's own new entry left out):")
+for k in sorted(set(a) | set(b)):
+    if a.get(k) != b.get(k) and not k.startswith(skip):
+        print("   %-34s %s | %s" % (k, a.get(k), b.get(k)))
+PYEOF
 fi
 
 if want resync; then
@@ -214,15 +238,23 @@ PYEOF
   printf 'new shard\n' > docs/archive/CHANGELOG-through-2099-01-01.md
   git add -A; git commit -q -m 'upstream-like edit'; UPC="$(git rev-parse HEAD)"
   printf '\n-- 2a. fork UNMOVED vs the upstream-like edit (control) --\n'
-  git merge-tree --write-tree --name-only "$UNMOVED" "$UPC" 2>&1 | grep -E '^(CONFLICT|Auto-merging)' | cut -c1-120 | sed 's/^/   /'
+  git merge-tree --write-tree --name-only "$UNMOVED" "$UPC" > "$T/mt-a.txt" 2>&1
+  grep -E '^(CONFLICT|Auto-merging)' "$T/mt-a.txt" | cut -c1-120 | sed 's/^/   /'
+  printf '   conflicts: %s; of them file-location: %s; the new upstream shard lands at: %s\n' "$(grep -c '^CONFLICT' "$T/mt-a.txt")" "$(grep -c '^CONFLICT (file location)' "$T/mt-a.txt")" \
+    "$(git ls-tree -r --name-only "$(head -1 "$T/mt-a.txt")" | grep 'CHANGELOG-through-2099')"
   printf '\n-- 2b. fork MOVED by the tool vs the same edit --\n'
-  git merge-tree --write-tree --name-only "$MV" "$UPC" 2>&1 | grep -E '^(CONFLICT|Auto-merging)' | cut -c1-120 | sed 's/^/   /'
+  git merge-tree --write-tree --name-only "$MV" "$UPC" > "$T/mt-b.txt" 2>&1
+  grep -E '^(CONFLICT|Auto-merging)' "$T/mt-b.txt" | cut -c1-120 | sed 's/^/   /'
+  printf '   conflicts: %s; of them file-location: %s; the new upstream shard lands at: %s\n' "$(grep -c '^CONFLICT' "$T/mt-b.txt")" "$(grep -c '^CONFLICT (file location)' "$T/mt-b.txt")" \
+    "$(git ls-tree -r --name-only "$(head -1 "$T/mt-b.txt")" | grep 'CHANGELOG-through-2099')"
+  printf '   (the tool leaves FORK_LEARNINGS-retired.md and HANDOFFS-archive.md in docs/archive/, so git sees no directory rename)\n'
   cd "$SRC" || exit 3
 fi
 
 triple() { grep -m1 '^== Summary:' "$1" | sed 's/^== Summary: //; s/ ==$//'; }
 if want suites; then
   h "7. plan 3.1: bash bin/tests.sh, the unmoved clone and the moved one, serially, same commit family"
+  printf 'uncommitted files before the suites: unmoved %s, moved %s (both must be 0)\n' "$(git -C "$T/U" status --short | wc -l | nospace)" "$(git -C "$T/M" status --short | wc -l | nospace)"
   for d in U M; do
     ( cd "$T/$d" && bash bin/tests.sh > "$T/suite-$d.txt" 2>&1 ); printf '%s: exit %s; %s\n' "$([ $d = U ] && echo unmoved || echo moved)" "$?" "$(triple "$T/suite-$d.txt")"
   done
