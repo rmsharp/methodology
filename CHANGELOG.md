@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S282 close-out — P9: the documents name files by bare name and say where they are; `check-links --layout both` exits 0; receipt complete
+
+BL-101 P9 is done (plan 7.3c). `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files per layout) and `bin/tests.sh` Test 10 holds it. The 36 became bare names in code spans because no one relative link spans the legacy and the `methodology/` layout; the runner says once where files are and `BOOTSTRAP.md` gained "Two layouts" with the C14 sentence. The ledgers were trimmed first on his go-ahead (HANDOFFS to `-3`, CHANGELOG 186,236 B to 78,034 B). **Gate run on `8e214c5`:** 18/18 pass, 0 unmeasured, results `5f5bd400b633`, manifest `a58181b6d58b`; the suite 483 / 0 / 0 at three receipts and 477 / 0 / 6 at two; `tests-sh-passed` floor 477. **3A:** S281's handoff scores 8. **3B:** self-score 8. **3C:** no fork learning row appended and none retired (D3), rows considered in the receipt. **Left:** `bin/migrate-layout` still prints its links check as "informational until P9"; P10 and its upstream route are his call; trim of HANDOFFS owed at the next Phase 0. His go-ahead at the close-out picker: push fork `main` to `origin` after this commit; `upstream` is not touched.  Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S282 — the floor: `tests-sh-passed` 476 to 477, measured at both receipt states
 
 `bash bin/tests.sh` in clean `--no-local` clones of `724aeed`, output captured: **483 / 0 / 0** at three receipts and **477 / 0 / 6** with the S282 stub removed in a scratch commit (two receipts); Test 40 compared 666 with 666 in both. The one new pass is Test 10's `check-links --layout both` assertion. A mutant with one legacy-style `docs/methodology/` link in `RECOMMENDED_SKILLS.md` leaves the legacy-only check at exit 0 and takes `--layout both` to exit 1, so the new assertion is not redundant. No gate added; the hook accepts a tightening.  Model: Claude Sonnet 5.5.
