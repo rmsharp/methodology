@@ -315,6 +315,15 @@ if python3 "$METHODOLOGY/tools/test_sync_layouts.py" >/dev/null 2>&1; then
 else
     fail "sync layer in both layouts unit tests failed"
 fi
+# The migration tool (BL-101 P7): bin/migrate-layout run as a command in scratch git projects that the real bin/sync
+# wrote (its plan, its refusals, the one commit and its rollback, the rewrites, the one ledger entry, the hits it leaves,
+# the shard rehearsal, the checks before and after), and its rules as functions. Canonical-only, like the tool. The
+# evidence over the 12 adopters in clones is a script (docs/planning/methodology-subdirectory-evidence/), not this suite.
+if python3 "$METHODOLOGY/tools/test_migrate_layout.py" >/dev/null 2>&1; then
+    pass "migration tool (bin/migrate-layout) unit tests green"
+else
+    fail "migration tool (bin/migrate-layout) unit tests failed"
+fi
 
 echo "== Test 19: dashboard twins byte-identical + same DASHBOARD_VERSION =="
 diff -q "$METHODOLOGY/tools/methodology_dashboard.py" "$STARTER/methodology_dashboard.py" >/dev/null \

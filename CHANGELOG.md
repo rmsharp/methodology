@@ -241,6 +241,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-07 · [BL-101] S280 — `bin/tests.sh` runs the migration tool's suite (128 tests, about 4.5 minutes of the shell suite)
+
+`bin/tests.sh` now runs `tools/test_migrate_layout.py` beside the other layout suites, after the sync layer, and passes or fails on its exit code (one new PASS row: "migration tool (bin/migrate-layout) unit tests green"). Canonical-only, like the tool. The floors for it (the shell suite's `tests-sh-passed` and a new gate `migrate-layout-unit-tests`) follow in the next commit, measured in a clean clone of this one. Model: Claude Sonnet 5.5.
+
 ### 2026-10-07 · [BL-101] S280 — the plan, the backlog and `CLAUDE.md` record BL-101 P7 (the plan at 59,767 of its declared 60,000 B)
 
 BL-101 P7 is recorded where the next session reads. **The plan:** a new section 7.3a (what was built and measured), the P7 bullet of 7.3 shortened to its criterion and its surface, the status lines say P1 to P7 are built and P8 is next, and sections 7.2a to 7.2e were recomposed (4,781 B to 2,630 B, every figure and every "not shown" kept) to make the room; the file is 59,767 B of a declared 60,000. **The backlog:** the BL-101 row and its detail entry say P7 is done, give the measured result over the 12 adopters (11 migrate, `claude_work` refused, `wsfct` rolled back by its own hook until it is updated), put the one open choice for the operator (a ledger that is only the seed cannot take its entry and stay a rename at 90%: keep the refusal, require additions-only and a 50% rename for the ledger alone, or commit the entry second) and make P8 the next action. **`CLAUDE.md`:** a row for `bin/migrate-layout` and `tools/test_migrate_layout.py` in the tools table, and P7 named among the tools that embed the resolver. Model: Claude Sonnet 5.5.
