@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [ad hoc] S286 — reconcile S285's `commit:` answer slot to its close-out sha
+
+S285's receipt named "`3184535` (the last work commit before this close-out; the close-out commit holding this receipt is the next one ...)", which `bin/check-handoff` refuses once a newer receipt sits above it (`bin/tests.sh` Test 34 L1: 482 passed, 1 failed in a clean clone of `8b614fa`, after the S286 claim; the gate run read `tests-sh-failed` 1). Per `starter-kit/HANDOFFS.md:64` and `:78-79` the next session reconciles it, as S261 did for S260 (`9cb4ec4`): the commit whose copy of the S285 block first reads `status: complete` is `b3e0736` (`git log --grep "S285 close-out"`), so the slot now starts `b3e0736 (the close-out commit; ...)`; the rest of the line is unchanged. One line in `HANDOFFS.md`. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S286 — the survey record, and the BL-101 row and Next action
 
 `docs/planning/methodology-subdirectory-evidence/s286-adopter-survey-record.md`: of the 25 files the survey names, 15 read a moved path by name and 10 are text. `nprcgenekeepr` has 9 (four CI filters, `.Rbuildignore`, three R tests, a data-raw script) and is the only adopter tier 1 touches; `chat_verification` and `church_growth` carry the older ledger hook the plan's C5 already measured; `dalia_martinez_funeral` an old `bin/check-handoff`; `mts-system` one script; `wsfct` two TypeScript scripts; `feedback-loop-comparison`, `airqino`, `Philippians` and `vscode_quarto_ext` none; `claude_work` has no commit. `BACKLOG.md` (the BL-101 row) and `BACKLOG-DETAIL.md` (its Next action) now say the survey is done and what is his: the tier for P12 on, the plan's order, the tool follow-up. The plan is untouched. The shell suite on the trimmed tree, in a clean clone of `e729ad6`: 477 / 0 / 6, Test 40 666 = 666 (`s286-suite-after-trim.txt`). Model: Claude Sonnet 5.5.
