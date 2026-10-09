@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-09 · [ad hoc] S287 — pushed `main` to the fork origin at his go-ahead (`a446fbf..211d3fc`, 14 commits), and this record with it
+
+At the S287 close-out picker he chose to push; `git push origin main` sent S286's 7 commits and S287's 7 (a plain fast-forward) and `git rev-list --left-right --count origin/main...main` read `0 0` after a fetch. Nothing went to `KJ5HST/methodology`. This commit changes only `CHANGELOG.md` and is pushed too, under his standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-09 · [BL-101] S287 close-out — P12 done at tier all; the receipt is complete; the gate run read 15/18 under load
 
 Receipt S287 is `status: complete` (self 8, predecessor 9; no fork learning row appended, so no retirement is owed: the rows considered are named in the receipt). Deliverable: `feedback-loop-comparison` synced and moved at `--tier all` in its own repository (`8ce4ed6`, `40d2b74`, `2e77a73`; no remote, nothing pushed), with the record, plan §7.4b, and the BL-101 row and Next action. **The gate run on `f195c4a` read `15/18 pass · 0 fail · 3 unmeasured`:** `tests-sh-passed`, `tests-sh-failed` and `migrate-layout-unit-tests` hit the ratchet's 600 s limit at a machine load average of 15 to 21 (BL-103, whose backlog detail now records the second occurrence). They were run by hand on the same commit: `bash bin/tests.sh` 483 passed, 0 failed, 0 skipped (1,835 s) and `tools/test_migrate_layout.py` 136 tests OK (794 s). This repository's `origin/main` is 14 commits behind after this one (his go-ahead); the next Phase 0 owes the HANDOFFS trim (3 receipts). Model: Claude Sonnet 5.5.
