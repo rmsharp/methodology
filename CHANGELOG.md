@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-08-2.md` (1 record(s), 40,483 B → 29,709 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-08 → 2026-10-08) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-08-2.md`](docs/archive/HANDOFFS-through-2026-10-08-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-08-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-08-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,483 B → 29,709 B (−26.6%).
+
 ### 2026-10-08 · [BL-101] S285 — two pushes at his go-ahead, the adopter's Actions run green, and his tier decision
 
 At the close-out picker he approved both pushes and chose the tier policy. **Fork:** `git push origin main` (`https://github.com/rmsharp/methodology.git`) took `e0123f3` to `b3e0736`, a fast-forward of 7 commits (the S284 push record, the trim and its fold, the claim, the record, the plan and backlog, the close-out); read back `0 0`; `upstream/main` unchanged at `f34769f`; nothing went upstream. **Adopter:** `git push origin master` in `model_project_constructor` (`https://github.com/rmsharp/model_project_constructor.git`) took `0dc3051` to `ec23bc7` (the sync, the tier-1 move, the test constant); read back `0 0`. **Its GitHub Actions run on `ec23bc7` (workflow `CI`, run 37859801764) passed all 5 jobs** (lint, type check, tests, ledger proofs plain and `--self-test`, data-agent decoupling): the first CI run on a moved tree, which the S285 close-out receipt listed as not verified and the record, the plan and the backlog said was not shown (corrected in this commit). **His decision (tier policy, recorded not built):** tier 1 for P12 on until each adopter's tests and proofs are surveyed; tier 2 per adopter later. This commit is docs-only and stays local, so the next read of `git rev-list --left-right --count origin/main...main` should be `0 1`. Model: Claude Sonnet 5.5.
