@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S287
+date: 2026-10-08
+status: pending
+active_task: P12 OF BL-101, `feedback-loop-comparison` MOVED TO THE `methodology/` LAYOUT AT TIER ALL, IN THAT REPOSITORY (plan section 7.4; chosen at the S287 Phase 0 picker; the survey S286 found 0 files in it that read a moved path, so his S285 "tier 1 until surveyed" condition is met). DONE per plan 7.4: a clean tree; `bin/status` before; `bin/sync` first, as its own commit in that repository, if any tracked file is not `current` (reading what `--force` would overwrite first); `bin/migrate-layout` dry run read; the apply as one commit; `bin/status` after (all `current`, at the new destinations); the adopter's OWN proofs, tests and CI named and green, rehearsed at each tier in clones first (a rise in skips is a failure); one full Phase 0 in the new layout; the sha of the checkout it synced from; a record in `docs/planning/methodology-subdirectory-evidence/`. SURFACE: that repository and its CI. CANNOT SHOW: another clone's hook arming. Its push is its own go-ahead; nothing is sent upstream. Before the claim: HANDOFFS trim `897a1f5` + fold `ff8abe4` (shard proof exit 0, `--no-local` clone).
+```
+
+```handoff
 session: S286
 date: 2026-10-08
 status: complete
