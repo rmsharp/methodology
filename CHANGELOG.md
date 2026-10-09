@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-09 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-08-4.md` (1 record(s), 41,067 B → 29,440 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-08 → 2026-10-08) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-08-4.md`](docs/archive/HANDOFFS-through-2026-10-08-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-08-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-08-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 41,067 B → 29,440 B (−28.3%).
+
 ### 2026-10-09 · [ad hoc] S287 — pushed `main` to the fork origin at his go-ahead (`a446fbf..211d3fc`, 14 commits), and this record with it
 
 At the S287 close-out picker he chose to push; `git push origin main` sent S286's 7 commits and S287's 7 (a plain fast-forward) and `git rev-list --left-right --count origin/main...main` read `0 0` after a fetch. Nothing went to `KJ5HST/methodology`. This commit changes only `CHANGELOG.md` and is pushed too, under his standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
