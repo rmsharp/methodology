@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S286 claim (in progress) — survey the 11 other adopters before P12
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose the read-only adopter survey as the one deliverable and gave two go-aheads: the owed HANDOFFS trim (done before this claim: trim `de77d5e`, fold `e729ad6`, shard proof exit 0 from a `--no-local` clone) and the push of `a446fbf` to the fork `origin` (pushed as that one commit; `git rev-list --left-right --count origin/main...main` read `0 0` after a fetch). Deliverable: for each of the 11 adopters other than `model_project_constructor`, the tracked tests, scripts, proofs and CI files that name a file the `methodology/` move relocates, counted by kind and by name, with the instrument first checked against the one adopter already measured. Read-only: nothing written in any adopter, nothing sent upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [ad hoc] S286 — fold the second 2026-10-08 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`de77d5e`, 1 receipt, S283, 2026-10-08, to `HANDOFFS-through-2026-10-08-2.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S285, S284). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-08-2.md.verify.sh` at `de77d5e`, exit 0. Model: Claude Sonnet 5.5.

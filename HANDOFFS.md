@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S286
+date: 2026-10-08
+status: pending
+active_task: SURVEY THE 11 OTHER ADOPTERS BEFORE P12 (BL-101, plan section 7.4's "tier 1 until it is surveyed"; S285 next_steps 2; chosen at the S286 Phase 0 picker). READ-ONLY. DONE: a script and its output in `docs/planning/methodology-subdirectory-evidence/`, and a record with one row per adopter naming the tracked tests, scripts, proofs and CI files that name a relocated file, by kind and by name; the instrument first run on `model_project_constructor` at `0dc3051` (its tree before the move) and shown to find the 4 files S285 measured; every figure re-run by me, none read from an agent. SURFACE: each adopter's committed tree on its default branch, by `git grep`. CANNOT SHOW: that a named path breaks at run time (a test may skip, a comment may only mention), an adopter's CI, or a tier-2 repair. Nothing written in any adopter; nothing sent upstream. Before the claim: HANDOFFS trim `de77d5e` + fold `e729ad6` (proof exit 0, `--no-local` clone) and the push of `a446fbf` to fork `origin` (read back `0 0`), both at his go-ahead.
+```
+
+```handoff
 session: S285
 date: 2026-10-08
 status: complete
