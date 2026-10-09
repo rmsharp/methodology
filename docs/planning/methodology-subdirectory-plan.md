@@ -1,9 +1,8 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
-**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P11 are done, as §7 records (P11 at tier 1).**
-**Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended:** D1 (a), D6
-(rehearse only), D8 (fork first, then one pull request), and D2, D3, D4, D5, D7, D9 as written (§9). **P0 to P11
-are done (§7.1 to §7.4a, S274 to S285); P12 is next, and tier 2 is open.**
+**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P12 are done, as §7 records (P11 at tier 1, P12 at tier all).**
+**Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).** **P0 to P12
+are done (§7.1 to §7.4b, S274 to S287); P13 is next, and tier 2 is open.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm. This file is in the population of that plan's retirement rule like every other planning file.
@@ -30,24 +29,20 @@ Evidence for every number below is re-runnable from
 3. **Nobody proposed it before** (§2.3 names what was searched). The B1 plan's Decision 1b deferred a
    canonical-side mirror as *"a possible future campaign"*; this plan is that campaign, aimed at a different layout.
 4. **What makes it hard is not the files; it is that the shipped tools, the hooks and every adopter's own files read these paths as literals** (17 couplings, §3).
-   Measured in scratch clones (`bin/tests.sh`): baseline **452 passed / 0 failed / 0 skipped**; moving
-   **only** `CHANGELOG.md` and `HANDOFFS.md` into `methodology/` gives **418 / 12 / 3**; moving the
-   archive directory too gives **414 / 11 / 5** (§3.1). Worse than a red: **the ledger co-staging hook
-   silently stops binding.** With the ledger at `methodology/CHANGELOG.md`, a commit that changes
-   tracked content and carries no ledger entry is **passed**; the unmoved control is refused (§3, C5).
+   In scratch clones of `bin/tests.sh`: baseline **452 / 0 / 0**; moving **only** the two ledgers gives **418 / 12 / 3**, and the
+   archive directory too **414 / 11 / 5** (§3.1). Worse than a red: **the ledger co-staging hook silently stops binding**: with the
+   ledger at `methodology/CHANGELOG.md` a commit with no ledger entry is **passed**, where the unmoved control is refused (§3, C5).
    A green suite is therefore not evidence about a move; §8 names the criteria that are.
 5. **Two feared risks were measured and are not risks.** All **117** frozen `.verify.sh` losslessness
    proofs give the same exit codes before and after moving the ledgers, and after moving the archive
    directory as well (§3, C7). A nested `methodology/.gitattributes` carrying `merge=union` merges two
    ledger edits cleanly, and the same merge without it conflicts (§4.2, E1).
-6. **Syncing is half the problem** (the operator's addition, §5A). `bin/sync` would write a blank
-   ledger beside a real one; the dashboard has a **second** sync channel that writes at the project
-   root; and **this repository's own resync with `upstream` changes shape once its files move**:
-   against the merge base git pairs none of the moved ledgers or JSON files, and one synthetic upstream
-   edit gives 4 modify/delete conflicts and a file-location conflict where the unmoved fork gives 3
-   text conflicts (§5A.4). The maintainer edits those files (142 of 234 root-ledger commits are his).
-   The plan's answers: sync before migrate, `--layout auto` through the window, and **this repository's
-   real files move only after the upstream decision (D8)**; P8 is a rehearsal in a scratch clone.
+6. **Syncing is half the problem** (the operator's addition, §5A). `bin/sync` would write a blank ledger beside a real one; the dashboard
+   is a **second** sync channel that writes at the project root; and **this repository's own resync with `upstream` changes shape once its
+   files move**: git pairs none of the moved ledgers or JSON files against the merge base, so one synthetic upstream edit gives 4 modify/delete
+   conflicts and a file-location conflict where the unmoved fork gives 3 text conflicts (§5A.4; the maintainer made 142 of 234 root-ledger
+   commits). The plan's answers: sync before migrate, `--layout auto` through the window, and **this repository's real files move only after
+   the upstream decision (D8)**; P8 is a rehearsal in a scratch clone.
 7. **Recommended shape:** *expand → migrate → contract* (§4.5), a layout resolver every shipped tool
    embeds (§4.3), two tiers (the framework's own files first, the project's state files second), the
    adopters one per session, and **a gate before** restructuring this repository's distributed source
@@ -106,9 +101,7 @@ documented as first-class (`starter-kit/BOOTSTRAP.md:42-50`), and §3 C2 covers 
 | `vscode_quarto_ext` | master, dirty 2, 2026-10-06 | 24 | 28 / 4 | `.claude/` 1 line |
 | `wsfct` | **active feature branch**, clean, 2026-10-06 | 42 | 14 / 2 | `.claude/` 5 lines |
 
-Versions behind (`bin/status`): from 1 to 45 per file; every adopter is behind on something. Only
-`model_project_constructor`, `feedback-loop-comparison` and `nprcgenekeepr` have a clean tree on their
-default branch; `bin/sync` writes into a clean tree only.
+Every adopter was behind on something (`bin/status`: 1 to 45 versions per file); `bin/sync` writes into a clean tree only.
 
 ### 2.3 Prior art and searches (absence claims name their reach)
 
@@ -517,7 +510,7 @@ one-deliverable rule is the default.
 
 ### 7.3c P9 — what was done (S282)
 
-**DONE.** `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files per layout); Test 10 holds it. No relative link between the runner and a framework document resolves in both layouts (`docs/methodology/X` against `X`), so those 36 became bare names in code spans; the 78 that resolve in both stayed links. The runner, `BOOTSTRAP.md` §Two layouts (C14's sentence) and the README now name both layouts. **Left (closed S284):** the `bin/migrate-layout` links check. **Not shown:** an adopter reading the new text.
+**DONE.** `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files); Test 10 holds it. The 36 that no relative path could serve in both layouts became bare names in code spans. The runner, `BOOTSTRAP.md` §Two layouts (C14's sentence) and the README now name both layouts. **Left (closed S284):** the `bin/migrate-layout` links check. **Not shown:** an adopter reading the new text.
 
 ### 7.3d P10 — the sha (S283)
 
@@ -526,7 +519,7 @@ one-deliverable rule is the default.
 ### 7.4 P11-P22 — an adopter per session (the BL-57 P6-P11 pattern)
 
 Done **in that repository** and recorded here. Order, by risk: `model_project_constructor` (P11, §7.4a),
-`feedback-loop-comparison`, `nprcgenekeepr` (the four-workflow CI
+`feedback-loop-comparison` (P12, §7.4b), `nprcgenekeepr` (the four-workflow CI
 filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqino` (nested copy),
 `chat_verification`, `church_growth`, `dalia_martinez_funeral`, `claude_work` (no history to move),
 `wsfct` **last and only on a clean default branch** (its branch is active).
@@ -540,7 +533,11 @@ filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqi
 
 ### 7.4a P11 — `model_project_constructor` (S285)
 
-**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`). **`--tier all` passed every check the tool runs and broke the adopter's own CI** (2 of its 13 proofs and 41 tests name the moved ledger), so by his choice it was reset and `--tier 1` applied: one test constant repaired, CI back to 3,942 passed and 9 skipped, Phase 0 run in the new layout. **Confirms §4.6:** tier 1 alone is coherent; the default `all` is not safe on the tool's checks alone (its `proofs` cell runs only moved shards' proofs). **Pushed;** Actions green, 5 of 5.
+**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`). `--tier all` passed every check the tool runs and broke the adopter's own CI (2 of 13 proofs, 41 tests name the moved ledger), so by his choice it was reset and `--tier 1` applied: one test constant repaired, CI back to 3,942 passed, 9 skipped, 5 of 5 jobs green after the push. **Confirms §4.6:** tier 1 alone is coherent; `all` is not safe on the tool's checks alone (its `proofs` cell runs only moved shards' proofs).
+
+### 7.4b P12 — `feedback-loop-comparison` (S287)
+
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p12-feedback-loop-comparison-record.md`). A Quarto paper with no remote, tests or CI; its build is `quarto render`. Synced with `--force` (two older canonical copies, nothing of its own overwritten), then moved: 30 renames; the HTML and PDF text of a fresh clone identical to before; health 59, risk 0 before and after. **The cost of tier 2:** 23 relative links in its own `SESSION_NOTES.md` (reported, never edited).
 
 ### 7.5 P23 and G-B
 
