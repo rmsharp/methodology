@@ -452,6 +452,7 @@ class TestThePureRules(unittest.TestCase):
         sorted tests/eval/PHASE_E_AGREEMENT_REPORT.md as a test, because its directory rule ran first)."""
         want = [("tests/test_read_budget.py", "", "tests"), ("tests/testthat/test-x.R", "", "tests"), ("src/foo_test.go", "", "tests"),
                 ("pkg/conftest.py", "", "tests"), ("web/app.test.ts", "", "tests"),
+                ("tests/helpers.py", "", "tests"), ("test/fixtures/data.json", "", "tests"), ("spec/models/user.rb", "", "tests"),
                 ("docs/x/SESSION_NOTES-pointer-collapse.verify.sh", "", "proofs"), ("verify-all.sh", "", "proofs"),
                 ("scripts/refresh.py", "", "scripts"), ("run.sh", "", "scripts"), ("web/scripts/archive.ts", "", "scripts"),
                 ("vignettes/data-raw/build.R", "", "scripts"),
@@ -1406,6 +1407,8 @@ class TestTheMachineReadFilesAreListedApartFromProse(Adopter):
         self.assertEqual(sorted(self.rows(nr, "config")), ["Makefile"])
         hooks = self.rows(nr, "hooks")
         self.assertEqual(sorted(hooks), [".git/hooks/pre-commit", ".githooks/pre-commit", ".pre-commit-config.yaml"])
+        self.assertEqual([x["file"] for x in nr["hooks"]["paths"]], sorted(hooks),
+                         "sorted by file, though the hook git does not track is read after the tracked ones")
         self.assertEqual({k: bool(v.get("untracked")) for k, v in hooks.items()},
                          {".git/hooks/pre-commit": True, ".githooks/pre-commit": False, ".pre-commit-config.yaml": False})
         self.assertEqual((hooks[".git/hooks/pre-commit"]["mentions"], hooks[".git/hooks/pre-commit"]["code_mentions"],
@@ -1417,6 +1420,29 @@ class TestTheMachineReadFilesAreListedApartFromProse(Adopter):
         self.assertEqual((rows["tests/test_c.py"]["mentions"], rows["tests/test_c.py"]["code_mentions"]), (1, 0))
         self.assertEqual((rows["tests/test_d.py"]["mentions"], rows["tests/test_d.py"]["code_mentions"], rows["tests/test_d.py"]["line"]), (2, 1, 2),
                          "the row points at the first mention on a code line")
+
+    def test_two_names_on_one_line_are_two_mentions_on_code_lines(self):
+        self.add({"tests/test_two.py": 'LEDGERS = ["CHANGELOG.md", "HANDOFFS.md"]\n'})
+        row = self.rows(run_migrate(self.project).report["not_rewritten"], "tests")["tests/test_two.py"]
+        self.assertEqual((row["mentions"], row["code_mentions"], row["names"]), (2, 2, ["CHANGELOG.md", "HANDOFFS.md"]))
+
+    def test_a_comment_only_file_is_printed_after_the_files_that_name_a_moved_path_on_a_code_line(self):
+        self.add({"tests/test_a.py": "# the ledger is CHANGELOG.md\n", "tests/test_z.py": 'LEDGER = "CHANGELOG.md"\n'})
+        out = run_migrate(self.project, json_out=False).out
+        self.assertLess(out.index("tests/test_z.py:1"), out.index("tests/test_a.py:1"), "the candidates come first, though a sorts before z")
+
+    def test_a_file_with_several_mentions_says_how_many_are_on_code_lines(self):
+        self.add({"tests/test_two.py": '# CHANGELOG.md\nLEDGERS = ["CHANGELOG.md", "HANDOFFS.md"]\n'})
+        out = run_migrate(self.project, json_out=False).out
+        self.assertRegex(out, r"tests/test_two\.py:2 .*\(3 mentions, 2 on code lines\)")
+
+    def test_a_hook_git_does_not_track_is_marked_on_its_own_row(self):
+        """The moves list also says `not tracked` of a plain move, so the words alone prove nothing about the hook."""
+        hook = self.project / ".git" / "hooks" / "pre-commit"
+        hook.write_text('#!/bin/sh\n# installed by context_budget.py\nexec python3 "$(git rev-parse --show-toplevel)/context_budget.py" --precommit\n', encoding="utf-8")
+        out = run_migrate(self.project, json_out=False).out
+        self.assertRegex(out, r"\.git/hooks/pre-commit:3 .*\[not tracked: per clone\]")
+        self.assertNotRegex(out, r"\.githooks/pre-commit:\d+ .*\[not tracked")
 
     def test_the_text_says_what_the_list_is_and_is_not(self):
         self.add(self.BREAKERS)

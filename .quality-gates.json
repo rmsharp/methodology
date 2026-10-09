@@ -100,7 +100,7 @@
     {
       "name": "migrate-layout-unit-tests",
       "direction": "min",
-      "threshold": 146,
+      "threshold": 150,
       "command": "python3 tools/test_migrate_layout.py",
       "extract": "Ran (\\d+) tests",
       "why": "BL-101 P7 (S280): bin/migrate-layout run as a command in scratch git projects the real bin/sync wrote (the plan, the refusals, the one commit and its rollback, the rewrites of CLAUDE.md, .gitignore and the two configs, the one ledger entry, the hits it leaves, the shard rehearsal, the checks before and after) and its rules as functions. Count never drops; green/red is carried by tests-sh-failed."
