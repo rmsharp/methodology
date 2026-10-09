@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-09 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-08-5.md` (1 record(s), 39,185 B → 27,594 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-08 → 2026-10-08) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-08-5.md`](docs/archive/HANDOFFS-through-2026-10-08-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-08-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-08-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 39,185 B → 27,594 B (−29.6%).
+
 ### 2026-10-09 · [BL-101] S288 — push record: main pushed to the fork origin at his go-ahead (793c7a1..0c5665a), and the F5-first decision
 
 At the S288 close-out picker he chose to push; `git push origin main` sent S288's 5 commits (a plain fast-forward, `793c7a1..0c5665a`) to `rmsharp/methodology` and `git rev-list --left-right --count origin/main...main` read `0 0` after a fetch. Nothing went to `KJ5HST/methodology`. **Also decided at that picker, by him: F5 (the tool follow-up, plan section 7.6 and `findings-register.md`) comes BEFORE P13**, so the next session's deliverable is the tool follow-up (list a project's tests, scripts, proofs, CI and hooks that read a moved path, apart from prose; prototype `kind_of` in `s286-adopter-survey.py`); P13 follows it. This commit changes only `CHANGELOG.md` and is pushed too, under his standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
