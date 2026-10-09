@@ -446,6 +446,27 @@ class TestThePureRules(unittest.TestCase):
         for path, cat in want.items():
             self.assertEqual(self.m.hit_category(path), cat, path)
 
+    def test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it(self):
+        """BL-101 F5 (plan 7.6): the report used to put a project's tests, scripts and proofs in `other` with its prose. The
+        text is the file's own, read for a first line; a prose extension under tests/ is prose (the survey's prototype
+        sorted tests/eval/PHASE_E_AGREEMENT_REPORT.md as a test, because its directory rule ran first)."""
+        want = [("tests/test_read_budget.py", "", "tests"), ("tests/testthat/test-x.R", "", "tests"), ("src/foo_test.go", "", "tests"),
+                ("pkg/conftest.py", "", "tests"), ("web/app.test.ts", "", "tests"),
+                ("docs/x/SESSION_NOTES-pointer-collapse.verify.sh", "", "proofs"), ("verify-all.sh", "", "proofs"),
+                ("scripts/refresh.py", "", "scripts"), ("run.sh", "", "scripts"), ("web/scripts/archive.ts", "", "scripts"),
+                ("vignettes/data-raw/build.R", "", "scripts"),
+                ("bin/refresh", "#!/usr/bin/env python3\nprint(1)\n", "scripts"), ("bin/notes", "just text\n", "other"),
+                ("Makefile", "", "config"), (".Rbuildignore", "", "config"), ("package.json", "", "config"), ("tox.ini", "", "config"),
+                ("docker-compose.yml", "", "config"),
+                (".husky/pre-commit", "", "hooks"), (".pre-commit-config.yaml", "", "hooks"), (".githooks/commit-msg", "", "hooks"),
+                (".github/workflows/ci.yml", "", "ci"), (".claude/settings.json", "", "harness"),
+                ("tests/eval/REPORT.md", "", "other"), ("tests/README.md", "", "other"), ("docs/guide.qmd", "", "other"),
+                ("README.md", "", "other"), ("notes.txt", "", "other"), ("data/table.csv", "", "other")]
+        for path, text, cat in want:
+            self.assertEqual(self.m.hit_category(path, text), cat, path)
+        self.assertEqual(self.m.CATEGORIES, ("ci", "hooks", "tests", "proofs", "scripts", "config", "harness", "ledger", "other"))
+        self.assertEqual(self.m.MACHINE_READ, ("ci", "hooks", "tests", "proofs", "scripts", "config"))
+
     def test_only_the_files_the_trimmer_writes_are_shards(self):
         yes = ("CHANGELOG-through-2026-08-01.md", "HANDOFFS-through-2026-08-02-3.md.verify.sh", "SESSION_NOTES-through-x.md")
         no = ("CHANGELOG-archive.md", "CHANGELOG-through-x.md.bak", "ROADMAP-through-x.md", "a/CHANGELOG-through-x.md", "CHANGELOG-through-.txt")
@@ -1242,11 +1263,13 @@ class TestTheHitsItWillNotRewrite(Adopter):
 
     PLACES = {"ci": ".github/workflows/ci.yml", "harness": ".claude/settings.json", "hooks": ".githooks/pre-commit",
               "other": "README.md"}
+    CATEGORIES = ["ci", "hooks", "tests", "proofs", "scripts", "config", "harness", "ledger", "other"]  # BL-101 F5: nine, was five
 
     def test_each_category_counts_its_mentions_and_names_the_files_and_lines(self):
         nr = run_migrate(self.project).report["not_rewritten"]
         self.assertEqual({k: (v["mentions"], v["files"]) for k, v in nr.items() if k != "ledger"},
-                         {"ci": (3, 1), "harness": (2, 1), "hooks": (1, 1), "other": (2, 1)})
+                         {"ci": (3, 1), "harness": (2, 1), "hooks": (1, 1), "other": (2, 1),
+                          "tests": (0, 0), "proofs": (0, 0), "scripts": (0, 0), "config": (0, 0)})
         self.assertEqual([(s["file"], s["line"]) for s in nr["ci"]["sites"]],
                          [(".github/workflows/ci.yml", 4), (".github/workflows/ci.yml", 5), (".github/workflows/ci.yml", 6)])
         self.assertEqual(nr["ci"]["sites"][2]["names"], ["docs/methodology/"], "a CI filter on the directory is a hit")
@@ -1285,7 +1308,7 @@ class TestTheHitsItWillNotRewrite(Adopter):
 
     def test_a_moved_file_a_rewritten_file_and_a_qualified_name_are_not_hits(self):
         nr = run_migrate(self.project).report["not_rewritten"]
-        self.assertEqual(sorted(nr), ["ci", "harness", "hooks", "ledger", "other"], "nothing was scanned")
+        self.assertEqual(sorted(nr), sorted(self.CATEGORIES), "nothing was scanned")
         listed = {s["file"] for cat in nr.values() for s in cat["sites"]}
         self.assertIn(".github/workflows/ci.yml", listed, "the scan found nothing, so the absences below prove nothing")
         self.assertNotIn("SAFEGUARDS.md", listed, "a moved framework document is not scanned")
@@ -1297,15 +1320,129 @@ class TestTheHitsItWillNotRewrite(Adopter):
             git(self.project, "rm", "-q", rel)
         self.commit("remove the places that name a moved file")
         nr = run_migrate(self.project).report["not_rewritten"]
-        self.assertEqual(sorted(nr), ["ci", "harness", "hooks", "ledger", "other"])
-        for name in ("ci", "harness", "hooks", "other"):
-            self.assertEqual((nr[name]["mentions"], nr[name]["files"], nr[name]["sites"]), (0, 0, []), name)
+        self.assertEqual(sorted(nr), sorted(self.CATEGORIES))
+        for name in self.CATEGORIES:
+            if name != "ledger":
+                self.assertEqual((nr[name]["mentions"], nr[name]["files"], nr[name]["sites"], nr[name]["paths"]), (0, 0, [], []), name)
 
     def test_the_text_a_person_reads_lists_them(self):
         r = run_migrate(self.project, json_out=False)
         self.assertRegex(r.out, r"(?m)^not rewritten")
         self.assertIn(".github/workflows/ci.yml:4", r.out)
         self.assertRegex(r.out, r"(?m)^\s+ledger:\s+\d+ mention")
+
+
+class TestTheMachineReadFilesAreListedApartFromProse(Adopter):
+    """BL-101 F5 (plan 7.6, findings-register.md). At P11 every check the tool runs passed and the adopter's own CI broke,
+    because the report put the tests and proofs that read a moved path in `other` with its prose, showed 25 sites of 2,647
+    mentions in 73 files, and none of the four files that broke was among them. A machine-read file is now listed, every
+    one, under its own kind. The scan rule itself is unchanged: only the sorting and the listing are new."""
+
+    PROOFS = ("docs/architecture-history/SESSION_NOTES-pointer-collapse.verify.sh",
+              "docs/architecture-history/SESSION_NOTES-pointer-collapse-S254.verify.sh")
+    BREAKERS = {"tests/test_read_budget.py": 'RUNNER = "SESSION_RUNNER.md"\n',
+                "tests/test_session_notes_census.py": 'LEDGER = "SESSION_NOTES.md"\n',
+                PROOFS[0]: '#!/bin/bash\nLIVE="SESSION_NOTES.md"\n',
+                PROOFS[1]: '#!/bin/bash\nLIVE="SESSION_NOTES.md"\n'}
+
+    def add(self, files, message="files that name a moved file"):
+        for rel, text in files.items():
+            path = self.project / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding="utf-8")
+        self.commit(message)
+
+    def rows(self, nr, cat):
+        return {x["file"]: x for x in nr[cat]["paths"]}
+
+    def test_the_four_files_that_broke_an_adopter_are_listed_each_under_its_kind(self):
+        self.add(self.BREAKERS)
+        nr = run_migrate(self.project).report["not_rewritten"]
+        self.assertEqual(sorted(self.rows(nr, "tests")), ["tests/test_read_budget.py", "tests/test_session_notes_census.py"])
+        self.assertEqual(sorted(self.rows(nr, "proofs")), sorted(self.PROOFS))
+        row = self.rows(nr, "tests")["tests/test_read_budget.py"]
+        self.assertEqual((row["line"], row["mentions"], row["code_mentions"], row["names"]), (1, 1, 1, ["SESSION_RUNNER.md"]))
+        self.assertIn("RUNNER", row["text"])
+        proof = self.rows(nr, "proofs")[self.PROOFS[0]]
+        self.assertEqual((proof["line"], proof["names"]), (2, ["SESSION_NOTES.md"]))
+        listed = {s["file"] for s in nr["other"]["sites"]}
+        self.assertFalse(listed & set(self.BREAKERS), "a file is in one category, not two")
+        self.assertEqual((nr["other"]["mentions"], nr["other"]["files"]), (2, 1), "other keeps only the README's two mentions")
+        kinds = ("tests", "proofs", "scripts", "config", "other")
+        self.assertEqual(sum(nr[k]["mentions"] for k in kinds), 2 + 4, "the split moves mentions; it neither adds nor drops one")
+
+    def test_every_machine_read_file_is_listed_though_the_sites_stay_capped(self):
+        files = {"tests/test_n%02d.py" % i: 'LEDGER = "CHANGELOG.md"\n' for i in range(30)}
+        files["tests/test_big.py"] = 'LEDGER = "CHANGELOG.md"\n' * 60
+        self.add(files)
+        tests = run_migrate(self.project).report["not_rewritten"]["tests"]
+        self.assertEqual((tests["mentions"], tests["files"]), (90, 31))
+        self.assertEqual(len(tests["sites"]), 25, "sites stay capped at 25 as before")
+        self.assertEqual({s["file"] for s in tests["sites"]}, {"tests/test_big.py"}, "the capped sites are all one file's: the crowd-out F5 found")
+        self.assertEqual([x["file"] for x in tests["paths"]], sorted(files), "the file list is complete and sorted")
+        big = next(x for x in tests["paths"] if x["file"] == "tests/test_big.py")
+        self.assertEqual((big["mentions"], big["code_mentions"]), (60, 60))
+
+    def test_a_prose_file_under_a_test_directory_stays_in_other(self):
+        self.add({"tests/NOTES.md": "The ledger is CHANGELOG.md.\n"})
+        nr = run_migrate(self.project).report["not_rewritten"]
+        self.assertEqual(nr["tests"]["paths"], [])
+        self.assertIn("tests/NOTES.md", {s["file"] for s in nr["other"]["sites"]})
+
+    def test_a_script_is_found_by_its_extension_or_by_its_first_line(self):
+        self.add({"scripts/refresh.py": 'LEDGER = "CHANGELOG.md"\n',
+                  "scripts/refresh": '#!/usr/bin/env python3\nLEDGER = "CHANGELOG.md"\n',
+                  "scripts/notes": "the ledger is CHANGELOG.md\n"})
+        nr = run_migrate(self.project).report["not_rewritten"]
+        self.assertEqual(sorted(self.rows(nr, "scripts")), ["scripts/refresh", "scripts/refresh.py"])
+        self.assertEqual(self.rows(nr, "scripts")["scripts/refresh"]["line"], 2)
+        self.assertIn("scripts/notes", {s["file"] for s in nr["other"]["sites"]}, "no extension and no first line: text")
+
+    def test_a_config_and_a_hook_framework_file_and_a_hook_git_does_not_track_are_listed_too(self):
+        self.add({"Makefile": "ledger:\n\tcat CHANGELOG.md\n", ".pre-commit-config.yaml": "files: CHANGELOG.md\n"})
+        hook = self.project / ".git" / "hooks" / "pre-commit"
+        hook.write_text('#!/bin/sh\n# installed by context_budget.py\nexec python3 "$(git rev-parse --show-toplevel)/context_budget.py" --precommit\n', encoding="utf-8")
+        nr = run_migrate(self.project).report["not_rewritten"]
+        self.assertEqual(sorted(self.rows(nr, "config")), ["Makefile"])
+        hooks = self.rows(nr, "hooks")
+        self.assertEqual(sorted(hooks), [".git/hooks/pre-commit", ".githooks/pre-commit", ".pre-commit-config.yaml"])
+        self.assertEqual({k: bool(v.get("untracked")) for k, v in hooks.items()},
+                         {".git/hooks/pre-commit": True, ".githooks/pre-commit": False, ".pre-commit-config.yaml": False})
+        self.assertEqual((hooks[".git/hooks/pre-commit"]["mentions"], hooks[".git/hooks/pre-commit"]["code_mentions"],
+                          hooks[".git/hooks/pre-commit"]["line"]), (2, 1, 3), "the comment names the tool and runs nothing; line 3 execs it")
+
+    def test_a_mention_on_a_comment_line_is_counted_and_marked(self):
+        self.add({"tests/test_c.py": "# the ledger is CHANGELOG.md\n", "tests/test_d.py": '# CHANGELOG.md\nLEDGER = "CHANGELOG.md"\n'})
+        rows = self.rows(run_migrate(self.project).report["not_rewritten"], "tests")
+        self.assertEqual((rows["tests/test_c.py"]["mentions"], rows["tests/test_c.py"]["code_mentions"]), (1, 0))
+        self.assertEqual((rows["tests/test_d.py"]["mentions"], rows["tests/test_d.py"]["code_mentions"], rows["tests/test_d.py"]["line"]), (2, 1, 2),
+                         "the row points at the first mention on a code line")
+
+    def test_the_text_says_what_the_list_is_and_is_not(self):
+        self.add(self.BREAKERS)
+        self.add({"tests/test_c.py": "# the ledger is CHANGELOG.md\n"}, "a test that names it only in a comment")
+        out = run_migrate(self.project, json_out=False).out
+        self.assertRegex(out, r"(?m)^\s+machine-read files that name a moved path")
+        for row in ("tests/test_read_budget.py:1", "tests/test_session_notes_census.py:1", self.PROOFS[0] + ":2", self.PROOFS[1] + ":2"):
+            self.assertIn(row, out)
+        for phrase in ("candidates", "does not run them", "necessary, not sufficient", "rehearse"):
+            self.assertIn(phrase, out)
+        self.assertRegex(out, r"tests/test_c\.py:1 .*\[comment lines only\]")
+        self.assertRegex(out, r"(?m)^\s+tests:\s+3 mention\(s\) in 3 file\(s\)")
+
+    def test_a_project_with_none_says_so_in_every_kind(self):
+        out = run_migrate(self.project, json_out=False).out
+        for kind in ("tests", "proofs", "scripts", "config"):
+            self.assertRegex(out, r"(?m)^\s+%s:\s+0 mention\(s\) in 0 file\(s\)" % kind)
+
+    def test_listing_a_file_never_edits_it(self):
+        self.add(self.BREAKERS)
+        before = {rel: (self.project / rel).read_bytes() for rel in self.BREAKERS}
+        r = run_migrate(self.project, "--apply", json_out=False)
+        self.assertEqual(r.returncode, 0, r.out)
+        for rel, data in before.items():
+            self.assertEqual((self.project / rel).read_bytes(), data, "%s was edited" % rel)
+        self.assertIn("tests/test_read_budget.py:1", r.out, "an apply prints the list too")
 
 
 class TestTheChecks(Adopter):

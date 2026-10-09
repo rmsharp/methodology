@@ -422,21 +422,49 @@ LEDGER_FILES = ("CHANGELOG.md", "HANDOFFS.md", "SESSION_NOTES.md")  # layout: ok
 CI_PREFIXES = (".github/", ".circleci/")
 CI_FILES = (".gitlab-ci.yml", ".travis.yml", "Jenkinsfile", "azure-pipelines.yml")
 SITES_SHOWN = 25
-CATEGORIES = ("ci", "harness", "hooks", "ledger", "other")
+# BL-101 F5 (plan 7.6, findings register): a project's tests, proofs, scripts and configs read a moved path as a machine
+# does, so each is listed, every one, under its own kind and apart from prose. `harness` is a permission string a prompt
+# reads, `ledger` is counted and never listed, and `other` is prose and whatever is left.
+MACHINE_READ = ("ci", "hooks", "tests", "proofs", "scripts", "config")
+CATEGORIES = MACHINE_READ + ("harness", "ledger", "other")
+HOOK_DIRS = (".githooks/", ".husky/")
+HOOK_FILES = (".pre-commit-config.yaml",)
+# A comment-only line cannot change what a machine does; this is a heuristic by first character, not a parse.
+COMMENT_STARTS = ("#", "//", "<!--", "/*", "*", ";", "%")
+TEST_DIR_RE = re.compile(r"(^|/)(tests?|specs?|testthat|__tests__)(/|$)")
+TEST_FILE_RE = re.compile(r"(^|/)(test_[^/]*|[^/]*_test\.[^/]*|[^/]*\.test\.[^/]*|[^/]*_spec\.[^/]*|conftest\.py)$")
+PROSE_EXT = (".md", ".qmd", ".rmd", ".rst", ".txt", ".tex", ".html", ".adoc")
+SCRIPT_EXT = (".sh", ".bash", ".zsh", ".py", ".r", ".js", ".mjs", ".cjs", ".ts", ".rb", ".pl", ".ps1", ".bat", ".jl")
+CONFIG_EXT = (".json", ".toml", ".yml", ".yaml", ".cfg", ".ini")
+CONFIG_NAMES = (".rbuildignore", ".dockerignore", "makefile", "description", "namespace", "dockerfile")
 
 
-def hit_category(path):
+def hit_category(path, text=""):
+    """The category a file that names a moved path falls in. `text` is the file's own, read only for a first line (`#!`),
+    which is what makes an extensionless script a script. A prose extension is prose wherever the file sits: the survey's
+    prototype sorted tests/eval/PHASE_E_AGREEMENT_REPORT.md as a test because its directory rule ran first."""
     name = path.rsplit("/", 1)[-1]
     if path.startswith(CI_PREFIXES) or path in CI_FILES:
         return "ci"
     if path.startswith(".claude/"):
         return "harness"
-    if path.startswith(".githooks/"):
+    if path.startswith(HOOK_DIRS) or name in HOOK_FILES:
         return "hooks"
     if path in LEDGER_FILES or path in tuple(NEW_DIR + "/" + n for n in LEDGER_FILES):
         return "ledger"
     if path.startswith((ARCHIVE_OLD + "/", ARCHIVE_NEW + "/")) and SHARD_RE.match(name):
         return "ledger"
+    low = name.lower()
+    if low.endswith(".verify.sh") or re.match(r"verify[^/]*\.sh$", low):
+        return "proofs"
+    if low.endswith(PROSE_EXT):
+        return "other"
+    if TEST_DIR_RE.search(path) or TEST_FILE_RE.search(path):
+        return "tests"
+    if low in CONFIG_NAMES or low.endswith(CONFIG_EXT):
+        return "config"
+    if low.endswith(SCRIPT_EXT) or text.startswith("#!"):
+        return "scripts"
     return "other"
 
 
@@ -449,10 +477,15 @@ def scan_hits(root, moves, rewrites, tier):
     never listed, since a committed entry is never rewritten. The files the tool moves unedited (the framework's own
     documents) are not hits; a file it rewrites is read as it will be once rewritten, so a directory it names in prose
     (`docs/methodology/`, which a rewrite of the paths in it leaves) is a hit and a path it has rewritten is not. A hook
-    line that runs a moved tool is marked: that hook will refuse the migration commit."""
+    line that runs a moved tool is marked: that hook will refuse the migration commit.
+
+    BL-101 F5: a file in a machine-read category (tests, proofs, scripts, config, and the CI and hook files) is also listed
+    in `paths`, every one, with its mentions, the mentions on non-comment lines, the names it carries and its first
+    mention on a code line, because the 25 sites a category shows are the first 25 lines and one file can use them all.
+    These are candidates: the scan reads names, never runs a file, so a name on a code line is necessary, not sufficient."""
     root = Path(root)
     mapping = logical_map(moves, tier)
-    out = {c: {"mentions": 0, "files": 0, "sites": []} for c in CATEGORIES}
+    out = {c: {"mentions": 0, "files": 0, "sites": [], "paths": []} for c in CATEGORIES}
     out["hooks"]["runs_moved_tool"] = 0
     if not mapping:
         return out
@@ -467,7 +500,9 @@ def scan_hits(root, moves, rewrites, tier):
     shown = {c: 0 for c in CATEGORIES}
 
     def visit(path, text, cat, rewritten=False, untracked=False):
-        mentions = 0
+        mentions = code = 0
+        found = set()
+        first = first_code = None
         for number, line in enumerate(text.splitlines(), 1):
             spans = [(m.start(), m.end(), m.group(0)) for m in pattern.finditer(line)] if not rewritten else []
             names = [s[2] for s in spans]
@@ -479,6 +514,12 @@ def scan_hits(root, moves, rewrites, tier):
             if not names:
                 continue
             mentions += len(names)
+            if cat in MACHINE_READ:
+                found.update(names)
+                first = first or (number, line)
+                if not line.lstrip().startswith(COMMENT_STARTS):
+                    code += len(names)
+                    first_code = first_code or (number, line)
             if cat != "ledger" and shown[cat] < SITES_SHOWN:
                 site = {"file": path, "line": number, "text": line.strip()[:200], "names": sorted(set(names))}
                 if cat == "hooks":
@@ -490,6 +531,10 @@ def scan_hits(root, moves, rewrites, tier):
         if mentions:
             out[cat]["mentions"] += mentions
             out[cat]["files"] += 1
+            if cat in MACHINE_READ:
+                number, line = first_code or first
+                out[cat]["paths"].append({"file": path, "line": number, "text": line.strip()[:200], "mentions": mentions,
+                                          "code_mentions": code, "names": sorted(found), "untracked": untracked})
 
     listed = sorted(p for p in r.stdout.split("\0") if p)
     for path in listed:
@@ -500,7 +545,7 @@ def scan_hits(root, moves, rewrites, tier):
             text = new_text[path] if rewritten else (root / path).read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
-        visit(path, text, hit_category(path), rewritten)
+        visit(path, text, hit_category(path, text), rewritten)
     # The hooks git runs are per clone and mostly not tracked (context_budget.py install-hook writes .git/hooks/pre-commit,
     # which execs the tool by its root path): read the directory git uses, so the hook that will refuse the commit is seen.
     hooks_rel = run(root, "rev-parse", "--git-path", "hooks").stdout.strip()
@@ -520,6 +565,8 @@ def scan_hits(root, moves, rewrites, tier):
                 visit(rel, f.read_text(encoding="utf-8", errors="replace"), "hooks", untracked=True)
             except OSError:
                 continue
+    for c in MACHINE_READ:
+        out[c]["paths"].sort(key=lambda x: x["file"])
     return out
 
 
@@ -874,12 +921,23 @@ def render_text(report):
     if report["not_rewritten"]:
         out.append("")
         out.append("not rewritten (reported for a person to decide):")
+        out.append("  machine-read files that name a moved path (candidates: this tool does not run them):")
+        out.append("    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a")
+        out.append("    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,")
+        out.append("    at tier 1 and then at tier all (plan 7.4).")
         for cat in CATEGORIES:
             c = report["not_rewritten"][cat]
             note = "  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)" if cat == "ledger" else ""
             out.append("  %-9s%d mention(s) in %d file(s)%s" % (cat + ":", c["mentions"], c["files"], note))
-            for s in c["sites"]:
-                out.append("    %s:%d  %s%s" % (s["file"], s["line"], s["text"][:120], "   [not tracked: per clone]" if s.get("untracked") else ""))
+            if cat in MACHINE_READ:
+                for x in sorted(c["paths"], key=lambda x: (x["code_mentions"] == 0, x["file"])):
+                    more = "" if x["mentions"] == 1 else "   (%d mentions, %d on code lines)" % (x["mentions"], x["code_mentions"])
+                    out.append("    %s:%d  %s%s%s%s" % (x["file"], x["line"], x["text"][:120], more,
+                                                        "" if x["code_mentions"] else "   [comment lines only]",
+                                                        "   [not tracked: per clone]" if x.get("untracked") else ""))
+            else:
+                for s in c["sites"]:
+                    out.append("    %s:%d  %s%s" % (s["file"], s["line"], s["text"][:120], "   [not tracked: per clone]" if s.get("untracked") else ""))
             if cat == "hooks" and c["runs_moved_tool"]:
                 out.append("    WARNING: %d hook line(s) run a moved tool: that hook will refuse the migration commit and the run will roll back;"
                            " update the hook first (hooks are per clone and not part of this plan)" % c["runs_moved_tool"])

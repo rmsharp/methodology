@@ -288,7 +288,7 @@ tree where `bin/status` does not read every TRACKED file `current` (sync first, 
 
 1. **Plan.** Print every `git mv` (source → destination), derived from the manifest; every path rewrite
    in `.context-budget.json`, `.quality-gates.json`, `CLAUDE.md`, `.gitignore` (a diff); every hit it
-   will **not** rewrite and why (CI workflows, `.claude/` rules, `.githooks/` copies, ledger links).
+   will **not** rewrite and why (CI, tests, proofs, scripts, configs, `.claude/` rules, `.githooks/` copies, ledger links).
 2. **Apply** as **one commit**: all renames with their rewrites and one new ledger entry. Git must
    detect each file as a rename (`git diff -M --name-status`): the tool asserts every moved file keeps
    ≥ 90% similarity, so `git log --follow` reaches the earlier history (E2).
