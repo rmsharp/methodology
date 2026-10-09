@@ -1,8 +1,7 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
-**Status: DECIDED (S273). The plan was that session's deliverable; P1 to P12 are done, as §7 records (P11 at tier 1, P12 at tier all).**
-**Ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).** **P0 to P12
-are done (§7.1 to §7.4b, S274 to S287); P13 is next, and tier 2 is open.**
+**Status: DECIDED (S273), ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).
+P0 to P12 are done (§7.1 to §7.4b, S274 to S287; P11 at tier 1, P12 at tier all); P13 is next, subject to §7.6, and tier 2 is open.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm. This file is in the population of that plan's retirement rule like every other planning file.
@@ -49,6 +48,10 @@ Evidence for every number below is re-runnable from
    paths (§5).
 8. **Decisions** (all ratified, S273, §9): D1 all the files, in two tiers; D2 flat, `workstreams/` the only
    subdirectory; D6 this repository rehearses only; D8 the fork first, then one pull request.
+9. **The adopter runs also test the route an adopter takes alone** (the operator's addition, 2026-10-09).
+   An adopter that syncs from `upstream` later has no agent rehearsing in clones and matching refused files
+   by hand, so each run in P11-P22 must leave that route safer: every finding becomes a fix with a test, an
+   open row or a declined one, and the next session reads the register first (§7.6). D8's pull request carries it.
 
 ---
 
@@ -64,8 +67,7 @@ Evidence for every number below is re-runnable from
   this repository (§5). They are separable and Part A does not need Part B.
 - **Syncing** (the operator's addition): how adopters are kept current while their layout changes, and how
   this repository stays in sync with `upstream` and `origin` once its own files move (§5A).
-- **What cannot move, whatever is decided:** `CLAUDE.md` (the file Claude Code loads from the project
-  root), `.git*` infrastructure, `.github/`, the project's own `README.md`, `LICENSE`, `docs/`.
+- **What cannot move, whatever is decided:** the files §4.1 and §4.2 mark *stays*.
 
 ## 2. What exists (evidence)
 
@@ -183,11 +185,9 @@ reserve was not measured"*: they read as green and measure nothing, which is the
 fail: the rest are assertions a crashed or skipped section never reached. **So the criterion for every
 phase is the unmoved tree's own triple, compared in the same state: failed 0, and passed and skipped
 exactly as the unmoved tree reads them**, never "the suite is green". The triple depends on how many
-receipts `HANDOFFS.md` holds, because Test 34 prints six stated SKIPs below three (fork Learning #70): the
-452 / 0 / 0 above is the **three-receipt** baseline at `c8b9ddd`, and after P1 wired one suite the unmoved
-tree reads **453 / 0 / 0 at three receipts and 447 / 0 / 6 at two** (S274, measured). A phase that starts
-just after a trim measures its baseline at two and compares its moved tree at two: those six skips are
-not a move's silent skips. Re-measure the baseline at each phase's own start.
+receipts `HANDOFFS.md` holds (Test 34 prints six stated SKIPs below three, fork Learning #70): 452 / 0 / 0
+above is the three-receipt baseline at `c8b9ddd`; after P1 the unmoved tree read **453 / 0 / 0 at three and
+447 / 0 / 6 at two** (S274, measured). A phase measures its baseline at its own start, in its own receipt state.
 
 ---
 
@@ -369,12 +369,9 @@ the fork's version of every distributed file, ahead of `upstream`.
 
 ### 5A.3 What P5, P6 and the adopter phases must show for sync
 
-- A scratch portfolio of three projects (legacy, migrated, empty): `bin/sync --dry-run ../*` and the real
-  run write exactly the expected files, none in the wrong layout, no blank seed (C1).
-- `methodology_dashboard.py --sync` over the same portfolio touches `methodology/methodology_dashboard.py`
-  in the migrated project and the root copy in the legacy one, and nothing else (C15).
-- `--source=github` against a local repository whose manifest carries the new table: exit 0 (C16; Test 53
-  is the harness).
+- A scratch portfolio of a legacy, a migrated and an empty project: `bin/sync --dry-run ../*`, the real run
+  and `methodology_dashboard.py --sync` write exactly the expected files, each in its project's layout, no blank seed (C1, C15).
+- `--source=github` against a local repository whose manifest carries the new table: exit 0 (C16; Test 53).
 - Per adopter: `bin/status` all `current` before the migration commit and after it.
 
 ### 5A.4 This repository's own sync with `upstream` and `origin` (measured)
@@ -404,9 +401,7 @@ potential conflict with the fork's resolver edits for as long as upstream does n
 
 **So:**
 
-1. **P8 is a rehearsal in a scratch clone and ships nothing.** This repository's real instance files move
-   only if the maintainer adopts the layout (both sides then rename the same files and git sees identical
-   renames) or the operator accepts hand-resolved ledger conflicts at every resync.
+1. **P8 is a rehearsal in a scratch clone and ships nothing**; the real move is §5's decision (D6, D8).
 2. **D8 gains a second reason:** the upstream route is what makes the fork's own layout sustainable, not
    only a courtesy.
 3. **A resync goes first in any session that moves a file**, so no upstream edit is pending at the root
@@ -469,11 +464,11 @@ one-deliverable rule is the default.
 
 | Phase | DONE (each tool) | Verify | Surface, and what it cannot enforce |
 |---|---|---|---|
-| **P2** | DONE (§7.2a): hook and ratchet accept either layout; **X2, a later commit with no ledger entry, is refused (a permanent test)** | a mutant per behaviour; the two selftest gates | scratch repos with real hooks; not another clone's `core.hooksPath` |
-| **P3** | DONE (§7.2b): the trimmer and `close_out_report.py` follow the ledger's directory; **all old proofs: histogram unchanged** | the trimmer's tests and mutants; clones | clones; not a trim at an adopter's history |
-| **P4** | DONE (§7.2c): `context_budget.py` and the checkers resolve either place | their suites, both fixtures | fixtures; not an adopter's `files[]` |
-| **P5** | DONE (§7.2d): the dashboard scores a new-layout fixture as the legacy one; **`--sync` writes no root copy into a migrated project (C15)** | `tools/test_methodology_dashboard.py`; the old and new dashboards over the real repos | fixtures and the repos here |
-| **P6** | DONE (§7.2e): the manifest's second table, read as data (C16); `bin/sync --layout auto` never puts a second copy beside the first (**C1**); the scanner is the gate at **zero** | `tools/test_sync_layouts.py`; the old and new tools over the real adopters; the §5A.3 scratch portfolio | clones. Cannot show a sync from GitHub against a real remote (S218's route) |
+| **P2** | DONE (§7.2a; X2 is permanent) | a mutant per behaviour; the two selftest gates | scratch repos with real hooks; not another clone's `core.hooksPath` |
+| **P3** | DONE (§7.2b) | the trimmer's tests and mutants; clones | clones; not a trim at an adopter's history |
+| **P4** | DONE (§7.2c) | their suites, both fixtures | fixtures; not an adopter's `files[]` |
+| **P5** | DONE (§7.2d) | `tools/test_methodology_dashboard.py`; the old and new dashboards over the real repos | fixtures and the repos here |
+| **P6** | DONE (§7.2e) | `tools/test_sync_layouts.py`; the old and new tools over the real adopters; the §5A.3 scratch portfolio | clones. Cannot show a sync from GitHub against a real remote (S218's route) |
 
 ### 7.2a P2 — what was built (S275)
 
@@ -528,7 +523,7 @@ filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqi
   `current`, as its own commit (§5A.2)**; `bin/migrate-layout` dry run read; the apply as one commit;
   `bin/status` after (all `current`, at the new destinations); the adopter's **own** proofs, test suite and CI
   green (named in its receipt), rehearsed at each tier in clones first, a rise in skips a failure; **tier 1 until it is surveyed (his, S285);** one full Phase 0 in the new layout; the sha of the checkout it synced
-  from; the project's push is **its own go-ahead**.
+  from; its findings in the register (§7.6); the project's push is **its own go-ahead**.
 - **Surface:** the adopter's repository and CI. **Cannot enforce:** another clone's hook arming; say so.
 
 ### 7.4a P11 — `model_project_constructor` (S285)
@@ -543,6 +538,22 @@ filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqi
 
 P23 flips the default and makes a legacy tree an error; it is a major release and **needs its own
 go-ahead**. G-B is §5's decision and, if taken, its own plan.
+
+### 7.6 Learning from the runs (the operator's addition, 2026-10-09)
+
+*"The plan must include learning from experience to be useful."* Each finding is one row of
+[`findings-register.md`](methodology-subdirectory-evidence/findings-register.md): the phase, what happened,
+**whether the tool's own checks saw it**, and its disposition.
+
+- **Before an adopter session:** read the register; where a row says so, change the order, the tier or this
+  plan (naming the row) before the claim.
+- **At its close:** every finding of the run is a row: **fixed** (the change and its test named), **open**
+  (where tracked) or **declined** (why). A finding left in a record's prose is not recorded.
+- **A finding the tool's checks did not see goes first:** the tool gains the check that would have seen it, or
+  a refusal, in its own session before the next adopter, unless he chooses otherwise at that session's
+  picker. F5 (P11) is the first.
+- **D8:** a pull request, if any, carries the register and waits while such a row is open, unless he waives
+  it and the ledger says so.
 
 ---
 
@@ -576,23 +587,19 @@ D4, D5, D7 and D9 as written.
 | **D5** | The ledger archive | (a) moves to `methodology/archive/` with the ledgers; (b) stays in `docs/archive/` | **(a), last**: proofs are unaffected either way (measured); it keeps `docs/` the project's own. Separable: it can ship a release later |
 | **D6** | This repository | B0 / B2 / B1 mirror | **B0 for the real files until D8; B2 as a rehearsal (P8); B1 only through G-B** (§5, §5A.4) |
 | **D7** | Versions and sync order | expand minor, contract major; both layouts supported until every portfolio adopter has migrated; `bin/sync --layout auto` through the window; sync before migrate | as stated (§4.5, §5A.2); the number of the release is a later decision |
-| **D8** | Upstream | fork-side work and adopters first; then **one** vetted pull request carrying the expand stage and the evidence; or none | **as stated.** It is also what makes this repository's own layout sustainable (§5A.4): without it the fork carries the resolver edits over every maintainer change. Every outward action is his go-ahead each time; no part of this plan sends anything |
+| **D8** | Upstream | fork-side work and adopters first; then **one** vetted pull request carrying the expand stage, the evidence and the findings register (§7.6); or none | **as stated.** It is also what makes this repository's own layout sustainable (§5A.4): without it the fork carries the resolver edits over every maintainer change. Every outward action is his go-ahead each time; no part of this plan sends anything |
 | **D9** | Adopter order and batching | §7.4's order, one per session | **as stated** |
 
 ## 10. Risks, stop conditions, rollback
 
-- **Stop** if P1's scanner finds a literal the resolver cannot express (a tool that reads a methodology
-  file by a path its own caller supplies), or P2's mutants cannot make a loosening-in-a-move refused.
-- **Stop** if P2 cannot make the hook refuse a ledger-less commit in the new layout, or P6's
-  scratch-portfolio sync writes anything outside the expected set.
+- The stop conditions of P1, P2 and P6 (all done) are in this plan at `b19df50`.
 - **Stop** if P7's clone run shows any adopter whose ledger loses its rename (similarity < 90%).
 - **Rollback:** every stage but the contract is additive; an adopter's migration is one commit and one
   `git revert`; the expand release changes no adopter that does not run the tool.
 - **Not established here:** how many *external* adopters exist and what layout they keep (the survey
   covers the 12 sibling projects); whether the maintainer will adopt the layout (D8) and so how often
   the fork's resolver edits will conflict with his; Claude Code behaviour beyond "`CLAUDE.md` is read from the project
-  root", which this plan relies on and did not re-test; the real cost of P5, since the dashboard is
-  4,900 lines, of which the 79 sites naming a root path (S274's scanner) are only the visible part.
+  root", which this plan relies on and did not re-test.
 
 ## 11. Evidence, and how to re-run it
 
