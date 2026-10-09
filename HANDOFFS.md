@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S288
+date: 2026-10-09
+status: pending
+active_task: AMEND THE BL-101 PLAN (`docs/planning/methodology-subdirectory-plan.md`) SO THAT THE ADOPTER RUNS HARDEN THE SYNC PATH ADOPTERS WILL USE UNAIDED, AND THE PLAN LEARNS FROM EXPERIENCE (his instructions, 2026-10-09, after the Phase 0 report: "add to the goal to make the upstream sync process robust via what is learned when performing these local syncs", then "The plan must include learning from experience to be useful"). DONE: the plan states the goal (a section 0 item marked as his addition, as item 6 is), a per-adopter DONE criterion that turns every finding into a fix with a test or a named declined row, and a re-read of the remaining phases against the findings before each adopter session; the plan held to its 60,000 B declared budget by recomposing; `bin/check-links` OK in both layouts; the BL-101 row and Next action name it. NOT: P13, the tool follow-up, anything upstream (D8 untouched). SURFACE: the plan file and the backlog; no tool changes.
+```
+
+```handoff
 session: S287
 date: 2026-10-08
 status: complete
