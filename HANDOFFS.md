@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S289
+date: 2026-10-09
+status: pending
+active_task: THE TOOL FOLLOW-UP, F5 (BL-101, plan section 7.6, `findings-register.md` row F5; his decision at the S288 close-out picker that it comes BEFORE P13): `bin/migrate-layout` lists, apart from prose, the project's own tests, scripts, proofs, CI files and hooks that read a path the move relocates, so an adopter that syncs alone is told what P11's `--tier all` broke (41 tests and 2 of 13 proofs the tool's checks did not see). Prototype: `kind_of` in `docs/planning/methodology-subdirectory-evidence/s286-adopter-survey.py`. Development workstream; the design is presented to him for approval before any code (the Present-to-Implement gate). Not this session: P13, anything in an adopter, anything upstream, F6, F8.
+```
+
+```handoff
 session: S288
 date: 2026-10-09
 status: complete
