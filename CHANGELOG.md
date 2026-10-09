@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S287 — the P12 reports: the tier-all rehearsal, the real dry run and apply, and the final clone's log
+
+The `bin/migrate-layout --tier all` report on the rehearsal clone; the dry run on the real adopter (31 moves, one more than the clone's 30: the adopter's untracked, ignored `dashboard.html` moves plainly) and its apply (`40d2b74`, `checks (before -> after)` read in the record); and the log of the checks on a fresh clone of that commit: the paper renders with 0 warnings and the HTML and PDF text are identical to the original's, dashboard health 59 and risk 0 (the same as on the synced tree before the move), and Phase 0 reads in the new layout with 0 undocumented commits. Quoted prose and diff hunks removed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S287 — the P12 rehearsal: its two scripts, its log and its tier-1 report
 
 `p12-rehearsal.sh` clones `feedback-loop-comparison` four times (`--no-local`; the real repository is only cloned), syncs three of the clones with `--force`, applies `--tier 1` to one and `--tier all` to another, and renders the adopter's Quarto paper (HTML and PDF) in each; `p12-final-clone.sh` runs the same checks and a Phase 0 on a fresh clone of the result. Outputs are in `docs/planning/methodology-subdirectory-evidence/p12-adopter-runs/`, with the tool's quoted adopter prose and diff hunks removed (some adopters are private and this fork is public). The rehearsal: every step exited 0, and the HTML and the PDF text were identical in the unsynced original, the synced control, tier 1 and tier all. Model: Claude Sonnet 5.5.

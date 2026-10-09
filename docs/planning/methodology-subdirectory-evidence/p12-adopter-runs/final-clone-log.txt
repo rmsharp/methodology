@@ -1,0 +1,21 @@
+adopter HEAD 40d2b743a8aad9540f319c823a05b5f896c60015
+present methodology/SESSION_RUNNER.md
+present methodology/SAFEGUARDS.md
+present methodology/SESSION_NOTES.md
+present methodology/CHANGELOG.md
+present methodology/HANDOFFS.md
+SAFEGUARDS byte-identical to canonical
+SESSION_RUNNER byte-identical to canonical
+7:## ACTIVE TASK
+0
+40d2b74 chore(methodology): move the methodology files under methodology/ (tier all, 31 files)
+8ce4ed6 chore(methodology): sync from KJ5HST/methodology @ c2cdbfd (11 updated, 16 created), before the layout move
+cda76db docs(session-notes): record commit hash 692b502 + v1.0 tag in Session 3 close-out
+692b502 docs(research): Session 3 close-out — Phase 6 claim-source audit, prose corrections, v1.0
+09bf7bf docs(session-notes): record commit hash da4131e in Session 2 handoff
+dashboard exit=0
+CHANGELOG frontier 40d2b743a8aad9540f319c823a05b5f896c60015; undocumented: 0
+HANDOFFS frontier 40d2b743a8aad9540f319c823a05b5f896c60015; commits after: 0
+0
+render exit=0 warnings=0
+html c3844843ba3b pdftext 0c405cac9438
