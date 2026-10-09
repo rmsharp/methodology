@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [BL-101] S287 — the P12 rehearsal: its two scripts, its log and its tier-1 report
+
+`p12-rehearsal.sh` clones `feedback-loop-comparison` four times (`--no-local`; the real repository is only cloned), syncs three of the clones with `--force`, applies `--tier 1` to one and `--tier all` to another, and renders the adopter's Quarto paper (HTML and PDF) in each; `p12-final-clone.sh` runs the same checks and a Phase 0 on a fresh clone of the result. Outputs are in `docs/planning/methodology-subdirectory-evidence/p12-adopter-runs/`, with the tool's quoted adopter prose and diff hunks removed (some adopters are private and this fork is public). The rehearsal: every step exited 0, and the HTML and the PDF text were identical in the unsynced original, the synced control, tier 1 and tier all. Model: Claude Sonnet 5.5.
+
 ### 2026-10-08 · [BL-101] S287 claim (in progress) — P12, `feedback-loop-comparison` moved to the `methodology/` layout at tier all
 
 CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose P12 on `feedback-loop-comparison` at tier all. The owed HANDOFFS trim (`897a1f5`) and its fold (`ff8abe4`) ran before this claim, the shard proof exit 0 from a `--no-local` clone. Deliverable: that adopter synced, rehearsed at each tier in clones, then moved in its own repository, with its own proofs, tests and CI named, and a record here. Nothing is pushed in the adopter and nothing goes upstream without his go-ahead. Model: Claude Sonnet 5.5.

@@ -1,0 +1,56 @@
+migrate-layout: <scratch>/p12/t1
+canonical: ~/Development/methodology @ c2cdbfdb39a3
+layout: legacy   tier: 1   mode: apply
+
+moves (23):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+
+left in place (4):
+  docs/methodology/README.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_PROTOCOL.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_PROTOCOL.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/workstreams/TEMPLATE_PROTOCOL.md -- not a file of the manifest: the project's own, or an older copy; it stays
+
+rewrites (2 file(s)):
+  CLAUDE.md (9 replacement(s))
+  .context-budget.json (2 replacement(s))
+
+not rewritten (reported for a person to decide):
+  ci:      0 mention(s) in 0 file(s)
+  harness: 0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  ledger:  15 mention(s) in 2 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   52 mention(s) in 8 file(s)
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 0 -> exit 0
+  links:   exit 1; 0 framework, 4 project dangling -> exit 1; 0 framework, 4 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 5 commit(s) reached by git log --follow -> 6 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 13e891efd503
