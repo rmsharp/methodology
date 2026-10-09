@@ -1,0 +1,138 @@
+survey instrument: s286-adopter-survey.py   canonical /Users/rmsharp/Development/methodology @ ce6a26b
+strong names (36): .context-budget-history.jsonl, .context-budget.json, .gitattributes, .quality-gates-results.json, .quality-gates.json, ARCHITECTURE_WORKSTREAM.md, AUDIT_WORKSTREAM.md, BOOTSTRAP.md, CHANGELOG.md, CLAUDE_TEMPLATE.md, CONTEXT_TEMPLATE.md, DESIGN_WORKSTREAM.md, DEVELOPMENT_WORKSTREAM.md, FRAMEWORK_APPARATUS.md, FRAMEWORK_LEARNINGS.md, HANDOFFS.md, HOW_TO_USE.md, INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md, ITERATIVE_METHODOLOGY.md, RECOMMENDED_SKILLS.md, RESEARCH_DOCUMENTATION_WORKSTREAM.md, RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md, ROADMAP.md, SAFEGUARDS.md, SESSION_NOTES.md, SESSION_RUNNER.md, TEMPLATE_CAMPAIGN.md, TEMPLATE_WORKSTREAM.md, context_budget.py, dashboard.html, dashboard_history.jsonl, docs/archive/, docs/methodology/, methodology_dashboard.py, methodology_trim.py, quality_ratchet.py
+weak names (30): ARCHITECTURE_WORKSTREAM, AUDIT_WORKSTREAM, BOOTSTRAP, CHANGELOG, CLAUDE_TEMPLATE, CONTEXT_TEMPLATE, DESIGN_WORKSTREAM, DEVELOPMENT_WORKSTREAM, FRAMEWORK_APPARATUS, FRAMEWORK_LEARNINGS, HANDOFFS, HOW_TO_USE, INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN, ITERATIVE_METHODOLOGY, RECOMMENDED_SKILLS, RESEARCH_DOCUMENTATION_WORKSTREAM, RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN, ROADMAP, SAFEGUARDS, SESSION_NOTES, SESSION_RUNNER, TEMPLATE_CAMPAIGN, TEMPLATE_WORKSTREAM, context-budget, context_budget, dashboard_history, methodology_dashboard, methodology_trim, quality-gates, quality_ratchet
+== airqino@998cd51  rev 998cd51  checked-out branch main  dirty 4  upstream(behind ahead) 0 0  tracked 72  self(moved or old copies) 48
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     1 /   1 /   0
+     gitignore     1 /   1 /   0
+     prose         4 /   4 /   0
+     script        1 /   1 /   0   <- machine-read
+     test          1 /   0 /   0   <- machine-read
+   machine-read files with a strong name on a code line: 1   (weak-only: 0)   <- the candidates
+     [script] S  app.py  strong=dashboard.html weak=-  code-lines=1
+== chat_verification@107cbed  rev 107cbed  checked-out branch main  dirty 1  upstream(behind ahead) no upstream  tracked 36  self(moved or old copies) 28
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     1 /   1 /   0
+     gitignore     1 /   1 /   0
+     hook          1 /   1 /   0   <- machine-read
+     prose         2 /   2 /   0
+   machine-read files with a strong name on a code line: 1   (weak-only: 0)   <- the candidates
+     [hook  ] S  .githooks/pre-commit  strong=CHANGELOG.md,HANDOFFS.md,SESSION_NOTES.md,SESSION_RUNNER.md weak=-  code-lines=10
+== church_growth@3035560  rev 3035560  checked-out branch main  dirty 1  upstream(behind ahead) no upstream  tracked 42  self(moved or old copies) 23
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     1 /   1 /   0
+     gitignore     1 /   1 /   0
+     hook          1 /   1 /   0   <- machine-read
+     other         1 /   0 /   0
+     prose         3 /   3 /   0
+   machine-read files with a strong name on a code line: 1   (weak-only: 0)   <- the candidates
+     [hook  ] S  .githooks/pre-commit  strong=CHANGELOG.md,SESSION_RUNNER.md weak=-  code-lines=5
+== claude_work  NO COMMITS on the checked-out branch (0 tracked files): the committed-tree surface is empty, and bin/migrate-layout refuses a project with no commit
+== dalia_martinez_funeral@5cd7b91  rev 5cd7b91  checked-out branch master  dirty 6  upstream(behind ahead) no upstream  tracked 32  self(moved or old copies) 20
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     1 /   1 /   0
+     gitignore     1 /   1 /   0
+     prose         4 /   3 /   0
+     script        1 /   1 /   0   <- machine-read
+   machine-read files with a strong name on a code line: 1   (weak-only: 0)   <- the candidates
+     [script] S  bin/check-handoff  strong=HANDOFFS.md weak=-  code-lines=11
+== feedback-loop-comparison@cda76db  rev cda76db  checked-out branch main  dirty 0  upstream(behind ahead) no upstream  tracked 33  self(moved or old copies) 18
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     1 /   1 /   0
+     gitignore     1 /   1 /   0
+     other         1 /   1 /   0
+     prose         9 /   7 /   0
+   machine-read files with a strong name on a code line: 0   (weak-only: 0)   <- the candidates
+== mts-system@d1cf54f  rev d1cf54f  checked-out branch master  dirty 1  upstream(behind ahead) 0 43  tracked 738  self(moved or old copies) 39
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     1 /   1 /   0
+     gitignore     1 /   1 /   0
+     prose        31 /  27 /   1
+     script        2 /   2 /   0   <- machine-read
+     test          1 /   1 /   0   <- machine-read
+   machine-read files with a strong name on a code line: 3   (weak-only: 0)   <- the candidates
+     [test  ] S  scripts/test_learnings_archive.py  strong=.context-budget.json weak=context-budget  code-lines=7
+     [script] S  scripts/deploy_vps.sh  strong=.context-budget-history.jsonl,dashboard_history.jsonl weak=context-budget  code-lines=2
+     [script] S  scripts/learnings_archive.py  strong=.context-budget.json weak=context-budget  code-lines=3
+== nprcgenekeepr@6302757  rev 6302757  checked-out branch master  dirty 0  upstream(behind ahead) 0 49  tracked 1534  self(moved or old copies) 141
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     ci            4 /   4 /   0   <- machine-read
+     claude_md     1 /   1 /   0
+     config        2 /   1 /   0   <- machine-read
+     gitignore     1 /   1 /   0
+     prose       109 /  97 /   6
+     script        3 /   1 /   1   <- machine-read
+     test         11 /   3 /   0   <- machine-read
+   machine-read files with a strong name on a code line: 9   (weak-only: 1)   <- the candidates
+     [ci    ] S  .github/workflows/R-CMD-check.yaml  strong=.context-budget.json,.quality-gates.json,BOOTSTRAP.md,CHANGELOG.md,CLAUDE_TEMPLATE.md,CONTEXT_TEMPLATE.md,FRAMEWORK_LEARNINGS.md,HANDOFFS.md,RECOMMENDED_SKILLS.md,ROADMAP.md,SAFEGUARDS.md,SESSION_NOTES.md,SESSION_RUNNER.md,context_budget.py,methodology_dashboard.py,methodology_trim.py,quality_ratchet.py weak=context-budget,quality-gates  code-lines=17
+     [ci    ] S  .github/workflows/lint.yaml  strong=.context-budget.json,.quality-gates.json,BOOTSTRAP.md,CHANGELOG.md,CLAUDE_TEMPLATE.md,CONTEXT_TEMPLATE.md,FRAMEWORK_LEARNINGS.md,HANDOFFS.md,RECOMMENDED_SKILLS.md,ROADMAP.md,SAFEGUARDS.md,SESSION_NOTES.md,SESSION_RUNNER.md,context_budget.py,methodology_dashboard.py,methodology_trim.py,quality_ratchet.py weak=context-budget,quality-gates  code-lines=17
+     [ci    ] S  .github/workflows/pkgdown.yaml  strong=.context-budget.json,.quality-gates.json,BOOTSTRAP.md,CHANGELOG.md,CLAUDE_TEMPLATE.md,CONTEXT_TEMPLATE.md,FRAMEWORK_LEARNINGS.md,HANDOFFS.md,RECOMMENDED_SKILLS.md,ROADMAP.md,SAFEGUARDS.md,SESSION_NOTES.md,SESSION_RUNNER.md,context_budget.py,methodology_dashboard.py,methodology_trim.py,quality_ratchet.py weak=context-budget,quality-gates  code-lines=17
+     [ci    ] S  .github/workflows/test-coverage.yaml  strong=.context-budget.json,.quality-gates.json,BOOTSTRAP.md,CHANGELOG.md,CLAUDE_TEMPLATE.md,CONTEXT_TEMPLATE.md,FRAMEWORK_LEARNINGS.md,HANDOFFS.md,RECOMMENDED_SKILLS.md,ROADMAP.md,SAFEGUARDS.md,SESSION_NOTES.md,SESSION_RUNNER.md,context_budget.py,methodology_dashboard.py,methodology_trim.py,quality_ratchet.py weak=context-budget,quality-gates  code-lines=17
+     [test  ] S  tests/testthat/test_handoffsReceiptPlacement.R  strong=HANDOFFS.md weak=-  code-lines=4
+     [test  ] S  tests/testthat/test_rbuildignore.R  strong=.gitattributes,methodology_trim.py weak=-  code-lines=6
+     [test  ] S  tests/testthat/test_workflowPathsIgnore.R  strong=.context-budget.json,.quality-gates.json,CHANGELOG.md,HANDOFFS.md,SAFEGUARDS.md,SESSION_NOTES.md,SESSION_RUNNER.md,docs/archive/,methodology_trim.py,quality_ratchet.py weak=CHANGELOG,context-budget,quality-gates  code-lines=7
+     [script] w  renv/activate.R  strong=- weak=BOOTSTRAP  code-lines=4
+     [script] S  vignettes/articles/data-raw/build-document1-evidence.R  strong=CHANGELOG.md,HANDOFFS.md,SESSION_NOTES.md weak=SESSION_RUNNER  code-lines=4
+     [config] S  .Rbuildignore  strong=.gitattributes weak=BOOTSTRAP,CHANGELOG,CONTEXT_TEMPLATE,FRAMEWORK_LEARNINGS,HANDOFFS,RECOMMENDED_SKILLS,ROADMAP,SAFEGUARDS,SESSION_NOTES,SESSION_RUNNER,context-budget,context_budget,dashboard_history,methodology_dashboard,methodology_trim,quality-gates,quality_ratchet  code-lines=20
+== Philippians@427e634  rev 427e634  checked-out branch main  dirty 4  upstream(behind ahead) no upstream  tracked 123  self(moved or old copies) 31
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     1 /   1 /   0
+     config        1 /   0 /   0   <- machine-read
+     gitignore     1 /   1 /   0
+     other         1 /   0 /   0
+     prose         7 /   5 /   1
+     script        2 /   1 /   1   <- machine-read
+   machine-read files with a strong name on a code line: 1   (weak-only: 1)   <- the candidates
+     [script] w  crossword/build_crossword.py  strong=- weak=SESSION_RUNNER  code-lines=1
+     [script] S  scripts/check-bulletins.py  strong=.quality-gates.json weak=quality-gates  code-lines=1
+== vscode_quarto_ext@507b934  rev 507b934  checked-out branch master  dirty 1  upstream(behind ahead) 0 249  tracked 430  self(moved or old copies) 37
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     1 /   1 /   0
+     gitignore     1 /   1 /   0
+     other         1 /   1 /   0
+     prose        41 /  31 /   7
+     script       29 /   1 /   0   <- machine-read
+     test         32 /   1 /  15   <- machine-read
+   machine-read files with a strong name on a code line: 2   (weak-only: 15)   <- the candidates
+     [test  ] w  test/integration/suite/debounced-diagnostics.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/integration/suite/embedded-vdoc.test.ts  strong=- weak=CHANGELOG  code-lines=3
+     [test  ] w  test/integration/suite/language.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/integration/suite/notebook-renderer.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/integration/suite/outline.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/integration/suite/semantic-tokens.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/integration/suite/snippets.test.ts  strong=- weak=CHANGELOG  code-lines=2
+     [test  ] w  test/integration/suite/vdoc-assert.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/lsp/runTest.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/lsp/suite/real-lsp.test.ts  strong=- weak=CHANGELOG  code-lines=4
+     [test  ] S  test/unit/backlog-hygiene-gate.test.ts  strong=CHANGELOG.md weak=-  code-lines=2
+     [test  ] w  test/unit/embedded-virtual-doc.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/unit/grammar-embedded-breadth.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/unit/notebook-renderer.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/unit/semantic-token-scopes.test.ts  strong=- weak=CHANGELOG  code-lines=1
+     [test  ] w  test/unit/semantic-tokens.test.ts  strong=- weak=CHANGELOG  code-lines=2
+     [script] S  check-backlog.js  strong=CHANGELOG.md weak=-  code-lines=1
+== wsfct@master  rev adba306  checked-out branch docs/s698-storage-write-design  dirty 0  upstream(behind ahead) no upstream  tracked 2711  self(moved or old copies) 42
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     claude_md     2 /   2 /   0
+     gitignore     1 /   1 /   0
+     other         6 /   6 /   0
+     prose        47 /  33 /  13
+     script        6 /   3 /   0   <- machine-read
+     test          9 /   3 /   0   <- machine-read
+   machine-read files with a strong name on a code line: 6   (weak-only: 0)   <- the candidates
+     [test  ] S  web/src/__tests__/database/rls-ratchet.test.ts  strong=SAFEGUARDS.md weak=-  code-lines=1
+     [test  ] S  web/src/__tests__/lib/archiveSessionNotes.test.ts  strong=docs/archive/ weak=SESSION_NOTES  code-lines=11
+     [test  ] S  web/src/__tests__/lib/foldStalePr.test.ts  strong=SESSION_NOTES.md weak=SESSION_NOTES  code-lines=2
+     [script] S  web/scripts/archive-session-notes.ts  strong=SESSION_NOTES.md,docs/archive/ weak=SESSION_NOTES  code-lines=4
+     [script] S  web/scripts/fold-stale-pr.ts  strong=SESSION_NOTES.md weak=-  code-lines=3
+     [script] S  web/src/lib/archiveSessionNotes.ts  strong=docs/archive/ weak=-  code-lines=1

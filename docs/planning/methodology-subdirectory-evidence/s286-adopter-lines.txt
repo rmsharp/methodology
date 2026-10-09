@@ -1,0 +1,627 @@
+
+#### airqino@998cd51 @ 998cd51 (checked-out branch main) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## app.py  [script]  strong={'dashboard.html': 1} weak=- code-lines=1
+    81: return render_template("dashboard.html",
+
+## tests/test_api_routes.py  [test]  strong=- weak=- code-lines=0
+   192: # The chart's widest button (templates/dashboard.html:99), at getRange's 30-day cap (README.md:112).
+
+#### chat_verification@107cbed @ 107cbed (checked-out branch main) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## .githooks/pre-commit  [hook]  strong={'CHANGELOG.md': 4, 'SESSION_NOTES.md': 2, 'HANDOFFS.md': 4, 'SESSION_RUNNER.md': 1} weak=- code-lines=10
+     4: # Refuses a commit that changes tracked content unless CHANGELOG.md is co-staged,
+     7: # repo (like this one) that has no root SESSION_RUNNER.md to run that gate.
+    15: #   Opt out:     delete CHANGELOG.md and record that decision in CLAUDE.md
+    17: #                deliberately narrower than "a HANDOFFS.md commit"
+    33: # SESSION_NOTES.md` staged beside a real claim reads as the two exempt paths and
+    36: # get stricter — with one honest exception: `git mv CHANGELOG.md FOO.md` now shows
+    37: # CHANGELOG.md as staged and passes, which is the same behaviour `git rm
+    38: # CHANGELOG.md` has always had and is the documented opt-out.
+    46: # CHANGELOG.md co-staged (this also covers the very first ledger commit): pass.
+    48: # same-length sibling (CHANGELOGxmd, CHANGELOG-md) satisfy the gate.
+    49: if printf '%s\n' "$staged" | grep -qxF 'CHANGELOG.md'; then
+    54: # action to record yet. SESSION_RUNNER.md §1B says the claim stub is written
+    58: # repo's history whose entire diff is HANDOFFS.md alone were refused by the rule
+    75: # HANDOFFS.md rides through with it. Measured over all 27 real claims, not
+    86: # HANDOFFS.md content, its own reconcile is frontier-based, and `bin/check-handoff`
+    94: # SESSION_NOTES.md may ride along because distributed Phase 1B tells every
+    97: outside=$(printf '%s\n' "$staged" | grep -vxF -e 'HANDOFFS.md' -e 'SESSION_NOTES.md')
+    98: if [ -z "$outside" ] && printf '%s\n' "$staged" | grep -qxF 'HANDOFFS.md'; then
+    99: # Added lines only. `-x` makes the `+++ b/HANDOFFS.md` header unmatchable by
+   107: added=$(git diff --cached --no-ext-diff --no-textconv --no-color -U0 -- HANDOFFS.md | grep '^+')
+   126: if ! git ls-files --error-unmatch CHANGELOG.md >/dev/null 2>&1; then
+   132: ✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+   135: ledger. Append one dated, source-tagged entry to CHANGELOG.md — exactly one of
+   142: * Opt out for good:  delete CHANGELOG.md and record the decision in CLAUDE.md.
+   144: The one exemption is the Phase 1B claim: a commit staging only HANDOFFS.md
+   145: (SESSION_NOTES.md may ride along) whose diff ADDS a receipt block and whose every
+   150: "Too small to log" is the failure mode, not an exception (SESSION_RUNNER.md FM #27).
+
+#### church_growth@3035560 @ 3035560 (checked-out branch main) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## .githooks/pre-commit  [hook]  strong={'CHANGELOG.md': 4, 'SESSION_RUNNER.md': 1} weak=- code-lines=5
+     4: # Refuses a commit that changes tracked content unless CHANGELOG.md is co-staged,
+     7: # repo (like this one) that has no root SESSION_RUNNER.md to run that gate.
+    15: #   Opt out:     delete CHANGELOG.md and record that decision in CLAUDE.md
+    36: # CHANGELOG.md co-staged (this also covers the very first ledger commit): pass.
+    38: # same-length sibling (CHANGELOGxmd, CHANGELOG-md) satisfy the gate.
+    39: if printf '%s\n' "$staged" | grep -qxF 'CHANGELOG.md'; then
+    47: if ! git ls-files --error-unmatch CHANGELOG.md >/dev/null 2>&1; then
+    53: ✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+    56: ledger. Append one dated, source-tagged entry to CHANGELOG.md — exactly one of
+    63: * Opt out for good:  delete CHANGELOG.md and record the decision in CLAUDE.md.
+    65: "Too small to log" is the failure mode, not an exception (SESSION_RUNNER.md FM #27).
+
+#### dalia_martinez_funeral@5cd7b91 @ 5cd7b91 (checked-out branch master) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## bin/check-handoff  [script]  strong={'HANDOFFS.md': 11} weak=- code-lines=11
+     2: """check-handoff — validate a session's `handoff` receipt block in HANDOFFS.md.
+     4: starter-kit/HANDOFFS.md (SEED disposition, see bin/_manifest.py) is a per-session
+    28: Part of the close-out-receipt vertical slice (P1: starter-kit/HANDOFFS.md + manifest
+    32: bin/check-handoff                    # check the newest receipt in ./HANDOFFS.md,
+    33: # falling back to starter-kit/HANDOFFS.md
+    86: e.g. HANDOFFS.md's own 4-backtick "````" wrapper around its illustrative
+   216: """The repo's own HANDOFFS.md if present, else the starter-kit seed template
+   217: (the only place HANDOFFS.md lives inside the canonical methodology repo, which
+   220: root_file = root / "HANDOFFS.md"
+   223: return root / "starter-kit" / "HANDOFFS.md"
+   228: description="Validate the newest `handoff` receipt block in a HANDOFFS.md ledger."
+   230: p.add_argument("--file", help="explicit HANDOFFS.md path to check (what bin/tests.sh uses)")
+
+#### feedback-loop-comparison@cda76db @ cda76db (checked-out branch main) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+#### mts-system@d1cf54f @ d1cf54f (checked-out branch master) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## scripts/deploy_vps.sh  [script]  strong={'dashboard_history.jsonl': 1, '.context-budget-history.jsonl': 1} weak={'context-budget': 1} code-lines=2
+   104: # The dashboard_history.jsonl and .context-budget-history.jsonl excludes below are NOT redundant
+   106: # / context-budget history, kept in git so it survives machine loss), so .gitignore does not cover
+   118: --exclude "dashboard_history.jsonl" \
+   119: --exclude ".context-budget-history.jsonl" \
+
+## scripts/learnings_archive.py  [script]  strong={'.context-budget.json': 3} weak={'context-budget': 3} code-lines=3
+    11: --root holds PROJECT_LEARNINGS.md, .context-budget.json (whose max_bytes for that file
+    31: CONFIG_NAME = ".context-budget.json"
+    64: """max_bytes declared for the live file in the root's .context-budget.json."""
+
+## scripts/test_learnings_archive.py  [test]  strong={'.context-budget.json': 7} weak={'context-budget': 7} code-lines=7
+    52: with open(os.path.join(root, ".context-budget.json"), "w") as f:
+   141: """Priority 4: the ceiling in .context-budget.json decides whether anything moves."""
+   173: with open(os.path.join(root, ".context-budget.json"), "w") as f:
+   278: with open(os.path.join(root, ".context-budget.json"), "w") as f:
+   283: "no budget config": (lambda r: os.remove(os.path.join(r, ".context-budget.json")),
+   284: ".context-budget.json"),
+   286: "config is not JSON": (write_config("{"), ".context-budget.json"),
+
+#### nprcgenekeepr@6302757 @ 6302757 (checked-out branch master) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## .Rbuildignore  [config]  strong={'.gitattributes': 1} weak={'SESSION_RUNNER': 1, 'SESSION_NOTES': 1, 'SAFEGUARDS': 1, 'ROADMAP': 1, 'CHANGELOG': 1, 'BOOTSTRAP': 1, 'CONTEXT_TEMPLATE': 1, 'HANDOFFS': 1, 'dashboard_history': 1, 'methodology_dashboard': 1, 'RECOMMENDED_SKILLS': 1, 'FRAMEWORK_LEARNINGS': 1, 'methodology_trim': 1, 'context_budget': 1, 'quality_ratchet': 1, 'context-budget': 2, 'quality-gates': 2} code-lines=20
+    17: ^\.gitattributes$
+    68: # dupes like SESSION_NOTES 2.md and CLAUDE copy.md stay build-ignored and never
+    72: ^SESSION_RUNNER.*\.md$
+    73: ^SESSION_NOTES.*\.md$
+    74: ^SAFEGUARDS.*\.md$
+    76: ^ROADMAP.*\.md$
+    77: ^CHANGELOG.*\.md$
+    78: ^BOOTSTRAP.*\.md$
+    79: ^CONTEXT_TEMPLATE.*\.md$
+    80: ^HANDOFFS.*\.md$
+    81: ^dashboard_history\.jsonl$
+    85: ^methodology_dashboard\.py$
+    88: ^RECOMMENDED_SKILLS.*\.md$
+   107: # fix -- see CHANGELOG.md. Does NOT cover
+   118: # owner decision via AskUserQuestion, see CHANGELOG.md.
+   125: # Session 568, 2026-08-14, owner decision via AskUserQuestion, see CHANGELOG.md.
+   136: ^FRAMEWORK_LEARNINGS\.md$
+   137: ^methodology_trim\.py$
+   150: ^context_budget\.py$
+   151: ^quality_ratchet\.py$
+   152: ^\.context-budget\.json$
+   153: ^\.quality-gates\.json$
+   154: ^\.context-budget-history\.jsonl$
+   155: ^\.quality-gates-results\.json$
+
+## .github/workflows/R-CMD-check.yaml  [ci]  strong={'CHANGELOG.md': 1, 'HANDOFFS.md': 1, 'SESSION_NOTES.md': 1, 'SESSION_RUNNER.md': 1, 'SAFEGUARDS.md': 1, 'BOOTSTRAP.md': 1, 'FRAMEWORK_LEARNINGS.md': 1, 'RECOMMENDED_SKILLS.md': 1, 'ROADMAP.md': 1, 'CLAUDE_TEMPLATE.md': 1, 'CONTEXT_TEMPLATE.md': 1, 'methodology_dashboard.py': 1, 'methodology_trim.py': 1, 'context_budget.py': 1, 'quality_ratchet.py': 1, '.context-budget.json': 1, '.quality-gates.json': 1} weak={'context-budget': 1, 'quality-gates': 1} code-lines=17
+    10: - CHANGELOG.md
+    12: - HANDOFFS.md
+    13: - SESSION_NOTES.md
+    15: - SESSION_RUNNER.md
+    16: - SAFEGUARDS.md
+    17: - BOOTSTRAP.md
+    18: - FRAMEWORK_LEARNINGS.md
+    19: - RECOMMENDED_SKILLS.md
+    20: - ROADMAP.md
+    21: - CLAUDE_TEMPLATE.md
+    22: - CONTEXT_TEMPLATE.md
+    23: - methodology_dashboard.py
+    24: - methodology_trim.py
+    25: - context_budget.py
+    26: - quality_ratchet.py
+    27: - .context-budget.json
+    28: - .quality-gates.json
+
+## .github/workflows/lint.yaml  [ci]  strong={'CHANGELOG.md': 1, 'HANDOFFS.md': 1, 'SESSION_NOTES.md': 1, 'SESSION_RUNNER.md': 1, 'SAFEGUARDS.md': 1, 'BOOTSTRAP.md': 1, 'FRAMEWORK_LEARNINGS.md': 1, 'RECOMMENDED_SKILLS.md': 1, 'ROADMAP.md': 1, 'CLAUDE_TEMPLATE.md': 1, 'CONTEXT_TEMPLATE.md': 1, 'methodology_dashboard.py': 1, 'methodology_trim.py': 1, 'context_budget.py': 1, 'quality_ratchet.py': 1, '.context-budget.json': 1, '.quality-gates.json': 1} weak={'context-budget': 1, 'quality-gates': 1} code-lines=17
+    10: - CHANGELOG.md
+    12: - HANDOFFS.md
+    13: - SESSION_NOTES.md
+    15: - SESSION_RUNNER.md
+    16: - SAFEGUARDS.md
+    17: - BOOTSTRAP.md
+    18: - FRAMEWORK_LEARNINGS.md
+    19: - RECOMMENDED_SKILLS.md
+    20: - ROADMAP.md
+    21: - CLAUDE_TEMPLATE.md
+    22: - CONTEXT_TEMPLATE.md
+    23: - methodology_dashboard.py
+    24: - methodology_trim.py
+    25: - context_budget.py
+    26: - quality_ratchet.py
+    27: - .context-budget.json
+    28: - .quality-gates.json
+
+## .github/workflows/pkgdown.yaml  [ci]  strong={'CHANGELOG.md': 1, 'HANDOFFS.md': 1, 'SESSION_NOTES.md': 1, 'SESSION_RUNNER.md': 1, 'SAFEGUARDS.md': 1, 'BOOTSTRAP.md': 1, 'FRAMEWORK_LEARNINGS.md': 1, 'RECOMMENDED_SKILLS.md': 1, 'ROADMAP.md': 1, 'CLAUDE_TEMPLATE.md': 1, 'CONTEXT_TEMPLATE.md': 1, 'methodology_dashboard.py': 1, 'methodology_trim.py': 1, 'context_budget.py': 1, 'quality_ratchet.py': 1, '.context-budget.json': 1, '.quality-gates.json': 1} weak={'context-budget': 1, 'quality-gates': 1} code-lines=17
+    10: - CHANGELOG.md
+    12: - HANDOFFS.md
+    13: - SESSION_NOTES.md
+    15: - SESSION_RUNNER.md
+    16: - SAFEGUARDS.md
+    17: - BOOTSTRAP.md
+    18: - FRAMEWORK_LEARNINGS.md
+    19: - RECOMMENDED_SKILLS.md
+    20: - ROADMAP.md
+    21: - CLAUDE_TEMPLATE.md
+    22: - CONTEXT_TEMPLATE.md
+    23: - methodology_dashboard.py
+    24: - methodology_trim.py
+    25: - context_budget.py
+    26: - quality_ratchet.py
+    27: - .context-budget.json
+    28: - .quality-gates.json
+
+## .github/workflows/test-coverage.yaml  [ci]  strong={'CHANGELOG.md': 1, 'HANDOFFS.md': 1, 'SESSION_NOTES.md': 1, 'SESSION_RUNNER.md': 1, 'SAFEGUARDS.md': 1, 'BOOTSTRAP.md': 1, 'FRAMEWORK_LEARNINGS.md': 1, 'RECOMMENDED_SKILLS.md': 1, 'ROADMAP.md': 1, 'CLAUDE_TEMPLATE.md': 1, 'CONTEXT_TEMPLATE.md': 1, 'methodology_dashboard.py': 1, 'methodology_trim.py': 1, 'context_budget.py': 1, 'quality_ratchet.py': 1, '.context-budget.json': 1, '.quality-gates.json': 1} weak={'context-budget': 1, 'quality-gates': 1} code-lines=17
+    10: - CHANGELOG.md
+    12: - HANDOFFS.md
+    13: - SESSION_NOTES.md
+    15: - SESSION_RUNNER.md
+    16: - SAFEGUARDS.md
+    17: - BOOTSTRAP.md
+    18: - FRAMEWORK_LEARNINGS.md
+    19: - RECOMMENDED_SKILLS.md
+    20: - ROADMAP.md
+    21: - CLAUDE_TEMPLATE.md
+    22: - CONTEXT_TEMPLATE.md
+    23: - methodology_dashboard.py
+    24: - methodology_trim.py
+    25: - context_budget.py
+    26: - quality_ratchet.py
+    27: - .context-budget.json
+    28: - .quality-gates.json
+
+## _pkgdown.yml  [config]  strong=- weak=- code-lines=0
+     4: # `docs/methodology/` and `docs/planning/` are git-tracked inside `docs/`
+
+## renv/activate.R  [script]  strong=- weak={'BOOTSTRAP': 4} code-lines=4
+   595: tarball <- Sys.getenv("RENV_BOOTSTRAP_TARBALL", unset = NA)
+   609: fmt <- "- RENV_BOOTSTRAP_TARBALL is set (%s) but does not exist."
+   633: enabled <- Sys.getenv("RENV_BOOTSTRAP_FROM_GITHUB", unset = "TRUE")
+  1258: if (!is.na(Sys.getenv("RENV_BOOTSTRAP_INSTALL_ONLY", unset = NA)))
+
+## tests/testthat/helper-handoffsBox.R  [test]  strong=- weak=- code-lines=0
+     5: ## inside the format-example box of `HANDOFFS.md`"): what
+
+## tests/testthat/test-e2e-pedigree-module.R  [test]  strong=- weak=- code-lines=0
+   813: ## SESSION_RUNNER.md).
+
+## tests/testthat/test_addRectilinearWaypoints.R  [test]  strong=- weak=- code-lines=0
+   778: ## drift as census (c2) 116 -> 105 (see the S679 CHANGELOG entry).
+
+## tests/testthat/test_buildMatingUnitForest.R  [test]  strong=- weak=- code-lines=0
+   280: ## suite -- S453 was audit-only, per PROJECT_LEARNINGS.md; CHANGELOG.md's
+
+## tests/testthat/test_examplePedigreeTxt.R  [test]  strong=- weak=- code-lines=0
+    59: ## unless the repository's .gitattributes pins the file to LF; that is how
+
+## tests/testthat/test_handoffsReceiptPlacement.R  [test]  strong={'HANDOFFS.md': 4} weak=- code-lines=4
+     5: ## box of `HANDOFFS.md`", found S917; the owner chose a test in the suite, S922):
+     8: ## `methodology_trim.py` counted them as front matter and could archive
+    18: ## the first block in the file's). The real-file tests read ../../HANDOFFS.md,
+    24: handoffs_path <- file.path(pkg_root, "HANDOFFS.md")
+    78: test_that("the real HANDOFFS.md holds exactly one receipt in its example box", {
+    79: skip_if_not(file.exists(handoffs_path), "HANDOFFS.md is not in this build")
+    85: skip_if_not(file.exists(handoffs_path), "HANDOFFS.md is not in this build")
+
+## tests/testthat/test_markerKinship.R  [test]  strong=- weak=- code-lines=0
+   159: ## absolute wall-clock assertion. See CHANGELOG.md.
+
+## tests/testthat/test_markerParentageLikelihood.R  [test]  strong=- weak=- code-lines=0
+   574: ## which would differ by far more than a couple of ULPs. See CHANGELOG.md.
+   632: ## CHANGELOG.md.
+
+## tests/testthat/test_rbuildignore.R  [test]  strong={'methodology_trim.py': 3, '.gitattributes': 3} weak=- code-lines=6
+    28: test_that(".Rbuildignore covers the real methodology_trim.py at the repo root", {
+    33: anyPatternMatches(patterns, "methodology_trim.py"),
+    35: "no .Rbuildignore pattern matches the real file \"methodology_trim.py\" --",
+    42: ## The repo-root .gitattributes (S804) keeps a shipped example's line endings
+    46: test_that(".Rbuildignore keeps the repo-root .gitattributes out of the tarball", {
+    51: anyPatternMatches(patterns, ".gitattributes"),
+    52: info = "no .Rbuildignore pattern matches the repo-root \".gitattributes\""
+
+## tests/testthat/test_reportGV.R  [test]  strong=- weak=- code-lines=0
+   577: ## NEWS/CHANGELOG claim. The effective default number of gene-drop
+
+## tests/testthat/test_workflowPathsIgnore.R  [test]  strong={'SESSION_NOTES.md': 1, 'CHANGELOG.md': 1, 'HANDOFFS.md': 1, 'SESSION_RUNNER.md': 1, 'SAFEGUARDS.md': 1, 'docs/archive/': 1, 'methodology_trim.py': 1, 'quality_ratchet.py': 1, '.context-budget.json': 1, '.quality-gates.json': 3} weak={'CHANGELOG': 1, 'context-budget': 1, 'quality-gates': 3} code-lines=7
+    38: "BACKLOG.md", "CHANGELOG.md", "HANDOFFS.md", "SESSION_NOTES.md",
+    39: "PROJECT_LEARNINGS.md", "CLAUDE.md", "SESSION_RUNNER.md", "SAFEGUARDS.md",
+    41: "docs/archive/CHANGELOG-through-2026-10-03.md",
+    43: "methodology_trim.py", "quality_ratchet.py",
+    44: ".quality-gates.json", ".context-budget.json"
+   154: expect_true(globMatches(".quality-gates.json", ".quality-gates.json"))
+   155: expect_false(globMatches(".quality-gates.json", "xquality-gates.json"))
+
+## vignettes/articles/colony-manager-guide-screenshots.R  [script]  strong=- weak=- code-lines=0
+    13: # structure -- SAFEGUARDS.md "Verify Render-Dependency Completeness": a clean
+   463: # see this session's HANDOFFS.md / plan-doc note.
+
+## vignettes/articles/data-raw/build-document1-evidence.R  [script]  strong={'CHANGELOG.md': 1, 'HANDOFFS.md': 1, 'SESSION_NOTES.md': 1} weak={'SESSION_RUNNER': 1} code-lines=4
+    17: SESSION1_COMMIT <- "6fd87749" # first SESSION_RUNNER-numbered commit ("Session 1")
+   179: changelog <- readLines("CHANGELOG.md", warn = FALSE)
+   186: handoffs <- readLines("HANDOFFS.md", warn = FALSE)
+   191: session_notes <- readLines("SESSION_NOTES.md", warn = FALSE)
+   213: # ---- F5 (optional/partial): self-score trend from HANDOFFS.md --------------
+   214: # CAUTION: HANDOFFS.md receipts started at S324 ("freeze legacy, go forward",
+
+#### Philippians@427e634 @ 427e634 (checked-out branch main) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## crossword/build_crossword.py  [script]  strong=- weak={'SESSION_RUNNER': 1} code-lines=1
+    11: (SESSION_RUNNER FM #2).
+
+## scripts/check-bulletins.py  [script]  strong={'.quality-gates.json': 1} weak={'quality-gates': 1} code-lines=1
+     2: """Bulletin page-fit measures for the quality ratchet (.quality-gates.json).
+
+## study/_quarto.yml  [config]  strong=- weak=- code-lines=0
+    53: # face rather than silently falling back to tofu (SAFEGUARDS render-dep
+
+#### vscode_quarto_ext@507b934 @ 507b934 (checked-out branch master) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## check-backlog.d.ts  [script]  strong=- weak=- code-lines=0
+     3: * (CHANGELOG: BACKLOG.md holds only open work, Session 195).
+
+## check-backlog.js  [script]  strong={'CHANGELOG.md': 1} weak=- code-lines=1
+     4: * (CHANGELOG: BACKLOG.md holds only open work, Session 195).
+     9: * written, and SESSION_RUNNER Phase 3F says to remove a completed item in the
+   131: `\n  Completed work belongs in CHANGELOG.md, and anything worth carrying` +
+
+## check-package.js  [script]  strong=- weak=- code-lines=0
+     4: * (CHANGELOG: the scratchpad/ .vsix packaging leak, Session 174).
+
+## src/core/cell-background.ts  [script]  strong=- weak=- code-lines=0
+     3: * (CHANGELOG: cell-execution code-cell background highlighting, Session 111).
+
+## src/core/embedded/semantic-tokens.ts  [script]  strong=- weak=- code-lines=0
+     2: * Pure, `vscode`-free semantic-token translation (CHANGELOG: semantic highlighting via the embedded LSP, Sessions 88-90, plan §6.2). This
+    30: * TYPE axis (plan §5.4, D4) and `typeHintComment` on the MODIFIER axis (CHANGELOG: semantic-token modifier axis, Session 97).
+   100: * ## The modifier axis (CHANGELOG: semantic-token modifier axis, Session 97), resolved: carry `typeHintComment`. Refute `builtin`.
+   103: * candidates CHANGELOG: semantic-token modifier axis, Session 97 named in OPPOSITE directions — which is the whole finding:
+   116: *    REFUTATION of CHANGELOG: semantic-token modifier axis, Session 97's own headline instance (`print` -> `function.builtin`). Pylance
+   159: // The one foreign MODIFIER, carried (CHANGELOG: semantic-token modifier axis, Session 97 (a)) — and, unlike a dropped/cleared name,
+   277: * (CHANGELOG: semantic highlighting via the embedded LSP, Sessions 88-90, Slice 2; plan §5.5 D5).
+
+## src/core/embedded/vdoc-path.ts  [script]  strong=- weak=- code-lines=0
+     3: * documents (CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87 — the shipped-defect fix; plan §6.1). This module MUST
+   182: * whole file as binary, defeating the mandatory grep inventory; see CHANGELOG: vdoc-path NUL-separator source hygiene, Session 105.) A
+
+## src/core/embedded/virtual-doc.ts  [script]  strong=- weak=- code-lines=0
+   198: * The virtual document for exactly ONE cell (CHANGELOG: outline granularity, in-cell code symbols + show/hide toggle, Sessions 71-73 slice 2, outline
+
+## src/core/new-notebook.ts  [script]  strong=- weak=- code-lines=0
+     3: * (CHANGELOG: quarto.newNotebook, Session 112 — create a new Quarto `.ipynb` notebook).
+
+## src/core/notebook-callout.ts  [script]  strong=- weak=- code-lines=0
+     4: * Pure, `vscode`-free markdown-it plugin (CHANGELOG: notebook markdown-cell Quarto-aware renderer, Session 113) that renders Quarto
+
+## src/core/preview-format.ts  [script]  strong=- weak=- code-lines=0
+     3: * (CHANGELOG: preview command family breadth, Sessions 82-85). Two concerns:
+
+## src/core/project-yaml.ts  [script]  strong=- weak=- code-lines=0
+   304: // (Session 153; see `CHANGELOG.md`). They were the last two value enumerators still using
+
+## src/core/qmd/model.ts  [script]  strong=- weak=- code-lines=0
+  3581: * per-reader `yaml_metadata_block` table are deleted rather than gated; `CHANGELOG.md` and
+  6264: * in `SESSION_NOTES.md`):
+  7446: * pass (CHANGELOG: semantic-token pass rescans the document 2+2N times, Session 95). A single-entry (last-value) cache
+
+## src/core/render-script.ts  [script]  strong=- weak=- code-lines=0
+     4: * documents (CHANGELOG: preview command family breadth, Sessions 82-85, `quarto.previewScript`; plan
+
+## src/core/workspace-symbols.ts  [script]  strong=- weak=- code-lines=0
+     3: * CHANGELOG: workspace symbol provider, Session 54) — flattening the per-document outline tree from
+
+## src/features/cell-background.ts  [script]  strong=- weak=- code-lines=0
+     3: * (CHANGELOG: cell-execution code-cell background highlighting, Session 111).
+
+## src/features/clear-cache.ts  [script]  strong=- weak=- code-lines=0
+     2: * `Quarto: Clear Cache...` (CHANGELOG: quick declarative wins bundle, Sessions 76-78(d)).
+
+## src/features/debounced-diagnostics.ts  [script]  strong=- weak=- code-lines=0
+     3: * features (extracted Session 126, CHANGELOG: createDebouncedDiagnosticsFeature extraction, Session 126 — rule-of-two: the unknown-KEY
+
+## src/features/embedded-vdoc.ts  [script]  strong=- weak=- code-lines=0
+     2: * The one `vscode` adapter every embedded-language forward rides on (CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87
+   166: * WITHOUT a window reload retains this module (CHANGELOG: mkdtemp fallback-dir leak, Session 101's lesson), so a never-reset latch would
+   190: * there is no directory to clean up, precisely when one is about to exist (CHANGELOG: mkdtemp fallback-dir leak, Session 101).
+   321: // independent reasons — which is why CHANGELOG: post-dispose forward latch, Session 107's filed premise that a latch "would apply
+
+## src/features/format-cell.ts  [script]  strong=- weak=- code-lines=0
+     2: * `Quarto: Format Cell` (CHANGELOG: Format Cell, Session 75) — delegates a code cell's
+     5: * recipe as outline in-cell symbol forwarding (CHANGELOG: outline granularity, in-cell code symbols + show/hide toggle, Sessions 71-73 slice 2):
+    19: * CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87). It used to route through a custom `quarto-format-cell:`
+   130: *     This was latent, not new: until CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87 the forward went to a custom URI
+
+## src/features/new-notebook.ts  [script]  strong=- weak=- code-lines=0
+     2: * `Quarto: New Quarto Notebook` (CHANGELOG: quarto.newNotebook, Session 112) — create a new Quarto
+
+## src/features/preview.ts  [script]  strong=- weak=- code-lines=0
+    37: * (CHANGELOG: preview command family breadth, Sessions 82-85 Slice 2; plan §6 Slice 2). Drives the mutually-exclusive
+   444: * (CHANGELOG: preview command family breadth, Sessions 82-85; plan `docs/planning/2026-07-12-preview-script-plan.md`).
+
+## src/features/yaml-diagnostics.ts  [script]  strong=- weak=- code-lines=0
+    16: * CHANGELOG: createDebouncedDiagnosticsFeature extraction, Session 126). This module supplies only the three per-feature axes: the
+
+## src/features/yaml-value-diagnostics.ts  [script]  strong=- weak=- code-lines=0
+    13: *     `createDebouncedDiagnosticsFeature` (`./debounced-diagnostics`, CHANGELOG:
+
+## src/providers/embedded.ts  [script]  strong=- weak=- code-lines=0
+    16: * **The vdoc is a real `file:` document, and that is load-bearing** (CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87).
+
+## src/providers/image-paste.ts  [script]  strong=- weak=- code-lines=0
+     5: * inserts a Markdown image reference (CHANGELOG: image paste, Session 58
+
+## src/providers/outline.ts  [script]  strong=- weak=- code-lines=0
+     4: * toggle, CHANGELOG: outline granularity, in-cell code symbols + show/hide toggle, Sessions 71-73 slice 1; in-cell code symbol forwarding, slice 2 —
+    15: * embedded forward (`features/embedded-vdoc.ts`, CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87). They used to
+
+## src/providers/semantic-tokens.ts  [script]  strong=- weak=- code-lines=0
+     2: * Semantic highlighting for embedded code cells (CHANGELOG: semantic highlighting via the embedded LSP, Sessions 88-90, Slice 1; plan §6.4).
+
+## src/providers/workspace-symbols.ts  [script]  strong=- weak=- code-lines=0
+     4: * just the active editor (CHANGELOG: workspace symbol provider, Session 54). A thin `vscode`
+
+## src/webview/notebook-renderer.ts  [script]  strong=- weak=- code-lines=0
+    26: * Inject the callout box stylesheet (CHANGELOG: notebook markdown-cell Quarto-aware renderer, Session 113 follow-on B) once into the
+    32: * The `class="markdown-style"` tag is load-bearing (CHANGELOG: notebook callout BOX CSS shipped through the wrong channel, Session 122): VS Code
+    68: * Notebook-renderer entrypoint (CHANGELOG: notebook markdown-cell Quarto-aware renderer, Session 113, first slice). This module is
+
+## test/integration/runTest.ts  [test]  strong=- weak=- code-lines=0
+    36: // unanswerable (Session 96, CHANGELOG: multi-language merge suite failures, Session 96). Bump this deliberately — and
+
+## test/integration/suite/debounced-diagnostics.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+    11: * (CHANGELOG: createDebouncedDiagnosticsFeature extraction, Session 126) via a SYNTHETIC feature — a stand-in `gate`/`compute`
+    73: describe("Quarto: createDebouncedDiagnosticsFeature (shared skeleton, CHANGELOG: createDebouncedDiagnosticsFeature extraction, Session 126)", () => {
+
+## test/integration/suite/embedded-vdoc.test.ts  [test]  strong=- weak={'CHANGELOG': 3} code-lines=3
+    73: // (CHANGELOG: post-dispose forward latch, Session 107). Clear it after every test — a set latch would drop every later `ensureVdoc` in
+    96: //    returned nothing (this is the defect, CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87);
+   539: // `if (uri !== undefined)` that can never run (CHANGELOG: post-dispose forward latch, Session 107 nit 2a — the S91 review tightened
+   550: // Clear the deactivate latch this describe's `disposeAllVdocs()` sets (CHANGELOG: post-dispose forward latch, Session 107 nit 2b).
+   617: describe("embedded vdoc: a forward dispatched AFTER the extension deactivates (CHANGELOG: post-dispose forward latch, Session 107)", () => {
+   619: // (CHANGELOG: post-dispose forward latch, Session 107 nit 2b) so it does not drop later forwards in the shared host.
+   676: * The `fallbackDirPromise` memo's own lifecycle — CHANGELOG: mkdtemp fallback-dir leak, Session 101 and BACKLOG: disposeEpoch grows unboundedly leg (b), which
+   685: describe("embedded vdoc: the fallback temp directory's lifecycle (CHANGELOG: mkdtemp fallback-dir leak, Session 101 + :121b)", () => {
+   686: // Clear the deactivate latch this describe's `disposeAllVdocs()` calls set (CHANGELOG: post-dispose forward latch, Session 107 nit 2b).
+   741: // CHANGELOG: mkdtemp fallback-dir leak, Session 101. `vdocDirFor` assigns `fallbackDir` ONLY inside the `mkdtemp().then()`
+   882: // Clear the deactivate latch this describe's `disposeAllVdocs()` call sets (CHANGELOG: post-dispose forward latch, Session 107 nit 2b).
+  1248: * Phase 2 of `docs/planning/2026-07-16-os-temp-vdoc-sweep-plan.md` (CHANGELOG: OS-temp vdoc sweep, Sessions 103/106).
+  1266: describe("embedded vdoc: the fallback dir stays 0700 after a delete-underneath (plan Phase 2, CHANGELOG: OS-temp vdoc sweep, Sessions 103/106)", () => {
+  1267: // Clear the deactivate latch this describe's `disposeAllVdocs()` calls set (CHANGELOG: post-dispose forward latch, Session 107 nit 2b).
+  1282: // latch it now also sets (CHANGELOG: post-dispose forward latch, Session 107), or the forwards exercised below would be dropped.
+
+## test/integration/suite/embedded.test.ts  [test]  strong=- weak=- code-lines=0
+    73: * key was the thing that hid CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87, and why no stand-in can replace
+
+## test/integration/suite/format-cell.test.ts  [test]  strong=- weak=- code-lines=0
+   276: * This was unreachable until CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87: the forward went to a custom URI scheme
+
+## test/integration/suite/language.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+    43: describe("Standalone diagram/typst language registration (CHANGELOG: quick declarative wins bundle, Sessions 76-78(b))", () => {
+
+## test/integration/suite/notebook-renderer.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+    24: * CHANGELOG: notebook markdown-cell Quarto-aware renderer, Session 113 (first slice): the extension contributes a
+   120: it("ships the callout styles through the markdown-style shadow-DOM channel (CHANGELOG: notebook callout BOX CSS shipped through the wrong channel, Session 122)", () => {
+
+## test/integration/suite/outline.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+  1611: describe("Quarto: in-cell code symbol forwarding (CHANGELOG: outline granularity, in-cell code symbols + show/hide toggle, Sessions 71-73 slice 2)", () => {
+  2223: // SESSION_RUNNER failure mode #24. The engine is resolved from the TEXT here (the `{r}`
+
+## test/integration/suite/semantic-tokens.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+    15: * Semantic-token forwarding for embedded cells (CHANGELOG: semantic highlighting via the embedded LSP, Sessions 88-90, Slice 1).
+   278: * A SECOND python provider's legend, for the CHANGELOG: RANGE-registry provider divergence, Session 100 DOCUMENT-axis provider-divergence pin
+   301: * NOT a VS Code version drift (fails identically on 1.128.1 and 1.129.0; CHANGELOG: multi-language merge suite failures, Session 96 / Session 96).
+   500: // asserted, not pinned (CHANGELOG: one-language-throws pinning, Session 98, Session 89 adversarial review).
+   522: // fix from an extension (CHANGELOG: RANGE-registry provider divergence, Session 100, filed by the Session 88 Slice-1 review; mechanism
+   588: // provider divergence (CHANGELOG: RANGE-registry provider divergence, Session 100 axis b)", Session 100) — including the THROW leg, which
+   780: * The (b) RANGE-registry axis of CHANGELOG: RANGE-registry provider divergence, Session 100 — the divergence path our {ojs}/{js} cells
+   923: * CHANGELOG: RANGE-registry provider divergence, Session 100 for the full argument.
+   925: describe("embedded semantic tokens — RANGE-registry provider divergence (CHANGELOG: RANGE-registry provider divergence, Session 100 axis b)", () => {
+  1062: // it is why CHANGELOG: RANGE-registry provider divergence, Session 100's range axis is broader in KIND, not merely in reachability.
+
+## test/integration/suite/snippets.test.ts  [test]  strong=- weak={'CHANGELOG': 2} code-lines=2
+    51: it("offers the qlisttable snippet by prefix in a quarto document (CHANGELOG: quick declarative wins bundle, Sessions 76-78(c))", async () => {
+    65: it("offers the qfragment snippet by prefix in a quarto document (CHANGELOG: quick declarative wins bundle, Sessions 76-78(c))", async () => {
+
+## test/integration/suite/vdoc-assert.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+     8: * in-cell outline symbols, Format Cell). It exists because of CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87, and it is
+    49: `${what} — a custom scheme is invisible to real language servers (CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87)`,
+
+## test/integration/suite/yaml-diagnostics.test.ts  [test]  strong=- weak=- code-lines=0
+   148: // a real interactive Extension Development Host (SESSION_NOTES.md records
+
+## test/lsp/runTest.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+     7: * The real-LSP harness (`npm run test:lsp`) — CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87.
+    82: "  (CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87) — they were all green while the feature was dead.",
+
+## test/lsp/suite/real-lsp.test.ts  [test]  strong=- weak={'CHANGELOG': 4} code-lines=4
+    12: * The tests that could have caught CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87, and the only tests that can catch it
+    73: describe("REAL Pylance: the forwards that were silently dead (CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87)", function () {
+   539: // CHANGELOG: semantic highlighting via the embedded LSP, Sessions 88-90, Slice 1 — the feature this whole two-session arc exists for, and
+   706: it("SEMANTIC TOKENS: carries `typeHintComment` (matches .py) but NOT `builtin` (already matches .py) — CHANGELOG: semantic-token modifier axis, Session 97", async () => {
+   708: // to prove BOTH halves of CHANGELOG: semantic-token modifier axis, Session 97's resolution — that Pylance actually EMITS
+   775: `our provider must PRESERVE \`typeHintComment\` on the \`# type:\` comment tokens (CHANGELOG: semantic-token modifier axis, Session 97 (a)); ` +
+   779: // (2) THE REFUTATION (CHANGELOG: semantic-token modifier axis, Session 97 (b)): `builtin` is genuinely on the wire, but we deliberately
+   795: "our legend must NOT carry `builtin` (the refuted half of CHANGELOG: semantic-token modifier axis, Session 97) — so the re-encode " +
+   801: // CHANGELOG: semantic highlighting via the embedded LSP, Sessions 88-90, Slice 2's DONE gate, and the only test that can prove it: two
+
+## test/unit/backlog-hygiene-gate.test.ts  [test]  strong={'CHANGELOG.md': 2} weak=- code-lines=2
+    12: * (CHANGELOG: BACKLOG.md holds only open work, Session 195).
+    15: * items only" since it was written, and SESSION_RUNNER Phase 3F says to remove a
+    34: "  above were one deliverable; see `CHANGELOG.md`, 2026-08-02.)*",
+    94: "completed work belongs in CHANGELOG.md; anything worth carrying forward " +
+
+## test/unit/embedded-virtual-doc.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+   271: describe("buildCellVirtualContent — isolates exactly ONE cell (CHANGELOG: outline granularity, in-cell code symbols + show/hide toggle, Sessions 71-73 slice 2)", () => {
+
+## test/unit/grammar-embedded-breadth.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+     9: * Headless tokenization proof (CHANGELOG: quick declarative wins bundle, Sessions 76-78(a)) that each newly-added
+    84: describe("embedded-grammar breadth (CHANGELOG: quick declarative wins bundle, Sessions 76-78(a))", () => {
+   109: * against this repo's own `.vscode-test` install — see CHANGELOG: quick declarative wins bundle, Sessions 76-78(a))
+
+## test/unit/new-notebook.test.ts  [test]  strong=- weak=- code-lines=0
+     6: * new Quarto `.ipynb` notebook (CHANGELOG: quarto.newNotebook, Session 112): a raw YAML front-matter cell
+
+## test/unit/notebook-callout.test.ts  [test]  strong=- weak=- code-lines=0
+     6: * `calloutPlugin` is a pure, `vscode`-free markdown-it plugin (CHANGELOG: notebook markdown-cell Quarto-aware renderer, Session 113)
+   857: * CHANGELOG: notebook markdown-cell Quarto-aware renderer, Session 113 follow-on (B): CSS box styling. `calloutStyles()` returns the
+
+## test/unit/notebook-renderer.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+    50: it("tags the injected <style> with class 'markdown-style' so VS Code clones it into each notebook cell's shadow root (CHANGELOG: notebook callout BOX CSS shipped through the wrong channel, Session 122)", () => {
+
+## test/unit/package-activation.test.ts  [test]  strong=- weak=- code-lines=0
+    22: * CHANGELOG: preview command family breadth, Sessions 82-85 Slice 2. The `quartoRenderScriptActive` context key can
+
+## test/unit/package-contents-gate.test.ts  [test]  strong=- weak=- code-lines=0
+    11: * (CHANGELOG: the scratchpad/ .vsix packaging leak, Session 174).
+
+## test/unit/preview-script-manifest.test.ts  [test]  strong=- weak=- code-lines=0
+     5: * Manifest-shape regression guards for CHANGELOG: preview command family breadth, Sessions 82-85 Slice 2 — the
+
+## test/unit/qmd-model.test.ts  [test]  strong=- weak=- code-lines=0
+   902: * On this repo's own 108 markdown/qmd files it deletes `SESSION_NOTES.md`'s
+  1073: * real heading (`SESSION_NOTES.md`'s own 'Session 83 Handoff Evaluation' is what the
+  1075: * `SESSION_NOTES.md:3426` emits ONLY `<h2>Session 84 (superseded …)</h2>` — the "Session 83
+  2165: //      pandoc does not. `<basefont size="3">` is the measured case (CHANGELOG: BACKLOG.md
+ 20188: // in `SESSION_NOTES.md`.
+
+## test/unit/semantic-token-scopes.test.ts  [test]  strong=- weak={'CHANGELOG': 1} code-lines=1
+     6: * The `contributes.semanticTokenScopes` half of the D4 decision (CHANGELOG: semantic highlighting via the embedded LSP, Sessions 88-90, Slice 3).
+     9: * and `typeHintComment` on the MODIFIER axis (CHANGELOG: semantic-token modifier axis, Session 97). Each is carried because a
+   119: it("maps the carried MODIFIER `typeHintComment` to Pylance's OWN comment scope (CHANGELOG: semantic-token modifier axis, Session 97 (a))", () => {
+
+## test/unit/semantic-tokens.test.ts  [test]  strong=- weak={'CHANGELOG': 2} code-lines=2
+   353: it("KEEPS the `typeHintComment` modifier — a `# type:` comment's interior is a COMMENT, not live code (CHANGELOG: semantic-token modifier axis, Session 97 (a))", () => {
+   376: it("still carries NO OTHER foreign MODIFIER — `builtin`/`typeHint` stay CLEARED (the refutation of CHANGELOG: semantic-token modifier axis, Session 97 (b))", () => {
+   379: // CHANGELOG: semantic-token modifier axis, Session 97's headline instance was `print` -> `function.builtin`, "the builtin distinction
+
+## test/unit/source-hygiene.test.ts  [test]  strong=- weak=- code-lines=0
+    17: * both delete loops (CHANGELOG: vdoc-path NUL-separator source hygiene, Session 105). This test fails the moment any `.ts` file under
+
+## test/unit/standalone-languages.test.ts  [test]  strong=- weak=- code-lines=0
+    10: * (CHANGELOG: quick declarative wins bundle, Sessions 76-78(b), declarative-only, TDD-exempt per CLAUDE.md) —
+
+## test/unit/tokenize.test.ts  [test]  strong=- weak=- code-lines=0
+    60: // the literal does not satisfy `IRawGrammar` (CHANGELOG: the test/unit
+
+## test/unit/type-check-gate.test.ts  [test]  strong=- weak=- code-lines=0
+     6: * The regression guard on the `test/unit` type-check gate itself (CHANGELOG: the
+
+## test/unit/vdoc-path.test.ts  [test]  strong=- weak=- code-lines=0
+    16: * (CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87, plan §6.1).
+   193: // git and grep read the whole file as binary — CHANGELOG: vdoc-path NUL-separator source hygiene, Session 105). This pins the
+
+## test/unit/yaml-schema-index.test.ts  [test]  strong=- weak=- code-lines=0
+  1376: // ✅ THE STRUCTURAL HALF IS CLOSED (CHANGELOG: the test/unit type-check gate, Session 173):
+
+#### wsfct@master @ adba306 (checked-out branch docs/s698-storage-write-design) -- every matching line of every MACHINE-READ non-moved tracked file, by path
+# (prose, CLAUDE.md and ignore files are counted in the report but not quoted: some adopters are private)
+
+## web/e2e/helpers/auth-utils.ts  [script]  strong=- weak=- code-lines=0
+    36: * in s227 SESSION_NOTES handoff.
+
+## web/scripts/archive-session-notes.ts  [script]  strong={'SESSION_NOTES.md': 2, 'docs/archive/': 1} weak={'SESSION_NOTES': 1} code-lines=4
+     2: * archive-session-notes — CLI shell for the SESSION_NOTES.md archival tool.
+     4: * Splits SESSION_NOTES.md so only the most recent `--retain` sessions (default
+     6: * under `docs/archive/session-notes/`, with a pointer row added to the live
+    22: *   --notes PATH     Override the SESSION_NOTES.md path (testing).
+    35: const DEFAULT_NOTES = resolve(__dirname, '../../SESSION_NOTES.md')
+    36: const DEFAULT_ARCHIVE_DIR = resolve(__dirname, '../../docs/archive/session-notes')
+    71: 'archive-session-notes — move sessions older than the retain window out of SESSION_NOTES.md\n' +
+   100: const fileName = `SESSION_NOTES_ARCHIVE_${range}.md`
+
+## web/scripts/fold-stale-pr.ts  [script]  strong={'SESSION_NOTES.md': 3} weak=- code-lines=3
+     6: * Status claim in SESSION_NOTES.md into the canonical MERGED form, deriving the
+    18: *   --dry-run        Print the planned fold(s); do NOT write SESSION_NOTES.md.
+    23: *   --notes PATH     Override the SESSION_NOTES.md path (testing).
+    39: const DEFAULT_NOTES = resolve(__dirname, '../../SESSION_NOTES.md')
+   110: 'fold-stale-pr — fold the predecessor\'s merged [#TBD] claim in SESSION_NOTES.md\n' +
+   179: console.log(`\nDRY-RUN: would fold ${folded} target(s); SESSION_NOTES.md NOT written.`)
+
+## web/src/__tests__/database/ensure-test-user.test.ts  [test]  strong=- weak=- code-lines=0
+    14: * copy of the comparison — see `PROJECT_LEARNINGS.md` and `CHANGELOG.md` for
+
+## web/src/__tests__/database/migration-108-ddl-consistency-drift-fix-finding4.test.ts  [test]  strong=- weak=- code-lines=0
+    41: * failed -- see CHANGELOG.md's 2026-08-25 entry for the mutation-proof
+
+## web/src/__tests__/database/migration-108-ddl-consistency-drift-fix.test.ts  [test]  strong=- weak=- code-lines=0
+    41: * see CHANGELOG.md's 2026-08-22 entry for the mutation-proof transcript.
+
+## web/src/__tests__/database/rls-matrix-characterization-247-252.test.ts  [test]  strong=- weak=- code-lines=0
+    19: *      zero bleed into the other table (recorded in CHANGELOG.md, s662).
+
+## web/src/__tests__/database/rls-ratchet.test.ts  [test]  strong={'SAFEGUARDS.md': 1} weak=- code-lines=1
+    87: 'Adding it to helpers/rlsRatchetAllowlist.ts RAISES the ratchet and needs plan-mode approval (SAFEGUARDS.md Blast Radius).',
+
+## web/src/__tests__/helpers/rlsRatchetAllowlist.ts  [test]  strong=- weak=- code-lines=0
+    13: * approval (SAFEGUARDS.md, Blast Radius Limits).
+
+## web/src/__tests__/lib/archiveSessionNotes.test.ts  [test]  strong={'docs/archive/': 1} weak={'SESSION_NOTES': 11} code-lines=11
+     8: * Fixture mirrors the real SESSION_NOTES.md's structural shape closely enough to
+   111: '| `docs/archive/session-notes/SESSION_NOTES_ARCHIVE_101-103.md` | 101-103 | 3 |\n'
+   119: expect(result.live).toContain('SESSION_NOTES_ARCHIVE_101-103.md')
+   123: expect(result.archived).not.toContain('SESSION_NOTES_ARCHIVE_101-103.md')
+   151: const entry1 = { fileName: 'SESSION_NOTES_ARCHIVE_101-103.md', min: 101, max: 103, count: 3 }
+   152: const entry2 = { fileName: 'SESSION_NOTES_ARCHIVE_104-110.md', min: 104, max: 110, count: 7 }
+   158: expect(updated).toContain('SESSION_NOTES_ARCHIVE_101-103.md')
+   175: expect(withBoth).toContain('SESSION_NOTES_ARCHIVE_101-103.md')
+   176: expect(withBoth).toContain('SESSION_NOTES_ARCHIVE_104-110.md')
+   178: expect(withBoth.indexOf('SESSION_NOTES_ARCHIVE_104-110.md')).toBeLessThan(
+   179: withBoth.indexOf('SESSION_NOTES_ARCHIVE_101-103.md'),
+   200: expect(updated).toContain('SESSION_NOTES_ARCHIVE_101-103.md')
+
+## web/src/__tests__/lib/foldStalePr.test.ts  [test]  strong={'SESSION_NOTES.md': 1} weak={'SESSION_NOTES': 1} code-lines=2
+     5: * real SESSION_NOTES.md so the fold logic is proven against every false-positive
+    23: '| `SESSION_NOTES.md` | s354 Status (`PR [#TBD] on `docs/s354-fold-551-merged`` → ' +
+    38: 'SESSION_NOTES s354 Status (`PR [#TBD] on `docs/s354-fold-551-merged`` → ' +
+
+## web/src/__tests__/lib/push-endpoint.test.ts  [test]  strong=- weak=- code-lines=0
+     6: * Background (measured, see CHANGELOG s650): `push_subscriptions.endpoint` is
+
+## web/src/app/api/auth/login/route.ts  [script]  strong=- weak=- code-lines=0
+    13: * WebKit 26.5 has a real, root-caused bug (see BACKLOG/CHANGELOG s536,
+
+## web/src/lib/archiveSessionNotes.ts  [script]  strong={'docs/archive/': 1} weak=- code-lines=1
+     2: * archiveSessionNotes — pure logic for the SESSION_NOTES.md retention/archival tool.
+     6: * SESSION_NOTES.md is an append-only, newest-first log — one write-up per
+    13: * live in SESSION_NOTES.md, move everything older into a dated archive file
+    14: * under `docs/archive/session-notes/`, and record the move in a small
+    58: /** Content to write back to SESSION_NOTES.md (preamble + the most recent `retainCount` sessions). */
+   163: return `| \`docs/archive/session-notes/${entry.fileName}\` | ${entry.min}-${entry.max} | ${entry.count} |`
+
+## web/src/lib/foldStalePr.ts  [script]  strong=- weak=- code-lines=0
+    23: * `[#TBD]` appears ~150 times in SESSION_NOTES.md, but only ONE shape is a real

@@ -1,0 +1,46 @@
+survey instrument: s286-adopter-survey.py   canonical /Users/rmsharp/Development/methodology @ ce6a26b
+strong names (36): .context-budget-history.jsonl, .context-budget.json, .gitattributes, .quality-gates-results.json, .quality-gates.json, ARCHITECTURE_WORKSTREAM.md, AUDIT_WORKSTREAM.md, BOOTSTRAP.md, CHANGELOG.md, CLAUDE_TEMPLATE.md, CONTEXT_TEMPLATE.md, DESIGN_WORKSTREAM.md, DEVELOPMENT_WORKSTREAM.md, FRAMEWORK_APPARATUS.md, FRAMEWORK_LEARNINGS.md, HANDOFFS.md, HOW_TO_USE.md, INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md, ITERATIVE_METHODOLOGY.md, RECOMMENDED_SKILLS.md, RESEARCH_DOCUMENTATION_WORKSTREAM.md, RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md, ROADMAP.md, SAFEGUARDS.md, SESSION_NOTES.md, SESSION_RUNNER.md, TEMPLATE_CAMPAIGN.md, TEMPLATE_WORKSTREAM.md, context_budget.py, dashboard.html, dashboard_history.jsonl, docs/archive/, docs/methodology/, methodology_dashboard.py, methodology_trim.py, quality_ratchet.py
+weak names (30): ARCHITECTURE_WORKSTREAM, AUDIT_WORKSTREAM, BOOTSTRAP, CHANGELOG, CLAUDE_TEMPLATE, CONTEXT_TEMPLATE, DESIGN_WORKSTREAM, DEVELOPMENT_WORKSTREAM, FRAMEWORK_APPARATUS, FRAMEWORK_LEARNINGS, HANDOFFS, HOW_TO_USE, INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN, ITERATIVE_METHODOLOGY, RECOMMENDED_SKILLS, RESEARCH_DOCUMENTATION_WORKSTREAM, RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN, ROADMAP, SAFEGUARDS, SESSION_NOTES, SESSION_RUNNER, TEMPLATE_CAMPAIGN, TEMPLATE_WORKSTREAM, context-budget, context_budget, dashboard_history, methodology_dashboard, methodology_trim, quality-gates, quality_ratchet
+== model_project_constructor@0dc3051  rev 0dc3051  checked-out branch master  dirty 0  upstream(behind ahead) 0 0  tracked 364  self(moved or old copies) 31
+   layout: docs/methodology/ root-runner   destination methodology/ already tracked: no
+   files naming a moved name, by kind (any / strong on a code line / weak only on a code line):
+     ci            2 /   0 /   0   <- machine-read
+     claude_md     1 /   1 /   0
+     config        2 /   2 /   0   <- machine-read
+     gitignore     1 /   1 /   0
+     other         2 /   2 /   0
+     proof        13 /  13 /   0   <- machine-read
+     prose        44 /  42 /   0
+     script        1 /   1 /   0   <- machine-read
+     test          9 /   9 /   0   <- machine-read
+   machine-read files with a strong name on a code line: 25   (weak-only: 0)   <- the candidates
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S220-through-S217.md.verify.sh  strong=SESSION_NOTES.md weak=SESSION_NOTES  code-lines=4
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S224-through-S221.md.verify.sh  strong=SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=34
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S227-through-S225.md.verify.sh  strong=SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=74
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S231-through-S228.md.verify.sh  strong=SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=83
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S235-through-S232.md.verify.sh  strong=CHANGELOG.md,SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=94
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S238-through-S236.md.verify.sh  strong=CHANGELOG.md,SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=113
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S241-through-S239.md.verify.sh  strong=CHANGELOG.md,SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=122
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S248-through-S242.md.verify.sh  strong=SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=101
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S257-through-S249.md.verify.sh  strong=SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=111
+     [proof ] S  docs/architecture-history/SESSION_NOTES-S269-through-S258.md.verify.sh  strong=SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=117
+     [proof ] S  docs/architecture-history/SESSION_NOTES-pointer-collapse-S254.verify.sh  strong=CHANGELOG.md,SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=53
+     [proof ] S  docs/architecture-history/SESSION_NOTES-pointer-collapse.verify.sh  strong=CHANGELOG.md,HANDOFFS.md,SESSION_NOTES.md,docs/methodology/,methodology_dashboard.py weak=SESSION_NOTES  code-lines=35
+     [proof ] S  docs/architecture-history/SESSION_NOTES-through-S216.md.verify.sh  strong=CHANGELOG.md,HANDOFFS.md,SESSION_NOTES.md,methodology_dashboard.py weak=SESSION_NOTES  code-lines=6
+     [test  ] S  tests/eval/PHASE_E_AGREEMENT_REPORT.md  strong=CHANGELOG.md weak=-  code-lines=1
+     [test  ] S  tests/eval/governance_sweep.py  strong=SAFEGUARDS.md weak=-  code-lines=1
+     [test  ] S  tests/orchestrator/test_logging_error_text.py  strong=CHANGELOG.md weak=-  code-lines=1
+     [test  ] S  tests/orchestrator/test_pipeline_website_failure.py  strong=CHANGELOG.md weak=-  code-lines=1
+     [test  ] S  tests/scripts/test_run_pipeline_intake_error_text.py  strong=CHANGELOG.md weak=-  code-lines=1
+     [test  ] S  tests/scripts/test_run_pipeline_website_crash_resume.py  strong=CHANGELOG.md weak=-  code-lines=1
+     [test  ] S  tests/test_dependency_floors.py  strong=SAFEGUARDS.md weak=CHANGELOG  code-lines=2
+     [test  ] S  tests/test_read_budget.py  strong=CHANGELOG.md,SESSION_NOTES.md,SESSION_RUNNER.md,docs/methodology/ weak=CHANGELOG,SESSION_NOTES  code-lines=39
+     [test  ] S  tests/test_session_notes_census.py  strong=SESSION_NOTES.md,docs/methodology/ weak=SESSION_NOTES  code-lines=30
+     [script] S  packages/data-agent/src/model_project_constructor_data_agent/db.py  strong=CHANGELOG.md weak=-  code-lines=1
+     [config] S  prs-export.json  strong=CHANGELOG.md,SESSION_NOTES.md weak=ROADMAP  code-lines=1
+     [config] S  releases-export.json  strong=CHANGELOG.md weak=-  code-lines=1
+   control tests/test_read_budget.py                                                expected tiers [1, 2]  strong-name tiers found [1, 2] OK
+   control tests/test_session_notes_census.py                                       expected tiers [2]  strong-name tiers found [1, 2] OK
+   control docs/architecture-history/SESSION_NOTES-pointer-collapse.verify.sh       expected tiers [2]  strong-name tiers found [1, 2] OK
+   control docs/architecture-history/SESSION_NOTES-pointer-collapse-S254.verify.sh  expected tiers [2]  strong-name tiers found [1, 2] OK
+   control: 4 of 4 known files found with their tiers; 21 further machine-read files carry a strong name on a code line (none is among S285's failures)
