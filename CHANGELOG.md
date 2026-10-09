@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-08 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-08-3.md` (1 record(s), 41,215 B → 29,453 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-08 → 2026-10-08) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-08-3.md`](docs/archive/HANDOFFS-through-2026-10-08-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-08-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-08-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 41,215 B → 29,453 B (−28.5%).
+
 ### 2026-10-08 · [BL-101] S286 — close-out — the adopter survey: 15 of 25 named files read a moved path
 
 `CHANGELOG: pending` on the S286 claim entry is cleared by this statement (the never-edit gate forbids editing a committed entry). **Deliverable:** the read-only survey of the 11 other adopters (`docs/planning/methodology-subdirectory-evidence/s286-adopter-survey-record.md`, instrument `s286-adopter-survey.py`, commits `3f86e4d` and `8b614fa`). **Found:** 10 adopters have commits; of 25 machine-read files that name a moved file, 15 read it as a path (9 in `nprcgenekeepr`, the only adopter tier 1 touches) and 10 are text; four adopters have none; `claude_work` has no commit. **Control:** `model_project_constructor` at `0dc3051` shows S285's 4 of 4 and 21 more that did not break, so a hit is an upper bound, not a prediction. **Before the claim:** the push of `a446fbf` to the fork `origin` and the HANDOFFS trim (`de77d5e`, fold `e729ad6`), both at his go-ahead. **Found and fixed:** the first gate run read 17/18 because S285's `commit:` slot was prose (reconciled to `b3e0736`, `f97e4ed`). **Corrections of mine:** the instrument was refined after the first control run; three figures I wrote from memory were wrong and were re-derived before commit. **3A:** S285's handoff scores 9. **3B:** self-score 8. **3C: no fork learning row appended (D3 not triggered):** considered #101, #68, #64 and #70. Gates 18/18 pass · 0 fail · 0 unmeasured · results 64b22c42cc89 · manifest 93aff6c93dbc on `f97e4ed`. Nothing went upstream; #94, #92 and #93 are unchanged and without a maintainer reply; the push of this session's commits to the fork `origin` waits for his go-ahead. Model: Claude Sonnet 5.5.
