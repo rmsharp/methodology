@@ -1,0 +1,25 @@
+# bin/check-handoff --file <adopter HANDOFFS.md>, before the move (the synced commit da595cb) and after (f7a0194): the same 6 findings
+## before
+check-handoff: FAIL — 6 unreconciled `commit:` answer slot(s) in ctrl/HANDOFFS.md:
+  error: receipt S18 (2026-09-18) names no commit sha in its `commit:` answer slot: '5056055'
+  error: receipt S13 (2026-09-17) names no commit sha in its `commit:` answer slot: '5084680'
+  error: receipt S8 (2026-09-17) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S7 (2026-09-17) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S6 (2026-09-17) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S5 (2026-09-15) names no commit sha in its `commit:` answer slot: 'pending'
+  note: the spec (starter-kit/HANDOFFS.md:64, :78-79) says the next session
+        reconciles `commit:` to a real sha. Find the sha a receipt should name
+        with: git log --all --full-history --format=%H -- <this file>
+        then the first commit whose copy of that block reads `status: complete`.
+## after
+check-handoff: FAIL — 6 unreconciled `commit:` answer slot(s) in head/methodology/HANDOFFS.md:
+  error: receipt S18 (2026-09-18) names no commit sha in its `commit:` answer slot: '5056055'
+  error: receipt S13 (2026-09-17) names no commit sha in its `commit:` answer slot: '5084680'
+  error: receipt S8 (2026-09-17) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S7 (2026-09-17) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S6 (2026-09-17) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S5 (2026-09-15) names no commit sha in its `commit:` answer slot: 'pending'
+  note: the spec (starter-kit/HANDOFFS.md:64, :78-79) says the next session
+        reconciles `commit:` to a real sha. Find the sha a receipt should name
+        with: git log --all --full-history --format=%H -- <this file>
+        then the first commit whose copy of that block reads `status: complete`.

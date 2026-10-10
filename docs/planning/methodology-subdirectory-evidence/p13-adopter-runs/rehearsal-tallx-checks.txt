@@ -1,0 +1,11 @@
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 0 -> exit 0
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 1 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 76 commit(s) reached by git log --follow -> 77 commit(s) reached by git log --follow
+  clean tree: NO
+CHECKS DIFFER (tree not clean). The commit stands; to undo it: git revert 922521cd43b7
+
+APPLIED: one commit, 922521cd43b7
