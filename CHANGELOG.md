@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [BL-101] S291 — `docs/planning/BACKLOG.md` recomposed under the dashboard's one-read budget (57,294 B to 56,064 B)
+
+S290's last edit of the BL-101 row (`2508bd9`) took `docs/planning/BACKLOG.md` from 56,505 B to 57,294 B, 544 B past the 56,750 B budget the dashboard measures, and the dashboard's risk read HIGH at this session's Phase 0 (it read medium at S290's). The row's tail (P11, P12, the survey, F5, F10 and F11: 3,123 B) is one segment of 1,893 B now; each fact it dropped is in `BACKLOG-DETAIL.md` (P11 DONE, P12 DONE, F5 DONE, F10 and F11 DONE) or in the records the segment names. Nothing else in the file changed. The headroom is 686 B, so the next edit of the row must recompose too. Chosen by him at the S291 Phase 0 picker (own commit before the claim). Model: Claude Sonnet 5.5.
+
 ### 2026-10-10 · [ad hoc] S291 — fold the 2026-10-09 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`0ba86c5`, 1 receipt, S288, 2026-10-09, to `HANDOFFS-through-2026-10-09.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S290, S289). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-09.md.verify.sh` at `0ba86c5`, exit 0 (L1, L2/front-matter, L3). Model: Claude Sonnet 5.5.
