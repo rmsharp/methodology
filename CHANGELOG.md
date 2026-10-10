@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [BL-101] S293 claim (in progress) — the F15 fix in `bin/migrate-layout`
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose P15 on `nprcgenekeepr` at tier all and gave two go-aheads (the owed HANDOFFS trim and a push of 10 commits to the fork, entries below). P15 was then not possible: at the check before any claim, `nprcgenekeepr` had a live `claude` session (pid 64241, started 16:34 that day, its repository's newest commit "S957 claim" at 16:38), `mts-system`, `vscode_quarto_ext` and `wsfct` each had one, and `Philippians`, `dalia_martinez_funeral`, `chat_verification` and `claude_work` were dirty or without a commit. At a second picker he chose the F15 fix in this repository. Deliverable: one fix to `bin/migrate-layout`'s `hooks` row (`findings-register.md` row F15: a false warning on the layout-aware hook, `.githooks/pre-commit:303`) with its test, Development workstream. P15, F6, F8, F12 to F14 and F16, anything upstream and D8 are not part of it. Model: Claude Sonnet 5.5.
+
+### 2026-10-10 · [ad hoc] S293 — push of this repository's 10 commits to the fork `origin` (`rmsharp/methodology`)
+
+Non-commit action, on his explicit go-ahead at the S293 Phase 0 picker ("Push 10 commits to fork origin"). `git push origin 8580d81:refs/heads/main` moved the fork's `main` from `fc01ccb` to `8580d81` (S292's close-out commit; the 10 commits are S292's, from `9ccf08c` through `8580d81`). The ref named the commit, not `HEAD`, because the trim `45a7e12` and its fold `bae66fe` had been committed first and were not part of the go-ahead; they are local. Read back after the push: `git ls-remote origin refs/heads/main` and `git rev-parse 8580d81` both read `8580d811ac3586e4e3c4e27af1089cf71dd6dc2f`, and `git rev-list --left-right --count origin/main...8580d81` read `0 0` after a fetch. Upstream `KJ5HST/methodology` was not touched: no pull request, issue, comment or tag. Model: Claude Sonnet 5.5.
+
 ### 2026-10-10 · [ad hoc] S293 — fold the third 2026-10-09 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`45a7e12`, 1 receipt, S290, 2026-10-09, to `HANDOFFS-through-2026-10-09-3.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S292, S291). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-09-3.md.verify.sh` at `45a7e12`, exit 0 (L1, L2/front-matter, L3). Model: Claude Sonnet 5.5.

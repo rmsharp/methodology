@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S293
+date: 2026-10-10
+status: pending
+active_task: THE F15 FIX IN `bin/migrate-layout` (BL-101, findings-register.md row F15; his S293 second-picker choice, because P15 was blocked at the check before any claim: `nprcgenekeepr` had a live `claude` session and its S957 claim commit was minutes old, and no other adopter was free). The `hooks` row of `bin/migrate-layout` warns that a hook line "runs a moved tool ... will roll back" on the layout-aware ledger hook itself (`.githooks/pre-commit:303`) though the apply exits 0; the fix honours the `# layout: ok` marker, with its test. Done before the claim at his go-aheads: the HANDOFFS trim `45a7e12` and its fold `bae66fe`, and a push of 10 commits to the fork (`8580d81`).
+```
+
+```handoff
 session: S292
 date: 2026-10-10
 status: complete
