@@ -1,0 +1,7 @@
+....................................................................x... [ 49%]
+....................x................................................... [ 98%]
+..                                                                       [100%]
+=========================== short test summary info ============================
+XFAIL tests/test_api_routes.py::test_hourly_bad_days_is_a_client_error - D2: int() on ?days= with no validation (app.py:237)
+XFAIL tests/test_csv_routes.py::test_timeseries_bad_hours_is_a_client_error - D2: int() on ?hours= with no validation (app.py:188)
+144 passed, 2 xfailed in 0.52s
