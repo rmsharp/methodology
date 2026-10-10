@@ -1,0 +1,4 @@
+baseline: rc=0 failing=[]
+G05   KILLED   by test_a_pattern_list_a_program_reads_is_config_except_the_gitignore (named classes)
+P13   KILLED   by test_the_files_of_a_line_come_in_name_order (named classes)
+killed 2, survived 0
