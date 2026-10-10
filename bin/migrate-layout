@@ -31,6 +31,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import warnings
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -439,6 +440,14 @@ CONFIG_EXT = (".json", ".toml", ".yml", ".yaml", ".cfg", ".ini")
 CONFIG_NAMES = (".rbuildignore", ".dockerignore", "makefile", "description", "namespace", "dockerfile")
 
 
+def is_pattern_list(low):
+    """BL-101 F11: a dot-file whose name ends in `ignore` is a list of patterns a program reads (`.vscodeignore`, `.npmignore`,
+    `.vercelignore`, `.railwayignore`), so it is config and not prose. vsce 3.6.0 matches each line with minimatch and no
+    `matchBase`: a bare name is the project root's, and `methodology/SESSION_RUNNER.md` is packaged. A `.gitignore` is the
+    exception: git matches a bare name at any depth, and the tool rewrites the anchored entries of the root one."""
+    return low.startswith(".") and low.endswith("ignore") and low != ".gitignore"
+
+
 def hit_category(path, text=""):
     """The category a file that names a moved path falls in. `text` is the file's own, read only for a first line (`#!`),
     which is what makes an extensionless script a script. A prose extension is prose wherever the file sits: the survey's
@@ -461,11 +470,54 @@ def hit_category(path, text=""):
         return "other"
     if TEST_DIR_RE.search(path) or TEST_FILE_RE.search(path):
         return "tests"
-    if low in CONFIG_NAMES or low.endswith(CONFIG_EXT):
+    if low in CONFIG_NAMES or low.endswith(CONFIG_EXT) or is_pattern_list(low):
         return "config"
     if low.endswith(SCRIPT_EXT) or text.startswith("#!"):
         return "scripts"
     return "other"
+
+
+POSIX_CLASS_RE = re.compile(r"\[:\^?[a-z]+:\]")
+
+
+def pattern_exposure(text, mapping):
+    """BL-101 F10 (plan 7.6, findings register): which moved files a `.Rbuildignore` stops covering. The scan reads whole names,
+    and a list of regular expressions (`^SESSION_RUNNER.*\\.md$`) names none, so it read the 3 comment lines of a real one and
+    listed the harmless row. Read as R reads it (measured on R 4.6.1 with a probe package): every non-empty line is a
+    case-insensitive regular expression, a line starting with # included (`# |ALPHA` left ALPHA.md out of the build); a line
+    that matches a path, or a directory above it, covers it (`^docsdir$` left docsdir/inner.txt out). A moved file is exposed
+    when a line covers it where it is and no line covers it where it goes: the same probe packaged
+    methodology/SESSION_RUNNER.md, and one more line, `^methodology$`, stopped it. The matching is Python's `re`, not R's
+    engine, so the answer is a candidate, not a verdict. A line `re` cannot compile, or that holds a POSIX class (`[[:alpha:]]`,
+    which `re` reads as a different set), is counted, not evaluated."""
+    rules, unread = [], 0
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")  # R's POSIX classes ([[:alpha:]]) are a nested-set warning to re, not an error
+        for number, line in enumerate(text.splitlines(), 1):
+            if not line:
+                continue
+            if POSIX_CLASS_RE.search(line):
+                unread += 1  # a character class to R's PCRE and a different set to `re`: not evaluated rather than misread
+                continue
+            try:
+                rules.append((number, line, re.compile(line, re.IGNORECASE)))
+            except re.error:
+                unread += 1
+
+    def covering(path):
+        parts = path.split("/")
+        prefixes = ["/".join(parts[:i]) for i in range(1, len(parts) + 1)]
+        return [r for r in rules if any(r[2].search(p) for p in prefixes)]
+
+    exposed, by_line = [], {}
+    for src, dest in mapping.items():
+        now = covering(src)
+        if now and not covering(dest):
+            exposed.append(src)
+            for number, line, _rx in now:
+                by_line.setdefault((number, line), []).append(src)
+    lines = [{"line": n, "text": s, "files": sorted(f)} for (n, s), f in sorted(by_line.items())]
+    return {"exposed": sorted(exposed), "lines": lines, "unread": unread}
 
 
 DIR_RE = re.compile(r"(?<![\w./~-])docs/(?:methodology/?|archive/?)(?![\w.-])")  # layout: ok -- the two directories the move empties, searched for in prose
@@ -482,7 +534,10 @@ def scan_hits(root, moves, rewrites, tier):
     BL-101 F5: a file in a machine-read category (tests, proofs, scripts, config, and the CI and hook files) is also listed
     in `paths`, every one, with its mentions, the mentions on non-comment lines, the names it carries and its first
     mention on a code line, because the 25 sites a category shows are the first 25 lines and one file can use them all.
-    These are candidates: the scan reads names, never runs a file, so a name on a code line is necessary, not sufficient."""
+    These are candidates: the scan reads names, never runs a file, so a name on a code line is necessary, not sufficient.
+
+    BL-101 F10: a root `.Rbuildignore` is also read for what its regular expressions cover (`pattern_exposure`), since a pattern
+    names no file the scan could find, and its row gains `patterns`."""
     root = Path(root)
     mapping = logical_map(moves, tier)
     out = {c: {"mentions": 0, "files": 0, "sites": [], "paths": []} for c in CATEGORIES}
@@ -565,6 +620,23 @@ def scan_hits(root, moves, rewrites, tier):
                 visit(rel, f.read_text(encoding="utf-8", errors="replace"), "hooks", untracked=True)
             except OSError:
                 continue
+    # BL-101 F10: the root .Rbuildignore is read for what its patterns cover, whether or not it spells a name out; the row it
+    # already has (from a comment that does) keeps its fields and gains `patterns`.
+    if ".Rbuildignore" in tracked_files(root):
+        try:
+            ignore_text = (root / ".Rbuildignore").read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            ignore_text = ""
+        exposure = pattern_exposure(ignore_text, mapping)
+        if exposure["exposed"]:
+            row = next((x for x in out["config"]["paths"] if x["file"] == ".Rbuildignore"), None)
+            if row is None:
+                first = exposure["lines"][0]
+                row = {"file": ".Rbuildignore", "line": first["line"], "text": first["text"].strip()[:200], "mentions": 0,
+                       "code_mentions": 0, "names": [], "untracked": False}
+                out["config"]["paths"].append(row)
+                out["config"]["files"] += 1
+            row["patterns"] = exposure
     for c in MACHINE_READ:
         out[c]["paths"].sort(key=lambda x: x["file"])
     return out
@@ -930,11 +1002,22 @@ def render_text(report):
             note = "  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)" if cat == "ledger" else ""
             out.append("  %-9s%d mention(s) in %d file(s)%s" % (cat + ":", c["mentions"], c["files"], note))
             if cat in MACHINE_READ:
-                for x in sorted(c["paths"], key=lambda x: (x["code_mentions"] == 0, x["file"])):
-                    more = "" if x["mentions"] == 1 else "   (%d mentions, %d on code lines)" % (x["mentions"], x["code_mentions"])
+                for x in sorted(c["paths"], key=lambda x: (x["code_mentions"] == 0 and not x.get("patterns"), x["file"])):
+                    more = "" if x["mentions"] <= 1 else "   (%d mentions, %d on code lines)" % (x["mentions"], x["code_mentions"])
                     out.append("    %s:%d  %s%s%s%s" % (x["file"], x["line"], x["text"][:120], more,
-                                                        "" if x["code_mentions"] else "   [comment lines only]",
+                                                        "" if x["code_mentions"] or not x["mentions"] or x.get("patterns") else "   [comment lines only]",
                                                         "   [not tracked: per clone]" if x.get("untracked") else ""))
+                    p = x.get("patterns")
+                    if p:
+                        for ln in p["lines"]:
+                            names = ln["files"]
+                            shown = ", ".join(names[:3]) + (" and %d more" % (len(names) - 3) if len(names) > 3 else "")
+                            out.append("      line %d: %s  stops covering %s" % (ln["line"], ln["text"][:120], shown))
+                        out.append("      %d line(s) cover %d moved file(s) where they are now and no line covers them under %s/; a line such as ^%s$ would"
+                                   " (each line read as a case-insensitive regular expression with Python's re, not R's engine: a candidate, not a verdict)"
+                                   % (len(p["lines"]), len(p["exposed"]), NEW_DIR, NEW_DIR))
+                        if p["unread"]:
+                            out.append("      %d line(s) could not be read as a regular expression and were not evaluated" % p["unread"])
             else:
                 for s in c["sites"]:
                     out.append("    %s:%d  %s%s" % (s["file"], s["line"], s["text"][:120], "   [not tracked: per clone]" if s.get("untracked") else ""))

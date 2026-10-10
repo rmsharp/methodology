@@ -468,6 +468,86 @@ class TestThePureRules(unittest.TestCase):
         self.assertEqual(self.m.CATEGORIES, ("ci", "hooks", "tests", "proofs", "scripts", "config", "harness", "ledger", "other"))
         self.assertEqual(self.m.MACHINE_READ, ("ci", "hooks", "tests", "proofs", "scripts", "config"))
 
+    def test_a_pattern_list_a_program_reads_is_config_except_the_gitignore(self):
+        """BL-101 F11 (register, S290): `.vscodeignore` named 26 moved files and was filed under `other` with the prose, 26 of
+        254 mentions. vsce 3.6.0 matches each line with minimatch and no `matchBase`, so a bare name is the project root's
+        and `methodology/SESSION_RUNNER.md` is packaged. A `.gitignore` stays prose: git matches a bare name at any depth,
+        so an entry the tool does not anchor-rewrite still ignores the moved file."""
+        want = [(".vscodeignore", "config"), ("pkg/.npmignore", "config"), (".vercelignore", "config"), (".dockerignore", "config"),
+                ("mts-backend/.railwayignore", "config"), (".Rbuildignore", "config"), (".gcloudignore", "config"),
+                (".gitignore", "other"), ("docs/.gitignore", "other"), ("ignore", "other"), (".ignore-me", "other"),
+                ("notes.vscodeignore", "other"), ("vscodeignore", "other")]
+        for path, cat in want:
+            self.assertEqual(self.m.hit_category(path), cat, path)
+
+    # --- the pattern rule (BL-101 F10) ---
+    PATTERN_MAP = {"SESSION_RUNNER.md": "methodology/SESSION_RUNNER.md", "CHANGELOG.md": "methodology/CHANGELOG.md",
+                   "docs/methodology/HOW_TO_USE.md": "methodology/HOW_TO_USE.md", "dashboard.html": "methodology/dashboard.html"}
+
+    def test_a_regex_line_that_covers_a_file_where_it_is_and_not_where_it_goes_is_exposed(self):
+        e = self.m.pattern_exposure("^SESSION_RUNNER.*\\.md$\n^README\\.md$\n", self.PATTERN_MAP)
+        self.assertEqual(e["exposed"], ["SESSION_RUNNER.md"])
+        self.assertEqual(e["lines"], [{"line": 1, "text": "^SESSION_RUNNER.*\\.md$", "files": ["SESSION_RUNNER.md"]}])
+        self.assertEqual(e["unread"], 0)
+
+    def test_a_line_matches_without_regard_to_case(self):
+        """R 4.6.1 built a probe package without FOO.txt under `^foo\\.txt$`."""
+        self.assertEqual(self.m.pattern_exposure("^session_runner.*\\.md$\n", self.PATTERN_MAP)["exposed"], ["SESSION_RUNNER.md"])
+
+    def test_a_line_that_matches_a_directory_covers_what_is_under_it(self):
+        """R 4.6.1 left docsdir/inner.txt out of a package under `^docsdir$`; the files under docs/methodology/ move out of it."""
+        e = self.m.pattern_exposure("^docs$\n", self.PATTERN_MAP)
+        self.assertEqual(e["exposed"], ["docs/methodology/HOW_TO_USE.md"])
+
+    def test_a_line_that_covers_the_destination_clears_the_exposure(self):
+        """The same probe built `methodology/SESSION_RUNNER.md` into the package, and one more line, `^methodology$`, stopped it."""
+        for extra in ("^methodology$", "^methodology/", "methodology"):
+            e = self.m.pattern_exposure("^SESSION_RUNNER.*\\.md$\n%s\n" % extra, self.PATTERN_MAP)
+            self.assertEqual((e["exposed"], e["lines"]), ([], []), extra)
+
+    def test_a_line_that_still_matches_after_the_move_is_not_exposed(self):
+        self.assertEqual(self.m.pattern_exposure("SESSION_RUNNER\n", self.PATTERN_MAP)["exposed"], [])
+
+    def test_a_hash_line_is_a_pattern_not_a_comment(self):
+        """R 4.6.1 left ALPHA.md out of a package under the single line `# |ALPHA`: a line that starts with # is a regular
+        expression, here an alternation. Skipping hash lines would miss it; a plain remark matches no path, so it costs nothing."""
+        self.assertEqual(self.m.pattern_exposure("# |^SESSION_RUNNER\\.md$\n", self.PATTERN_MAP)["exposed"], ["SESSION_RUNNER.md"])
+        self.assertEqual(self.m.pattern_exposure("# SESSION_RUNNER.md is ignored below\n", self.PATTERN_MAP)["exposed"], [])
+
+    def test_a_line_that_is_not_a_regular_expression_is_counted_and_the_rest_are_read(self):
+        e = self.m.pattern_exposure("[unclosed\n^CHANGELOG\\.md$\n", self.PATTERN_MAP)
+        self.assertEqual((e["unread"], e["exposed"], [x["line"] for x in e["lines"]]), (1, ["CHANGELOG.md"], [2]))
+
+    def test_a_posix_class_is_counted_as_unread_not_misread(self):
+        """`[[:alpha:]]` is a character class to R's PCRE and a set containing `[` and `:` to Python's `re`, so evaluating it
+        would answer for a different pattern. It is counted as a line not evaluated, and said quietly."""
+        import io
+        import contextlib
+        err = io.StringIO()
+        with contextlib.redirect_stderr(err):
+            e = self.m.pattern_exposure("^[[:alpha:]]+\\.md$\n^[[:^digit:]]+\\.md$\n^CHANGELOG\\.md$\n", self.PATTERN_MAP)
+        self.assertEqual((e["unread"], e["exposed"]), (2, ["CHANGELOG.md"]), "the negated class is a class too")
+        self.assertEqual(err.getvalue(), "")
+
+    def test_an_empty_line_is_not_a_pattern(self):
+        """An empty regular expression would match every path; R drops the empty lines, so the rule does."""
+        for text in ("", "\n\n", "\r\n"):
+            e = self.m.pattern_exposure(text, self.PATTERN_MAP)
+            self.assertEqual((e["exposed"], e["lines"], e["unread"]), ([], [], 0), repr(text))
+
+    def test_a_file_exposed_by_two_lines_is_listed_under_both_and_counted_once(self):
+        e = self.m.pattern_exposure("^SESSION_RUNNER\\.md$\n^SESSION_.*\\.md$\n", self.PATTERN_MAP)
+        self.assertEqual(e["exposed"], ["SESSION_RUNNER.md"])
+        self.assertEqual([(x["line"], x["files"]) for x in e["lines"]], [(1, ["SESSION_RUNNER.md"]), (2, ["SESSION_RUNNER.md"])])
+
+    def test_the_lines_come_in_line_order_not_in_the_order_the_files_were_found(self):
+        """The map lists SESSION_RUNNER.md before dashboard.html, and the line that covers dashboard.html is the first line."""
+        e = self.m.pattern_exposure("^dashboard\\.html$\n^SESSION_RUNNER\\.md$\n", self.PATTERN_MAP)
+        self.assertEqual([x["line"] for x in e["lines"]], [1, 2])
+
+    def test_nothing_moves_so_nothing_is_exposed(self):
+        self.assertEqual(self.m.pattern_exposure("^SESSION_RUNNER.*\\.md$\n", {})["exposed"], [])
+
     def test_only_the_files_the_trimmer_writes_are_shards(self):
         yes = ("CHANGELOG-through-2026-08-01.md", "HANDOFFS-through-2026-08-02-3.md.verify.sh", "SESSION_NOTES-through-x.md")
         no = ("CHANGELOG-archive.md", "CHANGELOG-through-x.md.bak", "ROADMAP-through-x.md", "a/CHANGELOG-through-x.md", "CHANGELOG-through-.txt")
@@ -1469,6 +1549,160 @@ class TestTheMachineReadFilesAreListedApartFromProse(Adopter):
         for rel, data in before.items():
             self.assertEqual((self.project / rel).read_bytes(), data, "%s was edited" % rel)
         self.assertIn("tests/test_read_budget.py:1", r.out, "an apply prints the list too")
+
+
+class TestAPatternThatStopsMatchingIsListed(Adopter):
+    """BL-101 F10 and F11 (plan 7.6, findings-register.md; S290). F5's list reads whole names, so a root `.Rbuildignore` of
+    regular expressions (`^SESSION_RUNNER.*\\.md$`) was listed only for the comment lines that spelled a name out, and the
+    row a person read was the harmless one. The file is now read as the program reads it: every non-empty line a
+    case-insensitive regular expression, a line that matches a path or a directory above it covers it, and a moved file is
+    exposed when a line covers it where it is and none covers it where it goes. A candidate, never a verdict: Python's `re`,
+    not R's engine. F11: a packager's ignore file (`.vscodeignore`) is config, not prose."""
+
+    LINES = "^SESSION_RUNNER.*\\.md$\n^methodology_trim\\.py$\n^dashboard\\.html$\n"
+    REMARKED = "# keep the framework files out of the build\n" + LINES
+
+    def put(self, text, rel=".Rbuildignore", message="an ignore file"):
+        path = self.project / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+        self.commit(message)
+
+    def report(self, *args):
+        return run_migrate(self.project, *args).report["not_rewritten"]
+
+    def row(self, nr, rel=".Rbuildignore", cat="config"):
+        return next((x for x in nr[cat]["paths"] if x["file"] == rel), None)
+
+    def test_a_file_of_regular_expressions_is_listed_though_it_names_no_file(self):
+        self.put(self.REMARKED)
+        nr = self.report()
+        row = self.row(nr)
+        self.assertEqual((row["mentions"], row["code_mentions"], row["names"]), (0, 0, []), "no whole name is spelled out in it")
+        self.assertEqual([x["line"] for x in row["patterns"]["lines"]], [2, 3, 4])
+        self.assertEqual(row["patterns"]["exposed"], ["SESSION_RUNNER.md", "dashboard.html", "methodology_trim.py"])
+        self.assertEqual(row["patterns"]["unread"], 0)
+        self.assertEqual((row["line"], row["text"]), (2, "^SESSION_RUNNER.*\\.md$"), "the row points at the first line that stops matching, not at line 1")
+        self.assertEqual((nr["config"]["files"], nr["config"]["mentions"]), (1, 0), "a pattern is not a mention of a name")
+
+    def test_a_file_that_also_spells_a_name_out_is_one_row_with_both(self):
+        self.put("# the ledger is CHANGELOG.md\n^SESSION_RUNNER.*\\.md$\n")
+        nr = self.report()
+        row = self.row(nr)
+        self.assertEqual((row["mentions"], row["code_mentions"], row["line"]), (1, 0, 1), "F5's row, as it was")
+        self.assertEqual(row["patterns"]["exposed"], ["SESSION_RUNNER.md"])
+        self.assertEqual(sum(1 for x in nr["config"]["paths"] if x["file"] == ".Rbuildignore"), 1)
+        self.assertEqual((nr["config"]["files"], nr["config"]["mentions"]), (1, 1))
+
+    def test_a_row_whose_patterns_stop_matching_is_not_marked_comment_lines_only(self):
+        """The file spells a name out only in a comment, and that is the harmless half: the marker would tell a reader to skip a
+        file whose patterns are the exposure."""
+        self.put("# the ledger is CHANGELOG.md\n^SESSION_RUNNER.*\\.md$\n")
+        row_line = next(l for l in run_migrate(self.project, json_out=False).out.splitlines() if ".Rbuildignore:1" in l)
+        self.assertNotIn("[comment lines only]", row_line)
+        self.put("# the ledger is CHANGELOG.md\n", message="the same file without the pattern")
+        row_line = next(l for l in run_migrate(self.project, json_out=False).out.splitlines() if ".Rbuildignore:1" in l)
+        self.assertIn("[comment lines only]", row_line, "with nothing else in it the marker is still true")
+
+    def test_a_line_that_covers_the_new_directory_clears_every_line_it_covers(self):
+        self.put(self.LINES + "^methodology$\n")
+        nr = self.report()
+        self.assertIsNone(self.row(nr))
+        self.assertEqual(nr["config"]["files"], 0)
+
+    def test_a_line_that_covers_a_directory_exposes_the_files_under_it(self):
+        self.put("^docs$\n")
+        exposed = self.row(self.report())["patterns"]["exposed"]
+        self.assertIn("docs/methodology/HOW_TO_USE.md", exposed)
+        self.assertIn("docs/archive/CHANGELOG-through-2026-08-01.md", exposed)
+        self.assertNotIn("docs/methodology/PROJECT_CONVENTIONS.md", exposed, "the project's own file stays where it is")
+
+    def test_tier_one_leaves_the_ledgers_in_place_so_their_lines_stay_covered(self):
+        self.put("^CHANGELOG.*\\.md$\n^SESSION_RUNNER.*\\.md$\n")
+        self.assertEqual(self.row(self.report("--tier", "1"))["patterns"]["exposed"], ["SESSION_RUNNER.md"])
+        self.assertEqual(self.row(self.report())["patterns"]["exposed"], ["CHANGELOG.md", "SESSION_RUNNER.md"])
+
+    def test_only_the_file_at_the_root_is_read(self):
+        self.put("^SESSION_RUNNER.*\\.md$\n", rel="pkg/.Rbuildignore")
+        nr = self.report()
+        self.assertIsNone(self.row(nr, "pkg/.Rbuildignore"))
+        self.assertEqual(nr["config"]["files"], 0)
+
+    def test_a_line_that_is_not_a_regular_expression_is_counted_and_the_rest_are_read(self):
+        self.put("[unclosed\n^CHANGELOG\\.md$\n")
+        patterns = self.row(self.report())["patterns"]
+        self.assertEqual((patterns["unread"], patterns["exposed"]), (1, ["CHANGELOG.md"]))
+
+    def test_a_project_without_one_lists_no_pattern(self):
+        nr = self.report()
+        for cat in ("ci", "hooks", "tests", "proofs", "scripts", "config"):
+            self.assertTrue(all("patterns" not in x for x in nr[cat]["paths"]), cat)
+        self.assertEqual(nr["config"]["files"], 0)
+
+    def test_the_text_says_which_lines_stop_matching_and_what_would_cover_the_new_place(self):
+        self.put(self.REMARKED)
+        out = run_migrate(self.project, json_out=False).out
+        self.assertRegex(out, r"\.Rbuildignore:2 .*\^SESSION_RUNNER\.\*\\\.md\$")
+        row_line = out.split(".Rbuildignore:2")[1].split("\n")[0]
+        self.assertNotIn("[comment lines only]", row_line, "it is a pattern row, not a comment-only one")
+        self.assertNotIn("mentions", row_line, "a row of patterns spells no name out, so it has no count of mentions to print")
+        for phrase in ("line 2:", "line 4:", "SESSION_RUNNER.md", "dashboard.html", "^methodology$", "case-insensitive regular expression",
+                       "Python", "a candidate, not a verdict"):
+            self.assertIn(phrase, out)
+        self.assertRegex(out, r"(?m)^\s+config:\s+0 mention\(s\) in 1 file\(s\)")
+        self.assertRegex(out, r"3 line\(s\) cover 3 moved file\(s\)")
+
+    def test_a_line_that_covers_many_files_names_three_and_counts_the_rest(self):
+        self.put("^docs$\n")
+        out = run_migrate(self.project, json_out=False).out
+        self.assertRegex(out, r"line 1: \^docs\$  stops covering [^,\n]+, [^,\n]+, [^,\n]+ and \d+ more\n")
+        self.assertRegex(out, r"\n      1 line\(s\) cover (?!1 )\d+ moved file\(s\)", "the line count and the file count are two numbers")
+
+    def test_a_line_that_cannot_be_read_is_said_in_the_text(self):
+        self.put("[unclosed\n^CHANGELOG\\.md$\n")
+        self.assertRegex(run_migrate(self.project, json_out=False).out, r"1 line\(s\) could not be read as a regular expression")
+
+    def test_a_file_whose_only_lines_cannot_be_read_gets_no_row(self):
+        self.put("[unclosed\n")
+        nr = self.report()
+        self.assertIsNone(self.row(nr))
+        self.assertEqual(nr["config"]["files"], 0)
+
+    def test_a_file_git_does_not_track_is_not_read(self):
+        (self.project / ".git" / "info" / "exclude").write_text(".Rbuildignore\n", encoding="utf-8")
+        (self.project / ".Rbuildignore").write_text(self.LINES, encoding="utf-8")
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["status"], "ok", r.out)
+        self.assertIsNone(self.row(r.report["not_rewritten"]))
+
+    def test_a_row_of_patterns_sorts_with_the_candidates_not_with_the_comment_only_files(self):
+        self.put("# CHANGELOG.md\n", rel=".Acfg.json", message="a config that names it only in a comment; it sorts before .Rbuildignore")
+        self.put(self.LINES)
+        out = run_migrate(self.project, json_out=False).out
+        self.assertLess(out.index(".Rbuildignore:1"), out.index(".Acfg.json:1"), "by name alone .Acfg.json comes first")
+
+    def test_listing_a_pattern_file_never_edits_it(self):
+        self.put(self.LINES)
+        before = (self.project / ".Rbuildignore").read_bytes()
+        r = run_migrate(self.project, "--apply", json_out=False)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual((self.project / ".Rbuildignore").read_bytes(), before)
+        self.assertIn(".Rbuildignore:1", r.out, "an apply prints the list too")
+
+    # --- F11 ---
+    def test_a_packagers_ignore_file_that_names_a_moved_file_is_config_not_prose(self):
+        self.put("SESSION_RUNNER.md\nCHANGELOG.md\n", rel=".vscodeignore")
+        nr = self.report()
+        row = self.row(nr, ".vscodeignore")
+        self.assertEqual((row["mentions"], row["code_mentions"]), (2, 2))
+        self.assertNotIn(".vscodeignore", {s["file"] for s in nr["other"]["sites"]}, "a file is in one category, not two")
+        self.assertNotIn("patterns", row, "vsce's matching is not evaluated: the file is listed, never judged")
+
+    def test_a_gitignore_below_the_root_stays_prose(self):
+        self.put("CHANGELOG.md\n", rel="web/.gitignore")
+        nr = self.report()
+        self.assertIsNone(self.row(nr, "web/.gitignore"))
+        self.assertIn("web/.gitignore", {s["file"] for s in nr["other"]["sites"]})
 
 
 class TestTheChecks(Adopter):
