@@ -1,0 +1,11 @@
+Philippians                old other=(24, 7)  new tests+proofs+scripts+config+other=(24, 7)  ledger/harness/ci/hooks same=True  IDENTICAL
+airqino                    old other=(469, 19)  new tests+proofs+scripts+config+other=(469, 19)  ledger/harness/ci/hooks same=True  IDENTICAL
+chat_verification          old other=(21, 4)  new tests+proofs+scripts+config+other=(21, 4)  ledger/harness/ci/hooks same=True  IDENTICAL
+church_growth              old other=(54, 6)  new tests+proofs+scripts+config+other=(54, 6)  ledger/harness/ci/hooks same=True  IDENTICAL
+dalia_martinez_funeral     old other=(118, 6)  new tests+proofs+scripts+config+other=(118, 6)  ledger/harness/ci/hooks same=True  IDENTICAL
+feedback-loop-comparison   old other=(93, 9)  new tests+proofs+scripts+config+other=(93, 9)  ledger/harness/ci/hooks same=True  IDENTICAL
+mts-system                 old other=(2050, 33)  new tests+proofs+scripts+config+other=(2050, 33)  ledger/harness/ci/hooks same=True  IDENTICAL
+nprcgenekeepr              old other=(1345, 119)  new tests+proofs+scripts+config+other=(1345, 119)  ledger/harness/ci/hooks same=True  IDENTICAL
+vscode_quarto_ext          old other=(265, 43)  new tests+proofs+scripts+config+other=(265, 43)  ledger/harness/ci/hooks same=True  IDENTICAL
+wsfct                      old other=(2988, 61)  new tests+proofs+scripts+config+other=(2988, 61)  ledger/harness/ci/hooks same=True  IDENTICAL
+clones that differ: 0
