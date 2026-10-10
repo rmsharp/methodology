@@ -1,0 +1,31 @@
+# control: the commit before the move, 4cdf70a (CHANGELOG.md and HANDOFFS.md at the root)
+check-ledger: 29 finding(s) in 1 file(s)
+CHANGELOG.md:12: orphaned text outside any entry: At close-out, prepend one entry per action, **newest on top**. Key on a mechanical fact, n
+CHANGELOG.md:57: orphaned text outside any entry: <!-- Entries go below, newest on top. Delete the seed-sentinel line near the top when you 
+check-ledger exit 1
+check-handoff: FAIL — 2 issue(s) in the newest receipt in HANDOFFS.md:
+  error: key_files has no path:line token (e.g. SessionManager.java:245): 'docs/initiatives/pattern-4-visitor-experience/2026-about-visit-page-content.md (revised'
+  error: what_was_done names no commit sha and is not the literal 'pending': "Read both drafts in full; presented doc 1 (no open questions) and doc 2's four Open"
+check-handoff: FAIL — 5 unreconciled `commit:` answer slot(s) in HANDOFFS.md:
+  error: receipt S14 (2026-07-21) names no commit sha in its `commit:` answer slot: '(this close-out commit)'
+  error: receipt S9 (2026-07-21) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S7 (2026-07-21) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S6 (2026-07-21) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S5 (2026-07-21) names no commit sha in its `commit:` answer slot: 'pending'
+check-handoff exit 1
+
+# head: the move, 62f7d8a (methodology/CHANGELOG.md and methodology/HANDOFFS.md)
+check-ledger: 29 finding(s) in 1 file(s)
+methodology/CHANGELOG.md:12: orphaned text outside any entry: At close-out, prepend one entry per action, **newest on top**. Key on a mechanical fact, n
+methodology/CHANGELOG.md:57: orphaned text outside any entry: <!-- Entries go below, newest on top. Delete the seed-sentinel line near the top when you 
+check-ledger exit 1
+check-handoff: FAIL — 2 issue(s) in the newest receipt in methodology/HANDOFFS.md:
+  error: key_files has no path:line token (e.g. SessionManager.java:245): 'docs/initiatives/pattern-4-visitor-experience/2026-about-visit-page-content.md (revised'
+  error: what_was_done names no commit sha and is not the literal 'pending': "Read both drafts in full; presented doc 1 (no open questions) and doc 2's four Open"
+check-handoff: FAIL — 5 unreconciled `commit:` answer slot(s) in methodology/HANDOFFS.md:
+  error: receipt S14 (2026-07-21) names no commit sha in its `commit:` answer slot: '(this close-out commit)'
+  error: receipt S9 (2026-07-21) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S7 (2026-07-21) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S6 (2026-07-21) names no commit sha in its `commit:` answer slot: 'pending'
+  error: receipt S5 (2026-07-21) names no commit sha in its `commit:` answer slot: 'pending'
+check-handoff exit 1

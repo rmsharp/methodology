@@ -1,0 +1,178 @@
+{
+ "_": "The `hooks` block of `bin/migrate-layout <clone at 4cdf70a> --tier all --json` (a dry run on a clone of church_growth after the sync and the hook replacement, before the move). The one site with runs_tool true is .githooks/pre-commit:303.",
+ "hooks": {
+  "mentions": 15,
+  "files": 1,
+  "sites": [
+   {
+    "file": ".githooks/pre-commit",
+    "line": 4,
+    "text": "# Refuses a commit that changes tracked content unless CHANGELOG.md is co-staged,",
+    "names": [
+     "CHANGELOG.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 7,
+    "text": "# repo (like this one) that has no root SESSION_RUNNER.md to run that gate.",
+    "names": [
+     "SESSION_RUNNER.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 15,
+    "text": "#   Opt out:     delete CHANGELOG.md and record that decision in CLAUDE.md",
+    "names": [
+     "CHANGELOG.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 26,
+    "text": "LEGACY=CHANGELOG.md                 # layout: ok -- the selftest builds the legacy layout's fixtures",
+    "names": [
+     "CHANGELOG.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 29,
+    "text": "ROOTRUN=SESSION_RUNNER.md           # layout: ok -- the same framework anchor at the root, for the tie fixtures",
+    "names": [
+     "SESSION_RUNNER.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 30,
+    "text": "OLDARCH=docs/archive                # layout: ok -- the legacy shard directory, for the trim fixtures",
+    "names": [
+     "docs/archive"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 175,
+    "text": "# hook found no tracked CHANGELOG.md and took its \"no ledger, never block\" branch. X2 is the first",
+    "names": [
+     "CHANGELOG.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 290,
+    "text": "# Quality ratchet (quality-ratchet plan, D2; SAFEGUARDS.md Blast Radius Limits): refuse a",
+    "names": [
+     "SAFEGUARDS.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 291,
+    "text": "# commit that LOOSENS a declared threshold in .quality-gates.json, or removes the manifest.",
+    "names": [
+     ".quality-gates.json"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 296,
+    "text": "# guard on the worktree alone let `git rm .quality-gates.json` through untested (PR #82",
+    "names": [
+     ".quality-gates.json"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 302,
+    "text": "mfile=.quality-gates.json   # layout: ok -- the manifest's name; both places are tried below",
+    "names": [
+     ".quality-gates.json"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 303,
+    "text": "rtool=quality_ratchet.py    # layout: ok -- the tool's name; the three places are tried below",
+    "names": [
+     "quality_ratchet.py"
+    ],
+    "runs_tool": true,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 324,
+    "text": "legacy_ledger=CHANGELOG.md                # layout: ok -- the legacy half of the table this hook resolves",
+    "names": [
+     "CHANGELOG.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 326,
+    "text": "legacy_runner=SESSION_RUNNER.md           # layout: ok -- the framework anchor, root half: it decides a tie (plan 7.2a)",
+    "names": [
+     "SESSION_RUNNER.md"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   },
+   {
+    "file": ".githooks/pre-commit",
+    "line": 328,
+    "text": "legacy_archive=docs/archive               # layout: ok -- where a trim writes its shard today",
+    "names": [
+     "docs/archive"
+    ],
+    "runs_tool": false,
+    "untracked": false
+   }
+  ],
+  "paths": [
+   {
+    "file": ".githooks/pre-commit",
+    "line": 26,
+    "text": "LEGACY=CHANGELOG.md                 # layout: ok -- the selftest builds the legacy layout's fixtures",
+    "mentions": 15,
+    "code_mentions": 8,
+    "names": [
+     ".quality-gates.json",
+     "CHANGELOG.md",
+     "SAFEGUARDS.md",
+     "SESSION_RUNNER.md",
+     "docs/archive",
+     "quality_ratchet.py"
+    ],
+    "untracked": false
+   }
+  ],
+  "runs_moved_tool": 1
+ }
+}

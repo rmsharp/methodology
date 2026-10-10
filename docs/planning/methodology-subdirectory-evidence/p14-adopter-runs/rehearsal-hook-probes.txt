@@ -1,3 +1,7 @@
+# Each section is the hook's own output for one later commit in one rehearsal clone: tracked content with no ledger entry (probe-noledger), then with one (probe-ledger).
+# An empty section is a commit that passed (exit 0); a section with the hook's refusal is exit 1. The exit codes themselves are the `probe ... exit=` lines of rehearsal-log.txt.
+# base and ctrl: the adopter's old hook, ledger at the root. tall: old hook, ledger moved (it passes). tallh, tallx: the layout-aware hook, ledger moved.
+
 == base probe-noledger
 ✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).
 
