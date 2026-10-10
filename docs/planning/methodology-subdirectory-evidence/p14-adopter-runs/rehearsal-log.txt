@@ -1,0 +1,76 @@
+start Sat Oct 10 13:40:11 CDT 2026
+adopter HEAD 303556052596976d7c58c930e97442f965b254b8
+source HEAD  9ccf08c81a4024dfc321a3db6872996be3793138
+adopter core.hooksPath=[.githooks]; status: [?? __pycache__/ ]
+tallx status before sync: []
+dash base exit=0
+status base exit=0
+probe base (tracked content, NO ledger entry, ledger at CHANGELOG.md) exit=1
+probe base (tracked content WITH a ledger entry) exit=0
+sync --dry-run ctrl exit=0
+sync ctrl (no --force) exit=0
+commit ctrl (sync, OLD hook armed) exit=0
+  ctrl status after sync: []
+sync t1 (no --force) exit=0
+commit t1 (sync, OLD hook armed) exit=0
+  t1 status after sync: []
+sync tall (no --force) exit=0
+commit tall (sync, OLD hook armed) exit=0
+  tall status after sync: []
+sync tallh (no --force) exit=0
+commit tallh (sync, OLD hook armed) exit=0
+  tallh status after sync: []
+sync tallx (no --force) exit=0
+commit tallx (sync, OLD hook armed) exit=0
+  tallx status after sync: []
+probe ctrl (tracked content, NO ledger entry, ledger at CHANGELOG.md) exit=1
+probe ctrl (tracked content WITH a ledger entry) exit=0
+commit tallh (hook replaced) exit=0
+commit tallx (hook replaced) exit=0
+hook --selftest (tallh) exit=0  pre-commit selftest: OK (43 checks)
+migrate dry-run t1 exit=0
+migrate --apply t1 (tier 1) exit=0
+migrate dry-run tall exit=0
+migrate --apply tall (tier all) exit=0
+migrate dry-run tallh exit=0
+migrate --apply tallh (tier all) exit=0
+migrate dry-run tallx exit=0
+migrate --apply tallx (tier all) exit=0
+tallx: __pycache__ pyc in place and intact (19c1958c078e)
+tallx: methodology/dashboard.html intact (2ccd4ed32685)
+tallx: methodology/dashboard_history.jsonl intact (5050cbab6324)
+tallx: git status --porcelain after the move: []
+probe tall (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=0
+probe tall (tracked content WITH a ledger entry) exit=0
+probe tallh (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=1
+probe tallh (tracked content WITH a ledger entry) exit=0
+probe tallx (tracked content, NO ledger entry, ledger at methodology/CHANGELOG.md) exit=1
+probe tallx (tracked content WITH a ledger entry) exit=0
+tall: ledger order after the move (first 5 entry titles):
+    59:### 2026-10-10 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 30 files)
+    63:### 2026-10-10 · [ad hoc] Methodology sync (rehearsal text)
+    68:### 2026-08-10 · [ad hoc] Verified BACKLOG.md's doc-only self-scan defect already fixed upstream; corrected the record
+    84:### 2026-08-10 · [ad hoc] Noted Component C's 15-item BACKLOG-migration gap in BACKLOG.md
+    95:### 2026-07-22 · [ad hoc] Incorporated author feedback into Pattern 4's home-page draft
+tallh: ledger order after the move (first 5 entry titles):
+    59:### 2026-10-10 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 30 files)
+    63:### 2026-10-10 · [ad hoc] Replaced the ledger hook with the layout-aware one
+    68:### 2026-10-10 · [ad hoc] Methodology sync (rehearsal text)
+    73:### 2026-08-10 · [ad hoc] Verified BACKLOG.md's doc-only self-scan defect already fixed upstream; corrected the record
+    89:### 2026-08-10 · [ad hoc] Noted Component C's 15-item BACKLOG-migration gap in BACKLOG.md
+ratchet ctrl exit=0  
+ratchet t1 exit=0  
+ratchet tall exit=0  
+ratchet tallh exit=0  
+ratchet tallx exit=0  
+status ctrl exit=0
+status t1 exit=0
+status tall exit=0
+status tallh exit=0
+status tallx exit=0
+dash ctrl exit=0
+dash t1 exit=0
+dash tall exit=0
+dash tallh exit=0
+dash tallx exit=0
+done Sat Oct 10 13:41:20 CDT 2026

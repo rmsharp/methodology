@@ -1,0 +1,8 @@
+base    Health: 34/100 High+ Risk: 1 Commits: 57
+ctrl    Health: 49/100 High+ Risk: 1 Commits: 58
+t1      Health: 49/100 High+ Risk: 1 Commits: 59
+tall    Health: 49/100 High+ Risk: 1 Commits: 59
+tallh   Health: 49/100 High+ Risk: 1 Commits: 60
+tallx   Health: 49/100 High+ Risk: 1 Commits: 60
+
+# base is the adopter's own dashboard before the sync (39 versions behind); the others run the synced dashboard (at the root in ctrl, under methodology/ in the moved arms)
