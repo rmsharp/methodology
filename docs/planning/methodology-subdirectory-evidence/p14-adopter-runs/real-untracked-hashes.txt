@@ -1,0 +1,9 @@
+# before the move (sha256 of the three non-tracked files)
+19c1958c078ead780c2f708b6763835ca52cc5cdccfb32fcba4f86ccbd8f5c8b  __pycache__/methodology_dashboard.cpython-310.pyc
+2ccd4ed32685d37637dd947b54f5cab6d4774058e229a79143dabbd98da5145b  dashboard.html
+5050cbab63247afb058f08c9b01b2673b9cd1625f20db87b9e284e63f380065c  dashboard_history.jsonl
+
+# after the move (the pyc stays at the root; the two generated files are plain-moved under methodology/)
+19c1958c078ead780c2f708b6763835ca52cc5cdccfb32fcba4f86ccbd8f5c8b  __pycache__/methodology_dashboard.cpython-310.pyc
+2ccd4ed32685d37637dd947b54f5cab6d4774058e229a79143dabbd98da5145b  methodology/dashboard.html
+5050cbab63247afb058f08c9b01b2673b9cd1625f20db87b9e284e63f380065c  methodology/dashboard_history.jsonl

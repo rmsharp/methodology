@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [BL-101] S292 — the P14 real-run reports: the sync, the dry run, the apply and the non-tracked files' hashes
+
+The raw outputs of the P14 real run in `~/Development/church_growth` (`p14-adopter-runs/`): `real-sync-output.txt` (`bin/sync` without `--force`: 16 updated, 8 created, 2 unchanged, no refusal; the adopter's commit `2f1389c`), `real-dry-run-report.txt` (the dry run on the real tree after the sync and the hook replacement `4cdf70a`: exit 0, 32 moves, identical to the rehearsal's tier-all dry run except the ledger mention count, 306 against 290, from the two real entries), `real-apply-report.txt` (the apply, the adopter's commit `62f7d8a`: 23/23 `current`, ledger and handoff exit 1 before and after, 0 project links dangling, history 36 to 37, clean tree) and `real-untracked-hashes.txt` (sha256 of the stray pyc and the two ignored generated files before and after: identical; the `.git/info/exclude` the sync and the apply needed was restored and `cmp` read it identical). Model: Claude Sonnet 5.5.
+
 ### 2026-10-10 · [BL-101] S292 — the P14 rehearsal reports: tier 1, tier all, the sync dry run and the hook probes
 
 The raw outputs of the P14 rehearsal (`p14-adopter-runs/`): `rehearsal-tier-1-report.txt` (the apply report at tier 1: `links` 0 to 4 project dangling, register row F13 again), `rehearsal-tier-all-report.txt` (the apply at tier all in the arm that carries the real tree's non-tracked files: 32 moves, `CLAUDE.md` 21 replacements, checks 23/23, ledger and handoff exit 1 before and after, 0 links, history 36 to 37, clean tree, and the `hooks` WARNING that is register row F15), `rehearsal-sync-dry-run.txt` and `rehearsal-hook-probes.txt` (the later-commit probes in each arm: control 1 then 0, old hook after the move 0 then 0, layout-aware hook 1 then 0; and the `--selftest` line). Model: Claude Sonnet 5.5.
