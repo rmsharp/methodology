@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [BL-101] S291 — the P13 rehearsal: its two scripts, its log and its tier-1 report
+
+`docs/planning/methodology-subdirectory-evidence/p13-rehearsal.sh` clones `airqino` (`998cd51`) six times with `git clone --no-local` and never writes to the real repository: base (unsynced), ctrl (synced), t1 (synced, `--tier 1`), tall (synced, `--tier all`), tallx and tallm (as tall, with the real tree's four untracked files copied in and excluded locally, tallm excluding the three generated files' new names as well). Each arm runs the adopter's own `python3 -m pytest -q` (144 passed, 2 xfailed in all 8 states) and its gates. `p13-final-clone.sh` is Phase 0 in the new layout from a fresh clone of the real result and a clone of the sync commit as control. Added: the two scripts, `p13-adopter-runs/rehearsal-log.txt` and `p13-adopter-runs/rehearsal-tier-1-report.txt`. The rest of the outputs follow in their own commits. Model: Claude Sonnet 5.5.
+
 ### 2026-10-10 · [BL-101] S291 claim (in progress) — P13 on `airqino` at tier all
 
 CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose P13 on `airqino` at tier all (recommended), BACKLOG.md recomposed in its own commit before the claim (`912d8c7`), and no push of the 10 local commits. The owed HANDOFFS trim (`0ba86c5`, S288's receipt to `HANDOFFS-through-2026-10-09.md`, shard proof exit 0 from a `--no-local` clone) and its fold (`9000d21`) ran before this claim. Deliverable: one adopter session in `~/Development/airqino` (plan section 7.4, Development workstream), recorded in `p13-airqino-record.md` and the findings register. Its push, anything upstream, F6, F8 and D8 are not part of it. Model: Claude Sonnet 5.5.

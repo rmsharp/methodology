@@ -1,0 +1,186 @@
+migrate-layout: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/e11a321d-68ba-4c10-9074-4d3731dd9119/scratchpad/p13/t1
+canonical: /Users/rmsharp/Development/methodology @ 41296a1a6e5c
+layout: legacy   tier: 1   mode: apply
+
+moves (23):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+
+left in place (19):
+  docs/methodology/CLAUDE.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/LICENSE -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/README.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/bin/_manifest.py -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/bin/check-links -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/bin/status -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/bin/sync -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/bin/tests.sh -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/BOOTSTRAP.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/CHANGELOG.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/CLAUDE_TEMPLATE.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/CONTEXT_TEMPLATE.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/RECOMMENDED_SKILLS.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/ROADMAP.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/SAFEGUARDS.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/SESSION_NOTES.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/SESSION_RUNNER.md -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/starter-kit/methodology_dashboard.py -- not a file of the manifest: the project's own, or an older copy; it stays
+  docs/methodology/tools/methodology_dashboard.py -- not a file of the manifest: the project's own, or an older copy; it stays
+
+rewrites (2 file(s)):
+  CLAUDE.md (10 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -2,20 +2,20 @@
+     
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -**Read and follow `SESSION_RUNNER.md` step by step.** It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+    +**Read and follow `methodology/SESSION_RUNNER.md` step by step.** It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+     
+     **Three rules you will be tempted to violate:**
+    -1. **Orient first** — Read SAFEGUARDS.md -> SESSION_NOTES.md -> run `methodology_dashboard.py` -> git status -> report findings -> WAIT FOR THE USER TO SPEAK
+    +1. **Orient first** — Read methodology/SAFEGUARDS.md -> SESSION_NOTES.md -> run `methodology/methodology_dashboard.py` -> git status -> report findings -> WAIT FOR THE USER TO SPEAK
+     2. **1 and done** — One deliverable per session. When it's complete, close out. Do not start the next thing.
+     3. **Auto-close** — When done: evaluate previous handoff, self-assess, document learnings, write handoff notes, commit, report, STOP.
+     
+    -`SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+    +`methodology/SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+     
+     ---
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from canonical, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here.*
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from canonical, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here.*
+     
+     ### Additional Phase 0 steps
+     
+    @@ -27,7 +27,7 @@
+     
+     ### Ledger (`CHANGELOG.md`) conventions
+     
+    -The rules are `docs/methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger. This project adds two conventions:
+    +The rules are `methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger. This project adds two conventions:
+     
+     - **Source tags.** `[BL-<id>]` names an item in *this* repo's `BACKLOG.md`. Work that comes from the methodology repo's backlog, such as a sync or BL-57's header migration, is tagged `[ad hoc]` and names the methodology item in its summary.
+     - **Legacy layout, left as written.** Session 6 migrated the header to `ledger-format: 2` (`5e4b483`) and dropped the old Keep-a-Changelog `## [Unreleased]` heading. So the 2026-09 entries sit under no month heading, and the first `## YYYY-MM` heading opens with the first 2026-10 entry. Don't add `## 2026-09` above them. The 2026-09-14 and 2026-09-15 entries have prose bodies instead of the detail bullets. They stay that way, because entries are never edited.
+    @@ -36,14 +36,14 @@
+     
+     <!-- This table is loaded every session and grows with no cap. When CLAUDE.md nears its
+          size budget, extract these rows to a committed PROJECT_LEARNINGS.md at the project
+    -     root and replace them with a one-line pointer (read on demand). See BOOTSTRAP.md Step 5. -->
+    +     root and replace them with a one-line pointer (read on demand). See methodology/BOOTSTRAP.md Step 5. -->
+     
+     | # | Learning | Source | When to Apply |
+     |---|----------|--------|---------------|
+     | 1 | Hardware assumptions from research papers may not match the actual device revision. Session 1 described "Arduino Mega + SIM900 GPRS" based on published literature; the actual REV6 board (2022) is a custom PCB with no USB port. Physical verification trumps literature-based assumptions for hardware projects. | Session 2 hardware investigation | When documentation references specific hardware components, verify against the physical device before writing connection instructions or buying parts. |
+     | 2 | Verify product availability before recommending a purchase. First adapter recommendation was out of stock, requiring a second round of research and a doc update. Check stock status as part of the recommendation, not after. | Session 2 adapter research | When recommending specific products for purchase. |
+     | 3 | A factual correction landed in one surface but not its duplicates. Session 2 fixed the "no USB / Arduino Mega" hardware claim in `serial_reader.py`, `.env.example`, and `docs/HARDWARE.md`, but the same stale "connect a USB cable to the Arduino Mega port" copy stayed in the UI (`templates/dashboard.html:54-55`) until Session 7. Doc fixes don't auto-propagate to user-facing strings. | Session 4 (found while writing README) | When correcting a factual/hardware claim, grep ALL surfaces for the old wording — templates, JS, docs, comments — not just the module that prompted the fix. |
+    -| 4 | The harness's session-start git snapshot and `SESSION_NOTES.md`'s ACTIVE TASK both go stale here, because other actors commit to this repo between and during sessions. Session 4's Phase 0 snapshot missed an out-of-session edit. In Session 5, a methodology-repo session had switched the branch and committed `dfe26fd` after the snapshot was taken, and three June re-vendor commits had left the ACTIVE TASK wrong for three months. Methodology-repo sessions keep their notes in `~/Development/methodology`, not here (the session-notes boundary rule in `SESSION_RUNNER.md`). | Session 5 orientation | At every Phase 0, run `git status` and `git reflog -5` yourself instead of trusting the snapshot. For commits newer than the last airqino session, find their record with `git -C ~/Development/methodology log --all -S<sha>` before calling them ghost sessions. Search by hash: matching on commit subjects misattributed `66abe78` in Session 5. |
+    +| 4 | The harness's session-start git snapshot and `SESSION_NOTES.md`'s ACTIVE TASK both go stale here, because other actors commit to this repo between and during sessions. Session 4's Phase 0 snapshot missed an out-of-session edit. In Session 5, a methodology-repo session had switched the branch and committed `dfe26fd` after the snapshot was taken, and three June re-vendor commits had left the ACTIVE TASK wrong for three months. Methodology-repo sessions keep their notes in `~/Development/methodology`, not here (the session-notes boundary rule in `methodology/SESSION_RUNNER.md`). | Session 5 orientation | At every Phase 0, run `git status` and `git reflog -5` yourself instead of trusting the snapshot. For commits newer than the last airqino session, find their record with `git -C ~/Development/methodology log --all -S<sha>` before calling them ghost sessions. Search by hash: matching on commit subjects misattributed `66abe78` in Session 5. |
+     | 5 | The Flask UI can be runtime-verified without the device. With no data source configured (no `.env`, no uploaded CSV), `/` renders the setup banner. Start `python3 app.py` in the background, `curl` port 5001 and grep the HTML, then take a headless-Chrome screenshot (`--headless=new --screenshot=<png> --window-size=1200,700`). That checks a template change end to end. In Session 7, Chrome wrote the PNG within seconds but its process never exited, so run it in the background and stop it. | Session 7 banner fix | Any change to `templates/`, `static/` or a route's output. Check the rendered page, not only the source, then stop the server and Chrome and confirm port 5001 is free. |
+     | 6 | The session records cite commits by SHA. `CHANGELOG.md` entries, `HANDOFFS.md` receipts and the `git show <sha>:SESSION_NOTES.md` archive pointers all do. A squash or rebase merge rewrites those SHAs, and deleting the branch afterwards leaves every citation pointing at nothing. Session 8 merged PR #1 (`9099569`) and PR #2 (`8554078`) with merge commits for this reason. **Now a gate:** since Session 11, GitHub allows merge commits only on `rmsharp/airqinodashboard` (squash and rebase are off, per `gh repo view --json squashMergeAllowed,rebaseMergeAllowed`). The gate covers PR merges only, not local git. | Session 8 branch housekeeping | Merging any PR or branch into `main`: use a merge commit (`gh pr merge --merge`) or a fast-forward, never `--squash` or `--rebase`. Local squashes and rebases still work, so the rule still binds branches landed without a PR. Before deleting a branch, confirm with `git merge-base --is-ancestor` that it and every SHA the ledger cites are in `main`. |
+     | 7 | Reading code gives suspicions; running it gives facts. Session 9 read the three modules, then probed them in the scratchpad (the serial parser called directly, the routes through Flask's test client). The probes turned the suspicions into 7 reproduced defects (`docs/planning/test-suite-plan.md` §4). A spike then ran the plan's fixture, `pytest.ini`, pty and ratchet mechanics, driving 3 guards red, before the plan asserted any of them. Two defects were reasoned rather than probed until a post-write check, and 6 `file:line` citations written from memory were wrong. | Session 9 test-suite plan | Any plan or handoff that claims how this code behaves: probe each claim in the scratchpad (never in the repo) before writing it, and re-grep every `file:line` after writing, before the commit. |
+    @@ -61,4 +61,4 @@
+     
+     ### Project-specific Failure Modes
+     
+    -(none — the base failure modes in `SESSION_RUNNER.md` apply.)
+    +(none — the base failure modes in `methodology/SESSION_RUNNER.md` apply.)
+  .context-budget.json (2 replacement(s))
+    --- .context-budget.json
+    +++ .context-budget.json
+    @@ -60,12 +60,12 @@
+     
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "Drift-checked, never size-checked — an adopter may not edit this file, so a size finding would be unactionable. Adjust the canonical path to wherever your methodology checkout lives. Zero local edits means `git diff` in your project shows nothing, so drift is otherwise invisible: on the source project both synced files were 13 and 2 commits behind for 48 days without anyone noticing."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         }
+       ]
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  tests:   0 mention(s) in 0 file(s)
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 63 mention(s) in 5 file(s)
+    docs/methodology/bin/_manifest.py:12  framework under docs/methodology/). Cross-references inside   (22 mentions, 20 on code lines)
+    docs/methodology/bin/check-links:6  docs/methodology/ + the starter-kit root-files at the project root). A relative   (5 mentions, 5 on code lines)
+    docs/methodology/bin/tests.sh:149  [ -f "$P/docs/methodology/ITERATIVE_METHODOLOGY.md" ] && pass "framework doc landed under docs/methodology/" || fail "do   (6 mentions, 6 on code lines)
+    docs/methodology/starter-kit/methodology_dashboard.py:19  ~/projects/                       <-- put methodology_dashboard.py here   (15 mentions, 15 on code lines)
+    docs/methodology/tools/methodology_dashboard.py:19  ~/projects/                       <-- put methodology_dashboard.py here   (15 mentions, 15 on code lines)
+  config:  4 mention(s) in 1 file(s)
+    .quality-gates.json:2  "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear,    (4 mentions, 4 on code lines)
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  60 mention(s) in 3 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   278 mention(s) in 12 file(s)
+    BACKLOG.md:13  - **The catch:** `docs/methodology/LICENSE` is not MIT. It is Terrell Deppe's (KJ5HST) own licence: use and adapt
+    BACKLOG.md:15  files (`docs/methodology/` and their root copies), so those can't be relicensed. "Fully MIT" has to mean MIT for
+    BACKLOG.md:28  and no Status column) — the unmigrated-work signal is inactive for this repo" (`methodology_dashboard.py:2068`).
+    BACKLOG.md:33  (`docs/methodology/starter-kit/BOOTSTRAP.md:151`), and leave the sub-bullets as they are. One `- [ ]` line is
+    BACKLOG.md:34  enough for the scanner to pick the checkbox format (`_BACKLOG_BOX_RE`, `methodology_dashboard.py:229`). A table
+    BACKLOG.md:41  `methodology_dashboard.py:3275`). The health score gives CI/CD 0 of its 20 points (`:3226-3231`): one
+    BACKLOG.md:44  (`quality_ratchet.py --run`) need no credentials or hardware, so they could run on every push and PR. GitHub
+    README.md:32  The tests drive the app through Flask's test client, so they need no device, no credentials and no `.env`. The fixtures 
+    docs/methodology/CLAUDE.md:24  `SESSION_RUNNER.md` is the entry point — it tells agents what to read, when to stop, and how to close out. Everything ca
+    docs/methodology/CLAUDE.md:77  - **SESSION_RUNNER.md documents 26 failure modes** with specific countermeasures. These are empirically derived from 110
+    docs/methodology/CLAUDE.md:79  - **"1 and done" rule** — one deliverable per session, then close out. This is structural, not advisory. Since v2.7 the 
+    docs/methodology/CLAUDE.md:94  - **v2.2:** `bin/sync` + `bin/status` distribution tooling (dual-mode commit/ignore, dual-source local/github), CLAUDE_T
+    docs/methodology/CLAUDE.md:96  - **v2.4:** Multi-session campaigns promoted to first-class layer — new vocabulary and document home for campaign templa
+    docs/methodology/CLAUDE.md:98  - **v2.6:** Skill-recommendation convention — new content layer alongside phases, principles, workstreams, and campaigns
+    docs/methodology/CLAUDE.md:99  - **v2.6.1:** Docs-only dot release bundling four external contributions (rmsharp PRs #18/#23/#25/#27). (1) **Skill-cita
+    docs/methodology/CLAUDE.md:100  - **v2.6.2:** Docs-only dot release resolving issue #22 (Pocock skill enablement gap, rmsharp investigation) under **str
+    docs/methodology/CLAUDE.md:101  - **v2.7:** Vertical-slice model — the first change to the unit of "1 and done" (issues #20/#21, adopted by operator dec
+    docs/methodology/CLAUDE.md:102  - **v2.7.1:** Docs-only naming-consistency dot release resolving issue #15. The two decimal-suffixed phase labels in `IT
+    docs/methodology/CLAUDE.md:103  - **v2.7.2:** Docs-only dot release bundling three external contributions (rmsharp PRs #29/#30/#31), each resolving one 
+    docs/methodology/CLAUDE.md:104  - **v2.8:** First non-docs change since v2.2's distribution tooling — `bin/sync`/`bin/status` expanded from the legacy 3
+    docs/methodology/CLAUDE.md:105  - **v2.9:** Combined release covering two additive contributions that merged together (rmsharp PRs #38/#39). **(1) Hands
+    docs/methodology/README.md:13  | **Cockpit checklist** | `SESSION_RUNNER.md` | Step-by-step procedure. Follow this. |
+    docs/methodology/README.md:72  This copies the full methodology corpus into the target: the operating files (`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `REC
+    docs/methodology/README.md:76  Copy the starter-kit root-files to your project root — `SESSION_RUNNER.md`, `SAFEGUARDS.md`, `RECOMMENDED_SKILLS.md`, `C
+    docs/methodology/README.md:85  Read and follow `SESSION_RUNNER.md` step by step. It is your operating procedure
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 0 -> exit 0
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 4 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 76 commit(s) reached by git log --follow -> 77 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 21c5a1c2315b

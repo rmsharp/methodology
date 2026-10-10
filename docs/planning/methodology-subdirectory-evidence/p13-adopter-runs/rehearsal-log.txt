@@ -1,0 +1,76 @@
+start Sat Oct 10 01:56:54 CDT 2026
+adopter HEAD 998cd51101f65778443df22351d23855c7063e50
+source HEAD  41296a1a6e5ce06a84040283d63ece4139cb7e1e
+tallx status before sync: []
+pytest base exit=0  144 passed, 2 xfailed in 0.57s
+ratchet base exit=0  
+status base exit=0
+sync --dry-run ctrl exit=0
+sync ctrl (no --force) exit=0
+commit ctrl exit=0
+  ctrl status after sync: []
+sync t1 (no --force) exit=0
+commit t1 exit=0
+  t1 status after sync: []
+sync tall (no --force) exit=0
+commit tall exit=0
+  tall status after sync: []
+sync tallx (no --force) exit=0
+commit tallx exit=0
+  tallx status after sync: []
+sync tallm (no --force) exit=0
+commit tallm exit=0
+  tallm status after sync: []
+migrate dry-run t1 exit=0
+migrate --apply t1 (tier 1) exit=0
+migrate dry-run tall exit=0
+migrate --apply tall (tier all) exit=0
+migrate dry-run tallx exit=0
+migrate --apply tallx (tier all) exit=4
+migrate dry-run tallm exit=0
+migrate --apply tallm (tier all) exit=0
+tallx: methodology/.context-budget-history.jsonl intact (sha256 23c6ebb2022a)
+tallx: methodology/.quality-gates-results.json intact (sha256 320e402643a3)
+tallx: methodology/dashboard_history.jsonl intact (sha256 1bb9ce8805bb)
+tallx: docs/HARDWARE.html in place and intact (sha256 8f51555edfa5)
+tallx: git status --porcelain after the move: [?? methodology/.context-budget-history.jsonl ?? methodology/.quality-gates-results.json ?? methodology/dashboard_history.jsonl ]
+tallm: methodology/.context-budget-history.jsonl intact (sha256 23c6ebb2022a)
+tallm: methodology/.quality-gates-results.json intact (sha256 320e402643a3)
+tallm: methodology/dashboard_history.jsonl intact (sha256 1bb9ce8805bb)
+tallm: docs/HARDWARE.html in place and intact (sha256 8f51555edfa5)
+tallm: git status --porcelain after the move: []
+tall: ledger order after the move (headings and entry titles, first 6):
+    18:## 2026-10
+    20:### 2026-10-10 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 30 files)
+    24:### 2026-10-10 · [ad hoc] Methodology sync (rehearsal text)
+    30:### 2026-09-18 · [ad hoc] Session 20 closed out — D5 fixed with a missing-credentials note, added to the plan; main fast-forwarded, pushed with 
+    36:### 2026-09-18 · [ad hoc] The test plan records D5 as fixed, with its note, and an API-side finding
+    42:### 2026-09-18 · [ad hoc] README says the API needs all four credentials; `tests-passed` tightened for the note's tests
+tallm: ledger order after the move (headings and entry titles, first 6):
+    18:## 2026-10
+    20:### 2026-10-10 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 33 files)
+    24:### 2026-10-10 · [ad hoc] Methodology sync (rehearsal text)
+    30:### 2026-09-18 · [ad hoc] Session 20 closed out — D5 fixed with a missing-credentials note, added to the plan; main fast-forwarded, pushed with 
+    36:### 2026-09-18 · [ad hoc] The test plan records D5 as fixed, with its note, and an API-side finding
+    42:### 2026-09-18 · [ad hoc] README says the API needs all four credentials; `tests-passed` tightened for the note's tests
+pytest ctrl exit=0  144 passed, 2 xfailed in 0.58s
+ratchet ctrl exit=0  
+pytest t1 exit=0  144 passed, 2 xfailed in 0.58s
+ratchet t1 exit=0  
+pytest tall exit=0  144 passed, 2 xfailed in 0.59s
+ratchet tall exit=0  
+pytest tallx exit=0  144 passed, 2 xfailed in 0.58s
+ratchet tallx exit=0  
+pytest tallm exit=0  144 passed, 2 xfailed in 0.59s
+ratchet tallm exit=0  
+status ctrl exit=0
+status t1 exit=0
+status tall exit=0
+status tallx exit=0
+status tallm exit=0
+dash ctrl exit=0
+dash t1 exit=0
+dash tall exit=0
+dash tallx exit=0
+dash tallm exit=0
+done Sat Oct 10 01:58:03 CDT 2026
