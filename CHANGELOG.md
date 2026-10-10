@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-09.md` (1 record(s), 38,712 B → 28,959 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-09 → 2026-10-09) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-09.md`](docs/archive/HANDOFFS-through-2026-10-09.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-09.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-09.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,712 B → 28,959 B (−25.2%).
+
 ### 2026-10-10 · [BL-101] S290 close-out — F10 and F11 done: the tool reads a root `.Rbuildignore` for what its patterns cover, and files a packager's ignore list as config; the receipt is complete
 
 CHANGELOG: recorded. The session's actions, each with its own entry above: the owed HANDOFFS trim `b0cad40` and its fold `c2c52a5`, the claim `aae6c22`, the change `ec8a38d` and its test `b06f8d1`, the evidence `dee8aac`, `a4866c6` and `65862cb`, and the record, register and backlog `2508bd9`. No upstream action, no push (10 commits ahead of the fork `origin` after this one), nothing in an adopter. The gate run on `2508bd9`: 18/18 pass · 0 fail · 0 unmeasured · results 20d9937f9bf7 · manifest c7eae109fc87. Phase 3C appended no fork learning row (D3 not triggered): the rows considered were fork #81, #107 and distributed Learning #12. The receipt scores S289's handoff 9 and this session 7: four figures stated at the design gate were wrong and are corrected forward in the record, the ledger and the BL-101 paragraph. Next: P13 (his S290 pick `airqino` at tier all, to confirm), after the HANDOFFS trim that is owed. Model: Claude Sonnet 5.5.
