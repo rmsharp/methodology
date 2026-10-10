@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-09 · [BL-101] S289 — F5's second mutation round: the seven survivors, 7 of 7 killed; both rounds kept as evidence
+
+`f5-mutants.py` (30 mutants, one per behaviour F5 added) and the output of both rounds, `f5-mutation-round-1.txt` (23 killed, 7 survived, about 49 minutes) and `f5-mutation-round-2.txt` (the seven against `4b80afe`, which adds the four tests and three table rows written for them: **7 killed, 0 survived**, baseline green at 150 tests). The runner is `mutate-p7.py`, unchanged, run in a scratch clone and never in this working tree. A round proves the tests would notice a wrong change to the new code, not that the code is right: the real-tree comparisons are in the entry above. Model: Claude Sonnet 5.5.
+
 ### 2026-10-09 · [BL-101] S289 — F5 evidence: the population comparison and the old-against-new identity check, with their output
 
 `f5-population.py` (the tool's dry run on 10 adopters at the S286 pinned revisions, in `--no-local` clones, after a sync in the clone where the tool asked for one; compared with the survey's 25 strong-name candidates: **24 of 25 listed with the matching kind**, the 25th a `.gitattributes` hit that migration leaves in place, 5 extras in `airqino`'s nested `docs/methodology/` copy; output `f5-population-output.txt`, identical on a second run) and `f5-identity.py` (the tool before F5, `fb71d55~1`, against the tool now on the same clones: `ledger`, `harness`, `ci` and `hooks` identical and the old `other` equal to `tests + proofs + scripts + config + other` in mentions and files, **10 of 10**; output `f5-identity-output.txt`). Nothing was written in an adopter's real tree. Model: Claude Sonnet 5.5.

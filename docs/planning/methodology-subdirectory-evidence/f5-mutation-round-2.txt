@@ -1,0 +1,9 @@
+baseline: rc=0 failing=[]
+F17   KILLED   by test_a_file_with_several_mentions_says_how_many_are_on_code_lines (named classes)
+F18   KILLED   by test_a_config_and_a_hook_framework_file_and_a_hook_git_does_not_track_are_listed_too (named classes)
+F20   KILLED   by test_a_file_with_several_mentions_says_how_many_are_on_code_lines (named classes)
+F22   KILLED   by test_a_hook_git_does_not_track_is_marked_on_its_own_row (named classes)
+F23   KILLED   by test_a_comment_only_file_is_printed_after_the_files_that_name_a_moved_path_on_a_code_line (named classes)
+F27   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F28   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+killed 7, survived 0

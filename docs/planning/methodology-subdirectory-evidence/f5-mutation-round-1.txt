@@ -1,0 +1,32 @@
+baseline: rc=0 failing=[]
+F01   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F02   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F03   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F04   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F05   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F06   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F07   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F08   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F09   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F10   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F11   KILLED   by test_a_script_is_found_by_its_extension_or_by_its_first_line (named classes)
+F12   KILLED   by test_a_config_and_a_hook_framework_file_and_a_hook_git_does_not_track_are_listed_too (named classes)
+F13   KILLED   by test_a_config_and_a_hook_framework_file_and_a_hook_git_does_not_track_are_listed_too (named classes)
+F14   KILLED   by test_a_mention_on_a_comment_line_is_counted_and_marked (named classes)
+F15   KILLED   by test_a_config_and_a_hook_framework_file_and_a_hook_git_does_not_track_are_listed_too (named classes)
+F16   KILLED   by test_the_four_files_that_broke_an_adopter_are_listed_each_under_its_kind (named classes)
+F17   SURVIVED bin/migrate-layout: '                    code += len(names)\n' -> '                    code += 1\n'
+F18   SURVIVED bin/migrate-layout: '    for c in MACHINE_READ:\n        out[c]["paths"].sort(key=' -> ''
+F19   KILLED   by test_a_config_and_a_hook_framework_file_and_a_hook_git_does_not_track_are_listed_too (named classes)
+F20   SURVIVED bin/migrate-layout: '                    out.append("    %s:%d  %s%s%s%s" % (x["f' -> '                    out.append("    %s:%d  %s%s%s%s" % (x["f'
+F21   KILLED   by test_the_text_says_what_the_list_is_and_is_not (named classes)
+F22   SURVIVED bin/migrate-layout: '                                                        "   ' -> '                                                        ""))'
+F23   SURVIVED bin/migrate-layout: 'for x in sorted(c["paths"], key=lambda x: (x["code_mentions"' -> 'for x in sorted(c["paths"], key=lambda x: x["file"]):'
+F24   KILLED   by test_the_text_says_what_the_list_is_and_is_not (named classes)
+F25   KILLED   by test_the_text_says_what_the_list_is_and_is_not (named classes)
+F26   KILLED   by test_a_config_and_a_hook_framework_file_and_a_hook_git_does_not_track_are_listed_too (named classes)
+F27   SURVIVED bin/migrate-layout: 'TEST_DIR_RE = re.compile(r"(^|/)(tests?|specs?|testthat|__te' -> 'TEST_DIR_RE = re.compile(r"(^|/)(specs?|testthat|__tests__)('
+F28   SURVIVED bin/migrate-layout: 'TEST_DIR_RE = re.compile(r"(^|/)(tests?|specs?|testthat|__te' -> 'TEST_DIR_RE = re.compile(r"(^|/)(tests?|testthat|__tests__)('
+F29   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+F30   KILLED   by test_a_machine_read_file_is_sorted_by_what_a_machine_does_with_it (named classes)
+killed 23, survived 7
