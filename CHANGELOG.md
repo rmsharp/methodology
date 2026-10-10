@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [BL-101] S294 claim (in progress) — F16, the `CLAUDE.md` rewrite in `bin/migrate-layout`
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose F16 as the deliverable and gave two go-aheads (the owed HANDOFFS trim and a push of the 6 local commits to the fork; both done, entries below). P15 was not possible: `nprcgenekeepr`, `mts-system`, `vscode_quarto_ext` and `wsfct` each had a live `claude` session at Phase 0 (checked with `pgrep -x claude` and `lsof -a -p <pid> -d cwd`), and `Philippians`, `dalia_martinez_funeral` and `chat_verification` had uncommitted changes. Deliverable: one decision and one fix for register row F16 (`docs/planning/methodology-subdirectory-evidence/findings-register.md`): `bin/migrate-layout` rewrites a project's `CLAUDE.md` as text and cannot tell a live pointer from a past-tense account in the project's own Learnings. The rule is his call; the first step is the options in one picker. Phase 3F records the rest. Model: Claude Sonnet 5.5.
+
 ### 2026-10-10 · [ad hoc] S294 — fold the 2026-10-10 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`0da40b0`, 1 receipt, S291, 2026-10-10, to `HANDOFFS-through-2026-10-10.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S293, S292). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-10.md.verify.sh` at `0da40b0`, exit 0 (L1, L2/front-matter, L3). Before the trim, on his go-ahead at Phase 0, `6ca1037` was pushed to the fork `origin` by name and read back with `ls-remote` (`0 0`); nothing was pushed after it, and nothing went upstream. Model: Claude Sonnet 5.5.

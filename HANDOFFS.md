@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S294
+date: 2026-10-10
+status: pending
+active_task: THE F16 DECISION AND FIX in `bin/migrate-layout`'s `CLAUDE.md` rewrite (BL-101, `docs/planning/methodology-subdirectory-evidence/findings-register.md` row F16; his S294 Phase 0 pick, because P15 was blocked at the check before any claim: `nprcgenekeepr`, `mts-system`, `vscode_quarto_ext` and `wsfct` each have a live `claude` session, and `Philippians`, `dalia_martinez_funeral` and `chat_verification` are dirty). F16: the tool rewrites a project's `CLAUDE.md` as text, and 9 of the 16 lines it changed at `church_growth` sit inside the project's own `### Project-specific Learnings`, which record past events at the old paths. The rule is his call (the register says so): the first step is to read the rewrite code and put the options to him in one picker, then write the tests first. Done at his go-ahead before this claim: a push of `6ca1037` (6 commits) to the fork, the HANDOFFS trim `0da40b0` and its fold `d8ab92d`. NOT done: P15, anything upstream.
+```
+
+```handoff
 session: S293
 date: 2026-10-10
 status: complete
