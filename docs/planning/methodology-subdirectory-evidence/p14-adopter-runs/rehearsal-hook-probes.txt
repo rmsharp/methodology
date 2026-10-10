@@ -1,0 +1,38 @@
+== base probe-noledger
+✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+
+This commit changes tracked content but does not update the authoritative
+ledger. Append one dated, source-tagged entry to CHANGELOG.md — exactly one of
+[issue #<N>] | [BL-<N>] | [ad hoc] — newest on top, then stage it and re-commit.
+
+== base probe-ledger
+== ctrl probe-noledger
+✗ CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+
+This commit changes tracked content but does not update the authoritative
+ledger. Append one dated, source-tagged entry to CHANGELOG.md — exactly one of
+[issue #<N>] | [BL-<N>] | [ad hoc] — newest on top, then stage it and re-commit.
+
+== ctrl probe-ledger
+== tall probe-noledger
+== tall probe-ledger
+== tallh probe-noledger
+quality-ratchet: first manifest commit (0 gate(s)) — nothing to compare against
+✗ methodology/CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+
+This commit changes tracked content but does not update the authoritative
+ledger. Prepend one dated, source-tagged entry to methodology/CHANGELOG.md — exactly one of
+[issue #<N>] | [BL-<id>] | [ad hoc] — newest on top, then stage it and re-commit.
+== tallh probe-ledger
+quality-ratchet: first manifest commit (0 gate(s)) — nothing to compare against
+== tallx probe-noledger
+quality-ratchet: first manifest commit (0 gate(s)) — nothing to compare against
+✗ methodology/CHANGELOG.md not staged — failure mode #27 (unrecorded action).
+
+This commit changes tracked content but does not update the authoritative
+ledger. Prepend one dated, source-tagged entry to methodology/CHANGELOG.md — exactly one of
+[issue #<N>] | [BL-<id>] | [ad hoc] — newest on top, then stage it and re-commit.
+== tallx probe-ledger
+quality-ratchet: first manifest commit (0 gate(s)) — nothing to compare against
+== tallh hook --selftest (last line)
+pre-commit selftest: OK (43 checks)

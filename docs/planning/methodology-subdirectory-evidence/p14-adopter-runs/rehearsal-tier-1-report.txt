@@ -1,0 +1,183 @@
+migrate-layout: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/6b489958-1792-491a-842d-57b9000a456e/scratchpad/p14/t1
+canonical: /Users/rmsharp/Development/methodology @ 9ccf08c81a40
+layout: legacy   tier: 1   mode: apply
+
+moves (23):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+
+left in place (1):
+  docs/methodology/sessions/.gitkeep -- not a file of the manifest: the project's own, or an older copy; it stays
+
+rewrites (2 file(s)):
+  CLAUDE.md (14 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -2,14 +2,14 @@
+     
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -Read and follow `SESSION_RUNNER.md` step by step. It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+    +Read and follow `methodology/SESSION_RUNNER.md` step by step. It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+     
+     **Three rules you will be tempted to violate:**
+    -1. **Orient first** — Read SAFEGUARDS.md → SESSION_NOTES.md → run `methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+    +1. **Orient first** — Read methodology/SAFEGUARDS.md → SESSION_NOTES.md → run `methodology/methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+     2. **1 and done** — One deliverable per session. When it's complete, close out. Do not start the next thing.
+     3. **Auto-close** — When done: evaluate previous handoff, self-assess, document learnings, write handoff notes, commit, report, STOP.
+     
+    -`SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+    +`methodology/SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+     
+     ---
+     
+    @@ -22,7 +22,7 @@
+     **Repository taxonomy decided 2026-07-21, migrated 2026-07-21 (S13)** — see
+     `docs/planning/2026-07-21-repo-taxonomy-migration-plan.md` for the full decision and evidence-based
+     migration plan. Summary: content organizes **by-initiative** under `docs/initiatives/<slug>/`
+    -(matching `docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md`'s per-campaign directory shape), with
+    +(matching `methodology/workstreams/TEMPLATE_CAMPAIGN.md`'s per-campaign directory shape), with
+     a ministry subfolder nested inside an initiative only if that initiative's content spans more than
+     one ministry (default: flat, ministry recorded as a tag, not a folder). `docs/sources/` stays at
+     its current top level (shared raw material, not itself a campaign). `docs/methodology/` is
+    @@ -41,7 +41,7 @@
+     ## Build / Test / Verify
+     
+     N/A — content/strategy repository, no code or render pipeline. The "build equivalent"
+    -(`SAFEGUARDS.md`) for this project is: does the document accurately reflect its cited source
+    +(`methodology/SAFEGUARDS.md`) for this project is: does the document accurately reflect its cited source
+     (a video, a sermon manuscript, church-specific input) and is that sourcing traceable? Verify by
+     re-checking the deliverable against its source, not by running a command.
+     
+    @@ -49,7 +49,7 @@
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from the methodology repo, not project-owned). The base files govern unless explicitly overridden here.*
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from the methodology repo, not project-owned). The base files govern unless explicitly overridden here.*
+     
+     *Populate these subsections only where real customizations exist — empty subsections can be deleted. Do not edit the synced files themselves.*
+     
+    @@ -81,10 +81,10 @@
+        sermon manuscripts first — the series already had strong story-branding (`FACEBOOK MESSAGE`
+        fields) that a generic pass would have duplicated or contradicted instead of building on.
+     3. **This repo touches other, separately-governed projects (e.g. sermon manuscripts under
+    -   `~/Documents/Mark/Personal/Eldering/`) that have their own `SESSION_RUNNER.md`/`CLAUDE.md`
+    +   `~/Documents/Mark/Personal/Eldering/`) that have their own `methodology/SESSION_RUNNER.md`/`CLAUDE.md`
+        discipline and ratified content.** Read them freely for grounding; never edit them as part of
+        a `church_growth` session — that would cross a project boundary the same way editing another
+    -   repo's files would (`SAFEGUARDS.md` blast-radius principle applied to sibling projects, not
+    +   repo's files would (`methodology/SAFEGUARDS.md` blast-radius principle applied to sibling projects, not
+        just sibling files).
+     4. **When a campaign doc cites specific line numbers into a target manuscript, verify every
+        citation against the actual file in a dedicated re-read pass before shipping — don't trust
+    @@ -148,10 +148,10 @@
+        a dragon note names specific instances of a structural risk (a displayed block, a repeated
+        phrase, a cited pattern): grep/scan the source for the *general shape* the named instances
+        exemplify, not just the named instances themselves.
+    -9. **`methodology_dashboard.py`'s doc-only detection can be self-referentially defeated by its own
+    +9. **`methodology/methodology_dashboard.py`'s doc-only detection can be self-referentially defeated by its own
+        presence at the project root.** The dashboard's BL-5 doc-only classifier caps "real code" at 200
+        source LOC before checking the doc corpus (`detect_doc_only()`,
+    -   `methodology_dashboard.py:1209-1243`). Because `BOOTSTRAP.md` puts a copy of the (2,000+ line)
+    +   `methodology/methodology_dashboard.py:1209-1243`). Because `methodology/BOOTSTRAP.md` puts a copy of the (2,000+ line)
+        dashboard script itself at every adopting project's root, and nothing excludes its own filename
+        from the file walk, the script counts itself as the project's source code — for a pure-content
+        repo like this one, that alone blows past the 200-LOC cap and the repo is scored as a code repo
+    @@ -213,7 +213,7 @@
+         lied, but because "IN PROGRESS" described the *session's close-out state* (never formally
+         finished) and got read as describing the *content's* state (still being written) — a claim
+         about another file's status, copy-forwarded without the file being re-opened, is
+    -    `SESSION_RUNNER.md` FM #11/#20's (gaps/edits from memory) failure shape applied to a status
+    +    `methodology/SESSION_RUNNER.md` FM #11/#20's (gaps/edits from memory) failure shape applied to a status
+         label instead of a citation or an edit target. **Before
+         relaying or acting on an inherited "still in progress" / "parked mid-edit" claim about a file
+         this session isn't actively editing, re-read the file itself first if this session is about to
+  .context-budget.json (2 replacement(s))
+    --- .context-budget.json
+    +++ .context-budget.json
+    @@ -60,12 +60,12 @@
+     
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "Drift-checked, never size-checked — an adopter may not edit this file, so a size finding would be unactionable. Adjust the canonical path to wherever your methodology checkout lives. Zero local edits means `git diff` in your project shows nothing, so drift is otherwise invisible: on the source project both synced files were 13 and 2 commits behind for 48 days without anyone noticing."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         }
+       ]
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      0 mention(s) in 0 file(s)
+  hooks:   2 mention(s) in 1 file(s)
+    .githooks/pre-commit:65  "Too small to log" is the failure mode, not an exception (SESSION_RUNNER.md FM #27).   (2 mentions, 1 on code lines)
+  tests:   0 mention(s) in 0 file(s)
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 0 mention(s) in 0 file(s)
+  config:  4 mention(s) in 1 file(s)
+    .quality-gates.json:2  "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear,    (4 mentions, 4 on code lines)
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  73 mention(s) in 3 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   24 mention(s) in 6 file(s)
+    .gitignore:1  # Generated by methodology_dashboard.py
+    .methodology-profile:4  # marker, methodology_dashboard.py's own DOC_ONLY_MARKER heuristic (methodology_dashboard.py:1209)
+    .methodology-profile:5  # misclassifies this repo as code, because the dashboard script itself (methodology_dashboard.py,
+    BACKLOG.md:4  - [ ] **[Upstream — fixed; local resync pending, low priority]** `methodology_dashboard.py`'s
+    BACKLOG.md:15  content-verified `methodology_dashboard.py`/`methodology_trim.py` from `source` to `vendor`
+    BACKLOG.md:21  `methodology_dashboard.py` here is still `DASHBOARD_VERSION 2.8.0` (2026-07-11), which
+    BACKLOG.md:27  - [ ] **[Convention note, low severity]** `methodology_dashboard.py`'s Component C ledger-freshness
+    BACKLOG.md:30  `SESSION_RUNNER.md`'s stated convention ("remove it from `BACKLOG.md` in the same commit" that
+    BACKLOG.md:159  and `docs/methodology/` — still pending the formal structure decision above)
+    CLAUDE.md:28  its current top level (shared raw material, not itself a campaign). `docs/methodology/` is
+    docs/initiatives/ephesians-content-rollout/2026-ephesians-content-slice-rollout-plan.md:40  item, and `docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md` would prefer a
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:6  executed, per `SESSION_RUNNER.md`'s Planning Sessions section and Known Failure Mode #18
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:33  to break, but `SAFEGUARDS.md`'s rename/move discipline still applies: "Never rename/move files as
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:36  - `docs/methodology/` is synced from the canonical methodology repo (`BOOTSTRAP.md`'s manifest) and
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:73  `docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md` prescribes a per-campaign directory —
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:90  **`docs/methodology/` is unchanged** — synced, not project content.
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:137  rename detection), not renames, per `SAFEGUARDS.md`'s caution that renames "are never quick."
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:215  13. Commit in ≤5-file slices per `SAFEGUARDS.md`'s blast-radius cap (e.g. one commit per `git mv` batch, one for `BACKLO
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:231  | `docs/methodology/` | **No change** — out of scope, synced | None |
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:255  (`SAFEGUARDS.md`) still holds after the move.
+    docs/planning/2026-07-21-repo-taxonomy-migration-plan.md:265  `SESSION_RUNNER.md`'s Planning Sessions rule ("the plan is the deliverable; do not start
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 4 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 35 commit(s) reached by git log --follow -> 36 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 4d453c7776ab
