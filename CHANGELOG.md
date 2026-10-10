@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [BL-101] S292 claim (in progress) — P14 on `church_growth` at tier all
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose P14 on `church_growth` (out of plan order: `nprcgenekeepr` and `mts-system` each had a Claude session running at Phase 0, `church_growth` none), and gave three go-aheads: the owed HANDOFFS trim (`2761657`, S289's receipt to `HANDOFFS-through-2026-10-09-2.md`, shard proof exit 0 from a `--no-local` clone) and its fold (`b71bda1`), a push of this repository's 20 local commits to the fork `origin`, and a push of `airqino`'s 2 commits (entries below). Deliverable: one adopter session in `~/Development/church_growth` (plan section 7.4, Development workstream), recorded in a `p14-church-growth-record.md` beside the P13 record and in the findings register. Its push, anything upstream, F6, F8, F12 to F14 and D8 are not part of it. Model: Claude Sonnet 5.5.
+
 ### 2026-10-10 · [ad hoc] S292 — fold the second 2026-10-09 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`2761657`, 1 receipt, S289, 2026-10-09, to `HANDOFFS-through-2026-10-09-2.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S291, S290). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-09-2.md.verify.sh` at `2761657`, exit 0 (L1, L2/front-matter, L3). Model: Claude Sonnet 5.5.
@@ -256,6 +260,14 @@ Moved the oldest **1** record(s) (2026-10-09 → 2026-10-09) out of [`HANDOFFS.m
 [`docs/archive/HANDOFFS-through-2026-10-09-2.md`](docs/archive/HANDOFFS-through-2026-10-09-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
 pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-09-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-09-2.md.verify.sh)
 rather than trusting a digest printed here. Live file 40,385 B → 29,351 B (−27.3%).
+
+### 2026-10-10 · [BL-101] S292 — push of `~/Development/airqino` (P13's sync `da595cb` and move `f7a0194`) to `rmsharp/airqinodashboard`
+
+Non-commit action, on his explicit go-ahead at the S292 Phase 0 picker ("Push airqino's 2 commits"). `git push origin main` in `~/Development/airqino` moved its `origin/main` from `998cd51` to `f7a0194` (2 commits: the sync, then the tier-all move). Read back after the push: `git ls-remote origin refs/heads/main` returned `f7a01943d6ab82fb36e2f76e3ae20080985f390d`, equal to its local HEAD, and `git rev-list --left-right --count HEAD...origin/main` read `0 0`. The project has no CI, so nothing ran on the push. Not sent anywhere else. Model: Claude Sonnet 5.5.
+
+### 2026-10-10 · [ad hoc] S292 — push of this repository's 20 local commits to the fork `origin` (`rmsharp/methodology`)
+
+Non-commit action, on his explicit go-ahead at the S292 Phase 0 picker ("Push 20 commits to fork origin"). `git push origin main` moved the fork's `main` from `f0770dc` to `fc01ccb` (S291's close-out commit; the 20 commits are S290's and S291's, from the HANDOFFS trim `b0cad40` through `fc01ccb`). Read back after the push: `git ls-remote origin refs/heads/main` and `git rev-parse HEAD` both read `fc01ccb94ecb063da87439b512e6f724c6500591`, and `git rev-list --left-right --count HEAD...origin/main` read `0 0` after a fetch. Upstream `KJ5HST/methodology` was not touched: no pull request, issue, comment or tag. The three commits this session adds after `fc01ccb` (trim, fold, claim) were not part of that go-ahead and are local. Model: Claude Sonnet 5.5.
 
 ### 2026-10-10 · [BL-101] S291 — close-out: P13 done at tier all on `airqino`; the receipt is complete; the gate run read 18/18
 

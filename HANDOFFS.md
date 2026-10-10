@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S292
+date: 2026-10-10
+status: pending
+active_task: P14 ON `church_growth` AT TIER ALL (BL-101, plan section 7.4, an adopter per session; his S292 Phase 0 pick, out of plan order because `nprcgenekeepr` and `mts-system` each had a Claude session running at Phase 0): the adopter `~/Development/church_growth` (last commit 2026-08-10, untracked `__pycache__/` at Phase 0) is synced where a tracked file is not `current` (its own commit there), then moved with `bin/migrate-layout --tier all` as one commit, rehearsed in `--no-local` clones first; recorded in a `p14-church-growth-record.md` and the findings register. Done in that repository; its push is its own go-ahead.
+```
+
+```handoff
 session: S291
 date: 2026-10-10
 status: complete
