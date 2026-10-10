@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-10.md` (1 record(s), 40,881 B → 29,455 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-10 → 2026-10-10) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-10.md`](docs/archive/HANDOFFS-through-2026-10-10.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-10.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-10.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,881 B → 29,455 B (−27.9%).
+
 ### 2026-10-10 · [BL-101] S293 — close-out: the F15 fix done, P15 not started (no adopter was free); the receipt is complete; the gate run read 18/18
 
 Receipt S293 is `status: complete` (self 8, predecessor 9; no fork learning row appended, so no retirement is owed: the rows considered are named in the receipt, fork #28, #16, #64 and #82). **Gate run:** `quality_ratchet.py --run` in a clean `--no-local` clone of `548ae9a`, 18/18 pass, 0 fail, 0 unmeasured, results `791e005997ab`, manifest `e755389a69c7`, 893 s (no gate near BL-103's 600 s limit); `migrate-layout-unit-tests` read 186 against its new floor 186. **Real-data smoke (Phase 3E):** a `--no-local` clone of `~/Development/church_growth` at `4cdf70a`, dry run `--tier all`: the tool from before the fix printed the `WARNING: 1 hook line(s) run a moved tool ...` line, the fixed tool printed none, both exited 0 with 15 hook mentions in 1 file, and the adopter's tree was unchanged. **One correction of my own:** the register's F15 line, committed in `548ae9a`, said a run over an adopter carrying the layout-aware hook was "Not shown"; the smoke above was run after it was written and shows it for a dry run, so the register line is corrected in this commit; the one thing still not shown is an apply. The close-out commit adds this entry, the receipt and that register edit; nothing was pushed after the fork's `8580d81`, so 6 commits are local after it. Model: Claude Sonnet 5.5.
