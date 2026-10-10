@@ -469,8 +469,8 @@ class TestThePureRules(unittest.TestCase):
         self.assertEqual(self.m.MACHINE_READ, ("ci", "hooks", "tests", "proofs", "scripts", "config"))
 
     def test_a_pattern_list_a_program_reads_is_config_except_the_gitignore(self):
-        """BL-101 F11 (register, S290): `.vscodeignore` named 26 moved files and was filed under `other` with the prose, 26 of
-        254 mentions. vsce 3.6.0 matches each line with minimatch and no `matchBase`, so a bare name is the project root's
+        """BL-101 F11 (register, S290): `.vscodeignore` carried 26 mentions of moved names (21 on code lines) and was filed under
+        `other` with the prose, 26 of that adopter's 254 mentions there. vsce 3.6.0 matches each line with minimatch and no `matchBase`, so a bare name is the project root's
         and `methodology/SESSION_RUNNER.md` is packaged. A `.gitignore` stays prose: git matches a bare name at any depth,
         so an entry the tool does not anchor-rewrite still ignores the moved file."""
         want = [(".vscodeignore", "config"), ("pkg/.npmignore", "config"), (".vercelignore", "config"), (".dockerignore", "config"),

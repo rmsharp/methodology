@@ -2,7 +2,9 @@
 new, test classes): `old` occurs exactly once in `file`; the classes are where the killing test is expected to live (the fast
 ones first). Written from the new code, one mutant per behaviour F10 and F11 added, after the lesson of F5's first round (7 of
 30 survived, each a behaviour no test pinned): a mutant named for a behaviour the tests were written together with the code, not
-before it, is the one to aim at. Usage: mutate-p7.py <scratch clone of the commit under test> f10-mutants.py [ids...]"""
+before it, is the one to aim at. G05 below is round 2's: round 1 ran an equivalent one (`low` is the basename, so a `/` test on
+it changes nothing), which survived and was replaced; round 1's output (`f10-mutation-round-1.txt`) therefore reads G05
+SURVIVED where a re-run of this file reads it KILLED. Usage: mutate-p7.py <scratch clone of the commit under test> f10-mutants.py [ids...]"""
 T = "bin/migrate-layout"
 PURE = ["TestThePureRules"]
 CMD = ["TestAPatternThatStopsMatchingIsListed"]

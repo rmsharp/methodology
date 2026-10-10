@@ -1,0 +1,27 @@
+== R: R version 4.6.1 (2026-06-24) -- "Happy Hop"
+1. matching is case-insensitive: ^foo\.txt$ against FOO.txt (FOO.txt absent = excluded)
+   built (exit 0): ALPHA.md BETA.md SESSION_RUNNER.md docsdir/inner.txt 
+2. a line that matches a directory covers what is under it: ^docsdir$ (inner.txt absent = excluded)
+   built (exit 0): ALPHA.md BETA.md FOO.txt SESSION_RUNNER.md foo2.txt 
+3. a line that starts with # is a regular expression, not a comment: '# |ALPHA' (ALPHA.md absent = excluded; BETA.md present)
+   built (exit 0): BETA.md FOO.txt SESSION_RUNNER.md docsdir/inner.txt foo2.txt 
+4. the framework file where it is now, covered: ^SESSION_RUNNER.*\.md$
+   built (exit 0): ALPHA.md BETA.md FOO.txt docsdir/inner.txt foo2.txt 
+5. after the move to methodology/ the same line no longer covers it (methodology/SESSION_RUNNER.md is packaged)
+   built (exit 0): FOO.txt docsdir/inner.txt foo2.txt methodology/SESSION_RUNNER.md 
+6. one more line, ^methodology$, covers the new directory (0 methodology/ entries packaged: the moved file and KEEP.txt are both out)
+   built (exit 0): methodology/ entries packaged: 0
+== vsce 3.6.0: a bare name in .vscodeignore is the project root's
+7. .vscodeignore = SESSION_RUNNER.md, with a copy in methodology/ (the moved file is listed = packaged):
+   package.json
+   extension.js
+   README.md
+   LICENSE
+   CHANGELOG.md
+   methodology/SESSION_RUNNER.md
+8. .vscodeignore = SESSION_RUNNER.md and methodology/** (the moved file is not listed):
+   package.json
+   extension.js
+   README.md
+   LICENSE
+   CHANGELOG.md
