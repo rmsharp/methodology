@@ -545,6 +545,11 @@ class TestThePureRules(unittest.TestCase):
         e = self.m.pattern_exposure("^dashboard\\.html$\n^SESSION_RUNNER\\.md$\n", self.PATTERN_MAP)
         self.assertEqual([x["line"] for x in e["lines"]], [1, 2])
 
+    def test_the_files_of_a_line_come_in_name_order(self):
+        """The map lists SESSION_RUNNER.md before CHANGELOG.md; the one line that covers both lists them in name order."""
+        e = self.m.pattern_exposure("^[A-Z_]+\\.md$\n", self.PATTERN_MAP)
+        self.assertEqual(e["lines"][0]["files"], ["CHANGELOG.md", "SESSION_RUNNER.md"])
+
     def test_nothing_moves_so_nothing_is_exposed(self):
         self.assertEqual(self.m.pattern_exposure("^SESSION_RUNNER.*\\.md$\n", {})["exposed"], [])
 
