@@ -1,7 +1,7 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
 **Status: DECIDED (S273), ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).
-P0 to P12 are done (§7.1 to §7.4b, S274 to S287; P11 at tier 1, P12 at tier all); P13 is next, subject to §7.6, and tier 2 is open.**
+P0 to P14 are done (§7.1 to §7.4d, S274 to S292; P11 at tier 1, P12 to P14 at tier all); P15 is next, subject to §7.6, and tier 2 is open.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm. This file is in the population of that plan's retirement rule like every other planning file.
@@ -48,10 +48,9 @@ Evidence for every number below is re-runnable from
    paths (§5).
 8. **Decisions** (all ratified, S273, §9): D1 all the files, in two tiers; D2 flat, `workstreams/` the only
    subdirectory; D6 this repository rehearses only; D8 the fork first, then one pull request.
-9. **The adopter runs also test the route an adopter takes alone** (the operator's addition, 2026-10-09).
-   An adopter that syncs from `upstream` later has no agent rehearsing in clones and matching refused files
-   by hand, so each run in P11-P22 must leave that route safer: every finding becomes a fix with a test, an
-   open row or a declined one, and the next session reads the register first (§7.6). D8's pull request carries it.
+9. **The adopter runs also test the route an adopter takes alone** (the operator's addition, 2026-10-09): every
+   finding of a P11-P22 run becomes a fix with a test, an open row or a declined one, and the next session
+   reads the register first (§7.6). D8's pull request carries it.
 
 ---
 
@@ -474,7 +473,7 @@ one-deliverable rule is the default.
 
 ### 7.2b P3 — what was built (S276)
 
-**DONE.** `methodology_trim.py` 1.8.0 takes its shard directory and link prefix from the ledger's own directory, and `close_out_report.py` 1.2.0 finds its ledger the same way; a half-migrated tree is refused. **Measured:** 119 of 119 shards give the same `--reverify` verdict under both tools; a real ledger, moved in a scratch clone, trims and proves. 44 mutants. **Left:** a root ledger's links are dead after the move (C6). **Not shown:** a trim at a real adopter.
+**DONE.** `methodology_trim.py` 1.8.0 takes its shard directory and link prefix from the ledger's own directory, and `close_out_report.py` 1.2.0 finds its ledger the same way; a half-migrated tree is refused. **Measured:** 119 of 119 shards give the same `--reverify` verdict under both tools; a real ledger, moved in a scratch clone, trims and proves. 44 mutants. **Not shown:** a trim at a real adopter.
 
 ### 7.2c P4 — what was built (S277)
 
@@ -503,22 +502,22 @@ one-deliverable rule is the default.
 
 ### 7.3c P9 — what was done (S282)
 
-**DONE.** `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files); Test 10 holds it. The 36 that no relative path could serve in both layouts became bare names in code spans. The runner, `BOOTSTRAP.md` §Two layouts (C14's sentence) and the README now name both layouts. **Left (closed S284):** the `bin/migrate-layout` links check. **Not shown:** an adopter reading the new text.
+**DONE.** `bin/check-links --layout both` went from exit 1 (36 of 116 links dangling in the new layout) to exit 0 (80 links in 23 files); Test 10 holds it. The 36 that no relative path could serve in both layouts became bare names in code spans. The runner, `BOOTSTRAP.md` §Two layouts (C14's sentence) and the README now name both layouts. **Not shown:** an adopter reading the new text.
 
 ### 7.3d P10 — the sha (S283)
 
-**DONE** (a record; nothing sent). **Adopters may sync from `add55f1`**, the last commit to change a distributed file or anything under `bin/`, `tools/`, `starter-kit/`, `.githooks/`. **Measured on 12 adopters in clones:** the stage changes no path, layout, health or `check-links` exit of one that only syncs (19 to 21 content files). **D8 does not gate P11**; a pull request is a port (34 of 81 commits replay). **Not shown:** an adopter's CI. Detail: `methodology-subdirectory-evidence/p10-expand-release-record.md`.
+**DONE** (a record; nothing sent). **Adopters may sync from `add55f1`**, the last commit to change a distributed file or anything under `bin/`, `tools/`, `starter-kit/`, `.githooks/`. **Measured on 12 adopters in clones:** the stage changes no path, layout, health or `check-links` exit of one that only syncs. **D8 does not gate P11**; a pull request is a port (34 of 81 commits replay). **Not shown:** an adopter's CI. Detail: `methodology-subdirectory-evidence/p10-expand-release-record.md`.
 
 ### 7.4 P11-P22 — an adopter per session (the BL-57 P6-P11 pattern)
 
 Done **in that repository** and recorded here. Order, by risk: `model_project_constructor` (P11, §7.4a),
-`feedback-loop-comparison` (P12, §7.4b), `airqino` (P13, §7.4c; his pick, a nested copy), `nprcgenekeepr`
-(the four-workflow CI filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`,
-`chat_verification`, `church_growth`, `dalia_martinez_funeral`, `claude_work` (no history to move),
-`wsfct` **last and only on a clean default branch** (its branch is active).
+`feedback-loop-comparison` (P12, §7.4b), `airqino` (P13, §7.4c; his pick, a nested copy), `church_growth` (P14, §7.4d;
+his pick, out of order: the next two had a session running), `nprcgenekeepr` (the four-workflow CI filter and its R
+test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `chat_verification`, `dalia_martinez_funeral`,
+`claude_work` (no history to move), `wsfct` **last and only on a clean default branch** (its branch is active).
 
 - **DONE per adopter:** a clean tree (untracked files count, F12); `bin/status` before; **`bin/sync` first if any TRACKED file is not
-  `current`, as its own commit (§5A.2)**; `bin/migrate-layout` dry run read; the apply as one commit;
+  `current`, as its own commit (§5A.2)**; **an older ledger hook replaced first, its own commit (F2)**; `bin/migrate-layout` dry run read; the apply as one commit;
   `bin/status` after (all `current`, at the new destinations); the adopter's **own** proofs, test suite and CI
   green (named in its receipt), rehearsed at each tier in clones first, a rise in skips a failure; **tier 1 until it is surveyed (his, S285);** one full Phase 0 in the new layout; the sha of the checkout it synced
   from; its findings in the register (§7.6); the project's push is **its own go-ahead**.
@@ -526,15 +525,19 @@ Done **in that repository** and recorded here. Order, by risk: `model_project_co
 
 ### 7.4a P11 — `model_project_constructor` (S285)
 
-**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`). `--tier all` passed every check the tool runs and broke the adopter's CI (2 of 13 proofs, 41 tests name the moved ledger), so by his choice `--tier 1` was applied (CI 3,942 passed, 9 skipped). **Confirms §4.6:** tier 1 alone is coherent; `all` is not safe on the tool's checks alone.
+**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`). `--tier all` broke its CI (2 proofs, 41 tests name the moved ledger) though every check the tool runs passed, so he chose `--tier 1`. **Confirms §4.6:** `all` is not safe on the tool's checks alone.
 
 ### 7.4b P12 — `feedback-loop-comparison` (S287)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p12-feedback-loop-comparison-record.md`). A Quarto paper with no remote, tests or CI. Synced with `--force` (two older canonical copies), moved: 30 renames, rendered output identical, health 59 and risk 0 before and after. **Tier 2 cost:** 23 relative links in its own `SESSION_NOTES.md`.
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p12-feedback-loop-comparison-record.md`). A Quarto paper, no remote, tests or CI. Synced with `--force` (two older canonical copies); 30 renames; health 59 and risk 0 before and after. **Tier 2 cost:** 23 links in its `SESSION_NOTES.md`.
 
 ### 7.4c P13 — `airqino` (S291)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p13-airqino-record.md`). Flask, 144 tests, no CI, a remote; not pushed. Synced without `--force`, moved: 30 renames and 4 untracked generated files; tests, gates and dashboard identical before and after. **Tier 2 cost:** 1 link in the ledger header. **Findings:** register rows F12 to F14.
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p13-airqino-record.md`). Flask, 144 tests, no CI; pushed 2026-10-10. 30 renames and 4 untracked generated files; tests, gates and dashboard identical. **Tier 2 cost:** 1 link. **Findings:** F12 to F14.
+
+### 7.4d P14 — `church_growth` (S292)
+
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p14-church-growth-record.md`). A doc-only repository, no remote, tests, CI or gates, with an older ledger hook: after the move a later commit with no ledger entry exits 0 under it and 1 under the layout-aware hook (C5), so it was replaced first. 30 renames; dashboard 49 and risk high before and after. **Tier 2 cost:** 0 links. **Findings:** F15, F16.
 
 ### 7.5 P23 and G-B
 
