@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-09 · [BL-101] S289 — F5 recorded: the record, register row F5 fixed and F10 opened, the BL-101 row and Next action
+
+`f5-machine-read-list-record.md` (the problem reproduced first, the change, what was measured, what the list cannot show, how to reproduce). `findings-register.md`: a dated line under F5 (**fixed**, `fb71d55`, held by nine tests and one table test, `migrate-layout-unit-tests` 136 to 150) and a new open row **F10** (a pattern that names a moved file by stem is not seen: `nprcgenekeepr`'s `.Rbuildignore` has 16 such regex lines and the tool lists the file only for 3 comment mentions; not seen by the tool's own checks, untracked, his call). `BACKLOG.md` BL-101 row and `BACKLOG-DETAIL.md` (an S289 paragraph; the Next action no longer offers F5, which is done, and offers F10 instead). Not done and not started: P13, F10, F6, F8, anything in an adopter, anything upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-09 · [BL-101] S289 — F5's second mutation round: the seven survivors, 7 of 7 killed; both rounds kept as evidence
 
 `f5-mutants.py` (30 mutants, one per behaviour F5 added) and the output of both rounds, `f5-mutation-round-1.txt` (23 killed, 7 survived, about 49 minutes) and `f5-mutation-round-2.txt` (the seven against `4b80afe`, which adds the four tests and three table rows written for them: **7 killed, 0 survived**, baseline green at 150 tests). The runner is `mutate-p7.py`, unchanged, run in a scratch clone and never in this working tree. A round proves the tests would notice a wrong change to the new code, not that the code is right: the real-tree comparisons are in the entry above. Model: Claude Sonnet 5.5.
