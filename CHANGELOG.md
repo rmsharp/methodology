@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-09 · [BL-101] S290 — F10 and F11 recorded: the record, register rows F10 fixed and F11 added and fixed, the BL-101 row and Next action
+
+`f10-pattern-rule-record.md` (what the rules would add, measured before building, with the three wrong figures corrected; what R 4.6.1 and vsce 3.6.0 do; the change; what was measured after; what the list cannot show; how to reproduce), `findings-register.md` (F11 added, dated lines for F10 and F11 under "Changes of disposition", the pointer to the next adopter session), the BL-101 row in `BACKLOG.md` and the S290 paragraph and Next action in `BACKLOG-DETAIL.md` (the P13 default is his S290 pick, `airqino` at tier all, given in an answer the picker said to ignore unless he chose P13, so the next session confirms it). BL-101 stays open: P13 onward. Nothing in an adopter, nothing upstream, no push. Model: Claude Sonnet 5.5.
+
 ### 2026-10-09 · [BL-101] S290 — F10's probes of R 4.6.1 and vsce 3.6.0 as a script, and two corrections of my own wording in committed text
 
 `f10-probes.sh` (output `f10-probes-output.txt`) rebuilds the toy R package and the toy extension the record's section 3 rests on, and prints what each program packaged: R left `FOO.txt` out under `^foo\.txt$` (case-insensitive), left `docsdir/inner.txt` out under `^docsdir$`, left `ALPHA.md` out under the single line `# |ALPHA`, packaged `methodology/SESSION_RUNNER.md` once `SESSION_RUNNER.md` moved there under `^SESSION_RUNNER.*\.md$`, and packaged 0 `methodology/` entries once `^methodology$` was added; vsce 3.6.0 listed `methodology/SESSION_RUNNER.md` for packaging under a bare `SESSION_RUNNER.md` line and did not once `methodology/**` was added. **Corrected in committed text:** the F11 test's docstring said `.vscodeignore` named 26 moved files; it carries 26 mentions of moved names, 21 on code lines (`tools/test_migrate_layout.py`, docstring only, no test changed); and `f10-mutants.py` now says its G05 is round 2's, so round 1's output reads SURVIVED where a re-run reads KILLED. Model: Claude Sonnet 5.5.
