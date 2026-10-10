@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-09-2.md` (1 record(s), 40,385 B → 29,351 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-09 → 2026-10-09) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-09-2.md`](docs/archive/HANDOFFS-through-2026-10-09-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-09-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-09-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,385 B → 29,351 B (−27.3%).
+
 ### 2026-10-10 · [BL-101] S291 — close-out: P13 done at tier all on `airqino`; the receipt is complete; the gate run read 18/18
 
 Receipt S291 is `status: complete` (self 8, predecessor 9; no fork learning row appended, so no retirement is owed: the rows considered are named in the receipt). `CHANGELOG: pending` on the S291 claim entry is cleared by this statement (a committed entry is not edited). Deliverable: P13 (plan §7.4c, register rows F12 to F14, record `p13-airqino-record.md`); the sync `da595cb` and the move `f7a0194` are in `~/Development/airqino`, local, 2 ahead of its `origin/main`. **The gate run on `5dd513a` read `18/18 pass · 0 fail · 0 unmeasured`** (results `20d9937f9bf7`, manifest `c7eae109fc87`, the S290 hashes: no threshold moved; `tests-sh-passed` 483 at three receipts), 16.8 minutes at a load of about 2 to 3, so BL-103's 600 s limit was not hit. **Two loose counts in this session's entries, corrected here:** `c3e6d48` says 'all 8 states' (10; corrected once already in `b97313a`) and `952497f` says 'four names, then seven' (seven at once). **For him, at the next Phase 0:** the adopter and tier for P14 (or the F6, F8, F12, F13, F14 triage); whether `airqino` is pushed, its nested copy deleted and its generated files ignored; D8, the release number and any tag. The HANDOFFS trim is owed after that report (3 receipts). Nothing was pushed or sent upstream; this repository's `origin/main` is 20 commits behind after this one (his go-ahead). Plan 59,879 of 60,000 B, BACKLOG.md 56,358 of 56,750 B. Model: Claude Sonnet 5.5.
