@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-09-3.md` (1 record(s), 41,173 B → 29,475 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-09 → 2026-10-09) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-09-3.md`](docs/archive/HANDOFFS-through-2026-10-09-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-09-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-09-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 41,173 B → 29,475 B (−28.4%).
+
 ### 2026-10-10 · [BL-101] S292 — close-out: P14 done at tier all on `church_growth`; the receipt is complete; the gate run read 18/18
 
 Receipt S292 is `status: complete` (self 8, predecessor 9; no fork learning row appended, so no retirement is owed: the rows considered are named in the receipt, fork #82, #53, #58 and distributed Learning #12). `CHANGELOG: pending` on the S292 claim entry is cleared by this statement (a committed entry is not edited). Deliverable: P14 (plan §7.4d, register rows F15 and F16, record `p14-church-growth-record.md`); the sync `2f1389c`, the hook replacement `4cdf70a` and the move `62f7d8a` are in `~/Development/church_growth`, local (it has no remote). **The gate run on `4afc0d6` read `18/18 pass · 0 fail · 0 unmeasured`** (results `20d9937f9bf7`, manifest `c7eae109fc87`, the S291 hashes: no threshold moved; `tests-sh-passed` 483 at four receipts), 17.5 minutes (1,048 s) at a load of about 4 to 7, so BL-103's 600 s limit was not hit. **Three loose statements in this session's entries, corrected here:** the entry of `d981009` says 'Three dated lines' were added under the register's rows (two); the entry of `e3e267e` describes `rehearsal-hook-probes.txt` as showing the exit codes (the file holds the hook's own words, empty where a commit passed; the codes are the `probe ... exit=` lines of `rehearsal-log.txt`, and a header added in `78eaa2e` says so); the entry of `78eaa2e` says the file was 'committed two entries below' (it first landed in `e3e267e`). **For him, at the next Phase 0:** the adopter and tier for P15 (or the F6, F8, F12 to F16 triage); whether `church_growth` ignores `__pycache__/` and migrates its two stale seeds; D8, the release number and any tag. The HANDOFFS trim is owed after that report (3 receipts). Pushes done this session, each on his go-ahead: this repository's 20 commits to the fork and `airqino`'s 2 commits (entries above); this session's 10 commits are local, and nothing was sent upstream. Plan 59,957 of 60,000 B, BACKLOG.md 56,716 of 56,750 B. Model: Claude Sonnet 5.5.
