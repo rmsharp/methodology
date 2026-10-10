@@ -1,0 +1,206 @@
+Philippians                 S: 1 file(s) 1 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 1
+    [S] crossword/build_crossword.py:11  SESSION_RUNNER  | (SESSION_RUNNER FM #2).
+airqino                     S: 8 file(s) 95 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 3
+    [S] app.py:77  dashboard  | def dashboard():
+    [S] app.py:295  dashboard  | body["ragged_rows"] = ragged  # dashboard.js reports it
+    [S] docs/methodology/bin/_manifest.py:52  DESIGN_WORKSTREAM  | ("workstreams/DESIGN_WORKSTREAM.md",
+    [S] docs/methodology/bin/_manifest.py:54  ARCHITECTURE_WORKSTREAM  | ("workstreams/ARCHITECTURE_WORKSTREAM.md",
+    [S] docs/methodology/bin/_manifest.py:56  DEVELOPMENT_WORKSTREAM  | ("workstreams/DEVELOPMENT_WORKSTREAM.md",
+    [S] docs/methodology/bin/_manifest.py:58  AUDIT_WORKSTREAM  | ("workstreams/AUDIT_WORKSTREAM.md",
+    [S] docs/methodology/bin/_manifest.py:60  RESEARCH_DOCUMENTATION_WORKSTREAM  | ("workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md",
+    [S] docs/methodology/bin/_manifest.py:62  TEMPLATE_WORKSTREAM  | ("workstreams/TEMPLATE_WORKSTREAM.md",
+    [S] docs/methodology/bin/_manifest.py: ... 3 more
+    [S] docs/methodology/bin/tests.sh:25  SESSION_RUNNER  | diff -q "$P/SESSION_RUNNER.md" "$STARTER/SESSION_RUNNER.md" >/dev/null && pass "SESSION_RUNNER matches canonic
+    [S] docs/methodology/bin/tests.sh:25  SESSION_RUNNER  | diff -q "$P/SESSION_RUNNER.md" "$STARTER/SESSION_RUNNER.md" >/dev/null && pass "SESSION_RUNNER matches canonic
+    [S] docs/methodology/bin/tests.sh:25  SESSION_RUNNER  | diff -q "$P/SESSION_RUNNER.md" "$STARTER/SESSION_RUNNER.md" >/dev/null && pass "SESSION_RUNNER matches canonic
+    [S] docs/methodology/bin/tests.sh:25  SESSION_RUNNER  | diff -q "$P/SESSION_RUNNER.md" "$STARTER/SESSION_RUNNER.md" >/dev/null && pass "SESSION_RUNNER matches canonic
+    [S] docs/methodology/bin/tests.sh:26  SAFEGUARDS  | diff -q "$P/SAFEGUARDS.md" "$STARTER/SAFEGUARDS.md" >/dev/null && pass "SAFEGUARDS matches canonical" || fail 
+    [S] docs/methodology/bin/tests.sh:26  SAFEGUARDS  | diff -q "$P/SAFEGUARDS.md" "$STARTER/SAFEGUARDS.md" >/dev/null && pass "SAFEGUARDS matches canonical" || fail 
+    [S] docs/methodology/bin/tests.sh: ... 50 more
+    [S] docs/methodology/starter-kit/methodology_dashboard.py:6  dashboard  | health and risk, generates a self-contained HTML dashboard, and opens it in the
+    [S] docs/methodology/starter-kit/methodology_dashboard.py:14  dashboard  | The dashboard auto-detects its context based on where it's placed:
+    [S] docs/methodology/starter-kit/methodology_dashboard.py:188  dashboard  | """Walk up from `start`, returning the resolved path to the canonical dashboard
+    [S] docs/methodology/starter-kit/methodology_dashboard.py:189  methodology_dashboard  | (methodology/starter-kit/methodology_dashboard.py), or None if not found locally.
+    [S] docs/methodology/starter-kit/methodology_dashboard.py:200  dashboard  | """Read the DASHBOARD_VERSION string from a dashboard copy without importing it."""
+    [S] docs/methodology/starter-kit/methodology_dashboard.py:235  dashboard  | """Copy the canonical dashboard to the portfolio root + every discovered project.
+    [S] docs/methodology/starter-kit/methodology_dashboard.py: ... 6 more
+    [S] docs/methodology/tools/methodology_dashboard.py:6  dashboard  | health and risk, generates a self-contained HTML dashboard, and opens it in the
+    [S] docs/methodology/tools/methodology_dashboard.py:14  dashboard  | The dashboard auto-detects its context based on where it's placed:
+    [S] docs/methodology/tools/methodology_dashboard.py:188  dashboard  | """Walk up from `start`, returning the resolved path to the canonical dashboard
+    [S] docs/methodology/tools/methodology_dashboard.py:189  methodology_dashboard  | (methodology/starter-kit/methodology_dashboard.py), or None if not found locally.
+    [S] docs/methodology/tools/methodology_dashboard.py:200  dashboard  | """Read the DASHBOARD_VERSION string from a dashboard copy without importing it."""
+    [S] docs/methodology/tools/methodology_dashboard.py:235  dashboard  | """Copy the canonical dashboard to the portfolio root + every discovered project.
+    [S] docs/methodology/tools/methodology_dashboard.py: ... 6 more
+    [S] static/js/dashboard.js:154  dashboard  | + '. Check SERIAL_PORT in .env and the adapter, then restart the dashboard.');
+    [S] tests/test_csv_routes.py:28  dashboard  | """POST a file under the field name the dashboard's FormData uses (dashboard.js:451)."""
+    [S] tests/test_csv_routes.py:28  dashboard  | """POST a file under the field name the dashboard's FormData uses (dashboard.js:451)."""
+    [S] tests/test_serial_routes.py:68  dashboard  | assert "no-such-port" in body["error"]  # dashboard.js shows it in the readings grid
+chat_verification           S: 0 file(s) 0 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 0
+church_growth               S: 0 file(s) 0 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 0
+dalia_martinez_funeral      S: 1 file(s) 3 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 0
+    [S] bin/check-handoff:4  HANDOFFS  | starter-kit/HANDOFFS.md (SEED disposition, see bin/_manifest.py) is a per-session
+    [S] bin/check-handoff:28  HANDOFFS  | Part of the close-out-receipt vertical slice (P1: starter-kit/HANDOFFS.md + manifest
+    [S] bin/check-handoff:32  HANDOFFS  | bin/check-handoff                    # check the newest receipt in ./HANDOFFS.md,
+feedback-loop-comparison    S: 0 file(s) 0 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 0
+mts-system                  S: 18 file(s) 37 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 18
+    [S] mts-admin/src/api/client.test.ts:264  dashboard  | mockLocationPathname('/dashboard')
+    [S] mts-admin/src/components/layout/DashboardLayout.i18n.test.tsx:30  dashboard  | useLocation: () => ({ pathname: '/dashboard' }),
+    [S] mts-admin/src/components/layout/DashboardLayout.i18n.test.tsx:82  dashboard  | expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument()
+    [S] mts-admin/src/components/layout/DashboardLayout.i18n.test.tsx:187  dashboard  | expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument()
+    [S] mts-admin/src/components/layout/DashboardLayout.roleNav.test.tsx:18  dashboard  | useLocation: () => ({ pathname: '/dashboard' }),
+    [S] mts-admin/src/components/layout/DashboardLayout.test.tsx:27  dashboard  | useLocation: () => ({ pathname: '/dashboard' }),
+    [S] mts-admin/src/components/layout/DashboardLayout.test.tsx:88  dashboard  | const dashboardLink = screen.getByRole('link', { name: /dashboard/i })
+    [S] mts-admin/src/i18n/index.ts:8  dashboard  | import enDashboard from './locales/en/dashboard.json'
+    [S] mts-admin/src/i18n/index.ts:20  dashboard  | import esDashboard from './locales/es/dashboard.json'
+    [S] mts-admin/src/i18n/index.ts:36  dashboard  | dashboard: enDashboard,
+    [S] mts-admin/src/i18n/index.ts:50  dashboard  | dashboard: esDashboard,
+    [S] mts-admin/src/i18n/index.ts:77  dashboard  | ns: ['common', 'auth', 'dashboard', 'settings', 'navigation', 'projects', 'actors', 'responses', 'analytics', 
+    [S] mts-admin/src/i18n/locales/en/common.json:8  dashboard  | "dashboard": "Dashboard",
+    [S] mts-admin/src/i18n/locales/en/dashboard.json:31  dashboard  | "loadFailed": "Failed to load dashboard data. Please try again."
+    [S] mts-admin/src/i18n/locales/en/navigation.json:9  dashboard  | "dashboard": "Dashboard",
+    [S] mts-admin/src/i18n/locales/es/common.json:8  dashboard  | "dashboard": "Panel",
+    [S] mts-admin/src/i18n/locales/es/navigation.json:9  dashboard  | "dashboard": "Panel",
+    [S] mts-admin/src/pages/DashboardPage.test.tsx:57  dashboard  | expect(h1).toHaveTextContent(/dashboard/i)
+    [S] mts-admin/src/pages/LoginPage.i18n.test.tsx:261  dashboard  | expect(mockNavigate).toHaveBeenCalledWith('/dashboard')
+    [S] mts-admin/src/pages/LoginPage.test.tsx:97  dashboard  | it('should navigate to dashboard after successful login', async () => {
+    [S] mts-admin/src/pages/LoginPage.test.tsx:110  dashboard  | expect(mockNavigate).toHaveBeenCalledWith('/dashboard')
+    [S] mts-admin/src/pages/LoginPage.test.tsx:145  dashboard  | expect(mockNavigate).toHaveBeenCalledWith('/dashboard')
+    [S] mts-web/src/App.test.tsx:60  dashboard  | it('should land on the originally-requested protected route after a hard reload/fresh-mount while still authen
+    [S] mts-web/src/components/layout/AppLayout.test.tsx:29  dashboard  | expect(logoLink.closest('a')).toHaveAttribute('href', '/dashboard')
+    [S] mts-web/src/pages/DashboardPage.test.tsx:107  dashboard  | <MemoryRouter initialEntries={['/dashboard']}>
+    [S] mts-web/src/pages/DashboardPage.test.tsx:109  dashboard  | <Route path="/dashboard" element={<DashboardPage />} />
+    [S] mts-web/src/pages/InvitationPage.test.tsx:91  dashboard  | it('accepts the invitation and shows a success message pointing an actor to their dashboard', async () => {
+    [S] mts-web/src/pages/InvitationPage.test.tsx:121  dashboard  | expect(screen.getByRole('link', { name: /dashboard/i })).toHaveAttribute('href', '/dashboard')
+    [S] mts-web/src/pages/InvitationPage.test.tsx:121  dashboard  | expect(screen.getByRole('link', { name: /dashboard/i })).toHaveAttribute('href', '/dashboard')
+    [S] mts-web/src/pages/InvitationPage.test.tsx:124  dashboard  | it('accepts an owner/delegate invitation and shows success copy without a dashboard link', async () => {
+    [S] mts-web/src/pages/InvitationPage.test.tsx:154  dashboard  | expect(screen.queryByRole('link', { name: /dashboard/i })).not.toBeInTheDocument()
+    [S] mts-web/src/pages/LoginPage.test.tsx:48  dashboard  | it('should submit the form with valid credentials and navigate to dashboard', async () => {
+    [S] mts-web/src/pages/LoginPage.test.tsx:57  dashboard  | expect(mockNavigate).toHaveBeenCalledWith('/dashboard')
+    [S] mts-web/src/pages/LoginPage.test.tsx:116  dashboard  | <Route path="/dashboard" element={<div>Dashboard Page</div>} />
+    [S] mts-web/src/pages/LoginPage.test.tsx:125  dashboard  | it('should redirect to /dashboard when already authenticated with no location.state.from (e.g. visiting /login
+    [S] mts-web/src/pages/LoginPage.test.tsx:135  dashboard  | <Route path="/dashboard" element={<div>Dashboard Page</div>} />
+    [S] mts-web/src/pages/LoginPage.test.tsx:154  dashboard  | expect(mockNavigate).toHaveBeenCalledWith('/dashboard')
+nprcgenekeepr               S: 1 file(s) 16 line(s)  M: 1 file(s) 4 line(s)  P: 1 file(s) 22 line(s) covering 143 moved file(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 0
+    [S] .Rbuildignore:72  SESSION_RUNNER  | ^SESSION_RUNNER.*\.md$
+    [S] .Rbuildignore:73  SESSION_NOTES  | ^SESSION_NOTES.*\.md$
+    [S] .Rbuildignore:74  SAFEGUARDS  | ^SAFEGUARDS.*\.md$
+    [S] .Rbuildignore:76  ROADMAP  | ^ROADMAP.*\.md$
+    [S] .Rbuildignore:77  CHANGELOG  | ^CHANGELOG.*\.md$
+    [S] .Rbuildignore:78  BOOTSTRAP  | ^BOOTSTRAP.*\.md$
+    [S] .Rbuildignore: ... 10 more
+    [M] .Rbuildignore:85  methodology_dashboard  | ^methodology_dashboard\.py$
+    [M] .Rbuildignore:137  methodology_trim  | ^methodology_trim\.py$
+    [M] .Rbuildignore:150  context_budget  | ^context_budget\.py$
+    [M] .Rbuildignore:151  quality_ratchet  | ^quality_ratchet\.py$
+    [P] .Rbuildignore:72  SESSION_RUNNER.md  | ^SESSION_RUNNER.*\.md$
+    [P] .Rbuildignore:136  FRAMEWORK_LEARNINGS.md  | ^FRAMEWORK_LEARNINGS\.md$
+    [P] .Rbuildignore:74  SAFEGUARDS.md  | ^SAFEGUARDS.*\.md$
+    [P] .Rbuildignore:88  RECOMMENDED_SKILLS.md  | ^RECOMMENDED_SKILLS.*\.md$
+    [P] .Rbuildignore:79  CONTEXT_TEMPLATE.md  | ^CONTEXT_TEMPLATE.*\.md$
+    [P] .Rbuildignore:71  CLAUDE_TEMPLATE.md  | ^CLAUDE.*\.md$
+    [P] .Rbuildignore: ... 137 more
+vscode_quarto_ext           S: 20 file(s) 35 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 1 file(s) 1 line(s)  S new to the F5 list: 20
+    [S] src/core/yaml-schema.ts:411  dashboard  | { name: "dashboard", description: "Quarto dashboard." },
+    [S] src/core/yaml-schema.ts:411  dashboard  | { name: "dashboard", description: "Quarto dashboard." },
+    [S] src/core/yaml-schema.ts:1749  dashboard  | const FORMAT_SYNTHESIZED = ["md", "hugo", "dashboard", "email"];
+    [S] test/integration/suite/debounced-diagnostics.test.ts:73  CHANGELOG  | describe("Quarto: createDebouncedDiagnosticsFeature (shared skeleton, CHANGELOG: createDebouncedDiagnosticsFea
+    [S] test/integration/suite/embedded-vdoc.test.ts:617  CHANGELOG  | describe("embedded vdoc: a forward dispatched AFTER the extension deactivates (CHANGELOG: post-dispose forward
+    [S] test/integration/suite/embedded-vdoc.test.ts:685  CHANGELOG  | describe("embedded vdoc: the fallback temp directory's lifecycle (CHANGELOG: mkdtemp fallback-dir leak, Sessio
+    [S] test/integration/suite/embedded-vdoc.test.ts:1266  CHANGELOG  | describe("embedded vdoc: the fallback dir stays 0700 after a delete-underneath (plan Phase 2, CHANGELOG: OS-te
+    [S] test/integration/suite/language.test.ts:43  CHANGELOG  | describe("Standalone diagram/typst language registration (CHANGELOG: quick declarative wins bundle, Sessions 7
+    [S] test/integration/suite/notebook-renderer.test.ts:120  CHANGELOG  | it("ships the callout styles through the markdown-style shadow-DOM channel (CHANGELOG: notebook callout BOX CS
+    [S] test/integration/suite/outline.test.ts:1611  CHANGELOG  | describe("Quarto: in-cell code symbol forwarding (CHANGELOG: outline granularity, in-cell code symbols + show/
+    [S] test/integration/suite/semantic-tokens.test.ts:925  CHANGELOG  | describe("embedded semantic tokens — RANGE-registry provider divergence (CHANGELOG: RANGE-registry provider di
+    [S] test/integration/suite/snippets.test.ts:51  CHANGELOG  | it("offers the qlisttable snippet by prefix in a quarto document (CHANGELOG: quick declarative wins bundle, Se
+    [S] test/integration/suite/snippets.test.ts:65  CHANGELOG  | it("offers the qfragment snippet by prefix in a quarto document (CHANGELOG: quick declarative wins bundle, Ses
+    [S] test/integration/suite/vdoc-assert.ts:49  CHANGELOG  | `${what} — a custom scheme is invisible to real language servers (CHANGELOG: embedded-language forwarding did 
+    [S] test/integration/suite/yaml-value-diagnostics.test.ts:429  dashboard  | "dashboard",
+    [S] test/lsp/runTest.ts:82  CHANGELOG  | "  (CHANGELOG: embedded-language forwarding did not reach real language servers, Session 87) — they were all g
+    [S] test/lsp/suite/real-lsp.test.ts:73  CHANGELOG  | describe("REAL Pylance: the forwards that were silently dead (CHANGELOG: embedded-language forwarding did not 
+    [S] test/lsp/suite/real-lsp.test.ts:706  CHANGELOG  | it("SEMANTIC TOKENS: carries `typeHintComment` (matches .py) but NOT `builtin` (already matches .py) — CHANGEL
+    [S] test/lsp/suite/real-lsp.test.ts:775  CHANGELOG  | `our provider must PRESERVE \`typeHintComment\` on the \`# type:\` comment tokens (CHANGELOG: semantic-token m
+    [S] test/lsp/suite/real-lsp.test.ts:795  CHANGELOG  | "our legend must NOT carry `builtin` (the refuted half of CHANGELOG: semantic-token modifier axis, Session 97)
+    [S] test/unit/embedded-virtual-doc.test.ts:271  CHANGELOG  | describe("buildCellVirtualContent — isolates exactly ONE cell (CHANGELOG: outline granularity, in-cell code sy
+    [S] test/unit/format-aliases.test.ts:18  dashboard  | ["html-all", ["$html-doc", "dashboard"]], // nested one level
+    [S] test/unit/format-aliases.test.ts:39  dashboard  | new Set(["html", "html4", "html5", "dashboard"]),
+    [S] test/unit/format-name-check.test.ts:24  dashboard  | "md", "hugo", "dashboard", "email", // synthesized
+    [S] test/unit/format-name-check.test.ts:60  dashboard  | it.each(["html", "pdf", "revealjs", "typst", "gfm", "markdown", "md", "dashboard", "hugo", "email"])(
+    [S] test/unit/grammar-embedded-breadth.test.ts:84  CHANGELOG  | describe("embedded-grammar breadth (CHANGELOG: quick declarative wins bundle, Sessions 76-78(a))", () => {
+    [S] test/unit/notebook-renderer.test.ts:50  CHANGELOG  | it("tags the injected <style> with class 'markdown-style' so VS Code clones it into each notebook cell's shado
+    [S] test/unit/semantic-token-scopes.test.ts:119  CHANGELOG  | it("maps the carried MODIFIER `typeHintComment` to Pylance's OWN comment scope (CHANGELOG: semantic-token modi
+    [S] test/unit/semantic-tokens.test.ts:353  CHANGELOG  | it("KEEPS the `typeHintComment` modifier — a `# type:` comment's interior is a COMMENT, not live code (CHANGEL
+    [S] test/unit/semantic-tokens.test.ts:376  CHANGELOG  | it("still carries NO OTHER foreign MODIFIER — `builtin`/`typeHint` stay CLEARED (the refutation of CHANGELOG: 
+    [S] test/unit/yaml-schema-index.test.ts:141  dashboard  | "html-all": ["$html-doc", "dashboard"], // nested
+    [S] test/unit/yaml-schema-index.test.ts:1040  dashboard  | it("concats Quarto's synthesized formats (md/hugo/dashboard/email)", () => {
+    [S] test/unit/yaml-schema-index.test.ts:1041  dashboard  | for (const n of ["md", "hugo", "dashboard", "email"]) {
+    [S] test/unit/yaml-schema-index.test.ts:1093  dashboard  | it("includes the base names and Quarto's synthesized formats (md/hugo/dashboard/email)", () => {
+    [S] test/unit/yaml-schema-index.test.ts:1094  dashboard  | for (const n of ["html", "epub", "docbook", "pdf", "revealjs", "typst", "md", "hugo", "dashboard", "email"]) {
+    [G] .vscodeignore:0    | 26 literal mention(s)
+wsfct                       S: 29 file(s) 69 line(s)  M: 0 file(s) 0 line(s)  P: 0 file(s) 0 line(s)  G: 0 file(s) 0 line(s)  S new to the F5 list: 26
+    [S] reports/2026-03-15/generate-coverage-report.py:115  dashboard  | if '/dashboard' in p:
+    [S] reports/2026-03-15/generate-coverage-report.py:233  dashboard  | if 'dashboard' in name:
+    [S] web/e2e/accessibility-keyboard-flows.spec.ts:79  dashboard  | test.describe('Keyboard E2E Flow 2 — Member login + dashboard (WCAG 2.1.1, 3.3.2)', () => {
+    [S] web/e2e/admin-attendance.spec.ts:357  dashboard  | test('admin can view attendance dashboard', async ({ page }) => {
+    [S] web/e2e/admin-attendance.spec.ts:718  dashboard  | test('attendance dashboard shows all stat cards', async ({ page }) => {
+    [S] web/e2e/admin-attendance.spec.ts:732  dashboard  | test('dashboard links navigate to correct pages', async ({ page }) => {
+    [S] web/e2e/admin-background-checks.spec.ts:264  dashboard  | test('should show expiring soon checkbox on dashboard', async ({ page }) => {
+    [S] web/e2e/admin-custodial.spec.ts:18  dashboard  | test('loads dashboard page with three sections', async ({ page }) => {
+    [S] web/e2e/admin-custodial.spec.ts:83  dashboard  | test('has back link to dashboard', async ({ page }) => {
+    [S] web/e2e/admin-custodial.spec.ts:566  dashboard  | test('can navigate from dashboard to areas and back', async ({ page }) => {
+    [S] web/e2e/admin-custodial.spec.ts:581  dashboard  | test('can navigate from dashboard to templates', async ({ page }) => {
+    [S] web/e2e/admin-custodial.spec.ts:591  dashboard  | test('can navigate from dashboard to schedules', async ({ page }) => {
+    [S] web/e2e/admin-facilities-exports.spec.ts:15  dashboard  | test('Export CSV button is visible on custodial dashboard', async ({ page }) => {
+    [S] web/e2e/admin-maintenance.spec.ts:20  dashboard  | test('1. dashboard loads and displays summary cards', async ({ page }) => {
+    [S] web/e2e/admin-maintenance.spec.ts:33  dashboard  | test('2. dashboard shows summary cards with counts', async ({ page }) => {
+    [S] web/e2e/admin-maintenance.spec.ts:43  dashboard  | test('3. dashboard links navigate to work orders page', async ({ page }) => {
+    [S] web/e2e/demo-user-access.spec.ts:75  dashboard  | const sidebar = page.locator('nav, [role="navigation"]').filter({ hasText: /dashboard|events|sermons/i })
+    [S] web/e2e/demo-user-access.spec.ts:79  dashboard  | test('demo user can access admin dashboard', async ({ page }) => {
+    [S] web/e2e/facilities-user.spec.ts:66  dashboard  | test('has back link to dashboard', async ({ page }) => {
+    [S] web/e2e/facilities-user.spec.ts:111  dashboard  | test('has back link to dashboard', async ({ page }) => {
+    [S] web/e2e/facilities-user.spec.ts:371  dashboard  | test('dashboard shows not-a-member message for non-team member', async ({ page }) => {
+    [S] web/e2e/member-journey.spec.ts:29  dashboard  | test('dashboard shows stats cards', async ({ page }) => {
+    [S] web/e2e/member-journey.spec.ts:38  dashboard  | test('dashboard shows Welcome Path section', async ({ page }) => {
+    [S] web/e2e/member-journey.spec.ts:45  dashboard  | test('dashboard shows Classes & Courses section', async ({ page }) => {
+    [S] web/e2e/member-journey.spec.ts:52  dashboard  | test('dashboard shows Reading Plans section', async ({ page }) => {
+    [S] web/e2e/member-journey.spec.ts:59  dashboard  | test('dashboard has links to detail pages', async ({ page }) => {
+    [S] web/scripts/archive-session-notes.ts:35  SESSION_NOTES  | const DEFAULT_NOTES = resolve(__dirname, '../../SESSION_NOTES.md')
+    [S] web/scripts/fold-stale-pr.ts:39  SESSION_NOTES  | const DEFAULT_NOTES = resolve(__dirname, '../../SESSION_NOTES.md')
+    [S] web/scripts/manual-test-setup.sh:261  dashboard  | echo "  1. View attendance dashboard with statistics"
+    [S] web/src/__tests__/api/admin/security-dashboard.test.ts:168  dashboard  | it('returns dashboard data for admin user', async () => {
+    [S] web/src/__tests__/api/admin/security-dashboard.test.ts:194  dashboard  | it('returns dashboard data for staff user', async () => {
+    [S] web/src/__tests__/auth/callback-confirm.test.tsx:113  dashboard  | mockGet.mockReturnValue('/dashboard')
+    [S] web/src/__tests__/auth/callback-confirm.test.tsx:119  dashboard  | expect(mockPush).toHaveBeenCalledWith('/dashboard')
+    [S] web/src/__tests__/auth/callback.test.ts:167  dashboard  | 'http://localhost:3000/callback?code=test-code&next=/dashboard'
+    [S] web/src/__tests__/auth/callback.test.ts:174  dashboard  | 'http://localhost:3000/dashboard'
+    [S] web/src/__tests__/components/admin/AdminSidebar.test.tsx:85  dashboard  | it('should have link to admin dashboard', () => {
+    [S] web/src/__tests__/components/admin/AdminSidebar.test.tsx:87  dashboard  | const dashboardLink = screen.getByRole('link', { name: /dashboard/i })
+    [S] web/src/__tests__/components/admin/AdminSidebar.test.tsx:166  dashboard  | const dashboardLink = screen.getByRole('link', { name: /dashboard/i })
+    [S] web/src/__tests__/lib/foldStalePr.test.ts:38  SESSION_NOTES  | 'SESSION_NOTES s354 Status (`PR [#TBD] on `docs/s354-fold-551-merged`` → ' +
+    [S] web/src/__tests__/pages/admin-custodial.test.tsx:106  dashboard  | it('renders dashboard with three sections', async () => {
+    [S] web/src/__tests__/pages/admin-maintenance.test.tsx:370  dashboard  | it('renders dashboard with three sections', async () => {
+    [S] web/src/__tests__/pages/admin/AdminAnalyticsPage.test.tsx:224  dashboard  | screen.getByRole('heading', { level: 1, name: /analytics dashboard/i })
+    [S] web/src/__tests__/pages/admin/AdminAttendanceHistoryPage.test.tsx:170  dashboard  | it('shows back link to attendance dashboard', async () => {
+    [S] web/src/__tests__/pages/admin/AdminAttendanceHistoryPage.test.tsx:174  dashboard  | const backLink = screen.getByRole('link', { name: /back to attendance dashboard/i })
+    [S] web/src/__tests__/pages/admin/AdminAttendanceRecordPage.test.tsx:261  dashboard  | it('shows back link to attendance dashboard', async () => {
+    [S] web/src/__tests__/pages/admin/AdminAttendanceRecordPage.test.tsx:265  dashboard  | const backLink = screen.getByRole('link', { name: /back to attendance dashboard/i })
+    [S] web/src/__tests__/pages/admin/AdminAttendanceReportsPage.test.tsx:280  dashboard  | const backLink = screen.getByRole('link', { name: /back to attendance dashboard/i })
+    [S] web/src/__tests__/pages/admin/AdminAttendanceServicesPage.test.tsx:374  dashboard  | const backLink = screen.getByText(/back to attendance dashboard/i)
+    [S] web/src/__tests__/pages/admin/AdminDashboard.test.tsx:206  dashboard  | it('should render dashboard title', async () => {
+    [S] web/src/__tests__/pages/admin/AdminDashboard.test.tsx:209  dashboard  | expect(screen.getByRole('heading', { level: 1, name: /dashboard/i })).toBeInTheDocument()
+    [S] web/src/lib/help-content.ts:39  dashboard  | After logging in, you'll see your personalized dashboard with:
+    [S] web/src/lib/help-content.ts:80  dashboard  | 1. Navigate to the **My Journey** page from your dashboard or user menu
+    [S] web/src/translations/en.json:1074  dashboard  | "dashboard": {
+    [S] web/src/translations/en.json:1612  dashboard  | "dashboard": "Maintenance Dashboard",
+    [S] web/src/translations/en.json:1691  dashboard  | "dashboard": "Custodial Dashboard",
+    [S] web/src/translations/en.json:2120  dashboard  | "dashboard": {
+    [S] web/src/translations/en.json:2231  dashboard  | "dashboard": {
+    [S] web/src/translations/en.json:3937  dashboard  | "dashboard": {
+    [S] web/src/translations/en.json: ... 4 more
+    [S] web/src/translations/es.json:1074  dashboard  | "dashboard": {
+    [S] web/src/translations/es.json:1612  dashboard  | "dashboard": "Panel de Mantenimiento",
+    [S] web/src/translations/es.json:1691  dashboard  | "dashboard": "Panel de Servicios de Limpieza",
+    [S] web/src/translations/es.json:2120  dashboard  | "dashboard": {
+    [S] web/src/translations/es.json:2231  dashboard  | "dashboard": {
+    [S] web/src/translations/es.json:3937  dashboard  | "dashboard": {
+    [S] web/src/translations/es.json: ... 1 more
+TOTAL S: 78 file(s) 256 line(s)  M: 1 file(s) 4 line(s)  P: 1 file(s) 22 line(s)  G: 1 file(s) 1 line(s)  S new to the F5 list: 68 file(s)

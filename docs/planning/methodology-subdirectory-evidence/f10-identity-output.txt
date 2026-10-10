@@ -1,0 +1,11 @@
+Philippians                unchanged kinds same=True rows same=True  config+other (23, 6) -> (23, 6)  OK  S286 candidates 1, listed 1
+airqino                    unchanged kinds same=True rows same=True  config+other (386, 13) -> (386, 13)  OK  S286 candidates 1, listed 1
+chat_verification          unchanged kinds same=True rows same=True  config+other (21, 4) -> (21, 4)  OK  S286 candidates 1, listed 1
+church_growth              unchanged kinds same=True rows same=True  config+other (54, 6) -> (54, 6)  OK  S286 candidates 1, listed 1
+dalia_martinez_funeral     unchanged kinds same=True rows same=True  config+other (110, 5) -> (110, 5)  OK  S286 candidates 1, listed 1
+feedback-loop-comparison   unchanged kinds same=True rows same=True  config+other (93, 9) -> (93, 9)  OK  S286 candidates 0, listed 0
+mts-system                 unchanged kinds same=True rows same=True  config+other (2036, 30) -> (2036, 30)  OK  S286 candidates 3, listed 3
+nprcgenekeepr              unchanged kinds same=True rows same=True  config+other (1310, 109) -> (1310, 109)  OK  S286 candidates 9, listed 9  patterns: ['.Rbuildignore'] 22 line(s), 143 moved file(s), 0 unread
+vscode_quarto_ext          unchanged kinds same=True rows same=True  config+other (254, 37) -> (254, 37)  OK  S286 candidates 2, listed 2  other->config: ['.vscodeignore']
+wsfct                      unchanged kinds same=True rows same=True  config+other (2961, 49) -> (2961, 49)  OK  S286 candidates 6, listed 6
+clones that differ: 0; clones with a patterns row: 1; files moved other->config: 1; S286 candidates listed: 25 of 25
