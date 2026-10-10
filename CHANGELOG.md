@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-10 · [BL-101] S291 — the P13 real-run reports: the sync, the dry run, the apply and the untracked files' hashes
+
+Added to `docs/planning/methodology-subdirectory-evidence/p13-adopter-runs/`: `real-sync-output.txt` (`bin/sync` on the real `airqino`: 21 files updated, `.gitattributes` created, no `--force`; in `airqino` it is `da595cb`), `real-dry-run-report.txt` (the migration's dry run after the sync: no refusal, 34 moves, 19 files left in place), `real-apply-report.txt` (the apply, `f7a0194`: status 23/23 to 23/23, ledger exit 0 to 0, history 76 to 77, `clean tree: yes`, exit 0) and `real-untracked-hashes.txt` (sha256 of the four untracked files before and after: identical). Two commits in `~/Development/airqino`, not pushed; its `.git/info/exclude` was added to for the apply and restored byte-for-byte after. Model: Claude Sonnet 5.5.
+
 ### 2026-10-10 · [BL-101] S291 — the P13 rehearsal reports: tier all, the two untracked-file arms and the adopter's check-handoff
 
 Added to `docs/planning/methodology-subdirectory-evidence/p13-adopter-runs/`: `rehearsal-tier-all-report.txt` (the apply report of the tier-all arm: 30 moves, 19 files left in place, the four rewrites, the not-rewritten rows, the checks), `rehearsal-tallx-checks.txt` and `rehearsal-tallm-checks.txt` (the checks of the two arms with the real tree's untracked files: the first exits 4, `CHECKS DIFFER (tree not clean)`, the commit made, because the three generated files sit untracked at `methodology/`; the second, with their new names excluded too, exits 0 and reads `clean tree: yes`), and `check-handoff-before-after.txt` (the adopter's own 6 unusable `commit:` slots, the same before and after the move). **A correction of the entry above (`c3e6d48`):** it says the suite read 144 passed and 2 xfailed 'in all 8 states'; the count is 10 (the 6 rehearsal arms, the real tree after the sync and after the move, and the 2 final-check clones), each 144 and 2. A committed entry is not edited, so it is corrected here. Model: Claude Sonnet 5.5.

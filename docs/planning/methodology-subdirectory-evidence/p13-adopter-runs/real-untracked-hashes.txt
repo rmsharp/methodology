@@ -1,0 +1,12 @@
+# sha256 of the four untracked files of the real airqino, before (at the claim) and after the move
+# before: root names; after: the three generated files under methodology/, docs/HARDWARE.html in place
+## before
+23c6ebb2022a9c548b74a153d58149bfc0b66c603e64bddab4a3575a54830653  .context-budget-history.jsonl
+320e402643a34e3bdc29ebba4c1e2d5c4553732bdf8e4f6e56d8f71da89074c8  .quality-gates-results.json
+1bb9ce8805bba41362aad0ca790331b5fdae95add1f3475e9197ac6f351a05e8  dashboard_history.jsonl
+8f51555edfa5ce58314a1389f2c4ad34d0e20e86e19846acf28dd7a683d8ab5f  docs/HARDWARE.html
+## after (hashes only, same order: the three generated files, then docs/HARDWARE.html)
+23c6ebb2022a9c548b74a153d58149bfc0b66c603e64bddab4a3575a54830653
+320e402643a34e3bdc29ebba4c1e2d5c4553732bdf8e4f6e56d8f71da89074c8
+1bb9ce8805bba41362aad0ca790331b5fdae95add1f3475e9197ac6f351a05e8
+8f51555edfa5ce58314a1389f2c4ad34d0e20e86e19846acf28dd7a683d8ab5f
