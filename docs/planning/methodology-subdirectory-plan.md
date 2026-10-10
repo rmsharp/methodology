@@ -449,13 +449,11 @@ one-deliverable rule is the default.
 
 ### 7.1 P1 — the resolver, the fixtures, the scanner
 
-- **DONE:** the resolver in one canonical-only module with the four-row table of §4.3 as its unit tests;
-  a `tools/test_layout_resolver.py` suite wired into `bin/tests.sh`; **fixture trees in both layouts**
-  that every later phase reuses; the **literal scanner**, run RED against `c8b9ddd` and listing every
-  line that names a root path of a methodology file in a shipped tool (177 sites over 12 files at S274;
-  the plan's first figures came from one grep that could not be reproduced); a ratchet gate for each new
-  suite, floor set from its measured count.
-- **Verify:** `bash bin/tests.sh > /tmp/o.txt` (capture it; the ratchet keeps none), the §3.1 criterion;
+- **DONE:** the resolver (one canonical-only module; §4.3's four-row table is its unit tests), its suite
+  `tools/test_layout_resolver.py` wired into `bin/tests.sh`, **fixture trees in both layouts**, and the
+  **literal scanner**, run RED against `c8b9ddd` (177 sites over 12 files at S274; the plan's first figures
+  came from one grep that could not be reproduced); a ratchet gate per new suite, floor from its measured count.
+- **Verify:** `bash bin/tests.sh > /tmp/o.txt` (the ratchet keeps none), the §3.1 criterion;
   `python3 starter-kit/quality_ratchet.py --run`; the scanner exits non-zero with the list.
 - **Surface:** the canonical suite and scratch trees; not a real adopter's tools or a hook armed in a clone.
 - **Boundary:** no tool changes behaviour. The scanner is RED on purpose, **not** a gate until P6.
@@ -492,7 +490,7 @@ one-deliverable rule is the default.
 
 ### 7.3a P7 — what was built (S280)
 
-**DONE.** `bin/migrate-layout` (canonical-only; a dry run unless `--apply`) refuses a tree that is not clean, current and unmigrated, naming every reason. Its apply is ONE commit through the project's hooks (every tracked move a rename at 90% or better, rolled back on failure, checked before and after; exit 4 if a check differs). **Measured:** 78 mutants; the 12 adopters in `--no-local` clones (`p7-adopter-runs/summary.md`): **11 migrate**, **`claude_work` is refused** (a seed-only ledger falls to 68%), `wsfct`'s untracked pre-commit hook rolls the commit back. **Corrects §3 C7:** equal proof exit codes held for this repository's proofs, not every adopter's. **Not shown:** an adopter's CI or tests (§7.4a).
+**DONE.** `bin/migrate-layout` refuses a tree that is not clean, current and unmigrated, naming every reason; its apply is ONE commit through the project's hooks (every tracked move a rename at 90% or better, rolled back on failure, checked before and after, exit 4 if a check differs). **Measured:** 78 mutants; the 12 adopters in `--no-local` clones (`p7-adopter-runs/summary.md`): **11 migrate**, **`claude_work` is refused** (a seed-only ledger falls to 68%), `wsfct`'s untracked pre-commit hook rolls the commit back. **Corrects §3 C7:** equal proof exit codes held for this repository's proofs, not every adopter's. **Not shown:** an adopter's CI or tests (§7.4a).
 
 ### 7.3 P7-P8 — the tool, then the rehearsal
 
@@ -514,12 +512,12 @@ one-deliverable rule is the default.
 ### 7.4 P11-P22 — an adopter per session (the BL-57 P6-P11 pattern)
 
 Done **in that repository** and recorded here. Order, by risk: `model_project_constructor` (P11, §7.4a),
-`feedback-loop-comparison` (P12, §7.4b), `nprcgenekeepr` (the four-workflow CI
-filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqino` (nested copy),
+`feedback-loop-comparison` (P12, §7.4b), `airqino` (P13, §7.4c; his pick, a nested copy), `nprcgenekeepr`
+(the four-workflow CI filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`,
 `chat_verification`, `church_growth`, `dalia_martinez_funeral`, `claude_work` (no history to move),
 `wsfct` **last and only on a clean default branch** (its branch is active).
 
-- **DONE per adopter:** a clean tree; `bin/status` before; **`bin/sync` first if any TRACKED file is not
+- **DONE per adopter:** a clean tree (untracked files count, F12); `bin/status` before; **`bin/sync` first if any TRACKED file is not
   `current`, as its own commit (§5A.2)**; `bin/migrate-layout` dry run read; the apply as one commit;
   `bin/status` after (all `current`, at the new destinations); the adopter's **own** proofs, test suite and CI
   green (named in its receipt), rehearsed at each tier in clones first, a rise in skips a failure; **tier 1 until it is surveyed (his, S285);** one full Phase 0 in the new layout; the sha of the checkout it synced
@@ -528,11 +526,15 @@ filter and its R test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `airqi
 
 ### 7.4a P11 — `model_project_constructor` (S285)
 
-**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`). `--tier all` passed every check the tool runs and broke the adopter's own CI (2 of 13 proofs, 41 tests name the moved ledger), so by his choice it was reset and `--tier 1` applied: one test constant repaired, CI back to 3,942 passed, 9 skipped, 5 of 5 jobs green after the push. **Confirms §4.6:** tier 1 alone is coherent; `all` is not safe on the tool's checks alone (its `proofs` cell runs only moved shards' proofs).
+**DONE at tier 1** (record: `methodology-subdirectory-evidence/p11-model-project-constructor-record.md`). `--tier all` passed every check the tool runs and broke the adopter's CI (2 of 13 proofs, 41 tests name the moved ledger), so by his choice `--tier 1` was applied (CI 3,942 passed, 9 skipped). **Confirms §4.6:** tier 1 alone is coherent; `all` is not safe on the tool's checks alone.
 
 ### 7.4b P12 — `feedback-loop-comparison` (S287)
 
-**DONE at tier all** (record: `methodology-subdirectory-evidence/p12-feedback-loop-comparison-record.md`). A Quarto paper with no remote, tests or CI; its build is `quarto render`. Synced with `--force` (two older canonical copies, nothing of its own overwritten), then moved: 30 renames; the HTML and PDF text of a fresh clone identical to before; health 59, risk 0 before and after. **The cost of tier 2:** 23 relative links in its own `SESSION_NOTES.md` (reported, never edited).
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p12-feedback-loop-comparison-record.md`). A Quarto paper with no remote, tests or CI. Synced with `--force` (two older canonical copies), moved: 30 renames, rendered output identical, health 59 and risk 0 before and after. **Tier 2 cost:** 23 relative links in its own `SESSION_NOTES.md`.
+
+### 7.4c P13 — `airqino` (S291)
+
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p13-airqino-record.md`). Flask, 144 tests, no CI, a remote; not pushed. Synced without `--force`, moved: 30 renames and 4 untracked generated files; tests, gates and dashboard identical before and after. **Tier 2 cost:** 1 link in the ledger header. **Findings:** register rows F12 to F14.
 
 ### 7.5 P23 and G-B
 

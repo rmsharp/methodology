@@ -1,0 +1,30 @@
+adopter HEAD f7a01943d6ab82fb36e2f76e3ae20080985f390d
+control at da595cb
+present methodology/SESSION_RUNNER.md
+present methodology/SAFEGUARDS.md
+present methodology/SESSION_NOTES.md
+present methodology/CHANGELOG.md
+present methodology/HANDOFFS.md
+SAFEGUARDS byte-identical to canonical
+SESSION_RUNNER byte-identical to canonical
+7:## ACTIVE TASK
+git status lines: 0
+f7a0194 chore(methodology): move the methodology files under methodology/ (tier all, 34 files)
+da595cb chore(methodology): sync the methodology files from KJ5HST/methodology @ 41296a1
+998cd51 docs: Session 20 close-out — D5 fixed with a missing-credentials note, main fast-forwarded
+0ba0bea docs: test plan records D5 as fixed, with its missing-credentials note
+CHANGELOG frontier f7a0194; undocumented after it: 0
+HANDOFFS frontier f7a0194; commits after: 0
+merges since the frontier: 0
+dashboard head exit=0
+dashboard ctrl exit=0
+  ctrl:  Health: 68/100 High+ Risk: 0 Commits: 88
+  head:  Health: 68/100 High+ Risk: 0 Commits: 89
+pytest ctrl exit=0  144 passed, 2 xfailed in 0.58s
+pytest head exit=0  144 passed, 2 xfailed in 0.58s
+ratchet ctrl exit=0  2/2 pass · 0 fail · 0 unmeasured · results 2993256f954d · manifest 0f1d28b61292
+ratchet head exit=0  2/2 pass · 0 fail · 0 unmeasured · results 2993256f954d · manifest 0f1d28b61292
+status head exit=0  tracked current: 23
+check-links head exit=1
+  methodology/CHANGELOG.md:11  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+
