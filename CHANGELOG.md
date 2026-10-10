@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-09 · [BL-101] S290 claim (in progress) — the tool follow-up, F10: `bin/migrate-layout` sees a pattern that names a moved file by stem
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose F10 as the deliverable (the recommended option; the P13 adopter question was left unanswered by design) and left F6 and F8 open. The owed HANDOFFS trim (`b0cad40`, S287's receipt to `HANDOFFS-through-2026-10-08-6.md`, shard proof exit 0 from a `--no-local` clone) and its fold (`c2c52a5`) ran before this claim. Deliverable: register row F10 (plan section 7.6), Development workstream; the rule and its measured noise are presented to him before code. P13 is not started and nothing goes upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-09 · [ad hoc] S290 — fold the sixth 2026-10-08 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`b0cad40`, 1 receipt, S287, 2026-10-08, to `HANDOFFS-through-2026-10-08-6.md`) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S289, S288). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-08-6.md.verify.sh` at `b0cad40`, exit 0 (L1, L2/front-matter, L3). Model: Claude Sonnet 5.5.

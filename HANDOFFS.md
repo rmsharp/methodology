@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S290
+date: 2026-10-09
+status: pending
+active_task: THE TOOL FOLLOW-UP, F10 (BL-101, plan section 7.6, `findings-register.md` row F10; his Phase 0 pick at S290, recommended by section 7.6's rule that a finding the tool's own checks did not see goes before the next adopter): `bin/migrate-layout` sees a pattern that names a moved file by stem (`nprcgenekeepr`'s `.Rbuildignore` regex lines `^SESSION_RUNNER.*\.md$`), which stop matching once the files sit under `methodology/`. The rule and its measured noise are shown to him inline BEFORE any code. P13, F6, F8, D8, any adopter and any push are NOT part of this session.
+```
+
+```handoff
 session: S289
 date: 2026-10-09
 status: complete
