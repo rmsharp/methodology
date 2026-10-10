@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-09 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-08-6.md` (1 record(s), 38,628 B → 27,014 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-08 → 2026-10-08) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-08-6.md`](docs/archive/HANDOFFS-through-2026-10-08-6.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-08-6.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-08-6.md.verify.sh)
+rather than trusting a digest printed here. Live file 38,628 B → 27,014 B (−30.1%).
+
 ### 2026-10-09 · [BL-101] S289 — push record: main pushed to the fork origin at his go-ahead (b518e63..db9afc3), and the F10 decision left to Phase 0
 
 At the S289 close-out picker he chose to push; `git push origin main` sent S289's 9 commits (a plain fast-forward, `b518e63..db9afc3`) to `rmsharp/methodology` and `git rev-list --left-right --count origin/main...main` read `0 0` after a fetch. Nothing went to `KJ5HST/methodology`. **Also decided at that picker, by him:** whether F10 (a pattern that names a moved file by stem is not seen) is built before P13, or waived, is decided at the next session's Phase 0 picker; section 7.6's default (F10 first) stands until then. The receipt's line that a push waits for his go-ahead is therefore historical: the go-ahead came after it was written. This commit changes only `CHANGELOG.md` and is pushed too, under his standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
