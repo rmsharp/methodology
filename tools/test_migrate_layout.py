@@ -1935,6 +1935,43 @@ class TestWhatTheHitsSayAboutHooksAndDirectories(Adopter):
         text = run_migrate(self.project, json_out=False).out
         self.assertIn("refuse the migration commit", text)
 
+    def test_a_hook_line_that_says_it_tries_every_place_is_not_flagged_as_running_a_moved_tool(self):
+        """Real data (church_growth, register F15): the layout-aware ledger hook assigns the tool's name on a line marked
+        `# layout: ok -- ...` and tries three places for it, so it works after the move; the warning that it would refuse the
+        migration commit was false (the apply exited 0 in every arm). The site is still listed: a person may want to see it."""
+        (self.project / ".githooks" / "pre-push").write_text(
+            "#!/bin/sh\nrtool=context_budget.py    # layout: ok -- the tool's name; the places are tried below\n", encoding="utf-8")
+        self.commit("a hook that tries every place")
+        r = run_migrate(self.project)
+        sites = [s for s in r.report["not_rewritten"]["hooks"]["sites"] if s["file"] == ".githooks/pre-push"]
+        self.assertEqual([(s["line"], s["runs_tool"]) for s in sites], [(2, False)])
+        self.assertEqual(r.report["not_rewritten"]["hooks"]["runs_moved_tool"], 0)
+        self.assertNotIn("refuse the migration commit", run_migrate(self.project, json_out=False).out)
+
+    def test_a_marker_with_no_reason_acknowledges_nothing(self):
+        """The grammar bin/check-layout-literals reads: `# layout: ok` needs ` -- <reason>`, or it acknowledges nothing."""
+        (self.project / ".githooks" / "pre-push").write_text(
+            "#!/bin/sh\npython3 context_budget.py --status || exit 1    # layout: ok\n", encoding="utf-8")
+        self.commit("a hook with a bare marker")
+        r = run_migrate(self.project)
+        sites = [s for s in r.report["not_rewritten"]["hooks"]["sites"] if s["file"] == ".githooks/pre-push"]
+        self.assertEqual([(s["line"], s["runs_tool"]) for s in sites], [(2, True)])
+        self.assertEqual(r.report["not_rewritten"]["hooks"]["runs_moved_tool"], 1)
+
+    def test_this_repositorys_own_ledger_hook_raises_no_warning(self):
+        """The F15 reproduction: the hook register row F2 tells an adopter to install, copied into a project as it is."""
+        shutil.copy(REPO / ".githooks" / "pre-commit", self.project / ".githooks" / "pre-commit")
+        self.commit("the layout-aware ledger hook")
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["not_rewritten"]["hooks"]["runs_moved_tool"], 0)
+        self.assertNotIn("refuse the migration commit", run_migrate(self.project, json_out=False).out)
+
+    def test_the_marker_grammar_is_the_one_check_layout_literals_reads(self):
+        """One grammar in two tools: a marker that acknowledges a literal there must acknowledge a hook line here."""
+        m = _load_script("migrate_layout", MIGRATE)
+        literals = _load_script("check_layout_literals", REPO / "bin" / "check-layout-literals")
+        self.assertEqual(m.MARKER_RE.pattern, literals.MARKER_RE.pattern)
+
     def test_a_hook_in_the_hooks_directory_that_git_does_not_track_is_found_and_flagged(self):
         """Real data (wsfct): context_budget.py install-hook writes .git/hooks/pre-commit, which is per clone and not
         tracked, and which runs $top/context_budget.py: the scan of tracked files could not see the hook that refused."""

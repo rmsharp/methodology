@@ -432,6 +432,10 @@ HOOK_DIRS = (".githooks/", ".husky/")
 HOOK_FILES = (".pre-commit-config.yaml",)
 # A comment-only line cannot change what a machine does; this is a heuristic by first character, not a parse.
 COMMENT_STARTS = ("#", "//", "<!--", "/*", "*", ";", "%")
+# BL-101 F15: a hook line that says why it names a moved tool and still works (`# layout: ok -- <reason>`: the layout-aware
+# ledger hook tries three places for it) is not a line that runs the tool at its old place. The grammar is the one
+# bin/check-layout-literals reads, a test holds the two equal: a marker with no reason acknowledges nothing.
+MARKER_RE = re.compile(r"#\s*layout:\s*ok\b(?P<reason>\s+--\s+\S)?")
 TEST_DIR_RE = re.compile(r"(^|/)(tests?|specs?|testthat|__tests__)(/|$)")
 TEST_FILE_RE = re.compile(r"(^|/)(test_[^/]*|[^/]*_test\.[^/]*|[^/]*\.test\.[^/]*|[^/]*_spec\.[^/]*|conftest\.py)$")
 PROSE_EXT = (".md", ".qmd", ".rmd", ".rst", ".txt", ".tex", ".html", ".adoc")
@@ -529,7 +533,8 @@ def scan_hits(root, moves, rewrites, tier):
     never listed, since a committed entry is never rewritten. The files the tool moves unedited (the framework's own
     documents) are not hits; a file it rewrites is read as it will be once rewritten, so a directory it names in prose
     (`docs/methodology/`, which a rewrite of the paths in it leaves) is a hit and a path it has rewritten is not. A hook
-    line that runs a moved tool is marked: that hook will refuse the migration commit.
+    line that runs a moved tool is marked: that hook will refuse the migration commit. A line carrying `# layout: ok -- <reason>`
+    (BL-101 F15: the layout-aware ledger hook names the tool that way and tries three places for it) is listed, not marked.
 
     BL-101 F5: a file in a machine-read category (tests, proofs, scripts, config, and the CI and hook files) is also listed
     in `paths`, every one, with its mentions, the mentions on non-comment lines, the names it carries and its first
@@ -578,7 +583,9 @@ def scan_hits(root, moves, rewrites, tier):
             if cat != "ledger" and shown[cat] < SITES_SHOWN:
                 site = {"file": path, "line": number, "text": line.strip()[:200], "names": sorted(set(names))}
                 if cat == "hooks":
-                    site["runs_tool"] = any(n.endswith(".py") for n in names) and not line.lstrip().startswith("#")
+                    marked = MARKER_RE.search(line)
+                    site["runs_tool"] = (any(n.endswith(".py") for n in names) and not line.lstrip().startswith("#")
+                                         and not (marked and marked.group("reason")))
                     site["untracked"] = untracked
                     out["hooks"]["runs_moved_tool"] += int(site["runs_tool"])
                 out[cat]["sites"].append(site)
