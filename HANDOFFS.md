@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S291
+date: 2026-10-10
+status: pending
+active_task: P13 ON `airqino` AT TIER ALL (BL-101, plan section 7.4, an adopter per session; his S291 Phase 0 pick, confirming the P13 default he gave at S290): the adopter `~/Development/airqino` (origin `rmsharp/airqinodashboard`, idle since 2026-09-18, level with its origin) is synced where a tracked file is not `current` (its own commit), then moved with `bin/migrate-layout --tier all` as one commit; its own tests and build rehearsed in clones first at each tier, `bin/status` before and after, one full Phase 0 in the new layout, the sha it synced from; every finding a register row (plan section 7.6). The record is `methodology-subdirectory-evidence/p13-airqino-record.md`. NOT part of this session: a push of `airqino` (its own go-ahead), anything sent upstream, F6, F8, D8, any other adopter, P23.
+```
+
+```handoff
 session: S290
 date: 2026-10-09
 status: complete
