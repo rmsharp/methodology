@@ -1,0 +1,30 @@
+model_project_constructor    changed lines:  11 outside Learnings,   0 inside   (read at HEAD)
+feedback-loop-comparison     changed lines:   0 outside Learnings,   0 inside   (read at HEAD)
+nprcgenekeepr                changed lines:  20 outside Learnings,   1 inside   (read at HEAD)
+      | ed prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.  ==> SESSION_RUNNER.md
+mts-system                   changed lines:  17 outside Learnings,   1 inside   (read at HEAD)
+      | k resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.  ==> SESSION_RUNNER.md
+vscode_quarto_ext            changed lines:  21 outside Learnings,   0 inside   (read at HEAD)
+Philippians                  changed lines:   8 outside Learnings,   2 inside   (read at HEAD)
+      | durable ratification record lives in `CONTEXT.md`'s decisions log (`closed S2` — Ephesians Decision #4) and `CHANGELOG.md`, not in the plan document. Same pattern in `sermons/README.md`: its  ==> CHANGELOG.md
+      | **P8 — Bulletin page fit is a declared gate: `scripts/check-bulletins.py` → `.quality-gates.json` `bulletin-right-edge-pt` ≤ 580.4, `bulletin-max-pages` ≤ 2.** After || .json` `bulletin-right-edge-pt` ≤ 580.4, `bulletin-max-pages` ≤ 2.** After rendering a bulletin, run `python3 quality_ratchet.py --run` and cite its summary line in the receipt. Fix a failure by rew  ==> .quality-gates.json, quality_ratchet.py
+airqino                      changed lines:   0 outside Learnings,   0 inside   (read at HEAD)
+chat_verification            changed lines:   5 outside Learnings,   3 inside   (read at HEAD)
+      | the ledger recording that the defect was closed. `SESSION_RUNNER.md` §3D already says forward-looking  ==> SESSION_RUNNER.md
+      | not just by the section it names.** (Session 8) Reconciling `CHANGELOG.md`/`HANDOFFS.md` against the || not just by the section it names.** (Session 8) Reconciling `CHANGELOG.md`/`HANDOFFS.md` against the  ==> CHANGELOG.md, HANDOFFS.md
+      | it as completely as writing the real section would have. This is `FRAMEWORK_LEARNINGS.md` #19's  ==> FRAMEWORK_LEARNINGS.md
+church_growth                changed lines:   7 outside Learnings,   9 inside   (read at 62f7d8a~1)
+      | `~/Documents/Mark/Personal/Eldering/`) that have their own `SESSION_RUNNER.md`/`CLAUDE.md`  ==> SESSION_RUNNER.md
+      | repo's files would (`SAFEGUARDS.md` blast-radius principle applied to sibling projects, not  ==> SAFEGUARDS.md
+      | 9. **`methodology_dashboard.py`'s doc-only detection can be self-referentially defeated by its own  ==> methodology_dashboard.py
+      | `methodology_dashboard.py:1209-1243`). Because `BOOTSTRAP.md` puts a copy of the (2,000+ line) || `methodology_dashboard.py:1209-1243`). Because `BOOTSTRAP.md` puts a copy of the (2,000+ line)  ==> BOOTSTRAP.md, methodology_dashboard.py
+      | `docs/campaigns` turned up ~80 hits, but the large majority were inside `CHANGELOG.md`,  ==> CHANGELOG.md
+      | `HANDOFFS.md`, and past `SESSION_NOTES.md` session entries — an append-only ledger || `HANDOFFS.md`, and past `SESSION_NOTES.md` session entries — an append-only ledger and a  ==> HANDOFFS.md, SESSION_NOTES.md
+      | a `[WIP]` checkpoint commit, parked before formal close-out (no `CHANGELOG.md` entry, no  ==> CHANGELOG.md
+      | completed `HANDOFFS.md` receipt — its receipt sat `status: pending`). Every session from S5  ==> HANDOFFS.md
+      | `SESSION_RUNNER.md` FM #11/#20's (gaps/edits from memory) failure shape applied to a sta  ==> SESSION_RUNNER.md
+dalia_martinez_funeral       changed lines:   9 outside Learnings,   0 inside   (read at HEAD)
+claude_work                  no committed CLAUDE.md
+wsfct                        changed lines:  37 outside Learnings,   1 inside   (read at HEAD)
+      | numbered 1–451, no duplicates (fixed s597; re-derive via `grep -c`, this drifts). Extracted from the synced `SESSION_RUNNER.md` table to keep `CLAUDE.md` within its size budget. **Read it when a t || k resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.  ==> SESSION_RUNNER.md
+TOTAL changed lines: 135 outside, 17 inside (152)
