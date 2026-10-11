@@ -245,6 +245,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [BL-101] S295 claim (in progress) — F12, the dirty-tree rule in `bin/migrate-layout`
+
+CHANGELOG: pending. Operator said `go`; at the Phase 0 picker he chose F12 as the deliverable and gave two go-aheads (the owed HANDOFFS trim and a push of 5 commits to the fork; both done, entries below). P15 was not possible: `nprcgenekeepr`, `mts-system`, `vscode_quarto_ext` and `wsfct` each had a live `claude` session (checked with `pgrep -x claude` and `lsof -a -p <pid> -d cwd`), and `Philippians`, `dalia_martinez_funeral` and `chat_verification` had uncommitted changes. Deliverable: one decision and one fix for register row F12: the tool refuses a tree whose only dirt is generated files its own plan moves. The rule is his call; the first step is the options in one picker. The gate citation of S294 (results `791e005997ab`) was re-run in a clean clone of `9bd6f83` and confirmed (18/18, manifest `e755389a69c7`). Phase 3F records the rest. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [ad hoc] S295 — fold the second 2026-10-10 HANDOFFS shard pointer into the archive index
 
 The pointer block the trim (`4b631e7`, 1 receipt, S292, 2026-10-10, to `HANDOFFS-through-2026-10-10-2.md`, the name the dry run chose because `HANDOFFS-through-2026-10-10.md` was taken) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S294, S293). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-10-2.md.verify.sh` at `4b631e7`, exit 0 (L1, L2/front-matter, L3). Before the trim, on his go-ahead at Phase 0, `9bd6f83` was pushed to the fork `origin` by name (5 commits) and read back with `ls-remote` (`0 0`); nothing was pushed after it, and nothing went upstream. Model: Claude Sonnet 5.5.

@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S295
+date: 2026-10-11
+status: pending
+active_task: THE F12 DECISION AND FIX in `bin/migrate-layout` (BL-101, `docs/planning/methodology-subdirectory-evidence/findings-register.md` row F12; his S295 Phase 0 pick, because P15 was blocked at the check before any claim: `nprcgenekeepr`, `mts-system`, `vscode_quarto_ext` and `wsfct` each have a live `claude` session, and `Philippians`, `dalia_martinez_funeral` and `chat_verification` are dirty). F12: the tool refuses a tree whose only dirt is generated files its own plan moves (untracked at `airqino`; a MODIFIED tracked `dashboard_history.jsonl` at `mts-system` and `chat_verification` is my reading of their status, not yet measured against the check). The rule is his call: the first step is to read the dirty-tree check and put the options to him in one picker, then write the tests first. Done at his go-ahead before this claim: a push of `9bd6f83` (5 commits) to the fork, the HANDOFFS trim `4b631e7` and its fold `e0aa384`. NOT part of it: P15, F6, F8, F13, F14, anything upstream, D8.
+```
+
+```handoff
 session: S294
 date: 2026-10-10
 status: complete
