@@ -1,0 +1,29 @@
+== 1. each adopter's dirt, by status code and by the tool's GENERATED names (dashboard.html, dashboard_history.jsonl, .context-budget-history.jsonl, .quality-gates-results.json)
+  model_project_constructor  migrated (not measured)
+  feedback-loop-comparison   migrated (not measured)
+  nprcgenekeepr              clean tree
+  mts-system                 1 entries: generated untracked 0, generated modified-tracked 1, other 0   rule A clears it: no   rule B clears it: yes
+  vscode_quarto_ext          1 entries: generated untracked 0, generated modified-tracked 0, other 1   rule A clears it: no   rule B clears it: no
+  Philippians                4 entries: generated untracked 0, generated modified-tracked 0, other 4   rule A clears it: no   rule B clears it: no
+  airqino                    migrated (not measured)
+  chat_verification          1 entries: generated untracked 0, generated modified-tracked 1, other 0   rule A clears it: no   rule B clears it: yes
+  church_growth              migrated (not measured)
+  dalia_martinez_funeral     6 entries: generated untracked 0, generated modified-tracked 0, other 6   rule A clears it: no   rule B clears it: no
+  claude_work                16 entries: generated untracked 0, generated modified-tracked 0, other 16   rule A clears it: no   rule B clears it: no
+  wsfct                      clean tree
+  measured 8 adopters not yet moved; trees rule A leaves clean: 0; trees rule B leaves clean: 2
+
+== 2. the tool's dry run in a --no-local clone, the real modified generated file copied over the clone's
+  mts-system           exit 1; clone status: M dashboard_history.jsonl
+    REFUSED:
+      - [dirty-tree] the working tree is not clean: dashboard_history.jsonl
+      - [not-current] bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): SESSION_RUNNER.md (2 versions behind), FRAMEWORK_LEARNINGS.md (1 version behind), SAFEGUARDS.md (2 versions behind), RECOMMENDED_SKILLS.md (2 versions behind), CLAUDE_TEMPLATE.md (1 version behind), BOOTSTRAP.md (3 versions behind), methodology_dashboard.py (9 versions behind), methodology_trim.py (7 versions behind), context_budget.py (2 versions behind), quality_ratchet.py (5 versions behind), docs/methodology/ITERATIVE_METHODOLOGY.md (2 versions behind), docs/methodology/HOW_TO_USE.md (2 v
+  chat_verification    exit 1; clone status: M dashboard_history.jsonl
+    REFUSED:
+      - [dirty-tree] the working tree is not clean: dashboard_history.jsonl
+      - [not-current] bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): SESSION_RUNNER.md (6 versions behind), FRAMEWORK_LEARNINGS.md (45 versions behind), SAFEGUARDS.md (6 versions behind), RECOMMENDED_SKILLS.md (2 versions behind), CLAUDE_TEMPLATE.md (1 version behind), BOOTSTRAP.md (12 versions behind), methodology_dashboard.py (21 versions behind), methodology_trim.py (15 versions behind), context_budget.py (12 versions behind), quality_ratchet.py (missing), docs/methodology/ITERATIVE_METHODOLOGY.md (8 versions behind), docs/methodology/HOW_TO_USE.md (5 versi
+
+== 3. git mv of a MODIFIED tracked file, in a scratch repository: the two paths the tool would have to handle
+  after the move commit, status:                 ' M methodology/h.jsonl'
+  committed at the new path / worktree there:    'one\n' / 'one\ntwo\n'
+  after rollback's reset --hard HEAD, h.jsonl:   'one\n'  (the adopter's second line is gone)
