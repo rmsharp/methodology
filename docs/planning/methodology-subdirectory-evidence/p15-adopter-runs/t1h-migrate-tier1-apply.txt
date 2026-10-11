@@ -1,0 +1,229 @@
+migrate-layout: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/f965d31b-7ca5-42e4-8176-494b030b55ca/scratchpad/p15/t1h
+canonical: /Users/rmsharp/Development/methodology @ 19b9882fb57b
+layout: legacy   tier: 1   mode: apply
+
+moves (23):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+
+left in place (1):
+  docs/methodology/README.md -- not a file of the manifest: the project's own, or an older copy; it stays
+
+rewrites (2 file(s)):
+  CLAUDE.md (17 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -1,13 +1,13 @@
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -**Read and follow `SESSION_RUNNER.md` step by step.** It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+    +**Read and follow `methodology/SESSION_RUNNER.md` step by step.** It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+     
+     **Three rules you will be tempted to violate:**
+    -1. **Orient first** — Read SAFEGUARDS.md → SESSION_NOTES.md → check GitHub Issues (or BACKLOG.md if no repo) → run `methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+    +1. **Orient first** — Read methodology/SAFEGUARDS.md → SESSION_NOTES.md → check GitHub Issues (or BACKLOG.md if no repo) → run `methodology/methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+     2. **1 and done** — One deliverable per session. When it's complete, close out. Do not start the next thing.
+     3. **Auto-close** — When done: evaluate previous handoff, self-assess, document learnings, write handoff notes, commit, report, STOP. Read `docs/conventions/CLOSEOUT_CHECKLISTS.md` first (project checklists).
+     
+    -`SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+    +`methodology/SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+     
+     ---
+     
+    @@ -109,7 +109,7 @@
+     
+     ## Build / Test / Verify
+     
+    -The build-equivalent for this R package (relocated here from `SAFEGUARDS.md` during the 2026-05-31 methodology update so the synced `SAFEGUARDS.md` stays byte-identical to canonical; see `SAFEGUARDS.md` "Verify the Build Equivalent"):
+    +The build-equivalent for this R package (relocated here from `methodology/SAFEGUARDS.md` during the 2026-05-31 methodology update so the synced `methodology/SAFEGUARDS.md` stays byte-identical to canonical; see `methodology/SAFEGUARDS.md` "Verify the Build Equivalent"):
+     
+     | Purpose | Command | Pass criteria |
+     |---|---|---|
+    @@ -126,7 +126,7 @@
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from https://github.com/rmsharp/methodology, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here so upstream's `bin/sync` (not in this repo) stays friction-free (see BOOTSTRAP "Updating an existing project").*
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from https://github.com/rmsharp/methodology, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here so upstream's `bin/sync` (not in this repo) stays friction-free (see BOOTSTRAP "Updating an existing project").*
+     
+     ### Additional Phase 0 steps
+     
+    @@ -161,7 +161,7 @@
+       because no inline tag exists. A ratified order lives in prose, so the tag-only
+       grep misses it entirely (`PROJECT_LEARNINGS.md` Learning 506).
+     - This formats the *existing* Phase 0 step 7 report; it adds no new
+    -  `SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user
+    +  `methodology/SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user
+       after the report.
+     - Keep the `(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)` tag inline on each
+       `BACKLOG.md` item itself (not only in the rendered report), so the tag survives
+    @@ -172,7 +172,7 @@
+     immediately after rendering the priorities list above, follow it with one
+     `AskUserQuestion` call so the user can pick with a click instead of free-typing.
+     This *supplements* the prose list (which still renders in full, unchanged) — it
+    -does not replace it, add a new `SESSION_RUNNER.md` step, or change the mandatory
+    +does not replace it, add a new `methodology/SESSION_RUNNER.md` step, or change the mandatory
+     Phase 0 STOP-and-wait-for-the-user: the question itself **is** the wait.
+     
+     - **Which items get an option:** one option per priorities-list item that got its
+    @@ -214,16 +214,16 @@
+     deliverable ("1 and done"), never a Phase 0 inline repair. Origin (a red `R-CMD-check.yaml` run
+     unnoticed for 13 sessions) is Learning 547; rejected alternatives are recorded in Learning 770.
+     
+    -**Context-budget check (adopted S720, 2026-09-19, owner-ratified):** run `python3 context_budget.py`
+    +**Context-budget check (adopted S720, 2026-09-19, owner-ratified):** run `python3 methodology/context_budget.py`
+     at Phase 0 step 5, alongside the dashboard. **Report, don't fix** — fold findings into the step 7
+     report like any other health signal. Expected state since the S725 reduction campaign: **no file
+     over its ceiling** (`CLAUDE.md` may sit in the 24,000 B warn band — headroom, not a defect); a
+     `CLAUDE.md` red means new growth is owed a reduction, and a `SESSION_NOTES.md` red means a
+    -`methodology_trim.py --budget-bytes 65536` trim is owed (the two ceilings are deliberately the
+    +`methodology/methodology_trim.py --budget-bytes 65536` trim is owed (the two ceilings are deliberately the
+     same number); a per-line finding on `SESSION_NOTES.md` (280 B ceiling) means an over-long
+     line to wrap. A **missing `budget:protected` fence** finding on `CLAUDE.md` means someone
+     removed the Project Overview fence — restore it before anything else. The per-clone pre-commit
+    -hook (`python3 context_budget.py install-hook`) refuses only commits that *grow* an over-ceiling
+    +hook (`python3 methodology/context_budget.py install-hook`) refuses only commits that *grow* an over-ceiling
+     file; re-install it on a fresh clone, bypass with `--no-verify` only when a legitimate growth
+     commit is owed (the decision then lands as a `.context-budget.json` diff, not a silent override).
+     `.context-budget-history.jsonl` stays gitignored (S719 decision).
+    @@ -247,7 +247,7 @@
+     - **`_pkgdown.yml` reference coverage** — new exported function → add it to a `_pkgdown.yml` reference group, same session.
+     - **BACKLOG completed-item removal** — completing an item → remove its block entirely in the same commit; the record goes to `CHANGELOG.md`.
+     - **`CHANGELOG.md` legacy history** — pre-S325 history lives in `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add entries there.
+    -- **`methodology_trim.py` local customization** — after any sync from the fork's `main`, re-apply the `SESSION_NOTES.md` ledger patch; pass `--budget-bytes 65536` on every run.
+    +- **`methodology/methodology_trim.py` local customization** — after any sync from the fork's `main`, re-apply the `SESSION_NOTES.md` ledger patch; pass `--budget-bytes 65536` on every run.
+     - **`CHANGELOG.md` legacy forms** — bare `[BL]` headings stay as written; new entries use `[issue #<N>]`, `[BL-<id>]` or `[ad hoc]`.
+     - **`SESSION_NOTES.md` archive fence-scanner defect** — resolved S527/S528; historical note only.
+     
+    @@ -257,11 +257,11 @@
+     
+     ### Project-specific Learnings
+     
+    -Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+    +Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.
+     
+     ### Project-specific Failure Modes
+     
+    -(none — the base failure modes #1–28 in `SESSION_RUNNER.md` apply, including #26
+    +(none — the base failure modes #1–28 in `methodology/SESSION_RUNNER.md` apply, including #26
+     "mega-session masquerading as a vertical slice" and #27 "unrecorded action,"
+     added by the 2026-07-08 methodology sync to v3.4, and #28 "unbounded mandatory
+     read," added by the 2026-08-20 methodology sync to v3.7.)
+  .context-budget.json (2 replacement(s))
+    --- .context-budget.json
+    +++ .context-budget.json
+    @@ -53,12 +53,12 @@
+     
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "Drift-checked, never size-checked. Canonical path verified S720: the rmsharp/methodology checkout at ../methodology, the same source bin/sync uses; both synced files reported ok at calibration."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         }
+       ]
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      44 mention(s) in 4 file(s)
+    .github/workflows/R-CMD-check.yaml:15  - SESSION_RUNNER.md   (11 mentions, 11 on code lines)
+    .github/workflows/lint.yaml:15  - SESSION_RUNNER.md   (11 mentions, 11 on code lines)
+    .github/workflows/pkgdown.yaml:15  - SESSION_RUNNER.md   (11 mentions, 11 on code lines)
+    .github/workflows/test-coverage.yaml:15  - SESSION_RUNNER.md   (11 mentions, 11 on code lines)
+  hooks:   4 mention(s) in 1 file(s)
+    .git/hooks/pre-commit:7  for t in "context_budget.py" "methodology/context_budget.py"; do   (4 mentions, 3 on code lines)   [not tracked: per clone]
+    WARNING: 2 hook line(s) run a moved tool: that hook will refuse the migration commit and the run will roll back; update the hook first (hooks are per clone and not part of this plan)
+  tests:   11 mention(s) in 5 file(s)
+    tests/testthat/test_rbuildignore.R:28  test_that(".Rbuildignore covers the real methodology_trim.py at the repo root", {   (3 mentions, 3 on code lines)
+    tests/testthat/test_workflowPathsIgnore.R:39  "PROJECT_LEARNINGS.md", "CLAUDE.md", "SESSION_RUNNER.md", "SAFEGUARDS.md",   (5 mentions, 5 on code lines)
+    tests/testthat/test-e2e-pedigree-module.R:813  ## SESSION_RUNNER.md).   [comment lines only]
+    tests/testthat/test_handoffsReceiptPlacement.R:8  ## `methodology_trim.py` counted them as front matter and could archive   [comment lines only]
+    tests/testthat/test_originFundingWording.R:204  ## BACKLOG.md and docs/archive/ log what was written when, and   [comment lines only]
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 1 mention(s) in 1 file(s)
+    vignettes/articles/colony-manager-guide-screenshots.R:13  # structure -- SAFEGUARDS.md "Verify Render-Dependency Completeness": a clean   [comment lines only]
+  config:  5 mention(s) in 3 file(s)
+    .Rbuildignore:15  ^docs$
+      line 15: ^docs$  stops covering docs/methodology/FRAMEWORK_APPARATUS.md, docs/methodology/HOW_TO_USE.md, docs/methodology/ITERATIVE_METHODOLOGY.md and 9 more
+      line 71: ^CLAUDE.*\.md$  stops covering CLAUDE_TEMPLATE.md
+      line 72: ^SESSION_RUNNER.*\.md$  stops covering SESSION_RUNNER.md
+      line 74: ^SAFEGUARDS.*\.md$  stops covering SAFEGUARDS.md
+      line 78: ^BOOTSTRAP.*\.md$  stops covering BOOTSTRAP.md
+      line 79: ^CONTEXT_TEMPLATE.*\.md$  stops covering CONTEXT_TEMPLATE.md
+      line 85: ^methodology_dashboard\.py$  stops covering methodology_dashboard.py
+      line 88: ^RECOMMENDED_SKILLS.*\.md$  stops covering RECOMMENDED_SKILLS.md
+      line 136: ^FRAMEWORK_LEARNINGS\.md$  stops covering FRAMEWORK_LEARNINGS.md
+      line 137: ^methodology_trim\.py$  stops covering methodology_trim.py
+      line 150: ^context_budget\.py$  stops covering context_budget.py
+      line 151: ^quality_ratchet\.py$  stops covering quality_ratchet.py
+      12 line(s) cover 23 moved file(s) where they are now and no line covers them under methodology/; a line such as ^methodology$ would (each line read as a case-insensitive regular expression with Python's re, not R's engine: a candidate, not a verdict)
+    .quality-gates.json:2  "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear,    (4 mentions, 4 on code lines)
+    _pkgdown.yml:4  # `docs/methodology/` and `docs/planning/` are git-tracked inside `docs/`   [comment lines only]
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  2587 mention(s) in 116 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   559 mention(s) in 81 file(s)
+    .gitignore:25  !docs/methodology/
+    .gitignore:26  !docs/methodology/**
+    .gitignore:39  !docs/archive/
+    .gitignore:40  !docs/archive/**
+    .gitignore:76  # project's own SESSION_RUNNER.md/SAFEGUARDS.md methodology (github.com/KJ5HST/methodology) --
+    .gitignore:104  # Python bytecode cache from methodology_dashboard.py/methodology_trim.py (Session 514)
+    .gitignore:109  # above. The methodology repo tracks .context-budget-history.jsonl because context_budget.py's
+    .gitignore:111  # adopted that trigger (BACKLOG.md carries a context_budget.py evaluation item), so tracking is
+    BACKLOG.md:4  future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.md` Phase 0.)*
+    BACKLOG.md:36  30,267 B; shard `docs/archive/HANDOFFS-through-2026-10-08.md`); S917 had trimmed it 33 sessions earlier
+    BACKLOG.md:38  trimmer's 196,608 B archive line) would make `context_budget.py` warn and the pre-commit hook refuse
+    BACKLOG.md:368  whether to patch them here (a second local modification to `methodology_trim.py`, which the owner
+    BACKLOG.md:391  `methodology_trim.py` config** (found S518, 2026-08-11, READY, Effort L; RECURRING --
+    BACKLOG.md:393  ledger-size items but does not fit `methodology_trim.py`'s chronological-record model:
+    BACKLOG.md:416  `CHANGELOG.md` + `docs/archive/CHANGELOG-*.md` carry an entry heading for every session
+    CLAUDE.md:249  - **`CHANGELOG.md` legacy history** — pre-S325 history lives in `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add e
+    PROJECT_LEARNINGS.md:3  > Extracted verbatim from `CLAUDE.md` on 2026-06-06 to keep `CLAUDE.md` within its size budget (Claude Code targets ~200
+    PROJECT_LEARNINGS.md:5  *Migrated verbatim from `SESSION_RUNNER.md`'s Learnings table during the 2026-05-31 methodology update (Session 10) so t
+    PROJECT_LEARNINGS.md:76  The synced trio (`SESSION_RUNNER.md`, `SAFEGUARDS.md`, `methodology_dashboard.py`) must stay BYTE-IDENTICAL to canonical
+    PROJECT_LEARNINGS.md:196  Pushed the long-lived `add-methodology` dev branch (105 commits / 356 files; master a strict ancestor → 0 behind → clean
+    PROJECT_LEARNINGS.md:198  #### Learning 52 — Fix pkgdown's `docs/` collision (#42) by REPOINTING the output dir, not relocating the doc trees: `bu
+    PROJECT_LEARNINGS.md:202  #42: the `pkgdown` Build-site step failed on a fresh CI clone because `docs/methodology/`+`docs/planning/` are git-track
+    PROJECT_LEARNINGS.md:214  **(a) [verify-the-gating-fact-firsthand] Re-verify the one fact a close turns on, even when the handoff already states i
+    PROJECT_LEARNINGS.md:220  **(a) [generalize-the-class, cont. from 58a] S58 broadened only `SESSION_NOTES`; the same macOS-dupe WARNING class still
+    PROJECT_LEARNINGS.md:223  **(a) [enumerate-from-the-artifact, not the handoff] The handoff's candidate-file list was incomplete; the authoritative
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 4 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 1850 commit(s) reached by git log --follow -> 1851 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 7cf9e4912da3

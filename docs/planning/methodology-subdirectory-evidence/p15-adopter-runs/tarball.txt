@@ -1,0 +1,18 @@
+label base
+TARBALL_BYTES=3775455
+files in tarball: 1114
+under nprcgenekeepr/methodology/: 0
+top-level entries not in a plain package: 
+
+label tallh
+TARBALL_BYTES=8494054
+files in tarball: 1260
+under nprcgenekeepr/methodology/: 146
+top-level entries not in a plain package: methodology 
+
+label tallA
+TARBALL_BYTES=3775642
+files in tarball: 1114
+under nprcgenekeepr/methodology/: 0
+top-level entries not in a plain package: 
+

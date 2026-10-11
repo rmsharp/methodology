@@ -1,0 +1,18 @@
+sync: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/f965d31b-7ca5-42e4-8176-494b030b55ca/scratchpad/p15/ctrl
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1739-g19b9882
+  layout:  legacy (found SESSION_RUNNER.md)
+  (dry-run: no changes will be written)
+
+  ERROR: the following files have local modifications that don't match
+  any canonical or historical version and would be overwritten:
+    methodology_trim.py
+
+  The recommended pattern (see plan §3.2) is to move per-project
+  customizations into CLAUDE.md's 'Project-Specific Methodology
+  Adaptations' section, keeping synced files byte-identical to canonical.
+
+  To proceed anyway and overwrite local changes, pass --force.
+  To inspect the drift first:
+    diff /private/tmp/claude-501/-Users-rmsharp-Development-methodology/f965d31b-7ca5-42e4-8176-494b030b55ca/scratchpad/p15/ctrl/methodology_trim.py /Users/rmsharp/Development/methodology/starter-kit/methodology_trim.py

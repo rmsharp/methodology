@@ -1,0 +1,394 @@
+migrate-layout: /private/tmp/claude-501/-Users-rmsharp-Development-methodology/f965d31b-7ca5-42e4-8176-494b030b55ca/scratchpad/p15/tall
+canonical: /Users/rmsharp/Development/methodology @ 19b9882fb57b
+layout: legacy   tier: all   mode: apply
+
+moves (143):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv SESSION_NOTES.md methodology/SESSION_NOTES.md
+  git mv CHANGELOG.md methodology/CHANGELOG.md
+  git mv HANDOFFS.md methodology/HANDOFFS.md
+  git mv ROADMAP.md methodology/ROADMAP.md
+  git mv .context-budget.json methodology/.context-budget.json
+  git mv .quality-gates.json methodology/.quality-gates.json
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+  git mv docs/archive/CHANGELOG-through-2026-08-10.md methodology/archive/CHANGELOG-through-2026-08-10.md
+  git mv docs/archive/CHANGELOG-through-2026-08-10.md.verify.sh methodology/archive/CHANGELOG-through-2026-08-10.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-08-11.md methodology/archive/CHANGELOG-through-2026-08-11.md
+  git mv docs/archive/CHANGELOG-through-2026-08-11.md.verify.sh methodology/archive/CHANGELOG-through-2026-08-11.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-08-12.md methodology/archive/CHANGELOG-through-2026-08-12.md
+  git mv docs/archive/CHANGELOG-through-2026-08-12.md.verify.sh methodology/archive/CHANGELOG-through-2026-08-12.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-08-13.md methodology/archive/CHANGELOG-through-2026-08-13.md
+  git mv docs/archive/CHANGELOG-through-2026-08-13.md.verify.sh methodology/archive/CHANGELOG-through-2026-08-13.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-08-14.md methodology/archive/CHANGELOG-through-2026-08-14.md
+  git mv docs/archive/CHANGELOG-through-2026-08-14.md.verify.sh methodology/archive/CHANGELOG-through-2026-08-14.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-17.md methodology/archive/CHANGELOG-through-2026-09-17.md
+  git mv docs/archive/CHANGELOG-through-2026-09-17.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-17.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-18.md methodology/archive/CHANGELOG-through-2026-09-18.md
+  git mv docs/archive/CHANGELOG-through-2026-09-18.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-18.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-19-2.md methodology/archive/CHANGELOG-through-2026-09-19-2.md
+  git mv docs/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-19-2.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-19.md methodology/archive/CHANGELOG-through-2026-09-19.md
+  git mv docs/archive/CHANGELOG-through-2026-09-19.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-19.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-21.md methodology/archive/CHANGELOG-through-2026-09-21.md
+  git mv docs/archive/CHANGELOG-through-2026-09-21.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-21.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-23.md methodology/archive/CHANGELOG-through-2026-09-23.md
+  git mv docs/archive/CHANGELOG-through-2026-09-23.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-23.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-24.md methodology/archive/CHANGELOG-through-2026-09-24.md
+  git mv docs/archive/CHANGELOG-through-2026-09-24.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-24.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-26-2.md methodology/archive/CHANGELOG-through-2026-09-26-2.md
+  git mv docs/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-26-2.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-26-3.md methodology/archive/CHANGELOG-through-2026-09-26-3.md
+  git mv docs/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-26-3.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-26.md methodology/archive/CHANGELOG-through-2026-09-26.md
+  git mv docs/archive/CHANGELOG-through-2026-09-26.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-26.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-10-03.md methodology/archive/CHANGELOG-through-2026-10-03.md
+  git mv docs/archive/CHANGELOG-through-2026-10-03.md.verify.sh methodology/archive/CHANGELOG-through-2026-10-03.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-10-09.md methodology/archive/CHANGELOG-through-2026-10-09.md
+  git mv docs/archive/CHANGELOG-through-2026-10-09.md.verify.sh methodology/archive/CHANGELOG-through-2026-10-09.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-08-10.md methodology/archive/HANDOFFS-through-2026-08-10.md
+  git mv docs/archive/HANDOFFS-through-2026-08-10.md.verify.sh methodology/archive/HANDOFFS-through-2026-08-10.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-08-12.md methodology/archive/HANDOFFS-through-2026-08-12.md
+  git mv docs/archive/HANDOFFS-through-2026-08-12.md.verify.sh methodology/archive/HANDOFFS-through-2026-08-12.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-08-13.md methodology/archive/HANDOFFS-through-2026-08-13.md
+  git mv docs/archive/HANDOFFS-through-2026-08-13.md.verify.sh methodology/archive/HANDOFFS-through-2026-08-13.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-08-14.md methodology/archive/HANDOFFS-through-2026-08-14.md
+  git mv docs/archive/HANDOFFS-through-2026-08-14.md.verify.sh methodology/archive/HANDOFFS-through-2026-08-14.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-17.md methodology/archive/HANDOFFS-through-2026-09-17.md
+  git mv docs/archive/HANDOFFS-through-2026-09-17.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-17.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-18.md methodology/archive/HANDOFFS-through-2026-09-18.md
+  git mv docs/archive/HANDOFFS-through-2026-09-18.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-18.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-19-2.md methodology/archive/HANDOFFS-through-2026-09-19-2.md
+  git mv docs/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-19-2.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-19.md methodology/archive/HANDOFFS-through-2026-09-19.md
+  git mv docs/archive/HANDOFFS-through-2026-09-19.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-19.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-21.md methodology/archive/HANDOFFS-through-2026-09-21.md
+  git mv docs/archive/HANDOFFS-through-2026-09-21.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-21.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-23.md methodology/archive/HANDOFFS-through-2026-09-23.md
+  git mv docs/archive/HANDOFFS-through-2026-09-23.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-23.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-24.md methodology/archive/HANDOFFS-through-2026-09-24.md
+  git mv docs/archive/HANDOFFS-through-2026-09-24.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-24.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-26-2.md methodology/archive/HANDOFFS-through-2026-09-26-2.md
+  git mv docs/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-26-2.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-26-3.md methodology/archive/HANDOFFS-through-2026-09-26-3.md
+  git mv docs/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-26-3.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-26.md methodology/archive/HANDOFFS-through-2026-09-26.md
+  git mv docs/archive/HANDOFFS-through-2026-09-26.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-26.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-30.md methodology/archive/HANDOFFS-through-2026-09-30.md
+  git mv docs/archive/HANDOFFS-through-2026-09-30.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-30.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-10-04.md methodology/archive/HANDOFFS-through-2026-10-04.md
+  git mv docs/archive/HANDOFFS-through-2026-10-04.md.verify.sh methodology/archive/HANDOFFS-through-2026-10-04.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-10-08.md methodology/archive/HANDOFFS-through-2026-10-08.md
+  git mv docs/archive/HANDOFFS-through-2026-10-08.md.verify.sh methodology/archive/HANDOFFS-through-2026-10-08.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-08-12.md methodology/archive/SESSION_NOTES-through-2026-08-12.md
+  git mv docs/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-08-12.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-08-13.md methodology/archive/SESSION_NOTES-through-2026-08-13.md
+  git mv docs/archive/SESSION_NOTES-through-2026-08-13.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-08-13.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-08-15.md methodology/archive/SESSION_NOTES-through-2026-08-15.md
+  git mv docs/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-08-15.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-17.md methodology/archive/SESSION_NOTES-through-2026-09-17.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-17.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-17.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-18.md methodology/archive/SESSION_NOTES-through-2026-09-18.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-18.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-19-2.md methodology/archive/SESSION_NOTES-through-2026-09-19-2.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-19-2.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-19-3.md methodology/archive/SESSION_NOTES-through-2026-09-19-3.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-19-3.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-19.md methodology/archive/SESSION_NOTES-through-2026-09-19.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-19.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-20-2.md methodology/archive/SESSION_NOTES-through-2026-09-20-2.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-20-2.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-20.md methodology/archive/SESSION_NOTES-through-2026-09-20.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-20.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-21-2.md methodology/archive/SESSION_NOTES-through-2026-09-21-2.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-21-2.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-21.md methodology/archive/SESSION_NOTES-through-2026-09-21.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-21.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-22.md methodology/archive/SESSION_NOTES-through-2026-09-22.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-22.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-23-2.md methodology/archive/SESSION_NOTES-through-2026-09-23-2.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-23-2.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-23.md methodology/archive/SESSION_NOTES-through-2026-09-23.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-23.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-25.md methodology/archive/SESSION_NOTES-through-2026-09-25.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-25.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-25.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-26-2.md methodology/archive/SESSION_NOTES-through-2026-09-26-2.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-26-2.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-26-2.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-26-3.md methodology/archive/SESSION_NOTES-through-2026-09-26-3.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-26-3.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-26-3.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-26-4.md methodology/archive/SESSION_NOTES-through-2026-09-26-4.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-26-4.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-26.md methodology/archive/SESSION_NOTES-through-2026-09-26.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-26.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-26.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-27.md methodology/archive/SESSION_NOTES-through-2026-09-27.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-27.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-28-2.md methodology/archive/SESSION_NOTES-through-2026-09-28-2.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-28-2.md.verify.sh
+  git mv docs/archive/SESSION_NOTES-through-2026-09-28.md methodology/archive/SESSION_NOTES-through-2026-09-28.md
+  git mv docs/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh methodology/archive/SESSION_NOTES-through-2026-09-28.md.verify.sh
+
+left in place (3):
+  .gitattributes -- holds rules of the project's own; it stays at the root
+  docs/archive/CHANGELOG-legacy-pre-S325.md -- not a ledger shard the trimmer wrote: the project's own; it stays
+  docs/methodology/README.md -- not a file of the manifest: the project's own, or an older copy; it stays
+
+rewrites (3 file(s)):
+  CLAUDE.md (27 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -1,13 +1,13 @@
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -**Read and follow `SESSION_RUNNER.md` step by step.** It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+    +**Read and follow `methodology/SESSION_RUNNER.md` step by step.** It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+     
+     **Three rules you will be tempted to violate:**
+    -1. **Orient first** — Read SAFEGUARDS.md → SESSION_NOTES.md → check GitHub Issues (or BACKLOG.md if no repo) → run `methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+    +1. **Orient first** — Read methodology/SAFEGUARDS.md → methodology/SESSION_NOTES.md → check GitHub Issues (or BACKLOG.md if no repo) → run `methodology/methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+     2. **1 and done** — One deliverable per session. When it's complete, close out. Do not start the next thing.
+     3. **Auto-close** — When done: evaluate previous handoff, self-assess, document learnings, write handoff notes, commit, report, STOP. Read `docs/conventions/CLOSEOUT_CHECKLISTS.md` first (project checklists).
+     
+    -`SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+    +`methodology/SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+     
+     ---
+     
+    @@ -109,7 +109,7 @@
+     
+     ## Build / Test / Verify
+     
+    -The build-equivalent for this R package (relocated here from `SAFEGUARDS.md` during the 2026-05-31 methodology update so the synced `SAFEGUARDS.md` stays byte-identical to canonical; see `SAFEGUARDS.md` "Verify the Build Equivalent"):
+    +The build-equivalent for this R package (relocated here from `methodology/SAFEGUARDS.md` during the 2026-05-31 methodology update so the synced `methodology/SAFEGUARDS.md` stays byte-identical to canonical; see `methodology/SAFEGUARDS.md` "Verify the Build Equivalent"):
+     
+     | Purpose | Command | Pass criteria |
+     |---|---|---|
+    @@ -126,7 +126,7 @@
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from https://github.com/rmsharp/methodology, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here so upstream's `bin/sync` (not in this repo) stays friction-free (see BOOTSTRAP "Updating an existing project").*
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from https://github.com/rmsharp/methodology, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here so upstream's `bin/sync` (not in this repo) stays friction-free (see BOOTSTRAP "Updating an existing project").*
+     
+     ### Additional Phase 0 steps
+     
+    @@ -161,7 +161,7 @@
+       because no inline tag exists. A ratified order lives in prose, so the tag-only
+       grep misses it entirely (`PROJECT_LEARNINGS.md` Learning 506).
+     - This formats the *existing* Phase 0 step 7 report; it adds no new
+    -  `SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user
+    +  `methodology/SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user
+       after the report.
+     - Keep the `(READY | BLOCKED | DECISION NEEDED, Effort S|M|L)` tag inline on each
+       `BACKLOG.md` item itself (not only in the rendered report), so the tag survives
+    @@ -172,7 +172,7 @@
+     immediately after rendering the priorities list above, follow it with one
+     `AskUserQuestion` call so the user can pick with a click instead of free-typing.
+     This *supplements* the prose list (which still renders in full, unchanged) — it
+    -does not replace it, add a new `SESSION_RUNNER.md` step, or change the mandatory
+    +does not replace it, add a new `methodology/SESSION_RUNNER.md` step, or change the mandatory
+     Phase 0 STOP-and-wait-for-the-user: the question itself **is** the wait.
+     
+     - **Which items get an option:** one option per priorities-list item that got its
+    @@ -214,19 +214,19 @@
+     deliverable ("1 and done"), never a Phase 0 inline repair. Origin (a red `R-CMD-check.yaml` run
+     unnoticed for 13 sessions) is Learning 547; rejected alternatives are recorded in Learning 770.
+     
+    -**Context-budget check (adopted S720, 2026-09-19, owner-ratified):** run `python3 context_budget.py`
+    +**Context-budget check (adopted S720, 2026-09-19, owner-ratified):** run `python3 methodology/context_budget.py`
+     at Phase 0 step 5, alongside the dashboard. **Report, don't fix** — fold findings into the step 7
+     report like any other health signal. Expected state since the S725 reduction campaign: **no file
+     over its ceiling** (`CLAUDE.md` may sit in the 24,000 B warn band — headroom, not a defect); a
+    -`CLAUDE.md` red means new growth is owed a reduction, and a `SESSION_NOTES.md` red means a
+    -`methodology_trim.py --budget-bytes 65536` trim is owed (the two ceilings are deliberately the
+    -same number); a per-line finding on `SESSION_NOTES.md` (280 B ceiling) means an over-long
+    +`CLAUDE.md` red means new growth is owed a reduction, and a `methodology/SESSION_NOTES.md` red means a
+    +`methodology/methodology_trim.py --budget-bytes 65536` trim is owed (the two ceilings are deliberately the
+    +same number); a per-line finding on `methodology/SESSION_NOTES.md` (280 B ceiling) means an over-long
+     line to wrap. A **missing `budget:protected` fence** finding on `CLAUDE.md` means someone
+     removed the Project Overview fence — restore it before anything else. The per-clone pre-commit
+    -hook (`python3 context_budget.py install-hook`) refuses only commits that *grow* an over-ceiling
+    +hook (`python3 methodology/context_budget.py install-hook`) refuses only commits that *grow* an over-ceiling
+     file; re-install it on a fresh clone, bypass with `--no-verify` only when a legitimate growth
+    -commit is owed (the decision then lands as a `.context-budget.json` diff, not a silent override).
+    -`.context-budget-history.jsonl` stays gitignored (S719 decision).
+    +commit is owed (the decision then lands as a `methodology/.context-budget.json` diff, not a silent override).
+    +`methodology/.context-budget-history.jsonl` stays gitignored (S719 decision).
+     
+     ### Additional task-to-workstream mappings
+     
+    @@ -245,11 +245,11 @@
+     - **CI-break tracking** — a live-found CI break gets no issue of its own; fix it or defer via `BACKLOG.md`.
+     - **Lint close-out** — any tracked `.R` file added or changed → `lintr::lint_package()` (package loaded first) before close-out.
+     - **`_pkgdown.yml` reference coverage** — new exported function → add it to a `_pkgdown.yml` reference group, same session.
+    -- **BACKLOG completed-item removal** — completing an item → remove its block entirely in the same commit; the record goes to `CHANGELOG.md`.
+    -- **`CHANGELOG.md` legacy history** — pre-S325 history lives in `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add entries there.
+    -- **`methodology_trim.py` local customization** — after any sync from the fork's `main`, re-apply the `SESSION_NOTES.md` ledger patch; pass `--budget-bytes 65536` on every run.
+    -- **`CHANGELOG.md` legacy forms** — bare `[BL]` headings stay as written; new entries use `[issue #<N>]`, `[BL-<id>]` or `[ad hoc]`.
+    -- **`SESSION_NOTES.md` archive fence-scanner defect** — resolved S527/S528; historical note only.
+    +- **BACKLOG completed-item removal** — completing an item → remove its block entirely in the same commit; the record goes to `methodology/CHANGELOG.md`.
+    +- **`methodology/CHANGELOG.md` legacy history** — pre-S325 history lives in `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add entries there.
+    +- **`methodology/methodology_trim.py` local customization** — after any sync from the fork's `main`, re-apply the `methodology/SESSION_NOTES.md` ledger patch; pass `--budget-bytes 65536` on every run.
+    +- **`methodology/CHANGELOG.md` legacy forms** — bare `[BL]` headings stay as written; new entries use `[issue #<N>]`, `[BL-<id>]` or `[ad hoc]`.
+    +- **`methodology/SESSION_NOTES.md` archive fence-scanner defect** — resolved S527/S528; historical note only.
+     
+     ### Development Process Contract override
+     
+    @@ -257,11 +257,11 @@
+     
+     ### Project-specific Learnings
+     
+    -Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+    +Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) — extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.
+     
+     ### Project-specific Failure Modes
+     
+    -(none — the base failure modes #1–28 in `SESSION_RUNNER.md` apply, including #26
+    +(none — the base failure modes #1–28 in `methodology/SESSION_RUNNER.md` apply, including #26
+     "mega-session masquerading as a vertical slice" and #27 "unrecorded action,"
+     added by the 2026-07-08 methodology sync to v3.4, and #28 "unbounded mandatory
+     read," added by the 2026-08-20 methodology sync to v3.7.)
+  .context-budget.json (3 replacement(s))
+    --- .context-budget.json
+    +++ methodology/.context-budget.json
+    @@ -35,7 +35,7 @@
+           "_": "41,622 B at S720 calibration — RED BY DESIGN, kept at the seed's 28,000 B target (which also matches the file's own stated ~25 KB budget) rather than frozen at current size. The remedy is the BACKLOG.md 'CLAUDE.md reduction campaign' item (filed S720); until it lands, the pre-commit hook's relative rule refuses commits that GROW this file and passes any that shrink it. max_tokens = 28,000 / 2.27. The protected fence wraps the Project Overview (what the package is for) so no future compaction can take it — FM #28's harder-to-see form."
+         },
+         {
+    -      "path": "SESSION_NOTES.md",
+    +      "path": "methodology/SESSION_NOTES.md",
+           "class": "read-mandated",
+           "max_lines": 1000,
+           "max_bytes": 65536,
+    @@ -53,12 +53,12 @@
+     
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "Drift-checked, never size-checked. Canonical path verified S720: the rmsharp/methodology checkout at ../methodology, the same source bin/sync uses; both synced files reported ok at calibration."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         }
+       ]
+  .quality-gates.json (1 replacement(s))
+    --- .quality-gates.json
+    +++ methodology/.quality-gates.json
+    @@ -1,7 +1,7 @@
+     {
+       "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear, held by quality_ratchet.py. STARTS EMPTY ON PURPOSE: a ratchet begins where the project IS, not where an article says it should be. Measure first, then declare each gate at its current value; `python3 quality_ratchet.py --run` reports every gate, and `install-hook` makes the pre-commit ratchet refuse any later commit that loosens one. Thresholds only tighten. Loosening one is a plan-mode decision made in its own commit with the reason in the ledger, committed with --no-verify — a recorded bypass, not an exemption (SAFEGUARDS.md Blast Radius Limits; SESSION_RUNNER.md failure mode #17; ITERATIVE_METHODOLOGY.md §Mechanical Gates Bind Every Actor).",
+       "version": 1,
+    -  "results_file": ".quality-gates-results.json",
+    +  "results_file": "methodology/.quality-gates-results.json",
+       "_results_file": "Where --run writes its results (gitignored by default — add it to .gitignore; the receipt cites the summary line, and the dashboard reads the file where it exists). Commit it instead if you want every clone to score the last run.",
+       "_gate_schema": "Each gate: `name` (unique; the ratchet keys on it), `direction` (`min`: measured >= threshold, or `max`: measured <= threshold), `threshold` (a number), and optionally `command` (run via the shell from the project root) plus `extract` (a regex whose FIRST capture group is the measured number; without `extract` the command's exit code is the measurement, so `max 0` means `must exit 0`). A gate with no command is declared, not measured: --run reports it UNMEASURED and exits 1 — never pass. `why` and `unit` are free text for the reader.",
+       "_example": {
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      68 mention(s) in 4 file(s)
+    .github/workflows/R-CMD-check.yaml:10  - CHANGELOG.md   (17 mentions, 17 on code lines)
+    .github/workflows/lint.yaml:10  - CHANGELOG.md   (17 mentions, 17 on code lines)
+    .github/workflows/pkgdown.yaml:10  - CHANGELOG.md   (17 mentions, 17 on code lines)
+    .github/workflows/test-coverage.yaml:10  - CHANGELOG.md   (17 mentions, 17 on code lines)
+  hooks:   2 mention(s) in 1 file(s)
+    .git/hooks/pre-commit:4  exec python3 "$(git rev-parse --show-toplevel)/context_budget.py" --precommit   (2 mentions, 1 on code lines)   [not tracked: per clone]
+    WARNING: 1 hook line(s) run a moved tool: that hook will refuse the migration commit and the run will roll back; update the hook first (hooks are per clone and not part of this plan)
+  tests:   33 mention(s) in 10 file(s)
+    tests/testthat/test_handoffsReceiptPlacement.R:24  handoffs_path <- file.path(pkg_root, "HANDOFFS.md")   (6 mentions, 4 on code lines)
+    tests/testthat/test_rbuildignore.R:28  test_that(".Rbuildignore covers the real methodology_trim.py at the repo root", {   (3 mentions, 3 on code lines)
+    tests/testthat/test_workflowPathsIgnore.R:38  "BACKLOG.md", "CHANGELOG.md", "HANDOFFS.md", "SESSION_NOTES.md",   (13 mentions, 13 on code lines)
+    tests/testthat/helper-handoffsBox.R:5  ## inside the format-example box of `HANDOFFS.md`"): what   [comment lines only]
+    tests/testthat/test-e2e-pedigree-module.R:813  ## SESSION_RUNNER.md).   [comment lines only]
+    tests/testthat/test_buildMatingUnitForest.R:280  ## suite -- S453 was audit-only, per PROJECT_LEARNINGS.md; CHANGELOG.md's   [comment lines only]
+    tests/testthat/test_defaultPopulationWording.R:21  ## is in CHANGELOG.md); the last two blocks pin the numbers the widened Genetic   [comment lines only]
+    tests/testthat/test_markerKinship.R:159  ## absolute wall-clock assertion. See CHANGELOG.md.   [comment lines only]
+    tests/testthat/test_markerParentageLikelihood.R:574  ## which would differ by far more than a couple of ULPs. See CHANGELOG.md.   (2 mentions, 0 on code lines)   [comment lines only]
+    tests/testthat/test_originFundingWording.R:203  ## name: CHANGELOG.md, HANDOFFS.md, SESSION_NOTES.md, PROJECT_LEARNINGS.md,   (4 mentions, 0 on code lines)   [comment lines only]
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 7 mention(s) in 2 file(s)
+    vignettes/articles/data-raw/build-document1-evidence.R:179  changelog <- readLines("CHANGELOG.md", warn = FALSE)   (5 mentions, 3 on code lines)
+    vignettes/articles/colony-manager-guide-screenshots.R:13  # structure -- SAFEGUARDS.md "Verify Render-Dependency Completeness": a clean   (2 mentions, 0 on code lines)   [comment lines only]
+  config:  4 mention(s) in 2 file(s)
+    .Rbuildignore:107  # fix -- see CHANGELOG.md. Does NOT cover   (3 mentions, 0 on code lines)
+      line 15: ^docs$  stops covering docs/archive/CHANGELOG-through-2026-08-10.md, docs/archive/CHANGELOG-through-2026-08-10.md.verify.sh, docs/archive/CHANGELOG-through-2026-08-11.md and 123 more
+      line 71: ^CLAUDE.*\.md$  stops covering CLAUDE_TEMPLATE.md
+      line 72: ^SESSION_RUNNER.*\.md$  stops covering SESSION_RUNNER.md
+      line 73: ^SESSION_NOTES.*\.md$  stops covering SESSION_NOTES.md
+      line 74: ^SAFEGUARDS.*\.md$  stops covering SAFEGUARDS.md
+      line 76: ^ROADMAP.*\.md$  stops covering ROADMAP.md
+      line 77: ^CHANGELOG.*\.md$  stops covering CHANGELOG.md
+      line 78: ^BOOTSTRAP.*\.md$  stops covering BOOTSTRAP.md
+      line 79: ^CONTEXT_TEMPLATE.*\.md$  stops covering CONTEXT_TEMPLATE.md
+      line 80: ^HANDOFFS.*\.md$  stops covering HANDOFFS.md
+      line 81: ^dashboard_history\.jsonl$  stops covering dashboard_history.jsonl
+      line 85: ^methodology_dashboard\.py$  stops covering methodology_dashboard.py
+      line 86: ^dashboard\.html$  stops covering dashboard.html
+      line 88: ^RECOMMENDED_SKILLS.*\.md$  stops covering RECOMMENDED_SKILLS.md
+      line 136: ^FRAMEWORK_LEARNINGS\.md$  stops covering FRAMEWORK_LEARNINGS.md
+      line 137: ^methodology_trim\.py$  stops covering methodology_trim.py
+      line 150: ^context_budget\.py$  stops covering context_budget.py
+      line 151: ^quality_ratchet\.py$  stops covering quality_ratchet.py
+      line 152: ^\.context-budget\.json$  stops covering .context-budget.json
+      line 153: ^\.quality-gates\.json$  stops covering .quality-gates.json
+      line 154: ^\.context-budget-history\.jsonl$  stops covering .context-budget-history.jsonl
+      line 155: ^\.quality-gates-results\.json$  stops covering .quality-gates-results.json
+      22 line(s) cover 147 moved file(s) where they are now and no line covers them under methodology/; a line such as ^methodology$ would (each line read as a case-insensitive regular expression with Python's re, not R's engine: a candidate, not a verdict)
+    _pkgdown.yml:4  # `docs/methodology/` and `docs/planning/` are git-tracked inside `docs/`   [comment lines only]
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  10515 mention(s) in 117 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   1339 mention(s) in 107 file(s)
+    .gitignore:25  !docs/methodology/
+    .gitignore:26  !docs/methodology/**
+    .gitignore:39  !docs/archive/
+    .gitignore:40  !docs/archive/**
+    .gitignore:43  dashboard.html
+    .gitignore:44  dashboard_history.jsonl
+    .gitignore:57  # Session 479 (2026-08-08), see CHANGELOG.md and PROJECT_LEARNINGS.md Learning 479. This does
+    .gitignore:72  # CHANGELOG.md.
+    .gitignore:76  # project's own SESSION_RUNNER.md/SAFEGUARDS.md methodology (github.com/KJ5HST/methodology) --
+    .gitignore:82  # 2026-08-14, owner decision via AskUserQuestion, see CHANGELOG.md.
+    .gitignore:104  # Python bytecode cache from methodology_dashboard.py/methodology_trim.py (Session 514)
+    .gitignore:108  # S719). Both ignored here, matching this project's own handling of dashboard_history.jsonl
+    .gitignore:109  # above. The methodology repo tracks .context-budget-history.jsonl because context_budget.py's
+    .gitignore:111  # adopted that trigger (BACKLOG.md carries a context_budget.py evaluation item), so tracking is
+    .gitignore:113  .context-budget-history.jsonl
+    .gitignore:114  .quality-gates-results.json
+    BACKLOG.md:3  *Open, actionable work only. Completed history → `CHANGELOG.md`; feature inventory &
+    BACKLOG.md:4  future plans → `ROADMAP.md`. (Methodology file model — see `SESSION_RUNNER.md` Phase 0.)*
+    BACKLOG.md:30  - [ ] **Optional: put `HANDOFFS.md` under the context-budget hook, so a commit that pushes it past the Read
+    BACKLOG.md:32  Effort S; config only, `.context-budget.json`)** -- `HANDOFFS.md` crossed 262,144 B in S950's close-out
+    BACKLOG.md:34  Phase 0 dashboard ("High+ Risk 1"): `.context-budget.json` budgets only `CLAUDE.md` and `SESSION_NOTES.md`,
+    BACKLOG.md:36  30,267 B; shard `docs/archive/HANDOFFS-through-2026-10-08.md`); S917 had trimmed it 33 sessions earlier
+    BACKLOG.md:38  trimmer's 196,608 B archive line) would make `context_budget.py` warn and the pre-commit hook refuse
+    BACKLOG.md:41  whether `CHANGELOG.md` gets the same entry (it crossed the 196,608 B line at S959; S960 trimmed it).
+    BACKLOG.md:45  `NEWS.Rmd`/`NEWS.md` heading, `README.md` and `ROADMAP.md` stay at 2.0.0.9000 on purpose.
+
+ROLLED BACK: git commit was refused: python3: can't open file '/private/tmp/claude-501/-Users-rmsharp-Development-methodology/f965d31b-7ca5-42e4-8176-494b030b55ca/scratchpad/p15/tall/context_budget.py': [Errno 2] No such file or directory
+the project is as it was before the run

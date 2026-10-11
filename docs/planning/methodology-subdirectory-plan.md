@@ -1,7 +1,7 @@
 # Moving the methodology files into one `methodology/` directory — analysis and plan
 
 **Status: DECIDED (S273), ratified by the operator on 2026-10-06 at S273's close-out picker, every one as recommended (§9).
-P0 to P14 are done (§7.1 to §7.4d, S274 to S292; P11 at tier 1, P12 to P14 at tier all); P15 is next, subject to §7.6, and tier 2 is open.**
+P0 to P15 are done (§7.1 to §7.4e, S274 to S296; P11 at tier 1, P12 to P15 at tier all); P16 is next, subject to §7.6, and tier 2 is open.**
 Base commit `c8b9ddd` (fork `main`; it contains all of `upstream/main`, 0 commits behind). **Declared budget: 60,000 B**, one agent
 read at prose density, as [`file-management-system-plan.md`](file-management-system-plan.md) sets the
 norm. This file is in the population of that plan's retirement rule like every other planning file.
@@ -452,10 +452,8 @@ one-deliverable rule is the default.
   `tools/test_layout_resolver.py` wired into `bin/tests.sh`, **fixture trees in both layouts**, and the
   **literal scanner**, run RED against `c8b9ddd` (177 sites over 12 files at S274; the plan's first figures
   came from one grep that could not be reproduced); a ratchet gate per new suite, floor from its measured count.
-- **Verify:** `bash bin/tests.sh > /tmp/o.txt` (the ratchet keeps none), the §3.1 criterion;
-  `python3 starter-kit/quality_ratchet.py --run`; the scanner exits non-zero with the list.
-- **Surface:** the canonical suite and scratch trees; not a real adopter's tools or a hook armed in a clone.
-- **Boundary:** no tool changes behaviour. The scanner is RED on purpose, **not** a gate until P6.
+- **Verify, surface:** `bash bin/tests.sh > /tmp/o.txt` against §3.1's criterion, and
+  `python3 starter-kit/quality_ratchet.py --run`; the canonical suite and scratch trees, not a real adopter's tools or a hook armed in a clone.
 
 ### 7.2 P2-P6 — one layer each (all RED-first, both layouts green)
 
@@ -491,14 +489,9 @@ one-deliverable rule is the default.
 
 **DONE.** `bin/migrate-layout` refuses a tree that is not clean, current and unmigrated, naming every reason; its apply is ONE commit through the project's hooks (every tracked move a rename at 90% or better, rolled back on failure, checked before and after, exit 4 if a check differs). **Measured:** 78 mutants; the 12 adopters in `--no-local` clones (`p7-adopter-runs/summary.md`): **11 migrate**, **`claude_work` is refused** (a seed-only ledger falls to 68%), `wsfct`'s untracked pre-commit hook rolls the commit back. **Corrects §3 C7:** equal proof exit codes held for this repository's proofs, not every adopter's. **Not shown:** an adopter's CI or tests (§7.4a).
 
-### 7.3 P7-P8 — the tool, then the rehearsal
-
-- **P7 DONE (§7.3a).** **Surface:** clones; **not** an adopter's own CI or tests (P11-P22, in the real repository).
-- **P8 DONE (§7.3b; a rehearsal, ships nothing).** **Surface:** a clone. It **cannot** show the next session's Phase 0 in the new layout; if D8 allows the real move, that move is a single-commit phase of its own with that Phase 0 as its outstanding check.
-
 ### 7.3b P8 — what was measured (S281)
 
-**DONE** (§11; two `--no-local` clones). **The §3.1 criterion FAILS for this repository's own move:** unmoved **482 / 0 / 0**, moved **445 / 11 / 4**, gates 18/18 against **16/18**; the failures are canonical-only tests reading root ledgers by path. **Also:** the tool refuses this repository (`[not-current]`); the dashboard reads the moved changelog as absent (76 to 74); the §5A.4 re-run gives 4 modify/delete conflicts. **Held:** 126 tracked proofs (121 / 5 in both trees), both ledgers trim and prove in `methodology/archive/`, X2 is refused. **Not shown:** Phase 0 in the new layout. B2's blockers are BL-104.
+**DONE** (§11; two `--no-local` clones). **The §3.1 criterion FAILS for this repository's own move:** unmoved **482 / 0 / 0**, moved **445 / 11 / 4**, gates 18/18 against **16/18**; the failures are canonical-only tests reading root ledgers by path. **Also:** the tool refuses this repository (`[not-current]`); the dashboard reads the moved changelog as absent (76 to 74); the §5A.4 re-run gives 4 modify/delete conflicts. **Held:** 126 tracked proofs (121 / 5 in both trees), both ledgers trim and prove in `methodology/archive/`, X2 is refused. **Not shown:** Phase 0 in the new layout (a real move, if D8 allows one, is its own phase with that Phase 0 as its check). B2's blockers are BL-104.
 
 ### 7.3c P9 — what was done (S282)
 
@@ -506,19 +499,19 @@ one-deliverable rule is the default.
 
 ### 7.3d P10 — the sha (S283)
 
-**DONE** (a record; nothing sent). **Adopters may sync from `add55f1`**, the last commit to change a distributed file or anything under `bin/`, `tools/`, `starter-kit/`, `.githooks/`. **Measured on 12 adopters in clones:** the stage changes no path, layout, health or `check-links` exit of one that only syncs. **D8 does not gate P11**; a pull request is a port (34 of 81 commits replay). **Not shown:** an adopter's CI. Detail: `methodology-subdirectory-evidence/p10-expand-release-record.md`.
+**DONE** (a record; nothing sent). **Adopters may sync from `add55f1`**, the last commit to change a distributed file or anything under `bin/`, `tools/`, `starter-kit/`, `.githooks/`. **Measured on 12 adopters in clones:** the stage changes no path, layout, health or `check-links` exit of one that only syncs. **D8 does not gate P11**; a pull request is a port (34 of 81 commits replay). **Not shown:** an adopter's CI. Detail: `.../p10-expand-release-record.md`.
 
 ### 7.4 P11-P22 — an adopter per session (the BL-57 P6-P11 pattern)
 
 Done **in that repository** and recorded here. Order, by risk: `model_project_constructor` (P11, §7.4a),
 `feedback-loop-comparison` (P12, §7.4b), `airqino` (P13, §7.4c; his pick, a nested copy), `church_growth` (P14, §7.4d;
-his pick, out of order: the next two had a session running), `nprcgenekeepr` (the four-workflow CI filter and its R
-test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `chat_verification`, `dalia_martinez_funeral`,
+his pick, out of order: the next two had a session running), `nprcgenekeepr` (P15, §7.4e),
+`mts-system`, `vscode_quarto_ext`, `Philippians`, `chat_verification`, `dalia_martinez_funeral`,
 `claude_work` (no history to move), `wsfct` **last and only on a clean default branch** (its branch is active).
 
 - **DONE per adopter:** a clean tree (untracked files count, F12); `bin/status` before; **`bin/sync` first if any TRACKED file is not
-  `current`, as its own commit (§5A.2)**; **an older ledger hook replaced first, its own commit (F2)**; `bin/migrate-layout` dry run read; the apply as one commit;
-  `bin/status` after (all `current`, at the new destinations); the adopter's **own** proofs, test suite and CI
+  `current`, as its own commit (§5A.2)**; **an older ledger hook, or a per-clone hook that runs a moved tool, replaced first (its own commit where tracked; F2, F18)**; `bin/migrate-layout` dry run read; the apply as one commit;
+  `bin/status` after (all `current`, at the new destinations); the adopter's **own** proofs, test suite, declared gates and CI
   green (named in its receipt), rehearsed at each tier in clones first, a rise in skips a failure; **tier 1 until it is surveyed (his, S285);** one full Phase 0 in the new layout; the sha of the checkout it synced
   from; its findings in the register (§7.6); the project's push is **its own go-ahead**.
 - **Surface:** the adopter's repository and CI. **Cannot enforce:** another clone's hook arming; say so.
@@ -538,6 +531,10 @@ test), `mts-system`, `vscode_quarto_ext`, `Philippians`, `chat_verification`, `d
 ### 7.4d P14 — `church_growth` (S292)
 
 **DONE at tier all** (record: `methodology-subdirectory-evidence/p14-church-growth-record.md`). A doc-only repository, no remote, tests, CI or gates, with an older ledger hook: after the move a later commit with no ledger entry exits 0 under it and 1 under the layout-aware hook (C5), so it was replaced first. 30 renames; dashboard 49 and risk high before and after. **Tier 2 cost:** 0 links. **Findings:** F15, F16.
+
+### 7.4e P15 — `nprcgenekeepr` (S296)
+
+**DONE at tier all** (record: `methodology-subdirectory-evidence/p15-nprcgenekeepr-record.md`). **9 of its own files were edited before the move** (F20): as the tool leaves it, tier all took its tarball from 3.78 to 8.49 MB (gate: 5 MB) and made 2 tests skip; after, 0 failed, skips as before. Its per-clone hook was rewritten first (F18); the sync's overlay dropped its 49-line trimmer addition, restored after (F7). **Tier 2 cost:** 110 links. **Findings:** F17 to F20.
 
 ### 7.5 P23 and G-B
 

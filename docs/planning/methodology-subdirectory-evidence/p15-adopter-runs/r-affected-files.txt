@@ -1,0 +1,23 @@
+== base
+test_rbuildignore.R tests 2 passed 3 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 10 failed 0 error 0 skipped 0 
+test_workflowPathsIgnore.R tests 11 passed 218 failed 0 error 0 skipped 0 
+== ctrl
+test_rbuildignore.R tests 2 passed 3 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 10 failed 0 error 0 skipped 0 
+test_workflowPathsIgnore.R tests 11 passed 218 failed 0 error 0 skipped 0 
+== t1h
+test_rbuildignore.R tests 2 passed 3 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 10 failed 0 error 0 skipped 0 
+test_workflowPathsIgnore.R tests 11 passed 218 failed 0 error 0 skipped 0 
+== tallh
+test_rbuildignore.R tests 2 passed 3 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 7 failed 0 error 0 skipped 2 
+test_workflowPathsIgnore.R tests 11 passed 218 failed 0 error 0 skipped 0 
+== tallx
+test_rbuildignore.R tests 2 passed 3 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 7 failed 0 error 0 skipped 2 
+test_workflowPathsIgnore.R tests 11 passed 218 failed 0 error 0 skipped 0 
+test_rbuildignore.R tests 3 passed 4 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 10 failed 0 error 0 skipped 0 
+test_workflowPathsIgnore.R tests 11 passed 240 failed 0 error 0 skipped 0 

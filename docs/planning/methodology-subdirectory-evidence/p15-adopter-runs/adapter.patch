@@ -1,0 +1,142 @@
+diff --git a/.Rbuildignore b/.Rbuildignore
+index 26d62788..75061311 100644
+--- a/.Rbuildignore
++++ b/.Rbuildignore
+@@ -159,3 +159,6 @@ README\.*\.png$
+ # tree otherwise (S727 tarball audit Finding 2). Mirrored in .gitignore. S728, 2026-09-19.
+ ^tests/testthat/_problems$
+ ^tests/testthat/testthat-problems\.rds$
++# methodology/ holds the methodology files (bin/migrate-layout moves them there). Like their old places at the
++# root and under docs/ they are project notes and tooling, not package content.
++^methodology$
+diff --git a/.github/workflows/R-CMD-check.yaml b/.github/workflows/R-CMD-check.yaml
+index edac8a67..0d8300fd 100644
+--- a/.github/workflows/R-CMD-check.yaml
++++ b/.github/workflows/R-CMD-check.yaml
+@@ -27,6 +27,7 @@ on:
+       - .context-budget.json
+       - .quality-gates.json
+       - docs/**
++      - methodology/**
+   pull_request:
+ 
+ name: R-CMD-check.yaml
+diff --git a/.github/workflows/lint.yaml b/.github/workflows/lint.yaml
+index 9daa8011..7562ef0e 100644
+--- a/.github/workflows/lint.yaml
++++ b/.github/workflows/lint.yaml
+@@ -27,6 +27,7 @@ on:
+       - .context-budget.json
+       - .quality-gates.json
+       - docs/**
++      - methodology/**
+   pull_request:
+ 
+ name: lint.yaml
+diff --git a/.github/workflows/pkgdown.yaml b/.github/workflows/pkgdown.yaml
+index 25350b28..ce8de153 100644
+--- a/.github/workflows/pkgdown.yaml
++++ b/.github/workflows/pkgdown.yaml
+@@ -27,6 +27,7 @@ on:
+       - .context-budget.json
+       - .quality-gates.json
+       - docs/**
++      - methodology/**
+   pull_request:
+   release:
+     types: [published]
+diff --git a/.github/workflows/test-coverage.yaml b/.github/workflows/test-coverage.yaml
+index a159d82d..56cdf43e 100644
+--- a/.github/workflows/test-coverage.yaml
++++ b/.github/workflows/test-coverage.yaml
+@@ -27,6 +27,7 @@ on:
+       - .context-budget.json
+       - .quality-gates.json
+       - docs/**
++      - methodology/**
+   pull_request:
+ 
+ name: test-coverage.yaml
+diff --git a/tests/testthat/test_handoffsReceiptPlacement.R b/tests/testthat/test_handoffsReceiptPlacement.R
+index baf36953..5566e54d 100644
+--- a/tests/testthat/test_handoffsReceiptPlacement.R
++++ b/tests/testthat/test_handoffsReceiptPlacement.R
+@@ -21,7 +21,9 @@
+ ## the source tree, which is where the close-out suite runs.
+ 
+ pkg_root <- testthat::test_path("..", "..")
+-handoffs_path <- file.path(pkg_root, "HANDOFFS.md")
++## methodology/HANDOFFS.md after bin/migrate-layout, the root before it.
++handoffs_candidates <- file.path(pkg_root, c("methodology/HANDOFFS.md", "HANDOFFS.md"))
++handoffs_path <- Find(file.exists, handoffs_candidates, nomatch = handoffs_candidates[2L])
+ 
+ ## One receipt as the file writes it: a `handoff` fence, key lines, a plain
+ ## closing fence.
+diff --git a/tests/testthat/test_rbuildignore.R b/tests/testthat/test_rbuildignore.R
+index 96397095..7d901173 100644
+--- a/tests/testthat/test_rbuildignore.R
++++ b/tests/testthat/test_rbuildignore.R
+@@ -55,3 +55,11 @@ test_that(".Rbuildignore keeps the repo-root .gitattributes out of the tarball",
+     anyPatternMatches(patterns, "inst/extdata/examples/ExamplePedigree.txt")
+   )
+ })
++
++## The methodology files live under methodology/ (bin/migrate-layout). R CMD build
++## reads the filesystem, so a directory no pattern covers ships whole.
++test_that(".Rbuildignore keeps the methodology/ directory out of the tarball", {
++  skip_if_not(file.exists(rbuildignore_path), no_rbuildignore_msg)
++
++  expect_true(anyPatternMatches(readRbuildignorePatterns(), "methodology"))
++})
+diff --git a/tests/testthat/test_workflowPathsIgnore.R b/tests/testthat/test_workflowPathsIgnore.R
+index d74d6e26..b2d10a59 100644
+--- a/tests/testthat/test_workflowPathsIgnore.R
++++ b/tests/testthat/test_workflowPathsIgnore.R
+@@ -41,7 +41,9 @@ skippable_paths <- c(
+   "docs/archive/CHANGELOG-through-2026-10-03.md",
+   "docs/planning/sexcodes-adoption-plan.md",
+   "methodology_trim.py", "quality_ratchet.py",
+-  ".quality-gates.json", ".context-budget.json"
++  ".quality-gates.json", ".context-budget.json",
++  "methodology/CHANGELOG.md", "methodology/HANDOFFS.md", "methodology/SESSION_NOTES.md",
++  "methodology/methodology_trim.py", "methodology/.quality-gates.json"
+ )
+ 
+ ## Files a workflow reads, whether or not .Rbuildignore lists them. A change to
+diff --git a/vignettes/articles/data-raw/build-document1-evidence.R b/vignettes/articles/data-raw/build-document1-evidence.R
+index ab10a1c0..201ead47 100644
+--- a/vignettes/articles/data-raw/build-document1-evidence.R
++++ b/vignettes/articles/data-raw/build-document1-evidence.R
+@@ -20,6 +20,9 @@ git <- function(...) {
+   system2("git", c(...), stdout = TRUE, stderr = FALSE)
+ }
+ 
++# The ledgers sit under methodology/ after bin/migrate-layout, at the root before it.
++ledger_path <- function(f) if (file.exists(file.path("methodology", f))) file.path("methodology", f) else f
++
+ out_dir <- "vignettes/articles/data"
+ dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
+ 
+@@ -176,19 +179,19 @@ write.csv(commit_timeline, file.path(out_dir, "commit-activity-timeline.csv"), r
+ 
+ # ---- T6: engineering-process metrics ----------------------------------------
+ 
+-changelog <- readLines("CHANGELOG.md", warn = FALSE)
++changelog <- readLines(ledger_path("CHANGELOG.md"), warn = FALSE)
+ changelog_dates <- regmatches(changelog, regexpr("^### [0-9]{4}-[0-9]{2}-[0-9]{2}", changelog))
+ changelog_dates <- sub("^### ", "", changelog_dates)
+ 
+ learnings <- readLines("PROJECT_LEARNINGS.md", warn = FALSE)
+ n_learnings <- sum(grepl("^#### Learning [0-9]+ ", learnings))
+ 
+-handoffs <- readLines("HANDOFFS.md", warn = FALSE)
++handoffs <- readLines(ledger_path("HANDOFFS.md"), warn = FALSE)
+ sessions_hd <- regmatches(handoffs, regexpr("^session: S[0-9]+", handoffs))
+ statuses_hd <- regmatches(handoffs, regexpr("^status: (complete|pending|reconciled)", handoffs))
+ n_receipts_complete <- sum(grepl("complete", statuses_hd))
+ 
+-session_notes <- readLines("SESSION_NOTES.md", warn = FALSE)
++session_notes <- readLines(ledger_path("SESSION_NOTES.md"), warn = FALSE)
+ corr_zero <- sum(grepl("0 stakeholder correction", session_notes))
+ corr_nonzero <- sum(grepl("[1-9][0-9]* stakeholder correction", session_notes))
+ 

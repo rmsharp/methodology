@@ -1,0 +1,4 @@
+FULL tests 11017 passed 10824 failed 0 error 0 skipped 187 warning 6 files 391 secs 353 
+FULL tests 11017 passed 10824 failed 0 error 0 skipped 187 warning 6 files 391 secs 361 
+FULL tests 11017 passed 10824 failed 0 error 0 skipped 187 warning 6 files 391 secs 349 
+FULL tests 11016 passed 10821 failed 0 error 0 skipped 189 warning 6 files 391 secs 346 

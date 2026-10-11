@@ -1,0 +1,76 @@
+start Sun Oct 11 12:39:51 CDT 2026
+adopter HEAD 3004914aa35ae1e08e785565dbd702cc8416fe08 on master
+source HEAD  19b9882fb57b612f1a91a0520cdb8ef47ecec5ab
+adopter core.hooksPath=[]; status: []
+209e617bfeed811e
+tallx status before sync: []
+status base exit=0
+dash base exit=0
+sync --dry-run ctrl exit=2
+sync ctrl (no --force) exit=2
+sync ctrl --force exit=0
+commit ctrl (sync, old hook armed) exit=0
+  ctrl status after sync: []
+sync t1 (no --force) exit=2
+sync t1 --force exit=0
+commit t1 (sync, old hook armed) exit=0
+  t1 status after sync: []
+sync t1h (no --force) exit=2
+sync t1h --force exit=0
+commit t1h (sync, old hook armed) exit=0
+  t1h status after sync: []
+sync tall (no --force) exit=2
+sync tall --force exit=0
+commit tall (sync, old hook armed) exit=0
+  tall status after sync: []
+sync tallh (no --force) exit=2
+sync tallh --force exit=0
+commit tallh (sync, old hook armed) exit=0
+  tallh status after sync: []
+sync tallx (no --force) exit=2
+sync tallx --force exit=0
+commit tallx (sync, old hook armed) exit=0
+  tallx status after sync: []
+install-hook t1h exit=0
+install-hook tallh exit=0
+install-hook tallx exit=0
+migrate dry-run t1 exit=0
+migrate --apply t1 (tier 1) exit=3
+  t1 HEAD subject: chore(methodology): sync framework update from canonical
+  t1 status after: []
+migrate dry-run t1h exit=0
+migrate --apply t1h (tier 1) exit=0
+  t1h HEAD subject: chore(methodology): move the methodology files under methodology/ (tier 1, 23 files)
+  t1h status after: []
+migrate dry-run tall exit=0
+migrate --apply tall (tier all) exit=3
+  tall HEAD subject: chore(methodology): sync framework update from canonical
+  tall status after: []
+migrate dry-run tallh exit=0
+migrate --apply tallh (tier all) exit=0
+  tallh HEAD subject: chore(methodology): move the methodology files under methodology/ (tier all, 143 files)
+  tallh status after: []
+migrate dry-run tallx exit=0
+migrate --apply tallx (tier all) exit=0
+  tallx HEAD subject: chore(methodology): move the methodology files under methodology/ (tier all, 147 files)
+  tallx status after: []
+tallx: methodology/.context-budget-history.jsonl intact
+tallx: methodology/.quality-gates-results.json intact
+tallx: methodology/dashboard.html intact
+tallx: methodology/dashboard_history.jsonl intact
+tallx: .claude/settings.local.json intact
+probe ctrl (a small tracked file) exit=0
+probe ctrl (CLAUDE.md 19700 B -> 28502 B, ceiling 28000) exit=1
+probe t1h (a small tracked file) exit=0
+probe t1h (CLAUDE.md 19904 B -> 28502 B, ceiling 28000) exit=1
+probe tallh (a small tracked file) exit=0
+probe tallh (CLAUDE.md 20024 B -> 28502 B, ceiling 28000) exit=1
+probe tallx (a small tracked file) exit=0
+probe tallx (CLAUDE.md 20024 B -> 28502 B, ceiling 28000) exit=1
+status ctrl exit=0
+status t1 exit=0
+status t1h exit=0
+status tall exit=0
+status tallh exit=0
+status tallx exit=0
+done Sun Oct 11 12:47:48 CDT 2026
