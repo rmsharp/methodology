@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-10-3.md` (1 record(s), 40,819 B → 29,413 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-10 → 2026-10-10) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-10-3.md`](docs/archive/HANDOFFS-through-2026-10-10-3.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-10-3.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-10-3.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,819 B → 29,413 B (−27.9%).
+
 ### 2026-10-11 · [ad hoc] S295 — the close-out receipt's next steps (2) and (5) corrected after the push and the CHANGELOG trim
 
 The receipt `status: complete` in `HANDOFFS.md` (committed in `98056a5`) was written before the entry below it: its step (2) named the `CHANGELOG.md` trim as owed and its step (5) named 5 commits as unpushed. Both were then done on his go-ahead (the push of `98056a5`; the trim `043a741`, forced past `SRF_RED`), so a successor reading only the newest receipt would start from a stale state. Step (2) now reads "ONE TRIM OWED" (the `HANDOFFS.md` trim, 3 receipts) with the changelog trim recorded as done and its rate uncut (about 13 sessions to the trigger, an estimate); step (5) names `043a741` and the entry below as the local commits. `check-handoff` exit 0 (record under its 12,288 B budget). No other field changed. Model: Claude Sonnet 5.5.
