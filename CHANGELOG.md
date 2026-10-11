@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [BL-101] S296 — push record: main pushed to the fork origin at his go-ahead (7a3e84c..3af7f9a)
+
+At his word ("push main to origin") `git push origin main` sent one commit (a plain fast-forward, `7a3e84c..3af7f9a`) to `rmsharp/methodology`: `3af7f9a`, the correction of the S296 receipt's next steps (1)(b) and (5). After a fetch `git rev-list --left-right --count origin/main...main` read `0 0`. Nothing went to `KJ5HST/methodology`, no tag. The previous entry's line that `3af7f9a` is local and not pushed is therefore historical. This commit changes only `CHANGELOG.md` and is pushed too, under his standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [BL-101] S296 — the close-out receipt's next steps (1)(b) and (5) corrected after the adopter push and the push of `main`
 
 The S296 receipt in `HANDOFFS.md` was written before two pushes the entries above record, so its `next_steps` still offered the push of `nprcgenekeepr`'s commits as open (1)(b) and listed this repository's commits as local (5). Both lines now say **DONE after this receipt, on his go-ahead** and give the ranges (`a8b884c81..5a41dbbdd` in the adopter, `98056a5..1434660` and then `7a3e84c` here) and the CI result; the rest of the receipt, including its narrative lines that nothing was pushed (true when written), is unchanged. One line of `HANDOFFS.md` changed (the same correction S295 made to its own receipt); `bin/check-handoff` and `bin/check-ledger` exit 0. **This commit is local and not pushed:** it changes `HANDOFFS.md`, which the standing grant for push records does not cover, so `main` is one commit ahead of `origin/main` until he says to push. Model: Claude Sonnet 5.5.
