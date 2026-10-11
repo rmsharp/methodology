@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] S296 — fold the third 2026-10-10 HANDOFFS shard pointer into the archive index
+
+The pointer block the trim (`278b507`, 1 receipt, S293, 2026-10-10, to `HANDOFFS-through-2026-10-10-3.md`, the name the dry run chose because `-2` was taken) wrote into `HANDOFFS.md` is now one row in `docs/HANDOFFS_ARCHIVE_INDEX.md` (1 receipt, trimmer v1.8.0), in its own commit as the fold procedure requires. `HANDOFFS.md` holds 2 receipts (S295, S294). The shard proof was run by name from a `--no-local` clone of the trim commit: `HANDOFFS-through-2026-10-10-3.md.verify.sh` at `278b507`, exit 0 (L1, L2/front-matter, L3). The trim ran on his go-ahead at the S296 Phase 0 (a picker answer: "Yes, trim, then claim and start P15"); nothing was pushed and nothing went upstream. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-10-3.md` (1 record(s), 40,819 B → 29,413 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
