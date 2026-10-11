@@ -245,6 +245,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-10-2.md` (1 record(s), 41,216 B → 29,394 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-10 → 2026-10-10) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-10-2.md`](docs/archive/HANDOFFS-through-2026-10-10-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-10-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-10-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 41,216 B → 29,394 B (−28.7%).
+
 ### 2026-10-10 · [BL-101] S294 close-out — F16 closed with no tool change; the receipt is complete
 
 Receipt S294 is `status: complete` (self 8, predecessor 9; no fork learning row appended, so no retirement is owed: the rows considered are named in the receipt, fork #57, #80, #39 and #71). **The deliverable:** F16, the `CLAUDE.md` text rewrite of `bin/migrate-layout`, settled by a measurement over the 11 adopters with a `CLAUDE.md` (17 of 152 changed lines inside a Learnings region, none made false, one a runnable command) and his choice to keep the rule; the record, the script, its output and the register line are in `25ed0ea` (the entry below). **What this commit adds:** the receipt, this entry and the BL-101 Next action in `docs/planning/BACKLOG-DETAIL.md` (F16 declined, the S294 live-session note). **One breach of my own, stated:** at the first picker I recommended listing the Learnings lines instead of rewriting them, which I had not run; the measurement showed the opposite (fork #57's lesson), cost a second picker and is in the record and the receipt. **Gate run:** quality_ratchet: 18/18 pass · 0 fail · 0 unmeasured · results 791e005997ab · manifest e755389a69c7 (the gate run in a clean `--no-local` clone of `25ed0ea`, about 16 minutes at a load of about 6 to 8, so no gate reached BL-103's 600 s limit; the close-out commit adds only this receipt, its ledger entry and the BL-101 Next action in `BACKLOG-DETAIL.md`; tests-sh-passed read 483 at three receipts, floor 477; migrate-layout-unit-tests 186, floor 186) **Pushes:** `6ca1037` went to the fork `origin` at the start of the session on his go-ahead (recorded in the fold entry below); the 5 commits after it (the trim, its fold, the claim, the F16 record and this close-out) are local. Model: Claude Sonnet 5.5.
