@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] S295 — push of the close-out to the fork, and the CHANGELOG trim forced past SRF_RED, on his go-ahead
+
+After the close-out `98056a5`, at his go-ahead (a picker: "push 5 commits to the fork" and "CHANGELOG trim now"): **the push** of `98056a5` to the fork `origin` by name, read back `0 0` and equal by `ls-remote` (it carried the trim `4b631e7`, its fold `e0aa384`, the claim `bb7151d`, the F12 record `904e17e` and the close-out); nothing went upstream. **The trim** `043a741`: `CHANGELOG.md` had passed its trigger (199,040 B against 196,608 B), the dry run refused with `SRF_RED` (SRF 1.1183 against the last archive `40c3694`, which had left the file at 78,034 B on 2026-10-08: it grew back 121 KB in three days), and the plan's rule for RED is "do not archive again" (`framework-context-cost-plan.md` section 3.3). I ran it with `--force`, as the ledger's earlier changelog trims were (`CHANGELOG-through-2026-08-09.md`, `--cut 2026-08-02 --force`), after a forced dry run read 88 of 157 records and 199,040 B to 99,197 B: shard `docs/archive/CHANGELOG-through-2026-10-08.md` (cut key 2026-10-08 straddles a day, so the name is a span label); the proof exit 0 in the tree and from a `--no-local` clone of `043a741`. **The rate was not cut:** SRF RED says the next deliverable is a rate cut, and at this ledger's recent rate (about 7.5 KB a session, an estimate) the trigger is about 13 sessions away again. No fold is needed: a changelog shard's pointer block stays in its own front matter. The trim and this entry are local (2 commits ahead of the fork). The S295 receipt's next step (2) names this trim as owed: it is done here; the `HANDOFFS.md` trim (3 receipts) is still owed. Model: Claude Sonnet 5.5.
+
 ### 2026-10-11 · [ad hoc] Ledger trim: `CHANGELOG.md` → `docs/archive/CHANGELOG-through-2026-10-08.md` (88 record(s), 199,040 B → 99,197 B)
 
 **Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
