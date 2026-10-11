@@ -54,6 +54,13 @@ trim-and-fold no longer grows this front matter. The fold rule is in the index.
      trim commit the shipped .verify.sh fails L2 (fork Learning #58). -->
 
 ```handoff
+session: S296
+date: 2026-10-11
+status: pending
+active_task: P15 (BL-101, plan §7.4): the fifth adopter, `nprcgenekeepr`, at tier all, in its own repository (`~/Development/nprcgenekeepr`, `master`, HEAD `3004914aa` at the claim, clean, one commit ahead of its upstream). His pick at the S296 Phase 0, after he asked whether it could run once the adopter was clean and out of a session; rechecked at the claim: no `claude` process with that cwd (`wsfct`, `vscode_quarto_ext` and `mts-system` each still have one). Plan order: the riskiest of the adopters left (9 files read a moved path at the S286 count: four CI filters, `.Rbuildignore`, three R tests, a data-raw script). Read the findings register first; F2 (an older ledger hook) and F7 (a file `bin/sync` refuses) are checked before the sync; rehearse at each tier in `--no-local` clones with its own tests and the CI filters. Done at his go-ahead before this claim: the owed HANDOFFS trim (`278b507`, S293's receipt to `HANDOFFS-through-2026-10-10-3.md`, shard proof exit 0 from a `--no-local` clone) and its fold (`1bbf5da`). NOT part of it: a push of the adopter's commits (its own go-ahead), anything upstream, F6, F8, F13, F14, D8, a push of this repository's local commits.
+```
+
+```handoff
 session: S295
 date: 2026-10-11
 status: complete
