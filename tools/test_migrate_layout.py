@@ -553,6 +553,157 @@ class TestThePureRules(unittest.TestCase):
     def test_nothing_moves_so_nothing_is_exposed(self):
         self.assertEqual(self.m.pattern_exposure("^SESSION_RUNNER.*\\.md$\n", {})["exposed"], [])
 
+    # --- the vsce rule (BL-101 F24) ---
+    # Each row is (pattern, path, answer) as minimatch 10.2.5 with `{ dot: true }` gave it, the call vsce 3.9.2 makes
+    # (`package.js` `collectFiles`), measured in S299: `f24-oracle.py` re-runs this table through node and compares.
+    VSCE_ORACLE = [
+        ("a/**", "a", False), ("a/**", "a/b", True), ("a/**", "a/b/c", True), ("**", "a", True), ("**", "a/b", True), ("**", ".x", True),
+        ("**/*.map", "x.map", True), ("**/*.map", "a/b/x.map", True), ("**/*.map", "a.map/b", False),
+        ("*.md", "x.md", True), ("*.md", "a/x.md", False), ("*.md", ".md", True), ("*", ".hidden", True), ("*", "a/b", False),
+        ("SESSION_RUNNER.md", "SESSION_RUNNER.md", True), ("SESSION_RUNNER.md", "methodology/SESSION_RUNNER.md", False),
+        ("methodology/**", "methodology/SESSION_RUNNER.md", True), ("methodology/**", "methodology", False),
+        ("/a", "a", False), ("./a", "a", False), ("a/./b", "a/b", False), ("a/", "a", False), ("dir/", "dir/x", False),
+        ("{a,b}.md", "a.md", True), ("{a,b}.md", "b.md", True), ("{a,b}.md", "c.md", False),
+        ("[ab].md", "a.md", True), ("[ab].md", "c.md", False), ("[!a].md", "b.md", True), ("[!a].md", "a.md", False),
+        ("[^a].md", "b.md", True), ("[a-c].md", "b.md", True), ("[a-c].md", "d.md", False),
+        ("a?c", "abc", True), ("a?c", "a/c", False), ("a?c", "ac", False),
+        ("**/.git/**", ".git/x", True), ("**/.git/**", "a/.git/x", True), ("**/.git", ".git", True), ("**/.git", "a/.git", True),
+        (".eslintrc*", ".eslintrc.json", True), (".eslintrc*", "a/.eslintrc.json", False),
+        ("a**b", "axxb", True), ("a**b", "a/b", False), ("a**/b", "a/x/b", False), ("**a", "xa", True), ("**a", "x/a", False),
+        ("a/**/b", "a/b", True), ("a/**/b", "a/x/b", True), ("a/**/b", "a/x/y/b", True), ("a/**/b", "a/x/c", False),
+        ("**/a", "a", True), ("**/a", "x/a", True), ("**/a", "x/ab", False), ("**/**", "a", True),
+        ("a/*", "a/b", True), ("a/*", "a", False), ("a/*", "a/b/c", False), ("a b", "a b", True),
+        ("{a,b/c}.md", "b/c.md", True), ("{a,{b,c}}.md", "c.md", True), ("x{,y}", "x", True), ("x{,y}", "xy", True),
+        ("session_runner.md", "SESSION_RUNNER.md", False),
+    ]
+    VSCE_MAP = {"SESSION_RUNNER.md": "methodology/SESSION_RUNNER.md", "CHANGELOG.md": "methodology/CHANGELOG.md",
+                "docs/methodology/HOW_TO_USE.md": "methodology/HOW_TO_USE.md",
+                "docs/archive/CHANGELOG-through-2026-08-01.md": "methodology/archive/CHANGELOG-through-2026-08-01.md",
+                "methodology_trim.py": "methodology/methodology_trim.py", ".context-budget.json": "methodology/.context-budget.json"}
+
+    def vsce(self, text, mapping=None):
+        return self.m.vscodeignore_exposure(text, self.VSCE_MAP if mapping is None else mapping)
+
+    def test_the_translation_of_a_glob_answers_as_minimatch_does(self):
+        for pattern, path, want in self.VSCE_ORACLE:
+            match = self.m.vsce_glob(pattern)
+            self.assertIsNotNone(match, "a pattern the table lists is one the rule reads: " + pattern)
+            self.assertIs(match(path), want, "%r against %r" % (pattern, path))
+
+    def test_a_glob_it_does_not_read_is_none_and_never_a_guess(self):
+        """An extended glob, a numeric or letter range, a backslash, a POSIX class, a lone brace and an empty path segment are
+        read differently by minimatch than by any reading made here, so they are counted and not evaluated."""
+        for pattern in ("+(a|b)", "@(a|b)", "!(a)", "?(a)b", "*(a)", "x{1..3}", "x{a..c}", "a\\*b", "[[:upper:]]*", "{a}", "x{", "x}", "a//b", "[a", "[]", "[]a]", "[z-a]"):
+            self.assertIsNone(self.m.vsce_glob(pattern), pattern)
+
+    def test_a_bare_name_is_the_project_roots_and_not_the_new_directorys(self):
+        """vsce 3.9.2 matches `SESSION_RUNNER.md` against `methodology/SESSION_RUNNER.md` as false: the move leaves the file
+        packaged. The same row of the probe in S290 read vsce 3.6.0 (`vsce ls`): the file was listed after the move."""
+        e = self.vsce("SESSION_RUNNER.md\nREADME.md\n")
+        self.assertEqual(e["exposed"], ["SESSION_RUNNER.md"])
+        self.assertEqual(e["lines"][0], {"line": 1, "text": "SESSION_RUNNER.md", "files": ["SESSION_RUNNER.md"]})
+        self.assertEqual(e["unread"], 0)
+
+    def test_a_line_for_the_new_directory_clears_every_line_it_covers(self):
+        for extra in ("methodology/**", "methodology", "methodology/"):
+            e = self.vsce("SESSION_RUNNER.md\ndocs/**\n**/*.py\n" + extra + "\n")
+            self.assertEqual((e["exposed"], e["lines"]), ([], []), extra)
+
+    def test_a_directory_name_covers_what_is_under_it_and_a_leaf_glob_does_not(self):
+        """vsce adds `/**` to a line whose last segment has no `*` (`package.js` line 1295), so `docs` is `docs/**`; `docs/*` is
+        not, and minimatch gives `a/*` against `a/b/c` as false."""
+        deep = {"docs/methodology/HOW_TO_USE.md": "methodology/HOW_TO_USE.md"}
+        for line in ("docs", "docs/", "docs/**", "**/docs/**"):
+            self.assertEqual(self.vsce(line + "\n", deep)["exposed"], ["docs/methodology/HOW_TO_USE.md"], line)
+        self.assertEqual(self.vsce("docs/*\n", deep)["exposed"], [])
+        self.assertEqual(self.vsce("docs/*\n", {"docs/x.md": "methodology/x.md"})["exposed"], ["docs/x.md"])
+
+    def test_a_double_star_leaf_covers_the_file_at_any_depth_and_so_still_covers_it_after_the_move(self):
+        e = self.vsce("**/*.py\n")
+        self.assertEqual(e["exposed"], [], "methodology/methodology_trim.py is ignored too")
+
+    def test_a_star_does_not_cross_a_directory_so_it_stops_covering_the_moved_file(self):
+        """`*.md` against `methodology/SESSION_RUNNER.md` is false with no `matchBase`: a person who wrote it to mean every
+        markdown file at any depth is exposed by the move."""
+        e = self.vsce("*.md\n")
+        self.assertEqual(e["exposed"], ["CHANGELOG.md", "SESSION_RUNNER.md"],
+                         "a file below the root (docs/methodology/HOW_TO_USE.md) is not covered by `*.md` where it is")
+
+    def test_a_star_reaches_a_dot_file(self):
+        """`{ dot: true }`: `*` against `.hidden` and `*.md` against `.md` are true."""
+        self.assertEqual(self.vsce("*.json\n")["exposed"], [".context-budget.json"])
+
+    def test_the_rule_is_case_sensitive(self):
+        self.assertEqual(self.vsce("session_runner.md\n")["exposed"], [])
+
+    def test_a_line_written_the_gitignore_way_matches_nothing(self):
+        """`/SESSION_RUNNER.md` and `./SESSION_RUNNER.md` are false against `SESSION_RUNNER.md` (measured): they cover it neither
+        where it is nor where it goes, so they are not exposed, and a person who meant them as the root's is told nothing."""
+        self.assertEqual(self.vsce("/SESSION_RUNNER.md\n./CHANGELOG.md\n")["exposed"], [])
+
+    def test_a_negation_brings_a_file_back_and_applies_to_a_directory_name_too(self):
+        """vsce keeps a file when ANY negation matches it, whatever its place among the lines (`collectFiles`: `!ignore.some(...) ||
+        negate.some(...)`), and the `/**` it adds to a directory name is added to a negation as well."""
+        deep = {"docs/methodology/HOW_TO_USE.md": "methodology/HOW_TO_USE.md"}
+        self.assertEqual(self.vsce("docs/**\n!docs/methodology/HOW_TO_USE.md\n", deep)["exposed"], [], "it is packaged where it is")
+        self.assertEqual(self.vsce("!docs/methodology\ndocs/**\n", deep)["exposed"], [], "a negation above the line it undoes counts too")
+        self.assertEqual(self.vsce("docs/**\nmethodology/**\n!methodology/HOW_TO_USE.md\n", deep)["exposed"],
+                         ["docs/methodology/HOW_TO_USE.md"], "a negation that brings it back where it goes leaves it packaged")
+
+    def test_vsces_own_default_list_is_part_of_the_answer(self):
+        """The root `.gitattributes` is on vsce's default list and `methodology/.gitattributes` is not: `bin/migrate-layout`
+        moves it, and 1 of the 36 files the P17 move put into the adopter's `.vsix` was this one."""
+        e = self.vsce("", {".gitattributes": "methodology/.gitattributes"})
+        self.assertEqual(e["exposed"], [".gitattributes"])
+        self.assertEqual(e["lines"], [{"line": 0, "text": "(vsce default) .gitattributes", "files": [".gitattributes"]}])
+        self.assertEqual(self.vsce("methodology/**\n", {".gitattributes": "methodology/.gitattributes"})["exposed"], [])
+
+    def test_a_file_vsce_never_ignores_stays_packaged_whatever_the_file_says(self):
+        """`!package.json` and `!README.md` are appended to every list."""
+        moved = {"README.md": "methodology/README.md", "package.json": "methodology/package.json"}
+        self.assertEqual(self.vsce("README.md\npackage.json\n", moved)["exposed"], [])
+
+    def test_a_hash_line_is_a_comment_and_a_line_is_trimmed(self):
+        """Unlike R, vsce drops a line that starts with `#` after trimming it."""
+        self.assertEqual(self.vsce("# SESSION_RUNNER.md\n   # CHANGELOG.md\n")["exposed"], [])
+        self.assertEqual(self.vsce("   SESSION_RUNNER.md \t\n")["exposed"], ["SESSION_RUNNER.md"])
+
+    def test_a_line_break_of_any_kind_and_a_byte_order_mark_are_read_as_vsce_reads_them(self):
+        """vsce splits on `\\n` and on `\\r`, and `String.prototype.trim` removes a byte order mark; the number printed is the
+        line an editor shows, so `\\r\\n` is one break."""
+        e = self.vsce("# a\r\nSESSION_RUNNER.md\r\nCHANGELOG.md\r\n")
+        self.assertEqual([(x["line"], x["text"]) for x in e["lines"]], [(2, "SESSION_RUNNER.md"), (3, "CHANGELOG.md")])
+        self.assertEqual([x["line"] for x in self.vsce("# a\rSESSION_RUNNER.md\r")["lines"]], [2], "a lone carriage return breaks too")
+        self.assertEqual(self.vsce("﻿SESSION_RUNNER.md\n")["exposed"], ["SESSION_RUNNER.md"])
+
+    def test_a_brace_list_is_one_line_that_covers_several_files(self):
+        e = self.vsce("{SESSION_RUNNER,CHANGELOG}.md\n")
+        self.assertEqual(e["exposed"], ["CHANGELOG.md", "SESSION_RUNNER.md"])
+        self.assertEqual([(x["line"], x["files"]) for x in e["lines"]], [(1, ["CHANGELOG.md", "SESSION_RUNNER.md"])])
+
+    def test_a_line_that_is_not_read_is_counted_and_the_rest_are_read(self):
+        e = self.vsce("@(SESSION_RUNNER|CHANGELOG).md\nx{1..3}\nCHANGELOG\\.md\n[[:upper:]]*.md\n{a}\nCHANGELOG.md\n")
+        self.assertEqual((e["unread"], e["exposed"], [x["line"] for x in e["lines"]]), (5, ["CHANGELOG.md"], [6]))
+
+    def test_the_lines_come_in_line_order_the_defaults_last_and_the_files_in_name_order(self):
+        e = self.vsce("CHANGELOG.md\n*.md\nSESSION_RUNNER.md\n", {**self.VSCE_MAP, ".gitattributes": "methodology/.gitattributes"})
+        self.assertEqual([(x["line"], x["files"]) for x in e["lines"]],
+                         [(1, ["CHANGELOG.md"]), (2, ["CHANGELOG.md", "SESSION_RUNNER.md"]), (3, ["SESSION_RUNNER.md"]),
+                          (0, [".gitattributes"])])
+
+    def test_a_file_that_a_line_and_the_directory_it_stands_for_both_cover_is_listed_once(self):
+        """`a/**/b` and the `a/**/b/**` vsce adds both match `a/b/b`: the line names the file once."""
+        e = self.vsce("a/**/b\n", {"a/b/b": "z/b"})
+        self.assertEqual((e["exposed"], [(x["line"], x["files"]) for x in e["lines"]]), (["a/b/b"], [(1, ["a/b/b"])]))
+
+    def test_every_entry_of_vsces_own_lists_is_one_the_tool_reads(self):
+        for name in self.m.VSCE_DEFAULT_IGNORE + self.m.VSCE_NOT_IGNORED:
+            self.assertIsNotNone(self.m.vsce_glob(name), name)
+        self.assertEqual((len(self.m.VSCE_DEFAULT_IGNORE), self.m.VSCE_NOT_IGNORED), (32, ("package.json", "README.md")))
+
+    def test_vsce_nothing_moves_so_nothing_is_exposed(self):
+        self.assertEqual(self.m.vscodeignore_exposure("SESSION_RUNNER.md\n", {})["exposed"], [])
+
     def test_only_the_files_the_trimmer_writes_are_shards(self):
         yes = ("CHANGELOG-through-2026-08-01.md", "HANDOFFS-through-2026-08-02-3.md.verify.sh", "SESSION_NOTES-through-x.md")
         no = ("CHANGELOG-archive.md", "CHANGELOG-through-x.md.bak", "ROADMAP-through-x.md", "a/CHANGELOG-through-x.md", "CHANGELOG-through-.txt")
@@ -1701,13 +1852,133 @@ class TestAPatternThatStopsMatchingIsListed(Adopter):
         row = self.row(nr, ".vscodeignore")
         self.assertEqual((row["mentions"], row["code_mentions"]), (2, 2))
         self.assertNotIn(".vscodeignore", {s["file"] for s in nr["other"]["sites"]}, "a file is in one category, not two")
-        self.assertNotIn("patterns", row, "vsce's matching is not evaluated: the file is listed, never judged")
+        self.put("SESSION_RUNNER.md\nCHANGELOG.md\n", rel=".npmignore")
+        npm = self.row(self.report(), ".npmignore")
+        self.assertEqual((npm["mentions"], npm["code_mentions"]), (2, 2))
+        self.assertNotIn("patterns", npm, "only vsce's matching was read and run (F24): any other pattern list is listed, never judged")
 
     def test_a_gitignore_below_the_root_stays_prose(self):
         self.put("CHANGELOG.md\n", rel="web/.gitignore")
         nr = self.report()
         self.assertIsNone(self.row(nr, "web/.gitignore"))
         self.assertIn("web/.gitignore", {s["file"] for s in nr["other"]["sites"]})
+
+
+class TestAPackagersIgnoreFileIsEvaluated(Adopter):
+    """BL-101 F24 (plan 7.6, findings register; S299). F11 listed a root `.vscodeignore` as config and never judged it, so a
+    move that put 36 files into `vscode_quarto_ext`'s `.vsix` passed every check the tool prints and only the adopter's own
+    `release-gate` (78 files against 42) saw it. The file is now read as vsce reads it (`package.js` `collectFiles`, vsce
+    3.9.2: each line a minimatch pattern with `{ dot: true }` and no `matchBase`, `/**` added to a directory name, vsce's own
+    default list, any negation brings a file back) and a moved file is exposed when it is ignored where it is and packaged
+    where it goes. Listed, never edited, no refusal; the answer is this tool's translation of minimatch, not minimatch."""
+
+    LINES = "docs/**\nSESSION_RUNNER.md\nCHANGELOG.md\n"
+
+    def put(self, text, rel=".vscodeignore", message="an ignore file"):
+        path = self.project / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
+        self.commit(message)
+
+    def report(self, *args):
+        return run_migrate(self.project, *args).report["not_rewritten"]
+
+    def row(self, nr, rel=".vscodeignore", cat="config"):
+        return next((x for x in nr[cat]["paths"] if x["file"] == rel), None)
+
+    def test_a_file_that_ignores_names_and_a_directory_is_listed_with_what_the_move_exposes(self):
+        self.put("# keep the framework out of the .vsix\n" + self.LINES)
+        row = self.row(self.report())
+        p = row["patterns"]
+        self.assertEqual((row["mentions"], row["code_mentions"]), (2, 2), "F5's row, as it was: the two bare names")
+        self.assertEqual([x["line"] for x in p["lines"]], [2, 3, 4, 0], "line order, the default list last")
+        for name in ("SESSION_RUNNER.md", "CHANGELOG.md", "docs/methodology/HOW_TO_USE.md", ".gitattributes"):
+            self.assertIn(name, p["exposed"], name)
+        self.assertNotIn("docs/methodology/PROJECT_CONVENTIONS.md", p["exposed"], "the project's own file stays where it is")
+        self.assertEqual(p["unread"], 0)
+        self.assertEqual(p["lines"][-1]["text"], "(vsce default) .gitattributes")
+        self.assertEqual((row["line"], row["text"]), (3, "SESSION_RUNNER.md"), "an existing row keeps F5's pointer: its first mention")
+        self.put("# keep the framework out of the .vsix\ndocs/**\n", message="a file that names no moved file")
+        fresh = self.row(self.report())
+        self.assertEqual((fresh["line"], fresh["text"], fresh["mentions"]), (2, "docs/**", 0), "a new row points at the first line that stops matching")
+
+    def test_a_line_for_the_new_directory_clears_every_exposure_and_the_row_of_patterns(self):
+        self.put(self.LINES + "methodology/**\n")
+        row = self.row(self.report())
+        self.assertEqual(row["mentions"], 2, "the file still names two moved files, which is F5's row")
+        self.assertNotIn("patterns", row)
+        self.put("src/**\nmethodology/**\n", message="a file that names no moved file")
+        nr = self.report()
+        self.assertIsNone(self.row(nr))
+        self.assertEqual(nr["config"]["files"], 0)
+
+    def test_a_file_that_names_nothing_moved_is_still_a_row_when_the_default_list_exposes_a_file(self):
+        """The root `.gitattributes` is on vsce's default list and moves to `methodology/.gitattributes`."""
+        self.put("src/**\n")
+        row = self.row(self.report())
+        self.assertEqual(row["patterns"]["exposed"], [".gitattributes"])
+        self.assertEqual((row["mentions"], row["names"], row["line"]), (0, [], 0))
+
+    def test_tier_one_leaves_the_ledgers_in_place_so_their_lines_stay_covered(self):
+        self.put("CHANGELOG.md\nSESSION_RUNNER.md\n")
+        tier1 = self.row(self.report("--tier", "1"))["patterns"]["exposed"]
+        self.assertIn("SESSION_RUNNER.md", tier1)
+        self.assertNotIn("CHANGELOG.md", tier1)
+        self.assertIn("CHANGELOG.md", self.row(self.report())["patterns"]["exposed"])
+
+    def test_only_the_file_at_the_root_is_read_and_only_when_git_tracks_it(self):
+        self.put("SESSION_RUNNER.md\n", rel="pkg/.vscodeignore")
+        below = self.row(self.report(), "pkg/.vscodeignore")
+        self.assertEqual(below["mentions"], 1, "F5 lists it, as a pattern list")
+        self.assertNotIn("patterns", below, "but only the file at the root is evaluated")
+        (self.project / ".git" / "info" / "exclude").write_text(".vscodeignore\n", encoding="utf-8")
+        (self.project / ".vscodeignore").write_text("SESSION_RUNNER.md\n", encoding="utf-8")
+        r = run_migrate(self.project)
+        self.assertEqual(r.report["status"], "ok", r.out)
+        self.assertIsNone(self.row(r.report["not_rewritten"]))
+
+    def test_the_text_says_which_lines_stop_matching_and_what_would_cover_the_new_place(self):
+        self.put("# keep the framework out of the .vsix\n" + self.LINES)
+        out = run_migrate(self.project, json_out=False).out
+        self.assertRegex(out, r"\.vscodeignore:3 .*SESSION_RUNNER\.md")
+        row_line = out.split(".vscodeignore:3")[1].split("\n")[0]
+        self.assertNotIn("[comment lines only]", row_line)
+        for phrase in ("line 2: docs/**  stops covering", "line 3: SESSION_RUNNER.md  stops covering SESSION_RUNNER.md",
+                       "vsce's default list: .gitattributes  stops covering .gitattributes", "methodology/**", "minimatch",
+                       "no matchBase", "a bare name is the project root's", "a candidate, not a verdict"):
+            self.assertIn(phrase, out)
+        self.assertNotIn("case-insensitive regular expression", out, "that sentence is R's, and this project has no .Rbuildignore")
+        self.assertRegex(out, r"\d+ line\(s\) cover \d+ moved file\(s\)")
+
+    def test_a_line_that_covers_many_files_names_three_and_counts_the_rest(self):
+        self.put("docs/**\n")
+        out = run_migrate(self.project, json_out=False).out
+        self.assertRegex(out, r"line 1: docs/\*\*  stops covering [^,\n]+, [^,\n]+, [^,\n]+ and \d+ more\n")
+
+    def test_a_line_that_cannot_be_read_is_said_in_the_text(self):
+        self.put("@(SESSION_RUNNER|CHANGELOG).md\nx{1..3}\nCHANGELOG.md\n")
+        out = run_migrate(self.project, json_out=False).out
+        self.assertRegex(out, r"2 line\(s\) could not be read as a glob and were not evaluated")
+        self.assertEqual(self.row(self.report())["patterns"]["unread"], 2)
+
+    def test_a_pattern_list_for_another_program_is_listed_and_never_judged(self):
+        self.put("SESSION_RUNNER.md\n", rel=".npmignore")
+        self.assertNotIn("patterns", self.row(self.report(), ".npmignore"))
+
+    def test_the_rbuildignore_text_is_the_one_it_was(self):
+        self.put("^SESSION_RUNNER.*\\.md$\n", rel=".Rbuildignore")
+        out = run_migrate(self.project, json_out=False).out
+        for phrase in ("case-insensitive regular expression", "^methodology$", "Python's re, not R's engine"):
+            self.assertIn(phrase, out)
+        self.assertNotIn("minimatch", out)
+
+    def test_listing_a_vscodeignore_never_edits_it(self):
+        self.put(self.LINES)
+        before = (self.project / ".vscodeignore").read_bytes()
+        r = run_migrate(self.project, "--apply", json_out=False)
+        self.assertEqual(r.returncode, 0, r.out)
+        self.assertEqual((self.project / ".vscodeignore").read_bytes(), before)
+        self.assertIn(".vscodeignore:", r.out, "an apply prints the list too")
 
 
 class TestTheChecks(Adopter):

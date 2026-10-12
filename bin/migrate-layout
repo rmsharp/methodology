@@ -524,6 +524,176 @@ def pattern_exposure(text, mapping):
     return {"exposed": sorted(exposed), "lines": lines, "unread": unread}
 
 
+# BL-101 F24 (plan 7.6, findings register): a root `.vscodeignore` is read as vsce reads it. vsce 3.9.2 (`out/package.js`,
+# `collectFiles`, the same call as in 3.6.0) keeps a file when no line of the ignore list matches it or any negation does,
+# each line a minimatch pattern with `{ dot: true }` and no `matchBase`. Measured against minimatch 10.2.5 in S299 (the
+# adopter's own checkout; `f24-oracle.py`, `f24-differential.py`).
+VSCE_PINNED = "vsce 3.9.2, minimatch 10.2.5"
+VSCE_DEFAULT_IGNORE = (  # `defaultIgnore` of vsce 3.9.2, in its order; none of them gets the `/**` a line of the file gets
+    ".vscodeignore", "package-lock.json", "npm-debug.log", "yarn.lock", "yarn-error.log", "npm-shrinkwrap.json", ".editorconfig",
+    ".npmrc", ".yarnrc", ".gitattributes", "*.todo", "tslint.yaml", ".eslintrc*", ".babelrc*", ".prettierrc*", ".cz-config.js",  # layout: ok -- vsce's own default list, matched against the project's paths
+    ".commitlintrc*", "webpack.config.js", "ISSUE_TEMPLATE.md", "CONTRIBUTING.md", "PULL_REQUEST_TEMPLATE.md", "CODE_OF_CONDUCT.md",
+    ".github", ".travis.yml", "appveyor.yml", "**/.git", "**/.git/**", "**/*.vsix", "**/.DS_Store", "**/*.vsixmanifest",
+    "**/.vscode-test/**", "**/.vscode-test-web/**")
+VSCE_NOT_IGNORED = ("package.json", "README.md")  # the two negations vsce appends to every list
+VSCE_LEAF_GLOB_RE = re.compile(r"(^|/)[^/]*\*[^/]*\Z")  # vsce: a line whose last segment has a `*` is not a directory name
+
+
+def expand_braces(pattern):
+    """The alternatives of a pattern's comma lists (`{a,b}.md`, nested ones too), or None for a brace that is not one: a
+    range (`{1..3}`), a lone `{a}` (minimatch keeps it literal) and an unmatched one are read differently than here."""
+    first = pattern.find("{")
+    if first < 0:
+        return None if "}" in pattern else [pattern]
+    depth, commas, end = 0, [], -1
+    for i in range(first, len(pattern)):
+        if pattern[i] == "{":
+            depth += 1
+        elif pattern[i] == "}":
+            depth -= 1
+            if depth == 0:
+                end = i
+                break
+        elif pattern[i] == "," and depth == 1:
+            commas.append(i)
+    if end < 0 or not commas:
+        return None
+    cuts = [first] + commas + [end]
+    out = []
+    for a, b in zip(cuts, cuts[1:]):
+        sub = expand_braces(pattern[:first] + pattern[a + 1:b] + pattern[end + 1:])
+        if sub is None:
+            return None
+        out += sub
+    return out
+
+
+def glob_segment(seg):
+    """The regular expression for one path segment of a glob, or None when it holds what is not read here: an extended glob
+    (`+(a|b)`), a backslash, a POSIX class (`[[:upper:]]`), a class that is empty or never closed. `*` and `?` stop at a `/`,
+    which a segment never holds, and with `{ dot: true }` they reach a leading dot; a `**` inside a segment is one `*`."""
+    out, i = [], 0
+    while i < len(seg):
+        c = seg[i]
+        if c == "\\":
+            return None
+        if c == "*":
+            while seg[i + 1:i + 2] == "*":
+                i += 1
+            if seg[i + 1:i + 2] == "(":
+                return None
+            out.append("[^/]*")
+        elif c in "+@!?" and seg[i + 1:i + 2] == "(":
+            return None
+        elif c == "?":
+            out.append("[^/]")
+        elif c == "[":
+            j = i + 1
+            negated = seg[j:j + 1] in ("!", "^")
+            j += negated
+            end = seg.find("]", j + 1)  # a `]` first would be a member, which minimatch and POSIX read differently: not read
+            if end < 0 or seg[j] == "]":
+                return None
+            body = seg[j:end]
+            if "[" in body or "\\" in body:
+                return None
+            members = "".join("-" if (k and k < len(body) - 1 and ch == "-") else re.escape(ch) for k, ch in enumerate(body))
+            out.append("[%s%s]" % ("^" if negated else "", members))
+            i = end
+        else:
+            out.append(re.escape(c))
+        i += 1
+    return "".join(out)
+
+
+def vsce_glob(pattern):
+    """A function (path) -> bool that answers as `minimatch(path, pattern, { dot: true })` does, or None when the pattern holds
+    what `glob_segment` and `expand_braces` do not read: it is then counted and never guessed. A `**` that is a whole segment
+    matches any number of segments, and at the end of the pattern one or more (`a/**` is not `a`); a leading `/`, a `.` segment
+    and a trailing `/` match no path. Case-sensitive, no `matchBase`: a pattern with no `/` is the project root's."""
+    alternatives = expand_braces(pattern)
+    if alternatives is None:
+        return None
+    compiled = []
+    for alt in alternatives:
+        segments = alt.split("/")
+        if "" in segments[1:-1]:
+            return None  # minimatch collapses `a//b` to `a/b`; not read
+        parts = []
+        for seg in segments:
+            if seg == "**":
+                parts.append(None)
+                continue
+            regex = glob_segment(seg)
+            if regex is None:
+                return None
+            try:
+                parts.append(re.compile(regex, re.S))
+            except re.error:
+                return None
+        compiled.append(parts)
+
+    def matches(parts, path):
+        done = {}
+
+        def go(i, j):
+            if (i, j) not in done:
+                if i == len(parts):
+                    done[(i, j)] = j == len(path)
+                elif parts[i] is None:
+                    done[(i, j)] = j < len(path) if i == len(parts) - 1 else any(go(i + 1, k) for k in range(j, len(path) + 1))
+                else:
+                    done[(i, j)] = j < len(path) and parts[i].fullmatch(path[j]) is not None and go(i + 1, j + 1)
+            return done[(i, j)]
+        return go(0, 0)
+    return lambda path: any(matches(parts, path.split("/")) for parts in compiled)
+
+
+def vsce_ignore_list(text):
+    """What vsce makes of a `.vscodeignore` (`collectFiles`): split at `\\n` and `\\r`, trimmed (a byte order mark with it), a line
+    that is empty or starts with `#` dropped; a line whose last segment has no `*` also stands for `/**` below it (`docs` is
+    `docs/**`), a negation (`!`) too; vsce's own default list is added, and `!package.json` and `!README.md`. Returns
+    (covering, unread): `covering(path)` is the (line, text) pairs that ignore the path, none when any negation matches it
+    wherever the negation sits, so a path is packaged exactly when it is empty; vsce's default list is line 0. A line this
+    tool does not read is counted in `unread` and plays no part."""
+    entries, negations, unread = [], [], 0
+    for number, raw in enumerate(re.split(r"\r\n|\r|\n", text), 1):
+        line = raw.strip().strip("\ufeff").strip()
+        if not line or line.startswith("#"):
+            continue
+        negated = line.startswith("!")
+        patterns = [line] + ([] if VSCE_LEAF_GLOB_RE.search(line) else [line + "**" if line.endswith("/") else line + "/**"])
+        globs = [vsce_glob(p[1:] if negated else p) for p in patterns]
+        if any(g is None for g in globs):
+            unread += 1
+            continue
+        (negations if negated else entries).extend((number, line, g) for g in globs)
+    for name in VSCE_DEFAULT_IGNORE:
+        entries.append((0, "(vsce default) " + name, vsce_glob(name)))
+    negations += [(0, "!" + name, vsce_glob(name)) for name in VSCE_NOT_IGNORED]
+
+    def covering(path):
+        hit = [(n, t) for n, t, g in entries if g(path)]
+        return [] if hit and any(g(path) for _n, _t, g in negations) else hit
+    return covering, unread
+
+
+def vscodeignore_exposure(text, mapping):
+    """BL-101 F24: which moved files a `.vscodeignore` stops covering, read as vsce reads it (`vsce_ignore_list`). A moved file
+    is exposed when it is ignored where it is and packaged where it goes. Same shape as `pattern_exposure`; vsce's default
+    list is reported as line 0, last, and a line this tool does not read is counted."""
+    covering, unread = vsce_ignore_list(text)
+    exposed, by_line = [], {}
+    for src, dest in mapping.items():
+        now = covering(src)
+        if now and not covering(dest):
+            exposed.append(src)
+            for key in now:
+                by_line.setdefault(key, []).append(src)
+    lines = [{"line": n, "text": s, "files": sorted(set(f))} for (n, s), f in sorted(by_line.items(), key=lambda kv: (kv[0][0] == 0, kv[0]))]
+    return {"exposed": sorted(exposed), "lines": lines, "unread": unread}
+
+
 DIR_RE = re.compile(r"(?<![\w./~-])docs/(?:methodology/?|archive/?)(?![\w.-])")  # layout: ok -- the two directories the move empties, searched for in prose
 
 
@@ -542,7 +712,8 @@ def scan_hits(root, moves, rewrites, tier):
     These are candidates: the scan reads names, never runs a file, so a name on a code line is necessary, not sufficient.
 
     BL-101 F10: a root `.Rbuildignore` is also read for what its regular expressions cover (`pattern_exposure`), since a pattern
-    names no file the scan could find, and its row gains `patterns`."""
+    names no file the scan could find, and its row gains `patterns`. BL-101 F24: so is a root `.vscodeignore`, for what vsce's
+    glob matching covers (`vscodeignore_exposure`); a pattern list for any other program is listed and never judged."""
     root = Path(root)
     mapping = logical_map(moves, tier)
     out = {c: {"mentions": 0, "files": 0, "sites": [], "paths": []} for c in CATEGORIES}
@@ -627,19 +798,23 @@ def scan_hits(root, moves, rewrites, tier):
                 visit(rel, f.read_text(encoding="utf-8", errors="replace"), "hooks", untracked=True)
             except OSError:
                 continue
-    # BL-101 F10: the root .Rbuildignore is read for what its patterns cover, whether or not it spells a name out; the row it
-    # already has (from a comment that does) keeps its fields and gains `patterns`.
-    if ".Rbuildignore" in tracked_files(root):
+    # BL-101 F10, F24: the root .Rbuildignore (as R reads it) and the root .vscodeignore (as vsce reads it) are read for what
+    # their patterns cover, whether or not they spell a name out; the row a file already has (from a name it spells out)
+    # keeps its fields and gains `patterns`.
+    root_tracked = tracked_files(root)
+    for ignore_name, exposure_of in ((".Rbuildignore", pattern_exposure), (".vscodeignore", vscodeignore_exposure)):
+        if ignore_name not in root_tracked:
+            continue
         try:
-            ignore_text = (root / ".Rbuildignore").read_text(encoding="utf-8", errors="replace")
+            ignore_text = (root / ignore_name).read_text(encoding="utf-8", errors="replace")
         except OSError:
             ignore_text = ""
-        exposure = pattern_exposure(ignore_text, mapping)
+        exposure = exposure_of(ignore_text, mapping)
         if exposure["exposed"]:
-            row = next((x for x in out["config"]["paths"] if x["file"] == ".Rbuildignore"), None)
+            row = next((x for x in out["config"]["paths"] if x["file"] == ignore_name), None)
             if row is None:
                 first = exposure["lines"][0]
-                row = {"file": ".Rbuildignore", "line": first["line"], "text": first["text"].strip()[:200], "mentions": 0,
+                row = {"file": ignore_name, "line": first["line"], "text": first["text"].strip()[:200], "mentions": 0,
                        "code_mentions": 0, "names": [], "untracked": False}
                 out["config"]["paths"].append(row)
                 out["config"]["files"] += 1
@@ -1016,15 +1191,25 @@ def render_text(report):
                                                         "   [not tracked: per clone]" if x.get("untracked") else ""))
                     p = x.get("patterns")
                     if p:
+                        vsce = x["file"] == ".vscodeignore"
                         for ln in p["lines"]:
                             names = ln["files"]
                             shown = ", ".join(names[:3]) + (" and %d more" % (len(names) - 3) if len(names) > 3 else "")
-                            out.append("      line %d: %s  stops covering %s" % (ln["line"], ln["text"][:120], shown))
-                        out.append("      %d line(s) cover %d moved file(s) where they are now and no line covers them under %s/; a line such as ^%s$ would"
-                                   " (each line read as a case-insensitive regular expression with Python's re, not R's engine: a candidate, not a verdict)"
-                                   % (len(p["lines"]), len(p["exposed"]), NEW_DIR, NEW_DIR))
+                            if ln["line"]:
+                                out.append("      line %d: %s  stops covering %s" % (ln["line"], ln["text"][:120], shown))
+                            else:
+                                out.append("      vsce's default list: %s  stops covering %s" % (ln["text"].replace("(vsce default) ", "", 1), shown))
+                        if vsce:
+                            out.append("      %d line(s) cover %d moved file(s) where they are now and no line covers them under %s/; a line such as %s/** would"
+                                       " (vsce reads each line with minimatch, { dot: true } and no matchBase, so a bare name is the project root's; this tool's"
+                                       " own translation of that, checked against %s: a candidate, not a verdict)"
+                                       % (len(p["lines"]), len(p["exposed"]), NEW_DIR, NEW_DIR, VSCE_PINNED))
+                        else:
+                            out.append("      %d line(s) cover %d moved file(s) where they are now and no line covers them under %s/; a line such as ^%s$ would"
+                                       " (each line read as a case-insensitive regular expression with Python's re, not R's engine: a candidate, not a verdict)"
+                                       % (len(p["lines"]), len(p["exposed"]), NEW_DIR, NEW_DIR))
                         if p["unread"]:
-                            out.append("      %d line(s) could not be read as a regular expression and were not evaluated" % p["unread"])
+                            out.append("      %d line(s) could not be read as %s and were not evaluated" % (p["unread"], "a glob" if vsce else "a regular expression"))
             else:
                 for s in c["sites"]:
                     out.append("    %s:%d  %s%s" % (s["file"], s["line"], s["text"][:120], "   [not tracked: per clone]" if s.get("untracked") else ""))
