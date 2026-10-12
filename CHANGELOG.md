@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S304 close-out — BL-105 build phase 3 done: the prose; the receipt is complete; the gate run read 18/18
+
+Phase 3 of BL-105 is done on the fork and sent nowhere: `BOOTSTRAP.md` 218 and 222 and `CLAUDE_TEMPLATE.md` 83-84 say where `PROJECT_LEARNINGS.md` lives in either layout, and `bin/check-links:84`, which was code (F31), allows it beside `FRAMEWORK_LEARNINGS.md`. The gate in a clean `--no-local` clone of `35459ca`: 18/18, results `0ca51b2444cc`, manifest `5ba29f982c78`. `HANDOFFS.md` holds 3 receipts (S304, S303, S302): one trim is owed after the next Phase 0 report. The `HANDOFFS.md` receipt carries the rest; Phase 3C appended no fork learning row.
+
 ### 2026-10-12 · [BL-101] BL-105's state in the plan, the backlog row and its detail: the prose is written, phase 4 is not
 
 `methodology-subdirectory-plan.md` status line (same byte count, 59,994 of 60,000 B), `BACKLOG.md` row BL-105 and a new S304 paragraph in `BACKLOG-DETAIL.md`: build phase 3 done on the fork (`BOOTSTRAP.md` 218 and 222, `CLAUDE_TEMPLATE.md` 83-84, `bin/check-links` as code, F31), nothing sent; the next phase is the adopters (phase 4). The row stays open: phase 4 is not started.
