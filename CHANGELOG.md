@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-11-2.md` (1 record(s), 40,202 B → 29,598 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-11 → 2026-10-11) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-11-2.md`](docs/archive/HANDOFFS-through-2026-10-11-2.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-11-2.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-11-2.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,202 B → 29,598 B (−26.4%).
+
 ### 2026-10-11 · [ad hoc] S298 — the receipt's push count corrected from 6 to 7
 
 `HANDOFFS.md` S298 receipt `next_steps` (5) said `git rev-list --count origin/main..HEAD` reads 6 after the close-out; the BL-105 record (`76564bb`) made it 7 (the trim, its fold, the claim, the checkpoint, the work commit, the close-out and that record). The receipt now says 7, and its `key_files` section list is shortened to `§1 to §6` to stay under the 12,288 B record budget. No other claim changed; nothing pushed. Model: Claude Sonnet 5.5.
