@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-11-5.md` (1 record(s), 37,904 B → 28,158 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-11 → 2026-10-11) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-11-5.md`](docs/archive/HANDOFFS-through-2026-10-11-5.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-11-5.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-11-5.md.verify.sh)
+rather than trusting a digest printed here. Live file 37,904 B → 28,158 B (−25.7%).
+
 ### 2026-10-12 · [BL-101] S301 close-out — BL-105 decided (option B); the receipt is complete; the gate run read 18/18
 
 Phase 3 done: S300's handoff scored 9 (3A), this session 8 (3B); no fork learning row appended (3C: considered fork #34, #57, #23 and the distributed #12; the lesson is BL-106, a gate). The `HANDOFFS.md` receipt is `complete` and `check-handoff` exits 0; the gate run in a clean `--no-local` clone of `0b496b8` read 18/18, 0 fail, 0 unmeasured, results `8c209fa9806e`, manifest `440ab037cfe1` (equal to S300's, as no code, test or gate changed). A HANDOFFS trim is owed again after the next Phase 0 (3 receipts: S301, S300, S299). Pushed this session: `1dfc8b2` to the fork only; 7 commits ahead of `origin/main` after this one, a push is his call.
