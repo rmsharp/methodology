@@ -1,0 +1,10 @@
+
+──────────────────────────────────────────────────────────────────────────
+  quality gates — run  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+──────────────────────────────────────────────────────────────────────────
+  gate                                    rule    measured  status
+  ledger-lag                              <= 0           0  pass
+  release-gate                            <= 0           0  pass
+──────────────────────────────────────────────────────────────────────────
+  cite in the receipt: quality_ratchet: 2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+

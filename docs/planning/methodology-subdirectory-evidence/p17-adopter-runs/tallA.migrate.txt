@@ -1,0 +1,356 @@
+migrate-layout: /Users/rmsharp/.cache/p17-rehearsal/p17/tallA
+canonical: /Users/rmsharp/Development/methodology @ 5de6b7fda8aa
+layout: legacy   tier: all   mode: apply
+
+moves (36):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv SESSION_NOTES.md methodology/SESSION_NOTES.md
+  git mv CHANGELOG.md methodology/CHANGELOG.md
+  git mv HANDOFFS.md methodology/HANDOFFS.md
+  git mv ROADMAP.md methodology/ROADMAP.md
+  git mv .context-budget.json methodology/.context-budget.json
+  git mv .quality-gates.json methodology/.quality-gates.json
+  git mv .gitattributes methodology/.gitattributes
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+  git mv dashboard_history.jsonl methodology/dashboard_history.jsonl
+  git mv .context-budget-history.jsonl methodology/.context-budget-history.jsonl
+  git mv docs/archive/CHANGELOG-through-2026-08-24.md methodology/archive/CHANGELOG-through-2026-08-24.md
+  git mv docs/archive/CHANGELOG-through-2026-08-24.md.verify.sh methodology/archive/CHANGELOG-through-2026-08-24.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-08-24.md methodology/archive/HANDOFFS-through-2026-08-24.md
+  git mv docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh methodology/archive/HANDOFFS-through-2026-08-24.md.verify.sh
+
+left in place (3):
+  docs/archive/README.md -- not a ledger shard the trimmer wrote: the project's own; it stays
+  docs/archive/SESSION_NOTES-through-S253.md -- its proof exits 2 at the new place (0 here): the proof reads its shard by a path that moves; the shard and its proof stay
+  docs/archive/SESSION_NOTES-through-S253.md.verify.sh -- its proof exits 2 at the new place (0 here): the proof reads its shard by a path that moves; the shard and its proof stay
+
+rewrites (3 file(s)):
+  CLAUDE.md (29 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -2,14 +2,14 @@
+     
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -Read and follow `SESSION_RUNNER.md` step by step. It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+    +Read and follow `methodology/SESSION_RUNNER.md` step by step. It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+     
+     **Three rules you will be tempted to violate:**
+    -1. **Orient first** — Read SAFEGUARDS.md → SESSION_NOTES.md → run `methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+    +1. **Orient first** — Read methodology/SAFEGUARDS.md → methodology/SESSION_NOTES.md → run `methodology/methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+     2. **1 and done** — One deliverable per session. When it's complete, close out. Do not start the next thing.
+     3. **Auto-close** — When done: evaluate previous handoff, self-assess, document learnings, write handoff notes, commit, report, STOP.
+     
+    -`SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+    +`methodology/SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+     
+     ---
+     
+    @@ -49,7 +49,7 @@
+     
+     ## Build / Test / Verify
+     
+    -**The build equivalent (record the run in close-out, see SAFEGUARDS.md) is:**
+    +**The build equivalent (record the run in close-out, see methodology/SAFEGUARDS.md) is:**
+     
+     ```bash
+     npm run compile      # type-checks src AND test/unit, then bundles — seconds
+    @@ -99,7 +99,7 @@
+     - **`test:integration` and `test:lsp` take over the screen** — each launches a real VS Code
+       Extension Development Host window. Get the operator's explicit go-ahead before running either.
+     - **A red `check-backlog` is not fixed by deleting the block.** It means a completed record is
+    -  sitting in an open-work file: record the outcome in `CHANGELOG.md` and anything worth carrying
+    +  sitting in an open-work file: record the outcome in `methodology/CHANGELOG.md` and anything worth carrying
+       forward in `PROJECT_LEARNINGS.md` **first**, then delete. ⚠ Verify per block — Session 195 found
+       an OPEN, operator-pending decision (the lone `+` gate suspension, 2 recovered against 32 new
+       phantoms) buried inside a tombstone, recorded in no other tracked file.
+    @@ -119,7 +119,7 @@
+       change that moves a corpus document into the losing column is a defect, whatever the unit tests say.
+       Any directory holding `src/` scores, so a past build is `run.sh <sha> /tmp/build-<sha>`.
+     - ⚠ **It is machine-specific and can never be a gate.** The corpus is personal and is never
+    -  committed: `.quality-gates.json` and CI cannot run this, which is exactly why the habit has to be
+    +  committed: `methodology/.quality-gates.json` and CI cannot run this, which is exactly why the habit has to be
+       written down here instead.
+     - ⚠ **Name a corpus document only by its ORDINAL** in any tracked file (Learning #548).
+     - The scripts are tracked and the corpus is not; `tools/realdoc-score/README.md` says which files it
+    @@ -129,16 +129,16 @@
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from the methodology repo, not project-owned). The base files govern unless explicitly overridden here.*
+    -
+    -> **Why this file and not a synced one:** `SESSION_RUNNER.md`, `SAFEGUARDS.md`, and everything under `docs/methodology/` (including the workstream docs) are synced byte-identical from the canonical methodology repo — editing them blocks future syncs (BOOTSTRAP, "Customizations Go in CLAUDE.md, Not in Synced Files"). Every project-specific rule, including the one below, lives here.
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from the methodology repo, not project-owned). The base files govern unless explicitly overridden here.*
+    +
+    +> **Why this file and not a synced one:** `methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, and everything under `docs/methodology/` (including the workstream docs) are synced byte-identical from the canonical methodology repo — editing them blocks future syncs (BOOTSTRAP, "Customizations Go in CLAUDE.md, Not in Synced Files"). Every project-specific rule, including the one below, lives here.
+     
+     ### Mandatory development practice — strict TDD (operator directive, project-wide)
+     
+     **For the entire duration of this project, all implementation and bug-fix work MUST follow strict test-driven development.** This is a hard gate, an override that strengthens the base Development-workstream guidance (which lists "Test-last" as anti-pattern #3 and already says "write the failing test first"). It is not optional and does not lapse between sessions.
+     
+     - **Red → Green → Refactor, one test at a time.** Write ONE failing test for the next behavior, run it and confirm it fails *for the right reason* (RED), write the minimal code to pass (GREEN), then refactor with tests green. Repeat.
+    -- **Vertical slices, never horizontal.** Do NOT write all tests first then all implementation — that produces tests of imagined behavior. One test → one implementation → repeat (see the `/tdd` skill, which is the operative how-to; cited in `RECOMMENDED_SKILLS.md`).
+    +- **Vertical slices, never horizontal.** Do NOT write all tests first then all implementation — that produces tests of imagined behavior. One test → one implementation → repeat (see the `/tdd` skill, which is the operative how-to; cited in `methodology/RECOMMENDED_SKILLS.md`).
+     - **Test behavior through the public interface,** not implementation details, so tests survive refactors. For this project the pure `core/` library (the §3.3 guardrail) is where most logic lives and is unit-tested headlessly with `npm test` (vitest); `vscode` adapters are verified with `@vscode/test-electron` (Learning #3).
+     - **Scope of the gate:** anything with logic (parsers, arg-builders, indexers, providers, lifecycle/state machines). Pure declarative/config/doc edits with no logic (e.g. a `package.json` command contribution, grammar JSON) are exempt from a unit test but still require their normal verification (compile, integration registration, render).
+     - **Enforcement at close-out:** a session's self-assessment must state that implementation was TDD (RED shown before GREEN). A commit that adds logic with no preceding failing test is a protocol violation to flag in the handoff.
+    @@ -165,7 +165,7 @@
+       score against `quarto render` because that is mechanical over thousands of documents; the product
+       **defaults to mirroring Posit**, because Posit is the *product* oracle — what a user expects an
+       Outline to do. **Seven such decisions are now recorded** in `BACKLOG.md`'s RECORD item and in
+    -  `CHANGELOG.md`; five mirror Posit, and ⚠ **two deliberately do not.**
+    +  `methodology/CHANGELOG.md`; five mirror Posit, and ⚠ **two deliberately do not.**
+     - ⚠ **The default is rebuttable, and decisions (6) and (7) are the cases that rebutted it (Sessions
+       274 and 277).**
+       Mirroring Posit rests on Posit's behaviour being *intended*. Where Posit's own maintainers have
+    @@ -189,7 +189,7 @@
+     
+     *Origin: operator directive, Session 75 (2026-07-11) — formalizes a pattern already used ad hoc in Sessions 71/73/74 into a standing procedural step, so it fires automatically at every future Phase 0 rather than being re-derived per session. See also the standing `feedback` memory `candidate-list-selection` (general interaction preference: arrow+enter selection over a typed-digit prose list).*
+     
+    -### `SESSION_NOTES.md` retention — it is TRANSIENT, not append-only (Session 256)
+    +### `methodology/SESSION_NOTES.md` retention — it is TRANSIENT, not append-only (Session 256)
+     
+     **At Phase 3D, after writing your own close-out pair, DELETE the oldest pair so the live file holds
+     at most three. Do not append indefinitely.** A close-out pair is what one closing session writes:
+    @@ -199,10 +199,10 @@
+     the 400-line ceiling, leaving real headroom instead of the next session inheriting a full file.
+     
+     **A dropped pair is not lost — it is one command away**, and the file is small enough that this is
+    -trivial: `git show <sha>:SESSION_NOTES.md`. Records through Session 253 additionally live in
+    +trivial: `git show <sha>:methodology/SESSION_NOTES.md`. Records through Session 253 additionally live in
+     [`docs/archive/SESSION_NOTES-through-S253.md`](docs/archive/SESSION_NOTES-through-S253.md). The
+     live file's job is only to answer *"what is the active task, and whose handoff am I scoring?"* The
+    -durable record is `HANDOFFS.md` (the receipts), `CHANGELOG.md` (the ledger) and git.
+    +durable record is `methodology/HANDOFFS.md` (the receipts), `methodology/CHANGELOG.md` (the ledger) and git.
+     
+     **Why this rule exists, because the reason is not obvious and the canonical seed argues both sides.**
+     `../methodology/starter-kit/SESSION_NOTES.md` says at line 5 *"This file is transient — it is
+    @@ -212,10 +212,10 @@
+     both ledgers combined before the Session 254 trim — in the one file Phase 0 step 2 *orders* every
+     session to read. Sessions 254 and 255 each read ~160 of its ~13,900 lines and inferred the rest,
+     which is failure mode #28 committed by the sessions that documented it. Canonical's own repo, 110
+    -sessions of dogfooding, has **no `SESSION_NOTES.md` at all**.
+    +sessions of dogfooding, has **no `methodology/SESSION_NOTES.md` at all**.
+     
+     **Two things that make this rule non-obvious in practice:**
+    -- ⚠ **`methodology_trim.py` cannot enforce it.** `--file SESSION_NOTES.md` exits 3 with `NO_CONFIG`
+    +- ⚠ **`methodology/methodology_trim.py` cannot enforce it.** `--file methodology/SESSION_NOTES.md` exits 3 with `NO_CONFIG`
+       by design, and a `LedgerSpec` cannot be authored for this file at all: `date_of_record` is
+       required and `evaluate()` freezes the oldest **by date**, while **458 of 740 records carried no
+       date**. The reduction axis here is the **session number**. Upstream **BL-32** (open, undecided)
+    @@ -225,7 +225,7 @@
+       by construction otherwise (upstream BL-36). Rewrite `## ACTIVE TASK` in the close-out commit, not
+       the trim commit.
+     
+    -**The gate that actually catches regrowth is `python3 context_budget.py`** — `max_lines: 400`,
+    +**The gate that actually catches regrowth is `python3 methodology/context_budget.py`** — `max_lines: 400`,
+     `max_bytes: 120000`, `max_line_bytes: 280`. The line ceiling binds ~4.7x harder than the byte one,
+     and `max_line_bytes` is the one that stays red after a trim: keep every ACTIVE TASK line under
+     280 B rather than writing one 620 B paragraph.
+    @@ -234,9 +234,9 @@
+     rule attached regrows — this file had already been drained twice under an instruction to "keep it
+     clean", which is what `BACKLOG.md`'s own header records about itself.*
+     
+    -### `CHANGELOG.md` conventions (Session 264)
+    -
+    -**The rules are [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger).**
+    +### `methodology/CHANGELOG.md` conventions (Session 264)
+    +
+    +**The rules are [§The Action Ledger](methodology/FRAMEWORK_APPARATUS.md#the-action-ledger).**
+     This project adds:
+     - **Tag a `BACKLOG.md` item `[BL-<item title>]`.** Its items carry no ids, so the title is the id;
+       leave out any `]`, which ends the tag early. Methodology-repo work (a sync, BL-57) is `[ad hoc]`,
+    @@ -246,9 +246,9 @@
+       longer resolve (`BACKLOG.md`'s header). Most entries before S264 cover a whole session, not one
+       commit. The Keep-a-Changelog `## [Unreleased]` heading is gone; entries group under `## YYYY-MM`.
+       The headings the audit skips:
+    -  `cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') | grep '^### ' | grep -vE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[(issue #[0-9]+|BL-[^]]+|ad hoc)\]'`
+    -- **`CHANGELOG.md` is not in `.context-budget.json`.** No session reads it whole, so it has no read
+    -  budget. Its only size trigger is `python3 methodology_trim.py --file CHANGELOG.md --check`, and
+    +  `cat methodology/CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') | grep '^### ' | grep -vE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[(issue #[0-9]+|BL-[^]]+|ad hoc)\]'`
+    +- **`methodology/CHANGELOG.md` is not in `methodology/.context-budget.json`.** No session reads it whole, so it has no read
+    +  budget. Its only size trigger is `python3 methodology/methodology_trim.py --file methodology/CHANGELOG.md --check`, and
+       archiving is optional.
+     
+     *Origin: Session 264 (2026-09-18), BL-57 P8. Operator decisions: the tag form, recording the legacy
+  .context-budget.json (13 replacement(s))
+    --- .context-budget.json
+    +++ methodology/.context-budget.json
+    @@ -26,7 +26,7 @@
+           "_protected_min_bytes": "Derived, not inherited. This project's statement of purpose measures 732 B at Session 255; the seed shipped 800, which this file could never satisfy. 700 leaves the fence real (a compaction cannot cut more than ~4% of it) without being unsatisfiable on day one."
+         },
+         {
+    -      "path": "SESSION_NOTES.md",
+    +      "path": "methodology/SESSION_NOTES.md",
+           "class": "read-mandated",
+           "max_lines": 400,
+           "max_bytes": 120000,
+    @@ -46,7 +46,7 @@
+           "_": "Phase 0 step 2 ORDERS a read of this file. ⚠ MEASURED 3,946,063 B / 13,912 lines at Session 255 -- 33x this ceiling, and larger than BOTH ledgers were before the Session 254 trim. Sessions 254 and 255 each read ~160 lines of it and inferred the rest, which is failure mode #28 committed twice by the session that then wrote the finding down. The ceiling is canonical's, kept deliberately rather than raised to make this green -- raising it would record the problem as the standard. Reducing this file is a NAMED next deliverable, not housekeeping."
+         },
+         {
+    -      "path": "HANDOFFS.md",
+    +      "path": "methodology/HANDOFFS.md",
+           "class": "read-mandated",
+           "max_bytes": 65536,
+           "_": "The durable receipt ledger; Phase 0 reconciles it and Phase 3D writes to it. 65,536 B is this project's ceiling, no longer the trimmer's: trim v1.5.0 (synced at Session 264) archives it only above 196,608 B, so this entry stays `over` until a trim is run by hand. KEPT deliberately: the operator decided at methodology Session 191 (the upstream plan's D7) that the remedy is a trim in this project, not dropping the warning as CHANGELOG.md's was -- and that trim needs `--budget-bytes` or `--cut N --force`, since the trimmer's own trigger will not fire. 52,850 B after the Session 254 trim (was 1,801,150 -- 27x over, refusing to trim at all because of a stale bootstrap seed footer); 62,521 B when this config was written at Session 255. Measure, don't trust this sentence: `python3 methodology_trim.py --check --file HANDOFFS.md`."
+    @@ -66,48 +66,48 @@
+       ],
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "⚠ ALL BUT TWO OF THESE WERE SILENTLY BEHIND CANONICAL UNTIL SESSION 255. An adopter may not edit these files, so zero local edits means `git diff` shows nothing and drift is invisible -- SESSION_RUNNER.md, FRAMEWORK_LEARNINGS.md, RECOMMENDED_SKILLS.md, BOOTSTRAP.md, methodology_dashboard.py and methodology_trim.py had ALL drifted, and context_budget.py plus .context-budget.json were never installed at all. This block is the check that makes that visible. Adjust the paths if the methodology checkout moves."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         },
+         {
+    -      "path": "FRAMEWORK_LEARNINGS.md",
+    +      "path": "methodology/FRAMEWORK_LEARNINGS.md",
+           "canonical": "../methodology/starter-kit/FRAMEWORK_LEARNINGS.md"
+         },
+         {
+    -      "path": "RECOMMENDED_SKILLS.md",
+    +      "path": "methodology/RECOMMENDED_SKILLS.md",
+           "canonical": "../methodology/starter-kit/RECOMMENDED_SKILLS.md"
+         },
+         {
+    -      "path": "BOOTSTRAP.md",
+    +      "path": "methodology/BOOTSTRAP.md",
+           "canonical": "../methodology/starter-kit/BOOTSTRAP.md"
+         },
+         {
+    -      "path": "CLAUDE_TEMPLATE.md",
+    +      "path": "methodology/CLAUDE_TEMPLATE.md",
+           "canonical": "../methodology/starter-kit/CLAUDE_TEMPLATE.md"
+         },
+         {
+    -      "path": "CONTEXT_TEMPLATE.md",
+    +      "path": "methodology/CONTEXT_TEMPLATE.md",
+           "canonical": "../methodology/starter-kit/CONTEXT_TEMPLATE.md"
+         },
+         {
+    -      "path": "methodology_dashboard.py",
+    +      "path": "methodology/methodology_dashboard.py",
+           "canonical": "../methodology/starter-kit/methodology_dashboard.py"
+         },
+         {
+    -      "path": "methodology_trim.py",
+    +      "path": "methodology/methodology_trim.py",
+           "canonical": "../methodology/starter-kit/methodology_trim.py"
+         },
+         {
+    -      "path": "context_budget.py",
+    +      "path": "methodology/context_budget.py",
+           "canonical": "../methodology/starter-kit/context_budget.py"
+         },
+         {
+    -      "path": "quality_ratchet.py",
+    +      "path": "methodology/quality_ratchet.py",
+           "canonical": "../methodology/starter-kit/quality_ratchet.py"
+         }
+       ]
+  .quality-gates.json (2 replacement(s))
+    --- .quality-gates.json
+    +++ methodology/.quality-gates.json
+    @@ -1,7 +1,7 @@
+     {
+       "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear, held by quality_ratchet.py. STARTS EMPTY ON PURPOSE: a ratchet begins where the project IS, not where an article says it should be. Measure first, then declare each gate at its current value; `python3 quality_ratchet.py --run` reports every gate, and `install-hook` makes the pre-commit ratchet refuse any later commit that loosens one. Thresholds only tighten. Loosening one is a plan-mode decision made in its own commit with the reason in the ledger, committed with --no-verify — a recorded bypass, not an exemption (SAFEGUARDS.md Blast Radius Limits; SESSION_RUNNER.md failure mode #17; ITERATIVE_METHODOLOGY.md §Mechanical Gates Bind Every Actor).",
+       "version": 1,
+    -  "results_file": ".quality-gates-results.json",
+    +  "results_file": "methodology/.quality-gates-results.json",
+       "_results_file": "Where --run writes its results (gitignored by default — add it to .gitignore; the receipt cites the summary line, and the dashboard reads the file where it exists). Commit it instead if you want every clone to score the last run.",
+       "_gate_schema": "Each gate: `name` (unique; the ratchet keys on it), `direction` (`min`: measured >= threshold, or `max`: measured <= threshold), `threshold` (a number), and optionally `command` (run via the shell from the project root) plus `extract` (a regex whose FIRST capture group is the measured number; without `extract` the command's exit code is the measurement, so `max 0` means `must exit 0`). A gate with no command is declared, not measured: --run reports it UNMEASURED and exits 1 — never pass. `why` and `unit` are free text for the reader.",
+       "_example": {
+    @@ -19,7 +19,7 @@
+           "direction": "max",
+           "threshold": 0,
+           "unit": "commits",
+    -      "command": "git rev-list --count --no-merges \"$(git log -1 --format=%H -- CHANGELOG.md)..HEAD\"",
+    +      "command": "git rev-list --count --no-merges \"$(git log -1 --format=%H -- methodology/CHANGELOG.md)..HEAD\"",
+           "extract": "^(\\d+)$",
+           "why": "Commits after the newest commit that touched CHANGELOG.md -- Phase 0's reconcile set, and the set that makes methodology_trim.py refuse with P1_UNDOCUMENTED. Measured 0 at Session 264 (operator's decision; PROJECT_LEARNINGS #544). It catches an unrecorded commit at the END of a session, not a mid-session commit followed by a recorded one: the one-entry-per-commit rule itself is the canonical pre-commit hook's to enforce, which is not installed."
+         },
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  tests:   7 mention(s) in 3 file(s)
+    test/unit/backlog-hygiene-gate.test.ts:34  "  above were one deliverable; see `CHANGELOG.md`, 2026-08-02.)*",   (2 mentions, 2 on code lines)
+    test/integration/suite/yaml-diagnostics.test.ts:148  // a real interactive Extension Development Host (SESSION_NOTES.md records   [comment lines only]
+    test/unit/qmd-model.test.ts:902  * On this repo's own 108 markdown/qmd files it deletes `SESSION_NOTES.md`'s   (4 mentions, 0 on code lines)   [comment lines only]
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 4 mention(s) in 3 file(s)
+    check-backlog.js:131  `\n  Completed work belongs in CHANGELOG.md, and anything worth carrying` +
+    src/core/project-yaml.ts:304  // (Session 153; see `CHANGELOG.md`). They were the last two value enumerators still using   [comment lines only]
+    src/core/qmd/model.ts:3581  * per-reader `yaml_metadata_block` table are deleted rather than gated; `CHANGELOG.md` and   (2 mentions, 0 on code lines)   [comment lines only]
+  config:  26 mention(s) in 1 file(s)
+    .vscodeignore:43  SESSION_RUNNER.md   (26 mentions, 21 on code lines)
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  2228 mention(s) in 9 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   228 mention(s) in 36 file(s)
+    .gitignore:2  dashboard.html
+    .gitignore:65  # quality_ratchet.py's `--run` output (methodology sync, Session 264) — gitignored by default, as
+    .gitignore:66  # the seed `.quality-gates.json` says; commit it instead if every clone should score the last run.
+    .gitignore:67  .quality-gates-results.json
+    BACKLOG.md:3  *Open, actionable work items only. Completed work → `CHANGELOG.md`. Feature inventory & plans → `ROADMAP.md`.*
+    BACKLOG.md:17  > **append-only history** (`SESSION_NOTES.md`, `HANDOFFS.md`, `CHANGELOG.md`, `PROJECT_LEARNINGS.md`)
+    BACKLOG.md:70  each block against `CHANGELOG.md`, and wrote "keep it clean" — an instruction, which is what the
+    BACKLOG.md:84  - [ ] **R6 residuals — what the positively-established silence rule leaves at HEAD's answer** (Session 275; the rule is 
+    BACKLOG.md:94  - [ ] **Pre-existing fence-grammar defects measured by Session 276's research -- each wrong at HEAD, independent of any 
+    BACKLOG.md:110  - [ ] **The oracle corpus is 131 documents and its prose says 66** (found by Session 271's R2 fan-out and **verified fir
+    BACKLOG.md:112  - [ ] **⚠ NEW (Session 272) — an EMPTY `---` / `---` pair is read as a setext heading whose text is `---`, and the mid-d
+    BACKLOG.md:120  - [ ] **The attribute spec is matched with regexes and never TOKENIZED as pandoc tokenizes it, so an opener pandoc REFUS
+    BACKLOG.md:136  - **(5) MID-DOCUMENT YAML METADATA IS NOT MODELLED AT ALL — the Outline shows what is inside a `---` span, and `quarto r
+    BACKLOG.md:148  - ⚠ Delete this bullet only when something makes all **seven** answers unnecessary — a decision record is not open work,
+    BACKLOG.md:184  - [ ] **Only the `html:` per-format block's `from:` is resolved — a NON-ACTIVE format's `from:` is refused, and that ref
+    BACKLOG.md:194  - [ ] **⚠ RECORD-HYGIENE FINDING, verified firsthand but NOT acted on: the `rawTexMacroLineIsBlock` item below is a COMP
+    BACKLOG.md:222  - [ ] **RECORD GAP — Session 180 reported three items as "filed, not fixed" and none of them reached this file** (found 
+    BACKLOG.md:256  - [ ] **Validate the scalar `format:` NAME on the remaining surfaces + polish (S145 §4.3 deferrals)** — all reuse S145's
+    BACKLOG.md:260  - [ ] **51% of the `scratchpad/` paths cited by TRACKED documents no longer exist, and two are findings documents cited 
+    BACKLOG.md:264  - [ ] **`npm audit` went 2 → 6 advisories and no document in the repo records the change** (found by Session 186 at Orie
+    BACKLOG.md:270  - [ ] **Marketplace publish prerequisites — OPERATOR STEP, not an agent task.** An actual `vsce publish` needs a registe
+    BACKLOG.md:274  - [ ] **Post-Posit-comparison feature roadmap — the residual open candidates.** Prioritized via grill-me sessions (Sessi
+    BACKLOG.md:280  *Condensed by Session 150 from a 44-line tracker that carried all 16 completed ranked items, their 17 completed sub-slic
+    BACKLOG.md:286  *(empty — the one item this section held, the Posit feature comparison, was completed in Session 42 and now lives in `CH
+    BACKLOG.md:455  ⚠ **THE OTHER HALF OF THIS ITEM — `BLOCK_QUOTE_PREFIX`'s `^ {0,3}` ANCHOR — IS CLOSED BY SESSION 243**, after Sessions 2
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 18 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  2 proof(s), exit histogram {"0": 2} -> 2 proof(s), exit histogram {"0": 2}
+  history: 483 commit(s) reached by git log --follow -> 484 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 2bb5264c6b28

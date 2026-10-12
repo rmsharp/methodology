@@ -1,0 +1,7 @@
+check-links: FAIL — 4 dangling link(s) in the tree at /Users/rmsharp/.cache/p17-rehearsal/p17/t1A (new layout):
+  methodology/SESSION_NOTES.md:0  ->  <distributed file missing from tree>
+  methodology/CHANGELOG.md:0  ->  <distributed file missing from tree>
+  methodology/HANDOFFS.md:0  ->  <distributed file missing from tree>
+  methodology/ROADMAP.md:0  ->  <distributed file missing from tree>
+
+Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.

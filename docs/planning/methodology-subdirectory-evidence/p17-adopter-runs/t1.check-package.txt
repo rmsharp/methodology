@@ -1,0 +1,10 @@
+
+> vscode-quarto-ext@0.0.1 check-package
+> node check-package.js
+
+check-package: FAIL — 65 files, 6.67 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media methodology package.json snippets syntaxes
+
+  ✗ unexpected `methodology` in the package — 23 file(s), e.g. methodology/quality_ratchet.py, methodology/methodology_trim.py, methodology/methodology_dashboard.py, …
+    Either exclude it in .vscodeignore, or add it to ALLOWED_ROOTS here if it really should ship.
+
+  The packaged set is what `vsce ls` reports; run it to see every path.

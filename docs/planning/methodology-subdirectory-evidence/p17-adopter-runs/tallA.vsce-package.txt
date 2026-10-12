@@ -1,0 +1,57 @@
+Executing prepublish script 'npm run vscode:prepublish'...
+
+> vscode-quarto-ext@0.0.1 vscode:prepublish
+> npm run compile && npm run check-package
+
+
+> vscode-quarto-ext@0.0.1 compile
+> npm run check-types && npm run bundle
+
+
+> vscode-quarto-ext@0.0.1 check-types
+> tsc --noEmit && npm run check-types:unit
+
+
+> vscode-quarto-ext@0.0.1 check-types:unit
+> tsc -p tsconfig.unit.json
+
+
+> vscode-quarto-ext@0.0.1 bundle
+> node esbuild.js
+
+
+> vscode-quarto-ext@0.0.1 check-package
+> node check-package.js
+
+check-package: OK — 42 files, 5.66 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json snippets syntaxes
+ INFO  Files included in the VSIX:
+tallA.vsix
+├─ [Content_Types].xml 
+├─ extension.vsixmanifest 
+└─ extension/
+   ├─ LICENSE.txt [1.04 KB]
+   ├─ NOTICE [8.43 KB]
+   ├─ language-configuration.json [0.74 KB]
+   ├─ package.json [18.02 KB]
+   ├─ readme.md [9.49 KB]
+   ├─ dist/
+   │  ├─ extension.js [391.93 KB]
+   │  └─ notebook-renderer.js [17.97 KB]
+   ├─ languages/
+   │  ├─ dot-language-configuration.json [0.4 KB]
+   │  ├─ mermaid-language-configuration.json [0.37 KB]
+   │  └─ typst-language-configuration.json [0.45 KB]
+   ├─ media/
+   │  ├─ icon.png [7.56 KB]
+   │  ├─ graphviz/ (1 file) [1.27 MB]
+   │  ├─ katex/ (22 files) [543.12 KB]
+   │  ├─ mermaid/ (1 file) [3.4 MB]
+   │  └─ walkthrough/ (5 files) [1.78 KB]
+   ├─ snippets/
+   │  └─ quarto.json [3.13 KB]
+   └─ syntaxes/
+      └─ quarto.tmLanguage.json [13.45 KB]
+
+=> Run vsce ls --tree to see all included files.
+
+ DONE  Packaged: /Users/rmsharp/.cache/p17-rehearsal/p17/tallA.vsix (44 files, 1.85 MB)

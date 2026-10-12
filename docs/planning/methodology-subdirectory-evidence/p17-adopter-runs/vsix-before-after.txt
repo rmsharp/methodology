@@ -1,0 +1,49 @@
+base.vsix: 1935373 B, 44 entries
+tallA.vsix: 1935373 B, 44 entries
+diff of the entry lists: 0 lines
+vsce ls: base 42 paths, tall 78, tallA 42
+--- entries (both archives):
+[Content_Types].xml
+extension.vsixmanifest
+extension/dist/extension.js
+extension/dist/notebook-renderer.js
+extension/language-configuration.json
+extension/languages/dot-language-configuration.json
+extension/languages/mermaid-language-configuration.json
+extension/languages/typst-language-configuration.json
+extension/LICENSE.txt
+extension/media/graphviz/viz-global.js
+extension/media/icon.png
+extension/media/katex/fonts/KaTeX_AMS-Regular.woff2
+extension/media/katex/fonts/KaTeX_Caligraphic-Bold.woff2
+extension/media/katex/fonts/KaTeX_Caligraphic-Regular.woff2
+extension/media/katex/fonts/KaTeX_Fraktur-Bold.woff2
+extension/media/katex/fonts/KaTeX_Fraktur-Regular.woff2
+extension/media/katex/fonts/KaTeX_Main-Bold.woff2
+extension/media/katex/fonts/KaTeX_Main-BoldItalic.woff2
+extension/media/katex/fonts/KaTeX_Main-Italic.woff2
+extension/media/katex/fonts/KaTeX_Main-Regular.woff2
+extension/media/katex/fonts/KaTeX_Math-BoldItalic.woff2
+extension/media/katex/fonts/KaTeX_Math-Italic.woff2
+extension/media/katex/fonts/KaTeX_SansSerif-Bold.woff2
+extension/media/katex/fonts/KaTeX_SansSerif-Italic.woff2
+extension/media/katex/fonts/KaTeX_SansSerif-Regular.woff2
+extension/media/katex/fonts/KaTeX_Script-Regular.woff2
+extension/media/katex/fonts/KaTeX_Size1-Regular.woff2
+extension/media/katex/fonts/KaTeX_Size2-Regular.woff2
+extension/media/katex/fonts/KaTeX_Size3-Regular.woff2
+extension/media/katex/fonts/KaTeX_Size4-Regular.woff2
+extension/media/katex/fonts/KaTeX_Typewriter-Regular.woff2
+extension/media/katex/katex.min.css
+extension/media/katex/katex.min.js
+extension/media/mermaid/mermaid.min.js
+extension/media/walkthrough/create-document.md
+extension/media/walkthrough/create-project.md
+extension/media/walkthrough/install-quarto.md
+extension/media/walkthrough/render-preview.md
+extension/media/walkthrough/run-cell.md
+extension/NOTICE
+extension/package.json
+extension/readme.md
+extension/snippets/quarto.json
+extension/syntaxes/quarto.tmLanguage.json

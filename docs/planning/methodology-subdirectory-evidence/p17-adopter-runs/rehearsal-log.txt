@@ -1,0 +1,176 @@
+start Sun Oct 11 21:35:57 CDT 2026
+adopter HEAD 507b934879794a903bce026692570e75de3c951d
+source HEAD  5de6b7fda8aa214c1495bdf7c425528c9ee5adb2
+adopter core.hooksPath=[]; tracked status: []
+cloned 6 arms, status of each: 0 0 0 0 0 0 
+npm test base exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)  (6 s)
+check-package base exit=0  check-package: OK — 42 files, 5.66 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json sn
+vsce ls base: 42 paths
+check-backlog base exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types base exit=0
+ratchet base exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 8845021a4049
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           0  pass
+context_budget --status base exit=2
+check-ledger base exit=1  /Users/rmsharp/.cache/p17-rehearsal/p17/base/CHANGELOG.md:20: 0 source tags (want exactly 
+check-handoff base exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/p17-rehe
+git status base: [ M .context-budget-history.jsonl ]
+status base exit=0
+sync --dry-run ctrl exit=0
+sync ctrl (no --force) exit=0
+ctrl untracked after the sync: [?? .gitattributes ]
+npm test ctrl-after-sync-uncommitted exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)  (5 s)
+check-package ctrl-after-sync-uncommitted exit=0  check-package: OK — 42 files, 5.66 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json sn
+vsce ls ctrl-after-sync-uncommitted: 42 paths
+check-backlog ctrl-after-sync-uncommitted exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types ctrl-after-sync-uncommitted exit=0
+ratchet ctrl-after-sync-uncommitted exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 8845021a4049
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           0  pass
+context_budget --status ctrl-after-sync-uncommitted exit=2
+check-ledger ctrl-after-sync-uncommitted exit=1  /Users/rmsharp/.cache/p17-rehearsal/p17/ctrl/CHANGELOG.md:20: 0 source tags (want exactly 
+check-handoff ctrl-after-sync-uncommitted exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/p17-rehe
+git status ctrl-after-sync-uncommitted: [ M BOOTSTRAP.md  M CLAUDE_TEMPLATE.md  M FRAMEWORK_LEARNINGS.md  M RECOMMENDED_SKILLS.md  M SAFEGUARDS.md  M SESSION_RUNNER.md  M context_budget.py  M docs/methodology/FRAMEWORK_APPARATUS.md  M docs/methodology/HOW_TO_USE.md  M docs/methodology/ITERATIVE_METHODOLOGY.md  M docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md  M docs/methodology/workstreams/AUDIT_WORKSTREAM.md  M docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md  M docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md  M docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md  M docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md  M docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md  M docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md  M methodology_dashboard.py  M methodology_trim.py  M quality_ratchet.py ?? .gitattributes ]
+commit ctrl (chore(methodology): sync) exit=0
+npm test ctrl exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)  (5 s)
+check-package ctrl exit=0  check-package: OK — 42 files, 5.66 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json sn
+vsce ls ctrl: 42 paths
+check-backlog ctrl exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types ctrl exit=0
+ratchet ctrl exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 8845021a4049
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           0  pass
+context_budget --status ctrl exit=2
+check-ledger ctrl exit=1  /Users/rmsharp/.cache/p17-rehearsal/p17/ctrl/CHANGELOG.md:26: 0 source tags (want exactly 
+check-handoff ctrl exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/p17-rehe
+git status ctrl: []
+sync t1 (no --force) exit=0
+commit t1 (chore(methodology): sync) exit=0
+sync tall (no --force) exit=0
+commit tall (chore(methodology): sync) exit=0
+commit t1A (chore(vsix): deny methodology/ in .vscodeignore, before the move) exit=0
+sync t1A (no --force) exit=0
+commit t1A (chore(methodology): sync) exit=0
+commit tallA (chore(vsix): deny methodology/ in .vscodeignore, before the move) exit=0
+sync tallA (no --force) exit=0
+commit tallA (chore(methodology): sync) exit=0
+migrate dry-run t1 exit=0
+migrate --apply t1 (tier 1) exit=0
+  t1 status after the move: []  HEAD 552d280 chore(methodology): move the methodology files under methodolo
+migrate dry-run tall exit=0
+migrate --apply tall (tier all) exit=0
+  tall status after the move: []  HEAD 7f63f50 chore(methodology): move the methodology files under methodolo
+migrate dry-run t1A exit=0
+migrate --apply t1A (tier 1) exit=0
+  t1A status after the move: []  HEAD a9eb112 chore(methodology): move the methodology files under methodolo
+migrate dry-run tallA exit=0
+migrate --apply tallA (tier all) exit=0
+  tallA status after the move: []  HEAD 2bb5264 chore(methodology): move the methodology files under methodolo
+npm test t1 exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)  (5 s)
+check-package t1 exit=1  check-package: FAIL — 65 files, 6.67 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media methodology p
+      ✗ unexpected `methodology` in the package — 23 file(s), e.g. methodology/quality_ratchet.py, methodology/methodology_trim.py, methodology/methodology_dashboard.py, …
+vsce ls t1: 65 paths
+check-backlog t1 exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types t1 exit=0
+ratchet t1 exit=2  1/2 pass · 1 fail · 0 unmeasured · results 9bbcd254e93e · manifest 8845021a4049
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           1  fail
+context_budget --status t1 exit=2
+check-ledger t1 exit=1  /Users/rmsharp/.cache/p17-rehearsal/p17/t1/CHANGELOG.md:32: 0 source tags (want exactly on
+check-handoff t1 exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/p17-rehe
+git status t1: []
+npm test tall exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)  (5 s)
+check-package tall exit=1  check-package: FAIL — 78 files, 9.90 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media methodology p
+      ✗ unexpected `methodology` in the package — 36 file(s), e.g. methodology/quality_ratchet.py, methodology/methodology_trim.py, methodology/methodology_dashboard.py, …
+vsce ls tall: 78 paths
+check-backlog tall exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types tall exit=0
+ratchet tall exit=2  1/2 pass · 1 fail · 0 unmeasured · results 9bbcd254e93e · manifest 334939914945
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           1  fail
+context_budget --status tall exit=2
+check-ledger tall exit=1  /Users/rmsharp/.cache/p17-rehearsal/p17/tall/methodology/CHANGELOG.md:32: 0 source tags (w
+check-handoff tall exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/p17-rehe
+git status tall: []
+npm test t1A exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)  (5 s)
+check-package t1A exit=0  check-package: OK — 42 files, 5.66 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json sn
+vsce ls t1A: 42 paths
+check-backlog t1A exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types t1A exit=0
+ratchet t1A exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 8845021a4049
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           0  pass
+context_budget --status t1A exit=2
+check-ledger t1A exit=1  /Users/rmsharp/.cache/p17-rehearsal/p17/t1A/CHANGELOG.md:38: 0 source tags (want exactly o
+check-handoff t1A exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/p17-rehe
+git status t1A: []
+npm test tallA exit=0   Test Files 68 passed (68)   Tests 4583 passed (4583)  (5 s)
+check-package tallA exit=0  check-package: OK — 42 files, 5.66 MB uncompressed, roots: LICENSE NOTICE README.md dist language-configuration.json languages media package.json sn
+vsce ls tallA: 42 paths
+check-backlog tallA exit=0  check-backlog: OK — no completed-work records, 218 open items.
+check-types tallA exit=0
+ratchet tallA exit=0  2/2 pass · 0 fail · 0 unmeasured · results bba236856bad · manifest 334939914945
+      ledger-lag                              <= 0           0  pass
+      release-gate                            <= 0           0  pass
+context_budget --status tallA exit=2
+check-ledger tallA exit=1  /Users/rmsharp/.cache/p17-rehearsal/p17/tallA/methodology/CHANGELOG.md:38: 0 source tags (
+check-handoff tallA exit=1  check-handoff: FAIL — 3 issue(s) in the newest receipt in /Users/rmsharp/.cache/p17-rehe
+git status tallA: []
+diff base vs tallA packaged set: 0 lines differ
+diff base vs tall  packaged set: 36 lines differ
+    tall: 37a38,73
+    tall: > methodology/.context-budget-history.jsonl
+    tall: > methodology/.context-budget.json
+    tall: > methodology/.gitattributes
+    tall: > methodology/.quality-gates.json
+    tall: > methodology/archive/CHANGELOG-through-2026-08-24.md
+    tall: > methodology/archive/CHANGELOG-through-2026-08-24.md.verify.sh
+    tall: > methodology/archive/HANDOFFS-through-2026-08-24.md
+ctrl: first dated entries of CHANGELOG.md (line: heading):
+    18: ## 2026-09
+    20: ### 2026-10-11 · [ad hoc] Methodology sync (rehearsal text)
+    26: ### 2026-10-07 · [BL-CommonMark-family readers: what the Session 296 rules still miss — the container model, the quot
+    30: ### 2026-10-07 · [BL-Kernel-cell closing and the unbounded second look — what Sessions 293, 294 and 295's rules still
+tallA: first dated entries of methodology/CHANGELOG.md (line: heading):
+    18: ## 2026-10
+    20: ### 2026-10-11 · [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 36 files)
+    24: ## 2026-09
+    26: ### 2026-10-11 · [ad hoc] Methodology sync (rehearsal text)
+tallA: ledger lines inside a code fence before the first dated heading: 0
+ CLAUDE.md                                          |  42 ++++----
+ methodology/.context-budget.json                   | 114 +++++++++++++++++++++
+ .../.quality-gates.json                            |   4 +-
+ 3 files changed, 137 insertions(+), 23 deletions(-)
++{
++  "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear, held by quality_ratchet.py. STARTS EMPTY ON PURPOSE: a ratchet begins where the project IS, not where an article says it should be. Mea
++  "version": 1,
++  "results_file": "methodology/.quality-gates-results.json",
++  "_results_file": "Where --run writes its results (gitignored by default — add it to .gitignore; the receipt cites the summary line, and the dashboard reads the file where it exists). Commit it instead if you want every clone to score the last run.",
++  "_gate_schema": "Each gate: `name` (unique; the ratchet keys on it), `direction` (`min`: measured >= threshold, or `max`: measured <= threshold), `threshold` (a number), and optionally `command` (run via the shell from the project root) plus `extract` (a re
++  "_example": {
++    "name": "coverage",
++    "direction": "min",
++    "threshold": 82.5,
++    "unit": "%",
++    "command": "coverage report",
+check-links t1 exit=1
+check-links t1A exit=1
+check-links tallA exit=1
+status ctrl exit=0  layout: ctrl legacy
+status t1 exit=0  layout: t1 new
+status tall exit=0  layout: tall new
+status t1A exit=0  layout: t1A new
+status tallA exit=0  layout: tallA new
+dash base exit=0
+dash ctrl exit=0
+dash t1 exit=0
+dash tall exit=0
+dash t1A exit=0
+dash tallA exit=0
+  dashboard base:  Health: 76/100 High+ Risk: 1 Commits: 1,729
+  dashboard ctrl:  Health: 76/100 High+ Risk: 1 Commits: 1,730
+  dashboard t1:  Health: 76/100 High+ Risk: 1 Commits: 1,731
+  dashboard tall:  Health: 76/100 High+ Risk: 1 Commits: 1,731
+  dashboard t1A:  Health: 76/100 High+ Risk: 1 Commits: 1,732
+  dashboard tallA:  Health: 76/100 High+ Risk: 1 Commits: 1,732
+done Sun Oct 11 21:40:19 CDT 2026

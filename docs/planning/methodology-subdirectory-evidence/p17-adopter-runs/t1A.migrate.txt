@@ -1,0 +1,233 @@
+migrate-layout: /Users/rmsharp/.cache/p17-rehearsal/p17/t1A
+canonical: /Users/rmsharp/Development/methodology @ 5de6b7fda8aa
+layout: legacy   tier: 1   mode: apply
+
+moves (23):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+
+rewrites (2 file(s)):
+  CLAUDE.md (14 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -2,14 +2,14 @@
+     
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -Read and follow `SESSION_RUNNER.md` step by step. It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+    +Read and follow `methodology/SESSION_RUNNER.md` step by step. It is your operating procedure for every session. It tells you what to read, when to stop, and how to close out.
+     
+     **Three rules you will be tempted to violate:**
+    -1. **Orient first** — Read SAFEGUARDS.md → SESSION_NOTES.md → run `methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+    +1. **Orient first** — Read methodology/SAFEGUARDS.md → SESSION_NOTES.md → run `methodology/methodology_dashboard.py` → git status → report findings → WAIT FOR THE USER TO SPEAK
+     2. **1 and done** — One deliverable per session. When it's complete, close out. Do not start the next thing.
+     3. **Auto-close** — When done: evaluate previous handoff, self-assess, document learnings, write handoff notes, commit, report, STOP.
+     
+    -`SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+    +`methodology/SESSION_RUNNER.md` documents known failure modes and their countermeasures. The protocol compensates for documented tendencies to skip orientation, skip close-out, and continue past the deliverable.
+     
+     ---
+     
+    @@ -49,7 +49,7 @@
+     
+     ## Build / Test / Verify
+     
+    -**The build equivalent (record the run in close-out, see SAFEGUARDS.md) is:**
+    +**The build equivalent (record the run in close-out, see methodology/SAFEGUARDS.md) is:**
+     
+     ```bash
+     npm run compile      # type-checks src AND test/unit, then bundles — seconds
+    @@ -129,16 +129,16 @@
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from the methodology repo, not project-owned). The base files govern unless explicitly overridden here.*
+    -
+    -> **Why this file and not a synced one:** `SESSION_RUNNER.md`, `SAFEGUARDS.md`, and everything under `docs/methodology/` (including the workstream docs) are synced byte-identical from the canonical methodology repo — editing them blocks future syncs (BOOTSTRAP, "Customizations Go in CLAUDE.md, Not in Synced Files"). Every project-specific rule, including the one below, lives here.
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from the methodology repo, not project-owned). The base files govern unless explicitly overridden here.*
+    +
+    +> **Why this file and not a synced one:** `methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, and everything under `docs/methodology/` (including the workstream docs) are synced byte-identical from the canonical methodology repo — editing them blocks future syncs (BOOTSTRAP, "Customizations Go in CLAUDE.md, Not in Synced Files"). Every project-specific rule, including the one below, lives here.
+     
+     ### Mandatory development practice — strict TDD (operator directive, project-wide)
+     
+     **For the entire duration of this project, all implementation and bug-fix work MUST follow strict test-driven development.** This is a hard gate, an override that strengthens the base Development-workstream guidance (which lists "Test-last" as anti-pattern #3 and already says "write the failing test first"). It is not optional and does not lapse between sessions.
+     
+     - **Red → Green → Refactor, one test at a time.** Write ONE failing test for the next behavior, run it and confirm it fails *for the right reason* (RED), write the minimal code to pass (GREEN), then refactor with tests green. Repeat.
+    -- **Vertical slices, never horizontal.** Do NOT write all tests first then all implementation — that produces tests of imagined behavior. One test → one implementation → repeat (see the `/tdd` skill, which is the operative how-to; cited in `RECOMMENDED_SKILLS.md`).
+    +- **Vertical slices, never horizontal.** Do NOT write all tests first then all implementation — that produces tests of imagined behavior. One test → one implementation → repeat (see the `/tdd` skill, which is the operative how-to; cited in `methodology/RECOMMENDED_SKILLS.md`).
+     - **Test behavior through the public interface,** not implementation details, so tests survive refactors. For this project the pure `core/` library (the §3.3 guardrail) is where most logic lives and is unit-tested headlessly with `npm test` (vitest); `vscode` adapters are verified with `@vscode/test-electron` (Learning #3).
+     - **Scope of the gate:** anything with logic (parsers, arg-builders, indexers, providers, lifecycle/state machines). Pure declarative/config/doc edits with no logic (e.g. a `package.json` command contribution, grammar JSON) are exempt from a unit test but still require their normal verification (compile, integration registration, render).
+     - **Enforcement at close-out:** a session's self-assessment must state that implementation was TDD (RED shown before GREEN). A commit that adds logic with no preceding failing test is a protocol violation to flag in the handoff.
+    @@ -215,7 +215,7 @@
+     sessions of dogfooding, has **no `SESSION_NOTES.md` at all**.
+     
+     **Two things that make this rule non-obvious in practice:**
+    -- ⚠ **`methodology_trim.py` cannot enforce it.** `--file SESSION_NOTES.md` exits 3 with `NO_CONFIG`
+    +- ⚠ **`methodology/methodology_trim.py` cannot enforce it.** `--file SESSION_NOTES.md` exits 3 with `NO_CONFIG`
+       by design, and a `LedgerSpec` cannot be authored for this file at all: `date_of_record` is
+       required and `evaluate()` freezes the oldest **by date**, while **458 of 740 records carried no
+       date**. The reduction axis here is the **session number**. Upstream **BL-32** (open, undecided)
+    @@ -225,7 +225,7 @@
+       by construction otherwise (upstream BL-36). Rewrite `## ACTIVE TASK` in the close-out commit, not
+       the trim commit.
+     
+    -**The gate that actually catches regrowth is `python3 context_budget.py`** — `max_lines: 400`,
+    +**The gate that actually catches regrowth is `python3 methodology/context_budget.py`** — `max_lines: 400`,
+     `max_bytes: 120000`, `max_line_bytes: 280`. The line ceiling binds ~4.7x harder than the byte one,
+     and `max_line_bytes` is the one that stays red after a trim: keep every ACTIVE TASK line under
+     280 B rather than writing one 620 B paragraph.
+    @@ -236,7 +236,7 @@
+     
+     ### `CHANGELOG.md` conventions (Session 264)
+     
+    -**The rules are [§The Action Ledger](docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger).**
+    +**The rules are [§The Action Ledger](methodology/FRAMEWORK_APPARATUS.md#the-action-ledger).**
+     This project adds:
+     - **Tag a `BACKLOG.md` item `[BL-<item title>]`.** Its items carry no ids, so the title is the id;
+       leave out any `]`, which ends the tag early. Methodology-repo work (a sync, BL-57) is `[ad hoc]`,
+    @@ -248,7 +248,7 @@
+       The headings the audit skips:
+       `cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') | grep '^### ' | grep -vE '^### [0-9]{4}-[0-9]{2}-[0-9]{2} · \[(issue #[0-9]+|BL-[^]]+|ad hoc)\]'`
+     - **`CHANGELOG.md` is not in `.context-budget.json`.** No session reads it whole, so it has no read
+    -  budget. Its only size trigger is `python3 methodology_trim.py --file CHANGELOG.md --check`, and
+    +  budget. Its only size trigger is `python3 methodology/methodology_trim.py --file CHANGELOG.md --check`, and
+       archiving is optional.
+     
+     *Origin: Session 264 (2026-09-18), BL-57 P8. Operator decisions: the tag form, recording the legacy
+  .context-budget.json (11 replacement(s))
+    --- .context-budget.json
+    +++ .context-budget.json
+    @@ -66,48 +66,48 @@
+       ],
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "⚠ ALL BUT TWO OF THESE WERE SILENTLY BEHIND CANONICAL UNTIL SESSION 255. An adopter may not edit these files, so zero local edits means `git diff` shows nothing and drift is invisible -- SESSION_RUNNER.md, FRAMEWORK_LEARNINGS.md, RECOMMENDED_SKILLS.md, BOOTSTRAP.md, methodology_dashboard.py and methodology_trim.py had ALL drifted, and context_budget.py plus .context-budget.json were never installed at all. This block is the check that makes that visible. Adjust the paths if the methodology checkout moves."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         },
+         {
+    -      "path": "FRAMEWORK_LEARNINGS.md",
+    +      "path": "methodology/FRAMEWORK_LEARNINGS.md",
+           "canonical": "../methodology/starter-kit/FRAMEWORK_LEARNINGS.md"
+         },
+         {
+    -      "path": "RECOMMENDED_SKILLS.md",
+    +      "path": "methodology/RECOMMENDED_SKILLS.md",
+           "canonical": "../methodology/starter-kit/RECOMMENDED_SKILLS.md"
+         },
+         {
+    -      "path": "BOOTSTRAP.md",
+    +      "path": "methodology/BOOTSTRAP.md",
+           "canonical": "../methodology/starter-kit/BOOTSTRAP.md"
+         },
+         {
+    -      "path": "CLAUDE_TEMPLATE.md",
+    +      "path": "methodology/CLAUDE_TEMPLATE.md",
+           "canonical": "../methodology/starter-kit/CLAUDE_TEMPLATE.md"
+         },
+         {
+    -      "path": "CONTEXT_TEMPLATE.md",
+    +      "path": "methodology/CONTEXT_TEMPLATE.md",
+           "canonical": "../methodology/starter-kit/CONTEXT_TEMPLATE.md"
+         },
+         {
+    -      "path": "methodology_dashboard.py",
+    +      "path": "methodology/methodology_dashboard.py",
+           "canonical": "../methodology/starter-kit/methodology_dashboard.py"
+         },
+         {
+    -      "path": "methodology_trim.py",
+    +      "path": "methodology/methodology_trim.py",
+           "canonical": "../methodology/starter-kit/methodology_trim.py"
+         },
+         {
+    -      "path": "context_budget.py",
+    +      "path": "methodology/context_budget.py",
+           "canonical": "../methodology/starter-kit/context_budget.py"
+         },
+         {
+    -      "path": "quality_ratchet.py",
+    +      "path": "methodology/quality_ratchet.py",
+           "canonical": "../methodology/starter-kit/quality_ratchet.py"
+         }
+       ]
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  tests:   0 mention(s) in 0 file(s)
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 0 mention(s) in 0 file(s)
+  config:  18 mention(s) in 2 file(s)
+    .quality-gates.json:2  "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear,    (5 mentions, 5 on code lines)
+    .vscodeignore:43  SESSION_RUNNER.md   (13 mentions, 11 on code lines)
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  709 mention(s) in 9 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   104 mention(s) in 29 file(s)
+    .gitignore:65  # quality_ratchet.py's `--run` output (methodology sync, Session 264) — gitignored by default, as
+    BACKLOG.md:110  - [ ] **The oracle corpus is 131 documents and its prose says 66** (found by Session 271's R2 fan-out and **verified fir
+    CLAUDE.md:134  > **Why this file and not a synced one:** `methodology/SESSION_RUNNER.md`, `methodology/SAFEGUARDS.md`, and everything u
+    CLAUDE.md:203  [`docs/archive/SESSION_NOTES-through-S253.md`](docs/archive/SESSION_NOTES-through-S253.md). The
+    CLAUDE.md:223  `docs/archive/SESSION_NOTES-through-S253.md.verify.sh` does.
+    CLAUDE.md:249  `cat CHANGELOG.md $(git ls-files 'docs/archive/CHANGELOG-*.md') | grep '^### ' | grep -vE '^### [0-9]{4}-[0-9]{2}-[0-9]{
+    PROJECT_LEARNINGS.md:4  session's Phase 3C close-out (`SESSION_RUNNER.md` §3C). Extracted here from `CLAUDE.md` on
+    PROJECT_LEARNINGS.md:12  touched by `bin/sync` (that only touches `SESSION_RUNNER.md`, `SAFEGUARDS.md`,
+    PROJECT_LEARNINGS.md:13  `docs/methodology/**`, and other byte-identical canonical copies). No tooling changes were
+    PROJECT_LEARNINGS.md:72  | 44 | **Phase 6d-6+ (b2-iii-key) — deep-nested per-format option KEY completion, the first b2-iii slice, executed acros
+    PROJECT_LEARNINGS.md:73  | 45 | **Methodology sync (Session 38) — pulled the project's copied methodology files up to the canonical `KJ5HST/metho
+    PROJECT_LEARNINGS.md:78  | 46 | **CLAUDE.md size-management — extract a runaway append-only section into its own committed, non-auto-loaded file 
+    PROJECT_LEARNINGS.md:147  | 115 | **`grep -rn` silently skips any file containing a NUL byte — so a grep-based inventory can be sound in method an
+    PROJECT_LEARNINGS.md:152  | 120 | **A handoff's fix PRESCRIPTION is an inherited claim, not evidence — and when it contradicts the code's own docu
+    PROJECT_LEARNINGS.md:529  | 497 | **A PRESENCE COUNT IS NOT A PRIORITY SIGNAL UNTIL YOU CHECK THAT IT WAS MEASURED WITH THE INSTRUMENT THE ITEM NE
+    PROJECT_LEARNINGS.md:530  | 498 | **A LEDGER TRIM MOVES THE FRONTIER, SO AN UNRECORDED COMMIT STOPS BEING *LATE* AND BECOMES *UNRECOVERABLE* — REC
+    PROJECT_LEARNINGS.md:531  | 499 | **AN INSTALLED TOOL THAT REPORTS TO NOBODY IS NOT A SAFEGUARD — IT IS DECORATION, AND IT FAILS SILENTLY FOR AS L
+    PROJECT_LEARNINGS.md:533  | 501 | **A PROOF ARTIFACT CAN BE WEAKER THAN THE CHECK IT CLAIMS TO REPRODUCE, AND IT FAILS IN THE DIRECTION THAT LOOKS
+    PROJECT_LEARNINGS.md:535  | 503 | **BEFORE DESIGNING A FIX FOR A GAP YOU JUST DOCUMENTED, CHECK WHETHER YOUR DISTRIBUTOR ALREADY SHIPS ONE.** At S
+    PROJECT_LEARNINGS.md:536  | 504 | **THE DRIFT YOU CANNOT SEE IN `git diff` IS THE KIND THAT LASTS.** Six canonical-owned files — `SESSION_RUNNER.m
+    PROJECT_LEARNINGS.md:538  | 506 | **RUN THE TOOL AGAINST THE TARGET BEFORE PLANNING THE WORK — THE REFUSAL *IS* THE SHAPE OF THE DELIVERABLE.** Th
+    PROJECT_LEARNINGS.md:576  | 544 | **A SYNC THAT ADDS A ROOT FILE REDS THE RELEASE GATE, AND ONLY THE RELEASE GATE — DENY IT BEFORE THE SYNC COMMIT
+    PROJECT_LEARNINGS.md:612  | 580 | **"ZERO ISSUES" CAN MEAN "THIS PROJECT DOES NOT USE ISSUES", NOT "NOBODY HAS FILED IT" — CHECK THE TRACKER'S USA
+    docs/MODEL-DIVERGENCE-FAMILIES.md:4  `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`.
+    docs/REAL-DOCUMENT-RESCORE.md:4  `docs/methodology/workstreams/AUDIT_WORKSTREAM.md`. Prior audit in this series:
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 4 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  0 proof(s), exit histogram {} -> 0 proof(s), exit histogram {}
+  history: 483 commit(s) reached by git log --follow -> 484 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, a9eb112b2885

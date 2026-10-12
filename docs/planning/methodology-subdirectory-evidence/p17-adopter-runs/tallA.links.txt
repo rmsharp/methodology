@@ -1,0 +1,21 @@
+check-links: FAIL — 18 dangling link(s) in the tree at /Users/rmsharp/.cache/p17-rehearsal/p17/tallA (new layout):
+  methodology/SESSION_NOTES.md:5  ->  docs/archive/SESSION_NOTES-through-S253.md
+  methodology/SESSION_NOTES.md:6  ->  docs/archive/SESSION_NOTES-through-S253.md.verify.sh
+  methodology/CHANGELOG.md:11  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+  methodology/CHANGELOG.md:14  ->  docs/archive/CHANGELOG-through-2026-08-24.md
+  methodology/CHANGELOG.md:15  ->  docs/archive/CHANGELOG-through-2026-08-24.md.verify.sh
+  methodology/CHANGELOG.md:902  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+  methodology/CHANGELOG.md:1320  ->  docs/archive/HANDOFFS-through-2026-08-24.md
+  methodology/CHANGELOG.md:1321  ->  docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh
+  methodology/CHANGELOG.md:1328  ->  docs/archive/CHANGELOG-through-2026-08-24.md
+  methodology/CHANGELOG.md:1329  ->  docs/archive/CHANGELOG-through-2026-08-24.md.verify.sh
+  methodology/CHANGELOG.md:1346  ->  docs/archive/CHANGELOG-through-2026-08-24.md
+  methodology/CHANGELOG.md:1347  ->  docs/archive/HANDOFFS-through-2026-08-24.md
+  methodology/CHANGELOG.md:1349  ->  docs/archive/README.md
+  methodology/CHANGELOG.md:1355  ->  docs/archive/README.md
+  methodology/HANDOFFS.md:21  ->  docs/archive/
+  methodology/HANDOFFS.md:309  ->  docs/methodology/FRAMEWORK_APPARATUS.md#the-action-ledger
+  methodology/HANDOFFS.md:332  ->  docs/archive/HANDOFFS-through-2026-08-24.md
+  methodology/HANDOFFS.md:333  ->  docs/archive/HANDOFFS-through-2026-08-24.md.verify.sh
+
+Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.
