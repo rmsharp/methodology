@@ -249,6 +249,14 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-11 · [ad hoc] Ledger trim: `HANDOFFS.md` → `docs/archive/HANDOFFS-through-2026-10-10-4.md` (1 record(s), 40,017 B → 28,264 B)
+
+**Written by:** `methodology_trim.py` v1.8.0 — a tool action, not a session's judgment.
+Moved the oldest **1** record(s) (2026-10-10 → 2026-10-10) out of [`HANDOFFS.md`](HANDOFFS.md) into
+[`docs/archive/HANDOFFS-through-2026-10-10-4.md`](docs/archive/HANDOFFS-through-2026-10-10-4.md). Losslessness is asserted by L1 (records-zone concatenation), L2 (zone
+pinning) and L3 (record partition), and is **re-derivable** — run [`docs/archive/HANDOFFS-through-2026-10-10-4.md.verify.sh`](docs/archive/HANDOFFS-through-2026-10-10-4.md.verify.sh)
+rather than trusting a digest printed here. Live file 40,017 B → 28,264 B (−29.4%).
+
 ### 2026-10-11 · [BL-101] S296 — push record: main pushed to the fork origin at his go-ahead (7a3e84c..3af7f9a)
 
 At his word ("push main to origin") `git push origin main` sent one commit (a plain fast-forward, `7a3e84c..3af7f9a`) to `rmsharp/methodology`: `3af7f9a`, the correction of the S296 receipt's next steps (1)(b) and (5). After a fetch `git rev-list --left-right --count origin/main...main` read `0 0`. Nothing went to `KJ5HST/methodology`, no tag. The previous entry's line that `3af7f9a` is local and not pushed is therefore historical. This commit changes only `CHANGELOG.md` and is pushed too, under his standing grant for push records, so no further record is owed. Model: Claude Sonnet 5.5.
