@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S302 — BL-105 rehearsed (build phase 1): the record, and register rows F25 to F30
+
+`bl105-rehearsal-record.md`: the companion move simulated with `bin/migrate-layout`'s own rewrite and check functions in `--no-local` clones of `nprcgenekeepr`, `mts-system` and `model_project_constructor`; **B stands**. `nprcgenekeepr` unchanged (11,163 tests equal, tarball 3,784,543 B to 3,784,545 B) but for one uncovered script; `mts-system`'s archiver fails on the real tree with its tests green; `model_project_constructor` 2 tests red and 26 skipped until 3 lines are edited. 6 files edited in 3 adopters, against the census's 5. Register rows F25 to F30, all open, and a dated line. Nothing built, no real tree written, nothing outward.
+
 ### 2026-10-12 · [BL-101] S302 — BL-105 rehearsal: the raw outputs and driver results of model_project_constructor
 
 `mpc-driver.json` and `mpc-raw.txt` in `bl105-runs/`, clones at `ec23bc7`. The `mpc-full-*` sections are the first full-suite attempts, aborted by `-x` on a missing `sqlalchemy` in the system Python (the same in base and edit); the `mpc-all-*` ones are the runs that count, with the project's own `.venv` and `PYTHONPATH` set to the clone's `src` (without it the venv imports the real tree).
