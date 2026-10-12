@@ -249,6 +249,10 @@ than trusting this sentence. Written by `methodology_trim.py` v1.8.0.
 
 ## 2026-10
 
+### 2026-10-12 · [BL-101] S302 — BL-105 rehearsal: the raw outputs and driver results of nprcgenekeepr and mts-system
+
+Each adopter's driver run (the tool's own list for the move, the tool's checks before and after, the rewrites) is one JSON and its raw outputs (hand-edit patch, queue script, test and gate outputs) one text, in `bl105-runs/`: `npr-driver.json` and `npr-raw.txt`, `mts-driver.json` and `mts-raw.txt`. The clones were under `~/.cache/bl105-rehearsal` (F23), at `5cacf61` and `d1cf54f`; nothing in either real tree was touched.
+
 ### 2026-10-12 · [BL-101] S302 — BL-105 rehearsal: the two scratch drivers and the link count
 
 `bl105-companion.py` applies the one companion mapping (`PROJECT_LEARNINGS.md` to `methodology/PROJECT_LEARNINGS.md`) through `bin/migrate-layout`'s own rewrite and check functions in a clone it is given (it builds nothing in the tool and commits nothing); `bl105-links.py` counts the markdown links to the file by where each lands, which `check-links` does not (it read the same project-link count before and after in every arm). `links-by-arm.txt` is its output over the six control and move clones.

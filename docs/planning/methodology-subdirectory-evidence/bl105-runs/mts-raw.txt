@@ -1,0 +1,968 @@
+# BL-105 rehearsal (S302): raw outputs, adopter mts. Clones were under ~/.cache/bl105-rehearsal (F23); sections in the order the record cites them.
+
+==== mts-hand-edits.patch ====
+diff --git a/scripts/learnings_archive.py b/scripts/learnings_archive.py
+index df7df2f..c28946c 100644
+--- a/scripts/learnings_archive.py
++++ b/scripts/learnings_archive.py
+@@ -31,5 +31,12 @@ LIVE_NAME = "PROJECT_LEARNINGS.md"
+ CONFIG_NAME = ".context-budget.json"
++NEW_DIR = "methodology"  # BL-101: the new layout keeps the live file and its budget config here
+ SHARD_DIR = "docs/history"
++LIVE_REL = LIVE_NAME  # where _run found the live file; the shard text names it
+ DEFAULT_TARGET_BYTES = 150_000
+ 
++
++def _where(root, name):
++    """The project-relative path of `name`: under methodology/ in the new layout, at the root in the legacy one."""
++    return f"{NEW_DIR}/{name}" if os.path.isfile(os.path.join(root, NEW_DIR, name)) else name
++
+ HEADER_LINES = (
+@@ -65,3 +72,3 @@ def _trigger_bytes(root):
+     try:
+-        with open(os.path.join(root, CONFIG_NAME)) as f:
++        with open(os.path.join(root, _where(root, CONFIG_NAME))) as f:
+             config = json.load(f)
+@@ -70,3 +77,3 @@ def _trigger_bytes(root):
+     try:
+-        return next(spec["max_bytes"] for spec in config["files"] if spec["path"] == LIVE_NAME)
++        return next(spec["max_bytes"] for spec in config["files"] if spec["path"] == _where(root, LIVE_NAME))
+     except (StopIteration, KeyError, TypeError):
+@@ -178,3 +185,3 @@ def _pointer_block(shards, newest):
+     lookup = (
+-        f"git grep -n \"^| 73 |\" -- {LIVE_NAME} '{SHARD_DIR}/PROJECT_LEARNINGS-rows-*.md'"
++        f"git grep -n \"^| 73 |\" -- {LIVE_REL} '{SHARD_DIR}/PROJECT_LEARNINGS-rows-*.md'"
+     )
+@@ -244,3 +251,5 @@ def _refuse(problems, why=""):
+ def _run(args):
+-    live_path = os.path.join(args.root, LIVE_NAME)
++    global LIVE_REL
++    LIVE_REL = _where(args.root, LIVE_NAME)
++    live_path = os.path.join(args.root, LIVE_REL)
+     try:
+diff --git a/scripts/test_learnings_archive.py b/scripts/test_learnings_archive.py
+index 8a833bf..1dee6c2 100644
+--- a/scripts/test_learnings_archive.py
++++ b/scripts/test_learnings_archive.py
+@@ -424,2 +424,30 @@ class PointerBlock(unittest.TestCase):
+ 
++class NewLayout(unittest.TestCase):
++    """BL-101: the live file and its budget config sit under methodology/, the config naming the file's new path."""
++
++    def new_layout_root(self, rows, max_bytes):
++        root = make_root(self, rows, max_bytes)
++        os.makedirs(os.path.join(root, "methodology"))
++        os.rename(os.path.join(root, LIVE), os.path.join(root, "methodology", LIVE))
++        os.remove(os.path.join(root, ".context-budget.json"))
++        config = {"files": [{"path": "methodology/" + LIVE, "class": "on-demand", "max_bytes": max_bytes}]}
++        with open(os.path.join(root, "methodology", ".context-budget.json"), "w") as f:
++            json.dump(config, f)
++        return root
++
++    def test_check_reads_both_files_under_methodology(self):
++        root = self.new_layout_root([row(n) for n in range(1, 21)], 3000)
++        code, out = run("--root", root, "--check")
++        self.assertEqual(code, 1)
++        self.assertIn("B against the 3,000 B trigger: over", out)
++
++    def test_write_moves_rows_and_the_lookup_names_the_new_path(self):
++        root = self.new_layout_root([row(n) for n in range(1, 21)], 3000)
++        code, _ = run("--root", root, "--write", "--target-bytes", "2000")
++        self.assertEqual(code, 0)
++        self.assertEqual(len(shard_paths(root)), 1)
++        block = read_bytes(root, "methodology/" + LIVE).split(BEGIN, 1)[1].split(END, 1)[0]
++        self.assertIn(b"-- methodology/PROJECT_LEARNINGS.md 'docs/history/", block)
++
++
+ class VerifyMove(unittest.TestCase):
+
+==== mts-archive-check-mts-base.txt ====
+PROJECT_LEARNINGS.md: 265,780 B against the 250,000 B trigger: over
+
+==== mts-archive-check-mts-edit.txt ====
+PROJECT_LEARNINGS.md: 265,780 B against the 250,000 B trigger: over
+
+==== mts-archive-check-mts-mig.txt ====
+usage error: cannot read .context-budget.json: [Errno 2] No such file or directory: '/Users/rmsharp/.cache/bl105-rehearsal/mts-mig/.context-budget.json'
+
+==== mts-archive-check-mts-move.txt ====
+usage error: cannot read PROJECT_LEARNINGS.md: No such file or directory (/Users/rmsharp/.cache/bl105-rehearsal/mts-move/PROJECT_LEARNINGS.md)
+
+==== mts-budget-status-mts-base.txt ====
+
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [1mcontext budget[0m  [31m[1mOVER[0m   [2mresident 25,621 B ≈ 8,744 tok[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mfile                                      size     ceiling  status[0m
+  CLAUDE.md                             25,621 B    28,000 B  [33mwarn[0m
+  SESSION_NOTES.md                      15,712 B   120,000 B  [32mok[0m
+  PROJECT_LEARNINGS.md                 265,780 B   250,000 B  [31mover[0m
+  CHANGELOG.md                         285,150 B   196,608 B  [31mover[0m
+  HANDOFFS.md                          267,154 B   196,608 B  [31mover[0m
+  SESSION_RUNNER.md                       synced   canonical  [36munmeasured[0m
+  SAFEGUARDS.md                           synced   canonical  [36munmeasured[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  resident total [1m25,621 B[0m / 34,000 B ceiling   [2mgrowth run 8/10[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+
+  [33m[1mCLAUDE.md[0m — 25,621 B is past the 24,000 B warn line
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mPROJECT_LEARNINGS.md[0m — 265,780 B exceeds the 250,000 B ceiling by 15,780
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mCHANGELOG.md[0m — 285,150 B exceeds the 196,608 B ceiling by 88,542
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mHANDOFFS.md[0m — 267,154 B exceeds the 196,608 B ceiling by 70,546
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+
+==== mts-budget-status-mts-edit.txt ====
+
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [1mcontext budget[0m  [31m[1mOVER[0m   [2mresident 25,911 B ≈ 8,843 tok[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mfile                                      size     ceiling  status[0m
+  CLAUDE.md                             25,911 B    28,000 B  [33mwarn[0m
+  methodology/SESSION_NOTES.md          15,712 B   120,000 B  [32mok[0m
+  methodology/PROJECT_LEARNINGS.md     265,780 B   250,000 B  [31mover[0m
+  methodology/CHANGELOG.md             285,613 B   196,608 B  [31mover[0m
+  methodology/HANDOFFS.md              267,154 B   196,608 B  [31mover[0m
+  methodology/SESSION_RUNNER.md           synced   canonical  [36munmeasured[0m
+  methodology/SAFEGUARDS.md               synced   canonical  [36munmeasured[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  resident total [1m25,911 B[0m / 34,000 B ceiling   [2mgrowth run 7/10[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+
+  [33m[1mCLAUDE.md[0m — 25,911 B is past the 24,000 B warn line
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mmethodology/PROJECT_LEARNINGS.md[0m — 265,780 B exceeds the 250,000 B ceiling by 15,780
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mmethodology/CHANGELOG.md[0m — 285,613 B exceeds the 196,608 B ceiling by 89,005
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mmethodology/HANDOFFS.md[0m — 267,154 B exceeds the 196,608 B ceiling by 70,546
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+
+==== mts-budget-status-mts-mig.txt ====
+
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [1mcontext budget[0m  [31m[1mOVER[0m   [2mresident 25,875 B ≈ 8,831 tok[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mfile                                      size     ceiling  status[0m
+  CLAUDE.md                             25,875 B    28,000 B  [33mwarn[0m
+  methodology/SESSION_NOTES.md          15,712 B   120,000 B  [32mok[0m
+  PROJECT_LEARNINGS.md                 265,780 B   250,000 B  [31mover[0m
+  methodology/CHANGELOG.md             285,613 B   196,608 B  [31mover[0m
+  methodology/HANDOFFS.md              267,154 B   196,608 B  [31mover[0m
+  methodology/SESSION_RUNNER.md           synced   canonical  [36munmeasured[0m
+  methodology/SAFEGUARDS.md               synced   canonical  [36munmeasured[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  resident total [1m25,875 B[0m / 34,000 B ceiling   [2mgrowth run 7/10[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+
+  [33m[1mCLAUDE.md[0m — 25,875 B is past the 24,000 B warn line
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mPROJECT_LEARNINGS.md[0m — 265,780 B exceeds the 250,000 B ceiling by 15,780
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mmethodology/CHANGELOG.md[0m — 285,613 B exceeds the 196,608 B ceiling by 89,005
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mmethodology/HANDOFFS.md[0m — 267,154 B exceeds the 196,608 B ceiling by 70,546
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+
+==== mts-budget-status-mts-move.txt ====
+
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [1mcontext budget[0m  [31m[1mOVER[0m   [2mresident 25,911 B ≈ 8,843 tok[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mfile                                      size     ceiling  status[0m
+  CLAUDE.md                             25,911 B    28,000 B  [33mwarn[0m
+  methodology/SESSION_NOTES.md          15,712 B   120,000 B  [32mok[0m
+  methodology/PROJECT_LEARNINGS.md     265,780 B   250,000 B  [31mover[0m
+  methodology/CHANGELOG.md             285,613 B   196,608 B  [31mover[0m
+  methodology/HANDOFFS.md              267,154 B   196,608 B  [31mover[0m
+  methodology/SESSION_RUNNER.md           synced   canonical  [36munmeasured[0m
+  methodology/SAFEGUARDS.md               synced   canonical  [36munmeasured[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  resident total [1m25,911 B[0m / 34,000 B ceiling   [2mgrowth run 7/10[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+
+  [33m[1mCLAUDE.md[0m — 25,911 B is past the 24,000 B warn line
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mmethodology/PROJECT_LEARNINGS.md[0m — 265,780 B exceeds the 250,000 B ceiling by 15,780
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mmethodology/CHANGELOG.md[0m — 285,613 B exceeds the 196,608 B ceiling by 89,005
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+  [31m[1mmethodology/HANDOFFS.md[0m — 267,154 B exceeds the 196,608 B ceiling by 70,546
+      1. [1mMove[0m — Relocate the section into the document that owns it — a module- or subsystem-level doc a session opens only once it knows the task. Resident context is for what a session needs BEFORE it knows the task.
+      2. [1mCompute[0m — Replace any hand-maintained count or list with the command that produces it. A count written into a read-often file is a future lie — on the project this was measured, 10 of 11 rows of one such table were wrong by the time anyone checked.
+      3. [1mArchive[0m — git already conserves every byte. Cut the content and leave `git show <sha>:<file>` — retrieval by original line number, zero new bytes.
+      4. [1mDelete[0m — If another file says the same thing, delete this copy and link to it.
+      5. [1mRaise the ceiling[0m — Edit .context-budget.json. This is last for a reason — see the cost of growth below.
+
+
+==== mts-migrate-dry.txt ====
+migrate-layout: /Users/rmsharp/.cache/bl105-rehearsal/mts-mig
+canonical: /Users/rmsharp/Development/methodology @ f02751751449
+layout: legacy   tier: all   mode: dry run (nothing written; add --apply to migrate)
+
+moves (40):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv SESSION_NOTES.md methodology/SESSION_NOTES.md
+  git mv CHANGELOG.md methodology/CHANGELOG.md
+  git mv HANDOFFS.md methodology/HANDOFFS.md
+  git mv ROADMAP.md methodology/ROADMAP.md
+  git mv .context-budget.json methodology/.context-budget.json
+  git mv .quality-gates.json methodology/.quality-gates.json
+  git mv .gitattributes methodology/.gitattributes
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+  git mv dashboard_history.jsonl methodology/dashboard_history.jsonl
+  git mv .context-budget-history.jsonl methodology/.context-budget-history.jsonl
+  git mv docs/archive/CHANGELOG-through-2026-09-02.md methodology/archive/CHANGELOG-through-2026-09-02.md
+  git mv docs/archive/CHANGELOG-through-2026-09-02.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-02.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-28.md methodology/archive/CHANGELOG-through-2026-09-28.md
+  git mv docs/archive/CHANGELOG-through-2026-09-28.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-28.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-03.md methodology/archive/HANDOFFS-through-2026-09-03.md
+  git mv docs/archive/HANDOFFS-through-2026-09-03.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-03.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-22.md methodology/archive/HANDOFFS-through-2026-09-22.md
+  git mv docs/archive/HANDOFFS-through-2026-09-22.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-22.md.verify.sh
+
+rewrites (3 file(s)):
+  CLAUDE.md (24 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -2,18 +2,18 @@
+     
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -Read and follow `SESSION_RUNNER.md` step by step. It is your operating procedure
+    +Read and follow `methodology/SESSION_RUNNER.md` step by step. It is your operating procedure
+     for every session. It tells you what to read, when to stop, and how to close out.
+     
+     ---
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from canonical, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here.*
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from canonical, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here.*
+     
+     ### Additional Phase 0 steps
+     
+    -After canonical `SESSION_RUNNER.md` Phase 0's step 8, this project adds step 9:
+    +After canonical `methodology/SESSION_RUNNER.md` Phase 0's step 8, this project adds step 9:
+     
+     9. **Present the remaining backlog via `AskUserQuestion`.** After the text report (step 7), turn the open work into an actionable choice instead of leaving the user to parse prose and reply unprompted:
+        - Pull the candidate list from two places: (a) the ACTIVE TASK banner's "OR pick another open ticket" list (or equivalent), and (b) **every non-DONE row in `BACKLOG.md`** — scan the whole file, not one named section (see gotcha below).
+    @@ -26,15 +26,15 @@
+     
+     ### Additional Phase 1B requirement
+     
+    -**If the deliverable is feature implementation or a bug fix, invoke the `/tdd` skill before writing the first failing test.** The skill enforces vertical slicing (one test → one impl), behavior-over-implementation testing, and mock-at-boundaries discipline — all of which are required by the "Test Quality" sub-section in `CLAUDE.md`. The skill complements, does not replace, the RED/GREEN/REFACTOR phase rules in `CLAUDE.md`. Documentation, planning, audit, and methodology sessions do not invoke `/tdd` (TDD does not apply to non-code deliverables, per the precedent in SESSION_NOTES.md Session 9 self-assessment).
+    -
+    -### Additional Phase 3D requirement — archive the outgoing SESSION_NOTES.md block first
+    -
+    -**Before writing your own session's block into `SESSION_NOTES.md`, move whatever is currently there (your predecessor's block — already read and scored in your Phase 3A) into [`docs/history/SESSION_NOTES_ARCHIVE_2026.md`](docs/history/SESSION_NOTES_ARCHIVE_2026.md), then write only your own block into `SESSION_NOTES.md`.** This is not new policy — `SESSION_RUNNER.md` Phase 3D already says `SESSION_NOTES.md` "is the transient scratchpad (overwritten next session)" — but base Phase 3D never spells out the *mechanism* for "overwritten," so 61 sessions in a row (Sessions 80–141) read "update" as "prepend a new PRIOR TASK block" instead, and the file silently regrew to 1,988 lines / 810 KB before Session 142 caught it and archived it (`PROC-READ-CEILING-001`). Concretely, at Phase 3D:
+    +**If the deliverable is feature implementation or a bug fix, invoke the `/tdd` skill before writing the first failing test.** The skill enforces vertical slicing (one test → one impl), behavior-over-implementation testing, and mock-at-boundaries discipline — all of which are required by the "Test Quality" sub-section in `CLAUDE.md`. The skill complements, does not replace, the RED/GREEN/REFACTOR phase rules in `CLAUDE.md`. Documentation, planning, audit, and methodology sessions do not invoke `/tdd` (TDD does not apply to non-code deliverables, per the precedent in methodology/SESSION_NOTES.md Session 9 self-assessment).
+    +
+    +### Additional Phase 3D requirement — archive the outgoing methodology/SESSION_NOTES.md block first
+    +
+    +**Before writing your own session's block into `methodology/SESSION_NOTES.md`, move whatever is currently there (your predecessor's block — already read and scored in your Phase 3A) into [`docs/history/SESSION_NOTES_ARCHIVE_2026.md`](docs/history/SESSION_NOTES_ARCHIVE_2026.md), then write only your own block into `methodology/SESSION_NOTES.md`.** This is not new policy — `methodology/SESSION_RUNNER.md` Phase 3D already says `methodology/SESSION_NOTES.md` "is the transient scratchpad (overwritten next session)" — but base Phase 3D never spells out the *mechanism* for "overwritten," so 61 sessions in a row (Sessions 80–141) read "update" as "prepend a new PRIOR TASK block" instead, and the file silently regrew to 1,988 lines / 810 KB before Session 142 caught it and archived it (`PROC-READ-CEILING-001`). Concretely, at Phase 3D:
+     
+     1. Identify the current top-of-file content: everything from the `---` after the Purpose/pointer lines through the end of file is one session's block (its ACTIVE TASK banner, its handoff evaluation of its own predecessor, its self-assessment).
+     2. Move that block, byte-for-byte, into `docs/history/SESSION_NOTES_ARCHIVE_2026.md` — insert it immediately before the newest existing `## Session N archived Session M` heading, found by searching for that heading text, so the new section lands newest-first, after the intro, and the intro's last lines stay with it. **Never insert at a line number:** a fixed line split the intro in Session 194, and a later session's insert pushed its last line down under an older section (`PROJECT_LEARNINGS.md` row 241). After inserting, confirm the intro's lines match the archive's creation commit (`9a862b8`). Verify losslessness the way Session 142 did: byte-containment checks against `git show HEAD:<path>`, not `git diff` (the archive crossed `core.bigfilethreshold` in Session 142 and is a binary diff from here on — content is unaffected, only `git diff`'s line view).
+    -3. Write your own session's ACTIVE TASK banner (demoted to a close-out block: DONE, handoff evaluation of your predecessor, self-assessment) as the *only* content in `SESSION_NOTES.md`, below the unchanged Purpose/pointer lines.
+    +3. Write your own session's ACTIVE TASK banner (demoted to a close-out block: DONE, handoff evaluation of your predecessor, self-assessment) as the *only* content in `methodology/SESSION_NOTES.md`, below the unchanged Purpose/pointer lines.
+     
+     **Skipping this step is the exact failure this section exists to prevent** — it will not error or fail a test, it will simply let the file grow by one more session's worth, invisibly, until some future session measures it and finds another `PROC-READ-CEILING-001`.
+     
+    @@ -65,11 +65,11 @@
+     
+     ### Project-specific Learnings
+     
+    -Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget — search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+    +Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget — search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.
+     
+     ### Project-specific Failure Modes
+     
+    -(none — the base failure modes in `SESSION_RUNNER.md` apply.)
+    +(none — the base failure modes in `methodology/SESSION_RUNNER.md` apply.)
+     
+     ---
+     
+    @@ -114,7 +114,7 @@
+     - **Mock only at system boundaries.** External APIs, time/randomness, file system (sometimes), and databases (sometimes — prefer a real test database). **Do not mock your own classes, internal collaborators, or anything you control.** Tests that mock internals are coupled to internals and break on every refactor.
+     - **No assertion on call counts or call order** unless the call IS the observable behavior (e.g., a webhook dispatch). Internal call patterns are implementation detail.
+     - **Vertical slicing is mandatory; horizontal slicing is forbidden.** One test → one minimal implementation → repeat. Writing all tests first, then all implementation, produces tests that verify *imagined* behavior rather than *actual* behavior. Skipping this rule is a TDD violation, equivalent to skipping a phase.
+    -- **Coverage compatibility:** The >80% coverage floor above governs *how much* of new code is covered. Behavior prioritization (see Test Plan template in `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`) governs *which* behaviors receive exhaustive vs. lighter coverage *within* that floor. The two rules compose; neither overrides the other.
+    +- **Coverage compatibility:** The >80% coverage floor above governs *how much* of new code is covered. Behavior prioritization (see Test Plan template in `methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`) governs *which* behaviors receive exhaustive vs. lighter coverage *within* that floor. The two rules compose; neither overrides the other.
+     - **REFACTOR phase guidance — prefer deep modules.** When refactoring (after GREEN), evaluate whether new code reveals an opportunity to deepen a module: small interface, more hidden implementation. Avoid the inverse (shallow modules — large interface, thin implementation).
+     
+     ### TDD Phases
+    @@ -157,7 +157,7 @@
+     - "Simplified", "for now", or "would need X for accuracy" logic is a stub — it must be replaced with a real implementation before the feature can be considered complete
+     - If real data is not yet available (e.g., no backend endpoint exists), the assistant MUST either create the endpoint or explicitly flag the stub and mark the feature as incomplete in BACKLOG.md
+     - Comments like `// simplified`, `// placeholder`, or `// hardcoded` are violations and must be resolved before marking work as done
+    -- **Scope clarification:** This rule applies at **feature-complete declaration**, not within an in-progress TDD cycle. During the GREEN phase of a tracer-bullet cycle, the minimum implementation may legitimately be a hardcoded literal that subsequent tests in the same feature drive out. The anti-stub rule fires when a feature is declared done — not on every intermediate commit inside its TDD loop. (Note: this rule is also distinct from the **session stub** required by `SESSION_RUNNER.md` Phase 1B — that stub is mandatory and is overwritten in Phase 3D, not "shipped code.")
+    +- **Scope clarification:** This rule applies at **feature-complete declaration**, not within an in-progress TDD cycle. During the GREEN phase of a tracer-bullet cycle, the minimum implementation may legitimately be a hardcoded literal that subsequent tests in the same feature drive out. The anti-stub rule fires when a feature is declared done — not on every intermediate commit inside its TDD loop. (Note: this rule is also distinct from the **session stub** required by `methodology/SESSION_RUNNER.md` Phase 1B — that stub is mandatory and is overwritten in Phase 3D, not "shipped code.")
+     
+     ### Error Handling
+     
+    @@ -175,8 +175,8 @@
+     - Add missing imports
+     - Run tests after code changes
+     - Create test files for new features
+    -- Record every action in CHANGELOG.md (one entry per commit, plus each non-commit action) and remove a completed item's row from BACKLOG.md in the same commit
+    -- Update SESSION_NOTES.md during/after work
+    +- Record every action in methodology/CHANGELOG.md (one entry per commit, plus each non-commit action) and remove a completed item's row from BACKLOG.md in the same commit
+    +- Update methodology/SESSION_NOTES.md during/after work
+     - Fix failing tests before committing
+     - Run builds and restarts automatically after code changes
+     - Use parallel agents to explore/research simultaneously rather than sequentially
+    @@ -205,15 +205,15 @@
+     
+     ### Session Continuity Protocol
+     1. **Start of session**: Read `BACKLOG.md` to understand current state
+    -2. **During work**: Record each action in `CHANGELOG.md` as it is taken — one entry per commit, a claim commit carrying an *(in progress)* entry — and remove a completed item's `BACKLOG.md` row in the same commit
+    -3. **End of session**: Update `SESSION_NOTES.md` with context for next instance
+    +2. **During work**: Record each action in `methodology/CHANGELOG.md` as it is taken — one entry per commit, a claim commit carrying an *(in progress)* entry — and remove a completed item's `BACKLOG.md` row in the same commit
+    +3. **End of session**: Update `methodology/SESSION_NOTES.md` with context for next instance
+     4. **For big changes**: Enter plan mode, explore thoroughly, get approval before implementing
+     
+     ### Documentation Update Rule (MANDATORY)
+     Every git commit that changes feature code MUST be followed immediately by updates to:
+     - **`BACKLOG.md`**: Remove the completed item's row entirely (see the file's own "Instructions for Updating This File" — `DONE` is not a resting state there)
+    -- **`CHANGELOG.md`**: One dated, source-tagged entry per commit (feature code or not) and per non-commit action, not only completed items — newest on top; rules in `docs/methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger (`SESSION_RUNNER.md` Phase 3F, FM #27)
+    -- **`SESSION_NOTES.md`**: Update "Work Completed", "Files Modified/Created", and "Resume Point"
+    +- **`methodology/CHANGELOG.md`**: One dated, source-tagged entry per commit (feature code or not) and per non-commit action, not only completed items — newest on top; rules in `methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger (`methodology/SESSION_RUNNER.md` Phase 3F, FM #27)
+    +- **`methodology/SESSION_NOTES.md`**: Update "Work Completed", "Files Modified/Created", and "Resume Point"
+     
+     These updates MUST be included in the same push or committed and pushed immediately after the feature commit. Do NOT wait for the user to request documentation updates — they are part of completing the work.
+     
+    @@ -439,7 +439,7 @@
+     
+     ## Development Phases
+     
+    -Phased roadmap: `ROADMAP.md`.
+    +Phased roadmap: `methodology/ROADMAP.md`.
+     
+     ## Resources
+     
+  .context-budget.json (5 replacement(s))
+    --- .context-budget.json
+    +++ methodology/.context-budget.json
+    @@ -35,7 +35,7 @@
+           "_": "Auto-loaded in full by Claude Code. Wrap your project's statement of purpose in <!-- budget:protected --> ... <!-- /budget:protected --> and the tool will refuse to let a later compaction remove it. On the project this came from, 32.5% of this file was an index of past failures and 0.5% was what the software is for."
+         },
+         {
+    -      "path": "SESSION_NOTES.md",
+    +      "path": "methodology/SESSION_NOTES.md",
+           "class": "read-mandated",
+           "max_lines": 400,
+           "max_bytes": 120000,
+    @@ -59,14 +59,14 @@
+           "_": "Tightened 300,000 -> 250,000 B (Session 149, PROC-LEARNINGS-ARCHIVE-001 Phase 2) — derived from the harness's own plain-Read refusal line, 262,144 B (256 KiB), less headroom for growth between archiving sessions (docs/planning/proc-learnings-archive-001.md D1). This project reads the file on demand (CLAUDE.md: 'Read it when a task resembles earlier work'), never whole at Phase 0, so archiving is a project-owned tool (scripts/learnings_archive.py), not methodology_trim.py (NO_CONFIG for a table-shaped ledger; no header-repeating split strategy). scripts/learnings_archive.py --check / --write is what enforces this trigger; run --check to see current bytes/rows against it, --write to cut the oldest rows into a docs/history/ shard once over it."
+         },
+         {
+    -      "path": "CHANGELOG.md",
+    +      "path": "methodology/CHANGELOG.md",
+           "_path": "Absent from this config until Session 142 (PROC-READ-CEILING-001) even though the file is mandated-read (Phase 0 step 6) — its own archive threshold lived only inside methodology_trim.py's hardcoded constants, invisible to context_budget.py's growth-run warning.",
+           "class": "ledger",
+           "max_bytes": 196608,
+           "_": "196,608 B is methodology_trim.py's own Class A archive-fire threshold for a ROOT ledger (its TRIM_VERSION 1.5.0 changelog: 'raised to meet it'), not a separately chosen number — the two tools now agree on when this file is over budget. Not in WHOLE_READ_CLASSES (class 'ledger' is unlisted): correct, since Phase 0 reads this file's newest entries and greps it, never the whole thing in one call. Trimmed 387,758 B -> 99,041 B on 2026-09-21 (Session 142); re-fires once growth reaches 196,608 B again — run `python3 methodology_trim.py --file CHANGELOG.md --check` to test, `--write` to act."
+         },
+         {
+    -      "path": "HANDOFFS.md",
+    +      "path": "methodology/HANDOFFS.md",
+           "_path": "Same gap as CHANGELOG.md, same fix, same session.",
+           "class": "ledger",
+           "max_bytes": 196608,
+    @@ -76,12 +76,12 @@
+     
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "Drift-checked, never size-checked — an adopter may not edit this file, so a size finding would be unactionable. Adjust the canonical path to wherever your methodology checkout lives. Zero local edits means `git diff` in your project shows nothing, so drift is otherwise invisible: on the source project both synced files were 13 and 2 commits behind for 48 days without anyone noticing."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         }
+       ]
+  .quality-gates.json (1 replacement(s))
+    --- .quality-gates.json
+    +++ methodology/.quality-gates.json
+    @@ -1,7 +1,7 @@
+     {
+       "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear, held by quality_ratchet.py. STARTS EMPTY ON PURPOSE: a ratchet begins where the project IS, not where an article says it should be. Measure first, then declare each gate at its current value; `python3 quality_ratchet.py --run` reports every gate, and `install-hook` makes the pre-commit ratchet refuse any later commit that loosens one. Thresholds only tighten. Loosening one is a plan-mode decision made in its own commit with the reason in the ledger, committed with --no-verify — a recorded bypass, not an exemption (SAFEGUARDS.md Blast Radius Limits; SESSION_RUNNER.md failure mode #17; ITERATIVE_METHODOLOGY.md §Mechanical Gates Bind Every Actor).",
+       "version": 1,
+    -  "results_file": ".quality-gates-results.json",
+    +  "results_file": "methodology/.quality-gates-results.json",
+       "_results_file": "Where --run writes its results (gitignored by default — add it to .gitignore; the receipt cites the summary line, and the dashboard reads the file where it exists). Commit it instead if you want every clone to score the last run.",
+       "_gate_schema": "Each gate: `name` (unique; the ratchet keys on it), `direction` (`min`: measured >= threshold, or `max`: measured <= threshold), `threshold` (a number), and optionally `command` (run via the shell from the project root) plus `extract` (a regex whose FIRST capture group is the measured number; without `extract` the command's exit code is the measurement, so `max 0` means `must exit 0`). A gate with no command is declared, not measured: --run reports it UNMEASURED and exits 1 — never pass. `why` and `unit` are free text for the reader.",
+       "_example": {
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  tests:   7 mention(s) in 1 file(s)
+    scripts/test_learnings_archive.py:52  with open(os.path.join(root, ".context-budget.json"), "w") as f:   (7 mentions, 7 on code lines)
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 7 mention(s) in 2 file(s)
+    scripts/deploy_vps.sh:118  --exclude "dashboard_history.jsonl" \   (4 mentions, 2 on code lines)
+    scripts/learnings_archive.py:11  --root holds PROJECT_LEARNINGS.md, .context-budget.json (whose max_bytes for that file   (3 mentions, 3 on code lines)
+  config:  0 mention(s) in 0 file(s)
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  1433 mention(s) in 11 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   2036 mention(s) in 30 file(s)
+    .gitignore:2  dashboard.html
+    .gitignore:3  # NOTE: dashboard_history.jsonl is deliberately NOT ignored. Unlike dashboard.html
+    .gitignore:9  # Written by `python3 quality_ratchet.py --run` (a root file bin/sync adds). Ignored so
+    .gitignore:12  .quality-gates-results.json
+    BACKLOG.md:3  > Open work only. Completed work → [`CHANGELOG.md`](CHANGELOG.md) (authoritative action ledger).
+    BACKLOG.md:4  > Shipped feature inventory → [`ROADMAP.md`](ROADMAP.md). A completed row is **removed from this
+    BACKLOG.md:5  > file** and logged in `CHANGELOG.md` in the same commit — see Instructions below.
+    BACKLOG.md:29  | INFRA-VPS-PORT465-BLOCKED-001 | Outbound SMTP port 465 (implicit TLS) is network-blocked from the production VPS | REA
+    BACKLOG.md:31  | PROC-CLAUDEMD-WARN-BUDGET-001 | `CLAUDE.md` sits at 24,603 B, past its 24,000 B `warn_bytes` line (well under the 28,0
+    BACKLOG.md:35  | PROC-STAGE2-DOTENV-EXAMPLE-EXCLUDE-001 | `docs/planning/plan-005-stage2-install-runbook.md` step 4's computed 7-line `
+    BACKLOG.md:43  | RED-PROOF-CI-001 | Run `scripts/red_check.py` on each combined RED+GREEN commit in a PR | BLOCKED (on `CI-IOS-001`: it
+    BACKLOG.md:45  | PROC-LEDGER-READ-REFUSAL-001 | `CHANGELOG.md` is past the 262,144 B hard-refusal limit for a default read, and `PROJEC
+    BACKLOG.md:55  2. **When completing a task**: **Remove the row from this file** and record it in `CHANGELOG.md`
+    BACKLOG.md:56  in the same commit (`SESSION_RUNNER.md` Phase 3F, FM #27). `DONE` is not a resting state in
+    BACKLOG.md:60  5. **A ticket ID not on this list is not open work** — check `CHANGELOG.md` for its history.
+    CLAUDE_STRUCTURE.md:12  The safety rules are defined in `SAFEGUARDS.md`.
+    PRODUCT_VISION.md:94  - **SAFEGUARDS.md** defines non-negotiable safety rules
+    PRODUCT_VISION.md:98  - **CHANGELOG.md** is the source of truth for completed work — the authoritative action ledger
+    PRODUCT_VISION.md:99  - **ROADMAP.md** is the source of truth for the shipped feature inventory
+    PRODUCT_VISION.md:100  - **HANDOFFS.md** is the durable, machine-checkable proof each session's close-out was done
+    PRODUCT_VISION.md:101  - **SESSION_NOTES.md** preserves continuity across sessions
+    PROJECT_LEARNINGS.md:3  > Migrated verbatim from `SESSION_RUNNER.md`'s "Learnings (added by sessions)" table on 2026-07-12 to route project lear
+    PROJECT_LEARNINGS.md:14  | 85 | **Deleting a secret from HEAD is not remediation — and it is worse than doing nothing, because it *looks* done. A
+    PROJECT_LEARNINGS.md:15  | 86 | **Guidance that names a safe place for secrets must be verified to actually be safe — and a remediation artifact 
+    PROJECT_LEARNINGS.md:16  | 87 | **A `git commit -m "…"` message is shell-interpreted: under zsh, backticks command-substitute and the commit stil
+
+==== mts-migrate.txt ====
+migrate-layout: /Users/rmsharp/.cache/bl105-rehearsal/mts-mig
+canonical: /Users/rmsharp/Development/methodology @ f02751751449
+layout: legacy   tier: all   mode: apply
+
+moves (40):
+  git mv SESSION_RUNNER.md methodology/SESSION_RUNNER.md
+  git mv FRAMEWORK_LEARNINGS.md methodology/FRAMEWORK_LEARNINGS.md
+  git mv SAFEGUARDS.md methodology/SAFEGUARDS.md
+  git mv RECOMMENDED_SKILLS.md methodology/RECOMMENDED_SKILLS.md
+  git mv CONTEXT_TEMPLATE.md methodology/CONTEXT_TEMPLATE.md
+  git mv CLAUDE_TEMPLATE.md methodology/CLAUDE_TEMPLATE.md
+  git mv BOOTSTRAP.md methodology/BOOTSTRAP.md
+  git mv methodology_dashboard.py methodology/methodology_dashboard.py
+  git mv methodology_trim.py methodology/methodology_trim.py
+  git mv context_budget.py methodology/context_budget.py
+  git mv quality_ratchet.py methodology/quality_ratchet.py
+  git mv SESSION_NOTES.md methodology/SESSION_NOTES.md
+  git mv CHANGELOG.md methodology/CHANGELOG.md
+  git mv HANDOFFS.md methodology/HANDOFFS.md
+  git mv ROADMAP.md methodology/ROADMAP.md
+  git mv .context-budget.json methodology/.context-budget.json
+  git mv .quality-gates.json methodology/.quality-gates.json
+  git mv .gitattributes methodology/.gitattributes
+  git mv docs/methodology/ITERATIVE_METHODOLOGY.md methodology/ITERATIVE_METHODOLOGY.md
+  git mv docs/methodology/HOW_TO_USE.md methodology/HOW_TO_USE.md
+  git mv docs/methodology/FRAMEWORK_APPARATUS.md methodology/FRAMEWORK_APPARATUS.md
+  git mv docs/methodology/workstreams/DESIGN_WORKSTREAM.md methodology/workstreams/DESIGN_WORKSTREAM.md
+  git mv docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md methodology/workstreams/ARCHITECTURE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md methodology/workstreams/DEVELOPMENT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/AUDIT_WORKSTREAM.md methodology/workstreams/AUDIT_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md
+  git mv docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md methodology/workstreams/TEMPLATE_WORKSTREAM.md
+  git mv docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md
+  git mv docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md methodology/workstreams/TEMPLATE_CAMPAIGN.md
+  git mv dashboard_history.jsonl methodology/dashboard_history.jsonl
+  git mv .context-budget-history.jsonl methodology/.context-budget-history.jsonl
+  git mv docs/archive/CHANGELOG-through-2026-09-02.md methodology/archive/CHANGELOG-through-2026-09-02.md
+  git mv docs/archive/CHANGELOG-through-2026-09-02.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-02.md.verify.sh
+  git mv docs/archive/CHANGELOG-through-2026-09-28.md methodology/archive/CHANGELOG-through-2026-09-28.md
+  git mv docs/archive/CHANGELOG-through-2026-09-28.md.verify.sh methodology/archive/CHANGELOG-through-2026-09-28.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-03.md methodology/archive/HANDOFFS-through-2026-09-03.md
+  git mv docs/archive/HANDOFFS-through-2026-09-03.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-03.md.verify.sh
+  git mv docs/archive/HANDOFFS-through-2026-09-22.md methodology/archive/HANDOFFS-through-2026-09-22.md
+  git mv docs/archive/HANDOFFS-through-2026-09-22.md.verify.sh methodology/archive/HANDOFFS-through-2026-09-22.md.verify.sh
+
+rewrites (3 file(s)):
+  CLAUDE.md (24 replacement(s))
+    --- CLAUDE.md
+    +++ CLAUDE.md
+    @@ -2,18 +2,18 @@
+     
+     ## SESSION PROTOCOL — FOLLOW BEFORE DOING ANYTHING
+     
+    -Read and follow `SESSION_RUNNER.md` step by step. It is your operating procedure
+    +Read and follow `methodology/SESSION_RUNNER.md` step by step. It is your operating procedure
+     for every session. It tells you what to read, when to stop, and how to close out.
+     
+     ---
+     
+     ## Project-Specific Methodology Adaptations
+     
+    -*Additions and overrides to the base methodology at `SESSION_RUNNER.md` and `SAFEGUARDS.md` (synced from canonical, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here.*
+    +*Additions and overrides to the base methodology at `methodology/SESSION_RUNNER.md` and `methodology/SAFEGUARDS.md` (synced from canonical, not project-owned). The base files govern unless explicitly overridden here. **Do not edit the synced files** — put customizations here.*
+     
+     ### Additional Phase 0 steps
+     
+    -After canonical `SESSION_RUNNER.md` Phase 0's step 8, this project adds step 9:
+    +After canonical `methodology/SESSION_RUNNER.md` Phase 0's step 8, this project adds step 9:
+     
+     9. **Present the remaining backlog via `AskUserQuestion`.** After the text report (step 7), turn the open work into an actionable choice instead of leaving the user to parse prose and reply unprompted:
+        - Pull the candidate list from two places: (a) the ACTIVE TASK banner's "OR pick another open ticket" list (or equivalent), and (b) **every non-DONE row in `BACKLOG.md`** — scan the whole file, not one named section (see gotcha below).
+    @@ -26,15 +26,15 @@
+     
+     ### Additional Phase 1B requirement
+     
+    -**If the deliverable is feature implementation or a bug fix, invoke the `/tdd` skill before writing the first failing test.** The skill enforces vertical slicing (one test → one impl), behavior-over-implementation testing, and mock-at-boundaries discipline — all of which are required by the "Test Quality" sub-section in `CLAUDE.md`. The skill complements, does not replace, the RED/GREEN/REFACTOR phase rules in `CLAUDE.md`. Documentation, planning, audit, and methodology sessions do not invoke `/tdd` (TDD does not apply to non-code deliverables, per the precedent in SESSION_NOTES.md Session 9 self-assessment).
+    -
+    -### Additional Phase 3D requirement — archive the outgoing SESSION_NOTES.md block first
+    -
+    -**Before writing your own session's block into `SESSION_NOTES.md`, move whatever is currently there (your predecessor's block — already read and scored in your Phase 3A) into [`docs/history/SESSION_NOTES_ARCHIVE_2026.md`](docs/history/SESSION_NOTES_ARCHIVE_2026.md), then write only your own block into `SESSION_NOTES.md`.** This is not new policy — `SESSION_RUNNER.md` Phase 3D already says `SESSION_NOTES.md` "is the transient scratchpad (overwritten next session)" — but base Phase 3D never spells out the *mechanism* for "overwritten," so 61 sessions in a row (Sessions 80–141) read "update" as "prepend a new PRIOR TASK block" instead, and the file silently regrew to 1,988 lines / 810 KB before Session 142 caught it and archived it (`PROC-READ-CEILING-001`). Concretely, at Phase 3D:
+    +**If the deliverable is feature implementation or a bug fix, invoke the `/tdd` skill before writing the first failing test.** The skill enforces vertical slicing (one test → one impl), behavior-over-implementation testing, and mock-at-boundaries discipline — all of which are required by the "Test Quality" sub-section in `CLAUDE.md`. The skill complements, does not replace, the RED/GREEN/REFACTOR phase rules in `CLAUDE.md`. Documentation, planning, audit, and methodology sessions do not invoke `/tdd` (TDD does not apply to non-code deliverables, per the precedent in methodology/SESSION_NOTES.md Session 9 self-assessment).
+    +
+    +### Additional Phase 3D requirement — archive the outgoing methodology/SESSION_NOTES.md block first
+    +
+    +**Before writing your own session's block into `methodology/SESSION_NOTES.md`, move whatever is currently there (your predecessor's block — already read and scored in your Phase 3A) into [`docs/history/SESSION_NOTES_ARCHIVE_2026.md`](docs/history/SESSION_NOTES_ARCHIVE_2026.md), then write only your own block into `methodology/SESSION_NOTES.md`.** This is not new policy — `methodology/SESSION_RUNNER.md` Phase 3D already says `methodology/SESSION_NOTES.md` "is the transient scratchpad (overwritten next session)" — but base Phase 3D never spells out the *mechanism* for "overwritten," so 61 sessions in a row (Sessions 80–141) read "update" as "prepend a new PRIOR TASK block" instead, and the file silently regrew to 1,988 lines / 810 KB before Session 142 caught it and archived it (`PROC-READ-CEILING-001`). Concretely, at Phase 3D:
+     
+     1. Identify the current top-of-file content: everything from the `---` after the Purpose/pointer lines through the end of file is one session's block (its ACTIVE TASK banner, its handoff evaluation of its own predecessor, its self-assessment).
+     2. Move that block, byte-for-byte, into `docs/history/SESSION_NOTES_ARCHIVE_2026.md` — insert it immediately before the newest existing `## Session N archived Session M` heading, found by searching for that heading text, so the new section lands newest-first, after the intro, and the intro's last lines stay with it. **Never insert at a line number:** a fixed line split the intro in Session 194, and a later session's insert pushed its last line down under an older section (`PROJECT_LEARNINGS.md` row 241). After inserting, confirm the intro's lines match the archive's creation commit (`9a862b8`). Verify losslessness the way Session 142 did: byte-containment checks against `git show HEAD:<path>`, not `git diff` (the archive crossed `core.bigfilethreshold` in Session 142 and is a binary diff from here on — content is unaffected, only `git diff`'s line view).
+    -3. Write your own session's ACTIVE TASK banner (demoted to a close-out block: DONE, handoff evaluation of your predecessor, self-assessment) as the *only* content in `SESSION_NOTES.md`, below the unchanged Purpose/pointer lines.
+    +3. Write your own session's ACTIVE TASK banner (demoted to a close-out block: DONE, handoff evaluation of your predecessor, self-assessment) as the *only* content in `methodology/SESSION_NOTES.md`, below the unchanged Purpose/pointer lines.
+     
+     **Skipping this step is the exact failure this section exists to prevent** — it will not error or fail a test, it will simply let the file grow by one more session's worth, invisibly, until some future session measures it and finds another `PROC-READ-CEILING-001`.
+     
+    @@ -65,11 +65,11 @@
+     
+     ### Project-specific Learnings
+     
+    -Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget — search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `SESSION_RUNNER.md`.
+    +Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget — search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.
+     
+     ### Project-specific Failure Modes
+     
+    -(none — the base failure modes in `SESSION_RUNNER.md` apply.)
+    +(none — the base failure modes in `methodology/SESSION_RUNNER.md` apply.)
+     
+     ---
+     
+    @@ -114,7 +114,7 @@
+     - **Mock only at system boundaries.** External APIs, time/randomness, file system (sometimes), and databases (sometimes — prefer a real test database). **Do not mock your own classes, internal collaborators, or anything you control.** Tests that mock internals are coupled to internals and break on every refactor.
+     - **No assertion on call counts or call order** unless the call IS the observable behavior (e.g., a webhook dispatch). Internal call patterns are implementation detail.
+     - **Vertical slicing is mandatory; horizontal slicing is forbidden.** One test → one minimal implementation → repeat. Writing all tests first, then all implementation, produces tests that verify *imagined* behavior rather than *actual* behavior. Skipping this rule is a TDD violation, equivalent to skipping a phase.
+    -- **Coverage compatibility:** The >80% coverage floor above governs *how much* of new code is covered. Behavior prioritization (see Test Plan template in `docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`) governs *which* behaviors receive exhaustive vs. lighter coverage *within* that floor. The two rules compose; neither overrides the other.
+    +- **Coverage compatibility:** The >80% coverage floor above governs *how much* of new code is covered. Behavior prioritization (see Test Plan template in `methodology/workstreams/DEVELOPMENT_WORKSTREAM.md`) governs *which* behaviors receive exhaustive vs. lighter coverage *within* that floor. The two rules compose; neither overrides the other.
+     - **REFACTOR phase guidance — prefer deep modules.** When refactoring (after GREEN), evaluate whether new code reveals an opportunity to deepen a module: small interface, more hidden implementation. Avoid the inverse (shallow modules — large interface, thin implementation).
+     
+     ### TDD Phases
+    @@ -157,7 +157,7 @@
+     - "Simplified", "for now", or "would need X for accuracy" logic is a stub — it must be replaced with a real implementation before the feature can be considered complete
+     - If real data is not yet available (e.g., no backend endpoint exists), the assistant MUST either create the endpoint or explicitly flag the stub and mark the feature as incomplete in BACKLOG.md
+     - Comments like `// simplified`, `// placeholder`, or `// hardcoded` are violations and must be resolved before marking work as done
+    -- **Scope clarification:** This rule applies at **feature-complete declaration**, not within an in-progress TDD cycle. During the GREEN phase of a tracer-bullet cycle, the minimum implementation may legitimately be a hardcoded literal that subsequent tests in the same feature drive out. The anti-stub rule fires when a feature is declared done — not on every intermediate commit inside its TDD loop. (Note: this rule is also distinct from the **session stub** required by `SESSION_RUNNER.md` Phase 1B — that stub is mandatory and is overwritten in Phase 3D, not "shipped code.")
+    +- **Scope clarification:** This rule applies at **feature-complete declaration**, not within an in-progress TDD cycle. During the GREEN phase of a tracer-bullet cycle, the minimum implementation may legitimately be a hardcoded literal that subsequent tests in the same feature drive out. The anti-stub rule fires when a feature is declared done — not on every intermediate commit inside its TDD loop. (Note: this rule is also distinct from the **session stub** required by `methodology/SESSION_RUNNER.md` Phase 1B — that stub is mandatory and is overwritten in Phase 3D, not "shipped code.")
+     
+     ### Error Handling
+     
+    @@ -175,8 +175,8 @@
+     - Add missing imports
+     - Run tests after code changes
+     - Create test files for new features
+    -- Record every action in CHANGELOG.md (one entry per commit, plus each non-commit action) and remove a completed item's row from BACKLOG.md in the same commit
+    -- Update SESSION_NOTES.md during/after work
+    +- Record every action in methodology/CHANGELOG.md (one entry per commit, plus each non-commit action) and remove a completed item's row from BACKLOG.md in the same commit
+    +- Update methodology/SESSION_NOTES.md during/after work
+     - Fix failing tests before committing
+     - Run builds and restarts automatically after code changes
+     - Use parallel agents to explore/research simultaneously rather than sequentially
+    @@ -205,15 +205,15 @@
+     
+     ### Session Continuity Protocol
+     1. **Start of session**: Read `BACKLOG.md` to understand current state
+    -2. **During work**: Record each action in `CHANGELOG.md` as it is taken — one entry per commit, a claim commit carrying an *(in progress)* entry — and remove a completed item's `BACKLOG.md` row in the same commit
+    -3. **End of session**: Update `SESSION_NOTES.md` with context for next instance
+    +2. **During work**: Record each action in `methodology/CHANGELOG.md` as it is taken — one entry per commit, a claim commit carrying an *(in progress)* entry — and remove a completed item's `BACKLOG.md` row in the same commit
+    +3. **End of session**: Update `methodology/SESSION_NOTES.md` with context for next instance
+     4. **For big changes**: Enter plan mode, explore thoroughly, get approval before implementing
+     
+     ### Documentation Update Rule (MANDATORY)
+     Every git commit that changes feature code MUST be followed immediately by updates to:
+     - **`BACKLOG.md`**: Remove the completed item's row entirely (see the file's own "Instructions for Updating This File" — `DONE` is not a resting state there)
+    -- **`CHANGELOG.md`**: One dated, source-tagged entry per commit (feature code or not) and per non-commit action, not only completed items — newest on top; rules in `docs/methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger (`SESSION_RUNNER.md` Phase 3F, FM #27)
+    -- **`SESSION_NOTES.md`**: Update "Work Completed", "Files Modified/Created", and "Resume Point"
+    +- **`methodology/CHANGELOG.md`**: One dated, source-tagged entry per commit (feature code or not) and per non-commit action, not only completed items — newest on top; rules in `methodology/FRAMEWORK_APPARATUS.md` §The Action Ledger (`methodology/SESSION_RUNNER.md` Phase 3F, FM #27)
+    +- **`methodology/SESSION_NOTES.md`**: Update "Work Completed", "Files Modified/Created", and "Resume Point"
+     
+     These updates MUST be included in the same push or committed and pushed immediately after the feature commit. Do NOT wait for the user to request documentation updates — they are part of completing the work.
+     
+    @@ -439,7 +439,7 @@
+     
+     ## Development Phases
+     
+    -Phased roadmap: `ROADMAP.md`.
+    +Phased roadmap: `methodology/ROADMAP.md`.
+     
+     ## Resources
+     
+  .context-budget.json (5 replacement(s))
+    --- .context-budget.json
+    +++ methodology/.context-budget.json
+    @@ -35,7 +35,7 @@
+           "_": "Auto-loaded in full by Claude Code. Wrap your project's statement of purpose in <!-- budget:protected --> ... <!-- /budget:protected --> and the tool will refuse to let a later compaction remove it. On the project this came from, 32.5% of this file was an index of past failures and 0.5% was what the software is for."
+         },
+         {
+    -      "path": "SESSION_NOTES.md",
+    +      "path": "methodology/SESSION_NOTES.md",
+           "class": "read-mandated",
+           "max_lines": 400,
+           "max_bytes": 120000,
+    @@ -59,14 +59,14 @@
+           "_": "Tightened 300,000 -> 250,000 B (Session 149, PROC-LEARNINGS-ARCHIVE-001 Phase 2) — derived from the harness's own plain-Read refusal line, 262,144 B (256 KiB), less headroom for growth between archiving sessions (docs/planning/proc-learnings-archive-001.md D1). This project reads the file on demand (CLAUDE.md: 'Read it when a task resembles earlier work'), never whole at Phase 0, so archiving is a project-owned tool (scripts/learnings_archive.py), not methodology_trim.py (NO_CONFIG for a table-shaped ledger; no header-repeating split strategy). scripts/learnings_archive.py --check / --write is what enforces this trigger; run --check to see current bytes/rows against it, --write to cut the oldest rows into a docs/history/ shard once over it."
+         },
+         {
+    -      "path": "CHANGELOG.md",
+    +      "path": "methodology/CHANGELOG.md",
+           "_path": "Absent from this config until Session 142 (PROC-READ-CEILING-001) even though the file is mandated-read (Phase 0 step 6) — its own archive threshold lived only inside methodology_trim.py's hardcoded constants, invisible to context_budget.py's growth-run warning.",
+           "class": "ledger",
+           "max_bytes": 196608,
+           "_": "196,608 B is methodology_trim.py's own Class A archive-fire threshold for a ROOT ledger (its TRIM_VERSION 1.5.0 changelog: 'raised to meet it'), not a separately chosen number — the two tools now agree on when this file is over budget. Not in WHOLE_READ_CLASSES (class 'ledger' is unlisted): correct, since Phase 0 reads this file's newest entries and greps it, never the whole thing in one call. Trimmed 387,758 B -> 99,041 B on 2026-09-21 (Session 142); re-fires once growth reaches 196,608 B again — run `python3 methodology_trim.py --file CHANGELOG.md --check` to test, `--write` to act."
+         },
+         {
+    -      "path": "HANDOFFS.md",
+    +      "path": "methodology/HANDOFFS.md",
+           "_path": "Same gap as CHANGELOG.md, same fix, same session.",
+           "class": "ledger",
+           "max_bytes": 196608,
+    @@ -76,12 +76,12 @@
+     
+       "synced": [
+         {
+    -      "path": "SESSION_RUNNER.md",
+    +      "path": "methodology/SESSION_RUNNER.md",
+           "canonical": "../methodology/starter-kit/SESSION_RUNNER.md",
+           "_": "Drift-checked, never size-checked — an adopter may not edit this file, so a size finding would be unactionable. Adjust the canonical path to wherever your methodology checkout lives. Zero local edits means `git diff` in your project shows nothing, so drift is otherwise invisible: on the source project both synced files were 13 and 2 commits behind for 48 days without anyone noticing."
+         },
+         {
+    -      "path": "SAFEGUARDS.md",
+    +      "path": "methodology/SAFEGUARDS.md",
+           "canonical": "../methodology/starter-kit/SAFEGUARDS.md"
+         }
+       ]
+  .quality-gates.json (1 replacement(s))
+    --- .quality-gates.json
+    +++ methodology/.quality-gates.json
+    @@ -1,7 +1,7 @@
+     {
+       "_": "Declared quality gates for this project — the thresholds every actor (any agent, any tier, any human) must clear, held by quality_ratchet.py. STARTS EMPTY ON PURPOSE: a ratchet begins where the project IS, not where an article says it should be. Measure first, then declare each gate at its current value; `python3 quality_ratchet.py --run` reports every gate, and `install-hook` makes the pre-commit ratchet refuse any later commit that loosens one. Thresholds only tighten. Loosening one is a plan-mode decision made in its own commit with the reason in the ledger, committed with --no-verify — a recorded bypass, not an exemption (SAFEGUARDS.md Blast Radius Limits; SESSION_RUNNER.md failure mode #17; ITERATIVE_METHODOLOGY.md §Mechanical Gates Bind Every Actor).",
+       "version": 1,
+    -  "results_file": ".quality-gates-results.json",
+    +  "results_file": "methodology/.quality-gates-results.json",
+       "_results_file": "Where --run writes its results (gitignored by default — add it to .gitignore; the receipt cites the summary line, and the dashboard reads the file where it exists). Commit it instead if you want every clone to score the last run.",
+       "_gate_schema": "Each gate: `name` (unique; the ratchet keys on it), `direction` (`min`: measured >= threshold, or `max`: measured <= threshold), `threshold` (a number), and optionally `command` (run via the shell from the project root) plus `extract` (a regex whose FIRST capture group is the measured number; without `extract` the command's exit code is the measurement, so `max 0` means `must exit 0`). A gate with no command is declared, not measured: --run reports it UNMEASURED and exits 1 — never pass. `why` and `unit` are free text for the reader.",
+       "_example": {
+
+not rewritten (reported for a person to decide):
+  machine-read files that name a moved path (candidates: this tool does not run them):
+    a name on a code line is necessary, not sufficient (a control named 25 files and 4 broke); a path built in pieces or a
+    module imported by its stem is not seen. Before applying, rehearse the project's own tests and proofs in a clone,
+    at tier 1 and then at tier all (plan 7.4).
+  ci:      0 mention(s) in 0 file(s)
+  hooks:   0 mention(s) in 0 file(s)
+  tests:   7 mention(s) in 1 file(s)
+    scripts/test_learnings_archive.py:52  with open(os.path.join(root, ".context-budget.json"), "w") as f:   (7 mentions, 7 on code lines)
+  proofs:  0 mention(s) in 0 file(s)
+  scripts: 7 mention(s) in 2 file(s)
+    scripts/deploy_vps.sh:118  --exclude "dashboard_history.jsonl" \   (4 mentions, 2 on code lines)
+    scripts/learnings_archive.py:11  --root holds PROJECT_LEARNINGS.md, .context-budget.json (whose max_bytes for that file   (3 mentions, 3 on code lines)
+  config:  0 mention(s) in 0 file(s)
+  harness: 0 mention(s) in 0 file(s)
+  ledger:  1433 mention(s) in 11 file(s)  (a committed entry is never edited; a link in one is relative to where its ledger sat when it was written)
+  other:   2036 mention(s) in 30 file(s)
+    .gitignore:2  dashboard.html
+    .gitignore:3  # NOTE: dashboard_history.jsonl is deliberately NOT ignored. Unlike dashboard.html
+    .gitignore:9  # Written by `python3 quality_ratchet.py --run` (a root file bin/sync adds). Ignored so
+    .gitignore:12  .quality-gates-results.json
+    BACKLOG.md:3  > Open work only. Completed work → [`CHANGELOG.md`](CHANGELOG.md) (authoritative action ledger).
+    BACKLOG.md:4  > Shipped feature inventory → [`ROADMAP.md`](ROADMAP.md). A completed row is **removed from this
+    BACKLOG.md:5  > file** and logged in `CHANGELOG.md` in the same commit — see Instructions below.
+    BACKLOG.md:29  | INFRA-VPS-PORT465-BLOCKED-001 | Outbound SMTP port 465 (implicit TLS) is network-blocked from the production VPS | REA
+    BACKLOG.md:31  | PROC-CLAUDEMD-WARN-BUDGET-001 | `CLAUDE.md` sits at 24,603 B, past its 24,000 B `warn_bytes` line (well under the 28,0
+    BACKLOG.md:35  | PROC-STAGE2-DOTENV-EXAMPLE-EXCLUDE-001 | `docs/planning/plan-005-stage2-install-runbook.md` step 4's computed 7-line `
+    BACKLOG.md:43  | RED-PROOF-CI-001 | Run `scripts/red_check.py` on each combined RED+GREEN commit in a PR | BLOCKED (on `CI-IOS-001`: it
+    BACKLOG.md:45  | PROC-LEDGER-READ-REFUSAL-001 | `CHANGELOG.md` is past the 262,144 B hard-refusal limit for a default read, and `PROJEC
+    BACKLOG.md:55  2. **When completing a task**: **Remove the row from this file** and record it in `CHANGELOG.md`
+    BACKLOG.md:56  in the same commit (`SESSION_RUNNER.md` Phase 3F, FM #27). `DONE` is not a resting state in
+    BACKLOG.md:60  5. **A ticket ID not on this list is not open work** — check `CHANGELOG.md` for its history.
+    CLAUDE_STRUCTURE.md:12  The safety rules are defined in `SAFEGUARDS.md`.
+    PRODUCT_VISION.md:94  - **SAFEGUARDS.md** defines non-negotiable safety rules
+    PRODUCT_VISION.md:98  - **CHANGELOG.md** is the source of truth for completed work — the authoritative action ledger
+    PRODUCT_VISION.md:99  - **ROADMAP.md** is the source of truth for the shipped feature inventory
+    PRODUCT_VISION.md:100  - **HANDOFFS.md** is the durable, machine-checkable proof each session's close-out was done
+    PRODUCT_VISION.md:101  - **SESSION_NOTES.md** preserves continuity across sessions
+    PROJECT_LEARNINGS.md:3  > Migrated verbatim from `SESSION_RUNNER.md`'s "Learnings (added by sessions)" table on 2026-07-12 to route project lear
+    PROJECT_LEARNINGS.md:14  | 85 | **Deleting a secret from HEAD is not remediation — and it is worse than doing nothing, because it *looks* done. A
+    PROJECT_LEARNINGS.md:15  | 86 | **Guidance that names a safe place for secrets must be verified to actually be safe — and a remediation artifact 
+    PROJECT_LEARNINGS.md:16  | 87 | **A `git commit -m "…"` message is shell-interpreted: under zsh, backticks command-substitute and the commit stil
+
+checks (before -> after):
+  status:  23/23 tracked current -> 23/23 tracked current
+  ledger:  exit 1 -> exit 1
+  handoff: exit 1 -> exit 1
+  links:   exit 0; 0 framework, 0 project dangling -> exit 1; 0 framework, 15 project dangling  (the framework documents are judged; the project's own files are reported)
+  proofs:  4 proof(s), exit histogram {"0": 4} -> 4 proof(s), exit histogram {"0": 4}
+  history: 447 commit(s) reached by git log --follow -> 448 commit(s) reached by git log --follow
+  clean tree: yes
+
+APPLIED: one commit, 1ac2ca0019a9
+
+==== mts-sync-dry.txt ====
+sync: /Users/rmsharp/.cache/bl105-rehearsal/mts-mig
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1792-gf027517
+  layout:  legacy (found SESSION_RUNNER.md)
+  (dry-run: no changes will be written)
+  files:
+    SESSION_RUNNER.md: would write
+    FRAMEWORK_LEARNINGS.md: would write
+    SAFEGUARDS.md: would write
+    RECOMMENDED_SKILLS.md: would write
+    CONTEXT_TEMPLATE.md: unchanged
+    CLAUDE_TEMPLATE.md: would write
+    BOOTSTRAP.md: would write
+    methodology_dashboard.py: would write
+    methodology_trim.py: would write
+    context_budget.py: would write
+    quality_ratchet.py: would write
+    SESSION_NOTES.md: present (seed; left as-is)
+    CHANGELOG.md: present (seed; left as-is)
+    HANDOFFS.md: present (seed; left as-is)
+    ROADMAP.md: present (seed; left as-is)
+    .context-budget.json: present (seed; left as-is)
+    .quality-gates.json: present (seed; left as-is)
+    .gitattributes: would create
+    docs/methodology/ITERATIVE_METHODOLOGY.md: would write
+    docs/methodology/HOW_TO_USE.md: would write
+    docs/methodology/FRAMEWORK_APPARATUS.md: would write
+    docs/methodology/workstreams/DESIGN_WORKSTREAM.md: unchanged
+    docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: would write
+    docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md: would write
+    docs/methodology/workstreams/AUDIT_WORKSTREAM.md: would write
+    docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md: would write
+    docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md: would write
+    docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md: would write
+    docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md: would write
+    docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md: would write
+
+==== mts-sync.txt ====
+sync: /Users/rmsharp/.cache/bl105-rehearsal/mts-mig
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1792-gf027517
+  layout:  legacy (found SESSION_RUNNER.md)
+  files:
+    SESSION_RUNNER.md: updated
+    FRAMEWORK_LEARNINGS.md: updated
+    SAFEGUARDS.md: updated
+    RECOMMENDED_SKILLS.md: updated
+    CONTEXT_TEMPLATE.md: unchanged
+    CLAUDE_TEMPLATE.md: updated
+    BOOTSTRAP.md: updated
+    methodology_dashboard.py: updated
+    methodology_trim.py: updated
+    context_budget.py: updated
+    quality_ratchet.py: updated
+    SESSION_NOTES.md: present (seed; left as-is)
+    CHANGELOG.md: present (seed; left as-is)
+    HANDOFFS.md: present (seed; left as-is)
+    ROADMAP.md: present (seed; left as-is)
+    .context-budget.json: present (seed; left as-is)
+    .quality-gates.json: present (seed; left as-is)
+    .gitattributes: created
+    docs/methodology/ITERATIVE_METHODOLOGY.md: updated
+    docs/methodology/HOW_TO_USE.md: updated
+    docs/methodology/FRAMEWORK_APPARATUS.md: updated
+    docs/methodology/workstreams/DESIGN_WORKSTREAM.md: unchanged
+    docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: updated
+    docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md: updated
+    docs/methodology/workstreams/AUDIT_WORKSTREAM.md: updated
+    docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md: updated
+    docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md: updated
+    docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md: updated
+    docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md: updated
+    docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md: updated
+
+==== mts-unittest-mts-base.txt ====
+.................
+----------------------------------------------------------------------
+Ran 17 tests in 0.988s
+
+OK
+
+==== mts-unittest-mts-edit.txt ====
+...................
+----------------------------------------------------------------------
+Ran 19 tests in 0.983s
+
+OK
+
+==== mts-unittest-mts-mig.txt ====
+.................
+----------------------------------------------------------------------
+Ran 17 tests in 0.945s
+
+OK
+
+==== mts-unittest-mts-move.txt ====
+.................
+----------------------------------------------------------------------
+Ran 17 tests in 0.972s
+
+OK
+
+==== mts-write-mts-base.txt ====
+moved rows 84-148 (65 rows) to docs/history/PROJECT_LEARNINGS-rows-0084-0148.md
+
+==== mts-write-mts-edit.txt ====
+moved rows 84-148 (65 rows) to docs/history/PROJECT_LEARNINGS-rows-0084-0148.md
+
+==== sync-dry-mts-move.txt ====
+sync: /Users/rmsharp/.cache/bl105-rehearsal/mts-move
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1792-gf027517
+  layout:  new (found methodology/SESSION_RUNNER.md)
+  (dry-run: no changes will be written)
+  files:
+    methodology/SESSION_RUNNER.md: unchanged
+    methodology/FRAMEWORK_LEARNINGS.md: unchanged
+    methodology/SAFEGUARDS.md: unchanged
+    methodology/RECOMMENDED_SKILLS.md: unchanged
+    methodology/CONTEXT_TEMPLATE.md: unchanged
+    methodology/CLAUDE_TEMPLATE.md: unchanged
+    methodology/BOOTSTRAP.md: unchanged
+    methodology/methodology_dashboard.py: unchanged
+    methodology/methodology_trim.py: unchanged
+    methodology/context_budget.py: unchanged
+    methodology/quality_ratchet.py: unchanged
+    methodology/SESSION_NOTES.md: present (seed; left as-is)
+    methodology/CHANGELOG.md: present (seed; left as-is)
+    methodology/HANDOFFS.md: present (seed; left as-is)
+    methodology/ROADMAP.md: present (seed; left as-is)
+    methodology/.context-budget.json: present (seed; left as-is)
+    methodology/.quality-gates.json: present (seed; left as-is)
+    methodology/.gitattributes: present (seed; left as-is)
+    methodology/ITERATIVE_METHODOLOGY.md: unchanged
+    methodology/HOW_TO_USE.md: unchanged
+    methodology/FRAMEWORK_APPARATUS.md: unchanged
+    methodology/workstreams/DESIGN_WORKSTREAM.md: unchanged
+    methodology/workstreams/ARCHITECTURE_WORKSTREAM.md: unchanged
+    methodology/workstreams/DEVELOPMENT_WORKSTREAM.md: unchanged
+    methodology/workstreams/AUDIT_WORKSTREAM.md: unchanged
+    methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md: unchanged
+    methodology/workstreams/TEMPLATE_WORKSTREAM.md: unchanged
+    methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md: unchanged
+    methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md: unchanged
+    methodology/workstreams/TEMPLATE_CAMPAIGN.md: unchanged

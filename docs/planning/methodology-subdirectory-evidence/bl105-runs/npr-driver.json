@@ -1,0 +1,1364 @@
+{
+ "scan": {
+  "mode": "scan",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/npr-scan",
+  "layout": "new",
+  "file_bytes": 3232615,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    "methodology/.context-budget.json"
+   ],
+   ".quality-gates.json": [
+    "methodology/.quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 7,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -116,11 +116,11 @@\n | Full package check | `devtools::check()` or `R CMD check` | No errors, no warnings, no notes (ideally) |\n | Test suite | `devtools::test()` or `testthat::test_local()` | All tests pass |\n \n-**Fast single-file test:** `Rscript -e 'Sys.setenv(NOT_CRAN = \"true\"); suppressMessages(pkgload::load_all(\".\", quiet=TRUE)); testthat::test_file(\"tests/testthat/test_X.R\", reporter=\"summary\")'` (sets `NOT_CRAN` first \u2014 without it, a file with a top-level `skip_on_cran()` silently bare-skips instead of running; see `PROJECT_LEARNINGS.md` Learning 417.)\n+**Fast single-file test:** `Rscript -e 'Sys.setenv(NOT_CRAN = \"true\"); suppressMessages(pkgload::load_all(\".\", quiet=TRUE)); testthat::test_file(\"tests/testthat/test_X.R\", reporter=\"summary\")'` (sets `NOT_CRAN` first \u2014 without it, a file with a top-level `skip_on_cran()` silently bare-skips instead of running; see `methodology/PROJECT_LEARNINGS.md` Learning 417.)\n \n **Clean regression read:** `Sys.setenv(NOT_CRAN = \"true\"); pkgload::load_all(\".\", quiet=TRUE); as.data.frame(testthat::test_dir(\"tests/testthat\", reporter=\"silent\", stop_on_failure=FALSE))`, then check `sum(failed)` **and** `sum(error)` directly, unfiltered. (`load_all()` must run first \u2014 without it this command produces mass-spurious failures unrelated to anything actually broken; see Learning 377. `NOT_CRAN` must be set too \u2014 without it, any file with a top-level `skip_on_cran()` [e.g. `test_wordlist_coverage.R`] silently bare-skips and its failure vanishes from `sum(failed)` instead of counting; see Learning 417 and Learning 594, which hit exactly this omission in this command.) **No `test-app-*`/`test-e2e-*` exclusion filter \u2014 removed S624 (2026-08-23).** Learning #2/#4 (Sessions 3-4) once documented those files as pre-existing baseline noise because `create_test_app()` was undefined at the time, so every such file errored or was skipped as a structural artifact rather than a real failure; `create_test_app()` has been defined (`tests/testthat/helper-shinytest2.R:200`) for a long time, and unfiltered runs report 0 failed/0 error across those files for weeks (S622/S623). A blanket `!grepl(\"test-app-|test-e2e-\", file)` exclusion is now a live risk, not a convenience \u2014 it would silently hide a real regression landing in exactly those files, which issue #163 (S623) nearly demonstrated. Do not reintroduce the pattern; if a specific file ever develops a genuine, currently-true reason for exclusion, name that file and the reason explicitly in a fresh entry rather than reviving a permanent file-name-pattern amnesty. (Learning #2/#4 themselves are left unedited as the frozen historical record of what was true in Sessions 3-4.)\n \n-**`renv::snapshot()` always needs `dev = TRUE` in this project.** `renv/settings.json` sets `snapshot.type: \"explicit\"`, under which a **plain** `renv::snapshot()` only scans `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` \u2014 every dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`, `mockery`, `shinytest2`, `shinyBS`, plus the dev-profile tools `roxygen2`, `devtools` and `quarto`, and their transitive deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits `renv::restore()` (a fresh clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check consistency) instead of the bare form. See `PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause diagnosis.\n+**`renv::snapshot()` always needs `dev = TRUE` in this project.** `renv/settings.json` sets `snapshot.type: \"explicit\"`, under which a **plain** `renv::snapshot()` only scans `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` \u2014 every dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`, `mockery`, `shinytest2`, `shinyBS`, plus the dev-profile tools `roxygen2`, `devtools` and `quarto`, and their transitive deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits `renv::restore()` (a fresh clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check consistency) instead of the bare form. See `methodology/PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause diagnosis.\n \n ---\n \n@@ -159,7 +159,7 @@\n   ratified next-pickup order for still-open issues) and surface that cluster's next\n   item as a first-class numbered option \u2014 never folded into \"Informational\" just\n   because no inline tag exists. A ratified order lives in prose, so the tag-only\n-  grep misses it entirely (`PROJECT_LEARNINGS.md` Learning 506).\n+  grep misses it entirely (`methodology/PROJECT_LEARNINGS.md` Learning 506).\n - This formats the *existing* Phase 0 step 7 report; it adds no new\n   `methodology/SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user\n   after the report.\n@@ -203,7 +203,7 @@\n a secondary ghost-session signal \u2014 cross-check newly-filed GitHub issues against such files.\n Before bulk-acting on such a batch, open and date-check each file individually: grouping by\n directory/extension alone misclassifies in both directions (two near-misses:\n-`PROJECT_LEARNINGS.md` Learning 479).\n+`methodology/PROJECT_LEARNINGS.md` Learning 479).\n \n **GitHub Actions CI status check (decided S545, 2026-08-13, owner-directed):** run\n `gh run list --branch master --limit 10` as part of Phase 0 step 4, **every session,\n@@ -260,7 +260,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) \u2014 extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n+Project institutional memory lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) \u2014 extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' methodology/PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n \n ### Project-specific Failure Modes\n \n"
+   }
+  ],
+  "scan_hits": {
+   "ci": {
+    "mentions": 5,
+    "files": 5,
+    "sites": [
+     {
+      "file": ".github/workflows/R-CMD-check.yaml",
+      "line": 14,
+      "text": "- PROJECT_LEARNINGS.md",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": ".github/workflows/lint.yaml",
+      "line": 14,
+      "text": "- PROJECT_LEARNINGS.md",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": ".github/workflows/pkgdown.yaml",
+      "line": 14,
+      "text": "- PROJECT_LEARNINGS.md",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": ".github/workflows/shinytest2.yaml",
+      "line": 22,
+      "text": "# drifting silently again -- see PROJECT_LEARNINGS.md Learning 312: two files,",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": ".github/workflows/test-coverage.yaml",
+      "line": 14,
+      "text": "- PROJECT_LEARNINGS.md",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": ".github/workflows/R-CMD-check.yaml",
+      "line": 14,
+      "text": "- PROJECT_LEARNINGS.md",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": ".github/workflows/lint.yaml",
+      "line": 14,
+      "text": "- PROJECT_LEARNINGS.md",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": ".github/workflows/pkgdown.yaml",
+      "line": 14,
+      "text": "- PROJECT_LEARNINGS.md",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": ".github/workflows/shinytest2.yaml",
+      "line": 22,
+      "text": "# drifting silently again -- see PROJECT_LEARNINGS.md Learning 312: two files,",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": ".github/workflows/test-coverage.yaml",
+      "line": 14,
+      "text": "- PROJECT_LEARNINGS.md",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "hooks": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": [],
+    "runs_moved_tool": 0
+   },
+   "tests": {
+    "mentions": 20,
+    "files": 15,
+    "sites": [
+     {
+      "file": "tests/testthat/helper-live-render-positions.R",
+      "line": 66,
+      "text": "## PROJECT_LEARNINGS.md: the shared Chrome browser process was previously",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R",
+      "line": 38,
+      "text": "#' browser. See `PROJECT_LEARNINGS.md` for the full diagnosis.",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test-e2e-marker-genetics-ld-block-module.R",
+      "line": 26,
+      "text": "#' `PROJECT_LEARNINGS.md` for the full diagnosis and",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_appServer_logging.R",
+      "line": 167,
+      "text": "# getParamDef() stop(). Per PROJECT_LEARNINGS.md Learning 347(d), an",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_buildMatingUnitForest.R",
+      "line": 280,
+      "text": "## suite -- S453 was audit-only, per PROJECT_LEARNINGS.md; CHANGELOG.md's",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_comparePedigreeStructure.R",
+      "line": 656,
+      "text": "toy-AND-real-scale validation discipline (PROJECT_LEARNINGS.md Learning",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_comparePedigreeStructure.R",
+      "line": 736,
+      "text": "## not merely reasoned about (PROJECT_LEARNINGS.md Learning 596's",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_comparePedigreeStructure.R",
+      "line": 1031,
+      "text": "discipline (PROJECT_LEARNINGS.md Learning 596) applied to Track C's own",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_e2e_package_qualification.R",
+      "line": 29,
+      "text": "## looked. See PROJECT_LEARNINGS.md.",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_groupAddAssign.R",
+      "line": 319,
+      "text": "# session's own GREEN verification, see PROJECT_LEARNINGS.md.",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_helper_live_render_positions_teardown.R",
+      "line": 57,
+      "text": "#' for CI-infrastructure fixes (see BACKLOG.md / PROJECT_LEARNINGS.md).",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_helper_live_render_positions_timeout.R",
+      "line": 26,
+      "text": "#' PROJECT_LEARNINGS.md for the full ranked-hypothesis diagnosis.",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_originFundingWording.R",
+      "line": 203,
+      "text": "## name: CHANGELOG.md, HANDOFFS.md, SESSION_NOTES.md, PROJECT_LEARNINGS.md,",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_originFundingWording.R",
+      "line": 204,
+      "text": "## BACKLOG.md and docs/archive/ log what was written when, and",
+      "names": [
+       "docs/archive/"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_reportGV.R",
+      "line": 223,
+      "text": "# PROJECT_LEARNINGS.md Learning 401) and produces exactly one flagged animal:",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_shinytest2_workflow_coverage.R",
+      "line": 5,
+      "text": "# with no error anywhere (see PROJECT_LEARNINGS.md Learning 312 -- this is the",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_wordlist_coverage.R",
+      "line": 8,
+      "text": "## ... NOTE` line (found S521, 2026-08-11; see PROJECT_LEARNINGS.md). This guard makes",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_wordlist_coverage.R",
+      "line": 24,
+      "text": "## under a real R CMD check re-run; see PROJECT_LEARNINGS.md): testthat runs every",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_workflowPathsIgnore.R",
+      "line": 39,
+      "text": "\"PROJECT_LEARNINGS.md\", \"CLAUDE.md\", \"SESSION_RUNNER.md\", \"SAFEGUARDS.md\",",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "tests/testthat/test_workflowPathsIgnore.R",
+      "line": 41,
+      "text": "\"docs/archive/CHANGELOG-through-2026-10-03.md\",",
+      "names": [
+       "docs/archive"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": "tests/testthat/helper-live-render-positions.R",
+      "line": 66,
+      "text": "## PROJECT_LEARNINGS.md: the shared Chrome browser process was previously",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test-e2e-marker-genetics-genomic-roh-module.R",
+      "line": 38,
+      "text": "#' browser. See `PROJECT_LEARNINGS.md` for the full diagnosis.",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test-e2e-marker-genetics-ld-block-module.R",
+      "line": 26,
+      "text": "#' `PROJECT_LEARNINGS.md` for the full diagnosis and",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_appServer_logging.R",
+      "line": 167,
+      "text": "# getParamDef() stop(). Per PROJECT_LEARNINGS.md Learning 347(d), an",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_buildMatingUnitForest.R",
+      "line": 280,
+      "text": "## suite -- S453 was audit-only, per PROJECT_LEARNINGS.md; CHANGELOG.md's",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_comparePedigreeStructure.R",
+      "line": 656,
+      "text": "toy-AND-real-scale validation discipline (PROJECT_LEARNINGS.md Learning",
+      "mentions": 3,
+      "code_mentions": 2,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_e2e_package_qualification.R",
+      "line": 29,
+      "text": "## looked. See PROJECT_LEARNINGS.md.",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_groupAddAssign.R",
+      "line": 319,
+      "text": "# session's own GREEN verification, see PROJECT_LEARNINGS.md.",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_helper_live_render_positions_teardown.R",
+      "line": 57,
+      "text": "#' for CI-infrastructure fixes (see BACKLOG.md / PROJECT_LEARNINGS.md).",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_helper_live_render_positions_timeout.R",
+      "line": 26,
+      "text": "#' PROJECT_LEARNINGS.md for the full ranked-hypothesis diagnosis.",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_originFundingWording.R",
+      "line": 203,
+      "text": "## name: CHANGELOG.md, HANDOFFS.md, SESSION_NOTES.md, PROJECT_LEARNINGS.md,",
+      "mentions": 2,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/archive/"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_reportGV.R",
+      "line": 223,
+      "text": "# PROJECT_LEARNINGS.md Learning 401) and produces exactly one flagged animal:",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_shinytest2_workflow_coverage.R",
+      "line": 5,
+      "text": "# with no error anywhere (see PROJECT_LEARNINGS.md Learning 312 -- this is the",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_wordlist_coverage.R",
+      "line": 8,
+      "text": "## ... NOTE` line (found S521, 2026-08-11; see PROJECT_LEARNINGS.md). This guard makes",
+      "mentions": 2,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "tests/testthat/test_workflowPathsIgnore.R",
+      "line": 39,
+      "text": "\"PROJECT_LEARNINGS.md\", \"CLAUDE.md\", \"SESSION_RUNNER.md\", \"SAFEGUARDS.md\",",
+      "mentions": 2,
+      "code_mentions": 2,
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/archive"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "proofs": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": []
+   },
+   "scripts": {
+    "mentions": 43,
+    "files": 5,
+    "sites": [
+     {
+      "file": "R/modPedigree.R",
+      "line": 808,
+      "text": "# visNetwork:::visOptions()'s source, PROJECT_LEARNINGS.md",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "data-raw/kinship2FidelityValidation.R",
+      "line": 97,
+      "text": "## PROJECT_LEARNINGS.md Learning 643 / tests/testthat/",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 206,
+      "text": "(\"docs/methodology\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 207,
+      "text": "(\"docs/methodology/workstreams\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 561,
+      "text": "TRIM_ARCHIVE_DIR = \"docs/archive\"  # layout: ok -- the legacy half of TRIM_ARCHIVE_DIRS: the shard directory beside a root ledger",
+      "names": [
+       "docs/archive"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 875,
+      "text": "# Only a path UNDER docs/methodology/ is self-evidencing. That directory is this framework's own",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 888,
+      "text": "\"docs/methodology/ITERATIVE_METHODOLOGY.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 889,
+      "text": "\"docs/methodology/FRAMEWORK_APPARATUS.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 890,
+      "text": "\"docs/methodology/HOW_TO_USE.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 891,
+      "text": "\"docs/methodology/workstreams/DESIGN_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 892,
+      "text": "\"docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 893,
+      "text": "\"docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 894,
+      "text": "\"docs/methodology/workstreams/AUDIT_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 895,
+      "text": "\"docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 896,
+      "text": "\"docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 897,
+      "text": "\"docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 898,
+      "text": "\"docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved ",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 899,
+      "text": "\"docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 919,
+      "text": "# How many of the seven ambiguous root names must co-occur to stand in for a docs/methodology/ path.",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 949,
+      "text": "# name in this scanner's tables stays the LEGACY name (SESSION_RUNNER.md, docs/methodology/...): the card,",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 964,
+      "text": "| frozenset((\"docs/methodology\", \"docs/methodology/workstreams\")))  # layout: ok -- the checklist's directory items, by their legacy names",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 969,
+      "text": "workstreams/ the one subdirectory, and docs/methodology/ dropped (plan decision D2).\"\"\"",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 970,
+      "text": "if rel == \"docs/methodology\":  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology",
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 972,
+      "text": "if rel.startswith(\"docs/methodology/\"):  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 973,
+      "text": "rel = rel[len(\"docs/methodology/\"):]  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology/"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": "R/modPedigree.R",
+      "line": 808,
+      "text": "# visNetwork:::visOptions()'s source, PROJECT_LEARNINGS.md",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "data-raw/kinship2FidelityValidation.R",
+      "line": 97,
+      "text": "## PROJECT_LEARNINGS.md Learning 643 / tests/testthat/",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 206,
+      "text": "(\"docs/methodology\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "mentions": 32,
+      "code_mentions": 26,
+      "names": [
+       "docs/archive",
+       "docs/archive/",
+       "docs/methodology",
+       "docs/methodology/"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "methodology/methodology_trim.py",
+      "line": 5,
+      "text": "`docs/archive/`, and refuses to do it unless the move is provably lossless.",
+      "mentions": 8,
+      "code_mentions": 4,
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/archive",
+       "docs/archive/"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "vignettes/articles/data-raw/build-document1-evidence.R",
+      "line": 186,
+      "text": "learnings <- readLines(\"PROJECT_LEARNINGS.md\", warn = FALSE)",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "config": {
+    "mentions": 2,
+    "files": 2,
+    "sites": [
+     {
+      "file": "_pkgdown.yml",
+      "line": 4,
+      "text": "# `docs/methodology/` and `docs/planning/` are git-tracked inside `docs/`",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/.context-budget.json",
+      "line": 2,
+      "text": "\"_\": \"CALIBRATED for nprcgenekeepr, S720 (2026-09-19), replacing the untouched seed the S719 sync installed. Every ceiling below is either a measurement of THIS project or a deliberately-kept target w",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": "_pkgdown.yml",
+      "line": 4,
+      "text": "# `docs/methodology/` and `docs/planning/` are git-tracked inside `docs/`",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "docs/methodology/"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "methodology/.context-budget.json",
+      "line": 2,
+      "text": "\"_\": \"CALIBRATED for nprcgenekeepr, S720 (2026-09-19), replacing the untouched seed the S719 sync installed. Every ceiling below is either a measurement of THIS project or a deliberately-kept target w",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "harness": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": []
+   },
+   "ledger": {
+    "mentions": 3385,
+    "files": 117,
+    "sites": [],
+    "paths": []
+   },
+   "other": {
+    "mentions": 322,
+    "files": 82,
+    "sites": [
+     {
+      "file": ".gitignore",
+      "line": 25,
+      "text": "!docs/methodology/",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": ".gitignore",
+      "line": 26,
+      "text": "!docs/methodology/**",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": ".gitignore",
+      "line": 39,
+      "text": "!docs/archive/",
+      "names": [
+       "docs/archive/"
+      ]
+     },
+     {
+      "file": ".gitignore",
+      "line": 40,
+      "text": "!docs/archive/**",
+      "names": [
+       "docs/archive/"
+      ]
+     },
+     {
+      "file": ".gitignore",
+      "line": 57,
+      "text": "# Session 479 (2026-08-08), see CHANGELOG.md and PROJECT_LEARNINGS.md Learning 479. This does",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 383,
+      "text": "the `SRF_RED` decision's own scope, per `PROJECT_LEARNINGS.md` Learning 382's \"report,",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 419,
+      "text": "`CHANGELOG.md` + `docs/archive/CHANGELOG-*.md` carry an entry heading for every session",
+      "names": [
+       "docs/archive"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 459,
+      "text": "findings: `PROJECT_LEARNINGS.md` Learnings 410, 411, 485, 488-499. No live item remains here: S921 shipped",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "CLAUDE.md",
+      "line": 252,
+      "text": "- **`methodology/CHANGELOG.md` legacy history** \u2014 pre-S325 history lives in `docs/archive/CHANGELOG-legacy-pre-S325.md`; never add entries there.",
+      "names": [
+       "docs/archive"
+      ]
+     },
+     {
+      "file": "docs/architecture/module-contract.md",
+      "line": 36,
+      "text": "only `appServer` (see `PROJECT_LEARNINGS.md` Learning 347(a): `modSummaryStats`'",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 19,
+      "text": "glob (`docs/archive/CHANGELOG-*.md`) and by whether `CHANGELOG.md`'s own size dropped in the commit",
+      "names": [
+       "docs/archive"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 36,
+      "text": "- **Ran `bin/sync --source=local --force`** (a full, unshallowed local clone of canonical, cross-checked against the user's own contributor fork `rmsharp/methodology` \u2014 both required after a shallow c",
+      "names": [
+       "PROJECT_LEARNINGS.md",
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 37,
+      "text": "- **Manually refreshed `docs/methodology/README.md`** (not `bin/sync`-tracked, but a prior session had mirrored it in as reference documentation) from the current canonical `README.md`.",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 74,
+      "text": "- **Files:** `docs/planning/cran-2.0.0-submission-plan.md` (extensively updated in place \u2014 new \u00a70, new Phase 3b, updated Phase 3/4/5 status blocks, updated \u00a75 dragons, \u00a78 decisions, \u00a79 summary table);",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 331,
+      "text": "- **Files:** new `tests/testthat/test_appServer_server.R`; `CHANGELOG.md`, `PROJECT_LEARNINGS.md` (Learning 266), `SESSION_NOTES.md`. Issue **#111 stays OPEN** (multi-session campaign; remaining slice",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 365,
+      "text": "- **Verify (firsthand):** single-file 15/15 (34 expectations); `lintr::lint()` **0** on all 3 changed `R/` files; `spell_check_package` **clean** (no WORDLIST churn); NAMESPACE diff = **+2 exports** o",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 375,
+      "text": "- **Verify (firsthand):** single-file 16/16 (29 expectations); `lintr::lint()` **0** on both changed `R/` files; `spell_check_package` **clean** (no WORDLIST churn); NAMESPACE diff = **+1 export** onl",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 384,
+      "text": "- **Verify (firsthand):** single-file 12/12; `lintr::lint()` **0** on the new file + `lint_package()` **0** on changed files; `spell_check_package` **clean** (no WORDLIST churn); **NAMESPACE diff EMPT",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 393,
+      "text": "- **Verify (firsthand):** single-file test 21/21; `lintr::lint()` 0 on the new file (fixed 5 real `implicit_integer` lints \u2014 that linter *is* enforced by `.lintr`'s tag set) and `lintr::lint_package()",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 410,
+      "text": "- **Phase-3E (runtime smoke): N/A (stated, not skipped)** \u2014 doc-only REFACTOR; all four function bodies unchanged; empty NAMESPACE diff proven; no runtime/behavior surface. `PROJECT_LEARNINGS.md` Lear",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 419,
+      "text": "- **Verify:** full suite 0 fail / 0 error / 0 true offenders; `lintr` 0 on the changed R file; `spell_check_package` clean; NAMESPACE diff empty; **`R CMD check --as-cran` (clean tree) GREEN \u2014 0 error",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 566,
+      "text": "- **Landed-tree sanity check (this is a PR-for-CI merge, but confirmed anyway):** `git diff c623cbfa..0978d405 -- NAMESPACE DESCRIPTION` **empty** (title-only, as S257 predicted); the merge touched ex",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 584,
+      "text": "- **Keyword-safe** PR body (\"Part of #103. Stage 7 of 8 \u2014 does **not** close the tracking issue\"). Learning 242 added to `PROJECT_LEARNINGS.md`. **Stages 1\u20137 of #103 are now all on `master`** (Stage 7",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 598,
+      "text": "- **Verified:** `document()` zero `man/`/`NAMESPACE` diff; `lintr` 0 on both changed files; `spell_check_package` clean; **`R CMD check --as-cran` = `Status: 2 NOTEs` (0/0/2)** with R-code-problems / ",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/archive/CHANGELOG-legacy-pre-S325.md",
+      "line": 606,
+      "text": "- **Keyword-safe** PR body (\"Part of #103. Stage 5 of 8 \u2014 does **not** close the tracking issue\"). Learning 239 added to `PROJECT_LEARNINGS.md`. **Stages 1\u20134 of #103 are on `master`; Stage 5 is on PR ",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     }
+    ],
+    "paths": []
+   }
+  },
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 806
+   }
+  }
+ },
+ "move": {
+  "mode": "move",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/npr-move",
+  "layout": "new",
+  "file_bytes": 3232615,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    "methodology/.context-budget.json"
+   ],
+   ".quality-gates.json": [
+    "methodology/.quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 7,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -116,11 +116,11 @@\n | Full package check | `devtools::check()` or `R CMD check` | No errors, no warnings, no notes (ideally) |\n | Test suite | `devtools::test()` or `testthat::test_local()` | All tests pass |\n \n-**Fast single-file test:** `Rscript -e 'Sys.setenv(NOT_CRAN = \"true\"); suppressMessages(pkgload::load_all(\".\", quiet=TRUE)); testthat::test_file(\"tests/testthat/test_X.R\", reporter=\"summary\")'` (sets `NOT_CRAN` first \u2014 without it, a file with a top-level `skip_on_cran()` silently bare-skips instead of running; see `PROJECT_LEARNINGS.md` Learning 417.)\n+**Fast single-file test:** `Rscript -e 'Sys.setenv(NOT_CRAN = \"true\"); suppressMessages(pkgload::load_all(\".\", quiet=TRUE)); testthat::test_file(\"tests/testthat/test_X.R\", reporter=\"summary\")'` (sets `NOT_CRAN` first \u2014 without it, a file with a top-level `skip_on_cran()` silently bare-skips instead of running; see `methodology/PROJECT_LEARNINGS.md` Learning 417.)\n \n **Clean regression read:** `Sys.setenv(NOT_CRAN = \"true\"); pkgload::load_all(\".\", quiet=TRUE); as.data.frame(testthat::test_dir(\"tests/testthat\", reporter=\"silent\", stop_on_failure=FALSE))`, then check `sum(failed)` **and** `sum(error)` directly, unfiltered. (`load_all()` must run first \u2014 without it this command produces mass-spurious failures unrelated to anything actually broken; see Learning 377. `NOT_CRAN` must be set too \u2014 without it, any file with a top-level `skip_on_cran()` [e.g. `test_wordlist_coverage.R`] silently bare-skips and its failure vanishes from `sum(failed)` instead of counting; see Learning 417 and Learning 594, which hit exactly this omission in this command.) **No `test-app-*`/`test-e2e-*` exclusion filter \u2014 removed S624 (2026-08-23).** Learning #2/#4 (Sessions 3-4) once documented those files as pre-existing baseline noise because `create_test_app()` was undefined at the time, so every such file errored or was skipped as a structural artifact rather than a real failure; `create_test_app()` has been defined (`tests/testthat/helper-shinytest2.R:200`) for a long time, and unfiltered runs report 0 failed/0 error across those files for weeks (S622/S623). A blanket `!grepl(\"test-app-|test-e2e-\", file)` exclusion is now a live risk, not a convenience \u2014 it would silently hide a real regression landing in exactly those files, which issue #163 (S623) nearly demonstrated. Do not reintroduce the pattern; if a specific file ever develops a genuine, currently-true reason for exclusion, name that file and the reason explicitly in a fresh entry rather than reviving a permanent file-name-pattern amnesty. (Learning #2/#4 themselves are left unedited as the frozen historical record of what was true in Sessions 3-4.)\n \n-**`renv::snapshot()` always needs `dev = TRUE` in this project.** `renv/settings.json` sets `snapshot.type: \"explicit\"`, under which a **plain** `renv::snapshot()` only scans `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` \u2014 every dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`, `mockery`, `shinytest2`, `shinyBS`, plus the dev-profile tools `roxygen2`, `devtools` and `quarto`, and their transitive deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits `renv::restore()` (a fresh clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check consistency) instead of the bare form. See `PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause diagnosis.\n+**`renv::snapshot()` always needs `dev = TRUE` in this project.** `renv/settings.json` sets `snapshot.type: \"explicit\"`, under which a **plain** `renv::snapshot()` only scans `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` \u2014 every dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`, `mockery`, `shinytest2`, `shinyBS`, plus the dev-profile tools `roxygen2`, `devtools` and `quarto`, and their transitive deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits `renv::restore()` (a fresh clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check consistency) instead of the bare form. See `methodology/PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause diagnosis.\n \n ---\n \n@@ -159,7 +159,7 @@\n   ratified next-pickup order for still-open issues) and surface that cluster's next\n   item as a first-class numbered option \u2014 never folded into \"Informational\" just\n   because no inline tag exists. A ratified order lives in prose, so the tag-only\n-  grep misses it entirely (`PROJECT_LEARNINGS.md` Learning 506).\n+  grep misses it entirely (`methodology/PROJECT_LEARNINGS.md` Learning 506).\n - This formats the *existing* Phase 0 step 7 report; it adds no new\n   `methodology/SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user\n   after the report.\n@@ -203,7 +203,7 @@\n a secondary ghost-session signal \u2014 cross-check newly-filed GitHub issues against such files.\n Before bulk-acting on such a batch, open and date-check each file individually: grouping by\n directory/extension alone misclassifies in both directions (two near-misses:\n-`PROJECT_LEARNINGS.md` Learning 479).\n+`methodology/PROJECT_LEARNINGS.md` Learning 479).\n \n **GitHub Actions CI status check (decided S545, 2026-08-13, owner-directed):** run\n `gh run list --branch master --limit 10` as part of Phase 0 step 4, **every session,\n@@ -260,7 +260,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) \u2014 extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n+Project institutional memory lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) \u2014 extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' methodology/PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n \n ### Project-specific Failure Modes\n \n"
+   }
+  ],
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 806
+   }
+  },
+  "git_mv": {
+   "exit": 0,
+   "err": ""
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 0
+   }
+  },
+  "differences": [
+   "status",
+   "history"
+  ]
+ },
+ "edit": {
+  "mode": "move",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/npr-edit",
+  "layout": "new",
+  "file_bytes": 3232615,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    "methodology/.context-budget.json"
+   ],
+   ".quality-gates.json": [
+    "methodology/.quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 7,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -116,11 +116,11 @@\n | Full package check | `devtools::check()` or `R CMD check` | No errors, no warnings, no notes (ideally) |\n | Test suite | `devtools::test()` or `testthat::test_local()` | All tests pass |\n \n-**Fast single-file test:** `Rscript -e 'Sys.setenv(NOT_CRAN = \"true\"); suppressMessages(pkgload::load_all(\".\", quiet=TRUE)); testthat::test_file(\"tests/testthat/test_X.R\", reporter=\"summary\")'` (sets `NOT_CRAN` first \u2014 without it, a file with a top-level `skip_on_cran()` silently bare-skips instead of running; see `PROJECT_LEARNINGS.md` Learning 417.)\n+**Fast single-file test:** `Rscript -e 'Sys.setenv(NOT_CRAN = \"true\"); suppressMessages(pkgload::load_all(\".\", quiet=TRUE)); testthat::test_file(\"tests/testthat/test_X.R\", reporter=\"summary\")'` (sets `NOT_CRAN` first \u2014 without it, a file with a top-level `skip_on_cran()` silently bare-skips instead of running; see `methodology/PROJECT_LEARNINGS.md` Learning 417.)\n \n **Clean regression read:** `Sys.setenv(NOT_CRAN = \"true\"); pkgload::load_all(\".\", quiet=TRUE); as.data.frame(testthat::test_dir(\"tests/testthat\", reporter=\"silent\", stop_on_failure=FALSE))`, then check `sum(failed)` **and** `sum(error)` directly, unfiltered. (`load_all()` must run first \u2014 without it this command produces mass-spurious failures unrelated to anything actually broken; see Learning 377. `NOT_CRAN` must be set too \u2014 without it, any file with a top-level `skip_on_cran()` [e.g. `test_wordlist_coverage.R`] silently bare-skips and its failure vanishes from `sum(failed)` instead of counting; see Learning 417 and Learning 594, which hit exactly this omission in this command.) **No `test-app-*`/`test-e2e-*` exclusion filter \u2014 removed S624 (2026-08-23).** Learning #2/#4 (Sessions 3-4) once documented those files as pre-existing baseline noise because `create_test_app()` was undefined at the time, so every such file errored or was skipped as a structural artifact rather than a real failure; `create_test_app()` has been defined (`tests/testthat/helper-shinytest2.R:200`) for a long time, and unfiltered runs report 0 failed/0 error across those files for weeks (S622/S623). A blanket `!grepl(\"test-app-|test-e2e-\", file)` exclusion is now a live risk, not a convenience \u2014 it would silently hide a real regression landing in exactly those files, which issue #163 (S623) nearly demonstrated. Do not reintroduce the pattern; if a specific file ever develops a genuine, currently-true reason for exclusion, name that file and the reason explicitly in a fresh entry rather than reviving a permanent file-name-pattern amnesty. (Learning #2/#4 themselves are left unedited as the frozen historical record of what was true in Sessions 3-4.)\n \n-**`renv::snapshot()` always needs `dev = TRUE` in this project.** `renv/settings.json` sets `snapshot.type: \"explicit\"`, under which a **plain** `renv::snapshot()` only scans `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` \u2014 every dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`, `mockery`, `shinytest2`, `shinyBS`, plus the dev-profile tools `roxygen2`, `devtools` and `quarto`, and their transitive deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits `renv::restore()` (a fresh clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check consistency) instead of the bare form. See `PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause diagnosis.\n+**`renv::snapshot()` always needs `dev = TRUE` in this project.** `renv/settings.json` sets `snapshot.type: \"explicit\"`, under which a **plain** `renv::snapshot()` only scans `DESCRIPTION`'s `Imports`/`Depends`/`LinkingTo` \u2014 every dev-only package (`Suggests` in `DESCRIPTION`, e.g. `testthat`, `dplyr`, `mockery`, `shinytest2`, `shinyBS`, plus the dev-profile tools `roxygen2`, `devtools` and `quarto`, and their transitive deps like `pkgload`/`chromote`) is silently dropped from `renv.lock` on an ordinary snapshot, only to resurface as a missing-package crash the next time someone hits `renv::restore()` (a fresh clone, an R-version bump). Always run `renv::snapshot(dev = TRUE)` (and `renv::status(dev = TRUE)` to check consistency) instead of the bare form. See `methodology/PROJECT_LEARNINGS.md` Learning 473/476 for the root-cause diagnosis.\n \n ---\n \n@@ -159,7 +159,7 @@\n   ratified next-pickup order for still-open issues) and surface that cluster's next\n   item as a first-class numbered option \u2014 never folded into \"Informational\" just\n   because no inline tag exists. A ratified order lives in prose, so the tag-only\n-  grep misses it entirely (`PROJECT_LEARNINGS.md` Learning 506).\n+  grep misses it entirely (`methodology/PROJECT_LEARNINGS.md` Learning 506).\n - This formats the *existing* Phase 0 step 7 report; it adds no new\n   `methodology/SESSION_RUNNER.md` step and does not change the mandatory STOP-and-wait-for-the-user\n   after the report.\n@@ -203,7 +203,7 @@\n a secondary ghost-session signal \u2014 cross-check newly-filed GitHub issues against such files.\n Before bulk-acting on such a batch, open and date-check each file individually: grouping by\n directory/extension alone misclassifies in both directions (two near-misses:\n-`PROJECT_LEARNINGS.md` Learning 479).\n+`methodology/PROJECT_LEARNINGS.md` Learning 479).\n \n **GitHub Actions CI status check (decided S545, 2026-08-13, owner-directed):** run\n `gh run list --branch master --limit 10` as part of Phase 0 step 4, **every session,\n@@ -260,7 +260,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md) \u2014 extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n+Project institutional memory lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md) \u2014 extracted from this file to keep `CLAUDE.md` within its size budget (count entries with `grep -c '^#### Learning ' methodology/PROJECT_LEARNINGS.md`; never hand-maintain the number here). **Read it when you need prior-session context; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n \n ### Project-specific Failure Modes\n \n"
+   }
+  ],
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 806
+   }
+  },
+  "git_mv": {
+   "exit": 0,
+   "err": ""
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 0
+   }
+  },
+  "differences": [
+   "status",
+   "history"
+  ]
+ },
+ "npr-move-checks": {
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 806
+   }
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 807
+   }
+  },
+  "differences": [
+   "status"
+  ]
+ },
+ "npr-edit-checks": {
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 806
+   }
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 22
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 30 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 110
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 807
+   }
+  },
+  "differences": [
+   "status"
+  ]
+ }
+}

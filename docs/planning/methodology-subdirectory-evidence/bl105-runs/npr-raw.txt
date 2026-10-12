@@ -1,0 +1,205 @@
+# BL-105 rehearsal (S302): raw outputs, adopter npr. Clones were under ~/.cache/bl105-rehearsal (F23); sections in the order the record cites them.
+
+==== npr-hand-edits.patch ====
+diff --git a/tests/testthat/test_workflowPathsIgnore.R b/tests/testthat/test_workflowPathsIgnore.R
+index b2d10a59..30339861 100644
+--- a/tests/testthat/test_workflowPathsIgnore.R
++++ b/tests/testthat/test_workflowPathsIgnore.R
+@@ -39,2 +39,3 @@ skippable_paths <- c(
+   "PROJECT_LEARNINGS.md", "CLAUDE.md", "SESSION_RUNNER.md", "SAFEGUARDS.md",
++  "methodology/PROJECT_LEARNINGS.md",
+   "docs/audits/CI_RED_MASTER_DIAGNOSIS_2026-10-04.md",
+diff --git a/vignettes/articles/data-raw/build-document1-evidence.R b/vignettes/articles/data-raw/build-document1-evidence.R
+index 201ead47..699d05a7 100644
+--- a/vignettes/articles/data-raw/build-document1-evidence.R
++++ b/vignettes/articles/data-raw/build-document1-evidence.R
+@@ -185,3 +185,3 @@ changelog_dates <- sub("^### ", "", changelog_dates)
+ 
+-learnings <- readLines("PROJECT_LEARNINGS.md", warn = FALSE)
++learnings <- readLines(ledger_path("PROJECT_LEARNINGS.md"), warn = FALSE)
+ n_learnings <- sum(grepl("^#### Learning [0-9]+ ", learnings))
+
+==== queue-npr.sh ====
+#!/bin/bash
+# BL-105 rehearsal, nprcgenekeepr arms: serial queue (one heavy job at a time)
+export RENV_PATHS_LIBRARY=$HOME/Library/Caches/org.R-project.R/R/renv/library/nprcgenekeepr-e7e04aee
+R=/Users/rmsharp/.cache/bl105-rehearsal; E=/Users/rmsharp/Development/methodology/docs/planning/methodology-subdirectory-evidence
+cd $R
+for n in npr-base npr-move npr-edit; do
+  ( cd $R/$n && timeout 900 Rscript vignettes/articles/data-raw/build-document1-evidence.R > $R/out/script-$n.txt 2>&1; echo $? > $R/out/script-$n.done; git status --short | head -20 > $R/out/script-$n.status.txt )
+done
+for n in npr-base npr-move; do
+  ( cd $R/$n && python3 methodology/quality_ratchet.py --run > $R/out/gate-$n.txt 2>&1; echo $? > $R/out/gate-$n.done )
+done
+for n in npr-base npr-move; do
+  bash $E/p15-r-run.sh $R/$n $E/p15-r-full.R $R/out/full-$n $R/out/full-$n.csv
+done
+echo finished > $R/out/queue-npr.done
+
+==== one-npr-base.txt ====
+test_rbuildignore.R tests 3 passed 4 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 10 failed 0 error 0 skipped 0 
+test_workflowPathsIgnore.R tests 11 passed 240 failed 0 error 0 skipped 0 
+
+==== one-npr-edit.txt ====
+test_rbuildignore.R tests 3 passed 4 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 10 failed 0 error 0 skipped 0 
+test_workflowPathsIgnore.R tests 11 passed 244 failed 0 error 0 skipped 0 
+
+==== one-npr-move.txt ====
+test_rbuildignore.R tests 3 passed 4 failed 0 error 0 skipped 0 
+test_handoffsReceiptPlacement.R tests 7 passed 10 failed 0 error 0 skipped 0 
+test_workflowPathsIgnore.R tests 11 passed 240 failed 0 error 0 skipped 0 
+
+==== script-npr-base.status.txt ====
+ M vignettes/articles/data/commit-activity-timeline.csv
+ M vignettes/articles/data/module-inventory.csv
+ M vignettes/articles/data/process-metrics.csv
+ M vignettes/articles/data/self-score-trend.csv
+
+==== script-npr-base.txt ====
+Warning message:
+In system2("gh", c("issue", "list", "--state", "closed", "--search",  :
+  running command ''gh' issue list --state closed --search closed:2025-07-26..2026-07-09 --limit 300 --json number,title,closedAt,labels 2>/dev/null' had status 1
+gh CLI unavailable or not authenticated -- feature-candidates.csv not regenerated
+Wrote 8 frozen data files to vignettes/articles/data
+
+==== script-npr-edit.status.txt ====
+ M vignettes/articles/data/commit-activity-timeline.csv
+ M vignettes/articles/data/module-inventory.csv
+ M vignettes/articles/data/process-metrics.csv
+ M vignettes/articles/data/self-score-trend.csv
+
+==== script-npr-edit.txt ====
+Warning message:
+In system2("gh", c("issue", "list", "--state", "closed", "--search",  :
+  running command ''gh' issue list --state closed --search closed:2025-07-26..2026-07-09 --limit 300 --json number,title,closedAt,labels 2>/dev/null' had status 1
+gh CLI unavailable or not authenticated -- feature-candidates.csv not regenerated
+Wrote 8 frozen data files to vignettes/articles/data
+
+==== script-npr-move.status.txt ====
+ M vignettes/articles/data/commit-activity-timeline.csv
+ M vignettes/articles/data/module-inventory.csv
+
+==== script-npr-move.txt ====
+Warning message:
+In system2("gh", c("issue", "list", "--state", "closed", "--search",  :
+  running command ''gh' issue list --state closed --search closed:2025-07-26..2026-07-09 --limit 300 --json number,title,closedAt,labels 2>/dev/null' had status 1
+gh CLI unavailable or not authenticated -- feature-candidates.csv not regenerated
+Error in file(con, "r") : cannot open the connection
+Calls: readLines -> file
+In addition: Warning message:
+In file(con, "r") :
+  cannot open file 'PROJECT_LEARNINGS.md': No such file or directory
+Execution halted
+
+==== gate-npr-base.txt ====
+
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [1mquality gates — run[0m  [32m[1m1/1 pass · 0 fail · 0 unmeasured · results 6711a010b7b5 · manifest aa983075d6a2[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mgate                                    rule    measured  status[0m
+  tarball_size_clean_export           <= 5e+06 3.78454e+06  [32mpass[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mcite in the receipt:[0m quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results 6711a010b7b5 · manifest aa983075d6a2
+
+
+==== gate-npr-move.txt ====
+
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [1mquality gates — run[0m  [32m[1m1/1 pass · 0 fail · 0 unmeasured · results f6149b673969 · manifest aa983075d6a2[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mgate                                    rule    measured  status[0m
+  tarball_size_clean_export           <= 5e+06 3.78454e+06  [32mpass[0m
+[2m──────────────────────────────────────────────────────────────────────────[0m
+  [2mcite in the receipt:[0m quality_ratchet: 1/1 pass · 0 fail · 0 unmeasured · results f6149b673969 · manifest aa983075d6a2
+
+
+==== full-npr-base.txt ====
+  145: stop
+  144: <reactive>
+  122: inputResults$cleanedStudbook
+  115: observe [/Users/rmsharp/.cache/bl105-rehearsal/npr-base/R/appServer.R#169]
+  114: <observer>
+15 15 
+15 15 
+10 10 
+  151: stop
+  150: checkAncestryRules [/Users/rmsharp/.cache/bl105-rehearsal/npr-base/R/checkAncestryRules.R#70]
+  149: checkMatePairAncestryArgs [/Users/rmsharp/.cache/bl105-rehearsal/npr-base/R/reportMatePairs.R#399]
+  148: reportMatePairs [/Users/rmsharp/.cache/bl105-rehearsal/npr-base/R/reportMatePairs.R#187]
+  147: observe [/Users/rmsharp/.cache/bl105-rehearsal/npr-base/R/modMatePair.R#439]
+  146: <observer:observeEvent(input$analyze)>
+5 5 
+5 5 
+5 5 
+5 5 
+5 5 
+FULL tests 11163 passed 10970 failed 0 error 0 skipped 187 warning 6 files 394 secs 411 
+
+==== full-npr-move.txt ====
+  145: stop
+  144: <reactive>
+  122: inputResults$cleanedStudbook
+  115: observe [/Users/rmsharp/.cache/bl105-rehearsal/npr-move/R/appServer.R#169]
+  114: <observer>
+15 15 
+15 15 
+10 10 
+  151: stop
+  150: checkAncestryRules [/Users/rmsharp/.cache/bl105-rehearsal/npr-move/R/checkAncestryRules.R#70]
+  149: checkMatePairAncestryArgs [/Users/rmsharp/.cache/bl105-rehearsal/npr-move/R/reportMatePairs.R#399]
+  148: reportMatePairs [/Users/rmsharp/.cache/bl105-rehearsal/npr-move/R/reportMatePairs.R#187]
+  147: observe [/Users/rmsharp/.cache/bl105-rehearsal/npr-move/R/modMatePair.R#439]
+  146: <observer:observeEvent(input$analyze)>
+5 5 
+5 5 
+5 5 
+5 5 
+5 5 
+[2026-10-12 13:45:00] [warning] got non-close frame while closing
+FULL tests 11163 passed 10970 failed 0 error 0 skipped 187 warning 6 files 394 secs 375 
+
+==== sync-dry-npr-base.txt ====
+sync: /Users/rmsharp/.cache/bl105-rehearsal/npr-base
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1792-gf027517
+  layout:  new (found methodology/SESSION_RUNNER.md)
+  (dry-run: no changes will be written)
+
+  ERROR: the following files have local modifications that don't match
+  any canonical or historical version and would be overwritten:
+    methodology/methodology_trim.py
+
+  The recommended pattern (see plan §3.2) is to move per-project
+  customizations into CLAUDE.md's 'Project-Specific Methodology
+  Adaptations' section, keeping synced files byte-identical to canonical.
+
+  To proceed anyway and overwrite local changes, pass --force.
+  To inspect the drift first:
+    diff /Users/rmsharp/.cache/bl105-rehearsal/npr-base/methodology/methodology_trim.py /Users/rmsharp/Development/methodology/starter-kit/methodology_trim.py
+
+==== sync-dry-npr-move.txt ====
+sync: /Users/rmsharp/.cache/bl105-rehearsal/npr-move
+  source:  local (/Users/rmsharp/Development/methodology)
+  mode:    commit
+  version: v4.2-1792-gf027517
+  layout:  new (found methodology/SESSION_RUNNER.md)
+  (dry-run: no changes will be written)
+
+  ERROR: the following files have local modifications that don't match
+  any canonical or historical version and would be overwritten:
+    methodology/methodology_trim.py
+
+  The recommended pattern (see plan §3.2) is to move per-project
+  customizations into CLAUDE.md's 'Project-Specific Methodology
+  Adaptations' section, keeping synced files byte-identical to canonical.
+
+  To proceed anyway and overwrite local changes, pass --force.
+  To inspect the drift first:
+    diff /Users/rmsharp/.cache/bl105-rehearsal/npr-move/methodology/methodology_trim.py /Users/rmsharp/Development/methodology/starter-kit/methodology_trim.py
+
+==== full-npr-*.csv (per test file, base against move-only) ====
+cmp: identical, 395 rows (header + 394 files); sha256 02114fd286cffdb9
+quality-gates results, tarball_size_clean_export: base 3784543 B, move-only 3784545 B

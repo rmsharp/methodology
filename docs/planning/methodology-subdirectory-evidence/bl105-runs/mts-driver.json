@@ -1,0 +1,999 @@
+{
+ "scan": {
+  "mode": "scan",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/mts-scan",
+  "layout": "new",
+  "file_bytes": 265780,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    "methodology/.context-budget.json"
+   ],
+   ".quality-gates.json": [
+    "methodology/.quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 3,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -33,7 +33,7 @@\n **Before writing your own session's block into `methodology/SESSION_NOTES.md`, move whatever is currently there (your predecessor's block \u2014 already read and scored in your Phase 3A) into [`docs/history/SESSION_NOTES_ARCHIVE_2026.md`](docs/history/SESSION_NOTES_ARCHIVE_2026.md), then write only your own block into `methodology/SESSION_NOTES.md`.** This is not new policy \u2014 `methodology/SESSION_RUNNER.md` Phase 3D already says `methodology/SESSION_NOTES.md` \"is the transient scratchpad (overwritten next session)\" \u2014 but base Phase 3D never spells out the *mechanism* for \"overwritten,\" so 61 sessions in a row (Sessions 80\u2013141) read \"update\" as \"prepend a new PRIOR TASK block\" instead, and the file silently regrew to 1,988 lines / 810 KB before Session 142 caught it and archived it (`PROC-READ-CEILING-001`). Concretely, at Phase 3D:\n \n 1. Identify the current top-of-file content: everything from the `---` after the Purpose/pointer lines through the end of file is one session's block (its ACTIVE TASK banner, its handoff evaluation of its own predecessor, its self-assessment).\n-2. Move that block, byte-for-byte, into `docs/history/SESSION_NOTES_ARCHIVE_2026.md` \u2014 insert it immediately before the newest existing `## Session N archived Session M` heading, found by searching for that heading text, so the new section lands newest-first, after the intro, and the intro's last lines stay with it. **Never insert at a line number:** a fixed line split the intro in Session 194, and a later session's insert pushed its last line down under an older section (`PROJECT_LEARNINGS.md` row 241). After inserting, confirm the intro's lines match the archive's creation commit (`9a862b8`). Verify losslessness the way Session 142 did: byte-containment checks against `git show HEAD:<path>`, not `git diff` (the archive crossed `core.bigfilethreshold` in Session 142 and is a binary diff from here on \u2014 content is unaffected, only `git diff`'s line view).\n+2. Move that block, byte-for-byte, into `docs/history/SESSION_NOTES_ARCHIVE_2026.md` \u2014 insert it immediately before the newest existing `## Session N archived Session M` heading, found by searching for that heading text, so the new section lands newest-first, after the intro, and the intro's last lines stay with it. **Never insert at a line number:** a fixed line split the intro in Session 194, and a later session's insert pushed its last line down under an older section (`methodology/PROJECT_LEARNINGS.md` row 241). After inserting, confirm the intro's lines match the archive's creation commit (`9a862b8`). Verify losslessness the way Session 142 did: byte-containment checks against `git show HEAD:<path>`, not `git diff` (the archive crossed `core.bigfilethreshold` in Session 142 and is a binary diff from here on \u2014 content is unaffected, only `git diff`'s line view).\n 3. Write your own session's ACTIVE TASK banner (demoted to a close-out block: DONE, handoff evaluation of your predecessor, self-assessment) as the *only* content in `methodology/SESSION_NOTES.md`, below the unchanged Purpose/pointer lines.\n \n **Skipping this step is the exact failure this section exists to prevent** \u2014 it will not error or fail a test, it will simply let the file grow by one more session's worth, invisibly, until some future session measures it and finds another `PROC-READ-CEILING-001`.\n@@ -65,7 +65,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget \u2014 search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n+Project institutional memory lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget \u2014 search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n \n ### Project-specific Failure Modes\n \n"
+   },
+   {
+    "path": "methodology/.context-budget.json",
+    "replacements": 1,
+    "diff": "--- methodology/.context-budget.json\n+++ methodology/.context-budget.json\n@@ -51,7 +51,7 @@\n       \"_\": \"Phase 0 step 2 orders a read of this file. That instruction is only honest while the file is readable. This entry's max_lines/max_bytes were carried unchanged from the seed's own source project (26,097 lines, a median read of 180) and never re-derived against THIS project's real numbers, which is exactly the omission PROC-READ-CEILING-001 found: mts-system's own SESSION_NOTES.md reached 1,988 lines / 810,057 B before Session 142's archive (SESSION_RUNNER.md Phase 3D's 'transient scratchpad, overwritten' design, restored once at Session 76, never repeated since). Measured 14 lines / 1,541 B on 2026-09-21 right after that archive. 400 lines / 120,000 B stays as a generous ceiling for one session's own ACTIVE TASK block (this project's blocks run longer than the seed's), not because it was re-derived from a fresh median \u2014 the real fix here is CLAUDE.md's new Additional Phase 3D requirement, which makes the file archive its predecessor's block every close-out so it never again grows toward this ceiling unnoticed.\"\n     },\n     {\n-      \"path\": \"PROJECT_LEARNINGS.md\",\n+      \"path\": \"methodology/PROJECT_LEARNINGS.md\",\n       \"_path\": \"Was 'LEARNINGS.md' in the seed \u2014 this project renamed the file (see CLAUDE.md's 'Project-specific Learnings' subsection) and the config entry was never updated to match, so this whole entry pointed at a file that has never existed here. Found and fixed by PROC-READ-CEILING-001 (Session 142); nothing before this session ever measured against it.\",\n       \"_max_tokens\": \"DELIBERATELY ABSENT. The read cap binds a file read WHOLE; a file read in PART is not bound by it \u2014 measured over 80 transcripts, one such file was read whole once and in part 243 times, and a partial read returns whole ROWS. So on-demand files get no token verdict, and their budget belongs on the unit actually read (a row, a record, a section). Giving this file a max_tokens would be a budget on the wrong unit, which is not conservative \u2014 it is unmeasured.\",\n       \"class\": \"on-demand\",\n"
+   }
+  ],
+  "scan_hits": {
+   "ci": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": []
+   },
+   "hooks": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": [],
+    "runs_moved_tool": 0
+   },
+   "tests": {
+    "mentions": 6,
+    "files": 5,
+    "sites": [
+     {
+      "file": "mts-backend/tests/test_email_service.py",
+      "line": 95,
+      "text": "# distinct coverage (PROJECT_LEARNINGS.md #143's own point, applied to",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "mts-backend/tests/test_health.py",
+      "line": 68,
+      "text": "the S88 silent-drift root cause (PROJECT_LEARNINGS.md #73).",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "mts-backend/tests/test_migration_schema_parity.py",
+      "line": 121,
+      "text": "`PROJECT_LEARNINGS.md` #202/#204 confirm single-column flags are not this",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "mts-backend/tests/test_sampling.py",
+      "line": 1323,
+      "text": "\"\"\"PROJECT_LEARNINGS.md #107: the inherited and actor_type values",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "scripts/test_learnings_archive.py",
+      "line": 23,
+      "text": "LIVE = \"PROJECT_LEARNINGS.md\"",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "scripts/test_learnings_archive.py",
+      "line": 416,
+      "text": "b\"git grep -n \\\"^| 73 |\\\" -- PROJECT_LEARNINGS.md \"",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": "mts-backend/tests/test_email_service.py",
+      "line": 95,
+      "text": "# distinct coverage (PROJECT_LEARNINGS.md #143's own point, applied to",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "mts-backend/tests/test_health.py",
+      "line": 68,
+      "text": "the S88 silent-drift root cause (PROJECT_LEARNINGS.md #73).",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "mts-backend/tests/test_migration_schema_parity.py",
+      "line": 121,
+      "text": "`PROJECT_LEARNINGS.md` #202/#204 confirm single-column flags are not this",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "mts-backend/tests/test_sampling.py",
+      "line": 1323,
+      "text": "\"\"\"PROJECT_LEARNINGS.md #107: the inherited and actor_type values",
+      "mentions": 1,
+      "code_mentions": 1,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "scripts/test_learnings_archive.py",
+      "line": 23,
+      "text": "LIVE = \"PROJECT_LEARNINGS.md\"",
+      "mentions": 2,
+      "code_mentions": 2,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "proofs": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": []
+   },
+   "scripts": {
+    "mentions": 43,
+    "files": 4,
+    "sites": [
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 206,
+      "text": "(\"docs/methodology\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 207,
+      "text": "(\"docs/methodology/workstreams\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 561,
+      "text": "TRIM_ARCHIVE_DIR = \"docs/archive\"  # layout: ok -- the legacy half of TRIM_ARCHIVE_DIRS: the shard directory beside a root ledger",
+      "names": [
+       "docs/archive"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 875,
+      "text": "# Only a path UNDER docs/methodology/ is self-evidencing. That directory is this framework's own",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 888,
+      "text": "\"docs/methodology/ITERATIVE_METHODOLOGY.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 889,
+      "text": "\"docs/methodology/FRAMEWORK_APPARATUS.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 890,
+      "text": "\"docs/methodology/HOW_TO_USE.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 891,
+      "text": "\"docs/methodology/workstreams/DESIGN_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 892,
+      "text": "\"docs/methodology/workstreams/ARCHITECTURE_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 893,
+      "text": "\"docs/methodology/workstreams/DEVELOPMENT_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 894,
+      "text": "\"docs/methodology/workstreams/AUDIT_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 895,
+      "text": "\"docs/methodology/workstreams/RESEARCH_DOCUMENTATION_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 896,
+      "text": "\"docs/methodology/workstreams/TEMPLATE_WORKSTREAM.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 897,
+      "text": "\"docs/methodology/workstreams/RESEARCH_EXHAUSTIVE_VERIFICATION_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 898,
+      "text": "\"docs/methodology/workstreams/INHERITED_CODEBASE_FAMILIARIZATION_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved ",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 899,
+      "text": "\"docs/methodology/workstreams/TEMPLATE_CAMPAIGN.md\",  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 919,
+      "text": "# How many of the seven ambiguous root names must co-occur to stand in for a docs/methodology/ path.",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 949,
+      "text": "# name in this scanner's tables stays the LEGACY name (SESSION_RUNNER.md, docs/methodology/...): the card,",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 964,
+      "text": "| frozenset((\"docs/methodology\", \"docs/methodology/workstreams\")))  # layout: ok -- the checklist's directory items, by their legacy names",
+      "names": [
+       "docs/methodology"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 969,
+      "text": "workstreams/ the one subdirectory, and docs/methodology/ dropped (plan decision D2).\"\"\"",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 970,
+      "text": "if rel == \"docs/methodology\":  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology",
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 972,
+      "text": "if rel.startswith(\"docs/methodology/\"):  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 973,
+      "text": "rel = rel[len(\"docs/methodology/\"):]  # layout: ok -- the legacy docs/methodology/ prefix the new layout drops (plan decision D2)",
+      "names": [
+       "docs/methodology/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 997,
+      "text": "# The directories a trim writes its shards and proofs into: docs/archive/ beside a root ledger, and",
+      "names": [
+       "docs/archive/"
+      ]
+     },
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 1129,
+      "text": "# executables PRODUCE. A single `--write` emits a fixed 220-line bash script into `docs/archive/`,",
+      "names": [
+       "docs/archive/"
+      ]
+     }
+    ],
+    "paths": [
+     {
+      "file": "methodology/methodology_dashboard.py",
+      "line": 206,
+      "text": "(\"docs/methodology\", 10, \"dir\"),  # layout: ok -- the LEGACY name of a methodology file, the key every table and the card use; where it lives is resolved by layout_locations",
+      "mentions": 32,
+      "code_mentions": 26,
+      "names": [
+       "docs/archive",
+       "docs/archive/",
+       "docs/methodology",
+       "docs/methodology/"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "methodology/methodology_trim.py",
+      "line": 5,
+      "text": "`docs/archive/`, and refuses to do it unless the move is provably lossless.",
+      "mentions": 7,
+      "code_mentions": 4,
+      "names": [
+       "docs/archive",
+       "docs/archive/"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "scripts/learnings_archive.py",
+      "line": 2,
+      "text": "\"\"\"Archive the oldest rows of PROJECT_LEARNINGS.md into a shard under docs/history/.",
+      "mentions": 3,
+      "code_mentions": 3,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     },
+     {
+      "file": "scripts/run_ios_tests.sh",
+      "line": 13,
+      "text": "# (PROJECT_LEARNINGS.md #236). With NO the runner keeps going, and the per-test",
+      "mentions": 1,
+      "code_mentions": 0,
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ],
+      "untracked": false
+     }
+    ]
+   },
+   "config": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": []
+   },
+   "harness": {
+    "mentions": 0,
+    "files": 0,
+    "sites": [],
+    "paths": []
+   },
+   "ledger": {
+    "mentions": 471,
+    "files": 11,
+    "sites": [],
+    "paths": []
+   },
+   "other": {
+    "mentions": 632,
+    "files": 25,
+    "sites": [
+     {
+      "file": "BACKLOG.md",
+      "line": 29,
+      "text": "| INFRA-VPS-PORT465-BLOCKED-001 | Outbound SMTP port 465 (implicit TLS) is network-blocked from the production VPS | READY (low priority \u2014 informational until something needs port 465) | **Source:** S",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 31,
+      "text": "| PROC-CLAUDEMD-WARN-BUDGET-001 | `CLAUDE.md` sits at 24,603 B, past its 24,000 B `warn_bytes` line (well under the 28,000 B `max_bytes` hard ceiling) | READY (needs a scope decision on which rules co",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 39,
+      "text": "| BUG-IOS-UITEST-ADDEXCEPTION-HITTABLE-001 | `AvailabilityUITests.testAddException` cannot find or hit its Add Exception button under the full suite, in about 2 of 3 runs | NEEDS_REVIEW (S189: not rep",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 45,
+      "text": "| PROC-LEDGER-READ-REFUSAL-001 | `CHANGELOG.md` is past the 262,144 B hard-refusal limit for a default read, and `PROJECT_LEARNINGS.md` and `HANDOFFS.md` are close to it | READY (medium \u2014 it is the da",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 46,
+      "text": "| PROC-SHELLTEST-ZERO-TESTS-001 | The five `scripts/test_*.sh` shell test scripts exit 0 when no test ran | READY (low priority \u2014 nothing is wrong today; all five run their tests, so this only matters",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "BACKLOG.md",
+      "line": 50,
+      "text": "| PLAN-004 | Migrate hosting from Railway to Fly.io or VPS | [`docs/planning/plan-004-hosting-migration-railway-to-vps.md`](docs/planning/plan-004-hosting-migration-railway-to-vps.md) | 5-6 sessions (",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "MTSApp/MTSUITests/AvailabilityUITests.swift",
+      "line": 111,
+      "text": "// PROJECT_LEARNINGS.md #218). Direct API cleanup, not the UI -- this is test",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/dev-commands.md",
+      "line": 109,
+      "text": "| iOS \u2014 UI (`MTSUITests`, XCTest) | 40 | All pass **in isolation or as the `AvailabilityUITests` class alone** (+2 by-design skips, `AppStoreScreenshots`' reviewer-credential gate). +1 this session: `",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/PROJECT_LEARNINGS-rows-0001-0083.md",
+      "line": 3,
+      "text": "> Archived from `PROJECT_LEARNINGS.md` by `scripts/learnings_archive.py`. Rows moved byte-for-byte; row numbers never change.",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/PROJECT_LEARNINGS-rows-0001-0083.md",
+      "line": 49,
+      "text": "| 43 | **When a plan's \"if nearing budget, reroute elsewhere\" instruction is phrased in an approximate unit, resolve it against the precise unit the receiving file's own header actually cites \u2014 not th",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/PROJECT_LEARNINGS-rows-0001-0083.md",
+      "line": 78,
+      "text": "| 72 | **Recalling a prior learning's general principle from a session summary is not the same as having re-read the learning's own exact mechanics \u2014 and the gap is exactly where its specific, hard-wo",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 37,
+      "text": "> **Dashboard flag, explained:** High+ Risk 1 was the file-size check: at Phase 0 `CHANGELOG.md` was 268,862 B, past the 262,144 B hard refusal (a default Read returns no content at all); `PROJECT_LEA",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 42,
+      "text": "> **What's next (specific):** (1) A new session for `CI-IOS-SEED-AVAILABILITY-001`. Seed weekly availability for the test actor in `scripts/ci_seed_test_user.py` (`seed_user`, line 27, after the actor",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 44,
+      "text": "> **Gotchas:** (a) Run the suite wrapper from `MTSApp/` with `../.env.test`. From the repo root it exits 66 in about a second (\"does not contain an Xcode project\"), and the harness reports a backgroun",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 93,
+      "text": "> **Not done, and why:** (a) The iOS suite was not run: the Docker daemon is not running (the operator had launched Docker Desktop before S201, yet `docker info` answers \"Docker Desktop is unable to s",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 104,
+      "text": "**Score: 8/10.** **What helped:** next step (1) gave the exact probe command, and it exited 0 as claimed. Every key-file line number checked out (`docs/dev-commands.md:51` and `:164`, `ios-tests.yml:5",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 163,
+      "text": "> **Key files:** `scripts/ci_backend_up.sh:24` (port guard), `:33` (db step), `:45` (ready line); `docs/planning/plan-006-ci-ios-self-hosted.md:6` (status); `BACKLOG.md` (CI-IOS-001 row); `PROJECT_LEA",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 183,
+      "text": "> **Key files:** `scripts/ci_backend_up.sh:23` (port guard), `:30` (compose up), `:33` (db step), `:37` (rate limit), `:45` (ready line). `scripts/test_ci_backend_up.sh:94-163` (8 behavior tests, 27 c",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 234,
+      "text": "> **Key files:** `MTSApp/MTSUITests/MTSRUITests.swift:13-15` (base `setUpWithError`), `:123` (`testCredentials(from:)`), `:135-141` (static accessors), `:240` and `:268` (contract classes). `scripts/r",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 281,
+      "text": "> **Key files:** `docs/planning/plan-006-ci-ios-self-hosted.md:6` (status), `:70-75` (D1 to D6 with answers), `:77` (\u00a76 Phases, Phase 1 next). `BACKLOG.md:42` (CI-IOS-001 row). `CHANGELOG.md:26` (clos",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 320,
+      "text": "> **Key files:** `scripts/run_ios_tests.sh:15,22` (pin), `docs/dev-commands.md:55-56` (pin note), `PROJECT_LEARNINGS.md:168` (row 239), `docs/history/SESSION_NOTES_ARCHIVE_2026.md` (S193 block under `",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 356,
+      "text": "> **Key files:** `scripts/run_ios_tests.sh:15` (env pin), `:21` (log), `:22` (the xcodebuild line with the flag), `:25` (restart check), `:30` (failed-test check); `scripts/test_run_ios_tests.sh:107` ",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 359,
+      "text": "**Score: 8/10.** **What helped:** the pin at `run_ios_tests.sh:15` and row 237 at `PROJECT_LEARNINGS.md:166` were both exact. The probe-removal hash was recorded, and it matched. The gotchas held: `da",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 379,
+      "text": "4. Fix `PROJECT_LEARNINGS.md` row 237's missing cells, if you want the row complete (it is a Session 192 defect).",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     },
+     {
+      "file": "docs/history/SESSION_NOTES_ARCHIVE_2026.md",
+      "line": 401,
+      "text": "> **Key files:** `scripts/run_ios_tests.sh:15` (the pin), `:21` (restart check), `:26` (failed-test check); `scripts/test_run_ios_tests.sh` (the stub records the env value; two new tests); `PROJECT_LE",
+      "names": [
+       "PROJECT_LEARNINGS.md"
+      ]
+     }
+    ],
+    "paths": []
+   }
+  },
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 172
+   }
+  }
+ },
+ "move": {
+  "mode": "move",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/mts-move",
+  "layout": "new",
+  "file_bytes": 265780,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    "methodology/.context-budget.json"
+   ],
+   ".quality-gates.json": [
+    "methodology/.quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 3,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -33,7 +33,7 @@\n **Before writing your own session's block into `methodology/SESSION_NOTES.md`, move whatever is currently there (your predecessor's block \u2014 already read and scored in your Phase 3A) into [`docs/history/SESSION_NOTES_ARCHIVE_2026.md`](docs/history/SESSION_NOTES_ARCHIVE_2026.md), then write only your own block into `methodology/SESSION_NOTES.md`.** This is not new policy \u2014 `methodology/SESSION_RUNNER.md` Phase 3D already says `methodology/SESSION_NOTES.md` \"is the transient scratchpad (overwritten next session)\" \u2014 but base Phase 3D never spells out the *mechanism* for \"overwritten,\" so 61 sessions in a row (Sessions 80\u2013141) read \"update\" as \"prepend a new PRIOR TASK block\" instead, and the file silently regrew to 1,988 lines / 810 KB before Session 142 caught it and archived it (`PROC-READ-CEILING-001`). Concretely, at Phase 3D:\n \n 1. Identify the current top-of-file content: everything from the `---` after the Purpose/pointer lines through the end of file is one session's block (its ACTIVE TASK banner, its handoff evaluation of its own predecessor, its self-assessment).\n-2. Move that block, byte-for-byte, into `docs/history/SESSION_NOTES_ARCHIVE_2026.md` \u2014 insert it immediately before the newest existing `## Session N archived Session M` heading, found by searching for that heading text, so the new section lands newest-first, after the intro, and the intro's last lines stay with it. **Never insert at a line number:** a fixed line split the intro in Session 194, and a later session's insert pushed its last line down under an older section (`PROJECT_LEARNINGS.md` row 241). After inserting, confirm the intro's lines match the archive's creation commit (`9a862b8`). Verify losslessness the way Session 142 did: byte-containment checks against `git show HEAD:<path>`, not `git diff` (the archive crossed `core.bigfilethreshold` in Session 142 and is a binary diff from here on \u2014 content is unaffected, only `git diff`'s line view).\n+2. Move that block, byte-for-byte, into `docs/history/SESSION_NOTES_ARCHIVE_2026.md` \u2014 insert it immediately before the newest existing `## Session N archived Session M` heading, found by searching for that heading text, so the new section lands newest-first, after the intro, and the intro's last lines stay with it. **Never insert at a line number:** a fixed line split the intro in Session 194, and a later session's insert pushed its last line down under an older section (`methodology/PROJECT_LEARNINGS.md` row 241). After inserting, confirm the intro's lines match the archive's creation commit (`9a862b8`). Verify losslessness the way Session 142 did: byte-containment checks against `git show HEAD:<path>`, not `git diff` (the archive crossed `core.bigfilethreshold` in Session 142 and is a binary diff from here on \u2014 content is unaffected, only `git diff`'s line view).\n 3. Write your own session's ACTIVE TASK banner (demoted to a close-out block: DONE, handoff evaluation of your predecessor, self-assessment) as the *only* content in `methodology/SESSION_NOTES.md`, below the unchanged Purpose/pointer lines.\n \n **Skipping this step is the exact failure this section exists to prevent** \u2014 it will not error or fail a test, it will simply let the file grow by one more session's worth, invisibly, until some future session measures it and finds another `PROC-READ-CEILING-001`.\n@@ -65,7 +65,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget \u2014 search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n+Project institutional memory lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget \u2014 search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n \n ### Project-specific Failure Modes\n \n"
+   },
+   {
+    "path": "methodology/.context-budget.json",
+    "replacements": 1,
+    "diff": "--- methodology/.context-budget.json\n+++ methodology/.context-budget.json\n@@ -51,7 +51,7 @@\n       \"_\": \"Phase 0 step 2 orders a read of this file. That instruction is only honest while the file is readable. This entry's max_lines/max_bytes were carried unchanged from the seed's own source project (26,097 lines, a median read of 180) and never re-derived against THIS project's real numbers, which is exactly the omission PROC-READ-CEILING-001 found: mts-system's own SESSION_NOTES.md reached 1,988 lines / 810,057 B before Session 142's archive (SESSION_RUNNER.md Phase 3D's 'transient scratchpad, overwritten' design, restored once at Session 76, never repeated since). Measured 14 lines / 1,541 B on 2026-09-21 right after that archive. 400 lines / 120,000 B stays as a generous ceiling for one session's own ACTIVE TASK block (this project's blocks run longer than the seed's), not because it was re-derived from a fresh median \u2014 the real fix here is CLAUDE.md's new Additional Phase 3D requirement, which makes the file archive its predecessor's block every close-out so it never again grows toward this ceiling unnoticed.\"\n     },\n     {\n-      \"path\": \"PROJECT_LEARNINGS.md\",\n+      \"path\": \"methodology/PROJECT_LEARNINGS.md\",\n       \"_path\": \"Was 'LEARNINGS.md' in the seed \u2014 this project renamed the file (see CLAUDE.md's 'Project-specific Learnings' subsection) and the config entry was never updated to match, so this whole entry pointed at a file that has never existed here. Found and fixed by PROC-READ-CEILING-001 (Session 142); nothing before this session ever measured against it.\",\n       \"_max_tokens\": \"DELIBERATELY ABSENT. The read cap binds a file read WHOLE; a file read in PART is not bound by it \u2014 measured over 80 transcripts, one such file was read whole once and in part 243 times, and a partial read returns whole ROWS. So on-demand files get no token verdict, and their budget belongs on the unit actually read (a row, a record, a section). Giving this file a max_tokens would be a budget on the wrong unit, which is not conservative \u2014 it is unmeasured.\",\n       \"class\": \"on-demand\",\n"
+   }
+  ],
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 172
+   }
+  },
+  "git_mv": {
+   "exit": 0,
+   "err": ""
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 0
+   }
+  },
+  "differences": [
+   "history"
+  ]
+ },
+ "edit": {
+  "mode": "move",
+  "project": "/Users/rmsharp/.cache/bl105-rehearsal/mts-edit",
+  "layout": "new",
+  "file_bytes": 265780,
+  "tracked": true,
+  "mapping": {
+   "PROJECT_LEARNINGS.md": "methodology/PROJECT_LEARNINGS.md"
+  },
+  "dirty_before": [],
+  "configs_found": {
+   ".gitignore": [
+    ".gitignore"
+   ],
+   "CLAUDE.md": [
+    "CLAUDE.md"
+   ],
+   ".context-budget.json": [
+    "methodology/.context-budget.json"
+   ],
+   ".quality-gates.json": [
+    "methodology/.quality-gates.json"
+   ]
+  },
+  "rewrites": [
+   {
+    "path": "CLAUDE.md",
+    "replacements": 3,
+    "diff": "--- CLAUDE.md\n+++ CLAUDE.md\n@@ -33,7 +33,7 @@\n **Before writing your own session's block into `methodology/SESSION_NOTES.md`, move whatever is currently there (your predecessor's block \u2014 already read and scored in your Phase 3A) into [`docs/history/SESSION_NOTES_ARCHIVE_2026.md`](docs/history/SESSION_NOTES_ARCHIVE_2026.md), then write only your own block into `methodology/SESSION_NOTES.md`.** This is not new policy \u2014 `methodology/SESSION_RUNNER.md` Phase 3D already says `methodology/SESSION_NOTES.md` \"is the transient scratchpad (overwritten next session)\" \u2014 but base Phase 3D never spells out the *mechanism* for \"overwritten,\" so 61 sessions in a row (Sessions 80\u2013141) read \"update\" as \"prepend a new PRIOR TASK block\" instead, and the file silently regrew to 1,988 lines / 810 KB before Session 142 caught it and archived it (`PROC-READ-CEILING-001`). Concretely, at Phase 3D:\n \n 1. Identify the current top-of-file content: everything from the `---` after the Purpose/pointer lines through the end of file is one session's block (its ACTIVE TASK banner, its handoff evaluation of its own predecessor, its self-assessment).\n-2. Move that block, byte-for-byte, into `docs/history/SESSION_NOTES_ARCHIVE_2026.md` \u2014 insert it immediately before the newest existing `## Session N archived Session M` heading, found by searching for that heading text, so the new section lands newest-first, after the intro, and the intro's last lines stay with it. **Never insert at a line number:** a fixed line split the intro in Session 194, and a later session's insert pushed its last line down under an older section (`PROJECT_LEARNINGS.md` row 241). After inserting, confirm the intro's lines match the archive's creation commit (`9a862b8`). Verify losslessness the way Session 142 did: byte-containment checks against `git show HEAD:<path>`, not `git diff` (the archive crossed `core.bigfilethreshold` in Session 142 and is a binary diff from here on \u2014 content is unaffected, only `git diff`'s line view).\n+2. Move that block, byte-for-byte, into `docs/history/SESSION_NOTES_ARCHIVE_2026.md` \u2014 insert it immediately before the newest existing `## Session N archived Session M` heading, found by searching for that heading text, so the new section lands newest-first, after the intro, and the intro's last lines stay with it. **Never insert at a line number:** a fixed line split the intro in Session 194, and a later session's insert pushed its last line down under an older section (`methodology/PROJECT_LEARNINGS.md` row 241). After inserting, confirm the intro's lines match the archive's creation commit (`9a862b8`). Verify losslessness the way Session 142 did: byte-containment checks against `git show HEAD:<path>`, not `git diff` (the archive crossed `core.bigfilethreshold` in Session 142 and is a binary diff from here on \u2014 content is unaffected, only `git diff`'s line view).\n 3. Write your own session's ACTIVE TASK banner (demoted to a close-out block: DONE, handoff evaluation of your predecessor, self-assessment) as the *only* content in `methodology/SESSION_NOTES.md`, below the unchanged Purpose/pointer lines.\n \n **Skipping this step is the exact failure this section exists to prevent** \u2014 it will not error or fail a test, it will simply let the file grow by one more session's worth, invisibly, until some future session measures it and finds another `PROC-READ-CEILING-001`.\n@@ -65,7 +65,7 @@\n \n ### Project-specific Learnings\n \n-Project institutional memory lives in [`PROJECT_LEARNINGS.md`](PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget \u2014 search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n+Project institutional memory lives in [`methodology/PROJECT_LEARNINGS.md`](methodology/PROJECT_LEARNINGS.md), archived in shards under `docs/history/PROJECT_LEARNINGS-rows-*.md` when it grows past budget \u2014 search or window-read, never plain-read. **Read it when a task resembles earlier work; append new learnings there, not here.** Base methodology-level learnings remain in `methodology/SESSION_RUNNER.md`.\n \n ### Project-specific Failure Modes\n \n"
+   },
+   {
+    "path": "methodology/.context-budget.json",
+    "replacements": 1,
+    "diff": "--- methodology/.context-budget.json\n+++ methodology/.context-budget.json\n@@ -51,7 +51,7 @@\n       \"_\": \"Phase 0 step 2 orders a read of this file. That instruction is only honest while the file is readable. This entry's max_lines/max_bytes were carried unchanged from the seed's own source project (26,097 lines, a median read of 180) and never re-derived against THIS project's real numbers, which is exactly the omission PROC-READ-CEILING-001 found: mts-system's own SESSION_NOTES.md reached 1,988 lines / 810,057 B before Session 142's archive (SESSION_RUNNER.md Phase 3D's 'transient scratchpad, overwritten' design, restored once at Session 76, never repeated since). Measured 14 lines / 1,541 B on 2026-09-21 right after that archive. 400 lines / 120,000 B stays as a generous ceiling for one session's own ACTIVE TASK block (this project's blocks run longer than the seed's), not because it was re-derived from a fresh median \u2014 the real fix here is CLAUDE.md's new Additional Phase 3D requirement, which makes the file archive its predecessor's block every close-out so it never again grows toward this ceiling unnoticed.\"\n     },\n     {\n-      \"path\": \"PROJECT_LEARNINGS.md\",\n+      \"path\": \"methodology/PROJECT_LEARNINGS.md\",\n       \"_path\": \"Was 'LEARNINGS.md' in the seed \u2014 this project renamed the file (see CLAUDE.md's 'Project-specific Learnings' subsection) and the config entry was never updated to match, so this whole entry pointed at a file that has never existed here. Found and fixed by PROC-READ-CEILING-001 (Session 142); nothing before this session ever measured against it.\",\n       \"_max_tokens\": \"DELIBERATELY ABSENT. The read cap binds a file read WHOLE; a file read in PART is not bound by it \u2014 measured over 80 transcripts, one such file was read whole once and in part 243 times, and a partial read returns whole ROWS. So on-demand files get no token verdict, and their budget belongs on the unit actually read (a row, a record, a section). Giving this file a max_tokens would be a budget on the wrong unit, which is not conservative \u2014 it is unmeasured.\",\n       \"class\": \"on-demand\",\n"
+   }
+  ],
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 172
+   }
+  },
+  "git_mv": {
+   "exit": 0,
+   "err": ""
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 0
+   }
+  },
+  "differences": [
+   "history"
+  ]
+ },
+ "mts-move-checks": {
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 172
+   }
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 173
+   }
+  },
+  "differences": []
+ },
+ "mts-edit-checks": {
+  "checks_before": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 172
+   }
+  },
+  "checks_after": {
+   "status": {
+    "exit": 0,
+    "tracked": 23,
+    "current": 23
+   },
+   "ledger": {
+    "exit": 1,
+    "line": "check-ledger: 3 finding(s) in 1 file(s)"
+   },
+   "handoff": {
+    "exit": 1,
+    "line": "then the first commit whose copy of that block reads `status: complete`."
+   },
+   "links": {
+    "exit": 1,
+    "line": "Distributed files author cross-references for the ADOPTER layout (B1 plan section 4). Fix the target above, not the layout.",
+    "framework": 0,
+    "project": 15
+   },
+   "proofs": {
+    "count": 0,
+    "histogram": {}
+   },
+   "history": {
+    "commits": 173
+   }
+  },
+  "differences": []
+ }
+}
