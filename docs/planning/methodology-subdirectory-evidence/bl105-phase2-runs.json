@@ -1,0 +1,575 @@
+{
+ "what": "bin/migrate-layout with the BL-105 phase 2 changes, applied in --no-local clones of the five adopters that track PROJECT_LEARNINGS.md (S303). Clones under ~/.cache/s303-adopters, never the live trees.",
+ "adopters": [
+  {
+   "adopter": "nprcgenekeepr",
+   "base_revision": "5cacf616",
+   "clone_prepared_by": "the live tree is refused (dry run only); in the clone methodology/methodology_trim.py was replaced by the canonical copy and committed, the only way to make `bin/status` read it current",
+   "dry_run_of_the_unprepared_clone": {
+    "status": "refused",
+    "refusals": [
+     [
+      "not-current",
+      "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): methodology/methodology_trim.py (locally modified)"
+     ]
+    ]
+   },
+   "apply": {
+    "layout_before": "new",
+    "tier": "all",
+    "status": "applied",
+    "moves": 1,
+    "kinds": [
+     "companion"
+    ],
+    "companion_rename_score": [
+     100
+    ],
+    "rewrites": [
+     [
+      "CLAUDE.md",
+      7
+     ]
+    ],
+    "ledger_entry_heading": "### 2026-10-12 \u00b7 [ad hoc] Layout top-up: `PROJECT_LEARNINGS.md` now lives under `methodology/` (tier all, 1 file)",
+    "live_links": {
+     "count": 0,
+     "files": 0,
+     "sites": []
+    },
+    "checks": {
+     "ran": true,
+     "differences": [],
+     "ok": true,
+     "clean": true,
+     "before": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 1,
+       "framework": 0,
+       "project": 110
+      },
+      "history": {
+       "commits": 1866
+      }
+     },
+     "after": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 1,
+       "framework": 0,
+       "project": 110
+      },
+      "history": {
+       "commits": 1867
+      }
+     }
+    }
+   }
+  },
+  {
+   "adopter": "vscode_quarto_ext",
+   "base_revision": "c246ccbd",
+   "clone_prepared_by": "nothing",
+   "dry_run_of_the_unprepared_clone": {
+    "status": "ok",
+    "refusals": []
+   },
+   "apply": {
+    "layout_before": "new",
+    "tier": "all",
+    "status": "applied",
+    "moves": 1,
+    "kinds": [
+     "companion"
+    ],
+    "companion_rename_score": [
+     100
+    ],
+    "rewrites": [
+     [
+      "CLAUDE.md",
+      6
+     ],
+     [
+      "methodology/.context-budget.json",
+      1
+     ]
+    ],
+    "ledger_entry_heading": "### 2026-10-12 \u00b7 [ad hoc] Layout top-up: `PROJECT_LEARNINGS.md` now lives under `methodology/` (tier all, 1 file)",
+    "live_links": {
+     "count": 0,
+     "files": 0,
+     "sites": []
+    },
+    "checks": {
+     "ran": true,
+     "differences": [],
+     "ok": true,
+     "clean": true,
+     "before": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 1,
+       "framework": 0,
+       "project": 18
+      },
+      "history": {
+       "commits": 485
+      }
+     },
+     "after": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 1,
+       "framework": 0,
+       "project": 18
+      },
+      "history": {
+       "commits": 486
+      }
+     }
+    }
+   }
+  },
+  {
+   "adopter": "model_project_constructor",
+   "base_revision": "ec23bc7e",
+   "clone_prepared_by": "nothing (tier 1 at P11: `all` takes its tier 2 with the companion)",
+   "dry_run_of_the_unprepared_clone": {
+    "status": "ok",
+    "refusals": []
+   },
+   "apply": {
+    "layout_before": "new",
+    "tier": "all",
+    "status": "applied",
+    "moves": 8,
+    "kinds": [
+     "companion",
+     "manifest"
+    ],
+    "companion_rename_score": [
+     100
+    ],
+    "rewrites": [
+     [
+      "CLAUDE.md",
+      27
+     ],
+     [
+      ".context-budget.json",
+      1
+     ],
+     [
+      ".quality-gates.json",
+      1
+     ]
+    ],
+    "ledger_entry_heading": "### 2026-10-12 \u00b7 [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 8 files)",
+    "live_links": {
+     "count": 5,
+     "files": 3,
+     "sites": [
+      [
+       "BACKLOG.md",
+       80,
+       "PROJECT_LEARNINGS.md",
+       "methodology/PROJECT_LEARNINGS.md"
+      ],
+      [
+       "docs/architecture-history/SESSION_NOTES-through-S216.md",
+       3,
+       "../../SESSION_NOTES.md",
+       "methodology/SESSION_NOTES.md"
+      ],
+      [
+       "docs/planning/ledger-budgets-review.md",
+       17,
+       "../../PROJECT_LEARNINGS.md",
+       "methodology/PROJECT_LEARNINGS.md"
+      ],
+      [
+       "docs/planning/ledger-budgets-review.md",
+       126,
+       "../../PROJECT_LEARNINGS.md",
+       "methodology/PROJECT_LEARNINGS.md"
+      ],
+      [
+       "docs/planning/ledger-budgets-review.md",
+       269,
+       "../../PROJECT_LEARNINGS.md",
+       "methodology/PROJECT_LEARNINGS.md"
+      ]
+     ]
+    },
+    "checks": {
+     "ran": true,
+     "differences": [],
+     "ok": true,
+     "clean": true,
+     "before": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 1,
+       "framework": 0,
+       "project": 4
+      },
+      "history": {
+       "commits": 335
+      }
+     },
+     "after": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 1,
+       "framework": 0,
+       "project": 6
+      },
+      "history": {
+       "commits": 336
+      }
+     }
+    }
+   }
+  },
+  {
+   "adopter": "mts-system",
+   "base_revision": "d1cf54fb",
+   "clone_prepared_by": "`bin/sync` and one scratch commit (the clone was 1 to 9 versions behind)",
+   "dry_run_of_the_unprepared_clone": {
+    "status": "refused",
+    "refusals": [
+     [
+      "not-current",
+      "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): SESSION_RUNNER.md (2 versions behind), FRAMEWORK_LEARNINGS.md (1 version behind), SAFEGUARDS.md (2 versions behind)"
+     ]
+    ]
+   },
+   "apply": {
+    "layout_before": "legacy",
+    "tier": "all",
+    "status": "applied",
+    "moves": 41,
+    "kinds": [
+     "companion",
+     "generated",
+     "manifest",
+     "shard"
+    ],
+    "companion_rename_score": [
+     100
+    ],
+    "rewrites": [
+     [
+      "CLAUDE.md",
+      27
+     ],
+     [
+      ".context-budget.json",
+      6
+     ],
+     [
+      ".quality-gates.json",
+      1
+     ]
+    ],
+    "ledger_entry_heading": "### 2026-10-12 \u00b7 [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 41 files)",
+    "live_links": {
+     "count": 3,
+     "files": 2,
+     "sites": [
+      [
+       "BACKLOG.md",
+       3,
+       "CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ],
+      [
+       "BACKLOG.md",
+       4,
+       "ROADMAP.md",
+       "methodology/ROADMAP.md"
+      ],
+      [
+       "README.md",
+       20,
+       "ROADMAP.md",
+       "methodology/ROADMAP.md"
+      ]
+     ]
+    },
+    "checks": {
+     "ran": true,
+     "differences": [],
+     "ok": true,
+     "clean": true,
+     "before": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 0,
+       "framework": 0,
+       "project": 0
+      },
+      "history": {
+       "commits": 447
+      }
+     },
+     "after": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 1,
+       "framework": 0,
+       "project": 15
+      },
+      "history": {
+       "commits": 448
+      }
+     }
+    }
+   }
+  },
+  {
+   "adopter": "wsfct",
+   "base_revision": "545e8fb1",
+   "clone_prepared_by": "`bin/sync` and one scratch commit (the clone was 2 to 11 versions behind)",
+   "dry_run_of_the_unprepared_clone": {
+    "status": "refused",
+    "refusals": [
+     [
+      "not-current",
+      "bin/status does not read every TRACKED file current: run bin/sync first (plan 5A.2): SESSION_RUNNER.md (2 versions behind), FRAMEWORK_LEARNINGS.md (1 version behind), SAFEGUARDS.md (3 versions behind)"
+     ]
+    ]
+   },
+   "apply": {
+    "layout_before": "legacy",
+    "tier": "all",
+    "status": "applied",
+    "moves": 44,
+    "kinds": [
+     "companion",
+     "generated",
+     "manifest",
+     "shard"
+    ],
+    "companion_rename_score": [
+     100
+    ],
+    "rewrites": [
+     [
+      ".gitignore",
+      2
+     ],
+     [
+      "CLAUDE.md",
+      48
+     ],
+     [
+      ".context-budget.json",
+      5
+     ],
+     [
+      ".quality-gates.json",
+      1
+     ]
+    ],
+    "ledger_entry_heading": "### 2026-10-12 \u00b7 [ad hoc] Layout migration: the methodology files now live under `methodology/` (tier all, 44 files)",
+    "live_links": {
+     "count": 10,
+     "files": 3,
+     "sites": [
+      [
+       "README.md",
+       196,
+       "./docs/methodology/ITERATIVE_METHODOLOGY.md",
+       "methodology/ITERATIVE_METHODOLOGY.md"
+      ],
+      [
+       "README.md",
+       200,
+       "./docs/methodology/ITERATIVE_METHODOLOGY.md",
+       "methodology/ITERATIVE_METHODOLOGY.md"
+      ],
+      [
+       "docs/archive/CHANGELOG_LEGACY_2026-01_through_2026-08.md",
+       3,
+       "../../CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ],
+      [
+       "web/CLAUDE.md",
+       1119,
+       "../CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ],
+      [
+       "web/CLAUDE.md",
+       1119,
+       "../CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ],
+      [
+       "web/CLAUDE.md",
+       1123,
+       "../CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ],
+      [
+       "web/CLAUDE.md",
+       1123,
+       "../CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ],
+      [
+       "web/CLAUDE.md",
+       1123,
+       "../CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ],
+      [
+       "web/CLAUDE.md",
+       1123,
+       "../CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ],
+      [
+       "web/CLAUDE.md",
+       1123,
+       "../CHANGELOG.md",
+       "methodology/CHANGELOG.md"
+      ]
+     ]
+    },
+    "checks": {
+     "ran": true,
+     "differences": [],
+     "ok": true,
+     "clean": true,
+     "before": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 0,
+       "framework": 0,
+       "project": 0
+      },
+      "history": {
+       "commits": 543
+      }
+     },
+     "after": {
+      "status": {
+       "exit": 0,
+       "tracked": 23,
+       "current": 23
+      },
+      "ledger": {
+       "exit": 1
+      },
+      "handoff": {
+       "exit": 1
+      },
+      "links": {
+       "exit": 1,
+       "framework": 0,
+       "project": 11
+      },
+      "history": {
+       "commits": 544
+      }
+     }
+    }
+   }
+  }
+ ]
+}
